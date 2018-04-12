@@ -15,8 +15,7 @@ namespace MediationModel
 				{ruleName.ToMySqlField()},
 				{description.ToMySqlField()},
 				{JsonExpression.ToMySqlField()},
-				{isPrepaid.ToMySqlField()},
-				{enabled.ToMySqlField()}
+				{isPrepaid.ToMySqlField()}
 				)";
 		}
 		public  string GetExtInsertCustom(Func<jsonbillingrule,string> externalInsertMethod)
@@ -30,8 +29,7 @@ namespace MediationModel
 				ruleName={ruleName.ToMySqlField()+" "},
 				description={description.ToMySqlField()+" "},
 				JsonExpression={JsonExpression.ToMySqlField()+" "},
-				isPrepaid={isPrepaid.ToMySqlField()+" "},
-				enabled={enabled.ToMySqlField()+" "}
+				isPrepaid={isPrepaid.ToMySqlField()+" "}
 				{whereClauseMethod.Invoke(this)};
 				";
 		}

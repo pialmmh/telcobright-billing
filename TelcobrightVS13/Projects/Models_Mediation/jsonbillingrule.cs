@@ -19,6 +19,5 @@ namespace MediationModel
         public string description { get; set; }
         public string JsonExpression { get; set; }
         public sbyte isPrepaid { get; set; }
-        public sbyte enabled { get; set; }
     }
 }
