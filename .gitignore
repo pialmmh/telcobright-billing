@@ -244,5 +244,6 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 
-# Telcobright Extensions dll
+# Telcobright Extensions dll/conf
 **/Extensions/*.dll
+**/*.conf
