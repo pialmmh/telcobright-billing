@@ -537,9 +537,9 @@ namespace InstallConfig
                         foreach (var br in BIllingRulesDefiner.BillingRules)
                         {
                             cmd.CommandText = $@"insert into jsonbillingrule
-                                           (id,rulename,description,isprepaid,jsonexpression) values 
+                                           (id,rulename,isprepaid,description,jsonexpression) values 
                                             ({br.Id},{br.RuleName.EncloseWith("'")},
-                                            {br.IsPrepaid},{br.Description.EncloseWith("'")}
+                                            {Convert.ToInt32(br.IsPrepaid)},{br.Description.EncloseWith("'")}
                                             ,{(JsonConvert.SerializeObject(br)).EncloseWith("'")});";
                             cmd.ExecuteNonQuery();
                         }
