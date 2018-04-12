@@ -14,6 +14,7 @@ namespace InstallConfig
             new BillingRule(id:1,ruleName: "Prepaid")
             {
                 IsPrepaid = true,
+                
                 Description = "VoiceServiceBlockingBasedOnPortCost",
                 AccBalanceThresholdActions = new List<AccBalanceThresholdAction>()
                 {
