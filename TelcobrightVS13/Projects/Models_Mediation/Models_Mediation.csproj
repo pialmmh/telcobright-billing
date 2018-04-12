@@ -1,0 +1,598 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4282D6F4-EFD2-418A-BE9F-74F09B7A45D8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MediationModel</RootNamespace>
+    <AssemblyName>MediationModel</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MySql.Data, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
+    <Reference Include="MySql.Data.Entity.EF6, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ValueTuple, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="account.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="acc_chargeable.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="acc_ledger_summary.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="acc_temp_transaction.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="acc_transaction.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="allerror.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ansprefixextra.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="aspnetuserclaim.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="autoincrementcounter.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="billingruleassignment.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="carriercontactmapping.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="causecode.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdr.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrdiscarded.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrerror.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrfieldlist.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrfieldmappingbyswitchtype.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrinconsistent.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrpartiallastaggregatedrawinstance.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrpartialrawinstance.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrpartialreference.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="commontg.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="country.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="countrycode.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataReaderConversion\cdr.cs" />
+    <Compile Include="DataReaderConversion\_CdrDataRowToStrArrHelper.cs" />
+    <Compile Include="DataReaderConversion\cdrerror.cs" />
+    <Compile Include="DataReaderConversion\IDataReaderToStrArrConverter.cs" />
+    <Compile Include="dialogiccdr.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityExtensions\account.cs" />
+    <Compile Include="EntityExtensions\acc_chargeable.cs" />
+    <Compile Include="EntityExtensions\Crud\account.cs" />
+    <Compile Include="EntityExtensions\Crud\acc_chargeable.cs" />
+    <Compile Include="EntityExtensions\Crud\acc_ledger_summary.cs" />
+    <Compile Include="EntityExtensions\Crud\acc_temp_transaction.cs" />
+    <Compile Include="EntityExtensions\Crud\acc_transaction.cs" />
+    <Compile Include="EntityExtensions\Crud\allerror.cs" />
+    <Compile Include="EntityExtensions\Crud\ansprefixextra.cs" />
+    <Compile Include="EntityExtensions\Crud\aspnetuserclaim.cs" />
+    <Compile Include="EntityExtensions\Crud\autoincrementcounter.cs" />
+    <Compile Include="EntityExtensions\Crud\billingruleassignment.cs" />
+    <Compile Include="EntityExtensions\Crud\carriercontactmapping.cs" />
+    <Compile Include="EntityExtensions\Crud\causecode.cs" />
+    <Compile Include="EntityExtensions\Crud\cdr.cs" />
+    <Compile Include="EntityExtensions\Crud\cdrdiscarded.cs" />
+    <Compile Include="EntityExtensions\Crud\cdrerror.cs" />
+    <Compile Include="EntityExtensions\Crud\cdrfieldlist.cs" />
+    <Compile Include="EntityExtensions\Crud\cdrfieldmappingbyswitchtype.cs" />
+    <Compile Include="EntityExtensions\Crud\cdrinconsistent.cs" />
+    <Compile Include="EntityExtensions\Crud\cdrpartiallastaggregatedrawinstance.cs" />
+    <Compile Include="EntityExtensions\Crud\cdrpartialrawinstance.cs" />
+    <Compile Include="EntityExtensions\Crud\cdrpartialreference.cs" />
+    <Compile Include="EntityExtensions\Crud\commontg.cs" />
+    <Compile Include="EntityExtensions\Crud\country.cs" />
+    <Compile Include="EntityExtensions\Crud\countrycode.cs" />
+    <Compile Include="EntityExtensions\Crud\enumaccountingclass.cs" />
+    <Compile Include="EntityExtensions\Crud\enumanstype.cs" />
+    <Compile Include="EntityExtensions\Crud\enumbillingspan.cs" />
+    <Compile Include="EntityExtensions\Crud\enumbilltype.cs" />
+    <Compile Include="EntityExtensions\Crud\enumcalldirection.cs" />
+    <Compile Include="EntityExtensions\Crud\enumcallforwardingroamingtype.cs" />
+    <Compile Include="EntityExtensions\Crud\enumcdrformat.cs" />
+    <Compile Include="EntityExtensions\Crud\enumcreditrule.cs" />
+    <Compile Include="EntityExtensions\Crud\enumcurrency.cs" />
+    <Compile Include="EntityExtensions\Crud\enumdatedassignment.cs" />
+    <Compile Include="EntityExtensions\Crud\enumdateparsestring.cs" />
+    <Compile Include="EntityExtensions\Crud\enuminvoicetemplate.cs" />
+    <Compile Include="EntityExtensions\Crud\enumjobautocreatetype.cs" />
+    <Compile Include="EntityExtensions\Crud\enumjobdefinition.cs" />
+    <Compile Include="EntityExtensions\Crud\enumjobstatu.cs" />
+    <Compile Include="EntityExtensions\Crud\enumjobtype.cs" />
+    <Compile Include="EntityExtensions\Crud\enumnationalorinternationalroute.cs" />
+    <Compile Include="EntityExtensions\Crud\enumpartnerrule.cs" />
+    <Compile Include="EntityExtensions\Crud\enumpartnertype.cs" />
+    <Compile Include="EntityExtensions\Crud\enumpostpaidinvoicestatu.cs" />
+    <Compile Include="EntityExtensions\Crud\enumprepaidinvoicestatu.cs" />
+    <Compile Include="EntityExtensions\Crud\enumprepostpaid.cs" />
+    <Compile Include="EntityExtensions\Crud\enumrateplanformat.cs" />
+    <Compile Include="EntityExtensions\Crud\enumrateplantype.cs" />
+    <Compile Include="EntityExtensions\Crud\enumratesheetformat.cs" />
+    <Compile Include="EntityExtensions\Crud\enumroutestatu.cs" />
+    <Compile Include="EntityExtensions\Crud\enumservicecategory.cs" />
+    <Compile Include="EntityExtensions\Crud\enumservicefamily.cs" />
+    <Compile Include="EntityExtensions\Crud\enumservicegroup.cs" />
+    <Compile Include="EntityExtensions\Crud\enumservicesubcategory.cs" />
+    <Compile Include="EntityExtensions\Crud\enumsignalingprotocol.cs" />
+    <Compile Include="EntityExtensions\Crud\enumss7networkindicator.cs" />
+    <Compile Include="EntityExtensions\Crud\enumswitchvendor.cs" />
+    <Compile Include="EntityExtensions\Crud\enumtaxrule.cs" />
+    <Compile Include="EntityExtensions\Crud\enumtelcobrightforcarriertype.cs" />
+    <Compile Include="EntityExtensions\Crud\enumtransactiontype.cs" />
+    <Compile Include="EntityExtensions\Crud\enumtransportprotocol.cs" />
+    <Compile Include="EntityExtensions\Crud\enumvatrule.cs" />
+    <Compile Include="EntityExtensions\Crud\errordefinition.cs" />
+    <Compile Include="EntityExtensions\Crud\genericparameterassignment.cs" />
+    <Compile Include="EntityExtensions\Crud\job.cs" />
+    <Compile Include="EntityExtensions\Crud\jobcompletion.cs" />
+    <Compile Include="EntityExtensions\Crud\jobsegment.cs" />
+    <Compile Include="EntityExtensions\Crud\jsonbillingrule.cs" />
+    <Compile Include="EntityExtensions\Crud\lcr.cs" />
+    <Compile Include="EntityExtensions\Crud\lcrpoint.cs" />
+    <Compile Include="EntityExtensions\Crud\lcrrateplan.cs" />
+    <Compile Include="EntityExtensions\Crud\ne.cs" />
+    <Compile Include="EntityExtensions\Crud\partner.cs" />
+    <Compile Include="EntityExtensions\Crud\partnerprefix.cs" />
+    <Compile Include="EntityExtensions\Crud\process.cs" />
+    <Compile Include="EntityExtensions\Crud\product.cs" />
+    <Compile Include="EntityExtensions\Crud\rate.cs" />
+    <Compile Include="EntityExtensions\Crud\rateassign.cs" />
+    <Compile Include="EntityExtensions\Crud\rateplan.cs" />
+    <Compile Include="EntityExtensions\Crud\rateplanassign.cs" />
+    <Compile Include="EntityExtensions\Crud\rateplanassignmenttuple.cs" />
+    <Compile Include="EntityExtensions\Crud\ratetask.cs" />
+    <Compile Include="EntityExtensions\Crud\ratetaskassign.cs" />
+    <Compile Include="EntityExtensions\Crud\ratetaskassignreference.cs" />
+    <Compile Include="EntityExtensions\Crud\ratetaskreference.cs" />
+    <Compile Include="EntityExtensions\Crud\reporttemplate.cs" />
+    <Compile Include="EntityExtensions\Crud\role.cs" />
+    <Compile Include="EntityExtensions\Crud\route.cs" />
+    <Compile Include="EntityExtensions\Crud\routeaddressmapping.cs" />
+    <Compile Include="EntityExtensions\Crud\StaticExtInsertColumnParsedDic.cs" />
+    <Compile Include="EntityExtensions\Crud\telcobrightpartner.cs" />
+    <Compile Include="EntityExtensions\Crud\timezone.cs" />
+    <Compile Include="EntityExtensions\Crud\uom.cs" />
+    <Compile Include="EntityExtensions\Crud\uom_conversion.cs" />
+    <Compile Include="EntityExtensions\Crud\uom_conversion_dated.cs" />
+    <Compile Include="EntityExtensions\Crud\user.cs" />
+    <Compile Include="EntityExtensions\Crud\userclaim.cs" />
+    <Compile Include="EntityExtensions\Crud\userlogin.cs" />
+    <Compile Include="EntityExtensions\Crud\userrole.cs" />
+    <Compile Include="EntityExtensions\Crud\xyzprefix.cs" />
+    <Compile Include="EntityExtensions\Crud\xyzprefixset.cs" />
+    <Compile Include="EntityExtensions\Crud\xyzselected.cs" />
+    <Compile Include="EntityExtensions\Crud\zone.cs" />
+    <Compile Include="EntityExtensions\Crud\_StaticExtInsertColumnHeaders.cs" />
+    <Compile Include="EntityExtensions\enumratesheetformat.cs" />
+    <Compile Include="EntityExtensions\ICdrAssignment.cs" />
+    <Compile Include="EntityExtensions\SerializingAttrAdder.cs" />
+    <Compile Include="EntityExtensions\ICachebale.cs" />
+    <Compile Include="EntityExtensions\ICdr.cs" />
+    <Compile Include="EntityExtensions\IdCallWiseListOfRouteVsCost.cs" />
+    <Compile Include="EntityExtensions\job.cs" />
+    <Compile Include="EntityExtensions\lcr.cs" />
+    <Compile Include="EntityExtensions\LcrDisplayClass.cs" />
+    <Compile Include="EntityExtensions\LcrExpression.cs" />
+    <Compile Include="EntityExtensions\LcrJobData.cs" />
+    <Compile Include="EntityExtensions\PartnerEntities.cs" />
+    <Compile Include="EntityExtensions\process.cs" />
+    <Compile Include="EntityExtensions\ProcessParamater.cs" />
+    <Compile Include="EntityExtensions\Productext.cs" />
+    <Compile Include="EntityExtensions\Rateext.cs" />
+    <Compile Include="EntityExtensions\rateplanassignmenttuple.cs" />
+    <Compile Include="EntityExtensions\RateSheetImportParamJson.cs" />
+    <Compile Include="EntityExtensions\ratetask.cs" />
+    <Compile Include="EntityExtensions\route.cs" />
+    <Compile Include="EntityExtensions\RoutePartnerPair.cs" />
+    <Compile Include="EntityExtensions\RouteVsCost.cs" />
+    <Compile Include="EntityExtensions\RouteWiseCdrsCollection.cs" />
+    <Compile Include="EntityExtensions\RouteWithSupplierPrefix.cs" />
+    <Compile Include="EntityExtensions\_Summary\AbstractCdrSummary.cs" />
+    <Compile Include="EntityExtensions\_Summary\acc_ledger_summary.cs" />
+    <Compile Include="EntityExtensions\_Summary\ISummary.cs" />
+    <Compile Include="EntityExtensions\_Summary\sum_voice_.cs" />
+    <Compile Include="enumaccountingclass.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumanstype.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumbillingspan.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumbilltype.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumcalldirection.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumcallforwardingroamingtype.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumcdrformat.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumcreditrule.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumcurrency.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumdatedassignment.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumdateparsestring.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enuminvoicetemplate.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumjobautocreatetype.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumjobdefinition.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumjobstatu.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumjobtype.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumnationalorinternationalroute.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumpartnerrule.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumpartnertype.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumpostpaidinvoicestatu.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumprepaidinvoicestatu.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumprepostpaid.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumrateplanformat.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumrateplantype.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumratesheetformat.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumroutestatu.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumservicecategory.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumservicefamily.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumservicegroup.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumservicesubcategory.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumsignalingprotocol.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumss7networkindicator.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumswitchvendor.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enums\EnumCdrSummary.cs" />
+    <Compile Include="enums\Enums.cs" />
+    <Compile Include="enumtaxrule.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumtelcobrightforcarriertype.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumtransactiontype.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumtransportprotocol.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="enumvatrule.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="errordefinition.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="genericparameterassignment.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="job.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="jobcompletion.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="jobsegment.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="jsonbillingrule.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="lcr.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="lcrpoint.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="lcrrateplan.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ne.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="partner.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PartnerModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PartnerModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PartnerModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PartnerModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PartnerModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="partnerprefix.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="process.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="product.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="rate.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="rateassign.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="rateplan.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="rateplanassign.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="rateplanassignmenttuple.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ratetask.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ratetaskassign.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ratetaskassignreference.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ratetaskreference.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="reporttemplate.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="role.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="route.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="routeaddressmapping.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sum_voice_day_01.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sum_voice_day_02.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sum_voice_day_03.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sum_voice_hr_01.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sum_voice_hr_02.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sum_voice_hr_03.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="telcobrightpartner.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="timezone.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="uom.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="uom_conversion.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="uom_conversion_dated.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="user.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="userclaim.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="userlogin.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="userrole.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\DisplayClasses.cs" />
+    <Compile Include="xyzprefix.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="xyzprefixset.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="xyzselected.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="zone.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <EntityDeploy Include="PartnerModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>PartnerModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="PartnerModel.edmx.diagram">
+      <DependentUpon>PartnerModel.edmx</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LibraryExtensions\LibraryExtensions.csproj">
+      <Project>{d4c2f34d-4d3d-43ae-84f0-e80cfedb1b48}</Project>
+      <Name>LibraryExtensions</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="PartnerModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>PartnerModel.edmx</DependentUpon>
+      <LastGenOutput>PartnerModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="PartnerModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>PartnerModel.edmx</DependentUpon>
+      <LastGenOutput>PartnerModel.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="EntityExtensions\Validators\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

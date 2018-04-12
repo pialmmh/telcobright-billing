@@ -1,0 +1,464 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="employeesModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.6" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="departments">
+          <Key>
+            <PropertyRef Name="dept_no" />
+          </Key>
+          <Property Name="dept_no" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="dept_name" Type="varchar" MaxLength="40" Nullable="false" />
+        </EntityType>
+        <EntityType Name="dept_emp">
+          <Key>
+            <PropertyRef Name="emp_no" />
+            <PropertyRef Name="dept_no" />
+          </Key>
+          <Property Name="emp_no" Type="int" Nullable="false" />
+          <Property Name="dept_no" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="from_date" Type="date" Nullable="false" />
+          <Property Name="to_date" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="dept_manager">
+          <Key>
+            <PropertyRef Name="emp_no" />
+            <PropertyRef Name="dept_no" />
+          </Key>
+          <Property Name="emp_no" Type="int" Nullable="false" />
+          <Property Name="dept_no" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="from_date" Type="date" Nullable="false" />
+          <Property Name="to_date" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="employees">
+          <Key>
+            <PropertyRef Name="emp_no" />
+          </Key>
+          <Property Name="emp_no" Type="int" Nullable="false" />
+          <Property Name="birth_date" Type="date" Nullable="false" />
+          <Property Name="first_name" Type="varchar" MaxLength="14" Nullable="false" />
+          <Property Name="last_name" Type="varchar" MaxLength="16" Nullable="false" />
+          <Property Name="gender" Type="enum" Nullable="false" />
+          <Property Name="hire_date" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="salaries">
+          <Key>
+            <PropertyRef Name="emp_no" />
+            <PropertyRef Name="from_date" />
+          </Key>
+          <Property Name="emp_no" Type="int" Nullable="false" />
+          <Property Name="salary" Type="int" Nullable="false" />
+          <Property Name="from_date" Type="date" Nullable="false" />
+          <Property Name="to_date" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="titles">
+          <Key>
+            <PropertyRef Name="emp_no" />
+            <PropertyRef Name="title" />
+            <PropertyRef Name="from_date" />
+          </Key>
+          <Property Name="emp_no" Type="int" Nullable="false" />
+          <Property Name="title" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="from_date" Type="date" Nullable="false" />
+          <Property Name="to_date" Type="date" />
+        </EntityType>
+        <Association Name="dept_emp_ibfk_1">
+          <End Role="employees" Type="Self.employees" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="dept_emp" Type="Self.dept_emp" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employees">
+              <PropertyRef Name="emp_no" />
+            </Principal>
+            <Dependent Role="dept_emp">
+              <PropertyRef Name="emp_no" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="dept_emp_ibfk_2">
+          <End Role="departments" Type="Self.departments" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="dept_emp" Type="Self.dept_emp" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="departments">
+              <PropertyRef Name="dept_no" />
+            </Principal>
+            <Dependent Role="dept_emp">
+              <PropertyRef Name="dept_no" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="dept_manager_ibfk_1">
+          <End Role="employees" Type="Self.employees" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="dept_manager" Type="Self.dept_manager" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employees">
+              <PropertyRef Name="emp_no" />
+            </Principal>
+            <Dependent Role="dept_manager">
+              <PropertyRef Name="emp_no" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="dept_manager_ibfk_2">
+          <End Role="departments" Type="Self.departments" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="dept_manager" Type="Self.dept_manager" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="departments">
+              <PropertyRef Name="dept_no" />
+            </Principal>
+            <Dependent Role="dept_manager">
+              <PropertyRef Name="dept_no" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="salaries_ibfk_1">
+          <End Role="employees" Type="Self.employees" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="salaries" Type="Self.salaries" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employees">
+              <PropertyRef Name="emp_no" />
+            </Principal>
+            <Dependent Role="salaries">
+              <PropertyRef Name="emp_no" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="titles_ibfk_1">
+          <End Role="employees" Type="Self.employees" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="titles" Type="Self.titles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employees">
+              <PropertyRef Name="emp_no" />
+            </Principal>
+            <Dependent Role="titles">
+              <PropertyRef Name="emp_no" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="employeesModelStoreContainer">
+          <EntitySet Name="departments" EntityType="Self.departments" Schema="employees" store:Type="Tables" />
+          <EntitySet Name="dept_emp" EntityType="Self.dept_emp" Schema="employees" store:Type="Tables" />
+          <EntitySet Name="dept_manager" EntityType="Self.dept_manager" Schema="employees" store:Type="Tables" />
+          <EntitySet Name="employees" EntityType="Self.employees" Schema="employees" store:Type="Tables" />
+          <EntitySet Name="salaries" EntityType="Self.salaries" Schema="employees" store:Type="Tables" />
+          <EntitySet Name="titles" EntityType="Self.titles" Schema="employees" store:Type="Tables" />
+          <AssociationSet Name="dept_emp_ibfk_1" Association="Self.dept_emp_ibfk_1">
+            <End Role="employees" EntitySet="employees" />
+            <End Role="dept_emp" EntitySet="dept_emp" />
+          </AssociationSet>
+          <AssociationSet Name="dept_emp_ibfk_2" Association="Self.dept_emp_ibfk_2">
+            <End Role="departments" EntitySet="departments" />
+            <End Role="dept_emp" EntitySet="dept_emp" />
+          </AssociationSet>
+          <AssociationSet Name="dept_manager_ibfk_1" Association="Self.dept_manager_ibfk_1">
+            <End Role="employees" EntitySet="employees" />
+            <End Role="dept_manager" EntitySet="dept_manager" />
+          </AssociationSet>
+          <AssociationSet Name="dept_manager_ibfk_2" Association="Self.dept_manager_ibfk_2">
+            <End Role="departments" EntitySet="departments" />
+            <End Role="dept_manager" EntitySet="dept_manager" />
+          </AssociationSet>
+          <AssociationSet Name="salaries_ibfk_1" Association="Self.salaries_ibfk_1">
+            <End Role="employees" EntitySet="employees" />
+            <End Role="salaries" EntitySet="salaries" />
+          </AssociationSet>
+          <AssociationSet Name="titles_ibfk_1" Association="Self.titles_ibfk_1">
+            <End Role="employees" EntitySet="employees" />
+            <End Role="titles" EntitySet="titles" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="employeesModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="department">
+          <Key>
+            <PropertyRef Name="dept_no" />
+          </Key>
+          <Property Name="dept_no" Type="String" MaxLength="4" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="dept_name" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="dept_emp" Relationship="Self.dept_emp_ibfk_2" FromRole="departments" ToRole="dept_emp" />
+          <NavigationProperty Name="dept_manager" Relationship="Self.dept_manager_ibfk_2" FromRole="departments" ToRole="dept_manager" />
+        </EntityType>
+        <EntityType Name="dept_emp">
+          <Key>
+            <PropertyRef Name="emp_no" />
+            <PropertyRef Name="dept_no" />
+          </Key>
+          <Property Name="emp_no" Type="Int32" Nullable="false" />
+          <Property Name="dept_no" Type="String" MaxLength="4" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="from_date" Type="DateTime" Nullable="false" />
+          <Property Name="to_date" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="department" Relationship="Self.dept_emp_ibfk_2" FromRole="dept_emp" ToRole="departments" />
+          <NavigationProperty Name="employee" Relationship="Self.dept_emp_ibfk_1" FromRole="dept_emp" ToRole="employees" />
+        </EntityType>
+        <EntityType Name="dept_manager">
+          <Key>
+            <PropertyRef Name="emp_no" />
+            <PropertyRef Name="dept_no" />
+          </Key>
+          <Property Name="emp_no" Type="Int32" Nullable="false" />
+          <Property Name="dept_no" Type="String" MaxLength="4" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="from_date" Type="DateTime" Nullable="false" />
+          <Property Name="to_date" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="department" Relationship="Self.dept_manager_ibfk_2" FromRole="dept_manager" ToRole="departments" />
+          <NavigationProperty Name="employee" Relationship="Self.dept_manager_ibfk_1" FromRole="dept_manager" ToRole="employees" />
+        </EntityType>
+        <EntityType Name="employee">
+          <Key>
+            <PropertyRef Name="emp_no" />
+          </Key>
+          <Property Name="emp_no" Type="Int32" Nullable="false" />
+          <Property Name="birth_date" Type="DateTime" Nullable="false" />
+          <Property Name="first_name" Type="String" MaxLength="14" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="last_name" Type="String" MaxLength="16" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="gender" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="hire_date" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="dept_emp" Relationship="Self.dept_emp_ibfk_1" FromRole="employees" ToRole="dept_emp" />
+          <NavigationProperty Name="dept_manager" Relationship="Self.dept_manager_ibfk_1" FromRole="employees" ToRole="dept_manager" />
+          <NavigationProperty Name="salaries" Relationship="Self.salaries_ibfk_1" FromRole="employees" ToRole="salaries" />
+          <NavigationProperty Name="titles" Relationship="Self.titles_ibfk_1" FromRole="employees" ToRole="titles" />
+        </EntityType>
+        <EntityType Name="salary">
+          <Key>
+            <PropertyRef Name="emp_no" />
+            <PropertyRef Name="from_date" />
+          </Key>
+          <Property Name="emp_no" Type="Int32" Nullable="false" />
+          <Property Name="salary1" Type="Int32" Nullable="false" />
+          <Property Name="from_date" Type="DateTime" Nullable="false" />
+          <Property Name="to_date" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="employee" Relationship="Self.salaries_ibfk_1" FromRole="salaries" ToRole="employees" />
+        </EntityType>
+        <EntityType Name="title">
+          <Key>
+            <PropertyRef Name="emp_no" />
+            <PropertyRef Name="title1" />
+            <PropertyRef Name="from_date" />
+          </Key>
+          <Property Name="emp_no" Type="Int32" Nullable="false" />
+          <Property Name="title1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="from_date" Type="DateTime" Nullable="false" />
+          <Property Name="to_date" Type="DateTime" />
+          <NavigationProperty Name="employee" Relationship="Self.titles_ibfk_1" FromRole="titles" ToRole="employees" />
+        </EntityType>
+        <Association Name="dept_emp_ibfk_2">
+          <End Role="departments" Type="Self.department" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="dept_emp" Type="Self.dept_emp" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="departments">
+              <PropertyRef Name="dept_no" />
+            </Principal>
+            <Dependent Role="dept_emp">
+              <PropertyRef Name="dept_no" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="dept_manager_ibfk_2">
+          <End Role="departments" Type="Self.department" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="dept_manager" Type="Self.dept_manager" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="departments">
+              <PropertyRef Name="dept_no" />
+            </Principal>
+            <Dependent Role="dept_manager">
+              <PropertyRef Name="dept_no" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="dept_emp_ibfk_1">
+          <End Role="employees" Type="Self.employee" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="dept_emp" Type="Self.dept_emp" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employees">
+              <PropertyRef Name="emp_no" />
+            </Principal>
+            <Dependent Role="dept_emp">
+              <PropertyRef Name="emp_no" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="dept_manager_ibfk_1">
+          <End Role="employees" Type="Self.employee" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="dept_manager" Type="Self.dept_manager" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employees">
+              <PropertyRef Name="emp_no" />
+            </Principal>
+            <Dependent Role="dept_manager">
+              <PropertyRef Name="emp_no" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="salaries_ibfk_1">
+          <End Role="employees" Type="Self.employee" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="salaries" Type="Self.salary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employees">
+              <PropertyRef Name="emp_no" />
+            </Principal>
+            <Dependent Role="salaries">
+              <PropertyRef Name="emp_no" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="titles_ibfk_1">
+          <End Role="employees" Type="Self.employee" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="titles" Type="Self.title" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employees">
+              <PropertyRef Name="emp_no" />
+            </Principal>
+            <Dependent Role="titles">
+              <PropertyRef Name="emp_no" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="employeesEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="departments" EntityType="Self.department" />
+          <EntitySet Name="dept_emp" EntityType="Self.dept_emp" />
+          <EntitySet Name="dept_manager" EntityType="Self.dept_manager" />
+          <EntitySet Name="employees" EntityType="Self.employee" />
+          <EntitySet Name="salaries" EntityType="Self.salary" />
+          <EntitySet Name="titles" EntityType="Self.title" />
+          <AssociationSet Name="dept_emp_ibfk_2" Association="Self.dept_emp_ibfk_2">
+            <End Role="departments" EntitySet="departments" />
+            <End Role="dept_emp" EntitySet="dept_emp" />
+          </AssociationSet>
+          <AssociationSet Name="dept_manager_ibfk_2" Association="Self.dept_manager_ibfk_2">
+            <End Role="departments" EntitySet="departments" />
+            <End Role="dept_manager" EntitySet="dept_manager" />
+          </AssociationSet>
+          <AssociationSet Name="dept_emp_ibfk_1" Association="Self.dept_emp_ibfk_1">
+            <End Role="employees" EntitySet="employees" />
+            <End Role="dept_emp" EntitySet="dept_emp" />
+          </AssociationSet>
+          <AssociationSet Name="dept_manager_ibfk_1" Association="Self.dept_manager_ibfk_1">
+            <End Role="employees" EntitySet="employees" />
+            <End Role="dept_manager" EntitySet="dept_manager" />
+          </AssociationSet>
+          <AssociationSet Name="salaries_ibfk_1" Association="Self.salaries_ibfk_1">
+            <End Role="employees" EntitySet="employees" />
+            <End Role="salaries" EntitySet="salaries" />
+          </AssociationSet>
+          <AssociationSet Name="titles_ibfk_1" Association="Self.titles_ibfk_1">
+            <End Role="employees" EntitySet="employees" />
+            <End Role="titles" EntitySet="titles" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="employeesModelStoreContainer" CdmEntityContainer="employeesEntities">
+          <EntitySetMapping Name="departments">
+            <EntityTypeMapping TypeName="employeesModel.department">
+              <MappingFragment StoreEntitySet="departments">
+                <ScalarProperty Name="dept_no" ColumnName="dept_no" />
+                <ScalarProperty Name="dept_name" ColumnName="dept_name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="dept_emp">
+            <EntityTypeMapping TypeName="employeesModel.dept_emp">
+              <MappingFragment StoreEntitySet="dept_emp">
+                <ScalarProperty Name="emp_no" ColumnName="emp_no" />
+                <ScalarProperty Name="dept_no" ColumnName="dept_no" />
+                <ScalarProperty Name="from_date" ColumnName="from_date" />
+                <ScalarProperty Name="to_date" ColumnName="to_date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="dept_manager">
+            <EntityTypeMapping TypeName="employeesModel.dept_manager">
+              <MappingFragment StoreEntitySet="dept_manager">
+                <ScalarProperty Name="emp_no" ColumnName="emp_no" />
+                <ScalarProperty Name="dept_no" ColumnName="dept_no" />
+                <ScalarProperty Name="from_date" ColumnName="from_date" />
+                <ScalarProperty Name="to_date" ColumnName="to_date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="employees">
+            <EntityTypeMapping TypeName="employeesModel.employee">
+              <MappingFragment StoreEntitySet="employees">
+                <ScalarProperty Name="emp_no" ColumnName="emp_no" />
+                <ScalarProperty Name="birth_date" ColumnName="birth_date" />
+                <ScalarProperty Name="first_name" ColumnName="first_name" />
+                <ScalarProperty Name="last_name" ColumnName="last_name" />
+                <ScalarProperty Name="gender" ColumnName="gender" />
+                <ScalarProperty Name="hire_date" ColumnName="hire_date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="salaries">
+            <EntityTypeMapping TypeName="employeesModel.salary">
+              <MappingFragment StoreEntitySet="salaries">
+                <ScalarProperty Name="emp_no" ColumnName="emp_no" />
+                <ScalarProperty Name="salary1" ColumnName="salary" />
+                <ScalarProperty Name="from_date" ColumnName="from_date" />
+                <ScalarProperty Name="to_date" ColumnName="to_date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="titles">
+            <EntityTypeMapping TypeName="employeesModel.title">
+              <MappingFragment StoreEntitySet="titles">
+                <ScalarProperty Name="emp_no" ColumnName="emp_no" />
+                <ScalarProperty Name="title1" ColumnName="title" />
+                <ScalarProperty Name="from_date" ColumnName="from_date" />
+                <ScalarProperty Name="to_date" ColumnName="to_date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

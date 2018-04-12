@@ -1,0 +1,309 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.Net.Compilers.2.2.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.2.0\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1A64E6F9-903C-416C-B322-1B5C5D997001}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TelcobrightMediation</RootNamespace>
+    <AssemblyName>Mediation</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Common.Logging, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.3.3.1\lib\net40\Common.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.Core.3.3.1\lib\net40\Common.Logging.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FluentValidation, Version=6.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentValidation.6.4.1\lib\Net45\FluentValidation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Itenso.TimePeriod, Version=2.1.1.0, Culture=neutral, PublicKeyToken=8cb6db75b4e81486, processorArchitecture=MSIL">
+      <HintPath>..\packages\TimePeriodLibrary.NET.2.1.1\lib\net46\Itenso.TimePeriod.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="MySql.Data, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
+    <Reference Include="MySql.Data.Entity.EF6, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Quartz, Version=2.5.0.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Quartz.2.5.0\lib\net40\Quartz.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Spring.Core, Version=2.0.1.45000, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
+      <HintPath>..\packages\Spring.Core.2.0.1\lib\net45\Spring.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ValueTuple, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WinSCPnet, Version=1.2.10.5874, Culture=neutral, PublicKeyToken=2271ec4a3c56d0bf, processorArchitecture=MSIL">
+      <HintPath>..\packages\WinSCP.5.7.6\lib\WinSCPnet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Accounting\AccBalanceThresholdHandler.cs" />
+    <Compile Include="Accounting\AccChargeableExt.cs" />
+    <Compile Include="Accounting\BillingPeriodContants.cs" />
+    <Compile Include="Accounting\IBillingRule.cs" />
+    <Compile Include="Accounting\PostingAccount\CdrPostingAccountingFinder.cs" />
+    <Compile Include="Accounting\ITimeRangeImplementer.cs" />
+    <Compile Include="Accounting\BillingRule.cs" />
+    <Compile Include="Accounting\LedgerSumFactory.cs" />
+    <Compile Include="Accounting\AccountFactory.cs" />
+    <Compile Include="Cdr\CdrJob.cs" />
+    <Compile Include="Cdr\Summary\DailyCdrSummaryFactory.cs" />
+    <Compile Include="Cdr\Summary\CdrSummaryFactory.cs" />
+    <Compile Include="Cdr\Summary\AbstractSummaryFactory.cs" />
+    <Compile Include="Accounting\ITimeRangePopulator.cs" />
+    <Compile Include="Accounting\JsonBillingRuleToBillingRuleConverter.cs" />
+    <Compile Include="Accounting\AccountingContext.cs" />
+    <Compile Include="Accounting\PaymentProcessor.cs" />
+    <Compile Include="Cache\AbstractCache.cs" />
+    <Compile Include="Cache\CachedItem.cs" />
+    <Compile Include="Cache\ICache.cs" />
+    <Compile Include="Cache\TempTransactionCache.cs" />
+    <Compile Include="Cache\TimeWiseSummaryCachePopulator.cs" />
+    <Compile Include="Cache\TransactionCache.cs" />
+    <Compile Include="Cache\ChargeableCache.cs" />
+    <Compile Include="Cache\AccountCache.cs" />
+    <Compile Include="Cache\CachedSummary.cs" />
+    <Compile Include="Cache\UoMConvRateCache.cs" />
+    <Compile Include="Cache\AutoIncrementCounterCache.cs" />
+    <Compile Include="Cache\SummaryCache.cs" />
+    <Compile Include="Cdr\cdrExtFactory.cs" />
+    <Compile Include="Cdr\CdrEraser.cs" />
+    <Compile Include="Cdr\CdrProcessor.cs" />
+    <Compile Include="Cdr\Summary\CdrSummaryContext.cs" />
+    <Compile Include="Cdr\CdrJobResult.cs" />
+    <Compile Include="Cdr\CdrTxtRowWrapperForInconsistencyCheck.cs" />
+    <Compile Include="Cdr\Collection\CdrCollectionResult.cs" />
+    <Compile Include="Cdr\Collection\CdrManipulatingUtil.cs" />
+    <Compile Include="Cdr\Collection\CdrToCdrErrorConverter.cs" />
+    <Compile Include="Cdr\Collection\DayWiseRowIdsCollection.cs" />
+    <Compile Include="Cdr\Collection\IcdrImplConverter.cs" />
+    <Compile Include="Cdr\Collection\PartialCdrCollector.cs" />
+    <Compile Include="Cdr\Collection\PartialCdrContainer.cs" />
+    <Compile Include="Cdr\Collection\PreProcessors\AbstractCdrJobPreProcessor.cs" />
+    <Compile Include="Cdr\Collection\PreProcessors\NewCdrPreProcessor.cs" />
+    <Compile Include="Cdr\Collection\PreProcessors\CdrReProcessingPreProcessor.cs" />
+    <Compile Include="Cdr\Collection\SqlMultiWhereClauseBuilder.cs" />
+    <Compile Include="Cdr\Collection\SqlSingleWhereClauseBuilder.cs" />
+    <Compile Include="Cdr\DurationVerifier.cs" />
+    <Compile Include="Cdr\Summary\HourlyCdrSummaryFactory.cs" />
+    <Compile Include="Cdr\OldCdrDeleter.cs" />
+    <Compile Include="Cdr\Summary\CdrSummaryFactoryFactory.cs" />
+    <Compile Include="Collector\IEventCollector.cs" />
+    <Compile Include="Collector\SqlMultiWhereClause.cs" />
+    <Compile Include="Collector\SqlSingleWhereClause.cs" />
+    <Compile Include="Collector\SqlWhereParamEnums.cs" />
+    <Compile Include="Collector\UnprocessedTextCdrCollectorFromDb.cs" />
+    <Compile Include="Collector\PrevAccountingInfoPopulator.cs" />
+    <Compile Include="Collector\DbRowCollector.cs" />
+    <Compile Include="Cdr\CdrExt.cs" />
+    <Compile Include="Cdr\PartialCdrWriter.cs" />
+    <Compile Include="Config\ApplicationServerConfig.cs" />
+    <Compile Include="Config\IGenericJsonRule.cs" />
+    <Compile Include="Config\CdrSetting.cs" />
+    <Compile Include="Config\ConfigFactory.cs" />
+    <Compile Include="Config\ConnectionManager.cs" />
+    <Compile Include="Config\ConfigOtherObjects.cs" />
+    <Compile Include="Config\IConfigGenerator.cs" />
+    <Compile Include="Config\IConfigurationSection.cs" />
+    <Compile Include="Config\JobInputData\FileCopyJobInputData.cs" />
+    <Compile Include="Config\JobInputData\OptimizerJobInputData.cs" />
+    <Compile Include="Config\JobInputData\LcrJobInputData.cs" />
+    <Compile Include="Config\JobInputData\FileOperationJobInputData.cs" />
+    <Compile Include="Config\MediationSetting.cs" />
+    <Compile Include="Config\ResourcePool.cs" />
+    <Compile Include="Config\TelcobrightConfig.cs" />
+    <Compile Include="Config\JobInputData\CdrCollectorInputData.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="Mediation\RateContainerInMemoryLocal.cs" />
+    <Compile Include="Mediation\RateDictionaryGeneratorByTuples.cs" />
+    <Compile Include="SegmentedJob\RowIdVsDate.cs" />
+    <Compile Include="SegmentedJob\SegmentedCdrEraser.cs" />
+    <Compile Include="SegmentedJob\AbstractSegmentedJobProcessor.cs" />
+    <Compile Include="SegmentedJob\ISegmentedJob.cs" />
+    <Compile Include="SegmentedJob\ISegmentedJobProcessor.cs" />
+    <Compile Include="SegmentedJob\SegmentedCdrReprocessor.cs" />
+    <Compile Include="SegmentedJob\SegmentedCdrErrorProcessor.cs" />
+    <Compile Include="Mediation\TupleDefinitions.cs" />
+    <Compile Include="MefData\IAutoCreateJob.cs" />
+    <Compile Include="MefData\IDisplayClass.cs" />
+    <Compile Include="MefData\IFileDecoder.cs" />
+    <Compile Include="MefData\IFileNameMatchingRule.cs" />
+    <Compile Include="Config\IGenericAssignmentFactory.cs" />
+    <Compile Include="MefData\INerCalculationRule.cs" />
+    <Compile Include="MefData\IEventAggregator.cs" />
+    <Compile Include="MefData\IPartnerRule.cs" />
+    <Compile Include="MefData\IRateSheetFormat.cs" />
+    <Compile Include="MefData\IReport.cs" />
+    <Compile Include="MefData\IServiceFamily.cs" />
+    <Compile Include="MefData\IServiceGroup.cs" />
+    <Compile Include="MefData\ITelcobrightJob.cs" />
+    <Compile Include="MefData\MefJobContainer.cs" />
+    <Compile Include="AutoIncrementManager.cs" />
+    <Compile Include="Cdr\CdrCollectionResultProcessingSummary.cs" />
+    <Compile Include="Cdr\BatchSqlJobParamJson.cs" />
+    <Compile Include="Config\JobInputData\CdrJobInputData.cs" />
+    <Compile Include="SegmentedJob\AbstractRowBasedSegmentedJobProcessor.cs" />
+    <Compile Include="EventAndListeners\IChargeable.cs" />
+    <Compile Include="MediationContext.cs" />
+    <Compile Include="MefData\MefDecoderContainer.cs" />
+    <Compile Include="MefData\MefGenericAssignmentFactoryContainer.cs" />
+    <Compile Include="MefData\MefPartnerRulesContainer.cs" />
+    <Compile Include="MefData\MefNerRulesContainer.cs" />
+    <Compile Include="MefData\MefRateSheetFormat.cs" />
+    <Compile Include="Config\RatingRule.cs" />
+    <Compile Include="Config\ServiceGroupConfiguration.cs" />
+    <Compile Include="MefData\MefServiceGroupContainer.cs" />
+    <Compile Include="MefData\MefServiceFamilyContainer.cs" />
+    <Compile Include="SimpleLookups.cs" />
+    <Compile Include="Mediation\CompressFile.cs" />
+    <Compile Include="Mediation\TxtTableFromCdrOrSummary.cs" />
+    <Compile Include="Collector\FileBasedTextCdrCollector.cs" />
+    <Compile Include="EventAndListeners\AbstractListener.cs" />
+    <Compile Include="EventAndListeners\INetworkEvent.cs" />
+    <Compile Include="Cdr\CdrJobContext.cs" />
+    <Compile Include="EventAndListeners\EnumsNetworkEvents.cs" />
+    <Compile Include="Cdr\CdrMediationResult.cs" />
+    <Compile Include="EventAndListeners\ListenerFactory.cs" />
+    <Compile Include="FileOperations\FileLocation.cs" />
+    <Compile Include="FileOperations\FileSync.cs" />
+    <Compile Include="FileOperations\RemoteDirectoryLister.cs" />
+    <Compile Include="FileOperations\_DirectorySyncSettings.cs" />
+    <Compile Include="FileOperations\_FileOperations.cs" />
+    <Compile Include="FileOperations\_WriteError.cs" />
+    <Compile Include="MefData\ServiceContext.cs" />
+    <Compile Include="Models\PortalObjects.cs" />
+    <Compile Include="_Rating\PrefixMatcher.cs" />
+    <Compile Include="_Rating\A2ZRater.cs" />
+    <Compile Include="Mediation\BinCdrFunctions.cs" />
+    <Compile Include="MediationDicAndCollections.cs" />
+    <Compile Include="Cdr\MediationCompletionMarker.cs" />
+    <Compile Include="Mediation\MyExcel.cs" />
+    <Compile Include="Mediation\RateCache.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mediation\RateDictionary.cs" />
+    <Compile Include="Mediation\RateList.cs" />
+    <Compile Include="Mediation\TelcoBrightAdhocMethods.cs" />
+    <Compile Include="Mediation\TelcobrightProcess.cs" />
+    <Compile Include="MefData\_Composers.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="_Rating\XyzRuleHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="job_scheduling_data_2_0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="WinSCP.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FlexValidation\FlexValidation.csproj">
+      <Project>{18396cbf-0500-4924-ac33-9ed359ca60d7}</Project>
+      <Name>FlexValidation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LibraryExtensions\LibraryExtensions.csproj">
+      <Project>{d4c2f34d-4d3d-43ae-84f0-e80cfedb1b48}</Project>
+      <Name>LibraryExtensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Models_Mediation\Models_Mediation.csproj">
+      <Project>{4282d6f4-efd2-418a-be9f-74f09b7a45d8}</Project>
+      <Name>Models_Mediation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\QuartzTelcobright\QuartzTelcobright.csproj">
+      <Project>{4dc3e3de-5ed6-4b02-abf1-b66f77b0dc6b}</Project>
+      <Name>QuartzTelcobright</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.2.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.2.0\build\Microsoft.Net.Compilers.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

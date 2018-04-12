@@ -1,0 +1,54 @@
+[
+	{
+		"FieldTemplateName":"Basic",
+		"Fields":["starttime as `Start Time`",
+				"AnswerTime as `Answer Time`",
+				"endtime as `End Time`",
+				"concat(switchid,'-',incomingroute) as `Ingress Route`",
+				"concat(switchid,'-',outgoingroute)  as `Outgoing Route`",
+				"OriginatingCallingNumber as `Ingress Calling Number`",
+				"OriginatingCalledNumber as `Ingress Called Number`",
+				"TerminatingCallingNumber as `Egress Calling Number`",
+				"TerminatingCalledNumber as `Egress Called Number`",
+				"durationsec as `Actual Duration`",
+				"roundedduration as `Rounded Duration`",
+				"duration1 as Duration1",
+				"duration2 as Duration2",
+				"Duration3 as Duration3",
+				"releasecauseingress as `Ingress CauseCode`", 
+				"ReleaseCauseEgress as `Egress Cause Code`"
+				]
+	},
+	{
+		"FieldTemplateName":"All",
+		"Fields":["*"
+				]
+	},
+	{
+		"FieldTemplateName":"Basic_Error",
+		"Fields":["c.field4 as `Error Reason`",
+				"starttime as `Start Time`",
+				"AnswerTime as `Answer Time`",
+				"endtime as `End Time`",
+				"concat(switchid,'-',incomingroute) as `Ingress Route`",
+				"concat(switchid,'-',outgoingroute)  as `Outgoing Route`",
+				"OriginatingCallingNumber as `Ingress Calling Number`",
+				"OriginatingCalledNumber as `Ingress Called Number`",
+				"TerminatingCallingNumber as `Egress Calling Number`",
+				"TerminatingCalledNumber as `Egress Called Number`",
+				"durationsec as `Actual Duration`",
+				"roundedduration as `Rounded Duration`",
+				"duration1 as Duration1",
+				"duration2 as Duration2",
+				"Duration3 as Duration3",
+				"releasecauseingress as `Ingress CauseCode`", 
+				"ReleaseCauseEgress as `Egress Cause Code`"
+				]
+	},
+	{
+		"FieldTemplateName":"All_Error",
+		"Fields":["c.field4 as `Error Reason`",
+				  "c.*"
+				]
+	},
+]
