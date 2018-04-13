@@ -211,14 +211,14 @@ namespace InstallConfig
             //***FILE LOCATIONS**********************************************
             //local/vault1: all app servers will use same local file location
             //the object "vault" will have a copy of below object for each app servers with server id as key and location as dictionary value
-            FileLocation vaultPltDhkDl = new FileLocation()
+            FileLocation vaultJslZteDhk = new FileLocation()
             {
-                Name = "Vault.PltDhkDL",//this is refered in ne table, name MUST start with "Vault"
+                Name = "Vault.JslZteDhk",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "C:/telcobright/Vault/Resources/CDR/Platinum Communications/PltDhkDL",
+                StartingPath = "C:/telcobright/Vault/Resources/CDR/JSL/JslZteDhk",
                 User = "",
                 Pass = "",
             };
@@ -229,7 +229,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = "/",
                 ServerIp = "192.168.2.216",
-                StartingPath = "Resources/CDR/Platinum Communications/PltDhkDL",
+                StartingPath = "Resources/CDR/JSL/JslZteDhk",
                 User = "ftpuser",
                 Pass = "Takay1takaane",
             };
@@ -240,7 +240,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = "/",
                 ServerIp = "192.168.2.224",
-                StartingPath = "Resources/CDR/Platinum Communications/PltDhkDL",
+                StartingPath = "Resources/CDR/JSL/JslZteDhk",
                 User = "ftpuser",
                 Pass = "Takay1takaane",
                 Skip = true
@@ -249,12 +249,12 @@ namespace InstallConfig
             List<FileLocation> ftpLocations = new List<FileLocation>();
             ftpLocations.Add(appServerFtp1);
             ftpLocations.Add(appServerFtp2);
-            Vault pltDhkDLvault = new Vault("Vault.PltDhkDL", this.Tbc, ftpLocations);
-            pltDhkDLvault.LocalLocation = new SyncLocation(vaultPltDhkDl.Name) { FileLocation = vaultPltDhkDl };//don't pass this to constructor and set there, causes problem in json serialize
-            this.Tbc.Vaults.Add(pltDhkDLvault);
-            FileLocation pltDhkDl = new FileLocation()
+            Vault JslZteDhkvault = new Vault("Vault.JslZteDhk", this.Tbc, ftpLocations);
+            JslZteDhkvault.LocalLocation = new SyncLocation(vaultJslZteDhk.Name) { FileLocation = vaultJslZteDhk };//don't pass this to constructor and set there, causes problem in json serialize
+            this.Tbc.Vaults.Add(JslZteDhkvault);
+            FileLocation JslZteDhk = new FileLocation()
             {
-                Name = "PltDhkDL",
+                Name = "JslZteDhk",
                 LocationType = "ftp",
                 OsType = "linux",
                 PathSeparator = "/",
@@ -307,27 +307,27 @@ namespace InstallConfig
                 IgnoreZeroLenghFile = 1,
             };
             //add locations to directory settings
-            this.Tbc.DirectorySettings.FileLocations.Add(vaultPltDhkDl.Name, vaultPltDhkDl);
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultJslZteDhk.Name, vaultJslZteDhk);
             this.Tbc.DirectorySettings.FileLocations.Add(appServerFtp1.Name, appServerFtp1);
             this.Tbc.DirectorySettings.FileLocations.Add(appServerFtp2.Name, appServerFtp2);
-            this.Tbc.DirectorySettings.FileLocations.Add(pltDhkDl.Name, pltDhkDl);
+            this.Tbc.DirectorySettings.FileLocations.Add(JslZteDhk.Name, JslZteDhk);
 
             this.Tbc.DirectorySettings.FileLocations.Add(fileArchive1.Name, fileArchive1);
             this.Tbc.DirectorySettings.FileLocations.Add(fileArchiveIof.Name, fileArchiveIof);
 
 
             //sync pair platinum:Vault
-            SyncPair pltDhkDlVault = new SyncPair("PltDhkDL:Vault")
+            SyncPair JslZteDhkVault = new SyncPair("JslZteDhk:Vault")
             {
                 SkipSourceFileListing = false,
-                SrcSyncLocation = new SyncLocation("PltDhkDL")
+                SrcSyncLocation = new SyncLocation("JslZteDhk")
                 {
-                    FileLocation = pltDhkDl,
+                    FileLocation = JslZteDhk,
                     DescendingFileListByFileName = this.Tbc.CdrSetting.DescendingOrderWhileListingFiles
                 },
-                DstSyncLocation = new SyncLocation("Vault_PltDhkDL")
+                DstSyncLocation = new SyncLocation("Vault_JslZteDhk")
                 {
-                    FileLocation = vaultPltDhkDl
+                    FileLocation = vaultJslZteDhk
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
@@ -352,9 +352,9 @@ namespace InstallConfig
             {
                 SkipCopyingToDestination = false,
                 SkipSourceFileListing = true,
-                SrcSyncLocation = new SyncLocation("Vault_PltDhkDL")
+                SrcSyncLocation = new SyncLocation("Vault_JslZteDhk")
                 {
-                    FileLocation = vaultPltDhkDl
+                    FileLocation = vaultJslZteDhk
                 },
                 DstSyncLocation = new SyncLocation("FileArchive1")
                 {
@@ -386,7 +386,7 @@ namespace InstallConfig
                 SkipSourceFileListing = true,
                 SrcSyncLocation = new SyncLocation("Vault_S3")
                 {
-                    FileLocation = vaultPltDhkDl
+                    FileLocation = vaultJslZteDhk
                 },
                 DstSyncLocation = new SyncLocation("IOF")
                 {
@@ -407,7 +407,7 @@ namespace InstallConfig
             };
 
             //add sync pairs to directory config
-            directorySetting.SyncPairs.Add(pltDhkDlVault.Name, pltDhkDlVault);
+            directorySetting.SyncPairs.Add(JslZteDhkVault.Name, JslZteDhkVault);
             directorySetting.SyncPairs.Add(vaultS3FileArchive1.Name, vaultS3FileArchive1);
             directorySetting.SyncPairs.Add(vaultS3Iof.Name, vaultS3Iof);
             //load the syncpairs in dictioinary, first by source

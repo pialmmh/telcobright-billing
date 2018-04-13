@@ -111,6 +111,7 @@
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="jsl\PartnersWithRoutes.json" />
     <None Include="_dbl.config" />
     <None Include="_roots.config" />
   </ItemGroup>

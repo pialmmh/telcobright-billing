@@ -1,0 +1,298 @@
+﻿[
+  {
+    "PartnerName": "Bangla Trac Communications IOS",
+    "IdParner": "1",
+    "Type": "IOS",
+    "OWN_PREFIX": "",
+    "DomesticTGs": "",
+    "InternationalTGs": "2089"
+  },
+  {
+    "PartnerName": "Digicon Telecommunication Limited IOS",
+    "IdParner": "2",
+    "Type": "IOS",
+    "OWN_PREFIX": "",
+    "DomesticTGs": "",
+    "InternationalTGs": "2074"
+  },
+  {
+    "PartnerName": "Global Voice Telecom Limited IOS",
+    "IdParner": "3",
+    "Type": "IOS",
+    "OWN_PREFIX": "",
+    "DomesticTGs": "",
+    "InternationalTGs": "2053"
+  },
+  {
+    "PartnerName": "Mir Telecom IOS",
+    "IdParner": "4",
+    "Type": "IOS",
+    "OWN_PREFIX": "",
+    "DomesticTGs": "",
+    "InternationalTGs": "2051"
+  },
+  {
+    "PartnerName": "Novotel IOS",
+    "IdParner": "5",
+    "Type": "IOS",
+    "OWN_PREFIX": "",
+    "DomesticTGs": "",
+    "InternationalTGs": "2045"
+  },
+  {
+    "PartnerName": "Roots Communication IOS",
+    "IdParner": "6",
+    "Type": "IOS",
+    "OWN_PREFIX": "",
+    "DomesticTGs": "",
+    "InternationalTGs": "2056"
+  },
+  {
+    "PartnerName": "Unique Infowary LImited IOS",
+    "IdParner": "7",
+    "Type": "IOS",
+    "OWN_PREFIX": "",
+    "DomesticTGs": "",
+    "InternationalTGs": "2058"
+  },
+  {
+    "PartnerName": "ADN Telecom",
+    "IdParner": "8",
+    "Type": "IPTSP",
+    "OWN_PREFIX": "9610",
+    "DomesticTGs": "2093",
+    "InternationalTGs": "2083"
+  },
+  {
+    "PartnerName": "AIRTEL",
+    "IdParner": "9",
+    "Type": "ANS",
+    "OWN_PREFIX": "16",
+    "DomesticTGs": "2046",
+    "InternationalTGs": "2049"
+  },
+  {
+    "PartnerName": "BANGLALINK",
+    "IdParner": "10",
+    "Type": "ANS",
+    "OWN_PREFIX": "19",
+    "DomesticTGs": "2084",
+    "InternationalTGs": "2003"
+  },
+  {
+    "PartnerName": "GRAMEENPHONE",
+    "IdParner": "11",
+    "Type": "ANS",
+    "OWN_PREFIX": "17",
+    "DomesticTGs": "2044",
+    "InternationalTGs": "2078"
+  },
+  {
+    "PartnerName": "ROBI (AKTEL)",
+    "IdParner": "12",
+    "Type": "ANS",
+    "OWN_PREFIX": "18",
+    "DomesticTGs": "2087",
+    "InternationalTGs": "2094"
+  },
+  {
+    "PartnerName": "TELETALK",
+    "IdParner": "13",
+    "Type": "ANS",
+    "OWN_PREFIX": "15",
+    "DomesticTGs": "2006",
+    "InternationalTGs": "2040"
+  },
+  {
+    "PartnerName": "ADN Telecom",
+    "IdParner": "14",
+    "Type": "IPTSP",
+    "OWN_PREFIX": "8000161271",
+    "DomesticTGs": "2083",
+    "InternationalTGs": ""
+  },
+  {
+    "PartnerName": "ADN Telecom",
+    "IdParner": "14",
+    "Type": "IPTSP",
+    "OWN_PREFIX": "8000112233",
+    "DomesticTGs": "2083",
+    "InternationalTGs": ""
+  },
+  {
+    "PartnerName": "ADN Telecom",
+    "IdParner": "14",
+    "Type": "IPTSP",
+    "OWN_PREFIX": "8000333333",
+    "DomesticTGs": "2083",
+    "InternationalTGs": ""
+  },
+  {
+    "PartnerName": "ADN Telecom",
+    "IdParner": "14",
+    "Type": "IPTSP",
+    "OWN_PREFIX": "8000888999",
+    "DomesticTGs": "2083",
+    "InternationalTGs": ""
+  },
+  {
+    "PartnerName": "ADN Telecom",
+    "IdParner": "14",
+    "Type": "IPTSP",
+    "OWN_PREFIX": "8000446633",
+    "DomesticTGs": "2083",
+    "InternationalTGs": ""
+  },
+  {
+    "PartnerName": "ADN Telecom",
+    "IdParner": "14",
+    "Type": "IPTSP",
+    "OWN_PREFIX": "8000300300",
+    "DomesticTGs": "2083",
+    "InternationalTGs": ""
+  },
+  {
+    "PartnerName": "ADN Telecom",
+    "IdParner": "14",
+    "Type": "IPTSP",
+    "OWN_PREFIX": "8000123456",
+    "DomesticTGs": "2083",
+    "InternationalTGs": ""
+  },
+  {
+    "PartnerName": "ADN Telecom",
+    "IdParner": "14",
+    "Type": "IPTSP",
+    "OWN_PREFIX": "8000100100",
+    "DomesticTGs": "2083",
+    "InternationalTGs": ""
+  },
+  {
+    "PartnerName": "ADN Telecom",
+    "IdParner": "14",
+    "Type": "IPTSP",
+    "OWN_PREFIX": "8000111222",
+    "DomesticTGs": "2083",
+    "InternationalTGs": ""
+  },
+  {
+    "PartnerName": "ADN Telecom",
+    "IdParner": "14",
+    "Type": "IPTSP",
+    "OWN_PREFIX": "80008808000",
+    "DomesticTGs": "2083",
+    "InternationalTGs": ""
+  },
+  {
+    "PartnerName": "ADN Telecom",
+    "IdParner": "14",
+    "Type": "IPTSP",
+    "OWN_PREFIX": "8000161271",
+    "DomesticTGs": "2083",
+    "InternationalTGs": ""
+  },
+  {
+    "PartnerName": "ADN Telecom",
+    "IdParner": "14",
+    "Type": "IPTSP",
+    "OWN_PREFIX": "8000777777",
+    "DomesticTGs": "2083",
+    "InternationalTGs": ""
+  },
+  {
+    "PartnerName": "ADN Telecom",
+    "IdParner": "14",
+    "Type": "IPTSP",
+    "OWN_PREFIX": "8001114444",
+    "DomesticTGs": "2083",
+    "InternationalTGs": ""
+  },
+  {
+    "PartnerName": "ADN Telecom",
+    "IdParner": "14",
+    "Type": "IPTSP",
+    "OWN_PREFIX": "8001112220",
+    "DomesticTGs": "2083",
+    "InternationalTGs": ""
+  },
+  {
+    "PartnerName": "ADN Telecom",
+    "IdParner": "14",
+    "Type": "IPTSP",
+    "OWN_PREFIX": "8001112221",
+    "DomesticTGs": "2083",
+    "InternationalTGs": ""
+  },
+  {
+    "PartnerName": "ADN Telecom",
+    "IdParner": "14",
+    "Type": "IPTSP",
+    "OWN_PREFIX": "8001112222",
+    "DomesticTGs": "2083",
+    "InternationalTGs": ""
+  },
+  {
+    "PartnerName": "ADN Telecom",
+    "IdParner": "14",
+    "Type": "IPTSP",
+    "OWN_PREFIX": "8001112223",
+    "DomesticTGs": "2083",
+    "InternationalTGs": ""
+  },
+  {
+    "PartnerName": "ADN Telecom",
+    "IdParner": "14",
+    "Type": "IPTSP",
+    "OWN_PREFIX": "8001112224",
+    "DomesticTGs": "2083",
+    "InternationalTGs": ""
+  },
+  {
+    "PartnerName": "ADN Telecom",
+    "IdParner": "14",
+    "Type": "IPTSP",
+    "OWN_PREFIX": "8001112225",
+    "DomesticTGs": "2083",
+    "InternationalTGs": ""
+  },
+  {
+    "PartnerName": "ADN Telecom",
+    "IdParner": "14",
+    "Type": "IPTSP",
+    "OWN_PREFIX": "8001112226",
+    "DomesticTGs": "2083",
+    "InternationalTGs": ""
+  },
+  {
+    "PartnerName": "ADN Telecom",
+    "IdParner": "14",
+    "Type": "IPTSP",
+    "OWN_PREFIX": "8001112227",
+    "DomesticTGs": "2083",
+    "InternationalTGs": ""
+  },
+  {
+    "PartnerName": "ADN Telecom",
+    "IdParner": "14",
+    "Type": "IPTSP",
+    "OWN_PREFIX": "8001112228",
+    "DomesticTGs": "2083",
+    "InternationalTGs": ""
+  },
+  {
+    "PartnerName": "ADN Telecom",
+    "IdParner": "14",
+    "Type": "IPTSP",
+    "OWN_PREFIX": "8001112229",
+    "DomesticTGs": "2083",
+    "InternationalTGs": ""
+  },
+  {
+    "PartnerName": "ADN Telecom",
+    "IdParner": "14",
+    "Type": "IPTSP",
+    "OWN_PREFIX": "8000700700",
+    "DomesticTGs": "2083",
+    "InternationalTGs": ""
+  }
+]

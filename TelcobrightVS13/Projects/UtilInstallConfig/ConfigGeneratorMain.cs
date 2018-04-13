@@ -101,9 +101,18 @@ namespace InstallConfig
                             
                         }
                         Console.WriteLine("Config Files have been generated successfully.");
+                        //reset route & partners
+                        Console.WriteLine("Reset Partner & Routes (Y/N)? this will clear routes, partners, partnerprefix & accounts.");
+                        ConsoleKeyInfo keyInfo = Console.ReadKey();
+                        if (keyInfo.KeyChar == 'Y' || keyInfo.KeyChar == 'y')
+                        {
+                            ConfigureQuartzJobStore(operatorConfigs, configPathHelper, schedulerSetting);//configure job store for all opeartors
+                            Console.WriteLine();
+                            Console.WriteLine("Job store has been reset successfully.");
+                        }
                         //reset job store
                         Console.WriteLine("Reset QuartzJob Store (Y/N)? this will clear all job data.");
-                        ConsoleKeyInfo keyInfo = Console.ReadKey();
+                        keyInfo = Console.ReadKey();
                         if (keyInfo.KeyChar == 'Y' || keyInfo.KeyChar == 'y')
                         {
                             ConfigureQuartzJobStore(operatorConfigs, configPathHelper, schedulerSetting);//configure job store for all opeartors
@@ -152,7 +161,14 @@ namespace InstallConfig
                 quartzManager.CreateJobs<QuartzTelcobrightProcessWrapper>(tbc.SchedulerDaemonConfigs);
             }
         }
-
+        static void ConfigurePartnerAndRoutes(List<TelcobrightConfig> operatorConfigs, 
+            ConfigPathHelper configPathHelper)
+        {
+            foreach (var tbc in operatorConfigs)
+            {
+                
+            }
+        }
         private static void CreateSchedulerDatabaseIfRequired(DatabaseSetting databaseSetting, bool force,
             ConfigPathHelper configPathHelper)
         {
