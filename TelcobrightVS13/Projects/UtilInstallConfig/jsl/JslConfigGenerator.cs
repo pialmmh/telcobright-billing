@@ -36,165 +36,156 @@ namespace InstallConfig
                 SummaryTimeField = SummaryTimeFieldEnum.AnswerTime,
                 PartialCdrEnabledNeIds =new List<int>() {3},
                 DescendingOrderWhileListingFiles = false,
-                DescendingOrderWhileProcessingListedFiles = false,
-                ValidationRulesForInconsistentCdrs = new Dictionary<string, string>()
-                {
-                    { "!String.IsNullOrEmpty(obj[98]) and !String.IsNullOrWhiteSpace(obj[98])",
-                        "UniqueBillId cannot be empty" },//public const int Uniquebillid = 98;
-                    { $@"Validator.BooleanParsers['isNumericChecker'].Invoke(obj[2]) == true 
+                DescendingOrderWhileProcessingListedFiles = false
+            };
+            this.Tbc.CdrSetting.ValidationRulesForInconsistentCdrs = new Dictionary<string, string>()
+            {
+                { "!String.IsNullOrEmpty(obj[98]) and !String.IsNullOrWhiteSpace(obj[98])",
+                    "UniqueBillId cannot be empty" },//public const int Uniquebillid = 98;
+                { $@"Validator.BooleanParsers['isNumericChecker'].Invoke(obj[2]) == true 
                          and Validator.IntParsers['intConverterProxy'].Invoke(obj[2]) > 0",
-                        "SequenceNumber must be numeric and > 0" },//public const int Sequencenumber = 2;
-                    {"!String.IsNullOrEmpty(obj[5]) and !String.IsNullOrWhiteSpace(obj[5])",
-                        "incomingroute cannot be empty" },//public const int Incomingroute = 5;
-                    {"!String.IsNullOrEmpty(obj[9]) and !String.IsNullOrWhiteSpace(obj[9])",
-                        "OriginatingCalledNumber cannot be empty" },//public const int Originatingcallednumber = 9;
-                    {$@"Validator.BooleanParsers['isNumericChecker'].Invoke(obj[14]) 
+                    "SequenceNumber must be numeric and > 0" },//public const int Sequencenumber = 2;
+                {"!String.IsNullOrEmpty(obj[5]) and !String.IsNullOrWhiteSpace(obj[5])",
+                    "incomingroute cannot be empty" },//public const int Incomingroute = 5;
+                {"!String.IsNullOrEmpty(obj[9]) and !String.IsNullOrWhiteSpace(obj[9])",
+                    "OriginatingCalledNumber cannot be empty" },//public const int Originatingcallednumber = 9;
+                {$@"Validator.BooleanParsers['isNumericChecker'].Invoke(obj[14]) 
                         and Validator.DoubleParsers['doubleConverterProxy'].Invoke(obj[14]) >= 0",
-                        "durationsec must be numeric and >= 0" },//public const int Durationsec = 14;
-                    {$@"Validator.BooleanParsers['isDateTimeChecker'].Invoke(obj[29]) == true
+                    "durationsec must be numeric and >= 0" },//public const int Durationsec = 14;
+                {$@"Validator.BooleanParsers['isDateTimeChecker'].Invoke(obj[29]) == true
                         and Validator.DateParsers['strToMySqlDtConverter'].Invoke(obj[29]) 
                         > date('"+ tempCdrSetting.NotAllowedCallDateTimeBefore.ToString("yyyy-MM-dd") +"')",
-                        "StartTime must be a valid datetime and > "+tempCdrSetting.NotAllowedCallDateTimeBefore.ToString("yyyy-MM-dd") },//public const int Starttime = 29;
-                    {$@"Validator.BooleanParsers['isDateTimeChecker'].Invoke(obj[15]) == true and 
+                    "StartTime must be a valid datetime and > "+tempCdrSetting.NotAllowedCallDateTimeBefore.ToString("yyyy-MM-dd") },//public const int Starttime = 29;
+                {$@"Validator.BooleanParsers['isDateTimeChecker'].Invoke(obj[15]) == true and 
                         Validator.DateParsers['strToMySqlDtConverter'].Invoke(obj[15]) >= 
                         Validator.DateParsers['strToMySqlDtConverter'].Invoke(obj[29]"+")",
-                        "EndTime must be a valid datetime and >= StartTime" },//public const int Endtime = 15;
-                    {"obj[54] == '1'",
-                        "validflag must be 1" },//public const int Validflag = 54;
-                },
-
-                CommonMediationChecklist = new Dictionary<string, string>()
-                {
-                    { "!String.IsNullOrEmpty(obj.UniqueBillId) and !String.IsNullOrWhiteSpace(obj.UniqueBillId)",
-                        "UniqueBillId cannot be empty" },//public const int Uniquebillid = 98;
-                    { "obj.SequenceNumber > 0",
-                        "SequenceNumber must be > 0" },//public const int Sequencenumber = 2;
-                    {"!String.IsNullOrEmpty(obj.incomingroute) and !String.IsNullOrWhiteSpace(obj.incomingroute)",
-                        "incomingroute cannot be empty" },//public const int Incomingroute = 5;
-                    {"!String.IsNullOrEmpty(obj.OriginatingCalledNumber) and !String.IsNullOrWhiteSpace(obj.OriginatingCalledNumber)",
-                        "OriginatingCalledNumber cannot be empty" },//public const int Originatingcallednumber = 9;
-                    {"obj.DurationSec >= 0",
-                        "durationsec must be >= 0" },//public const int Durationsec = 14;
-                    {"obj.StartTime > date('"+ tempCdrSetting.NotAllowedCallDateTimeBefore.ToString("yyyy-MM-dd") +"')",
-                        "StartTime must be > "+tempCdrSetting.NotAllowedCallDateTimeBefore.ToString("yyyy-MM-dd") },//public const int Starttime = 29;
-                    {"obj.EndTime >= obj.StartTime",
-                        "EndTime must be >= StartTime" },//public const int Endtime = 15;
-                    {"obj.validflag > 0",
-                        "validflag must be > 0" },//public const int Validflag = 54;
-                    { "obj.SwitchId > 0",
-                        "SwitchId must be > 0" },
-                    {"obj.idcall > 0",
-                        "idcall must be > 0" },
-                    {"!String.IsNullOrEmpty(obj.FileName) and !String.IsNullOrWhiteSpace(obj.FileName)",
-                        "FileName cannot be empty" },
-                    {"obj.finalrecord == 1",
-                        "FinalRecord must be 1" },
-                    { "obj.EndTime !=null and obj.EndTime >= obj.StartTime",
-                        "EndTime must be >= StartTime" },
-                    {"obj.durationsec > 0?obj.ChargingStatus == 1: obj.ChargingStatus == 0",
-                        "ChargingStatus must be 1 when durationsec > 0 , otherwise == 0 " },
-                    { "obj.inPartnerId > 0",
-                        "inPartnerId must be > 0" },
-                    { "obj.CallDirection > 0",
-                        "CallDirection must be > 0" },
-                },
-                ServiceGroupConfigurations = new Dictionary<int, ServiceGroupConfiguration>()
-                {
-                    {//1 dictionary iteam=1 service group configuration
-                        1, new ServiceGroupConfiguration(enabled:true)//domestic 
-                        {
-                            PartnerRules = new List<string>() { "PrtInByTg", "PrtOutByTg" },
-                            Ratingtrules = new List<RatingRule>()
-                            {
-                                new RatingRule() {IdServiceFamily = ServiceFamilyType.A2Z,AssignDirection = 1},
-                            },
-                            MediationChecklistForAnsweredCdrs = 
-                                new Dictionary<string, string>()
-                                {
-                                    {"obj.DurationSec >= 0",
-                                        "DurationSec must be >=  0" },
-                                    {"!String.IsNullOrEmpty(obj.outgoingroute) and !String.IsNullOrWhiteSpace(obj.outgoingroute)",
-                                        "outgoingroute cannot be empty" },
-                                    {"obj.outPartnerId > 0",
-                                        "outPartnerId must be > 0" },
-                                    {"!String.IsNullOrEmpty(obj.matchedprefixcustomer) and !String.IsNullOrWhiteSpace(obj.matchedprefixcustomer)",
-                                        "matchedprefixcustomer cannot be empty" },
-                                    {"obj.durationsec > 0 ? obj.CustomerCost > 0 : obj.CustomerCost == 0 ",
-                                        "CustomerCost must be > 0 when durationsec > 0  , otherwise == 0 " },
-                                    {"obj.durationsec > 0?obj.roundedduration > 0: obj.roundedduration >= 0",
-                                        "roundedduration must be > 0 when durationsec >0 , otherwise >= 0 " },
-                                },
-                        }
-                    },//end dictionary item
-                    {// dictionary iteam=1 service group configuration
-                        3, new ServiceGroupConfiguration(enabled:true)//intlInIcx
-                        {
-                            PartnerRules = new List<string>() { "PrtInByTg", "PrtOutByTg" },
-                            Ratingtrules = new List<RatingRule>()
-                            {
-                                new RatingRule() {IdServiceFamily =ServiceFamilyType.A2Z,AssignDirection = 1},
-                            },
-                            MediationChecklistForAnsweredCdrs =
-                                new Dictionary<string, string>()
-                                {
-                                    {"obj.DurationSec >= 0",
-                                        "DurationSec must be >=  0" },
-                                    {"!String.IsNullOrEmpty(obj.outgoingroute) and !String.IsNullOrWhiteSpace(obj.outgoingroute)",
-                                        "outgoingroute cannot be empty" },
-                                    {"obj.outPartnerId > 0",
-                                        "outPartnerId must be > 0" },
-                                    {"!String.IsNullOrEmpty(obj.matchedprefixcustomer) and !String.IsNullOrWhiteSpace(obj.matchedprefixcustomer)",
-                                        "matchedprefixcustomer cannot be empty" },
-                                    {"obj.durationsec > 0 ? obj.CustomerCost > 0 : obj.CustomerCost == 0 ",
-                                        "CustomerCost must be > 0 when durationsec > 0  , otherwise == 0 " },
-                                    {"obj.durationsec > 0?obj.roundedduration > 0: obj.roundedduration >= 0",
-                                        "roundedduration must be > 0 when durationsec >0 , otherwise >= 0 " },
-                                },
-                        }
-                    },//end dictionary item
-                    {
-                        2,new ServiceGroupConfiguration(enabled:true)//intlOutIgw
-                        {
-                            PartnerRules = new List<string>() { "PrtInByTg", "PrtOutByTg" },
-                            Ratingtrules = new List<RatingRule>()
-                            {
-                                new RatingRule() {IdServiceFamily = ServiceFamilyType.XyzIcx, AssignDirection = 0}
-                            },
-                            MediationChecklistForAnsweredCdrs = 
-                                new Dictionary<string, string>()
-                                {
-                                    {"obj.DurationSec >= 0",
-                                        "DurationSec must be >=  0" },
-                                    {"!String.IsNullOrEmpty(obj.CountryCode) and !String.IsNullOrWhiteSpace(obj.CountryCode)",
-                                        "CountryCode cannot be empty" },
-                                    {"!String.IsNullOrEmpty(obj.outgoingroute) and !String.IsNullOrWhiteSpace(obj.outgoingroute)",
-                                        "outgoingroute cannot be empty" },
-                                    {"obj.outPartnerId > 0",
-                                        "outPartnerId must be > 0" },
-                                    {"!String.IsNullOrEmpty(obj.MatchedPrefixY) and !String.IsNullOrWhiteSpace(obj.MatchedPrefixY)",
-                                        "MatchedPrefixY cannot be empty" },
-                                    {"obj.durationsec > 0 ? obj.RevenueIGWOut > 0 : obj.RevenueIGWOut == 0 ",
-                                        "RevenueIGWOut must be > 0 when durationsec > 0 , otherwise == 0" },
-                                    {"obj.durationsec > 0 ? obj.SubscriberChargeXOut > 0 : obj.SubscriberChargeXOut == 0 ",
-                                        "SubscriberChargeXOut must be > 0 when durationsec > 0 , otherwise == 0" },
-                                    {"obj.durationsec > 0 ? obj.CarrierCostYIGWOut > 0 : obj.CarrierCostYIGWOut == 0 ",
-                                        "CarrierCostYIGWOut must be > 0 when durationsec > 0 , otherwise == 0" },
-                                    {"obj.durationsec > 0 ? obj.RevenueIGWOut > 0 : obj.RevenueIGWOut == 0 ",
-                                        "RevenueIGWOut must be > 0 when durationsec > 0 , otherwise == 0" },
-                                    {"obj.PartialFlag >= 0",
-                                        "PartialFlag must be >=  0" },
-                                    {"obj.field1 >= 0",
-                                        "field1 must be >=  0" },
-                                    {"obj.field2 >= 0",
-                                        "field2 must be >=  0" },
-                                    {"obj.durationsec > 0 ? obj.roundedduration > 0 : obj.roundedduration == 0 ",
-                                        "roundedduration must be > 0 when durationsec > 0 , otherwise == 0" },
-
-                                },
-                        }
-                    }
-                }
+                    "EndTime must be a valid datetime and >= StartTime" },//public const int Endtime = 15;
+                {"obj[54] == '1'",
+                    "validflag must be 1" },//public const int Validflag = 54;
             };
+            this.Tbc.CdrSetting.CommonMediationChecklist = new Dictionary<string, string>()
+            {
+                { "!String.IsNullOrEmpty(obj.UniqueBillId) and !String.IsNullOrWhiteSpace(obj.UniqueBillId)",
+                    "UniqueBillId cannot be empty" },//public const int Uniquebillid = 98;
+                { "obj.SequenceNumber > 0",
+                    "SequenceNumber must be > 0" },//public const int Sequencenumber = 2;
+                {"!String.IsNullOrEmpty(obj.incomingroute) and !String.IsNullOrWhiteSpace(obj.incomingroute)",
+                    "incomingroute cannot be empty" },//public const int Incomingroute = 5;
+                {"!String.IsNullOrEmpty(obj.OriginatingCalledNumber) and !String.IsNullOrWhiteSpace(obj.OriginatingCalledNumber)",
+                    "OriginatingCalledNumber cannot be empty" },//public const int Originatingcallednumber = 9;
+                {"obj.DurationSec >= 0",
+                    "durationsec must be >= 0" },//public const int Durationsec = 14;
+                {"obj.StartTime > date('"+ tempCdrSetting.NotAllowedCallDateTimeBefore.ToString("yyyy-MM-dd") +"')",
+                    "StartTime must be > "+tempCdrSetting.NotAllowedCallDateTimeBefore.ToString("yyyy-MM-dd") },//public const int Starttime = 29;
+                {"obj.EndTime >= obj.StartTime",
+                    "EndTime must be >= StartTime" },//public const int Endtime = 15;
+                {"obj.validflag > 0",
+                    "validflag must be > 0" },//public const int Validflag = 54;
+                { "obj.SwitchId > 0",
+                    "SwitchId must be > 0" },
+                {"obj.idcall > 0",
+                    "idcall must be > 0" },
+                {"!String.IsNullOrEmpty(obj.FileName) and !String.IsNullOrWhiteSpace(obj.FileName)",
+                    "FileName cannot be empty" },
+                {"obj.finalrecord == 1",
+                    "FinalRecord must be 1" },
+                { "obj.EndTime !=null and obj.EndTime >= obj.StartTime",
+                    "EndTime must be >= StartTime" },
+                {"obj.durationsec > 0?obj.ChargingStatus == 1: obj.ChargingStatus == 0",
+                    "ChargingStatus must be 1 when durationsec > 0 , otherwise == 0 " },
+                { "obj.inPartnerId > 0",
+                    "inPartnerId must be > 0" },
+                { "obj.CallDirection > 0",
+                    "CallDirection must be > 0" },
+            };
+            this.Tbc.CdrSetting.ServiceGroupConfigurations = new Dictionary<int, ServiceGroupConfiguration>();
+            this.Tbc.CdrSetting.ServiceGroupConfigurations.Add(1, new ServiceGroupConfiguration(enabled: true)//domestic 
+            {
+                PartnerRules = new List<string>() { "PrtInByTg", "PrtOutByTg" },
+                Ratingtrules = new List<RatingRule>()
+                {
+                    new RatingRule() {IdServiceFamily = ServiceFamilyType.A2Z,AssignDirection = 1},
+                },
+                MediationChecklistForAnsweredCdrs =
+                    new Dictionary<string, string>()
+                    {
+                        {"obj.DurationSec >= 0",
+                            "DurationSec must be >=  0" },
+                        {"!String.IsNullOrEmpty(obj.outgoingroute) and !String.IsNullOrWhiteSpace(obj.outgoingroute)",
+                            "outgoingroute cannot be empty" },
+                        {"obj.outPartnerId > 0",
+                            "outPartnerId must be > 0" },
+                        {"!String.IsNullOrEmpty(obj.matchedprefixcustomer) and !String.IsNullOrWhiteSpace(obj.matchedprefixcustomer)",
+                            "matchedprefixcustomer cannot be empty" },
+                        {"obj.durationsec > 0 ? obj.CustomerCost > 0 : obj.CustomerCost == 0 ",
+                            "CustomerCost must be > 0 when durationsec > 0  , otherwise == 0 " },
+                        {"obj.durationsec > 0?obj.roundedduration > 0: obj.roundedduration >= 0",
+                            "roundedduration must be > 0 when durationsec >0 , otherwise >= 0 " },
+                    },
+            });
+            this.Tbc.CdrSetting.ServiceGroupConfigurations.Add(3, value: new ServiceGroupConfiguration(enabled:true)//intlInIcx
+            {
+                PartnerRules = new List<string>() { "PrtInByTg", "PrtOutByTg" },
+                Ratingtrules = new List<RatingRule>()
+                {
+                    new RatingRule() {IdServiceFamily =ServiceFamilyType.A2Z,AssignDirection = 1},
+                },
+                MediationChecklistForAnsweredCdrs =
+                    new Dictionary<string, string>()
+                    {
+                        {"obj.DurationSec >= 0",
+                            "DurationSec must be >=  0" },
+                        {"!String.IsNullOrEmpty(obj.outgoingroute) and !String.IsNullOrWhiteSpace(obj.outgoingroute)",
+                            "outgoingroute cannot be empty" },
+                        {"obj.outPartnerId > 0",
+                            "outPartnerId must be > 0" },
+                        {"!String.IsNullOrEmpty(obj.matchedprefixcustomer) and !String.IsNullOrWhiteSpace(obj.matchedprefixcustomer)",
+                            "matchedprefixcustomer cannot be empty" },
+                        {"obj.durationsec > 0 ? obj.CustomerCost > 0 : obj.CustomerCost == 0 ",
+                            "CustomerCost must be > 0 when durationsec > 0  , otherwise == 0 " },
+                        {"obj.durationsec > 0?obj.roundedduration > 0: obj.roundedduration >= 0",
+                            "roundedduration must be > 0 when durationsec >0 , otherwise >= 0 " },
+                    },
+            });
+            this.Tbc.CdrSetting.ServiceGroupConfigurations.Add(
+                2, value: new ServiceGroupConfiguration(enabled:true)//intlOutIgw
+            {
+                PartnerRules = new List<string>() { "PrtInByTg", "PrtOutByTg" },
+                Ratingtrules = new List<RatingRule>()
+                {
+                    new RatingRule() {IdServiceFamily = ServiceFamilyType.XyzIcx, AssignDirection = 0}
+                },
+                MediationChecklistForAnsweredCdrs = 
+                    new Dictionary<string, string>()
+                    {
+                        {"obj.DurationSec >= 0",
+                            "DurationSec must be >=  0" },
+                        {"!String.IsNullOrEmpty(obj.CountryCode) and !String.IsNullOrWhiteSpace(obj.CountryCode)",
+                            "CountryCode cannot be empty" },
+                        {"!String.IsNullOrEmpty(obj.outgoingroute) and !String.IsNullOrWhiteSpace(obj.outgoingroute)",
+                            "outgoingroute cannot be empty" },
+                        {"obj.outPartnerId > 0",
+                            "outPartnerId must be > 0" },
+                        {"!String.IsNullOrEmpty(obj.MatchedPrefixY) and !String.IsNullOrWhiteSpace(obj.MatchedPrefixY)",
+                            "MatchedPrefixY cannot be empty" },
+                        {"obj.durationsec > 0 ? obj.RevenueIGWOut > 0 : obj.RevenueIGWOut == 0 ",
+                            "RevenueIGWOut must be > 0 when durationsec > 0 , otherwise == 0" },
+                        {"obj.durationsec > 0 ? obj.SubscriberChargeXOut > 0 : obj.SubscriberChargeXOut == 0 ",
+                            "SubscriberChargeXOut must be > 0 when durationsec > 0 , otherwise == 0" },
+                        {"obj.durationsec > 0 ? obj.CarrierCostYIGWOut > 0 : obj.CarrierCostYIGWOut == 0 ",
+                            "CarrierCostYIGWOut must be > 0 when durationsec > 0 , otherwise == 0" },
+                        {"obj.PartialFlag >= 0",
+                            "PartialFlag must be >=  0" },
+                        {"obj.field1 >= 0",
+                            "field1 must be >=  0" },
+                        {"obj.field2 >= 0",
+                            "field2 must be >=  0" },
+                        {"obj.durationsec > 0 ? obj.roundedduration > 0 : obj.roundedduration == 0 ",
+                            "roundedduration must be > 0 when durationsec > 0 , otherwise == 0" },
+                    },
+            });
+            
+            
             //write all configuration first in ws_topshelf / bin/debug, for production
             //also, in tester/bin/debug
 
@@ -258,11 +249,11 @@ namespace InstallConfig
                 LocationType = "ftp",
                 OsType = "linux",
                 PathSeparator = "/",
-                StartingPath = "/cdr/ICDR/primary",
+                StartingPath = "/home/zxss10_bsvr/data/bfile/bill/zsmart_media_bak",
                 Sftphostkey = "",
-                ServerIp = "10.10.10.10",
-                User = "ics",
-                Pass = "icsveraz",
+                ServerIp = "10.133.34.12",
+                User = "icxbill",
+                Pass = "icx123",
                 ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
                 IgnoreZeroLenghFile = 1
             };
@@ -289,21 +280,21 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"/",//backslash didn't work with winscp
                 StartingPath = @"/archive",
-                ServerIp = "192.168.2.225", //server = "172.16.16.242",
-                User = "ftpuser",
-                Pass = "Takay1takaane",
+                ServerIp = "10.100.201.20",
+                User = "cdr",
+                Pass = "cdr13531",
                 IgnoreZeroLenghFile = 1
             };
-            FileLocation fileArchiveIof = new FileLocation()//raw cdr archive
+            FileLocation fileArchiveCAS = new FileLocation()//raw cdr archive
             {
-                Name = "FileArchiveIOF",
+                Name = "FileArchiveCAS",
                 LocationType = "ftp",
                 OsType = "linux",
                 PathSeparator = "/",
                 StartingPath = @"/",
-                ServerIp = "172.22.21.11", //server = "172.16.16.242",
-                User = "platinum",
-                Pass = "usr_platinum3!2",
+                ServerIp = "192.168.100.83", //server = "172.16.16.242",
+                User = "adminjibon",
+                Pass = "jibondhara35#",
                 IgnoreZeroLenghFile = 1,
             };
             //add locations to directory settings
@@ -313,7 +304,7 @@ namespace InstallConfig
             this.Tbc.DirectorySettings.FileLocations.Add(JslZteDhk.Name, JslZteDhk);
 
             this.Tbc.DirectorySettings.FileLocations.Add(fileArchive1.Name, fileArchive1);
-            this.Tbc.DirectorySettings.FileLocations.Add(fileArchiveIof.Name, fileArchiveIof);
+            this.Tbc.DirectorySettings.FileLocations.Add(fileArchiveCAS.Name, fileArchiveCAS);
 
 
             //sync pair platinum:Vault
@@ -332,9 +323,9 @@ namespace InstallConfig
                 SrcSettings = new SyncSettingsSource()
                 {
                     SecondaryDirectory = "Downloaded",
-                    ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('icdr')
+                    ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('ICX')
                                                                 and
-                                                                (Name.EndsWith('.0') or Name.EndsWith('.1'))
+                                                                (Name.EndsWith('.DAT'))
                                                                 and Length>0")
                 },
                 DstSettings = new SyncSettingsDest()
@@ -379,18 +370,18 @@ namespace InstallConfig
                     )
                 }
             };
-            //sync pair Vault_S3:IOF
-            SyncPair vaultS3Iof = new SyncPair("Vault:IOF")
+            //sync pair vault:CAS
+            SyncPair vaultS3CAS = new SyncPair("Vault:CAS")
             {
                 SkipCopyingToDestination = false,
                 SkipSourceFileListing = true,
-                SrcSyncLocation = new SyncLocation("Vault_S3")
+                SrcSyncLocation = new SyncLocation("Vault_JslZteDhk")
                 {
                     FileLocation = vaultJslZteDhk
                 },
-                DstSyncLocation = new SyncLocation("IOF")
+                DstSyncLocation = new SyncLocation("CAS")
                 {
-                    FileLocation = fileArchiveIof
+                    FileLocation = fileArchiveCAS
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
@@ -409,7 +400,7 @@ namespace InstallConfig
             //add sync pairs to directory config
             directorySetting.SyncPairs.Add(JslZteDhkVault.Name, JslZteDhkVault);
             directorySetting.SyncPairs.Add(vaultS3FileArchive1.Name, vaultS3FileArchive1);
-            directorySetting.SyncPairs.Add(vaultS3Iof.Name, vaultS3Iof);
+            directorySetting.SyncPairs.Add(vaultS3CAS.Name, vaultS3CAS);
             //load the syncpairs in dictioinary, first by source
             foreach (SyncPair sp in directorySetting.SyncPairs.Values)
             {
@@ -428,7 +419,7 @@ namespace InstallConfig
             //add archive locations to CdrSettings
             this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>();
             this.Tbc.CdrSetting.BackupSyncPairNames.Add(vaultS3FileArchive1.Name);
-            this.Tbc.CdrSetting.BackupSyncPairNames.Add(vaultS3Iof.Name);
+            this.Tbc.CdrSetting.BackupSyncPairNames.Add(vaultS3CAS.Name);
 
 
             //configuration for server1

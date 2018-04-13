@@ -22,10 +22,10 @@ namespace TelcobrightMediation
             newSummary.tup_switchid = Convert.ToInt32(cdrExt.Cdr.SwitchId);
             newSummary.tup_inpartnerid = Convert.ToInt32(cdrExt.Cdr.inPartnerId);
             newSummary.tup_outpartnerid = Convert.ToInt32(cdrExt.Cdr.outPartnerId);
-            newSummary.tup_incomingroute = cdrExt.Cdr.incomingroute.AlternateStringIfNull("");
-            newSummary.tup_outgoingroute = cdrExt.Cdr.outgoingroute.AlternateStringIfNull("");
-            newSummary.tup_incomingip = cdrExt.Cdr.OriginatingIP.AlternateStringIfNull("");
-            newSummary.tup_outgoingip = cdrExt.Cdr.TerminatingIP.AlternateStringIfNull("");
+            newSummary.tup_incomingroute = cdrExt.Cdr.incomingroute.ReplaceNullWith("");
+            newSummary.tup_outgoingroute = cdrExt.Cdr.outgoingroute.ReplaceNullWith("");
+            newSummary.tup_incomingip = cdrExt.Cdr.OriginatingIP.ReplaceNullWith("");
+            newSummary.tup_outgoingip = cdrExt.Cdr.TerminatingIP.ReplaceNullWith("");
             newSummary.tup_customerrate = 0;
             newSummary.tup_supplierrate = 0;
             newSummary.totalcalls = 1;

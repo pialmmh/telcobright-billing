@@ -6,7 +6,7 @@ namespace LibraryExtensions
     {
         public static string ToSqlField(this DateTime? val,string dateFormat)
         {
-            string str = val.AlternateStringIfNull("null", dateFormat);
+            string str = val.ReplaceNullWith("null", dateFormat);
             return string.Equals(str, "null", StringComparison.InvariantCultureIgnoreCase) ? str : str.EncloseWith("'");
         }
         public static string ToSqlField(this DateTime val, string dateFormat)
@@ -15,20 +15,20 @@ namespace LibraryExtensions
         }
         public static string ToSqlField(this string val)
         {
-            string str = val.AlternateStringIfNull("null");
+            string str = val.ReplaceNullWith("null");
             return string.Equals(str,"null", StringComparison.InvariantCultureIgnoreCase)?str : str.EncloseWith("'");
         }
         public static string ToSqlField(this char? val)
         {
-            return val.AlternateStringIfNull("null");
+            return val.ReplaceNullWith("null");
         }
         public static string ToSqlField(this long? val)
         {
-            return val.AlternateStringIfNull("null");
+            return val.ReplaceNullWith("null");
         }
         public static string ToSqlField(this double? val)
         {
-            return val.AlternateStringIfNull("null");
+            return val.ReplaceNullWith("null");
         }
         public static string ToSqlField(this double val)
         {
@@ -40,7 +40,7 @@ namespace LibraryExtensions
         }
         public static string ToSqlField(this decimal? val)
         {
-            return val.AlternateStringIfNull("null");
+            return val.ReplaceNullWith("null");
         }
         public static string ToSqlField(this decimal val)
         {
@@ -52,7 +52,7 @@ namespace LibraryExtensions
         }
         public static string ToSqlField(this Single? val)
         {
-            return val.AlternateStringIfNull("null");
+            return val.ReplaceNullWith("null");
         }
         public static string ToSqlField(this long val)
         {
@@ -61,11 +61,11 @@ namespace LibraryExtensions
 
         public static string ToSqlField(this int? val)
         {
-            return val.AlternateStringIfNull("null");
+            return val.ReplaceNullWith("null");
         }
         public static string ToSqlField(this short? val)
         {
-            return val.AlternateStringIfNull("null");
+            return val.ReplaceNullWith("null");
         }
         public static string ToSqlField(this int val)
         {
@@ -78,7 +78,7 @@ namespace LibraryExtensions
         
         public static string ToSqlField(this sbyte? val)
         {
-            return val.AlternateStringIfNull("null");
+            return val.ReplaceNullWith("null");
         }
         public static string ToSqlField(this sbyte val)
         {
@@ -86,7 +86,7 @@ namespace LibraryExtensions
         }
         public static string ToSqlField(this byte? val)
         {
-            return val.AlternateStringIfNull("null");
+            return val.ReplaceNullWith("null");
         }
         public static string ToSqlField(this byte val)
         {

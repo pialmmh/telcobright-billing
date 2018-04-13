@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using TelcobrightFileOperations;
 using System.Reflection;
+using System.Text;
 using LibraryExtensions;
 using LibraryExtensions.ConfigHelper;
 using MediationModel;
@@ -23,6 +24,21 @@ using TelcobrightMediation.Scheduler.Quartz;
 //using CrystalQuartzTest;
 namespace InstallConfig
 {
+    internal enum RouteType
+    {
+        National=1,
+        International=2
+    }
+    internal class ParnerRouteImportInfo
+    {
+        public string PartnerName { get; set; }
+        public int IdPartner { get; set; }
+        public int SwitchId{get; set; }
+        public string DomesticTGs { get; set; }
+        public string InternationalTGs { get; set; }
+        //public string Description { get; set; }//can't use description as route naes are commaseparated in excel row
+        public int Status { get; set; }
+    }
     class ConfigGeneratorMain
     {
         static void Main(string[] args)
@@ -33,7 +49,7 @@ namespace InstallConfig
                 Start:
                 Console.Clear();
                 //tb operator name
-                string tbOperatorName = ConfigurationManager.AppSettings["JsonConfigFileName"].Split('_')[1];
+                string tbOperatorName = ConfigurationManager.AppSettings["JsonConfigFileNameForPortalCopyForSingleOperator"].Split('_')[1];
 
                 Console.WriteLine("Welcome to Telcobright Initial Configuration Utility");
                 Console.WriteLine("Partner Database Name: [" + tbOperatorName + "]");
@@ -101,18 +117,9 @@ namespace InstallConfig
                             
                         }
                         Console.WriteLine("Config Files have been generated successfully.");
-                        //reset route & partners
-                        Console.WriteLine("Reset Partner & Routes (Y/N)? this will clear routes, partners, partnerprefix & accounts.");
-                        ConsoleKeyInfo keyInfo = Console.ReadKey();
-                        if (keyInfo.KeyChar == 'Y' || keyInfo.KeyChar == 'y')
-                        {
-                            ConfigureQuartzJobStore(operatorConfigs, configPathHelper, schedulerSetting);//configure job store for all opeartors
-                            Console.WriteLine();
-                            Console.WriteLine("Job store has been reset successfully.");
-                        }
                         //reset job store
                         Console.WriteLine("Reset QuartzJob Store (Y/N)? this will clear all job data.");
-                        keyInfo = Console.ReadKey();
+                        ConsoleKeyInfo keyInfo = Console.ReadKey();
                         if (keyInfo.KeyChar == 'Y' || keyInfo.KeyChar == 'y')
                         {
                             ConfigureQuartzJobStore(operatorConfigs, configPathHelper, schedulerSetting);//configure job store for all opeartors
@@ -161,14 +168,89 @@ namespace InstallConfig
                 quartzManager.CreateJobs<QuartzTelcobrightProcessWrapper>(tbc.SchedulerDaemonConfigs);
             }
         }
-        static void ConfigurePartnerAndRoutes(List<TelcobrightConfig> operatorConfigs, 
+        static void ResetParnerRoutes(TelcobrightConfig tbc, 
             ConfigPathHelper configPathHelper)
         {
-            foreach (var tbc in operatorConfigs)
+            string constr =
+                "server=" + tbc.DatabaseSetting.ServerName + ";User Id=" + tbc.DatabaseSetting.AdminUserName +
+                ";password=" + tbc.DatabaseSetting.AdminPassword + ";Persist Security Info=True;" +
+                "database="+tbc.DatabaseSetting.DatabaseName+";";
+            using (MySqlConnection con = new MySqlConnection(constr))
             {
-                
+                con.Open();
+                using (MySqlCommand cmd = new MySqlCommand("", con))
+                {
+                    try
+                    {
+                        string routeImportFilename =
+                            configPathHelper.GetOperatorWiseConfigDirInUtil(tbc.DatabaseSetting.DatabaseName)
+                            + Path.DirectorySeparatorChar + tbc.DatabaseSetting.DatabaseName + "Routes.json";
+                        List<ParnerRouteImportInfo> parnerRouteImportInfos =
+                            JsonConvert.DeserializeObject<List<ParnerRouteImportInfo>>(
+                                File.ReadAllText(routeImportFilename));
+                        List<route> allRoutes = new List<route>();
+                        Func<string, int, int, int,int,route> singleRouteCreator =
+                            (routeName, switchId, idPartner, routeType,status) => new route()
+                            {
+                                RouteName = routeName,
+                                SwitchId = switchId,
+                                idPartner = idPartner,
+                                NationalOrInternational = routeType,
+                                Status = status
+                            };
+                        Func<ParnerRouteImportInfo, List<route>> multipleRoutesCreator = p =>
+                        {
+                            List<route> routes = new List<route>();
+                            List<string> routeNames= p.DomesticTGs?.Split(',').Select(strRoute => strRoute
+                                    .Trim()).ToList();
+                            routeNames?.ForEach(tg => 
+                                    routes.Add(singleRouteCreator(tg, p.SwitchId, p.IdPartner,
+                                        (int)RouteType.National,p.Status)));
+                            routeNames = p.InternationalTGs?.Split(',').Select(strRoute => strRoute
+                                .Trim()).ToList();
+                            routeNames?.ForEach(tg => 
+                                    routes.Add(singleRouteCreator(tg, p.SwitchId, p.IdPartner,
+                                        (int)RouteType.International,p.Status)));
+                            return routes;
+                        };
+                        foreach (ParnerRouteImportInfo parnerRouteImportInfo in parnerRouteImportInfos)
+                        {
+                            allRoutes.AddRange(multipleRoutesCreator(parnerRouteImportInfo));
+                        }
+                        var duplicateRoutes = allRoutes.GroupBy(r =>
+                                new StringBuilder(r.SwitchId.ToString()).Append("-").Append(r.RouteName).ToString())
+                            .Where(g => g.Count() > 1)
+                            .Select(g => g.Key).ToList();
+                        if (duplicateRoutes.Any())
+                        {
+                            throw new NotSupportedException($@"Duplicate route names found for same switchId:
+                                                                   {string.Join(",", duplicateRoutes)}");
+                        }
+                        cmd.CommandText = "set autocommit=0;";
+                        cmd.ExecuteNonQuery();
+                        cmd.CommandText = "delete from route;";
+                        cmd.ExecuteNonQuery();
+                        cmd.CommandText = new StringBuilder(StaticExtInsertColumnHeaders.route)
+                            .Append(string.Join(",", allRoutes.Select(c => c.GetExtInsertValues()).ToList()))
+                            .ToString();
+                        cmd.ExecuteNonQuery();
+                        cmd.CommandText = "commit;";
+                        cmd.ExecuteNonQuery();
+                    }
+                    catch (Exception e)
+                    {
+                        cmd.CommandText = "rollback;";
+                        cmd.ExecuteNonQuery();
+                        Console.WriteLine(e);
+                        throw;
+                    }
+                }
             }
+            Console.WriteLine();
+            Console.WriteLine("Routes have been reset successfully for " + tbc.DatabaseSetting.DatabaseName + ".");
+            
         }
+
         private static void CreateSchedulerDatabaseIfRequired(DatabaseSetting databaseSetting, bool force,
             ConfigPathHelper configPathHelper)
         {
@@ -256,7 +338,7 @@ namespace InstallConfig
             if (kinfo.KeyChar == 'Y' || kinfo.KeyChar == 'y')
             {
                 Console.WriteLine();
-                Console.WriteLine("Resetting partitions...");
+                Console.WriteLine($@"Resetting partitions for {tbc.DatabaseSetting.DatabaseName}...");
                 PartitionManager partitionManager = new PartitionManager(tbc.DatabaseSetting);
                 partitionManager.ResetPartitions();
                 Console.WriteLine("Partitions were reset successfully for "+tbc.DatabaseSetting.DatabaseName);
@@ -265,6 +347,19 @@ namespace InstallConfig
             {
                 Console.WriteLine();
                 Console.WriteLine("Partitions were not reset for "+tbc.DatabaseSetting.DatabaseName);
+            }
+            //reset routes
+            Console.WriteLine(Environment.NewLine + "Reset routes for " + tbc.DatabaseSetting.DatabaseName + "?");
+            ConsoleKeyInfo keyInfo = Console.ReadKey();
+            if (keyInfo.KeyChar == 'Y' || keyInfo.KeyChar == 'y')
+            {
+                ResetParnerRoutes(tbc,configPathHelper); //reset routes per operator with confirmation for each
+                Console.WriteLine();
+            }
+            else
+            {
+                Console.WriteLine();
+                Console.WriteLine("Routes were not reset for " + tbc.DatabaseSetting.DatabaseName);
             }
             NameValueCollection configFiles = (NameValueCollection)ConfigurationManager.GetSection("appSettings");
             foreach (string key in configFiles)
