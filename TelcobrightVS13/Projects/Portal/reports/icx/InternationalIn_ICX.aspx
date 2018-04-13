@@ -529,7 +529,7 @@
              <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" ItemStyle-Wrap="false" />
             <asp:BoundField DataField="ANS" HeaderText="ANS" SortExpression="ANS" />
               <asp:BoundField DataField="IGW" HeaderText="ICX/IOS" SortExpression="IGW" />
-            <asp:BoundField DataField="Int Partner" HeaderText="International Partner" SortExpression="Int Partner" />
+            <asp:BoundField DataField="International Partner" HeaderText="International Partner" SortExpression="International Partner" />
               
             
             <asp:BoundField DataField="CallsCount" 

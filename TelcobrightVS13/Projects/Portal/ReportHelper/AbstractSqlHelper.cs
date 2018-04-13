@@ -28,7 +28,8 @@ namespace PortalApp
                 { "Yearly","year(tup_starttime)"},
                 { "Monthly","concat(year(tup_starttime),'-',date_format(date(tup_starttime),'%b'))"},
                 { "Daily","date(tup_starttime)" },
-                { "Hourly","concat(date(tup_starttime),' ',date_format(date(tup_starttime),'%H'),':00')"},
+//                { "Hourly","concat(date(tup_starttime),' ',date_format(date(tup_starttime),'%H'),':00')"},
+                { "Hourly","concat(date(tup_starttime),' ',date_format(tup_starttime,'%H'),':00')"},
                 {"Weekly","concat(year(tup_starttime),'-W',week(tup_starttime))" }
             };
 

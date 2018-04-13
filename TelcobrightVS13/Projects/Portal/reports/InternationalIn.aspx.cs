@@ -10,6 +10,7 @@ using System.Web.UI.WebControls;
 using reports;
 using ExportToExcel;
 using MediationModel;
+using LibraryExtensions;
 using PortalApp.ReportHelper;
 public partial class DefaultRptIntlIn : System.Web.UI.Page
 {
@@ -20,7 +21,7 @@ public partial class DefaultRptIntlIn : System.Web.UI.Page
     {
 
         string StartDate =txtDate.Text;
-        string EndtDate =txtDate1.Text;
+        string EndtDate = (txtDate1.Text.ConvertToDateTimeFromMySqlFormat()).AddSeconds(1).ToMySqlStyleDateTimeStrWithoutQuote();
         string tableName = DropDownListReportSource.SelectedValue + "03";
 
         string groupInterval = getSelectedRadioButtonText();
@@ -35,15 +36,16 @@ public partial class DefaultRptIntlIn : System.Web.UI.Page
                          
                          new List<string>()
                             {
+                                groupInterval=="Hourly"?"tup_starttime":string.Empty,
                                 CheckBoxPartner.Checked==true?"tup_inpartnerid":string.Empty,
                                 CheckBoxShowByAns.Checked==true?"tup_destinationId":string.Empty,
                                 CheckBoxShowByIgw.Checked==true?"tup_outpartnerid":string.Empty,
                             },
                          new List<string>()
                             {
-                                DropDownListPartner.SelectedIndex>0?" tup_inpartnerid="+DropDownListPartner.SelectedValue:string.Empty,
-                                DropDownListAns.SelectedIndex>0?" tup_destinationId="+DropDownListAns.SelectedValue:string.Empty,
-                                DropDownListIgw.SelectedIndex>0?" tup_outpartnerid="+DropDownListIgw.SelectedValue:string.Empty
+                                CheckBoxPartner.Checked==true?DropDownListPartner.SelectedIndex>0?" tup_inpartnerid="+DropDownListPartner.SelectedValue:string.Empty:string.Empty,
+                                CheckBoxShowByAns.Checked==true?DropDownListAns.SelectedIndex>0?" tup_destinationId="+DropDownListAns.SelectedValue:string.Empty:string.Empty,
+                                CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_outpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty
                             }).getSQLString();
 
        

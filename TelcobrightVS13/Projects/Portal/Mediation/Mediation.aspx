@@ -4,6 +4,7 @@
 <%--Common--%>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Import Namespace="MediationModel" %>
+<%@ Import Namespace="PortalApp" %>
 
 <%----%>
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
