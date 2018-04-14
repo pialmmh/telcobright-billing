@@ -135,9 +135,8 @@ namespace WS_Telcobright_Topshelf
                 {
                     telcobrightpartner tbPartner = context.telcobrightpartners
                         .Where(p => p.databasename == tbc.DatabaseSetting.DatabaseName).ToList().First();
-                    tbc.IdTelcobrightPartner = tbPartner.idCustomer;
                 }
-                    
+
                 operatorWiseConfigs.Add(configFileNameAsOperatorName, tbc);
             }
             return operatorWiseConfigs;

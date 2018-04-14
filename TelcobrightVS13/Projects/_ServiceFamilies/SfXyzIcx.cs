@@ -37,7 +37,7 @@ namespace TelcobrightMediation
             List<TupleByPeriod> tups = GetServiceTuple(serviceContext, answerTime);
             if (tups == null) return null;
             Rateext matchedRateWithIdRatePlanAssignTuple = pr.MatchPrefix(phoneNumber, category, subCategory
-                                                            , tups, answerTime, flagLcr);
+                                                            , tups, answerTime, flagLcr,useInMemoryTable:true);
             if (matchedRateWithIdRatePlanAssignTuple == null) return null;
             AccChargeableExt chargeableExt=
             new XyzRuleHelper(serviceContext.MefServiceFamilyContainer.UsdBcsCache ,pr, this).ExecuteXyzRating(matchedRateWithIdRatePlanAssignTuple, cdrExt,serviceContext, "icx");

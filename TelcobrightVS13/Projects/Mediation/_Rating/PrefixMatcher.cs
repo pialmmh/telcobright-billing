@@ -26,14 +26,14 @@ namespace TelcobrightMediation
             this.DicRatePlan =serviceContext.MefServiceFamilyContainer.RateCache.DicRatePlan;
         }
         public Rateext MatchPrefix(string phoneNumber, int category, int subCategory, List<TupleByPeriod> tups, DateTime answerTime,
-            bool flagLcr)
+            bool flagLcr, bool useInMemoryTable)
         {
             //TupleByPeriod=one rateplanassignmenttuple on the day of answertime
             List<Dictionary<string, RatesWithAssignmentTuple>> priorityWisePrefixDicWithAssignTuple = new List<Dictionary<string, RatesWithAssignmentTuple>>();
             foreach (TupleByPeriod tup in tups.OrderBy(c => c.Priority).ToList())
             {
                 Dictionary<string, List<Rateext>> prefixDic = null;
-                prefixDic = GetPrefixWiseRateInstances(tup, flagLcr);
+                prefixDic = GetPrefixWiseRateInstances(tup, flagLcr,useInMemoryTable);
                 Dictionary<string,RatesWithAssignmentTuple> prefixDicWithAssignmentTuples
                     =new Dictionary<string, RatesWithAssignmentTuple>();
                 foreach (KeyValuePair<string, List<Rateext>> kv in prefixDic)
@@ -83,11 +83,11 @@ namespace TelcobrightMediation
         }
 
 
-        public Dictionary<string, List<Rateext>> GetPrefixWiseRateInstances(TupleByPeriod tup, bool flagLcr)
+        public Dictionary<string, List<Rateext>> GetPrefixWiseRateInstances(TupleByPeriod tup, bool flagLcr,bool useInMemoryTable)
         {
             //TupleByPeriod=one rateplanassignmenttuple on the day of answertime
             Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>> dicRatesByDay
-                = this.ServiceContext.MefServiceFamilyContainer.RateCache.GetRateDictsByDay(tup.DRange, flagLcr);
+                = this.ServiceContext.MefServiceFamilyContainer.RateCache.GetRateDictsByDay(tup.DRange, flagLcr,useInMemoryTable);
             Dictionary<string, List<Rateext>> dicRatesByPrefix = null;
             if (dicRatesByDay != null)
             {

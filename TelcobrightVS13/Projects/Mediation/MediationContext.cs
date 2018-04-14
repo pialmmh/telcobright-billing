@@ -7,6 +7,7 @@ using System.Linq;
 using MediationModel;
 using MySql.Data.MySqlClient;
 using System.Data;
+using System.Data.Entity;
 using System.Data.Common;
 using TelcobrightMediation.Config;
 using FlexValidation;
@@ -55,7 +56,8 @@ namespace TelcobrightMediation
             this.Context = context;
             this.MefDecoderContainer = new MefDecoderContainer(this.Context);
             this.MefServiceFamilyContainer = new MefServiceFamilyContainer();
-            this.Nes = context.nes.Where(c => c.idCustomer == tbc.IdTelcobrightPartner)
+            this.Nes = context.nes.Include(n=>n.telcobrightpartner)
+                .Where(n => n.telcobrightpartner.databasename == tbc.DatabaseSetting.DatabaseName)
                 .ToDictionary(c => c.idSwitch.ToString());
             this.SwitchWiseLookups = new Dictionary<int, SwitchWiseLookup>();
             this.ServiceGroupConfigurations = new Dictionary<int, Dictionary<int, ServiceGroupConfiguration>>();
@@ -98,7 +100,7 @@ namespace TelcobrightMediation
             DateRange dRange = new DateRange() {StartDate = DateTime.Today, EndDate = DateTime.Today.AddDays(1)};
             this.MefServiceFamilyContainer.RateCache =
                 new RateCache(
-                    context.telcobrightpartners.First(c => c.idCustomer == this.Tbc.IdTelcobrightPartner)
+                    context.telcobrightpartners.First(c => c.databasename == this.Tbc.DatabaseSetting.DatabaseName)
                         .RateDictionaryMaxRecords, this.Context)
                 {
                     DicRatePlan = context.rateplans.Include("enumbillingspan")

@@ -64,8 +64,13 @@ namespace UnitTesterManual
                     tbc.GetPathIndependentApplicationDirectory();
                     {
                         ne ne = context.nes.Include(n => n.telcobrightpartner)
-                            .Where(n => n.telcobrightpartner.databasename == this.OperatorName &&
-                                        (n.SkipCdrDecoded == null || n.SkipCdrDecoded != 1)).ToList().First();
+                            .Where(n => n.telcobrightpartner.databasename == tbc.DatabaseSetting.DatabaseName &&
+                                        (n.SkipCdrDecoded == null || n.SkipCdrDecoded != 1)).ToList().FirstOrDefault();
+                        if (ne == null)
+                        {
+                            Console.WriteLine("No ne found configured for CdrProcessing, exiting...");
+                            return;
+                        }
                         List<job> incompleteJobs = context.jobs
                             .Where(c => c.idjobdefinition == 1 && c.Status==7 && c.CompletionTime == null
                                         && c.idNE == ne.idSwitch).ToList();

@@ -55,7 +55,7 @@ namespace TelcobrightMediation
             List<TupleByPeriod> tups = GetServiceTuple(serviceContext, answerTime);
             if (tups == null) return null;
             Rateext matchedRateWithAssignmentTupleId = pr.MatchPrefix(phoneNumber, category, subCategory, tups,
-                answerTime, flagLcr);
+                answerTime, flagLcr,useInMemoryTable:true);
             if (matchedRateWithAssignmentTupleId == null) return null;
 
             //iof over selling rule

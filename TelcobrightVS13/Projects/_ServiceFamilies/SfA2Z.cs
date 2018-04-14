@@ -27,7 +27,8 @@ namespace ServiceFamilies
             A2ZRater a2Z = new A2ZRater(serviceContext, cdr);
             decimal finalDuration = 0;
             decimal finalAmount = 0;
-            Rateext matchedRateWithAssignmentTupleId = a2Z.ExecuteA2Z(out finalDuration, out finalAmount, flagLcr);
+            Rateext matchedRateWithAssignmentTupleId = a2Z.ExecuteA2Z(out finalDuration, out finalAmount, flagLcr,
+                useInMemoryTable:true);
             acc_chargeable chargeable = null;
             account postingAccount = null;
             if (matchedRateWithAssignmentTupleId != null)

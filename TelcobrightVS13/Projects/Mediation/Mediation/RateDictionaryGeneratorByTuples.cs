@@ -63,7 +63,7 @@ namespace TelcobrightMediation
             this.Context=context;
             this._rateContainer = rateContainer;
         }
-        public Dictionary<TupleByPeriod, List<Rateext>> GetRateDict()
+        public Dictionary<TupleByPeriod, List<Rateext>> GetRateDict(bool useInMemoryTable)
         {
 
             if (this.IdService < 1)//service must be selected
@@ -136,7 +136,7 @@ namespace TelcobrightMediation
 
                 //order by prefix ascending and startdate descending
                 List<Rateext> lstRates = new List<Rateext>();
-                lstRates = rateList.GetAllRates().ToList()
+                lstRates = rateList.GetAllRates(useInMemoryTable).ToList()
                     .OrderBy(c => c.Priority).ThenBy(c => c.Prefix).ThenByDescending(c => c.P_Startdate).ToList();
                 this._dicTupRates.Add(rt, lstRates);
             }

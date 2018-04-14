@@ -41,7 +41,7 @@ namespace TelcobrightMediation
             return cdr.StartTime <
                    this.ServiceContext.CdrProcessor.CdrJobContext.MediationContext.Tbc.CdrSetting.NotAllowedCallDateTimeBefore;
         }
-        public Rateext ExecuteA2Z(out decimal finalDuration,out decimal finalAmount,bool flagLcr)
+        public Rateext ExecuteA2Z(out decimal finalDuration,out decimal finalAmount,bool flagLcr, bool useInMemoryTable)
         {
             //set out params defaults
             finalDuration = 0;
@@ -61,7 +61,7 @@ namespace TelcobrightMediation
             List<TupleByPeriod> tups = GetAssignmentTuples(this.ServiceContext.IdServiceGroup.ToString());
             if(tups==null) return null;
             Rateext thisRateWithAssigmentTupleId = this.PrefixMatcher.MatchPrefix(phoneNumber, category, subCategory,
-                tups, Convert.ToDateTime(this.Cdr.AnswerTime), flagLcr);
+                tups, Convert.ToDateTime(this.Cdr.AnswerTime), flagLcr,useInMemoryTable);
             if (thisRateWithAssigmentTupleId == null) return null;
             finalDuration = 0;
             finalDuration = this.PrefixMatcher.A2ZDuration(this.Cdr.DurationSec, thisRateWithAssigmentTupleId);

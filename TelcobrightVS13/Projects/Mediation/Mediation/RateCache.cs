@@ -36,14 +36,14 @@ namespace TelcobrightMediation
         }
 
         public Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>>
-            GetRateDictsByDay(DateRange dRange,bool flagLcr)
+            GetRateDictsByDay(DateRange dRange,bool flagLcr,bool useInMemoryTable)
         {
             Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>> todaysDict = null;
 
             this.DateRangeWiseRateDic.TryGetValue(dRange, out todaysDict);
             if (todaysDict == null)
             {
-                PopulateDicByDay(dRange,flagLcr);
+                PopulateDicByDay(dRange,flagLcr,useInMemoryTable);
                 this.DateRangeWiseRateDic.TryGetValue(dRange, out todaysDict);
             }
             
@@ -67,7 +67,7 @@ namespace TelcobrightMediation
         }
 
 
-        public void PopulateDicByDay(DateRange dRange,bool flagLcr)
+        public void PopulateDicByDay(DateRange dRange,bool flagLcr, bool useInMemoryTable)
         {
             using (DbCommand cmd=this.Context.Database.Connection.CreateCommand())
             {
@@ -92,21 +92,21 @@ namespace TelcobrightMediation
                 (new TupleByPeriod.EqualityComparer());
 
             //for non assignable services
-            Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>> tempDic = GetRateDicNonPartnerAssignable(dRange,flagLcr);
+            Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>> tempDic = GetRateDicNonPartnerAssignable(dRange,flagLcr,useInMemoryTable);
             foreach (KeyValuePair<TupleByPeriod, Dictionary<string, List<Rateext>>> kv in tempDic)
             {
                 dicByDay.Add(kv.Key, kv.Value);
             }
 
             //assignable services, direction=customer
-            tempDic = GetRateDicPartnerAssignable(dRange, ServiceAssignmentDirection.Customer,flagLcr);
+            tempDic = GetRateDicPartnerAssignable(dRange, ServiceAssignmentDirection.Customer,flagLcr,useInMemoryTable);
             foreach (KeyValuePair<TupleByPeriod, Dictionary<string, List<Rateext>>> kv in tempDic)
             {
                 dicByDay.Add(kv.Key, kv.Value);
             }
 
             //assignable services, direction=supplier
-            tempDic = GetRateDicPartnerAssignable(dRange, ServiceAssignmentDirection.Supplier,flagLcr);
+            tempDic = GetRateDicPartnerAssignable(dRange, ServiceAssignmentDirection.Supplier,flagLcr,useInMemoryTable);
             foreach (KeyValuePair<TupleByPeriod, Dictionary<string, List<Rateext>>> kv in tempDic)
             {
                 dicByDay.Add(kv.Key, kv.Value);
@@ -120,7 +120,8 @@ namespace TelcobrightMediation
             this.DateRangeWiseRateDic.Add(dRange, dicByDay);
         }
 
-        private Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>> GetRateDicNonPartnerAssignable(DateRange dRange,bool flagLcr)
+        private Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>> GetRateDicNonPartnerAssignable(DateRange dRange,bool flagLcr,
+            bool useInMemoryTable)
         {
             Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>> dicRateDic =
                 new Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>>
@@ -137,7 +138,7 @@ namespace TelcobrightMediation
 
                     //order by prefix ascending and startdate descending
                     Dictionary<TupleByPeriod, List<Rateext>>
-                        dicRateList = dicGenerator.GetRateDict(); //Get the rate dictionary
+                        dicRateList = dicGenerator.GetRateDict(useInMemoryTable); //Get the rate dictionary
                     foreach (KeyValuePair<TupleByPeriod, List<Rateext>> kv in dicRateList)
                     {
                         Dictionary<string, List<Rateext>> dicRates = RateListToDictionary(kv.Value, flagLcr);
@@ -151,7 +152,7 @@ namespace TelcobrightMediation
         }
 
         private Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>> GetRateDicPartnerAssignable(DateRange dRange, ServiceAssignmentDirection assignDir,
-            bool flagLcr)
+            bool flagLcr,bool useInMemoryTable)
         {
             Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>> dicRateDic =
                 new Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>>
@@ -168,7 +169,7 @@ namespace TelcobrightMediation
 
                 //order by prefix ascending and startdate descending
                 Dictionary<TupleByPeriod, List<Rateext>>
-                    dicRateList = dicGenerator.GetRateDict(); //Get the rate dictionary
+                    dicRateList = dicGenerator.GetRateDict(useInMemoryTable); //Get the rate dictionary
                 List<Rateext> combinedList = new List<Rateext>();
                 foreach (KeyValuePair<TupleByPeriod, List<Rateext>> kv in dicRateList)
                 {

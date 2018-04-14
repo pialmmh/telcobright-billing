@@ -51,7 +51,7 @@ namespace TelcobrightMediation
         }
 
 
-        public List<Rateext> GetAllRates()
+        public List<Rateext> GetAllRates(bool useInMemoryTable)
         {
             List<RateAssignWithTuple> lstRatePlans = new List<RateAssignWithTuple>();
 
@@ -61,7 +61,7 @@ namespace TelcobrightMediation
             foreach (RateAssignWithTuple ratePlan in lstRatePlans)
             {
                 //for each rate plans, keep on adding list of rates
-                List<Rateext> newrates = GetRatesByRatePlan(ratePlan);
+                List<Rateext> newrates = GetRatesByRatePlan(ratePlan,useInMemoryTable);
                 lstRates.AddRange(newrates.Select(newRate => this._rateContainer.Append(newRate)));
             }
             //lstRates.OrderBy(c=>c.p)
@@ -133,7 +133,7 @@ namespace TelcobrightMediation
             return lstRatePlan;
         }
 
-        List<Rateext> GetRatesByRatePlan(RateAssignWithTuple ratePlan)
+        List<Rateext> GetRatesByRatePlan(RateAssignWithTuple ratePlan,bool useInMemoryTable)
         {
             List<Rateext> lstRates = new List<Rateext>();
             StringBuilder sbRate = new StringBuilder();
@@ -175,6 +175,8 @@ namespace TelcobrightMediation
             }
             strStartDateByRatePlan += " as startdatebyrateplan, ";
 
+            //when using this method from portal, there are no in memory caching of rates.
+            string rateTableNameBaseOnInMemoryFlag = useInMemoryTable == true ? "temp_rate" : "rate";
 
             sbRate.Append(" select r.*,(select " +
                           (ratePlan.RTup.Priority == null ? " null " : ratePlan.RTup.Priority.ToString()) +
@@ -188,7 +190,7 @@ namespace TelcobrightMediation
                           " (select " + (ratePlan.RTup.IdRoute == null ? "-1" : ratePlan.RTup.IdRoute.ToString()) +
                           ") as idRoute, " +
                           strOpenRatePlan +
-                          " from temp_rate r where ")
+                          $@" from {rateTableNameBaseOnInMemoryFlag} r where ")
                 .Append(ratePlan.IntersectingDateSpan.GetWhereExpressionRates("startdate", "enddate"));
 
             if (ratePlan.RTup.IdRatePlan >= 1) //by single rateplan

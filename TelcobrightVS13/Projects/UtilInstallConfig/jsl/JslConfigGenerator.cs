@@ -18,13 +18,14 @@ namespace InstallConfig
     {
         public string OperatorName { get;}
         public TelcobrightConfig Tbc { get; }
+
         public JslConfigGenerator()
         {
             int thisServerId = 1;
             this.OperatorName = "jsl";
             this.Tbc = new TelcobrightConfig(thisServerId);
-            this.Tbc.IdTelcobrightPartner = 7;
         }
+
         public TelcobrightConfig GenerateConfig(DatabaseSetting schedulerDatabaseSetting)
         {
             if (string.IsNullOrWhiteSpace(this.OperatorName))
