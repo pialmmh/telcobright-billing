@@ -33,13 +33,20 @@ namespace UnitTesterManual
         public string HelpText => "Processes CDR";
         public int ProcessId => 103;
         public string OperatorName { get; set; }
+        public IFileDecoder CdrDecoder { get; set; }
+
+        public MockNewCdrProcessor(string operatorName, IFileDecoder fileDecoder)
+        {
+            this.OperatorName = operatorName;
+            this.CdrDecoder = fileDecoder;
+        }
+
         public void ExecuteJobsWithTests(ITelcobrightJob job,CdrJobInputData cdrJobInputData)
         {
             job.Execute(cdrJobInputData);
         }
-        public void Execute(string operatorName)
+        public void Execute()
         {
-            this.OperatorName = operatorName;
             if (this.OperatorName == string.Empty) throw new NoNullAllowedException("OperatorName must be set.");
             try
             {
@@ -47,16 +54,18 @@ namespace UnitTesterManual
                                              Path.DirectorySeparatorChar + "WS_Topshelf_Quartz" +
                                              Path.DirectorySeparatorChar +
                                              "bin" + Path.DirectorySeparatorChar + "config" +
-                                             Path.DirectorySeparatorChar + "platinum.conf";
+                                             Path.DirectorySeparatorChar + $@"{this.OperatorName}.conf";
                 TelcobrightConfig tbc = ConfigFactory.GetConfigFromFile(configFileName);
-                string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName);
+                string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(this.OperatorName);
                 using (PartnerEntities context = new PartnerEntities(entityConStr))
                 {
                     context.Database.Connection.Open();
                     var mediationContext = new MediationContext(tbc, context);
                     tbc.GetPathIndependentApplicationDirectory();
                     {
-                        ne ne = context.nes.Where(c => c.idSwitch == 1).ToList().First();
+                        ne ne = context.nes.Include(n => n.telcobrightpartner)
+                            .Where(n => n.telcobrightpartner.databasename == this.OperatorName &&
+                                        (n.SkipCdrDecoded == null || n.SkipCdrDecoded != 1)).ToList().First();
                         List<job> incompleteJobs = context.jobs
                             .Where(c => c.idjobdefinition == 1 && c.Status==7 && c.CompletionTime == null
                                         && c.idNE == ne.idSwitch).ToList();
@@ -69,7 +78,7 @@ namespace UnitTesterManual
                                 cmd.ExecuteCommandText("set autocommit=0;"); //transaction started
                                 try
                                 {
-                                    ITelcobrightJob iJob = new MockNewCdrFileJob();
+                                    ITelcobrightJob iJob = new MockNewCdrFileJob(this.CdrDecoder,this.OperatorName);
                                     var cdrJobInputData = new CdrJobInputData(mediationContext, context,ne, telcobrightJob);
                                     iJob.Execute(cdrJobInputData); //execute job, this includes commit if successful,
                                 } //commit is done inside "cdrjob" as segmented jobs need commit inside for segments
@@ -119,7 +128,7 @@ namespace UnitTesterManual
             } //try
             catch (Exception e1)
             {
-                ErrorWriter wr = new ErrorWriter(e1, "ProcessCdr", null, "", operatorName);
+                ErrorWriter wr = new ErrorWriter(e1, "ProcessCdr", null, "", "mockNewCdrProcessor");
             }
         }
 

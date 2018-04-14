@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Decoders;
 using TelcobrightMediation;
 
 namespace UnitTesterManual
@@ -11,7 +12,8 @@ namespace UnitTesterManual
     {
         static void Main(string[] args)
         {
-            string operatorName = "platinum";
+            string operatorName = "jsl";//change here...
+            IFileDecoder cdrDecoder=new ZteTdmDecoder();//change here...
             Console.WriteLine("Select a mock cdr process for operator:"+operatorName+".");
             Console.WriteLine("1=NewCdr");
             Console.WriteLine("2=ErrorCdr");
@@ -25,7 +27,7 @@ namespace UnitTesterManual
             {
                 case '1':
                     Console.WriteLine("Executing NewCdr for "+operatorName+".");
-                    new MockNewCdrProcessor().Execute(operatorName);
+                    new MockNewCdrProcessor(operatorName,cdrDecoder).Execute();
                     break;
                 case '2':
                     Console.WriteLine("Executing ErrorCdr for " + operatorName + ".");

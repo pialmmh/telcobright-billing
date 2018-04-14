@@ -13,13 +13,12 @@ namespace Decoders
 {
 
     [Export("Decoder", typeof(IFileDecoder))]
-    public class ZteTdm : IFileDecoder
+    public class ZteTdmDecoder : IFileDecoder
     {
         public override string ToString() => this.RuleName;
         public string RuleName => GetType().Name;
         public string Id => "17";
         public string HelpText => "Decodes ZTE TDM CDR.";
-
         public List<string[]> DecodeFile(CdrCollectorInputData input,out List<cdrinconsistent> inconsistentCdrs)
         {
             inconsistentCdrs = new List<cdrinconsistent>();

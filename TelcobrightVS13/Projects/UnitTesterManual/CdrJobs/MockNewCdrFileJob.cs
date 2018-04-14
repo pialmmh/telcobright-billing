@@ -23,18 +23,24 @@ namespace UnitTesterManual
     [Export("Job", typeof(ITelcobrightJob))]
     public class MockNewCdrFileJob : NewCdrFile
     {
+        public IFileDecoder CdrDecoder { get; set; }
+        public string OperatorName { get; set; }
+        public MockNewCdrFileJob(IFileDecoder cdrDecoder,string operatorName)
+        {
+            this.CdrDecoder = cdrDecoder;
+            this.OperatorName = operatorName;
+        }
+
         public override JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
         {
             CdrJobInputData input = (CdrJobInputData) jobInputData;
             AutoIncrementManager autoIncrementManager = new AutoIncrementManager(input.Context);
             CdrCollectorInputData collectorInput =
                 new CdrCollectorInputData(input, input.TelcobrightJob.JobName, autoIncrementManager);
-            collectorInput.FullPath = $@"C:\telcobright\Vault\Resources\CDR\Platinum Communications\PltDhkDL\"
+            collectorInput.FullPath = $@"C:\telcobright\Vault\Resources\CDR\{this.OperatorName}\{collectorInput.Ne.SwitchName}\"
                                       + input.TelcobrightJob.JobName;
-            DialogicControlSwitchDecoder cdrDecoder = new DialogicControlSwitchDecoder();
-
             List<cdrinconsistent> inconsistentCdrs;
-            List<string[]> decodedCdrRows = cdrDecoder.DecodeFile(collectorInput, out inconsistentCdrs);
+            List<string[]> decodedCdrRows = this.CdrDecoder.DecodeFile(collectorInput, out inconsistentCdrs);
             NewCdrPreProcessor newAndErrorCdrPreProcessor =
                 new NewCdrPreProcessor(decodedCdrRows, inconsistentCdrs, collectorInput);
             base.PrepareDecodedRawCdrs(newAndErrorCdrPreProcessor, collectorInput);
