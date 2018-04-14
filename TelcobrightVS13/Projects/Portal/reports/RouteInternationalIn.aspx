@@ -47,8 +47,8 @@
                     this.DropDownListMonth1.SelectedIndex = int.Parse(DateTime.Now.ToString("MM")) - 1;
                     //txtDate.Text = FirstDayOfMonthFromDateTime(System.DateTime.Now).ToString("dd/MM/yyyy");
                     //txtDate1.Text = LastDayOfMonthFromDateTime(System.DateTime.Now).ToString("dd/MM/yyyy");
-                    this.txtDate.Text = DateTime.Now.ToString("yyyy-MM-dd");
-                    this.txtDate1.Text = DateTime.Now.ToString("yyyy-MM-dd");
+                    this.txtDate.Text = DateTime.Now.ToString("yyyy-MM-dd 00:00:00");
+                    this.txtDate1.Text = DateTime.Now.ToString("yyyy-MM-dd 23:59:59");
 
                     using (PartnerEntities contex = new PartnerEntities())
                     {
@@ -154,13 +154,13 @@
             {
                 //select 15th of month to find out first and last day of a month as it exists in all months.
                 DateTime anyDayOfMonth = new DateTime(int.Parse(this.TextBoxYear.Text), int.Parse(this.DropDownListMonth.SelectedValue), 15);
-                this.txtDate.Text= FirstDayOfMonthFromDateTime(anyDayOfMonth).ToString("yyyy-MM-dd");
+                this.txtDate.Text= FirstDayOfMonthFromDateTime(anyDayOfMonth).ToString("yyyy-MM-dd 00:00:00");
             }
             protected void DropDownListMonth1_SelectedIndexChanged(object sender, EventArgs e)
             {
                 //select 15th of month to find out first and last day of a month as it exists in all months.
                 DateTime anyDayOfMonth = new DateTime(int.Parse(this.TextBoxYear1.Text), int.Parse(this.DropDownListMonth1.SelectedValue), 15);
-                this.txtDate1.Text = LastDayOfMonthFromDateTime(anyDayOfMonth).ToString("yyyy-MM-dd");
+                this.txtDate1.Text = LastDayOfMonthFromDateTime(anyDayOfMonth).ToString("yyyy-MM-dd 23:59:59");
             }
             protected void ButtonTemplate_Click(object sender, EventArgs e)
             {
@@ -398,7 +398,7 @@
     <div style="float:left;width:280px;">
         Start Date [Time] <asp:TextBox id="txtDate" Runat="server" /> 
         <asp:CalendarExtender ID="CalendarStartDate" runat="server" 
-            TargetControlID="txtDate"  PopupButtonID="txtDate" Format="yyyy-MM-dd">
+            TargetControlID="txtDate"  PopupButtonID="txtDate" Format="yyyy-MM-dd 00:00:00">
         </asp:CalendarExtender>     
         
         
@@ -407,7 +407,7 @@
     <div style="float:left;width:280px;">
         End Date [Time] <asp:TextBox id="txtDate1" Runat="server" />
         <asp:CalendarExtender ID="CalendarEndDate" runat="server" 
-            TargetControlID="txtDate1"  PopupButtonID="txtDate1" Format="yyyy-MM-dd">
+            TargetControlID="txtDate1"  PopupButtonID="txtDate1" Format="yyyy-MM-dd 23:59:59">
         </asp:CalendarExtender>     
     </div>
    

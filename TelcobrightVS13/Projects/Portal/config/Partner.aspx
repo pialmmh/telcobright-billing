@@ -317,9 +317,19 @@ order by type "></asp:SqlDataSource>
             <asp:BoundField DataField="refccr" HeaderText="Ref. CCR" SortExpression="refccr" visible="false" />
             <asp:BoundField DataField="refccrbycc" HeaderText="Ref. CCR (CC)" SortExpression="refccrbycc" visible="false" />
             <asp:TemplateField>
+                <HeaderTemplate>
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                        <tr>
+                            <td width="220px" align="left">Account Name</td>
+                            <td width="80px" align="center">Amount</td>
+                            <td width="30px" align="center">UOM</td>
+                        </tr>
+                    </table>
+                </HeaderTemplate>
                 <ItemTemplate>
                     <asp:Panel ID="pnlAccount" runat="server" >
-                        <asp:GridView ID="gvAccount" runat="server" AutoGenerateColumns="false" ForeColor="#333333" GridLines="Vertical" Font-Size="9pt">
+                        <asp:GridView ID="gvAccount" runat="server" AutoGenerateColumns="false" ForeColor="#333333" GridLines="Vertical" Font-Size="9pt" 
+                            ShowHeader="False" BorderStyle="Solid" BorderColor="Silver">
                             <Columns>
                                 <asp:BoundField ItemStyle-Width="220px" DataField="accountName" HeaderText="Account Name" HeaderStyle-HorizontalAlign="Left" ItemStyle-HorizontalAlign="Left" />
                                 <asp:BoundField ItemStyle-Width="80px" DataField="BalanceAfter" HeaderText="Balance" HeaderStyle-HorizontalAlign="Right" ItemStyle-HorizontalAlign="Right" />                                
