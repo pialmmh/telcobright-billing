@@ -7,16 +7,20 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using DocumentFormat.OpenXml.Wordprocessing;
 using PortalApp;
 using MediationModel;
+using Spring.Expressions;
+using TelcobrightMediation;
 
 public partial class ConfigPartner : System.Web.UI.Page
 {
+    private static TelcobrightConfig Tbc { get; set; }
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)
         {
-
+            Tbc = PageUtil.GetTelcobrightConfig();
             //Retrieve Path from TreeView for displaying in the master page caption label
 
             TreeView masterTree = (TreeView)Master.FindControl("TreeView1");
@@ -84,6 +88,7 @@ public partial class ConfigPartner : System.Web.UI.Page
     protected void GridViewPartner_RowDataBound(object sender, GridViewRowEventArgs e)
     {
 
+        
         if (e.Row.RowType == DataControlRowType.DataRow)
         {
 
@@ -103,13 +108,19 @@ public partial class ConfigPartner : System.Web.UI.Page
             GridView gvAccount = e.Row.FindControl("gvAccount") as GridView;
             using (PartnerEntities context = new PartnerEntities())
             {
-                var regexIntOut = new Regex(@".*/sg5/.*/sf4/.*");
-                var regexAZVoice = new Regex(@".*/sg4/.*/sf1/.*");
+                List<KeyValuePair<Regex, string>> serviceAliases = Tbc.ServiceAliasesRegex;
                 List<account> accounts = context.accounts.Where(p => p.idPartner == idPartner && p.isBillable == 1 && p.isCustomerAccount == 1).ToList();
                 foreach (account account in accounts)
                 {
-                    if (regexIntOut.Matches(account.accountName).Count > 0) account.accountName = "International Outgoing";
-                    else if (regexAZVoice.Matches(account.accountName).Count > 0) account.accountName = "International Outgoing";
+                    foreach (var kv in serviceAliases)
+                    {
+                        var regex = kv.Key;
+                        if (regex.Matches(account.accountName).Count > 0)
+                        {
+                            account.accountName = kv.Value;
+                            break;
+                        }
+                    }
                 }
                 gvAccount.DataSource = accounts;
                 gvAccount.DataBind();

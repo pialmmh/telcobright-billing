@@ -23,7 +23,7 @@ public partial class DefaultRtIntlIn : Page
     {
 
         string StartDate = txtDate.Text;
-        string EndtDate = txtDate1.Text;
+        string EndtDate = (txtDate1.Text.ConvertToDateTimeFromMySqlFormat()).AddSeconds(1).ToMySqlStyleDateTimeStrWithoutQuote();
         string tableName = DropDownListReportSource.SelectedValue + "03";
 
         string groupInterval = getSelectedRadioButtonText();
@@ -38,6 +38,7 @@ public partial class DefaultRtIntlIn : Page
 
                          new List<string>()
                             {
+                                groupInterval=="Hourly"?"tup_starttime":string.Empty,
                                 CheckBoxPartner.Checked==true?"tup_incomingroute":string.Empty,
                               //  CheckBoxShowByAns.Checked==true?"tup_incomingroute":string.Empty,
                                 CheckBoxShowByIgw.Checked==true?"tup_outgoingroute":string.Empty,

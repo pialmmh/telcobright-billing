@@ -69,7 +69,7 @@ namespace PortalApp.ReportHelper
 		        100*(SUM(connectedCallsCC)/SUM(totalcalls)) AS CCRByCC 
 	            FROM {TableName}
                 WHERE tup_starttime>='{StartDate}'
-                AND tup_starttime<='{EndDate}'
+                AND tup_starttime<'{EndDate}'
                 {GetWhereClauseAdditional()}
                 {GetGroupBy()}
             

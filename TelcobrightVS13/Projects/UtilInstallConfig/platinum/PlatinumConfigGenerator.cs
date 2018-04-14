@@ -4,6 +4,7 @@ using System.IO;
 using TelcobrightFileOperations;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Text.RegularExpressions;
 using LibraryExtensions.ConfigHelper;
 using QuartzTelcobright;
 using TelcobrightMediation;
@@ -181,7 +182,12 @@ namespace InstallConfig
             };
             //write all configuration first in ws_topshelf / bin/debug, for production
             //also, in tester/bin/debug
-
+            List<KeyValuePair<Regex, string>> serviceAliases = new List<KeyValuePair<Regex, string>>
+            {
+                new KeyValuePair<Regex, string>(new Regex(@".*/sg5/.*/sf4/.*"), "International Outgoing"),
+                new KeyValuePair<Regex, string>(new Regex(@".*/sg4/.*/sf1/.*"), "AZ Voice")
+            };
+            this.Tbc.ServiceAliasesRegex = serviceAliases;
             //temp use of ne, remove later
 
 
@@ -651,8 +657,8 @@ namespace InstallConfig
                                             "nodes['Mediation'].Expanded=true",
                                             "nodes['Settings'].Expanded=true",
                                             "nodes['Billing Reports'].Expanded=true",
-                                            "nodes['ICX'].Expanded=false",
-                                            "nodes['IGW'].Expanded=true"
+                                            "nodes['Reports/ICX'].Expanded=false",
+                                            "nodes['Reports/IGW'].Expanded=true"
                                        },
                                SpringExpressionIfNotRole = new List<string>()
                                        {
@@ -660,8 +666,8 @@ namespace InstallConfig
                                             "nodes['Mediation'].Expanded=false",
                                             "nodes['Settings'].Expanded=false",
                                             "nodes['Billing Reports'].Expanded=false",
-                                            "nodes['ICX'].Expanded=false",
-                                            "nodes['IGW'].Expanded=true"
+                                            "nodes['Reports/ICX'].Expanded=false",
+                                            "nodes['Reports/IGW'].Expanded=true"
                                         }
                            }
                         }//list of settings by Roles

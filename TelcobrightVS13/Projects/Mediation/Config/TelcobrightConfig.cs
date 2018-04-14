@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using LibraryExtensions.ConfigHelper;
 using QuartzTelcobright;
 using TelcobrightMediation.Scheduler.Quartz;
@@ -25,6 +26,9 @@ namespace TelcobrightMediation
         public Dictionary<string, ApplicationServerConfig> ApplicationServersConfig { get; set; }//server id as string
         public int IdTelcobrightPartner { get; set; }
         public TelcobrightConfig() { }//required by some non cdr process e.g. directorySYnc
+
+        public List<KeyValuePair<Regex, string>> ServiceAliasesRegex { get; set; } =
+            new List<KeyValuePair<Regex, string>>();
         public TelcobrightConfig(int thisServerId)
         {
             this.Vaults = new List<Vault>();

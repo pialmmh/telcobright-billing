@@ -11,6 +11,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using ExportToExcel;
+using LibraryExtensions;
 using reports;
 using MediationModel;
 using PortalApp;
@@ -23,7 +24,7 @@ public partial class DefaultRptIntlOut : System.Web.UI.Page
     {
 
         string StartDate = txtDate.Text;
-        string EndtDate = txtDate1.Text;
+        string EndtDate = (txtDate1.Text.ConvertToDateTimeFromMySqlFormat()).AddSeconds(1).ToMySqlStyleDateTimeStrWithoutQuote();
         string tableName = DropDownListReportSource.SelectedValue+"02";
             
 
@@ -48,11 +49,11 @@ public partial class DefaultRptIntlOut : System.Web.UI.Page
                       
                          new List<string>()
                             {
-                                DropDownListCountry.SelectedIndex>0?" tup_countryorareacode="+DropDownListCountry.SelectedValue:string.Empty,
-                                DropDownPrefix.SelectedIndex>0?"tup_matchedprefixcustomer="+DropDownPrefix.SelectedValue:string.Empty,
-                                DropDownListIntlCarier.SelectedIndex>0?" tup_outpartnerid="+DropDownListIntlCarier.SelectedValue:string.Empty,
-                                DropDownListAns.SelectedIndex>0?" tup_sourceID="+DropDownListAns.SelectedValue:string.Empty,
-                                DropDownListIgw.SelectedIndex>0?" tup_inpartnerid="+DropDownListIgw.SelectedValue:string.Empty
+                                CheckBoxShowByCountry.Checked==true?DropDownListCountry.SelectedIndex>0?" tup_countryorareacode="+DropDownListCountry.SelectedValue:string.Empty:string.Empty,
+                                CheckBoxShowByDestination.Checked==true?DropDownPrefix.SelectedIndex>0?"tup_matchedprefixcustomer="+DropDownPrefix.SelectedValue:string.Empty:string.Empty,
+                                CheckBoxIntlPartner.Checked==true?DropDownListIntlCarier.SelectedIndex>0?" tup_outpartnerid="+DropDownListIntlCarier.SelectedValue:string.Empty:string.Empty,
+                                CheckBoxShowByAns.Checked==true?DropDownListAns.SelectedIndex>0?" tup_sourceID="+DropDownListAns.SelectedValue:string.Empty:string.Empty,
+                                CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_inpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty
                             }).getSQLString();
 
         //File.WriteAllText("c:" + Path.DirectorySeparatorChar + "temp" + Path.DirectorySeparatorChar + "testQuery.txt", constructedSQL);
@@ -420,7 +421,7 @@ public partial class DefaultRptIntlOut : System.Web.UI.Page
                 {
                     DropDownPrefix.Items.Add(new ListItem(p.Description , p.Prefix.ToString()));
                 }
-
+                DropDownPrefix.Enabled = CheckBoxShowByDestination.Checked;
                 var ANSList = contex.partners.Where(p => p.PartnerType == 1).ToList();
                 DropDownListAns.Items.Clear();
                 DropDownListAns.Items.Add(new ListItem(" [All]", "-1"));
@@ -498,8 +499,8 @@ public partial class DefaultRptIntlOut : System.Web.UI.Page
             DropDownListMonth1.SelectedIndex = int.Parse(System.DateTime.Now.ToString("MM")) - 1;
             //txtDate.Text = FirstDayOfMonthFromDateTime(System.DateTime.Now).ToString("dd/MM/yyyy");
             //txtDate1.Text = LastDayOfMonthFromDateTime(System.DateTime.Now).ToString("dd/MM/yyyy");
-            txtDate.Text = DateTime.Now.ToString("yyyy-MM-dd");
-            txtDate1.Text = DateTime.Now.ToString("yyyy-MM-dd");
+            txtDate.Text = DateTime.Now.ToString("yyyy-MM-dd 00:00:00");
+            txtDate1.Text = DateTime.Now.ToString("yyyy-MM-dd 23:59:59");
 
 
             //set controls if page is called for a template
@@ -581,22 +582,22 @@ public partial class DefaultRptIntlOut : System.Web.UI.Page
 
         if (!IsPostBack)
         {
-            //using (MySqlConnection con = new MySqlConnection(ConfigurationManager.ConnectionStrings["reader"].ConnectionString))
-            //{
-            //    con.Open();
-            //    using (MySqlCommand cmd = new MySqlCommand("", con))
-            //    {
-            //        cmd.CommandText = "CALL OutgoingPrefix(@p_CountryCode)";
-            //        cmd.Parameters.AddWithValue("p_CountryCode", prefixFilter);
+            using (MySqlConnection con = new MySqlConnection(ConfigurationManager.ConnectionStrings["reader"].ConnectionString))
+            {
+                con.Open();
+                using (MySqlCommand cmd = new MySqlCommand("", con))
+                {
+                    cmd.CommandText = "CALL OutgoingPrefix(@p_CountryCode)";
+                    cmd.Parameters.AddWithValue("p_CountryCode", prefixFilter);
 
-            //        MySqlDataReader dr = cmd.ExecuteReader();
-            //        DropDownPrefix.Items.Clear();
-            //        while (dr.Read())
-            //        {
-            //            DropDownPrefix.Items.Add(new ListItem(dr[1].ToString(), dr[0].ToString()));
-            //        }
-            //    }
-            //}
+                    MySqlDataReader dr = cmd.ExecuteReader();
+                    DropDownPrefix.Items.Clear();
+                    while (dr.Read())
+                    {
+                        DropDownPrefix.Items.Add(new ListItem(dr[1].ToString(), dr[0].ToString()));
+                    }
+                }
+            }
         }
 
     }
@@ -618,13 +619,13 @@ public partial class DefaultRptIntlOut : System.Web.UI.Page
     {
         //select 15th of month to find out first and last day of a month as it exists in all months.
         DateTime anyDayOfMonth = new DateTime(int.Parse(TextBoxYear.Text), int.Parse(DropDownListMonth.SelectedValue), 15);
-        txtDate.Text = FirstDayOfMonthFromDateTime(anyDayOfMonth).ToString("yyyy-MM-dd");
+        txtDate.Text = FirstDayOfMonthFromDateTime(anyDayOfMonth).ToString("yyyy-MM-dd 00:00:00");
     }
     protected void DropDownListMonth1_SelectedIndexChanged(object sender, EventArgs e)
     {
         //select 15th of month to find out first and last day of a month as it exists in all months.
         DateTime anyDayOfMonth = new DateTime(int.Parse(TextBoxYear1.Text), int.Parse(DropDownListMonth1.SelectedValue), 15);
-        txtDate1.Text = LastDayOfMonthFromDateTime(anyDayOfMonth).ToString("yyyy-MM-dd");
+        txtDate1.Text = LastDayOfMonthFromDateTime(anyDayOfMonth).ToString("yyyy-MM-dd 23:59:59");
     }
     protected void ButtonTemplate_Click(object sender, EventArgs e)
     {
@@ -815,23 +816,23 @@ public partial class DefaultRptIntlOut : System.Web.UI.Page
                 prefixFilter = DropDownListCountry.SelectedValue;
             }
 
-            //using (MySqlConnection con = new MySqlConnection(ConfigurationManager.ConnectionStrings["reader"].ConnectionString))
-            //{
-            //    con.Open();
-            //    using (MySqlCommand cmd = new MySqlCommand("", con))
-            //    {
-            //        cmd.CommandText = "CALL OutgoingPrefix(@p_CountryCode)";
-            //        cmd.Parameters.AddWithValue("p_CountryCode", prefixFilter);
+            using (MySqlConnection con = new MySqlConnection(ConfigurationManager.ConnectionStrings["reader"].ConnectionString))
+            {
+                con.Open();
+                using (MySqlCommand cmd = new MySqlCommand("", con))
+                {
+                    cmd.CommandText = "CALL OutgoingPrefix(@p_CountryCode)";
+                    cmd.Parameters.AddWithValue("p_CountryCode", prefixFilter);
 
-            //        MySqlDataReader dr = cmd.ExecuteReader();
-            //        DropDownPrefix.Items.Clear();
-            //        while (dr.Read())
-            //        {
-            //            DropDownPrefix.Items.Add(new ListItem(dr[1].ToString(), dr[0].ToString()));
-            //        }
-            //    }
+                    MySqlDataReader dr = cmd.ExecuteReader();
+                    DropDownPrefix.Items.Clear();
+                    while (dr.Read())
+                    {
+                        DropDownPrefix.Items.Add(new ListItem(dr[1].ToString(), dr[0].ToString()));
+                    }
+                }
 
-            //}
+            }
         }
 
 
@@ -840,12 +841,14 @@ public partial class DefaultRptIntlOut : System.Web.UI.Page
 
     protected void CheckBoxShowByDestination_CheckedChanged(object sender, EventArgs e)
     {
-        
-
-
+        if (CheckBoxShowByDestination.Checked == true)
+        {
+            DropDownPrefix.SelectedIndex = 0;
+        }
+        DropDownPrefix.Enabled = CheckBoxShowByDestination.Checked;
     }
 
-    
+
 
 
     public static void ExportToSpreadsheet(DataTable table, string name)
@@ -906,8 +909,8 @@ public partial class DefaultRptIntlOut : System.Web.UI.Page
         }
         else
         {
-            txtDate.Text = System.DateTime.Now.ToString("yyyy-MM-dd");
-            txtDate1.Text = System.DateTime.Now.ToString("yyyy-MM-dd");
+            txtDate.Text = System.DateTime.Now.ToString("yyyy-MM-dd 00:00:00");
+            txtDate1.Text = System.DateTime.Now.ToString("yyyy-MM-dd 23:59:59");
         }
     }
 

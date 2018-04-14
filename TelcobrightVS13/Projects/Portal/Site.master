@@ -108,8 +108,8 @@
             <asp:TreeNode Value="Intl. Incoming" Expanded="True" Text="Intl. Incoming" SelectAction="None">
               <asp:TreeNode Value="Traffic" Text="Traffic" SelectAction="Select" NavigateUrl="~/reports/InternationalIn.aspx"> </asp:TreeNode>
               <asp:TreeNode Value="Route Wise Traffic" Text="Route Wise" SelectAction="Select" NavigateUrl="~/reports/RouteInternationalIn.aspx"> </asp:TreeNode>
-              <asp:TreeNode Value="Cause Codes" Text="Cause Codes" NavigateUrl="~/reports/CauseInternationalIn.aspx"> </asp:TreeNode>
-              <asp:TreeNode Value="Cause Codes (by Route)" Text="Cause Codes (by Route)" NavigateUrl="~/reports/CauseRouteInternationalIn.aspx"> </asp:TreeNode>
+<%--              <asp:TreeNode Value="Cause Codes" Text="Cause Codes" NavigateUrl="~/reports/CauseInternationalIn.aspx"> </asp:TreeNode>
+              <asp:TreeNode Value="Cause Codes (by Route)" Text="Cause Codes (by Route)" NavigateUrl="~/reports/CauseRouteInternationalIn.aspx"> </asp:TreeNode>--%>
             </asp:TreeNode>
 
             <asp:TreeNode Value="Intl. Outgoing" Expanded="True" Text="Intl. Outgoing" SelectAction="None">

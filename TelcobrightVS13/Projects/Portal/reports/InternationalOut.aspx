@@ -162,7 +162,7 @@
     <div style="float:left;width:280px;">
         Start Date [Time] <asp:TextBox id="txtDate" Runat="server" /> 
         <asp:CalendarExtender ID="CalendarStartDate" runat="server" 
-            TargetControlID="txtDate"  PopupButtonID="txtDate" Format="yyyy-MM-dd">
+            TargetControlID="txtDate"  PopupButtonID="txtDate" Format="yyyy-MM-dd 00:00:00">
         </asp:CalendarExtender>     
         
         
@@ -171,7 +171,7 @@
     <div style="float:left;width:280px;">
         End Date [Time] <asp:TextBox id="txtDate1" Runat="server" />
         <asp:CalendarExtender ID="CalendarEndDate" runat="server" 
-            TargetControlID="txtDate1"  PopupButtonID="txtDate1" Format="yyyy-MM-dd">
+            TargetControlID="txtDate1"  PopupButtonID="txtDate1" Format="yyyy-MM-dd 23:59:59">
         </asp:CalendarExtender>     
     </div>
    
@@ -205,7 +205,7 @@
               oncheckedchanged="CheckBoxShowByCountry_CheckedChanged"/> 
 
                 <asp:DropDownList ID="DropDownListCountry" runat="server" 
-                  Enabled="true">
+                  Enabled="true" AutoPostBack="True" onselectedindexchanged="DropDownList1_SelectedIndexChanged">
                 </asp:DropDownList>
                
                 
@@ -213,7 +213,7 @@
           <div style="text-align:left;float:left;margin-left:10px;">
               View by Destination:
               <asp:CheckBox ID="CheckBoxShowByDestination" runat="server" 
-                  AutoPostBack="false" 
+                  AutoPostBack="True" 
                   oncheckedchanged="CheckBoxShowByDestination_CheckedChanged" Checked="false" /> 
              
               <asp:DropDownList ID="DropDownPrefix" runat="server" DataSourceID="" 
