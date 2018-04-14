@@ -78,18 +78,16 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
             ddlserviceGroup.Items.Add(new ListItem(" [Select]", "-1"));
             ServiceGroupComposer serviceGroupComposer = new ServiceGroupComposer();
             serviceGroupComposer.ComposeFromPath(PageUtil.GetPortalBinPath() + "\\..\\Extensions");
-            Dictionary<int, IServiceGroup> serviceGroups =
+            Dictionary<int, IServiceGroup> mefServiceGroups =
                     serviceGroupComposer.ServiceGroups.ToDictionary(c => c.Id);
-            Dictionary<string, string>
-                dicUniqueServiceGroup = new Dictionary<string, string>(); //serv group id, name
-            Dictionary<string, enumservicegroup> dicServiceGroups =
-                context.enumservicegroups.ToDictionary(c => c.id.ToString());
-
             foreach (KeyValuePair<int, ServiceGroupConfiguration> kv in Tbc.CdrSetting.ServiceGroupConfigurations)
             {
-                if (serviceGroups.ContainsKey(kv.Key))
+                if (mefServiceGroups.ContainsKey(kv.Key))
                 {
-                    ddlserviceGroup.Items.Add(new ListItem(kv.Key.ToString(), serviceGroups[kv.Key].Id.ToString()));
+                    IServiceGroup thisServiceGroup = null;
+                    mefServiceGroups.TryGetValue(kv.Key, out thisServiceGroup);
+                    if(thisServiceGroup==null) throw new Exception("Service group not found for id="+kv.Key);
+                    ddlserviceGroup.Items.Add(new ListItem(thisServiceGroup.RuleName, kv.Key.ToString()));
                 }
             }
         }
@@ -100,9 +98,9 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
     {
         List<int> configuredSfIdsForThisServiceGroup = serviceGroupConfig.Ratingtrules.Select(c => c.IdServiceFamily)
             .ToList();
-        using (PartnerEntities contex = new PartnerEntities())
+        using (PartnerEntities context = new PartnerEntities())
         {
-            var Lstrules = contex.enumservicefamilies
+            var lstrules = context.enumservicefamilies
                 .Where(c => configuredSfIdsForThisServiceGroup.Contains(c.id)).ToList();
         }
 

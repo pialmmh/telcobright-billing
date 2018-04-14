@@ -247,7 +247,7 @@ idpartner,priority,service, goes to table rateplanassignmenttuple, id in the tab
                 
                             <div style="float:left;text-align:right; min-width:200px;margin-top:0px;">
                 
-                                 <b>Service Group:</b>
+                                <b>Service Group:</b>
                                 <asp:DropDownList ID="DropDownListServiceGroup" runat="server" AutoPostBack="True" OnSelectedIndexChanged="DropDownListServiceGroup_SelectedIndexChanged"
                                                   >
                                 </asp:DropDownList>

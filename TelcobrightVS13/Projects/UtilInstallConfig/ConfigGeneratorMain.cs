@@ -349,7 +349,7 @@ namespace InstallConfig
                 Console.WriteLine("Partitions were not reset for "+tbc.DatabaseSetting.DatabaseName);
             }
             //reset routes
-            Console.WriteLine(Environment.NewLine + "Reset routes for " + tbc.DatabaseSetting.DatabaseName + "?");
+            Console.WriteLine(Environment.NewLine + "Reset routes for " + tbc.DatabaseSetting.DatabaseName + " (Y/N)?");
             ConsoleKeyInfo keyInfo = Console.ReadKey();
             if (keyInfo.KeyChar == 'Y' || keyInfo.KeyChar == 'y')
             {
