@@ -10,49 +10,47 @@ using System.Web.UI.WebControls;
 using reports;
 using ExportToExcel;
 using MediationModel;
+using LibraryExtensions;
 using PortalApp.ReportHelper;
-using System.IO;
-
 public partial class DefaultRptDomesticIcx : System.Web.UI.Page
 {
     private int _mShowByCountry=0;
     private int _mShowByAns = 0;
-   
     DataTable _dt;
-
     private string GetQuery()
     {
 
-        string StartDate = txtDate.Text;
-        string EndtDate = txtDate1.Text;
-        string tableName = DropDownListReportSource.SelectedValue + "01";
+        string StartDate =txtDate.Text;
+        string EndtDate = (txtDate1.Text.ConvertToDateTimeFromMySqlFormat()).AddSeconds(1).ToMySqlStyleDateTimeStrWithoutQuote();
+        string tableName = DropDownListReportSource.SelectedValue + "03";
 
         string groupInterval = getSelectedRadioButtonText();
 
 
 
-        string constructedSQL = new SqlHelperDomestic
+        string constructedSQL = new SqlHelperIntlInIgw
                         (StartDate,
-                          EndtDate,
+                         EndtDate,
                          groupInterval,
                          tableName,
+                         
                          new List<string>()
                             {
-                                
-                                CheckBoxShowByAns.Checked==true?"tup_sourceID":string.Empty,
+                                groupInterval=="Hourly"?"tup_starttime":string.Empty,
+                                CheckBoxPartner.Checked==true?"tup_inpartnerid":string.Empty,
+                                CheckBoxShowByAns.Checked==true?"tup_destinationId":string.Empty,
                                 CheckBoxShowByIgw.Checked==true?"tup_outpartnerid":string.Empty,
                             },
                          new List<string>()
                             {
-
+                                CheckBoxPartner.Checked==true?DropDownListPartner.SelectedIndex>0?" tup_inpartnerid="+DropDownListPartner.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxShowByAns.Checked==true?DropDownListAns.SelectedIndex>0?" tup_destinationId="+DropDownListAns.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_outpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty
                             }).getSQLString();
 
-        //File.WriteAllText("c:" + Path.DirectorySeparatorChar + "temp" + Path.DirectorySeparatorChar + "testQuery.txt", constructedSQL);
+       
         return constructedSQL;
     }
-
 
     public string getSelectedRadioButtonText()
     {
@@ -75,11 +73,8 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
 
 
 
-
     protected void submit_Click(object sender, EventArgs e)
     {
-        //GetQuery();
-
         if (CheckBoxShowByAns.Checked == true)
         {
             GridView1.Columns[3].Visible = true;
@@ -109,18 +104,17 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
         else GridView1.Columns[1].Visible = false;
         if (CheckBoxShowCost.Checked == true)
         {
-            
-            GridView1.Columns[9].Visible = false;
-            //GridView1.Columns[10].Visible = false;
-            GridView1.Columns[11].Visible = false;
+            //GridView1.Columns[9].Visible = true;
+            GridView1.Columns[10].Visible = false;
+            GridView1.Columns[11].Visible = true;
             GridView1.Columns[12].Visible = false;
             GridView1.Columns[13].Visible = false;
             GridView1.Columns[14].Visible = false;
         }
         else
         {
-            GridView1.Columns[9].Visible = false;
-            //GridView1.Columns[10].Visible = false;
+            //GridView1.Columns[9].Visible = false;
+            GridView1.Columns[10].Visible = false;
             GridView1.Columns[11].Visible = false;
             GridView1.Columns[12].Visible = false;
             GridView1.Columns[13].Visible = false;
@@ -134,7 +128,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
             GridView1.Columns[18].Visible = true;
             //GridView1.Columns[19].Visible = true;
             GridView1.Columns[20].Visible = true;
-            
+
         }
         else
         {
@@ -144,7 +138,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
             GridView1.Columns[18].Visible = false;
             //GridView1.Columns[19].Visible = false;
             GridView1.Columns[20].Visible = false;
-            
+
         }
         //make profit invisible, it's useless
         GridView1.Columns[15].Visible = false;
@@ -155,11 +149,10 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
             connection.ConnectionString = ConfigurationManager.ConnectionStrings["reader"].ConnectionString;
 
             connection.Open();
+           
+            MySqlCommand cmd = new MySqlCommand(GetQuery(), connection);
 
-            MySqlCommand cmd = new MySqlCommand(GetQuery(),connection);
-            cmd.Connection = connection;
-            
-            
+            cmd.Connection = connection; 
             if (CheckBoxDailySummary.Checked == false)
             {
 
@@ -175,7 +168,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
             //common code
             if (CheckBoxDailySummary.Checked == true)
             {
-                string summaryInterval="";
+                string summaryInterval = "";
                 if (RadioButtonHalfHourly.Checked == true)
                 {
                     summaryInterval = "Halfhourly";
@@ -206,126 +199,117 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
                     summaryInterval = "Yearly";
                     GridView1.Columns[0].HeaderText = "Year";
                 }
-
-              
-
             }
-
-        
-           
-            MySqlDataAdapter da = new MySqlDataAdapter(cmd);
-            DataSet dataset = new DataSet();
-            da.Fill(dataset);
+                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                DataSet dataset = new DataSet();
+                da.Fill(dataset);
 
 
-            GridView1.DataSource = dataset;
-            bool hasRows = dataset.Tables.Cast<DataTable>()
-                               .Any(table => table.Rows.Count != 0);
-            if (hasRows == true)
-            {
-                GridView1.ShowFooter = true;//set it here before setting footer text, setting this to true clears already set footer text
-                Label1.Text = "";
-                Button1.Visible = true; //show export
-                //Summary calculation for grid view*************************
-                TrafficReportDatasetBased tr = new TrafficReportDatasetBased(dataset);
-                tr.Ds = dataset;
-                List<NoOfCallsVsPdd> callVsPdd = new List<NoOfCallsVsPdd>();
-                foreach (DataRow dr in tr.Ds.Tables[0].Rows)
+                GridView1.DataSource = dataset;
+                bool hasRows = dataset.Tables.Cast<DataTable>()
+                                   .Any(table => table.Rows.Count != 0);
+                if (hasRows == true)
                 {
-                    tr.CallStat.TotalCalls += tr.ForceConvertToLong( dr["CallsCount"]);
-                    tr.CallStat.ConnectedCalls += tr.ForceConvertToLong( dr["ConnectedCount"]);
-                    tr.CallStat.ConnectedCallsbyCauseCodes += tr.ForceConvertToLong( dr["ConectbyCC"]);
-                    tr.CallStat.SuccessfullCalls += tr.ForceConvertToLong(dr["Number Of Calls"]);
-                    tr.CallStat.TotalActualDuration += tr.ForceConvertToDouble(dr["Paid Minutes"]);
-                    tr.CallStat.TotalRoundedDuration += tr.ForceConvertToDouble(dr["RoundedDuration"]);
-                    tr.CallStat.TotalDuration1 += tr.ForceConvertToDouble( dr["Duration1"]);
-                    
-                    NoOfCallsVsPdd cpdd = new NoOfCallsVsPdd(tr.ForceConvertToLong(dr["Number Of Calls"]),tr.ForceConvertToDouble(dr["PDD"]));
-                    callVsPdd.Add(cpdd);
-                }
-                tr.CallStat.TotalActualDuration = Math.Round(tr.CallStat.TotalActualDuration, 2);
-                tr.CallStat.TotalDuration1 = Math.Round(tr.CallStat.TotalDuration1, 2);
-                tr.CallStat.TotalDuration2 = Math.Round(tr.CallStat.TotalDuration2, 2);
-                tr.CallStat.TotalDuration3 = Math.Round(tr.CallStat.TotalDuration3, 2);
-                tr.CallStat.TotalDuration4 = Math.Round(tr.CallStat.TotalDuration4, 2);
-                tr.CallStat.TotalRoundedDuration = Math.Round(tr.CallStat.TotalRoundedDuration, 2);
-                tr.CallStat.SupplierCost = Math.Round(tr.CallStat.SupplierCost, 2);
-                tr.CallStat.CalculateAsr(2);
-                tr.CallStat.CalculateAcd(2);
-                tr.CallStat.CalculateAveragePdd(callVsPdd, 2);
-                tr.CallStat.CalculateCcr(2);
-                tr.CallStat.CalculateCcRbyCauseCode(2);
-                //SUMMARY CALCULATION FOR GRIDVIEW COMPLETE
-
-                
-                //display summary information in the footer
-                Dictionary<string, dynamic> fieldSummaries = new Dictionary<string, dynamic>();//key=colname,val=colindex in grid
-                //all keys have to be lowercase, because db fields are lower case at times
-                fieldSummaries.Add("callscount", tr.CallStat.TotalCalls);
-                fieldSummaries.Add("connectedcount", tr.CallStat.ConnectedCalls);
-                fieldSummaries.Add("connectbycc", tr.CallStat.ConnectedCallsbyCauseCodes);
-                fieldSummaries.Add("number of calls", tr.CallStat.SuccessfullCalls);
-                fieldSummaries.Add("paid minutes", tr.CallStat.TotalActualDuration);
-                fieldSummaries.Add("roundedduration", tr.CallStat.TotalRoundedDuration);
-                fieldSummaries.Add("duration1", tr.CallStat.TotalDuration1);
-                fieldSummaries.Add("asr", tr.CallStat.Asr);
-                fieldSummaries.Add("acd", tr.CallStat.Acd);
-                fieldSummaries.Add("pdd", tr.CallStat.Pdd);
-                fieldSummaries.Add("ccr", tr.CallStat.Ccr);
-                fieldSummaries.Add("ccrbycc", tr.CallStat.CcRbyCauseCode);
-              //  fieldSummaries.Add("costansin", tr.CallStat.SupplierCost);
-                tr.FieldSummaries = fieldSummaries;
-
-                Session["Domestic"] = tr;//save to session
-
-                //populate footer
-                //clear first
-                bool captionSetForTotal = false;
-                for (int c = 0; c < GridView1.Columns.Count; c++)
-                {
-                    GridView1.Columns[c].FooterText = "";
-                }
-                for (int c = 0; c < GridView1.Columns.Count; c++)
-                {
-                    if (captionSetForTotal == false && GridView1.Columns[c].Visible == true)
+                    GridView1.ShowFooter = true;//set it here before setting footer text, setting this to true clears already set footer text
+                    Label1.Text = "";
+                    Button1.Visible = true; //show export
+                                            //Summary calculation for grid view*************************
+                    TrafficReportDatasetBased tr = new TrafficReportDatasetBased(dataset);
+                    tr.Ds = dataset;
+                    List<NoOfCallsVsPdd> callVsPdd = new List<NoOfCallsVsPdd>();
+                    foreach (DataRow dr in tr.Ds.Tables[0].Rows)
                     {
-                        GridView1.Columns[c].FooterText = "Total: ";//first visible column
-                        captionSetForTotal = true;
+                        tr.CallStat.TotalCalls += tr.ForceConvertToLong(dr["CallsCount"]);
+                        tr.CallStat.ConnectedCalls += tr.ForceConvertToLong(dr["ConnectedCount"]);
+                        tr.CallStat.ConnectedCallsbyCauseCodes += tr.ForceConvertToLong(dr["ConectbyCC"]);
+                        tr.CallStat.SuccessfullCalls += tr.ForceConvertToLong(dr["Number Of Calls (International Incoming)"]);
+                        tr.CallStat.TotalActualDuration += tr.ForceConvertToDouble(dr["Paid Minutes (International Incoming)"]);
+                        tr.CallStat.TotalRoundedDuration += tr.ForceConvertToDouble(dr["RoundedDuration"]);
+                        tr.CallStat.TotalDuration1 += tr.ForceConvertToDouble(dr["Duration1"]);
+                        NoOfCallsVsPdd cpdd = new NoOfCallsVsPdd(tr.ForceConvertToLong(dr["Number Of Calls (International Incoming)"]), tr.ForceConvertToDouble(dr["PDD"]));
+                        callVsPdd.Add(cpdd);
                     }
-                    string key = GridView1.Columns[c].SortExpression.ToLower();
-                    if (key == "") continue;
-                    if (tr.FieldSummaries.ContainsKey(key))
+                    tr.CallStat.TotalActualDuration = Math.Round(tr.CallStat.TotalActualDuration, 2);
+                    tr.CallStat.TotalDuration1 = Math.Round(tr.CallStat.TotalDuration1, 2);
+                    tr.CallStat.TotalDuration2 = Math.Round(tr.CallStat.TotalDuration2, 2);
+                    tr.CallStat.TotalDuration3 = Math.Round(tr.CallStat.TotalDuration3, 2);
+                    tr.CallStat.TotalDuration4 = Math.Round(tr.CallStat.TotalDuration4, 2);
+                    tr.CallStat.TotalRoundedDuration = Math.Round(tr.CallStat.TotalRoundedDuration, 2);
+                    tr.CallStat.CalculateAsr(2);
+                    tr.CallStat.CalculateAcd(2);
+                    tr.CallStat.CalculateAveragePdd(callVsPdd, 2);
+                    tr.CallStat.CalculateCcr(2);
+                    tr.CallStat.CalculateCcRbyCauseCode(2);
+                    //SUMMARY CALCULATION FOR GRIDVIEW COMPLETE
+
+
+                    //display summary information in the footer
+                    Dictionary<string, dynamic> fieldSummaries = new Dictionary<string, dynamic>();//key=colname,val=colindex in grid
+                                                                                                   //all keys have to be lowercase, because db fields are lower case at times
+                    fieldSummaries.Add("callscount", tr.CallStat.TotalCalls);
+                    fieldSummaries.Add("connectedcount", tr.CallStat.ConnectedCalls);
+                    fieldSummaries.Add("connectbycc", tr.CallStat.ConnectedCallsbyCauseCodes);
+                    fieldSummaries.Add("number of calls (international incoming)", tr.CallStat.SuccessfullCalls);
+                    fieldSummaries.Add("paid minutes (international incoming)", tr.CallStat.TotalActualDuration);
+                    fieldSummaries.Add("roundedduration", tr.CallStat.TotalRoundedDuration);
+                    fieldSummaries.Add("duration1", tr.CallStat.TotalDuration1);
+                    fieldSummaries.Add("asr", tr.CallStat.Asr);
+                    fieldSummaries.Add("acd", tr.CallStat.Acd);
+                    fieldSummaries.Add("pdd", tr.CallStat.Pdd);
+                    fieldSummaries.Add("ccr", tr.CallStat.Ccr);
+                    fieldSummaries.Add("ccrbycc", tr.CallStat.CcRbyCauseCode);
+                    tr.FieldSummaries = fieldSummaries;
+
+                    Session["IntlIn"] = tr;//save to session
+
+                    //populate footer
+                    //clear first
+                    bool captionSetForTotal = false;
+                    for (int c = 0; c < GridView1.Columns.Count; c++)
                     {
-                        GridView1.Columns[c].FooterText += (tr.GetDataColumnSummary(key)).ToString();//+ required to cocat "Total:"
+                        GridView1.Columns[c].FooterText = "";
                     }
-                }
-                GridView1.DataBind();//call it here after setting footer, footer text doesn't show sometime otherwise, may be a bug
-                GridView1.ShowFooter = true;//don't set it now, set before footer text setting, weird! it clears the footer text
-                //hide filters...
-                Page.ClientScript.RegisterStartupScript(GetType(), "MyKey", "HideParamBorderDivSubmit();", true);
+                    for (int c = 0; c < GridView1.Columns.Count; c++)
+                    {
+                        if (captionSetForTotal == false && GridView1.Columns[c].Visible == true)
+                        {
+                            GridView1.Columns[c].FooterText = "Total: ";//first visible column
+                            captionSetForTotal = true;
+                        }
+                        string key = GridView1.Columns[c].SortExpression.ToLower();
+                        if (key == "") continue;
+                        if (tr.FieldSummaries.ContainsKey(key))
+                        {
+                            GridView1.Columns[c].FooterText += (tr.GetDataColumnSummary(key)).ToString();//+ required to cocat "Total:"
+                        }
+                    }
+                    GridView1.DataBind();//call it here after setting footer, footer text doesn't show sometime otherwise, may be a bug
+                    GridView1.ShowFooter = true;//don't set it now, set before footer text setting, weird! it clears the footer text
+                                                //hide filters...
+                    Page.ClientScript.RegisterStartupScript(GetType(), "MyKey", "HideParamBorderDivSubmit();", true);
                     hidValueSubmitClickFlag.Value = "false";
 
-            }//if has rows
+                }//if has rows
 
-            else
-            {
-                GridView1.DataBind();
-                Label1.Text = "No Data!";
-                Button1.Visible = false; //hide export
-            }
+                else
+                {
+                    GridView1.DataBind();
+                    Label1.Text = "No Data!";
+                    Button1.Visible = false; //hide export
+                }
 
             }//using mysql connection
-        
 
 
 
-    }
+        }
+    
 
     protected void Button1_Click(object sender, EventArgs e)
     {
-        if (Session["Domestic"] != null) //THIS MUST BE CHANGED IN EACH PAGE
+        if (Session["IntlIn"] != null) //THIS MUST BE CHANGED IN EACH PAGE
         {
-            TrafficReportDatasetBased tr = (TrafficReportDatasetBased)Session["Domestic"];
+            TrafficReportDatasetBased tr = (TrafficReportDatasetBased)Session["IntlIn"];
             DataSetWithGridView dsG = new DataSetWithGridView(tr, GridView1);//invisible columns are removed in constructor
             CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(tr.Ds, "IntlIncoming_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                     + ".xlsx", Response);
@@ -439,8 +423,8 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
 
             DateTime endtime = DateTime.Now;
             DateTime starttime = endtime.AddMinutes(a * (-1));
-            txtDate1.Text = endtime.ToString("yyyy-MM-dd HH:mm:ss");
-            txtDate.Text = starttime.ToString("yyyy-MM-dd HH:mm:ss");
+            txtDate1.Text = endtime.ToString("dd/MM/yyyy HH:mm:ss");
+            txtDate.Text = starttime.ToString("dd/MM/yyyy HH:mm:ss");
 
             //return true;
         }
@@ -490,7 +474,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
                     return;
                 }
                 //Label lblCountry = (Label)e.Row.FindControl("Label3");
-                string thisAnsName = DataBinder.Eval(e.Row.DataItem, "Incoming ANS").ToString();
+                string thisAnsName = DataBinder.Eval(e.Row.DataItem, "ANS").ToString();
                 Single thisAsr = 0;
                 Single thisAcd = 0;
                 Single thisCcr = 0;

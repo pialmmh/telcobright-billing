@@ -82,6 +82,7 @@
      <asp:DropDownList ID="DropDownListReportSource" runat="server" >
          <asp:ListItem Value="sum_voice_day_">Day Wise</asp:ListItem>
          <asp:ListItem Value="sum_voice_hr_">Hour Wise</asp:ListItem>
+        
      </asp:DropDownList>
 
 
@@ -161,7 +162,7 @@
     <div style="float:left;width:280px;">
         Start Date [Time] <asp:TextBox id="txtDate" Runat="server" /> 
         <asp:CalendarExtender ID="CalendarStartDate" runat="server" 
-            TargetControlID="txtDate"  PopupButtonID="txtDate" Format="yyyy-MM-dd">
+            TargetControlID="txtDate"  PopupButtonID="txtDate" Format="yyyy-MM-dd 00:00:00">
         </asp:CalendarExtender>     
         
         
@@ -170,7 +171,7 @@
     <div style="float:left;width:280px;">
         End Date [Time] <asp:TextBox id="txtDate1" Runat="server" />
         <asp:CalendarExtender ID="CalendarEndDate" runat="server" 
-            TargetControlID="txtDate1"  PopupButtonID="txtDate1" Format="yyyy-MM-dd">
+            TargetControlID="txtDate1"  PopupButtonID="txtDate1" Format="yyyy-MM-dd 23:59:59">
         </asp:CalendarExtender>     
     </div>
    
@@ -204,23 +205,20 @@
               oncheckedchanged="CheckBoxShowByCountry_CheckedChanged"/> 
 
                 <asp:DropDownList ID="DropDownListCountry" runat="server" 
-                     Enabled="true"
-                      >
+                  Enabled="true" AutoPostBack="True" onselectedindexchanged="DropDownList1_SelectedIndexChanged">
                 </asp:DropDownList>
                
-                 
+                
             </div>          
           <div style="text-align:left;float:left;margin-left:10px;">
               View by Destination:
               <asp:CheckBox ID="CheckBoxShowByDestination" runat="server" 
-                  AutoPostBack="false" 
+                  AutoPostBack="True" 
                   oncheckedchanged="CheckBoxShowByDestination_CheckedChanged" Checked="false" /> 
              
-              <asp:DropDownList ID="DropDownPrefix" runat="server" Width="330" Enabled="true">
+              <asp:DropDownList ID="DropDownPrefix" runat="server" DataSourceID="" 
+                  DataTextField="Destination" DataValueField="Prefix" Width="330" Enabled="true">
               </asp:DropDownList>
-           
-
-
             </div>
                     </ContentTemplate>
                 </asp:UpdatePanel>
@@ -228,17 +226,15 @@
             
            <div style="height:3px;clear:both;"></div>
            
-           <div style="float:left; ">
-               <asp:UpdatePanel ID="UpdatePanel2" runat="server" >
+           <div style="float:left;">
+               <asp:UpdatePanel ID="UpdatePanel2" runat="server">
             <ContentTemplate> 
-               View by Originating ANS:
+               <%--View by ANS: --%>
                 <asp:CheckBox ID="CheckBoxShowByAns" runat="server" AutoPostBack="True" 
-                    oncheckedchanged="CheckBoxShowByAns_CheckedChanged" Checked="true" />
+                    oncheckedchanged="CheckBoxShowByAns_CheckedChanged" Checked="false" Visible="False" />
                 <asp:DropDownList ID="DropDownListAns" runat="server"  
-                   Enabled="true">
+                     Visible="False" Enabled="False">
                 </asp:DropDownList>
-                
-          
                  </ContentTemplate>
                </asp:UpdatePanel>
             </div>
@@ -249,15 +245,13 @@
             <ContentTemplate>
 
             <div style="float:left;margin-left:10px;">
-              View by Outgoing_IOS: <asp:CheckBox ID="CheckBoxShowByIgw" runat="server" 
+                View by ANS: <asp:CheckBox ID="CheckBoxShowByIgw" runat="server" 
                 AutoPostBack="True" oncheckedchanged="CheckBoxShowByIgw_CheckedChanged" Checked="false" />
           
-                <asp:DropDownList ID="DropDownListIgw" 
-                    runat="server" 
-                    Enabled="false">
+                <asp:DropDownList ID="DropDownListIgw" runat="server" 
+                  Enabled="False">
                 </asp:DropDownList>
 
-             
             </div>
 
                 </ContentTemplate>
@@ -266,15 +260,13 @@
 
            <asp:UpdatePanel ID="UpdatePanel4" runat="server">
             <ContentTemplate>
-            <div style="float:left;margin-left:10px;display: none;">
-                View by Outgoing_IOS:
+            <div style="float:left;margin-left:10px;">
+                View by IOS:
           <asp:CheckBox ID="CheckBoxIntlPartner" runat="server" AutoPostBack="True" Checked="false" 
            OnCheckedChanged="CheckBoxShowByPartner_CheckedChanged"/>
               <asp:DropDownList ID="DropDownListIntlCarier" runat="server" 
                      Enabled="false">
               </asp:DropDownList>
-              
-
             </div>
                 </ContentTemplate>
                </asp:UpdatePanel>
@@ -300,7 +292,7 @@
             <asp:BoundField DataField="Destination" HeaderText="Destination" 
                 SortExpression="Destination" />
             <asp:BoundField DataField="ANS" HeaderText="ANS" SortExpression="ANS" />
-            <asp:BoundField DataField="IGW" HeaderText="IOS" SortExpression="IGW" />
+            <asp:BoundField DataField="IGW" HeaderText="ICX" SortExpression="IGW" />
             <asp:BoundField DataField="International Partner" HeaderText="Intl Partner" SortExpression="International Partner" />
             
             <asp:BoundField DataField="CallsCount" 
@@ -332,7 +324,7 @@
                 DataFormatString="{0:#,0.#0}"
                 HeaderText="Billed Duration" 
                 SortExpression="roundedduration"></asp:BoundField>
-            <asp:BoundField DataField="supplierduration" Visible="false" 
+            <asp:BoundField DataField="supplierduration" 
                 DataFormatString="{0:#,0.#0}"
                 HeaderText="Supplier Duration" 
                 SortExpression="supplierduration"></asp:BoundField>
@@ -351,11 +343,10 @@
 
             <asp:BoundField DataField="X (BDT)" DataFormatString="{0:#,0.#0}" HeaderText="X (BDT)" SortExpression="X (BDT)" />
             <asp:BoundField DataField="Y (USD)" DataFormatString="{0:#,0.#0}" HeaderText="Y (USD)" SortExpression="Y (USD)" />
-            <asp:BoundField DataField="Z (BDT)" DataFormatString="{0:#,0.#0}" HeaderText="Z (BDT)" SortExpression="Z (BDT)" Visible="false" />
-            <asp:BoundField DataField="revenueigwout" DataFormatString="{0:#,0.#0}" HeaderText="Revenue (BDT)" SortExpression="revenueigwout" Visible="false" />
-            <asp:BoundField DataField="suppliercost" DataFormatString="{0:#,0.#0}" HeaderText="Partner Cost (USD)" SortExpression="suppliercost" Visible="false" />
-            <asp:BoundField DataField="profitbdt" DataFormatString="{0:#,0.#0}" HeaderText="Profit (BDT)" SortExpression="profitbdt" Visible="false" />
-            <asp:BoundField DataField="profitminute" DataFormatString="{0:#,0.#0}" HeaderText="Profit (BDT) /Minute" SortExpression="profitminute" Visible="false" />
+            <asp:BoundField DataField="Z (BDT)" DataFormatString="{0:#,0.#0}" HeaderText="Z (BDT)" SortExpression="Z (BDT)" />
+            <asp:BoundField DataField="revenueigwout" DataFormatString="{0:#,0.#0}" HeaderText="Revenue (BDT)" SortExpression="revenueigwout" />
+            <asp:BoundField DataField="suppliercost" DataFormatString="{0:#,0.#0}" HeaderText="Partner Cost (USD)" SortExpression="suppliercost" />
+           
             
              <%-- <asp:BoundField DataField="profitminute" HeaderText="Profit/Minute" SortExpression="profitminute" />--%>
             

@@ -291,24 +291,6 @@ public partial class DefaultRptIntlInIcx {
     protected global::System.Web.UI.WebControls.DropDownList DropDownListPartner;
     
     /// <summary>
-    /// CheckBoxShowByIgw control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.CheckBox CheckBoxShowByIgw;
-    
-    /// <summary>
-    /// DropDownListIgw control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList DropDownListIgw;
-    
-    /// <summary>
     /// CheckBoxShowByAns control.
     /// </summary>
     /// <remarks>
@@ -325,6 +307,24 @@ public partial class DefaultRptIntlInIcx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.DropDownList DropDownListAns;
+    
+    /// <summary>
+    /// CheckBoxShowByIgw control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.CheckBox CheckBoxShowByIgw;
+    
+    /// <summary>
+    /// DropDownListIgw control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList DropDownListIgw;
     
     /// <summary>
     /// SqlDataSource4 control.

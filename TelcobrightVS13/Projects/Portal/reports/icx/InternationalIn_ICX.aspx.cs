@@ -10,23 +10,18 @@ using System.Web.UI.WebControls;
 using reports;
 using ExportToExcel;
 using MediationModel;
-using System.IO;
+using LibraryExtensions;
 using PortalApp.ReportHelper;
-using PortalApp;
-
 public partial class DefaultRptIntlInIcx : System.Web.UI.Page
 {
     private int _mShowByCountry=0;
     private int _mShowByAns = 0;
-   
     DataTable _dt;
-
-
     private string GetQuery()
     {
 
-        string StartDate = txtDate.Text;
-        string EndtDate = txtDate1.Text;
+        string StartDate =txtDate.Text;
+        string EndtDate = (txtDate1.Text.ConvertToDateTimeFromMySqlFormat()).AddSeconds(1).ToMySqlStyleDateTimeStrWithoutQuote();
         string tableName = DropDownListReportSource.SelectedValue + "03";
 
         string groupInterval = getSelectedRadioButtonText();
@@ -35,12 +30,13 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
 
         string constructedSQL = new SqlHelperIntlInIgw
                         (StartDate,
-                        EndtDate,
+                         EndtDate,
                          groupInterval,
                          tableName,
-
+                         
                          new List<string>()
                             {
+                                groupInterval=="Hourly"?"tup_starttime":string.Empty,
                                 CheckBoxPartner.Checked==true?"tup_inpartnerid":string.Empty,
                                 CheckBoxShowByAns.Checked==true?"tup_destinationId":string.Empty,
                                 CheckBoxShowByIgw.Checked==true?"tup_outpartnerid":string.Empty,
@@ -52,7 +48,7 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
                                 CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_outpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty
                             }).getSQLString();
 
-        //  File.WriteAllText("c:" + Path.DirectorySeparatorChar + "temp" + Path.DirectorySeparatorChar + "testQuery.txt", constructedSQL);
+       
         return constructedSQL;
     }
 
@@ -77,17 +73,13 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
 
 
 
-
-
-
     protected void submit_Click(object sender, EventArgs e)
     {
-       // GetQuery();
         if (CheckBoxShowByAns.Checked == true)
         {
             GridView1.Columns[3].Visible = true;
             //load ANS KPI
-            Dictionary<string,partner> dicKpiAns = new Dictionary<string, partner>();
+            Dictionary<string, partner> dicKpiAns = new Dictionary<string, partner>();
             using (PartnerEntities context = new PartnerEntities())
             {
                 foreach (partner thisPartner in context.partners.Where(c => c.PartnerType == 1).ToList())
@@ -136,7 +128,7 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
             GridView1.Columns[18].Visible = true;
             //GridView1.Columns[19].Visible = true;
             GridView1.Columns[20].Visible = true;
-            
+
         }
         else
         {
@@ -146,7 +138,7 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
             GridView1.Columns[18].Visible = false;
             //GridView1.Columns[19].Visible = false;
             GridView1.Columns[20].Visible = false;
-            
+
         }
         //make profit invisible, it's useless
         GridView1.Columns[15].Visible = false;
@@ -157,12 +149,11 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
             connection.ConnectionString = ConfigurationManager.ConnectionStrings["reader"].ConnectionString;
 
             connection.Open();
-
+           
             MySqlCommand cmd = new MySqlCommand(GetQuery(), connection);
 
-            cmd.Connection = connection;
-          
-            if (RadioButtonHalfHourly.Checked == false)
+            cmd.Connection = connection; 
+            if (CheckBoxDailySummary.Checked == false)
             {
 
                 GridView1.Columns[0].Visible = false;
@@ -174,12 +165,16 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
             }
 
 
-            ////common code
-            if (RadioButtonHalfHourly.Checked == true)
+            //common code
+            if (CheckBoxDailySummary.Checked == true)
             {
                 string summaryInterval = "";
-
-                if (RadioButtonHourly.Checked == true)
+                if (RadioButtonHalfHourly.Checked == true)
+                {
+                    summaryInterval = "Halfhourly";
+                    GridView1.Columns[0].HeaderText = "Half Hour";
+                }
+                else if (RadioButtonHourly.Checked == true)
                 {
                     summaryInterval = "Hourly";
                     GridView1.Columns[0].HeaderText = "Hour";
@@ -204,10 +199,7 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
                     summaryInterval = "Yearly";
                     GridView1.Columns[0].HeaderText = "Year";
                 }
-
-               
             }
-               
                 MySqlDataAdapter da = new MySqlDataAdapter(cmd);
                 DataSet dataset = new DataSet();
                 da.Fill(dataset);
@@ -234,7 +226,6 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
                         tr.CallStat.TotalActualDuration += tr.ForceConvertToDouble(dr["Paid Minutes (International Incoming)"]);
                         tr.CallStat.TotalRoundedDuration += tr.ForceConvertToDouble(dr["RoundedDuration"]);
                         tr.CallStat.TotalDuration1 += tr.ForceConvertToDouble(dr["Duration1"]);
-                        
                         NoOfCallsVsPdd cpdd = new NoOfCallsVsPdd(tr.ForceConvertToLong(dr["Number Of Calls (International Incoming)"]), tr.ForceConvertToDouble(dr["PDD"]));
                         callVsPdd.Add(cpdd);
                     }
@@ -244,7 +235,6 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
                     tr.CallStat.TotalDuration3 = Math.Round(tr.CallStat.TotalDuration3, 2);
                     tr.CallStat.TotalDuration4 = Math.Round(tr.CallStat.TotalDuration4, 2);
                     tr.CallStat.TotalRoundedDuration = Math.Round(tr.CallStat.TotalRoundedDuration, 2);
-                   
                     tr.CallStat.CalculateAsr(2);
                     tr.CallStat.CalculateAcd(2);
                     tr.CallStat.CalculateAveragePdd(callVsPdd, 2);
@@ -268,7 +258,6 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
                     fieldSummaries.Add("pdd", tr.CallStat.Pdd);
                     fieldSummaries.Add("ccr", tr.CallStat.Ccr);
                     fieldSummaries.Add("ccrbycc", tr.CallStat.CcRbyCauseCode);
-                    // fieldSummaries.Add("costicxin", tr.callStat.TotalCustomerCost);
                     tr.FieldSummaries = fieldSummaries;
 
                     Session["IntlIn"] = tr;//save to session
@@ -312,8 +301,8 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
             }//using mysql connection
 
 
-        }
 
+        }
     
 
     protected void Button1_Click(object sender, EventArgs e)
@@ -434,8 +423,8 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
 
             DateTime endtime = DateTime.Now;
             DateTime starttime = endtime.AddMinutes(a * (-1));
-            txtDate1.Text = endtime.ToString("yyyy-MM-dd HH:mm:ss");
-            txtDate.Text = starttime.ToString("yyyy-MM-dd HH:mm:ss");
+            txtDate1.Text = endtime.ToString("dd/MM/yyyy HH:mm:ss");
+            txtDate.Text = starttime.ToString("dd/MM/yyyy HH:mm:ss");
 
             //return true;
         }
