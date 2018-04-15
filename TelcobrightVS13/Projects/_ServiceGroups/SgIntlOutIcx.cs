@@ -13,7 +13,7 @@ namespace TelcobrightMediation
 	{
 		private readonly SgIntlTransitVoice _sgIntlTransitVoice=new SgIntlTransitVoice();
 		public override string ToString() => this.RuleName;
-		public string RuleName => GetType().Name;
+		public string RuleName => "International Outgoing Calls [ICX]";
 		public string HelpText => "Service group International Outgoing for BD ICX.";
 		public int Id => 2;
 		private Dictionary<string, Type> SummaryTargetTables { get; }
