@@ -6,6 +6,7 @@ using System.Data.Common;
 using System.IO;
 using TelcobrightFileOperations;
 using System.Linq;
+using System.Text;
 using MediationModel;
 using System.Threading.Tasks;
 using Decoders;
@@ -17,6 +18,7 @@ using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Cdr;
 using TelcobrightMediation.Config;
 using Jobs;
+using TelcobrightMediation.Mediation.Cdr;
 
 namespace UnitTesterManual
 {
@@ -41,13 +43,19 @@ namespace UnitTesterManual
                                       + input.TelcobrightJob.JobName;
             List<cdrinconsistent> inconsistentCdrs;
             List<string[]> decodedCdrRows = this.CdrDecoder.DecodeFile(collectorInput, out inconsistentCdrs);
-            NewCdrPreProcessor newAndErrorCdrPreProcessor =
+            NewCdrPreProcessor preProcessor =
                 new NewCdrPreProcessor(decodedCdrRows, inconsistentCdrs, collectorInput);
-            base.PrepareDecodedRawCdrs(newAndErrorCdrPreProcessor, collectorInput);
-
+            base.PrepareDecodedRawCdrs(preProcessor, collectorInput);
+            //todo: remove temp dump code
+            if (inconsistentCdrs.Any())
+            {
+                throw new Exception("Inconsistent cdrs are temporarily disallowed.");
+            }
+            DumpToMockCdr(decodedCdrRows, "mockcdr", input);
+            //end temp code
             CdrCollectionResult newCollectionResult = null;
             CdrCollectionResult oldCollectionResult = null;
-            newAndErrorCdrPreProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
+            preProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
             CdrJobContext cdrJobContext = new CdrJobContext(input, autoIncrementManager,
                 newCollectionResult.HoursInvolved);
             CdrProcessor cdrProcessor = new CdrProcessor(cdrJobContext, newCollectionResult);
@@ -56,6 +64,17 @@ namespace UnitTesterManual
             CdrJob cdrJob = new CdrJob(cdrProcessor, cdrEraser, cdrProcessor.CollectionResult.RawCount);
             ExecuteCdrJob(input, cdrJob);
             return JobCompletionStatus.Complete;
+        }
+
+        private void DumpToMockCdr(List<string[]> txtRows, string mockCdrTableName, CdrJobInputData input)
+        {
+            using (DbCommand cmd = ConnectionManager.CreateCommandFromDbContext(input.Context))
+            {
+                cmd.CommandText = new StringBuilder(StaticExtInsertColumnHeaders.cdrinconsistent.Replace("cdrinconsistent", mockCdrTableName))
+                    .Append(string.Join(",", txtRows.Select(r => CdrManipulatingUtil.ConvertTxtRowToCdrinconsistent(r)
+                        .GetExtInsertValues()))).ToString();
+                cmd.ExecuteNonQuery();
+            }
         }
 
         protected override void ExecuteCdrJob(CdrJobInputData input, CdrJob cdrJob)

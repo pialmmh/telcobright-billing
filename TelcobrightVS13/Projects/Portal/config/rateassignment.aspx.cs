@@ -3746,7 +3746,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
 
                 if (ExistingTuple == null)//tuple does not exist
                 {
-                    //todo: fix autoincrement problem
+                    //todo: fix autoincrement work around currently implemented for billingRuleassignment
                     int maxIdRatePlanAssignmentTuple = 0;
                     using (PartnerEntities context = new PartnerEntities())
                     {

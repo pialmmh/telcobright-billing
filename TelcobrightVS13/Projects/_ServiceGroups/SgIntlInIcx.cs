@@ -45,7 +45,8 @@ namespace TelcobrightMediation
 			dicRoutes.TryGetValue(key, out thisRoute);
 			if (thisRoute != null)
 			{
-				if (thisRoute.partner.PartnerType == 4 && thisRoute.NationalOrInternational == 2
+				if (thisRoute.partner.PartnerType == IcxPartnerType.IOS 
+                    && thisRoute.NationalOrInternational == RouteLocalityType.International
 				) //IGW and route=international
 				{
 					thisCdr.CallDirection = 3; //Intl in ICX

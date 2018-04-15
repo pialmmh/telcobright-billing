@@ -43,8 +43,8 @@ namespace TelcobrightMediation
             dicRoutes.TryGetValue(key, out thisRoute);
             if (thisRoute != null)
             {
-                if (thisRoute.partner.PartnerType == 1 &&
-                    thisRoute.NationalOrInternational == 1) //ANS and route=national
+                if (thisRoute.partner.PartnerType == IcxPartnerType.ANS &&
+                    thisRoute.NationalOrInternational == RouteLocalityType.National) //ANS and route=national
                 {
                     thisCdr.CallDirection = 1; //Domestic in ICX
                 }
