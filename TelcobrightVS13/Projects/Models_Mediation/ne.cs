@@ -18,6 +18,7 @@ namespace MediationModel
         public ne()
         {
             this.jobs = new HashSet<job>();
+            this.routes = new HashSet<route>();
         }
     
         public int idSwitch { get; set; }
@@ -53,6 +54,8 @@ namespace MediationModel
         public virtual enumcdrformat enumcdrformat { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<job> jobs { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<route> routes { get; set; }
         public virtual telcobrightpartner telcobrightpartner { get; set; }
     }
 }

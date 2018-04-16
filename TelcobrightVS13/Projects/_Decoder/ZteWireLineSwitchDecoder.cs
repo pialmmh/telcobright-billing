@@ -16,11 +16,11 @@ namespace Decoders
     public class ZteWireLineSwitchDecoder : IFileDecoder
     {
         public override string ToString() => this.RuleName;
-        public string RuleName => GetType().Name;
-        public string Id => "16";
-        public string HelpText => "Decodes ZTE CDR.";
+        public virtual string RuleName => GetType().Name;
+        public virtual string Id => "16";
+        public virtual string HelpText => "Decodes ZTE TDM/IP CDR.";
 
-        public List<string[]> DecodeFile(CdrCollectorInputData input,out List<cdrinconsistent> inconsistentCdrs)
+        public virtual List<string[]> DecodeFile(CdrCollectorInputData input,out List<cdrinconsistent> inconsistentCdrs)
         {
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();

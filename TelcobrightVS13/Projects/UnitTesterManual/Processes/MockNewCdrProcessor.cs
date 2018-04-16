@@ -34,11 +34,12 @@ namespace UnitTesterManual
         public int ProcessId => 103;
         public string OperatorName { get; set; }
         public IFileDecoder CdrDecoder { get; set; }
-
-        public MockNewCdrProcessor(string operatorName, IFileDecoder fileDecoder)
+        public bool DumpRawCdr { get; }
+        public MockNewCdrProcessor(string operatorName, IFileDecoder fileDecoder,bool dumpRawCdr)
         {
             this.OperatorName = operatorName;
             this.CdrDecoder = fileDecoder;
+            this.DumpRawCdr = dumpRawCdr;
         }
 
         public void ExecuteJobsWithTests(ITelcobrightJob job,CdrJobInputData cdrJobInputData)
@@ -82,7 +83,7 @@ namespace UnitTesterManual
                             cmd.ExecuteCommandText("set autocommit=0;"); //transaction started
                             try
                             {
-                                ITelcobrightJob iJob = new MockNewCdrFileJob(this.CdrDecoder, this.OperatorName);
+                                ITelcobrightJob iJob = new MockNewCdrFileJob(this.CdrDecoder, this.OperatorName,this.DumpRawCdr);
                                 var cdrJobInputData =
                                     new CdrJobInputData(mediationContext, context, ne, telcobrightJob);
                                 iJob.Execute(cdrJobInputData); //execute job, this includes commit if successful,

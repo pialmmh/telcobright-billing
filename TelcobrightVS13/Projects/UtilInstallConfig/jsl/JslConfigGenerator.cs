@@ -35,7 +35,7 @@ namespace InstallConfig
             this.Tbc.CdrSetting = new CdrSetting()
             {
                 SummaryTimeField = SummaryTimeFieldEnum.AnswerTime,
-                PartialCdrEnabledNeIds =new List<int>() {3},
+                PartialCdrEnabledNeIds =new List<int>() {7},
                 DescendingOrderWhileListingFiles = false,
                 DescendingOrderWhileProcessingListedFiles = false
             };

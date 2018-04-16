@@ -26,8 +26,20 @@ namespace UnitTesterManual
             switch (cmdName)
             {
                 case '1':
-                    Console.WriteLine("Executing NewCdr for "+operatorName+".");
-                    new MockNewCdrProcessor(operatorName,cdrDecoder).Execute();
+                    Console.WriteLine("Dump rawCdrs? (Y/N)?");
+                    var keyInfo = Console.ReadKey();
+                    Console.WriteLine();
+                    bool dumpRawCdr = false;
+                    if (new List<char>() {'y', 'Y'}.Contains(keyInfo.KeyChar))
+                    {
+                        dumpRawCdr = true;
+                        Console.WriteLine("Executing NewCdr for " + operatorName + ". Raw cdr dumping is enabled.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Executing NewCdr for " + operatorName + ". Raw cdr dumping is disabled.");
+                    }
+                    new MockNewCdrProcessor(operatorName,cdrDecoder,dumpRawCdr).Execute();
                     break;
                 case '2':
                     Console.WriteLine("Executing ErrorCdr for " + operatorName + ".");
