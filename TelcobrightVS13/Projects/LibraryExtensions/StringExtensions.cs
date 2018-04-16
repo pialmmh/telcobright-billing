@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+
 namespace LibraryExtensions
 {
     public static class StringExtensions
@@ -108,6 +112,10 @@ namespace LibraryExtensions
         public static bool IsNullOrEmptyOrWhiteSpace(this string s)
         {
             return string.IsNullOrEmpty(s) || string.IsNullOrWhiteSpace(s);
+        }
+        public static bool ValueIn(this string s,IEnumerable<string> values)
+        {
+            return values.Contains(s);
         }
     }
 

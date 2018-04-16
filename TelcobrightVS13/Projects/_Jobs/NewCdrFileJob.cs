@@ -18,7 +18,7 @@ using TelcobrightMediation.Config;
 namespace Jobs
 {
     [Export("Job", typeof(ITelcobrightJob))]
-    public class NewCdrFile : ITelcobrightJob
+    public class NewCdrFileJob : ITelcobrightJob
     {
         public virtual string RuleName => "JobNewCdrFile";
         public virtual string HelpText => "New Cdr Job, processes a new CDR file";

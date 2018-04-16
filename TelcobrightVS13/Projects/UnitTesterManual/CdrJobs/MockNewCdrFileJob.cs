@@ -23,16 +23,15 @@ using TelcobrightMediation.Mediation.Cdr;
 namespace UnitTesterManual
 {
     [Export("Job", typeof(ITelcobrightJob))]
-    public class MockNewCdrFileJob : NewCdrFile
+    public class MockNewCdrFileJob : NewCdrFileJob
     {
         public IFileDecoder CdrDecoder { get; set; }
         public string OperatorName { get; set; }
-        public bool DumpRawCdr { get; }
-        public MockNewCdrFileJob(IFileDecoder cdrDecoder,string operatorName,bool dumpRawCdr)
+
+        public MockNewCdrFileJob(IFileDecoder cdrDecoder, string operatorName)
         {
             this.CdrDecoder = cdrDecoder;
             this.OperatorName = operatorName;
-            this.DumpRawCdr = dumpRawCdr;
         }
 
         public override JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
@@ -48,15 +47,7 @@ namespace UnitTesterManual
             NewCdrPreProcessor preProcessor =
                 new NewCdrPreProcessor(decodedCdrRows, inconsistentCdrs, collectorInput);
             base.PrepareDecodedRawCdrs(preProcessor, collectorInput);
-            if (this.DumpRawCdr)
-            {
-                if (inconsistentCdrs.Any())
-                {
-                    throw new Exception("Inconsistent cdrs are temporarily disallowed.");
-                }
-                DumpToMockCdr(input.TelcobrightJob.JobName,decodedCdrRows, "mockcdr", input);
-            }
-            
+
             CdrCollectionResult newCollectionResult = null;
             CdrCollectionResult oldCollectionResult = null;
             preProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
@@ -68,21 +59,6 @@ namespace UnitTesterManual
             CdrJob cdrJob = new CdrJob(cdrProcessor, cdrEraser, cdrProcessor.CollectionResult.RawCount);
             ExecuteCdrJob(input, cdrJob);
             return JobCompletionStatus.Complete;
-        }
-
-        private void DumpToMockCdr(string fileName,List<string[]> txtRows, string mockCdrTableName, CdrJobInputData input)
-        {
-            txtRows.ForEach(r=>r[Fn.Filename]=fileName);
-            Console.WriteLine("Dumping rawcdrs into mockcdr table for file:"+fileName);
-            using (DbCommand cmd = ConnectionManager.CreateCommandFromDbContext(input.Context))
-            {
-                cmd.CommandText = $@"delete from mockcdr where fileserialno={fileName.EncloseWithSingleQuotes()}";
-                cmd.ExecuteNonQuery();
-                StringBuilder sb = new StringBuilder("insert into mockcdr values ")
-                    .Append(String.Join(",",txtRows.Select(row=>"(" + string.Join(",",row.Select(fld=>fld.EncloseWithSingleQuotes())) + ")").ToList()));
-                cmd.CommandText = sb.ToString();    
-                cmd.ExecuteNonQuery();
-            }
         }
 
         protected override void ExecuteCdrJob(CdrJobInputData input, CdrJob cdrJob)
@@ -98,7 +74,7 @@ namespace UnitTesterManual
                 Assert.IsTrue(MediationTester.SummaryCountTwiceAsCdrCount(cdrJob.CdrProcessor));
                 Assert.IsTrue(MediationTester.
                     SumOfPrevDayWiseDurationsAndNewSummaryInstancesIsEqualToSameInMergedSummaryCache(cdrJob.CdrProcessor));
-                if (this.DumpRawCdr == true && cdrJob.CdrJobContext.MediationContext.Tbc.CdrSetting
+                if (cdrJob.CdrJobContext.MediationContext.Tbc.CdrSetting
                         .PartialCdrEnabledNeIds.Contains(cdrJob.CdrJobContext.Ne.idSwitch))
                 {
                     //partial cdrs tests here...

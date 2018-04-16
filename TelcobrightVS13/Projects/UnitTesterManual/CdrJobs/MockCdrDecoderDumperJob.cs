@@ -23,12 +23,12 @@ using TelcobrightMediation.Mediation.Cdr;
 namespace UnitTesterManual
 {
     [Export("Job", typeof(ITelcobrightJob))]
-    public class MockCdrDecoderDumper : NewCdrFile
+    public class MockCdrDecoderDumperJob : NewCdrFileJob
     {
         public IFileDecoder CdrDecoder { get; set; }
         public string OperatorName { get; set; }
 
-        public MockCdrDecoderDumper(IFileDecoder cdrDecoder, string operatorName, bool dumpRawCdr)
+        public MockCdrDecoderDumperJob(IFileDecoder cdrDecoder, string operatorName)
         {
             this.CdrDecoder = cdrDecoder;
             this.OperatorName = operatorName;
@@ -45,16 +45,21 @@ namespace UnitTesterManual
                 + input.TelcobrightJob.JobName;
             List<cdrinconsistent> inconsistentCdrs;
             List<string[]> decodedCdrRows = this.CdrDecoder.DecodeFile(collectorInput, out inconsistentCdrs);
-            NewCdrPreProcessor preProcessor =
-                new NewCdrPreProcessor(decodedCdrRows, inconsistentCdrs, collectorInput);
-            base.PrepareDecodedRawCdrs(preProcessor, collectorInput);
+            //NewCdrPreProcessor preProcessor =
+              //  new NewCdrPreProcessor(decodedCdrRows, inconsistentCdrs, collectorInput);
+            //base.PrepareDecodedRawCdrs(preProcessor, collectorInput);
             if (inconsistentCdrs.Any())
             {
                 throw new Exception("Inconsistent cdrs are temporarily disallowed.");
             }
             string fileName = input.TelcobrightJob.JobName;
-            decodedCdrRows.ForEach(r => r[Fn.Filename] = fileName);
-            Console.WriteLine("Dumping rawcdrs into mockcdr table for file:" + fileName);
+            string switchId = input.Ne.idSwitch.ToString();
+            decodedCdrRows.ForEach(r =>
+            {
+                r[Fn.Filename] = fileName;
+                r[Fn.Switchid]=switchId.ToString();
+            });
+            
             using (DbCommand cmd = ConnectionManager.CreateCommandFromDbContext(input.Context))
             {
                 cmd.CommandText = $@"delete from mockcdr where fileserialno={fileName.EncloseWithSingleQuotes()}";
@@ -66,6 +71,8 @@ namespace UnitTesterManual
                                            ")").ToList()));
                 cmd.CommandText = sb.ToString();
                 cmd.ExecuteNonQuery();
+
+                cmd.ExecuteCommandText("commit;");
             }
             return JobCompletionStatus.Complete;
         }

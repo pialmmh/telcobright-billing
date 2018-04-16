@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="CdrJobs\MockCdrEraserJob.cs" />
     <Compile Include="CdrJobs\MockCdrReProcessorJob.cs" />
+    <Compile Include="CdrJobs\MockCdrDecoderDumperJob.cs" />
     <Compile Include="Processes\MockCdrReProcessor.cs" />
     <Compile Include="Processes\MockNewCdrProcessor.cs" />
     <Compile Include="MockDialogicCdrDecoder.cs" />

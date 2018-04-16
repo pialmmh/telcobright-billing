@@ -34,12 +34,11 @@ namespace UnitTesterManual
         public int ProcessId => 103;
         public string OperatorName { get; set; }
         public IFileDecoder CdrDecoder { get; set; }
-        public bool DumpRawCdr { get; }
-        public MockNewCdrProcessor(string operatorName, IFileDecoder fileDecoder,bool dumpRawCdr)
+        public bool DecodeAndDumpOnly { get; set; } = false;
+        public MockNewCdrProcessor(string operatorName, IFileDecoder fileDecoder)
         {
             this.OperatorName = operatorName;
             this.CdrDecoder = fileDecoder;
-            this.DumpRawCdr = dumpRawCdr;
         }
 
         public void ExecuteJobsWithTests(ITelcobrightJob job,CdrJobInputData cdrJobInputData)
@@ -78,12 +77,21 @@ namespace UnitTesterManual
                     {
                         foreach (job telcobrightJob in incompleteJobs)
                         {
-                            Console.WriteLine("Processing CdrJob for Switch:" + ne.SwitchName +
-                                              ", JobName:" + telcobrightJob.JobName);
+                            string jobPurposeIndicator = this.DecodeAndDumpOnly == false
+                                ? "Processing CdrJob"
+                                : "Decoding & Dumping raw cdr";
+                            Console.WriteLine(
+                                $"{jobPurposeIndicator} for Switch:{ne.SwitchName}, JobName:{telcobrightJob.JobName}");
                             cmd.ExecuteCommandText("set autocommit=0;"); //transaction started
                             try
                             {
-                                ITelcobrightJob iJob = new MockNewCdrFileJob(this.CdrDecoder, this.OperatorName,this.DumpRawCdr);
+                                ITelcobrightJob iJob = null;
+                                if (this.DecodeAndDumpOnly == false)
+                                {
+                                    iJob = new MockNewCdrFileJob(this.CdrDecoder, this.OperatorName);
+                                }
+                                else iJob = new MockCdrDecoderDumperJob(this.CdrDecoder, this.OperatorName);
+
                                 var cdrJobInputData =
                                     new CdrJobInputData(mediationContext, context, ne, telcobrightJob);
                                 iJob.Execute(cdrJobInputData); //execute job, this includes commit if successful,
