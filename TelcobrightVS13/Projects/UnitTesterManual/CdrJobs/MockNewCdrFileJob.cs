@@ -46,7 +46,8 @@ namespace UnitTesterManual
             List<string[]> decodedCdrRows = this.CdrDecoder.DecodeFile(collectorInput, out inconsistentCdrs);
             NewCdrPreProcessor preProcessor =
                 new NewCdrPreProcessor(decodedCdrRows, inconsistentCdrs, collectorInput);
-            base.PrepareDecodedRawCdrs(preProcessor, collectorInput);
+            base.PreformatRawCdrs(preProcessor, collectorInput);
+            preProcessor.TxtCdrRows.ForEach(txtRow => preProcessor.ConvertToCdrOrInconsistentOnFailure(txtRow));
 
             CdrCollectionResult newCollectionResult = null;
             CdrCollectionResult oldCollectionResult = null;

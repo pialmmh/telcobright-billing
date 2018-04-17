@@ -263,6 +263,7 @@ namespace Decoders
                             thisNormalizedRow[55] = "0";//for now mark as non-partial, single cdr
                                                         //remove the text "end1", casue that will throw error for this field in cdrloaded
                             thisNormalizedRow[65] = "0";//a numeric value is ok as per cdrfieldlist
+                            thisNormalizedRow[Fn.Finalrecord] = "1";
                             decodedRows.Add(thisNormalizedRow);
                         }
                     }

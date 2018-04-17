@@ -235,16 +235,15 @@ namespace Decoders
                     {
                         thisNormalizedRow[Fn.Chargingstatus] = "0";
                     }
-
+                    
                     //exclude rows having charging status other than successful or failed...(e.g. intermediate in dialogic cdr)
                     if ((thisNormalizedRow[18] == "0") || (thisNormalizedRow[18] == "1"))
                     {
                         if (thisNormalizedRow[54] == "R")
                         {
-                            //add valid flag for this type of switch, valid flag comes from cdr for zte
-                            thisNormalizedRow[54] = "1";
+                            thisNormalizedRow[54] = "1";//add valid flag for this type of switch, valid flag comes from cdr for zte
                             thisNormalizedRow[55] = "0";//for now mark as non-partial, single cdr
-
+                            thisNormalizedRow[Fn.Finalrecord] = "1";
                             decodedRows.Add(thisNormalizedRow);
                         }
                     }

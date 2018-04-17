@@ -60,7 +60,7 @@ namespace TelcobrightMediation
                 base.InconsistentCdrs.Add(cdrInconsistent);
             else if (convertedCdr != null && cdrInconsistent == null)
             {
-                if (convertedCdr.PartialFlag != 1)
+                if (convertedCdr.PartialFlag == 0)
                     base.NonPartialCdrs.Add(convertedCdr);
                 else
                     base.RawPartialCdrInstances.Add(
@@ -92,7 +92,12 @@ namespace TelcobrightMediation
                 {
                     PartialCdrCollector partialCdrCollector = new PartialCdrCollector(
                         this.CdrCollectorInputData, base.RawPartialCdrInstances.ToList());
-                    partialCdrCollector.CollectFullInfo();
+                    partialCdrCollector.CollectPartialCdrHistory();
+                    if (partialCdrCollector.ValidatePartialCdrCollectionStatus() == false)
+                    {
+                        throw new Exception($@"Sum of idCalls from cdrpartialreference & cdrpartialrawinstance
+                                       does not match, partial cdr collection result is not correct.");
+                    }
                     base.PartialCdrContainers = partialCdrCollector.AggregateAll() ?? new BlockingCollection<PartialCdrContainer>();
                 }
             }
@@ -140,11 +145,6 @@ namespace TelcobrightMediation
                     thisRow[c] = (thisRow[c] == null ? string.Empty : thisRow[c].Trim());
                 }
             }
-        }
-
-        public void MarkRowAsFinalRecordWhenPartialCdrsDisabled(string[] thisRow)
-        {
-            thisRow[Fn.Finalrecord] = "1";
         }
 
         public void RemoveIllegalCharacters(List<string> illegalStrToRemoveFromFields, string[] thisRow)
