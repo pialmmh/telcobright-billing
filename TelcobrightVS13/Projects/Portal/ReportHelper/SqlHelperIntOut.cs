@@ -73,7 +73,7 @@ namespace PortalApp.ReportHelper
 
 	            FROM {TableName}
                 WHERE tup_starttime>='{StartDate}'
-                AND tup_starttime<='{EndDate}'
+                AND tup_starttime<'{EndDate}'
                 {GetWhereClauseAdditional()}
                 {GetGroupBy()}
             

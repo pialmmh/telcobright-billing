@@ -22,7 +22,6 @@ public partial class SiteMaster : System.Web.UI.MasterPage
     protected void Page_Load(object sender, EventArgs e)
     {
 
-
         //TreeView1 restore node states...
         if (this.Session["sesCommonState"] != null)
         {
@@ -41,7 +40,7 @@ public partial class SiteMaster : System.Web.UI.MasterPage
 
         if (!this.IsPostBack)
         {
-
+            this.Session["isTreeLoaded"] = true;
             //Load Report Templates in TreeView dynically from database.
             CommonCode commonCode = new CommonCode();
             commonCode.LoadReportTemplatesTree(ref this.TreeView1);
@@ -85,11 +84,18 @@ public partial class SiteMaster : System.Web.UI.MasterPage
             //remove nodes other than expanded, for role based secutiry.  TV doesnot support visible property.
             if (currentRoles.Select(c => c.Name).Contains("admin") == false)
             {
-                this.TreeView1.Nodes.Clear();
-                foreach (TreeNode node in mExt.Nodes.Values)
+                if (this.Session["isTreeLoaded"] == null)
                 {
-                    if (node.Expanded == false) continue;
-                    this.TreeView1.Nodes.Add(node);
+                    this.TreeView1.Nodes.Clear();
+                    foreach (TreeNode node in mExt.Nodes.Values)
+                    {
+                        if (node.Expanded == false) continue;
+                        TreeNode parentNode = TreeView1.FindNode(node.ValuePath.Split('/')[0]);
+                        if (parentNode == null)
+                            this.TreeView1.Nodes.Add(node);
+                        else
+                            parentNode.ChildNodes.Add(new TreeNode(node.Text, node.ValuePath));
+                    }
                 }
             }
             //set home page link to dashboard if specified in portalsettings
