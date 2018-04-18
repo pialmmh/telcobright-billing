@@ -61,6 +61,7 @@ namespace TelcobrightMediation.Mediation.Cdr
 
         Dictionary<string, cdr> CollectLastProcessedCdrInstances()
         {
+            if(this.BillIdWiseReferences.Any()==false) return new Dictionary<string, cdr>();
             var dayWisePartialReferences = this.BillIdWiseReferences.Values
                 .GroupBy(r => r.CallDate.Date).ToDictionary(g => g.Key, g => g.Select(r => r.lastIdcall).ToList());
             string sql = string.Join(" union all ",
@@ -72,23 +73,27 @@ namespace TelcobrightMediation.Mediation.Cdr
         }
         public BlockingCollection<PartialCdrContainer> AggregateAll()
         {
-            BlockingCollection<PartialCdrContainer> partialCdrFullInfos = new BlockingCollection<PartialCdrContainer>();
+            BlockingCollection<PartialCdrContainer> partialCdrContainers = new BlockingCollection<PartialCdrContainer>();
             foreach (KeyValuePair<string, List<cdrpartialrawinstance>> kv in this.BillIdWiseNewRawInstances)
             {
                 var partialCdrContainer = new PartialCdrContainer(
-                    newRawInstances:this.BillIdWiseNewRawInstances[kv.Key],
-                    prevRawInstances:this.BillIdWisePrevRawInstances.ContainsKey(kv.Key)
-                                                    ?this.BillIdWisePrevRawInstances[kv.Key]:null,
+                    newRawInstances: this.BillIdWiseNewRawInstances[kv.Key],
+                    prevRawInstances: this.BillIdWisePrevRawInstances.ContainsKey(kv.Key)
+                        ? this.BillIdWisePrevRawInstances[kv.Key]
+                        : new List<cdrpartialrawinstance>(),
                     cdrPartialreference: this.BillIdWiseReferences.ContainsKey(kv.Key)
-                                        ? this.BillIdWiseReferences[kv.Key]:null,
-                    prevAggregatedRawInstance: this.BillIdWiseLastAggregatedRawInstances.ContainsKey(kv.Key)==true
-                                           ? this.BillIdWiseLastAggregatedRawInstances[kv.Key]:null,
+                        ? this.BillIdWiseReferences[kv.Key]
+                        : null,
+                    lastAggregatedRawInstance: this.BillIdWiseLastAggregatedRawInstances.ContainsKey(kv.Key) == true
+                        ? this.BillIdWiseLastAggregatedRawInstances[kv.Key]
+                        : null,
                     prevProcessedCdrInstance: this.BillIdWiseLastProcessedAggregatedCdrs.ContainsKey(kv.Key) == true
-                        ? this.BillIdWiseLastProcessedAggregatedCdrs[kv.Key] : null);
+                        ? this.BillIdWiseLastProcessedAggregatedCdrs[kv.Key]
+                        : null);
                 partialCdrContainer.Aggregate();
-                partialCdrFullInfos.Add(partialCdrContainer);
+                partialCdrContainers.Add(partialCdrContainer);
             }
-            return partialCdrFullInfos;
+            return partialCdrContainers;
         }
 
         private string CreateSqlToCollectPrevPartialCdrInfo(List<string> uniqueBillIds,string tableName)
@@ -97,22 +102,26 @@ namespace TelcobrightMediation.Mediation.Cdr
             StringBuilder sb = new StringBuilder($@"select * from {tableName} where switchid={this.IdSwitch} and")
                 .Append($@" uniquebillid in ({
                         string.Join(",", uniqueBillIds.Select(b => b.EncloseWithSingleQuotes()))})")
-                .Append($@" and starttime >= {scanDates.Min().ToMySqlField()})")
-                .Append($@" and starttime < {(scanDates.Max().AddDays(1))}");
+                .Append($@" and starttime >= {scanDates.Min().ToMySqlField()}")
+                .Append($@" and starttime < {scanDates.Max().AddDays(1).ToMySqlField()}");
             return sb.ToString();
         }
 
-        public bool ValidatePartialCdrCollectionStatus()
+        public void ValidatePartialCdrCollectionStatus()
         {
             long sumFromCdrPartialRef = this.BillIdWiseReferences.Values.SelectMany(r => r
                 .commaSepIdcallsForAllInstances.Split(',').Select(strIdCall => Convert.ToInt64(strIdCall))).Sum();
             long sumFromPrevRawInstances = this.BillIdWisePrevRawInstances.Values
                 .SelectMany(listOfInstances => listOfInstances).Sum(instance=>instance.idcall);
-            long sumFromLastAggregatedRawInstances = this.BillIdWiseLastAggregatedRawInstances.Values
-                .Sum(lastAggInstance => lastAggInstance.idcall);
-            return new List<long>() {sumFromCdrPartialRef, sumFromPrevRawInstances, sumFromLastAggregatedRawInstances}
-                .TrueForAll(val => val == sumFromCdrPartialRef);
-            //todo: add more validation clauses here...like match duration
+            if(sumFromCdrPartialRef!=sumFromPrevRawInstances) 
+                throw new Exception("Sum of prev partial idCalls from partialCdrReference & prevRawinstances does not match.");
+
+            decimal sumDurationFromLastAggregatedRawInstances = this.BillIdWiseLastAggregatedRawInstances.Values
+                .Sum(lastAggInstance => lastAggInstance.DurationSec);
+            decimal sumDurationFromPrevRawInstances = this.BillIdWisePrevRawInstances.Values
+                                                          .SelectMany(r => r).Sum(r => r.DurationSec);
+            if(sumDurationFromLastAggregatedRawInstances!= sumDurationFromPrevRawInstances)
+                throw new Exception("Sum duration of prev partial cdrs from prevRawInstances & lastAggregatedInstances does not match.");
         }
 
         private List<DateTime> AddDistinctDaysBeforeAndAfterUniqueDaysForSafePartialCollection(

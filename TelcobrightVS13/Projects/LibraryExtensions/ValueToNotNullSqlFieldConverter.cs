@@ -4,7 +4,6 @@ namespace LibraryExtensions
 {
     public static class ValueToNotNullSqlFieldConverter
     {
-        //todo: remove tmp function
         public static string ToNotNullSqlField(this string val)
         {
             string str = val.ReplaceNullWith("");

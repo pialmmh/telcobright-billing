@@ -93,11 +93,7 @@ namespace TelcobrightMediation
                     PartialCdrCollector partialCdrCollector = new PartialCdrCollector(
                         this.CdrCollectorInputData, base.RawPartialCdrInstances.ToList());
                     partialCdrCollector.CollectPartialCdrHistory();
-                    if (partialCdrCollector.ValidatePartialCdrCollectionStatus() == false)
-                    {
-                        throw new Exception($@"Sum of idCalls from cdrpartialreference & cdrpartialrawinstance
-                                       does not match, partial cdr collection result is not correct.");
-                    }
+                    partialCdrCollector.ValidatePartialCdrCollectionStatus();
                     base.PartialCdrContainers = partialCdrCollector.AggregateAll() ?? new BlockingCollection<PartialCdrContainer>();
                 }
             }
@@ -120,6 +116,10 @@ namespace TelcobrightMediation
             var concatedList = cdrExtsForPartials.Concat(cdrExtsForNonPartials).ToList();
             if (concatedList.GroupBy(c => c.UniqueBillId).Any(g => g.Count() > 1))
                 throw new Exception("Duplicate billId for CdrExts in CdrJob");
+            var rawPartialCount = this.PartialCdrContainers.SelectMany(p => p.NewRawInstances).Count();
+            if (this.RawCount!=cdrExtsForNonPartials.Count+cdrExtsForPartials.Count+
+                rawPartialCount-this.PartialCdrContainers.Count)
+                throw new Exception("Count of nonPartial and partial cdrs do not match expected with expected rawCount for this job.");
             return concatedList;
         }
 

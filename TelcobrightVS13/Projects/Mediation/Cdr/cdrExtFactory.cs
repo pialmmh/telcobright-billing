@@ -26,7 +26,7 @@ namespace TelcobrightMediation.Cdr
             CdrNewOldType cdrNewOldType)
         {
             if (partialCdrContainer == null
-                || partialCdrContainer.NewMediatableCdrInstance == null)
+                || partialCdrContainer.NewCdrEquivalent == null)
             {
                 throw new Exception(
                     "Either partialCdrContainer or NewMediatableInstance is null, both should be set for partial cdrs.");
@@ -34,14 +34,14 @@ namespace TelcobrightMediation.Cdr
             switch (cdrNewOldType)
             {
                 case CdrNewOldType.NewCdr:
-                    if (partialCdrContainer.NewMediatableCdrInstance.FinalRecord != 1)
+                    if (partialCdrContainer.NewCdrEquivalent.FinalRecord != 1)
                         throw new Exception("Partial cdr equivalent instance must have final record set to 1.");
-                    if (partialCdrContainer.NewMediatableCdrInstance.PartialFlag != 1)
+                    if (partialCdrContainer.NewCdrEquivalent.PartialFlag != 1)
                         throw new Exception("Partial cdr equivalent instance must have partial flag set to 1.");
-                    return new CdrExt(partialCdrContainer.NewMediatableCdrInstance, CdrNewOldType.NewCdr)
+                    return new CdrExt(partialCdrContainer.NewCdrEquivalent, CdrNewOldType.NewCdr)
                     {
                         PartialCdrContainer = partialCdrContainer,
-                        MediationResult = new CdrMediationResult(partialCdrContainer.NewMediatableCdrInstance)
+                        MediationResult = new CdrMediationResult(partialCdrContainer.NewCdrEquivalent)
                     };
                 case CdrNewOldType.OldCdr:
                     if (partialCdrContainer.PrevProcessedCdrInstance == null)
