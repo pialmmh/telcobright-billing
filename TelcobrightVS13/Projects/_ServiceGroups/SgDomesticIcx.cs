@@ -12,7 +12,7 @@ namespace TelcobrightMediation
     {
         private readonly SgIntlTransitVoice _sgIntlTransitVoice = new SgIntlTransitVoice();
         public override string ToString() => this.RuleName;
-        public string RuleName => GetType().Name;
+        public string RuleName => "Domestic Calls [ICX]";
         public string HelpText => "Service group Domestic for BD ICX.";
         public int Id => 1;
         private Dictionary<string, Type> SummaryTargetTables { get; }
@@ -43,8 +43,8 @@ namespace TelcobrightMediation
             dicRoutes.TryGetValue(key, out thisRoute);
             if (thisRoute != null)
             {
-                if (thisRoute.partner.PartnerType == 1 &&
-                    thisRoute.NationalOrInternational == 1) //ANS and route=national
+                if (thisRoute.partner.PartnerType == IcxPartnerType.ANS &&
+                    thisRoute.NationalOrInternational == RouteLocalityType.National) //ANS and route=national
                 {
                     thisCdr.CallDirection = 1; //Domestic in ICX
                 }

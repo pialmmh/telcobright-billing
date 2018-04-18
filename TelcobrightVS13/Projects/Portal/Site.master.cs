@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI.WebControls;
 using System.Collections;
+using LibraryExtensions;
 using PortalApp;
 using MediationModel;
 
@@ -58,14 +59,21 @@ public partial class SiteMaster : System.Web.UI.MasterPage
                 }
             }
             telcobrightpartner thisPartner = null;
-            TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
+            TelcobrightConfig tbc = PageUtil.GetTelcobrightConfig();
 
-            using (PartnerEntities conTelco = new PartnerEntities())
+            if (tbc.PortalSettings.AlternateDisplayName.IsNullOrEmptyOrWhiteSpace())
             {
-                thisPartner = conTelco.telcobrightpartners.Where(c => c.databasename == dbNameAppConf).ToList().First();
+                using (PartnerEntities conTelco = new PartnerEntities())
+                {
+                    thisPartner = conTelco.telcobrightpartners.Where(c => c.databasename == dbNameAppConf).ToList()
+                        .First();
+                }
+                this.lblCustomerDisplayName.Text = thisPartner.CustomerName;
             }
-            this.lblCustomerDisplayName.Text = thisPartner.CustomerName;
-
+            else
+            {
+                this.lblCustomerDisplayName.Text = tbc.PortalSettings.AlternateDisplayName;
+            }
             List<role> roles = PageUtil.GetRoles();
             //nodes can't be accessed by name, so adding them so that they can be parsed by spring expression
             //for applying page settings
@@ -80,7 +88,7 @@ public partial class SiteMaster : System.Web.UI.MasterPage
             //apply master page settings
             List<role> currentRoles = PageUtil.GetRoles();
             //apply page settings
-            PageUtil.ApplyPageSettings(mExt, true, telcobrightConfig);
+            PageUtil.ApplyPageSettings(mExt, true, tbc);
             //remove nodes other than expanded, for role based secutiry.  TV doesnot support visible property.
             if (currentRoles.Select(c => c.Name).Contains("admin") == false)
             {
@@ -100,9 +108,9 @@ public partial class SiteMaster : System.Web.UI.MasterPage
             }
             //set home page link to dashboard if specified in portalsettings
             var x = (LinkButton)FindControl("LinkButtonHome");
-            if (!string.IsNullOrEmpty(telcobrightConfig.PortalSettings.HomePageUrl))
+            if (!string.IsNullOrEmpty(tbc.PortalSettings.HomePageUrl))
             {
-                x.PostBackUrl = telcobrightConfig.PortalSettings.HomePageUrl;
+                x.PostBackUrl = tbc.PortalSettings.HomePageUrl;
             }
         }//if not postback
     }

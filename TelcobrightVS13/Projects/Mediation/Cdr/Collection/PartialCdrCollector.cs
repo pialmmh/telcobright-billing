@@ -21,8 +21,8 @@ namespace TelcobrightMediation.Mediation.Cdr
         private Dictionary<string, cdrpartialreference> BillIdWiseReferences { get; set; }
         private Dictionary<string,List<cdrpartialrawinstance>> BillIdWiseNewRawInstances { get; set; }
         private Dictionary<string, List<cdrpartialrawinstance>> BillIdWisePrevRawInstances { get; set; }
-        private Dictionary<string, cdrpartiallastaggregatedrawinstance> BillIdWisePrevAggregatedRawInstances { get; set; }
-        private Dictionary<string, cdr> BillIdWisePrevProcessedCdrInstances { get; set; }
+        private Dictionary<string, cdrpartiallastaggregatedrawinstance> BillIdWiseLastAggregatedRawInstances { get; set; }
+        private Dictionary<string, cdr> BillIdWiseLastProcessedAggregatedCdrs { get; set; }
         //public List<PartialCdrAggregatedInformation> AggregatedPartialCdrInfos { get; private set; }
         public PartialCdrCollector(CdrCollectorInputData cdrCollectorInputData, List<cdrpartialrawinstance> newPartialCdrInstances)
         {
@@ -39,21 +39,37 @@ namespace TelcobrightMediation.Mediation.Cdr
                 AddDistinctDaysBeforeAndAfterUniqueDaysForSafePartialCollection(datesInvolved);
         }
 
-        public void CollectFullInfo()
+        public void CollectPartialCdrHistory()
         {
             List<string> uniqueBillIds = this.BillIdWiseNewRawInstances.Keys.ToList();
-            this.BillIdWiseReferences = CollectBillIdWiseCdrPartialReferences(this.Context, uniqueBillIds);
-            this.BillIdWisePrevRawInstances =
-                CollectBillIdWiseRawPartialInstances(uniqueBillIds);
-            if (ValidatePartialCdrCollectionByIdCallsSum(this.BillIdWisePrevRawInstances) == false)
-            {
-                throw new Exception($@"Sum of idCalls from cdrpartialreference & cdrpartialrawinstance
-                                       does not match, partial cdr collection result is not correct.");
-            }
-            this.BillIdWisePrevAggregatedRawInstances=CollectLastAggregatedRawInstances(uniqueBillIds);
-            this.BillIdWisePrevProcessedCdrInstances = CollectLastProcessedCdrInstances(uniqueBillIds);
+            string sql = CreateSqlToCollectPrevPartialCdrInfo(uniqueBillIds, "cdrpartialreference")
+                .Replace("starttime", "calldate");
+            this.BillIdWiseReferences = this.Context.Database.SqlQuery<cdrpartialreference>(sql)
+                .ToDictionary(c => c.UniqueBillId);
+
+            sql = CreateSqlToCollectPrevPartialCdrInfo(uniqueBillIds, "cdrpartialrawinstance");
+            this.BillIdWisePrevRawInstances = this.Context.Database.SqlQuery<cdrpartialrawinstance>(sql)
+                .GroupBy(c => c.UniqueBillId).ToDictionary(g => g.Key, g => g.ToList());
+
+            sql = CreateSqlToCollectPrevPartialCdrInfo(uniqueBillIds, "cdrpartiallastaggregatedrawinstance");
+            this.BillIdWiseLastAggregatedRawInstances = this.Context.Database
+                .SqlQuery<cdrpartiallastaggregatedrawinstance>(sql)
+                .ToDictionary(c => c.UniqueBillId);
+
+            this.BillIdWiseLastProcessedAggregatedCdrs = CollectLastProcessedCdrInstances();
         }
 
+        Dictionary<string, cdr> CollectLastProcessedCdrInstances()
+        {
+            var dayWisePartialReferences = this.BillIdWiseReferences.Values
+                .GroupBy(r => r.CallDate.Date).ToDictionary(g => g.Key, g => g.Select(r => r.lastIdcall).ToList());
+            string sql = string.Join(" union all ",
+                dayWisePartialReferences.Select(kv =>
+                    $@" select * from cdr where switchid={this.IdSwitch} 
+                    and idcall in ({string.Join(",", kv.Value)}) and {
+                    kv.Key.ToMySqlWhereClauseForOneDay("starttime")}"));
+            return this.Context.Database.SqlQuery<cdr>(sql).ToDictionary(c => c.UniqueBillId);
+        }
         public BlockingCollection<PartialCdrContainer> AggregateAll()
         {
             BlockingCollection<PartialCdrContainer> partialCdrFullInfos = new BlockingCollection<PartialCdrContainer>();
@@ -65,110 +81,40 @@ namespace TelcobrightMediation.Mediation.Cdr
                                                     ?this.BillIdWisePrevRawInstances[kv.Key]:null,
                     cdrPartialreference: this.BillIdWiseReferences.ContainsKey(kv.Key)
                                         ? this.BillIdWiseReferences[kv.Key]:null,
-                    prevAggregatedRawInstance: this.BillIdWisePrevAggregatedRawInstances.ContainsKey(kv.Key)==true
-                                           ? this.BillIdWisePrevAggregatedRawInstances[kv.Key]:null,
-                    prevProcessedCdrInstance: this.BillIdWisePrevProcessedCdrInstances.ContainsKey(kv.Key) == true
-                        ? this.BillIdWisePrevProcessedCdrInstances[kv.Key] : null);
+                    prevAggregatedRawInstance: this.BillIdWiseLastAggregatedRawInstances.ContainsKey(kv.Key)==true
+                                           ? this.BillIdWiseLastAggregatedRawInstances[kv.Key]:null,
+                    prevProcessedCdrInstance: this.BillIdWiseLastProcessedAggregatedCdrs.ContainsKey(kv.Key) == true
+                        ? this.BillIdWiseLastProcessedAggregatedCdrs[kv.Key] : null);
                 partialCdrContainer.Aggregate();
                 partialCdrFullInfos.Add(partialCdrContainer);
             }
             return partialCdrFullInfos;
         }
 
-        
-
-
-        private Dictionary<string, cdrpartialreference> CollectBillIdWiseCdrPartialReferences(PartnerEntities context,
-            List<string> uniqueBillIds)
+        private string CreateSqlToCollectPrevPartialCdrInfo(List<string> uniqueBillIds,string tableName)
         {
-            string sql =
-                GetDateWiseWhereClauseToSelectPrevInstancesBasedOnUniqueBillId(
-                    uniqueBillIds, "cdrpartialreference", "calldate");
-            return context.Database.SqlQuery<cdrpartialreference>(sql)
-                    .ToDictionary(c => c.UniqueBillId);
-            
-        }
-        
-        private Dictionary<string, List<cdrpartialrawinstance>>
-            CollectBillIdWiseRawPartialInstances(List<string> uniqueBillIds)
-        {
-            string sql = GetDateWiseWhereClauseToSelectPrevInstancesBasedOnUniqueBillId(
-                            uniqueBillIds, "cdrpartialrawinstance", "starttime");
-            Dictionary<string, List<cdrpartialrawinstance>>
-                billIdWisePrevInstances = this.Context.Database.
-                SqlQuery<cdrpartialrawinstance>(sql)
-                .GroupBy(c=>c.UniqueBillId)
-                .ToDictionary(g=>g.Key,g=>g.ToList());
-            return billIdWisePrevInstances;
+            var scanDates = this.DatesToScanForSafePartialCdrCollection;
+            StringBuilder sb = new StringBuilder($@"select * from {tableName} where switchid={this.IdSwitch} and")
+                .Append($@" uniquebillid in ({
+                        string.Join(",", uniqueBillIds.Select(b => b.EncloseWithSingleQuotes()))})")
+                .Append($@" and starttime >= {scanDates.Min().ToMySqlField()})")
+                .Append($@" and starttime < {(scanDates.Max().AddDays(1))}");
+            return sb.ToString();
         }
 
-        private Dictionary<string, cdrpartiallastaggregatedrawinstance>
-            CollectLastAggregatedRawInstances(List<string> uniqueBillIds)
+        public bool ValidatePartialCdrCollectionStatus()
         {
-            string sql = GetDateWiseWhereClauseToSelectPrevInstancesBasedOnUniqueBillId(
-                uniqueBillIds, "cdrpartiallastaggregatedrawinstance", "starttime");
-            return this.Context.Database.SqlQuery<cdrpartiallastaggregatedrawinstance>(sql)
-                .ToDictionary(c => c.UniqueBillId);
-        }
-        private Dictionary<string, cdr>
-            CollectLastProcessedCdrInstances(List<string> uniqueBillIds)
-        {
-            Dictionary<DateTime, List<long>> dayWiseIdCalls
-                = this.BillIdWiseReferences.Values.GroupBy(c => c.CallDate.Date)
-                    .ToDictionary(g => g.Key, g => g.Select(c => c.lastIdcall).ToList());
-            string sql = 
-                string.Join(" union all ",
-                dayWiseIdCalls.Select(kv => $@" select * from cdr 
-                                              where {kv.Key.ToMySqlWhereClauseForOneDay("starttime")}
-                                              and idcall in ({string.Join(",", kv.Value)})"));
-            Dictionary<string, cdr> lastProcessedCdrInstances =
-                this.Context.Database.SqlQuery<cdr>(sql).ToDictionary(c => c.UniqueBillId);
-            Dictionary<string, string> uniqueBillIdsAsDic = uniqueBillIds.ToDictionary(c => c);
-            foreach (var kv in lastProcessedCdrInstances)
-            {
-                if(uniqueBillIdsAsDic.ContainsKey(kv.Key)==false)
-                    throw new Exception("At least one billId for last processed partial cdr is not in current jobs partial cdr list.");
-            }
-            return lastProcessedCdrInstances;
+            long sumFromCdrPartialRef = this.BillIdWiseReferences.Values.SelectMany(r => r
+                .commaSepIdcallsForAllInstances.Split(',').Select(strIdCall => Convert.ToInt64(strIdCall))).Sum();
+            long sumFromPrevRawInstances = this.BillIdWisePrevRawInstances.Values
+                .SelectMany(listOfInstances => listOfInstances).Sum(instance=>instance.idcall);
+            long sumFromLastAggregatedRawInstances = this.BillIdWiseLastAggregatedRawInstances.Values
+                .Sum(lastAggInstance => lastAggInstance.idcall);
+            return new List<long>() {sumFromCdrPartialRef, sumFromPrevRawInstances, sumFromLastAggregatedRawInstances}
+                .TrueForAll(val => val == sumFromCdrPartialRef);
+            //todo: add more validation clauses here...like match duration
         }
 
-        private string GetDateWiseWhereClauseToSelectPrevInstancesBasedOnUniqueBillId(List<string> uniqueBillIds,
-            string tableName,string columnNameForDateWisePartition)
-        {
-            List<string> dateWisewhereClauses = new List<string>();
-            foreach (var singleDate in this.DatesToScanForSafePartialCdrCollection)
-            {
-                var sb = new StringBuilder("select * from ").Append(tableName).Append(" where switchid=")
-                    .Append(this.IdSwitch).Append(" and ");
-                sb.Append(singleDate.ToMySqlWhereClauseForOneDay(columnNameForDateWisePartition))
-                    .Append(" and uniqueBillId in ("+string.Join(",",uniqueBillIds.Select(bId=>bId.EncloseWith("'")))+")");
-                dateWisewhereClauses.Add(sb.ToString());
-            }
-            return string.Join(" union all ", dateWisewhereClauses);
-        }
-
-        private bool ValidatePartialCdrCollectionByIdCallsSum(Dictionary<string, List<cdrpartialrawinstance>>
-            billIdWisePrevUnProcessedPartialInstancesInstances)
-        {
-            Dictionary<string, List<long>> billIdWiseIdCallsFromCdrPartialReference =
-                PrepareBillIdWiseIdCallsFromCdrPartialReferences();
-            long sumFromCdrPartialRef = billIdWiseIdCallsFromCdrPartialReference.Values.Select(c => c.Sum()).Sum();
-            long sumFromPrevPartialUnprocessedInstances = billIdWisePrevUnProcessedPartialInstancesInstances.Values
-                .Select(listOfInstances => listOfInstances.Sum(c => c.idcall)).Sum();
-            return sumFromCdrPartialRef==sumFromPrevPartialUnprocessedInstances;
-        }
-
-        private Dictionary<string, List<long>> PrepareBillIdWiseIdCallsFromCdrPartialReferences()
-        {
-            Dictionary<string, List<long>> billIdWiseIdCalls = new Dictionary<string, List<long>>();
-            foreach (KeyValuePair<string, cdrpartialreference> kv in this.BillIdWiseReferences)
-            {
-                billIdWiseIdCalls.Add(kv.Key,
-                    kv.Value.commaSepIdcallsForAllInstances.Split(',')
-                        .Select(idCallAsString => Convert.ToInt64(idCallAsString)).ToList());
-            }
-            return billIdWiseIdCalls;
-        }
         private List<DateTime> AddDistinctDaysBeforeAndAfterUniqueDaysForSafePartialCollection(
             List<DateTime> datesToScanForPrevInstances)
         {

@@ -51,9 +51,9 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
 
         }
         ruleddl.Items.Clear();
-        ruleddl.Items.Add(new ListItem("[All]", "-1"));
+        ruleddl.Items.Add(new ListItem("[Select]", "-1"));
         cyclelistddl.Items.Clear();
-        cyclelistddl.Items.Add(new ListItem("[All]", "-1"));
+        cyclelistddl.Items.Add(new ListItem("[Select]", "-1"));
         foreach (BillingRule jsb in billingRules)
         {
             ruleddl.Items.Add(new ListItem(jsb.RuleName, jsb.Id.ToString()));
@@ -78,49 +78,43 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
             ddlserviceGroup.Items.Add(new ListItem(" [Select]", "-1"));
             ServiceGroupComposer serviceGroupComposer = new ServiceGroupComposer();
             serviceGroupComposer.ComposeFromPath(PageUtil.GetPortalBinPath() + "\\..\\Extensions");
-            Dictionary<int, IServiceGroup> serviceGroups =
+            Dictionary<int, IServiceGroup> mefServiceGroups =
                     serviceGroupComposer.ServiceGroups.ToDictionary(c => c.Id);
-            Dictionary<string, string>
-                dicUniqueServiceGroup = new Dictionary<string, string>(); //serv group id, name
-            Dictionary<string, enumservicegroup> dicServiceGroups =
-                context.enumservicegroups.ToDictionary(c => c.id.ToString());
-
             foreach (KeyValuePair<int, ServiceGroupConfiguration> kv in Tbc.CdrSetting.ServiceGroupConfigurations)
             {
-                if (serviceGroups.ContainsKey(kv.Key))
+                if (mefServiceGroups.ContainsKey(kv.Key))
                 {
-                    ddlserviceGroup.Items.Add(new ListItem(kv.Key.ToString(), serviceGroups[kv.Key].Id.ToString()));
+                    IServiceGroup thisServiceGroup = null;
+                    mefServiceGroups.TryGetValue(kv.Key, out thisServiceGroup);
+                    if(thisServiceGroup==null) throw new Exception("Service group not found for id="+kv.Key);
+                    ddlserviceGroup.Items.Add(new ListItem(thisServiceGroup.RuleName, kv.Key.ToString()));
                 }
             }
         }
     }
-    List<enumservicefamily> Lstrules = new List<enumservicefamily>();
 
     private void PopulateDropdownlistService(ServiceGroupConfiguration serviceGroupConfig)
     {
         List<int> configuredSfIdsForThisServiceGroup = serviceGroupConfig.Ratingtrules.Select(c => c.IdServiceFamily)
             .ToList();
-        using (PartnerEntities contex = new PartnerEntities())
+        using (PartnerEntities context = new PartnerEntities())
         {
-            var Lstrules = contex.enumservicefamilies
+            var lstrules = context.enumservicefamilies
                 .Where(c => configuredSfIdsForThisServiceGroup.Contains(c.id)).ToList();
-        }
-
-        //  Lstrules = Lstrules.Where(c => configuredSfNamesForThisServiceGroup.Contains(c.ServiceName)).ToList();
-        DropDownList dropservice = (DropDownList) frmSupplierRatePlanInsert.FindControl("DropDownListservice");
-        dropservice.Items.Clear();
-        dropservice.Items.Add(new ListItem(" [Select]", "-1"));
-        foreach (enumservicefamily ThisRule in Lstrules)
-        {
-            dropservice.Items.Add(new ListItem(ThisRule.ServiceName, ThisRule.id.ToString()));
+            DropDownList dropservice = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListservice");
+            dropservice.Items.Clear();
+            dropservice.Items.Add(new ListItem(" [Select]", "-1"));
+            foreach (enumservicefamily thisRule in lstrules)
+            {
+                dropservice.Items.Add(new ListItem(thisRule.ServiceName, thisRule.id.ToString()));
+            }
         }
     }
 
     protected void DropDownListServiceGroup_SelectedIndexChanged(object sender, EventArgs e)
     {
-        int idServiceGroup= Convert.ToInt32(((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListServiceGroup")).SelectedValue);
         int serviceGroupId =Convert.ToInt32(((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListServiceGroup")).SelectedItem.Value);
-        if (idServiceGroup== -1){
+        if (serviceGroupId== -1){
             DropDownList dropservice = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListservice");
             dropservice.Items.Clear();
         }
@@ -845,7 +839,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                 if (dropPartner.SelectedValue == "0")//none
                 {
                     ((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListAssignedDirection")).Enabled = false;
-                    Lstrules = Conmed.enumservicefamilies.Where(c => c.PartnerAssignNotNeeded == 1).ToList();
+                    var lstRules = Conmed.enumservicefamilies.Where(c => c.PartnerAssignNotNeeded == 1).ToList();
                     dropRoute.SelectedValue = "-1";
                     dropRoute.Enabled = false;
                 }
@@ -857,7 +851,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                 }
                 else//a partner has been selected
                 {
-                    Lstrules = Conmed.enumservicefamilies.Where(c => c.PartnerAssignNotNeeded != 1).ToList();
+                    var lstRules = Conmed.enumservicefamilies.Where(c => c.PartnerAssignNotNeeded != 1).ToList();
                     ((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListAssignedDirection")).Enabled = true;
                     int idPartner = Convert.ToInt32(dropPartner.SelectedValue);
                     var LstRoute = Context.routes.Where(c => c.idPartner == idPartner).ToList();
@@ -3423,8 +3417,8 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
 
 
             DropDownList ServiceType = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListAssignedDirection");
-
             DropDownList ddlistSf = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListservice");
+            DropDownList ddlBillingRule = (DropDownList) frmSupplierRatePlanInsert.FindControl("DropDownBillingRule");
             if (ServiceType.SelectedIndex == 2)
             {
                 billingRule = "";
@@ -3432,8 +3426,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
             }
             else
             {
-                billingRule = ((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownBillingRule")).SelectedValue;
-                paymentMode = ((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListPaymentMethod")).SelectedValue;
+                billingRule = ddlBillingRule.SelectedValue;
             }
             // BillingInformation bl = new BillingInformation(billingRule, paymentMode);
             // var jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(bl);
@@ -3444,7 +3437,12 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                 StatusLabel.Text = "No Service Family Selected!";
                 return;
             }
-
+            if (ddlBillingRule.SelectedIndex == 0)
+            {
+                StatusLabel.ForeColor = Color.Red;
+                StatusLabel.Text = "No Billing Rule Selected!";
+                return;
+            }
             Dictionary<string, enumservicefamily> dicServiceFamily = new Dictionary<string, enumservicefamily>();
             using (PartnerEntities Context = new PartnerEntities())
             {
@@ -3748,27 +3746,49 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
 
                 if (ExistingTuple == null)//tuple does not exist
                 {
-                    rateplanassignmenttuple NewTuple = new rateplanassignmenttuple();
+                    //todo: fix autoincrement work around currently implemented for billingRuleassignment
+                    int maxIdRatePlanAssignmentTuple = 0;
+                    using (PartnerEntities context = new PartnerEntities())
+                    {
+                        if (context.rateplanassignmenttuples.Any())
+                        {
+                            maxIdRatePlanAssignmentTuple = context.rateplanassignmenttuples.Max(c => c.id);
+                        }
+                    }
+                    rateplanassignmenttuple newTuple =
+                        new rateplanassignmenttuple() {id = ++maxIdRatePlanAssignmentTuple};
                     if (NewidPartner == 0)//has to be null in the database
                     {
-                        NewTuple.idpartner = null;
+                        newTuple.idpartner = null;
                     }
                     else
                     {
-                        NewTuple.idpartner = NewidPartner;
+                        newTuple.idpartner = NewidPartner;
                     }
                     if (NewRoute == -1)
                     {
-                        NewTuple.route = null;
+                        newTuple.route = null;
                     }
                     else
                     {
-                        NewTuple.route = NewRoute;
+                        newTuple.route = NewRoute;
                     }
-                    NewTuple.idService = NewserviceId;
-                    NewTuple.priority = NewPriority;
-                    NewTuple.AssignDirection = NewAssignDirection;
-                    Context.rateplanassignmenttuples.Add(NewTuple);
+                    newTuple.idService = NewserviceId;
+                    newTuple.priority = NewPriority;
+                    newTuple.AssignDirection = NewAssignDirection;
+                    Context.rateplanassignmenttuples.Add(newTuple);
+                    //insert billingRule
+                    ddlBillingRule = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownBillingRule");
+                    DropDownList ddlserviceGroup = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListServiceGroup");
+                    int selectedBillingRule = Convert.ToInt32(ddlBillingRule.SelectedValue);
+                    int selectedServiceGroup = Convert.ToInt32(ddlserviceGroup.SelectedValue);
+                    billingruleassignment billingruleassignment = new billingruleassignment()
+                    {
+                        idRatePlanAssignmentTuple = newTuple.id,
+                        idServiceGroup = selectedServiceGroup,
+                        idBillingRule = selectedBillingRule
+                    };
+                    Context.billingruleassignments.Add(billingruleassignment);
                     Context.SaveChanges();
                 }
 
@@ -3939,7 +3959,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                        "`EndPreviousRate`,            " +
                        "`Category`,                " +
                        "`SubCategory`,             " +
-                       // "`BillingParams`)" +
+                       "`BillingParams`)" +
                        "VALUES                        " +
 
                        "(  													 " +
@@ -3988,10 +4008,8 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                        "'" + ThisRate.EndPreviousRate + "'," +
                        "'" + ThisRate.Category + "'," +
                        "'" + ThisRate.SubCategory + "'," +
-                       "'" + ThisRate.Category + "'," +
-                       //  "'" + new JavaScriptSerializer().Serialize(bl) +
-                       "')";
-
+                       "'" + ThisRate.Category + "'" +")";
+            
             return x;
         }
         catch (Exception e1)
@@ -4367,11 +4385,11 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
         //<asp:ListItem Value="12">Rate Position Not Found</asp:ListItem> //status
         //<asp:ListItem Value="13">Existing</asp:ListItem> //status
 
-        rateassign ThisRate = null;
+        rateassign thisRate = null;
         try
         {
             List<ratetaskassign> lstDeleteTasks = lstRateTask.Where(c => c.rateamount == "-1"
-                                                                         && c.field2 == "0"//not having validation error
+                                                            && c.field2 == "0"//not having validation error
             ).ToList();
 
             List<ratetaskassign> lstPrefixDelAll = lstDeleteTasks.Where(c => c.Prefix == "*").Select(c => new ratetaskassign { Prefix = "*", startdate = c.startdate, ChangedByTaskId = c.id.ToString(), Category = c.Category, SubCategory = c.SubCategory }).ToList();
@@ -4501,7 +4519,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
 
                     foreach (ratetaskassign ThisTask in lstRateTask)
                     {
-                        ThisRate = RateTaskToRate(ThisTask, idRatePlan);
+                        thisRate = RateTaskToRate(ThisTask, idRatePlan);
                         //when converting from task to rate, any previous overlap and conflicts are discarded
                         //by the conversion as it is not necessary.
 
@@ -4511,13 +4529,13 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                         rateassign PrevRate = null;
                         rateassign LastInstance = null;
 
-                        if (SurroundingRates(ref dicRateCache, ThisRate, idRatePlan, ref PresentRate, ref NextRate, ref PrevRate, ref LastInstance) == 0)
+                        if (SurroundingRates(ref dicRateCache, thisRate, idRatePlan, ref PresentRate, ref NextRate, ref PrevRate, ref LastInstance) == 0)
                         //error occured
                         {
                             if (CheckBoxContinueOnError.Checked == false) return 0;
                         }
 
-                        RatePositioning RatePos = new RatePositioning(PresentRate, PrevRate, NextRate, ThisRate, CheckBoxAutoAdjust.Checked);
+                        RatePositioning RatePos = new RatePositioning(PresentRate, PrevRate, NextRate, thisRate, CheckBoxAutoAdjust.Checked);
                         //rate positions and any overlap/conflict status is known now
 
                         bool OverLap = RatePos.Overlap;
@@ -4558,14 +4576,14 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                         }
 
                         //process rates which are not overlap or conflict
-                        switch (ThisRate.Status)
+                        switch (thisRate.Status)
                         {
                             case 9://overlap
                             case 12://rate position not found
 
                                 sbSQL.Append(
-                                    " update ratetaskassign set status =" + ThisRate.Status +
-                                    " where id=" + ThisRate.id).Append(";");
+                                    " update ratetaskassign set status =" + thisRate.Status +
+                                    " where id=" + thisRate.id).Append(";");
 
                                 break;
                             case 2://new
@@ -4573,21 +4591,21 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                                 {
                                     if (RatePos.ThisPosition == RatePositions.BeforeAll)
                                     {
-                                        ThisRate.enddate = NextRate.startdate;
+                                        thisRate.enddate = NextRate.startdate;
                                     }
 
                                     sbSQL.Append(
-                                        InsertSqlRate(ThisRate)).Append(";");
+                                        InsertSqlRate(thisRate)).Append(";");
 
                                     sbSQL.Append(
                                         " update ratetaskassign set changecommitted=1, " +
-                                        " startdate='" + ThisRate.startdate.ToString("yyyy-MM-dd HH:mm:ss") + "'," +
+                                        " startdate='" + thisRate.startdate.ToString("yyyy-MM-dd HH:mm:ss") + "'," +
                                         " enddate=" +
-                                        (ThisRate.enddate != new DateTime(9999, 12, 31, 23, 59, 59) ?
-                                            ("'" + Convert.ToDateTime(ThisRate.enddate).ToString("yyyy-MM-dd HH:mm:ss") + "'") : "null")
+                                        (thisRate.enddate != new DateTime(9999, 12, 31, 23, 59, 59) ?
+                                            ("'" + Convert.ToDateTime(thisRate.enddate).ToString("yyyy-MM-dd HH:mm:ss") + "'") : "null")
                                         + "," +
-                                        "status =" + ThisRate.Status + " where " +
-                                        " id=" + ThisRate.id).Append(";");
+                                        "status =" + thisRate.Status + " where " +
+                                        " id=" + thisRate.id).Append(";");
                                     TotalCommitCount++;
                                 }
                                 break;
@@ -4606,8 +4624,8 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                                         if (PrevRate.enddate == RatePos.FutureDate)//null, end previous rate with no end date
                                         {
                                             sbSQL.Append(
-                                                " update rateassign set enddate='" + ThisRate.startdate.ToString("yyyy-MM-dd HH:mm:ss") + "', " +
-                                                " ChangedByTaskId=" + ThisRate.id +
+                                                " update rateassign set enddate='" + thisRate.startdate.ToString("yyyy-MM-dd HH:mm:ss") + "', " +
+                                                " ChangedByTaskId=" + thisRate.id +
                                                 " where id=" + PrevRate.id).Append(";");
 
                                             //also make sure the corresponding previous task for this rate has the 
@@ -4619,39 +4637,39 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                                                                                                              && c.startdate == PreviousRatesDate
                                                 ).FirstOrDefault();
                                                 sbSQL.Append(
-                                                    " update ratetaskassign set enddate='" + ThisRate.startdate.ToString("yyyy-MM-dd HH:mm:ss") + "' " +
+                                                    " update ratetaskassign set enddate='" + thisRate.startdate.ToString("yyyy-MM-dd HH:mm:ss") + "' " +
                                                     " where id=" + PrevTask.id).Append(";");
                                             }
                                         }
                                         //insert the new rate
                                         sbSQL.Append(
-                                            InsertSqlRate(ThisRate)).Append(";");
+                                            InsertSqlRate(thisRate)).Append(";");
 
                                         sbSQL.Append(
                                             " update ratetaskassign set changecommitted=1," +
-                                            " startdate='" + ThisRate.startdate.ToString("yyyy-MM-dd HH:mm:ss") + "'," +
+                                            " startdate='" + thisRate.startdate.ToString("yyyy-MM-dd HH:mm:ss") + "'," +
                                             " enddate=" +
-                                            (ThisRate.enddate != new DateTime(9999, 12, 31, 23, 59, 59) ?
-                                                ("'" + Convert.ToDateTime(ThisRate.enddate).ToString("yyyy-MM-dd HH:mm:ss") + "'") : "null")
+                                            (thisRate.enddate != new DateTime(9999, 12, 31, 23, 59, 59) ?
+                                                ("'" + Convert.ToDateTime(thisRate.enddate).ToString("yyyy-MM-dd HH:mm:ss") + "'") : "null")
                                             + "," +
-                                            " status =" + ThisRate.Status + " where " +
-                                            " id=" + ThisRate.id).Append(";");
+                                            " status =" + thisRate.Status + " where " +
+                                            " id=" + thisRate.id).Append(";");
                                         TotalCommitCount++;
                                     }
                                     //else if previous rate is null
                                     else
                                     {
                                         sbSQL.Append(
-                                            InsertSqlRate(ThisRate)).Append(";");
+                                            InsertSqlRate(thisRate)).Append(";");
 
                                         sbSQL.Append(
                                             " update ratetaskassign set changecommitted=1, " +
-                                            " startdate='" + ThisRate.startdate.ToString("yyyy-MM-dd HH:mm:ss") + "'," +
-                                            " enddate='" + Convert.ToDateTime(ThisRate.enddate).ToString("yyyy-MM-dd HH:mm:ss") + "' " +
-                                            ",status =" + ThisRate.Status +
+                                            " startdate='" + thisRate.startdate.ToString("yyyy-MM-dd HH:mm:ss") + "'," +
+                                            " enddate='" + Convert.ToDateTime(thisRate.enddate).ToString("yyyy-MM-dd HH:mm:ss") + "' " +
+                                            ",status =" + thisRate.Status +
                                             " ,affectedrates='" + PrevRate.id + "'" +
                                             " where " +
-                                            " id=" + ThisRate.id).Append(";");
+                                            " id=" + thisRate.id).Append(";");
                                         TotalCommitCount++;
                                     }
                                 }
@@ -4663,7 +4681,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                                 {
                                     //have to change own end date as well so that it doesn't overlap the next
                                     //AffectedOLRates.Add(ThisRate.id.ToString());--this can't be set, the taskid will be set in rate table
-                                    ThisRate.enddate = NextRate.startdate;
+                                    thisRate.enddate = NextRate.startdate;
                                 }
                                 else//overlappingboth or overlapbycoincide
                                 {
@@ -4672,33 +4690,33 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                                     {
 
                                         sbSQL.Append(
-                                            " update rateassign set enddate='" + ThisRate.startdate.ToString("yyyy-MM-dd HH:mm:ss") + "' " +
-                                            " ChangedByTaskId=" + ThisRate.id +
+                                            " update rateassign set enddate='" + thisRate.startdate.ToString("yyyy-MM-dd HH:mm:ss") + "' " +
+                                            " ChangedByTaskId=" + thisRate.id +
                                             " where id=" + PrevRate.id).Append(";");
 
                                         AffectedOLRates.Add(PrevRate.id.ToString());
                                     }
                                     if ((RatePos.ThisOverLapType == OverlapTypes.OverlappingBoth) ||
-                                        (ThisRate.enddate == RatePos.FutureDate))
+                                        (thisRate.enddate == RatePos.FutureDate))
                                     {
                                         //have to change own end date as well so that it doesn't overlap the next
-                                        ThisRate.enddate = NextRate.startdate;
+                                        thisRate.enddate = NextRate.startdate;
                                     }
                                 }
 
                                 sbSQL.Append(
-                                    InsertSqlRate(ThisRate)).Append(";");
+                                    InsertSqlRate(thisRate)).Append(";");
                                 sbSQL.Append(
-                                    " update ratetaskassign set changecommitted=1,status =" + ThisRate.Status +
+                                    " update ratetaskassign set changecommitted=1,status =" + thisRate.Status +
                                     " ,affectedrates='" + string.Join(",", AffectedOLRates.ToArray()) + "'" +
                                     " where " +
-                                    " id=" + ThisRate.id).Append(";");
+                                    " id=" + thisRate.id).Append(";");
                                 TotalCommitCount++;
                                 break;
                             case 13://existing, dont' mark as change committed
                                 sbSQL.Append(
-                                    " update ratetaskassign set status =" + ThisRate.Status + " where " +
-                                    " id=" + ThisRate.id).Append(";");
+                                    " update ratetaskassign set status =" + thisRate.Status + " where " +
+                                    " id=" + thisRate.id).Append(";");
 
                                 break;
                         }
@@ -4720,7 +4738,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
             var color = ColorTranslator.FromHtml("#FA0509");
             StatusLabel.ForeColor = color;
             StatusLabel.Text = e1.Message + "<br/>" + e1.InnerException + "<br/>" +
-                               ThisRate.Prefix + " effective date:" + ThisRate.startdate;
+                               thisRate.Prefix + " effective date:" + thisRate.startdate;
             return -1;
         }
 

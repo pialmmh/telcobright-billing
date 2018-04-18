@@ -13,7 +13,7 @@ namespace TelcobrightMediation
 	{
 		private readonly SgIntlTransitVoice _sgIntlTransitVoice=new SgIntlTransitVoice();
 		public override string ToString() => this.RuleName;
-		public string RuleName => GetType().Name;
+		public string RuleName => "International Outgoing Calls [ICX]";
 		public string HelpText => "Service group International Outgoing for BD ICX.";
 		public int Id => 2;
 		private Dictionary<string, Type> SummaryTargetTables { get; }
@@ -44,12 +44,11 @@ namespace TelcobrightMediation
 			dicRoutes.TryGetValue(key, out thisRoute);
 			if (thisRoute != null)
 			{
-				if (thisRoute.partner.PartnerType == 1 && thisRoute.NationalOrInternational == 2
-				) //ANS and route=international
+				if (thisRoute.partner.PartnerType == IcxPartnerType.ANS 
+					&& thisRoute.NationalOrInternational == RouteLocalityType.International) 
 				{
-
 					thisCdr.CallDirection = 2; //international Out in IGW
-											   //set year-month id for this call for tt clean & bc selling
+					//set year-month id for this call for tt clean & bc selling
 					string tempDateTime = thisCdr.StartTime.ToMySqlStyleDateTimeStrWithoutQuote();
 					thisCdr.field1 =Convert.ToInt32(tempDateTime.Substring(2, 2) + tempDateTime.Substring(5, 2));
 					thisCdr.field2 = Convert.ToInt32(tempDateTime.Substring(2, 2) + tempDateTime.Substring(5, 2));

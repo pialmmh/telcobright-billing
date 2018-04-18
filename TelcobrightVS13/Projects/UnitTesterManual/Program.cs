@@ -19,6 +19,7 @@ namespace UnitTesterManual
             Console.WriteLine("2=ErrorCdr");
             Console.WriteLine("3=CdrReprocess");
             Console.WriteLine("4=CdrEraser");
+            Console.WriteLine("5=RawCdrDecoderAndDumper");
             Console.WriteLine("q=Quit");
             ConsoleKeyInfo ki = new ConsoleKeyInfo();
             ki = Console.ReadKey(true);
@@ -26,7 +27,6 @@ namespace UnitTesterManual
             switch (cmdName)
             {
                 case '1':
-                    Console.WriteLine("Executing NewCdr for "+operatorName+".");
                     new MockNewCdrProcessor(operatorName,cdrDecoder).Execute();
                     break;
                 case '2':
@@ -41,6 +41,12 @@ namespace UnitTesterManual
                     Console.WriteLine("Executing CdrEraser for " + operatorName + ".");
                     var mockProcessor = new MockCdrReProcessor { Job = new MockCdrEraserJob() };
                     mockProcessor.Execute(operatorName);
+                    break;
+                case '5':
+                    Console.WriteLine("Executing RawCdrDecoder & Dumper for " + operatorName + ".");
+                    MockNewCdrProcessor dumpProcessor= new MockNewCdrProcessor(operatorName, cdrDecoder);
+                    dumpProcessor.DecodeAndDumpOnly = true;
+                    dumpProcessor.Execute();
                     break;
                 case 'q':
                 case 'Q':

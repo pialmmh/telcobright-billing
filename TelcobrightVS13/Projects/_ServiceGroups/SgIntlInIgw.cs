@@ -14,7 +14,7 @@ namespace TelcobrightMediation
     {
         private readonly SgIntlTransitVoice _sgIntlTransitVoice = new SgIntlTransitVoice();
         public override string ToString() => this.RuleName;
-        public string RuleName => GetType().Name;
+        public string RuleName => "International Incoming Calls [IGW]";
 
         public string HelpText =>
             "Service group International Incoming for BD IGW. Old common mediation codes for IGW, could not separate in short time, covers both intl in/out";

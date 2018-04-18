@@ -13,7 +13,7 @@ namespace TelcobrightMediation
 	{
 		private readonly SgIntlTransitVoice _sgIntlTransitVoice = new SgIntlTransitVoice();
 		public override string ToString() => this.RuleName;
-		public string RuleName => GetType().Name;
+		public string RuleName => "International Incoming Calls [ICX]";
 		public string HelpText { get; } = "Service group Intl In for BD ICX.";
 		public int Id => 3;
 		private Dictionary<string, Type> SummaryTargetTables { get; }
@@ -45,7 +45,8 @@ namespace TelcobrightMediation
 			dicRoutes.TryGetValue(key, out thisRoute);
 			if (thisRoute != null)
 			{
-				if (thisRoute.partner.PartnerType == 4 && thisRoute.NationalOrInternational == 2
+				if (thisRoute.partner.PartnerType == IcxPartnerType.IOS 
+                    && thisRoute.NationalOrInternational == RouteLocalityType.International
 				) //IGW and route=international
 				{
 					thisCdr.CallDirection = 3; //Intl in ICX

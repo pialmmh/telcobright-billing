@@ -342,6 +342,7 @@ namespace Decoders
                         //add valid flag for this type of switch, valid flag comes from cdr for zte
                         normalizedRow[Fn.Validflag] = "1";
                         normalizedRow[Fn.Partialflag] = "0";
+                        normalizedRow[Fn.Finalrecord] = "1";
                         decodedRows.Add(normalizedRow);
                     }
                 }

@@ -6,6 +6,7 @@ using System.Data.Common;
 using System.IO;
 using TelcobrightFileOperations;
 using System.Linq;
+using System.Text;
 using MediationModel;
 using System.Threading.Tasks;
 using Decoders;
@@ -17,15 +18,17 @@ using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Cdr;
 using TelcobrightMediation.Config;
 using Jobs;
+using TelcobrightMediation.Mediation.Cdr;
 
 namespace UnitTesterManual
 {
     [Export("Job", typeof(ITelcobrightJob))]
-    public class MockNewCdrFileJob : NewCdrFile
+    public class MockNewCdrFileJob : NewCdrFileJob
     {
         public IFileDecoder CdrDecoder { get; set; }
         public string OperatorName { get; set; }
-        public MockNewCdrFileJob(IFileDecoder cdrDecoder,string operatorName)
+
+        public MockNewCdrFileJob(IFileDecoder cdrDecoder, string operatorName)
         {
             this.CdrDecoder = cdrDecoder;
             this.OperatorName = operatorName;
@@ -41,13 +44,14 @@ namespace UnitTesterManual
                                       + input.TelcobrightJob.JobName;
             List<cdrinconsistent> inconsistentCdrs;
             List<string[]> decodedCdrRows = this.CdrDecoder.DecodeFile(collectorInput, out inconsistentCdrs);
-            NewCdrPreProcessor newAndErrorCdrPreProcessor =
+            NewCdrPreProcessor preProcessor =
                 new NewCdrPreProcessor(decodedCdrRows, inconsistentCdrs, collectorInput);
-            base.PrepareDecodedRawCdrs(newAndErrorCdrPreProcessor, collectorInput);
+            base.PreformatRawCdrs(preProcessor, collectorInput);
+            preProcessor.TxtCdrRows.ForEach(txtRow => preProcessor.ConvertToCdrOrInconsistentOnFailure(txtRow));
 
             CdrCollectionResult newCollectionResult = null;
             CdrCollectionResult oldCollectionResult = null;
-            newAndErrorCdrPreProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
+            preProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
             CdrJobContext cdrJobContext = new CdrJobContext(input, autoIncrementManager,
                 newCollectionResult.HoursInvolved);
             CdrProcessor cdrProcessor = new CdrProcessor(cdrJobContext, newCollectionResult);
@@ -71,6 +75,12 @@ namespace UnitTesterManual
                 Assert.IsTrue(MediationTester.SummaryCountTwiceAsCdrCount(cdrJob.CdrProcessor));
                 Assert.IsTrue(MediationTester.
                     SumOfPrevDayWiseDurationsAndNewSummaryInstancesIsEqualToSameInMergedSummaryCache(cdrJob.CdrProcessor));
+                if (cdrJob.CdrJobContext.MediationContext.Tbc.CdrSetting
+                        .PartialCdrEnabledNeIds.Contains(cdrJob.CdrJobContext.Ne.idSwitch))
+                {
+                    //partial cdrs tests here...
+
+                }
                 cdrJob.CdrProcessor?.WriteChangesExceptContext();
                 cdrJob.CdrJobContext.WriteChanges();
                 WriteJobCompletionIfCollectionNotEmpty(cdrJob, input.TelcobrightJob);

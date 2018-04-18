@@ -22,5 +22,6 @@ namespace MediationModel
         public int priority { get; set; }
     
         public virtual billingruleassignment billingruleassignment { get; set; }
+        public virtual route route1 { get; set; }
     }
 }

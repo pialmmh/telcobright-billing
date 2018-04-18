@@ -18,7 +18,7 @@ using TelcobrightMediation.Config;
 namespace Jobs
 {
     [Export("Job", typeof(ITelcobrightJob))]
-    public class NewCdrFile : ITelcobrightJob
+    public class NewCdrFileJob : ITelcobrightJob
     {
         public virtual string RuleName => "JobNewCdrFile";
         public virtual string HelpText => "New Cdr Job, processes a new CDR file";
@@ -31,7 +31,9 @@ namespace Jobs
             CdrCollectorInputData collectorInput = CreateCollectorInputDataInstance(input, autoIncrementManager);
             IEventCollector cdrCollector = new FileBasedTextCdrCollector(collectorInput, input.Context);
             NewCdrPreProcessor preProcessor = (NewCdrPreProcessor)cdrCollector.Collect();
-            PrepareDecodedRawCdrs(preProcessor, collectorInput);
+            PreformatRawCdrs(preProcessor, collectorInput);
+            preProcessor.TxtCdrRows.ForEach(txtRow => preProcessor.ConvertToCdrOrInconsistentOnFailure(txtRow));
+
             CdrCollectionResult newCollectionResult = null;
             CdrCollectionResult oldCollectionResult = null;
             preProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
@@ -56,12 +58,16 @@ namespace Jobs
             return new CdrCollectorInputData(input, fileName, autoIncrementManager);
         }
 
-        protected void PrepareDecodedRawCdrs(NewCdrPreProcessor preProcessor,
+        protected void PreformatRawCdrs(NewCdrPreProcessor preProcessor,
             CdrCollectorInputData collectorinput)
         {
             SetIdCallsInSameOrderAsCollected(preProcessor, collectorinput);
             FlexValidator<string[]> inconistentValidator = NewCdrPreProcessor.CreateValidatorForInconsistencyCheck(collectorinput);
-            preProcessor.TxtCdrRows = preProcessor.FilterCdrsWithDuplicateBillIdsAsInconsistent(preProcessor.TxtCdrRows);
+            if (!collectorinput.CdrJobInputData.MediationContext.Tbc.CdrSetting.PartialCdrEnabledNeIds
+                .Contains(collectorinput.Ne.idSwitch))
+            {
+                preProcessor.TxtCdrRows = preProcessor.FilterCdrsWithDuplicateBillIdsAsInconsistent(preProcessor.TxtCdrRows);
+            }
             Parallel.ForEach(preProcessor.TxtCdrRows, txtRow =>
             {
                 preProcessor.SetAllBlankFieldsToZerolengthString(txtRow);
@@ -72,11 +78,6 @@ namespace Jobs
                 preProcessor
                     .AdjustStartTimeBasedOnCdrSettingsForSummaryTimeField(
                         collectorinput.Tbc.CdrSetting.SummaryTimeField, txtRow);
-                if (!collectorinput.CdrJobInputData.MediationContext.Tbc.CdrSetting.PartialCdrEnabledNeIds
-                    .Contains(collectorinput.Ne.idSwitch))
-                {
-                    preProcessor.MarkRowAsFinalRecordWhenPartialCdrsDisabled(txtRow);
-                }
                 preProcessor.CheckAndConvertIfInconsistent(collectorinput.CdrJobInputData,
                     inconistentValidator, txtRow);
             });
@@ -87,7 +88,7 @@ namespace Jobs
                     .Where(c => !inconsistentIdCalls.Contains(Convert.ToInt64(c[Fn.Idcall])))
                     .ToList();
             }
-            preProcessor.TxtCdrRows.ForEach(txtRow => preProcessor.ConvertToCdrOrInconsistentOnFailure(txtRow));
+            
         }
 
         private static void SetIdCallsInSameOrderAsCollected(NewCdrPreProcessor preProcessor, CdrCollectorInputData collectorinput)

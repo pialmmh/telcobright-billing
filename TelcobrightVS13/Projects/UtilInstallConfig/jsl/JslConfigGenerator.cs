@@ -35,7 +35,7 @@ namespace InstallConfig
             this.Tbc.CdrSetting = new CdrSetting()
             {
                 SummaryTimeField = SummaryTimeFieldEnum.AnswerTime,
-                PartialCdrEnabledNeIds =new List<int>() {3},
+                PartialCdrEnabledNeIds =new List<int>() {7},
                 DescendingOrderWhileListingFiles = false,
                 DescendingOrderWhileProcessingListedFiles = false
             };
@@ -438,6 +438,7 @@ namespace InstallConfig
            PortalSettings portalSetting = new PortalSettings("Portal Settings")
             {
                HomePageUrl = "~/Dashboard.aspx",
+               AlternateDisplayName = "ICX Manager",
                PortalSites = new List<InternetSite>()
                 {
                     new InternetSite(this.Tbc)//make sure that first one always the http portal

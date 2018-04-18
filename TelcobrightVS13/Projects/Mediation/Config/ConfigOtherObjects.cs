@@ -249,6 +249,7 @@ namespace TelcobrightMediation
     public class PortalSettings
     {
         public string HomePageUrl { get; set; }
+        public string AlternateDisplayName { get; set; }
         public List<InternetSite> PortalSites { get; set; }
         public PortalSettings(string sectionName)
         {

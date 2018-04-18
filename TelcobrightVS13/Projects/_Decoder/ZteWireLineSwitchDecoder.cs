@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Globalization;
 using System.Linq;
+using LibraryExtensions;
 using TelcobrightFileOperations;
 using MediationModel;
 using TelcobrightMediation.Mediation.Cdr;
@@ -16,11 +17,11 @@ namespace Decoders
     public class ZteWireLineSwitchDecoder : IFileDecoder
     {
         public override string ToString() => this.RuleName;
-        public string RuleName => GetType().Name;
-        public string Id => "16";
-        public string HelpText => "Decodes ZTE CDR.";
+        public virtual string RuleName => GetType().Name;
+        public virtual string Id => "16";
+        public virtual string HelpText => "Decodes ZTE TDM/IP CDR.";
 
-        public List<string[]> DecodeFile(CdrCollectorInputData input,out List<cdrinconsistent> inconsistentCdrs)
+        public virtual List<string[]> DecodeFile(CdrCollectorInputData input,out List<cdrinconsistent> inconsistentCdrs)
         {
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
@@ -55,7 +56,6 @@ namespace Decoders
                     {
                         if (thisField.BinByteOffset == null) //field is not present in cdr
                         {
-
                             thisRow[thisField.FieldNumber] = "";
                         }
                         else //field is present in CDR and get the string representation by huawei data type
@@ -198,10 +198,14 @@ namespace Decoders
                                     //for valid id field
                                     //0=valid
                                     //1=invalid
-                                    else if ((thisField.FieldNumber == 18) || //charging status
-                                             (thisField.FieldNumber == 54)) //valid id
+                                    else if ((thisField.FieldNumber == 18)) //charging status
                                     {
                                         strThisField = intEquivalentBits.ToString();
+                                    }
+                                    else if ((thisField.FieldNumber == 54)) ////valid flag, 
+
+                                    {
+                                        strThisField = intEquivalentBits==0?"1":"0" ; //0 = valid for zte, so invert
                                     }
 
                                     else if ((thisField.FieldNumber == 22)) //release direction
@@ -367,11 +371,16 @@ namespace Decoders
                     //    //1: invalid; Shows an invalid CDR record. 
 
                     ////if valid answertime and partial cdr flag found
-                    if (thisRow[Fn.Partialflag] == "1")
+                    if (thisRow[Fn.Partialflag].Trim().ValueIn(new[] {"1", "2", "3"}))
                     {
-                        thisRow[89] = thisRow[14]; //duration
+                        thisRow[89] = thisRow[14]; //partial duration
                         thisRow[90] = thisRow[17]; //partial answertime
                         thisRow[91] = thisRow[15]; //partial endtime
+                    }
+                    else
+                    {
+                        thisRow[Fn.Partialflag] = "0";
+                        thisRow[Fn.Finalrecord] = "1";
                     }
                     decodedRows.Add(thisRow); 
                 }

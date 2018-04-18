@@ -1577,6 +1577,114 @@ warning 6002: The table/view 'def.platinum.cdrpartialreference' does not have a 
           <Property Name="StartDate" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="JobCreated" Type="int" Nullable="false" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'def.platinum.mockcdr' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="mockcdr">
+          <Property Name="SwitchId" Type="varchar" MaxLength="100" />
+          <Property Name="idCall" Type="varchar" MaxLength="100" />
+          <Property Name="SequenceNumber" Type="varchar" MaxLength="100" />
+          <Property Name="FileSerialNo" Type="varchar" MaxLength="100" />
+          <Property Name="CallDirection" Type="varchar" MaxLength="100" />
+          <Property Name="IncomingRoute" Type="varchar" MaxLength="100" />
+          <Property Name="OriginatingIP" Type="varchar" MaxLength="100" />
+          <Property Name="OPC" Type="varchar" MaxLength="100" />
+          <Property Name="OriginatingCIC" Type="varchar" MaxLength="100" />
+          <Property Name="OriginatingCalledNumber" Type="varchar" MaxLength="100" />
+          <Property Name="TerminatingCalledNumber" Type="varchar" MaxLength="100" />
+          <Property Name="OriginatingCallingNumber" Type="varchar" MaxLength="100" />
+          <Property Name="TerminatingCallingNumber" Type="varchar" MaxLength="100" />
+          <Property Name="CustomerPrePaid" Type="varchar" MaxLength="100" />
+          <Property Name="DurationSec" Type="varchar" MaxLength="100" />
+          <Property Name="EndTime" Type="varchar" MaxLength="100" />
+          <Property Name="ConnectTime" Type="varchar" MaxLength="100" />
+          <Property Name="AnswerTime" Type="varchar" MaxLength="100" />
+          <Property Name="ChargingStatus" Type="varchar" MaxLength="100" />
+          <Property Name="PDD" Type="varchar" MaxLength="100" />
+          <Property Name="CountryCode" Type="varchar" MaxLength="100" />
+          <Property Name="MinuteID" Type="varchar" MaxLength="100" />
+          <Property Name="ReleaseDirection" Type="varchar" MaxLength="100" />
+          <Property Name="ReleaseCauseSystem" Type="varchar" MaxLength="100" />
+          <Property Name="ReleaseCauseEgress" Type="varchar" MaxLength="100" />
+          <Property Name="OutgoingRoute" Type="varchar" MaxLength="100" />
+          <Property Name="TerminatingIP" Type="varchar" MaxLength="100" />
+          <Property Name="DPC" Type="varchar" MaxLength="100" />
+          <Property Name="TerminatingCIC" Type="varchar" MaxLength="100" />
+          <Property Name="StartTime" Type="varchar" MaxLength="100" />
+          <Property Name="CustomerID" Type="varchar" MaxLength="100" />
+          <Property Name="CustomerRate" Type="varchar" MaxLength="100" />
+          <Property Name="SupplierID" Type="varchar" MaxLength="100" />
+          <Property Name="SupplierRate" Type="varchar" MaxLength="100" />
+          <Property Name="MatchedPrefixY" Type="varchar" MaxLength="100" />
+          <Property Name="MediationRuleSupplier" Type="varchar" MaxLength="100" />
+          <Property Name="MatchedPrefixCustomer" Type="varchar" MaxLength="100" />
+          <Property Name="MatchedPrefixSupplier" Type="varchar" MaxLength="100" />
+          <Property Name="CustomerCost" Type="varchar" MaxLength="100" />
+          <Property Name="SupplierCost" Type="varchar" MaxLength="100" />
+          <Property Name="CostANSIn" Type="varchar" MaxLength="100" />
+          <Property Name="CostICXIn" Type="varchar" MaxLength="100" />
+          <Property Name="CostVATCommissionIn" Type="varchar" MaxLength="100" />
+          <Property Name="IGWRevenueIn" Type="varchar" MaxLength="100" />
+          <Property Name="RevenueANSOut" Type="varchar" MaxLength="100" />
+          <Property Name="RevenueIGWOut" Type="varchar" MaxLength="100" />
+          <Property Name="RevenueICXOut" Type="varchar" MaxLength="100" />
+          <Property Name="RevenueVATCommissionOut" Type="varchar" MaxLength="100" />
+          <Property Name="SubscriberChargeXOut" Type="varchar" MaxLength="100" />
+          <Property Name="CarrierCostYIGWOut" Type="varchar" MaxLength="100" />
+          <Property Name="ANSPrefixOrig" Type="varchar" MaxLength="100" />
+          <Property Name="AnsIdOrig" Type="varchar" MaxLength="100" />
+          <Property Name="AnsPrefixTerm" Type="varchar" MaxLength="100" />
+          <Property Name="AnsIdTerm" Type="varchar" MaxLength="100" />
+          <Property Name="ValidFlag" Type="varchar" MaxLength="100" />
+          <Property Name="PartialFlag" Type="varchar" MaxLength="100" />
+          <Property Name="ReleaseCauseIngress" Type="varchar" MaxLength="100" />
+          <Property Name="CustomerCallNumberANS" Type="varchar" MaxLength="100" />
+          <Property Name="SupplierCallNumberANS" Type="varchar" MaxLength="100" />
+          <Property Name="CalledPartyNOA" Type="varchar" MaxLength="100" />
+          <Property Name="CallingPartyNOA" Type="varchar" MaxLength="100" />
+          <Property Name="YearID" Type="varchar" MaxLength="100" />
+          <Property Name="CalledPartyNOAOut" Type="varchar" MaxLength="100" />
+          <Property Name="CallingPartyNOAOut" Type="varchar" MaxLength="100" />
+          <Property Name="BTRCTermRate" Type="varchar" MaxLength="100" />
+          <Property Name="WeekDayId" Type="varchar" MaxLength="100" />
+          <Property Name="E1Id" Type="varchar" MaxLength="100" />
+          <Property Name="MediaIP1" Type="varchar" MaxLength="100" />
+          <Property Name="MediaIP2" Type="varchar" MaxLength="100" />
+          <Property Name="MediaIP3" Type="varchar" MaxLength="100" />
+          <Property Name="MediaIP4" Type="varchar" MaxLength="100" />
+          <Property Name="CallCancelDuration" Type="varchar" MaxLength="100" />
+          <Property Name="E1IdOut" Type="varchar" MaxLength="100" />
+          <Property Name="inTrunkAdditionalInfo" Type="varchar" MaxLength="100" />
+          <Property Name="outTrunkAdditionalInfo" Type="varchar" MaxLength="100" />
+          <Property Name="InMgwId" Type="varchar" MaxLength="100" />
+          <Property Name="OutMgwId" Type="varchar" MaxLength="100" />
+          <Property Name="MediationComplete" Type="varchar" MaxLength="100" />
+          <Property Name="Codec" Type="varchar" MaxLength="100" />
+          <Property Name="ConnectedNumberType" Type="varchar" MaxLength="100" />
+          <Property Name="RedirectingNumber" Type="varchar" MaxLength="100" />
+          <Property Name="CallForwardOrRoamingType" Type="varchar" MaxLength="100" />
+          <Property Name="date1" Type="varchar" MaxLength="100" />
+          <Property Name="field1" Type="varchar" MaxLength="100" />
+          <Property Name="field2" Type="varchar" MaxLength="100" />
+          <Property Name="field3" Type="varchar" MaxLength="100" />
+          <Property Name="field4" Type="varchar" MaxLength="100" />
+          <Property Name="field5" Type="varchar" MaxLength="100" />
+          <Property Name="RoundedDuration" Type="varchar" MaxLength="100" />
+          <Property Name="PartialDuration" Type="varchar" MaxLength="100" />
+          <Property Name="PartialAnswerTime" Type="varchar" MaxLength="100" />
+          <Property Name="PartialEndTime" Type="varchar" MaxLength="100" />
+          <Property Name="FinalRecord" Type="varchar" MaxLength="100" />
+          <Property Name="Duration1" Type="varchar" MaxLength="100" />
+          <Property Name="Duration2" Type="varchar" MaxLength="100" />
+          <Property Name="Duration3" Type="varchar" MaxLength="100" />
+          <Property Name="Duration4" Type="varchar" MaxLength="100" />
+          <Property Name="PreviousPeriodCdr" Type="varchar" MaxLength="100" />
+          <Property Name="UniqueBillId" Type="varchar" MaxLength="100" />
+          <Property Name="BillingInfo" Type="varchar" MaxLength="100" />
+          <Property Name="Category" Type="varchar" MaxLength="100" />
+          <Property Name="SubCategory" Type="varchar" MaxLength="100" />
+          <Property Name="ChangedByJobId" Type="varchar" MaxLength="100" />
+          <Property Name="EventDate" Type="varchar" MaxLength="100" />
+        </EntityType>-->
         <EntityType Name="ne">
           <Key>
             <PropertyRef Name="idSwitch" />
@@ -2970,6 +3078,18 @@ warning 6002: The table/view 'def.platinum.uom_conversion_dated' does not have a
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_Ne">
+          <End Role="ne" Type="Self.ne" Multiplicity="1" />
+          <End Role="route" Type="Self.route" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ne">
+              <PropertyRef Name="idSwitch" />
+            </Principal>
+            <Dependent Role="route">
+              <PropertyRef Name="SwitchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_rateplan">
           <End Role="rateplan" Type="Self.rateplan" Multiplicity="0..1" />
           <End Role="ratetaskreference" Type="Self.ratetaskreference" Multiplicity="*" />
@@ -2979,6 +3099,18 @@ warning 6002: The table/view 'def.platinum.uom_conversion_dated' does not have a
             </Principal>
             <Dependent Role="ratetaskreference">
               <PropertyRef Name="idRatePlan" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_route">
+          <End Role="route" Type="Self.route" Multiplicity="0..1" />
+          <End Role="rateplanassignmenttuple" Type="Self.rateplanassignmenttuple" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="route">
+              <PropertyRef Name="idroute" />
+            </Principal>
+            <Dependent Role="rateplanassignmenttuple">
+              <PropertyRef Name="route" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -4159,9 +4291,17 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             <End Role="country" EntitySet="country" />
             <End Role="zone" EntitySet="zone" />
           </AssociationSet>
+          <AssociationSet Name="fk_Ne" Association="Self.fk_Ne">
+            <End Role="ne" EntitySet="ne" />
+            <End Role="route" EntitySet="route" />
+          </AssociationSet>
           <AssociationSet Name="fk_rateplan" Association="Self.fk_rateplan">
             <End Role="rateplan" EntitySet="rateplan" />
             <End Role="ratetaskreference" EntitySet="ratetaskreference" />
+          </AssociationSet>
+          <AssociationSet Name="fk_route" Association="Self.fk_route">
+            <End Role="route" EntitySet="route" />
+            <End Role="rateplanassignmenttuple" EntitySet="rateplanassignmenttuple" />
           </AssociationSet>
           <AssociationSet Name="fk_zone" Association="Self.fk_zone">
             <End Role="zone" EntitySet="zone" />
@@ -4386,6 +4526,10 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             <End Role="job" EntitySet="jobs" />
             <End Role="jobsegment" EntitySet="jobsegments" />
           </AssociationSet>
+          <AssociationSet Name="fk_Ne" Association="MediationModel.fk_Ne">
+            <End Role="ne" EntitySet="nes" />
+            <End Role="route" EntitySet="routes" />
+          </AssociationSet>
           <AssociationSet Name="ne_ibfk_1" Association="MediationModel.ne_ibfk_1">
             <End Role="telcobrightpartner" EntitySet="telcobrightpartners" />
             <End Role="ne" EntitySet="nes" />
@@ -4397,6 +4541,10 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <AssociationSet Name="fk_rateplan" Association="MediationModel.fk_rateplan">
             <End Role="rateplan" EntitySet="rateplans" />
             <End Role="ratetaskreference" EntitySet="ratetaskreferences" />
+          </AssociationSet>
+          <AssociationSet Name="fk_route" Association="MediationModel.fk_route">
+            <End Role="route" EntitySet="routes" />
+            <End Role="rateplanassignmenttuple" EntitySet="rateplanassignmenttuples" />
           </AssociationSet>
           <AssociationSet Name="userroles_ibfk_2" Association="MediationModel.userroles_ibfk_2">
             <End Role="role" EntitySet="roles" />
@@ -5435,6 +5583,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="PrependLocationNumberToFileName" Type="Int32" Nullable="false" />
           <NavigationProperty Name="enumcdrformat" Relationship="MediationModel.fk_cdrformat" FromRole="ne" ToRole="enumcdrformat" />
           <NavigationProperty Name="jobs" Relationship="MediationModel.job_ibfk_4" FromRole="ne" ToRole="job" />
+          <NavigationProperty Name="routes" Relationship="MediationModel.fk_Ne" FromRole="ne" ToRole="route" />
           <NavigationProperty Name="telcobrightpartner" Relationship="MediationModel.ne_ibfk_1" FromRole="ne" ToRole="telcobrightpartner" />
         </EntityType>
         <EntityType Name="partner">
@@ -5691,6 +5840,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="route" Type="Int32" />
           <Property Name="priority" Type="Int32" Nullable="false" />
           <NavigationProperty Name="billingruleassignment" Relationship="MediationModel.billingruleassignment_ibfk_2" FromRole="rateplanassignmenttuple" ToRole="billingruleassignment" />
+          <NavigationProperty Name="route1" Relationship="MediationModel.fk_route" FromRole="rateplanassignmenttuple" ToRole="route" />
         </EntityType>
         <EntityType Name="ratetask">
           <Key>
@@ -5864,7 +6014,9 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="field3" Type="Int32" />
           <Property Name="field4" Type="Int32" />
           <Property Name="field5" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ne" Relationship="MediationModel.fk_Ne" FromRole="route" ToRole="ne" />
           <NavigationProperty Name="partner" Relationship="MediationModel.route_ibfk_1" FromRole="route" ToRole="partner" />
+          <NavigationProperty Name="rateplanassignmenttuples" Relationship="MediationModel.fk_route" FromRole="route" ToRole="rateplanassignmenttuple" />
         </EntityType>
         <EntityType Name="routeaddressmapping">
           <Key>
@@ -7448,6 +7600,18 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_Ne">
+          <End Type="MediationModel.ne" Role="ne" Multiplicity="1" />
+          <End Type="MediationModel.route" Role="route" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ne">
+              <PropertyRef Name="idSwitch" />
+            </Principal>
+            <Dependent Role="route">
+              <PropertyRef Name="SwitchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="ne_ibfk_1">
           <End Type="MediationModel.telcobrightpartner" Role="telcobrightpartner" Multiplicity="1" />
           <End Type="MediationModel.ne" Role="ne" Multiplicity="*" />
@@ -7481,6 +7645,18 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             </Principal>
             <Dependent Role="ratetaskreference">
               <PropertyRef Name="idRatePlan" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_route">
+          <End Type="MediationModel.route" Role="route" Multiplicity="0..1" />
+          <End Type="MediationModel.rateplanassignmenttuple" Role="rateplanassignmenttuple" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="route">
+              <PropertyRef Name="idroute" />
+            </Principal>
+            <Dependent Role="rateplanassignmenttuple">
+              <PropertyRef Name="route" />
             </Dependent>
           </ReferentialConstraint>
         </Association>

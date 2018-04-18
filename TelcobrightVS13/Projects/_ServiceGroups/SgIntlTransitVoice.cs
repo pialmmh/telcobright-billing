@@ -12,7 +12,7 @@ namespace TelcobrightMediation
     public class SgIntlTransitVoice : IServiceGroup
     {
         public override string ToString() => this.RuleName;
-        public string RuleName => GetType().Name;
+        public string RuleName => "Transit Calls [Wholesale Voice]";
         public string HelpText => "Service group for international transit voice.";
         public int Id => 100;
         private Dictionary<string, Type> SummaryTargetTables { get; }

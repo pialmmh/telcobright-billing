@@ -283,6 +283,8 @@ namespace Decoders
                         }
                         thisRow[Fn.Answertime] = "";//set answertime to null
                     }
+                    thisRow[Fn.Finalrecord] = "1";
+                    thisRow[Fn.Validflag] = "1";
                     decodedRows.Add(thisRow);
                 }
                 catch (Exception e1)

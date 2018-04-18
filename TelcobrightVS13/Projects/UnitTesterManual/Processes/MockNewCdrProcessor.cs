@@ -34,7 +34,7 @@ namespace UnitTesterManual
         public int ProcessId => 103;
         public string OperatorName { get; set; }
         public IFileDecoder CdrDecoder { get; set; }
-
+        public bool DecodeAndDumpOnly { get; set; } = false;
         public MockNewCdrProcessor(string operatorName, IFileDecoder fileDecoder)
         {
             this.OperatorName = operatorName;
@@ -62,73 +62,82 @@ namespace UnitTesterManual
                     context.Database.Connection.Open();
                     var mediationContext = new MediationContext(tbc, context);
                     tbc.GetPathIndependentApplicationDirectory();
+                    ne ne = context.nes.Include(n => n.telcobrightpartner)
+                        .Where(n => n.telcobrightpartner.databasename == tbc.DatabaseSetting.DatabaseName &&
+                                    (n.SkipCdrDecoded == null || n.SkipCdrDecoded != 1)).ToList().FirstOrDefault();
+                    if (ne == null)
                     {
-                        ne ne = context.nes.Include(n => n.telcobrightpartner)
-                            .Where(n => n.telcobrightpartner.databasename == tbc.DatabaseSetting.DatabaseName &&
-                                        (n.SkipCdrDecoded == null || n.SkipCdrDecoded != 1)).ToList().FirstOrDefault();
-                        if (ne == null)
+                        Console.WriteLine("No Ne found configured for CdrProcessing, exiting...");
+                        return;
+                    }
+                    List<job> incompleteJobs = context.jobs
+                        .Where(c => c.idjobdefinition == 1 && c.Status == 7 && c.CompletionTime == null
+                                    && c.idNE == ne.idSwitch).ToList();
+                    using (DbCommand cmd = context.Database.Connection.CreateCommand())
+                    {
+                        foreach (job telcobrightJob in incompleteJobs)
                         {
-                            Console.WriteLine("No ne found configured for CdrProcessing, exiting...");
-                            return;
-                        }
-                        List<job> incompleteJobs = context.jobs
-                            .Where(c => c.idjobdefinition == 1 && c.Status==7 && c.CompletionTime == null
-                                        && c.idNE == ne.idSwitch).ToList();
-                        using (DbCommand cmd=context.Database.Connection.CreateCommand())
-                        {
-                            foreach (job telcobrightJob in incompleteJobs)
+                            string jobPurposeIndicator = this.DecodeAndDumpOnly == false
+                                ? "Processing CdrJob"
+                                : "Decoding & Dumping raw cdr";
+                            Console.WriteLine(
+                                $"{jobPurposeIndicator} for Switch:{ne.SwitchName}, JobName:{telcobrightJob.JobName}");
+                            cmd.ExecuteCommandText("set autocommit=0;"); //transaction started
+                            try
                             {
-                                Console.WriteLine("Processing CdrJob for Switch:" + ne.SwitchName +
-                                                  ", JobName:" + telcobrightJob.JobName);
-                                cmd.ExecuteCommandText("set autocommit=0;"); //transaction started
+                                ITelcobrightJob iJob = null;
+                                if (this.DecodeAndDumpOnly == false)
+                                {
+                                    iJob = new MockNewCdrFileJob(this.CdrDecoder, this.OperatorName);
+                                }
+                                else iJob = new MockCdrDecoderDumperJob(this.CdrDecoder, this.OperatorName);
+
+                                var cdrJobInputData =
+                                    new CdrJobInputData(mediationContext, context, ne, telcobrightJob);
+                                iJob.Execute(cdrJobInputData); //execute job, this includes commit if successful,
+                            } //commit is done inside "cdrjob" as segmented jobs need commit inside for segments
+                            catch (Exception e)
+                            {
                                 try
                                 {
-                                    ITelcobrightJob iJob = new MockNewCdrFileJob(this.CdrDecoder,this.OperatorName);
-                                    var cdrJobInputData = new CdrJobInputData(mediationContext, context,ne, telcobrightJob);
-                                    iJob.Execute(cdrJobInputData); //execute job, this includes commit if successful,
-                                } //commit is done inside "cdrjob" as segmented jobs need commit inside for segments
-                                catch (Exception e)
-                                {
+                                    bool rateCacheSizeExceeded =
+                                        HandleOufOfMemoryExceptionForRateCache(mediationContext, e);
+                                    if (rateCacheSizeExceeded) continue;
+                                    Console.WriteLine("xxxErrorxxx Processing CdrJob for Switch:" +
+                                                      ne.SwitchName + ", JobName:" +
+                                                      telcobrightJob.JobName);
+                                    Console.WriteLine(e.Message);
+                                    context.Database.Connection.CreateCommand().ExecuteCommandText(" rollback; ");
+                                    ErrorWriter wr = new ErrorWriter(e, "ProcessCdr", telcobrightJob,
+                                        "CdrJob processing error.", tbc.DatabaseSetting.DatabaseName);
+
+                                    //also save the error information within the job
+                                    //use try catch in case DB is not accesible
                                     try
                                     {
-                                        bool rateCacheSizeExceeded =
-                                            HandleOufOfMemoryExceptionForRateCache(mediationContext, e);
-                                        if (rateCacheSizeExceeded) continue;
-                                        Console.WriteLine("xxxErrorxxx Processing CdrJob for Switch:" +
-                                                          ne.SwitchName + ", JobName:" +
-                                                          telcobrightJob.JobName);
-                                        Console.WriteLine(e.Message);
-                                        context.Database.Connection.CreateCommand().ExecuteCommandText(" rollback; ");
-                                        ErrorWriter wr = new ErrorWriter(e, "ProcessCdr", telcobrightJob,
-                                            "CdrJob processing error.", tbc.DatabaseSetting.DatabaseName);
-
-                                        //also save the error information within the job
-                                        //use try catch in case DB is not accesible
-                                        try
-                                        {
-                                            context.Database.Connection.CreateCommand().CommandText = " update job set `Error`= '" +
-                                                                                                      e.Message.Replace("'", "") +
-                                                                                                      Environment.NewLine +
-                                                                                                      (e.InnerException?.ToString().Replace("'", "") ??
-                                                                                                       "") + "' " + " where id=" + telcobrightJob.id;
-                                            context.Database.Connection.CreateCommand().ExecuteNonQuery();
-                                        }
-                                        catch (Exception e2)
-                                        {
-                                            ErrorWriter wr2 = new ErrorWriter(e2, "ProcessCdr", telcobrightJob,
-                                                "Exception within catch block.", tbc.DatabaseSetting.DatabaseName);
-                                        }
-                                        continue; //with next cdr or job
+                                        context.Database.Connection.CreateCommand().CommandText =
+                                            " update job set `Error`= '" +
+                                            e.Message.Replace("'", "") +
+                                            Environment.NewLine +
+                                            (e.InnerException?.ToString().Replace("'", "") ??
+                                             "") + "' " + " where id=" + telcobrightJob.id;
+                                        context.Database.Connection.CreateCommand().ExecuteNonQuery();
                                     }
-                                    catch (Exception)
+                                    catch (Exception e2)
                                     {
-                                        //reaching here would be database problem
-                                        context.Database.Connection.Close();
+                                        ErrorWriter wr2 = new ErrorWriter(e2, "ProcessCdr", telcobrightJob,
+                                            "Exception within catch block.", tbc.DatabaseSetting.DatabaseName);
                                     }
-                                } //end catch
-                            } //for each job
-                        }
-                    } //for each NE
+                                    continue; //with next cdr or job
+                                }
+                                catch (Exception)
+                                {
+                                    //reaching here would be database problem
+                                    context.Database.Connection.Close();
+                                }
+                            } //end catch
+                        } //for each job
+                    }
                 }
             } //try
             catch (Exception e1)

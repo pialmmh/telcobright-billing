@@ -21,4 +21,21 @@ namespace TelcobrightMediation
         public const int XyzIcx = 7;
         public const int XyzIgw = 4;
     }
+    public static class IcxPartnerType
+    {
+        public const int ANS = 2;
+        public const int IOS = 3;
+    }
+    public static class IgwPartnerType
+    {
+        public const int ANS = 1;
+        public const int IOS = 2;
+        public const int ForeignCarrier=3;
+    }
+
+    public static class RouteLocalityType
+    {
+        public const int National = 1;
+        public const int International = 2;
+    }
 }
