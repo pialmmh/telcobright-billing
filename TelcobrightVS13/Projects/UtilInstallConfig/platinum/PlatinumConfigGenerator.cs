@@ -649,7 +649,7 @@ namespace InstallConfig
                            {
                                RoleNames = new List<string>()
                                {
-                                    "admin","billing"
+                                    "admin"
                                },
                                SpringExpressionIfRole = new List<string>()
                                        {
@@ -669,7 +669,32 @@ namespace InstallConfig
                                             "nodes['Reports/ICX'].Expanded=false",
                                             "nodes['Reports/IGW'].Expanded=true"
                                         }
-                           }
+                           },
+                            new SettingByRoles()
+                            {
+                                RoleNames = new List<string>()
+                                {
+                                    "billing"
+                                },
+                                SpringExpressionIfRole = new List<string>()
+                                {
+                                    "nodes['Configuration'].Expanded=true",
+                                    "nodes['Mediation'].Expanded=true",
+                                    "nodes['Settings'].Expanded=true",
+                                    "nodes['Billing Reports'].Expanded=true",
+                                    "nodes['Reports/ICX'].Expanded=false",
+                                    "nodes['Reports/IGW'].Expanded=true"
+                                },
+                                SpringExpressionIfNotRole = new List<string>()
+                                {
+                                    "nodes['Configuration'].Expanded=false",
+                                    "nodes['Mediation'].Expanded=false",
+                                    "nodes['Settings'].Expanded=false",
+                                    "nodes['Billing Reports'].Expanded=false",
+                                    "nodes['Reports/ICX'].Expanded=false",
+                                    "nodes['Reports/IGW'].Expanded=true"
+                                }
+                            }
                         }//list of settings by Roles
                     },
                     { "~/reports/InternationalIn.aspx",//settings for report pages

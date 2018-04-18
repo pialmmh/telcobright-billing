@@ -652,7 +652,7 @@ namespace InstallConfig
                            {
                                RoleNames = new List<string>()
                                {
-                                    "admin","billing"
+                                    "admin"
                                },
                                SpringExpressionIfRole = new List<string>()
                                        {
@@ -668,7 +668,26 @@ namespace InstallConfig
                                             "nodes['Settings'].Expanded=false",
                                             "nodes['Billing Reports'].Expanded=false"
                                         }
-                           }
+                           },
+                            new SettingByRoles()
+                            {
+                                RoleNames = new List<string>()
+                                {
+                                    "billing"
+                                },
+                                SpringExpressionIfRole = new List<string>()
+                                {
+                                    "nodes['Configuration'].Expanded=true",
+                                    "nodes['Mediation'].Expanded=true",
+                                    "nodes['Settings'].Expanded=true",
+                                    "nodes['Billing Reports'].Expanded=true"
+                                },
+                                SpringExpressionIfNotRole = new List<string>()
+                                {
+                                    
+                                }
+                            }
+
                         }//list of settings by Roles
                     },
                     { "~/reports/InternationalIn.aspx",//settings for report pages
