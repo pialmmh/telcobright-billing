@@ -98,7 +98,8 @@ namespace TelcobrightMediation
                 }
             }
             List<CdrExt> newCdrExts = this.CreateNewCdrExts();
-            List<CdrExt> oldCdrExts = this.CreateOldCdrExts();
+            Func<List<CdrExt>> oldCdrExtCreatorFromPrevPartialInstances = () => this.CreateOldCdrExts();
+            List<CdrExt> oldCdrExts = oldCdrExtCreatorFromPrevPartialInstances.Invoke();
 
             base.PopulatePrevAccountingInfo(oldCdrExts);
             newCollectionResult = new CdrCollectionResult(base.CdrCollectorInputData.Ne, newCdrExts,
@@ -126,6 +127,7 @@ namespace TelcobrightMediation
         protected override List<CdrExt> CreateOldCdrExts()
         {
             return this.PartialCdrContainers
+                .Where(c => c.LastProcessedAggregatedRawInstance != null)
                 .Select(partialContainer => CdrExtFactory.CreateCdrExtWithPartialCdr(partialContainer,
                     CdrNewOldType.OldCdr)).ToList();
         }

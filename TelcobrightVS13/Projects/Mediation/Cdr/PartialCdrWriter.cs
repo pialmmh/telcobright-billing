@@ -80,7 +80,7 @@ namespace TelcobrightMediation.Cdr
         private void DeletePrevAggregatedRawInstances()
         {
             List<cdrpartiallastaggregatedrawinstance> prevAggregatedRawInstances =
-                this.PartialCdrContainers.Select(c => c.PrevAggregatedRawInstance).Where(c => c != null).ToList();
+                this.PartialCdrContainers.Select(c => c.LastProcessedAggregatedRawInstance).Where(c => c != null).ToList();
             int deletedCount = 0;
             if (prevAggregatedRawInstances.Any())
             {

@@ -17,7 +17,7 @@ namespace TelcobrightMediation
         public List<cdrpartialrawinstance> NewRawInstances { get; }
         public List<cdrpartialrawinstance> PrevRawInstances { get; }
         public cdrpartialreference CdrPartialReference { get; private set; }
-        public cdrpartiallastaggregatedrawinstance PrevAggregatedRawInstance { get; }
+        public cdrpartiallastaggregatedrawinstance LastProcessedAggregatedRawInstance { get; }
         public cdrpartiallastaggregatedrawinstance NewAggregatedRawInstance { get; private set; }
         public cdr PrevProcessedCdrInstance { get; }
         public cdr NewCdrEquivalent { get; private set; }
@@ -31,7 +31,7 @@ namespace TelcobrightMediation
             this.NewRawInstances = newRawInstances;
             this.PrevRawInstances = prevRawInstances;
             this.CdrPartialReference = cdrPartialreference;
-            this.PrevAggregatedRawInstance = lastAggregatedRawInstance;
+            this.LastProcessedAggregatedRawInstance = lastAggregatedRawInstance;
             this.PrevProcessedCdrInstance = prevProcessedCdrInstance;
         }
 
@@ -42,8 +42,8 @@ namespace TelcobrightMediation
                 new IcdrImplConverter<cdr>().Convert(CdrManipulatingUtil.Clone(this.NewRawInstances.Last()));
             this.NewCdrEquivalent.DurationSec =
                 this.CombinedNewAndOldUnprocessedInstance.Sum(c => c.DurationSec);
-            if (this.PrevAggregatedRawInstance != null) //if there is a prev instance
-                this.NewCdrEquivalent.StartTime = this.PrevAggregatedRawInstance.StartTime;
+            if (this.LastProcessedAggregatedRawInstance != null) //if there is a prev instance
+                this.NewCdrEquivalent.StartTime = this.LastProcessedAggregatedRawInstance.StartTime;
             this.NewCdrEquivalent.AnswerTime = this.CombinedNewAndOldUnprocessedInstance.Min(c => c.AnswerTime);
             this.NewCdrEquivalent.EndTime = this.CombinedNewAndOldUnprocessedInstance.Max(c => c.EndTime);
             DateTime? minConnectTime = this.CombinedNewAndOldUnprocessedInstance.Where(c => c.ConnectTime != null)
