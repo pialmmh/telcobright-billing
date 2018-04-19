@@ -2,6 +2,7 @@ package App; /**
  * Created by Omnia on 8/2/2017.
  */
 
+import Helper.SSHCommandSender;
 import Session.*;
 import dao.CRUD.CiscoShMacAddTableResultParserCRUD;
 import dao.Common.*;
@@ -23,9 +24,15 @@ public class IpLogExecuterMain {
         try {
             //testHibernate();
             ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("beans/IpLogBeans.xml");
-            CliCommandSequence commandSequence=new CliCommandSequence();
-            SshSessionInfo sessionInfo= context.getBean("ne1SessionInfo", SshSessionInfo.class);
-            String output = sessionInfo.getOutputFromSession(commandSequence);
+            CliCommandSequence commandSequence = new CliCommandSequence();
+            SshSessionInfo sessionInfo = context.getBean("ne1SessionInfo", SshSessionInfo.class);
+
+            SSHCommandSender commandSender = new SSHCommandSender();
+            commandSender.setCliCommandSequence(commandSequence);
+            commandSender.setSessionInfo(sessionInfo);
+
+
+            String output = commandSender.sendCommand();
             System.out.println("The output received is");
             System.out.println(output);
             /*ICliOutputParser parser = new CiscoShMacAddTableResultParser();
@@ -72,8 +79,6 @@ public class IpLogExecuterMain {
         CiscoShMacAddTableResultParserCRUD crudExecuter = new CiscoShMacAddTableResultParserCRUD(springQueryExecuter, sqlBuilder);
         return crudExecuter.insertMany(instances);
     }*/
-
-
 
 
     static ByteArrayOutputStream setConsoleToBuffer(PrintStream shellStream) {
