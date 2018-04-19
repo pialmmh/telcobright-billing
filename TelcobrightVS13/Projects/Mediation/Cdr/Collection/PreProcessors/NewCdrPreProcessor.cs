@@ -85,8 +85,9 @@ namespace TelcobrightMediation
         public override void GetCollectionResults(out CdrCollectionResult newCollectionResult,
             out CdrCollectionResult oldCollectionResult)
         {
-            if (base.CdrCollectorInputData.CdrSetting.PartialCdrEnabledNeIds
-                .Contains(base.CdrCollectorInputData.CdrJobInputData.Ne.idSwitch))
+            Func<bool> partialCdrEnabled = () => base.CdrCollectorInputData.CdrSetting.PartialCdrEnabledNeIds
+                .Contains(base.CdrCollectorInputData.CdrJobInputData.Ne.idSwitch);
+            if (partialCdrEnabled())
             {
                 if (base.RawPartialCdrInstances?.Any() == true)
                 {
@@ -94,7 +95,8 @@ namespace TelcobrightMediation
                         this.CdrCollectorInputData, base.RawPartialCdrInstances.ToList());
                     partialCdrCollector.CollectPartialCdrHistory();
                     partialCdrCollector.ValidatePartialCdrCollectionStatus();
-                    base.PartialCdrContainers = partialCdrCollector.AggregateAll() ?? new BlockingCollection<PartialCdrContainer>();
+                    base.PartialCdrContainers = partialCdrCollector.AggregateAll() ??
+                                                new BlockingCollection<PartialCdrContainer>();
                 }
             }
             List<CdrExt> newCdrExts = this.CreateNewCdrExts();
