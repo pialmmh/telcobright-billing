@@ -683,7 +683,8 @@ namespace InstallConfig
                                     "nodes['Settings'].Expanded=true",
                                     "nodes['Billing Reports'].Expanded=true",
                                     "nodes['Reports/ICX'].Expanded=false",
-                                    "nodes['Reports/IGW'].Expanded=true"
+                                    "nodes['Reports/IGW'].Expanded=true",
+                                    "nodes['Settings/Manage Users'].Expanded=false"
                                 },
                                 SpringExpressionIfNotRole = new List<string>()
                                 {

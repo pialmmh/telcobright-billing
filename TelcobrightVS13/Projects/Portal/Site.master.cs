@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI.WebControls;
 using System.Collections;
+using ClosedXML.Excel;
 using LibraryExtensions;
 using PortalApp;
 using MediationModel;
@@ -41,7 +42,7 @@ public partial class SiteMaster : System.Web.UI.MasterPage
 
         if (!this.IsPostBack)
         {
-            this.Session["isTreeLoaded"] = true;
+//            this.Session["isTreeLoaded"] = true;
             //Load Report Templates in TreeView dynically from database.
             CommonCode commonCode = new CommonCode();
             commonCode.LoadReportTemplatesTree(ref this.TreeView1);
@@ -92,18 +93,79 @@ public partial class SiteMaster : System.Web.UI.MasterPage
             //remove nodes other than expanded, for role based secutiry.  TV doesnot support visible property.
             if (currentRoles.Select(c => c.Name).Contains("admin") == false)
             {
-                if (this.Session["isTreeLoaded"] == null)
+                this.TreeView1.Nodes.Clear();
+                List<TreeNode> authenticatedNodes = new List<TreeNode>();
+                List<TreeNode> nonExpandedNodes = mExt.Nodes.Values.Where(n => n.Expanded == false).ToList();
+                foreach (TreeNode node in mExt.Nodes.Values)
                 {
-                    this.TreeView1.Nodes.Clear();
-                    foreach (TreeNode node in mExt.Nodes.Values)
+                    bool bValid = true;
+                    foreach (TreeNode neNode in nonExpandedNodes)
                     {
-                        if (node.Expanded == false) continue;
-                        TreeNode parentNode = TreeView1.FindNode(node.ValuePath.Split('/')[0]);
-                        if (parentNode == null)
-                            this.TreeView1.Nodes.Add(node);
-                        else
-                            parentNode.ChildNodes.Add(new TreeNode(node.Text, node.ValuePath));
+                        if (node.ValuePath.Contains(neNode.ValuePath))
+                        {
+                            bValid = false;
+                            break;
+                        }
                     }
+                    if (bValid) authenticatedNodes.Add(node);
+                }
+
+                
+                foreach (TreeNode node in authenticatedNodes)
+                {
+                    if (node.Expanded == false) continue;
+                    String[] parts = node.ValuePath.Split('/');
+                    String parentPath = String.Empty;
+                    for (int i = 0; i < parts.Length; i++)
+                    {
+                        if (i == 0)
+                        {
+                            TreeNode tNode = TreeView1.FindNode(parts[i]);
+                            if (tNode == null)
+                            {
+                                tNode = new TreeNode(node.Text, node.Value, node.NavigateUrl);
+                                if (node.NavigateUrl == String.Empty) tNode.SelectAction = TreeNodeSelectAction.None;
+                                this.TreeView1.Nodes.Add(tNode);
+                            }
+                            parentPath = parts[i];
+                        }
+                        else
+                        {
+                            TreeNode tNode = TreeView1.FindNode(parentPath);
+                            parentPath = $"{parentPath}/{parts[i]}";
+                            TreeNode cNode = TreeView1.FindNode(parentPath);
+                            if (cNode == null)
+                            {
+                                cNode = new TreeNode(node.Text, node.Value, node.ImageUrl, node.NavigateUrl,
+                                    node.Target);
+                                if (node.NavigateUrl == String.Empty) cNode.SelectAction = TreeNodeSelectAction.None;
+                                tNode.ChildNodes.Add(cNode);
+                            }
+                        }
+                    }
+                    //TreeNode parentNode = null;
+                    //if (parts.Length > 1)
+                    //{
+                    //    String parentPath = String.Empty;
+                    //    for (int i = 0; i < parts.Length - 1; i++)
+                    //    {
+                    //        if (i == 0) parentPath = parts[i];
+                    //        else parentPath = String.Format("{0}/{1}", parentPath, parts[i]);
+                    //    }
+                    //    parentNode = TreeView1.FindNode(parentPath);
+                    //}
+                    //if (parentNode == null)
+                    //{
+                    //    TreeNode tNode = new TreeNode(node.Text, node.ValuePath, node.NavigateUrl);
+                    //    if (node.NavigateUrl == String.Empty) tNode.SelectAction = TreeNodeSelectAction.None;
+                    //    this.TreeView1.Nodes.Add(tNode);
+                    //}
+                    //else
+                    //{
+                    //    TreeNode tNode = new TreeNode(node.Text, node.ValuePath, node.NavigateUrl);
+                    //    if (node.NavigateUrl == String.Empty) tNode.SelectAction = TreeNodeSelectAction.None;
+                    //    parentNode.ChildNodes.Add(tNode);
+                    //}
                 }
             }
             //set home page link to dashboard if specified in portalsettings
