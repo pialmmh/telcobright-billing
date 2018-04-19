@@ -107,6 +107,8 @@
     <Compile Include="Accounting\BillingRule.cs" />
     <Compile Include="Accounting\LedgerSumFactory.cs" />
     <Compile Include="Accounting\AccountFactory.cs" />
+    <Compile Include="Automation\AutomatedNetworkElementCli.cs" />
+    <Compile Include="Automation\SessionInfo.cs" />
     <Compile Include="Automation\SingleCliCommand.cs" />
     <Compile Include="Cdr\CdrJob.cs" />
     <Compile Include="Cdr\Summary\DailyCdrSummaryFactory.cs" />
@@ -161,6 +163,9 @@
     <Compile Include="Cdr\PartialCdrWriter.cs" />
     <Compile Include="Config\ApplicationServerConfig.cs" />
     <Compile Include="Automation\CliCommandSequence.cs" />
+    <Compile Include="Config\ISessionBasedCliAutomationConfig.cs" />
+    <Compile Include="Config\ICliAutomationConfig.cs" />
+    <Compile Include="Config\SshAutomationConfig.cs" />
     <Compile Include="Config\IGenericJsonRule.cs" />
     <Compile Include="Config\CdrSetting.cs" />
     <Compile Include="Config\ConfigFactory.cs" />

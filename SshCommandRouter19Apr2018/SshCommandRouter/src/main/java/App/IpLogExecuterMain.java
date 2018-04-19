@@ -2,20 +2,10 @@ package App; /**
  * Created by Omnia on 8/2/2017.
  */
 
-import Helper.SSHCommandSender;
+import SshCommandSender;
 import Session.*;
-import dao.CRUD.CiscoShMacAddTableResultParserCRUD;
-import dao.Common.*;
-import dao.Models.*;
-import CliParser.CiscoShMacAddTableResultParser;
-import CliParser.ICliOutputParser;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
 
-import java.util.*;
 import java.io.*;
 
 public class IpLogExecuterMain {

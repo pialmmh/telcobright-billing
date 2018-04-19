@@ -11,6 +11,7 @@ using TelcobrightMediation;
 using TelcobrightMediation.Config;
 using FlexValidation;
 using TelcobrightMediation.Accounting;
+using TelcobrightMediation.Automation;
 
 namespace InstallConfig
 {
@@ -720,7 +721,31 @@ namespace InstallConfig
 
             };
             this.Tbc.PortalSettings = portalSetting;
+            Dictionary<int, AutomatedNetworkElementCli> automatedNetworkElementClis =
+                new Dictionary<int, AutomatedNetworkElementCli>()
+                {
+                    {
+                        1,new AutomatedNetworkElementCli()
+                        {
+                            AutomationConfig = new SshAutomationConfig()
+                            {
+                                CliCommandSequence = new CliCommandSequence()
+                                {
+                                    commands = new List<SingleCliCommand>()
+                                    {
+                                        
+                                    }
+                                },
+                                SessionInfo = new SessionInfo()
+                                {
+                                    
+                                }
+                            }
+                        }
+                    }
+                };
             return this.Tbc;
         }
+        
     }
 }

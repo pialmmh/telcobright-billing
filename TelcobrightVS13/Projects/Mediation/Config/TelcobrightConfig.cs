@@ -3,14 +3,11 @@ using System.IO;
 using System.Text.RegularExpressions;
 using LibraryExtensions.ConfigHelper;
 using QuartzTelcobright;
+using TelcobrightMediation.Automation;
 using TelcobrightMediation.Scheduler.Quartz;
 
 namespace TelcobrightMediation
 {
-    public interface IAutomationConfig
-    {
-        int IdTelcobrigtPartner { get; }
-    }
     public class TelcobrightConfig
     {
         //temporarily keep connection strings with help of ne, change later
@@ -25,6 +22,7 @@ namespace TelcobrightMediation
         public PortalSettings PortalSettings { get; set; }
         public Dictionary<string, ApplicationServerConfig> ApplicationServersConfig { get; set; }//server id as string
         public int IdTelcobrightPartner { get; set; }
+        public Dictionary<int,AutomatedNetworkElementCli> AutomatedNetworkElementClis { get; set; }
         public TelcobrightConfig() { }//required by some non cdr process e.g. directorySYnc
 
         public List<KeyValuePair<Regex, string>> ServiceAliasesRegex { get; set; } =
