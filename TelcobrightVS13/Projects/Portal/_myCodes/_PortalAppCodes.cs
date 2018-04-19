@@ -89,6 +89,7 @@ namespace PortalApp
                         }
                     }
                     //for other roles    
+                    bool isRoleApplied = false;
                     foreach (SettingByRoles settingByRoles in settingsForOtherRoles)
                     {
                         if (settingByRoles.RoleNames.Intersect(currentRoleNames).Any())//apply settings if Role
@@ -98,6 +99,7 @@ namespace PortalApp
                                 var tempArr = springProperty.Split('=');
                                 ExpressionEvaluator.SetValue(pageAsObjet, tempArr[0], tempArr[1]);
                             }
+                            isRoleApplied = true;
                         }
                         else//apply settings if not Role
                         {
@@ -107,6 +109,7 @@ namespace PortalApp
                                 ExpressionEvaluator.SetValue(pageAsObjet, tempArr[0], tempArr[1]);
                             }
                         }
+                        if (isRoleApplied) break;
                     }
                 }
             }
