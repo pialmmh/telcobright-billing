@@ -74,7 +74,9 @@ namespace TelcobrightMediation
                     this.CollectionResult.CdrErrors.Add(ConvertCdrToCdrError(removedCdrExt.Cdr.errorCode, removedCdrExt));
                 }
             });
-            Parallel.ForEach(this.CollectionResult.ProcessedCdrExts, processedCdrExt =>
+            //todo: change to parallel
+            //Parallel.ForEach(this.CollectionResult.ProcessedCdrExts, processedCdrExt =>
+            this.CollectionResult.ProcessedCdrExts.ToList().ForEach(processedCdrExt =>
             {
                 IServiceGroup serviceGroup = null;
                 this.MediationContext.MefServiceGroupContainer.IdServiceGroupWiseServiceGroups.TryGetValue(

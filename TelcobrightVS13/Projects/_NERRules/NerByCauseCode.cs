@@ -51,7 +51,6 @@ namespace PartnerRules
                     causeCodeValue = Convert.ToInt32(mediatableInstance.releasecauseingress);
                     break;
             }
-            if (causeCodeValue == 0) throw new Exception("Cause code value not found in mediated cdr");
             return causeCodeValue;
         }
     }

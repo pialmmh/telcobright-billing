@@ -147,7 +147,7 @@ namespace TelcobrightMediation.Cdr
                                                                              uniquebillid={
                                     c.UniqueBillId.EncloseWith("'")
                                 }
-                                                                             and starttime=
+                                                                             and calldate=
                                                                              {
                                     c.CallDate.ToMySqlStyleDateTimeStrWithQuote()
                                 } 

@@ -19,7 +19,7 @@ namespace TelcobrightMediation
 		private Dictionary<string, Type> SummaryTargetTables { get; }
 		public SgIntlInIcx()//constructor
 		{
-		    this.SummaryTargetTables = new Dictionary<string, Type>()
+			this.SummaryTargetTables = new Dictionary<string, Type>()
 				{
 					{ "sum_voice_day_03",typeof(sum_voice_day_03)},
 					{ "sum_voice_hr_03" ,typeof(sum_voice_hr_03) },
@@ -46,7 +46,7 @@ namespace TelcobrightMediation
 			if (thisRoute != null)
 			{
 				if (thisRoute.partner.PartnerType == IcxPartnerType.IOS 
-                    && thisRoute.NationalOrInternational == RouteLocalityType.International
+					&& thisRoute.NationalOrInternational == RouteLocalityType.International
 				) //IGW and route=international
 				{
 					thisCdr.CallDirection = 3; //Intl in ICX
@@ -59,7 +59,29 @@ namespace TelcobrightMediation
 
 		public void SetServiceGroupWiseSummaryParams(CdrExt cdrExt, AbstractCdrSummary newSummary)
 		{
-			this._sgIntlTransitVoice.SetServiceGroupWiseSummaryParams(cdrExt, newSummary);
+			//this._sgIntlTransitVoice.SetServiceGroupWiseSummaryParams(cdrExt, newSummary);
+			newSummary.tup_countryorareacode = cdrExt.Cdr.CountryCode;
+			newSummary.tup_matchedprefixcustomer = cdrExt.Cdr.matchedprefixcustomer;
+			newSummary.tup_matchedprefixsupplier = cdrExt.Cdr.matchedprefixsupplier;
+			if (cdrExt.Cdr.ChargingStatus != 1) return;
+
+			acc_chargeable chargeableCust = null;
+			cdrExt.Chargeables.TryGetValue(new ValueTuple<int, int, int>(this.Id, 1, 1), out chargeableCust);
+			if (chargeableCust == null)
+			{
+				throw new Exception("Chargeable info not found for customer direction.");
+			}
+			this._sgIntlTransitVoice.SetChargingSummaryInCustomerDirection(chargeableCust, newSummary);
+
+			newSummary.tax1 = 0;
+			newSummary.tax2 = 0;
+			newSummary.vat = 0;
+			newSummary.intAmount1 = 0;
+			newSummary.intAmount2 = 0;
+			newSummary.longAmount1 = 0;
+			newSummary.longAmount2 = 0;
+			newSummary.doubleAmount1 = 0;
+			newSummary.doubleAmount2 = 0;
 		}
 	}
 }
