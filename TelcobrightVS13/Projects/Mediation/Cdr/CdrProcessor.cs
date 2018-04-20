@@ -42,8 +42,9 @@ namespace TelcobrightMediation
         {
             var newCdrExts = this.CollectionResult.ConcurrentCdrExts.Values.ToList();
             var accountingContext = this.CdrJobContext.AccountingContext;
-            //newCdrExts.ForEach(cdrExt=>
-            Parallel.ForEach(newCdrExts, cdrExt =>
+            //todo: change to parallel
+            newCdrExts.ForEach(cdrExt=>
+            //Parallel.ForEach(newCdrExts, cdrExt =>
             {
                 try
                 {

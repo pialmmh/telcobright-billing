@@ -45,8 +45,9 @@ namespace TelcobrightMediation.Cdr
 
         public void ProcessTransactionsIncrementally()
         {
-            var newCdrExts = this.CdrProcessor.CollectionResult.ConcurrentCdrExts.Values.ToList();
-            var oldCdrExts = this.CdrEraser.CollectionResult.ConcurrentCdrExts;
+            var newProcessedCdrExts = this.CdrProcessor.CollectionResult.ProcessedCdrExts.ToList();
+            var oldCdrExts = this.CdrEraser?.CollectionResult.ConcurrentCdrExts ??
+                             new ConcurrentDictionary<string, CdrExt>();
             int matchedOldCdrs = 0;
             int matchedOldTransactions = 0;
             List<acc_transaction> incrementalTransactions = new List<acc_transaction>();
@@ -54,12 +55,17 @@ namespace TelcobrightMediation.Cdr
             {
                 if (this.CdrEraser == null) //no old cdrs
                 {
-                    newCdrExts.ForEach(newCdrExt => AddNewTransactionsAsIncrementals(newCdrExt));
+                    newProcessedCdrExts.SelectMany(c=>c.AccWiseTransactionContainers.Values).ToList()
+                        .ForEach(transactionContainer =>
+                        {
+                            transactionContainer.IncrementalTransaction = transactionContainer.NewTransaction.Clone();
+                            incrementalTransactions.Add(transactionContainer.IncrementalTransaction);
+                        });
                 }
                 else if (this.CdrEraser != null) //corresponding oldcdrs may exist for a newCdrExt
                 {
                     incrementalTransactions =
-                        GetIncrementalTransactionsForNewAndOldCdrExistingCase(newCdrExts, oldCdrExts,
+                        GetIncrementalTransactionsForNewAndOldCdrExistingCase(newProcessedCdrExts, oldCdrExts,
                             ref matchedOldCdrs,
                             ref matchedOldTransactions);
                 }
@@ -78,20 +84,25 @@ namespace TelcobrightMediation.Cdr
                     incrementalTransactions.Add(incrementalTransaction);
                 }
             }
-            ValidateTransactions(newCdrExts, oldCdrExts, matchedOldCdrs, matchedOldTransactions, incrementalTransactions);
+            ValidateTransactions(newProcessedCdrExts, oldCdrExts, matchedOldCdrs, matchedOldTransactions, incrementalTransactions);
             this.CdrJobContext.AccountingContext.ExecuteTransactions(incrementalTransactions);
         }
 
         private static List<acc_transaction> GetIncrementalTransactionsForNewAndOldCdrExistingCase(
-            List<CdrExt> newCdrExts, ConcurrentDictionary<string, CdrExt> oldCdrExts, ref int matchedOldCdrs,
+            List<CdrExt> newProcessedCdrExts, ConcurrentDictionary<string, CdrExt> oldCdrExts, ref int matchedOldCdrs,
             ref int matchedOldTransactions)
         {
-            foreach (var newCdrExt in newCdrExts)
+            foreach (var newCdrExt in newProcessedCdrExts)
             {
                 var oldCdrExt = oldCdrExts[newCdrExt.UniqueBillId];
                 if (oldCdrExt == null) //old cdr doesn't exist
                 {
-                    AddNewTransactionsAsIncrementals(newCdrExt);
+                    newCdrExt.AccWiseTransactionContainers.Values.ToList()
+                        .ForEach(transactionContainer =>
+                        {
+                            transactionContainer.IncrementalTransaction = transactionContainer.NewTransaction.Clone();
+                            incrementalTransactions.Add(transactionContainer.IncrementalTransaction);
+                        });
                 }
                 else //matched oldCdr found for this newcdrext
                 {
@@ -114,20 +125,11 @@ namespace TelcobrightMediation.Cdr
                     }
                 }
             }
-            return newCdrExts.SelectMany(c => c.AccWiseTransactionContainers.Values)
+            return newProcessedCdrExts.SelectMany(c => c.AccWiseTransactionContainers.Values)
                 .Select(t => t.IncrementalTransaction).ToList();
         }
 
-        private static void AddNewTransactionsAsIncrementals(CdrExt newCdrExt)
-        {
-            foreach (TransactionContainerForSingleAccount transactionContainer in newCdrExt
-                                        .AccWiseTransactionContainers.Values)
-            {
-                transactionContainer.IncrementalTransaction = transactionContainer.NewTransaction.Clone();
-            }
-        }
-
-        private static void ValidateTransactions(List<CdrExt> newCdrExts, ConcurrentDictionary<string, CdrExt> oldCdrExts, int matchedOldCdrs, int matchedOldTransactions,
+        private static void ValidateTransactions(List<CdrExt> newProcessedCdrExts, ConcurrentDictionary<string, CdrExt> oldCdrExts, int matchedOldCdrs, int matchedOldTransactions,
             List<acc_transaction> incrementalTransactions)
         {
             if (matchedOldCdrs != oldCdrExts.Count)
@@ -135,7 +137,7 @@ namespace TelcobrightMediation.Cdr
                     "Found number of oldCdr during transaction processing does not match initial count.");
             if (matchedOldTransactions != oldCdrExts.Values.SelectMany(c => c.AccWiseTransactionContainers.Values).Count())
                 throw new Exception("Found number of old transactions during transaction processing does not match initial count.");
-            var sumOfNewTransactionAmounts = newCdrExts.SelectMany(c => c.AccWiseTransactionContainers.Values)
+            var sumOfNewTransactionAmounts = newProcessedCdrExts.SelectMany(c => c.AccWiseTransactionContainers.Values)
                 .Sum(t => t.NewTransaction.amount);
             var sumOfOldTransactionAmounts = oldCdrExts.Values.SelectMany(c => c.AccWiseTransactionContainers.Values
                 .SelectMany(t => t.OldTransactions)).Sum(t => t.amount);
