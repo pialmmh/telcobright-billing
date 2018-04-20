@@ -68,7 +68,7 @@ namespace UnitTesterManual
             {
                 //cdrJob.Execute();
                 cdrJob.CdrEraser?.UndoOldSummaries();
-                cdrJob.CdrEraser?.WriteChangesExceptContext();
+                cdrJob.CdrEraser?.DeleteOldCdrs();
                 cdrJob.CdrProcessor?.Process();
                 Assert.IsTrue(MediationTester.DurationSumInCdrAndMergedCachedAreTollerablyEqual(cdrJob.CdrProcessor));
                 Assert.IsTrue(MediationTester.DurationSumInCdrAndSummaryAreTollerablyEqual(cdrJob.CdrProcessor));

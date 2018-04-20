@@ -155,6 +155,7 @@
     <Compile Include="Cdr\Summary\HourlyCdrSummaryFactory.cs" />
     <Compile Include="Cdr\OldCdrDeleter.cs" />
     <Compile Include="Cdr\Summary\CdrSummaryFactoryFactory.cs" />
+    <Compile Include="Cdr\TransactionContainerForSingleAccount.cs" />
     <Compile Include="Collector\IEventCollector.cs" />
     <Compile Include="Collector\SqlMultiWhereClause.cs" />
     <Compile Include="Collector\SqlSingleWhereClause.cs" />

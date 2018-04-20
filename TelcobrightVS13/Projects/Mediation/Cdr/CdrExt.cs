@@ -32,8 +32,9 @@ namespace TelcobrightMediation.Cdr
         public Dictionary<ValueTuple<int, int, int>, acc_chargeable> Chargeables { get; }
             = new Dictionary<ValueTuple<int, int, int>, acc_chargeable>(); //key=tuple(sg,sf,product,assignedDir)
 
-        public List<acc_transaction> Transactions { get; } = new List<acc_transaction>();
-        public List<acc_transaction> IncrementalTransactions { get; } = new List<acc_transaction>();
+        public Dictionary<long, TransactionContainerForSingleAccount> AccWiseTransactionContainers { get; } =
+            new Dictionary<long, TransactionContainerForSingleAccount>();
+
         public CdrMediationResult MediationResult { get; set; }
 
         public PartialCdrContainer PartialCdrContainer
@@ -75,19 +76,6 @@ namespace TelcobrightMediation.Cdr
         public override string ToString()
         {
             return this.UniqueBillId + "/" + this.Cdr.idcall;
-        }
-
-        public void ReverseTransactions()
-        {
-            foreach (acc_transaction transaction in this.Transactions)
-            {
-                if (transaction.cancelled == 1)
-                    throw new Exception(
-                        "Collected prev transaction cannot have cancelled status=1, possibly erroneous coding.");
-                transaction.cancelled = 1;
-                transaction.debitOrCredit = transaction.debitOrCredit == "c" ? "d" : "c";
-                transaction.amount = (-1) * transaction.amount;
-            }
         }
     }
 }

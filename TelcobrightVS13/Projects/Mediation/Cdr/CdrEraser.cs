@@ -42,9 +42,9 @@ namespace TelcobrightMediation
             if (!this.CollectionResult.ConcurrentCdrExts.Any()) return;
 
             var oldCdrExts = this.CollectionResult.ConcurrentCdrExts.Values.ToList();
-            this.CdrJobContext.AccountingContext.TransactionCache.PopulateCache(
-                () => oldCdrExts.SelectMany(c => c.Transactions).ToDictionary(trans => trans.id.ToString()));
-            //oldCdrExts.ForEach(oldCdrExt=>//create old summaries
+            this.CdrJobContext.AccountingContext.TransactionCache.PopulateCache( 
+                () => new Dictionary<string, acc_transaction>());
+
             Parallel.ForEach(oldCdrExts,oldCdrExt=>
             {
                 if (oldCdrExt.CdrNewOldType != CdrNewOldType.OldCdr)
@@ -73,7 +73,7 @@ namespace TelcobrightMediation
             this.CdrJobContext.AccountingContext.ChargeableCache.DeleteAll();
         }
 
-        public void WriteChangesExceptContext()
+        public void DeleteOldCdrs()
         {
             int delCount=OldCdrDeleter.DeleteOldCdrs("cdr", this.CollectionResult.ConcurrentCdrExts.Values
                 .Select(c => new KeyValuePair<long, DateTime>(c.Cdr.idcall, c.StartTime)).ToList(),

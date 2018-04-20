@@ -150,11 +150,6 @@ namespace TelcobrightMediation
             cdr.errorCode = ""; //clear error flag/description from previous mediation attempt
         }
 
-        public void WriteChangesExceptContext()
-        {
-            this.WriteCdrs();
-        }
-
         private static void ExecuteNerRule(CdrProcessor cdrProcessor, CdrExt cdrExt)
         {
             string ruleName = cdrProcessor.CdrJobContext.MediationContext.Tbc.CdrSetting.NerCalculationRule;
@@ -242,13 +237,20 @@ namespace TelcobrightMediation
                     {
                         cdrExt.Chargeables.Add(chargeableExt.AccChargeable.GetTuple(), chargeableExt.AccChargeable);
                         acc_transaction transaction = sf.GetTransaction(chargeableExt, serviceContext);
-                        cdrExt.Transactions.Add(transaction);
+                        TransactionContainerForSingleAccount transactionContainer = null;
+                        if (cdrExt.AccWiseTransactionContainers.TryGetValue(transaction.glAccountId,
+                                out transactionContainer) == false)
+                        {
+                            transactionContainer = new TransactionContainerForSingleAccount();
+                        }
+                        cdrExt.AccWiseTransactionContainers.Add(transaction.glAccountId,transactionContainer);
+                        transactionContainer.NewTransactions.Add(transaction);
                     }
                 }
             }
         }
 
-        void WriteCdrs()
+        public void WriteCdrs()
         {
             if (this.CdrJobContext.TelcobrightJob.idjobdefinition == 2) //cdrError
             {
@@ -280,7 +282,7 @@ namespace TelcobrightMediation
                     "RawCount in collection result must equal (inconsistentCount+ errorCount + cdrCount+rawPartialActualCount-distintPartialCount");
         }
 
-        public long WriteCdrInconsistent()
+        long WriteCdrInconsistent()
         {
             long inconsistentCount = 0;
             if (this.CollectionResult.CdrInconsistents.Any())

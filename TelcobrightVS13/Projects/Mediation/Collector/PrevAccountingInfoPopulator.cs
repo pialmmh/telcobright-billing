@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using javax.transaction;
 using LibraryExtensions;
 using MediationModel;
 
@@ -28,10 +29,11 @@ namespace TelcobrightMediation.Cdr.CollectionRelated.Collector
                 Dictionary<DateTime, List<CdrExt>> dayWiseOldCdrExts = this.SuccessfullOldCdrExts
                     .GroupBy(c => c.StartTime.Date).ToDictionary(g => g.Key, g => g.ToList());
                 string sql = string.Join(" union all ", dayWiseOldCdrExts.Select(kv =>
-                        $@"select * from acc_transaction where 
+                    $@"select * from acc_transaction where 
                            {kv.Key.ToMySqlWhereClauseForOneDay("transactionTime")} 
                            and uniquebillid in ({
-                           string.Join(",", kv.Value.Select(c => c.UniqueBillId.EncloseWith("'")))}) 
+                            string.Join(",", kv.Value.Select(c => c.UniqueBillId.EncloseWith("'")))
+                        }) 
                            and cancelled is null"));
                 Dictionary<string, List<acc_transaction>> billidWisePrevTransactions =
                     this.Context.Database.SqlQuery<acc_transaction>(sql)
@@ -39,18 +41,19 @@ namespace TelcobrightMediation.Cdr.CollectionRelated.Collector
 
                 foreach (var kv in billidWisePrevTransactions)
                 {
-                    kv.Value.ForEach(t => this.BillIdWiseCdrExts[kv.Key].Transactions.Add(t));
-                }
-            }
-        }
-
-        public void ReverseTransactions()
-        {
-            if (this.SuccessfullOldCdrExts.Any())
-            {
-                foreach (var successfullOldCdrExt in this.SuccessfullOldCdrExts)
-                {
-                    successfullOldCdrExt.ReverseTransactions();
+                    CdrExt targetCdrExt = this.BillIdWiseCdrExts[kv.Key];
+                    foreach (var oldTransaction in kv.Value)
+                    {
+                        TransactionContainerForSingleAccount transactionContainer = null;
+                        if (targetCdrExt.AccWiseTransactionContainers.TryGetValue(oldTransaction.glAccountId,
+                                out transactionContainer) == false)
+                        {
+                            transactionContainer = new TransactionContainerForSingleAccount();
+                            targetCdrExt.AccWiseTransactionContainers
+                                .Add(oldTransaction.glAccountId, transactionContainer);
+                            transactionContainer.OldTransactions.Add(oldTransaction);
+                        }
+                    }
                 }
             }
         }

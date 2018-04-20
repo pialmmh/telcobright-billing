@@ -71,18 +71,13 @@ namespace TelcobrightMediation
                 });
         }
 
-        public void CreateIncrementalTransactions()
-        {
-            
-        }
         public void WriteChanges()
         {
             foreach (var summaryCache in this.CdrSummaryContext.TableWiseSummaryCache.Values)
             {
                 summaryCache.SaveChanges(this.DbCmd,this.SegmentSizeForDbWrite);
             }
-            this.AccountingContext.SaveChanges();
-            this.AutoIncrementManager.WriteState();
+            
         }
     }
 }
