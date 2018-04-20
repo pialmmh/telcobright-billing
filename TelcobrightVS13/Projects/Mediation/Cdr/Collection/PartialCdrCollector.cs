@@ -22,7 +22,7 @@ namespace TelcobrightMediation.Mediation.Cdr
         private Dictionary<string,List<cdrpartialrawinstance>> BillIdWiseNewRawInstances { get; set; }
         private Dictionary<string, List<cdrpartialrawinstance>> BillIdWisePrevRawInstances { get; set; }
         private Dictionary<string, cdrpartiallastaggregatedrawinstance> BillIdWiseLastAggregatedRawInstances { get; set; }
-        private Dictionary<string, cdr> BillIdWiseLastProcessedAggregatedCdrs { get; set; }
+        private Dictionary<string, cdr> BillIdWiseLastProcessedCdrInstance { get; set; }
         //public List<PartialCdrAggregatedInformation> AggregatedPartialCdrInfos { get; private set; }
         public PartialCdrCollector(CdrCollectorInputData cdrCollectorInputData, List<cdrpartialrawinstance> newPartialCdrInstances)
         {
@@ -56,7 +56,7 @@ namespace TelcobrightMediation.Mediation.Cdr
                 .SqlQuery<cdrpartiallastaggregatedrawinstance>(sql)
                 .ToDictionary(c => c.UniqueBillId);
 
-            this.BillIdWiseLastProcessedAggregatedCdrs = CollectLastProcessedCdrInstances();
+            this.BillIdWiseLastProcessedCdrInstance = CollectLastProcessedCdrInstances();
         }
 
         Dictionary<string, cdr> CollectLastProcessedCdrInstances()
@@ -77,7 +77,7 @@ namespace TelcobrightMediation.Mediation.Cdr
             foreach (KeyValuePair<string, List<cdrpartialrawinstance>> kv in this.BillIdWiseNewRawInstances)
             {
                 var partialCdrContainer = new PartialCdrContainer(
-                    newRawInstances: this.BillIdWiseNewRawInstances[kv.Key],
+                    newRawInstances: kv.Value,
                     prevRawInstances: this.BillIdWisePrevRawInstances.ContainsKey(kv.Key)
                         ? this.BillIdWisePrevRawInstances[kv.Key]
                         : new List<cdrpartialrawinstance>(),
@@ -87,8 +87,8 @@ namespace TelcobrightMediation.Mediation.Cdr
                     lastAggregatedRawInstance: this.BillIdWiseLastAggregatedRawInstances.ContainsKey(kv.Key) == true
                         ? this.BillIdWiseLastAggregatedRawInstances[kv.Key]
                         : null,
-                    prevProcessedCdrInstance: this.BillIdWiseLastProcessedAggregatedCdrs.ContainsKey(kv.Key) == true
-                        ? this.BillIdWiseLastProcessedAggregatedCdrs[kv.Key]
+                    prevProcessedCdrInstance: this.BillIdWiseLastProcessedCdrInstance.ContainsKey(kv.Key) == true
+                        ? this.BillIdWiseLastProcessedCdrInstance[kv.Key]
                         : null);
                 partialCdrContainer.Aggregate();
                 partialCdrContainers.Add(partialCdrContainer);

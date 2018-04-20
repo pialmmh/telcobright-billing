@@ -63,7 +63,7 @@ namespace TelcobrightMediation
                             SetPdd(cdrExt.Cdr);
                         }
                     }
-                    SeparateAsErrorOrProcessedCdrBasedOnMediationStatus(cdrExt);
+                    SeparateErrorAndProcessedCdrsBasedOnMediationStatus(cdrExt);
                 }
                 catch (Exception e)
                 {
@@ -93,15 +93,11 @@ namespace TelcobrightMediation
                 {
                     accountingContext.ChargeableCache.Insert(chargeable, ch => ch.id > 0);
                 }
-                foreach (var transaction in processedCdrExt.Transactions.AsEnumerable())
-                {
-                    accountingContext.ExecuteTransaction(transaction);
-                }
             });
         }
 
 
-        private void SeparateAsErrorOrProcessedCdrBasedOnMediationStatus(CdrExt cdrExt)
+        private void SeparateErrorAndProcessedCdrsBasedOnMediationStatus(CdrExt cdrExt)
         {
             ValidationResult validationResult =
                 MediationErrorChecker.ExecuteValidationRules(cdrExt, this.CdrJobContext);

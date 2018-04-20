@@ -33,17 +33,7 @@ namespace TelcobrightMediation.Cdr
             = new Dictionary<ValueTuple<int, int, int>, acc_chargeable>(); //key=tuple(sg,sf,product,assignedDir)
 
         public List<acc_transaction> Transactions { get; } = new List<acc_transaction>();
-
-        public List<acc_transaction> ReversedTransactions
-        {
-            get
-            {
-                if (this.CdrNewOldType != CdrNewOldType.OldCdr)
-                    throw new Exception("Property ReversedTransactions can be accessed for oldCdrsExts only.");
-                return this._reversedTransactions;
-            }
-        }
-
+        public List<acc_transaction> IncrementalTransactions { get; } = new List<acc_transaction>();
         public CdrMediationResult MediationResult { get; set; }
 
         public PartialCdrContainer PartialCdrContainer

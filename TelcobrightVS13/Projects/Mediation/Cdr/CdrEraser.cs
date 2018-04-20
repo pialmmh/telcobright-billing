@@ -26,7 +26,10 @@ namespace TelcobrightMediation
     public class CdrEraser
     {
         public CdrJobContext CdrJobContext { get; }
-        private CdrCollectionResult CollectionResult { get; }
+        public CdrCollectionResult CollectionResult { get; }
+
+        private Dictionary<string, List<acc_transaction>> BillIdWisePrevTransactions { get; set; } =
+            new Dictionary<string, List<acc_transaction>>();
         private MediationContext MediationContext => this.CdrJobContext.MediationContext;
         public CdrEraser(CdrJobContext cdrJobContext,CdrCollectionResult newCollectionResult)
         {
@@ -34,7 +37,7 @@ namespace TelcobrightMediation
             this.CollectionResult = newCollectionResult;
         }
 
-        public void Process()
+        public void UndoOldSummaries()
         {
             if (!this.CollectionResult.ConcurrentCdrExts.Any()) return;
 
@@ -55,17 +58,16 @@ namespace TelcobrightMediation
                     //oldCdrExt.TableWiseSummaries.Add(targetTableName, recreatedSummary);
                     this.CdrJobContext.CdrSummaryContext.MergeSubstractSummary(targetTableName, regeneratedSummary);
                 });
-                foreach (var transaction in oldCdrExt.Transactions)
-                {
-                    acc_transaction cancelledTransaction = this.MarkPrevTransactionAsCancelled(transaction);
-                    this.CdrJobContext.AccountingContext.TransactionCache
-                        .AddExternallyUpdatedEntityToUpdatedItems(cancelledTransaction);
-                    acc_transaction reversedTransaction = this.CreateReversedTransactions(
-                        transaction, this.CdrJobContext.TelcobrightJob.id);
-                    this.CdrJobContext.AccountingContext.ExecuteTransaction(reversedTransaction);
-                }
             });
             var oldChargeables = oldCdrExts.SelectMany(c => c.Chargeables.Values).ToList();
+            this.CdrJobContext.AccountingContext.ChargeableCache
+                .PopulateCache(() => oldChargeables.ToDictionary(chargeable => chargeable.id.ToString()));
+            this.CdrJobContext.AccountingContext.ChargeableCache.DeleteAll();
+        }
+        public void UndoOldChargeables()
+        {
+            if (!this.CollectionResult.ConcurrentCdrExts.Any()) return;
+            var oldChargeables = this.CollectionResult.ConcurrentCdrExts.Values.SelectMany(c => c.Chargeables.Values).ToList();
             this.CdrJobContext.AccountingContext.ChargeableCache
                 .PopulateCache(() => oldChargeables.ToDictionary(chargeable => chargeable.id.ToString()));
             this.CdrJobContext.AccountingContext.ChargeableCache.DeleteAll();

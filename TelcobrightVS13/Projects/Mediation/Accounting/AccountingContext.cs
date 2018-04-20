@@ -78,6 +78,14 @@ namespace TelcobrightMediation.Accounting
             this.LedgerSummaryCache.SaveChanges(this.Cmd, this.SegmentSizeforDbWrite);
         }
 
+        public void ExecuteTransactions(IEnumerable<acc_transaction> transactions)
+        {
+            foreach (var accTransaction in transactions)
+            {
+                this.ExecuteTransaction(accTransaction);
+            }
+        }
+
         public void ExecuteTransaction(acc_transaction transaction)
         {
             string accName = "";
