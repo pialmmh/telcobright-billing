@@ -40,7 +40,8 @@ namespace Jobs
             CdrJobContext cdrJobContext =
                 new CdrJobContext(input, autoIncrementManager, newCollectionResult.HoursInvolved);
             CdrProcessor cdrProcessor = new CdrProcessor(cdrJobContext, newCollectionResult);
-            CdrEraser cdrEraser = oldCollectionResult != null ? new CdrEraser(cdrJobContext, oldCollectionResult) : null;
+            CdrEraser cdrEraser = oldCollectionResult?.IsEmpty == false
+                ? new CdrEraser(cdrJobContext, oldCollectionResult) : null;
             int rawCount = preProcessor.TxtCdrRows.Count;
             CdrJob cdrJob = new CdrJob(cdrProcessor, cdrEraser, rawCount);
             ExecuteCdrJob(input, cdrJob);

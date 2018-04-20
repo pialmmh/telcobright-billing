@@ -1,20 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Decoders;
 using TelcobrightMediation;
-
+using LibraryExtensions;
 namespace UnitTesterManual
 {
     class Program
     {
         static void Main(string[] args)
         {
-            string operatorName = "jsl";//change here...
-            IFileDecoder cdrDecoder=new ZteTdmDecoder();//change here...
-            Console.WriteLine("Select a mock cdr process for operator:"+operatorName+".");
+            string appConfigPathOfUtilInstallConfig = new DirectoryInfo(FileAndPathHelper.GetBinPath()).Parent.Parent.Parent
+                .GetDirectories()
+                .First(d => d.Name == "UtilInstallConfig").GetFiles().First(f => f.Name == "App.config")
+                .FullName;
+            string operatorName = File.ReadLines(appConfigPathOfUtilInstallConfig)
+                .First(line => line.Contains("JsonConfigFileNameForPortalCopyForSingleOperator"))
+                .Split('=')[2].Split('"')[1].Split('_')[1];
+            //IFileDecoder cdrDecoder=new ZteTdmDecoder();//change here...
+            IFileDecoder cdrDecoder = new DialogicControlSwitchDecoder();//change here...
+            Console.WriteLine("*********Running for Operator:"+operatorName+"**********");
+            Console.WriteLine("Select a mock process:");
             Console.WriteLine("1=NewCdr");
             Console.WriteLine("2=ErrorCdr");
             Console.WriteLine("3=CdrReprocess");

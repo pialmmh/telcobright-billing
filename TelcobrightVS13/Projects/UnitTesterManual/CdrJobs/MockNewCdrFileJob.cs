@@ -55,7 +55,7 @@ namespace UnitTesterManual
             CdrJobContext cdrJobContext = new CdrJobContext(input, autoIncrementManager,
                 newCollectionResult.HoursInvolved);
             CdrProcessor cdrProcessor = new CdrProcessor(cdrJobContext, newCollectionResult);
-            CdrEraser cdrEraser = oldCollectionResult != null
+            CdrEraser cdrEraser = oldCollectionResult?.IsEmpty==false
                 ? new CdrEraser(cdrJobContext, oldCollectionResult) : null;
             CdrJob cdrJob = new CdrJob(cdrProcessor, cdrEraser, cdrProcessor.CollectionResult.RawCount);
             ExecuteCdrJob(input, cdrJob);
