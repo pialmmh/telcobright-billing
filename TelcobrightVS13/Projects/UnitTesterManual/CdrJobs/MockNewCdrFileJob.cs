@@ -66,10 +66,12 @@ namespace UnitTesterManual
         {
             if (cdrJob.CdrProcessor.CollectionResult.ConcurrentCdrExts.Count > 0)
             {
-                //cdrJob.Execute();
                 cdrJob.CdrEraser?.UndoOldSummaries();
+                cdrJob.CdrEraser?.UndoOldChargeables();
                 cdrJob.CdrEraser?.DeleteOldCdrs();
+
                 cdrJob.CdrProcessor?.Process();
+                cdrJob.ProcessTransactionsIncrementally();
                 Assert.IsTrue(MediationTester.DurationSumInCdrAndMergedCachedAreTollerablyEqual(cdrJob.CdrProcessor));
                 Assert.IsTrue(MediationTester.DurationSumInCdrAndSummaryAreTollerablyEqual(cdrJob.CdrProcessor));
                 Assert.IsTrue(MediationTester.SummaryCountTwiceAsCdrCount(cdrJob.CdrProcessor));
@@ -81,9 +83,13 @@ namespace UnitTesterManual
                     //partial cdrs tests here...
 
                 }
-                cdrJob.CdrProcessor?.WriteChangesExceptContext();
-                cdrJob.CdrJobContext.WriteChanges();
-                WriteJobCompletionIfCollectionNotEmpty(cdrJob, input.TelcobrightJob);
+                cdrJob.CdrProcessor?.WriteCdrs();
+                foreach (var summaryCache in cdrJob.CdrJobContext.CdrSummaryContext.TableWiseSummaryCache.Values)
+                {
+                    summaryCache.WriteAllChanges(cdrJob.CdrJobContext.DbCmd, cdrJob.CdrJobContext.SegmentSizeForDbWrite);
+                }
+                cdrJob.CdrJobContext.AccountingContext.WriteAllChanges();
+                cdrJob.CdrJobContext.AutoIncrementManager.WriteState();
             }
             else
             {

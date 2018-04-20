@@ -47,7 +47,7 @@ namespace TelcobrightMediation
         public DbCommand DbCmd { get; }
         public AutoIncrementManager AutoIncrementManager { get; }
 
-        public CdrJobContext(CdrJobInputData cdrJobInputData,AutoIncrementManager autoIncrementManager,
+        public CdrJobContext(CdrJobInputData cdrJobInputData, AutoIncrementManager autoIncrementManager,
             List<DateTime> hoursInvolvedInNewCollection) //constructor
         {
             this.CdrjobInputData = cdrJobInputData;
@@ -59,25 +59,16 @@ namespace TelcobrightMediation
             this.AccountingContext = new AccountingContext(this.CdrjobInputData.Context, 0, this.AutoIncrementManager,
                 this.DatesInvolved, this.CdrjobInputData.CdrSetting.SegmentSizeForDbWrite);
             this.CdrSummaryContext = new CdrSummaryContext(this.MediationContext,
-                this.AutoIncrementManager,this.Context, this.HoursInvolved);
+                this.AutoIncrementManager, this.Context, this.HoursInvolved);
             this.DatesInvolved.ForEach(
                 d =>
                 {
                     var rateCache = this.MediationContext.MefServiceFamilyContainer.RateCache;
                     var dateRange = new DateRange(d.Date, d.AddDays(1));
-                    if (rateCache.DateRangeWiseRateDic.ContainsKey(dateRange)==false)
+                    if (rateCache.DateRangeWiseRateDic.ContainsKey(dateRange) == false)
                         this.MediationContext.MefServiceFamilyContainer.RateCache
-                        .PopulateDicByDay(dateRange,flagLcr:false,useInMemoryTable: true);
+                            .PopulateDicByDay(dateRange, flagLcr: false, useInMemoryTable: true);
                 });
-        }
-
-        public void WriteChanges()
-        {
-            foreach (var summaryCache in this.CdrSummaryContext.TableWiseSummaryCache.Values)
-            {
-                summaryCache.SaveChanges(this.DbCmd,this.SegmentSizeForDbWrite);
-            }
-            
         }
     }
 }

@@ -159,7 +159,7 @@ namespace TelcobrightMediation
             }
         }
 
-        public virtual void SaveChanges(DbCommand cmd, int segmentSize)
+        public virtual void WriteAllChanges(DbCommand cmd, int segmentSize)
         {
             lock (this._locker)
             {

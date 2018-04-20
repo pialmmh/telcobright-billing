@@ -9,7 +9,7 @@ namespace TelcobrightMediation
 {
     public interface ICache
     {
-        void SaveChanges(DbCommand cmd, int segmentSize);
+        void WriteAllChanges(DbCommand cmd, int segmentSize);
         int WriteInserts(DbCommand cmd, int segmentSize);
         void WriteUpdates(DbCommand cmd, int segmentSize);
         void WriteDeletes(DbCommand cmd, int segmentSize);

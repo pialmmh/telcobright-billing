@@ -31,15 +31,19 @@ namespace TelcobrightMediation.Cdr
             this.CdrEraser?.DeleteOldCdrs();
 
             this.CdrProcessor?.Process();
-            this.CdrProcessor?.WriteCdrs();
 
-            this.ProcessTransactions();
-            this.CdrJobContext
-            this.CdrJobContext.AccountingContext.SaveChanges();
+            this.ProcessTransactionsIncrementally();
+
+            this.CdrProcessor?.WriteCdrs();
+            foreach (var summaryCache in this.CdrJobContext.CdrSummaryContext.TableWiseSummaryCache.Values)
+            {
+                summaryCache.WriteAllChanges(this.CdrJobContext.DbCmd, this.CdrJobContext.SegmentSizeForDbWrite);
+            }
+            this.CdrJobContext.AccountingContext.WriteAllChanges();
             this.CdrJobContext.AutoIncrementManager.WriteState();
         }
 
-        void ProcessTransactions()
+        public void ProcessTransactionsIncrementally()
         {
             var newCdrExts = this.CdrProcessor.CollectionResult.ConcurrentCdrExts.Values.ToList();
             var oldCdrExts = this.CdrEraser.CollectionResult.ConcurrentCdrExts;

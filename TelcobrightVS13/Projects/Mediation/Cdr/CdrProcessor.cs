@@ -244,7 +244,7 @@ namespace TelcobrightMediation
                             transactionContainer = new TransactionContainerForSingleAccount();
                         }
                         cdrExt.AccWiseTransactionContainers.Add(transaction.glAccountId,transactionContainer);
-                        transactionContainer.NewTransactions.Add(transaction);
+                        transactionContainer.NewTransaction = transaction;
                     }
                 }
             }
@@ -282,7 +282,7 @@ namespace TelcobrightMediation
                     "RawCount in collection result must equal (inconsistentCount+ errorCount + cdrCount+rawPartialActualCount-distintPartialCount");
         }
 
-        long WriteCdrInconsistent()
+        public long WriteCdrInconsistent()
         {
             long inconsistentCount = 0;
             if (this.CollectionResult.CdrInconsistents.Any())

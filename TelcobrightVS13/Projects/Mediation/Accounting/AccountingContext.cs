@@ -70,12 +70,12 @@ namespace TelcobrightMediation.Accounting
                 throw new Exception("Null Accounting or balance or ledgerSummaryCache!");
         }
         
-        public void SaveChanges()
+        public void WriteAllChanges()
         {
-            this.ChargeableCache.SaveChanges(this.Cmd,this.SegmentSizeforDbWrite);
-            this.AccountCache.SaveChanges(this.Cmd, this.SegmentSizeforDbWrite);
-            this.TransactionCache.SaveChanges(this.Cmd, this.SegmentSizeforDbWrite);
-            this.LedgerSummaryCache.SaveChanges(this.Cmd, this.SegmentSizeforDbWrite);
+            this.ChargeableCache.WriteAllChanges(this.Cmd,this.SegmentSizeforDbWrite);
+            this.AccountCache.WriteAllChanges(this.Cmd, this.SegmentSizeforDbWrite);
+            this.TransactionCache.WriteAllChanges(this.Cmd, this.SegmentSizeforDbWrite);
+            this.LedgerSummaryCache.WriteAllChanges(this.Cmd, this.SegmentSizeforDbWrite);
         }
 
         public void ExecuteTransactions(IEnumerable<acc_transaction> transactions)
