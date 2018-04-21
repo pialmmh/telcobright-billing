@@ -21,7 +21,8 @@ namespace TelcobrightMediation.Cdr
             this.CdrProcessor = cdrProcessor;
             this.CdrEraser = cdrEraser;
             this.CdrJobContext = cdrJobContext;
-            this.NewProcessedCdrExts = this.CdrProcessor.CollectionResult.ProcessedCdrExts.ToList();
+            this.NewProcessedCdrExts = this.CdrProcessor?.CollectionResult.ProcessedCdrExts.ToList() ??
+                                       new List<CdrExt>();
             this.OldCdrExts = this.CdrEraser?.CollectionResult.ConcurrentCdrExts ??
                                                               new ConcurrentDictionary<string, CdrExt>();
         }
@@ -84,9 +85,11 @@ namespace TelcobrightMediation.Cdr
             {
                 if (this.CdrEraser == null)
                     throw new Exception("Both cdrProcessor & cdrEraser are found null while processing transactions.");
+                this._matchedOldCdrs = this.OldCdrExts.Values.Count;
                 foreach (var oldTransactionContainer in this.OldCdrExts.Values.SelectMany(
                     c => c.AccWiseTransactionContainers.Values))
                 {
+                    this._matchedOldTransactions += oldTransactionContainer.OldTransactions.Count;
                     var incrementalTransaction = oldTransactionContainer.OldTransactions.Last().Clone();
                     incrementalTransaction.id =
                         this.CdrJobContext.AutoIncrementManager.GetNewCounter("acc_transaction");

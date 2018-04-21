@@ -115,6 +115,7 @@
     <Compile Include="Automation\SingleCliCommand.cs" />
     <Compile Include="Cdr\CdrBasedTransactionProcessor.cs" />
     <Compile Include="Cdr\CdrJob.cs" />
+    <Compile Include="Cdr\CdrWritingResult.cs" />
     <Compile Include="Cdr\Summary\DailyCdrSummaryFactory.cs" />
     <Compile Include="Cdr\Summary\CdrSummaryFactory.cs" />
     <Compile Include="Cdr\Summary\AbstractSummaryFactory.cs" />

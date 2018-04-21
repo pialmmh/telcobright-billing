@@ -34,9 +34,16 @@ namespace UnitTesterManual
             this.OperatorName = operatorName;
         }
 
+        private CdrJobInputData Input { get; set; }
+        bool PartialCollectionEnabled=> this.Input.MediationContext.Tbc.CdrSetting
+            .PartialCdrEnabledNeIds.Contains(this.Input.Ne.idSwitch);
+        private int rawCount, nonPartialCount,uniquePartialCount,rawPartialCount,distinctPartialCount = 0;
+        private decimal rawDuration = 0;
+        
         public override JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
         {
             CdrJobInputData input = (CdrJobInputData) jobInputData;
+            this.Input = input;
             AutoIncrementManager autoIncrementManager = new AutoIncrementManager(input.Context);
             CdrCollectorInputData collectorInput =
                 new CdrCollectorInputData(input, input.TelcobrightJob.JobName, autoIncrementManager);
@@ -48,6 +55,16 @@ namespace UnitTesterManual
                 new NewCdrPreProcessor(decodedCdrRows, inconsistentCdrs, collectorInput);
             base.PreformatRawCdrs(preProcessor, collectorInput);
             preProcessor.TxtCdrRows.ForEach(txtRow => preProcessor.ConvertToCdrOrInconsistentOnFailure(txtRow));
+
+            this.rawDuration = preProcessor.TxtCdrRows.Select(r => Convert.ToDecimal(r[Fn.Durationsec])).Sum();
+            if (this.PartialCollectionEnabled)
+            {
+                this.nonPartialCount = preProcessor.TxtCdrRows.Count(r =>r[Fn.Partialflag]=="0");
+                var partialRows= preProcessor.TxtCdrRows.Where(r =>
+                    r[Fn.Partialflag].ValueIn(new[] { "1", "2", "3" }) && r[Fn.Partialflag] != "0");
+                this.rawPartialCount = partialRows.Count();
+                this.distinctPartialCount = partialRows.GroupBy(r => r[Fn.Uniquebillid]).Count();
+            }
 
             CdrCollectionResult newCollectionResult = null;
             CdrCollectionResult oldCollectionResult = null;
@@ -81,13 +98,43 @@ namespace UnitTesterManual
                 Assert.IsTrue(MediationTester.SummaryCountTwiceAsCdrCount(cdrJob.CdrProcessor));
                 Assert.IsTrue(MediationTester.
                     SumOfPrevDayWiseDurationsAndNewSummaryInstancesIsEqualToSameInMergedSummaryCache(cdrJob.CdrProcessor));
-                if (cdrJob.CdrJobContext.MediationContext.Tbc.CdrSetting
-                        .PartialCdrEnabledNeIds.Contains(cdrJob.CdrJobContext.Ne.idSwitch))
+                CdrWritingResult cdrWritingResult= cdrJob.CdrProcessor?.WriteCdrs();
+                if (this.PartialCollectionEnabled)
                 {
                     //partial cdrs tests here...
+                    var collectionResult = cdrJob.CdrProcessor.CollectionResult;
+                    var processedCdrExts = collectionResult.ProcessedCdrExts;
+                    var nonPartialCdrExts = collectionResult.ProcessedCdrExts.Where(c => c.Cdr.PartialFlag==0).ToList();
+                    var partialCdrExts = collectionResult.ProcessedCdrExts.Where(c => c.PartialCdrContainer != null)
+                        .ToList();
 
+                    Assert.AreEqual(cdrWritingResult.CdrCount,collectionResult.ProcessedCdrExts.Count);
+                    Assert.AreEqual(cdrWritingResult.CdrErrorCount,collectionResult.CdrErrors.Count);
+                    Assert.AreEqual(cdrWritingResult.CdrInconsistentCount, collectionResult.CdrInconsistents.Count);
+                    Assert.AreEqual(cdrWritingResult.TrueNonPartialCount, nonPartialCdrExts.Count);
+                    Assert.AreEqual(cdrWritingResult.NormalizedPartialCount, partialCdrExts.Count);
+                    Assert.AreEqual(cdrWritingResult.CdrCount, (nonPartialCdrExts.Count+partialCdrExts.Count));
+                    Assert.AreEqual(this.distinctPartialCount+this.nonPartialCount, 
+                        (nonPartialCdrExts.Count + partialCdrExts.Count));
+
+                    Assert.AreEqual(cdrWritingResult.PartialCdrWriter.WrittenCdrPartialReferences, partialCdrExts.Count);
+                    Assert.AreEqual(cdrWritingResult.PartialCdrWriter.WrittenNewRawInstances+this.nonPartialCount, collectionResult.RawCount);
+                    partialCdrExts.ForEach(c=>Assert.IsNotNull(c.PartialCdrContainer.NewAggregatedRawInstance));
+                    partialCdrExts.ForEach(c => Assert.IsNotNull(c.PartialCdrContainer.NewCdrEquivalent));
+                    Assert.AreEqual(partialCdrExts.Select(c=>c.PartialCdrContainer.NewAggregatedRawInstance).Count(),
+                        partialCdrExts.Select(c=>c.PartialCdrContainer.NewCdrEquivalent).Count());
+
+                    decimal nonPartialDuration = nonPartialCdrExts.Sum(c => c.Cdr.DurationSec);
+                    decimal partialNormalizedDuration = partialCdrExts.Sum(c => c.Cdr.DurationSec);
+                    Assert.AreEqual(this.rawDuration,nonPartialDuration+partialNormalizedDuration);
+                    Assert.AreEqual(collectionResult.ProcessedCdrExts.Sum(c => c.Cdr.DurationSec),
+                        (nonPartialDuration + partialNormalizedDuration));
+                    Assert.AreEqual(partialNormalizedDuration,
+                        partialCdrExts.SelectMany(c => c.PartialCdrContainer.NewRawInstances).Sum(c => c.DurationSec));
+                    //long newAggRawInstancesCount =
+                    //  .Select(c => c.PartialCdrContainer.NewAggregatedRawInstance).Count();
+                    //Assert.AreEqual(cdrWritingResult.NormalizedPartialCount==));
                 }
-                cdrJob.CdrProcessor?.WriteCdrs();
                 foreach (var summaryCache in cdrJob.CdrJobContext.CdrSummaryContext.TableWiseSummaryCache.Values)
                 {
                     summaryCache.WriteAllChanges(cdrJob.CdrJobContext.DbCmd, cdrJob.CdrJobContext.SegmentSizeForDbWrite);

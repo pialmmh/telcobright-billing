@@ -15,6 +15,7 @@ namespace TelcobrightMediation
         {
             this.MefServiceGroupsContainer = mefServiceGroupsContainer;
         }
+
         protected AbstractCdrSummary CreateInstanceWithoutDate(TSource summarySourceObject)
         {
             CdrExt cdrExt = summarySourceObject;
@@ -24,10 +25,11 @@ namespace TelcobrightMediation
             newSummary.tup_outpartnerid = Convert.ToInt32(cdrExt.Cdr.outPartnerId);
             newSummary.tup_incomingroute = cdrExt.Cdr.incomingroute.ReplaceNullWith("");
             newSummary.tup_outgoingroute = cdrExt.Cdr.outgoingroute.ReplaceNullWith("");
-            newSummary.tup_incomingip = cdrExt.Cdr.OriginatingIP.ReplaceNullWith("");
-            newSummary.tup_outgoingip = cdrExt.Cdr.TerminatingIP.ReplaceNullWith("");
             newSummary.tup_customerrate = 0;
             newSummary.tup_supplierrate = 0;
+            newSummary.tup_incomingip = cdrExt.Cdr.OriginatingIP.ReplaceNullWith("");
+            newSummary.tup_outgoingip = cdrExt.Cdr.TerminatingIP.ReplaceNullWith("");
+
             newSummary.totalcalls = 1;
             if (cdrExt.Cdr.ConnectTime != null)
             {
@@ -40,17 +42,6 @@ namespace TelcobrightMediation
             }
             else newSummary.connectedcallsCC = 0;
 
-            newSummary.tup_countryorareacode = "";//keep all tuple non null
-            newSummary.tup_matchedprefixcustomer = "";
-            newSummary.tup_matchedprefixsupplier = "";
-            newSummary.tup_sourceId = "";
-            newSummary.tup_destinationId = "";
-            newSummary.tup_customercurrency = "";
-            newSummary.tup_suppliercurrency = "";
-            newSummary.tup_tax1currency = "";
-            newSummary.tup_tax2currency = "";
-            newSummary.tup_vatcurrency = "";
-
             newSummary.successfulcalls = Convert.ToInt64(cdrExt.Cdr.ChargingStatus);
             newSummary.actualduration = cdrExt.Cdr.DurationSec;
             newSummary.roundedduration = Convert.ToDecimal(cdrExt.Cdr.roundedduration);
@@ -60,11 +51,25 @@ namespace TelcobrightMediation
             newSummary.PDD = Convert.ToDouble(cdrExt.Cdr.PDD);
 
             //service group specific params, set default first then send through service group to set right value
-            IServiceGroup serviceGroup = this.MefServiceGroupsContainer.IdServiceGroupWiseServiceGroups[cdrExt.Cdr.CallDirection];
+            IServiceGroup serviceGroup =
+                this.MefServiceGroupsContainer.IdServiceGroupWiseServiceGroups[cdrExt.Cdr.CallDirection];
             serviceGroup.SetServiceGroupWiseSummaryParams(cdrExt, newSummary);
+            ReplaceNullsWithDefaultForTupleFields(newSummary);
             return newSummary;
         }
 
-        
+        void ReplaceNullsWithDefaultForTupleFields(AbstractCdrSummary newSummary)
+        {
+            newSummary.tup_countryorareacode = newSummary.tup_countryorareacode ?? "";
+            newSummary.tup_matchedprefixcustomer = newSummary.tup_matchedprefixcustomer ?? "";
+            newSummary.tup_matchedprefixsupplier = newSummary.tup_matchedprefixsupplier ?? "";
+            newSummary.tup_sourceId = newSummary.tup_sourceId ?? "";
+            newSummary.tup_destinationId = newSummary.tup_destinationId ?? "";
+            newSummary.tup_customercurrency = newSummary.tup_customercurrency ?? "";
+            newSummary.tup_suppliercurrency = newSummary.tup_suppliercurrency ?? "";
+            newSummary.tup_tax1currency = newSummary.tup_tax1currency ?? "";
+            newSummary.tup_tax2currency = newSummary.tup_tax2currency ?? "";
+            newSummary.tup_vatcurrency = newSummary.tup_vatcurrency ?? "";
+        }
     }
 }

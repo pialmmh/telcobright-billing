@@ -81,9 +81,9 @@ namespace TelcobrightMediation.Cdr
 
         private void ValidateSummaryCollection()
         {
-            var dayWiseSummaryCaches = this.TableWiseSummaryCache.Where(kv => kv.Key.Contains("_hr_"))
+            var dayWiseSummaryCaches = this.TableWiseSummaryCache.Where(kv => kv.Key.Contains("_day_"))
                             .ToDictionary(kv => kv.Key, kv => kv.Value);
-            var hourWiseSummaryCaches = this.TableWiseSummaryCache.Where(kv => kv.Key.Contains("_day_"))
+            var hourWiseSummaryCaches = this.TableWiseSummaryCache.Where(kv => kv.Key.Contains("_hr_"))
                 .ToDictionary(kv => kv.Key, kv => kv.Value);
             foreach (var kv in dayWiseSummaryCaches)
             {

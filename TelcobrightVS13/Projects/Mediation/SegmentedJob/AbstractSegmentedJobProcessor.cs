@@ -73,7 +73,7 @@ namespace TelcobrightMediation
             {
                 foreach (jobsegment jobSegment in incompleteSegments)
                 {
-                    Console.WriteLine("Processing Segment:" + (jobSegment.segmentNumber+1) + " for job "
+                    Console.WriteLine("Processing Segment:" + (jobSegment.segmentNumber) + " for job "
                                       + this.TelcobrightJob.JobName);
                     ISegmentedJob segmentedJob = null;
                     try

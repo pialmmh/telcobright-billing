@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using MediationModel;
 using Spring.Core;
@@ -40,7 +41,25 @@ namespace TelcobrightMediation
                 if (existingSummary == null)
                 {
                     if (mergeType == SummaryMergeType.Substract)
+                    {
+                        //todo remove temp code
+                        if (this.EntityOrTableName.Contains("sum_voice"))
+                        {
+                            //var possMatch = string.Join(Environment.NewLine,
+                            //    this.Cache.Values.Select(s => s.GetTupleKey().ToString()));
+                            var tuples = this.Cache.Values.Select(s => s.GetTupleKey().ToString()).ToList();
+                            var tup = tuples
+                                .First(t => t.ToString()
+                                    .Contains(
+                                        //"1, 584, 1, Ivoco_SBC, Novo1-IOF, 0.01890000, 0.02000000, 114.130.252.171:5060, 203.201.48.36:5060, , 880, 0034, , 23, USD, , , '2017-12-01 00:00:00', USD, USD"));
+                                        key.ToString()));
+                            //var matchStr = possMatch.ToString() == key.ToString();
+                            //Debug.Flush();
+                            //Debug.Print(tupleKeys);
+                        }
+                        //end temp code
                         throw new NotSupportedException("Previous summary instance cannot be null for summary substraction.");
+                    }
                     //summaries are merged in Cache, cache.Insert without value copy will have the same reference 
                     //for source summary entity & the mergable version in cache
                     //when a next summary instance to update the merged cache, the first source object will also get changed.
@@ -51,9 +70,9 @@ namespace TelcobrightMediation
                     {
                         InsertWithKey(clonedSummary, key, pdValidatationMethodForInsert);
                     }
-                    else if (mergeType == SummaryMergeType.Substract)
+                    else 
                     {
-                        throw new Exception("Cannot merge substract summary, previous instance does not exist.");
+                        throw new NotSupportedException("Summary merge type must be add or substract.");
                     }
                 }
                 else

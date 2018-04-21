@@ -117,6 +117,10 @@ namespace LibraryExtensions
         {
             return values.Contains(s);
         }
+        public static bool ValueNotIn(this string s, IEnumerable<string> values)
+        {
+            return !values.Contains(s);
+        }
     }
 
 }
