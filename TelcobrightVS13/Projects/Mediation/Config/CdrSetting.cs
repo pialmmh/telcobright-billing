@@ -10,6 +10,7 @@ namespace TelcobrightMediation
         public List<int> PartialCdrEnabledNeIds { get; set; }=new List<int>();
         public int SegmentSizeForDbWrite { get; set; }
         public int NoOfDecimalPrecisionDigitsForDoubles { get; set; }
+        public decimal FractionalNumberComparisonTollerance { get; set; }= .000001M;
         public int BatchSizeWhenPreparingLargeSqlJob { get; set; }
         public SummaryTimeFieldEnum SummaryTimeField { get; set; }
         public int DaysToAddBeforeAndAfterUniqueDaysForSafePartialCollection { get; set; }

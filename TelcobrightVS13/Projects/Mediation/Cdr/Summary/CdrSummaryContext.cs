@@ -24,6 +24,7 @@ namespace TelcobrightMediation.Cdr
         public List<DateTime> DatesInvolved { get; } //set by new cdrs only, which covers old cdr case as well.
         public List<DateTime> HoursInvolved { get; } //set by new cdrs only, which covers old cdr case as well.
         private PartnerEntities Context { get; }
+
         public CdrSummaryContext(MediationContext mediationContext,
             AutoIncrementManager autoIncrementManager, PartnerEntities context, List<DateTime> hoursInvolved)
         {
@@ -39,14 +40,16 @@ namespace TelcobrightMediation.Cdr
                 .Select(tableName => new
                 {
                     SummaryTableName = tableName,
-                    CdrSummaryFactory = CdrSummaryFactoryFactory.Create(tableName, this.MediationContext.MefServiceGroupContainer)
-                }).ToDictionary(annonymous => annonymous.SummaryTableName,annonymous=>annonymous.CdrSummaryFactory);
+                    CdrSummaryFactory =
+                    CdrSummaryFactoryFactory.Create(tableName, this.MediationContext.MefServiceGroupContainer)
+                }).ToDictionary(annonymous => annonymous.SummaryTableName, annonymous => annonymous.CdrSummaryFactory);
 
 
             foreach (int serviceGroupNumber in this.MediationContext.Tbc.CdrSetting.ServiceGroupConfigurations.Keys)
             {
                 IServiceGroup serviceGroup = null;
-                this.MediationContext.MefServiceGroupContainer.IdServiceGroupWiseServiceGroups.TryGetValue(serviceGroupNumber,out serviceGroup);
+                this.MediationContext.MefServiceGroupContainer.IdServiceGroupWiseServiceGroups.TryGetValue(
+                    serviceGroupNumber, out serviceGroup);
                 if (serviceGroup != null)
                 {
                     Dictionary<string, Type> summaryTargetTables = serviceGroup.GetSummaryTargetTables();
@@ -63,13 +66,34 @@ namespace TelcobrightMediation.Cdr
                         {
                             selectedDateTimes = this.HoursInvolved;
                         }
-                        else throw new Exception("Cdrsummary type must contain 'day' or 'hr' in service group configuration");
+                        else
+                            throw new Exception(
+                                "Cdrsummary type must contain 'day' or 'hr' in service group configuration");
                         TimeWiseSummaryCachePopulator<AbstractCdrSummary, CdrSummaryTuple> timeWiseSummaryCachePopulator
                             = new TimeWiseSummaryCachePopulator<AbstractCdrSummary, CdrSummaryTuple>
                                 (summaryCache, this.Context, "tup_starttime", selectedDateTimes);
                         timeWiseSummaryCachePopulator.Populate();
                     }
                 }
+            }
+            ValidateSummaryCollection();
+        }
+
+        private void ValidateSummaryCollection()
+        {
+            var dayWiseSummaryCaches = this.TableWiseSummaryCache.Where(kv => kv.Key.Contains("_hr_"))
+                            .ToDictionary(kv => kv.Key, kv => kv.Value);
+            var hourWiseSummaryCaches = this.TableWiseSummaryCache.Where(kv => kv.Key.Contains("_day_"))
+                .ToDictionary(kv => kv.Key, kv => kv.Value);
+            foreach (var kv in dayWiseSummaryCaches)
+            {
+                SummaryCache<AbstractCdrSummary, CdrSummaryTuple> dayWiseSummaryCache = kv.Value;
+                SummaryCache<AbstractCdrSummary, CdrSummaryTuple> hourWiseSummaryCache =
+                    hourWiseSummaryCaches[kv.Key.Replace("day", "hr")];
+                var daySumOfDuration = dayWiseSummaryCache.GetItems().Sum(s => s.actualduration);
+                var hourWiseSumOfDuration = hourWiseSummaryCache.GetItems().Sum(s => s.actualduration);
+                if (Math.Abs(daySumOfDuration - hourWiseSumOfDuration) > this.MediationContext.Tbc.CdrSetting.FractionalNumberComparisonTollerance)
+                    throw new Exception("Collected day & hour wise summary duration do not match.");
             }
         }
 

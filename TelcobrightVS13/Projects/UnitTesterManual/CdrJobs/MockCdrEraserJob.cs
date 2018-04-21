@@ -16,13 +16,13 @@ namespace UnitTesterManual
             CdrJobInputData input = (CdrJobInputData)jobInputData;
             AutoIncrementManager autoIncrementManager = new AutoIncrementManager(input.Context);
             CdrCollectorInputData cdrCollectorInput = new CdrCollectorInputData(input, "", autoIncrementManager);
-            SegmentedCdrEraser segmentedCdrReprocessJobProcessor =
+            SegmentedCdrEraser segmentedCdrEraser =
                 new SegmentedCdrEraser(cdrCollectorInput,
                     input.CdrSetting.BatchSizeWhenPreparingLargeSqlJob, "idcall", "starttime");
             if (input.TelcobrightJob.Status != 2) //prepare job if not prepared already
-                segmentedCdrReprocessJobProcessor.PrepareSegments();
-            List<jobsegment> jobsegments = segmentedCdrReprocessJobProcessor.ExecuteIncompleteSegments();
-            segmentedCdrReprocessJobProcessor.FinishJob(jobsegments); //mark job as complete
+                segmentedCdrEraser.PrepareSegments();
+            List<jobsegment> jobsegments = segmentedCdrEraser.ExecuteIncompleteSegments();
+            segmentedCdrEraser.FinishJob(jobsegments); //mark job as complete
             return JobCompletionStatus.Complete;
         }
     }

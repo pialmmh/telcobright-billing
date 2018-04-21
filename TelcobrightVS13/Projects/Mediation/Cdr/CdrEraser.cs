@@ -45,7 +45,9 @@ namespace TelcobrightMediation
             this.CdrJobContext.AccountingContext.TransactionCache.PopulateCache( 
                 () => new Dictionary<string, acc_transaction>());
 
-            Parallel.ForEach(oldCdrExts,oldCdrExt=>
+            //todo: change to parallel
+            //Parallel.ForEach(oldCdrExts,oldCdrExt=>
+            oldCdrExts.ForEach(oldCdrExt =>
             {
                 if (oldCdrExt.CdrNewOldType != CdrNewOldType.OldCdr)
                     throw new Exception("OldCdrs must have CdrNewOldtype status set to old.");
