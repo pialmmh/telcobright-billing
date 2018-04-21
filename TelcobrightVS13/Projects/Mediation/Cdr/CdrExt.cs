@@ -45,7 +45,7 @@ namespace TelcobrightMediation.Cdr
                 {
                     throw new Exception("Property PartialCdrContainer cannot be accessed for old cdrs.");
                 }
-                else if (this.Cdr.PartialFlag != 1)
+                else if (this.Cdr.PartialFlag == 0)
                 {
                     throw new Exception("Property PartialCdrContainer cannot be accessed for non partial cdrs.");
                 }
@@ -57,7 +57,7 @@ namespace TelcobrightMediation.Cdr
                 {
                     throw new Exception("Property PartialCdrContainer cannot be set for old cdrs.");
                 }
-                else if (this.Cdr.PartialFlag != 1 && value != null)
+                else if (this.Cdr.PartialFlag == 0 && value != null)
                 {
                     throw new Exception("Property PartialCdrContainer cannot be set for non partial cdrs.");
                 }

@@ -63,23 +63,19 @@ namespace TelcobrightMediation
                 if (convertedCdr.PartialFlag == 0)
                     base.NonPartialCdrs.Add(convertedCdr);
                 else
-                    base.RawPartialCdrInstances.Add(
-                        new IcdrImplConverter<cdrpartialrawinstance>().Convert(convertedCdr));
+                {
+                    if (convertedCdr.PartialFlag>0)
+                    {
+                        base.RawPartialCdrInstances.Add(
+                            new IcdrImplConverter<cdrpartialrawinstance>().Convert(convertedCdr));
+                    }
+                    else
+                    {
+                        throw new Exception("Converted cdr from txtRow must have valid numeric partial flag.");
+                    }
+                }
             }
             else throw new Exception("Both converted & inconsistent cdrs cannot be null or not null at the same time.");
-        }
-
-        private static cdr ConvertTxtRowToCxxxxxdrOrInconistentOnFailure(BlockingCollection<cdrinconsistent> cdrInconsistentAggregator,
-            string[] row)
-        {
-            cdrinconsistent cdrInconsistent = null;
-            cdr convertedCdr = CdrManipulatingUtil.ConvertTxtRowToCdrOrInconsistentOnFailure(row, out cdrInconsistent);
-            if (convertedCdr == null && cdrInconsistent != null)
-            {
-                cdrInconsistentAggregator.Add(cdrInconsistent);
-                return null;
-            }
-            return convertedCdr;
         }
 
         public override void GetCollectionResults(out CdrCollectionResult newCollectionResult,

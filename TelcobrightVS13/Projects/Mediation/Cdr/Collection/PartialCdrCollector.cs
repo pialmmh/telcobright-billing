@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Configuration;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Runtime.Remoting.Contexts;
 using System.Text;
@@ -141,6 +142,75 @@ namespace TelcobrightMediation.Mediation.Cdr
             //now filter unique days again, because there will be repeated dates
             datesToScanForPrevInstances = datesToScanForPrevInstances.Distinct().OrderBy(c => c).ToList();
             return datesToScanForPrevInstances;
+        }
+
+        private void ValidateCollection()
+        {
+            var uniqueBillIds = this.BillIdWiseNewRawInstances.Keys.ToList();
+            var newRawInstances = this.BillIdWiseNewRawInstances.Values.SelectMany(r => r).ToList();
+            var cdrPartialReferences = this.BillIdWiseReferences.Values.ToList();
+            var lastProcessedCdrs = this.BillIdWiseLastProcessedCdrInstance.Values.ToList();
+            var lastAggRawInstances = this.BillIdWiseLastAggregatedRawInstances.Values.ToList();
+            var distinctDates = newRawInstances.Select(r => r.StartTime.Date).Distinct().ToList();
+            distinctDates.ForEach(d =>
+            {
+                if (this.DatesToScanForSafePartialCdrCollection.Contains(d)==false)
+                {
+                    throw new Exception("All dates in raw partial cdr instances should be in DatesToScanForSafePartialCdrCollection");
+                }
+            });
+            newRawInstances.ForEach(r =>
+            {
+                if (r.SwitchId != this.IdSwitch)
+                {
+                    throw new Exception("All rawInstances switchid must be "+this.IdSwitch);
+                }
+            });
+            if(this.BillIdWiseReferences.Count>this.BillIdWiseNewRawInstances.Count)
+                throw new Exception("Collected cdrpartialreferences count must be <= current uniqueBillIdCount.");
+            cdrPartialReferences.ForEach(r =>
+            {
+                if(this.BillIdWiseNewRawInstances.Keys.Contains(r.UniqueBillId)==false)
+                    throw new Exception("Cdrpartial references cannot contain billIds that are not in BillIdWiseNewRawinstances.");
+            });
+            if (cdrPartialReferences.Count != this.BillIdWiseLastAggregatedRawInstances.Values.Count)
+                throw new Exception("Number of cdrpartialreference must be equal to number of collected lastAggRawInstances.");
+            cdrPartialReferences.ForEach(r =>
+            {
+                List<long> idCallsOfPrevInstancesBySplittingComma =
+                    r.commaSepIdcallsForAllInstances.Split(',').Select(strIdCall => Convert.ToInt64(strIdCall))
+                        .ToList();
+                var prevRawInstances = this.BillIdWisePrevRawInstances[r.UniqueBillId].ToList();
+                if (idCallsOfPrevInstancesBySplittingComma.Count!=prevRawInstances.Count)
+                    throw new Exception("Collected number of PrevRawInstances does not match history contained in cdrpartialreference.");
+                if (idCallsOfPrevInstancesBySplittingComma.All(prevRawInstances.Select(p=>p.idcall).Contains)==false)
+                {
+                    throw new Exception("Collected idcalls of PrevRawInstances do not match history contained in cdrpartialreference.");
+                }
+                long collectedIdCallOfLastAggRaw = this.BillIdWiseLastAggregatedRawInstances[r.UniqueBillId].idcall;
+                if(r.lastIdcall!=collectedIdCallOfLastAggRaw)
+                    throw new Exception("Last idcall from cdrpartial reference must match idcall of lastAggRawInstance.");
+                long collectedIdCallOfLastCdr = this.BillIdWiseLastProcessedCdrInstance[r.UniqueBillId].idcall;
+                if (r.lastIdcall != collectedIdCallOfLastCdr)
+                    throw new Exception("Last idcall from cdrpartial reference must match idcall of last processed cdr instance.");
+            });
+            var collectedLastAggBillIds=this.BillIdWiseLastAggregatedRawInstances.Values.Select(c=>c.UniqueBillId).ToList();
+            collectedLastAggBillIds.ForEach(lastAggBillId =>
+            {
+                if (uniqueBillIds.Contains(lastAggBillId)==false)
+                {
+                    throw new Exception(
+                        "At least one billId of collected lastAggRawInstance does not belong to unique bill ids for this partial cdr collector.");
+                }
+            });
+            lastProcessedCdrs.ForEach(c =>
+            {
+                if (uniqueBillIds.Contains(c.UniqueBillId) == false)
+                    throw new Exception("Collected last processed cdrs billids must be in current uniqueBillIds of partial cdr collector.");
+            });
+            if(lastProcessedCdrs.Count!=lastAggRawInstances.Count)
+                throw new Exception("Number of last processed cdrs & lastAggRawInstance must be equal.");
+            
         }
     }
 }

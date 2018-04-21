@@ -277,7 +277,7 @@ namespace TelcobrightMediation
             if (this.Tbc.CdrSetting.PartialCdrEnabledNeIds.Contains(this.CdrJobContext.Ne.idSwitch))
             {
                 partialCdrWriter = new PartialCdrWriter(
-                    this.CollectionResult.ConcurrentCdrExts.Values.Where(e => e.Cdr.PartialFlag == 1)
+                    this.CollectionResult.ConcurrentCdrExts.Values.Where(e => e.Cdr.PartialFlag >0)
                         .Select(e => e.PartialCdrContainer).ToList(), this.CdrJobContext);
                 partialCdrWriter.Write();
                 partialCdrContainers = partialCdrWriter.PartialCdrContainers;
