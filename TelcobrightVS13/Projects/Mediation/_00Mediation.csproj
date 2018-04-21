@@ -113,6 +113,7 @@
     <Compile Include="Automation\AutomatedNetworkElementCli.cs" />
     <Compile Include="Automation\SessionInfo.cs" />
     <Compile Include="Automation\SingleCliCommand.cs" />
+    <Compile Include="Cdr\CdrBasedTransactionProcessor.cs" />
     <Compile Include="Cdr\CdrJob.cs" />
     <Compile Include="Cdr\Summary\DailyCdrSummaryFactory.cs" />
     <Compile Include="Cdr\Summary\CdrSummaryFactory.cs" />

@@ -71,7 +71,11 @@ namespace UnitTesterManual
                 cdrJob.CdrEraser?.DeleteOldCdrs();
 
                 cdrJob.CdrProcessor?.Process();
-                cdrJob.ProcessTransactionsIncrementally();
+                CdrBasedTransactionProcessor transactionProcessor =
+                    new CdrBasedTransactionProcessor(cdrJob.CdrProcessor, cdrJob.CdrEraser, cdrJob.CdrJobContext);
+                List<acc_transaction> incrementalTransactions = transactionProcessor.ProcessTransactionsIncrementally();
+                transactionProcessor.ValidateTransactions(incrementalTransactions);
+                cdrJob.CdrJobContext.AccountingContext.ExecuteTransactions(incrementalTransactions);
                 Assert.IsTrue(MediationTester.DurationSumInCdrAndMergedCachedAreTollerablyEqual(cdrJob.CdrProcessor));
                 Assert.IsTrue(MediationTester.DurationSumInCdrAndSummaryAreTollerablyEqual(cdrJob.CdrProcessor));
                 Assert.IsTrue(MediationTester.SummaryCountTwiceAsCdrCount(cdrJob.CdrProcessor));
