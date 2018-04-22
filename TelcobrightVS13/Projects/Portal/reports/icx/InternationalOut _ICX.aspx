@@ -292,8 +292,8 @@
             <asp:BoundField DataField="Destination" HeaderText="Destination" 
                 SortExpression="Destination" />
             <asp:BoundField DataField="ANS" HeaderText="ANS" SortExpression="ANS" />
-            <asp:BoundField DataField="IGW" HeaderText="ICX" SortExpression="IGW" />
-            <asp:BoundField DataField="International Partner" HeaderText="Intl Partner" SortExpression="International Partner" />
+            <asp:BoundField DataField="IGW" HeaderText="ANS" SortExpression="IGW" />
+            <asp:BoundField DataField="International Partner" HeaderText="IOS" SortExpression="International Partner" />
             
             <asp:BoundField DataField="CallsCount" 
                 DataFormatString="{0:#,0}"

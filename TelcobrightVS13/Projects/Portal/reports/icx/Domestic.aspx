@@ -534,8 +534,8 @@
                     <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                     <Columns>
                         <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" ItemStyle-Wrap="false" />
-                        <asp:BoundField DataField="International Partner" HeaderText="International Partner" SortExpression="International Partner" />
-                        <asp:BoundField DataField="IGW" HeaderText="ICX/IOS" SortExpression="IGW" />
+                        <asp:BoundField DataField="International Partner" HeaderText="Incoming ANS" SortExpression="International Partner" />
+                        <asp:BoundField DataField="IGW" HeaderText="Outgoing ANS" SortExpression="IGW" />
                         <asp:BoundField DataField="ANS" HeaderText="ANS" SortExpression="ANS" />
 
                         <asp:BoundField DataField="CallsCount"
