@@ -557,23 +557,19 @@ namespace InstallConfig
                         {
                             "CheckBoxShowCost.Enabled=true",
                             "CheckBoxShowCost.Checked=true",
-                            "GridView1.Columns[7].Visible=true",//actual duration
-                            "GridView1.Columns[9].Visible=true",//duration1
-                            "GridView1.Columns[6].Visible=true",//Connect count
-                            "GridView1.Columns[19].Visible=true",//CCR
+                            "GridView1.Columns[3].Visible=false",//fake ans
+                            "GridView1.Columns[6].Visible=false",//connected calls
+                            "GridView1.Columns[7].Visible=false",//actual duration
+                            "GridView1.Columns[8].Visible=false",//billed duration
+                            "GridView1.Columns[16].Visible=false",//ASR
+                            "GridView1.Columns[18].Visible=false",//PDD
+                            "GridView1.Columns[19].Visible=false",//CCR
                             "GridView1.Columns[20].Visible=false",//Connect count by cc
                             "GridView1.Columns[21].Visible=false",//CCR by cc
                         },
                         SpringExpressionIfNotRole = new List<string>()
                         {
                             "CheckBoxShowCost.Enabled=false",
-                            "GridView1.Columns[6].Visible=true",//Connect count
-                            "GridView1.Columns[7].Visible=false",
-                            "GridView1.Columns[9].Visible=false",
-                            "GridView1.Columns[8].HeaderText=Duration",
-                            "GridView1.Columns[19].Visible=true",//CCR
-                            "GridView1.Columns[20].Visible=false",//Connect count by cc
-                            "GridView1.Columns[21].Visible=false",//CCR by cc
                         }
                     }
                 }
@@ -621,22 +617,20 @@ namespace InstallConfig
                         SpringExpressionIfRole = new List<string>()
                         {
                             "CheckBoxShowCost.Enabled=true",
-                            "GridView1.Columns[8].Visible=true",//connected calls
-                            "GridView1.Columns[9].Visible=true",//actual duration
-                            "GridView1.Columns[12].Visible=true",//supplier duration
-                            "GridView1.Columns[16].Visible=true",//CCR
+                            "GridView1.Columns[3].Visible=false",//fake ans
+                            "GridView1.Columns[8].Visible=false",//connected calls
+                            "GridView1.Columns[9].Visible=false",//actual duration
+                            "GridView1.Columns[12].Visible=false",//supplier duration
+                            "GridView1.Columns[13].Visible=false",//ASR
+                            "GridView1.Columns[15].Visible=false",//PDD
+                            "GridView1.Columns[16].Visible=false",//CCR
                             "GridView1.Columns[17].Visible=false",//connect by cc
                             "GridView1.Columns[18].Visible=false",//CCR by cc
+                            "GridView1.Columns[23].Visible=false",//Partner Cost
                         },
                         SpringExpressionIfNotRole = new List<string>()
                         {
                             "CheckBoxShowCost.Enabled=false",
-                            "GridView1.Columns[8].Visible=true",//connected calls
-                            "GridView1.Columns[9].Visible=false",//actual duration
-                            "GridView1.Columns[12].Visible=false",//supplier duration
-                            "GridView1.Columns[16].Visible=true",//CCR
-                            "GridView1.Columns[17].Visible=false",//connect by cc
-                            "GridView1.Columns[18].Visible=false",//CCR by cc
                         }
                     }
                 }

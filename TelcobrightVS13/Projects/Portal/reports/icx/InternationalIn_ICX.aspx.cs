@@ -75,6 +75,7 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
 
     protected void submit_Click(object sender, EventArgs e)
     {
+        /*
         if (CheckBoxShowByAns.Checked == true)
         {
             GridView1.Columns[3].Visible = true;
@@ -90,6 +91,7 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
             }
         }
         else GridView1.Columns[3].Visible = false;
+        */
 
         if (CheckBoxShowByIgw.Checked == true)
         {
@@ -122,23 +124,11 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
         }
         if (CheckBoxShowPerformance.Checked == true)
         {
-            GridView1.Columns[15].Visible = true;
-            GridView1.Columns[16].Visible = true;
             GridView1.Columns[17].Visible = true;
-            GridView1.Columns[18].Visible = true;
-            //GridView1.Columns[19].Visible = true;
-            GridView1.Columns[20].Visible = true;
-
         }
         else
         {
-            GridView1.Columns[15].Visible = false;
-            GridView1.Columns[16].Visible = false;
             GridView1.Columns[17].Visible = false;
-            GridView1.Columns[18].Visible = false;
-            //GridView1.Columns[19].Visible = false;
-            GridView1.Columns[20].Visible = false;
-
         }
         //make profit invisible, it's useless
         GridView1.Columns[15].Visible = false;

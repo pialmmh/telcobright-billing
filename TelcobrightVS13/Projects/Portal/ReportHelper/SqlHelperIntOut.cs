@@ -68,7 +68,7 @@ namespace PortalApp.ReportHelper
                 SUM(doubleAmount1) AS X,
                 SUM(doubleAmount2) AS Y,
                 SUM(doubleAmount3) AS Z,
-                (SELECT 0) AS revenueigwout,
+                SUM(customercost) AS revenueigwout,
                 Sum(SupplierCost) AS suppliercost
 
 	            FROM {TableName}

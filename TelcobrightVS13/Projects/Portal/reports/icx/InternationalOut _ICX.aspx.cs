@@ -83,6 +83,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
         //view by country/prefix logic has been changed later, adding this new flag
         bool notViewingByCountry = CheckBoxShowByDestination.Checked | (!CheckBoxShowByCountry.Checked);//not viewing by country if view by desination is checked
 
+        
         //undo the effect of hiding some grid by the summary button first******************
         GridView1.Columns[0].Visible = true;
         GridView1.Columns[1].Visible = true;
@@ -97,11 +98,11 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
         }
         else GridView1.Columns[2].Visible = true;
 
-        if (CheckBoxShowByAns.Checked == true)
-        {
-            GridView1.Columns[3].Visible = true;
-        }
-        else GridView1.Columns[3].Visible = false;
+        //if (CheckBoxShowByAns.Checked == true)
+        //{
+        //    GridView1.Columns[3].Visible = true;
+        //}
+        //else GridView1.Columns[3].Visible = false;
 
         if (CheckBoxShowByIgw.Checked == true)
         {
@@ -115,23 +116,14 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
         }
         else GridView1.Columns[5].Visible = false;
 
+        
         if (CheckBoxShowPerformance.Checked == true)
         {
-            GridView1.Columns[13].Visible = true;
             GridView1.Columns[14].Visible = true;
-            GridView1.Columns[15].Visible = true;
-            //GridView1.Columns[16].Visible = true;
-            GridView1.Columns[17].Visible = true;
-            GridView1.Columns[18].Visible = true;
         }
         else
         {
-            GridView1.Columns[13].Visible = false;
             GridView1.Columns[14].Visible = false;
-            GridView1.Columns[15].Visible = false;
-            //GridView1.Columns[16].Visible = false;
-            GridView1.Columns[17].Visible = false;
-            GridView1.Columns[18].Visible = false;
         }
 
         if (CheckBoxShowCost.Checked == true)
@@ -140,24 +132,15 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
             GridView1.Columns[20].Visible = true;
             GridView1.Columns[21].Visible = true;
             GridView1.Columns[22].Visible = true;
-            GridView1.Columns[23].Visible = true;
-            GridView1.Columns[24].Visible = true;
-            GridView1.Columns[25].Visible = true;
-
         }
         else
         {
-
             GridView1.Columns[19].Visible = false;
             GridView1.Columns[20].Visible = false;
             GridView1.Columns[21].Visible = false;
             GridView1.Columns[22].Visible = false;
-            GridView1.Columns[23].Visible = false;
-           // GridView1.Columns[24].Visible = false;
-           // GridView1.Columns[25].Visible = false;
         }
-
-
+        
 
         using (MySqlConnection connection = new MySqlConnection())
         {
