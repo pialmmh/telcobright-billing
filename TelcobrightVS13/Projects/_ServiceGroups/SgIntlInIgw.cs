@@ -46,8 +46,8 @@ namespace TelcobrightMediation
             MefServiceGroupsContainer servGroupData =
                 cdrProcessor.CdrJobContext.MediationContext.MefServiceGroupContainer;
             //international in call direction/service group
-            var dicRoutes = servGroupData.DicRouteIncludePartner;
-            string key = thisCdr.SwitchId + "-" + thisCdr.incomingroute;
+            var dicRoutes = servGroupData.SwitchWiseRoutes;
+            var key=new ValueTuple<int,string>(thisCdr.SwitchId,thisCdr.incomingroute); 
             route thisRoute = null;
             dicRoutes.TryGetValue(key, out thisRoute);
             if (thisRoute != null)

@@ -33,18 +33,20 @@ namespace TelcobrightMediation
         }
 
         public AccChargeableExt ExecuteXyzRating(Rateext matchedRateWithAssignmentTupleId, CdrExt cdrExt, ServiceContext serviceContext,
-            string igwOrIcx)
+            XyzRatingType xyzRatingType)
         {
             cdr thisCdr = cdrExt.Cdr;
             long finalDuration = 0; //xyz is rounded always
             decimal tempDuration = thisCdr.DurationSec;
             finalDuration =
                 Convert.ToInt64(this.PrefixMatcher.A2ZDuration(tempDuration, matchedRateWithAssignmentTupleId));
-            decimal xAmountBdt = this.PrefixMatcher.A2ZAmount(finalDuration, matchedRateWithAssignmentTupleId, 0,
-                serviceContext.CdrProcessor);
-            decimal yAmountUsd = this.PrefixMatcher.A2ZAmount(finalDuration, matchedRateWithAssignmentTupleId, 1,
-                serviceContext.CdrProcessor);
-
+            decimal xAmountBdt = this.PrefixMatcher.A2ZAmount(finalDuration, matchedRateWithAssignmentTupleId,
+                rateFieldNumber: 0,//rate amount
+                cdrProcessor: serviceContext.CdrProcessor);
+            decimal yAmountUsd = this.PrefixMatcher.A2ZAmount(finalDuration, matchedRateWithAssignmentTupleId, 
+                rateFieldNumber: 1,//other amount1
+                cdrProcessor: serviceContext.CdrProcessor);
+            decimal btrcRevSharePercentage = Convert.ToDecimal(matchedRateWithAssignmentTupleId.OtherAmount3);
             thisCdr.roundedduration = finalDuration;
             thisCdr.SubscriberChargeXOut = Convert.ToDecimal(xAmountBdt);
             thisCdr.CarrierCostYIGWOut = Convert.ToDecimal(yAmountUsd);
@@ -60,10 +62,10 @@ namespace TelcobrightMediation
             uom_conversion_dated conversionRate = GetExactOrNearestEarlierConvRateForXyz(callDate);
             if (conversionRate == null) return null;
             thisCdr.USDRateY = Convert.ToDecimal(conversionRate.CONVERSION_FACTOR);
-            decimal yBdt = yAmountUsd * Convert.ToDecimal(conversionRate.CONVERSION_FACTOR);
-            decimal zAmount = yBdt - xAmountBdt;
+            decimal yBdt = yAmountUsd * (decimal)thisCdr.USDRateY;
+            decimal zAmount = xAmountBdt- yBdt;
             decimal fifteenPcOfZ = Convert.ToDecimal(zAmount * matchedRateWithAssignmentTupleId.OtherAmount2) / 100;
-            decimal finalAmount = igwOrIcx == "igw" ? fifteenPcOfZ + yBdt : fifteenPcOfZ;
+            decimal finalAmount = xyzRatingType == XyzRatingType.Igw ? fifteenPcOfZ + yBdt : fifteenPcOfZ;
             thisCdr.RevenueIGWOut = finalAmount;
             account postingAccount = GetPostingAccount(cdrExt, serviceContext, "BDT");
             BillingRule billingRule = GetBillingRule(serviceContext,
@@ -90,6 +92,7 @@ namespace TelcobrightMediation
                     OtherAmount1 = xAmountBdt,
                     OtherAmount2 = yAmountUsd,
                     OtherAmount3 = zAmount,
+                    OtherDecAmount1 = fifteenPcOfZ*btrcRevSharePercentage/100,
                     unitPriceOrCharge = matchedRateWithAssignmentTupleId.rateamount,
                     Prefix = matchedRateWithAssignmentTupleId.Prefix,
                     RateId = matchedRateWithAssignmentTupleId.id,

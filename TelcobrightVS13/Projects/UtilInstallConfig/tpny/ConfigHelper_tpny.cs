@@ -40,7 +40,11 @@ namespace InstallConfig
                     {//dictionary item
                         1, new ServiceGroupConfiguration(enabled:true)//domestic
                         {
-                            PartnerRules = new List<string>() { "PrtInByTg", "PrtOutByTg" },
+                            PartnerRules = new List<int>()
+                            {
+                                PartnerRuletype.InPartnerByIncomingRoute,
+                                PartnerRuletype.OutPartnerByOutgoingRoute
+                            },
                             Ratingtrules = new List<RatingRule>()
                             {
                                 new RatingRule() {IdServiceFamily =ServiceFamilyType.A2Z,AssignDirection = 1},
@@ -50,7 +54,11 @@ namespace InstallConfig
                     {
                         2,new ServiceGroupConfiguration(enabled:true)//intlOutIcx
                         {
-                            PartnerRules = new List<string>() { "PrtInByTg", "PrtOutByTg" },
+                            PartnerRules = new List<int>()
+                            {
+                                PartnerRuletype.InPartnerByIncomingRoute,
+                                PartnerRuletype.OutPartnerByOutgoingRoute
+                            },
                             Ratingtrules = new List<RatingRule>()
                             {
                                 new RatingRule() {IdServiceFamily =ServiceFamilyType.XyzIcx,AssignDirection = 0}    
@@ -60,7 +68,11 @@ namespace InstallConfig
                     {
                         3,new ServiceGroupConfiguration(enabled:true)//intlInIcx
                         {
-                            PartnerRules = new List<string>() { "PrtInByTg", "PrtOutByTg" },
+                            PartnerRules = new List<int>()
+                            {
+                                PartnerRuletype.InPartnerByIncomingRoute,
+                                PartnerRuletype.OutPartnerByOutgoingRoute
+                            },
                             Ratingtrules = new List<RatingRule>()
                             {
                                 new RatingRule() {IdServiceFamily =ServiceFamilyType.A2Z,AssignDirection = 1},

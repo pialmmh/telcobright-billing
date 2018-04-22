@@ -10,7 +10,7 @@ namespace TelcobrightMediation
 {
     public class MefServiceFamilyContainer
     {
-        public Dictionary<string, route> DicRouteIncludingPartner { get; set; }//<switchid-route,route>
+        public Dictionary<ValueTuple<int,string>, route> DicRouteIncludingPartner { get; set; }//<switchid-route,route>
         public Dictionary<string, countrycode> DicCountryCode { get; set; }
         public ServiceFamilyComposer CmpServiceFamily { get; }
         public IDictionary<int, IServiceFamily> DicExtensions { get; }
@@ -22,7 +22,7 @@ namespace TelcobrightMediation
         public UoMConvRateCache UsdBcsCache { get; private set; }
         public MefServiceFamilyContainer()
         {
-            this.DicRouteIncludingPartner = new Dictionary<string, route>();
+            this.DicRouteIncludingPartner = new Dictionary<ValueTuple<int, string>, route>();
             this.DicCountryCode=new Dictionary<string, countrycode>();
             this.CmpServiceFamily=new ServiceFamilyComposer();
             this.DicExtensions=new Dictionary<int, IServiceFamily>();

@@ -200,12 +200,12 @@ namespace TelcobrightMediation
             return jobSummary;
         }
 
-        private void ExecutePartnerRules(List<string> partnerRules, CdrExt cdrExt)
+        private void ExecutePartnerRules(List<int> partnerRules, CdrExt cdrExt)
         {
-            foreach (var c in partnerRules)
+            foreach (var rule in partnerRules)
             {
                 IPartnerRule partnerRule = null;
-                this.CdrJobContext.MediationContext.MefPartnerRuleContainer.DicExtensions.TryGetValue(c,
+                this.CdrJobContext.MediationContext.MefPartnerRuleContainer.DicExtensions.TryGetValue(rule,
                     out partnerRule);
                 if (partnerRule != null)
                 {

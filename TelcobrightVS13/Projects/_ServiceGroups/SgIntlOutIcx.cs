@@ -38,8 +38,8 @@ namespace TelcobrightMediation
 		public void Execute(cdr thisCdr, CdrProcessor cdrProcessor)
 		{
 			//international Out call direction/service group
-			var dicRoutes = cdrProcessor.CdrJobContext.MediationContext.MefServiceGroupContainer.DicRouteIncludePartner;
-			string key = thisCdr.SwitchId + "-" + thisCdr.incomingroute;
+			var dicRoutes = cdrProcessor.CdrJobContext.MediationContext.MefServiceGroupContainer.SwitchWiseRoutes;
+			var key = new ValueTuple<int, string>(thisCdr.SwitchId,thisCdr.incomingroute);
 			route thisRoute = null;
 			dicRoutes.TryGetValue(key, out thisRoute);
 			if (thisRoute != null)
@@ -69,7 +69,9 @@ namespace TelcobrightMediation
 			newSummary.tup_sourceId = cdrExt.Cdr.inPartnerId.ToString();
 			if (cdrExt.Cdr.ChargingStatus != 1) return;
 
-			newSummary.tup_customerrate = chargeableCust.unitPriceOrCharge;
+		    newSummary.tup_customerrate = Convert.ToDecimal(cdrExt.Cdr.USDRateY);
+                //chargeableCust.unitPriceOrCharge--no need to keep x rate, keep Usdrate so that can be shown in summary report
+		    newSummary.tup_supplierrate = Convert.ToDecimal(cdrExt.Cdr.SupplierRate);
 			newSummary.tup_customercurrency = chargeableCust.idBilledUom;
 			newSummary.customercost = chargeableCust.BilledAmount;
 			newSummary.doubleAmount1 = Convert.ToDouble(chargeableCust.OtherAmount1);

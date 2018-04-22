@@ -105,7 +105,11 @@ namespace InstallConfig
                     {//1 dictionary iteam=1 service group configuration
                         4, new ServiceGroupConfiguration(enabled:true)//intlInIgw
                         {
-                            PartnerRules = new List<string>() { "PrtInByTg", "PrtOutByTg" },
+                            PartnerRules = new List<int>()
+                            {
+                                PartnerRuletype.InPartnerByIncomingRoute,
+                                PartnerRuletype.OutPartnerByOutgoingRoute
+                            },
                             Ratingtrules = new List<RatingRule>()
                             {
                                 new RatingRule() {IdServiceFamily = ServiceFamilyType.A2Z, AssignDirection = 1},
@@ -138,7 +142,11 @@ namespace InstallConfig
                     {
                         5,new ServiceGroupConfiguration(enabled:true)//intlOutIgw
                         {
-                            PartnerRules = new List<string>() { "PrtInByTg", "PrtOutByTg" },
+                            PartnerRules = new List<int>()
+                            {
+                                PartnerRuletype.InPartnerByIncomingRoute,
+                                PartnerRuletype.OutPartnerByOutgoingRoute
+                            },
                             Ratingtrules = new List<RatingRule>()
                             {
                                 new RatingRule() {IdServiceFamily = ServiceFamilyType.A2Z, AssignDirection = 2},

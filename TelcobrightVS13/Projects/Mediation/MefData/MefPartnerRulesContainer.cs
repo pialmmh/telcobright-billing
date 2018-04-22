@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using MediationModel;
 
 namespace TelcobrightMediation
@@ -7,7 +8,7 @@ namespace TelcobrightMediation
     {
         public PartnerRuleComposer CmpPartner = new PartnerRuleComposer();
         //same dicroute object as in mediation data
-        public Dictionary<string, route> DicRouteIncludePartner = new Dictionary<string, route>();//<switchid-route,route>
-        public IDictionary<string, IPartnerRule> DicExtensions = new Dictionary<string, IPartnerRule>();
+        public Dictionary<ValueTuple<int,string>, route> SwitchWiseRoutes = new Dictionary<ValueTuple<int,string>, route>();//<switchid-route,route>
+        public IDictionary<int, IPartnerRule> DicExtensions = new Dictionary<int, IPartnerRule>();
     }
 }

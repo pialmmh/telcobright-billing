@@ -40,7 +40,7 @@ namespace UnitTesterManual
             .PartialCdrEnabledNeIds.Contains(this.Input.Ne.idSwitch);
         private int rawCount, nonPartialCount,uniquePartialCount,rawPartialCount,distinctPartialCount = 0;
         private decimal rawDurationWithoutInconsistents = 0;
-        
+        //todo: move them to base (newCdr) & consider making the tests permament in newCdrJob
         public override JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
         {
             CdrJobInputData input = (CdrJobInputData) jobInputData;

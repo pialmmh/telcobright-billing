@@ -100,10 +100,15 @@ namespace InstallConfig
                     "CallDirection must be > 0" },
             };
             this.Tbc.CdrSetting.ServiceGroupConfigurations = new Dictionary<int, ServiceGroupConfiguration>();
-            this.Tbc.CdrSetting.ServiceGroupConfigurations.Add(1, new ServiceGroupConfiguration(enabled: true)//domestic 
+            this.Tbc.CdrSetting.ServiceGroupConfigurations.Add(1, //domestic 
+                new ServiceGroupConfiguration(enabled: true)
             {
-                PartnerRules = new List<string>() { "PrtInByTg", "PrtOutByTg" },
-                Ratingtrules = new List<RatingRule>()
+                PartnerRules = new List<int>()
+                {
+                    PartnerRuletype.InPartnerByIncomingRoute,
+                    PartnerRuletype.OutPartnerByOutgoingRoute 
+                },
+                    Ratingtrules = new List<RatingRule>()
                 {
                     new RatingRule() {IdServiceFamily = ServiceFamilyType.A2Z,AssignDirection = 1},
                 },
@@ -120,14 +125,21 @@ namespace InstallConfig
                             "matchedprefixcustomer cannot be empty" },
                         {"obj.durationsec > 0 ? obj.CustomerCost > 0 : obj.CustomerCost == 0 ",
                             "CustomerCost must be > 0 when durationsec > 0  , otherwise == 0 " },
+                        {"obj.durationsec > 0 ? obj.RevenueVATCommissionOut > 0 : obj.RevenueVATCommissionOut == 0 ",
+                            "Revenue Commission (BTRC) must be > 0 when durationsec > 0  , otherwise == 0 " },
                         {"obj.durationsec > 0?obj.roundedduration > 0: obj.roundedduration >= 0",
                             "roundedduration must be > 0 when durationsec >0 , otherwise >= 0 " },
                     },
             });
-            this.Tbc.CdrSetting.ServiceGroupConfigurations.Add(3, value: new ServiceGroupConfiguration(enabled:true)//intlInIcx
+            this.Tbc.CdrSetting.ServiceGroupConfigurations.Add(3, 
+                value: new ServiceGroupConfiguration(enabled:true)//intlInIcx
             {
-                PartnerRules = new List<string>() { "PrtInByTg", "PrtOutByTg" },
-                Ratingtrules = new List<RatingRule>()
+                PartnerRules = new List<int>()
+                {
+                    PartnerRuletype.InPartnerByIncomingRoute,
+                    PartnerRuletype.OutPartnerByOutgoingRoute
+                },
+                    Ratingtrules = new List<RatingRule>()
                 {
                     new RatingRule() {IdServiceFamily =ServiceFamilyType.A2Z,AssignDirection = 1},
                 },
@@ -144,14 +156,20 @@ namespace InstallConfig
                             "matchedprefixcustomer cannot be empty" },
                         {"obj.durationsec > 0 ? obj.CustomerCost > 0 : obj.CustomerCost == 0 ",
                             "CustomerCost must be > 0 when durationsec > 0  , otherwise == 0 " },
-                        {"obj.durationsec > 0?obj.roundedduration > 0: obj.roundedduration >= 0",
+                        {"obj.durationsec > 0 ? obj.RevenueVATCommissionOut > 0 : obj.RevenueVATCommissionOut == 0 ",
+                            "Revenue Commission (BTRC) must be > 0 when durationsec > 0  , otherwise == 0 " },
+                        { "obj.durationsec > 0?obj.roundedduration > 0: obj.roundedduration >= 0",
                             "roundedduration must be > 0 when durationsec >0 , otherwise >= 0 " },
                     },
             });
             this.Tbc.CdrSetting.ServiceGroupConfigurations.Add(
                 2, value: new ServiceGroupConfiguration(enabled:true)//intlOutIgw
             {
-                PartnerRules = new List<string>() { "PrtInByTg", "PrtOutByTg" },
+                PartnerRules = new List<int>()
+                {
+                    PartnerRuletype.InPartnerByIncomingRoute,
+                    PartnerRuletype.OutPartnerByOutgoingRoute
+                },
                 Ratingtrules = new List<RatingRule>()
                 {
                     new RatingRule() {IdServiceFamily = ServiceFamilyType.XyzIcx, AssignDirection = 0}
@@ -169,9 +187,11 @@ namespace InstallConfig
                             "outPartnerId must be > 0" },
                         {"!String.IsNullOrEmpty(obj.MatchedPrefixY) and !String.IsNullOrWhiteSpace(obj.MatchedPrefixY)",
                             "MatchedPrefixY cannot be empty" },
-                        //{"obj.durationsec > 0 ? obj.RevenueIGWOut > 0 : obj.RevenueIGWOut == 0 ",
-                        //    "RevenueIGWOut must be > 0 when durationsec > 0 , otherwise == 0" },
-                        {"obj.durationsec > 0 ? obj.SubscriberChargeXOut > 0 : obj.SubscriberChargeXOut == 0 ",
+                        {"obj.durationsec > 0 ? obj.RevenueICXOut > 0 : obj.RevenueICXOut == 0 ",
+                            "RevenueICXOut must be > 0 when durationsec > 0 , otherwise == 0" },
+                        {"obj.durationsec > 0 ? obj.RevenueVATCommissionOut > 0 : obj.RevenueVATCommissionOut == 0 ",
+                            "Revenue Commission (BTRC) must be > 0 when durationsec > 0  , otherwise == 0 " },
+                        { "obj.durationsec > 0 ? obj.SubscriberChargeXOut > 0 : obj.SubscriberChargeXOut == 0 ",
                             "SubscriberChargeXOut must be > 0 when durationsec > 0 , otherwise == 0" },
                         {"obj.durationsec > 0 ? obj.CarrierCostYIGWOut > 0 : obj.CarrierCostYIGWOut == 0 ",
                             "CarrierCostYIGWOut must be > 0 when durationsec > 0 , otherwise == 0" },

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using MediationModel;
 using FlexValidation;
@@ -7,7 +8,7 @@ namespace TelcobrightMediation
     {
         public ServiceGroupComposer CmpServiceGroup = new ServiceGroupComposer();
         //same dicroute object as in mediation data
-        public Dictionary<string, route> DicRouteIncludePartner = new Dictionary<string, route>();//<switchid-route,route>
+        public Dictionary<ValueTuple<int,string>, route> SwitchWiseRoutes = new Dictionary<ValueTuple<int,string>, route>();//<switchid-route,route>
         public IDictionary<string, IServiceGroup> DicExtensions = new Dictionary<string, IServiceGroup>();
         public IDictionary<int, IServiceGroup> IdServiceGroupWiseServiceGroups = new Dictionary<int, IServiceGroup>();
         public Dictionary<int, FlexValidator<cdr>> MediationChecklistValidatorForUnAnsweredCdrs =

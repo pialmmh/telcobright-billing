@@ -1,4 +1,5 @@
-﻿using TelcobrightMediation;
+﻿using System;
+using TelcobrightMediation;
 using System.ComponentModel.Composition;
 using MediationModel;
 
@@ -18,9 +19,9 @@ namespace PartnerRules
 
         public void Execute(cdr thisCdr, MefPartnerRulesContainer pData)
         {
-            string key = thisCdr.SwitchId + "-" + thisCdr.outgoingroute;
+            var key = new ValueTuple<int,string>(thisCdr.SwitchId,thisCdr.outgoingroute);
             route thisRoute = null;
-            pData.DicRouteIncludePartner.TryGetValue(key, out thisRoute);
+            pData.SwitchWiseRoutes.TryGetValue(key, out thisRoute);
             if (thisRoute != null)
             {
                 thisCdr.outPartnerId = thisRoute.idPartner;

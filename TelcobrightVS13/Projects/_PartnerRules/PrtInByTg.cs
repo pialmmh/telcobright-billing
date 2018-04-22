@@ -18,9 +18,9 @@ namespace PartnerRules
         public int Id => 1;
         public void Execute(cdr thisCdr, MefPartnerRulesContainer pData)
         {
-            string key = thisCdr.SwitchId + "-" + thisCdr.incomingroute;
+            var key = new ValueTuple<int,string>(thisCdr.SwitchId, thisCdr.incomingroute);
             route thisRoute = null;
-            pData.DicRouteIncludePartner.TryGetValue(key, out thisRoute);
+            pData.SwitchWiseRoutes.TryGetValue(key, out thisRoute);
             if (thisRoute != null)
             {
                 thisCdr.inPartnerId = thisRoute.idPartner;

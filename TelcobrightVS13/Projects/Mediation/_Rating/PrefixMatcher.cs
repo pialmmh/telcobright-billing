@@ -163,12 +163,12 @@ namespace TelcobrightMediation
         }
 
 
-        public decimal A2ZAmount(decimal finalDurationSec, Rateext thisRate, int indexForRateAmount,
+        public decimal A2ZAmount(decimal finalDurationSec, Rateext thisRate, int rateFieldNumber,
             CdrProcessor cdrProcessor)
         {
             decimal thisRateAmount = 0;
             if (finalDurationSec == 0) return 0;
-            switch (indexForRateAmount)
+            switch (rateFieldNumber)
             {
                 case 0: thisRateAmount = thisRate.rateamount; break;
                 case 1: thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount1); break;

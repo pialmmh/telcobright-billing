@@ -105,11 +105,11 @@ namespace TelcobrightMediation
             route r = null;
             if (this.ServiceContext.AssignDir == ServiceAssignmentDirection.Customer)
             {
-                this.ServiceContext.MefServiceFamilyContainer.DicRouteIncludingPartner.TryGetValue(this.Cdr.SwitchId + "-" + this.Cdr.incomingroute, out r);
+                this.ServiceContext.MefServiceFamilyContainer.DicRouteIncludingPartner.TryGetValue(new ValueTuple<int,string>(this.Cdr.SwitchId, this.Cdr.incomingroute), out r);
             }
             else if (this.ServiceContext.AssignDir == ServiceAssignmentDirection.Supplier)
             {
-                this.ServiceContext.MefServiceFamilyContainer.DicRouteIncludingPartner.TryGetValue(this.Cdr.SwitchId + "-" + this.Cdr.outgoingroute, out r);
+                this.ServiceContext.MefServiceFamilyContainer.DicRouteIncludingPartner.TryGetValue(new ValueTuple<int,string>(this.Cdr.SwitchId,this.Cdr.outgoingroute), out r);
             }
             if (r != null)
             {

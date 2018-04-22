@@ -28,7 +28,7 @@ namespace TelcobrightMediation
         public FlexValidator<cdr> CommonMediationCheckListValidator { get; private set; }
         public MefServiceFamilyContainer MefServiceFamilyContainer { get; }
         public Dictionary<string, enumbillingspan> BillingSpans { get; }
-        public Dictionary<string, route> Routes { get; }
+        public Dictionary<ValueTuple<int,string>, route> Routes { get; }
 
         public List<ansprefixextra>
             LstAnsPrefixExtra
@@ -68,7 +68,7 @@ namespace TelcobrightMediation
                 this.ServiceGroupConfigurations.Add(ne.idSwitch, dicmedInner);
             }
             this.BillingSpans = context.enumbillingspans.ToDictionary(c => c.ofbiz_uom_Id); //route data
-            this.Routes = context.routes.ToDictionary(r => r.SwitchId + "-" + r.RouteName);
+            this.Routes = context.routes.ToDictionary(r => new ValueTuple<int,string>(r.SwitchId,r.RouteName));
             this.Partners = context.partners.ToDictionary(c => c.idPartner.ToString());
             this.DictAnsOrig = new Dictionary<string, partnerprefix>();
             this.DictAnsOrig = PopulateANSPrefix();
@@ -91,9 +91,9 @@ namespace TelcobrightMediation
                 CreateValidatorInstanceWithValidationExpressions<cdr>(this.Tbc.CdrSetting.CommonMediationChecklist);
             ComposeMefExtensions(this.Tbc);
             CreateServiceGroupWiseFlexValidatorInstances();
-            this.MefServiceGroupContainer.DicRouteIncludePartner =
+            this.MefServiceGroupContainer.SwitchWiseRoutes =
                 this.Routes; //assign the route dic to servicegroupdata
-            this.MefPartnerRuleContainer.DicRouteIncludePartner =
+            this.MefPartnerRuleContainer.SwitchWiseRoutes =
                 this.Routes; //assign the route dic to servicegroupdata
 
             //assign the route dic to servicegroupdata
@@ -156,7 +156,7 @@ namespace TelcobrightMediation
             }
             this.MefPartnerRuleContainer.CmpPartner.Compose();
             foreach (var ext in this.MefPartnerRuleContainer.CmpPartner.Partners)
-                this.MefPartnerRuleContainer.DicExtensions.Add(ext.RuleName, ext);
+                this.MefPartnerRuleContainer.DicExtensions.Add(ext.Id, ext);
             this.MefServiceFamilyContainer.CmpServiceFamily.Compose();
             foreach (var ext in this.MefServiceFamilyContainer.CmpServiceFamily.ServiceFamilys)
                 this.MefServiceFamilyContainer.DicExtensions.Add(ext.Id, ext);

@@ -38,8 +38,8 @@ namespace TelcobrightMediation
         public void Execute(cdr thisCdr, CdrProcessor cdrProcessor)
         {
             //international in call direction/service group
-            var dicRoutes = cdrProcessor.CdrJobContext.MediationContext.MefServiceGroupContainer.DicRouteIncludePartner;
-            string key = thisCdr.SwitchId + "-" + thisCdr.incomingroute;
+            var dicRoutes = cdrProcessor.CdrJobContext.MediationContext.MefServiceGroupContainer.SwitchWiseRoutes;
+            var key= new ValueTuple<int,string>(thisCdr.SwitchId,thisCdr.incomingroute);
             route thisRoute = null;
             dicRoutes.TryGetValue(key, out thisRoute);
             if (thisRoute != null)

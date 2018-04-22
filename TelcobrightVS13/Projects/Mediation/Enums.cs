@@ -13,6 +13,11 @@ namespace TelcobrightMediation
         ProgressivelyComplete = 2,
     }
 
+    public static class PartnerRuletype
+    {
+        public const int InPartnerByIncomingRoute=1;
+        public const int OutPartnerByOutgoingRoute = 2;
+    }
     public static class ServiceFamilyType
     {
         public const int A2Z =1;
@@ -37,5 +42,11 @@ namespace TelcobrightMediation
     {
         public const int National = 1;
         public const int International = 2;
+    }
+
+    public enum XyzRatingType
+    {
+        Igw,
+        Icx
     }
 }
