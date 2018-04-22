@@ -90,7 +90,7 @@ namespace TelcobrightMediation
                     PartialCdrCollector partialCdrCollector = new PartialCdrCollector(
                         this.CdrCollectorInputData, base.RawPartialCdrInstances.ToList());
                     partialCdrCollector.CollectPartialCdrHistory();
-                    partialCdrCollector.ValidatePartialCdrCollectionStatus();
+                    partialCdrCollector.ValidateCollectionStatus();
                     base.PartialCdrContainers = partialCdrCollector.AggregateAll() ??
                                                 new BlockingCollection<PartialCdrContainer>();
                 }

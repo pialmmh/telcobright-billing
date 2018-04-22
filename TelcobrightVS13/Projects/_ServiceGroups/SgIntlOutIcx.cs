@@ -66,7 +66,7 @@ namespace TelcobrightMediation
 			}
 			newSummary.tup_matchedprefixcustomer = cdrExt.Cdr.MatchedPrefixY;
 			newSummary.tup_countryorareacode = cdrExt.Cdr.CountryCode;
-			newSummary.tup_sourceId = cdrExt.Cdr.AnsIdOrig.ToString();
+			newSummary.tup_sourceId = cdrExt.Cdr.inPartnerId.ToString();
 			if (cdrExt.Cdr.ChargingStatus != 1) return;
 
 			newSummary.tup_customerrate = chargeableCust.unitPriceOrCharge;

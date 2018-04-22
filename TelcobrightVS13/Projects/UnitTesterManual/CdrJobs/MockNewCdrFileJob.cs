@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TelcobrightMediation;
 using System.ComponentModel.Composition;
 using System.Data.Common;
+using System.Diagnostics.Contracts;
 using System.IO;
 using TelcobrightFileOperations;
 using System.Linq;

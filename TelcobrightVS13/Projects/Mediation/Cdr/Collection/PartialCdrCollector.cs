@@ -107,24 +107,6 @@ namespace TelcobrightMediation.Mediation.Cdr
                 .Append($@" and starttime < {scanDates.Max().AddDays(1).ToMySqlField()}");
             return sb.ToString();
         }
-
-        public void ValidatePartialCdrCollectionStatus()
-        {
-            long sumFromCdrPartialRef = this.BillIdWiseReferences.Values.SelectMany(r => r
-                .commaSepIdcallsForAllInstances.Split(',').Select(strIdCall => Convert.ToInt64(strIdCall))).Sum();
-            long sumFromPrevRawInstances = this.BillIdWisePrevRawInstances.Values
-                .SelectMany(listOfInstances => listOfInstances).Sum(instance=>instance.idcall);
-            if(sumFromCdrPartialRef!=sumFromPrevRawInstances) 
-                throw new Exception("Sum of prev partial idCalls from partialCdrReference & prevRawinstances does not match.");
-
-            decimal sumDurationFromLastAggregatedRawInstances = this.BillIdWiseLastAggregatedRawInstances.Values
-                .Sum(lastAggInstance => lastAggInstance.DurationSec);
-            decimal sumDurationFromPrevRawInstances = this.BillIdWisePrevRawInstances.Values
-                                                          .SelectMany(r => r).Sum(r => r.DurationSec);
-            if(sumDurationFromLastAggregatedRawInstances!= sumDurationFromPrevRawInstances)
-                throw new Exception("Sum duration of prev partial cdrs from prevRawInstances & lastAggregatedInstances does not match.");
-        }
-
         private List<DateTime> AddDistinctDaysBeforeAndAfterUniqueDaysForSafePartialCollection(
             List<DateTime> datesToScanForPrevInstances)
         {
@@ -144,10 +126,11 @@ namespace TelcobrightMediation.Mediation.Cdr
             return datesToScanForPrevInstances;
         }
 
-        private void ValidateCollection()
+        public void ValidateCollectionStatus()
         {
             var uniqueBillIds = this.BillIdWiseNewRawInstances.Keys.ToList();
             var newRawInstances = this.BillIdWiseNewRawInstances.Values.SelectMany(r => r).ToList();
+            var allPrevRawInstances = this.BillIdWisePrevRawInstances.Values.SelectMany(r => r).ToList();
             var cdrPartialReferences = this.BillIdWiseReferences.Values.ToList();
             var lastProcessedCdrs = this.BillIdWiseLastProcessedCdrInstance.Values.ToList();
             var lastAggRawInstances = this.BillIdWiseLastAggregatedRawInstances.Values.ToList();
@@ -210,7 +193,20 @@ namespace TelcobrightMediation.Mediation.Cdr
             });
             if(lastProcessedCdrs.Count!=lastAggRawInstances.Count)
                 throw new Exception("Number of last processed cdrs & lastAggRawInstance must be equal.");
-            
+
+            if (lastProcessedCdrs.Sum(c=>c.DurationSec) != lastAggRawInstances.Sum(c=>c.DurationSec))
+                throw new Exception("Duration total of last processed cdrs & lastAggRawInstance must be equal.");
+            if (lastAggRawInstances.Sum(lAgg => lAgg.DurationSec) != allPrevRawInstances.Sum(p => p.DurationSec))
+                throw new Exception("Duration total of lastAggRawInstances & prevRawInstance must be equal.");
+
+            lastProcessedCdrs.ForEach(c =>
+            {
+                var matchingLastAggInstance = this.BillIdWiseLastProcessedCdrInstance[c.UniqueBillId];
+                if (c.DurationSec!=matchingLastAggInstance.DurationSec)
+                {
+                    throw new Exception("Individual duration of last processed cdrs must match corresponding lastAggRawInstance's duration.");
+                }
+            });
         }
     }
 }

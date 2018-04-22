@@ -228,10 +228,9 @@ namespace TelcobrightMediation
                         throw new Exception("Unique BillId not found!");
                     ServiceContext serviceContext = new ServiceContext(this, serviceGroup, sf,
                         rule.AssignDirection == 1
-                            ? ServiceAssignmentDirection.Customer
-                            : rule.AssignDirection == 2
-                                ? ServiceAssignmentDirection.Supplier
-                                : ServiceAssignmentDirection.None, idProductForIndividualAccount);
+                            ? ServiceAssignmentDirection.Customer: rule.AssignDirection == 2
+                                ? ServiceAssignmentDirection.Supplier: ServiceAssignmentDirection.None
+                                , idProductForIndividualAccount);
                     //execute rating & accounting
                     AccChargeableExt chargeableExt = sf.Execute(cdrExt, serviceContext, false);
                     if (chargeableExt != null)
