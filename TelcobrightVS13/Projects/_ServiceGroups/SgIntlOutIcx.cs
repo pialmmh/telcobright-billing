@@ -69,8 +69,7 @@ namespace TelcobrightMediation
 			newSummary.tup_sourceId = cdrExt.Cdr.inPartnerId.ToString();
 			if (cdrExt.Cdr.ChargingStatus != 1) return;
 
-		    newSummary.tup_customerrate = Convert.ToDecimal(cdrExt.Cdr.USDRateY);
-                //chargeableCust.unitPriceOrCharge--no need to keep x rate, keep Usdrate so that can be shown in summary report
+		    newSummary.tup_customerrate = Convert.ToDecimal(cdrExt.Cdr.USDRateY);//no need to keep x rate, keep Usdrate so that can be shown in summary report
 		    newSummary.tup_supplierrate = Convert.ToDecimal(cdrExt.Cdr.SupplierRate);
 			newSummary.tup_customercurrency = chargeableCust.idBilledUom;
 			newSummary.customercost = chargeableCust.BilledAmount;
