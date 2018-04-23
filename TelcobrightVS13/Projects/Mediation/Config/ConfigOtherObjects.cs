@@ -261,6 +261,7 @@ namespace TelcobrightMediation
         {
             this.DicConfigObjects = new Dictionary<string, object>();
         }
+        public Dictionary<string,int> RouteTypeEnums { get; set; }= new Dictionary<string, int>();
     }
     public class LogFileProcessorSetting
     {

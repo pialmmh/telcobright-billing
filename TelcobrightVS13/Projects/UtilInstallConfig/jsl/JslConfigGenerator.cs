@@ -216,7 +216,7 @@ namespace InstallConfig
                 new KeyValuePair<Regex, string>(new Regex(@".*/sg1/.*/sf1/.*"), "Domestic"),
                 new KeyValuePair<Regex, string>(new Regex(@".*/sg3/.*/sf1/.*"), "International Incoming")
             };
-
+            Tbc.ServiceAliasesRegex = serviceAliases;
             //temp use of ne, remove later
 
 
@@ -466,6 +466,12 @@ namespace InstallConfig
             {
                HomePageUrl = "~/Dashboard.aspx",
                AlternateDisplayName = "ICX Manager",
+               RouteTypeEnums = new Dictionary<string, int>()
+               {
+                   {"Select",-1 },
+                   { "National",1},
+                   { "International",2},  
+               },
                PortalSites = new List<InternetSite>()
                 {
                     new InternetSite(this.Tbc)//make sure that first one always the http portal

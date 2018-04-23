@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Text.RegularExpressions;
 using LibraryExtensions.ConfigHelper;
 using TelcobrightFileOperations;
 using TelcobrightMediation;
@@ -37,6 +38,12 @@ namespace InstallConfig
             };
             //write all configuration first in ws_topshelf / bin/debug, for production
             //also, in tester/bin/debug
+            List<KeyValuePair<Regex, string>> serviceAliases = new List<KeyValuePair<Regex, string>>
+            {
+                new KeyValuePair<Regex, string>(new Regex(@".*/sg5/.*/sf4/.*"), "International Outgoing"),
+                new KeyValuePair<Regex, string>(new Regex(@".*/sg4/.*/sf1/.*"), "AZ Voice")
+            };
+            this.Tbc.ServiceAliasesRegex = serviceAliases;
 
             //temp use of ne, remove later
 
@@ -202,6 +209,11 @@ namespace InstallConfig
 
             PortalSettings portalSetting = new PortalSettings("Portal Settings")
             {
+                RouteTypeEnums = new Dictionary<string, int>()
+                {
+                    {"Select",-1 },
+                    { "International",2},
+                },
                 PortalSites = new List<InternetSite>()
                 {
                     new InternetSite(this.Tbc)//make sure that first one always the http portal

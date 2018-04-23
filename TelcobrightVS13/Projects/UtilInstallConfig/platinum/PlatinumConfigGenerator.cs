@@ -445,6 +445,11 @@ namespace InstallConfig
            PortalSettings portalSetting = new PortalSettings("Portal Settings")
             {
                HomePageUrl = "~/Dashboard.aspx",
+               RouteTypeEnums = new Dictionary<string, int>()
+               {
+                   {"Select",-1 },
+                   { "International",2},
+               },
                PortalSites = new List<InternetSite>()
                 {
                     new InternetSite(this.Tbc)//make sure that first one always the http portal
