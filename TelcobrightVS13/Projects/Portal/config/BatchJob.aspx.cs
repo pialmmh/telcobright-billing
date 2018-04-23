@@ -479,7 +479,7 @@ public partial class ConfigBatcJob : System.Web.UI.Page
             if (serviceGroup > 0)
             {
                 newParam = new SqlSingleWhereClauseBuilder(SqlWhereAndOrType.And);
-                newParam.Expression = "calldirection=";
+                newParam.Expression = "ServiceGroup=";
                 newParam.ParamType = SqlWhereParamType.Numeric;
                 newParam.ParamValue = serviceGroup.ToString();
                 lstWhereParamsSingle.Add(newParam);

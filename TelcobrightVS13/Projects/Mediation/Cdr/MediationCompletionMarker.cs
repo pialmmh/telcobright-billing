@@ -21,7 +21,7 @@ namespace TelcobrightMediation
             if (validationResult.IsValid == false) return validationResult;
 
             var sgData = cdrJobContext.MediationContext.MefServiceGroupContainer;
-            int idServiceGroup = sgData.IdServiceGroupWiseServiceGroups[cdrExt.Cdr.CallDirection].Id;
+            int idServiceGroup = sgData.IdServiceGroupWiseServiceGroups[cdrExt.Cdr.ServiceGroup].Id;
             if (cdrExt.MediationResult.ChargingStatus == 0) //if still true, check against answered checklist
             {
                 validator = sgData.MediationChecklistValidatorForUnAnsweredCdrs[idServiceGroup];

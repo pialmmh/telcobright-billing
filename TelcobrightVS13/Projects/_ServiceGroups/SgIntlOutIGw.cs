@@ -46,7 +46,7 @@ namespace TelcobrightMediation
             {
                 if (thisRoute.partner.PartnerType == 2) //ICX
                 {
-                    thisCdr.CallDirection = 5; //international Out in IGW
+                    thisCdr.ServiceGroup = 5; //international Out in IGW
                     //set ansidorig if roaming ans flag is on
                     if (thisRoute.field1 != null && Convert.ToInt32(thisRoute.field1) > 0) //roaming ANS=field1
                     {
@@ -145,8 +145,8 @@ namespace TelcobrightMediation
             newSummary.tup_customerrate = chargeableCust.unitPriceOrCharge;
             newSummary.tup_customercurrency = chargeableCust.idBilledUom;
             newSummary.customercost = chargeableCust.BilledAmount;
-            newSummary.doubleAmount1 = Convert.ToDouble(chargeableCust.OtherAmount1);
-            newSummary.doubleAmount2 = Convert.ToDouble(chargeableCust.OtherAmount2);
+            newSummary.longDecimalAmount1 = Convert.ToDecimal(chargeableCust.OtherAmount1);
+            newSummary.longDecimalAmount2 = Convert.ToDecimal(chargeableCust.OtherAmount2);
             newSummary.doubleAmount3 = Convert.ToDouble(chargeableCust.OtherAmount3);
 
             acc_chargeable chargeableSupp = null;

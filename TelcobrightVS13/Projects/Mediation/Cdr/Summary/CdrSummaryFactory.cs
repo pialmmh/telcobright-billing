@@ -52,7 +52,7 @@ namespace TelcobrightMediation
 
             //service group specific params, set default first then send through service group to set right value
             IServiceGroup serviceGroup =
-                this.MefServiceGroupsContainer.IdServiceGroupWiseServiceGroups[cdrExt.Cdr.CallDirection];
+                this.MefServiceGroupsContainer.IdServiceGroupWiseServiceGroups[cdrExt.Cdr.ServiceGroup];
             serviceGroup.SetServiceGroupWiseSummaryParams(cdrExt, newSummary);
             ReplaceNullsWithDefaultForTupleFields(newSummary);
             return newSummary;

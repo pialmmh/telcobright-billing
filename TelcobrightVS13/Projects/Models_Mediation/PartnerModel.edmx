@@ -250,7 +250,7 @@ warning 6002: The table/view 'def.platinum.cdr' does not have a primary key defi
             <PropertyRef Name="idcall" />
             <PropertyRef Name="SequenceNumber" />
             <PropertyRef Name="FileName" />
-            <PropertyRef Name="CallDirection" />
+            <PropertyRef Name="ServiceGroup" />
             <PropertyRef Name="OriginatingCalledNumber" />
             <PropertyRef Name="DurationSec" />
             <PropertyRef Name="EndTime" />
@@ -261,7 +261,7 @@ warning 6002: The table/view 'def.platinum.cdr' does not have a primary key defi
           <Property Name="idcall" Type="bigint" Nullable="false" />
           <Property Name="SequenceNumber" Type="bigint" Nullable="false" />
           <Property Name="FileName" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="CallDirection" Type="int" Nullable="false" />
+          <Property Name="ServiceGroup" Type="int" Nullable="false" />
           <Property Name="incomingroute" Type="varchar" MaxLength="100" />
           <Property Name="OriginatingIP" Type="varchar" MaxLength="25" />
           <Property Name="OPC" Type="usmallint" />
@@ -367,12 +367,13 @@ warning 6002: The table/view 'def.platinum.cdrdiscarded' does not have a primary
         <EntityType Name="cdrdiscarded">
           <Key>
             <PropertyRef Name="idcall" />
+            <PropertyRef Name="ServiceGroup" />
           </Key>
           <Property Name="SwitchId" Type="varchar" MaxLength="100" />
           <Property Name="idcall" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="SequenceNumber" Type="varchar" MaxLength="100" />
           <Property Name="FileName" Type="varchar" MaxLength="100" />
-          <Property Name="CallDirection" Type="varchar" MaxLength="100" />
+          <Property Name="ServiceGroup" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="incomingroute" Type="varchar" MaxLength="100" />
           <Property Name="OriginatingIP" Type="varchar" MaxLength="100" />
           <Property Name="OPC" Type="varchar" MaxLength="100" />
@@ -481,7 +482,7 @@ warning 6002: The table/view 'def.platinum.cdrdiscarded' does not have a primary
           <Property Name="idcall" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="SequenceNumber" Type="varchar" MaxLength="100" />
           <Property Name="FileName" Type="varchar" MaxLength="100" />
-          <Property Name="CallDirection" Type="varchar" MaxLength="100" />
+          <Property Name="ServiceGroup" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="incomingroute" Type="varchar" MaxLength="100" />
           <Property Name="OriginatingIP" Type="varchar" MaxLength="100" />
           <Property Name="OPC" Type="varchar" MaxLength="100" />
@@ -611,7 +612,7 @@ warning 6002: The table/view 'def.platinum.cdrdiscarded' does not have a primary
           <Property Name="idcall" Type="bigint" Nullable="false" />
           <Property Name="SequenceNumber" Type="varchar" MaxLength="100" />
           <Property Name="FileName" Type="varchar" MaxLength="100" />
-          <Property Name="CallDirection" Type="varchar" MaxLength="100" />
+          <Property Name="ServiceGroup" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="incomingroute" Type="varchar" MaxLength="100" />
           <Property Name="OriginatingIP" Type="varchar" MaxLength="100" />
           <Property Name="OPC" Type="varchar" MaxLength="100" />
@@ -720,7 +721,7 @@ warning 6002: The table/view 'def.platinum.cdrpartiallastaggregatedrawinstance' 
             <PropertyRef Name="idcall" />
             <PropertyRef Name="SequenceNumber" />
             <PropertyRef Name="FileName" />
-            <PropertyRef Name="CallDirection" />
+            <PropertyRef Name="ServiceGroup" />
             <PropertyRef Name="OriginatingCalledNumber" />
             <PropertyRef Name="DurationSec" />
             <PropertyRef Name="EndTime" />
@@ -731,7 +732,7 @@ warning 6002: The table/view 'def.platinum.cdrpartiallastaggregatedrawinstance' 
           <Property Name="idcall" Type="bigint" Nullable="false" />
           <Property Name="SequenceNumber" Type="bigint" Nullable="false" />
           <Property Name="FileName" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="CallDirection" Type="int" Nullable="false" />
+          <Property Name="ServiceGroup" Type="int" Nullable="false" />
           <Property Name="incomingroute" Type="varchar" MaxLength="100" />
           <Property Name="OriginatingIP" Type="varchar" MaxLength="25" />
           <Property Name="OPC" Type="usmallint" />
@@ -840,7 +841,7 @@ warning 6002: The table/view 'def.platinum.cdrpartialrawinstance' does not have 
             <PropertyRef Name="idcall" />
             <PropertyRef Name="SequenceNumber" />
             <PropertyRef Name="FileName" />
-            <PropertyRef Name="CallDirection" />
+            <PropertyRef Name="ServiceGroup" />
             <PropertyRef Name="OriginatingCalledNumber" />
             <PropertyRef Name="DurationSec" />
             <PropertyRef Name="EndTime" />
@@ -851,7 +852,7 @@ warning 6002: The table/view 'def.platinum.cdrpartialrawinstance' does not have 
           <Property Name="idcall" Type="bigint" Nullable="false" />
           <Property Name="SequenceNumber" Type="bigint" Nullable="false" />
           <Property Name="FileName" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="CallDirection" Type="int" Nullable="false" />
+          <Property Name="ServiceGroup" Type="int" Nullable="false" />
           <Property Name="incomingroute" Type="varchar" MaxLength="100" />
           <Property Name="OriginatingIP" Type="varchar" MaxLength="25" />
           <Property Name="OPC" Type="usmallint" />
@@ -1594,7 +1595,7 @@ warning 6013: The table/view 'def.platinum.mockcdr' does not have a primary key 
           <Property Name="OriginatingCallingNumber" Type="varchar" MaxLength="100" />
           <Property Name="TerminatingCallingNumber" Type="varchar" MaxLength="100" />
           <Property Name="CustomerPrePaid" Type="varchar" MaxLength="100" />
-          <Property Name="DurationSec" Type="varchar" MaxLength="100" />
+          <Property Name="DurationSec" Type="decimal" Precision="13" Scale="4" />
           <Property Name="EndTime" Type="varchar" MaxLength="100" />
           <Property Name="ConnectTime" Type="varchar" MaxLength="100" />
           <Property Name="AnswerTime" Type="varchar" MaxLength="100" />
@@ -2205,8 +2206,8 @@ warning 6002: The table/view 'def.platinum.sum_voice_day_01' does not have a pri
             <PropertyRef Name="intAmount2" />
             <PropertyRef Name="longAmount1" />
             <PropertyRef Name="longAmount2" />
-            <PropertyRef Name="doubleAmount1" />
-            <PropertyRef Name="doubleAmount2" />
+            <PropertyRef Name="longDecimalAmount1" />
+            <PropertyRef Name="longDecimalAmount2" />
             <PropertyRef Name="intAmount3" />
             <PropertyRef Name="longAmount3" />
             <PropertyRef Name="doubleAmount3" />
@@ -2252,12 +2253,12 @@ warning 6002: The table/view 'def.platinum.sum_voice_day_01' does not have a pri
           <Property Name="vat" Type="decimal" Precision="13" Scale="4" Nullable="false" />
           <Property Name="intAmount1" Type="int" Nullable="false" />
           <Property Name="intAmount2" Type="int" Nullable="false" />
-          <Property Name="longAmount1" Type="int" Nullable="false" />
-          <Property Name="longAmount2" Type="int" Nullable="false" />
-          <Property Name="doubleAmount1" Type="double" Nullable="false" />
-          <Property Name="doubleAmount2" Type="double" Nullable="false" />
+          <Property Name="longAmount1" Type="bigint" Nullable="false" />
+          <Property Name="longAmount2" Type="bigint" Nullable="false" />
+          <Property Name="longDecimalAmount1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="longDecimalAmount2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="intAmount3" Type="int" Nullable="false" />
-          <Property Name="longAmount3" Type="int" Nullable="false" />
+          <Property Name="longAmount3" Type="bigint" Nullable="false" />
           <Property Name="doubleAmount3" Type="double" Nullable="false" />
           <Property Name="decimalAmount1" Type="decimal" Precision="13" Scale="4" Nullable="false" />
           <Property Name="decimalAmount2" Type="decimal" Precision="13" Scale="4" Nullable="false" />
@@ -2307,8 +2308,8 @@ warning 6002: The table/view 'def.platinum.sum_voice_day_02' does not have a pri
             <PropertyRef Name="intAmount2" />
             <PropertyRef Name="longAmount1" />
             <PropertyRef Name="longAmount2" />
-            <PropertyRef Name="doubleAmount1" />
-            <PropertyRef Name="doubleAmount2" />
+            <PropertyRef Name="longDecimalAmount1" />
+            <PropertyRef Name="longDecimalAmount2" />
             <PropertyRef Name="intAmount3" />
             <PropertyRef Name="longAmount3" />
             <PropertyRef Name="doubleAmount3" />
@@ -2354,12 +2355,12 @@ warning 6002: The table/view 'def.platinum.sum_voice_day_02' does not have a pri
           <Property Name="vat" Type="decimal" Precision="13" Scale="4" Nullable="false" />
           <Property Name="intAmount1" Type="int" Nullable="false" />
           <Property Name="intAmount2" Type="int" Nullable="false" />
-          <Property Name="longAmount1" Type="int" Nullable="false" />
-          <Property Name="longAmount2" Type="int" Nullable="false" />
-          <Property Name="doubleAmount1" Type="double" Nullable="false" />
-          <Property Name="doubleAmount2" Type="double" Nullable="false" />
+          <Property Name="longAmount1" Type="bigint" Nullable="false" />
+          <Property Name="longAmount2" Type="bigint" Nullable="false" />
+          <Property Name="longDecimalAmount1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="longDecimalAmount2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="intAmount3" Type="int" Nullable="false" />
-          <Property Name="longAmount3" Type="int" Nullable="false" />
+          <Property Name="longAmount3" Type="bigint" Nullable="false" />
           <Property Name="doubleAmount3" Type="double" Nullable="false" />
           <Property Name="decimalAmount1" Type="decimal" Precision="13" Scale="4" Nullable="false" />
           <Property Name="decimalAmount2" Type="decimal" Precision="13" Scale="4" Nullable="false" />
@@ -2409,8 +2410,8 @@ warning 6002: The table/view 'def.platinum.sum_voice_day_03' does not have a pri
             <PropertyRef Name="intAmount2" />
             <PropertyRef Name="longAmount1" />
             <PropertyRef Name="longAmount2" />
-            <PropertyRef Name="doubleAmount1" />
-            <PropertyRef Name="doubleAmount2" />
+            <PropertyRef Name="longDecimalAmount1" />
+            <PropertyRef Name="longDecimalAmount2" />
             <PropertyRef Name="intAmount3" />
             <PropertyRef Name="longAmount3" />
             <PropertyRef Name="doubleAmount3" />
@@ -2456,12 +2457,12 @@ warning 6002: The table/view 'def.platinum.sum_voice_day_03' does not have a pri
           <Property Name="vat" Type="decimal" Precision="13" Scale="4" Nullable="false" />
           <Property Name="intAmount1" Type="int" Nullable="false" />
           <Property Name="intAmount2" Type="int" Nullable="false" />
-          <Property Name="longAmount1" Type="int" Nullable="false" />
-          <Property Name="longAmount2" Type="int" Nullable="false" />
-          <Property Name="doubleAmount1" Type="double" Nullable="false" />
-          <Property Name="doubleAmount2" Type="double" Nullable="false" />
+          <Property Name="longAmount1" Type="bigint" Nullable="false" />
+          <Property Name="longAmount2" Type="bigint" Nullable="false" />
+          <Property Name="longDecimalAmount1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="longDecimalAmount2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="intAmount3" Type="int" Nullable="false" />
-          <Property Name="longAmount3" Type="int" Nullable="false" />
+          <Property Name="longAmount3" Type="bigint" Nullable="false" />
           <Property Name="doubleAmount3" Type="double" Nullable="false" />
           <Property Name="decimalAmount1" Type="decimal" Precision="13" Scale="4" Nullable="false" />
           <Property Name="decimalAmount2" Type="decimal" Precision="13" Scale="4" Nullable="false" />
@@ -2511,8 +2512,8 @@ warning 6002: The table/view 'def.platinum.sum_voice_hr_01' does not have a prim
             <PropertyRef Name="intAmount2" />
             <PropertyRef Name="longAmount1" />
             <PropertyRef Name="longAmount2" />
-            <PropertyRef Name="doubleAmount1" />
-            <PropertyRef Name="doubleAmount2" />
+            <PropertyRef Name="longDecimalAmount1" />
+            <PropertyRef Name="longDecimalAmount2" />
             <PropertyRef Name="intAmount3" />
             <PropertyRef Name="longAmount3" />
             <PropertyRef Name="doubleAmount3" />
@@ -2558,12 +2559,12 @@ warning 6002: The table/view 'def.platinum.sum_voice_hr_01' does not have a prim
           <Property Name="vat" Type="decimal" Precision="13" Scale="4" Nullable="false" />
           <Property Name="intAmount1" Type="int" Nullable="false" />
           <Property Name="intAmount2" Type="int" Nullable="false" />
-          <Property Name="longAmount1" Type="int" Nullable="false" />
-          <Property Name="longAmount2" Type="int" Nullable="false" />
-          <Property Name="doubleAmount1" Type="double" Nullable="false" />
-          <Property Name="doubleAmount2" Type="double" Nullable="false" />
+          <Property Name="longAmount1" Type="bigint" Nullable="false" />
+          <Property Name="longAmount2" Type="bigint" Nullable="false" />
+          <Property Name="longDecimalAmount1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="longDecimalAmount2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="intAmount3" Type="int" Nullable="false" />
-          <Property Name="longAmount3" Type="int" Nullable="false" />
+          <Property Name="longAmount3" Type="bigint" Nullable="false" />
           <Property Name="doubleAmount3" Type="double" Nullable="false" />
           <Property Name="decimalAmount1" Type="decimal" Precision="13" Scale="4" Nullable="false" />
           <Property Name="decimalAmount2" Type="decimal" Precision="13" Scale="4" Nullable="false" />
@@ -2613,8 +2614,8 @@ warning 6002: The table/view 'def.platinum.sum_voice_hr_02' does not have a prim
             <PropertyRef Name="intAmount2" />
             <PropertyRef Name="longAmount1" />
             <PropertyRef Name="longAmount2" />
-            <PropertyRef Name="doubleAmount1" />
-            <PropertyRef Name="doubleAmount2" />
+            <PropertyRef Name="longDecimalAmount1" />
+            <PropertyRef Name="longDecimalAmount2" />
             <PropertyRef Name="intAmount3" />
             <PropertyRef Name="longAmount3" />
             <PropertyRef Name="doubleAmount3" />
@@ -2660,12 +2661,12 @@ warning 6002: The table/view 'def.platinum.sum_voice_hr_02' does not have a prim
           <Property Name="vat" Type="decimal" Precision="13" Scale="4" Nullable="false" />
           <Property Name="intAmount1" Type="int" Nullable="false" />
           <Property Name="intAmount2" Type="int" Nullable="false" />
-          <Property Name="longAmount1" Type="int" Nullable="false" />
-          <Property Name="longAmount2" Type="int" Nullable="false" />
-          <Property Name="doubleAmount1" Type="double" Nullable="false" />
-          <Property Name="doubleAmount2" Type="double" Nullable="false" />
+          <Property Name="longAmount1" Type="bigint" Nullable="false" />
+          <Property Name="longAmount2" Type="bigint" Nullable="false" />
+          <Property Name="longDecimalAmount1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="longDecimalAmount2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="intAmount3" Type="int" Nullable="false" />
-          <Property Name="longAmount3" Type="int" Nullable="false" />
+          <Property Name="longAmount3" Type="bigint" Nullable="false" />
           <Property Name="doubleAmount3" Type="double" Nullable="false" />
           <Property Name="decimalAmount1" Type="decimal" Precision="13" Scale="4" Nullable="false" />
           <Property Name="decimalAmount2" Type="decimal" Precision="13" Scale="4" Nullable="false" />
@@ -2715,8 +2716,8 @@ warning 6002: The table/view 'def.platinum.sum_voice_hr_03' does not have a prim
             <PropertyRef Name="intAmount2" />
             <PropertyRef Name="longAmount1" />
             <PropertyRef Name="longAmount2" />
-            <PropertyRef Name="doubleAmount1" />
-            <PropertyRef Name="doubleAmount2" />
+            <PropertyRef Name="longDecimalAmount1" />
+            <PropertyRef Name="longDecimalAmount2" />
             <PropertyRef Name="intAmount3" />
             <PropertyRef Name="longAmount3" />
             <PropertyRef Name="doubleAmount3" />
@@ -2762,12 +2763,12 @@ warning 6002: The table/view 'def.platinum.sum_voice_hr_03' does not have a prim
           <Property Name="vat" Type="decimal" Precision="13" Scale="4" Nullable="false" />
           <Property Name="intAmount1" Type="int" Nullable="false" />
           <Property Name="intAmount2" Type="int" Nullable="false" />
-          <Property Name="longAmount1" Type="int" Nullable="false" />
-          <Property Name="longAmount2" Type="int" Nullable="false" />
-          <Property Name="doubleAmount1" Type="double" Nullable="false" />
-          <Property Name="doubleAmount2" Type="double" Nullable="false" />
+          <Property Name="longAmount1" Type="bigint" Nullable="false" />
+          <Property Name="longAmount2" Type="bigint" Nullable="false" />
+          <Property Name="longDecimalAmount1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="longDecimalAmount2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="intAmount3" Type="int" Nullable="false" />
-          <Property Name="longAmount3" Type="int" Nullable="false" />
+          <Property Name="longAmount3" Type="bigint" Nullable="false" />
           <Property Name="doubleAmount3" Type="double" Nullable="false" />
           <Property Name="decimalAmount1" Type="decimal" Precision="13" Scale="4" Nullable="false" />
           <Property Name="decimalAmount2" Type="decimal" Precision="13" Scale="4" Nullable="false" />
@@ -3472,7 +3473,7 @@ FROM `acc_transaction` AS `acc_transaction`</DefiningQuery>
 `cdr`.`idcall`, 
 `cdr`.`SequenceNumber`, 
 `cdr`.`FileName`, 
-`cdr`.`CallDirection`, 
+`cdr`.`ServiceGroup`, 
 `cdr`.`incomingroute`, 
 `cdr`.`OriginatingIP`, 
 `cdr`.`OPC`, 
@@ -3580,7 +3581,7 @@ FROM `cdr` AS `cdr`</DefiningQuery>
 `cdrdiscarded`.`idcall`, 
 `cdrdiscarded`.`SequenceNumber`, 
 `cdrdiscarded`.`FileName`, 
-`cdrdiscarded`.`CallDirection`, 
+`cdrdiscarded`.`ServiceGroup`, 
 `cdrdiscarded`.`incomingroute`, 
 `cdrdiscarded`.`OriginatingIP`, 
 `cdrdiscarded`.`OPC`, 
@@ -3688,7 +3689,7 @@ FROM `cdrdiscarded` AS `cdrdiscarded`</DefiningQuery>
 `cdrpartiallastaggregatedrawinstance`.`idcall`, 
 `cdrpartiallastaggregatedrawinstance`.`SequenceNumber`, 
 `cdrpartiallastaggregatedrawinstance`.`FileName`, 
-`cdrpartiallastaggregatedrawinstance`.`CallDirection`, 
+`cdrpartiallastaggregatedrawinstance`.`ServiceGroup`, 
 `cdrpartiallastaggregatedrawinstance`.`incomingroute`, 
 `cdrpartiallastaggregatedrawinstance`.`OriginatingIP`, 
 `cdrpartiallastaggregatedrawinstance`.`OPC`, 
@@ -3796,7 +3797,7 @@ FROM `cdrpartiallastaggregatedrawinstance` AS `cdrpartiallastaggregatedrawinstan
 `cdrpartialrawinstance`.`idcall`, 
 `cdrpartialrawinstance`.`SequenceNumber`, 
 `cdrpartialrawinstance`.`FileName`, 
-`cdrpartialrawinstance`.`CallDirection`, 
+`cdrpartialrawinstance`.`ServiceGroup`, 
 `cdrpartialrawinstance`.`incomingroute`, 
 `cdrpartialrawinstance`.`OriginatingIP`, 
 `cdrpartialrawinstance`.`OPC`, 
@@ -3950,8 +3951,8 @@ FROM `cdrpartialreference` AS `cdrpartialreference`</DefiningQuery>
 `sum_voice_day_01`.`intAmount2`, 
 `sum_voice_day_01`.`longAmount1`, 
 `sum_voice_day_01`.`longAmount2`, 
-`sum_voice_day_01`.`doubleAmount1`, 
-`sum_voice_day_01`.`doubleAmount2`, 
+`sum_voice_day_01`.`longDecimalAmount1`, 
+`sum_voice_day_01`.`longDecimalAmount2`, 
 `sum_voice_day_01`.`intAmount3`, 
 `sum_voice_day_01`.`longAmount3`, 
 `sum_voice_day_01`.`doubleAmount3`, 
@@ -4002,8 +4003,8 @@ FROM `sum_voice_day_01` AS `sum_voice_day_01`</DefiningQuery>
 `sum_voice_day_02`.`intAmount2`, 
 `sum_voice_day_02`.`longAmount1`, 
 `sum_voice_day_02`.`longAmount2`, 
-`sum_voice_day_02`.`doubleAmount1`, 
-`sum_voice_day_02`.`doubleAmount2`, 
+`sum_voice_day_02`.`longDecimalAmount1`, 
+`sum_voice_day_02`.`longDecimalAmount2`, 
 `sum_voice_day_02`.`intAmount3`, 
 `sum_voice_day_02`.`longAmount3`, 
 `sum_voice_day_02`.`doubleAmount3`, 
@@ -4054,8 +4055,8 @@ FROM `sum_voice_day_02` AS `sum_voice_day_02`</DefiningQuery>
 `sum_voice_day_03`.`intAmount2`, 
 `sum_voice_day_03`.`longAmount1`, 
 `sum_voice_day_03`.`longAmount2`, 
-`sum_voice_day_03`.`doubleAmount1`, 
-`sum_voice_day_03`.`doubleAmount2`, 
+`sum_voice_day_03`.`longDecimalAmount1`, 
+`sum_voice_day_03`.`longDecimalAmount2`, 
 `sum_voice_day_03`.`intAmount3`, 
 `sum_voice_day_03`.`longAmount3`, 
 `sum_voice_day_03`.`doubleAmount3`, 
@@ -4106,8 +4107,8 @@ FROM `sum_voice_day_03` AS `sum_voice_day_03`</DefiningQuery>
 `sum_voice_hr_01`.`intAmount2`, 
 `sum_voice_hr_01`.`longAmount1`, 
 `sum_voice_hr_01`.`longAmount2`, 
-`sum_voice_hr_01`.`doubleAmount1`, 
-`sum_voice_hr_01`.`doubleAmount2`, 
+`sum_voice_hr_01`.`longDecimalAmount1`, 
+`sum_voice_hr_01`.`longDecimalAmount2`, 
 `sum_voice_hr_01`.`intAmount3`, 
 `sum_voice_hr_01`.`longAmount3`, 
 `sum_voice_hr_01`.`doubleAmount3`, 
@@ -4158,8 +4159,8 @@ FROM `sum_voice_hr_01` AS `sum_voice_hr_01`</DefiningQuery>
 `sum_voice_hr_02`.`intAmount2`, 
 `sum_voice_hr_02`.`longAmount1`, 
 `sum_voice_hr_02`.`longAmount2`, 
-`sum_voice_hr_02`.`doubleAmount1`, 
-`sum_voice_hr_02`.`doubleAmount2`, 
+`sum_voice_hr_02`.`longDecimalAmount1`, 
+`sum_voice_hr_02`.`longDecimalAmount2`, 
 `sum_voice_hr_02`.`intAmount3`, 
 `sum_voice_hr_02`.`longAmount3`, 
 `sum_voice_hr_02`.`doubleAmount3`, 
@@ -4210,8 +4211,8 @@ FROM `sum_voice_hr_02` AS `sum_voice_hr_02`</DefiningQuery>
 `sum_voice_hr_03`.`intAmount2`, 
 `sum_voice_hr_03`.`longAmount1`, 
 `sum_voice_hr_03`.`longAmount2`, 
-`sum_voice_hr_03`.`doubleAmount1`, 
-`sum_voice_hr_03`.`doubleAmount2`, 
+`sum_voice_hr_03`.`longDecimalAmount1`, 
+`sum_voice_hr_03`.`longDecimalAmount2`, 
 `sum_voice_hr_03`.`intAmount3`, 
 `sum_voice_hr_03`.`longAmount3`, 
 `sum_voice_hr_03`.`doubleAmount3`, 
@@ -4694,7 +4695,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="idcall" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="SequenceNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="FileName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CallDirection" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ServiceGroup" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="incomingroute" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="OriginatingIP" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="OPC" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
@@ -4826,7 +4827,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="idcall" Type="Int64" Nullable="false" />
           <Property Name="SequenceNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="FileName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CallDirection" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ServiceGroup" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="incomingroute" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="OriginatingIP" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="OPC" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
@@ -6331,7 +6332,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             <PropertyRef Name="idcall" />
             <PropertyRef Name="SequenceNumber" />
             <PropertyRef Name="FileName" />
-            <PropertyRef Name="CallDirection" />
+            <PropertyRef Name="ServiceGroup" />
             <PropertyRef Name="OriginatingCalledNumber" />
             <PropertyRef Name="DurationSec" />
             <PropertyRef Name="EndTime" />
@@ -6342,7 +6343,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="idcall" Type="Int64" Nullable="false" />
           <Property Name="SequenceNumber" Type="Int64" Nullable="false" />
           <Property Name="FileName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CallDirection" Type="Int32" Nullable="false" />
+          <Property Name="ServiceGroup" Type="Int32" Nullable="false" />
           <Property Name="incomingroute" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="OriginatingIP" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
           <Property Name="OPC" Type="Int32" />
@@ -6446,12 +6447,13 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
         <EntityType Name="cdrdiscarded">
           <Key>
             <PropertyRef Name="idcall" />
+            <PropertyRef Name="ServiceGroup" />
           </Key>
           <Property Name="SwitchId" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="idcall" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="SequenceNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="FileName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CallDirection" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ServiceGroup" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="incomingroute" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="OriginatingIP" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="OPC" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
@@ -6558,7 +6560,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             <PropertyRef Name="idcall" />
             <PropertyRef Name="SequenceNumber" />
             <PropertyRef Name="FileName" />
-            <PropertyRef Name="CallDirection" />
+            <PropertyRef Name="ServiceGroup" />
             <PropertyRef Name="OriginatingCalledNumber" />
             <PropertyRef Name="DurationSec" />
             <PropertyRef Name="EndTime" />
@@ -6569,7 +6571,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="idcall" Type="Int64" Nullable="false" />
           <Property Name="SequenceNumber" Type="Int64" Nullable="false" />
           <Property Name="FileName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CallDirection" Type="Int32" Nullable="false" />
+          <Property Name="ServiceGroup" Type="Int32" Nullable="false" />
           <Property Name="incomingroute" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="OriginatingIP" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
           <Property Name="OPC" Type="Int32" />
@@ -6676,7 +6678,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             <PropertyRef Name="idcall" />
             <PropertyRef Name="SequenceNumber" />
             <PropertyRef Name="FileName" />
-            <PropertyRef Name="CallDirection" />
+            <PropertyRef Name="ServiceGroup" />
             <PropertyRef Name="OriginatingCalledNumber" />
             <PropertyRef Name="DurationSec" />
             <PropertyRef Name="EndTime" />
@@ -6687,7 +6689,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="idcall" Type="Int64" Nullable="false" />
           <Property Name="SequenceNumber" Type="Int64" Nullable="false" />
           <Property Name="FileName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CallDirection" Type="Int32" Nullable="false" />
+          <Property Name="ServiceGroup" Type="Int32" Nullable="false" />
           <Property Name="incomingroute" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="OriginatingIP" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
           <Property Name="OPC" Type="Int32" />
@@ -6846,8 +6848,8 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             <PropertyRef Name="intAmount2" />
             <PropertyRef Name="longAmount1" />
             <PropertyRef Name="longAmount2" />
-            <PropertyRef Name="doubleAmount1" />
-            <PropertyRef Name="doubleAmount2" />
+            <PropertyRef Name="longDecimalAmount1" />
+            <PropertyRef Name="longDecimalAmount2" />
             <PropertyRef Name="intAmount3" />
             <PropertyRef Name="longAmount3" />
             <PropertyRef Name="doubleAmount3" />
@@ -6893,12 +6895,12 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="vat" Type="Decimal" Nullable="false" />
           <Property Name="intAmount1" Type="Int32" Nullable="false" />
           <Property Name="intAmount2" Type="Int32" Nullable="false" />
-          <Property Name="longAmount1" Type="Int32" Nullable="false" />
-          <Property Name="longAmount2" Type="Int32" Nullable="false" />
-          <Property Name="doubleAmount1" Type="Double" Nullable="false" />
-          <Property Name="doubleAmount2" Type="Double" Nullable="false" />
+          <Property Name="longAmount1" Type="Int64" Nullable="false" />
+          <Property Name="longAmount2" Type="Int64" Nullable="false" />
+          <Property Name="longDecimalAmount1" Type="Decimal" Nullable="false" />
+          <Property Name="longDecimalAmount2" Type="Decimal" Nullable="false" />
           <Property Name="intAmount3" Type="Int32" Nullable="false" />
-          <Property Name="longAmount3" Type="Int32" Nullable="false" />
+          <Property Name="longAmount3" Type="Int64" Nullable="false" />
           <Property Name="doubleAmount3" Type="Double" Nullable="false" />
           <Property Name="decimalAmount1" Type="Decimal" Nullable="false" />
           <Property Name="decimalAmount2" Type="Decimal" Nullable="false" />
@@ -6946,8 +6948,8 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             <PropertyRef Name="intAmount2" />
             <PropertyRef Name="longAmount1" />
             <PropertyRef Name="longAmount2" />
-            <PropertyRef Name="doubleAmount1" />
-            <PropertyRef Name="doubleAmount2" />
+            <PropertyRef Name="longDecimalAmount1" />
+            <PropertyRef Name="longDecimalAmount2" />
             <PropertyRef Name="intAmount3" />
             <PropertyRef Name="longAmount3" />
             <PropertyRef Name="doubleAmount3" />
@@ -6993,12 +6995,12 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="vat" Type="Decimal" Nullable="false" />
           <Property Name="intAmount1" Type="Int32" Nullable="false" />
           <Property Name="intAmount2" Type="Int32" Nullable="false" />
-          <Property Name="longAmount1" Type="Int32" Nullable="false" />
-          <Property Name="longAmount2" Type="Int32" Nullable="false" />
-          <Property Name="doubleAmount1" Type="Double" Nullable="false" />
-          <Property Name="doubleAmount2" Type="Double" Nullable="false" />
+          <Property Name="longAmount1" Type="Int64" Nullable="false" />
+          <Property Name="longAmount2" Type="Int64" Nullable="false" />
+          <Property Name="longDecimalAmount1" Type="Decimal" Nullable="false" />
+          <Property Name="longDecimalAmount2" Type="Decimal" Nullable="false" />
           <Property Name="intAmount3" Type="Int32" Nullable="false" />
-          <Property Name="longAmount3" Type="Int32" Nullable="false" />
+          <Property Name="longAmount3" Type="Int64" Nullable="false" />
           <Property Name="doubleAmount3" Type="Double" Nullable="false" />
           <Property Name="decimalAmount1" Type="Decimal" Nullable="false" />
           <Property Name="decimalAmount2" Type="Decimal" Nullable="false" />
@@ -7046,8 +7048,8 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             <PropertyRef Name="intAmount2" />
             <PropertyRef Name="longAmount1" />
             <PropertyRef Name="longAmount2" />
-            <PropertyRef Name="doubleAmount1" />
-            <PropertyRef Name="doubleAmount2" />
+            <PropertyRef Name="longDecimalAmount1" />
+            <PropertyRef Name="longDecimalAmount2" />
             <PropertyRef Name="intAmount3" />
             <PropertyRef Name="longAmount3" />
             <PropertyRef Name="doubleAmount3" />
@@ -7093,12 +7095,12 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="vat" Type="Decimal" Nullable="false" />
           <Property Name="intAmount1" Type="Int32" Nullable="false" />
           <Property Name="intAmount2" Type="Int32" Nullable="false" />
-          <Property Name="longAmount1" Type="Int32" Nullable="false" />
-          <Property Name="longAmount2" Type="Int32" Nullable="false" />
-          <Property Name="doubleAmount1" Type="Double" Nullable="false" />
-          <Property Name="doubleAmount2" Type="Double" Nullable="false" />
+          <Property Name="longAmount1" Type="Int64" Nullable="false" />
+          <Property Name="longAmount2" Type="Int64" Nullable="false" />
+          <Property Name="longDecimalAmount1" Type="Decimal" Nullable="false" />
+          <Property Name="longDecimalAmount2" Type="Decimal" Nullable="false" />
           <Property Name="intAmount3" Type="Int32" Nullable="false" />
-          <Property Name="longAmount3" Type="Int32" Nullable="false" />
+          <Property Name="longAmount3" Type="Int64" Nullable="false" />
           <Property Name="doubleAmount3" Type="Double" Nullable="false" />
           <Property Name="decimalAmount1" Type="Decimal" Nullable="false" />
           <Property Name="decimalAmount2" Type="Decimal" Nullable="false" />
@@ -7146,8 +7148,8 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             <PropertyRef Name="intAmount2" />
             <PropertyRef Name="longAmount1" />
             <PropertyRef Name="longAmount2" />
-            <PropertyRef Name="doubleAmount1" />
-            <PropertyRef Name="doubleAmount2" />
+            <PropertyRef Name="longDecimalAmount1" />
+            <PropertyRef Name="longDecimalAmount2" />
             <PropertyRef Name="intAmount3" />
             <PropertyRef Name="longAmount3" />
             <PropertyRef Name="doubleAmount3" />
@@ -7193,12 +7195,12 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="vat" Type="Decimal" Nullable="false" />
           <Property Name="intAmount1" Type="Int32" Nullable="false" />
           <Property Name="intAmount2" Type="Int32" Nullable="false" />
-          <Property Name="longAmount1" Type="Int32" Nullable="false" />
-          <Property Name="longAmount2" Type="Int32" Nullable="false" />
-          <Property Name="doubleAmount1" Type="Double" Nullable="false" />
-          <Property Name="doubleAmount2" Type="Double" Nullable="false" />
+          <Property Name="longAmount1" Type="Int64" Nullable="false" />
+          <Property Name="longAmount2" Type="Int64" Nullable="false" />
+          <Property Name="longDecimalAmount1" Type="Decimal" Nullable="false" />
+          <Property Name="longDecimalAmount2" Type="Decimal" Nullable="false" />
           <Property Name="intAmount3" Type="Int32" Nullable="false" />
-          <Property Name="longAmount3" Type="Int32" Nullable="false" />
+          <Property Name="longAmount3" Type="Int64" Nullable="false" />
           <Property Name="doubleAmount3" Type="Double" Nullable="false" />
           <Property Name="decimalAmount1" Type="Decimal" Nullable="false" />
           <Property Name="decimalAmount2" Type="Decimal" Nullable="false" />
@@ -7246,8 +7248,8 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             <PropertyRef Name="intAmount2" />
             <PropertyRef Name="longAmount1" />
             <PropertyRef Name="longAmount2" />
-            <PropertyRef Name="doubleAmount1" />
-            <PropertyRef Name="doubleAmount2" />
+            <PropertyRef Name="longDecimalAmount1" />
+            <PropertyRef Name="longDecimalAmount2" />
             <PropertyRef Name="intAmount3" />
             <PropertyRef Name="longAmount3" />
             <PropertyRef Name="doubleAmount3" />
@@ -7293,12 +7295,12 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="vat" Type="Decimal" Nullable="false" />
           <Property Name="intAmount1" Type="Int32" Nullable="false" />
           <Property Name="intAmount2" Type="Int32" Nullable="false" />
-          <Property Name="longAmount1" Type="Int32" Nullable="false" />
-          <Property Name="longAmount2" Type="Int32" Nullable="false" />
-          <Property Name="doubleAmount1" Type="Double" Nullable="false" />
-          <Property Name="doubleAmount2" Type="Double" Nullable="false" />
+          <Property Name="longAmount1" Type="Int64" Nullable="false" />
+          <Property Name="longAmount2" Type="Int64" Nullable="false" />
+          <Property Name="longDecimalAmount1" Type="Decimal" Nullable="false" />
+          <Property Name="longDecimalAmount2" Type="Decimal" Nullable="false" />
           <Property Name="intAmount3" Type="Int32" Nullable="false" />
-          <Property Name="longAmount3" Type="Int32" Nullable="false" />
+          <Property Name="longAmount3" Type="Int64" Nullable="false" />
           <Property Name="doubleAmount3" Type="Double" Nullable="false" />
           <Property Name="decimalAmount1" Type="Decimal" Nullable="false" />
           <Property Name="decimalAmount2" Type="Decimal" Nullable="false" />
@@ -7346,8 +7348,8 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             <PropertyRef Name="intAmount2" />
             <PropertyRef Name="longAmount1" />
             <PropertyRef Name="longAmount2" />
-            <PropertyRef Name="doubleAmount1" />
-            <PropertyRef Name="doubleAmount2" />
+            <PropertyRef Name="longDecimalAmount1" />
+            <PropertyRef Name="longDecimalAmount2" />
             <PropertyRef Name="intAmount3" />
             <PropertyRef Name="longAmount3" />
             <PropertyRef Name="doubleAmount3" />
@@ -7393,12 +7395,12 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="vat" Type="Decimal" Nullable="false" />
           <Property Name="intAmount1" Type="Int32" Nullable="false" />
           <Property Name="intAmount2" Type="Int32" Nullable="false" />
-          <Property Name="longAmount1" Type="Int32" Nullable="false" />
-          <Property Name="longAmount2" Type="Int32" Nullable="false" />
-          <Property Name="doubleAmount1" Type="Double" Nullable="false" />
-          <Property Name="doubleAmount2" Type="Double" Nullable="false" />
+          <Property Name="longAmount1" Type="Int64" Nullable="false" />
+          <Property Name="longAmount2" Type="Int64" Nullable="false" />
+          <Property Name="longDecimalAmount1" Type="Decimal" Nullable="false" />
+          <Property Name="longDecimalAmount2" Type="Decimal" Nullable="false" />
           <Property Name="intAmount3" Type="Int32" Nullable="false" />
-          <Property Name="longAmount3" Type="Int32" Nullable="false" />
+          <Property Name="longAmount3" Type="Int64" Nullable="false" />
           <Property Name="doubleAmount3" Type="Double" Nullable="false" />
           <Property Name="decimalAmount1" Type="Decimal" Nullable="false" />
           <Property Name="decimalAmount2" Type="Decimal" Nullable="false" />
@@ -7988,7 +7990,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="OPC" ColumnName="OPC" />
                 <ScalarProperty Name="OriginatingIP" ColumnName="OriginatingIP" />
                 <ScalarProperty Name="incomingroute" ColumnName="incomingroute" />
-                <ScalarProperty Name="CallDirection" ColumnName="CallDirection" />
+                <ScalarProperty Name="ServiceGroup" ColumnName="ServiceGroup" />
                 <ScalarProperty Name="FileName" ColumnName="FileName" />
                 <ScalarProperty Name="SequenceNumber" ColumnName="SequenceNumber" />
                 <ScalarProperty Name="idcall" ColumnName="idcall" />
@@ -8121,7 +8123,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="OPC" ColumnName="OPC" />
                 <ScalarProperty Name="OriginatingIP" ColumnName="OriginatingIP" />
                 <ScalarProperty Name="incomingroute" ColumnName="incomingroute" />
-                <ScalarProperty Name="CallDirection" ColumnName="CallDirection" />
+                <ScalarProperty Name="ServiceGroup" ColumnName="ServiceGroup" />
                 <ScalarProperty Name="FileName" ColumnName="FileName" />
                 <ScalarProperty Name="SequenceNumber" ColumnName="SequenceNumber" />
                 <ScalarProperty Name="idcall" ColumnName="idcall" />
@@ -9632,7 +9634,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="OPC" ColumnName="OPC" />
                 <ScalarProperty Name="OriginatingIP" ColumnName="OriginatingIP" />
                 <ScalarProperty Name="incomingroute" ColumnName="incomingroute" />
-                <ScalarProperty Name="CallDirection" ColumnName="CallDirection" />
+                <ScalarProperty Name="ServiceGroup" ColumnName="ServiceGroup" />
                 <ScalarProperty Name="FileName" ColumnName="FileName" />
                 <ScalarProperty Name="SequenceNumber" ColumnName="SequenceNumber" />
                 <ScalarProperty Name="idcall" ColumnName="idcall" />
@@ -9742,7 +9744,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="OPC" ColumnName="OPC" />
                 <ScalarProperty Name="OriginatingIP" ColumnName="OriginatingIP" />
                 <ScalarProperty Name="incomingroute" ColumnName="incomingroute" />
-                <ScalarProperty Name="CallDirection" ColumnName="CallDirection" />
+                <ScalarProperty Name="ServiceGroup" ColumnName="ServiceGroup" />
                 <ScalarProperty Name="FileName" ColumnName="FileName" />
                 <ScalarProperty Name="SequenceNumber" ColumnName="SequenceNumber" />
                 <ScalarProperty Name="idcall" ColumnName="idcall" />
@@ -9852,7 +9854,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="OPC" ColumnName="OPC" />
                 <ScalarProperty Name="OriginatingIP" ColumnName="OriginatingIP" />
                 <ScalarProperty Name="incomingroute" ColumnName="incomingroute" />
-                <ScalarProperty Name="CallDirection" ColumnName="CallDirection" />
+                <ScalarProperty Name="ServiceGroup" ColumnName="ServiceGroup" />
                 <ScalarProperty Name="FileName" ColumnName="FileName" />
                 <ScalarProperty Name="SequenceNumber" ColumnName="SequenceNumber" />
                 <ScalarProperty Name="idcall" ColumnName="idcall" />
@@ -9962,7 +9964,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="OPC" ColumnName="OPC" />
                 <ScalarProperty Name="OriginatingIP" ColumnName="OriginatingIP" />
                 <ScalarProperty Name="incomingroute" ColumnName="incomingroute" />
-                <ScalarProperty Name="CallDirection" ColumnName="CallDirection" />
+                <ScalarProperty Name="ServiceGroup" ColumnName="ServiceGroup" />
                 <ScalarProperty Name="FileName" ColumnName="FileName" />
                 <ScalarProperty Name="SequenceNumber" ColumnName="SequenceNumber" />
                 <ScalarProperty Name="idcall" ColumnName="idcall" />
@@ -9991,8 +9993,8 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="doubleAmount3" ColumnName="doubleAmount3" />
                 <ScalarProperty Name="longAmount3" ColumnName="longAmount3" />
                 <ScalarProperty Name="intAmount3" ColumnName="intAmount3" />
-                <ScalarProperty Name="doubleAmount2" ColumnName="doubleAmount2" />
-                <ScalarProperty Name="doubleAmount1" ColumnName="doubleAmount1" />
+                <ScalarProperty Name="longDecimalAmount2" ColumnName="longDecimalAmount2" />
+                <ScalarProperty Name="longDecimalAmount1" ColumnName="longDecimalAmount1" />
                 <ScalarProperty Name="longAmount2" ColumnName="longAmount2" />
                 <ScalarProperty Name="longAmount1" ColumnName="longAmount1" />
                 <ScalarProperty Name="intAmount2" ColumnName="intAmount2" />
@@ -10045,8 +10047,8 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="doubleAmount3" ColumnName="doubleAmount3" />
                 <ScalarProperty Name="longAmount3" ColumnName="longAmount3" />
                 <ScalarProperty Name="intAmount3" ColumnName="intAmount3" />
-                <ScalarProperty Name="doubleAmount2" ColumnName="doubleAmount2" />
-                <ScalarProperty Name="doubleAmount1" ColumnName="doubleAmount1" />
+                <ScalarProperty Name="longDecimalAmount2" ColumnName="longDecimalAmount2" />
+                <ScalarProperty Name="longDecimalAmount1" ColumnName="longDecimalAmount1" />
                 <ScalarProperty Name="longAmount2" ColumnName="longAmount2" />
                 <ScalarProperty Name="longAmount1" ColumnName="longAmount1" />
                 <ScalarProperty Name="intAmount2" ColumnName="intAmount2" />
@@ -10099,8 +10101,8 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="doubleAmount3" ColumnName="doubleAmount3" />
                 <ScalarProperty Name="longAmount3" ColumnName="longAmount3" />
                 <ScalarProperty Name="intAmount3" ColumnName="intAmount3" />
-                <ScalarProperty Name="doubleAmount2" ColumnName="doubleAmount2" />
-                <ScalarProperty Name="doubleAmount1" ColumnName="doubleAmount1" />
+                <ScalarProperty Name="longDecimalAmount2" ColumnName="longDecimalAmount2" />
+                <ScalarProperty Name="longDecimalAmount1" ColumnName="longDecimalAmount1" />
                 <ScalarProperty Name="longAmount2" ColumnName="longAmount2" />
                 <ScalarProperty Name="longAmount1" ColumnName="longAmount1" />
                 <ScalarProperty Name="intAmount2" ColumnName="intAmount2" />
@@ -10153,8 +10155,8 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="doubleAmount3" ColumnName="doubleAmount3" />
                 <ScalarProperty Name="longAmount3" ColumnName="longAmount3" />
                 <ScalarProperty Name="intAmount3" ColumnName="intAmount3" />
-                <ScalarProperty Name="doubleAmount2" ColumnName="doubleAmount2" />
-                <ScalarProperty Name="doubleAmount1" ColumnName="doubleAmount1" />
+                <ScalarProperty Name="longDecimalAmount2" ColumnName="longDecimalAmount2" />
+                <ScalarProperty Name="longDecimalAmount1" ColumnName="longDecimalAmount1" />
                 <ScalarProperty Name="longAmount2" ColumnName="longAmount2" />
                 <ScalarProperty Name="longAmount1" ColumnName="longAmount1" />
                 <ScalarProperty Name="intAmount2" ColumnName="intAmount2" />
@@ -10207,8 +10209,8 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="doubleAmount3" ColumnName="doubleAmount3" />
                 <ScalarProperty Name="longAmount3" ColumnName="longAmount3" />
                 <ScalarProperty Name="intAmount3" ColumnName="intAmount3" />
-                <ScalarProperty Name="doubleAmount2" ColumnName="doubleAmount2" />
-                <ScalarProperty Name="doubleAmount1" ColumnName="doubleAmount1" />
+                <ScalarProperty Name="longDecimalAmount2" ColumnName="longDecimalAmount2" />
+                <ScalarProperty Name="longDecimalAmount1" ColumnName="longDecimalAmount1" />
                 <ScalarProperty Name="longAmount2" ColumnName="longAmount2" />
                 <ScalarProperty Name="longAmount1" ColumnName="longAmount1" />
                 <ScalarProperty Name="intAmount2" ColumnName="intAmount2" />
@@ -10261,8 +10263,8 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="doubleAmount3" ColumnName="doubleAmount3" />
                 <ScalarProperty Name="longAmount3" ColumnName="longAmount3" />
                 <ScalarProperty Name="intAmount3" ColumnName="intAmount3" />
-                <ScalarProperty Name="doubleAmount2" ColumnName="doubleAmount2" />
-                <ScalarProperty Name="doubleAmount1" ColumnName="doubleAmount1" />
+                <ScalarProperty Name="longDecimalAmount2" ColumnName="longDecimalAmount2" />
+                <ScalarProperty Name="longDecimalAmount1" ColumnName="longDecimalAmount1" />
                 <ScalarProperty Name="longAmount2" ColumnName="longAmount2" />
                 <ScalarProperty Name="longAmount1" ColumnName="longAmount1" />
                 <ScalarProperty Name="intAmount2" ColumnName="intAmount2" />

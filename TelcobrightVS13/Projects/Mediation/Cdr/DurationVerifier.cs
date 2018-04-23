@@ -44,9 +44,10 @@ namespace TelcobrightMediation
                 throw new Exception("duration in cdr & summary does not match.");
             this.receivedDurationFromNewCdr += durationInCdr;
             this.receivedDurationFromNewSummary += durationInSummary;
-            var summaryCache= this.CdrJobContext.CdrSummaryContext.TableWiseSummaryCache[this.SummaryTableName];
+            var summaryCache = this.CdrJobContext.CdrSummaryContext.TableWiseSummaryCache[this.SummaryTableName];
             this.MergedDurationInSummaryContext = summaryCache.GetItems().Sum(s => s.actualduration);
-            if ((this.MergedDurationInSummaryContext - this.receivedDurationFromNewSummary)!=this.prevDurationInSummaryTable)
+            if ((this.MergedDurationInSummaryContext - this.receivedDurationFromNewSummary) !=
+                this.prevDurationInSummaryTable)
                 throw new Exception(
                     "Increment of merged duration in summaryContext & prev duration from summary does not match.");
             decimal differenceMergedVsPrevDurationInSummary =
@@ -61,25 +62,8 @@ namespace TelcobrightMediation
             decimal sumOfInsertedVsNonInsertedItem = insertedItemsSum + nonInsertedItemsSum;
             decimal totalInCache = summaryCache.GetItems().Sum(c => c.actualduration);
             if (totalInCache != sumOfInsertedVsNonInsertedItem)
-                throw new Exception("Sum of total & inserted+nonInserted item must match after each transaction in cache.");
-        }
-
-        public void WriteFinalVerificationReport(int callDirection)
-        {
-            Console.WriteLine("callDirection=" + callDirection);
-            var cdrExts = this.cdrProcessor.CollectionResult.ProcessedCdrExts
-                .Where(c => c.Cdr.CallDirection == callDirection && c.Cdr.ChargingStatus == 1)
-                .OrderBy(c => c.Cdr.idcall).ToList();
-            decimal sumDurationCdr = cdrExts.Sum(c => c.Cdr.DurationSec);
-            Console.WriteLine("SumInCdrInstances=" + sumDurationCdr);
-            var summaries = this.cdrProcessor.CollectionResult
-                .ProcessedCdrExts.Where(c => c.Cdr.CallDirection == callDirection && c.Cdr.ChargingStatus == 1)
-                .SelectMany(c=>c.TableWiseSummaries).Where(kv=>kv.Key==this.SummaryTableName)
-                .Select(c=>c.Value);
-            decimal sumDurationSummary = summaries.Sum(s => s.actualduration);
-            if (sumDurationCdr != sumDurationSummary)
-                throw new Exception("duration mismatch between cdr & summary");
-            Console.WriteLine("SumInSummaries=" + sumDurationSummary);
+                throw new Exception(
+                    "Sum of total & inserted+nonInserted item must match after each transaction in cache.");
         }
     }
 }

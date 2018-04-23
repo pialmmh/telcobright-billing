@@ -31,7 +31,7 @@ namespace TelcobrightMediation.EntityHelpers
                 idcall = sourceCdr.idcall.ToString(),
                 SequenceNumber = sourceCdr.SequenceNumber.ToString(),
                 FileName = sourceCdr.FileName.ToString(),
-                CallDirection = sourceCdr.CallDirection.ToString(),
+                ServiceGroup = sourceCdr.ServiceGroup.ToString(),
                 incomingroute = sourceCdr.incomingroute.ToString(),
                 OriginatingIP = sourceCdr.OriginatingIP.ToString(),
                 OPC = sourceCdr.OPC.ToString(),

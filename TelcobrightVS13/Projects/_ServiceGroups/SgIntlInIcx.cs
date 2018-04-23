@@ -49,7 +49,7 @@ namespace TelcobrightMediation
 					&& thisRoute.NationalOrInternational == RouteLocalityType.International
 				) //IGW and route=international
 				{
-					thisCdr.CallDirection = 3; //Intl in ICX
+					thisCdr.ServiceGroup = 3; //Intl in ICX
 											   //set year-month id for this call for tt clean & bc selling
 					string startTimeAsStr = thisCdr.StartTime.ToMySqlStyleDateTimeStrWithoutQuote();
 					thisCdr.field2 = Convert.ToInt32(startTimeAsStr.Substring(2, 2) + startTimeAsStr.Substring(5, 2));
@@ -80,8 +80,8 @@ namespace TelcobrightMediation
 			newSummary.intAmount2 = 0;
 			newSummary.longAmount1 = 0;
 			newSummary.longAmount2 = 0;
-			newSummary.doubleAmount1 = 0;
-			newSummary.doubleAmount2 = 0;
+			newSummary.longDecimalAmount1 = 0;
+			newSummary.longDecimalAmount2 = 0;
 		}
 	}
 }

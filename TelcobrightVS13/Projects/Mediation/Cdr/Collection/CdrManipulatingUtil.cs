@@ -33,7 +33,7 @@ namespace TelcobrightMediation.Mediation.Cdr
                 convertedCdr.idcall = txtRow[Fn.Idcall].GetValue<long>();
                 convertedCdr.SequenceNumber = txtRow[Fn.Sequencenumber].GetValue<long>();
                 convertedCdr.FileName = txtRow[Fn.Filename];
-                convertedCdr.CallDirection = txtRow[Fn.Calldirection].GetValue<int>();
+                convertedCdr.ServiceGroup = txtRow[Fn.ServiceGroup].GetValue<int>();
                 convertedCdr.incomingroute = txtRow[Fn.Incomingroute];
                 convertedCdr.OriginatingIP = txtRow[Fn.Originatingip];
                 convertedCdr.OPC = txtRow[Fn.Opc].GetValueOrNull<int>();
@@ -153,7 +153,7 @@ namespace TelcobrightMediation.Mediation.Cdr
             inconsistentCdr.idcall = Convert.ToInt64(txtRow[Fn.Idcall]);
             inconsistentCdr.SequenceNumber = txtRow[Fn.Sequencenumber];
             inconsistentCdr.FileName = txtRow[Fn.Filename];
-            inconsistentCdr.CallDirection = txtRow[Fn.Calldirection];
+            inconsistentCdr.ServiceGroup = txtRow[Fn.ServiceGroup];
             inconsistentCdr.incomingroute = txtRow[Fn.Incomingroute];
             inconsistentCdr.OriginatingIP = txtRow[Fn.Originatingip];
             inconsistentCdr.OPC = txtRow[Fn.Opc];
@@ -262,7 +262,7 @@ namespace TelcobrightMediation.Mediation.Cdr
             newInstance.idcall = sourceCdr.idcall;
             newInstance.SequenceNumber = sourceCdr.SequenceNumber;
             newInstance.FileName = sourceCdr.FileName;
-            newInstance.CallDirection = sourceCdr.CallDirection;
+            newInstance.ServiceGroup = sourceCdr.ServiceGroup;
             newInstance.incomingroute = sourceCdr.incomingroute;
             newInstance.OriginatingIP = sourceCdr.OriginatingIP;
             newInstance.OPC = sourceCdr.OPC;

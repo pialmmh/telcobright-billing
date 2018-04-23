@@ -313,7 +313,7 @@ public partial class DefaultCauseRouteIntlInCallView2 : System.Web.UI.Page
             return "";
         }
         string sqlstring = "";
-        sqlstring = "Select OriginatingCalledNumber,OriginatingCallingNumber,TerminatingCalledNumber,TerminatingCallingNumber,IncomingRoute,OutgoingRoute,StartTime,ConnectTime,EndTime,DurationSec as ActualDuration,RoundedDuration,"+ causeCodeFieldName +" as Cause from cdrloaded where callDirection=4"; //,CustomerID as ICX,SupplierID as Partner,AnsIDOrig as ANS
+        sqlstring = "Select OriginatingCalledNumber,OriginatingCallingNumber,TerminatingCalledNumber,TerminatingCallingNumber,IncomingRoute,OutgoingRoute,StartTime,ConnectTime,EndTime,DurationSec as ActualDuration,RoundedDuration,"+ causeCodeFieldName +" as Cause from cdrloaded where ServiceGroup=4"; //,CustomerID as ICX,SupplierID as Partner,AnsIDOrig as ANS
         sqlstring += " and starttime>='"+ this._startdate+"' and starttime<='"+ this._enddate+"'";
         
         if (this._ans!="")

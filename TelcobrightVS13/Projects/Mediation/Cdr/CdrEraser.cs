@@ -52,7 +52,7 @@ namespace TelcobrightMediation
                 if (oldCdrExt.CdrNewOldType != CdrNewOldType.OldCdr)
                     throw new Exception("OldCdrs must have CdrNewOldtype status set to old.");
                 List<string> summaryTargetTables = this.MediationContext.MefServiceGroupContainer
-                    .IdServiceGroupWiseServiceGroups[Convert.ToInt32(oldCdrExt.Cdr.CallDirection)].GetSummaryTargetTables().Keys.ToList();
+                    .IdServiceGroupWiseServiceGroups[Convert.ToInt32(oldCdrExt.Cdr.ServiceGroup)].GetSummaryTargetTables().Keys.ToList();
                 summaryTargetTables.ForEach(targetTableName =>
                 {
                     AbstractCdrSummary regeneratedSummary = (AbstractCdrSummary)this.CdrJobContext.CdrSummaryContext

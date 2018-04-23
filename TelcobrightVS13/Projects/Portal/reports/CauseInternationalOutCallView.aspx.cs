@@ -353,7 +353,7 @@ public partial class DefaultCIntlOutCallView1 : System.Web.UI.Page
             this.lbl1.Text = "Invalid Date!";
             return "";
         }
-        sqlstring = "Select OriginatingCalledNumber,OriginatingCallingNumber,TerminatingCalledNumber,TerminatingCallingNumber,IncomingRoute,OutgoingRoute,StartTime,ConnectTime,EndTime,DurationSec as ActualDuration,RoundedDuration,"+ causeCodeFieldName +" as Cause from cdrloaded where callDirection=5"; //,CustomerID as ICX,SupplierID as Partner,AnsIDOrig as ANS
+        sqlstring = "Select OriginatingCalledNumber,OriginatingCallingNumber,TerminatingCalledNumber,TerminatingCallingNumber,IncomingRoute,OutgoingRoute,StartTime,ConnectTime,EndTime,DurationSec as ActualDuration,RoundedDuration,"+ causeCodeFieldName +" as Cause from cdrloaded where ServiceGroup=5"; //,CustomerID as ICX,SupplierID as Partner,AnsIDOrig as ANS
         sqlstring += " and starttime>='"+ this._startdate+"' and starttime<='"+ this._enddate+"'";
         if (this._country!="")
         {

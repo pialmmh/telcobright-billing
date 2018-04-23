@@ -8,7 +8,7 @@ namespace MediationModel
          long idcall { get; set; }
          long SequenceNumber { get; set; }
          string FileName { get; set; }
-         int CallDirection { get; set; }
+         int ServiceGroup { get; set; }
          string incomingroute { get; set; }
          string OriginatingIP { get; set; }
          Nullable<int> OPC { get; set; }

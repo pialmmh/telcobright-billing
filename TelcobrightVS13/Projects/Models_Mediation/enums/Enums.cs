@@ -17,7 +17,7 @@
         public const int Idcall = 1;
         public const int Sequencenumber = 2;
         public const int Filename = 3;
-        public const int Calldirection = 4;
+        public const int ServiceGroup = 4;
         public const int Incomingroute = 5;
         public const int Originatingip = 6;
         public const int Opc = 7;

@@ -43,7 +43,7 @@ namespace PortalApp.reports.Accounts
                                     + " from cdr"
                                     + " where starttime>='"+ this.txtStartDate.Text+" 00:00:00'"
                                     + " and starttime<='"+ this.txtEndDate.Text+" 23:59:59'"
-                                    + " and calldirection=4"
+                                    + " and ServiceGroup=4"
                                     + " and chargingstatus=1"
                                     + " and duration1>0"
                                     + " group by date(starttime),customerid,customerrate,supplierid"

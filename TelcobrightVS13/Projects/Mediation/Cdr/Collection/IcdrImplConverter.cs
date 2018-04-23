@@ -11,7 +11,7 @@ namespace TelcobrightMediation.Mediation.Cdr
             convertedCdrVariant.idcall = source.idcall;
             convertedCdrVariant.SequenceNumber = source.SequenceNumber;
             convertedCdrVariant.FileName = source.FileName;
-            convertedCdrVariant.CallDirection = source.CallDirection;
+            convertedCdrVariant.ServiceGroup = source.ServiceGroup;
             convertedCdrVariant.incomingroute = source.incomingroute;
             convertedCdrVariant.OriginatingIP = source.OriginatingIP;
             convertedCdrVariant.OPC = source.OPC;

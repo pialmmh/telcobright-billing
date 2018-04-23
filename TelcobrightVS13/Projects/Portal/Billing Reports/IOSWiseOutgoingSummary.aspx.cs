@@ -84,7 +84,7 @@ namespace PortalApp.reports.Accounts
                                             + " select ansidorig,Count(*) as CallCount,matchedprefixy,sum(Duration3)/60 ActualDuration,"
                                             + " sum(roundedduration)/60 RoundedDuration, sum(SubscriberChargeXOut) as X, sum(carrierCostYigwout) as Y,customerid"
                                             + " from cdr c"
-                                            + " where calldirection=5"
+                                            + " where ServiceGroup=5"
                                             + " and chargingstatus=1"
                                             + " and CustomerID=" + this._isoId + ""
                                             + " and starttime>='" + this.txtStartDate.Text + " 00:00:00'"
@@ -129,7 +129,7 @@ namespace PortalApp.reports.Accounts
                                             + " select ansidorig,Count(*) as CallCount,matchedprefixy,sum(Duration3)/60 ActualDuration,"
                                             + " sum(roundedduration)/60 RoundedDuration, sum(SubscriberChargeXOut) as X, sum(carrierCostYigwout) as Y,customerid"
                                             + " from cdrloaded c"
-                                            + " where calldirection=5"
+                                            + " where ServiceGroup=5"
                                             + " and chargingstatus=1"
                                            
                                             + " and starttime>='" + this.txtStartDate.Text + " 00:00:00'"

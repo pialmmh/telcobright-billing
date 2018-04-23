@@ -59,7 +59,7 @@ namespace TelcobrightMediation
                         serviceGroup.ExecutePostRatingActions(cdrExt, this);
                         ExecuteNerRule(this, cdrExt);
                         if (this.CdrJobContext.MediationContext.Tbc.CdrSetting.CallConnectTimePresent == true &&
-                            cdrExt.Cdr.CallDirection > 0 && cdrExt.Cdr.ChargingStatus == 1)
+                            cdrExt.Cdr.ServiceGroup > 0 && cdrExt.Cdr.ChargingStatus == 1)
                         {
                             SetPdd(cdrExt.Cdr);
                         }
@@ -81,7 +81,7 @@ namespace TelcobrightMediation
             {
                 IServiceGroup serviceGroup = null;
                 this.MediationContext.MefServiceGroupContainer.IdServiceGroupWiseServiceGroups.TryGetValue(
-                    processedCdrExt.Cdr.CallDirection, out serviceGroup);
+                    processedCdrExt.Cdr.ServiceGroup, out serviceGroup);
                 if (serviceGroup == null) throw new Exception("Servicegroup not found before generating summary.");
                 foreach (string targetTableName in serviceGroup.GetSummaryTargetTables().Keys)
                 {
@@ -131,10 +131,10 @@ namespace TelcobrightMediation
                 if (serviceGroup != null)
                 {
                     serviceGroupConfiguration = kv.Value;
-                    newCdrExt.Cdr.CallDirection =
-                        0; //unset calldirection first if already set e.g. during re-processing
+                    newCdrExt.Cdr.ServiceGroup =
+                        0; //unset ServiceGroup first if already set e.g. during re-processing
                     serviceGroup.Execute(newCdrExt.Cdr, this);
-                    if (newCdrExt.Cdr.CallDirection > 0) break;
+                    if (newCdrExt.Cdr.ServiceGroup > 0) break;
                 }
             }
         }

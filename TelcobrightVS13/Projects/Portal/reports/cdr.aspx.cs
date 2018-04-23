@@ -471,7 +471,7 @@ public partial class ConfigCdr : Page
         string sourceTable = this.DropDownListSource.SelectedIndex == 0 ? "cdrloaded c " : "cdrerror c ";
         string sql = " select * from " + sourceTable + " left join partner inpartner on c.customerid=inpartner.idpartner left join partner outpartner on c.supplierid=outpartner.idpartner " +//basic string
                      " where starttime>='" + startdate + "' and starttime<='" + enddate + "' " +
-                     (serviceGroup >= 0 ? " and calldirection=" + serviceGroup : "")+
+                     (serviceGroup >= 0 ? " and ServiceGroup=" + serviceGroup : "")+
                      (chargingStatus >= 0 ? " and chargingstatus=" + chargingStatus : "");
 
         int idSwitch = this.DropDownListSwitch.SelectedIndex == 0 ? 0 : Convert.ToInt32(this.DropDownListSwitch.SelectedValue);

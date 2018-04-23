@@ -97,8 +97,8 @@ namespace InstallConfig
                         "ChargingStatus must be 1 when durationsec > 0 , otherwise == 0 " },
                     { "obj.inPartnerId > 0",
                         "InPartnerId must be > 0" },
-                    { "obj.CallDirection > 0",
-                        "CallDirection must be > 0" },
+                    { "obj.ServiceGroup > 0",
+                        "ServiceGroup must be > 0" },
                 },
                 ServiceGroupConfigurations = new Dictionary<int, ServiceGroupConfiguration>()
                 {

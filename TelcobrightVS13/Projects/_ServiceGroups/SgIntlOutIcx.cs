@@ -47,7 +47,7 @@ namespace TelcobrightMediation
 				if (thisRoute.partner.PartnerType == IcxPartnerType.ANS 
 					&& thisRoute.NationalOrInternational == RouteLocalityType.International) 
 				{
-					thisCdr.CallDirection = 2; //international Out in IGW
+					thisCdr.ServiceGroup = 2; //international Out in IGW
 					//set year-month id for this call for tt clean & bc selling
 					string tempDateTime = thisCdr.StartTime.ToMySqlStyleDateTimeStrWithoutQuote();
 					thisCdr.field1 =Convert.ToInt32(tempDateTime.Substring(2, 2) + tempDateTime.Substring(5, 2));
@@ -73,8 +73,8 @@ namespace TelcobrightMediation
 		    newSummary.tup_supplierrate = Convert.ToDecimal(cdrExt.Cdr.SupplierRate);
 			newSummary.tup_customercurrency = chargeableCust.idBilledUom;
 			newSummary.customercost = chargeableCust.BilledAmount;
-			newSummary.doubleAmount1 = Convert.ToDouble(chargeableCust.OtherAmount1);
-			newSummary.doubleAmount2 = Convert.ToDouble(chargeableCust.OtherAmount2);
+			newSummary.longDecimalAmount1 = Convert.ToDecimal(chargeableCust.OtherAmount1);
+			newSummary.longDecimalAmount2 = Convert.ToDecimal(chargeableCust.OtherAmount2);
 			newSummary.doubleAmount3 = Convert.ToDouble(chargeableCust.OtherAmount3);
 
 			newSummary.tup_destinationId = "";

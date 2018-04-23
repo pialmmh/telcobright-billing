@@ -54,7 +54,7 @@ namespace TelcobrightMediation
             {
                 if (thisRoute.partner.PartnerType == 3) //foreign partner
                 {
-                    thisCdr.CallDirection = 4; //internationa inco in IGW
+                    thisCdr.ServiceGroup = 4; //internationa inco in IGW
                     int roundedDuration = 0;
                     //set rounded duration [field 88] 100 ms
                     //get decimal part only by rouding the actual duration to 2 decimals first
@@ -162,8 +162,8 @@ namespace TelcobrightMediation
             newSummary.intAmount2 = 0;
             newSummary.longAmount1 = 0;
             newSummary.longAmount2 = 0;
-            newSummary.doubleAmount1 = 0;
-            newSummary.doubleAmount2 = 0;
+            newSummary.longDecimalAmount1 = 0;
+            newSummary.longDecimalAmount2 = 0;
         }
     }
 }

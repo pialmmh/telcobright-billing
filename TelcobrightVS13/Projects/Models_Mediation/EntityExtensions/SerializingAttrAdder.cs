@@ -32,7 +32,7 @@ namespace MediationModel
     [Serializable]
     public partial class enumanstype { };
     [Serializable]
-    public partial class enumcalldirection { };
+    public partial class enumServiceGroup { };
     [Serializable]
     public partial class enumcallforwardingroamingtype { };
     [Serializable]
@@ -90,7 +90,7 @@ namespace MediationModel
     [Serializable]
     public partial class service { };
     [Serializable]
-    public partial class serviceassignmentbycalldirection { };
+    public partial class serviceassignmentbyServiceGroup { };
     [Serializable]
     public partial class reporttemplate { };
     [Serializable]

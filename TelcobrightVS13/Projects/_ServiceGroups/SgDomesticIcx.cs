@@ -46,7 +46,7 @@ namespace TelcobrightMediation
                 if (thisRoute.partner.PartnerType == IcxPartnerType.ANS &&
                     thisRoute.NationalOrInternational == RouteLocalityType.National) //ANS and route=national
                 {
-                    thisCdr.CallDirection = 1; //Domestic in ICX
+                    thisCdr.ServiceGroup = 1; //Domestic in ICX
                 }
             }
         }
@@ -73,8 +73,8 @@ namespace TelcobrightMediation
             newSummary.intAmount2 = 0;
             newSummary.longAmount1 = 0;
             newSummary.longAmount2 = 0;
-            newSummary.doubleAmount1 = 0;
-            newSummary.doubleAmount2 = 0;
+            newSummary.longDecimalAmount1 = 0;
+            newSummary.longDecimalAmount2 = 0;
         }
     }
 }

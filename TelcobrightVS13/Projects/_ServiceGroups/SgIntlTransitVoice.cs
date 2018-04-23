@@ -36,7 +36,7 @@ namespace TelcobrightMediation
 
         public void Execute(cdr cdr, CdrProcessor cdrProcessor)
         {
-            cdr.CallDirection = 100; 
+            cdr.ServiceGroup = 100; 
         }
 
         public void SetServiceGroupWiseSummaryParams(CdrExt cdrExt, AbstractCdrSummary newSummary)
@@ -69,8 +69,8 @@ namespace TelcobrightMediation
             newSummary.intAmount2 = 0;
             newSummary.longAmount1 = 0;
             newSummary.longAmount2 = 0;
-            newSummary.doubleAmount1 = 0;
-            newSummary.doubleAmount2 = 0;
+            newSummary.longDecimalAmount1 = 0;
+            newSummary.longDecimalAmount2 = 0;
         }
 
         public void SetChargingSummaryInCustomerDirection(acc_chargeable chargeableCust, AbstractCdrSummary newSummary)
