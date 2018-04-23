@@ -4,6 +4,7 @@ using System.IO;
 using TelcobrightFileOperations;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Text.RegularExpressions;
 using LibraryExtensions.ConfigHelper;
 using QuartzTelcobright;
 using TelcobrightMediation;
@@ -205,10 +206,15 @@ namespace InstallConfig
                             "roundedduration must be > 0 when durationsec > 0 , otherwise == 0" },
                     },
             });
-            
-            
+
+
             //write all configuration first in ws_topshelf / bin/debug, for production
             //also, in tester/bin/debug
+            List<KeyValuePair<Regex, string>> serviceAliases = new List<KeyValuePair<Regex, string>>
+            {
+                new KeyValuePair<Regex, string>(new Regex(@".*/sg5/.*/sf4/.*"), "International Outgoing"),
+                new KeyValuePair<Regex, string>(new Regex(@".*/sg4/.*/sf1/.*"), "AZ Voice")
+            };
 
             //temp use of ne, remove later
 
