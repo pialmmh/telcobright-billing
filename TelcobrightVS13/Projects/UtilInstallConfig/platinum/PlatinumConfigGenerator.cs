@@ -24,7 +24,7 @@ namespace InstallConfig
         {
             int thisServerId = 1;
             this.OperatorName = "platinum";
-            this.Tbc = new TelcobrightConfig(thisServerId);
+            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Igw, thisServerId);
             this.Tbc.IdTelcobrightPartner = 1;
         }
         public TelcobrightConfig GenerateConfig(DatabaseSetting schedulerDatabaseSetting)

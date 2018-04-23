@@ -11,6 +11,7 @@ namespace TelcobrightMediation
     public class TelcobrightConfig
     {
         //temporarily keep connection strings with help of ne, change later
+        public TelecomOperatortype TelecomOperatortype { get;}
         public List<QuartzTbDaemonConfig> SchedulerDaemonConfigs { get; set; }
         public ResourcePool ResourcePool{ get; set; }
         public SimpleCacheSettings SimpleCacheSettings { get; set; }
@@ -27,12 +28,14 @@ namespace TelcobrightMediation
 
         public List<KeyValuePair<Regex, string>> ServiceAliasesRegex { get; set; } =
             new List<KeyValuePair<Regex, string>>();
-        public TelcobrightConfig(int thisServerId)
+        public TelcobrightConfig(TelecomOperatortype telecomOperatortype,
+            int thisServerId)
         {
             this.Vaults = new List<Vault>();
             this.ServerId = thisServerId;
             this.ApplicationServersConfig = new Dictionary<string, ApplicationServerConfig>();
             this.ResourcePool = new ResourcePool();
+            this.TelecomOperatortype = telecomOperatortype;
         }
 
         public string GetPathIndependentApplicationDirectory()

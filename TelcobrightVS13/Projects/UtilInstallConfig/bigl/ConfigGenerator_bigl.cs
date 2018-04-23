@@ -24,7 +24,7 @@ namespace InstallConfig
         public BiglConfigGenerator()
         {
             int ThisServerId = 1;
-            this.Tbc = new TelcobrightConfig(ThisServerId);
+            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Igw, ThisServerId);
             this.OperatorName = "bigl";
         }
         public TelcobrightConfig GenerateConfig(DatabaseSetting schedulerDatabaseSetting)

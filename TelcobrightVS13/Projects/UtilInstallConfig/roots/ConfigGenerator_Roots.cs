@@ -19,7 +19,7 @@ namespace InstallConfig
         {
             int thisServerId = 1;
             this.OperatorName = "roots";
-            this.Tbc = new TelcobrightConfig(thisServerId);
+            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Igw, thisServerId);
         }
         public TelcobrightConfig GenerateConfig(DatabaseSetting schedulerDatabaseSetting)
         {

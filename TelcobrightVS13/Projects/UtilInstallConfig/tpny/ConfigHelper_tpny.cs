@@ -25,7 +25,7 @@ namespace InstallConfig
         public TpnyConfigGenerator()
         {
             this.OperatorName = "tpny";
-            TelcobrightConfig Tbc = new TelcobrightConfig(1);
+            TelcobrightConfig Tbc = new TelcobrightConfig(TelecomOperatortype.Icx , 1);
         }
         public TelcobrightConfig GenerateConfig(DatabaseSetting schedulerDatabaseSetting)
         {

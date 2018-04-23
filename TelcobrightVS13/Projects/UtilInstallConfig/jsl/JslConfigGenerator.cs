@@ -24,7 +24,7 @@ namespace InstallConfig
         {
             int thisServerId = 1;
             this.OperatorName = "jsl";
-            this.Tbc = new TelcobrightConfig(thisServerId);
+            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, thisServerId);
         }
 
         public TelcobrightConfig GenerateConfig(DatabaseSetting schedulerDatabaseSetting)
@@ -212,8 +212,9 @@ namespace InstallConfig
             //also, in tester/bin/debug
             List<KeyValuePair<Regex, string>> serviceAliases = new List<KeyValuePair<Regex, string>>
             {
-                new KeyValuePair<Regex, string>(new Regex(@".*/sg5/.*/sf4/.*"), "International Outgoing"),
-                new KeyValuePair<Regex, string>(new Regex(@".*/sg4/.*/sf1/.*"), "AZ Voice")
+                new KeyValuePair<Regex, string>(new Regex(@".*/sg2/.*/sf7/.*"), "International Outgoing"),
+                new KeyValuePair<Regex, string>(new Regex(@".*/sg1/.*/sf1/.*"), "Domestic"),
+                new KeyValuePair<Regex, string>(new Regex(@".*/sg3/.*/sf1/.*"), "International Incoming")
             };
 
             //temp use of ne, remove later
