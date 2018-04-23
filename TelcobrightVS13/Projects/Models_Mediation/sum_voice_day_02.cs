@@ -58,7 +58,7 @@ namespace MediationModel
         public override decimal longDecimalAmount2 { get; set; }
         public override int intAmount3 { get; set; }
         public override long longAmount3 { get; set; }
-        public override double doubleAmount3 { get; set; }
+        public override decimal longDecimalAmount3 { get; set; }
         public override decimal decimalAmount1 { get; set; }
         public override decimal decimalAmount2 { get; set; }
         public override decimal decimalAmount3 { get; set; }

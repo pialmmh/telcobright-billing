@@ -53,7 +53,7 @@ namespace MediationModel
 		public abstract long longAmount3 { get; set; }
 		public abstract decimal longDecimalAmount1 { get; set; }
 		public abstract decimal longDecimalAmount2 { get; set; }
-		public abstract double doubleAmount3 { get; set; }
+		public abstract decimal longDecimalAmount3 { get; set; }
 		public abstract decimal decimalAmount1 { get; set; }
 		public abstract decimal decimalAmount2 { get; set; }
 		public abstract decimal decimalAmount3 { get; set; }
@@ -113,7 +113,7 @@ namespace MediationModel
 			longAmount3 += newSummary.longAmount3;
 			this.longDecimalAmount1 += newSummary.longDecimalAmount1;
 			this.longDecimalAmount2 += newSummary.longDecimalAmount2;
-			doubleAmount3 += newSummary.doubleAmount3;
+			this.longDecimalAmount3 += newSummary.longDecimalAmount3;
 
 			decimalAmount1 += newSummary.decimalAmount1;
 			decimalAmount2 += newSummary.decimalAmount2;
@@ -143,7 +143,7 @@ namespace MediationModel
 			longAmount3 = value * longAmount3;
 			this.longDecimalAmount1 = value * this.longDecimalAmount1;
 			this.longDecimalAmount2 = value * this.longDecimalAmount2;
-			doubleAmount3 = value * doubleAmount3;
+			this.longDecimalAmount3 = value * this.longDecimalAmount3;
 
 			decimalAmount1 = value * decimalAmount1;
 			decimalAmount2 = value * decimalAmount2;
@@ -197,7 +197,7 @@ namespace MediationModel
 			newSummary.longAmount3 = this.longAmount3;
 			newSummary.longDecimalAmount1 = this.longDecimalAmount1;
 			newSummary.longDecimalAmount2 = this.longDecimalAmount2;
-			newSummary.doubleAmount3 = this.doubleAmount3;
+			newSummary.longDecimalAmount3 = this.longDecimalAmount3;
 			newSummary.decimalAmount1 = this.decimalAmount1;
 			newSummary.decimalAmount2 = this.decimalAmount2;
 			newSummary.decimalAmount3 = this.decimalAmount3;
@@ -251,7 +251,7 @@ namespace MediationModel
 				{this.longDecimalAmount2.ToMySqlField()},            
 				{intAmount3.ToMySqlField()},               
 				{longAmount3.ToMySqlField()},              
-				{doubleAmount3.ToMySqlField()},            
+				{this.longDecimalAmount3.ToMySqlField()},            
 				{decimalAmount1.ToMySqlField()},           
 				{decimalAmount2.ToMySqlField()},           
 				{decimalAmount3.ToMySqlField()})";
@@ -286,7 +286,7 @@ namespace MediationModel
 				doubleAmount2={this.longDecimalAmount2.ToMySqlField() + " "},
 				intAmount3={intAmount3.ToMySqlField() + " "},
 				longAmount3={longAmount3.ToMySqlField() + " "},
-				doubleAmount3={doubleAmount3.ToMySqlField() + " "},
+				doubleAmount3={this.longDecimalAmount3.ToMySqlField() + " "},
 				decimalAmount1={decimalAmount1.ToMySqlField() + " "},
 				decimalAmount2={decimalAmount2.ToMySqlField() + " "},
 				decimalAmount3={decimalAmount3.ToMySqlField() + " "}

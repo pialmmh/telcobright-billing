@@ -124,6 +124,8 @@ namespace InstallConfig
                                         "outgoingroute cannot be empty" },
                                     {"obj.outPartnerId > 0",
                                         "outPartnerId must be > 0" },
+                                    {"!String.IsNullOrEmpty(obj.CountryCode) and !String.IsNullOrWhiteSpace(obj.CountryCode)",
+                                        "CountryCode cannot be empty" },
                                     {"!String.IsNullOrEmpty(obj.matchedprefixcustomer) and !String.IsNullOrWhiteSpace(obj.matchedprefixcustomer)",
                                         "matchedprefixcustomer cannot be empty" },
                                     {"obj.durationsec > 0 ? obj.CustomerCost > 0 : obj.CustomerCost == 0 ",
@@ -150,6 +152,8 @@ namespace InstallConfig
                             Ratingtrules = new List<RatingRule>()
                             {
                                 new RatingRule() {IdServiceFamily = ServiceFamilyType.A2Z, AssignDirection = 2},
+                                //keep xyz after a2z, there is logic in xyz sf rules for icx & igw that will change
+                                //country code only if empty, or throw exception if different
                                 new RatingRule() {IdServiceFamily = ServiceFamilyType.XyzIgw, AssignDirection = 0}
                             },
                             MediationChecklistForAnsweredCdrs = 
@@ -163,7 +167,7 @@ namespace InstallConfig
                                         "outgoingroute cannot be empty" },
                                     {"obj.outPartnerId > 0",
                                         "outPartnerId must be > 0" },
-                                    {"!String.IsNullOrEmpty(obj.MatchedPrefixY) and !String.IsNullOrWhiteSpace(obj.MatchedPrefixY)",
+                                    { "!String.IsNullOrEmpty(obj.MatchedPrefixY) and !String.IsNullOrWhiteSpace(obj.MatchedPrefixY)",
                                         "MatchedPrefixY cannot be empty" },
                                     {"!String.IsNullOrEmpty(obj.matchedprefixsupplier) and !String.IsNullOrWhiteSpace(obj.matchedprefixsupplier)",
                                         "matchedprefixsupplier cannot be empty" },

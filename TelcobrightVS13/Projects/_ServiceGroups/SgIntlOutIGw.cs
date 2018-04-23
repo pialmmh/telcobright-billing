@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using LibraryExtensions;
 using TelcobrightMediation.Cdr;
 using TransactionTuple = System.ValueTuple<int, int, long, int, long>;
+
 namespace TelcobrightMediation
 {
 
@@ -14,17 +15,22 @@ namespace TelcobrightMediation
         private readonly SgIntlTransitVoice _sgIntlTransitVoice = new SgIntlTransitVoice();
         public override string ToString() => this.RuleName;
         public string RuleName => "International Outgoing Calls [IGW]";
-        public string HelpText => "Service group International Outgoing for BD IGW. Old common mediation codes for IGW, could not separate in short time, covers both intl in/out";
+
+        public string HelpText =>
+            "Service group International Outgoing for BD IGW. Old common mediation codes for IGW, could not separate in short time, covers both intl in/out";
+
         public int Id => 5;
         private Dictionary<string, Type> SummaryTargetTables { get; }
-        public SgIntlOutIGw()//constructor
+
+        public SgIntlOutIGw() //constructor
         {
             this.SummaryTargetTables = new Dictionary<string, Type>()
-                {
-                    { "sum_voice_day_02",typeof(sum_voice_day_02)},
-                    { "sum_voice_hr_02" ,typeof(sum_voice_hr_02) },
-                };
+            {
+                {"sum_voice_day_02", typeof(sum_voice_day_02)},
+                {"sum_voice_hr_02", typeof(sum_voice_hr_02)},
+            };
         }
+
         public Dictionary<string, Type> GetSummaryTargetTables()
         {
             return this.SummaryTargetTables;
@@ -39,7 +45,7 @@ namespace TelcobrightMediation
         {
             //international in call direction/service group
             var dicRoutes = cdrProcessor.CdrJobContext.MediationContext.MefServiceGroupContainer.SwitchWiseRoutes;
-            var key= new ValueTuple<int,string>(thisCdr.SwitchId,thisCdr.incomingroute);
+            var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.incomingroute);
             route thisRoute = null;
             dicRoutes.TryGetValue(key, out thisRoute);
             if (thisRoute != null)
@@ -111,7 +117,8 @@ namespace TelcobrightMediation
                             {
                                 partnerprefix thisPrefix = null;
                                 string matchStr = originatingCallingNumber.Substring(0, iteration + 1);
-                                cdrProcessor.CdrJobContext.MediationContext.DictAnsOrig.TryGetValue(matchStr, out thisPrefix);
+                                cdrProcessor.CdrJobContext.MediationContext.DictAnsOrig.TryGetValue(matchStr,
+                                    out thisPrefix);
                                 if (thisPrefix != null)
                                 {
                                     ansPrefixOrig = thisPrefix.Prefix;
@@ -136,18 +143,19 @@ namespace TelcobrightMediation
             if (cdrExt.Cdr.ChargingStatus != 1) return;
 
             acc_chargeable chargeableCust = null;
-            cdrExt.Chargeables.TryGetValue(new ValueTuple<int, int,int>(this.Id, 4, 1), out chargeableCust);
+            cdrExt.Chargeables.TryGetValue(new ValueTuple<int, int, int>(this.Id, 4, 1), out chargeableCust);
             if (chargeableCust == null)
             {
                 throw new Exception("Chargeable not found for customer direction.");
             }
-            
-            newSummary.tup_customerrate = chargeableCust.unitPriceOrCharge;
-            newSummary.tup_customercurrency = chargeableCust.idBilledUom;
-            newSummary.customercost = chargeableCust.BilledAmount;
-            newSummary.longDecimalAmount1 = Convert.ToDecimal(chargeableCust.OtherAmount1);
-            newSummary.longDecimalAmount2 = Convert.ToDecimal(chargeableCust.OtherAmount2);
-            newSummary.doubleAmount3 = Convert.ToDouble(chargeableCust.OtherAmount3);
+
+            newSummary.customercost = Convert.ToDecimal(chargeableCust.BilledAmount); //invoice amount
+            newSummary.tup_customerrate = Convert.ToDecimal(chargeableCust.OtherDecAmount1); //x rate
+            newSummary.tup_supplierrate = Convert.ToDecimal(chargeableCust.OtherDecAmount2); //y rate
+            newSummary.tup_customercurrency = Convert.ToDecimal(chargeableCust.OtherDecAmount3).ToString(); //usd rate
+            newSummary.longDecimalAmount1 = Convert.ToDecimal(chargeableCust.OtherAmount1); //x amount
+            newSummary.longDecimalAmount2 = Convert.ToDecimal(chargeableCust.OtherAmount2); //y amount
+            newSummary.longDecimalAmount3 = Convert.ToDecimal(chargeableCust.OtherAmount3); //z amount
 
             acc_chargeable chargeableSupp = null;
             cdrExt.Chargeables.TryGetValue(new ValueTuple<int, int, int>(this.Id, 1, 2), out chargeableSupp);
@@ -156,18 +164,6 @@ namespace TelcobrightMediation
                 throw new Exception("Chargeable info not found for supplier direction.");
             }
             this._sgIntlTransitVoice.SetChargingSummaryInSupplierDirection(chargeableSupp, newSummary);
-
-            newSummary.tup_destinationId = "";
-            newSummary.tup_tax1currency = "";
-            newSummary.tup_tax2currency = "";
-            newSummary.tup_vatcurrency = "";
-            newSummary.tax1 = 0;
-            newSummary.tax2 = 0;
-            newSummary.vat = 0;
-            newSummary.intAmount1 = 0;
-            newSummary.intAmount2 = 0;
-            newSummary.longAmount1 = 0;
-            newSummary.longAmount2 = 0;
         }
     }
 }

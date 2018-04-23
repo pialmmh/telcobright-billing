@@ -4,7 +4,7 @@ using MediationModel;
 using System.Collections.Generic;
 using LibraryExtensions;
 using TelcobrightMediation.Cdr;
-using TransactionTuple = System.ValueTuple<int, int, long, int,long>;
+using TransactionTuple = System.ValueTuple<int, int, long, int, long>;
 
 namespace TelcobrightMediation
 {
@@ -47,7 +47,7 @@ namespace TelcobrightMediation
                 cdrProcessor.CdrJobContext.MediationContext.MefServiceGroupContainer;
             //international in call direction/service group
             var dicRoutes = servGroupData.SwitchWiseRoutes;
-            var key=new ValueTuple<int,string>(thisCdr.SwitchId,thisCdr.incomingroute); 
+            var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.incomingroute);
             route thisRoute = null;
             dicRoutes.TryGetValue(key, out thisRoute);
             if (thisRoute != null)
