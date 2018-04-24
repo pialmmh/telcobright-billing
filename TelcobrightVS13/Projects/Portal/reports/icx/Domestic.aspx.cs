@@ -28,7 +28,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
 
 
 
-        string constructedSQL = new SqlHelperIntlInIgw
+        string constructedSQL = new SqlHelperIntlInIcx
                         (StartDate,
                          EndtDate,
                          groupInterval,
@@ -106,19 +106,13 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
         else GridView1.Columns[1].Visible = false;
         if (CheckBoxShowCost.Checked == true)
         {
-            GridView1.Columns[10].Visible = false;
-            GridView1.Columns[11].Visible = true;
-            GridView1.Columns[12].Visible = false;
-            GridView1.Columns[13].Visible = false;
-            GridView1.Columns[14].Visible = false;
+            GridView1.Columns[12].Visible = true;
+            GridView1.Columns[13].Visible = true;
         }
         else
         {
-            GridView1.Columns[10].Visible = false;
-            GridView1.Columns[11].Visible = false;
             GridView1.Columns[12].Visible = false;
             GridView1.Columns[13].Visible = false;
-            GridView1.Columns[14].Visible = false;
         }
         if (CheckBoxShowPerformance.Checked == true)
         {
@@ -214,7 +208,9 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
                         tr.CallStat.TotalActualDuration += tr.ForceConvertToDouble(dr["Paid Minutes (International Incoming)"]);
                         tr.CallStat.TotalRoundedDuration += tr.ForceConvertToDouble(dr["RoundedDuration"]);
                         tr.CallStat.TotalDuration1 += tr.ForceConvertToDouble(dr["Duration1"]);
-                        NoOfCallsVsPdd cpdd = new NoOfCallsVsPdd(tr.ForceConvertToLong(dr["Number Of Calls (International Incoming)"]), tr.ForceConvertToDouble(dr["PDD"]));
+                        tr.CallStat.TotalCustomerCost += tr.ForceConvertToDouble(dr["customercost"]);
+                        tr.CallStat.BtrcRevShare += tr.ForceConvertToDouble(dr["tax1"]);
+                    NoOfCallsVsPdd cpdd = new NoOfCallsVsPdd(tr.ForceConvertToLong(dr["Number Of Calls (International Incoming)"]), tr.ForceConvertToDouble(dr["PDD"]));
                         callVsPdd.Add(cpdd);
                     }
                     tr.CallStat.TotalActualDuration = Math.Round(tr.CallStat.TotalActualDuration, 2);
@@ -223,6 +219,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
                     tr.CallStat.TotalDuration3 = Math.Round(tr.CallStat.TotalDuration3, 2);
                     tr.CallStat.TotalDuration4 = Math.Round(tr.CallStat.TotalDuration4, 2);
                     tr.CallStat.TotalRoundedDuration = Math.Round(tr.CallStat.TotalRoundedDuration, 2);
+                    tr.CallStat.TotalCustomerCost = Math.Round(tr.CallStat.TotalCustomerCost, 2);
                     tr.CallStat.CalculateAsr(2);
                     tr.CallStat.CalculateAcd(2);
                     tr.CallStat.CalculateAveragePdd(callVsPdd, 2);
@@ -246,6 +243,8 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
                     fieldSummaries.Add("pdd", tr.CallStat.Pdd);
                     fieldSummaries.Add("ccr", tr.CallStat.Ccr);
                     fieldSummaries.Add("ccrbycc", tr.CallStat.CcRbyCauseCode);
+                    fieldSummaries.Add("customercost", tr.CallStat.TotalCustomerCost);
+                    fieldSummaries.Add("tax1", tr.CallStat.BtrcRevShare);
                     tr.FieldSummaries = fieldSummaries;
 
                     Session["IntlIn"] = tr;//save to session

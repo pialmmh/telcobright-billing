@@ -569,18 +569,14 @@
                             DataFormatString="{0:F2}"
                             HeaderText="ICX/IOS (USD)"
                             SortExpression="costicxin" />
-                        <asp:BoundField DataField="costvatcomissionin"
-                            DataFormatString="{0:F2}"
-                            HeaderText="BTRC (USD)"
-                            SortExpression="costvatcomissionin" />
-
-
-
                         <asp:BoundField DataField="customercost"
                             DataFormatString="{0:F2}"
-                            HeaderText="Revenue [USD]"
+                            HeaderText="Revenue"
                             SortExpression="customercost" />
-
+                        <asp:BoundField DataField="tax1"
+                            DataFormatString="{0:F2}"
+                            HeaderText="BTRC Revenue Share"
+                            SortExpression="tax1" />
                         <asp:BoundField DataField="igwrevenuein"
                             DataFormatString="{0:F2}"
                             HeaderText="IGW $"

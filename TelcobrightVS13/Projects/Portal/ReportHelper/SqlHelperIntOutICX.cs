@@ -5,8 +5,8 @@ using System.Web;
 
 namespace PortalApp.ReportHelper
 {
-    public class SqlHelperIntOutICX : AbstractSqlHelper{
-    public SqlHelperIntOutICX(string startDate, string endDate, string groupInterval, string tablename,
+    public class SqlHelperIntOutIcx : AbstractSqlHelper{
+    public SqlHelperIntOutIcx(string startDate, string endDate, string groupInterval, string tablename,
                                     List<string> groupExpressions, List<string> whereExpressions)
     {
         StartDate = startDate;

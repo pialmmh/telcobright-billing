@@ -593,7 +593,11 @@ namespace InstallConfig
                             "GridView1.Columns[3].Visible=false",//fake ans
                             "GridView1.Columns[6].Visible=false",//connected calls
                             "GridView1.Columns[7].Visible=false",//actual duration
-                            "GridView1.Columns[8].Visible=false",//billed duration
+                            "GridView1.Columns[9].Visible=false",//carrier duration
+                            "GridView1.Columns[10].Visible=false",//ANS $
+                            "GridView1.Columns[11].Visible=false",//ICX/IOS
+                            "GridView1.Columns[14].Visible=false",//IGW$
+                            "GridView1.Columns[15].Visible=false",//Profit
                             "GridView1.Columns[16].Visible=false",//ASR
                             "GridView1.Columns[18].Visible=false",//PDD
                             "GridView1.Columns[19].Visible=false",//CCR

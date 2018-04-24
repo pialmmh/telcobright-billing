@@ -572,14 +572,14 @@
                             SortExpression="costicxin" />
                         <asp:BoundField DataField="costvatcomissionin"
                             DataFormatString="{0:F2}"
-                            HeaderText="BTRC (USD)"
-                            SortExpression="costvatcomissionin" />
+                            HeaderText="BTRC Revenue Share"
+                            SortExpression="tax1" />
 
 
 
                         <asp:BoundField DataField="customercost"
                             DataFormatString="{0:F2}"
-                            HeaderText="Revenue [USD]"
+                            HeaderText="Revenue"
                             SortExpression="customercost" />
 
                         <asp:BoundField DataField="igwrevenuein"

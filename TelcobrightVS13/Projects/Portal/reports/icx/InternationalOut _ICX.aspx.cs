@@ -32,7 +32,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
 
 
 
-        string constructedSQL = new SqlHelperIntOutICX
+        string constructedSQL = new SqlHelperIntOutIcx
                         (StartDate,
                          EndtDate,
                          groupInterval,
