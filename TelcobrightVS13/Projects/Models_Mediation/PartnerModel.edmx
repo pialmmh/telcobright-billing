@@ -2248,9 +2248,9 @@ warning 6002: The table/view 'def.platinum.sum_voice_day_01' does not have a pri
           <Property Name="PDD" Type="double" Nullable="false" />
           <Property Name="customercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="suppliercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
-          <Property Name="tax1" Type="decimal" Precision="13" Scale="4" Nullable="false" />
-          <Property Name="tax2" Type="decimal" Precision="13" Scale="4" Nullable="false" />
-          <Property Name="vat" Type="decimal" Precision="13" Scale="4" Nullable="false" />
+          <Property Name="tax1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="tax2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="vat" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="intAmount1" Type="int" Nullable="false" />
           <Property Name="intAmount2" Type="int" Nullable="false" />
           <Property Name="longAmount1" Type="bigint" Nullable="false" />
@@ -2350,9 +2350,9 @@ warning 6002: The table/view 'def.platinum.sum_voice_day_02' does not have a pri
           <Property Name="PDD" Type="double" Nullable="false" />
           <Property Name="customercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="suppliercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
-          <Property Name="tax1" Type="decimal" Precision="13" Scale="4" Nullable="false" />
-          <Property Name="tax2" Type="decimal" Precision="13" Scale="4" Nullable="false" />
-          <Property Name="vat" Type="decimal" Precision="13" Scale="4" Nullable="false" />
+          <Property Name="tax1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="tax2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="vat" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="intAmount1" Type="int" Nullable="false" />
           <Property Name="intAmount2" Type="int" Nullable="false" />
           <Property Name="longAmount1" Type="bigint" Nullable="false" />
@@ -2452,9 +2452,9 @@ warning 6002: The table/view 'def.platinum.sum_voice_day_03' does not have a pri
           <Property Name="PDD" Type="double" Nullable="false" />
           <Property Name="customercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="suppliercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
-          <Property Name="tax1" Type="decimal" Precision="13" Scale="4" Nullable="false" />
-          <Property Name="tax2" Type="decimal" Precision="13" Scale="4" Nullable="false" />
-          <Property Name="vat" Type="decimal" Precision="13" Scale="4" Nullable="false" />
+          <Property Name="tax1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="tax2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="vat" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="intAmount1" Type="int" Nullable="false" />
           <Property Name="intAmount2" Type="int" Nullable="false" />
           <Property Name="longAmount1" Type="bigint" Nullable="false" />
@@ -2554,9 +2554,9 @@ warning 6002: The table/view 'def.platinum.sum_voice_hr_01' does not have a prim
           <Property Name="PDD" Type="double" Nullable="false" />
           <Property Name="customercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="suppliercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
-          <Property Name="tax1" Type="decimal" Precision="13" Scale="4" Nullable="false" />
-          <Property Name="tax2" Type="decimal" Precision="13" Scale="4" Nullable="false" />
-          <Property Name="vat" Type="decimal" Precision="13" Scale="4" Nullable="false" />
+          <Property Name="tax1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="tax2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="vat" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="intAmount1" Type="int" Nullable="false" />
           <Property Name="intAmount2" Type="int" Nullable="false" />
           <Property Name="longAmount1" Type="bigint" Nullable="false" />
@@ -2656,9 +2656,9 @@ warning 6002: The table/view 'def.platinum.sum_voice_hr_02' does not have a prim
           <Property Name="PDD" Type="double" Nullable="false" />
           <Property Name="customercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="suppliercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
-          <Property Name="tax1" Type="decimal" Precision="13" Scale="4" Nullable="false" />
-          <Property Name="tax2" Type="decimal" Precision="13" Scale="4" Nullable="false" />
-          <Property Name="vat" Type="decimal" Precision="13" Scale="4" Nullable="false" />
+          <Property Name="tax1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="tax2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="vat" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="intAmount1" Type="int" Nullable="false" />
           <Property Name="intAmount2" Type="int" Nullable="false" />
           <Property Name="longAmount1" Type="bigint" Nullable="false" />
@@ -2758,9 +2758,9 @@ warning 6002: The table/view 'def.platinum.sum_voice_hr_03' does not have a prim
           <Property Name="PDD" Type="double" Nullable="false" />
           <Property Name="customercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="suppliercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
-          <Property Name="tax1" Type="decimal" Precision="13" Scale="4" Nullable="false" />
-          <Property Name="tax2" Type="decimal" Precision="13" Scale="4" Nullable="false" />
-          <Property Name="vat" Type="decimal" Precision="13" Scale="4" Nullable="false" />
+          <Property Name="tax1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="tax2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="vat" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="intAmount1" Type="int" Nullable="false" />
           <Property Name="intAmount2" Type="int" Nullable="false" />
           <Property Name="longAmount1" Type="bigint" Nullable="false" />

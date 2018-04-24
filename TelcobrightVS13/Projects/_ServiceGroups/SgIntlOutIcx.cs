@@ -81,7 +81,7 @@ namespace TelcobrightMediation
             newSummary.longDecimalAmount1 = Convert.ToDecimal(chargeableCust.OtherAmount1); //x amount
             newSummary.longDecimalAmount2 = Convert.ToDecimal(chargeableCust.OtherAmount2); //y amount
             newSummary.longDecimalAmount3 = Convert.ToDecimal(chargeableCust.OtherAmount3); //z amount
-            newSummary.suppliercost = Convert.ToDecimal(chargeableCust.TaxAmount1); //btrc rev share
+            newSummary.tax1 = Convert.ToDecimal(chargeableCust.TaxAmount1);//btrc rev share
         }
     }
 }

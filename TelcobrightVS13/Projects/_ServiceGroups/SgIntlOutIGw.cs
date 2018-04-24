@@ -156,7 +156,7 @@ namespace TelcobrightMediation
             newSummary.longDecimalAmount1 = Convert.ToDecimal(chargeableCust.OtherAmount1); //x amount
             newSummary.longDecimalAmount2 = Convert.ToDecimal(chargeableCust.OtherAmount2); //y amount
             newSummary.longDecimalAmount3 = Convert.ToDecimal(chargeableCust.OtherAmount3); //z amount
-
+            newSummary.tax1 = Convert.ToDecimal(chargeableCust.TaxAmount1);//btrc
             acc_chargeable chargeableSupp = null;
             cdrExt.Chargeables.TryGetValue(new ValueTuple<int, int, int>(this.Id, 1, 2), out chargeableSupp);
             if (chargeableSupp == null)
