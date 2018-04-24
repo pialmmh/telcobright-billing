@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.UI.WebControls;
 
@@ -119,8 +120,18 @@ namespace PortalApp
             }
             return "";
         }
- 
-      
+
+        protected virtual string GetGroupByWithPreExistingClauses(string preExistingGrouByExpression)
+        {
+            List<string> nonEmptyExpressions = groupExpressions.Where(s => !string.IsNullOrEmpty(s)).ToList();
+            if (nonEmptyExpressions.Count > 0)
+            {
+                return new StringBuilder(preExistingGrouByExpression).Append(string.Join(",", nonEmptyExpressions)).ToString();
+            }
+            return preExistingGrouByExpression;
+        }
+
+
         protected string GetDateExpression(string groupInterval)
         {
             return dateExpressions[groupInterval];

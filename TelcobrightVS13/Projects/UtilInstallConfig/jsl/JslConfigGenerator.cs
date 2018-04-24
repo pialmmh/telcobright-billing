@@ -659,7 +659,6 @@ namespace InstallConfig
                             "GridView1.Columns[16].Visible=false",//CCR
                             "GridView1.Columns[17].Visible=false",//connect by cc
                             "GridView1.Columns[18].Visible=false",//CCR by cc
-                            "GridView1.Columns[23].Visible=false",//Partner Cost
                         },
                         SpringExpressionIfNotRole = new List<string>()
                         {

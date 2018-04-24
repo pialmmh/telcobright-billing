@@ -32,7 +32,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
 
 
 
-        string constructedSQL = new SqlHelperIntOut
+        string constructedSQL = new SqlHelperIntOutICX
                         (StartDate,
                          EndtDate,
                          groupInterval,
@@ -128,17 +128,19 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
 
         if (CheckBoxShowCost.Checked == true)
         {
-            GridView1.Columns[19].Visible = true;
-            GridView1.Columns[20].Visible = true;
-            GridView1.Columns[21].Visible = true;
             GridView1.Columns[22].Visible = true;
+            GridView1.Columns[23].Visible = true;
+            GridView1.Columns[24].Visible = true;
+            GridView1.Columns[25].Visible = true;
+            GridView1.Columns[26].Visible = true;
         }
         else
         {
-            GridView1.Columns[19].Visible = false;
-            GridView1.Columns[20].Visible = false;
-            GridView1.Columns[21].Visible = false;
             GridView1.Columns[22].Visible = false;
+            GridView1.Columns[23].Visible = false;
+            GridView1.Columns[24].Visible = false;
+            GridView1.Columns[25].Visible = false;
+            GridView1.Columns[26].Visible = false;
         }
         
 

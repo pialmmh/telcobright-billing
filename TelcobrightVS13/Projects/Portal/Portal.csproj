@@ -707,6 +707,7 @@
     <Compile Include="ReportHelper\SqlHelperDomestic.cs" />
     <Compile Include="ReportHelper\SqlHelperInIGWRouteWise.cs" />
     <Compile Include="ReportHelper\SqlHelperIntlInIGW.cs" />
+    <Compile Include="ReportHelper\SqlHelperIntOutICX.cs" />
     <Compile Include="ReportHelper\SqlHelperIntOut.cs" />
     <Compile Include="reports\BTRCReport.aspx.cs">
       <DependentUpon>BTRCReport.aspx</DependentUpon>

@@ -5,8 +5,8 @@ using System.Web;
 
 namespace PortalApp.ReportHelper
 {
-    public class SqlHelperIntOut : AbstractSqlHelper{
-    public  SqlHelperIntOut(string startDate, string endDate, string groupInterval, string tablename,
+    public class SqlHelperIntOutICX : AbstractSqlHelper{
+    public SqlHelperIntOutICX(string startDate, string endDate, string groupInterval, string tablename,
                                     List<string> groupExpressions, List<string> whereExpressions)
     {
         StartDate = startDate;
@@ -43,7 +43,10 @@ namespace PortalApp.ReportHelper
                 Y AS 'Y (USD)',
                 Z AS 'Z (BDT)',
                 revenueigwout,
-                suppliercost                          
+                suppliercost, 
+                XRate AS 'X RATE(BDT)', 
+                YRate AS 'Y RATE(USD)', 
+                USDRate AS 'Dollar Rate' 
                 FROM
                 (
 	            SELECT {GetDateExpression(this.groupInterval)} AS Date,
@@ -69,13 +72,16 @@ namespace PortalApp.ReportHelper
                 SUM(longDecimalAmount2) AS Y,
                 SUM(longDecimalAmount3) AS Z,
                 SUM(customercost) AS revenueigwout,
-                Sum(tax1) AS suppliercost
+                SUM(tax1) AS suppliercost, 
+                SUM(tup_customerrate) as XRate, 
+                SUM(tup_supplierrate) as YRate, 
+                SUM(tup_customercurrency) as USDRate 
 
 	            FROM {TableName}
                 WHERE tup_starttime>='{StartDate}'
                 AND tup_starttime<'{EndDate}'
                 {GetWhereClauseAdditional()}
-                {GetGroupBy()}
+                {GetGroupByWithPreExistingClauses(" GROUP BY tup_customerrate, tup_supplierrate, tup_customercurrency, ")}
             
             ) x
             LEFT JOIN partner cr
