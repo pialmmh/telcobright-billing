@@ -20,6 +20,7 @@ namespace TelcobrightMediation.Cdr
 
     public class CdrExt
     {
+        //todo: implement IsPartial Property
         private PartialCdrContainer _partialCdrContainer;
         private readonly List<acc_transaction> _reversedTransactions = new List<acc_transaction>();
         public CdrNewOldType CdrNewOldType { get; }

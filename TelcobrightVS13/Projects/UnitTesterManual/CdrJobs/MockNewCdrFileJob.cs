@@ -67,9 +67,12 @@ namespace UnitTesterManual
             if (this.PartialCollectionEnabled)
             {
                 this.nonPartialCount = preProcessor.TxtCdrRows.Count(r => r[Fn.Partialflag] == "0");
-                var partialRows = preProcessor.TxtCdrRows.Where(r =>
-                    r[Fn.Partialflag].ValueIn(new[] {"1", "2", "3"}) && r[Fn.Partialflag] != "0");
-                this.rawPartialCount = partialRows.Count();
+                List<string> partialCdrIndicators = this.Input.CdrSetting.PartialCdrFlagIndicators;
+                List<string[]> partialRows = preProcessor.TxtCdrRows.Where(r =>
+                        partialCdrIndicators.Contains(r[Fn.Partialflag])).ToList();
+                this.rawPartialCount = partialRows.Count;
+                if (preProcessor.TxtCdrRows.Count!=this.nonPartialCount+this.rawPartialCount)
+                    throw new Exception("TxtCdr rows with partial & non-partial flag do not match total decoded text rows");
                 this.distinctPartialCount = partialRows.GroupBy(r => r[Fn.Uniquebillid]).Count();
             }
 

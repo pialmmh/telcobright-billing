@@ -19,7 +19,6 @@ using LibraryExtensions;
 using TelcobrightMediation.Config;
 using LibraryExtensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TelcobrightMediation.EntityHelpers;
 
 namespace UnitTesterManual
 {

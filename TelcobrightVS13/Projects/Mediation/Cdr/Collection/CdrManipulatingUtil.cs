@@ -67,18 +67,18 @@ namespace TelcobrightMediation.Mediation.Cdr
                 convertedCdr.USDRateY = txtRow[Fn.Usdratey].GetValueOrNull<decimal>();
                 convertedCdr.matchedprefixcustomer = txtRow[Fn.Matchedprefixcustomer];
                 convertedCdr.matchedprefixsupplier = txtRow[Fn.Matchedprefixsupplier];
-                convertedCdr.CustomerCost = Convert.ToDecimal(txtRow[Fn.Customercost].GetValueOrNull<double>());
-                convertedCdr.SupplierCost = Convert.ToDecimal(txtRow[Fn.Suppliercost].GetValueOrNull<double>());
-                convertedCdr.CostANSIn = Convert.ToDecimal(txtRow[Fn.Costansin].GetValueOrNull<double>());
-                convertedCdr.CostICXIn = Convert.ToDecimal(txtRow[Fn.Costicxin].GetValueOrNull<double>());
-                convertedCdr.CostVATCommissionIn = Convert.ToDecimal(txtRow[Fn.Costvatcommissionin].GetValueOrNull<double>());
-                convertedCdr.IGWRevenueIn = Convert.ToDecimal(txtRow[Fn.Igwrevenuein].GetValueOrNull<double>());
-                convertedCdr.RevenueANSOut = Convert.ToDecimal(txtRow[Fn.Revenueansout].GetValueOrNull<double>());
-                convertedCdr.RevenueIGWOut = Convert.ToDecimal(txtRow[Fn.Revenueigwout].GetValueOrNull<double>());
-                convertedCdr.RevenueICXOut = Convert.ToDecimal(txtRow[Fn.Revenueicxout].GetValueOrNull<double>());
-                convertedCdr.RevenueVATCommissionOut = Convert.ToDecimal(txtRow[Fn.Revenuevatcommissionout].GetValueOrNull<double>());
-                convertedCdr.SubscriberChargeXOut = Convert.ToDecimal(txtRow[Fn.Subscriberchargexout].GetValueOrNull<double>());
-                convertedCdr.CarrierCostYIGWOut = Convert.ToDecimal(txtRow[Fn.Carriercostyigwout].GetValueOrNull<double>());
+                convertedCdr.CustomerCost = System.Convert.ToDecimal(txtRow[Fn.Customercost].GetValueOrNull<double>());
+                convertedCdr.SupplierCost = System.Convert.ToDecimal(txtRow[Fn.Suppliercost].GetValueOrNull<double>());
+                convertedCdr.CostANSIn = System.Convert.ToDecimal(txtRow[Fn.Costansin].GetValueOrNull<double>());
+                convertedCdr.CostICXIn = System.Convert.ToDecimal(txtRow[Fn.Costicxin].GetValueOrNull<double>());
+                convertedCdr.CostVATCommissionIn = System.Convert.ToDecimal(txtRow[Fn.Costvatcommissionin].GetValueOrNull<double>());
+                convertedCdr.IGWRevenueIn = System.Convert.ToDecimal(txtRow[Fn.Igwrevenuein].GetValueOrNull<double>());
+                convertedCdr.RevenueANSOut = System.Convert.ToDecimal(txtRow[Fn.Revenueansout].GetValueOrNull<double>());
+                convertedCdr.RevenueIGWOut = System.Convert.ToDecimal(txtRow[Fn.Revenueigwout].GetValueOrNull<double>());
+                convertedCdr.RevenueICXOut = System.Convert.ToDecimal(txtRow[Fn.Revenueicxout].GetValueOrNull<double>());
+                convertedCdr.RevenueVATCommissionOut = System.Convert.ToDecimal(txtRow[Fn.Revenuevatcommissionout].GetValueOrNull<double>());
+                convertedCdr.SubscriberChargeXOut = System.Convert.ToDecimal(txtRow[Fn.Subscriberchargexout].GetValueOrNull<double>());
+                convertedCdr.CarrierCostYIGWOut = System.Convert.ToDecimal(txtRow[Fn.Carriercostyigwout].GetValueOrNull<double>());
                 convertedCdr.ANSPrefixOrig = txtRow[Fn.Ansprefixorig];
                 convertedCdr.AnsIdOrig = txtRow[Fn.Ansidorig].GetValueOrNull<int>();
                 convertedCdr.AnsPrefixTerm = txtRow[Fn.Ansprefixterm];
@@ -150,7 +150,7 @@ namespace TelcobrightMediation.Mediation.Cdr
         {
             cdrinconsistent inconsistentCdr = new cdrinconsistent();
             inconsistentCdr.SwitchId = txtRow[Fn.Switchid];
-            inconsistentCdr.idcall = Convert.ToInt64(txtRow[Fn.Idcall]);
+            inconsistentCdr.idcall = System.Convert.ToInt64(txtRow[Fn.Idcall]);
             inconsistentCdr.SequenceNumber = txtRow[Fn.Sequencenumber];
             inconsistentCdr.FileName = txtRow[Fn.Filename];
             inconsistentCdr.ServiceGroup = txtRow[Fn.ServiceGroup];
@@ -364,5 +364,129 @@ namespace TelcobrightMediation.Mediation.Cdr
             newInstance.ActualStartTime = sourceCdr.ActualStartTime;
             return newInstance;
         }
+
+        public static cdrerror ConvertCdrToCdrError(ICdr sourceCdr)
+        {
+            Func<DateTime, string> dateToString = sourceDate =>
+                sourceDate.ToMySqlStyleDateTimeStrWithoutQuote();
+            Func<DateTime?, string> nullableDateToString = sourceDate =>
+            {
+                string strDate = "";
+                strDate = sourceDate != null
+                    ? dateToString(System.Convert.ToDateTime(sourceDate))
+                    : "";
+                return strDate;
+            };
+            return new cdrerror()//star with cdr error, then cast if necessary
+            {
+                SwitchId = sourceCdr.SwitchId.ToString(),
+                idcall = sourceCdr.idcall.ToString(),
+                SequenceNumber = sourceCdr.SequenceNumber.ToString(),
+                FileName = sourceCdr.FileName.ToString(),
+                ServiceGroup = sourceCdr.ServiceGroup.ToString(),
+                incomingroute = sourceCdr.incomingroute.ToString(),
+                OriginatingIP = sourceCdr.OriginatingIP.ToString(),
+                OPC = sourceCdr.OPC.ToString(),
+                OriginatingCIC = sourceCdr.OriginatingCIC.ToString(),
+                OriginatingCalledNumber = sourceCdr.OriginatingCalledNumber.ToString(),
+                TerminatingCalledNumber = sourceCdr.TerminatingCalledNumber.ToString(),
+                OriginatingCallingNumber = sourceCdr.OriginatingCallingNumber.ToString(),
+                TerminatingCallingNumber = sourceCdr.TerminatingCallingNumber.ToString(),
+                CustomerPrePaid = sourceCdr.CustomerPrePaid.ToString(),
+                DurationSec = sourceCdr.DurationSec.ToString(),
+                EndTime = nullableDateToString(sourceCdr.EndTime),
+                ConnectTime = nullableDateToString(sourceCdr.ConnectTime),
+                AnswerTime = nullableDateToString(sourceCdr.AnswerTime),
+                ChargingStatus = sourceCdr.ChargingStatus.ToString(),
+                PDD = sourceCdr.PDD.ToString(),
+                CountryCode = sourceCdr.CountryCode.ToString(),
+                MinuteID = sourceCdr.MinuteID.ToString(),
+                ReleaseDirection = sourceCdr.ReleaseDirection.ToString(),
+                ReleaseCauseSystem = sourceCdr.ReleaseCauseSystem.ToString(),
+                ReleaseCauseEgress = sourceCdr.ReleaseCauseEgress.ToString(),
+                outgoingroute = sourceCdr.outgoingroute.ToString(),
+                TerminatingIP = sourceCdr.TerminatingIP.ToString(),
+                DPC = sourceCdr.DPC.ToString(),
+                TerminatingCIC = sourceCdr.TerminatingCIC.ToString(),
+                StartTime = sourceCdr.StartTime.ToMySqlStyleDateTimeStrWithoutQuote(),
+                inPartnerId = sourceCdr.inPartnerId.ToString(),
+                CustomerRate = sourceCdr.CustomerRate.ToString(),
+                outPartnerId = sourceCdr.outPartnerId.ToString(),
+                SupplierRate = sourceCdr.SupplierRate.ToString(),
+                MatchedPrefixY = sourceCdr.MatchedPrefixY.ToString(),
+                USDRateY = sourceCdr.USDRateY.ToString(),
+                matchedprefixcustomer = sourceCdr.matchedprefixcustomer.ToString(),
+                matchedprefixsupplier = sourceCdr.matchedprefixsupplier.ToString(),
+                CustomerCost = sourceCdr.CustomerCost.ToString(),
+                SupplierCost = sourceCdr.SupplierCost.ToString(),
+                CostANSIn = sourceCdr.CostANSIn.ToString(),
+                CostICXIn = sourceCdr.CostICXIn.ToString(),
+                CostVATCommissionIn = sourceCdr.CostVATCommissionIn.ToString(),
+                IGWRevenueIn = sourceCdr.IGWRevenueIn.ToString(),
+                RevenueANSOut = sourceCdr.RevenueANSOut.ToString(),
+                RevenueIGWOut = sourceCdr.RevenueIGWOut.ToString(),
+                RevenueICXOut = sourceCdr.RevenueICXOut.ToString(),
+                RevenueVATCommissionOut = sourceCdr.RevenueVATCommissionOut.ToString(),
+                SubscriberChargeXOut = sourceCdr.SubscriberChargeXOut.ToString(),
+                CarrierCostYIGWOut = sourceCdr.CarrierCostYIGWOut.ToString(),
+                ANSPrefixOrig = sourceCdr.ANSPrefixOrig.ToString(),
+                AnsIdOrig = sourceCdr.AnsIdOrig.ToString(),
+                AnsPrefixTerm = sourceCdr.AnsPrefixTerm.ToString(),
+                AnsIdTerm = sourceCdr.AnsIdTerm.ToString(),
+                validflag = sourceCdr.validflag.ToString(),
+                PartialFlag = sourceCdr.PartialFlag.ToString(),
+                releasecauseingress = sourceCdr.releasecauseingress.ToString(),
+                CustomerCallNumberANS = sourceCdr.CustomerCallNumberANS.ToString(),
+                SupplierCallNumberANS = sourceCdr.SupplierCallNumberANS.ToString(),
+                CalledPartyNOA = sourceCdr.CalledPartyNOA.ToString(),
+                CallingPartyNOA = sourceCdr.CallingPartyNOA.ToString(),
+                GrpDayId = sourceCdr.GrpDayId.ToString(),
+                MonthId = sourceCdr.MonthId.ToString(),
+                DayId = sourceCdr.DayId.ToString(),
+                BTRCTermRate = sourceCdr.BTRCTermRate.ToString(),
+                WeekDayId = sourceCdr.WeekDayId.ToString(),
+                E1Id = sourceCdr.E1Id.ToString(),
+                MediaIP1 = sourceCdr.MediaIP1.ToString(),
+                MediaIP2 = sourceCdr.MediaIP2.ToString(),
+                MediaIP3 = sourceCdr.MediaIP3.ToString(),
+                MediaIP4 = sourceCdr.MediaIP4.ToString(),
+                CallCancelDuration = sourceCdr.CallCancelDuration.ToString(),
+                E1IdOut = sourceCdr.E1IdOut.ToString(),
+                inTrunkAdditionalInfo = sourceCdr.inTrunkAdditionalInfo.ToString(),
+                outTrunkAdditionalInfo = sourceCdr.outTrunkAdditionalInfo.ToString(),
+                inMgwId = sourceCdr.inMgwId.ToString(),
+                outMgwId = sourceCdr.outMgwId.ToString(),
+                mediationcomplete = sourceCdr.mediationcomplete.ToString(),
+                codec = sourceCdr.codec.ToString(),
+                ConnectedNumberType = sourceCdr.ConnectedNumberType.ToString(),
+                RedirectingNumber = sourceCdr.RedirectingNumber.ToString(),
+                CallForwardOrRoamingType = sourceCdr.CallForwardOrRoamingType.ToString(),
+                date1 = nullableDateToString(sourceCdr.date1),
+                field1 = sourceCdr.field1.ToString(),
+                field2 = sourceCdr.field2.ToString(),
+                field3 = sourceCdr.field3.ToString(),
+                errorCode = sourceCdr.errorCode.ToString(),
+                field5 = sourceCdr.field5.ToString(),
+                roundedduration = sourceCdr.roundedduration.ToString(),
+                PartialDuration = sourceCdr.PartialDuration.ToString(),
+                PartialAnswerTime = nullableDateToString(sourceCdr.PartialAnswerTime),
+                PartialEndTime = sourceCdr.PartialEndTime.ToString(),
+                FinalRecord = sourceCdr.FinalRecord.ToString(),
+                Duration1 = sourceCdr.Duration1.ToString(),
+                Duration2 = sourceCdr.Duration2.ToString(),
+                Duration3 = sourceCdr.Duration3.ToString(),
+                Duration4 = sourceCdr.Duration4.ToString(),
+                PreviousPeriodCdr = sourceCdr.PreviousPeriodCdr.ToString(),
+                UniqueBillId = sourceCdr.UniqueBillId.ToString(),
+                BillngInfo = sourceCdr.BillngInfo.ToString(),
+                Category = sourceCdr.Category.ToString(),
+                SubCategory = sourceCdr.SubCategory.ToString(),
+                ChangedByJobId = sourceCdr.ChangedByJobId.ToString(),
+                ActualStartTime = nullableDateToString(sourceCdr.ActualStartTime)
+
+            };
+        }
     }
+
+
 }

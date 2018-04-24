@@ -8,6 +8,7 @@ namespace TelcobrightMediation
     {
         public bool ConsiderEmptyCdrFilesAsValid { get; set; }
         public List<int> PartialCdrEnabledNeIds { get; set; }=new List<int>();
+        public List<string> PartialCdrFlagIndicators { get; set; }
         public int SegmentSizeForDbWrite { get; set; }
         public int NoOfDecimalPrecisionDigitsForDoubles { get; set; }
         public decimal FractionalNumberComparisonTollerance { get; set; }= .000001M;

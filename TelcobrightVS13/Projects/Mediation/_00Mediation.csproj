@@ -143,7 +143,6 @@
     <Compile Include="Cdr\CdrTxtRowWrapperForInconsistencyCheck.cs" />
     <Compile Include="Cdr\Collection\CdrCollectionResult.cs" />
     <Compile Include="Cdr\Collection\CdrManipulatingUtil.cs" />
-    <Compile Include="Cdr\Collection\CdrToCdrErrorConverter.cs" />
     <Compile Include="Cdr\Collection\DayWiseRowIdsCollection.cs" />
     <Compile Include="Cdr\Collection\IcdrImplConverter.cs" />
     <Compile Include="Cdr\Collection\PartialCdrCollector.cs" />

@@ -37,6 +37,7 @@ namespace InstallConfig
             {
                 SummaryTimeField = SummaryTimeFieldEnum.AnswerTime,
                 PartialCdrEnabledNeIds =new List<int>() {7},
+                PartialCdrFlagIndicators = new List<string>() { "1","2","3"},
                 DescendingOrderWhileListingFiles = false,
                 DescendingOrderWhileProcessingListedFiles = false
             };

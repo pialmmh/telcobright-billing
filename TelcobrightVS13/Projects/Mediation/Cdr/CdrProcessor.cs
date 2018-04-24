@@ -12,12 +12,12 @@ using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Web.ApplicationServices;
 using FlexValidation;
 using TelcobrightMediation.Cdr;
 using TelcobrightMediation.Config;
-using TelcobrightMediation.EntityHelpers;
 using TelcobrightMediation.Mediation.Cdr;
 using TransactionTuple = System.ValueTuple<int, int, long, int>;
 using CdrSummaryTuple = System.ValueTuple<int, int, int, string, string, decimal, decimal, System.ValueTuple<string, string, string, string, string, string, string, System.ValueTuple<string, string, string, string, string, string>>>;
@@ -64,15 +64,20 @@ namespace TelcobrightMediation
                             SetPdd(cdrExt.Cdr);
                         }
                     }
-                    SeparateErrorAndProcessedCdrsBasedOnMediationStatus(cdrExt);
+                    ValidationResult mediationResult =
+                        MediationErrorChecker.ExecuteValidationRules(cdrExt, this.CdrJobContext);
+                    if (mediationResult.IsValid == false)
+                        SendToCdrError(cdrExt,"Mediation error: "+ mediationResult.FirstValidationFailureMessage);
+                    else
+                    {
+                        SetMediationStatusToSuccess(cdrExt.Cdr);
+                        this.CollectionResult.ProcessedCdrExts.Add(cdrExt);
+                    }
                 }
                 catch (Exception e)
                 {
-                    CdrExt removedCdrExt = null;
-                    this.CollectionResult.ConcurrentCdrExts.TryRemove(cdrExt.UniqueBillId, out removedCdrExt);
-                    removedCdrExt.Cdr.mediationcomplete = 0;
-                    removedCdrExt.Cdr.errorCode = new StringBuilder("Exception: ").Append(e.Message).ToString();
-                    this.CollectionResult.CdrErrors.Add(ConvertCdrToCdrError(removedCdrExt.Cdr.errorCode, removedCdrExt));
+                    string errorMessage = new StringBuilder("Exception: ").Append(e.Message).ToString();
+                    this.SendToCdrError(cdrExt, errorMessage);
                 }
             });
             //todo: change to parallel
@@ -97,25 +102,15 @@ namespace TelcobrightMediation
             });
         }
 
-
-        private void SeparateErrorAndProcessedCdrsBasedOnMediationStatus(CdrExt cdrExt)
+        private void SendToCdrError(CdrExt cdrExt, string errorMessage)
         {
-            ValidationResult validationResult =
-                MediationErrorChecker.ExecuteValidationRules(cdrExt, this.CdrJobContext);
-            if (validationResult.IsValid == false)
+            if (cdrExt.PartialCdrContainer == null && cdrExt.Cdr.PartialFlag == 0)
+                this.CollectionResult.AddNonPartialCdrExtToCdrErrors(cdrExt, errorMessage);
+            else if (cdrExt.PartialCdrContainer != null && cdrExt.Cdr.PartialFlag != 0)
             {
-                CdrExt removedCdrExt = null;
-                if(this.CollectionResult.ConcurrentCdrExts.TryRemove(cdrExt.UniqueBillId, out removedCdrExt)==false)
-                    throw new Exception("Could not remove mediation incomplete cdr from CdrExts, " +
-                                        "it may have been removed erroneously.");
-                this.CollectionResult.CdrErrors.Add(
-                    ConvertCdrToCdrError(validationResult.FirstValidationFailureMessage, removedCdrExt));
+                this.CollectionResult.AddNewRawPartialCdrsToCdrErrors(cdrExt, errorMessage);
             }
-            else
-            {
-                SetMediationStatusToSuccess(cdrExt.Cdr);
-                this.CollectionResult.ProcessedCdrExts.Add(cdrExt);
-            }
+            else throw new InvalidDataContractException("Cdr must be either partial or non-partial.");
         }
 
         private void ExecuteServiceGroups(CdrExt newCdrExt,
@@ -169,17 +164,6 @@ namespace TelcobrightMediation
                 : (Convert.ToDateTime(thisCdr.AnswerTime) - thisCdr.ActualStartTime).TotalSeconds;
             thisCdr.PDD = (float)diffInSeconds;
         }
-
-        private cdrerror ConvertCdrToCdrError(string validationMsg, CdrExt cdrExt)
-        {
-            cdrExt.Cdr.mediationcomplete = 0;
-            cdrExt.Cdr.errorCode = new StringBuilder("Error: ") //field4 in cdrerror to keep the error expression
-                .Append(validationMsg).ToString();
-            return CdrToCdrErrorConverter.Convert(cdrExt.Cdr);
-        }
-
-
-        
 
         private void ExecutePartnerRules(List<int> partnerRules, CdrExt cdrExt)
         {
@@ -257,7 +241,8 @@ namespace TelcobrightMediation
             if (this.Tbc.CdrSetting.PartialCdrEnabledNeIds.Contains(this.CdrJobContext.Ne.idSwitch))
             {
                 partialCdrWriter = new PartialCdrWriter(
-                    this.CollectionResult.ConcurrentCdrExts.Values.Where(e => e.Cdr.PartialFlag >0)
+                    this.CollectionResult.ProcessedCdrExts.
+                    Where(e => e.Cdr.PartialFlag !=0&&e.PartialCdrContainer!=null)
                         .Select(e => e.PartialCdrContainer).ToList(), this.CdrJobContext);
                 partialCdrWriter.Write();
                 partialCdrContainers = partialCdrWriter.PartialCdrContainers;

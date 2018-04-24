@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using LibraryExtensions;
 using MediationModel;
 using TelcobrightFileOperations;
@@ -14,6 +15,8 @@ namespace TelcobrightMediation
 {
     public class CdrCollectionResult
     {
+        private readonly BlockingCollection<cdrerror> _cdrErrors = new BlockingCollection<cdrerror>();
+        public IReadOnlyCollection<cdrerror> CdrErrors => this._cdrErrors.ToList().AsReadOnly();
         public int RawCount { get; }
         public ne Ne { get; }
         public List<DateTime> DatesInvolved { get; }
@@ -23,7 +26,6 @@ namespace TelcobrightMediation
         public IEnumerable<CdrExt> MediationCompletedCdrExts => this.ConcurrentCdrExts.Values.Where(
             c => c.Cdr != null && c.Cdr.mediationcomplete == 1);
         public List<cdrinconsistent> CdrInconsistents { get; }
-        public BlockingCollection<cdrerror> CdrErrors { get; } = new BlockingCollection<cdrerror>();
         public BlockingCollection<CdrExt> ProcessedCdrExts { get; }=new BlockingCollection<CdrExt>();
         public bool IsEmpty => this.DatesInvolved == null || this.DatesInvolved.Any() == false ||
                                !this.ConcurrentCdrExts.Any() && !this.CdrInconsistents.Any();
@@ -40,6 +42,45 @@ namespace TelcobrightMediation
             this.DatesInvolved = this.HoursInvolved.Select(h => h.Date).Distinct().ToList();
             this.CdrInconsistents = cdrInconsistents;
             this.RawCount = rawCount;
+        }
+
+        private cdrerror ConvertCdrToCdrError(ICdr cdr, string validationMsg)
+        {
+            cdr.mediationcomplete = 0;
+            cdr.errorCode = validationMsg;
+            return CdrManipulatingUtil.ConvertCdrToCdrError(cdr);
+        }
+        public void AddNonPartialCdrExtToCdrErrors(CdrExt cdrExt, string errorMessage)
+        {
+            if (cdrExt.PartialCdrContainer != null || cdrExt.Cdr.PartialFlag != 0)
+            {
+                throw new Exception("Partial cdrExt must be added to cdrErrors through appropriate method.");
+            }
+            this._cdrErrors.Add(ConvertCdrToCdrError(cdrExt.Cdr, errorMessage));
+            CdrExt removedCdrExt = null;
+            if (this.ConcurrentCdrExts.TryRemove(cdrExt.UniqueBillId, out removedCdrExt)==false)
+            {
+                throw new Exception("Could not remove cdrExt from collection after converting cdr " +
+                                    "to cdrError.");
+            }
+        }
+
+        public void AddNewRawPartialCdrsToCdrErrors(CdrExt cdrExt,string errorMessage)
+        {
+            if (cdrExt.PartialCdrContainer == null || cdrExt.Cdr.PartialFlag == 0)
+            {
+                throw new Exception("Non partial cdrExt must be added to cdrErrors through appropriate method.");
+            }
+            cdrExt.PartialCdrContainer.NewRawInstances.ForEach(r =>
+            {
+                this._cdrErrors.Add(ConvertCdrToCdrError(r, errorMessage));
+                CdrExt removedCdrExt = null;
+                if (this.ConcurrentCdrExts.TryRemove(cdrExt.UniqueBillId, out removedCdrExt) == false)
+                {
+                    throw new Exception("Could not remove cdrExt from collection after converting rawPartial instance " +
+                                        "to cdrError.");
+                }
+            });
         }
     }
 }
