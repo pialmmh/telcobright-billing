@@ -177,7 +177,9 @@
         Font-Size="9pt" BorderColor="Silver" onrowediting="GridView1_RowEditing" 
         onrowupdating="GridView1_RowUpdating"
         onrowcancelingedit="GridView1_RowCancelingEdit" 
-        onrowupdated="GridView1_RowUpdated" BorderStyle="Solid">
+        onrowupdated="GridView1_RowUpdated" 
+        OnRowDataBound="GridView1_OnRowDataBound"
+        BorderStyle="Solid">
         <AlternatingRowStyle BackColor="#f2f2f2" ForeColor="#284775" />
         <Columns>
             <asp:CommandField ShowDeleteButton="false" ShowEditButton="True" />
@@ -314,6 +316,22 @@
                     
                 </ItemTemplate>
             </asp:TemplateField>
+            
+            <asp:TemplateField HeaderText="Route Type" SortExpression="NationalOrInternational">
+                <EditItemTemplate>
+                    <asp:Label ID="lblRouteType" runat="server" Text='<%# Bind("NationalOrInternational") %>' Visible = "false" />
+                    <asp:DropDownList ID="ddlistRouteType" runat="server" Enabled="True" AutoPostBack="True" OnSelectedIndexChanged="ddlistRouteType_OnSelectedIndexChanged">
+                    </asp:DropDownList>
+                    
+                </EditItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="lblRouteType" runat="server" Text='<%# Bind("NationalOrInternational") %>' Visible = "false" />
+                    <asp:DropDownList ID="ddlistRouteType" runat="server" Enabled="False">
+                    </asp:DropDownList>
+                    
+                </ItemTemplate>
+            </asp:TemplateField>
+
 
             <asp:BoundField DataField="date1" HeaderText="date1" SortExpression="date1" visible="false"/>
             <%--<asp:BoundField DataField="field1" HeaderText="field1" 
@@ -397,6 +415,12 @@ select idpartner,partnername from partner where partnertype=1 order by partnerna
                             Enabled="True" >
                         </asp:DropDownList>
                         <br />
+                        Route Type:
+                        <asp:DropDownList ID="ddlistRouteType" runat="server" AutoPostBack="True" 
+                                            SelectedValue='<%# Bind("NationalOrInternational") %>'
+                                            Enabled="True" Visible="True" >
+                        </asp:DropDownList>
+                        <br />
                         </div>
                     </td>
 
@@ -463,8 +487,8 @@ select idpartner,partnername from partner where partnertype=1 order by partnerna
                     Text='<%# Bind("idPartner") %>' Visible="false" />
                 <br />
                 <%--NationalOrInternational:--%>
-                <asp:TextBox ID="NationalOrInternationalTextBox" runat="server" 
-                    Text='<%# Bind("NationalOrInternational") %>' Visible="false" />
+<%--                <asp:TextBox ID="NationalOrInternationalTextBox" runat="server" 
+                    Text='<%# Bind("NationalOrInternational") %>' Visible="false" />--%>
                 <br />
             
             </div>

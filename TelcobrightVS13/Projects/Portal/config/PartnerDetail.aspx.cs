@@ -1,11 +1,14 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.UI.WebControls;
 using MediationModel;
+using TelcobrightMediation;
+using PortalApp;
 
 public partial class ConfigPartnerDetail : System.Web.UI.Page
 {
@@ -159,6 +162,13 @@ public partial class ConfigPartnerDetail : System.Web.UI.Page
 
         if (!this.IsPostBack)
         {
+            // route type
+            DropDownList ddlistRouteType = (DropDownList)this.FormViewRouteAdd.FindControl("ddlistRouteType");
+            TelcobrightConfig tbc = PageUtil.GetTelcobrightConfig();
+            foreach (KeyValuePair<string, int> item in tbc.PortalSettings.RouteTypeEnums)
+            {
+                ddlistRouteType.Items.Add(new ListItem(item.Key, item.Value.ToString()));
+            }
 
             HttpRequest q = this.Request;
             NameValueCollection n = q.QueryString;
@@ -171,7 +181,7 @@ public partial class ConfigPartnerDetail : System.Web.UI.Page
                     v = Convert.ToInt32(n.Get(0));
                 }
             }
-            
+
             //v = 3;//purple
             this.Session["sesidPartner"] = v;
 
@@ -250,7 +260,6 @@ public partial class ConfigPartnerDetail : System.Web.UI.Page
                 this.Session["sesidOperatorType"] = idOperatorType;
                 
             }
-
         }
     }
 
@@ -531,5 +540,30 @@ public partial class ConfigPartnerDetail : System.Web.UI.Page
     protected void GridView1_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
     {
         this.LabelUpdateValidate.Visible = false;
+    }
+
+    protected void GridView1_OnRowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType == DataControlRowType.DataRow)
+        {
+            DropDownList ddlistRouteType = (DropDownList) e.Row.FindControl("ddlistRouteType");
+            TelcobrightConfig tbc = PageUtil.GetTelcobrightConfig();
+            foreach (KeyValuePair<string, int> item in tbc.PortalSettings.RouteTypeEnums)
+            {
+                ddlistRouteType.Items.Add(new ListItem(item.Key, item.Value.ToString()));
+            }
+
+            string routeType = (e.Row.FindControl("lblRouteType") as Label).Text;
+            ddlistRouteType.Items.FindByValue(routeType).Selected = true;
+        }
+    }
+
+    protected void ddlistRouteType_OnSelectedIndexChanged(object sender, EventArgs e)
+    {
+        DropDownList ddlCurrentDropDownList = (DropDownList)sender;
+        GridViewRow grdrDropDownRow = ((GridViewRow)ddlCurrentDropDownList.Parent.Parent);
+        Label lblCurrentStatus = (Label)grdrDropDownRow.FindControl("lblRouteType");
+        if (lblCurrentStatus != null)
+            lblCurrentStatus.Text = ddlCurrentDropDownList.SelectedItem.Value;
     }
 }

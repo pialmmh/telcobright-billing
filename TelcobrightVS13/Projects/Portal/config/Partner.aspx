@@ -331,7 +331,7 @@ order by type "></asp:SqlDataSource>
                         <asp:GridView ID="gvAccount" runat="server" AutoGenerateColumns="false" ForeColor="#333333" GridLines="Vertical" Font-Size="9pt" 
                             ShowHeader="False" BorderStyle="Solid" BorderColor="Silver">
                             <Columns>
-                                <asp:BoundField ItemStyle-Width="220px" DataField="accountName" HeaderText="Account Name" HeaderStyle-HorizontalAlign="Left" ItemStyle-HorizontalAlign="Left" />
+                                <asp:BoundField ItemStyle-Width="220px" DataField="accountName" HeaderText="Service Account" HeaderStyle-HorizontalAlign="Left" ItemStyle-HorizontalAlign="Left" />
                                 <asp:BoundField ItemStyle-Width="80px" DataField="BalanceAfter" HeaderText="Balance" HeaderStyle-HorizontalAlign="Right" ItemStyle-HorizontalAlign="Right" />                                
                                 <asp:BoundField ItemStyle-Width="30px" DataField="iduom" HeaderText="UOM" HeaderStyle-HorizontalAlign="Left" ItemStyle-HorizontalAlign="Left" />                                
                             </Columns>
