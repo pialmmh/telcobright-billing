@@ -43,7 +43,7 @@ namespace PortalApp.ReportHelper
                 Y AS 'Y (USD)',
                 Z AS 'Z (BDT)',
                 revenueigwout,
-                suppliercost, 
+                tax1, 
                 XRate AS 'X RATE(BDT)', 
                 YRate AS 'Y RATE(USD)', 
                 USDRate AS 'Dollar Rate' 
@@ -72,7 +72,7 @@ namespace PortalApp.ReportHelper
                 SUM(longDecimalAmount2) AS Y,
                 SUM(longDecimalAmount3) AS Z,
                 SUM(customercost) AS revenueigwout,
-                SUM(tax1) AS suppliercost, 
+                SUM(tax1) AS tax1, 
                 SUM(tup_customerrate) as XRate, 
                 SUM(tup_supplierrate) as YRate, 
                 SUM(tup_customercurrency) as USDRate 

@@ -249,9 +249,11 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                     tr.CallStat.TotalRoundedDuration += tr.ForceConvertToDouble(dr["RoundedDuration"]);
                     tr.CallStat.TotalDuration3 += tr.ForceConvertToDouble(dr["hmsduration"]);
                     tr.CallStat.TotalDuration2 += tr.ForceConvertToDouble(dr["supplierduration"]);
+                    tr.CallStat.XAmount += tr.ForceConvertToDouble(dr["X (BDT)"]);
+                    tr.CallStat.YAmount += tr.ForceConvertToDouble(dr["Y (USD)"]);
+                    tr.CallStat.ZAmount += tr.ForceConvertToDouble(dr["Z (BDT)"]);
                     tr.CallStat.IgwRevenue += tr.ForceConvertToDouble(dr["revenueigwout"]);
-                    tr.CallStat.SupplierCost += tr.ForceConvertToDouble(dr["suppliercost"]);
-                   // tr.CallStat.ProfitBdt += tr.ForceConvertToDouble(dr["profitbdt"]);
+                    tr.CallStat.BtrcRevShare += tr.ForceConvertToDouble(dr["tax1"]);
 
                     NoOfCallsVsPdd cpdd = new NoOfCallsVsPdd(tr.ForceConvertToLong(dr["No of Calls (Outgoing International)"]), tr.ForceConvertToDouble(dr["PDD"]));
                     callVsPdd.Add(cpdd);
@@ -262,6 +264,10 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                 tr.CallStat.TotalDuration3 = Math.Round(tr.CallStat.TotalDuration3, 2);
                 tr.CallStat.TotalDuration4 = Math.Round(tr.CallStat.TotalDuration4, 2);
                 tr.CallStat.TotalRoundedDuration = Math.Round(tr.CallStat.TotalRoundedDuration, 2);
+                tr.CallStat.XAmount = Math.Round(tr.CallStat.XAmount, 2);
+                tr.CallStat.YAmount = Math.Round(tr.CallStat.YAmount, 2);
+                tr.CallStat.ZAmount = Math.Round(tr.CallStat.ZAmount, 2);
+                tr.CallStat.IgwRevenue = Math.Round(tr.CallStat.IgwRevenue, 2);
                 tr.CallStat.CalculateAsr(2);
                 tr.CallStat.CalculateAcd(2);
                 tr.CallStat.CalculateAveragePdd(callVsPdd, 2);
@@ -287,6 +293,12 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                 fieldSummaries.Add("pdd", tr.CallStat.Pdd);
                 fieldSummaries.Add("ccr", tr.CallStat.Ccr);
                 fieldSummaries.Add("ccrbycc", tr.CallStat.CcRbyCauseCode);
+                fieldSummaries.Add("x (bdt)", tr.CallStat.XAmount);
+                fieldSummaries.Add("y (usd)", tr.CallStat.YAmount);
+                fieldSummaries.Add("z (bdt)", tr.CallStat.ZAmount);
+                fieldSummaries.Add("revenueigwout", tr.CallStat.IgwRevenue);
+                fieldSummaries.Add("tax1", tr.CallStat.BtrcRevShare);
+
                 tr.FieldSummaries = fieldSummaries;
 
                 Session["IntlOut"] = tr;//save to session

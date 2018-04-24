@@ -35,9 +35,10 @@ namespace reports
         public double Pdd { get; set; }
         public double Ccr { get; set; }
         public double CcRbyCauseCode { get; set; }
-        public double X { get; set; }
-        public double Y { get; set; }
-        public double Z { get; set; }
+        public double XAmount { get; set; }
+        public double YAmount { get; set; }
+        public double ZAmount { get; set; }
+        public double BtrcRevShare { get; set; }
         public double IgwRevenue { get; set; }
         public double SupplierCost { get; set; }
         public double TotalCustomerCost { get; set; }
