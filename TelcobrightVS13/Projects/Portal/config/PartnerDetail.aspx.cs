@@ -12,7 +12,7 @@ using PortalApp;
 
 public partial class ConfigPartnerDetail : System.Web.UI.Page
 {
-
+    private static TelcobrightConfig Tbc;
     protected void cvPrefix_Validate(object source, ServerValidateEventArgs args)
     {
 
@@ -164,8 +164,8 @@ public partial class ConfigPartnerDetail : System.Web.UI.Page
         {
             // route type
             DropDownList ddlistRouteType = (DropDownList)this.FormViewRouteAdd.FindControl("ddlistRouteType");
-            TelcobrightConfig tbc = PageUtil.GetTelcobrightConfig();
-            foreach (KeyValuePair<string, int> item in tbc.PortalSettings.RouteTypeEnums)
+            Tbc = PageUtil.GetTelcobrightConfig();
+            foreach (KeyValuePair<string, int> item in Tbc.PortalSettings.RouteTypeEnums)
             {
                 ddlistRouteType.Items.Add(new ListItem(item.Key, item.Value.ToString()));
             }
@@ -547,8 +547,7 @@ public partial class ConfigPartnerDetail : System.Web.UI.Page
         if (e.Row.RowType == DataControlRowType.DataRow)
         {
             DropDownList ddlistRouteType = (DropDownList) e.Row.FindControl("ddlistRouteType");
-            TelcobrightConfig tbc = PageUtil.GetTelcobrightConfig();
-            foreach (KeyValuePair<string, int> item in tbc.PortalSettings.RouteTypeEnums)
+            foreach (KeyValuePair<string, int> item in Tbc.PortalSettings.RouteTypeEnums)
             {
                 ddlistRouteType.Items.Add(new ListItem(item.Key, item.Value.ToString()));
             }
