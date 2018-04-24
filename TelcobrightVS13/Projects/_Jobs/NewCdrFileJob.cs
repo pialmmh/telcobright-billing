@@ -140,18 +140,12 @@ namespace Jobs
         {
             using (DbCommand cmd = ConnectionManager.CreateCommandFromDbContext(cdrProcessor.CdrJobContext.Context))
             {
-                string sql = " update job set CompletionTime='" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "'," +
-                             " NoOfRecords=" + cdrProcessor.CollectionResult.RawCount + ",StartSequenceNumber=" + cdrProcessor.CollectionResult.CollectionResultProcessingSummary.StartSequenceNumber + "," +
-                             " EndSequenceNumber=" + cdrProcessor.CollectionResult.CollectionResultProcessingSummary.EndSequenceNumber + "," +
-                             " FailedCount=" + cdrProcessor.CollectionResult.CollectionResultProcessingSummary.FailedCount + "," +
-                             " SuccessfulCount=" + cdrProcessor.CollectionResult.CollectionResultProcessingSummary.SuccessfulCount + "," +
-                             " TotalDuration=" + cdrProcessor.CollectionResult.CollectionResultProcessingSummary.TotalDuration + "," +
-                             " PartialDuration=" + cdrProcessor.CollectionResult.CollectionResultProcessingSummary.PartialDuration + "," +
-                             " Status=1 " + "," +
-                             " MinCallStartTime='" + cdrProcessor.CollectionResult.CollectionResultProcessingSummary.MinCallStartTime.ToString("yyyy-MM-dd HH:mm:ss") + "'," +
-                             " MaxCallStartTime='" + cdrProcessor.CollectionResult.CollectionResultProcessingSummary.MaxCallStartTime.ToString("yyyy-MM-dd HH:mm:ss") + "', " +
-                             " Error='' " +
-                             " where id=" + telcobrightJob.id;
+                string sql =
+                    $" update job set CompletionTime={DateTime.Now.ToMySqlField()}, " +
+                    $" status=1, "+
+                    $"NoOfSteps={cdrProcessor.CollectionResult.RawCount}," +
+                    $"progresss={cdrProcessor.CollectionResult.RawCount}," +
+                    $"Error=null where id={telcobrightJob.id}";
                 cmd.CommandText = sql;
                 cmd.ExecuteNonQuery();
             }
@@ -161,16 +155,12 @@ namespace Jobs
         {
             using (DbCommand cmd = ConnectionManager.CreateCommandFromDbContext(cdrProcessor.CdrJobContext.Context))
             {
-                string sql = " update job set CompletionTime='" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "'," +
-                             " NoOfRecords=" + cdrProcessor.CollectionResult.RawCount +
-                             ",StartSequenceNumber=" + cdrProcessor.CollectionResult.CollectionResultProcessingSummary.StartSequenceNumber + "," +
-                             " EndSequenceNumber=" + cdrProcessor.CollectionResult.CollectionResultProcessingSummary.EndSequenceNumber + "," +
-                             " FailedCount=" + cdrProcessor.CollectionResult.CollectionResultProcessingSummary.FailedCount + "," +
-                             " SuccessfulCount=" + cdrProcessor.CollectionResult.CollectionResultProcessingSummary.SuccessfulCount + "," +
-                             " TotalDuration=" + cdrProcessor.CollectionResult.CollectionResultProcessingSummary.TotalDuration + "," +
-                             " PartialDuration=" + cdrProcessor.CollectionResult.CollectionResultProcessingSummary.PartialDuration + "," +
-                             " Status=1 " +
-                             " where id=" + telcobrightJob.id;
+                string sql =
+                    $" update job set CompletionTime={DateTime.Now.ToMySqlField()}, " +
+                    $" status=1, " +
+                    $"NoOfSteps=0," +
+                    $"progresss=0," +
+                    $"Error=null where id={telcobrightJob.id}";
                 cmd.CommandText = sql;
                 cmd.ExecuteNonQuery();
             }

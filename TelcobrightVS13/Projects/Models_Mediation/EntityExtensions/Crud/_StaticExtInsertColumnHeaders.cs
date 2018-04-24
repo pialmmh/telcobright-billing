@@ -73,7 +73,7 @@ namespace MediationModel
 		public static string enumvatrule { get { return " insert into enumvatrule(id,Type,description) values ";} }
 		public static string errordefinition { get { return " insert into errordefinition(idError,Description,Severity,Action) values ";} }
 		public static string genericparameterassignment { get { return " insert into genericparameterassignment(JsonExpAssignedTo,GenericInstanceFactoryName,description,JsonParametersToAssign) values ";} }
-		public static string job { get { return " insert into job(id,idjobdefinition,JobName,OwnerServer,idNE,priority,SerialNumber,Status,Progress,CreationTime,LastExecuted,CompletionTime,NoOfRecords,TotalDuration,PartialDuration,StartSequenceNumber,EndSequenceNumber,FailedCount,SuccessfulCount,MinCallStartTime,MaxCallStartTime,JobParameter,OtherDetail,Error) values ";} }
+		public static string job { get { return " insert into job(id,idjobdefinition,JobName,OwnerServer,idNE,priority,SerialNumber,Status,Progress,CreationTime,LastExecuted,CompletionTime,NoOfSteps,JobSummary,Error,JobParameter) values ";} }
 		public static string jobcompletion { get { return " insert into jobcompletion(idJob) values ";} }
 		public static string jobsegment { get { return " insert into jobsegment(id,idJob,segmentNumber,stepsCount,status,SegmentDetail) values ";} }
 		public static string jsonbillingrule { get { return " insert into jsonbillingrule(id,ruleName,description,JsonExpression,isPrepaid) values ";} }

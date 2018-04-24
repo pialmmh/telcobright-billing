@@ -1497,7 +1497,7 @@ warning 6002: The table/view 'def.platinum.cdrpartialreference' does not have a 
           <Property Name="idjobdefinition" Type="int" Nullable="false" />
           <Property Name="JobName" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="OwnerServer" Type="int" />
-          <Property Name="idNE" Type="int" Nullable="false" />
+          <Property Name="idNE" Type="int" />
           <Property Name="priority" Type="int" Nullable="false" />
           <Property Name="SerialNumber" Type="bigint" />
           <Property Name="Status" Type="int" Nullable="false" />
@@ -1505,18 +1505,10 @@ warning 6002: The table/view 'def.platinum.cdrpartialreference' does not have a 
           <Property Name="CreationTime" Type="datetime" Precision="0" />
           <Property Name="LastExecuted" Type="datetime" Precision="0" />
           <Property Name="CompletionTime" Type="datetime" Precision="0" />
-          <Property Name="NoOfRecords" Type="int" />
-          <Property Name="TotalDuration" Type="double" />
-          <Property Name="PartialDuration" Type="double" />
-          <Property Name="StartSequenceNumber" Type="int" />
-          <Property Name="EndSequenceNumber" Type="int" />
-          <Property Name="FailedCount" Type="int" />
-          <Property Name="SuccessfulCount" Type="int" />
-          <Property Name="MinCallStartTime" Type="datetime" Precision="0" />
-          <Property Name="MaxCallStartTime" Type="datetime" Precision="0" />
-          <Property Name="JobParameter" Type="longtext" />
-          <Property Name="OtherDetail" Type="longtext" />
+          <Property Name="NoOfSteps" Type="int" />
+          <Property Name="JobSummary" Type="longtext" />
           <Property Name="Error" Type="text" />
+          <Property Name="JobParameter" Type="longtext" />
         </EntityType>
         <EntityType Name="jobcompletion">
           <Key>
@@ -3152,7 +3144,7 @@ warning 6002: The table/view 'def.platinum.uom_conversion_dated' does not have a
           </ReferentialConstraint>
         </Association>
         <Association Name="job_ibfk_4">
-          <End Role="ne" Type="Self.ne" Multiplicity="1" />
+          <End Role="ne" Type="Self.ne" Multiplicity="0..1" />
           <End Role="job" Type="Self.job" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ne">
@@ -5463,7 +5455,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="idjobdefinition" Type="Int32" Nullable="false" />
           <Property Name="JobName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="OwnerServer" Type="Int32" />
-          <Property Name="idNE" Type="Int32" Nullable="false" />
+          <Property Name="idNE" Type="Int32" />
           <Property Name="priority" Type="Int32" Nullable="false" />
           <Property Name="SerialNumber" Type="Int64" />
           <Property Name="Status" Type="Int32" Nullable="false" />
@@ -5471,18 +5463,10 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="CreationTime" Type="DateTime" />
           <Property Name="LastExecuted" Type="DateTime" />
           <Property Name="CompletionTime" Type="DateTime" />
-          <Property Name="NoOfRecords" Type="Int32" />
-          <Property Name="TotalDuration" Type="Double" />
-          <Property Name="PartialDuration" Type="Double" />
-          <Property Name="StartSequenceNumber" Type="Int32" />
-          <Property Name="EndSequenceNumber" Type="Int32" />
-          <Property Name="FailedCount" Type="Int32" />
-          <Property Name="SuccessfulCount" Type="Int32" />
-          <Property Name="MinCallStartTime" Type="DateTime" />
-          <Property Name="MaxCallStartTime" Type="DateTime" />
-          <Property Name="JobParameter" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" />
-          <Property Name="OtherDetail" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" />
+          <Property Name="NoOfSteps" Type="Int32" />
+          <Property Name="JobSummary" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" />
           <Property Name="Error" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+          <Property Name="JobParameter" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="enumjobdefinition" Relationship="MediationModel.job_ibfk_1" FromRole="job" ToRole="enumjobdefinition" />
           <NavigationProperty Name="enumjobstatu" Relationship="MediationModel.job_ibfk_3" FromRole="job" ToRole="enumjobstatu" />
           <NavigationProperty Name="ne" Relationship="MediationModel.job_ibfk_4" FromRole="job" ToRole="ne" />
@@ -7579,7 +7563,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           </ReferentialConstraint>
         </Association>
         <Association Name="job_ibfk_4">
-          <End Type="MediationModel.ne" Role="ne" Multiplicity="1" />
+          <End Type="MediationModel.ne" Role="ne" Multiplicity="0..1" />
           <End Type="MediationModel.job" Role="job" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ne">
@@ -8696,18 +8680,10 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <EntitySetMapping Name="jobs">
             <EntityTypeMapping TypeName="MediationModel.job">
               <MappingFragment StoreEntitySet="job">
-                <ScalarProperty Name="Error" ColumnName="Error" />
-                <ScalarProperty Name="OtherDetail" ColumnName="OtherDetail" />
                 <ScalarProperty Name="JobParameter" ColumnName="JobParameter" />
-                <ScalarProperty Name="MaxCallStartTime" ColumnName="MaxCallStartTime" />
-                <ScalarProperty Name="MinCallStartTime" ColumnName="MinCallStartTime" />
-                <ScalarProperty Name="SuccessfulCount" ColumnName="SuccessfulCount" />
-                <ScalarProperty Name="FailedCount" ColumnName="FailedCount" />
-                <ScalarProperty Name="EndSequenceNumber" ColumnName="EndSequenceNumber" />
-                <ScalarProperty Name="StartSequenceNumber" ColumnName="StartSequenceNumber" />
-                <ScalarProperty Name="PartialDuration" ColumnName="PartialDuration" />
-                <ScalarProperty Name="TotalDuration" ColumnName="TotalDuration" />
-                <ScalarProperty Name="NoOfRecords" ColumnName="NoOfRecords" />
+                <ScalarProperty Name="Error" ColumnName="Error" />
+                <ScalarProperty Name="JobSummary" ColumnName="JobSummary" />
+                <ScalarProperty Name="NoOfSteps" ColumnName="NoOfSteps" />
                 <ScalarProperty Name="CompletionTime" ColumnName="CompletionTime" />
                 <ScalarProperty Name="LastExecuted" ColumnName="LastExecuted" />
                 <ScalarProperty Name="CreationTime" ColumnName="CreationTime" />

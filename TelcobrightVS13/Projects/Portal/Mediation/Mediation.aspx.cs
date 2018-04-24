@@ -273,9 +273,6 @@ public partial class DefaultMediation : System.Web.UI.Page
         }
 
         long totalSequence = 0;
-        double totalDuration = 0;
-        double totalPDuration = 0;
-
         List<job> lstAllCdr=null;
         using (PartnerEntities context = new PartnerEntities())
         {
@@ -319,15 +316,11 @@ public partial class DefaultMediation : System.Web.UI.Page
                 long tempLong = 0;
                 double tempDouble = 0;
                 double tempDouble1 = 0;
-                long.TryParse(j.NoOfRecords.ToString(), out tempLong);
+                long.TryParse(j.NoOfSteps.ToString(), out tempLong);
                 totalSequence += tempLong;
-                double.TryParse(j.TotalDuration.ToString(), out tempDouble);
-                totalDuration += tempDouble;
-                double.TryParse(j.PartialDuration.ToString(), out tempDouble1);
-                totalPDuration += tempDouble1;
                 
                 ne ne = null;
-                dicNe.TryGetValue(j.idNE, out ne);
+                dicNe.TryGetValue(Convert.ToInt32(j.idNE), out ne);
                 j.ne = ne;
 
                 enumjobstatu jstat = null;
@@ -357,9 +350,7 @@ public partial class DefaultMediation : System.Web.UI.Page
         {
             this.lblStatus.ForeColor = Color.Green;
             this.lblStatus.Text = " Total Jobs: " + lstAllCdr.Count + ", "
-                + "Total Sequence: " + totalSequence + ", "
-                + "Total Duration: " + totalDuration + ", "
-                + "Total Partial Duration: " + totalDuration;
+                + "Total Sequence: " + totalSequence + ", ";
 
             this.Button1.Visible = true; //show export
             this.lblStatus.Visible = true;

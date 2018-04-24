@@ -24,7 +24,7 @@ namespace MediationModel
         public int idjobdefinition { get; set; }
         public string JobName { get; set; }
         public Nullable<int> OwnerServer { get; set; }
-        public int idNE { get; set; }
+        public Nullable<int> idNE { get; set; }
         public int priority { get; set; }
         public Nullable<long> SerialNumber { get; set; }
         public int Status { get; set; }
@@ -32,18 +32,10 @@ namespace MediationModel
         public Nullable<System.DateTime> CreationTime { get; set; }
         public Nullable<System.DateTime> LastExecuted { get; set; }
         public Nullable<System.DateTime> CompletionTime { get; set; }
-        public Nullable<int> NoOfRecords { get; set; }
-        public Nullable<double> TotalDuration { get; set; }
-        public Nullable<double> PartialDuration { get; set; }
-        public Nullable<int> StartSequenceNumber { get; set; }
-        public Nullable<int> EndSequenceNumber { get; set; }
-        public Nullable<int> FailedCount { get; set; }
-        public Nullable<int> SuccessfulCount { get; set; }
-        public Nullable<System.DateTime> MinCallStartTime { get; set; }
-        public Nullable<System.DateTime> MaxCallStartTime { get; set; }
-        public string JobParameter { get; set; }
-        public string OtherDetail { get; set; }
+        public Nullable<int> NoOfSteps { get; set; }
+        public string JobSummary { get; set; }
         public string Error { get; set; }
+        public string JobParameter { get; set; }
     
         public virtual enumjobdefinition enumjobdefinition { get; set; }
         public virtual enumjobstatu enumjobstatu { get; set; }

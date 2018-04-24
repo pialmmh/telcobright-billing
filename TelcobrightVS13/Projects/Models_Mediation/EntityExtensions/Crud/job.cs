@@ -23,18 +23,10 @@ namespace MediationModel
 				{CreationTime.ToMySqlField()},
 				{LastExecuted.ToMySqlField()},
 				{CompletionTime.ToMySqlField()},
-				{NoOfRecords.ToMySqlField()},
-				{TotalDuration.ToMySqlField()},
-				{PartialDuration.ToMySqlField()},
-				{StartSequenceNumber.ToMySqlField()},
-				{EndSequenceNumber.ToMySqlField()},
-				{FailedCount.ToMySqlField()},
-				{SuccessfulCount.ToMySqlField()},
-				{MinCallStartTime.ToMySqlField()},
-				{MaxCallStartTime.ToMySqlField()},
-				{JobParameter.ToMySqlField()},
-				{OtherDetail.ToMySqlField()},
-				{Error.ToMySqlField()}
+				{NoOfSteps.ToMySqlField()},
+				{JobSummary.ToMySqlField()},
+				{Error.ToMySqlField()},
+				{JobParameter.ToMySqlField()}
 				)";
 		}
 		public  string GetExtInsertCustom(Func<job,string> externalInsertMethod)
@@ -56,18 +48,10 @@ namespace MediationModel
 				CreationTime={CreationTime.ToMySqlField()+" "},
 				LastExecuted={LastExecuted.ToMySqlField()+" "},
 				CompletionTime={CompletionTime.ToMySqlField()+" "},
-				NoOfRecords={NoOfRecords.ToMySqlField()+" "},
-				TotalDuration={TotalDuration.ToMySqlField()+" "},
-				PartialDuration={PartialDuration.ToMySqlField()+" "},
-				StartSequenceNumber={StartSequenceNumber.ToMySqlField()+" "},
-				EndSequenceNumber={EndSequenceNumber.ToMySqlField()+" "},
-				FailedCount={FailedCount.ToMySqlField()+" "},
-				SuccessfulCount={SuccessfulCount.ToMySqlField()+" "},
-				MinCallStartTime={MinCallStartTime.ToMySqlField()+" "},
-				MaxCallStartTime={MaxCallStartTime.ToMySqlField()+" "},
-				JobParameter={JobParameter.ToMySqlField()+" "},
-				OtherDetail={OtherDetail.ToMySqlField()+" "},
-				Error={Error.ToMySqlField()+" "}
+				NoOfSteps={NoOfSteps.ToMySqlField()+" "},
+				JobSummary={JobSummary.ToMySqlField()+" "},
+				Error={Error.ToMySqlField()+" "},
+				JobParameter={JobParameter.ToMySqlField()+" "}
 				{whereClauseMethod.Invoke(this)};
 				";
 		}

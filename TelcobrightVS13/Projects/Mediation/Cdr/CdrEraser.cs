@@ -21,6 +21,7 @@ using TelcobrightMediation.EntityHelpers;
 using TelcobrightMediation.Mediation.Cdr;
 using TransactionTuple = System.ValueTuple<int, int, long, int>;
 using CdrSummaryTuple = System.ValueTuple<int, int, int, string, string, decimal, decimal, System.ValueTuple<string, string, string, string, string, string, string, System.ValueTuple<string, string, string, string, string, string>>>;
+
 namespace TelcobrightMediation
 {
     public class CdrEraser
@@ -30,19 +31,23 @@ namespace TelcobrightMediation
 
         private Dictionary<string, List<acc_transaction>> BillIdWisePrevTransactions { get; set; } =
             new Dictionary<string, List<acc_transaction>>();
+
         private MediationContext MediationContext => this.CdrJobContext.MediationContext;
-        public CdrEraser(CdrJobContext cdrJobContext,CdrCollectionResult newCollectionResult)
+
+        public CdrEraser(CdrJobContext cdrJobContext, CdrCollectionResult newCollectionResult)
         {
             this.CdrJobContext = cdrJobContext;
             this.CollectionResult = newCollectionResult;
+            this.CollectionResult.ConcurrentCdrExts.Values.ToList().ForEach(c => this.CollectionResult.ProcessedCdrExts.Add(c));
         }
 
         public void UndoOldSummaries()
         {
-            if (!this.CollectionResult.ConcurrentCdrExts.Any()) return;
+            if (!this.CollectionResult.ProcessedCdrExts.Any())
+                throw new Exception("ProcessedCdrExts cannot be empty in Cdr Erasing job.");
 
-            var oldCdrExts = this.CollectionResult.ConcurrentCdrExts.Values.ToList();
-            this.CdrJobContext.AccountingContext.TransactionCache.PopulateCache( 
+            var oldCdrExts = this.CollectionResult.ProcessedCdrExts.ToList();
+            this.CdrJobContext.AccountingContext.TransactionCache.PopulateCache(
                 () => new Dictionary<string, acc_transaction>());
 
             //todo: change to parallel
@@ -52,11 +57,12 @@ namespace TelcobrightMediation
                 if (oldCdrExt.CdrNewOldType != CdrNewOldType.OldCdr)
                     throw new Exception("OldCdrs must have CdrNewOldtype status set to old.");
                 List<string> summaryTargetTables = this.MediationContext.MefServiceGroupContainer
-                    .IdServiceGroupWiseServiceGroups[Convert.ToInt32(oldCdrExt.Cdr.ServiceGroup)].GetSummaryTargetTables().Keys.ToList();
+                    .IdServiceGroupWiseServiceGroups[Convert.ToInt32(oldCdrExt.Cdr.ServiceGroup)]
+                    .GetSummaryTargetTables().Keys.ToList();
                 summaryTargetTables.ForEach(targetTableName =>
                 {
-                    AbstractCdrSummary regeneratedSummary = (AbstractCdrSummary)this.CdrJobContext.CdrSummaryContext
-                                        .TargetTableWiseSummaryFactory[targetTableName].CreateNewInstance(oldCdrExt);
+                    AbstractCdrSummary regeneratedSummary = (AbstractCdrSummary) this.CdrJobContext.CdrSummaryContext
+                        .TargetTableWiseSummaryFactory[targetTableName].CreateNewInstance(oldCdrExt);
                     //oldCdrExt.TableWiseSummaries.Add(targetTableName, recreatedSummary);
                     this.CdrJobContext.CdrSummaryContext.MergeSubstractSummary(targetTableName, regeneratedSummary);
                 });
@@ -66,10 +72,12 @@ namespace TelcobrightMediation
                 .PopulateCache(() => oldChargeables.ToDictionary(chargeable => chargeable.id.ToString()));
             this.CdrJobContext.AccountingContext.ChargeableCache.DeleteAll();
         }
+
         public void UndoOldChargeables()
         {
-            if (!this.CollectionResult.ConcurrentCdrExts.Any()) return;
-            var oldChargeables = this.CollectionResult.ConcurrentCdrExts.Values.SelectMany(c => c.Chargeables.Values).ToList();
+            if (!this.CollectionResult.ProcessedCdrExts.Any())
+                throw new Exception("ProcessedCdrExts cannot be empty in Cdr Erasing job.");
+            var oldChargeables = this.CollectionResult.ProcessedCdrExts.SelectMany(c => c.Chargeables.Values).ToList();
             this.CdrJobContext.AccountingContext.ChargeableCache
                 .PopulateCache(() => oldChargeables.ToDictionary(chargeable => chargeable.id.ToString()));
             this.CdrJobContext.AccountingContext.ChargeableCache.DeleteAll();
@@ -77,58 +85,11 @@ namespace TelcobrightMediation
 
         public void DeleteOldCdrs()
         {
-            int delCount=OldCdrDeleter.DeleteOldCdrs("cdr", this.CollectionResult.ConcurrentCdrExts.Values
-                .Select(c => new KeyValuePair<long, DateTime>(c.Cdr.idcall, c.StartTime)).ToList(),
-                this.CdrJobContext.SegmentSizeForDbWrite,this.CdrJobContext.DbCmd);
-            if(delCount!=this.CollectionResult.RawCount)
+            int delCount = OldCdrDeleter.DeleteOldCdrs("cdr", this.CollectionResult.ProcessedCdrExts
+                    .Select(c => new KeyValuePair<long, DateTime>(c.Cdr.idcall, c.StartTime)).ToList(),
+                this.CdrJobContext.SegmentSizeForDbWrite, this.CdrJobContext.DbCmd);
+            if (delCount != this.CollectionResult.RawCount)
                 throw new Exception("Deleted number of cdrs do not match raw count in collection result.");
         }
-
-        acc_transaction MarkPrevTransactionAsCancelled(acc_transaction oldTransaction)
-        {
-            if (oldTransaction.cancelled == 1)
-                throw new Exception("Prev transaction cannot have cancelled status=1, could be erroneous coding.");
-            oldTransaction.cancelled = 1;
-            oldTransaction.isBillable = null;
-            oldTransaction.isBilled = null;
-            return oldTransaction;
-        }
-
-        acc_transaction CreateReversedTransactions(acc_transaction oldTrans,long idTelcobrightJob)
-        {
-            {
-                if (oldTrans.cancelled != 1)
-                    throw new Exception(
-                        "Reversed transactions can only be created for transaction marked as 'cancelled'.");
-                var newTrans = new acc_transaction();
-                newTrans.id =
-                    this.CdrJobContext.AccountingContext.AutoIncrementManager.GetNewCounter("acc_transaction");
-                newTrans.transactionTime = oldTrans.transactionTime;
-                if (oldTrans.debitOrCredit == "c")
-                {
-                    newTrans.debitOrCredit = "d";
-                }
-                else if (oldTrans.debitOrCredit == "d")
-                {
-                    newTrans.debitOrCredit = "c";
-                }
-                else throw new ArgumentOutOfRangeException();
-                newTrans.idEvent = oldTrans.idEvent;
-                newTrans.uniqueBillId = oldTrans.uniqueBillId;
-                newTrans.description = "reversed";
-                newTrans.glAccountId = oldTrans.glAccountId;
-                newTrans.amount = (-1) * oldTrans.amount;
-                newTrans.uomId = oldTrans.uomId;
-                newTrans.isBillable = null;
-                newTrans.isPrepaid = oldTrans.isPrepaid;
-                newTrans.isBilled = null;
-                newTrans.cancelled = 1;
-                newTrans.createdByJob = idTelcobrightJob;
-                newTrans.changedByJob = idTelcobrightJob;
-                newTrans.jsonDetail = "";
-                return newTrans;
-            }
-        }
     }
-
 }

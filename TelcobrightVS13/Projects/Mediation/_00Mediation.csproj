@@ -214,7 +214,6 @@
     <Compile Include="MefData\ITelcobrightJob.cs" />
     <Compile Include="MefData\MefJobContainer.cs" />
     <Compile Include="AutoIncrementManager.cs" />
-    <Compile Include="Cdr\CdrCollectionResultProcessingSummary.cs" />
     <Compile Include="Cdr\BatchSqlJobParamJson.cs" />
     <Compile Include="Config\JobInputData\CdrJobInputData.cs" />
     <Compile Include="SegmentedJob\AbstractRowBasedSegmentedJobProcessor.cs" />

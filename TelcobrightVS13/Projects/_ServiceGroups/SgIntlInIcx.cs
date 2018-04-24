@@ -5,83 +5,76 @@ using System.Collections.Generic;
 using LibraryExtensions;
 using TelcobrightMediation.Cdr;
 using TransactionTuple = System.ValueTuple<int, int, long, int,long>;
+
 namespace TelcobrightMediation
 {
 
-	[Export("ServiceGroup", typeof(IServiceGroup))]
-	public class SgIntlInIcx : IServiceGroup
-	{
-		private readonly SgIntlTransitVoice _sgIntlTransitVoice = new SgIntlTransitVoice();
-		public override string ToString() => this.RuleName;
-		public string RuleName => "International Incoming Calls [ICX]";
-		public string HelpText { get; } = "Service group Intl In for BD ICX.";
-		public int Id => 3;
-		private Dictionary<string, Type> SummaryTargetTables { get; }
-		public SgIntlInIcx()//constructor
-		{
-			this.SummaryTargetTables = new Dictionary<string, Type>()
-				{
-					{ "sum_voice_day_03",typeof(sum_voice_day_03)},
-					{ "sum_voice_hr_03" ,typeof(sum_voice_hr_03) },
-				};
-		}
-		public Dictionary<string, Type> GetSummaryTargetTables()
-		{
-			return this.SummaryTargetTables;
-		}
+    [Export("ServiceGroup", typeof(IServiceGroup))]
+    public class SgIntlInIcx : IServiceGroup
+    {
+        private readonly SgIntlTransitVoice _sgIntlTransitVoice = new SgIntlTransitVoice();
+        public override string ToString() => this.RuleName;
+        public string RuleName => "International Incoming Calls [ICX]";
+        public string HelpText { get; } = "Service group Intl In for BD ICX.";
+        public int Id => 3;
+        private Dictionary<string, Type> SummaryTargetTables { get; }
 
-		public void ExecutePostRatingActions(CdrExt cdrExt, CdrProcessor cdrProcessor)
-		{
-			cdrExt.Cdr.roundedduration = cdrExt.Cdr.Duration1;
-			cdrExt.Cdr.CostICXIn = cdrExt.Cdr.CustomerCost;
-		}
+        public SgIntlInIcx() //constructor
+        {
+            this.SummaryTargetTables = new Dictionary<string, Type>()
+            {
+                {"sum_voice_day_03", typeof(sum_voice_day_03)},
+                {"sum_voice_hr_03", typeof(sum_voice_hr_03)},
+            };
+        }
 
-		public void Execute(cdr thisCdr, CdrProcessor cdrProcessor)
-		{
-			//international in call direction/service group
-			var dicRoutes = cdrProcessor.CdrJobContext.MediationContext.MefServiceGroupContainer.SwitchWiseRoutes;
-			var key = new ValueTuple<int, string>(thisCdr.SwitchId,thisCdr.incomingroute);
+        public Dictionary<string, Type> GetSummaryTargetTables()
+        {
+            return this.SummaryTargetTables;
+        }
+
+        public void ExecutePostRatingActions(CdrExt cdrExt, CdrProcessor cdrProcessor)
+        {
+            cdrExt.Cdr.roundedduration = cdrExt.Cdr.Duration1;
+            cdrExt.Cdr.CostICXIn = cdrExt.Cdr.CustomerCost;
+        }
+
+        public void Execute(cdr thisCdr, CdrProcessor cdrProcessor)
+        {
+            //international in call direction/service group
+            var dicRoutes = cdrProcessor.CdrJobContext.MediationContext.MefServiceGroupContainer.SwitchWiseRoutes;
+            var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.incomingroute);
             route thisRoute = null;
-			dicRoutes.TryGetValue(key, out thisRoute);
-			if (thisRoute != null)
-			{
-				if (thisRoute.partner.PartnerType == IcxPartnerType.IOS 
-					&& thisRoute.NationalOrInternational == RouteLocalityType.International
-				) //IGW and route=international
-				{
-					thisCdr.ServiceGroup = 3; //Intl in ICX
-											   //set year-month id for this call for tt clean & bc selling
-					string startTimeAsStr = thisCdr.StartTime.ToMySqlStyleDateTimeStrWithoutQuote();
-					thisCdr.field2 = Convert.ToInt32(startTimeAsStr.Substring(2, 2) + startTimeAsStr.Substring(5, 2));
-				}
-			}
-		}
+            dicRoutes.TryGetValue(key, out thisRoute);
+            if (thisRoute != null)
+            {
+                if (thisRoute.partner.PartnerType == IcxPartnerType.IOS
+                    && thisRoute.NationalOrInternational == RouteLocalityType.International
+                ) //IGW and route=international
+                {
+                    thisCdr.ServiceGroup = 3; //Intl in ICX
+                    //set year-month id for this call for tt clean & bc selling
+                    string startTimeAsStr = thisCdr.StartTime.ToMySqlStyleDateTimeStrWithoutQuote();
+                    thisCdr.field2 = Convert.ToInt32(startTimeAsStr.Substring(2, 2) + startTimeAsStr.Substring(5, 2));
+                }
+            }
+        }
 
-		public void SetServiceGroupWiseSummaryParams(CdrExt cdrExt, AbstractCdrSummary newSummary)
-		{
-			//this._sgIntlTransitVoice.SetServiceGroupWiseSummaryParams(cdrExt, newSummary);
-			newSummary.tup_countryorareacode = cdrExt.Cdr.CountryCode;
-			newSummary.tup_matchedprefixcustomer = cdrExt.Cdr.matchedprefixcustomer;
-			newSummary.tup_matchedprefixsupplier = cdrExt.Cdr.matchedprefixsupplier;
-			if (cdrExt.Cdr.ChargingStatus != 1) return;
+        public void SetServiceGroupWiseSummaryParams(CdrExt cdrExt, AbstractCdrSummary newSummary)
+        {
+            //this._sgIntlTransitVoice.SetServiceGroupWiseSummaryParams(cdrExt, newSummary);
+            newSummary.tup_countryorareacode = cdrExt.Cdr.CountryCode;
+            newSummary.tup_matchedprefixcustomer = cdrExt.Cdr.matchedprefixcustomer;
+            newSummary.tup_matchedprefixsupplier = cdrExt.Cdr.matchedprefixsupplier;
+            if (cdrExt.Cdr.ChargingStatus != 1) return;
 
-			acc_chargeable chargeableCust = null;
-			cdrExt.Chargeables.TryGetValue(new ValueTuple<int, int, int>(this.Id, 1, 1), out chargeableCust);
-			if (chargeableCust == null)
-			{
-				throw new Exception("Chargeable info not found for customer direction.");
-			}
-			this._sgIntlTransitVoice.SetChargingSummaryInCustomerDirection(chargeableCust, newSummary);
-
-			newSummary.tax1 = 0;
-			newSummary.tax2 = 0;
-			newSummary.vat = 0;
-			newSummary.intAmount1 = 0;
-			newSummary.intAmount2 = 0;
-			newSummary.longAmount1 = 0;
-			newSummary.longAmount2 = 0;
-			newSummary.longDecimalAmount1 = 0;
-			newSummary.longDecimalAmount2 = 0;
-		}
-	}
+            acc_chargeable chargeableCust = null;
+            cdrExt.Chargeables.TryGetValue(new ValueTuple<int, int, int>(this.Id, 1, 1), out chargeableCust);
+            if (chargeableCust == null)
+            {
+                throw new Exception("Chargeable info not found for customer direction.");
+            }
+            this._sgIntlTransitVoice.SetChargingSummaryInCustomerDirection(chargeableCust, newSummary);
+        }
+    }
 }

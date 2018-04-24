@@ -105,7 +105,9 @@ namespace TelcobrightMediation
             if (validationResult.IsValid == false)
             {
                 CdrExt removedCdrExt = null;
-                this.CollectionResult.ConcurrentCdrExts.TryRemove(cdrExt.UniqueBillId, out removedCdrExt);
+                if(this.CollectionResult.ConcurrentCdrExts.TryRemove(cdrExt.UniqueBillId, out removedCdrExt)==false)
+                    throw new Exception("Could not remove mediation incomplete cdr from CdrExts, " +
+                                        "it may have been removed erroneously.");
                 this.CollectionResult.CdrErrors.Add(
                     ConvertCdrToCdrError(validationResult.FirstValidationFailureMessage, removedCdrExt));
             }
@@ -177,28 +179,7 @@ namespace TelcobrightMediation
         }
 
 
-        private CollectionResultProcessingSummary GetCdrJobSegmentSummary()
-        {
-            //https://stackoverflow.com/questions/24776710/lambda-expression-select-min-and-max-at-the-same-time
-            CollectionResultProcessingSummary jobSummary =
-                (CollectionResultProcessingSummary) this.CollectionResult.ConcurrentCdrExts.Values
-                    .Select(e => e.Cdr)
-                    .GroupBy(anyConstant => 1)
-                    .Select(g => new CollectionResultProcessingSummary()
-                    {
-                        StartSequenceNumber = g.Min(c => c.SequenceNumber),
-                        EndSequenceNumber = g.Max(c => c.SequenceNumber),
-                        MinIdCall = g.Min(c => c.idcall),
-                        MaxIdCall = g.Max(c => c.idcall),
-                        MinCallStartTime = g.Min(c => c.StartTime),
-                        MaxCallStartTime = g.Max(c => c.StartTime),
-                        PartialDuration = g.Sum(c => Convert.ToDouble(c.PartialDuration)),
-                        TotalDuration = g.Sum(c => Convert.ToDouble(c.DurationSec)),
-                        SuccessfulCount = g.Sum(c => Convert.ToInt32(c.ChargingStatus)),
-                    }).First();
-            jobSummary.FailedCount = this.CollectionResult.ConcurrentCdrExts.Count - jobSummary.SuccessfulCount;
-            return jobSummary;
-        }
+        
 
         private void ExecutePartnerRules(List<int> partnerRules, CdrExt cdrExt)
         {
@@ -281,7 +262,6 @@ namespace TelcobrightMediation
                 partialCdrWriter.Write();
                 partialCdrContainers = partialCdrWriter.PartialCdrContainers;
             }
-            int cdrExtCount = this.CollectionResult.ConcurrentCdrExts.Count;
             int rawPartialActualCount = partialCdrContainers.Sum(c => c.NewRawInstances.Count);
             int distinctPartialCount = partialCdrContainers.Count;
 

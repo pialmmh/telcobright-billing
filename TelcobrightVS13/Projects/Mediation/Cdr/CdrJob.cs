@@ -45,7 +45,5 @@ namespace TelcobrightMediation.Cdr
             this.CdrJobContext.AccountingContext.WriteAllChanges();
             this.CdrJobContext.AutoIncrementManager.WriteState();
         }
-
-        
     }
 }

@@ -27,7 +27,6 @@ namespace TelcobrightMediation
         public BlockingCollection<CdrExt> ProcessedCdrExts { get; }=new BlockingCollection<CdrExt>();
         public bool IsEmpty => this.DatesInvolved == null || this.DatesInvolved.Any() == false ||
                                !this.ConcurrentCdrExts.Any() && !this.CdrInconsistents.Any();
-        public CollectionResultProcessingSummary CollectionResultProcessingSummary { get; }
         public CdrCollectionResult(ne ne, List<CdrExt> cdrExts,
             List<cdrinconsistent> cdrInconsistents, int rawCount)
         {
@@ -40,7 +39,6 @@ namespace TelcobrightMediation
             this.HoursInvolved = this.ConcurrentCdrExts.Values.Select(c => c.StartTime.RoundDownToHour()).Distinct().ToList();
             this.DatesInvolved = this.HoursInvolved.Select(h => h.Date).Distinct().ToList();
             this.CdrInconsistents = cdrInconsistents;
-            this.CollectionResultProcessingSummary = new CollectionResultProcessingSummary();
             this.RawCount = rawCount;
         }
     }
