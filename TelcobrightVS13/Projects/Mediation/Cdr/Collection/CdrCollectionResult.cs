@@ -74,13 +74,13 @@ namespace TelcobrightMediation
             cdrExt.PartialCdrContainer.NewRawInstances.ForEach(r =>
             {
                 this._cdrErrors.Add(ConvertCdrToCdrError(r, errorMessage));
-                CdrExt removedCdrExt = null;
-                if (this.ConcurrentCdrExts.TryRemove(cdrExt.UniqueBillId, out removedCdrExt) == false)
-                {
-                    throw new Exception("Could not remove cdrExt from collection after converting rawPartial instance " +
-                                        "to cdrError.");
-                }
             });
+            CdrExt removedCdrExt = null;
+            if (this.ConcurrentCdrExts.TryRemove(cdrExt.UniqueBillId, out removedCdrExt) == false)
+            {
+                throw new Exception("Could not remove cdrExt from collection after converting rawPartial instance " +
+                                    "to cdrError.");
+            }
         }
     }
 }
