@@ -104,7 +104,7 @@ namespace TelcobrightMediation
 
         private void SendToCdrError(CdrExt cdrExt, string errorMessage)
         {
-            if (cdrExt.PartialCdrContainer == null && cdrExt.Cdr.PartialFlag == 0)
+            if (cdrExt.Cdr.PartialFlag == 0)
                 this.CollectionResult.AddNonPartialCdrExtToCdrErrors(cdrExt, errorMessage);
             else if (cdrExt.PartialCdrContainer != null && cdrExt.Cdr.PartialFlag != 0)
             {

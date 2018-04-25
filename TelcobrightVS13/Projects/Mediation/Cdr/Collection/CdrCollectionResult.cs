@@ -52,7 +52,7 @@ namespace TelcobrightMediation
         }
         public void AddNonPartialCdrExtToCdrErrors(CdrExt cdrExt, string errorMessage)
         {
-            if (cdrExt.PartialCdrContainer != null || cdrExt.Cdr.PartialFlag != 0)
+            if (cdrExt.Cdr.PartialFlag != 0)
             {
                 throw new Exception("Partial cdrExt must be added to cdrErrors through appropriate method.");
             }
@@ -67,7 +67,7 @@ namespace TelcobrightMediation
 
         public void AddNewRawPartialCdrsToCdrErrors(CdrExt cdrExt,string errorMessage)
         {
-            if (cdrExt.PartialCdrContainer == null || cdrExt.Cdr.PartialFlag == 0)
+            if (cdrExt.PartialCdrContainer==null &&cdrExt.Cdr.PartialFlag == 0)
             {
                 throw new Exception("Non partial cdrExt must be added to cdrErrors through appropriate method.");
             }

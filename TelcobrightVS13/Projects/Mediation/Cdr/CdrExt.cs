@@ -20,7 +20,6 @@ namespace TelcobrightMediation.Cdr
 
     public class CdrExt
     {
-        //todo: implement IsPartial Property
         private PartialCdrContainer _partialCdrContainer;
         private readonly List<acc_transaction> _reversedTransactions = new List<acc_transaction>();
         public CdrNewOldType CdrNewOldType { get; }
@@ -42,23 +41,23 @@ namespace TelcobrightMediation.Cdr
         {
             get
             {
-                if (this.CdrNewOldType == CdrNewOldType.OldCdr)
+                if (this.CdrNewOldType == CdrNewOldType.OldCdr)//old cdr
                 {
-                    throw new Exception("Property PartialCdrContainer cannot be accessed for old cdrs.");
+                    throw new Exception("Property PartialCdrContainer cannot be used for old cdrs.");
                 }
-                else if (this.Cdr.PartialFlag == 0)
+                else if (this.Cdr.PartialFlag == 0)//new non partial cdr
                 {
-                    throw new Exception("Property PartialCdrContainer cannot be accessed for non partial cdrs.");
+                    throw new Exception("Property PartialCdrContainer cannot be used for non partial cdrs.");
                 }
                 return this._partialCdrContainer;
             }
             set
             {
-                if (this.CdrNewOldType == CdrNewOldType.OldCdr && value != null)
+                if (this.CdrNewOldType == CdrNewOldType.OldCdr && value != null)//old cdr
                 {
                     throw new Exception("Property PartialCdrContainer cannot be set for old cdrs.");
                 }
-                else if (this.Cdr.PartialFlag == 0 && value != null)
+                else if (this.Cdr.PartialFlag == 0 && value != null)//new non partial cdr
                 {
                     throw new Exception("Property PartialCdrContainer cannot be set for non partial cdrs.");
                 }
