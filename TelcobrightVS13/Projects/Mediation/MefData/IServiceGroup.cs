@@ -11,7 +11,7 @@ namespace TelcobrightMediation
         string HelpText { get; }
         int Id { get; }
         void Execute(cdr thisCdr, CdrProcessor cdrProcessor);
-        void ExecutePostRatingActions(CdrExt cdrExt,CdrProcessor cdrProcessor);
+        void ExecutePostRatingActions(CdrExt cdrExt, object postRatingData);
         Dictionary<string, Type> GetSummaryTargetTables();
         void SetServiceGroupWiseSummaryParams(CdrExt cdrExt, AbstractCdrSummary newSummary);
     }

@@ -29,10 +29,11 @@ namespace ServiceFamilies
             decimal finalAmount = 0;
             Rateext matchedRateWithAssignmentTupleId = a2Z.ExecuteA2Z(out finalDuration, out finalAmount, flagLcr,
                 useInMemoryTable:true);
-            acc_chargeable chargeable = null;
-            account postingAccount = null;
             if (matchedRateWithAssignmentTupleId != null)
             {
+                //consider otherAmount3 as tax1, by default
+                decimal taxAmount1 = Convert.ToDecimal(matchedRateWithAssignmentTupleId.OtherAmount3);
+                cdr.RevenueVATCommissionOut = cdr.CustomerCost * taxAmount1 / 100;
                 string idCurrencyUoM = serviceContext.CdrProcessor.CdrJobContext.MediationContext.MefServiceFamilyContainer
                     .DicRateplans[matchedRateWithAssignmentTupleId.idrateplan.ToString()].Currency;
                 int idChargedPartner = GetChargedOrChargingPartnerId(cdrExt, serviceContext);
@@ -41,10 +42,10 @@ namespace ServiceFamilies
                 CdrPostingAccountingFinder postingAccountingFinder =
                     new CdrPostingAccountingFinder(serviceContext, matchedRateWithAssignmentTupleId, idChargedPartner,
                         billingRule);
-                postingAccount = postingAccountingFinder.GetPostingAccount();
+                var postingAccount = postingAccountingFinder.GetPostingAccount();
                 if(cdrExt.Cdr.ChargingStatus==1)
                 {
-                    chargeable = new acc_chargeable
+                    var chargeable = new acc_chargeable
                     {
                         id = serviceContext.CdrProcessor.CdrJobContext.AccountingContext.AutoIncrementManager.GetNewCounter("acc_chargeable"),
                         uniqueBillId = cdr.UniqueBillId,
@@ -63,7 +64,8 @@ namespace ServiceFamilies
                         RateId = matchedRateWithAssignmentTupleId.id,
                         glAccountId = postingAccount.id,
                         changedByJob = serviceContext.CdrProcessor.CdrJobContext.TelcobrightJob.id,
-                        idBillingrule = billingRule.Id
+                        idBillingrule = billingRule.Id,
+                        TaxAmount1 = taxAmount1
                     };
                     if (chargeable.createdByJob == null)
                     {

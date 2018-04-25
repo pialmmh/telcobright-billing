@@ -29,7 +29,7 @@ namespace TelcobrightMediation
             return this.SummaryTargetTables;
         }
 
-        public void ExecutePostRatingActions(CdrExt cdrExt, CdrProcessor cdrProcessor)
+        public void ExecutePostRatingActions(CdrExt cdrExt, object postRatingData)
         {
             
         }

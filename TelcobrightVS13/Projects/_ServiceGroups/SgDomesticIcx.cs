@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using LibraryExtensions;
 using TelcobrightMediation.Cdr;
 using TransactionTuple = System.ValueTuple<int, int, long, int, long>;
+
 namespace TelcobrightMediation
 {
     [Export("ServiceGroup", typeof(IServiceGroup))]
@@ -16,29 +17,31 @@ namespace TelcobrightMediation
         public string HelpText => "Service group Domestic for BD ICX.";
         public int Id => 1;
         private Dictionary<string, Type> SummaryTargetTables { get; }
-        public SgDomesticIcx()//constructor
+
+        public SgDomesticIcx() //constructor
         {
             this.SummaryTargetTables = new Dictionary<string, Type>()
-                {
-                    { "sum_voice_day_01",typeof(sum_voice_day_01)},
-                    { "sum_voice_hr_01" ,typeof(sum_voice_hr_01) },
-                };
+            {
+                {"sum_voice_day_01", typeof(sum_voice_day_01)},
+                {"sum_voice_hr_01", typeof(sum_voice_hr_01)},
+            };
         }
+
         public Dictionary<string, Type> GetSummaryTargetTables()
         {
             return this.SummaryTargetTables;
         }
 
-        public void ExecutePostRatingActions(CdrExt cdrExt, CdrProcessor cdrProcessor)
+        public void ExecutePostRatingActions(CdrExt cdrExt, object postRatingData)
         {
-            cdrExt.Cdr.roundedduration = cdrExt.Cdr.Duration1;
-            cdrExt.Cdr.CostANSIn = cdrExt.Cdr.CustomerCost;
+
         }
+
         public void Execute(cdr thisCdr, CdrProcessor cdrProcessor)
         {
             //Domestic call direction/service group
             var dicRoutes = cdrProcessor.CdrJobContext.MediationContext.MefServiceGroupContainer.SwitchWiseRoutes;
-            var key = new ValueTuple<int,string>(thisCdr.SwitchId, thisCdr.incomingroute);
+            var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.incomingroute);
             route thisRoute = null;
             dicRoutes.TryGetValue(key, out thisRoute);
             if (thisRoute != null)
@@ -50,6 +53,7 @@ namespace TelcobrightMediation
                 }
             }
         }
+
         public void SetServiceGroupWiseSummaryParams(CdrExt cdrExt, AbstractCdrSummary newSummary)
         {
             //this._sgIntlTransitVoice.SetServiceGroupWiseSummaryParams(cdrExt, newSummary);
@@ -65,16 +69,7 @@ namespace TelcobrightMediation
                 throw new Exception("Chargeable info not found for customer direction.");
             }
             this._sgIntlTransitVoice.SetChargingSummaryInCustomerDirection(chargeableCust, newSummary);
-            
-            newSummary.tax1 = 0;
-            newSummary.tax2 = 0;
-            newSummary.vat = 0;
-            newSummary.intAmount1 = 0;
-            newSummary.intAmount2 = 0;
-            newSummary.longAmount1 = 0;
-            newSummary.longAmount2 = 0;
-            newSummary.longDecimalAmount1 = 0;
-            newSummary.longDecimalAmount2 = 0;
+            newSummary.tax1 = Convert.ToDecimal(chargeableCust.TaxAmount1);
         }
     }
 }

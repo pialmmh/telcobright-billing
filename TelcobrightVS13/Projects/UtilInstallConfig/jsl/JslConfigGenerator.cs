@@ -189,7 +189,7 @@ namespace InstallConfig
                             "outPartnerId must be > 0" },
                         {"!String.IsNullOrEmpty(obj.MatchedPrefixY) and !String.IsNullOrWhiteSpace(obj.MatchedPrefixY)",
                             "MatchedPrefixY cannot be empty" },
-                        {"obj.durationsec > 0 ? obj.RevenueICXOut > 0 : obj.RevenueICXOut == 0 ",
+                        {"obj.durationsec > 0 ? obj.RevenueICXOut != 0 : obj.RevenueICXOut == 0 ",//negative allowed
                             "RevenueICXOut must be > 0 when durationsec > 0 , otherwise == 0" },
                         {"obj.durationsec > 0 ? obj.RevenueVATCommissionOut > 0 : obj.RevenueVATCommissionOut == 0 ",
                             "Revenue Commission (BTRC) must be > 0 when durationsec > 0  , otherwise == 0 " },

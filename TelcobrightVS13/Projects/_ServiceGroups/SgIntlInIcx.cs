@@ -33,10 +33,9 @@ namespace TelcobrightMediation
             return this.SummaryTargetTables;
         }
 
-        public void ExecutePostRatingActions(CdrExt cdrExt, CdrProcessor cdrProcessor)
+        public void ExecutePostRatingActions(CdrExt cdrExt, object postRatingData)
         {
             cdrExt.Cdr.roundedduration = cdrExt.Cdr.Duration1;
-            cdrExt.Cdr.CostICXIn = cdrExt.Cdr.CustomerCost;
         }
 
         public void Execute(cdr thisCdr, CdrProcessor cdrProcessor)
@@ -75,6 +74,7 @@ namespace TelcobrightMediation
                 throw new Exception("Chargeable info not found for customer direction.");
             }
             this._sgIntlTransitVoice.SetChargingSummaryInCustomerDirection(chargeableCust, newSummary);
+            newSummary.tax1 = Convert.ToDecimal(chargeableCust.TaxAmount1);
         }
     }
 }

@@ -30,7 +30,7 @@ namespace TelcobrightMediation.Cdr
         public Dictionary<string, AbstractCdrSummary> TableWiseSummaries { get; set; }
 
         public Dictionary<ValueTuple<int, int, int>, acc_chargeable> Chargeables { get; }
-            = new Dictionary<ValueTuple<int, int, int>, acc_chargeable>(); //key=tuple(sg,sf,product,assignedDir)
+            = new Dictionary<ValueTuple<int, int, int>, acc_chargeable>(); //key=tuple(sg,sf,assignedDir)
 
         public Dictionary<long, TransactionContainerForSingleAccount> AccWiseTransactionContainers { get; } =
             new Dictionary<long, TransactionContainerForSingleAccount>();

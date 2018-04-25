@@ -50,7 +50,6 @@ namespace TelcobrightMediation
             decimal yAmountUsd = this.PrefixMatcher.A2ZAmount(finalDuration, matchedRateWithAssignmentTupleId,
                 rateFieldNumber: 1, //other amount1
                 cdrProcessor: serviceContext.CdrProcessor);
-            decimal btrcRevSharePercentage = Convert.ToDecimal(matchedRateWithAssignmentTupleId.OtherAmount3);
             thisCdr.roundedduration = finalDuration;
             thisCdr.SubscriberChargeXOut = Convert.ToDecimal(xAmountBdt);
             thisCdr.CarrierCostYIGWOut = Convert.ToDecimal(yAmountUsd);
@@ -64,7 +63,7 @@ namespace TelcobrightMediation
             {
                 throw new Exception($@"Already set Country code {thisCdr.CountryCode} id different from matchedXyz rates country code {matchedRateWithAssignmentTupleId.CountryCode}");
             }
-            thisCdr.CustomerRate = matchedRateWithAssignmentTupleId.OtherAmount1;
+            //thisCdr.CustomerRate = matchedRateWithAssignmentTupleId.OtherAmount1;
 
             //add the 100ms part 
             decimal duration100 = this.PrefixMatcher.HundredMsDuration(tempDuration);
@@ -76,8 +75,23 @@ namespace TelcobrightMediation
             decimal yBdt = yAmountUsd * (decimal) thisCdr.USDRateY;
             decimal zAmount = xAmountBdt - yBdt;
             decimal fifteenPcOfZ = Convert.ToDecimal(zAmount * matchedRateWithAssignmentTupleId.OtherAmount2) / 100;
-            decimal finalAmount = xyzRatingType == XyzRatingType.Igw ? fifteenPcOfZ + yBdt : fifteenPcOfZ;
-            thisCdr.RevenueIGWOut = finalAmount;
+            decimal finalAmount = 0;
+            switch (xyzRatingType)
+            {
+                case XyzRatingType.Igw:
+                    finalAmount = fifteenPcOfZ + yBdt;
+                    thisCdr.RevenueIGWOut = finalAmount;
+                    break;
+                case XyzRatingType.Icx:
+                    finalAmount = fifteenPcOfZ;
+                    thisCdr.RevenueICXOut = finalAmount;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(xyzRatingType), xyzRatingType, null);
+            }
+            decimal btrcRevSharePercentage = Convert.ToDecimal(matchedRateWithAssignmentTupleId.OtherAmount3);
+            decimal btrcRevShareAmount = fifteenPcOfZ * btrcRevSharePercentage / 100;
+            thisCdr.RevenueVATCommissionOut = btrcRevShareAmount;
             account postingAccount = GetPostingAccount(cdrExt, serviceContext, "BDT");
             BillingRule billingRule = GetBillingRule(serviceContext,
                 matchedRateWithAssignmentTupleId.IdRatePlanAssignmentTuple);
@@ -101,7 +115,7 @@ namespace TelcobrightMediation
                     OtherAmount1 = xAmountBdt,//xAmount
                     OtherAmount2 = yAmountUsd,//yAmount
                     OtherAmount3 = zAmount,//zAmount
-                    TaxAmount1 = fifteenPcOfZ * btrcRevSharePercentage / 100,
+                    TaxAmount1 = btrcRevShareAmount,
                     unitPriceOrCharge = matchedRateWithAssignmentTupleId.rateamount,
                     Prefix = matchedRateWithAssignmentTupleId.Prefix,
                     RateId = matchedRateWithAssignmentTupleId.id,
