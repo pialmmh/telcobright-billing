@@ -417,6 +417,7 @@
     <Content Include="cal.png" />
     <Content Include="config\calendar.png" />
     <Content Include="config\BatchJob.aspx" />
+    <Content Include="config\InvoiceGeneration.aspx" />
     <Content Include="config\PackageAssignment.aspx" />
     <Content Include="config\PaymentHistory.aspx" />
     <Content Include="config\PaymentManagement.aspx" />
@@ -666,6 +667,13 @@
     </Compile>
     <Compile Include="config\BatchJob.aspx.designer.cs">
       <DependentUpon>BatchJob.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="config\InvoiceGeneration.aspx.cs">
+      <DependentUpon>InvoiceGeneration.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="config\InvoiceGeneration.aspx.designer.cs">
+      <DependentUpon>InvoiceGeneration.aspx</DependentUpon>
     </Compile>
     <Compile Include="config\PackageAssignment.aspx.cs">
       <DependentUpon>PackageAssignment.aspx</DependentUpon>

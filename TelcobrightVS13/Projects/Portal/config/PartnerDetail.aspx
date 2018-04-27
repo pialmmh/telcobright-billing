@@ -4,7 +4,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" Runat="Server">
 
-<div style="margin-left:5px; min-width:600px;min-height:600px;">
+    <div style="margin-left:5px; min-width:600px;min-height:600px;">
 
 <div>
     
