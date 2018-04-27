@@ -54,7 +54,7 @@ namespace PortalApp.ReportHelper
 				SUM(successfulcalls) AS Successfulcalls, 
 				SUM(connectedcalls) AS ConnectedCalls,
 		        SUM((actualduration)/60)AS MinutesIn, 
-                sum(roundedduration)/60 AS roundedduration, 
+                sum(duration1)/60 AS roundedduration, 
                 sum(duration1)/60 AS duration1,
 		        (SELECT 0) AS costansin,
 		        SUM(SupplierCost) AS costicxin, 
