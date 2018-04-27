@@ -50,12 +50,12 @@ namespace TelcobrightMediation
                 {
                     ResetMediationStatus(cdrExt.Cdr);
                     ServiceGroupConfiguration serviceGroupConfiguration = null;
-                    IServiceGroup serviceGroup = null;
-                    ExecuteServiceGroups(cdrExt, out serviceGroupConfiguration, out serviceGroup);
+                    IServiceGroup serviceGroup = ExecuteServiceGroups(cdrExt, out serviceGroupConfiguration);
+                    serviceGroupConfiguration.ServiceGroup = serviceGroup;
                     if (serviceGroup != null)
                     {
                         ExecutePartnerRules(serviceGroupConfiguration.PartnerRules, cdrExt);
-                        ExecuteServiceFamilyRules(serviceGroup, serviceGroupConfiguration.Ratingtrules, cdrExt);
+                        ExecuteServiceFamilyRules(serviceGroupConfiguration, serviceGroupConfiguration.Ratingtrules, cdrExt);
                         serviceGroup.ExecutePostRatingActions(cdrExt, this);
                         ExecuteNerRule(this, cdrExt);
                         if (this.CdrJobContext.MediationContext.Tbc.CdrSetting.CallConnectTimePresent == true &&
@@ -113,16 +113,15 @@ namespace TelcobrightMediation
             else throw new InvalidDataContractException("Cdr must be either partial or non-partial.");
         }
 
-        private void ExecuteServiceGroups(CdrExt newCdrExt,
-            out ServiceGroupConfiguration serviceGroupConfiguration, out IServiceGroup serviceGroup)
+        private IServiceGroup ExecuteServiceGroups(CdrExt newCdrExt,
+            out ServiceGroupConfiguration serviceGroupConfiguration)
         {
             serviceGroupConfiguration = null;
-            serviceGroup = null;
             Dictionary<int  , ServiceGroupConfiguration> serviceGroupConfigurations =
                 this.CdrJobContext.MediationContext.Tbc.CdrSetting.ServiceGroupConfigurations;
             foreach (KeyValuePair<int, ServiceGroupConfiguration> kv in serviceGroupConfigurations)
             {
-                serviceGroup = null;
+                IServiceGroup serviceGroup = null;
                 this.CdrJobContext.MediationContext.MefServiceGroupContainer.IdServiceGroupWiseServiceGroups.TryGetValue(kv.Key,
                     out serviceGroup);
                 if (serviceGroup != null)
@@ -131,9 +130,10 @@ namespace TelcobrightMediation
                     newCdrExt.Cdr.ServiceGroup =
                         0; //unset ServiceGroup first if already set e.g. during re-processing
                     serviceGroup.Execute(newCdrExt.Cdr, this);
-                    if (newCdrExt.Cdr.ServiceGroup > 0) break;
+                    if (newCdrExt.Cdr.ServiceGroup > 0) return serviceGroup;
                 }
             }
+            return null;
         }
 
         private void ResetMediationStatus(cdr cdr)
@@ -179,7 +179,7 @@ namespace TelcobrightMediation
             }
         }
 
-        private void ExecuteServiceFamilyRules(IServiceGroup serviceGroup, List<RatingRule> ratingRules, CdrExt cdrExt)
+        private void ExecuteServiceFamilyRules(ServiceGroupConfiguration serviceGroupConfiguration, List<RatingRule> ratingRules, CdrExt cdrExt)
         {
             foreach (RatingRule rule in ratingRules)
             {
@@ -191,7 +191,7 @@ namespace TelcobrightMediation
                     int idProductForIndividualAccount = 0; //find out a way to implement this later
                     if (string.IsNullOrEmpty(cdrExt.Cdr.UniqueBillId))
                         throw new Exception("Unique BillId not found!");
-                    ServiceContext serviceContext = new ServiceContext(this, serviceGroup, sf,
+                    ServiceContext serviceContext = new ServiceContext(this, serviceGroupConfiguration, sf,
                         rule.AssignDirection == 1
                             ? ServiceAssignmentDirection.Customer: rule.AssignDirection == 2
                                 ? ServiceAssignmentDirection.Supplier: ServiceAssignmentDirection.None

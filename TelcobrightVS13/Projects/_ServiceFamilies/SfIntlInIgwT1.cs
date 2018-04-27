@@ -114,7 +114,7 @@ namespace TelcobrightMediation
                     uniqueBillId = thisCdr.UniqueBillId,
                     idEvent = Convert.ToInt64(thisCdr.idcall),
                     transactionTime = thisCdr.StartTime,
-                    servicegroup = serviceContext.IdServiceGroup,
+                    servicegroup = serviceContext.ServiceGroupConfiguration.IdServiceGroup,
                     assignedDirection = 2, //indicates a bill by supplier (IOS/ICX)
                     servicefamily = serviceContext.ServiceFamily.Id,
                     ProductId = matchedRateWithAssignmentTupleId.ProductId,
@@ -164,7 +164,8 @@ namespace TelcobrightMediation
             var x = new rateplanassignmenttuple() { idService = this.Id };
 
             List<rateplanassignmenttuple> match = null;
-            serviceContext.MefServiceFamilyContainer.ServiceGroupWiseTupDefs[serviceContext.IdServiceGroup.ToString()]
+            serviceContext.MefServiceFamilyContainer
+                .ServiceGroupWiseTupDefs[serviceContext.ServiceGroupConfiguration.IdServiceGroup.ToString()]
                 .DicServiceTuplesIncludingBillingRuleAssignment.TryGetValue(x.GetTuple(), out match);
 
             if (match != null)

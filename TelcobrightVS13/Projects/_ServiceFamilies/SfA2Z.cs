@@ -32,6 +32,7 @@ namespace ServiceFamilies
             if (matchedRateWithAssignmentTupleId != null)
             {
                 //consider otherAmount3 as tax1, by default
+                cdr.Duration1 = finalDuration;
                 decimal taxAmount1 = Convert.ToDecimal(matchedRateWithAssignmentTupleId.OtherAmount3);
                 cdr.RevenueVATCommissionOut = cdr.CustomerCost * taxAmount1 / 100;
                 string idCurrencyUoM = serviceContext.CdrProcessor.CdrJobContext.MediationContext.MefServiceFamilyContainer
@@ -51,7 +52,7 @@ namespace ServiceFamilies
                         uniqueBillId = cdr.UniqueBillId,
                         idEvent = Convert.ToInt64(cdr.idcall),
                         transactionTime = cdr.StartTime,
-                        servicegroup = serviceContext.IdServiceGroup,
+                        servicegroup = serviceContext.ServiceGroupConfiguration.IdServiceGroup,
                         assignedDirection = Convert.ToSByte(serviceContext.AssignDir),
                         servicefamily = serviceContext.ServiceFamily.Id,
                         ProductId = matchedRateWithAssignmentTupleId.ProductId,

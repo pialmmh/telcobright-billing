@@ -29,7 +29,7 @@ namespace TelcobrightMediation
             account postingAccount = null;
             AccountFactory accountFactory =
                 new AccountFactory(serviceContext.CdrProcessor.CdrJobContext.AccountingContext);
-            postingAccount = accountFactory.CreateOrGetBillable(0, serviceContext.IdServiceGroup,
+            postingAccount = accountFactory.CreateOrGetBillable(0, serviceContext.ServiceGroupConfiguration.IdServiceGroup,
                 Convert.ToInt32(newCdrExt.Cdr.inPartnerId),
                 serviceContext.ServiceFamily.Id, 0, idCurrencyUoM);
             return postingAccount;
@@ -104,7 +104,7 @@ namespace TelcobrightMediation
                     uniqueBillId = thisCdr.UniqueBillId,
                     idEvent = Convert.ToInt64(thisCdr.idcall),
                     transactionTime = callDate,
-                    servicegroup = serviceContext.IdServiceGroup,
+                    servicegroup = serviceContext.ServiceGroupConfiguration.IdServiceGroup,
                     assignedDirection =1, //charged to customer, although does not have assigndir 
                     servicefamily = serviceContext.ServiceFamily.Id,
                     ProductId = matchedRateWithAssignmentTupleId.ProductId,

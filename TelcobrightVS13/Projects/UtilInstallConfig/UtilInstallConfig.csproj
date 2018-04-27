@@ -99,10 +99,12 @@
     <Compile Include="ConfigPathHelper.cs" />
     <Compile Include="FileRename.cs" />
     <Compile Include="jsl\JslConfigGenerator.cs" />
+    <Compile Include="jsl\JslServiceGroups.cs" />
     <Compile Include="jsl\JslQuartzConfig.cs" />
     <Compile Include="MefConfigImportComposer.cs" />
     <Compile Include="platinum\PlatinumConfigGenerator.cs" />
     <Compile Include="dbl\ConfigHelper_DBL.cs" />
+    <Compile Include="platinum\PlatinumServiceGroups.cs" />
     <Compile Include="platinum\PlatinumQuartzConfig.cs" />
     <Compile Include="roots\ConfigGenerator_Roots.cs" />
     <Compile Include="ConfigGeneratorMain.cs" />

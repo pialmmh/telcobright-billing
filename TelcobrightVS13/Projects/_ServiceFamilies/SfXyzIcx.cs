@@ -71,7 +71,8 @@ namespace TelcobrightMediation
         {
             var x = new rateplanassignmenttuple() { idService = this.Id};
             List<rateplanassignmenttuple> match = null;
-            serviceContext .MefServiceFamilyContainer.ServiceGroupWiseTupDefs[serviceContext.IdServiceGroup.ToString()]
+            serviceContext.MefServiceFamilyContainer
+                .ServiceGroupWiseTupDefs[serviceContext.ServiceGroupConfiguration.IdServiceGroup.ToString()]
                 .DicServiceTuplesIncludingBillingRuleAssignment.TryGetValue(x.GetTuple(), out match);
             if (match != null)
             {

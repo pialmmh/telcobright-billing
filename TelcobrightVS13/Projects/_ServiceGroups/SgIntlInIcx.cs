@@ -35,7 +35,6 @@ namespace TelcobrightMediation
 
         public void ExecutePostRatingActions(CdrExt cdrExt, object postRatingData)
         {
-            cdrExt.Cdr.roundedduration = cdrExt.Cdr.Duration1;
         }
 
         public void Execute(cdr thisCdr, CdrProcessor cdrProcessor)

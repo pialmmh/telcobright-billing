@@ -58,7 +58,8 @@ namespace TelcobrightMediation
             //following will return tuples for the day of answer time. If rateplans are assigned to routes, then routetuples
             //in the rateplanassignment table will be fetched, otherwise partner tuples will be returned
             //TupleByPeriod=one rateplanassignmenttuple on the day of answertime
-            List<TupleByPeriod> tups = GetAssignmentTuples(this.ServiceContext.IdServiceGroup.ToString());
+            List<TupleByPeriod> tups = GetAssignmentTuples(this.ServiceContext.ServiceGroupConfiguration.IdServiceGroup
+                .ToString());
             if(tups==null) return null;
             Rateext thisRateWithAssigmentTupleId = this.PrefixMatcher.MatchPrefix(phoneNumber, category, subCategory,
                 tups, Convert.ToDateTime(this.Cdr.AnswerTime), flagLcr,useInMemoryTable);

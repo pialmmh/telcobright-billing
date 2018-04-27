@@ -136,9 +136,10 @@ namespace UnitTesterManual
                          + processedErrorCount + processedInconsistentCount));
                     Assert.AreEqual(cdrWritingResult.PartialCdrWriter.WrittenCdrPartialReferences,
                         processedPartialCdrExts.Count);
+                    Assert.AreEqual(cdrWritingResult.CdrCount,processedCdrExts.Count);
                     Assert.AreEqual(collectionResult.RawCount,
-                        +cdrWritingResult.CdrCount + cdrWritingResult.CdrErrorCount +
-                        cdrWritingResult.CdrInconsistentCount);
+                        cdrWritingResult.CdrErrorCount +cdrWritingResult.CdrInconsistentCount
+                        +processedCdrExts.Select(c=>c.NewRawCount).Sum());
                     processedPartialCdrExts.ForEach(
                         c => Assert.IsNotNull(c.PartialCdrContainer.NewAggregatedRawInstance));
                     processedPartialCdrExts.ForEach(c => Assert.IsNotNull(c.PartialCdrContainer.NewCdrEquivalent));

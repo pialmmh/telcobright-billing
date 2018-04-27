@@ -10,18 +10,18 @@ namespace TelcobrightMediation
     {
         public CdrProcessor CdrProcessor { get; }
         public MefServiceFamilyContainer MefServiceFamilyContainer { get; }
-        public int IdServiceGroup { get; set; }
+        public ServiceGroupConfiguration ServiceGroupConfiguration { get; }
         public IServiceFamily ServiceFamily { get; set; }
-        public int ProductIdToOverrideServiceFamilyAccount { get; set; }
+        public int ProductIdToOverrideServiceFamilyAccount { get;}
         public ServiceAssignmentDirection AssignDir { get; set; }
 
         public ServiceContext(CdrProcessor cdrProcessor,
-            IServiceGroup serviceGroup, IServiceFamily serviceFamily,
+            ServiceGroupConfiguration serviceGroupConfiguration, IServiceFamily serviceFamily,
             ServiceAssignmentDirection assignDir, int productIdToOverrideServiceFamilyAccount)
         {
             this.CdrProcessor = cdrProcessor;
             this.MefServiceFamilyContainer = this.CdrProcessor.CdrJobContext.MediationContext.MefServiceFamilyContainer;
-            this.IdServiceGroup = serviceGroup.Id;
+            this.ServiceGroupConfiguration = serviceGroupConfiguration;
             this.ServiceFamily = serviceFamily;
             this.ProductIdToOverrideServiceFamilyAccount = productIdToOverrideServiceFamilyAccount;
             this.AssignDir = assignDir;

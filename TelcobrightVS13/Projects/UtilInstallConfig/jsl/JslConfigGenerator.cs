@@ -101,114 +101,7 @@ namespace InstallConfig
                 { "obj.ServiceGroup > 0",
                     "ServiceGroup must be > 0" },
             };
-            this.Tbc.CdrSetting.ServiceGroupConfigurations = new Dictionary<int, ServiceGroupConfiguration>();
-            this.Tbc.CdrSetting.ServiceGroupConfigurations.Add(1, //domestic 
-                new ServiceGroupConfiguration(enabled: true)
-            {
-                PartnerRules = new List<int>()
-                {
-                    PartnerRuletype.InPartnerByIncomingRoute,
-                    PartnerRuletype.OutPartnerByOutgoingRoute 
-                },
-                    Ratingtrules = new List<RatingRule>()
-                {
-                    new RatingRule() {IdServiceFamily = ServiceFamilyType.A2Z,AssignDirection = 1},
-                },
-                MediationChecklistForAnsweredCdrs =
-                    new Dictionary<string, string>()
-                    {
-                        {"obj.DurationSec >= 0",
-                            "DurationSec must be >=  0" },
-                        {"!String.IsNullOrEmpty(obj.outgoingroute) and !String.IsNullOrWhiteSpace(obj.outgoingroute)",
-                            "outgoingroute cannot be empty" },
-                        {"obj.outPartnerId > 0",
-                            "outPartnerId must be > 0" },
-                        {"!String.IsNullOrEmpty(obj.matchedprefixcustomer) and !String.IsNullOrWhiteSpace(obj.matchedprefixcustomer)",
-                            "matchedprefixcustomer cannot be empty" },
-                        {"obj.durationsec > 0 ? obj.CustomerCost > 0 : obj.CustomerCost == 0 ",
-                            "CustomerCost must be > 0 when durationsec > 0  , otherwise == 0 " },
-                        {"obj.durationsec > 0 ? obj.RevenueVATCommissionOut > 0 : obj.RevenueVATCommissionOut == 0 ",
-                            "Revenue Commission (BTRC) must be > 0 when durationsec > 0  , otherwise == 0 " },
-                        {"obj.durationsec > 0?obj.roundedduration > 0: obj.roundedduration >= 0",
-                            "roundedduration must be > 0 when durationsec >0 , otherwise >= 0 " },
-                    },
-            });
-            this.Tbc.CdrSetting.ServiceGroupConfigurations.Add(3, 
-                value: new ServiceGroupConfiguration(enabled:true)//intlInIcx
-            {
-                PartnerRules = new List<int>()
-                {
-                    PartnerRuletype.InPartnerByIncomingRoute,
-                    PartnerRuletype.OutPartnerByOutgoingRoute
-                },
-                    Ratingtrules = new List<RatingRule>()
-                {
-                    new RatingRule() {IdServiceFamily =ServiceFamilyType.A2Z,AssignDirection = 1},
-                },
-                MediationChecklistForAnsweredCdrs =
-                    new Dictionary<string, string>()
-                    {
-                        {"obj.DurationSec >= 0",
-                            "DurationSec must be >=  0" },
-                        {"!String.IsNullOrEmpty(obj.outgoingroute) and !String.IsNullOrWhiteSpace(obj.outgoingroute)",
-                            "outgoingroute cannot be empty" },
-                        {"obj.outPartnerId > 0",
-                            "outPartnerId must be > 0" },
-                        {"!String.IsNullOrEmpty(obj.matchedprefixcustomer) and !String.IsNullOrWhiteSpace(obj.matchedprefixcustomer)",
-                            "matchedprefixcustomer cannot be empty" },
-                        {"obj.durationsec > 0 ? obj.CustomerCost > 0 : obj.CustomerCost == 0 ",
-                            "CustomerCost must be > 0 when durationsec > 0  , otherwise == 0 " },
-                        {"obj.durationsec > 0 ? obj.RevenueVATCommissionOut > 0 : obj.RevenueVATCommissionOut == 0 ",
-                            "Revenue Commission (BTRC) must be > 0 when durationsec > 0  , otherwise == 0 " },
-                        { "obj.durationsec > 0?obj.roundedduration > 0: obj.roundedduration >= 0",
-                            "roundedduration must be > 0 when durationsec >0 , otherwise >= 0 " },
-                    },
-            });
-            this.Tbc.CdrSetting.ServiceGroupConfigurations.Add(
-                2, value: new ServiceGroupConfiguration(enabled:true)//intlOutIgw
-            {
-                PartnerRules = new List<int>()
-                {
-                    PartnerRuletype.InPartnerByIncomingRoute,
-                    PartnerRuletype.OutPartnerByOutgoingRoute
-                },
-                Ratingtrules = new List<RatingRule>()
-                {
-                    new RatingRule() {IdServiceFamily = ServiceFamilyType.XyzIcx, AssignDirection = 0}
-                },
-                MediationChecklistForAnsweredCdrs = 
-                    new Dictionary<string, string>()
-                    {
-                        {"obj.DurationSec >= 0",
-                            "DurationSec must be >=  0" },
-                        {"!String.IsNullOrEmpty(obj.CountryCode) and !String.IsNullOrWhiteSpace(obj.CountryCode)",
-                            "CountryCode cannot be empty" },
-                        {"!String.IsNullOrEmpty(obj.outgoingroute) and !String.IsNullOrWhiteSpace(obj.outgoingroute)",
-                            "outgoingroute cannot be empty" },
-                        {"obj.outPartnerId > 0",
-                            "outPartnerId must be > 0" },
-                        {"!String.IsNullOrEmpty(obj.MatchedPrefixY) and !String.IsNullOrWhiteSpace(obj.MatchedPrefixY)",
-                            "MatchedPrefixY cannot be empty" },
-                        {"obj.durationsec > 0 ? obj.RevenueICXOut != 0 : obj.RevenueICXOut == 0 ",//negative allowed
-                            "RevenueICXOut must be > 0 when durationsec > 0 , otherwise == 0" },
-                        {"obj.durationsec > 0 ? obj.RevenueVATCommissionOut > 0 : obj.RevenueVATCommissionOut == 0 ",
-                            "Revenue Commission (BTRC) must be > 0 when durationsec > 0  , otherwise == 0 " },
-                        { "obj.durationsec > 0 ? obj.SubscriberChargeXOut > 0 : obj.SubscriberChargeXOut == 0 ",
-                            "SubscriberChargeXOut must be > 0 when durationsec > 0 , otherwise == 0" },
-                        {"obj.durationsec > 0 ? obj.CarrierCostYIGWOut > 0 : obj.CarrierCostYIGWOut == 0 ",
-                            "CarrierCostYIGWOut must be > 0 when durationsec > 0 , otherwise == 0" },
-                        {"obj.PartialFlag >= 0",
-                            "PartialFlag must be >=  0" },
-                        {"obj.field1 >= 0",
-                            "field1 must be >=  0" },
-                        {"obj.field2 >= 0",
-                            "field2 must be >=  0" },
-                        {"obj.durationsec > 0 ? obj.roundedduration > 0 : obj.roundedduration == 0 ",
-                            "roundedduration must be > 0 when durationsec > 0 , otherwise == 0" },
-                    },
-            });
-
-
+            this.Tbc.CdrSetting.ServiceGroupConfigurations = this.GetServiceGroupConfigurations();
             //write all configuration first in ws_topshelf / bin/debug, for production
             //also, in tester/bin/debug
             List<KeyValuePair<Regex, string>> serviceAliases = new List<KeyValuePair<Regex, string>>
@@ -217,10 +110,8 @@ namespace InstallConfig
                 new KeyValuePair<Regex, string>(new Regex(@".*/sg1/.*/sf1/.*"), "Domestic"),
                 new KeyValuePair<Regex, string>(new Regex(@".*/sg3/.*/sf1/.*"), "International Incoming")
             };
-            Tbc.ServiceAliasesRegex = serviceAliases;
-            //temp use of ne, remove later
-
-
+            this.Tbc.ServiceAliasesRegex = serviceAliases;
+            
             //database part
             DirectorySettings directorySetting = new DirectorySettings("Directory Settings")
             {

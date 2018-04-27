@@ -20,6 +20,7 @@ namespace TelcobrightMediation.Cdr
 
     public class CdrExt
     {
+        public int NewRawCount => this.Cdr.PartialFlag == 0 ? 1 : this.PartialCdrContainer.NewRawInstances.Count;
         private PartialCdrContainer _partialCdrContainer;
         private readonly List<acc_transaction> _reversedTransactions = new List<acc_transaction>();
         public CdrNewOldType CdrNewOldType { get; }

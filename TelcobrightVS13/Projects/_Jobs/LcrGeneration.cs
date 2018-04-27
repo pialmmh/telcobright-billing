@@ -105,7 +105,12 @@ namespace Jobs
                 //service group1 (domestic) has been directly referred in this project
                 IServiceGroup sgDomestic = new SgDomesticIcx();
                 IServiceFamily a2ZServiceFamily=new SfA2Z();
-                ServiceContext serviceContext = new ServiceContext(cdrProcessor, sgDomestic, a2ZServiceFamily,
+                ServiceContext serviceContext = new ServiceContext(cdrProcessor, 
+                    new ServiceGroupConfiguration(idServiceGroup:1)
+                    {
+                        ServiceGroup    = sgDomestic
+                    } 
+                    , a2ZServiceFamily,
                     ServiceAssignmentDirection.Supplier, 0);
                 Random random = new Random();
                 List<string[]> thisRowAsList = new List<string[]>();

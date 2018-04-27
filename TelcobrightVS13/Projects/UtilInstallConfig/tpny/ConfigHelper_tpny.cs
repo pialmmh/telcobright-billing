@@ -39,7 +39,7 @@ namespace InstallConfig
                 ServiceGroupConfigurations = new Dictionary<int, ServiceGroupConfiguration>()
                 {
                     {//dictionary item
-                        1, new ServiceGroupConfiguration(enabled:true)//domestic
+                        1, new ServiceGroupConfiguration(idServiceGroup:1)//domestic
                         {
                             PartnerRules = new List<int>()
                             {
@@ -53,7 +53,7 @@ namespace InstallConfig
                         }
                     },//end dic item
                     {
-                        2,new ServiceGroupConfiguration(enabled:true)//intlOutIcx
+                        2,new ServiceGroupConfiguration(idServiceGroup:2)//intlOutIcx
                         {
                             PartnerRules = new List<int>()
                             {
@@ -67,7 +67,7 @@ namespace InstallConfig
                         }
                     },
                     {
-                        3,new ServiceGroupConfiguration(enabled:true)//intlInIcx
+                        3,new ServiceGroupConfiguration(idServiceGroup:3)//intlInIcx
                         {
                             PartnerRules = new List<int>()
                             {
