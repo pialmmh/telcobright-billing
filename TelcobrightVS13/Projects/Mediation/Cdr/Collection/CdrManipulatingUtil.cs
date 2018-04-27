@@ -137,6 +137,7 @@ namespace TelcobrightMediation.Mediation.Cdr
             }
             catch (Exception e)
             {
+                Console.WriteLine(e);
                 new ErrorWriter(e, "CdrJobExecuter", null,
                     "Could not convert text row to cdr", "");
                 cdrInconsistent = ConvertTxtRowToCdrinconsistent(txtRow);

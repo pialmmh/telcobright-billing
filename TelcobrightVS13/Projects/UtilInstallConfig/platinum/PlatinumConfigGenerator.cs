@@ -130,7 +130,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "C:/telcobright/Vault/Resources/CDR/Platinum Communications/PltDhkDL",
+                StartingPath = "C:/telcobright/Vault/Resources/CDR/platinum/PltDhkDL",
                 User = "",
                 Pass = "",
             };
@@ -141,7 +141,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = "/",
                 ServerIp = "192.168.2.216",
-                StartingPath = "Resources/CDR/Platinum Communications/PltDhkDL",
+                StartingPath = "Resources/CDR/platinum/PltDhkDL",
                 User = "ftpuser",
                 Pass = "Takay1takaane",
             };
@@ -152,7 +152,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = "/",
                 ServerIp = "192.168.2.224",
-                StartingPath = "Resources/CDR/Platinum Communications/PltDhkDL",
+                StartingPath = "Resources/CDR/platinum/PltDhkDL",
                 User = "ftpuser",
                 Pass = "Takay1takaane",
                 Skip = true

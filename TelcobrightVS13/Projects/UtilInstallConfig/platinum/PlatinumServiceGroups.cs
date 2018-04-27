@@ -21,7 +21,7 @@ namespace InstallConfig
         {
             List<ServiceGroupConfiguration> serviceGroupConfigurations = new List<ServiceGroupConfiguration>()
             {
-                new ServiceGroupConfiguration(idServiceGroup: 5) //intlInIgw
+                new ServiceGroupConfiguration(idServiceGroup: 4) //intlInIgw
                 {
                     PartnerRules = new List<int>()
                     {

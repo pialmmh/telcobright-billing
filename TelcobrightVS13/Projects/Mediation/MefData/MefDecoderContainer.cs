@@ -7,9 +7,9 @@ namespace TelcobrightMediation
     public class MefDecoderContainer
     {
         public DecoderComposer CmpDecoder = new DecoderComposer();
-        public IDictionary<string, IFileDecoder> DicExtensions = new Dictionary<string, IFileDecoder>();
+        public IDictionary<int, IFileDecoder> DicExtensions = new Dictionary<int, IFileDecoder>();
         public Dictionary<int, List<cdrfieldmappingbyswitchtype>> DicFieldMapping = new Dictionary<int, List<cdrfieldmappingbyswitchtype>>();
-        public Dictionary<string, enumcdrformat> DicCdrFormat = new Dictionary<string, enumcdrformat>();
+        public Dictionary<int, enumcdrformat> DicCdrFormatsByid = new Dictionary<int, enumcdrformat>();
         public PartnerEntities Context { get; }
         public int Totalfieldtelcobright = 0;
         public MefDecoderContainer(PartnerEntities context)
@@ -26,7 +26,7 @@ namespace TelcobrightMediation
             }
             foreach (enumcdrformat cf in context.enumcdrformats.ToList())
             {
-                this.DicCdrFormat.Add(cf.id.ToString(), cf);
+                this.DicCdrFormatsByid.Add(cf.id, cf);
             }
             //dicFieldMapping = Context.cdrfieldmappingbyswitchtypes.Where(c=>c.SwitchType == 2).OrderBy(c=>c.FieldNumber).ToList();
             this.Totalfieldtelcobright = context.cdrfieldlists.Count();

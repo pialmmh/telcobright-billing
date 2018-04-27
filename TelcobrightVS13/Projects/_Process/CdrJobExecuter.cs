@@ -120,6 +120,7 @@ namespace Process
 
                             catch (Exception e1)
                             {
+                                Console.WriteLine(e1);
                                 ErrorWriter wr = new ErrorWriter(e1, "ProcessCdr", null, "NE:" + ne.idSwitch,tbc.DatabaseSetting.DatabaseName);
                                 continue; //with next switch
                             }
@@ -129,6 +130,7 @@ namespace Process
             } //try
             catch (Exception e1)
             {
+                Console.WriteLine(e1);
                 ErrorWriter wr = new ErrorWriter(e1,"ProcessCdr",null,"",operatorName);
             }
         }

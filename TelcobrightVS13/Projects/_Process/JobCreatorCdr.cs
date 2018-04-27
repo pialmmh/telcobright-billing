@@ -40,8 +40,8 @@ namespace Process
                     int idOprator = context.telcobrightpartners
                         .Where(c => c.databasename == tbc.DatabaseSetting.DatabaseName).Select(c => c.idCustomer)
                         .First();
-                    foreach (ne thisSwitch in context.nes.Where(c=>c.idCustomer==idOprator).ToList())
-                    { 
+                    foreach (ne thisSwitch in context.nes.Where(c => c.idCustomer == idOprator).ToList())
+                    {
                         try
                         {
                             if (thisSwitch.SkipCdrListed == 1) continue;
@@ -78,15 +78,18 @@ namespace Process
                         } //try
                         catch (Exception e1)
                         {
+                            Console.WriteLine(e1);
                             ErrorWriter wr =
-                                new ErrorWriter(e1, "CdrJobCreator/SwitchId:" + thisSwitch.idSwitch, null, "",operatorName);
+                                new ErrorWriter(e1, "CdrJobCreator/SwitchId:" + thisSwitch.idSwitch, null, "",
+                                    operatorName);
                         } //catch
                     } //for each customerswitchinfo
                 }
             }
             catch (Exception e1)
             {
-                ErrorWriter wr = new ErrorWriter(e1, "CdrJobCreator", null, "",operatorName);
+                Console.WriteLine(e1);
+                ErrorWriter wr = new ErrorWriter(e1, "CdrJobCreator", null, "", operatorName);
             }
         }
     }

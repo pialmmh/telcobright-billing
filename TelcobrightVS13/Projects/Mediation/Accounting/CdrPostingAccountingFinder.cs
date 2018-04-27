@@ -40,35 +40,26 @@ namespace TelcobrightMediation.Accounting
             {
                 if (billingRule.IsPrepaid)//prepaid                                                                           
                 {
-                    postingAccount = accountFactory.CreateOrGetCustomerAccount(0,
-                        this.ServiceContext.ServiceGroupConfiguration.IdServiceGroup,
-                        this.IdChargedOrChargingPartner
-                        , this.ServiceContext.ServiceFamily.Id,
-                        this.ServiceContext.ProductIdToOverrideServiceFamilyAccount, idCurrencyUoM);
+                    postingAccount = accountFactory.CreateOrGetCustomerAccount(0, this.ServiceContext.ServiceGroupConfiguration.IdServiceGroup, this.IdChargedOrChargingPartner
+                        , this.ServiceContext.ServiceFamily.Id, this.ServiceContext.ProductIdToOverrideServiceFamilyAccount, idCurrencyUoM);
                 }
                 else//postpaid                                                                                                
                 {
-                    postingAccount = accountFactory.CreateOrGetBillable(0,
-                        this.ServiceContext.ServiceGroupConfiguration.IdServiceGroup, this.IdChargedOrChargingPartner
-                        , this.ServiceContext.ServiceFamily.Id,
-                        this.ServiceContext.ProductIdToOverrideServiceFamilyAccount, idCurrencyUoM);
+                    postingAccount = accountFactory.CreateOrGetBillable(0, this.ServiceContext.ServiceGroupConfiguration.IdServiceGroup, this.IdChargedOrChargingPartner
+                        , this.ServiceContext.ServiceFamily.Id, this.ServiceContext.ProductIdToOverrideServiceFamilyAccount, idCurrencyUoM);
                 }
             }
             if (this.ServiceContext.AssignDir == ServiceAssignmentDirection.Supplier)
             {
                 if (billingRule.IsPrepaid)//prepaid                                                                           
                 {
-                    postingAccount = accountFactory.CreateOrGetSupplierAccount(0,
-                        this.ServiceContext.ServiceGroupConfiguration.IdServiceGroup, this.IdChargedOrChargingPartner
-                        , this.ServiceContext.ServiceFamily.Id,
-                        this.ServiceContext.ProductIdToOverrideServiceFamilyAccount, idCurrencyUoM);
+                    postingAccount = accountFactory.CreateOrGetSupplierAccount(0, this.ServiceContext.ServiceGroupConfiguration.IdServiceGroup, this.IdChargedOrChargingPartner
+                        , this.ServiceContext.ServiceFamily.Id, this.ServiceContext.ProductIdToOverrideServiceFamilyAccount, idCurrencyUoM);
                 }
                 else//postpaid                                                                                                
                 {
-                    postingAccount = accountFactory.CreateOrGetPayable(0,
-                        this.ServiceContext.ServiceGroupConfiguration.IdServiceGroup, this.IdChargedOrChargingPartner
-                        , this.ServiceContext.ServiceFamily.Id,
-                        this.ServiceContext.ProductIdToOverrideServiceFamilyAccount, idCurrencyUoM);
+                    postingAccount = accountFactory.CreateOrGetPayable(0, this.ServiceContext.ServiceGroupConfiguration.IdServiceGroup, this.IdChargedOrChargingPartner
+                        , this.ServiceContext.ServiceFamily.Id, this.ServiceContext.ProductIdToOverrideServiceFamilyAccount, idCurrencyUoM);
                 }
             }
             return postingAccount;

@@ -18,7 +18,7 @@ namespace Decoders
     {
         public override string ToString() => this.RuleName;
         public virtual string RuleName => GetType().Name;
-        public virtual string Id => "16";
+        public virtual int Id => 16;
         public virtual string HelpText => "Decodes ZTE TDM/IP CDR.";
 
         public virtual List<string[]> DecodeFile(CdrCollectorInputData input,out List<cdrinconsistent> inconsistentCdrs)
@@ -27,7 +27,7 @@ namespace Decoders
             List<string[]> decodedRows = new List<string[]>();
 
             List<cdrfieldmappingbyswitchtype> lstFieldMapping = null;
-            input.MefDecodersData.DicFieldMapping.TryGetValue(Convert.ToInt32(this.Id), out lstFieldMapping);
+            input.MefDecodersData.DicFieldMapping.TryGetValue(this.Id, out lstFieldMapping);
             string zteStartofTimeStr = "2000-01-01 00:00:00"; // <-- Valid
             string format = "yyyy-MM-dd HH:mm:ss";
             DateTime zteStartofTime;
@@ -386,6 +386,7 @@ namespace Decoders
                 }
                 catch (Exception e1)
                 {
+                    Console.WriteLine(e1);
                     inconsistentCdrs.Add(CdrManipulatingUtil.ConvertTxtRowToCdrinconsistent(thisRow));
                     ErrorWriter wr = new ErrorWriter(e1, "DecodeCdr", null,
                         this.RuleName + " encounterd error during decoding and an Inconsistent cdr has been generated."

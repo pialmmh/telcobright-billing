@@ -18,17 +18,22 @@ namespace TelcobrightMediation.Cdr
         protected CdrCollectorInputData CdrCollectorInputData { get; }
         protected PartnerEntities Context => this.CdrCollectorInputData.CdrJobInputData.Context;
         protected BlockingCollection<cdr> NonPartialCdrs { get; } = new BlockingCollection<cdr>();
+
         protected BlockingCollection<cdrpartialrawinstance> RawPartialCdrInstances { get; } =
             new BlockingCollection<cdrpartialrawinstance>();
+
         protected BlockingCollection<PartialCdrContainer> PartialCdrContainers { get; set; } =
             new BlockingCollection<PartialCdrContainer>();
+
         public BlockingCollection<cdrinconsistent> InconsistentCdrs { get; }
             = new BlockingCollection<cdrinconsistent>();
+
         public bool IsEmpty => (this.InconsistentCdrs.Any() == false && this.NonPartialCdrs.Any() == false
                                 && this.RawPartialCdrInstances.Any() == false);
 
         public abstract void GetCollectionResults(out CdrCollectionResult newCollectionResult,
             out CdrCollectionResult oldCollectionResult);
+
         protected abstract List<CdrExt> CreateNewCdrExts();
         protected abstract List<CdrExt> CreateOldCdrExts();
 

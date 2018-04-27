@@ -7,21 +7,41 @@ using System.Threading.Tasks;
 using Decoders;
 using TelcobrightMediation;
 using LibraryExtensions;
+using MediationModel;
+using TelcobrightMediation.Config;
+
 namespace UnitTesterManual
 {
     class Program
     {
         static void Main(string[] args)
         {
-            string appConfigPathOfUtilInstallConfig = new DirectoryInfo(FileAndPathHelper.GetBinPath()).Parent.Parent.Parent
-                .GetDirectories()
+            DirectoryInfo projectDirectory= new DirectoryInfo(FileAndPathHelper.GetBinPath()).Parent.Parent.Parent;
+            string appConfigPathOfUtilInstallConfig = projectDirectory.GetDirectories()
                 .First(d => d.Name == "UtilInstallConfig").GetFiles().First(f => f.Name == "App.config")
                 .FullName;
             string operatorName = File.ReadLines(appConfigPathOfUtilInstallConfig)
                 .First(line => line.Contains("JsonConfigFileNameForPortalCopyForSingleOperator"))
                 .Split('=')[2].Split('"')[1].Split('_')[1];
-            IFileDecoder cdrDecoder=new ZteTdmDecoder();//change here...
-            //IFileDecoder cdrDecoder = new DialogicControlSwitchDecoder();//change here...
+
+            int idCdrFormat = 0;
+            using (PartnerEntities context=new PartnerEntities(ConnectionManager.GetEntityConnectionStringByOperator(operatorName)))
+            {
+                idCdrFormat = context.nes.Where(c => c.idCustomer ==
+                                                     context.telcobrightpartners.Where(
+                                                             p => p.databasename == operatorName)
+                                                         .Select(p => p.idCustomer).ToList().FirstOrDefault())
+                                                      .Select(n => n.idcdrformat).First();
+
+
+
+            }
+            DirectoryInfo mefExtensionDirectory = projectDirectory.GetDirectories()
+                .First(d => d.Name == "WS_Topshelf_Quartz").GetDirectories().First(dir => dir.Name == "Extensions");
+            DecoderComposer decoderComposer = new DecoderComposer();
+            decoderComposer.ComposeFromPath(mefExtensionDirectory.FullName);
+            var decoders = decoderComposer.Decoders.ToDictionary(d => d.Id.ToString());
+            IFileDecoder cdrDecoder = decoders[idCdrFormat.ToString()];
             Console.WriteLine("*********Running for Operator:"+operatorName+"**********");
             Console.WriteLine("Select a mock process:");
             Console.WriteLine("1=NewCdr");

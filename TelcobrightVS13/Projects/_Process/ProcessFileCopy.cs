@@ -103,6 +103,7 @@ namespace Process
                             }
                             catch (Exception e1)
                             {
+                                Console.WriteLine(e1);
                                 try
                                 {
                                     sql = " rollback; ";

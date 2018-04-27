@@ -18,7 +18,8 @@ namespace TelcobrightMediation
             finalCdrs.ForEach(c => base.NonPartialCdrs.Add(c));
         }
 
-        public override void GetCollectionResults(out CdrCollectionResult newCollectionResult, out CdrCollectionResult oldCollectionResult)
+        public override void GetCollectionResults(out CdrCollectionResult newCollectionResult,
+            out CdrCollectionResult oldCollectionResult)
         {
             List<CdrExt> newCdrExts = this.CreateNewCdrExts();
             if (newCdrExts.GroupBy(c => c.UniqueBillId).Any(g => g.Count() > 1))
@@ -29,7 +30,7 @@ namespace TelcobrightMediation
             base.PopulatePrevAccountingInfo(oldCdrExts);
             var emptyCdrInconsistents = new List<cdrinconsistent>();
             newCollectionResult = new CdrCollectionResult(base.CdrCollectorInputData.Ne,
-                newCdrExts,emptyCdrInconsistents, base.RawCount);
+                newCdrExts, emptyCdrInconsistents, base.RawCount);
             oldCollectionResult = new CdrCollectionResult(base.CdrCollectorInputData.Ne,
                 oldCdrExts, emptyCdrInconsistents, base.RawCount);
         }

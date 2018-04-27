@@ -17,7 +17,7 @@ namespace Decoders
     {
         public override string ToString() => this.RuleName;
         public string RuleName => GetType().Name;
-        public string Id => "4";
+        public int Id => 4;
         public string HelpText => "Decodes Sansay CDR.";
         protected CdrCollectorInputData Input { get; set; }//required for testing with derived mock collector class
         protected virtual List<string[]> GetTxtCdrs()
@@ -32,9 +32,7 @@ namespace Decoders
 
             this.Input = input;
             List<cdrfieldmappingbyswitchtype> lstFieldMapping = null;
-            enumcdrformat cdrFormat = null;
-            input.MefDecodersData.DicCdrFormat.TryGetValue(this.RuleName.ToLower(), out cdrFormat);
-            input.MefDecodersData.DicFieldMapping.TryGetValue(cdrFormat.id, out lstFieldMapping);
+            input.MefDecodersData.DicFieldMapping.TryGetValue(this.Id, out lstFieldMapping);
             List<string[]> tempTable = GetTxtCdrs();
             if (tempTable == null)
             {
@@ -200,12 +198,7 @@ namespace Decoders
                             fldCount++;
 
                         }
-                        //catch (Exception e1)
-                        //{
-                        //    FldCount++;
-                        //    continue;
-                        //}
-
+                        
                     } // for each field
                       //set charging status
                     double tmpDuration = 0;
@@ -251,6 +244,7 @@ namespace Decoders
                 catch (Exception e1)
                 {//if error found for one row, add this to inconsistent
 
+                    Console.WriteLine(e1);
                     inconsistentCdrs.Add(CdrManipulatingUtil.ConvertTxtRowToCdrinconsistent(thisRow));
                     ErrorWriter wr = new ErrorWriter(e1, "DecodeCdr", null,
                         this.RuleName + " encounterd error during decoding and an Inconsistent cdr has been generated."

@@ -62,14 +62,17 @@ namespace TelcobrightMediation.Accounting
                                     and transactiondate={l.transactionDate.ToMySqlStyleDateTimeStrWithQuote()}"),
                 deleteCommandGenerator: null);
             
+            if (this.AccountCache == null || this.LedgerSummaryCache == null)
+                throw new Exception("Null Accounting or balance or ledgerSummaryCache!");
+        }
+
+        public void PopulatePrevLedgerSummary()
+        {
             TimeWiseSummaryCachePopulator<acc_ledger_summary, ValueTuple<long, DateTime>> ledgerSummaryPopulator
                 = new TimeWiseSummaryCachePopulator<acc_ledger_summary, ValueTuple<long, DateTime>>
                     (this.LedgerSummaryCache, this.Context, "transactionDate", this.DatesInvolved);
             ledgerSummaryPopulator.Populate();
-            if (this.AccountCache == null || this.LedgerSummaryCache == null)
-                throw new Exception("Null Accounting or balance or ledgerSummaryCache!");
         }
-        
         public void WriteAllChanges()
         {
             this.ChargeableCache.WriteAllChanges(this.Cmd,this.SegmentSizeforDbWrite);

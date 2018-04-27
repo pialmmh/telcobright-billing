@@ -59,15 +59,24 @@ namespace TelcobrightMediation
                 this.DatesInvolved, this.CdrjobInputData.CdrSetting.SegmentSizeForDbWrite);
             this.CdrSummaryContext = new CdrSummaryContext(this.MediationContext,
                 this.AutoIncrementManager, this.Context, this.HoursInvolved);
+
+            PopulateRateCacheForDatesInvolved();
+            this.AccountingContext.PopulatePrevLedgerSummary();
+            this.CdrSummaryContext.PopulatePrevSummary();
+            this.CdrSummaryContext.ValidateDayVsHourWiseSummaryCollection();
+        }
+
+        private void PopulateRateCacheForDatesInvolved()
+        {
             this.DatesInvolved.ForEach(
-                d =>
-                {
-                    var rateCache = this.MediationContext.MefServiceFamilyContainer.RateCache;
-                    var dateRange = new DateRange(d.Date, d.AddDays(1));
-                    if (rateCache.DateRangeWiseRateDic.ContainsKey(dateRange) == false)
-                        this.MediationContext.MefServiceFamilyContainer.RateCache
-                            .PopulateDicByDay(dateRange, flagLcr: false, useInMemoryTable: true);
-                });
+                            d =>
+                            {
+                                var rateCache = this.MediationContext.MefServiceFamilyContainer.RateCache;
+                                var dateRange = new DateRange(d.Date, d.AddDays(1));
+                                if (rateCache.DateRangeWiseRateDic.ContainsKey(dateRange) == false)
+                                    this.MediationContext.MefServiceFamilyContainer.RateCache
+                                        .PopulateDicByDay(dateRange, flagLcr: false, useInMemoryTable: true);
+                            });
         }
     }
 }

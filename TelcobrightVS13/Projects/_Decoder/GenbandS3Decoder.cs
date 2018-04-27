@@ -16,7 +16,7 @@ namespace Decoders
     {
         public override string ToString() => this.RuleName;
         public string RuleName => GetType().Name;
-        public string Id => "1";
+        public int Id => 1;
         public string HelpText => "Decodes Genband S3 CDR.";
         public List<string[]> DecodeFile(CdrCollectorInputData input,out List<cdrinconsistent> inconsistentCdrs)
         {
@@ -24,9 +24,7 @@ namespace Decoders
             inconsistentCdrs = new List<cdrinconsistent>();
 
             List<cdrfieldmappingbyswitchtype> lstFieldMapping = null;
-            enumcdrformat cdrFormat = null;
-            input.MefDecodersData.DicCdrFormat.TryGetValue(this.RuleName.ToLower(), out cdrFormat);
-            input.MefDecodersData.DicFieldMapping.TryGetValue(cdrFormat.id, out lstFieldMapping);
+            input.MefDecodersData.DicFieldMapping.TryGetValue(this.Id, out lstFieldMapping);
             List<string[]> tempTable = FileUtil.ParseTextFileToListOfStrArray(input.FullPath, ';', 0);
             
             if (tempTable == null)
@@ -270,6 +268,8 @@ namespace Decoders
                 }
                 catch (Exception e1)
                 {//if error found for one row, add this to inconsistent
+
+                    Console.WriteLine(e1);
                     inconsistentCdrs.Add(CdrManipulatingUtil.ConvertTxtRowToCdrinconsistent(thisRow));
                     ErrorWriter wr = new ErrorWriter(e1, "DecodeCdr", null,
                         this.RuleName + " encounterd error during decoding and an Inconsistent cdr has been generated."

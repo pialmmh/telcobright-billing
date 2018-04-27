@@ -74,7 +74,8 @@ public class MyExcel
     }
 
 
-    private int GetRates(string filePath, ref List<ratetask> lstRateTask, rateplan rp, bool endAllPrevPrefix,string[] dateFormats)
+    private int GetRates(string filePath, ref List<ratetask> lstRateTask, rateplan rp, bool endAllPrevPrefix,
+        string[] dateFormats)
     {
         //try
         {
@@ -95,24 +96,20 @@ public class MyExcel
             app.DisplayAlerts = false;
 
             book = app.Workbooks.Open(filePath,
-                   Missing.Value, Missing.Value, Missing.Value,
-                   Missing.Value, Missing.Value, Missing.Value, Missing.Value,
-                   Missing.Value, Missing.Value, Missing.Value, Missing.Value,
-                   Missing.Value, Missing.Value, Missing.Value);
+                Missing.Value, Missing.Value, Missing.Value,
+                Missing.Value, Missing.Value, Missing.Value, Missing.Value,
+                Missing.Value, Missing.Value, Missing.Value, Missing.Value,
+                Missing.Value, Missing.Value, Missing.Value);
 
             Worksheet sheet = new Worksheet();
-            sheet = (Worksheet)book.Worksheets[1];
+            sheet = (Worksheet) book.Worksheets[1];
 
-            SheetImportTask importTask = new SheetImportTask(ImportTaskType.RateChanges, 
+            SheetImportTask importTask = new SheetImportTask(ImportTaskType.RateChanges,
                 sheet, this.DicCountryCode, this.DicCountryName, rp);
 
-            return importTask.GetVendorFormat(ref lstRateTask, rp,book,dateFormats,ref dateSeparator);
-            
+            return importTask.GetVendorFormat(ref lstRateTask, rp, book, dateFormats, ref dateSeparator);
+
         }
-        //catch (Exception e1)
-        //{
-        //    return e1.InnerException.ToString();
-        //}
     }
 
 
@@ -176,7 +173,9 @@ public class MyExcel
         Dictionary<string, countrycode> _dicCountryName = new Dictionary<string, countrycode>();
 
         //constructor
-        public SheetImportTask(ImportTaskType pImportTaskType, Worksheet pSheet, Dictionary<string, countrycode> pDicCountryCode, Dictionary<string, countrycode> pDicCountryName, rateplan pRatePlan)
+        public SheetImportTask(ImportTaskType pImportTaskType, Worksheet pSheet,
+            Dictionary<string, countrycode> pDicCountryCode, Dictionary<string, countrycode> pDicCountryName,
+            rateplan pRatePlan)
         {
             this._dicCountryCode = pDicCountryCode;
             this._dicCountryName = pDicCountryName;
@@ -190,7 +189,7 @@ public class MyExcel
         {
             try
             {
-                char[] sepArr = new char[] { ',', ':', ';', '`' };
+                char[] sepArr = new char[] {',', ':', ';', '`'};
                 sepCharForCsv = ',';
                 //find separator chracter
                 Dictionary<char, int> dicCharCount = new Dictionary<char, int>();
@@ -203,12 +202,13 @@ public class MyExcel
                 int dim2 = objArray.GetLength(1);
                 //count occurance of each char, max will be the separator
                 for (int i = 1; i <= dim1; i++)
-                    for (int j = 1; j <= dim2; j++)
-                        foreach (char ch in sepArr)
-                        {
-                            dicCharCount[ch] += objArray[i, j].ToString().Count(c => c == ch);
-                        }
-                sepCharForCsv = (from x in dicCharCount where x.Value == dicCharCount.Max(v => v.Value) select x.Key).First();
+                for (int j = 1; j <= dim2; j++)
+                    foreach (char ch in sepArr)
+                    {
+                        dicCharCount[ch] += objArray[i, j].ToString().Count(c => c == ch);
+                    }
+                sepCharForCsv = (from x in dicCharCount where x.Value == dicCharCount.Max(v => v.Value) select x.Key)
+                    .First();
                 //split csv rows to multiple field row
                 for (int i = 1; i <= dim1; i++)
                 {
@@ -219,11 +219,13 @@ public class MyExcel
             }
             catch (Exception e1)
             {
+                Console.WriteLine(e1);
                 return e1.Message;
             }
         }
 
-        public int GetVendorFormat(ref List<ratetask> lstRateTask, rateplan rp, Workbook book, string[] dateFormats, ref string dateSeparator)
+        public int GetVendorFormat(ref List<ratetask> lstRateTask, rateplan rp, Workbook book, string[] dateFormats,
+            ref string dateSeparator)
         {
             object[,] objArray = (object[,]) this._range.get_Value(XlRangeValueDataType.xlRangeValueDefault);
             int dim1 = objArray.GetLength(0);
@@ -262,9 +264,9 @@ public class MyExcel
                 dim2 = csvArr[0].GetLength(0);
                 //objArray = new object[Dim1, Dim2];//don't use the 0 index, start from 1
                 //objArray = Array.CreateInstance(typeof(object), new object[] { 1, Dim1 }, new object[] { 1, Dim2 });
-                objArray = (object[,])Array.CreateInstance(typeof(object),
-                           new int[] { dim1, dim2 },
-                           new int[] { 1, 1 });
+                objArray = (object[,]) Array.CreateInstance(typeof(object),
+                    new int[] {dim1, dim2},
+                    new int[] {1, 1});
                 for (int r = 1; r <= dim1; r++)
                 {
                     for (int c = 1; c <= dim2; c++)
@@ -274,21 +276,22 @@ public class MyExcel
                 }
             }
             this.FirstRow = FindFirstRow(ref objArray, dateFormats, ref dateSeparator);
-            return GetVendorFormatByString(ref objArray, this.FirstRow, book,dateFormats,ref dateSeparator);
+            return GetVendorFormatByString(ref objArray, this.FirstRow, book, dateFormats, ref dateSeparator);
 
-        }        
-            
-            
-        
+        }
 
 
-        public int GetVendorFormatByString(ref object[,] objArray, int firstRow, Workbook book,string[] dateFormats,ref string dateSeparator)
+
+
+
+        public int GetVendorFormatByString(ref object[,] objArray, int firstRow, Workbook book, string[] dateFormats,
+            ref string dateSeparator)
         {
             int dim1 = objArray.GetLength(0);
             int dim2 = objArray.GetLength(1);
             string headerText = "";
             headerText = HeaderTextByAllSheet(book);
-            
+
             Dictionary<string, enumratesheetformat> dicRsformat = null;
             using (PartnerEntities context = new PartnerEntities())
             {
@@ -317,35 +320,36 @@ public class MyExcel
                     {
                         continue;
                     }
-                    else//match found
+                    else //match found
                     {
                         return rf.id;
                     }
                 }
             }
-            
+
             //try some additional format...will make this one MEF someday hopefully
-            if(dim2>=2)
+            if (dim2 >= 2)
             {
                 RateTableMetaData metaData = new RateTableMetaData();
-                FindTableMetaData(ref objArray, ref metaData, firstRow, VendorFormat.None, dateFormats, ref dateSeparator);
-                if(metaData.IndexDescription==1 &&
-                    metaData.IndexPrefix1==2&&
-                    metaData.IndexStartDate==4&&
-                    metaData.IndexRate==3)
+                FindTableMetaData(ref objArray, ref metaData, firstRow, VendorFormat.None, dateFormats,
+                    ref dateSeparator);
+                if (metaData.IndexDescription == 1 &&
+                    metaData.IndexPrefix1 == 2 &&
+                    metaData.IndexStartDate == 4 &&
+                    metaData.IndexRate == 3)
                 {
-                    return 12;//dbl normalized
+                    return 12; //dbl normalized
                 }
             }
 
-            return 0;   
+            return 0;
         }
 
         string HeaderTextByAllSheet(Workbook book)
         {
             //concat all text in first 500 lines, first 10 columns in each sheets
             StringBuilder sbstr = new StringBuilder();
-            
+
             foreach (Worksheet Sheet in book.Worksheets)
             {
                 //skip hidded, If the sheet name ends with an underscore (_) then its hidden. Regular sheet names will end with a dollar sign ($).
@@ -355,23 +359,26 @@ public class MyExcel
                 try
                 {
                     //couldn't figure out why repeated sheet name occured with exception, just ignore the sheet in case this happens
-                    objArray = (object[,])range.get_Value(XlRangeValueDataType.xlRangeValueDefault);
+                    objArray = (object[,]) range.get_Value(XlRangeValueDataType.xlRangeValueDefault);
                 }
-                catch(Exception e2)
+                catch (Exception e2)
                 {
-                    continue;//with next sheet
+                    Console.WriteLine(e2);
+                    continue; //with next sheet
                 }
                 //objarray can be null for unused sheet
                 if (objArray == null) continue;
                 int i = 1;
                 int dim1 = objArray.GetLength(0);
                 int dim2 = objArray.GetLength(1);
-                for (i = 1; i < (dim1<500?dim1:500); i++)//1 based array returned by excel
+                for (i = 1; i < (dim1 < 500 ? dim1 : 500); i++) //1 based array returned by excel
                 {
                     int j = 1;
-                    for (j = 1; j <= (dim2<10?dim2:10); j++)  //1 based array
+                    for (j = 1; j <= (dim2 < 10 ? dim2 : 10); j++) //1 based array
                     {
-                        CellDataType? thisColumnLike = (objArray[i, j] != null ? CellDataType.Undetermined : CellDataType.Null);
+                        CellDataType? thisColumnLike = (objArray[i, j] != null
+                            ? CellDataType.Undetermined
+                            : CellDataType.Null);
                         switch (thisColumnLike)
                         {
                             case CellDataType.Null:
@@ -382,7 +389,7 @@ public class MyExcel
                         }
                     }
                 }
-            }//for each sheet the leading texts are copied in dbstr
+            } //for each sheet the leading texts are copied in dbstr
 
             return sbstr.ToString();
 
@@ -390,20 +397,20 @@ public class MyExcel
 
 
 
-        
 
 
 
 
 
-        List<ratetask> GetRateArrayByCol(ref object[,] valueArray,Dictionary<int,string> dicCols ,ref Exception e1)
+
+        List<ratetask> GetRateArrayByCol(ref object[,] valueArray, Dictionary<int, string> dicCols, ref Exception e1)
         {
             List<ratetask> lstRateTask = new List<ratetask>();
             try
             {
                 int dim1 = valueArray.GetLength(0);
                 int dim2 = valueArray.GetLength(1);
-                for (int i = 2; i <= dim1; i++)//skip first row with column headers
+                for (int i = 2; i <= dim1; i++) //skip first row with column headers
                 {
                     List<string> lstJson = new List<string>();
                     for (int j = 1; j <= dim2; j++)
@@ -425,9 +432,9 @@ public class MyExcel
                             {
                                 val = "'" + val + "'";
                             }
-                            
+
                         }
-                        else//nto numeric
+                        else //nto numeric
                         {
                             val = "'" + valueArray[i, j].ToString() + "'";
                             if (fldName == "startdate")
@@ -441,13 +448,15 @@ public class MyExcel
                         }
                         lstJson.Add("'" + fldName + "':" + val);
                     }
-                    StringBuilder sbJson = new StringBuilder().Append("{ ").Append(string.Join(",", lstJson)).Append(" }");
+                    StringBuilder sbJson = new StringBuilder().Append("{ ").Append(string.Join(",", lstJson))
+                        .Append(" }");
                     ratetask newtask = JsonConvert.DeserializeObject<ratetask>(sbJson.ToString());
                     lstRateTask.Add(newtask);
                 }
             }
             catch (Exception e)
             {
+                Console.WriteLine(e);
                 e1 = e;
             }
             return lstRateTask;
@@ -474,7 +483,7 @@ public class MyExcel
                 {
                     countryCodeInclusionCount++;
                 }
-                else if (rtask.CountryCode.Trim() == "")//if country code is not mentioned, prefix must contain cc
+                else if (rtask.CountryCode.Trim() == "") //if country code is not mentioned, prefix must contain cc
                 {
                     countryCodeInclusionCount++;
                 }
@@ -497,23 +506,28 @@ public class MyExcel
                     rTask.Prefix = rTask.CountryCode + rTask.Prefix;
                 }
             }
-                
+
         }
+
         class RateFormatWithOrder
         {
             public string DateFormat = "";
             public int Order = 100;
-            public RateFormatWithOrder(string formatString,int sortOrder)
+
+            public RateFormatWithOrder(string formatString, int sortOrder)
             {
                 this.DateFormat = formatString;
                 this.Order = sortOrder;
             }
+
             public override string ToString()
             {
                 return this.Order.ToString() + "=>" + this.DateFormat;
             }
         }
-        List<ratetask> GetFinalRateArray(List<string[]> lstSinglePrefixArray, RateTableMetaData tableData, VendorFormat vFormat,string[] dateFormats,ref string dateSeparator)
+
+        List<ratetask> GetFinalRateArray(List<string[]> lstSinglePrefixArray, RateTableMetaData tableData,
+            VendorFormat vFormat, string[] dateFormats, ref string dateSeparator)
         {
 
             //here order by dateformats with the help of DateSeparator to improve performance during parsing with huge format array
@@ -522,7 +536,8 @@ public class MyExcel
                 List<RateFormatWithOrder> lstFormatOrder = new List<RateFormatWithOrder>();
                 foreach (string format in dateFormats)
                 {
-                    lstFormatOrder.Add(new RateFormatWithOrder(format, (format.Contains(dateSeparator) == true ? 0 : 100)));
+                    lstFormatOrder.Add(
+                        new RateFormatWithOrder(format, (format.Contains(dateSeparator) == true ? 0 : 100)));
                 }
                 lstFormatOrder = lstFormatOrder.OrderBy(c => c.Order).ToList();
                 List<string> dateFormatsOrdered = new List<string>();
@@ -532,7 +547,7 @@ public class MyExcel
                 }
                 dateFormats = dateFormatsOrdered.ToArray();
             }
-            
+
             List<ratetask> lstRates = new List<ratetask>();
             try
             {
@@ -542,10 +557,14 @@ public class MyExcel
                     ratetask newTask = new ratetask();
                     //Row 0://prefix
                     //NewRow[0] 
-                    newTask.Prefix = (tableData.IndexPrefix1) > -1 ? thisRow[tableData.IndexPrefix1 - 1] : "";//0 & 1 based array adjustment
+                    newTask.Prefix = (tableData.IndexPrefix1) > -1
+                        ? thisRow[tableData.IndexPrefix1 - 1]
+                        : ""; //0 & 1 based array adjustment
                     //Row 1://description
                     //NewRow[1] 
-                    newTask.description = (tableData.IndexDescription) > -1 ? thisRow[tableData.IndexDescription - 1] : "";
+                    newTask.description = (tableData.IndexDescription) > -1
+                        ? thisRow[tableData.IndexDescription - 1]
+                        : "";
                     //Row 2://rate
                     if (this._importTaskType == ImportTaskType.RateChanges)
                     {
@@ -558,7 +577,7 @@ public class MyExcel
                             newTask.rateamount = (tableData.IndexRate) > -1 ? thisRow[tableData.IndexRate - 1] : "";
                         }
                     }
-                    else//code delete
+                    else //code delete
                     {
                         //NewRow[2] 
                         newTask.rateamount = "-1";
@@ -568,49 +587,64 @@ public class MyExcel
                     newTask.Resolution = (tableData.IndexPulse) > -1 ? thisRow[tableData.IndexPulse - 1] : "";
                     if (newTask.Resolution == "")
                     {
-                        newTask.Resolution = this.RatePlan.Resolution.ToString();//fetch default
+                        newTask.Resolution = this.RatePlan.Resolution.ToString(); //fetch default
                     }
                     //Row 4://minduration
                     //NewRow[4] 
-                    newTask.MinDurationSec = (tableData.IndexMinDuration) > -1 ? thisRow[tableData.IndexMinDuration - 1] : "";
+                    newTask.MinDurationSec = (tableData.IndexMinDuration) > -1
+                        ? thisRow[tableData.IndexMinDuration - 1]
+                        : "";
                     if (newTask.MinDurationSec == "")
                     {
-                        newTask.MinDurationSec = this.RatePlan.mindurationsec.ToString();//fetch default
+                        newTask.MinDurationSec = this.RatePlan.mindurationsec.ToString(); //fetch default
                     }
                     //Row 5://countrycode
                     //NewRow[5] 
-                    newTask.CountryCode = (tableData.IndexCountryCode) > -1 ? thisRow[tableData.IndexCountryCode - 1] : "";
+                    newTask.CountryCode = (tableData.IndexCountryCode) > -1
+                        ? thisRow[tableData.IndexCountryCode - 1]
+                        : "";
                     //Row 6://effectivedate
                     DateTime tempDate = new DateTime();
-                    if (vFormat == VendorFormat.Bharti)//bharti specific
+                    if (vFormat == VendorFormat.Bharti) //bharti specific
                     {
                         switch (thisRow[5].ToLower().Trim())
                         {
-                            case ""://unchanged
+                            case "": //unchanged
                                 //NewRow[6] 
-                                newTask.startdate = this.VendorParams.ParamBharti.DefaultUnchangedValidityDate.ToString("yyyy-MM-dd HH:mm:ss");
+                                newTask.startdate =
+                                    this.VendorParams.ParamBharti.DefaultUnchangedValidityDate.ToString(
+                                        "yyyy-MM-dd HH:mm:ss");
                                 break;
                             case "increase":
-                                newTask.startdate = this.VendorParams.ParamBharti.DefaultIncreaseValidityDate.ToString("yyyy-MM-dd HH:mm:ss");
+                                newTask.startdate =
+                                    this.VendorParams.ParamBharti.DefaultIncreaseValidityDate.ToString(
+                                        "yyyy-MM-dd HH:mm:ss");
                                 break;
                             case "decrease":
-                                newTask.startdate = this.VendorParams.ParamBharti.DefaultDecreaseValidityDate.ToString("yyyy-MM-dd HH:mm:ss");
+                                newTask.startdate =
+                                    this.VendorParams.ParamBharti.DefaultDecreaseValidityDate.ToString(
+                                        "yyyy-MM-dd HH:mm:ss");
                                 break;
-                            default://code update
-                                newTask.startdate = this.VendorParams.ParamBharti.DefaultCodeUpdateValidityDate.ToString("yyyy-MM-dd HH:mm:ss");
+                            default: //code update
+                                newTask.startdate =
+                                    this.VendorParams.ParamBharti.DefaultCodeUpdateValidityDate.ToString(
+                                        "yyyy-MM-dd HH:mm:ss");
                                 break;
                         }
                     }
                     else
                     {
-                        newTask.startdate = (tableData.IndexStartDate) > -1 ? thisRow[tableData.IndexStartDate - 1] : "";
+                        newTask.startdate = (tableData.IndexStartDate) > -1
+                            ? thisRow[tableData.IndexStartDate - 1]
+                            : "";
                         //format date
                         //if (DateTime.TryParse(NewTask.startdate, out TempDate) == true)
                         //{
                         //    NewTask.startdate = TempDate.ToString("yyyy-MM-dd HH:mm:ss");
                         //}
-                     
-                        if (DateTime.TryParseExact(newTask.startdate, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out tempDate))
+
+                        if (DateTime.TryParseExact(newTask.startdate, dateFormats, CultureInfo.InvariantCulture,
+                            DateTimeStyles.None, out tempDate))
                         {
                             newTask.startdate = tempDate.ToString("yyyy-MM-dd HH:mm:ss");
                         }
@@ -629,31 +663,37 @@ public class MyExcel
                     }
                     //Row 8://surchargetime
                     //NewRow[8] 
-                    newTask.SurchargeTime = (tableData.IndexSurchargeTime) > -1 ? thisRow[tableData.IndexSurchargeTime - 1] : "";
+                    newTask.SurchargeTime = (tableData.IndexSurchargeTime) > -1
+                        ? thisRow[tableData.IndexSurchargeTime - 1]
+                        : "";
                     if (newTask.SurchargeTime == "")
                     {
-                        newTask.SurchargeTime = this.RatePlan.SurchargeTime.ToString();//fetch default
+                        newTask.SurchargeTime = this.RatePlan.SurchargeTime.ToString(); //fetch default
                     }
                     //Row 9://surcharge amount
                     //NewRow[9] 
-                    newTask.SurchargeAmount = (tableData.IndexSurchargeAmount) > -1 ? thisRow[tableData.IndexSurchargeAmount - 1] : "";
+                    newTask.SurchargeAmount = (tableData.IndexSurchargeAmount) > -1
+                        ? thisRow[tableData.IndexSurchargeAmount - 1]
+                        : "";
                     if (newTask.SurchargeAmount == "")
                     {
-                        newTask.SurchargeAmount = this.RatePlan.SurchargeAmount.ToString();//fetch default
+                        newTask.SurchargeAmount = this.RatePlan.SurchargeAmount.ToString(); //fetch default
                     }
                     //Row 10://service type
                     //NewRow[10] 
                     newTask.Category = (tableData.IndexServiceType) > -1 ? thisRow[tableData.IndexServiceType - 1] : "";
                     if (newTask.Category == "")
                     {
-                        newTask.Category = this.RatePlan.Category.ToString();//fetch default
+                        newTask.Category = this.RatePlan.Category.ToString(); //fetch default
                     }
                     //Row 11://sub service type
                     //NewRow[11] 
-                    newTask.SubCategory = (tableData.IndexSubServiceType) > -1 ? thisRow[tableData.IndexSubServiceType - 1] : "";
+                    newTask.SubCategory = (tableData.IndexSubServiceType) > -1
+                        ? thisRow[tableData.IndexSubServiceType - 1]
+                        : "";
                     if (newTask.SubCategory == "")
                     {
-                        newTask.SubCategory = this.RatePlan.SubCategory.ToString();//fetch default
+                        newTask.SubCategory = this.RatePlan.SubCategory.ToString(); //fetch default
                     }
 
                     ////***vendor specific modification
@@ -667,9 +707,10 @@ public class MyExcel
                     lstRates.Add(newTask);
                 }
 
-            }//try
+            } //try
             catch (Exception e1)
             {
+                Console.WriteLine(e1);
                 return null;
             }
             CheckCountryCodeInclusionAndCommonPrefix(ref lstRates);
@@ -679,9 +720,10 @@ public class MyExcel
         enum RangeType
         {
             None,
-            Whole,//6114-6118
-            TrailingDigits//6114-20
+            Whole, //6114-6118
+            TrailingDigits //6114-20
         }
+
         string RangeToMultiplePrefix(string value)
         {
             string retval = "";
@@ -690,10 +732,10 @@ public class MyExcel
                 return value;
             }
 
-            value = value.Replace(" ", "");//replace space
-            value = value.Replace("\t", "");//replace space
+            value = value.Replace(" ", ""); //replace space
+            value = value.Replace("\t", ""); //replace space
             //separate cell value as comma (or other then -) separated values
-            char[] sepArr = new char[] { ',', ':', ';' };
+            char[] sepArr = new char[] {',', ':', ';'};
             char sepChar = ',';
             //find separator chracter
             foreach (char ch in sepArr)
@@ -757,8 +799,10 @@ public class MyExcel
                         break;
                     case RangeType.TrailingDigits:
                         lstPrefixeOneRange = new List<string>();
-                        string commonprefix = prefixBeforeDash.Substring(0, prefixBeforeDash.Length - prefixAfterDash.Length);
-                        long numToIncrement = long.Parse(prefixBeforeDash.Substring(commonprefix.Length, prefixBeforeDash.Length - commonprefix.Length));
+                        string commonprefix =
+                            prefixBeforeDash.Substring(0, prefixBeforeDash.Length - prefixAfterDash.Length);
+                        long numToIncrement = long.Parse(prefixBeforeDash.Substring(commonprefix.Length,
+                            prefixBeforeDash.Length - commonprefix.Length));
                         long incrementUpto = long.Parse(prefixAfterDash);
                         if (incrementUpto > numToIncrement)
                         {
@@ -774,7 +818,7 @@ public class MyExcel
                     lstRangeNormalizedArr.Add(str);
                 }
 
-            }//for each separated value, each may or may not contain '-'
+            } //for each separated value, each may or may not contain '-'
 
             //return the cell as comma separated
 
@@ -784,11 +828,12 @@ public class MyExcel
         class SeparatedPrefixArray
         {
             public string[] PrefixArray = null;
+
             public SeparatedPrefixArray(string value)
             {
                 //value could be character separated too
                 //find separator chracter
-                char[] sepArr = new char[] { ',', ':', ';' };
+                char[] sepArr = new char[] {',', ':', ';'};
                 char sepChar = ',';
 
                 foreach (char ch in sepArr)
@@ -803,11 +848,13 @@ public class MyExcel
             }
         }
 
-        List<string[]> MultipleToSinglePrefixArray(ImportTaskType thisSheetType, ref object[,] valueArray, RateTableMetaData tableData,string[] dateFormats,ref string dateSeparator)
+        List<string[]> MultipleToSinglePrefixArray(ImportTaskType thisSheetType, ref object[,] valueArray,
+            RateTableMetaData tableData, string[] dateFormats, ref string dateSeparator)
         {
             //sometime prefix without countrycode and combined prefix both can exist
             //in that case later has more chracters and it should be the prefix column
-            if (thisSheetType == ImportTaskType.RateChanges && tableData.IndexPrefix1 > -1 && tableData.IndexPrefix2 > -1)
+            if (thisSheetType == ImportTaskType.RateChanges && tableData.IndexPrefix1 > -1 &&
+                tableData.IndexPrefix2 > -1)
             {
                 if (tableData.DicColData[tableData.IndexPrefix2].ColAttribs.CharacterCount
                     > tableData.DicColData[tableData.IndexPrefix1].ColAttribs.CharacterCount)
@@ -820,9 +867,9 @@ public class MyExcel
             try
             {
                 int dim2 = valueArray.GetLength(1);
-                for (int i = tableData.FirstRow; ; i++)//1 based array returned by excel
+                for (int i = tableData.FirstRow;; i++) //1 based array returned by excel
                 {
-                    if (CheckIfBeyondLastRow(i, ref valueArray,dateFormats,ref dateSeparator) == true)
+                    if (CheckIfBeyondLastRow(i, ref valueArray, dateFormats, ref dateSeparator) == true)
                     {
                         return singlePrefixTableRows;
                     }
@@ -837,19 +884,21 @@ public class MyExcel
                     {
                         finalPrefixesForThisRow = sepOldCodes.PrefixArray;
                     }
-                    else//code changes,//code delete handling e.g. for tata
+                    else //code changes,//code delete handling e.g. for tata
                     {
-                        string valNewCodes = valueArray[i, tableData.IndexPrefix2].ToString().Replace(" ", "").Replace("\t", "");
+                        string valNewCodes = valueArray[i, tableData.IndexPrefix2].ToString().Replace(" ", "")
+                            .Replace("\t", "");
                         valNewCodes = RangeToMultiplePrefix(valNewCodes);
                         SeparatedPrefixArray sepNewCodes = new SeparatedPrefixArray(valNewCodes);
                         finalPrefixesForThisRow = (from s in sepOldCodes.PrefixArray.Except(sepNewCodes.PrefixArray)
-                                                   where s != ""//exclude where old entries had only country, new code added, not significant for code deletion
-                                                   select s).ToArray();
+                            where
+                            s != "" //exclude where old entries had only country, new code added, not significant for code deletion
+                            select s).ToArray();
                     }
 
                     int prefixcount = finalPrefixesForThisRow.Count();
 
-                    List<string[]> lstRows = new List<string[]>();//multi to single prefix normalized row
+                    List<string[]> lstRows = new List<string[]>(); //multi to single prefix normalized row
 
                     for (int k = 0; k < prefixcount; k++)
                     {
@@ -861,19 +910,21 @@ public class MyExcel
                                 oneRow[j - 1] = valueArray[i, j] != null ? valueArray[i, j].ToString().Trim() : "";
                             }
                         }
-                        oneRow[tableData.IndexPrefix1 - 1] = finalPrefixesForThisRow[k].Trim();//code deletes are normalized in index1 like rate changes
+                        oneRow[tableData.IndexPrefix1 - 1] =
+                            finalPrefixesForThisRow[k].Trim(); //code deletes are normalized in index1 like rate changes
                         lstRows.Add(oneRow);
                     }
 
-                    foreach (string[] rstr in lstRows)//lstrows may contain one or multiple rows depending on
-                    //single or multiple prefix
+                    foreach (string[] rstr in lstRows) //lstrows may contain one or multiple rows depending on
+                        //single or multiple prefix
                     {
                         singlePrefixTableRows.Add(rstr);
                     }
                 }
-            }//try
+            } //try
             catch (Exception e1)
             {
+                Console.WriteLine(e1);
                 return null;
             }
             return singlePrefixTableRows;
@@ -899,7 +950,7 @@ public class MyExcel
             public int LastRow = -1;
 
             public int IndexPrefix1 = -1;
-            public int IndexPrefix2 = -1;//can be present e.g. code update sheet of Tata
+            public int IndexPrefix2 = -1; //can be present e.g. code update sheet of Tata
             public int IndexDescription = -1;
             public int IndexRate = -1;
             public int IndexPulse = -1;
@@ -913,7 +964,7 @@ public class MyExcel
             public int IndexServiceType = -1;
             public int IndexSubServiceType = -1;
 
-            public Dictionary<int, ColumnMetaData> DicColData = new Dictionary<int, ColumnMetaData>();//keep
+            public Dictionary<int, ColumnMetaData> DicColData = new Dictionary<int, ColumnMetaData>(); //keep
             //row column attribs for each column (key, 1 based) in case they are required 
         }
 
@@ -942,7 +993,8 @@ public class MyExcel
 
             public int GetAttributeCount()
             {
-                return this.PossRateCount + this.PossPrefixCount + this.PossCountryCodeCount + this.PossCountryNameCount + this.PossMultipleWordCount + this.PossDateCount;
+                return this.PossRateCount + this.PossPrefixCount + this.PossCountryCodeCount +
+                       this.PossCountryNameCount + this.PossMultipleWordCount + this.PossDateCount;
             }
 
             public CellDataType GetCellDataTypeByMaxAttributeCount()
@@ -957,7 +1009,7 @@ public class MyExcel
                 if (this.PossPrefixCount > max)
                 {
                     max = this.PossPrefixCount;
-                    maxLike = CellDataType.Prefix;//could be multipleprefix also, but set column type=prefix will do
+                    maxLike = CellDataType.Prefix; //could be multipleprefix also, but set column type=prefix will do
                 }
                 if (this.PossCountryCodeCount > max)
                 {
@@ -991,9 +1043,9 @@ public class MyExcel
             LastRow
         }
 
-      
 
-        int FindFirstRow(ref object[,] objArray,string[] dateFormats, ref string dateSeparator)
+
+        int FindFirstRow(ref object[,] objArray, string[] dateFormats, ref string dateSeparator)
         {
             int rowIndex = -1;
             int dim1 = objArray.GetLength(0);
@@ -1003,16 +1055,18 @@ public class MyExcel
             dim2 = objArray.GetLength(1);
 
             int i = 1;
-            for (i = 1; i <= dim1; i++)//1 based array returned by excel
+            for (i = 1; i <= dim1; i++) //1 based array returned by excel
             {
                 RowColumnAttributes rAttrib = new RowColumnAttributes();
                 int j = 1;
 
-                for (j = 1; j <= dim2; j++)  //1 based array
+                for (j = 1; j <= dim2; j++) //1 based array
                 {
                     CellDataType? thisColumnLike = CellDataType.Null;
 
-                    thisColumnLike = (objArray[i, j] != null ? FindCellDataType(objArray[i, j].ToString().Trim(),dateFormats,ref dateSeparator) : CellDataType.Null);
+                    thisColumnLike = (objArray[i, j] != null
+                        ? FindCellDataType(objArray[i, j].ToString().Trim(), dateFormats, ref dateSeparator)
+                        : CellDataType.Null);
 
                     switch (thisColumnLike)
                     {
@@ -1047,7 +1101,7 @@ public class MyExcel
             return rowIndex;
         }
 
-        bool CheckIfBeyondLastRow(int rowindex, ref object[,] objArray,string[] dateFormats,ref string dateSeparator)
+        bool CheckIfBeyondLastRow(int rowindex, ref object[,] objArray, string[] dateFormats, ref string dateSeparator)
         {
             int dim1 = objArray.GetLength(0);
             if (rowindex > dim1)
@@ -1060,9 +1114,11 @@ public class MyExcel
             RowColumnAttributes rAttrib = new RowColumnAttributes();
             int j = 1;
 
-            for (j = 1; j <= dim2; j++)  //1 based array
+            for (j = 1; j <= dim2; j++) //1 based array
             {
-                CellDataType? thisColumnLike = (objArray[i, j] != null ? FindCellDataType(objArray[i, j].ToString().Trim(),dateFormats,ref dateSeparator) : CellDataType.Null);
+                CellDataType? thisColumnLike = (objArray[i, j] != null
+                    ? FindCellDataType(objArray[i, j].ToString().Trim(), dateFormats, ref dateSeparator)
+                    : CellDataType.Null);
                 switch (thisColumnLike)
                 {
                     case CellDataType.Null:
@@ -1098,7 +1154,8 @@ public class MyExcel
 
         }
 
-        int FindColumnAttributes(ref object[,] objArray, int firstRow, int columnIndex, ref RowColumnAttributes rAttrib,string[] dateFormats,ref string dateSeparator)
+        int FindColumnAttributes(ref object[,] objArray, int firstRow, int columnIndex, ref RowColumnAttributes rAttrib,
+            string[] dateFormats, ref string dateSeparator)
         {
 
             try
@@ -1106,10 +1163,12 @@ public class MyExcel
                 int i = firstRow;
                 int j = columnIndex;
                 int dim1 = objArray.GetLength(0);
-                int maxRowToScan = dim1;//dim1<20? (dim1-1) :(firstRow + 19);
-                for (i = firstRow; i < maxRowToScan && i <= dim1; i++)//sampling over 20 rows will do
+                int maxRowToScan = dim1; //dim1<20? (dim1-1) :(firstRow + 19);
+                for (i = firstRow; i < maxRowToScan && i <= dim1; i++) //sampling over 20 rows will do
                 {
-                    CellDataType? thisColumnLike = (objArray[i, j] != null ? FindCellDataType(objArray[i, j].ToString(),dateFormats,ref dateSeparator) : CellDataType.Null);
+                    CellDataType? thisColumnLike = (objArray[i, j] != null
+                        ? FindCellDataType(objArray[i, j].ToString(), dateFormats, ref dateSeparator)
+                        : CellDataType.Null);
                     switch (thisColumnLike)
                     {
                         case CellDataType.Null:
@@ -1152,7 +1211,7 @@ public class MyExcel
                     }
                     rAttrib.CharacterCount += objArray[i, j].ToString().Length;
 
-                }//for each row
+                } //for each row
 
                 //set charactercount for current column 
 
@@ -1161,17 +1220,20 @@ public class MyExcel
             }
             catch (Exception e1)
             {
+                Console.WriteLine(e1);
                 return -1;
             }
         }
-        
-        CellDataType FindCellDataType(string value,string[] dateFormats,ref string dateSeparator)//must send value after using tostring()
+
+        CellDataType
+            FindCellDataType(string value, string[] dateFormats,
+                ref string dateSeparator) //must send value after using tostring()
         {
             value = value.Trim();
             CellDataType thisLike = CellDataType.Undetermined;
             try
             {
-                
+
                 double rateDouble = -1;
                 if (value.Contains(".") && double.TryParse(value, out rateDouble) == true)
                 {
@@ -1180,30 +1242,34 @@ public class MyExcel
                 }
 
                 DateTime myDateTime = new DateTime(1, 1, 1);
-                
+
                 if ((value.Contains("/")) &&
-                    DateTime.TryParseExact(value, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out myDateTime))
+                    DateTime.TryParseExact(value, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None,
+                        out myDateTime))
                 {
                     thisLike = CellDataType.Datetime;
                     dateSeparator = "/";
                     return thisLike;
                 }
                 else if ((value.Contains("-")) &&
-                    DateTime.TryParseExact(value, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out myDateTime))
+                         DateTime.TryParseExact(value, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None,
+                             out myDateTime))
                 {
                     thisLike = CellDataType.Datetime;
                     dateSeparator = "-";
                     return thisLike;
                 }
                 else if ((value.Contains(".")) &&
-                    DateTime.TryParseExact(value, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out myDateTime))
+                         DateTime.TryParseExact(value, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None,
+                             out myDateTime))
                 {
                     thisLike = CellDataType.Datetime;
                     dateSeparator = ".";
                     return thisLike;
                 }
                 else if ((value.Contains(" ")) &&
-                    DateTime.TryParseExact(value, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out myDateTime))
+                         DateTime.TryParseExact(value, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None,
+                             out myDateTime))
                 {
                     thisLike = CellDataType.Datetime;
                     dateSeparator = " ";
@@ -1211,7 +1277,8 @@ public class MyExcel
                 }
 
                 //replace "/" with "-". If dates contain "/", datetime.tryparse didn't work with 
-                else if (DateTime.TryParse(value.Replace("/","-"), out myDateTime) && (value.Contains("/") || value.Contains("-")))
+                else if (DateTime.TryParse(value.Replace("/", "-"), out myDateTime) &&
+                         (value.Contains("/") || value.Contains("-")))
                 {
                     thisLike = CellDataType.Datetime;
                     return thisLike;
@@ -1221,7 +1288,7 @@ public class MyExcel
                 bool wholeNumber = true;
                 bool mostlyDigits = false;
                 //value could be character separated too
-                char[] sepArr = new char[] { ',', ':', '-', ';' };
+                char[] sepArr = new char[] {',', ':', '-', ';'};
                 char sepChar = ',';
                 //find separator chracter
                 foreach (char ch in sepArr)
@@ -1249,7 +1316,7 @@ public class MyExcel
                         break;
                     }
                 }
-                if (wholeNumber == true)//prefix or country
+                if (wholeNumber == true) //prefix or country
                 {
                     long num = 0;
                     if (Int64.TryParse(vArr[0], out num))
@@ -1269,14 +1336,14 @@ public class MyExcel
                         }
                     }
                 }
-                else//not exactly numeric cell
+                else //not exactly numeric cell
                 {
                     if (this._dicCountryName.ContainsKey(vArr[0].ToString().ToLower()) && vArr.GetLength(0) == 1)
                     {
                         thisLike = CellDataType.CountryName;
                         return thisLike;
                     }
-                    if (vArr.GetLength(0) > 1)//comma separated cell
+                    if (vArr.GetLength(0) > 1) //comma separated cell
                     {
                         //multiple values, comma separated
                         //cannot be single prefix
@@ -1301,7 +1368,7 @@ public class MyExcel
 
                             }
                         }
-                        else//comma separated but values not numeric
+                        else //comma separated but values not numeric
                         {
                             //one last check if this cell contains prefix
                             //check if mostly digits
@@ -1331,12 +1398,12 @@ public class MyExcel
                         }
 
                     }
-                    if (vArr.GetLength(0) == 1)//single cell, not comma separated and also not numeric
+                    if (vArr.GetLength(0) == 1) //single cell, not comma separated and also not numeric
                     {
 
                         //single value only
                         //can be single or multiple word description
-                        if (vArr[0].Split(null).GetLength(0) > 1)//split on white space yields multiple values in array
+                        if (vArr[0].Split(null).GetLength(0) > 1) //split on white space yields multiple values in array
                         {
                             thisLike = CellDataType.DescriptionMultipleWord;
                             return thisLike;
@@ -1347,11 +1414,12 @@ public class MyExcel
                             return thisLike;
                         }
                     }
-                }//if numeric==false
+                } //if numeric==false
 
                 //one last check if this cell contains prefix
                 //check if mostly digits
-                if (thisLike != CellDataType.CountryCode && thisLike != CellDataType.Prefix && thisLike != CellDataType.MultiplePrefix)
+                if (thisLike != CellDataType.CountryCode && thisLike != CellDataType.Prefix &&
+                    thisLike != CellDataType.MultiplePrefix)
                 {
                     int digitCount = 0;
                     int nonDigitCount = 0;
@@ -1374,11 +1442,13 @@ public class MyExcel
             }
             catch (Exception e1)
             {
+                Console.WriteLine(e1);
                 return CellDataType.Undetermined;
             }
         }
 
-        string FindTableMetaData(ref object[,] valueArray, ref RateTableMetaData tableData, int firstRow, VendorFormat vFormat,string[] dateFormats,ref string dateSeparator)
+        string FindTableMetaData(ref object[,] valueArray, ref RateTableMetaData tableData, int firstRow,
+            VendorFormat vFormat, string[] dateFormats, ref string dateSeparator)
         {
             //try
             {
@@ -1387,7 +1457,7 @@ public class MyExcel
                 if (vFormat == VendorFormat.GenericExcel || vFormat == VendorFormat.GenericText)
                 {
                     tableData.IndexPrefix1 = 1;
-                    tableData.IndexPrefix2 = -1;//can be present e.g. code update sheet of Tata
+                    tableData.IndexPrefix2 = -1; //can be present e.g. code update sheet of Tata
                     tableData.IndexDescription = 2;
                     tableData.IndexRate = 3;
                     tableData.IndexPulse = 4;
@@ -1408,14 +1478,14 @@ public class MyExcel
                 List<int> possDateColsIndex = new List<int>();
                 List<int> possDateMulPrefixIndex = new List<int>();
 
-                for (int j = 1; j <= dim2; j++)  //1 based array, for each column
+                for (int j = 1; j <= dim2; j++) //1 based array, for each column
                 {
                     RowColumnAttributes rAttrib = new RowColumnAttributes();
-                    FindColumnAttributes(ref valueArray, firstRow, j, ref rAttrib,dateFormats,ref dateSeparator);
+                    FindColumnAttributes(ref valueArray, firstRow, j, ref rAttrib, dateFormats, ref dateSeparator);
 
                     CellDataType? thisColumnLike = rAttrib.GetCellDataTypeByMaxAttributeCount();
                     ColumnMetaData thisColData = new ColumnMetaData();
-                    thisColData.ColumnType = (CellDataType)thisColumnLike;
+                    thisColData.ColumnType = (CellDataType) thisColumnLike;
                     thisColData.ColAttribs = rAttrib;
                     tableData.DicColData.Add(j, thisColData);
 
@@ -1465,11 +1535,12 @@ public class MyExcel
                             break;
                     }
 
-                }//for each column
+                } //for each column
 
                 //find out description column
                 int maxColIndexChar = -1;
-                int maxUniqueWordCount = 0;//prefix description column will have more unique word rather than increase/decrease/CLI route etc.
+                int maxUniqueWordCount =
+                    0; //prefix description column will have more unique word rather than increase/decrease/CLI route etc.
                 for (int c = 1; c <= tableData.DicColData.Count; c++)
                 {
                     ColumnMetaData cData = null;
@@ -1479,7 +1550,8 @@ public class MyExcel
                         && cData.ColumnType != CellDataType.Datetime && cData.ColumnType != CellDataType.Rate
                         && cData.ColumnType != CellDataType.CountryName)
                     {
-                        if (cData.ColumnType == CellDataType.DescriptionMultipleWord && cData.ColAttribs.CharacterCount > max
+                        if (cData.ColumnType == CellDataType.DescriptionMultipleWord &&
+                            cData.ColAttribs.CharacterCount > max
                             && cData.ColAttribs.DicUnqWord.Count > maxUniqueWordCount)
                         {
                             max = cData.ColAttribs.CharacterCount;
@@ -1493,10 +1565,6 @@ public class MyExcel
 
                 return "";
             }
-            //catch (Exception e1)
-            //{
-            //    return e1.InnerException.ToString();
-            //}
         }
 
     }

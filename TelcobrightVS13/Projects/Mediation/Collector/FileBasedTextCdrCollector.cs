@@ -20,7 +20,7 @@ namespace TelcobrightMediation
         public object Collect()
         {
             IFileDecoder decoder = null;
-            this.CollectorInput.MefDecodersData.DicExtensions.TryGetValue(this.CollectorInput.Ne.idcdrformat.ToString(), out decoder);
+            this.CollectorInput.MefDecodersData.DicExtensions.TryGetValue(this.CollectorInput.Ne.idcdrformat, out decoder);
             if (decoder == null)
             {
                 throw new Exception("No suitable file decoder found for cdrformat: " + this.CollectorInput.Ne.idcdrformat

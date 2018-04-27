@@ -18,6 +18,7 @@ namespace ProjectBackup
                 }
                 catch (Exception e1)
                 {
+                    Console.WriteLine(e1);
                     Thread.Sleep(5000);
                     Directory.Delete(@"d:\dropbox\TelcobrightVS13_old", true);
                 }

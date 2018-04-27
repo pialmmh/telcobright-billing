@@ -76,6 +76,7 @@ namespace TelcobrightMediation
                 }
                 catch (Exception e)
                 {
+                    Console.WriteLine(e);
                     string errorMessage = new StringBuilder("Exception: ").Append(e.Message).ToString();
                     this.SendToCdrError(cdrExt, errorMessage);
                 }

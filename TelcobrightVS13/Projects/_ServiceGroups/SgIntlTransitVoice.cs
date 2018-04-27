@@ -52,7 +52,7 @@ namespace TelcobrightMediation
             {
                 throw new Exception("Chargeable info not found for customer direction.");
             }
-            SetChargingSummaryInCustomerDirection(chargeableCust,newSummary);
+            SetChargingSummaryInCustomerDirection(chargeableCust, newSummary);
 
             acc_chargeable chargeableSupp = null;
             cdrExt.Chargeables.TryGetValue(new ValueTuple<int, int, int>(this.Id, 1, 2), out chargeableSupp);
@@ -61,16 +61,6 @@ namespace TelcobrightMediation
                 throw new Exception("Chargeable info not found for supplier direction.");
             }
             SetChargingSummaryInSupplierDirection(chargeableSupp, newSummary);
-
-            newSummary.tax1 = 0;
-            newSummary.tax2 = 0;
-            newSummary.vat = 0;
-            newSummary.intAmount1 = 0;
-            newSummary.intAmount2 = 0;
-            newSummary.longAmount1 = 0;
-            newSummary.longAmount2 = 0;
-            newSummary.longDecimalAmount1 = 0;
-            newSummary.longDecimalAmount2 = 0;
         }
 
         public void SetChargingSummaryInCustomerDirection(acc_chargeable chargeableCust, AbstractCdrSummary newSummary)

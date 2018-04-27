@@ -68,6 +68,7 @@ namespace TelcobrightMediation
                 }
                 catch (Exception e1)
                 {
+                    Console.WriteLine(e1);
                     ErrorWriter wr = new ErrorWriter(e1, "GetFileListFromInsideClassVault",null,"", this.Tbc.DatabaseSetting.DatabaseName);
                 }
             }
@@ -107,6 +108,7 @@ namespace TelcobrightMediation
                     }
                     catch (Exception e1)
                     {
+                        Console.WriteLine(e1);
                         ErrorWriter wr = new ErrorWriter(e1, "GetSingleFileFromVault",null,"", this.Tbc.DatabaseSetting.DatabaseName);
                     }
                 }
@@ -133,6 +135,7 @@ namespace TelcobrightMediation
                     }
                     catch (Exception e1)
                     {
+                        Console.WriteLine(e1);
                         ErrorWriter wr = new ErrorWriter(e1, "SyncOtherVaults",null,"", this.Tbc.DatabaseSetting.DatabaseName);
                     }
                 }
@@ -159,6 +162,7 @@ namespace TelcobrightMediation
                 }
                 catch (Exception e1)
                 {
+                    Console.WriteLine(e1);
                     ErrorWriter wr = new ErrorWriter(e1, "DeleteSingleFileFromVault",null,"", this.Tbc.DatabaseSetting.DatabaseName);
                     return false;
                 }

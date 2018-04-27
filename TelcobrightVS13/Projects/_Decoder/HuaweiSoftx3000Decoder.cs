@@ -17,7 +17,7 @@ namespace Decoders
     {
         public override string ToString() => this.RuleName;
         public string RuleName => GetType().Name;
-        public string Id => "3";
+        public int Id => 3;
         public string HelpText => "Decodes Huawei Softx3000 CDR.";
         public List<string[]> DecodeFile(CdrCollectorInputData input,out List<cdrinconsistent> inconsistentCdrs)
         {
@@ -25,9 +25,7 @@ namespace Decoders
             List<string[]> decodedRows = new List<string[]>();
 
             List<cdrfieldmappingbyswitchtype> lstFieldMapping = null;
-            enumcdrformat cdrFormat = null;
-            input.MefDecodersData.DicCdrFormat.TryGetValue(this.RuleName.ToLower(), out cdrFormat);
-            input.MefDecodersData.DicFieldMapping.TryGetValue(cdrFormat.id, out lstFieldMapping);
+            input.MefDecodersData.DicFieldMapping.TryGetValue(this.Id, out lstFieldMapping);
             int huaweiFixedBytePerRows = 907;
             byte[] a = FileUtil.GetBytesFromFile(input.FullPath);
             //check if file is multiple of byteperrows
@@ -290,6 +288,7 @@ namespace Decoders
                 catch (Exception e1)
                 {//if error found for one row, add this to inconsistent
 
+                    Console.WriteLine(e1);
                     inconsistentCdrs.Add(CdrManipulatingUtil.ConvertTxtRowToCdrinconsistent(thisRow));
                     ErrorWriter wr = new ErrorWriter(e1, "DecodeCdr", null,
                         this.RuleName + " encounterd error during decoding and an Inconsistent cdr has been generated."

@@ -67,13 +67,15 @@ namespace RateSheetFormat
             CodeChanges
         }
 
-        public string GetRates(string filePath, ref List<ratetask> lstRateTask, rateplan rp, bool endAllPrevPrefix, string[] dateFormats)
+        public string GetRates(string filePath, ref List<ratetask> lstRateTask, rateplan rp, bool endAllPrevPrefix,
+            string[] dateFormats)
         {
             //try
             {
                 string dateSeparator = "";
                 //ApplicationClass app = new ApplicationClass(); // the Excel application.
-                var app = new Application();app.Visible = false;
+                var app = new Application();
+                app.Visible = false;
                 // the reference to the workbook,
                 // which is the xls document to read from.
                 Workbook book = null;
@@ -88,13 +90,13 @@ namespace RateSheetFormat
                 app.DisplayAlerts = false;
 
                 book = app.Workbooks.Open(filePath,
-                       Missing.Value, Missing.Value, Missing.Value,
-                       Missing.Value, Missing.Value, Missing.Value, Missing.Value,
-                       Missing.Value, Missing.Value, Missing.Value, Missing.Value,
-                       Missing.Value, Missing.Value, Missing.Value);
+                    Missing.Value, Missing.Value, Missing.Value,
+                    Missing.Value, Missing.Value, Missing.Value, Missing.Value,
+                    Missing.Value, Missing.Value, Missing.Value, Missing.Value,
+                    Missing.Value, Missing.Value, Missing.Value);
 
                 Worksheet sheet = new Worksheet();
-                sheet = (Worksheet)book.Worksheets[1];
+                sheet = (Worksheet) book.Worksheets[1];
 
                 SheetImportTask importTask = new SheetImportTask(ImportTaskType.RateChanges,
                     sheet, this.DicCountryCode, this.DicCountryName, rp);
@@ -116,7 +118,8 @@ namespace RateSheetFormat
                 using (PartnerEntities context = new PartnerEntities())
                 {
                     lstOldOpenRates = context.rates.Where(c => c.idrateplan == rp.id && c.enddate == null
-                        && c.startdate <= importTask.VendorParams.ParamBharti.DefaultCodeUpdateValidityDate).ToList();
+                                                               && c.startdate <= importTask.VendorParams.ParamBharti
+                                                                   .DefaultCodeUpdateValidityDate).ToList();
                 }
                 //convert strlines to dictionary of rates
                 foreach (ratetask thisTask in lstRateTask)
@@ -124,7 +127,8 @@ namespace RateSheetFormat
                     rate newRate = new rate();
                     newRate.Prefix = thisTask.Prefix;
                     DateTime deleteDate = new DateTime();
-                    if (DateTime.TryParseExact(thisTask.startdate, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out deleteDate))
+                    if (DateTime.TryParseExact(thisTask.startdate, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture,
+                        DateTimeStyles.None, out deleteDate))
                     {
                         newRate.startdate = deleteDate;
                     }
@@ -136,13 +140,16 @@ namespace RateSheetFormat
                 foreach (rate openRate in lstOldOpenRates)
                 {
                     if (dicNewCodes.ContainsKey(openRate.Prefix) == false)
-                    {//this code does not exist in the new dic, so it has to be deleted
+                    {
+//this code does not exist in the new dic, so it has to be deleted
                         ratetask deltask = new ratetask();
                         deltask.Prefix = openRate.Prefix;
-                        deltask.rateamount = "-1";//rate
-                        deltask.startdate = importTask.VendorParams.ParamBharti.DefaultCodeUpdateValidityDate.ToString("yyyy-MM-dd HH:mm:ss");//start datetime
-                        deltask.Resolution = "1";//set any resolution
-                        deltask.MinDurationSec = "1";//set any minduratin
+                        deltask.rateamount = "-1"; //rate
+                        deltask.startdate =
+                            importTask.VendorParams.ParamBharti.DefaultCodeUpdateValidityDate
+                                .ToString("yyyy-MM-dd HH:mm:ss"); //start datetime
+                        deltask.Resolution = "1"; //set any resolution
+                        deltask.MinDurationSec = "1"; //set any minduratin
 
                         lstCodeDeletes.Add(deltask);
                     }
@@ -151,7 +158,7 @@ namespace RateSheetFormat
 
 
                 //merge code delete instructions with main prefix list
-                lstRateTask.AddRange(lstCodeDeletes);//add the code delete instructions to strlines
+                lstRateTask.AddRange(lstCodeDeletes); //add the code delete instructions to strlines
 
                 //delete all instance of excel, because it wasn't getting ended by the code of excel instancing
                 foreach (Process process in Process.GetProcessesByName("Excel"))
@@ -161,10 +168,6 @@ namespace RateSheetFormat
 
                 return "";
             }
-            //catch (Exception e1)
-            //{
-            //    return e1.InnerException.ToString();
-            //}
         }
 
 
@@ -271,6 +274,7 @@ namespace RateSheetFormat
                 }
                 catch (Exception e1)
                 {
+                    Console.WriteLine(e1);
                     return e1.Message;
                 }
             }

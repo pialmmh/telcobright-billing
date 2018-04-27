@@ -86,33 +86,41 @@ namespace WS_Telcobright_Topshelf
 
         static void TimerAction()
         {
-            IApplicationContext
-                springContext = ContextRegistry.GetContext(); //don't use "using", it auto disposes spring context
-            MefProcessContainer mefProcessContainer = GetMefProcessContainerFromIoC(springContext);
-            Dictionary<string, TelcobrightConfig> operatorWiseConfigs = GetTelcobrightConfigs();
-            IScheduler runtimeScheduler = null;
-            runtimeScheduler = GetScheduler(SchedulerRunTimeType.Runtime, springContext);
-            #if DEBUG
-            if (Debugger.IsAttached)
+            try
             {
-                Console.WriteLine("Starting RAMJobStore based scheduler for debug....");
-                runtimeScheduler.Standby();
-                IScheduler debugScheduler = GetScheduler(SchedulerRunTimeType.Debug, springContext);
-                ScheduleDebugJobsFromMenu(runtimeScheduler, debugScheduler);
-                debugScheduler.Context.Put("processes", mefProcessContainer);
-                debugScheduler.Context.Put("configs", operatorWiseConfigs);
-                debugScheduler.Start();
-                Console.WriteLine("Telcobright Scheduler has been started in debug mode.");
+                IApplicationContext
+                    springContext = ContextRegistry.GetContext(); //don't use "using", it auto disposes spring context
+                MefProcessContainer mefProcessContainer = GetMefProcessContainerFromIoC(springContext);
+                Dictionary<string, TelcobrightConfig> operatorWiseConfigs = GetTelcobrightConfigs();
+                IScheduler runtimeScheduler = null;
+                runtimeScheduler = GetScheduler(SchedulerRunTimeType.Runtime, springContext);
+#if DEBUG
+                if (Debugger.IsAttached)
+                {
+                    Console.WriteLine("Starting RAMJobStore based scheduler for debug....");
+                    runtimeScheduler.Standby();
+                    IScheduler debugScheduler = GetScheduler(SchedulerRunTimeType.Debug, springContext);
+                    ScheduleDebugJobsFromMenu(runtimeScheduler, debugScheduler);
+                    debugScheduler.Context.Put("processes", mefProcessContainer);
+                    debugScheduler.Context.Put("configs", operatorWiseConfigs);
+                    debugScheduler.Start();
+                    Console.WriteLine("Telcobright Scheduler has been started in debug mode.");
+                }
+#endif //end #if DEBUG
+                Console.WriteLine("Starting Scheduler...");
+                Console.ReadLine();
+                return;
+                runtimeScheduler.Context.Put("processes", mefProcessContainer);
+                runtimeScheduler.Context.Put("configs", operatorWiseConfigs);
+                runtimeScheduler.Start();
+                Console.WriteLine("Telcobright Scheduler has been started.");
+                Console.WriteLine("Scheduler has not been started due to entering debug mode.");
             }
-            #endif //end #if DEBUG
-            Console.WriteLine("Starting Scheduler...");
-            Console.ReadLine();
-            return;
-            runtimeScheduler.Context.Put("processes", mefProcessContainer);
-            runtimeScheduler.Context.Put("configs", operatorWiseConfigs);
-            runtimeScheduler.Start();
-            Console.WriteLine("Telcobright Scheduler has been started.");
-            Console.WriteLine("Scheduler has not been started due to entering debug mode.");
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
         private static MefProcessContainer GetMefProcessContainerFromIoC(IApplicationContext springContext)
         {

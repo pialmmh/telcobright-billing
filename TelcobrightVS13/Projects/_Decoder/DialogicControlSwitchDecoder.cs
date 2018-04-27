@@ -16,7 +16,7 @@ namespace Decoders
     {
         public override string ToString() => this.RuleName;
         public virtual string RuleName => GetType().Name;
-        public string Id => "2";
+        public int Id => 2;
         public string HelpText => "Decodes Dialogic (Veraz) Control Switch CDR.";
         protected CdrCollectorInputData Input { get; set; }
         protected virtual List<string[]> GetTxtCdrs()
@@ -33,9 +33,7 @@ namespace Decoders
                 this.Input = input;
             }
             List<cdrfieldmappingbyswitchtype> lstFieldMapping = null;
-            enumcdrformat cdrFormat = null;
-            input.MefDecodersData.DicCdrFormat.TryGetValue(this.Id, out cdrFormat);
-            input.MefDecodersData.DicFieldMapping.TryGetValue(cdrFormat.id, out lstFieldMapping);
+            input.MefDecodersData.DicFieldMapping.TryGetValue(this.Id, out lstFieldMapping);
             List<string[]> tempTable = GetTxtCdrs();
             
             int rowCnt = 0;
@@ -348,8 +346,8 @@ namespace Decoders
                 }
                 catch (Exception e1)
                 {
-//if error found for one row, add this to inconsistent
-
+                    //if error found for one row, add this to inconsistent
+                    Console.WriteLine(e1);
                     inconsistentCdrs.Add(CdrManipulatingUtil.ConvertTxtRowToCdrinconsistent(csvRow));
                     ErrorWriter wr = new ErrorWriter(e1, "DecodeCdr", null,
                         this.RuleName + " encounterd error during decoding and an Inconsistent cdr has been generated."

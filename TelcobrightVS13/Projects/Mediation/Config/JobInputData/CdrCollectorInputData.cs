@@ -7,6 +7,7 @@ namespace TelcobrightMediation
     {
         public CdrJobInputData CdrJobInputData { get; }
         public PartnerEntities Context => this.CdrJobInputData.Context;
+        public MediationContext MediationContext => this.CdrJobInputData.MediationContext;
         public TelcobrightConfig Tbc => this.CdrJobInputData.Tbc;
         public ne Ne => this.CdrJobInputData.Ne;
         public CdrSetting CdrSetting => this.CdrJobInputData.Tbc.CdrSetting;

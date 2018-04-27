@@ -17,7 +17,7 @@ namespace Decoders
     {
         public override string ToString() => this.RuleName;
         public override string RuleName => GetType().Name;
-        public override string Id => "17";
+        public override int Id => 17;
         public override string HelpText => "Decodes ZTE TDM CDR.";
         public override List<string[]> DecodeFile(CdrCollectorInputData input,out List<cdrinconsistent> inconsistentCdrs)
         {

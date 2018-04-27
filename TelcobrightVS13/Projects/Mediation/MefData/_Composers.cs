@@ -57,8 +57,13 @@ namespace TelcobrightMediation
 			var container = new CompositionContainer(catalog);
 			container.ComposeParts(this);
 		}
-
-	}
+	    public void ComposeFromPath(string path)
+	    {
+	        var catalog = new DirectoryCatalog(path);
+	        var container = new CompositionContainer(catalog);
+	        container.ComposeParts(this);
+	    }
+    }
 	public class ServiceGroupComposer
 	{
 		[ImportMany("ServiceGroup", typeof(IServiceGroup))]

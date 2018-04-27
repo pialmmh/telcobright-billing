@@ -31,6 +31,7 @@ namespace TelcobrightFileOperations
             }
             catch (Exception e2)//database error
             {
+                Console.WriteLine(e2);
                 try
                 {
                     allerror thisError = new allerror

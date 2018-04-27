@@ -141,6 +141,7 @@ namespace UnitTesterManual
             } //try
             catch (Exception e1)
             {
+                Console.WriteLine(e1);
                 ErrorWriter wr = new ErrorWriter(e1, "ProcessCdr", null, "", "mockNewCdrProcessor");
             }
         }

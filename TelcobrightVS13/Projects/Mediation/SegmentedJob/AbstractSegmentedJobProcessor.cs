@@ -44,7 +44,7 @@ namespace TelcobrightMediation
                                         {s.status},'{JsonConvert.SerializeObject(s.SegmentDetail)}')");
                     }
                     cmd.ExecuteCommandText(" update job set " +
-                                           " status=2," + "NoOfRecords=" + jobSegments.Sum(s => s.stepsCount) +
+                                           " status=2," + "NoOfSteps=" + jobSegments.Sum(s => s.stepsCount) +
                                            " where id= " + this.TelcobrightJob.id);
                     cmd.ExecuteCommandText("commit;");
                 }

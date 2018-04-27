@@ -78,12 +78,11 @@ namespace UnitTesterManual
             CdrCollectionResult newCollectionResult = null;
             CdrCollectionResult oldCollectionResult = null;
             preProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
-            CdrJobContext cdrJobContext = new CdrJobContext(input, autoIncrementManager,
-                newCollectionResult.HoursInvolved);
+
+            CdrJobContext cdrJobContext = new CdrJobContext(input, autoIncrementManager,newCollectionResult.HoursInvolved);
             CdrProcessor cdrProcessor = new CdrProcessor(cdrJobContext, newCollectionResult);
             CdrEraser cdrEraser = oldCollectionResult?.IsEmpty == false
-                ? new CdrEraser(cdrJobContext, oldCollectionResult)
-                : null;
+                ? new CdrEraser(cdrJobContext, oldCollectionResult): null;
             CdrJob cdrJob = new CdrJob(cdrProcessor, cdrEraser, cdrProcessor.CollectionResult.RawCount);
             ExecuteCdrJob(input, cdrJob);
             return JobCompletionStatus.Complete;

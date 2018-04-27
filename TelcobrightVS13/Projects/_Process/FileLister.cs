@@ -58,6 +58,7 @@ namespace Process
                         }
                         catch (Exception e1)
                         {
+                            Console.WriteLine(e1);
                             ErrorWriter wr = new ErrorWriter(e1, "FileLister/Filename:" + fileName, null, "", operatorName);
                             continue; //with next file
                         }
@@ -66,6 +67,7 @@ namespace Process
             }
             catch (Exception e1)
             {
+                Console.WriteLine(e1);
                 ErrorWriter wr = new ErrorWriter(e1, "FileLister", null, "",operatorName);
             }
         }

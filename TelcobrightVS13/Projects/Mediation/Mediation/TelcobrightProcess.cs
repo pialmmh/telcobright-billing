@@ -24,6 +24,7 @@ namespace TelcobrightMediation
                 }
             catch (Exception e1)
             {
+                Console.WriteLine(e1);
                 var logFileName = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "telcobright.log";
                 File.WriteAllText(logFileName, e1.Message + Environment.NewLine + (e1.InnerException != null ? e1.InnerException.ToString() : ""));
             }

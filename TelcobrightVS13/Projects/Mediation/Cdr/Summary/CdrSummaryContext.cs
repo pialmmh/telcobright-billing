@@ -43,8 +43,10 @@ namespace TelcobrightMediation.Cdr
                     CdrSummaryFactory =
                     CdrSummaryFactoryFactory.Create(tableName, this.MediationContext.MefServiceGroupContainer)
                 }).ToDictionary(annonymous => annonymous.SummaryTableName, annonymous => annonymous.CdrSummaryFactory);
+        }
 
-
+        public void PopulatePrevSummary()
+        {
             foreach (int serviceGroupNumber in this.MediationContext.Tbc.CdrSetting.ServiceGroupConfigurations.Keys)
             {
                 IServiceGroup serviceGroup = null;
@@ -76,13 +78,11 @@ namespace TelcobrightMediation.Cdr
                     }
                 }
             }
-            ValidateSummaryCollection();
         }
-
-        private void ValidateSummaryCollection()
+        public void ValidateDayVsHourWiseSummaryCollection()
         {
             var dayWiseSummaryCaches = this.TableWiseSummaryCache.Where(kv => kv.Key.Contains("_day_"))
-                            .ToDictionary(kv => kv.Key, kv => kv.Value);
+                .ToDictionary(kv => kv.Key, kv => kv.Value);
             var hourWiseSummaryCaches = this.TableWiseSummaryCache.Where(kv => kv.Key.Contains("_hr_"))
                 .ToDictionary(kv => kv.Key, kv => kv.Value);
             foreach (var kv in dayWiseSummaryCaches)
@@ -96,7 +96,6 @@ namespace TelcobrightMediation.Cdr
                     throw new Exception("Collected day & hour wise summary duration do not match.");
             }
         }
-
         private SummaryCache<AbstractCdrSummary, CdrSummaryTuple>
             CreateSummaryCacheInstance(string summaryTableName)
         {
