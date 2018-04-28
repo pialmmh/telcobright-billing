@@ -39,7 +39,7 @@ namespace MediationModel
 		public abstract decimal duration1 { get; set; }
 		public abstract decimal duration2 { get; set; }
 		public abstract decimal duration3 { get; set; }
-		public abstract double PDD { get; set; }
+		public abstract decimal PDD { get; set; }
 		public abstract decimal customercost { get; set; }
 		public abstract decimal suppliercost { get; set; }
 		public abstract decimal tax1 { get; set; }

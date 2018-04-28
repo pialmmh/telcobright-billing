@@ -38,23 +38,23 @@ warning 6002: The table/view 'def.platinum.acc_chargeable' does not have a prima
           <Property Name="ProductId" Type="bigint" Nullable="false" />
           <Property Name="idBilledUom" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="idQuantityUom" Type="varchar" MaxLength="10" Nullable="false" />
-          <Property Name="BilledAmount" Type="decimal" Precision="13" Scale="4" Nullable="false" />
-          <Property Name="Quantity" Type="decimal" Precision="13" Scale="4" Nullable="false" />
-          <Property Name="unitPriceOrCharge" Type="decimal" Precision="17" Scale="8" Nullable="false" />
+          <Property Name="BilledAmount" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="Quantity" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="unitPriceOrCharge" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="Prefix" Type="varchar" MaxLength="30" />
           <Property Name="RateId" Type="bigint" Nullable="false" />
-          <Property Name="TaxAmount1" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="TaxAmount2" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="TaxAmount3" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="VatAmount1" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="VatAmount2" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="VatAmount3" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="OtherAmount1" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="OtherAmount2" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="OtherAmount3" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="OtherDecAmount1" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="OtherDecAmount2" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="OtherDecAmount3" Type="decimal" Precision="13" Scale="4" />
+          <Property Name="TaxAmount1" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="TaxAmount2" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="TaxAmount3" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="VatAmount1" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="VatAmount2" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="VatAmount3" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="OtherAmount1" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="OtherAmount2" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="OtherAmount3" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="OtherDecAmount1" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="OtherDecAmount2" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="OtherDecAmount3" Type="decimal" Precision="20" Scale="8" />
           <Property Name="createdByJob" Type="bigint" />
           <Property Name="changedByJob" Type="bigint" />
           <Property Name="idBillingrule" Type="int" Nullable="false" />
@@ -97,9 +97,9 @@ warning 6002: The table/view 'def.platinum.acc_temp_transaction' does not have a
           <Property Name="description" Type="varchar" MaxLength="255" />
           <Property Name="glAccountId" Type="bigint" Nullable="false" />
           <Property Name="uomId" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="amount" Type="decimal" Precision="13" Scale="4" Nullable="false" />
-          <Property Name="BalanceBefore" Type="decimal" Precision="13" Scale="4" Nullable="false" />
-          <Property Name="BalanceAfter" Type="decimal" Precision="13" Scale="4" Nullable="false" />
+          <Property Name="amount" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="BalanceBefore" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="BalanceAfter" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="isBillable" Type="tinyint" />
           <Property Name="isPrepaid" Type="tinyint" />
           <Property Name="isBilled" Type="tinyint" />
@@ -131,9 +131,9 @@ warning 6002: The table/view 'def.platinum.acc_transaction' does not have a prim
           <Property Name="description" Type="varchar" MaxLength="255" />
           <Property Name="glAccountId" Type="bigint" Nullable="false" />
           <Property Name="uomId" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="amount" Type="decimal" Precision="13" Scale="4" Nullable="false" />
-          <Property Name="BalanceBefore" Type="decimal" Precision="13" Scale="4" Nullable="false" />
-          <Property Name="BalanceAfter" Type="decimal" Precision="13" Scale="4" Nullable="false" />
+          <Property Name="amount" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="BalanceBefore" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="BalanceAfter" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="isBillable" Type="tinyint" />
           <Property Name="isPrepaid" Type="tinyint" />
           <Property Name="isBilled" Type="tinyint" />
@@ -158,12 +158,12 @@ warning 6002: The table/view 'def.platinum.acc_transaction' does not have a prim
           <Property Name="isBillable" Type="tinyint" />
           <Property Name="isCustomerAccount" Type="tinyint" />
           <Property Name="isSupplierAccount" Type="tinyint" />
-          <Property Name="balanceBefore" Type="decimal" Precision="13" Scale="4" Nullable="false" />
-          <Property Name="lastAmount" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="balanceAfter" Type="decimal" Precision="13" Scale="4" Nullable="false" />
+          <Property Name="balanceBefore" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="lastAmount" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="balanceAfter" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="lastUpdated" Type="datetime" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="superviseNegativeBalance" Type="int" />
-          <Property Name="negativeBalanceLimit" Type="decimal" Precision="13" Scale="4" Nullable="false" />
+          <Property Name="negativeBalanceLimit" Type="decimal" Precision="20" Scale="8" Nullable="false" />
         </EntityType>
         <EntityType Name="allerror">
           <Key>
@@ -271,7 +271,7 @@ warning 6002: The table/view 'def.platinum.cdr' does not have a primary key defi
           <Property Name="OriginatingCallingNumber" Type="varchar" MaxLength="100" />
           <Property Name="TerminatingCallingNumber" Type="varchar" MaxLength="100" />
           <Property Name="CustomerPrePaid" Type="utinyint" />
-          <Property Name="DurationSec" Type="decimal" Precision="13" Scale="4" Nullable="false" />
+          <Property Name="DurationSec" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="EndTime" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="ConnectTime" Type="datetime" Precision="0" />
           <Property Name="AnswerTime" Type="datetime" Precision="0" />
@@ -288,25 +288,25 @@ warning 6002: The table/view 'def.platinum.cdr' does not have a primary key defi
           <Property Name="TerminatingCIC" Type="usmallint" />
           <Property Name="StartTime" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="inPartnerId" Type="int" />
-          <Property Name="CustomerRate" Type="decimal" Precision="17" Scale="8" />
+          <Property Name="CustomerRate" Type="decimal" Precision="20" Scale="8" />
           <Property Name="outPartnerId" Type="int" />
-          <Property Name="SupplierRate" Type="decimal" Precision="17" Scale="8" />
+          <Property Name="SupplierRate" Type="decimal" Precision="20" Scale="8" />
           <Property Name="MatchedPrefixY" Type="varchar" MaxLength="20" />
-          <Property Name="USDRateY" Type="decimal" Precision="17" Scale="8" />
+          <Property Name="USDRateY" Type="decimal" Precision="20" Scale="8" />
           <Property Name="matchedprefixcustomer" Type="varchar" MaxLength="100" />
           <Property Name="matchedprefixsupplier" Type="varchar" MaxLength="100" />
-          <Property Name="CustomerCost" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="SupplierCost" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="CostANSIn" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="CostICXIn" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="CostVATCommissionIn" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="IGWRevenueIn" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="RevenueANSOut" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="RevenueIGWOut" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="RevenueICXOut" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="RevenueVATCommissionOut" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="SubscriberChargeXOut" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="CarrierCostYIGWOut" Type="decimal" Precision="13" Scale="4" />
+          <Property Name="CustomerCost" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="SupplierCost" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="CostANSIn" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="CostICXIn" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="CostVATCommissionIn" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="IGWRevenueIn" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="RevenueANSOut" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="RevenueIGWOut" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="RevenueICXOut" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="RevenueVATCommissionOut" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="SubscriberChargeXOut" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="CarrierCostYIGWOut" Type="decimal" Precision="20" Scale="8" />
           <Property Name="ANSPrefixOrig" Type="varchar" MaxLength="10" />
           <Property Name="AnsIdOrig" Type="int" />
           <Property Name="AnsPrefixTerm" Type="varchar" MaxLength="10" />
@@ -321,14 +321,14 @@ warning 6002: The table/view 'def.platinum.cdr' does not have a primary key defi
           <Property Name="GrpDayId" Type="uint" />
           <Property Name="MonthId" Type="utinyint" />
           <Property Name="DayId" Type="usmallint" />
-          <Property Name="BTRCTermRate" Type="double" />
+          <Property Name="BTRCTermRate" Type="decimal" Precision="20" Scale="8" />
           <Property Name="WeekDayId" Type="int" />
           <Property Name="E1Id" Type="usmallint" />
           <Property Name="MediaIP1" Type="varchar" MaxLength="15" />
           <Property Name="MediaIP2" Type="varchar" MaxLength="15" />
           <Property Name="MediaIP3" Type="varchar" MaxLength="15" />
           <Property Name="MediaIP4" Type="varchar" MaxLength="15" />
-          <Property Name="CallCancelDuration" Type="double" />
+          <Property Name="CallCancelDuration" Type="decimal" Precision="20" Scale="8" />
           <Property Name="E1IdOut" Type="usmallint" />
           <Property Name="inTrunkAdditionalInfo" Type="varchar" MaxLength="30" />
           <Property Name="outTrunkAdditionalInfo" Type="varchar" MaxLength="30" />
@@ -345,15 +345,15 @@ warning 6002: The table/view 'def.platinum.cdr' does not have a primary key defi
           <Property Name="field3" Type="int" />
           <Property Name="errorCode" Type="varchar" MaxLength="100" />
           <Property Name="field5" Type="int" />
-          <Property Name="roundedduration" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="PartialDuration" Type="decimal" Precision="13" Scale="4" />
+          <Property Name="roundedduration" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="PartialDuration" Type="decimal" Precision="20" Scale="8" />
           <Property Name="PartialAnswerTime" Type="datetime" Precision="0" />
           <Property Name="PartialEndTime" Type="datetime" Precision="0" />
           <Property Name="FinalRecord" Type="bigint" />
-          <Property Name="Duration1" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="Duration2" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="Duration3" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="Duration4" Type="decimal" Precision="13" Scale="4" />
+          <Property Name="Duration1" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="Duration2" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="Duration3" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="Duration4" Type="decimal" Precision="20" Scale="8" />
           <Property Name="PreviousPeriodCdr" Type="int" />
           <Property Name="UniqueBillId" Type="varchar" MaxLength="100" />
           <Property Name="BillngInfo" Type="text" />
@@ -742,7 +742,7 @@ warning 6002: The table/view 'def.platinum.cdrpartiallastaggregatedrawinstance' 
           <Property Name="OriginatingCallingNumber" Type="varchar" MaxLength="100" />
           <Property Name="TerminatingCallingNumber" Type="varchar" MaxLength="100" />
           <Property Name="CustomerPrePaid" Type="utinyint" />
-          <Property Name="DurationSec" Type="decimal" Precision="13" Scale="4" Nullable="false" />
+          <Property Name="DurationSec" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="EndTime" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="ConnectTime" Type="datetime" Precision="0" />
           <Property Name="AnswerTime" Type="datetime" Precision="0" />
@@ -759,25 +759,25 @@ warning 6002: The table/view 'def.platinum.cdrpartiallastaggregatedrawinstance' 
           <Property Name="TerminatingCIC" Type="usmallint" />
           <Property Name="StartTime" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="inPartnerId" Type="int" />
-          <Property Name="CustomerRate" Type="decimal" Precision="17" Scale="8" />
+          <Property Name="CustomerRate" Type="decimal" Precision="20" Scale="8" />
           <Property Name="outPartnerId" Type="int" />
-          <Property Name="SupplierRate" Type="decimal" Precision="17" Scale="8" />
+          <Property Name="SupplierRate" Type="decimal" Precision="20" Scale="8" />
           <Property Name="MatchedPrefixY" Type="varchar" MaxLength="20" />
-          <Property Name="USDRateY" Type="decimal" Precision="17" Scale="8" />
+          <Property Name="USDRateY" Type="decimal" Precision="20" Scale="8" />
           <Property Name="matchedprefixcustomer" Type="varchar" MaxLength="100" />
           <Property Name="matchedprefixsupplier" Type="varchar" MaxLength="100" />
-          <Property Name="CustomerCost" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="SupplierCost" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="CostANSIn" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="CostICXIn" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="CostVATCommissionIn" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="IGWRevenueIn" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="RevenueANSOut" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="RevenueIGWOut" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="RevenueICXOut" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="RevenueVATCommissionOut" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="SubscriberChargeXOut" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="CarrierCostYIGWOut" Type="decimal" Precision="13" Scale="4" />
+          <Property Name="CustomerCost" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="SupplierCost" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="CostANSIn" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="CostICXIn" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="CostVATCommissionIn" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="IGWRevenueIn" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="RevenueANSOut" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="RevenueIGWOut" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="RevenueICXOut" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="RevenueVATCommissionOut" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="SubscriberChargeXOut" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="CarrierCostYIGWOut" Type="decimal" Precision="20" Scale="8" />
           <Property Name="ANSPrefixOrig" Type="varchar" MaxLength="10" />
           <Property Name="AnsIdOrig" Type="int" />
           <Property Name="AnsPrefixTerm" Type="varchar" MaxLength="10" />
@@ -792,14 +792,14 @@ warning 6002: The table/view 'def.platinum.cdrpartiallastaggregatedrawinstance' 
           <Property Name="GrpDayId" Type="uint" />
           <Property Name="MonthId" Type="utinyint" />
           <Property Name="DayId" Type="usmallint" />
-          <Property Name="BTRCTermRate" Type="double" />
+          <Property Name="BTRCTermRate" Type="decimal" Precision="20" Scale="8" />
           <Property Name="WeekDayId" Type="int" />
           <Property Name="E1Id" Type="usmallint" />
           <Property Name="MediaIP1" Type="varchar" MaxLength="15" />
           <Property Name="MediaIP2" Type="varchar" MaxLength="15" />
           <Property Name="MediaIP3" Type="varchar" MaxLength="15" />
           <Property Name="MediaIP4" Type="varchar" MaxLength="15" />
-          <Property Name="CallCancelDuration" Type="double" />
+          <Property Name="CallCancelDuration" Type="decimal" Precision="20" Scale="8" />
           <Property Name="E1IdOut" Type="usmallint" />
           <Property Name="inTrunkAdditionalInfo" Type="varchar" MaxLength="30" />
           <Property Name="outTrunkAdditionalInfo" Type="varchar" MaxLength="30" />
@@ -816,15 +816,15 @@ warning 6002: The table/view 'def.platinum.cdrpartiallastaggregatedrawinstance' 
           <Property Name="field3" Type="int" />
           <Property Name="errorCode" Type="varchar" MaxLength="100" />
           <Property Name="field5" Type="int" />
-          <Property Name="roundedduration" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="PartialDuration" Type="decimal" Precision="13" Scale="4" />
+          <Property Name="roundedduration" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="PartialDuration" Type="decimal" Precision="20" Scale="8" />
           <Property Name="PartialAnswerTime" Type="datetime" Precision="0" />
           <Property Name="PartialEndTime" Type="datetime" Precision="0" />
           <Property Name="FinalRecord" Type="bigint" />
-          <Property Name="Duration1" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="Duration2" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="Duration3" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="Duration4" Type="decimal" Precision="13" Scale="4" />
+          <Property Name="Duration1" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="Duration2" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="Duration3" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="Duration4" Type="decimal" Precision="20" Scale="8" />
           <Property Name="PreviousPeriodCdr" Type="int" />
           <Property Name="UniqueBillId" Type="varchar" MaxLength="100" />
           <Property Name="BillngInfo" Type="text" />
@@ -862,7 +862,7 @@ warning 6002: The table/view 'def.platinum.cdrpartialrawinstance' does not have 
           <Property Name="OriginatingCallingNumber" Type="varchar" MaxLength="100" />
           <Property Name="TerminatingCallingNumber" Type="varchar" MaxLength="100" />
           <Property Name="CustomerPrePaid" Type="utinyint" />
-          <Property Name="DurationSec" Type="decimal" Precision="13" Scale="4" Nullable="false" />
+          <Property Name="DurationSec" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="EndTime" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="ConnectTime" Type="datetime" Precision="0" />
           <Property Name="AnswerTime" Type="datetime" Precision="0" />
@@ -879,25 +879,25 @@ warning 6002: The table/view 'def.platinum.cdrpartialrawinstance' does not have 
           <Property Name="TerminatingCIC" Type="usmallint" />
           <Property Name="StartTime" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="inPartnerId" Type="int" />
-          <Property Name="CustomerRate" Type="decimal" Precision="17" Scale="8" />
+          <Property Name="CustomerRate" Type="decimal" Precision="20" Scale="8" />
           <Property Name="outPartnerId" Type="int" />
-          <Property Name="SupplierRate" Type="decimal" Precision="17" Scale="8" />
+          <Property Name="SupplierRate" Type="decimal" Precision="20" Scale="8" />
           <Property Name="MatchedPrefixY" Type="varchar" MaxLength="20" />
-          <Property Name="USDRateY" Type="decimal" Precision="17" Scale="8" />
+          <Property Name="USDRateY" Type="decimal" Precision="20" Scale="8" />
           <Property Name="matchedprefixcustomer" Type="varchar" MaxLength="100" />
           <Property Name="matchedprefixsupplier" Type="varchar" MaxLength="100" />
-          <Property Name="CustomerCost" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="SupplierCost" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="CostANSIn" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="CostICXIn" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="CostVATCommissionIn" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="IGWRevenueIn" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="RevenueANSOut" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="RevenueIGWOut" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="RevenueICXOut" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="RevenueVATCommissionOut" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="SubscriberChargeXOut" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="CarrierCostYIGWOut" Type="decimal" Precision="13" Scale="4" />
+          <Property Name="CustomerCost" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="SupplierCost" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="CostANSIn" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="CostICXIn" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="CostVATCommissionIn" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="IGWRevenueIn" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="RevenueANSOut" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="RevenueIGWOut" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="RevenueICXOut" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="RevenueVATCommissionOut" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="SubscriberChargeXOut" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="CarrierCostYIGWOut" Type="decimal" Precision="20" Scale="8" />
           <Property Name="ANSPrefixOrig" Type="varchar" MaxLength="10" />
           <Property Name="AnsIdOrig" Type="int" />
           <Property Name="AnsPrefixTerm" Type="varchar" MaxLength="10" />
@@ -912,14 +912,14 @@ warning 6002: The table/view 'def.platinum.cdrpartialrawinstance' does not have 
           <Property Name="GrpDayId" Type="uint" />
           <Property Name="MonthId" Type="utinyint" />
           <Property Name="DayId" Type="usmallint" />
-          <Property Name="BTRCTermRate" Type="double" />
+          <Property Name="BTRCTermRate" Type="decimal" Precision="20" Scale="8" />
           <Property Name="WeekDayId" Type="int" />
           <Property Name="E1Id" Type="usmallint" />
           <Property Name="MediaIP1" Type="varchar" MaxLength="15" />
           <Property Name="MediaIP2" Type="varchar" MaxLength="15" />
           <Property Name="MediaIP3" Type="varchar" MaxLength="15" />
           <Property Name="MediaIP4" Type="varchar" MaxLength="15" />
-          <Property Name="CallCancelDuration" Type="double" />
+          <Property Name="CallCancelDuration" Type="decimal" Precision="20" Scale="8" />
           <Property Name="E1IdOut" Type="usmallint" />
           <Property Name="inTrunkAdditionalInfo" Type="varchar" MaxLength="30" />
           <Property Name="outTrunkAdditionalInfo" Type="varchar" MaxLength="30" />
@@ -936,15 +936,15 @@ warning 6002: The table/view 'def.platinum.cdrpartialrawinstance' does not have 
           <Property Name="field3" Type="int" />
           <Property Name="errorCode" Type="varchar" MaxLength="100" />
           <Property Name="field5" Type="int" />
-          <Property Name="roundedduration" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="PartialDuration" Type="decimal" Precision="13" Scale="4" />
+          <Property Name="roundedduration" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="PartialDuration" Type="decimal" Precision="20" Scale="8" />
           <Property Name="PartialAnswerTime" Type="datetime" Precision="0" />
           <Property Name="PartialEndTime" Type="datetime" Precision="0" />
           <Property Name="FinalRecord" Type="bigint" />
-          <Property Name="Duration1" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="Duration2" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="Duration3" Type="decimal" Precision="13" Scale="4" />
-          <Property Name="Duration4" Type="decimal" Precision="13" Scale="4" />
+          <Property Name="Duration1" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="Duration2" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="Duration3" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="Duration4" Type="decimal" Precision="20" Scale="8" />
           <Property Name="PreviousPeriodCdr" Type="int" />
           <Property Name="UniqueBillId" Type="varchar" MaxLength="100" />
           <Property Name="BillngInfo" Type="text" />
@@ -1587,7 +1587,7 @@ warning 6013: The table/view 'def.platinum.mockcdr' does not have a primary key 
           <Property Name="OriginatingCallingNumber" Type="varchar" MaxLength="100" />
           <Property Name="TerminatingCallingNumber" Type="varchar" MaxLength="100" />
           <Property Name="CustomerPrePaid" Type="varchar" MaxLength="100" />
-          <Property Name="DurationSec" Type="decimal" Precision="13" Scale="4" />
+          <Property Name="DurationSec" Type="decimal" Precision="20" Scale="8" />
           <Property Name="EndTime" Type="varchar" MaxLength="100" />
           <Property Name="ConnectTime" Type="varchar" MaxLength="100" />
           <Property Name="AnswerTime" Type="varchar" MaxLength="100" />
@@ -1786,7 +1786,7 @@ warning 6013: The table/view 'def.platinum.mockcdr' does not have a primary key 
           <Property Name="ProductId" Type="int" Nullable="false" />
           <Property Name="Prefix" Type="varchar" MaxLength="25" Nullable="false" />
           <Property Name="description" Type="varchar" MaxLength="200" />
-          <Property Name="rateamount" Type="decimal" Precision="17" Scale="8" Nullable="false" />
+          <Property Name="rateamount" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="WeekDayStart" Type="int" Nullable="false" />
           <Property Name="WeekDayEnd" Type="int" Nullable="false" />
           <Property Name="starttime" Type="varchar" MaxLength="6" />
@@ -1794,7 +1794,7 @@ warning 6013: The table/view 'def.platinum.mockcdr' does not have a primary key 
           <Property Name="Resolution" Type="int" Nullable="false" />
           <Property Name="MinDurationSec" Type="float" Nullable="false" />
           <Property Name="SurchargeTime" Type="int" Nullable="false" />
-          <Property Name="SurchargeAmount" Type="double" Nullable="false" />
+          <Property Name="SurchargeAmount" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="idrateplan" Type="bigint" />
           <Property Name="CountryCode" Type="varchar" MaxLength="20" />
           <Property Name="date1" Type="datetime" Precision="0" />
@@ -1809,17 +1809,17 @@ warning 6013: The table/view 'def.platinum.mockcdr' does not have a primary key 
           <Property Name="RouteDisabled" Type="int" Nullable="false" />
           <Property Name="Type" Type="int" Nullable="false" />
           <Property Name="Currency" Type="int" Nullable="false" />
-          <Property Name="OtherAmount1" Type="decimal" Precision="17" Scale="8" />
-          <Property Name="OtherAmount2" Type="decimal" Precision="17" Scale="8" />
-          <Property Name="OtherAmount3" Type="decimal" Precision="17" Scale="8" />
-          <Property Name="OtherAmount4" Type="double" />
-          <Property Name="OtherAmount5" Type="double" />
-          <Property Name="OtherAmount6" Type="double" />
+          <Property Name="OtherAmount1" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="OtherAmount2" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="OtherAmount3" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="OtherAmount4" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="OtherAmount5" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="OtherAmount6" Type="decimal" Precision="20" Scale="8" />
           <Property Name="OtherAmount7" Type="float" />
           <Property Name="OtherAmount8" Type="float" />
           <Property Name="OtherAmount9" Type="float" />
           <Property Name="OtherAmount10" Type="float" />
-          <Property Name="TimeZoneOffsetSec" Type="double" Nullable="false" />
+          <Property Name="TimeZoneOffsetSec" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="RatePosition" Type="int" />
           <Property Name="IgwPercentageIn" Type="float" />
           <Property Name="ConflictingRateIds" Type="varchar" MaxLength="300" />
@@ -1845,7 +1845,7 @@ warning 6013: The table/view 'def.platinum.mockcdr' does not have a primary key 
           <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Prefix" Type="varchar" MaxLength="25" Nullable="false" />
           <Property Name="description" Type="varchar" MaxLength="200" />
-          <Property Name="rateamount" Type="double" Nullable="false" />
+          <Property Name="rateamount" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="WeekDayStart" Type="int" Nullable="false" />
           <Property Name="WeekDayEnd" Type="int" Nullable="false" />
           <Property Name="starttime" Type="varchar" MaxLength="6" />
@@ -1853,7 +1853,7 @@ warning 6013: The table/view 'def.platinum.mockcdr' does not have a primary key 
           <Property Name="Resolution" Type="int" Nullable="false" />
           <Property Name="MinDurationSec" Type="float" Nullable="false" />
           <Property Name="SurchargeTime" Type="int" Nullable="false" />
-          <Property Name="SurchargeAmount" Type="double" Nullable="false" />
+          <Property Name="SurchargeAmount" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="idrateplan" Type="bigint" />
           <Property Name="CountryCode" Type="varchar" MaxLength="20" />
           <Property Name="date1" Type="datetime" Precision="0" />
@@ -1871,14 +1871,14 @@ warning 6013: The table/view 'def.platinum.mockcdr' does not have a primary key 
           <Property Name="OtherAmount1" Type="float" />
           <Property Name="OtherAmount2" Type="float" />
           <Property Name="OtherAmount3" Type="float" />
-          <Property Name="OtherAmount4" Type="double" />
-          <Property Name="OtherAmount5" Type="double" />
+          <Property Name="OtherAmount4" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="OtherAmount5" Type="decimal" Precision="20" Scale="8" />
           <Property Name="OtherAmount6" Type="float" />
           <Property Name="OtherAmount7" Type="float" />
           <Property Name="OtherAmount8" Type="float" />
           <Property Name="OtherAmount9" Type="float" />
           <Property Name="OtherAmount10" Type="float" />
-          <Property Name="TimeZoneOffsetSec" Type="double" Nullable="false" />
+          <Property Name="TimeZoneOffsetSec" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="RatePosition" Type="int" />
           <Property Name="IgwPercentageIn" Type="float" />
           <Property Name="ConflictingRateIds" Type="varchar" MaxLength="300" />
@@ -1918,7 +1918,7 @@ warning 6013: The table/view 'def.platinum.mockcdr' does not have a primary key 
           <Property Name="Resolution" Type="int" Nullable="false" />
           <Property Name="mindurationsec" Type="float" Nullable="false" />
           <Property Name="SurchargeTime" Type="int" Nullable="false" />
-          <Property Name="SurchargeAmount" Type="double" Nullable="false" />
+          <Property Name="SurchargeAmount" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="Category" Type="tinyint" />
           <Property Name="SubCategory" Type="tinyint" />
           <Property Name="BillingSpan" Type="varchar" MaxLength="10" Nullable="false" />
@@ -1946,7 +1946,7 @@ warning 6013: The table/view 'def.platinum.mockcdr' does not have a primary key 
           <Property Name="Resolution" Type="int" Nullable="false" />
           <Property Name="MinDurationSec" Type="int" Nullable="false" />
           <Property Name="SurchargeTime" Type="int" Nullable="false" />
-          <Property Name="SurchargeAmount" Type="double" Nullable="false" />
+          <Property Name="SurchargeAmount" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="Category" Type="tinyint" />
           <Property Name="SubCategory" Type="tinyint" />
         </EntityType>
@@ -2213,8 +2213,8 @@ warning 6002: The table/view 'def.platinum.sum_voice_day_01' does not have a pri
           <Property Name="tup_outpartnerid" Type="int" Nullable="false" />
           <Property Name="tup_incomingroute" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="tup_outgoingroute" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="tup_customerrate" Type="decimal" Precision="17" Scale="8" Nullable="false" />
-          <Property Name="tup_supplierrate" Type="decimal" Precision="17" Scale="8" Nullable="false" />
+          <Property Name="tup_customerrate" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="tup_supplierrate" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="tup_incomingip" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="tup_outgoingip" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="tup_countryorareacode" Type="varchar" MaxLength="50" Nullable="false" />
@@ -2237,7 +2237,7 @@ warning 6002: The table/view 'def.platinum.sum_voice_day_01' does not have a pri
           <Property Name="duration1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="duration2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="duration3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
-          <Property Name="PDD" Type="double" Nullable="false" />
+          <Property Name="PDD" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="customercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="suppliercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="tax1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
@@ -2252,9 +2252,9 @@ warning 6002: The table/view 'def.platinum.sum_voice_day_01' does not have a pri
           <Property Name="intAmount3" Type="int" Nullable="false" />
           <Property Name="longAmount3" Type="bigint" Nullable="false" />
           <Property Name="longDecimalAmount3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
-          <Property Name="decimalAmount1" Type="decimal" Precision="13" Scale="4" Nullable="false" />
-          <Property Name="decimalAmount2" Type="decimal" Precision="13" Scale="4" Nullable="false" />
-          <Property Name="decimalAmount3" Type="decimal" Precision="13" Scale="4" Nullable="false" />
+          <Property Name="decimalAmount1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="decimalAmount2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="decimalAmount3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'def.platinum.sum_voice_day_02' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -2315,8 +2315,8 @@ warning 6002: The table/view 'def.platinum.sum_voice_day_02' does not have a pri
           <Property Name="tup_outpartnerid" Type="int" Nullable="false" />
           <Property Name="tup_incomingroute" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="tup_outgoingroute" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="tup_customerrate" Type="decimal" Precision="17" Scale="8" Nullable="false" />
-          <Property Name="tup_supplierrate" Type="decimal" Precision="17" Scale="8" Nullable="false" />
+          <Property Name="tup_customerrate" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="tup_supplierrate" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="tup_incomingip" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="tup_outgoingip" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="tup_countryorareacode" Type="varchar" MaxLength="50" Nullable="false" />
@@ -2339,7 +2339,7 @@ warning 6002: The table/view 'def.platinum.sum_voice_day_02' does not have a pri
           <Property Name="duration1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="duration2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="duration3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
-          <Property Name="PDD" Type="double" Nullable="false" />
+          <Property Name="PDD" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="customercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="suppliercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="tax1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
@@ -2354,9 +2354,9 @@ warning 6002: The table/view 'def.platinum.sum_voice_day_02' does not have a pri
           <Property Name="intAmount3" Type="int" Nullable="false" />
           <Property Name="longAmount3" Type="bigint" Nullable="false" />
           <Property Name="longDecimalAmount3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
-          <Property Name="decimalAmount1" Type="decimal" Precision="13" Scale="4" Nullable="false" />
-          <Property Name="decimalAmount2" Type="decimal" Precision="13" Scale="4" Nullable="false" />
-          <Property Name="decimalAmount3" Type="decimal" Precision="13" Scale="4" Nullable="false" />
+          <Property Name="decimalAmount1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="decimalAmount2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="decimalAmount3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'def.platinum.sum_voice_day_03' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -2417,8 +2417,8 @@ warning 6002: The table/view 'def.platinum.sum_voice_day_03' does not have a pri
           <Property Name="tup_outpartnerid" Type="int" Nullable="false" />
           <Property Name="tup_incomingroute" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="tup_outgoingroute" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="tup_customerrate" Type="decimal" Precision="17" Scale="8" Nullable="false" />
-          <Property Name="tup_supplierrate" Type="decimal" Precision="17" Scale="8" Nullable="false" />
+          <Property Name="tup_customerrate" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="tup_supplierrate" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="tup_incomingip" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="tup_outgoingip" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="tup_countryorareacode" Type="varchar" MaxLength="50" Nullable="false" />
@@ -2441,7 +2441,7 @@ warning 6002: The table/view 'def.platinum.sum_voice_day_03' does not have a pri
           <Property Name="duration1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="duration2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="duration3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
-          <Property Name="PDD" Type="double" Nullable="false" />
+          <Property Name="PDD" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="customercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="suppliercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="tax1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
@@ -2456,9 +2456,9 @@ warning 6002: The table/view 'def.platinum.sum_voice_day_03' does not have a pri
           <Property Name="intAmount3" Type="int" Nullable="false" />
           <Property Name="longAmount3" Type="bigint" Nullable="false" />
           <Property Name="longDecimalAmount3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
-          <Property Name="decimalAmount1" Type="decimal" Precision="13" Scale="4" Nullable="false" />
-          <Property Name="decimalAmount2" Type="decimal" Precision="13" Scale="4" Nullable="false" />
-          <Property Name="decimalAmount3" Type="decimal" Precision="13" Scale="4" Nullable="false" />
+          <Property Name="decimalAmount1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="decimalAmount2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="decimalAmount3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'def.platinum.sum_voice_hr_01' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -2519,8 +2519,8 @@ warning 6002: The table/view 'def.platinum.sum_voice_hr_01' does not have a prim
           <Property Name="tup_outpartnerid" Type="int" Nullable="false" />
           <Property Name="tup_incomingroute" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="tup_outgoingroute" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="tup_customerrate" Type="decimal" Precision="17" Scale="8" Nullable="false" />
-          <Property Name="tup_supplierrate" Type="decimal" Precision="17" Scale="8" Nullable="false" />
+          <Property Name="tup_customerrate" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="tup_supplierrate" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="tup_incomingip" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="tup_outgoingip" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="tup_countryorareacode" Type="varchar" MaxLength="50" Nullable="false" />
@@ -2543,7 +2543,7 @@ warning 6002: The table/view 'def.platinum.sum_voice_hr_01' does not have a prim
           <Property Name="duration1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="duration2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="duration3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
-          <Property Name="PDD" Type="double" Nullable="false" />
+          <Property Name="PDD" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="customercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="suppliercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="tax1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
@@ -2558,9 +2558,9 @@ warning 6002: The table/view 'def.platinum.sum_voice_hr_01' does not have a prim
           <Property Name="intAmount3" Type="int" Nullable="false" />
           <Property Name="longAmount3" Type="bigint" Nullable="false" />
           <Property Name="longDecimalAmount3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
-          <Property Name="decimalAmount1" Type="decimal" Precision="13" Scale="4" Nullable="false" />
-          <Property Name="decimalAmount2" Type="decimal" Precision="13" Scale="4" Nullable="false" />
-          <Property Name="decimalAmount3" Type="decimal" Precision="13" Scale="4" Nullable="false" />
+          <Property Name="decimalAmount1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="decimalAmount2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="decimalAmount3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'def.platinum.sum_voice_hr_02' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -2621,8 +2621,8 @@ warning 6002: The table/view 'def.platinum.sum_voice_hr_02' does not have a prim
           <Property Name="tup_outpartnerid" Type="int" Nullable="false" />
           <Property Name="tup_incomingroute" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="tup_outgoingroute" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="tup_customerrate" Type="decimal" Precision="17" Scale="8" Nullable="false" />
-          <Property Name="tup_supplierrate" Type="decimal" Precision="17" Scale="8" Nullable="false" />
+          <Property Name="tup_customerrate" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="tup_supplierrate" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="tup_incomingip" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="tup_outgoingip" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="tup_countryorareacode" Type="varchar" MaxLength="50" Nullable="false" />
@@ -2645,7 +2645,7 @@ warning 6002: The table/view 'def.platinum.sum_voice_hr_02' does not have a prim
           <Property Name="duration1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="duration2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="duration3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
-          <Property Name="PDD" Type="double" Nullable="false" />
+          <Property Name="PDD" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="customercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="suppliercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="tax1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
@@ -2660,9 +2660,9 @@ warning 6002: The table/view 'def.platinum.sum_voice_hr_02' does not have a prim
           <Property Name="intAmount3" Type="int" Nullable="false" />
           <Property Name="longAmount3" Type="bigint" Nullable="false" />
           <Property Name="longDecimalAmount3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
-          <Property Name="decimalAmount1" Type="decimal" Precision="13" Scale="4" Nullable="false" />
-          <Property Name="decimalAmount2" Type="decimal" Precision="13" Scale="4" Nullable="false" />
-          <Property Name="decimalAmount3" Type="decimal" Precision="13" Scale="4" Nullable="false" />
+          <Property Name="decimalAmount1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="decimalAmount2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="decimalAmount3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'def.platinum.sum_voice_hr_03' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -2723,8 +2723,8 @@ warning 6002: The table/view 'def.platinum.sum_voice_hr_03' does not have a prim
           <Property Name="tup_outpartnerid" Type="int" Nullable="false" />
           <Property Name="tup_incomingroute" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="tup_outgoingroute" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="tup_customerrate" Type="decimal" Precision="17" Scale="8" Nullable="false" />
-          <Property Name="tup_supplierrate" Type="decimal" Precision="17" Scale="8" Nullable="false" />
+          <Property Name="tup_customerrate" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="tup_supplierrate" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="tup_incomingip" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="tup_outgoingip" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="tup_countryorareacode" Type="varchar" MaxLength="50" Nullable="false" />
@@ -2747,7 +2747,7 @@ warning 6002: The table/view 'def.platinum.sum_voice_hr_03' does not have a prim
           <Property Name="duration1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="duration2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="duration3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
-          <Property Name="PDD" Type="double" Nullable="false" />
+          <Property Name="PDD" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="customercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="suppliercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="tax1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
@@ -2762,9 +2762,9 @@ warning 6002: The table/view 'def.platinum.sum_voice_hr_03' does not have a prim
           <Property Name="intAmount3" Type="int" Nullable="false" />
           <Property Name="longAmount3" Type="bigint" Nullable="false" />
           <Property Name="longDecimalAmount3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
-          <Property Name="decimalAmount1" Type="decimal" Precision="13" Scale="4" Nullable="false" />
-          <Property Name="decimalAmount2" Type="decimal" Precision="13" Scale="4" Nullable="false" />
-          <Property Name="decimalAmount3" Type="decimal" Precision="13" Scale="4" Nullable="false" />
+          <Property Name="decimalAmount1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="decimalAmount2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="decimalAmount3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
         </EntityType>
         <EntityType Name="telcobrightpartner">
           <Key>
@@ -2828,9 +2828,9 @@ warning 6002: The table/view 'def.platinum.uom_conversion' does not have a prima
           </Key>
           <Property Name="UOM_ID" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="UOM_ID_TO" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="CONVERSION_FACTOR" Type="double" />
+          <Property Name="CONVERSION_FACTOR" Type="decimal" Precision="20" Scale="8" />
           <Property Name="CUSTOM_METHOD_ID" Type="varchar" MaxLength="20" />
-          <Property Name="DECIMAL_SCALE" Type="decimal" Precision="20" Scale="0" />
+          <Property Name="DECIMAL_SCALE" Type="decimal" Precision="20" Scale="8" />
           <Property Name="ROUNDING_MODE" Type="varchar" MaxLength="20" />
           <Property Name="LAST_UPDATED_STAMP" Type="datetime" Precision="0" />
           <Property Name="LAST_UPDATED_TX_STAMP" Type="datetime" Precision="0" />
@@ -2849,9 +2849,9 @@ warning 6002: The table/view 'def.platinum.uom_conversion_dated' does not have a
           <Property Name="UOM_ID_TO" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="FROM_DATE" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="THRU_DATE" Type="datetime" Precision="0" />
-          <Property Name="CONVERSION_FACTOR" Type="double" />
+          <Property Name="CONVERSION_FACTOR" Type="decimal" Precision="20" Scale="8" />
           <Property Name="CUSTOM_METHOD_ID" Type="varchar" MaxLength="20" />
-          <Property Name="DECIMAL_SCALE" Type="decimal" Precision="20" Scale="0" />
+          <Property Name="DECIMAL_SCALE" Type="decimal" Precision="20" Scale="8" />
           <Property Name="ROUNDING_MODE" Type="varchar" MaxLength="20" />
           <Property Name="PURPOSE_ENUM_ID" Type="varchar" MaxLength="20" />
           <Property Name="LAST_UPDATED_STAMP" Type="datetime" Precision="0" />
@@ -5656,7 +5656,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="Resolution" Type="Int32" Nullable="false" />
           <Property Name="MinDurationSec" Type="Single" Nullable="false" />
           <Property Name="SurchargeTime" Type="Int32" Nullable="false" />
-          <Property Name="SurchargeAmount" Type="Double" Nullable="false" />
+          <Property Name="SurchargeAmount" Type="Decimal" Nullable="false" />
           <Property Name="idrateplan" Type="Int64" />
           <Property Name="CountryCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="date1" Type="DateTime" />
@@ -5674,14 +5674,14 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="OtherAmount1" Type="Decimal" />
           <Property Name="OtherAmount2" Type="Decimal" />
           <Property Name="OtherAmount3" Type="Decimal" />
-          <Property Name="OtherAmount4" Type="Double" />
-          <Property Name="OtherAmount5" Type="Double" />
-          <Property Name="OtherAmount6" Type="Double" />
+          <Property Name="OtherAmount4" Type="Decimal" />
+          <Property Name="OtherAmount5" Type="Decimal" />
+          <Property Name="OtherAmount6" Type="Decimal" />
           <Property Name="OtherAmount7" Type="Single" />
           <Property Name="OtherAmount8" Type="Single" />
           <Property Name="OtherAmount9" Type="Single" />
           <Property Name="OtherAmount10" Type="Single" />
-          <Property Name="TimeZoneOffsetSec" Type="Double" Nullable="false" />
+          <Property Name="TimeZoneOffsetSec" Type="Decimal" Nullable="false" />
           <Property Name="RatePosition" Type="Int32" />
           <Property Name="IgwPercentageIn" Type="Single" />
           <Property Name="ConflictingRateIds" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
@@ -5707,7 +5707,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Prefix" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
           <Property Name="description" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="rateamount" Type="Double" Nullable="false" />
+          <Property Name="rateamount" Type="Decimal" Nullable="false" />
           <Property Name="WeekDayStart" Type="Int32" Nullable="false" />
           <Property Name="WeekDayEnd" Type="Int32" Nullable="false" />
           <Property Name="starttime" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
@@ -5715,7 +5715,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="Resolution" Type="Int32" Nullable="false" />
           <Property Name="MinDurationSec" Type="Single" Nullable="false" />
           <Property Name="SurchargeTime" Type="Int32" Nullable="false" />
-          <Property Name="SurchargeAmount" Type="Double" Nullable="false" />
+          <Property Name="SurchargeAmount" Type="Decimal" Nullable="false" />
           <Property Name="idrateplan" Type="Int64" />
           <Property Name="CountryCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="date1" Type="DateTime" />
@@ -5733,14 +5733,14 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="OtherAmount1" Type="Single" />
           <Property Name="OtherAmount2" Type="Single" />
           <Property Name="OtherAmount3" Type="Single" />
-          <Property Name="OtherAmount4" Type="Double" />
-          <Property Name="OtherAmount5" Type="Double" />
+          <Property Name="OtherAmount4" Type="Decimal" />
+          <Property Name="OtherAmount5" Type="Decimal" />
           <Property Name="OtherAmount6" Type="Single" />
           <Property Name="OtherAmount7" Type="Single" />
           <Property Name="OtherAmount8" Type="Single" />
           <Property Name="OtherAmount9" Type="Single" />
           <Property Name="OtherAmount10" Type="Single" />
-          <Property Name="TimeZoneOffsetSec" Type="Double" Nullable="false" />
+          <Property Name="TimeZoneOffsetSec" Type="Decimal" Nullable="false" />
           <Property Name="RatePosition" Type="Int32" />
           <Property Name="IgwPercentageIn" Type="Single" />
           <Property Name="ConflictingRateIds" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
@@ -5780,7 +5780,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="Resolution" Type="Int32" Nullable="false" />
           <Property Name="mindurationsec" Type="Single" Nullable="false" />
           <Property Name="SurchargeTime" Type="Int32" Nullable="false" />
-          <Property Name="SurchargeAmount" Type="Double" Nullable="false" />
+          <Property Name="SurchargeAmount" Type="Decimal" Nullable="false" />
           <Property Name="Category" Type="SByte" />
           <Property Name="SubCategory" Type="SByte" />
           <Property Name="BillingSpan" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
@@ -5810,7 +5810,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="Resolution" Type="Int32" Nullable="false" />
           <Property Name="MinDurationSec" Type="Int32" Nullable="false" />
           <Property Name="SurchargeTime" Type="Int32" Nullable="false" />
-          <Property Name="SurchargeAmount" Type="Double" Nullable="false" />
+          <Property Name="SurchargeAmount" Type="Decimal" Nullable="false" />
           <Property Name="Category" Type="SByte" />
           <Property Name="SubCategory" Type="SByte" />
         </EntityType>
@@ -6387,14 +6387,14 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="GrpDayId" Type="Int64" />
           <Property Name="MonthId" Type="Byte" />
           <Property Name="DayId" Type="Int32" />
-          <Property Name="BTRCTermRate" Type="Double" />
+          <Property Name="BTRCTermRate" Type="Decimal" />
           <Property Name="WeekDayId" Type="Int32" />
           <Property Name="E1Id" Type="Int32" />
           <Property Name="MediaIP1" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="MediaIP2" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="MediaIP3" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="MediaIP4" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="CallCancelDuration" Type="Double" />
+          <Property Name="CallCancelDuration" Type="Decimal" />
           <Property Name="E1IdOut" Type="Int32" />
           <Property Name="inTrunkAdditionalInfo" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="outTrunkAdditionalInfo" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
@@ -6615,14 +6615,14 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="GrpDayId" Type="Int64" />
           <Property Name="MonthId" Type="Byte" />
           <Property Name="DayId" Type="Int32" />
-          <Property Name="BTRCTermRate" Type="Double" />
+          <Property Name="BTRCTermRate" Type="Decimal" />
           <Property Name="WeekDayId" Type="Int32" />
           <Property Name="E1Id" Type="Int32" />
           <Property Name="MediaIP1" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="MediaIP2" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="MediaIP3" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="MediaIP4" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="CallCancelDuration" Type="Double" />
+          <Property Name="CallCancelDuration" Type="Decimal" />
           <Property Name="E1IdOut" Type="Int32" />
           <Property Name="inTrunkAdditionalInfo" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="outTrunkAdditionalInfo" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
@@ -6733,14 +6733,14 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="GrpDayId" Type="Int64" />
           <Property Name="MonthId" Type="Byte" />
           <Property Name="DayId" Type="Int32" />
-          <Property Name="BTRCTermRate" Type="Double" />
+          <Property Name="BTRCTermRate" Type="Decimal" />
           <Property Name="WeekDayId" Type="Int32" />
           <Property Name="E1Id" Type="Int32" />
           <Property Name="MediaIP1" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="MediaIP2" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="MediaIP3" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="MediaIP4" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="CallCancelDuration" Type="Double" />
+          <Property Name="CallCancelDuration" Type="Decimal" />
           <Property Name="E1IdOut" Type="Int32" />
           <Property Name="inTrunkAdditionalInfo" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="outTrunkAdditionalInfo" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
@@ -6871,7 +6871,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="duration1" Type="Decimal" Nullable="false" />
           <Property Name="duration2" Type="Decimal" Nullable="false" />
           <Property Name="duration3" Type="Decimal" Nullable="false" />
-          <Property Name="PDD" Type="Double" Nullable="false" />
+          <Property Name="PDD" Type="Decimal" Nullable="false" />
           <Property Name="customercost" Type="Decimal" Nullable="false" />
           <Property Name="suppliercost" Type="Decimal" Nullable="false" />
           <Property Name="tax1" Type="Decimal" Nullable="false" />
@@ -6971,7 +6971,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="duration1" Type="Decimal" Nullable="false" />
           <Property Name="duration2" Type="Decimal" Nullable="false" />
           <Property Name="duration3" Type="Decimal" Nullable="false" />
-          <Property Name="PDD" Type="Double" Nullable="false" />
+          <Property Name="PDD" Type="Decimal" Nullable="false" />
           <Property Name="customercost" Type="Decimal" Nullable="false" />
           <Property Name="suppliercost" Type="Decimal" Nullable="false" />
           <Property Name="tax1" Type="Decimal" Nullable="false" />
@@ -7071,7 +7071,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="duration1" Type="Decimal" Nullable="false" />
           <Property Name="duration2" Type="Decimal" Nullable="false" />
           <Property Name="duration3" Type="Decimal" Nullable="false" />
-          <Property Name="PDD" Type="Double" Nullable="false" />
+          <Property Name="PDD" Type="Decimal" Nullable="false" />
           <Property Name="customercost" Type="Decimal" Nullable="false" />
           <Property Name="suppliercost" Type="Decimal" Nullable="false" />
           <Property Name="tax1" Type="Decimal" Nullable="false" />
@@ -7171,7 +7171,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="duration1" Type="Decimal" Nullable="false" />
           <Property Name="duration2" Type="Decimal" Nullable="false" />
           <Property Name="duration3" Type="Decimal" Nullable="false" />
-          <Property Name="PDD" Type="Double" Nullable="false" />
+          <Property Name="PDD" Type="Decimal" Nullable="false" />
           <Property Name="customercost" Type="Decimal" Nullable="false" />
           <Property Name="suppliercost" Type="Decimal" Nullable="false" />
           <Property Name="tax1" Type="Decimal" Nullable="false" />
@@ -7271,7 +7271,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="duration1" Type="Decimal" Nullable="false" />
           <Property Name="duration2" Type="Decimal" Nullable="false" />
           <Property Name="duration3" Type="Decimal" Nullable="false" />
-          <Property Name="PDD" Type="Double" Nullable="false" />
+          <Property Name="PDD" Type="Decimal" Nullable="false" />
           <Property Name="customercost" Type="Decimal" Nullable="false" />
           <Property Name="suppliercost" Type="Decimal" Nullable="false" />
           <Property Name="tax1" Type="Decimal" Nullable="false" />
@@ -7371,7 +7371,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="duration1" Type="Decimal" Nullable="false" />
           <Property Name="duration2" Type="Decimal" Nullable="false" />
           <Property Name="duration3" Type="Decimal" Nullable="false" />
-          <Property Name="PDD" Type="Double" Nullable="false" />
+          <Property Name="PDD" Type="Decimal" Nullable="false" />
           <Property Name="customercost" Type="Decimal" Nullable="false" />
           <Property Name="suppliercost" Type="Decimal" Nullable="false" />
           <Property Name="tax1" Type="Decimal" Nullable="false" />
@@ -7397,7 +7397,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           </Key>
           <Property Name="UOM_ID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="UOM_ID_TO" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="CONVERSION_FACTOR" Type="Double" />
+          <Property Name="CONVERSION_FACTOR" Type="Decimal" />
           <Property Name="CUSTOM_METHOD_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="DECIMAL_SCALE" Type="Decimal" />
           <Property Name="ROUNDING_MODE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
@@ -7418,7 +7418,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="UOM_ID_TO" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="FROM_DATE" Type="DateTime" Nullable="false" />
           <Property Name="THRU_DATE" Type="DateTime" />
-          <Property Name="CONVERSION_FACTOR" Type="Double" />
+          <Property Name="CONVERSION_FACTOR" Type="Decimal" />
           <Property Name="CUSTOM_METHOD_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="DECIMAL_SCALE" Type="Decimal" />
           <Property Name="ROUNDING_MODE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />

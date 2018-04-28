@@ -48,7 +48,7 @@ namespace TelcobrightMediation
             newSummary.duration1 = Convert.ToDecimal(cdrExt.Cdr.Duration1);
             newSummary.duration2 = Convert.ToDecimal(cdrExt.Cdr.Duration2);
             newSummary.duration3 = Convert.ToDecimal(cdrExt.Cdr.Duration3);
-            newSummary.PDD = Convert.ToDouble(cdrExt.Cdr.PDD);
+            newSummary.PDD = Convert.ToDecimal(cdrExt.Cdr.PDD);
 
             //service group specific params, set default first then send through service group to set right value
             IServiceGroup serviceGroup =

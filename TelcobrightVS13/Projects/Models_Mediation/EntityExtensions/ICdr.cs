@@ -17,7 +17,7 @@ namespace MediationModel
          string TerminatingCalledNumber { get; set; }
          string OriginatingCallingNumber { get; set; }
          string TerminatingCallingNumber { get; set; }
-         Nullable<byte> CustomerPrePaid { get; set; }
+         Nullable<byte> PrePaid { get; set; }
          decimal DurationSec { get; set; }
          DateTime EndTime { get; set; }
          Nullable<DateTime> ConnectTime { get; set; }
@@ -25,7 +25,7 @@ namespace MediationModel
          Nullable<byte> ChargingStatus { get; set; }
          Nullable<Single> PDD { get; set; }
          string CountryCode { get; set; }
-         Nullable<int> MinuteID { get; set; }
+         Nullable<int> AreaCodeOrLata { get; set; }
          Nullable<byte> ReleaseDirection { get; set; }
          Nullable<int> ReleaseCauseSystem { get; set; }
          Nullable<int> ReleaseCauseEgress { get; set; }
@@ -46,12 +46,12 @@ namespace MediationModel
          Nullable<decimal> SupplierCost { get; set; }
          Nullable<decimal> CostANSIn { get; set; }
          Nullable<decimal> CostICXIn { get; set; }
-         Nullable<decimal> CostVATCommissionIn { get; set; }
+         Nullable<decimal> Tax1 { get; set; }
          Nullable<decimal> IGWRevenueIn { get; set; }
          Nullable<decimal> RevenueANSOut { get; set; }
          Nullable<decimal> RevenueIGWOut { get; set; }
          Nullable<decimal> RevenueICXOut { get; set; }
-         Nullable<decimal> RevenueVATCommissionOut { get; set; }
+         Nullable<decimal> Tax2 { get; set; }
          Nullable<decimal> SubscriberChargeXOut { get; set; }
          Nullable<decimal> CarrierCostYIGWOut { get; set; }
          string ANSPrefixOrig { get; set; }
@@ -65,17 +65,17 @@ namespace MediationModel
          Nullable<long> SupplierCallNumberANS { get; set; }
          Nullable<byte> CalledPartyNOA { get; set; }
          Nullable<byte> CallingPartyNOA { get; set; }
-         Nullable<long> GrpDayId { get; set; }
-         Nullable<byte> MonthId { get; set; }
-         Nullable<int> DayId { get; set; }
-         Nullable<double> BTRCTermRate { get; set; }
-         Nullable<int> WeekDayId { get; set; }
+         Nullable<long> AdditionalSystemCodes { get; set; }
+         Nullable<byte> AdditionalPartyNumber { get; set; }
+         Nullable<int> ResellerIds { get; set; }
+         Nullable<decimal> BTRCTermRate { get; set; }
+         Nullable<int> PreviousRoutes { get; set; }
          Nullable<int> E1Id { get; set; }
          string MediaIP1 { get; set; }
          string MediaIP2 { get; set; }
          string MediaIP3 { get; set; }
          string MediaIP4 { get; set; }
-         Nullable<double> CallCancelDuration { get; set; }
+         Nullable<decimal> CallCancelDuration { get; set; }
          Nullable<int> E1IdOut { get; set; }
          string inTrunkAdditionalInfo { get; set; }
          string outTrunkAdditionalInfo { get; set; }
@@ -103,7 +103,7 @@ namespace MediationModel
          Nullable<decimal> Duration4 { get; set; }
          Nullable<int> PreviousPeriodCdr { get; set; }
          string UniqueBillId { get; set; }
-         string BillngInfo { get; set; }
+         string AdditionalMetaData { get; set; }
          Nullable<int> Category { get; set; }
          Nullable<int> SubCategory { get; set; }
          Nullable<long> ChangedByJobId { get; set; }

@@ -64,7 +64,7 @@ namespace TelcobrightMediation
             //1   0.02000000000   0.00500000000   0.01500000000   0.60000000000   0.40000000000   0.00900000000   0.00500000000   0.01400000000   0.00600000000
 
             long finalDuration = 0;
-            finalDuration = Convert.ToInt64(pr.A2ZDuration(thisCdr.DurationSec,matchedRateWithAssignmentTupleId));
+            finalDuration = Convert.ToInt64(pr.GetA2ZDuration(thisCdr.DurationSec,matchedRateWithAssignmentTupleId));
             //effective termination rate
             decimal additionalChargeIof = Convert.ToDecimal(matchedRateWithAssignmentTupleId.OtherAmount1); //.005c
             Rateext tempRate = new Rateext()
@@ -87,7 +87,7 @@ namespace TelcobrightMediation
             btrcAmount = terminatingAmount * btrcPercentage;
             iosTotalAmount = iosFirstAmount + additionalAmountIof;
 
-            thisCdr.CostVATCommissionIn = Convert.ToDecimal(btrcAmount);
+            thisCdr.Tax1 = Convert.ToDecimal(btrcAmount);
             thisCdr.CostICXIn = Convert.ToDecimal(iosTotalAmount);
 
             thisCdr.matchedprefixsupplier = matchedRateWithAssignmentTupleId.Prefix;

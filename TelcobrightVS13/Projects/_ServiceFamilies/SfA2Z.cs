@@ -24,17 +24,17 @@ namespace ServiceFamilies
         public AccChargeableExt Execute(CdrExt cdrExt, ServiceContext serviceContext, bool flagLcr)
         {
             cdr cdr = cdrExt.Cdr;
-            A2ZRater a2Z = new A2ZRater(serviceContext, cdr);
+            A2ZRater a2ZRater = new A2ZRater(serviceContext, cdr);
             decimal finalDuration = 0;
             decimal finalAmount = 0;
-            Rateext matchedRateWithAssignmentTupleId = a2Z.ExecuteA2Z(out finalDuration, out finalAmount, flagLcr,
+            Rateext matchedRateWithAssignmentTupleId = a2ZRater.ExecuteA2ZRating(out finalDuration, out finalAmount, flagLcr,
                 useInMemoryTable:true);
             if (matchedRateWithAssignmentTupleId != null)
             {
                 //consider otherAmount3 as tax1, by default
                 cdr.Duration1 = finalDuration;
                 decimal taxAmount1 = Convert.ToDecimal(matchedRateWithAssignmentTupleId.OtherAmount3);
-                cdr.RevenueVATCommissionOut = cdr.CustomerCost * taxAmount1 / 100;
+                cdr.Tax2 = cdr.CustomerCost * taxAmount1 / 100;
                 string idCurrencyUoM = serviceContext.CdrProcessor.CdrJobContext.MediationContext.MefServiceFamilyContainer
                     .DicRateplans[matchedRateWithAssignmentTupleId.idrateplan.ToString()].Currency;
                 int idChargedPartner = GetChargedOrChargingPartnerId(cdrExt, serviceContext);

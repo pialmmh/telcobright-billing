@@ -96,7 +96,7 @@ namespace TelcobrightMediation
             return dicRatesByPrefix;
         }
 
-        public decimal A2ZDuration(decimal actualDurationSec, Rateext thisRate)
+        public decimal GetA2ZDuration(decimal actualDurationSec, Rateext thisRate)
         {
             if (actualDurationSec == 0) return 0;
 
@@ -163,7 +163,7 @@ namespace TelcobrightMediation
         }
 
 
-        public decimal A2ZAmount(decimal finalDurationSec, Rateext thisRate, int rateFieldNumber,
+        public decimal GetA2ZAmount(decimal finalDurationSec, Rateext thisRate, int rateFieldNumber,
             CdrProcessor cdrProcessor)
         {
             decimal thisRateAmount = 0;

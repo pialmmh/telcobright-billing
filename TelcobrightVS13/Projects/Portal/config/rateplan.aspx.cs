@@ -625,10 +625,10 @@ public partial class ConfigSupplierRatePlan : Page
         newPlan.Category = sbyte.Parse(newServiceType);
         newPlan.SubCategory = sbyte.Parse(newSubServiceType);
 
-        double tempDbl = 0;
-        if (double.TryParse(newSurchargeAmount, out tempDbl))
+        decimal tempDecimal = 0;
+        if (decimal.TryParse(newSurchargeAmount, out tempDecimal))
         {
-            newPlan.SurchargeAmount = tempDbl;
+            newPlan.SurchargeAmount = tempDecimal;
         }
         else newPlan.SurchargeAmount = 0;
 

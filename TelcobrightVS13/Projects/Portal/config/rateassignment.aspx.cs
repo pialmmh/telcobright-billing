@@ -4756,7 +4756,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
             ThisRate.id = ThisTask.id;
             ThisRate.Prefix = ThisTask.Prefix;
             ThisRate.description = ThisTask.description;
-            ThisRate.rateamount = Convert.ToDouble(ThisTask.rateamount);
+            ThisRate.rateamount = Convert.ToDecimal(ThisTask.rateamount);
             ThisRate.WeekDayStart = Convert.ToInt32(ThisTask.WeekDayStart);
             ThisRate.WeekDayEnd = Convert.ToInt32(ThisTask.WeekDayEnd);
             ThisRate.starttime = ThisTask.starttime;
@@ -4764,7 +4764,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
             ThisRate.Resolution = Convert.ToInt32(ThisTask.Resolution);
             ThisRate.MinDurationSec = Convert.ToSingle(ThisTask.MinDurationSec);
             ThisRate.SurchargeTime = Convert.ToInt32(ThisTask.SurchargeTime);
-            ThisRate.SurchargeAmount = Convert.ToDouble(ThisTask.SurchargeAmount);
+            ThisRate.SurchargeAmount = Convert.ToDecimal(ThisTask.SurchargeAmount);
             ThisRate.idrateplan = idRatePlan;//ThisTask.idrateplan;
             ThisRate.CountryCode = ThisTask.CountryCode;
 
@@ -4796,14 +4796,14 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
             ThisRate.OtherAmount1 = Convert.ToSingle(ThisTask.OtherAmount1);
             ThisRate.OtherAmount2 = Convert.ToSingle(ThisTask.OtherAmount2);
             ThisRate.OtherAmount3 = Convert.ToSingle(ThisTask.OtherAmount3);
-            ThisRate.OtherAmount4 = Convert.ToSingle(ThisTask.OtherAmount4);
-            ThisRate.OtherAmount5 = Convert.ToSingle(ThisTask.OtherAmount5);
+            ThisRate.OtherAmount4 = Convert.ToDecimal(ThisTask.OtherAmount4);
+            ThisRate.OtherAmount5 = Convert.ToDecimal(ThisTask.OtherAmount5);
             ThisRate.OtherAmount6 = Convert.ToSingle(ThisTask.OtherAmount6);
             ThisRate.OtherAmount7 = Convert.ToSingle(ThisTask.OtherAmount7);
             ThisRate.OtherAmount8 = Convert.ToSingle(ThisTask.OtherAmount8);
             ThisRate.OtherAmount9 = Convert.ToSingle(ThisTask.OtherAmount9);
             ThisRate.OtherAmount10 = Convert.ToSingle(ThisTask.OtherAmount10);
-            ThisRate.TimeZoneOffsetSec = Convert.ToDouble(ThisTask.TimeZoneOffsetSec);
+            ThisRate.TimeZoneOffsetSec = Convert.ToDecimal(ThisTask.TimeZoneOffsetSec);
             ThisRate.RatePosition = Convert.ToInt32(ThisTask.RatePosition);
             ThisRate.IgwPercentageIn = Convert.ToSingle(ThisTask.IgwPercentageIn);
             ThisRate.ConflictingRateIds = ThisTask.ConflictingRateIds;

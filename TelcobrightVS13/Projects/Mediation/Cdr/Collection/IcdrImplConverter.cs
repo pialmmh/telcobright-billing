@@ -20,7 +20,7 @@ namespace TelcobrightMediation.Mediation.Cdr
             convertedCdrVariant.TerminatingCalledNumber = source.TerminatingCalledNumber;
             convertedCdrVariant.OriginatingCallingNumber = source.OriginatingCallingNumber;
             convertedCdrVariant.TerminatingCallingNumber = source.TerminatingCallingNumber;
-            convertedCdrVariant.CustomerPrePaid = source.CustomerPrePaid;
+            convertedCdrVariant.PrePaid = source.PrePaid;
             convertedCdrVariant.DurationSec = source.DurationSec;
             convertedCdrVariant.EndTime = source.EndTime;
             convertedCdrVariant.ConnectTime = source.ConnectTime;
@@ -28,7 +28,7 @@ namespace TelcobrightMediation.Mediation.Cdr
             convertedCdrVariant.ChargingStatus = source.ChargingStatus;
             convertedCdrVariant.PDD = source.PDD;
             convertedCdrVariant.CountryCode = source.CountryCode;
-            convertedCdrVariant.MinuteID = source.MinuteID;
+            convertedCdrVariant.AreaCodeOrLata = source.AreaCodeOrLata;
             convertedCdrVariant.ReleaseDirection = source.ReleaseDirection;
             convertedCdrVariant.ReleaseCauseSystem = source.ReleaseCauseSystem;
             convertedCdrVariant.ReleaseCauseEgress = source.ReleaseCauseEgress;
@@ -49,12 +49,12 @@ namespace TelcobrightMediation.Mediation.Cdr
             convertedCdrVariant.SupplierCost = source.SupplierCost;
             convertedCdrVariant.CostANSIn = source.CostANSIn;
             convertedCdrVariant.CostICXIn = source.CostICXIn;
-            convertedCdrVariant.CostVATCommissionIn = source.CostVATCommissionIn;
+            convertedCdrVariant.Tax1 = source.Tax1;
             convertedCdrVariant.IGWRevenueIn = source.IGWRevenueIn;
             convertedCdrVariant.RevenueANSOut = source.RevenueANSOut;
             convertedCdrVariant.RevenueIGWOut = source.RevenueIGWOut;
             convertedCdrVariant.RevenueICXOut = source.RevenueICXOut;
-            convertedCdrVariant.RevenueVATCommissionOut = source.RevenueVATCommissionOut;
+            convertedCdrVariant.Tax2 = source.Tax2;
             convertedCdrVariant.SubscriberChargeXOut = source.SubscriberChargeXOut;
             convertedCdrVariant.CarrierCostYIGWOut = source.CarrierCostYIGWOut;
             convertedCdrVariant.ANSPrefixOrig = source.ANSPrefixOrig;
@@ -68,11 +68,11 @@ namespace TelcobrightMediation.Mediation.Cdr
             convertedCdrVariant.SupplierCallNumberANS = source.SupplierCallNumberANS;
             convertedCdrVariant.CalledPartyNOA = source.CalledPartyNOA;
             convertedCdrVariant.CallingPartyNOA = source.CallingPartyNOA;
-            convertedCdrVariant.GrpDayId = source.GrpDayId;
-            convertedCdrVariant.MonthId = source.MonthId;
-            convertedCdrVariant.DayId = source.DayId;
+            convertedCdrVariant.AdditionalSystemCodes = source.AdditionalSystemCodes;
+            convertedCdrVariant.AdditionalPartyNumber = source.AdditionalPartyNumber;
+            convertedCdrVariant.ResellerIds = source.ResellerIds;
             convertedCdrVariant.BTRCTermRate = source.BTRCTermRate;
-            convertedCdrVariant.WeekDayId = source.WeekDayId;
+            convertedCdrVariant.PreviousRoutes = source.PreviousRoutes;
             convertedCdrVariant.E1Id = source.E1Id;
             convertedCdrVariant.MediaIP1 = source.MediaIP1;
             convertedCdrVariant.MediaIP2 = source.MediaIP2;
@@ -106,7 +106,7 @@ namespace TelcobrightMediation.Mediation.Cdr
             convertedCdrVariant.Duration4 = source.Duration4;
             convertedCdrVariant.PreviousPeriodCdr = source.PreviousPeriodCdr;
             convertedCdrVariant.UniqueBillId = source.UniqueBillId;
-            convertedCdrVariant.BillngInfo = source.BillngInfo;
+            convertedCdrVariant.AdditionalMetaData = source.AdditionalMetaData;
             convertedCdrVariant.Category = source.Category;
             convertedCdrVariant.SubCategory = source.SubCategory;
             convertedCdrVariant.ChangedByJobId = source.ChangedByJobId;

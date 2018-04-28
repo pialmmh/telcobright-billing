@@ -188,7 +188,7 @@
     <Compile Include="Config\TelcobrightConfig.cs" />
     <Compile Include="Config\JobInputData\CdrCollectorInputData.cs" />
     <Compile Include="Config\TelecomOperatortype.cs" />
-    <Compile Include="Enums.cs" />
+    <Compile Include="Enums\Enums.cs" />
     <Compile Include="Mediation\RateContainerInMemoryLocal.cs" />
     <Compile Include="Mediation\RateDictionaryGeneratorByTuples.cs" />
     <Compile Include="SegmentedJob\RowIdVsDate.cs" />

@@ -43,11 +43,11 @@ namespace TelcobrightMediation
             long finalDuration = 0; //xyz is rounded always
             decimal tempDuration = thisCdr.DurationSec;
             finalDuration =
-                Convert.ToInt64(this.PrefixMatcher.A2ZDuration(tempDuration, matchedRateWithAssignmentTupleId));
-            decimal xAmountBdt = this.PrefixMatcher.A2ZAmount(finalDuration, matchedRateWithAssignmentTupleId,
+                Convert.ToInt64(this.PrefixMatcher.GetA2ZDuration(tempDuration, matchedRateWithAssignmentTupleId));
+            decimal xAmountBdt = this.PrefixMatcher.GetA2ZAmount(finalDuration, matchedRateWithAssignmentTupleId,
                 rateFieldNumber: 0, //rate amount
                 cdrProcessor: serviceContext.CdrProcessor);
-            decimal yAmountUsd = this.PrefixMatcher.A2ZAmount(finalDuration, matchedRateWithAssignmentTupleId,
+            decimal yAmountUsd = this.PrefixMatcher.GetA2ZAmount(finalDuration, matchedRateWithAssignmentTupleId,
                 rateFieldNumber: 1, //other amount1
                 cdrProcessor: serviceContext.CdrProcessor);
             thisCdr.roundedduration = finalDuration;
@@ -91,7 +91,7 @@ namespace TelcobrightMediation
             }
             decimal btrcRevSharePercentage = Convert.ToDecimal(matchedRateWithAssignmentTupleId.OtherAmount3);
             decimal btrcRevShareAmount = fifteenPcOfZ * btrcRevSharePercentage / 100;
-            thisCdr.RevenueVATCommissionOut = btrcRevShareAmount;
+            thisCdr.Tax2 = btrcRevShareAmount;
             account postingAccount = GetPostingAccount(cdrExt, serviceContext, "BDT");
             BillingRule billingRule = GetBillingRule(serviceContext,
                 matchedRateWithAssignmentTupleId.IdRatePlanAssignmentTuple);

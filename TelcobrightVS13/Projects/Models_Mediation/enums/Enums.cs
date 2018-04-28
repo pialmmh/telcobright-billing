@@ -26,7 +26,7 @@
         public const int Terminatingcallednumber = 10;
         public const int Originatingcallingnumber = 11;
         public const int Terminatingcallingnumber = 12;
-        public const int Customerprepaid = 13;
+        public const int PrePaid = 13;
         public const int Durationsec = 14;
         public const int Endtime = 15;
         public const int Connecttime = 16;
@@ -34,7 +34,7 @@
         public const int Chargingstatus = 18;
         public const int Pdd = 19;
         public const int Countrycode = 20;
-        public const int Minuteid = 21;
+        public const int AreaCodeOrLata = 21;
         public const int Releasedirection = 22;
         public const int Releasecausesystem = 23;
         public const int Releasecauseegress = 24;
@@ -74,11 +74,11 @@
         public const int Suppliercallnumberans = 58;
         public const int Calledpartynoa = 59;
         public const int Callingpartynoa = 60;
-        public const int Grpdayid = 61;
-        public const int Monthid = 62;
-        public const int Dayid = 63;
+        public const int AdditionalSystemCodes = 61;
+        public const int AdditionalPartyNumber = 62;
+        public const int ResellerIds = 63;
         public const int Btrctermrate = 64;
-        public const int Weekdayid = 65;
+        public const int PreviousRoutes = 65;
         public const int E1Id = 66;
         public const int Mediaip1 = 67;
         public const int Mediaip2 = 68;
@@ -112,7 +112,7 @@
         public const int Duration4 = 96;
         public const int Previousperiodcdr = 97;
         public const int Uniquebillid = 98;
-        public const int Billnginfo = 99;
+        public const int AdditionalMetaData = 99;
         public const int Category = 100;
         public const int Subcategory = 101;
         public const int Changedbyjobid = 102;

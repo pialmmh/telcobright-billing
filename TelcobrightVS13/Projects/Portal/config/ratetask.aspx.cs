@@ -26,7 +26,10 @@ using MediationModel;
 //using DocumentFormat.OpenXml.Packaging;
 using PortalApp;
 using Process = System.Diagnostics.Process;
+using LibraryExtensions;
+using TelcobrightMediation.Accounting;
 
+[System.Runtime.InteropServices.Guid("5FC3FD70-56C8-4DAA-9C00-472988E7CACD")]
 public partial class ConfigRateTask : Page
 {
     enum OverlapTypes
@@ -2638,9 +2641,28 @@ public partial class ConfigRateTask : Page
 
         //now update, new rate has validation and other flags set...
 
+        
+
         thisRate.Prefix = newRate.Prefix;
         thisRate.description = newRate.description;
-        thisRate.rateamount = newRate.rateamount;
+        int ceilingRateAtFractionalPosition = Convert.ToInt32(newRate.RateAmountRoundupDecimal);
+        if(ceilingRateAtFractionalPosition==0)
+        {
+            thisRate.rateamount = newRate.rateamount;
+        }
+        else if (ceilingRateAtFractionalPosition>7 || ceilingRateAtFractionalPosition<0)
+        {
+            this.StatusLabel.ForeColor = Color.Red;
+            this.StatusLabel.Text = "RateAmountRoundupDecimal must be >=0 & <=7";
+        }
+        else if(ceilingRateAtFractionalPosition>=1 & ceilingRateAtFractionalPosition<=7)
+        {
+            FractionCeilingHelper fractionHelper =
+                new FractionCeilingHelper(newRate.rateamount, ceilingRateAtFractionalPosition);
+            thisRate.rateamount = fractionHelper.GetFormattedNumber();
+        }
+        else throw new ArgumentOutOfRangeException();
+
         thisRate.Resolution = newRate.Resolution;
         //ThisRate.CountryCode = NewRate.CountryCode;
         thisRate.startdate = newRate.startdate;
@@ -4259,7 +4281,7 @@ public partial class ConfigRateTask : Page
             thisRate.Resolution = Convert.ToInt32(thisTask.Resolution);
             thisRate.MinDurationSec = Convert.ToSingle(thisTask.MinDurationSec);
             thisRate.SurchargeTime = Convert.ToInt32(thisTask.SurchargeTime);
-            thisRate.SurchargeAmount = Convert.ToDouble(thisTask.SurchargeAmount);
+            thisRate.SurchargeAmount = Convert.ToDecimal(thisTask.SurchargeAmount);
             thisRate.idrateplan = idRatePlan;//ThisTask.idrateplan;
             thisRate.CountryCode = thisTask.CountryCode;
 
@@ -4295,14 +4317,14 @@ public partial class ConfigRateTask : Page
             thisRate.OtherAmount1 = Convert.ToDecimal(thisTask.OtherAmount1 != null && thisTask.OtherAmount1 != "" ? thisTask.OtherAmount1 : "0");
             thisRate.OtherAmount2 = Convert.ToDecimal(thisTask.OtherAmount2 != null && thisTask.OtherAmount2 != "" ? thisTask.OtherAmount2 : "0");
             thisRate.OtherAmount3 = Convert.ToDecimal(thisTask.OtherAmount3 != null && thisTask.OtherAmount3 != "" ? thisTask.OtherAmount3 : "0");
-            thisRate.OtherAmount4 = Convert.ToSingle(thisTask.OtherAmount4 != null && thisTask.OtherAmount4 != "" ? thisTask.OtherAmount4 : "0");
-            thisRate.OtherAmount5 = Convert.ToSingle(thisTask.OtherAmount5 != null && thisTask.OtherAmount5 != "" ? thisTask.OtherAmount5 : "0");
-            thisRate.OtherAmount6 = Convert.ToSingle(thisTask.OtherAmount6 != null && thisTask.OtherAmount6 != "" ? thisTask.OtherAmount6 : "0");
+            thisRate.OtherAmount4 = Convert.ToDecimal(thisTask.OtherAmount4 != null && thisTask.OtherAmount4 != "" ? thisTask.OtherAmount4 : "0");
+            thisRate.OtherAmount5 = Convert.ToDecimal(thisTask.OtherAmount5 != null && thisTask.OtherAmount5 != "" ? thisTask.OtherAmount5 : "0");
+            thisRate.OtherAmount6 = Convert.ToDecimal(thisTask.OtherAmount6 != null && thisTask.OtherAmount6 != "" ? thisTask.OtherAmount6 : "0");
             thisRate.OtherAmount7 = Convert.ToSingle(thisTask.OtherAmount7 != null && thisTask.OtherAmount7 != "" ? thisTask.OtherAmount7 : "0");
             thisRate.OtherAmount8 = Convert.ToSingle(thisTask.OtherAmount8 != null && thisTask.OtherAmount8 != "" ? thisTask.OtherAmount8 : "0");
             thisRate.OtherAmount9 = Convert.ToSingle(thisTask.OtherAmount9 != null && thisTask.OtherAmount9 != "" ? thisTask.OtherAmount9 : "0");
             thisRate.OtherAmount10 = Convert.ToSingle(thisTask.OtherAmount10 != null && thisTask.OtherAmount10 != "" ? thisTask.OtherAmount10 : "0");
-            thisRate.TimeZoneOffsetSec = Convert.ToDouble(thisTask.TimeZoneOffsetSec != null && thisTask.TimeZoneOffsetSec != "" ? thisTask.TimeZoneOffsetSec : "0");
+            thisRate.TimeZoneOffsetSec = Convert.ToDecimal(thisTask.TimeZoneOffsetSec != null && thisTask.TimeZoneOffsetSec != "" ? thisTask.TimeZoneOffsetSec : "0");
             thisRate.RatePosition = Convert.ToInt32(thisTask.RatePosition != null && thisTask.RatePosition != "" ? thisTask.RatePosition : "0");
             thisRate.IgwPercentageIn = Convert.ToSingle(thisTask.IgwPercentageIn != null && thisTask.IgwPercentageIn != "" ? thisTask.IgwPercentageIn : "0");
             thisRate.ConflictingRateIds = thisTask.ConflictingRateIds;

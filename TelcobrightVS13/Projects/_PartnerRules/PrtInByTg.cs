@@ -25,7 +25,7 @@ namespace PartnerRules
             {
                 thisCdr.inPartnerId = thisRoute.idPartner;
                 //set post paid/pre-paid flag
-                thisCdr.CustomerPrePaid =Convert.ToByte(thisRoute.partner.CustomerPrePaid);
+                thisCdr.PrePaid =Convert.ToByte(thisRoute.partner.CustomerPrePaid);
             }
         }
     }
