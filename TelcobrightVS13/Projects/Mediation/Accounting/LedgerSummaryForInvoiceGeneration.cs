@@ -19,11 +19,13 @@ namespace TelcobrightMediation.Accounting
         public DateTime StartDateWithTime
         {
             get { return StartDate.Date; }
+            set { StartDate = value.Date; }
         }
 
         public DateTime EndDateWithTime
         {
             get { return EndDate.Date.AddDays(1).AddSeconds(-1); }
+            set { EndDate = value.Date; }
         }
 
         public String ServiceAccount { get; set; }

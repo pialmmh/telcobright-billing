@@ -65,6 +65,8 @@ namespace PortalApp.config
                     {
                         ddlistServiceAccount.Items.Add(kv.Value);
                     }
+                    txtDate.Text = DateTime.Now.ToString("yyyy-MM-dd 00:00:00");
+                    txtDate1.Text = DateTime.Now.ToString("yyyy-MM-dd 23:59:59");
                 }
             }
         }
@@ -103,12 +105,16 @@ namespace PortalApp.config
         {
             List<LedgerSummaryForInvoiceGeneration> summaryForInvoiceGenerations = (List<LedgerSummaryForInvoiceGeneration>)this.Session["igInvoiceGenList"];
             LedgerSummaryForInvoiceGeneration ledgerSummary = new LedgerSummaryForInvoiceGeneration();
+            ledgerSummary.PartnerId = Convert.ToInt32(ddlistPartner.SelectedValue);
+            ledgerSummary.PartnerName = ddlistPartner.SelectedItem.Text;
             ledgerSummary.ServiceAccount = ddlistServiceAccount.Text;
+            ledgerSummary.StartDateWithTime = Convert.ToDateTime(txtDate.Text);
+            ledgerSummary.EndDateWithTime = Convert.ToDateTime(txtDate1.Text);
             ledgerSummary.TimeZone = Convert.ToInt32(ddlistTimeZone.SelectedValue);
             summaryForInvoiceGenerations.Add(ledgerSummary);
+            this.Session["igInvoiceGenList"] = summaryForInvoiceGenerations;
             gvInvoice.DataSource = summaryForInvoiceGenerations;
             gvInvoice.DataBind();
-
         }
     }
 }
