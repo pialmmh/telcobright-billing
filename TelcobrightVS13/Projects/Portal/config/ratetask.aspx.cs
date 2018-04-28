@@ -2658,8 +2658,8 @@ public partial class ConfigRateTask : Page
         else if(ceilingRateAtFractionalPosition>=1 & ceilingRateAtFractionalPosition<=7)
         {
             FractionCeilingHelper fractionHelper =
-                new FractionCeilingHelper(newRate.rateamount, ceilingRateAtFractionalPosition);
-            thisRate.rateamount = fractionHelper.GetFormattedNumber();
+                new FractionCeilingHelper(Convert.ToDecimal(newRate.rateamount), ceilingRateAtFractionalPosition);
+            thisRate.rateamount = fractionHelper.GetPreciseDecimal().ToString(CultureInfo.InvariantCulture);
         }
         else throw new ArgumentOutOfRangeException();
 

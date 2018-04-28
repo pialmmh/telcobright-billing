@@ -11,13 +11,14 @@ using Utils.Testers.Employees;
 
 namespace Utils
 {
-    class Programchrome
+    class Program
     {
      
         static void Main(string[] args)
         {
             //var tester = new FractionCeilingTester();
             //tester.Test();
+            //tester.PerformanceTest();
             Console.WriteLine("Press a key:");
             Console.WriteLine("1=Test Entity Renaming");
             Console.WriteLine("2=Entity Framework Batch Renaming");

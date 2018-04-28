@@ -517,7 +517,7 @@
     <Compile Include="userrole.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Utils.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="ValidationTester.cs" />
     <Compile Include="xyzprefix.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>

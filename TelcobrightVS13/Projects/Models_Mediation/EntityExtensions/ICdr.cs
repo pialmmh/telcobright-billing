@@ -17,16 +17,16 @@ namespace MediationModel
          string TerminatingCalledNumber { get; set; }
          string OriginatingCallingNumber { get; set; }
          string TerminatingCallingNumber { get; set; }
-         Nullable<byte> PrePaid { get; set; }
+         Nullable<int> PrePaid { get; set; }
          decimal DurationSec { get; set; }
          DateTime EndTime { get; set; }
          Nullable<DateTime> ConnectTime { get; set; }
          Nullable<DateTime> AnswerTime { get; set; }
-         Nullable<byte> ChargingStatus { get; set; }
+         Nullable<int> ChargingStatus { get; set; }
          Nullable<Single> PDD { get; set; }
          string CountryCode { get; set; }
-         Nullable<int> AreaCodeOrLata { get; set; }
-         Nullable<byte> ReleaseDirection { get; set; }
+         string AreaCodeOrLata { get; set; }
+         Nullable<int> ReleaseDirection { get; set; }
          Nullable<int> ReleaseCauseSystem { get; set; }
          Nullable<int> ReleaseCauseEgress { get; set; }
          string outgoingroute { get; set; }
@@ -59,17 +59,17 @@ namespace MediationModel
          string AnsPrefixTerm { get; set; }
          Nullable<int> AnsIdTerm { get; set; }
          Nullable<int> validflag { get; set; }
-         Nullable<sbyte> PartialFlag { get; set; }
+         Nullable<int> PartialFlag { get; set; }
          Nullable<int> releasecauseingress { get; set; }
          Nullable<long> CustomerCallNumberANS { get; set; }
          Nullable<long> SupplierCallNumberANS { get; set; }
-         Nullable<byte> CalledPartyNOA { get; set; }
-         Nullable<byte> CallingPartyNOA { get; set; }
-         Nullable<long> AdditionalSystemCodes { get; set; }
-         Nullable<byte> AdditionalPartyNumber { get; set; }
-         Nullable<int> ResellerIds { get; set; }
+         Nullable<int> CalledPartyNOA { get; set; }
+         Nullable<int> CallingPartyNOA { get; set; }
+         string AdditionalSystemCodes { get; set; }
+         string AdditionalPartyNumber { get; set; }
+         string ResellerIds { get; set; }
          Nullable<decimal> BTRCTermRate { get; set; }
-         Nullable<int> PreviousRoutes { get; set; }
+         string PreviousRoutes { get; set; }
          Nullable<int> E1Id { get; set; }
          string MediaIP1 { get; set; }
          string MediaIP2 { get; set; }
@@ -81,11 +81,11 @@ namespace MediationModel
          string outTrunkAdditionalInfo { get; set; }
          string inMgwId { get; set; }
          string outMgwId { get; set; }
-         Nullable<sbyte> mediationcomplete { get; set; }
+         Nullable<int> mediationcomplete { get; set; }
          string codec { get; set; }
-         Nullable<byte> ConnectedNumberType { get; set; }
+         Nullable<int> ConnectedNumberType { get; set; }
          string RedirectingNumber { get; set; }
-         Nullable<byte> CallForwardOrRoamingType { get; set; }
+         Nullable<int> CallForwardOrRoamingType { get; set; }
          Nullable<DateTime> date1 { get; set; }
          Nullable<int> field1 { get; set; }
          Nullable<int> field2 { get; set; }

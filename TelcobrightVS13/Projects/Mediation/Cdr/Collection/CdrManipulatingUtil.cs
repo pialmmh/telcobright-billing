@@ -50,7 +50,7 @@ namespace TelcobrightMediation.Mediation.Cdr
                 convertedCdr.ChargingStatus = txtRow[Fn.Chargingstatus].GetValueOrNull<byte>();
                 convertedCdr.PDD = txtRow[Fn.Pdd].GetValueOrNull<Single>();
                 convertedCdr.CountryCode = txtRow[Fn.Countrycode];
-                convertedCdr.AreaCodeOrLata = txtRow[Fn.AreaCodeOrLata].GetValueOrNull<int>();
+                convertedCdr.AreaCodeOrLata = txtRow[Fn.AreaCodeOrLata];
                 convertedCdr.ReleaseDirection = txtRow[Fn.Releasedirection].GetValueOrNull<byte>();
                 convertedCdr.ReleaseCauseSystem = txtRow[Fn.Releasecausesystem].GetValueOrNull<int>();
                 convertedCdr.ReleaseCauseEgress = txtRow[Fn.Releasecauseegress].GetValueOrNull<int>();
@@ -90,11 +90,11 @@ namespace TelcobrightMediation.Mediation.Cdr
                 convertedCdr.SupplierCallNumberANS = txtRow[Fn.Suppliercallnumberans].GetValueOrNull<long>();
                 convertedCdr.CalledPartyNOA = txtRow[Fn.Calledpartynoa].GetValueOrNull<byte>();
                 convertedCdr.CallingPartyNOA = txtRow[Fn.Callingpartynoa].GetValueOrNull<byte>();
-                convertedCdr.AdditionalSystemCodes = txtRow[Fn.AdditionalSystemCodes].GetValueOrNull<long>();
-                convertedCdr.AdditionalPartyNumber = txtRow[Fn.AdditionalPartyNumber].GetValueOrNull<byte>();
-                convertedCdr.ResellerIds = txtRow[Fn.ResellerIds].GetValueOrNull<int>();
+                convertedCdr.AdditionalSystemCodes = txtRow[Fn.AdditionalSystemCodes];
+                convertedCdr.AdditionalPartyNumber = txtRow[Fn.AdditionalPartyNumber];
+                convertedCdr.ResellerIds = txtRow[Fn.ResellerIds];
                 convertedCdr.BTRCTermRate = txtRow[Fn.Btrctermrate].GetValueOrNull<decimal>();
-                convertedCdr.PreviousRoutes = txtRow[Fn.PreviousRoutes].GetValueOrNull<int>();
+                convertedCdr.PreviousRoutes = txtRow[Fn.PreviousRoutes];
                 convertedCdr.E1Id = txtRow[Fn.E1Id].GetValueOrNull<int>();
                 convertedCdr.MediaIP1 = txtRow[Fn.Mediaip1];
                 convertedCdr.MediaIP2 = txtRow[Fn.Mediaip2];

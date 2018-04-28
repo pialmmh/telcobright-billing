@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +12,7 @@ namespace Utils.Testers
 {
     public class FractionCeilingTester
     {
+        private static readonly Random random = new Random();
         public void Test()
         {
             var numbers = new List<KeyValuePair<string,int>>()
@@ -59,6 +62,44 @@ namespace Utils.Testers
                 Console.WriteLine($@"Amount={amount}, ceilingPosition={ceilingAtPosition}, ValAfterCeiling={valAFterCeiling}");
             });
             
+        }
+
+        public void PerformanceTest()
+        {
+            int count = 1000000;
+            List<KeyValuePair< string, int>> numbers=new List<KeyValuePair<string, int>>();
+            Random miniRandom = new Random();
+            for (int i = 0; i < count; i++)
+            {
+                var rndDecimal = Convert.ToDecimal(RandomNumberBetween(1.41421, 120.14159));
+                numbers.Add(new KeyValuePair<string, int>(rndDecimal.ToString(CultureInfo.InvariantCulture),
+                    miniRandom.Next(1, 7)));
+            }
+            Stopwatch st=new Stopwatch();
+            st.Reset();
+            st.Start();
+            var results = new List<KeyValuePair<string, string>>();
+            for (var index = 0; index < numbers.Count; index++)
+            {
+                KeyValuePair<string, int> n = numbers[index];
+                FractionCeilingHelper fractionHelper =
+                    new FractionCeilingHelper(n.Key, n.Value);
+                results.Add(new KeyValuePair<string, string>(n.Key,
+                    n.Value + "-> " + fractionHelper.GetFormattedNumber()));
+            }
+            st.Stop();
+            Console.WriteLine("Elapsed seconds: "+ st.ElapsedMilliseconds/1000);
+            Console.Read();
+        }
+
+        
+        
+
+        private static double RandomNumberBetween(double minValue, double maxValue)
+        {
+            var next = random.NextDouble();
+
+            return minValue + (next * (maxValue - minValue));
         }
     }
 }

@@ -3,6 +3,8 @@ using System.Globalization;
 using LibraryExtensions;
 using System.Collections.Generic;
 using MediationModel;
+using TelcobrightMediation.Accounting;
+
 namespace TelcobrightMediation
 {
     public class A2ZRater
@@ -67,7 +69,13 @@ namespace TelcobrightMediation
             finalDuration = 0;
             finalDuration = this.PrefixMatcher.GetA2ZDuration(this.Cdr.DurationSec, thisRateWithAssigmentTupleId);
             finalAmount = this.PrefixMatcher.GetA2ZAmount(finalDuration, thisRateWithAssigmentTupleId, 0,this.ServiceContext.CdrProcessor);
-
+            int ceilingUpPositionAfterDecimal = Convert.ToInt32(thisRateWithAssigmentTupleId.OtherAmount9);
+            if (ceilingUpPositionAfterDecimal>0 && ceilingUpPositionAfterDecimal<=7)
+            {
+                FractionCeilingHelper ceilingHelper =
+                    new FractionCeilingHelper(finalAmount, ceilingUpPositionAfterDecimal);
+                finalAmount = ceilingHelper.GetPreciseDecimal();
+            }
             switch (this.ServiceContext.AssignDir)
             {
                 case ServiceAssignmentDirection.Customer:

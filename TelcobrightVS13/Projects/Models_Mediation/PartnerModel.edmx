@@ -264,28 +264,28 @@ warning 6002: The table/view 'def.platinum.cdr' does not have a primary key defi
           <Property Name="ServiceGroup" Type="int" Nullable="false" />
           <Property Name="incomingroute" Type="varchar" MaxLength="100" />
           <Property Name="OriginatingIP" Type="varchar" MaxLength="25" />
-          <Property Name="OPC" Type="usmallint" />
-          <Property Name="OriginatingCIC" Type="usmallint" />
+          <Property Name="OPC" Type="int" />
+          <Property Name="OriginatingCIC" Type="int" />
           <Property Name="OriginatingCalledNumber" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="TerminatingCalledNumber" Type="varchar" MaxLength="100" />
           <Property Name="OriginatingCallingNumber" Type="varchar" MaxLength="100" />
           <Property Name="TerminatingCallingNumber" Type="varchar" MaxLength="100" />
-          <Property Name="CustomerPrePaid" Type="utinyint" />
+          <Property Name="PrePaid" Type="int" />
           <Property Name="DurationSec" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="EndTime" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="ConnectTime" Type="datetime" Precision="0" />
           <Property Name="AnswerTime" Type="datetime" Precision="0" />
-          <Property Name="ChargingStatus" Type="utinyint" />
+          <Property Name="ChargingStatus" Type="int" />
           <Property Name="PDD" Type="float" />
           <Property Name="CountryCode" Type="varchar" MaxLength="15" />
-          <Property Name="MinuteID" Type="usmallint" />
-          <Property Name="ReleaseDirection" Type="utinyint" />
-          <Property Name="ReleaseCauseSystem" Type="usmallint" />
-          <Property Name="ReleaseCauseEgress" Type="usmallint" />
+          <Property Name="AreaCodeOrLata" Type="varchar" MaxLength="50" />
+          <Property Name="ReleaseDirection" Type="int" />
+          <Property Name="ReleaseCauseSystem" Type="int" />
+          <Property Name="ReleaseCauseEgress" Type="int" />
           <Property Name="outgoingroute" Type="varchar" MaxLength="100" />
           <Property Name="TerminatingIP" Type="varchar" MaxLength="25" />
-          <Property Name="DPC" Type="usmallint" />
-          <Property Name="TerminatingCIC" Type="usmallint" />
+          <Property Name="DPC" Type="int" />
+          <Property Name="TerminatingCIC" Type="int" />
           <Property Name="StartTime" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="inPartnerId" Type="int" />
           <Property Name="CustomerRate" Type="decimal" Precision="20" Scale="8" />
@@ -299,12 +299,12 @@ warning 6002: The table/view 'def.platinum.cdr' does not have a primary key defi
           <Property Name="SupplierCost" Type="decimal" Precision="20" Scale="8" />
           <Property Name="CostANSIn" Type="decimal" Precision="20" Scale="8" />
           <Property Name="CostICXIn" Type="decimal" Precision="20" Scale="8" />
-          <Property Name="CostVATCommissionIn" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="Tax1" Type="decimal" Precision="20" Scale="8" />
           <Property Name="IGWRevenueIn" Type="decimal" Precision="20" Scale="8" />
           <Property Name="RevenueANSOut" Type="decimal" Precision="20" Scale="8" />
           <Property Name="RevenueIGWOut" Type="decimal" Precision="20" Scale="8" />
           <Property Name="RevenueICXOut" Type="decimal" Precision="20" Scale="8" />
-          <Property Name="RevenueVATCommissionOut" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="Tax2" Type="decimal" Precision="20" Scale="8" />
           <Property Name="SubscriberChargeXOut" Type="decimal" Precision="20" Scale="8" />
           <Property Name="CarrierCostYIGWOut" Type="decimal" Precision="20" Scale="8" />
           <Property Name="ANSPrefixOrig" Type="varchar" MaxLength="10" />
@@ -312,33 +312,33 @@ warning 6002: The table/view 'def.platinum.cdr' does not have a primary key defi
           <Property Name="AnsPrefixTerm" Type="varchar" MaxLength="10" />
           <Property Name="AnsIdTerm" Type="int" />
           <Property Name="validflag" Type="int" />
-          <Property Name="PartialFlag" Type="tinyint" />
+          <Property Name="PartialFlag" Type="int" />
           <Property Name="releasecauseingress" Type="int" />
           <Property Name="CustomerCallNumberANS" Type="bigint" />
           <Property Name="SupplierCallNumberANS" Type="bigint" />
-          <Property Name="CalledPartyNOA" Type="utinyint" />
-          <Property Name="CallingPartyNOA" Type="utinyint" />
-          <Property Name="GrpDayId" Type="uint" />
-          <Property Name="MonthId" Type="utinyint" />
-          <Property Name="DayId" Type="usmallint" />
+          <Property Name="CalledPartyNOA" Type="int" />
+          <Property Name="CallingPartyNOA" Type="int" />
+          <Property Name="AdditionalSystemCodes" Type="varchar" MaxLength="100" />
+          <Property Name="AdditionalPartyNumber" Type="varchar" MaxLength="100" />
+          <Property Name="ResellerIds" Type="varchar" MaxLength="100" />
           <Property Name="BTRCTermRate" Type="decimal" Precision="20" Scale="8" />
-          <Property Name="WeekDayId" Type="int" />
-          <Property Name="E1Id" Type="usmallint" />
+          <Property Name="PreviousRoutes" Type="varchar" MaxLength="500" />
+          <Property Name="E1Id" Type="int" />
           <Property Name="MediaIP1" Type="varchar" MaxLength="15" />
           <Property Name="MediaIP2" Type="varchar" MaxLength="15" />
           <Property Name="MediaIP3" Type="varchar" MaxLength="15" />
           <Property Name="MediaIP4" Type="varchar" MaxLength="15" />
           <Property Name="CallCancelDuration" Type="decimal" Precision="20" Scale="8" />
-          <Property Name="E1IdOut" Type="usmallint" />
+          <Property Name="E1IdOut" Type="int" />
           <Property Name="inTrunkAdditionalInfo" Type="varchar" MaxLength="30" />
           <Property Name="outTrunkAdditionalInfo" Type="varchar" MaxLength="30" />
           <Property Name="inMgwId" Type="varchar" MaxLength="20" />
           <Property Name="outMgwId" Type="varchar" MaxLength="20" />
-          <Property Name="mediationcomplete" Type="tinyint" />
+          <Property Name="mediationcomplete" Type="int" />
           <Property Name="codec" Type="varchar" MaxLength="20" />
-          <Property Name="ConnectedNumberType" Type="utinyint" />
+          <Property Name="ConnectedNumberType" Type="int" />
           <Property Name="RedirectingNumber" Type="varchar" MaxLength="30" />
-          <Property Name="CallForwardOrRoamingType" Type="utinyint" />
+          <Property Name="CallForwardOrRoamingType" Type="int" />
           <Property Name="date1" Type="datetime" Precision="0" />
           <Property Name="field1" Type="int" />
           <Property Name="field2" Type="int" />
@@ -356,7 +356,7 @@ warning 6002: The table/view 'def.platinum.cdr' does not have a primary key defi
           <Property Name="Duration4" Type="decimal" Precision="20" Scale="8" />
           <Property Name="PreviousPeriodCdr" Type="int" />
           <Property Name="UniqueBillId" Type="varchar" MaxLength="100" />
-          <Property Name="BillngInfo" Type="text" />
+          <Property Name="AdditionalMetaData" Type="varchar" MaxLength="500" />
           <Property Name="Category" Type="int" />
           <Property Name="SubCategory" Type="int" />
           <Property Name="ChangedByJobId" Type="bigint" />
@@ -735,28 +735,28 @@ warning 6002: The table/view 'def.platinum.cdrpartiallastaggregatedrawinstance' 
           <Property Name="ServiceGroup" Type="int" Nullable="false" />
           <Property Name="incomingroute" Type="varchar" MaxLength="100" />
           <Property Name="OriginatingIP" Type="varchar" MaxLength="25" />
-          <Property Name="OPC" Type="usmallint" />
-          <Property Name="OriginatingCIC" Type="usmallint" />
+          <Property Name="OPC" Type="int" />
+          <Property Name="OriginatingCIC" Type="int" />
           <Property Name="OriginatingCalledNumber" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="TerminatingCalledNumber" Type="varchar" MaxLength="100" />
           <Property Name="OriginatingCallingNumber" Type="varchar" MaxLength="100" />
           <Property Name="TerminatingCallingNumber" Type="varchar" MaxLength="100" />
-          <Property Name="CustomerPrePaid" Type="utinyint" />
+          <Property Name="PrePaid" Type="int" />
           <Property Name="DurationSec" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="EndTime" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="ConnectTime" Type="datetime" Precision="0" />
           <Property Name="AnswerTime" Type="datetime" Precision="0" />
-          <Property Name="ChargingStatus" Type="utinyint" />
+          <Property Name="ChargingStatus" Type="int" />
           <Property Name="PDD" Type="float" />
           <Property Name="CountryCode" Type="varchar" MaxLength="15" />
-          <Property Name="MinuteID" Type="usmallint" />
-          <Property Name="ReleaseDirection" Type="utinyint" />
-          <Property Name="ReleaseCauseSystem" Type="usmallint" />
-          <Property Name="ReleaseCauseEgress" Type="usmallint" />
+          <Property Name="AreaCodeOrLata" Type="varchar" MaxLength="50" />
+          <Property Name="ReleaseDirection" Type="int" />
+          <Property Name="ReleaseCauseSystem" Type="int" />
+          <Property Name="ReleaseCauseEgress" Type="int" />
           <Property Name="outgoingroute" Type="varchar" MaxLength="100" />
           <Property Name="TerminatingIP" Type="varchar" MaxLength="25" />
-          <Property Name="DPC" Type="usmallint" />
-          <Property Name="TerminatingCIC" Type="usmallint" />
+          <Property Name="DPC" Type="int" />
+          <Property Name="TerminatingCIC" Type="int" />
           <Property Name="StartTime" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="inPartnerId" Type="int" />
           <Property Name="CustomerRate" Type="decimal" Precision="20" Scale="8" />
@@ -770,12 +770,12 @@ warning 6002: The table/view 'def.platinum.cdrpartiallastaggregatedrawinstance' 
           <Property Name="SupplierCost" Type="decimal" Precision="20" Scale="8" />
           <Property Name="CostANSIn" Type="decimal" Precision="20" Scale="8" />
           <Property Name="CostICXIn" Type="decimal" Precision="20" Scale="8" />
-          <Property Name="CostVATCommissionIn" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="Tax1" Type="decimal" Precision="20" Scale="8" />
           <Property Name="IGWRevenueIn" Type="decimal" Precision="20" Scale="8" />
           <Property Name="RevenueANSOut" Type="decimal" Precision="20" Scale="8" />
           <Property Name="RevenueIGWOut" Type="decimal" Precision="20" Scale="8" />
           <Property Name="RevenueICXOut" Type="decimal" Precision="20" Scale="8" />
-          <Property Name="RevenueVATCommissionOut" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="Tax2" Type="decimal" Precision="20" Scale="8" />
           <Property Name="SubscriberChargeXOut" Type="decimal" Precision="20" Scale="8" />
           <Property Name="CarrierCostYIGWOut" Type="decimal" Precision="20" Scale="8" />
           <Property Name="ANSPrefixOrig" Type="varchar" MaxLength="10" />
@@ -783,33 +783,33 @@ warning 6002: The table/view 'def.platinum.cdrpartiallastaggregatedrawinstance' 
           <Property Name="AnsPrefixTerm" Type="varchar" MaxLength="10" />
           <Property Name="AnsIdTerm" Type="int" />
           <Property Name="validflag" Type="int" />
-          <Property Name="PartialFlag" Type="tinyint" />
+          <Property Name="PartialFlag" Type="int" />
           <Property Name="releasecauseingress" Type="int" />
           <Property Name="CustomerCallNumberANS" Type="bigint" />
           <Property Name="SupplierCallNumberANS" Type="bigint" />
-          <Property Name="CalledPartyNOA" Type="utinyint" />
-          <Property Name="CallingPartyNOA" Type="utinyint" />
-          <Property Name="GrpDayId" Type="uint" />
-          <Property Name="MonthId" Type="utinyint" />
-          <Property Name="DayId" Type="usmallint" />
+          <Property Name="CalledPartyNOA" Type="int" />
+          <Property Name="CallingPartyNOA" Type="int" />
+          <Property Name="AdditionalSystemCodes" Type="varchar" MaxLength="100" />
+          <Property Name="AdditionalPartyNumber" Type="varchar" MaxLength="100" />
+          <Property Name="ResellerIds" Type="varchar" MaxLength="100" />
           <Property Name="BTRCTermRate" Type="decimal" Precision="20" Scale="8" />
-          <Property Name="WeekDayId" Type="int" />
-          <Property Name="E1Id" Type="usmallint" />
+          <Property Name="PreviousRoutes" Type="varchar" MaxLength="500" />
+          <Property Name="E1Id" Type="int" />
           <Property Name="MediaIP1" Type="varchar" MaxLength="15" />
           <Property Name="MediaIP2" Type="varchar" MaxLength="15" />
           <Property Name="MediaIP3" Type="varchar" MaxLength="15" />
           <Property Name="MediaIP4" Type="varchar" MaxLength="15" />
           <Property Name="CallCancelDuration" Type="decimal" Precision="20" Scale="8" />
-          <Property Name="E1IdOut" Type="usmallint" />
+          <Property Name="E1IdOut" Type="int" />
           <Property Name="inTrunkAdditionalInfo" Type="varchar" MaxLength="30" />
           <Property Name="outTrunkAdditionalInfo" Type="varchar" MaxLength="30" />
           <Property Name="inMgwId" Type="varchar" MaxLength="20" />
           <Property Name="outMgwId" Type="varchar" MaxLength="20" />
-          <Property Name="mediationcomplete" Type="tinyint" />
+          <Property Name="mediationcomplete" Type="int" />
           <Property Name="codec" Type="varchar" MaxLength="20" />
-          <Property Name="ConnectedNumberType" Type="utinyint" />
+          <Property Name="ConnectedNumberType" Type="int" />
           <Property Name="RedirectingNumber" Type="varchar" MaxLength="30" />
-          <Property Name="CallForwardOrRoamingType" Type="utinyint" />
+          <Property Name="CallForwardOrRoamingType" Type="int" />
           <Property Name="date1" Type="datetime" Precision="0" />
           <Property Name="field1" Type="int" />
           <Property Name="field2" Type="int" />
@@ -827,7 +827,7 @@ warning 6002: The table/view 'def.platinum.cdrpartiallastaggregatedrawinstance' 
           <Property Name="Duration4" Type="decimal" Precision="20" Scale="8" />
           <Property Name="PreviousPeriodCdr" Type="int" />
           <Property Name="UniqueBillId" Type="varchar" MaxLength="100" />
-          <Property Name="BillngInfo" Type="text" />
+          <Property Name="AdditionalMetaData" Type="varchar" MaxLength="500" />
           <Property Name="Category" Type="int" />
           <Property Name="SubCategory" Type="int" />
           <Property Name="ChangedByJobId" Type="bigint" />
@@ -855,28 +855,28 @@ warning 6002: The table/view 'def.platinum.cdrpartialrawinstance' does not have 
           <Property Name="ServiceGroup" Type="int" Nullable="false" />
           <Property Name="incomingroute" Type="varchar" MaxLength="100" />
           <Property Name="OriginatingIP" Type="varchar" MaxLength="25" />
-          <Property Name="OPC" Type="usmallint" />
-          <Property Name="OriginatingCIC" Type="usmallint" />
+          <Property Name="OPC" Type="int" />
+          <Property Name="OriginatingCIC" Type="int" />
           <Property Name="OriginatingCalledNumber" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="TerminatingCalledNumber" Type="varchar" MaxLength="100" />
           <Property Name="OriginatingCallingNumber" Type="varchar" MaxLength="100" />
           <Property Name="TerminatingCallingNumber" Type="varchar" MaxLength="100" />
-          <Property Name="CustomerPrePaid" Type="utinyint" />
+          <Property Name="PrePaid" Type="int" />
           <Property Name="DurationSec" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="EndTime" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="ConnectTime" Type="datetime" Precision="0" />
           <Property Name="AnswerTime" Type="datetime" Precision="0" />
-          <Property Name="ChargingStatus" Type="utinyint" />
+          <Property Name="ChargingStatus" Type="int" />
           <Property Name="PDD" Type="float" />
           <Property Name="CountryCode" Type="varchar" MaxLength="15" />
-          <Property Name="MinuteID" Type="usmallint" />
-          <Property Name="ReleaseDirection" Type="utinyint" />
-          <Property Name="ReleaseCauseSystem" Type="usmallint" />
-          <Property Name="ReleaseCauseEgress" Type="usmallint" />
+          <Property Name="AreaCodeOrLata" Type="varchar" MaxLength="50" />
+          <Property Name="ReleaseDirection" Type="int" />
+          <Property Name="ReleaseCauseSystem" Type="int" />
+          <Property Name="ReleaseCauseEgress" Type="int" />
           <Property Name="outgoingroute" Type="varchar" MaxLength="100" />
           <Property Name="TerminatingIP" Type="varchar" MaxLength="25" />
-          <Property Name="DPC" Type="usmallint" />
-          <Property Name="TerminatingCIC" Type="usmallint" />
+          <Property Name="DPC" Type="int" />
+          <Property Name="TerminatingCIC" Type="int" />
           <Property Name="StartTime" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="inPartnerId" Type="int" />
           <Property Name="CustomerRate" Type="decimal" Precision="20" Scale="8" />
@@ -890,12 +890,12 @@ warning 6002: The table/view 'def.platinum.cdrpartialrawinstance' does not have 
           <Property Name="SupplierCost" Type="decimal" Precision="20" Scale="8" />
           <Property Name="CostANSIn" Type="decimal" Precision="20" Scale="8" />
           <Property Name="CostICXIn" Type="decimal" Precision="20" Scale="8" />
-          <Property Name="CostVATCommissionIn" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="Tax1" Type="decimal" Precision="20" Scale="8" />
           <Property Name="IGWRevenueIn" Type="decimal" Precision="20" Scale="8" />
           <Property Name="RevenueANSOut" Type="decimal" Precision="20" Scale="8" />
           <Property Name="RevenueIGWOut" Type="decimal" Precision="20" Scale="8" />
           <Property Name="RevenueICXOut" Type="decimal" Precision="20" Scale="8" />
-          <Property Name="RevenueVATCommissionOut" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="Tax2" Type="decimal" Precision="20" Scale="8" />
           <Property Name="SubscriberChargeXOut" Type="decimal" Precision="20" Scale="8" />
           <Property Name="CarrierCostYIGWOut" Type="decimal" Precision="20" Scale="8" />
           <Property Name="ANSPrefixOrig" Type="varchar" MaxLength="10" />
@@ -903,33 +903,33 @@ warning 6002: The table/view 'def.platinum.cdrpartialrawinstance' does not have 
           <Property Name="AnsPrefixTerm" Type="varchar" MaxLength="10" />
           <Property Name="AnsIdTerm" Type="int" />
           <Property Name="validflag" Type="int" />
-          <Property Name="PartialFlag" Type="tinyint" />
+          <Property Name="PartialFlag" Type="int" />
           <Property Name="releasecauseingress" Type="int" />
           <Property Name="CustomerCallNumberANS" Type="bigint" />
           <Property Name="SupplierCallNumberANS" Type="bigint" />
-          <Property Name="CalledPartyNOA" Type="utinyint" />
-          <Property Name="CallingPartyNOA" Type="utinyint" />
-          <Property Name="GrpDayId" Type="uint" />
-          <Property Name="MonthId" Type="utinyint" />
-          <Property Name="DayId" Type="usmallint" />
+          <Property Name="CalledPartyNOA" Type="int" />
+          <Property Name="CallingPartyNOA" Type="int" />
+          <Property Name="AdditionalSystemCodes" Type="varchar" MaxLength="100" />
+          <Property Name="AdditionalPartyNumber" Type="varchar" MaxLength="100" />
+          <Property Name="ResellerIds" Type="varchar" MaxLength="100" />
           <Property Name="BTRCTermRate" Type="decimal" Precision="20" Scale="8" />
-          <Property Name="WeekDayId" Type="int" />
-          <Property Name="E1Id" Type="usmallint" />
+          <Property Name="PreviousRoutes" Type="varchar" MaxLength="500" />
+          <Property Name="E1Id" Type="int" />
           <Property Name="MediaIP1" Type="varchar" MaxLength="15" />
           <Property Name="MediaIP2" Type="varchar" MaxLength="15" />
           <Property Name="MediaIP3" Type="varchar" MaxLength="15" />
           <Property Name="MediaIP4" Type="varchar" MaxLength="15" />
           <Property Name="CallCancelDuration" Type="decimal" Precision="20" Scale="8" />
-          <Property Name="E1IdOut" Type="usmallint" />
+          <Property Name="E1IdOut" Type="int" />
           <Property Name="inTrunkAdditionalInfo" Type="varchar" MaxLength="30" />
           <Property Name="outTrunkAdditionalInfo" Type="varchar" MaxLength="30" />
           <Property Name="inMgwId" Type="varchar" MaxLength="20" />
           <Property Name="outMgwId" Type="varchar" MaxLength="20" />
-          <Property Name="mediationcomplete" Type="tinyint" />
+          <Property Name="mediationcomplete" Type="int" />
           <Property Name="codec" Type="varchar" MaxLength="20" />
-          <Property Name="ConnectedNumberType" Type="utinyint" />
+          <Property Name="ConnectedNumberType" Type="int" />
           <Property Name="RedirectingNumber" Type="varchar" MaxLength="30" />
-          <Property Name="CallForwardOrRoamingType" Type="utinyint" />
+          <Property Name="CallForwardOrRoamingType" Type="int" />
           <Property Name="date1" Type="datetime" Precision="0" />
           <Property Name="field1" Type="int" />
           <Property Name="field2" Type="int" />
@@ -947,7 +947,7 @@ warning 6002: The table/view 'def.platinum.cdrpartialrawinstance' does not have 
           <Property Name="Duration4" Type="decimal" Precision="20" Scale="8" />
           <Property Name="PreviousPeriodCdr" Type="int" />
           <Property Name="UniqueBillId" Type="varchar" MaxLength="100" />
-          <Property Name="BillngInfo" Type="text" />
+          <Property Name="AdditionalMetaData" Type="varchar" MaxLength="500" />
           <Property Name="Category" Type="int" />
           <Property Name="SubCategory" Type="int" />
           <Property Name="ChangedByJobId" Type="bigint" />
@@ -3474,7 +3474,7 @@ FROM `acc_transaction` AS `acc_transaction`</DefiningQuery>
 `cdr`.`TerminatingCalledNumber`, 
 `cdr`.`OriginatingCallingNumber`, 
 `cdr`.`TerminatingCallingNumber`, 
-`cdr`.`CustomerPrePaid`, 
+`cdr`.`PrePaid`, 
 `cdr`.`DurationSec`, 
 `cdr`.`EndTime`, 
 `cdr`.`ConnectTime`, 
@@ -3482,7 +3482,7 @@ FROM `acc_transaction` AS `acc_transaction`</DefiningQuery>
 `cdr`.`ChargingStatus`, 
 `cdr`.`PDD`, 
 `cdr`.`CountryCode`, 
-`cdr`.`MinuteID`, 
+`cdr`.`AreaCodeOrLata`, 
 `cdr`.`ReleaseDirection`, 
 `cdr`.`ReleaseCauseSystem`, 
 `cdr`.`ReleaseCauseEgress`, 
@@ -3503,12 +3503,12 @@ FROM `acc_transaction` AS `acc_transaction`</DefiningQuery>
 `cdr`.`SupplierCost`, 
 `cdr`.`CostANSIn`, 
 `cdr`.`CostICXIn`, 
-`cdr`.`CostVATCommissionIn`, 
+`cdr`.`Tax1`, 
 `cdr`.`IGWRevenueIn`, 
 `cdr`.`RevenueANSOut`, 
 `cdr`.`RevenueIGWOut`, 
 `cdr`.`RevenueICXOut`, 
-`cdr`.`RevenueVATCommissionOut`, 
+`cdr`.`Tax2`, 
 `cdr`.`SubscriberChargeXOut`, 
 `cdr`.`CarrierCostYIGWOut`, 
 `cdr`.`ANSPrefixOrig`, 
@@ -3522,11 +3522,11 @@ FROM `acc_transaction` AS `acc_transaction`</DefiningQuery>
 `cdr`.`SupplierCallNumberANS`, 
 `cdr`.`CalledPartyNOA`, 
 `cdr`.`CallingPartyNOA`, 
-`cdr`.`GrpDayId`, 
-`cdr`.`MonthId`, 
-`cdr`.`DayId`, 
+`cdr`.`AdditionalSystemCodes`, 
+`cdr`.`AdditionalPartyNumber`, 
+`cdr`.`ResellerIds`, 
 `cdr`.`BTRCTermRate`, 
-`cdr`.`WeekDayId`, 
+`cdr`.`PreviousRoutes`, 
 `cdr`.`E1Id`, 
 `cdr`.`MediaIP1`, 
 `cdr`.`MediaIP2`, 
@@ -3560,7 +3560,7 @@ FROM `acc_transaction` AS `acc_transaction`</DefiningQuery>
 `cdr`.`Duration4`, 
 `cdr`.`PreviousPeriodCdr`, 
 `cdr`.`UniqueBillId`, 
-`cdr`.`BillngInfo`, 
+`cdr`.`AdditionalMetaData`, 
 `cdr`.`Category`, 
 `cdr`.`SubCategory`, 
 `cdr`.`ChangedByJobId`, 
@@ -3690,7 +3690,7 @@ FROM `cdrdiscarded` AS `cdrdiscarded`</DefiningQuery>
 `cdrpartiallastaggregatedrawinstance`.`TerminatingCalledNumber`, 
 `cdrpartiallastaggregatedrawinstance`.`OriginatingCallingNumber`, 
 `cdrpartiallastaggregatedrawinstance`.`TerminatingCallingNumber`, 
-`cdrpartiallastaggregatedrawinstance`.`CustomerPrePaid`, 
+`cdrpartiallastaggregatedrawinstance`.`PrePaid`, 
 `cdrpartiallastaggregatedrawinstance`.`DurationSec`, 
 `cdrpartiallastaggregatedrawinstance`.`EndTime`, 
 `cdrpartiallastaggregatedrawinstance`.`ConnectTime`, 
@@ -3698,7 +3698,7 @@ FROM `cdrdiscarded` AS `cdrdiscarded`</DefiningQuery>
 `cdrpartiallastaggregatedrawinstance`.`ChargingStatus`, 
 `cdrpartiallastaggregatedrawinstance`.`PDD`, 
 `cdrpartiallastaggregatedrawinstance`.`CountryCode`, 
-`cdrpartiallastaggregatedrawinstance`.`MinuteID`, 
+`cdrpartiallastaggregatedrawinstance`.`AreaCodeOrLata`, 
 `cdrpartiallastaggregatedrawinstance`.`ReleaseDirection`, 
 `cdrpartiallastaggregatedrawinstance`.`ReleaseCauseSystem`, 
 `cdrpartiallastaggregatedrawinstance`.`ReleaseCauseEgress`, 
@@ -3719,12 +3719,12 @@ FROM `cdrdiscarded` AS `cdrdiscarded`</DefiningQuery>
 `cdrpartiallastaggregatedrawinstance`.`SupplierCost`, 
 `cdrpartiallastaggregatedrawinstance`.`CostANSIn`, 
 `cdrpartiallastaggregatedrawinstance`.`CostICXIn`, 
-`cdrpartiallastaggregatedrawinstance`.`CostVATCommissionIn`, 
+`cdrpartiallastaggregatedrawinstance`.`Tax1`, 
 `cdrpartiallastaggregatedrawinstance`.`IGWRevenueIn`, 
 `cdrpartiallastaggregatedrawinstance`.`RevenueANSOut`, 
 `cdrpartiallastaggregatedrawinstance`.`RevenueIGWOut`, 
 `cdrpartiallastaggregatedrawinstance`.`RevenueICXOut`, 
-`cdrpartiallastaggregatedrawinstance`.`RevenueVATCommissionOut`, 
+`cdrpartiallastaggregatedrawinstance`.`Tax2`, 
 `cdrpartiallastaggregatedrawinstance`.`SubscriberChargeXOut`, 
 `cdrpartiallastaggregatedrawinstance`.`CarrierCostYIGWOut`, 
 `cdrpartiallastaggregatedrawinstance`.`ANSPrefixOrig`, 
@@ -3738,11 +3738,11 @@ FROM `cdrdiscarded` AS `cdrdiscarded`</DefiningQuery>
 `cdrpartiallastaggregatedrawinstance`.`SupplierCallNumberANS`, 
 `cdrpartiallastaggregatedrawinstance`.`CalledPartyNOA`, 
 `cdrpartiallastaggregatedrawinstance`.`CallingPartyNOA`, 
-`cdrpartiallastaggregatedrawinstance`.`GrpDayId`, 
-`cdrpartiallastaggregatedrawinstance`.`MonthId`, 
-`cdrpartiallastaggregatedrawinstance`.`DayId`, 
+`cdrpartiallastaggregatedrawinstance`.`AdditionalSystemCodes`, 
+`cdrpartiallastaggregatedrawinstance`.`AdditionalPartyNumber`, 
+`cdrpartiallastaggregatedrawinstance`.`ResellerIds`, 
 `cdrpartiallastaggregatedrawinstance`.`BTRCTermRate`, 
-`cdrpartiallastaggregatedrawinstance`.`WeekDayId`, 
+`cdrpartiallastaggregatedrawinstance`.`PreviousRoutes`, 
 `cdrpartiallastaggregatedrawinstance`.`E1Id`, 
 `cdrpartiallastaggregatedrawinstance`.`MediaIP1`, 
 `cdrpartiallastaggregatedrawinstance`.`MediaIP2`, 
@@ -3776,7 +3776,7 @@ FROM `cdrdiscarded` AS `cdrdiscarded`</DefiningQuery>
 `cdrpartiallastaggregatedrawinstance`.`Duration4`, 
 `cdrpartiallastaggregatedrawinstance`.`PreviousPeriodCdr`, 
 `cdrpartiallastaggregatedrawinstance`.`UniqueBillId`, 
-`cdrpartiallastaggregatedrawinstance`.`BillngInfo`, 
+`cdrpartiallastaggregatedrawinstance`.`AdditionalMetaData`, 
 `cdrpartiallastaggregatedrawinstance`.`Category`, 
 `cdrpartiallastaggregatedrawinstance`.`SubCategory`, 
 `cdrpartiallastaggregatedrawinstance`.`ChangedByJobId`, 
@@ -3798,7 +3798,7 @@ FROM `cdrpartiallastaggregatedrawinstance` AS `cdrpartiallastaggregatedrawinstan
 `cdrpartialrawinstance`.`TerminatingCalledNumber`, 
 `cdrpartialrawinstance`.`OriginatingCallingNumber`, 
 `cdrpartialrawinstance`.`TerminatingCallingNumber`, 
-`cdrpartialrawinstance`.`CustomerPrePaid`, 
+`cdrpartialrawinstance`.`PrePaid`, 
 `cdrpartialrawinstance`.`DurationSec`, 
 `cdrpartialrawinstance`.`EndTime`, 
 `cdrpartialrawinstance`.`ConnectTime`, 
@@ -3806,7 +3806,7 @@ FROM `cdrpartiallastaggregatedrawinstance` AS `cdrpartiallastaggregatedrawinstan
 `cdrpartialrawinstance`.`ChargingStatus`, 
 `cdrpartialrawinstance`.`PDD`, 
 `cdrpartialrawinstance`.`CountryCode`, 
-`cdrpartialrawinstance`.`MinuteID`, 
+`cdrpartialrawinstance`.`AreaCodeOrLata`, 
 `cdrpartialrawinstance`.`ReleaseDirection`, 
 `cdrpartialrawinstance`.`ReleaseCauseSystem`, 
 `cdrpartialrawinstance`.`ReleaseCauseEgress`, 
@@ -3827,12 +3827,12 @@ FROM `cdrpartiallastaggregatedrawinstance` AS `cdrpartiallastaggregatedrawinstan
 `cdrpartialrawinstance`.`SupplierCost`, 
 `cdrpartialrawinstance`.`CostANSIn`, 
 `cdrpartialrawinstance`.`CostICXIn`, 
-`cdrpartialrawinstance`.`CostVATCommissionIn`, 
+`cdrpartialrawinstance`.`Tax1`, 
 `cdrpartialrawinstance`.`IGWRevenueIn`, 
 `cdrpartialrawinstance`.`RevenueANSOut`, 
 `cdrpartialrawinstance`.`RevenueIGWOut`, 
 `cdrpartialrawinstance`.`RevenueICXOut`, 
-`cdrpartialrawinstance`.`RevenueVATCommissionOut`, 
+`cdrpartialrawinstance`.`Tax2`, 
 `cdrpartialrawinstance`.`SubscriberChargeXOut`, 
 `cdrpartialrawinstance`.`CarrierCostYIGWOut`, 
 `cdrpartialrawinstance`.`ANSPrefixOrig`, 
@@ -3846,11 +3846,11 @@ FROM `cdrpartiallastaggregatedrawinstance` AS `cdrpartiallastaggregatedrawinstan
 `cdrpartialrawinstance`.`SupplierCallNumberANS`, 
 `cdrpartialrawinstance`.`CalledPartyNOA`, 
 `cdrpartialrawinstance`.`CallingPartyNOA`, 
-`cdrpartialrawinstance`.`GrpDayId`, 
-`cdrpartialrawinstance`.`MonthId`, 
-`cdrpartialrawinstance`.`DayId`, 
+`cdrpartialrawinstance`.`AdditionalSystemCodes`, 
+`cdrpartialrawinstance`.`AdditionalPartyNumber`, 
+`cdrpartialrawinstance`.`ResellerIds`, 
 `cdrpartialrawinstance`.`BTRCTermRate`, 
-`cdrpartialrawinstance`.`WeekDayId`, 
+`cdrpartialrawinstance`.`PreviousRoutes`, 
 `cdrpartialrawinstance`.`E1Id`, 
 `cdrpartialrawinstance`.`MediaIP1`, 
 `cdrpartialrawinstance`.`MediaIP2`, 
@@ -3884,7 +3884,7 @@ FROM `cdrpartiallastaggregatedrawinstance` AS `cdrpartiallastaggregatedrawinstan
 `cdrpartialrawinstance`.`Duration4`, 
 `cdrpartialrawinstance`.`PreviousPeriodCdr`, 
 `cdrpartialrawinstance`.`UniqueBillId`, 
-`cdrpartialrawinstance`.`BillngInfo`, 
+`cdrpartialrawinstance`.`AdditionalMetaData`, 
 `cdrpartialrawinstance`.`Category`, 
 `cdrpartialrawinstance`.`SubCategory`, 
 `cdrpartialrawinstance`.`ChangedByJobId`, 
@@ -6336,16 +6336,16 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="TerminatingCalledNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="OriginatingCallingNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="TerminatingCallingNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CustomerPrePaid" Type="Byte" />
+          <Property Name="PrePaid" Type="Int32" />
           <Property Name="DurationSec" Type="Decimal" Nullable="false" />
           <Property Name="EndTime" Type="DateTime" Nullable="false" />
           <Property Name="ConnectTime" Type="DateTime" />
           <Property Name="AnswerTime" Type="DateTime" />
-          <Property Name="ChargingStatus" Type="Byte" />
+          <Property Name="ChargingStatus" Type="Int32" />
           <Property Name="PDD" Type="Single" />
           <Property Name="CountryCode" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="MinuteID" Type="Int32" />
-          <Property Name="ReleaseDirection" Type="Byte" />
+          <Property Name="AreaCodeOrLata" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ReleaseDirection" Type="Int32" />
           <Property Name="ReleaseCauseSystem" Type="Int32" />
           <Property Name="ReleaseCauseEgress" Type="Int32" />
           <Property Name="outgoingroute" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
@@ -6365,12 +6365,12 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="SupplierCost" Type="Decimal" />
           <Property Name="CostANSIn" Type="Decimal" />
           <Property Name="CostICXIn" Type="Decimal" />
-          <Property Name="CostVATCommissionIn" Type="Decimal" />
+          <Property Name="Tax1" Type="Decimal" />
           <Property Name="IGWRevenueIn" Type="Decimal" />
           <Property Name="RevenueANSOut" Type="Decimal" />
           <Property Name="RevenueIGWOut" Type="Decimal" />
           <Property Name="RevenueICXOut" Type="Decimal" />
-          <Property Name="RevenueVATCommissionOut" Type="Decimal" />
+          <Property Name="Tax2" Type="Decimal" />
           <Property Name="SubscriberChargeXOut" Type="Decimal" />
           <Property Name="CarrierCostYIGWOut" Type="Decimal" />
           <Property Name="ANSPrefixOrig" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
@@ -6378,17 +6378,17 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="AnsPrefixTerm" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="AnsIdTerm" Type="Int32" />
           <Property Name="validflag" Type="Int32" />
-          <Property Name="PartialFlag" Type="SByte" />
+          <Property Name="PartialFlag" Type="Int32" />
           <Property Name="releasecauseingress" Type="Int32" />
           <Property Name="CustomerCallNumberANS" Type="Int64" />
           <Property Name="SupplierCallNumberANS" Type="Int64" />
-          <Property Name="CalledPartyNOA" Type="Byte" />
-          <Property Name="CallingPartyNOA" Type="Byte" />
-          <Property Name="GrpDayId" Type="Int64" />
-          <Property Name="MonthId" Type="Byte" />
-          <Property Name="DayId" Type="Int32" />
+          <Property Name="CalledPartyNOA" Type="Int32" />
+          <Property Name="CallingPartyNOA" Type="Int32" />
+          <Property Name="AdditionalSystemCodes" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="AdditionalPartyNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ResellerIds" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="BTRCTermRate" Type="Decimal" />
-          <Property Name="WeekDayId" Type="Int32" />
+          <Property Name="PreviousRoutes" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="E1Id" Type="Int32" />
           <Property Name="MediaIP1" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="MediaIP2" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
@@ -6400,11 +6400,11 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="outTrunkAdditionalInfo" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="inMgwId" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="outMgwId" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="mediationcomplete" Type="SByte" />
+          <Property Name="mediationcomplete" Type="Int32" />
           <Property Name="codec" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="ConnectedNumberType" Type="Byte" />
+          <Property Name="ConnectedNumberType" Type="Int32" />
           <Property Name="RedirectingNumber" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="CallForwardOrRoamingType" Type="Byte" />
+          <Property Name="CallForwardOrRoamingType" Type="Int32" />
           <Property Name="date1" Type="DateTime" />
           <Property Name="field1" Type="Int32" />
           <Property Name="field2" Type="Int32" />
@@ -6422,7 +6422,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="Duration4" Type="Decimal" />
           <Property Name="PreviousPeriodCdr" Type="Int32" />
           <Property Name="UniqueBillId" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="BillngInfo" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+          <Property Name="AdditionalMetaData" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="Category" Type="Int32" />
           <Property Name="SubCategory" Type="Int32" />
           <Property Name="ChangedByJobId" Type="Int64" />
@@ -6564,16 +6564,16 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="TerminatingCalledNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="OriginatingCallingNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="TerminatingCallingNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CustomerPrePaid" Type="Byte" />
+          <Property Name="PrePaid" Type="Int32" />
           <Property Name="DurationSec" Type="Decimal" Nullable="false" />
           <Property Name="EndTime" Type="DateTime" Nullable="false" />
           <Property Name="ConnectTime" Type="DateTime" />
           <Property Name="AnswerTime" Type="DateTime" />
-          <Property Name="ChargingStatus" Type="Byte" />
+          <Property Name="ChargingStatus" Type="Int32" />
           <Property Name="PDD" Type="Single" />
           <Property Name="CountryCode" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="MinuteID" Type="Int32" />
-          <Property Name="ReleaseDirection" Type="Byte" />
+          <Property Name="AreaCodeOrLata" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ReleaseDirection" Type="Int32" />
           <Property Name="ReleaseCauseSystem" Type="Int32" />
           <Property Name="ReleaseCauseEgress" Type="Int32" />
           <Property Name="outgoingroute" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
@@ -6593,12 +6593,12 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="SupplierCost" Type="Decimal" />
           <Property Name="CostANSIn" Type="Decimal" />
           <Property Name="CostICXIn" Type="Decimal" />
-          <Property Name="CostVATCommissionIn" Type="Decimal" />
+          <Property Name="Tax1" Type="Decimal" />
           <Property Name="IGWRevenueIn" Type="Decimal" />
           <Property Name="RevenueANSOut" Type="Decimal" />
           <Property Name="RevenueIGWOut" Type="Decimal" />
           <Property Name="RevenueICXOut" Type="Decimal" />
-          <Property Name="RevenueVATCommissionOut" Type="Decimal" />
+          <Property Name="Tax2" Type="Decimal" />
           <Property Name="SubscriberChargeXOut" Type="Decimal" />
           <Property Name="CarrierCostYIGWOut" Type="Decimal" />
           <Property Name="ANSPrefixOrig" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
@@ -6606,17 +6606,17 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="AnsPrefixTerm" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="AnsIdTerm" Type="Int32" />
           <Property Name="validflag" Type="Int32" />
-          <Property Name="PartialFlag" Type="SByte" />
+          <Property Name="PartialFlag" Type="Int32" />
           <Property Name="releasecauseingress" Type="Int32" />
           <Property Name="CustomerCallNumberANS" Type="Int64" />
           <Property Name="SupplierCallNumberANS" Type="Int64" />
-          <Property Name="CalledPartyNOA" Type="Byte" />
-          <Property Name="CallingPartyNOA" Type="Byte" />
-          <Property Name="GrpDayId" Type="Int64" />
-          <Property Name="MonthId" Type="Byte" />
-          <Property Name="DayId" Type="Int32" />
+          <Property Name="CalledPartyNOA" Type="Int32" />
+          <Property Name="CallingPartyNOA" Type="Int32" />
+          <Property Name="AdditionalSystemCodes" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="AdditionalPartyNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ResellerIds" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="BTRCTermRate" Type="Decimal" />
-          <Property Name="WeekDayId" Type="Int32" />
+          <Property Name="PreviousRoutes" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="E1Id" Type="Int32" />
           <Property Name="MediaIP1" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="MediaIP2" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
@@ -6628,11 +6628,11 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="outTrunkAdditionalInfo" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="inMgwId" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="outMgwId" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="mediationcomplete" Type="SByte" />
+          <Property Name="mediationcomplete" Type="Int32" />
           <Property Name="codec" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="ConnectedNumberType" Type="Byte" />
+          <Property Name="ConnectedNumberType" Type="Int32" />
           <Property Name="RedirectingNumber" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="CallForwardOrRoamingType" Type="Byte" />
+          <Property Name="CallForwardOrRoamingType" Type="Int32" />
           <Property Name="date1" Type="DateTime" />
           <Property Name="field1" Type="Int32" />
           <Property Name="field2" Type="Int32" />
@@ -6650,7 +6650,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="Duration4" Type="Decimal" />
           <Property Name="PreviousPeriodCdr" Type="Int32" />
           <Property Name="UniqueBillId" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="BillngInfo" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+          <Property Name="AdditionalMetaData" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="Category" Type="Int32" />
           <Property Name="SubCategory" Type="Int32" />
           <Property Name="ChangedByJobId" Type="Int64" />
@@ -6682,16 +6682,16 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="TerminatingCalledNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="OriginatingCallingNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="TerminatingCallingNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CustomerPrePaid" Type="Byte" />
+          <Property Name="PrePaid" Type="Int32" />
           <Property Name="DurationSec" Type="Decimal" Nullable="false" />
           <Property Name="EndTime" Type="DateTime" Nullable="false" />
           <Property Name="ConnectTime" Type="DateTime" />
           <Property Name="AnswerTime" Type="DateTime" />
-          <Property Name="ChargingStatus" Type="Byte" />
+          <Property Name="ChargingStatus" Type="Int32" />
           <Property Name="PDD" Type="Single" />
           <Property Name="CountryCode" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="MinuteID" Type="Int32" />
-          <Property Name="ReleaseDirection" Type="Byte" />
+          <Property Name="AreaCodeOrLata" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ReleaseDirection" Type="Int32" />
           <Property Name="ReleaseCauseSystem" Type="Int32" />
           <Property Name="ReleaseCauseEgress" Type="Int32" />
           <Property Name="outgoingroute" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
@@ -6711,12 +6711,12 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="SupplierCost" Type="Decimal" />
           <Property Name="CostANSIn" Type="Decimal" />
           <Property Name="CostICXIn" Type="Decimal" />
-          <Property Name="CostVATCommissionIn" Type="Decimal" />
+          <Property Name="Tax1" Type="Decimal" />
           <Property Name="IGWRevenueIn" Type="Decimal" />
           <Property Name="RevenueANSOut" Type="Decimal" />
           <Property Name="RevenueIGWOut" Type="Decimal" />
           <Property Name="RevenueICXOut" Type="Decimal" />
-          <Property Name="RevenueVATCommissionOut" Type="Decimal" />
+          <Property Name="Tax2" Type="Decimal" />
           <Property Name="SubscriberChargeXOut" Type="Decimal" />
           <Property Name="CarrierCostYIGWOut" Type="Decimal" />
           <Property Name="ANSPrefixOrig" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
@@ -6724,17 +6724,17 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="AnsPrefixTerm" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="AnsIdTerm" Type="Int32" />
           <Property Name="validflag" Type="Int32" />
-          <Property Name="PartialFlag" Type="SByte" />
+          <Property Name="PartialFlag" Type="Int32" />
           <Property Name="releasecauseingress" Type="Int32" />
           <Property Name="CustomerCallNumberANS" Type="Int64" />
           <Property Name="SupplierCallNumberANS" Type="Int64" />
-          <Property Name="CalledPartyNOA" Type="Byte" />
-          <Property Name="CallingPartyNOA" Type="Byte" />
-          <Property Name="GrpDayId" Type="Int64" />
-          <Property Name="MonthId" Type="Byte" />
-          <Property Name="DayId" Type="Int32" />
+          <Property Name="CalledPartyNOA" Type="Int32" />
+          <Property Name="CallingPartyNOA" Type="Int32" />
+          <Property Name="AdditionalSystemCodes" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="AdditionalPartyNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ResellerIds" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="BTRCTermRate" Type="Decimal" />
-          <Property Name="WeekDayId" Type="Int32" />
+          <Property Name="PreviousRoutes" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="E1Id" Type="Int32" />
           <Property Name="MediaIP1" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="MediaIP2" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
@@ -6746,11 +6746,11 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="outTrunkAdditionalInfo" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="inMgwId" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="outMgwId" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="mediationcomplete" Type="SByte" />
+          <Property Name="mediationcomplete" Type="Int32" />
           <Property Name="codec" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="ConnectedNumberType" Type="Byte" />
+          <Property Name="ConnectedNumberType" Type="Int32" />
           <Property Name="RedirectingNumber" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="CallForwardOrRoamingType" Type="Byte" />
+          <Property Name="CallForwardOrRoamingType" Type="Int32" />
           <Property Name="date1" Type="DateTime" />
           <Property Name="field1" Type="Int32" />
           <Property Name="field2" Type="Int32" />
@@ -6768,7 +6768,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="Duration4" Type="Decimal" />
           <Property Name="PreviousPeriodCdr" Type="Int32" />
           <Property Name="UniqueBillId" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="BillngInfo" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+          <Property Name="AdditionalMetaData" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="Category" Type="Int32" />
           <Property Name="SubCategory" Type="Int32" />
           <Property Name="ChangedByJobId" Type="Int64" />
@@ -9515,7 +9515,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="ChangedByJobId" ColumnName="ChangedByJobId" />
                 <ScalarProperty Name="SubCategory" ColumnName="SubCategory" />
                 <ScalarProperty Name="Category" ColumnName="Category" />
-                <ScalarProperty Name="BillngInfo" ColumnName="BillngInfo" />
+                <ScalarProperty Name="AdditionalMetaData" ColumnName="AdditionalMetaData" />
                 <ScalarProperty Name="UniqueBillId" ColumnName="UniqueBillId" />
                 <ScalarProperty Name="PreviousPeriodCdr" ColumnName="PreviousPeriodCdr" />
                 <ScalarProperty Name="Duration4" ColumnName="Duration4" />
@@ -9549,11 +9549,11 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="MediaIP2" ColumnName="MediaIP2" />
                 <ScalarProperty Name="MediaIP1" ColumnName="MediaIP1" />
                 <ScalarProperty Name="E1Id" ColumnName="E1Id" />
-                <ScalarProperty Name="WeekDayId" ColumnName="WeekDayId" />
+                <ScalarProperty Name="PreviousRoutes" ColumnName="PreviousRoutes" />
                 <ScalarProperty Name="BTRCTermRate" ColumnName="BTRCTermRate" />
-                <ScalarProperty Name="DayId" ColumnName="DayId" />
-                <ScalarProperty Name="MonthId" ColumnName="MonthId" />
-                <ScalarProperty Name="GrpDayId" ColumnName="GrpDayId" />
+                <ScalarProperty Name="ResellerIds" ColumnName="ResellerIds" />
+                <ScalarProperty Name="AdditionalPartyNumber" ColumnName="AdditionalPartyNumber" />
+                <ScalarProperty Name="AdditionalSystemCodes" ColumnName="AdditionalSystemCodes" />
                 <ScalarProperty Name="CallingPartyNOA" ColumnName="CallingPartyNOA" />
                 <ScalarProperty Name="CalledPartyNOA" ColumnName="CalledPartyNOA" />
                 <ScalarProperty Name="SupplierCallNumberANS" ColumnName="SupplierCallNumberANS" />
@@ -9567,12 +9567,12 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="ANSPrefixOrig" ColumnName="ANSPrefixOrig" />
                 <ScalarProperty Name="CarrierCostYIGWOut" ColumnName="CarrierCostYIGWOut" />
                 <ScalarProperty Name="SubscriberChargeXOut" ColumnName="SubscriberChargeXOut" />
-                <ScalarProperty Name="RevenueVATCommissionOut" ColumnName="RevenueVATCommissionOut" />
+                <ScalarProperty Name="Tax2" ColumnName="Tax2" />
                 <ScalarProperty Name="RevenueICXOut" ColumnName="RevenueICXOut" />
                 <ScalarProperty Name="RevenueIGWOut" ColumnName="RevenueIGWOut" />
                 <ScalarProperty Name="RevenueANSOut" ColumnName="RevenueANSOut" />
                 <ScalarProperty Name="IGWRevenueIn" ColumnName="IGWRevenueIn" />
-                <ScalarProperty Name="CostVATCommissionIn" ColumnName="CostVATCommissionIn" />
+                <ScalarProperty Name="Tax1" ColumnName="Tax1" />
                 <ScalarProperty Name="CostICXIn" ColumnName="CostICXIn" />
                 <ScalarProperty Name="CostANSIn" ColumnName="CostANSIn" />
                 <ScalarProperty Name="SupplierCost" ColumnName="SupplierCost" />
@@ -9593,7 +9593,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="ReleaseCauseEgress" ColumnName="ReleaseCauseEgress" />
                 <ScalarProperty Name="ReleaseCauseSystem" ColumnName="ReleaseCauseSystem" />
                 <ScalarProperty Name="ReleaseDirection" ColumnName="ReleaseDirection" />
-                <ScalarProperty Name="MinuteID" ColumnName="MinuteID" />
+                <ScalarProperty Name="AreaCodeOrLata" ColumnName="AreaCodeOrLata" />
                 <ScalarProperty Name="CountryCode" ColumnName="CountryCode" />
                 <ScalarProperty Name="PDD" ColumnName="PDD" />
                 <ScalarProperty Name="ChargingStatus" ColumnName="ChargingStatus" />
@@ -9601,7 +9601,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="ConnectTime" ColumnName="ConnectTime" />
                 <ScalarProperty Name="EndTime" ColumnName="EndTime" />
                 <ScalarProperty Name="DurationSec" ColumnName="DurationSec" />
-                <ScalarProperty Name="CustomerPrePaid" ColumnName="CustomerPrePaid" />
+                <ScalarProperty Name="PrePaid" ColumnName="PrePaid" />
                 <ScalarProperty Name="TerminatingCallingNumber" ColumnName="TerminatingCallingNumber" />
                 <ScalarProperty Name="OriginatingCallingNumber" ColumnName="OriginatingCallingNumber" />
                 <ScalarProperty Name="TerminatingCalledNumber" ColumnName="TerminatingCalledNumber" />
@@ -9735,7 +9735,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="ChangedByJobId" ColumnName="ChangedByJobId" />
                 <ScalarProperty Name="SubCategory" ColumnName="SubCategory" />
                 <ScalarProperty Name="Category" ColumnName="Category" />
-                <ScalarProperty Name="BillngInfo" ColumnName="BillngInfo" />
+                <ScalarProperty Name="AdditionalMetaData" ColumnName="AdditionalMetaData" />
                 <ScalarProperty Name="UniqueBillId" ColumnName="UniqueBillId" />
                 <ScalarProperty Name="PreviousPeriodCdr" ColumnName="PreviousPeriodCdr" />
                 <ScalarProperty Name="Duration4" ColumnName="Duration4" />
@@ -9769,11 +9769,11 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="MediaIP2" ColumnName="MediaIP2" />
                 <ScalarProperty Name="MediaIP1" ColumnName="MediaIP1" />
                 <ScalarProperty Name="E1Id" ColumnName="E1Id" />
-                <ScalarProperty Name="WeekDayId" ColumnName="WeekDayId" />
+                <ScalarProperty Name="PreviousRoutes" ColumnName="PreviousRoutes" />
                 <ScalarProperty Name="BTRCTermRate" ColumnName="BTRCTermRate" />
-                <ScalarProperty Name="DayId" ColumnName="DayId" />
-                <ScalarProperty Name="MonthId" ColumnName="MonthId" />
-                <ScalarProperty Name="GrpDayId" ColumnName="GrpDayId" />
+                <ScalarProperty Name="ResellerIds" ColumnName="ResellerIds" />
+                <ScalarProperty Name="AdditionalPartyNumber" ColumnName="AdditionalPartyNumber" />
+                <ScalarProperty Name="AdditionalSystemCodes" ColumnName="AdditionalSystemCodes" />
                 <ScalarProperty Name="CallingPartyNOA" ColumnName="CallingPartyNOA" />
                 <ScalarProperty Name="CalledPartyNOA" ColumnName="CalledPartyNOA" />
                 <ScalarProperty Name="SupplierCallNumberANS" ColumnName="SupplierCallNumberANS" />
@@ -9787,12 +9787,12 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="ANSPrefixOrig" ColumnName="ANSPrefixOrig" />
                 <ScalarProperty Name="CarrierCostYIGWOut" ColumnName="CarrierCostYIGWOut" />
                 <ScalarProperty Name="SubscriberChargeXOut" ColumnName="SubscriberChargeXOut" />
-                <ScalarProperty Name="RevenueVATCommissionOut" ColumnName="RevenueVATCommissionOut" />
+                <ScalarProperty Name="Tax2" ColumnName="Tax2" />
                 <ScalarProperty Name="RevenueICXOut" ColumnName="RevenueICXOut" />
                 <ScalarProperty Name="RevenueIGWOut" ColumnName="RevenueIGWOut" />
                 <ScalarProperty Name="RevenueANSOut" ColumnName="RevenueANSOut" />
                 <ScalarProperty Name="IGWRevenueIn" ColumnName="IGWRevenueIn" />
-                <ScalarProperty Name="CostVATCommissionIn" ColumnName="CostVATCommissionIn" />
+                <ScalarProperty Name="Tax1" ColumnName="Tax1" />
                 <ScalarProperty Name="CostICXIn" ColumnName="CostICXIn" />
                 <ScalarProperty Name="CostANSIn" ColumnName="CostANSIn" />
                 <ScalarProperty Name="SupplierCost" ColumnName="SupplierCost" />
@@ -9813,7 +9813,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="ReleaseCauseEgress" ColumnName="ReleaseCauseEgress" />
                 <ScalarProperty Name="ReleaseCauseSystem" ColumnName="ReleaseCauseSystem" />
                 <ScalarProperty Name="ReleaseDirection" ColumnName="ReleaseDirection" />
-                <ScalarProperty Name="MinuteID" ColumnName="MinuteID" />
+                <ScalarProperty Name="AreaCodeOrLata" ColumnName="AreaCodeOrLata" />
                 <ScalarProperty Name="CountryCode" ColumnName="CountryCode" />
                 <ScalarProperty Name="PDD" ColumnName="PDD" />
                 <ScalarProperty Name="ChargingStatus" ColumnName="ChargingStatus" />
@@ -9821,7 +9821,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="ConnectTime" ColumnName="ConnectTime" />
                 <ScalarProperty Name="EndTime" ColumnName="EndTime" />
                 <ScalarProperty Name="DurationSec" ColumnName="DurationSec" />
-                <ScalarProperty Name="CustomerPrePaid" ColumnName="CustomerPrePaid" />
+                <ScalarProperty Name="PrePaid" ColumnName="PrePaid" />
                 <ScalarProperty Name="TerminatingCallingNumber" ColumnName="TerminatingCallingNumber" />
                 <ScalarProperty Name="OriginatingCallingNumber" ColumnName="OriginatingCallingNumber" />
                 <ScalarProperty Name="TerminatingCalledNumber" ColumnName="TerminatingCalledNumber" />
@@ -9845,7 +9845,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="ChangedByJobId" ColumnName="ChangedByJobId" />
                 <ScalarProperty Name="SubCategory" ColumnName="SubCategory" />
                 <ScalarProperty Name="Category" ColumnName="Category" />
-                <ScalarProperty Name="BillngInfo" ColumnName="BillngInfo" />
+                <ScalarProperty Name="AdditionalMetaData" ColumnName="AdditionalMetaData" />
                 <ScalarProperty Name="UniqueBillId" ColumnName="UniqueBillId" />
                 <ScalarProperty Name="PreviousPeriodCdr" ColumnName="PreviousPeriodCdr" />
                 <ScalarProperty Name="Duration4" ColumnName="Duration4" />
@@ -9879,11 +9879,11 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="MediaIP2" ColumnName="MediaIP2" />
                 <ScalarProperty Name="MediaIP1" ColumnName="MediaIP1" />
                 <ScalarProperty Name="E1Id" ColumnName="E1Id" />
-                <ScalarProperty Name="WeekDayId" ColumnName="WeekDayId" />
+                <ScalarProperty Name="PreviousRoutes" ColumnName="PreviousRoutes" />
                 <ScalarProperty Name="BTRCTermRate" ColumnName="BTRCTermRate" />
-                <ScalarProperty Name="DayId" ColumnName="DayId" />
-                <ScalarProperty Name="MonthId" ColumnName="MonthId" />
-                <ScalarProperty Name="GrpDayId" ColumnName="GrpDayId" />
+                <ScalarProperty Name="ResellerIds" ColumnName="ResellerIds" />
+                <ScalarProperty Name="AdditionalPartyNumber" ColumnName="AdditionalPartyNumber" />
+                <ScalarProperty Name="AdditionalSystemCodes" ColumnName="AdditionalSystemCodes" />
                 <ScalarProperty Name="CallingPartyNOA" ColumnName="CallingPartyNOA" />
                 <ScalarProperty Name="CalledPartyNOA" ColumnName="CalledPartyNOA" />
                 <ScalarProperty Name="SupplierCallNumberANS" ColumnName="SupplierCallNumberANS" />
@@ -9897,12 +9897,12 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="ANSPrefixOrig" ColumnName="ANSPrefixOrig" />
                 <ScalarProperty Name="CarrierCostYIGWOut" ColumnName="CarrierCostYIGWOut" />
                 <ScalarProperty Name="SubscriberChargeXOut" ColumnName="SubscriberChargeXOut" />
-                <ScalarProperty Name="RevenueVATCommissionOut" ColumnName="RevenueVATCommissionOut" />
+                <ScalarProperty Name="Tax2" ColumnName="Tax2" />
                 <ScalarProperty Name="RevenueICXOut" ColumnName="RevenueICXOut" />
                 <ScalarProperty Name="RevenueIGWOut" ColumnName="RevenueIGWOut" />
                 <ScalarProperty Name="RevenueANSOut" ColumnName="RevenueANSOut" />
                 <ScalarProperty Name="IGWRevenueIn" ColumnName="IGWRevenueIn" />
-                <ScalarProperty Name="CostVATCommissionIn" ColumnName="CostVATCommissionIn" />
+                <ScalarProperty Name="Tax1" ColumnName="Tax1" />
                 <ScalarProperty Name="CostICXIn" ColumnName="CostICXIn" />
                 <ScalarProperty Name="CostANSIn" ColumnName="CostANSIn" />
                 <ScalarProperty Name="SupplierCost" ColumnName="SupplierCost" />
@@ -9923,7 +9923,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="ReleaseCauseEgress" ColumnName="ReleaseCauseEgress" />
                 <ScalarProperty Name="ReleaseCauseSystem" ColumnName="ReleaseCauseSystem" />
                 <ScalarProperty Name="ReleaseDirection" ColumnName="ReleaseDirection" />
-                <ScalarProperty Name="MinuteID" ColumnName="MinuteID" />
+                <ScalarProperty Name="AreaCodeOrLata" ColumnName="AreaCodeOrLata" />
                 <ScalarProperty Name="CountryCode" ColumnName="CountryCode" />
                 <ScalarProperty Name="PDD" ColumnName="PDD" />
                 <ScalarProperty Name="ChargingStatus" ColumnName="ChargingStatus" />
@@ -9931,7 +9931,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="ConnectTime" ColumnName="ConnectTime" />
                 <ScalarProperty Name="EndTime" ColumnName="EndTime" />
                 <ScalarProperty Name="DurationSec" ColumnName="DurationSec" />
-                <ScalarProperty Name="CustomerPrePaid" ColumnName="CustomerPrePaid" />
+                <ScalarProperty Name="PrePaid" ColumnName="PrePaid" />
                 <ScalarProperty Name="TerminatingCallingNumber" ColumnName="TerminatingCallingNumber" />
                 <ScalarProperty Name="OriginatingCallingNumber" ColumnName="OriginatingCallingNumber" />
                 <ScalarProperty Name="TerminatingCalledNumber" ColumnName="TerminatingCalledNumber" />

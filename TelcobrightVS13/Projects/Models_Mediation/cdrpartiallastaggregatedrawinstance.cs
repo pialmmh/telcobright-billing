@@ -27,16 +27,16 @@ namespace MediationModel
         public string TerminatingCalledNumber { get; set; }
         public string OriginatingCallingNumber { get; set; }
         public string TerminatingCallingNumber { get; set; }
-        public Nullable<byte> PrePaid { get; set; }
+        public Nullable<int> PrePaid { get; set; }
         public decimal DurationSec { get; set; }
         public System.DateTime EndTime { get; set; }
         public Nullable<System.DateTime> ConnectTime { get; set; }
         public Nullable<System.DateTime> AnswerTime { get; set; }
-        public Nullable<byte> ChargingStatus { get; set; }
+        public Nullable<int> ChargingStatus { get; set; }
         public Nullable<float> PDD { get; set; }
         public string CountryCode { get; set; }
-        public Nullable<int> AreaCodeOrLata { get; set; }
-        public Nullable<byte> ReleaseDirection { get; set; }
+        public string AreaCodeOrLata { get; set; }
+        public Nullable<int> ReleaseDirection { get; set; }
         public Nullable<int> ReleaseCauseSystem { get; set; }
         public Nullable<int> ReleaseCauseEgress { get; set; }
         public string outgoingroute { get; set; }
@@ -69,17 +69,17 @@ namespace MediationModel
         public string AnsPrefixTerm { get; set; }
         public Nullable<int> AnsIdTerm { get; set; }
         public Nullable<int> validflag { get; set; }
-        public Nullable<sbyte> PartialFlag { get; set; }
+        public Nullable<int> PartialFlag { get; set; }
         public Nullable<int> releasecauseingress { get; set; }
         public Nullable<long> CustomerCallNumberANS { get; set; }
         public Nullable<long> SupplierCallNumberANS { get; set; }
-        public Nullable<byte> CalledPartyNOA { get; set; }
-        public Nullable<byte> CallingPartyNOA { get; set; }
-        public Nullable<long> AdditionalSystemCodes { get; set; }
-        public Nullable<byte> AdditionalPartyNumber { get; set; }
-        public Nullable<int> ResellerIds { get; set; }
+        public Nullable<int> CalledPartyNOA { get; set; }
+        public Nullable<int> CallingPartyNOA { get; set; }
+        public string AdditionalSystemCodes { get; set; }
+        public string AdditionalPartyNumber { get; set; }
+        public string ResellerIds { get; set; }
         public Nullable<decimal> BTRCTermRate { get; set; }
-        public Nullable<int> PreviousRoutes { get; set; }
+        public string PreviousRoutes { get; set; }
         public Nullable<int> E1Id { get; set; }
         public string MediaIP1 { get; set; }
         public string MediaIP2 { get; set; }
@@ -91,11 +91,11 @@ namespace MediationModel
         public string outTrunkAdditionalInfo { get; set; }
         public string inMgwId { get; set; }
         public string outMgwId { get; set; }
-        public Nullable<sbyte> mediationcomplete { get; set; }
+        public Nullable<int> mediationcomplete { get; set; }
         public string codec { get; set; }
-        public Nullable<byte> ConnectedNumberType { get; set; }
+        public Nullable<int> ConnectedNumberType { get; set; }
         public string RedirectingNumber { get; set; }
-        public Nullable<byte> CallForwardOrRoamingType { get; set; }
+        public Nullable<int> CallForwardOrRoamingType { get; set; }
         public Nullable<System.DateTime> date1 { get; set; }
         public Nullable<int> field1 { get; set; }
         public Nullable<int> field2 { get; set; }

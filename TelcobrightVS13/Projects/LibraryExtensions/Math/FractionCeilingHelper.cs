@@ -15,9 +15,9 @@ namespace TelcobrightMediation.Accounting
         private int MaxAllowedFractionPrecissionByTelcobright { get; } = 8;
         private int CeilingAtFractionalPosition { get; }
 
-        public FractionCeilingHelper(string amount, int ceilingAtFractionalPosition)
+        public FractionCeilingHelper(decimal amount, int ceilingAtFractionalPosition)
         {
-            this.Amount = amount;
+            this.Amount = amount.ToString(CultureInfo.InvariantCulture);
             this.CeilingAtFractionalPosition = ceilingAtFractionalPosition;
             if (this.CeilingAtFractionalPosition >= this.MaxAllowedFractionPrecissionByTelcobright)
             {
@@ -25,9 +25,9 @@ namespace TelcobrightMediation.Accounting
             }
         }
 
-        public string GetFormattedNumber()
+        public decimal GetPreciseDecimal()
         {
-            if (this.Amount.Contains(".") == false) return this.Amount;
+            if (this.Amount.Contains(".") == false) return Convert.ToDecimal(this.Amount);
             string[] tempArr = this.Amount.Split('.');
             string nonFracPart = tempArr[0];
             string fracPart = GetFixedLengthFracPart(tempArr[1]);
@@ -36,8 +36,7 @@ namespace TelcobrightMediation.Accounting
             string fullNumber = new StringBuilder(nonFracPart).Append(".").Append(fracpartUpToCeilingPosition)
                 .ToString();
             decimal multiplier = Convert.ToDecimal(Math.Pow(10, this.CeilingAtFractionalPosition));
-            return (Math.Ceiling(Convert.ToDecimal(fullNumber) * multiplier) / multiplier).ToString(CultureInfo
-                .InvariantCulture);
+            return (Math.Ceiling(Convert.ToDecimal(fullNumber) * multiplier) / multiplier);
         }
 
         private string GetFixedLengthFracPart(string fracPart)
