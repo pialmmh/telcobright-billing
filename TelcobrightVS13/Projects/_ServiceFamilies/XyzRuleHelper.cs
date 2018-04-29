@@ -74,6 +74,7 @@ namespace TelcobrightMediation
             thisCdr.UsdRateY = Convert.ToDecimal(conversionRate.CONVERSION_FACTOR);
             decimal yBdt = yAmountUsd * (decimal) thisCdr.UsdRateY;
             decimal zAmount = xAmountBdt - yBdt;
+            thisCdr.ZAmount = zAmount;
             decimal fifteenPcOfZ = Convert.ToDecimal(zAmount * matchedRateWithAssignmentTupleId.OtherAmount2) / 100;
             decimal finalAmount = 0;
             switch (xyzRatingType)

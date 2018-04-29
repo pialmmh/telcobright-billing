@@ -26,8 +26,8 @@ namespace Decoders
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
 
-            List<cdrfieldmappingbyswitchtype> lstFieldMapping = null;
-            input.MefDecodersData.DicFieldMapping.TryGetValue(this.Id, out lstFieldMapping);
+            List<cdrfieldmappingbyswitchtype> fieldMappings = null;
+            input.MefDecodersData.DicFieldMapping.TryGetValue(this.Id, out fieldMappings);
             string zteStartofTimeStr = "2000-01-01 00:00:00"; // <-- Valid
             string format = "yyyy-MM-dd HH:mm:ss";
             DateTime zteStartofTime;
@@ -52,16 +52,16 @@ namespace Decoders
                     thisRow = new string[input.MefDecodersData.Totalfieldtelcobright];
                     DateTime zteAnswerTime = DateTime.Now;
                     DateTime zteEndTime = DateTime.Now;
-                    foreach (cdrfieldmappingbyswitchtype thisField in lstFieldMapping) //for each field
+                    foreach (cdrfieldmappingbyswitchtype fldMapping in fieldMappings) //for each field
                     {
-                        if (thisField.BinByteOffset == null) //field is not present in cdr
+                        if (fldMapping.BinByteOffset == null) //field is not present in cdr
                         {
-                            thisRow[thisField.FieldNumber] = "";
+                            thisRow[fldMapping.FieldNumber] = "";
                         }
                         else //field is present in CDR and get the string representation by huawei data type
                         {
                             //float to int conversion of offset value 
-                            string thisOffSetStr = thisField.BinByteOffset.ToString();
+                            string thisOffSetStr = fldMapping.BinByteOffset.ToString();
                             int posDot = thisOffSetStr.IndexOf(".");
                             int thisOffSetInt = 0;
                             float bitOffSet = 0;
@@ -88,7 +88,7 @@ namespace Decoders
                             }
                             //float to int conversion of Length, will work for 0.125 types of values only
                             //has to add the logic to make 1.125 types of value
-                            string thisLenStr = thisField.BinByteLen.ToString();
+                            string thisLenStr = fldMapping.BinByteLen.ToString();
                             posDot = thisLenStr.IndexOf(".");
                             Single thisLenFloat = 0;
                             //read number of bit length from byte based on this calc...
@@ -118,11 +118,11 @@ namespace Decoders
                             int intEquivalentBits = 0;
                             if (bitOffSet == 0) //regular byte array, no fractional bit
                             {
-                                if (thisField.BinByteLen >= 1)
+                                if (fldMapping.BinByteLen >= 1)
                                 {
-                                    fieldAsByte = new byte[Convert.ToInt32(thisField.BinByteLen)];
+                                    fieldAsByte = new byte[Convert.ToInt32(fldMapping.BinByteLen)];
                                     Buffer.BlockCopy(a, Convert.ToInt32(thisOffSetInt + (rowCnt * zteFixedBytePerRows)),
-                                        fieldAsByte, 0, Convert.ToInt32(thisField.BinByteLen));
+                                        fieldAsByte, 0, Convert.ToInt32(fldMapping.BinByteLen));
                                 }
                                 else //read certain bits of length <1 e.g. .25 from the byte
                                 {
@@ -146,13 +146,13 @@ namespace Decoders
                             }
 
                             string strThisField = "";
-                            switch (thisField.BinByteType)
+                            switch (fldMapping.BinByteType)
                             {
                                 case "unsigned short":
 
                                     strThisField = BinCdr.ByteArrayToUInt16BigIndian(fieldAsByte).ToString();
 
-                                    if (thisField.FieldNumber == 74) //OutTrkGroupNo
+                                    if (fldMapping.FieldNumber == 74) //OutTrkGroupNo
                                     {
                                         //set TG for international incoming 
                                         if ((thisRow[73] == "0") || (thisRow[33] == "1")) //InTrkGrpno=0 and OutMg=1
@@ -181,7 +181,7 @@ namespace Decoders
                                 case "unsigned char":
 
 
-                                    if (thisField.FieldNumber == 55) // cdr type, interim, final etc.
+                                    if (fldMapping.FieldNumber == 55) // cdr type, interim, final etc.
                                     {
                                         //0：one record
                                         //1：first part
@@ -198,17 +198,17 @@ namespace Decoders
                                     //for valid id field
                                     //0=valid
                                     //1=invalid
-                                    else if ((thisField.FieldNumber == 18)) //charging status
+                                    else if ((fldMapping.FieldNumber == 18)) //charging status
                                     {
                                         strThisField = intEquivalentBits.ToString();
                                     }
-                                    else if ((thisField.FieldNumber == 54)) ////valid flag, 
+                                    else if ((fldMapping.FieldNumber == 54)) ////valid flag, 
 
                                     {
                                         strThisField = intEquivalentBits==0?"1":"0" ; //0 = valid for zte, so invert
                                     }
 
-                                    else if ((thisField.FieldNumber == 22)) //release direction
+                                    else if ((fldMapping.FieldNumber == 22)) //release direction
                                     {
                                         strThisField = intEquivalentBits.ToString();
                                     }
@@ -230,10 +230,11 @@ namespace Decoders
                                     //TerminatingCallingNumber 12  
 
                                     if (
-                                            (thisField.FieldNumber == 9) ||
-                                            (thisField.FieldNumber == 10) ||
-                                            (thisField.FieldNumber == 11) ||
-                                            (thisField.FieldNumber == 12)) //||
+                                            (fldMapping.FieldNumber == 80) ||//redirectingnumber
+                                        (fldMapping.FieldNumber == 9) ||
+                                            (fldMapping.FieldNumber == 10) ||
+                                            (fldMapping.FieldNumber == 11) ||
+                                            (fldMapping.FieldNumber == 12)) //||
                                                                            //(ThisField.FieldNumber == 80)) have to find re-direct number field for zte
                                     {
                                         strThisField = BinCdr.BcdToDigitStringZte(fieldAsByte).ToString();
@@ -259,7 +260,7 @@ namespace Decoders
 
                                     UInt32 elapsedSeconds = BinCdr.ByteArrayToZteSeconds(b);
 
-                                    if (thisField.FieldNumber == 29) //start time
+                                    if (fldMapping.FieldNumber == 29) //start time
                                     {
                                         //take intrkconnecttime or outtrkconnecttime, whichever is present
                                         //if both are 0, then use answer time
@@ -274,10 +275,10 @@ namespace Decoders
                                         {
                                             //read outtrkconnecttime
                                             byte[] tempFieldAsByte = null;
-                                            tempFieldAsByte = new byte[Convert.ToInt32(thisField.BinByteLen)];
+                                            tempFieldAsByte = new byte[Convert.ToInt32(fldMapping.BinByteLen)];
                                             Buffer.BlockCopy(a,
                                                 Convert.ToInt32(thisOffSetInt + 41 + (rowCnt * zteFixedBytePerRows)),
-                                                tempFieldAsByte, 0, Convert.ToInt32(thisField.BinByteLen));
+                                                tempFieldAsByte, 0, Convert.ToInt32(fldMapping.BinByteLen));
 
                                             byte[] b1 = new byte[4];
                                             int j1 = 0;
@@ -297,10 +298,10 @@ namespace Decoders
                                         {
                                             //read outtrkconnecttime
                                             byte[] tempFieldAsByte = null;
-                                            tempFieldAsByte = new byte[Convert.ToInt32(thisField.BinByteLen)];
+                                            tempFieldAsByte = new byte[Convert.ToInt32(fldMapping.BinByteLen)];
                                             Buffer.BlockCopy(a,
                                                 Convert.ToInt32(thisOffSetInt - 19 + (rowCnt * zteFixedBytePerRows)),
-                                                tempFieldAsByte, 0, Convert.ToInt32(thisField.BinByteLen));
+                                                tempFieldAsByte, 0, Convert.ToInt32(fldMapping.BinByteLen));
 
                                             byte[] b1 = new byte[4];
                                             int j1 = 0;
@@ -322,12 +323,12 @@ namespace Decoders
                                     thisDateTime = thisDateTime.AddMilliseconds(m10 * 10); //milli seconds part addition
                                     strThisField = thisDateTime.ToString("yyyy-MM-dd HH:mm:ss");
 
-                                    if (thisField.FieldNumber == 15) //end time
+                                    if (fldMapping.FieldNumber == 15) //end time
                                     {
                                         zteEndTime = thisDateTime;
                                     }
 
-                                    else if (thisField.FieldNumber == 17) //answer time
+                                    else if (fldMapping.FieldNumber == 17) //answer time
                                     {
                                         zteAnswerTime = thisDateTime;
 
@@ -348,7 +349,7 @@ namespace Decoders
                                     break;
 
                             } //switch
-                            thisRow[thisField.FieldNumber] = strThisField;
+                            thisRow[fldMapping.FieldNumber] = strThisField;
                         } //if field present in CDR
                         //fieldCnt++;
 

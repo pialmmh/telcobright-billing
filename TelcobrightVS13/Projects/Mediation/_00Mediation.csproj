@@ -261,7 +261,6 @@
     <Compile Include="Mediation\TelcobrightProcess.cs" />
     <Compile Include="MefData\_Composers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="_Rating\XyzRuleHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
