@@ -84,9 +84,9 @@ namespace Jobs
             });
             if (preProcessor.InconsistentCdrs.Any())
             {
-                List<long> inconsistentIdCalls = preProcessor.InconsistentCdrs.Select(c => Convert.ToInt64(c.idcall)).ToList();
+                List<long> inconsistentIdCalls = preProcessor.InconsistentCdrs.Select(c => Convert.ToInt64(c.IdCall)).ToList();
                 preProcessor.TxtCdrRows = preProcessor.TxtCdrRows
-                    .Where(c => !inconsistentIdCalls.Contains(Convert.ToInt64(c[Fn.Idcall])))
+                    .Where(c => !inconsistentIdCalls.Contains(Convert.ToInt64(c[Fn.IdCall])))
                     .ToList();
             }
             

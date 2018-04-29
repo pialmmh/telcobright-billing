@@ -161,7 +161,7 @@ namespace PortalApp.reports.Accounts
                         using (MySqlCommand cmd = con.CreateCommand())
                         {
                             string query = "select DATE_FORMAT(calldate,'%d-%b-%y') as `Date`,DATE_FORMAT(AnswerTime, '%d-%m-%Y %H:%i:%s') as 'Call Start Time',DATE_FORMAT(EndTime, '%d-%m-%Y %H:%i:%s') as 'Call End Time', p.PartnerName as `Ingress Carrier`"
-                                           + " ,OriginatingIP as `Inbound IP`, originatingCallingNumber as `A Number`, MediaIP4 as `B Number`, left(SUBSTRING_INDEX(MatchedPrefixCustomer,')',1),5) as `Dial Code`"
+                                           + " ,OriginatingIP as `Inbound IP`, originatingCallingNumber as `A Number`, MediaIp4 as `B Number`, left(SUBSTRING_INDEX(MatchedPrefixCustomer,')',1),5) as `Dial Code`"
                                            + " ,substring(SUBSTRING_INDEX(MatchedPrefixCustomer,')',1),8) as 'Destination',round(duration,2) as `Duration (Min)`,customerrate as `Rate ($)`, round(IngressAmount,5) as `Amount ($)`"
                                            + " from"
                                            + " (select date(starttime) as CallDate, customerid, duration1/60 as duration, customerrate, customercost as IngressAmount,"
@@ -308,7 +308,7 @@ namespace PortalApp.reports.Accounts
                                         + " TotalCalls as `Call Qty.`,ROUND(duration1,2) as `Duration (Min)`,customerrate as `Rate ($)`, round(IngressAmount,5) as `Amount ($)`"
                                         + " from"
                                         + " (select date(starttime) as CallDate,count(*) as TotalCalls,customerid,sum(duration1)/60 as duration1,customerrate,sum(customercost) as IngressAmount,"
-                                        + " matchedprefixcustomer,StartTime,idcall"
+                                        + " matchedprefixcustomer,StartTime,IdCall"
                                         + " from cdrloaded"
                                         + " where starttime>='" + this._startdatetime + "'"
                                         + " and starttime<='" + this._enddatetime + "'"
@@ -320,7 +320,7 @@ namespace PortalApp.reports.Accounts
                                         + " left join partner p"
                                         + " on x.customerid=p.idpartner"
                                         + " join billinfo pd"
-                                        + " on x.idcall=pd.idcall"
+                                        + " on x.IdCall=pd.IdCall"
                                         + " and x.starttime=pd.starttime"
                                         + " and pd.servicefamily=1"
                                         + " order by calldate";
@@ -456,7 +456,7 @@ namespace PortalApp.reports.Accounts
                                         + " TotalCalls as `Call Qty.`,ROUND(duration1,2) as `Duration (Min)`,customerrate as `Rate ($)`, round(IngressAmount,5) as `Amount ($)`"
                                         + " from"
                                         + " (select date(starttime) as CallDate,count(*) as TotalCalls,customerid,sum(duration1)/60 as duration1,customerrate,sum(customercost) as IngressAmount,"
-                                        + " matchedprefixcustomer,StartTime,idcall"
+                                        + " matchedprefixcustomer,StartTime,IdCall"
                                         + " from cdr"
                                         + " where starttime>='" + this._startdatetime + "'"
                                         + " and starttime<='" + this._enddatetime + "'"
@@ -469,7 +469,7 @@ namespace PortalApp.reports.Accounts
                                         + " left join partner p"
                                         + " on x.customerid=p.idpartner"
                                         + " join billinfo pd"
-                                        + " on x.idcall=pd.idcall"
+                                        + " on x.IdCall=pd.IdCall"
                                         + " and x.starttime=pd.starttime"
                                         + " and pd.servicefamily=1"
                                         + " order by calldate"; 

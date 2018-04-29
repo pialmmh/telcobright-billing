@@ -32,7 +32,7 @@ namespace TelcobrightMediation
 
         public int GetChargedOrChargingPartnerId(CdrExt newCdrExt,ServiceContext serviceContext)//thisrow,assignDir,return idPartner who's charged or charging
         {
-            return Convert.ToInt32(newCdrExt.Cdr.outPartnerId);
+            return Convert.ToInt32(newCdrExt.Cdr.OutPartnerId);
         }
         public void Execute(CdrExt cdrExt,ServiceContext serviceContext)
         {
@@ -44,20 +44,20 @@ namespace TelcobrightMediation
             //int serviceFamily = Id;
             //PrefixMatcher pr = new PrefixMatcher(serviceFamily, serviceContext.CdrJob.MediationContext.RatingData, serviceContext.AssignDir);
             //DateTime answerTime = new DateTime();
-            //if (thisCdr[Fn.Chargingstatus] == "1")
+            //if (thisCdr[Fn.ChargingStatus] == "1")
             //{
-            //    if (DateTime.TryParseExact(thisCdr[Fn.Answertime], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture,
+            //    if (DateTime.TryParseExact(thisCdr[Fn.AnswerTime], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture,
             //        DateTimeStyles.None, out answerTime) == false)
             //    {
-            //        throw new Exception("Could not parse Answertime!");//answer time can't be null for suc.calls
+            //        throw new Exception("Could not parse AnswerTime!");//answer time can't be null for suc.calls
             //    }
             //}
             //else//failed call, use start time as answertime, for prefix matching, duration and amount will be 0
             //{
-            //    if (DateTime.TryParseExact(thisCdr[Fn.Starttime], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture,
+            //    if (DateTime.TryParseExact(thisCdr[Fn.StartTime], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture,
             //        DateTimeStyles.None, out answerTime) == false)
             //    {
-            //        throw new Exception("Could not parse Answertime!");//answer time can't be null for suc.calls
+            //        throw new Exception("Could not parse AnswerTime!");//answer time can't be null for suc.calls
             //    }
             //}
             //int tempCategory = -1;//default 1=call
@@ -90,8 +90,8 @@ namespace TelcobrightMediation
 
             //thisCdr[Fn.Costvatcommissionin] = btrcAmount.ToString();
             //thisCdr[Fn.Costicxin] = icxAmount.ToString();
-            //thisCdr[Fn.Costansin] = ansAmount.ToString();
-            //thisCdr[Fn.Matchedprefixsupplier] = thisRate.Prefix;
+            //thisCdr[Fn.CostAnsIn] = ansAmount.ToString();
+            //thisCdr[Fn.MatchedPrefixSupplier] = thisRate.Prefix;
             //thisCdr[Fn.Roundedduration] = finalDuration.ToString();
 
             //if (thisRate != null)

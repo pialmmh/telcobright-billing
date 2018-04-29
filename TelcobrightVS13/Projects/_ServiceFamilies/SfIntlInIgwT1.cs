@@ -23,7 +23,7 @@ namespace TelcobrightMediation
         public int Id => 3;
         public int GetChargedOrChargingPartnerId(CdrExt newCdrExt, ServiceContext serviceContext)//thisrow,assignDir,return idPartner who's charged or charging
         {
-            return Convert.ToInt32(newCdrExt.Cdr.outPartnerId);
+            return Convert.ToInt32(newCdrExt.Cdr.OutPartnerId);
         }
 
         public AccChargeableExt Execute(CdrExt cdrExt, ServiceContext serviceContext, bool flagLcr)
@@ -88,10 +88,10 @@ namespace TelcobrightMediation
             iosTotalAmount = iosFirstAmount + additionalAmountIof;
 
             thisCdr.Tax1 = Convert.ToDecimal(btrcAmount);
-            thisCdr.CostICXIn = Convert.ToDecimal(iosTotalAmount);
+            thisCdr.CostIcxIn = Convert.ToDecimal(iosTotalAmount);
 
-            thisCdr.matchedprefixsupplier = matchedRateWithAssignmentTupleId.Prefix;
-            thisCdr.roundedduration = finalDuration;
+            thisCdr.MatchedPrefixSupplier = matchedRateWithAssignmentTupleId.Prefix;
+            thisCdr.RoundedDuration = finalDuration;
             thisCdr.SupplierRate = matchedRateWithAssignmentTupleId.rateamount;
             int idChargedPartner = GetChargedOrChargingPartnerId(cdrExt, serviceContext);
             BillingRule billingRule = GetBillingRule(serviceContext,
@@ -112,7 +112,7 @@ namespace TelcobrightMediation
                     id = serviceContext.CdrProcessor.CdrJobContext.AccountingContext.AutoIncrementManager
                         .GetNewCounter("acc_chargeable"),
                     uniqueBillId = thisCdr.UniqueBillId,
-                    idEvent = Convert.ToInt64(thisCdr.idcall),
+                    idEvent = Convert.ToInt64(thisCdr.IdCall),
                     transactionTime = thisCdr.StartTime,
                     servicegroup = serviceContext.ServiceGroupConfiguration.IdServiceGroup,
                     assignedDirection = 2, //indicates a bill by supplier (IOS/ICX)

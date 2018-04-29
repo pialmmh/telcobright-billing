@@ -85,7 +85,7 @@ namespace TelcobrightMediation
         public void DeleteOldCdrs()
         {
             int delCount = OldCdrDeleter.DeleteOldCdrs("cdr", this.CollectionResult.ProcessedCdrExts
-                    .Select(c => new KeyValuePair<long, DateTime>(c.Cdr.idcall, c.StartTime)).ToList(),
+                    .Select(c => new KeyValuePair<long, DateTime>(c.Cdr.IdCall, c.StartTime)).ToList(),
                 this.CdrJobContext.SegmentSizeForDbWrite, this.CdrJobContext.DbCmd);
             if (delCount != this.CollectionResult.RawCount)
                 throw new Exception("Deleted number of cdrs do not match raw count in collection result.");

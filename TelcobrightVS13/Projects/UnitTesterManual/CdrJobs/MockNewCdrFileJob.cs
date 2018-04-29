@@ -72,7 +72,7 @@ namespace UnitTesterManual
                 this.rawPartialCount = partialRows.Count;
                 if (preProcessor.TxtCdrRows.Count!=this.nonPartialCount+this.rawPartialCount)
                     throw new Exception("TxtCdr rows with partial & non-partial flag do not match total decoded text rows");
-                this.distinctPartialCount = partialRows.GroupBy(r => r[Fn.Uniquebillid]).Count();
+                this.distinctPartialCount = partialRows.GroupBy(r => r[Fn.UniqueBillId]).Count();
             }
 
             CdrCollectionResult newCollectionResult = null;

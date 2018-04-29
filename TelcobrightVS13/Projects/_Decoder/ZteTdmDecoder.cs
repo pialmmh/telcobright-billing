@@ -25,8 +25,8 @@ namespace Decoders
             List<string[]> decodedRows = base.DecodeFile(input, out inconsistentCdrs);
             decodedRows.ForEach(row =>
             {
-                row[Fn.Incomingroute] = row[Fn.InTrunkAdditionalInfo];
-                row[Fn.Outgoingroute] = row[Fn.OutTrunkAdditionalInfo];
+                row[Fn.IncomingRoute] = row[Fn.InTrunkAdditionalInfo];
+                row[Fn.OutgoingRoute] = row[Fn.OutTrunkAdditionalInfo];
             });
             return decodedRows;
         }

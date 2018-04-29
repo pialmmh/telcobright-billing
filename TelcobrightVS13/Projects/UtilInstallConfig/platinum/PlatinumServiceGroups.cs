@@ -41,12 +41,12 @@ namespace InstallConfig
                                 "DurationSec must be >=  0"
                             },
                             {
-                                "!String.IsNullOrEmpty(obj.outgoingroute) and !String.IsNullOrWhiteSpace(obj.outgoingroute)",
-                                "outgoingroute cannot be empty"
+                                "!String.IsNullOrEmpty(obj.OutgoingRoute) and !String.IsNullOrWhiteSpace(obj.OutgoingRoute)",
+                                "OutgoingRoute cannot be empty"
                             },
                             {
-                                "obj.outPartnerId > 0",
-                                "outPartnerId must be > 0"
+                                "obj.OutPartnerId > 0",
+                                "OutPartnerId must be > 0"
                             },
                             {
                                 "!String.IsNullOrEmpty(obj.CountryCode) and !String.IsNullOrWhiteSpace(obj.CountryCode)",
@@ -57,12 +57,12 @@ namespace InstallConfig
                                 "matchedprefixcustomer cannot be empty"
                             },
                             {
-                                "obj.durationsec > 0 ? obj.CustomerCost > 0 : obj.CustomerCost == 0 ",
-                                "CustomerCost must be > 0 when durationsec > 0  , otherwise == 0 "
+                                "obj.durationsec > 0 ? obj.InPartnerCost > 0 : obj.InPartnerCost == 0 ",
+                                "InPartnerCost must be > 0 when durationsec > 0  , otherwise == 0 "
                             },
                             {
-                                "obj.CostICXIn >= 0",
-                                "CostICXIn must be >=  0"
+                                "obj.CostIcxIn >= 0",
+                                "CostIcxIn must be >=  0"
                             },
                             {
                                 "obj.CostVATCommissionIn >= 0",
@@ -104,12 +104,12 @@ namespace InstallConfig
                                 "CountryCode cannot be empty"
                             },
                             {
-                                "!String.IsNullOrEmpty(obj.outgoingroute) and !String.IsNullOrWhiteSpace(obj.outgoingroute)",
-                                "outgoingroute cannot be empty"
+                                "!String.IsNullOrEmpty(obj.OutgoingRoute) and !String.IsNullOrWhiteSpace(obj.OutgoingRoute)",
+                                "OutgoingRoute cannot be empty"
                             },
                             {
-                                "obj.outPartnerId > 0",
-                                "outPartnerId must be > 0"
+                                "obj.OutPartnerId > 0",
+                                "OutPartnerId must be > 0"
                             },
                             {
                                 "!String.IsNullOrEmpty(obj.MatchedPrefixY) and !String.IsNullOrWhiteSpace(obj.MatchedPrefixY)",
@@ -120,12 +120,12 @@ namespace InstallConfig
                                 "matchedprefixsupplier cannot be empty"
                             },
                             {
-                                "obj.durationsec > 0 ? obj.SupplierCost > 0 : obj.SupplierCost == 0 ",
-                                "SupplierCost must be > 0 when durationsec > 0 , otherwise == 0"
+                                "obj.durationsec > 0 ? obj.OutPartnerCost > 0 : obj.OutPartnerCost == 0 ",
+                                "OutPartnerCost must be > 0 when durationsec > 0 , otherwise == 0"
                             },
                             {
-                                "obj.durationsec > 0 ? obj.RevenueIGWOut > 0 : obj.RevenueIGWOut == 0 ",
-                                "RevenueIGWOut must be > 0 when durationsec > 0 , otherwise == 0"
+                                "obj.durationsec > 0 ? obj.RevenueIgwOut > 0 : obj.RevenueIgwOut == 0 ",
+                                "RevenueIgwOut must be > 0 when durationsec > 0 , otherwise == 0"
                             },
                             {
                                 "obj.durationsec > 0 ? obj.SubscriberChargeXOut > 0 : obj.SubscriberChargeXOut == 0 ",

@@ -26,9 +26,9 @@ public partial class DefaultCauseRouteIntlInCallView2 : System.Web.UI.Page
     string _causecode="";
     string _causecodecount = "";
     string _sqlquerystring = "";
-    string _incomingRoute = "";
+    string _IncomingRoute = "";
     int? _switchIdInco=-1;
-    string _outgoingRoute = "";
+    string _OutgoingRoute = "";
     int? _switchIdOut = -1;
     int _startindex = 0;
     //int endindex = startindex + 99;
@@ -87,7 +87,7 @@ public partial class DefaultCauseRouteIntlInCallView2 : System.Web.UI.Page
         tempgridval.Add(Session["CauseRouteInternationalInCallView.aspx.csgridans"]);// = row.Cells[3].Text;
         tempgridval.Add(Session["CauseRouteInternationalInCallView.aspx.csgridicx"]);// = row.Cells[4].Text;
         tempgridval.Add(Session["CauseRouteInternationalInCallView.aspx.csgridpartner"]);// = row.Cells[5].Text;
-        tempgridval.Add(Session["CauseRouteInternationalInCallView.aspx.csgridcallsstatus"]);// = row.Cells[6].Text;
+        tempgridval.Add(Session["CauseRouteInternationalInCallView.aspx.csgrIdCallsstatus"]);// = row.Cells[6].Text;
         tempgridval.Add(Session["CauseRouteInternationalInCallView.aspx.csgridcausecodecount"]);// = row.Cells[8].Text;
         tempgridval.Add(Session["CauseRouteInternationalInCallView.aspx.csstartdate"]);// = txtDate.Text;
         tempgridval.Add(Session["CauseRouteInternationalInCallView.aspx.csenddate"]);// = textDate1.Text;
@@ -195,7 +195,7 @@ public partial class DefaultCauseRouteIntlInCallView2 : System.Web.UI.Page
             dicParameters.TryGetValue("gridans", out this._ans);
             dicParameters.TryGetValue("gridicx", out this._icx);
             dicParameters.TryGetValue("gridpartner", out this._partner);
-            dicParameters.TryGetValue("gridcallsstatus", out this._callsstatus);
+            dicParameters.TryGetValue("grIdCallsstatus", out this._callsstatus);
             dicParameters.TryGetValue("gridcause", out this._causecode);
             dicParameters.TryGetValue("gridcausecodecount", out this._causecodecount);
 
@@ -231,33 +231,33 @@ public partial class DefaultCauseRouteIntlInCallView2 : System.Web.UI.Page
             //}
         }
 
-        //icx=outgoingroute
-        //partner=incomingroute
+        //icx=OutgoingRoute
+        //partner=IncomingRoute
         string supplierName = "";
         string customerName = "";
         int posBracket = 0;
         if (this._icx != "null" && this._icx != "")
         {
             posBracket = this._icx.IndexOf("(");
-            this._outgoingRoute = this._icx.Substring(0, posBracket - 2);
+            this._OutgoingRoute = this._icx.Substring(0, posBracket - 2);
             supplierName = this._icx.Substring(posBracket + 1, this._icx.Length - posBracket - 2);
 
             using (PartnerEntities context = new PartnerEntities())
             {
                 int idSupplier = context.partners.Where(c => c.PartnerName == supplierName).First().idPartner;
-                this._switchIdOut = context.routes.Where(c => (c.RouteName == this._outgoingRoute && c.idPartner == idSupplier)).First().SwitchId;
+                this._switchIdOut = context.routes.Where(c => (c.RouteName == this._OutgoingRoute && c.idPartner == idSupplier)).First().SwitchId;
             }
         }
 
         if (this._partner != "null" && this._partner != "")
         {
             posBracket = this._partner.IndexOf("(");
-            this._incomingRoute = this._partner.Substring(0, posBracket - 1);
+            this._IncomingRoute = this._partner.Substring(0, posBracket - 1);
             customerName = this._partner.Substring(posBracket + 1, this._partner.Length - posBracket-2);
             using (PartnerEntities context = new PartnerEntities())
             {
                 int idCustomer = context.partners.Where(c => c.PartnerName == customerName).First().idPartner;
-                this._switchIdInco = context.routes.Where(c => (c.RouteName == this._incomingRoute && c.idPartner == idCustomer)).First().SwitchId;
+                this._switchIdInco = context.routes.Where(c => (c.RouteName == this._IncomingRoute && c.idPartner == idCustomer)).First().SwitchId;
             }
         }
         
@@ -322,11 +322,11 @@ public partial class DefaultCauseRouteIntlInCallView2 : System.Web.UI.Page
         }
         if (this._icx!="")
         {
-            sqlstring += " and outgoingroute='"+ this._outgoingRoute+"' and switchid="+ this._switchIdOut  ;
+            sqlstring += " and OutgoingRoute='"+ this._OutgoingRoute+"' and switchid="+ this._switchIdOut  ;
         }
         if (this._partner!="")
         {
-            sqlstring += " and incomingroute='"+ this._incomingRoute+"' and switchid="+ this._switchIdInco;
+            sqlstring += " and IncomingRoute='"+ this._IncomingRoute+"' and switchid="+ this._switchIdInco;
         }
         if (this._causecode != "")
         {

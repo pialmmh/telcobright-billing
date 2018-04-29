@@ -5,11 +5,11 @@ namespace MediationModel
     public interface ICdr
     {
          int SwitchId { get; set; }
-         long idcall { get; set; }
+         long IdCall { get; set; }
          long SequenceNumber { get; set; }
          string FileName { get; set; }
          int ServiceGroup { get; set; }
-         string incomingroute { get; set; }
+         string IncomingRoute { get; set; }
          string OriginatingIP { get; set; }
          Nullable<int> OPC { get; set; }
          Nullable<int> OriginatingCIC { get; set; }
@@ -29,70 +29,70 @@ namespace MediationModel
          Nullable<int> ReleaseDirection { get; set; }
          Nullable<int> ReleaseCauseSystem { get; set; }
          Nullable<int> ReleaseCauseEgress { get; set; }
-         string outgoingroute { get; set; }
+         string OutgoingRoute { get; set; }
          string TerminatingIP { get; set; }
          Nullable<int> DPC { get; set; }
          Nullable<int> TerminatingCIC { get; set; }
          DateTime StartTime { get; set; }
-         Nullable<int> inPartnerId { get; set; }
+         Nullable<int> InPartnerId { get; set; }
         Nullable<decimal> CustomerRate { get; set; }
-        Nullable<int> outPartnerId { get; set; }
+        Nullable<int> OutPartnerId { get; set; }
          Nullable<decimal> SupplierRate { get; set; }
          string MatchedPrefixY { get; set; }
-         Nullable<decimal> USDRateY { get; set; }
-         string matchedprefixcustomer { get; set; }
-         string matchedprefixsupplier { get; set; }
-         Nullable<decimal> CustomerCost { get; set; }
-         Nullable<decimal> SupplierCost { get; set; }
-         Nullable<decimal> CostANSIn { get; set; }
-         Nullable<decimal> CostICXIn { get; set; }
+         Nullable<decimal> UsdRateY { get; set; }
+         string MatchedPrefixCustomer { get; set; }
+         string MatchedPrefixSupplier { get; set; }
+         Nullable<decimal> InPartnerCost { get; set; }
+         Nullable<decimal> OutPartnerCost { get; set; }
+         Nullable<decimal> CostAnsIn { get; set; }
+         Nullable<decimal> CostIcxIn { get; set; }
          Nullable<decimal> Tax1 { get; set; }
-         Nullable<decimal> IGWRevenueIn { get; set; }
-         Nullable<decimal> RevenueANSOut { get; set; }
-         Nullable<decimal> RevenueIGWOut { get; set; }
-         Nullable<decimal> RevenueICXOut { get; set; }
+         Nullable<decimal> IgwRevenueIn { get; set; }
+         Nullable<decimal> RevenueAnsOut { get; set; }
+         Nullable<decimal> RevenueIgwOut { get; set; }
+         Nullable<decimal> RevenueIcxOut { get; set; }
          Nullable<decimal> Tax2 { get; set; }
-         Nullable<decimal> SubscriberChargeXOut { get; set; }
-         Nullable<decimal> CarrierCostYIGWOut { get; set; }
-         string ANSPrefixOrig { get; set; }
+         Nullable<decimal> XAmount { get; set; }
+         Nullable<decimal> YAmount { get; set; }
+         string AnsPrefixOrig { get; set; }
          Nullable<int> AnsIdOrig { get; set; }
          string AnsPrefixTerm { get; set; }
          Nullable<int> AnsIdTerm { get; set; }
-         Nullable<int> validflag { get; set; }
+         Nullable<int> ValidFlag { get; set; }
          Nullable<int> PartialFlag { get; set; }
-         Nullable<int> releasecauseingress { get; set; }
-         Nullable<long> CustomerCallNumberANS { get; set; }
-         Nullable<long> SupplierCallNumberANS { get; set; }
+         Nullable<int> ReleaseCauseIngress { get; set; }
+         Nullable<int> InRoamingOpId { get; set; }
+         Nullable<int> OutRoamingOpId { get; set; }
          Nullable<int> CalledPartyNOA { get; set; }
          Nullable<int> CallingPartyNOA { get; set; }
          string AdditionalSystemCodes { get; set; }
          string AdditionalPartyNumber { get; set; }
          string ResellerIds { get; set; }
-         Nullable<decimal> BTRCTermRate { get; set; }
+         Nullable<decimal> ZAmount { get; set; }
          string PreviousRoutes { get; set; }
          Nullable<int> E1Id { get; set; }
-         string MediaIP1 { get; set; }
-         string MediaIP2 { get; set; }
-         string MediaIP3 { get; set; }
-         string MediaIP4 { get; set; }
-         Nullable<decimal> CallCancelDuration { get; set; }
+         string MediaIp1 { get; set; }
+         string MediaIp2 { get; set; }
+         string MediaIp3 { get; set; }
+         string MediaIp4 { get; set; }
+         Nullable<Single> CallReleaseDuration { get; set; }
          Nullable<int> E1IdOut { get; set; }
-         string inTrunkAdditionalInfo { get; set; }
-         string outTrunkAdditionalInfo { get; set; }
-         string inMgwId { get; set; }
-         string outMgwId { get; set; }
-         Nullable<int> mediationcomplete { get; set; }
-         string codec { get; set; }
+        string InTrunkAdditionalInfo { get; set; }
+        string OutTrunkAdditionalInfo { get; set; }
+         string InMgwId { get; set; }
+         string OutMgwId { get; set; }
+         Nullable<int> MediationComplete { get; set; }
+         string Codec { get; set; }
          Nullable<int> ConnectedNumberType { get; set; }
          string RedirectingNumber { get; set; }
          Nullable<int> CallForwardOrRoamingType { get; set; }
-         Nullable<DateTime> date1 { get; set; }
-         Nullable<int> field1 { get; set; }
-         Nullable<int> field2 { get; set; }
-         Nullable<int> field3 { get; set; }
-         string errorCode { get; set; }
-         Nullable<int> field5 { get; set; }
-         Nullable<decimal> roundedduration { get; set; }
+         Nullable<DateTime> OtherDate { get; set; }
+        decimal? SummaryMetaTotal { get; set; }
+        Nullable<decimal> TransactionMetaTotal { get; set; }
+         Nullable<decimal> ChargeableMetaTotal { get; set; }
+         string ErrorCode { get; set; }
+         Nullable<int> NERSuccess { get; set; }
+         Nullable<decimal> RoundedDuration { get; set; }
          Nullable<decimal> PartialDuration { get; set; }
          Nullable<DateTime> PartialAnswerTime { get; set; }
          Nullable<DateTime> PartialEndTime { get; set; }
@@ -107,6 +107,6 @@ namespace MediationModel
          Nullable<int> Category { get; set; }
          Nullable<int> SubCategory { get; set; }
          Nullable<long> ChangedByJobId { get; set; }
-         DateTime ActualStartTime { get; set; }
+         DateTime SignalingStartTime { get; set; }
     }
 }

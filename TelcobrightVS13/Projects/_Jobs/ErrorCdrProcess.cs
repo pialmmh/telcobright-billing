@@ -34,7 +34,7 @@ namespace Jobs
             CdrCollectorInputData cdrCollectorInput = new CdrCollectorInputData(input, "", autoIncrementManager);
             SegmentedCdrErrorProcessor segmentedCdrErrorJobProcessor =
                 new SegmentedCdrErrorProcessor(cdrCollectorInput,
-                    input.CdrSetting.BatchSizeWhenPreparingLargeSqlJob, "idcall", "starttime");
+                    input.CdrSetting.BatchSizeWhenPreparingLargeSqlJob, "IdCall", "starttime");
             if (input.TelcobrightJob.Status != 2) //prepare job if not prepared already
                 segmentedCdrErrorJobProcessor.PrepareSegments();
             List<jobsegment> jobsegments = segmentedCdrErrorJobProcessor.ExecuteIncompleteSegments();

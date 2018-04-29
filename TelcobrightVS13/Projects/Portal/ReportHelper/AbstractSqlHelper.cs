@@ -70,7 +70,7 @@ namespace PortalApp
 
                 tup_inpartnerid,              
 	            tup_destinationID ,       
-	            tup_outpartnerID ,  
+	            tup_outpartnerid ,  
                 tup_countryorareacode,
                 tup_matchedprefixcustomer,
                 SUM(totalcalls) AS TotalCalls, 
@@ -79,7 +79,7 @@ namespace PortalApp
 		        SUM(Successfulcalls) AS CallsIn, 
 		        SUM((actualDuration)/60)AS MinutesIn, 
 		        (SELECT 0) AS costansin,
-		        SUM(SupplierCost) AS costicxin, 
+		        SUM(OutPartnerCost) AS costicxin, 
 		        SUM(tax1) AS costvatcomissionin,
 		        (SELECT 0) AS igwrevenuein,
 		        (SELECT customercost) AS customercost,

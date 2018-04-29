@@ -79,15 +79,15 @@ namespace TelcobrightMediation
             switch (this.ServiceContext.AssignDir)
             {
                 case ServiceAssignmentDirection.Customer:
-                    this.Cdr.matchedprefixcustomer  = thisRateWithAssigmentTupleId.Prefix;//remove - to avoid conflict in summary
+                    this.Cdr.MatchedPrefixCustomer  = thisRateWithAssigmentTupleId.Prefix;//remove - to avoid conflict in summary
                     this.Cdr.Duration1 = finalDuration;
-                    this.Cdr.CustomerCost = Convert.ToDecimal(finalAmount);
+                    this.Cdr.InPartnerCost = Convert.ToDecimal(finalAmount);
                     this.Cdr.CustomerRate = thisRateWithAssigmentTupleId.rateamount;
                     break;
                 case ServiceAssignmentDirection.Supplier:
-                    this.Cdr.matchedprefixsupplier = thisRateWithAssigmentTupleId.Prefix;//remove - to avoid conflict in summary
+                    this.Cdr.MatchedPrefixSupplier = thisRateWithAssigmentTupleId.Prefix;//remove - to avoid conflict in summary
                     this.Cdr.Duration2 = finalDuration;
-                    this.Cdr.SupplierCost = Convert.ToDecimal(finalAmount);
+                    this.Cdr.OutPartnerCost = Convert.ToDecimal(finalAmount);
                     this.Cdr.SupplierRate = thisRateWithAssigmentTupleId.rateamount;
                     break;
             }
@@ -114,11 +114,11 @@ namespace TelcobrightMediation
             route r = null;
             if (this.ServiceContext.AssignDir == ServiceAssignmentDirection.Customer)
             {
-                this.ServiceContext.MefServiceFamilyContainer.DicRouteIncludingPartner.TryGetValue(new ValueTuple<int,string>(this.Cdr.SwitchId, this.Cdr.incomingroute), out r);
+                this.ServiceContext.MefServiceFamilyContainer.DicRouteIncludingPartner.TryGetValue(new ValueTuple<int,string>(this.Cdr.SwitchId, this.Cdr.IncomingRoute), out r);
             }
             else if (this.ServiceContext.AssignDir == ServiceAssignmentDirection.Supplier)
             {
-                this.ServiceContext.MefServiceFamilyContainer.DicRouteIncludingPartner.TryGetValue(new ValueTuple<int,string>(this.Cdr.SwitchId,this.Cdr.outgoingroute), out r);
+                this.ServiceContext.MefServiceFamilyContainer.DicRouteIncludingPartner.TryGetValue(new ValueTuple<int,string>(this.Cdr.SwitchId,this.Cdr.OutgoingRoute), out r);
             }
             if (r != null)
             {
@@ -155,7 +155,7 @@ namespace TelcobrightMediation
 
             if (this.ServiceContext.AssignDir == ServiceAssignmentDirection.Customer)
             {
-                int idpartner = Convert.ToInt32(this.Cdr.inPartnerId) ;
+                int idpartner = Convert.ToInt32(this.Cdr.InPartnerId) ;
                 if (idpartner > 0)
                 {
                     rpAssignTuple.idpartner = idpartner;
@@ -164,7 +164,7 @@ namespace TelcobrightMediation
             }
             else if (this.ServiceContext.AssignDir == ServiceAssignmentDirection.Supplier)
             {
-                int idpartner = Convert.ToInt32(this.Cdr.outPartnerId);
+                int idpartner = Convert.ToInt32(this.Cdr.OutPartnerId);
                 if (idpartner > 0)
                 {
                     rpAssignTuple.idpartner = idpartner;

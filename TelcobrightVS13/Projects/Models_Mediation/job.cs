@@ -36,6 +36,8 @@ namespace MediationModel
         public string JobSummary { get; set; }
         public string Error { get; set; }
         public string JobParameter { get; set; }
+        public string JobState { get; set; }
+        public string JobAdditionalInfo { get; set; }
     
         public virtual enumjobdefinition enumjobdefinition { get; set; }
         public virtual enumjobstatu enumjobstatu { get; set; }

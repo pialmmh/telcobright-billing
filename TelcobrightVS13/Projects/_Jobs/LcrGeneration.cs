@@ -46,7 +46,7 @@ namespace Jobs
                 LcrJobData lData = null;
                 List<RouteWiseCdrsCollection> routeWiseCdrCollections =
                     GenerateRouteWiseCdrsCollections(lcrJobInputData.TelcobrightJob, partnerContext, out lData);
-                IdCallWiseListOfRouteVsCost idCallWiseListOfRouteVsCost = new IdCallWiseListOfRouteVsCost();
+                IdCallWiseListOfRouteVsCost IdCallWiseListOfRouteVsCost = new IdCallWiseListOfRouteVsCost();
                 foreach (var singleRouteWiseCollection in routeWiseCdrCollections)
                 {
                     List<CdrExt> cdrExtsForThisRoute = singleRouteWiseCollection.Cdrs
@@ -60,9 +60,9 @@ namespace Jobs
                         cdrExtsForThisRoute.Select(c=>c.StartTime.Date.RoundDownToHour()).Distinct().ToList());
                     CdrProcessor cdrProcessor=new CdrProcessor(cdrJobContext,collectionResult);
                     cdrJob = new CdrJob(cdrProcessor,null,cdrExtsForThisRoute.Count);
-                    ExecutePseudoRating(singleRouteWiseCollection.Route,cdrProcessor,sf,idCallWiseListOfRouteVsCost);
+                    ExecutePseudoRating(singleRouteWiseCollection.Route,cdrProcessor,sf,IdCallWiseListOfRouteVsCost);
                 }
-                List<lcr> lstNewLcr = idCallWiseListOfRouteVsCost.GetLcr(lData);
+                List<lcr> lstNewLcr = IdCallWiseListOfRouteVsCost.GetLcr(lData);
                 //write SQLs, 
                 string sql = "";
                 using (DbCommand cmd = ConnectionManager.CreateCommandFromDbContext(partnerContext))
@@ -93,7 +93,7 @@ namespace Jobs
         }
 
         private void ExecutePseudoRating(route thisRoute, CdrProcessor cdrProcessor, IServiceFamily sf,
-            IdCallWiseListOfRouteVsCost idCallWiseListOfRouteVsCost)
+            IdCallWiseListOfRouteVsCost IdCallWiseListOfRouteVsCost)
         {
 
             //pseudo rating routewise
@@ -119,7 +119,7 @@ namespace Jobs
                 //todo: will need to adjust eventcdr case for lcr generation
                 //look carefully the commented out codes & try to adjust to new object based cdr handling instead of txtrows    
                 //new EventVoiceCdr(random.Next().ToString(),
-                //thisRow[Fn.Starttime].ConvertToDateTimeFromMySqlFormat(),
+                //thisRow[Fn.StartTime].ConvertToDateTimeFromMySqlFormat(),
                 //thisRowAsList, new List<string[]>());
                 sf.Execute(cdrExt, serviceContext, true);
                 var key = new ValueTuple<int, int, int>(1, 2, 0);
@@ -127,10 +127,10 @@ namespace Jobs
                     cdrExt.Chargeables[new ValueTuple<int, int, int>(1, 1, 2)];
                 if (chargeable != null) //sg=1,sf=1,assigndir=2, product=0
                 {
-                    Double cost = Convert.ToDouble(cdrExt.Cdr.SupplierCost);
-                    //double.TryParse(thisRow[Fn.Suppliercost], out cost);
+                    Double cost = Convert.ToDouble(cdrExt.Cdr.OutPartnerCost);
+                    //double.TryParse(thisRow[Fn.OutPartnerCost], out cost);
                     RouteVsCost routeVsCost = new RouteVsCost(thisRoute, cost, chargeable.Prefix);
-                    idCallWiseListOfRouteVsCost.Append(cdrExt.Cdr.idcall, routeVsCost);
+                    IdCallWiseListOfRouteVsCost.Append(cdrExt.Cdr.IdCall, routeVsCost);
                 }
                 else
                 {
@@ -208,12 +208,12 @@ namespace Jobs
             {
                 string[] thisRow = new string[fieldCount];
                 cdr newCdr=new cdr();
-                newCdr.idcall = Convert.ToInt64(prefix);//use prefix as the idcall as well, dup ids are filtered already, this is not a real mediation case
+                newCdr.IdCall = Convert.ToInt64(prefix);//use prefix as the IdCall as well, dup ids are filtered already, this is not a real mediation case
                 newCdr.TerminatingCalledNumber = prefix;
                 newCdr.DurationSec = 60;
-                newCdr.outgoingroute = rw.Route.RouteName;
+                newCdr.OutgoingRoute = rw.Route.RouteName;
                 newCdr.SwitchId= rw.Route.SwitchId;
-                newCdr.outPartnerId = rw.Route.idPartner;
+                newCdr.OutPartnerId = rw.Route.idPartner;
                 newCdr.AnswerTime = lcrDate;
                 newCdr.StartTime = lcrDate;
                 newCdr.ChargingStatus = 1;

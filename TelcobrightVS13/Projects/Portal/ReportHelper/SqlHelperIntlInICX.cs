@@ -49,7 +49,7 @@ namespace PortalApp.ReportHelper
 	            SELECT {GetDateExpression(this.groupInterval)} AS Date,
                 tup_inpartnerid,              
 	            tup_destinationId ,       
-	            tup_outpartnerID ,  
+	            tup_outpartnerid ,  
                 SUM(totalcalls) AS TotalCalls, 
 				SUM(successfulcalls) AS Successfulcalls, 
 				SUM(connectedcalls) AS ConnectedCalls,
@@ -57,7 +57,7 @@ namespace PortalApp.ReportHelper
                 sum(duration1)/60 AS roundedduration, 
                 sum(duration1)/60 AS duration1,
 		        (SELECT 0) AS costansin,
-		        SUM(SupplierCost) AS costicxin, 
+		        SUM(OutPartnerCost) AS costicxin, 
 		        SUM(tax1) AS costvatcomissionin,
 		        Sum(customercost) AS customercost,
                 Sum(tax1) AS tax1,
@@ -81,7 +81,7 @@ namespace PortalApp.ReportHelper
             LEFT JOIN partner cr1
             ON x.tup_destinationId = cr1.idpartner
             LEFT JOIN partner cr2
-            ON x.tup_outpartnerID = cr2.idpartner
+            ON x.tup_outpartnerid = cr2.idpartner
             ORDER BY Successfulcalls,costansin DESC ;";
         }
     }

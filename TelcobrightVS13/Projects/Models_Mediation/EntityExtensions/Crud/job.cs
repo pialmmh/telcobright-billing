@@ -26,7 +26,9 @@ namespace MediationModel
 				{NoOfSteps.ToMySqlField()},
 				{JobSummary.ToMySqlField()},
 				{Error.ToMySqlField()},
-				{JobParameter.ToMySqlField()}
+				{JobParameter.ToMySqlField()},
+				{JobState.ToMySqlField()},
+				{JobAdditionalInfo.ToMySqlField()}
 				)";
 		}
 		public  string GetExtInsertCustom(Func<job,string> externalInsertMethod)
@@ -51,7 +53,9 @@ namespace MediationModel
 				NoOfSteps={NoOfSteps.ToMySqlField()+" "},
 				JobSummary={JobSummary.ToMySqlField()+" "},
 				Error={Error.ToMySqlField()+" "},
-				JobParameter={JobParameter.ToMySqlField()+" "}
+				JobParameter={JobParameter.ToMySqlField()+" "},
+				JobState={JobState.ToMySqlField()+" "},
+				JobAdditionalInfo={JobAdditionalInfo.ToMySqlField()+" "}
 				{whereClauseMethod.Invoke(this)};
 				";
 		}

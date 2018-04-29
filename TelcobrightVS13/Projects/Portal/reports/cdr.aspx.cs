@@ -483,20 +483,20 @@ public partial class ConfigCdr : Page
         int supplierId = this.DropDownListOutPartner.SelectedIndex == 0 ? 0 : Convert.ToInt32(this.DropDownListOutPartner.SelectedValue);
         if (supplierId > 0) sql += " and supplierid=" + supplierId;
 
-        string incomingRoute = this.DropDownListInRoute.SelectedIndex == 0 ? "-1" : this.DropDownListInRoute.SelectedItem.Value;
-        if (incomingRoute != "-1")
+        string IncomingRoute = this.DropDownListInRoute.SelectedIndex == 0 ? "-1" : this.DropDownListInRoute.SelectedItem.Value;
+        if (IncomingRoute != "-1")
         {
-            string routeSwitchIdIn = dicRoutes[incomingRoute].SwitchId.ToString();
-            string routeNameIn = dicRoutes[incomingRoute].RouteName;
-            sql += " and ( switchid=" + routeSwitchIdIn + " and incomingroute='" + routeNameIn + "' ) ";
+            string routeSwitchIdIn = dicRoutes[IncomingRoute].SwitchId.ToString();
+            string routeNameIn = dicRoutes[IncomingRoute].RouteName;
+            sql += " and ( switchid=" + routeSwitchIdIn + " and IncomingRoute='" + routeNameIn + "' ) ";
         }
 
-        string outgoingRoute = this.DropDownListOutRoute.SelectedIndex == 0 ? "-1" : this.DropDownListOutRoute.SelectedItem.Value;
-        if (outgoingRoute != "-1")
+        string OutgoingRoute = this.DropDownListOutRoute.SelectedIndex == 0 ? "-1" : this.DropDownListOutRoute.SelectedItem.Value;
+        if (OutgoingRoute != "-1")
         {
-            string routeSwitchIdOut = dicRoutes[outgoingRoute].SwitchId.ToString();
-            string routeNameOut = dicRoutes[outgoingRoute].RouteName;
-            sql += " and (switchid=" + routeSwitchIdOut + " and outgoingroute='" + routeNameOut + "' ) ";
+            string routeSwitchIdOut = dicRoutes[OutgoingRoute].SwitchId.ToString();
+            string routeNameOut = dicRoutes[OutgoingRoute].RouteName;
+            sql += " and (switchid=" + routeSwitchIdOut + " and OutgoingRoute='" + routeNameOut + "' ) ";
         }
 
         if (!string.IsNullOrEmpty(this.TextBoxIngressCalled.Text.Trim()))

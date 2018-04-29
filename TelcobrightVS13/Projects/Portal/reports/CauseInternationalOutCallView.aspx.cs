@@ -85,7 +85,7 @@ public partial class DefaultCIntlOutCallView1 : System.Web.UI.Page
         tempgridval.Add(Session["CauseInternationalInCallView.aspx.csgridans"]);// = row.Cells[3].Text;
         tempgridval.Add(Session["CauseInternationalInCallView.aspx.csgridicx"]);// = row.Cells[4].Text;
         tempgridval.Add(Session["CauseInternationalInCallView.aspx.csgridpartner"]);// = row.Cells[5].Text;
-        tempgridval.Add(Session["CauseInternationalInCallView.aspx.csgridcallsstatus"]);// = row.Cells[6].Text;
+        tempgridval.Add(Session["CauseInternationalInCallView.aspx.csgrIdCallsstatus"]);// = row.Cells[6].Text;
         tempgridval.Add(Session["CauseInternationalInCallView.aspx.csgridcausecodecount"]);// = row.Cells[8].Text;
         tempgridval.Add(Session["CauseInternationalInCallView.aspx.csstartdate"]);// = txtDate.Text;
         tempgridval.Add(Session["CauseInternationalInCallView.aspx.csenddate"]);// = textDate1.Text;
@@ -190,7 +190,7 @@ public partial class DefaultCIntlOutCallView1 : System.Web.UI.Page
             dicParameters.TryGetValue("gridans", out this._ans);
             dicParameters.TryGetValue("gridicx", out this._icx);
             dicParameters.TryGetValue("gridpartner", out this._partner);
-            dicParameters.TryGetValue("gridcallsstatus", out this._callsstatus);
+            dicParameters.TryGetValue("grIdCallsstatus", out this._callsstatus);
             dicParameters.TryGetValue("gridcause", out this._causecode);
             dicParameters.TryGetValue("gridcausecodecount", out this._causecodecount);
 
@@ -255,10 +255,10 @@ public partial class DefaultCIntlOutCallView1 : System.Web.UI.Page
                 if (this.Session["CauseInternationalInCallView.aspx.csgridpartner"].ToString() != "")
                     this._partner = this.Session["CauseInternationalInCallView.aspx.csgridpartner"].ToString();
             }
-            if (this.Session["CauseInternationalInCallView.aspx.csgridcallsstatus"] != null)
+            if (this.Session["CauseInternationalInCallView.aspx.csgrIdCallsstatus"] != null)
             {
-                if (this.Session["CauseInternationalInCallView.aspx.csgridcallsstatus"].ToString() != "")
-                    this._callsstatus = this.Session["CauseInternationalInCallView.aspx.csgridcallsstatus"].ToString();
+                if (this.Session["CauseInternationalInCallView.aspx.csgrIdCallsstatus"].ToString() != "")
+                    this._callsstatus = this.Session["CauseInternationalInCallView.aspx.csgrIdCallsstatus"].ToString();
             }//gridcause
             if (this.Session["CauseInternationalInCallView.aspx.csgridcause"] != null)
             {

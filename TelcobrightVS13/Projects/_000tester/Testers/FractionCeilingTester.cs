@@ -51,9 +51,9 @@ namespace Utils.Testers
                 try
                 {
                     FractionCeilingHelper fractionHelper =
-                        new FractionCeilingHelper(amount, ceilingAtPosition);
+                        new FractionCeilingHelper(Convert.ToDecimal(amount), ceilingAtPosition);
                     
-                    valAFterCeiling = fractionHelper.GetFormattedNumber();
+                    valAFterCeiling = fractionHelper.GetPreciseDecimal().ToString(CultureInfo.InvariantCulture);
                 }
                 catch (Exception e)
                 {
@@ -83,9 +83,9 @@ namespace Utils.Testers
             {
                 KeyValuePair<string, int> n = numbers[index];
                 FractionCeilingHelper fractionHelper =
-                    new FractionCeilingHelper(n.Key, n.Value);
+                    new FractionCeilingHelper(Convert.ToDecimal(n.Key), n.Value);
                 results.Add(new KeyValuePair<string, string>(n.Key,
-                    n.Value + "-> " + fractionHelper.GetFormattedNumber()));
+                    n.Value + "-> " + fractionHelper.GetPreciseDecimal()));
             }
             st.Stop();
             Console.WriteLine("Elapsed seconds: "+ st.ElapsedMilliseconds/1000);

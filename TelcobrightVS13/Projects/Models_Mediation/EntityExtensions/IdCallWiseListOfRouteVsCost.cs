@@ -5,23 +5,23 @@ namespace MediationModel
 {
     public class IdCallWiseListOfRouteVsCost
     {
-        //main dic to hold prefix/idcall wise call info [prefix hasbeen used as idcall]
+        //main dic to hold prefix/IdCall wise call info [prefix hasbeen used as IdCall]
         private Dictionary<string, List<RouteVsCost>> _dicIdVsRouteCost;
         public IdCallWiseListOfRouteVsCost()
         {
             this._dicIdVsRouteCost = new Dictionary<string, List<RouteVsCost>>();
         }
-        public void Append(long idCall, RouteVsCost rc)
+        public void Append(long IdCall, RouteVsCost rc)
         {
             List<RouteVsCost> lstRouteVsCost = null;
-            if (this._dicIdVsRouteCost.ContainsKey(idCall.ToString()) == false)
+            if (this._dicIdVsRouteCost.ContainsKey(IdCall.ToString()) == false)
             {
                 lstRouteVsCost = new List<RouteVsCost>();
-                this._dicIdVsRouteCost.Add(idCall.ToString(), lstRouteVsCost);
+                this._dicIdVsRouteCost.Add(IdCall.ToString(), lstRouteVsCost);
             }
             else
             {
-                lstRouteVsCost = this._dicIdVsRouteCost[idCall.ToString()];
+                lstRouteVsCost = this._dicIdVsRouteCost[IdCall.ToString()];
             }
             lstRouteVsCost.Add(rc);
         }

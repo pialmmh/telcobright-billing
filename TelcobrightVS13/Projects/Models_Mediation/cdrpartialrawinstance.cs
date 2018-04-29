@@ -15,11 +15,11 @@ namespace MediationModel
     public partial class cdrpartialrawinstance
     {
         public int SwitchId { get; set; }
-        public long idcall { get; set; }
+        public long IdCall { get; set; }
         public long SequenceNumber { get; set; }
         public string FileName { get; set; }
         public int ServiceGroup { get; set; }
-        public string incomingroute { get; set; }
+        public string IncomingRoute { get; set; }
         public string OriginatingIP { get; set; }
         public Nullable<int> OPC { get; set; }
         public Nullable<int> OriginatingCIC { get; set; }
@@ -39,70 +39,70 @@ namespace MediationModel
         public Nullable<int> ReleaseDirection { get; set; }
         public Nullable<int> ReleaseCauseSystem { get; set; }
         public Nullable<int> ReleaseCauseEgress { get; set; }
-        public string outgoingroute { get; set; }
+        public string OutgoingRoute { get; set; }
         public string TerminatingIP { get; set; }
         public Nullable<int> DPC { get; set; }
         public Nullable<int> TerminatingCIC { get; set; }
         public System.DateTime StartTime { get; set; }
-        public Nullable<int> inPartnerId { get; set; }
+        public Nullable<int> InPartnerId { get; set; }
         public Nullable<decimal> CustomerRate { get; set; }
-        public Nullable<int> outPartnerId { get; set; }
+        public Nullable<int> OutPartnerId { get; set; }
         public Nullable<decimal> SupplierRate { get; set; }
         public string MatchedPrefixY { get; set; }
-        public Nullable<decimal> USDRateY { get; set; }
-        public string matchedprefixcustomer { get; set; }
-        public string matchedprefixsupplier { get; set; }
-        public Nullable<decimal> CustomerCost { get; set; }
-        public Nullable<decimal> SupplierCost { get; set; }
-        public Nullable<decimal> CostANSIn { get; set; }
-        public Nullable<decimal> CostICXIn { get; set; }
+        public Nullable<decimal> UsdRateY { get; set; }
+        public string MatchedPrefixCustomer { get; set; }
+        public string MatchedPrefixSupplier { get; set; }
+        public Nullable<decimal> InPartnerCost { get; set; }
+        public Nullable<decimal> OutPartnerCost { get; set; }
+        public Nullable<decimal> CostAnsIn { get; set; }
+        public Nullable<decimal> CostIcxIn { get; set; }
         public Nullable<decimal> Tax1 { get; set; }
-        public Nullable<decimal> IGWRevenueIn { get; set; }
-        public Nullable<decimal> RevenueANSOut { get; set; }
-        public Nullable<decimal> RevenueIGWOut { get; set; }
-        public Nullable<decimal> RevenueICXOut { get; set; }
+        public Nullable<decimal> IgwRevenueIn { get; set; }
+        public Nullable<decimal> RevenueAnsOut { get; set; }
+        public Nullable<decimal> RevenueIgwOut { get; set; }
+        public Nullable<decimal> RevenueIcxOut { get; set; }
         public Nullable<decimal> Tax2 { get; set; }
-        public Nullable<decimal> SubscriberChargeXOut { get; set; }
-        public Nullable<decimal> CarrierCostYIGWOut { get; set; }
-        public string ANSPrefixOrig { get; set; }
+        public Nullable<decimal> XAmount { get; set; }
+        public Nullable<decimal> YAmount { get; set; }
+        public string AnsPrefixOrig { get; set; }
         public Nullable<int> AnsIdOrig { get; set; }
         public string AnsPrefixTerm { get; set; }
         public Nullable<int> AnsIdTerm { get; set; }
-        public Nullable<int> validflag { get; set; }
+        public Nullable<int> ValidFlag { get; set; }
         public Nullable<int> PartialFlag { get; set; }
-        public Nullable<int> releasecauseingress { get; set; }
-        public Nullable<long> CustomerCallNumberANS { get; set; }
-        public Nullable<long> SupplierCallNumberANS { get; set; }
+        public Nullable<int> ReleaseCauseIngress { get; set; }
+        public Nullable<int> InRoamingOpId { get; set; }
+        public Nullable<int> OutRoamingOpId { get; set; }
         public Nullable<int> CalledPartyNOA { get; set; }
         public Nullable<int> CallingPartyNOA { get; set; }
         public string AdditionalSystemCodes { get; set; }
         public string AdditionalPartyNumber { get; set; }
         public string ResellerIds { get; set; }
-        public Nullable<decimal> BTRCTermRate { get; set; }
+        public Nullable<decimal> ZAmount { get; set; }
         public string PreviousRoutes { get; set; }
         public Nullable<int> E1Id { get; set; }
-        public string MediaIP1 { get; set; }
-        public string MediaIP2 { get; set; }
-        public string MediaIP3 { get; set; }
-        public string MediaIP4 { get; set; }
-        public Nullable<decimal> CallCancelDuration { get; set; }
+        public string MediaIp1 { get; set; }
+        public string MediaIp2 { get; set; }
+        public string MediaIp3 { get; set; }
+        public string MediaIp4 { get; set; }
+        public Nullable<float> CallReleaseDuration { get; set; }
         public Nullable<int> E1IdOut { get; set; }
-        public string inTrunkAdditionalInfo { get; set; }
-        public string outTrunkAdditionalInfo { get; set; }
-        public string inMgwId { get; set; }
-        public string outMgwId { get; set; }
-        public Nullable<int> mediationcomplete { get; set; }
-        public string codec { get; set; }
+        public string InTrunkAdditionalInfo { get; set; }
+        public string OutTrunkAdditionalInfo { get; set; }
+        public string InMgwId { get; set; }
+        public string OutMgwId { get; set; }
+        public Nullable<int> MediationComplete { get; set; }
+        public string Codec { get; set; }
         public Nullable<int> ConnectedNumberType { get; set; }
         public string RedirectingNumber { get; set; }
         public Nullable<int> CallForwardOrRoamingType { get; set; }
-        public Nullable<System.DateTime> date1 { get; set; }
-        public Nullable<int> field1 { get; set; }
-        public Nullable<int> field2 { get; set; }
-        public Nullable<int> field3 { get; set; }
-        public string errorCode { get; set; }
-        public Nullable<int> field5 { get; set; }
-        public Nullable<decimal> roundedduration { get; set; }
+        public Nullable<System.DateTime> OtherDate { get; set; }
+        public Nullable<decimal> SummaryMetaTotal { get; set; }
+        public Nullable<decimal> TransactionMetaTotal { get; set; }
+        public Nullable<decimal> ChargeableMetaTotal { get; set; }
+        public string ErrorCode { get; set; }
+        public Nullable<int> NERSuccess { get; set; }
+        public Nullable<decimal> RoundedDuration { get; set; }
         public Nullable<decimal> PartialDuration { get; set; }
         public Nullable<System.DateTime> PartialAnswerTime { get; set; }
         public Nullable<System.DateTime> PartialEndTime { get; set; }
@@ -117,6 +117,6 @@ namespace MediationModel
         public Nullable<int> Category { get; set; }
         public Nullable<int> SubCategory { get; set; }
         public Nullable<long> ChangedByJobId { get; set; }
-        public System.DateTime ActualStartTime { get; set; }
+        public System.DateTime SignalingStartTime { get; set; }
     }
 }

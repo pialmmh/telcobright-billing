@@ -537,13 +537,13 @@ public partial class ConfigBatcJob : System.Web.UI.Page
                 //Sql += " and supplierid=" + SupplierId;
             }
 
-            string incomingRoute = this.DropDownListInRoute.SelectedIndex == 0
+            string IncomingRoute = this.DropDownListInRoute.SelectedIndex == 0
                 ? "-1"
                 : this.DropDownListInRoute.SelectedItem.Value;
-            if (incomingRoute != "-1")
+            if (IncomingRoute != "-1")
             {
-                string routeSwitchIdIn = dicRoutes[incomingRoute].SwitchId.ToString();
-                string routeNameIn = dicRoutes[incomingRoute].RouteName;
+                string routeSwitchIdIn = dicRoutes[IncomingRoute].SwitchId.ToString();
+                string routeNameIn = dicRoutes[IncomingRoute].RouteName;
 
                 SqlMultiWhereClauseBuilder multiParam = new SqlMultiWhereClauseBuilder(SqlWhereAndOrType.And);
 
@@ -554,7 +554,7 @@ public partial class ConfigBatcJob : System.Web.UI.Page
                 multiParam.SingleParams.Add(newParam);
 
                 newParam = new SqlSingleWhereClauseBuilder(SqlWhereAndOrType.And);
-                newParam.Expression = "incomingroute=";
+                newParam.Expression = "IncomingRoute=";
                 newParam.ParamType = SqlWhereParamType.Text;
                 newParam.ParamValue = routeNameIn.ToString();
                 multiParam.SingleParams.Add(newParam);
@@ -562,13 +562,13 @@ public partial class ConfigBatcJob : System.Web.UI.Page
                 lstWhereParamsMultiple.Add(multiParam);
             }
 
-            string outgoingRoute = this.DropDownListOutRoute.SelectedIndex == 0
+            string OutgoingRoute = this.DropDownListOutRoute.SelectedIndex == 0
                 ? "-1"
                 : this.DropDownListOutRoute.SelectedItem.Value;
-            if (outgoingRoute != "-1")
+            if (OutgoingRoute != "-1")
             {
-                string routeSwitchIdOut = dicRoutes[outgoingRoute].SwitchId.ToString();
-                string routeNameOut = dicRoutes[outgoingRoute].RouteName;
+                string routeSwitchIdOut = dicRoutes[OutgoingRoute].SwitchId.ToString();
+                string routeNameOut = dicRoutes[OutgoingRoute].RouteName;
 
                 SqlMultiWhereClauseBuilder multiParam = new SqlMultiWhereClauseBuilder(SqlWhereAndOrType.And);
 
@@ -579,7 +579,7 @@ public partial class ConfigBatcJob : System.Web.UI.Page
                 multiParam.SingleParams.Add(newParam);
 
                 newParam = new SqlSingleWhereClauseBuilder(SqlWhereAndOrType.And);
-                newParam.Expression = "outgoingroute=";
+                newParam.Expression = "OutgoingRoute=";
                 newParam.ParamType = SqlWhereParamType.Text;
                 newParam.ParamValue = routeNameOut.ToString();
                 multiParam.SingleParams.Add(newParam);
@@ -652,7 +652,7 @@ public partial class ConfigBatcJob : System.Web.UI.Page
                 batchSize,
                 lstWhereParamsSingle,
                 lstWhereParamsMultiple,
-                columnExpressions: new List<string>() { "idcall as RowId", "starttime as RowDateTime" }
+                columnExpressions: new List<string>() { "IdCall as RowId", "starttime as RowDateTime" }
             );
 
             int jobCount = 0;

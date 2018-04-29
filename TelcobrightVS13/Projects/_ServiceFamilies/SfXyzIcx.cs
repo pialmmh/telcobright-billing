@@ -18,7 +18,7 @@ namespace TelcobrightMediation
         public int Id => 7;
         public int GetChargedOrChargingPartnerId(CdrExt cdrExt,ServiceContext serviceContext)//thisrow,assignDir,return idPartner who's charged or charging
         {
-            return Convert.ToInt32(cdrExt.Cdr.inPartnerId);
+            return Convert.ToInt32(cdrExt.Cdr.InPartnerId);
         }
         public AccChargeableExt Execute(CdrExt cdrExt,ServiceContext serviceContext, bool flagLcr)
         {

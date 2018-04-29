@@ -36,7 +36,7 @@ namespace TelcobrightMediation
                 JsonConvert.DeserializeObject<BatchSqlJobParamJson>(this.TelcobrightJob.JobParameter);
             string sourceTable = batchParamJ.TableName;
             int batchSize = batchParamJ.BatchSize < 1000 ? 1000 : batchParamJ.BatchSize;
-            string sql = batchParamJ.GetSqlForRowIdAndDate(); //select idCall,starttime from...
+            string sql = batchParamJ.GetSqlForRowIdAndDate(); //select IdCall,starttime from...
             int limitStart = 0;
             bool keepLooping = true;
             List<jobsegment> jobSegments = new List<jobsegment>();
@@ -45,14 +45,14 @@ namespace TelcobrightMediation
             while (keepLooping)
             {
                 sql += "order by " + this.IndexedRowIdColumnName + " limit " +
-                       limitStart + //idcall is indexed for performance
+                       limitStart + //IdCall is indexed for performance
                        "," + this.BatchSizeWhenPreparingLargeSqlJob;
                 limitStart += this.BatchSizeWhenPreparingLargeSqlJob;
-                List<RowIdVsDate<long>> idCallAndDates =
+                List<RowIdVsDate<long>> IdCallAndDates =
                     this.Context.Database.SqlQuery<RowIdVsDate<long>>(sql).ToList();
 
                 //segment the job to defined batch size e.g. 5000-10000 configured in the config file
-                var collectionSegmenter = new CollectionSegmenter<RowIdVsDate<long>>(idCallAndDates, 0);
+                var collectionSegmenter = new CollectionSegmenter<RowIdVsDate<long>>(IdCallAndDates, 0);
                 List<RowIdVsDate<long>> segment = new List<RowIdVsDate<long>>();
                 int currentSegmentNumber = 0;
                 segment = collectionSegmenter.GetNextSegment(batchSize).ToList();
@@ -74,7 +74,7 @@ namespace TelcobrightMediation
                     jobSegments.Add(js);
                     segment = collectionSegmenter.GetNextSegment(batchSize).ToList();
                 } //while to to create smaller segments of 5000-10000 or whatever is defined
-            } //while for Millions of idcalls & dates
+            } //while for Millions of IdCalls & dates
             base.SaveSegmentsToDb(jobSegments);
         }
         public DayWiseRowIdsCollection DeserializeDayWiseRowIdsCollection(jobsegment segment)

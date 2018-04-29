@@ -23,7 +23,7 @@ namespace PortalApp.reports.Other
 
                 using (MySqlCommand cmd = con.CreateCommand())
                 {
-                    string query = "SELECT StartTime as 'Call Date', incomingroute as 'Ingress Trunk', outgoingroute as 'Egress Trunk', DurationSec as 'Duration (Sec)'"
+                    string query = "SELECT StartTime as 'Call Date', IncomingRoute as 'Ingress Trunk', OutgoingRoute as 'Egress Trunk', DurationSec as 'Duration (Sec)'"
                                     + " FROM cdrerror"
                                     + " where starttime>='" + this.txtStartDate.Text + " 00:00:00'"
                                     + " and starttime<='" + this.txtEndDate.Text + " 23:59:59'"

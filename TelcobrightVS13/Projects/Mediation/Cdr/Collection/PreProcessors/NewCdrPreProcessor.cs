@@ -30,22 +30,22 @@ namespace TelcobrightMediation
             ValidationResult validationResult = flexValidator.Validate(txtRow);
             if (validationResult.IsValid == false)
             {
-                txtRow[Fn.Field4] = validationResult.FirstValidationFailureMessage;
+                txtRow[Fn.ErrorCode] = validationResult.FirstValidationFailureMessage;
                 base.InconsistentCdrs.Add(CdrManipulatingUtil.ConvertTxtRowToCdrinconsistent(txtRow));
             }
         }
 
         public List<string[]> FilterCdrsWithDuplicateBillIdsAsInconsistent(List<string[]> txtRows)
         {
-            List<string[]> dupRows = txtRows.GroupBy(c => c[Fn.Uniquebillid]).Where(g => g.Count() > 1)
+            List<string[]> dupRows = txtRows.GroupBy(c => c[Fn.UniqueBillId]).Where(g => g.Count() > 1)
                 .Select(g => g.ToList())
                 .SelectMany(c => c).ToList();
-            txtRows = txtRows.Where(r => !dupRows.Select(dupRow => dupRow[Fn.Uniquebillid]).ToList()
-                .Contains(r[Fn.Uniquebillid])).ToList();
+            txtRows = txtRows.Where(r => !dupRows.Select(dupRow => dupRow[Fn.UniqueBillId]).ToList()
+                .Contains(r[Fn.UniqueBillId])).ToList();
             dupRows.ForEach(
                 dupRow =>
                 {
-                    dupRow[Fn.Field4] = "Duplicate billids are not allowed when partial cdrs are disabled.";
+                    dupRow[Fn.ErrorCode] = "Duplicate billids are not allowed when partial cdrs are disabled.";
                     base.InconsistentCdrs.Add(CdrManipulatingUtil.ConvertTxtRowToCdrinconsistent(dupRow));
                 });
             return txtRows;
@@ -182,13 +182,13 @@ namespace TelcobrightMediation
         public void AdjustStartTimeBasedOnCdrSettingsForSummaryTimeField(SummaryTimeFieldEnum summaryTimeFieldEnum,
             string[] row)
         {
-            row[Fn.Actualstarttime] = row[Fn.Starttime];
+            row[Fn.SignalingStartTime] = row[Fn.StartTime];
             if (summaryTimeFieldEnum == SummaryTimeFieldEnum.AnswerTime)
             {
                 DateTime answerTime;
-                if (row[Fn.Answertime].TryParseToDateTimeFromMySqlFormat(out answerTime) == true)
+                if (row[Fn.AnswerTime].TryParseToDateTimeFromMySqlFormat(out answerTime) == true)
                 {
-                    row[Fn.Starttime] = row[Fn.Answertime];
+                    row[Fn.StartTime] = row[Fn.AnswerTime];
                 }
             }
         }

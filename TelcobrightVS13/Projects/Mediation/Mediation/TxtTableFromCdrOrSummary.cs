@@ -81,32 +81,32 @@ namespace TelcobrightMediation
 
             if (uniqueBillId == null && LstIdCall != null && LstIdCall.Count > 0)
             {
-                sqlTxtTable += " and idcall in (" + string.Join(",", LstIdCall.ToArray()) + ") ;";
+                sqlTxtTable += " and IdCall in (" + string.Join(",", LstIdCall.ToArray()) + ") ;";
             }
 
             if (uniqueBillId != null
             ) //loading old instances of partial cdr mode, make sure that the final instance is loaded at last
             {
                 //SqlTxtTable += " and UniqueBillId='" + UniqueBillId + "'";
-                //load idcalls for this uniquebillid and switch
+                //load IdCalls for this uniquebillid and switch
                 StringBuilder whereIn = new StringBuilder();
-                whereIn.Append(" and idcall in (");
+                whereIn.Append(" and IdCall in (");
                 //using (MySqlConnection con = new MySqlConnection(ConStrPartner))
 
                 //con.Open();
                 using (DbCommand command = ConnectionManager.CreateCommandFromDbContext(context))
                 {
                     command.CommandText =
-                        " select idcall from cdrpartial where uniquebillid='" + uniqueBillId + "' and idswitch=" +
+                        " select IdCall from cdrpartial where uniquebillid='" + uniqueBillId + "' and idswitch=" +
                         idSwitch +
                         " and starttime='" + Convert.ToDateTime(startingPeriod).ToString("yyyy-MM-dd HH:mm:ss") + "'";
                     DbDataReader myReader = command.ExecuteReader();
                     List<string> lstIdCall = new List<string>();
                     while (myReader.Read())
                     {
-                        long idCall = -1;
-                        long.TryParse(myReader[0].ToString(), out idCall);
-                        if (idCall == -1)
+                        long IdCall = -1;
+                        long.TryParse(myReader[0].ToString(), out IdCall);
+                        if (IdCall == -1)
                         {
                             allerror thisError = new allerror();
                             thisError.idError = 102; //arbitrary
@@ -114,7 +114,7 @@ namespace TelcobrightMediation
                             thisError.Status = 1;
 
                             thisError.ExceptionMessage =
-                                @"Could not parse idcall during partial cdr listing for unique bill id=" +
+                                @"Could not parse IdCall during partial cdr listing for unique bill id=" +
                                 uniqueBillId + " and switchid=" + idSwitch;
 
                             thisError.ProcessName = processName;
@@ -124,12 +124,12 @@ namespace TelcobrightMediation
                         }
                         else
                         {
-                            lstIdCall.Add(idCall.ToString());
+                            lstIdCall.Add(IdCall.ToString());
                         }
                     } //while reader...
                     myReader.Close();
                     myReader = null;
-                    //idcalls are loaded
+                    //IdCalls are loaded
                     if (lstIdCall.Count > 0)
                     {
                         sqlTxtTable += whereIn.Append(string.Join(",", lstIdCall.ToArray()))
@@ -137,7 +137,7 @@ namespace TelcobrightMediation
                     }
                     else
                     {
-                        return 1; // old instances can't be found as no idcall found from cdrpartial...
+                        return 1; // old instances can't be found as no IdCall found from cdrpartial...
                     }
                 }
                 

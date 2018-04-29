@@ -24,7 +24,7 @@ namespace TelcobrightMediation
         public ConcurrentDictionary<string, CdrExt> ConcurrentCdrExts { get;}=new ConcurrentDictionary<string, CdrExt>();
 
         public IEnumerable<CdrExt> MediationCompletedCdrExts => this.ConcurrentCdrExts.Values.Where(
-            c => c.Cdr != null && c.Cdr.mediationcomplete == 1);
+            c => c.Cdr != null && c.Cdr.MediationComplete == 1);
         public List<cdrinconsistent> CdrInconsistents { get; }
         public BlockingCollection<CdrExt> ProcessedCdrExts { get; }=new BlockingCollection<CdrExt>();
         public bool IsEmpty => this.DatesInvolved == null || this.DatesInvolved.Any() == false ||
@@ -46,8 +46,8 @@ namespace TelcobrightMediation
 
         private cdrerror ConvertCdrToCdrError(ICdr cdr, string validationMsg)
         {
-            cdr.mediationcomplete = 0;
-            cdr.errorCode = validationMsg;
+            cdr.MediationComplete = 0;
+            cdr.ErrorCode = validationMsg;
             return CdrManipulatingUtil.ConvertCdrToCdrError(cdr);
         }
         public void AddNonPartialCdrExtToCdrErrors(CdrExt cdrExt, string errorMessage)

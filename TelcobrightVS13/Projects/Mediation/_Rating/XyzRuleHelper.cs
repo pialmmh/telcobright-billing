@@ -30,7 +30,7 @@ namespace TelcobrightMediation
             AccountFactory accountFactory =
                 new AccountFactory(serviceContext.CdrProcessor.CdrJobContext.AccountingContext);
             postingAccount = accountFactory.CreateOrGetBillable(0, serviceContext.ServiceGroupConfiguration.IdServiceGroup,
-                Convert.ToInt32(newCdrExt.Cdr.inPartnerId),
+                Convert.ToInt32(newCdrExt.Cdr.InPartnerId),
                 serviceContext.ServiceFamily.Id, 0, idCurrencyUoM);
             return postingAccount;
         }
@@ -50,11 +50,11 @@ namespace TelcobrightMediation
             decimal yAmountUsd = this.PrefixMatcher.GetA2ZAmount(finalDuration, matchedRateWithAssignmentTupleId,
                 rateFieldNumber: 1, //other amount1
                 cdrProcessor: serviceContext.CdrProcessor);
-            thisCdr.roundedduration = finalDuration;
-            thisCdr.SubscriberChargeXOut = Convert.ToDecimal(xAmountBdt);
-            thisCdr.CarrierCostYIGWOut = Convert.ToDecimal(yAmountUsd);
+            thisCdr.RoundedDuration = finalDuration;
+            thisCdr.XAmount = Convert.ToDecimal(xAmountBdt);
+            thisCdr.YAmount = Convert.ToDecimal(yAmountUsd);
             thisCdr.MatchedPrefixY = matchedRateWithAssignmentTupleId.Prefix;
-            thisCdr.matchedprefixcustomer = thisCdr.MatchedPrefixY;
+            thisCdr.MatchedPrefixCustomer = thisCdr.MatchedPrefixY;
             if (thisCdr.CountryCode.IsNullOrEmptyOrWhiteSpace())
             {
                 thisCdr.CountryCode = matchedRateWithAssignmentTupleId.CountryCode;
@@ -71,8 +71,8 @@ namespace TelcobrightMediation
             DateTime callDate = thisCdr.StartTime;
             uom_conversion_dated conversionRate = GetExactOrNearestEarlierConvRateForXyz(callDate);
             if (conversionRate == null) return null;
-            thisCdr.USDRateY = Convert.ToDecimal(conversionRate.CONVERSION_FACTOR);
-            decimal yBdt = yAmountUsd * (decimal) thisCdr.USDRateY;
+            thisCdr.UsdRateY = Convert.ToDecimal(conversionRate.CONVERSION_FACTOR);
+            decimal yBdt = yAmountUsd * (decimal) thisCdr.UsdRateY;
             decimal zAmount = xAmountBdt - yBdt;
             decimal fifteenPcOfZ = Convert.ToDecimal(zAmount * matchedRateWithAssignmentTupleId.OtherAmount2) / 100;
             decimal finalAmount = 0;
@@ -80,11 +80,11 @@ namespace TelcobrightMediation
             {
                 case XyzRatingType.Igw:
                     finalAmount = fifteenPcOfZ + yBdt;
-                    thisCdr.RevenueIGWOut = finalAmount;
+                    thisCdr.RevenueIgwOut = finalAmount;
                     break;
                 case XyzRatingType.Icx:
                     finalAmount = fifteenPcOfZ;
-                    thisCdr.RevenueICXOut = finalAmount;
+                    thisCdr.RevenueIcxOut = finalAmount;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(xyzRatingType), xyzRatingType, null);
@@ -102,7 +102,7 @@ namespace TelcobrightMediation
                     id =serviceContext.CdrProcessor.CdrJobContext.AccountingContext.AutoIncrementManager
                             .GetNewCounter("acc_chargeable"),
                     uniqueBillId = thisCdr.UniqueBillId,
-                    idEvent = Convert.ToInt64(thisCdr.idcall),
+                    idEvent = Convert.ToInt64(thisCdr.IdCall),
                     transactionTime = callDate,
                     servicegroup = serviceContext.ServiceGroupConfiguration.IdServiceGroup,
                     assignedDirection =1, //charged to customer, although does not have assigndir 
@@ -122,7 +122,7 @@ namespace TelcobrightMediation
                     glAccountId = postingAccount.id,
                     OtherDecAmount1 = matchedRateWithAssignmentTupleId.rateamount,//xRate
                     OtherDecAmount2 = matchedRateWithAssignmentTupleId.OtherAmount1,//yRate
-                    OtherDecAmount3 = thisCdr.USDRateY,//usdRate
+                    OtherDecAmount3 = thisCdr.UsdRateY,//usdRate
                     changedByJob = serviceContext.CdrProcessor.CdrJobContext.TelcobrightJob.id,
                     idBillingrule = billingRule.Id,
                 };

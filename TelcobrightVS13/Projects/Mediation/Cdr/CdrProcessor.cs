@@ -139,14 +139,14 @@ namespace TelcobrightMediation
 
         private void ResetMediationStatus(cdr cdr)
         {
-            cdr.errorCode = ""; //set error flag empty by default to prevent calls going to cdrloaded table...
-            cdr.mediationcomplete = 0;
+            cdr.ErrorCode = ""; //set error flag empty by default to prevent calls going to cdrloaded table...
+            cdr.MediationComplete = 0;
         }
 
         private void SetMediationStatusToSuccess(cdr cdr)
         {
-            cdr.mediationcomplete = 1;
-            cdr.errorCode = ""; //clear error flag/description from previous mediation attempt
+            cdr.MediationComplete = 1;
+            cdr.ErrorCode = ""; //clear error flag/description from previous mediation attempt
         }
 
         private static void ExecuteNerRule(CdrProcessor cdrProcessor, CdrExt cdrExt)
@@ -161,8 +161,8 @@ namespace TelcobrightMediation
         private static void SetPdd(cdr thisCdr)
         {
             var diffInSeconds = thisCdr.ConnectTime != null
-                ? (Convert.ToDateTime(thisCdr.ConnectTime) - thisCdr.ActualStartTime).TotalSeconds
-                : (Convert.ToDateTime(thisCdr.AnswerTime) - thisCdr.ActualStartTime).TotalSeconds;
+                ? (Convert.ToDateTime(thisCdr.ConnectTime) - thisCdr.SignalingStartTime).TotalSeconds
+                : (Convert.ToDateTime(thisCdr.AnswerTime) - thisCdr.SignalingStartTime).TotalSeconds;
             thisCdr.PDD = (float)diffInSeconds;
         }
 
@@ -221,7 +221,7 @@ namespace TelcobrightMediation
             if (this.CdrJobContext.TelcobrightJob.idjobdefinition == 2) //cdrError
             {
                 OldCdrDeleter.DeleteOldCdrs("cdrerror", this.CollectionResult.ConcurrentCdrExts.Values
-                        .Select(c => new KeyValuePair<long, DateTime>(c.Cdr.idcall, c.StartTime)).ToList(),
+                        .Select(c => new KeyValuePair<long, DateTime>(c.Cdr.IdCall, c.StartTime)).ToList(),
                     this.CdrJobContext.SegmentSizeForDbWrite, this.CdrJobContext.DbCmd);
             }
 
@@ -229,10 +229,10 @@ namespace TelcobrightMediation
             long errorCount = WriteCdrError();
 
             var nonPartialCdrs = this.CollectionResult.ProcessedCdrExts
-                .Where(c => c.Cdr.mediationcomplete == 1 && c.Cdr.PartialFlag==0).Select(c => c.Cdr).ToList();
+                .Where(c => c.Cdr.MediationComplete == 1 && c.Cdr.PartialFlag==0).Select(c => c.Cdr).ToList();
             long nonPartialCdrCount = WriteCdr(nonPartialCdrs);
             var normalizedPartialCdrs = this.CollectionResult.ProcessedCdrExts
-                .Where(c => c.Cdr.mediationcomplete == 1 && c.Cdr.PartialFlag > 0).Select(c => c.Cdr).ToList();
+                .Where(c => c.Cdr.MediationComplete == 1 && c.Cdr.PartialFlag > 0).Select(c => c.Cdr).ToList();
             long normalizedPartialCdrCount = WriteCdr(normalizedPartialCdrs);
 
             long cdrCount = nonPartialCdrCount + normalizedPartialCdrCount;

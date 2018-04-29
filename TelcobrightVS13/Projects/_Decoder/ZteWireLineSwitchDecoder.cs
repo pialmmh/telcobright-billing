@@ -380,7 +380,7 @@ namespace Decoders
                     else
                     {
                         thisRow[Fn.Partialflag] = "0";
-                        thisRow[Fn.Finalrecord] = "1";
+                        thisRow[Fn.FinalRecord] = "1";
                     }
                     decodedRows.Add(thisRow); 
                 }

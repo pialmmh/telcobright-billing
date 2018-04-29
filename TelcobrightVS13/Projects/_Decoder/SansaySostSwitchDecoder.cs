@@ -205,7 +205,7 @@ namespace Decoders
                     double.TryParse(thisNormalizedRow[Fn.Durationsec], out tmpDuration);
                     if (tmpDuration > 0)
                     {
-                        thisNormalizedRow[Fn.Chargingstatus] = "1";
+                        thisNormalizedRow[Fn.ChargingStatus] = "1";
                         //set connect time based on PDD
                         double pddSec = 0;
                         double tempDbl = -1;
@@ -216,17 +216,17 @@ namespace Decoders
                             {
                                 DateTime connectTime = new DateTime();
                                 DateTime startTime = new DateTime();
-                                if (DateTime.TryParseExact(thisNormalizedRow[Fn.Starttime], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out startTime))
+                                if (DateTime.TryParseExact(thisNormalizedRow[Fn.StartTime], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out startTime))
                                 {
                                     connectTime = startTime.AddSeconds(pddSec);
-                                    thisNormalizedRow[Fn.Connecttime] = connectTime.ToString("yyyy-MM-dd HH:mm:ss");
+                                    thisNormalizedRow[Fn.ConnectTime] = connectTime.ToString("yyyy-MM-dd HH:mm:ss");
                                 }
                             }
                         }
                     }
                     else
                     {
-                        thisNormalizedRow[Fn.Chargingstatus] = "0";
+                        thisNormalizedRow[Fn.ChargingStatus] = "0";
                     }
                     
                     //exclude rows having charging status other than successful or failed...(e.g. intermediate in dialogic cdr)
@@ -236,7 +236,7 @@ namespace Decoders
                         {
                             thisNormalizedRow[54] = "1";//add valid flag for this type of switch, valid flag comes from cdr for zte
                             thisNormalizedRow[55] = "0";//for now mark as non-partial, single cdr
-                            thisNormalizedRow[Fn.Finalrecord] = "1";
+                            thisNormalizedRow[Fn.FinalRecord] = "1";
                             decodedRows.Add(thisNormalizedRow);
                         }
                     }

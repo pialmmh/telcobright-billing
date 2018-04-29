@@ -51,7 +51,7 @@ namespace TelcobrightMediation
 
         public string GetSqlForRowIdAndDate()
         {
-            //return " select idcall,date(starttime) as callDate from " + this.TableName + GetFullWhereClause();
+            //return " select IdCall,date(starttime) as callDate from " + this.TableName + GetFullWhereClause();
             return " select "+string.Join(",",this.ColumnExpressions)+ " from " + this.TableName + GetFullWhereClause();
         }
     }

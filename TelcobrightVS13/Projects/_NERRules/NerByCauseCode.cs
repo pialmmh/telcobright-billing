@@ -28,11 +28,11 @@ namespace PartnerRules
             if (cdrProcessor.CdrJobContext.MediationContext.SwitchWiseLookups[cdrProcessor.CdrJobContext.Ne.idSwitch].DicCauseCodeCcr
                     .ContainsKey((cdrProcessor.CdrJobContext.Ne.idSwitch + "-" + causeCodeValueInCdr)) == true)
             {
-                cdrExt.Cdr.field5 = 1; //fn.87=ConnectedFlagByCauseCodeForCdrIndicatedInField5
+                cdrExt.Cdr.NERSuccess = 1; //fn.87=ConnectedFlagByCauseCodeForCdrIndicatedInField5
             }
             else
             {
-                cdrExt.Cdr.field5 = 0;
+                cdrExt.Cdr.NERSuccess = 0;
             }
         }
 
@@ -48,7 +48,7 @@ namespace PartnerRules
                     causeCodeValue = Convert.ToInt32(mediatableInstance.ReleaseCauseEgress);
                     break;
                 case 56:
-                    causeCodeValue = Convert.ToInt32(mediatableInstance.releasecauseingress);
+                    causeCodeValue = Convert.ToInt32(mediatableInstance.ReleaseCauseIngress);
                     break;
             }
             return causeCodeValue;

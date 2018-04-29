@@ -33,10 +33,8 @@ namespace MediationModel
         public virtual DbSet<billingruleassignment> billingruleassignments { get; set; }
         public virtual DbSet<carriercontactmapping> carriercontactmappings { get; set; }
         public virtual DbSet<causecode> causecodes { get; set; }
-        public virtual DbSet<cdrerror> cdrerrors { get; set; }
         public virtual DbSet<cdrfieldlist> cdrfieldlists { get; set; }
         public virtual DbSet<cdrfieldmappingbyswitchtype> cdrfieldmappingbyswitchtypes { get; set; }
-        public virtual DbSet<cdrinconsistent> cdrinconsistents { get; set; }
         public virtual DbSet<commontg> commontgs { get; set; }
         public virtual DbSet<country> countries { get; set; }
         public virtual DbSet<countrycode> countrycodes { get; set; }
@@ -122,7 +120,7 @@ namespace MediationModel
         public virtual DbSet<acc_temp_transaction> acc_temp_transaction { get; set; }
         public virtual DbSet<acc_transaction> acc_transaction { get; set; }
         public virtual DbSet<cdr> cdrs { get; set; }
-        public virtual DbSet<cdrdiscarded> cdrdiscardeds { get; set; }
+        public virtual DbSet<cdrerror> cdrerrors { get; set; }
         public virtual DbSet<cdrpartiallastaggregatedrawinstance> cdrpartiallastaggregatedrawinstances { get; set; }
         public virtual DbSet<cdrpartialrawinstance> cdrpartialrawinstances { get; set; }
         public virtual DbSet<cdrpartialreference> cdrpartialreferences { get; set; }
@@ -134,5 +132,7 @@ namespace MediationModel
         public virtual DbSet<sum_voice_hr_03> sum_voice_hr_03 { get; set; }
         public virtual DbSet<uom_conversion> uom_conversion { get; set; }
         public virtual DbSet<uom_conversion_dated> uom_conversion_dated { get; set; }
+        public virtual DbSet<cdrdiscarded> cdrdiscardeds { get; set; }
+        public virtual DbSet<cdrinconsistent> cdrinconsistents { get; set; }
     }
 }

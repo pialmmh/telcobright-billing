@@ -47,7 +47,7 @@ namespace TelcobrightMediation
                 cdrProcessor.CdrJobContext.MediationContext.MefServiceGroupContainer;
             //international in call direction/service group
             var dicRoutes = servGroupData.SwitchWiseRoutes;
-            var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.incomingroute);
+            var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
             route thisRoute = null;
             dicRoutes.TryGetValue(key, out thisRoute);
             if (thisRoute != null)
@@ -56,15 +56,6 @@ namespace TelcobrightMediation
                 {
                     thisCdr.ServiceGroup = 4; //internationa inco in IGW
                     int roundedDuration = 0;
-                    //set rounded duration [field 88] 100 ms
-                    //get decimal part only by rouding the actual duration to 2 decimals first
-
-                    //set ttclean/bcsellling 
-                    thisCdr.field1 = 1;
-                    //set year-month id for this call
-                    string strDateTime = thisCdr.StartTime.ToMySqlStyleDateTimeStrWithoutQuote();
-                    thisCdr.field2 = Convert.ToInt32(strDateTime.Substring(2, 2) + strDateTime.Substring(5, 2));
-
                     string terminatingCalledNumber = thisCdr.TerminatingCalledNumber.ToString();
                     if (terminatingCalledNumber != "" && terminatingCalledNumber.Length >= 5)
                     {
@@ -98,7 +89,7 @@ namespace TelcobrightMediation
                     }
                     int iteration = 0;
                     //find out AnsidTerm for this call
-                    //50	ANSPrefixOrig
+                    //50	AnsPrefixOrig
                     //51	AnsIdOrig
                     //52	AnsPrefixTerm
                     //53	AnsIdTerm
@@ -129,7 +120,7 @@ namespace TelcobrightMediation
             newSummary.tup_destinationId = cdrExt.Cdr.AnsIdTerm.ToString();
             newSummary.tup_matchedprefixsupplier =
                 cdrExt.Cdr
-                    .matchedprefixsupplier; //this is overwritten in SetChargingSummaryInCustomerDirection for successful calls
+                    .MatchedPrefixSupplier; //this is overwritten in SetChargingSummaryInCustomerDirection for successful calls
             if (cdrExt.Cdr.ChargingStatus != 1) return;
 
             acc_chargeable chargeableCust = null;

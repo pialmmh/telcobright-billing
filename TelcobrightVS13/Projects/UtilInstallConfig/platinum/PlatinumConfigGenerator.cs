@@ -42,12 +42,12 @@ namespace InstallConfig
                 ValidationRulesForInconsistentCdrs = new Dictionary<string, string>()
                 {
                     { "!String.IsNullOrEmpty(obj[98]) and !String.IsNullOrWhiteSpace(obj[98])",
-                        "UniqueBillId cannot be empty" },//public const int Uniquebillid = 98;
+                        "UniqueBillId cannot be empty" },//public const int UniqueBillId = 98;
                     { $@"Validator.BooleanParsers['isNumericChecker'].Invoke(obj[2]) == true 
                          and Validator.IntParsers['intConverterProxy'].Invoke(obj[2]) > 0",
                         "SequenceNumber must be numeric and > 0" },//public const int Sequencenumber = 2;
                     {"!String.IsNullOrEmpty(obj[5]) and !String.IsNullOrWhiteSpace(obj[5])",
-                        "incomingroute cannot be empty" },//public const int Incomingroute = 5;
+                        "IncomingRoute cannot be empty" },//public const int IncomingRoute = 5;
                     {"!String.IsNullOrEmpty(obj[9]) and !String.IsNullOrWhiteSpace(obj[9])",
                         "OriginatingCalledNumber cannot be empty" },//public const int Originatingcallednumber = 9;
                     {$@"Validator.BooleanParsers['isNumericChecker'].Invoke(obj[14]) 
@@ -56,7 +56,7 @@ namespace InstallConfig
                     {$@"Validator.BooleanParsers['isDateTimeChecker'].Invoke(obj[29]) == true
                         and Validator.DateParsers['strToMySqlDtConverter'].Invoke(obj[29]) 
                         > date('"+ tempCdrSetting.NotAllowedCallDateTimeBefore.ToString("yyyy-MM-dd") +"')",
-                        "StartTime must be a valid datetime and > "+tempCdrSetting.NotAllowedCallDateTimeBefore.ToString("yyyy-MM-dd") },//public const int Starttime = 29;
+                        "StartTime must be a valid datetime and > "+tempCdrSetting.NotAllowedCallDateTimeBefore.ToString("yyyy-MM-dd") },//public const int StartTime = 29;
                     {$@"Validator.BooleanParsers['isDateTimeChecker'].Invoke(obj[15]) == true and 
                         Validator.DateParsers['strToMySqlDtConverter'].Invoke(obj[15]) >= 
                         Validator.DateParsers['strToMySqlDtConverter'].Invoke(obj[29]"+")",
@@ -68,25 +68,25 @@ namespace InstallConfig
                 CommonMediationChecklist = new Dictionary<string, string>()
                 {
                     { "!String.IsNullOrEmpty(obj.UniqueBillId) and !String.IsNullOrWhiteSpace(obj.UniqueBillId)",
-                        "UniqueBillId cannot be empty" },//public const int Uniquebillid = 98;
+                        "UniqueBillId cannot be empty" },//public const int UniqueBillId = 98;
                     { "obj.SequenceNumber > 0",
                         "SequenceNumber must be > 0" },//public const int Sequencenumber = 2;
-                    {"!String.IsNullOrEmpty(obj.incomingroute) and !String.IsNullOrWhiteSpace(obj.incomingroute)",
-                        "incomingroute cannot be empty" },//public const int Incomingroute = 5;
+                    {"!String.IsNullOrEmpty(obj.IncomingRoute) and !String.IsNullOrWhiteSpace(obj.IncomingRoute)",
+                        "IncomingRoute cannot be empty" },//public const int IncomingRoute = 5;
                     {"!String.IsNullOrEmpty(obj.OriginatingCalledNumber) and !String.IsNullOrWhiteSpace(obj.OriginatingCalledNumber)",
                         "OriginatingCalledNumber cannot be empty" },//public const int Originatingcallednumber = 9;
                     {"obj.DurationSec >= 0",
                         "durationsec must be >= 0" },//public const int Durationsec = 14;
                     {"obj.StartTime > date('"+ tempCdrSetting.NotAllowedCallDateTimeBefore.ToString("yyyy-MM-dd") +"')",
-                        "StartTime must be > "+tempCdrSetting.NotAllowedCallDateTimeBefore.ToString("yyyy-MM-dd") },//public const int Starttime = 29;
+                        "StartTime must be > "+tempCdrSetting.NotAllowedCallDateTimeBefore.ToString("yyyy-MM-dd") },//public const int StartTime = 29;
                     {"obj.EndTime >= obj.StartTime",
                         "EndTime must be >= StartTime" },//public const int Endtime = 15;
                     {"obj.validflag > 0",
                         "validflag must be > 0" },//public const int Validflag = 54;
                     { "obj.SwitchId > 0",
                         "SwitchId must be > 0" },
-                    {"obj.idcall > 0",
-                        "idcall must be > 0" },
+                    {"obj.IdCall > 0",
+                        "IdCall must be > 0" },
                     {"!String.IsNullOrEmpty(obj.FileName) and !String.IsNullOrWhiteSpace(obj.FileName)",
                         "FileName cannot be empty" },
                     {"obj.finalrecord == 1",
@@ -95,7 +95,7 @@ namespace InstallConfig
                         "EndTime must be >= StartTime" },
                     {"obj.durationsec > 0?obj.ChargingStatus == 1: obj.ChargingStatus == 0",
                         "ChargingStatus must be 1 when durationsec > 0 , otherwise == 0 " },
-                    { "obj.inPartnerId > 0",
+                    { "obj.InPartnerId > 0",
                         "InPartnerId must be > 0" },
                     { "obj.ServiceGroup > 0",
                         "ServiceGroup must be > 0" },
@@ -405,8 +405,8 @@ namespace InstallConfig
                                         "endtime as `End Time`",
                                         "inpartner.partnername as `In Partner`",
                                         "outpartner.partnername as `Out Partner`",
-                                        "concat(switchid,'-',incomingroute) as `Ingress Route`",
-                                        "concat(switchid,'-',outgoingroute)  as `Egress Route`",
+                                        "concat(switchid,'-',IncomingRoute) as `Ingress Route`",
+                                        "concat(switchid,'-',OutgoingRoute)  as `Egress Route`",
                                         "OriginatingCallingNumber as `Ingress Calling Number`",
                                         "OriginatingCalledNumber as `Ingress Called Number`",
                                         "TerminatingCallingNumber as `Egress Calling Number`",
@@ -436,10 +436,10 @@ namespace InstallConfig
                                         "starttime as `Start Time`",
                                         "AnswerTime as `Answer Time`",
                                         "endtime as `End Time`",
-                                        "c.inPartnerId",
-                                        "c.outPartnerId",
-                                        "concat(switchid,'-',incomingroute) as `Ingress Route`",
-                                        "concat(switchid,'-',outgoingroute)  as `Egress Route`",
+                                        "c.InPartnerId",
+                                        "c.OutPartnerId",
+                                        "concat(switchid,'-',IncomingRoute) as `Ingress Route`",
+                                        "concat(switchid,'-',OutgoingRoute)  as `Egress Route`",
                                         "OriginatingCallingNumber as `Ingress Calling Number`",
                                         "OriginatingCalledNumber as `Ingress Called Number`",
                                         "TerminatingCallingNumber as `Egress Calling Number`",
