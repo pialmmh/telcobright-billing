@@ -16,8 +16,9 @@ namespace Utils
      
         static void Main(string[] args)
         {
-            //var tester = new EFTester();
+            //var tester = new FractionCeilingTester();
             //tester.Test();
+            //tester.PerformanceTest();
             Console.WriteLine("Press a key:");
             Console.WriteLine("1=Test Entity Renaming");
             Console.WriteLine("2=Entity Framework Batch Renaming");

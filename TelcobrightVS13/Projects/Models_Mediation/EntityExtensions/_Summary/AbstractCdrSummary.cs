@@ -39,7 +39,7 @@ namespace MediationModel
 		public abstract decimal duration1 { get; set; }
 		public abstract decimal duration2 { get; set; }
 		public abstract decimal duration3 { get; set; }
-		public abstract double PDD { get; set; }
+		public abstract decimal PDD { get; set; }
 		public abstract decimal customercost { get; set; }
 		public abstract decimal suppliercost { get; set; }
 		public abstract decimal tax1 { get; set; }
@@ -80,10 +80,10 @@ namespace MediationModel
 				);
 			var tup1 = new CdrSummaryTuple(
 				tup_switchid,
-				tup_inpartnerid,
-				tup_outpartnerid,
-				tup_incomingroute,
-				tup_outgoingroute,
+				this.tup_inpartnerid,
+				this.tup_outpartnerid,
+				this.tup_incomingroute,
+				this.tup_outgoingroute,
 				tup_customerrate,
 				tup_supplierrate,
 				tup2);
@@ -209,10 +209,10 @@ namespace MediationModel
 			return $@"(
 				{id.ToMySqlField()},                       
 				{tup_switchid.ToMySqlField()},             
-				{tup_inpartnerid.ToMySqlField()},          
-				{tup_outpartnerid.ToMySqlField()},         
-				{tup_incomingroute.ToNotNullSqlField()},        
-				{tup_outgoingroute.ToNotNullSqlField()},        
+				{this.tup_inpartnerid.ToMySqlField()},          
+				{this.tup_outpartnerid.ToMySqlField()},         
+				{this.tup_incomingroute.ToNotNullSqlField()},        
+				{this.tup_outgoingroute.ToNotNullSqlField()},        
 				{tup_customerrate.ToMySqlField()},         
 				{tup_supplierrate.ToMySqlField()},         
 				{tup_incomingip.ToNotNullSqlField()},           

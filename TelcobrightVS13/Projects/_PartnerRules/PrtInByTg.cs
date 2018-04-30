@@ -18,14 +18,14 @@ namespace PartnerRules
         public int Id => 1;
         public void Execute(cdr thisCdr, MefPartnerRulesContainer pData)
         {
-            var key = new ValueTuple<int,string>(thisCdr.SwitchId, thisCdr.incomingroute);
+            var key = new ValueTuple<int,string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
             route thisRoute = null;
             pData.SwitchWiseRoutes.TryGetValue(key, out thisRoute);
             if (thisRoute != null)
             {
-                thisCdr.inPartnerId = thisRoute.idPartner;
+                thisCdr.InPartnerId = thisRoute.idPartner;
                 //set post paid/pre-paid flag
-                thisCdr.CustomerPrePaid =Convert.ToByte(thisRoute.partner.CustomerPrePaid);
+                thisCdr.PrePaid =Convert.ToByte(thisRoute.partner.CustomerPrePaid);
             }
         }
     }

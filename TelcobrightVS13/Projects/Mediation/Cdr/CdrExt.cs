@@ -25,7 +25,7 @@ namespace TelcobrightMediation.Cdr
         private readonly List<acc_transaction> _reversedTransactions = new List<acc_transaction>();
         public CdrNewOldType CdrNewOldType { get; }
         public string UniqueBillId => this.Cdr.UniqueBillId;
-        public long IdCall => this.Cdr.idcall;
+        public long IdCall => this.Cdr.IdCall;
         public DateTime StartTime => this.Cdr.StartTime;
         public cdr Cdr { get; set; }
         public Dictionary<string, AbstractCdrSummary> TableWiseSummaries { get; set; }
@@ -76,7 +76,7 @@ namespace TelcobrightMediation.Cdr
 
         public override string ToString()
         {
-            return this.UniqueBillId + "/" + this.Cdr.idcall;
+            return this.UniqueBillId + "/" + this.Cdr.IdCall;
         }
     }
 }

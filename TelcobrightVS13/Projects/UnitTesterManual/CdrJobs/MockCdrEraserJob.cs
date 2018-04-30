@@ -18,7 +18,7 @@ namespace UnitTesterManual
             CdrCollectorInputData cdrCollectorInput = new CdrCollectorInputData(input, "", autoIncrementManager);
             SegmentedCdrEraser segmentedCdrEraser =
                 new SegmentedCdrEraser(cdrCollectorInput,
-                    input.CdrSetting.BatchSizeWhenPreparingLargeSqlJob, "idcall", "starttime");
+                    input.CdrSetting.BatchSizeWhenPreparingLargeSqlJob, "IdCall", "starttime");
             if (input.TelcobrightJob.Status != 2) //prepare job if not prepared already
                 segmentedCdrEraser.PrepareSegments();
             List<jobsegment> jobsegments = segmentedCdrEraser.ExecuteIncompleteSegments();

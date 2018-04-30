@@ -477,6 +477,7 @@
     </Compile>
     <Compile Include="Testers\CastWithInterfaceTester.cs" />
     <Compile Include="Testers\Employees\FullTextSearchTester.cs" />
+    <Compile Include="Testers\FractionCeilingTester.cs" />
     <Compile Include="Testers\ObjectCopierTest.cs" />
     <Compile Include="TestFluentValidationRules.cs" />
     <Compile Include="TestFluentValidationRuleSets.cs" />
@@ -516,7 +517,7 @@
     <Compile Include="userrole.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Utils.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="ValidationTester.cs" />
     <Compile Include="xyzprefix.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>

@@ -220,19 +220,19 @@ namespace Decoders
                     double.TryParse(thisNormalizedRow[Fn.Durationsec], out tmpDuration);
                     if (thisRow[12] == "N" || tmpDuration > 0)
                     {
-                        thisNormalizedRow[Fn.Chargingstatus] = "1";
+                        thisNormalizedRow[Fn.ChargingStatus] = "1";
                         //set answer time based on duration
                         DateTime endTime = new DateTime();
                         DateTime answerTime = new DateTime();
                         if (DateTime.TryParseExact(thisNormalizedRow[Fn.Endtime], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out endTime))
                         {
                             answerTime = endTime.AddSeconds(tmpDuration * (-1));//substract
-                            thisNormalizedRow[Fn.Answertime] = answerTime.ToString("yyyy-MM-dd HH:mm:ss");
+                            thisNormalizedRow[Fn.AnswerTime] = answerTime.ToString("yyyy-MM-dd HH:mm:ss");
                         }
                     }
                     else
                     {
-                        thisNormalizedRow[Fn.Chargingstatus] = "0";
+                        thisNormalizedRow[Fn.ChargingStatus] = "0";
                     }
 
                     //set connect time based on PDD
@@ -243,10 +243,10 @@ namespace Decoders
                         pddSec = tempDbl;//pdd found in sec here.
                         DateTime connectTime = new DateTime();
                         DateTime startTime = new DateTime();
-                        if (DateTime.TryParseExact(thisNormalizedRow[Fn.Starttime], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out startTime))
+                        if (DateTime.TryParseExact(thisNormalizedRow[Fn.StartTime], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out startTime))
                         {
                             connectTime = startTime.AddSeconds(pddSec);
-                            thisNormalizedRow[Fn.Connecttime] = connectTime.ToString("yyyy-MM-dd HH:mm:ss");
+                            thisNormalizedRow[Fn.ConnectTime] = connectTime.ToString("yyyy-MM-dd HH:mm:ss");
                         }
                     }
 
@@ -261,7 +261,7 @@ namespace Decoders
                             thisNormalizedRow[55] = "0";//for now mark as non-partial, single cdr
                                                         //remove the text "end1", casue that will throw error for this field in cdrloaded
                             thisNormalizedRow[65] = "0";//a numeric value is ok as per cdrfieldlist
-                            thisNormalizedRow[Fn.Finalrecord] = "1";
+                            thisNormalizedRow[Fn.FinalRecord] = "1";
                             decodedRows.Add(thisNormalizedRow);
                         }
                     }

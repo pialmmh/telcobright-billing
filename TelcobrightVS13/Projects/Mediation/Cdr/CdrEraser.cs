@@ -27,7 +27,7 @@ namespace TelcobrightMediation
     {
         public CdrJobContext CdrJobContext { get; }
         public CdrCollectionResult CollectionResult { get; }
-
+        private List<CdrExt> OldCdrExts { get; }
         private Dictionary<string, List<acc_transaction>> BillIdWisePrevTransactions { get; set; } =
             new Dictionary<string, List<acc_transaction>>();
 
@@ -37,21 +37,22 @@ namespace TelcobrightMediation
         {
             this.CdrJobContext = cdrJobContext;
             this.CollectionResult = newCollectionResult;
-            this.CollectionResult.ConcurrentCdrExts.Values.ToList().ForEach(c => this.CollectionResult.ProcessedCdrExts.Add(c));
-        }
-
-        public void UndoOldSummaries()
-        {
+            this.CollectionResult.ConcurrentCdrExts.Values.ToList()
+                .ForEach(c =>
+                {
+                    if (c.CdrNewOldType != CdrNewOldType.OldCdr)
+                        throw new Exception("OldCdrs must have CdrNewOldtype status set to old.");
+                    this.CollectionResult.ProcessedCdrExts.Add(c);
+                });
             if (!this.CollectionResult.ProcessedCdrExts.Any())
                 throw new Exception("ProcessedCdrExts cannot be empty in Cdr Erasing job.");
-
-            var oldCdrExts = this.CollectionResult.ProcessedCdrExts.ToList();
-            this.CdrJobContext.AccountingContext.TransactionCache.PopulateCache(
-                () => new Dictionary<string, acc_transaction>());
-
+            this.OldCdrExts= this.CollectionResult.ProcessedCdrExts.ToList();
+        }
+        public void RegenerateOldSummaries()
+        {
             //todo: change to parallel
             //Parallel.ForEach(oldCdrExts,oldCdrExt=>
-            oldCdrExts.ForEach(oldCdrExt =>
+            this.OldCdrExts.ForEach(oldCdrExt =>
             {
                 if (oldCdrExt.CdrNewOldType != CdrNewOldType.OldCdr)
                     throw new Exception("OldCdrs must have CdrNewOldtype status set to old.");
@@ -62,14 +63,36 @@ namespace TelcobrightMediation
                 {
                     AbstractCdrSummary regeneratedSummary = (AbstractCdrSummary) this.CdrJobContext.CdrSummaryContext
                         .TargetTableWiseSummaryFactory[targetTableName].CreateNewInstance(oldCdrExt);
-                    //oldCdrExt.TableWiseSummaries.Add(targetTableName, recreatedSummary);
-                    this.CdrJobContext.CdrSummaryContext.MergeSubstractSummary(targetTableName, regeneratedSummary);
+                    oldCdrExt.TableWiseSummaries.Add(targetTableName, regeneratedSummary);
                 });
             });
-            var oldChargeables = oldCdrExts.SelectMany(c => c.Chargeables.Values).ToList();
-            this.CdrJobContext.AccountingContext.ChargeableCache
-                .PopulateCache(() => oldChargeables.ToDictionary(chargeable => chargeable.id.ToString()));
-            this.CdrJobContext.AccountingContext.ChargeableCache.DeleteAll();
+        }
+
+        public void ValidateSummaryReGeneration()
+        {
+            decimal regeneratedSummaryDurationTotal = this.OldCdrExts.SelectMany(c => c.TableWiseSummaries.Values)
+                .Sum(s => s.actualduration);
+            var summaryDurationTotalFromCdrMetaData =
+                Convert.ToDecimal(this.OldCdrExts.Sum(c => c.Cdr.SummaryMetaTotal));
+            if (Math.Abs(regeneratedSummaryDurationTotal - summaryDurationTotalFromCdrMetaData) >
+                this.CdrJobContext.MediationContext.Tbc.CdrSetting.FractionalNumberComparisonTollerance)
+            {
+                throw new Exception("Regenerated summary total do not match ");
+            }
+        }
+
+        public void UndoOldSummaries()
+        {
+            //todo: change to parallel
+            //Parallel.ForEach(oldCdrExts,oldCdrExt=>
+            this.OldCdrExts.ForEach(oldCdrExt =>
+            {
+                foreach (var kv in oldCdrExt.TableWiseSummaries)
+                {
+                    string summaryTargetTable = kv.Key;
+                    this.CdrJobContext.CdrSummaryContext.MergeSubstractSummary(summaryTargetTable, kv.Value);
+                }
+            });
         }
 
         public void UndoOldChargeables()
@@ -85,7 +108,7 @@ namespace TelcobrightMediation
         public void DeleteOldCdrs()
         {
             int delCount = OldCdrDeleter.DeleteOldCdrs("cdr", this.CollectionResult.ProcessedCdrExts
-                    .Select(c => new KeyValuePair<long, DateTime>(c.Cdr.idcall, c.StartTime)).ToList(),
+                    .Select(c => new KeyValuePair<long, DateTime>(c.Cdr.IdCall, c.StartTime)).ToList(),
                 this.CdrJobContext.SegmentSizeForDbWrite, this.CdrJobContext.DbCmd);
             if (delCount != this.CollectionResult.RawCount)
                 throw new Exception("Deleted number of cdrs do not match raw count in collection result.");

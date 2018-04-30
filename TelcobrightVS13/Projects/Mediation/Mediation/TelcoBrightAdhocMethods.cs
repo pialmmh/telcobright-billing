@@ -30,11 +30,11 @@ namespace TelcobrightMediation
                     List<string> lstSegment = new List<string>();
                     foreach (string[] thisrow in lines)
                     {
-                        string prefix = thisrow[Fn.Matchedprefixy];
-                        double rDuration = Convert.ToDouble(thisrow[Fn.Roundedduration]);
+                        string prefix = thisrow[Fn.MatchedPrefixY];
+                        double rDuration = Convert.ToDouble(thisrow[Fn.RoundedDuration]);
                         double rateAmount = Convert.ToDouble(dicRates[prefix].OtherAmount1);
                         double amount = rDuration * rateAmount / 60;
-                        thisrow[Fn.Carriercostyigwout] = amount.ToString();
+                        thisrow[Fn.YAmount] = amount.ToString();
                         int segment = 5000;
 
                         lstSegment.Add((" ('" + string.Join("','", thisrow) + "') ").Replace("'\\N'", "NULL"));

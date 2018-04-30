@@ -41,7 +41,7 @@ namespace TelcobrightMediation
         {
             //international in call direction/service group
             var dicRoutes = cdrProcessor.CdrJobContext.MediationContext.MefServiceGroupContainer.SwitchWiseRoutes;
-            var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.incomingroute);
+            var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
             route thisRoute = null;
             dicRoutes.TryGetValue(key, out thisRoute);
             if (thisRoute != null)
@@ -51,9 +51,6 @@ namespace TelcobrightMediation
                 ) //IGW and route=international
                 {
                     thisCdr.ServiceGroup = 3; //Intl in ICX
-                    //set year-month id for this call for tt clean & bc selling
-                    string startTimeAsStr = thisCdr.StartTime.ToMySqlStyleDateTimeStrWithoutQuote();
-                    thisCdr.field2 = Convert.ToInt32(startTimeAsStr.Substring(2, 2) + startTimeAsStr.Substring(5, 2));
                 }
             }
         }
@@ -62,8 +59,8 @@ namespace TelcobrightMediation
         {
             //this._sgIntlTransitVoice.SetServiceGroupWiseSummaryParams(cdrExt, newSummary);
             newSummary.tup_countryorareacode = cdrExt.Cdr.CountryCode;
-            newSummary.tup_matchedprefixcustomer = cdrExt.Cdr.matchedprefixcustomer;
-            newSummary.tup_matchedprefixsupplier = cdrExt.Cdr.matchedprefixsupplier;
+            newSummary.tup_matchedprefixcustomer = cdrExt.Cdr.MatchedPrefixCustomer;
+            newSummary.tup_matchedprefixsupplier = cdrExt.Cdr.MatchedPrefixSupplier;
             if (cdrExt.Cdr.ChargingStatus != 1) return;
 
             acc_chargeable chargeableCust = null;

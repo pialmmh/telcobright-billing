@@ -67,9 +67,9 @@ namespace TelcobrightMediation
                                            CallDate = newMediatableCdrInstance.StartTime,
                                        };
             this.CdrPartialReference.lastFilename = newMediatableCdrInstance.FileName;
-            this.CdrPartialReference.lastIdcall = newMediatableCdrInstance.idcall;
+            this.CdrPartialReference.lastIdcall = newMediatableCdrInstance.IdCall;
             this.CdrPartialReference.commaSepIdcallsForAllInstances
-                = string.Join(",", concatedNewAndOldRawinstances.Select(c => c.idcall.ToString()));
+                = string.Join(",", concatedNewAndOldRawinstances.Select(c => c.IdCall.ToString()));
         }
     }
 }

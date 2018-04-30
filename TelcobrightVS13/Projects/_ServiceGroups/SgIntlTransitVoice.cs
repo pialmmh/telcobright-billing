@@ -42,8 +42,8 @@ namespace TelcobrightMediation
         public void SetServiceGroupWiseSummaryParams(CdrExt cdrExt, AbstractCdrSummary newSummary)
         {
             newSummary.tup_countryorareacode = cdrExt.Cdr.CountryCode;
-            newSummary.tup_matchedprefixcustomer = cdrExt.Cdr.matchedprefixcustomer;
-            newSummary.tup_matchedprefixsupplier = cdrExt.Cdr.matchedprefixsupplier;
+            newSummary.tup_matchedprefixcustomer = cdrExt.Cdr.MatchedPrefixCustomer;
+            newSummary.tup_matchedprefixsupplier = cdrExt.Cdr.MatchedPrefixSupplier;
             if (cdrExt.Cdr.ChargingStatus != 1) return;
 
             acc_chargeable chargeableCust = null;

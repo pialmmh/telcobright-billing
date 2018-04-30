@@ -21,10 +21,10 @@ namespace TelcobrightMediation
             CdrExt cdrExt = summarySourceObject;
             sum_voice_day_01 newSummary = new sum_voice_day_01();
             newSummary.tup_switchid = Convert.ToInt32(cdrExt.Cdr.SwitchId);
-            newSummary.tup_inpartnerid = Convert.ToInt32(cdrExt.Cdr.inPartnerId);
-            newSummary.tup_outpartnerid = Convert.ToInt32(cdrExt.Cdr.outPartnerId);
-            newSummary.tup_incomingroute = cdrExt.Cdr.incomingroute.ReplaceNullWith("");
-            newSummary.tup_outgoingroute = cdrExt.Cdr.outgoingroute.ReplaceNullWith("");
+            newSummary.tup_inpartnerid = Convert.ToInt32(cdrExt.Cdr.InPartnerId);
+            newSummary.tup_outpartnerid = Convert.ToInt32(cdrExt.Cdr.OutPartnerId);
+            newSummary.tup_incomingroute = cdrExt.Cdr.IncomingRoute.ReplaceNullWith("");
+            newSummary.tup_outgoingroute = cdrExt.Cdr.OutgoingRoute.ReplaceNullWith("");
             newSummary.tup_customerrate = 0;
             newSummary.tup_supplierrate = 0;
             newSummary.tup_incomingip = cdrExt.Cdr.OriginatingIP.ReplaceNullWith("");
@@ -36,7 +36,7 @@ namespace TelcobrightMediation
                 newSummary.connectedcalls = 1; //connected flag by connect time
             }
             else newSummary.connectedcalls = 0;
-            if (cdrExt.Cdr.field5 == 1)
+            if (cdrExt.Cdr.NERSuccess == 1)
             {
                 newSummary.connectedcallsCC = 1; //connected flag
             }
@@ -44,11 +44,11 @@ namespace TelcobrightMediation
 
             newSummary.successfulcalls = Convert.ToInt64(cdrExt.Cdr.ChargingStatus);
             newSummary.actualduration = cdrExt.Cdr.DurationSec;
-            newSummary.roundedduration = Convert.ToDecimal(cdrExt.Cdr.roundedduration);
+            newSummary.roundedduration = Convert.ToDecimal(cdrExt.Cdr.RoundedDuration);
             newSummary.duration1 = Convert.ToDecimal(cdrExt.Cdr.Duration1);
             newSummary.duration2 = Convert.ToDecimal(cdrExt.Cdr.Duration2);
             newSummary.duration3 = Convert.ToDecimal(cdrExt.Cdr.Duration3);
-            newSummary.PDD = Convert.ToDouble(cdrExt.Cdr.PDD);
+            newSummary.PDD = Convert.ToDecimal(cdrExt.Cdr.PDD);
 
             //service group specific params, set default first then send through service group to set right value
             IServiceGroup serviceGroup =

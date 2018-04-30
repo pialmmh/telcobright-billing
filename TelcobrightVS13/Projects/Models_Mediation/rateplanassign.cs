@@ -32,7 +32,7 @@ namespace MediationModel
         public int Resolution { get; set; }
         public int MinDurationSec { get; set; }
         public int SurchargeTime { get; set; }
-        public double SurchargeAmount { get; set; }
+        public decimal SurchargeAmount { get; set; }
         public Nullable<sbyte> Category { get; set; }
         public Nullable<sbyte> SubCategory { get; set; }
     }

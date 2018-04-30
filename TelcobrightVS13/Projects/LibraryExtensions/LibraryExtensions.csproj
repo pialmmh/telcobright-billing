@@ -86,6 +86,7 @@
     <Compile Include="ExecutablePathFinder.cs" />
     <Compile Include="FileAndPathHelper.cs" />
     <Compile Include="CommonDbClientExtensions.cs" />
+    <Compile Include="Math\FractionCeilingHelper.cs" />
     <Compile Include="MySqlFieldToString.cs" />
     <Compile Include="ConfigHelper\PartitionManagerPerTable.cs" />
     <Compile Include="NullToNonNullableConverter.cs" />

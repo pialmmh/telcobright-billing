@@ -15,11 +15,11 @@ namespace MediationModel
     public partial class cdrerror
     {
         public string SwitchId { get; set; }
-        public string idcall { get; set; }
-        public string SequenceNumber { get; set; }
+        public long IdCall { get; set; }
+        public long SequenceNumber { get; set; }
         public string FileName { get; set; }
         public string ServiceGroup { get; set; }
-        public string incomingroute { get; set; }
+        public string IncomingRoute { get; set; }
         public string OriginatingIP { get; set; }
         public string OPC { get; set; }
         public string OriginatingCIC { get; set; }
@@ -27,7 +27,7 @@ namespace MediationModel
         public string TerminatingCalledNumber { get; set; }
         public string OriginatingCallingNumber { get; set; }
         public string TerminatingCallingNumber { get; set; }
-        public string CustomerPrePaid { get; set; }
+        public string PrePaid { get; set; }
         public string DurationSec { get; set; }
         public string EndTime { get; set; }
         public string ConnectTime { get; set; }
@@ -35,74 +35,74 @@ namespace MediationModel
         public string ChargingStatus { get; set; }
         public string PDD { get; set; }
         public string CountryCode { get; set; }
-        public string MinuteID { get; set; }
+        public string AreaCodeOrLata { get; set; }
         public string ReleaseDirection { get; set; }
         public string ReleaseCauseSystem { get; set; }
         public string ReleaseCauseEgress { get; set; }
-        public string outgoingroute { get; set; }
+        public string OutgoingRoute { get; set; }
         public string TerminatingIP { get; set; }
         public string DPC { get; set; }
         public string TerminatingCIC { get; set; }
-        public string StartTime { get; set; }
-        public string inPartnerId { get; set; }
+        public System.DateTime StartTime { get; set; }
+        public string InPartnerId { get; set; }
         public string CustomerRate { get; set; }
-        public string outPartnerId { get; set; }
+        public string OutPartnerId { get; set; }
         public string SupplierRate { get; set; }
         public string MatchedPrefixY { get; set; }
-        public string USDRateY { get; set; }
-        public string matchedprefixcustomer { get; set; }
-        public string matchedprefixsupplier { get; set; }
-        public string CustomerCost { get; set; }
-        public string SupplierCost { get; set; }
-        public string CostANSIn { get; set; }
-        public string CostICXIn { get; set; }
-        public string CostVATCommissionIn { get; set; }
-        public string IGWRevenueIn { get; set; }
-        public string RevenueANSOut { get; set; }
-        public string RevenueIGWOut { get; set; }
-        public string RevenueICXOut { get; set; }
-        public string RevenueVATCommissionOut { get; set; }
-        public string SubscriberChargeXOut { get; set; }
-        public string CarrierCostYIGWOut { get; set; }
-        public string ANSPrefixOrig { get; set; }
+        public string UsdRateY { get; set; }
+        public string MatchedPrefixCustomer { get; set; }
+        public string MatchedPrefixSupplier { get; set; }
+        public string InPartnerCost { get; set; }
+        public string OutPartnerCost { get; set; }
+        public string CostAnsIn { get; set; }
+        public string CostIcxIn { get; set; }
+        public string Tax1 { get; set; }
+        public string IgwRevenueIn { get; set; }
+        public string RevenueAnsOut { get; set; }
+        public string RevenueIgwOut { get; set; }
+        public string RevenueIcxOut { get; set; }
+        public string Tax2 { get; set; }
+        public string XAmount { get; set; }
+        public string YAmount { get; set; }
+        public string AnsPrefixOrig { get; set; }
         public string AnsIdOrig { get; set; }
         public string AnsPrefixTerm { get; set; }
         public string AnsIdTerm { get; set; }
-        public string validflag { get; set; }
+        public string ValidFlag { get; set; }
         public string PartialFlag { get; set; }
-        public string releasecauseingress { get; set; }
-        public string CustomerCallNumberANS { get; set; }
-        public string SupplierCallNumberANS { get; set; }
+        public string ReleaseCauseIngress { get; set; }
+        public string InRoamingOpId { get; set; }
+        public string OutRoamingOpId { get; set; }
         public string CalledPartyNOA { get; set; }
         public string CallingPartyNOA { get; set; }
-        public string GrpDayId { get; set; }
-        public string MonthId { get; set; }
-        public string DayId { get; set; }
-        public string BTRCTermRate { get; set; }
-        public string WeekDayId { get; set; }
+        public string AdditionalSystemCodes { get; set; }
+        public string AdditionalPartyNumber { get; set; }
+        public string ResellerIds { get; set; }
+        public string ZAmount { get; set; }
+        public string PreviousRoutes { get; set; }
         public string E1Id { get; set; }
-        public string MediaIP1 { get; set; }
-        public string MediaIP2 { get; set; }
-        public string MediaIP3 { get; set; }
-        public string MediaIP4 { get; set; }
-        public string CallCancelDuration { get; set; }
+        public string MediaIp1 { get; set; }
+        public string MediaIp2 { get; set; }
+        public string MediaIp3 { get; set; }
+        public string MediaIp4 { get; set; }
+        public string CallReleaseDuration { get; set; }
         public string E1IdOut { get; set; }
-        public string inTrunkAdditionalInfo { get; set; }
-        public string outTrunkAdditionalInfo { get; set; }
-        public string inMgwId { get; set; }
-        public string outMgwId { get; set; }
-        public string mediationcomplete { get; set; }
-        public string codec { get; set; }
+        public string InTrunkAdditionalInfo { get; set; }
+        public string OutTrunkAdditionalInfo { get; set; }
+        public string InMgwId { get; set; }
+        public string OutMgwId { get; set; }
+        public string MediationComplete { get; set; }
+        public string Codec { get; set; }
         public string ConnectedNumberType { get; set; }
         public string RedirectingNumber { get; set; }
         public string CallForwardOrRoamingType { get; set; }
-        public string date1 { get; set; }
-        public string field1 { get; set; }
-        public string field2 { get; set; }
-        public string field3 { get; set; }
-        public string errorCode { get; set; }
-        public string field5 { get; set; }
-        public string roundedduration { get; set; }
+        public string OtherDate { get; set; }
+        public string SummaryMetaTotal { get; set; }
+        public string TransactionMetaTotal { get; set; }
+        public string ChargeableMetaTotal { get; set; }
+        public string ErrorCode { get; set; }
+        public string NERSuccess { get; set; }
+        public string RoundedDuration { get; set; }
         public string PartialDuration { get; set; }
         public string PartialAnswerTime { get; set; }
         public string PartialEndTime { get; set; }
@@ -113,10 +113,10 @@ namespace MediationModel
         public string Duration4 { get; set; }
         public string PreviousPeriodCdr { get; set; }
         public string UniqueBillId { get; set; }
-        public string BillngInfo { get; set; }
+        public string AdditionalMetaData { get; set; }
         public string Category { get; set; }
         public string SubCategory { get; set; }
         public string ChangedByJobId { get; set; }
-        public string ActualStartTime { get; set; }
+        public string SignalingStartTime { get; set; }
     }
 }

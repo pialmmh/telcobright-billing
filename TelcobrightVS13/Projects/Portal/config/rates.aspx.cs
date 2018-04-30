@@ -954,13 +954,13 @@ public partial class DefaultRates : Page
                     thisInstance.MinDurationSec = newMinDurationSec;
                     thisInstance.Inactive = newInactive;
                     thisInstance.SurchargeTime = newSurchargeTime;
-                    thisInstance.SurchargeAmount = newSurchargeAmount;
+                    thisInstance.SurchargeAmount = Convert.ToDecimal(newSurchargeAmount);
                     thisInstance.OtherAmount1 = Convert.ToDecimal(newOtherAmount1);
                     thisInstance.OtherAmount2 = Convert.ToDecimal(newOtherAmount2);
                     thisInstance.OtherAmount3 = Convert.ToDecimal(newOtherAmount3);
-                    thisInstance.OtherAmount4 = newOtherAmount4;
-                    thisInstance.OtherAmount5 = newOtherAmount5;
-                    thisInstance.OtherAmount6 = newOtherAmount6;
+                    thisInstance.OtherAmount4 = Convert.ToDecimal(newOtherAmount4);
+                    thisInstance.OtherAmount5 = Convert.ToDecimal(newOtherAmount5);
+                    thisInstance.OtherAmount6 = Convert.ToDecimal(newOtherAmount6);
                     thisInstance.OtherAmount7 = newOtherAmount7;
                     thisInstance.OtherAmount8 = newOtherAmount8;
                     thisInstance.OtherAmount9 = newOtherAmount9;

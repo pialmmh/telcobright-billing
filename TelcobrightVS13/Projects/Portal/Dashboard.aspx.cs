@@ -46,8 +46,8 @@ public partial class DashboardAspx : Page
         List<DashBoard.ErrorCalls> ec = new List<DashBoard.ErrorCalls>();
         using (PartnerEntities conPartner = new PartnerEntities())
         {
-            ec = conPartner.Database.SqlQuery<DashBoard.ErrorCalls>(@"select errorCode as ErrorReason, count(*) as NumberOfCalls
-                                                from cdrerror group by errorCode").ToList();
+            ec = conPartner.Database.SqlQuery<DashBoard.ErrorCalls>(@"select ErrorCode as ErrorReason, count(*) as NumberOfCalls
+                                                from cdrerror group by ErrorCode").ToList();
             this.HyperLinkError.Text = ec.Select(c=>c.NumberOfCalls).Sum() + " Calls in Error";
             this.GridViewError.DataSource = ec;
             this.GridViewError.DataBind();

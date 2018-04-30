@@ -18,7 +18,7 @@ namespace MediationModel
         public string UOM_ID_TO { get; set; }
         public System.DateTime FROM_DATE { get; set; }
         public Nullable<System.DateTime> THRU_DATE { get; set; }
-        public Nullable<double> CONVERSION_FACTOR { get; set; }
+        public Nullable<decimal> CONVERSION_FACTOR { get; set; }
         public string CUSTOM_METHOD_ID { get; set; }
         public Nullable<decimal> DECIMAL_SCALE { get; set; }
         public string ROUNDING_MODE { get; set; }

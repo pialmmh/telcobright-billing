@@ -24,17 +24,17 @@ namespace ServiceFamilies
         public AccChargeableExt Execute(CdrExt cdrExt, ServiceContext serviceContext, bool flagLcr)
         {
             cdr cdr = cdrExt.Cdr;
-            A2ZRater a2Z = new A2ZRater(serviceContext, cdr);
+            A2ZRater a2ZRater = new A2ZRater(serviceContext, cdr);
             decimal finalDuration = 0;
             decimal finalAmount = 0;
-            Rateext matchedRateWithAssignmentTupleId = a2Z.ExecuteA2Z(out finalDuration, out finalAmount, flagLcr,
+            Rateext matchedRateWithAssignmentTupleId = a2ZRater.ExecuteA2ZRating(out finalDuration, out finalAmount, flagLcr,
                 useInMemoryTable:true);
             if (matchedRateWithAssignmentTupleId != null)
             {
                 //consider otherAmount3 as tax1, by default
                 cdr.Duration1 = finalDuration;
                 decimal taxAmount1 = Convert.ToDecimal(matchedRateWithAssignmentTupleId.OtherAmount3);
-                cdr.RevenueVATCommissionOut = cdr.CustomerCost * taxAmount1 / 100;
+                cdr.Tax2 = cdr.InPartnerCost * taxAmount1 / 100;
                 string idCurrencyUoM = serviceContext.CdrProcessor.CdrJobContext.MediationContext.MefServiceFamilyContainer
                     .DicRateplans[matchedRateWithAssignmentTupleId.idrateplan.ToString()].Currency;
                 int idChargedPartner = GetChargedOrChargingPartnerId(cdrExt, serviceContext);
@@ -50,7 +50,7 @@ namespace ServiceFamilies
                     {
                         id = serviceContext.CdrProcessor.CdrJobContext.AccountingContext.AutoIncrementManager.GetNewCounter("acc_chargeable"),
                         uniqueBillId = cdr.UniqueBillId,
-                        idEvent = Convert.ToInt64(cdr.idcall),
+                        idEvent = Convert.ToInt64(cdr.IdCall),
                         transactionTime = cdr.StartTime,
                         servicegroup = serviceContext.ServiceGroupConfiguration.IdServiceGroup,
                         assignedDirection = Convert.ToSByte(serviceContext.AssignDir),
@@ -97,8 +97,8 @@ namespace ServiceFamilies
         }
         private int GetChargedOrChargingPartnerId(CdrExt cdrExt,ServiceContext serviceContext)//thisrow,assignDir,return idPartner who's charged or charging
         {
-            return serviceContext.AssignDir == ServiceAssignmentDirection.Customer ? Convert.ToInt32(cdrExt.Cdr.inPartnerId) :
-               serviceContext.AssignDir == ServiceAssignmentDirection.Supplier ? Convert.ToInt32(cdrExt.Cdr.outPartnerId) : -1;
+            return serviceContext.AssignDir == ServiceAssignmentDirection.Customer ? Convert.ToInt32(cdrExt.Cdr.InPartnerId) :
+               serviceContext.AssignDir == ServiceAssignmentDirection.Supplier ? Convert.ToInt32(cdrExt.Cdr.OutPartnerId) : -1;
         }
 
         public acc_transaction GetTransaction(AccChargeableExt accChargeableExt,ServiceContext serviceContext)

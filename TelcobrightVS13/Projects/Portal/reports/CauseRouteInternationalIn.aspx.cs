@@ -893,7 +893,7 @@ public partial class DefaultCauseRouteIntlInCallView : Page
                 string queryString = "gridans=" + (e.Row.Cells[3].Text != "" ? e.Row.Cells[3].Text : "null") + "&" +
                     "gridicx=" + (e.Row.Cells[2].Text != "" ? e.Row.Cells[2].Text : "null") + "&" +
                     "gridpartner=" + (e.Row.Cells[1].Text != "" ? e.Row.Cells[1].Text : "null") + "&" +
-                    "gridcallsstatus=" + (e.Row.Cells[5].Text != "" ? e.Row.Cells[5].Text : "null") + "&" +
+                    "grIdCallsstatus=" + (e.Row.Cells[5].Text != "" ? e.Row.Cells[5].Text : "null") + "&" +
                     "gridcause=" + (e.Row.Cells[6].Text != "" ? e.Row.Cells[6].Text : "null") + "&" +
                     "gridcausecodecount=" + (e.Row.Cells[8].Text != "" ? e.Row.Cells[8].Text : "null") + "&" +
                     "gridcountry=null" + "&" +

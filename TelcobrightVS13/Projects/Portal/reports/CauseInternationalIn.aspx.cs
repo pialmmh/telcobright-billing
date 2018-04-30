@@ -815,7 +815,7 @@ public partial class DefaultCauseIntlIn : Page
             this.Session["CauseInternationalIn.aspx.csgridans"] = row.Cells[3].Text;
             this.Session["CauseInternationalIn.aspx.csgridicx"] = row.Cells[2].Text;
             this.Session["CauseInternationalIn.aspx.csgridpartner"] = row.Cells[1].Text;
-            this.Session["CauseInternationalIn.aspx.csgridcallsstatus"] = row.Cells[5].Text;
+            this.Session["CauseInternationalIn.aspx.csgrIdCallsstatus"] = row.Cells[5].Text;
             this.Session["CauseInternationalIn.aspx.csgridcause"] = row.Cells[6].Text;
             this.Session["CauseInternationalIn.aspx.csgridcausecodecount"] = row.Cells[8].Text;
             this.Session["CauseInternationalIn.aspx.csstartdate"] = this.txtDate.Text;
@@ -858,7 +858,7 @@ public partial class DefaultCauseIntlIn : Page
                 string queryString = "gridans=" + (e.Row.Cells[3].Text != "" ? e.Row.Cells[3].Text : "null") + "&" +
                     "gridicx=" + (e.Row.Cells[2].Text != "" ? e.Row.Cells[2].Text : "null") + "&" +
                     "gridpartner=" + (e.Row.Cells[1].Text != "" ? e.Row.Cells[1].Text : "null") + "&" +
-                    "gridcallsstatus=" + (e.Row.Cells[5].Text != "" ? e.Row.Cells[5].Text : "null") + "&" +
+                    "grIdCallsstatus=" + (e.Row.Cells[5].Text != "" ? e.Row.Cells[5].Text : "null") + "&" +
                     "gridcause=" + (e.Row.Cells[6].Text != "" ? e.Row.Cells[6].Text : "null") + "&" +
                     "gridcausecodecount=" + (e.Row.Cells[8].Text != "" ? e.Row.Cells[8].Text : "null") + "&" +
                     "gridcountry=null" + "&" +

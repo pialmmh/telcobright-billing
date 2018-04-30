@@ -161,7 +161,7 @@ public partial class DefaultCdrError : System.Web.UI.Page
             dicParameters.TryGetValue("gridans", out this._ans);
             dicParameters.TryGetValue("gridicx", out this._icx);
             dicParameters.TryGetValue("gridpartner", out this._partner);
-            dicParameters.TryGetValue("gridcallsstatus", out this._callsstatus);
+            dicParameters.TryGetValue("grIdCallsstatus", out this._callsstatus);
             dicParameters.TryGetValue("gridcause", out this._causecode);
             dicParameters.TryGetValue("gridcausecodecount", out this._causecodecount);
 
@@ -225,10 +225,10 @@ public partial class DefaultCdrError : System.Web.UI.Page
                 if (this.Session["CauseInternationalInCallView.aspx.csgridpartner"].ToString() != "")
                     this._partner = this.Session["CauseInternationalInCallView.aspx.csgridpartner"].ToString();
             }
-            if (this.Session["CauseInternationalInCallView.aspx.csgridcallsstatus"] != null)
+            if (this.Session["CauseInternationalInCallView.aspx.csgrIdCallsstatus"] != null)
             {
-                if (this.Session["CauseInternationalInCallView.aspx.csgridcallsstatus"].ToString() != "")
-                    this._callsstatus = this.Session["CauseInternationalInCallView.aspx.csgridcallsstatus"].ToString();
+                if (this.Session["CauseInternationalInCallView.aspx.csgrIdCallsstatus"].ToString() != "")
+                    this._callsstatus = this.Session["CauseInternationalInCallView.aspx.csgrIdCallsstatus"].ToString();
             }//gridcause
             if (this.Session["CauseInternationalInCallView.aspx.csgridcause"] != null)
             {

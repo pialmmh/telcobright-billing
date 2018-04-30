@@ -44,7 +44,7 @@ namespace MediationModel
         public override decimal duration1 { get; set; }
         public override decimal duration2 { get; set; }
         public override decimal duration3 { get; set; }
-        public override double PDD { get; set; }
+        public override decimal PDD { get; set; }
         public override decimal customercost { get; set; }
         public override decimal suppliercost { get; set; }
         public override decimal tax1 { get; set; }

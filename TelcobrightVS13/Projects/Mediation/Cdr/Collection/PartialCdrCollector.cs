@@ -68,7 +68,7 @@ namespace TelcobrightMediation.Mediation.Cdr
             string sql = string.Join(" union all ",
                 dayWisePartialReferences.Select(kv =>
                     $@" select * from cdr where switchid={this.IdSwitch} 
-                    and idcall in ({string.Join(",", kv.Value)}) and {
+                    and IdCall in ({string.Join(",", kv.Value)}) and {
                     kv.Key.ToMySqlWhereClauseForOneDay("starttime")}"));
             return this.Context.Database.SqlQuery<cdr>(sql).ToDictionary(c => c.UniqueBillId);
         }
@@ -160,22 +160,22 @@ namespace TelcobrightMediation.Mediation.Cdr
                 throw new Exception("Number of cdrpartialreference must be equal to number of collected lastAggRawInstances.");
             cdrPartialReferences.ForEach(r =>
             {
-                List<long> idCallsOfPrevInstancesBySplittingComma =
+                List<long> IdCallsOfPrevInstancesBySplittingComma =
                     r.commaSepIdcallsForAllInstances.Split(',').Select(strIdCall => Convert.ToInt64(strIdCall))
                         .ToList();
                 var prevRawInstances = this.BillIdWisePrevRawInstances[r.UniqueBillId].ToList();
-                if (idCallsOfPrevInstancesBySplittingComma.Count!=prevRawInstances.Count)
+                if (IdCallsOfPrevInstancesBySplittingComma.Count!=prevRawInstances.Count)
                     throw new Exception("Collected number of PrevRawInstances does not match history contained in cdrpartialreference.");
-                if (idCallsOfPrevInstancesBySplittingComma.All(prevRawInstances.Select(p=>p.idcall).Contains)==false)
+                if (IdCallsOfPrevInstancesBySplittingComma.All(prevRawInstances.Select(p=>p.IdCall).Contains)==false)
                 {
-                    throw new Exception("Collected idcalls of PrevRawInstances do not match history contained in cdrpartialreference.");
+                    throw new Exception("Collected IdCalls of PrevRawInstances do not match history contained in cdrpartialreference.");
                 }
-                long collectedIdCallOfLastAggRaw = this.BillIdWiseLastAggregatedRawInstances[r.UniqueBillId].idcall;
+                long collectedIdCallOfLastAggRaw = this.BillIdWiseLastAggregatedRawInstances[r.UniqueBillId].IdCall;
                 if(r.lastIdcall!=collectedIdCallOfLastAggRaw)
-                    throw new Exception("Last idcall from cdrpartial reference must match idcall of lastAggRawInstance.");
-                long collectedIdCallOfLastCdr = this.BillIdWiseLastProcessedCdrInstance[r.UniqueBillId].idcall;
+                    throw new Exception("Last IdCall from cdrpartial reference must match IdCall of lastAggRawInstance.");
+                long collectedIdCallOfLastCdr = this.BillIdWiseLastProcessedCdrInstance[r.UniqueBillId].IdCall;
                 if (r.lastIdcall != collectedIdCallOfLastCdr)
-                    throw new Exception("Last idcall from cdrpartial reference must match idcall of last processed cdr instance.");
+                    throw new Exception("Last IdCall from cdrpartial reference must match IdCall of last processed cdr instance.");
             });
             var collectedLastAggBillIds=this.BillIdWiseLastAggregatedRawInstances.Values.Select(c=>c.UniqueBillId).ToList();
             collectedLastAggBillIds.ForEach(lastAggBillId =>

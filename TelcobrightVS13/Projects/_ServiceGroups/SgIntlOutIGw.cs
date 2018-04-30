@@ -45,7 +45,7 @@ namespace TelcobrightMediation
         {
             //international in call direction/service group
             var dicRoutes = cdrProcessor.CdrJobContext.MediationContext.MefServiceGroupContainer.SwitchWiseRoutes;
-            var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.incomingroute);
+            var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
             route thisRoute = null;
             dicRoutes.TryGetValue(key, out thisRoute);
             if (thisRoute != null)
@@ -58,14 +58,6 @@ namespace TelcobrightMediation
                     {
                         thisCdr.AnsIdOrig = thisRoute.field1;
                     }
-
-                    //set ttclean/bcsellling 
-                    thisCdr.field1 = 2;
-                    //set year-month id for this call
-                    string strStartTime = thisCdr.StartTime.ToMySqlStyleDateTimeStrWithoutQuote();
-                    thisCdr.field2 = Convert.ToInt32(strStartTime.Substring(2, 2) + strStartTime.Substring(5, 2));
-
-
                     string originatingCallingNumber = (thisCdr.OriginatingCallingNumber.StartsWith("+") == false
                         ? thisCdr.OriginatingCallingNumber
                         : thisCdr.OriginatingCallingNumber.Substring(1, thisCdr.OriginatingCallingNumber.Length - 1));
@@ -126,7 +118,7 @@ namespace TelcobrightMediation
                                     continue;
                                 }
                             }
-                            thisCdr.ANSPrefixOrig = ansPrefixOrig;
+                            thisCdr.AnsPrefixOrig = ansPrefixOrig;
                             thisCdr.AnsIdOrig = ansIdOrig;
                         }
                     } //if originatingcallingnumber present

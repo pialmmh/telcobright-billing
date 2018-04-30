@@ -19,12 +19,12 @@ namespace PartnerRules
 
         public void Execute(cdr thisCdr, MefPartnerRulesContainer pData)
         {
-            var key = new ValueTuple<int,string>(thisCdr.SwitchId,thisCdr.outgoingroute);
+            var key = new ValueTuple<int,string>(thisCdr.SwitchId,thisCdr.OutgoingRoute);
             route thisRoute = null;
             pData.SwitchWiseRoutes.TryGetValue(key, out thisRoute);
             if (thisRoute != null)
             {
-                thisCdr.outPartnerId = thisRoute.idPartner;
+                thisCdr.OutPartnerId = thisRoute.idPartner;
             }
         }
     }

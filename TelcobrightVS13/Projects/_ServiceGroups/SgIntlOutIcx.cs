@@ -42,7 +42,7 @@ namespace TelcobrightMediation
         {
             //international Out call direction/service group
             var dicRoutes = cdrProcessor.CdrJobContext.MediationContext.MefServiceGroupContainer.SwitchWiseRoutes;
-            var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.incomingroute);
+            var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
             route thisRoute = null;
             dicRoutes.TryGetValue(key, out thisRoute);
             if (thisRoute != null)
@@ -53,8 +53,6 @@ namespace TelcobrightMediation
                     thisCdr.ServiceGroup = 2; //international Out in IGW
                     //set year-month id for this call for tt clean & bc selling
                     string tempDateTime = thisCdr.StartTime.ToMySqlStyleDateTimeStrWithoutQuote();
-                    thisCdr.field1 = Convert.ToInt32(tempDateTime.Substring(2, 2) + tempDateTime.Substring(5, 2));
-                    thisCdr.field2 = Convert.ToInt32(tempDateTime.Substring(2, 2) + tempDateTime.Substring(5, 2));
                 }
             }
         }

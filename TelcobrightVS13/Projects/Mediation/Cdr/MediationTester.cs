@@ -1,73 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LibraryExtensions;
 using MediationModel;
-using MySql.Data.MySqlClient;
-using TelcobrightMediation;
-using TelcobrightMediation.Cdr;
-using CdrSummaryTuple = System.ValueTuple<int, int, int, string, string, decimal, decimal, System.ValueTuple<string, string, string, string, string, string, string, System.ValueTuple<string, string, string, string, string, string>>>;
-namespace UnitTesterManual
-{
-    class DateWithDouble
-    {
-        public DateTime Date { get; set; }
-        public double Value { get; set; }
-    }
 
-    class DoubleComparer
+namespace TelcobrightMediation
+{
+    public class MediationTester
     {
-        private double _tollerance = .00000001;
-        public bool IsEqal(double num1, double num2)
+        private decimal DecimalComparisionTollerance { get; }
+
+        public MediationTester(decimal decimalComparisionTollerance)
         {
-            if (Math.Abs(num1 - num2) < this._tollerance)
-                return true;
-            else return false;
+            this.DecimalComparisionTollerance = decimalComparisionTollerance;
         }
-        public DoubleComparer(){}
-        public DoubleComparer(double tollerance)
-        {
-            this._tollerance = tollerance;
-        }
-    }
-    public static class MediationTester
-    {
-        private static decimal _decimalComparisionTollerance = .00000001M;
-        public static bool DurationSumInCdrAndSummaryAreTollerablyEqual(CdrProcessor cdrProcessor)
+
+        public bool DurationSumInCdrAndSummaryAreTollerablyEqual(CdrProcessor cdrProcessor)
         {
             return cdrProcessor.CollectionResult.ConcurrentCdrExts.Values.Sum(c => c.Cdr?.DurationSec)
-                -cdrProcessor.CollectionResult.ConcurrentCdrExts.Values.Sum(
+                   - cdrProcessor.CollectionResult.ConcurrentCdrExts.Values.Sum(
                        c => c.TableWiseSummaries.Values.Sum(s => s?.actualduration))
-                       <=_decimalComparisionTollerance;
+                   <= this.DecimalComparisionTollerance;
         }
-        public static bool DurationSumInCdrAndMergedCachedAreTollerablyEqual(CdrProcessor cdrProcessor)
+        public bool DurationSumInCdrAndTableWiseSummariesAreTollerablyEqual(CdrProcessor cdrProcessor)
         {
             return cdrProcessor.CollectionResult.ConcurrentCdrExts.Values.Sum(c => c.Cdr?.DurationSec)
-                   - cdrProcessor.CollectionResult.ConcurrentCdrExts.Values.SelectMany(c=>c.TableWiseSummaries.Values).Sum(s=>s.actualduration)
-                   <= _decimalComparisionTollerance;
+                   - cdrProcessor.CollectionResult.ConcurrentCdrExts.Values.SelectMany(c => c.TableWiseSummaries.Values).Sum(s => s.actualduration)
+                   <= this.DecimalComparisionTollerance;
         }
-        public static bool SummaryCountTwiceAsCdrCount(CdrProcessor cdrProcessor)
+        public bool SummaryCountTwiceAsCdrCount(CdrProcessor cdrProcessor)
         {
-            var cdrCount= cdrProcessor.CollectionResult.ConcurrentCdrExts.Count();
+            var cdrCount = cdrProcessor.CollectionResult.ConcurrentCdrExts.Count();
             int summaryInstanceCount = cdrProcessor.CollectionResult.ConcurrentCdrExts.Values
                 .SelectMany(c => c.TableWiseSummaries.Values).Count();
             return 2 * cdrCount == summaryInstanceCount;
         }
 
-        public static bool SumOfPrevDayWiseDurationsAndNewSummaryInstancesIsEqualToSameInMergedSummaryCache
+        public bool SumOfPrevDayWiseDurationsAndNewSummaryInstancesIsEqualToSameInMergedSummaryCache
             (CdrProcessor cdrProcessor)
         {
             var summaryTargetTables = cdrProcessor.CdrJobContext.MediationContext.MefServiceGroupContainer
                 .IdServiceGroupWiseServiceGroups.SelectMany(sg => sg.Value.GetSummaryTargetTables().Keys)
                 .Distinct().ToList();
-            
+
             foreach (string summaryTableName in summaryTargetTables)
             {
                 List<DateTime> datesOrHoursInvolved = summaryTableName.Contains("day")
-                    ? cdrProcessor.CdrJobContext.DatesInvolved: cdrProcessor.CdrJobContext.HoursInvolved;
+                    ? cdrProcessor.CdrJobContext.DatesInvolved : cdrProcessor.CdrJobContext.HoursInvolved;
                 string sql = $@"SELECT tup_starttime,ifnull(sum(actualduration),0) actualduration
                         FROM {summaryTableName}
                         where actualduration>0
@@ -103,11 +84,11 @@ namespace UnitTesterManual
                     var mergedDurationInSummaryContext = cdrProcessor.CdrJobContext.CdrSummaryContext
                         .TableWiseSummaryCache
                         .Where(keyValue => keyValue.Key == summaryTableName).Select(keyValue => keyValue.Value)
-                        .SelectMany(summaryCache => summaryCache.GetItems().Where(s=>s.tup_starttime==kv.Key))
+                        .SelectMany(summaryCache => summaryCache.GetItems().Where(s => s.tup_starttime == kv.Key))
                         .Sum(summary => summary.actualduration);
                     decimal totalSupposedToBeDuration =
                         newDurationForThisDayOrHourInNewCdrExtSummaries + prevDurationForThisDayOrHourFromSummaryTable;
-                    if (totalSupposedToBeDuration!= mergedDurationInSummaryContext)
+                    if (totalSupposedToBeDuration != mergedDurationInSummaryContext)
                         return false;
                 }
             }

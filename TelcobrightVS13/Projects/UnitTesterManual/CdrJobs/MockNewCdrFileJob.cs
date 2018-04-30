@@ -39,12 +39,6 @@ namespace UnitTesterManual
 
         bool PartialCollectionEnabled => this.Input.MediationContext.Tbc.CdrSetting
             .PartialCdrEnabledNeIds.Contains(this.Input.Ne.idSwitch);
-
-        private int rawCount, nonPartialCount, uniquePartialCount, rawPartialCount, distinctPartialCount = 0;
-
-        private decimal rawDurationWithoutInconsistents = 0;
-
-        //todo: move them to base (newCdr) & consider making the tests permament in newCdrJob
         public override JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
         {
             CdrJobInputData input = (CdrJobInputData) jobInputData;
@@ -72,7 +66,7 @@ namespace UnitTesterManual
                 this.rawPartialCount = partialRows.Count;
                 if (preProcessor.TxtCdrRows.Count!=this.nonPartialCount+this.rawPartialCount)
                     throw new Exception("TxtCdr rows with partial & non-partial flag do not match total decoded text rows");
-                this.distinctPartialCount = partialRows.GroupBy(r => r[Fn.Uniquebillid]).Count();
+                this.distinctPartialCount = partialRows.GroupBy(r => r[Fn.UniqueBillId]).Count();
             }
 
             CdrCollectionResult newCollectionResult = null;
@@ -92,71 +86,27 @@ namespace UnitTesterManual
         {
             if (cdrJob.CdrProcessor.CollectionResult.ConcurrentCdrExts.Count > 0)
             {
+                cdrJob.CdrEraser?.RegenerateOldSummaries();
+                cdrJob.CdrEraser?.ValidateSummaryReGeneration();
                 cdrJob.CdrEraser?.UndoOldSummaries();
                 cdrJob.CdrEraser?.UndoOldChargeables();
                 cdrJob.CdrEraser?.DeleteOldCdrs();
 
                 cdrJob.CdrProcessor?.Process();
+
                 CdrBasedTransactionProcessor transactionProcessor =
                     new CdrBasedTransactionProcessor(cdrJob.CdrProcessor, cdrJob.CdrEraser, cdrJob.CdrJobContext);
                 List<acc_transaction> incrementalTransactions = transactionProcessor.ProcessTransactionsIncrementally();
                 transactionProcessor.ValidateTransactions(incrementalTransactions);
                 cdrJob.CdrJobContext.AccountingContext.ExecuteTransactions(incrementalTransactions);
-                Assert.IsTrue(MediationTester.DurationSumInCdrAndMergedCachedAreTollerablyEqual(cdrJob.CdrProcessor));
-                Assert.IsTrue(MediationTester.DurationSumInCdrAndSummaryAreTollerablyEqual(cdrJob.CdrProcessor));
-                Assert.IsTrue(MediationTester.SummaryCountTwiceAsCdrCount(cdrJob.CdrProcessor));
-                Assert.IsTrue(MediationTester
-                    .SumOfPrevDayWiseDurationsAndNewSummaryInstancesIsEqualToSameInMergedSummaryCache(cdrJob
-                        .CdrProcessor));
+
+                base.ValidateWithMediationTester(input, cdrJob);
                 CdrWritingResult cdrWritingResult = cdrJob.CdrProcessor?.WriteCdrs();
                 if (this.PartialCollectionEnabled)
                 {
-                    //partial cdrs tests here...
-                    var collectionResult = cdrJob.CdrProcessor.CollectionResult;
-                    int processedErrorCount = collectionResult.CdrErrors.Count;
-                    int processedInconsistentCount = collectionResult.CdrInconsistents.Count;
-                    var processedCdrExts = collectionResult.ProcessedCdrExts;
-                    var processedNonPartialCdrExts = processedCdrExts.Where(c => c.Cdr.PartialFlag == 0).ToList();
-                    var processedPartialCdrExts = collectionResult.ProcessedCdrExts.Where(
-                        c => c.Cdr.PartialFlag > 0 && c.PartialCdrContainer != null).ToList();
-
-                    Assert.AreEqual(cdrWritingResult.CdrCount, collectionResult.ProcessedCdrExts.Count);
-                    Assert.AreEqual(cdrWritingResult.CdrCount,
-                        processedNonPartialCdrExts.Count + processedPartialCdrExts.Count);
-                    Assert.AreEqual(cdrWritingResult.CdrErrorCount, collectionResult.CdrErrors.Count);
-                    Assert.AreEqual(cdrWritingResult.CdrInconsistentCount, collectionResult.CdrInconsistents.Count);
-                    Assert.AreEqual(cdrWritingResult.TrueNonPartialCount, processedNonPartialCdrExts.Count);
-                    Assert.AreEqual(cdrWritingResult.NormalizedPartialCount, processedPartialCdrExts.Count);
-                    Assert.AreEqual(cdrWritingResult.CdrCount,
-                        (processedNonPartialCdrExts.Count + processedPartialCdrExts.Count));
-                    Assert.AreEqual(this.rawPartialCount + this.nonPartialCount,
-                        (processedNonPartialCdrExts.Count + processedPartialCdrExts
-                             .SelectMany(c => c.PartialCdrContainer.NewRawInstances).Count()
-                         + processedErrorCount + processedInconsistentCount));
-                    Assert.AreEqual(cdrWritingResult.PartialCdrWriter.WrittenCdrPartialReferences,
-                        processedPartialCdrExts.Count);
-                    Assert.AreEqual(cdrWritingResult.CdrCount,processedCdrExts.Count);
-                    Assert.AreEqual(collectionResult.RawCount,
-                        cdrWritingResult.CdrErrorCount +cdrWritingResult.CdrInconsistentCount
-                        +processedCdrExts.Select(c=>c.NewRawCount).Sum());
-                    processedPartialCdrExts.ForEach(
-                        c => Assert.IsNotNull(c.PartialCdrContainer.NewAggregatedRawInstance));
-                    processedPartialCdrExts.ForEach(c => Assert.IsNotNull(c.PartialCdrContainer.NewCdrEquivalent));
-                    Assert.AreEqual(
-                        processedPartialCdrExts.Select(c => c.PartialCdrContainer.NewAggregatedRawInstance).Count(),
-                        processedPartialCdrExts.Select(c => c.PartialCdrContainer.NewCdrEquivalent).Count());
-
-                    decimal nonPartialDuration = processedNonPartialCdrExts.Sum(c => c.Cdr.DurationSec);
-                    decimal partialNormalizedDuration = processedPartialCdrExts.Sum(c => c.Cdr.DurationSec);
-                    Assert.AreEqual(this.rawDurationWithoutInconsistents,
-                        nonPartialDuration + partialNormalizedDuration+
-                        collectionResult.CdrErrors.Sum(c => Convert.ToDecimal(c.DurationSec)));
-                    Assert.AreEqual(collectionResult.ProcessedCdrExts.Sum(c => c.Cdr.DurationSec),
-                        (nonPartialDuration + partialNormalizedDuration));
-                    Assert.AreEqual(partialNormalizedDuration,
-                        processedPartialCdrExts.SelectMany(c => c.PartialCdrContainer.NewRawInstances)
-                            .Sum(c => c.DurationSec));
+                    base.PerformAdditionalValidationForPartialCdrCase(cdrJob, cdrWritingResult);
                 }
+
                 foreach (var summaryCache in cdrJob.CdrJobContext.CdrSummaryContext.TableWiseSummaryCache.Values)
                 {
                     summaryCache.WriteAllChanges(cdrJob.CdrJobContext.DbCmd,

@@ -259,29 +259,29 @@ namespace Decoders
                     thisRow[55] = "0";//for now mark as non-partial, single cdr
                     //found invalid starttime for failed calls, put connecttime's value in starttime
                     //also found answertime for failed calls, set them to null
-                    if (thisRow[Fn.Chargingstatus] != "1")
+                    if (thisRow[Fn.ChargingStatus] != "1")
                     {
                         DateTime tempDate = new DateTime();
                         //if not valid start time
-                        if (!DateTime.TryParseExact(thisRow[Fn.Starttime], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out tempDate))
+                        if (!DateTime.TryParseExact(thisRow[Fn.StartTime], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out tempDate))
                         {
                             //put connect time into starttime
-                            if (DateTime.TryParseExact(thisRow[Fn.Connecttime], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out tempDate))
+                            if (DateTime.TryParseExact(thisRow[Fn.ConnectTime], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out tempDate))
                             {
-                                thisRow[Fn.Starttime] = thisRow[Fn.Connecttime];
+                                thisRow[Fn.StartTime] = thisRow[Fn.ConnectTime];
                             }//else try answertime
-                            else if (DateTime.TryParseExact(thisRow[Fn.Answertime], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out tempDate))
+                            else if (DateTime.TryParseExact(thisRow[Fn.AnswerTime], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out tempDate))
                             {
-                                thisRow[Fn.Starttime] = thisRow[Fn.Answertime];
+                                thisRow[Fn.StartTime] = thisRow[Fn.AnswerTime];
                             }
                             else if (DateTime.TryParseExact(thisRow[Fn.Endtime], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out tempDate))
                             {
-                                thisRow[Fn.Starttime] = thisRow[Fn.Endtime];
+                                thisRow[Fn.StartTime] = thisRow[Fn.Endtime];
                             }
                         }
-                        thisRow[Fn.Answertime] = "";//set answertime to null
+                        thisRow[Fn.AnswerTime] = "";//set answertime to null
                     }
-                    thisRow[Fn.Finalrecord] = "1";
+                    thisRow[Fn.FinalRecord] = "1";
                     thisRow[Fn.Validflag] = "1";
                     decodedRows.Add(thisRow);
                 }
