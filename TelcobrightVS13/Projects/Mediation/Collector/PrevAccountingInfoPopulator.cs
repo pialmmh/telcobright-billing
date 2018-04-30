@@ -44,11 +44,11 @@ namespace TelcobrightMediation.Cdr.CollectionRelated.Collector
                     CdrExt targetCdrExt = this.BillIdWiseCdrExts[kv.Key];
                     foreach (var oldTransaction in kv.Value)
                     {
-                        TransactionContainerForSingleAccount transactionContainer = null;
+                        AccWiseTransactionContainer transactionContainer = null;
                         if (targetCdrExt.AccWiseTransactionContainers.TryGetValue(oldTransaction.glAccountId,
                                 out transactionContainer) == false)
                         {
-                            transactionContainer = new TransactionContainerForSingleAccount();
+                            transactionContainer = new AccWiseTransactionContainer();
                             targetCdrExt.AccWiseTransactionContainers
                                 .Add(oldTransaction.glAccountId, transactionContainer);
                             transactionContainer.OldTransactions.Add(oldTransaction);

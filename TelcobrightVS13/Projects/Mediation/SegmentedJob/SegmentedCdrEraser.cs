@@ -37,7 +37,7 @@ namespace TelcobrightMediation
             CdrJobContext cdrJobContext = new CdrJobContext(this.CdrCollectorInput.CdrJobInputData,
                 this.CdrCollectorInput.AutoIncrementManager, newCollectionResult.HoursInvolved);
             CdrEraser cdrEraser = new CdrEraser(cdrJobContext, oldCollectionResult);
-            CdrJob cdrJob = new CdrJob(null, cdrEraser, oldCollectionResult.RawCount);
+            CdrJob cdrJob = new CdrJob(null, cdrEraser, oldCollectionResult.RawCount,partialCdrTesterData:null);
             return cdrJob;
         }
     }

@@ -208,19 +208,14 @@ namespace TelcobrightMediation
                     {
                         cdrExt.Chargeables.Add(chargeableExt.AccChargeable.GetTuple(), chargeableExt.AccChargeable);
                         acc_transaction transaction = sf.GetTransaction(chargeableExt, serviceContext);
-                        TransactionContainerForSingleAccount transactionContainer = null;
+                        AccWiseTransactionContainer transactionContainer = null;
                         if (cdrExt.AccWiseTransactionContainers.TryGetValue(transaction.glAccountId,
                                 out transactionContainer) == false)
                         {
-                            transactionContainer = new TransactionContainerForSingleAccount();
+                            transactionContainer = new AccWiseTransactionContainer();
                         }
                         cdrExt.AccWiseTransactionContainers.Add(transaction.glAccountId, transactionContainer);
                         transactionContainer.NewTransaction = transaction;
-
-                        cdr.ChargeableMetaTotal = cdrExt.Chargeables.Values.Sum(c => c.BilledAmount);
-                        if (cdr.TransactionMetaTotal == null) cdr.TransactionMetaTotal = 0;
-                        cdr.TransactionMetaTotal +=
-                            cdrExt.AccWiseTransactionContainers.Values.Sum(t => t.IncrementalTransaction.amount);
                     }
                 }
 

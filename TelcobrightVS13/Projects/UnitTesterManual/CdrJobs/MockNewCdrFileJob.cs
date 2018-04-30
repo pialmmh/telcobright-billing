@@ -35,14 +35,12 @@ namespace UnitTesterManual
             this.OperatorName = operatorName;
         }
 
-        private CdrJobInputData Input { get; set; }
-
         bool PartialCollectionEnabled => this.Input.MediationContext.Tbc.CdrSetting
             .PartialCdrEnabledNeIds.Contains(this.Input.Ne.idSwitch);
         public override JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
         {
             CdrJobInputData input = (CdrJobInputData) jobInputData;
-            this.Input = input;
+            base.Input = input;
             AutoIncrementManager autoIncrementManager = new AutoIncrementManager(input.Context);
             CdrCollectorInputData collectorInput =
                 new CdrCollectorInputData(input, input.TelcobrightJob.JobName, autoIncrementManager);
@@ -58,62 +56,33 @@ namespace UnitTesterManual
 
             this.rawDurationWithoutInconsistents = preProcessor.TxtCdrRows
                 .Select(r => Convert.ToDecimal(r[Fn.Durationsec])).Sum();
+            PartialCdrTesterData partialCdrTesterData = null;
             if (this.PartialCollectionEnabled)
             {
-                this.nonPartialCount = preProcessor.TxtCdrRows.Count(r => r[Fn.Partialflag] == "0");
-                List<string[]> partialRows = preProcessor.TxtCdrRows.Where(r =>
-                    this.Input.CdrSetting.PartialCdrFlagIndicators.Contains(r[Fn.Partialflag])).ToList();
-                this.rawPartialCount = partialRows.Count;
-                if (preProcessor.TxtCdrRows.Count!=this.nonPartialCount+this.rawPartialCount)
-                    throw new Exception("TxtCdr rows with partial & non-partial flag do not match total decoded text rows");
-                this.distinctPartialCount = partialRows.GroupBy(r => r[Fn.UniqueBillId]).Count();
+                partialCdrTesterData = InitPartialCdrTesterData(preProcessor);
             }
 
             CdrCollectionResult newCollectionResult = null;
             CdrCollectionResult oldCollectionResult = null;
             preProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
 
-            CdrJobContext cdrJobContext = new CdrJobContext(input, autoIncrementManager,newCollectionResult.HoursInvolved);
+            CdrJobContext cdrJobContext =
+                new CdrJobContext(input, autoIncrementManager, newCollectionResult.HoursInvolved);
             CdrProcessor cdrProcessor = new CdrProcessor(cdrJobContext, newCollectionResult);
             CdrEraser cdrEraser = oldCollectionResult?.IsEmpty == false
                 ? new CdrEraser(cdrJobContext, oldCollectionResult): null;
-            CdrJob cdrJob = new CdrJob(cdrProcessor, cdrEraser, cdrProcessor.CollectionResult.RawCount);
+            CdrJob cdrJob = new CdrJob(cdrProcessor, cdrEraser, cdrProcessor.CollectionResult.RawCount,partialCdrTesterData);
             ExecuteCdrJob(input, cdrJob);
             return JobCompletionStatus.Complete;
         }
+
+        
 
         protected override void ExecuteCdrJob(CdrJobInputData input, CdrJob cdrJob)
         {
             if (cdrJob.CdrProcessor.CollectionResult.ConcurrentCdrExts.Count > 0)
             {
-                cdrJob.CdrEraser?.RegenerateOldSummaries();
-                cdrJob.CdrEraser?.ValidateSummaryReGeneration();
-                cdrJob.CdrEraser?.UndoOldSummaries();
-                cdrJob.CdrEraser?.UndoOldChargeables();
-                cdrJob.CdrEraser?.DeleteOldCdrs();
-
-                cdrJob.CdrProcessor?.Process();
-
-                CdrBasedTransactionProcessor transactionProcessor =
-                    new CdrBasedTransactionProcessor(cdrJob.CdrProcessor, cdrJob.CdrEraser, cdrJob.CdrJobContext);
-                List<acc_transaction> incrementalTransactions = transactionProcessor.ProcessTransactionsIncrementally();
-                transactionProcessor.ValidateTransactions(incrementalTransactions);
-                cdrJob.CdrJobContext.AccountingContext.ExecuteTransactions(incrementalTransactions);
-
-                base.ValidateWithMediationTester(input, cdrJob);
-                CdrWritingResult cdrWritingResult = cdrJob.CdrProcessor?.WriteCdrs();
-                if (this.PartialCollectionEnabled)
-                {
-                    base.PerformAdditionalValidationForPartialCdrCase(cdrJob, cdrWritingResult);
-                }
-
-                foreach (var summaryCache in cdrJob.CdrJobContext.CdrSummaryContext.TableWiseSummaryCache.Values)
-                {
-                    summaryCache.WriteAllChanges(cdrJob.CdrJobContext.DbCmd,
-                        cdrJob.CdrJobContext.SegmentSizeForDbWrite);
-                }
-                cdrJob.CdrJobContext.AccountingContext.WriteAllChanges();
-                cdrJob.CdrJobContext.AutoIncrementManager.WriteState();
+                
             }
             else
             {

@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using LibraryExtensions;
 using MediationModel;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TelcobrightMediation.Cdr;
 
 namespace TelcobrightMediation
 {
@@ -24,12 +26,15 @@ namespace TelcobrightMediation
                        c => c.TableWiseSummaries.Values.Sum(s => s?.actualduration))
                    <= this.DecimalComparisionTollerance;
         }
+
         public bool DurationSumInCdrAndTableWiseSummariesAreTollerablyEqual(CdrProcessor cdrProcessor)
         {
             return cdrProcessor.CollectionResult.ConcurrentCdrExts.Values.Sum(c => c.Cdr?.DurationSec)
-                   - cdrProcessor.CollectionResult.ConcurrentCdrExts.Values.SelectMany(c => c.TableWiseSummaries.Values).Sum(s => s.actualduration)
+                   - cdrProcessor.CollectionResult.ConcurrentCdrExts.Values.SelectMany(c => c.TableWiseSummaries.Values)
+                       .Sum(s => s.actualduration)
                    <= this.DecimalComparisionTollerance;
         }
+
         public bool SummaryCountTwiceAsCdrCount(CdrProcessor cdrProcessor)
         {
             var cdrCount = cdrProcessor.CollectionResult.ConcurrentCdrExts.Count();
@@ -48,7 +53,8 @@ namespace TelcobrightMediation
             foreach (string summaryTableName in summaryTargetTables)
             {
                 List<DateTime> datesOrHoursInvolved = summaryTableName.Contains("day")
-                    ? cdrProcessor.CdrJobContext.DatesInvolved : cdrProcessor.CdrJobContext.HoursInvolved;
+                    ? cdrProcessor.CdrJobContext.DatesInvolved
+                    : cdrProcessor.CdrJobContext.HoursInvolved;
                 string sql = $@"SELECT tup_starttime,ifnull(sum(actualduration),0) actualduration
                         FROM {summaryTableName}
                         where actualduration>0
@@ -94,6 +100,5 @@ namespace TelcobrightMediation
             }
             return true;
         }
-
     }
 }

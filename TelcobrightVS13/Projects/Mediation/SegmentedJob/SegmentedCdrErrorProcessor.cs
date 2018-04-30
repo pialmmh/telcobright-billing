@@ -49,7 +49,7 @@ namespace TelcobrightMediation
             CdrProcessor cdrProcessor = new CdrProcessor(cdrJobContext, newCollectionResult);
             CdrEraser cdrEraser = oldCollectionResult != null ? new CdrEraser(cdrJobContext, oldCollectionResult) : null;
             int rawCount = preProcessor.TxtCdrRows.Count;
-            CdrJob cdrJob = new CdrJob(cdrProcessor, cdrEraser, rawCount);
+            CdrJob cdrJob = new CdrJob(cdrProcessor, cdrEraser, rawCount,partialCdrTesterData:null);
             return cdrJob;
         }
 
