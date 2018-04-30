@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using jdk.nashorn.@internal.ir;
 
 namespace TelcobrightMediation.Accounting
 {
@@ -30,5 +31,18 @@ namespace TelcobrightMediation.Accounting
 
         public String ServiceAccount { get; set; }
         public int TimeZone { get; set; }
+        public int GmtOffset { get; set; }
+
+
+        private const int DefaultGmtOffset = 21600;
+        public DateTime StartDateWithTimeLocal
+        {
+            get { return StartDateWithTime.AddSeconds(DefaultGmtOffset - this.GmtOffset); }
+        }
+
+        public DateTime EndDateWithTimeLocal
+        {
+            get { return EndDateWithTime.AddSeconds(DefaultGmtOffset - this.GmtOffset); }
+        }
     }
 }

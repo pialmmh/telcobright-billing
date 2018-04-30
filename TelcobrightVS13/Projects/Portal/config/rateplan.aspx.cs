@@ -21,7 +21,7 @@ public partial class ConfigSupplierRatePlan : Page
             commonCodes.LoadReportTemplatesTree(ref masterTree);
 
             string localPath = this.Request.Url.LocalPath;
-            int pos2NdSlash = localPath.Substring(1, localPath.Length - 1).IndexOf("/");
+            int pos2NdSlash = localPath.Substring(1, localPath.Length - 1).IndexOf("/");http://localhost:25964/config/rateplan.aspx.cs
             string rootFolder = localPath.Substring(1, pos2NdSlash);
             int endOfRootFolder = this.Request.Url.AbsoluteUri.IndexOf(rootFolder);
             string urlWithQueryString = ("~" + "/" + rootFolder +

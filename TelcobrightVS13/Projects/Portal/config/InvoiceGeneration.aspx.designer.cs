@@ -13,15 +13,6 @@ namespace PortalApp.config {
     public partial class InvoiceGeneration {
         
         /// <summary>
-        /// SqlDataTimeZone control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.SqlDataSource SqlDataTimeZone;
-        
-        /// <summary>
         /// ToolkitScriptManager1 control.
         /// </summary>
         /// <remarks>
@@ -38,6 +29,15 @@ namespace PortalApp.config {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gvInvoice;
+        
+        /// <summary>
+        /// btnGenerateInvoice control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnGenerateInvoice;
         
         /// <summary>
         /// upCustomInvoice control.
