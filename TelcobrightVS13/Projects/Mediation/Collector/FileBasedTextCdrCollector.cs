@@ -13,7 +13,7 @@ namespace TelcobrightMediation
     public class FileBasedTextCdrCollector : IEventCollector
     {
         public CdrCollectorInputData CollectorInput { get; protected set; }
-        public FileBasedTextCdrCollector(CdrCollectorInputData collectorInput, PartnerEntities context)
+        public FileBasedTextCdrCollector(CdrCollectorInputData collectorInput)
         {
             this.CollectorInput = collectorInput;
         }

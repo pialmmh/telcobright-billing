@@ -56,10 +56,11 @@ namespace Jobs
                                 new List<cdrinconsistent>(), cdrExtsForThisRoute.Count);
                     CdrJobInputData cdrJobInputData=new CdrJobInputData(mediationContext,partnerContext,
                         lcrJobInputData.Ne,lcrJobInputData.TelcobrightJob);
-                    CdrJobContext cdrJobContext=new CdrJobContext(cdrJobInputData,null,
+                    CdrJobContext cdrJobContext=new CdrJobContext(cdrJobInputData,
                         cdrExtsForThisRoute.Select(c=>c.StartTime.Date.RoundDownToHour()).Distinct().ToList());
                     CdrProcessor cdrProcessor=new CdrProcessor(cdrJobContext,collectionResult);
-                    cdrJob = new CdrJob(cdrProcessor,null,cdrExtsForThisRoute.Count);
+                    cdrJob = new CdrJob(cdrProcessor: cdrProcessor, cdrEraser: null,
+                        actualStepsCount: cdrExtsForThisRoute.Count, partialCdrTesterData: null);
                     ExecutePseudoRating(singleRouteWiseCollection.Route,cdrProcessor,sf,IdCallWiseListOfRouteVsCost);
                 }
                 List<lcr> lstNewLcr = IdCallWiseListOfRouteVsCost.GetLcr(lData);

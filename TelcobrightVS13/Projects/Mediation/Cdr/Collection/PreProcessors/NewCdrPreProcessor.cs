@@ -51,20 +51,20 @@ namespace TelcobrightMediation
             return txtRows;
         }
 
-        public void ConvertToCdrOrInconsistentOnFailure(string[] row)
+        public void ConvertToCdr(string[] row,out cdrinconsistent cdrInconsistent)
         {
             cdr convertedCdr = null;
-            cdrinconsistent cdrInconsistent = null;
+            //cdrinconsistent 
+                cdrInconsistent = null;
             convertedCdr = CdrManipulatingUtil.ConvertTxtRowToCdrOrInconsistentOnFailure(row, out cdrInconsistent);
-            if (convertedCdr == null && cdrInconsistent != null)
-                base.InconsistentCdrs.Add(cdrInconsistent);
-            else if (convertedCdr != null && cdrInconsistent == null)
+            if (convertedCdr == null && cdrInconsistent != null) return;
+            if (convertedCdr != null && cdrInconsistent == null)
             {
                 if (convertedCdr.PartialFlag == 0)
                     base.NonPartialCdrs.Add(convertedCdr);
                 else
                 {
-                    if (convertedCdr.PartialFlag>0)
+                    if (convertedCdr.PartialFlag > 0)
                     {
                         base.RawPartialCdrInstances.Add(
                             new IcdrImplConverter<cdrpartialrawinstance>().Convert(convertedCdr));

@@ -15,7 +15,7 @@ namespace UnitTesterManual
         {
             CdrJobInputData input = (CdrJobInputData)jobInputData;
             AutoIncrementManager autoIncrementManager = new AutoIncrementManager(input.Context);
-            CdrCollectorInputData cdrCollectorInput = new CdrCollectorInputData(input, "", autoIncrementManager);
+            CdrCollectorInputData cdrCollectorInput = new CdrCollectorInputData(input, "");
             SegmentedCdrEraser segmentedCdrEraser =
                 new SegmentedCdrEraser(cdrCollectorInput,
                     input.CdrSetting.BatchSizeWhenPreparingLargeSqlJob, "IdCall", "starttime");

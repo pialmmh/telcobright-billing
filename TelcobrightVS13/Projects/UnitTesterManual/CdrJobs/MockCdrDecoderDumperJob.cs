@@ -39,7 +39,7 @@ namespace UnitTesterManual
             CdrJobInputData input = (CdrJobInputData) jobInputData;
             AutoIncrementManager autoIncrementManager = new AutoIncrementManager(input.Context);
             CdrCollectorInputData collectorInput =
-                new CdrCollectorInputData(input, input.TelcobrightJob.JobName, autoIncrementManager);
+                new CdrCollectorInputData(input, input.TelcobrightJob.JobName);
             collectorInput.FullPath =
                 $@"C:\telcobright\Vault\Resources\CDR\{this.OperatorName}\{collectorInput.Ne.SwitchName}\"
                 + input.TelcobrightJob.JobName;

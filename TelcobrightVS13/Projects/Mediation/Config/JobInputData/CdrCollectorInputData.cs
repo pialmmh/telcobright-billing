@@ -16,12 +16,11 @@ namespace TelcobrightMediation
         public string FullPath { get; set; }
         public AutoIncrementManager AutoIncrementManager { get; }
 
-        public CdrCollectorInputData(CdrJobInputData cdrJobInputData,
-            string fullPath, AutoIncrementManager autoIncrementManager)
+        public CdrCollectorInputData(CdrJobInputData cdrJobInputData, string fullPath)
         {
             this.CdrJobInputData = cdrJobInputData;
             this.FullPath = fullPath;
-            this.AutoIncrementManager = autoIncrementManager;
+            this.AutoIncrementManager = cdrJobInputData.AutoIncrementManager;
         }
     }
 }

@@ -34,87 +34,49 @@ namespace UnitTesterManual
             this.CdrDecoder = cdrDecoder;
             this.OperatorName = operatorName;
         }
-
-        bool PartialCollectionEnabled => this.Input.MediationContext.Tbc.CdrSetting
-            .PartialCdrEnabledNeIds.Contains(this.Input.Ne.idSwitch);
+        private string CdrLocation => @"C:\telcobright\Vault\Resources\CDR";
         public override JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
         {
-            CdrJobInputData input = (CdrJobInputData) jobInputData;
-            base.Input = input;
-            AutoIncrementManager autoIncrementManager = new AutoIncrementManager(input.Context);
-            CdrCollectorInputData collectorInput =
-                new CdrCollectorInputData(input, input.TelcobrightJob.JobName, autoIncrementManager);
-            collectorInput.FullPath =
-                $@"C:\telcobright\Vault\Resources\CDR\{this.OperatorName}\{collectorInput.Ne.SwitchName}\"
-                + input.TelcobrightJob.JobName;
-            List<cdrinconsistent> inconsistentCdrs;
-            List<string[]> decodedCdrRows = this.CdrDecoder.DecodeFile(collectorInput, out inconsistentCdrs);
-            NewCdrPreProcessor preProcessor =
-                new NewCdrPreProcessor(decodedCdrRows, inconsistentCdrs, collectorInput);
-            base.PreformatRawCdrs(preProcessor, collectorInput);
-            preProcessor.TxtCdrRows.ForEach(txtRow => preProcessor.ConvertToCdrOrInconsistentOnFailure(txtRow));
+            base.Input = (CdrJobInputData) jobInputData;
+            NewCdrPreProcessor preProcessor = this.Collect();
+            base.PreformatRawCdrs(preProcessor);
+            preProcessor.TxtCdrRows.ForEach(txtRow =>
+            {
+                cdrinconsistent cdrInconsistent = null;
+                preProcessor.ConvertToCdr(txtRow, out cdrInconsistent);
+                preProcessor.InconsistentCdrs.Add(cdrInconsistent);
+            });
 
             this.rawDurationWithoutInconsistents = preProcessor.TxtCdrRows
                 .Select(r => Convert.ToDecimal(r[Fn.Durationsec])).Sum();
             PartialCdrTesterData partialCdrTesterData = null;
-            if (this.PartialCollectionEnabled)
+            if (base.PartialCollectionEnabled)
             {
                 partialCdrTesterData = InitPartialCdrTesterData(preProcessor);
             }
-
-            CdrCollectionResult newCollectionResult = null;
-            CdrCollectionResult oldCollectionResult = null;
-            preProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
-
-            CdrJobContext cdrJobContext =
-                new CdrJobContext(input, autoIncrementManager, newCollectionResult.HoursInvolved);
-            CdrProcessor cdrProcessor = new CdrProcessor(cdrJobContext, newCollectionResult);
-            CdrEraser cdrEraser = oldCollectionResult?.IsEmpty == false
-                ? new CdrEraser(cdrJobContext, oldCollectionResult): null;
-            CdrJob cdrJob = new CdrJob(cdrProcessor, cdrEraser, cdrProcessor.CollectionResult.RawCount,partialCdrTesterData);
-            ExecuteCdrJob(input, cdrJob);
+            CdrJob cdrJob = base.CreateCdrJob(preProcessor, partialCdrTesterData);
+            base.ExecuteCdrJob(cdrJob);
             return JobCompletionStatus.Complete;
+        }
+        protected override NewCdrPreProcessor Collect()
+        {
+            Vault vault = base.Input.MediationContext.Tbc.Vaults.First(
+                c => c.Name == base.Input.TelcobrightJob.ne.SourceFileLocations);
+            FileLocation fileLocation = vault.LocalLocation.FileLocation;
+            string fileName = fileLocation.GetOsNormalizedPath(fileLocation.StartingPath)
+                              + Path.DirectorySeparatorChar + base.Input.TelcobrightJob.JobName;
+            base.CollectorInput = new CdrCollectorInputData(base.Input, fileName);
+            IEventCollector cdrCollector = new FileBasedTextCdrCollector(base.CollectorInput);
+            base.CollectorInput.FullPath =
+                $@"{this.CdrLocation}\{this.OperatorName}\{base.CollectorInput.Ne.SwitchName}\"
+                + base.Input.TelcobrightJob.JobName;
+
+            List<cdrinconsistent> inconsistentCdrs;
+            List<string[]> decodedCdrRows = this.CdrDecoder.DecodeFile(base.CollectorInput, out inconsistentCdrs);
+            return new NewCdrPreProcessor(decodedCdrRows, inconsistentCdrs, base.CollectorInput);
         }
 
         
-
-        protected override void ExecuteCdrJob(CdrJobInputData input, CdrJob cdrJob)
-        {
-            if (cdrJob.CdrProcessor.CollectionResult.ConcurrentCdrExts.Count > 0)
-            {
-                
-            }
-            else
-            {
-                if (cdrJob.CdrProcessor.CollectionResult.CdrInconsistents.Count > 0)
-                {
-                    if (input.TelcobrightJob.idjobdefinition == 1 &&
-                        cdrJob.CdrProcessor.CollectionResult.CdrInconsistents.Count > 0) //newcdr
-                    {
-                        cdrJob.CdrProcessor.WriteCdrInconsistent();
-                    }
-                }
-                if (cdrJob.CdrProcessor.CdrJobContext.MediationContext.Tbc.CdrSetting.ConsiderEmptyCdrFilesAsValid ==
-                    false)
-                {
-                    throw new Exception("Empty new cdr files are not considered valid as per cdr setting.");
-                }
-                WriteJobCompletionIfCollectionIsEmpty(cdrJob, input.TelcobrightJob);
-            }
-
-            //code reaching here means no error
-            using (DbCommand cmd = ConnectionManager.CreateCommandFromDbContext(input.Context))
-            {
-                cmd.CommandText = " commit; ";
-                cmd.ExecuteNonQuery();
-            }
-
-            //create file copy job for all backup locations, async-don't wait
-            //Task.Run(() => ArchiveAndDeleteJobCreation(tbc, ThisJob));
-            //vault.DeleteSingleFile(ThisJob.JobName);
-            //File.Delete(fileName);
-            //ArchiveAndDeleteJobCreation(input.MediationContext.Tbc, cdrJob.TelcobrightJob);
-        }
 
         protected void WriteJobCompletionIfCollectionNotEmpty(CdrJob cdrJob, job telcobrightJob)
         {

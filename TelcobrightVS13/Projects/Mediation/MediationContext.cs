@@ -19,6 +19,7 @@ namespace TelcobrightMediation
     {
         public TelcobrightConfig Tbc { get; }
         public PartnerEntities Context { get; }
+        public AutoIncrementManager AutoIncrementManager { get; }
         public MefDecoderContainer MefDecoderContainer { get; set; }
         public MefServiceGroupsContainer MefServiceGroupContainer = new MefServiceGroupsContainer();
         public MefPartnerRulesContainer MefPartnerRuleContainer = new MefPartnerRulesContainer();
@@ -54,6 +55,7 @@ namespace TelcobrightMediation
             StaticExtInsertColumnParsedDic.Parse();
             this.Tbc = tbc;
             this.Context = context;
+            this.AutoIncrementManager = new AutoIncrementManager(this.Context);
             this.MefDecoderContainer = new MefDecoderContainer(this.Context);
             this.MefServiceFamilyContainer = new MefServiceFamilyContainer();
             this.Nes = context.nes.Include(n=>n.telcobrightpartner)
