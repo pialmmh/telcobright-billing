@@ -18,7 +18,6 @@ namespace TelcobrightMediation.Cdr
         public CdrJobContext CdrJobContext { get; }
         private MediationContext MediationContext => this.CdrJobContext.CdrjobInputData.MediationContext;
         private CdrSetting CdrSetting => this.MediationContext.Tbc.CdrSetting;
-        bool PartialCollectionEnabled => this.CdrSetting.PartialCdrEnabledNeIds.Contains(this.CdrJobContext.Ne.idSwitch);
         private PartialCdrTesterData PartialCdrTesterData { get; }
         public CdrJob(CdrProcessor cdrProcessor, CdrEraser cdrEraser, int actualStepsCount,
             PartialCdrTesterData partialCdrTesterData)
@@ -47,7 +46,7 @@ namespace TelcobrightMediation.Cdr
 
             ValidateWithMediationTester(this.CdrJobContext.CdrjobInputData);
             CdrWritingResult cdrWritingResult = this.CdrProcessor?.WriteCdrs();
-            if (this.PartialCollectionEnabled)
+            if (this.CdrProcessor != null && this.CdrProcessor.PartialProcessingEnabled)
             {
                 PartialCdrTester partialCdrTester =
                     new PartialCdrTester(this, cdrWritingResult, this.PartialCdrTesterData);
@@ -72,6 +71,8 @@ namespace TelcobrightMediation.Cdr
             Assert.IsTrue(mediationTester
                 .SumOfPrevDayWiseDurationsAndNewSummaryInstancesIsEqualToSameInMergedSummaryCache(
                     this.CdrProcessor));
+            Assert.IsTrue(
+                mediationTester.DurationSumOfNonPartialRawPartialsAndRawDurationAreTollerablyEqual(this.CdrProcessor));
         }
     }
 }

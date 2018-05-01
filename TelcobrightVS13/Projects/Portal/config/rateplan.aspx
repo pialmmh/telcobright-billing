@@ -560,7 +560,7 @@ order by Type "
                     <asp:Label ID="lblMinDurationSec" runat="server" Text='<%#Eval("MinDurationSec")!=null?Eval("MinDurationSec").ToString():"" %>'></asp:Label>
                 </ItemTemplate>
                 <EditItemTemplate>
-                    <asp:TextBox ID="txtMinDurationSec" Enabled="True" runat="server" Text='<%# Bind("mindurationsec") %>'></asp:TextBox>
+                    <asp:TextBox ID="txtMinDurationSec" Enabled="True" runat="server" Text='<%# Bind("minDurationSec") %>'></asp:TextBox>
                 </EditItemTemplate>
 
 <ControlStyle Width="30px"></ControlStyle>

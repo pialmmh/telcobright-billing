@@ -106,6 +106,8 @@
     <Compile Include="jsl\JslServiceGroups.cs" />
     <Compile Include="jsl\JslQuartzConfig.cs" />
     <Compile Include="MefConfigImportComposer.cs" />
+    <Compile Include="platinum\PlatinumProductAndServiceSettings.cs" />
+    <Compile Include="platinum\PlatinumAPPServerConfig.cs" />
     <Compile Include="platinum\PlatinumDirectorySetting.cs" />
     <Compile Include="platinum\_PlatinumConfigMain.cs" />
     <Compile Include="dbl\ConfigHelper_DBL.cs" />

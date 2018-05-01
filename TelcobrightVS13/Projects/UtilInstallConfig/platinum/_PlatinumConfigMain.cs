@@ -50,24 +50,17 @@ namespace InstallConfig
             
             this.PrepareDirectorySetting(this.Tbc);
 
-            List<KeyValuePair<Regex, string>> serviceAliases = new List<KeyValuePair<Regex, string>>
-            {
-                new KeyValuePair<Regex, string>(new Regex(@".*/sg5/.*/sf4/.*"), "International Outgoing"),
-                new KeyValuePair<Regex, string>(new Regex(@".*/sg4/.*/sf1/.*"), "AZ Voice")
-            };
-            this.Tbc.ServiceAliasesRegex = serviceAliases;
+            this.PrepareProductAndServiceSettings();
             
-            ApplicationServerConfig serverConfig1 = new ApplicationServerConfig(this.Tbc) { ServerId = 1, OwnIpAddress = "192.168.101.1" };
-            ApplicationServerConfig serverConfig2 = new ApplicationServerConfig(this.Tbc) { ServerId = 2 };
-
-            this.Tbc.ApplicationServersConfig.Add(serverConfig1.ServerId.ToString(), serverConfig1);
-            this.Tbc.ApplicationServersConfig.Add(serverConfig2.ServerId.ToString(), serverConfig1);
+            this.PrepareAppServerSettings();
 
             DatabaseSetting databaseSetting = schedulerDatabaseSetting.GetCopy();
             databaseSetting.DatabaseName = this.OperatorName;//change dbname here if required
             this.Tbc.DatabaseSetting = databaseSetting;
             this.Tbc.PortalSettings = GetPortalSettings(this.Tbc);
-            this.Tbc.AutomationSetting = GetAutomationSetting();            
+            
+            //automation has a interface instanciation issue with json, fix it.
+            //this.Tbc.AutomationSetting = GetAutomationSetting();            
             return this.Tbc;
         }
         

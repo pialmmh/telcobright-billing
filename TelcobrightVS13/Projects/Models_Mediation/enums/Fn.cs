@@ -16,7 +16,7 @@ namespace MediationModel
         public const int OriginatingCallingNumber = 11;
         public const int TerminatingCallingNumber = 12;
         public const int PrePaid = 13;
-        public const int Durationsec = 14;
+        public const int DurationSec = 14;
         public const int Endtime = 15;
         public const int ConnectTime = 16;
         public const int AnswerTime = 17;

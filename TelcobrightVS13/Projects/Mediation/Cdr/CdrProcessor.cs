@@ -31,7 +31,7 @@ namespace TelcobrightMediation
         private MediationContext MediationContext => this.CdrJobContext.MediationContext;
         private TelcobrightConfig Tbc => this.MediationContext.Tbc;
         private DbCommand DbCmd => this.CdrJobContext.DbCmd;
-
+        public bool PartialProcessingEnabled => this.Tbc.CdrSetting.PartialCdrEnabledNeIds.Contains(this.CdrJobContext.Ne.idSwitch);
         public CdrProcessor(CdrJobContext cdrJobContext, CdrCollectionResult newCollectionResult)
         {
             this.CdrJobContext = cdrJobContext;
@@ -82,6 +82,7 @@ namespace TelcobrightMediation
                     this.SendToCdrError(cdrExt, errorMessage);
                 }
             });
+            this.CollectionResult.CollectionResultProcessingState=CollectionResultProcessingState.AfterMediation;
             //todo: change to parallel
             //Parallel.ForEach(this.CollectionResult.ProcessedCdrExts, processedCdrExt =>
             this.CollectionResult.ProcessedCdrExts.ToList().ForEach(processedCdrExt =>
@@ -226,8 +227,12 @@ namespace TelcobrightMediation
         {
             if (this.CdrJobContext.TelcobrightJob.idjobdefinition == 2) //cdrError
             {
-                OldCdrDeleter.DeleteOldCdrs("cdrerror", this.CollectionResult.ConcurrentCdrExts.Values
-                        .Select(c => new KeyValuePair<long, DateTime>(c.Cdr.IdCall, c.StartTime)).ToList(),
+                var idCallsOfProcessedCdrs = this.CollectionResult.ProcessedCdrExts
+                    .Select(c => new KeyValuePair<long, DateTime>(c.Cdr.IdCall, c.StartTime)).ToList();
+                var idCallsOfCdrErrors = this.CollectionResult.CdrErrors
+                    .Select(c => new KeyValuePair<long, DateTime>(c.IdCall, c.StartTime)).ToList();
+
+                OldCdrDeleter.DeleteOldCdrs("cdrerror", idCallsOfProcessedCdrs.Concat(idCallsOfCdrErrors).ToList(),
                     this.CdrJobContext.SegmentSizeForDbWrite, this.CdrJobContext.DbCmd);
             }
 
@@ -239,13 +244,16 @@ namespace TelcobrightMediation
             long nonPartialCdrCount = WriteCdr(nonPartialCdrs);
             var normalizedPartialCdrs = this.CollectionResult.ProcessedCdrExts
                 .Where(c => c.Cdr.MediationComplete == 1 && c.Cdr.PartialFlag > 0).Select(c => c.Cdr).ToList();
-            long normalizedPartialCdrCount = WriteCdr(normalizedPartialCdrs);
-
+            long normalizedPartialCdrCount = 0;
+            if (normalizedPartialCdrs.Any())
+            {
+                normalizedPartialCdrCount= WriteCdr(normalizedPartialCdrs);
+            }
             long cdrCount = nonPartialCdrCount + normalizedPartialCdrCount;
 
             List<PartialCdrContainer> partialCdrContainers = new List<PartialCdrContainer>();
             PartialCdrWriter partialCdrWriter = null;
-            if (this.Tbc.CdrSetting.PartialCdrEnabledNeIds.Contains(this.CdrJobContext.Ne.idSwitch))
+            if (this.PartialProcessingEnabled)
             {
                 partialCdrWriter = new PartialCdrWriter(
                     this.CollectionResult.ProcessedCdrExts.

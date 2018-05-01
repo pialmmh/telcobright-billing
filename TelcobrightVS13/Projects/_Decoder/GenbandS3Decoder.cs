@@ -82,7 +82,7 @@ namespace Decoders
                                 case 12://Terminating Calling Number
                                     strThisField = thisRow[Convert.ToInt32(thisField.FieldPositionInCDRRow - 1)].ToString();
                                     break;
-                                case 14://Durationsec
+                                case 14://DurationSec
                                     strThisField = thisRow[Convert.ToInt32(thisField.FieldPositionInCDRRow - 1)].ToString();
 
                                     break;
@@ -217,7 +217,7 @@ namespace Decoders
 
                     //set charging status
                     double tmpDuration = 0;
-                    double.TryParse(thisNormalizedRow[Fn.Durationsec], out tmpDuration);
+                    double.TryParse(thisNormalizedRow[Fn.DurationSec], out tmpDuration);
                     if (thisRow[12] == "N" || tmpDuration > 0)
                     {
                         thisNormalizedRow[Fn.ChargingStatus] = "1";

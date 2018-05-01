@@ -38,20 +38,24 @@ namespace UnitTesterManual
         public override JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
         {
             base.Input = (CdrJobInputData) jobInputData;
-            NewCdrPreProcessor preProcessor = this.Collect();
+            NewCdrPreProcessor preProcessor = this.CollectRaw();
             base.PreformatRawCdrs(preProcessor);
-            preProcessor.TxtCdrRows.ForEach(txtRow =>
-            {
-                cdrinconsistent cdrInconsistent = null;
-                preProcessor.ConvertToCdr(txtRow, out cdrInconsistent);
-                preProcessor.InconsistentCdrs.Add(cdrInconsistent);
-            });
-            PartialCdrTesterData partialCdrTesterData = base.CollectTestData(preProcessor);
-            CdrJob cdrJob = base.CreateCdrJob(preProcessor, partialCdrTesterData);
-            base.ExecuteCdrJob(cdrJob);
+            preProcessor.TxtCdrRows.ForEach(txtRow => this.CdrConverter(preProcessor, txtRow));
+
+            CdrCollectionResult newCollectionResult, oldCollectionResult = null;
+            preProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
+
+            PartialCdrTesterData partialCdrTesterData = base.OrganizeTestData(preProcessor,newCollectionResult);
+            CdrJobContext cdrJobContext =
+                new CdrJobContext(this.Input, newCollectionResult.HoursInvolved);
+            CdrProcessor cdrProcessor = new CdrProcessor(cdrJobContext, newCollectionResult);
+            CdrEraser cdrEraser = oldCollectionResult?.IsEmpty == false
+                ? new CdrEraser(cdrJobContext, oldCollectionResult) : null;
+            CdrJob cdrJob = new CdrJob(cdrProcessor, cdrEraser, this.RawCount, partialCdrTesterData);
+            ExecuteCdrJob(cdrJob);
             return JobCompletionStatus.Complete;
         }
-        protected override NewCdrPreProcessor Collect()
+        protected override NewCdrPreProcessor CollectRaw()
         {
             Vault vault = base.Input.MediationContext.Tbc.DirectorySettings.Vaults.First(
                 c => c.Name == base.Input.TelcobrightJob.ne.SourceFileLocations);
@@ -66,8 +70,6 @@ namespace UnitTesterManual
             List<string[]> decodedCdrRows = this.CdrDecoder.DecodeFile(base.CollectorInput, out inconsistentCdrs);
             return new NewCdrPreProcessor(decodedCdrRows, inconsistentCdrs, base.CollectorInput);
         }
-
-        
 
         protected void WriteJobCompletionIfCollectionNotEmpty(CdrJob cdrJob, job telcobrightJob)
         {

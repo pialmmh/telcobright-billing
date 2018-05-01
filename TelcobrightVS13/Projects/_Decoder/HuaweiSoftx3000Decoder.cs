@@ -193,7 +193,7 @@ namespace Decoders
                                     {
                                         //if duration>0 set answerflag, regardless of whether it is 1 by field18's original value
                                         double tempDuration = 0;
-                                        double.TryParse(thisRow[Fn.Durationsec], out tempDuration);
+                                        double.TryParse(thisRow[Fn.DurationSec], out tempDuration);
                                         if (tempDuration > 0)
                                         {
                                             strThisField = "1";

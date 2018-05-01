@@ -43,7 +43,7 @@ namespace TelcobrightMediation.Mediation.Cdr
                 convertedCdr.OriginatingCallingNumber = txtRow[Fn.OriginatingCallingNumber];
                 convertedCdr.TerminatingCallingNumber = txtRow[Fn.TerminatingCallingNumber];
                 convertedCdr.PrePaid = txtRow[Fn.PrePaid].GetValueOrNull<byte>();
-                convertedCdr.DurationSec = txtRow[Fn.Durationsec].GetValue<decimal>();
+                convertedCdr.DurationSec = txtRow[Fn.DurationSec].GetValue<decimal>();
                 convertedCdr.EndTime = txtRow[Fn.Endtime].ConvertToDateTimeFromMySqlFormat();
                 convertedCdr.ConnectTime = txtRow[Fn.ConnectTime].ConvertToNullableDateTimeFromMySqlFormat();
                 convertedCdr.AnswerTime = txtRow[Fn.AnswerTime].ConvertToNullableDateTimeFromMySqlFormat();
@@ -164,7 +164,7 @@ namespace TelcobrightMediation.Mediation.Cdr
             inconsistentCdr.OriginatingCallingNumber = txtRow[Fn.OriginatingCallingNumber];
             inconsistentCdr.TerminatingCallingNumber = txtRow[Fn.TerminatingCallingNumber];
             inconsistentCdr.PrePaid = txtRow[Fn.PrePaid];
-            inconsistentCdr.DurationSec = txtRow[Fn.Durationsec];
+            inconsistentCdr.DurationSec = txtRow[Fn.DurationSec];
             inconsistentCdr.EndTime = txtRow[Fn.Endtime];
             inconsistentCdr.ConnectTime = txtRow[Fn.ConnectTime];
             inconsistentCdr.AnswerTime = txtRow[Fn.AnswerTime];

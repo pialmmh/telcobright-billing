@@ -1831,7 +1831,7 @@ warning 6002: The table/view 'def.platinum.cdrpartialreference' does not have a 
           <Property Name="codedeletedate" Type="datetime" Precision="0" />
           <Property Name="ChangeCommitted" Type="int" />
           <Property Name="Resolution" Type="int" Nullable="false" />
-          <Property Name="mindurationsec" Type="float" Nullable="false" />
+          <Property Name="minDurationSec" Type="float" Nullable="false" />
           <Property Name="SurchargeTime" Type="int" Nullable="false" />
           <Property Name="SurchargeAmount" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="Category" Type="tinyint" />
@@ -5691,7 +5691,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="codedeletedate" Type="DateTime" />
           <Property Name="ChangeCommitted" Type="Int32" />
           <Property Name="Resolution" Type="Int32" Nullable="false" />
-          <Property Name="mindurationsec" Type="Single" Nullable="false" />
+          <Property Name="minDurationSec" Type="Single" Nullable="false" />
           <Property Name="SurchargeTime" Type="Int32" Nullable="false" />
           <Property Name="SurchargeAmount" Type="Decimal" Nullable="false" />
           <Property Name="Category" Type="SByte" />
@@ -8929,7 +8929,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="Category" ColumnName="Category" />
                 <ScalarProperty Name="SurchargeAmount" ColumnName="SurchargeAmount" />
                 <ScalarProperty Name="SurchargeTime" ColumnName="SurchargeTime" />
-                <ScalarProperty Name="mindurationsec" ColumnName="mindurationsec" />
+                <ScalarProperty Name="minDurationSec" ColumnName="minDurationSec" />
                 <ScalarProperty Name="Resolution" ColumnName="Resolution" />
                 <ScalarProperty Name="ChangeCommitted" ColumnName="ChangeCommitted" />
                 <ScalarProperty Name="codedeletedate" ColumnName="codedeletedate" />

@@ -46,7 +46,7 @@ namespace TelcobrightMediation
             ; //default 1=voice
             int category = tempCategory > 0 ? tempCategory : 1; //default 1=call
             int subCategory = tempSubCategory > 0 ? tempSubCategory : 1; //default 1=voice
-            decimal durationSec = thisCdr.DurationSec; //may change per service family ######;
+            decimal DurationSec = thisCdr.DurationSec; //may change per service family ######;
             //end common******************************
 
             string phoneNumber = thisCdr.TerminatingCalledNumber; //change per service family#####

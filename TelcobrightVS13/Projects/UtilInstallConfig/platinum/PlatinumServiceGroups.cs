@@ -57,8 +57,8 @@ namespace InstallConfig
                                 "matchedprefixcustomer cannot be empty"
                             },
                             {
-                                "obj.durationsec > 0 ? obj.InPartnerCost > 0 : obj.InPartnerCost == 0 ",
-                                "InPartnerCost must be > 0 when durationsec > 0  , otherwise == 0 "
+                                "obj.DurationSec > 0 ? obj.InPartnerCost > 0 : obj.InPartnerCost == 0 ",
+                                "InPartnerCost must be > 0 when DurationSec > 0  , otherwise == 0 "
                             },
                             {
                                 "obj.CostIcxIn >= 0",
@@ -73,8 +73,8 @@ namespace InstallConfig
                                 "AnsIdTerm must be > 0"
                             },
                             {
-                                "obj.durationsec > 0?obj.roundedduration > 0: obj.roundedduration >= 0",
-                                "roundedduration must be > 0 when durationsec >0 , otherwise >= 0 "
+                                "obj.DurationSec > 0?obj.roundedduration > 0: obj.roundedduration >= 0",
+                                "roundedduration must be > 0 when DurationSec >0 , otherwise >= 0 "
                             },
                         },
                 }, //end dictionary item
@@ -120,36 +120,28 @@ namespace InstallConfig
                                 "matchedprefixsupplier cannot be empty"
                             },
                             {
-                                "obj.durationsec > 0 ? obj.OutPartnerCost > 0 : obj.OutPartnerCost == 0 ",
-                                "OutPartnerCost must be > 0 when durationsec > 0 , otherwise == 0"
+                                "obj.DurationSec > 0 ? obj.OutPartnerCost > 0 : obj.OutPartnerCost == 0 ",
+                                "OutPartnerCost must be > 0 when DurationSec > 0 , otherwise == 0"
                             },
                             {
-                                "obj.durationsec > 0 ? obj.RevenueIgwOut > 0 : obj.RevenueIgwOut == 0 ",
-                                "RevenueIgwOut must be > 0 when durationsec > 0 , otherwise == 0"
+                                "obj.DurationSec > 0 ? obj.RevenueIgwOut > 0 : obj.RevenueIgwOut == 0 ",
+                                "RevenueIgwOut must be > 0 when DurationSec > 0 , otherwise == 0"
                             },
                             {
-                                "obj.durationsec > 0 ? obj.XAmount > 0 : obj.XAmount == 0 ",
-                                "XAmount must be > 0 when durationsec > 0 , otherwise == 0"
+                                "obj.DurationSec > 0 ? obj.XAmount > 0 : obj.XAmount == 0 ",
+                                "XAmount must be > 0 when DurationSec > 0 , otherwise == 0"
                             },
                             {
-                                "obj.durationsec > 0 ? obj.YAmount > 0 : obj.YAmount == 0 ",
-                                "YAmount must be > 0 when durationsec > 0 , otherwise == 0"
+                                "obj.DurationSec > 0 ? obj.YAmount > 0 : obj.YAmount == 0 ",
+                                "YAmount must be > 0 when DurationSec > 0 , otherwise == 0"
                             },
                             {
                                 "obj.PartialFlag >= 0",
                                 "PartialFlag must be >=  0"
                             },
                             {
-                                "obj.field1 >= 0",
-                                "field1 must be >=  0"
-                            },
-                            {
-                                "obj.field2 >= 0",
-                                "field2 must be >=  0"
-                            },
-                            {
-                                "obj.durationsec > 0 ? obj.roundedduration > 0 : obj.roundedduration == 0 ",
-                                "roundedduration must be > 0 when durationsec > 0 , otherwise == 0"
+                                "obj.DurationSec > 0 ? obj.roundedduration > 0 : obj.roundedduration == 0 ",
+                                "roundedduration must be > 0 when DurationSec > 0 , otherwise == 0"
                             },
 
                         },

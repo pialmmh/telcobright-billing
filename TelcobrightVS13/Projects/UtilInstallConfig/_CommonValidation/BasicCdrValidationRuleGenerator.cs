@@ -37,8 +37,8 @@ namespace InstallConfig._CommonValidation
                 }, //public const int Originatingcallednumber = 9;
                 {
                     "obj.DurationSec >= 0",
-                    "durationsec must be >= 0"
-                }, //public const int Durationsec = 14;
+                    "DurationSec must be >= 0"
+                }, //public const int DurationSec = 14;
                 {
                     "obj.StartTime > date('" + this.NotAllowedCallDateTimeBefore.ToString("yyyy-MM-dd") + "')",
                     "StartTime must be > " + this.NotAllowedCallDateTimeBefore.ToString("yyyy-MM-dd")
@@ -64,7 +64,7 @@ namespace InstallConfig._CommonValidation
                     "FileName cannot be empty"
                 },
                 {
-                    "obj.finalrecord == 1",
+                    "obj.FinalRecord == 1",
                     "FinalRecord must be 1"
                 },
                 {
@@ -72,8 +72,8 @@ namespace InstallConfig._CommonValidation
                     "EndTime must be >= StartTime"
                 },
                 {
-                    "obj.durationsec > 0?obj.ChargingStatus == 1: obj.ChargingStatus == 0",
-                    "ChargingStatus must be 1 when durationsec > 0 , otherwise == 0 "
+                    "obj.DurationSec > 0?obj.ChargingStatus == 1: obj.ChargingStatus == 0",
+                    "ChargingStatus must be 1 when DurationSec > 0 , otherwise == 0 "
                 },
                 {
                     "obj.InPartnerId > 0",
@@ -110,8 +110,8 @@ namespace InstallConfig._CommonValidation
                 {
                     $@"Validator.BooleanParsers['isNumericChecker'].Invoke(obj[14]) 
                         and Validator.DoubleParsers['doubleConverterProxy'].Invoke(obj[14]) >= 0",
-                    "durationsec must be numeric and >= 0"
-                }, //public const int Durationsec = 14;
+                    "DurationSec must be numeric and >= 0"
+                }, //public const int DurationSec = 14;
                 {
                     $@"Validator.BooleanParsers['isDateTimeChecker'].Invoke(obj[29]) == true
                         and Validator.DateParsers['strToMySqlDtConverter'].Invoke(obj[29]) 

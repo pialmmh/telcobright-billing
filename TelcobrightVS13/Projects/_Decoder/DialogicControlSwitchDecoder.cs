@@ -95,7 +95,7 @@ namespace Decoders
                                     strThisField = csvRow[Convert.ToInt32(thisField.FieldPositionInCDRRow - 1)]
                                         .ToString();
                                     break;
-                                case 14: //Durationsec
+                                case 14: //DurationSec
                                     strThisField = csvRow[Convert.ToInt32(thisField.FieldPositionInCDRRow - 1)]
                                         .ToString();
                                     break;

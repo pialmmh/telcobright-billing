@@ -17,12 +17,12 @@ namespace TelcobrightMediation.Cdr
         public int RawCount { get; }
         protected CdrCollectorInputData CdrCollectorInputData { get; }
         protected PartnerEntities Context => this.CdrCollectorInputData.CdrJobInputData.Context;
-        protected BlockingCollection<cdr> NonPartialCdrs { get; } = new BlockingCollection<cdr>();
+        public BlockingCollection<cdr> NonPartialCdrs { get; } = new BlockingCollection<cdr>();
 
         protected BlockingCollection<cdrpartialrawinstance> RawPartialCdrInstances { get; } =
             new BlockingCollection<cdrpartialrawinstance>();
 
-        protected BlockingCollection<PartialCdrContainer> PartialCdrContainers { get; set; } =
+        public BlockingCollection<PartialCdrContainer> PartialCdrContainers { get; set; } =
             new BlockingCollection<PartialCdrContainer>();
 
         public BlockingCollection<cdrinconsistent> InconsistentCdrs { get; }
