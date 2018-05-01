@@ -98,7 +98,7 @@ namespace InstallConfig
             ftpLocations.Add(appServerFtp2);
             Vault sansayVault = new Vault("Vault.Sansay", this.Tbc, ftpLocations);
             sansayVault.LocalLocation = new SyncLocation(vaultSansay.Name) { FileLocation = vaultSansay };//don't pass this to constructor and set there, causes problem in json serialize
-            this.Tbc.Vaults.Add(sansayVault);
+            this.Tbc.DirectorySettings.Vaults.Add(sansayVault);
             FileLocation sansay = new FileLocation()
             {
                 Name = "Sansay",

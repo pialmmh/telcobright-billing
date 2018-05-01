@@ -99,7 +99,7 @@ namespace InstallConfig
             ftpLocations.Add(appServerFtp2);
             Vault dhkHwBiglvault = new Vault("Vault.dhkHwBigl", this.Tbc, ftpLocations);
             dhkHwBiglvault.LocalLocation = new SyncLocation(vaultDhkHwBigl.Name) { FileLocation = vaultDhkHwBigl };//don't pass this to constructor and set there, causes problem in json serialize
-            this.Tbc.Vaults.Add(dhkHwBiglvault);
+            this.Tbc.DirectorySettings.Vaults.Add(dhkHwBiglvault);
             FileLocation dhkHwBigl = new FileLocation()
             {
                 Name = "dhkHwBigl",

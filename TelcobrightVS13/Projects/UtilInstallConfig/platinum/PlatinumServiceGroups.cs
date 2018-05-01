@@ -128,12 +128,12 @@ namespace InstallConfig
                                 "RevenueIgwOut must be > 0 when durationsec > 0 , otherwise == 0"
                             },
                             {
-                                "obj.durationsec > 0 ? obj.SubscriberChargeXOut > 0 : obj.SubscriberChargeXOut == 0 ",
-                                "SubscriberChargeXOut must be > 0 when durationsec > 0 , otherwise == 0"
+                                "obj.durationsec > 0 ? obj.XAmount > 0 : obj.XAmount == 0 ",
+                                "XAmount must be > 0 when durationsec > 0 , otherwise == 0"
                             },
                             {
-                                "obj.durationsec > 0 ? obj.CarrierCostYIGWOut > 0 : obj.CarrierCostYIGWOut == 0 ",
-                                "CarrierCostYIGWOut must be > 0 when durationsec > 0 , otherwise == 0"
+                                "obj.durationsec > 0 ? obj.YAmount > 0 : obj.YAmount == 0 ",
+                                "YAmount must be > 0 when durationsec > 0 , otherwise == 0"
                             },
                             {
                                 "obj.PartialFlag >= 0",

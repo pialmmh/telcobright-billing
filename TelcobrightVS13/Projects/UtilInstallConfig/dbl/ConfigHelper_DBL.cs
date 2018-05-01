@@ -100,7 +100,7 @@ namespace InstallConfig
             ftpLocations.Add(appServerFtp2);
             Vault s3Vault = new Vault("Vault.S3", this.Tbc, ftpLocations);
             s3Vault.LocalLocation = new SyncLocation(vaultS3.Name) { FileLocation = vaultS3 };//don't pass this to constructor and set there, causes problem in json serialize
-            this.Tbc.Vaults.Add(s3Vault);
+            this.Tbc.DirectorySettings.Vaults.Add(s3Vault);
             FileLocation s31 = new FileLocation()
             {
                 Name = "S3_1",

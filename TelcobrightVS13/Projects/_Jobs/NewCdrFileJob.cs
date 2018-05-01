@@ -25,8 +25,8 @@ namespace Jobs
         public virtual string HelpText => "New Cdr Job, processes a new CDR file";
         public override string ToString() => this.RuleName;
         public virtual int Id => 1;
-        protected int rawCount, nonPartialCount, uniquePartialCount, rawPartialCount, distinctPartialCount = 0;
-        protected decimal rawDurationWithoutInconsistents = 0;
+        protected int RawCount, NonPartialCount, UniquePartialCount, RawPartialCount, DistinctPartialCount = 0;
+        protected decimal RawDurationWithoutInconsistents = 0;
         protected  CdrJobInputData Input { get; set; }
         protected CdrCollectorInputData CollectorInput { get; set; }
         protected bool PartialCollectionEnabled => this.Input.MediationContext.Tbc.CdrSetting
@@ -40,18 +40,25 @@ namespace Jobs
             {
                 cdrinconsistent cdrInconsistent = null;
                 preProcessor.ConvertToCdr(txtRow, out cdrInconsistent);
-                if(cdrInconsistent!=null) preProcessor.InconsistentCdrs.Add(cdrInconsistent);
+                if (cdrInconsistent != null) preProcessor.InconsistentCdrs.Add(cdrInconsistent);
             });
-            this.rawDurationWithoutInconsistents = preProcessor.TxtCdrRows
+            PartialCdrTesterData partialCdrTesterData = CollectTestData(preProcessor);
+            CdrJob cdrJob = CreateCdrJob(preProcessor, partialCdrTesterData);
+            ExecuteCdrJob(cdrJob);
+            return JobCompletionStatus.Complete;
+        }
+
+        protected PartialCdrTesterData CollectTestData(NewCdrPreProcessor preProcessor)
+        {
+            this.RawCount = preProcessor.TxtCdrRows.Count;
+            this.RawDurationWithoutInconsistents = preProcessor.TxtCdrRows
                 .Select(r => Convert.ToDecimal(r[Fn.Durationsec])).Sum();
             PartialCdrTesterData partialCdrTesterData = null;
             if (this.PartialCollectionEnabled)
             {
                 partialCdrTesterData = InitPartialCdrTesterData(preProcessor);
             }
-            CdrJob cdrJob = CreateCdrJob(preProcessor, partialCdrTesterData);
-            ExecuteCdrJob(cdrJob);
-            return JobCompletionStatus.Complete;
+            return partialCdrTesterData;
         }
 
         protected CdrJob CreateCdrJob(NewCdrPreProcessor preProcessor, PartialCdrTesterData partialCdrTesterData)
@@ -64,8 +71,7 @@ namespace Jobs
             CdrProcessor cdrProcessor = new CdrProcessor(cdrJobContext, newCollectionResult);
             CdrEraser cdrEraser = oldCollectionResult?.IsEmpty == false
                 ? new CdrEraser(cdrJobContext, oldCollectionResult) : null;
-            this.rawCount = preProcessor.TxtCdrRows.Count;
-            CdrJob cdrJob = new CdrJob(cdrProcessor, cdrEraser, this.rawCount, partialCdrTesterData);
+            CdrJob cdrJob = new CdrJob(cdrProcessor, cdrEraser, this.RawCount, partialCdrTesterData);
             return cdrJob;
         }
 
@@ -109,7 +115,7 @@ namespace Jobs
 
         protected virtual NewCdrPreProcessor Collect()
         {
-            Vault vault =this.Input.MediationContext.Tbc.Vaults.First(
+            Vault vault =this.Input.MediationContext.Tbc.DirectorySettings.Vaults.First(
                     c => c.Name == this.Input.TelcobrightJob.ne.SourceFileLocations);
             FileLocation fileLocation = vault.LocalLocation.FileLocation;
             string fileName = fileLocation.GetOsNormalizedPath(fileLocation.StartingPath)
@@ -121,15 +127,15 @@ namespace Jobs
 
         protected PartialCdrTesterData InitPartialCdrTesterData(NewCdrPreProcessor preProcessor)
         {
-            this.nonPartialCount = preProcessor.TxtCdrRows.Count(r => r[Fn.Partialflag] == "0");
+            this.NonPartialCount = preProcessor.TxtCdrRows.Count(r => r[Fn.Partialflag] == "0");
             List<string[]> partialRows = preProcessor.TxtCdrRows.Where(r =>
                 this.Input.CdrSetting.PartialCdrFlagIndicators.Contains(r[Fn.Partialflag])).ToList();
-            this.rawPartialCount = partialRows.Count;
-            if (preProcessor.TxtCdrRows.Count != this.nonPartialCount + this.rawPartialCount)
+            this.RawPartialCount = partialRows.Count;
+            if (preProcessor.TxtCdrRows.Count != this.NonPartialCount + this.RawPartialCount)
                 throw new Exception("TxtCdr rows with partial & non-partial flag do not match total decoded text rows");
-            this.distinctPartialCount = partialRows.GroupBy(r => r[Fn.UniqueBillId]).Count();
-            return new PartialCdrTesterData(this.nonPartialCount, this.rawCount,
-                this.rawDurationWithoutInconsistents, this.rawPartialCount);
+            this.DistinctPartialCount = partialRows.GroupBy(r => r[Fn.UniqueBillId]).Count();
+            return new PartialCdrTesterData(this.NonPartialCount, this.RawCount,
+                this.RawDurationWithoutInconsistents, this.RawPartialCount);
         }
 
         protected void PreformatRawCdrs(NewCdrPreProcessor preProcessor)
@@ -218,7 +224,7 @@ namespace Jobs
                 }
 
                 //create delete job
-                string vaultName = tbc.Vaults.Where(c => c.Name == thisJob.ne.SourceFileLocations).Select(c => c.Name)
+                string vaultName = tbc.DirectorySettings.Vaults.Where(c => c.Name == thisJob.ne.SourceFileLocations).Select(c => c.Name)
                     .First();
                 FileUtil.CreateFileDeleteJob(thisJob.JobName, tbc.DirectorySettings.FileLocations[vaultName], context,
                     new JobPreRequisite()

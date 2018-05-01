@@ -37,7 +37,7 @@ namespace PortalApp.reports.Accounts
                                     +" from"
                                     +" ("
                                     +" select date(starttime) as `Date`,ansidorig,Count(*) as CallCount,matchedprefixy,sum(Duration3)/60 ActualDuration,"
-                                    +" sum(roundedduration)/60 RoundedDuration, sum(SubscriberChargeXOut) as X, sum(carrierCostYigwout) as Y,customerid"
+                                    +" sum(roundedduration)/60 RoundedDuration, sum(XAmount) as X, sum(YAmount) as Y,customerid"
                                     +" from cdr c"
                                     +" where ServiceGroup=5"
                                     +" and chargingstatus=1"

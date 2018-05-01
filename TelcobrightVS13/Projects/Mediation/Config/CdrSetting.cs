@@ -24,6 +24,7 @@ namespace TelcobrightMediation
         public Dictionary<int, ServiceGroupConfiguration> ServiceGroupConfigurations { get; set; }
         public string NerCalculationRule { get; set; }
         public bool CallConnectTimePresent { get; set; }
+        public bool DisableCdrPostProcessingJobCreationForAutomation { get; set; }
         public CdrSetting()
         {
             this.NerCalculationRule = "NerByCauseCode";

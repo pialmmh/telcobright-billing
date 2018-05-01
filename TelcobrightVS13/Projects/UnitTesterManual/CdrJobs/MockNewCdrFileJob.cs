@@ -46,31 +46,22 @@ namespace UnitTesterManual
                 preProcessor.ConvertToCdr(txtRow, out cdrInconsistent);
                 preProcessor.InconsistentCdrs.Add(cdrInconsistent);
             });
-
-            this.rawDurationWithoutInconsistents = preProcessor.TxtCdrRows
-                .Select(r => Convert.ToDecimal(r[Fn.Durationsec])).Sum();
-            PartialCdrTesterData partialCdrTesterData = null;
-            if (base.PartialCollectionEnabled)
-            {
-                partialCdrTesterData = InitPartialCdrTesterData(preProcessor);
-            }
+            PartialCdrTesterData partialCdrTesterData = base.CollectTestData(preProcessor);
             CdrJob cdrJob = base.CreateCdrJob(preProcessor, partialCdrTesterData);
             base.ExecuteCdrJob(cdrJob);
             return JobCompletionStatus.Complete;
         }
         protected override NewCdrPreProcessor Collect()
         {
-            Vault vault = base.Input.MediationContext.Tbc.Vaults.First(
+            Vault vault = base.Input.MediationContext.Tbc.DirectorySettings.Vaults.First(
                 c => c.Name == base.Input.TelcobrightJob.ne.SourceFileLocations);
             FileLocation fileLocation = vault.LocalLocation.FileLocation;
             string fileName = fileLocation.GetOsNormalizedPath(fileLocation.StartingPath)
                               + Path.DirectorySeparatorChar + base.Input.TelcobrightJob.JobName;
             base.CollectorInput = new CdrCollectorInputData(base.Input, fileName);
-            IEventCollector cdrCollector = new FileBasedTextCdrCollector(base.CollectorInput);
             base.CollectorInput.FullPath =
                 $@"{this.CdrLocation}\{this.OperatorName}\{base.CollectorInput.Ne.SwitchName}\"
                 + base.Input.TelcobrightJob.JobName;
-
             List<cdrinconsistent> inconsistentCdrs;
             List<string[]> decodedCdrRows = this.CdrDecoder.DecodeFile(base.CollectorInput, out inconsistentCdrs);
             return new NewCdrPreProcessor(decodedCdrRows, inconsistentCdrs, base.CollectorInput);
