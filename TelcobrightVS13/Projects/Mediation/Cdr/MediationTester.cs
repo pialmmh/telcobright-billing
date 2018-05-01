@@ -10,6 +10,7 @@ using TelcobrightMediation.Cdr;
 
 namespace TelcobrightMediation
 {
+    //todo: change to abs
     public class MediationTester
     {
         private decimal DecimalComparisionTollerance { get; }
@@ -25,8 +26,8 @@ namespace TelcobrightMediation
             var nonPartialCdrs =processedCdrExts.Where(c => c.Cdr.PartialFlag == 0);
             var partialCdrExts = processedCdrExts.Where(c => c.Cdr.PartialFlag > 0);
             var newRawPartialCdrs = partialCdrExts.SelectMany(c => c.PartialCdrContainer.NewRawInstances);
-            return nonPartialCdrs.Sum(c => c.Cdr.DurationSec) + newRawPartialCdrs.Sum(c => c.DurationSec)
-                   == cdrProcessor.CollectionResult.RawDurationTotalOfConsistentCdrs;
+            return Math.Abs(nonPartialCdrs.Sum(c => c.Cdr.DurationSec) + newRawPartialCdrs.Sum(c => c.DurationSec)
+                    -cdrProcessor.CollectionResult.RawDurationTotalOfConsistentCdrs)<=this.DecimalComparisionTollerance;
         }
         public bool DurationSumInCdrAndSummaryAreTollerablyEqual(CdrProcessor cdrProcessor)
         {
@@ -101,7 +102,7 @@ namespace TelcobrightMediation
                         .Sum(summary => summary.actualduration);
                     decimal totalSupposedToBeDuration =
                         newDurationForThisDayOrHourInNewCdrExtSummaries + prevDurationForThisDayOrHourFromSummaryTable;
-                    if (totalSupposedToBeDuration != mergedDurationInSummaryContext)
+                    if (Math.Abs(totalSupposedToBeDuration-mergedDurationInSummaryContext)>this.DecimalComparisionTollerance)
                         return false;
                 }
             }
