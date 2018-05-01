@@ -98,12 +98,12 @@ namespace TelcobrightMediation
                                                 new BlockingCollection<PartialCdrContainer>();
                     Func<List<CdrExt>> oldCdrExtCreatorByLastPartialEqCloning = () => this.CreateOldCdrExts();
                     oldCdrExts = oldCdrExtCreatorByLastPartialEqCloning.Invoke();
+
+                    base.LoadPrevAccountingInfoForCdrExts(oldCdrExts);
+                    base.VerifyPrevAccountingInfoCollection(oldCdrExts, base.CdrSetting.FractionalNumberComparisonTollerance);
                 }
             }
             
-            base.LoadPrevAccountingInfoForCdrExts(oldCdrExts);
-            base.VerifyPrevAccountingInfoCollection(oldCdrExts, base.CdrSetting.FractionalNumberComparisonTollerance);
-
             newCollectionResult = new CdrCollectionResult(base.CdrCollectorInputData.Ne, newCdrExts,
                 base.InconsistentCdrs.ToList(), base.RawCount);
             oldCollectionResult = new CdrCollectionResult(base.CdrCollectorInputData.Ne, oldCdrExts,
