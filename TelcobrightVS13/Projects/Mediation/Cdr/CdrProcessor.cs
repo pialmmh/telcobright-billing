@@ -32,19 +32,19 @@ namespace TelcobrightMediation
         private TelcobrightConfig Tbc => this.MediationContext.Tbc;
         private DbCommand DbCmd => this.CdrJobContext.DbCmd;
         public bool PartialProcessingEnabled => this.Tbc.CdrSetting.PartialCdrEnabledNeIds.Contains(this.CdrJobContext.Ne.idSwitch);
+        private List<CdrExt> NewCdrExts => this.CollectionResult.ConcurrentCdrExts.Values.ToList();
+        AccountingContext AccountingContext => this.CdrJobContext.AccountingContext;
         public CdrProcessor(CdrJobContext cdrJobContext, CdrCollectionResult newCollectionResult)
         {
             this.CdrJobContext = cdrJobContext;
             this.CollectionResult = newCollectionResult;
         }
 
-        public void Process()
+        public void Mediate()
         {
-            var newCdrExts = this.CollectionResult.ConcurrentCdrExts.Values.ToList();
-            var accountingContext = this.CdrJobContext.AccountingContext;
             //todo: change to parallel
-            newCdrExts.ForEach(cdrExt=>
-            //Parallel.ForEach(newCdrExts, cdrExt =>
+            this.NewCdrExts.ForEach(cdrExt =>
+                //Parallel.ForEach(newCdrExts, cdrExt =>
             {
                 try
                 {
@@ -56,7 +56,7 @@ namespace TelcobrightMediation
                     {
                         ExecutePartnerRules(serviceGroupConfiguration.PartnerRules, cdrExt);
                         ExecuteRating(serviceGroupConfiguration, serviceGroupConfiguration.Ratingtrules, cdrExt);
-                        
+
                         serviceGroup.ExecutePostRatingActions(cdrExt, this);
                         ExecuteNerRule(this, cdrExt);
                         if (this.CdrJobContext.MediationContext.Tbc.CdrSetting.CallConnectTimePresent == true &&
@@ -68,7 +68,7 @@ namespace TelcobrightMediation
                     ValidationResult mediationResult =
                         MediationErrorChecker.ExecuteValidationRules(cdrExt, this.CdrJobContext);
                     if (mediationResult.IsValid == false)
-                        SendToCdrError(cdrExt,"Mediation error: "+ mediationResult.FirstValidationFailureMessage);
+                        SendToCdrError(cdrExt, "Mediation error: " + mediationResult.FirstValidationFailureMessage);
                     else
                     {
                         SetMediationStatusToSuccess(cdrExt.Cdr);
@@ -82,29 +82,46 @@ namespace TelcobrightMediation
                     this.SendToCdrError(cdrExt, errorMessage);
                 }
             });
-            this.CollectionResult.CollectionResultProcessingState=CollectionResultProcessingState.AfterMediation;
+            this.CollectionResult.CollectionResultProcessingState = CollectionResultProcessingState.AfterMediation;
+        }
+        public void GenerateSummaries()
+        {
             //todo: change to parallel
             //Parallel.ForEach(this.CollectionResult.ProcessedCdrExts, processedCdrExt =>
             this.CollectionResult.ProcessedCdrExts.ToList().ForEach(processedCdrExt =>
             {
-                IServiceGroup serviceGroup = null;
-                this.MediationContext.MefServiceGroupContainer.IdServiceGroupWiseServiceGroups.TryGetValue(
-                    processedCdrExt.Cdr.ServiceGroup, out serviceGroup);
-                if (serviceGroup == null) throw new Exception("Servicegroup not found before generating summary.");
-                foreach (string targetTableName in serviceGroup.GetSummaryTargetTables().Keys)
+                this.CdrJobContext.CdrSummaryContext.GenerateSummary(processedCdrExt);
+                var cdr = processedCdrExt.Cdr;
+                if (Convert.ToDecimal(cdr.SummaryMetaTotal)!=0)
+                    throw new Exception("Summmary meta data of new cdr must be zero.");
+                cdr.SummaryMetaTotal = processedCdrExt.TableWiseSummaries.Values.Sum(s => s.actualduration);
+            });
+        }
+        public void MergeNewSummariesIntoCache()
+        {
+            //todo: change to parallel
+            //Parallel.ForEach(this.CollectionResult.ProcessedCdrExts, processedCdrExt =>
+            this.CollectionResult.ProcessedCdrExts.ToList().ForEach(processedCdrExt =>
+            {
+                foreach (var kv in processedCdrExt.TableWiseSummaries)
                 {
-                    AbstractCdrSummary newSummary = (AbstractCdrSummary) this.CdrJobContext.CdrSummaryContext
-                        .TargetTableWiseSummaryFactory[targetTableName].CreateNewInstance(processedCdrExt);
-                    processedCdrExt.TableWiseSummaries.Add(targetTableName, newSummary);
-                    this.CdrJobContext.CdrSummaryContext.MergeAddSummary(targetTableName, newSummary);
-                }
-                foreach (var chargeable in processedCdrExt.Chargeables.Values.AsEnumerable())
-                {
-                    accountingContext.ChargeableCache.Insert(chargeable, ch => ch.id > 0);
+                    string summaryTargetTable = kv.Key;
+                    this.CdrJobContext.CdrSummaryContext.MergeAddSummary(summaryTargetTable, kv.Value);
                 }
             });
         }
-
+        public void InsertChargeablesIntoAccountingContext()
+        {
+            //todo: change to parallel
+            //Parallel.ForEach(this.CollectionResult.ProcessedCdrExts, processedCdrExt =>
+            this.CollectionResult.ProcessedCdrExts.ToList().ForEach(processedCdrExt =>
+            {
+                foreach (var chargeable in processedCdrExt.Chargeables.Values.AsEnumerable())
+                {
+                    this.AccountingContext.ChargeableCache.Insert(chargeable, ch => ch.id > 0);
+                }
+            });
+        }
         private void SendToCdrError(CdrExt cdrExt, string errorMessage)
         {
             if (cdrExt.Cdr.PartialFlag == 0)

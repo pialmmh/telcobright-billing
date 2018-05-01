@@ -45,13 +45,7 @@ namespace UnitTesterManual
             CdrCollectionResult newCollectionResult, oldCollectionResult = null;
             preProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
 
-            PartialCdrTesterData partialCdrTesterData = base.OrganizeTestData(preProcessor,newCollectionResult);
-            CdrJobContext cdrJobContext =
-                new CdrJobContext(this.Input, newCollectionResult.HoursInvolved);
-            CdrProcessor cdrProcessor = new CdrProcessor(cdrJobContext, newCollectionResult);
-            CdrEraser cdrEraser = oldCollectionResult?.IsEmpty == false
-                ? new CdrEraser(cdrJobContext, oldCollectionResult) : null;
-            CdrJob cdrJob = new CdrJob(cdrProcessor, cdrEraser, this.RawCount, partialCdrTesterData);
+            CdrJob cdrJob = base.PrepareCdrJob(preProcessor, newCollectionResult, oldCollectionResult);
             ExecuteCdrJob(cdrJob);
             return JobCompletionStatus.Complete;
         }

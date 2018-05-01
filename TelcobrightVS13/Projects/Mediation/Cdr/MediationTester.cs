@@ -10,7 +10,6 @@ using TelcobrightMediation.Cdr;
 
 namespace TelcobrightMediation
 {
-    //todo: change to abs
     public class MediationTester
     {
         private decimal DecimalComparisionTollerance { get; }
@@ -31,18 +30,17 @@ namespace TelcobrightMediation
         }
         public bool DurationSumInCdrAndSummaryAreTollerablyEqual(CdrProcessor cdrProcessor)
         {
-            return cdrProcessor.CollectionResult.ProcessedCdrExts.Sum(c => c.Cdr?.DurationSec)
-                   - cdrProcessor.CollectionResult.ProcessedCdrExts.Sum(
-                       c => c.TableWiseSummaries.Values.Sum(s => s?.actualduration))
+            return Math.Abs(cdrProcessor.CollectionResult.ProcessedCdrExts.Sum(c => Convert.ToDecimal(c.Cdr?.DurationSec))
+                    - cdrProcessor.CollectionResult.ProcessedCdrExts.Sum(
+                        c => c.TableWiseSummaries.Values.Sum(s => Convert.ToDecimal(s?.actualduration))))
                    <= this.DecimalComparisionTollerance;
         }
 
-        public bool DurationSumInCdrAndTableWiseSummariesAreTollerablyEqual(CdrProcessor cdrProcessor)
+        public bool DurationSumInCdrAndTableWiseSummariesAreTollerablyEqual(CdrCollectionResult collectionResult)
         {
-            return cdrProcessor.CollectionResult.ProcessedCdrExts.Sum(c => c.Cdr?.DurationSec)
-                   - cdrProcessor.CollectionResult.ProcessedCdrExts.SelectMany(c => c.TableWiseSummaries.Values)
-                       .Sum(s => s.actualduration)
-                   <= this.DecimalComparisionTollerance;
+            return Math.Abs(collectionResult.ProcessedCdrExts.Sum(c => Convert.ToDecimal(c.Cdr?.DurationSec))
+                    - collectionResult.ProcessedCdrExts.SelectMany(c => c.TableWiseSummaries.Values)
+                        .Sum(s => s.actualduration)) <= this.DecimalComparisionTollerance;
         }
 
         public bool SummaryCountTwiceAsCdrCount(CdrProcessor cdrProcessor)

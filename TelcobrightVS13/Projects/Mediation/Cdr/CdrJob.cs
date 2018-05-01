@@ -37,7 +37,10 @@ namespace TelcobrightMediation.Cdr
             this.CdrEraser?.UndoOldChargeables();
             this.CdrEraser?.DeleteOldCdrs();
 
-            this.CdrProcessor?.Process();
+            this.CdrProcessor?.Mediate();
+            this.CdrProcessor?.GenerateSummaries();
+            this.CdrProcessor?.MergeNewSummariesIntoCache();
+            this.CdrProcessor?.InsertChargeablesIntoAccountingContext();
 
             IncrementalTransactionCreator transactionProcessor = new IncrementalTransactionCreator(this);
             List<acc_transaction> incrementalTransactions= transactionProcessor.CreateIncrementalTransactions();
@@ -65,7 +68,26 @@ namespace TelcobrightMediation.Cdr
         {
             MediationTester mediationTester =
                 new MediationTester(input.Tbc.CdrSetting.FractionalNumberComparisonTollerance);
-            Assert.IsTrue(mediationTester.DurationSumInCdrAndTableWiseSummariesAreTollerablyEqual(this.CdrProcessor));
+            if(!mediationTester.DurationSumInCdrAndTableWiseSummariesAreTollerablyEqual(this.CdrProcessor.CollectionResult))
+                throw new Exception("Duration sum in cdr and tableWiseSummaries are not tollerably equal");
+            if(!mediationTester.DurationSumInCdrAndSummaryAreTollerablyEqual(this.CdrProcessor))
+                throw new Exception("Duration sum in cdr and summary are not tollerably equal");
+            if(!mediationTester.SummaryCountTwiceAsCdrCount(this.CdrProcessor))
+                throw new Exception("Summary count is not twice as cdr count");
+            if(!mediationTester
+                .SumOfPrevDayWiseDurationsAndNewSummaryInstancesIsEqualToSameInMergedSummaryCache(
+                    this.CdrProcessor))
+                throw new Exception("Sum of prev day wise durations and new summary instances is not equal to same " +
+                                    "in merged summary cache");
+            if(!mediationTester.DurationSumOfNonPartialRawPartialsAndRawDurationAreTollerablyEqual(this.CdrProcessor))
+                throw new Exception("Duration sum Of non partial and raw Partial cdrs " +
+                                    "are not equal to duration in raw instances.");
+        }
+        protected void AssertWithMediationTester(CdrJobInputData input)
+        {
+            MediationTester mediationTester =
+                new MediationTester(input.Tbc.CdrSetting.FractionalNumberComparisonTollerance);
+            Assert.IsTrue(mediationTester.DurationSumInCdrAndTableWiseSummariesAreTollerablyEqual(this.CdrProcessor.CollectionResult));
             Assert.IsTrue(mediationTester.DurationSumInCdrAndSummaryAreTollerablyEqual(this.CdrProcessor));
             Assert.IsTrue(mediationTester.SummaryCountTwiceAsCdrCount(this.CdrProcessor));
             Assert.IsTrue(mediationTester

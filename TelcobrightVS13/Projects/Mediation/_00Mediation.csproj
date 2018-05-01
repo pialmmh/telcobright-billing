@@ -162,6 +162,7 @@
     <Compile Include="Cdr\OldCdrDeleter.cs" />
     <Compile Include="Cdr\Summary\CdrSummaryFactoryFactory.cs" />
     <Compile Include="Cdr\AccWiseTransactionContainer.cs" />
+    <Compile Include="Cdr\Summary\ISummaryFactory.cs" />
     <Compile Include="Cdr\TransactionMetaDataUpdater.cs" />
     <Compile Include="Collector\IEventCollector.cs" />
     <Compile Include="Collector\SqlMultiWhereClause.cs" />
