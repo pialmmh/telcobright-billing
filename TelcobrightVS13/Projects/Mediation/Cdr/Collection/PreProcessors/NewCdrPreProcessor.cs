@@ -83,6 +83,9 @@ namespace TelcobrightMediation
         {
             Func<bool> partialCdrEnabled = () => base.CdrCollectorInputData.CdrSetting.PartialCdrEnabledNeIds
                 .Contains(base.CdrCollectorInputData.CdrJobInputData.Ne.idSwitch);
+
+            List<CdrExt> newCdrExts = this.CreateNewCdrExts();
+            List<CdrExt> oldCdrExts =new List<CdrExt>();
             if (partialCdrEnabled())
             {
                 if (base.RawPartialCdrInstances?.Any() == true)
@@ -93,13 +96,12 @@ namespace TelcobrightMediation
                     partialCdrCollector.ValidateCollectionStatus();
                     base.PartialCdrContainers = partialCdrCollector.AggregateAll() ??
                                                 new BlockingCollection<PartialCdrContainer>();
+                    Func<List<CdrExt>> oldCdrExtCreatorFromPrevPartialInstances = () => this.CreateOldCdrExts();
+                    oldCdrExts = oldCdrExtCreatorFromPrevPartialInstances.Invoke();
                 }
             }
-            List<CdrExt> newCdrExts = this.CreateNewCdrExts();
-            Func<List<CdrExt>> oldCdrExtCreatorFromPrevPartialInstances = () => this.CreateOldCdrExts();
-            List<CdrExt> oldCdrExts = oldCdrExtCreatorFromPrevPartialInstances.Invoke();
-
-            base.PopulatePrevAccountingInfo(oldCdrExts);
+            
+            base.LoadPrevAccountingInfoInsideCdrExts(oldCdrExts);
             newCollectionResult = new CdrCollectionResult(base.CdrCollectorInputData.Ne, newCdrExts,
                 base.InconsistentCdrs.ToList(), base.RawCount);
             oldCollectionResult = new CdrCollectionResult(base.CdrCollectorInputData.Ne, oldCdrExts,

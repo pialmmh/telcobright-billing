@@ -45,13 +45,36 @@ namespace TelcobrightMediation.Cdr
             inconsistentCdrs.ForEach(inconsistentCdr => this.InconsistentCdrs.Add(inconsistentCdr));
         }
 
-        protected virtual void PopulatePrevAccountingInfo(List<CdrExt> oldCdrExts)
+        protected void LoadPrevAccountingInfoInsideCdrExts(List<CdrExt> oldCdrExts)
         {
             if (!oldCdrExts.Any()) return;
             PrevAccountingInfoPopulator prevAccountingInfoPopulator =
                 new PrevAccountingInfoPopulator(this.Context, oldCdrExts);
             prevAccountingInfoPopulator.PopulatePreviousChargeables();
             prevAccountingInfoPopulator.PopulatePreviousTransactions();
+        }
+
+        //todo: impletement these to both new & reprocessor
+        protected void VerifyPrevTransactionsCollectionStatus(List<CdrExt> oldCdrExts,decimal fractionComparisonTollerence)
+        {
+            oldCdrExts.ForEach(c =>
+            {
+                if(Math.Abs(Convert.ToDecimal(c.Cdr.TransactionMetaTotal)-
+                c.AccWiseTransactionContainers.Values.SelectMany(transContainer=>transContainer.OldTransactions)
+                    .Sum(t=>t.amount))
+                    >fractionComparisonTollerence)
+                    throw new Exception("Sum of old transactions does not match meta data from cdr.");
+            });
+        }
+        protected void VerifyPrevChargeablesCollectionStatus(List<CdrExt> oldCdrExts, decimal fractionComparisonTollerence)
+        {
+            oldCdrExts.ForEach(c =>
+            {
+                if (Math.Abs(Convert.ToDecimal(c.Cdr.ChargeableMetaTotal) -
+                             c.Chargeables.Values.Sum(chargeable => chargeable.BilledAmount))
+                    > fractionComparisonTollerence)
+                    throw new Exception("Sum of old chargeables does not match meta data from cdr.");
+            });
         }
     }
 }
