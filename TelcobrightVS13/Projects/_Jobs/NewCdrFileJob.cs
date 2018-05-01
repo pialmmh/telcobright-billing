@@ -191,7 +191,7 @@ namespace Jobs
                     $" update job set CompletionTime={DateTime.Now.ToMySqlField()}, " +
                     $" status=1, "+
                     $"NoOfSteps={cdrProcessor.CollectionResult.RawCount}," +
-                    $"progresss={cdrProcessor.CollectionResult.RawCount}," +
+                    $"progress={cdrProcessor.CollectionResult.RawCount}," +
                     $"Error=null where id={telcobrightJob.id}";
                 cmd.CommandText = sql;
                 cmd.ExecuteNonQuery();
@@ -206,7 +206,7 @@ namespace Jobs
                     $" update job set CompletionTime={DateTime.Now.ToMySqlField()}, " +
                     $" status=1, " +
                     $"NoOfSteps=0," +
-                    $"progresss=0," +
+                    $"progress=0," +
                     $"Error=null where id={telcobrightJob.id}";
                 cmd.CommandText = sql;
                 cmd.ExecuteNonQuery();
