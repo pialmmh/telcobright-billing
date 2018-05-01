@@ -114,7 +114,8 @@ namespace TelcobrightMediation
         {
             //todo: change to parallel
             //Parallel.ForEach(this.CollectionResult.ProcessedCdrExts, processedCdrExt =>
-            this.CollectionResult.ProcessedCdrExts.ToList().ForEach(processedCdrExt =>
+            this.CollectionResult.ProcessedCdrExts.Where(c=>c.Cdr.ChargingStatus==1).ToList().
+                ForEach(processedCdrExt =>
             {
                 foreach (var chargeable in processedCdrExt.Chargeables.Values.AsEnumerable())
                 {

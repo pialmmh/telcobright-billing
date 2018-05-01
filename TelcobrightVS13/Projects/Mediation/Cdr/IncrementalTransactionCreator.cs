@@ -35,7 +35,7 @@ namespace TelcobrightMediation.Cdr
             {
                 if (this.CdrEraser == null) //only new cdrs but no old cdrs
                 {
-                    this.NewProcessedCdrExts.ForEach(newCdrExt =>
+                    this.NewProcessedCdrExts.Where(c=>c.Cdr.ChargingStatus==1).ToList().ForEach(newCdrExt =>
                     {
                         TransactionMetaDataUpdater transactionMetaDataUpdater = new TransactionMetaDataUpdater(newCdrExt.Cdr);
                         CreateIncTransForNewCdrExtWithNoOldInstance(newCdrExt,transactionMetaDataUpdater);

@@ -46,11 +46,11 @@ namespace TelcobrightMediation.Cdr
             inconsistentCdrs.ForEach(inconsistentCdr => this.InconsistentCdrs.Add(inconsistentCdr));
         }
 
-        protected void LoadPrevAccountingInfoForCdrExts(List<CdrExt> oldCdrExts)
+        protected void LoadPrevAccountingInfoForSuccessfulCdrExts(List<CdrExt> oldSuccessfulCdrExts)
         {
-            if (!oldCdrExts.Any()) return;
+            if (!oldSuccessfulCdrExts.Any()) return;
             PrevAccountingInfoPopulator prevAccountingInfoPopulator =
-                new PrevAccountingInfoPopulator(this.Context, oldCdrExts);
+                new PrevAccountingInfoPopulator(this.Context, oldSuccessfulCdrExts);
             prevAccountingInfoPopulator.PopulatePreviousChargeables();
             prevAccountingInfoPopulator.PopulatePreviousTransactions();
         }

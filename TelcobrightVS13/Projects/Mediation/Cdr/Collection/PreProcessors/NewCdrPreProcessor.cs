@@ -99,11 +99,15 @@ namespace TelcobrightMediation
                     Func<List<CdrExt>> oldCdrExtCreatorByLastPartialEqCloning = () => this.CreateOldCdrExts();
                     oldCdrExts = oldCdrExtCreatorByLastPartialEqCloning.Invoke();
 
-                    base.LoadPrevAccountingInfoForCdrExts(oldCdrExts);
-                    base.VerifyPrevAccountingInfoCollection(oldCdrExts, base.CdrSetting.FractionalNumberComparisonTollerance);
+                    List<CdrExt> successfulOldCdrExts = oldCdrExts.Where(c => c.Cdr.ChargingStatus == 1).ToList();
+                    if (successfulOldCdrExts.Any())
+                    {
+                        base.LoadPrevAccountingInfoForSuccessfulCdrExts(successfulOldCdrExts);
+                        base.VerifyPrevAccountingInfoCollection(successfulOldCdrExts,
+                            base.CdrSetting.FractionalNumberComparisonTollerance);
+                    }
                 }
             }
-            
             newCollectionResult = new CdrCollectionResult(base.CdrCollectorInputData.Ne, newCdrExts,
                 base.InconsistentCdrs.ToList(), base.RawCount);
             oldCollectionResult = new CdrCollectionResult(base.CdrCollectorInputData.Ne, oldCdrExts,
