@@ -96,12 +96,14 @@ namespace TelcobrightMediation
                     partialCdrCollector.ValidateCollectionStatus();
                     base.PartialCdrContainers = partialCdrCollector.AggregateAll() ??
                                                 new BlockingCollection<PartialCdrContainer>();
-                    Func<List<CdrExt>> oldCdrExtCreatorFromPrevPartialInstances = () => this.CreateOldCdrExts();
-                    oldCdrExts = oldCdrExtCreatorFromPrevPartialInstances.Invoke();
+                    Func<List<CdrExt>> oldCdrExtCreatorByLastPartialEqCloning = () => this.CreateOldCdrExts();
+                    oldCdrExts = oldCdrExtCreatorByLastPartialEqCloning.Invoke();
                 }
             }
             
-            base.LoadPrevAccountingInfoInsideCdrExts(oldCdrExts);
+            base.LoadPrevAccountingInfoForCdrExts(oldCdrExts);
+            base.VerifyPrevAccountingInfoCollection(oldCdrExts, base.CdrSetting.FractionalNumberComparisonTollerance);
+
             newCollectionResult = new CdrCollectionResult(base.CdrCollectorInputData.Ne, newCdrExts,
                 base.InconsistentCdrs.ToList(), base.RawCount);
             oldCollectionResult = new CdrCollectionResult(base.CdrCollectorInputData.Ne, oldCdrExts,
@@ -112,7 +114,7 @@ namespace TelcobrightMediation
             var cdrExtsForNonPartials = this.NonPartialCdrs
                 .Select(cdr => CdrExtFactory.CreateCdrExtWithNonPartialCdr(cdr, CdrNewOldType.NewCdr)).ToList();
             var cdrExtsForPartials = this.PartialCdrContainers
-                .Select(partialContainer => CdrExtFactory.CreateCdrExtWithPartialCdr(partialContainer,
+                .Select(partialContainer => CdrExtFactory.CreateCdrExtWithPartialCdrContainer(partialContainer,
                     CdrNewOldType.NewCdr)).ToList();
             var concatedList = cdrExtsForPartials.Concat(cdrExtsForNonPartials).ToList();
             if (concatedList.GroupBy(c => c.UniqueBillId).Any(g => g.Count() > 1))
@@ -128,7 +130,7 @@ namespace TelcobrightMediation
         {
             return this.PartialCdrContainers
                 .Where(c => c.LastProcessedAggregatedRawInstance != null)
-                .Select(partialContainer => CdrExtFactory.CreateCdrExtWithPartialCdr(partialContainer,
+                .Select(partialContainer => CdrExtFactory.CreateCdrExtWithPartialCdrContainer(partialContainer,
                     CdrNewOldType.OldCdr)).ToList();
         }
 

@@ -27,7 +27,10 @@ namespace TelcobrightMediation
             List<CdrExt> oldCdrExts = this.CreateOldCdrExts();
             if (oldCdrExts.GroupBy(c => c.UniqueBillId).Any(g => g.Count() > 1))
                 throw new Exception("Duplicate billId for Old CdrExts in CdrJob");
-            base.LoadPrevAccountingInfoInsideCdrExts(oldCdrExts);
+
+            base.LoadPrevAccountingInfoForCdrExts(oldCdrExts);
+            base.VerifyPrevAccountingInfoCollection(oldCdrExts, base.CdrSetting.FractionalNumberComparisonTollerance);
+
             var emptyCdrInconsistents = new List<cdrinconsistent>();
             newCollectionResult = new CdrCollectionResult(base.CdrCollectorInputData.Ne,
                 newCdrExts, emptyCdrInconsistents, base.RawCount);
@@ -37,16 +40,32 @@ namespace TelcobrightMediation
 
         protected override List<CdrExt> CreateNewCdrExts()
         {
-            return this.NonPartialCdrs
-                .Select(cdr => CdrExtFactory.CreateCdrExtWithNonPartialCdr(cdr, CdrNewOldType.NewCdr)).ToList();
+            List<CdrExt> newCdrExts = new List<CdrExt>();
+            Func<cdr,cdr> metaDataRemoverInCaseOfReProcessing = oldCdr =>
+            {
+                oldCdr.TransactionMetaTotal = 0;
+                oldCdr.ChargeableMetaTotal = 0;
+                oldCdr.SummaryMetaTotal = 0;
+                return oldCdr;
+            };
+            this.NonPartialCdrs.ToList().ForEach(nonPartialCdr =>
+            {
+                var clonedCdr = new IcdrImplConverter<cdr>().Convert(CdrManipulatingUtil.Clone(nonPartialCdr));
+                clonedCdr = metaDataRemoverInCaseOfReProcessing.Invoke(clonedCdr);
+                newCdrExts.Add(CdrExtFactory.CreateCdrExtWithNonPartialCdr(cdr: clonedCdr,
+                    treatCdrAsNewOldType: CdrNewOldType.NewCdr));
+            });
+            return newCdrExts;
         }
 
         protected override List<CdrExt> CreateOldCdrExts()
         {
             return this.NonPartialCdrs
-                .Select(cdr => CdrExtFactory.CreateCdrExtWithNonPartialCdr(
-                 new IcdrImplConverter<cdr>().Convert(CdrManipulatingUtil.Clone(cdr))
-                 , CdrNewOldType.OldCdr)).ToList();
+                .Select(cdr => 
+                        CdrExtFactory.CreateCdrExtWithNonPartialCdr(
+                        cdr: new IcdrImplConverter<cdr>().Convert(CdrManipulatingUtil.Clone(cdr))
+                        , treatCdrAsNewOldType: CdrNewOldType.OldCdr)
+                ).ToList();
         }
     }
 }

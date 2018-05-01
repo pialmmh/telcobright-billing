@@ -28,6 +28,7 @@ namespace TelcobrightMediation.Cdr
         public BlockingCollection<cdrinconsistent> InconsistentCdrs { get; }
             = new BlockingCollection<cdrinconsistent>();
 
+        public CdrSetting CdrSetting => this.CdrCollectorInputData.CdrSetting;
         public bool IsEmpty => (this.InconsistentCdrs.Any() == false && this.NonPartialCdrs.Any() == false
                                 && this.RawPartialCdrInstances.Any() == false);
 
@@ -45,7 +46,7 @@ namespace TelcobrightMediation.Cdr
             inconsistentCdrs.ForEach(inconsistentCdr => this.InconsistentCdrs.Add(inconsistentCdr));
         }
 
-        protected void LoadPrevAccountingInfoInsideCdrExts(List<CdrExt> oldCdrExts)
+        protected void LoadPrevAccountingInfoForCdrExts(List<CdrExt> oldCdrExts)
         {
             if (!oldCdrExts.Any()) return;
             PrevAccountingInfoPopulator prevAccountingInfoPopulator =
@@ -53,9 +54,13 @@ namespace TelcobrightMediation.Cdr
             prevAccountingInfoPopulator.PopulatePreviousChargeables();
             prevAccountingInfoPopulator.PopulatePreviousTransactions();
         }
-
-        //todo: impletement these to both new & reprocessor
-        protected void VerifyPrevTransactionsCollectionStatus(List<CdrExt> oldCdrExts,decimal fractionComparisonTollerence)
+        protected void VerifyPrevAccountingInfoCollection(List<CdrExt> oldCdrExts, decimal fractionComparisonTollerence)
+        {
+            if (!oldCdrExts.Any()) return;
+            VerifyPrevTransactionsCollectionStatus(oldCdrExts,fractionComparisonTollerence);
+            VerifyPrevChargeablesCollectionStatus(oldCdrExts, fractionComparisonTollerence);
+        }
+        private void VerifyPrevTransactionsCollectionStatus(List<CdrExt> oldCdrExts,decimal fractionComparisonTollerence)
         {
             oldCdrExts.ForEach(c =>
             {
@@ -66,7 +71,7 @@ namespace TelcobrightMediation.Cdr
                     throw new Exception("Sum of old transactions does not match meta data from cdr.");
             });
         }
-        protected void VerifyPrevChargeablesCollectionStatus(List<CdrExt> oldCdrExts, decimal fractionComparisonTollerence)
+        private void VerifyPrevChargeablesCollectionStatus(List<CdrExt> oldCdrExts, decimal fractionComparisonTollerence)
         {
             oldCdrExts.ForEach(c =>
             {

@@ -30,8 +30,8 @@ namespace TelcobrightMediation
             List<cdr> finalCdrs = dbRowCollector.Collect();
             CdrReProcessingPreProcessor preProcessor =
                 new CdrReProcessingPreProcessor(this.CdrCollectorInput, finalCdrs);
-            CdrCollectionResult newCollectionResult = null;
-            CdrCollectionResult oldCollectionResult = null;
+
+            CdrCollectionResult newCollectionResult, oldCollectionResult = null;
             preProcessor.GetCollectionResults(out newCollectionResult,out oldCollectionResult);
             CdrJobContext cdrJobContext = new CdrJobContext(this.CdrCollectorInput.CdrJobInputData,
                 newCollectionResult.HoursInvolved);
