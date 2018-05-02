@@ -55,20 +55,20 @@ namespace TelcobrightMediation.Cdr
             prevAccountingInfoPopulator.PopulatePreviousChargeables();
             prevAccountingInfoPopulator.PopulatePreviousTransactions();
         }
-        protected void VerifyPrevAccountingInfoCollection(List<CdrExt> oldCdrExts, decimal fractionComparisonTollerence)
+        protected void VerifyPrevAccountingInfoCollection(List<CdrExt> successfulOldCdrExts, decimal fractionComparisonTollerence)
         {
-            if (!oldCdrExts.Any()) return;
-            VerifyPrevTransactionsCollectionStatus(oldCdrExts,fractionComparisonTollerence);
-            VerifyPrevChargeablesCollectionStatus(oldCdrExts, fractionComparisonTollerence);
+            if (!successfulOldCdrExts.Any()) return;
+            VerifyPrevTransactionsCollectionStatus(successfulOldCdrExts,fractionComparisonTollerence);
+            VerifyPrevChargeablesCollectionStatus(successfulOldCdrExts, fractionComparisonTollerence);
         }
-        private void VerifyPrevTransactionsCollectionStatus(List<CdrExt> oldCdrExts,decimal fractionComparisonTollerence)
+        private void VerifyPrevTransactionsCollectionStatus(List<CdrExt> successfulOldCdrExts, decimal fractionComparisonTollerence)
         {
-            oldCdrExts.ForEach(c =>
+            successfulOldCdrExts.ForEach(c =>
             {
-                if(Math.Abs(Convert.ToDecimal(c.Cdr.TransactionMetaTotal)-
-                c.AccWiseTransactionContainers.Values.SelectMany(transContainer=>transContainer.OldTransactions)
-                    .Sum(t=>t.amount))
-                    >fractionComparisonTollerence)
+                decimal transTotalFromCdrMetaData = Convert.ToDecimal(c.Cdr.TransactionMetaTotal);
+                decimal transTotalFromTransactions = c.AccWiseTransactionContainers.Values.SelectMany(transContainer=>transContainer.OldTransactions)
+                    .Sum(t=>t.amount);
+                if(Math.Abs(transTotalFromCdrMetaData-transTotalFromTransactions)>fractionComparisonTollerence)
                     throw new Exception("Sum of old transactions does not match meta data from cdr.");
             });
         }
@@ -76,9 +76,9 @@ namespace TelcobrightMediation.Cdr
         {
             oldCdrExts.ForEach(c =>
             {
-                if (Math.Abs(Convert.ToDecimal(c.Cdr.ChargeableMetaTotal) -
-                             c.Chargeables.Values.Sum(chargeable => chargeable.BilledAmount))
-                    > fractionComparisonTollerence)
+                decimal chargeableTotalFromCdrMeta = Convert.ToDecimal(c.Cdr.ChargeableMetaTotal);
+                decimal totalFromChargeableInstances = c.Chargeables.Values.Sum(chargeable => chargeable.BilledAmount);
+                if (Math.Abs(chargeableTotalFromCdrMeta -totalFromChargeableInstances)> fractionComparisonTollerence)
                     throw new Exception("Sum of old chargeables does not match meta data from cdr.");
             });
         }

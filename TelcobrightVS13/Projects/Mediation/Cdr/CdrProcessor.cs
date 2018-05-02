@@ -60,7 +60,6 @@ namespace TelcobrightMediation
                     {
                         ExecutePartnerRules(serviceGroupConfiguration.PartnerRules, cdrExt);
                         ExecuteRating(serviceGroupConfiguration, serviceGroupConfiguration.Ratingtrules, cdrExt);
-
                         serviceGroup.ExecutePostRatingActions(cdrExt, this);
                         ExecuteNerRule(this, cdrExt);
                         if (this.CdrJobContext.MediationContext.Tbc.CdrSetting.CallConnectTimePresent == true &&
@@ -117,13 +116,17 @@ namespace TelcobrightMediation
             });
         }
 
-        public void InsertChargeablesIntoAccountingContext()
+        public void ProcessChargeables()
         {
             //todo: change to parallel
             //Parallel.ForEach(this.CollectionResult.ProcessedCdrExts, processedCdrExt =>
             this.CollectionResult.ProcessedCdrExts.Where(c => c.Cdr.ChargingStatus == 1).ToList().ForEach(
                 processedCdrExt =>
                 {
+                    if (Convert.ToDecimal(processedCdrExt.Cdr.ChargeableMetaTotal) > 0)
+                            throw new Exception("Chargeable meta total cannot be > 0 for new cdr.");
+                    processedCdrExt.Cdr.ChargeableMetaTotal =
+                        processedCdrExt.Chargeables.Values.Sum(c => c.BilledAmount);
                     foreach (var chargeable in processedCdrExt.Chargeables.Values.AsEnumerable())
                     {
                         this.AccountingContext.ChargeableCache.Insert(chargeable, ch => ch.id > 0);

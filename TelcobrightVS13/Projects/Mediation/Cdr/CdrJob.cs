@@ -40,7 +40,7 @@ namespace TelcobrightMediation.Cdr
             this.CdrProcessor?.Mediate();
             this.CdrProcessor?.GenerateSummaries();
             this.CdrProcessor?.MergeNewSummariesIntoCache();
-            this.CdrProcessor?.InsertChargeablesIntoAccountingContext();
+            this.CdrProcessor?.ProcessChargeables();
 
             IncrementalTransactionCreator transactionProcessor = new IncrementalTransactionCreator(this);
             List<acc_transaction> incrementalTransactions= transactionProcessor.CreateIncrementalTransactions();
