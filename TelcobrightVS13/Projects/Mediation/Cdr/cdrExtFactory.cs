@@ -36,8 +36,8 @@ namespace TelcobrightMediation.Cdr
                 case CdrNewOldType.NewCdr:
                     if (partialCdrContainer.NewCdrEquivalent.FinalRecord != 1)
                         throw new Exception("Partial cdr equivalent instance must have final record set to 1.");
-                    if (partialCdrContainer.NewCdrEquivalent.PartialFlag >0)
-                        throw new Exception("Partial cdr equivalent instance must have partial flag set to 1.");
+                    if (partialCdrContainer.NewCdrEquivalent.PartialFlag <=0)
+                        throw new Exception("Partial cdr equivalent instance must have partial flag >= 1.");
                     return new CdrExt(partialCdrContainer.NewCdrEquivalent, CdrNewOldType.NewCdr)
                     {
                         PartialCdrContainer = partialCdrContainer,
