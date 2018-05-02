@@ -14,7 +14,6 @@ namespace InstallConfig
             new BillingRule(id:1,ruleName: "Prepaid")
             {
                 IsPrepaid = true,
-                
                 Description = "VoiceServiceBlockingBasedOnPortCost",
                 AccBalanceThresholdActions = new List<AccBalanceThresholdAction>()
                 {
@@ -29,6 +28,8 @@ namespace InstallConfig
                 Description = "",
                 InvoiceOverdueInDay = 7,
                 CronExpressionForBillingCycle = "0 0 0 1 * ? *",
+                BillingInterval = DateInterval.Months,
+                BillDuration = 1,
             }
         };
     }

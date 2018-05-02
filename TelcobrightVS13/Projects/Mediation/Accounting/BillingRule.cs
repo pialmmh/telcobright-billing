@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using TelcobrightMediation.Config;
 using Itenso.TimePeriod;
+using Quartz;
+
 namespace TelcobrightMediation.Accounting
 {
     public class BillingRule:IGenericJsonRule,IBillingRule,ITimeRangeImplementer
@@ -13,6 +15,49 @@ namespace TelcobrightMediation.Accounting
         public string RuleName { get; }
         public string Description { get; set; }
         public bool IsPrepaid { get; set; }
+        public TimeRange GetBillingCycleByBillableItemsDate(DateTime billablesDate)
+        {
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.Local;
+            DateTimeOffset billDate = DateTime.SpecifyKind(billablesDate, DateTimeKind.Local);
+            CronExpression quartzHelper = new CronExpression(CronExpressionForBillingCycle);
+            quartzHelper.TimeZone = timeZoneInfo;
+            DateTimeOffset? nextScheduledJob = quartzHelper.GetNextValidTimeAfter(billDate);
+            DateTimeOffset prevScheduledJob = new DateTimeOffset();
+            if (nextScheduledJob != null)
+            {
+                int billDuration = this.BillDuration;
+                TimeSpan ts = (DateTimeOffset) nextScheduledJob - billDate;
+                if (ts.TotalSeconds > 0) billDuration = -billDuration;
+                switch (this.BillingInterval)
+                {
+                    case DateInterval.Minutes:
+                        prevScheduledJob = ((DateTimeOffset) nextScheduledJob).AddMinutes(billDuration);
+                        break;
+                    case DateInterval.Hours:
+                        prevScheduledJob = ((DateTimeOffset) nextScheduledJob).AddHours(billDuration);
+                        break;
+                    case DateInterval.Days:
+                        prevScheduledJob = ((DateTimeOffset) nextScheduledJob).AddDays(billDuration);
+                        nextScheduledJob = ((DateTimeOffset) nextScheduledJob).AddDays(-1);
+                        break;
+                    case DateInterval.Weeks:
+                        prevScheduledJob = ((DateTimeOffset) nextScheduledJob).AddDays(billDuration * 7);
+                        nextScheduledJob = ((DateTimeOffset) nextScheduledJob).AddDays(-1);
+                        break;
+                    case DateInterval.Months:
+                        prevScheduledJob = ((DateTimeOffset) nextScheduledJob).AddMonths(billDuration).AddDays(1);
+                        nextScheduledJob = ((DateTimeOffset) nextScheduledJob).AddDays(-1);
+                        break;
+                    case DateInterval.Years:
+                        prevScheduledJob = ((DateTimeOffset) nextScheduledJob).AddYears(billDuration);
+                        nextScheduledJob = ((DateTimeOffset) nextScheduledJob).AddDays(-1);
+                        break;
+                }
+                return new TimeRange(prevScheduledJob.DateTime, ((DateTimeOffset) nextScheduledJob).DateTime);
+            }
+            else return null;
+        }
+
         public List<AccBalanceThresholdAction> AccBalanceThresholdActions { get; set; }
         public int InvoiceOverdueInDay { get; set; }
         public string CronExpressionForBillingCycle { get; set; }
@@ -21,6 +66,9 @@ namespace TelcobrightMediation.Accounting
         public Single AvgRateForVoice { get; set; }
         public Single AcdInMinuteForVoice { get; set; }
         public Dictionary<string,string> JsonParameters { get; set; }
+        public DateInterval? BillingInterval { get; set; }
+        public int BillDuration { get; set; }
+
         public BillingRule(int id,string ruleName)
         {
             this.RuleName = ruleName;
