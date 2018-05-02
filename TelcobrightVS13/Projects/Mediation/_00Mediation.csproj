@@ -115,6 +115,7 @@
     <Compile Include="Automation\AutomatedNetworkElementCli.cs" />
     <Compile Include="Automation\SessionInfo.cs" />
     <Compile Include="Automation\SingleCliCommand.cs" />
+    <Compile Include="Cdr\Collection\PreProcessors\CdrErasingPreProcessor.cs" />
     <Compile Include="Cdr\IncrementalTransactionCreator.cs" />
     <Compile Include="Cdr\CdrJob.cs" />
     <Compile Include="Cdr\CdrWritingResult.cs" />
@@ -164,13 +165,13 @@
     <Compile Include="Cdr\AccWiseTransactionContainer.cs" />
     <Compile Include="Cdr\Summary\ISummaryFactory.cs" />
     <Compile Include="Cdr\TransactionMetaDataUpdater.cs" />
-    <Compile Include="Collector\IEventCollector.cs" />
-    <Compile Include="Collector\SqlMultiWhereClause.cs" />
-    <Compile Include="Collector\SqlSingleWhereClause.cs" />
-    <Compile Include="Collector\SqlWhereParamEnums.cs" />
-    <Compile Include="Collector\UnprocessedTextCdrCollectorFromDb.cs" />
-    <Compile Include="Collector\PrevAccountingInfoPopulator.cs" />
-    <Compile Include="Collector\DbRowCollector.cs" />
+    <Compile Include="Cdr\Collection\Collector\IEventCollector.cs" />
+    <Compile Include="Cdr\Collection\Collector\SqlMultiWhereClause.cs" />
+    <Compile Include="Cdr\Collection\Collector\SqlSingleWhereClause.cs" />
+    <Compile Include="Cdr\Collection\Collector\SqlWhereParamEnums.cs" />
+    <Compile Include="Cdr\Collection\Collector\UnprocessedTextCdrCollectorFromDb.cs" />
+    <Compile Include="Cdr\Collection\Collector\PrevAccountingInfoPopulator.cs" />
+    <Compile Include="Cdr\Collection\Collector\DbRowCollector.cs" />
     <Compile Include="Cdr\CdrExt.cs" />
     <Compile Include="Cdr\PartialCdrWriter.cs" />
     <Compile Include="Config\ApplicationServerConfig.cs" />
@@ -238,7 +239,7 @@
     <Compile Include="SimpleLookups.cs" />
     <Compile Include="Mediation\CompressFile.cs" />
     <Compile Include="Mediation\TxtTableFromCdrOrSummary.cs" />
-    <Compile Include="Collector\FileBasedTextCdrCollector.cs" />
+    <Compile Include="Cdr\Collection\Collector\FileBasedTextCdrCollector.cs" />
     <Compile Include="EventAndListeners\AbstractListener.cs" />
     <Compile Include="EventAndListeners\INetworkEvent.cs" />
     <Compile Include="Cdr\CdrJobContext.cs" />

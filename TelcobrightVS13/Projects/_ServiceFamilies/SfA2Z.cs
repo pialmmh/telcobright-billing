@@ -27,21 +27,21 @@ namespace ServiceFamilies
             A2ZRater a2ZRater = new A2ZRater(serviceContext, cdr);
             decimal finalDuration = 0;
             decimal finalAmount = 0;
-            Rateext matchedRateWithAssignmentTupleId = a2ZRater.ExecuteA2ZRating(out finalDuration, out finalAmount, flagLcr,
+            Rateext rateWithAssignmentTupleId = a2ZRater.ExecuteA2ZRating(out finalDuration, out finalAmount, flagLcr,
                 useInMemoryTable:true);
-            if (matchedRateWithAssignmentTupleId != null)
+            if (rateWithAssignmentTupleId != null)
             {
                 //consider otherAmount3 as tax1, by default
                 cdr.Duration1 = finalDuration;
-                decimal taxAmount1 = Convert.ToDecimal(matchedRateWithAssignmentTupleId.OtherAmount3);
+                decimal taxAmount1 = Convert.ToDecimal(rateWithAssignmentTupleId.OtherAmount3);
                 cdr.Tax2 = cdr.InPartnerCost * taxAmount1 / 100;
                 string idCurrencyUoM = serviceContext.CdrProcessor.CdrJobContext.MediationContext.MefServiceFamilyContainer
-                    .DicRateplans[matchedRateWithAssignmentTupleId.idrateplan.ToString()].Currency;
+                    .DicRateplans[rateWithAssignmentTupleId.idrateplan.ToString()].Currency;
                 int idChargedPartner = GetChargedOrChargingPartnerId(cdrExt, serviceContext);
                 BillingRule billingRule = GetBillingRule(serviceContext,
-                    matchedRateWithAssignmentTupleId.IdRatePlanAssignmentTuple);
+                    rateWithAssignmentTupleId.IdRatePlanAssignmentTuple);
                 CdrPostingAccountingFinder postingAccountingFinder =
-                    new CdrPostingAccountingFinder(serviceContext, matchedRateWithAssignmentTupleId, idChargedPartner,
+                    new CdrPostingAccountingFinder(serviceContext, rateWithAssignmentTupleId, idChargedPartner,
                         billingRule);
                 var postingAccount = postingAccountingFinder.GetPostingAccount();
                 if(cdrExt.Cdr.ChargingStatus==1)
@@ -55,14 +55,14 @@ namespace ServiceFamilies
                         servicegroup = serviceContext.ServiceGroupConfiguration.IdServiceGroup,
                         assignedDirection = Convert.ToSByte(serviceContext.AssignDir),
                         servicefamily = serviceContext.ServiceFamily.Id,
-                        ProductId = matchedRateWithAssignmentTupleId.ProductId,
+                        ProductId = rateWithAssignmentTupleId.ProductId,
                         idBilledUom = idCurrencyUoM,
                         idQuantityUom = "TF_s",
                         BilledAmount = Convert.ToDecimal(finalAmount),
                         Quantity = finalDuration,
-                        unitPriceOrCharge = matchedRateWithAssignmentTupleId.rateamount,
-                        Prefix = matchedRateWithAssignmentTupleId.Prefix,
-                        RateId = matchedRateWithAssignmentTupleId.id,
+                        unitPriceOrCharge = rateWithAssignmentTupleId.rateamount,
+                        Prefix = rateWithAssignmentTupleId.Prefix,
+                        RateId = rateWithAssignmentTupleId.id,
                         glAccountId = postingAccount.id,
                         changedByJob = serviceContext.CdrProcessor.CdrJobContext.TelcobrightJob.id,
                         idBillingrule = billingRule.Id,
@@ -79,7 +79,7 @@ namespace ServiceFamilies
                             : "unknown";
                     return new AccChargeableExt(chargeable)
                     {
-                        RateExt = matchedRateWithAssignmentTupleId,
+                        RateExt = rateWithAssignmentTupleId,
                         Account = postingAccount
                     };//no rate matched
                 }

@@ -65,8 +65,8 @@ namespace InstallConfig
                                 "CostIcxIn must be >=  0"
                             },
                             {
-                                "obj.CostVATCommissionIn >= 0",
-                                "CostVATCommissionIn must be >=  0"
+                                "obj.Tax1 >= 0",
+                                "Tax1 must be >=  0"
                             },
                             {
                                 "obj.AnsIdTerm>0",

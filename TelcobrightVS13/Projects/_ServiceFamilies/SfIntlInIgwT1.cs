@@ -43,7 +43,7 @@ namespace TelcobrightMediation
             }
             int tempCategory = Convert.ToInt32(thisCdr.Category); //default 1=call
             int tempSubCategory = Convert.ToInt32(thisCdr.SubCategory);
-            ; //default 1=voice
+            
             int category = tempCategory > 0 ? tempCategory : 1; //default 1=call
             int subCategory = tempSubCategory > 0 ? tempSubCategory : 1; //default 1=voice
             decimal DurationSec = thisCdr.DurationSec; //may change per service family ######;
@@ -89,7 +89,7 @@ namespace TelcobrightMediation
 
             thisCdr.Tax1 = Convert.ToDecimal(btrcAmount);
             thisCdr.CostIcxIn = Convert.ToDecimal(iosTotalAmount);
-
+            thisCdr.CountryCode = matchedRateWithAssignmentTupleId.CountryCode;
             thisCdr.MatchedPrefixSupplier = matchedRateWithAssignmentTupleId.Prefix;
             thisCdr.RoundedDuration = finalDuration;
             thisCdr.SupplierRate = matchedRateWithAssignmentTupleId.rateamount;

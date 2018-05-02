@@ -63,13 +63,13 @@ namespace TelcobrightMediation
             List<TupleByPeriod> tups = GetAssignmentTuples(this.ServiceContext.ServiceGroupConfiguration.IdServiceGroup
                 .ToString());
             if(tups==null) return null;
-            Rateext thisRateWithAssigmentTupleId = this.PrefixMatcher.MatchPrefix(phoneNumber, category, subCategory,
+            Rateext rateWithAssigmentTupleId = this.PrefixMatcher.MatchPrefix(phoneNumber, category, subCategory,
                 tups, Convert.ToDateTime(this.Cdr.AnswerTime), flagLcr,useInMemoryTable);
-            if (thisRateWithAssigmentTupleId == null) return null;
+            if (rateWithAssigmentTupleId == null) return null;
             finalDuration = 0;
-            finalDuration = this.PrefixMatcher.GetA2ZDuration(this.Cdr.DurationSec, thisRateWithAssigmentTupleId);
-            finalAmount = this.PrefixMatcher.GetA2ZAmount(finalDuration, thisRateWithAssigmentTupleId, 0,this.ServiceContext.CdrProcessor);
-            int ceilingUpPositionAfterDecimal = Convert.ToInt32(thisRateWithAssigmentTupleId.OtherAmount9);
+            finalDuration = this.PrefixMatcher.GetA2ZDuration(this.Cdr.DurationSec, rateWithAssigmentTupleId);
+            finalAmount = this.PrefixMatcher.GetA2ZAmount(finalDuration, rateWithAssigmentTupleId, 0,this.ServiceContext.CdrProcessor);
+            int ceilingUpPositionAfterDecimal = Convert.ToInt32(rateWithAssigmentTupleId.OtherAmount9);
             if (ceilingUpPositionAfterDecimal>0 && ceilingUpPositionAfterDecimal<=7)
             {
                 FractionCeilingHelper ceilingHelper =
@@ -79,19 +79,21 @@ namespace TelcobrightMediation
             switch (this.ServiceContext.AssignDir)
             {
                 case ServiceAssignmentDirection.Customer:
-                    this.Cdr.MatchedPrefixCustomer  = thisRateWithAssigmentTupleId.Prefix;//remove - to avoid conflict in summary
+                    this.Cdr.MatchedPrefixCustomer  = rateWithAssigmentTupleId.Prefix;//remove - to avoid conflict in summary
                     this.Cdr.Duration1 = finalDuration;
                     this.Cdr.InPartnerCost = Convert.ToDecimal(finalAmount);
-                    this.Cdr.CustomerRate = thisRateWithAssigmentTupleId.rateamount;
+                    this.Cdr.CustomerRate = rateWithAssigmentTupleId.rateamount;
+                    this.Cdr.CountryCode = rateWithAssigmentTupleId.CountryCode;
                     break;
                 case ServiceAssignmentDirection.Supplier:
-                    this.Cdr.MatchedPrefixSupplier = thisRateWithAssigmentTupleId.Prefix;//remove - to avoid conflict in summary
+                    this.Cdr.MatchedPrefixSupplier = rateWithAssigmentTupleId.Prefix;//remove - to avoid conflict in summary
                     this.Cdr.Duration2 = finalDuration;
                     this.Cdr.OutPartnerCost = Convert.ToDecimal(finalAmount);
-                    this.Cdr.SupplierRate = thisRateWithAssigmentTupleId.rateamount;
+                    this.Cdr.SupplierRate = rateWithAssigmentTupleId.rateamount;
+                    this.Cdr.CountryCode = rateWithAssigmentTupleId.CountryCode;
                     break;
             }
-            return thisRateWithAssigmentTupleId;
+            return rateWithAssigmentTupleId;
         }
         private List<TupleByPeriod> GetAssignmentTuples(string idServiceGroup)
         {

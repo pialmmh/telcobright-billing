@@ -34,9 +34,10 @@ namespace TelcobrightMediation.Cdr
 
         public abstract void GetCollectionResults(out CdrCollectionResult newCollectionResult,
             out CdrCollectionResult oldCollectionResult);
-
         protected abstract List<CdrExt> CreateNewCdrExts();
         protected abstract List<CdrExt> CreateOldCdrExts();
+        protected abstract CdrCollectionResult CreateNewCollectionResult();
+        protected abstract CdrCollectionResult CreateOldCollectionResult();
 
         protected AbstractCdrJobPreProcessor(CdrCollectorInputData cdrCollectorInputData, int rawCount,
             List<cdrinconsistent> inconsistentCdrs)

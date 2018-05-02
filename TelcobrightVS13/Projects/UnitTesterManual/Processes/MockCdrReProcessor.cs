@@ -59,7 +59,7 @@ namespace UnitTesterManual
                     {
                         ne ne = context.nes.Where(c => c.idSwitch == 1).ToList().First();
                         List<job> incompleteJobs = context.jobs
-                            .Where(c => new List<int>() {2,3,4}.Contains(c.idjobdefinition)//err & reprocess
+                            .Where(c => new List<int>() {2,3,4}.Contains(c.idjobdefinition)//err,reprocess, erase
                              && c.Status!=1 && c.CompletionTime == null && c.idNE == ne.idSwitch).ToList();
                         using (DbCommand cmd=context.Database.Connection.CreateCommand())
                         {

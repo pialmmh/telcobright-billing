@@ -29,11 +29,12 @@ namespace TelcobrightMediation
             DbRowCollector<cdr> dbRowCollector =
                 new DbRowCollector<cdr>(this.CdrCollectorInput.CdrJobInputData, selectSql);
             List<cdr> finalCdrs = dbRowCollector.Collect();
-            CdrReProcessingPreProcessor reprocessingPreProcessor =
-                new CdrReProcessingPreProcessor(this.CdrCollectorInput, finalCdrs);
-            CdrCollectionResult newCollectionResult = null;
-            CdrCollectionResult oldCollectionResult = null;
+            CdrErasingPreProcessor reprocessingPreProcessor =
+                new CdrErasingPreProcessor(this.CdrCollectorInput, finalCdrs);
+
+            CdrCollectionResult newCollectionResult = null, oldCollectionResult = null;
             reprocessingPreProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
+
             CdrJobContext cdrJobContext = new CdrJobContext(this.CdrCollectorInput.CdrJobInputData,
                 newCollectionResult.HoursInvolved);
             CdrEraser cdrEraser = new CdrEraser(cdrJobContext, oldCollectionResult);

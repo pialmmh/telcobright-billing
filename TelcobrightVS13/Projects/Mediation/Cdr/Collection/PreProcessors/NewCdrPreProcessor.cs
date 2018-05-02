@@ -81,11 +81,22 @@ namespace TelcobrightMediation
         public override void GetCollectionResults(out CdrCollectionResult newCollectionResult,
             out CdrCollectionResult oldCollectionResult)
         {
+            newCollectionResult = CreateNewCollectionResult();
+            oldCollectionResult = CreateOldCollectionResult();
+        }
+        protected  override CdrCollectionResult CreateNewCollectionResult()
+        {
+            List<CdrExt> newCdrExts = this.CreateNewCdrExts();
+            var newCollectionResult = new CdrCollectionResult(base.CdrCollectorInputData.Ne, newCdrExts,
+                base.InconsistentCdrs.ToList(), base.RawCount);
+            return newCollectionResult;
+        }
+        protected override CdrCollectionResult CreateOldCollectionResult()
+        {
+            List<CdrExt> oldCdrExts = new List<CdrExt>();
             Func<bool> partialCdrEnabled = () => base.CdrCollectorInputData.CdrSetting.PartialCdrEnabledNeIds
                 .Contains(base.CdrCollectorInputData.CdrJobInputData.Ne.idSwitch);
 
-            List<CdrExt> newCdrExts = this.CreateNewCdrExts();
-            List<CdrExt> oldCdrExts =new List<CdrExt>();
             if (partialCdrEnabled())
             {
                 if (base.RawPartialCdrInstances?.Any() == true)
@@ -108,11 +119,13 @@ namespace TelcobrightMediation
                     }
                 }
             }
-            newCollectionResult = new CdrCollectionResult(base.CdrCollectorInputData.Ne, newCdrExts,
-                base.InconsistentCdrs.ToList(), base.RawCount);
-            oldCollectionResult = new CdrCollectionResult(base.CdrCollectorInputData.Ne, oldCdrExts,
+            var oldCollectionResult = new CdrCollectionResult(base.CdrCollectorInputData.Ne, oldCdrExts,
                 new List<cdrinconsistent>(), oldCdrExts.Count);
+            return oldCollectionResult;
         }
+
+        
+
         protected override List<CdrExt> CreateNewCdrExts()
         {
             var cdrExtsForNonPartials = this.NonPartialCdrs

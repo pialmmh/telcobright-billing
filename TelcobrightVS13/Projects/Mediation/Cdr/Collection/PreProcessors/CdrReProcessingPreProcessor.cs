@@ -21,13 +21,28 @@ namespace TelcobrightMediation
         public override void GetCollectionResults(out CdrCollectionResult newCollectionResult,
             out CdrCollectionResult oldCollectionResult)
         {
+            newCollectionResult = CreateNewCollectionResult();
+            oldCollectionResult = CreateOldCollectionResult();
+        }
+
+        protected override CdrCollectionResult CreateNewCollectionResult()
+        {
             List<CdrExt> newCdrExts = this.CreateNewCdrExts();
             if (newCdrExts.GroupBy(c => c.UniqueBillId).Any(g => g.Count() > 1))
                 throw new Exception("Duplicate billId for CdrExts in CdrJob");
+            var emptyCdrInconsistents = new List<cdrinconsistent>();
+            var newCollectionResult = new CdrCollectionResult(base.CdrCollectorInputData.Ne,
+                newCdrExts, emptyCdrInconsistents, base.RawCount);
+            return newCollectionResult;
+        }
+
+        protected override CdrCollectionResult CreateOldCollectionResult()
+        {
             List<CdrExt> oldCdrExts = this.CreateOldCdrExts();
             if (oldCdrExts.GroupBy(c => c.UniqueBillId).Any(g => g.Count() > 1))
                 throw new Exception("Duplicate billId for Old CdrExts in CdrJob");
 
+            var emptyCdrInconsistents = new List<cdrinconsistent>();
             List<CdrExt> successfulOldCdrExts = oldCdrExts.Where(c => c.Cdr.ChargingStatus == 1).ToList();
             if (successfulOldCdrExts.Any())
             {
@@ -35,11 +50,9 @@ namespace TelcobrightMediation
                 base.VerifyPrevAccountingInfoCollection(successfulOldCdrExts,
                     base.CdrSetting.FractionalNumberComparisonTollerance);
             }
-            var emptyCdrInconsistents = new List<cdrinconsistent>();
-            newCollectionResult = new CdrCollectionResult(base.CdrCollectorInputData.Ne,
-                newCdrExts, emptyCdrInconsistents, base.RawCount);
-            oldCollectionResult = new CdrCollectionResult(base.CdrCollectorInputData.Ne,
+            var oldCollectionResult = new CdrCollectionResult(base.CdrCollectorInputData.Ne,
                 oldCdrExts, emptyCdrInconsistents, base.RawCount);
+            return oldCollectionResult;
         }
 
         protected override List<CdrExt> CreateNewCdrExts()
@@ -52,7 +65,7 @@ namespace TelcobrightMediation
                 oldCdr.SummaryMetaTotal = 0;
                 return oldCdr;
             };
-            this.NonPartialCdrs.ToList().ForEach(nonPartialCdr =>
+            base.NonPartialCdrs.ToList().ForEach(nonPartialCdr =>
             {
                 var clonedCdr = new IcdrImplConverter<cdr>().Convert(CdrManipulatingUtil.Clone(nonPartialCdr));
                 clonedCdr = metaDataRemoverInCaseOfReProcessing.Invoke(clonedCdr);
