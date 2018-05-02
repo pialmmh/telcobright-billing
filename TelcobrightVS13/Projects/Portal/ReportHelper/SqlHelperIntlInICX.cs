@@ -57,7 +57,7 @@ namespace PortalApp.ReportHelper
                 sum(duration1)/60 AS roundedduration, 
                 sum(duration1)/60 AS duration1,
 		        (SELECT 0) AS costansin,
-		        SUM(OutPartnerCost) AS costicxin, 
+		        SUM(suppliercost) AS costicxin, 
 		        SUM(tax1) AS costvatcomissionin,
 		        Sum(customercost) AS customercost,
                 Sum(tax1) AS tax1,
