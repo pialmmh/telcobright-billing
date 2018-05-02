@@ -67,7 +67,7 @@ namespace TelcobrightMediation
                                        {
                                            UniqueBillId = newMediatableCdrInstance.UniqueBillId,
                                            switchid = newMediatableCdrInstance.SwitchId,
-                                           CallDate = newMediatableCdrInstance.StartTime,
+                                           CallDate = newMediatableCdrInstance.StartTime.Date,
                                        };
             this.CdrPartialReference.lastFilename = newMediatableCdrInstance.FileName;
             this.CdrPartialReference.lastIdcall = newMediatableCdrInstance.IdCall;
