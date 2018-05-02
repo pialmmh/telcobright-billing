@@ -56,13 +56,14 @@ namespace TelcobrightMediation.Cdr
                 processedPartialCdrExts.Select(c => c.PartialCdrContainer.NewCdrEquivalent).Count());
 
             decimal nonPartialDuration = processedNonPartialCdrExts.Sum(c => c.Cdr.DurationSec);
-            decimal partialNormalizedDuration = processedPartialCdrExts.Sum(c => c.Cdr.DurationSec);
+            decimal partialNewRawInstancesDuration = processedPartialCdrExts
+                .SelectMany(c=>c.PartialCdrContainer.NewRawInstances).Sum(c => c.DurationSec);
+            decimal errorDuration = collectionResult.CdrErrors.Sum(c => Convert.ToDecimal(c.DurationSec));
             Assert.AreEqual(this.PartialCdrTesterData.RawDurationWithoutInconsistents,
-                nonPartialDuration + partialNormalizedDuration +
-                collectionResult.CdrErrors.Sum(c => Convert.ToDecimal(c.DurationSec)));
+                nonPartialDuration + partialNewRawInstancesDuration +errorDuration);
             Assert.AreEqual(collectionResult.ProcessedCdrExts.Sum(c => c.Cdr.DurationSec),
-                (nonPartialDuration + partialNormalizedDuration));
-            Assert.AreEqual(partialNormalizedDuration,
+                (nonPartialDuration + partialNewRawInstancesDuration));
+            Assert.AreEqual(partialNewRawInstancesDuration,
                 processedPartialCdrExts.SelectMany(c => c.PartialCdrContainer.NewRawInstances)
                     .Sum(c => c.DurationSec));
         }

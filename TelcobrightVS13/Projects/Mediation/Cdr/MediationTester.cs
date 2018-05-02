@@ -29,7 +29,8 @@ namespace TelcobrightMediation
             var newRawPartialCdrs = partialCdrExts.SelectMany(c => c.PartialCdrContainer.NewRawInstances);
             var nonPartialDurationSum = nonPartialCdrs.Sum(c => c.Cdr.DurationSec);
             var rawPartialDurationSum = newRawPartialCdrs.Sum(c => c.DurationSec);
-            bool result = Math.Abs(nonPartialDurationSum + rawPartialDurationSum
+            var errorDuration = cdrProcessor.CollectionResult.CdrErrors.Sum(c => Convert.ToDecimal(c.DurationSec));
+            bool result = Math.Abs(nonPartialDurationSum + rawPartialDurationSum+errorDuration
                                    - cdrProcessor.CollectionResult.RawDurationTotalOfConsistentCdrs) <=
                           this.FractionComparisionTollerance;
             return result;
