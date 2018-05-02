@@ -15,7 +15,7 @@ namespace TelcobrightMediation.Cdr
         private CdrJobContext CdrJobContext { get; }
         private List<CdrExt> NewSuccessfulCdrExts { get; }
         private ConcurrentDictionary<string, CdrExt> OldSuccessfulCdrExts { get; }
-        private List<acc_transaction> IncrementalTransactions{ get; set; }
+        private List<acc_transaction> IncrementalTransactions { get; set; }
 
         public IncrementalTransactionCreator(CdrJob cdrJob)
         {
@@ -37,15 +37,16 @@ namespace TelcobrightMediation.Cdr
 
         public List<acc_transaction> CreateIncrementalTransactions()
         {
-            this.IncrementalTransactions= new List<acc_transaction>();
+            this.IncrementalTransactions = new List<acc_transaction>();
             if (this.CdrProcessor != null) //new cdr exists
             {
                 if (this.CdrEraser == null) //only new cdrs but no old cdrs
                 {
-                    this.NewSuccessfulCdrExts.Where(c=>c.Cdr.ChargingStatus==1).ToList().ForEach(newCdrExt =>
+                    this.NewSuccessfulCdrExts.Where(c => c.Cdr.ChargingStatus == 1).ToList().ForEach(newCdrExt =>
                     {
-                        TransactionMetaDataUpdater transactionMetaDataUpdater = new TransactionMetaDataUpdater(newCdrExt.Cdr);
-                        CreateIncTransForNewCdrExtWithNoOldInstance(newCdrExt,transactionMetaDataUpdater);
+                        TransactionMetaDataUpdater transactionMetaDataUpdater =
+                            new TransactionMetaDataUpdater(newCdrExt.Cdr);
+                        CreateIncTransForNewCdrExtWithNoOldInstance(newCdrExt, transactionMetaDataUpdater);
                     });
                 }
                 else if (this.CdrEraser != null) //new + old cdr co-existence
@@ -60,7 +61,8 @@ namespace TelcobrightMediation.Cdr
             return this.IncrementalTransactions;
         }
 
-        private void CreateIncTransForNewCdrExtWithNoOldInstance(CdrExt newCdrExt, TransactionMetaDataUpdater transactionMetaDataUpdater)
+        private void CreateIncTransForNewCdrExtWithNoOldInstance(CdrExt newCdrExt,
+            TransactionMetaDataUpdater transactionMetaDataUpdater)
         {
             var cdr = newCdrExt.Cdr;
             foreach (var transactionContainer in newCdrExt.AccWiseTransactionContainers.Values)
@@ -95,13 +97,16 @@ namespace TelcobrightMediation.Cdr
             foreach (var newCdrExt in this.NewSuccessfulCdrExts)
             {
                 CdrExt oldCdrExt = null;
-                TransactionMetaDataUpdater transactionMetaDataUpdater =new TransactionMetaDataUpdater(newCdrExt.Cdr);
                 if (this.OldSuccessfulCdrExts.TryGetValue(newCdrExt.UniqueBillId, out oldCdrExt) == false) //no old cdr
                 {
+                    var transactionMetaDataUpdater = new TransactionMetaDataUpdater(newCdrExt.Cdr);
                     CreateIncTransForNewCdrExtWithNoOldInstance(newCdrExt, transactionMetaDataUpdater);
                 }
                 else //new+old cdr co-existence
                 {
+                    //todo: remove temp code
+                    var sumNew = newCdrExt.AccWiseTransactionContainers.Values.Sum(t => t.NewTransaction.amount);
+                    //end temp code
                     foreach (KeyValuePair<long, AccWiseTransactionContainer> kv in newCdrExt
                         .AccWiseTransactionContainers)
                     {
@@ -113,12 +118,13 @@ namespace TelcobrightMediation.Cdr
                         {
                             throw new Exception("OldTransaction container not found in old CdrExt instance.");
                         }
-
+                        newCdrExt.Cdr.TransactionMetaTotal = oldCdrExt.Cdr.TransactionMetaTotal;
+                        var transactionMetaDataUpdater = new TransactionMetaDataUpdater(newCdrExt.Cdr);
                         var incTrans = newTransactionContainer.NewTransaction.Clone();
                         incTrans.amount =
                             newTransactionContainer.NewTransaction.amount -
                             oldTransactionContainer.OldTransactions.Sum(t => t.amount);
-                        newTransactionContainer.SetIncrementalTransaction(incTrans,transactionMetaDataUpdater);
+                        newTransactionContainer.SetIncrementalTransaction(incTrans, transactionMetaDataUpdater);
                     }
                 }
             }
@@ -129,9 +135,8 @@ namespace TelcobrightMediation.Cdr
         {
             decimal fractionComparsionTollerance = this.CdrJobContext.MediationContext.CdrSetting
                 .FractionalNumberComparisonTollerance;
-            var sumOfNewTransactionAmounts = this.NewSuccessfulCdrExts
-                .SelectMany(c => c.AccWiseTransactionContainers.Values).Sum(t => t.NewTransaction.amount);
-            var sumOfOldTransactionAmounts = this.OldSuccessfulCdrExts.Values.SelectMany(c => c.AccWiseTransactionContainers
+            var sumOfOldTransactionAmounts = this.OldSuccessfulCdrExts.Values.SelectMany(c => c
+                .AccWiseTransactionContainers
                 .Values.SelectMany(t => t.OldTransactions)).Sum(t => t.amount);
 
             decimal sumOfOldTransactionsFromCdrMetaData =
@@ -142,12 +147,38 @@ namespace TelcobrightMediation.Cdr
                 throw new Exception("Transaction total of old cdrs does not match the total from old cdrs meta data.");
             }
 
-            var sumOfIncrementalTransactionAmounts = this.IncrementalTransactions.Sum(t => t.amount);
-            if (Math.Abs(sumOfNewTransactionAmounts-
-                (sumOfOldTransactionAmounts + sumOfIncrementalTransactionAmounts))>fractionComparsionTollerance)
+            var oldBillIds = this.OldSuccessfulCdrExts.Values.Select(c => c.UniqueBillId).ToList();
+            var newWithOldSuccessfuls = this.NewSuccessfulCdrExts.Where(c => oldBillIds.Contains(c.UniqueBillId))
+                .ToList();
+            var sumOfNewForNewWithOlds = newWithOldSuccessfuls
+                .SelectMany(c => c.AccWiseTransactionContainers.Values)
+                .Select(tContainer => tContainer.NewTransaction).Sum(t => t.amount);
+            var sumOfOldForNewWithOlds = newWithOldSuccessfuls
+                .SelectMany(c => c.AccWiseTransactionContainers.Values)
+                .SelectMany(tContainer => tContainer.OldTransactions).Sum(t => t.amount);
+            var sumOfIncForNewWithOlds = newWithOldSuccessfuls
+                .SelectMany(c => c.AccWiseTransactionContainers.Values)
+                .Select(tContainer => tContainer.IncrementalTransaction).Sum(t => t.amount);
+            if (Math.Abs(sumOfIncForNewWithOlds -
+                         (sumOfOldForNewWithOlds + sumOfIncForNewWithOlds)) > fractionComparsionTollerance)
             {
                 throw new Exception(
-                    "Sum of new transctions amount does not match the sum of old & incremental amounts. ");
+                    "Sum of new transctions amount does not match the sum of old & incremental amounts" +
+                    "for New and Old cdr co-existence case. ");
+            }
+            if (this.CdrProcessor != null)
+            {
+                decimal sumOfAllTransMetaData = Convert.ToDecimal(this.NewSuccessfulCdrExts.Sum(c => c.Cdr.TransactionMetaTotal));
+                decimal sumOfAllIncAmount = this.NewSuccessfulCdrExts
+                    .SelectMany(c => c.AccWiseTransactionContainers.Values)
+                    .Sum(tContainer => tContainer.IncrementalTransaction.amount);
+                decimal sumOfAllOldAmount = this.OldSuccessfulCdrExts.Values
+                    .SelectMany(c => c.AccWiseTransactionContainers.Values)
+                    .SelectMany(tContainer => tContainer.OldTransactions)
+                    .Sum(c => c.amount);
+                if(Math.Abs(sumOfAllTransMetaData-(sumOfAllIncAmount+sumOfAllOldAmount))>fractionComparsionTollerance)
+                throw new Exception("Expected transaction meta data does not match the total of " +
+                                    "all incremental & old transactions amount.");
             }
         }
     }

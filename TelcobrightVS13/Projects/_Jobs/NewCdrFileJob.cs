@@ -82,9 +82,7 @@ namespace Jobs
                     throw new Exception("Duration sum of old cdrs in cdrEraser is not equal to " +
                                         "the same of cdrs in partialCdrExts with old Instances.");
             }
-
-                CdrJob cdrJob = new CdrJob(cdrProcessor, cdrEraser, this.RawCount, partialCdrTesterData);
-            
+            CdrJob cdrJob = new CdrJob(cdrProcessor, cdrEraser, this.RawCount, partialCdrTesterData);
             return cdrJob;
         }
 
