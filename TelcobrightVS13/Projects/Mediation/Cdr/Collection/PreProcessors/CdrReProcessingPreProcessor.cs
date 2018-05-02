@@ -42,7 +42,6 @@ namespace TelcobrightMediation
             if (oldCdrExts.GroupBy(c => c.UniqueBillId).Any(g => g.Count() > 1))
                 throw new Exception("Duplicate billId for Old CdrExts in CdrJob");
 
-            var emptyCdrInconsistents = new List<cdrinconsistent>();
             List<CdrExt> successfulOldCdrExts = oldCdrExts.Where(c => c.Cdr.ChargingStatus == 1).ToList();
             if (successfulOldCdrExts.Any())
             {
@@ -50,6 +49,7 @@ namespace TelcobrightMediation
                 base.VerifyPrevAccountingInfoCollection(successfulOldCdrExts,
                     base.CdrSetting.FractionalNumberComparisonTollerance);
             }
+            var emptyCdrInconsistents = new List<cdrinconsistent>();
             var oldCollectionResult = new CdrCollectionResult(base.CdrCollectorInputData.Ne,
                 oldCdrExts, emptyCdrInconsistents, base.RawCount);
             return oldCollectionResult;

@@ -15,7 +15,6 @@ namespace TelcobrightMediation
         public CdrErasingPreProcessor(CdrCollectorInputData cdrCollectorInputData, List<cdr> finalCdrs)
             : base(cdrCollectorInputData, finalCdrs)
         {
-            finalCdrs.ForEach(c => base.NonPartialCdrs.Add(c));
         }
 
         public override void GetCollectionResults(out CdrCollectionResult newCollectionResult,
