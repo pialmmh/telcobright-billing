@@ -13,10 +13,13 @@ namespace TelcobrightMediation
     public class MediationTester
     {
         private decimal FractionComparisionTollerance { get; }
+        private CdrCollectionResult CdrCollectionResult { get; }
+
         public MediationTester(decimal fractionComparisionTollerance)
         {
             this.FractionComparisionTollerance = fractionComparisionTollerance;
         }
+
         public bool DurationSumOfNonPartialRawPartialsAndRawDurationAreTollerablyEqual(CdrProcessor cdrProcessor)
         {
             var processedCdrExts = cdrProcessor.CollectionResult.ProcessedCdrExts;
@@ -26,10 +29,10 @@ namespace TelcobrightMediation
             return Math.Abs(nonPartialCdrs.Sum(c => c.Cdr.DurationSec) + newRawPartialCdrs.Sum(c => c.DurationSec)
                     -cdrProcessor.CollectionResult.RawDurationTotalOfConsistentCdrs)>this.FractionComparisionTollerance;
         }
-        public bool DurationSumInCdrAndSummaryAreTollerablyEqual(CdrProcessor cdrProcessor)
+        public bool DurationSumInCdrAndSummaryAreTollerablyEqual(CdrCollectionResult collectionResult)
         {
-            return Math.Abs(cdrProcessor.CollectionResult.ProcessedCdrExts.Sum(c => Convert.ToDecimal(c.Cdr?.DurationSec))
-                    - cdrProcessor.CollectionResult.ProcessedCdrExts.Sum(
+            return Math.Abs(collectionResult.ProcessedCdrExts.Sum(c => Convert.ToDecimal(c.Cdr?.DurationSec))
+                    - collectionResult.ProcessedCdrExts.Sum(
                         c => c.TableWiseSummaries.Values.Sum(s => Convert.ToDecimal(s?.actualduration))))
                    > this.FractionComparisionTollerance;
         }
@@ -42,10 +45,10 @@ namespace TelcobrightMediation
             return Math.Abs(durationInCdrs- durationInSumaries) > this.FractionComparisionTollerance;
         }
 
-        public bool SummaryCountTwiceAsCdrCount(CdrProcessor cdrProcessor)
+        public bool SummaryCountTwiceAsCdrCount(CdrCollectionResult collectionResult)
         {
-            var cdrCount = cdrProcessor.CollectionResult.ProcessedCdrExts.Count();
-            int summaryInstanceCount = cdrProcessor.CollectionResult.ProcessedCdrExts
+            var cdrCount = collectionResult.ProcessedCdrExts.Count();
+            int summaryInstanceCount = collectionResult.ProcessedCdrExts
                 .SelectMany(c => c.TableWiseSummaries.Values).Count();
             return 2 * cdrCount == summaryInstanceCount;
         }
@@ -92,14 +95,14 @@ namespace TelcobrightMediation
                     decimal newDurationForThisDayOrHourInNewCdrExtSummaries = kv.Value;
                     decimal prevDurationForThisDayOrHourFromSummaryTable = 0;
                     dayWisePrevDurations.TryGetValue(kv.Key, out prevDurationForThisDayOrHourFromSummaryTable);
-                    var mergedDurationInSummaryContext = cdrProcessor.CdrJobContext.CdrSummaryContext
+                    var updatedDurationInSummaryContext = cdrProcessor.CdrJobContext.CdrSummaryContext
                         .TableWiseSummaryCache
                         .Where(keyValue => keyValue.Key == summaryTableName).Select(keyValue => keyValue.Value)
                         .SelectMany(summaryCache => summaryCache.GetItems().Where(s => s.tup_starttime == kv.Key))
                         .Sum(summary => summary.actualduration);
                     decimal totalSupposedToBeDuration =
                         newDurationForThisDayOrHourInNewCdrExtSummaries + prevDurationForThisDayOrHourFromSummaryTable;
-                    if (Math.Abs(totalSupposedToBeDuration-mergedDurationInSummaryContext)>this.FractionComparisionTollerance)
+                    if (Math.Abs(totalSupposedToBeDuration-updatedDurationInSummaryContext)>this.FractionComparisionTollerance)
                         return false;
                 }
             }

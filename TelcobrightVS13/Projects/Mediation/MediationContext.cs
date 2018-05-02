@@ -18,6 +18,7 @@ namespace TelcobrightMediation
     public class MediationContext
     {
         public TelcobrightConfig Tbc { get; }
+        public CdrSetting CdrSetting => this.Tbc.CdrSetting;
         public PartnerEntities Context { get; }
         public AutoIncrementManager AutoIncrementManager { get; }
         public MefDecoderContainer MefDecoderContainer { get; set; }
