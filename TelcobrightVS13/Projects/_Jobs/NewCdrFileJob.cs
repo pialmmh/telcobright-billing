@@ -68,14 +68,17 @@ namespace Jobs
                 if(cdrEraser.CollectionResult.RawCount!=cdrEraser.CollectionResult.ConcurrentCdrExts.Count)
                     throw new Exception("Raw count of cdrEraser does not match concurrentCdrExts total.");
                 var newPartialCdrExtsWithOldInstance = cdrProcessor.CollectionResult.ConcurrentCdrExts.Values.Where(
-                    c => c.Cdr.PartialFlag > 0 && c.PartialCdrContainer.LastProcessedAggregatedRawInstance != null);
+                    c => c.Cdr.PartialFlag > 0 && c.PartialCdrContainer.LastProcessedAggregatedRawInstance != null)
+                    .ToList();
                 var cdrExtsAsOldCdr = cdrEraser.CollectionResult.ConcurrentCdrExts.Values;
-                var partialCdrExtsWithOldInstance = newPartialCdrExtsWithOldInstance as CdrExt[] ?? newPartialCdrExtsWithOldInstance.ToArray();
-                if (cdrExtsAsOldCdr.Count!=partialCdrExtsWithOldInstance.Count())
+                if (cdrExtsAsOldCdr.Count!=newPartialCdrExtsWithOldInstance.Count)
                     throw new Exception("For newCdr job, number of old cdrExts must match equivalent partial cdrs " +
                                         "which have previous aggregated instance.");
-                if(Math.Abs(cdrExtsAsOldCdr.Sum(c=>c.Cdr.DurationSec)-
-                    partialCdrExtsWithOldInstance.Sum(c=>c.Cdr.DurationSec))>this.Input.CdrSetting.FractionalNumberComparisonTollerance)
+                decimal sumDurationOfOldCdrsTobeDeleted = cdrExtsAsOldCdr.Sum(c=>c.Cdr.DurationSec);
+                decimal sumDurationOfOldPartialInstances = newPartialCdrExtsWithOldInstance
+                    .Sum(c=>c.PartialCdrContainer.LastProcessedAggregatedRawInstance.DurationSec);
+                if(Math.Abs(sumDurationOfOldCdrsTobeDeleted-
+                    sumDurationOfOldPartialInstances)>this.Input.CdrSetting.FractionalNumberComparisonTollerance)
                     throw new Exception("Duration sum of old cdrs in cdrEraser is not equal to " +
                                         "the same of cdrs in partialCdrExts with old Instances.");
             }
