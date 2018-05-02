@@ -47,7 +47,7 @@ namespace Process
                             if (thisSwitch.SkipCdrListed == 1) continue;
                             Console.WriteLine("Listing Files in Switch:" + thisSwitch.SwitchName);
                             string vaultName = thisSwitch.SourceFileLocations;
-                            Vault vault = tbc.Vaults.First(c => c.Name == vaultName);
+                            Vault vault = tbc.DirectorySettings.Vaults.First(c => c.Name == vaultName);
                             var fileNames = vault.GetFileList();
                             if (tbc.CdrSetting.DescendingOrderWhileListingFiles == true)
                                 fileNames = fileNames.OrderByDescending(c => c).ToList();

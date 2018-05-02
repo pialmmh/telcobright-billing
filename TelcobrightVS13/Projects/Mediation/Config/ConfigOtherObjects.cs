@@ -192,6 +192,7 @@ namespace TelcobrightMediation
         public string SectionName { get; set; }
         public int SectionOrder { get; set; }
         public string ApplicationRootDirectory { get; set; }
+        public List<Vault> Vaults { get; set; }=new List<Vault>();
         public Dictionary<string, FileLocation> FileLocations { get; set; }
         public Dictionary<string, SyncLocation> SyncLocations { get; set; }
         public Dictionary<string, SyncPair> SyncPairs { get; set; }

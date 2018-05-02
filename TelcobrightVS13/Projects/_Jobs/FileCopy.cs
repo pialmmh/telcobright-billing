@@ -206,7 +206,7 @@ namespace Jobs
                         if(dstLocation.FileLocation.LocationType=="vault")
                         {
                             string vaultName = dstLocation.FileLocation.Name;
-                            input.Tbc.Vaults.First(c => c.Name==vaultName).SyncOthers(destinationSyncInfo);
+                            input.Tbc.DirectorySettings.Vaults.First(c => c.Name==vaultName).SyncOthers(destinationSyncInfo);
                         }
                     }
                     else//REMOTE->LOCAL+ compression
@@ -255,7 +255,7 @@ namespace Jobs
                     }
                     //otherwise get local file ref from vault (this will copy from other vaults through ftp first if nonexisting) 
                     //& execute as if source is local
-                    Vault vault = input.Tbc.Vaults.First(c => c.Name == srcLocation.FileLocation.Name);
+                    Vault vault = input.Tbc.DirectorySettings.Vaults.First(c => c.Name == srcLocation.FileLocation.Name);
                     string localFileName = vault.GetSingleFile(new FileSyncInfo(paramFileCopy.RelativeFileName, srcLocation));
                     if(localFileName=="")
                     {

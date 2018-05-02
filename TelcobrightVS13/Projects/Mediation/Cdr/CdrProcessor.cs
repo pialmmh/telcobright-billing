@@ -32,19 +32,23 @@ namespace TelcobrightMediation
         private TelcobrightConfig Tbc => this.MediationContext.Tbc;
         private DbCommand DbCmd => this.CdrJobContext.DbCmd;
 
+        public bool PartialProcessingEnabled => this.Tbc.CdrSetting.PartialCdrEnabledNeIds.Contains(this.CdrJobContext
+            .Ne.idSwitch);
+
+        private List<CdrExt> NewCdrExts => this.CollectionResult.ConcurrentCdrExts.Values.ToList();
+        AccountingContext AccountingContext => this.CdrJobContext.AccountingContext;
+
         public CdrProcessor(CdrJobContext cdrJobContext, CdrCollectionResult newCollectionResult)
         {
             this.CdrJobContext = cdrJobContext;
             this.CollectionResult = newCollectionResult;
         }
 
-        public void Process()
+        public void Mediate()
         {
-            var newCdrExts = this.CollectionResult.ConcurrentCdrExts.Values.ToList();
-            var accountingContext = this.CdrJobContext.AccountingContext;
             //todo: change to parallel
-            newCdrExts.ForEach(cdrExt=>
-            //Parallel.ForEach(newCdrExts, cdrExt =>
+            this.NewCdrExts.ForEach(cdrExt =>
+                //Parallel.ForEach(newCdrExts, cdrExt =>
             {
                 try
                 {
@@ -56,7 +60,7 @@ namespace TelcobrightMediation
                     {
                         ExecutePartnerRules(serviceGroupConfiguration.PartnerRules, cdrExt);
                         ExecuteRating(serviceGroupConfiguration, serviceGroupConfiguration.Ratingtrules, cdrExt);
-                        
+
                         serviceGroup.ExecutePostRatingActions(cdrExt, this);
                         ExecuteNerRule(this, cdrExt);
                         if (this.CdrJobContext.MediationContext.Tbc.CdrSetting.CallConnectTimePresent == true &&
@@ -68,7 +72,7 @@ namespace TelcobrightMediation
                     ValidationResult mediationResult =
                         MediationErrorChecker.ExecuteValidationRules(cdrExt, this.CdrJobContext);
                     if (mediationResult.IsValid == false)
-                        SendToCdrError(cdrExt,"Mediation error: "+ mediationResult.FirstValidationFailureMessage);
+                        SendToCdrError(cdrExt, "Mediation error: " + mediationResult.FirstValidationFailureMessage);
                     else
                     {
                         SetMediationStatusToSuccess(cdrExt.Cdr);
@@ -82,26 +86,49 @@ namespace TelcobrightMediation
                     this.SendToCdrError(cdrExt, errorMessage);
                 }
             });
+            this.CollectionResult.CollectionResultProcessingState = CollectionResultProcessingState.AfterMediation;
+        }
+
+        public void GenerateSummaries()
+        {
             //todo: change to parallel
             //Parallel.ForEach(this.CollectionResult.ProcessedCdrExts, processedCdrExt =>
             this.CollectionResult.ProcessedCdrExts.ToList().ForEach(processedCdrExt =>
             {
-                IServiceGroup serviceGroup = null;
-                this.MediationContext.MefServiceGroupContainer.IdServiceGroupWiseServiceGroups.TryGetValue(
-                    processedCdrExt.Cdr.ServiceGroup, out serviceGroup);
-                if (serviceGroup == null) throw new Exception("Servicegroup not found before generating summary.");
-                foreach (string targetTableName in serviceGroup.GetSummaryTargetTables().Keys)
+                this.CdrJobContext.CdrSummaryContext.GenerateSummary(processedCdrExt);
+                var cdr = processedCdrExt.Cdr;
+                if (Convert.ToDecimal(cdr.SummaryMetaTotal) != 0)
+                    throw new Exception("Summmary meta data of new cdr must be zero.");
+                cdr.SummaryMetaTotal = processedCdrExt.TableWiseSummaries.Values.Sum(s => s.actualduration);
+            });
+        }
+
+        public void MergeNewSummariesIntoCache()
+        {
+            //todo: change to parallel
+            //Parallel.ForEach(this.CollectionResult.ProcessedCdrExts, processedCdrExt =>
+            this.CollectionResult.ProcessedCdrExts.ToList().ForEach(processedCdrExt =>
+            {
+                foreach (var kv in processedCdrExt.TableWiseSummaries)
                 {
-                    AbstractCdrSummary newSummary = (AbstractCdrSummary) this.CdrJobContext.CdrSummaryContext
-                        .TargetTableWiseSummaryFactory[targetTableName].CreateNewInstance(processedCdrExt);
-                    processedCdrExt.TableWiseSummaries.Add(targetTableName, newSummary);
-                    this.CdrJobContext.CdrSummaryContext.MergeAddSummary(targetTableName, newSummary);
-                }
-                foreach (var chargeable in processedCdrExt.Chargeables.Values.AsEnumerable())
-                {
-                    accountingContext.ChargeableCache.Insert(chargeable, ch => ch.id > 0);
+                    string summaryTargetTable = kv.Key;
+                    this.CdrJobContext.CdrSummaryContext.MergeAddSummary(summaryTargetTable, kv.Value);
                 }
             });
+        }
+
+        public void InsertChargeablesIntoAccountingContext()
+        {
+            //todo: change to parallel
+            //Parallel.ForEach(this.CollectionResult.ProcessedCdrExts, processedCdrExt =>
+            this.CollectionResult.ProcessedCdrExts.Where(c => c.Cdr.ChargingStatus == 1).ToList().ForEach(
+                processedCdrExt =>
+                {
+                    foreach (var chargeable in processedCdrExt.Chargeables.Values.AsEnumerable())
+                    {
+                        this.AccountingContext.ChargeableCache.Insert(chargeable, ch => ch.id > 0);
+                    }
+                });
         }
 
         private void SendToCdrError(CdrExt cdrExt, string errorMessage)
@@ -119,13 +146,14 @@ namespace TelcobrightMediation
             out ServiceGroupConfiguration serviceGroupConfiguration)
         {
             serviceGroupConfiguration = null;
-            Dictionary<int  , ServiceGroupConfiguration> serviceGroupConfigurations =
+            Dictionary<int, ServiceGroupConfiguration> serviceGroupConfigurations =
                 this.CdrJobContext.MediationContext.Tbc.CdrSetting.ServiceGroupConfigurations;
             foreach (KeyValuePair<int, ServiceGroupConfiguration> kv in serviceGroupConfigurations)
             {
                 IServiceGroup serviceGroup = null;
-                this.CdrJobContext.MediationContext.MefServiceGroupContainer.IdServiceGroupWiseServiceGroups.TryGetValue(kv.Key,
-                    out serviceGroup);
+                this.CdrJobContext.MediationContext.MefServiceGroupContainer.IdServiceGroupWiseServiceGroups
+                    .TryGetValue(kv.Key,
+                        out serviceGroup);
                 if (serviceGroup != null)
                 {
                     serviceGroupConfiguration = kv.Value;
@@ -164,7 +192,7 @@ namespace TelcobrightMediation
             var diffInSeconds = thisCdr.ConnectTime != null
                 ? (Convert.ToDateTime(thisCdr.ConnectTime) - thisCdr.SignalingStartTime).TotalSeconds
                 : (Convert.ToDateTime(thisCdr.AnswerTime) - thisCdr.SignalingStartTime).TotalSeconds;
-            thisCdr.PDD = (float)diffInSeconds;
+            thisCdr.PDD = (float) diffInSeconds;
         }
 
         private void ExecutePartnerRules(List<int> partnerRules, CdrExt cdrExt)
@@ -208,19 +236,14 @@ namespace TelcobrightMediation
                     {
                         cdrExt.Chargeables.Add(chargeableExt.AccChargeable.GetTuple(), chargeableExt.AccChargeable);
                         acc_transaction transaction = sf.GetTransaction(chargeableExt, serviceContext);
-                        TransactionContainerForSingleAccount transactionContainer = null;
+                        AccWiseTransactionContainer transactionContainer = null;
                         if (cdrExt.AccWiseTransactionContainers.TryGetValue(transaction.glAccountId,
                                 out transactionContainer) == false)
                         {
-                            transactionContainer = new TransactionContainerForSingleAccount();
+                            transactionContainer = new AccWiseTransactionContainer();
                         }
                         cdrExt.AccWiseTransactionContainers.Add(transaction.glAccountId, transactionContainer);
                         transactionContainer.NewTransaction = transaction;
-
-                        cdr.ChargeableMetaTotal = cdrExt.Chargeables.Values.Sum(c => c.BilledAmount);
-                        if (cdr.TransactionMetaTotal == null) cdr.TransactionMetaTotal = 0;
-                        cdr.TransactionMetaTotal +=
-                            cdrExt.AccWiseTransactionContainers.Values.Sum(t => t.IncrementalTransaction.amount);
                     }
                 }
 
@@ -231,30 +254,46 @@ namespace TelcobrightMediation
         {
             if (this.CdrJobContext.TelcobrightJob.idjobdefinition == 2) //cdrError
             {
-                OldCdrDeleter.DeleteOldCdrs("cdrerror", this.CollectionResult.ConcurrentCdrExts.Values
-                        .Select(c => new KeyValuePair<long, DateTime>(c.Cdr.IdCall, c.StartTime)).ToList(),
+                var idCallsOfProcessedCdrs = this.CollectionResult.ProcessedCdrExts
+                    .Select(c => new KeyValuePair<long, DateTime>(c.Cdr.IdCall, c.StartTime)).ToList();
+                var idCallsOfCdrErrors = this.CollectionResult.CdrErrors
+                    .Select(c => new KeyValuePair<long, DateTime>(c.IdCall, c.StartTime)).ToList();
+
+                OldCdrDeleter.DeleteOldCdrs("cdrerror", idCallsOfProcessedCdrs.Concat(idCallsOfCdrErrors).ToList(),
                     this.CdrJobContext.SegmentSizeForDbWrite, this.CdrJobContext.DbCmd);
             }
 
-            long inconsistentCount = WriteCdrInconsistent();
-            long errorCount = WriteCdrError();
+            long inconsistentCount = 0,
+                errorCount = 0,
+                nonPartialCdrCount = 0,
+                normalizedPartialCdrCount = 0,
+                cdrCount = 0;
+
+            if (this.CollectionResult.CdrInconsistents.Any())
+                inconsistentCount = WriteCdrInconsistent();
+
+            if (this.CollectionResult.CdrErrors.Any())
+                errorCount = WriteCdrError();
 
             var nonPartialCdrs = this.CollectionResult.ProcessedCdrExts
-                .Where(c => c.Cdr.MediationComplete == 1 && c.Cdr.PartialFlag==0).Select(c => c.Cdr).ToList();
-            long nonPartialCdrCount = WriteCdr(nonPartialCdrs);
+                .Where(c => c.Cdr.MediationComplete == 1 && c.Cdr.PartialFlag == 0).Select(c => c.Cdr).ToList();
+            if (nonPartialCdrs.Any())
+                nonPartialCdrCount = WriteCdr(nonPartialCdrs);
+
             var normalizedPartialCdrs = this.CollectionResult.ProcessedCdrExts
                 .Where(c => c.Cdr.MediationComplete == 1 && c.Cdr.PartialFlag > 0).Select(c => c.Cdr).ToList();
-            long normalizedPartialCdrCount = WriteCdr(normalizedPartialCdrs);
+            if (normalizedPartialCdrs.Any())
+                normalizedPartialCdrCount = WriteCdr(normalizedPartialCdrs);
 
-            long cdrCount = nonPartialCdrCount + normalizedPartialCdrCount;
+            cdrCount = nonPartialCdrCount + normalizedPartialCdrCount;
 
             List<PartialCdrContainer> partialCdrContainers = new List<PartialCdrContainer>();
             PartialCdrWriter partialCdrWriter = null;
-            if (this.Tbc.CdrSetting.PartialCdrEnabledNeIds.Contains(this.CdrJobContext.Ne.idSwitch))
+            if (this.PartialProcessingEnabled)
             {
                 partialCdrWriter = new PartialCdrWriter(
-                    this.CollectionResult.ProcessedCdrExts.
-                    Where(e => e.Cdr.PartialFlag !=0&&e.PartialCdrContainer!=null)
+                    this.CollectionResult.ProcessedCdrExts
+                        .Where(e => e.Cdr.PartialFlag != 0 && e.PartialCdrContainer != null)
                         .Select(e => e.PartialCdrContainer).ToList(), this.CdrJobContext);
                 partialCdrWriter.Write();
                 partialCdrContainers = partialCdrWriter.PartialCdrContainers;
@@ -280,19 +319,16 @@ namespace TelcobrightMediation
         public long WriteCdrInconsistent()
         {
             long inconsistentCount = 0;
-            if (this.CollectionResult.CdrInconsistents.Any())
-            {
-                int startAt = 0;
-                CollectionSegmenter<string> segmenter
-                    = new CollectionSegmenter<string>(
-                        this.CollectionResult.CdrInconsistents.Select(c => c.GetExtInsertValues()), startAt);
-                segmenter.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
-                    segment =>
-                    {
-                        this.DbCmd.CommandText = "insert into cdrinconsistent values " + string.Join(",", segment);
-                        inconsistentCount += this.DbCmd.ExecuteNonQuery(); //write cdr loaded
-                    });
-            }
+            int startAt = 0;
+            CollectionSegmenter<string> segmenter
+                = new CollectionSegmenter<string>(
+                    this.CollectionResult.CdrInconsistents.Select(c => c.GetExtInsertValues()), startAt);
+            segmenter.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
+                segment =>
+                {
+                    this.DbCmd.CommandText = "insert into cdrinconsistent values " + string.Join(",", segment);
+                    inconsistentCount += this.DbCmd.ExecuteNonQuery(); //write cdr loaded
+                });
             return inconsistentCount;
         }
 
@@ -300,42 +336,35 @@ namespace TelcobrightMediation
         {
             List<cdrerror> cdrErrors = this.CollectionResult.CdrErrors.ToList();
             long errorInsertedCount = 0;
-            if (cdrErrors.Any())
-            {
-                int startAt = 0;
-                CollectionSegmenter<cdrerror> methodEnumerator =
-                    new CollectionSegmenter<cdrerror>(cdrErrors, startAt);
-                this.DbCmd.CommandType = CommandType.Text;
-                methodEnumerator.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
-                    segment =>
-                    {
-                        this.DbCmd.CommandText =
-                            new StringBuilder(StaticExtInsertColumnHeaders.cdrerror)
-                                .Append(string.Join(",", segment.Select(c => c.GetExtInsertValues()))).ToString();
-                        errorInsertedCount += this.DbCmd.ExecuteNonQuery(); //write cdr loaded
-                    });
-            }
+            int startAt = 0;
+            CollectionSegmenter<cdrerror> methodEnumerator =
+                new CollectionSegmenter<cdrerror>(cdrErrors, startAt);
+            this.DbCmd.CommandType = CommandType.Text;
+            methodEnumerator.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
+                segment =>
+                {
+                    this.DbCmd.CommandText =
+                        new StringBuilder(StaticExtInsertColumnHeaders.cdrerror)
+                            .Append(string.Join(",", segment.Select(c => c.GetExtInsertValues()))).ToString();
+                    errorInsertedCount += this.DbCmd.ExecuteNonQuery(); //write cdr loaded
+                });
             return errorInsertedCount;
         }
 
         int WriteCdr(List<cdr> cdrs)
         {
             int insertCount = 0;
-            if (cdrs.Any())
-            {
-                int startAt = 0;
-                CollectionSegmenter<cdr> methodEnumerator = new CollectionSegmenter<cdr>
-                    (cdrs, startAt);
-                methodEnumerator.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
-                    segment =>
-                    {
-                        this.DbCmd.CommandText = new StringBuilder(StaticExtInsertColumnHeaders.cdr)
-                            .Append(string.Join(",",
-                                segment.Select(c => c.GetExtInsertValues()).ToList())).ToString();
-                        insertCount += this.DbCmd.ExecuteNonQuery();
-                    });
-                return insertCount;
-            }
+            int startAt = 0;
+            CollectionSegmenter<cdr> methodEnumerator = new CollectionSegmenter<cdr>
+                (cdrs, startAt);
+            methodEnumerator.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
+                segment =>
+                {
+                    this.DbCmd.CommandText = new StringBuilder(StaticExtInsertColumnHeaders.cdr)
+                        .Append(string.Join(",",
+                            segment.Select(c => c.GetExtInsertValues()).ToList())).ToString();
+                    insertCount += this.DbCmd.ExecuteNonQuery();
+                });
             return insertCount;
         }
     }

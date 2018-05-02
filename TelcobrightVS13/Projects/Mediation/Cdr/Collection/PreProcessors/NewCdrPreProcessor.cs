@@ -51,20 +51,20 @@ namespace TelcobrightMediation
             return txtRows;
         }
 
-        public void ConvertToCdrOrInconsistentOnFailure(string[] row)
+        public void ConvertToCdr(string[] row,out cdrinconsistent cdrInconsistent)
         {
             cdr convertedCdr = null;
-            cdrinconsistent cdrInconsistent = null;
+            //cdrinconsistent 
+                cdrInconsistent = null;
             convertedCdr = CdrManipulatingUtil.ConvertTxtRowToCdrOrInconsistentOnFailure(row, out cdrInconsistent);
-            if (convertedCdr == null && cdrInconsistent != null)
-                base.InconsistentCdrs.Add(cdrInconsistent);
-            else if (convertedCdr != null && cdrInconsistent == null)
+            if (convertedCdr == null && cdrInconsistent != null) return;
+            if (convertedCdr != null && cdrInconsistent == null)
             {
                 if (convertedCdr.PartialFlag == 0)
                     base.NonPartialCdrs.Add(convertedCdr);
                 else
                 {
-                    if (convertedCdr.PartialFlag>0)
+                    if (convertedCdr.PartialFlag > 0)
                     {
                         base.RawPartialCdrInstances.Add(
                             new IcdrImplConverter<cdrpartialrawinstance>().Convert(convertedCdr));
@@ -83,6 +83,9 @@ namespace TelcobrightMediation
         {
             Func<bool> partialCdrEnabled = () => base.CdrCollectorInputData.CdrSetting.PartialCdrEnabledNeIds
                 .Contains(base.CdrCollectorInputData.CdrJobInputData.Ne.idSwitch);
+
+            List<CdrExt> newCdrExts = this.CreateNewCdrExts();
+            List<CdrExt> oldCdrExts =new List<CdrExt>();
             if (partialCdrEnabled())
             {
                 if (base.RawPartialCdrInstances?.Any() == true)
@@ -93,13 +96,18 @@ namespace TelcobrightMediation
                     partialCdrCollector.ValidateCollectionStatus();
                     base.PartialCdrContainers = partialCdrCollector.AggregateAll() ??
                                                 new BlockingCollection<PartialCdrContainer>();
+                    Func<List<CdrExt>> oldCdrExtCreatorByLastPartialEqCloning = () => this.CreateOldCdrExts();
+                    oldCdrExts = oldCdrExtCreatorByLastPartialEqCloning.Invoke();
+
+                    List<CdrExt> successfulOldCdrExts = oldCdrExts.Where(c => c.Cdr.ChargingStatus == 1).ToList();
+                    if (successfulOldCdrExts.Any())
+                    {
+                        base.LoadPrevAccountingInfoForSuccessfulCdrExts(successfulOldCdrExts);
+                        base.VerifyPrevAccountingInfoCollection(successfulOldCdrExts,
+                            base.CdrSetting.FractionalNumberComparisonTollerance);
+                    }
                 }
             }
-            List<CdrExt> newCdrExts = this.CreateNewCdrExts();
-            Func<List<CdrExt>> oldCdrExtCreatorFromPrevPartialInstances = () => this.CreateOldCdrExts();
-            List<CdrExt> oldCdrExts = oldCdrExtCreatorFromPrevPartialInstances.Invoke();
-
-            base.PopulatePrevAccountingInfo(oldCdrExts);
             newCollectionResult = new CdrCollectionResult(base.CdrCollectorInputData.Ne, newCdrExts,
                 base.InconsistentCdrs.ToList(), base.RawCount);
             oldCollectionResult = new CdrCollectionResult(base.CdrCollectorInputData.Ne, oldCdrExts,
@@ -110,7 +118,7 @@ namespace TelcobrightMediation
             var cdrExtsForNonPartials = this.NonPartialCdrs
                 .Select(cdr => CdrExtFactory.CreateCdrExtWithNonPartialCdr(cdr, CdrNewOldType.NewCdr)).ToList();
             var cdrExtsForPartials = this.PartialCdrContainers
-                .Select(partialContainer => CdrExtFactory.CreateCdrExtWithPartialCdr(partialContainer,
+                .Select(partialContainer => CdrExtFactory.CreateCdrExtWithPartialCdrContainer(partialContainer,
                     CdrNewOldType.NewCdr)).ToList();
             var concatedList = cdrExtsForPartials.Concat(cdrExtsForNonPartials).ToList();
             if (concatedList.GroupBy(c => c.UniqueBillId).Any(g => g.Count() > 1))
@@ -126,7 +134,7 @@ namespace TelcobrightMediation
         {
             return this.PartialCdrContainers
                 .Where(c => c.LastProcessedAggregatedRawInstance != null)
-                .Select(partialContainer => CdrExtFactory.CreateCdrExtWithPartialCdr(partialContainer,
+                .Select(partialContainer => CdrExtFactory.CreateCdrExtWithPartialCdrContainer(partialContainer,
                     CdrNewOldType.OldCdr)).ToList();
         }
 

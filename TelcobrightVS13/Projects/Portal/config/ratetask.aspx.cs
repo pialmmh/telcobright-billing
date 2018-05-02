@@ -1715,7 +1715,7 @@ public partial class ConfigRateTask : Page
     //    {
     //        ThisRate.Resolution = myInt;
     //    }
-    //    else //invalid resolution/pulse/mindurationsec or surchargetime
+    //    else //invalid resolution/pulse/minDurationSec or surchargetime
     //    {
     //        int NewFlag = SetBitInteger(Convert.ToInt32(ThisRate.field2), 3);
     //        ThisRate.field2 = NewFlag;
@@ -1726,7 +1726,7 @@ public partial class ConfigRateTask : Page
     //    {
     //        ThisRate.MinDurationSec = myInt;
     //    }
-    //    else //invalid resolution/pulse, mindurationsec or surchargetime
+    //    else //invalid resolution/pulse, minDurationSec or surchargetime
     //    {
     //        int NewFlag = SetBitInteger(Convert.ToInt32(ThisRate.field2), 3);
     //        ThisRate.field2 = NewFlag;
@@ -1737,7 +1737,7 @@ public partial class ConfigRateTask : Page
     //    {
     //        ThisRate.SurchargeTime = myInt;
     //    }
-    //    else //invalid resolution/pulse, mindurationsec or surchargetime
+    //    else //invalid resolution/pulse, minDurationSec or surchargetime
     //    {
     //        int NewFlag = SetBitInteger(Convert.ToInt32(ThisRate.field2), 3);
     //        ThisRate.field2 = NewFlag;
@@ -2240,7 +2240,7 @@ public partial class ConfigRateTask : Page
         {
             thisTask.Resolution = myInt.ToString();
         }
-        else //invalid resolution/pulse/mindurationsec or surchargetime
+        else //invalid resolution/pulse/minDurationSec or surchargetime
         {
             int newFlag = SetBitInteger(Convert.ToInt32(thisTask.field2), 3);
             thisTask.field2 = newFlag.ToString();
@@ -2787,7 +2787,7 @@ public partial class ConfigRateTask : Page
         double.TryParse(thisPlan.SurchargeTime.ToString(), out tempDbl);
         txtSurchargeTime.Text = tempDbl.ToString();
 
-        double.TryParse(thisPlan.mindurationsec.ToString(), out tempDbl);
+        double.TryParse(thisPlan.minDurationSec.ToString(), out tempDbl);
         txtMinDurationSec.Text = tempDbl.ToString();
 
         double.TryParse(thisPlan.RateAmountRoundupDecimal.ToString(), out tempDbl);

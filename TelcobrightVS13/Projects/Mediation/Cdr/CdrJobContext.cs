@@ -46,15 +46,14 @@ namespace TelcobrightMediation
         public DbCommand DbCmd { get; }
         public AutoIncrementManager AutoIncrementManager { get; }
 
-        public CdrJobContext(CdrJobInputData cdrJobInputData, AutoIncrementManager autoIncrementManager,
-            List<DateTime> hoursInvolvedInNewCollection) //constructor
+        public CdrJobContext(CdrJobInputData cdrJobInputData, List<DateTime> hoursInvolvedInNewCollection)
         {
             this.CdrjobInputData = cdrJobInputData;
             this.HoursInvolved = hoursInvolvedInNewCollection;
             this.DatesInvolved = this.HoursInvolved.Select(c => c.Date).Distinct().ToList();
             this.DbCmd = ConnectionManager.CreateCommandFromDbContext(this.Context);
             this.DbCmd.CommandType = CommandType.Text;
-            this.AutoIncrementManager = autoIncrementManager;
+            this.AutoIncrementManager = cdrJobInputData.AutoIncrementManager;
             this.AccountingContext = new AccountingContext(this.CdrjobInputData.Context, 0, this.AutoIncrementManager,
                 this.DatesInvolved, this.CdrjobInputData.CdrSetting.SegmentSizeForDbWrite);
             this.CdrSummaryContext = new CdrSummaryContext(this.MediationContext,

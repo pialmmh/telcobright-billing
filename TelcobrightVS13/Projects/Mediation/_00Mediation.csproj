@@ -61,6 +61,7 @@
     <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="MySql.Data, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="MySql.Data.Entity.EF6, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -115,10 +116,12 @@
     <Compile Include="Automation\AutomatedNetworkElementCli.cs" />
     <Compile Include="Automation\SessionInfo.cs" />
     <Compile Include="Automation\SingleCliCommand.cs" />
-    <Compile Include="Cdr\CdrBasedTransactionProcessor.cs" />
+    <Compile Include="Cdr\IncrementalTransactionCreator.cs" />
     <Compile Include="Cdr\CdrJob.cs" />
     <Compile Include="Cdr\CdrWritingResult.cs" />
     <Compile Include="Cdr\MediationTester.cs" />
+    <Compile Include="Cdr\PartialCdrTester.cs" />
+    <Compile Include="Cdr\PartialCdrTesterData.cs" />
     <Compile Include="Cdr\Summary\DailyCdrSummaryFactory.cs" />
     <Compile Include="Cdr\Summary\CdrSummaryFactory.cs" />
     <Compile Include="Cdr\Summary\AbstractSummaryFactory.cs" />
@@ -159,7 +162,9 @@
     <Compile Include="Cdr\Summary\HourlyCdrSummaryFactory.cs" />
     <Compile Include="Cdr\OldCdrDeleter.cs" />
     <Compile Include="Cdr\Summary\CdrSummaryFactoryFactory.cs" />
-    <Compile Include="Cdr\TransactionContainerForSingleAccount.cs" />
+    <Compile Include="Cdr\AccWiseTransactionContainer.cs" />
+    <Compile Include="Cdr\Summary\ISummaryFactory.cs" />
+    <Compile Include="Cdr\TransactionMetaDataUpdater.cs" />
     <Compile Include="Collector\IEventCollector.cs" />
     <Compile Include="Collector\SqlMultiWhereClause.cs" />
     <Compile Include="Collector\SqlSingleWhereClause.cs" />
@@ -171,6 +176,7 @@
     <Compile Include="Cdr\PartialCdrWriter.cs" />
     <Compile Include="Config\ApplicationServerConfig.cs" />
     <Compile Include="Automation\CliCommandSequence.cs" />
+    <Compile Include="Config\AutomationSetting.cs" />
     <Compile Include="Config\ISessionBasedCliAutomationConfig.cs" />
     <Compile Include="Config\ICliAutomationConfig.cs" />
     <Compile Include="Config\SshAutomationConfig.cs" />

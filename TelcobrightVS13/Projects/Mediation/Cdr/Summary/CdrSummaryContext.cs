@@ -44,7 +44,18 @@ namespace TelcobrightMediation.Cdr
                     CdrSummaryFactoryFactory.Create(tableName, this.MediationContext.MefServiceGroupContainer)
                 }).ToDictionary(annonymous => annonymous.SummaryTableName, annonymous => annonymous.CdrSummaryFactory);
         }
-
+        public void GenerateSummary(CdrExt cdrExt)
+        {
+            List<string> summaryTargetTables = this.MediationContext.MefServiceGroupContainer
+                .IdServiceGroupWiseServiceGroups[cdrExt.Cdr.ServiceGroup]
+                .GetSummaryTargetTables().Keys.ToList();
+            summaryTargetTables.ForEach(targetTableName =>
+            {
+                AbstractCdrSummary cdrSummary = (AbstractCdrSummary)this
+                    .TargetTableWiseSummaryFactory[targetTableName].CreateNewInstance(cdrExt);
+                cdrExt.TableWiseSummaries.Add(targetTableName, cdrSummary);
+            });
+        }
         public void PopulatePrevSummary()
         {
             foreach (int serviceGroupNumber in this.MediationContext.Tbc.CdrSetting.ServiceGroupConfigurations.Keys)

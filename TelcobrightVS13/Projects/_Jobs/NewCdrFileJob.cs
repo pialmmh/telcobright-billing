@@ -25,46 +25,127 @@ namespace Jobs
         public virtual string HelpText => "New Cdr Job, processes a new CDR file";
         public override string ToString() => this.RuleName;
         public virtual int Id => 1;
-        protected int rawCount, nonPartialCount, uniquePartialCount, rawPartialCount, distinctPartialCount = 0;
-        protected decimal rawDurationWithoutInconsistents = 0;
+        protected int RawCount, NonPartialCount, UniquePartialCount, RawPartialCount, DistinctPartialCount = 0;
+        protected decimal RawDurationTotalOfConsistentCdrs = 0;
+        protected  CdrJobInputData Input { get; set; }
+        protected CdrCollectorInputData CollectorInput { get; set; }
+        protected bool PartialCollectionEnabled => this.Input.MediationContext.Tbc.CdrSetting
+            .PartialCdrEnabledNeIds.Contains(this.Input.Ne.idSwitch);
+        protected Action<NewCdrPreProcessor, string[]> CdrConverter = (preProcessor, txtRow) =>
+        {
+            cdrinconsistent cdrInconsistent = null;
+            preProcessor.ConvertToCdr(txtRow, out cdrInconsistent);
+            if (cdrInconsistent != null) preProcessor.InconsistentCdrs.Add(cdrInconsistent);
+        };
         public virtual JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
         {
-            CdrJobInputData input = (CdrJobInputData)jobInputData;
-            AutoIncrementManager autoIncrementManager = new AutoIncrementManager(input.Context);
-            CdrCollectorInputData collectorInput = CreateCollectorInputDataInstance(input, autoIncrementManager);
-            IEventCollector cdrCollector = new FileBasedTextCdrCollector(collectorInput, input.Context);
-            NewCdrPreProcessor preProcessor = (NewCdrPreProcessor)cdrCollector.Collect();
-            PreformatRawCdrs(preProcessor, collectorInput);
-            preProcessor.TxtCdrRows.ForEach(txtRow => preProcessor.ConvertToCdrOrInconsistentOnFailure(txtRow));
+            this.Input = (CdrJobInputData)jobInputData;
+            NewCdrPreProcessor preProcessor = this.CollectRaw();
+            PreformatRawCdrs(preProcessor);
+            preProcessor.TxtCdrRows.ForEach(txtRow => this.CdrConverter(preProcessor, txtRow));
 
-            CdrCollectionResult newCollectionResult = null;
-            CdrCollectionResult oldCollectionResult = null;
+            CdrCollectionResult newCollectionResult, oldCollectionResult = null;
             preProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
-            CdrJobContext cdrJobContext =
-                new CdrJobContext(input, autoIncrementManager, newCollectionResult.HoursInvolved);
-            CdrProcessor cdrProcessor = new CdrProcessor(cdrJobContext, newCollectionResult);
-            CdrEraser cdrEraser = oldCollectionResult?.IsEmpty == false
-                ? new CdrEraser(cdrJobContext, oldCollectionResult) : null;
-            int rawCount = preProcessor.TxtCdrRows.Count;
-            CdrJob cdrJob = new CdrJob(cdrProcessor, cdrEraser, rawCount);
-            ExecuteCdrJob(input, cdrJob);
+
+            CdrJob cdrJob = PrepareCdrJob(preProcessor, newCollectionResult, oldCollectionResult);
+            ExecuteCdrJob(cdrJob);
             return JobCompletionStatus.Complete;
         }
 
-        protected CdrCollectorInputData CreateCollectorInputDataInstance(CdrJobInputData input,
-            AutoIncrementManager autoIncrementManager)
+        protected CdrJob PrepareCdrJob(NewCdrPreProcessor preProcessor, CdrCollectionResult newCollectionResult, CdrCollectionResult oldCollectionResult)
         {
-            Vault vault =
-                input.MediationContext.Tbc.Vaults.First(c => c.Name == input.TelcobrightJob.ne.SourceFileLocations);
-            FileLocation fileLocation = vault.LocalLocation.FileLocation;
-            string fileName = fileLocation.GetOsNormalizedPath(fileLocation.StartingPath)
-                              + Path.DirectorySeparatorChar + input.TelcobrightJob.JobName;
-            return new CdrCollectorInputData(input, fileName, autoIncrementManager);
+            PartialCdrTesterData partialCdrTesterData = OrganizeTestDataForPartialCdrs(preProcessor, newCollectionResult);
+
+            CdrJobContext cdrJobContext =
+                new CdrJobContext(this.Input, newCollectionResult.HoursInvolved);
+            CdrProcessor cdrProcessor = new CdrProcessor(cdrJobContext, newCollectionResult);
+            CdrEraser cdrEraser = oldCollectionResult?.IsEmpty == false
+                ? new CdrEraser(cdrJobContext, oldCollectionResult) : null;
+            CdrJob cdrJob = new CdrJob(cdrProcessor, cdrEraser, this.RawCount, partialCdrTesterData);
+            return cdrJob;
         }
 
-        protected void PreformatRawCdrs(NewCdrPreProcessor preProcessor,
-            CdrCollectorInputData collectorinput)
+        protected virtual NewCdrPreProcessor CollectRaw()
         {
+            Vault vault = this.Input.MediationContext.Tbc.DirectorySettings.Vaults.First(
+                c => c.Name == this.Input.TelcobrightJob.ne.SourceFileLocations);
+            FileLocation fileLocation = vault.LocalLocation.FileLocation;
+            string fileName = fileLocation.GetOsNormalizedPath(fileLocation.StartingPath)
+                              + Path.DirectorySeparatorChar + this.Input.TelcobrightJob.JobName;
+            this.CollectorInput = new CdrCollectorInputData(this.Input, fileName);
+            IEventCollector cdrCollector = new FileBasedTextCdrCollector(this.CollectorInput);
+            return (NewCdrPreProcessor)cdrCollector.Collect();
+        }
+
+        protected PartialCdrTesterData OrganizeTestDataForPartialCdrs(NewCdrPreProcessor preProcessor,
+            CdrCollectionResult newCollectionResult)
+        {
+            this.RawCount = preProcessor.RawCount;
+            newCollectionResult.RawDurationTotalOfConsistentCdrs =
+                preProcessor.NonPartialCdrs.Sum(c => c.DurationSec) + preProcessor.PartialCdrContainers
+                    .SelectMany(pc => pc.NewRawInstances).Sum(r => r.DurationSec);
+            this.RawDurationTotalOfConsistentCdrs = newCollectionResult.RawDurationTotalOfConsistentCdrs;
+            PartialCdrTesterData partialCdrTesterData = null;
+            if (this.PartialCollectionEnabled)
+            {
+                this.NonPartialCount = preProcessor.TxtCdrRows.Count(r => r[Fn.Partialflag] == "0");
+                List<string[]> partialRows = preProcessor.TxtCdrRows.Where(r =>
+                    this.Input.CdrSetting.PartialCdrFlagIndicators.Contains(r[Fn.Partialflag])).ToList();
+                this.RawPartialCount = partialRows.Count;
+                if (preProcessor.TxtCdrRows.Count != this.NonPartialCount + this.RawPartialCount)
+                    throw new Exception("TxtCdr rows with partial & non-partial flag do not match total decoded text rows");
+                this.DistinctPartialCount = partialRows.GroupBy(r => r[Fn.UniqueBillId]).Count();
+                partialCdrTesterData = new PartialCdrTesterData(this.NonPartialCount, this.RawCount,
+                    newCollectionResult.RawDurationTotalOfConsistentCdrs, this.RawPartialCount);
+            }
+            return partialCdrTesterData;
+        }
+        protected virtual void ExecuteCdrJob(CdrJob cdrJob)
+        {
+            if (cdrJob.CdrProcessor.CollectionResult.ConcurrentCdrExts.Count > 0)
+            {
+                cdrJob.Execute();
+                WriteJobCompletionIfCollectionNotEmpty(cdrJob.CdrProcessor, this.Input.TelcobrightJob);
+            }
+            else
+            {
+                if (cdrJob.CdrProcessor.CollectionResult.CdrInconsistents.Count > 0)
+                {
+                    if (this.Input.TelcobrightJob.idjobdefinition == 1 &&
+                        cdrJob.CdrProcessor.CollectionResult.CdrInconsistents.Count > 0) //newcdr
+                    {
+                        cdrJob.CdrProcessor.WriteCdrInconsistent();
+                    }
+                }
+                if (cdrJob.CdrProcessor.CdrJobContext.MediationContext.Tbc.CdrSetting.ConsiderEmptyCdrFilesAsValid ==
+                    false)
+                {
+                    throw new Exception("Empty new cdr files are not considered valid as per cdr setting.");
+                }
+                WriteJobCompletionIfCollectionIsEmpty(cdrJob.CdrProcessor, this.Input.TelcobrightJob);
+            }
+
+            //code reaching here means no error
+            using (DbCommand cmd = ConnectionManager.CreateCommandFromDbContext(this.Input.Context))
+            {
+                cmd.CommandText = " commit; ";
+                cmd.ExecuteNonQuery();
+            }
+
+            //create file copy job for all backup locations, async-don't wait
+            //Task.Run(() => ArchiveAndDeleteJobCreation(tbc, ThisJob));
+            //vault.DeleteSingleFile(ThisJob.JobName);
+            //File.Delete(fileName);
+            if (this.Input.CdrSetting.DisableCdrPostProcessingJobCreationForAutomation == false)
+            {
+                ArchiveAndDeleteJobCreation(this.Input.MediationContext.Tbc,
+                    cdrJob.CdrProcessor.CdrJobContext.TelcobrightJob);
+            }
+        }
+
+        protected void PreformatRawCdrs(NewCdrPreProcessor preProcessor)
+        {
+            var collectorinput = this.CollectorInput;
             SetIdCallsInSameOrderAsCollected(preProcessor, collectorinput);
             FlexValidator<string[]> inconistentValidator = NewCdrPreProcessor.CreateValidatorForInconsistencyCheck(collectorinput);
             if (!collectorinput.CdrJobInputData.MediationContext.Tbc.CdrSetting.PartialCdrEnabledNeIds
@@ -101,44 +182,7 @@ namespace Jobs
             preProcessor.TxtCdrRows.ForEach(txtRow => preProcessor.SetIdCall(collectorinput.AutoIncrementManager, txtRow));
         }
 
-        protected virtual void ExecuteCdrJob(CdrJobInputData input, CdrJob cdrJob)
-        {
-            if (cdrJob.CdrProcessor.CollectionResult.ConcurrentCdrExts.Count > 0)
-            {
-                cdrJob.Execute();
-                WriteJobCompletionIfCollectionNotEmpty(cdrJob.CdrProcessor, input.TelcobrightJob);
-            }
-            else
-            {
-                if (cdrJob.CdrProcessor.CollectionResult.CdrInconsistents.Count > 0)
-                {
-                    if (input.TelcobrightJob.idjobdefinition == 1 &&
-                        cdrJob.CdrProcessor.CollectionResult.CdrInconsistents.Count > 0) //newcdr
-                    {
-                        cdrJob.CdrProcessor.WriteCdrInconsistent();
-                    }
-                }
-                if (cdrJob.CdrProcessor.CdrJobContext.MediationContext.Tbc.CdrSetting.ConsiderEmptyCdrFilesAsValid == false)
-                {
-                    throw new Exception("Empty new cdr files are not considered valid as per cdr setting.");
-                }
-                WriteJobCompletionIfCollectionIsEmpty(cdrJob.CdrProcessor, input.TelcobrightJob);
-            }
-
-            //code reaching here means no error
-            using (DbCommand cmd = ConnectionManager.CreateCommandFromDbContext(input.Context))
-            {
-                cmd.CommandText = " commit; ";
-                cmd.ExecuteNonQuery();
-            }
-
-            //create file copy job for all backup locations, async-don't wait
-            //Task.Run(() => ArchiveAndDeleteJobCreation(tbc, ThisJob));
-            //vault.DeleteSingleFile(ThisJob.JobName);
-            //File.Delete(fileName);
-            ArchiveAndDeleteJobCreation(input.MediationContext.Tbc, cdrJob.CdrProcessor.CdrJobContext.TelcobrightJob);
-        }
-
+        
         protected void WriteJobCompletionIfCollectionNotEmpty(CdrProcessor cdrProcessor, job telcobrightJob)
         {
             using (DbCommand cmd = ConnectionManager.CreateCommandFromDbContext(cdrProcessor.CdrJobContext.Context))
@@ -147,7 +191,7 @@ namespace Jobs
                     $" update job set CompletionTime={DateTime.Now.ToMySqlField()}, " +
                     $" status=1, "+
                     $"NoOfSteps={cdrProcessor.CollectionResult.RawCount}," +
-                    $"progresss={cdrProcessor.CollectionResult.RawCount}," +
+                    $"progress={cdrProcessor.CollectionResult.RawCount}," +
                     $"Error=null where id={telcobrightJob.id}";
                 cmd.CommandText = sql;
                 cmd.ExecuteNonQuery();
@@ -162,7 +206,7 @@ namespace Jobs
                     $" update job set CompletionTime={DateTime.Now.ToMySqlField()}, " +
                     $" status=1, " +
                     $"NoOfSteps=0," +
-                    $"progresss=0," +
+                    $"progress=0," +
                     $"Error=null where id={telcobrightJob.id}";
                 cmd.CommandText = sql;
                 cmd.ExecuteNonQuery();
@@ -185,7 +229,7 @@ namespace Jobs
                 }
 
                 //create delete job
-                string vaultName = tbc.Vaults.Where(c => c.Name == thisJob.ne.SourceFileLocations).Select(c => c.Name)
+                string vaultName = tbc.DirectorySettings.Vaults.Where(c => c.Name == thisJob.ne.SourceFileLocations).Select(c => c.Name)
                     .First();
                 FileUtil.CreateFileDeleteJob(thisJob.JobName, tbc.DirectorySettings.FileLocations[vaultName], context,
                     new JobPreRequisite()
@@ -195,63 +239,7 @@ namespace Jobs
                 );
             }
         }
-        protected void ValidateWithMediationTester(CdrJobInputData input, CdrJob cdrJob)
-        {
-            MediationTester mediationTester =
-                new MediationTester(input.Tbc.CdrSetting.FractionalNumberComparisonTollerance);
-            Assert.IsTrue(mediationTester.DurationSumInCdrAndTableWiseSummariesAreTollerablyEqual(cdrJob.CdrProcessor));
-            Assert.IsTrue(mediationTester.DurationSumInCdrAndSummaryAreTollerablyEqual(cdrJob.CdrProcessor));
-            Assert.IsTrue(mediationTester.SummaryCountTwiceAsCdrCount(cdrJob.CdrProcessor));
-            Assert.IsTrue(mediationTester
-                .SumOfPrevDayWiseDurationsAndNewSummaryInstancesIsEqualToSameInMergedSummaryCache(cdrJob
-                    .CdrProcessor));
-        }
-        protected void PerformAdditionalValidationForPartialCdrCase(CdrJob cdrJob, CdrWritingResult cdrWritingResult)
-        {
-            //partial cdrs tests here...
-            var collectionResult = cdrJob.CdrProcessor.CollectionResult;
-            int processedErrorCount = collectionResult.CdrErrors.Count;
-            int processedInconsistentCount = collectionResult.CdrInconsistents.Count;
-            var processedCdrExts = collectionResult.ProcessedCdrExts;
-            var processedNonPartialCdrExts = processedCdrExts.Where(c => c.Cdr.PartialFlag == 0).ToList();
-            var processedPartialCdrExts = collectionResult.ProcessedCdrExts.Where(
-                c => c.Cdr.PartialFlag > 0 && c.PartialCdrContainer != null).ToList();
-            Assert.AreEqual(cdrWritingResult.CdrCount, collectionResult.ProcessedCdrExts.Count);
-            Assert.AreEqual(cdrWritingResult.CdrCount,
-                processedNonPartialCdrExts.Count + processedPartialCdrExts.Count);
-            Assert.AreEqual(cdrWritingResult.CdrErrorCount, collectionResult.CdrErrors.Count);
-            Assert.AreEqual(cdrWritingResult.CdrInconsistentCount, collectionResult.CdrInconsistents.Count);
-            Assert.AreEqual(cdrWritingResult.TrueNonPartialCount, processedNonPartialCdrExts.Count);
-            Assert.AreEqual(cdrWritingResult.NormalizedPartialCount, processedPartialCdrExts.Count);
-            Assert.AreEqual(cdrWritingResult.CdrCount,
-                (processedNonPartialCdrExts.Count + processedPartialCdrExts.Count));
-            Assert.AreEqual(this.rawPartialCount + this.nonPartialCount,
-                (processedNonPartialCdrExts.Count + processedPartialCdrExts
-                     .SelectMany(c => c.PartialCdrContainer.NewRawInstances).Count()
-                 + processedErrorCount + processedInconsistentCount));
-            Assert.AreEqual(cdrWritingResult.PartialCdrWriter.WrittenCdrPartialReferences,
-                processedPartialCdrExts.Count);
-            Assert.AreEqual(cdrWritingResult.CdrCount, processedCdrExts.Count);
-            Assert.AreEqual(collectionResult.RawCount,
-                cdrWritingResult.CdrErrorCount + cdrWritingResult.CdrInconsistentCount
-                + processedCdrExts.Select(c => c.NewRawCount).Sum());
-            processedPartialCdrExts.ForEach(
-                c => Assert.IsNotNull(c.PartialCdrContainer.NewAggregatedRawInstance));
-            processedPartialCdrExts.ForEach(c => Assert.IsNotNull(c.PartialCdrContainer.NewCdrEquivalent));
-            Assert.AreEqual(
-                processedPartialCdrExts.Select(c => c.PartialCdrContainer.NewAggregatedRawInstance).Count(),
-                processedPartialCdrExts.Select(c => c.PartialCdrContainer.NewCdrEquivalent).Count());
-
-            decimal nonPartialDuration = processedNonPartialCdrExts.Sum(c => c.Cdr.DurationSec);
-            decimal partialNormalizedDuration = processedPartialCdrExts.Sum(c => c.Cdr.DurationSec);
-            Assert.AreEqual(this.rawDurationWithoutInconsistents,
-                nonPartialDuration + partialNormalizedDuration +
-                collectionResult.CdrErrors.Sum(c => Convert.ToDecimal(c.DurationSec)));
-            Assert.AreEqual(collectionResult.ProcessedCdrExts.Sum(c => c.Cdr.DurationSec),
-                (nonPartialDuration + partialNormalizedDuration));
-            Assert.AreEqual(partialNormalizedDuration,
-                processedPartialCdrExts.SelectMany(c => c.PartialCdrContainer.NewRawInstances)
-                    .Sum(c => c.DurationSec));
-        }
+        
+        
     }
 }

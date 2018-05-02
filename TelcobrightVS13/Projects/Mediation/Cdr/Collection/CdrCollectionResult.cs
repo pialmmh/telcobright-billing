@@ -13,22 +13,43 @@ using CdrSummaryTuple = System.ValueTuple<int, int, int, string, string, decimal
 
 namespace TelcobrightMediation
 {
+    public enum CollectionResultProcessingState
+    {
+        BeforeMediation,
+        AfterMediation
+    }
     public class CdrCollectionResult
     {
-        private readonly BlockingCollection<cdrerror> _cdrErrors = new BlockingCollection<cdrerror>();
-        public IReadOnlyCollection<cdrerror> CdrErrors => this._cdrErrors.ToList().AsReadOnly();
+        public CollectionResultProcessingState CollectionResultProcessingState { get; set; } =
+            CollectionResultProcessingState.BeforeMediation;
+        private readonly BlockingCollection<cdrerror> cdrErrors = new BlockingCollection<cdrerror>();
+        public IReadOnlyCollection<cdrerror> CdrErrors => this.cdrErrors.ToList().AsReadOnly();
         public int RawCount { get; }
+        public decimal RawDurationTotalOfConsistentCdrs = 0;
+        private readonly ConcurrentDictionary<string, CdrExt> concurrentCdrExts = new ConcurrentDictionary<string, CdrExt>();
         public ne Ne { get; }
         public List<DateTime> DatesInvolved { get; }
         public List<DateTime> HoursInvolved { get; }
-        public ConcurrentDictionary<string, CdrExt> ConcurrentCdrExts { get;}=new ConcurrentDictionary<string, CdrExt>();
 
-        public IEnumerable<CdrExt> MediationCompletedCdrExts => this.ConcurrentCdrExts.Values.Where(
-            c => c.Cdr != null && c.Cdr.MediationComplete == 1);
+        public ConcurrentDictionary<string, CdrExt> ConcurrentCdrExts
+        {
+            get
+            {
+                if (this.CollectionResultProcessingState==CollectionResultProcessingState.AfterMediation)
+                {
+                    throw new Exception("Property ConcurrentCdrExts cannot accessed after mediation, " +
+                        "use ProcessedCdrExts & CdrErrors instead.");
+                }
+                return this.concurrentCdrExts;
+            }
+        }
+
         public List<cdrinconsistent> CdrInconsistents { get; }
         public BlockingCollection<CdrExt> ProcessedCdrExts { get; }=new BlockingCollection<CdrExt>();
+
         public bool IsEmpty => this.DatesInvolved == null || this.DatesInvolved.Any() == false ||
-                               !this.ConcurrentCdrExts.Any() && !this.CdrInconsistents.Any();
+                               !this.ConcurrentCdrExts.Any() && !this.CdrInconsistents.Any()
+                               && !this.CdrErrors.Any() && !this.ProcessedCdrExts.Any();
         public CdrCollectionResult(ne ne, List<CdrExt> cdrExts,
             List<cdrinconsistent> cdrInconsistents, int rawCount)
         {
@@ -56,7 +77,7 @@ namespace TelcobrightMediation
             {
                 throw new Exception("Partial cdrExt must be added to cdrErrors through appropriate method.");
             }
-            this._cdrErrors.Add(ConvertCdrToCdrError(cdrExt.Cdr, errorMessage));
+            this.cdrErrors.Add(ConvertCdrToCdrError(cdrExt.Cdr, errorMessage));
             CdrExt removedCdrExt = null;
             if (this.ConcurrentCdrExts.TryRemove(cdrExt.UniqueBillId, out removedCdrExt)==false)
             {
@@ -67,13 +88,13 @@ namespace TelcobrightMediation
 
         public void AddNewRawPartialCdrsToCdrErrors(CdrExt cdrExt,string errorMessage)
         {
-            if (cdrExt.PartialCdrContainer==null &&cdrExt.Cdr.PartialFlag == 0)
+            if (cdrExt.Cdr.PartialFlag == 0 && cdrExt.PartialCdrContainer == null)
             {
                 throw new Exception("Non partial cdrExt must be added to cdrErrors through appropriate method.");
             }
             cdrExt.PartialCdrContainer.NewRawInstances.ForEach(r =>
             {
-                this._cdrErrors.Add(ConvertCdrToCdrError(r, errorMessage));
+                this.cdrErrors.Add(ConvertCdrToCdrError(r, errorMessage));
             });
             CdrExt removedCdrExt = null;
             if (this.ConcurrentCdrExts.TryRemove(cdrExt.UniqueBillId, out removedCdrExt) == false)

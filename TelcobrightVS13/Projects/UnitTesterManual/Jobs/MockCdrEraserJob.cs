@@ -9,20 +9,20 @@ using TelcobrightMediation;
 
 namespace UnitTesterManual
 {
-    public class MockCdrReProcessorJob:CdrReProcess
+    public class MockCdrEraserJob:CdrReProcess
     {
         public override JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
         {
             CdrJobInputData input = (CdrJobInputData)jobInputData;
             AutoIncrementManager autoIncrementManager = new AutoIncrementManager(input.Context);
-            CdrCollectorInputData cdrCollectorInput = new CdrCollectorInputData(input, "", autoIncrementManager);
-            SegmentedCdrReprocessor segmentedCdrReprocessJobProcessor =
-                new SegmentedCdrReprocessor(cdrCollectorInput,
+            CdrCollectorInputData cdrCollectorInput = new CdrCollectorInputData(input, "");
+            SegmentedCdrEraser segmentedCdrEraser =
+                new SegmentedCdrEraser(cdrCollectorInput,
                     input.CdrSetting.BatchSizeWhenPreparingLargeSqlJob, "IdCall", "starttime");
             if (input.TelcobrightJob.Status != 2) //prepare job if not prepared already
-                segmentedCdrReprocessJobProcessor.PrepareSegments();
-            List<jobsegment> jobsegments = segmentedCdrReprocessJobProcessor.ExecuteIncompleteSegments();
-            segmentedCdrReprocessJobProcessor.FinishJob(jobsegments); //mark job as complete
+                segmentedCdrEraser.PrepareSegments();
+            List<jobsegment> jobsegments = segmentedCdrEraser.ExecuteIncompleteSegments();
+            segmentedCdrEraser.FinishJob(jobsegments); //mark job as complete
             return JobCompletionStatus.Complete;
         }
     }

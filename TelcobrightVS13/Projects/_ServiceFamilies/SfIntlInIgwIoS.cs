@@ -66,13 +66,13 @@ namespace TelcobrightMediation
             //int.TryParse(thisCdr[Fn.Subcategory], out tempSubCategory);
             //int category = tempCategory > 0 ? tempCategory : 1;//default 1=call
             //int subCategory = tempSubCategory > 0 ? tempSubCategory : 1;//default 1=voice
-            //double durationSec = 0;
+            //double DurationSec = 0;
             ////end common******************************
 
             //string phoneNumber = thisCdr[Fn.Terminatingcallednumber];//change per service family#####
             //if (phoneNumber.Trim() == "") return;//term no can be empty e.g. for failed calls
 
-            //double.TryParse(thisCdr[Fn.Durationsec], out durationSec);//may change per service family ######
+            //double.TryParse(thisCdr[Fn.DurationSec], out DurationSec);//may change per service family ######
 
             //List<TupleByPeriod> tups = GetServiceTuple(thisCdr, serviceContext.CdrJob.MediationContext.RatingData, serviceContext.AssignDir, answerTime);
             //if (tups == null) return;
@@ -81,7 +81,7 @@ namespace TelcobrightMediation
 
             //long finalDuration = 0;//xyz is rounded always
 
-            //finalDuration = Convert.ToInt64(pr.A2ZDuration(Convert.ToDouble(thisCdr[Fn.Durationsec]), thisRate));
+            //finalDuration = Convert.ToInt64(pr.A2ZDuration(Convert.ToDouble(thisCdr[Fn.DurationSec]), thisRate));
             //double terminatingAmount = 0;
             //terminatingAmount = pr.A2ZAmount(finalDuration, thisRate, 0, serviceContext.CdrJob);
             //double btrcAmount = terminatingAmount * (double)thisRate.OtherAmount1 / 100;

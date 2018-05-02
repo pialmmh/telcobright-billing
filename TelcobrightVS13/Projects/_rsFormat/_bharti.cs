@@ -583,7 +583,7 @@ namespace RateSheetFormat
                         newTask.MinDurationSec = (tableData.IndexMinDuration) > -1 ? thisRow[tableData.IndexMinDuration - 1] : "";
                         if (newTask.MinDurationSec == "")
                         {
-                            newTask.MinDurationSec = this.RatePlan.mindurationsec.ToString();//fetch default
+                            newTask.MinDurationSec = this.RatePlan.minDurationSec.ToString();//fetch default
                         }
                         //Row 5://countrycode
                         //NewRow[5] 

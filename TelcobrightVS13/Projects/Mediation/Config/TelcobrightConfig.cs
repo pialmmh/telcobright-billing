@@ -16,7 +16,7 @@ namespace TelcobrightMediation
         public ResourcePool ResourcePool{ get; set; }
         public SimpleCacheSettings SimpleCacheSettings { get; set; }
         public CdrSetting CdrSetting { get; set; }
-        public List<Vault> Vaults { get; set; }
+        public AutomationSetting AutomationSetting { get; set; }
         public int ServerId { get; set; }
         public DirectorySettings DirectorySettings { get; set; }
         public DatabaseSetting DatabaseSetting { get; set; }
@@ -31,7 +31,6 @@ namespace TelcobrightMediation
         public TelcobrightConfig(TelecomOperatortype telecomOperatortype,
             int thisServerId)
         {
-            this.Vaults = new List<Vault>();
             this.ServerId = thisServerId;
             this.ApplicationServersConfig = new Dictionary<string, ApplicationServerConfig>();
             this.ResourcePool = new ResourcePool();

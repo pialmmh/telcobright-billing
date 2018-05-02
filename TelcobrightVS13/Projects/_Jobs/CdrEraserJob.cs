@@ -30,7 +30,7 @@ namespace Jobs
         {
             CdrJobInputData input = (CdrJobInputData) jobInputData;
             AutoIncrementManager autoIncrementManager = new AutoIncrementManager(input.Context);
-            CdrCollectorInputData cdrCollectorInput = new CdrCollectorInputData(input, "", autoIncrementManager);
+            CdrCollectorInputData cdrCollectorInput = new CdrCollectorInputData(input, "");
             SegmentedCdrErrorProcessor segmentedCdrErrorJobProcessor =
                 new SegmentedCdrErrorProcessor(cdrCollectorInput,
                     input.CdrSetting.BatchSizeWhenPreparingLargeSqlJob, "IdCall", "starttime");

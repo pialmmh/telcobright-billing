@@ -28,6 +28,7 @@ namespace TelcobrightMediation
         public CdrJobContext CdrJobContext { get; }
         public CdrCollectionResult CollectionResult { get; }
         private List<CdrExt> OldCdrExts { get; }
+        private CdrSetting CdrSetting => this.CdrJobContext.MediationContext.Tbc.CdrSetting;
         private Dictionary<string, List<acc_transaction>> BillIdWisePrevTransactions { get; set; } =
             new Dictionary<string, List<acc_transaction>>();
 
@@ -52,19 +53,11 @@ namespace TelcobrightMediation
         {
             //todo: change to parallel
             //Parallel.ForEach(oldCdrExts,oldCdrExt=>
-            this.OldCdrExts.ForEach(oldCdrExt =>
+            this.OldCdrExts.ForEach(cdrExt =>
             {
-                if (oldCdrExt.CdrNewOldType != CdrNewOldType.OldCdr)
+                if (cdrExt.CdrNewOldType != CdrNewOldType.OldCdr)
                     throw new Exception("OldCdrs must have CdrNewOldtype status set to old.");
-                List<string> summaryTargetTables = this.MediationContext.MefServiceGroupContainer
-                    .IdServiceGroupWiseServiceGroups[Convert.ToInt32(oldCdrExt.Cdr.ServiceGroup)]
-                    .GetSummaryTargetTables().Keys.ToList();
-                summaryTargetTables.ForEach(targetTableName =>
-                {
-                    AbstractCdrSummary regeneratedSummary = (AbstractCdrSummary) this.CdrJobContext.CdrSummaryContext
-                        .TargetTableWiseSummaryFactory[targetTableName].CreateNewInstance(oldCdrExt);
-                    oldCdrExt.TableWiseSummaries.Add(targetTableName, regeneratedSummary);
-                });
+                this.CdrJobContext.CdrSummaryContext.GenerateSummary(cdrExt);
             });
         }
 
@@ -79,6 +72,10 @@ namespace TelcobrightMediation
             {
                 throw new Exception("Regenerated summary total do not match ");
             }
+            MediationTester mediationTester =
+                new MediationTester(this.CdrSetting.FractionalNumberComparisonTollerance);
+            if (!mediationTester.DurationSumInCdrAndTableWiseSummariesAreTollerablyEqual(this.CollectionResult))
+                throw new Exception("Duration sum in cdr and tableWiseSummaries are not tollerably equal");
         }
 
         public void UndoOldSummaries()

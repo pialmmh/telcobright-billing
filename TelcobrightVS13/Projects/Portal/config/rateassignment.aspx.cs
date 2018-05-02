@@ -2316,7 +2316,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
         {
             ThisTask.Resolution = myInt.ToString();
         }
-        else //invalid resolution/pulse/mindurationsec or surchargetime
+        else //invalid resolution/pulse/minDurationSec or surchargetime
         {
             int NewFlag = SetBitInteger(Convert.ToInt32(ThisTask.field2), 3);
             ThisTask.field2 = NewFlag.ToString();

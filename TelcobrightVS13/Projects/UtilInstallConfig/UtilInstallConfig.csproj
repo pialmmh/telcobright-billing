@@ -98,12 +98,21 @@
     <Compile Include="BIllingRulesDefiner.cs" />
     <Compile Include="ConfigPathHelper.cs" />
     <Compile Include="FileRename.cs" />
-    <Compile Include="jsl\JslConfigGenerator.cs" />
+    <Compile Include="jsl\JslProductAndServiceConfig.cs" />
+    <Compile Include="jsl\JslDirectorySettings.cs" />
+    <Compile Include="jsl\JslPortalSetting.cs" />
+    <Compile Include="jsl\JslAppServerConfig.cs" />
+    <Compile Include="jsl\_JslConfigMain.cs" />
     <Compile Include="jsl\JslServiceGroups.cs" />
     <Compile Include="jsl\JslQuartzConfig.cs" />
     <Compile Include="MefConfigImportComposer.cs" />
-    <Compile Include="platinum\PlatinumConfigGenerator.cs" />
+    <Compile Include="platinum\PlatinumProductAndServiceSettings.cs" />
+    <Compile Include="platinum\PlatinumAPPServerConfig.cs" />
+    <Compile Include="platinum\PlatinumDirectorySetting.cs" />
+    <Compile Include="platinum\_PlatinumConfigMain.cs" />
     <Compile Include="dbl\ConfigHelper_DBL.cs" />
+    <Compile Include="platinum\PlatinumPortalSetting.cs" />
+    <Compile Include="platinum\PlatinumAutomationConfig.cs" />
     <Compile Include="platinum\PlatinumServiceGroups.cs" />
     <Compile Include="platinum\PlatinumQuartzConfig.cs" />
     <Compile Include="roots\ConfigGenerator_Roots.cs" />
@@ -113,6 +122,7 @@
     <Compile Include="SchedulerConfigGenerator.cs" />
     <Compile Include="tpny\ConfigHelper_tpny.cs" />
     <Compile Include="utility\util_Del_CompletedCDRFilesLocal.cs" />
+    <Compile Include="_CommonValidation\BasicCdrValidationRuleGenerator.cs" />
     <None Include="app.manifest" />
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
