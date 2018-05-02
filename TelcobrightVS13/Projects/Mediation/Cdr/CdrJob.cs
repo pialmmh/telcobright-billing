@@ -77,8 +77,6 @@ namespace TelcobrightMediation.Cdr
         {
             MediationTester mediationTester =
                 new MediationTester(input.Tbc.CdrSetting.FractionalNumberComparisonTollerance);
-            if(!mediationTester.DurationSumInCdrAndTableWiseSummariesAreTollerablyEqual(collectionResult))
-                throw new Exception("Duration sum in cdr and tableWiseSummaries are not tollerably equal");
             if(!mediationTester.DurationSumInCdrAndSummaryAreTollerablyEqual(collectionResult))
                 throw new Exception("Duration sum in cdr and summary are not tollerably equal");
             if(!mediationTester.SummaryCountTwiceAsCdrCount(collectionResult))
@@ -96,8 +94,6 @@ namespace TelcobrightMediation.Cdr
         {
             MediationTester mediationTester =
                 new MediationTester(input.Tbc.CdrSetting.FractionalNumberComparisonTollerance);
-            if (!mediationTester.DurationSumInCdrAndTableWiseSummariesAreTollerablyEqual(collectionResult))
-                throw new Exception("Duration sum in cdr and tableWiseSummaries are not tollerably equal");
             if (!mediationTester.DurationSumInCdrAndSummaryAreTollerablyEqual(collectionResult))
                 throw new Exception("Duration sum in cdr and summary are not tollerably equal");
             if (!mediationTester.SummaryCountTwiceAsCdrCount(collectionResult))
@@ -115,7 +111,6 @@ namespace TelcobrightMediation.Cdr
         {
             MediationTester mediationTester =
                 new MediationTester(input.Tbc.CdrSetting.FractionalNumberComparisonTollerance);
-            Assert.IsTrue(mediationTester.DurationSumInCdrAndTableWiseSummariesAreTollerablyEqual(collectionResult));
             Assert.IsTrue(mediationTester.DurationSumInCdrAndSummaryAreTollerablyEqual(collectionResult));
             Assert.IsTrue(mediationTester.SummaryCountTwiceAsCdrCount(collectionResult));
             //todo: do something about this test which makes database trip & need to modify this to work with both eraser & processor

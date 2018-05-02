@@ -24,7 +24,6 @@ namespace TelcobrightMediation.Mediation.Cdr
         private Dictionary<string, List<cdrpartialrawinstance>> BillIdWisePrevRawInstances { get; set; }
         private Dictionary<string, cdrpartiallastaggregatedrawinstance> BillIdWiseLastAggregatedRawInstances { get; set; }
         private Dictionary<string, cdr> BillIdWiseLastProcessedCdrInstance { get; set; }
-        //public List<PartialCdrAggregatedInformation> AggregatedPartialCdrInfos { get; private set; }
         public PartialCdrCollector(CdrCollectorInputData cdrCollectorInputData, List<cdrpartialrawinstance> newPartialCdrInstances)
         {
             if (newPartialCdrInstances.Count == 0)
@@ -92,6 +91,7 @@ namespace TelcobrightMediation.Mediation.Cdr
                         ? this.BillIdWiseLastProcessedCdrInstance[kv.Key]
                         : null);
                 partialCdrContainer.Aggregate();
+                partialCdrContainer.ValidateAggregation(this.CdrSetting.FractionalNumberComparisonTollerance);
                 partialCdrContainers.Add(partialCdrContainer);
             }
             return partialCdrContainers;
@@ -160,13 +160,13 @@ namespace TelcobrightMediation.Mediation.Cdr
                 throw new Exception("Number of cdrpartialreference must be equal to number of collected lastAggRawInstances.");
             cdrPartialReferences.ForEach(r =>
             {
-                List<long> IdCallsOfPrevInstancesBySplittingComma =
+                List<long> idCallsOfPrevInstancesBySplittingComma =
                     r.commaSepIdcallsForAllInstances.Split(',').Select(strIdCall => Convert.ToInt64(strIdCall))
                         .ToList();
                 var prevRawInstances = this.BillIdWisePrevRawInstances[r.UniqueBillId].ToList();
-                if (IdCallsOfPrevInstancesBySplittingComma.Count!=prevRawInstances.Count)
+                if (idCallsOfPrevInstancesBySplittingComma.Count!=prevRawInstances.Count)
                     throw new Exception("Collected number of PrevRawInstances does not match history contained in cdrpartialreference.");
-                if (IdCallsOfPrevInstancesBySplittingComma.All(prevRawInstances.Select(p=>p.IdCall).Contains)==false)
+                if (idCallsOfPrevInstancesBySplittingComma.All(prevRawInstances.Select(p=>p.IdCall).Contains)==false)
                 {
                     throw new Exception("Collected IdCalls of PrevRawInstances do not match history contained in cdrpartialreference.");
                 }

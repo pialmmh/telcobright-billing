@@ -16,12 +16,15 @@ namespace TelcobrightMediation
 {
     public class NewCdrPreProcessor : AbstractCdrJobPreProcessor
     {
+        private bool PartialCdrEnabled { get; }
         public List<string[]> TxtCdrRows { get; set; }
         public NewCdrPreProcessor(List<string[]> txtCdrRows, List<cdrinconsistent> inconsistentCdrs,
             CdrCollectorInputData cdrCollectorInputData)
             : base(cdrCollectorInputData, txtCdrRows.Count + inconsistentCdrs.Count, inconsistentCdrs) //used after sql collection
         {
             this.TxtCdrRows = txtCdrRows;
+            this.PartialCdrEnabled = base.CdrCollectorInputData.CdrSetting.PartialCdrEnabledNeIds
+                .Contains(base.CdrCollectorInputData.CdrJobInputData.Ne.idSwitch);
         }
 
         public void CheckAndConvertIfInconsistent(CdrJobInputData input, FlexValidator<string[]> flexValidator,
@@ -91,13 +94,11 @@ namespace TelcobrightMediation
                 base.InconsistentCdrs.ToList(), base.RawCount);
             return newCollectionResult;
         }
-        protected override CdrCollectionResult CreateOldCollectionResult()
+        protected override List<CdrExt> CreateNewCdrExts()
         {
-            List<CdrExt> oldCdrExts = new List<CdrExt>();
-            Func<bool> partialCdrEnabled = () => base.CdrCollectorInputData.CdrSetting.PartialCdrEnabledNeIds
-                .Contains(base.CdrCollectorInputData.CdrJobInputData.Ne.idSwitch);
-
-            if (partialCdrEnabled())
+            var cdrExtsForNonPartials = this.NonPartialCdrs
+                .Select(cdr => CdrExtFactory.CreateCdrExtWithNonPartialCdr(cdr, CdrNewOldType.NewCdr)).ToList();
+            if (this.PartialCdrEnabled)
             {
                 if (base.RawPartialCdrInstances?.Any() == true)
                 {
@@ -107,6 +108,28 @@ namespace TelcobrightMediation
                     partialCdrCollector.ValidateCollectionStatus();
                     base.PartialCdrContainers = partialCdrCollector.AggregateAll() ??
                                                 new BlockingCollection<PartialCdrContainer>();
+                }
+            }
+            var cdrExtsForPartials = this.PartialCdrContainers
+                .Select(partialContainer => CdrExtFactory.CreateCdrExtWithPartialCdrContainer(partialContainer,
+                    CdrNewOldType.NewCdr)).ToList();
+
+            var concatedList = cdrExtsForPartials.Concat(cdrExtsForNonPartials).ToList();
+            if (concatedList.GroupBy(c => c.UniqueBillId).Any(g => g.Count() > 1))
+                throw new Exception("Duplicate billId for CdrExts in CdrJob");
+            var rawPartialCount = this.PartialCdrContainers.SelectMany(p => p.NewRawInstances).Count();
+            if (this.RawCount != cdrExtsForNonPartials.Count + cdrExtsForPartials.Count +
+                rawPartialCount - this.PartialCdrContainers.Count)
+                throw new Exception("Count of nonPartial and partial cdrs do not match expected with expected rawCount for this job.");
+            return concatedList;
+        }
+        protected override CdrCollectionResult CreateOldCollectionResult()
+        {
+            List<CdrExt> oldCdrExts = new List<CdrExt>();
+            if (this.PartialCdrEnabled)
+            {
+                if (base.RawPartialCdrInstances?.Any() == true)
+                {
                     Func<List<CdrExt>> oldCdrExtCreatorByLastPartialEqCloning = () => this.CreateOldCdrExts();
                     oldCdrExts = oldCdrExtCreatorByLastPartialEqCloning.Invoke();
 
@@ -125,24 +148,6 @@ namespace TelcobrightMediation
         }
 
         
-
-        protected override List<CdrExt> CreateNewCdrExts()
-        {
-            var cdrExtsForNonPartials = this.NonPartialCdrs
-                .Select(cdr => CdrExtFactory.CreateCdrExtWithNonPartialCdr(cdr, CdrNewOldType.NewCdr)).ToList();
-            var cdrExtsForPartials = this.PartialCdrContainers
-                .Select(partialContainer => CdrExtFactory.CreateCdrExtWithPartialCdrContainer(partialContainer,
-                    CdrNewOldType.NewCdr)).ToList();
-            var concatedList = cdrExtsForPartials.Concat(cdrExtsForNonPartials).ToList();
-            if (concatedList.GroupBy(c => c.UniqueBillId).Any(g => g.Count() > 1))
-                throw new Exception("Duplicate billId for CdrExts in CdrJob");
-            var rawPartialCount = this.PartialCdrContainers.SelectMany(p => p.NewRawInstances).Count();
-            if (this.RawCount!=cdrExtsForNonPartials.Count+cdrExtsForPartials.Count+
-                rawPartialCount-this.PartialCdrContainers.Count)
-                throw new Exception("Count of nonPartial and partial cdrs do not match expected with expected rawCount for this job.");
-            return concatedList;
-        }
-
         protected override List<CdrExt> CreateOldCdrExts()
         {
             return this.PartialCdrContainers

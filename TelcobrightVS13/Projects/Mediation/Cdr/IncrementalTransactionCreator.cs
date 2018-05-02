@@ -26,7 +26,7 @@ namespace TelcobrightMediation.Cdr
                                             .Where(c => c.Cdr.ChargingStatus == 1).ToList() ?? new List<CdrExt>();
 
             this.OldSuccessfulCdrExts = new ConcurrentDictionary<string, CdrExt>();
-            this.CdrEraser.CollectionResult.ConcurrentCdrExts.Values.Where(c => c.Cdr.ChargingStatus == 1).ToList()
+            this.CdrEraser?.CollectionResult.ConcurrentCdrExts.Values.Where(c => c.Cdr.ChargingStatus == 1).ToList()
                 .ForEach(c =>
                 {
                     if (this.OldSuccessfulCdrExts.TryAdd(c.UniqueBillId, c) == false)
