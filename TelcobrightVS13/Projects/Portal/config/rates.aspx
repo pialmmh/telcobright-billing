@@ -1087,7 +1087,7 @@ select Code,Name from countrycode "
             </asp:TemplateField>
 
             
-            <asp:TemplateField HeaderText="Other Amount1" SortExpression="OtherAmount1" Visible="true" ControlStyle-Width="30px">
+            <asp:TemplateField HeaderText="Other Amount1" SortExpression="OtherAmount1" Visible="true" ControlStyle-Width="70px">
                 <ItemTemplate>
                     <asp:Label ID="lblOtherAmount1" runat="server" Text='<%# Eval("OtherAmount1")==null?"": Eval("OtherAmount1").ToString() %>'></asp:Label>
                 </ItemTemplate>
@@ -1095,10 +1095,10 @@ select Code,Name from countrycode "
                     <asp:TextBox ID="txtOtherAmount1" Enabled="true" runat="server" Text='<%# Eval("OtherAmount1")==null?"": Eval("OtherAmount1").ToString() %>'></asp:TextBox>
                 </EditItemTemplate>
 
-<ControlStyle Width="30px"></ControlStyle>
+<ControlStyle Width="70px"></ControlStyle>
             </asp:TemplateField>
 
-            <asp:TemplateField HeaderText="Other Amount2" SortExpression="OtherAmount2" Visible="true" ControlStyle-Width="50px">
+            <asp:TemplateField HeaderText="Other Amount2" SortExpression="OtherAmount2" Visible="true" ControlStyle-Width="70px">
                 <ItemTemplate>
                     <asp:Label ID="lblOtherAmount2" runat="server" Text='<%# Eval("OtherAmount2")==null?"": Eval("OtherAmount2").ToString() %>'></asp:Label>
                 </ItemTemplate>
@@ -1106,10 +1106,10 @@ select Code,Name from countrycode "
                     <asp:TextBox ID="txtOtherAmount2" Enabled="true" runat="server" Text='<%# Eval("OtherAmount2")==null?"": Eval("OtherAmount2").ToString() %>'></asp:TextBox>
                 </EditItemTemplate>
 
-<ControlStyle Width="50px"></ControlStyle>
+<ControlStyle Width="70px"></ControlStyle>
             </asp:TemplateField>
 
-            <asp:TemplateField HeaderText="Other Amount3" SortExpression="OtherAmount3" Visible="true" ControlStyle-Width="50px">
+            <asp:TemplateField HeaderText="Other Amount3" SortExpression="OtherAmount3" Visible="true" ControlStyle-Width="70px">
                 <ItemTemplate>
                     <asp:Label ID="lblOtherAmount3" runat="server" Text='<%# Eval("OtherAmount3")==null?"": Eval("OtherAmount3").ToString() %>'></asp:Label>
                 </ItemTemplate>
@@ -1117,7 +1117,7 @@ select Code,Name from countrycode "
                     <asp:TextBox ID="txtOtherAmount3" Enabled="true" runat="server" Text='<%# Eval("OtherAmount3")==null?"": Eval("OtherAmount3").ToString() %>'></asp:TextBox>
                 </EditItemTemplate>
 
-<ControlStyle Width="50px"></ControlStyle>
+<ControlStyle Width="70px"></ControlStyle>
             </asp:TemplateField>
 
             <asp:TemplateField HeaderText="X (BDT)" SortExpression="OtherAmount4" Visible="false" ControlStyle-Width="70px">
