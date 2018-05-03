@@ -56,7 +56,6 @@ namespace UnitTesterManual
                 $@"{this.CdrLocation}\{this.OperatorName}\{base.Input.Ne.SwitchName}\"
                 + base.Input.TelcobrightJob.JobName);
             //base.CollectorInput = new CdrCollectorInputData(base.Input,);
-            this.EventCollector = new FileBasedTextCdrCollector(this.CollectorInput);
             this.EventCollector.Params = new Dictionary<string, string>()
             {
                 { "fileName",

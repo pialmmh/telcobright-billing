@@ -30,6 +30,9 @@ namespace TelcobrightMediation
         public object Collect()
         {
             List<string[]> rows = new List<string[]>();
+            var connection = this.Context.Database.Connection;
+            if (connection.State!=ConnectionState.Open)
+                connection.Open();
             using (DbCommand cmd = this.Context.Database.Connection.CreateCommand())
             {
                 cmd.CommandText = "select * from " + this.DatabaseName + "." + this.TableName + " where filename='" +
@@ -46,7 +49,9 @@ namespace TelcobrightMediation
                 }
                 reader.Close();
             }
-            return rows;
+            NewCdrPreProcessor textCdrCollectionPreProcessor =
+                new NewCdrPreProcessor(rows, new List<cdrinconsistent>(), this.CollectorInput);
+            return textCdrCollectionPreProcessor;
         }
 
     }

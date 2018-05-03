@@ -84,7 +84,7 @@ namespace TelcobrightMediation.Cdr
                     var oldTransactionContainer = kv.Value;
                     var incrementalTransaction = oldTransactionContainer.OldTransactions.Last().Clone();
                     incrementalTransaction.id =
-                        this.CdrJobContext.AutoIncrementManager.GetNewCounter("acc_transaction");
+                        this.CdrJobContext.AutoIncrementManager.GetNewCounter(AutoIncrementCounterType.acc_transaction);
                     incrementalTransaction.amount = (-1) * oldTransactionContainer.OldTransactions.Sum(t => t.amount);
                     this.IncrementalTransactions.Add(incrementalTransaction);
                     //no need to update meta data in old cdr, it's going to be deleted anyway.

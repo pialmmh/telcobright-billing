@@ -56,7 +56,14 @@ namespace TelcobrightMediation
             StaticExtInsertColumnParsedDic.Parse();
             this.Tbc = tbc;
             this.Context = context;
-            this.AutoIncrementManager = new AutoIncrementManager(this.Context);
+            this.AutoIncrementManager = new AutoIncrementManager(
+                counter=>(int)AutoIncrementTypeDictionary.EnumTypes[counter.tableName],
+                counter=>counter.GetExtInsertValues(),
+                counter=>counter.GetUpdateCommand
+                (c=>$@" where tableName='{(int)AutoIncrementTypeDictionary.EnumTypes[counter.tableName]}'"),
+                null);
+            this.AutoIncrementManager.PopulateCache(() => context.autoincrementcounters.ToDictionary(c => c.value));
+
             this.MefDecoderContainer = new MefDecoderContainer(this.Context);
             this.MefServiceFamilyContainer = new MefServiceFamilyContainer();
             this.Nes = context.nes.Include(n=>n.telcobrightpartner)

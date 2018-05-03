@@ -202,7 +202,7 @@ namespace TelcobrightMediation
 
         public void SetIdCall(AutoIncrementManager autoIncrementManager, string[] thisRow)
         {
-            thisRow[1] = autoIncrementManager.GetNewCounter("cdr").ToString();
+            thisRow[1] = autoIncrementManager.GetNewCounter(AutoIncrementCounterType.cdr).ToString();
         }
 
         public void AdjustStartTimeBasedOnCdrSettingsForSummaryTimeField(SummaryTimeFieldEnum summaryTimeFieldEnum,

@@ -110,7 +110,7 @@ namespace TelcobrightMediation
                 acc_chargeable chargeable = new acc_chargeable()
                 {
                     id = serviceContext.CdrProcessor.CdrJobContext.AccountingContext.AutoIncrementManager
-                        .GetNewCounter("acc_chargeable"),
+                        .GetNewCounter(AutoIncrementCounterType.acc_chargeable),
                     uniqueBillId = thisCdr.UniqueBillId,
                     idEvent = Convert.ToInt64(thisCdr.IdCall),
                     transactionTime = thisCdr.StartTime,
@@ -192,7 +192,7 @@ namespace TelcobrightMediation
             acc_chargeable chargeable = accChargeableExt.AccChargeable;
             acc_transaction transaction = new acc_transaction()
             {
-                id = serviceContext.CdrProcessor.CdrJobContext.AutoIncrementManager.GetNewCounter("acc_transaction"),
+                id = serviceContext.CdrProcessor.CdrJobContext.AutoIncrementManager.GetNewCounter(AutoIncrementCounterType.acc_transaction),
                 transactionTime = chargeable.transactionTime,
                 debitOrCredit = "c", //single entry, use "d" for toptup, "c" for charging
                 idEvent = chargeable.idEvent,

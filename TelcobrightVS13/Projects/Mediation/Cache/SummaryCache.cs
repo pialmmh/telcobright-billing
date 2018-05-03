@@ -12,7 +12,8 @@ namespace TelcobrightMediation
         ISummary<TEntity, TKey>
     {
         public override string EntityOrTableName { get; }
-        private readonly object _locker=new object();
+        private AutoIncrementCounterType EntityTypeAsEnum { get; }
+        private readonly object locker=new object();
         private AutoIncrementManager AutoIncrementManager { get; }
         public SummaryCache(string entityName,AutoIncrementManager autoIncrementManager , Func<TEntity, TKey> dictionaryKeyGenerator,
             Func<TEntity, string> insertCommandGenerator,
@@ -22,6 +23,7 @@ namespace TelcobrightMediation
         {
             this.EntityOrTableName = entityName;
             this.AutoIncrementManager = autoIncrementManager;
+            this.EntityTypeAsEnum = AutoIncrementTypeDictionary.EnumTypes[entityName];
         }
         public override void PopulateCache(Func<Dictionary<TKey, TEntity>> methodToPopulate)//define method in Instance
         {
@@ -33,7 +35,7 @@ namespace TelcobrightMediation
         }
         public void Merge(TEntity newSummary, SummaryMergeType mergeType, Func<TEntity, bool> pdValidatationMethodForInsert)
         {
-            lock(this._locker)
+            lock(this.locker)
             {
                 TEntity existingSummary = default(TEntity);
                 TKey key = newSummary.GetTupleKey();
@@ -54,7 +56,7 @@ namespace TelcobrightMediation
                     //when a next summary instance to update the merged cache, the first source object will also get changed.
                     //to prevent that, use GetValueCopy();
                     var clonedSummary = (TEntity) newSummary.CloneWithFakeId();
-                    clonedSummary.id = this.AutoIncrementManager.GetNewCounter(this.EntityOrTableName);
+                    clonedSummary.id = this.AutoIncrementManager.GetNewCounter(this.EntityTypeAsEnum);
                     if (mergeType == SummaryMergeType.Add)
                     {
                         InsertWithKey(clonedSummary, key, pdValidatationMethodForInsert);

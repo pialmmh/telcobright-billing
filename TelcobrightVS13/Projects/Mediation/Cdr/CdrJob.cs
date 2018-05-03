@@ -71,7 +71,8 @@ namespace TelcobrightMediation.Cdr
                     this.CdrJobContext.SegmentSizeForDbWrite);
             }
             this.CdrJobContext.AccountingContext.WriteAllChanges();
-            this.CdrJobContext.AutoIncrementManager.WriteState();
+            this.CdrJobContext.AutoIncrementManager.WriteAllChanges(this.CdrJobContext.DbCmd,
+                this.CdrSetting.SegmentSizeForDbWrite);
         }
         protected void ValidateCdrProcessorWithMediationTester(CdrJobInputData input,CdrCollectionResult collectionResult)
         {

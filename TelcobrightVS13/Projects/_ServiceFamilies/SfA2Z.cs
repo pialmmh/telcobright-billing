@@ -48,7 +48,7 @@ namespace ServiceFamilies
                 {
                     var chargeable = new acc_chargeable
                     {
-                        id = serviceContext.CdrProcessor.CdrJobContext.AccountingContext.AutoIncrementManager.GetNewCounter("acc_chargeable"),
+                        id = serviceContext.CdrProcessor.CdrJobContext.AccountingContext.AutoIncrementManager.GetNewCounter(AutoIncrementCounterType.acc_chargeable),
                         uniqueBillId = cdr.UniqueBillId,
                         idEvent = Convert.ToInt64(cdr.IdCall),
                         transactionTime = cdr.StartTime,
@@ -108,7 +108,8 @@ namespace ServiceFamilies
             BillingRule billingRule= serviceContext.MefServiceFamilyContainer.BillingRules[idBillingRule.ToString()];
             acc_transaction transaction = new acc_transaction()
             {
-                id = serviceContext.CdrProcessor.CdrJobContext.AutoIncrementManager.GetNewCounter("acc_transaction"),
+                id = serviceContext.CdrProcessor.CdrJobContext.AutoIncrementManager
+                    .GetNewCounter(AutoIncrementCounterType.acc_transaction),
                 transactionTime = chargeable.transactionTime,
                 debitOrCredit = "c", //single entry, use "d" for toptup, "c" for charging
                 idEvent = chargeable.idEvent,
