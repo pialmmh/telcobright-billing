@@ -170,7 +170,7 @@
     <Compile Include="Cdr\Collection\Collector\SqlMultiWhereClause.cs" />
     <Compile Include="Cdr\Collection\Collector\SqlSingleWhereClause.cs" />
     <Compile Include="Cdr\Collection\Collector\SqlWhereParamEnums.cs" />
-    <Compile Include="Cdr\Collection\Collector\UnprocessedTextCdrCollectorFromDb.cs" />
+    <Compile Include="Cdr\Collection\Collector\RawTextCdrCollectorFromDb.cs" />
     <Compile Include="Cdr\Collection\Collector\PrevAccountingInfoPopulator.cs" />
     <Compile Include="Cdr\Collection\Collector\DbRowCollector.cs" />
     <Compile Include="Cdr\CdrExt.cs" />

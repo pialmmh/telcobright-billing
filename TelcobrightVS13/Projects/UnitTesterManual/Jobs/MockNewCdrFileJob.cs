@@ -26,12 +26,12 @@ namespace UnitTesterManual
     [Export("Job", typeof(ITelcobrightJob))]
     public class MockNewCdrFileJob : NewCdrFileJob
     {
-        public IFileDecoder CdrDecoder { get; set; }
+        public IEventCollector EventCollector { get; set; }
         public string OperatorName { get; set; }
 
-        public MockNewCdrFileJob(IFileDecoder cdrDecoder, string operatorName)
+        public MockNewCdrFileJob(IEventCollector eventCollector, string operatorName)
         {
-            this.CdrDecoder = cdrDecoder;
+            this.EventCollector = eventCollector;
             this.OperatorName = operatorName;
         }
         private string CdrLocation => @"C:\telcobright\Vault\Resources\CDR";
@@ -49,20 +49,21 @@ namespace UnitTesterManual
             ExecuteCdrJob(cdrJob);
             return JobCompletionStatus.Complete;
         }
+
         protected override NewCdrPreProcessor CollectRaw()
         {
-            Vault vault = base.Input.MediationContext.Tbc.DirectorySettings.Vaults.First(
-                c => c.Name == base.Input.TelcobrightJob.ne.SourceFileLocations);
-            FileLocation fileLocation = vault.LocalLocation.FileLocation;
-            string fileName = fileLocation.GetOsNormalizedPath(fileLocation.StartingPath)
-                              + Path.DirectorySeparatorChar + base.Input.TelcobrightJob.JobName;
-            base.CollectorInput = new CdrCollectorInputData(base.Input, fileName);
-            base.CollectorInput.FullPath =
-                $@"{this.CdrLocation}\{this.OperatorName}\{base.CollectorInput.Ne.SwitchName}\"
-                + base.Input.TelcobrightJob.JobName;
-            List<cdrinconsistent> inconsistentCdrs;
-            List<string[]> decodedCdrRows = this.CdrDecoder.DecodeFile(base.CollectorInput, out inconsistentCdrs);
-            return new NewCdrPreProcessor(decodedCdrRows, inconsistentCdrs, base.CollectorInput);
+            this.CollectorInput = new CdrCollectorInputData(base.Input,
+                $@"{this.CdrLocation}\{this.OperatorName}\{base.Input.Ne.SwitchName}\"
+                + base.Input.TelcobrightJob.JobName);
+            //base.CollectorInput = new CdrCollectorInputData(base.Input,);
+            this.EventCollector = new FileBasedTextCdrCollector(this.CollectorInput);
+            this.EventCollector.Params = new Dictionary<string, string>()
+            {
+                { "fileName",
+                  base.Input.TelcobrightJob.JobName
+                }
+            };
+            return (NewCdrPreProcessor) this.EventCollector.Collect();
         }
 
         protected void WriteJobCompletionIfCollectionNotEmpty(CdrJob cdrJob, job telcobrightJob)

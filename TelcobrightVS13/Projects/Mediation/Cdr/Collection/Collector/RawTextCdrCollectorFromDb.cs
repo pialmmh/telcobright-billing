@@ -6,34 +6,34 @@ using System.Data.Common;
 using MediationModel;
 using TelcobrightMediation.Cdr;
 using MySql.Data.MySqlClient;
+
 namespace TelcobrightMediation
 {
-    public class RawCdrCollectorFromDb
+    public class RawTextCdrCollectorFromDb : IEventCollector
     {
-        public CdrCollectorInputData CollectorInput { get; protected set; }
+        public CdrCollectorInputData CollectorInput { get; set; }
         public string DatabaseName { get; set; }
         public string TableName { get; set; }
         public string FileName { get; set; }
         public PartnerEntities Context { get; }
+        public Dictionary<string,string> Params { get; set; }
 
-        public RawCdrCollectorFromDb(CdrCollectorInputData collectorInput, string databaseName, 
-            string tableName, string fileName,PartnerEntities context)
+        public RawTextCdrCollectorFromDb(string databaseName,
+            string tableName, PartnerEntities context)
         {
-            this.CollectorInput = collectorInput;
             this.DatabaseName = databaseName;
             this.TableName = tableName;
-            this.FileName = fileName;
-            this.Context =context;
+            this.Context = context;
         }
 
 
-        public List<string[]> CollectRawCdrsFromDb()
+        public object Collect()
         {
             List<string[]> rows = new List<string[]>();
             using (DbCommand cmd = this.Context.Database.Connection.CreateCommand())
             {
                 cmd.CommandText = "select * from " + this.DatabaseName + "." + this.TableName + " where filename='" +
-                                  this.FileName + "'";
+                                  this.Params["fileName"] + "'";
                 DbDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
@@ -48,5 +48,6 @@ namespace TelcobrightMediation
             }
             return rows;
         }
+
     }
 }

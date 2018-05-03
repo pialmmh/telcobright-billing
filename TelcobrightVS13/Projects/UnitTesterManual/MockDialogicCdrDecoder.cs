@@ -25,12 +25,13 @@ namespace UnitTesterManual
 
         protected override List<string[]> GetTxtCdrs()
         {
-            RawCdrCollectorFromDb rawCdrCollector = new RawCdrCollectorFromDb(this.CollectorInput, "mockcdr",
-                "dialogiccdr",
-                this.CollectorInput.TelcobrightJob.JobName, this.Context);
-            List<string[]> txtRows = rawCdrCollector.CollectRawCdrsFromDb();
-            txtRows.ForEach(r => r[Fn.Partialflag] = "1");//enable partial flag for testing
-            return txtRows;
+            //RawTextCdrCollectorFromDb rawCdrCollector = new RawTextCdrCollectorFromDb(this.CollectorInput, "mockcdr",
+            //    "dialogiccdr",
+            //    this.CollectorInput.TelcobrightJob.JobName, this.Context);
+            //List<string[]> txtRows = rawCdrCollector.CollectRawCdrsFromDb();
+            //txtRows.ForEach(r => r[Fn.Partialflag] = "1");//enable partial flag for testing
+            //return txtRows;
+            return null;
         }
     }
 }
