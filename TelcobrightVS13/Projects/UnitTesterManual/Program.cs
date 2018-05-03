@@ -56,7 +56,11 @@ namespace UnitTesterManual
                 switch (cmdName)
                 {
                     case '1':
-                        new MockNewCdrProcessor(operatorName, eventCollector).Execute();
+                        var processor= new MockNewCdrProcessor(operatorName, eventCollector)
+                        {
+                            ProcessInReverseOrder = true
+                        };
+                        processor.Execute();
                         break;
                     case '2':
                         Console.WriteLine("Executing ErrorCdr for " + operatorName + ".");

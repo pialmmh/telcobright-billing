@@ -125,11 +125,11 @@ namespace TelcobrightMediation.Cdr
                             newTransactionContainer.NewTransaction.amount -
                             oldTransactionContainer.OldTransactions.Sum(t => t.amount);
                         newTransactionContainer.SetIncrementalTransaction(incTrans, transactionMetaDataUpdater);
+                        this.IncrementalTransactions.Add(incTrans);
                     }
                 }
             }
         }
-
 
         public void ValidateTransactions(List<acc_transaction> incrementalTransactions)
         {

@@ -35,6 +35,7 @@ namespace UnitTesterManual
         public string OperatorName { get; set; }
         public IEventCollector EventCollector { get; set; }
         public bool DecodeAndDumpOnly { get; set; } = false;
+        public bool ProcessInReverseOrder{ get; set; }
         public MockNewCdrProcessor(string operatorName, IEventCollector eventCollector)
         {
             this.OperatorName = operatorName;
@@ -73,6 +74,8 @@ namespace UnitTesterManual
                     List<job> incompleteJobs = context.jobs
                         .Where(c => c.idjobdefinition == 1 && c.Status == 7 && c.CompletionTime == null
                                     && c.idNE == ne.idSwitch).ToList();
+                    if (this.ProcessInReverseOrder)
+                        incompleteJobs = incompleteJobs.OrderByDescending(c => c.JobName).ToList();
                     using (DbCommand cmd = context.Database.Connection.CreateCommand())
                     {
                         foreach (job telcobrightJob in incompleteJobs)
