@@ -13,12 +13,11 @@ namespace TelcobrightMediation
     public class FileBasedTextCdrCollector : IEventCollector
     {
         public CdrCollectorInputData CollectorInput { get; protected set; }
-        public Dictionary<string, string> Params { get; set; }
+        public Dictionary<string, object> Params { get; set; }
         public FileBasedTextCdrCollector(CdrCollectorInputData collectorInput)
         {
             this.CollectorInput = collectorInput;
         }
-
         public object Collect()
         {
             IFileDecoder decoder = null;

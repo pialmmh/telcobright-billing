@@ -213,11 +213,11 @@ namespace TelcobrightMediation
                     segment =>
                     {
                         cmd.CommandText = (string.Join(String.Empty, segment)).ToString();
-                        updateWriteCount+= cmd.ExecuteNonQuery();
+                        updateWriteCount += cmd.ExecuteNonQuery();
                     });
+                if (updateWriteCount != this.UpdatedItems.Count)
+                    throw new Exception("Updated records count in database does not match UpdateCache count.");
                 this.UpdatedItems.Clear();
-                if(updateWriteCount==0)
-                    throw new Exception("Items exist in UpdateCache but 0 row was affected in database.");
             }
         }
 
@@ -240,9 +240,9 @@ namespace TelcobrightMediation
                         cmd.CommandText = string.Join(String.Empty, segment).ToString();
                         deleteWriteCount+= cmd.ExecuteNonQuery();
                     });
+                if (deleteWriteCount != this.DeletedItems.Count)
+                    throw new Exception("Deleted records count in database does not match DeleteCache count.");
                 this.DeletedItems.Clear();
-                if (deleteWriteCount == 0)
-                    throw new Exception("Items exist in DeletedCache but 0 row was affected in database.");
             }
         }
     }

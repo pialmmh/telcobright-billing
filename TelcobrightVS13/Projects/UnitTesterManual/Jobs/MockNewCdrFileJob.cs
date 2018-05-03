@@ -56,10 +56,14 @@ namespace UnitTesterManual
                 $@"{this.CdrLocation}\{this.OperatorName}\{base.Input.Ne.SwitchName}\"
                 + base.Input.TelcobrightJob.JobName);
             //base.CollectorInput = new CdrCollectorInputData(base.Input,);
-            this.EventCollector.Params = new Dictionary<string, string>()
+            this.EventCollector.Params = new Dictionary<string, object>()
             {
                 { "fileName",
                   base.Input.TelcobrightJob.JobName
+                },
+                {
+                    "collectorInput",
+                    new CdrCollectorInputData(base.Input,"")
                 }
             };
             return (NewCdrPreProcessor) this.EventCollector.Collect();

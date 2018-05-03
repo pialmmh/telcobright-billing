@@ -11,12 +11,11 @@ namespace TelcobrightMediation
 {
     public class RawTextCdrCollectorFromDb : IEventCollector
     {
-        public CdrCollectorInputData CollectorInput { get; set; }
         public string DatabaseName { get; set; }
         public string TableName { get; set; }
         public string FileName { get; set; }
         public PartnerEntities Context { get; }
-        public Dictionary<string,string> Params { get; set; }
+        public Dictionary<string,object> Params { get; set; }
 
         public RawTextCdrCollectorFromDb(string databaseName,
             string tableName, PartnerEntities context)
@@ -41,7 +40,7 @@ namespace TelcobrightMediation
                 while (reader.Read())
                 {
                     List<string> row = new List<string>();
-                    for (int i = 0; i < reader.FieldCount - 1; i++) //skip filename in the last column
+                    for (int i = 0; i < reader.FieldCount; i++) //skip filename in the last column
                     {
                         row.Add(reader[i].ToString());
                     }
@@ -50,7 +49,7 @@ namespace TelcobrightMediation
                 reader.Close();
             }
             NewCdrPreProcessor textCdrCollectionPreProcessor =
-                new NewCdrPreProcessor(rows, new List<cdrinconsistent>(), this.CollectorInput);
+                new NewCdrPreProcessor(rows, new List<cdrinconsistent>(), (CdrCollectorInputData)this.Params["collectorInput"]);
             return textCdrCollectionPreProcessor;
         }
 
