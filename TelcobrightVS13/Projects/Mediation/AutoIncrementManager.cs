@@ -14,18 +14,25 @@ using TelcobrightMediation.Config;
 
 namespace TelcobrightMediation
 {
-    public class AutoIncrementManager : AbstractCache<autoincrementcounter, long> //int=autoincrementCountertype enum
+    public class AutoIncrementManager : AbstractCache<autoincrementcounter, int> //int=autoincrementCountertype enum
     {
         private static readonly object Locker = new object();
-        public AutoIncrementManager(Func<autoincrementcounter, long> dictionaryKeyGenerator,
+        private DbCommand DbCmd { get; }
+        private int SegmentSizeForDbWrite { get; }
+
+        public AutoIncrementManager(Func<autoincrementcounter, int> dictionaryKeyGenerator,
             Func<autoincrementcounter, string> insertCommandGenerator,
             Func<autoincrementcounter, string> updateCommandGenerator,
-            Func<autoincrementcounter, string> deleteCommandPartGenerator)
+            Func<autoincrementcounter, string> deleteCommandPartGenerator,
+            DbCommand dbCmd, int segmentSizeForDbWrite)
             : base(dictionaryKeyGenerator, insertCommandGenerator, updateCommandGenerator,
                 deleteCommandPartGenerator) //Constructor
-        {} //pass to base
+        {
+            this.DbCmd = dbCmd;
+            this.SegmentSizeForDbWrite = segmentSizeForDbWrite;
+        }
 
-        public override void PopulateCache(Func<Dictionary<long, autoincrementcounter>> methodToPopulate)
+        public override void PopulateCache(Func<Dictionary<int, autoincrementcounter>> methodToPopulate)
         {
             foreach (var keyValuePair in methodToPopulate.Invoke())
             {
@@ -49,7 +56,7 @@ namespace TelcobrightMediation
                         tableName = counterType.ToString(),
                         value = 0
                     };
-                    CachedItem<long, autoincrementcounter> boxedItem =
+                    CachedItem<int, autoincrementcounter> boxedItem =
                         base.InsertWithKey(newCounter, counterTypeInt, c => c.value == 0);
                     thisCounter = boxedItem.Entity;
                 }
@@ -57,6 +64,11 @@ namespace TelcobrightMediation
                 base.AddExternallyUpdatedEntityToUpdatedItems(thisCounter);
                 return thisCounter.value;
             }
+        }
+        
+        public void WriteAllChanges()
+        {
+            base.WriteAllChanges(this.DbCmd,this.SegmentSizeForDbWrite);
         }
     }
 }

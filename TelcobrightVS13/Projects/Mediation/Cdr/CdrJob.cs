@@ -57,7 +57,8 @@ namespace TelcobrightMediation.Cdr
                 ValidateCdrProcessorWithMediationTester(this.CdrJobContext.CdrjobInputData,
                     this.CdrProcessor.CollectionResult);
             }
-            CdrWritingResult cdrWritingResult = this.CdrProcessor?.WriteCdrs();
+            var cdrWritingResult = this.CdrProcessor?.WriteCdrs();
+
             if (this.CdrProcessor != null && this.CdrProcessor.PartialProcessingEnabled)
             {
                 PartialCdrTester partialCdrTester =
@@ -71,8 +72,7 @@ namespace TelcobrightMediation.Cdr
                     this.CdrJobContext.SegmentSizeForDbWrite);
             }
             this.CdrJobContext.AccountingContext.WriteAllChanges();
-            this.CdrJobContext.AutoIncrementManager.WriteAllChanges(this.CdrJobContext.DbCmd,
-                this.CdrSetting.SegmentSizeForDbWrite);
+            this.CdrJobContext.AutoIncrementManager.WriteAllChanges();
         }
         protected void ValidateCdrProcessorWithMediationTester(CdrJobInputData input,CdrCollectionResult collectionResult)
         {
