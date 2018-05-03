@@ -201,9 +201,10 @@ namespace TelcobrightMediation
             lock (this._locker)
             {
                 if (this.UpdatedItems.Any() == false) return;
+                int updateWriteCount = 0;
                 if (this.UpdateCommandGenerator == null)
                 {
-                    throw new Exception("UpdateCommandGenerator is not set and null.");
+                    throw new Exception("UpdateCommandGenerator is null/not defined.");
                 }
                 var sqls = this.GetUpdatedItems().Select(c => this.UpdateCommandGenerator(c)).ToList();
                 int startAt = 0;
@@ -212,9 +213,11 @@ namespace TelcobrightMediation
                     segment =>
                     {
                         cmd.CommandText = (string.Join(String.Empty, segment)).ToString();
-                        cmd.ExecuteNonQuery();
+                        updateWriteCount+= cmd.ExecuteNonQuery();
                     });
                 this.UpdatedItems.Clear();
+                if(updateWriteCount==0)
+                    throw new Exception("Items exist in UpdateCache but 0 row was affected in database.");
             }
         }
 
@@ -223,9 +226,10 @@ namespace TelcobrightMediation
             lock (this._locker)
             {
                 if (this.DeletedItems.Any() == false) return;
+                int deleteWriteCount = 0;
                 if (this.DeleteCommandGenerator == null)
                 {
-                    throw new Exception("DeleteCommandGenerator is not set and null.");
+                    throw new Exception("DeleteCommandGenerator is null/not defined.");
                 }
                 var sqls = this.GetDeletedItems().Select(c => this.DeleteCommandGenerator(c)).ToList();
                 int startAt = 0;
@@ -233,10 +237,12 @@ namespace TelcobrightMediation
                 segments.ExecuteMethodInSegments(segmentSize,
                     segment =>
                     {
-                        cmd.CommandText = (string.Join(String.Empty, segment)).ToString();
-                        cmd.ExecuteNonQuery();
+                        cmd.CommandText = string.Join(String.Empty, segment).ToString();
+                        deleteWriteCount+= cmd.ExecuteNonQuery();
                     });
                 this.DeletedItems.Clear();
+                if (deleteWriteCount == 0)
+                    throw new Exception("Items exist in DeletedCache but 0 row was affected in database.");
             }
         }
     }
