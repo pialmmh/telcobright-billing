@@ -29,12 +29,10 @@ namespace TelcobrightMediation.Cdr.CollectionRelated.Collector
                 Dictionary<DateTime, List<CdrExt>> dayWiseOldCdrExts = this.SuccessfullOldCdrExts
                     .GroupBy(c => c.StartTime.Date).ToDictionary(g => g.Key, g => g.ToList());
                 string sql = string.Join(" union all ", dayWiseOldCdrExts.Select(kv =>
-                    $@"select * from acc_transaction where 
+                           $@"select * from acc_transaction where 
                            {kv.Key.ToMySqlWhereClauseForOneDay("transactionTime")} 
                            and uniquebillid in ({
-                            string.Join(",", kv.Value.Select(c => c.UniqueBillId.EncloseWith("'")))
-                        }) 
-                           and cancelled is null"));
+                           string.Join(",", kv.Value.Select(c => c.UniqueBillId.EncloseWith("'")))})"));
                 Dictionary<string, List<acc_transaction>> billidWisePrevTransactions =
                     this.Context.Database.SqlQuery<acc_transaction>(sql)
                         .GroupBy(c => c.uniqueBillId).ToDictionary(g => g.Key, g => g.ToList());
@@ -51,8 +49,8 @@ namespace TelcobrightMediation.Cdr.CollectionRelated.Collector
                             transactionContainer = new AccWiseTransactionContainer();
                             targetCdrExt.AccWiseTransactionContainers
                                 .Add(oldTransaction.glAccountId, transactionContainer);
-                            transactionContainer.OldTransactions.Add(oldTransaction);
                         }
+                        transactionContainer.OldTransactions.Add(oldTransaction);
                     }
                 }
             }

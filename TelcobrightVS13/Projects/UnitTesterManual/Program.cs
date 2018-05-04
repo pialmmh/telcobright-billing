@@ -58,7 +58,7 @@ namespace UnitTesterManual
                     case '1':
                         var processor= new MockNewCdrProcessor(operatorName, eventCollector)
                         {
-                            ProcessInReverseOrder = true
+                            ProcessInReverseOrder = false
                         };
                         processor.Execute();
                         break;
