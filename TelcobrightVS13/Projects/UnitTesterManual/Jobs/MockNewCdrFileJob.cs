@@ -28,7 +28,6 @@ namespace UnitTesterManual
     {
         public IEventCollector EventCollector { get; set; }
         public string OperatorName { get; set; }
-
         public MockNewCdrFileJob(IEventCollector eventCollector, string operatorName)
         {
             this.EventCollector = eventCollector;
@@ -55,17 +54,11 @@ namespace UnitTesterManual
             this.CollectorInput = new CdrCollectorInputData(base.Input,
                 $@"{this.CdrLocation}\{this.OperatorName}\{base.Input.Ne.SwitchName}\"
                 + base.Input.TelcobrightJob.JobName);
+
             //base.CollectorInput = new CdrCollectorInputData(base.Input,);
-            this.EventCollector.Params = new Dictionary<string, object>()
-            {
-                { "fileName",
-                  base.Input.TelcobrightJob.JobName
-                },
-                {
-                    "collectorInput",
-                    new CdrCollectorInputData(base.Input,"")
-                }
-            };
+            FileBasedTextCdrCollector fileBasedNewCdrCollector =
+                (FileBasedTextCdrCollector) this.EventCollector;
+            fileBasedNewCdrCollector.CollectorInput = this.CollectorInput;
             return (NewCdrPreProcessor) this.EventCollector.Collect();
         }
 

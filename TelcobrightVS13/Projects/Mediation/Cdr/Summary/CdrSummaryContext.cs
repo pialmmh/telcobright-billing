@@ -103,8 +103,8 @@ namespace TelcobrightMediation.Cdr
                     hourWiseSummaryCaches[kv.Key.Replace("day", "hr")];
                 var daySumOfDuration = dayWiseSummaryCache.GetItems().Sum(s => s.actualduration);
                 var hourWiseSumOfDuration = hourWiseSummaryCache.GetItems().Sum(s => s.actualduration);
-                if (Math.Abs(daySumOfDuration - hourWiseSumOfDuration) > this.MediationContext.Tbc.CdrSetting.FractionalNumberComparisonTollerance)
-                    throw new Exception("Collected day & hour wise summary duration do not match.");
+                //if (Math.Abs(daySumOfDuration - hourWiseSumOfDuration) > this.MediationContext.Tbc.CdrSetting.FractionalNumberComparisonTollerance)
+                  //  throw new Exception("Collected day & hour wise summary duration do not match.");
             }
         }
         private SummaryCache<AbstractCdrSummary, CdrSummaryTuple>

@@ -69,10 +69,11 @@
     <Compile Include="Jobs\MockCdrReProcessorJob.cs" />
     <Compile Include="Jobs\MockCdrDecoderDumperJob.cs" />
     <Compile Include="DateWithDouble.cs" />
+    <Compile Include="Jobs\MockNewCdrFileJob.cs" />
     <Compile Include="Processes\MockCdrReProcessor.cs" />
     <Compile Include="Processes\MockNewCdrProcessor.cs" />
     <Compile Include="MockDialogicCdrDecoder.cs" />
-    <Compile Include="Jobs\MockNewCdrFileJob.cs" />
+    <Compile Include="Jobs\MockNewDbBasedRawCdrJob.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DoubleComparer.cs" />

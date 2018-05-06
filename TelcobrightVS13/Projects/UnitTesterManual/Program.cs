@@ -41,7 +41,8 @@ namespace UnitTesterManual
                 //decoderComposer.ComposeFromPath(mefExtensionDirectory.FullName);
                 //var decoders = decoderComposer.Decoders.ToDictionary(d => d.Id.ToString());
                 //IFileDecoder cdrDecoder = decoders[idCdrFormat.ToString()];
-                IEventCollector eventCollector = new RawTextCdrCollectorFromDb(operatorName, "mockcdr", context);
+                //IEventCollector eventCollector = new RawTextCdrCollectorFromDb(operatorName, "mockcdr", context);
+                IEventCollector eventCollector = new FileBasedTextCdrCollector(new CdrCollectorInputData());
                 Console.WriteLine("*********Running for Operator:" + operatorName + "**********");
                 Console.WriteLine("Select a mock process:");
                 Console.WriteLine("1=NewCdr");
