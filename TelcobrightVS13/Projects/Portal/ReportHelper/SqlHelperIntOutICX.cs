@@ -73,9 +73,9 @@ namespace PortalApp.ReportHelper
                 SUM(longDecimalAmount3) AS Z,
                 SUM(customercost) AS revenueigwout,
                 SUM(tax1) AS tax1, 
-                SUM(tup_customerrate) as XRate, 
-                SUM(tup_supplierrate) as YRate, 
-                SUM(tup_customercurrency) as USDRate 
+                tup_customerrate as XRate, 
+                tup_supplierrate as YRate, 
+                tup_customercurrency as USDRate 
 
 	            FROM {TableName}
                 WHERE tup_starttime>='{StartDate}'

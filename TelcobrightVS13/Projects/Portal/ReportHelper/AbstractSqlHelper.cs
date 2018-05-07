@@ -128,7 +128,7 @@ namespace PortalApp
             {
                 return new StringBuilder(preExistingGrouByExpression).Append(string.Join(",", nonEmptyExpressions)).ToString();
             }
-            return preExistingGrouByExpression;
+            return preExistingGrouByExpression.Substring(0, preExistingGrouByExpression.Length-2);
         }
 
 
