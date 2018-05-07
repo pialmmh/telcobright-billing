@@ -51,9 +51,7 @@ namespace TelcobrightMediation
         }
         public void RegenerateOldSummaries()
         {
-            //todo: change to parallel
-            //Parallel.ForEach(oldCdrExts,oldCdrExt=>
-            this.OldCdrExts.ForEach(cdrExt =>
+            Parallel.ForEach(this.OldCdrExts,cdrExt=>
             {
                 if (cdrExt.CdrNewOldType != CdrNewOldType.OldCdr)
                     throw new Exception("OldCdrs must have CdrNewOldtype status set to old.");
@@ -80,9 +78,7 @@ namespace TelcobrightMediation
 
         public void UndoOldSummaries()
         {
-            //todo: change to parallel
-            //Parallel.ForEach(oldCdrExts,oldCdrExt=>
-            this.OldCdrExts.ForEach(oldCdrExt =>
+            Parallel.ForEach(this.OldCdrExts, oldCdrExt=>
             {
                 foreach (var kv in oldCdrExt.TableWiseSummaries)
                 {

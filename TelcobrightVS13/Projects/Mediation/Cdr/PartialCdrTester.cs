@@ -46,7 +46,7 @@ namespace TelcobrightMediation.Cdr
                  + processedErrorCount + processedInconsistentCount));
             Assert.AreEqual(this.CdrWritingResult.PartialCdrWriter.WrittenCdrPartialReferences,
                 processedPartialCdrExts.Count);
-            Assert.AreEqual(this.CdrWritingResult.CdrCount, processedCdrExts.Count);
+            Assert.AreEqual(this.CdrWritingResult.CdrCount, processedCdrExts.Count());
             Assert.AreEqual(collectionResult.RawCount,
                 this.CdrWritingResult.CdrErrorCount + this.CdrWritingResult.CdrInconsistentCount
                 + processedCdrExts.Select(c => c.NewRawCount).Sum());

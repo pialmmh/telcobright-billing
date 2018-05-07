@@ -15,7 +15,7 @@ namespace TelcobrightMediation.Cdr
         private CdrJobContext CdrJobContext { get; }
         private List<CdrExt> NewSuccessfulCdrExts { get; }
         private ConcurrentDictionary<string, CdrExt> OldSuccessfulCdrExts { get; }
-        private List<acc_transaction> IncrementalTransactions { get; set; }
+        private BlockingCollection<acc_transaction> IncrementalTransactions { get; set; }
 
         public IncrementalTransactionCreator(CdrJob cdrJob)
         {
@@ -37,12 +37,13 @@ namespace TelcobrightMediation.Cdr
 
         public List<acc_transaction> CreateIncrementalTransactions()
         {
-            this.IncrementalTransactions = new List<acc_transaction>();
+            this.IncrementalTransactions = new BlockingCollection<acc_transaction>();
             if (this.CdrProcessor != null) //new cdr exists
             {
                 if (this.CdrEraser == null) //only new cdrs but no old cdrs
                 {
-                    this.NewSuccessfulCdrExts.Where(c => c.Cdr.ChargingStatus == 1).ToList().ForEach(newCdrExt =>
+                    Parallel.ForEach(this.NewSuccessfulCdrExts,newCdrExt=>
+                    //this.NewSuccessfulCdrExts.ForEach(newCdrExt =>
                     {
                         TransactionMetaDataUpdater transactionMetaDataUpdater =
                             new TransactionMetaDataUpdater(newCdrExt.Cdr);
@@ -58,7 +59,7 @@ namespace TelcobrightMediation.Cdr
             {
                 CreateIncrementalTransactionsForCdrEraser();
             }
-            return this.IncrementalTransactions;
+            return this.IncrementalTransactions.ToList();
         }
 
         private void CreateIncTransForNewCdrExtWithNoOldInstance(CdrExt newCdrExt,
@@ -77,7 +78,8 @@ namespace TelcobrightMediation.Cdr
         {
             if (this.CdrEraser == null)
                 throw new Exception("Both cdrProcessor & cdrEraser are found null while processing transactions.");
-            foreach (var oldCdrExt in this.OldSuccessfulCdrExts.Values)
+            Parallel.ForEach(this.OldSuccessfulCdrExts.Values, oldCdrExt=>
+            //this.OldSuccessfulCdrExts.Values.ToList().ForEach(oldCdrExt =>
             {
                 foreach (var kv in oldCdrExt.AccWiseTransactionContainers)
                 {
@@ -89,12 +91,13 @@ namespace TelcobrightMediation.Cdr
                     this.IncrementalTransactions.Add(incrementalTransaction);
                     //no need to update meta data in old cdr, it's going to be deleted anyway.
                 }
-            }
+            });
         }
 
         private void CreateIncrementalTransActionsForNewAndOldCdrCase()
         {
-            foreach (var newCdrExt in this.NewSuccessfulCdrExts)
+            Parallel.ForEach(this.NewSuccessfulCdrExts,newCdrExt =>
+            //this.NewSuccessfulCdrExts.ForEach(newCdrExt =>
             {
                 CdrExt oldCdrExt = null;
                 if (this.OldSuccessfulCdrExts.TryGetValue(newCdrExt.UniqueBillId, out oldCdrExt) == false) //no old cdr
@@ -128,14 +131,15 @@ namespace TelcobrightMediation.Cdr
                         this.IncrementalTransactions.Add(incTrans);
                     }
                 }
-            }
+            });
         }
 
         public void ValidateTransactions(List<acc_transaction> incrementalTransactions)
         {
             decimal fractionComparsionTollerance = this.CdrJobContext.MediationContext.CdrSetting
                 .FractionalNumberComparisonTollerance;
-            var sumOfOldTransactionAmounts = this.OldSuccessfulCdrExts.Values.SelectMany(c => c
+            var sumOfOldTransactionAmounts = this.OldSuccessfulCdrExts.Values
+                .SelectMany(c => c
                 .AccWiseTransactionContainers
                 .Values.SelectMany(t => t.OldTransactions)).Sum(t => t.amount);
 
@@ -150,9 +154,6 @@ namespace TelcobrightMediation.Cdr
             var oldBillIds = this.OldSuccessfulCdrExts.Values.Select(c => c.UniqueBillId).ToList();
             var newWithOldSuccessfuls = this.NewSuccessfulCdrExts.Where(c => oldBillIds.Contains(c.UniqueBillId))
                 .ToList();
-            var sumOfNewForNewWithOlds = newWithOldSuccessfuls
-                .SelectMany(c => c.AccWiseTransactionContainers.Values)
-                .Select(tContainer => tContainer.NewTransaction).Sum(t => t.amount);
             var sumOfOldForNewWithOlds = newWithOldSuccessfuls
                 .SelectMany(c => c.AccWiseTransactionContainers.Values)
                 .SelectMany(tContainer => tContainer.OldTransactions).Sum(t => t.amount);

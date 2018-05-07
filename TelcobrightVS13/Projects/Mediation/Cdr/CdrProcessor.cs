@@ -46,9 +46,8 @@ namespace TelcobrightMediation
 
         public void Mediate()
         {
-            //todo: change to parallel
-            this.NewCdrExts.ForEach(cdrExt =>
-                //Parallel.ForEach(newCdrExts, cdrExt =>
+            //this.NewCdrExts.ForEach(cdrExt =>
+            Parallel.ForEach(this.NewCdrExts, cdrExt =>
             {
                 try
                 {
@@ -90,9 +89,8 @@ namespace TelcobrightMediation
 
         public void GenerateSummaries()
         {
-            //todo: change to parallel
-            //Parallel.ForEach(this.CollectionResult.ProcessedCdrExts, processedCdrExt =>
-            this.CollectionResult.ProcessedCdrExts.ToList().ForEach(processedCdrExt =>
+            Parallel.ForEach(this.CollectionResult.ProcessedCdrExts, processedCdrExt =>
+            //this.CollectionResult.ProcessedCdrExts.ToList().ForEach(processedCdrExt =>
             {
                 this.CdrJobContext.CdrSummaryContext.GenerateSummary(processedCdrExt);
                 var cdr = processedCdrExt.Cdr;
@@ -104,9 +102,8 @@ namespace TelcobrightMediation
 
         public void MergeNewSummariesIntoCache()
         {
-            //todo: change to parallel
-            //Parallel.ForEach(this.CollectionResult.ProcessedCdrExts, processedCdrExt =>
-            this.CollectionResult.ProcessedCdrExts.ToList().ForEach(processedCdrExt =>
+            Parallel.ForEach(this.CollectionResult.ProcessedCdrExts, processedCdrExt =>
+            //this.CollectionResult.ProcessedCdrExts.ToList().ForEach(processedCdrExt =>
             {
                 foreach (var kv in processedCdrExt.TableWiseSummaries)
                 {
@@ -118,9 +115,9 @@ namespace TelcobrightMediation
 
         public void ProcessChargeables()
         {
-            //todo: change to parallel
-            //Parallel.ForEach(this.CollectionResult.ProcessedCdrExts, processedCdrExt =>
-            this.CollectionResult.ProcessedCdrExts.Where(c => c.Cdr.ChargingStatus == 1).ToList().ForEach(
+            var chargeables= this.CollectionResult.ProcessedCdrExts.Where(c => c.Cdr.ChargingStatus == 1);
+            Parallel.ForEach(chargeables,
+            //chargeables.ForEach(
                 processedCdrExt =>
                 {
                     if (Convert.ToDecimal(processedCdrExt.Cdr.ChargeableMetaTotal) > 0)

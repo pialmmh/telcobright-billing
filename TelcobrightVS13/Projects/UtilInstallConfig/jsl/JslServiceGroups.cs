@@ -64,8 +64,8 @@ namespace InstallConfig
                             "InPartnerCost must be > 0 when DurationSec >= 0.1"
                         },
                         {
-                            "obj.DurationSec >= 0.1M ? obj.Tax2 > 0 : obj.Tax2 == 0 ",
-                            "Revenue BTRC (Tax2) must be > 0 when DurationSec >= 0.1"
+                            "obj.DurationSec >= 0.1M ? obj.Tax1 > 0 : obj.Tax1 == 0 ",
+                            "BTRC RevShare (Tax1) must be > 0 when DurationSec >= 0.1"
                         },
                     },
             });
@@ -113,8 +113,8 @@ namespace InstallConfig
                                 "InPartnerCost must be > 0 when DurationSec >= 0.1"
                             },
                             {
-                                "obj.DurationSec >= 0.1M ? obj.Tax2 > 0 : obj.Tax2 == 0 ",
-                                "Revenue BTRC (Tax2) must be > 0 when DurationSec >= 0.1"
+                                "obj.DurationSec >= 0.1M ? obj.Tax1 > 0 : obj.Tax1 == 0 ",
+                                "BTRC RevShare (Tax1) must be > 0 when DurationSec >= 0.1"
                             },
                         },
                 });
@@ -158,7 +158,7 @@ namespace InstallConfig
                         },
                         {
                             "obj.DurationSec >= 0.1M ? obj.Tax2 > 0 : obj.Tax2 == 0 ",
-                            "Revenue BTRC (Tax2) must be > 0 when DurationSec >= 0.1"
+                            "BTRC RevShare (Tax2) must be > 0 when DurationSec >= 0.1"
                         },
                         {
                             "obj.DurationSec >= 0.1M ? obj.XAmount > 0 : obj.XAmount == 0 ",

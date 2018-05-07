@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,8 +15,6 @@ namespace TelcobrightMediation
     public class MediationTester
     {
         private decimal FractionComparisionTollerance { get; }
-        private CdrCollectionResult CdrCollectionResult { get; }
-
         public MediationTester(decimal fractionComparisionTollerance)
         {
             this.FractionComparisionTollerance = fractionComparisionTollerance;
@@ -37,8 +36,9 @@ namespace TelcobrightMediation
         }
         public bool DurationSumInCdrAndSummaryAreTollerablyEqual(CdrCollectionResult collectionResult)
         {
-            decimal durationSumInCdr = collectionResult.ProcessedCdrExts.Sum(c => Convert.ToDecimal(c.Cdr?.DurationSec));
-            decimal durationSumInSummaries = collectionResult.ProcessedCdrExts.
+            var processedCdrExts = collectionResult.ProcessedCdrExts;
+            decimal durationSumInCdr = processedCdrExts.Sum(c => Convert.ToDecimal(c.Cdr?.DurationSec));
+            decimal durationSumInSummaries = processedCdrExts.
                 Sum(c => c.TableWiseSummaries.Values.Sum(s => Convert.ToDecimal(s?.actualduration)));
             int summaryTypeCount = 2;//at this moment just hr & day
             bool result = Math.Abs(durationSumInCdr - decimal.Divide(durationSumInSummaries, summaryTypeCount)) 
@@ -47,9 +47,9 @@ namespace TelcobrightMediation
         }
         public bool SummaryCountTwiceAsCdrCount(CdrCollectionResult collectionResult)
         {
-            var cdrCount = collectionResult.ProcessedCdrExts.Count();
-            int summaryInstanceCount = collectionResult.ProcessedCdrExts
-                .SelectMany(c => c.TableWiseSummaries.Values).Count();
+            var processedCdrExts = collectionResult.ProcessedCdrExts;
+            var cdrCount = processedCdrExts.Count();
+            int summaryInstanceCount = processedCdrExts.SelectMany(c => c.TableWiseSummaries.Values).Count();
             return 2 * cdrCount == summaryInstanceCount;
         }
 

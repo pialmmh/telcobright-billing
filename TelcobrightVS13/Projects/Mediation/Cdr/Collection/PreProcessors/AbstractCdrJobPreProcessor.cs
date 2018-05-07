@@ -65,8 +65,8 @@ namespace TelcobrightMediation.Cdr
         private void VerifyPrevTransactionsCollectionStatus(List<CdrExt> successfulOldCdrExts,
             decimal fractionComparisonTollerence)
         {
-            //todo: change to parallel
-            successfulOldCdrExts.ForEach(c =>
+            Parallel.ForEach(successfulOldCdrExts,c=>
+            //successfulOldCdrExts.ForEach(c =>
             {
                 decimal transTotalFromCdrMetaData = Convert.ToDecimal(c.Cdr.TransactionMetaTotal);
                 decimal transTotalFromTransactions = c.AccWiseTransactionContainers.Values.
@@ -78,8 +78,8 @@ namespace TelcobrightMediation.Cdr
 
         private void VerifyPrevChargeablesCollectionStatus(List<CdrExt> oldCdrExts, decimal fractionComparisonTollerence)
         {
-            //todo: change to parallel
-            oldCdrExts.ForEach(c =>
+            Parallel.ForEach(oldCdrExts,c=>
+            //oldCdrExts.ForEach(c =>
             {
                 decimal chargeableTotalFromCdrMeta = Convert.ToDecimal(c.Cdr.ChargeableMetaTotal);
                 decimal totalFromChargeableInstances = c.Chargeables.Values.Sum(chargeable => chargeable.BilledAmount);

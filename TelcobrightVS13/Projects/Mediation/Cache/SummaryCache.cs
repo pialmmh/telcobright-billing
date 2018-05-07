@@ -44,11 +44,6 @@ namespace TelcobrightMediation
                 {
                     if (mergeType == SummaryMergeType.Substract)
                     {
-                        //todo: remove temp code
-                        foreach (var cacheKey in this.Cache.Keys)
-                        {
-                            Debug.Print(cacheKey.ToString());
-                        }
                         throw new NotSupportedException("Previous summary instance cannot be null for summary substraction.");
                     }
                     //summaries are merged in Cache, cache.Insert without value copy will have the same reference 
