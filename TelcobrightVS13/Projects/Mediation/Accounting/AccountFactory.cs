@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using MediationModel;
 namespace TelcobrightMediation.Accounting
 {
@@ -120,6 +121,22 @@ namespace TelcobrightMediation.Accounting
                     .Append("/revenue").Append("/uom").Append(uom)).ToString()
             };
             return CreateAccountThroughCache(newAcc);
+        }
+
+        public List<KeyValuePair<string, string>> GetAccountParts(string accountName)
+        {
+            List<KeyValuePair<string, string>> accountParts = new List<KeyValuePair<string, string>>();
+            string[] parts = accountName.Split('/');
+            foreach (string part in parts)
+            {
+                string value = Regex.Match(part, @"\d+").Value;
+                if (value != String.Empty)
+                {
+                    string key = part.Replace(value, string.Empty);
+                    accountParts.Add(new KeyValuePair<string, string>(key, value));
+                }
+            }
+            return accountParts;
         }
     }
 }

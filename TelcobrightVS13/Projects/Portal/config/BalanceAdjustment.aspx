@@ -25,7 +25,7 @@
                     Service Account:
                     <div style="clear:left;height:7px;"></div>
                     <asp:DropDownList ID="ddlistServiceAccount" runat="server" Enabled="true" AutoPostBack="true" 
-                                      DataTextField="id" DataValueField="id" />
+                                      DataTextField="accountName" DataValueField="id" />
                 </div>
                 <div>
                     Date:

@@ -45,6 +45,8 @@ namespace PortalApp.config
                     List<KeyValuePair<Regex, string>> serviceAliases = Tbc.ServiceAliasesRegex;
                     foreach (LedgerSummaryForInvoiceGeneration summaryItem in summaryForInvoiceGenerations)
                     {
+                        
+                        
                         foreach (var kv in serviceAliases)
                         {
                             var regex = kv.Key;
@@ -56,6 +58,14 @@ namespace PortalApp.config
                         }
 
                     }
+
+                    AccountFactory accountFactory = new AccountFactory(null);
+                    foreach (var accounts in summaryForInvoiceGenerations.GroupBy(x => x.AccountName))
+                    {
+                        List<KeyValuePair<string, string>> accountParts = accountFactory.GetAccountParts(accounts.First().AccountName);
+
+                    }
+
                     BindingList<LedgerSummaryForInvoiceGeneration> invoiceGenerations = new BindingList<LedgerSummaryForInvoiceGeneration>(summaryForInvoiceGenerations);
                     this.Session["igInvoiceGenList"] = invoiceGenerations;
                     gvInvoice.DataSource = invoiceGenerations;

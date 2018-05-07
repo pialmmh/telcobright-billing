@@ -25,6 +25,8 @@ namespace PortalApp.config
                     ddlistPartner.DataSource = allPartners;
                     ddlistPartner.DataBind();
                 }
+                txtDate.Text = DateTime.Now.ToString("yyyy-MM-dd");
+                ddlistPartner_OnSelectedIndexChanged(ddlistPartner, EventArgs.Empty);
             }
         }
 
