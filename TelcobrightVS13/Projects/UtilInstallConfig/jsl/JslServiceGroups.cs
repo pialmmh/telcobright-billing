@@ -43,6 +43,11 @@ namespace InstallConfig
                             "OutgoingRoute cannot be empty"
                         },
                         {
+                            "obj.InPartnerId > 0",
+                            "InPartnerId must be > 0"
+                        },
+
+                        {
                             "obj.OutPartnerId > 0",
                             "OutPartnerId must be > 0"
                         },
@@ -59,8 +64,8 @@ namespace InstallConfig
                             "InPartnerCost must be > 0 when DurationSec >= 0.1"
                         },
                         {
-                            "obj.DurationSec >= 0.1M ? obj.RevenueVATCommissionOut > 0 : obj.RevenueVATCommissionOut == 0 ",
-                            "Revenue Commission (BTRC) must be > 0 when DurationSec >= 0.1"
+                            "obj.DurationSec >= 0.1M ? obj.Tax2 > 0 : obj.Tax2 == 0 ",
+                            "Revenue BTRC (Tax2) must be > 0 when DurationSec >= 0.1"
                         },
                     },
             });
@@ -88,6 +93,10 @@ namespace InstallConfig
                                 "OutgoingRoute cannot be empty"
                             },
                             {
+                                "obj.InPartnerId > 0",
+                                "InPartnerId must be > 0"
+                            },
+                            {
                                 "obj.OutPartnerId > 0",
                                 "OutPartnerId must be > 0"
                             },
@@ -104,8 +113,8 @@ namespace InstallConfig
                                 "InPartnerCost must be > 0 when DurationSec >= 0.1"
                             },
                             {
-                                "obj.DurationSec >= 0.1M ? obj.RevenueVATCommissionOut > 0 : obj.RevenueVATCommissionOut == 0 ",
-                                "Revenue Commission (BTRC) must be > 0 when DurationSec >= 0.1"
+                                "obj.DurationSec >= 0.1M ? obj.Tax2 > 0 : obj.Tax2 == 0 ",
+                                "Revenue BTRC (Tax2) must be > 0 when DurationSec >= 0.1"
                             },
                         },
                 });
@@ -148,8 +157,8 @@ namespace InstallConfig
                             "RevenueIcxOut must be > 0 when DurationSec >= 0.1"
                         },
                         {
-                            "obj.DurationSec >= 0.1M ? obj.RevenueVATCommissionOut > 0 : obj.RevenueVATCommissionOut == 0 ",
-                            "Revenue Commission (BTRC) must be > 0 when DurationSec >= 0.1"
+                            "obj.DurationSec >= 0.1M ? obj.Tax2 > 0 : obj.Tax2 == 0 ",
+                            "Revenue BTRC (Tax2) must be > 0 when DurationSec >= 0.1"
                         },
                         {
                             "obj.DurationSec >= 0.1M ? obj.XAmount > 0 : obj.XAmount == 0 ",

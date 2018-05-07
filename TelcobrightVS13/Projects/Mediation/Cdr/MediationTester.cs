@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Itenso.TimePeriod;
 using LibraryExtensions;
 using MediationModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -26,25 +27,24 @@ namespace TelcobrightMediation
             var nonPartialCdrs =processedCdrExts.Where(c => c.Cdr.PartialFlag == 0);
             var partialCdrExts = processedCdrExts.Where(c => c.Cdr.PartialFlag > 0);
             var newRawPartialCdrs = partialCdrExts.SelectMany(c => c.PartialCdrContainer.NewRawInstances);
-            return Math.Abs(nonPartialCdrs.Sum(c => c.Cdr.DurationSec) + newRawPartialCdrs.Sum(c => c.DurationSec)
-                    -cdrProcessor.CollectionResult.RawDurationTotalOfConsistentCdrs)>this.FractionComparisionTollerance;
+            var nonPartialDurationSum = nonPartialCdrs.Sum(c => c.Cdr.DurationSec);
+            var rawPartialDurationSum = newRawPartialCdrs.Sum(c => c.DurationSec);
+            var errorDuration = cdrProcessor.CollectionResult.CdrErrors.Sum(c => Convert.ToDecimal(c.DurationSec));
+            bool result = Math.Abs(nonPartialDurationSum + rawPartialDurationSum+errorDuration
+                                   - cdrProcessor.CollectionResult.RawDurationTotalOfConsistentCdrs) <=
+                          this.FractionComparisionTollerance;
+            return result;
         }
         public bool DurationSumInCdrAndSummaryAreTollerablyEqual(CdrCollectionResult collectionResult)
         {
-            return Math.Abs(collectionResult.ProcessedCdrExts.Sum(c => Convert.ToDecimal(c.Cdr?.DurationSec))
-                    - collectionResult.ProcessedCdrExts.Sum(
-                        c => c.TableWiseSummaries.Values.Sum(s => Convert.ToDecimal(s?.actualduration))))
-                   > this.FractionComparisionTollerance;
+            decimal durationSumInCdr = collectionResult.ProcessedCdrExts.Sum(c => Convert.ToDecimal(c.Cdr?.DurationSec));
+            decimal durationSumInSummaries = collectionResult.ProcessedCdrExts.
+                Sum(c => c.TableWiseSummaries.Values.Sum(s => Convert.ToDecimal(s?.actualduration)));
+            int summaryTypeCount = 2;//at this moment just hr & day
+            bool result = Math.Abs(durationSumInCdr - decimal.Divide(durationSumInSummaries, summaryTypeCount)) 
+                <= this.FractionComparisionTollerance;
+            return result;
         }
-
-        public bool DurationSumInCdrAndTableWiseSummariesAreTollerablyEqual(CdrCollectionResult collectionResult)
-        {
-            var durationInCdrs = collectionResult.ProcessedCdrExts.Sum(c => Convert.ToDecimal(c.Cdr?.DurationSec));
-            var durationInSumaries = collectionResult.ProcessedCdrExts.SelectMany(c => c.TableWiseSummaries.Values)
-                .Sum(s => s.actualduration);
-            return Math.Abs(durationInCdrs- durationInSumaries) > this.FractionComparisionTollerance;
-        }
-
         public bool SummaryCountTwiceAsCdrCount(CdrCollectionResult collectionResult)
         {
             var cdrCount = collectionResult.ProcessedCdrExts.Count();

@@ -36,8 +36,8 @@ namespace TelcobrightMediation.Cdr
                 case CdrNewOldType.NewCdr:
                     if (partialCdrContainer.NewCdrEquivalent.FinalRecord != 1)
                         throw new Exception("Partial cdr equivalent instance must have final record set to 1.");
-                    if (partialCdrContainer.NewCdrEquivalent.PartialFlag != 1)
-                        throw new Exception("Partial cdr equivalent instance must have partial flag set to 1.");
+                    if (partialCdrContainer.NewCdrEquivalent.PartialFlag <=0)
+                        throw new Exception("Partial cdr equivalent instance must have partial flag >= 1.");
                     return new CdrExt(partialCdrContainer.NewCdrEquivalent, CdrNewOldType.NewCdr)
                     {
                         PartialCdrContainer = partialCdrContainer,
@@ -52,9 +52,9 @@ namespace TelcobrightMediation.Cdr
                     if (partialCdrContainer.PrevProcessedCdrInstance.FinalRecord != 1)
                         throw new Exception(
                             "Prev processed instance of partial cdr must have final record set to 1.");
-                    if (partialCdrContainer.PrevProcessedCdrInstance.PartialFlag != 1)
+                    if (partialCdrContainer.PrevProcessedCdrInstance.PartialFlag < 1)
                         throw new Exception(
-                            "Prev processed instance for partial cdr must have partial flag set to 1.");
+                            "Prev processed instance for partial cdr must have partial flag >= 1.");
                     cdr clonedCdr =new IcdrImplConverter<cdr>().Convert(
                             CdrManipulatingUtil.Clone(partialCdrContainer.PrevProcessedCdrInstance));
                     return new CdrExt(clonedCdr, CdrNewOldType.OldCdr)

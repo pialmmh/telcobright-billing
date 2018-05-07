@@ -9,5 +9,6 @@ namespace TelcobrightMediation.Cdr
     public interface IEventCollector
     {
         object Collect();
+        Dictionary<string,object> Params { get; set; }
     }
 }

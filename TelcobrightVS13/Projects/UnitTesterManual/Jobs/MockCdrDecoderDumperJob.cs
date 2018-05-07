@@ -37,7 +37,6 @@ namespace UnitTesterManual
         public override JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
         {
             CdrJobInputData input = (CdrJobInputData) jobInputData;
-            AutoIncrementManager autoIncrementManager = new AutoIncrementManager(input.Context);
             CdrCollectorInputData collectorInput =
                 new CdrCollectorInputData(input, input.TelcobrightJob.JobName);
             collectorInput.FullPath =

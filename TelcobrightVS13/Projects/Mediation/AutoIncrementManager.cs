@@ -9,118 +9,66 @@ using System.Threading;
 using LibraryExtensions;
 using MySql.Data.MySqlClient;
 using MediationModel;
+using net.bytebuddy.asm;
 using TelcobrightMediation.Config;
 
 namespace TelcobrightMediation
 {
-    class MyLocker
+    public class AutoIncrementManager : AbstractCache<autoincrementcounter, int> //int=autoincrementCountertype enum
     {
-        private int id;
+        private static readonly object Locker = new object();
+        private DbCommand DbCmd { get; }
+        private int SegmentSizeForDbWrite { get; }
 
-        public MyLocker(int id)
+        public AutoIncrementManager(Func<autoincrementcounter, int> dictionaryKeyGenerator,
+            Func<autoincrementcounter, string> insertCommandGenerator,
+            Func<autoincrementcounter, string> updateCommandGenerator,
+            Func<autoincrementcounter, string> deleteCommandPartGenerator,
+            DbCommand dbCmd, int segmentSizeForDbWrite)
+            : base(dictionaryKeyGenerator, insertCommandGenerator, updateCommandGenerator,
+                deleteCommandPartGenerator) //Constructor
         {
-            this.id = id;
+            this.DbCmd = dbCmd;
+            this.SegmentSizeForDbWrite = segmentSizeForDbWrite;
         }
-    }
-    public class AutoIncrementManager
-    {
-        private ConcurrentDictionary<string, autoincrementcounter> Counters { get; } =
-                                    new ConcurrentDictionary<string, autoincrementcounter>();
 
-        private ConcurrentDictionary<string, autoincrementcounter> UpdatedCounters { get; } =
-                                    new ConcurrentDictionary<string, autoincrementcounter>();
-
-        private ConcurrentDictionary<string, autoincrementcounter> InsertedCounters { get; } =
-                                    new ConcurrentDictionary<string, autoincrementcounter>();
-        private PartnerEntities Context { get; }
-        private readonly object _locker = new object();
-        public AutoIncrementManager(PartnerEntities context)
+        public override void PopulateCache(Func<Dictionary<int, autoincrementcounter>> methodToPopulate)
         {
-            this.Context = context;
-            var existingCounters = this.Context.autoincrementcounters.ToDictionary(c => c.tableName);
-            foreach (KeyValuePair<string, autoincrementcounter> kv in existingCounters)
+            foreach (var keyValuePair in methodToPopulate.Invoke())
             {
-                if (this.Counters.TryAdd(kv.Key, kv.Value) == false)
-                    throw new Exception("Could not add item to Counters of autoincrement manager, probably duplicate item.");
+                if (base.Cache.TryAdd(keyValuePair.Key, keyValuePair.Value) == false)
+                    throw new Exception(
+                        "Could not add existing account to concurrent dictionary while populating AccountCache, probably duplicate item.");
             }
         }
 
-        public long GetNewCounter(string tableNameLowerCase)//don't use .ToLower() for performance
+        public long GetNewCounter(AutoIncrementCounterType counterType) //don't use .ToLower() for performance
         {
-            lock (this._locker)
+            lock (Locker)
             {
                 autoincrementcounter thisCounter = null;
-                this.Counters.TryGetValue(tableNameLowerCase, out thisCounter);
+                int counterTypeInt = (int) counterType;
+                base.Cache.TryGetValue(counterTypeInt, out thisCounter);
                 if (thisCounter == null) //if doesn't exist in cache
                 {
-                    thisCounter = InsertNewCounter(tableNameLowerCase);
-                }
-                else //existing AI in cache
-                {
-                    if (!AlreadyInInsertedCounters(tableNameLowerCase)
-                        && this.UpdatedCounters.ContainsKey(tableNameLowerCase) == false)
+                    var newCounter = new autoincrementcounter()
                     {
-                        if (this.UpdatedCounters.TryAdd(thisCounter.tableName, thisCounter) == false)
-                            throw new Exception("Could not add item to updated counters of autoincrement manager, probably duplicate item.");
-                    }
+                        tableName = counterType.ToString(),
+                        value = 0
+                    };
+                    CachedItem<int, autoincrementcounter> boxedItem =
+                        base.InsertWithKey(newCounter, counterTypeInt, c => c.value == 0);
+                    thisCounter = boxedItem.Entity;
                 }
                 ++thisCounter.value;
+                base.AddExternallyUpdatedEntityToUpdatedItems(thisCounter);
                 return thisCounter.value;
             }
         }
-
-        bool AlreadyInInsertedCounters(string tableNameLowerCase)
+        
+        public void WriteAllChanges()
         {
-            return this.InsertedCounters.ContainsKey(tableNameLowerCase);
-        }
-        public long GetCurrentCounterValue(string tableNameLowerCase)
-        {
-            return this.Counters[tableNameLowerCase].value;
-        }
-        private autoincrementcounter InsertNewCounter(string tableName)
-        {
-            autoincrementcounter newCounter = new autoincrementcounter() { tableName = tableName, value = 0 };
-            if (this.Counters.TryAdd(tableName, newCounter) == false)
-                throw new Exception("Could not insert new item to Counters of autoincrement manager, probably duplicate item.");
-            if (this.InsertedCounters.TryAdd(newCounter.tableName, newCounter) == false)
-                throw new Exception("Could not insert new item to Counters of autoincrement manager, probably duplicate item.");
-            return newCounter;
-        }
-        public void WriteState()
-        {
-            lock (this._locker)
-            {
-                using (DbCommand cmd = ConnectionManager.CreateCommandFromDbContext(this.Context))
-                {
-                    StringBuilder sbSql = new StringBuilder();
-                    foreach (autoincrementcounter counter in this.InsertedCounters.Values)
-                    {
-                        sbSql.Append($@" insert into autoincrementcounter 
-                                     (tablename,value) values(
-                                     {counter.tableName.ToMySqlField()},{counter.value.ToMySqlField()});");
-                    }
-                    if (!string.IsNullOrEmpty(sbSql.ToString()))
-                    {
-                        cmd.CommandText = sbSql.ToString();
-                        cmd.ExecuteNonQuery();
-                    }
-
-                    sbSql = new StringBuilder();
-                    foreach (autoincrementcounter counter in this.UpdatedCounters.Values)
-                    {
-                        sbSql.Append($@" update autoincrementcounter 
-                                     set value={counter.value.ToMySqlField()}
-                                     where tablename={counter.tableName.EncloseWith("'")};");
-                    }
-                    if (!string.IsNullOrEmpty(sbSql.ToString()))
-                    {
-                        cmd.CommandText = sbSql.ToString();
-                        cmd.ExecuteNonQuery();
-                    }
-
-                }
-            }
+            base.WriteAllChanges(this.DbCmd,this.SegmentSizeForDbWrite);
         }
     }
-
 }

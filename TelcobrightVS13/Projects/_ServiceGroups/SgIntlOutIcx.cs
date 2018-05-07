@@ -61,17 +61,15 @@ namespace TelcobrightMediation
         {
             newSummary.tup_matchedprefixcustomer = cdrExt.Cdr.MatchedPrefixY;
             newSummary.tup_countryorareacode = cdrExt.Cdr.CountryCode;
-            newSummary.tup_sourceId = cdrExt.Cdr.AnsIdOrig.ToString();
-            newSummary.tup_inpartnerid = Convert.ToInt32(cdrExt.Cdr.AnsIdOrig);
+            newSummary.tup_sourceId = cdrExt.Cdr.InPartnerId.ToString();
+            newSummary.tup_inpartnerid = Convert.ToInt32(cdrExt.Cdr.InPartnerId);
             if (cdrExt.Cdr.ChargingStatus != 1) return;
-
             acc_chargeable chargeableCust = null;
             cdrExt.Chargeables.TryGetValue(new ValueTuple<int, int, int>(this.Id, 7, 1), out chargeableCust);
             if (chargeableCust == null)
             {
                 throw new Exception("Chargeable not found for customer direction.");
             }
-
             newSummary.customercost = Convert.ToDecimal(chargeableCust.BilledAmount); //invoice amount
             newSummary.tup_customerrate = Convert.ToDecimal(chargeableCust.OtherDecAmount1); //x rate
             newSummary.tup_supplierrate = Convert.ToDecimal(chargeableCust.OtherDecAmount2); //y rate

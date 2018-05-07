@@ -32,7 +32,7 @@ namespace TelcobrightMediation.Accounting
                 targetAcc = this.AccountingContext.AccountCache.GetItemByKey(newAcc.accountName);
                 if (targetAcc == null)
                 {
-                    newAcc.id = this.AccountingContext.AutoIncrementManager.GetNewCounter("account");
+                    newAcc.id = this.AccountingContext.AutoIncrementManager.GetNewCounter(AutoIncrementCounterType.account);
                     targetAcc = this.AccountingContext.AccountCache.InsertWithKey(newAcc, newAcc.accountName,
                         acc => acc.id > 0);
                 }

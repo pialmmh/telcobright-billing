@@ -19,6 +19,7 @@ using LibraryExtensions;
 using TelcobrightMediation.Config;
 using LibraryExtensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TelcobrightMediation.Cdr;
 
 namespace UnitTesterManual
 {
@@ -32,12 +33,13 @@ namespace UnitTesterManual
         public string HelpText => "Processes CDR";
         public int ProcessId => 103;
         public string OperatorName { get; set; }
-        public IFileDecoder CdrDecoder { get; set; }
+        public IEventCollector EventCollector { get; set; }
         public bool DecodeAndDumpOnly { get; set; } = false;
-        public MockNewCdrProcessor(string operatorName, IFileDecoder fileDecoder)
+        public bool ProcessInReverseOrder{ get; set; }
+        public MockNewCdrProcessor(string operatorName, IEventCollector eventCollector)
         {
             this.OperatorName = operatorName;
-            this.CdrDecoder = fileDecoder;
+            this.EventCollector = eventCollector;
         }
 
         public void ExecuteJobsWithTests(ITelcobrightJob job,CdrJobInputData cdrJobInputData)
@@ -72,6 +74,8 @@ namespace UnitTesterManual
                     List<job> incompleteJobs = context.jobs
                         .Where(c => c.idjobdefinition == 1 && c.Status == 7 && c.CompletionTime == null
                                     && c.idNE == ne.idSwitch).ToList();
+                    if (this.ProcessInReverseOrder)
+                        incompleteJobs = incompleteJobs.OrderByDescending(c => c.JobName).ToList();
                     using (DbCommand cmd = context.Database.Connection.CreateCommand())
                     {
                         foreach (job telcobrightJob in incompleteJobs)
@@ -87,9 +91,10 @@ namespace UnitTesterManual
                                 ITelcobrightJob iJob = null;
                                 if (this.DecodeAndDumpOnly == false)
                                 {
-                                    iJob = new MockNewCdrFileJob(this.CdrDecoder, this.OperatorName);
+                                    iJob = new MockNewCdrFileJob(this.EventCollector, this.OperatorName);
                                 }
-                                else iJob = new MockCdrDecoderDumperJob(this.CdrDecoder, this.OperatorName);
+                                //todo: fix it later
+                                //else iJob = new MockCdrDecoderDumperJob(this.EventCollector, this.OperatorName);
 
                                 var cdrJobInputData =
                                     new CdrJobInputData(mediationContext, context, ne, telcobrightJob);

@@ -13,12 +13,14 @@ namespace TelcobrightMediation.Cdr
         private CdrWritingResult CdrWritingResult { get; }
         private PartialCdrTesterData PartialCdrTesterData { get; }
 
-        public PartialCdrTester(CdrJob cdrJob, CdrWritingResult cdrWritingResult, PartialCdrTesterData partialCdrTesterData)
+        public PartialCdrTester(CdrJob cdrJob, CdrWritingResult cdrWritingResult,
+            PartialCdrTesterData partialCdrTesterData)
         {
             this.CdrJob = cdrJob;
             this.CdrWritingResult = cdrWritingResult;
             this.PartialCdrTesterData = partialCdrTesterData;
         }
+
         public void ValidatePartialCdrMediation()
         {
             //partial cdrs tests here...
@@ -56,15 +58,16 @@ namespace TelcobrightMediation.Cdr
                 processedPartialCdrExts.Select(c => c.PartialCdrContainer.NewCdrEquivalent).Count());
 
             decimal nonPartialDuration = processedNonPartialCdrExts.Sum(c => c.Cdr.DurationSec);
-            decimal partialNormalizedDuration = processedPartialCdrExts.Sum(c => c.Cdr.DurationSec);
+            decimal partialNewRawInstancesDuration = processedPartialCdrExts
+                .SelectMany(c => c.PartialCdrContainer.NewRawInstances).Sum(c => c.DurationSec);
+            decimal errorDuration = collectionResult.CdrErrors.Sum(c => Convert.ToDecimal(c.DurationSec));
             Assert.AreEqual(this.PartialCdrTesterData.RawDurationWithoutInconsistents,
-                nonPartialDuration + partialNormalizedDuration +
-                collectionResult.CdrErrors.Sum(c => Convert.ToDecimal(c.DurationSec)));
+                nonPartialDuration + partialNewRawInstancesDuration + errorDuration);
+
+            decimal partialNormalizedDuration = processedPartialCdrExts
+                .Select(c => c.PartialCdrContainer.NewCdrEquivalent).Sum(c => c.DurationSec);
             Assert.AreEqual(collectionResult.ProcessedCdrExts.Sum(c => c.Cdr.DurationSec),
                 (nonPartialDuration + partialNormalizedDuration));
-            Assert.AreEqual(partialNormalizedDuration,
-                processedPartialCdrExts.SelectMany(c => c.PartialCdrContainer.NewRawInstances)
-                    .Sum(c => c.DurationSec));
         }
     }
 }

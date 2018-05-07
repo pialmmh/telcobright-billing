@@ -30,7 +30,6 @@ namespace Jobs
         public virtual JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
         {
             CdrJobInputData input = (CdrJobInputData) jobInputData;
-            AutoIncrementManager autoIncrementManager = new AutoIncrementManager(input.Context);
             CdrCollectorInputData cdrCollectorInput = new CdrCollectorInputData(input, "");
             SegmentedCdrReprocessor segmentedCdrReprocessJobProcessor =
                 new SegmentedCdrReprocessor(cdrCollectorInput,

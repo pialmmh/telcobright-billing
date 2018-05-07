@@ -21,11 +21,12 @@ namespace TelcobrightMediation
         public cdr PrevProcessedCdrInstance { get; }
         public cdr NewCdrEquivalent { get; private set; }
         public List<cdrpartialrawinstance> CombinedNewAndOldUnprocessedInstance { get; private set; }
+
         public PartialCdrContainer(List<cdrpartialrawinstance> newRawInstances,
-                                    List<cdrpartialrawinstance> prevRawInstances,
-                                    cdrpartialreference cdrPartialreference,
-                                    cdrpartiallastaggregatedrawinstance lastAggregatedRawInstance,
-                                    cdr prevProcessedCdrInstance)
+            List<cdrpartialrawinstance> prevRawInstances,
+            cdrpartialreference cdrPartialreference,
+            cdrpartiallastaggregatedrawinstance lastAggregatedRawInstance,
+            cdr prevProcessedCdrInstance)
         {
             this.NewRawInstances = newRawInstances;
             this.PrevRawInstances = prevRawInstances;
@@ -48,7 +49,9 @@ namespace TelcobrightMediation
             DateTime? minConnectTime = this.CombinedNewAndOldUnprocessedInstance.Where(c => c.ConnectTime != null)
                 .Select(c => c.ConnectTime).FirstOrDefault();
             if (minConnectTime != null) this.NewCdrEquivalent.ConnectTime = minConnectTime;
-            this.NewCdrEquivalent.PartialFlag = 1;
+            this.NewCdrEquivalent.PartialFlag = this.CombinedNewAndOldUnprocessedInstance.Max(c=>c.PartialFlag);
+            if(this.NewCdrEquivalent.PartialFlag<=0) throw new Exception("Partial flag must be > 0 for aggregated " +
+                                                                    "partial equivalent cdr.");
             this.NewCdrEquivalent.FinalRecord = 1;
             this.NewAggregatedRawInstance =
                 new IcdrImplConverter<cdrpartiallastaggregatedrawinstance>().Convert(this.NewCdrEquivalent);
@@ -64,12 +67,27 @@ namespace TelcobrightMediation
                                        {
                                            UniqueBillId = newMediatableCdrInstance.UniqueBillId,
                                            switchid = newMediatableCdrInstance.SwitchId,
-                                           CallDate = newMediatableCdrInstance.StartTime,
+                                           CallDate = newMediatableCdrInstance.StartTime.Date,
                                        };
             this.CdrPartialReference.lastFilename = newMediatableCdrInstance.FileName;
             this.CdrPartialReference.lastIdcall = newMediatableCdrInstance.IdCall;
             this.CdrPartialReference.commaSepIdcallsForAllInstances
                 = string.Join(",", concatedNewAndOldRawinstances.Select(c => c.IdCall.ToString()));
+        }
+
+        public void ValidateAggregation(decimal fractionCompareTollerance)
+        {
+            List<long> commaSepidCalls = this.CdrPartialReference.commaSepIdcallsForAllInstances.Split(',')
+                .AsEnumerable().Select(id => Convert.ToInt64(id)).ToList();
+            if(commaSepidCalls.Sum()!=this.CombinedNewAndOldUnprocessedInstance.Sum(c=>c.IdCall))
+                throw new Exception("Idcalls sum validation mismatch after aggregation.");
+            if(this.NewCdrEquivalent.DurationSec-this.CombinedNewAndOldUnprocessedInstance.Sum(c=>c.DurationSec)
+                >fractionCompareTollerance)
+                throw new Exception("Equivalent duration of aggregated partial cdr does not match duration total of " +
+                                    "raw instances.");
+            if(this.NewCdrEquivalent.StartTime.Date!=this.CdrPartialReference.CallDate)
+                throw new Exception("Call date of new cdr equivalent and partial cdr reference must match " +
+                                    "after aggregation.");
         }
     }
 }

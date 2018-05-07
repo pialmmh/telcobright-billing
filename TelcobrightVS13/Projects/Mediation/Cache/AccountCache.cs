@@ -9,16 +9,14 @@ namespace TelcobrightMediation
     public class AccountCache : AbstractCache<account, string> //string=acc id
     {
         public ConcurrentDictionary<string, string> IndexById { get; } = new ConcurrentDictionary<string, string>();
-        private readonly object _locker = new object();
-
+        private readonly object locker = new object();
         public AccountCache(Func<account, string> dictionaryKeyGenerator,
             Func<account, string> insertCommandGenerator,
             Func<account, string> updateCommandGenerator,
             Func<account, string> deleteCommandPartGenerator)
             : base(dictionaryKeyGenerator, insertCommandGenerator, updateCommandGenerator,
                 deleteCommandPartGenerator) //Constructor
-        {
-        } //pass to base
+        {} //pass to base
 
         public override void
             PopulateCache(Func<Dictionary<string, account>> methodToPopulate) //define method in Instance
@@ -40,7 +38,7 @@ namespace TelcobrightMediation
         public override CachedItem<string, account> InsertWithKey(account newItem, string key,
             Func<account, bool> pkValidationMethod)
         {
-            lock (this._locker)
+            lock (this.locker)
             {
                 CachedItem<string, account> insertedItem = base.InsertWithKey(newItem, key, pkValidationMethod);
                 account insertedAccount = insertedItem.Entity;
@@ -51,7 +49,7 @@ namespace TelcobrightMediation
 
         private void UpdateIndexWithNewEntity(account acc)
         {
-            lock (this._locker)
+            lock (this.locker)
             {
                 if (this.IndexById.TryAdd(acc.id.ToString(), acc.accountName) == false)
                 {

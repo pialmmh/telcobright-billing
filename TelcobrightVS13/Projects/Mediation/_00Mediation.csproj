@@ -113,6 +113,7 @@
     <Compile Include="Accounting\BillingRule.cs" />
     <Compile Include="Accounting\LedgerSumFactory.cs" />
     <Compile Include="Accounting\AccountFactory.cs" />
+    <Compile Include="AutoIncrementManager_old.cs" />
     <Compile Include="Automation\AutomatedNetworkElementCli.cs" />
     <Compile Include="Automation\SessionInfo.cs" />
     <Compile Include="Automation\SingleCliCommand.cs" />
@@ -170,7 +171,7 @@
     <Compile Include="Cdr\Collection\Collector\SqlMultiWhereClause.cs" />
     <Compile Include="Cdr\Collection\Collector\SqlSingleWhereClause.cs" />
     <Compile Include="Cdr\Collection\Collector\SqlWhereParamEnums.cs" />
-    <Compile Include="Cdr\Collection\Collector\UnprocessedTextCdrCollectorFromDb.cs" />
+    <Compile Include="Cdr\Collection\Collector\RawTextCdrCollectorFromDb.cs" />
     <Compile Include="Cdr\Collection\Collector\PrevAccountingInfoPopulator.cs" />
     <Compile Include="Cdr\Collection\Collector\DbRowCollector.cs" />
     <Compile Include="Cdr\CdrExt.cs" />
@@ -197,7 +198,15 @@
     <Compile Include="Config\TelcobrightConfig.cs" />
     <Compile Include="Config\JobInputData\CdrCollectorInputData.cs" />
     <Compile Include="Config\TelecomOperatortype.cs" />
-    <Compile Include="Enums\Enums.cs" />
+    <Compile Include="Enums\AutoIncrementTypeDictionary.cs" />
+    <Compile Include="Enums\AutoIncrementCounterType.cs" />
+    <Compile Include="Enums\XyzRatingType.cs" />
+    <Compile Include="Enums\IcxPartnerType.cs" />
+    <Compile Include="Enums\IgwPartnerType.cs" />
+    <Compile Include="Enums\JobCompletionStatus.cs" />
+    <Compile Include="Enums\PartnerRuletype.cs" />
+    <Compile Include="Enums\RouteLocalityType.cs" />
+    <Compile Include="Enums\ServiceFamilyType.cs" />
     <Compile Include="Mediation\RateContainerInMemoryLocal.cs" />
     <Compile Include="Mediation\RateDictionaryGeneratorByTuples.cs" />
     <Compile Include="SegmentedJob\RowIdVsDate.cs" />

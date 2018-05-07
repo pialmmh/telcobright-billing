@@ -101,7 +101,7 @@ namespace TelcobrightMediation
                 var chargeable = new acc_chargeable()
                 {
                     id =serviceContext.CdrProcessor.CdrJobContext.AccountingContext.AutoIncrementManager
-                            .GetNewCounter("acc_chargeable"),
+                            .GetNewCounter(AutoIncrementCounterType.acc_chargeable),
                     uniqueBillId = thisCdr.UniqueBillId,
                     idEvent = Convert.ToInt64(thisCdr.IdCall),
                     transactionTime = callDate,
