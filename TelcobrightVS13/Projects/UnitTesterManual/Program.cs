@@ -65,7 +65,8 @@ namespace UnitTesterManual
                         break;
                     case '2':
                         Console.WriteLine("Executing ErrorCdr for " + operatorName + ".");
-                        new MockCdrReProcessor().Execute(operatorName);
+                        var mockErrorProcessor = new MockCdrReProcessor { Job = new MockCdrErrorProcessorJob() };
+                        mockErrorProcessor.Execute(operatorName);
                         break;
                     case '3':
                         Console.WriteLine("Executing ReprocessCdr for " + operatorName + ".");

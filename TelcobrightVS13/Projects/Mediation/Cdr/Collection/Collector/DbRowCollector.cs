@@ -39,6 +39,7 @@ namespace TelcobrightMediation
                     string[] convertedRow = dummyDataObjectToCallExtensionMethod.ConvertDataReaderToStrArr(cdrfieldlists,reader);
                     txtRows.Add(convertedRow);
                 }
+                reader.Close();
             }
             return txtRows;
         }

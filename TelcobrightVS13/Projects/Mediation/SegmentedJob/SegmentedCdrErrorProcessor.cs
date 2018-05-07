@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FlexValidation;
+using LibraryExtensions;
 using MediationModel;
 using Newtonsoft.Json;
 using TelcobrightMediation;
@@ -47,9 +48,8 @@ namespace TelcobrightMediation
             preProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
             CdrJobContext cdrJobContext = new CdrJobContext(this.CdrCollectorInput.CdrJobInputData,
                 newCollectionResult.HoursInvolved);
-            
             CdrProcessor cdrProcessor = new CdrProcessor(cdrJobContext, newCollectionResult);
-            CdrEraser cdrEraser = oldCollectionResult != null ? new CdrEraser(cdrJobContext, oldCollectionResult) : null;
+            CdrEraser cdrEraser = !oldCollectionResult.IsEmpty ? new CdrEraser(cdrJobContext, oldCollectionResult) : null;
             int rawCount = preProcessor.TxtCdrRows.Count;
             CdrJob cdrJob = new CdrJob(cdrProcessor, cdrEraser, rawCount,partialCdrTesterData:null);
             return cdrJob;
@@ -57,10 +57,23 @@ namespace TelcobrightMediation
 
         private FlexValidator<string[]> CreateValidatorInstance()
         {
-            return new FlexValidator<string[]>(continueOnError: false,
+            Dictionary<string, string> rules = this.CdrCollectorInput.CdrJobInputData.MediationContext.Tbc.CdrSetting
+                .ValidationRulesForInconsistentCdrs;
+            rules = rules.Where(kv => kv.Value.StartsWith("SequenceNumber must be numeric") == false
+                                      || kv.Value.StartsWith("StartTime must be a valid datetime") == false)
+                .ToDictionary(kv => kv.Key,kv=>kv.Value);
+            var flexValidator= new FlexValidator<string[]>(continueOnError: false,
                 throwExceptionOnFirstError: false,
-                validationExpressionsWithErrorMessage: this.CdrCollectorInput.CdrJobInputData.MediationContext.Tbc.CdrSetting
-                    .ValidationRulesForInconsistentCdrs);
+                validationExpressionsWithErrorMessage: 
+                rules);
+            flexValidator.DateParsers.Add(
+                "stringToDateConverterFromMySqlFormat", str => str.ConvertToDateTimeFromMySqlFormat());
+            flexValidator.DateParsers.Add("strToMySqlDtConverter", str => str.ConvertToDateTimeFromMySqlFormat());
+            flexValidator.DoubleParsers.Add("doubleConverterProxy", str => Convert.ToDouble(str));
+            flexValidator.IntParsers.Add("intConverterProxy", str => Convert.ToInt32(str));
+            flexValidator.BooleanParsers.Add("isDateTimeChecker", str => str.IsDateTime(StringExtensions.MySqlDateTimeFormat));
+            flexValidator.BooleanParsers.Add("isNumericChecker", str => str.IsNumeric());
+            return flexValidator;
         }
     }
 }

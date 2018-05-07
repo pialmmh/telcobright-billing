@@ -33,8 +33,20 @@ namespace ServiceFamilies
             {
                 //consider otherAmount3 as tax1, by default
                 cdr.Duration1 = finalDuration;
-                decimal taxAmount1 = Convert.ToDecimal(rateWithAssignmentTupleId.OtherAmount3);
-                cdr.Tax2 = cdr.InPartnerCost * taxAmount1 / 100;
+                decimal taxAmount = Convert.ToDecimal(cdr.InPartnerCost) *
+                                    Convert.ToDecimal(rateWithAssignmentTupleId.OtherAmount3) / 100;
+                if (serviceContext.AssignDir == ServiceAssignmentDirection.Customer)
+                {
+                    cdr.Tax1 = taxAmount;
+                }
+                else if (serviceContext.AssignDir == ServiceAssignmentDirection.Supplier)
+                {
+                    cdr.Tax2 = taxAmount;
+                }
+                else
+                {
+                    throw new ArgumentException();
+                }
                 string idCurrencyUoM = serviceContext.CdrProcessor.CdrJobContext.MediationContext.MefServiceFamilyContainer
                     .DicRateplans[rateWithAssignmentTupleId.idrateplan.ToString()].Currency;
                 int idChargedPartner = GetChargedOrChargingPartnerId(cdrExt, serviceContext);
@@ -66,12 +78,25 @@ namespace ServiceFamilies
                         glAccountId = postingAccount.id,
                         changedByJob = serviceContext.CdrProcessor.CdrJobContext.TelcobrightJob.id,
                         idBillingrule = billingRule.Id,
-                        TaxAmount1 = taxAmount1
                     };
+                    if (serviceContext.AssignDir == ServiceAssignmentDirection.Customer)
+                    {
+                        chargeable.TaxAmount1 = taxAmount;
+                    }
+                    else if (serviceContext.AssignDir == ServiceAssignmentDirection.Supplier)
+                    {
+                        chargeable.TaxAmount2 = taxAmount;
+                    }
+                    else
+                    {
+                        throw new ArgumentException();
+                    }
+
                     if (chargeable.createdByJob == null)
                     {
                         chargeable.createdByJob = serviceContext.CdrProcessor.CdrJobContext.TelcobrightJob.id;
                     }
+
                     job telcobrightJob = serviceContext.CdrProcessor.CdrJobContext.TelcobrightJob;
                     chargeable.description = new List<string> {"1", "2"}.Contains(telcobrightJob.idjobdefinition.ToString())
                         ? "nc" //use new cdr flag for new & error cdr job

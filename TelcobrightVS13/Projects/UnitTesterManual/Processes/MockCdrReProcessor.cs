@@ -48,7 +48,7 @@ namespace UnitTesterManual
                                              Path.DirectorySeparatorChar + "WS_Topshelf_Quartz" +
                                              Path.DirectorySeparatorChar +
                                              "bin" + Path.DirectorySeparatorChar + "config" +
-                                             Path.DirectorySeparatorChar + "platinum.conf";
+                                             Path.DirectorySeparatorChar + this.OperatorName + ".conf";
                 TelcobrightConfig tbc = ConfigFactory.GetConfigFromFile(configFileName);
                 string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(OperatorName);
                 using (PartnerEntities context = new PartnerEntities(entityConStr))
@@ -57,7 +57,9 @@ namespace UnitTesterManual
                     var mediationContext = new MediationContext(tbc, context);
                     tbc.GetPathIndependentApplicationDirectory();
                     {
-                        ne ne = context.nes.Where(c => c.idSwitch == 1).ToList().First();
+                        int idTelcobrightpartner = context.telcobrightpartners
+                            .Where(c => c.databasename == this.OperatorName).ToList().First().idCustomer;
+                        ne ne = context.nes.Where(c => c.idCustomer==idTelcobrightpartner).ToList().First();
                         List<job> incompleteJobs = context.jobs
                             .Where(c => new List<int>() {2,3,4}.Contains(c.idjobdefinition)//err,reprocess, erase
                              && c.Status!=1 && c.CompletionTime == null && c.idNE == ne.idSwitch).ToList();

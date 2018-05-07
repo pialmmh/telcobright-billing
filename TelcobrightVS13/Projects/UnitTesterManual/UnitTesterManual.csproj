@@ -65,6 +65,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Jobs\MockCdrErrorProcessorJob.cs" />
     <Compile Include="Jobs\MockCdrEraserJob.cs" />
     <Compile Include="Jobs\MockCdrReProcessorJob.cs" />
     <Compile Include="Jobs\MockCdrDecoderDumperJob.cs" />
