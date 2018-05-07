@@ -19,8 +19,6 @@ namespace Utils
             //var tester = new FractionCeilingTester();
             //tester.Test();
             //tester.PerformanceTest();
-            
-            
             Console.WriteLine("Press a key:");
             Console.WriteLine("1=Test Entity Renaming");
             Console.WriteLine("2=Entity Framework Batch Renaming");
@@ -199,6 +197,53 @@ namespace Utils
         }
 
         
+        static void TestEntityContext()
+        {
+            //using (MySqlConnection con =
+            //    new MySqlConnection(ConfigurationManager.ConnectionStrings["Partner"].ConnectionString))
+            {
+                //con.Open();
+                using (PartnerEntities model = new PartnerEntities())
+                {
+                    model.Database.Connection.Open();
+                    var cmd = model.Database.Connection.CreateCommand();
+                    cmd.CommandText = ("set autocommit=0;insert into enumvatrule values(-1,'test','testdesc')");
+                    cmd.ExecuteNonQuery();
+
+
+                    var cmd2 = model.Database.Connection.CreateCommand();
+                    cmd2.CommandText = ("set autocommit=0;insert into enumvatrule values(-10,'test','should not be seen')");
+                    cmd2.ExecuteNonQuery();
+
+
+                    cmd.CommandText = ("commit;");
+                    cmd.ExecuteNonQuery();
+
+                    
+
+                    List<enumvatrule> vatRules = model.enumvatrules.ToList();
+                }
+            }
+
+        }
+
+        static void DateChangerInICDRFileForTestCases()
+        {
+            foreach (string file in Directory.GetFiles("C:\\Dropbox\\partial testing csvs with fake cdr\\icdrformat"))
+            {
+                List<string[]> lines = ParseTextFileToList(file, ';', 0);
+                foreach (string[] line in lines)
+                {
+                    string globalCallId = line[3];
+                    if (globalCallId == "AAAAEVbVTzSBcAABEtSs8w" || globalCallId == "BAAAEVbVTzSBcAABEtSs8w")
+                    {
+                        ChangeMonthToMay(line);
+                    }
+                }
+                File.WriteAllLines(file,lines.Select(c=>string.Join(";",c)));
+            }
+        }
+
         static void ChangeMonthToMay(string[] line)
         {
             for (var i = 0; i < line.Length; i++)
@@ -208,13 +253,30 @@ namespace Utils
                     line[i] = col.Replace("2016-03", "2016-05");
             }
         }
-        
+        static void TestEntityFrameworkCastingToAbstractClass()
+        {
+            Console.WriteLine("Testing Entity Framework Casting to Abstract Classes...");
+            List<TestAbstractClass> lstAbstractClasses=new List<TestAbstractClass>();
+            
+            using (PartnerEntities model = new PartnerEntities())
+            {
+                var vatrules = model.Database.SqlQuery<vatrule>
+                (
+                    "select * from enumvatrule"
+                ).ToList();
+                foreach (var erule in vatrules)
+                {
+                    lstAbstractClasses.Add((TestAbstractClass)erule);
+                }
+            }
+        }
+
 
         class EntityRenameTester
         {
             public void Test()
             {
-                //using (jslEntities context = new jslEntities())
+                //using (PartnerEntities context = new PartnerEntities())
                 //{
                 //    //context.accounts.Add(new Account()
                 //    //{

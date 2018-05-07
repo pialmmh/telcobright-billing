@@ -45,7 +45,7 @@ namespace Utils
         private List<CdrFieldListContainer> CdrFieldListContainers { get; } = new List<CdrFieldListContainer>();
         public DerivedClassPerfTester()
         {
-            jslEntities context=new jslEntities();
+            PartnerEntities context=new PartnerEntities();
             this.CdrFieldLists = context.cdrfieldlists.ToList();
             this.CdrFieldLists.ForEach(c => this.CdrFieldListExts.Add(CdrFieldListExtFactory.CreateCdrFieldListExt(c)));
             this.CdrFieldLists.ForEach(c => this.CdrFieldListContainers.Add(new CdrFieldListContainer(c)));

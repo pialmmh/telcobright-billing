@@ -21,7 +21,7 @@ namespace Utils
         {
             List<MediationRulesByServiceGroup> medrules = new List<MediationRulesByServiceGroup>();
             List<string> jsonRules = new List<string>();
-            using (jslEntities context = new jslEntities())
+            using (PartnerEntities context = new PartnerEntities())
             {
                 //jsonRules = context.mediationrules.Select(c => c.medrulesjson).ToList();
             }

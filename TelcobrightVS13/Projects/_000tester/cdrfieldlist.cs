@@ -14,9 +14,18 @@ namespace Utils
     
     public partial class cdrfieldlist
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public cdrfieldlist()
+        {
+            this.cdrfieldmappingbyswitchtypes = new HashSet<cdrfieldmappingbyswitchtype>();
+        }
+    
         public int fieldnumber { get; set; }
         public string FieldName { get; set; }
         public Nullable<int> IsNumeric { get; set; }
         public Nullable<int> IsDateTime { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<cdrfieldmappingbyswitchtype> cdrfieldmappingbyswitchtypes { get; set; }
     }
 }

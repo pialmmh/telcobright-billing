@@ -15,7 +15,7 @@ namespace Utils
     {
         public void Test()
         {
-            using (var dbContext=new jslEntities())
+            using (var dbContext=new PartnerEntities())
             {
                 string sql = $@"select idcall as IdCall,starttime as StartTime from cdr limit 0,100";
                 List<IdVsDate> rowIdVsDates =

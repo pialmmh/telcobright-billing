@@ -18,7 +18,7 @@ namespace Utils
         public int ProductId { get; set; }
         public string Prefix { get; set; }
         public string description { get; set; }
-        public decimal rateamount { get; set; }
+        public double rateamount { get; set; }
         public int WeekDayStart { get; set; }
         public int WeekDayEnd { get; set; }
         public string starttime { get; set; }
@@ -26,7 +26,7 @@ namespace Utils
         public int Resolution { get; set; }
         public float MinDurationSec { get; set; }
         public int SurchargeTime { get; set; }
-        public decimal SurchargeAmount { get; set; }
+        public double SurchargeAmount { get; set; }
         public Nullable<long> idrateplan { get; set; }
         public string CountryCode { get; set; }
         public Nullable<System.DateTime> date1 { get; set; }
@@ -41,17 +41,17 @@ namespace Utils
         public int RouteDisabled { get; set; }
         public int Type { get; set; }
         public int Currency { get; set; }
-        public Nullable<decimal> OtherAmount1 { get; set; }
-        public Nullable<decimal> OtherAmount2 { get; set; }
-        public Nullable<decimal> OtherAmount3 { get; set; }
-        public Nullable<decimal> OtherAmount4 { get; set; }
-        public Nullable<decimal> OtherAmount5 { get; set; }
-        public Nullable<decimal> OtherAmount6 { get; set; }
+        public Nullable<float> OtherAmount1 { get; set; }
+        public Nullable<float> OtherAmount2 { get; set; }
+        public Nullable<float> OtherAmount3 { get; set; }
+        public Nullable<double> OtherAmount4 { get; set; }
+        public Nullable<double> OtherAmount5 { get; set; }
+        public Nullable<float> OtherAmount6 { get; set; }
         public Nullable<float> OtherAmount7 { get; set; }
         public Nullable<float> OtherAmount8 { get; set; }
         public Nullable<float> OtherAmount9 { get; set; }
         public Nullable<float> OtherAmount10 { get; set; }
-        public decimal TimeZoneOffsetSec { get; set; }
+        public double TimeZoneOffsetSec { get; set; }
         public Nullable<int> RatePosition { get; set; }
         public Nullable<float> IgwPercentageIn { get; set; }
         public string ConflictingRateIds { get; set; }
@@ -69,5 +69,6 @@ namespace Utils
         public string Comment2 { get; set; }
         public Nullable<int> billingspan { get; set; }
         public Nullable<int> RateAmountRoundupDecimal { get; set; }
+        public Nullable<int> tier { get; set; }
     }
 }

@@ -17,7 +17,7 @@ namespace Utils
         public void Test()
         {
             List<cdrfieldlist> cdrfieldlists = null;
-            using (jslEntities context = new jslEntities())
+            using (PartnerEntities context = new PartnerEntities())
             {
                 cdrfieldlists = context.cdrfieldlists.ToList();
             }
