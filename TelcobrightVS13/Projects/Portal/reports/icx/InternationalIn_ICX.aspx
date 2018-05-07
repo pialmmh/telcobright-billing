@@ -571,7 +571,7 @@
                             SortExpression="costicxin" />
                         <asp:BoundField DataField="customercost"
                             DataFormatString="{0:F2}"
-                            HeaderText="Revenue"
+                            HeaderText="Revenue (USD)"
                             SortExpression="customercost" />
                         <asp:BoundField DataField="tax1"
                             DataFormatString="{0:F2}"

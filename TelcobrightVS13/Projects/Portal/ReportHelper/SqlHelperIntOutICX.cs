@@ -72,7 +72,7 @@ namespace PortalApp.ReportHelper
                 SUM(longDecimalAmount2) AS Y,
                 SUM(longDecimalAmount3) AS Z,
                 SUM(customercost) AS revenueigwout,
-                SUM(tax1) AS tax1, 
+                SUM(tax2) AS tax1, 
                 tup_customerrate as XRate, 
                 tup_supplierrate as YRate, 
                 tup_customercurrency as USDRate 
