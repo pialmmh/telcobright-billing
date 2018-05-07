@@ -13,10 +13,10 @@ namespace Utils
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class PartnerEntities : DbContext
+    public partial class jslEntities : DbContext
     {
-        public PartnerEntities()
-            : base("name=PartnerEntities")
+        public jslEntities()
+            : base("name=jslEntities")
         {
         }
     
@@ -25,112 +25,8 @@ namespace Utils
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<acc_balance> acc_balance { get; set; }
-        public virtual DbSet<account> accounts { get; set; }
-        public virtual DbSet<allerror> allerrors { get; set; }
-        public virtual DbSet<ansprefixextra> ansprefixextras { get; set; }
-        public virtual DbSet<aspnetuserclaim> aspnetuserclaims { get; set; }
-        public virtual DbSet<autoincrementcounter> autoincrementcounters { get; set; }
-        public virtual DbSet<billingruleassignment> billingruleassignments { get; set; }
-        public virtual DbSet<carriercontactmapping> carriercontactmappings { get; set; }
-        public virtual DbSet<causecode> causecodes { get; set; }
-        public virtual DbSet<cdrerror> cdrerrors { get; set; }
-        public virtual DbSet<cdrfieldlist> cdrfieldlists { get; set; }
-        public virtual DbSet<cdrfieldmappingbyswitchtype> cdrfieldmappingbyswitchtypes { get; set; }
-        public virtual DbSet<cdrinconsistent> cdrinconsistents { get; set; }
-        public virtual DbSet<commontg> commontgs { get; set; }
-        public virtual DbSet<country> countries { get; set; }
-        public virtual DbSet<countrycode> countrycodes { get; set; }
-        public virtual DbSet<enumaccountingclass> enumaccountingclasses { get; set; }
-        public virtual DbSet<enumanstype> enumanstypes { get; set; }
-        public virtual DbSet<enumbillingspan> enumbillingspans { get; set; }
-        public virtual DbSet<enumbilltype> enumbilltypes { get; set; }
-        public virtual DbSet<enumcalldirection> enumcalldirections { get; set; }
-        public virtual DbSet<enumcallforwardingroamingtype> enumcallforwardingroamingtypes { get; set; }
-        public virtual DbSet<enumcdrformat> enumcdrformats { get; set; }
-        public virtual DbSet<enumcreditrule> enumcreditrules { get; set; }
-        public virtual DbSet<enumcurrency> enumcurrencies { get; set; }
-        public virtual DbSet<enumdatedassignment> enumdatedassignments { get; set; }
-        public virtual DbSet<enumdateparsestring> enumdateparsestrings { get; set; }
-        public virtual DbSet<enuminvoicetemplate> enuminvoicetemplates { get; set; }
-        public virtual DbSet<enumjobautocreatetype> enumjobautocreatetypes { get; set; }
-        public virtual DbSet<enumjobdefinition> enumjobdefinitions { get; set; }
-        public virtual DbSet<enumjobstatu> enumjobstatus { get; set; }
-        public virtual DbSet<enumjobtype> enumjobtypes { get; set; }
-        public virtual DbSet<enumnationalorinternationalroute> enumnationalorinternationalroutes { get; set; }
-        public virtual DbSet<enumpartnerrule> enumpartnerrules { get; set; }
-        public virtual DbSet<enumpartnertype> enumpartnertypes { get; set; }
-        public virtual DbSet<enumpostpaidinvoicestatu> enumpostpaidinvoicestatus { get; set; }
-        public virtual DbSet<enumprepaidinvoicestatu> enumprepaidinvoicestatus { get; set; }
-        public virtual DbSet<enumprepostpaid> enumprepostpaids { get; set; }
-        public virtual DbSet<enumrateplanformat> enumrateplanformats { get; set; }
-        public virtual DbSet<enumrateplantype> enumrateplantypes { get; set; }
-        public virtual DbSet<enumratesheetformat> enumratesheetformats { get; set; }
-        public virtual DbSet<enumroutestatu> enumroutestatus { get; set; }
-        public virtual DbSet<enumservicecategory> enumservicecategories { get; set; }
-        public virtual DbSet<enumservicefamily> enumservicefamilies { get; set; }
-        public virtual DbSet<enumservicegroup> enumservicegroups { get; set; }
-        public virtual DbSet<enumservicesubcategory> enumservicesubcategories { get; set; }
-        public virtual DbSet<enumsignalingprotocol> enumsignalingprotocols { get; set; }
-        public virtual DbSet<enumss7networkindicator> enumss7networkindicator { get; set; }
-        public virtual DbSet<enumswitchvendor> enumswitchvendors { get; set; }
-        public virtual DbSet<enumtaxrule> enumtaxrules { get; set; }
-        public virtual DbSet<enumtelcobrightforcarriertype> enumtelcobrightforcarriertypes { get; set; }
-        public virtual DbSet<enumtransactiontype> enumtransactiontypes { get; set; }
-        public virtual DbSet<enumtransportprotocol> enumtransportprotocols { get; set; }
-        public virtual DbSet<enumvatrule> enumvatrules { get; set; }
-        public virtual DbSet<errordefinition> errordefinitions { get; set; }
-        public virtual DbSet<genericparameterassignment> genericparameterassignments { get; set; }
-        public virtual DbSet<job> jobs { get; set; }
-        public virtual DbSet<jobcompletion> jobcompletions { get; set; }
-        public virtual DbSet<jobsegment> jobsegments { get; set; }
-        public virtual DbSet<jsonbillingrule> jsonbillingrules { get; set; }
-        public virtual DbSet<lcr> lcrs { get; set; }
-        public virtual DbSet<lcrpoint> lcrpoints { get; set; }
-        public virtual DbSet<lcrrateplan> lcrrateplans { get; set; }
-        public virtual DbSet<ne> nes { get; set; }
-        public virtual DbSet<partner> partners { get; set; }
-        public virtual DbSet<partnerprefix> partnerprefixes { get; set; }
-        public virtual DbSet<process> processes { get; set; }
-        public virtual DbSet<product> products { get; set; }
         public virtual DbSet<rate> rates { get; set; }
-        public virtual DbSet<rateassign> rateassigns { get; set; }
-        public virtual DbSet<rateplan> rateplans { get; set; }
-        public virtual DbSet<rateplanassign> rateplanassigns { get; set; }
-        public virtual DbSet<rateplanassignmenttuple> rateplanassignmenttuples { get; set; }
-        public virtual DbSet<ratetask> ratetasks { get; set; }
-        public virtual DbSet<ratetaskassign> ratetaskassigns { get; set; }
-        public virtual DbSet<ratetaskassignreference> ratetaskassignreferences { get; set; }
-        public virtual DbSet<ratetaskreference> ratetaskreferences { get; set; }
-        public virtual DbSet<reporttemplate> reporttemplates { get; set; }
-        public virtual DbSet<role> roles { get; set; }
-        public virtual DbSet<route> routes { get; set; }
-        public virtual DbSet<routeaddressmapping> routeaddressmappings { get; set; }
-        public virtual DbSet<telcobrightpartner> telcobrightpartners { get; set; }
-        public virtual DbSet<timezone> timezones { get; set; }
-        public virtual DbSet<userclaim> userclaims { get; set; }
-        public virtual DbSet<userlogin> userlogins { get; set; }
-        public virtual DbSet<userrole> userroles { get; set; }
-        public virtual DbSet<user> users { get; set; }
-        public virtual DbSet<xyzprefix> xyzprefixes { get; set; }
-        public virtual DbSet<xyzprefixset> xyzprefixsets { get; set; }
-        public virtual DbSet<xyzselected> xyzselecteds { get; set; }
-        public virtual DbSet<zone> zones { get; set; }
-        public virtual DbSet<acc_ledger> acc_ledger { get; set; }
-        public virtual DbSet<acc_ledger_summary> acc_ledger_summary { get; set; }
-        public virtual DbSet<acc_prev_transaction> acc_prev_transaction { get; set; }
-        public virtual DbSet<acc_temp_transaction> acc_temp_transaction { get; set; }
-        public virtual DbSet<acc_transaction> acc_transaction { get; set; }
+        public virtual DbSet<cdrfieldlist> cdrfieldlists { get; set; }
         public virtual DbSet<cdr> cdrs { get; set; }
-        public virtual DbSet<cdrdiscarded> cdrdiscardeds { get; set; }
-        public virtual DbSet<cdrpartialaggregatedinstance> cdrpartialaggregatedinstances { get; set; }
-        public virtual DbSet<cdrpartialreference> cdrpartialreferences { get; set; }
-        public virtual DbSet<cdrpartialunprocessedinstance> cdrpartialunprocessedinstances { get; set; }
-        public virtual DbSet<sum_voice_day_01> sum_voice_day_01 { get; set; }
-        public virtual DbSet<sum_voice_day_02> sum_voice_day_02 { get; set; }
-        public virtual DbSet<sum_voice_day_03> sum_voice_day_03 { get; set; }
-        public virtual DbSet<sum_voice_hr_01> sum_voice_hr_01 { get; set; }
-        public virtual DbSet<sum_voice_hr_02> sum_voice_hr_02 { get; set; }
-        public virtual DbSet<sum_voice_hr_03> sum_voice_hr_03 { get; set; }
     }
 }

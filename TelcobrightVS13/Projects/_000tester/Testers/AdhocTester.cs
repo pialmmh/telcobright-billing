@@ -15,7 +15,7 @@ namespace Utils
     {
         public void StartTesting()
         {
-            new ObjectCopierTest(new cdr()).Test();
+            
 
             List<string> fieldNames = new ClassTypeOrPropertyHelper().GetSimplePropertyNames(typeof(cdr));
             File.WriteAllText("c:/temp/entityProperties.txt", String.Join(Environment.NewLine, fieldNames));
@@ -28,7 +28,7 @@ namespace Utils
             var end = DateTime.Now;
             Console.WriteLine("Total time:" + (end - start).TotalSeconds);
             cdrfieldlist cf = null;
-            using (PartnerEntities context = new PartnerEntities())
+            using (jslEntities context = new jslEntities())
             {
                 cf = context.cdrfieldlists.Take(1).ToList().First();
                 //cf = context.cdrfieldlists.Where(c=>c.FieldName=="PDD").Take(1).First();

@@ -9,7 +9,7 @@ namespace Utils
         public void TestAndCompare()
         {
             List<cdrfieldlist> cdrfieldlists;
-            using (PartnerEntities context = new PartnerEntities())
+            using (jslEntities context = new jslEntities())
             {
                 cdrfieldlists = context.cdrfieldlists.ToList();
             }

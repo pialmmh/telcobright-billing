@@ -139,7 +139,7 @@ namespace Utils
         void RelationalOperators()
         {
             cdrfieldlist cdrf = null;
-            using (PartnerEntities context = new PartnerEntities())
+            using (jslEntities context = new jslEntities())
             {
                 cdrf = context.cdrfieldlists.Take(1).ToList().First();
             }
