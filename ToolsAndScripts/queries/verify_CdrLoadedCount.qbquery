@@ -1,0 +1,4 @@
+﻿select count(*) from purple.cdrloaded
+where fileserialno >=5074
+and fileserialno <=27799
+

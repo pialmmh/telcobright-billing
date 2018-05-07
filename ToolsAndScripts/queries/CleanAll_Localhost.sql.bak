@@ -1,0 +1,20 @@
+#jobs can be cleaned or set to not finished
+delete from job;#job delete version
+#update job set status=7,completiontime=null;#status=received version
+# end job part
+delete from jobcompletion;
+delete from Allerror;
+delete from cdrbackedup;
+delete from CdrSummary;
+delete from CdrLoaded;
+delete from cdrpartial;
+delete from CounterCdrLoaded;
+delete from CdrError;
+delete from cdrinconsistent;
+delete from billinfo;
+delete from billable;
+delete from lcr;
+
+
+
+

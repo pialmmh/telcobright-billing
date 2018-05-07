@@ -1,0 +1,10 @@
+﻿select sum(roundedduration)/60 as LoadedDuration,sum(carriercostyigwout) as Y,
+(sum(subscriberchargexout)-sum(78.4*carriercostyigwout))*.15 as IgwRevenue,
+((sum(subscriberchargexout)-sum(78.4*carriercostyigwout))*.15)+(sum(carriercostyigwout)*78.4) as PayableToIGW,
+sum(suppliercost*78.4) as suppliercost,
+((sum(subscriberchargexout)-sum(78.4*carriercostyigwout))*.15)+(sum(carriercostyigwout)*78.4)-sum(suppliercost*78.4) as ProfitBDT
+from cdrloaded
+where calldirection=2
+and chargingstatus=1
+and (starttime >='2013-06-01'
+and starttime <'2013-07-01')

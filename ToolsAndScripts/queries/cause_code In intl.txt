@@ -1,0 +1,2884 @@
+drop procedure CauseIncIntNoAnsNoIgw;		
+DELIMITER //		
+CREATE PROCEDURE CauseIncIntNoAnsNoIgw(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45))		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+		
+select DATE_FORMAT(`Date`,'%d/%m/%Y') `Date`,ANS,IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', (select null) as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select date(StartTime)as `Date`,(Select Null) ANS,(select Null) as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn		
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+	group by chargingstatus,releasecauseingress,  date(StartTime)	
+  ) x		
+  order by `Date` asc,MinutesIn desc;		
+END //		
+DELIMITER ;		
+		
+		
+drop procedure CauseIncIntNoAnsGroupIGWAll;		
+DELIMITER //		
+CREATE PROCEDURE CauseIncIntNoAnsGroupIGWAll(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45))		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+		
+select DATE_FORMAT(`Date`,'%d/%m/%Y') `Date`,ANS,cr.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', (select null) as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select date(StartTime)as `Date`,(Select Null) ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn		
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+	group by chargingstatus,releasecauseingress,  date(StartTime),supplierid	
+  ) x		
+  left join carrier cr		
+  on x.IGW=cr.idcarrier		
+  order by `Date` asc,MinutesIn desc;		
+END //		
+DELIMITER ;		
+		
+		
+drop procedure CauseIncIntNoAnsGroupIGWOne;		
+DELIMITER //		
+CREATE PROCEDURE CauseIncIntNoAnsGroupIGWOne(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45)		
+,IN p_IgwId int)		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+		
+select DATE_FORMAT(`Date`,'%d/%m/%Y') `Date`,ANS,cr.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', (select null) as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select date(StartTime)as `Date`,(Select Null) ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn		
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+  and supplierid=p_IgwId  		
+	group by chargingstatus,releasecauseingress,  date(StartTime),supplierid	
+  ) x		
+  left join carrier cr		
+  on x.IGW=cr.idcarrier		
+  order by `Date` asc,MinutesIn desc;		
+END //		
+DELIMITER ;		
+		
+drop procedure CauseIncIntAllAnsNoIgw;		
+DELIMITER //		
+CREATE PROCEDURE CauseIncIntAllAnsNoIgw(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45))		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+		
+select DATE_FORMAT(`Date`,'%d/%m/%Y') `Date`,cr.CarrierName as ANS,IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', (select null) as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select date(StartTime)as `Date`,AnsIdTerm as ANS,(select Null) as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn		
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+	group by chargingstatus,releasecauseingress,  date(StartTime),AnsIdTerm	
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  order by `Date` asc,MinutesIn desc;		
+END //		
+DELIMITER ;		
+		
+drop procedure CauseIncIntAllAnsGroupIGWAll;		
+DELIMITER //		
+CREATE PROCEDURE CauseIncIntAllAnsGroupIGWAll(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45))		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+select DATE_FORMAT(`Date`,'%d/%m/%Y') `Date`,cr.CarrierName as ANS,cr1.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', (select null) as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select date(StartTime)as `Date`,AnsIdTerm as ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn		
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+	group by chargingstatus,releasecauseingress,  date(StartTime),AnsIdTerm,supplierid	
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  left join Carrier cr1		
+  on x.IGW=cr1.idCarrier		
+  order by `Date` asc,MinutesIn desc;		
+		
+END //		
+DELIMITER ;		
+		
+		
+drop procedure CauseIncIntAllAnsGroupIGWOne;		
+DELIMITER //		
+CREATE PROCEDURE CauseIncIntAllAnsGroupIGWOne(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45)		
+,IN p_IgwId int)		
+BEGIN		
+		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+select DATE_FORMAT(`Date`,'%d/%m/%Y') `Date`,cr.CarrierName as ANS,cr1.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', (select null) as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select date(StartTime)as `Date`,AnsIdTerm as ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn		
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+	and supplierid=p_IgwId	
+	group by chargingstatus,releasecauseingress,  date(StartTime),AnsIdTerm,supplierid	
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  left join Carrier cr1		
+  on x.IGW=cr1.idCarrier		
+  order by `Date` asc,MinutesIn desc;		
+		
+END //		
+DELIMITER ;		
+		
+		
+drop procedure CauseIncIntOneAnsNoIgw;		
+DELIMITER //		
+CREATE PROCEDURE CauseIncIntOneAnsNoIgw(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45),IN p_AnsId int)		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+		
+select DATE_FORMAT(`Date`,'%d/%m/%Y') `Date`,cr.CarrierName as ANS,IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', (select null) as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select date(StartTime)as `Date`,AnsIdTerm as ANS,(select Null) as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn		
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+  and AnsIdTerm=p_AnsId  		
+	group by chargingstatus,releasecauseingress,  date(StartTime),AnsIdTerm	
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  order by `Date` asc,MinutesIn desc;		
+END //		
+DELIMITER ;		
+		
+		
+		
+		
+drop procedure CauseIncIntOneAnsGroupIGWAll;		
+DELIMITER //		
+CREATE PROCEDURE CauseIncIntOneAnsGroupIGWAll(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45),IN p_AnsId int)		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+select DATE_FORMAT(`Date`,'%d/%m/%Y') `Date`,cr.CarrierName as ANS,cr1.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', (select null) as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select date(StartTime)as `Date`,AnsIdTerm as ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn		
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+  and AnsIdTerm=p_Ansid		
+	group by chargingstatus,releasecauseingress,  date(StartTime),AnsIdTerm,supplierid	
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  left join Carrier cr1		
+  on x.IGW=cr1.idCarrier		
+  order by `Date` asc,MinutesIn desc;		
+		
+END //		
+DELIMITER ;		
+		
+drop procedure CauseIncIntOneAnsGroupIGWOne;		
+DELIMITER //		
+CREATE PROCEDURE CauseIncIntOneAnsGroupIGWOne(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45)		
+,IN p_AnsId int,IN p_IgwId int)		
+BEGIN		
+		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+select DATE_FORMAT(`Date`,'%d/%m/%Y') `Date`,cr.CarrierName as ANS,cr1.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', (select null) as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select date(StartTime)as `Date`,AnsIdTerm as ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn		
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+  and AnsIdTerm=p_AnsId		
+	and supplierid=p_IgwId	
+	group by chargingstatus,releasecauseingress,  date(StartTime),AnsIdTerm,supplierid	
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  left join Carrier cr1		
+  on x.IGW=cr1.idCarrier		
+  order by `Date` asc,MinutesIn desc;		
+		
+END //		
+DELIMITER ;		
+		
+		
+drop procedure CauseIncIntCarrierAllNoAnsNoIgw;		
+DELIMITER //		
+CREATE PROCEDURE CauseIncIntCarrierAllNoAnsNoIgw(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45))		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+		
+select DATE_FORMAT(`Date`,'%d/%m/%Y') `Date`,ANS,IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select date(StartTime)as `Date`,(Select Null) ANS,(select Null) as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn,customerid		
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+	group by chargingstatus,releasecauseingress,  date(StartTime),customerid	
+  ) x		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by `Date` asc,MinutesIn desc;		
+END //		
+DELIMITER ;		
+		
+		
+drop procedure CauseIncIntCarrierAllNoAnsGroupIGWAll;		
+DELIMITER //		
+CREATE PROCEDURE CauseIncIntCarrierAllNoAnsGroupIGWAll(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45))		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+		
+select DATE_FORMAT(`Date`,'%d/%m/%Y') `Date`,ANS,cr.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select date(StartTime)as `Date`,(Select Null) ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn	,customerid	
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+	group by chargingstatus,releasecauseingress,  date(StartTime),supplierid	,customerid
+  ) x		
+  left join carrier cr		
+  on x.IGW=cr.idcarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by `Date` asc,MinutesIn desc;		
+END //		
+DELIMITER ;		
+		
+		
+drop procedure CauseIncIntCarrierAllNoAnsGroupIGWOne;		
+DELIMITER //		
+CREATE PROCEDURE CauseIncIntCarrierAllNoAnsGroupIGWOne(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45)		
+,IN p_IgwId int)		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+		
+select DATE_FORMAT(`Date`,'%d/%m/%Y') `Date`,ANS,cr.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select date(StartTime)as `Date`,(Select Null) ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn	,customerid	
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+  and supplierid=p_IgwId  		
+	group by chargingstatus,releasecauseingress,  date(StartTime),supplierid	,customerid
+  ) x		
+  left join carrier cr		
+  on x.IGW=cr.idcarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by `Date` asc,MinutesIn desc;		
+END //		
+DELIMITER ;		
+		
+drop procedure CauseIncIntCarrierAllAllAnsNoIgw;		
+DELIMITER //		
+CREATE PROCEDURE CauseIncIntCarrierAllAllAnsNoIgw(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45))		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+		
+select DATE_FORMAT(`Date`,'%d/%m/%Y') `Date`,cr.CarrierName as ANS,IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select date(StartTime)as `Date`,AnsIdTerm as ANS,(select Null) as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn	,customerid	
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+	group by chargingstatus,releasecauseingress,  date(StartTime),AnsIdTerm	,customerid
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by `Date` asc,MinutesIn desc;		
+END //		
+DELIMITER ;		
+		
+drop procedure CauseIncIntCarrierAllAllAnsGroupIGWAll;		
+DELIMITER //		
+CREATE PROCEDURE CauseIncIntCarrierAllAllAnsGroupIGWAll(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45))		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+select DATE_FORMAT(`Date`,'%d/%m/%Y') `Date`,cr.CarrierName as ANS,cr1.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select date(StartTime)as `Date`,AnsIdTerm as ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn,customerid		
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+	group by chargingstatus,releasecauseingress,  date(StartTime),AnsIdTerm,supplierid	,customerid
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  left join Carrier cr1		
+  on x.IGW=cr1.idCarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by `Date` asc,MinutesIn desc;		
+		
+END //		
+DELIMITER ;		
+		
+		
+drop procedure CauseIncIntCarrierAllAllAnsGroupIGWOne;		
+DELIMITER //		
+CREATE PROCEDURE CauseIncIntCarrierAllAllAnsGroupIGWOne(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45)		
+,IN p_IgwId int)		
+BEGIN		
+		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+select DATE_FORMAT(`Date`,'%d/%m/%Y') `Date`,cr.CarrierName as ANS,cr1.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select date(StartTime)as `Date`,AnsIdTerm as ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn,customerid		
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+	and supplierid=p_IgwId	
+	group by chargingstatus,releasecauseingress,  date(StartTime),AnsIdTerm,supplierid,customerid	
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  left join Carrier cr1		
+  on x.IGW=cr1.idCarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by `Date` asc,MinutesIn desc;		
+		
+END //		
+DELIMITER ;		
+		
+		
+drop procedure CauseIncIntCarrierAllOneAnsNoIgw;		
+DELIMITER //		
+CREATE PROCEDURE CauseIncIntCarrierAllOneAnsNoIgw(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45),IN p_AnsId int)		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+		
+select DATE_FORMAT(`Date`,'%d/%m/%Y') `Date`,cr.CarrierName as ANS,IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+from		
+(select date(StartTime)as `Date`,AnsIdTerm as ANS,(select Null) as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn	,customerid	
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+  and AnsIdTerm=p_AnsId  		
+	group by chargingstatus,releasecauseingress,  date(StartTime),AnsIdTerm,customerid	
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by `Date` asc,MinutesIn desc;		
+END //		
+DELIMITER ;		
+		
+		
+		
+		
+drop procedure CauseIncIntCarrierAllOneAnsGroupIGWAll;		
+DELIMITER //		
+CREATE PROCEDURE CauseIncIntCarrierAllOneAnsGroupIGWAll(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45),IN p_AnsId int)		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+select DATE_FORMAT(`Date`,'%d/%m/%Y') `Date`,cr.CarrierName as ANS,cr1.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select date(StartTime)as `Date`,AnsIdTerm as ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn	,customerid	
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+  and AnsIdTerm=p_Ansid		
+	group by chargingstatus,releasecauseingress,  date(StartTime),AnsIdTerm,supplierid	,customerid
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  left join Carrier cr1		
+  on x.IGW=cr1.idCarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by `Date` asc,MinutesIn desc;		
+		
+END //		
+DELIMITER ;		
+		
+drop procedure CauseIncIntCarrierAllOneAnsGroupIGWOne;		
+DELIMITER //		
+CREATE PROCEDURE CauseIncIntCarrierAllOneAnsGroupIGWOne(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45)		
+,IN p_AnsId int,IN p_IgwId int)		
+BEGIN		
+		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+select DATE_FORMAT(`Date`,'%d/%m/%Y') `Date`,cr.CarrierName as ANS,cr1.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select date(StartTime)as `Date`,AnsIdTerm as ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn	,customerid	
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+  and AnsIdTerm=p_AnsId		
+	and supplierid=p_IgwId	
+	group by chargingstatus,releasecauseingress,  date(StartTime),AnsIdTerm,supplierid	,customerid
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  left join Carrier cr1		
+  on x.IGW=cr1.idCarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by `Date` asc,MinutesIn desc;		
+		
+END //		
+DELIMITER ;		
+		
+		
+drop procedure CauseIncIntCarrierOneNoAnsNoIgw;		
+DELIMITER //		
+CREATE PROCEDURE CauseIncIntCarrierOneNoAnsNoIgw(IN p_IntlCarrier int , p_StartDateTime varchar(45), IN p_EndDateTime varchar(45))		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+		
+select DATE_FORMAT(`Date`,'%d/%m/%Y') `Date`,ANS,IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select date(StartTime)as `Date`,(Select Null) ANS,(select Null) as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn,customerid		
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+	and customerid=p_IntlCarrier	
+	group by chargingstatus,releasecauseingress,  date(StartTime),customerid	
+  ) x		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by `Date` asc,MinutesIn desc;		
+END //		
+DELIMITER ;		
+		
+		
+drop procedure CauseIncIntCarrierOneNoAnsGroupIGWAll;		
+DELIMITER //		
+CREATE PROCEDURE CauseIncIntCarrierOneNoAnsGroupIGWAll(IN p_IntlCarrier int , p_StartDateTime varchar(45), IN p_EndDateTime varchar(45))		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+		
+select DATE_FORMAT(`Date`,'%d/%m/%Y') `Date`,ANS,cr.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select date(StartTime)as `Date`,(Select Null) ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn	,customerid	
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+	and customerid=p_IntlCarrier	
+	group by chargingstatus,releasecauseingress,  date(StartTime),supplierid	,customerid
+  ) x		
+  left join carrier cr		
+  on x.IGW=cr.idcarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by `Date` asc,MinutesIn desc;		
+END //		
+DELIMITER ;		
+		
+		
+drop procedure CauseIncIntCarrierOneNoAnsGroupIGWOne;		
+DELIMITER //		
+CREATE PROCEDURE CauseIncIntCarrierOneNoAnsGroupIGWOne(IN p_IntlCarrier int , p_StartDateTime varchar(45), IN p_EndDateTime varchar(45)		
+,IN p_IgwId int)		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+		
+select DATE_FORMAT(`Date`,'%d/%m/%Y') `Date`,ANS,cr.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select date(StartTime)as `Date`,(Select Null) ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn	,customerid	
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+  and customerid=p_IntlCarrier		
+  and supplierid=p_IgwId  		
+	group by chargingstatus,releasecauseingress,  date(StartTime),supplierid	,customerid
+  ) x		
+  left join carrier cr		
+  on x.IGW=cr.idcarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by `Date` asc,MinutesIn desc;		
+END //		
+DELIMITER ;		
+		
+drop procedure CauseIncIntCarrierOneAllAnsNoIgw;		
+DELIMITER //		
+CREATE PROCEDURE CauseIncIntCarrierOneAllAnsNoIgw(IN p_IntlCarrier int , p_StartDateTime varchar(45), IN p_EndDateTime varchar(45))		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+		
+select DATE_FORMAT(`Date`,'%d/%m/%Y') `Date`,cr.CarrierName as ANS,IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select date(StartTime)as `Date`,AnsIdTerm as ANS,(select Null) as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn	,customerid	
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+	and customerid=p_IntlCarrier	
+	group by chargingstatus,releasecauseingress,  date(StartTime),AnsIdTerm	,customerid
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by `Date` asc,MinutesIn desc;		
+END //		
+DELIMITER ;		
+		
+drop procedure CauseIncIntCarrierOneAllAnsGroupIGWAll;		
+DELIMITER //		
+CREATE PROCEDURE CauseIncIntCarrierOneAllAnsGroupIGWAll(IN p_IntlCarrier int , p_StartDateTime varchar(45), IN p_EndDateTime varchar(45))		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+select DATE_FORMAT(`Date`,'%d/%m/%Y') `Date`,cr.CarrierName as ANS,cr1.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select date(StartTime)as `Date`,AnsIdTerm as ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn,customerid		
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+	and customerid=p_IntlCarrier	
+	group by chargingstatus,releasecauseingress,  date(StartTime),AnsIdTerm,supplierid	,customerid
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  left join Carrier cr1		
+  on x.IGW=cr1.idCarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by `Date` asc,MinutesIn desc;		
+		
+END //		
+DELIMITER ;		
+		
+		
+drop procedure CauseIncIntCarrierOneAllAnsGroupIGWOne;		
+DELIMITER //		
+CREATE PROCEDURE CauseIncIntCarrierOneAllAnsGroupIGWOne(IN p_IntlCarrier int , p_StartDateTime varchar(45), IN p_EndDateTime varchar(45)		
+,IN p_IgwId int)		
+BEGIN		
+		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+select DATE_FORMAT(`Date`,'%d/%m/%Y') `Date`,cr.CarrierName as ANS,cr1.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select date(StartTime)as `Date`,AnsIdTerm as ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn,customerid		
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+	and customerid=p_IntlCarrier	
+	and supplierid=p_IgwId	
+	group by chargingstatus,releasecauseingress,  date(StartTime),AnsIdTerm,supplierid,customerid	
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  left join Carrier cr1		
+  on x.IGW=cr1.idCarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by `Date` asc,MinutesIn desc;		
+		
+END //		
+DELIMITER ;		
+		
+		
+drop procedure CauseIncIntCarrierOneOneAnsNoIgw;		
+DELIMITER //		
+CREATE PROCEDURE CauseIncIntCarrierOneOneAnsNoIgw(IN p_IntlCarrier int , p_StartDateTime varchar(45), IN p_EndDateTime varchar(45),IN p_AnsId int)		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+		
+select DATE_FORMAT(`Date`,'%d/%m/%Y') `Date`,cr.CarrierName as ANS,IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select date(StartTime)as `Date`,AnsIdTerm as ANS,(select Null) as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn	,customerid	
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+  and customerid=p_IntlCarrier		
+  and AnsIdTerm=p_AnsId  		
+	group by chargingstatus,releasecauseingress,  date(StartTime),AnsIdTerm,customerid	
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by `Date` asc,MinutesIn desc;		
+END //		
+DELIMITER ;		
+		
+		
+		
+		
+drop procedure CauseIncIntCarrierOneOneAnsGroupIGWAll;		
+DELIMITER //		
+CREATE PROCEDURE CauseIncIntCarrierOneOneAnsGroupIGWAll(IN p_IntlCarrier int , p_StartDateTime varchar(45), IN p_EndDateTime varchar(45),IN p_AnsId int)		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+select DATE_FORMAT(`Date`,'%d/%m/%Y') `Date`,cr.CarrierName as ANS,cr1.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select date(StartTime)as `Date`,AnsIdTerm as ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn	,customerid	
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+  and customerid=p_IntlCarrier		
+  and AnsIdTerm=p_Ansid		
+	group by chargingstatus,releasecauseingress,  date(StartTime),AnsIdTerm,supplierid	,customerid
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  left join Carrier cr1		
+  on x.IGW=cr1.idCarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by `Date` asc,MinutesIn desc;		
+		
+END //		
+DELIMITER ;		
+		
+drop procedure CauseIncIntCarrierOneOneAnsGroupIGWOne;		
+DELIMITER //		
+CREATE PROCEDURE CauseIncIntCarrierOneOneAnsGroupIGWOne(IN p_IntlCarrier int , p_StartDateTime varchar(45), IN p_EndDateTime varchar(45)		
+,IN p_AnsId int,IN p_IgwId int)		
+BEGIN		
+		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+select DATE_FORMAT(`Date`,'%d/%m/%Y') `Date`,cr.CarrierName as ANS,cr1.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select date(StartTime)as `Date`,AnsIdTerm as ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn	,customerid	
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+  and customerid=p_IntlCarrier		
+  and AnsIdTerm=p_AnsId		
+	and supplierid=p_IgwId	
+	group by chargingstatus,releasecauseingress,  date(StartTime),AnsIdTerm,supplierid	,customerid
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+ left join Carrier cr1		
+  on x.IGW=cr1.idCarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by `Date` asc,MinutesIn desc;		
+		
+END //		
+DELIMITER ;		
+		
+		
+drop procedure CauseSummaryIncIntNoAnsNoIgw;		
+DELIMITER //		
+CREATE PROCEDURE CauseSummaryIncIntNoAnsNoIgw(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45))		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+		
+select ANS,IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', (select null) as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select (Select Null) ANS,(select Null) as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn		
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+	group by chargingstatus,releasecauseingress	
+  ) x		
+  order by MinutesIn desc;		
+END //		
+DELIMITER ;		
+		
+		
+drop procedure CauseSummaryIncIntNoAnsGroupIGWAll;		
+DELIMITER //		
+CREATE PROCEDURE CauseSummaryIncIntNoAnsGroupIGWAll(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45))		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+		
+select ANS,cr.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', (select null) as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select (Select Null) ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn		
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+	group by chargingstatus,releasecauseingress,  supplierid	
+  ) x		
+  left join carrier cr		
+  on x.IGW=cr.idcarrier		
+  order by MinutesIn desc;		
+END //		
+DELIMITER ;		
+		
+		
+drop procedure CauseSummaryIncIntNoAnsGroupIGWOne;		
+DELIMITER //		
+CREATE PROCEDURE CauseSummaryIncIntNoAnsGroupIGWOne(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45)		
+,IN p_IgwId int)		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+		
+select ANS,cr.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', (select null) as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select (Select Null) ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn		
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+  and supplierid=p_IgwId  		
+	group by chargingstatus,releasecauseingress,  supplierid	
+  ) x		
+  left join carrier cr		
+  on x.IGW=cr.idcarrier		
+  order by MinutesIn desc;		
+END //		
+DELIMITER ;		
+		
+drop procedure CauseSummaryIncIntAllAnsNoIgw;		
+DELIMITER //		
+CREATE PROCEDURE CauseSummaryIncIntAllAnsNoIgw(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45))		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+		
+select cr.CarrierName as ANS,IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', (select null) as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select AnsIdTerm as ANS,(select Null) as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn		
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+	group by chargingstatus,releasecauseingress,  AnsIdTerm	
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  order by MinutesIn desc;		
+END //		
+DELIMITER ;		
+		
+drop procedure CauseSummaryIncIntAllAnsGroupIGWAll;		
+DELIMITER //		
+CREATE PROCEDURE CauseSummaryIncIntAllAnsGroupIGWAll(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45))		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+select cr.CarrierName as ANS,cr1.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', (select null) as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select AnsIdTerm as ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn		
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+	group by chargingstatus,releasecauseingress,  AnsIdTerm,supplierid	
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  left join Carrier cr1		
+  on x.IGW=cr1.idCarrier		
+  order by MinutesIn desc;		
+		
+END //		
+DELIMITER ;		
+		
+		
+drop procedure CauseSummaryIncIntAllAnsGroupIGWOne;		
+DELIMITER //		
+CREATE PROCEDURE CauseSummaryIncIntAllAnsGroupIGWOne(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45)		
+,IN p_IgwId int)		
+BEGIN		
+		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+select cr.CarrierName as ANS,cr1.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', (select null) as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select AnsIdTerm as ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn		
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+	and supplierid=p_IgwId	
+	group by chargingstatus,releasecauseingress,  AnsIdTerm,supplierid	
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  left join Carrier cr1		
+  on x.IGW=cr1.idCarrier		
+  order by MinutesIn desc;		
+		
+END //		
+DELIMITER ;		
+		
+		
+drop procedure CauseSummaryIncIntOneAnsNoIgw;		
+DELIMITER //		
+CREATE PROCEDURE CauseSummaryIncIntOneAnsNoIgw(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45),IN p_AnsId int)		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+		
+select cr.CarrierName as ANS,IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', (select null) as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select AnsIdTerm as ANS,(select Null) as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn		
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+  and AnsIdTerm=p_AnsId  		
+	group by chargingstatus,releasecauseingress,  AnsIdTerm	
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  order by MinutesIn desc;		
+END //		
+DELIMITER ;		
+		
+		
+		
+		
+drop procedure CauseSummaryIncIntOneAnsGroupIGWAll;		
+DELIMITER //		
+CREATE PROCEDURE CauseSummaryIncIntOneAnsGroupIGWAll(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45),IN p_AnsId int)		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+select cr.CarrierName as ANS,cr1.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', (select null) as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select AnsIdTerm as ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn		
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+  and AnsIdTerm=p_Ansid		
+	group by chargingstatus,releasecauseingress,  AnsIdTerm,supplierid	
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  left join Carrier cr1		
+  on x.IGW=cr1.idCarrier		
+  order by MinutesIn desc;		
+		
+END //		
+DELIMITER ;		
+		
+drop procedure CauseSummaryIncIntOneAnsGroupIGWOne;		
+DELIMITER //		
+CREATE PROCEDURE CauseSummaryIncIntOneAnsGroupIGWOne(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45)		
+,IN p_AnsId int,IN p_IgwId int)		
+BEGIN		
+		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+select cr.CarrierName as ANS,cr1.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', (select null) as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select AnsIdTerm as ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn		
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+  and AnsIdTerm=p_AnsId		
+	and supplierid=p_IgwId	
+	group by chargingstatus,releasecauseingress,  AnsIdTerm,supplierid	
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  left join Carrier cr1		
+  on x.IGW=cr1.idCarrier		
+  order by MinutesIn desc;		
+		
+END //		
+DELIMITER ;		
+		
+		
+drop procedure CauseSummaryIncIntCarrierAllNoAnsNoIgw;		
+DELIMITER //		
+CREATE PROCEDURE CauseSummaryIncIntCarrierAllNoAnsNoIgw(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45))		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+		
+select ANS,IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select (Select Null) ANS,(select Null) as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn,customerid		
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+	group by chargingstatus,releasecauseingress,  customerid	
+  ) x		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by MinutesIn desc;		
+END //		
+DELIMITER ;		
+		
+		
+drop procedure CauseSummaryIncIntCarrierAllNoAnsGroupIGWAll;		
+DELIMITER //		
+CREATE PROCEDURE CauseSummaryIncIntCarrierAllNoAnsGroupIGWAll(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45))		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+		
+select ANS,cr.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select (Select Null) ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn	,customerid	
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+	group by chargingstatus,releasecauseingress,  supplierid	,customerid
+  ) x		
+  left join carrier cr		
+  on x.IGW=cr.idcarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by MinutesIn desc;		
+END //		
+DELIMITER ;		
+		
+		
+drop procedure CauseSummaryIncIntCarrierAllNoAnsGroupIGWOne;		
+DELIMITER //		
+CREATE PROCEDURE CauseSummaryIncIntCarrierAllNoAnsGroupIGWOne(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45)		
+,IN p_IgwId int)		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+		
+select ANS,cr.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select (Select Null) ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn	,customerid	
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+  and supplierid=p_IgwId  		
+	group by chargingstatus,releasecauseingress,  supplierid	,customerid
+  ) x		
+  left join carrier cr		
+  on x.IGW=cr.idcarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by MinutesIn desc;		
+END //		
+DELIMITER ;		
+		
+drop procedure CauseSummaryIncIntCarrierAllAllAnsNoIgw;		
+DELIMITER //		
+CREATE PROCEDURE CauseSummaryIncIntCarrierAllAllAnsNoIgw(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45))		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+		
+select cr.CarrierName as ANS,IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select AnsIdTerm as ANS,(select Null) as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn	,customerid	
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+	group by chargingstatus,releasecauseingress,  AnsIdTerm	,customerid
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by MinutesIn desc;		
+END //		
+DELIMITER ;		
+		
+drop procedure CauseSummaryIncIntCarrierAllAllAnsGroupIGWAll;		
+DELIMITER //		
+CREATE PROCEDURE CauseSummaryIncIntCarrierAllAllAnsGroupIGWAll(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45))		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+select cr.CarrierName as ANS,cr1.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select AnsIdTerm as ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn,customerid		
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+	group by chargingstatus,releasecauseingress,  AnsIdTerm,supplierid	,customerid
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  left join Carrier cr1		
+  on x.IGW=cr1.idCarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by MinutesIn desc;		
+		
+END //		
+DELIMITER ;		
+		
+		
+drop procedure CauseSummaryIncIntCarrierAllAllAnsGroupIGWOne;		
+DELIMITER //		
+CREATE PROCEDURE CauseSummaryIncIntCarrierAllAllAnsGroupIGWOne(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45)		
+,IN p_IgwId int)		
+BEGIN		
+		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+select cr.CarrierName as ANS,cr1.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select AnsIdTerm as ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn,customerid		
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+	and supplierid=p_IgwId	
+	group by chargingstatus,releasecauseingress,  AnsIdTerm,supplierid,customerid	
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  left join Carrier cr1		
+  on x.IGW=cr1.idCarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by MinutesIn desc;		
+		
+END //		
+DELIMITER ;		
+		
+		
+drop procedure CauseSummaryIncIntCarrierAllOneAnsNoIgw;		
+DELIMITER //		
+CREATE PROCEDURE CauseSummaryIncIntCarrierAllOneAnsNoIgw(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45),IN p_AnsId int)		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+		
+select cr.CarrierName as ANS,IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select AnsIdTerm as ANS,(select Null) as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn	,customerid	
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+  and AnsIdTerm=p_AnsId  		
+	group by chargingstatus,releasecauseingress,  AnsIdTerm,customerid	
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by MinutesIn desc;		
+END //		
+DELIMITER ;		
+		
+		
+		
+		
+drop procedure CauseSummaryIncIntCarrierAllOneAnsGroupIGWAll;		
+DELIMITER //		
+CREATE PROCEDURE CauseSummaryIncIntCarrierAllOneAnsGroupIGWAll(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45),IN p_AnsId int)		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+select cr.CarrierName as ANS,cr1.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select AnsIdTerm as ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn	,customerid	
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+  and AnsIdTerm=p_Ansid		
+	group by chargingstatus,releasecauseingress,  AnsIdTerm,supplierid	,customerid
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  left join Carrier cr1		
+  on x.IGW=cr1.idCarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by MinutesIn desc;		
+		
+END //		
+DELIMITER ;		
+		
+drop procedure CauseSummaryIncIntCarrierAllOneAnsGroupIGWOne;		
+DELIMITER //		
+CREATE PROCEDURE CauseSummaryIncIntCarrierAllOneAnsGroupIGWOne(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45)		
+,IN p_AnsId int,IN p_IgwId int)		
+BEGIN		
+		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+select cr.CarrierName as ANS,cr1.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select AnsIdTerm as ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn	,customerid	
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+  and AnsIdTerm=p_AnsId		
+	and supplierid=p_IgwId	
+	group by chargingstatus,releasecauseingress,  AnsIdTerm,supplierid	,customerid
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  left join Carrier cr1		
+  on x.IGW=cr1.idCarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by MinutesIn desc;		
+		
+END //		
+DELIMITER ;		
+		
+		
+drop procedure CauseSummaryIncIntCarrierOneNoAnsNoIgw;		
+DELIMITER //		
+CREATE PROCEDURE CauseSummaryIncIntCarrierOneNoAnsNoIgw(IN p_IntlCarrier int , p_StartDateTime varchar(45), IN p_EndDateTime varchar(45))		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+		
+select ANS,IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select (Select Null) ANS,(select Null) as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn,customerid		
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+	and customerid=p_IntlCarrier	
+	group by chargingstatus,releasecauseingress,  customerid	
+  ) x		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by MinutesIn desc;		
+END //		
+DELIMITER ;		
+		
+		
+drop procedure CauseSummaryIncIntCarrierOneNoAnsGroupIGWAll;		
+DELIMITER //		
+CREATE PROCEDURE CauseSummaryIncIntCarrierOneNoAnsGroupIGWAll(IN p_IntlCarrier int , p_StartDateTime varchar(45), IN p_EndDateTime varchar(45))		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+		
+select ANS,cr.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select (Select Null) ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn	,customerid	
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+	and customerid=p_IntlCarrier	
+	group by chargingstatus,releasecauseingress,  supplierid	,customerid
+  ) x		
+  left join carrier cr		
+  on x.IGW=cr.idcarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by MinutesIn desc;		
+END //		
+DELIMITER ;		
+		
+		
+drop procedure CauseSummaryIncIntCarrierOneNoAnsGroupIGWOne;		
+DELIMITER //		
+CREATE PROCEDURE CauseSummaryIncIntCarrierOneNoAnsGroupIGWOne(IN p_IntlCarrier int , p_StartDateTime varchar(45), IN p_EndDateTime varchar(45)		
+,IN p_IgwId int)		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+		
+select ANS,cr.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select (Select Null) ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn	,customerid	
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+  and customerid=p_IntlCarrier		
+  and supplierid=p_IgwId  		
+	group by chargingstatus,releasecauseingress,  supplierid	,customerid
+  ) x		
+  left join carrier cr		
+  on x.IGW=cr.idcarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by MinutesIn desc;		
+END //		
+DELIMITER ;		
+		
+drop procedure CauseSummaryIncIntCarrierOneAllAnsNoIgw;		
+DELIMITER //		
+CREATE PROCEDURE CauseSummaryIncIntCarrierOneAllAnsNoIgw(IN p_IntlCarrier int , p_StartDateTime varchar(45), IN p_EndDateTime varchar(45))		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+		
+select cr.CarrierName as ANS,IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select AnsIdTerm as ANS,(select Null) as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn	,customerid	
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+	and customerid=p_IntlCarrier	
+	group by chargingstatus,releasecauseingress,  AnsIdTerm	,customerid
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by MinutesIn desc;		
+END //		
+DELIMITER ;		
+		
+drop procedure CauseSummaryIncIntCarrierOneAllAnsGroupIGWAll;		
+DELIMITER //		
+CREATE PROCEDURE CauseSummaryIncIntCarrierOneAllAnsGroupIGWAll(IN p_IntlCarrier int , p_StartDateTime varchar(45), IN p_EndDateTime varchar(45))		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+select cr.CarrierName as ANS,cr1.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select AnsIdTerm as ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn,customerid		
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+	and customerid=p_IntlCarrier	
+	group by chargingstatus,releasecauseingress,  AnsIdTerm,supplierid	,customerid
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  left join Carrier cr1		
+  on x.IGW=cr1.idCarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by MinutesIn desc;		
+		
+END //		
+DELIMITER ;		
+		
+		
+drop procedure CauseSummaryIncIntCarrierOneAllAnsGroupIGWOne;		
+DELIMITER //		
+CREATE PROCEDURE CauseSummaryIncIntCarrierOneAllAnsGroupIGWOne(IN p_IntlCarrier int , p_StartDateTime varchar(45), IN p_EndDateTime varchar(45)		
+,IN p_IgwId int)		
+BEGIN		
+		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+select cr.CarrierName as ANS,cr1.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select AnsIdTerm as ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn,customerid		
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+	and customerid=p_IntlCarrier	
+	and supplierid=p_IgwId	
+	group by chargingstatus,releasecauseingress,  AnsIdTerm,supplierid,customerid	
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  left join Carrier cr1		
+  on x.IGW=cr1.idCarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by MinutesIn desc;		
+		
+END //		
+DELIMITER ;		
+		
+		
+drop procedure CauseSummaryIncIntCarrierOneOneAnsNoIgw;		
+DELIMITER //		
+CREATE PROCEDURE CauseSummaryIncIntCarrierOneOneAnsNoIgw(IN p_IntlCarrier int , p_StartDateTime varchar(45), IN p_EndDateTime varchar(45),IN p_AnsId int)		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+		
+select cr.CarrierName as ANS,IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select AnsIdTerm as ANS,(select Null) as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn	,customerid	
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+  and customerid=p_IntlCarrier		
+  and AnsIdTerm=p_AnsId  		
+	group by chargingstatus,releasecauseingress,  AnsIdTerm,customerid	
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by MinutesIn desc;		
+END //		
+DELIMITER ;		
+		
+		
+		
+		
+drop procedure CauseSummaryIncIntCarrierOneOneAnsGroupIGWAll;		
+DELIMITER //		
+CREATE PROCEDURE CauseSummaryIncIntCarrierOneOneAnsGroupIGWAll(IN p_IntlCarrier int , p_StartDateTime varchar(45), IN p_EndDateTime varchar(45),IN p_AnsId int)		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+select cr.CarrierName as ANS,cr1.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select AnsIdTerm as ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn	,customerid	
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+  and customerid=p_IntlCarrier		
+  and AnsIdTerm=p_Ansid		
+	group by chargingstatus,releasecauseingress,  AnsIdTerm,supplierid	,customerid
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  left join Carrier cr1		
+  on x.IGW=cr1.idCarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by MinutesIn desc;		
+		
+END //		
+DELIMITER ;		
+		
+drop procedure CauseSummaryIncIntCarrierOneOneAnsGroupIGWOne;		
+DELIMITER //		
+CREATE PROCEDURE CauseSummaryIncIntCarrierOneOneAnsGroupIGWOne(IN p_IntlCarrier int , p_StartDateTime varchar(45), IN p_EndDateTime varchar(45)		
+,IN p_AnsId int,IN p_IgwId int)		
+BEGIN		
+		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+		
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+		
+select cr.CarrierName as ANS,cr1.CarrierName as IGW,CallsIn as 'Number Of Calls (International Incoming)', round(MinutesIn,6) as 'Paid Minutes (International Incoming)', IntlCarrier.CarrierName as 'International Carrier'    		
+,costansin,costicxin,costvatcomissionin,igwrevenuein,customercost,profit, ASR,ACD,PDD, roundedduration, CCR,CallsCount,ConnectedCount from		
+(select AnsIdTerm as ANS,supplierid as IGW,case chargingstatus when 1 then 'Success' else 'failed' end as CallsIn, ReleaseCauseIngress as MinutesIn	,customerid	
+	, count(ReleaseCauseIngress) as costansin,count(*) as costicxin	, (select NULL) as costvatcomissionin,(select NULL) as igwrevenuein,(select NULL) as customercost, (select NULL) as profit,(select NULL) as ASR, (select NULL) as ACD,(select NULL) as PDD , (select NULL) as roundedduration, (select NULL) as CCR, (select NULL) as CallsCount,(select NULL) as ConnectedCount from cdrloaded
+	where starttime>=varStartDate	
+	and starttime<=varEndDate	
+		
+	and calldirection=3	
+  and customerid=p_IntlCarrier		
+  and AnsIdTerm=p_AnsId		
+	and supplierid=p_IgwId	
+	group by chargingstatus,releasecauseingress,  AnsIdTerm,supplierid	,customerid
+  ) x		
+  left join Carrier cr		
+  on x.ANS=cr.idCarrier		
+  left join Carrier cr1		
+  on x.IGW=cr1.idCarrier		
+  left join carrier IntlCarrier		
+  on x.customerid=IntlCarrier.idCarrier		
+  order by MinutesIn desc;		
+		
+END //		
+DELIMITER ;		

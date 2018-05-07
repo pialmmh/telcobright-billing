@@ -1,0 +1,4 @@
+﻿select sum(noofrecordssrv1) as TotalRecords,c.* from cdrdecoded c
+where fileserialnumber >=5074
+and fileserialnumber <=27799
+and idswitch=2;

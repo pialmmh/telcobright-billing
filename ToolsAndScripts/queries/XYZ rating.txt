@@ -1,0 +1,6 @@
+select matchedprefixy,durationsec/60, 12*15*(truncate(c.DurationSec/15,0)+
+CASE WHEN ( (c.DurationSec/15-truncate(c.DurationSec/15,0)) ) >0 THEN 1 ELSE 0 END)/60 as X, 
+.0369*15*(truncate(c.DurationSec/15,0)+
+CASE WHEN ( (c.DurationSec/15-truncate(c.DurationSec/15,0)) ) >0 THEN 1 ELSE 0 END)/60 as Y
+from cdrloaded c where calldirection=2
+and matchedprefixy ='919';

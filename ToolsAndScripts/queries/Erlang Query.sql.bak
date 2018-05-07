@@ -1,0 +1,232 @@
+drop procedure ErlangByRouteAll;		
+DELIMITER //		
+create procedure ErlangByRouteAll(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45),In p_W float)		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+declare TimeSpan double;
+
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+
+set TimeSpan=timestampdiff(second,varstartdate,varenddate);
+
+select (select null) as `Date`,concat(r.RouteName,' (',cr.CarrierName,'-',sw.switchname,')') as RouteName,r.field2 as Ports,TotalCalls,SuccessfulCalls,FailedCalls,TotalMinutes,
+TimeSpan as TimeSpanSec, Ec,Ec*(1-p_W*B)/(1-B) as Eo,Ec/r.field2 as EcPerPort,EC/(TotalCalls/TimeSpan) as MHT
+from
+(
+select incomingroute,switchid,count(*) as TotalCalls,sum(chargingstatus) as SuccessfulCalls,(count(*)-sum(chargingstatus)) as FailedCalls, sum(durationsec)/60 as TotalMinutes,
+sum(durationsec)/TimeSpan as Ec, (count(*)-sum(chargingstatus))/count(*) as B
+from cdrloaded c
+where starttime>=varstartdate
+and starttime<=varenddate
+group by incomingroute,switchid
+) x
+left join route r on x.incomingroute=r.routename and x.switchid=r.switchid
+left join carrier cr on r.idcarrier=cr.idcarrier
+left join telcobrightmediation.customerswitchinfo sw on x.switchid=sw.idswitch
+order by cr.carriertype,r.routename;
+
+		
+END //		
+DELIMITER ;		
+
+
+drop procedure ErlangByRouteOne;		
+DELIMITER //		
+create procedure ErlangByRouteOne(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45),In p_W float,in p_RouteName varchar(100),in p_switchid int)		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+declare TimeSpan double;
+
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+
+set TimeSpan=timestampdiff(second,varstartdate,varenddate);
+
+select (select null) as `Date`,concat(r.RouteName,' (',cr.CarrierName,'-',sw.switchname,')') as RouteName,r.field2 as Ports,TotalCalls,SuccessfulCalls,FailedCalls,TotalMinutes,
+TimeSpan as TimeSpanSec, Ec,Ec*(1-p_W*B)/(1-B) as Eo,Ec/r.field2 as EcPerPort,EC/(TotalCalls/TimeSpan) as MHT
+from
+(
+select incomingroute,switchid,count(*) as TotalCalls,sum(chargingstatus) as SuccessfulCalls,(count(*)-sum(chargingstatus)) as FailedCalls, sum(durationsec)/60 as TotalMinutes,
+sum(durationsec)/TimeSpan as Ec, (count(*)-sum(chargingstatus))/count(*) as B
+from cdrloaded c
+where starttime>=varstartdate
+and starttime<=varenddate
+and switchid=p_switchid and incomingroute=p_routename
+group by incomingroute,switchid
+) x
+left join route r on x.incomingroute=r.routename and x.switchid=r.switchid
+left join carrier cr on r.idcarrier=cr.idcarrier
+left join telcobrightmediation.customerswitchinfo sw on x.switchid=sw.idswitch
+order by cr.carriertype,r.routename;
+
+		
+END //		
+DELIMITER ;		
+
+
+
+#summary start
+drop procedure DailySummaryErlangByRouteAll;		
+DELIMITER //		
+create procedure DailySummaryErlangByRouteAll(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45),In p_W float)		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+declare TimeSpan double;
+
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+
+set TimeSpan=timestampdiff(second,varstartdate,varenddate);
+
+select (select null) as `Date`,concat(r.RouteName,' (',cr.CarrierName,'-',sw.switchname,')') as RouteName,r.field2 as Ports,TotalCalls,SuccessfulCalls,FailedCalls,TotalMinutes,
+TimeSpan as TimeSpanSec, Ec,Ec*(1-p_W*B)/(1-B) as Eo,Ec/r.field2 as EcPerPort,EC/(TotalCalls/TimeSpan) as MHT
+from
+(
+select incomingroute,switchid,count(*) as TotalCalls,sum(chargingstatus) as SuccessfulCalls,(count(*)-sum(chargingstatus)) as FailedCalls, sum(durationsec)/60 as TotalMinutes,
+sum(durationsec)/TimeSpan as Ec, (count(*)-sum(chargingstatus))/count(*) as B
+from cdrloaded c
+where starttime>=varstartdate
+and starttime<=varenddate
+group by incomingroute,switchid
+) x
+left join route r on x.incomingroute=r.routename and x.switchid=r.switchid
+left join carrier cr on r.idcarrier=cr.idcarrier
+left join telcobrightmediation.customerswitchinfo sw on x.switchid=sw.idswitch
+order by cr.carriertype,r.routename;
+
+		
+END //		
+DELIMITER ;		
+
+
+drop procedure DailySummaryErlangByRouteOne;		
+DELIMITER //		
+create procedure DailySummaryErlangByRouteOne(IN p_StartDateTime varchar(45), IN p_EndDateTime varchar(45),In p_W float,in p_RouteName varchar(100),in p_switchid int)		
+BEGIN		
+		
+declare varStartDate varchar(45);		
+declare varEndDate varchar(45);		
+declare TimeSpan double;
+
+IF LENGTH(p_StartDateTime)=19 THEN		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' ',		
+                        substring(p_StartDateTime,12,8));		
+ELSE		
+set varStartDate=concat(substring(p_StartDateTime,7,4),'-',		
+                        substring(p_StartDateTime,4,2),'-',		
+                        substring(p_StartDateTime,1,2),' 00:00:00');		
+		
+END IF;		
+		
+IF LENGTH(p_EndDateTime)=19 THEN		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' ',		
+                        substring(p_EndDateTime,12,8));		
+ELSE		
+set varEndDate=concat(substring(p_EndDateTime,7,4),'-',		
+                        substring(p_EndDateTime,4,2),'-',		
+                        substring(p_EndDateTime,1,2),' 23:59:59');		
+		
+END IF;		
+
+set TimeSpan=timestampdiff(second,varstartdate,varenddate);
+
+select (select null) as `Date`,concat(r.RouteName,' (',cr.CarrierName,'-',sw.switchname,')') as RouteName,r.field2 as Ports,TotalCalls,SuccessfulCalls,FailedCalls,TotalMinutes,
+TimeSpan as TimeSpanSec, Ec,Ec*(1-p_W*B)/(1-B) as Eo,Ec/r.field2 as EcPerPort,EC/(TotalCalls/TimeSpan) as MHT
+from
+(
+select incomingroute,switchid,count(*) as TotalCalls,sum(chargingstatus) as SuccessfulCalls,(count(*)-sum(chargingstatus)) as FailedCalls, sum(durationsec)/60 as TotalMinutes,
+sum(durationsec)/TimeSpan as Ec, (count(*)-sum(chargingstatus))/count(*) as B
+from cdrloaded c
+where starttime>=varstartdate
+and starttime<=varenddate
+and switchid=p_switchid and incomingroute=p_routename
+group by incomingroute,switchid
+) x
+left join route r on x.incomingroute=r.routename and x.switchid=r.switchid
+left join carrier cr on r.idcarrier=cr.idcarrier
+left join telcobrightmediation.customerswitchinfo sw on x.switchid=sw.idswitch
+order by cr.carriertype,r.routename;
+
+		
+END //		
+DELIMITER ;		
+
+
+
+
+
+#summary end

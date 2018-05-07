@@ -1,0 +1,27 @@
+select
+idCall,
+SequenceNumber,
+FileSerialNo,
+CallDirection,
+IncomingRoute,
+OriginatingCalledNumber,
+ChargingStatus,
+StartTime,
+EndTime,
+CustomerID,
+customerprepaid,
+calldirection,
+chargingstatus,
+durationsec ,
+matchedprefixcustomer,
+outgoingroute,
+supplierid,
+customercost,
+customercurrency,
+ansidterm,
+CostANSIn,
+CostICXIn,
+CostVATCommissionIn,
+IGWRevenueIn
+
+

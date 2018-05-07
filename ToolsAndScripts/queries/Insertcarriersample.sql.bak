@@ -1,0 +1,17 @@
+insert into route (idcarrier,routename,switchid,commonroute,nationalorinternational,status) values (398,	'165',1,0,2,1);
+insert into route (idcarrier,routename,switchid,commonroute,nationalorinternational,status) values (399,	'166',1,0,2,1);
+insert into route (idcarrier,routename,switchid,commonroute,nationalorinternational,status) values (400,	'167',1,0,2,1);
+insert into route (idcarrier,routename,switchid,commonroute,nationalorinternational,status) values (401,	'168',1,0,2,1);
+insert into route (idcarrier,routename,switchid,commonroute,nationalorinternational,status) values (402,	'169',1,0,2,1);
+insert into route (idcarrier,routename,switchid,commonroute,nationalorinternational,status) values (403,	'170',1,0,2,1);
+insert into route (idcarrier,routename,switchid,commonroute,nationalorinternational,status) values (404,	'171',1,0,2,1);
+insert into route (idcarrier,routename,switchid,commonroute,nationalorinternational,status) values (405,	'172',1,0,2,1);
+insert into route (idcarrier,routename,switchid,commonroute,nationalorinternational,status) values (406,	'173',1,0,2,1);
+insert into route (idcarrier,routename,switchid,commonroute,nationalorinternational,status) values (407,	'174',1,0,2,1);
+insert into route (idcarrier,routename,switchid,commonroute,nationalorinternational,status) values (408,	'175',1,0,2,1);
+insert into route (idcarrier,routename,switchid,commonroute,nationalorinternational,status) values (409,	'176',1,0,2,1);
+insert into route (idcarrier,routename,switchid,commonroute,nationalorinternational,status) values (410,	'177',1,0,2,1);
+insert into route (idcarrier,routename,switchid,commonroute,nationalorinternational,status) values (411,	'178',1,0,2,1);
+insert into route (idcarrier,routename,switchid,commonroute,nationalorinternational,status) values (412,	'179',1,0,2,1);
+insert into route (idcarrier,routename,switchid,commonroute,nationalorinternational,status) values (413,	'180',1,0,2,1);
+insert into route (idcarrier,routename,switchid,commonroute,nationalorinternational,status) values (414,	'181',1,0,2,1);
