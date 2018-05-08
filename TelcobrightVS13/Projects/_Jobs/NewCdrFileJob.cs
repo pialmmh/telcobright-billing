@@ -52,7 +52,8 @@ namespace Jobs
             return JobCompletionStatus.Complete;
         }
 
-        protected CdrJob PrepareCdrJob(NewCdrPreProcessor preProcessor, CdrCollectionResult newCollectionResult, CdrCollectionResult oldCollectionResult)
+        protected CdrJob PrepareCdrJob(NewCdrPreProcessor preProcessor, CdrCollectionResult newCollectionResult, 
+            CdrCollectionResult oldCollectionResult)
         {
             PartialCdrTesterData partialCdrTesterData = OrganizeTestDataForPartialCdrs(preProcessor, newCollectionResult);
 

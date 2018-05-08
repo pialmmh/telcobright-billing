@@ -25,7 +25,7 @@ namespace TelcobrightMediation
         private readonly BlockingCollection<cdrerror> cdrErrors = new BlockingCollection<cdrerror>();
         public IReadOnlyCollection<cdrerror> CdrErrors => this.cdrErrors.ToList().AsReadOnly();
         public int RawCount { get; }
-        public decimal RawDurationTotalOfConsistentCdrs = 0;
+        public decimal RawDurationTotalOfConsistentCdrs { get; set; }
         private readonly ConcurrentDictionary<string, CdrExt> concurrentCdrExts = new ConcurrentDictionary<string, CdrExt>();
         public ne Ne { get; }
         public List<DateTime> DatesInvolved { get; }

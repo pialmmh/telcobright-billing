@@ -247,3 +247,8 @@ ModelManifest.xml
 # Telcobright Extensions dll/conf
 **/Extensions/*.dll
 **/*.conf
+
+# App & Web Config
+**/App.config
+!TelcobrightVS13/Projects/UtilInstallConfig/App.config
+**/Web.config
