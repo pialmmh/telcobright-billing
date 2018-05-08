@@ -15,7 +15,10 @@ namespace TelcobrightMediation
     public class SegmentedCdrErrorProcessor : AbstractRowBasedSegmentedJobProcessor
     {
         private CdrCollectorInputData CdrCollectorInput { get; }
-
+        protected int RawCount, NonPartialCount, UniquePartialCount, RawPartialCount, DistinctPartialCount = 0;
+        protected decimal RawDurationTotalOfConsistentCdrs = 0;
+        protected bool PartialCollectionEnabled => this.CdrCollectorInput.MediationContext.Tbc.CdrSetting
+            .PartialCdrEnabledNeIds.Contains(this.CdrCollectorInput.Ne.idSwitch);
         public SegmentedCdrErrorProcessor(CdrCollectorInputData cdrCollectorInput,
             int batchSizeWhenPreparingLargeSqlJob,
             string indexedColumnName, string dateColumnName)
@@ -46,16 +49,34 @@ namespace TelcobrightMediation
             CdrCollectionResult newCollectionResult = null, oldCollectionResult = null;
             preProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
 
-            //PartialCdrTesterData partialCdrTesterData = OrganizeTestDataForPartialCdrs(preProcessor, newCollectionResult);
-            CdrJobContext cdrJobContext = new CdrJobContext(this.CdrCollectorInput.CdrJobInputData,
-                newCollectionResult.HoursInvolved);
-            CdrProcessor cdrProcessor = new CdrProcessor(cdrJobContext, newCollectionResult);
-            CdrEraser cdrEraser = !oldCollectionResult.IsEmpty ? new CdrEraser(cdrJobContext, oldCollectionResult) : null;
-            int rawCount = preProcessor.TxtCdrRows.Count;
-            CdrJob cdrJob = new CdrJob(cdrProcessor, cdrEraser, rawCount,partialCdrTesterData:null);
+            PartialCdrTesterData partialCdrTesterData = OrganizeTestDataForPartialCdrs(preProcessor, newCollectionResult);
+            CdrJob cdrJob = (new CdrJobFactory(this.CdrCollectorInput.CdrJobInputData, this.RawCount)).
+                CreateCdrJob(preProcessor, newCollectionResult, oldCollectionResult, partialCdrTesterData);
             return cdrJob;
         }
-
+        public PartialCdrTesterData OrganizeTestDataForPartialCdrs(NewCdrPreProcessor preProcessor,
+            CdrCollectionResult newCollectionResult)
+        {
+            this.RawCount = preProcessor.RawCount;
+            newCollectionResult.RawDurationTotalOfConsistentCdrs =
+                preProcessor.NonPartialCdrs.Sum(c => c.DurationSec) + preProcessor.PartialCdrContainers
+                    .SelectMany(pc => pc.NewRawInstances).Sum(r => r.DurationSec);
+            this.RawDurationTotalOfConsistentCdrs = newCollectionResult.RawDurationTotalOfConsistentCdrs;
+            PartialCdrTesterData partialCdrTesterData = null;
+            if (this.PartialCollectionEnabled)
+            {
+                this.NonPartialCount = preProcessor.TxtCdrRows.Count(r => r[Fn.Partialflag] == "0");
+                List<string[]> partialRows = preProcessor.TxtCdrRows.Where(r =>
+                    this.CdrCollectorInput.CdrSetting.PartialCdrFlagIndicators.Contains(r[Fn.Partialflag])).ToList();
+                this.RawPartialCount = partialRows.Count;
+                if (preProcessor.TxtCdrRows.Count != this.NonPartialCount + this.RawPartialCount)
+                    throw new Exception("TxtCdr rows with partial & non-partial flag do not match total decoded text rows");
+                this.DistinctPartialCount = partialRows.GroupBy(r => r[Fn.UniqueBillId]).Count();
+                partialCdrTesterData = new PartialCdrTesterData(this.NonPartialCount, this.RawCount,
+                    newCollectionResult.RawDurationTotalOfConsistentCdrs, this.RawPartialCount);
+            }
+            return partialCdrTesterData;
+        }
         private FlexValidator<string[]> CreateValidatorInstance()
         {
             Dictionary<string, string> rules = this.CdrCollectorInput.CdrJobInputData.MediationContext.Tbc.CdrSetting
@@ -76,5 +97,6 @@ namespace TelcobrightMediation
             flexValidator.BooleanParsers.Add("isNumericChecker", str => str.IsNumeric());
             return flexValidator;
         }
+
     }
 }

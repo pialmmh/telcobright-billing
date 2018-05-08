@@ -44,7 +44,10 @@ namespace UnitTesterManual
             CdrCollectionResult newCollectionResult, oldCollectionResult = null;
             preProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
 
-            CdrJob cdrJob = base.PrepareCdrJob(preProcessor, newCollectionResult, oldCollectionResult);
+            //CdrJob cdrJob = base.CreateCdrJob(preProcessor, newCollectionResult, oldCollectionResult);
+            PartialCdrTesterData partialCdrTesterData = OrganizeTestDataForPartialCdrs(preProcessor, newCollectionResult);
+            CdrJob cdrJob = (new CdrJobFactory(this.Input, this.RawCount)).
+                CreateCdrJob(preProcessor, newCollectionResult, oldCollectionResult, partialCdrTesterData);
             ExecuteCdrJob(cdrJob);
             return JobCompletionStatus.Complete;
         }
