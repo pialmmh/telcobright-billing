@@ -38,7 +38,6 @@ namespace MediationModel
         public virtual DbSet<commontg> commontgs { get; set; }
         public virtual DbSet<country> countries { get; set; }
         public virtual DbSet<countrycode> countrycodes { get; set; }
-        public virtual DbSet<dialogiccdr> dialogiccdrs { get; set; }
         public virtual DbSet<enumaccountingclass> enumaccountingclasses { get; set; }
         public virtual DbSet<enumanstype> enumanstypes { get; set; }
         public virtual DbSet<enumbillingspan> enumbillingspans { get; set; }
@@ -120,19 +119,22 @@ namespace MediationModel
         public virtual DbSet<acc_temp_transaction> acc_temp_transaction { get; set; }
         public virtual DbSet<acc_transaction> acc_transaction { get; set; }
         public virtual DbSet<cdr> cdrs { get; set; }
+        public virtual DbSet<cdrdiscarded> cdrdiscardeds { get; set; }
         public virtual DbSet<cdrerror> cdrerrors { get; set; }
+        public virtual DbSet<cdrinconsistent> cdrinconsistents { get; set; }
         public virtual DbSet<cdrpartiallastaggregatedrawinstance> cdrpartiallastaggregatedrawinstances { get; set; }
         public virtual DbSet<cdrpartialrawinstance> cdrpartialrawinstances { get; set; }
         public virtual DbSet<cdrpartialreference> cdrpartialreferences { get; set; }
+        public virtual DbSet<mockcdr> mockcdrs { get; set; }
         public virtual DbSet<sum_voice_day_01> sum_voice_day_01 { get; set; }
         public virtual DbSet<sum_voice_day_02> sum_voice_day_02 { get; set; }
         public virtual DbSet<sum_voice_day_03> sum_voice_day_03 { get; set; }
+        public virtual DbSet<sum_voice_day_04> sum_voice_day_04 { get; set; }
         public virtual DbSet<sum_voice_hr_01> sum_voice_hr_01 { get; set; }
         public virtual DbSet<sum_voice_hr_02> sum_voice_hr_02 { get; set; }
         public virtual DbSet<sum_voice_hr_03> sum_voice_hr_03 { get; set; }
+        public virtual DbSet<sum_voice_hr_04> sum_voice_hr_04 { get; set; }
         public virtual DbSet<uom_conversion> uom_conversion { get; set; }
         public virtual DbSet<uom_conversion_dated> uom_conversion_dated { get; set; }
-        public virtual DbSet<cdrdiscarded> cdrdiscardeds { get; set; }
-        public virtual DbSet<cdrinconsistent> cdrinconsistents { get; set; }
     }
 }

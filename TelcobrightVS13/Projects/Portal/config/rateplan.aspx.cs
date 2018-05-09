@@ -648,9 +648,9 @@ public partial class ConfigSupplierRatePlan : Page
         Single tempSin = 0;
         if (Single.TryParse(newMinDurationSec, out tempSin))
         {
-            newPlan.minDurationSec = tempSin;
+            newPlan.mindurationsec = tempSin;
         }
-        else newPlan.minDurationSec = 0;//default
+        else newPlan.mindurationsec = 0;//default
 
         newPlan.Currency = newCurrency;
         newPlan.BillingSpan = ((DropDownList)this.frmSupplierRatePlanInsert.FindControl("DropDownListBillingSpan")).SelectedValue;

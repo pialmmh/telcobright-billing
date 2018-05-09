@@ -138,9 +138,6 @@
     <Compile Include="DataReaderConversion\_CdrDataRowToStrArrHelper.cs" />
     <Compile Include="DataReaderConversion\cdrerror.cs" />
     <Compile Include="DataReaderConversion\IDataReaderToStrArrConverter.cs" />
-    <Compile Include="dialogiccdr.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="EntityExtensions\account.cs" />
     <Compile Include="EntityExtensions\acc_transaction.cs" />
     <Compile Include="EntityExtensions\acc_chargeable.cs" />
@@ -420,6 +417,9 @@
     <Compile Include="lcrrateplan.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="mockcdr.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="ne.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
@@ -499,6 +499,9 @@
     <Compile Include="sum_voice_day_03.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="sum_voice_day_04.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="sum_voice_hr_01.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
@@ -506,6 +509,9 @@
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="sum_voice_hr_03.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sum_voice_hr_04.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="telcobrightpartner.cs">

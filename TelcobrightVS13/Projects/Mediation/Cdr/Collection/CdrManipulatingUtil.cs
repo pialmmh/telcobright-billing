@@ -382,7 +382,7 @@ namespace TelcobrightMediation.Mediation.Cdr
             {
                 SwitchId = sourceCdr.SwitchId.ToString(),
                 IdCall = sourceCdr.IdCall,
-                SequenceNumber = sourceCdr.SequenceNumber,
+                SequenceNumber = sourceCdr.SequenceNumber.ToString(),
                 FileName = sourceCdr.FileName.ToString(),
                 ServiceGroup = sourceCdr.ServiceGroup.ToString(),
                 IncomingRoute = sourceCdr.IncomingRoute.ToString(),

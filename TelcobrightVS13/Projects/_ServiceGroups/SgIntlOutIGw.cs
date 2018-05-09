@@ -20,6 +20,7 @@ namespace TelcobrightMediation
             "Service group International Outgoing for BD IGW. Old common mediation codes for IGW, could not separate in short time, covers both intl in/out";
 
         public int Id => 5;
+        public Dictionary<string, string> Params { get; set; }
         private Dictionary<string, Type> SummaryTargetTables { get; }
 
         public SgIntlOutIGw() //constructor

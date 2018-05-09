@@ -36,7 +36,7 @@ namespace MediationModel
         public Nullable<System.DateTime> codedeletedate { get; set; }
         public Nullable<int> ChangeCommitted { get; set; }
         public int Resolution { get; set; }
-        public float minDurationSec { get; set; }
+        public float mindurationsec { get; set; }
         public int SurchargeTime { get; set; }
         public decimal SurchargeAmount { get; set; }
         public Nullable<sbyte> Category { get; set; }

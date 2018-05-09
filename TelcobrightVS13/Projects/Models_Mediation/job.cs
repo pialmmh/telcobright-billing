@@ -42,6 +42,7 @@ namespace MediationModel
         public virtual enumjobdefinition enumjobdefinition { get; set; }
         public virtual enumjobstatu enumjobstatu { get; set; }
         public virtual ne ne { get; set; }
+        public virtual jobcompletion jobcompletion { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<jobsegment> jobsegments { get; set; }
     }

@@ -15,5 +15,7 @@ namespace MediationModel
     public partial class jobcompletion
     {
         public long idJob { get; set; }
+    
+        public virtual job job { get; set; }
     }
 }

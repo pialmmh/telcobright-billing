@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using LibraryExtensions;
 namespace MediationModel
 {
-	public partial class :ICacheble<>
+	public partial class mockcdr:ICacheble<mockcdr>
 	{
 		public string GetExtInsertValues()
 		{
@@ -117,11 +117,11 @@ namespace MediationModel
 				{SignalingStartTime.ToMySqlField()}
 				)";
 		}
-		public  string GetExtInsertCustom(Func<,string> externalInsertMethod)
+		public  string GetExtInsertCustom(Func<mockcdr,string> externalInsertMethod)
 		{
 			return externalInsertMethod.Invoke(this);
 		}
-		public  string GetUpdateCommand(Func<,string> whereClauseMethod)
+		public  string GetUpdateCommand(Func<mockcdr,string> whereClauseMethod)
 		{
 			return $@"update mockcdr set 
 				SwitchId={SwitchId.ToMySqlField()+" "},
@@ -231,11 +231,11 @@ namespace MediationModel
 				{whereClauseMethod.Invoke(this)};
 				";
 		}
-		public  string GetUpdateCommandCustom(Func<,string> updateCommandMethodCustom)
+		public  string GetUpdateCommandCustom(Func<mockcdr,string> updateCommandMethodCustom)
 		{
 			return updateCommandMethodCustom.Invoke(this);
 		}
-		public  string GetDeleteCommand(Func<,string> whereClauseMethod)
+		public  string GetDeleteCommand(Func<mockcdr,string> whereClauseMethod)
 		{
 			return $@"delete from mockcdr 
 				{whereClauseMethod.Invoke(this)};

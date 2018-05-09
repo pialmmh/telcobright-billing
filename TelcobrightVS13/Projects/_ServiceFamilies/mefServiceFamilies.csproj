@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SfTollFreeEgressCharging.cs" />
     <Compile Include="SfA2Z.cs" />
     <Compile Include="SfIntlInIgwIoS.cs" />
     <Compile Include="SfIntlInIgwT1.cs" />

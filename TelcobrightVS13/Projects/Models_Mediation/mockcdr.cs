@@ -12,11 +12,11 @@ namespace MediationModel
     using System;
     using System.Collections.Generic;
     
-    public partial class cdrerror
+    public partial class mockcdr
     {
         public string SwitchId { get; set; }
-        public long IdCall { get; set; }
-        public string SequenceNumber { get; set; }
+        public string IdCall { get; set; }
+        public long SequenceNumber { get; set; }
         public string FileName { get; set; }
         public string ServiceGroup { get; set; }
         public string IncomingRoute { get; set; }
@@ -43,7 +43,7 @@ namespace MediationModel
         public string TerminatingIP { get; set; }
         public string DPC { get; set; }
         public string TerminatingCIC { get; set; }
-        public System.DateTime StartTime { get; set; }
+        public string StartTime { get; set; }
         public string InPartnerId { get; set; }
         public string CustomerRate { get; set; }
         public string OutPartnerId { get; set; }

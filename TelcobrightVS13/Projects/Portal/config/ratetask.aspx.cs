@@ -2787,7 +2787,7 @@ public partial class ConfigRateTask : Page
         double.TryParse(thisPlan.SurchargeTime.ToString(), out tempDbl);
         txtSurchargeTime.Text = tempDbl.ToString();
 
-        double.TryParse(thisPlan.minDurationSec.ToString(), out tempDbl);
+        double.TryParse(thisPlan.mindurationsec.ToString(), out tempDbl);
         txtMinDurationSec.Text = tempDbl.ToString();
 
         double.TryParse(thisPlan.RateAmountRoundupDecimal.ToString(), out tempDbl);

@@ -17,9 +17,9 @@ namespace ServiceFamilies
         {
             return this.RuleName;
         }
-        public string RuleName => GetType().Name;
-        public string HelpText => "General A2Z Prefix or Destinations based Rating";
-        public int Id => 1;
+        public virtual  string RuleName => GetType().Name;
+        public virtual string HelpText => "General A2Z Prefix or Destinations based Rating";
+        public virtual int Id => 1;
 
         public AccChargeableExt Execute(CdrExt cdrExt, ServiceContext serviceContext, bool flagLcr)
         {
@@ -35,18 +35,7 @@ namespace ServiceFamilies
                 cdr.Duration1 = finalDuration;
                 decimal taxAmount = Convert.ToDecimal(cdr.InPartnerCost) *
                                     Convert.ToDecimal(rateWithAssignmentTupleId.OtherAmount3) / 100;
-                if (serviceContext.AssignDir == ServiceAssignmentDirection.Customer)
-                {
-                    cdr.Tax1 = taxAmount;
-                }
-                else if (serviceContext.AssignDir == ServiceAssignmentDirection.Supplier)
-                {
-                    cdr.Tax2 = taxAmount;
-                }
-                else
-                {
-                    throw new ArgumentException();
-                }
+                GetTaxAmount(serviceContext, cdr, taxAmount);
                 string idCurrencyUoM = serviceContext.CdrProcessor.CdrJobContext.MediationContext.MefServiceFamilyContainer
                     .DicRateplans[rateWithAssignmentTupleId.idrateplan.ToString()].Currency;
                 int idChargedPartner = GetChargedOrChargingPartnerId(cdrExt, serviceContext);
@@ -56,7 +45,7 @@ namespace ServiceFamilies
                     new CdrPostingAccountingFinder(serviceContext, rateWithAssignmentTupleId, idChargedPartner,
                         billingRule);
                 var postingAccount = postingAccountingFinder.GetPostingAccount();
-                if(cdrExt.Cdr.ChargingStatus==1)
+                if (cdrExt.Cdr.ChargingStatus == 1)
                 {
                     var chargeable = new acc_chargeable
                     {
@@ -98,9 +87,9 @@ namespace ServiceFamilies
                     }
 
                     job telcobrightJob = serviceContext.CdrProcessor.CdrJobContext.TelcobrightJob;
-                    chargeable.description = new List<string> {"1", "2"}.Contains(telcobrightJob.idjobdefinition.ToString())
+                    chargeable.description = new List<string> { "1", "2" }.Contains(telcobrightJob.idjobdefinition.ToString())
                         ? "nc" //use new cdr flag for new & error cdr job
-                        : telcobrightJob.id.ToString() == "3"? "rc" //reprocess cdr
+                        : telcobrightJob.id.ToString() == "3" ? "rc" //reprocess cdr
                             : "unknown";
                     return new AccChargeableExt(chargeable)
                     {
@@ -112,6 +101,28 @@ namespace ServiceFamilies
             return null;
         }//execute
 
+        protected virtual void GetTaxAmount(ServiceContext serviceContext, cdr cdr, decimal taxAmount)
+        {
+            if (serviceContext.AssignDir == ServiceAssignmentDirection.Customer)
+            {
+                cdr.Tax1 = taxAmount;
+            }
+            else if (serviceContext.AssignDir == ServiceAssignmentDirection.Supplier)
+            {
+                cdr.Tax2 = taxAmount;
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
+        }
+
+        protected virtual int GetChargedOrChargingPartnerId(CdrExt cdrExt, ServiceContext serviceContext)//thisrow,assignDir,return idPartner who's charged or charging
+        {
+            return serviceContext.AssignDir == ServiceAssignmentDirection.Customer ? Convert.ToInt32(cdrExt.Cdr.InPartnerId) :
+                serviceContext.AssignDir == ServiceAssignmentDirection.Supplier ? Convert.ToInt32(cdrExt.Cdr.OutPartnerId) : -1;
+        }
+
         private BillingRule GetBillingRule(ServiceContext serviceContext,long idRatePlanAssignmentTuple)
         {
             int idbillingRule = Convert.ToInt32(serviceContext.MefServiceFamilyContainer
@@ -120,12 +131,7 @@ namespace ServiceFamilies
             BillingRule billingRule = serviceContext.MefServiceFamilyContainer.BillingRules[idbillingRule.ToString()];
             return billingRule;
         }
-        private int GetChargedOrChargingPartnerId(CdrExt cdrExt,ServiceContext serviceContext)//thisrow,assignDir,return idPartner who's charged or charging
-        {
-            return serviceContext.AssignDir == ServiceAssignmentDirection.Customer ? Convert.ToInt32(cdrExt.Cdr.InPartnerId) :
-               serviceContext.AssignDir == ServiceAssignmentDirection.Supplier ? Convert.ToInt32(cdrExt.Cdr.OutPartnerId) : -1;
-        }
-
+        
         public acc_transaction GetTransaction(AccChargeableExt accChargeableExt,ServiceContext serviceContext)
         {
             acc_chargeable chargeable = accChargeableExt.AccChargeable;

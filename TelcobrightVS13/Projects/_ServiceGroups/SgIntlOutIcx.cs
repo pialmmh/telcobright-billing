@@ -17,6 +17,7 @@ namespace TelcobrightMediation
         public string RuleName => "International Outgoing Calls [ICX]";
         public string HelpText => "Service group International Outgoing for BD ICX.";
         public int Id => 2;
+        public Dictionary<string, string> Params { get; set; }
         private Dictionary<string, Type> SummaryTargetTables { get; }
 
         public SgIntlOutIcx() //constructor
