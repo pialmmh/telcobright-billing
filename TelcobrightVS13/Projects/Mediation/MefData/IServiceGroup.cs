@@ -10,7 +10,7 @@ namespace TelcobrightMediation
         string RuleName { get; }
         string HelpText { get; }
         int Id { get; }
-        Dictionary<string,string> Params { set;}
+        void SetAdditionalParams(Dictionary<string, string> additionalParams);
         void Execute(cdr thisCdr, CdrProcessor cdrProcessor);
         void ExecutePostRatingActions(CdrExt cdrExt, object postRatingData);
         Dictionary<string, Type> GetSummaryTargetTables();

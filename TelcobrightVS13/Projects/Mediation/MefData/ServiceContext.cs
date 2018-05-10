@@ -14,7 +14,6 @@ namespace TelcobrightMediation
         public IServiceFamily ServiceFamily { get; set; }
         public int ProductIdToOverrideServiceFamilyAccount { get;}
         public ServiceAssignmentDirection AssignDir { get; set; }
-
         public ServiceContext(CdrProcessor cdrProcessor,
             ServiceGroupConfiguration serviceGroupConfiguration, IServiceFamily serviceFamily,
             ServiceAssignmentDirection assignDir, int productIdToOverrideServiceFamilyAccount)

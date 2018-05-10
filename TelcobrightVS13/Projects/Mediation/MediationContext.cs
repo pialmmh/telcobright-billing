@@ -158,13 +158,23 @@ namespace TelcobrightMediation
             this.MefDecoderContainer.CmpDecoder.Compose();
             foreach (var ext in this.MefDecoderContainer.CmpDecoder.Decoders)
                 this.MefDecoderContainer.DicExtensions.Add(ext.Id, ext);
+
             this.MefServiceGroupContainer.CmpServiceGroup.Compose();
-            foreach (var ext in this.MefServiceGroupContainer.CmpServiceGroup.ServiceGroups)
+            foreach (var serviceGroup in this.MefServiceGroupContainer.CmpServiceGroup.ServiceGroups)
             {
-                this.MefServiceGroupContainer.DicExtensions.Add(ext.RuleName.ToString(), ext);
+                ServiceGroupConfiguration serviceGroupConfiguration = null;
+                tbc.CdrSetting.ServiceGroupConfigurations.TryGetValue(serviceGroup.Id, 
+                    out serviceGroupConfiguration);
+                if (serviceGroupConfiguration!=null)
+                {
+                    serviceGroup.SetAdditionalParams(serviceGroupConfiguration.Params);
+                }
+                
+                this.MefServiceGroupContainer.DicExtensions.Add(serviceGroup.RuleName, serviceGroup);
                 this.MefServiceGroupContainer.IdServiceGroupWiseServiceGroups
-                    .Add(ext.Id, ext); //this is required during summary generation
+                    .Add(serviceGroup.Id, serviceGroup); //this is required during summary generation
             }
+
             this.MefPartnerRuleContainer.CmpPartner.Compose();
             foreach (var ext in this.MefPartnerRuleContainer.CmpPartner.Partners)
                 this.MefPartnerRuleContainer.DicExtensions.Add(ext.Id, ext);

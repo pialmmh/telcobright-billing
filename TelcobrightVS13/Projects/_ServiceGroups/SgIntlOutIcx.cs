@@ -12,12 +12,11 @@ namespace TelcobrightMediation
     [Export("ServiceGroup", typeof(IServiceGroup))]
     public class SgIntlOutIcx : IServiceGroup
     {
-        private readonly SgIntlTransitVoice _sgIntlTransitVoice = new SgIntlTransitVoice();
+        private readonly SgIntlTransitVoice sgIntlTransitVoice = new SgIntlTransitVoice();
         public override string ToString() => this.RuleName;
         public string RuleName => "International Outgoing Calls [ICX]";
         public string HelpText => "Service group International Outgoing for BD ICX.";
         public int Id => 2;
-        public Dictionary<string, string> Params { get; set; }
         private Dictionary<string, Type> SummaryTargetTables { get; }
 
         public SgIntlOutIcx() //constructor
@@ -35,6 +34,11 @@ namespace TelcobrightMediation
         }
 
         public void ExecutePostRatingActions(CdrExt cdrExt, object postRatingData)
+        {
+            
+        }
+
+        public void SetAdditionalParams(Dictionary<string, string> additionalParams)
         {
             
         }

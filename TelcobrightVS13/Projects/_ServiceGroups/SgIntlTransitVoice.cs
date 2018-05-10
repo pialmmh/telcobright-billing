@@ -15,7 +15,6 @@ namespace TelcobrightMediation
         public string RuleName => "Transit Calls [Wholesale Voice]";
         public string HelpText => "Service group for international transit voice.";
         public int Id => 100;
-        public Dictionary<string, string> Params { get; set; }
         private Dictionary<string, Type> SummaryTargetTables { get; }
         public SgIntlTransitVoice()//constructor
         {
@@ -31,6 +30,11 @@ namespace TelcobrightMediation
         }
 
         public void ExecutePostRatingActions(CdrExt cdrExt, object postRatingData)
+        {
+            
+        }
+
+        public void SetAdditionalParams(Dictionary<string, string> additionalParams)
         {
             
         }

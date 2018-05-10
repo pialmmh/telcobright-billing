@@ -12,12 +12,11 @@ namespace TelcobrightMediation
     [Export("ServiceGroup", typeof(IServiceGroup))]
     public class SgIntlInIcx : IServiceGroup
     {
-        private readonly SgIntlTransitVoice _sgIntlTransitVoice = new SgIntlTransitVoice();
+        private readonly SgIntlTransitVoice sgIntlTransitVoice = new SgIntlTransitVoice();
         public override string ToString() => this.RuleName;
         public string RuleName => "International Incoming Calls [ICX]";
         public string HelpText { get; } = "Service group Intl In for BD ICX.";
         public int Id => 3;
-        public Dictionary<string, string> Params { get; set; }
         private Dictionary<string, Type> SummaryTargetTables { get; }
 
         public SgIntlInIcx() //constructor
@@ -36,6 +35,11 @@ namespace TelcobrightMediation
 
         public void ExecutePostRatingActions(CdrExt cdrExt, object postRatingData)
         {
+        }
+
+        public void SetAdditionalParams(Dictionary<string, string> additionalParams)
+        {
+            
         }
 
         public void Execute(cdr thisCdr, CdrProcessor cdrProcessor)
@@ -70,7 +74,7 @@ namespace TelcobrightMediation
             {
                 throw new Exception("Chargeable info not found for customer direction.");
             }
-            this._sgIntlTransitVoice.SetChargingSummaryInCustomerDirection(chargeableCust, newSummary);
+            this.sgIntlTransitVoice.SetChargingSummaryInCustomerDirection(chargeableCust, newSummary);
             newSummary.tax1 = Convert.ToDecimal(chargeableCust.TaxAmount1);
         }
     }

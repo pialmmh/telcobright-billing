@@ -12,7 +12,7 @@ namespace TelcobrightMediation
     [Export("ServiceGroup", typeof(IServiceGroup))]
     public class SgIntlOutIGw : IServiceGroup
     {
-        private readonly SgIntlTransitVoice _sgIntlTransitVoice = new SgIntlTransitVoice();
+        private readonly SgIntlTransitVoice sgIntlTransitVoice = new SgIntlTransitVoice();
         public override string ToString() => this.RuleName;
         public string RuleName => "International Outgoing Calls [IGW]";
 
@@ -20,7 +20,6 @@ namespace TelcobrightMediation
             "Service group International Outgoing for BD IGW. Old common mediation codes for IGW, could not separate in short time, covers both intl in/out";
 
         public int Id => 5;
-        public Dictionary<string, string> Params { get; set; }
         private Dictionary<string, Type> SummaryTargetTables { get; }
 
         public SgIntlOutIGw() //constructor
@@ -38,6 +37,11 @@ namespace TelcobrightMediation
         }
 
         public void ExecutePostRatingActions(CdrExt cdrExt, object postRatingData)
+        {
+            
+        }
+
+        public void SetAdditionalParams(Dictionary<string, string> additionalParams)
         {
             
         }
@@ -156,7 +160,7 @@ namespace TelcobrightMediation
             {
                 throw new Exception("Chargeable info not found for supplier direction.");
             }
-            this._sgIntlTransitVoice.SetChargingSummaryInSupplierDirection(chargeableSupp, newSummary);
+            this.sgIntlTransitVoice.SetChargingSummaryInSupplierDirection(chargeableSupp, newSummary);
         }
     }
 }

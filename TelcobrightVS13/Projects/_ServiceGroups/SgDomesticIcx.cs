@@ -16,7 +16,6 @@ namespace TelcobrightMediation
         public string RuleName => "Domestic Calls [ICX]";
         public string HelpText => "Service group Domestic for BD ICX.";
         public int Id => 1;
-        public Dictionary<string, string> Params { get; set; }
         private Dictionary<string, Type> SummaryTargetTables { get; }
 
         public SgDomesticIcx() //constructor
@@ -36,6 +35,11 @@ namespace TelcobrightMediation
         public void ExecutePostRatingActions(CdrExt cdrExt, object postRatingData)
         {
 
+        }
+
+        public void SetAdditionalParams(Dictionary<string, string> additionalParams)
+        {
+            
         }
 
         public void Execute(cdr thisCdr, CdrProcessor cdrProcessor)

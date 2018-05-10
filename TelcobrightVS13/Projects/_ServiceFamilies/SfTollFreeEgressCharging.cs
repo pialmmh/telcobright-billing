@@ -23,27 +23,49 @@ namespace ServiceFamilies
         public override string HelpText => "Toll Free Egress Charging";
         public override int Id => 5;
 
-        protected override void GetTaxAmount(ServiceContext serviceContext, cdr cdr, decimal taxAmount)
+        protected override acc_chargeable CreateChargeable(ServiceContext serviceContext, cdr cdr, decimal finalDuration, decimal finalAmount, Rateext rateWithAssignmentTupleId, string idCurrencyUoM, BillingRule billingRule, account postingAccount)
         {
-            if (serviceContext.AssignDir == ServiceAssignmentDirection.Customer)
+            serviceContext.AssignDir=ServiceAssignmentDirection.Customer;
+            return new acc_chargeable
             {
-                throw new Exception("Rateplan must be assigned in supplier direction for TollFree Egress charging calls.");
-            }
-            if (serviceContext.AssignDir == ServiceAssignmentDirection.Supplier)
-            {
-                cdr.Tax1= taxAmount;
-            }
-            else
-            {
-                throw new ArgumentException();
-            }
+                id = serviceContext.CdrProcessor.CdrJobContext.AccountingContext.AutoIncrementManager.GetNewCounter(AutoIncrementCounterType.acc_chargeable),
+                uniqueBillId = cdr.UniqueBillId,
+                idEvent = Convert.ToInt64(cdr.IdCall),
+                transactionTime = cdr.StartTime,
+                servicegroup = serviceContext.ServiceGroupConfiguration.IdServiceGroup,
+                assignedDirection = Convert.ToSByte(serviceContext.AssignDir),
+                servicefamily = serviceContext.ServiceFamily.Id,
+                ProductId = rateWithAssignmentTupleId.ProductId,
+                idBilledUom = idCurrencyUoM,
+                idQuantityUom = "TF_s",
+                BilledAmount = Convert.ToDecimal(finalAmount),
+                Quantity = finalDuration,
+                unitPriceOrCharge = rateWithAssignmentTupleId.rateamount,
+                Prefix = rateWithAssignmentTupleId.Prefix,
+                RateId = rateWithAssignmentTupleId.id,
+                glAccountId = postingAccount.id,
+                changedByJob = serviceContext.CdrProcessor.CdrJobContext.TelcobrightJob.id,
+                idBillingrule = billingRule.Id,
+            };
+        }
+        protected override void SetTaxAmount(ServiceContext serviceContext, cdr cdr, decimal taxAmount)
+        {
+            cdr.Tax1 = taxAmount;
         }
 
         protected override int GetChargedOrChargingPartnerId(CdrExt cdrExt,
                 ServiceContext serviceContext)
         {
-            return serviceContext.AssignDir == ServiceAssignmentDirection.Supplier
-                ? Convert.ToInt32(cdrExt.Cdr.OutPartnerId): -1;
+            return Convert.ToInt32(cdrExt.Cdr.OutPartnerId);
+        }
+        protected override account GetPostingAccount(ServiceContext serviceContext, Rateext rateWithAssignmentTupleId, int idChargedPartner, BillingRule billingRule)
+        {
+            serviceContext.AssignDir = ServiceAssignmentDirection.Customer;
+            CdrPostingAccountingFinder postingAccountingFinder =
+                new CdrPostingAccountingFinder(serviceContext, rateWithAssignmentTupleId, idChargedPartner,
+                    billingRule);
+            var postingAccount = postingAccountingFinder.GetPostingAccount();
+            return postingAccount;
         }
     }
 }

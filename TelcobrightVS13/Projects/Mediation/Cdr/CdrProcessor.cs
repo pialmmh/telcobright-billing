@@ -155,6 +155,7 @@ namespace TelcobrightMediation
                     .TryGetValue(kv.Key, out serviceGroup);
                 if (serviceGroup != null)
                 {
+                    serviceGroupConfiguration = kv.Value;
                     newCdrExt.Cdr.ServiceGroup = 0; //unset ServiceGroup first if already set e.g. during re-processing
                     serviceGroup.Execute(newCdrExt.Cdr, this);
                     if (newCdrExt.Cdr.ServiceGroup > 0) return serviceGroup;

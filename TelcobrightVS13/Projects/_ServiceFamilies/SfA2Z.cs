@@ -35,52 +35,17 @@ namespace ServiceFamilies
                 cdr.Duration1 = finalDuration;
                 decimal taxAmount = Convert.ToDecimal(cdr.InPartnerCost) *
                                     Convert.ToDecimal(rateWithAssignmentTupleId.OtherAmount3) / 100;
-                GetTaxAmount(serviceContext, cdr, taxAmount);
+                SetTaxAmount(serviceContext, cdr, taxAmount);
                 string idCurrencyUoM = serviceContext.CdrProcessor.CdrJobContext.MediationContext.MefServiceFamilyContainer
                     .DicRateplans[rateWithAssignmentTupleId.idrateplan.ToString()].Currency;
                 int idChargedPartner = GetChargedOrChargingPartnerId(cdrExt, serviceContext);
                 BillingRule billingRule = GetBillingRule(serviceContext,
                     rateWithAssignmentTupleId.IdRatePlanAssignmentTuple);
-                CdrPostingAccountingFinder postingAccountingFinder =
-                    new CdrPostingAccountingFinder(serviceContext, rateWithAssignmentTupleId, idChargedPartner,
-                        billingRule);
-                var postingAccount = postingAccountingFinder.GetPostingAccount();
+                account postingAccount = GetPostingAccount(serviceContext, rateWithAssignmentTupleId, idChargedPartner, billingRule);
                 if (cdrExt.Cdr.ChargingStatus == 1)
                 {
-                    var chargeable = new acc_chargeable
-                    {
-                        id = serviceContext.CdrProcessor.CdrJobContext.AccountingContext.AutoIncrementManager.GetNewCounter(AutoIncrementCounterType.acc_chargeable),
-                        uniqueBillId = cdr.UniqueBillId,
-                        idEvent = Convert.ToInt64(cdr.IdCall),
-                        transactionTime = cdr.StartTime,
-                        servicegroup = serviceContext.ServiceGroupConfiguration.IdServiceGroup,
-                        assignedDirection = Convert.ToSByte(serviceContext.AssignDir),
-                        servicefamily = serviceContext.ServiceFamily.Id,
-                        ProductId = rateWithAssignmentTupleId.ProductId,
-                        idBilledUom = idCurrencyUoM,
-                        idQuantityUom = "TF_s",
-                        BilledAmount = Convert.ToDecimal(finalAmount),
-                        Quantity = finalDuration,
-                        unitPriceOrCharge = rateWithAssignmentTupleId.rateamount,
-                        Prefix = rateWithAssignmentTupleId.Prefix,
-                        RateId = rateWithAssignmentTupleId.id,
-                        glAccountId = postingAccount.id,
-                        changedByJob = serviceContext.CdrProcessor.CdrJobContext.TelcobrightJob.id,
-                        idBillingrule = billingRule.Id,
-                    };
-                    if (serviceContext.AssignDir == ServiceAssignmentDirection.Customer)
-                    {
-                        chargeable.TaxAmount1 = taxAmount;
-                    }
-                    else if (serviceContext.AssignDir == ServiceAssignmentDirection.Supplier)
-                    {
-                        chargeable.TaxAmount2 = taxAmount;
-                    }
-                    else
-                    {
-                        throw new ArgumentException();
-                    }
-
+                    acc_chargeable chargeable = CreateChargeable(serviceContext, cdr, finalDuration, finalAmount, rateWithAssignmentTupleId, idCurrencyUoM, billingRule, postingAccount);
+                    SetTaxAmount(serviceContext,cdr,taxAmount);
                     if (chargeable.createdByJob == null)
                     {
                         chargeable.createdByJob = serviceContext.CdrProcessor.CdrJobContext.TelcobrightJob.id;
@@ -101,7 +66,41 @@ namespace ServiceFamilies
             return null;
         }//execute
 
-        protected virtual void GetTaxAmount(ServiceContext serviceContext, cdr cdr, decimal taxAmount)
+        protected virtual acc_chargeable CreateChargeable(ServiceContext serviceContext, cdr cdr, decimal finalDuration, decimal finalAmount, Rateext rateWithAssignmentTupleId, string idCurrencyUoM, BillingRule billingRule, account postingAccount)
+        {
+            return new acc_chargeable
+            {
+                id = serviceContext.CdrProcessor.CdrJobContext.AccountingContext.AutoIncrementManager.GetNewCounter(AutoIncrementCounterType.acc_chargeable),
+                uniqueBillId = cdr.UniqueBillId,
+                idEvent = Convert.ToInt64(cdr.IdCall),
+                transactionTime = cdr.StartTime,
+                servicegroup = serviceContext.ServiceGroupConfiguration.IdServiceGroup,
+                assignedDirection = Convert.ToSByte(serviceContext.AssignDir),
+                servicefamily = serviceContext.ServiceFamily.Id,
+                ProductId = rateWithAssignmentTupleId.ProductId,
+                idBilledUom = idCurrencyUoM,
+                idQuantityUom = "TF_s",
+                BilledAmount = Convert.ToDecimal(finalAmount),
+                Quantity = finalDuration,
+                unitPriceOrCharge = rateWithAssignmentTupleId.rateamount,
+                Prefix = rateWithAssignmentTupleId.Prefix,
+                RateId = rateWithAssignmentTupleId.id,
+                glAccountId = postingAccount.id,
+                changedByJob = serviceContext.CdrProcessor.CdrJobContext.TelcobrightJob.id,
+                idBillingrule = billingRule.Id,
+            };
+        }
+
+        protected virtual account GetPostingAccount(ServiceContext serviceContext, Rateext rateWithAssignmentTupleId, int idChargedPartner, BillingRule billingRule)
+        {
+            CdrPostingAccountingFinder postingAccountingFinder =
+                                new CdrPostingAccountingFinder(serviceContext, rateWithAssignmentTupleId, idChargedPartner,
+                                    billingRule);
+            var postingAccount = postingAccountingFinder.GetPostingAccount();
+            return postingAccount;
+        }
+
+        protected virtual void SetTaxAmount(ServiceContext serviceContext, cdr cdr, decimal taxAmount)
         {
             if (serviceContext.AssignDir == ServiceAssignmentDirection.Customer)
             {

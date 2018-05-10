@@ -17,9 +17,8 @@ namespace TelcobrightMediation
         public string RuleName => "LTFS Calls [ICX]";
         public string HelpText => "Service group LTFS for BD ICX.";
         public int Id => 6;
-        public Dictionary<string, string> Params { get; set; }=new Dictionary<string, string>();
         private Dictionary<string, Type> SummaryTargetTables { get; }
-        private List<string> PrefixesOrderedByMaxLenFirst { get; }
+        private List<string> PrefixesOrderedByMaxLenFirst { get; set; }
 
         public SgLtfsIcx() //constructor
         {
@@ -28,15 +27,6 @@ namespace TelcobrightMediation
                 {"sum_voice_day_04", typeof(sum_voice_day_04)},
                 {"sum_voice_hr_04", typeof(sum_voice_hr_04)},
             };
-            if (this.Params.ContainsKey("prefixes"))
-            {
-                this.PrefixesOrderedByMaxLenFirst = this.Params["prefixes"].Split(',')
-                    .OrderByDescending(c => c.Length).ToList();
-            }
-            else
-            {
-                this.PrefixesOrderedByMaxLenFirst=new List<string>();
-            }
         }
 
         public Dictionary<string, Type> GetSummaryTargetTables()
@@ -47,6 +37,19 @@ namespace TelcobrightMediation
         public void ExecutePostRatingActions(CdrExt cdrExt, object postRatingData)
         {
 
+        }
+
+        public void SetAdditionalParams(Dictionary<string, string> additionalParams)
+        {
+            if (additionalParams.ContainsKey("prefixes"))
+            {
+                this.PrefixesOrderedByMaxLenFirst = additionalParams["prefixes"].Split(',')
+                    .OrderByDescending(c => c.Length).ToList();
+            }
+            else
+            {
+                this.PrefixesOrderedByMaxLenFirst = new List<string>();
+            }
         }
 
         public void Execute(cdr cdr, CdrProcessor cdrProcessor)
@@ -65,7 +68,7 @@ namespace TelcobrightMediation
                     {
                         if (cdr.OriginatingCalledNumber.StartsWith(prefix))
                         {
-                            cdr.ServiceGroup = 6; //LTFS in ICX           
+                            cdr.ServiceGroup = this.Id; //LTFS in ICX           
                             break;
                         }
                     }
@@ -82,7 +85,7 @@ namespace TelcobrightMediation
             if (cdrExt.Cdr.ChargingStatus != 1) return;
 
             acc_chargeable chargeableCust = null;
-            cdrExt.Chargeables.TryGetValue(new ValueTuple<int, int, int>(this.Id, 1, 1), out chargeableCust);
+            cdrExt.Chargeables.TryGetValue(new ValueTuple<int, int, int>(this.Id, 5, 1), out chargeableCust);
             if (chargeableCust == null)
             {
                 throw new Exception("Chargeable info not found for customer direction.");

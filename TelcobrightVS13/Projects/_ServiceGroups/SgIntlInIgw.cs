@@ -20,7 +20,6 @@ namespace TelcobrightMediation
             "Service group International Incoming for BD IGW. Old common mediation codes for IGW, could not separate in short time, covers both intl in/out";
 
         public int Id => 4;
-        public Dictionary<string, string> Params { get; set; }
         private Dictionary<string, Type> SummaryTargetTables { get; }
 
         public SgIntlInIgw() //constructor
@@ -38,6 +37,11 @@ namespace TelcobrightMediation
         }
 
         public void ExecutePostRatingActions(CdrExt cdrExt, object postRatingData)
+        {
+            
+        }
+
+        public void SetAdditionalParams(Dictionary<string, string> additionalParams)
         {
             
         }
