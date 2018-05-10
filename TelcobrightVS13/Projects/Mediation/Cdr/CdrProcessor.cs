@@ -54,7 +54,7 @@ namespace TelcobrightMediation
                     ResetMediationStatus(cdrExt.Cdr);
                     ServiceGroupConfiguration serviceGroupConfiguration = null;
                     IServiceGroup serviceGroup = ExecuteServiceGroups(cdrExt, out serviceGroupConfiguration);
-                    serviceGroupConfiguration.ServiceGroup = serviceGroup;
+                    serviceGroupConfiguration.SetServiceGroup(serviceGroup);
                     if (serviceGroup != null)
                     {
                         ExecutePartnerRules(serviceGroupConfiguration.PartnerRules, cdrExt);

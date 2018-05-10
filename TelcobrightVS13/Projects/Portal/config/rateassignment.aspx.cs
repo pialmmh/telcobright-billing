@@ -5584,21 +5584,21 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
             //LnkBtnRate.OnClientClick = "window.open('rates.aspx?idRatePlan=" + DataBinder.Eval(e.Row.DataItem, "inactive").ToString() + "')";
 
             //Label TempLabel = (Label)e.Row.FindControl("lblservice");
-            rateplanassignmenttuple ThisTuple = null;
-            long TupleId = Convert.ToInt64(DataBinder.Eval(e.Row.DataItem, "prefix"));
+            rateplanassignmenttuple thisTuple = null;
+            long tupleId = Convert.ToInt64(DataBinder.Eval(e.Row.DataItem, "prefix"));
             long idservice = -1;
-            if (dicTuple.TryGetValue(TupleId, out ThisTuple))
+            if (dicTuple.TryGetValue(tupleId, out thisTuple))
             {
-                enumservicefamily Thisservice = null;
-                dicservice.TryGetValue(ThisTuple.idService, out Thisservice);
-                Labelservicename.Text = Thisservice.ServiceName;
-                LabelPulse.Text = ThisTuple.priority.ToString();
-                LabelAssignDir.Text = ThisTuple.AssignDirection.ToString();
+                enumservicefamily thisservice = null;
+                dicservice.TryGetValue(thisTuple.idService, out thisservice);
+                Labelservicename.Text = thisservice.ServiceName;
+                LabelPulse.Text = thisTuple.priority.ToString();
+                LabelAssignDir.Text = thisTuple.AssignDirection.ToString();
 
                 string Routename = "Error!";
-                if (ThisTuple.route != null)
+                if (thisTuple.route != null)
                 {
-                    dicroute.TryGetValue(Convert.ToInt32(ThisTuple.route), out Routename);
+                    dicroute.TryGetValue(Convert.ToInt32(thisTuple.route), out Routename);
                     LabelRoute.Text = Routename;
                 }
                 else
@@ -5606,8 +5606,8 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                     LabelRoute.Text = "-";
                 }
 
-                idservice = ThisTuple.idService;
-                switch (ThisTuple.AssignDirection)
+                idservice = thisTuple.idService;
+                switch (thisTuple.AssignDirection)
                 {
                     case 1:
                         LabelAssignDir.Text = "Customer";

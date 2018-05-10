@@ -112,9 +112,9 @@ namespace TelcobrightMediation.Mediation.Cdr
                 convertedCdr.RedirectingNumber = txtRow[Fn.Redirectingnumber];
                 convertedCdr.CallForwardOrRoamingType = txtRow[Fn.Callforwardorroamingtype].GetValueOrNull<byte>();
                 convertedCdr.OtherDate = txtRow[Fn.OtherDate].ConvertToNullableDateTimeFromMySqlFormat();
-                convertedCdr.SummaryMetaTotal = txtRow[Fn.SummaryMetaTotal].GetValueOrNull<int>();
-                convertedCdr.TransactionMetaTotal = txtRow[Fn.TransactionMetaTotal].GetValueOrNull<int>();
-                convertedCdr.ChargeableMetaTotal = txtRow[Fn.ChargeableMetaTotal].GetValueOrNull<int>();
+                convertedCdr.SummaryMetaTotal = txtRow[Fn.SummaryMetaTotal].GetValueOrNull<decimal>();
+                convertedCdr.TransactionMetaTotal = txtRow[Fn.TransactionMetaTotal].GetValueOrNull<decimal>();
+                convertedCdr.ChargeableMetaTotal = txtRow[Fn.ChargeableMetaTotal].GetValueOrNull<decimal>();
                 convertedCdr.ErrorCode = txtRow[Fn.ErrorCode];
                 convertedCdr.NERSuccess = txtRow[Fn.NERSuccess].GetValueOrNull<int>();
                 convertedCdr.RoundedDuration = txtRow[Fn.RoundedDuration].GetValueOrNull<decimal>();

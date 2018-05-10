@@ -12,7 +12,7 @@ namespace TelcobrightMediation
     [Export("ServiceGroup", typeof(IServiceGroup))]
     public class SgLtfsIcx : IServiceGroup
     {
-        private readonly SgIntlTransitVoice _sgIntlTransitVoice = new SgIntlTransitVoice();
+        private readonly SgIntlTransitVoice sgIntlTransitVoice = new SgIntlTransitVoice();
         public override string ToString() => this.RuleName;
         public string RuleName => "LTFS Calls [ICX]";
         public string HelpText => "Service group LTFS for BD ICX.";
@@ -32,6 +32,10 @@ namespace TelcobrightMediation
             {
                 this.PrefixesOrderedByMaxLenFirst = this.Params["prefixes"].Split(',')
                     .OrderByDescending(c => c.Length).ToList();
+            }
+            else
+            {
+                this.PrefixesOrderedByMaxLenFirst=new List<string>();
             }
         }
 
@@ -83,7 +87,7 @@ namespace TelcobrightMediation
             {
                 throw new Exception("Chargeable info not found for customer direction.");
             }
-            this._sgIntlTransitVoice.SetChargingSummaryInCustomerDirection(chargeableCust, newSummary);
+            this.sgIntlTransitVoice.SetChargingSummaryInCustomerDirection(chargeableCust, newSummary);
             newSummary.tax1 = Convert.ToDecimal(chargeableCust.TaxAmount1);
         }
     }

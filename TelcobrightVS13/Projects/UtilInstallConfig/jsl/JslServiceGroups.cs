@@ -20,6 +20,57 @@ namespace InstallConfig
         public Dictionary<int, ServiceGroupConfiguration> GetServiceGroupConfigurations()
         {
             List<ServiceGroupConfiguration> serviceGroupConfigurations = new List<ServiceGroupConfiguration>();
+
+            serviceGroupConfigurations.Add(new ServiceGroupConfiguration(idServiceGroup: 6) //LTFS
+            {
+                Params = new Dictionary<string, string>() { {"prefixes","0800" } },
+                PartnerRules = new List<int>()
+                {
+                    PartnerRuletype.InPartnerByIncomingRoute,
+                    PartnerRuletype.OutPartnerByOutgoingRoute
+                },
+                Ratingtrules = new List<RatingRule>()
+                {
+                    new RatingRule() {IdServiceFamily = ServiceFamilyType.SfTollFreeEgressCharging, AssignDirection = 2},
+                },
+                MediationChecklistForAnsweredCdrs =
+                    new Dictionary<string, string>()
+                    {
+                        {
+                            "obj.DurationSec >= 0",
+                            "DurationSec must be >=  0"
+                        },
+                        {
+                            "!String.IsNullOrEmpty(obj.OutgoingRoute) and !String.IsNullOrWhiteSpace(obj.OutgoingRoute)",
+                            "OutgoingRoute cannot be empty"
+                        },
+                        {
+                            "obj.InPartnerId > 0",
+                            "InPartnerId must be > 0"
+                        },
+
+                        {
+                            "obj.OutPartnerId > 0",
+                            "OutPartnerId must be > 0"
+                        },
+                        {
+                            "!String.IsNullOrEmpty(obj.matchedprefixsupplier) and !String.IsNullOrWhiteSpace(obj.matchedprefixsupplier)",
+                            "matchedprefixsupplier cannot be empty"
+                        },
+                        {
+                            "obj.DurationSec >= 0.1M ? obj.duration2 > 0 : obj.duration2 == 0 ",
+                            "duration2 must be > 0 when DurationSec >= 0.1"
+                        },
+                        {
+                            "obj.DurationSec >= 0.1M ? obj.OutPartnerCost > 0 : obj.OutPartnerCost == 0 ",
+                            "OutPartnerCost must be > 0 when DurationSec >= 0.1"
+                        },
+                        {
+                            "obj.DurationSec >= 0.1M ? obj.Tax1 > 0 : obj.Tax1 == 0 ",
+                            "BTRC RevShare (Tax1) must be > 0 when DurationSec >= 0.1"
+                        },
+                    },
+            });
             serviceGroupConfigurations.Add(new ServiceGroupConfiguration(idServiceGroup: 1) //domestic
             {
                 PartnerRules = new List<int>()

@@ -12,6 +12,8 @@ namespace TelcobrightMediation
         sum_voice_day_03 = 8,
         sum_voice_hr_01 = 9,
         sum_voice_hr_02 = 10,
-        sum_voice_hr_03 = 11
+        sum_voice_hr_03 = 11,
+        sum_voice_day_04 = 12,
+        sum_voice_hr_04 = 13,
     }
 }

@@ -20,8 +20,8 @@ namespace ServiceFamilies
         }
 
         public override string RuleName => GetType().Name;
-        public override string HelpText => "Toll Free Egress Chaging";
-        public override int Id => 1;
+        public override string HelpText => "Toll Free Egress Charging";
+        public override int Id => 5;
 
         protected override void GetTaxAmount(ServiceContext serviceContext, cdr cdr, decimal taxAmount)
         {
