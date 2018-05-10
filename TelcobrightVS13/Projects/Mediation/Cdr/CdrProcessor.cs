@@ -46,15 +46,15 @@ namespace TelcobrightMediation
 
         public void Mediate()
         {
-            //this.NewCdrExts.ForEach(cdrExt =>
-            Parallel.ForEach(this.NewCdrExts, cdrExt =>
+            //todo: change to parallel
+            this.NewCdrExts.ForEach(cdrExt =>
+            //Parallel.ForEach(this.NewCdrExts, cdrExt =>
             {
                 try
                 {
                     ResetMediationStatus(cdrExt.Cdr);
                     ServiceGroupConfiguration serviceGroupConfiguration = null;
                     IServiceGroup serviceGroup = ExecuteServiceGroups(cdrExt, out serviceGroupConfiguration);
-                    serviceGroupConfiguration.SetServiceGroup(serviceGroup);
                     if (serviceGroup != null)
                     {
                         ExecutePartnerRules(serviceGroupConfiguration.PartnerRules, cdrExt);
@@ -152,13 +152,10 @@ namespace TelcobrightMediation
             {
                 IServiceGroup serviceGroup = null;
                 this.CdrJobContext.MediationContext.MefServiceGroupContainer.IdServiceGroupWiseServiceGroups
-                    .TryGetValue(kv.Key,
-                        out serviceGroup);
+                    .TryGetValue(kv.Key, out serviceGroup);
                 if (serviceGroup != null)
                 {
-                    serviceGroupConfiguration = kv.Value;
-                    newCdrExt.Cdr.ServiceGroup =
-                        0; //unset ServiceGroup first if already set e.g. during re-processing
+                    newCdrExt.Cdr.ServiceGroup = 0; //unset ServiceGroup first if already set e.g. during re-processing
                     serviceGroup.Execute(newCdrExt.Cdr, this);
                     if (newCdrExt.Cdr.ServiceGroup > 0) return serviceGroup;
                 }

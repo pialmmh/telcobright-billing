@@ -104,10 +104,8 @@ namespace Jobs
             foreach (CdrExt cdrExt in cdrProcessor.CollectionResult.ConcurrentCdrExts.Values)
             {
                 //service group1 (domestic) has been directly referred in this project
-                IServiceGroup sgDomestic = new SgDomesticIcx();
                 IServiceFamily a2ZServiceFamily=new SfA2Z();
                 var serviceGroupConfiguration = new ServiceGroupConfiguration(idServiceGroup: 1);
-                serviceGroupConfiguration.SetServiceGroup(sgDomestic);
                 ServiceContext serviceContext = new ServiceContext(cdrProcessor, 
                     serviceGroupConfiguration 
                     , a2ZServiceFamily,
