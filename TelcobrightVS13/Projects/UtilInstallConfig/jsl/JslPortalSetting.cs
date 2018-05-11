@@ -297,6 +297,9 @@ namespace InstallConfig
                     },
                     { "~/reports/icx/Domestic.aspx",
                         settingIntlIn
+                    },
+                    { "~/reports/icx/LocalTollFree.aspx",
+                        settingIntlIn
                     }
                 },//dictionary of page settings
 

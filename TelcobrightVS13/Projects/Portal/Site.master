@@ -129,6 +129,9 @@
                 <asp:TreeNode Value="Int.Out" Expanded="True" Text="Int.Out" SelectAction="None">
               <asp:TreeNode Value="Traffic" Text="Traffic" SelectAction="Select" NavigateUrl="~/reports/icx/InternationalOut _ICX.aspx"> </asp:TreeNode>
                </asp:TreeNode>
+                <asp:TreeNode Value="Local Toll Free" Expanded="True" Text="Local Toll Free" SelectAction="None">
+                    <asp:TreeNode Value="Traffic" Text="Traffic" SelectAction="Select" NavigateUrl="~/reports/icx/LocalTollFree.aspx"> </asp:TreeNode>
+                </asp:TreeNode>
             </asp:TreeNode>
 
         <%--<asp:TreeNode Value="CDR" Expanded="True" Text="CDR"  SelectAction="None">
