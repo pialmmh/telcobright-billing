@@ -232,6 +232,7 @@ namespace TelcobrightFileOperations
     {
         public SpringExpression ExpFileNameFilter { get; set; }
         public string SecondaryDirectory { get; set; }
+        public bool MoveFilesToSecondaryAfterCopy { get; set; }
         public bool Recursive { get; set; }
     }
     public enum DateWiseSubDirCreationType

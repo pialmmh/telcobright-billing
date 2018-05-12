@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using LibraryExtensions;
 using WinSCP;
 
 
@@ -204,7 +206,9 @@ namespace TelcobrightFileOperations
             }
             return false;
         }
-        public bool CopyFileRemoteLocal(SyncSettingsDest dstSettings, Session session, FileSyncInfo srcInfoRemote, FileSyncInfo dstInfoLocal, bool overwrite, bool removeOriginal)
+
+        public bool CopyFileRemoteLocal(SyncSettingsDest dstSettings, Session session, FileSyncInfo srcInfoRemote,
+            FileSyncInfo dstInfoLocal, bool overwrite, bool removeOriginal,SyncSettingsSource syncSettingsSource)
         {
             if (srcInfoRemote.SyncLocation.FileLocation.LocationType.StartsWith("local"))
             {
@@ -214,7 +218,7 @@ namespace TelcobrightFileOperations
             {
                 if (File.Exists(dstInfoLocal.FullPath))
                 {
-                    return true;//throw new System.Exception("File " + dstInfoLocal.fullPath + " exists!");
+                    return true; //throw new System.Exception("File " + dstInfoLocal.fullPath + " exists!");
                 }
             }
             if (File.Exists(dstInfoLocal.FullPath))
@@ -237,10 +241,31 @@ namespace TelcobrightFileOperations
             }
             if (File.Exists(dstInfoLocal.FullPath))
             {
+                if (!syncSettingsSource.SecondaryDirectory.IsNullOrEmptyOrWhiteSpace()&&
+                    syncSettingsSource.MoveFilesToSecondaryAfterCopy==true)
+                {
+                    try
+                    {
+                        string[] pathToDestinationFile = srcInfoRemote.FullPath.Split('/');
+                        string destNamePrefixedBySecondary =
+                            syncSettingsSource.SecondaryDirectory + "/" + pathToDestinationFile.Last();
+                        pathToDestinationFile[pathToDestinationFile.Length - 1] = destNamePrefixedBySecondary;
+                        string finalTargetFileName = string.Join("/", pathToDestinationFile);
+                        session.MoveFile(srcInfoRemote.FullPath,finalTargetFileName);
+                    }
+                    catch (Exception e)
+                    {
+                        //just log an error, ignore remote server file moving failure after download
+                        Console.WriteLine(e);
+                        new ErrorWriter(e, "FileCopier", null, "Could not move file in remote server after downloaded.",
+                            "");
+                    }
+                }
                 return true;
             }
             return false;
         }
+
         public bool CopyFileLocalRemote(SyncSettingsDest dstSettings, Session session,
             FileSyncInfo srcInfoLocal, FileSyncInfo dstInfoRemote, bool overwrite, bool removeOriginal)
         {

@@ -98,7 +98,7 @@ namespace TelcobrightMediation
                     try
                     {
                         FileSyncInfo sourceInfo = new FileSyncInfo(localInfo.RelativePath, rsl);
-                        if (fs.CopyFileRemoteLocal(dstSettings, rsl.GetRemoteFileTransferSession(this.Tbc), sourceInfo, destinationInfo, true, false) == true)
+                        if (fs.CopyFileRemoteLocal(dstSettings, rsl.GetRemoteFileTransferSession(this.Tbc), sourceInfo, destinationInfo, true, false,null) == true)
                         {
                             if (File.Exists(localInfo.FullPath))
                             {

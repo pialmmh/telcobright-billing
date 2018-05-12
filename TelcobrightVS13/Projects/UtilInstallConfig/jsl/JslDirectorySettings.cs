@@ -82,7 +82,7 @@ namespace InstallConfig
                 //User = "icxbill",
                 //Pass = "icx123",
                 ServerIp = "192.168.0.105",
-                User = "zxss10_bsvr",
+                User = "ftpuser",
                 Pass = "Takay1takaane",
                 ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
                 IgnoreZeroLenghFile = 1
@@ -129,8 +129,7 @@ namespace InstallConfig
             tbc.DirectorySettings.FileLocations.Add(fileArchiveCAS.Name, fileArchiveCAS);
 
 
-            //sync pair platinum:Vault
-            SyncPair JslZteDhkVault = new SyncPair("JslZteDhk:Vault")
+            SyncPair jslZteDhkVault = new SyncPair("JslZteDhk:Vault")
             {
                 SkipSourceFileListing = false,
                 SrcSyncLocation = new SyncLocation("JslZteDhk")
@@ -145,6 +144,7 @@ namespace InstallConfig
                 SrcSettings = new SyncSettingsSource()
                 {
                     SecondaryDirectory = "downloaded",
+                    MoveFilesToSecondaryAfterCopy = true,
                     ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('ICX')
                                                                 and
                                                                 (Name.EndsWith('.DAT'))
@@ -219,7 +219,7 @@ namespace InstallConfig
             };
 
             //add sync pairs to directory config
-            directorySetting.SyncPairs.Add(JslZteDhkVault.Name, JslZteDhkVault);
+            directorySetting.SyncPairs.Add(jslZteDhkVault.Name, jslZteDhkVault);
             directorySetting.SyncPairs.Add(vaultS3FileArchive1.Name, vaultS3FileArchive1);
             directorySetting.SyncPairs.Add(vaultS3CAS.Name, vaultS3CAS);
             //load the syncpairs in dictioinary, first by source

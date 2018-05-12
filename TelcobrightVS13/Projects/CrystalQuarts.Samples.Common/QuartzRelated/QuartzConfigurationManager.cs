@@ -56,8 +56,6 @@ namespace CrystalQuarts.Samples.Common
         {
             return TriggerBuilder.Create()
                 .WithIdentity(qData.Identity + "_trigger", qData.Group)
-                //.ForJob(jobKey)//it's an option to have individual trigger per job
-                //.StartNow()
                 .WithCronSchedule(qData.CronExpression)
                 .Build();
         }

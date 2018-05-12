@@ -55,7 +55,7 @@ namespace Jobs
         }
         public JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
         {
-            FileOperationJobInputData input = (FileOperationJobInputData) jobInputData;
+            FileCopyJobInputData input = (FileCopyJobInputData) jobInputData;
             JobParamFileCopy paramFileCopy = new JobParamFileCopy();
             paramFileCopy = JsonConvert.DeserializeObject<JobParamFileCopy>(input.TelcobrightJob.JobParameter);
             SyncPair syncPair = input.Tbc.DirectorySettings.SyncPairs[paramFileCopy.SyncPairName];
@@ -101,7 +101,7 @@ namespace Jobs
                             FileSyncInfo tempInfo = GetTempSyncInfo();
                             Session session = srcLocation.GetRemoteFileTransferSession(input.Tbc);
                             if (fs.CopyFileRemoteLocal(syncPair.DstSettings,session, sourceSyncInfo,tempInfo
-                                ,true, false) == false)
+                                ,true, false,null) == false)
                             {
                                 throw new Exception("Could not copy file from remote server!");
                             }
@@ -138,7 +138,7 @@ namespace Jobs
                             FileSyncInfo tempInfo = GetTempSyncInfo();
                             Session session = srcLocation.GetRemoteFileTransferSession(input.Tbc);
                             if (fs.CopyFileRemoteLocal(syncPair.DstSettings,session,sourceSyncInfo,
-                                tempInfo, true, false) == false)
+                                tempInfo, true, false,syncSettingSrc) == false)
                             {
                                 throw new Exception("Could not copy file from remote server!");
                             }
@@ -160,7 +160,7 @@ namespace Jobs
                             FileSyncInfo tempInfo = GetTempSyncInfo();
                             Session session = srcLocation.GetRemoteFileTransferSession(input.Tbc);
                             if (fs.CopyFileRemoteLocal(syncPair.DstSettings,session,sourceSyncInfo, 
-                                tempInfo, true, false) == false)
+                                tempInfo, true, false,syncSettingSrc) == false)
                             {
                                 throw new Exception("Could not copy file from remote server!");
                             }
@@ -197,7 +197,7 @@ namespace Jobs
                     {
                         if (fs.CopyFileRemoteLocal(syncPair.DstSettings,session,
                             sourceSyncInfo,destinationSyncInfo
-                            , true, false) == false)
+                            , true, false,syncSettingSrc) == false)
                         {
                             throw new Exception("Could not copy file from remote server!");
                         }
@@ -215,7 +215,7 @@ namespace Jobs
                         FileSyncInfo tempInfo = GetTempSyncInfo();
                         session = srcLocation.GetRemoteFileTransferSession(input.Tbc);
                         if (fs.CopyFileRemoteLocal(syncPair.DstSettings,session,sourceSyncInfo,
-                            tempInfo , true, false) == false)
+                            tempInfo , true, false,syncSettingSrc) == false)
                         {
                             throw new Exception("Could not copy file from remote server!");
                         }

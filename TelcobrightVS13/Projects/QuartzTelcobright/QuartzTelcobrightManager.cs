@@ -79,9 +79,8 @@ namespace QuartzTelcobright
         {
             return TriggerBuilder.Create()
                 .WithIdentity(qData.Identity +" " +qData.Group, qData.Group)
-                //.ForJob(jobKey)//it's an option to have individual trigger per job
-                //.StartNow()
-                .WithCronSchedule(qData.CronExpression)
+                .WithCronSchedule(qData.CronExpression,x=>x
+                .WithMisfireHandlingInstructionDoNothing())
                 .Build();
         }
         private ITrigger CreateTriggerWithMissFire(QuartzTbDaemonConfig qData)
@@ -89,7 +88,7 @@ namespace QuartzTelcobright
             return TriggerBuilder
                 .Create()
                 .WithIdentity(qData.Identity +" " +qData.Group, qData.Group)
-                .WithCronSchedule(qData.CronExpression, x => x.WithMisfireHandlingInstructionFireAndProceed())
+                .WithCronSchedule(qData.CronExpression, x => x.WithMisfireHandlingInstructionDoNothing())
                 .Build();
         }
     }
