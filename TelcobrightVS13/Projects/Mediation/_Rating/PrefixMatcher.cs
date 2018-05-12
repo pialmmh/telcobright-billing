@@ -20,9 +20,13 @@ namespace TelcobrightMediation
     {
         private Dictionary<string, rateplan> DicRatePlan { get; set; }
         private ServiceContext ServiceContext { get; }
+        private int MaxDecimalPrecision { get; }
         public PrefixMatcher(ServiceContext serviceContext)
         {
             this.ServiceContext = serviceContext;
+            this.MaxDecimalPrecision = this.ServiceContext.CdrSetting.MaxDecimalPrecision;
+            if (this.MaxDecimalPrecision < 0 && this.MaxDecimalPrecision > 8)
+                throw new Exception("Max decimal precision must be >=0 and <=8.");
             this.DicRatePlan =serviceContext.MefServiceFamilyContainer.RateCache.DicRatePlan;
         }
         public Rateext MatchPrefix(string phoneNumber, int category, int subCategory, List<TupleByPeriod> tups, DateTime answerTime,
@@ -221,6 +225,7 @@ namespace TelcobrightMediation
 
             billedAmountExcludingSurcharge = durationExcludingSurcharge * (thisRateAmount / bspanSec);
             finalAmount = billedAmountExcludingSurcharge + surchareAmount;
+            if (this.MaxDecimalPrecision > 0) finalAmount = decimal.Round(finalAmount, this.MaxDecimalPrecision);
             return finalAmount;
         }
 

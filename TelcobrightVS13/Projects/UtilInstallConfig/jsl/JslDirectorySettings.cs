@@ -78,27 +78,15 @@ namespace InstallConfig
                 PathSeparator = "/",
                 StartingPath = "/home/zxss10_bsvr/data/bfile/bill/zsmart_media_bak",
                 Sftphostkey = "",
-                ServerIp = "10.133.34.12",
-                User = "icxbill",
-                Pass = "icx123",
+                //ServerIp = "10.133.34.12",
+                //User = "icxbill",
+                //Pass = "icx123",
+                ServerIp = "192.168.0.105",
+                User = "zxss10_bsvr",
+                Pass = "Takay1takaane",
                 ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
                 IgnoreZeroLenghFile = 1
             };
-
-            //FileLocation S3_2 = new FileLocation()
-            //{
-            //    Name = "S3_2",
-            //    locationType = "ftp",
-            //    OSType = "windows",
-            //    pathSeparator = "/",
-            //    startingPath = "/oldcdr",
-            //    sftphostkey = "ssh-rsa 1024 0d:fd:ac:4a:67:05:e9:76:ef:a0:d2:c0:f9:1a:55:c1",
-            //    server = "172.16.16.242",
-            //    user = "ftpuser",
-            //    pass = "Takay1takaane",
-            //    ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
-            //    IgnoreZeroLenghFile = 1
-            //};
 
             FileLocation fileArchive1 = new FileLocation()//raw cdr archive
             {
@@ -106,8 +94,12 @@ namespace InstallConfig
                 LocationType = "ftp",
                 OsType = "windows",
                 PathSeparator = @"/",//backslash didn't work with winscp
+                //StartingPath = @"/archive",
+                //ServerIp = "10.100.201.20",
+                //User = "cdr",
+                //Pass = "cdr13531",
                 StartingPath = @"/archive",
-                ServerIp = "10.100.201.20",
+                ServerIp = "127.0.0.1",
                 User = "cdr",
                 Pass = "cdr13531",
                 IgnoreZeroLenghFile = 1
@@ -118,8 +110,12 @@ namespace InstallConfig
                 LocationType = "ftp",
                 OsType = "linux",
                 PathSeparator = "/",
-                StartingPath = @"/",
-                ServerIp = "192.168.100.83", //server = "172.16.16.242",
+                //StartingPath = @"/",
+                //ServerIp = "192.168.100.83", //server = "172.16.16.242",
+                //User = "adminjibon",
+                //Pass = "jibondhara35#",
+                StartingPath = @"/cas",
+                ServerIp = "127.0.0.1", //server = "172.16.16.242",
                 User = "adminjibon",
                 Pass = "jibondhara35#",
                 IgnoreZeroLenghFile = 1,
@@ -148,7 +144,7 @@ namespace InstallConfig
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
-                    SecondaryDirectory = "Downloaded",
+                    SecondaryDirectory = "downloaded",
                     ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('ICX')
                                                                 and
                                                                 (Name.EndsWith('.DAT'))
@@ -179,7 +175,7 @@ namespace InstallConfig
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
-                    SecondaryDirectory = "Downloaded",
+                    SecondaryDirectory = "downloaded",
                     ExpFileNameFilter = null,
                 },
                 DstSettings = new SyncSettingsDest()
@@ -190,9 +186,8 @@ namespace InstallConfig
                     SubDirRule = new SyncSettingsDstSubDirectoryRule
                     (
                         DateWiseSubDirCreationType.ByFileName,
-                        new SpringExpression(@"Name.Substring(16,8)"), //"S3_2_" is appended at vault
-                        "yyyyMMdd",
-                        true
+                        new SpringExpression(@"Name.Substring(3,8)"), //"S3_2_" is appended at vault
+                        "yyyyMMdd",true
                     )
                 }
             };

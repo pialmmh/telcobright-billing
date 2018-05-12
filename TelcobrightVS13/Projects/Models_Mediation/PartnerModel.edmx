@@ -151,7 +151,11 @@ warning 6002: The table/view 'def.platinum.acc_transaction' does not have a prim
           <Property Name="idParentExternal" Type="varchar" MaxLength="200" />
           <Property Name="idPartner" Type="int" Nullable="false" />
           <Property Name="accountName" Type="varchar" MaxLength="200" />
-          <Property Name="iduom" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="serviceGroup" Type="int" Nullable="false" />
+          <Property Name="serviceFamily" Type="int" Nullable="false" />
+          <Property Name="product" Type="int" Nullable="false" />
+          <Property Name="billableType" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="uom" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Depth" Type="int" Nullable="false" />
           <Property Name="Lineage" Type="varchar" MaxLength="400" />
           <Property Name="remark" Type="varchar" MaxLength="100" />
@@ -2417,6 +2421,210 @@ warning 6002: The table/view 'def.platinum.sum_voice_day_04' does not have a pri
           <Property Name="decimalAmount3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
+warning 6002: The table/view 'def.platinum.sum_voice_day_05' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="sum_voice_day_05">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="tup_switchid" />
+            <PropertyRef Name="tup_inpartnerid" />
+            <PropertyRef Name="tup_outpartnerid" />
+            <PropertyRef Name="tup_incomingroute" />
+            <PropertyRef Name="tup_outgoingroute" />
+            <PropertyRef Name="tup_customerrate" />
+            <PropertyRef Name="tup_supplierrate" />
+            <PropertyRef Name="tup_incomingip" />
+            <PropertyRef Name="tup_outgoingip" />
+            <PropertyRef Name="tup_countryorareacode" />
+            <PropertyRef Name="tup_matchedprefixcustomer" />
+            <PropertyRef Name="tup_matchedprefixsupplier" />
+            <PropertyRef Name="tup_sourceId" />
+            <PropertyRef Name="tup_destinationId" />
+            <PropertyRef Name="tup_customercurrency" />
+            <PropertyRef Name="tup_suppliercurrency" />
+            <PropertyRef Name="tup_tax1currency" />
+            <PropertyRef Name="tup_tax2currency" />
+            <PropertyRef Name="tup_vatcurrency" />
+            <PropertyRef Name="tup_starttime" />
+            <PropertyRef Name="totalcalls" />
+            <PropertyRef Name="connectedcalls" />
+            <PropertyRef Name="connectedcallsCC" />
+            <PropertyRef Name="successfulcalls" />
+            <PropertyRef Name="actualduration" />
+            <PropertyRef Name="roundedduration" />
+            <PropertyRef Name="duration1" />
+            <PropertyRef Name="duration2" />
+            <PropertyRef Name="duration3" />
+            <PropertyRef Name="PDD" />
+            <PropertyRef Name="customercost" />
+            <PropertyRef Name="suppliercost" />
+            <PropertyRef Name="tax1" />
+            <PropertyRef Name="tax2" />
+            <PropertyRef Name="vat" />
+            <PropertyRef Name="intAmount1" />
+            <PropertyRef Name="intAmount2" />
+            <PropertyRef Name="longAmount1" />
+            <PropertyRef Name="longAmount2" />
+            <PropertyRef Name="longDecimalAmount1" />
+            <PropertyRef Name="longDecimalAmount2" />
+            <PropertyRef Name="intAmount3" />
+            <PropertyRef Name="longAmount3" />
+            <PropertyRef Name="longDecimalAmount3" />
+            <PropertyRef Name="decimalAmount1" />
+            <PropertyRef Name="decimalAmount2" />
+            <PropertyRef Name="decimalAmount3" />
+          </Key>
+          <Property Name="id" Type="bigint" Nullable="false" />
+          <Property Name="tup_switchid" Type="int" Nullable="false" />
+          <Property Name="tup_inpartnerid" Type="int" Nullable="false" />
+          <Property Name="tup_outpartnerid" Type="int" Nullable="false" />
+          <Property Name="tup_incomingroute" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_outgoingroute" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_customerrate" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="tup_supplierrate" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="tup_incomingip" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_outgoingip" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_countryorareacode" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_matchedprefixcustomer" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_matchedprefixsupplier" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_sourceId" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_destinationId" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_customercurrency" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_suppliercurrency" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_tax1currency" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_tax2currency" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_vatcurrency" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_starttime" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="totalcalls" Type="bigint" Nullable="false" />
+          <Property Name="connectedcalls" Type="bigint" Nullable="false" />
+          <Property Name="connectedcallsCC" Type="bigint" Nullable="false" />
+          <Property Name="successfulcalls" Type="bigint" Nullable="false" />
+          <Property Name="actualduration" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="roundedduration" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="duration1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="duration2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="duration3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="PDD" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="customercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="suppliercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="tax1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="tax2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="vat" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="intAmount1" Type="int" Nullable="false" />
+          <Property Name="intAmount2" Type="int" Nullable="false" />
+          <Property Name="longAmount1" Type="bigint" Nullable="false" />
+          <Property Name="longAmount2" Type="bigint" Nullable="false" />
+          <Property Name="longDecimalAmount1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="longDecimalAmount2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="intAmount3" Type="int" Nullable="false" />
+          <Property Name="longAmount3" Type="bigint" Nullable="false" />
+          <Property Name="longDecimalAmount3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="decimalAmount1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="decimalAmount2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="decimalAmount3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'def.platinum.sum_voice_day_06' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="sum_voice_day_06">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="tup_switchid" />
+            <PropertyRef Name="tup_inpartnerid" />
+            <PropertyRef Name="tup_outpartnerid" />
+            <PropertyRef Name="tup_incomingroute" />
+            <PropertyRef Name="tup_outgoingroute" />
+            <PropertyRef Name="tup_customerrate" />
+            <PropertyRef Name="tup_supplierrate" />
+            <PropertyRef Name="tup_incomingip" />
+            <PropertyRef Name="tup_outgoingip" />
+            <PropertyRef Name="tup_countryorareacode" />
+            <PropertyRef Name="tup_matchedprefixcustomer" />
+            <PropertyRef Name="tup_matchedprefixsupplier" />
+            <PropertyRef Name="tup_sourceId" />
+            <PropertyRef Name="tup_destinationId" />
+            <PropertyRef Name="tup_customercurrency" />
+            <PropertyRef Name="tup_suppliercurrency" />
+            <PropertyRef Name="tup_tax1currency" />
+            <PropertyRef Name="tup_tax2currency" />
+            <PropertyRef Name="tup_vatcurrency" />
+            <PropertyRef Name="tup_starttime" />
+            <PropertyRef Name="totalcalls" />
+            <PropertyRef Name="connectedcalls" />
+            <PropertyRef Name="connectedcallsCC" />
+            <PropertyRef Name="successfulcalls" />
+            <PropertyRef Name="actualduration" />
+            <PropertyRef Name="roundedduration" />
+            <PropertyRef Name="duration1" />
+            <PropertyRef Name="duration2" />
+            <PropertyRef Name="duration3" />
+            <PropertyRef Name="PDD" />
+            <PropertyRef Name="customercost" />
+            <PropertyRef Name="suppliercost" />
+            <PropertyRef Name="tax1" />
+            <PropertyRef Name="tax2" />
+            <PropertyRef Name="vat" />
+            <PropertyRef Name="intAmount1" />
+            <PropertyRef Name="intAmount2" />
+            <PropertyRef Name="longAmount1" />
+            <PropertyRef Name="longAmount2" />
+            <PropertyRef Name="longDecimalAmount1" />
+            <PropertyRef Name="longDecimalAmount2" />
+            <PropertyRef Name="intAmount3" />
+            <PropertyRef Name="longAmount3" />
+            <PropertyRef Name="longDecimalAmount3" />
+            <PropertyRef Name="decimalAmount1" />
+            <PropertyRef Name="decimalAmount2" />
+            <PropertyRef Name="decimalAmount3" />
+          </Key>
+          <Property Name="id" Type="bigint" Nullable="false" />
+          <Property Name="tup_switchid" Type="int" Nullable="false" />
+          <Property Name="tup_inpartnerid" Type="int" Nullable="false" />
+          <Property Name="tup_outpartnerid" Type="int" Nullable="false" />
+          <Property Name="tup_incomingroute" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_outgoingroute" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_customerrate" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="tup_supplierrate" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="tup_incomingip" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_outgoingip" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_countryorareacode" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_matchedprefixcustomer" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_matchedprefixsupplier" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_sourceId" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_destinationId" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_customercurrency" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_suppliercurrency" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_tax1currency" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_tax2currency" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_vatcurrency" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_starttime" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="totalcalls" Type="bigint" Nullable="false" />
+          <Property Name="connectedcalls" Type="bigint" Nullable="false" />
+          <Property Name="connectedcallsCC" Type="bigint" Nullable="false" />
+          <Property Name="successfulcalls" Type="bigint" Nullable="false" />
+          <Property Name="actualduration" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="roundedduration" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="duration1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="duration2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="duration3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="PDD" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="customercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="suppliercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="tax1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="tax2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="vat" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="intAmount1" Type="int" Nullable="false" />
+          <Property Name="intAmount2" Type="int" Nullable="false" />
+          <Property Name="longAmount1" Type="bigint" Nullable="false" />
+          <Property Name="longAmount2" Type="bigint" Nullable="false" />
+          <Property Name="longDecimalAmount1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="longDecimalAmount2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="intAmount3" Type="int" Nullable="false" />
+          <Property Name="longAmount3" Type="bigint" Nullable="false" />
+          <Property Name="longDecimalAmount3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="decimalAmount1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="decimalAmount2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="decimalAmount3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
 warning 6002: The table/view 'def.platinum.sum_voice_hr_01' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="sum_voice_hr_01">
           <Key>
@@ -2824,6 +3032,210 @@ warning 6002: The table/view 'def.platinum.sum_voice_hr_04' does not have a prim
           <Property Name="decimalAmount2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="decimalAmount3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'def.platinum.sum_voice_hr_05' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="sum_voice_hr_05">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="tup_switchid" />
+            <PropertyRef Name="tup_inpartnerid" />
+            <PropertyRef Name="tup_outpartnerid" />
+            <PropertyRef Name="tup_incomingroute" />
+            <PropertyRef Name="tup_outgoingroute" />
+            <PropertyRef Name="tup_customerrate" />
+            <PropertyRef Name="tup_supplierrate" />
+            <PropertyRef Name="tup_incomingip" />
+            <PropertyRef Name="tup_outgoingip" />
+            <PropertyRef Name="tup_countryorareacode" />
+            <PropertyRef Name="tup_matchedprefixcustomer" />
+            <PropertyRef Name="tup_matchedprefixsupplier" />
+            <PropertyRef Name="tup_sourceId" />
+            <PropertyRef Name="tup_destinationId" />
+            <PropertyRef Name="tup_customercurrency" />
+            <PropertyRef Name="tup_suppliercurrency" />
+            <PropertyRef Name="tup_tax1currency" />
+            <PropertyRef Name="tup_tax2currency" />
+            <PropertyRef Name="tup_vatcurrency" />
+            <PropertyRef Name="tup_starttime" />
+            <PropertyRef Name="totalcalls" />
+            <PropertyRef Name="connectedcalls" />
+            <PropertyRef Name="connectedcallsCC" />
+            <PropertyRef Name="successfulcalls" />
+            <PropertyRef Name="actualduration" />
+            <PropertyRef Name="roundedduration" />
+            <PropertyRef Name="duration1" />
+            <PropertyRef Name="duration2" />
+            <PropertyRef Name="duration3" />
+            <PropertyRef Name="PDD" />
+            <PropertyRef Name="customercost" />
+            <PropertyRef Name="suppliercost" />
+            <PropertyRef Name="tax1" />
+            <PropertyRef Name="tax2" />
+            <PropertyRef Name="vat" />
+            <PropertyRef Name="intAmount1" />
+            <PropertyRef Name="intAmount2" />
+            <PropertyRef Name="longAmount1" />
+            <PropertyRef Name="longAmount2" />
+            <PropertyRef Name="longDecimalAmount1" />
+            <PropertyRef Name="longDecimalAmount2" />
+            <PropertyRef Name="intAmount3" />
+            <PropertyRef Name="longAmount3" />
+            <PropertyRef Name="longDecimalAmount3" />
+            <PropertyRef Name="decimalAmount1" />
+            <PropertyRef Name="decimalAmount2" />
+            <PropertyRef Name="decimalAmount3" />
+          </Key>
+          <Property Name="id" Type="bigint" Nullable="false" />
+          <Property Name="tup_switchid" Type="int" Nullable="false" />
+          <Property Name="tup_inpartnerid" Type="int" Nullable="false" />
+          <Property Name="tup_outpartnerid" Type="int" Nullable="false" />
+          <Property Name="tup_incomingroute" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_outgoingroute" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_customerrate" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="tup_supplierrate" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="tup_incomingip" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_outgoingip" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_countryorareacode" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_matchedprefixcustomer" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_matchedprefixsupplier" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_sourceId" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_destinationId" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_customercurrency" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_suppliercurrency" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_tax1currency" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_tax2currency" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_vatcurrency" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_starttime" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="totalcalls" Type="bigint" Nullable="false" />
+          <Property Name="connectedcalls" Type="bigint" Nullable="false" />
+          <Property Name="connectedcallsCC" Type="bigint" Nullable="false" />
+          <Property Name="successfulcalls" Type="bigint" Nullable="false" />
+          <Property Name="actualduration" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="roundedduration" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="duration1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="duration2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="duration3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="PDD" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="customercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="suppliercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="tax1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="tax2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="vat" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="intAmount1" Type="int" Nullable="false" />
+          <Property Name="intAmount2" Type="int" Nullable="false" />
+          <Property Name="longAmount1" Type="bigint" Nullable="false" />
+          <Property Name="longAmount2" Type="bigint" Nullable="false" />
+          <Property Name="longDecimalAmount1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="longDecimalAmount2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="intAmount3" Type="int" Nullable="false" />
+          <Property Name="longAmount3" Type="bigint" Nullable="false" />
+          <Property Name="longDecimalAmount3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="decimalAmount1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="decimalAmount2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="decimalAmount3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'def.platinum.sum_voice_hr_06' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="sum_voice_hr_06">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="tup_switchid" />
+            <PropertyRef Name="tup_inpartnerid" />
+            <PropertyRef Name="tup_outpartnerid" />
+            <PropertyRef Name="tup_incomingroute" />
+            <PropertyRef Name="tup_outgoingroute" />
+            <PropertyRef Name="tup_customerrate" />
+            <PropertyRef Name="tup_supplierrate" />
+            <PropertyRef Name="tup_incomingip" />
+            <PropertyRef Name="tup_outgoingip" />
+            <PropertyRef Name="tup_countryorareacode" />
+            <PropertyRef Name="tup_matchedprefixcustomer" />
+            <PropertyRef Name="tup_matchedprefixsupplier" />
+            <PropertyRef Name="tup_sourceId" />
+            <PropertyRef Name="tup_destinationId" />
+            <PropertyRef Name="tup_customercurrency" />
+            <PropertyRef Name="tup_suppliercurrency" />
+            <PropertyRef Name="tup_tax1currency" />
+            <PropertyRef Name="tup_tax2currency" />
+            <PropertyRef Name="tup_vatcurrency" />
+            <PropertyRef Name="tup_starttime" />
+            <PropertyRef Name="totalcalls" />
+            <PropertyRef Name="connectedcalls" />
+            <PropertyRef Name="connectedcallsCC" />
+            <PropertyRef Name="successfulcalls" />
+            <PropertyRef Name="actualduration" />
+            <PropertyRef Name="roundedduration" />
+            <PropertyRef Name="duration1" />
+            <PropertyRef Name="duration2" />
+            <PropertyRef Name="duration3" />
+            <PropertyRef Name="PDD" />
+            <PropertyRef Name="customercost" />
+            <PropertyRef Name="suppliercost" />
+            <PropertyRef Name="tax1" />
+            <PropertyRef Name="tax2" />
+            <PropertyRef Name="vat" />
+            <PropertyRef Name="intAmount1" />
+            <PropertyRef Name="intAmount2" />
+            <PropertyRef Name="longAmount1" />
+            <PropertyRef Name="longAmount2" />
+            <PropertyRef Name="longDecimalAmount1" />
+            <PropertyRef Name="longDecimalAmount2" />
+            <PropertyRef Name="intAmount3" />
+            <PropertyRef Name="longAmount3" />
+            <PropertyRef Name="longDecimalAmount3" />
+            <PropertyRef Name="decimalAmount1" />
+            <PropertyRef Name="decimalAmount2" />
+            <PropertyRef Name="decimalAmount3" />
+          </Key>
+          <Property Name="id" Type="bigint" Nullable="false" />
+          <Property Name="tup_switchid" Type="int" Nullable="false" />
+          <Property Name="tup_inpartnerid" Type="int" Nullable="false" />
+          <Property Name="tup_outpartnerid" Type="int" Nullable="false" />
+          <Property Name="tup_incomingroute" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_outgoingroute" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_customerrate" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="tup_supplierrate" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="tup_incomingip" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_outgoingip" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_countryorareacode" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_matchedprefixcustomer" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_matchedprefixsupplier" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_sourceId" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_destinationId" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_customercurrency" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_suppliercurrency" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_tax1currency" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_tax2currency" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_vatcurrency" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tup_starttime" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="totalcalls" Type="bigint" Nullable="false" />
+          <Property Name="connectedcalls" Type="bigint" Nullable="false" />
+          <Property Name="connectedcallsCC" Type="bigint" Nullable="false" />
+          <Property Name="successfulcalls" Type="bigint" Nullable="false" />
+          <Property Name="actualduration" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="roundedduration" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="duration1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="duration2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="duration3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="PDD" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="customercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="suppliercost" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="tax1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="tax2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="vat" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="intAmount1" Type="int" Nullable="false" />
+          <Property Name="intAmount2" Type="int" Nullable="false" />
+          <Property Name="longAmount1" Type="bigint" Nullable="false" />
+          <Property Name="longAmount2" Type="bigint" Nullable="false" />
+          <Property Name="longDecimalAmount1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="longDecimalAmount2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="intAmount3" Type="int" Nullable="false" />
+          <Property Name="longAmount3" Type="bigint" Nullable="false" />
+          <Property Name="longDecimalAmount3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="decimalAmount1" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="decimalAmount2" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="decimalAmount3" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+        </EntityType>
         <EntityType Name="telcobrightpartner">
           <Key>
             <PropertyRef Name="idCustomer" />
@@ -3058,7 +3470,9 @@ warning 6002: The table/view 'def.platinum.uom_conversion_dated' does not have a
           </ReferentialConstraint>
         </Association>
         <Association Name="billingruleassignment_ibfk_2">
-          <End Role="rateplanassignmenttuple" Type="Self.rateplanassignmenttuple" Multiplicity="1" />
+          <End Role="rateplanassignmenttuple" Type="Self.rateplanassignmenttuple" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="billingruleassignment" Type="Self.billingruleassignment" Multiplicity="0..1" />
           <ReferentialConstraint>
             <Principal Role="rateplanassignmenttuple">
@@ -4504,6 +4918,110 @@ FROM `sum_voice_day_03` AS `sum_voice_day_03`</DefiningQuery>
 `sum_voice_day_04`.`decimalAmount3`
 FROM `sum_voice_day_04` AS `sum_voice_day_04`</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="sum_voice_day_05" EntityType="Self.sum_voice_day_05" store:Type="Tables" store:Schema="platinum">
+            <DefiningQuery>SELECT
+`sum_voice_day_05`.`id`, 
+`sum_voice_day_05`.`tup_switchid`, 
+`sum_voice_day_05`.`tup_inpartnerid`, 
+`sum_voice_day_05`.`tup_outpartnerid`, 
+`sum_voice_day_05`.`tup_incomingroute`, 
+`sum_voice_day_05`.`tup_outgoingroute`, 
+`sum_voice_day_05`.`tup_customerrate`, 
+`sum_voice_day_05`.`tup_supplierrate`, 
+`sum_voice_day_05`.`tup_incomingip`, 
+`sum_voice_day_05`.`tup_outgoingip`, 
+`sum_voice_day_05`.`tup_countryorareacode`, 
+`sum_voice_day_05`.`tup_matchedprefixcustomer`, 
+`sum_voice_day_05`.`tup_matchedprefixsupplier`, 
+`sum_voice_day_05`.`tup_sourceId`, 
+`sum_voice_day_05`.`tup_destinationId`, 
+`sum_voice_day_05`.`tup_customercurrency`, 
+`sum_voice_day_05`.`tup_suppliercurrency`, 
+`sum_voice_day_05`.`tup_tax1currency`, 
+`sum_voice_day_05`.`tup_tax2currency`, 
+`sum_voice_day_05`.`tup_vatcurrency`, 
+`sum_voice_day_05`.`tup_starttime`, 
+`sum_voice_day_05`.`totalcalls`, 
+`sum_voice_day_05`.`connectedcalls`, 
+`sum_voice_day_05`.`connectedcallsCC`, 
+`sum_voice_day_05`.`successfulcalls`, 
+`sum_voice_day_05`.`actualduration`, 
+`sum_voice_day_05`.`roundedduration`, 
+`sum_voice_day_05`.`duration1`, 
+`sum_voice_day_05`.`duration2`, 
+`sum_voice_day_05`.`duration3`, 
+`sum_voice_day_05`.`PDD`, 
+`sum_voice_day_05`.`customercost`, 
+`sum_voice_day_05`.`suppliercost`, 
+`sum_voice_day_05`.`tax1`, 
+`sum_voice_day_05`.`tax2`, 
+`sum_voice_day_05`.`vat`, 
+`sum_voice_day_05`.`intAmount1`, 
+`sum_voice_day_05`.`intAmount2`, 
+`sum_voice_day_05`.`longAmount1`, 
+`sum_voice_day_05`.`longAmount2`, 
+`sum_voice_day_05`.`longDecimalAmount1`, 
+`sum_voice_day_05`.`longDecimalAmount2`, 
+`sum_voice_day_05`.`intAmount3`, 
+`sum_voice_day_05`.`longAmount3`, 
+`sum_voice_day_05`.`longDecimalAmount3`, 
+`sum_voice_day_05`.`decimalAmount1`, 
+`sum_voice_day_05`.`decimalAmount2`, 
+`sum_voice_day_05`.`decimalAmount3`
+FROM `sum_voice_day_05` AS `sum_voice_day_05`</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="sum_voice_day_06" EntityType="Self.sum_voice_day_06" store:Type="Tables" store:Schema="platinum">
+            <DefiningQuery>SELECT
+`sum_voice_day_06`.`id`, 
+`sum_voice_day_06`.`tup_switchid`, 
+`sum_voice_day_06`.`tup_inpartnerid`, 
+`sum_voice_day_06`.`tup_outpartnerid`, 
+`sum_voice_day_06`.`tup_incomingroute`, 
+`sum_voice_day_06`.`tup_outgoingroute`, 
+`sum_voice_day_06`.`tup_customerrate`, 
+`sum_voice_day_06`.`tup_supplierrate`, 
+`sum_voice_day_06`.`tup_incomingip`, 
+`sum_voice_day_06`.`tup_outgoingip`, 
+`sum_voice_day_06`.`tup_countryorareacode`, 
+`sum_voice_day_06`.`tup_matchedprefixcustomer`, 
+`sum_voice_day_06`.`tup_matchedprefixsupplier`, 
+`sum_voice_day_06`.`tup_sourceId`, 
+`sum_voice_day_06`.`tup_destinationId`, 
+`sum_voice_day_06`.`tup_customercurrency`, 
+`sum_voice_day_06`.`tup_suppliercurrency`, 
+`sum_voice_day_06`.`tup_tax1currency`, 
+`sum_voice_day_06`.`tup_tax2currency`, 
+`sum_voice_day_06`.`tup_vatcurrency`, 
+`sum_voice_day_06`.`tup_starttime`, 
+`sum_voice_day_06`.`totalcalls`, 
+`sum_voice_day_06`.`connectedcalls`, 
+`sum_voice_day_06`.`connectedcallsCC`, 
+`sum_voice_day_06`.`successfulcalls`, 
+`sum_voice_day_06`.`actualduration`, 
+`sum_voice_day_06`.`roundedduration`, 
+`sum_voice_day_06`.`duration1`, 
+`sum_voice_day_06`.`duration2`, 
+`sum_voice_day_06`.`duration3`, 
+`sum_voice_day_06`.`PDD`, 
+`sum_voice_day_06`.`customercost`, 
+`sum_voice_day_06`.`suppliercost`, 
+`sum_voice_day_06`.`tax1`, 
+`sum_voice_day_06`.`tax2`, 
+`sum_voice_day_06`.`vat`, 
+`sum_voice_day_06`.`intAmount1`, 
+`sum_voice_day_06`.`intAmount2`, 
+`sum_voice_day_06`.`longAmount1`, 
+`sum_voice_day_06`.`longAmount2`, 
+`sum_voice_day_06`.`longDecimalAmount1`, 
+`sum_voice_day_06`.`longDecimalAmount2`, 
+`sum_voice_day_06`.`intAmount3`, 
+`sum_voice_day_06`.`longAmount3`, 
+`sum_voice_day_06`.`longDecimalAmount3`, 
+`sum_voice_day_06`.`decimalAmount1`, 
+`sum_voice_day_06`.`decimalAmount2`, 
+`sum_voice_day_06`.`decimalAmount3`
+FROM `sum_voice_day_06` AS `sum_voice_day_06`</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="sum_voice_hr_01" EntityType="Self.sum_voice_hr_01" store:Type="Tables" store:Schema="platinum">
             <DefiningQuery>SELECT
 `sum_voice_hr_01`.`id`, 
@@ -4712,6 +5230,110 @@ FROM `sum_voice_hr_03` AS `sum_voice_hr_03`</DefiningQuery>
 `sum_voice_hr_04`.`decimalAmount3`
 FROM `sum_voice_hr_04` AS `sum_voice_hr_04`</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="sum_voice_hr_05" EntityType="Self.sum_voice_hr_05" store:Type="Tables" store:Schema="platinum">
+            <DefiningQuery>SELECT
+`sum_voice_hr_05`.`id`, 
+`sum_voice_hr_05`.`tup_switchid`, 
+`sum_voice_hr_05`.`tup_inpartnerid`, 
+`sum_voice_hr_05`.`tup_outpartnerid`, 
+`sum_voice_hr_05`.`tup_incomingroute`, 
+`sum_voice_hr_05`.`tup_outgoingroute`, 
+`sum_voice_hr_05`.`tup_customerrate`, 
+`sum_voice_hr_05`.`tup_supplierrate`, 
+`sum_voice_hr_05`.`tup_incomingip`, 
+`sum_voice_hr_05`.`tup_outgoingip`, 
+`sum_voice_hr_05`.`tup_countryorareacode`, 
+`sum_voice_hr_05`.`tup_matchedprefixcustomer`, 
+`sum_voice_hr_05`.`tup_matchedprefixsupplier`, 
+`sum_voice_hr_05`.`tup_sourceId`, 
+`sum_voice_hr_05`.`tup_destinationId`, 
+`sum_voice_hr_05`.`tup_customercurrency`, 
+`sum_voice_hr_05`.`tup_suppliercurrency`, 
+`sum_voice_hr_05`.`tup_tax1currency`, 
+`sum_voice_hr_05`.`tup_tax2currency`, 
+`sum_voice_hr_05`.`tup_vatcurrency`, 
+`sum_voice_hr_05`.`tup_starttime`, 
+`sum_voice_hr_05`.`totalcalls`, 
+`sum_voice_hr_05`.`connectedcalls`, 
+`sum_voice_hr_05`.`connectedcallsCC`, 
+`sum_voice_hr_05`.`successfulcalls`, 
+`sum_voice_hr_05`.`actualduration`, 
+`sum_voice_hr_05`.`roundedduration`, 
+`sum_voice_hr_05`.`duration1`, 
+`sum_voice_hr_05`.`duration2`, 
+`sum_voice_hr_05`.`duration3`, 
+`sum_voice_hr_05`.`PDD`, 
+`sum_voice_hr_05`.`customercost`, 
+`sum_voice_hr_05`.`suppliercost`, 
+`sum_voice_hr_05`.`tax1`, 
+`sum_voice_hr_05`.`tax2`, 
+`sum_voice_hr_05`.`vat`, 
+`sum_voice_hr_05`.`intAmount1`, 
+`sum_voice_hr_05`.`intAmount2`, 
+`sum_voice_hr_05`.`longAmount1`, 
+`sum_voice_hr_05`.`longAmount2`, 
+`sum_voice_hr_05`.`longDecimalAmount1`, 
+`sum_voice_hr_05`.`longDecimalAmount2`, 
+`sum_voice_hr_05`.`intAmount3`, 
+`sum_voice_hr_05`.`longAmount3`, 
+`sum_voice_hr_05`.`longDecimalAmount3`, 
+`sum_voice_hr_05`.`decimalAmount1`, 
+`sum_voice_hr_05`.`decimalAmount2`, 
+`sum_voice_hr_05`.`decimalAmount3`
+FROM `sum_voice_hr_05` AS `sum_voice_hr_05`</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="sum_voice_hr_06" EntityType="Self.sum_voice_hr_06" store:Type="Tables" store:Schema="platinum">
+            <DefiningQuery>SELECT
+`sum_voice_hr_06`.`id`, 
+`sum_voice_hr_06`.`tup_switchid`, 
+`sum_voice_hr_06`.`tup_inpartnerid`, 
+`sum_voice_hr_06`.`tup_outpartnerid`, 
+`sum_voice_hr_06`.`tup_incomingroute`, 
+`sum_voice_hr_06`.`tup_outgoingroute`, 
+`sum_voice_hr_06`.`tup_customerrate`, 
+`sum_voice_hr_06`.`tup_supplierrate`, 
+`sum_voice_hr_06`.`tup_incomingip`, 
+`sum_voice_hr_06`.`tup_outgoingip`, 
+`sum_voice_hr_06`.`tup_countryorareacode`, 
+`sum_voice_hr_06`.`tup_matchedprefixcustomer`, 
+`sum_voice_hr_06`.`tup_matchedprefixsupplier`, 
+`sum_voice_hr_06`.`tup_sourceId`, 
+`sum_voice_hr_06`.`tup_destinationId`, 
+`sum_voice_hr_06`.`tup_customercurrency`, 
+`sum_voice_hr_06`.`tup_suppliercurrency`, 
+`sum_voice_hr_06`.`tup_tax1currency`, 
+`sum_voice_hr_06`.`tup_tax2currency`, 
+`sum_voice_hr_06`.`tup_vatcurrency`, 
+`sum_voice_hr_06`.`tup_starttime`, 
+`sum_voice_hr_06`.`totalcalls`, 
+`sum_voice_hr_06`.`connectedcalls`, 
+`sum_voice_hr_06`.`connectedcallsCC`, 
+`sum_voice_hr_06`.`successfulcalls`, 
+`sum_voice_hr_06`.`actualduration`, 
+`sum_voice_hr_06`.`roundedduration`, 
+`sum_voice_hr_06`.`duration1`, 
+`sum_voice_hr_06`.`duration2`, 
+`sum_voice_hr_06`.`duration3`, 
+`sum_voice_hr_06`.`PDD`, 
+`sum_voice_hr_06`.`customercost`, 
+`sum_voice_hr_06`.`suppliercost`, 
+`sum_voice_hr_06`.`tax1`, 
+`sum_voice_hr_06`.`tax2`, 
+`sum_voice_hr_06`.`vat`, 
+`sum_voice_hr_06`.`intAmount1`, 
+`sum_voice_hr_06`.`intAmount2`, 
+`sum_voice_hr_06`.`longAmount1`, 
+`sum_voice_hr_06`.`longAmount2`, 
+`sum_voice_hr_06`.`longDecimalAmount1`, 
+`sum_voice_hr_06`.`longDecimalAmount2`, 
+`sum_voice_hr_06`.`intAmount3`, 
+`sum_voice_hr_06`.`longAmount3`, 
+`sum_voice_hr_06`.`longDecimalAmount3`, 
+`sum_voice_hr_06`.`decimalAmount1`, 
+`sum_voice_hr_06`.`decimalAmount2`, 
+`sum_voice_hr_06`.`decimalAmount3`
+FROM `sum_voice_hr_06` AS `sum_voice_hr_06`</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="uom_conversion" EntityType="Self.uom_conversion" store:Type="Tables" store:Schema="platinum">
             <DefiningQuery>SELECT
 `uom_conversion`.`UOM_ID`, 
@@ -4861,7 +5483,6 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
     <edmx:ConceptualModels>
       <Schema Namespace="MediationModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="PartnerEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="accounts" EntityType="MediationModel.account" />
           <EntitySet Name="allerrors" EntityType="MediationModel.allerror" />
           <EntitySet Name="ansprefixextras" EntityType="MediationModel.ansprefixextra" />
           <EntitySet Name="aspnetuserclaims" EntityType="MediationModel.aspnetuserclaim" />
@@ -4972,14 +5593,6 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <EntitySet Name="sum_voice_hr_04" EntityType="MediationModel.sum_voice_hr_04" />
           <EntitySet Name="uom_conversion" EntityType="MediationModel.uom_conversion" />
           <EntitySet Name="uom_conversion_dated" EntityType="MediationModel.uom_conversion_dated" />
-          <AssociationSet Name="account_ibfk_1" Association="MediationModel.account_ibfk_1">
-            <End Role="partner" EntitySet="partners" />
-            <End Role="account" EntitySet="accounts" />
-          </AssociationSet>
-          <AssociationSet Name="account_ibfk_2" Association="MediationModel.account_ibfk_2">
-            <End Role="partner" EntitySet="partners" />
-            <End Role="account" EntitySet="accounts" />
-          </AssociationSet>
           <AssociationSet Name="billingruleassignment_ibfk_2" Association="MediationModel.billingruleassignment_ibfk_2">
             <End Role="rateplanassignmenttuple" EntitySet="rateplanassignmenttuples" />
             <End Role="billingruleassignment" EntitySet="billingruleassignments" />
@@ -5084,32 +5697,20 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             <End Role="user" EntitySet="users" />
             <End Role="userrole" EntitySet="userroles" />
           </AssociationSet>
+          <EntitySet Name="sum_voice_day_05" EntityType="MediationModel.sum_voice_day_05" />
+          <EntitySet Name="sum_voice_day_06" EntityType="MediationModel.sum_voice_day_06" />
+          <EntitySet Name="sum_voice_hr_05" EntityType="MediationModel.sum_voice_hr_05" />
+          <EntitySet Name="sum_voice_hr_06" EntityType="MediationModel.sum_voice_hr_06" />
+          <EntitySet Name="accounts" EntityType="MediationModel.account" />
+          <AssociationSet Name="account_ibfk_1" Association="MediationModel.account_ibfk_1">
+            <End Role="partner" EntitySet="partners" />
+            <End Role="account" EntitySet="accounts" />
+          </AssociationSet>
+          <AssociationSet Name="account_ibfk_2" Association="MediationModel.account_ibfk_2">
+            <End Role="partner" EntitySet="partners" />
+            <End Role="account" EntitySet="accounts" />
+          </AssociationSet>
         </EntityContainer>
-        <EntityType Name="account">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="idParent" Type="Int64" />
-          <Property Name="idParentExternal" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="idPartner" Type="Int32" Nullable="false" />
-          <Property Name="accountName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="iduom" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Depth" Type="Int32" Nullable="false" />
-          <Property Name="Lineage" Type="String" MaxLength="400" FixedLength="false" Unicode="false" />
-          <Property Name="remark" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="isBillable" Type="SByte" />
-          <Property Name="isCustomerAccount" Type="SByte" />
-          <Property Name="isSupplierAccount" Type="SByte" />
-          <Property Name="balanceBefore" Type="Decimal" Nullable="false" />
-          <Property Name="lastAmount" Type="Decimal" />
-          <Property Name="balanceAfter" Type="Decimal" Nullable="false" />
-          <Property Name="lastUpdated" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="superviseNegativeBalance" Type="Int32" />
-          <Property Name="negativeBalanceLimit" Type="Decimal" Nullable="false" />
-          <NavigationProperty Name="partner" Relationship="MediationModel.account_ibfk_1" FromRole="account" ToRole="partner" />
-          <NavigationProperty Name="partner1" Relationship="MediationModel.account_ibfk_2" FromRole="account" ToRole="partner" />
-        </EntityType>
         <EntityType Name="allerror">
           <Key>
             <PropertyRef Name="id" />
@@ -5721,9 +6322,9 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="refpdd" Type="Single" />
           <Property Name="refasrfas" Type="Single" />
           <Property Name="DefaultCurrency" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="routes" Relationship="MediationModel.route_ibfk_1" FromRole="partner" ToRole="route" />
           <NavigationProperty Name="accounts" Relationship="MediationModel.account_ibfk_1" FromRole="partner" ToRole="account" />
           <NavigationProperty Name="accounts1" Relationship="MediationModel.account_ibfk_2" FromRole="partner" ToRole="account" />
-          <NavigationProperty Name="routes" Relationship="MediationModel.route_ibfk_1" FromRole="partner" ToRole="route" />
         </EntityType>
         <EntityType Name="partnerprefix">
           <Key>
@@ -8097,30 +8698,6 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <NavigationProperty Name="uom" Relationship="MediationModel.uom_conversion_dated_ibfk_1" FromRole="uom_conversion_dated" ToRole="uom" />
           <NavigationProperty Name="uom1" Relationship="MediationModel.uom_conversion_dated_ibfk_2" FromRole="uom_conversion_dated" ToRole="uom" />
         </EntityType>
-        <Association Name="account_ibfk_1">
-          <End Type="MediationModel.partner" Role="partner" Multiplicity="1" />
-          <End Type="MediationModel.account" Role="account" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="partner">
-              <PropertyRef Name="idPartner" />
-            </Principal>
-            <Dependent Role="account">
-              <PropertyRef Name="idPartner" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="account_ibfk_2">
-          <End Type="MediationModel.partner" Role="partner" Multiplicity="1" />
-          <End Type="MediationModel.account" Role="account" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="partner">
-              <PropertyRef Name="idPartner" />
-            </Principal>
-            <Dependent Role="account">
-              <PropertyRef Name="idPartner" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="billingruleassignment_ibfk_2">
           <End Type="MediationModel.rateplanassignmenttuple" Role="rateplanassignmenttuple" Multiplicity="1" />
           <End Type="MediationModel.billingruleassignment" Role="billingruleassignment" Multiplicity="0..1" />
@@ -8441,36 +9018,465 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="sum_voice_day_05">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="tup_switchid" />
+            <PropertyRef Name="tup_inpartnerid" />
+            <PropertyRef Name="tup_outpartnerid" />
+            <PropertyRef Name="tup_incomingroute" />
+            <PropertyRef Name="tup_outgoingroute" />
+            <PropertyRef Name="tup_customerrate" />
+            <PropertyRef Name="tup_supplierrate" />
+            <PropertyRef Name="tup_incomingip" />
+            <PropertyRef Name="tup_outgoingip" />
+            <PropertyRef Name="tup_countryorareacode" />
+            <PropertyRef Name="tup_matchedprefixcustomer" />
+            <PropertyRef Name="tup_matchedprefixsupplier" />
+            <PropertyRef Name="tup_sourceId" />
+            <PropertyRef Name="tup_destinationId" />
+            <PropertyRef Name="tup_customercurrency" />
+            <PropertyRef Name="tup_suppliercurrency" />
+            <PropertyRef Name="tup_tax1currency" />
+            <PropertyRef Name="tup_tax2currency" />
+            <PropertyRef Name="tup_vatcurrency" />
+            <PropertyRef Name="tup_starttime" />
+            <PropertyRef Name="totalcalls" />
+            <PropertyRef Name="connectedcalls" />
+            <PropertyRef Name="connectedcallsCC" />
+            <PropertyRef Name="successfulcalls" />
+            <PropertyRef Name="actualduration" />
+            <PropertyRef Name="roundedduration" />
+            <PropertyRef Name="duration1" />
+            <PropertyRef Name="duration2" />
+            <PropertyRef Name="duration3" />
+            <PropertyRef Name="PDD" />
+            <PropertyRef Name="customercost" />
+            <PropertyRef Name="suppliercost" />
+            <PropertyRef Name="tax1" />
+            <PropertyRef Name="tax2" />
+            <PropertyRef Name="vat" />
+            <PropertyRef Name="intAmount1" />
+            <PropertyRef Name="intAmount2" />
+            <PropertyRef Name="longAmount1" />
+            <PropertyRef Name="longAmount2" />
+            <PropertyRef Name="longDecimalAmount1" />
+            <PropertyRef Name="longDecimalAmount2" />
+            <PropertyRef Name="intAmount3" />
+            <PropertyRef Name="longAmount3" />
+            <PropertyRef Name="longDecimalAmount3" />
+            <PropertyRef Name="decimalAmount1" />
+            <PropertyRef Name="decimalAmount2" />
+            <PropertyRef Name="decimalAmount3" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" />
+          <Property Name="tup_switchid" Type="Int32" Nullable="false" />
+          <Property Name="tup_inpartnerid" Type="Int32" Nullable="false" />
+          <Property Name="tup_outpartnerid" Type="Int32" Nullable="false" />
+          <Property Name="tup_incomingroute" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_outgoingroute" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_customerrate" Type="Decimal" Nullable="false" />
+          <Property Name="tup_supplierrate" Type="Decimal" Nullable="false" />
+          <Property Name="tup_incomingip" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_outgoingip" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_countryorareacode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_matchedprefixcustomer" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_matchedprefixsupplier" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_sourceId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_destinationId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_customercurrency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_suppliercurrency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_tax1currency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_tax2currency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_vatcurrency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_starttime" Type="DateTime" Nullable="false" />
+          <Property Name="totalcalls" Type="Int64" Nullable="false" />
+          <Property Name="connectedcalls" Type="Int64" Nullable="false" />
+          <Property Name="connectedcallsCC" Type="Int64" Nullable="false" />
+          <Property Name="successfulcalls" Type="Int64" Nullable="false" />
+          <Property Name="actualduration" Type="Decimal" Nullable="false" />
+          <Property Name="roundedduration" Type="Decimal" Nullable="false" />
+          <Property Name="duration1" Type="Decimal" Nullable="false" />
+          <Property Name="duration2" Type="Decimal" Nullable="false" />
+          <Property Name="duration3" Type="Decimal" Nullable="false" />
+          <Property Name="PDD" Type="Decimal" Nullable="false" />
+          <Property Name="customercost" Type="Decimal" Nullable="false" />
+          <Property Name="suppliercost" Type="Decimal" Nullable="false" />
+          <Property Name="tax1" Type="Decimal" Nullable="false" />
+          <Property Name="tax2" Type="Decimal" Nullable="false" />
+          <Property Name="vat" Type="Decimal" Nullable="false" />
+          <Property Name="intAmount1" Type="Int32" Nullable="false" />
+          <Property Name="intAmount2" Type="Int32" Nullable="false" />
+          <Property Name="longAmount1" Type="Int64" Nullable="false" />
+          <Property Name="longAmount2" Type="Int64" Nullable="false" />
+          <Property Name="longDecimalAmount1" Type="Decimal" Nullable="false" />
+          <Property Name="longDecimalAmount2" Type="Decimal" Nullable="false" />
+          <Property Name="intAmount3" Type="Int32" Nullable="false" />
+          <Property Name="longAmount3" Type="Int64" Nullable="false" />
+          <Property Name="longDecimalAmount3" Type="Decimal" Nullable="false" />
+          <Property Name="decimalAmount1" Type="Decimal" Nullable="false" />
+          <Property Name="decimalAmount2" Type="Decimal" Nullable="false" />
+          <Property Name="decimalAmount3" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sum_voice_day_06">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="tup_switchid" />
+            <PropertyRef Name="tup_inpartnerid" />
+            <PropertyRef Name="tup_outpartnerid" />
+            <PropertyRef Name="tup_incomingroute" />
+            <PropertyRef Name="tup_outgoingroute" />
+            <PropertyRef Name="tup_customerrate" />
+            <PropertyRef Name="tup_supplierrate" />
+            <PropertyRef Name="tup_incomingip" />
+            <PropertyRef Name="tup_outgoingip" />
+            <PropertyRef Name="tup_countryorareacode" />
+            <PropertyRef Name="tup_matchedprefixcustomer" />
+            <PropertyRef Name="tup_matchedprefixsupplier" />
+            <PropertyRef Name="tup_sourceId" />
+            <PropertyRef Name="tup_destinationId" />
+            <PropertyRef Name="tup_customercurrency" />
+            <PropertyRef Name="tup_suppliercurrency" />
+            <PropertyRef Name="tup_tax1currency" />
+            <PropertyRef Name="tup_tax2currency" />
+            <PropertyRef Name="tup_vatcurrency" />
+            <PropertyRef Name="tup_starttime" />
+            <PropertyRef Name="totalcalls" />
+            <PropertyRef Name="connectedcalls" />
+            <PropertyRef Name="connectedcallsCC" />
+            <PropertyRef Name="successfulcalls" />
+            <PropertyRef Name="actualduration" />
+            <PropertyRef Name="roundedduration" />
+            <PropertyRef Name="duration1" />
+            <PropertyRef Name="duration2" />
+            <PropertyRef Name="duration3" />
+            <PropertyRef Name="PDD" />
+            <PropertyRef Name="customercost" />
+            <PropertyRef Name="suppliercost" />
+            <PropertyRef Name="tax1" />
+            <PropertyRef Name="tax2" />
+            <PropertyRef Name="vat" />
+            <PropertyRef Name="intAmount1" />
+            <PropertyRef Name="intAmount2" />
+            <PropertyRef Name="longAmount1" />
+            <PropertyRef Name="longAmount2" />
+            <PropertyRef Name="longDecimalAmount1" />
+            <PropertyRef Name="longDecimalAmount2" />
+            <PropertyRef Name="intAmount3" />
+            <PropertyRef Name="longAmount3" />
+            <PropertyRef Name="longDecimalAmount3" />
+            <PropertyRef Name="decimalAmount1" />
+            <PropertyRef Name="decimalAmount2" />
+            <PropertyRef Name="decimalAmount3" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" />
+          <Property Name="tup_switchid" Type="Int32" Nullable="false" />
+          <Property Name="tup_inpartnerid" Type="Int32" Nullable="false" />
+          <Property Name="tup_outpartnerid" Type="Int32" Nullable="false" />
+          <Property Name="tup_incomingroute" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_outgoingroute" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_customerrate" Type="Decimal" Nullable="false" />
+          <Property Name="tup_supplierrate" Type="Decimal" Nullable="false" />
+          <Property Name="tup_incomingip" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_outgoingip" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_countryorareacode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_matchedprefixcustomer" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_matchedprefixsupplier" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_sourceId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_destinationId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_customercurrency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_suppliercurrency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_tax1currency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_tax2currency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_vatcurrency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_starttime" Type="DateTime" Nullable="false" />
+          <Property Name="totalcalls" Type="Int64" Nullable="false" />
+          <Property Name="connectedcalls" Type="Int64" Nullable="false" />
+          <Property Name="connectedcallsCC" Type="Int64" Nullable="false" />
+          <Property Name="successfulcalls" Type="Int64" Nullable="false" />
+          <Property Name="actualduration" Type="Decimal" Nullable="false" />
+          <Property Name="roundedduration" Type="Decimal" Nullable="false" />
+          <Property Name="duration1" Type="Decimal" Nullable="false" />
+          <Property Name="duration2" Type="Decimal" Nullable="false" />
+          <Property Name="duration3" Type="Decimal" Nullable="false" />
+          <Property Name="PDD" Type="Decimal" Nullable="false" />
+          <Property Name="customercost" Type="Decimal" Nullable="false" />
+          <Property Name="suppliercost" Type="Decimal" Nullable="false" />
+          <Property Name="tax1" Type="Decimal" Nullable="false" />
+          <Property Name="tax2" Type="Decimal" Nullable="false" />
+          <Property Name="vat" Type="Decimal" Nullable="false" />
+          <Property Name="intAmount1" Type="Int32" Nullable="false" />
+          <Property Name="intAmount2" Type="Int32" Nullable="false" />
+          <Property Name="longAmount1" Type="Int64" Nullable="false" />
+          <Property Name="longAmount2" Type="Int64" Nullable="false" />
+          <Property Name="longDecimalAmount1" Type="Decimal" Nullable="false" />
+          <Property Name="longDecimalAmount2" Type="Decimal" Nullable="false" />
+          <Property Name="intAmount3" Type="Int32" Nullable="false" />
+          <Property Name="longAmount3" Type="Int64" Nullable="false" />
+          <Property Name="longDecimalAmount3" Type="Decimal" Nullable="false" />
+          <Property Name="decimalAmount1" Type="Decimal" Nullable="false" />
+          <Property Name="decimalAmount2" Type="Decimal" Nullable="false" />
+          <Property Name="decimalAmount3" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sum_voice_hr_05">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="tup_switchid" />
+            <PropertyRef Name="tup_inpartnerid" />
+            <PropertyRef Name="tup_outpartnerid" />
+            <PropertyRef Name="tup_incomingroute" />
+            <PropertyRef Name="tup_outgoingroute" />
+            <PropertyRef Name="tup_customerrate" />
+            <PropertyRef Name="tup_supplierrate" />
+            <PropertyRef Name="tup_incomingip" />
+            <PropertyRef Name="tup_outgoingip" />
+            <PropertyRef Name="tup_countryorareacode" />
+            <PropertyRef Name="tup_matchedprefixcustomer" />
+            <PropertyRef Name="tup_matchedprefixsupplier" />
+            <PropertyRef Name="tup_sourceId" />
+            <PropertyRef Name="tup_destinationId" />
+            <PropertyRef Name="tup_customercurrency" />
+            <PropertyRef Name="tup_suppliercurrency" />
+            <PropertyRef Name="tup_tax1currency" />
+            <PropertyRef Name="tup_tax2currency" />
+            <PropertyRef Name="tup_vatcurrency" />
+            <PropertyRef Name="tup_starttime" />
+            <PropertyRef Name="totalcalls" />
+            <PropertyRef Name="connectedcalls" />
+            <PropertyRef Name="connectedcallsCC" />
+            <PropertyRef Name="successfulcalls" />
+            <PropertyRef Name="actualduration" />
+            <PropertyRef Name="roundedduration" />
+            <PropertyRef Name="duration1" />
+            <PropertyRef Name="duration2" />
+            <PropertyRef Name="duration3" />
+            <PropertyRef Name="PDD" />
+            <PropertyRef Name="customercost" />
+            <PropertyRef Name="suppliercost" />
+            <PropertyRef Name="tax1" />
+            <PropertyRef Name="tax2" />
+            <PropertyRef Name="vat" />
+            <PropertyRef Name="intAmount1" />
+            <PropertyRef Name="intAmount2" />
+            <PropertyRef Name="longAmount1" />
+            <PropertyRef Name="longAmount2" />
+            <PropertyRef Name="longDecimalAmount1" />
+            <PropertyRef Name="longDecimalAmount2" />
+            <PropertyRef Name="intAmount3" />
+            <PropertyRef Name="longAmount3" />
+            <PropertyRef Name="longDecimalAmount3" />
+            <PropertyRef Name="decimalAmount1" />
+            <PropertyRef Name="decimalAmount2" />
+            <PropertyRef Name="decimalAmount3" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" />
+          <Property Name="tup_switchid" Type="Int32" Nullable="false" />
+          <Property Name="tup_inpartnerid" Type="Int32" Nullable="false" />
+          <Property Name="tup_outpartnerid" Type="Int32" Nullable="false" />
+          <Property Name="tup_incomingroute" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_outgoingroute" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_customerrate" Type="Decimal" Nullable="false" />
+          <Property Name="tup_supplierrate" Type="Decimal" Nullable="false" />
+          <Property Name="tup_incomingip" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_outgoingip" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_countryorareacode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_matchedprefixcustomer" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_matchedprefixsupplier" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_sourceId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_destinationId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_customercurrency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_suppliercurrency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_tax1currency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_tax2currency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_vatcurrency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_starttime" Type="DateTime" Nullable="false" />
+          <Property Name="totalcalls" Type="Int64" Nullable="false" />
+          <Property Name="connectedcalls" Type="Int64" Nullable="false" />
+          <Property Name="connectedcallsCC" Type="Int64" Nullable="false" />
+          <Property Name="successfulcalls" Type="Int64" Nullable="false" />
+          <Property Name="actualduration" Type="Decimal" Nullable="false" />
+          <Property Name="roundedduration" Type="Decimal" Nullable="false" />
+          <Property Name="duration1" Type="Decimal" Nullable="false" />
+          <Property Name="duration2" Type="Decimal" Nullable="false" />
+          <Property Name="duration3" Type="Decimal" Nullable="false" />
+          <Property Name="PDD" Type="Decimal" Nullable="false" />
+          <Property Name="customercost" Type="Decimal" Nullable="false" />
+          <Property Name="suppliercost" Type="Decimal" Nullable="false" />
+          <Property Name="tax1" Type="Decimal" Nullable="false" />
+          <Property Name="tax2" Type="Decimal" Nullable="false" />
+          <Property Name="vat" Type="Decimal" Nullable="false" />
+          <Property Name="intAmount1" Type="Int32" Nullable="false" />
+          <Property Name="intAmount2" Type="Int32" Nullable="false" />
+          <Property Name="longAmount1" Type="Int64" Nullable="false" />
+          <Property Name="longAmount2" Type="Int64" Nullable="false" />
+          <Property Name="longDecimalAmount1" Type="Decimal" Nullable="false" />
+          <Property Name="longDecimalAmount2" Type="Decimal" Nullable="false" />
+          <Property Name="intAmount3" Type="Int32" Nullable="false" />
+          <Property Name="longAmount3" Type="Int64" Nullable="false" />
+          <Property Name="longDecimalAmount3" Type="Decimal" Nullable="false" />
+          <Property Name="decimalAmount1" Type="Decimal" Nullable="false" />
+          <Property Name="decimalAmount2" Type="Decimal" Nullable="false" />
+          <Property Name="decimalAmount3" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sum_voice_hr_06">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="tup_switchid" />
+            <PropertyRef Name="tup_inpartnerid" />
+            <PropertyRef Name="tup_outpartnerid" />
+            <PropertyRef Name="tup_incomingroute" />
+            <PropertyRef Name="tup_outgoingroute" />
+            <PropertyRef Name="tup_customerrate" />
+            <PropertyRef Name="tup_supplierrate" />
+            <PropertyRef Name="tup_incomingip" />
+            <PropertyRef Name="tup_outgoingip" />
+            <PropertyRef Name="tup_countryorareacode" />
+            <PropertyRef Name="tup_matchedprefixcustomer" />
+            <PropertyRef Name="tup_matchedprefixsupplier" />
+            <PropertyRef Name="tup_sourceId" />
+            <PropertyRef Name="tup_destinationId" />
+            <PropertyRef Name="tup_customercurrency" />
+            <PropertyRef Name="tup_suppliercurrency" />
+            <PropertyRef Name="tup_tax1currency" />
+            <PropertyRef Name="tup_tax2currency" />
+            <PropertyRef Name="tup_vatcurrency" />
+            <PropertyRef Name="tup_starttime" />
+            <PropertyRef Name="totalcalls" />
+            <PropertyRef Name="connectedcalls" />
+            <PropertyRef Name="connectedcallsCC" />
+            <PropertyRef Name="successfulcalls" />
+            <PropertyRef Name="actualduration" />
+            <PropertyRef Name="roundedduration" />
+            <PropertyRef Name="duration1" />
+            <PropertyRef Name="duration2" />
+            <PropertyRef Name="duration3" />
+            <PropertyRef Name="PDD" />
+            <PropertyRef Name="customercost" />
+            <PropertyRef Name="suppliercost" />
+            <PropertyRef Name="tax1" />
+            <PropertyRef Name="tax2" />
+            <PropertyRef Name="vat" />
+            <PropertyRef Name="intAmount1" />
+            <PropertyRef Name="intAmount2" />
+            <PropertyRef Name="longAmount1" />
+            <PropertyRef Name="longAmount2" />
+            <PropertyRef Name="longDecimalAmount1" />
+            <PropertyRef Name="longDecimalAmount2" />
+            <PropertyRef Name="intAmount3" />
+            <PropertyRef Name="longAmount3" />
+            <PropertyRef Name="longDecimalAmount3" />
+            <PropertyRef Name="decimalAmount1" />
+            <PropertyRef Name="decimalAmount2" />
+            <PropertyRef Name="decimalAmount3" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" />
+          <Property Name="tup_switchid" Type="Int32" Nullable="false" />
+          <Property Name="tup_inpartnerid" Type="Int32" Nullable="false" />
+          <Property Name="tup_outpartnerid" Type="Int32" Nullable="false" />
+          <Property Name="tup_incomingroute" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_outgoingroute" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_customerrate" Type="Decimal" Nullable="false" />
+          <Property Name="tup_supplierrate" Type="Decimal" Nullable="false" />
+          <Property Name="tup_incomingip" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_outgoingip" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_countryorareacode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_matchedprefixcustomer" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_matchedprefixsupplier" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_sourceId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_destinationId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_customercurrency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_suppliercurrency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_tax1currency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_tax2currency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_vatcurrency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_starttime" Type="DateTime" Nullable="false" />
+          <Property Name="totalcalls" Type="Int64" Nullable="false" />
+          <Property Name="connectedcalls" Type="Int64" Nullable="false" />
+          <Property Name="connectedcallsCC" Type="Int64" Nullable="false" />
+          <Property Name="successfulcalls" Type="Int64" Nullable="false" />
+          <Property Name="actualduration" Type="Decimal" Nullable="false" />
+          <Property Name="roundedduration" Type="Decimal" Nullable="false" />
+          <Property Name="duration1" Type="Decimal" Nullable="false" />
+          <Property Name="duration2" Type="Decimal" Nullable="false" />
+          <Property Name="duration3" Type="Decimal" Nullable="false" />
+          <Property Name="PDD" Type="Decimal" Nullable="false" />
+          <Property Name="customercost" Type="Decimal" Nullable="false" />
+          <Property Name="suppliercost" Type="Decimal" Nullable="false" />
+          <Property Name="tax1" Type="Decimal" Nullable="false" />
+          <Property Name="tax2" Type="Decimal" Nullable="false" />
+          <Property Name="vat" Type="Decimal" Nullable="false" />
+          <Property Name="intAmount1" Type="Int32" Nullable="false" />
+          <Property Name="intAmount2" Type="Int32" Nullable="false" />
+          <Property Name="longAmount1" Type="Int64" Nullable="false" />
+          <Property Name="longAmount2" Type="Int64" Nullable="false" />
+          <Property Name="longDecimalAmount1" Type="Decimal" Nullable="false" />
+          <Property Name="longDecimalAmount2" Type="Decimal" Nullable="false" />
+          <Property Name="intAmount3" Type="Int32" Nullable="false" />
+          <Property Name="longAmount3" Type="Int64" Nullable="false" />
+          <Property Name="longDecimalAmount3" Type="Decimal" Nullable="false" />
+          <Property Name="decimalAmount1" Type="Decimal" Nullable="false" />
+          <Property Name="decimalAmount2" Type="Decimal" Nullable="false" />
+          <Property Name="decimalAmount3" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="account">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="idParent" Type="Int64" />
+          <Property Name="idParentExternal" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="idPartner" Type="Int32" Nullable="false" />
+          <Property Name="accountName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="serviceGroup" Type="Int32" Nullable="false" />
+          <Property Name="serviceFamily" Type="Int32" Nullable="false" />
+          <Property Name="product" Type="Int32" Nullable="false" />
+          <Property Name="billableType" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="uom" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Depth" Type="Int32" Nullable="false" />
+          <Property Name="Lineage" Type="String" MaxLength="400" FixedLength="false" Unicode="false" />
+          <Property Name="remark" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="isBillable" Type="SByte" />
+          <Property Name="isCustomerAccount" Type="SByte" />
+          <Property Name="isSupplierAccount" Type="SByte" />
+          <Property Name="balanceBefore" Type="Decimal" Nullable="false" />
+          <Property Name="lastAmount" Type="Decimal" />
+          <Property Name="balanceAfter" Type="Decimal" Nullable="false" />
+          <Property Name="lastUpdated" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="superviseNegativeBalance" Type="Int32" />
+          <Property Name="negativeBalanceLimit" Type="Decimal" Nullable="false" />
+          <NavigationProperty Name="partner" Relationship="MediationModel.account_ibfk_1" FromRole="account" ToRole="partner" />
+          <NavigationProperty Name="partner1" Relationship="MediationModel.account_ibfk_2" FromRole="account" ToRole="partner" />
+        </EntityType>
+        <Association Name="account_ibfk_1">
+          <End Type="MediationModel.partner" Role="partner" Multiplicity="1" />
+          <End Type="MediationModel.account" Role="account" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="partner">
+              <PropertyRef Name="idPartner" />
+            </Principal>
+            <Dependent Role="account">
+              <PropertyRef Name="idPartner" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="account_ibfk_2">
+          <End Type="MediationModel.partner" Role="partner" Multiplicity="1" />
+          <End Type="MediationModel.account" Role="account" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="partner">
+              <PropertyRef Name="idPartner" />
+            </Principal>
+            <Dependent Role="account">
+              <PropertyRef Name="idPartner" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="MediationModelStoreContainer" CdmEntityContainer="PartnerEntities">
-          <EntitySetMapping Name="accounts">
-            <EntityTypeMapping TypeName="MediationModel.account">
-              <MappingFragment StoreEntitySet="account">
-                <ScalarProperty Name="negativeBalanceLimit" ColumnName="negativeBalanceLimit" />
-                <ScalarProperty Name="superviseNegativeBalance" ColumnName="superviseNegativeBalance" />
-                <ScalarProperty Name="lastUpdated" ColumnName="lastUpdated" />
-                <ScalarProperty Name="balanceAfter" ColumnName="balanceAfter" />
-                <ScalarProperty Name="lastAmount" ColumnName="lastAmount" />
-                <ScalarProperty Name="balanceBefore" ColumnName="balanceBefore" />
-                <ScalarProperty Name="isSupplierAccount" ColumnName="isSupplierAccount" />
-                <ScalarProperty Name="isCustomerAccount" ColumnName="isCustomerAccount" />
-                <ScalarProperty Name="isBillable" ColumnName="isBillable" />
-                <ScalarProperty Name="remark" ColumnName="remark" />
-                <ScalarProperty Name="Lineage" ColumnName="Lineage" />
-                <ScalarProperty Name="Depth" ColumnName="Depth" />
-                <ScalarProperty Name="iduom" ColumnName="iduom" />
-                <ScalarProperty Name="accountName" ColumnName="accountName" />
-                <ScalarProperty Name="idPartner" ColumnName="idPartner" />
-                <ScalarProperty Name="idParentExternal" ColumnName="idParentExternal" />
-                <ScalarProperty Name="idParent" ColumnName="idParent" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="allerrors">
             <EntityTypeMapping TypeName="MediationModel.allerror">
               <MappingFragment StoreEntitySet="allerror">
@@ -11041,6 +12047,250 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="FROM_DATE" ColumnName="FROM_DATE" />
                 <ScalarProperty Name="UOM_ID_TO" ColumnName="UOM_ID_TO" />
                 <ScalarProperty Name="UOM_ID" ColumnName="UOM_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sum_voice_day_05">
+            <EntityTypeMapping TypeName="MediationModel.sum_voice_day_05">
+              <MappingFragment StoreEntitySet="sum_voice_day_05">
+                <ScalarProperty Name="decimalAmount3" ColumnName="decimalAmount3" />
+                <ScalarProperty Name="decimalAmount2" ColumnName="decimalAmount2" />
+                <ScalarProperty Name="decimalAmount1" ColumnName="decimalAmount1" />
+                <ScalarProperty Name="longDecimalAmount3" ColumnName="longDecimalAmount3" />
+                <ScalarProperty Name="longAmount3" ColumnName="longAmount3" />
+                <ScalarProperty Name="intAmount3" ColumnName="intAmount3" />
+                <ScalarProperty Name="longDecimalAmount2" ColumnName="longDecimalAmount2" />
+                <ScalarProperty Name="longDecimalAmount1" ColumnName="longDecimalAmount1" />
+                <ScalarProperty Name="longAmount2" ColumnName="longAmount2" />
+                <ScalarProperty Name="longAmount1" ColumnName="longAmount1" />
+                <ScalarProperty Name="intAmount2" ColumnName="intAmount2" />
+                <ScalarProperty Name="intAmount1" ColumnName="intAmount1" />
+                <ScalarProperty Name="vat" ColumnName="vat" />
+                <ScalarProperty Name="tax2" ColumnName="tax2" />
+                <ScalarProperty Name="tax1" ColumnName="tax1" />
+                <ScalarProperty Name="suppliercost" ColumnName="suppliercost" />
+                <ScalarProperty Name="customercost" ColumnName="customercost" />
+                <ScalarProperty Name="PDD" ColumnName="PDD" />
+                <ScalarProperty Name="duration3" ColumnName="duration3" />
+                <ScalarProperty Name="duration2" ColumnName="duration2" />
+                <ScalarProperty Name="duration1" ColumnName="duration1" />
+                <ScalarProperty Name="roundedduration" ColumnName="roundedduration" />
+                <ScalarProperty Name="actualduration" ColumnName="actualduration" />
+                <ScalarProperty Name="successfulcalls" ColumnName="successfulcalls" />
+                <ScalarProperty Name="connectedcallsCC" ColumnName="connectedcallsCC" />
+                <ScalarProperty Name="connectedcalls" ColumnName="connectedcalls" />
+                <ScalarProperty Name="totalcalls" ColumnName="totalcalls" />
+                <ScalarProperty Name="tup_starttime" ColumnName="tup_starttime" />
+                <ScalarProperty Name="tup_vatcurrency" ColumnName="tup_vatcurrency" />
+                <ScalarProperty Name="tup_tax2currency" ColumnName="tup_tax2currency" />
+                <ScalarProperty Name="tup_tax1currency" ColumnName="tup_tax1currency" />
+                <ScalarProperty Name="tup_suppliercurrency" ColumnName="tup_suppliercurrency" />
+                <ScalarProperty Name="tup_customercurrency" ColumnName="tup_customercurrency" />
+                <ScalarProperty Name="tup_destinationId" ColumnName="tup_destinationId" />
+                <ScalarProperty Name="tup_sourceId" ColumnName="tup_sourceId" />
+                <ScalarProperty Name="tup_matchedprefixsupplier" ColumnName="tup_matchedprefixsupplier" />
+                <ScalarProperty Name="tup_matchedprefixcustomer" ColumnName="tup_matchedprefixcustomer" />
+                <ScalarProperty Name="tup_countryorareacode" ColumnName="tup_countryorareacode" />
+                <ScalarProperty Name="tup_outgoingip" ColumnName="tup_outgoingip" />
+                <ScalarProperty Name="tup_incomingip" ColumnName="tup_incomingip" />
+                <ScalarProperty Name="tup_supplierrate" ColumnName="tup_supplierrate" />
+                <ScalarProperty Name="tup_customerrate" ColumnName="tup_customerrate" />
+                <ScalarProperty Name="tup_outgoingroute" ColumnName="tup_outgoingroute" />
+                <ScalarProperty Name="tup_incomingroute" ColumnName="tup_incomingroute" />
+                <ScalarProperty Name="tup_outpartnerid" ColumnName="tup_outpartnerid" />
+                <ScalarProperty Name="tup_inpartnerid" ColumnName="tup_inpartnerid" />
+                <ScalarProperty Name="tup_switchid" ColumnName="tup_switchid" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sum_voice_day_06">
+            <EntityTypeMapping TypeName="MediationModel.sum_voice_day_06">
+              <MappingFragment StoreEntitySet="sum_voice_day_06">
+                <ScalarProperty Name="decimalAmount3" ColumnName="decimalAmount3" />
+                <ScalarProperty Name="decimalAmount2" ColumnName="decimalAmount2" />
+                <ScalarProperty Name="decimalAmount1" ColumnName="decimalAmount1" />
+                <ScalarProperty Name="longDecimalAmount3" ColumnName="longDecimalAmount3" />
+                <ScalarProperty Name="longAmount3" ColumnName="longAmount3" />
+                <ScalarProperty Name="intAmount3" ColumnName="intAmount3" />
+                <ScalarProperty Name="longDecimalAmount2" ColumnName="longDecimalAmount2" />
+                <ScalarProperty Name="longDecimalAmount1" ColumnName="longDecimalAmount1" />
+                <ScalarProperty Name="longAmount2" ColumnName="longAmount2" />
+                <ScalarProperty Name="longAmount1" ColumnName="longAmount1" />
+                <ScalarProperty Name="intAmount2" ColumnName="intAmount2" />
+                <ScalarProperty Name="intAmount1" ColumnName="intAmount1" />
+                <ScalarProperty Name="vat" ColumnName="vat" />
+                <ScalarProperty Name="tax2" ColumnName="tax2" />
+                <ScalarProperty Name="tax1" ColumnName="tax1" />
+                <ScalarProperty Name="suppliercost" ColumnName="suppliercost" />
+                <ScalarProperty Name="customercost" ColumnName="customercost" />
+                <ScalarProperty Name="PDD" ColumnName="PDD" />
+                <ScalarProperty Name="duration3" ColumnName="duration3" />
+                <ScalarProperty Name="duration2" ColumnName="duration2" />
+                <ScalarProperty Name="duration1" ColumnName="duration1" />
+                <ScalarProperty Name="roundedduration" ColumnName="roundedduration" />
+                <ScalarProperty Name="actualduration" ColumnName="actualduration" />
+                <ScalarProperty Name="successfulcalls" ColumnName="successfulcalls" />
+                <ScalarProperty Name="connectedcallsCC" ColumnName="connectedcallsCC" />
+                <ScalarProperty Name="connectedcalls" ColumnName="connectedcalls" />
+                <ScalarProperty Name="totalcalls" ColumnName="totalcalls" />
+                <ScalarProperty Name="tup_starttime" ColumnName="tup_starttime" />
+                <ScalarProperty Name="tup_vatcurrency" ColumnName="tup_vatcurrency" />
+                <ScalarProperty Name="tup_tax2currency" ColumnName="tup_tax2currency" />
+                <ScalarProperty Name="tup_tax1currency" ColumnName="tup_tax1currency" />
+                <ScalarProperty Name="tup_suppliercurrency" ColumnName="tup_suppliercurrency" />
+                <ScalarProperty Name="tup_customercurrency" ColumnName="tup_customercurrency" />
+                <ScalarProperty Name="tup_destinationId" ColumnName="tup_destinationId" />
+                <ScalarProperty Name="tup_sourceId" ColumnName="tup_sourceId" />
+                <ScalarProperty Name="tup_matchedprefixsupplier" ColumnName="tup_matchedprefixsupplier" />
+                <ScalarProperty Name="tup_matchedprefixcustomer" ColumnName="tup_matchedprefixcustomer" />
+                <ScalarProperty Name="tup_countryorareacode" ColumnName="tup_countryorareacode" />
+                <ScalarProperty Name="tup_outgoingip" ColumnName="tup_outgoingip" />
+                <ScalarProperty Name="tup_incomingip" ColumnName="tup_incomingip" />
+                <ScalarProperty Name="tup_supplierrate" ColumnName="tup_supplierrate" />
+                <ScalarProperty Name="tup_customerrate" ColumnName="tup_customerrate" />
+                <ScalarProperty Name="tup_outgoingroute" ColumnName="tup_outgoingroute" />
+                <ScalarProperty Name="tup_incomingroute" ColumnName="tup_incomingroute" />
+                <ScalarProperty Name="tup_outpartnerid" ColumnName="tup_outpartnerid" />
+                <ScalarProperty Name="tup_inpartnerid" ColumnName="tup_inpartnerid" />
+                <ScalarProperty Name="tup_switchid" ColumnName="tup_switchid" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sum_voice_hr_05">
+            <EntityTypeMapping TypeName="MediationModel.sum_voice_hr_05">
+              <MappingFragment StoreEntitySet="sum_voice_hr_05">
+                <ScalarProperty Name="decimalAmount3" ColumnName="decimalAmount3" />
+                <ScalarProperty Name="decimalAmount2" ColumnName="decimalAmount2" />
+                <ScalarProperty Name="decimalAmount1" ColumnName="decimalAmount1" />
+                <ScalarProperty Name="longDecimalAmount3" ColumnName="longDecimalAmount3" />
+                <ScalarProperty Name="longAmount3" ColumnName="longAmount3" />
+                <ScalarProperty Name="intAmount3" ColumnName="intAmount3" />
+                <ScalarProperty Name="longDecimalAmount2" ColumnName="longDecimalAmount2" />
+                <ScalarProperty Name="longDecimalAmount1" ColumnName="longDecimalAmount1" />
+                <ScalarProperty Name="longAmount2" ColumnName="longAmount2" />
+                <ScalarProperty Name="longAmount1" ColumnName="longAmount1" />
+                <ScalarProperty Name="intAmount2" ColumnName="intAmount2" />
+                <ScalarProperty Name="intAmount1" ColumnName="intAmount1" />
+                <ScalarProperty Name="vat" ColumnName="vat" />
+                <ScalarProperty Name="tax2" ColumnName="tax2" />
+                <ScalarProperty Name="tax1" ColumnName="tax1" />
+                <ScalarProperty Name="suppliercost" ColumnName="suppliercost" />
+                <ScalarProperty Name="customercost" ColumnName="customercost" />
+                <ScalarProperty Name="PDD" ColumnName="PDD" />
+                <ScalarProperty Name="duration3" ColumnName="duration3" />
+                <ScalarProperty Name="duration2" ColumnName="duration2" />
+                <ScalarProperty Name="duration1" ColumnName="duration1" />
+                <ScalarProperty Name="roundedduration" ColumnName="roundedduration" />
+                <ScalarProperty Name="actualduration" ColumnName="actualduration" />
+                <ScalarProperty Name="successfulcalls" ColumnName="successfulcalls" />
+                <ScalarProperty Name="connectedcallsCC" ColumnName="connectedcallsCC" />
+                <ScalarProperty Name="connectedcalls" ColumnName="connectedcalls" />
+                <ScalarProperty Name="totalcalls" ColumnName="totalcalls" />
+                <ScalarProperty Name="tup_starttime" ColumnName="tup_starttime" />
+                <ScalarProperty Name="tup_vatcurrency" ColumnName="tup_vatcurrency" />
+                <ScalarProperty Name="tup_tax2currency" ColumnName="tup_tax2currency" />
+                <ScalarProperty Name="tup_tax1currency" ColumnName="tup_tax1currency" />
+                <ScalarProperty Name="tup_suppliercurrency" ColumnName="tup_suppliercurrency" />
+                <ScalarProperty Name="tup_customercurrency" ColumnName="tup_customercurrency" />
+                <ScalarProperty Name="tup_destinationId" ColumnName="tup_destinationId" />
+                <ScalarProperty Name="tup_sourceId" ColumnName="tup_sourceId" />
+                <ScalarProperty Name="tup_matchedprefixsupplier" ColumnName="tup_matchedprefixsupplier" />
+                <ScalarProperty Name="tup_matchedprefixcustomer" ColumnName="tup_matchedprefixcustomer" />
+                <ScalarProperty Name="tup_countryorareacode" ColumnName="tup_countryorareacode" />
+                <ScalarProperty Name="tup_outgoingip" ColumnName="tup_outgoingip" />
+                <ScalarProperty Name="tup_incomingip" ColumnName="tup_incomingip" />
+                <ScalarProperty Name="tup_supplierrate" ColumnName="tup_supplierrate" />
+                <ScalarProperty Name="tup_customerrate" ColumnName="tup_customerrate" />
+                <ScalarProperty Name="tup_outgoingroute" ColumnName="tup_outgoingroute" />
+                <ScalarProperty Name="tup_incomingroute" ColumnName="tup_incomingroute" />
+                <ScalarProperty Name="tup_outpartnerid" ColumnName="tup_outpartnerid" />
+                <ScalarProperty Name="tup_inpartnerid" ColumnName="tup_inpartnerid" />
+                <ScalarProperty Name="tup_switchid" ColumnName="tup_switchid" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sum_voice_hr_06">
+            <EntityTypeMapping TypeName="MediationModel.sum_voice_hr_06">
+              <MappingFragment StoreEntitySet="sum_voice_hr_06">
+                <ScalarProperty Name="decimalAmount3" ColumnName="decimalAmount3" />
+                <ScalarProperty Name="decimalAmount2" ColumnName="decimalAmount2" />
+                <ScalarProperty Name="decimalAmount1" ColumnName="decimalAmount1" />
+                <ScalarProperty Name="longDecimalAmount3" ColumnName="longDecimalAmount3" />
+                <ScalarProperty Name="longAmount3" ColumnName="longAmount3" />
+                <ScalarProperty Name="intAmount3" ColumnName="intAmount3" />
+                <ScalarProperty Name="longDecimalAmount2" ColumnName="longDecimalAmount2" />
+                <ScalarProperty Name="longDecimalAmount1" ColumnName="longDecimalAmount1" />
+                <ScalarProperty Name="longAmount2" ColumnName="longAmount2" />
+                <ScalarProperty Name="longAmount1" ColumnName="longAmount1" />
+                <ScalarProperty Name="intAmount2" ColumnName="intAmount2" />
+                <ScalarProperty Name="intAmount1" ColumnName="intAmount1" />
+                <ScalarProperty Name="vat" ColumnName="vat" />
+                <ScalarProperty Name="tax2" ColumnName="tax2" />
+                <ScalarProperty Name="tax1" ColumnName="tax1" />
+                <ScalarProperty Name="suppliercost" ColumnName="suppliercost" />
+                <ScalarProperty Name="customercost" ColumnName="customercost" />
+                <ScalarProperty Name="PDD" ColumnName="PDD" />
+                <ScalarProperty Name="duration3" ColumnName="duration3" />
+                <ScalarProperty Name="duration2" ColumnName="duration2" />
+                <ScalarProperty Name="duration1" ColumnName="duration1" />
+                <ScalarProperty Name="roundedduration" ColumnName="roundedduration" />
+                <ScalarProperty Name="actualduration" ColumnName="actualduration" />
+                <ScalarProperty Name="successfulcalls" ColumnName="successfulcalls" />
+                <ScalarProperty Name="connectedcallsCC" ColumnName="connectedcallsCC" />
+                <ScalarProperty Name="connectedcalls" ColumnName="connectedcalls" />
+                <ScalarProperty Name="totalcalls" ColumnName="totalcalls" />
+                <ScalarProperty Name="tup_starttime" ColumnName="tup_starttime" />
+                <ScalarProperty Name="tup_vatcurrency" ColumnName="tup_vatcurrency" />
+                <ScalarProperty Name="tup_tax2currency" ColumnName="tup_tax2currency" />
+                <ScalarProperty Name="tup_tax1currency" ColumnName="tup_tax1currency" />
+                <ScalarProperty Name="tup_suppliercurrency" ColumnName="tup_suppliercurrency" />
+                <ScalarProperty Name="tup_customercurrency" ColumnName="tup_customercurrency" />
+                <ScalarProperty Name="tup_destinationId" ColumnName="tup_destinationId" />
+                <ScalarProperty Name="tup_sourceId" ColumnName="tup_sourceId" />
+                <ScalarProperty Name="tup_matchedprefixsupplier" ColumnName="tup_matchedprefixsupplier" />
+                <ScalarProperty Name="tup_matchedprefixcustomer" ColumnName="tup_matchedprefixcustomer" />
+                <ScalarProperty Name="tup_countryorareacode" ColumnName="tup_countryorareacode" />
+                <ScalarProperty Name="tup_outgoingip" ColumnName="tup_outgoingip" />
+                <ScalarProperty Name="tup_incomingip" ColumnName="tup_incomingip" />
+                <ScalarProperty Name="tup_supplierrate" ColumnName="tup_supplierrate" />
+                <ScalarProperty Name="tup_customerrate" ColumnName="tup_customerrate" />
+                <ScalarProperty Name="tup_outgoingroute" ColumnName="tup_outgoingroute" />
+                <ScalarProperty Name="tup_incomingroute" ColumnName="tup_incomingroute" />
+                <ScalarProperty Name="tup_outpartnerid" ColumnName="tup_outpartnerid" />
+                <ScalarProperty Name="tup_inpartnerid" ColumnName="tup_inpartnerid" />
+                <ScalarProperty Name="tup_switchid" ColumnName="tup_switchid" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="accounts">
+            <EntityTypeMapping TypeName="MediationModel.account">
+              <MappingFragment StoreEntitySet="account">
+                <ScalarProperty Name="negativeBalanceLimit" ColumnName="negativeBalanceLimit" />
+                <ScalarProperty Name="superviseNegativeBalance" ColumnName="superviseNegativeBalance" />
+                <ScalarProperty Name="lastUpdated" ColumnName="lastUpdated" />
+                <ScalarProperty Name="balanceAfter" ColumnName="balanceAfter" />
+                <ScalarProperty Name="lastAmount" ColumnName="lastAmount" />
+                <ScalarProperty Name="balanceBefore" ColumnName="balanceBefore" />
+                <ScalarProperty Name="isSupplierAccount" ColumnName="isSupplierAccount" />
+                <ScalarProperty Name="isCustomerAccount" ColumnName="isCustomerAccount" />
+                <ScalarProperty Name="isBillable" ColumnName="isBillable" />
+                <ScalarProperty Name="remark" ColumnName="remark" />
+                <ScalarProperty Name="Lineage" ColumnName="Lineage" />
+                <ScalarProperty Name="Depth" ColumnName="Depth" />
+                <ScalarProperty Name="uom" ColumnName="uom" />
+                <ScalarProperty Name="billableType" ColumnName="billableType" />
+                <ScalarProperty Name="product" ColumnName="product" />
+                <ScalarProperty Name="serviceFamily" ColumnName="serviceFamily" />
+                <ScalarProperty Name="serviceGroup" ColumnName="serviceGroup" />
+                <ScalarProperty Name="accountName" ColumnName="accountName" />
+                <ScalarProperty Name="idPartner" ColumnName="idPartner" />
+                <ScalarProperty Name="idParentExternal" ColumnName="idParentExternal" />
+                <ScalarProperty Name="idParent" ColumnName="idParent" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

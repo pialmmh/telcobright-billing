@@ -9,13 +9,15 @@ namespace QuartzTelcobright.MefComposers
 {
     public class MefProcessContainer
     {
-        public Dictionary<string,ITelcobrightProcess> Processes { get; set; }
+        public Dictionary<string, ITelcobrightProcess> Processes { get; set; }
+
         MefProcessContainer(MefCollectiveAssemblyComposer mefCollectiveAssemblyComposer)
         {
             this.Processes = new Dictionary<string, ITelcobrightProcess>();
-            foreach (KeyValuePair<string, object> keyValuePair in mefCollectiveAssemblyComposer.ComposedMefDictionaryBytype["ITelcobrightProcess"])
+            foreach (KeyValuePair<string, object> keyValuePair in mefCollectiveAssemblyComposer
+                .ComposedMefDictionaryBytype["ITelcobrightProcess"])
             {
-                this.Processes.Add(keyValuePair.Key, (ITelcobrightProcess)keyValuePair.Value);
+                this.Processes.Add(keyValuePair.Key, (ITelcobrightProcess) keyValuePair.Value);
             }
         }
     }

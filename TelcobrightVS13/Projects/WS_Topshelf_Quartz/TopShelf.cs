@@ -93,11 +93,25 @@ namespace WS_Telcobright_Topshelf
                 MefProcessContainer mefProcessContainer = GetMefProcessContainerFromIoC(springContext);
                 Dictionary<string, TelcobrightConfig> operatorWiseConfigs = GetTelcobrightConfigs();
                 IScheduler runtimeScheduler = null;
-                runtimeScheduler = GetScheduler(SchedulerRunTimeType.Runtime, springContext);
+                try
+                {
+                    runtimeScheduler = GetScheduler(SchedulerRunTimeType.Runtime, springContext);
+                }
+                catch (Exception e)
+                {
+                    if (e.Message.Contains("Unable to bind"))
+                    {
+                        Console.WriteLine("Unable to start debug scheduler, " +
+                                          "telcobright service needs to be turned off.");
+                    }
+                    Console.Read();
+                    Environment.Exit(1);
+                }
+
 #if DEBUG
                 if (Debugger.IsAttached)
                 {
-                    Console.WriteLine("Starting RAMJobStore based scheduler for debug....");
+                    Console.WriteLine("Starting RAMJobStore based scheduler in debug mode....");
                     runtimeScheduler.Standby();
                     IScheduler debugScheduler = GetScheduler(SchedulerRunTimeType.Debug, springContext);
                     ScheduleDebugJobsFromMenu(runtimeScheduler, debugScheduler);
@@ -105,16 +119,15 @@ namespace WS_Telcobright_Topshelf
                     debugScheduler.Context.Put("configs", operatorWiseConfigs);
                     debugScheduler.Start();
                     Console.WriteLine("Telcobright Scheduler has been started in debug mode.");
+                    return;
                 }
-#endif //end #if DEBUG
-                Console.WriteLine("Starting Scheduler...");
+#endif
+                Console.WriteLine("Starting Scheduler in runtime mode...");
                 Console.ReadLine();
-                return;
                 runtimeScheduler.Context.Put("processes", mefProcessContainer);
                 runtimeScheduler.Context.Put("configs", operatorWiseConfigs);
                 runtimeScheduler.Start();
-                Console.WriteLine("Telcobright Scheduler has been started.");
-                Console.WriteLine("Scheduler has not been started due to entering debug mode.");
+                Console.WriteLine("Telcobright Scheduler has been started in runtime mode.");
             }
             catch (Exception e)
             {

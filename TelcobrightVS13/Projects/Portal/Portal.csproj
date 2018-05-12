@@ -806,6 +806,7 @@
     <Compile Include="_myCodes\MasterPageExtendedForPortal.cs" />
     <Compile Include="_myCodes\PaymentHistoryInfo.cs" />
     <Compile Include="_myCodes\ServiceAcountStatus.cs" />
+    <Compile Include="_myCodes\ServiceGroupPopulatorForDropDown.cs" />
     <Compile Include="_myCodes\TopUpInfo.cs" />
     <Compile Include="_myCodes\_PortalAppCodes.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />

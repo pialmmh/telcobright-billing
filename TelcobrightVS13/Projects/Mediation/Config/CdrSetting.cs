@@ -10,7 +10,7 @@ namespace TelcobrightMediation
         public List<int> PartialCdrEnabledNeIds { get; set; }=new List<int>();
         public List<string> PartialCdrFlagIndicators { get; set; }
         public int SegmentSizeForDbWrite { get; set; }
-        public int NoOfDecimalPrecisionDigitsForDoubles { get; set; }
+        public int MaxDecimalPrecision { get; set; } = 8;
         public decimal FractionalNumberComparisonTollerance { get; set; }= .000001M;
         public int BatchSizeWhenPreparingLargeSqlJob { get; set; }
         public SummaryTimeFieldEnum SummaryTimeField { get; set; }
@@ -32,7 +32,6 @@ namespace TelcobrightMediation
             this.BatchSizeWhenPreparingLargeSqlJob = 1000000; //1M
             this.DaysToAddBeforeAndAfterUniqueDaysForSafePartialCollection = 1;
             this.IllegalStrToRemoveFromFields = new List<string>();
-            this.NoOfDecimalPrecisionDigitsForDoubles = 10;
             this.CallConnectTimePresent = true;
         }
 

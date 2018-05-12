@@ -502,6 +502,12 @@
     <Compile Include="sum_voice_day_04.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="sum_voice_day_05.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sum_voice_day_06.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="sum_voice_hr_01.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
@@ -512,6 +518,12 @@
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="sum_voice_hr_04.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sum_voice_hr_05.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sum_voice_hr_06.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="telcobrightpartner.cs">

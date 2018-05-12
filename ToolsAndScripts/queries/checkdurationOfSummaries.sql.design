@@ -13,7 +13,7 @@
     <ConnectionString>User Id=root;Host=localhost;Database=jsl;Character Set=utf8</ConnectionString>
     <Database>jsl</Database>
   </Connection>
-  <Views ShowAdditionalViews="False" IsLayoutActiveAttribute="True" MainViewAttribute="Code" MainViewScale="44">
+  <Views ShowAdditionalViews="False" IsLayoutActiveAttribute="True" MainViewAttribute="Code" MainViewScale="50">
     <View Name="Design" Visible="False" />
     <View Name="Code" Active="True" Visible="True">
       <Data />

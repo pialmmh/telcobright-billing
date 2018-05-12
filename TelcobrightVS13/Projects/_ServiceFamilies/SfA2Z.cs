@@ -33,9 +33,6 @@ namespace ServiceFamilies
             {
                 //consider otherAmount3 as tax1, by default
                 cdr.Duration1 = finalDuration;
-                decimal taxAmount = Convert.ToDecimal(cdr.InPartnerCost) *
-                                    Convert.ToDecimal(rateWithAssignmentTupleId.OtherAmount3) / 100;
-                SetTaxAmount(serviceContext, cdr, taxAmount);
                 string idCurrencyUoM = serviceContext.CdrProcessor.CdrJobContext.MediationContext.MefServiceFamilyContainer
                     .DicRateplans[rateWithAssignmentTupleId.idrateplan.ToString()].Currency;
                 int idChargedPartner = GetChargedOrChargingPartnerId(cdrExt, serviceContext);
@@ -44,8 +41,10 @@ namespace ServiceFamilies
                 account postingAccount = GetPostingAccount(serviceContext, rateWithAssignmentTupleId, idChargedPartner, billingRule);
                 if (cdrExt.Cdr.ChargingStatus == 1)
                 {
-                    acc_chargeable chargeable = CreateChargeable(serviceContext, cdr, finalDuration, finalAmount, rateWithAssignmentTupleId, idCurrencyUoM, billingRule, postingAccount);
-                    SetTaxAmount(serviceContext,cdr,taxAmount);
+                    decimal taxAmount = 0;
+                    SetTaxAmount(serviceContext, cdr, rateWithAssignmentTupleId, out taxAmount);
+                    acc_chargeable chargeable = CreateChargeable(serviceContext, cdr, finalDuration, finalAmount,
+                        rateWithAssignmentTupleId, idCurrencyUoM, billingRule, postingAccount);
                     if (chargeable.createdByJob == null)
                     {
                         chargeable.createdByJob = serviceContext.CdrProcessor.CdrJobContext.TelcobrightJob.id;
@@ -100,8 +99,11 @@ namespace ServiceFamilies
             return postingAccount;
         }
 
-        protected virtual void SetTaxAmount(ServiceContext serviceContext, cdr cdr, decimal taxAmount)
+        protected virtual void SetTaxAmount(ServiceContext serviceContext, cdr cdr,
+            Rateext rateWithAssignmentTupleId, out decimal taxAmount)
         {
+            taxAmount = Convert.ToDecimal(cdr.InPartnerCost) *
+                                Convert.ToDecimal(rateWithAssignmentTupleId.OtherAmount3) / 100;
             if (serviceContext.AssignDir == ServiceAssignmentDirection.Customer)
             {
                 cdr.Tax1 = taxAmount;

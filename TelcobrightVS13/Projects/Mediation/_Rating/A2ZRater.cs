@@ -69,6 +69,7 @@ namespace TelcobrightMediation
             finalDuration = 0;
             finalDuration = this.PrefixMatcher.GetA2ZDuration(this.Cdr.DurationSec, rateWithAssigmentTupleId);
             finalAmount = this.PrefixMatcher.GetA2ZAmount(finalDuration, rateWithAssigmentTupleId, 0,this.ServiceContext.CdrProcessor);
+            
             int ceilingUpPositionAfterDecimal = Convert.ToInt32(rateWithAssigmentTupleId.OtherAmount9);
             if (ceilingUpPositionAfterDecimal>0 && ceilingUpPositionAfterDecimal<=7)
             {

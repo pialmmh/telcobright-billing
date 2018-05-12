@@ -371,8 +371,6 @@
                             </asp:DropDownList>
                                                     </span>
 
-                                                    
-
                                              
                                                     <span style="padding-left:5px;">Service Group</span>
                                                     <asp:DropDownList ID="DropDownListServiceGroup" runat="server" Enabled="true">

@@ -557,31 +557,13 @@
                 SortExpression="ReceiveTime"  DataFormatString="{0:yyyy-MM-dd HH:mm:ss}"/>--%>
             <asp:BoundField DataField="CompletionTime" HeaderText="CompletionTime"  ItemStyle-Wrap="false" 
                 SortExpression="CompletionTime"  DataFormatString="{0:yyyy-MM-dd HH:mm:ss}" />    
-            <asp:BoundField DataField="NoOfRecords" HeaderText="NoOfRecords" 
-                SortExpression="NoOfRecords"/>
-            <asp:BoundField DataField="TotalDuration" HeaderText="TotalDuration" 
-                SortExpression="TotalDuration"/>
-            <asp:BoundField DataField="PartialDuration" HeaderText="Partial Duration" 
-                SortExpression="Partial Duration"/>
-            <asp:BoundField DataField="StartSequenceNumber" 
-                HeaderText="StartSequenceNumber" SortExpression="StartSequenceNumber"/>
-            <asp:BoundField DataField="EndSequenceNumber" HeaderText="EndSequenceNumber" 
-                SortExpression="EndSequenceNumber"/>
-
-
-            <asp:BoundField DataField="FailedCount" HeaderText="FailedCount" 
-                SortExpression="FailedCount" />
-            <asp:BoundField DataField="SuccessfulCount" HeaderText="SuccessfulCount" 
-                SortExpression="SuccessfulCount" />
-            <asp:BoundField DataField="MinCallStartTime" HeaderText="MinCallStartTime"  DataFormatString="{0:yyyy-MM-dd HH:mm:ss}"  ItemStyle-Wrap="false" 
-                SortExpression="MinCallStartTime" />
-            <asp:BoundField DataField="MaxCallStartTime" HeaderText="MaxCallStartTime"  DataFormatString="{0:yyyy-MM-dd HH:mm:ss}"  ItemStyle-Wrap="false" 
-                SortExpression="MaxCallStartTime" />
-            <asp:BoundField DataField="JobParameter" HeaderText="JobParameter" ItemStyle-Width="500px" ItemStyle-Wrap="false"
-                SortExpression="JobParameter" />
-            <%--<asp:BoundField DataField="OtherDetail" HeaderText="OtherDetail" 
-                SortExpression="OtherDetail" />--%>
-            <asp:BoundField DataField="Error" HeaderText="ExecutionError" 
+            <asp:BoundField DataField="NoOfSteps" HeaderText="NoOfSteps" 
+                SortExpression="NoOfSteps"/>
+            <%--<asp:BoundField DataField="JobParameter" HeaderText="Parameters" ItemStyle-Width="500px" ItemStyle-Wrap="false"
+                SortExpression="JobParameter" />--%>
+            <asp:BoundField DataField="JobSummary" HeaderText="Summary" 
+                SortExpression="JobSummary" />
+            <asp:BoundField DataField="Error" HeaderText="Execution Error" 
                 SortExpression="Error" />
 
         </Columns>

@@ -479,6 +479,7 @@
     <Compile Include="Testers\Employees\FullTextSearchTester.cs" />
     <Compile Include="Testers\FractionCeilingTester.cs" />
     <Compile Include="Testers\ObjectCopierTest.cs" />
+    <Compile Include="Testers\StringVsTupPerfTester.cs" />
     <Compile Include="TestFluentValidationRules.cs" />
     <Compile Include="TestFluentValidationRuleSets.cs" />
     <Compile Include="TestJsonDeserializeWithNonEmptyConstructor.cs" />

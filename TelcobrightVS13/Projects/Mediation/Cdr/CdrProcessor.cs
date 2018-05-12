@@ -26,6 +26,9 @@ namespace TelcobrightMediation
 {
     public class CdrProcessor
     {
+        public bool SkipServiceGroupRules { get; set; }
+        public List<int> ServiceFamilyRulesToSkip { get; set; }=new List<int>();
+        public List<int> PartnerRulesToSkip { get; set; }=new List<int>();
         public CdrJobContext CdrJobContext { get; }
         public CdrCollectionResult CollectionResult { get; }
         private MediationContext MediationContext => this.CdrJobContext.MediationContext;
@@ -53,8 +56,18 @@ namespace TelcobrightMediation
                 try
                 {
                     ResetMediationStatus(cdrExt.Cdr);
+                    IServiceGroup serviceGroup = null;
                     ServiceGroupConfiguration serviceGroupConfiguration = null;
-                    IServiceGroup serviceGroup = ExecuteServiceGroups(cdrExt, out serviceGroupConfiguration);
+                    if (this.SkipServiceGroupRules==true)
+                    {
+                        var lastMediatedIdServiceGroup = cdrExt.Cdr.ServiceGroup;
+                        this.CdrJobContext.MediationContext.MefServiceGroupContainer.IdServiceGroupWiseServiceGroups
+                            .TryGetValue(lastMediatedIdServiceGroup, out serviceGroup);
+                        serviceGroupConfiguration = this.CdrJobContext.MediationContext.Tbc.CdrSetting
+                            .ServiceGroupConfigurations[lastMediatedIdServiceGroup];
+                    }
+                    else serviceGroup = ExecuteServiceGroups(cdrExt, out serviceGroupConfiguration);
+
                     if (serviceGroup != null)
                     {
                         ExecutePartnerRules(serviceGroupConfiguration.PartnerRules, cdrExt);
@@ -145,29 +158,33 @@ namespace TelcobrightMediation
         private IServiceGroup ExecuteServiceGroups(CdrExt newCdrExt,
             out ServiceGroupConfiguration serviceGroupConfiguration)
         {
+            IServiceGroup serviceGroup = null;
             serviceGroupConfiguration = null;
             Dictionary<int, ServiceGroupConfiguration> serviceGroupConfigurations =
                 this.CdrJobContext.MediationContext.Tbc.CdrSetting.ServiceGroupConfigurations;
             foreach (KeyValuePair<int, ServiceGroupConfiguration> kv in serviceGroupConfigurations)
             {
-                IServiceGroup serviceGroup = null;
                 this.CdrJobContext.MediationContext.MefServiceGroupContainer.IdServiceGroupWiseServiceGroups
                     .TryGetValue(kv.Key, out serviceGroup);
                 if (serviceGroup != null)
                 {
                     serviceGroupConfiguration = kv.Value;
-                    newCdrExt.Cdr.ServiceGroup = 0; //unset ServiceGroup first if already set e.g. during re-processing
+                    newCdrExt.Cdr.ServiceGroup = 0; //unset sg first if already set, e.g. during re-processing
                     serviceGroup.Execute(newCdrExt.Cdr, this);
                     if (newCdrExt.Cdr.ServiceGroup > 0) return serviceGroup;
                 }
             }
-            return null;
+            return serviceGroup;
         }
 
         private void ResetMediationStatus(cdr cdr)
         {
             cdr.ErrorCode = ""; //set error flag empty by default to prevent calls going to cdrloaded table...
             cdr.MediationComplete = 0;
+            cdr.AdditionalMetaData = null;
+            cdr.ChargeableMetaTotal = null;
+            cdr.SummaryMetaTotal = null;
+            cdr.TransactionMetaTotal = null;
         }
 
         private void SetMediationStatusToSuccess(cdr cdr)
@@ -195,15 +212,12 @@ namespace TelcobrightMediation
 
         private void ExecutePartnerRules(List<int> partnerRules, CdrExt cdrExt)
         {
-            foreach (var rule in partnerRules)
+            foreach (var idPartnerRule in partnerRules.Where(r=>!this.PartnerRulesToSkip.Contains(r)))
             {
                 IPartnerRule partnerRule = null;
-                this.CdrJobContext.MediationContext.MefPartnerRuleContainer.DicExtensions.TryGetValue(rule,
+                this.CdrJobContext.MediationContext.MefPartnerRuleContainer.DicExtensions.TryGetValue(idPartnerRule,
                     out partnerRule);
-                if (partnerRule != null)
-                {
-                    partnerRule.Execute(cdrExt.Cdr, this.CdrJobContext.MediationContext.MefPartnerRuleContainer);
-                }
+                partnerRule?.Execute(cdrExt.Cdr, this.CdrJobContext.MediationContext.MefPartnerRuleContainer);
             }
         }
 
@@ -211,7 +225,7 @@ namespace TelcobrightMediation
             List<RatingRule> ratingRules, CdrExt cdrExt)
         {
             var cdr = cdrExt.Cdr;
-            foreach (RatingRule rule in ratingRules)
+            foreach (RatingRule rule in ratingRules.Where(r=>!this.ServiceFamilyRulesToSkip.Contains(r.IdServiceFamily)))
             {
                 IServiceFamily sf = null;
                 this.CdrJobContext.MediationContext.MefServiceFamilyContainer.DicExtensions.TryGetValue(
@@ -225,8 +239,7 @@ namespace TelcobrightMediation
                         rule.AssignDirection == 1
                             ? ServiceAssignmentDirection.Customer
                             : rule.AssignDirection == 2
-                                ? ServiceAssignmentDirection.Supplier
-                                : ServiceAssignmentDirection.None
+                                ? ServiceAssignmentDirection.Supplier: ServiceAssignmentDirection.None
                         , idProductForIndividualAccount);
                     //execute rating & accounting
                     AccChargeableExt chargeableExt = sf.Execute(cdrExt, serviceContext, false);
@@ -367,3 +380,4 @@ namespace TelcobrightMediation
         }
     }
 }
+

@@ -48,8 +48,11 @@ namespace ServiceFamilies
                 idBillingrule = billingRule.Id,
             };
         }
-        protected override void SetTaxAmount(ServiceContext serviceContext, cdr cdr, decimal taxAmount)
+        protected override void SetTaxAmount(ServiceContext serviceContext, cdr cdr, 
+           Rateext rateWithAssignmentTupleId , out decimal taxAmount)
         {
+            taxAmount = Convert.ToDecimal(cdr.OutPartnerCost) *
+                        Convert.ToDecimal(rateWithAssignmentTupleId.OtherAmount3) / 100;
             cdr.Tax1 = taxAmount;
         }
 

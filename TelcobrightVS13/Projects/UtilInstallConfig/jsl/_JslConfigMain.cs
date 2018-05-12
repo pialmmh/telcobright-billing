@@ -46,7 +46,7 @@ namespace InstallConfig
                 ValidationRulesForInconsistentCdrs = basicValidationRuleGenerator.GetInconsistentValidationRules(),
                 CommonMediationChecklist = basicValidationRuleGenerator.GetCommonValidationRules(),
                 ServiceGroupConfigurations = this.GetServiceGroupConfigurations(),
-                DisableCdrPostProcessingJobCreationForAutomation = true
+                DisableCdrPostProcessingJobCreationForAutomation = false
             };
 
             this.PrepareDirectorySettings(this.Tbc);

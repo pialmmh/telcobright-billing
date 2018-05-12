@@ -19,7 +19,11 @@ namespace MediationModel
         public string idParentExternal { get; set; }
         public int idPartner { get; set; }
         public string accountName { get; set; }
-        public string iduom { get; set; }
+        public int serviceGroup { get; set; }
+        public int serviceFamily { get; set; }
+        public int product { get; set; }
+        public string billableType { get; set; }
+        public string uom { get; set; }
         public int Depth { get; set; }
         public string Lineage { get; set; }
         public string remark { get; set; }

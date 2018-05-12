@@ -127,8 +127,7 @@ namespace TelcobrightMediation
                     .ToDictionary(g => g.Key.ToString(), g => g.ToList());
             foreach (var kv in serviceGroupWiseRatePlanAssignmentTuples)
             {
-                this.MefServiceFamilyContainer.ServiceGroupWiseTupDefs
-                    .Add(kv.Key, new TupleDefinitions(kv.Value));
+                this.MefServiceFamilyContainer.ServiceGroupWiseTupDefs.Add(kv.Key, new TupleDefinitions(kv.Value));
             }
         }
 

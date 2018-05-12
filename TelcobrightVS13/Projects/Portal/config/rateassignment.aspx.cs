@@ -60,8 +60,6 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
             cyclelistddl.Items.Add(new ListItem(jsb.Description, jsb.Id.ToString()));
         }
 
-
-
         string thisConectionString = ConfigurationManager.ConnectionStrings["partner"].ConnectionString;
 
         MySqlConnection connection = new MySqlConnection(thisConectionString);
@@ -69,29 +67,16 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
         List<ne> lstSwitch;
         using (PartnerEntities context = new PartnerEntities())
         {
-            telcobrightpartner thisCustomer = (from c in context.telcobrightpartners
-                                               where c.databasename == database
-                                               select c).First();
+            telcobrightpartner thisCustomer = context.telcobrightpartners.First(c => c.databasename == database);
             int thisOperatorId = thisCustomer.idCustomer;
             lstSwitch = context.nes.Where(c => c.idCustomer == thisOperatorId).ToList();
             ddlserviceGroup.Items.Clear();
             ddlserviceGroup.Items.Add(new ListItem(" [Select]", "-1"));
-            ServiceGroupComposer serviceGroupComposer = new ServiceGroupComposer();
-            serviceGroupComposer.ComposeFromPath(PageUtil.GetPortalBinPath() + "\\..\\Extensions");
-            Dictionary<int, IServiceGroup> mefServiceGroups =
-                    serviceGroupComposer.ServiceGroups.ToDictionary(c => c.Id);
-            foreach (KeyValuePair<int, ServiceGroupConfiguration> kv in Tbc.CdrSetting.ServiceGroupConfigurations)
-            {
-                if (mefServiceGroups.ContainsKey(kv.Key))
-                {
-                    IServiceGroup thisServiceGroup = null;
-                    mefServiceGroups.TryGetValue(kv.Key, out thisServiceGroup);
-                    if(thisServiceGroup==null) throw new Exception("Service group not found for id="+kv.Key);
-                    ddlserviceGroup.Items.Add(new ListItem(thisServiceGroup.RuleName, kv.Key.ToString()));
-                }
-            }
+            ServiceGroupPopulatorForDropDown.Populate(ddlserviceGroup,this.Tbc);
         }
     }
+
+    
 
     private void PopulateDropdownlistService(ServiceGroupConfiguration serviceGroupConfig)
     {

@@ -25,7 +25,6 @@ namespace MediationModel
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<account> accounts { get; set; }
         public virtual DbSet<allerror> allerrors { get; set; }
         public virtual DbSet<ansprefixextra> ansprefixextras { get; set; }
         public virtual DbSet<aspnetuserclaim> aspnetuserclaims { get; set; }
@@ -136,5 +135,10 @@ namespace MediationModel
         public virtual DbSet<sum_voice_hr_04> sum_voice_hr_04 { get; set; }
         public virtual DbSet<uom_conversion> uom_conversion { get; set; }
         public virtual DbSet<uom_conversion_dated> uom_conversion_dated { get; set; }
+        public virtual DbSet<sum_voice_day_05> sum_voice_day_05 { get; set; }
+        public virtual DbSet<sum_voice_day_06> sum_voice_day_06 { get; set; }
+        public virtual DbSet<sum_voice_hr_05> sum_voice_hr_05 { get; set; }
+        public virtual DbSet<sum_voice_hr_06> sum_voice_hr_06 { get; set; }
+        public virtual DbSet<account> accounts { get; set; }
     }
 }

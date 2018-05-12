@@ -159,8 +159,8 @@ public partial class ConfigBatcJob : System.Web.UI.Page
                         jobdef.id.ToString()));
                 }
                 telcobrightpartner thisCustomer = (from c in context.telcobrightpartners
-                                                   where c.databasename == database
-                                                   select c).First();
+                    where c.databasename == database
+                    select c).First();
                 int thisOperatorId = thisCustomer.idCustomer;
                 lstSwitch = context.nes.Where(c => c.idCustomer == thisOperatorId).ToList();
 
@@ -171,8 +171,9 @@ public partial class ConfigBatcJob : System.Web.UI.Page
                 }
 
                 ServiceGroupComposer sgComposer = new ServiceGroupComposer();
-                string mefPath = PageUtil.GetPortalBinPath() + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar
-                    + "Extensions";
+                string mefPath = PageUtil.GetPortalBinPath() + Path.DirectorySeparatorChar + ".." +
+                                 Path.DirectorySeparatorChar
+                                 + "Extensions";
                 sgComposer.ComposeFromPath(mefPath);
                 Dictionary<string, string>
                     dicConfiguredServiceGroups = sgComposer.ServiceGroups.ToDictionary(c => c.Id.ToString(),
@@ -180,10 +181,7 @@ public partial class ConfigBatcJob : System.Web.UI.Page
                 //populate service group
                 this.DropDownListServiceGroup.Items.Clear();
                 this.DropDownListServiceGroup.Items.Add(new ListItem(" [All]", "-1"));
-                foreach (KeyValuePair<string, string> kv in dicConfiguredServiceGroups)
-                {
-                    this.DropDownListServiceGroup.Items.Add(new ListItem(kv.Value, kv.Key));
-                }
+                ServiceGroupPopulatorForDropDown.Populate(this.DropDownListServiceGroup, tbc);
             }
 
             this.DropDownListSwitch.Items.Clear();
