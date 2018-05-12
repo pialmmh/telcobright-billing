@@ -17,13 +17,13 @@ namespace Process
 {
 
     [Export("TelcobrightProcess", typeof(ITelcobrightProcess))]
-    public class ProcessCdrJobCreator : ITelcobrightProcess
+    public class CdrJobCreator : ITelcobrightProcess
     {
         public override string ToString()
         {
             return this.RuleName;
         }
-        public string RuleName => "ProcessCdrJobCreator";
+        public string RuleName => this.GetType().ToString();
         public string HelpText => "Method to Create Cdr Job";
         public int ProcessId => 101;
         

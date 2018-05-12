@@ -20,7 +20,7 @@ namespace Process
 {
 
     [Export("TelcobrightProcess", typeof(ITelcobrightProcess))]
-    public class ProcessFileCopy : ITelcobrightProcess
+    public class FileCopier : ITelcobrightProcess
     {
         public override string ToString()
         {

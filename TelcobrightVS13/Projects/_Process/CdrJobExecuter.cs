@@ -22,13 +22,13 @@ using TelcobrightMediation.Config;
 namespace Process
 {
     [Export("TelcobrightProcess", typeof(ITelcobrightProcess))]
-    public class ProcessCdrJobExecuter : ITelcobrightProcess
+    public class CdrJobExecuter : ITelcobrightProcess
     {
         public override string ToString()
         {
             return this.RuleName;
         }
-        public string RuleName => "ProcessCDR";
+        public string RuleName => this.GetType().ToString();
         public string HelpText => "Processes CDR";
         public int ProcessId => 103;
         public void Execute(IJobExecutionContext schedulerContext)

@@ -69,11 +69,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileLister.cs" />
-    <Compile Include="JobCreatorCdr.cs" />
+    <Compile Include="CdrJobCreator.cs" />
     <Compile Include="AutoCreateJob.cs" />
     <Compile Include="Optimizer.cs" />
     <Compile Include="PaymentProcessor.cs" />
-    <Compile Include="ProcessFileCopy.cs" />
+    <Compile Include="FileCopier.cs" />
     <Compile Include="CdrJobExecuter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

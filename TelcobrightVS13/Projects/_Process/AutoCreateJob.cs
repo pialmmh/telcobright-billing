@@ -27,7 +27,7 @@ namespace Process
             throw new NotImplementedException();
         }
 
-        public string RuleName => "AutoCreateJob";
+        public string RuleName => this.GetType().ToString();
         public string HelpText => "method AutoCrateJob";
         public int ProcessId => 105;
 
