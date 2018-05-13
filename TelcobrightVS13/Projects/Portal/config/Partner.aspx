@@ -333,7 +333,7 @@ order by type "></asp:SqlDataSource>
                             <Columns>
                                 <asp:BoundField ItemStyle-Width="220px" DataField="accountName" HeaderText="Service Account" HeaderStyle-HorizontalAlign="Left" ItemStyle-HorizontalAlign="Left" />
                                 <asp:BoundField ItemStyle-Width="80px" DataField="BalanceAfter" HeaderText="Balance" HeaderStyle-HorizontalAlign="Right" ItemStyle-HorizontalAlign="Right" />                                
-                                <asp:BoundField ItemStyle-Width="30px" DataField="iduom" HeaderText="UOM" HeaderStyle-HorizontalAlign="Left" ItemStyle-HorizontalAlign="Left" />                                
+                                <asp:BoundField ItemStyle-Width="30px" DataField="uom" HeaderText="UOM" HeaderStyle-HorizontalAlign="Left" ItemStyle-HorizontalAlign="Left" />                                
                             </Columns>
                             <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
                             <PagerStyle BackColor="#284775" ForeColor="White" 
