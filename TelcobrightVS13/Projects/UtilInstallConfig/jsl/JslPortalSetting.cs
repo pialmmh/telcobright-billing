@@ -44,7 +44,7 @@ namespace InstallConfig
                             AppPoolName = this.Tbc.DatabaseSetting.DatabaseName,
                             TemplateFileName = "../../" + this.Tbc.DatabaseSetting.DatabaseName + "/tmplPortalAppPools.txt",
                         },
-                        ImpersonateUserName="Mustafa",
+                        ImpersonateUserName="Administrator",
                         ImpersonatePassword="Habib321"
                     },
                     new InternetSite(this.Tbc)
