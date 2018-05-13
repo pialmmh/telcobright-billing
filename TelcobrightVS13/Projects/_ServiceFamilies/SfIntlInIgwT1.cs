@@ -103,8 +103,14 @@ namespace TelcobrightMediation
             //any ios, thereby change the service context here to "supplier"
             serviceContext.AssignDir = ServiceAssignmentDirection.Supplier;
             account postingAccount = postingAccountingFinder.GetPostingAccount();
-            string idCurrencyUoM = serviceContext.CdrProcessor.CdrJobContext.MediationContext.MefServiceFamilyContainer
-                .DicRateplans[matchedRateWithAssignmentTupleId.idrateplan.ToString()].Currency;
+            rateplan dicRateplan = null;
+            serviceContext.CdrProcessor.CdrJobContext.MediationContext.MefServiceFamilyContainer
+                .DicRateplans.TryGetValue((long)matchedRateWithAssignmentTupleId.idrateplan, out dicRateplan);
+            if (dicRateplan==null)
+            {
+                throw new Exception("Could not find rateplan.");
+            }
+            string idCurrencyUoM = dicRateplan.Currency;
             if(cdrExt.Cdr.ChargingStatus==1)
             {
                 acc_chargeable chargeable = new acc_chargeable()
@@ -150,12 +156,19 @@ namespace TelcobrightMediation
             return null;
         }
 
-        private BillingRule GetBillingRule(ServiceContext serviceContext, long idRatePlanAssignmentTuple)
+        private BillingRule GetBillingRule(ServiceContext serviceContext, int idRatePlanAssignmentTuple)
         {
-            int idbillingRule = Convert.ToInt32(serviceContext.MefServiceFamilyContainer
-                .IdWiseRateplanAssignmenttuplesIncludingBillingRules[idRatePlanAssignmentTuple.ToString()]
+            rateplanassignmenttuple idWiseRateplanAssignmenttuplesIncludingBillingRule = null;
+            serviceContext.MefServiceFamilyContainer
+                .IdWiseRateplanAssignmenttuplesIncludingBillingRules
+                .TryGetValue(idRatePlanAssignmentTuple,out idWiseRateplanAssignmenttuplesIncludingBillingRule);
+            if (idWiseRateplanAssignmenttuplesIncludingBillingRule == null)
+            {
+                throw new Exception($@"Billing rule not found for service family={serviceContext.ServiceFamily.ToString()}");
+            }
+            int idbillingRule = Convert.ToInt32(idWiseRateplanAssignmenttuplesIncludingBillingRule
                 .billingruleassignment.idBillingRule);
-            BillingRule billingRule = serviceContext.MefServiceFamilyContainer.BillingRules[idbillingRule.ToString()];
+            BillingRule billingRule = serviceContext.MefServiceFamilyContainer.BillingRules[idbillingRule];
             return billingRule;
         }
 
@@ -164,8 +177,17 @@ namespace TelcobrightMediation
             var x = new rateplanassignmenttuple() { idService = this.Id };
 
             List<rateplanassignmenttuple> match = null;
+            TupleDefinitions serviceGroupWiseTupDef = null;
             serviceContext.MefServiceFamilyContainer
-                .ServiceGroupWiseTupDefs[serviceContext.ServiceGroupConfiguration.IdServiceGroup.ToString()]
+                .ServiceGroupWiseTupDefs.TryGetValue(serviceContext.ServiceGroupConfiguration.IdServiceGroup,
+                    out serviceGroupWiseTupDef);
+            if (serviceGroupWiseTupDef==null)
+            {
+                throw new Exception(
+                    "Could not find serviceGroupWiseTupDef in " +
+                    "serviceContext.MefServiceFamilyContainer.ServiceGroupWiseTupDefs");
+            }
+            serviceGroupWiseTupDef
                 .DicServiceTuplesIncludingBillingRuleAssignment.TryGetValue(x.GetTuple(), out match);
 
             if (match != null)

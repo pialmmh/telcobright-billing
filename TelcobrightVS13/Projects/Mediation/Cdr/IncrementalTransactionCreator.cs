@@ -107,9 +107,6 @@ namespace TelcobrightMediation.Cdr
                 }
                 else //new+old cdr co-existence
                 {
-                    //todo: remove temp code
-                    var sumNew = newCdrExt.AccWiseTransactionContainers.Values.Sum(t => t.NewTransaction.amount);
-                    //end temp code
                     foreach (KeyValuePair<long, AccWiseTransactionContainer> kv in newCdrExt
                         .AccWiseTransactionContainers)
                     {

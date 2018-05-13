@@ -6,7 +6,7 @@ namespace MediationModel
 {
     public class Rateext : rate
     {
-        public long IdRatePlanAssignmentTuple { get; set; }
+        public int IdRatePlanAssignmentTuple { get; set; }
         public override string ToString()
         {
             return new StringBuilder().Append(this.Prefix).Append("/")

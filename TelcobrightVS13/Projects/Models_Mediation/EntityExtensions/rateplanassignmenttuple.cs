@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace MediationModel
 {
     public partial class rateplanassignmenttuple
@@ -18,13 +20,16 @@ namespace MediationModel
 
         private string GetPartnerTupleWithoutPriority()
         {
-            return GetServiceTupleWithoutPriority() + "/" + this.AssignDirection.ToString() + "/" + this.idpartner.ToString();
+            return new StringBuilder(GetServiceTupleWithoutPriority()).Append("/")
+                .Append(this.AssignDirection.ToString()).Append("/").Append(this.idpartner.ToString()).ToString();
         }
 
         private string GetRouteTupleWithoutPriority()
         {
-            return GetServiceTupleWithoutPriority() + "/" + this.AssignDirection.ToString() + "/" + this.route.ToString();
+            return new StringBuilder(GetServiceTupleWithoutPriority()).Append("/")
+                .Append(this.AssignDirection.ToString()).Append("/").Append(this.route.ToString()).ToString();
         }
+
         public string GetTuple()
         {
             if (this.route != null && this.route > 0)

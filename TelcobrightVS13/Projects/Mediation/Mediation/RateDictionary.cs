@@ -8,7 +8,7 @@ namespace TelcobrightMediation
 
     public class TupleByPeriod : IEquatable<TupleByPeriod>
     {
-        public long? IdAssignmentTuple { get; set; }
+        public int? IdAssignmentTuple { get; set; }
         public DateRange DRange { get; set; }
         public int Priority { get; set; }
         public override string ToString()
@@ -68,7 +68,7 @@ namespace TelcobrightMediation
     }
     public class RateTuple: IEquatable<RateTuple>
     {
-        public long? IdRateplanAssignmenttuple = -1;
+        public int? IdRateplanAssignmenttuple = -1;
         public long? IdService = null;
         public DateRange DRange = new DateRange();
         public int? IdRatePlan = null;

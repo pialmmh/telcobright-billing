@@ -49,9 +49,7 @@ namespace TelcobrightMediation
 
         public void Mediate()
         {
-            //todo: change to parallel
-            this.NewCdrExts.ForEach(cdrExt =>
-            //Parallel.ForEach(this.NewCdrExts, cdrExt =>
+            Parallel.ForEach(this.NewCdrExts, cdrExt =>
             {
                 try
                 {

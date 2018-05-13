@@ -31,20 +31,11 @@ namespace TelcobrightMediation
         public MefServiceFamilyContainer MefServiceFamilyContainer { get; }
         public Dictionary<string, enumbillingspan> BillingSpans { get; }
         public Dictionary<ValueTuple<int,string>, route> Routes { get; }
-
-        public List<ansprefixextra>
-            LstAnsPrefixExtra
-        {
-            get;
-            private set;
-        } //required for failed intl in calls where term number might be missing
+        public List<ansprefixextra> LstAnsPrefixExtra{get;private set;} //required for failed intl in calls where term number might be missing
 
         public Dictionary<string, partnerprefix>
             DictAnsOrig { get; private set; } //ANSTermprefix partner dictionary with AnsPrefix as Key
-
         public Dictionary<int, cdrfieldlist> CdrFieldLists { get; private set; }
-        public Dictionary<string, partner> Partners { get; set; }
-
         public Dictionary<int, Dictionary<int, ServiceGroupConfiguration>>
             ServiceGroupConfigurations { get; } //<switchid,dic<servicegroupID,medruleassignment>>
 
@@ -79,8 +70,8 @@ namespace TelcobrightMediation
                 this.ServiceGroupConfigurations.Add(ne.idSwitch, dicmedInner);
             }
             this.BillingSpans = context.enumbillingspans.ToDictionary(c => c.ofbiz_uom_Id); //route data
-            this.Routes = context.routes.ToDictionary(r => new ValueTuple<int,string>(r.SwitchId,r.RouteName));
-            this.Partners = context.partners.ToDictionary(c => c.idPartner.ToString());
+            this.Routes = context.routes.Include(r=>r.partner)
+                .ToDictionary(r => new ValueTuple<int,string>(r.SwitchId,r.RouteName));
             this.DictAnsOrig = new Dictionary<string, partnerprefix>();
             this.DictAnsOrig = PopulateANSPrefix();
             this.LstAnsPrefixExtra = context.ansprefixextras.OrderByDescending(c => c.PrefixBeforeAnsNumber.Length)
@@ -90,10 +81,9 @@ namespace TelcobrightMediation
             this.MefServiceFamilyContainer = new MefServiceFamilyContainer
             {
                 DicRouteIncludingPartner = this.Routes,
-                DicCountryCode = context.countrycodes.ToDictionary(c => c.Code),
-                DicRateplans = context.rateplans.ToDictionary(c => c.id.ToString()),
+                DicRateplans = context.rateplans.ToDictionary(c => c.id),
                 BillingRules = context.jsonbillingrules.ToList()
-                    .Select(c => JsonBillingRuleToBillingRuleConverter.Convert(c)).ToDictionary(c => c.Id.ToString())
+                    .Select(c => JsonBillingRuleToBillingRuleConverter.Convert(c)).ToDictionary(c => c.Id)
             };
             this.MefServiceFamilyContainer.PopulateCachedUsdBcs(this.Context);
             this.InconsistentCdrCheckListValidator = CreateValidatorInstanceWithValidationExpressions<string[]>(this.Tbc
@@ -121,10 +111,10 @@ namespace TelcobrightMediation
             List<rateplanassignmenttuple> rateplanassignmenttuples
                 = context.rateplanassignmenttuples.Include("billingruleassignment").ToList();
             this.MefServiceFamilyContainer.IdWiseRateplanAssignmenttuplesIncludingBillingRules
-                = rateplanassignmenttuples.ToDictionary(c => c.id.ToString());
-            Dictionary<string, List<rateplanassignmenttuple>> serviceGroupWiseRatePlanAssignmentTuples =
+                = rateplanassignmenttuples.ToDictionary(c => c.id);
+            Dictionary<int, List<rateplanassignmenttuple>> serviceGroupWiseRatePlanAssignmentTuples =
                 rateplanassignmenttuples.GroupBy(c => c.billingruleassignment.idServiceGroup)
-                    .ToDictionary(g => g.Key.ToString(), g => g.ToList());
+                    .ToDictionary(g => g.Key, g => g.ToList());
             foreach (var kv in serviceGroupWiseRatePlanAssignmentTuples)
             {
                 this.MefServiceFamilyContainer.ServiceGroupWiseTupDefs.Add(kv.Key, new TupleDefinitions(kv.Value));

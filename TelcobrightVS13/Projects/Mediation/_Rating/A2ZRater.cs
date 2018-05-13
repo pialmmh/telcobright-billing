@@ -60,8 +60,7 @@ namespace TelcobrightMediation
             //following will return tuples for the day of answer time. If rateplans are assigned to routes, then routetuples
             //in the rateplanassignment table will be fetched, otherwise partner tuples will be returned
             //TupleByPeriod=one rateplanassignmenttuple on the day of answertime
-            List<TupleByPeriod> tups = GetAssignmentTuples(this.ServiceContext.ServiceGroupConfiguration.IdServiceGroup
-                .ToString());
+            List<TupleByPeriod> tups = GetAssignmentTuples(this.ServiceContext.ServiceGroupConfiguration.IdServiceGroup);
             if(tups==null) return null;
             Rateext rateWithAssigmentTupleId = this.PrefixMatcher.MatchPrefix(phoneNumber, category, subCategory,
                 tups, Convert.ToDateTime(this.Cdr.AnswerTime), flagLcr,useInMemoryTable);
@@ -96,7 +95,7 @@ namespace TelcobrightMediation
             }
             return rateWithAssigmentTupleId;
         }
-        private List<TupleByPeriod> GetAssignmentTuples(string idServiceGroup)
+        private List<TupleByPeriod> GetAssignmentTuples(int idServiceGroup)
         {
             //first try by route
             List<TupleByPeriod> newtup = GetRouteTuple(idServiceGroup);
@@ -110,7 +109,7 @@ namespace TelcobrightMediation
             if (newtup != null) return newtup;
             return null;
         }
-        private List<TupleByPeriod> GetRouteTuple(string idServiceGroup)
+        private List<TupleByPeriod> GetRouteTuple(int idServiceGroup)
         {
             rateplanassignmenttuple rpAssignTuple = new rateplanassignmenttuple() { idService = this.ServiceContext.ServiceFamily.Id,
                 AssignDirection = Convert.ToInt32(this.ServiceContext.AssignDir) };
@@ -132,8 +131,14 @@ namespace TelcobrightMediation
                 return null;
             }
             List<rateplanassignmenttuple> match = null;
-            this.ServiceContext.MefServiceFamilyContainer.ServiceGroupWiseTupDefs[idServiceGroup]
-                .DicRouteTuplesIncludingBillingRuleAssignment.TryGetValue(rpAssignTuple.GetTuple(), out match);
+            TupleDefinitions serviceGroupWiseTupDef = null;
+            this.ServiceContext.MefServiceFamilyContainer.ServiceGroupWiseTupDefs.TryGetValue(idServiceGroup,
+                out serviceGroupWiseTupDef);
+            if (serviceGroupWiseTupDef == null)
+                throw new Exception(
+                    "Could not find serviceGroupWisetupDef in ServiceContext.MefServiceFamilyContainer.ServiceGroupWiseTupDefs");
+                serviceGroupWiseTupDef
+                    .DicRouteTuplesIncludingBillingRuleAssignment.TryGetValue(rpAssignTuple.GetTuple(), out match);
 
             if (match != null)
             {
@@ -151,7 +156,7 @@ namespace TelcobrightMediation
             else return null;
         }
 
-        private List<TupleByPeriod> GetPartnerTuple(string idServiceGroup)
+        private List<TupleByPeriod> GetPartnerTuple(int idServiceGroup)
         {
             rateplanassignmenttuple rpAssignTuple = new rateplanassignmenttuple() { idService =this.ServiceContext.ServiceFamily.Id,
                 AssignDirection = Convert.ToInt32(this.ServiceContext.AssignDir) };
@@ -176,7 +181,13 @@ namespace TelcobrightMediation
             }
 
             List<rateplanassignmenttuple> match = null;
-            this.ServiceContext.MefServiceFamilyContainer.ServiceGroupWiseTupDefs[idServiceGroup]
+            TupleDefinitions serviceGroupWiseTupDef = null;
+            this.ServiceContext.MefServiceFamilyContainer.ServiceGroupWiseTupDefs.TryGetValue(idServiceGroup,
+                out serviceGroupWiseTupDef);
+            if (serviceGroupWiseTupDef == null)
+                throw new Exception(
+                    "Could not find serviceGroupWisetupDef in ServiceContext.MefServiceFamilyContainer.ServiceGroupWiseTupDefs");
+            serviceGroupWiseTupDef
                 .DicPartnerTuplesIncludingBillingRuleAssignment.TryGetValue(rpAssignTuple.GetTuple(), out match);
 
             if (match != null)

@@ -33,8 +33,11 @@ namespace ServiceFamilies
             {
                 //consider otherAmount3 as tax1, by default
                 cdr.Duration1 = finalDuration;
-                string idCurrencyUoM = serviceContext.CdrProcessor.CdrJobContext.MediationContext.MefServiceFamilyContainer
-                    .DicRateplans[rateWithAssignmentTupleId.idrateplan.ToString()].Currency;
+                rateplan dicRateplan = null;
+                serviceContext.CdrProcessor.CdrJobContext.MediationContext.MefServiceFamilyContainer
+                    .DicRateplans.TryGetValue((long)rateWithAssignmentTupleId.idrateplan,out dicRateplan);
+                if (dicRateplan == null) throw new Exception("Could not find rateplan.");
+                string idCurrencyUoM = dicRateplan.Currency;
                 int idChargedPartner = GetChargedOrChargingPartnerId(cdrExt, serviceContext);
                 BillingRule billingRule = GetBillingRule(serviceContext,
                     rateWithAssignmentTupleId.IdRatePlanAssignmentTuple);
@@ -124,12 +127,19 @@ namespace ServiceFamilies
                 serviceContext.AssignDir == ServiceAssignmentDirection.Supplier ? Convert.ToInt32(cdrExt.Cdr.OutPartnerId) : -1;
         }
 
-        private BillingRule GetBillingRule(ServiceContext serviceContext,long idRatePlanAssignmentTuple)
+        private BillingRule GetBillingRule(ServiceContext serviceContext,int idRatePlanAssignmentTuple)
         {
-            int idbillingRule = Convert.ToInt32(serviceContext.MefServiceFamilyContainer
-                .IdWiseRateplanAssignmenttuplesIncludingBillingRules[idRatePlanAssignmentTuple.ToString()]
+            rateplanassignmenttuple idWiseRateplanAssignmenttuplesIncludingBillingRule = null;
+            serviceContext.MefServiceFamilyContainer
+                .IdWiseRateplanAssignmenttuplesIncludingBillingRules
+                .TryGetValue(idRatePlanAssignmentTuple,out idWiseRateplanAssignmenttuplesIncludingBillingRule);
+            if (idWiseRateplanAssignmenttuplesIncludingBillingRule==null)
+            {
+                throw new Exception($@"Billing rule not found for service family={serviceContext.ServiceFamily.ToString()}");
+            }
+            int idbillingRule = Convert.ToInt32(idWiseRateplanAssignmenttuplesIncludingBillingRule
                 .billingruleassignment.idBillingRule);
-            BillingRule billingRule = serviceContext.MefServiceFamilyContainer.BillingRules[idbillingRule.ToString()];
+            BillingRule billingRule = serviceContext.MefServiceFamilyContainer.BillingRules[idbillingRule];
             return billingRule;
         }
         
@@ -137,7 +147,7 @@ namespace ServiceFamilies
         {
             acc_chargeable chargeable = accChargeableExt.AccChargeable;
             int idBillingRule = chargeable.idBillingrule;
-            BillingRule billingRule= serviceContext.MefServiceFamilyContainer.BillingRules[idBillingRule.ToString()];
+            BillingRule billingRule= serviceContext.MefServiceFamilyContainer.BillingRules[idBillingRule];
             acc_transaction transaction = new acc_transaction()
             {
                 id = serviceContext.CdrProcessor.CdrJobContext.AutoIncrementManager

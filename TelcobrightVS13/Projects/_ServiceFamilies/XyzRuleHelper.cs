@@ -147,12 +147,19 @@ namespace TelcobrightMediation
             return null;
         }
 
-        private BillingRule GetBillingRule(ServiceContext serviceContext, long idRatePlanAssignmentTuple)
+        private BillingRule GetBillingRule(ServiceContext serviceContext, int idRatePlanAssignmentTuple)
         {
-            int idbillingRule = Convert.ToInt32(serviceContext.MefServiceFamilyContainer
-                .IdWiseRateplanAssignmenttuplesIncludingBillingRules[idRatePlanAssignmentTuple.ToString()]
+            rateplanassignmenttuple idWiseRateplanAssignmenttuplesIncludingBillingRule = null;
+            serviceContext.MefServiceFamilyContainer
+                .IdWiseRateplanAssignmenttuplesIncludingBillingRules
+                .TryGetValue(idRatePlanAssignmentTuple,out idWiseRateplanAssignmenttuplesIncludingBillingRule);
+            if (idWiseRateplanAssignmenttuplesIncludingBillingRule == null)
+            {
+                throw new Exception($@"Billing rule not found for service family={serviceContext.ServiceFamily.ToString()}");
+            }
+            int idbillingRule = Convert.ToInt32(idWiseRateplanAssignmenttuplesIncludingBillingRule
                 .billingruleassignment.idBillingRule);
-            BillingRule billingRule = serviceContext.MefServiceFamilyContainer.BillingRules[idbillingRule.ToString()];
+            BillingRule billingRule = serviceContext.MefServiceFamilyContainer.BillingRules[idbillingRule];
             return billingRule;
         }
 

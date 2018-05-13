@@ -74,7 +74,7 @@ namespace TelcobrightMediation
                         {
                             matchedRate = thisRate;
                             matchedRate.IdRatePlanAssignmentTuple =
-                                Convert.ToInt64(ratesWithAssignmentTuple.Tup.IdAssignmentTuple);
+                                Convert.ToInt32(ratesWithAssignmentTuple.Tup.IdAssignmentTuple);
                             matchFound = true;
                             break;//rates are sorted desc, starttime. latest match will be returned immediately
                         }

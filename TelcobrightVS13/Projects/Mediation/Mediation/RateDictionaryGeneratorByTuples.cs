@@ -147,7 +147,7 @@ namespace TelcobrightMediation
             foreach (KeyValuePair<RateTuple, List<Rateext>> kv in this._dicTupRates)
             {
                 TupleByPeriod shortTup=new TupleByPeriod{
-                    IdAssignmentTuple=Convert.ToInt64(kv.Key.IdRateplanAssignmenttuple),
+                    IdAssignmentTuple=Convert.ToInt32(kv.Key.IdRateplanAssignmenttuple),
                     DRange=kv.Key.DRange};
                 dicReturn.Add(shortTup, kv.Value);
             }

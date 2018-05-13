@@ -11,25 +11,23 @@ namespace TelcobrightMediation
     public class MefServiceFamilyContainer
     {
         public Dictionary<ValueTuple<int,string>, route> DicRouteIncludingPartner { get; set; }//<switchid-route,route>
-        public Dictionary<string, countrycode> DicCountryCode { get; set; }
         public ServiceFamilyComposer CmpServiceFamily { get; }
         public IDictionary<int, IServiceFamily> DicExtensions { get; }
         public RateCache RateCache { get; set; }
-        public Dictionary<string, rateplanassignmenttuple> IdWiseRateplanAssignmenttuplesIncludingBillingRules { get; set; }
-        public Dictionary<string,TupleDefinitions> ServiceGroupWiseTupDefs { get; set; }
-        public Dictionary<string, rateplan> DicRateplans { get; set; }//to fetch currency & other infor during rating
-        public Dictionary<string,BillingRule> BillingRules { get; set; }
+        public Dictionary<int, rateplanassignmenttuple> IdWiseRateplanAssignmenttuplesIncludingBillingRules { get; set; }
+        public Dictionary<int,TupleDefinitions> ServiceGroupWiseTupDefs { get; set; }
+        public Dictionary<long, rateplan> DicRateplans { get; set; }//to fetch currency & other infor during rating
+        public Dictionary<int,BillingRule> BillingRules { get; set; }
         public UoMConvRateCache UsdBcsCache { get; private set; }
         public MefServiceFamilyContainer()
         {
             this.DicRouteIncludingPartner = new Dictionary<ValueTuple<int, string>, route>();
-            this.DicCountryCode=new Dictionary<string, countrycode>();
             this.CmpServiceFamily=new ServiceFamilyComposer();
             this.DicExtensions=new Dictionary<int, IServiceFamily>();
             this.RateCache = null;
-            this.DicRateplans=new Dictionary<string, rateplan>();
-            this.BillingRules=new Dictionary<string, BillingRule>();
-            this.ServiceGroupWiseTupDefs=new Dictionary<string, TupleDefinitions>();
+            this.DicRateplans=new Dictionary<long, rateplan>();
+            this.BillingRules=new Dictionary<int, BillingRule>();
+            this.ServiceGroupWiseTupDefs=new Dictionary<int, TupleDefinitions>();
         }
         public void PopulateCachedUsdBcs(PartnerEntities context)
         {
