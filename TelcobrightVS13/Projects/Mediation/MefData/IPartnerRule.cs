@@ -7,6 +7,6 @@ namespace TelcobrightMediation
         string RuleName { get; }
         string HelpText { get; }
         int Id { get; }
-        void Execute(cdr thisCdr, MefPartnerRulesContainer pData);
+        int Execute(cdr thisCdr, MefPartnerRulesContainer pData);
     }
 }

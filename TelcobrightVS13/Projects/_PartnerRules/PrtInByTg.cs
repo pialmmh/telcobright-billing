@@ -14,9 +14,9 @@ namespace PartnerRules
             return this.RuleName;
         }
         public string RuleName => GetType().Name;
-        public string HelpText => "Incoming Partner/Partner Identification by Trunk Group";
+        public string HelpText => "Ingress Partner Identification by Trunk Group";
         public int Id => 1;
-        public void Execute(cdr thisCdr, MefPartnerRulesContainer pData)
+        public int Execute(cdr thisCdr, MefPartnerRulesContainer pData)
         {
             var key = new ValueTuple<int,string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
             route thisRoute = null;
@@ -24,9 +24,10 @@ namespace PartnerRules
             if (thisRoute != null)
             {
                 thisCdr.InPartnerId = thisRoute.idPartner;
-                //set post paid/pre-paid flag
-                thisCdr.PrePaid =Convert.ToByte(thisRoute.partner.CustomerPrePaid);
+                return thisRoute.idPartner;
             }
+            thisCdr.InPartnerId = 0;
+            return 0;
         }
     }
 }
