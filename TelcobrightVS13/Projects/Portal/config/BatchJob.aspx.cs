@@ -389,7 +389,7 @@ public partial class ConfigBatcJob : System.Web.UI.Page
                         if (tbc.CdrSetting.PartialCdrEnabledNeIds.Any())
                         {
                             this.lblStatus.Text =
-                                " Cdr erasing is not supported for NEs with partial cdr configuration!";
+                                "Cdr erasing is not supported for NEs with partial cdr configuration!";
                             return;
                         }
                         sourceTable = "cdr";

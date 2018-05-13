@@ -125,6 +125,8 @@ namespace Jobs
             //Task.Run(() => ArchiveAndDeleteJobCreation(tbc, ThisJob));
             //vault.DeleteSingleFile(ThisJob.JobName);
             //File.Delete(fileName);
+            //todo: solve constr issue in following mehtod
+            return;
             if (this.Input.CdrSetting.DisableCdrPostProcessingJobCreationForAutomation == false)
             {
                 ArchiveAndDeleteJobCreation(this.Input.MediationContext.Tbc,

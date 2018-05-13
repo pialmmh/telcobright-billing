@@ -14,10 +14,10 @@ namespace PartnerRules
             return this.RuleName;
         }
         public string RuleName => GetType().Name;
-        public string HelpText => "Outgoing Partner/Partner Identification by Trunk Group";
+        public string HelpText => "Egress Partner Identification by Trunk Group";
         public int Id => 2;
 
-        public void Execute(cdr thisCdr, MefPartnerRulesContainer pData)
+        public int Execute(cdr thisCdr, MefPartnerRulesContainer pData)
         {
             var key = new ValueTuple<int,string>(thisCdr.SwitchId,thisCdr.OutgoingRoute);
             route thisRoute = null;
@@ -25,7 +25,10 @@ namespace PartnerRules
             if (thisRoute != null)
             {
                 thisCdr.OutPartnerId = thisRoute.idPartner;
+                return thisRoute.idPartner;
             }
+            thisCdr.OutPartnerId = 0;
+            return 0;
         }
     }
 }

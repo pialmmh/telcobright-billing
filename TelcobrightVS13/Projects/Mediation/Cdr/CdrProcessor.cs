@@ -68,16 +68,37 @@ namespace TelcobrightMediation
                     }
                     else serviceGroup = ExecuteServiceGroups(cdrExt, out serviceGroupConfiguration);
 
+                    bool atleastOnePartnerNotFound = false;
                     if (serviceGroup != null)
                     {
-                        ExecutePartnerRules(serviceGroupConfiguration.PartnerRules, cdrExt);
-                        ExecuteRating(serviceGroupConfiguration, serviceGroupConfiguration.Ratingtrules, cdrExt);
-                        serviceGroup.ExecutePostRatingActions(cdrExt, this);
-                        ExecuteNerRule(this, cdrExt);
-                        if (this.CdrJobContext.MediationContext.Tbc.CdrSetting.CallConnectTimePresent == true &&
-                            cdrExt.Cdr.ServiceGroup > 0 && cdrExt.Cdr.ChargingStatus == 1)
+                        foreach (var idPartnerRule in serviceGroupConfiguration.PartnerRules
+                            .Where(r => !this.PartnerRulesToSkip.Contains(r)))
                         {
-                            SetPdd(cdrExt.Cdr);
+                            IPartnerRule partnerRule = null;
+                            this.CdrJobContext.MediationContext.MefPartnerRuleContainer.DicExtensions.TryGetValue(idPartnerRule,
+                                out partnerRule);
+                            if (partnerRule == null)
+                            {
+                                atleastOnePartnerNotFound = true;
+                                break;
+                            }
+                            if (partnerRule.Execute(cdrExt.Cdr,
+                                    this.CdrJobContext.MediationContext.MefPartnerRuleContainer) <= 0)
+                            {
+                                atleastOnePartnerNotFound = true;
+                                break;
+                            }
+                        }
+                        if (atleastOnePartnerNotFound==false)
+                        {
+                            ExecuteRating(serviceGroupConfiguration, serviceGroupConfiguration.Ratingtrules, cdrExt);
+                            serviceGroup.ExecutePostRatingActions(cdrExt, this);
+                            ExecuteNerRule(this, cdrExt);
+                            if (this.CdrJobContext.MediationContext.Tbc.CdrSetting.CallConnectTimePresent == true &&
+                                cdrExt.Cdr.ServiceGroup > 0 && cdrExt.Cdr.ChargingStatus == 1)
+                            {
+                                SetPdd(cdrExt.Cdr);
+                            }
                         }
                     }
                     ValidationResult mediationResult =
@@ -210,17 +231,7 @@ namespace TelcobrightMediation
             thisCdr.PDD = (float) diffInSeconds;
         }
 
-        private void ExecutePartnerRules(List<int> partnerRules, CdrExt cdrExt)
-        {
-            foreach (var idPartnerRule in partnerRules.Where(r=>!this.PartnerRulesToSkip.Contains(r)))
-            {
-                IPartnerRule partnerRule = null;
-                this.CdrJobContext.MediationContext.MefPartnerRuleContainer.DicExtensions.TryGetValue(idPartnerRule,
-                    out partnerRule);
-                partnerRule?.Execute(cdrExt.Cdr, this.CdrJobContext.MediationContext.MefPartnerRuleContainer);
-            }
-        }
-
+        
         private void ExecuteRating(ServiceGroupConfiguration serviceGroupConfiguration,
             List<RatingRule> ratingRules, CdrExt cdrExt)
         {
