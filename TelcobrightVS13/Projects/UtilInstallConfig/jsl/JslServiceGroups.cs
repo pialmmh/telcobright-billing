@@ -45,12 +45,12 @@ namespace InstallConfig
                             "OutgoingRoute cannot be empty"
                         },
                         {
-                            "obj.InPartnerId > 0",
+                            "obj.InPartnerId!=null and obj.InPartnerId > 0",
                             "InPartnerId must be > 0"
                         },
 
                         {
-                            "obj.OutPartnerId > 0",
+                            "obj.OutPartnerId!=null and obj.OutPartnerId > 0",
                             "OutPartnerId must be > 0"
                         },
                         {
@@ -94,12 +94,12 @@ namespace InstallConfig
                             "OutgoingRoute cannot be empty"
                         },
                         {
-                            "obj.InPartnerId > 0",
+                            "obj.InPartnerId!=null and obj.InPartnerId > 0",
                             "InPartnerId must be > 0"
                         },
 
                         {
-                            "obj.OutPartnerId > 0",
+                            "obj.OutPartnerId!=null and obj.OutPartnerId > 0",
                             "OutPartnerId must be > 0"
                         },
                         {
@@ -144,11 +144,11 @@ namespace InstallConfig
                                 "OutgoingRoute cannot be empty"
                             },
                             {
-                                "obj.InPartnerId > 0",
+                                "obj.InPartnerId!=null and obj.InPartnerId > 0",
                                 "InPartnerId must be > 0"
                             },
                             {
-                                "obj.OutPartnerId > 0",
+                                "obj.OutPartnerId!=null and obj.OutPartnerId > 0",
                                 "OutPartnerId must be > 0"
                             },
                             {
@@ -196,7 +196,7 @@ namespace InstallConfig
                             "OutgoingRoute cannot be empty"
                         },
                         {
-                            "obj.OutPartnerId > 0",
+                            "obj.OutPartnerId!=null and obj.OutPartnerId > 0",
                             "OutPartnerId must be > 0"
                         },
                         {
@@ -208,7 +208,7 @@ namespace InstallConfig
                             "RevenueIcxOut must be > 0 when DurationSec >= 0.1"
                         },
                         {
-                            "obj.DurationSec >= 0.1M ? obj.Tax2 > 0 : obj.Tax2 == 0 ",
+                            "obj.DurationSec >= 0.1M ? obj.Tax2 != 0 : obj.Tax2 == 0 ",
                             "BTRC RevShare (Tax2) must be > 0 when DurationSec >= 0.1"
                         },
                         {

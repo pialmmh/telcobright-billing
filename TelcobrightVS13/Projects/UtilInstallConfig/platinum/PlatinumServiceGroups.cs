@@ -45,7 +45,7 @@ namespace InstallConfig
                                 "OutgoingRoute cannot be empty"
                             },
                             {
-                                "obj.OutPartnerId > 0",
+                                "obj.OutPartnerId!=null and obj.OutPartnerId > 0",
                                 "OutPartnerId must be > 0"
                             },
                             {
@@ -108,7 +108,7 @@ namespace InstallConfig
                                 "OutgoingRoute cannot be empty"
                             },
                             {
-                                "obj.OutPartnerId > 0",
+                                "obj.OutPartnerId!=null and obj.OutPartnerId > 0",
                                 "OutPartnerId must be > 0"
                             },
                             {

@@ -76,7 +76,7 @@ namespace InstallConfig._CommonValidation
                     "ChargingStatus must be 1 when DurationSec > 0 , otherwise == 0 "
                 },
                 {
-                    "obj.InPartnerId > 0",
+                    "obj.InPartnerId!=null and obj.InPartnerId > 0",
                     "InPartnerId must be > 0"
                 },
                 {

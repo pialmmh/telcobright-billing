@@ -17,7 +17,8 @@ namespace TelcobrightMediation.Accounting
             this.AccountingContext = accContext;
         }
 
-        private account GetTemplateAccount(int idPartner, string uom,int serviceGroup,int serviceFamily,int product)
+        private account GetTemplateAccount(int idPartner, string uom,int serviceGroup,int serviceFamily,int product,
+            string billableType)
         {
             return new account()
             {
@@ -25,7 +26,8 @@ namespace TelcobrightMediation.Accounting
                 uom = uom,
                 serviceGroup = serviceGroup,
                 serviceFamily = serviceFamily,
-                product = product
+                product = product,
+                billableType = billableType
             };
         }
         
@@ -50,62 +52,68 @@ namespace TelcobrightMediation.Accounting
         {
             //for post paid, this accont is debited with invoice generation
             //for prepaid, this acc is credited & service bank is debited
-            var newAcc = GetTemplateAccount(idPartner, uom,sg,sf,product);//accountingClass=1,Asset
+            string billableType = "/custBilled";
+            var newAcc = GetTemplateAccount(idPartner, uom,sg,sf,product,billableType);//accountingClass=1,Asset
             newAcc.accountName = (new StringBuilder().Append("d").Append(depth)
                 .Append("/sg").Append(sg).Append("/p").Append(idPartner)
                 .Append("/sf").Append(sf).Append("/pd").Append(product > 0 ? product : 0)
-                .Append("/custBilled").Append("/uom").Append(uom)).ToString();
+                .Append(billableType).Append("/uom").Append(uom)).ToString();
             return CreateAccountThroughCache(newAcc);
         }
         public account CreateOrGetSupplierBilled(int depth, int sg, int idPartner, int sf, int product, string uom)
         {
             //for post paid, this accont is debited with invoice generation
             //for prepaid, this acc is credited & service bank is debited
-            var newAcc = GetTemplateAccount(idPartner, uom, sg, sf, product);//accountingClass=1,Asset
+            string billableType = "/suppBilled";
+            var newAcc = GetTemplateAccount(idPartner, uom, sg, sf, product,billableType);//accountingClass=1,Asset
             newAcc.accountName = (new StringBuilder().Append("d").Append(depth)
                 .Append("/sg").Append(sg).Append("/p").Append(idPartner)
                 .Append("/sf").Append(sf).Append("/pd").Append(product > 0 ? product : 0)
-                .Append("/suppBilled").Append("/uom").Append(uom)).ToString();
+                .Append(billableType).Append("/uom").Append(uom)).ToString();
             return CreateAccountThroughCache(newAcc);
         }
         public account CreateOrGetBillable(int depth, int sg, int idPartner, int sf, int product, string uom)
         {
-            var newAcc = GetTemplateAccount(idPartner, uom, sg, sf, product);//accountingClass=1,Asset
+            string billableType = "/billable";
+            var newAcc = GetTemplateAccount(idPartner, uom, sg, sf, product,billableType);//accountingClass=1,Asset
             newAcc.accountName = (new StringBuilder().Append("d").Append(depth)
                 .Append("/sg").Append(sg).Append("/p").Append(idPartner)
                 .Append("/sf").Append(sf).Append("/pd").Append(product > 0 ? product : 0)
-                .Append("/billable").Append("/uom").Append(uom)).ToString();
+                .Append(billableType).Append("/uom").Append(uom)).ToString();
             newAcc.isBillable = 1;
             newAcc.isCustomerAccount = 1;
             return CreateAccountThroughCache(newAcc);
         }
         public account CreateOrGetPayable(int depth, int sg, int idPartner, int sf, int product, string uom)
         {
-            var newAcc = GetTemplateAccount(idPartner, uom, sg, sf, product);//accountingClass=1,Asset
+            string billableType = "/payable";
+            var newAcc = GetTemplateAccount(idPartner, uom, sg, sf, product,billableType);//accountingClass=1,Asset
             newAcc.accountName = (new StringBuilder().Append("d").Append(depth)
                 .Append("/sg").Append(sg).Append("/p").Append(idPartner)
                 .Append("/sf").Append(sf).Append("/pd").Append(product > 0 ? product : 0)
-                .Append("/payable").Append("/uom").Append(uom)).ToString();
+                .Append(billableType).Append("/uom").Append(uom)).ToString();
             newAcc.isSupplierAccount = 1;
             return CreateAccountThroughCache(newAcc);
         }
         public account CreateOrGetCustomerAccount(int depth, int sg, int idPartner, int sf, int product, string uom)
         {
-            var newAcc = GetTemplateAccount(idPartner, uom, sg, sf, product);//liability
+            string billableType = "/customer";
+            var newAcc = GetTemplateAccount(idPartner, uom, sg, sf, product,billableType);//liability
             newAcc.accountName = (new StringBuilder().Append("d").Append(depth)
                 .Append("/sg").Append(sg).Append("/p").Append(idPartner)
                 .Append("/sf").Append(sf).Append("/pd").Append(product > 0 ? product : 0)
-                .Append("/customer").Append("/uom").Append(uom)).ToString();
+                .Append(billableType).Append("/uom").Append(uom)).ToString();
             newAcc.isCustomerAccount = 1;
             return CreateAccountThroughCache(newAcc);
         }
         public account CreateOrGetSupplierAccount(int depth, int sg, int idPartner, int sf, int product, string uom)
         {
-            var newAcc = GetTemplateAccount(idPartner, uom, sg, sf, product);//liability
+            string billabletype = "/supplier";
+            var newAcc = GetTemplateAccount(idPartner, uom, sg, sf, product,billabletype);//liability
             newAcc.accountName = (new StringBuilder().Append("d").Append(depth)
                 .Append("/sg").Append(sg).Append("/p").Append(idPartner)
                 .Append("/sf").Append(sf).Append("/pd").Append(product > 0 ? product : 0)
-                .Append("/supplier").Append("/uom").Append(uom)).ToString();
+                .Append(billabletype).Append("/uom").Append(uom)).ToString();
             newAcc.isSupplierAccount = 1;
             return CreateAccountThroughCache(newAcc);
         }
