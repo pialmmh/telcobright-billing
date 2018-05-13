@@ -6,7 +6,9 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Itenso.TimePeriod;
 using MediationModel;
+using Newtonsoft.Json;
 using TelcobrightMediation;
 using TelcobrightMediation.Accounting;
 
@@ -45,8 +47,6 @@ namespace PortalApp.config
                     List<KeyValuePair<Regex, string>> serviceAliases = Tbc.ServiceAliasesRegex;
                     foreach (LedgerSummaryForInvoiceGeneration summaryItem in summaryForInvoiceGenerations)
                     {
-                        
-                        
                         foreach (var kv in serviceAliases)
                         {
                             var regex = kv.Key;
@@ -59,11 +59,26 @@ namespace PortalApp.config
 
                     }
 
-                    AccountFactory accountFactory = new AccountFactory(null);
-                    foreach (var accounts in summaryForInvoiceGenerations.GroupBy(x => x.AccountName))
-                    {
-                        List<KeyValuePair<string, string>> accountParts = accountFactory.GetAccountParts(accounts.First().AccountName);
+                    //AccountFactory accountFactory = new AccountFactory(null);
+                    //foreach (var accounts in summaryForInvoiceGenerations.GroupBy(x => x.AccountName))
+                    //{
+                    //    List<KeyValuePair<string, string>> accountParts = accountFactory.GetAccountParts(accounts.First().AccountName);
+                    //}
 
+                    summaryForInvoiceGenerations = new List<LedgerSummaryForInvoiceGeneration>();
+                    List<BillingRule> billingRules = context.jsonbillingrules.ToList().Select(c => JsonConvert.DeserializeObject<BillingRule>(c.JsonExpression)).ToList();
+                    List<long> accountIds = context.accounts.Where(x => x.isCustomerAccount == 1 && x.isBillable == 1)
+                        .Select(x => x.id).ToList();
+                    List<acc_ledger_summary> accLedgerSummaries = context.acc_ledger_summary.Where(x => accountIds.Contains(x.idAccount) && x.AMOUNT != 0).ToList();
+                    foreach (acc_ledger_summary ledgerSummary in accLedgerSummaries)
+                    {
+                        var serviceGroup = context.accounts.First(x => x.id == ledgerSummary.idAccount).serviceGroup;
+                        var idBillingRule = context.billingruleassignments.First(x => x.idServiceGroup == serviceGroup).idBillingRule;
+                        BillingRule billingRule = billingRules.First(x => x.Id == idBillingRule);
+                        TimeRange timeRange = billingRule.GetBillingCycleByBillableItemsDate(ledgerSummary.transactionDate);
+
+                        LedgerSummaryForInvoiceGeneration ledgerSummaryForInvoiceGeneration = new LedgerSummaryForInvoiceGeneration();
+                        summaryForInvoiceGenerations.Add(ledgerSummaryForInvoiceGeneration);
                     }
 
                     BindingList<LedgerSummaryForInvoiceGeneration> invoiceGenerations = new BindingList<LedgerSummaryForInvoiceGeneration>(summaryForInvoiceGenerations);
