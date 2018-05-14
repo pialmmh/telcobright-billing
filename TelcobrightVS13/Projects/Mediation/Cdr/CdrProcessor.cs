@@ -1,6 +1,7 @@
 ﻿using LibraryExtensions;
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -383,6 +384,15 @@ namespace TelcobrightMediation
                             segment.AsParallel().Select(c => c.GetExtInsertValues()))).ToString();
                     insertCount += this.DbCmd.ExecuteNonQuery();
                 });
+            //todo: change to stringbuilder for faster
+            string str1= new StringBuilder(StaticExtInsertColumnHeaders.cdr)
+                .Append(string.Join(",",
+                    cdrs.AsParallel().Select(c => c.GetExtInsertValues()))).ToString();
+
+            StringBuilder sb = new StringBuilder(StaticExtInsertColumnHeaders.cdr);
+            cdrs.ForAll(c=>sb.Append(c));
+            string s2 = sb.ToString();
+
             return insertCount;
         }
     }
