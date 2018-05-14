@@ -34,9 +34,8 @@ namespace TelcobrightMediation
                           this.FractionComparisionTollerance;
             return result;
         }
-        public bool DurationSumInCdrAndSummaryAreTollerablyEqual(CdrCollectionResult collectionResult)
+        public bool DurationSumInCdrAndSummaryAreTollerablyEqual(ParallelQuery<CdrExt> processedCdrExts)
         {
-            var processedCdrExts = collectionResult.ProcessedCdrExts;
             decimal durationSumInCdr = processedCdrExts.Sum(c => Convert.ToDecimal(c.Cdr?.DurationSec));
             decimal durationSumInSummaries = processedCdrExts.
                 Sum(c => c.TableWiseSummaries.Values.Sum(s => Convert.ToDecimal(s?.actualduration)));
@@ -45,9 +44,8 @@ namespace TelcobrightMediation
                 <= this.FractionComparisionTollerance;
             return result;
         }
-        public bool SummaryCountTwiceAsCdrCount(CdrCollectionResult collectionResult)
+        public bool SummaryCountTwiceAsCdrCount(ParallelQuery<CdrExt> processedCdrExts)
         {
-            var processedCdrExts = collectionResult.ProcessedCdrExts;
             var cdrCount = processedCdrExts.Count();
             int summaryInstanceCount = processedCdrExts.SelectMany(c => c.TableWiseSummaries.Values).Count();
             return 2 * cdrCount == summaryInstanceCount;

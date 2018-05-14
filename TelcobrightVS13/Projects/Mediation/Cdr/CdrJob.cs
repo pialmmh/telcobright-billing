@@ -36,28 +36,28 @@ namespace TelcobrightMediation.Cdr
             if (this.CdrEraser != null)
             {
                 ValidateCdrEraserWithMediationTester(this.CdrJobContext.CdrjobInputData,
-                    this.CdrEraser.CollectionResult);
+                    this.CdrEraser.CollectionResult.ConcurrentCdrExts.Values.AsParallel());
             }
             this.CdrEraser?.UndoOldSummaries();
             this.CdrEraser?.UndoOldChargeables();
             this.CdrEraser?.DeleteOldCdrs();
 
             this.CdrProcessor?.Mediate();
-            this.CdrProcessor?.GenerateSummaries();
-            this.CdrProcessor?.MergeNewSummariesIntoCache();
-            this.CdrProcessor?.ProcessChargeables();
+            ParallelQuery<CdrExt> parallelCdrExts= this.CdrProcessor?.GenerateSummaries();
+            this.CdrProcessor?.MergeNewSummariesIntoCache(parallelCdrExts);
+            this.CdrProcessor?.ProcessChargeables(parallelCdrExts);
 
             IncrementalTransactionCreator transactionProcessor = new IncrementalTransactionCreator(this);
             List<acc_transaction> incrementalTransactions= transactionProcessor.CreateIncrementalTransactions();
-            transactionProcessor.ValidateTransactions(incrementalTransactions);
+            transactionProcessor.ValidateTransactions();
             this.CdrJobContext.AccountingContext.ExecuteTransactions(incrementalTransactions);
 
             if (this.CdrProcessor!=null)
             {
                 ValidateCdrProcessorWithMediationTester(this.CdrJobContext.CdrjobInputData,
-                    this.CdrProcessor.CollectionResult);
+                    parallelCdrExts);
             }
-            var cdrWritingResult = this.CdrProcessor?.WriteCdrs();
+            var cdrWritingResult = this.CdrProcessor?.WriteCdrs(parallelCdrExts);
 
             if (this.CdrProcessor != null && this.CdrProcessor.PartialProcessingEnabled)
             {
@@ -74,13 +74,13 @@ namespace TelcobrightMediation.Cdr
             this.CdrJobContext.AccountingContext.WriteAllChanges();
             this.CdrJobContext.AutoIncrementManager.WriteAllChanges();
         }
-        protected void ValidateCdrProcessorWithMediationTester(CdrJobInputData input,CdrCollectionResult collectionResult)
+        protected void ValidateCdrProcessorWithMediationTester(CdrJobInputData input,ParallelQuery<CdrExt> processedCdrExts)
         {
             MediationTester mediationTester =
                 new MediationTester(input.Tbc.CdrSetting.FractionalNumberComparisonTollerance);
-            if(!mediationTester.DurationSumInCdrAndSummaryAreTollerablyEqual(collectionResult))
+            if(!mediationTester.DurationSumInCdrAndSummaryAreTollerablyEqual(processedCdrExts))
                 throw new Exception("Duration sum in cdr and summary are not tollerably equal");
-            if(!mediationTester.SummaryCountTwiceAsCdrCount(collectionResult))
+            if(!mediationTester.SummaryCountTwiceAsCdrCount(processedCdrExts))
                 throw new Exception("Summary count is not twice as cdr count");
             //if(!mediationTester
             //    .SumOfPrevDayWiseDurationsAndNewSummaryInstancesIsEqualToSameInMergedSummaryCache(
@@ -91,13 +91,13 @@ namespace TelcobrightMediation.Cdr
                 throw new Exception("Duration sum Of non partial and raw Partial cdrs " +
                                     "are not equal to duration in raw instances.");
         }
-        protected void ValidateCdrEraserWithMediationTester(CdrJobInputData input, CdrCollectionResult collectionResult)
+        protected void ValidateCdrEraserWithMediationTester(CdrJobInputData input, ParallelQuery<CdrExt> processedCdrExts)
         {
             MediationTester mediationTester =
                 new MediationTester(input.Tbc.CdrSetting.FractionalNumberComparisonTollerance);
-            if (!mediationTester.DurationSumInCdrAndSummaryAreTollerablyEqual(collectionResult))
+            if (!mediationTester.DurationSumInCdrAndSummaryAreTollerablyEqual(processedCdrExts))
                 throw new Exception("Duration sum in cdr and summary are not tollerably equal");
-            if (!mediationTester.SummaryCountTwiceAsCdrCount(collectionResult))
+            if (!mediationTester.SummaryCountTwiceAsCdrCount(processedCdrExts))
                 throw new Exception("Summary count is not twice as cdr count");
             //if(!mediationTester
             //    .SumOfPrevDayWiseDurationsAndNewSummaryInstancesIsEqualToSameInMergedSummaryCache(
@@ -108,12 +108,12 @@ namespace TelcobrightMediation.Cdr
             //    throw new Exception("Duration sum Of non partial and raw Partial cdrs " +
             //                        "are not equal to duration in raw instances.");
         }
-        protected void AssertWithMediationTester(CdrJobInputData input, CdrCollectionResult collectionResult)
+        protected void AssertWithMediationTester(CdrJobInputData input, ParallelQuery<CdrExt> processedCdrExts)
         {
             MediationTester mediationTester =
                 new MediationTester(input.Tbc.CdrSetting.FractionalNumberComparisonTollerance);
-            Assert.IsTrue(mediationTester.DurationSumInCdrAndSummaryAreTollerablyEqual(collectionResult));
-            Assert.IsTrue(mediationTester.SummaryCountTwiceAsCdrCount(collectionResult));
+            Assert.IsTrue(mediationTester.DurationSumInCdrAndSummaryAreTollerablyEqual(processedCdrExts));
+            Assert.IsTrue(mediationTester.SummaryCountTwiceAsCdrCount(processedCdrExts));
             //todo: do something about this test which makes database trip & need to modify this to work with both eraser & processor
             //Assert.IsTrue(mediationTester
               //  .SumOfPrevDayWiseDurationsAndNewSummaryInstancesIsEqualToSameInMergedSummaryCache(

@@ -72,7 +72,8 @@ namespace TelcobrightMediation
             }
             MediationTester mediationTester =
                 new MediationTester(this.CdrSetting.FractionalNumberComparisonTollerance);
-            if (!mediationTester.DurationSumInCdrAndSummaryAreTollerablyEqual(this.CollectionResult))
+            if (!mediationTester.DurationSumInCdrAndSummaryAreTollerablyEqual(
+                this.CollectionResult.ConcurrentCdrExts.Values.AsParallel()))
                 throw new Exception("Duration sum in cdr and Summaries are not tollerably equal");
         }
 

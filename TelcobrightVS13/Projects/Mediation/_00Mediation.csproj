@@ -201,6 +201,7 @@
     <Compile Include="Config\TelecomOperatortype.cs" />
     <Compile Include="Enums\AutoIncrementTypeDictionary.cs" />
     <Compile Include="Enums\AutoIncrementCounterType.cs" />
+    <Compile Include="Enums\CdrSumaryTableType.cs" />
     <Compile Include="Enums\XyzRatingType.cs" />
     <Compile Include="Enums\IcxPartnerType.cs" />
     <Compile Include="Enums\IgwPartnerType.cs" />

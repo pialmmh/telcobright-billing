@@ -180,13 +180,14 @@ namespace TelcobrightMediation
                     throw new Exception("InsertCommandGenerator is not set and null.");
                 }
                 string extInsertHeader = StaticExtInsertColumnParsedDic.GetParsedDic()[this.EntityOrTableName];
-                var sqls = this.GetInsertedItems().Select(c => this.InsertCommandGenerator(c)).ToList();
+                var sqls = this.GetInsertedItems().AsParallel().Select(c => this.InsertCommandGenerator(c)).ToList();
                 int startAt = 0;
                 CollectionSegmenter<string> segments = new CollectionSegmenter<string>(sqls, startAt);
                 segments.ExecuteMethodInSegments(segmentSize,
                     segment =>
                     {
-                        cmd.CommandText = (new StringBuilder(extInsertHeader).Append(string.Join(",", segment))).ToString();
+                        cmd.CommandText = (new StringBuilder(extInsertHeader).Append(string.Join(",", segment.AsParallel())))
+                            .ToString();
                         affectedRecordCount += cmd.ExecuteNonQuery();
                     });
                 this.InsertedItems.Clear();

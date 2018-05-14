@@ -131,26 +131,28 @@ namespace TelcobrightMediation.Cdr
             });
         }
 
-        public void ValidateTransactions(List<acc_transaction> incrementalTransactions)
+        public void ValidateTransactions()
         {
             decimal fractionComparsionTollerance = this.CdrJobContext.MediationContext.CdrSetting
                 .FractionalNumberComparisonTollerance;
-            var sumOfOldTransactionAmounts = this.OldSuccessfulCdrExts.Values
+            var oldSuccessfulcdrExts = this.OldSuccessfulCdrExts.Values.AsParallel();
+            var sumOfOldTransactionAmounts = oldSuccessfulcdrExts
                 .SelectMany(c => c
                 .AccWiseTransactionContainers
                 .Values.SelectMany(t => t.OldTransactions)).Sum(t => t.amount);
 
             decimal sumOfOldTransactionsFromCdrMetaData =
-                Convert.ToDecimal(this.OldSuccessfulCdrExts.Values.Sum(c => c.Cdr.TransactionMetaTotal));
+                Convert.ToDecimal(oldSuccessfulcdrExts.Sum(c => c.Cdr.TransactionMetaTotal));
             if (Math.Abs(sumOfOldTransactionsFromCdrMetaData - sumOfOldTransactionAmounts) >
                 fractionComparsionTollerance)
             {
                 throw new Exception("Transaction total of old cdrs does not match the total from old cdrs meta data.");
             }
 
-            var oldBillIds = this.OldSuccessfulCdrExts.Values.Select(c => c.UniqueBillId).ToList();
-            var newWithOldSuccessfuls = this.NewSuccessfulCdrExts.Where(c => oldBillIds.Contains(c.UniqueBillId))
-                .ToList();
+            var oldBillIds = oldSuccessfulcdrExts.Select(c => c.UniqueBillId).ToList();
+            var newSuccessfulCdrExts = this.NewSuccessfulCdrExts.AsParallel();
+            var newWithOldSuccessfuls = newSuccessfulCdrExts.Where(c => oldBillIds.Contains(c.UniqueBillId))
+                .AsParallel();
             var sumOfOldForNewWithOlds = newWithOldSuccessfuls
                 .SelectMany(c => c.AccWiseTransactionContainers.Values)
                 .SelectMany(tContainer => tContainer.OldTransactions).Sum(t => t.amount);
@@ -166,11 +168,11 @@ namespace TelcobrightMediation.Cdr
             }
             if (this.CdrProcessor != null)
             {
-                decimal sumOfAllTransMetaData = Convert.ToDecimal(this.NewSuccessfulCdrExts.Sum(c => c.Cdr.TransactionMetaTotal));
-                decimal sumOfAllIncAmount = this.NewSuccessfulCdrExts
+                decimal sumOfAllTransMetaData = Convert.ToDecimal(newSuccessfulCdrExts.Sum(c => c.Cdr.TransactionMetaTotal));
+                decimal sumOfAllIncAmount = newSuccessfulCdrExts
                     .SelectMany(c => c.AccWiseTransactionContainers.Values)
                     .Sum(tContainer => tContainer.IncrementalTransaction.amount);
-                decimal sumOfAllOldAmount = this.OldSuccessfulCdrExts.Values
+                decimal sumOfAllOldAmount = oldSuccessfulcdrExts
                     .SelectMany(c => c.AccWiseTransactionContainers.Values)
                     .SelectMany(tContainer => tContainer.OldTransactions)
                     .Sum(c => c.amount);
