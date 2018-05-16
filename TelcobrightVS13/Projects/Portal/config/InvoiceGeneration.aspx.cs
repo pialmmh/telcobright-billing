@@ -30,55 +30,63 @@ namespace PortalApp.config
 
                     List<partner> allPartners = context.partners.OrderBy(i => i.PartnerName).ToList();
                     this.Session["sesAllPartners"] = allPartners;
+                    List<account> allAccounts = context.accounts.ToList();
 
                     List<timezone> tz = context.timezones.Include("zone.country")
                         .OrderBy(o => o.zone.country.country_name).ToList();
                     this.Session["sesAllTimeZones"] = tz;
 
-                    string sql = "select p.idpartner as PartnerId, p.PartnerName, a.accountName as AccountName, " +
-                        "idaccount as AccountId, StartDate, EndDate, Amount, " + DefaultTimeZoneId + " as TimeZone, "+ GmtOffset + " as GmtOffset " +
-                        "from (select idaccount, min(transactionDate) StartDate, max(transactiondate) EndDate, sum(amount) Amount " +
-                        "from acc_ledger_summary " +
-                        "where idaccount in (select id from account where isCustomerAccount = 1 and isBillable = 1) " +
-                        "and AMOUNT <> 0 group by idAccount) ls left join account a " +
-                        "on ls.idAccount = a.id left join partner p " +
-                        "on a.idPartner = p.idPartner;";
-                    List<LedgerSummaryForInvoiceGeneration> summaryForInvoiceGenerations = context.Database.SqlQuery<LedgerSummaryForInvoiceGeneration>(sql).ToList();
                     List<KeyValuePair<Regex, string>> serviceAliases = Tbc.ServiceAliasesRegex;
-                    foreach (LedgerSummaryForInvoiceGeneration summaryItem in summaryForInvoiceGenerations)
-                    {
-                        foreach (var kv in serviceAliases)
-                        {
-                            var regex = kv.Key;
-                            if (regex.Matches(summaryItem.AccountName).Count > 0)
-                            {
-                                summaryItem.ServiceAccount = kv.Value;
-                                break;
-                            }
-                        }
-
-                    }
-
-                    //AccountFactory accountFactory = new AccountFactory(null);
-                    //foreach (var accounts in summaryForInvoiceGenerations.GroupBy(x => x.AccountName))
-                    //{
-                    //    List<KeyValuePair<string, string>> accountParts = accountFactory.GetAccountParts(accounts.First().AccountName);
-                    //}
-
-                    summaryForInvoiceGenerations = new List<LedgerSummaryForInvoiceGeneration>();
+                    List<LedgerSummaryForInvoiceGeneration> summaryForInvoiceGenerations = new List<LedgerSummaryForInvoiceGeneration>();
                     List<BillingRule> billingRules = context.jsonbillingrules.ToList().Select(c => JsonConvert.DeserializeObject<BillingRule>(c.JsonExpression)).ToList();
                     List<long> accountIds = context.accounts.Where(x => x.isCustomerAccount == 1 && x.isBillable == 1)
                         .Select(x => x.id).ToList();
                     List<acc_ledger_summary> accLedgerSummaries = context.acc_ledger_summary.Where(x => accountIds.Contains(x.idAccount) && x.AMOUNT != 0).ToList();
+                    bool isAlreadyExists = false;
                     foreach (acc_ledger_summary ledgerSummary in accLedgerSummaries)
                     {
                         var serviceGroup = context.accounts.First(x => x.id == ledgerSummary.idAccount).serviceGroup;
                         var idBillingRule = context.billingruleassignments.First(x => x.idServiceGroup == serviceGroup).idBillingRule;
                         BillingRule billingRule = billingRules.First(x => x.Id == idBillingRule);
                         TimeRange timeRange = billingRule.GetBillingCycleByBillableItemsDate(ledgerSummary.transactionDate);
+                        account account = allAccounts.First(x => x.id == ledgerSummary.idAccount);
+                        partner partner = allPartners.First(x => x.idPartner == account.idPartner);
 
-                        LedgerSummaryForInvoiceGeneration ledgerSummaryForInvoiceGeneration = new LedgerSummaryForInvoiceGeneration();
-                        summaryForInvoiceGenerations.Add(ledgerSummaryForInvoiceGeneration);
+                        if (summaryForInvoiceGenerations.Count > 0)
+                        {
+                            LedgerSummaryForInvoiceGeneration cycle = summaryForInvoiceGenerations
+                                .FirstOrDefault(x => x.AccountId == ledgerSummary.idAccount &&
+                                                     x.PartnerId == partner.idPartner &&
+                                                     x.StartDateWithTime.Equals(timeRange.Start) &&
+                                                     x.EndDateWithTime.Equals(timeRange.End));
+                            if (cycle != null) isAlreadyExists = true;
+                        }
+
+                        if (!isAlreadyExists)
+                        {
+                            LedgerSummaryForInvoiceGeneration invoiceGeneration = new LedgerSummaryForInvoiceGeneration();
+                            invoiceGeneration.PartnerId = partner.idPartner;
+                            invoiceGeneration.PartnerName = partner.PartnerName;
+                            invoiceGeneration.AccountId = account.id;
+                            invoiceGeneration.AccountName = account.accountName;
+                            invoiceGeneration.StartDateWithTime = timeRange.Start;
+                            invoiceGeneration.EndDateWithTime = timeRange.End;
+                            invoiceGeneration.Amount = ledgerSummary.AMOUNT;
+                            invoiceGeneration.TimeZone = DefaultTimeZoneId;
+                            invoiceGeneration.GmtOffset = GmtOffset;
+
+                            foreach (var kv in serviceAliases)
+                            {
+                                var regex = kv.Key;
+                                if (regex.Matches(invoiceGeneration.AccountName).Count > 0)
+                                {
+                                    invoiceGeneration.ServiceAccount = kv.Value;
+                                    break;
+                                }
+                            }
+
+                            summaryForInvoiceGenerations.Add(invoiceGeneration);
+                        }
                     }
 
                     BindingList<LedgerSummaryForInvoiceGeneration> invoiceGenerations = new BindingList<LedgerSummaryForInvoiceGeneration>(summaryForInvoiceGenerations);

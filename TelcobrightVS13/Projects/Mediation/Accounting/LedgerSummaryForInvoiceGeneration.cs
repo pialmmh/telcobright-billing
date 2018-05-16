@@ -11,23 +11,11 @@ namespace TelcobrightMediation.Accounting
     {
         public int PartnerId { get; set; }
         public string PartnerName { get; set; }
-        public int AccountId { get; set; }
+        public long AccountId { get; set; }
         public string AccountName { get; set; }
-        private DateTime StartDate { get; set; }
-        private DateTime EndDate { get; set; }
         public decimal Amount { get; set; }
-
-        public DateTime StartDateWithTime
-        {
-            get { return StartDate.Date; }
-            set { StartDate = value.Date; }
-        }
-
-        public DateTime EndDateWithTime
-        {
-            get { return EndDate.Date.AddDays(1).AddSeconds(-1); }
-            set { EndDate = value.Date; }
-        }
+        public DateTime StartDateWithTime { get; set; }
+        public DateTime EndDateWithTime { get; set; }
 
         public String ServiceAccount { get; set; }
         public int TimeZone { get; set; }

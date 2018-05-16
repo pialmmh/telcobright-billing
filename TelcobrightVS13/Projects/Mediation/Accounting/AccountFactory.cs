@@ -136,21 +136,5 @@ namespace TelcobrightMediation.Accounting
             };
             return CreateAccountThroughCache(newAcc);
         }
-
-        public List<KeyValuePair<string, string>> GetAccountParts(string accountName)
-        {
-            List<KeyValuePair<string, string>> accountParts = new List<KeyValuePair<string, string>>();
-            string[] parts = accountName.Split('/');
-            foreach (string part in parts)
-            {
-                string value = Regex.Match(part, @"\d+").Value;
-                if (value != String.Empty)
-                {
-                    string key = part.Replace(value, string.Empty);
-                    accountParts.Add(new KeyValuePair<string, string>(key, value));
-                }
-            }
-            return accountParts;
-        }
     }
 }

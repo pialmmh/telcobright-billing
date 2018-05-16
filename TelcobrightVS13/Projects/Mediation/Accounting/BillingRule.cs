@@ -20,7 +20,7 @@ namespace TelcobrightMediation.Accounting
             TimeZoneInfo timeZoneInfo = TimeZoneInfo.Local;
             DateTimeOffset billDate = DateTime.SpecifyKind(billablesDate, DateTimeKind.Local);
             CronExpression quartzHelper = new CronExpression(CronExpressionForBillingCycle);
-            quartzHelper.TimeZone = timeZoneInfo;
+            //quartzHelper.TimeZone = timeZoneInfo;
             DateTimeOffset? nextScheduledJob = quartzHelper.GetNextValidTimeAfter(billDate);
             DateTimeOffset prevScheduledJob = new DateTimeOffset();
             if (nextScheduledJob != null)
@@ -31,26 +31,26 @@ namespace TelcobrightMediation.Accounting
                 switch (this.BillingInterval)
                 {
                     case DateInterval.Minutes:
-                        prevScheduledJob = ((DateTimeOffset) nextScheduledJob).AddMinutes(billDuration);
+                        prevScheduledJob = ((DateTimeOffset) nextScheduledJob).LocalDateTime.AddMinutes(billDuration);
                         break;
                     case DateInterval.Hours:
-                        prevScheduledJob = ((DateTimeOffset) nextScheduledJob).AddHours(billDuration);
+                        prevScheduledJob = ((DateTimeOffset) nextScheduledJob).LocalDateTime.AddHours(billDuration);
                         break;
                     case DateInterval.Days:
-                        prevScheduledJob = ((DateTimeOffset) nextScheduledJob).AddDays(billDuration);
-                        nextScheduledJob = ((DateTimeOffset) nextScheduledJob).AddDays(-1);
+                        prevScheduledJob = ((DateTimeOffset) nextScheduledJob).LocalDateTime.AddDays(billDuration);
+                        nextScheduledJob = ((DateTimeOffset) nextScheduledJob).LocalDateTime.AddDays(-1);
                         break;
                     case DateInterval.Weeks:
-                        prevScheduledJob = ((DateTimeOffset) nextScheduledJob).AddDays(billDuration * 7);
-                        nextScheduledJob = ((DateTimeOffset) nextScheduledJob).AddDays(-1);
+                        prevScheduledJob = ((DateTimeOffset) nextScheduledJob).LocalDateTime.AddDays(billDuration * 7);
+                        nextScheduledJob = ((DateTimeOffset) nextScheduledJob).LocalDateTime.AddDays(-1);
                         break;
                     case DateInterval.Months:
-                        prevScheduledJob = ((DateTimeOffset) nextScheduledJob).AddMonths(billDuration).AddDays(1);
-                        nextScheduledJob = ((DateTimeOffset) nextScheduledJob).AddDays(-1);
+                        prevScheduledJob = ((DateTimeOffset) nextScheduledJob).LocalDateTime.AddMonths(billDuration);
+                        nextScheduledJob = ((DateTimeOffset) nextScheduledJob).LocalDateTime.AddSeconds(-1);
                         break;
                     case DateInterval.Years:
-                        prevScheduledJob = ((DateTimeOffset) nextScheduledJob).AddYears(billDuration);
-                        nextScheduledJob = ((DateTimeOffset) nextScheduledJob).AddDays(-1);
+                        prevScheduledJob = ((DateTimeOffset) nextScheduledJob).LocalDateTime.AddYears(billDuration);
+                        nextScheduledJob = ((DateTimeOffset) nextScheduledJob).LocalDateTime.AddDays(-1);
                         break;
                 }
                 return new TimeRange(prevScheduledJob.DateTime, ((DateTimeOffset) nextScheduledJob).DateTime);
