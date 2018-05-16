@@ -24,7 +24,8 @@ namespace InstallConfig
             {
                 new KeyValuePair<Regex, string>(new Regex(@".*/sg2/.*/sf7/.*"), "International Outgoing"),
                 new KeyValuePair<Regex, string>(new Regex(@".*/sg1/.*/sf1/.*"), "Domestic"),
-                new KeyValuePair<Regex, string>(new Regex(@".*/sg3/.*/sf1/.*"), "International Incoming")
+                new KeyValuePair<Regex, string>(new Regex(@".*/sg3/.*/sf1/.*"), "International Incoming"),
+                new KeyValuePair<Regex, string>(new Regex(@".*/sg6/.*/sf5/.*"), "Local Toll-Free (LTFS)")
             };
             this.Tbc.ServiceAliasesRegex = serviceAliases;
         }

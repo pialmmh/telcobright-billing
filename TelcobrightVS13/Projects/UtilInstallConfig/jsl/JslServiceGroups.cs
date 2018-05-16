@@ -71,6 +71,70 @@ namespace InstallConfig
                         },
                     },
             });
+
+            serviceGroupConfigurations.Add(new ServiceGroupConfiguration(idServiceGroup: 2) //intlOutIgw
+            {
+                Params = new Dictionary<string, string>()
+                { { "idCdrRules", "2,1" } },//IcxOutgoingCallByInOutTg=2, IcxOutgoingCallByInTgType=1
+                PartnerRules = new List<int>()
+                {
+                    PartnerRuletype.InPartnerByIncomingRoute,
+                    PartnerRuletype.OutPartnerByOutgoingRoute
+                },
+                Ratingtrules = new List<RatingRule>()
+                {
+                    new RatingRule() {IdServiceFamily = ServiceFamilyType.XyzIcx, AssignDirection = 0}
+                },
+                MediationChecklistForAnsweredCdrs =
+                    new Dictionary<string, string>()
+                    {
+                        {
+                            "obj.DurationSec >= 0",
+                            "DurationSec must be >=  0"
+                        },
+                        {
+                            "!String.IsNullOrEmpty(obj.CountryCode) and !String.IsNullOrWhiteSpace(obj.CountryCode)",
+                            "CountryCode cannot be empty"
+                        },
+                        {
+                            "!String.IsNullOrEmpty(obj.OutgoingRoute) and !String.IsNullOrWhiteSpace(obj.OutgoingRoute)",
+                            "OutgoingRoute cannot be empty"
+                        },
+                        {
+                            "obj.OutPartnerId!=null and obj.OutPartnerId > 0",
+                            "OutPartnerId must be > 0"
+                        },
+                        {
+                            "!String.IsNullOrEmpty(obj.MatchedPrefixY) and !String.IsNullOrWhiteSpace(obj.MatchedPrefixY)",
+                            "MatchedPrefixY cannot be empty"
+                        },
+                        {
+                            "obj.DurationSec >= 0.1M ? obj.RevenueIcxOut != 0 : obj.RevenueIcxOut == 0 ", //negative allowed
+                            "RevenueIcxOut must be > 0 when DurationSec >= 0.1"
+                        },
+                        {
+                            "obj.DurationSec >= 0.1M ? obj.Tax2 != 0 : obj.Tax2 == 0 ",
+                            "BTRC RevShare (Tax2) must be > 0 when DurationSec >= 0.1"
+                        },
+                        {
+                            "obj.DurationSec >= 0.1M ? obj.XAmount > 0 : obj.XAmount == 0 ",
+                            "XAmount must be > 0 when DurationSec >= 0.1"
+                        },
+                        {
+                            "obj.DurationSec >= 0.1M ? obj.YAmount > 0 : obj.YAmount == 0 ",
+                            "YAmount must be > 0 when DurationSec >= 0.1"
+                        },
+                        {
+                            "obj.PartialFlag >= 0",
+                            "PartialFlag must be >=  0"
+                        },
+                        {
+                            "obj.DurationSec >= 0.1M ? obj.roundedduration > 0 : obj.roundedduration == 0 ",
+                            "roundedduration must be > 0 when DurationSec >= 0.1"
+                        },
+                    },
+            });
+
             serviceGroupConfigurations.Add(new ServiceGroupConfiguration(idServiceGroup: 1) //domestic
             {
                 PartnerRules = new List<int>()
@@ -169,66 +233,6 @@ namespace InstallConfig
                             },
                         },
                 });
-            serviceGroupConfigurations.Add(new ServiceGroupConfiguration(idServiceGroup: 2) //intlOutIgw
-            {
-                PartnerRules = new List<int>()
-                {
-                    PartnerRuletype.InPartnerByIncomingRoute,
-                    PartnerRuletype.OutPartnerByOutgoingRoute
-                },
-                Ratingtrules = new List<RatingRule>()
-                {
-                    new RatingRule() {IdServiceFamily = ServiceFamilyType.XyzIcx, AssignDirection = 0}
-                },
-                MediationChecklistForAnsweredCdrs =
-                    new Dictionary<string, string>()
-                    {
-                        {
-                            "obj.DurationSec >= 0",
-                            "DurationSec must be >=  0"
-                        },
-                        {
-                            "!String.IsNullOrEmpty(obj.CountryCode) and !String.IsNullOrWhiteSpace(obj.CountryCode)",
-                            "CountryCode cannot be empty"
-                        },
-                        {
-                            "!String.IsNullOrEmpty(obj.OutgoingRoute) and !String.IsNullOrWhiteSpace(obj.OutgoingRoute)",
-                            "OutgoingRoute cannot be empty"
-                        },
-                        {
-                            "obj.OutPartnerId!=null and obj.OutPartnerId > 0",
-                            "OutPartnerId must be > 0"
-                        },
-                        {
-                            "!String.IsNullOrEmpty(obj.MatchedPrefixY) and !String.IsNullOrWhiteSpace(obj.MatchedPrefixY)",
-                            "MatchedPrefixY cannot be empty"
-                        },
-                        {
-                            "obj.DurationSec >= 0.1M ? obj.RevenueIcxOut != 0 : obj.RevenueIcxOut == 0 ", //negative allowed
-                            "RevenueIcxOut must be > 0 when DurationSec >= 0.1"
-                        },
-                        {
-                            "obj.DurationSec >= 0.1M ? obj.Tax2 != 0 : obj.Tax2 == 0 ",
-                            "BTRC RevShare (Tax2) must be > 0 when DurationSec >= 0.1"
-                        },
-                        {
-                            "obj.DurationSec >= 0.1M ? obj.XAmount > 0 : obj.XAmount == 0 ",
-                            "XAmount must be > 0 when DurationSec >= 0.1"
-                        },
-                        {
-                            "obj.DurationSec >= 0.1M ? obj.YAmount > 0 : obj.YAmount == 0 ",
-                            "YAmount must be > 0 when DurationSec >= 0.1"
-                        },
-                        {
-                            "obj.PartialFlag >= 0",
-                            "PartialFlag must be >=  0"
-                        },
-                        {
-                            "obj.DurationSec >= 0.1M ? obj.roundedduration > 0 : obj.roundedduration == 0 ",
-                            "roundedduration must be > 0 when DurationSec >= 0.1"
-                        },
-                    },
-            });
             return serviceGroupConfigurations.ToDictionary(s => s.IdServiceGroup);
         }
     }

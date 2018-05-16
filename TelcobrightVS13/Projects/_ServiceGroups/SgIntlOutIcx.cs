@@ -2,6 +2,7 @@
 using System;
 using MediationModel;
 using System.Collections.Generic;
+using System.Linq;
 using LibraryExtensions;
 using TelcobrightMediation.Cdr;
 using TransactionTuple = System.ValueTuple<int, int, long, int,long>;
@@ -18,7 +19,7 @@ namespace TelcobrightMediation
         public string HelpText => "Service group International Outgoing for BD ICX.";
         public int Id => 2;
         private Dictionary<string, Type> SummaryTargetTables { get; }
-
+        private List<ICdrRule> CdrRules { get; set; }=new List<ICdrRule>();
         public SgIntlOutIcx() //constructor
         {
             this.SummaryTargetTables = new Dictionary<string, Type>()
@@ -40,24 +41,22 @@ namespace TelcobrightMediation
 
         public void SetAdditionalParams(Dictionary<string, string> additionalParams)
         {
-            
+            List<int> configuredIdCdrRules = additionalParams["idCdrRules"].Split(',')
+                .Select(str => Convert.ToInt32(str)).ToList();
+            CdrRuleComposer cdrRuleComposer = new CdrRuleComposer();
+            cdrRuleComposer.Compose();
+            this.CdrRules = cdrRuleComposer.CdrRules
+                .Where(c => configuredIdCdrRules.Contains(c.Id)).ToList();
         }
 
         public void Execute(cdr thisCdr, CdrProcessor cdrProcessor)
         {
-            //international Out call direction/service group
-            var dicRoutes = cdrProcessor.CdrJobContext.MediationContext.MefServiceGroupContainer.SwitchWiseRoutes;
-            var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
-            route thisRoute = null;
-            dicRoutes.TryGetValue(key, out thisRoute);
-            if (thisRoute != null)
+            foreach (var cdrRule in this.CdrRules)
             {
-                if (thisRoute.partner.PartnerType == IcxPartnerType.ANS
-                    && thisRoute.NationalOrInternational == RouteLocalityType.International)
+                if (cdrRule.CheckIfTrue(thisCdr))
                 {
-                    thisCdr.ServiceGroup = 2; //international Out in IGW
-                    //set year-month id for this call for tt clean & bc selling
-                    string tempDateTime = thisCdr.StartTime.ToMySqlStyleDateTimeStrWithoutQuote();
+                    thisCdr.ServiceGroup = 2; //international Out in IGW 
+                    break;
                 }
             }
         }

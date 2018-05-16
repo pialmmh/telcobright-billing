@@ -152,13 +152,13 @@ namespace TelcobrightMediation
             foreach (var serviceGroup in this.MefServiceGroupContainer.CmpServiceGroup.ServiceGroups)
             {
                 ServiceGroupConfiguration serviceGroupConfiguration = null;
-                tbc.CdrSetting.ServiceGroupConfigurations.TryGetValue(serviceGroup.Id, 
+                tbc.CdrSetting.ServiceGroupConfigurations.TryGetValue(serviceGroup.Id,
                     out serviceGroupConfiguration);
-                if (serviceGroupConfiguration!=null)
+                if (serviceGroupConfiguration != null)
                 {
                     serviceGroup.SetAdditionalParams(serviceGroupConfiguration.Params);
                 }
-                
+
                 this.MefServiceGroupContainer.DicExtensions.Add(serviceGroup.RuleName, serviceGroup);
                 this.MefServiceGroupContainer.IdServiceGroupWiseServiceGroups
                     .Add(serviceGroup.Id, serviceGroup); //this is required during summary generation

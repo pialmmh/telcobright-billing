@@ -212,6 +212,7 @@
     <Compile Include="Enums\ServiceFamilyType.cs" />
     <Compile Include="Mediation\RateContainerInMemoryLocal.cs" />
     <Compile Include="Mediation\RateDictionaryGeneratorByTuples.cs" />
+    <Compile Include="MefData\ICdrRule.cs" />
     <Compile Include="SegmentedJob\RowIdVsDate.cs" />
     <Compile Include="SegmentedJob\SegmentedCdrEraser.cs" />
     <Compile Include="SegmentedJob\AbstractSegmentedJobProcessor.cs" />
