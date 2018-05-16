@@ -42,7 +42,7 @@ namespace TelcobrightMediation.Accounting
                         break;
                     case DateInterval.Weeks:
                         prevScheduledJob = ((DateTimeOffset) nextScheduledJob).LocalDateTime.AddDays(billDuration * 7);
-                        nextScheduledJob = ((DateTimeOffset) nextScheduledJob).LocalDateTime.AddDays(-1);
+                        nextScheduledJob = ((DateTimeOffset) nextScheduledJob).LocalDateTime.AddSeconds(-1);
                         break;
                     case DateInterval.Months:
                         prevScheduledJob = ((DateTimeOffset) nextScheduledJob).LocalDateTime.AddMonths(billDuration);
