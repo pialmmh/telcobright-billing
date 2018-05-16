@@ -67,7 +67,7 @@
     </div>
     <br/>
     <div>
-        <span style="color: black;"><b>Add row for custom invoice generation:</b></span> <br/>
+        <span style="color: black;"><b>Add invoice generation task for custom period:</b></span> <br/>
         <asp:UpdatePanel runat="server" ID="upCustomInvoice">
             <ContentTemplate>
                 <table width="800px" cellpadding="2" cellspacing="2" border="0">
