@@ -177,7 +177,7 @@
     <Content Include="jsl\tmplPortalAppPools.txt" />
     <Content Include="jsl\tmplPortalFtpSite.txt" />
     <Content Include="jsl\tmplPortalWebSite.txt" />
-    <None Include="Database.conf" />
+    <None Include="LocalMachine.conf" />
     <Content Include="tpny\tmplPortalAppPools.txt" />
     <Content Include="tpny\tmplPortalFtpSite.txt" />
     <Content Include="tpny\tmplPortalWebSite.txt" />

@@ -18,10 +18,13 @@ namespace InstallConfig
 
         public static SchedulerSetting GeneraterateSchedulerConfig()
         {
-            return new SchedulerSetting(
+            DatabaseSetting databaseSetting = JsonConvert.DeserializeObject<DatabaseSetting>(
+                File.ReadAllText(databaseConfigFileName));
+
+            SchedulerSetting generaterateSchedulerConfig = new SchedulerSetting(
                 schedulerType: "quartz",
-                databaseSetting: JsonConvert.DeserializeObject<DatabaseSetting>(
-                    File.ReadAllText(databaseConfigFileName)));
+                databaseSetting: databaseSetting);
+            return generaterateSchedulerConfig;
         }
     }
 }
