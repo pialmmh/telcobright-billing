@@ -50,55 +50,59 @@ namespace TelcobrightMediation
 
         public void Mediate()
         {
-            Parallel.ForEach(this.NewCdrExts, cdrExt =>
-            {
-                try
+            //todo: change max deg of parallelism
+            int maxDegreeOfParallelism = 1;
+            Parallel.ForEach(this.NewCdrExts, new ParallelOptions() {MaxDegreeOfParallelism = maxDegreeOfParallelism} ,
+                cdrExt =>
                 {
-                    ResetMediationStatus(cdrExt.Cdr);
-                    IServiceGroup serviceGroup = null;
-                    ServiceGroupConfiguration serviceGroupConfiguration = null;
-                    if (this.SkipServiceGroupRules==true)
+                    try
                     {
-                        var lastMediatedIdServiceGroup = cdrExt.Cdr.ServiceGroup;
-                        this.CdrJobContext.MediationContext.MefServiceGroupContainer.IdServiceGroupWiseServiceGroups
-                            .TryGetValue(lastMediatedIdServiceGroup, out serviceGroup);
-                        serviceGroupConfiguration = this.CdrJobContext.MediationContext.Tbc.CdrSetting
-                            .ServiceGroupConfigurations[lastMediatedIdServiceGroup];
-                    }
-                    else serviceGroup = ExecuteServiceGroups(cdrExt, out serviceGroupConfiguration);
-
-                    if (serviceGroup != null)
-                    {
-                        var allPartnersFound = ExecutePartnerRules(cdrExt, serviceGroupConfiguration);
-                        if (allPartnersFound)
+                        ResetMediationStatus(cdrExt.Cdr);
+                        IServiceGroup serviceGroup = null;
+                        ServiceGroupConfiguration serviceGroupConfiguration = null;
+                        if (this.SkipServiceGroupRules == true)
                         {
-                            ExecuteRating(serviceGroupConfiguration, serviceGroupConfiguration.Ratingtrules, cdrExt);
-                            serviceGroup.ExecutePostRatingActions(cdrExt, this);
-                            ExecuteNerRule(this, cdrExt);
-                            if (this.CdrJobContext.MediationContext.Tbc.CdrSetting.CallConnectTimePresent == true &&
-                                cdrExt.Cdr.ServiceGroup > 0 && cdrExt.Cdr.ChargingStatus == 1)
+                            var lastMediatedIdServiceGroup = cdrExt.Cdr.ServiceGroup;
+                            this.CdrJobContext.MediationContext.MefServiceGroupContainer.IdServiceGroupWiseServiceGroups
+                                .TryGetValue(lastMediatedIdServiceGroup, out serviceGroup);
+                            serviceGroupConfiguration = this.CdrJobContext.MediationContext.Tbc.CdrSetting
+                                .ServiceGroupConfigurations[lastMediatedIdServiceGroup];
+                        }
+                        else serviceGroup = ExecuteServiceGroups(cdrExt, out serviceGroupConfiguration);
+
+                        if (serviceGroup != null)
+                        {
+                            var allPartnersFound = ExecutePartnerRules(cdrExt, serviceGroupConfiguration);
+                            if (allPartnersFound)
                             {
-                                SetPdd(cdrExt.Cdr);
+                                ExecuteRating(serviceGroupConfiguration, serviceGroupConfiguration.Ratingtrules,
+                                    cdrExt);
+                                serviceGroup.ExecutePostRatingActions(cdrExt, this);
+                                ExecuteNerRule(this, cdrExt);
+                                if (this.CdrJobContext.MediationContext.Tbc.CdrSetting.CallConnectTimePresent == true &&
+                                    cdrExt.Cdr.ServiceGroup > 0 && cdrExt.Cdr.ChargingStatus == 1)
+                                {
+                                    SetPdd(cdrExt.Cdr);
+                                }
                             }
                         }
+                        ValidationResult mediationResult =
+                            MediationErrorChecker.ExecuteValidationRules(cdrExt, this.CdrJobContext);
+                        if (mediationResult.IsValid == false)
+                            SendToCdrError(cdrExt, "Mediation error: " + mediationResult.FirstValidationFailureMessage);
+                        else
+                        {
+                            SetMediationStatusToSuccess(cdrExt.Cdr);
+                            this.CollectionResult.ProcessedCdrExts.Add(cdrExt);
+                        }
                     }
-                    ValidationResult mediationResult =
-                        MediationErrorChecker.ExecuteValidationRules(cdrExt, this.CdrJobContext);
-                    if (mediationResult.IsValid == false)
-                        SendToCdrError(cdrExt, "Mediation error: " + mediationResult.FirstValidationFailureMessage);
-                    else
+                    catch (Exception e)
                     {
-                        SetMediationStatusToSuccess(cdrExt.Cdr);
-                        this.CollectionResult.ProcessedCdrExts.Add(cdrExt);
+                        Console.WriteLine(e);
+                        string errorMessage = new StringBuilder("Exception: ").Append(e.Message).ToString();
+                        this.SendToCdrError(cdrExt, errorMessage);
                     }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    string errorMessage = new StringBuilder("Exception: ").Append(e.Message).ToString();
-                    this.SendToCdrError(cdrExt, errorMessage);
-                }
-            });
+                });
             this.CollectionResult.CollectionResultProcessingState = CollectionResultProcessingState.AfterMediation;
         }
 
