@@ -26,6 +26,7 @@ namespace PartnerRules
 
         public bool CheckIfTrue(cdr thisCdr)
         {
+            if(this.IsPrepared==false) throw new Exception("Rule is not prepared, method Prepare needs to be called first.");
             var dicRoutes = this.SwitchWiseRoutes;
             var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
             route thisRoute = null;

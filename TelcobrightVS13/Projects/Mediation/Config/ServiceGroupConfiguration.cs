@@ -9,8 +9,7 @@ namespace TelcobrightMediation
         public Dictionary<string, string> MediationChecklistForUnAnsweredCdrs { get; set; }
         public Dictionary<string, string> MediationChecklistForAnsweredCdrs { get; set; }
         public int IdServiceGroup { get; }
-        public Dictionary<string, string> Params { get; set; }
-
+        public Dictionary<string, string> Params { get; set; }=new Dictionary<string, string>();
         public ServiceGroupConfiguration(int idServiceGroup)
         {
             this.IdServiceGroup = idServiceGroup;

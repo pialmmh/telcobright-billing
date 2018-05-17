@@ -39,11 +39,11 @@ namespace TelcobrightMediation
 
         }
 
-        public void SetAdditionalParams(Dictionary<string, string> additionalParams)
+        public void SetAdditionalParams(Dictionary<string, object> additionalParams)
         {
             if (additionalParams.ContainsKey("prefixes"))
             {
-                this.PrefixesOrderedByMaxLenFirst = additionalParams["prefixes"].Split(',')
+                this.PrefixesOrderedByMaxLenFirst = ((string)additionalParams["prefixes"]).Split(',')
                     .OrderByDescending(c => c.Length).ToList();
             }
             else

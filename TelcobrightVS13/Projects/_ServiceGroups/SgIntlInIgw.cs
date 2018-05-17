@@ -41,7 +41,7 @@ namespace TelcobrightMediation
             
         }
 
-        public void SetAdditionalParams(Dictionary<string, string> additionalParams)
+        public void SetAdditionalParams(Dictionary<string, object> additionalParams)
         {
             
         }

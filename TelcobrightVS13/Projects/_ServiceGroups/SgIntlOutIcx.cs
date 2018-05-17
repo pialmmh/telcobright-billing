@@ -39,19 +39,16 @@ namespace TelcobrightMediation
             
         }
 
-        public void SetAdditionalParams(Dictionary<string, string> additionalParams)
+        public void SetAdditionalParams(Dictionary<string, object> additionalParams)
         {
-            List<int> configuredIdCdrRules = additionalParams["idCdrRules"].Split(',')
-                .Select(str => Convert.ToInt32(str)).ToList();
-            CdrRuleComposer cdrRuleComposer = new CdrRuleComposer();
-            cdrRuleComposer.Compose();
-            this.CdrRules = cdrRuleComposer.CdrRules
-                .Where(c => configuredIdCdrRules.Contains(c.Id)).ToList();
+            var cdrRules = additionalParams["cdrRules"] as List<ICdrRule>;
+            this.CdrRules = cdrRules;
         }
 
         public void Execute(cdr thisCdr, CdrProcessor cdrProcessor)
         {
-            foreach (var cdrRule in this.CdrRules)
+            
+            foreach (ICdrRule cdrRule in this.CdrRules)
             {
                 if (cdrRule.CheckIfTrue(thisCdr))
                 {

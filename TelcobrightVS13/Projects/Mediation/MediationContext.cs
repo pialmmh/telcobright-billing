@@ -12,6 +12,7 @@ using System.Data.Common;
 using TelcobrightMediation.Config;
 using FlexValidation;
 using TelcobrightMediation.Accounting;
+using static System.String;
 
 namespace TelcobrightMediation
 {
@@ -149,6 +150,8 @@ namespace TelcobrightMediation
                 this.MefDecoderContainer.DicExtensions.Add(ext.Id, ext);
 
             this.MefServiceGroupContainer.CmpServiceGroup.Compose();
+            CdrRuleComposer cdrRuleComposer = new CdrRuleComposer();
+            cdrRuleComposer.Compose();
             foreach (var serviceGroup in this.MefServiceGroupContainer.CmpServiceGroup.ServiceGroups)
             {
                 ServiceGroupConfiguration serviceGroupConfiguration = null;
@@ -156,7 +159,26 @@ namespace TelcobrightMediation
                     out serviceGroupConfiguration);
                 if (serviceGroupConfiguration != null)
                 {
-                    serviceGroup.SetAdditionalParams(serviceGroupConfiguration.Params);
+                    Dictionary<string, object> additionalParams = serviceGroupConfiguration.Params
+                        ?.ToDictionary(kv => kv.Key, kv => (object)kv.Value);
+                    object configuredCdrRules = "";
+                    additionalParams?.TryGetValue("idCdrRules", out configuredCdrRules);
+                    string cdrRulesAsStr = configuredCdrRules as string;
+                    List<ICdrRule> cdrRules = new List<ICdrRule>();
+                    if (!IsNullOrEmpty(cdrRulesAsStr) && !IsNullOrWhiteSpace(cdrRulesAsStr))
+                    {
+                        List<int> configuredIdCdrRules = cdrRulesAsStr.Split(',')
+                            .Select(str => Convert.ToInt32(str)).ToList();
+                        cdrRuleComposer.CdrRules
+                            .Where(c => configuredIdCdrRules.Contains(c.Id)).ToList().ForEach(cdrRule =>
+                            {
+                                cdrRule.Data = this.Routes;
+                                cdrRule.Prepare();
+                                cdrRules.Add(cdrRule);
+                            });
+                    }
+                    additionalParams?.Add("cdrRules",cdrRules);
+                    serviceGroup.SetAdditionalParams(additionalParams);
                 }
 
                 this.MefServiceGroupContainer.DicExtensions.Add(serviceGroup.RuleName, serviceGroup);

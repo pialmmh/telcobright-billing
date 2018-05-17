@@ -14,9 +14,18 @@ namespace PartnerRules
         public string RuleName => GetType().Name;
         public string HelpText => "Outgoing call identifier by ANS & IOS TG";
         public int Id => 2;
+        public object Data { get; set; }
+        public bool IsPrepared { get; private set; }
+        public void Prepare()
+        {
+            this.SwitchWiseRoutes = this.Data as Dictionary<ValueTuple<int, string>, route>;
+            this.IsPrepared = true;
+        }
         public Dictionary<ValueTuple<int, string>, route> SwitchWiseRoutes { get; set; }
         public bool CheckIfTrue(cdr thisCdr)
         {
+            if (this.IsPrepared == false)
+                throw new Exception("Rule is not prepared, method Prepare needs to be called first.");
             ValueTuple<int, string> key = new ValueTuple<int,string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
             route inRoute = null;
             this.SwitchWiseRoutes.TryGetValue(key, out inRoute);
