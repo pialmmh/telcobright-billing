@@ -75,7 +75,7 @@ namespace InstallConfig
             serviceGroupConfigurations.Add(new ServiceGroupConfiguration(idServiceGroup: 2) //intlOutIgw
             {
                 Params = new Dictionary<string, string>()
-                { { "idCdrRules", "2,1" } },//IcxOutgoingCallByInOutTg=2, IcxOutgoingCallByInTgType=1
+                { { "idCdrRules", "2" } },//IcxOutgoingCallByInOutTg=2, IcxOutgoingCallByInTgType=1
                 PartnerRules = new List<int>()
                 {
                     PartnerRuletype.InPartnerByIncomingRoute,
