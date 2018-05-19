@@ -10,7 +10,7 @@
     <asp:ToolkitScriptManager ID="ScriptManager1" runat="server">
 </asp:ToolkitScriptManager>
      <asp:GridView ID="GridView" OnRowDataBound="GridView_RowDataBound"
-                Font-Names="Arial"  DataKeyNames="PartnerID"
+                Font-Names="Arial"  DataKeyNames="idPartner"
                 Font-Size="0.75em" 
                 CellPadding="4" 
                 ForeColor="#333333"
@@ -23,17 +23,17 @@
                 <HeaderStyle BackColor="#5D7B9D" ForeColor="white" Font-Bold="True" />
                 <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
     <Columns>
-        <asp:BoundField DataField="PartnerID" HeaderText="PartnerID" />
-        <asp:BoundField DataField="PartnerName" HeaderText="PartnerName"/>
-         <asp:BoundField DataField="Service" HeaderText="Service"/>
-        <asp:BoundField DataField="Currency" HeaderText="Currency"/>
-         <asp:BoundField DataField="PaymentMode" HeaderText="PaymentMode"/>
+        <asp:BoundField DataField="idPartner" HeaderText="PartnerID" />
+        <asp:BoundField DataField="accountName" HeaderText="PartnerName"/>
+         <asp:BoundField DataField="serviceGroup" HeaderText="Service"/>
+        <asp:BoundField DataField="uom" HeaderText="Currency"/>
+<%--         <asp:BoundField DataField="PaymentMode" HeaderText="PaymentMode"/>
          <asp:BoundField DataField="CurrentBalance" HeaderText="CurrentBalance"/>
          <asp:BoundField DataField="MaxCreditLimit" HeaderText="MaxCreditLimit"/>
          <asp:BoundField DataField="LastCreditedAmount" HeaderText="LastCreditedAmount"/>
         <asp:BoundField DataField="Date" HeaderText="PaymentDate" />
          <asp:BoundField DataField="LastAmountType" HeaderText="LastAmountType"/>
-       <asp:BoundField DataField="" />
+       <asp:BoundField DataField="" />--%>
        <asp:BoundField DataField="" />
        
     </Columns>

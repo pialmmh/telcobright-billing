@@ -32,5 +32,12 @@ namespace TelcobrightMediation.Accounting
         {
             get { return EndDateWithTime.AddSeconds(DefaultGmtOffset - this.GmtOffset); }
         }
+
+        public List<DateTime> InvoiceDates { get; set; }
+
+        public LedgerSummaryForInvoiceGeneration()
+        {
+            InvoiceDates = new List<DateTime>();
+        }
     }
 }

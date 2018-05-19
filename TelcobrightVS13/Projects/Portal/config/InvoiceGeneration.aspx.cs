@@ -59,7 +59,12 @@ namespace PortalApp.config
                                                      x.PartnerId == partner.idPartner &&
                                                      x.StartDateWithTime.Equals(timeRange.Start) &&
                                                      x.EndDateWithTime.Equals(timeRange.End));
-                            if (cycle != null) isAlreadyExists = true;
+                            if (cycle != null)
+                            {
+                                cycle.Amount += ledgerSummary.AMOUNT;
+                                cycle.InvoiceDates.Add(ledgerSummary.transactionDate);
+                                isAlreadyExists = true;
+                            }
                         }
 
                         if (!isAlreadyExists)
@@ -74,6 +79,7 @@ namespace PortalApp.config
                             invoiceGeneration.Amount = ledgerSummary.AMOUNT;
                             invoiceGeneration.TimeZone = DefaultTimeZoneId;
                             invoiceGeneration.GmtOffset = GmtOffset;
+                            invoiceGeneration.InvoiceDates.Add(ledgerSummary.transactionDate);
 
                             foreach (var kv in serviceAliases)
                             {
@@ -181,6 +187,7 @@ namespace PortalApp.config
             ledgerSummary.EndDateWithTime = Convert.ToDateTime(txtDate1.Text);
             ledgerSummary.TimeZone = Convert.ToInt32(ddlistTimeZone.SelectedValue);
             ledgerSummary.GmtOffset = allTimeZones.First(x => x.id == ledgerSummary.TimeZone).gmt_offset;
+            ledgerSummary.InvoiceDates.Add(ledgerSummary.StartDateWithTime);
             invoiceGenerations.Add(ledgerSummary);
             this.Session["igInvoiceGenList"] = invoiceGenerations;
             gvInvoice.DataSource = invoiceGenerations;

@@ -162,6 +162,28 @@ public partial class ConfigPartnerDetail : System.Web.UI.Page
 
         if (!this.IsPostBack)
         {
+            //get own telcobrightcustomreid from telcobrightmediation database by matching databaes name
+            //from Partner
+
+            string thisConectionString = ConfigurationManager.ConnectionStrings["partner"].ConnectionString;
+
+            MySqlConnection connection = new MySqlConnection(thisConectionString);
+            string database = connection.Database.ToString();
+
+            using (PartnerEntities context = new PartnerEntities())
+            {
+                telcobrightpartner thisCustomer = (from c in context.telcobrightpartners
+                    where c.databasename == database
+                    select c).First();
+                int thisOperatorId = thisCustomer.idCustomer;
+                int idOperatorType = Convert.ToInt32(thisCustomer.idOperatorType);
+
+
+                this.Session["sesidOperator"] = thisOperatorId;
+                this.Session["sesidOperatorType"] = idOperatorType;
+
+            }
+
             // route type
             DropDownList ddlistRouteType = (DropDownList)this.FormViewRouteAdd.FindControl("ddlistRouteType");
             Tbc = PageUtil.GetTelcobrightConfig();
@@ -239,27 +261,6 @@ public partial class ConfigPartnerDetail : System.Web.UI.Page
 
             }
 
-            //get own telcobrightcustomreid from telcobrightmediation database by matching databaes name
-            //from Partner
-
-            string thisConectionString = ConfigurationManager.ConnectionStrings["partner"].ConnectionString;
-
-            MySqlConnection connection = new MySqlConnection(thisConectionString);
-            string database = connection.Database.ToString();
-
-            using (PartnerEntities context = new PartnerEntities())
-            {
-                telcobrightpartner thisCustomer = (from c in context.telcobrightpartners
-                                                    where c.databasename == database
-                                                    select c).First();
-                int thisOperatorId = thisCustomer.idCustomer;
-                int idOperatorType = Convert.ToInt32(thisCustomer.idOperatorType);
-
-
-                this.Session["sesidOperator"] = thisOperatorId;
-                this.Session["sesidOperatorType"] = idOperatorType;
-                
-            }
         }
     }
 

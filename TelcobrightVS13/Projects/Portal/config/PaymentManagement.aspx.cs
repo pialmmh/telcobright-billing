@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.UI.WebControls;
+using MediationModel;
 using PortalApp._myCodes;
 
 
@@ -19,24 +21,24 @@ namespace PortalApp.config
                 lb.CommandName = "ShowPopup";
                 lb.Click += new System.EventHandler(paymentBtn_Click);
 
-                if (e.Row.Cells[4].Text.Equals("Postpaid"))
-                {
-                    lb.Enabled = false;
+                //if (e.Row.Cells[4].Text.Equals("Postpaid"))
+                //{
+                //    lb.Enabled = false;
                    
-                }
-                else
-                {
+                //}
+                //else
+                //{
 
-                    lb.Enabled = true;
+                //    lb.Enabled = true;
 
 
-                }
-                e.Row.Cells[10].Controls.Add(lb);
-                LinkButton lb1 = new LinkButton();
-                lb1.ID = "historyBtn";
-                lb1.Text = "History";
-                lb1.OnClientClick = "window.open('PaymentHistory.aspx?id=" + Int32.Parse( e.Row.Cells[0].Text) + "'); return false;";
-                e.Row.Cells[11].Controls.Add(lb1);
+                //}
+                e.Row.Cells[4].Controls.Add(lb);
+                //LinkButton lb1 = new LinkButton();
+                //lb1.ID = "historyBtn";
+                //lb1.Text = "History";
+                //lb1.OnClientClick = "window.open('PaymentHistory.aspx?id=" + Int32.Parse( e.Row.Cells[0].Text) + "'); return false;";
+                //e.Row.Cells[11].Controls.Add(lb1);
 
             }
 
@@ -69,10 +71,20 @@ namespace PortalApp.config
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            ServiceAcountStatus s = new ServiceAcountStatus();
+            List<string> billableType = new List<string>()
+            {
+                "/custBilled", "/suppBilled", "/billable"
+            };
+            using (PartnerEntities context = new PartnerEntities())
+            {
+                List<account> payableAccounts = context.accounts.Where(x => billableType.Contains(x.billableType)).ToList();
+                GridView.DataSource = payableAccounts;
+                GridView.DataBind();
+            }
+            //ServiceAcountStatus s = new ServiceAcountStatus();
             
-            GridView.DataSource =s.popultateGrid();
-            GridView.DataBind();
+            //GridView.DataSource =s.popultateGrid();
+            //GridView.DataBind();
 
         }
        
