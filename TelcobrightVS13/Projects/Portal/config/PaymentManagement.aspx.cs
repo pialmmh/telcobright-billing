@@ -85,34 +85,33 @@ namespace PortalApp.config
             if (!IsPostBack)
             {
                 Tbc = PageUtil.GetTelcobrightConfig();
-                List<KeyValuePair<Regex, string>> serviceAliases = Tbc.ServiceAliasesRegex;
-                List<string> billableType = new List<string>()
-                {
-                    "/custBilled", "/suppBilled", "/billable"
-                };
+            }
+            List<KeyValuePair<Regex, string>> serviceAliases = Tbc.ServiceAliasesRegex;
+            List<string> billableType = new List<string>()
+            {
+                "/custBilled", "/suppBilled", "/billable"
+            };
 
-                using (PartnerEntities context = new PartnerEntities())
+            using (PartnerEntities context = new PartnerEntities())
+            {
+                List<partner> allPartners = context.partners.OrderBy(p => p.PartnerName).ToList();
+                Session["allPartners"] = allPartners;
+                List<account> payableAccounts = context.accounts.Where(x => billableType.Contains(x.billableType)).ToList();
+                foreach (account account in payableAccounts)
                 {
-                    List<partner> allPartners = context.partners.OrderBy(p => p.PartnerName).ToList();
-                    Session["allPartners"] = allPartners;
-                    List<account> payableAccounts = context.accounts.Where(x => billableType.Contains(x.billableType)).ToList();
-                    foreach (account account in payableAccounts)
+                    foreach (var kv in serviceAliases)
                     {
-                        foreach (var kv in serviceAliases)
+                        var regex = kv.Key;
+                        if (regex.Matches(account.accountName).Count > 0)
                         {
-                            var regex = kv.Key;
-                            if (regex.Matches(account.accountName).Count > 0)
-                            {
-                                account.accountName = kv.Value;
-                                break;
-                            }
+                            account.accountName = kv.Value;
+                            break;
                         }
                     }
-
-                    GridView.DataSource = payableAccounts;
-                    GridView.DataBind();
                 }
 
+                GridView.DataSource = payableAccounts;
+                GridView.DataBind();
             }
             //ServiceAcountStatus s = new ServiceAcountStatus();
 
@@ -120,7 +119,7 @@ namespace PortalApp.config
             //GridView.DataBind();
 
         }
-       
+
 
         protected void paymentBtn_Click(object sender, EventArgs e)
         {
@@ -128,7 +127,7 @@ namespace PortalApp.config
             LinkButton btndetails = sender as LinkButton;
             GridViewRow gvrow = (GridViewRow)btndetails.NamingContainer;
             lblID.Text = GridView.DataKeys[gvrow.RowIndex].Value.ToString();
-            lblusername.Text = gvrow.Cells[1].Text;
+//            lblusername.Text = ((List<partner>)Session["allPartners"]).First(x => x.idPartner == Convert.ToInt32(gvrow.Cells[1].Text)).PartnerName;
             lblSer.Text = gvrow.Cells[2].Text;
             this.ModalPopupExtender1.Show();
 

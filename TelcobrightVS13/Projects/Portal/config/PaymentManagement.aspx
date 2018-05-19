@@ -11,7 +11,7 @@
 </asp:ToolkitScriptManager>
      <asp:GridView ID="GridView" OnRowDataBound="GridView_RowDataBound"
                 Font-Names="Arial"  DataKeyNames="idPartner"
-                Font-Size="0.75em" 
+                Font-Size="9pt" 
                 CellPadding="4" 
                 ForeColor="#333333"
                 AutoGenerateColumns="False"
@@ -23,13 +23,14 @@
                 <HeaderStyle BackColor="#5D7B9D" ForeColor="white" Font-Bold="True" />
                 <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
     <Columns>
-        <asp:TemplateField>
+        <asp:BoundField DataField="idPartner" HeaderText="Partner Id"/>
+        <asp:TemplateField HeaderText="Partner Name">
             <ItemTemplate>
                 <asp:DropDownList runat="server" ID="ddlPartner" DataValueField="idPartner" DataTextField="PartnerName" Enabled="False"/>
             </ItemTemplate>
         </asp:TemplateField>
         <asp:BoundField DataField="accountName" HeaderText="Account Name"/>
-         <asp:BoundField DataField="serviceGroup" HeaderText="Service"/>
+        <asp:BoundField DataField="serviceGroup" HeaderText="Service Group"/>
         <asp:BoundField DataField="uom" HeaderText="Currency"/>
 <%--         <asp:BoundField DataField="PaymentMode" HeaderText="PaymentMode"/>
          <asp:BoundField DataField="CurrentBalance" HeaderText="CurrentBalance"/>
@@ -75,82 +76,62 @@ CancelControlID="btnCancel" BackgroundCssClass="modalBackground" >
 </asp:ModalPopupExtender>
 <asp:Panel ID="pnlpopup" runat="server" BackColor="White" Height="269px" Width="400px" style="display:none">
     <table width="100%" style="border:Solid 3px #0094ff; width:100%; height:100%" cellpadding="0" cellspacing="0">
-<tr style="background-color:#0094ff">
-<td colspan="2" style=" height:10%; color:White; font-weight:bold; font-size:larger" align="center">Carrier Details</td>
-</tr>
-<tr>
-<td align="right" style=" width:45%">
-ID:
-</td>
-<td>
-<asp:Label ID="lblID" runat="server"></asp:Label>
-</td>
-</tr>
-<tr>
-<td align="right">
-Partner:
-</td>
-<td>
-<asp:Label ID="lblusername" runat="server"></asp:Label>
-</td>
-</tr>
-<tr>
-    <td align="right">Service: </td>
-    <td>
-        <asp:Label ID="lblSer" runat="server"></asp:Label>
-    </td>
+    <tr style="background-color:#0094ff">
+        <td colspan="2" style=" height:10%; color:White; font-weight:bold; font-size:larger" align="center">Carrier Details</td>
     </tr>
-        <tr>
-            <td align="right">Type: </td>
-    <td>
-        <asp:DropDownList ID="ddlistType" runat="server"
+    <tr>
+        <td align="right" style=" width:45%">ID:</td>
+        <td><asp:Label ID="lblID" runat="server"></asp:Label></td>
+    </tr>
+    <tr>
+        <td align="right">Partner:</td>
+        <td style="padding:3px"><asp:Label ID="lblusername" runat="server"></asp:Label></td>
+    </tr>
+    <tr>
+        <td align="right">Service: </td>
+        <td style="padding:3px"><asp:Label ID="lblSer" runat="server"></asp:Label></td>
+    </tr>
+    <tr>
+        <td align="right">Type: </td>
+        <td style="padding:3px">
+            <asp:DropDownList ID="ddlistType" runat="server"
                 DataTextField="Type"
                 AutoPostBack="false">
              <asp:ListItem Value="Select Type" Selected="True"></asp:ListItem>
              <asp:ListItem Text="TopUp"> </asp:ListItem>
             <asp:ListItem Text="Credit"> </asp:ListItem>
-        </asp:DropDownList>
-    </td>
-        </tr>
-     <tr>
-            <td align="right">Payment Reference: </td>
-    <td>
-        <asp:TextBox ID="paymentReference" runat="server"> </asp:TextBox>
-    </td>
-        </tr>
-
-        <tr>
-            <td align="right">Comment: </td>
-    <td>
-        <asp:TextBox ID="comment" runat="server" TextMode="MultiLine"> </asp:TextBox>
-    </td>
-        </tr>
-    <tr>
-        <td>Date</td>
-         <td>Amount</td>
-    
+            </asp:DropDownList>
+        </td>
     </tr>
-   
-          <tr id="addPaymentRow">
-             
-              <td>
-
-                  <asp:TextBox id="txtDate" Runat="server" /> 
-        <asp:CalendarExtender ID="CalendarStartDate" runat="server" 
-            TargetControlID="txtDate"  PopupButtonID="txtDate" Format="yyyy-MM-dd">
-        </asp:CalendarExtender>
-                  </td>
-               <td style="padding:3px"> <asp:TextBox id="txtAmount" Runat="server" /> </td>
-          </tr>
+    <tr>
+        <td align="right">Payment Reference: </td>
+        <td style="padding:3px"><asp:TextBox ID="paymentReference" runat="server"> </asp:TextBox></td>
+    </tr>
+    <tr>
+        <td align="right">Comment: </td>
+        <td style="padding:3px"><asp:TextBox ID="comment" runat="server" TextMode="MultiLine"> </asp:TextBox></td>
+    </tr>
+    <tr>
+        <td align="right">Date: </td>
+        <td style="padding:3px">
+            <asp:TextBox id="txtDate" Runat="server" /> 
+            <asp:CalendarExtender ID="CalendarStartDate" runat="server" 
+                                  TargetControlID="txtDate"  PopupButtonID="txtDate" Format="yyyy-MM-dd">
+            </asp:CalendarExtender>
+        </td>
+    </tr>
+    <tr id="addPaymentRow">
+        <td align="right">Amount: </td>    
+        <td style="padding:3px"><asp:TextBox id="txtAmount" Runat="server" /> </td>
+    </tr>
     <%--<tr> <td align="center"><button onclick="addNewServiceRow();" type="button">Add New</button></td></tr>--%>
-   
-        <tr>
-            <td></td>
-            <td>
+    <tr>
+        <td></td>
+        <td>
                 <asp:Button ID="btnOK" runat="server" CommandName="OK" Text="OK" OnClick="btnOK_Click"  />
                 <asp:Button ID="btnCancel" runat="server" Text="Cancel" />
-            </td>
-        </tr>
+        </td>
+    </tr>
 </table>
 
 </asp:Panel>
