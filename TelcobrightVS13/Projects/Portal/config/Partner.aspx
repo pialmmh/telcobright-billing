@@ -322,7 +322,7 @@ order by type "></asp:SqlDataSource>
                         <tr>
                             <td width="220px" align="left">Account Name</td>
                             <td width="80px" align="center">Amount</td>
-                            <td width="30px" align="center">UOM</td>
+                            <td width="30px" align="right">UOM</td>
                         </tr>
                     </table>
                 </HeaderTemplate>
@@ -332,8 +332,8 @@ order by type "></asp:SqlDataSource>
                             ShowHeader="False" BorderStyle="Solid" BorderColor="Silver">
                             <Columns>
                                 <asp:BoundField ItemStyle-Width="220px" DataField="accountName" HeaderText="Service Account" HeaderStyle-HorizontalAlign="Left" ItemStyle-HorizontalAlign="Left" />
-                                <asp:BoundField ItemStyle-Width="80px" DataField="BalanceAfter" HeaderText="Balance" HeaderStyle-HorizontalAlign="Right" ItemStyle-HorizontalAlign="Right" />                                
-                                <asp:BoundField ItemStyle-Width="30px" DataField="uom" HeaderText="UOM" HeaderStyle-HorizontalAlign="Left" ItemStyle-HorizontalAlign="Left" />                                
+                                <asp:BoundField ItemStyle-Width="80px" DataField="BalanceAfter" DataFormatString="{0:n2}" HeaderText="Balance" HeaderStyle-HorizontalAlign="Right" ItemStyle-HorizontalAlign="Right" />                                
+                                <asp:BoundField ItemStyle-Width="30px" DataField="uom" HeaderText="UOM" HeaderStyle-HorizontalAlign="Right" ItemStyle-HorizontalAlign="Right" />                                
                             </Columns>
                             <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
                             <PagerStyle BackColor="#284775" ForeColor="White" 

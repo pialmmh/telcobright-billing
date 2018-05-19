@@ -23,8 +23,12 @@
                 <HeaderStyle BackColor="#5D7B9D" ForeColor="white" Font-Bold="True" />
                 <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
     <Columns>
-        <asp:BoundField DataField="idPartner" HeaderText="PartnerID" />
-        <asp:BoundField DataField="accountName" HeaderText="PartnerName"/>
+        <asp:TemplateField>
+            <ItemTemplate>
+                <asp:DropDownList runat="server" ID="ddlPartner" DataValueField="idPartner" DataTextField="PartnerName" Enabled="False"/>
+            </ItemTemplate>
+        </asp:TemplateField>
+        <asp:BoundField DataField="accountName" HeaderText="Account Name"/>
          <asp:BoundField DataField="serviceGroup" HeaderText="Service"/>
         <asp:BoundField DataField="uom" HeaderText="Currency"/>
 <%--         <asp:BoundField DataField="PaymentMode" HeaderText="PaymentMode"/>

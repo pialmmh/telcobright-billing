@@ -1,20 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Web.UI;
 using System.Web.UI.WebControls;
 using MediationModel;
 using PortalApp._myCodes;
+using TelcobrightMediation;
 
 
 namespace PortalApp.config
 {
     public partial class PaymentManagement : System.Web.UI.Page
     {
-      
+
+        private static TelcobrightConfig Tbc { get; set; }
+
         protected void GridView_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
+                DropDownList ddlPartner = (DropDownList)e.Row.FindControl("ddlPartner");
+                ddlPartner.DataSource = Session["allPartners"];
+                ddlPartner.DataBind();
+                string idPartner = DataBinder.Eval(e.Row.DataItem, "idPartner").ToString();
+                ddlPartner.Items.FindByValue(idPartner).Selected = true;
+
                 LinkButton lb = new LinkButton();
                 lb.ID = "paymentBtn";
                 lb.Text = "Add Payment";
@@ -71,18 +82,40 @@ namespace PortalApp.config
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            List<string> billableType = new List<string>()
+            if (!IsPostBack)
             {
-                "/custBilled", "/suppBilled", "/billable"
-            };
-            using (PartnerEntities context = new PartnerEntities())
-            {
-                List<account> payableAccounts = context.accounts.Where(x => billableType.Contains(x.billableType)).ToList();
-                GridView.DataSource = payableAccounts;
-                GridView.DataBind();
+                Tbc = PageUtil.GetTelcobrightConfig();
+                List<KeyValuePair<Regex, string>> serviceAliases = Tbc.ServiceAliasesRegex;
+                List<string> billableType = new List<string>()
+                {
+                    "/custBilled", "/suppBilled", "/billable"
+                };
+
+                using (PartnerEntities context = new PartnerEntities())
+                {
+                    List<partner> allPartners = context.partners.OrderBy(p => p.PartnerName).ToList();
+                    Session["allPartners"] = allPartners;
+                    List<account> payableAccounts = context.accounts.Where(x => billableType.Contains(x.billableType)).ToList();
+                    foreach (account account in payableAccounts)
+                    {
+                        foreach (var kv in serviceAliases)
+                        {
+                            var regex = kv.Key;
+                            if (regex.Matches(account.accountName).Count > 0)
+                            {
+                                account.accountName = kv.Value;
+                                break;
+                            }
+                        }
+                    }
+
+                    GridView.DataSource = payableAccounts;
+                    GridView.DataBind();
+                }
+
             }
             //ServiceAcountStatus s = new ServiceAcountStatus();
-            
+
             //GridView.DataSource =s.popultateGrid();
             //GridView.DataBind();
 
@@ -100,7 +133,6 @@ namespace PortalApp.config
             this.ModalPopupExtender1.Show();
 
         }
-
 
     }
 
