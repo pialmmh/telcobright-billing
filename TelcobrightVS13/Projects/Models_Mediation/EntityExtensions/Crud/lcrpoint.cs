@@ -8,42 +8,41 @@ namespace MediationModel
 {
 	public partial class lcrpoint:ICacheble<lcrpoint>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{TriggerTime.ToMySqlField()},
-				{RateChangeType.ToMySqlField()},
-				{prefix.ToMySqlField()},
-				{JobCreated.ToMySqlField()},
-				{RatePlanAssignmentFlag.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.TriggerTime.ToMySqlField()).Append(",")
+				.Append(this.RateChangeType.ToMySqlField()).Append(",")
+				.Append(this.prefix.ToMySqlField()).Append(",")
+				.Append(this.JobCreated.ToMySqlField()).Append(",")
+				.Append(this.RatePlanAssignmentFlag.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<lcrpoint,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<lcrpoint,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<lcrpoint,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<lcrpoint,string> whereClauseMethod)
 		{
-			return $@"update lcrpoint set 
-				id={id.ToMySqlField()+" "},
-				TriggerTime={TriggerTime.ToMySqlField()+" "},
-				RateChangeType={RateChangeType.ToMySqlField()+" "},
-				prefix={prefix.ToMySqlField()+" "},
-				JobCreated={JobCreated.ToMySqlField()+" "},
-				RatePlanAssignmentFlag={RatePlanAssignmentFlag.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update lcrpoint set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("TriggerTime=").Append(this.TriggerTime.ToMySqlField()).Append(",")
+				.Append("RateChangeType=").Append(this.RateChangeType.ToMySqlField()).Append(",")
+				.Append("prefix=").Append(this.prefix.ToMySqlField()).Append(",")
+				.Append("JobCreated=").Append(this.JobCreated.ToMySqlField()).Append(",")
+				.Append("RatePlanAssignmentFlag=").Append(this.RatePlanAssignmentFlag.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<lcrpoint,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<lcrpoint,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<lcrpoint,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<lcrpoint,string> whereClauseMethod)
 		{
-			return $@"delete from lcrpoint 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from lcrpoint 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

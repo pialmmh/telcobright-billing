@@ -8,44 +8,43 @@ namespace MediationModel
 {
 	public partial class cdrfieldmappingbyswitchtype:ICacheble<cdrfieldmappingbyswitchtype>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{Id.ToMySqlField()},
-				{FieldNumber.ToMySqlField()},
-				{idCdrFormat.ToMySqlField()},
-				{FieldPositionInCDRRow.ToMySqlField()},
-				{BinByteOffset.ToMySqlField()},
-				{BinByteLen.ToMySqlField()},
-				{BinByteType.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.Id.ToMySqlField()).Append(",")
+				.Append(this.FieldNumber.ToMySqlField()).Append(",")
+				.Append(this.idCdrFormat.ToMySqlField()).Append(",")
+				.Append(this.FieldPositionInCDRRow.ToMySqlField()).Append(",")
+				.Append(this.BinByteOffset.ToMySqlField()).Append(",")
+				.Append(this.BinByteLen.ToMySqlField()).Append(",")
+				.Append(this.BinByteType.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<cdrfieldmappingbyswitchtype,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<cdrfieldmappingbyswitchtype,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<cdrfieldmappingbyswitchtype,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<cdrfieldmappingbyswitchtype,string> whereClauseMethod)
 		{
-			return $@"update cdrfieldmappingbyswitchtype set 
-				Id={Id.ToMySqlField()+" "},
-				FieldNumber={FieldNumber.ToMySqlField()+" "},
-				idCdrFormat={idCdrFormat.ToMySqlField()+" "},
-				FieldPositionInCDRRow={FieldPositionInCDRRow.ToMySqlField()+" "},
-				BinByteOffset={BinByteOffset.ToMySqlField()+" "},
-				BinByteLen={BinByteLen.ToMySqlField()+" "},
-				BinByteType={BinByteType.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update cdrfieldmappingbyswitchtype set ")
+				.Append("Id=").Append(this.Id.ToMySqlField()).Append(",")
+				.Append("FieldNumber=").Append(this.FieldNumber.ToMySqlField()).Append(",")
+				.Append("idCdrFormat=").Append(this.idCdrFormat.ToMySqlField()).Append(",")
+				.Append("FieldPositionInCDRRow=").Append(this.FieldPositionInCDRRow.ToMySqlField()).Append(",")
+				.Append("BinByteOffset=").Append(this.BinByteOffset.ToMySqlField()).Append(",")
+				.Append("BinByteLen=").Append(this.BinByteLen.ToMySqlField()).Append(",")
+				.Append("BinByteType=").Append(this.BinByteType.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<cdrfieldmappingbyswitchtype,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<cdrfieldmappingbyswitchtype,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<cdrfieldmappingbyswitchtype,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<cdrfieldmappingbyswitchtype,string> whereClauseMethod)
 		{
-			return $@"delete from cdrfieldmappingbyswitchtype 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from cdrfieldmappingbyswitchtype 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

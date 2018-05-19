@@ -8,40 +8,39 @@ namespace MediationModel
 {
 	public partial class jsonbillingrule:ICacheble<jsonbillingrule>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{ruleName.ToMySqlField()},
-				{description.ToMySqlField()},
-				{JsonExpression.ToMySqlField()},
-				{isPrepaid.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.ruleName.ToMySqlField()).Append(",")
+				.Append(this.description.ToMySqlField()).Append(",")
+				.Append(this.JsonExpression.ToMySqlField()).Append(",")
+				.Append(this.isPrepaid.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<jsonbillingrule,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<jsonbillingrule,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<jsonbillingrule,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<jsonbillingrule,string> whereClauseMethod)
 		{
-			return $@"update jsonbillingrule set 
-				id={id.ToMySqlField()+" "},
-				ruleName={ruleName.ToMySqlField()+" "},
-				description={description.ToMySqlField()+" "},
-				JsonExpression={JsonExpression.ToMySqlField()+" "},
-				isPrepaid={isPrepaid.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update jsonbillingrule set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("ruleName=").Append(this.ruleName.ToMySqlField()).Append(",")
+				.Append("description=").Append(this.description.ToMySqlField()).Append(",")
+				.Append("JsonExpression=").Append(this.JsonExpression.ToMySqlField()).Append(",")
+				.Append("isPrepaid=").Append(this.isPrepaid.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<jsonbillingrule,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<jsonbillingrule,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<jsonbillingrule,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<jsonbillingrule,string> whereClauseMethod)
 		{
-			return $@"delete from jsonbillingrule 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from jsonbillingrule 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

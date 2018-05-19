@@ -8,34 +8,33 @@ namespace MediationModel
 {
 	public partial class enumsignalingprotocol:ICacheble<enumsignalingprotocol>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{Type.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.Type.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<enumsignalingprotocol,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<enumsignalingprotocol,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<enumsignalingprotocol,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<enumsignalingprotocol,string> whereClauseMethod)
 		{
-			return $@"update enumsignalingprotocol set 
-				id={id.ToMySqlField()+" "},
-				Type={Type.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update enumsignalingprotocol set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("Type=").Append(this.Type.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<enumsignalingprotocol,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<enumsignalingprotocol,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<enumsignalingprotocol,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<enumsignalingprotocol,string> whereClauseMethod)
 		{
-			return $@"delete from enumsignalingprotocol 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from enumsignalingprotocol 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

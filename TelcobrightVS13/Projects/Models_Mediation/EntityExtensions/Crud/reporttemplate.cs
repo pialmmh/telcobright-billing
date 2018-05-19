@@ -8,36 +8,35 @@ namespace MediationModel
 {
 	public partial class reporttemplate:ICacheble<reporttemplate>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{Templatename.ToMySqlField()},
-				{PageUrl.ToMySqlField()},
-				{ControlValues.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.Templatename.ToMySqlField()).Append(",")
+				.Append(this.PageUrl.ToMySqlField()).Append(",")
+				.Append(this.ControlValues.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<reporttemplate,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<reporttemplate,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<reporttemplate,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<reporttemplate,string> whereClauseMethod)
 		{
-			return $@"update reporttemplate set 
-				Templatename={Templatename.ToMySqlField()+" "},
-				PageUrl={PageUrl.ToMySqlField()+" "},
-				ControlValues={ControlValues.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update reporttemplate set ")
+				.Append("Templatename=").Append(this.Templatename.ToMySqlField()).Append(",")
+				.Append("PageUrl=").Append(this.PageUrl.ToMySqlField()).Append(",")
+				.Append("ControlValues=").Append(this.ControlValues.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<reporttemplate,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<reporttemplate,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<reporttemplate,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<reporttemplate,string> whereClauseMethod)
 		{
-			return $@"delete from reporttemplate 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from reporttemplate 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

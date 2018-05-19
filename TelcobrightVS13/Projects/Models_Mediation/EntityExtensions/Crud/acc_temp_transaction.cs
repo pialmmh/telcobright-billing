@@ -8,68 +8,67 @@ namespace MediationModel
 {
 	public partial class acc_temp_transaction:ICacheble<acc_temp_transaction>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{transactionTime.ToMySqlField()},
-				{seqId.ToMySqlField()},
-				{debitOrCredit.ToMySqlField()},
-				{idEvent.ToMySqlField()},
-				{uniqueBillId.ToMySqlField()},
-				{description.ToMySqlField()},
-				{glAccountId.ToMySqlField()},
-				{uomId.ToMySqlField()},
-				{amount.ToMySqlField()},
-				{BalanceBefore.ToMySqlField()},
-				{BalanceAfter.ToMySqlField()},
-				{isBillable.ToMySqlField()},
-				{isPrepaid.ToMySqlField()},
-				{isBilled.ToMySqlField()},
-				{cancelled.ToMySqlField()},
-				{createdByJob.ToMySqlField()},
-				{changedByJob.ToMySqlField()},
-				{jsonDetail.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.transactionTime.ToMySqlField()).Append(",")
+				.Append(this.seqId.ToMySqlField()).Append(",")
+				.Append(this.debitOrCredit.ToMySqlField()).Append(",")
+				.Append(this.idEvent.ToMySqlField()).Append(",")
+				.Append(this.uniqueBillId.ToMySqlField()).Append(",")
+				.Append(this.description.ToMySqlField()).Append(",")
+				.Append(this.glAccountId.ToMySqlField()).Append(",")
+				.Append(this.uomId.ToMySqlField()).Append(",")
+				.Append(this.amount.ToMySqlField()).Append(",")
+				.Append(this.BalanceBefore.ToMySqlField()).Append(",")
+				.Append(this.BalanceAfter.ToMySqlField()).Append(",")
+				.Append(this.isBillable.ToMySqlField()).Append(",")
+				.Append(this.isPrepaid.ToMySqlField()).Append(",")
+				.Append(this.isBilled.ToMySqlField()).Append(",")
+				.Append(this.cancelled.ToMySqlField()).Append(",")
+				.Append(this.createdByJob.ToMySqlField()).Append(",")
+				.Append(this.changedByJob.ToMySqlField()).Append(",")
+				.Append(this.jsonDetail.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<acc_temp_transaction,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<acc_temp_transaction,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<acc_temp_transaction,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<acc_temp_transaction,string> whereClauseMethod)
 		{
-			return $@"update acc_temp_transaction set 
-				id={id.ToMySqlField()+" "},
-				transactionTime={transactionTime.ToMySqlField()+" "},
-				seqId={seqId.ToMySqlField()+" "},
-				debitOrCredit={debitOrCredit.ToMySqlField()+" "},
-				idEvent={idEvent.ToMySqlField()+" "},
-				uniqueBillId={uniqueBillId.ToMySqlField()+" "},
-				description={description.ToMySqlField()+" "},
-				glAccountId={glAccountId.ToMySqlField()+" "},
-				uomId={uomId.ToMySqlField()+" "},
-				amount={amount.ToMySqlField()+" "},
-				BalanceBefore={BalanceBefore.ToMySqlField()+" "},
-				BalanceAfter={BalanceAfter.ToMySqlField()+" "},
-				isBillable={isBillable.ToMySqlField()+" "},
-				isPrepaid={isPrepaid.ToMySqlField()+" "},
-				isBilled={isBilled.ToMySqlField()+" "},
-				cancelled={cancelled.ToMySqlField()+" "},
-				createdByJob={createdByJob.ToMySqlField()+" "},
-				changedByJob={changedByJob.ToMySqlField()+" "},
-				jsonDetail={jsonDetail.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update acc_temp_transaction set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("transactionTime=").Append(this.transactionTime.ToMySqlField()).Append(",")
+				.Append("seqId=").Append(this.seqId.ToMySqlField()).Append(",")
+				.Append("debitOrCredit=").Append(this.debitOrCredit.ToMySqlField()).Append(",")
+				.Append("idEvent=").Append(this.idEvent.ToMySqlField()).Append(",")
+				.Append("uniqueBillId=").Append(this.uniqueBillId.ToMySqlField()).Append(",")
+				.Append("description=").Append(this.description.ToMySqlField()).Append(",")
+				.Append("glAccountId=").Append(this.glAccountId.ToMySqlField()).Append(",")
+				.Append("uomId=").Append(this.uomId.ToMySqlField()).Append(",")
+				.Append("amount=").Append(this.amount.ToMySqlField()).Append(",")
+				.Append("BalanceBefore=").Append(this.BalanceBefore.ToMySqlField()).Append(",")
+				.Append("BalanceAfter=").Append(this.BalanceAfter.ToMySqlField()).Append(",")
+				.Append("isBillable=").Append(this.isBillable.ToMySqlField()).Append(",")
+				.Append("isPrepaid=").Append(this.isPrepaid.ToMySqlField()).Append(",")
+				.Append("isBilled=").Append(this.isBilled.ToMySqlField()).Append(",")
+				.Append("cancelled=").Append(this.cancelled.ToMySqlField()).Append(",")
+				.Append("createdByJob=").Append(this.createdByJob.ToMySqlField()).Append(",")
+				.Append("changedByJob=").Append(this.changedByJob.ToMySqlField()).Append(",")
+				.Append("jsonDetail=").Append(this.jsonDetail.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<acc_temp_transaction,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<acc_temp_transaction,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<acc_temp_transaction,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<acc_temp_transaction,string> whereClauseMethod)
 		{
-			return $@"delete from acc_temp_transaction 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from acc_temp_transaction 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

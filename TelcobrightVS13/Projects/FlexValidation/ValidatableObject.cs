@@ -18,7 +18,7 @@ namespace FlexValidation
         private FlexValidator<T> Validator { get; }
         public ValidatableObject(T obj,FlexValidator<T> flexValidator)
         {
-            TypeRegistry.RegisterType("Parsers", typeof(FlexValidation.Parsers));
+            //TypeRegistry.RegisterType("Parsers", typeof(FlexValidation.Parsers));
             this.obj = obj;
             this.Validator = flexValidator;
         }

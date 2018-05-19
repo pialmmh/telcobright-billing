@@ -8,36 +8,35 @@ namespace MediationModel
 {
 	public partial class zone:ICacheble<zone>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{zone_id.ToMySqlField()},
-				{country_code.ToMySqlField()},
-				{zone_name.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.zone_id.ToMySqlField()).Append(",")
+				.Append(this.country_code.ToMySqlField()).Append(",")
+				.Append(this.zone_name.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<zone,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<zone,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<zone,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<zone,string> whereClauseMethod)
 		{
-			return $@"update zone set 
-				zone_id={zone_id.ToMySqlField()+" "},
-				country_code={country_code.ToMySqlField()+" "},
-				zone_name={zone_name.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update zone set ")
+				.Append("zone_id=").Append(this.zone_id.ToMySqlField()).Append(",")
+				.Append("country_code=").Append(this.country_code.ToMySqlField()).Append(",")
+				.Append("zone_name=").Append(this.zone_name.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<zone,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<zone,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<zone,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<zone,string> whereClauseMethod)
 		{
-			return $@"delete from zone 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from zone 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

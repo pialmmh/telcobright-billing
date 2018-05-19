@@ -8,36 +8,35 @@ namespace MediationModel
 {
 	public partial class enumratesheetformat:ICacheble<enumratesheetformat>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{Type.ToMySqlField()},
-				{IdentifierTextJson.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.Type.ToMySqlField()).Append(",")
+				.Append(this.IdentifierTextJson.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<enumratesheetformat,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<enumratesheetformat,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<enumratesheetformat,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<enumratesheetformat,string> whereClauseMethod)
 		{
-			return $@"update enumratesheetformat set 
-				id={id.ToMySqlField()+" "},
-				Type={Type.ToMySqlField()+" "},
-				IdentifierTextJson={IdentifierTextJson.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update enumratesheetformat set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("Type=").Append(this.Type.ToMySqlField()).Append(",")
+				.Append("IdentifierTextJson=").Append(this.IdentifierTextJson.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<enumratesheetformat,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<enumratesheetformat,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<enumratesheetformat,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<enumratesheetformat,string> whereClauseMethod)
 		{
-			return $@"delete from enumratesheetformat 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from enumratesheetformat 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

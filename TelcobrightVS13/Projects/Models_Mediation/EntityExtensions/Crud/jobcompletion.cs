@@ -8,32 +8,31 @@ namespace MediationModel
 {
 	public partial class jobcompletion:ICacheble<jobcompletion>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{idJob.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.idJob.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<jobcompletion,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<jobcompletion,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<jobcompletion,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<jobcompletion,string> whereClauseMethod)
 		{
-			return $@"update jobcompletion set 
-				idJob={idJob.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update jobcompletion set ")
+				.Append("idJob=").Append(this.idJob.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<jobcompletion,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<jobcompletion,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<jobcompletion,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<jobcompletion,string> whereClauseMethod)
 		{
-			return $@"delete from jobcompletion 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from jobcompletion 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

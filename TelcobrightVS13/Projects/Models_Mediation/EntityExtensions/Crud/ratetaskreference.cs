@@ -8,36 +8,35 @@ namespace MediationModel
 {
 	public partial class ratetaskreference:ICacheble<ratetaskreference>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{idRatePlan.ToMySqlField()},
-				{Description.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.idRatePlan.ToMySqlField()).Append(",")
+				.Append(this.Description.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<ratetaskreference,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<ratetaskreference,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<ratetaskreference,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<ratetaskreference,string> whereClauseMethod)
 		{
-			return $@"update ratetaskreference set 
-				id={id.ToMySqlField()+" "},
-				idRatePlan={idRatePlan.ToMySqlField()+" "},
-				Description={Description.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update ratetaskreference set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("idRatePlan=").Append(this.idRatePlan.ToMySqlField()).Append(",")
+				.Append("Description=").Append(this.Description.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<ratetaskreference,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<ratetaskreference,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<ratetaskreference,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<ratetaskreference,string> whereClauseMethod)
 		{
-			return $@"delete from ratetaskreference 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from ratetaskreference 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

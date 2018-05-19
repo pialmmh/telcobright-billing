@@ -8,86 +8,85 @@ namespace MediationModel
 {
 	public partial class partner:ICacheble<partner>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{idPartner.ToMySqlField()},
-				{PartnerName.ToMySqlField()},
-				{Address1.ToMySqlField()},
-				{Address2.ToMySqlField()},
-				{City.ToMySqlField()},
-				{State.ToMySqlField()},
-				{PostalCode.ToMySqlField()},
-				{Country.ToMySqlField()},
-				{Telephone.ToMySqlField()},
-				{email.ToMySqlField()},
-				{CustomerPrePaid.ToMySqlField()},
-				{PartnerType.ToMySqlField()},
-				{billingdate.ToMySqlField()},
-				{AllowedDaysForInvoicePayment.ToMySqlField()},
-				{timezone.ToMySqlField()},
-				{date1.ToMySqlField()},
-				{field1.ToMySqlField()},
-				{field2.ToMySqlField()},
-				{field3.ToMySqlField()},
-				{field4.ToMySqlField()},
-				{field5.ToMySqlField()},
-				{refasr.ToMySqlField()},
-				{refacd.ToMySqlField()},
-				{refccr.ToMySqlField()},
-				{refccrbycc.ToMySqlField()},
-				{refpdd.ToMySqlField()},
-				{refasrfas.ToMySqlField()},
-				{DefaultCurrency.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.idPartner.ToMySqlField()).Append(",")
+				.Append(this.PartnerName.ToMySqlField()).Append(",")
+				.Append(this.Address1.ToMySqlField()).Append(",")
+				.Append(this.Address2.ToMySqlField()).Append(",")
+				.Append(this.City.ToMySqlField()).Append(",")
+				.Append(this.State.ToMySqlField()).Append(",")
+				.Append(this.PostalCode.ToMySqlField()).Append(",")
+				.Append(this.Country.ToMySqlField()).Append(",")
+				.Append(this.Telephone.ToMySqlField()).Append(",")
+				.Append(this.email.ToMySqlField()).Append(",")
+				.Append(this.CustomerPrePaid.ToMySqlField()).Append(",")
+				.Append(this.PartnerType.ToMySqlField()).Append(",")
+				.Append(this.billingdate.ToMySqlField()).Append(",")
+				.Append(this.AllowedDaysForInvoicePayment.ToMySqlField()).Append(",")
+				.Append(this.timezone.ToMySqlField()).Append(",")
+				.Append(this.date1.ToMySqlField()).Append(",")
+				.Append(this.field1.ToMySqlField()).Append(",")
+				.Append(this.field2.ToMySqlField()).Append(",")
+				.Append(this.field3.ToMySqlField()).Append(",")
+				.Append(this.field4.ToMySqlField()).Append(",")
+				.Append(this.field5.ToMySqlField()).Append(",")
+				.Append(this.refasr.ToMySqlField()).Append(",")
+				.Append(this.refacd.ToMySqlField()).Append(",")
+				.Append(this.refccr.ToMySqlField()).Append(",")
+				.Append(this.refccrbycc.ToMySqlField()).Append(",")
+				.Append(this.refpdd.ToMySqlField()).Append(",")
+				.Append(this.refasrfas.ToMySqlField()).Append(",")
+				.Append(this.DefaultCurrency.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<partner,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<partner,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<partner,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<partner,string> whereClauseMethod)
 		{
-			return $@"update partner set 
-				idPartner={idPartner.ToMySqlField()+" "},
-				PartnerName={PartnerName.ToMySqlField()+" "},
-				Address1={Address1.ToMySqlField()+" "},
-				Address2={Address2.ToMySqlField()+" "},
-				City={City.ToMySqlField()+" "},
-				State={State.ToMySqlField()+" "},
-				PostalCode={PostalCode.ToMySqlField()+" "},
-				Country={Country.ToMySqlField()+" "},
-				Telephone={Telephone.ToMySqlField()+" "},
-				email={email.ToMySqlField()+" "},
-				CustomerPrePaid={CustomerPrePaid.ToMySqlField()+" "},
-				PartnerType={PartnerType.ToMySqlField()+" "},
-				billingdate={billingdate.ToMySqlField()+" "},
-				AllowedDaysForInvoicePayment={AllowedDaysForInvoicePayment.ToMySqlField()+" "},
-				timezone={timezone.ToMySqlField()+" "},
-				date1={date1.ToMySqlField()+" "},
-				field1={field1.ToMySqlField()+" "},
-				field2={field2.ToMySqlField()+" "},
-				field3={field3.ToMySqlField()+" "},
-				field4={field4.ToMySqlField()+" "},
-				field5={field5.ToMySqlField()+" "},
-				refasr={refasr.ToMySqlField()+" "},
-				refacd={refacd.ToMySqlField()+" "},
-				refccr={refccr.ToMySqlField()+" "},
-				refccrbycc={refccrbycc.ToMySqlField()+" "},
-				refpdd={refpdd.ToMySqlField()+" "},
-				refasrfas={refasrfas.ToMySqlField()+" "},
-				DefaultCurrency={DefaultCurrency.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update partner set ")
+				.Append("idPartner=").Append(this.idPartner.ToMySqlField()).Append(",")
+				.Append("PartnerName=").Append(this.PartnerName.ToMySqlField()).Append(",")
+				.Append("Address1=").Append(this.Address1.ToMySqlField()).Append(",")
+				.Append("Address2=").Append(this.Address2.ToMySqlField()).Append(",")
+				.Append("City=").Append(this.City.ToMySqlField()).Append(",")
+				.Append("State=").Append(this.State.ToMySqlField()).Append(",")
+				.Append("PostalCode=").Append(this.PostalCode.ToMySqlField()).Append(",")
+				.Append("Country=").Append(this.Country.ToMySqlField()).Append(",")
+				.Append("Telephone=").Append(this.Telephone.ToMySqlField()).Append(",")
+				.Append("email=").Append(this.email.ToMySqlField()).Append(",")
+				.Append("CustomerPrePaid=").Append(this.CustomerPrePaid.ToMySqlField()).Append(",")
+				.Append("PartnerType=").Append(this.PartnerType.ToMySqlField()).Append(",")
+				.Append("billingdate=").Append(this.billingdate.ToMySqlField()).Append(",")
+				.Append("AllowedDaysForInvoicePayment=").Append(this.AllowedDaysForInvoicePayment.ToMySqlField()).Append(",")
+				.Append("timezone=").Append(this.timezone.ToMySqlField()).Append(",")
+				.Append("date1=").Append(this.date1.ToMySqlField()).Append(",")
+				.Append("field1=").Append(this.field1.ToMySqlField()).Append(",")
+				.Append("field2=").Append(this.field2.ToMySqlField()).Append(",")
+				.Append("field3=").Append(this.field3.ToMySqlField()).Append(",")
+				.Append("field4=").Append(this.field4.ToMySqlField()).Append(",")
+				.Append("field5=").Append(this.field5.ToMySqlField()).Append(",")
+				.Append("refasr=").Append(this.refasr.ToMySqlField()).Append(",")
+				.Append("refacd=").Append(this.refacd.ToMySqlField()).Append(",")
+				.Append("refccr=").Append(this.refccr.ToMySqlField()).Append(",")
+				.Append("refccrbycc=").Append(this.refccrbycc.ToMySqlField()).Append(",")
+				.Append("refpdd=").Append(this.refpdd.ToMySqlField()).Append(",")
+				.Append("refasrfas=").Append(this.refasrfas.ToMySqlField()).Append(",")
+				.Append("DefaultCurrency=").Append(this.DefaultCurrency.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<partner,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<partner,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<partner,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<partner,string> whereClauseMethod)
 		{
-			return $@"delete from partner 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from partner 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

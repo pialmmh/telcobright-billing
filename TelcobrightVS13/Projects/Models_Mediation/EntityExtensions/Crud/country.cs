@@ -8,34 +8,33 @@ namespace MediationModel
 {
 	public partial class country:ICacheble<country>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{country_code.ToMySqlField()},
-				{country_name.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.country_code.ToMySqlField()).Append(",")
+				.Append(this.country_name.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<country,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<country,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<country,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<country,string> whereClauseMethod)
 		{
-			return $@"update country set 
-				country_code={country_code.ToMySqlField()+" "},
-				country_name={country_name.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update country set ")
+				.Append("country_code=").Append(this.country_code.ToMySqlField()).Append(",")
+				.Append("country_name=").Append(this.country_name.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<country,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<country,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<country,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<country,string> whereClauseMethod)
 		{
-			return $@"delete from country 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from country 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

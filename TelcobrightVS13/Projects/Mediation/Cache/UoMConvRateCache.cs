@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using MediationModel;
 
 namespace TelcobrightMediation
@@ -9,9 +10,9 @@ namespace TelcobrightMediation
     public class UoMConvRateCache : AbstractCache<uom_conversion_dated,string>//string=acc name
     {
         public UoMConvRateCache(Func<uom_conversion_dated, string> dictionaryKeyGenerator,
-            Func<uom_conversion_dated, string> insertCommandGenerator,
-            Func<uom_conversion_dated, string> updateWherePartGenerator,
-            Func<uom_conversion_dated, string> deleteommandGenerator)
+            Func<uom_conversion_dated, StringBuilder> insertCommandGenerator,
+            Func<uom_conversion_dated, StringBuilder> updateWherePartGenerator,
+            Func<uom_conversion_dated, StringBuilder> deleteommandGenerator)
             : base(dictionaryKeyGenerator, insertCommandGenerator, updateWherePartGenerator,deleteommandGenerator) { }//pass to base
         public override void PopulateCache(Func<Dictionary<string, uom_conversion_dated>> methodToPopulate)
         {

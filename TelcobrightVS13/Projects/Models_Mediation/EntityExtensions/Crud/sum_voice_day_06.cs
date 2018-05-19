@@ -8,126 +8,125 @@ namespace MediationModel
 {
 	public partial class sum_voice_day_06:ICacheble<sum_voice_day_06>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{tup_switchid.ToMySqlField()},
-				{tup_inpartnerid.ToMySqlField()},
-				{tup_outpartnerid.ToMySqlField()},
-				{tup_incomingroute.ToMySqlField()},
-				{tup_outgoingroute.ToMySqlField()},
-				{tup_customerrate.ToMySqlField()},
-				{tup_supplierrate.ToMySqlField()},
-				{tup_incomingip.ToMySqlField()},
-				{tup_outgoingip.ToMySqlField()},
-				{tup_countryorareacode.ToMySqlField()},
-				{tup_matchedprefixcustomer.ToMySqlField()},
-				{tup_matchedprefixsupplier.ToMySqlField()},
-				{tup_sourceId.ToMySqlField()},
-				{tup_destinationId.ToMySqlField()},
-				{tup_customercurrency.ToMySqlField()},
-				{tup_suppliercurrency.ToMySqlField()},
-				{tup_tax1currency.ToMySqlField()},
-				{tup_tax2currency.ToMySqlField()},
-				{tup_vatcurrency.ToMySqlField()},
-				{tup_starttime.ToMySqlField()},
-				{totalcalls.ToMySqlField()},
-				{connectedcalls.ToMySqlField()},
-				{connectedcallsCC.ToMySqlField()},
-				{successfulcalls.ToMySqlField()},
-				{actualduration.ToMySqlField()},
-				{roundedduration.ToMySqlField()},
-				{duration1.ToMySqlField()},
-				{duration2.ToMySqlField()},
-				{duration3.ToMySqlField()},
-				{PDD.ToMySqlField()},
-				{customercost.ToMySqlField()},
-				{suppliercost.ToMySqlField()},
-				{tax1.ToMySqlField()},
-				{tax2.ToMySqlField()},
-				{vat.ToMySqlField()},
-				{intAmount1.ToMySqlField()},
-				{intAmount2.ToMySqlField()},
-				{longAmount1.ToMySqlField()},
-				{longAmount2.ToMySqlField()},
-				{longDecimalAmount1.ToMySqlField()},
-				{longDecimalAmount2.ToMySqlField()},
-				{intAmount3.ToMySqlField()},
-				{longAmount3.ToMySqlField()},
-				{longDecimalAmount3.ToMySqlField()},
-				{decimalAmount1.ToMySqlField()},
-				{decimalAmount2.ToMySqlField()},
-				{decimalAmount3.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.tup_switchid.ToMySqlField()).Append(",")
+				.Append(this.tup_inpartnerid.ToMySqlField()).Append(",")
+				.Append(this.tup_outpartnerid.ToMySqlField()).Append(",")
+				.Append(this.tup_incomingroute.ToMySqlField()).Append(",")
+				.Append(this.tup_outgoingroute.ToMySqlField()).Append(",")
+				.Append(this.tup_customerrate.ToMySqlField()).Append(",")
+				.Append(this.tup_supplierrate.ToMySqlField()).Append(",")
+				.Append(this.tup_incomingip.ToMySqlField()).Append(",")
+				.Append(this.tup_outgoingip.ToMySqlField()).Append(",")
+				.Append(this.tup_countryorareacode.ToMySqlField()).Append(",")
+				.Append(this.tup_matchedprefixcustomer.ToMySqlField()).Append(",")
+				.Append(this.tup_matchedprefixsupplier.ToMySqlField()).Append(",")
+				.Append(this.tup_sourceId.ToMySqlField()).Append(",")
+				.Append(this.tup_destinationId.ToMySqlField()).Append(",")
+				.Append(this.tup_customercurrency.ToMySqlField()).Append(",")
+				.Append(this.tup_suppliercurrency.ToMySqlField()).Append(",")
+				.Append(this.tup_tax1currency.ToMySqlField()).Append(",")
+				.Append(this.tup_tax2currency.ToMySqlField()).Append(",")
+				.Append(this.tup_vatcurrency.ToMySqlField()).Append(",")
+				.Append(this.tup_starttime.ToMySqlField()).Append(",")
+				.Append(this.totalcalls.ToMySqlField()).Append(",")
+				.Append(this.connectedcalls.ToMySqlField()).Append(",")
+				.Append(this.connectedcallsCC.ToMySqlField()).Append(",")
+				.Append(this.successfulcalls.ToMySqlField()).Append(",")
+				.Append(this.actualduration.ToMySqlField()).Append(",")
+				.Append(this.roundedduration.ToMySqlField()).Append(",")
+				.Append(this.duration1.ToMySqlField()).Append(",")
+				.Append(this.duration2.ToMySqlField()).Append(",")
+				.Append(this.duration3.ToMySqlField()).Append(",")
+				.Append(this.PDD.ToMySqlField()).Append(",")
+				.Append(this.customercost.ToMySqlField()).Append(",")
+				.Append(this.suppliercost.ToMySqlField()).Append(",")
+				.Append(this.tax1.ToMySqlField()).Append(",")
+				.Append(this.tax2.ToMySqlField()).Append(",")
+				.Append(this.vat.ToMySqlField()).Append(",")
+				.Append(this.intAmount1.ToMySqlField()).Append(",")
+				.Append(this.intAmount2.ToMySqlField()).Append(",")
+				.Append(this.longAmount1.ToMySqlField()).Append(",")
+				.Append(this.longAmount2.ToMySqlField()).Append(",")
+				.Append(this.longDecimalAmount1.ToMySqlField()).Append(",")
+				.Append(this.longDecimalAmount2.ToMySqlField()).Append(",")
+				.Append(this.intAmount3.ToMySqlField()).Append(",")
+				.Append(this.longAmount3.ToMySqlField()).Append(",")
+				.Append(this.longDecimalAmount3.ToMySqlField()).Append(",")
+				.Append(this.decimalAmount1.ToMySqlField()).Append(",")
+				.Append(this.decimalAmount2.ToMySqlField()).Append(",")
+				.Append(this.decimalAmount3.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<sum_voice_day_06,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<sum_voice_day_06,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<sum_voice_day_06,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<sum_voice_day_06,string> whereClauseMethod)
 		{
-			return $@"update sum_voice_day_06 set 
-				id={id.ToMySqlField()+" "},
-				tup_switchid={tup_switchid.ToMySqlField()+" "},
-				tup_inpartnerid={tup_inpartnerid.ToMySqlField()+" "},
-				tup_outpartnerid={tup_outpartnerid.ToMySqlField()+" "},
-				tup_incomingroute={tup_incomingroute.ToMySqlField()+" "},
-				tup_outgoingroute={tup_outgoingroute.ToMySqlField()+" "},
-				tup_customerrate={tup_customerrate.ToMySqlField()+" "},
-				tup_supplierrate={tup_supplierrate.ToMySqlField()+" "},
-				tup_incomingip={tup_incomingip.ToMySqlField()+" "},
-				tup_outgoingip={tup_outgoingip.ToMySqlField()+" "},
-				tup_countryorareacode={tup_countryorareacode.ToMySqlField()+" "},
-				tup_matchedprefixcustomer={tup_matchedprefixcustomer.ToMySqlField()+" "},
-				tup_matchedprefixsupplier={tup_matchedprefixsupplier.ToMySqlField()+" "},
-				tup_sourceId={tup_sourceId.ToMySqlField()+" "},
-				tup_destinationId={tup_destinationId.ToMySqlField()+" "},
-				tup_customercurrency={tup_customercurrency.ToMySqlField()+" "},
-				tup_suppliercurrency={tup_suppliercurrency.ToMySqlField()+" "},
-				tup_tax1currency={tup_tax1currency.ToMySqlField()+" "},
-				tup_tax2currency={tup_tax2currency.ToMySqlField()+" "},
-				tup_vatcurrency={tup_vatcurrency.ToMySqlField()+" "},
-				tup_starttime={tup_starttime.ToMySqlField()+" "},
-				totalcalls={totalcalls.ToMySqlField()+" "},
-				connectedcalls={connectedcalls.ToMySqlField()+" "},
-				connectedcallsCC={connectedcallsCC.ToMySqlField()+" "},
-				successfulcalls={successfulcalls.ToMySqlField()+" "},
-				actualduration={actualduration.ToMySqlField()+" "},
-				roundedduration={roundedduration.ToMySqlField()+" "},
-				duration1={duration1.ToMySqlField()+" "},
-				duration2={duration2.ToMySqlField()+" "},
-				duration3={duration3.ToMySqlField()+" "},
-				PDD={PDD.ToMySqlField()+" "},
-				customercost={customercost.ToMySqlField()+" "},
-				suppliercost={suppliercost.ToMySqlField()+" "},
-				tax1={tax1.ToMySqlField()+" "},
-				tax2={tax2.ToMySqlField()+" "},
-				vat={vat.ToMySqlField()+" "},
-				intAmount1={intAmount1.ToMySqlField()+" "},
-				intAmount2={intAmount2.ToMySqlField()+" "},
-				longAmount1={longAmount1.ToMySqlField()+" "},
-				longAmount2={longAmount2.ToMySqlField()+" "},
-				longDecimalAmount1={longDecimalAmount1.ToMySqlField()+" "},
-				longDecimalAmount2={longDecimalAmount2.ToMySqlField()+" "},
-				intAmount3={intAmount3.ToMySqlField()+" "},
-				longAmount3={longAmount3.ToMySqlField()+" "},
-				longDecimalAmount3={longDecimalAmount3.ToMySqlField()+" "},
-				decimalAmount1={decimalAmount1.ToMySqlField()+" "},
-				decimalAmount2={decimalAmount2.ToMySqlField()+" "},
-				decimalAmount3={decimalAmount3.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update sum_voice_day_06 set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("tup_switchid=").Append(this.tup_switchid.ToMySqlField()).Append(",")
+				.Append("tup_inpartnerid=").Append(this.tup_inpartnerid.ToMySqlField()).Append(",")
+				.Append("tup_outpartnerid=").Append(this.tup_outpartnerid.ToMySqlField()).Append(",")
+				.Append("tup_incomingroute=").Append(this.tup_incomingroute.ToMySqlField()).Append(",")
+				.Append("tup_outgoingroute=").Append(this.tup_outgoingroute.ToMySqlField()).Append(",")
+				.Append("tup_customerrate=").Append(this.tup_customerrate.ToMySqlField()).Append(",")
+				.Append("tup_supplierrate=").Append(this.tup_supplierrate.ToMySqlField()).Append(",")
+				.Append("tup_incomingip=").Append(this.tup_incomingip.ToMySqlField()).Append(",")
+				.Append("tup_outgoingip=").Append(this.tup_outgoingip.ToMySqlField()).Append(",")
+				.Append("tup_countryorareacode=").Append(this.tup_countryorareacode.ToMySqlField()).Append(",")
+				.Append("tup_matchedprefixcustomer=").Append(this.tup_matchedprefixcustomer.ToMySqlField()).Append(",")
+				.Append("tup_matchedprefixsupplier=").Append(this.tup_matchedprefixsupplier.ToMySqlField()).Append(",")
+				.Append("tup_sourceId=").Append(this.tup_sourceId.ToMySqlField()).Append(",")
+				.Append("tup_destinationId=").Append(this.tup_destinationId.ToMySqlField()).Append(",")
+				.Append("tup_customercurrency=").Append(this.tup_customercurrency.ToMySqlField()).Append(",")
+				.Append("tup_suppliercurrency=").Append(this.tup_suppliercurrency.ToMySqlField()).Append(",")
+				.Append("tup_tax1currency=").Append(this.tup_tax1currency.ToMySqlField()).Append(",")
+				.Append("tup_tax2currency=").Append(this.tup_tax2currency.ToMySqlField()).Append(",")
+				.Append("tup_vatcurrency=").Append(this.tup_vatcurrency.ToMySqlField()).Append(",")
+				.Append("tup_starttime=").Append(this.tup_starttime.ToMySqlField()).Append(",")
+				.Append("totalcalls=").Append(this.totalcalls.ToMySqlField()).Append(",")
+				.Append("connectedcalls=").Append(this.connectedcalls.ToMySqlField()).Append(",")
+				.Append("connectedcallsCC=").Append(this.connectedcallsCC.ToMySqlField()).Append(",")
+				.Append("successfulcalls=").Append(this.successfulcalls.ToMySqlField()).Append(",")
+				.Append("actualduration=").Append(this.actualduration.ToMySqlField()).Append(",")
+				.Append("roundedduration=").Append(this.roundedduration.ToMySqlField()).Append(",")
+				.Append("duration1=").Append(this.duration1.ToMySqlField()).Append(",")
+				.Append("duration2=").Append(this.duration2.ToMySqlField()).Append(",")
+				.Append("duration3=").Append(this.duration3.ToMySqlField()).Append(",")
+				.Append("PDD=").Append(this.PDD.ToMySqlField()).Append(",")
+				.Append("customercost=").Append(this.customercost.ToMySqlField()).Append(",")
+				.Append("suppliercost=").Append(this.suppliercost.ToMySqlField()).Append(",")
+				.Append("tax1=").Append(this.tax1.ToMySqlField()).Append(",")
+				.Append("tax2=").Append(this.tax2.ToMySqlField()).Append(",")
+				.Append("vat=").Append(this.vat.ToMySqlField()).Append(",")
+				.Append("intAmount1=").Append(this.intAmount1.ToMySqlField()).Append(",")
+				.Append("intAmount2=").Append(this.intAmount2.ToMySqlField()).Append(",")
+				.Append("longAmount1=").Append(this.longAmount1.ToMySqlField()).Append(",")
+				.Append("longAmount2=").Append(this.longAmount2.ToMySqlField()).Append(",")
+				.Append("longDecimalAmount1=").Append(this.longDecimalAmount1.ToMySqlField()).Append(",")
+				.Append("longDecimalAmount2=").Append(this.longDecimalAmount2.ToMySqlField()).Append(",")
+				.Append("intAmount3=").Append(this.intAmount3.ToMySqlField()).Append(",")
+				.Append("longAmount3=").Append(this.longAmount3.ToMySqlField()).Append(",")
+				.Append("longDecimalAmount3=").Append(this.longDecimalAmount3.ToMySqlField()).Append(",")
+				.Append("decimalAmount1=").Append(this.decimalAmount1.ToMySqlField()).Append(",")
+				.Append("decimalAmount2=").Append(this.decimalAmount2.ToMySqlField()).Append(",")
+				.Append("decimalAmount3=").Append(this.decimalAmount3.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<sum_voice_day_06,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<sum_voice_day_06,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<sum_voice_day_06,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<sum_voice_day_06,string> whereClauseMethod)
 		{
-			return $@"delete from sum_voice_day_06 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from sum_voice_day_06 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

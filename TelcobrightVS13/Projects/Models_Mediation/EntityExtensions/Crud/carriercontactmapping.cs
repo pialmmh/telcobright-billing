@@ -8,58 +8,57 @@ namespace MediationModel
 {
 	public partial class carriercontactmapping:ICacheble<carriercontactmapping>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{idCarrierContactMapping.ToMySqlField()},
-				{Name.ToMySqlField()},
-				{Designation.ToMySqlField()},
-				{Department.ToMySqlField()},
-				{OfficePhone.ToMySqlField()},
-				{Mobile.ToMySqlField()},
-				{email.ToMySqlField()},
-				{idCarrier.ToMySqlField()},
-				{date1.ToMySqlField()},
-				{field1.ToMySqlField()},
-				{field2.ToMySqlField()},
-				{field3.ToMySqlField()},
-				{field4.ToMySqlField()},
-				{field5.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.idCarrierContactMapping.ToMySqlField()).Append(",")
+				.Append(this.Name.ToMySqlField()).Append(",")
+				.Append(this.Designation.ToMySqlField()).Append(",")
+				.Append(this.Department.ToMySqlField()).Append(",")
+				.Append(this.OfficePhone.ToMySqlField()).Append(",")
+				.Append(this.Mobile.ToMySqlField()).Append(",")
+				.Append(this.email.ToMySqlField()).Append(",")
+				.Append(this.idCarrier.ToMySqlField()).Append(",")
+				.Append(this.date1.ToMySqlField()).Append(",")
+				.Append(this.field1.ToMySqlField()).Append(",")
+				.Append(this.field2.ToMySqlField()).Append(",")
+				.Append(this.field3.ToMySqlField()).Append(",")
+				.Append(this.field4.ToMySqlField()).Append(",")
+				.Append(this.field5.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<carriercontactmapping,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<carriercontactmapping,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<carriercontactmapping,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<carriercontactmapping,string> whereClauseMethod)
 		{
-			return $@"update carriercontactmapping set 
-				idCarrierContactMapping={idCarrierContactMapping.ToMySqlField()+" "},
-				Name={Name.ToMySqlField()+" "},
-				Designation={Designation.ToMySqlField()+" "},
-				Department={Department.ToMySqlField()+" "},
-				OfficePhone={OfficePhone.ToMySqlField()+" "},
-				Mobile={Mobile.ToMySqlField()+" "},
-				email={email.ToMySqlField()+" "},
-				idCarrier={idCarrier.ToMySqlField()+" "},
-				date1={date1.ToMySqlField()+" "},
-				field1={field1.ToMySqlField()+" "},
-				field2={field2.ToMySqlField()+" "},
-				field3={field3.ToMySqlField()+" "},
-				field4={field4.ToMySqlField()+" "},
-				field5={field5.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update carriercontactmapping set ")
+				.Append("idCarrierContactMapping=").Append(this.idCarrierContactMapping.ToMySqlField()).Append(",")
+				.Append("Name=").Append(this.Name.ToMySqlField()).Append(",")
+				.Append("Designation=").Append(this.Designation.ToMySqlField()).Append(",")
+				.Append("Department=").Append(this.Department.ToMySqlField()).Append(",")
+				.Append("OfficePhone=").Append(this.OfficePhone.ToMySqlField()).Append(",")
+				.Append("Mobile=").Append(this.Mobile.ToMySqlField()).Append(",")
+				.Append("email=").Append(this.email.ToMySqlField()).Append(",")
+				.Append("idCarrier=").Append(this.idCarrier.ToMySqlField()).Append(",")
+				.Append("date1=").Append(this.date1.ToMySqlField()).Append(",")
+				.Append("field1=").Append(this.field1.ToMySqlField()).Append(",")
+				.Append("field2=").Append(this.field2.ToMySqlField()).Append(",")
+				.Append("field3=").Append(this.field3.ToMySqlField()).Append(",")
+				.Append("field4=").Append(this.field4.ToMySqlField()).Append(",")
+				.Append("field5=").Append(this.field5.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<carriercontactmapping,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<carriercontactmapping,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<carriercontactmapping,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<carriercontactmapping,string> whereClauseMethod)
 		{
-			return $@"delete from carriercontactmapping 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from carriercontactmapping 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

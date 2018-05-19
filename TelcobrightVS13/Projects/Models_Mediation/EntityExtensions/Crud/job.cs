@@ -8,66 +8,65 @@ namespace MediationModel
 {
 	public partial class job:ICacheble<job>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{idjobdefinition.ToMySqlField()},
-				{JobName.ToMySqlField()},
-				{OwnerServer.ToMySqlField()},
-				{idNE.ToMySqlField()},
-				{priority.ToMySqlField()},
-				{SerialNumber.ToMySqlField()},
-				{Status.ToMySqlField()},
-				{Progress.ToMySqlField()},
-				{CreationTime.ToMySqlField()},
-				{LastExecuted.ToMySqlField()},
-				{CompletionTime.ToMySqlField()},
-				{NoOfSteps.ToMySqlField()},
-				{JobSummary.ToMySqlField()},
-				{Error.ToMySqlField()},
-				{JobParameter.ToMySqlField()},
-				{JobState.ToMySqlField()},
-				{JobAdditionalInfo.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.idjobdefinition.ToMySqlField()).Append(",")
+				.Append(this.JobName.ToMySqlField()).Append(",")
+				.Append(this.OwnerServer.ToMySqlField()).Append(",")
+				.Append(this.idNE.ToMySqlField()).Append(",")
+				.Append(this.priority.ToMySqlField()).Append(",")
+				.Append(this.SerialNumber.ToMySqlField()).Append(",")
+				.Append(this.Status.ToMySqlField()).Append(",")
+				.Append(this.Progress.ToMySqlField()).Append(",")
+				.Append(this.CreationTime.ToMySqlField()).Append(",")
+				.Append(this.LastExecuted.ToMySqlField()).Append(",")
+				.Append(this.CompletionTime.ToMySqlField()).Append(",")
+				.Append(this.NoOfSteps.ToMySqlField()).Append(",")
+				.Append(this.JobSummary.ToMySqlField()).Append(",")
+				.Append(this.Error.ToMySqlField()).Append(",")
+				.Append(this.JobParameter.ToMySqlField()).Append(",")
+				.Append(this.JobState.ToMySqlField()).Append(",")
+				.Append(this.JobAdditionalInfo.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<job,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<job,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<job,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<job,string> whereClauseMethod)
 		{
-			return $@"update job set 
-				id={id.ToMySqlField()+" "},
-				idjobdefinition={idjobdefinition.ToMySqlField()+" "},
-				JobName={JobName.ToMySqlField()+" "},
-				OwnerServer={OwnerServer.ToMySqlField()+" "},
-				idNE={idNE.ToMySqlField()+" "},
-				priority={priority.ToMySqlField()+" "},
-				SerialNumber={SerialNumber.ToMySqlField()+" "},
-				Status={Status.ToMySqlField()+" "},
-				Progress={Progress.ToMySqlField()+" "},
-				CreationTime={CreationTime.ToMySqlField()+" "},
-				LastExecuted={LastExecuted.ToMySqlField()+" "},
-				CompletionTime={CompletionTime.ToMySqlField()+" "},
-				NoOfSteps={NoOfSteps.ToMySqlField()+" "},
-				JobSummary={JobSummary.ToMySqlField()+" "},
-				Error={Error.ToMySqlField()+" "},
-				JobParameter={JobParameter.ToMySqlField()+" "},
-				JobState={JobState.ToMySqlField()+" "},
-				JobAdditionalInfo={JobAdditionalInfo.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update job set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("idjobdefinition=").Append(this.idjobdefinition.ToMySqlField()).Append(",")
+				.Append("JobName=").Append(this.JobName.ToMySqlField()).Append(",")
+				.Append("OwnerServer=").Append(this.OwnerServer.ToMySqlField()).Append(",")
+				.Append("idNE=").Append(this.idNE.ToMySqlField()).Append(",")
+				.Append("priority=").Append(this.priority.ToMySqlField()).Append(",")
+				.Append("SerialNumber=").Append(this.SerialNumber.ToMySqlField()).Append(",")
+				.Append("Status=").Append(this.Status.ToMySqlField()).Append(",")
+				.Append("Progress=").Append(this.Progress.ToMySqlField()).Append(",")
+				.Append("CreationTime=").Append(this.CreationTime.ToMySqlField()).Append(",")
+				.Append("LastExecuted=").Append(this.LastExecuted.ToMySqlField()).Append(",")
+				.Append("CompletionTime=").Append(this.CompletionTime.ToMySqlField()).Append(",")
+				.Append("NoOfSteps=").Append(this.NoOfSteps.ToMySqlField()).Append(",")
+				.Append("JobSummary=").Append(this.JobSummary.ToMySqlField()).Append(",")
+				.Append("Error=").Append(this.Error.ToMySqlField()).Append(",")
+				.Append("JobParameter=").Append(this.JobParameter.ToMySqlField()).Append(",")
+				.Append("JobState=").Append(this.JobState.ToMySqlField()).Append(",")
+				.Append("JobAdditionalInfo=").Append(this.JobAdditionalInfo.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<job,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<job,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<job,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<job,string> whereClauseMethod)
 		{
-			return $@"delete from job 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from job 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

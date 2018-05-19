@@ -8,36 +8,35 @@ namespace MediationModel
 {
 	public partial class enumjobautocreatetype:ICacheble<enumjobautocreatetype>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{Type.ToMySqlField()},
-				{Description.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.Type.ToMySqlField()).Append(",")
+				.Append(this.Description.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<enumjobautocreatetype,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<enumjobautocreatetype,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<enumjobautocreatetype,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<enumjobautocreatetype,string> whereClauseMethod)
 		{
-			return $@"update enumjobautocreatetype set 
-				id={id.ToMySqlField()+" "},
-				Type={Type.ToMySqlField()+" "},
-				Description={Description.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update enumjobautocreatetype set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("Type=").Append(this.Type.ToMySqlField()).Append(",")
+				.Append("Description=").Append(this.Description.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<enumjobautocreatetype,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<enumjobautocreatetype,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<enumjobautocreatetype,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<enumjobautocreatetype,string> whereClauseMethod)
 		{
-			return $@"delete from enumjobautocreatetype 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from enumjobautocreatetype 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

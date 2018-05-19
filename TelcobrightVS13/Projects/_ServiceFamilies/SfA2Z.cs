@@ -107,6 +107,10 @@ namespace ServiceFamilies
         {
             taxAmount = Convert.ToDecimal(cdr.InPartnerCost) *
                                 Convert.ToDecimal(rateWithAssignmentTupleId.OtherAmount3) / 100;
+            if (taxAmount>0)
+            {
+                taxAmount = decimal.Round(taxAmount, serviceContext.MaxDecimalPrecision);
+            }
             if (serviceContext.AssignDir == ServiceAssignmentDirection.Customer)
             {
                 cdr.Tax1 = taxAmount;

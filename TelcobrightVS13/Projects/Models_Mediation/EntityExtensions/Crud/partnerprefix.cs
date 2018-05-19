@@ -8,40 +8,39 @@ namespace MediationModel
 {
 	public partial class partnerprefix:ICacheble<partnerprefix>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{idPartner.ToMySqlField()},
-				{PrefixType.ToMySqlField()},
-				{Prefix.ToMySqlField()},
-				{CommonTG.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.idPartner.ToMySqlField()).Append(",")
+				.Append(this.PrefixType.ToMySqlField()).Append(",")
+				.Append(this.Prefix.ToMySqlField()).Append(",")
+				.Append(this.CommonTG.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<partnerprefix,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<partnerprefix,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<partnerprefix,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<partnerprefix,string> whereClauseMethod)
 		{
-			return $@"update partnerprefix set 
-				id={id.ToMySqlField()+" "},
-				idPartner={idPartner.ToMySqlField()+" "},
-				PrefixType={PrefixType.ToMySqlField()+" "},
-				Prefix={Prefix.ToMySqlField()+" "},
-				CommonTG={CommonTG.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update partnerprefix set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("idPartner=").Append(this.idPartner.ToMySqlField()).Append(",")
+				.Append("PrefixType=").Append(this.PrefixType.ToMySqlField()).Append(",")
+				.Append("Prefix=").Append(this.Prefix.ToMySqlField()).Append(",")
+				.Append("CommonTG=").Append(this.CommonTG.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<partnerprefix,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<partnerprefix,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<partnerprefix,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<partnerprefix,string> whereClauseMethod)
 		{
-			return $@"delete from partnerprefix 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from partnerprefix 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

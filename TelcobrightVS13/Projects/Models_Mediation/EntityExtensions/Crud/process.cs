@@ -8,40 +8,39 @@ namespace MediationModel
 {
 	public partial class process:ICacheble<process>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{ProcessName.ToMySqlField()},
-				{LastRun.ToMySqlField()},
-				{ProcessParamaterJson.ToMySqlField()},
-				{AdminState.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.ProcessName.ToMySqlField()).Append(",")
+				.Append(this.LastRun.ToMySqlField()).Append(",")
+				.Append(this.ProcessParamaterJson.ToMySqlField()).Append(",")
+				.Append(this.AdminState.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<process,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<process,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<process,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<process,string> whereClauseMethod)
 		{
-			return $@"update process set 
-				id={id.ToMySqlField()+" "},
-				ProcessName={ProcessName.ToMySqlField()+" "},
-				LastRun={LastRun.ToMySqlField()+" "},
-				ProcessParamaterJson={ProcessParamaterJson.ToMySqlField()+" "},
-				AdminState={AdminState.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update process set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("ProcessName=").Append(this.ProcessName.ToMySqlField()).Append(",")
+				.Append("LastRun=").Append(this.LastRun.ToMySqlField()).Append(",")
+				.Append("ProcessParamaterJson=").Append(this.ProcessParamaterJson.ToMySqlField()).Append(",")
+				.Append("AdminState=").Append(this.AdminState.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<process,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<process,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<process,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<process,string> whereClauseMethod)
 		{
-			return $@"delete from process 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from process 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

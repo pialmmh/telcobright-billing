@@ -8,34 +8,33 @@ namespace MediationModel
 {
 	public partial class ansprefixextra:ICacheble<ansprefixextra>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{PrefixBeforeAnsNumber.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.PrefixBeforeAnsNumber.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<ansprefixextra,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<ansprefixextra,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<ansprefixextra,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<ansprefixextra,string> whereClauseMethod)
 		{
-			return $@"update ansprefixextra set 
-				id={id.ToMySqlField()+" "},
-				PrefixBeforeAnsNumber={PrefixBeforeAnsNumber.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update ansprefixextra set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("PrefixBeforeAnsNumber=").Append(this.PrefixBeforeAnsNumber.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<ansprefixextra,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<ansprefixextra,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<ansprefixextra,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<ansprefixextra,string> whereClauseMethod)
 		{
-			return $@"delete from ansprefixextra 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from ansprefixextra 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

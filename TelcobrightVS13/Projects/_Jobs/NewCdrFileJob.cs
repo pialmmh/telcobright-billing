@@ -117,6 +117,28 @@ namespace Jobs
             //code reaching here means no error
             using (DbCommand cmd = ConnectionManager.CreateCommandFromDbContext(this.Input.Context))
             {
+                //todo: remove tmp code
+                //if (this.Input.TelcobrightJob.JobName == "ICX20180216174067353.DAT")
+                //{
+                //    int x = 1;
+                //}
+                decimal cdrDUration = this.Input.Context.Database
+                    .SqlQuery<decimal>($@"select sum(durationsec) actualduration
+                     from cdr;").First();
+                decimal summaryDuration = this.Input.Context.Database.SqlQuery<decimal>(
+                    $@"select sum(actualduration) actualduration from
+(
+select sum(actualduration) actualduration, sum(roundedduration) roundedduration, sum(duration1) duration1, sum(duration2) duration2, sum(duration3) duration3 from sum_voice_day_01 union all
+select sum(actualduration) actualduration, sum(roundedduration) roundedduration, sum(duration1) duration1, sum(duration2) duration2, sum(duration3) duration3 from sum_voice_day_02 union all
+select sum(actualduration) actualduration, sum(roundedduration) roundedduration, sum(duration1) duration1, sum(duration2) duration2, sum(duration3) duration3 from sum_voice_day_03 union all
+select sum(actualduration) actualduration, sum(roundedduration) roundedduration, sum(duration1) duration1, sum(duration2) duration2, sum(duration3) duration3 from sum_voice_day_04
+) dayWiseSummaries;").First();
+
+                if (cdrDUration != summaryDuration)
+                {
+                    throw new Exception("Mismatch");
+                }
+                //end temp code
                 cmd.CommandText = " commit; ";
                 cmd.ExecuteNonQuery();
             }

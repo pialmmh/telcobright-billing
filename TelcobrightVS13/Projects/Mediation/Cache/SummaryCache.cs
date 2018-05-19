@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using MediationModel;
 using Spring.Core;
 
@@ -16,9 +17,9 @@ namespace TelcobrightMediation
         private readonly object locker=new object();
         private AutoIncrementManager AutoIncrementManager { get; }
         public SummaryCache(string entityName,AutoIncrementManager autoIncrementManager , Func<TEntity, TKey> dictionaryKeyGenerator,
-            Func<TEntity, string> insertCommandGenerator,
-            Func<TEntity, string> updateCommandGenerator,
-            Func<TEntity, string> deleteCommandGenerator)
+            Func<TEntity, StringBuilder> insertCommandGenerator,
+            Func<TEntity, StringBuilder> updateCommandGenerator,
+            Func<TEntity, StringBuilder> deleteCommandGenerator)
             : base(dictionaryKeyGenerator, insertCommandGenerator, updateCommandGenerator,deleteCommandGenerator)//Constructor
         {
             this.EntityOrTableName = entityName;

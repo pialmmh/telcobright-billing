@@ -12,10 +12,10 @@ namespace TelcobrightMediation
 {
     public abstract class AbstractCache<TEntity, TKey> : ICache where TEntity : ICacheble<TEntity>
     {
-        private readonly object _locker = new object();
+        private readonly object locker = new object();
         protected AbstractCache(Func<TEntity, TKey> dictionaryKeyGenerator,
-            Func<TEntity, string> insertCommandGenerator,
-            Func<TEntity, string> updateCommandGenerator, Func<TEntity, string> deleteCommandGenerator)
+            Func<TEntity, StringBuilder> insertCommandGenerator,
+            Func<TEntity, StringBuilder> updateCommandGenerator, Func<TEntity, StringBuilder> deleteCommandGenerator)
         {//constructor
             this.DictionaryKeyGenerator = dictionaryKeyGenerator;
             this.UpdateCommandGenerator = updateCommandGenerator;
@@ -23,9 +23,9 @@ namespace TelcobrightMediation
             this.DeleteCommandGenerator = deleteCommandGenerator;
         }
         public Func<TEntity, TKey> DictionaryKeyGenerator { get; protected set; }
-        public Func<TEntity, string> InsertCommandGenerator { get; protected set; }
-        public Func<TEntity, string> UpdateCommandGenerator { get; protected set; }
-        public Func<TEntity, string> DeleteCommandGenerator { get; protected set; }
+        public Func<TEntity, StringBuilder> InsertCommandGenerator { get; protected set; }
+        public Func<TEntity, StringBuilder> UpdateCommandGenerator { get; protected set; }
+        public Func<TEntity, StringBuilder> DeleteCommandGenerator { get; protected set; }
         public virtual string EntityOrTableName => typeof(TEntity).Name;
         protected ConcurrentDictionary<TKey, TEntity> Cache { get; } = new ConcurrentDictionary<TKey, TEntity>();
         protected readonly ConcurrentDictionary<TKey, TEntity> InsertedItems = new ConcurrentDictionary<TKey, TEntity>();
@@ -79,7 +79,7 @@ namespace TelcobrightMediation
         public int NumberOfDeletedItems => this.DeletedItems.Count;
         public virtual void Delete(TKey key)
         {
-            lock (this._locker)
+            lock (this.locker)
             {
                 TEntity toBeDeleted = default(TEntity);
                 this.Cache.TryGetValue(key, out toBeDeleted);
@@ -95,7 +95,7 @@ namespace TelcobrightMediation
         }
         public virtual void DeleteAll()
         {
-            lock (this._locker)
+            lock (this.locker)
             {
                 List<TKey> keys = this.Cache.Keys.ToList();
                 keys.ForEach(key => this.Delete(key));
@@ -103,7 +103,7 @@ namespace TelcobrightMediation
         }
         public virtual void UpdateThroughCache(TKey key, Action<TEntity> entityUpdater)
         {
-            lock (this._locker)
+            lock (this.locker)
             {
                 if (this.DeletedItems.ContainsKey(key) == true)
                     throw new Exception("Item to be updated already exists in deleted items which is not allowed");
@@ -120,7 +120,7 @@ namespace TelcobrightMediation
         }
         public virtual void AddExternallyUpdatedEntityToUpdatedItems(TEntity updatedEntity)
         {
-            lock (this._locker)
+            lock (this.locker)
             {
                 TKey key = this.DictionaryKeyGenerator(updatedEntity);
                 if (this.DeletedItems.ContainsKey(key) == true)
@@ -134,7 +134,7 @@ namespace TelcobrightMediation
         }
         public virtual CachedItem<TKey, TEntity> Insert(TEntity newItem, Func<TEntity, bool> pkValidationMethod)
         {
-            lock (this._locker)
+            lock (this.locker)
             {
                 TKey key = this.DictionaryKeyGenerator(newItem);
                 return InsertWithKey(newItem, key, pkValidationMethod);
@@ -143,7 +143,7 @@ namespace TelcobrightMediation
 
         public virtual CachedItem<TKey, TEntity> InsertWithKey(TEntity newItem, TKey key, Func<TEntity, bool> pkValidationMethod)
         {
-            lock (this._locker)
+            lock (this.locker)
             {
                 if (pkValidationMethod.Invoke(newItem) == false)
                     throw new Exception("Primary key is either missing or invalid.");
@@ -161,7 +161,7 @@ namespace TelcobrightMediation
 
         public virtual void WriteAllChanges(DbCommand cmd, int segmentSize)
         {
-            lock (this._locker)
+            lock (this.locker)
             {
                 this.WriteDeletes(cmd, segmentSize);
                 this.WriteInserts(cmd, segmentSize);
@@ -171,7 +171,7 @@ namespace TelcobrightMediation
 
         public virtual int WriteInserts(DbCommand cmd, int segmentSize)
         {
-            lock (this._locker)
+            lock (this.locker)
             {
                 int affectedRecordCount = 0;
                 if (this.InsertedItems.Any() == false) return affectedRecordCount;
@@ -180,26 +180,28 @@ namespace TelcobrightMediation
                     throw new Exception("InsertCommandGenerator is not set and null.");
                 }
                 string extInsertHeader = StaticExtInsertColumnParsedDic.GetParsedDic()[this.EntityOrTableName];
-                var sqls = this.GetInsertedItems().AsParallel().Select(c => this.InsertCommandGenerator(c)).ToList();
                 int startAt = 0;
-                CollectionSegmenter<string> segments = new CollectionSegmenter<string>(sqls, startAt);
+                CollectionSegmenter<TEntity> segments =
+                    new CollectionSegmenter<TEntity>(this.GetInsertedItems().AsParallel(), startAt);
                 segments.ExecuteMethodInSegments(segmentSize,
                     segment =>
                     {
-                        cmd.CommandText = (new StringBuilder(extInsertHeader).Append(string.Join(",", segment.AsParallel())))
-                            .ToString();
+                        var sqlsAsStringBuilders = segment.AsParallel().Select(c => this.InsertCommandGenerator(c));
+                        cmd.CommandText = new StringBuilder(extInsertHeader)
+                            .Append(StringBuilderJoiner.Join(",",sqlsAsStringBuilders)).ToString();
+
                         affectedRecordCount += cmd.ExecuteNonQuery();
                     });
-                this.InsertedItems.Clear();
-                if (affectedRecordCount != sqls.Count)
+                if (affectedRecordCount != this.InsertedItems.Count)
                     throw new Exception("Inserted records count does not match the same number in cache.");
+                this.InsertedItems.Clear();
                 return affectedRecordCount;
             }
         }
 
         public virtual void WriteUpdates(DbCommand cmd, int segmentSize)
         {
-            lock (this._locker)
+            lock (this.locker)
             {
                 if (this.UpdatedItems.Any() == false) return;
                 int updateWriteCount = 0;
@@ -207,13 +209,13 @@ namespace TelcobrightMediation
                 {
                     throw new Exception("UpdateCommandGenerator is null/not defined.");
                 }
-                var sqls = this.GetUpdatedItems().Select(c => this.UpdateCommandGenerator(c)).ToList();
                 int startAt = 0;
-                CollectionSegmenter<string> segments = new CollectionSegmenter<string>(sqls, startAt);
+                CollectionSegmenter<TEntity> segments = new CollectionSegmenter<TEntity>(this.GetUpdatedItems(), startAt);
                 segments.ExecuteMethodInSegments(segmentSize,
                     segment =>
                     {
-                        cmd.CommandText = (string.Join(String.Empty, segment)).ToString();
+                        var sqlsAsStringBuilders = segment.AsParallel().Select(c => this.UpdateCommandGenerator(c));
+                        cmd.CommandText = StringBuilderJoiner.Join(";", sqlsAsStringBuilders).ToString();
                         updateWriteCount += cmd.ExecuteNonQuery();
                     });
                 if (updateWriteCount != this.UpdatedItems.Count)
@@ -224,7 +226,7 @@ namespace TelcobrightMediation
 
         public virtual void WriteDeletes(DbCommand cmd, int segmentSize)
         {
-            lock (this._locker)
+            lock (this.locker)
             {
                 if (this.DeletedItems.Any() == false) return;
                 int deleteWriteCount = 0;
@@ -232,13 +234,13 @@ namespace TelcobrightMediation
                 {
                     throw new Exception("DeleteCommandGenerator is null/not defined.");
                 }
-                var sqls = this.GetDeletedItems().Select(c => this.DeleteCommandGenerator(c)).ToList();
                 int startAt = 0;
-                CollectionSegmenter<string> segments = new CollectionSegmenter<string>(sqls, startAt);
+                CollectionSegmenter<TEntity> segments = new CollectionSegmenter<TEntity>(this.GetDeletedItems(), startAt);
                 segments.ExecuteMethodInSegments(segmentSize,
                     segment =>
                     {
-                        cmd.CommandText = string.Join(String.Empty, segment).ToString();
+                        var sqlsAsStringBuilders = segment.AsParallel().Select(c => this.DeleteCommandGenerator(c));
+                        cmd.CommandText = StringBuilderJoiner.Join(";", sqlsAsStringBuilders).ToString();
                         deleteWriteCount+= cmd.ExecuteNonQuery();
                     });
                 if (deleteWriteCount != this.DeletedItems.Count)

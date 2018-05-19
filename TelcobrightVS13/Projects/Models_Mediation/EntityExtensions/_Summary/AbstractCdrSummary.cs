@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using LibraryExtensions;
 
 namespace MediationModel
@@ -60,94 +61,94 @@ namespace MediationModel
 		public CdrSummaryTuple GetTupleKey()
 		{
 			var tup3 = new ValueTuple<string, string, string, string, string, string>(
-				tup_tax1currency,
-				tup_tax2currency,
-				tup_vatcurrency,
-				tup_starttime.ToMySqlField(),
-				tup_customercurrency,
-				tup_suppliercurrency
+				this.tup_tax1currency,
+				this.tup_tax2currency,
+				this.tup_vatcurrency,
+				this.tup_starttime.ToMySqlField(),
+				this.tup_customercurrency,
+				this.tup_suppliercurrency
 				);
 			var tup2 = new ValueTuple<string, string, string, string, string, string, string,
 				ValueTuple<string, string, string, string, string, string>>(
-				tup_incomingip,
-				tup_outgoingip,
-				tup_countryorareacode,
-				tup_matchedprefixcustomer,
-				tup_matchedprefixsupplier,
-				tup_sourceId,
-				tup_destinationId,
+				this.tup_incomingip,
+				this.tup_outgoingip,
+				this.tup_countryorareacode,
+				this.tup_matchedprefixcustomer,
+				this.tup_matchedprefixsupplier,
+				this.tup_sourceId,
+				this.tup_destinationId,
 				tup3
 				);
 			var tup1 = new CdrSummaryTuple(
-				tup_switchid,
+				this.tup_switchid,
 				this.tup_inpartnerid,
 				this.tup_outpartnerid,
 				this.tup_incomingroute,
 				this.tup_outgoingroute,
-				tup_customerrate,
-				tup_supplierrate,
+				this.tup_customerrate,
+				this.tup_supplierrate,
 				tup2);
 			return tup1;
 		}
 		public void Merge(AbstractCdrSummary newSummary)
 		{
-			totalcalls += newSummary.totalcalls;
-			connectedcalls += newSummary.connectedcalls;
-			successfulcalls += newSummary.successfulcalls;
-			actualduration += newSummary.actualduration;
-			roundedduration += newSummary.roundedduration;
-			duration1 += newSummary.duration1;
-			duration2 += newSummary.duration2;
-			duration3 += newSummary.duration3;
-			PDD += newSummary.PDD;
-			customercost += newSummary.customercost;
-			suppliercost += newSummary.suppliercost;
-			tax1 += newSummary.tax1;
-			tax2 += newSummary.tax2;
-			vat += newSummary.vat;
-			intAmount1 += newSummary.intAmount1;
-			intAmount2 += newSummary.intAmount2;
-			intAmount3 += newSummary.intAmount3;
-			longAmount1 += newSummary.longAmount1;
-			longAmount2 += newSummary.longAmount2;
-			longAmount3 += newSummary.longAmount3;
+			this.totalcalls += newSummary.totalcalls;
+			this.connectedcalls += newSummary.connectedcalls;
+			this.successfulcalls += newSummary.successfulcalls;
+			this.actualduration += newSummary.actualduration;
+			this.roundedduration += newSummary.roundedduration;
+			this.duration1 += newSummary.duration1;
+			this.duration2 += newSummary.duration2;
+			this.duration3 += newSummary.duration3;
+			this.PDD += newSummary.PDD;
+			this.customercost += newSummary.customercost;
+			this.suppliercost += newSummary.suppliercost;
+			this.tax1 += newSummary.tax1;
+			this.tax2 += newSummary.tax2;
+			this.vat += newSummary.vat;
+			this.intAmount1 += newSummary.intAmount1;
+			this.intAmount2 += newSummary.intAmount2;
+			this.intAmount3 += newSummary.intAmount3;
+			this.longAmount1 += newSummary.longAmount1;
+			this.longAmount2 += newSummary.longAmount2;
+			this.longAmount3 += newSummary.longAmount3;
 			this.longDecimalAmount1 += newSummary.longDecimalAmount1;
 			this.longDecimalAmount2 += newSummary.longDecimalAmount2;
 			this.longDecimalAmount3 += newSummary.longDecimalAmount3;
 
-			decimalAmount1 += newSummary.decimalAmount1;
-			decimalAmount2 += newSummary.decimalAmount2;
-			decimalAmount3 += newSummary.decimalAmount3;
+			this.decimalAmount1 += newSummary.decimalAmount1;
+			this.decimalAmount2 += newSummary.decimalAmount2;
+			this.decimalAmount3 += newSummary.decimalAmount3;
 		}
 		public void Multiply(int value)
 		{
-			totalcalls = value * totalcalls;
-			connectedcalls = value * connectedcalls;
-			successfulcalls = value * successfulcalls;
-			actualduration = value * actualduration;
-			roundedduration = value * roundedduration;
-			duration1 = value * duration1;
-			duration2 = value * duration2;
-			duration3 = value * duration3;
-			PDD = value * PDD;
-			customercost = value * customercost;
-			suppliercost = value * suppliercost;
-			tax1 = value * tax1;
-			tax2 = value * tax2;
-			vat = value * vat;
-			intAmount1 = value * intAmount1;
-			intAmount2 = value * intAmount2;
-			intAmount3 = value * intAmount3;
-			longAmount1 = value * longAmount1;
-			longAmount2 = value * longAmount2;
-			longAmount3 = value * longAmount3;
+			this.totalcalls = value * this.totalcalls;
+			this.connectedcalls = value * this.connectedcalls;
+			this.successfulcalls = value * this.successfulcalls;
+			this.actualduration = value * this.actualduration;
+			this.roundedduration = value * this.roundedduration;
+			this.duration1 = value * this.duration1;
+			this.duration2 = value * this.duration2;
+			this.duration3 = value * this.duration3;
+			this.PDD = value * this.PDD;
+			this.customercost = value * this.customercost;
+			this.suppliercost = value * this.suppliercost;
+			this.tax1 = value * this.tax1;
+			this.tax2 = value * this.tax2;
+			this.vat = value * this.vat;
+			this.intAmount1 = value * this.intAmount1;
+			this.intAmount2 = value * this.intAmount2;
+			this.intAmount3 = value * this.intAmount3;
+			this.longAmount1 = value * this.longAmount1;
+			this.longAmount2 = value * this.longAmount2;
+			this.longAmount3 = value * this.longAmount3;
 			this.longDecimalAmount1 = value * this.longDecimalAmount1;
 			this.longDecimalAmount2 = value * this.longDecimalAmount2;
 			this.longDecimalAmount3 = value * this.longDecimalAmount3;
 
-			decimalAmount1 = value * decimalAmount1;
-			decimalAmount2 = value * decimalAmount2;
-			decimalAmount3 = value * decimalAmount3;
+			this.decimalAmount1 = value * this.decimalAmount1;
+			this.decimalAmount2 = value * this.decimalAmount2;
+			this.decimalAmount3 = value * this.decimalAmount3;
 		}
 
 		public AbstractCdrSummary CloneWithFakeId()
@@ -204,104 +205,104 @@ namespace MediationModel
 			return newSummary;
 		}
 
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},                       
-				{tup_switchid.ToMySqlField()},             
-				{this.tup_inpartnerid.ToMySqlField()},          
-				{this.tup_outpartnerid.ToMySqlField()},         
-				{this.tup_incomingroute.ToNotNullSqlField()},        
-				{this.tup_outgoingroute.ToNotNullSqlField()},        
-				{tup_customerrate.ToMySqlField()},         
-				{tup_supplierrate.ToMySqlField()},         
-				{tup_incomingip.ToNotNullSqlField()},           
-				{tup_outgoingip.ToNotNullSqlField()},           
-				{tup_countryorareacode.ToNotNullSqlField()},    
-				{tup_matchedprefixcustomer.ToNotNullSqlField()},
-				{tup_matchedprefixsupplier.ToNotNullSqlField()},
-				{tup_sourceId.ToNotNullSqlField()},             
-				{tup_destinationId.ToNotNullSqlField()},        
-				{tup_customercurrency.ToNotNullSqlField()},     
-				{tup_suppliercurrency.ToNotNullSqlField()},     
-				{tup_tax1currency.ToNotNullSqlField()},         
-				{tup_tax2currency.ToNotNullSqlField()},         
-				{tup_vatcurrency.ToNotNullSqlField()},          
-				{tup_starttime.ToMySqlField()},            
-				{totalcalls.ToMySqlField()},               
-				{connectedcalls.ToMySqlField()},           
-				{connectedcallsCC.ToMySqlField()},         
-				{successfulcalls.ToMySqlField()},          
-				{actualduration.ToMySqlField()},           
-				{roundedduration.ToMySqlField()},          
-				{duration1.ToMySqlField()},                
-				{duration2.ToMySqlField()},                
-				{duration3.ToMySqlField()},                
-				{PDD.ToMySqlField()},                      
-				{customercost.ToMySqlField()},             
-				{suppliercost.ToMySqlField()},             
-				{tax1.ToMySqlField()},                     
-				{tax2.ToMySqlField()},                     
-				{vat.ToMySqlField()},                      
-				{intAmount1.ToMySqlField()},               
-				{intAmount2.ToMySqlField()},               
-				{longAmount1.ToMySqlField()},              
-				{longAmount2.ToMySqlField()},              
-				{this.longDecimalAmount1.ToMySqlField()},            
-				{this.longDecimalAmount2.ToMySqlField()},            
-				{intAmount3.ToMySqlField()},               
-				{longAmount3.ToMySqlField()},              
-				{this.longDecimalAmount3.ToMySqlField()},            
-				{decimalAmount1.ToMySqlField()},           
-				{decimalAmount2.ToMySqlField()},           
-				{decimalAmount3.ToMySqlField()})";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")                       
+				.Append(this.tup_switchid.ToMySqlField()).Append(",")             
+				.Append(this.tup_inpartnerid.ToMySqlField()).Append(",")          
+				.Append(this.tup_outpartnerid.ToMySqlField()).Append(",")         
+				.Append(this.tup_incomingroute.ToNotNullSqlField()).Append(",")        
+				.Append(this.tup_outgoingroute.ToNotNullSqlField()).Append(",")        
+				.Append(this.tup_customerrate.ToMySqlField()).Append(",")         
+				.Append(this.tup_supplierrate.ToMySqlField()).Append(",")         
+				.Append(this.tup_incomingip.ToNotNullSqlField()).Append(",")           
+				.Append(this.tup_outgoingip.ToNotNullSqlField()).Append(",")           
+				.Append(this.tup_countryorareacode.ToNotNullSqlField()).Append(",")    
+				.Append(this.tup_matchedprefixcustomer.ToNotNullSqlField()).Append(",")
+				.Append(this.tup_matchedprefixsupplier.ToNotNullSqlField()).Append(",")
+				.Append(this.tup_sourceId.ToNotNullSqlField()).Append(",")             
+				.Append(this.tup_destinationId.ToNotNullSqlField()).Append(",")        
+				.Append(this.tup_customercurrency.ToNotNullSqlField()).Append(",")     
+				.Append(this.tup_suppliercurrency.ToNotNullSqlField()).Append(",")     
+				.Append(this.tup_tax1currency.ToNotNullSqlField()).Append(",")         
+				.Append(this.tup_tax2currency.ToNotNullSqlField()).Append(",")         
+				.Append(this.tup_vatcurrency.ToNotNullSqlField()).Append(",")          
+				.Append(this.tup_starttime.ToMySqlField()).Append(",")            
+				.Append(this.totalcalls.ToMySqlField()).Append(",")               
+				.Append(this.connectedcalls.ToMySqlField()).Append(",")           
+				.Append(this.connectedcallsCC.ToMySqlField()).Append(",")         
+				.Append(this.successfulcalls.ToMySqlField()).Append(",")          
+				.Append(this.actualduration.ToMySqlField()).Append(",")           
+				.Append(this.roundedduration.ToMySqlField()).Append(",")          
+				.Append(this.duration1.ToMySqlField()).Append(",")                
+				.Append(this.duration2.ToMySqlField()).Append(",")                
+				.Append(this.duration3.ToMySqlField()).Append(",")                
+				.Append(this.PDD.ToMySqlField()).Append(",")                      
+				.Append(this.customercost.ToMySqlField()).Append(",")             
+				.Append(this.suppliercost.ToMySqlField()).Append(",")             
+				.Append(this.tax1.ToMySqlField()).Append(",")                     
+				.Append(this.tax2.ToMySqlField()).Append(",")                     
+				.Append(this.vat.ToMySqlField()).Append(",")                      
+				.Append(this.intAmount1.ToMySqlField()).Append(",")               
+				.Append(this.intAmount2.ToMySqlField()).Append(",")               
+				.Append(this.longAmount1.ToMySqlField()).Append(",")              
+				.Append(this.longAmount2.ToMySqlField()).Append(",")              
+				.Append(this.longDecimalAmount1.ToMySqlField()).Append(",")            
+				.Append(this.longDecimalAmount2.ToMySqlField()).Append(",")            
+				.Append(this.intAmount3.ToMySqlField()).Append(",")               
+				.Append(this.longAmount3.ToMySqlField()).Append(",")              
+				.Append(this.longDecimalAmount3.ToMySqlField()).Append(",")            
+				.Append(this.decimalAmount1.ToMySqlField()).Append(",")           
+				.Append(this.decimalAmount2.ToMySqlField()).Append(",")           
+				.Append(this.decimalAmount3.ToMySqlField()).Append(")");
 		}
-		public string GetExtInsertCustom(Func<AbstractCdrSummary, string> externalInsertMethod)
+		public StringBuilder GetExtInsertCustom(Func<AbstractCdrSummary, string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public string GetUpdateCommand(Func<AbstractCdrSummary, string> whereClauseMethod)
+		public StringBuilder GetUpdateCommand(Func<AbstractCdrSummary, string> whereClauseMethod)
 		{
-			return $@"update AbstractCdrSummary set 
-				totalcalls={totalcalls.ToMySqlField() + " "},                     
-				connectedcalls={connectedcalls.ToMySqlField() + " "},             
-				connectedcallsCC={connectedcallsCC.ToMySqlField() + " "},         
-				successfulcalls={successfulcalls.ToMySqlField() + " "},           
-				actualduration={actualduration.ToMySqlField() + " "},             
-				roundedduration={roundedduration.ToMySqlField() + " "},           
-				duration1={duration1.ToMySqlField() + " "},                       
-				duration2={duration2.ToMySqlField() + " "},                       
-				duration3={duration3.ToMySqlField() + " "},                       
-				PDD={PDD.ToMySqlField() + " "},                                   
-				customercost={customercost.ToMySqlField() + " "},                 
-				suppliercost={suppliercost.ToMySqlField() + " "},                 
-				tax1={tax1.ToMySqlField() + " "},                                 
-				tax2={tax2.ToMySqlField() + " "},                                 
-				vat={vat.ToMySqlField() + " "},                                   
-				intAmount1={intAmount1.ToMySqlField() + " "},                     
-				intAmount2={intAmount2.ToMySqlField() + " "},                     
-				longAmount1={longAmount1.ToMySqlField() + " "},                   
-				longAmount2={longAmount2.ToMySqlField() + " "},                   
+			return new StringBuilder($@"update AbstractCdrSummary set 
+				totalcalls={this.totalcalls.ToMySqlField() + " "},                     
+				connectedcalls={this.connectedcalls.ToMySqlField() + " "},             
+				connectedcallsCC={this.connectedcallsCC.ToMySqlField() + " "},         
+				successfulcalls={this.successfulcalls.ToMySqlField() + " "},           
+				actualduration={this.actualduration.ToMySqlField() + " "},             
+				roundedduration={this.roundedduration.ToMySqlField() + " "},           
+				duration1={this.duration1.ToMySqlField() + " "},                       
+				duration2={this.duration2.ToMySqlField() + " "},                       
+				duration3={this.duration3.ToMySqlField() + " "},                       
+				PDD={this.PDD.ToMySqlField() + " "},                                   
+				customercost={this.customercost.ToMySqlField() + " "},                 
+				suppliercost={this.suppliercost.ToMySqlField() + " "},                 
+				tax1={this.tax1.ToMySqlField() + " "},                                 
+				tax2={this.tax2.ToMySqlField() + " "},                                 
+				vat={this.vat.ToMySqlField() + " "},                                   
+				intAmount1={this.intAmount1.ToMySqlField() + " "},                     
+				intAmount2={this.intAmount2.ToMySqlField() + " "},                     
+				longAmount1={this.longAmount1.ToMySqlField() + " "},                   
+				longAmount2={this.longAmount2.ToMySqlField() + " "},                   
 				longDecimalAmount1={this.longDecimalAmount1.ToMySqlField() + " "},
 				longDecimalAmount2={this.longDecimalAmount2.ToMySqlField() + " "},
-				intAmount3={intAmount3.ToMySqlField() + " "},                     
-				longAmount3={longAmount3.ToMySqlField() + " "},                   
+				intAmount3={this.intAmount3.ToMySqlField() + " "},                     
+				longAmount3={this.longAmount3.ToMySqlField() + " "},                   
 				longDecimalAmount3={this.longDecimalAmount3.ToMySqlField() + " "},
-				decimalAmount1={decimalAmount1.ToMySqlField() + " "},             
-				decimalAmount2={decimalAmount2.ToMySqlField() + " "},             
-				decimalAmount3={decimalAmount3.ToMySqlField() + " "}              
-				{whereClauseMethod.Invoke(this)};                                 
-				";
+				decimalAmount1={this.decimalAmount1.ToMySqlField() + " "},             
+				decimalAmount2={this.decimalAmount2.ToMySqlField() + " "},             
+				decimalAmount3={this.decimalAmount3.ToMySqlField() + " "}              
+				{whereClauseMethod.Invoke(this)}                                
+				");
 		}
-		public string GetUpdateCommandCustom(Func<AbstractCdrSummary, string> updateCommandMethodCustom)
+		public StringBuilder GetUpdateCommandCustom(Func<AbstractCdrSummary, string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public string GetDeleteCommand(Func<AbstractCdrSummary, string> whereClauseMethod)
+		public StringBuilder GetDeleteCommand(Func<AbstractCdrSummary, string> whereClauseMethod)
 		{
-			return $@"delete from AbstractCdrSummary 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from AbstractCdrSummary 
+				{whereClauseMethod.Invoke(this)}
+				");
 		}
 
 	}
