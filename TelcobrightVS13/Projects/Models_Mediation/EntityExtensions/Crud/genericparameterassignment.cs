@@ -8,38 +8,37 @@ namespace MediationModel
 {
 	public partial class genericparameterassignment:ICacheble<genericparameterassignment>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{JsonExpAssignedTo.ToMySqlField()},
-				{GenericInstanceFactoryName.ToMySqlField()},
-				{description.ToMySqlField()},
-				{JsonParametersToAssign.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.JsonExpAssignedTo.ToMySqlField()).Append(",")
+				.Append(this.GenericInstanceFactoryName.ToMySqlField()).Append(",")
+				.Append(this.description.ToMySqlField()).Append(",")
+				.Append(this.JsonParametersToAssign.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<genericparameterassignment,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<genericparameterassignment,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<genericparameterassignment,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<genericparameterassignment,string> whereClauseMethod)
 		{
-			return $@"update genericparameterassignment set 
-				JsonExpAssignedTo={JsonExpAssignedTo.ToMySqlField()+" "},
-				GenericInstanceFactoryName={GenericInstanceFactoryName.ToMySqlField()+" "},
-				description={description.ToMySqlField()+" "},
-				JsonParametersToAssign={JsonParametersToAssign.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update genericparameterassignment set ")
+				.Append("JsonExpAssignedTo=").Append(this.JsonExpAssignedTo.ToMySqlField()).Append(",")
+				.Append("GenericInstanceFactoryName=").Append(this.GenericInstanceFactoryName.ToMySqlField()).Append(",")
+				.Append("description=").Append(this.description.ToMySqlField()).Append(",")
+				.Append("JsonParametersToAssign=").Append(this.JsonParametersToAssign.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<genericparameterassignment,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<genericparameterassignment,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<genericparameterassignment,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<genericparameterassignment,string> whereClauseMethod)
 		{
-			return $@"delete from genericparameterassignment 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from genericparameterassignment 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

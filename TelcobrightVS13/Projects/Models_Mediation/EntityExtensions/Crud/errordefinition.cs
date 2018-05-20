@@ -8,38 +8,37 @@ namespace MediationModel
 {
 	public partial class errordefinition:ICacheble<errordefinition>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{idError.ToMySqlField()},
-				{Description.ToMySqlField()},
-				{Severity.ToMySqlField()},
-				{Action.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.idError.ToMySqlField()).Append(",")
+				.Append(this.Description.ToMySqlField()).Append(",")
+				.Append(this.Severity.ToMySqlField()).Append(",")
+				.Append(this.Action.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<errordefinition,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<errordefinition,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<errordefinition,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<errordefinition,string> whereClauseMethod)
 		{
-			return $@"update errordefinition set 
-				idError={idError.ToMySqlField()+" "},
-				Description={Description.ToMySqlField()+" "},
-				Severity={Severity.ToMySqlField()+" "},
-				Action={Action.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update errordefinition set ")
+				.Append("idError=").Append(this.idError.ToMySqlField()).Append(",")
+				.Append("Description=").Append(this.Description.ToMySqlField()).Append(",")
+				.Append("Severity=").Append(this.Severity.ToMySqlField()).Append(",")
+				.Append("Action=").Append(this.Action.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<errordefinition,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<errordefinition,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<errordefinition,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<errordefinition,string> whereClauseMethod)
 		{
-			return $@"delete from errordefinition 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from errordefinition 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

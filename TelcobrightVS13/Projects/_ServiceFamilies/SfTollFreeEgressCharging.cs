@@ -51,8 +51,9 @@ namespace ServiceFamilies
         protected override void SetTaxAmount(ServiceContext serviceContext, cdr cdr, 
            Rateext rateWithAssignmentTupleId , out decimal taxAmount)
         {
-            taxAmount = Convert.ToDecimal(cdr.OutPartnerCost) *
-                        Convert.ToDecimal(rateWithAssignmentTupleId.OtherAmount3) / 100;
+            taxAmount = (Convert.ToDecimal(cdr.OutPartnerCost) *
+                         Convert.ToDecimal(rateWithAssignmentTupleId.OtherAmount3) / 100)
+                .RoundFractionsUpTo(serviceContext.MaxDecimalPrecision);
             cdr.Tax1 = taxAmount;
         }
 

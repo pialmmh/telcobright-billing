@@ -8,36 +8,35 @@ namespace MediationModel
 {
 	public partial class enumdateparsestring:ICacheble<enumdateparsestring>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{value.ToMySqlField()},
-				{ParseString.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.value.ToMySqlField()).Append(",")
+				.Append(this.ParseString.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<enumdateparsestring,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<enumdateparsestring,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<enumdateparsestring,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<enumdateparsestring,string> whereClauseMethod)
 		{
-			return $@"update enumdateparsestring set 
-				id={id.ToMySqlField()+" "},
-				value={value.ToMySqlField()+" "},
-				ParseString={ParseString.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update enumdateparsestring set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("value=").Append(this.value.ToMySqlField()).Append(",")
+				.Append("ParseString=").Append(this.ParseString.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<enumdateparsestring,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<enumdateparsestring,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<enumdateparsestring,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<enumdateparsestring,string> whereClauseMethod)
 		{
-			return $@"delete from enumdateparsestring 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from enumdateparsestring 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

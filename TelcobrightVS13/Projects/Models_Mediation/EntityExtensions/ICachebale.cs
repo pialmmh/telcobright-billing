@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Text;
 
 namespace MediationModel
 {
@@ -10,11 +11,11 @@ namespace MediationModel
     }
     public interface ICacheble<TEntity> : ICacheble //where TEntity:class
     {
-        string GetExtInsertValues();
-        string GetExtInsertCustom(Func<TEntity, string> externalInsertMethod);
-        string GetUpdateCommand(Func<TEntity, string> whereClauseMethod);
-        string GetUpdateCommandCustom(Func<TEntity, string> updateCommandMethodCustom);
-        string GetDeleteCommand(Func<TEntity, string> whereClauseMethod);
+        StringBuilder GetExtInsertValues();
+        StringBuilder GetExtInsertCustom(Func<TEntity, string> externalInsertMethod);
+        StringBuilder GetUpdateCommand(Func<TEntity, string> whereClauseMethod);
+        StringBuilder GetUpdateCommandCustom(Func<TEntity, string> updateCommandMethodCustom);
+        StringBuilder GetDeleteCommand(Func<TEntity, string> whereClauseMethod);
     }
     public interface ICacheble<TEntity, TKey> : ICacheble<TEntity> //where TEntity:class
     {

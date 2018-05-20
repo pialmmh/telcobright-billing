@@ -46,16 +46,17 @@ namespace TelcobrightMediation
             
             int category = tempCategory > 0 ? tempCategory : 1; //default 1=call
             int subCategory = tempSubCategory > 0 ? tempSubCategory : 1; //default 1=voice
-            decimal DurationSec = thisCdr.DurationSec; //may change per service family ######;
-            //end common******************************
-
+            
             string phoneNumber = thisCdr.TerminatingCalledNumber; //change per service family#####
             if (phoneNumber.Trim() == "") return null; //term no can be empty e.g. for failed calls
 
             List<TupleByPeriod> tups = GetServiceTuple(serviceContext, answerTime);
             if (tups == null) return null;
+            int maxDecimalPrecision = serviceContext.MaxDecimalPrecision;
             Rateext matchedRateWithAssignmentTupleId = pr.MatchPrefix(phoneNumber, category, subCategory, tups,
                 answerTime, flagLcr,useInMemoryTable:true);
+            matchedRateWithAssignmentTupleId.rateamount =
+                matchedRateWithAssignmentTupleId.rateamount.RoundFractionsUpTo(maxDecimalPrecision);
             if (matchedRateWithAssignmentTupleId == null) return null;
 
             //iof over selling rule
@@ -66,29 +67,34 @@ namespace TelcobrightMediation
             long finalDuration = 0;
             finalDuration = Convert.ToInt64(pr.GetA2ZDuration(thisCdr.DurationSec,matchedRateWithAssignmentTupleId));
             //effective termination rate
-            decimal additionalChargeIof = Convert.ToDecimal(matchedRateWithAssignmentTupleId.OtherAmount1); //.005c
+            decimal additionalChargeIof = Convert.ToDecimal(matchedRateWithAssignmentTupleId.OtherAmount1)
+                .RoundFractionsUpTo(maxDecimalPrecision); //.005c
             Rateext tempRate = new Rateext()
             {
                 rateamount = (matchedRateWithAssignmentTupleId.rateamount - additionalChargeIof) //2c becomes 1.5c
             };
             decimal terminatingAmount = 0;
-            terminatingAmount = finalDuration * tempRate.rateamount / 60; //becomes 1.5c excluding .005 for 1 minute
+            terminatingAmount =
+                (finalDuration * tempRate.rateamount / 60).RoundFractionsUpTo(maxDecimalPrecision); //becomes 1.5c excluding .005 for 1 minute
 
-            decimal additionalAmountIof = finalDuration * additionalChargeIof / 60;
+            decimal additionalAmountIof =
+                (finalDuration * additionalChargeIof / 60).RoundFractionsUpTo(maxDecimalPrecision);
 
-            decimal iosPercentage = Convert.ToDecimal(matchedRateWithAssignmentTupleId.OtherAmount2);
-            decimal btrcPercentage = Convert.ToDecimal(matchedRateWithAssignmentTupleId.OtherAmount3);
+            decimal iosPercentage = Convert.ToDecimal(matchedRateWithAssignmentTupleId.OtherAmount2)
+                .RoundFractionsUpTo(maxDecimalPrecision);
+            decimal btrcPercentage = Convert.ToDecimal(matchedRateWithAssignmentTupleId.OtherAmount3)
+                .RoundFractionsUpTo(maxDecimalPrecision);
 
             decimal iosFirstAmount = 0;
             decimal btrcAmount = 0;
             decimal iosTotalAmount = 0;
 
-            iosFirstAmount = terminatingAmount * iosPercentage;
-            btrcAmount = terminatingAmount * btrcPercentage;
-            iosTotalAmount = iosFirstAmount + additionalAmountIof;
+            iosFirstAmount = (terminatingAmount * iosPercentage).RoundFractionsUpTo(maxDecimalPrecision);
+            btrcAmount = (terminatingAmount * btrcPercentage).RoundFractionsUpTo(maxDecimalPrecision);
+            iosTotalAmount = (iosFirstAmount + additionalAmountIof).RoundFractionsUpTo(maxDecimalPrecision);
 
-            thisCdr.Tax1 = Convert.ToDecimal(btrcAmount);
-            thisCdr.CostIcxIn = Convert.ToDecimal(iosTotalAmount);
+            thisCdr.Tax1 = btrcAmount.RoundFractionsUpTo(maxDecimalPrecision);
+            thisCdr.CostIcxIn = Convert.ToDecimal(iosTotalAmount).RoundFractionsUpTo(maxDecimalPrecision);
             thisCdr.CountryCode = matchedRateWithAssignmentTupleId.CountryCode;
             thisCdr.MatchedPrefixSupplier = matchedRateWithAssignmentTupleId.Prefix;
             thisCdr.RoundedDuration = finalDuration;
@@ -128,7 +134,7 @@ namespace TelcobrightMediation
                     idQuantityUom = "TF_s",
                     BilledAmount = Convert.ToDecimal(iosTotalAmount),
                     Quantity = finalDuration,
-                    OtherAmount1 = btrcAmount,
+                    TaxAmount1 = btrcAmount,
                     unitPriceOrCharge = matchedRateWithAssignmentTupleId.rateamount,
                     Prefix = matchedRateWithAssignmentTupleId.Prefix,
                     RateId = matchedRateWithAssignmentTupleId.id,

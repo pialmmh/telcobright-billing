@@ -8,38 +8,37 @@ namespace MediationModel
 {
 	public partial class enumcreditrule:ICacheble<enumcreditrule>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{RuleName.ToMySqlField()},
-				{Description.ToMySqlField()},
-				{json.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.RuleName.ToMySqlField()).Append(",")
+				.Append(this.Description.ToMySqlField()).Append(",")
+				.Append(this.json.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<enumcreditrule,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<enumcreditrule,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<enumcreditrule,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<enumcreditrule,string> whereClauseMethod)
 		{
-			return $@"update enumcreditrule set 
-				id={id.ToMySqlField()+" "},
-				RuleName={RuleName.ToMySqlField()+" "},
-				Description={Description.ToMySqlField()+" "},
-				json={json.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update enumcreditrule set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("RuleName=").Append(this.RuleName.ToMySqlField()).Append(",")
+				.Append("Description=").Append(this.Description.ToMySqlField()).Append(",")
+				.Append("json=").Append(this.json.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<enumcreditrule,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<enumcreditrule,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<enumcreditrule,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<enumcreditrule,string> whereClauseMethod)
 		{
-			return $@"delete from enumcreditrule 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from enumcreditrule 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

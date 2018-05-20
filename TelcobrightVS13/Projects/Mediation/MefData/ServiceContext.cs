@@ -15,6 +15,7 @@ namespace TelcobrightMediation
         public int ProductIdToOverrideServiceFamilyAccount { get;}
         public ServiceAssignmentDirection AssignDir { get; set; }
         public CdrSetting CdrSetting { get; }
+        public int MaxDecimalPrecision => this.CdrSetting.MaxDecimalPrecision;
         public ServiceContext(CdrProcessor cdrProcessor,
             ServiceGroupConfiguration serviceGroupConfiguration, IServiceFamily serviceFamily,
             ServiceAssignmentDirection assignDir, int productIdToOverrideServiceFamilyAccount)

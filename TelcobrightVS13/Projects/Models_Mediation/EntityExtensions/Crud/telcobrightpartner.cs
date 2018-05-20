@@ -8,76 +8,75 @@ namespace MediationModel
 {
 	public partial class telcobrightpartner:ICacheble<telcobrightpartner>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{idCustomer.ToMySqlField()},
-				{CustomerName.ToMySqlField()},
-				{idOperatorType.ToMySqlField()},
-				{databasename.ToMySqlField()},
-				{databasetype.ToMySqlField()},
-				{user.ToMySqlField()},
-				{pass.ToMySqlField()},
-				{ServerNameOrIP.ToMySqlField()},
-				{IBServerNameOrIP.ToMySqlField()},
-				{IBdatabasename.ToMySqlField()},
-				{IBdatabasetype.ToMySqlField()},
-				{IBuser.ToMySqlField()},
-				{IBpass.ToMySqlField()},
-				{TransactionSizeForCDRLoading.ToMySqlField()},
-				{NativeTimeZone.ToMySqlField()},
-				{IgwPrefix.ToMySqlField()},
-				{RateDictionaryMaxRecords.ToMySqlField()},
-				{MinMSForIntlOut.ToMySqlField()},
-				{RawCdrKeepDurationDays.ToMySqlField()},
-				{SummaryKeepDurationDays.ToMySqlField()},
-				{AutoDeleteOldData.ToMySqlField()},
-				{AutoDeleteStartHour.ToMySqlField()},
-				{AutoDeleteEndHour.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.idCustomer.ToMySqlField()).Append(",")
+				.Append(this.CustomerName.ToMySqlField()).Append(",")
+				.Append(this.idOperatorType.ToMySqlField()).Append(",")
+				.Append(this.databasename.ToMySqlField()).Append(",")
+				.Append(this.databasetype.ToMySqlField()).Append(",")
+				.Append(this.user.ToMySqlField()).Append(",")
+				.Append(this.pass.ToMySqlField()).Append(",")
+				.Append(this.ServerNameOrIP.ToMySqlField()).Append(",")
+				.Append(this.IBServerNameOrIP.ToMySqlField()).Append(",")
+				.Append(this.IBdatabasename.ToMySqlField()).Append(",")
+				.Append(this.IBdatabasetype.ToMySqlField()).Append(",")
+				.Append(this.IBuser.ToMySqlField()).Append(",")
+				.Append(this.IBpass.ToMySqlField()).Append(",")
+				.Append(this.TransactionSizeForCDRLoading.ToMySqlField()).Append(",")
+				.Append(this.NativeTimeZone.ToMySqlField()).Append(",")
+				.Append(this.IgwPrefix.ToMySqlField()).Append(",")
+				.Append(this.RateDictionaryMaxRecords.ToMySqlField()).Append(",")
+				.Append(this.MinMSForIntlOut.ToMySqlField()).Append(",")
+				.Append(this.RawCdrKeepDurationDays.ToMySqlField()).Append(",")
+				.Append(this.SummaryKeepDurationDays.ToMySqlField()).Append(",")
+				.Append(this.AutoDeleteOldData.ToMySqlField()).Append(",")
+				.Append(this.AutoDeleteStartHour.ToMySqlField()).Append(",")
+				.Append(this.AutoDeleteEndHour.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<telcobrightpartner,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<telcobrightpartner,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<telcobrightpartner,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<telcobrightpartner,string> whereClauseMethod)
 		{
-			return $@"update telcobrightpartner set 
-				idCustomer={idCustomer.ToMySqlField()+" "},
-				CustomerName={CustomerName.ToMySqlField()+" "},
-				idOperatorType={idOperatorType.ToMySqlField()+" "},
-				databasename={databasename.ToMySqlField()+" "},
-				databasetype={databasetype.ToMySqlField()+" "},
-				user={user.ToMySqlField()+" "},
-				pass={pass.ToMySqlField()+" "},
-				ServerNameOrIP={ServerNameOrIP.ToMySqlField()+" "},
-				IBServerNameOrIP={IBServerNameOrIP.ToMySqlField()+" "},
-				IBdatabasename={IBdatabasename.ToMySqlField()+" "},
-				IBdatabasetype={IBdatabasetype.ToMySqlField()+" "},
-				IBuser={IBuser.ToMySqlField()+" "},
-				IBpass={IBpass.ToMySqlField()+" "},
-				TransactionSizeForCDRLoading={TransactionSizeForCDRLoading.ToMySqlField()+" "},
-				NativeTimeZone={NativeTimeZone.ToMySqlField()+" "},
-				IgwPrefix={IgwPrefix.ToMySqlField()+" "},
-				RateDictionaryMaxRecords={RateDictionaryMaxRecords.ToMySqlField()+" "},
-				MinMSForIntlOut={MinMSForIntlOut.ToMySqlField()+" "},
-				RawCdrKeepDurationDays={RawCdrKeepDurationDays.ToMySqlField()+" "},
-				SummaryKeepDurationDays={SummaryKeepDurationDays.ToMySqlField()+" "},
-				AutoDeleteOldData={AutoDeleteOldData.ToMySqlField()+" "},
-				AutoDeleteStartHour={AutoDeleteStartHour.ToMySqlField()+" "},
-				AutoDeleteEndHour={AutoDeleteEndHour.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update telcobrightpartner set ")
+				.Append("idCustomer=").Append(this.idCustomer.ToMySqlField()).Append(",")
+				.Append("CustomerName=").Append(this.CustomerName.ToMySqlField()).Append(",")
+				.Append("idOperatorType=").Append(this.idOperatorType.ToMySqlField()).Append(",")
+				.Append("databasename=").Append(this.databasename.ToMySqlField()).Append(",")
+				.Append("databasetype=").Append(this.databasetype.ToMySqlField()).Append(",")
+				.Append("user=").Append(this.user.ToMySqlField()).Append(",")
+				.Append("pass=").Append(this.pass.ToMySqlField()).Append(",")
+				.Append("ServerNameOrIP=").Append(this.ServerNameOrIP.ToMySqlField()).Append(",")
+				.Append("IBServerNameOrIP=").Append(this.IBServerNameOrIP.ToMySqlField()).Append(",")
+				.Append("IBdatabasename=").Append(this.IBdatabasename.ToMySqlField()).Append(",")
+				.Append("IBdatabasetype=").Append(this.IBdatabasetype.ToMySqlField()).Append(",")
+				.Append("IBuser=").Append(this.IBuser.ToMySqlField()).Append(",")
+				.Append("IBpass=").Append(this.IBpass.ToMySqlField()).Append(",")
+				.Append("TransactionSizeForCDRLoading=").Append(this.TransactionSizeForCDRLoading.ToMySqlField()).Append(",")
+				.Append("NativeTimeZone=").Append(this.NativeTimeZone.ToMySqlField()).Append(",")
+				.Append("IgwPrefix=").Append(this.IgwPrefix.ToMySqlField()).Append(",")
+				.Append("RateDictionaryMaxRecords=").Append(this.RateDictionaryMaxRecords.ToMySqlField()).Append(",")
+				.Append("MinMSForIntlOut=").Append(this.MinMSForIntlOut.ToMySqlField()).Append(",")
+				.Append("RawCdrKeepDurationDays=").Append(this.RawCdrKeepDurationDays.ToMySqlField()).Append(",")
+				.Append("SummaryKeepDurationDays=").Append(this.SummaryKeepDurationDays.ToMySqlField()).Append(",")
+				.Append("AutoDeleteOldData=").Append(this.AutoDeleteOldData.ToMySqlField()).Append(",")
+				.Append("AutoDeleteStartHour=").Append(this.AutoDeleteStartHour.ToMySqlField()).Append(",")
+				.Append("AutoDeleteEndHour=").Append(this.AutoDeleteEndHour.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<telcobrightpartner,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<telcobrightpartner,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<telcobrightpartner,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<telcobrightpartner,string> whereClauseMethod)
 		{
-			return $@"delete from telcobrightpartner 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from telcobrightpartner 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

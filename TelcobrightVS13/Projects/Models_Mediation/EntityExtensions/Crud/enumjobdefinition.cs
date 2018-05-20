@@ -8,44 +8,43 @@ namespace MediationModel
 {
 	public partial class enumjobdefinition:ICacheble<enumjobdefinition>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{jobtypeid.ToMySqlField()},
-				{Type.ToMySqlField()},
-				{Priority.ToMySqlField()},
-				{BatchCreatable.ToMySqlField()},
-				{JobQueue.ToMySqlField()},
-				{Disabled.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.jobtypeid.ToMySqlField()).Append(",")
+				.Append(this.Type.ToMySqlField()).Append(",")
+				.Append(this.Priority.ToMySqlField()).Append(",")
+				.Append(this.BatchCreatable.ToMySqlField()).Append(",")
+				.Append(this.JobQueue.ToMySqlField()).Append(",")
+				.Append(this.Disabled.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<enumjobdefinition,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<enumjobdefinition,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<enumjobdefinition,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<enumjobdefinition,string> whereClauseMethod)
 		{
-			return $@"update enumjobdefinition set 
-				id={id.ToMySqlField()+" "},
-				jobtypeid={jobtypeid.ToMySqlField()+" "},
-				Type={Type.ToMySqlField()+" "},
-				Priority={Priority.ToMySqlField()+" "},
-				BatchCreatable={BatchCreatable.ToMySqlField()+" "},
-				JobQueue={JobQueue.ToMySqlField()+" "},
-				Disabled={Disabled.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update enumjobdefinition set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("jobtypeid=").Append(this.jobtypeid.ToMySqlField()).Append(",")
+				.Append("Type=").Append(this.Type.ToMySqlField()).Append(",")
+				.Append("Priority=").Append(this.Priority.ToMySqlField()).Append(",")
+				.Append("BatchCreatable=").Append(this.BatchCreatable.ToMySqlField()).Append(",")
+				.Append("JobQueue=").Append(this.JobQueue.ToMySqlField()).Append(",")
+				.Append("Disabled=").Append(this.Disabled.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<enumjobdefinition,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<enumjobdefinition,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<enumjobdefinition,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<enumjobdefinition,string> whereClauseMethod)
 		{
-			return $@"delete from enumjobdefinition 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from enumjobdefinition 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

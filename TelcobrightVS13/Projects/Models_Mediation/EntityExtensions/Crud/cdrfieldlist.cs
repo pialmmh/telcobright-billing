@@ -8,38 +8,37 @@ namespace MediationModel
 {
 	public partial class cdrfieldlist:ICacheble<cdrfieldlist>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{fieldnumber.ToMySqlField()},
-				{FieldName.ToMySqlField()},
-				{IsNumeric.ToMySqlField()},
-				{IsDateTime.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.fieldnumber.ToMySqlField()).Append(",")
+				.Append(this.FieldName.ToMySqlField()).Append(",")
+				.Append(this.IsNumeric.ToMySqlField()).Append(",")
+				.Append(this.IsDateTime.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<cdrfieldlist,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<cdrfieldlist,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<cdrfieldlist,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<cdrfieldlist,string> whereClauseMethod)
 		{
-			return $@"update cdrfieldlist set 
-				fieldnumber={fieldnumber.ToMySqlField()+" "},
-				FieldName={FieldName.ToMySqlField()+" "},
-				IsNumeric={IsNumeric.ToMySqlField()+" "},
-				IsDateTime={IsDateTime.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update cdrfieldlist set ")
+				.Append("fieldnumber=").Append(this.fieldnumber.ToMySqlField()).Append(",")
+				.Append("FieldName=").Append(this.FieldName.ToMySqlField()).Append(",")
+				.Append("IsNumeric=").Append(this.IsNumeric.ToMySqlField()).Append(",")
+				.Append("IsDateTime=").Append(this.IsDateTime.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<cdrfieldlist,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<cdrfieldlist,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<cdrfieldlist,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<cdrfieldlist,string> whereClauseMethod)
 		{
-			return $@"delete from cdrfieldlist 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from cdrfieldlist 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

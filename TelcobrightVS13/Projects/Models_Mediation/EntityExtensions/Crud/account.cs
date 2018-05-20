@@ -8,74 +8,73 @@ namespace MediationModel
 {
 	public partial class account:ICacheble<account>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{idParent.ToMySqlField()},
-				{idParentExternal.ToMySqlField()},
-				{idPartner.ToMySqlField()},
-				{accountName.ToMySqlField()},
-				{serviceGroup.ToMySqlField()},
-				{serviceFamily.ToMySqlField()},
-				{product.ToMySqlField()},
-				{billableType.ToMySqlField()},
-				{uom.ToMySqlField()},
-				{Depth.ToMySqlField()},
-				{Lineage.ToMySqlField()},
-				{remark.ToMySqlField()},
-				{isBillable.ToMySqlField()},
-				{isCustomerAccount.ToMySqlField()},
-				{isSupplierAccount.ToMySqlField()},
-				{balanceBefore.ToMySqlField()},
-				{lastAmount.ToMySqlField()},
-				{balanceAfter.ToMySqlField()},
-				{lastUpdated.ToMySqlField()},
-				{superviseNegativeBalance.ToMySqlField()},
-				{negativeBalanceLimit.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.idParent.ToMySqlField()).Append(",")
+				.Append(this.idParentExternal.ToMySqlField()).Append(",")
+				.Append(this.idPartner.ToMySqlField()).Append(",")
+				.Append(this.accountName.ToMySqlField()).Append(",")
+				.Append(this.serviceGroup.ToMySqlField()).Append(",")
+				.Append(this.serviceFamily.ToMySqlField()).Append(",")
+				.Append(this.product.ToMySqlField()).Append(",")
+				.Append(this.billableType.ToMySqlField()).Append(",")
+				.Append(this.uom.ToMySqlField()).Append(",")
+				.Append(this.Depth.ToMySqlField()).Append(",")
+				.Append(this.Lineage.ToMySqlField()).Append(",")
+				.Append(this.remark.ToMySqlField()).Append(",")
+				.Append(this.isBillable.ToMySqlField()).Append(",")
+				.Append(this.isCustomerAccount.ToMySqlField()).Append(",")
+				.Append(this.isSupplierAccount.ToMySqlField()).Append(",")
+				.Append(this.balanceBefore.ToMySqlField()).Append(",")
+				.Append(this.lastAmount.ToMySqlField()).Append(",")
+				.Append(this.balanceAfter.ToMySqlField()).Append(",")
+				.Append(this.lastUpdated.ToMySqlField()).Append(",")
+				.Append(this.superviseNegativeBalance.ToMySqlField()).Append(",")
+				.Append(this.negativeBalanceLimit.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<account,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<account,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<account,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<account,string> whereClauseMethod)
 		{
-			return $@"update account set 
-				id={id.ToMySqlField()+" "},
-				idParent={idParent.ToMySqlField()+" "},
-				idParentExternal={idParentExternal.ToMySqlField()+" "},
-				idPartner={idPartner.ToMySqlField()+" "},
-				accountName={accountName.ToMySqlField()+" "},
-				serviceGroup={serviceGroup.ToMySqlField()+" "},
-				serviceFamily={serviceFamily.ToMySqlField()+" "},
-				product={product.ToMySqlField()+" "},
-				billableType={billableType.ToMySqlField()+" "},
-				uom={uom.ToMySqlField()+" "},
-				Depth={Depth.ToMySqlField()+" "},
-				Lineage={Lineage.ToMySqlField()+" "},
-				remark={remark.ToMySqlField()+" "},
-				isBillable={isBillable.ToMySqlField()+" "},
-				isCustomerAccount={isCustomerAccount.ToMySqlField()+" "},
-				isSupplierAccount={isSupplierAccount.ToMySqlField()+" "},
-				balanceBefore={balanceBefore.ToMySqlField()+" "},
-				lastAmount={lastAmount.ToMySqlField()+" "},
-				balanceAfter={balanceAfter.ToMySqlField()+" "},
-				lastUpdated={lastUpdated.ToMySqlField()+" "},
-				superviseNegativeBalance={superviseNegativeBalance.ToMySqlField()+" "},
-				negativeBalanceLimit={negativeBalanceLimit.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update account set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("idParent=").Append(this.idParent.ToMySqlField()).Append(",")
+				.Append("idParentExternal=").Append(this.idParentExternal.ToMySqlField()).Append(",")
+				.Append("idPartner=").Append(this.idPartner.ToMySqlField()).Append(",")
+				.Append("accountName=").Append(this.accountName.ToMySqlField()).Append(",")
+				.Append("serviceGroup=").Append(this.serviceGroup.ToMySqlField()).Append(",")
+				.Append("serviceFamily=").Append(this.serviceFamily.ToMySqlField()).Append(",")
+				.Append("product=").Append(this.product.ToMySqlField()).Append(",")
+				.Append("billableType=").Append(this.billableType.ToMySqlField()).Append(",")
+				.Append("uom=").Append(this.uom.ToMySqlField()).Append(",")
+				.Append("Depth=").Append(this.Depth.ToMySqlField()).Append(",")
+				.Append("Lineage=").Append(this.Lineage.ToMySqlField()).Append(",")
+				.Append("remark=").Append(this.remark.ToMySqlField()).Append(",")
+				.Append("isBillable=").Append(this.isBillable.ToMySqlField()).Append(",")
+				.Append("isCustomerAccount=").Append(this.isCustomerAccount.ToMySqlField()).Append(",")
+				.Append("isSupplierAccount=").Append(this.isSupplierAccount.ToMySqlField()).Append(",")
+				.Append("balanceBefore=").Append(this.balanceBefore.ToMySqlField()).Append(",")
+				.Append("lastAmount=").Append(this.lastAmount.ToMySqlField()).Append(",")
+				.Append("balanceAfter=").Append(this.balanceAfter.ToMySqlField()).Append(",")
+				.Append("lastUpdated=").Append(this.lastUpdated.ToMySqlField()).Append(",")
+				.Append("superviseNegativeBalance=").Append(this.superviseNegativeBalance.ToMySqlField()).Append(",")
+				.Append("negativeBalanceLimit=").Append(this.negativeBalanceLimit.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<account,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<account,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<account,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<account,string> whereClauseMethod)
 		{
-			return $@"delete from account 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from account 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

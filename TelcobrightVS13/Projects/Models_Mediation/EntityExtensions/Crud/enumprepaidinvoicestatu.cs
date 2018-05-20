@@ -8,34 +8,33 @@ namespace MediationModel
 {
 	public partial class enumprepaidinvoicestatu:ICacheble<enumprepaidinvoicestatu>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{Type.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.Type.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<enumprepaidinvoicestatu,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<enumprepaidinvoicestatu,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<enumprepaidinvoicestatu,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<enumprepaidinvoicestatu,string> whereClauseMethod)
 		{
-			return $@"update enumprepaidinvoicestatus set 
-				id={id.ToMySqlField()+" "},
-				Type={Type.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update enumprepaidinvoicestatus set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("Type=").Append(this.Type.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<enumprepaidinvoicestatu,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<enumprepaidinvoicestatu,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<enumprepaidinvoicestatu,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<enumprepaidinvoicestatu,string> whereClauseMethod)
 		{
-			return $@"delete from enumprepaidinvoicestatus 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from enumprepaidinvoicestatus 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

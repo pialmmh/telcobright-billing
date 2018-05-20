@@ -8,42 +8,41 @@ namespace MediationModel
 {
 	public partial class cdrpartialreference:ICacheble<cdrpartialreference>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{UniqueBillId.ToMySqlField()},
-				{switchid.ToMySqlField()},
-				{lastIdcall.ToMySqlField()},
-				{CallDate.ToMySqlField()},
-				{commaSepIdcallsForAllInstances.ToMySqlField()},
-				{lastFilename.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.UniqueBillId.ToMySqlField()).Append(",")
+				.Append(this.switchid.ToMySqlField()).Append(",")
+				.Append(this.lastIdcall.ToMySqlField()).Append(",")
+				.Append(this.CallDate.ToMySqlField()).Append(",")
+				.Append(this.commaSepIdcallsForAllInstances.ToMySqlField()).Append(",")
+				.Append(this.lastFilename.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<cdrpartialreference,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<cdrpartialreference,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<cdrpartialreference,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<cdrpartialreference,string> whereClauseMethod)
 		{
-			return $@"update cdrpartialreference set 
-				UniqueBillId={UniqueBillId.ToMySqlField()+" "},
-				switchid={switchid.ToMySqlField()+" "},
-				lastIdcall={lastIdcall.ToMySqlField()+" "},
-				CallDate={CallDate.ToMySqlField()+" "},
-				commaSepIdcallsForAllInstances={commaSepIdcallsForAllInstances.ToMySqlField()+" "},
-				lastFilename={lastFilename.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update cdrpartialreference set ")
+				.Append("UniqueBillId=").Append(this.UniqueBillId.ToMySqlField()).Append(",")
+				.Append("switchid=").Append(this.switchid.ToMySqlField()).Append(",")
+				.Append("lastIdcall=").Append(this.lastIdcall.ToMySqlField()).Append(",")
+				.Append("CallDate=").Append(this.CallDate.ToMySqlField()).Append(",")
+				.Append("commaSepIdcallsForAllInstances=").Append(this.commaSepIdcallsForAllInstances.ToMySqlField()).Append(",")
+				.Append("lastFilename=").Append(this.lastFilename.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<cdrpartialreference,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<cdrpartialreference,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<cdrpartialreference,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<cdrpartialreference,string> whereClauseMethod)
 		{
-			return $@"delete from cdrpartialreference 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from cdrpartialreference 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

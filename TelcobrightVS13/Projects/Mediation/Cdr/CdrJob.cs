@@ -82,12 +82,14 @@ namespace TelcobrightMediation.Cdr
                 throw new Exception("Duration sum in cdr and summary are not tollerably equal");
             if(!mediationTester.SummaryCountTwiceAsCdrCount(processedCdrExts))
                 throw new Exception("Summary count is not twice as cdr count");
+            if (!mediationTester.CdrDurationMatchesSumOfInsertedAndUpdatedSummaryDurationInCache(this.CdrProcessor)) ;
+            throw new Exception("Cdr duration does not match inserted & updated summary instances duration in cache. ");
             //if(!mediationTester
             //    .SumOfPrevDayWiseDurationsAndNewSummaryInstancesIsEqualToSameInMergedSummaryCache(
             //        this.CdrProcessor))
             //    throw new Exception("Sum of prev day wise durations and new summary instances is not equal to same " +
             //                        "in merged summary cache");
-            if(!mediationTester.DurationSumOfNonPartialRawPartialsAndRawDurationAreTollerablyEqual(this.CdrProcessor))
+            if (!mediationTester.DurationSumOfNonPartialRawPartialsAndRawDurationAreTollerablyEqual(this.CdrProcessor))
                 throw new Exception("Duration sum Of non partial and raw Partial cdrs " +
                                     "are not equal to duration in raw instances.");
         }

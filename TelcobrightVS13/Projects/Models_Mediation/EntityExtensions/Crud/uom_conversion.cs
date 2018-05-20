@@ -8,50 +8,49 @@ namespace MediationModel
 {
 	public partial class uom_conversion:ICacheble<uom_conversion>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{UOM_ID.ToMySqlField()},
-				{UOM_ID_TO.ToMySqlField()},
-				{CONVERSION_FACTOR.ToMySqlField()},
-				{CUSTOM_METHOD_ID.ToMySqlField()},
-				{DECIMAL_SCALE.ToMySqlField()},
-				{ROUNDING_MODE.ToMySqlField()},
-				{LAST_UPDATED_STAMP.ToMySqlField()},
-				{LAST_UPDATED_TX_STAMP.ToMySqlField()},
-				{CREATED_STAMP.ToMySqlField()},
-				{CREATED_TX_STAMP.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.UOM_ID.ToMySqlField()).Append(",")
+				.Append(this.UOM_ID_TO.ToMySqlField()).Append(",")
+				.Append(this.CONVERSION_FACTOR.ToMySqlField()).Append(",")
+				.Append(this.CUSTOM_METHOD_ID.ToMySqlField()).Append(",")
+				.Append(this.DECIMAL_SCALE.ToMySqlField()).Append(",")
+				.Append(this.ROUNDING_MODE.ToMySqlField()).Append(",")
+				.Append(this.LAST_UPDATED_STAMP.ToMySqlField()).Append(",")
+				.Append(this.LAST_UPDATED_TX_STAMP.ToMySqlField()).Append(",")
+				.Append(this.CREATED_STAMP.ToMySqlField()).Append(",")
+				.Append(this.CREATED_TX_STAMP.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<uom_conversion,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<uom_conversion,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<uom_conversion,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<uom_conversion,string> whereClauseMethod)
 		{
-			return $@"update uom_conversion set 
-				UOM_ID={UOM_ID.ToMySqlField()+" "},
-				UOM_ID_TO={UOM_ID_TO.ToMySqlField()+" "},
-				CONVERSION_FACTOR={CONVERSION_FACTOR.ToMySqlField()+" "},
-				CUSTOM_METHOD_ID={CUSTOM_METHOD_ID.ToMySqlField()+" "},
-				DECIMAL_SCALE={DECIMAL_SCALE.ToMySqlField()+" "},
-				ROUNDING_MODE={ROUNDING_MODE.ToMySqlField()+" "},
-				LAST_UPDATED_STAMP={LAST_UPDATED_STAMP.ToMySqlField()+" "},
-				LAST_UPDATED_TX_STAMP={LAST_UPDATED_TX_STAMP.ToMySqlField()+" "},
-				CREATED_STAMP={CREATED_STAMP.ToMySqlField()+" "},
-				CREATED_TX_STAMP={CREATED_TX_STAMP.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update uom_conversion set ")
+				.Append("UOM_ID=").Append(this.UOM_ID.ToMySqlField()).Append(",")
+				.Append("UOM_ID_TO=").Append(this.UOM_ID_TO.ToMySqlField()).Append(",")
+				.Append("CONVERSION_FACTOR=").Append(this.CONVERSION_FACTOR.ToMySqlField()).Append(",")
+				.Append("CUSTOM_METHOD_ID=").Append(this.CUSTOM_METHOD_ID.ToMySqlField()).Append(",")
+				.Append("DECIMAL_SCALE=").Append(this.DECIMAL_SCALE.ToMySqlField()).Append(",")
+				.Append("ROUNDING_MODE=").Append(this.ROUNDING_MODE.ToMySqlField()).Append(",")
+				.Append("LAST_UPDATED_STAMP=").Append(this.LAST_UPDATED_STAMP.ToMySqlField()).Append(",")
+				.Append("LAST_UPDATED_TX_STAMP=").Append(this.LAST_UPDATED_TX_STAMP.ToMySqlField()).Append(",")
+				.Append("CREATED_STAMP=").Append(this.CREATED_STAMP.ToMySqlField()).Append(",")
+				.Append("CREATED_TX_STAMP=").Append(this.CREATED_TX_STAMP.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<uom_conversion,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<uom_conversion,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<uom_conversion,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<uom_conversion,string> whereClauseMethod)
 		{
-			return $@"delete from uom_conversion 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from uom_conversion 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -16,8 +17,8 @@ namespace TelcobrightMediation.Cdr
 {
     public class CdrSummaryContext
     {
-        public Dictionary<string, SummaryCache<AbstractCdrSummary, CdrSummaryTuple>> TableWiseSummaryCache { get; }
-            = new Dictionary<string, SummaryCache<AbstractCdrSummary, CdrSummaryTuple>>();
+        public ConcurrentDictionary<string, SummaryCache<AbstractCdrSummary, CdrSummaryTuple>> TableWiseSummaryCache { get; }
+            = new ConcurrentDictionary<string, SummaryCache<AbstractCdrSummary, CdrSummaryTuple>>();
         public Dictionary<string, CdrSummaryFactory<CdrExt>> TargetTableWiseSummaryFactory { get; }
         private MediationContext MediationContext { get; }
         private AutoIncrementManager AutoIncrementManager { get; }
@@ -69,7 +70,9 @@ namespace TelcobrightMediation.Cdr
                     foreach (string summaryTableName in summaryTargetTables.Keys)
                     {
                         var summaryCache = CreateSummaryCacheInstance(summaryTableName);
-                        this.TableWiseSummaryCache.Add(summaryTableName, summaryCache);
+                        if(this.TableWiseSummaryCache.TryAdd(summaryTableName, summaryCache)==false)
+                            throw  new Exception("Could not add to concurrent dictionary TableWiseSummary " +
+                                                 "in CdrSummaryContext");
                         List<DateTime> selectedDateTimes;
                         if (summaryTableName.Contains("day"))
                         {
@@ -92,15 +95,19 @@ namespace TelcobrightMediation.Cdr
         }
         public void ValidateDayVsHourWiseSummaryCollection()
         {
-            var dayWiseSummaryCaches = this.TableWiseSummaryCache.Where(kv => kv.Key.Contains("_day_"))
+            var daySummaryCaches = this.TableWiseSummaryCache.Where(kv => kv.Key.Contains("_day_"))
                 .ToDictionary(kv => kv.Key, kv => kv.Value);
-            var hourWiseSummaryCaches = this.TableWiseSummaryCache.Where(kv => kv.Key.Contains("_hr_"))
+            //todo: remove temp code
+            var prevSummarySumInCache = daySummaryCaches.Values.SelectMany(c => c.GetItems())
+                .Sum(s => s.actualduration);
+            //temp code
+            var hourSummaryCaches = this.TableWiseSummaryCache.Where(kv => kv.Key.Contains("_hr_"))
                 .ToDictionary(kv => kv.Key, kv => kv.Value);
-            foreach (var kv in dayWiseSummaryCaches)
+            foreach (var kv in daySummaryCaches)
             {
                 SummaryCache<AbstractCdrSummary, CdrSummaryTuple> dayWiseSummaryCache = kv.Value;
                 SummaryCache<AbstractCdrSummary, CdrSummaryTuple> hourWiseSummaryCache =
-                    hourWiseSummaryCaches[kv.Key.Replace("day", "hr")];
+                    hourSummaryCaches[kv.Key.Replace("day", "hr")];
                 var daySumOfDuration = dayWiseSummaryCache.GetItems().Sum(s => s.actualduration);
                 var hourWiseSumOfDuration = hourWiseSummaryCache.GetItems().Sum(s => s.actualduration);
                 //if (Math.Abs(daySumOfDuration - hourWiseSumOfDuration) > this.MediationContext.Tbc.CdrSetting.FractionalNumberComparisonTollerance)

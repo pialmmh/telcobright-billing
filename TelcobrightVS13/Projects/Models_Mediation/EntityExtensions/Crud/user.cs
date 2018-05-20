@@ -8,54 +8,53 @@ namespace MediationModel
 {
 	public partial class user:ICacheble<user>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{Id.ToMySqlField()},
-				{Email.ToMySqlField()},
-				{EmailConfirmed.ToMySqlField()},
-				{PasswordHash.ToMySqlField()},
-				{SecurityStamp.ToMySqlField()},
-				{PhoneNumber.ToMySqlField()},
-				{PhoneNumberConfirmed.ToMySqlField()},
-				{TwoFactorEnabled.ToMySqlField()},
-				{LockoutEndDateUtc.ToMySqlField()},
-				{LockoutEnabled.ToMySqlField()},
-				{AccessFailedCount.ToMySqlField()},
-				{UserName.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.Id.ToMySqlField()).Append(",")
+				.Append(this.Email.ToMySqlField()).Append(",")
+				.Append(this.EmailConfirmed.ToMySqlField()).Append(",")
+				.Append(this.PasswordHash.ToMySqlField()).Append(",")
+				.Append(this.SecurityStamp.ToMySqlField()).Append(",")
+				.Append(this.PhoneNumber.ToMySqlField()).Append(",")
+				.Append(this.PhoneNumberConfirmed.ToMySqlField()).Append(",")
+				.Append(this.TwoFactorEnabled.ToMySqlField()).Append(",")
+				.Append(this.LockoutEndDateUtc.ToMySqlField()).Append(",")
+				.Append(this.LockoutEnabled.ToMySqlField()).Append(",")
+				.Append(this.AccessFailedCount.ToMySqlField()).Append(",")
+				.Append(this.UserName.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<user,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<user,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<user,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<user,string> whereClauseMethod)
 		{
-			return $@"update users set 
-				Id={Id.ToMySqlField()+" "},
-				Email={Email.ToMySqlField()+" "},
-				EmailConfirmed={EmailConfirmed.ToMySqlField()+" "},
-				PasswordHash={PasswordHash.ToMySqlField()+" "},
-				SecurityStamp={SecurityStamp.ToMySqlField()+" "},
-				PhoneNumber={PhoneNumber.ToMySqlField()+" "},
-				PhoneNumberConfirmed={PhoneNumberConfirmed.ToMySqlField()+" "},
-				TwoFactorEnabled={TwoFactorEnabled.ToMySqlField()+" "},
-				LockoutEndDateUtc={LockoutEndDateUtc.ToMySqlField()+" "},
-				LockoutEnabled={LockoutEnabled.ToMySqlField()+" "},
-				AccessFailedCount={AccessFailedCount.ToMySqlField()+" "},
-				UserName={UserName.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update users set ")
+				.Append("Id=").Append(this.Id.ToMySqlField()).Append(",")
+				.Append("Email=").Append(this.Email.ToMySqlField()).Append(",")
+				.Append("EmailConfirmed=").Append(this.EmailConfirmed.ToMySqlField()).Append(",")
+				.Append("PasswordHash=").Append(this.PasswordHash.ToMySqlField()).Append(",")
+				.Append("SecurityStamp=").Append(this.SecurityStamp.ToMySqlField()).Append(",")
+				.Append("PhoneNumber=").Append(this.PhoneNumber.ToMySqlField()).Append(",")
+				.Append("PhoneNumberConfirmed=").Append(this.PhoneNumberConfirmed.ToMySqlField()).Append(",")
+				.Append("TwoFactorEnabled=").Append(this.TwoFactorEnabled.ToMySqlField()).Append(",")
+				.Append("LockoutEndDateUtc=").Append(this.LockoutEndDateUtc.ToMySqlField()).Append(",")
+				.Append("LockoutEnabled=").Append(this.LockoutEnabled.ToMySqlField()).Append(",")
+				.Append("AccessFailedCount=").Append(this.AccessFailedCount.ToMySqlField()).Append(",")
+				.Append("UserName=").Append(this.UserName.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<user,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<user,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<user,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<user,string> whereClauseMethod)
 		{
-			return $@"delete from users 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from users 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

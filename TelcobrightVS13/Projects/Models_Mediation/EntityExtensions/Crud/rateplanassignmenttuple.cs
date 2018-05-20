@@ -8,42 +8,41 @@ namespace MediationModel
 {
 	public partial class rateplanassignmenttuple:ICacheble<rateplanassignmenttuple>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{idService.ToMySqlField()},
-				{AssignDirection.ToMySqlField()},
-				{idpartner.ToMySqlField()},
-				{route.ToMySqlField()},
-				{priority.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.idService.ToMySqlField()).Append(",")
+				.Append(this.AssignDirection.ToMySqlField()).Append(",")
+				.Append(this.idpartner.ToMySqlField()).Append(",")
+				.Append(this.route.ToMySqlField()).Append(",")
+				.Append(this.priority.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<rateplanassignmenttuple,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<rateplanassignmenttuple,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<rateplanassignmenttuple,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<rateplanassignmenttuple,string> whereClauseMethod)
 		{
-			return $@"update rateplanassignmenttuple set 
-				id={id.ToMySqlField()+" "},
-				idService={idService.ToMySqlField()+" "},
-				AssignDirection={AssignDirection.ToMySqlField()+" "},
-				idpartner={idpartner.ToMySqlField()+" "},
-				route={route.ToMySqlField()+" "},
-				priority={priority.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update rateplanassignmenttuple set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("idService=").Append(this.idService.ToMySqlField()).Append(",")
+				.Append("AssignDirection=").Append(this.AssignDirection.ToMySqlField()).Append(",")
+				.Append("idpartner=").Append(this.idpartner.ToMySqlField()).Append(",")
+				.Append("route=").Append(this.route.ToMySqlField()).Append(",")
+				.Append("priority=").Append(this.priority.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<rateplanassignmenttuple,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<rateplanassignmenttuple,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<rateplanassignmenttuple,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<rateplanassignmenttuple,string> whereClauseMethod)
 		{
-			return $@"delete from rateplanassignmenttuple 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from rateplanassignmenttuple 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

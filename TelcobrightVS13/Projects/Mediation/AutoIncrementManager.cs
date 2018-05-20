@@ -21,9 +21,9 @@ namespace TelcobrightMediation
         private int SegmentSizeForDbWrite { get; }
 
         public AutoIncrementManager(Func<autoincrementcounter, int> dictionaryKeyGenerator,
-            Func<autoincrementcounter, string> insertCommandGenerator,
-            Func<autoincrementcounter, string> updateCommandGenerator,
-            Func<autoincrementcounter, string> deleteCommandPartGenerator,
+            Func<autoincrementcounter, StringBuilder> insertCommandGenerator,
+            Func<autoincrementcounter, StringBuilder> updateCommandGenerator,
+            Func<autoincrementcounter, StringBuilder> deleteCommandPartGenerator,
             DbCommand dbCmd, int segmentSizeForDbWrite)
             : base(dictionaryKeyGenerator, insertCommandGenerator, updateCommandGenerator,
                 deleteCommandPartGenerator) //Constructor

@@ -8,34 +8,33 @@ namespace MediationModel
 {
 	public partial class autoincrementcounter:ICacheble<autoincrementcounter>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{tableName.ToMySqlField()},
-				{value.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.tableName.ToMySqlField()).Append(",")
+				.Append(this.value.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<autoincrementcounter,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<autoincrementcounter,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<autoincrementcounter,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<autoincrementcounter,string> whereClauseMethod)
 		{
-			return $@"update autoincrementcounter set 
-				tableName={tableName.ToMySqlField()+" "},
-				value={value.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update autoincrementcounter set ")
+				.Append("tableName=").Append(this.tableName.ToMySqlField()).Append(",")
+				.Append("value=").Append(this.value.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<autoincrementcounter,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<autoincrementcounter,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<autoincrementcounter,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<autoincrementcounter,string> whereClauseMethod)
 		{
-			return $@"delete from autoincrementcounter 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from autoincrementcounter 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

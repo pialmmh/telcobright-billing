@@ -9,7 +9,7 @@ using LibraryExtensions;
 using MediationModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TelcobrightMediation.Cdr;
-
+using CdrSummaryTuple = System.ValueTuple<int, int, int, string, string, decimal, decimal, System.ValueTuple<string, string, string, string, string, string, string, System.ValueTuple<string, string, string, string, string, string>>>;
 namespace TelcobrightMediation
 {
     public class MediationTester
@@ -42,6 +42,18 @@ namespace TelcobrightMediation
             int summaryTypeCount = 2;//at this moment just hr & day
             bool result = Math.Abs(durationSumInCdr - decimal.Divide(durationSumInSummaries, summaryTypeCount)) 
                 <= this.FractionComparisionTollerance;
+            return result;
+        }
+        public bool CdrDurationMatchesSumOfInsertedAndUpdatedSummaryDurationInCache(CdrProcessor cdrProcessor)
+        {
+            var processedCdrExts = cdrProcessor.CollectionResult.ProcessedCdrExts.AsParallel();
+            decimal durationSumInCdr = processedCdrExts.Sum(c => Convert.ToDecimal(c.Cdr?.DurationSec));
+            var daySummaryCaches = cdrProcessor.CdrJobContext.CdrSummaryContext.TableWiseSummaryCache
+                .Where(kv => kv.Key.Contains("day")).Select(kv => kv.Value).ToList();
+            var inserteDuration = daySummaryCaches.SelectMany(c => c.GetInsertedItems()).Sum(s => s.actualduration);
+            var updatedDuration = daySummaryCaches.SelectMany(c => c.GetUpdatedItems()).Sum(s => s.actualduration);
+
+            bool result = durationSumInCdr == inserteDuration + updatedDuration;
             return result;
         }
         public bool SummaryCountTwiceAsCdrCount(ParallelQuery<CdrExt> processedCdrExts)

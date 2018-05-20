@@ -8,64 +8,63 @@ namespace MediationModel
 {
 	public partial class routeaddressmapping:ICacheble<routeaddressmapping>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{idRouteAddressMapping.ToMySqlField()},
-				{IpTdmAddress.ToMySqlField()},
-				{NoOfChannels.ToMySqlField()},
-				{AddressType.ToMySqlField()},
-				{SignalingProtocol.ToMySqlField()},
-				{SS7NetworkIndicator.ToMySqlField()},
-				{TransportProtocol.ToMySqlField()},
-				{SignalingPort.ToMySqlField()},
-				{Comment.ToMySqlField()},
-				{idRoute.ToMySqlField()},
-				{SwitchVendor.ToMySqlField()},
-				{date1.ToMySqlField()},
-				{field1.ToMySqlField()},
-				{field2.ToMySqlField()},
-				{field3.ToMySqlField()},
-				{field4.ToMySqlField()},
-				{field5.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.idRouteAddressMapping.ToMySqlField()).Append(",")
+				.Append(this.IpTdmAddress.ToMySqlField()).Append(",")
+				.Append(this.NoOfChannels.ToMySqlField()).Append(",")
+				.Append(this.AddressType.ToMySqlField()).Append(",")
+				.Append(this.SignalingProtocol.ToMySqlField()).Append(",")
+				.Append(this.SS7NetworkIndicator.ToMySqlField()).Append(",")
+				.Append(this.TransportProtocol.ToMySqlField()).Append(",")
+				.Append(this.SignalingPort.ToMySqlField()).Append(",")
+				.Append(this.Comment.ToMySqlField()).Append(",")
+				.Append(this.idRoute.ToMySqlField()).Append(",")
+				.Append(this.SwitchVendor.ToMySqlField()).Append(",")
+				.Append(this.date1.ToMySqlField()).Append(",")
+				.Append(this.field1.ToMySqlField()).Append(",")
+				.Append(this.field2.ToMySqlField()).Append(",")
+				.Append(this.field3.ToMySqlField()).Append(",")
+				.Append(this.field4.ToMySqlField()).Append(",")
+				.Append(this.field5.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<routeaddressmapping,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<routeaddressmapping,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<routeaddressmapping,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<routeaddressmapping,string> whereClauseMethod)
 		{
-			return $@"update routeaddressmapping set 
-				idRouteAddressMapping={idRouteAddressMapping.ToMySqlField()+" "},
-				IpTdmAddress={IpTdmAddress.ToMySqlField()+" "},
-				NoOfChannels={NoOfChannels.ToMySqlField()+" "},
-				AddressType={AddressType.ToMySqlField()+" "},
-				SignalingProtocol={SignalingProtocol.ToMySqlField()+" "},
-				SS7NetworkIndicator={SS7NetworkIndicator.ToMySqlField()+" "},
-				TransportProtocol={TransportProtocol.ToMySqlField()+" "},
-				SignalingPort={SignalingPort.ToMySqlField()+" "},
-				Comment={Comment.ToMySqlField()+" "},
-				idRoute={idRoute.ToMySqlField()+" "},
-				SwitchVendor={SwitchVendor.ToMySqlField()+" "},
-				date1={date1.ToMySqlField()+" "},
-				field1={field1.ToMySqlField()+" "},
-				field2={field2.ToMySqlField()+" "},
-				field3={field3.ToMySqlField()+" "},
-				field4={field4.ToMySqlField()+" "},
-				field5={field5.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update routeaddressmapping set ")
+				.Append("idRouteAddressMapping=").Append(this.idRouteAddressMapping.ToMySqlField()).Append(",")
+				.Append("IpTdmAddress=").Append(this.IpTdmAddress.ToMySqlField()).Append(",")
+				.Append("NoOfChannels=").Append(this.NoOfChannels.ToMySqlField()).Append(",")
+				.Append("AddressType=").Append(this.AddressType.ToMySqlField()).Append(",")
+				.Append("SignalingProtocol=").Append(this.SignalingProtocol.ToMySqlField()).Append(",")
+				.Append("SS7NetworkIndicator=").Append(this.SS7NetworkIndicator.ToMySqlField()).Append(",")
+				.Append("TransportProtocol=").Append(this.TransportProtocol.ToMySqlField()).Append(",")
+				.Append("SignalingPort=").Append(this.SignalingPort.ToMySqlField()).Append(",")
+				.Append("Comment=").Append(this.Comment.ToMySqlField()).Append(",")
+				.Append("idRoute=").Append(this.idRoute.ToMySqlField()).Append(",")
+				.Append("SwitchVendor=").Append(this.SwitchVendor.ToMySqlField()).Append(",")
+				.Append("date1=").Append(this.date1.ToMySqlField()).Append(",")
+				.Append("field1=").Append(this.field1.ToMySqlField()).Append(",")
+				.Append("field2=").Append(this.field2.ToMySqlField()).Append(",")
+				.Append("field3=").Append(this.field3.ToMySqlField()).Append(",")
+				.Append("field4=").Append(this.field4.ToMySqlField()).Append(",")
+				.Append("field5=").Append(this.field5.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<routeaddressmapping,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<routeaddressmapping,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<routeaddressmapping,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<routeaddressmapping,string> whereClauseMethod)
 		{
-			return $@"delete from routeaddressmapping 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from routeaddressmapping 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

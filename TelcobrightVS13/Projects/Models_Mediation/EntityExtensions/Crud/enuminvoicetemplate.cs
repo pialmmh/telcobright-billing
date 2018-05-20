@@ -8,40 +8,39 @@ namespace MediationModel
 {
 	public partial class enuminvoicetemplate:ICacheble<enuminvoicetemplate>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{TemplateName.ToMySqlField()},
-				{Description.ToMySqlField()},
-				{json.ToMySqlField()},
-				{OtherInfo.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.TemplateName.ToMySqlField()).Append(",")
+				.Append(this.Description.ToMySqlField()).Append(",")
+				.Append(this.json.ToMySqlField()).Append(",")
+				.Append(this.OtherInfo.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<enuminvoicetemplate,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<enuminvoicetemplate,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<enuminvoicetemplate,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<enuminvoicetemplate,string> whereClauseMethod)
 		{
-			return $@"update enuminvoicetemplate set 
-				id={id.ToMySqlField()+" "},
-				TemplateName={TemplateName.ToMySqlField()+" "},
-				Description={Description.ToMySqlField()+" "},
-				json={json.ToMySqlField()+" "},
-				OtherInfo={OtherInfo.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update enuminvoicetemplate set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("TemplateName=").Append(this.TemplateName.ToMySqlField()).Append(",")
+				.Append("Description=").Append(this.Description.ToMySqlField()).Append(",")
+				.Append("json=").Append(this.json.ToMySqlField()).Append(",")
+				.Append("OtherInfo=").Append(this.OtherInfo.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<enuminvoicetemplate,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<enuminvoicetemplate,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<enuminvoicetemplate,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<enuminvoicetemplate,string> whereClauseMethod)
 		{
-			return $@"delete from enuminvoicetemplate 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from enuminvoicetemplate 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

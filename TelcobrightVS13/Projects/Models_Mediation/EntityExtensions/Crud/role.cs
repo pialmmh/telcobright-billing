@@ -8,34 +8,33 @@ namespace MediationModel
 {
 	public partial class role:ICacheble<role>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{Id.ToMySqlField()},
-				{Name.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.Id.ToMySqlField()).Append(",")
+				.Append(this.Name.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<role,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<role,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<role,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<role,string> whereClauseMethod)
 		{
-			return $@"update roles set 
-				Id={Id.ToMySqlField()+" "},
-				Name={Name.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update roles set ")
+				.Append("Id=").Append(this.Id.ToMySqlField()).Append(",")
+				.Append("Name=").Append(this.Name.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<role,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<role,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<role,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<role,string> whereClauseMethod)
 		{
-			return $@"delete from roles 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from roles 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

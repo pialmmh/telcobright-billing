@@ -38,34 +38,35 @@ namespace TelcobrightTester
         }
         void GetExtInsertValues(StringBuilder sb)
         {
-            IEnumerable<string> valuesToMySqlFields = columns.Select(c => new StringBuilder("{").Append(c).Append(".ToMySqlField()}").ToString());
+            IEnumerable<string> valuesToMySqlFields = columns.Select(c => new StringBuilder(".Append(this.").Append(c).Append(".ToMySqlField())").ToString());
             int startIndent = 2;
-            sb.AppendLineWithIndent("public " + strOverrideForMethods + "string GetExtInsertValues()", startIndent)
+            sb.AppendLineWithIndent("public " + strOverrideForMethods + "StringBuilder GetExtInsertValues()", startIndent)
                 .AppendLineWithIndent("{", startIndent)
-                .AppendLineWithIndent("return $@\"(", 3)
-                .AppendLineWithIndent(string.Join("," + GetLineSeparator(4), valuesToMySqlFields), 4)
-                .AppendLineWithIndent(")\";", 4)
+                .AppendLineWithIndent("return new StringBuilder(\"(\")", 3)
+                .AppendLineWithIndent(string.Join(".Append(\",\")" + GetLineSeparator(4), valuesToMySqlFields)+".Append(\")\")", 4)
+                .AppendLineWithIndent(";", 4)
                 .AppendLineWithIndent("}", startIndent);
         }
         void GetExtInsertCustom(StringBuilder sb)
         {
             int startIndent = 2;
-            sb.AppendWithIndent("public " + strOverrideForMethods + " string GetExtInsertCustom(Func<", startIndent).Append(tableNameInCode).Append(",string> externalInsertMethod").AppendLine(")")
+            sb.AppendWithIndent("public " + strOverrideForMethods + " StringBuilder GetExtInsertCustom(Func<", startIndent).Append(tableNameInCode).Append(",string> externalInsertMethod").AppendLine(")")
                 .AppendLineWithIndent("{", startIndent)
-                .AppendLineWithIndent("return externalInsertMethod.Invoke(this);", 3)
+                .AppendLineWithIndent("return new StringBuilder(externalInsertMethod.Invoke(this));", 3)
                 .AppendLineWithIndent("}", startIndent);
         }
         void GetUpdateCommands(StringBuilder sb)
         {
-            IEnumerable<string> updateLines = columns.Select(c => (new StringBuilder(c).Append("=").Append("{" + c + ".ToMySqlField()+\" \"" + "}"))
+            IEnumerable<string> updateLines = columns.Select(c => 
+            new StringBuilder(".Append(\""+c).Append("=\").Append(").Append("this." + c + ".ToMySqlField())")
                                                                   .ToString());
             int startIndent = 2;
-            sb.AppendWithIndent("public " + strOverrideForMethods + " string GetUpdateCommand(Func<", startIndent).Append(tableNameInCode).AppendLine(",string> whereClauseMethod)")
+            sb.AppendWithIndent("public " + strOverrideForMethods + " StringBuilder GetUpdateCommand(Func<", startIndent).Append(tableNameInCode).AppendLine(",string> whereClauseMethod)")
                 .AppendLineWithIndent("{", startIndent)
-                .AppendWithIndent("return $@\"update ", 3).Append(this.tableNameInDb).AppendLine(" set ")
-                .AppendLineWithIndent(string.Join("," + GetLineSeparator(4), updateLines), 4)
-                .AppendWithIndent("{whereClauseMethod.Invoke(this)}", 4).AppendLine(";")
-                .AppendLineWithIndent("\";", 4)
+                .AppendWithIndent("return new StringBuilder(" + "\"update ", 3).Append(this.tableNameInDb).AppendLine(" set \")")
+                .AppendLineWithIndent(string.Join(".Append(\",\")" + GetLineSeparator(4), updateLines), 4)
+                .AppendWithIndent(".Append(whereClauseMethod.Invoke(this))", 4).AppendLine(";")
+                .AppendLineWithIndent("", 4)
                 .AppendLineWithIndent("}", startIndent);
         }
         void GetUpdateCommandsCustom(StringBuilder sb)
@@ -73,19 +74,19 @@ namespace TelcobrightTester
             IEnumerable<string> updateLines = columns.Select(c => (new StringBuilder(c).Append("=").Append("{" + c + ".ToMySqlField()+\" \"" + "}"))
                                                                   .ToString());
             int startIndent = 2;
-            sb.AppendWithIndent("public " + strOverrideForMethods + " string GetUpdateCommandCustom(Func<", startIndent).Append(tableNameInCode).AppendLine(",string> updateCommandMethodCustom)")
+            sb.AppendWithIndent("public " + strOverrideForMethods + " StringBuilder GetUpdateCommandCustom(Func<", startIndent).Append(tableNameInCode).AppendLine(",string> updateCommandMethodCustom)")
             .AppendLineWithIndent("{", startIndent)
-                .AppendWithIndent("return updateCommandMethodCustom.Invoke(this)", 3).AppendLine(";")
+                .AppendWithIndent("return new StringBuilder(updateCommandMethodCustom.Invoke(this))", 3).AppendLine(";")
                 .AppendLineWithIndent("}", startIndent);
         }
         void GetDeleteCommands(StringBuilder sb)
         {
             int startIndent = 2;
-            sb.AppendWithIndent("public " + strOverrideForMethods + " string GetDeleteCommand(Func<", startIndent).Append(tableNameInCode).AppendLine(",string> whereClauseMethod)")
+            sb.AppendWithIndent("public " + strOverrideForMethods + " StringBuilder GetDeleteCommand(Func<", startIndent).Append(tableNameInCode).AppendLine(",string> whereClauseMethod)")
                 .AppendLineWithIndent("{", startIndent)
-                .AppendWithIndent("return $@\"delete from ", 3).Append(this.tableNameInDb).AppendLine(" ")
-                .AppendWithIndent("{whereClauseMethod.Invoke(this)}", 4).AppendLine(";")
-                .AppendLineWithIndent("\";", 4)
+                .AppendWithIndent("return new StringBuilder($@\"delete from ", 3).Append(this.tableNameInDb).AppendLine(" ")
+                .AppendWithIndent("{whereClauseMethod.Invoke(this)}", 4)//.AppendLine(";")
+                .AppendLine("\");")
                 .AppendLineWithIndent("}", startIndent);
         }
         class TupleDef

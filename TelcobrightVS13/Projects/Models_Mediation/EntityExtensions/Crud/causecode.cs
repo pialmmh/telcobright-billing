@@ -8,40 +8,39 @@ namespace MediationModel
 {
 	public partial class causecode:ICacheble<causecode>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{idSwitch.ToMySqlField()},
-				{CC.ToMySqlField()},
-				{Description.ToMySqlField()},
-				{CallCompleteIndicator.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.idSwitch.ToMySqlField()).Append(",")
+				.Append(this.CC.ToMySqlField()).Append(",")
+				.Append(this.Description.ToMySqlField()).Append(",")
+				.Append(this.CallCompleteIndicator.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<causecode,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<causecode,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<causecode,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<causecode,string> whereClauseMethod)
 		{
-			return $@"update causecode set 
-				id={id.ToMySqlField()+" "},
-				idSwitch={idSwitch.ToMySqlField()+" "},
-				CC={CC.ToMySqlField()+" "},
-				Description={Description.ToMySqlField()+" "},
-				CallCompleteIndicator={CallCompleteIndicator.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update causecode set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("idSwitch=").Append(this.idSwitch.ToMySqlField()).Append(",")
+				.Append("CC=").Append(this.CC.ToMySqlField()).Append(",")
+				.Append("Description=").Append(this.Description.ToMySqlField()).Append(",")
+				.Append("CallCompleteIndicator=").Append(this.CallCompleteIndicator.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<causecode,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<causecode,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<causecode,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<causecode,string> whereClauseMethod)
 		{
-			return $@"delete from causecode 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from causecode 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

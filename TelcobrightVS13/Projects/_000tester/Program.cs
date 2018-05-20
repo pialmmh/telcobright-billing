@@ -16,8 +16,8 @@ namespace Utils
      
         static void Main(string[] args)
         {
-            //var tester = new FractionCeilingTester();
-            //tester.Test();
+            var tester = new FluentTester();
+            tester.Test();
             //tester.PerformanceTest();
             Console.WriteLine("Press a key:");
             Console.WriteLine("1=Test Entity Renaming");

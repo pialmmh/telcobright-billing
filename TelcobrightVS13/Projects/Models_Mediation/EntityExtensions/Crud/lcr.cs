@@ -8,44 +8,43 @@ namespace MediationModel
 {
 	public partial class lcr:ICacheble<lcr>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{Prefix.ToMySqlField()},
-				{idrateplan.ToMySqlField()},
-				{startdate.ToMySqlField()},
-				{LcrCurrent.ToMySqlField()},
-				{LcrHistory.ToMySqlField()},
-				{LastUpdated.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.Prefix.ToMySqlField()).Append(",")
+				.Append(this.idrateplan.ToMySqlField()).Append(",")
+				.Append(this.startdate.ToMySqlField()).Append(",")
+				.Append(this.LcrCurrent.ToMySqlField()).Append(",")
+				.Append(this.LcrHistory.ToMySqlField()).Append(",")
+				.Append(this.LastUpdated.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<lcr,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<lcr,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<lcr,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<lcr,string> whereClauseMethod)
 		{
-			return $@"update lcr set 
-				id={id.ToMySqlField()+" "},
-				Prefix={Prefix.ToMySqlField()+" "},
-				idrateplan={idrateplan.ToMySqlField()+" "},
-				startdate={startdate.ToMySqlField()+" "},
-				LcrCurrent={LcrCurrent.ToMySqlField()+" "},
-				LcrHistory={LcrHistory.ToMySqlField()+" "},
-				LastUpdated={LastUpdated.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update lcr set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("Prefix=").Append(this.Prefix.ToMySqlField()).Append(",")
+				.Append("idrateplan=").Append(this.idrateplan.ToMySqlField()).Append(",")
+				.Append("startdate=").Append(this.startdate.ToMySqlField()).Append(",")
+				.Append("LcrCurrent=").Append(this.LcrCurrent.ToMySqlField()).Append(",")
+				.Append("LcrHistory=").Append(this.LcrHistory.ToMySqlField()).Append(",")
+				.Append("LastUpdated=").Append(this.LastUpdated.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<lcr,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<lcr,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<lcr,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<lcr,string> whereClauseMethod)
 		{
-			return $@"delete from lcr 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from lcr 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

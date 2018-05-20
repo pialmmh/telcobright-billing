@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Text;
 using MediationModel;
 
 namespace TelcobrightMediation
@@ -8,9 +9,9 @@ namespace TelcobrightMediation
     public class TransactionCache : AbstractCache<acc_transaction, string>//string=acc id
     {
         public TransactionCache(Func<acc_transaction, string> dictionaryKeyGenerator,
-            Func<acc_transaction, string> insertCommandGenerator,
-            Func<acc_transaction, string> updateWherePartGenerator,
-            Func<acc_transaction, string> deleteWherePartGenerator)
+            Func<acc_transaction, StringBuilder> insertCommandGenerator,
+            Func<acc_transaction, StringBuilder> updateWherePartGenerator,
+            Func<acc_transaction, StringBuilder> deleteWherePartGenerator)
             : base(dictionaryKeyGenerator,insertCommandGenerator,updateWherePartGenerator,deleteWherePartGenerator)//Constructor
         { }//pass to base
         public override void PopulateCache(Func<Dictionary<string, acc_transaction>> methodToPopulate)//define method in Instance

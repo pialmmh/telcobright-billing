@@ -8,46 +8,45 @@ namespace MediationModel
 {
 	public partial class countrycode:ICacheble<countrycode>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{Code.ToMySqlField()},
-				{Name.ToMySqlField()},
-				{refasr.ToMySqlField()},
-				{refacd.ToMySqlField()},
-				{refccr.ToMySqlField()},
-				{refccrbycc.ToMySqlField()},
-				{refpdd.ToMySqlField()},
-				{refasrfas.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.Code.ToMySqlField()).Append(",")
+				.Append(this.Name.ToMySqlField()).Append(",")
+				.Append(this.refasr.ToMySqlField()).Append(",")
+				.Append(this.refacd.ToMySqlField()).Append(",")
+				.Append(this.refccr.ToMySqlField()).Append(",")
+				.Append(this.refccrbycc.ToMySqlField()).Append(",")
+				.Append(this.refpdd.ToMySqlField()).Append(",")
+				.Append(this.refasrfas.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<countrycode,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<countrycode,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<countrycode,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<countrycode,string> whereClauseMethod)
 		{
-			return $@"update countrycode set 
-				Code={Code.ToMySqlField()+" "},
-				Name={Name.ToMySqlField()+" "},
-				refasr={refasr.ToMySqlField()+" "},
-				refacd={refacd.ToMySqlField()+" "},
-				refccr={refccr.ToMySqlField()+" "},
-				refccrbycc={refccrbycc.ToMySqlField()+" "},
-				refpdd={refpdd.ToMySqlField()+" "},
-				refasrfas={refasrfas.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update countrycode set ")
+				.Append("Code=").Append(this.Code.ToMySqlField()).Append(",")
+				.Append("Name=").Append(this.Name.ToMySqlField()).Append(",")
+				.Append("refasr=").Append(this.refasr.ToMySqlField()).Append(",")
+				.Append("refacd=").Append(this.refacd.ToMySqlField()).Append(",")
+				.Append("refccr=").Append(this.refccr.ToMySqlField()).Append(",")
+				.Append("refccrbycc=").Append(this.refccrbycc.ToMySqlField()).Append(",")
+				.Append("refpdd=").Append(this.refpdd.ToMySqlField()).Append(",")
+				.Append("refasrfas=").Append(this.refasrfas.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<countrycode,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<countrycode,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<countrycode,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<countrycode,string> whereClauseMethod)
 		{
-			return $@"delete from countrycode 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from countrycode 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

@@ -8,42 +8,41 @@ namespace MediationModel
 {
 	public partial class enumservicefamily:ICacheble<enumservicefamily>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{ServiceName.ToMySqlField()},
-				{Description.ToMySqlField()},
-				{PartnerAssignNotNeeded.ToMySqlField()},
-				{ServiceCategory.ToMySqlField()},
-				{AccountingId.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.ServiceName.ToMySqlField()).Append(",")
+				.Append(this.Description.ToMySqlField()).Append(",")
+				.Append(this.PartnerAssignNotNeeded.ToMySqlField()).Append(",")
+				.Append(this.ServiceCategory.ToMySqlField()).Append(",")
+				.Append(this.AccountingId.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<enumservicefamily,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<enumservicefamily,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<enumservicefamily,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<enumservicefamily,string> whereClauseMethod)
 		{
-			return $@"update enumservicefamily set 
-				id={id.ToMySqlField()+" "},
-				ServiceName={ServiceName.ToMySqlField()+" "},
-				Description={Description.ToMySqlField()+" "},
-				PartnerAssignNotNeeded={PartnerAssignNotNeeded.ToMySqlField()+" "},
-				ServiceCategory={ServiceCategory.ToMySqlField()+" "},
-				AccountingId={AccountingId.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update enumservicefamily set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("ServiceName=").Append(this.ServiceName.ToMySqlField()).Append(",")
+				.Append("Description=").Append(this.Description.ToMySqlField()).Append(",")
+				.Append("PartnerAssignNotNeeded=").Append(this.PartnerAssignNotNeeded.ToMySqlField()).Append(",")
+				.Append("ServiceCategory=").Append(this.ServiceCategory.ToMySqlField()).Append(",")
+				.Append("AccountingId=").Append(this.AccountingId.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<enumservicefamily,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<enumservicefamily,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<enumservicefamily,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<enumservicefamily,string> whereClauseMethod)
 		{
-			return $@"delete from enumservicefamily 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from enumservicefamily 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

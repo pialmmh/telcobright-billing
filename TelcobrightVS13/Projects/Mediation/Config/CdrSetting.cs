@@ -28,7 +28,7 @@ namespace TelcobrightMediation
         public CdrSetting()
         {
             this.NerCalculationRule = "NerByCauseCode";
-            this.SegmentSizeForDbWrite = 10000;
+            this.SegmentSizeForDbWrite = 30000;
             this.BatchSizeWhenPreparingLargeSqlJob = 1000000; //1M
             this.DaysToAddBeforeAndAfterUniqueDaysForSafePartialCollection = 1;
             this.IllegalStrToRemoveFromFields = new List<string>();

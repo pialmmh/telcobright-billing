@@ -8,36 +8,35 @@ namespace MediationModel
 {
 	public partial class enumservicegroup:ICacheble<enumservicegroup>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{Type.ToMySqlField()},
-				{AccountingId.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.Type.ToMySqlField()).Append(",")
+				.Append(this.AccountingId.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<enumservicegroup,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<enumservicegroup,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<enumservicegroup,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<enumservicegroup,string> whereClauseMethod)
 		{
-			return $@"update enumservicegroup set 
-				id={id.ToMySqlField()+" "},
-				Type={Type.ToMySqlField()+" "},
-				AccountingId={AccountingId.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update enumservicegroup set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("Type=").Append(this.Type.ToMySqlField()).Append(",")
+				.Append("AccountingId=").Append(this.AccountingId.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<enumservicegroup,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<enumservicegroup,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<enumservicegroup,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<enumservicegroup,string> whereClauseMethod)
 		{
-			return $@"delete from enumservicegroup 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from enumservicegroup 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

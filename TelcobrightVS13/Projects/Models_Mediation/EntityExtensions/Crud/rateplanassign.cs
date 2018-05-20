@@ -8,72 +8,71 @@ namespace MediationModel
 {
 	public partial class rateplanassign:ICacheble<rateplanassign>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{Type.ToMySqlField()},
-				{Description.ToMySqlField()},
-				{date1.ToMySqlField()},
-				{field1.ToMySqlField()},
-				{field2.ToMySqlField()},
-				{field3.ToMySqlField()},
-				{field4.ToMySqlField()},
-				{field5.ToMySqlField()},
-				{TimeZone.ToMySqlField()},
-				{idCarrier.ToMySqlField()},
-				{Currency.ToMySqlField()},
-				{codedeletedate.ToMySqlField()},
-				{ChangeCommitted.ToMySqlField()},
-				{RatePlanName.ToMySqlField()},
-				{Resolution.ToMySqlField()},
-				{MinDurationSec.ToMySqlField()},
-				{SurchargeTime.ToMySqlField()},
-				{SurchargeAmount.ToMySqlField()},
-				{Category.ToMySqlField()},
-				{SubCategory.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.Type.ToMySqlField()).Append(",")
+				.Append(this.Description.ToMySqlField()).Append(",")
+				.Append(this.date1.ToMySqlField()).Append(",")
+				.Append(this.field1.ToMySqlField()).Append(",")
+				.Append(this.field2.ToMySqlField()).Append(",")
+				.Append(this.field3.ToMySqlField()).Append(",")
+				.Append(this.field4.ToMySqlField()).Append(",")
+				.Append(this.field5.ToMySqlField()).Append(",")
+				.Append(this.TimeZone.ToMySqlField()).Append(",")
+				.Append(this.idCarrier.ToMySqlField()).Append(",")
+				.Append(this.Currency.ToMySqlField()).Append(",")
+				.Append(this.codedeletedate.ToMySqlField()).Append(",")
+				.Append(this.ChangeCommitted.ToMySqlField()).Append(",")
+				.Append(this.RatePlanName.ToMySqlField()).Append(",")
+				.Append(this.Resolution.ToMySqlField()).Append(",")
+				.Append(this.MinDurationSec.ToMySqlField()).Append(",")
+				.Append(this.SurchargeTime.ToMySqlField()).Append(",")
+				.Append(this.SurchargeAmount.ToMySqlField()).Append(",")
+				.Append(this.Category.ToMySqlField()).Append(",")
+				.Append(this.SubCategory.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<rateplanassign,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<rateplanassign,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<rateplanassign,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<rateplanassign,string> whereClauseMethod)
 		{
-			return $@"update rateplanassign set 
-				id={id.ToMySqlField()+" "},
-				Type={Type.ToMySqlField()+" "},
-				Description={Description.ToMySqlField()+" "},
-				date1={date1.ToMySqlField()+" "},
-				field1={field1.ToMySqlField()+" "},
-				field2={field2.ToMySqlField()+" "},
-				field3={field3.ToMySqlField()+" "},
-				field4={field4.ToMySqlField()+" "},
-				field5={field5.ToMySqlField()+" "},
-				TimeZone={TimeZone.ToMySqlField()+" "},
-				idCarrier={idCarrier.ToMySqlField()+" "},
-				Currency={Currency.ToMySqlField()+" "},
-				codedeletedate={codedeletedate.ToMySqlField()+" "},
-				ChangeCommitted={ChangeCommitted.ToMySqlField()+" "},
-				RatePlanName={RatePlanName.ToMySqlField()+" "},
-				Resolution={Resolution.ToMySqlField()+" "},
-				MinDurationSec={MinDurationSec.ToMySqlField()+" "},
-				SurchargeTime={SurchargeTime.ToMySqlField()+" "},
-				SurchargeAmount={SurchargeAmount.ToMySqlField()+" "},
-				Category={Category.ToMySqlField()+" "},
-				SubCategory={SubCategory.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update rateplanassign set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("Type=").Append(this.Type.ToMySqlField()).Append(",")
+				.Append("Description=").Append(this.Description.ToMySqlField()).Append(",")
+				.Append("date1=").Append(this.date1.ToMySqlField()).Append(",")
+				.Append("field1=").Append(this.field1.ToMySqlField()).Append(",")
+				.Append("field2=").Append(this.field2.ToMySqlField()).Append(",")
+				.Append("field3=").Append(this.field3.ToMySqlField()).Append(",")
+				.Append("field4=").Append(this.field4.ToMySqlField()).Append(",")
+				.Append("field5=").Append(this.field5.ToMySqlField()).Append(",")
+				.Append("TimeZone=").Append(this.TimeZone.ToMySqlField()).Append(",")
+				.Append("idCarrier=").Append(this.idCarrier.ToMySqlField()).Append(",")
+				.Append("Currency=").Append(this.Currency.ToMySqlField()).Append(",")
+				.Append("codedeletedate=").Append(this.codedeletedate.ToMySqlField()).Append(",")
+				.Append("ChangeCommitted=").Append(this.ChangeCommitted.ToMySqlField()).Append(",")
+				.Append("RatePlanName=").Append(this.RatePlanName.ToMySqlField()).Append(",")
+				.Append("Resolution=").Append(this.Resolution.ToMySqlField()).Append(",")
+				.Append("MinDurationSec=").Append(this.MinDurationSec.ToMySqlField()).Append(",")
+				.Append("SurchargeTime=").Append(this.SurchargeTime.ToMySqlField()).Append(",")
+				.Append("SurchargeAmount=").Append(this.SurchargeAmount.ToMySqlField()).Append(",")
+				.Append("Category=").Append(this.Category.ToMySqlField()).Append(",")
+				.Append("SubCategory=").Append(this.SubCategory.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<rateplanassign,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<rateplanassign,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<rateplanassign,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<rateplanassign,string> whereClauseMethod)
 		{
-			return $@"delete from rateplanassign 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from rateplanassign 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

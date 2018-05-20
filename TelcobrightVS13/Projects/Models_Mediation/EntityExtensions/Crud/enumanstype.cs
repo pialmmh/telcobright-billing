@@ -8,34 +8,33 @@ namespace MediationModel
 {
 	public partial class enumanstype:ICacheble<enumanstype>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{Type.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.Type.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<enumanstype,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<enumanstype,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<enumanstype,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<enumanstype,string> whereClauseMethod)
 		{
-			return $@"update enumanstype set 
-				id={id.ToMySqlField()+" "},
-				Type={Type.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update enumanstype set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("Type=").Append(this.Type.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<enumanstype,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<enumanstype,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<enumanstype,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<enumanstype,string> whereClauseMethod)
 		{
-			return $@"delete from enumanstype 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from enumanstype 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

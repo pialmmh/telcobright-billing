@@ -8,140 +8,139 @@ namespace MediationModel
 {
 	public partial class rate:ICacheble<rate>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{ProductId.ToMySqlField()},
-				{Prefix.ToMySqlField()},
-				{description.ToMySqlField()},
-				{rateamount.ToMySqlField()},
-				{WeekDayStart.ToMySqlField()},
-				{WeekDayEnd.ToMySqlField()},
-				{starttime.ToMySqlField()},
-				{endtime.ToMySqlField()},
-				{Resolution.ToMySqlField()},
-				{MinDurationSec.ToMySqlField()},
-				{SurchargeTime.ToMySqlField()},
-				{SurchargeAmount.ToMySqlField()},
-				{idrateplan.ToMySqlField()},
-				{CountryCode.ToMySqlField()},
-				{date1.ToMySqlField()},
-				{field1.ToMySqlField()},
-				{field2.ToMySqlField()},
-				{field3.ToMySqlField()},
-				{field4.ToMySqlField()},
-				{field5.ToMySqlField()},
-				{startdate.ToMySqlField()},
-				{enddate.ToMySqlField()},
-				{Inactive.ToMySqlField()},
-				{RouteDisabled.ToMySqlField()},
-				{Type.ToMySqlField()},
-				{Currency.ToMySqlField()},
-				{OtherAmount1.ToMySqlField()},
-				{OtherAmount2.ToMySqlField()},
-				{OtherAmount3.ToMySqlField()},
-				{OtherAmount4.ToMySqlField()},
-				{OtherAmount5.ToMySqlField()},
-				{OtherAmount6.ToMySqlField()},
-				{OtherAmount7.ToMySqlField()},
-				{OtherAmount8.ToMySqlField()},
-				{OtherAmount9.ToMySqlField()},
-				{OtherAmount10.ToMySqlField()},
-				{TimeZoneOffsetSec.ToMySqlField()},
-				{RatePosition.ToMySqlField()},
-				{IgwPercentageIn.ToMySqlField()},
-				{ConflictingRateIds.ToMySqlField()},
-				{ChangedByTaskId.ToMySqlField()},
-				{ChangedOn.ToMySqlField()},
-				{Status.ToMySqlField()},
-				{idPreviousRate.ToMySqlField()},
-				{EndPreviousRate.ToMySqlField()},
-				{Category.ToMySqlField()},
-				{SubCategory.ToMySqlField()},
-				{ChangeCommitted.ToMySqlField()},
-				{ConflictingRates.ToMySqlField()},
-				{OverlappingRates.ToMySqlField()},
-				{Comment1.ToMySqlField()},
-				{Comment2.ToMySqlField()},
-				{billingspan.ToMySqlField()},
-				{RateAmountRoundupDecimal.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.ProductId.ToMySqlField()).Append(",")
+				.Append(this.Prefix.ToMySqlField()).Append(",")
+				.Append(this.description.ToMySqlField()).Append(",")
+				.Append(this.rateamount.ToMySqlField()).Append(",")
+				.Append(this.WeekDayStart.ToMySqlField()).Append(",")
+				.Append(this.WeekDayEnd.ToMySqlField()).Append(",")
+				.Append(this.starttime.ToMySqlField()).Append(",")
+				.Append(this.endtime.ToMySqlField()).Append(",")
+				.Append(this.Resolution.ToMySqlField()).Append(",")
+				.Append(this.MinDurationSec.ToMySqlField()).Append(",")
+				.Append(this.SurchargeTime.ToMySqlField()).Append(",")
+				.Append(this.SurchargeAmount.ToMySqlField()).Append(",")
+				.Append(this.idrateplan.ToMySqlField()).Append(",")
+				.Append(this.CountryCode.ToMySqlField()).Append(",")
+				.Append(this.date1.ToMySqlField()).Append(",")
+				.Append(this.field1.ToMySqlField()).Append(",")
+				.Append(this.field2.ToMySqlField()).Append(",")
+				.Append(this.field3.ToMySqlField()).Append(",")
+				.Append(this.field4.ToMySqlField()).Append(",")
+				.Append(this.field5.ToMySqlField()).Append(",")
+				.Append(this.startdate.ToMySqlField()).Append(",")
+				.Append(this.enddate.ToMySqlField()).Append(",")
+				.Append(this.Inactive.ToMySqlField()).Append(",")
+				.Append(this.RouteDisabled.ToMySqlField()).Append(",")
+				.Append(this.Type.ToMySqlField()).Append(",")
+				.Append(this.Currency.ToMySqlField()).Append(",")
+				.Append(this.OtherAmount1.ToMySqlField()).Append(",")
+				.Append(this.OtherAmount2.ToMySqlField()).Append(",")
+				.Append(this.OtherAmount3.ToMySqlField()).Append(",")
+				.Append(this.OtherAmount4.ToMySqlField()).Append(",")
+				.Append(this.OtherAmount5.ToMySqlField()).Append(",")
+				.Append(this.OtherAmount6.ToMySqlField()).Append(",")
+				.Append(this.OtherAmount7.ToMySqlField()).Append(",")
+				.Append(this.OtherAmount8.ToMySqlField()).Append(",")
+				.Append(this.OtherAmount9.ToMySqlField()).Append(",")
+				.Append(this.OtherAmount10.ToMySqlField()).Append(",")
+				.Append(this.TimeZoneOffsetSec.ToMySqlField()).Append(",")
+				.Append(this.RatePosition.ToMySqlField()).Append(",")
+				.Append(this.IgwPercentageIn.ToMySqlField()).Append(",")
+				.Append(this.ConflictingRateIds.ToMySqlField()).Append(",")
+				.Append(this.ChangedByTaskId.ToMySqlField()).Append(",")
+				.Append(this.ChangedOn.ToMySqlField()).Append(",")
+				.Append(this.Status.ToMySqlField()).Append(",")
+				.Append(this.idPreviousRate.ToMySqlField()).Append(",")
+				.Append(this.EndPreviousRate.ToMySqlField()).Append(",")
+				.Append(this.Category.ToMySqlField()).Append(",")
+				.Append(this.SubCategory.ToMySqlField()).Append(",")
+				.Append(this.ChangeCommitted.ToMySqlField()).Append(",")
+				.Append(this.ConflictingRates.ToMySqlField()).Append(",")
+				.Append(this.OverlappingRates.ToMySqlField()).Append(",")
+				.Append(this.Comment1.ToMySqlField()).Append(",")
+				.Append(this.Comment2.ToMySqlField()).Append(",")
+				.Append(this.billingspan.ToMySqlField()).Append(",")
+				.Append(this.RateAmountRoundupDecimal.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<rate,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<rate,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<rate,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<rate,string> whereClauseMethod)
 		{
-			return $@"update rate set 
-				id={id.ToMySqlField()+" "},
-				ProductId={ProductId.ToMySqlField()+" "},
-				Prefix={Prefix.ToMySqlField()+" "},
-				description={description.ToMySqlField()+" "},
-				rateamount={rateamount.ToMySqlField()+" "},
-				WeekDayStart={WeekDayStart.ToMySqlField()+" "},
-				WeekDayEnd={WeekDayEnd.ToMySqlField()+" "},
-				starttime={starttime.ToMySqlField()+" "},
-				endtime={endtime.ToMySqlField()+" "},
-				Resolution={Resolution.ToMySqlField()+" "},
-				MinDurationSec={MinDurationSec.ToMySqlField()+" "},
-				SurchargeTime={SurchargeTime.ToMySqlField()+" "},
-				SurchargeAmount={SurchargeAmount.ToMySqlField()+" "},
-				idrateplan={idrateplan.ToMySqlField()+" "},
-				CountryCode={CountryCode.ToMySqlField()+" "},
-				date1={date1.ToMySqlField()+" "},
-				field1={field1.ToMySqlField()+" "},
-				field2={field2.ToMySqlField()+" "},
-				field3={field3.ToMySqlField()+" "},
-				field4={field4.ToMySqlField()+" "},
-				field5={field5.ToMySqlField()+" "},
-				startdate={startdate.ToMySqlField()+" "},
-				enddate={enddate.ToMySqlField()+" "},
-				Inactive={Inactive.ToMySqlField()+" "},
-				RouteDisabled={RouteDisabled.ToMySqlField()+" "},
-				Type={Type.ToMySqlField()+" "},
-				Currency={Currency.ToMySqlField()+" "},
-				OtherAmount1={OtherAmount1.ToMySqlField()+" "},
-				OtherAmount2={OtherAmount2.ToMySqlField()+" "},
-				OtherAmount3={OtherAmount3.ToMySqlField()+" "},
-				OtherAmount4={OtherAmount4.ToMySqlField()+" "},
-				OtherAmount5={OtherAmount5.ToMySqlField()+" "},
-				OtherAmount6={OtherAmount6.ToMySqlField()+" "},
-				OtherAmount7={OtherAmount7.ToMySqlField()+" "},
-				OtherAmount8={OtherAmount8.ToMySqlField()+" "},
-				OtherAmount9={OtherAmount9.ToMySqlField()+" "},
-				OtherAmount10={OtherAmount10.ToMySqlField()+" "},
-				TimeZoneOffsetSec={TimeZoneOffsetSec.ToMySqlField()+" "},
-				RatePosition={RatePosition.ToMySqlField()+" "},
-				IgwPercentageIn={IgwPercentageIn.ToMySqlField()+" "},
-				ConflictingRateIds={ConflictingRateIds.ToMySqlField()+" "},
-				ChangedByTaskId={ChangedByTaskId.ToMySqlField()+" "},
-				ChangedOn={ChangedOn.ToMySqlField()+" "},
-				Status={Status.ToMySqlField()+" "},
-				idPreviousRate={idPreviousRate.ToMySqlField()+" "},
-				EndPreviousRate={EndPreviousRate.ToMySqlField()+" "},
-				Category={Category.ToMySqlField()+" "},
-				SubCategory={SubCategory.ToMySqlField()+" "},
-				ChangeCommitted={ChangeCommitted.ToMySqlField()+" "},
-				ConflictingRates={ConflictingRates.ToMySqlField()+" "},
-				OverlappingRates={OverlappingRates.ToMySqlField()+" "},
-				Comment1={Comment1.ToMySqlField()+" "},
-				Comment2={Comment2.ToMySqlField()+" "},
-				billingspan={billingspan.ToMySqlField()+" "},
-				RateAmountRoundupDecimal={RateAmountRoundupDecimal.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update rate set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("ProductId=").Append(this.ProductId.ToMySqlField()).Append(",")
+				.Append("Prefix=").Append(this.Prefix.ToMySqlField()).Append(",")
+				.Append("description=").Append(this.description.ToMySqlField()).Append(",")
+				.Append("rateamount=").Append(this.rateamount.ToMySqlField()).Append(",")
+				.Append("WeekDayStart=").Append(this.WeekDayStart.ToMySqlField()).Append(",")
+				.Append("WeekDayEnd=").Append(this.WeekDayEnd.ToMySqlField()).Append(",")
+				.Append("starttime=").Append(this.starttime.ToMySqlField()).Append(",")
+				.Append("endtime=").Append(this.endtime.ToMySqlField()).Append(",")
+				.Append("Resolution=").Append(this.Resolution.ToMySqlField()).Append(",")
+				.Append("MinDurationSec=").Append(this.MinDurationSec.ToMySqlField()).Append(",")
+				.Append("SurchargeTime=").Append(this.SurchargeTime.ToMySqlField()).Append(",")
+				.Append("SurchargeAmount=").Append(this.SurchargeAmount.ToMySqlField()).Append(",")
+				.Append("idrateplan=").Append(this.idrateplan.ToMySqlField()).Append(",")
+				.Append("CountryCode=").Append(this.CountryCode.ToMySqlField()).Append(",")
+				.Append("date1=").Append(this.date1.ToMySqlField()).Append(",")
+				.Append("field1=").Append(this.field1.ToMySqlField()).Append(",")
+				.Append("field2=").Append(this.field2.ToMySqlField()).Append(",")
+				.Append("field3=").Append(this.field3.ToMySqlField()).Append(",")
+				.Append("field4=").Append(this.field4.ToMySqlField()).Append(",")
+				.Append("field5=").Append(this.field5.ToMySqlField()).Append(",")
+				.Append("startdate=").Append(this.startdate.ToMySqlField()).Append(",")
+				.Append("enddate=").Append(this.enddate.ToMySqlField()).Append(",")
+				.Append("Inactive=").Append(this.Inactive.ToMySqlField()).Append(",")
+				.Append("RouteDisabled=").Append(this.RouteDisabled.ToMySqlField()).Append(",")
+				.Append("Type=").Append(this.Type.ToMySqlField()).Append(",")
+				.Append("Currency=").Append(this.Currency.ToMySqlField()).Append(",")
+				.Append("OtherAmount1=").Append(this.OtherAmount1.ToMySqlField()).Append(",")
+				.Append("OtherAmount2=").Append(this.OtherAmount2.ToMySqlField()).Append(",")
+				.Append("OtherAmount3=").Append(this.OtherAmount3.ToMySqlField()).Append(",")
+				.Append("OtherAmount4=").Append(this.OtherAmount4.ToMySqlField()).Append(",")
+				.Append("OtherAmount5=").Append(this.OtherAmount5.ToMySqlField()).Append(",")
+				.Append("OtherAmount6=").Append(this.OtherAmount6.ToMySqlField()).Append(",")
+				.Append("OtherAmount7=").Append(this.OtherAmount7.ToMySqlField()).Append(",")
+				.Append("OtherAmount8=").Append(this.OtherAmount8.ToMySqlField()).Append(",")
+				.Append("OtherAmount9=").Append(this.OtherAmount9.ToMySqlField()).Append(",")
+				.Append("OtherAmount10=").Append(this.OtherAmount10.ToMySqlField()).Append(",")
+				.Append("TimeZoneOffsetSec=").Append(this.TimeZoneOffsetSec.ToMySqlField()).Append(",")
+				.Append("RatePosition=").Append(this.RatePosition.ToMySqlField()).Append(",")
+				.Append("IgwPercentageIn=").Append(this.IgwPercentageIn.ToMySqlField()).Append(",")
+				.Append("ConflictingRateIds=").Append(this.ConflictingRateIds.ToMySqlField()).Append(",")
+				.Append("ChangedByTaskId=").Append(this.ChangedByTaskId.ToMySqlField()).Append(",")
+				.Append("ChangedOn=").Append(this.ChangedOn.ToMySqlField()).Append(",")
+				.Append("Status=").Append(this.Status.ToMySqlField()).Append(",")
+				.Append("idPreviousRate=").Append(this.idPreviousRate.ToMySqlField()).Append(",")
+				.Append("EndPreviousRate=").Append(this.EndPreviousRate.ToMySqlField()).Append(",")
+				.Append("Category=").Append(this.Category.ToMySqlField()).Append(",")
+				.Append("SubCategory=").Append(this.SubCategory.ToMySqlField()).Append(",")
+				.Append("ChangeCommitted=").Append(this.ChangeCommitted.ToMySqlField()).Append(",")
+				.Append("ConflictingRates=").Append(this.ConflictingRates.ToMySqlField()).Append(",")
+				.Append("OverlappingRates=").Append(this.OverlappingRates.ToMySqlField()).Append(",")
+				.Append("Comment1=").Append(this.Comment1.ToMySqlField()).Append(",")
+				.Append("Comment2=").Append(this.Comment2.ToMySqlField()).Append(",")
+				.Append("billingspan=").Append(this.billingspan.ToMySqlField()).Append(",")
+				.Append("RateAmountRoundupDecimal=").Append(this.RateAmountRoundupDecimal.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<rate,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<rate,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<rate,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<rate,string> whereClauseMethod)
 		{
-			return $@"delete from rate 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from rate 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

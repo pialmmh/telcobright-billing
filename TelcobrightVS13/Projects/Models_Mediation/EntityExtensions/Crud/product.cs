@@ -8,46 +8,45 @@ namespace MediationModel
 {
 	public partial class product:ICacheble<product>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{Prefix.ToMySqlField()},
-				{Name.ToMySqlField()},
-				{description.ToMySqlField()},
-				{Category.ToMySqlField()},
-				{SubCategory.ToMySqlField()},
-				{ServiceFamily.ToMySqlField()},
-				{AccountingId.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.Prefix.ToMySqlField()).Append(",")
+				.Append(this.Name.ToMySqlField()).Append(",")
+				.Append(this.description.ToMySqlField()).Append(",")
+				.Append(this.Category.ToMySqlField()).Append(",")
+				.Append(this.SubCategory.ToMySqlField()).Append(",")
+				.Append(this.ServiceFamily.ToMySqlField()).Append(",")
+				.Append(this.AccountingId.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<product,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<product,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<product,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<product,string> whereClauseMethod)
 		{
-			return $@"update product set 
-				id={id.ToMySqlField()+" "},
-				Prefix={Prefix.ToMySqlField()+" "},
-				Name={Name.ToMySqlField()+" "},
-				description={description.ToMySqlField()+" "},
-				Category={Category.ToMySqlField()+" "},
-				SubCategory={SubCategory.ToMySqlField()+" "},
-				ServiceFamily={ServiceFamily.ToMySqlField()+" "},
-				AccountingId={AccountingId.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update product set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("Prefix=").Append(this.Prefix.ToMySqlField()).Append(",")
+				.Append("Name=").Append(this.Name.ToMySqlField()).Append(",")
+				.Append("description=").Append(this.description.ToMySqlField()).Append(",")
+				.Append("Category=").Append(this.Category.ToMySqlField()).Append(",")
+				.Append("SubCategory=").Append(this.SubCategory.ToMySqlField()).Append(",")
+				.Append("ServiceFamily=").Append(this.ServiceFamily.ToMySqlField()).Append(",")
+				.Append("AccountingId=").Append(this.AccountingId.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<product,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<product,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<product,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<product,string> whereClauseMethod)
 		{
-			return $@"delete from product 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from product 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

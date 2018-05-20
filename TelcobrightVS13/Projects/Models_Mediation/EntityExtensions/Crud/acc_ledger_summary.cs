@@ -8,38 +8,37 @@ namespace MediationModel
 {
 	public partial class acc_ledger_summary:ICacheble<acc_ledger_summary>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{idAccount.ToMySqlField()},
-				{transactionDate.ToMySqlField()},
-				{AMOUNT.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.idAccount.ToMySqlField()).Append(",")
+				.Append(this.transactionDate.ToMySqlField()).Append(",")
+				.Append(this.AMOUNT.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<acc_ledger_summary,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<acc_ledger_summary,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<acc_ledger_summary,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<acc_ledger_summary,string> whereClauseMethod)
 		{
-			return $@"update acc_ledger_summary set 
-				id={id.ToMySqlField()+" "},
-				idAccount={idAccount.ToMySqlField()+" "},
-				transactionDate={transactionDate.ToMySqlField()+" "},
-				AMOUNT={AMOUNT.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update acc_ledger_summary set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("idAccount=").Append(this.idAccount.ToMySqlField()).Append(",")
+				.Append("transactionDate=").Append(this.transactionDate.ToMySqlField()).Append(",")
+				.Append("AMOUNT=").Append(this.AMOUNT.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<acc_ledger_summary,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<acc_ledger_summary,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<acc_ledger_summary,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<acc_ledger_summary,string> whereClauseMethod)
 		{
-			return $@"delete from acc_ledger_summary 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from acc_ledger_summary 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

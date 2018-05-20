@@ -8,36 +8,35 @@ namespace MediationModel
 {
 	public partial class enumbillingspan:ICacheble<enumbillingspan>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{ofbiz_uom_Id.ToMySqlField()},
-				{Type.ToMySqlField()},
-				{value.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.ofbiz_uom_Id.ToMySqlField()).Append(",")
+				.Append(this.Type.ToMySqlField()).Append(",")
+				.Append(this.value.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<enumbillingspan,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<enumbillingspan,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<enumbillingspan,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<enumbillingspan,string> whereClauseMethod)
 		{
-			return $@"update enumbillingspan set 
-				ofbiz_uom_Id={ofbiz_uom_Id.ToMySqlField()+" "},
-				Type={Type.ToMySqlField()+" "},
-				value={value.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update enumbillingspan set ")
+				.Append("ofbiz_uom_Id=").Append(this.ofbiz_uom_Id.ToMySqlField()).Append(",")
+				.Append("Type=").Append(this.Type.ToMySqlField()).Append(",")
+				.Append("value=").Append(this.value.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<enumbillingspan,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<enumbillingspan,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<enumbillingspan,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<enumbillingspan,string> whereClauseMethod)
 		{
-			return $@"delete from enumbillingspan 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from enumbillingspan 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

@@ -8,46 +8,45 @@ namespace MediationModel
 {
 	public partial class uom:ICacheble<uom>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{UOM_ID.ToMySqlField()},
-				{UOM_TYPE_ID.ToMySqlField()},
-				{ABBREVIATION.ToMySqlField()},
-				{DESCRIPTION.ToMySqlField()},
-				{LAST_UPDATED_STAMP.ToMySqlField()},
-				{LAST_UPDATED_TX_STAMP.ToMySqlField()},
-				{CREATED_STAMP.ToMySqlField()},
-				{CREATED_TX_STAMP.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.UOM_ID.ToMySqlField()).Append(",")
+				.Append(this.UOM_TYPE_ID.ToMySqlField()).Append(",")
+				.Append(this.ABBREVIATION.ToMySqlField()).Append(",")
+				.Append(this.DESCRIPTION.ToMySqlField()).Append(",")
+				.Append(this.LAST_UPDATED_STAMP.ToMySqlField()).Append(",")
+				.Append(this.LAST_UPDATED_TX_STAMP.ToMySqlField()).Append(",")
+				.Append(this.CREATED_STAMP.ToMySqlField()).Append(",")
+				.Append(this.CREATED_TX_STAMP.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<uom,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<uom,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<uom,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<uom,string> whereClauseMethod)
 		{
-			return $@"update uom set 
-				UOM_ID={UOM_ID.ToMySqlField()+" "},
-				UOM_TYPE_ID={UOM_TYPE_ID.ToMySqlField()+" "},
-				ABBREVIATION={ABBREVIATION.ToMySqlField()+" "},
-				DESCRIPTION={DESCRIPTION.ToMySqlField()+" "},
-				LAST_UPDATED_STAMP={LAST_UPDATED_STAMP.ToMySqlField()+" "},
-				LAST_UPDATED_TX_STAMP={LAST_UPDATED_TX_STAMP.ToMySqlField()+" "},
-				CREATED_STAMP={CREATED_STAMP.ToMySqlField()+" "},
-				CREATED_TX_STAMP={CREATED_TX_STAMP.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update uom set ")
+				.Append("UOM_ID=").Append(this.UOM_ID.ToMySqlField()).Append(",")
+				.Append("UOM_TYPE_ID=").Append(this.UOM_TYPE_ID.ToMySqlField()).Append(",")
+				.Append("ABBREVIATION=").Append(this.ABBREVIATION.ToMySqlField()).Append(",")
+				.Append("DESCRIPTION=").Append(this.DESCRIPTION.ToMySqlField()).Append(",")
+				.Append("LAST_UPDATED_STAMP=").Append(this.LAST_UPDATED_STAMP.ToMySqlField()).Append(",")
+				.Append("LAST_UPDATED_TX_STAMP=").Append(this.LAST_UPDATED_TX_STAMP.ToMySqlField()).Append(",")
+				.Append("CREATED_STAMP=").Append(this.CREATED_STAMP.ToMySqlField()).Append(",")
+				.Append("CREATED_TX_STAMP=").Append(this.CREATED_TX_STAMP.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<uom,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<uom,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<uom,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<uom,string> whereClauseMethod)
 		{
-			return $@"delete from uom 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from uom 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

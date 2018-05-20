@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using MediationModel;
 
 namespace TelcobrightMediation
@@ -11,9 +12,9 @@ namespace TelcobrightMediation
         public ConcurrentDictionary<string, string> IndexById { get; } = new ConcurrentDictionary<string, string>();
         private readonly object locker = new object();
         public AccountCache(Func<account, string> dictionaryKeyGenerator,
-            Func<account, string> insertCommandGenerator,
-            Func<account, string> updateCommandGenerator,
-            Func<account, string> deleteCommandPartGenerator)
+            Func<account, StringBuilder> insertCommandGenerator,
+            Func<account, StringBuilder> updateCommandGenerator,
+            Func<account, StringBuilder> deleteCommandPartGenerator)
             : base(dictionaryKeyGenerator, insertCommandGenerator, updateCommandGenerator,
                 deleteCommandPartGenerator) //Constructor
         {} //pass to base

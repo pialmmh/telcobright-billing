@@ -8,60 +8,59 @@ namespace MediationModel
 {
 	public partial class xyzprefix:ICacheble<xyzprefix>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{Prefix.ToMySqlField()},
-				{Description.ToMySqlField()},
-				{CountryCode.ToMySqlField()},
-				{date1.ToMySqlField()},
-				{field1.ToMySqlField()},
-				{field2.ToMySqlField()},
-				{field3.ToMySqlField()},
-				{field4.ToMySqlField()},
-				{field5.ToMySqlField()},
-				{refasr.ToMySqlField()},
-				{refacd.ToMySqlField()},
-				{refccr.ToMySqlField()},
-				{refccrbycc.ToMySqlField()},
-				{refpdd.ToMySqlField()},
-				{refasrfas.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.Prefix.ToMySqlField()).Append(",")
+				.Append(this.Description.ToMySqlField()).Append(",")
+				.Append(this.CountryCode.ToMySqlField()).Append(",")
+				.Append(this.date1.ToMySqlField()).Append(",")
+				.Append(this.field1.ToMySqlField()).Append(",")
+				.Append(this.field2.ToMySqlField()).Append(",")
+				.Append(this.field3.ToMySqlField()).Append(",")
+				.Append(this.field4.ToMySqlField()).Append(",")
+				.Append(this.field5.ToMySqlField()).Append(",")
+				.Append(this.refasr.ToMySqlField()).Append(",")
+				.Append(this.refacd.ToMySqlField()).Append(",")
+				.Append(this.refccr.ToMySqlField()).Append(",")
+				.Append(this.refccrbycc.ToMySqlField()).Append(",")
+				.Append(this.refpdd.ToMySqlField()).Append(",")
+				.Append(this.refasrfas.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<xyzprefix,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<xyzprefix,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<xyzprefix,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<xyzprefix,string> whereClauseMethod)
 		{
-			return $@"update xyzprefix set 
-				Prefix={Prefix.ToMySqlField()+" "},
-				Description={Description.ToMySqlField()+" "},
-				CountryCode={CountryCode.ToMySqlField()+" "},
-				date1={date1.ToMySqlField()+" "},
-				field1={field1.ToMySqlField()+" "},
-				field2={field2.ToMySqlField()+" "},
-				field3={field3.ToMySqlField()+" "},
-				field4={field4.ToMySqlField()+" "},
-				field5={field5.ToMySqlField()+" "},
-				refasr={refasr.ToMySqlField()+" "},
-				refacd={refacd.ToMySqlField()+" "},
-				refccr={refccr.ToMySqlField()+" "},
-				refccrbycc={refccrbycc.ToMySqlField()+" "},
-				refpdd={refpdd.ToMySqlField()+" "},
-				refasrfas={refasrfas.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update xyzprefix set ")
+				.Append("Prefix=").Append(this.Prefix.ToMySqlField()).Append(",")
+				.Append("Description=").Append(this.Description.ToMySqlField()).Append(",")
+				.Append("CountryCode=").Append(this.CountryCode.ToMySqlField()).Append(",")
+				.Append("date1=").Append(this.date1.ToMySqlField()).Append(",")
+				.Append("field1=").Append(this.field1.ToMySqlField()).Append(",")
+				.Append("field2=").Append(this.field2.ToMySqlField()).Append(",")
+				.Append("field3=").Append(this.field3.ToMySqlField()).Append(",")
+				.Append("field4=").Append(this.field4.ToMySqlField()).Append(",")
+				.Append("field5=").Append(this.field5.ToMySqlField()).Append(",")
+				.Append("refasr=").Append(this.refasr.ToMySqlField()).Append(",")
+				.Append("refacd=").Append(this.refacd.ToMySqlField()).Append(",")
+				.Append("refccr=").Append(this.refccr.ToMySqlField()).Append(",")
+				.Append("refccrbycc=").Append(this.refccrbycc.ToMySqlField()).Append(",")
+				.Append("refpdd=").Append(this.refpdd.ToMySqlField()).Append(",")
+				.Append("refasrfas=").Append(this.refasrfas.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<xyzprefix,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<xyzprefix,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<xyzprefix,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<xyzprefix,string> whereClauseMethod)
 		{
-			return $@"delete from xyzprefix 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from xyzprefix 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

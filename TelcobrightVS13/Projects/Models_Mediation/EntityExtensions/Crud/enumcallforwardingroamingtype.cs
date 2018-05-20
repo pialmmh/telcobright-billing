@@ -8,34 +8,33 @@ namespace MediationModel
 {
 	public partial class enumcallforwardingroamingtype:ICacheble<enumcallforwardingroamingtype>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{Type.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.Type.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<enumcallforwardingroamingtype,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<enumcallforwardingroamingtype,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<enumcallforwardingroamingtype,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<enumcallforwardingroamingtype,string> whereClauseMethod)
 		{
-			return $@"update enumcallforwardingroamingtype set 
-				id={id.ToMySqlField()+" "},
-				Type={Type.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update enumcallforwardingroamingtype set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("Type=").Append(this.Type.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<enumcallforwardingroamingtype,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<enumcallforwardingroamingtype,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<enumcallforwardingroamingtype,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<enumcallforwardingroamingtype,string> whereClauseMethod)
 		{
-			return $@"delete from enumcallforwardingroamingtype 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from enumcallforwardingroamingtype 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

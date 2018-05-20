@@ -50,8 +50,7 @@ namespace TelcobrightMediation
 
         public void Mediate()
         {
-            //todo: change max deg of parallelism
-            int maxDegreeOfParallelism = 1;
+            int maxDegreeOfParallelism = -1;//-1=no thread limitation
             Parallel.ForEach(this.NewCdrExts, new ParallelOptions() {MaxDegreeOfParallelism = maxDegreeOfParallelism} ,
                 cdrExt =>
                 {
@@ -141,14 +140,50 @@ namespace TelcobrightMediation
 
         public void MergeNewSummariesIntoCache(ParallelQuery<CdrExt> parallelCdrExts)
         {
-            parallelCdrExts.ForAll(processedCdrExt =>
+            //todo: remove temp
+            decimal durationSumInCdr = parallelCdrExts.Sum(c => Convert.ToDecimal(c.Cdr?.DurationSec));
+            var durationInSummary = parallelCdrExts.SelectMany(c => c.TableWiseSummaries.Values)
+                .Sum(s => s.actualduration)/2;
+            //temp code
+            //todo: change to parallel,by enabling the commedted block below
+            //parallelCdrExts.ForAll(processedCdrExt =>
+            //{
+            //    foreach (var kv in processedCdrExt.TableWiseSummaries)
+            //    {
+            //        string summaryTargetTable = kv.Key;
+            //        this.CdrJobContext.CdrSummaryContext.MergeAddSummary(summaryTargetTable, kv.Value);
+            //    }
+            //});
+            //todo: remove temp code
+            var cdrs = parallelCdrExts.ToList();
+            //todo: remove temp code
+            var daySummaryCaches = this.CdrJobContext.CdrSummaryContext.TableWiseSummaryCache
+                .Where(kv => kv.Key.Contains("day")).Select(kv => kv.Value).ToList();
+            var cacheDurationBefore = daySummaryCaches.SelectMany(c => c.GetItems()).Sum(s => s.actualduration);
+            cdrs.ForEach(processedCdrExt =>
             {
+                var thisCdrDuration = processedCdrExt.Cdr.DurationSec;
+                var prevInsDuration = daySummaryCaches.SelectMany(c => c.GetInsertedItems()).Sum(s => s.actualduration);
+                var prevUpdDuration = daySummaryCaches.SelectMany(c => c.GetUpdatedItems()).Sum(s => s.actualduration);
                 foreach (var kv in processedCdrExt.TableWiseSummaries)
                 {
                     string summaryTargetTable = kv.Key;
                     this.CdrJobContext.CdrSummaryContext.MergeAddSummary(summaryTargetTable, kv.Value);
                 }
+                var insDurationSofar = daySummaryCaches.SelectMany(c => c.GetInsertedItems()).Sum(s => s.actualduration);
+                var updDurationSoFar = daySummaryCaches.SelectMany(c => c.GetUpdatedItems()).Sum(s => s.actualduration);
+                var incInsDuration = insDurationSofar - prevInsDuration;
+                var incUpdDuration = updDurationSoFar - prevUpdDuration;
+                if (thisCdrDuration!=incInsDuration+incUpdDuration)
+                    throw new Exception("Mismatch");
             });
+            var cacheDurationAfter= daySummaryCaches.SelectMany(c => c.GetItems()).Sum(s => s.actualduration);
+            var incrementalDuration = cacheDurationAfter - cacheDurationBefore;
+
+            var inserteDuration = daySummaryCaches.SelectMany(c => c.GetInsertedItems()).Sum(s => s.actualduration);
+            var updatedDuration = daySummaryCaches.SelectMany(c => c.GetUpdatedItems()).Sum(s => s.actualduration);
+            bool result = durationSumInCdr == inserteDuration + updatedDuration;
+            //temp code
         }
 
         public void ProcessChargeables(ParallelQuery<CdrExt> parallelCdrExts)
@@ -343,8 +378,8 @@ namespace TelcobrightMediation
         {
             long inconsistentCount = 0;
             int startAt = 0;
-            CollectionSegmenter<string> segmenter
-                = new CollectionSegmenter<string>(
+            CollectionSegmenter<StringBuilder> segmenter
+                = new CollectionSegmenter<StringBuilder>(
                     this.CollectionResult.CdrInconsistents.Select(c => c.GetExtInsertValues()), startAt);
             segmenter.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
                 segment =>
@@ -383,22 +418,16 @@ namespace TelcobrightMediation
             methodEnumerator.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
                 segment =>
                 {
+                    var sbs = segment.AsParallel().Select(c => c.GetExtInsertValues());
                     this.DbCmd.CommandText = new StringBuilder(StaticExtInsertColumnHeaders.cdr)
-                        .Append(string.Join(",",
-                            segment.AsParallel().Select(c => c.GetExtInsertValues()))).ToString();
+                        .Append(StringBuilderJoiner.Join(",", sbs)).ToString();
                     insertCount += this.DbCmd.ExecuteNonQuery();
                 });
-            //todo: change to stringbuilder for faster
-            string str1= new StringBuilder(StaticExtInsertColumnHeaders.cdr)
-                .Append(string.Join(",",
-                    cdrs.AsParallel().Select(c => c.GetExtInsertValues()))).ToString();
-
-            StringBuilder sb = new StringBuilder(StaticExtInsertColumnHeaders.cdr);
-            cdrs.ForAll(c=>sb.Append(c));
-            string s2 = sb.ToString();
-
             return insertCount;
+            
         }
+
+        
     }
 }
 

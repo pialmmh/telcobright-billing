@@ -8,40 +8,39 @@ namespace MediationModel
 {
 	public partial class lcrrateplan:ICacheble<lcrrateplan>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{idRatePlan.ToMySqlField()},
-				{Description.ToMySqlField()},
-				{StartDate.ToMySqlField()},
-				{JobCreated.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.idRatePlan.ToMySqlField()).Append(",")
+				.Append(this.Description.ToMySqlField()).Append(",")
+				.Append(this.StartDate.ToMySqlField()).Append(",")
+				.Append(this.JobCreated.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<lcrrateplan,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<lcrrateplan,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<lcrrateplan,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<lcrrateplan,string> whereClauseMethod)
 		{
-			return $@"update lcrrateplan set 
-				id={id.ToMySqlField()+" "},
-				idRatePlan={idRatePlan.ToMySqlField()+" "},
-				Description={Description.ToMySqlField()+" "},
-				StartDate={StartDate.ToMySqlField()+" "},
-				JobCreated={JobCreated.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update lcrrateplan set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("idRatePlan=").Append(this.idRatePlan.ToMySqlField()).Append(",")
+				.Append("Description=").Append(this.Description.ToMySqlField()).Append(",")
+				.Append("StartDate=").Append(this.StartDate.ToMySqlField()).Append(",")
+				.Append("JobCreated=").Append(this.JobCreated.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<lcrrateplan,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<lcrrateplan,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<lcrrateplan,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<lcrrateplan,string> whereClauseMethod)
 		{
-			return $@"delete from lcrrateplan 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from lcrrateplan 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

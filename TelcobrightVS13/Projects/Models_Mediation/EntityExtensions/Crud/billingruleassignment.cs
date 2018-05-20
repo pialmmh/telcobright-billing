@@ -8,36 +8,35 @@ namespace MediationModel
 {
 	public partial class billingruleassignment:ICacheble<billingruleassignment>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{idRatePlanAssignmentTuple.ToMySqlField()},
-				{idBillingRule.ToMySqlField()},
-				{idServiceGroup.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.idRatePlanAssignmentTuple.ToMySqlField()).Append(",")
+				.Append(this.idBillingRule.ToMySqlField()).Append(",")
+				.Append(this.idServiceGroup.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<billingruleassignment,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<billingruleassignment,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<billingruleassignment,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<billingruleassignment,string> whereClauseMethod)
 		{
-			return $@"update billingruleassignment set 
-				idRatePlanAssignmentTuple={idRatePlanAssignmentTuple.ToMySqlField()+" "},
-				idBillingRule={idBillingRule.ToMySqlField()+" "},
-				idServiceGroup={idServiceGroup.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update billingruleassignment set ")
+				.Append("idRatePlanAssignmentTuple=").Append(this.idRatePlanAssignmentTuple.ToMySqlField()).Append(",")
+				.Append("idBillingRule=").Append(this.idBillingRule.ToMySqlField()).Append(",")
+				.Append("idServiceGroup=").Append(this.idServiceGroup.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<billingruleassignment,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<billingruleassignment,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<billingruleassignment,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<billingruleassignment,string> whereClauseMethod)
 		{
-			return $@"delete from billingruleassignment 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from billingruleassignment 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

@@ -8,38 +8,37 @@ namespace MediationModel
 {
 	public partial class commontg:ICacheble<commontg>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{TgName.ToMySqlField()},
-				{idSwitch.ToMySqlField()},
-				{description.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.TgName.ToMySqlField()).Append(",")
+				.Append(this.idSwitch.ToMySqlField()).Append(",")
+				.Append(this.description.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<commontg,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<commontg,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<commontg,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<commontg,string> whereClauseMethod)
 		{
-			return $@"update commontg set 
-				id={id.ToMySqlField()+" "},
-				TgName={TgName.ToMySqlField()+" "},
-				idSwitch={idSwitch.ToMySqlField()+" "},
-				description={description.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update commontg set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("TgName=").Append(this.TgName.ToMySqlField()).Append(",")
+				.Append("idSwitch=").Append(this.idSwitch.ToMySqlField()).Append(",")
+				.Append("description=").Append(this.description.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<commontg,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<commontg,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<commontg,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<commontg,string> whereClauseMethod)
 		{
-			return $@"delete from commontg 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from commontg 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

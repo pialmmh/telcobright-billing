@@ -104,18 +104,18 @@ namespace TelcobrightMediation
         {
             if (actualDurationSec == 0) return 0;
 
-            float minDurationSec = thisRate.MinDurationSec;
+            decimal minDurationSec = (decimal)thisRate.MinDurationSec;
 
-            if (minDurationSec < 0)//no rounding, use actual duration
+            if (minDurationSec < 0M)//no rounding, use actual duration
             {
                 return actualDurationSec;
             }
-            else if (minDurationSec > 0)//e.g. minimum .1 sec (100 ms) required for rounding up
+            else if (minDurationSec > 0M)//e.g. minimum .1 sec (100 ms) required for rounding up
             {
                 //the code below works upto 11 digits e.g. 3538.099999999994 if the last digit >4 or there is more decimal then only rounds up
-                decimal floorDuration = Convert.ToDecimal(Math.Floor(actualDurationSec));
-                decimal miliSecPart = Convert.ToDecimal(actualDurationSec) - floorDuration;
-                if (miliSecPart >= Convert.ToDecimal(minDurationSec))//holly sheet! 3000.1-3000 is not .1, 0.1999999999998181
+                decimal floorDuration = Math.Floor(actualDurationSec);
+                decimal miliSecPart = actualDurationSec - floorDuration;
+                if (miliSecPart >= minDurationSec)
                 {
                     actualDurationSec = Math.Ceiling(actualDurationSec);
                 }
@@ -170,20 +170,30 @@ namespace TelcobrightMediation
         public decimal GetA2ZAmount(decimal finalDurationSec, Rateext thisRate, int rateFieldNumber,
             CdrProcessor cdrProcessor)
         {
+            int maxDecimalPrecision = cdrProcessor.CdrJobContext.CdrjobInputData.CdrSetting.MaxDecimalPrecision;
             decimal thisRateAmount = 0;
             if (finalDurationSec == 0) return 0;
             switch (rateFieldNumber)
             {
                 case 0: thisRateAmount = thisRate.rateamount; break;
-                case 1: thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount1); break;
-                case 2: thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount2); break;
-                case 3: thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount3); break;
-                case 4: thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount4); break;
-                case 5: thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount5); break;
-                case 6: thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount6); break;
-                case 7: thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount7); break;
-                case 8: thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount8); break;
-                case 9: thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount9); break;
+                case 1: thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount1).RoundFractionsUpTo(maxDecimalPrecision);
+                    break;
+                case 2: thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount2).RoundFractionsUpTo(maxDecimalPrecision);
+                    break;
+                case 3: thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount3).RoundFractionsUpTo(maxDecimalPrecision);
+                    break;
+                case 4: thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount4).RoundFractionsUpTo(maxDecimalPrecision);
+                    break;
+                case 5: thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount5).RoundFractionsUpTo(maxDecimalPrecision);
+                    break;
+                case 6: thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount6).RoundFractionsUpTo(maxDecimalPrecision);
+                    break;
+                case 7: thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount7).RoundFractionsUpTo(maxDecimalPrecision);
+                    break;
+                case 8: thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount8).RoundFractionsUpTo(maxDecimalPrecision);
+                    break;
+                case 9: thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount9).RoundFractionsUpTo(maxDecimalPrecision);
+                    break;
             }
             decimal finalAmount = 0;
             decimal surchargeDuration = 0;

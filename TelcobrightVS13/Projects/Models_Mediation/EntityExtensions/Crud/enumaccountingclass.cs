@@ -8,36 +8,35 @@ namespace MediationModel
 {
 	public partial class enumaccountingclass:ICacheble<enumaccountingclass>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{Name.ToMySqlField()},
-				{NormalBalance.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.Name.ToMySqlField()).Append(",")
+				.Append(this.NormalBalance.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<enumaccountingclass,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<enumaccountingclass,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<enumaccountingclass,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<enumaccountingclass,string> whereClauseMethod)
 		{
-			return $@"update enumaccountingclass set 
-				id={id.ToMySqlField()+" "},
-				Name={Name.ToMySqlField()+" "},
-				NormalBalance={NormalBalance.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update enumaccountingclass set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("Name=").Append(this.Name.ToMySqlField()).Append(",")
+				.Append("NormalBalance=").Append(this.NormalBalance.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<enumaccountingclass,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<enumaccountingclass,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<enumaccountingclass,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<enumaccountingclass,string> whereClauseMethod)
 		{
-			return $@"delete from enumaccountingclass 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from enumaccountingclass 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

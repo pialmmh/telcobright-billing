@@ -8,38 +8,37 @@ namespace MediationModel
 {
 	public partial class userclaim:ICacheble<userclaim>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{Id.ToMySqlField()},
-				{UserId.ToMySqlField()},
-				{ClaimType.ToMySqlField()},
-				{ClaimValue.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.Id.ToMySqlField()).Append(",")
+				.Append(this.UserId.ToMySqlField()).Append(",")
+				.Append(this.ClaimType.ToMySqlField()).Append(",")
+				.Append(this.ClaimValue.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<userclaim,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<userclaim,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<userclaim,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<userclaim,string> whereClauseMethod)
 		{
-			return $@"update userclaims set 
-				Id={Id.ToMySqlField()+" "},
-				UserId={UserId.ToMySqlField()+" "},
-				ClaimType={ClaimType.ToMySqlField()+" "},
-				ClaimValue={ClaimValue.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update userclaims set ")
+				.Append("Id=").Append(this.Id.ToMySqlField()).Append(",")
+				.Append("UserId=").Append(this.UserId.ToMySqlField()).Append(",")
+				.Append("ClaimType=").Append(this.ClaimType.ToMySqlField()).Append(",")
+				.Append("ClaimValue=").Append(this.ClaimValue.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<userclaim,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<userclaim,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<userclaim,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<userclaim,string> whereClauseMethod)
 		{
-			return $@"delete from userclaims 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from userclaims 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

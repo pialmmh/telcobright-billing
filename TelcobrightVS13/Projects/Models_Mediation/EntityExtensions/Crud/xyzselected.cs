@@ -8,36 +8,35 @@ namespace MediationModel
 {
 	public partial class xyzselected:ICacheble<xyzselected>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{id.ToMySqlField()},
-				{prefix.ToMySqlField()},
-				{PrefixSet.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.prefix.ToMySqlField()).Append(",")
+				.Append(this.PrefixSet.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<xyzselected,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<xyzselected,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<xyzselected,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<xyzselected,string> whereClauseMethod)
 		{
-			return $@"update xyzselected set 
-				id={id.ToMySqlField()+" "},
-				prefix={prefix.ToMySqlField()+" "},
-				PrefixSet={PrefixSet.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update xyzselected set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("prefix=").Append(this.prefix.ToMySqlField()).Append(",")
+				.Append("PrefixSet=").Append(this.PrefixSet.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<xyzselected,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<xyzselected,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<xyzselected,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<xyzselected,string> whereClauseMethod)
 		{
-			return $@"delete from xyzselected 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from xyzselected 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

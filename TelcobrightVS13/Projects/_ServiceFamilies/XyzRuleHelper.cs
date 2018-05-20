@@ -51,8 +51,8 @@ namespace TelcobrightMediation
                 rateFieldNumber: 1, //other amount1
                 cdrProcessor: serviceContext.CdrProcessor);
             thisCdr.RoundedDuration = finalDuration;
-            thisCdr.XAmount = Convert.ToDecimal(xAmountBdt);
-            thisCdr.YAmount = Convert.ToDecimal(yAmountUsd);
+            thisCdr.XAmount = xAmountBdt.RoundFractionsUpTo(serviceContext.MaxDecimalPrecision);
+            thisCdr.YAmount = yAmountUsd.RoundFractionsUpTo(serviceContext.MaxDecimalPrecision);
             thisCdr.MatchedPrefixY = matchedRateWithAssignmentTupleId.Prefix;
             thisCdr.MatchedPrefixCustomer = thisCdr.MatchedPrefixY;
             if (thisCdr.CountryCode.IsNullOrEmptyOrWhiteSpace())
@@ -72,10 +72,13 @@ namespace TelcobrightMediation
             uom_conversion_dated conversionRate = GetExactOrNearestEarlierConvRateForXyz(callDate);
             if (conversionRate == null) return null;
             thisCdr.UsdRateY = Convert.ToDecimal(conversionRate.CONVERSION_FACTOR);
-            decimal yBdt = yAmountUsd * (decimal) thisCdr.UsdRateY;
-            decimal zAmount = xAmountBdt - yBdt;
+            decimal yBdt =
+                (yAmountUsd * (decimal) thisCdr.UsdRateY).RoundFractionsUpTo(serviceContext.MaxDecimalPrecision);
+            decimal zAmount = (xAmountBdt - yBdt).RoundFractionsUpTo(serviceContext.MaxDecimalPrecision);
             thisCdr.ZAmount = zAmount;
-            decimal fifteenPcOfZ = Convert.ToDecimal(zAmount * matchedRateWithAssignmentTupleId.OtherAmount2) / 100;
+            decimal fifteenPcOfZ =
+                (Convert.ToDecimal(zAmount * matchedRateWithAssignmentTupleId.OtherAmount2) / 100).RoundFractionsUpTo(
+                    serviceContext.MaxDecimalPrecision);
             decimal finalAmount = 0;
             switch (xyzRatingType)
             {
@@ -90,8 +93,10 @@ namespace TelcobrightMediation
                 default:
                     throw new ArgumentOutOfRangeException(nameof(xyzRatingType), xyzRatingType, null);
             }
-            decimal btrcRevSharePercentage = Convert.ToDecimal(matchedRateWithAssignmentTupleId.OtherAmount3);
-            decimal btrcRevShareAmount = fifteenPcOfZ * btrcRevSharePercentage / 100;
+            decimal btrcRevSharePercentage = Convert.ToDecimal(matchedRateWithAssignmentTupleId.OtherAmount3)
+                .RoundFractionsUpTo(serviceContext.MaxDecimalPrecision);
+            decimal btrcRevShareAmount =
+                (fifteenPcOfZ * btrcRevSharePercentage / 100).RoundFractionsUpTo(serviceContext.MaxDecimalPrecision);
             thisCdr.Tax2 = btrcRevShareAmount;
             account postingAccount = GetPostingAccount(cdrExt, serviceContext, "BDT");
             BillingRule billingRule = GetBillingRule(serviceContext,
@@ -111,7 +116,7 @@ namespace TelcobrightMediation
                     ProductId = matchedRateWithAssignmentTupleId.ProductId,
                     idBilledUom = "BDT",
                     idQuantityUom = "TF_s", //seconds
-                    BilledAmount = Convert.ToDecimal(finalAmount),//invoiceAmount
+                    BilledAmount = finalAmount,//invoiceAmount
                     Quantity = finalDuration,
                     OtherAmount1 = xAmountBdt,//xAmount
                     OtherAmount2 = yAmountUsd,//yAmount

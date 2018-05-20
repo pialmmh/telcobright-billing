@@ -8,38 +8,37 @@ namespace MediationModel
 {
 	public partial class aspnetuserclaim:ICacheble<aspnetuserclaim>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{Id.ToMySqlField()},
-				{UserId.ToMySqlField()},
-				{ClaimType.ToMySqlField()},
-				{ClaimValue.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.Id.ToMySqlField()).Append(",")
+				.Append(this.UserId.ToMySqlField()).Append(",")
+				.Append(this.ClaimType.ToMySqlField()).Append(",")
+				.Append(this.ClaimValue.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<aspnetuserclaim,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<aspnetuserclaim,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<aspnetuserclaim,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<aspnetuserclaim,string> whereClauseMethod)
 		{
-			return $@"update aspnetuserclaims set 
-				Id={Id.ToMySqlField()+" "},
-				UserId={UserId.ToMySqlField()+" "},
-				ClaimType={ClaimType.ToMySqlField()+" "},
-				ClaimValue={ClaimValue.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update aspnetuserclaims set ")
+				.Append("Id=").Append(this.Id.ToMySqlField()).Append(",")
+				.Append("UserId=").Append(this.UserId.ToMySqlField()).Append(",")
+				.Append("ClaimType=").Append(this.ClaimType.ToMySqlField()).Append(",")
+				.Append("ClaimValue=").Append(this.ClaimValue.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<aspnetuserclaim,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<aspnetuserclaim,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<aspnetuserclaim,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<aspnetuserclaim,string> whereClauseMethod)
 		{
-			return $@"delete from aspnetuserclaims 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from aspnetuserclaims 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }
