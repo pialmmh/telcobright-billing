@@ -121,6 +121,12 @@ public partial class ConfigPartner : System.Web.UI.Page
                             break;
                         }
                     }
+
+                    // update balance from acc_temp_transaction
+                    account.balanceAfter += context.acc_temp_transaction.Where(x => x.glAccountId == account.id)
+                        .Select(x => x.amount)
+                        .DefaultIfEmpty(0)
+                        .Sum();
                 }
                 gvAccount.DataSource = accounts;
                 gvAccount.DataBind();

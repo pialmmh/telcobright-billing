@@ -94,33 +94,6 @@ namespace PortalApp.config {
         protected global::System.Web.UI.WebControls.Label lblSer;
         
         /// <summary>
-        /// ddlistType control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlistType;
-        
-        /// <summary>
-        /// paymentReference control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox paymentReference;
-        
-        /// <summary>
-        /// comment control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox comment;
-        
-        /// <summary>
         /// txtDate control.
         /// </summary>
         /// <remarks>

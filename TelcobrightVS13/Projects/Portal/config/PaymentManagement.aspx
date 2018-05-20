@@ -10,7 +10,7 @@
     <asp:ToolkitScriptManager ID="ScriptManager1" runat="server">
 </asp:ToolkitScriptManager>
      <asp:GridView ID="GridView" OnRowDataBound="GridView_RowDataBound"
-                Font-Names="Arial"  DataKeyNames="idPartner"
+                Font-Names="Arial"  DataKeyNames="id"
                 Font-Size="9pt" 
                 CellPadding="4" 
                 ForeColor="#333333"
@@ -91,7 +91,7 @@ CancelControlID="btnCancel" BackgroundCssClass="modalBackground" >
         <td align="right">Service: </td>
         <td style="padding:3px"><asp:Label ID="lblSer" runat="server"></asp:Label></td>
     </tr>
-    <tr>
+<%--    <tr>
         <td align="right">Type: </td>
         <td style="padding:3px">
             <asp:DropDownList ID="ddlistType" runat="server"
@@ -110,7 +110,7 @@ CancelControlID="btnCancel" BackgroundCssClass="modalBackground" >
     <tr>
         <td align="right">Comment: </td>
         <td style="padding:3px"><asp:TextBox ID="comment" runat="server" TextMode="MultiLine"> </asp:TextBox></td>
-    </tr>
+    </tr>--%>
     <tr>
         <td align="right">Date: </td>
         <td style="padding:3px">

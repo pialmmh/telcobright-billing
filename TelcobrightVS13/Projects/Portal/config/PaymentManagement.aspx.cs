@@ -31,52 +31,24 @@ namespace PortalApp.config
                 lb.Text = "Add Payment";
                 lb.CommandName = "ShowPopup";
                 lb.Click += new System.EventHandler(paymentBtn_Click);
-
-                //if (e.Row.Cells[4].Text.Equals("Postpaid"))
-                //{
-                //    lb.Enabled = false;
-                   
-                //}
-                //else
-                //{
-
-                //    lb.Enabled = true;
-
-
-                //}
-                e.Row.Cells[4].Controls.Add(lb);
-                //LinkButton lb1 = new LinkButton();
-                //lb1.ID = "historyBtn";
-                //lb1.Text = "History";
-                //lb1.OnClientClick = "window.open('PaymentHistory.aspx?id=" + Int32.Parse( e.Row.Cells[0].Text) + "'); return false;";
-                //e.Row.Cells[11].Controls.Add(lb1);
-
+                e.Row.Cells[5].Controls.Add(lb);
             }
-
-
-
         }
-
-    
         
         protected void btnOK_Click(object sender, EventArgs e)
         {
-            int partnerId = Int32.Parse(lblID.Text);
-            Double amount =Double.Parse( txtAmount.Text);
-            string payDate = txtDate.Text;
-            string type = ddlistType.SelectedValue;
-            string reference = paymentReference.Text;
-            string comments = comment.Text;
-            List<ServiceAcountStatus> lstPayments = (List<ServiceAcountStatus>)this.GridView.DataSource;
-
-            var partner = lstPayments.Find(p => p.PartnerID == partnerId);
-            partner.LastCreditedAmount += amount;
-            partner.LastAmountType = type;
-            GridView.DataSource = lstPayments;
-            GridView.DataBind();
-            List<TopUpInfo> lstTopUpInfo = new List<TopUpInfo>();
-            lstTopUpInfo.Add(new TopUpInfo() {PartnerID=partnerId,Date=payDate,Type=type ,Amount=amount ,Currency=partner.Currency,PaymentReference=reference,Comment=comments} );
-
+            int accountId = Int32.Parse(lblID.Text);
+            decimal amount = decimal.Parse(txtAmount.Text);
+            DateTime payDate = Convert.ToDateTime(txtDate.Text);
+            using (PartnerEntities context = new PartnerEntities())
+            {
+                acc_temp_transaction transaction = new acc_temp_transaction();
+                transaction.transactionTime = payDate;
+                transaction.amount = amount;
+                transaction.glAccountId = accountId;
+                context.acc_temp_transaction.Add(transaction);
+                context.SaveChanges();
+            }
         }
 
 
@@ -113,29 +85,23 @@ namespace PortalApp.config
                 GridView.DataSource = payableAccounts;
                 GridView.DataBind();
             }
-            //ServiceAcountStatus s = new ServiceAcountStatus();
-
-            //GridView.DataSource =s.popultateGrid();
-            //GridView.DataBind();
-
         }
-
 
         protected void paymentBtn_Click(object sender, EventArgs e)
         {
-
-            LinkButton btndetails = sender as LinkButton;
-            GridViewRow gvrow = (GridViewRow)btndetails.NamingContainer;
-            lblID.Text = GridView.DataKeys[gvrow.RowIndex].Value.ToString();
-//            lblusername.Text = ((List<partner>)Session["allPartners"]).First(x => x.idPartner == Convert.ToInt32(gvrow.Cells[1].Text)).PartnerName;
-            lblSer.Text = gvrow.Cells[2].Text;
-            this.ModalPopupExtender1.Show();
-
+            using (PartnerEntities context = new PartnerEntities())
+            {
+                LinkButton btndetails = sender as LinkButton;
+                GridViewRow gvrow = (GridViewRow)btndetails.NamingContainer;
+                int accountId = Convert.ToInt32(GridView.DataKeys[gvrow.RowIndex].Value);
+                account account = context.accounts.First(x => x.id == accountId);
+                lblID.Text = accountId.ToString();
+                lblusername.Text = ((List<partner>)Session["allPartners"]).First(x => x.idPartner == account.idPartner).PartnerName;
+                lblSer.Text = gvrow.Cells[2].Text;
+                this.ModalPopupExtender1.Show();
+            }
         }
-
     }
-
-
 }
 
 
