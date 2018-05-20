@@ -90,11 +90,14 @@
       <asp:TreeNode Value="Rates" Text="Rates"  NavigateUrl="~/config/rates.aspx" />
       <asp:TreeNode Value="Least Cost Routing (LCR)" Text="LCR"  NavigateUrl="~/config/lcr.aspx" />
       <asp:TreeNode Value="View Routes" Text="View Routes"  NavigateUrl="~/config/ViewRoutes.aspx" />
-      <asp:TreeNode Value="Balance Adjustment" Text="Balance Adjustment"  NavigateUrl="~/config/BalanceAdjustment.aspx" />
-      <asp:TreeNode Value="Invoice Generation" Text="Invoice Generation"  NavigateUrl="~/config/InvoiceGeneration.aspx" />
      
       
     </asp:TreeNode>
+      <asp:TreeNode Value="Billing" Expanded="True" Text="Billing" SelectAction="None">
+          <asp:TreeNode Value="Payment Management" Text="Payment Management"  NavigateUrl="~/config/PaymentManagement.aspx" />
+          <asp:TreeNode Value="Balance Adjustment" Text="Balance Adjustment"  NavigateUrl="~/config/BalanceAdjustment.aspx" />
+          <asp:TreeNode Value="Invoice Generation" Text="Invoice Generation"  NavigateUrl="~/config/InvoiceGeneration.aspx" />
+      </asp:TreeNode>
 
     <asp:TreeNode Value="Reports" Expanded="True" Text="Reports" SelectAction="None">
 <%--        <asp:TreeNode Value="BTRC Report" Text="BTRC Report" SelectAction="Select" NavigateUrl="~/reports/BTRCReport.aspx"> </asp:TreeNode>
