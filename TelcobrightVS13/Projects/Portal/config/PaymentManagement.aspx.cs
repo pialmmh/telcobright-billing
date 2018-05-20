@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
+using System.Data.Entity.Validation;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.UI;
@@ -37,17 +41,45 @@ namespace PortalApp.config
         
         protected void btnOK_Click(object sender, EventArgs e)
         {
-            int accountId = Int32.Parse(lblID.Text);
-            decimal amount = decimal.Parse(txtAmount.Text);
-            DateTime payDate = Convert.ToDateTime(txtDate.Text);
-            using (PartnerEntities context = new PartnerEntities())
+            string log = string.Empty;
+            try
             {
-                acc_temp_transaction transaction = new acc_temp_transaction();
-                transaction.transactionTime = payDate;
-                transaction.amount = amount;
-                transaction.glAccountId = accountId;
-                context.acc_temp_transaction.Add(transaction);
-                context.SaveChanges();
+                int accountId = Int32.Parse(lblID.Text);
+                decimal amount = decimal.Parse(txtAmount.Text);
+                DateTime payDate = Convert.ToDateTime(txtDate.Text);
+                using (PartnerEntities context = new PartnerEntities())
+                {
+                    var con = context.Database.Connection;
+                    using (DbCommand cmd=con.CreateCommand())
+                    {
+                        if(con.State!=ConnectionState.Open) con.Open();
+                        account account = context.accounts.Where(x => x.id == accountId).ToList().First();
+                        acc_temp_transaction transaction = new acc_temp_transaction();
+                        transaction.transactionTime = payDate;
+                        transaction.amount = amount;
+                        transaction.glAccountId = accountId;
+                        transaction.debitOrCredit = "d";
+                        transaction.idEvent = -1;
+                        transaction.uomId = account.uom;
+                        transaction.BalanceBefore = 0;
+                        transaction.BalanceAfter = 0;
+                        transaction.jsonDetail = string.Empty;
+                        cmd.CommandText = string.Concat(
+                            StaticExtInsertColumnHeaders.acc_temp_transaction.Replace("(id,", "("),
+                            transaction.GetExtInsertValues().Replace("(0,", "("));
+                        cmd.ExecuteNonQuery();
+                    }
+                    
+                    //context.Database.Log = logInfo => FileLogger.Log(logInfo);
+                    //context.acc_temp_transaction.Add(transaction);
+                    //context.SaveChanges();
+
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                throw;
             }
         }
 
@@ -100,6 +132,14 @@ namespace PortalApp.config
                 lblSer.Text = gvrow.Cells[2].Text;
                 this.ModalPopupExtender1.Show();
             }
+        }
+    }
+
+    public class FileLogger
+    {
+        public static void Log(string logInfo)
+        {
+            File.AppendAllText(@"C:\Users\Gigabyte\Desktop\Logger.txt", logInfo);
         }
     }
 }
