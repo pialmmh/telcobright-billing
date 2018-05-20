@@ -174,8 +174,8 @@ namespace TelcobrightMediation
                 var updDurationSoFar = daySummaryCaches.SelectMany(c => c.GetUpdatedItems()).Sum(s => s.actualduration);
                 var incInsDuration = insDurationSofar - prevInsDuration;
                 var incUpdDuration = updDurationSoFar - prevUpdDuration;
-                if (thisCdrDuration!=incInsDuration+incUpdDuration)
-                    throw new Exception("Mismatch");
+                //if (thisCdrDuration!=incInsDuration+incUpdDuration)
+                //    throw new Exception("Mismatch");
             });
             var cacheDurationAfter= daySummaryCaches.SelectMany(c => c.GetItems()).Sum(s => s.actualduration);
             var incrementalDuration = cacheDurationAfter - cacheDurationBefore;

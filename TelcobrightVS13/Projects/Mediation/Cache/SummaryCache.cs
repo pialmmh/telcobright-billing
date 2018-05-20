@@ -12,6 +12,9 @@ namespace TelcobrightMediation
     public class SummaryCache<TEntity, TKey> : AbstractCache<TEntity, TKey> where TEntity : ICacheble<TEntity>,
         ISummary<TEntity, TKey>
     {
+        //todo: remove insertedCount & updated Count
+        public int InsertedCount { get; private set; }
+        public int UpdatedCount { get; private set; }
         public override string EntityOrTableName { get; }
         private AutoIncrementCounterType EntityTypeAsEnum { get; }
         private readonly object locker=new object();
@@ -56,6 +59,7 @@ namespace TelcobrightMediation
                     if (mergeType == SummaryMergeType.Add)
                     {
                         InsertWithKey(clonedSummary, key, pdValidatationMethodForInsert);
+                        this.InsertedCount++;
                     }
                     else 
                     {
@@ -70,6 +74,7 @@ namespace TelcobrightMediation
                     }
                     this.UpdateThroughCache(this.DictionaryKeyGenerator(existingSummary),
                         e => e.Merge(newSummary));
+                    this.UpdatedCount++;
                 }
             }
         }
