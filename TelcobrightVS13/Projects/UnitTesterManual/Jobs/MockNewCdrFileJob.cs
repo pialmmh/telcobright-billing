@@ -42,6 +42,11 @@ namespace UnitTesterManual
             preProcessor.TxtCdrRows.ForEach(txtRow => this.CdrConverter(preProcessor, txtRow));
 
             CdrCollectionResult newCollectionResult, oldCollectionResult = null;
+            //todo: remove temp code
+            var partialDuration = preProcessor.TxtCdrRows.Where(c => c[Fn.Partialflag].ValueIn(new[] {"1", "2", "3"}))
+                .Sum(c => Convert.ToDecimal(c[Fn.DurationSec]));
+            //end
+
             preProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
 
             //CdrJob cdrJob = base.CreateCdrJob(preProcessor, newCollectionResult, oldCollectionResult);

@@ -61,6 +61,11 @@ namespace TelcobrightMediation.Cdr
             this.CdrEraser?.UndoOldChargeables();
             this.CdrEraser?.DeleteOldCdrs();
 
+            //todo: remove temp code
+            var durationTobeProcessed =
+                this.CdrProcessor.CollectionResult.ConcurrentCdrExts.Values.Sum(c => c.Cdr.DurationSec);
+            //end temp code
+
             this.CdrProcessor?.Mediate();
             
             ParallelQuery<CdrExt> parallelCdrExts= this.CdrProcessor?.GenerateSummaries();

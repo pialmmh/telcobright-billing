@@ -140,5 +140,6 @@ namespace MediationModel
         public virtual DbSet<sum_voice_hr_05> sum_voice_hr_05 { get; set; }
         public virtual DbSet<sum_voice_hr_06> sum_voice_hr_06 { get; set; }
         public virtual DbSet<account> accounts { get; set; }
+        public virtual DbSet<durationmeta> durationmetas { get; set; }
     }
 }

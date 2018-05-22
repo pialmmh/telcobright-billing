@@ -70,6 +70,9 @@ namespace Jobs
             CdrCollectionResult newCollectionResult)
         {
             this.RawCount = preProcessor.RawCount;
+            //todo: remove temp code
+            var rawDuration = preProcessor.TxtCdrRows.Sum(r => Convert.ToDecimal(r[Fn.DurationSec]));
+            //end temp code
             newCollectionResult.RawDurationTotalOfConsistentCdrs =
                 preProcessor.NonPartialCdrs.Sum(c => c.DurationSec) + preProcessor.PartialCdrContainers
                     .SelectMany(pc => pc.NewRawInstances).Sum(r => r.DurationSec);
@@ -118,27 +121,61 @@ namespace Jobs
             using (DbCommand cmd = ConnectionManager.CreateCommandFromDbContext(this.Input.Context))
             {
                 //todo: remove tmp code
-//                //if (this.Input.TelcobrightJob.JobName == "ICX20180216174067353.DAT")
-//                //{
-//                //    int x = 1;
-//                //}
-//                decimal cdrDUration = this.Input.Context.Database
-//                    .SqlQuery<decimal>($@"select sum(durationsec) actualduration
-//                     from cdr;").First();
-//                decimal summaryDuration = this.Input.Context.Database.SqlQuery<decimal>(
-//                    $@"select sum(actualduration) actualduration from
-//(
-//select sum(actualduration) actualduration, sum(roundedduration) roundedduration, sum(duration1) duration1, sum(duration2) duration2, sum(duration3) duration3 from sum_voice_day_01 union all
-//select sum(actualduration) actualduration, sum(roundedduration) roundedduration, sum(duration1) duration1, sum(duration2) duration2, sum(duration3) duration3 from sum_voice_day_02 union all
-//select sum(actualduration) actualduration, sum(roundedduration) roundedduration, sum(duration1) duration1, sum(duration2) duration2, sum(duration3) duration3 from sum_voice_day_03 union all
-//select sum(actualduration) actualduration, sum(roundedduration) roundedduration, sum(duration1) duration1, sum(duration2) duration2, sum(duration3) duration3 from sum_voice_day_04
-//) dayWiseSummaries;").First();
+                //todo: remove temp code
+                durationmeta lastDm = null;
+                lastDm = this.Input.Context.durationmetas.ToList().LastOrDefault();
+                if (lastDm == null)
+                {
+                    lastDm = new durationmeta()
+                    {
+                        oldDuration = 0,
+                        newDuration = 0,
+                        durationAfterJob = 0
+                    };
+                }
 
-//                if (cdrDUration != summaryDuration)
-//                {
-//                    throw new Exception("Mismatch");
-//                }
-//                //end temp code
+                string jobname = cdrJob.CdrJobContext.TelcobrightJob.JobName;
+                decimal newRawDuration = cdrJob.CdrProcessor.CollectionResult.RawDurationTotalOfConsistentCdrs;
+                decimal newProcessedDuration = cdrJob.CdrProcessor.CollectionResult.ProcessedCdrExts.Sum(c => c.Cdr.DurationSec);
+                bool rawDurMatchesProcessedDur = newProcessedDuration == newRawDuration;
+
+                durationmeta newDm = new durationmeta();
+                newDm.filename = jobname;
+                newDm.oldDuration = 0;
+                newDm.newDuration = newRawDuration;
+                newDm.durationAfterJob = lastDm.durationAfterJob + newRawDuration;
+                cmd.CommandText=$@"insert into durationmeta (filename,oldduration,newduration,durationAfterjob) values 
+                                          ({newDm.filename.EncloseWith("'")},{newDm.oldDuration},{newDm.newDuration},
+                                          {newDm.durationAfterJob})  ";
+                cmd.ExecuteNonQuery();
+                //end
+                //                //if (this.Input.TelcobrightJob.JobName == "ICX20180216174067353.DAT")
+                //                //{
+                //                //    int x = 1;
+                //                //}
+                //decimal cdrDUration = this.Input.Context.Database
+                //    .SqlQuery<decimal>($@"select sum(durationsec) actualduration
+                //                     from cdr;").First();
+                decimal cdrDuration = (decimal) newDm.durationAfterJob;
+                decimal summaryDurationWritten = this.Input.Context.Database.SqlQuery<decimal>(
+                    $@"select sum(actualduration) actualduration from
+                (
+                select sum(actualduration) actualduration, sum(roundedduration) roundedduration, sum(duration1) duration1, sum(duration2) duration2, sum(duration3) duration3 from sum_voice_day_01 union all
+                select sum(actualduration) actualduration, sum(roundedduration) roundedduration, sum(duration1) duration1, sum(duration2) duration2, sum(duration3) duration3 from sum_voice_day_02 union all
+                select sum(actualduration) actualduration, sum(roundedduration) roundedduration, sum(duration1) duration1, sum(duration2) duration2, sum(duration3) duration3 from sum_voice_day_03 union all
+                select sum(actualduration) actualduration, sum(roundedduration) roundedduration, sum(duration1) duration1, sum(duration2) duration2, sum(duration3) duration3 from sum_voice_day_04
+                ) dayWiseSummaries;").First();
+
+                var daySummaryCaches = cdrJob.CdrJobContext.CdrSummaryContext.TableWiseSummaryCache
+                    .Where(kv => kv.Key.Contains("day")).Select(kv => kv.Value).ToList();
+                var summaryDurationFromCache = daySummaryCaches
+                    .SelectMany(sc => sc.GetItems()).Sum(s => s.actualduration);
+                    
+                if (cdrDuration != summaryDurationWritten)
+                {
+                    throw new Exception("Mismatch");
+                }
+                //end temp code
                 cmd.CommandText = " commit; ";
                 cmd.ExecuteNonQuery();
             }

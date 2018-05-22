@@ -1024,6 +1024,16 @@ warning 6002: The table/view 'def.platinum.cdrpartialreference' does not have a 
           <Property Name="refpdd" Type="float" />
           <Property Name="refasrfas" Type="float" />
         </EntityType>
+        <EntityType Name="durationmeta">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="filename" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="oldDuration" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="newDuration" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="durationAfterJob" Type="decimal" Precision="20" Scale="8" />
+        </EntityType>
         <EntityType Name="enumaccountingclass">
           <Key>
             <PropertyRef Name="id" />
@@ -3777,6 +3787,7 @@ warning 6002: The table/view 'def.platinum.uom_conversion_dated' does not have a
           <EntitySet Name="commontg" EntityType="Self.commontg" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="country" EntityType="Self.country" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="countrycode" EntityType="Self.countrycode" Schema="platinum" store:Type="Tables" />
+          <EntitySet Name="durationmeta" EntityType="Self.durationmeta" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="enumaccountingclass" EntityType="Self.enumaccountingclass" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="enumanstype" EntityType="Self.enumanstype" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="enumbillingspan" EntityType="Self.enumbillingspan" Schema="platinum" store:Type="Tables" />
@@ -5710,6 +5721,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             <End Role="partner" EntitySet="partners" />
             <End Role="account" EntitySet="accounts" />
           </AssociationSet>
+          <EntitySet Name="durationmetas" EntityType="MediationModel.durationmeta" />
         </EntityContainer>
         <EntityType Name="allerror">
           <Key>
@@ -9471,6 +9483,16 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="durationmeta">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="filename" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="oldDuration" Type="Decimal" />
+          <Property Name="newDuration" Type="Decimal" />
+          <Property Name="durationAfterJob" Type="Decimal" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -12290,6 +12312,17 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="idPartner" ColumnName="idPartner" />
                 <ScalarProperty Name="idParentExternal" ColumnName="idParentExternal" />
                 <ScalarProperty Name="idParent" ColumnName="idParent" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="durationmetas">
+            <EntityTypeMapping TypeName="MediationModel.durationmeta">
+              <MappingFragment StoreEntitySet="durationmeta">
+                <ScalarProperty Name="durationAfterJob" ColumnName="durationAfterJob" />
+                <ScalarProperty Name="newDuration" ColumnName="newDuration" />
+                <ScalarProperty Name="oldDuration" ColumnName="oldDuration" />
+                <ScalarProperty Name="filename" ColumnName="filename" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>

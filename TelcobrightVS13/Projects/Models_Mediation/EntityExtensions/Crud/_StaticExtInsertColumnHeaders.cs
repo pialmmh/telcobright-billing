@@ -32,6 +32,7 @@ namespace MediationModel
 		public static string commontg { get { return " insert into commontg(id,TgName,idSwitch,description) values ";} }
 		public static string country { get { return " insert into country(country_code,country_name) values ";} }
 		public static string countrycode { get { return " insert into countrycode(Code,Name,refasr,refacd,refccr,refccrbycc,refpdd,refasrfas) values ";} }
+		public static string durationmeta { get { return " insert into durationmeta(id,filename,oldDuration,newDuration,durationAfterJob) values ";} }
 		public static string enumaccountingclass { get { return " insert into enumaccountingclass(id,Name,NormalBalance) values ";} }
 		public static string enumanstype { get { return " insert into enumanstype(id,Type) values ";} }
 		public static string enumbillingspan { get { return " insert into enumbillingspan(ofbiz_uom_Id,Type,value) values ";} }
