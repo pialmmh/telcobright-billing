@@ -135,14 +135,20 @@ namespace Jobs
                 }
 
                 string jobname = cdrJob.CdrJobContext.TelcobrightJob.JobName;
-                decimal newRawDuration = cdrJob.CdrProcessor.CollectionResult.RawDurationTotalOfConsistentCdrs;
                 decimal newProcessedDuration = cdrJob.CdrProcessor.CollectionResult.ProcessedCdrExts.Sum(c => c.Cdr.DurationSec);
-                bool rawDurMatchesProcessedDur = newProcessedDuration == newRawDuration;
+                //bool rawDurMatchesProcessedDur = newProcessedDuration == newRawDuration;
 
                 durationmeta newDm = new durationmeta();
                 newDm.filename = jobname;
                 newDm.oldDuration = 0;
-                newDm.newDuration = newRawDuration;
+                var processedCdrExts = cdrJob.CdrProcessor.CollectionResult.ProcessedCdrExts;
+                var nonPartialCdrs = processedCdrExts
+                    .Where(c => c.Cdr.MediationComplete == 1 && c.Cdr.PartialFlag == 0).Select(c => c.Cdr).AsParallel();
+                var normalizedPartialCdrs = processedCdrExts
+                    .Where(c => c.Cdr.MediationComplete == 1 && c.Cdr.PartialFlag > 0).Select(c => c.Cdr).AsParallel();
+                decimal newRawDuration = cdrJob.CdrProcessor.CollectionResult.RawDurationTotalOfConsistentCdrs;
+                newDm.newDuration = nonPartialCdrs.Sum(c => c.DurationSec) +
+                                    normalizedPartialCdrs.Sum(c => c.DurationSec);
                 newDm.durationAfterJob = lastDm.durationAfterJob + newRawDuration;
                 cmd.CommandText=$@"insert into durationmeta (filename,oldduration,newduration,durationAfterjob) values 
                                           ({newDm.filename.EncloseWith("'")},{newDm.oldDuration},{newDm.newDuration},

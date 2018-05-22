@@ -344,7 +344,10 @@ namespace TelcobrightMediation
                 normalizedPartialCdrCount = WriteCdr(normalizedPartialCdrs);
 
             cdrCount = nonPartialCdrCount + normalizedPartialCdrCount;
-
+            if (cdrCount!=processedCdrExts.Count())
+            {
+                throw new Exception("Written number of cdrs does not match processed cdrs count.");
+            }
             List<PartialCdrContainer> partialCdrContainers = new List<PartialCdrContainer>();
             PartialCdrWriter partialCdrWriter = null;
             if (this.PartialProcessingEnabled)
