@@ -149,6 +149,7 @@
         <AssociationConnector Association="MediationModel.account_ibfk_1" />
         <AssociationConnector Association="MediationModel.account_ibfk_2" />
         <EntityTypeShape EntityType="MediationModel.durationmeta" Width="1.5" PointX="38.375" PointY="22.75" />
+        <EntityTypeShape EntityType="MediationModel.cdrmeta" Width="1.5" PointX="38.375" PointY="25.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

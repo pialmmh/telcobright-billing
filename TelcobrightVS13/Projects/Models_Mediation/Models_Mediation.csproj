@@ -116,6 +116,9 @@
     <Compile Include="cdrinconsistent.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="cdrmeta.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="cdrpartiallastaggregatedrawinstance.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
