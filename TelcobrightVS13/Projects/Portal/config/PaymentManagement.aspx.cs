@@ -135,13 +135,13 @@ namespace PortalApp.config
         }
     }
 
-    public class FileLogger
-    {
-        public static void Log(string logInfo)
-        {
-            File.AppendAllText(@"C:\Users\Gigabyte\Desktop\Logger.txt", logInfo);
-        }
-    }
+    //public class FileLogger
+    //{
+    //    public static void Log(string logInfo)
+    //    {
+    //        File.AppendAllText(@"C:\Users\Gigabyte\Desktop\Logger.txt", logInfo);
+    //    }
+    //}
 }
 
 
