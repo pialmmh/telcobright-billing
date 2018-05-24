@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using LibraryExtensions;
 using MediationModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -31,7 +32,9 @@ namespace TelcobrightMediation.Cdr
 
         public void Execute()
         {
-            
+
+            this.CdrEraser?.RegenerateOldSummaries();
+
             //todo: remove temp code
             //var oldCdrs = CdrEraser.CollectionResult.ProcessedCdrExts;
             //var oldCdrDuration = oldCdrs.Sum(c => c.Cdr.DurationSec);
@@ -212,7 +215,7 @@ namespace TelcobrightMediation.Cdr
                 select sum(actualduration) actualduration, sum(roundedduration) roundedduration, sum(duration1) duration1, sum(duration2) duration2, sum(duration3) duration3 from sum_voice_day_02 union all
                 select sum(actualduration) actualduration, sum(roundedduration) roundedduration, sum(duration1) duration1, sum(duration2) duration2, sum(duration3) duration3 from sum_voice_day_03 union all
                 select sum(actualduration) actualduration, sum(roundedduration) roundedduration, sum(duration1) duration1, sum(duration2) duration2, sum(duration3) duration3 from sum_voice_day_04
-                ) dayWiseSummaries;").First();
+                ) dayWiseSummaries;").ToList().First();
 
             var daySummaryCaches = this.CdrJobContext.CdrSummaryContext.TableWiseSummaryCache
                 .Where(kv => kv.Key.Contains("day")).Select(kv => kv.Value).ToList();
@@ -223,8 +226,8 @@ namespace TelcobrightMediation.Cdr
             {
                 throw new Exception("Cdr metadata mismatch, duration in cdr and summary tables are not consistent.");
             }
-            this.CdrJobContext.Context.Database.ExecuteSqlCommand(cdrMeta.GetUpdateCommand(c => $" where id={c.id}")
-                .ToString());
+            var sql = cdrMeta.GetUpdateCommand(c => $" where id={c.id}").ToString();
+            this.CdrJobContext.DbCmd.ExecuteCommandText(sql);
         }
     }
 }
