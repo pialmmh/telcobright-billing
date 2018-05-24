@@ -12,8 +12,8 @@ namespace MediationModel
 		{
 			return new StringBuilder("(")
 				.Append(this.id.ToMySqlField()).Append(",")
-				.Append(this.lastInsertedDuration.ToMySqlField()).Append(",")
-				.Append(this.lastDeletedDuration.ToMySqlField()).Append(",")
+				.Append(this.lastJobSegmentInsertedDuration.ToMySqlField()).Append(",")
+				.Append(this.lastJobSegmentDeletedDuration.ToMySqlField()).Append(",")
 				.Append(this.totalInsertedDuration.ToMySqlField()).Append(",")
 				.Append(this.totalDeletedDuration.ToMySqlField()).Append(")")
 				;
@@ -26,8 +26,8 @@ namespace MediationModel
 		{
 			return new StringBuilder("update cdrmeta set ")
 				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
-				.Append("lastInsertedDuration=").Append(this.lastInsertedDuration.ToMySqlField()).Append(",")
-				.Append("lastDeletedDuration=").Append(this.lastDeletedDuration.ToMySqlField()).Append(",")
+				.Append("lastJobSegmentInsertedDuration=").Append(this.lastJobSegmentInsertedDuration.ToMySqlField()).Append(",")
+				.Append("lastJobSegmentDeletedDuration=").Append(this.lastJobSegmentDeletedDuration.ToMySqlField()).Append(",")
 				.Append("totalInsertedDuration=").Append(this.totalInsertedDuration.ToMySqlField()).Append(",")
 				.Append("totalDeletedDuration=").Append(this.totalDeletedDuration.ToMySqlField())
 				.Append(whereClauseMethod.Invoke(this));

@@ -165,6 +165,7 @@
     <Compile Include="EntityExtensions\Crud\cdrfieldlist.cs" />
     <Compile Include="EntityExtensions\Crud\cdrfieldmappingbyswitchtype.cs" />
     <Compile Include="EntityExtensions\Crud\cdrinconsistent.cs" />
+    <Compile Include="EntityExtensions\Crud\cdrmeta.cs" />
     <Compile Include="EntityExtensions\Crud\cdrpartiallastaggregatedrawinstance.cs" />
     <Compile Include="EntityExtensions\Crud\cdrpartialrawinstance.cs" />
     <Compile Include="EntityExtensions\Crud\cdrpartialreference.cs" />

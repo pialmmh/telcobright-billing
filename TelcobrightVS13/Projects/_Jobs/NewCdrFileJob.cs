@@ -120,83 +120,6 @@ namespace Jobs
             //code reaching here means no error
             using (DbCommand cmd = ConnectionManager.CreateCommandFromDbContext(this.Input.Context))
             {
-                //todo: remove tmp code
-                //todo: remove temp code
-                //durationmeta lastDm = null;
-                //lastDm = this.Input.Context.durationmetas.ToList().LastOrDefault();
-                //if (lastDm == null)
-                //{
-                //    lastDm = new durationmeta()
-                //    {
-                //        oldDuration = 0,
-                //        newDuration = 0,
-                //        durationAfterJob = 0
-                //    };
-                //}
-                cdrmeta meta = this.Input.Context.cdrmetas.FirstOrDefault();
-                string jobname = cdrJob.CdrJobContext.TelcobrightJob.JobName;
-                decimal newProcessedDuration = cdrJob.CdrProcessor.CollectionResult.ProcessedCdrExts.Sum(c => c.Cdr.DurationSec);
-                //bool rawDurMatchesProcessedDur = newProcessedDuration == newRawDuration;
-
-                //durationmeta newDm = new durationmeta();
-                //newDm.filename = jobname;
-                //newDm.oldDuration = 0;
-                var processedCdrExts = cdrJob.CdrProcessor.CollectionResult.ProcessedCdrExts;
-                var nonPartialCdrs = processedCdrExts
-                    .Where(c => c.Cdr.MediationComplete == 1 && c.Cdr.PartialFlag == 0).Select(c => c.Cdr).AsParallel();
-                var normalizedPartialCdrs = processedCdrExts
-                    .Where(c => c.Cdr.MediationComplete == 1 && c.Cdr.PartialFlag > 0).Select(c => c.Cdr).AsParallel();
-                decimal newRawDuration = cdrJob.CdrProcessor.CollectionResult.RawDurationTotalOfConsistentCdrs;
-                //newDm.newDuration = nonPartialCdrs.Sum(c => c.DurationSec) +
-                //                    normalizedPartialCdrs.Sum(c => c.DurationSec);
-                //newDm.durationAfterJob = lastDm.durationAfterJob + newRawDuration;
-                //cmd.CommandText=$@"insert into durationmeta (filename,oldduration,newduration,durationAfterjob) values 
-                //                          ({newDm.filename.EncloseWith("'")},{newDm.oldDuration},{newDm.newDuration},
-                //                          {newDm.durationAfterJob})  ";
-                //cmd.ExecuteNonQuery();
-                //end
-                //                //if (this.Input.TelcobrightJob.JobName == "ICX20180216174067353.DAT")
-                //                //{
-                //                //    int x = 1;
-                //                //}
-                //decimal cdrDUration = this.Input.Context.Database
-                //    .SqlQuery<decimal>($@"select sum(durationsec) actualduration
-                //                     from cdr;").First();
-                var oldCollectionResult = cdrJob.CdrEraser?.CollectionResult;
-                decimal durationSupposedToBeDeleted = 0;
-                if (oldCollectionResult != null)
-                {
-                    durationSupposedToBeDeleted = oldCollectionResult.ConcurrentCdrExts.Values.Sum(c => c.Cdr.DurationSec);
-                    if (durationSupposedToBeDeleted
-                        != oldCollectionResult.ProcessedCdrExts.Sum(c => c.Cdr.DurationSec))
-                    {
-                        throw new Exception("Mismatch 1");
-                    }
-                }
-                decimal deletedDurationInCdrTable = Convert.ToDecimal(this.Input.Context.cdrmetas
-                    .Sum(c => c.totalDeletedDuration));
-                decimal insertedDurationInCdrTable = Convert.ToDecimal(this.Input.Context.cdrmetas
-                    .Sum(c => c.totalInsertedDuration));
-                decimal durationWrittenInCdrTable = insertedDurationInCdrTable - deletedDurationInCdrTable;
-                decimal summaryDurationWritten = this.Input.Context.Database.SqlQuery<decimal>(
-                    $@"select sum(actualduration) actualduration from
-                (
-                select sum(actualduration) actualduration, sum(roundedduration) roundedduration, sum(duration1) duration1, sum(duration2) duration2, sum(duration3) duration3 from sum_voice_day_01 union all
-                select sum(actualduration) actualduration, sum(roundedduration) roundedduration, sum(duration1) duration1, sum(duration2) duration2, sum(duration3) duration3 from sum_voice_day_02 union all
-                select sum(actualduration) actualduration, sum(roundedduration) roundedduration, sum(duration1) duration1, sum(duration2) duration2, sum(duration3) duration3 from sum_voice_day_03 union all
-                select sum(actualduration) actualduration, sum(roundedduration) roundedduration, sum(duration1) duration1, sum(duration2) duration2, sum(duration3) duration3 from sum_voice_day_04
-                ) dayWiseSummaries;").First();
-
-                var daySummaryCaches = cdrJob.CdrJobContext.CdrSummaryContext.TableWiseSummaryCache
-                    .Where(kv => kv.Key.Contains("day")).Select(kv => kv.Value).ToList();
-                var summaryDurationFromCache = daySummaryCaches
-                    .SelectMany(sc => sc.GetItems()).Sum(s => s.actualduration);
-                    
-                if (durationWrittenInCdrTable != summaryDurationWritten)
-                {
-                    throw new Exception("Mismatch");
-                }
-                //end temp code
                 cmd.CommandText = " commit; ";
                 cmd.ExecuteNonQuery();
             }
@@ -213,6 +136,8 @@ namespace Jobs
                     cdrJob.CdrProcessor.CdrJobContext.TelcobrightJob);
             }
         }
+
+        
 
         protected void PreformatRawCdrs(NewCdrPreProcessor preProcessor)
         {

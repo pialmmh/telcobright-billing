@@ -742,8 +742,8 @@ warning 6002: The table/view 'def.platinum.cdrinconsistent' does not have a prim
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" Nullable="false" />
-          <Property Name="lastInsertedDuration" Type="decimal" Precision="20" Scale="8" Nullable="false" />
-          <Property Name="lastDeletedDuration" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="lastJobSegmentInsertedDuration" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="lastJobSegmentDeletedDuration" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="totalInsertedDuration" Type="decimal" Precision="24" Scale="8" Nullable="false" />
           <Property Name="totalDeletedDuration" Type="decimal" Precision="24" Scale="8" Nullable="false" />
         </EntityType>
@@ -9510,8 +9510,8 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="lastInsertedDuration" Type="Decimal" Nullable="false" />
-          <Property Name="lastDeletedDuration" Type="Decimal" Nullable="false" />
+          <Property Name="lastJobSegmentInsertedDuration" Type="Decimal" Nullable="false" />
+          <Property Name="lastJobSegmentDeletedDuration" Type="Decimal" Nullable="false" />
           <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
           <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
         </EntityType>
@@ -12354,8 +12354,8 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
               <MappingFragment StoreEntitySet="cdrmeta">
                 <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
                 <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
-                <ScalarProperty Name="lastDeletedDuration" ColumnName="lastDeletedDuration" />
-                <ScalarProperty Name="lastInsertedDuration" ColumnName="lastInsertedDuration" />
+                <ScalarProperty Name="lastJobSegmentDeletedDuration" ColumnName="lastJobSegmentDeletedDuration" />
+                <ScalarProperty Name="lastJobSegmentInsertedDuration" ColumnName="lastJobSegmentInsertedDuration" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>

@@ -15,8 +15,8 @@ namespace MediationModel
     public partial class cdrmeta
     {
         public int id { get; set; }
-        public decimal lastInsertedDuration { get; set; }
-        public decimal lastDeletedDuration { get; set; }
+        public decimal lastJobSegmentInsertedDuration { get; set; }
+        public decimal lastJobSegmentDeletedDuration { get; set; }
         public decimal totalInsertedDuration { get; set; }
         public decimal totalDeletedDuration { get; set; }
     }
