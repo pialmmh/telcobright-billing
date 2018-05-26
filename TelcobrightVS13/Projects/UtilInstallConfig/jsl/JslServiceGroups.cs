@@ -109,27 +109,27 @@ namespace InstallConfig
                             "MatchedPrefixY cannot be empty"
                         },
                         {
-                            "obj.DurationSec >= 0.1M ? obj.RevenueIcxOut != 0 : obj.RevenueIcxOut == 0 ", //negative allowed
+                            "obj.DurationSec >= 0.1M ? obj.RevenueIcxOut != 0M : obj.RevenueIcxOut == 0M ", //negative allowed
                             "RevenueIcxOut must be > 0 when DurationSec >= 0.1"
                         },
                         {
-                            "obj.DurationSec >= 0.1M ? obj.Tax2 != 0 : obj.Tax2 == 0 ",
+                            "obj.DurationSec >= 0.1M ? obj.Tax2 != 0 : obj.Tax2 == 0M ",
                             "BTRC RevShare (Tax2) must be > 0 when DurationSec >= 0.1"
                         },
                         {
-                            "obj.DurationSec >= 0.1M ? obj.XAmount > 0 : obj.XAmount == 0 ",
+                            "obj.DurationSec >= 0.1M ? obj.XAmount > 0M : obj.XAmount == 0M ",
                             "XAmount must be > 0 when DurationSec >= 0.1"
                         },
                         {
-                            "obj.DurationSec >= 0.1M ? obj.YAmount > 0 : obj.YAmount == 0 ",
+                            "obj.DurationSec >= 0.1M ? obj.YAmount > 0M : obj.YAmount == 0M ",
                             "YAmount must be > 0 when DurationSec >= 0.1"
                         },
                         {
-                            "obj.PartialFlag >= 0",
+                            "obj.PartialFlag >= 0M",
                             "PartialFlag must be >=  0"
                         },
                         {
-                            "obj.DurationSec >= 0.1M ? obj.roundedduration > 0 : obj.roundedduration == 0 ",
+                            "obj.DurationSec >= 0.1M ? obj.roundedduration > 0M : obj.roundedduration == 0M ",
                             "roundedduration must be > 0 when DurationSec >= 0.1"
                         },
                     },
@@ -171,15 +171,15 @@ namespace InstallConfig
                             "matchedprefixcustomer cannot be empty"
                         },
                         {
-                            "obj.DurationSec >= 0.02M ? obj.duration1 > 0 : obj.duration1 == 0 ",
+                            "obj.DurationSec >= 0.02M ? obj.duration1 > 0M : obj.duration1 == 0M ",
                             "duration1 must be > 0 when DurationSec >= 0.02"
                         },
                         {
-                            "obj.DurationSec >= 0.02M ? obj.InPartnerCost > 0 : obj.InPartnerCost == 0 ",
+                            "obj.DurationSec >= 0.02M ? obj.InPartnerCost > 0M : obj.InPartnerCost == 0M ",
                             "InPartnerCost must be > 0 when DurationSec >= 0.02"
                         },
                         {
-                            "obj.DurationSec >= 0.02M ? obj.Tax1 > 0 : obj.Tax1 == 0 ",
+                            "obj.DurationSec >= 0.02M ? obj.Tax1 > 0M : obj.Tax1 == 0M ",
                             "BTRC RevShare (Tax1) must be > 0 when DurationSec >= 0.02"
                         },
                     },
@@ -220,15 +220,15 @@ namespace InstallConfig
                                 "matchedprefixcustomer cannot be empty"
                             },
                             {
-                                "obj.DurationSec >= 0.02M ? obj.duration1 > 0 : obj.duration1 == 0 ",
+                                "obj.DurationSec >= 0.02M ? obj.duration1 > 0M : obj.duration1 == 0M ",
                                 "duration1 must be > 0 when DurationSec >= 0.02"
                             },
                             {
-                                "obj.DurationSec >= 0.02M ? obj.InPartnerCost > 0 : obj.InPartnerCost == 0 ",
+                                "obj.DurationSec >= 0.02M ? obj.InPartnerCost > 0M : obj.InPartnerCost == 0M ",
                                 "InPartnerCost must be > 0 when DurationSec >= 0.02"
                             },
                             {
-                                "obj.DurationSec >= 0.02M ? obj.Tax1 > 0 : obj.Tax1 == 0 ",
+                                "obj.DurationSec >= 0.02M ? obj.Tax1 > 0M : obj.Tax1 == 0M ",
                                 "BTRC RevShare (Tax1) must be > 0 when DurationSec >= 0.02"
                             },
                         },

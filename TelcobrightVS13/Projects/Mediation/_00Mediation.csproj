@@ -178,6 +178,8 @@
     <Compile Include="Cdr\Collection\Collector\DbRowCollector.cs" />
     <Compile Include="Cdr\CdrExt.cs" />
     <Compile Include="Cdr\PartialCdrWriter.cs" />
+    <Compile Include="Cdr\Validator\IValidationRule.cs" />
+    <Compile Include="Cdr\Validator\MefValidator.cs" />
     <Compile Include="Config\ApplicationServerConfig.cs" />
     <Compile Include="Automation\CliCommandSequence.cs" />
     <Compile Include="Config\AutomationSetting.cs" />

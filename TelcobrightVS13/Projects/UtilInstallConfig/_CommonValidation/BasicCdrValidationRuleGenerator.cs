@@ -14,7 +14,6 @@ namespace InstallConfig._CommonValidation
         {
             this.NotAllowedCallDateTimeBefore = notAllowedCallDateTimeBefore;
         }
-
         public virtual Dictionary<string, string> GetCommonValidationRules()
         {
             return new Dictionary<string, string>()
@@ -131,6 +130,7 @@ namespace InstallConfig._CommonValidation
                 }, //public const int Validflag = 54;
             };
         }
+        
         
     }
 }

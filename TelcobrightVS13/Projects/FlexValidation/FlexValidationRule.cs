@@ -20,7 +20,7 @@ namespace FlexValidation
         }
         public bool Validate(object validatableObject)
         {
-            if (this.IsParsed == false) throw new Exception("Experssions must be parsed before use for faster performance.");
+            if (this.IsParsed == false) throw new Exception("Expressions must be parsed before use for faster performance.");
             bool isValid = (bool)this.ParsedExpression.GetValue(validatableObject, null);
             return isValid;
         }

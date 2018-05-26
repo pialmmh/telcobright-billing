@@ -169,6 +169,7 @@
     <Content Include="bigl\tmplPortalAppPools.txt" />
     <Content Include="bigl\tmplPortalFtpSite.txt" />
     <Content Include="bigl\tmplPortalWebSite.txt" />
+    <Content Include="MefRuleTemplate.txt" />
     <Content Include="platinum\tmplPortalAppPools.txt" />
     <Content Include="platinum\tmplPortalFtpSite.txt" />
     <Content Include="platinum\tmplPortalWebSite.txt" />
