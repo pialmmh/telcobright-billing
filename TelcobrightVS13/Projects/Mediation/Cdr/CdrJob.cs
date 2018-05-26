@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -20,6 +21,8 @@ namespace TelcobrightMediation.Cdr
         private MediationContext MediationContext => this.CdrJobContext.CdrjobInputData.MediationContext;
         private CdrSetting CdrSetting => this.MediationContext.Tbc.CdrSetting;
         private PartialCdrTesterData PartialCdrTesterData { get; }
+        private cdrmeta CdrMetaBeforeCdrjob { get; }
+
         public CdrJob(CdrProcessor cdrProcessor, CdrEraser cdrEraser, int actualStepsCount,
             PartialCdrTesterData partialCdrTesterData)
         {
@@ -28,6 +31,11 @@ namespace TelcobrightMediation.Cdr
             this.CdrEraser = cdrEraser;
             this.ActualStepsCount = actualStepsCount;
             this.PartialCdrTesterData = partialCdrTesterData;
+            this.CdrMetaBeforeCdrjob = ReadCdrMetaFromDb();
+            //todo: remove temp code
+            //this.CdrJobContext.DbCmd.ExecuteCommandText("delete from cdrmismatch;");
+            //this.CdrJobContext.DbCmd.ExecuteCommandText($@"delete from cdrtempduration");
+            //
         }
 
         public void Execute()
@@ -176,25 +184,24 @@ namespace TelcobrightMediation.Cdr
         private void UpdateCdrMetaData()
         {
             string jobname = this.CdrJobContext.TelcobrightJob.JobName;
-            decimal newProcessedDuration =
-                this.CdrProcessor.CollectionResult.ProcessedCdrExts.Sum(c => c.Cdr.DurationSec);
+
             var processedCdrExts = this.CdrProcessor.CollectionResult.ProcessedCdrExts;
-            var nonPartialCdrs = processedCdrExts
-                .Where(c => c.Cdr.MediationComplete == 1 && c.Cdr.PartialFlag == 0).Select(c => c.Cdr).AsParallel();
-            var normalizedPartialCdrs = processedCdrExts
-                .Where(c => c.Cdr.MediationComplete == 1 && c.Cdr.PartialFlag > 0).Select(c => c.Cdr).AsParallel();
+            decimal newProcessedDuration = processedCdrExts.Sum(c => c.Cdr.DurationSec);
             decimal newRawDuration = this.CdrProcessor.CollectionResult.RawDurationTotalOfConsistentCdrs;
+            cdrmeta cdrMetaAfterCdrJob = ReadCdrMetaFromDb();
 
+            if (newProcessedDuration != cdrMetaAfterCdrJob.totalInsertedDuration - this.CdrMetaBeforeCdrjob.totalInsertedDuration)
+            {
+                throw new Exception("New procesed duration does not match duration difference in cdrMeta before" +
+                                    "and after cdr job.");
+            }
+            decimal deletedDurationInCdrTable = cdrMetaAfterCdrJob.totalDeletedDuration;
+            decimal insertedDurationInCdrTable = cdrMetaAfterCdrJob.totalInsertedDuration;
 
-            cdrmeta cdrMeta = this.CdrJobContext.Context.cdrmetas.ToList().First();
-            cdrMeta.lastJobSegmentInsertedDuration = newProcessedDuration;
-            decimal deletedDurationInCdrTable = cdrMeta.totalDeletedDuration;
-            decimal insertedDurationInCdrTable = cdrMeta.totalInsertedDuration;
-            
 
             var oldCollectionResult = this.CdrEraser?.CollectionResult;
             decimal durationSupposedToBeDeleted = 0;
-            cdrMeta.lastJobSegmentDeletedDuration = 0;
+            cdrMetaAfterCdrJob.lastJobSegmentDeletedDuration = 0;
             if (oldCollectionResult != null)
             {
                 durationSupposedToBeDeleted = oldCollectionResult.ConcurrentCdrExts.Values.Sum(c => c.Cdr.DurationSec);
@@ -203,9 +210,15 @@ namespace TelcobrightMediation.Cdr
                 {
                     throw new Exception("Mismatch 1");
                 }
-                cdrMeta.lastJobSegmentDeletedDuration = durationSupposedToBeDeleted;
+                if (durationSupposedToBeDeleted != cdrMetaAfterCdrJob.totalDeletedDuration -
+                    this.CdrMetaBeforeCdrjob.totalDeletedDuration)
+                {
+                    throw new Exception("Duration supposed to be deleted does not match duration " +
+                                        "difference in cdrMeta before and after cdr job.");
+                }
+                cdrMetaAfterCdrJob.lastJobSegmentDeletedDuration = durationSupposedToBeDeleted;
             }
-            
+            cdrMetaAfterCdrJob.lastJobSegmentInsertedDuration = newProcessedDuration;
 
             decimal durationWrittenInCdrTable = insertedDurationInCdrTable - deletedDurationInCdrTable;
             decimal summaryDurationWritten = this.CdrJobContext.Context.Database.SqlQuery<decimal>(
@@ -226,8 +239,24 @@ namespace TelcobrightMediation.Cdr
             {
                 throw new Exception("Cdr metadata mismatch, duration in cdr and summary tables are not consistent.");
             }
-            var sql = cdrMeta.GetUpdateCommand(c => $" where id={c.id}").ToString();
+            var sql = cdrMetaAfterCdrJob.GetUpdateCommand(c => $" where id={c.id}").ToString();
             this.CdrJobContext.DbCmd.ExecuteCommandText(sql);
+        }
+
+        private cdrmeta ReadCdrMetaFromDb()
+        {
+            this.CdrJobContext.DbCmd.CommandText = "select * from cdrmeta";
+            cdrmeta cdrMetaAfterCdrJob = this.CdrJobContext.DbCmd.GetObjectsByQuery(r =>
+            new cdrmeta()
+            {
+                id = r.GetInt32(0),
+                lastJobSegmentInsertedDuration = r.GetDecimal(1),
+                lastJobSegmentDeletedDuration = r.GetDecimal(2),
+                totalInsertedDuration = r.GetDecimal(3),
+                totalDeletedDuration = r.GetDecimal(4)
+            }
+            ).First();
+            return cdrMetaAfterCdrJob;
         }
     }
 }

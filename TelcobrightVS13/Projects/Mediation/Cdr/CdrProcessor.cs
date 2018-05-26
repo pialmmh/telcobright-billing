@@ -20,6 +20,8 @@ using FlexValidation;
 using TelcobrightMediation.Cdr;
 using TelcobrightMediation.Config;
 using TelcobrightMediation.Mediation.Cdr;
+using System.IO;
+using System.Text.RegularExpressions;
 using TransactionTuple = System.ValueTuple<int, int, long, int>;
 using CdrSummaryTuple = System.ValueTuple<int, int, int, string, string, decimal, decimal, System.ValueTuple<string, string, string, string, string, string, string, System.ValueTuple<string, string, string, string, string, string>>>;
 
@@ -333,21 +335,48 @@ namespace TelcobrightMediation
             if (this.CollectionResult.CdrErrors.Any())
                 errorCount = WriteCdrError();
 
+            //todo: remote temp code
+            //todo: remote temp Code
+            string insertLogFileNameNonpartial = @"c:\temp\insertCdrNonPartial.txt";
+            if(File.Exists(insertLogFileNameNonpartial)) File.Delete(insertLogFileNameNonpartial);
+            string insertLogFileNamepartial = @"c:\temp\insertCdrPartial.txt";
+            if (File.Exists(insertLogFileNamepartial)) File.Delete(insertLogFileNamepartial);
+            //end temp code
+            
             var nonPartialCdrs = processedCdrExts
                 .Where(c => c.Cdr.MediationComplete == 1 && c.Cdr.PartialFlag == 0).Select(c => c.Cdr).AsParallel();
-            if (nonPartialCdrs.Any())
-                nonPartialCdrCount = WriteCdr(nonPartialCdrs);
-
             var normalizedPartialCdrs = processedCdrExts
                 .Where(c => c.Cdr.MediationComplete == 1 && c.Cdr.PartialFlag > 0).Select(c => c.Cdr).AsParallel();
+            //todo: remove temp code
+            var nonPartialCount = nonPartialCdrs.Count();
+            var partialCount = normalizedPartialCdrs.Count();
+            int totalCount = nonPartialCount + partialCount;
+            if (totalCount!=processedCdrExts.Count())
+            {
+                throw new Exception("Mismatch");
+            }
+            //end 
+            //todo: change list to parallelquery
+            if (nonPartialCdrs.Any())
+                nonPartialCdrCount = WriteCdr(nonPartialCdrs.ToList(),insertLogFileNameNonpartial,nonPartialCount);
             if (normalizedPartialCdrs.Any())
-                normalizedPartialCdrCount = WriteCdr(normalizedPartialCdrs);
+                normalizedPartialCdrCount = WriteCdr(normalizedPartialCdrs.ToList(),insertLogFileNamepartial,partialCount);
 
             cdrCount = nonPartialCdrCount + normalizedPartialCdrCount;
             if (cdrCount!=processedCdrExts.Count())
             {
                 throw new Exception("Written number of cdrs does not match processed cdrs count.");
             }
+            //todo: remove temp code
+            var insertSummaryFile = @"c:\temp\cdrWriteResult.txt";
+            if (File.Exists(insertSummaryFile)) File.Delete(insertSummaryFile);
+            File.WriteAllText(insertSummaryFile,
+                $"processedCdrExtCount={processedCdrExts.Count()}{Environment.NewLine}");
+            File.AppendAllText(insertSummaryFile,$"writtenCountTotal={cdrCount}{Environment.NewLine}");
+            File.AppendAllText(insertSummaryFile, $"writtenCountNonPartial={nonPartialCdrCount}{Environment.NewLine}");
+            File.AppendAllText(insertSummaryFile,
+                $"writtenCountPartial={normalizedPartialCdrCount}{Environment.NewLine}");
+            //end
             List<PartialCdrContainer> partialCdrContainers = new List<PartialCdrContainer>();
             PartialCdrWriter partialCdrWriter = null;
             if (this.PartialProcessingEnabled)
@@ -412,8 +441,25 @@ namespace TelcobrightMediation
             return errorInsertedCount;
         }
 
-        int WriteCdr(ParallelQuery<cdr> cdrs)
+        //todo: remove logFilename params & count param & processedCdrExt list
+        int WriteCdr(List<cdr> cdrs,string logFileName,int originalCount)
         {
+            //todo: remove temp code
+            List<string> insertCommandsSupposedToBe = cdrs.ToList().Select(c => c.GetExtInsertValues().ToString()).ToList();
+            if (originalCount!=insertCommandsSupposedToBe.Count)
+            {
+                throw new Exception("Mismatch.");
+            }
+            //todo: remove temp code
+            string durationString = string.Join(",",
+                cdrs.Select(c => $"({c.UniqueBillId.EncloseWith("'")},{c.DurationSec})"));
+            //this.CdrJobContext.DbCmd.ExecuteCommandText($@"insert into cdrtempduration values {durationString}");
+            decimal durationSumNonSegmented = cdrs.Sum(c => c.DurationSec);
+            decimal durationSumSegmented = 0;
+            decimal durationSumSegmentedNonParallel = 0;
+            //end
+            int insertCommandCountInCommandText = 0;
+            //end
             int insertCount = 0;
             int startAt = 0;
             CollectionSegmenter<cdr> methodEnumerator = new CollectionSegmenter<cdr>
@@ -421,11 +467,37 @@ namespace TelcobrightMediation
             methodEnumerator.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
                 segment =>
                 {
-                    var sbs = segment.AsParallel().Select(c => c.GetExtInsertValues());
+                    ParallelQuery<StringBuilder> sbs = segment.AsParallel().Select(c => c.GetExtInsertValues());
+                    //todo: remove temp code
+                    int segmentCount = segment.Count();
+                    durationSumSegmented += segment.AsParallel().Sum(c => c.DurationSec);
+                    durationSumSegmentedNonParallel += segment.ToList().Sum(c => c.DurationSec);
+                    //end
+                    StringBuilder extInsertCommandsForthisSegment = StringBuilderJoiner.Join(",", sbs);
                     this.DbCmd.CommandText = new StringBuilder(StaticExtInsertColumnHeaders.cdr)
-                        .Append(StringBuilderJoiner.Join(",", sbs)).ToString();
+                        .Append(extInsertCommandsForthisSegment).ToString();
+                    //todo: remove temp Code
+                    insertCommandCountInCommandText += this.DbCmd.CommandText.Replace("),(", "`").Split('`').Length;
+                    File.AppendAllText(logFileName, this.DbCmd.CommandText);
+                    //end temp code
                     insertCount += this.DbCmd.ExecuteNonQuery();
+                    //todo: remove temp code
+                    //this.DbCmd.CommandText = this.DbCmd.CommandText.Replace("into cdr", "into cdrmismatch");
+                    //this.DbCmd.ExecuteNonQuery();
+                    if (insertCommandCountInCommandText != insertCount)
+                    {
+                        throw new Exception("Mismatch");
+                    }
+                    //end
                 });
+            //todo: remove temp 
+            if(durationSumNonSegmented!=durationSumSegmented)
+                throw new Exception("Duration mismatch between segmented & non segmented cdrs.");
+            if (insertCommandCountInCommandText != originalCount)
+            {
+                throw new Exception("mismatch");
+            }
+            //end
             return insertCount;
             
         }

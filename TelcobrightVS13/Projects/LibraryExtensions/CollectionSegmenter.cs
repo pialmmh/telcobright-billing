@@ -6,12 +6,13 @@ namespace LibraryExtensions
 {
     public class CollectionSegmenter<T>
     {
-        public IEnumerable<T> Enumerable { get; }
+        //convert enumerable to list to save problems associated with enumerable.skip() with parallel collections
+        public List<T> Enumerable { get; }
         private int SkipFromStart { get; set; }
 
         public CollectionSegmenter(IEnumerable<T> enumerable, int startAtZeroBasedIndex)
         {
-            this.Enumerable = enumerable;
+            this.Enumerable = enumerable.ToList();
             this.SkipFromStart = startAtZeroBasedIndex;
         }
 
