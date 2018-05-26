@@ -6,21 +6,23 @@ using Spring.Expressions;
 
 namespace FlexValidation
 {
-    public class ValidationRule
+    public class FlexValidationRule:IValidationRule
     {
+
         protected IExpression ParsedExpression { get; set; }
         public string ValidationMessage { get; set; }
         protected bool IsParsed { get; set; }
-        public ValidationRule(KeyValuePair<string, string> validationExpressionsWithErrorMessage)
+        public FlexValidationRule(KeyValuePair<string, string> validationExpressionsWithErrorMessage)
         {
             this.ParsedExpression = Expression.Parse(validationExpressionsWithErrorMessage.Key);
             this.ValidationMessage = validationExpressionsWithErrorMessage.Value;
             this.IsParsed = true;
         }
-        public IExpression GetParsedExpression()
+        public bool Validate(object validatableObject)
         {
             if (this.IsParsed == false) throw new Exception("Experssions must be parsed before use for faster performance.");
-            return this.ParsedExpression;
+            bool isValid = (bool)this.ParsedExpression.GetValue(validatableObject, null);
+            return isValid;
         }
     }
 }

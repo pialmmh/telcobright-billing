@@ -12,34 +12,38 @@ namespace TelcobrightMediation
     public class SummaryCache<TEntity, TKey> : AbstractCache<TEntity, TKey> where TEntity : ICacheble<TEntity>,
         ISummary<TEntity, TKey>
     {
-        //todo: remove insertedCount & updated Count
-        public int InsertedCount { get; private set; }
-        public int UpdatedCount { get; private set; }
         public override string EntityOrTableName { get; }
         private AutoIncrementCounterType EntityTypeAsEnum { get; }
-        private readonly object locker=new object();
+        private readonly object locker = new object();
         private AutoIncrementManager AutoIncrementManager { get; }
-        public SummaryCache(string entityName,AutoIncrementManager autoIncrementManager , Func<TEntity, TKey> dictionaryKeyGenerator,
+
+        public SummaryCache(string entityName, AutoIncrementManager autoIncrementManager,
+            Func<TEntity, TKey> dictionaryKeyGenerator,
             Func<TEntity, StringBuilder> insertCommandGenerator,
             Func<TEntity, StringBuilder> updateCommandGenerator,
             Func<TEntity, StringBuilder> deleteCommandGenerator)
-            : base(dictionaryKeyGenerator, insertCommandGenerator, updateCommandGenerator,deleteCommandGenerator)//Constructor
+            : base(dictionaryKeyGenerator, insertCommandGenerator, updateCommandGenerator,
+                deleteCommandGenerator) //Constructor
         {
             this.EntityOrTableName = entityName;
             this.AutoIncrementManager = autoIncrementManager;
             this.EntityTypeAsEnum = AutoIncrementTypeDictionary.EnumTypes[entityName];
         }
-        public override void PopulateCache(Func<Dictionary<TKey, TEntity>> methodToPopulate)//define method in Instance
+
+        public override void PopulateCache(Func<Dictionary<TKey, TEntity>> methodToPopulate) //define method in Instance
         {
             foreach (var keyValuePair in methodToPopulate.Invoke())
             {
-                if(base.Cache.TryAdd(keyValuePair.Key, keyValuePair.Value)==false)
-                    throw new Exception("Could not add summary instance to concurrent dictionary while populating summarycache, probably duplicate item.");
+                if (base.Cache.TryAdd(keyValuePair.Key, keyValuePair.Value) == false)
+                    throw new Exception(
+                        "Could not add summary instance to concurrent dictionary while populating summarycache, probably duplicate item.");
             }
         }
-        public void Merge(TEntity newSummary, SummaryMergeType mergeType, Func<TEntity, bool> pdValidatationMethodForInsert)
+
+        public void Merge(TEntity newSummary, SummaryMergeType mergeType,
+            Func<TEntity, bool> pdValidatationMethodForInsert)
         {
-            lock(this.locker)
+            lock (this.locker)
             {
                 TEntity existingSummary = default(TEntity);
                 TKey key = newSummary.GetTupleKey();
@@ -48,7 +52,8 @@ namespace TelcobrightMediation
                 {
                     if (mergeType == SummaryMergeType.Substract)
                     {
-                        throw new NotSupportedException("Previous summary instance cannot be null for summary substraction.");
+                        throw new NotSupportedException(
+                            "Previous summary instance cannot be null for summary substraction.");
                     }
                     //summaries are merged in Cache, cache.Insert without value copy will have the same reference 
                     //for source summary entity & the mergable version in cache
@@ -59,9 +64,8 @@ namespace TelcobrightMediation
                     if (mergeType == SummaryMergeType.Add)
                     {
                         InsertWithKey(clonedSummary, key, pdValidatationMethodForInsert);
-                        this.InsertedCount++;
                     }
-                    else 
+                    else
                     {
                         throw new NotSupportedException("Summary merge type must be add or substract.");
                     }
@@ -74,7 +78,6 @@ namespace TelcobrightMediation
                     }
                     this.UpdateThroughCache(this.DictionaryKeyGenerator(existingSummary),
                         e => e.Merge(newSummary));
-                    this.UpdatedCount++;
                 }
             }
         }

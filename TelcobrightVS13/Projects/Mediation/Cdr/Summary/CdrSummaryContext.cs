@@ -97,10 +97,6 @@ namespace TelcobrightMediation.Cdr
         {
             var daySummaryCaches = this.TableWiseSummaryCache.Where(kv => kv.Key.Contains("_day_"))
                 .ToDictionary(kv => kv.Key, kv => kv.Value);
-            //todo: remove temp code
-            var prevSummarySumInCache = daySummaryCaches.Values.SelectMany(c => c.GetItems())
-                .Sum(s => s.actualduration);
-            //temp code
             var hourSummaryCaches = this.TableWiseSummaryCache.Where(kv => kv.Key.Contains("_hr_"))
                 .ToDictionary(kv => kv.Key, kv => kv.Value);
             foreach (var kv in daySummaryCaches)

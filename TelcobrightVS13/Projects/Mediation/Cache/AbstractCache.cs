@@ -182,7 +182,7 @@ namespace TelcobrightMediation
                 string extInsertHeader = StaticExtInsertColumnParsedDic.GetParsedDic()[this.EntityOrTableName];
                 int startAt = 0;
                 CollectionSegmenter<TEntity> segments =
-                    new CollectionSegmenter<TEntity>(this.GetInsertedItems().AsParallel(), startAt);
+                    new CollectionSegmenter<TEntity>(this.GetInsertedItems(), startAt);
                 segments.ExecuteMethodInSegments(segmentSize,
                     segment =>
                     {

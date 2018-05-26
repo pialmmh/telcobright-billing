@@ -58,8 +58,9 @@
   <ItemGroup>
     <Compile Include="FlexValidatorT.cs" />
     <Compile Include="Conditions.cs" />
+    <Compile Include="IValidationRule.cs" />
     <Compile Include="ValidatableObject.cs" />
-    <Compile Include="ValidationRule.cs" />
+    <Compile Include="FlexValidationRule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ValidationClause.cs" />
     <Compile Include="ValidationResultsContainer.cs" />

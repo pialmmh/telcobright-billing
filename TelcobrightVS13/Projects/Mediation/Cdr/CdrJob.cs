@@ -31,26 +31,13 @@ namespace TelcobrightMediation.Cdr
             this.CdrEraser = cdrEraser;
             this.ActualStepsCount = actualStepsCount;
             this.PartialCdrTesterData = partialCdrTesterData;
-            this.CdrMetaBeforeCdrjob = ReadCdrMetaFromDb();
-            //todo: remove temp code
-            //this.CdrJobContext.DbCmd.ExecuteCommandText("delete from cdrmismatch;");
-            //this.CdrJobContext.DbCmd.ExecuteCommandText($@"delete from cdrtempduration");
-            //
+            //this.CdrMetaBeforeCdrjob = ReadCdrMetaFromDb();
         }
 
         public void Execute()
         {
 
             this.CdrEraser?.RegenerateOldSummaries();
-
-            //todo: remove temp code
-            //var oldCdrs = CdrEraser.CollectionResult.ProcessedCdrExts;
-            //var oldCdrDuration = oldCdrs.Sum(c => c.Cdr.DurationSec);
-            //var daySummaryCaches = this.CdrJobContext.CdrSummaryContext.TableWiseSummaryCache
-            //    .Where(kv => kv.Key.Contains("day")).Select(kv => kv.Value).ToList();
-            //var summDurationInCacheStart = daySummaryCaches.SelectMany(s => s.GetItems()).Sum(c => c.actualduration);
-            //temp
-
             this.CdrEraser?.ValidateSummaryReGeneration();
             if (this.CdrEraser != null)
             {
@@ -58,49 +45,12 @@ namespace TelcobrightMediation.Cdr
                     this.CdrEraser.CollectionResult.ConcurrentCdrExts.Values.AsParallel());
             }
             this.CdrEraser?.UndoOldSummaries();
-
-            //todo: remove or find a way to kep this test
-            //var summDurationInCache = daySummaryCaches.SelectMany(s => s.GetItems()).Sum(c => c.actualduration);
-            //var updateItems = daySummaryCaches.SelectMany(s => s.GetUpdatedItems()).ToList();
-            //var updatedDurationFromUpdatedItems=updateItems.Sum(c => c.actualduration);
-            //var updateCacheDurationAftSubstract = summDurationInCache - summDurationInCacheStart;
-            //if (daySummaryCaches.SelectMany(c=>c.GetInsertedItems()).Any())
-            //    throw new Exception("Summary cache cannot contain inserted items after prev summary substraction.");
-            //end
-
             this.CdrEraser?.UndoOldChargeables();
             this.CdrEraser?.DeleteOldCdrs();
 
-            //todo: remove temp code
-            var durationTobeProcessed =
-                this.CdrProcessor.CollectionResult.ConcurrentCdrExts.Values.Sum(c => c.Cdr.DurationSec);
-            //end temp code
-
             this.CdrProcessor?.Mediate();
-            
             ParallelQuery<CdrExt> parallelCdrExts= this.CdrProcessor?.GenerateSummaries();
-
-            //todo: remove temp code
-            //updateItems = daySummaryCaches.SelectMany(s => s.GetUpdatedItems()).ToList();
-            //end
-
             this.CdrProcessor?.MergeNewSummariesIntoCache(parallelCdrExts);
-
-
-            //todo: remove temp code
-            //updateItems = daySummaryCaches.SelectMany(s => s.GetUpdatedItems()).ToList();
-            //end
-
-            //todo: remove temp code
-            //var newCdrDuration = CdrProcessor.CollectionResult.ProcessedCdrExts.Sum(c => c.Cdr.DurationSec);
-            //var newSummaryDuration = CdrProcessor.CollectionResult.ProcessedCdrExts
-            //    .SelectMany(c => c.TableWiseSummaries)
-            //    .Where(c => c.Key.Contains("day")).Select(kv => kv.Value).Sum(s => s.actualduration);
-            //summDurationInCache = daySummaryCaches.SelectMany(s => s.GetItems()).Sum(c => c.actualduration);
-            //var durationInInsertCache = daySummaryCaches.SelectMany(s => s.GetInsertedItems()).Sum(c => c.actualduration);
-            //var durationInUpdateCache = newCdrDuration - durationInInsertCache + updateCacheDurationAftSubstract;
-            //end
-
             this.CdrProcessor?.ProcessChargeables(parallelCdrExts);
 
             IncrementalTransactionCreator transactionProcessor = new IncrementalTransactionCreator(this);
@@ -129,7 +79,7 @@ namespace TelcobrightMediation.Cdr
             }
             this.CdrJobContext.AccountingContext.WriteAllChanges();
             this.CdrJobContext.AutoIncrementManager.WriteAllChanges();
-            UpdateCdrMetaData();
+            //UpdateCdrMetaData();
         }
 
         protected void ValidateCdrProcessorWithMediationTester(CdrJobInputData input,ParallelQuery<CdrExt> processedCdrExts)
@@ -183,32 +133,27 @@ namespace TelcobrightMediation.Cdr
         }
         private void UpdateCdrMetaData()
         {
-            string jobname = this.CdrJobContext.TelcobrightJob.JobName;
-
             var processedCdrExts = this.CdrProcessor.CollectionResult.ProcessedCdrExts;
             decimal newProcessedDuration = processedCdrExts.Sum(c => c.Cdr.DurationSec);
-            decimal newRawDuration = this.CdrProcessor.CollectionResult.RawDurationTotalOfConsistentCdrs;
             cdrmeta cdrMetaAfterCdrJob = ReadCdrMetaFromDb();
-
             if (newProcessedDuration != cdrMetaAfterCdrJob.totalInsertedDuration - this.CdrMetaBeforeCdrjob.totalInsertedDuration)
             {
                 throw new Exception("New procesed duration does not match duration difference in cdrMeta before" +
-                                    "and after cdr job.");
+                                    " and after cdr job.");
             }
             decimal deletedDurationInCdrTable = cdrMetaAfterCdrJob.totalDeletedDuration;
             decimal insertedDurationInCdrTable = cdrMetaAfterCdrJob.totalInsertedDuration;
 
-
             var oldCollectionResult = this.CdrEraser?.CollectionResult;
-            decimal durationSupposedToBeDeleted = 0;
             cdrMetaAfterCdrJob.lastJobSegmentDeletedDuration = 0;
             if (oldCollectionResult != null)
             {
-                durationSupposedToBeDeleted = oldCollectionResult.ConcurrentCdrExts.Values.Sum(c => c.Cdr.DurationSec);
+                var durationSupposedToBeDeleted = oldCollectionResult.ConcurrentCdrExts.Values.Sum(c => c.Cdr.DurationSec);
                 if (durationSupposedToBeDeleted
                     != oldCollectionResult.ProcessedCdrExts.Sum(c => c.Cdr.DurationSec))
                 {
-                    throw new Exception("Mismatch 1");
+                    throw new Exception("Duration total supposed to be deleted does not match cdr " +
+                                        "duration total in old collection.");
                 }
                 if (durationSupposedToBeDeleted != cdrMetaAfterCdrJob.totalDeletedDuration -
                     this.CdrMetaBeforeCdrjob.totalDeletedDuration)

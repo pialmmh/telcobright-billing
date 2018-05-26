@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using Spring.Context.Attributes;
 using Spring.Core.TypeResolution;
 
 namespace FlexValidation
@@ -10,8 +11,8 @@ namespace FlexValidation
     {
         public bool ContinueOnError { get; set; }
         public bool ThrowExceptionOnFirstError { get; set; }
-        private readonly List<ValidationRule> _flexRules = new List<ValidationRule>();
-        private readonly bool _isDoneParsingRules = false;
+        private readonly List<FlexValidationRule> flexRules = new List<FlexValidationRule>();
+        private readonly bool isDoneParsingRules = false;
         public FlexValidator() { }//Empty constructor for json deserialization
         public Dictionary<string, Func<string, DateTime>> DateParsers { get; set; }=new Dictionary<string, Func<string, DateTime>>();
 
@@ -34,28 +35,28 @@ namespace FlexValidation
             TypeRegistry.RegisterType("Parsers", typeof(FlexValidation.Parsers));
             this.ContinueOnError = continueOnError;
             this.ThrowExceptionOnFirstError = throwExceptionOnFirstError;
-            if (this._isDoneParsingRules == false)
+            if (this.isDoneParsingRules == false)
             {
                 foreach (KeyValuePair<string, string> kv in validationExpressionsWithErrorMessage)
                 {
-                    ValidationRule flexRule = new ValidationRule(kv);
-                    this._flexRules.Add(flexRule);
+                    FlexValidationRule flexRule = new FlexValidationRule(kv);
+                    this.flexRules.Add(flexRule);
                 }
-                this._isDoneParsingRules = true;
+                this.isDoneParsingRules = true;
             }
         }
 
         public virtual ValidationResult Validate(T instance)
         {
-            if (this._isDoneParsingRules==false)
+            if (this.isDoneParsingRules==false)
             {
                 throw new Exception("Flexvalidator's rules are not parsed.");
             }
             var validationResult = new ValidationResult();
-            foreach (ValidationRule flexRule in this._flexRules)
+            foreach (FlexValidationRule flexRule in this.flexRules)
             {
                 ValidatableObject<T> validatableObject=new ValidatableObject<T>(instance,this);
-                bool isValid = (bool)flexRule.GetParsedExpression().GetValue(validatableObject, null);
+                bool isValid = (bool)flexRule.Validate(validatableObject);
                 if (isValid == false)
                 {
                     validationResult.AppendValidationClause(new ValidationClause(false, flexRule.ValidationMessage));
@@ -72,32 +73,9 @@ namespace FlexValidation
             }
             return validationResult;
         }
-        
-        public virtual ValidationResult ValidateWithoutBoxing(T instance)
+        public List<FlexValidationRule> GetFlexRules()
         {
-            var validationResult = new ValidationResult();
-            foreach (ValidationRule flexRule in this._flexRules)
-            {
-                bool isValid = (bool)flexRule.GetParsedExpression().GetValue(instance, null);
-                if (isValid == false)
-                {
-                    validationResult.AppendValidationClause(new ValidationClause(false, flexRule.ValidationMessage));
-                    if (this.ThrowExceptionOnFirstError == true)
-                    {
-                        throw new Exception(flexRule.ValidationMessage);
-                    }
-                    if (this.ContinueOnError == false) break;
-                }
-                else
-                {
-                    validationResult.AppendValidationClause(new ValidationClause(true, string.Empty));
-                }
-            }
-            return validationResult;
-        }
-        public List<ValidationRule> GetFlexRules()
-        {
-            return this._flexRules;
+            return this.flexRules;
         }
     }
 }

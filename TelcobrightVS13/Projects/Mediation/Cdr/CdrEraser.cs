@@ -79,9 +79,7 @@ namespace TelcobrightMediation
 
         public void UndoOldSummaries()
         {
-            //todo: change to parallel
-            //Parallel.ForEach(this.OldCdrExts, oldCdrExt=>
-            this.OldCdrExts.ForEach(oldCdrExt =>
+            Parallel.ForEach(this.OldCdrExts, oldCdrExt=>
             {
                 foreach (var kv in oldCdrExt.TableWiseSummaries)
                 {

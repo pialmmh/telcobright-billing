@@ -92,18 +92,12 @@ namespace TelcobrightMediation
             List<CdrExt> newCdrExts = this.CreateNewCdrExts();
             var newCollectionResult = new CdrCollectionResult(base.CdrCollectorInputData.Ne, newCdrExts,
                 base.InconsistentCdrs.ToList(), base.RawCount);
-            //todo: remove temp code
-            var durToBeprocessed = newCollectionResult.ConcurrentCdrExts.Values.Sum(c => c.Cdr.DurationSec);
-            //end
             return newCollectionResult;
         }
         protected override List<CdrExt> CreateNewCdrExts()
         {
             var cdrExtsForNonPartials = this.NonPartialCdrs
                 .Select(cdr => CdrExtFactory.CreateCdrExtWithNonPartialCdr(cdr, CdrNewOldType.NewCdr)).ToList();
-            //todo: remove temp code
-            var nonPartialDur = cdrExtsForNonPartials.Sum(c => c.Cdr.DurationSec);
-            //end
             if (this.PartialCdrEnabled)
             {
                 if (base.RawPartialCdrInstances?.Any() == true)
@@ -119,10 +113,6 @@ namespace TelcobrightMediation
             var cdrExtsForPartials = this.PartialCdrContainers
                 .Select(partialContainer => CdrExtFactory.CreateCdrExtWithPartialCdrContainer(partialContainer,
                     CdrNewOldType.NewCdr)).ToList();
-            //todo: remove temp code
-            var partialCdrDur = cdrExtsForPartials.Sum(c => c.Cdr.DurationSec);
-            var sumDurPartialNonPartial = nonPartialDur + partialCdrDur;
-            //end
             var concatedList = cdrExtsForPartials.Concat(cdrExtsForNonPartials).ToList();
             if (concatedList.GroupBy(c => c.UniqueBillId).Any(g => g.Count() > 1))
                 throw new Exception("Duplicate billId for CdrExts in CdrJob");

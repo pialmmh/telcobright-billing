@@ -70,9 +70,6 @@ namespace Jobs
             CdrCollectionResult newCollectionResult)
         {
             this.RawCount = preProcessor.RawCount;
-            //todo: remove temp code
-            var rawDuration = preProcessor.TxtCdrRows.Sum(r => Convert.ToDecimal(r[Fn.DurationSec]));
-            //end temp code
             newCollectionResult.RawDurationTotalOfConsistentCdrs =
                 preProcessor.NonPartialCdrs.Sum(c => c.DurationSec) + preProcessor.PartialCdrContainers
                     .SelectMany(pc => pc.NewRawInstances).Sum(r => r.DurationSec);
@@ -136,8 +133,6 @@ namespace Jobs
                     cdrJob.CdrProcessor.CdrJobContext.TelcobrightJob);
             }
         }
-
-        
 
         protected void PreformatRawCdrs(NewCdrPreProcessor preProcessor)
         {
