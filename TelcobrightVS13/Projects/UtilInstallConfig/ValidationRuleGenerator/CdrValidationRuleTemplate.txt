@@ -1,0 +1,9 @@
+﻿[Export(typeof(IValidationRule<>), ExportMetadata("Type", "CdrValidationRuleType"))]
+public class RuleName : IValidationRule<cdr>
+{
+    public string ValidationMessage => "ValidationMessage";
+    public bool Validate(cdr obj)
+    {
+        return Expression;
+    }
+}

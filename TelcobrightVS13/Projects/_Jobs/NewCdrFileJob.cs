@@ -138,7 +138,8 @@ namespace Jobs
         {
             var collectorinput = this.CollectorInput;
             SetIdCallsInSameOrderAsCollected(preProcessor, collectorinput);
-            FlexValidator<string[]> inconistentValidator = NewCdrPreProcessor.CreateValidatorForInconsistencyCheck(collectorinput);
+            MefValidator<string[]> inconistentValidator =
+                NewCdrPreProcessor.CreateValidatorForInconsistencyCheck(collectorinput);
             if (!collectorinput.CdrJobInputData.MediationContext.Tbc.CdrSetting.PartialCdrEnabledNeIds
                 .Contains(collectorinput.Ne.idSwitch))
             {

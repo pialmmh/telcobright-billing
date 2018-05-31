@@ -27,10 +27,10 @@ namespace TelcobrightMediation
                 .Contains(base.CdrCollectorInputData.CdrJobInputData.Ne.idSwitch);
         }
 
-        public void CheckAndConvertIfInconsistent(CdrJobInputData input, FlexValidator<string[]> flexValidator,
+        public void CheckAndConvertIfInconsistent(CdrJobInputData input, MefValidator<string[]> mefValidator,
             string[] txtRow)
         {
-            ValidationResult validationResult = flexValidator.Validate(txtRow);
+            ValidationResult validationResult = mefValidator.Validate(txtRow);
             if (validationResult.IsValid == false)
             {
                 txtRow[Fn.ErrorCode] = validationResult.FirstValidationFailureMessage;
@@ -218,21 +218,14 @@ namespace TelcobrightMediation
                 }
             }
         }
-        public static FlexValidator<string[]> CreateValidatorForInconsistencyCheck(CdrCollectorInputData collectorinput)
+        public static MefValidator<string[]> CreateValidatorForInconsistencyCheck(CdrCollectorInputData collectorinput)
         {
-            FlexValidator<string[]> flexValidator = new FlexValidator<string[]>(
+            string pathToMefCatalog = @"..\..\Extensions\";
+            MefValidator<string[]> mefValidator = new MefValidator<string[]>(
                 continueOnError: false,
                 throwExceptionOnFirstError: false,
-                validationExpressionsWithErrorMessage: collectorinput.CdrJobInputData.MediationContext.Tbc.CdrSetting
-                    .ValidationRulesForInconsistentCdrs);
-            flexValidator.DateParsers.Add(
-                "stringToDateConverterFromMySqlFormat", str => str.ConvertToDateTimeFromMySqlFormat());
-            flexValidator.DateParsers.Add("strToMySqlDtConverter", str => str.ConvertToDateTimeFromMySqlFormat());
-            flexValidator.DoubleParsers.Add("doubleConverterProxy", str => Convert.ToDouble(str));
-            flexValidator.IntParsers.Add("intConverterProxy", str => Convert.ToInt32(str));
-            flexValidator.BooleanParsers.Add("isDateTimeChecker", str => str.IsDateTime(StringExtensions.MySqlDateTimeFormat));
-            flexValidator.BooleanParsers.Add("isNumericChecker", str => str.IsNumeric());
-            return flexValidator;
+                pathToCatalog:pathToMefCatalog);
+            return mefValidator;
         }
     }
 }

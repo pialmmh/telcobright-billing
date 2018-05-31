@@ -90,7 +90,7 @@ namespace TelcobrightMediation
             this.InconsistentCdrCheckListValidator = CreateValidatorInstanceWithValidationExpressions<string[]>(this.Tbc
                 .CdrSetting.ValidationRulesForInconsistentCdrs);
             this.CommonMediationCheckListValidator =
-                CreateValidatorInstanceWithValidationExpressions<cdr>(this.Tbc.CdrSetting.CommonMediationChecklist);
+                CreateValidatorInstanceWithValidationExpressions<cdr>(this.Tbc.CdrSetting.ValidationMetaDataRuleNameForCommonMediationCheck);
             ComposeMefExtensions(this.Tbc);
             CreateServiceGroupWiseFlexValidatorInstances();
             this.MefServiceGroupContainer.SwitchWiseRoutes =
@@ -221,19 +221,12 @@ namespace TelcobrightMediation
             }
         }
 
-        private FlexValidator<T> CreateValidatorInstanceWithValidationExpressions<T>(
-            Dictionary<string, string> validationExpressions)
+        private MefValidator<T> CreateValidatorInstanceWithValidationExpressions<T>()
         {
-            var flexValidator = new FlexValidator<T>(continueOnError: false,
-                throwExceptionOnFirstError: false,
-                validationExpressionsWithErrorMessage: validationExpressions);
-            flexValidator.DateParsers.Add("strToMySqlDtConverter", str => str.ConvertToDateTimeFromMySqlFormat());
-            flexValidator.DoubleParsers.Add("doubleConverterProxy", str => Convert.ToDouble(str));
-            flexValidator.IntParsers.Add("intConverterProxy", str => Convert.ToInt32(str));
-            flexValidator.BooleanParsers.Add("isDateTimeChecker",
-                str => str.IsDateTime(StringExtensions.MySqlDateTimeFormat));
-            flexValidator.BooleanParsers.Add("isNumericChecker", str => str.IsNumeric());
-            return flexValidator;
+            string pathToCatalog = @"..\..\Extensions\";
+            var mefValidator = new MefValidator<T>(continueOnError: false,
+                throwExceptionOnFirstError: false,pathToCatalog:pathToCatalog);
+            return mefValidator;
         }
     }
 }

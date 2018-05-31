@@ -19,8 +19,8 @@ namespace TelcobrightMediation
         public new bool DescendingOrderWhileListingFiles { get; set; }
         public List<string> IllegalStrToRemoveFromFields { get; set; }
         public DateTime NotAllowedCallDateTimeBefore { get; set; } = new DateTime(2008,1,1);
-        public Dictionary<string, string> ValidationRulesForInconsistentCdrs { get; set; }
-        public Dictionary<string,string> CommonMediationChecklist { get; set; }
+        public string ValidationMetaDataRuleNameForInconsistentCdrs { get; set; }
+        public string ValidationMetaDataRuleNameForCommonMediationCheck { get; set; }
         public Dictionary<int, ServiceGroupConfiguration> ServiceGroupConfigurations { get; set; }
         public string NerCalculationRule { get; set; }
         public bool CallConnectTimePresent { get; set; }

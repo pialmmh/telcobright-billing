@@ -19,19 +19,20 @@ namespace FlexValidation
         public bool ContinueOnError { get; set; }
         public bool ThrowExceptionOnFirstError { get; set; }
         private readonly List<IValidationRule<T>> rules = new List<IValidationRule<T>>();
-
+        private string RuleTypeInExportMetaData { get; }
         public MefValidator()
         {
         } //Empty constructor for json deserialization
 
         [JsonConstructor]
         public MefValidator(bool continueOnError, bool throwExceptionOnFirstError,
-            string pathToMefRulesDir) //constructor
+            string pathToCatalog,string ruletypeInExportMetaData) //constructor
         {
             this.ContinueOnError = continueOnError;
             this.ThrowExceptionOnFirstError = throwExceptionOnFirstError;
-            this.ComposeFromPath(pathToMefRulesDir);
-            foreach (var validationRule in this.ValidationRules)
+
+            this.ComposeFromPath(pathToCatalog);
+            foreach (var validationRule in this.ValidationRules.Where(r=>r.me))
             {
                 this.rules.Add(validationRule);
             }

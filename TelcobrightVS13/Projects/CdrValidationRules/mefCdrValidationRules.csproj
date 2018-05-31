@@ -61,8 +61,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ServiceGroupValRules.cs" />
+    <Compile Include="InconsistentCdrValRules.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="CdrValidationRules.cs" />
+    <Compile Include="CommonCdrValRules.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mediation\_00Mediation.csproj">

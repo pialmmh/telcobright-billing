@@ -122,7 +122,9 @@
     <Compile Include="SchedulerConfigGenerator.cs" />
     <Compile Include="tpny\ConfigHelper_tpny.cs" />
     <Compile Include="utility\util_Del_CompletedCDRFilesLocal.cs" />
-    <Compile Include="_CommonValidation\BasicCdrValidationRuleGenerator.cs" />
+    <Compile Include="ValidationRuleGenerator\InconsistentCdrValRulesTempl.cs" />
+    <Compile Include="ValidationRuleGenerator\CommonCdrValRulesTempl.cs" />
+    <Compile Include="ValidationRuleGenerator\CdrValidationRuleGenerator.cs" />
     <None Include="app.manifest" />
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
@@ -169,7 +171,6 @@
     <Content Include="bigl\tmplPortalAppPools.txt" />
     <Content Include="bigl\tmplPortalFtpSite.txt" />
     <Content Include="bigl\tmplPortalWebSite.txt" />
-    <Content Include="MefRuleTemplate.txt" />
     <Content Include="platinum\tmplPortalAppPools.txt" />
     <Content Include="platinum\tmplPortalFtpSite.txt" />
     <Content Include="platinum\tmplPortalWebSite.txt" />
@@ -178,6 +179,8 @@
     <Content Include="jsl\tmplPortalAppPools.txt" />
     <Content Include="jsl\tmplPortalFtpSite.txt" />
     <Content Include="jsl\tmplPortalWebSite.txt" />
+    <Content Include="ValidationRuleGenerator\CdrValidationRuleTemplate.txt" />
+    <Content Include="_notes\installation notes.txt" />
     <None Include="LocalMachine.conf" />
     <Content Include="tpny\tmplPortalAppPools.txt" />
     <Content Include="tpny\tmplPortalFtpSite.txt" />

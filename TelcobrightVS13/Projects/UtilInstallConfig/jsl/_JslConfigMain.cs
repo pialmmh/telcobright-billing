@@ -34,8 +34,8 @@ namespace InstallConfig
                 throw new Exception("Operator name not configured in Config Generator");
 
             CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
-            BasicCdrValidationRuleGenerator basicValidationRuleGenerator =
-                new BasicCdrValidationRuleGenerator(tempCdrSetting.NotAllowedCallDateTimeBefore);
+            CdrValidationRuleGenerator validationRuleGenerator =
+                new CdrValidationRuleGenerator(tempCdrSetting.NotAllowedCallDateTimeBefore);
             this.Tbc.CdrSetting = new CdrSetting
             {
                 SummaryTimeField = SummaryTimeFieldEnum.AnswerTime,
@@ -43,8 +43,8 @@ namespace InstallConfig
                 PartialCdrFlagIndicators = new List<string>() {"1", "2", "3"},
                 DescendingOrderWhileListingFiles = false,
                 DescendingOrderWhileProcessingListedFiles = false,
-                ValidationRulesForInconsistentCdrs = basicValidationRuleGenerator.GetInconsistentValidationRules(),
-                CommonMediationChecklist = basicValidationRuleGenerator.GetCommonValidationRules(),
+                ValidationMetaDataRuleNameForInconsistentCdrs = "CdrInconsistentValidation",
+                ValidationMetaDataRuleNameForCommonMediationCheck = "CdrCommonValidation",
                 ServiceGroupConfigurations = this.GetServiceGroupConfigurations(),
                 DisableCdrPostProcessingJobCreationForAutomation = false
             };
