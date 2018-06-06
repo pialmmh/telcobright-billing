@@ -83,7 +83,7 @@ namespace TelcobrightMediation
             {
                 foreach (var kv in oldCdrExt.TableWiseSummaries)
                 {
-                    string summaryTargetTable = kv.Key;
+                    CdrSummaryType summaryTargetTable = kv.Key;
                     this.CdrJobContext.CdrSummaryContext.MergeSubstractSummary(summaryTargetTable, kv.Value);
                 }
             });

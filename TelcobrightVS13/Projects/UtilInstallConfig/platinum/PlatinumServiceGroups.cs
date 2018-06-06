@@ -8,8 +8,11 @@ using Quartz;
 using TelcobrightMediation;
 using TelcobrightMediation.Scheduler.Quartz;
 using System.ComponentModel.Composition;
+using CdrValidationRules;
+using CdrValidationRules.CdrValidationRules.CommonCdrValidationRules;
 using LibraryExtensions;
 using LibraryExtensions.ConfigHelper;
+using MediationModel;
 using QuartzTelcobright;
 using TelcobrightMediation.Config;
 
@@ -34,49 +37,19 @@ namespace InstallConfig
                         new RatingRule() {IdServiceFamily = ServiceFamilyType.IntlInIgwT1, AssignDirection = 0}
                     },
                     MediationChecklistForAnsweredCdrs =
-                        new Dictionary<string, string>()
+                        new List<IValidationRule<cdr>>()
                         {
-                            {
-                                "obj.DurationSec >= 0",
-                                "DurationSec must be >=  0"
-                            },
-                            {
-                                "!String.IsNullOrEmpty(obj.OutgoingRoute) and !String.IsNullOrWhiteSpace(obj.OutgoingRoute)",
-                                "OutgoingRoute cannot be empty"
-                            },
-                            {
-                                "obj.OutPartnerId!=null and obj.OutPartnerId > 0",
-                                "OutPartnerId must be > 0"
-                            },
-                            {
-                                "!String.IsNullOrEmpty(obj.CountryCode) and !String.IsNullOrWhiteSpace(obj.CountryCode)",
-                                "CountryCode cannot be empty"
-                            },
-                            {
-                                "!String.IsNullOrEmpty(obj.matchedprefixcustomer) and !String.IsNullOrWhiteSpace(obj.matchedprefixcustomer)",
-                                "matchedprefixcustomer cannot be empty"
-                            },
-                            {
-                                "obj.DurationSec > 0 ? obj.InPartnerCost > 0 : obj.InPartnerCost == 0 ",
-                                "InPartnerCost must be > 0 when DurationSec > 0  , otherwise == 0 "
-                            },
-                            {
-                                "obj.CostIcxIn >= 0",
-                                "CostIcxIn must be >=  0"
-                            },
-                            {
-                                "obj.Tax1 >= 0",
-                                "Tax1 must be >=  0"
-                            },
-                            {
-                                "obj.AnsIdTerm>0",
-                                "AnsIdTerm must be > 0"
-                            },
-                            {
-                                "obj.DurationSec > 0?obj.roundedduration > 0: obj.roundedduration >= 0",
-                                "roundedduration must be > 0 when DurationSec >0 , otherwise >= 0 "
-                            },
-                        },
+                            new DurationSecGtEq0(),
+                            new OutgoingRouteNotEmpty(),
+                            new OutPartnerIdGt0(),
+                            new CountryCodeNotEmpty(),
+                            new MatchedPrefixCustomerNotEmpty(),
+                            new InPartnerCostGt0() {Data = 0M},
+                            new CostIcxInGt0() {Data = .09M},
+                            new BtrcRevShareTax1Gt0() {Data = .09M},
+                            new AnsIdTermGt0(),
+                            new RoundedDurationGt0(){Data = .09M},
+                         },
                 }, //end dictionary item
                 new ServiceGroupConfiguration(idServiceGroup: 5) //intlOutIgw
                 {
@@ -93,57 +66,19 @@ namespace InstallConfig
                         new RatingRule() {IdServiceFamily = ServiceFamilyType.XyzIgw, AssignDirection = 0}
                     },
                     MediationChecklistForAnsweredCdrs =
-                        new Dictionary<string, string>()
+                        new List<IValidationRule<cdr>>()
                         {
-                            {
-                                "obj.DurationSec >= 0",
-                                "DurationSec must be >=  0"
-                            },
-                            {
-                                "!String.IsNullOrEmpty(obj.CountryCode) and !String.IsNullOrWhiteSpace(obj.CountryCode)",
-                                "CountryCode cannot be empty"
-                            },
-                            {
-                                "!String.IsNullOrEmpty(obj.OutgoingRoute) and !String.IsNullOrWhiteSpace(obj.OutgoingRoute)",
-                                "OutgoingRoute cannot be empty"
-                            },
-                            {
-                                "obj.OutPartnerId!=null and obj.OutPartnerId > 0",
-                                "OutPartnerId must be > 0"
-                            },
-                            {
-                                "!String.IsNullOrEmpty(obj.MatchedPrefixY) and !String.IsNullOrWhiteSpace(obj.MatchedPrefixY)",
-                                "MatchedPrefixY cannot be empty"
-                            },
-                            {
-                                "!String.IsNullOrEmpty(obj.matchedprefixsupplier) and !String.IsNullOrWhiteSpace(obj.matchedprefixsupplier)",
-                                "matchedprefixsupplier cannot be empty"
-                            },
-                            {
-                                "obj.DurationSec > 0 ? obj.OutPartnerCost > 0 : obj.OutPartnerCost == 0 ",
-                                "OutPartnerCost must be > 0 when DurationSec > 0 , otherwise == 0"
-                            },
-                            {
-                                "obj.DurationSec > 0 ? obj.RevenueIgwOut > 0 : obj.RevenueIgwOut == 0 ",
-                                "RevenueIgwOut must be > 0 when DurationSec > 0 , otherwise == 0"
-                            },
-                            {
-                                "obj.DurationSec > 0 ? obj.XAmount > 0 : obj.XAmount == 0 ",
-                                "XAmount must be > 0 when DurationSec > 0 , otherwise == 0"
-                            },
-                            {
-                                "obj.DurationSec > 0 ? obj.YAmount > 0 : obj.YAmount == 0 ",
-                                "YAmount must be > 0 when DurationSec > 0 , otherwise == 0"
-                            },
-                            {
-                                "obj.PartialFlag >= 0",
-                                "PartialFlag must be >=  0"
-                            },
-                            {
-                                "obj.DurationSec > 0 ? obj.roundedduration > 0 : obj.roundedduration == 0 ",
-                                "roundedduration must be > 0 when DurationSec > 0 , otherwise == 0"
-                            },
-
+                            new DurationSecGtEq0(),
+                            new CountryCodeNotEmpty(),
+                            new OutgoingRouteNotEmpty(),
+                            new OutPartnerIdGt0(),
+                            new MatchedPrefixYNotempty(),
+                            new MatchedPrefixSupplierNotEmpty(),
+                            new OutPartnerCostGt0() {Data = 0M},
+                            new RevIgwOutGt0() {Data = .1M},
+                            new XAmountGt0() {Data = .1M},
+                            new YAmountGt0() {Data = .1M},
+                            new RoundedDurationGt0() {Data = .1M}
                         },
                 }
             };

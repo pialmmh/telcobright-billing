@@ -8,7 +8,9 @@ namespace TelcobrightMediation
 {
     public interface IValidationRule<T>
     {
-        bool Validate(T validatableObject);
+        object Data { get; set; }
+        void Prepare();
+        bool Validate(T obj);
         string ValidationMessage { get; }
     }
 }

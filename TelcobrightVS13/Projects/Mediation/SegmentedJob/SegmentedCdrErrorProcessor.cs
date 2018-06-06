@@ -17,8 +17,10 @@ namespace TelcobrightMediation
         private CdrCollectorInputData CdrCollectorInput { get; }
         protected int RawCount, NonPartialCount, UniquePartialCount, RawPartialCount, DistinctPartialCount = 0;
         protected decimal RawDurationTotalOfConsistentCdrs = 0;
+
         protected bool PartialCollectionEnabled => this.CdrCollectorInput.MediationContext.Tbc.CdrSetting
             .PartialCdrEnabledNeIds.Contains(this.CdrCollectorInput.Ne.idSwitch);
+
         public SegmentedCdrErrorProcessor(CdrCollectorInputData cdrCollectorInput,
             int batchSizeWhenPreparingLargeSqlJob,
             string indexedColumnName, string dateColumnName)
@@ -37,23 +39,27 @@ namespace TelcobrightMediation
             List<string[]> txtRows = dbRowCollector.CollectAsTxtRows();
             NewCdrPreProcessor preProcessor =
                 new NewCdrPreProcessor(txtRows, new List<cdrinconsistent>(), this.CdrCollectorInput);
-            FlexValidator<string[]> inconsistentValidator = CreateValidatorInstance();
+            MefValidator<string[]> inconsistentValidator = CreateValidatorInstance();
             Parallel.ForEach(txtRows, txtRow =>
             {
                 preProcessor
-                    .CheckAndConvertIfInconsistent(this.CdrCollectorInput.CdrJobInputData, inconsistentValidator, txtRow);
+                    .CheckAndConvertIfInconsistent(this.CdrCollectorInput.CdrJobInputData, inconsistentValidator,
+                        txtRow);
                 cdrinconsistent cdrInconsistent = null;
-                preProcessor.ConvertToCdr(txtRow,out cdrInconsistent);
+                preProcessor.ConvertToCdr(txtRow, out cdrInconsistent);
                 if (cdrInconsistent != null) preProcessor.InconsistentCdrs.Add(cdrInconsistent);
             });
             CdrCollectionResult newCollectionResult = null, oldCollectionResult = null;
             preProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
 
-            PartialCdrTesterData partialCdrTesterData = OrganizeTestDataForPartialCdrs(preProcessor, newCollectionResult);
-            CdrJob cdrJob = (new CdrJobFactory(this.CdrCollectorInput.CdrJobInputData, this.RawCount)).
-                CreateCdrJob(preProcessor, newCollectionResult, oldCollectionResult, partialCdrTesterData);
+            PartialCdrTesterData partialCdrTesterData =
+                OrganizeTestDataForPartialCdrs(preProcessor, newCollectionResult);
+            CdrJob cdrJob =
+                (new CdrJobFactory(this.CdrCollectorInput.CdrJobInputData, this.RawCount)).CreateCdrJob(preProcessor,
+                    newCollectionResult, oldCollectionResult, partialCdrTesterData);
             return cdrJob;
         }
+
         public PartialCdrTesterData OrganizeTestDataForPartialCdrs(NewCdrPreProcessor preProcessor,
             CdrCollectionResult newCollectionResult)
         {
@@ -70,33 +76,24 @@ namespace TelcobrightMediation
                     this.CdrCollectorInput.CdrSetting.PartialCdrFlagIndicators.Contains(r[Fn.Partialflag])).ToList();
                 this.RawPartialCount = partialRows.Count;
                 if (preProcessor.TxtCdrRows.Count != this.NonPartialCount + this.RawPartialCount)
-                    throw new Exception("TxtCdr rows with partial & non-partial flag do not match total decoded text rows");
+                    throw new Exception(
+                        "TxtCdr rows with partial & non-partial flag do not match total decoded text rows");
                 this.DistinctPartialCount = partialRows.GroupBy(r => r[Fn.UniqueBillId]).Count();
                 partialCdrTesterData = new PartialCdrTesterData(this.NonPartialCount, this.RawCount,
                     newCollectionResult.RawDurationTotalOfConsistentCdrs, this.RawPartialCount);
             }
             return partialCdrTesterData;
         }
-        private FlexValidator<string[]> CreateValidatorInstance()
-        {
-            Dictionary<string, string> rules = this.CdrCollectorInput.CdrJobInputData.MediationContext.Tbc.CdrSetting
-                .ValidationRulesForInconsistentCdrs;
-            rules = rules.Where(kv => kv.Value.StartsWith("SequenceNumber must be numeric") == false
-                                      || kv.Value.StartsWith("StartTime must be a valid datetime") == false)
-                .ToDictionary(kv => kv.Key,kv=>kv.Value);
-            var flexValidator= new FlexValidator<string[]>(continueOnError: false,
-                throwExceptionOnFirstError: false,
-                validationExpressionsWithErrorMessage: 
-                rules);
-            flexValidator.DateParsers.Add(
-                "stringToDateConverterFromMySqlFormat", str => str.ConvertToDateTimeFromMySqlFormat());
-            flexValidator.DateParsers.Add("strToMySqlDtConverter", str => str.ConvertToDateTimeFromMySqlFormat());
-            flexValidator.DoubleParsers.Add("doubleConverterProxy", str => Convert.ToDouble(str));
-            flexValidator.IntParsers.Add("intConverterProxy", str => Convert.ToInt32(str));
-            flexValidator.BooleanParsers.Add("isDateTimeChecker", str => str.IsDateTime(StringExtensions.MySqlDateTimeFormat));
-            flexValidator.BooleanParsers.Add("isNumericChecker", str => str.IsNumeric());
-            return flexValidator;
-        }
 
+        private MefValidator<string[]> CreateValidatorInstance()
+        {
+            List<IValidationRule<string[]>> rules = this.CdrCollectorInput.CdrJobInputData.MediationContext.Tbc
+                .CdrSetting.ValidationRulesForInconsistentCdrs;
+            rules = rules.Where(rule => rule.ValidationMessage.StartsWith("SequenceNumber") == false
+                                        || rule.ValidationMessage.StartsWith("StartTime") == false).ToList();
+            var validator = new MefValidator<string[]>(continueOnError: false,
+                throwExceptionOnFirstError: false, rules: rules);
+            return validator;
+        }
     }
 }

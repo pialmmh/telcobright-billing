@@ -10,13 +10,11 @@ namespace TelcobrightMediation
     public class A2ZRater
     {
         private ServiceContext ServiceContext { get; }
-        PrefixMatcher PrefixMatcher { get; set; }
         cdr Cdr { get; set; }
         public A2ZRater(ServiceContext serviceContext,cdr cdr)//constructor
         {
             this.ServiceContext = serviceContext;
             this.Cdr = cdr;
-            this.PrefixMatcher = new PrefixMatcher(this.ServiceContext);
             if (this.Cdr.ChargingStatus == 1)
             {
                 if (cdr.AnswerTime == null)
@@ -41,7 +39,8 @@ namespace TelcobrightMediation
         private bool StartTimeIsInvalidToo(cdr cdr)
         {
             return cdr.StartTime <
-                   this.ServiceContext.CdrProcessor.CdrJobContext.MediationContext.Tbc.CdrSetting.NotAllowedCallDateTimeBefore;
+                   this.ServiceContext.CdrProcessor.CdrJobContext.MediationContext.Tbc.CdrSetting
+                       .NotAllowedCallDateTimeBefore;
         }
         public Rateext ExecuteA2ZRating(out decimal finalDuration,out decimal finalAmount,bool flagLcr, bool useInMemoryTable)
         {
@@ -62,12 +61,13 @@ namespace TelcobrightMediation
             //TupleByPeriod=one rateplanassignmenttuple on the day of answertime
             List<TupleByPeriod> tups = GetAssignmentTuples(this.ServiceContext.ServiceGroupConfiguration.IdServiceGroup);
             if(tups==null) return null;
-            Rateext rateWithAssigmentTupleId = this.PrefixMatcher.MatchPrefix(phoneNumber, category, subCategory,
-                tups, Convert.ToDateTime(this.Cdr.AnswerTime), flagLcr,useInMemoryTable);
+            var prefixMatcher=new PrefixMatcher(this.ServiceContext, phoneNumber, category, subCategory,
+                tups, Convert.ToDateTime(this.Cdr.AnswerTime), flagLcr, useInMemoryTable);
+            Rateext rateWithAssigmentTupleId = prefixMatcher.MatchPrefix();
             if (rateWithAssigmentTupleId == null) return null;
             finalDuration = 0;
-            finalDuration = this.PrefixMatcher.GetA2ZDuration(this.Cdr.DurationSec, rateWithAssigmentTupleId);
-            finalAmount = this.PrefixMatcher.GetA2ZAmount(finalDuration, rateWithAssigmentTupleId, 0,this.ServiceContext.CdrProcessor);
+            finalDuration = prefixMatcher.GetA2ZDuration(this.Cdr.DurationSec, rateWithAssigmentTupleId);
+            finalAmount = prefixMatcher.GetA2ZAmount(finalDuration, rateWithAssigmentTupleId, 0,this.ServiceContext.CdrProcessor);
             
             int ceilingUpPositionAfterDecimal = Convert.ToInt32(rateWithAssigmentTupleId.OtherAmount9);
             if (ceilingUpPositionAfterDecimal>0 && ceilingUpPositionAfterDecimal<=7)

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TelcobrightMediation.Accounting;
-
+using MediationModel;
 namespace TelcobrightMediation
 {
     public class CdrSetting : LogFileProcessorSetting
@@ -19,8 +19,8 @@ namespace TelcobrightMediation
         public new bool DescendingOrderWhileListingFiles { get; set; }
         public List<string> IllegalStrToRemoveFromFields { get; set; }
         public DateTime NotAllowedCallDateTimeBefore { get; set; } = new DateTime(2008,1,1);
-        public string ValidationMetaDataRuleNameForInconsistentCdrs { get; set; }
-        public string ValidationMetaDataRuleNameForCommonMediationCheck { get; set; }
+        public List<IValidationRule<string[]>> ValidationRulesForInconsistentCdrs { get; set; }
+        public List<IValidationRule<cdr>> ValidationRulesForCommonMediationCheck { get; set; }
         public Dictionary<int, ServiceGroupConfiguration> ServiceGroupConfigurations { get; set; }
         public string NerCalculationRule { get; set; }
         public bool CallConnectTimePresent { get; set; }

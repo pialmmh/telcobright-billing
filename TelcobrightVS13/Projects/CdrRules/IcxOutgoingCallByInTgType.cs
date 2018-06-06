@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using TelcobrightMediation;
 using System.ComponentModel.Composition;
 using MediationModel;
+using TelcobrightMediation;
 
-namespace PartnerRules
+namespace CdrRules
 {
 
     [Export("CdrRule", typeof(ICdrRule))]

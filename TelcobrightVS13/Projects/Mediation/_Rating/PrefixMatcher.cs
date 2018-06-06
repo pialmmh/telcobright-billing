@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using LibraryExtensions;
 using System.Linq;
+using System.Threading.Tasks;
 using MediationModel;
 namespace TelcobrightMediation
 {
@@ -21,43 +22,57 @@ namespace TelcobrightMediation
         private Dictionary<string, rateplan> DicRatePlan { get; set; }
         private ServiceContext ServiceContext { get; }
         private int MaxDecimalPrecision { get; }
-        public PrefixMatcher(ServiceContext serviceContext)
+        private int category;
+        private int subCategory;
+        private DateTime answerTime;
+        private string[] phoneNumbersAsArray;
+        List<Dictionary<string, RatesWithAssignmentTuple>> priorityWisePrefixDicWithAssignTuple =
+            new List<Dictionary<string, RatesWithAssignmentTuple>>();
+        public PrefixMatcher(ServiceContext serviceContext, string phoneNumber, int category, 
+            int subCategory, List<TupleByPeriod> tups, DateTime answerTime, bool flagLcr,
+            bool useInMemoryTable)
         {
             this.ServiceContext = serviceContext;
+            this.category = category;
+            this.subCategory = subCategory;
+            this.answerTime = answerTime;
             this.MaxDecimalPrecision = this.ServiceContext.CdrSetting.MaxDecimalPrecision;
             if (this.MaxDecimalPrecision < 0 && this.MaxDecimalPrecision > 8)
                 throw new Exception("Max decimal precision must be >=0 and <=8.");
-            this.DicRatePlan =serviceContext.MefServiceFamilyContainer.RateCache.DicRatePlan;
-        }
-        public Rateext MatchPrefix(string phoneNumber, int category, int subCategory, List<TupleByPeriod> tups, DateTime answerTime,
-            bool flagLcr, bool useInMemoryTable)
-        {
+            this.DicRatePlan = serviceContext.MefServiceFamilyContainer.RateCache.DicRatePlan;
             //TupleByPeriod=one rateplanassignmenttuple on the day of answertime
-            List<Dictionary<string, RatesWithAssignmentTuple>> priorityWisePrefixDicWithAssignTuple = new List<Dictionary<string, RatesWithAssignmentTuple>>();
-            foreach (TupleByPeriod tup in tups.OrderBy(c => c.Priority).ToList())
+            foreach (TupleByPeriod tup in tups.OrderBy(c => c.Priority))//ToList()
             {
                 Dictionary<string, List<Rateext>> prefixDic = null;
-                prefixDic = GetPrefixWiseRateInstances(tup, flagLcr,useInMemoryTable);
-                Dictionary<string,RatesWithAssignmentTuple> prefixDicWithAssignmentTuples
-                    =new Dictionary<string, RatesWithAssignmentTuple>();
+                prefixDic = GetPrefixWiseRateInstances(tup, flagLcr, useInMemoryTable);
+                Dictionary<string, RatesWithAssignmentTuple> prefixDicWithAssignmentTuples
+                    = new Dictionary<string, RatesWithAssignmentTuple>();
                 foreach (KeyValuePair<string, List<Rateext>> kv in prefixDic)
                 {
-                    prefixDicWithAssignmentTuples.Add(kv.Key,new RatesWithAssignmentTuple(tup,kv.Value));
+                    prefixDicWithAssignmentTuples.Add(kv.Key, new RatesWithAssignmentTuple(tup, kv.Value));
                 }
                 if (prefixDic != null) priorityWisePrefixDicWithAssignTuple.Add(prefixDicWithAssignmentTuples);
             }
-
-            //if (PrefixDic == null) return null;
-            List<string> lstPhoneNumbers = new List<string>();
-            for (int i = phoneNumber.Length; i > 0; i--)
+            var phCharArray=phoneNumber.ToCharArray();
+            this.phoneNumbersAsArray=new string[phoneNumber.Length];
+            for (int i = 0; i < phCharArray.Length; i++)
             {
-                lstPhoneNumbers.Add(phoneNumber.Substring(0, i));
+                this.phoneNumbersAsArray[i] = new string(phCharArray, 0, phCharArray.Length - i);
             }
-            foreach (Dictionary<string, RatesWithAssignmentTuple> prefixDic in priorityWisePrefixDicWithAssignTuple)
+            //for (int i = phoneNumber.Length; i > 0; i--)
+            //{
+            //    this.phoneNumbersAsArray[i-1]=(phoneNumber.Substring(0, i));
+            //}
+        }
+
+        public Rateext MatchPrefix()
+        {
+            foreach (Dictionary<string, RatesWithAssignmentTuple> prefixDic in 
+                this.priorityWisePrefixDicWithAssignTuple)
             {
                 Rateext matchedRate = null;
                 bool matchFound = false;
-                foreach (string prefix in lstPhoneNumbers)
+                foreach (string prefix in this.phoneNumbersAsArray)
                 {
                     if (matchFound == true) break;
                     RatesWithAssignmentTuple ratesWithAssignmentTuple = null;
@@ -69,29 +84,29 @@ namespace TelcobrightMediation
                     List<Rateext> lstRates = ratesWithAssignmentTuple.Rates;
                     foreach (Rateext thisRate in lstRates)
                     {
-                        if (thisRate.Category == category && thisRate.SubCategory == subCategory &&
-                            answerTime >= thisRate.P_Startdate && answerTime < (thisRate.P_Enddate != null ? thisRate.P_Enddate : new DateTime(9999, 12, 31, 23, 59, 59)))
+                        if (thisRate.Category == this.category && thisRate.SubCategory == this.subCategory
+                            && this.answerTime >= thisRate.P_Startdate && this.answerTime <
+                            (thisRate.P_Enddate != null ? thisRate.P_Enddate : new DateTime(9999, 12, 31, 23, 59, 59)))
                         {
                             matchedRate = thisRate;
                             matchedRate.IdRatePlanAssignmentTuple =
                                 Convert.ToInt32(ratesWithAssignmentTuple.Tup.IdAssignmentTuple);
                             matchFound = true;
-                            break;//rates are sorted desc, starttime. latest match will be returned immediately
+                            break; //rates are sorted desc, starttime. latest match will be returned immediately
                         }
                     }
                 }
                 if (matchedRate != null) return matchedRate;
             }
             return null;
-
         }
 
 
-        public Dictionary<string, List<Rateext>> GetPrefixWiseRateInstances(TupleByPeriod tup, bool flagLcr,bool useInMemoryTable)
+        public Dictionary<string, List<Rateext>> GetPrefixWiseRateInstances(TupleByPeriod tup, bool flagLcr, bool useInMemoryTable)
         {
             //TupleByPeriod=one rateplanassignmenttuple on the day of answertime
             Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>> dicRatesByDay
-                = this.ServiceContext.MefServiceFamilyContainer.RateCache.GetRateDictsByDay(tup.DRange, flagLcr,useInMemoryTable);
+                = this.ServiceContext.MefServiceFamilyContainer.RateCache.GetRateDictsByDay(tup.DRange, flagLcr, useInMemoryTable);
             Dictionary<string, List<Rateext>> dicRatesByPrefix = null;
             if (dicRatesByDay != null)
             {
@@ -176,23 +191,32 @@ namespace TelcobrightMediation
             switch (rateFieldNumber)
             {
                 case 0: thisRateAmount = thisRate.rateamount; break;
-                case 1: thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount1).RoundFractionsUpTo(maxDecimalPrecision);
+                case 1:
+                    thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount1).RoundFractionsUpTo(maxDecimalPrecision);
                     break;
-                case 2: thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount2).RoundFractionsUpTo(maxDecimalPrecision);
+                case 2:
+                    thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount2).RoundFractionsUpTo(maxDecimalPrecision);
                     break;
-                case 3: thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount3).RoundFractionsUpTo(maxDecimalPrecision);
+                case 3:
+                    thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount3).RoundFractionsUpTo(maxDecimalPrecision);
                     break;
-                case 4: thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount4).RoundFractionsUpTo(maxDecimalPrecision);
+                case 4:
+                    thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount4).RoundFractionsUpTo(maxDecimalPrecision);
                     break;
-                case 5: thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount5).RoundFractionsUpTo(maxDecimalPrecision);
+                case 5:
+                    thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount5).RoundFractionsUpTo(maxDecimalPrecision);
                     break;
-                case 6: thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount6).RoundFractionsUpTo(maxDecimalPrecision);
+                case 6:
+                    thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount6).RoundFractionsUpTo(maxDecimalPrecision);
                     break;
-                case 7: thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount7).RoundFractionsUpTo(maxDecimalPrecision);
+                case 7:
+                    thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount7).RoundFractionsUpTo(maxDecimalPrecision);
                     break;
-                case 8: thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount8).RoundFractionsUpTo(maxDecimalPrecision);
+                case 8:
+                    thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount8).RoundFractionsUpTo(maxDecimalPrecision);
                     break;
-                case 9: thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount9).RoundFractionsUpTo(maxDecimalPrecision);
+                case 9:
+                    thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount9).RoundFractionsUpTo(maxDecimalPrecision);
                     break;
             }
             decimal finalAmount = 0;
@@ -239,15 +263,15 @@ namespace TelcobrightMediation
             return finalAmount;
         }
 
-        long GetBillingSpanByRateOrIfMissingByRatePlan(Rateext rate,CdrProcessor cdrProcessor)
+        long GetBillingSpanByRateOrIfMissingByRatePlan(Rateext rate, CdrProcessor cdrProcessor)
         {
-            long bspanSec= Convert.ToInt64(rate.billingspan);
+            long bspanSec = Convert.ToInt64(rate.billingspan);
             if (bspanSec > 0) return bspanSec;
             string strTimeFreqUom = this.DicRatePlan[rate.idrateplan.ToString()].BillingSpan;
             bspanSec = cdrProcessor.CdrJobContext.MediationContext.BillingSpans[strTimeFreqUom].value;
             if (bspanSec <= 0) throw new Exception("Billing Span Value Must be > 0");
             return bspanSec;
         }
-        
+
     }
 }

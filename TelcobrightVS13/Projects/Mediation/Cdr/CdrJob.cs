@@ -176,7 +176,7 @@ namespace TelcobrightMediation.Cdr
                 ) dayWiseSummaries;").ToList().First();
 
             var daySummaryCaches = this.CdrJobContext.CdrSummaryContext.TableWiseSummaryCache
-                .Where(kv => kv.Key.Contains("day")).Select(kv => kv.Value).ToList();
+                .Where(kv => kv.Key.ToString().Contains("day")).Select(kv => kv.Value).ToList();
             var summaryDurationFromCache = daySummaryCaches
                 .SelectMany(sc => sc.GetItems()).Sum(s => s.actualduration);
 

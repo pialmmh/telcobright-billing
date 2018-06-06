@@ -8,7 +8,7 @@ namespace TelcobrightMediation
 {
     class IncrementalDurationVerifier
     {
-        private string SummaryTableName { get; }
+        private CdrSummaryType SummaryTableName { get; }
         private decimal prevDurationInSummaryTable = 0;
         private decimal receivedDurationFromNewCdr = 0;
         private decimal receivedDurationFromNewSummary = 0;
@@ -16,7 +16,7 @@ namespace TelcobrightMediation
         private CdrProcessor cdrProcessor { get; }
         public decimal MergedDurationInSummaryContext { get; private set; }
 
-        public IncrementalDurationVerifier(CdrProcessor cdrProcessor, string summaryTableName)
+        public IncrementalDurationVerifier(CdrProcessor cdrProcessor, CdrSummaryType summaryTableName)
         {
             this.cdrProcessor = cdrProcessor;
             this.CdrJobContext = cdrProcessor.CdrJobContext;
@@ -39,7 +39,9 @@ namespace TelcobrightMediation
         public void Verify(CdrExt cdrExt)
         {
             decimal durationInCdr = cdrExt.Cdr.DurationSec;
-            decimal durationInSummary = cdrExt.TableWiseSummaries[this.SummaryTableName].actualduration;
+            AbstractCdrSummary cdrSummary;
+            cdrExt.TableWiseSummaries.TryGetValue(this.SummaryTableName,out cdrSummary);
+            decimal durationInSummary = cdrSummary.actualduration;
             if (durationInCdr != durationInSummary)
                 throw new Exception("duration in cdr & summary does not match.");
             this.receivedDurationFromNewCdr += durationInCdr;

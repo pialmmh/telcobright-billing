@@ -131,7 +131,13 @@ namespace InstallConfig
                             Console.WriteLine();
                             Console.WriteLine("Job store was not reset.");
                         }
-                        if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' || Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
+                        Console.WriteLine("Config generation is successful, press 'q' to quit");
+                        var k = Convert.ToChar((Console.ReadKey(true)).Key);
+                        if (k == 'q' || k== 'Q')
+                        {
+                            return;
+                        }
+                            
                         break;
 
                     case 'q':
@@ -396,14 +402,27 @@ namespace InstallConfig
             {
                 File.Delete(targetConfigFile); //debug directory
             }
-            using (FileStream fs = File.Open(targetConfigFile, FileMode.Create))
-            using (StreamWriter sw = new StreamWriter(fs))
-            using (JsonWriter jw = new JsonTextWriter(sw))
+            //prev serializing version
+            //using (FileStream fs = File.Open(targetConfigFile, FileMode.Create))
+            //using (StreamWriter sw = new StreamWriter(fs))
+            //using (JsonWriter jw = new JsonTextWriter(sw))
+            //{
+            //    jw.Formatting = Formatting.Indented;
+            //    JsonSerializer serializer = new JsonSerializer();
+                
+            //    serializer.Serialize(jw, tbc);
+            //}
+            //end prev
+
+            String jsonfile = targetConfigFile;
+            var settings = new JsonSerializerSettings()
             {
-                jw.Formatting = Formatting.Indented;
-                JsonSerializer serializer = new JsonSerializer();
-                serializer.Serialize(jw, tbc);
-            }
+                TypeNameHandling = TypeNameHandling.Auto
+            };
+            
+            string tbcAsStr = JsonConvert.SerializeObject(tbc, Formatting.Indented, settings);
+            File.WriteAllText(jsonfile, tbcAsStr);
+
         }
 
         static void CopyPortal(string operatorDatabaseName)

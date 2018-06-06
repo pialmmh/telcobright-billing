@@ -28,7 +28,6 @@ namespace TelcobrightMediation
             //common for each service family ********
             cdr thisCdr = cdrExt.Cdr;
             int serviceFamily = this.Id;
-            PrefixMatcher pr = new PrefixMatcher(serviceContext);
             DateTime answerTime = new DateTime();
             if (thisCdr.ChargingStatus == 1)
             {
@@ -48,8 +47,9 @@ namespace TelcobrightMediation
             
             List<TupleByPeriod> tups = GetServiceTuple(serviceContext, answerTime);
             if (tups == null) return null;
-            Rateext matchedRateWithIdRatePlanAssignTuple = pr.MatchPrefix(phoneNumber, category, subCategory, tups,
-                                                            answerTime, flagLcr,useInMemoryTable:true);
+            PrefixMatcher pr = new PrefixMatcher(serviceContext, phoneNumber, category, subCategory, tups,
+                answerTime, flagLcr, useInMemoryTable: true);
+            Rateext matchedRateWithIdRatePlanAssignTuple = pr.MatchPrefix();
             if (matchedRateWithIdRatePlanAssignTuple == null) return null;
             AccChargeableExt chargeableExt =
                 new XyzRuleHelper(serviceContext.MefServiceFamilyContainer.UsdBcsCache, pr, this).ExecuteXyzRating(

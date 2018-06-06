@@ -33,17 +33,18 @@ namespace InstallConfig
             if (string.IsNullOrWhiteSpace(this.OperatorName))
                 throw new Exception("Operator name not configured in Config Generator");
             CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
-            CdrValidationRuleGenerator cdrValidationRuleGenerator=
-                new CdrValidationRuleGenerator(tempCdrSetting.NotAllowedCallDateTimeBefore);
-
+            CommonCdrValRulesGen commonCdrValRulesGen=
+                new CommonCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
+            InconsistentCdrValRulesGen inconsistentCdrValRulesGen =
+                new InconsistentCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
             this.Tbc.CdrSetting = new CdrSetting()
             {
                 SummaryTimeField = SummaryTimeFieldEnum.StartTime,
                 PartialCdrEnabledNeIds =new List<int>(),
                 DescendingOrderWhileListingFiles = false,
                 DescendingOrderWhileProcessingListedFiles = false,
-                ValidationMetaDataRuleNameForInconsistentCdrs = "CdrInconsistentValidation",
-                ValidationMetaDataRuleNameForCommonMediationCheck = "CdrCommonValidation",
+                ValidationRulesForInconsistentCdrs = inconsistentCdrValRulesGen.GetRules(),
+                ValidationRulesForCommonMediationCheck = commonCdrValRulesGen.GetRules(),
                 ServiceGroupConfigurations = this.GetServiceGroupConfigurations(),
                 DisableCdrPostProcessingJobCreationForAutomation = true    
             };

@@ -28,7 +28,7 @@ namespace TelcobrightMediation.Cdr
         public long IdCall => this.Cdr.IdCall;
         public DateTime StartTime => this.Cdr.StartTime;
         public cdr Cdr { get; set; }
-        public Dictionary<string, AbstractCdrSummary> TableWiseSummaries { get; set; }
+        public Dictionary<CdrSummaryType, AbstractCdrSummary> TableWiseSummaries { get; set; }
 
         public Dictionary<ValueTuple<int, int, int>, acc_chargeable> Chargeables { get; }
             = new Dictionary<ValueTuple<int, int, int>, acc_chargeable>(); //key=tuple(sg,sf,assignedDir)
@@ -71,7 +71,7 @@ namespace TelcobrightMediation.Cdr
             this.Cdr = cdr;
             this.CdrNewOldType = cdrExtType;
 
-            this.TableWiseSummaries = new Dictionary<string, AbstractCdrSummary>();
+            this.TableWiseSummaries = new Dictionary<CdrSummaryType, AbstractCdrSummary>();
         }
 
         public override string ToString()

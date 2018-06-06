@@ -49,7 +49,7 @@ namespace TelcobrightMediation
             var processedCdrExts = cdrProcessor.CollectionResult.ProcessedCdrExts.AsParallel();
             decimal durationSumInCdr = processedCdrExts.Sum(c => Convert.ToDecimal(c.Cdr?.DurationSec));
             var daySummaryCaches = cdrProcessor.CdrJobContext.CdrSummaryContext.TableWiseSummaryCache
-                .Where(kv => kv.Key.Contains("day")).Select(kv => kv.Value).ToList();
+                .Where(kv => kv.Key.ToString().Contains("day")).Select(kv => kv.Value).ToList();
             var inserteDuration = daySummaryCaches.SelectMany(c => c.GetInsertedItems()).Sum(s => s.actualduration);
             var updatedDuration = daySummaryCaches.SelectMany(c => c.GetUpdatedItems()).Sum(s => s.actualduration);
 
@@ -70,9 +70,9 @@ namespace TelcobrightMediation
                 .IdServiceGroupWiseServiceGroups.SelectMany(sg => sg.Value.GetSummaryTargetTables().Keys)
                 .Distinct().ToList();
 
-            foreach (string summaryTableName in summaryTargetTables)
+            foreach (CdrSummaryType summaryTableName in summaryTargetTables)
             {
-                List<DateTime> datesOrHoursInvolved = summaryTableName.Contains("day")
+                List<DateTime> datesOrHoursInvolved = summaryTableName.ToString().Contains("day")
                     ? cdrProcessor.CdrJobContext.DatesInvolved
                     : cdrProcessor.CdrJobContext.HoursInvolved;
                 string sql = $@"SELECT tup_starttime,ifnull(sum(actualduration),0) actualduration

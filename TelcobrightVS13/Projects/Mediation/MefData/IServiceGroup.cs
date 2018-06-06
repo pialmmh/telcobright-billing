@@ -13,7 +13,7 @@ namespace TelcobrightMediation
         void SetAdditionalParams(Dictionary<string, object> additionalParams);
         void Execute(cdr thisCdr, CdrProcessor cdrProcessor);
         void ExecutePostRatingActions(CdrExt cdrExt, object postRatingData);
-        Dictionary<string, Type> GetSummaryTargetTables();
+        Dictionary<CdrSummaryType, Type> GetSummaryTargetTables();
         void SetServiceGroupWiseSummaryParams(CdrExt cdrExt, AbstractCdrSummary newSummary);
     }
 }

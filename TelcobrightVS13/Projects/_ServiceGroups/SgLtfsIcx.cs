@@ -17,19 +17,19 @@ namespace TelcobrightMediation
         public string RuleName => "LTFS Calls [ICX]";
         public string HelpText => "Service group LTFS for BD ICX.";
         public int Id => 6;
-        private Dictionary<string, Type> SummaryTargetTables { get; }
+        private Dictionary<CdrSummaryType, Type> SummaryTargetTables { get; }
         private List<string> PrefixesOrderedByMaxLenFirst { get; set; }
 
         public SgLtfsIcx() //constructor
         {
-            this.SummaryTargetTables = new Dictionary<string, Type>()
+            this.SummaryTargetTables = new Dictionary<CdrSummaryType, Type>()
             {
-                {"sum_voice_day_04", typeof(sum_voice_day_04)},
-                {"sum_voice_hr_04", typeof(sum_voice_hr_04)},
+                {CdrSummaryType.sum_voice_day_04, typeof(sum_voice_day_04)},
+                {CdrSummaryType.sum_voice_hr_04 , typeof(sum_voice_hr_04)},
             };
         }
 
-        public Dictionary<string, Type> GetSummaryTargetTables()
+        public Dictionary<CdrSummaryType, Type> GetSummaryTargetTables()
         {
             return this.SummaryTargetTables;
         }

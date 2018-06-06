@@ -15,16 +15,16 @@ namespace TelcobrightMediation
         public string RuleName => "Transit Calls [Wholesale Voice]";
         public string HelpText => "Service group for international transit voice.";
         public int Id => 100;
-        private Dictionary<string, Type> SummaryTargetTables { get; }
+        private Dictionary<CdrSummaryType, Type> SummaryTargetTables { get; }
         public SgIntlTransitVoice()//constructor
         {
-            this.SummaryTargetTables = new Dictionary<string, Type>()
+            this.SummaryTargetTables = new Dictionary<CdrSummaryType, Type>()
                 {
-                    { "sum_voice_day_01",typeof(sum_voice_day_01)},
-                    { "sum_voice_hr_01" ,typeof(sum_voice_hr_01) },
+                    { CdrSummaryType.sum_voice_day_01, typeof(sum_voice_day_01)},
+                    { CdrSummaryType.sum_voice_hr_01 , typeof(sum_voice_hr_01) },
                 };
         }
-        public Dictionary<string, Type> GetSummaryTargetTables()
+        public Dictionary<CdrSummaryType, Type> GetSummaryTargetTables()
         {
             return this.SummaryTargetTables;
         }

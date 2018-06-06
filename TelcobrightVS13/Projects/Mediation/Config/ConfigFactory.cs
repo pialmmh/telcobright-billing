@@ -14,11 +14,20 @@ namespace TelcobrightMediation.Config
             {
                 throw new Exception("Config file name is missing.");
             }
-            using (StreamReader file = File.OpenText(configFileName))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                return (TelcobrightConfig) serializer.Deserialize(file, typeof(TelcobrightConfig));
-            }
+            //prev deserializer
+            //using (StreamReader file = File.OpenText(configFileName))
+            //{
+            //    JsonSerializer serializer = new JsonSerializer();
+            //    return (TelcobrightConfig) serializer.Deserialize(file, typeof(TelcobrightConfig));
+            //}
+            //end prev
+            string json = File.ReadAllText(configFileName);
+            var obj = JsonConvert.DeserializeObject<TelcobrightConfig>(json,
+                new JsonSerializerSettings
+                {
+                    TypeNameHandling = TypeNameHandling.Auto,
+                });
+            return (TelcobrightConfig) obj;
         }
 
         public static TelcobrightConfig GetConfigFromSchedulerExecutionContext(IJobExecutionContext context,string operatorName)

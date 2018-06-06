@@ -87,10 +87,9 @@ namespace TelcobrightMediation
                                 }
                             }
                         }
-                        ValidationResult mediationResult =
-                            MediationErrorChecker.ExecuteValidationRules(cdrExt, this.CdrJobContext);
-                        if (mediationResult.IsValid == false)
-                            SendToCdrError(cdrExt, "Mediation error: " + mediationResult.FirstValidationFailureMessage);
+                        string validationErorMsg = MediationValidator.ExecuteRules(cdrExt, this.CdrJobContext);
+                        if (!string.IsNullOrEmpty(validationErorMsg))
+                            SendToCdrError(cdrExt, "Mediation error: " + validationErorMsg);
                         else
                         {
                             SetMediationStatusToSuccess(cdrExt.Cdr);
@@ -146,7 +145,7 @@ namespace TelcobrightMediation
             {
                 foreach (var kv in processedCdrExt.TableWiseSummaries)
                 {
-                    string summaryTargetTable = kv.Key;
+                    CdrSummaryType summaryTargetTable = kv.Key;
                     this.CdrJobContext.CdrSummaryContext.MergeAddSummary(summaryTargetTable, kv.Value);
                 }
             });

@@ -11,9 +11,9 @@ namespace TelcobrightMediation
         public Dictionary<ValueTuple<int,string>, route> SwitchWiseRoutes = new Dictionary<ValueTuple<int,string>, route>();//<switchid-route,route>
         public IDictionary<string, IServiceGroup> DicExtensions = new Dictionary<string, IServiceGroup>();
         public IDictionary<int, IServiceGroup> IdServiceGroupWiseServiceGroups = new Dictionary<int, IServiceGroup>();
-        public Dictionary<int, FlexValidator<cdr>> MediationChecklistValidatorForUnAnsweredCdrs =
-            new Dictionary<int, FlexValidator<cdr>>();//key=sgNumber
-        public Dictionary<int, FlexValidator<cdr>> MediationChecklistValidatorForAnsweredCdrs =
-            new Dictionary<int, FlexValidator<cdr>>(); //key=sgNumber
+        public Dictionary<int, MefValidator<cdr>> MediationChecklistValidatorForUnAnsweredCdrs { get; set; }
+            =new Dictionary<int, MefValidator<cdr>>();//key=sgNumber
+        public Dictionary<int, MefValidator<cdr>> MediationChecklistValidatorForAnsweredCdrs { get; set; }
+            =new Dictionary<int, MefValidator<cdr>>(); //key=sgNumber
     }
 }

@@ -31,10 +31,14 @@ namespace TelcobrightMediation
             string[] txtRow)
         {
             ValidationResult validationResult = mefValidator.Validate(txtRow);
-            if (validationResult.IsValid == false)
+            foreach (IValidationRule<string[]> rule in mefValidator.Rules)
             {
-                txtRow[Fn.ErrorCode] = validationResult.FirstValidationFailureMessage;
-                base.InconsistentCdrs.Add(CdrManipulatingUtil.ConvertTxtRowToCdrinconsistent(txtRow));
+                if (rule.Validate(txtRow) == false)
+                {
+                    txtRow[Fn.ErrorCode] = rule.ValidationMessage;
+                    base.InconsistentCdrs.Add(CdrManipulatingUtil.ConvertTxtRowToCdrinconsistent(txtRow));
+                    return;
+                }
             }
         }
 
@@ -220,11 +224,10 @@ namespace TelcobrightMediation
         }
         public static MefValidator<string[]> CreateValidatorForInconsistencyCheck(CdrCollectorInputData collectorinput)
         {
-            string pathToMefCatalog = @"..\..\Extensions\";
             MefValidator<string[]> mefValidator = new MefValidator<string[]>(
                 continueOnError: false,
                 throwExceptionOnFirstError: false,
-                pathToCatalog:pathToMefCatalog);
+                rules:collectorinput.CdrSetting.ValidationRulesForInconsistentCdrs);
             return mefValidator;
         }
     }

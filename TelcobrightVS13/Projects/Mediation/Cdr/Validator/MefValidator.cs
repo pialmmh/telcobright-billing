@@ -14,53 +14,39 @@ namespace FlexValidation
     public class MefValidator<T>
     {
         [ImportMany(typeof(IValidationRule<>))]
-        public IEnumerable<IValidationRule<T>> ValidationRules { get; set; }
-
+        public List<IValidationRule<T>> Rules { get;}
         public bool ContinueOnError { get; set; }
         public bool ThrowExceptionOnFirstError { get; set; }
-        private readonly List<IValidationRule<T>> rules = new List<IValidationRule<T>>();
-        private string RuleTypeInExportMetaData { get; }
         public MefValidator()
         {
         } //Empty constructor for json deserialization
 
         [JsonConstructor]
         public MefValidator(bool continueOnError, bool throwExceptionOnFirstError,
-            string pathToCatalog,string ruletypeInExportMetaData) //constructor
+            List<IValidationRule<T>> rules) //constructor
         {
             this.ContinueOnError = continueOnError;
             this.ThrowExceptionOnFirstError = throwExceptionOnFirstError;
-
-            this.ComposeFromPath(pathToCatalog);
-            foreach (var validationRule in this.ValidationRules.Where(r=>r.me))
-            {
-                this.rules.Add(validationRule);
-            }
+            this.Rules = rules;
+            this.Rules.ForEach(r=>r.Prepare());
         }
 
-        private void ComposeFromPath(string path)
+        public virtual ValidationResult Validate(T objToValidate)
         {
-            var catalog = new DirectoryCatalog(path);
-            var container = new CompositionContainer(catalog);
-            container.ComposeParts(this);
-        }
-
-        public virtual ValidationResult Validate(T instance)
-        {
-            if (this.rules.Any() == false)
+            if (this.Rules.Any() == false)
             {
                 throw new Exception("No rules found.");
             }
             var validationResult = new ValidationResult();
-            foreach (IValidationRule<T> flexRule in this.rules)
+            foreach (IValidationRule<T> rule in this.Rules)
             {
-                bool isValid = (bool) flexRule.Validate(instance);
+                bool isValid = rule.Validate(objToValidate);
                 if (isValid == false)
                 {
-                    validationResult.AppendValidationClause(new ValidationClause(false, flexRule.ValidationMessage));
+                    validationResult.AppendValidationClause(new ValidationClause(false, rule.ValidationMessage));
                     if (this.ThrowExceptionOnFirstError == true)
                     {
-                        throw new Exception(flexRule.ValidationMessage);
+                        throw new Exception(rule.ValidationMessage);
                     }
                     if (this.ContinueOnError == false) break;
                 }

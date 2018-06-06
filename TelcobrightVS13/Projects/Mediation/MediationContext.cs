@@ -27,8 +27,8 @@ namespace TelcobrightMediation
         public MefPartnerRulesContainer MefPartnerRuleContainer = new MefPartnerRulesContainer();
         public MefJobContainer MefJobContainer = new MefJobContainer();
         public MefNerRulesContainer MefNerRulesContainer = new MefNerRulesContainer();
-        public FlexValidator<string[]> InconsistentCdrCheckListValidator { get; private set; }
-        public FlexValidator<cdr> CommonMediationCheckListValidator { get; private set; }
+        public MefValidator<string[]> InconsistentCdrCheckListValidator { get; private set; }
+        public MefValidator<cdr> CommonMediationCheckListValidator { get; private set; }
         public MefServiceFamilyContainer MefServiceFamilyContainer { get; }
         public Dictionary<string, enumbillingspan> BillingSpans { get; }
         public Dictionary<ValueTuple<int,string>, route> Routes { get; }
@@ -87,12 +87,12 @@ namespace TelcobrightMediation
                     .Select(c => JsonBillingRuleToBillingRuleConverter.Convert(c)).ToDictionary(c => c.Id)
             };
             this.MefServiceFamilyContainer.PopulateCachedUsdBcs(this.Context);
-            this.InconsistentCdrCheckListValidator = CreateValidatorInstanceWithValidationExpressions<string[]>(this.Tbc
+            this.InconsistentCdrCheckListValidator = CreateValidatorInstanceFromRules<string[]>(this.Tbc
                 .CdrSetting.ValidationRulesForInconsistentCdrs);
             this.CommonMediationCheckListValidator =
-                CreateValidatorInstanceWithValidationExpressions<cdr>(this.Tbc.CdrSetting.ValidationMetaDataRuleNameForCommonMediationCheck);
+                CreateValidatorInstanceFromRules<cdr>(this.Tbc.CdrSetting.ValidationRulesForCommonMediationCheck);
             ComposeMefExtensions(this.Tbc);
-            CreateServiceGroupWiseFlexValidatorInstances();
+            CreateServiceGroupWiseValidatorInstances();
             this.MefServiceGroupContainer.SwitchWiseRoutes =
                 this.Routes; //assign the route dic to servicegroupdata
             this.MefPartnerRuleContainer.SwitchWiseRoutes =
@@ -120,6 +120,7 @@ namespace TelcobrightMediation
             {
                 this.MefServiceFamilyContainer.ServiceGroupWiseTupDefs.Add(kv.Key, new TupleDefinitions(kv.Value));
             }
+            CdrSummaryTypeDictionary.Initialize();
         }
 
         Dictionary<string, partnerprefix> PopulateANSPrefix()
@@ -203,29 +204,29 @@ namespace TelcobrightMediation
                 this.MefNerRulesContainer.DicExtensions.Add(ext.RuleName, ext);
         }
 
-        private void CreateServiceGroupWiseFlexValidatorInstances()
+        private void CreateServiceGroupWiseValidatorInstances()
         {
             foreach (KeyValuePair<int, IServiceGroup> kv in this.MefServiceGroupContainer.IdServiceGroupWiseServiceGroups)
             {
                 if (this.Tbc.CdrSetting.ServiceGroupConfigurations.ContainsKey(kv.Key))
                 {
                     this.MefServiceGroupContainer.MediationChecklistValidatorForAnsweredCdrs.Add(kv.Key,
-                        CreateValidatorInstanceWithValidationExpressions<cdr>(this.Tbc.CdrSetting
+                        CreateValidatorInstanceFromRules<cdr>(this.Tbc.CdrSetting
                             .ServiceGroupConfigurations[kv.Key]
                             .MediationChecklistForAnsweredCdrs));
                     this.MefServiceGroupContainer.MediationChecklistValidatorForUnAnsweredCdrs.Add(kv.Key,
-                        CreateValidatorInstanceWithValidationExpressions<cdr>(this.Tbc.CdrSetting
+                        CreateValidatorInstanceFromRules<cdr>(this.Tbc.CdrSetting
                             .ServiceGroupConfigurations[kv.Key]
                             .MediationChecklistForUnAnsweredCdrs));
                 }
             }
         }
 
-        private MefValidator<T> CreateValidatorInstanceWithValidationExpressions<T>()
+        private MefValidator<T> CreateValidatorInstanceFromRules<T>(List<IValidationRule<T>> rules)
         {
-            string pathToCatalog = @"..\..\Extensions\";
             var mefValidator = new MefValidator<T>(continueOnError: false,
-                throwExceptionOnFirstError: false,pathToCatalog:pathToCatalog);
+                                throwExceptionOnFirstError: false,
+                                rules:rules);
             return mefValidator;
         }
     }

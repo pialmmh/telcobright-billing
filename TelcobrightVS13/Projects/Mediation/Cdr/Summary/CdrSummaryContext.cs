@@ -17,9 +17,9 @@ namespace TelcobrightMediation.Cdr
 {
     public class CdrSummaryContext
     {
-        public ConcurrentDictionary<string, SummaryCache<AbstractCdrSummary, CdrSummaryTuple>> TableWiseSummaryCache { get; }
-            = new ConcurrentDictionary<string, SummaryCache<AbstractCdrSummary, CdrSummaryTuple>>();
-        public Dictionary<string, CdrSummaryFactory<CdrExt>> TargetTableWiseSummaryFactory { get; }
+        public ConcurrentDictionary<CdrSummaryType, SummaryCache<AbstractCdrSummary, CdrSummaryTuple>> TableWiseSummaryCache { get; }
+            = new ConcurrentDictionary<CdrSummaryType, SummaryCache<AbstractCdrSummary, CdrSummaryTuple>>();
+        public Dictionary<CdrSummaryType, CdrSummaryFactory<CdrExt>> TargetTableWiseSummaryFactory { get; }
         private MediationContext MediationContext { get; }
         private AutoIncrementManager AutoIncrementManager { get; }
         public List<DateTime> DatesInvolved { get; } //set by new cdrs only, which covers old cdr case as well.
@@ -47,13 +47,15 @@ namespace TelcobrightMediation.Cdr
         }
         public void GenerateSummary(CdrExt cdrExt)
         {
-            List<string> summaryTargetTables = this.MediationContext.MefServiceGroupContainer
+            List<CdrSummaryType> summaryTargetTables = this.MediationContext.MefServiceGroupContainer
                 .IdServiceGroupWiseServiceGroups[cdrExt.Cdr.ServiceGroup]
                 .GetSummaryTargetTables().Keys.ToList();
             summaryTargetTables.ForEach(targetTableName =>
             {
-                AbstractCdrSummary cdrSummary = (AbstractCdrSummary)this
-                    .TargetTableWiseSummaryFactory[targetTableName].CreateNewInstance(cdrExt);
+                CdrSummaryFactory<CdrExt> cdrSummaryFactory;
+                if(!this.TargetTableWiseSummaryFactory.TryGetValue(targetTableName,out cdrSummaryFactory))
+                    throw new Exception("Cdrsummary factory not found for table name="+targetTableName);
+                AbstractCdrSummary cdrSummary = (AbstractCdrSummary)cdrSummaryFactory.CreateNewInstance(cdrExt);
                 cdrExt.TableWiseSummaries.Add(targetTableName, cdrSummary);
             });
         }
@@ -66,19 +68,19 @@ namespace TelcobrightMediation.Cdr
                     serviceGroupNumber, out serviceGroup);
                 if (serviceGroup != null)
                 {
-                    Dictionary<string, Type> summaryTargetTables = serviceGroup.GetSummaryTargetTables();
-                    foreach (string summaryTableName in summaryTargetTables.Keys)
+                    Dictionary<CdrSummaryType, Type> summaryTargetTables = serviceGroup.GetSummaryTargetTables();
+                    foreach (CdrSummaryType summaryTableName in summaryTargetTables.Keys)
                     {
                         var summaryCache = CreateSummaryCacheInstance(summaryTableName);
                         if(this.TableWiseSummaryCache.TryAdd(summaryTableName, summaryCache)==false)
                             throw  new Exception("Could not add to concurrent dictionary TableWiseSummary " +
                                                  "in CdrSummaryContext");
                         List<DateTime> selectedDateTimes;
-                        if (summaryTableName.Contains("day"))
+                        if (summaryTableName.ToString().Contains("day"))
                         {
                             selectedDateTimes = this.DatesInvolved;
                         }
-                        else if (summaryTableName.Contains("hr"))
+                        else if (summaryTableName.ToString().Contains("hr"))
                         {
                             selectedDateTimes = this.HoursInvolved;
                         }
@@ -95,15 +97,17 @@ namespace TelcobrightMediation.Cdr
         }
         public void ValidateDayVsHourWiseSummaryCollection()
         {
-            var daySummaryCaches = this.TableWiseSummaryCache.Where(kv => kv.Key.Contains("_day_"))
+            var daySummaryCaches = this.TableWiseSummaryCache.Where(kv => kv.Key.ToString().Contains("_day_"))
                 .ToDictionary(kv => kv.Key, kv => kv.Value);
-            var hourSummaryCaches = this.TableWiseSummaryCache.Where(kv => kv.Key.Contains("_hr_"))
+            var hourSummaryCaches = this.TableWiseSummaryCache.Where(kv => kv.Key.ToString().Contains("_hr_"))
                 .ToDictionary(kv => kv.Key, kv => kv.Value);
             foreach (var kv in daySummaryCaches)
             {
                 SummaryCache<AbstractCdrSummary, CdrSummaryTuple> dayWiseSummaryCache = kv.Value;
-                SummaryCache<AbstractCdrSummary, CdrSummaryTuple> hourWiseSummaryCache =
-                    hourSummaryCaches[kv.Key.Replace("day", "hr")];
+                string cdrSummaryTypeStr = kv.Key.ToString();
+                SummaryCache<AbstractCdrSummary, CdrSummaryTuple> hourWiseSummaryCache;
+                CdrSummaryType cdrSummaryType = CdrSummaryTypeDictionary.GetTypes()[cdrSummaryTypeStr.Replace("day", "hr")];
+                hourSummaryCaches.TryGetValue(cdrSummaryType,out hourWiseSummaryCache);
                 var daySumOfDuration = dayWiseSummaryCache.GetItems().Sum(s => s.actualduration);
                 var hourWiseSumOfDuration = hourWiseSummaryCache.GetItems().Sum(s => s.actualduration);
                 //if (Math.Abs(daySumOfDuration - hourWiseSumOfDuration) > this.MediationContext.Tbc.CdrSetting.FractionalNumberComparisonTollerance)
@@ -111,32 +115,43 @@ namespace TelcobrightMediation.Cdr
             }
         }
         private SummaryCache<AbstractCdrSummary, CdrSummaryTuple>
-            CreateSummaryCacheInstance(string summaryTableName)
+            CreateSummaryCacheInstance(CdrSummaryType summaryTableName)
         {
             Func<AbstractCdrSummary,string> whereClauseBuilder = summary =>
                 $@" where id={summary.id} and tup_starttime={summary.tup_starttime.ToMySqlField()}";
             SummaryCache<AbstractCdrSummary, CdrSummaryTuple> cachedSummary =
                 new SummaryCache<AbstractCdrSummary, CdrSummaryTuple>
-                (summaryTableName,this.AutoIncrementManager, e => e.GetTupleKey(), e => e.GetExtInsertValues(),
-                    e => e.GetUpdateCommand(whereClauseBuilder).Replace("AbstractCdrSummary",summaryTableName), 
+                (summaryTableName.ToString(),this.AutoIncrementManager, e => e.GetTupleKey(), e => e.GetExtInsertValues(),
+                    e => e.GetUpdateCommand(whereClauseBuilder).Replace("AbstractCdrSummary",summaryTableName.ToString()), 
                     null);
             return cachedSummary;
         }
 
-        public AbstractCdrSummary CreateSummaryInstanceForSingleTable(CdrExt cdrExt, string targetTableName)
+        public AbstractCdrSummary CreateSummaryInstanceForSingleTable(CdrExt cdrExt, CdrSummaryType targetTableName)
         {
-            AbstractCdrSummary newSummary =
-                (AbstractCdrSummary) this.TargetTableWiseSummaryFactory[targetTableName].CreateNewInstance(cdrExt);
-            return newSummary;
+            CdrSummaryFactory<CdrExt> cdrSummaryFactory;
+            if (!this.TargetTableWiseSummaryFactory.TryGetValue(targetTableName, out cdrSummaryFactory))
+                throw new Exception("Could not find cdrSummaryFactory");
+            return (AbstractCdrSummary) cdrSummaryFactory.CreateNewInstance(cdrExt);
         }
 
-        public void MergeAddSummary(string summaryTableName, AbstractCdrSummary cdrSummary)
+        public void MergeAddSummary(CdrSummaryType summaryTableName, AbstractCdrSummary cdrSummary)
         {
-            this.TableWiseSummaryCache[summaryTableName].Merge(cdrSummary, SummaryMergeType.Add, sum => sum.id > 0);
+            SummaryCache<AbstractCdrSummary, CdrSummaryTuple> targetSummaryCacheForMergeSubstract;
+            if (!this.TableWiseSummaryCache.TryGetValue(summaryTableName, out targetSummaryCacheForMergeSubstract))
+            {
+                throw new Exception("Target summary cache not found for summary merge substraction.");
+            }
+            targetSummaryCacheForMergeSubstract.Merge(cdrSummary, SummaryMergeType.Add, sum => sum.id > 0);
         }
-        public void MergeSubstractSummary(string summaryTableName, AbstractCdrSummary cdrSummary)
+        public void MergeSubstractSummary(CdrSummaryType summaryTableName, AbstractCdrSummary cdrSummary)
         {
-            this.TableWiseSummaryCache[summaryTableName].Merge(cdrSummary, SummaryMergeType.Substract, sum => sum.id > 0);
+            SummaryCache<AbstractCdrSummary, CdrSummaryTuple> targetSummaryCacheForMergeAdd;
+            if (!this.TableWiseSummaryCache.TryGetValue(summaryTableName, out targetSummaryCacheForMergeAdd))
+            {
+                throw new Exception("Target summary cache not found for summary merge addition.");
+            }
+            targetSummaryCacheForMergeAdd.Merge(cdrSummary, SummaryMergeType.Substract, sum => sum.id > 0);
         }
     }
 }

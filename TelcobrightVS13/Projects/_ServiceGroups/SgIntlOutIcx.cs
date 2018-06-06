@@ -18,18 +18,18 @@ namespace TelcobrightMediation
         public string RuleName => "International Outgoing Calls [ICX]";
         public string HelpText => "Service group International Outgoing for BD ICX.";
         public int Id => 2;
-        private Dictionary<string, Type> SummaryTargetTables { get; }
+        private Dictionary<CdrSummaryType, Type> SummaryTargetTables { get; }
         private List<ICdrRule> CdrRules { get; set; }=new List<ICdrRule>();
         public SgIntlOutIcx() //constructor
         {
-            this.SummaryTargetTables = new Dictionary<string, Type>()
+            this.SummaryTargetTables = new Dictionary<CdrSummaryType, Type>()
             {
-                {"sum_voice_day_02", typeof(sum_voice_day_02)},
-                {"sum_voice_hr_02", typeof(sum_voice_hr_02)},
+                {CdrSummaryType.sum_voice_day_02, typeof(sum_voice_day_02)},
+                {CdrSummaryType.sum_voice_hr_02, typeof(sum_voice_hr_02)},
             };
         }
 
-        public Dictionary<string, Type> GetSummaryTargetTables()
+        public Dictionary<CdrSummaryType, Type> GetSummaryTargetTables()
         {
             return this.SummaryTargetTables;
         }

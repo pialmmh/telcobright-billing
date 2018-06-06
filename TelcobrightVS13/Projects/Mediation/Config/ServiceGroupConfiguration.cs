@@ -1,20 +1,21 @@
 ﻿using System.Collections.Generic;
-
+using MediationModel;
+using TelcobrightMediation;
 namespace TelcobrightMediation
 {
     public class ServiceGroupConfiguration
     {
         public List<int> PartnerRules { get; set; }
         public List<RatingRule> Ratingtrules { get; set; }
-        public Dictionary<string, string> MediationChecklistForUnAnsweredCdrs { get; set; }
-        public Dictionary<string, string> MediationChecklistForAnsweredCdrs { get; set; }
+        public List<IValidationRule<cdr>> MediationChecklistForUnAnsweredCdrs { get; set; }
+        public List<IValidationRule<cdr>> MediationChecklistForAnsweredCdrs { get; set; }
         public int IdServiceGroup { get; }
         public Dictionary<string, string> Params { get; set; }=new Dictionary<string, string>();
         public ServiceGroupConfiguration(int idServiceGroup)
         {
             this.IdServiceGroup = idServiceGroup;
-            this.MediationChecklistForAnsweredCdrs = new Dictionary<string, string>();
-            this.MediationChecklistForUnAnsweredCdrs = new Dictionary<string, string>();
+            this.MediationChecklistForAnsweredCdrs = new List<IValidationRule<cdr>>();
+            this.MediationChecklistForUnAnsweredCdrs = new List<IValidationRule<cdr>>();
         }
     }
 }

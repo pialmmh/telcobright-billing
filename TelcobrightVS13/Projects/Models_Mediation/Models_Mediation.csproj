@@ -380,6 +380,7 @@
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="enums\CdrSummaryType.cs" />
+    <Compile Include="enums\CdrSummaryTypeAsConstStr.cs" />
     <Compile Include="enums\Enums.cs" />
     <Compile Include="enums\Fn.cs" />
     <Compile Include="enumtaxrule.cs">

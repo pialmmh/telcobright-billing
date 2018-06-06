@@ -1,15 +1,16 @@
 using System;
+using MediationModel;
 using TelcobrightMediation.Cdr;
 
 namespace TelcobrightMediation
 {
     public class CdrSummaryFactoryFactory
     {
-        public static CdrSummaryFactory<CdrExt> Create(string targetTableName,MefServiceGroupsContainer mefServiceGroupsContainer)
+        public static CdrSummaryFactory<CdrExt> Create(CdrSummaryType targetTableName,MefServiceGroupsContainer mefServiceGroupsContainer)
         {
-            if (targetTableName.Contains("_day_"))
+            if (targetTableName.ToString().Contains("_day_"))
                 return new DailyCdrSummaryFactory<CdrExt>(mefServiceGroupsContainer);
-            else if (targetTableName.Contains("_hr_"))
+            else if (targetTableName.ToString().Contains("_hr_"))
             {
                 return new HourlyCdrSummaryFactory<CdrExt>(mefServiceGroupsContainer);
             }

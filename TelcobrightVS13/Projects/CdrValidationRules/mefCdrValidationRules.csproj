@@ -61,12 +61,58 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommonCdrValidationRules\ChargingStatus1WhenDurationGt0.cs" />
+    <Compile Include="CommonCdrValidationRules\DurationSecGtEq0.cs" />
+    <Compile Include="CommonCdrValidationRules\FileNameNotEmpty.cs" />
+    <Compile Include="CommonCdrValidationRules\FinalRecordMustBe1.cs" />
+    <Compile Include="CommonCdrValidationRules\IdCallGt0.cs" />
+    <Compile Include="CommonCdrValidationRules\IncomingRouteNotEmpty.cs" />
+    <Compile Include="CommonCdrValidationRules\InPartnerIdGt0.cs" />
+    <Compile Include="CommonCdrValidationRules\OriginatingCalledNumberNotEmpty.cs" />
+    <Compile Include="CommonCdrValidationRules\SeqNumGreaterThanZero.cs" />
+    <Compile Include="CommonCdrValidationRules\EndTimeIsGtEqStartTime.cs" />
+    <Compile Include="CommonCdrValidationRules\ServiceGroupGt0.cs" />
+    <Compile Include="CommonCdrValidationRules\StartTimeIsValidAndWithinLimit.cs" />
+    <Compile Include="CommonCdrValidationRules\SwitchIdGt0.cs" />
+    <Compile Include="CommonCdrValidationRules\UniqueBillIdNonEmpty.cs" />
+    <Compile Include="CommonCdrValidationRules\PartialFlagGtEq0.cs" />
+    <Compile Include="CommonCdrValidationRules\ValidFlagGt0.cs" />
+    <Compile Include="InconsistentValidationRules\StrEndTimeIsGtEqStartTime.cs" />
+    <Compile Include="InconsistentValidationRules\StrStartTimeIsValidAndWithinLimit.cs" />
+    <Compile Include="InconsistentValidationRules\StrDurationSecGtEq0.cs" />
+    <Compile Include="InconsistentValidationRules\StrOriginatingCalledNumberNotEmpty.cs" />
+    <Compile Include="InconsistentValidationRules\StrIncomingRouteNotEmpty.cs" />
+    <Compile Include="InconsistentValidationRules\StrSeqNumGreaterThanZero.cs" />
+    <Compile Include="InconsistentValidationRules\StrUniqueBillidNotEmpty.cs" />
+    <Compile Include="InconsistentValidationRules\StrValidFlagMustBe1.cs" />
+    <Compile Include="OtherCdrFieldsRule\AnsIdOrigGt0.cs" />
+    <Compile Include="OtherCdrFieldsRule\Duration1Gt0 .cs" />
+    <Compile Include="OtherCdrFieldsRule\CostIcxInGt0.cs" />
+    <Compile Include="OtherCdrFieldsRule\MatchedPrefixCustomerNotEmpty.cs" />
+    <Compile Include="OtherCdrFieldsRule\InPartnerCostGt0.cs" />
+    <Compile Include="OtherCdrFieldsRule\AnsIdTermGt0.cs" />
+    <Compile Include="OtherCdrFieldsRule\RevIgwOutGt0.cs" />
+    <Compile Include="OtherCdrFieldsRule\RoundedDurationGt0.cs" />
+    <Compile Include="OtherCdrFieldsRule\YAmountGt0.cs" />
+    <Compile Include="OtherCdrFieldsRule\XAmountGt0.cs" />
+    <Compile Include="OtherCdrFieldsRule\BtrcRevShareTax2Gt0.cs" />
+    <Compile Include="OtherCdrFieldsRule\CountryCodeNotEmpty.cs" />
+    <Compile Include="OtherCdrFieldsRule\Duration2Gt0.cs" />
+    <Compile Include="OtherCdrFieldsRule\MatchedPrefixYNotempty.cs" />
+    <Compile Include="OtherCdrFieldsRule\MatchedPrefixSupplierNotEmpty.cs" />
+    <Compile Include="OtherCdrFieldsRule\RevIcxOutNot0.cs" />
+    <Compile Include="OtherCdrFieldsRule\OutPartnerCostGt0.cs" />
+    <Compile Include="OtherCdrFieldsRule\OutPartnerIdGt0.cs" />
+    <Compile Include="OtherCdrFieldsRule\OutgoingRouteNotEmpty.cs" />
+    <Compile Include="OtherCdrFieldsRule\BtrcRevShareTax1Gt0.cs" />
     <Compile Include="ServiceGroupValRules.cs" />
-    <Compile Include="InconsistentCdrValRules.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="CommonCdrValRules.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LibraryExtensions\LibraryExtensions.csproj">
+      <Project>{d4c2f34d-4d3d-43ae-84f0-e80cfedb1b48}</Project>
+      <Name>LibraryExtensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Mediation\_00Mediation.csproj">
       <Project>{1a64e6f9-903c-416c-b322-1b5c5d997001}</Project>
       <Name>_00Mediation</Name>
@@ -80,10 +126,16 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy $(TargetPath) $(SolutionDir)WS_Topshelf_Quartz\Extensions\$(TargetFileName)
 copy $(TargetPath) $(SolutionDir)UnitTesterManual\Extensions\$(TargetFileName)
+
+copy $(TargetPath) $(SolutionDir)WS_Topshelf_Quartz\Bin\Debug\$(TargetFileName)
+copy $(TargetPath) $(SolutionDir)WS_Topshelf_Quartz\Bin\Release\$(TargetFileName)
+copy $(TargetPath) $(SolutionDir)UnitTesterManual\Bin\Debug\$(TargetFileName)
+copy $(TargetPath) $(SolutionDir)UnitTesterManual\Bin\Release\$(TargetFileName)
 </PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

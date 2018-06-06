@@ -31,7 +31,6 @@ namespace TelcobrightMediation
             //common for each service family ********
             cdr thisCdr = cdrExt.Cdr;
             int serviceFamily = this.Id;
-            PrefixMatcher pr = new PrefixMatcher(serviceContext);
             DateTime answerTime;
             if (thisCdr.ChargingStatus == 1)
             {
@@ -53,8 +52,9 @@ namespace TelcobrightMediation
             List<TupleByPeriod> tups = GetServiceTuple(serviceContext, answerTime);
             if (tups == null) return null;
             int maxDecimalPrecision = serviceContext.MaxDecimalPrecision;
-            Rateext matchedRateWithAssignmentTupleId = pr.MatchPrefix(phoneNumber, category, subCategory, tups,
-                answerTime, flagLcr,useInMemoryTable:true);
+            PrefixMatcher prefixaMatcher = new PrefixMatcher(serviceContext, phoneNumber, category, subCategory, tups,
+                answerTime, flagLcr, useInMemoryTable: true);
+            Rateext matchedRateWithAssignmentTupleId = prefixaMatcher.MatchPrefix();
             matchedRateWithAssignmentTupleId.rateamount =
                 matchedRateWithAssignmentTupleId.rateamount.RoundFractionsUpTo(maxDecimalPrecision);
             if (matchedRateWithAssignmentTupleId == null) return null;
@@ -65,7 +65,7 @@ namespace TelcobrightMediation
             //1   0.02000000000   0.00500000000   0.01500000000   0.60000000000   0.40000000000   0.00900000000   0.00500000000   0.01400000000   0.00600000000
 
             long finalDuration = 0;
-            finalDuration = Convert.ToInt64(pr.GetA2ZDuration(thisCdr.DurationSec,matchedRateWithAssignmentTupleId));
+            finalDuration = Convert.ToInt64(prefixaMatcher.GetA2ZDuration(thisCdr.DurationSec,matchedRateWithAssignmentTupleId));
             //effective termination rate
             decimal additionalChargeIof = Convert.ToDecimal(matchedRateWithAssignmentTupleId.OtherAmount1)
                 .RoundFractionsUpTo(maxDecimalPrecision); //.005c

@@ -58,39 +58,41 @@ namespace MediationModel
 		public abstract decimal decimalAmount1 { get; set; }
 		public abstract decimal decimalAmount2 { get; set; }
 		public abstract decimal decimalAmount3 { get; set; }
-		public CdrSummaryTuple GetTupleKey()
-		{
-			var tup3 = new ValueTuple<string, string, string, string, string, string>(
-				this.tup_tax1currency,
-				this.tup_tax2currency,
-				this.tup_vatcurrency,
-				this.tup_starttime.ToMySqlField(),
-				this.tup_customercurrency,
-				this.tup_suppliercurrency
-				);
-			var tup2 = new ValueTuple<string, string, string, string, string, string, string,
-				ValueTuple<string, string, string, string, string, string>>(
-				this.tup_incomingip,
-				this.tup_outgoingip,
-				this.tup_countryorareacode,
-				this.tup_matchedprefixcustomer,
-				this.tup_matchedprefixsupplier,
-				this.tup_sourceId,
-				this.tup_destinationId,
-				tup3
-				);
-			var tup1 = new CdrSummaryTuple(
-				this.tup_switchid,
-				this.tup_inpartnerid,
-				this.tup_outpartnerid,
-				this.tup_incomingroute,
-				this.tup_outgoingroute,
-				this.tup_customerrate,
-				this.tup_supplierrate,
-				tup2);
-			return tup1;
-		}
-		public void Merge(AbstractCdrSummary newSummary)
+
+	    public CdrSummaryTuple GetTupleKey()
+	    {
+	        var tup3 = new ValueTuple<string, string, string, string, string, string>(
+	            this.tup_tax1currency,
+	            this.tup_tax2currency,
+	            this.tup_vatcurrency,
+	            this.tup_starttime.ToMySqlField(),
+	            this.tup_customercurrency,
+	            this.tup_suppliercurrency
+	        );
+	        var tup2 = new ValueTuple<string, string, string, string, string, string, string,
+	            ValueTuple<string, string, string, string, string, string>>(
+	            this.tup_incomingip,
+	            this.tup_outgoingip,
+	            this.tup_countryorareacode,
+	            this.tup_matchedprefixcustomer,
+	            this.tup_matchedprefixsupplier,
+	            this.tup_sourceId,
+	            this.tup_destinationId,
+	            tup3
+	        );
+	        var tup1 = new CdrSummaryTuple(
+	            this.tup_switchid,
+	            this.tup_inpartnerid,
+	            this.tup_outpartnerid,
+	            this.tup_incomingroute,
+	            this.tup_outgoingroute,
+	            this.tup_customerrate,
+	            this.tup_supplierrate,
+	            tup2);
+	        return tup1;
+	    }
+
+	    public void Merge(AbstractCdrSummary newSummary)
 		{
 			this.totalcalls += newSummary.totalcalls;
 			this.connectedcalls += newSummary.connectedcalls;
@@ -304,7 +306,5 @@ namespace MediationModel
 				{whereClauseMethod.Invoke(this)}
 				");
 		}
-
 	}
-
 }

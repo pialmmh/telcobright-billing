@@ -20,18 +20,18 @@ namespace TelcobrightMediation
             "Service group International Outgoing for BD IGW. Old common mediation codes for IGW, could not separate in short time, covers both intl in/out";
 
         public int Id => 5;
-        private Dictionary<string, Type> SummaryTargetTables { get; }
+        private Dictionary<CdrSummaryType, Type> SummaryTargetTables { get; }
 
         public SgIntlOutIGw() //constructor
         {
-            this.SummaryTargetTables = new Dictionary<string, Type>()
+            this.SummaryTargetTables = new Dictionary<CdrSummaryType, Type>()
             {
-                {"sum_voice_day_02", typeof(sum_voice_day_02)},
-                {"sum_voice_hr_02", typeof(sum_voice_hr_02)},
+                {CdrSummaryType.sum_voice_day_02, typeof(sum_voice_day_02)},
+                {CdrSummaryType.sum_voice_hr_02, typeof(sum_voice_hr_02)},
             };
         }
 
-        public Dictionary<string, Type> GetSummaryTargetTables()
+        public Dictionary<CdrSummaryType, Type> GetSummaryTargetTables()
         {
             return this.SummaryTargetTables;
         }
