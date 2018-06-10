@@ -78,7 +78,7 @@ namespace PortalApp.ReportHelper
             ON x.tup_incomingroute = cr.RouteName
             LEFT JOIN route cr1
             ON x.tup_outgoingroute = cr1.RouteName
-            ORDER BY Successfulcalls,costansin DESC ;";
+            ORDER BY " + (GetGroupBy().Contains("tup_starttime") ? "Date, " : string.Empty) + " Successfulcalls,costansin DESC ;";
         }
 
         protected string GetWhereClauseAdditional()

@@ -82,7 +82,7 @@ namespace PortalApp.ReportHelper
             ON x.tup_destinationId = cr1.idpartner
             LEFT JOIN partner cr2
             ON x.tup_outpartnerid = cr2.idpartner
-            ORDER BY Successfulcalls,costansin DESC ;";
+            ORDER BY " + (GetGroupBy().Contains("tup_starttime") ? "Date, " : string.Empty) + " Successfulcalls,costansin DESC ;";
         }
     }
 }

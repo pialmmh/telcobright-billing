@@ -26,11 +26,20 @@ public partial class DefaultRptIntlOut : System.Web.UI.Page
         string StartDate = txtDate.Text;
         string EndtDate = (txtDate1.Text.ConvertToDateTimeFromMySqlFormat()).AddSeconds(1).ToMySqlStyleDateTimeStrWithoutQuote();
         string tableName = DropDownListReportSource.SelectedValue+"02";
-            
+
 
         string groupInterval = getSelectedRadioButtonText();
+        switch (groupInterval)
+        {
+            case "Half Hourly":
+            case "Hourly":
+                tableName = tableName.Replace("_day_", "_hr_");
+                break;
+            default:
+                tableName = tableName.Replace("_hr_", "_day_");
+                break;
 
-
+        }
 
         string constructedSQL = new SqlHelperIntOut
                         (StartDate,
@@ -39,6 +48,7 @@ public partial class DefaultRptIntlOut : System.Web.UI.Page
                          tableName,
                          new List<string>()
                             {
+                                getInterval(groupInterval), 
                                 CheckBoxShowByCountry.Checked==true?"tup_countryorareacode":string.Empty,
                                 CheckBoxShowByDestination.Checked==true?"tup_matchedprefixcustomer":string.Empty,
                                 CheckBoxIntlPartner.Checked==true?"tup_outpartnerid":string.Empty,
@@ -59,23 +69,46 @@ public partial class DefaultRptIntlOut : System.Web.UI.Page
         //File.WriteAllText("c:" + Path.DirectorySeparatorChar + "temp" + Path.DirectorySeparatorChar + "testQuery.txt", constructedSQL);
         return constructedSQL;
     }
+
+    private string getInterval(string groupInterval)
+    {
+        switch (groupInterval)
+        {
+            case "Hourly":
+            case "Daily":
+                return "tup_starttime";
+            case "Weekly":
+                return "concat(year(tup_starttime),'-W',week(tup_starttime))";
+            case "Monthly":
+                return "concat(year(tup_starttime),'-',date_format(tup_starttime,'%b'))";
+            case "Yearly":
+                return "DATE_FORMAT(tup_starttime,'%Y')";
+            default:
+                return string.Empty;
+        }
+    }
+
     public string getSelectedRadioButtonText()
     {
-        string interval = "";
-        if (RadioButtonHalfHourly.Checked)
-            return interval = "" + RadioButtonHalfHourly.Text;
-        else if (RadioButtonHourly.Checked)
-            return interval = "" + RadioButtonHourly.Text;
-        else if (RadioButtonDaily.Checked)
-            return interval = "" + RadioButtonDaily.Text;
-        else if (RadioButtonWeekly.Checked)
-            return interval = "" + RadioButtonWeekly.Text;
-        else if (RadioButtonMonthly.Checked)
-            return interval = "" + RadioButtonMonthly.Text;
-        else if (RadioButtonYearly.Checked)
-            return interval = "" + RadioButtonYearly.Text;
-        else
-            return "";
+        if (CheckBoxDailySummary.Checked)
+        {
+            string interval = "";
+            if (RadioButtonHalfHourly.Checked)
+                return interval = "" + RadioButtonHalfHourly.Text;
+            else if (RadioButtonHourly.Checked)
+                return interval = "" + RadioButtonHourly.Text;
+            else if (RadioButtonDaily.Checked)
+                return interval = "" + RadioButtonDaily.Text;
+            else if (RadioButtonWeekly.Checked)
+                return interval = "" + RadioButtonWeekly.Text;
+            else if (RadioButtonMonthly.Checked)
+                return interval = "" + RadioButtonMonthly.Text;
+            else if (RadioButtonYearly.Checked)
+                return interval = "" + RadioButtonYearly.Text;
+            else
+                return "";
+        }
+        else return string.Empty;
     }
 
     protected void submit_Click(object sender, EventArgs e)

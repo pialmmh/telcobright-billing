@@ -94,7 +94,7 @@ namespace PortalApp.ReportHelper
             ON x.tup_matchedprefixcustomer=cx.Prefix
             LEFT JOIN CountryCode cn
             ON cx.CountryCode=cn.Code
-            ORDER BY Successfulcalls DESC ;";
+            ORDER BY " + (GetGroupBy().Contains("tup_starttime") ? "Date, " : string.Empty) + " Successfulcalls DESC ;";
         }
     }
 }
