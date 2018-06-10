@@ -49,16 +49,16 @@ namespace TelcobrightMediation.Cdr
             this.CdrEraser?.DeleteOldCdrs();
 
             this.CdrProcessor?.Mediate();
-            ParallelQuery<CdrExt> parallelCdrExts= this.CdrProcessor?.GenerateSummaries();
+            ParallelQuery<CdrExt> parallelCdrExts = this.CdrProcessor?.GenerateSummaries();
             this.CdrProcessor?.MergeNewSummariesIntoCache(parallelCdrExts);
             this.CdrProcessor?.ProcessChargeables(parallelCdrExts);
 
             IncrementalTransactionCreator transactionProcessor = new IncrementalTransactionCreator(this);
-            List<acc_transaction> incrementalTransactions= transactionProcessor.CreateIncrementalTransactions();
+            List<acc_transaction> incrementalTransactions = transactionProcessor.CreateIncrementalTransactions();
             transactionProcessor.ValidateTransactions();
             this.CdrJobContext.AccountingContext.ExecuteTransactions(incrementalTransactions);
 
-            if (this.CdrProcessor!=null)
+            if (this.CdrProcessor != null)
             {
                 ValidateCdrProcessorWithMediationTester(this.CdrJobContext.CdrjobInputData,
                     parallelCdrExts);
@@ -82,13 +82,13 @@ namespace TelcobrightMediation.Cdr
             //UpdateCdrMetaData();
         }
 
-        protected void ValidateCdrProcessorWithMediationTester(CdrJobInputData input,ParallelQuery<CdrExt> processedCdrExts)
+        protected void ValidateCdrProcessorWithMediationTester(CdrJobInputData input, ParallelQuery<CdrExt> processedCdrExts)
         {
             MediationTester mediationTester =
                 new MediationTester(input.Tbc.CdrSetting.FractionalNumberComparisonTollerance);
-            if(!mediationTester.DurationSumInCdrAndSummaryAreTollerablyEqual(processedCdrExts))
+            if (!mediationTester.DurationSumInCdrAndSummaryAreTollerablyEqual(processedCdrExts))
                 throw new Exception("Duration sum in cdr and summary are not tollerably equal");
-            if(!mediationTester.SummaryCountTwiceAsCdrCount(processedCdrExts))
+            if (!mediationTester.SummaryCountTwiceAsCdrCount(processedCdrExts))
                 throw new Exception("Summary count is not twice as cdr count");
             //if (!mediationTester.CdrDurationMatchesSumOfInsertedAndUpdatedSummaryDurationInCache(this.CdrProcessor)) ;
             //throw new Exception("Cdr duration does not match inserted & updated summary instances duration in cache. ");
@@ -126,7 +126,7 @@ namespace TelcobrightMediation.Cdr
             Assert.IsTrue(mediationTester.SummaryCountTwiceAsCdrCount(processedCdrExts));
             //todo: do something about this test which makes database trip & need to modify this to work with both eraser & processor
             //Assert.IsTrue(mediationTester
-              //  .SumOfPrevDayWiseDurationsAndNewSummaryInstancesIsEqualToSameInMergedSummaryCache(
+            //  .SumOfPrevDayWiseDurationsAndNewSummaryInstancesIsEqualToSameInMergedSummaryCache(
             //        this.CdrProcessor));
             Assert.IsTrue(
                 mediationTester.DurationSumOfNonPartialRawPartialsAndRawDurationAreTollerablyEqual(this.CdrProcessor));
@@ -192,14 +192,14 @@ namespace TelcobrightMediation.Cdr
         {
             this.CdrJobContext.DbCmd.CommandText = "select * from cdrmeta";
             cdrmeta cdrMetaAfterCdrJob = this.CdrJobContext.DbCmd.GetObjectsByQuery(r =>
-            new cdrmeta()
-            {
-                id = r.GetInt32(0),
-                lastJobSegmentInsertedDuration = r.GetDecimal(1),
-                lastJobSegmentDeletedDuration = r.GetDecimal(2),
-                totalInsertedDuration = r.GetDecimal(3),
-                totalDeletedDuration = r.GetDecimal(4)
-            }
+                new cdrmeta()
+                {
+                    id = r.GetInt32(0),
+                    lastJobSegmentInsertedDuration = r.GetDecimal(1),
+                    lastJobSegmentDeletedDuration = r.GetDecimal(2),
+                    totalInsertedDuration = r.GetDecimal(3),
+                    totalDeletedDuration = r.GetDecimal(4)
+                }
             ).First();
             return cdrMetaAfterCdrJob;
         }

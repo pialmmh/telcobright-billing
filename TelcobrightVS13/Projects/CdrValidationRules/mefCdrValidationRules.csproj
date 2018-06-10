@@ -131,12 +131,11 @@
   <PropertyGroup>
     <PostBuildEvent>copy $(TargetPath) $(SolutionDir)WS_Topshelf_Quartz\Extensions\$(TargetFileName)
 copy $(TargetPath) $(SolutionDir)UnitTesterManual\Extensions\$(TargetFileName)
-
 copy $(TargetPath) $(SolutionDir)WS_Topshelf_Quartz\Bin\Debug\$(TargetFileName)
 copy $(TargetPath) $(SolutionDir)WS_Topshelf_Quartz\Bin\Release\$(TargetFileName)
 copy $(TargetPath) $(SolutionDir)UnitTesterManual\Bin\Debug\$(TargetFileName)
 copy $(TargetPath) $(SolutionDir)UnitTesterManual\Bin\Release\$(TargetFileName)
-</PostBuildEvent>
+copy $(TargetPath) $(SolutionDir)Portal\bin\$(TargetFileName)</PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

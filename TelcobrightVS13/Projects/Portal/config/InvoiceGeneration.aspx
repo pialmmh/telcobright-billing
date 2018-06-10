@@ -5,8 +5,6 @@
 
     <%--Page Load and Other Server Side Asp.net scripts--%>
        
-
-
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" Runat="Server">
     <ajaxToolkit:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server" />
@@ -43,8 +41,8 @@
                                 <asp:DropDownList ID="ddlistTimeZone" runat="server" AutoPostBack="false" Enabled="True"/>
                             </EditItemTemplate>
                         </asp:TemplateField>
-                        <asp:boundfield datafield="StartDateWithTime" headertext="From" dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" />
-                        <asp:boundfield datafield="EndDateWithTime" headertext="Till" dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" />
+                        <asp:boundfield datafield="StartDateTime" headertext="From" dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" />
+                        <asp:boundfield datafield="EndDateTime" headertext="Till" dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" />
                         <asp:boundfield datafield="Amount" headertext="Amount" DataFormatString="{0:n2}">
                             <ItemStyle HorizontalAlign="Right" />
                         </asp:boundfield>
@@ -62,11 +60,15 @@
         </asp:UpdatePanel>
     </div>
     <br/>
-    <div>
-        <asp:Button runat="server" ID="btnGenerateInvoice" OnClick="btnGenerateInvoice_OnClick" Text="Generate Invoice"/>
+    <div style="float: left">
+        <asp:Button runat="server" ID="btnGenerateInvoice" OnClick="btnGenerateInvoice_OnClick" Text="Create Invoice Generation Jobs"/>
+    </div>
+    <div style="float: left; padding-left: 10px;">
+        <asp:Label ID="lblStatus" runat="server" Text=""></asp:Label>    
     </div>
     <br/>
-    <div>
+    
+    <div style="clear: both; padding-top: 10px;">
         <span style="color: black;"><b>Add invoice generation task for custom period:</b></span> <br/>
         <asp:UpdatePanel runat="server" ID="upCustomInvoice">
             <ContentTemplate>

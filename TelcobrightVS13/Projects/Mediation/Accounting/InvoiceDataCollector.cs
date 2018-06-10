@@ -7,15 +7,15 @@ using jdk.nashorn.@internal.ir;
 
 namespace TelcobrightMediation.Accounting
 {
-    public class LedgerSummaryForInvoiceGeneration
+    public class InvoiceDataCollector
     {
         public int PartnerId { get; set; }
         public string PartnerName { get; set; }
         public long AccountId { get; set; }
         public string AccountName { get; set; }
         public decimal Amount { get; set; }
-        public DateTime StartDateWithTime { get; set; }
-        public DateTime EndDateWithTime { get; set; }
+        public DateTime StartDateTime { get; set; }
+        public DateTime EndDateTime { get; set; }
 
         public String ServiceAccount { get; set; }
         public int TimeZone { get; set; }
@@ -23,19 +23,19 @@ namespace TelcobrightMediation.Accounting
 
 
         private const int DefaultGmtOffset = 21600;
-        public DateTime StartDateWithTimeLocal
+        public DateTime StartDateTimeLocal
         {
-            get { return StartDateWithTime.AddSeconds(DefaultGmtOffset - this.GmtOffset); }
+            get { return this.StartDateTime.AddSeconds(DefaultGmtOffset - this.GmtOffset); }
         }
 
-        public DateTime EndDateWithTimeLocal
+        public DateTime EndDateTimeLocal
         {
-            get { return EndDateWithTime.AddSeconds(DefaultGmtOffset - this.GmtOffset); }
+            get { return this.EndDateTime.AddSeconds(DefaultGmtOffset - this.GmtOffset); }
         }
 
         public List<DateTime> InvoiceDates { get; set; }
 
-        public LedgerSummaryForInvoiceGeneration()
+        public InvoiceDataCollector()
         {
             InvoiceDates = new List<DateTime>();
         }
