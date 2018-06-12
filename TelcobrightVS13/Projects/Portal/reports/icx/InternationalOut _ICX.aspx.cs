@@ -53,7 +53,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                                 CheckBoxIntlPartner.Checked==true?"tup_outpartnerid":string.Empty,
                                 CheckBoxShowByAns.Checked==true?"tup_sourceID":string.Empty,
                                 CheckBoxShowByIgw.Checked==true?"tup_inpartnerid":string.Empty,
-
+                                CheckBoxShowByCustomerRate.Checked==true?"tup_customerrate":string.Empty,
                             },
                       
                          new List<string>()
@@ -118,29 +118,36 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
         
         //undo the effect of hiding some grid by the summary button first******************
         GridView1.Columns[0].Visible = true;
-        GridView1.Columns[1].Visible = true;
+        if (CheckBoxDailySummary.Checked)
+        {
+            GridView1.Columns[1].Visible = false;
+            GridView1.Columns[2].Visible = false;
+            GridView1.Columns[3].Visible = false;
+            GridView1.Columns[5].Visible = false;
+        }
+        //GridView1.Columns[1].Visible = true;
         //GridView1.Columns[2].Visible = false;
         //GridView1.Columns[3].Visible = false;
-        //GridView1.Columns[4].Visible = false;
+        GridView1.Columns[4].Visible = false;
         //*****************************
 
         if (CheckBoxShowByCountry.Checked == true)
         {
-            GridView1.Columns[2].Visible = false;
+            GridView1.Columns[1].Visible = true;
         }
-        else GridView1.Columns[2].Visible = true;
+        else GridView1.Columns[1].Visible = false;
 
-        //if (CheckBoxShowByAns.Checked == true)
-        //{
-        //    GridView1.Columns[3].Visible = true;
-        //}
-        //else GridView1.Columns[3].Visible = false;
+        if (CheckBoxShowByDestination.Checked == true)
+        {
+            GridView1.Columns[2].Visible = true;
+        }
+        else GridView1.Columns[2].Visible = false;
 
         if (CheckBoxShowByIgw.Checked == true)
         {
-            GridView1.Columns[4].Visible = true;
+            GridView1.Columns[3].Visible = true;
         }
-        else GridView1.Columns[4].Visible = false;
+        else GridView1.Columns[3].Visible = false;
 
         if (CheckBoxIntlPartner.Checked == true)
         {

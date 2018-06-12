@@ -81,7 +81,7 @@ namespace PortalApp.ReportHelper
                 WHERE tup_starttime>='{StartDate}'
                 AND tup_starttime<'{EndDate}'
                 {GetWhereClauseAdditional()}
-                {GetGroupByWithPreExistingClauses(" GROUP BY tup_customerrate, tup_supplierrate, tup_customercurrency, ")}
+                {GetGroupBy()}
             
             ) x
             LEFT JOIN partner cr

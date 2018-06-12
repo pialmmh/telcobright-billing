@@ -270,6 +270,10 @@
             </div>
                 </ContentTemplate>
                </asp:UpdatePanel>
+           
+           <div style="float:left;margin-left:10px;">
+               View by Customer Rate: <asp:CheckBox ID="CheckBoxShowByCustomerRate" runat="server" Checked="false" />
+           </div>
           
        </div>
        <%--End Div Partner***************************************************--%>
