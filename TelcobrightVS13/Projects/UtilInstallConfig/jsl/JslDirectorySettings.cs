@@ -78,12 +78,12 @@ namespace InstallConfig
                 PathSeparator = "/",
                 StartingPath = "/home/zxss10_bsvr/data/bfile/bill/zsmart_media_bak",
                 Sftphostkey = "ssh-rsa 2048 44:56:0b:fa:3a:79:c2:ee:1c:95:d9:05:b5:9b:56:4a",
-                //ServerIp = "10.133.34.12",
-                //User = "icxbill",
-                //Pass = "icx123",
-                ServerIp = "192.168.0.105",
-                User = "ftpuser",
-                Pass = "Takay1takaane",
+                ServerIp = "10.133.34.12",
+                User = "icxbill",
+                Pass = "icx123",
+                //ServerIp = "192.168.0.105",
+                //User = "ftpuser",
+                //Pass = "Takay1takaane",
                 ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
                 IgnoreZeroLenghFile = 1
             };

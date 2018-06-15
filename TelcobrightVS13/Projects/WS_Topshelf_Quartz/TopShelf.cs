@@ -122,6 +122,17 @@ namespace WS_Telcobright_Topshelf
                     return;
                 }
 #endif
+                //todo: remove temp code
+                Console.WriteLine("Starting RAMJobStore based scheduler in debug mode....");
+                runtimeScheduler.Standby();
+                IScheduler debugScheduler2 = GetScheduler(SchedulerRunTimeType.Debug, springContext);
+                ScheduleDebugJobsFromMenu(runtimeScheduler, debugScheduler2);
+                debugScheduler2.Context.Put("processes", mefProcessContainer);
+                debugScheduler2.Context.Put("configs", operatorWiseConfigs);
+                debugScheduler2.Start();
+                Console.WriteLine("Telcobright Scheduler has been started in debug mode.");
+                return;
+                //
                 Console.WriteLine("Starting Scheduler in runtime mode...");
                 Console.ReadLine();
                 runtimeScheduler.Context.Put("processes", mefProcessContainer);

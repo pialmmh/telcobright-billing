@@ -221,24 +221,25 @@ namespace TelcobrightFileOperations
                     return true; //throw new System.Exception("File " + dstInfoLocal.fullPath + " exists!");
                 }
             }
-            if (File.Exists(dstInfoLocal.FullPath))
+            if (!File.Exists(dstInfoLocal.FullPath))
             {
-                File.Delete(dstInfoLocal.FullPath);
+                //File.Delete(dstInfoLocal.FullPath);
+                //copy with temp ext first
+                string tempExt = "";
+                if (dstSettings.FileExtensionForSafeCopyWithTempFile != "")
+                {
+                    tempExt = dstSettings.FileExtensionForSafeCopyWithTempFile;
+                    dstInfoLocal.CreatePaths(null);
+                    session.GetFiles(srcInfoRemote.FullPath, dstInfoLocal.FullPath + tempExt, removeOriginal);
+                    File.Move(dstInfoLocal.FullPath + tempExt, dstInfoLocal.FullPath);
+                }
+                else
+                {
+                    dstInfoLocal.CreatePaths(null);
+                    session.GetFiles(srcInfoRemote.FullPath, dstInfoLocal.FullPath, removeOriginal);
+                }
             }
-            //copy with temp ext first
-            string tempExt = "";
-            if (dstSettings.FileExtensionForSafeCopyWithTempFile != "")
-            {
-                tempExt = dstSettings.FileExtensionForSafeCopyWithTempFile;
-                dstInfoLocal.CreatePaths(null);
-                session.GetFiles(srcInfoRemote.FullPath, dstInfoLocal.FullPath + tempExt, removeOriginal);
-                File.Move(dstInfoLocal.FullPath + tempExt, dstInfoLocal.FullPath);
-            }
-            else
-            {
-                dstInfoLocal.CreatePaths(null);
-                session.GetFiles(srcInfoRemote.FullPath, dstInfoLocal.FullPath, removeOriginal);
-            }
+            
             if (File.Exists(dstInfoLocal.FullPath))
             {
                 if (!syncSettingsSource.SecondaryDirectory.IsNullOrEmptyOrWhiteSpace()&&
