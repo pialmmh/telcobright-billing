@@ -63,6 +63,12 @@ namespace TelcobrightMediation.Cdr
                 ValidateCdrProcessorWithMediationTester(this.CdrJobContext.CdrjobInputData,
                     parallelCdrExts);
             }
+            //write summaries, so that durationTotal in summary can be validated after writing cdrs
+            foreach (var summaryCache in this.CdrJobContext.CdrSummaryContext.TableWiseSummaryCache.Values)
+            {
+                summaryCache.WriteAllChanges(this.CdrJobContext.DbCmd,
+                    this.CdrJobContext.SegmentSizeForDbWrite);
+            }
             var cdrWritingResult = this.CdrProcessor?.WriteCdrs(parallelCdrExts);
 
             if (this.CdrProcessor != null && this.CdrProcessor.PartialProcessingEnabled)
@@ -72,11 +78,7 @@ namespace TelcobrightMediation.Cdr
                 partialCdrTester.ValidatePartialCdrMediation();
             }
 
-            foreach (var summaryCache in this.CdrJobContext.CdrSummaryContext.TableWiseSummaryCache.Values)
-            {
-                summaryCache.WriteAllChanges(this.CdrJobContext.DbCmd,
-                    this.CdrJobContext.SegmentSizeForDbWrite);
-            }
+            
             this.CdrJobContext.AccountingContext.WriteAllChanges();
             this.CdrJobContext.AutoIncrementManager.WriteAllChanges();
             //UpdateCdrMetaData();

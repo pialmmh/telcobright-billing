@@ -188,7 +188,7 @@ namespace TelcobrightMediation
                     {
                         var sqlsAsStringBuilders = segment.AsParallel().Select(c => this.InsertCommandGenerator(c));
                         cmd.CommandText = new StringBuilder(extInsertHeader)
-                            .Append(StringBuilderJoiner.Join(",",sqlsAsStringBuilders)).ToString();
+                            .Append(StringBuilderJoiner.Join(",",sqlsAsStringBuilders.ToList())).ToString();
 
                         affectedRecordCount += cmd.ExecuteNonQuery();
                     });
@@ -215,7 +215,7 @@ namespace TelcobrightMediation
                     segment =>
                     {
                         var sqlsAsStringBuilders = segment.AsParallel().Select(c => this.UpdateCommandGenerator(c));
-                        cmd.CommandText = StringBuilderJoiner.Join(";", sqlsAsStringBuilders).ToString();
+                        cmd.CommandText = StringBuilderJoiner.Join(";", sqlsAsStringBuilders.ToList()).ToString();
                         updateWriteCount += cmd.ExecuteNonQuery();
                     });
                 if (updateWriteCount != this.UpdatedItems.Count)
@@ -240,7 +240,7 @@ namespace TelcobrightMediation
                     segment =>
                     {
                         var sqlsAsStringBuilders = segment.AsParallel().Select(c => this.DeleteCommandGenerator(c));
-                        cmd.CommandText = StringBuilderJoiner.Join(";", sqlsAsStringBuilders).ToString();
+                        cmd.CommandText = StringBuilderJoiner.Join(";", sqlsAsStringBuilders.ToList()).ToString();
                         deleteWriteCount+= cmd.ExecuteNonQuery();
                     });
                 if (deleteWriteCount != this.DeletedItems.Count)

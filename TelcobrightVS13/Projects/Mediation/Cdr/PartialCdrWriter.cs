@@ -42,9 +42,9 @@ namespace TelcobrightMediation.Cdr
             if (newRawPartialInstances.Any())
             {
                 int startAt = 0;
-                CollectionSegmenter<cdrpartialrawinstance> methodEnumerator =
+                CollectionSegmenter<cdrpartialrawinstance> collectionSegmenter =
                     new CollectionSegmenter<cdrpartialrawinstance>(newRawPartialInstances, startAt);
-                methodEnumerator.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
+                collectionSegmenter.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
                     segment =>
                     {
                         this.CdrJobContext.DbCmd.CommandText = new StringBuilder(StaticExtInsertColumnHeaders.cdrpartialrawinstance)
@@ -61,9 +61,9 @@ namespace TelcobrightMediation.Cdr
             if (cdrPartialReferences.Any())
             {
                 int startAt = 0;
-                CollectionSegmenter<cdrpartialreference> methodEnumerator =
+                CollectionSegmenter<cdrpartialreference> collectionSegmenter =
                     new CollectionSegmenter<cdrpartialreference>(cdrPartialReferences, startAt);
-                methodEnumerator.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
+                collectionSegmenter.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
                     segment =>
                     {
                         this.CdrJobContext.DbCmd.CommandText = new StringBuilder(StaticExtInsertColumnHeaders.cdrpartialreference)
@@ -85,9 +85,9 @@ namespace TelcobrightMediation.Cdr
             if (prevAggregatedRawInstances.Any())
             {
                 int startAt = 0;
-                CollectionSegmenter<cdrpartiallastaggregatedrawinstance> methodEnumerator =
+                CollectionSegmenter<cdrpartiallastaggregatedrawinstance> collectionSegmenter =
                     new CollectionSegmenter<cdrpartiallastaggregatedrawinstance>(prevAggregatedRawInstances, startAt);
-                methodEnumerator.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
+                collectionSegmenter.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
                     segment =>
                     {
                         this.CdrJobContext.DbCmd.CommandText = new StringBuilder()
@@ -110,10 +110,10 @@ namespace TelcobrightMediation.Cdr
             if (newAggregatedRawInstances.Any())
             {
                 int startAt = 0;
-                CollectionSegmenter<cdrpartiallastaggregatedrawinstance> methodEnumerator =
+                CollectionSegmenter<cdrpartiallastaggregatedrawinstance> collectionSegmenter =
                     new CollectionSegmenter<cdrpartiallastaggregatedrawinstance>(newAggregatedRawInstances,
                         startAt);
-                methodEnumerator.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
+                collectionSegmenter.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
                     segment =>
                     {
                         this.CdrJobContext.DbCmd.CommandText =
@@ -137,9 +137,9 @@ namespace TelcobrightMediation.Cdr
             if (cdrPartialReferences.Any())
             {
                 int startAt = 0;
-                CollectionSegmenter<cdrpartialreference> methodEnumerator =
+                CollectionSegmenter<cdrpartialreference> collectionSegmenter =
                     new CollectionSegmenter<cdrpartialreference>(cdrPartialReferences, startAt);
-                methodEnumerator.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
+                collectionSegmenter.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
                     segment =>
                     {
                         this.CdrJobContext.DbCmd.CommandText = new StringBuilder()

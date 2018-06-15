@@ -1,0 +1,78 @@
+delimiter //
+CREATE TRIGGER sum_voice_hr_01_after_insert
+AFTER INSERT
+   ON sum_voice_hr_01 FOR EACH ROW
+
+BEGIN
+
+   update cdrsummarymeta_hr_01
+   set totalInsertedDuration=totalInsertedDuration+NEW.actualduration;
+
+END;//
+delimiter ;
+
+delimiter //
+CREATE TRIGGER sum_voice_hr_02_after_insert
+AFTER INSERT
+   ON sum_voice_hr_02 FOR EACH ROW
+
+BEGIN
+
+   update cdrsummarymeta_hr_02
+   set totalInsertedDuration=totalInsertedDuration+NEW.actualduration;
+
+END;//
+delimiter ;
+
+delimiter //
+CREATE TRIGGER sum_voice_hr_03_after_insert
+AFTER INSERT
+   ON sum_voice_hr_03 FOR EACH ROW
+
+BEGIN
+
+   update cdrsummarymeta_hr_03
+   set totalInsertedDuration=totalInsertedDuration+NEW.actualduration;
+
+END;//
+delimiter ;
+
+delimiter //
+CREATE TRIGGER sum_voice_hr_04_after_insert
+AFTER INSERT
+   ON sum_voice_hr_04 FOR EACH ROW
+
+BEGIN
+
+   update cdrsummarymeta_hr_04
+   set totalInsertedDuration=totalInsertedDuration+NEW.actualduration;
+
+END;//
+delimiter ;
+
+delimiter //
+CREATE TRIGGER sum_voice_hr_05_after_insert
+AFTER INSERT
+   ON sum_voice_hr_05 FOR EACH ROW
+
+BEGIN
+
+   update cdrsummarymeta_hr_05
+   set totalInsertedDuration=totalInsertedDuration+NEW.actualduration;
+
+END;//
+delimiter ;
+
+delimiter //
+CREATE TRIGGER sum_voice_hr_06_after_insert
+AFTER INSERT
+   ON sum_voice_hr_06 FOR EACH ROW
+
+BEGIN
+
+   update cdrsummarymeta_hr_06
+   set totalInsertedDuration=totalInsertedDuration+NEW.actualduration;
+
+END;//
+delimiter ;
+

@@ -60,17 +60,19 @@ namespace WS_Telcobright_Topshelf
         Runtime,
         Debug
     }
+
     public class TelcobrightService
     {
         public TelcobrightService()
         {
             Console.WriteLine("Starting Telcobright Scheduler.");
-            var timer = new Timer(1000) { AutoReset = false, Enabled = true };
+            var timer = new Timer(1000) {AutoReset = false, Enabled = true};
             timer.Elapsed += new ElapsedEventHandler(_timer_Elapsed);
             //TimerAction();
             Console.WriteLine("Program Exited.");
 
         }
+
         static void _timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             try
@@ -82,6 +84,7 @@ namespace WS_Telcobright_Topshelf
                 Console.WriteLine(exception);
                 throw;
             }
+
         }
 
         static void TimerAction()
@@ -146,9 +149,10 @@ namespace WS_Telcobright_Topshelf
                 throw;
             }
         }
+
         private static MefProcessContainer GetMefProcessContainerFromIoC(IApplicationContext springContext)
         {
-            var mefProcessContainer = (MefProcessContainer)springContext.GetObject("mefProcessContainer");
+            var mefProcessContainer = (MefProcessContainer) springContext.GetObject("mefProcessContainer");
             return mefProcessContainer;
         }
 
@@ -162,7 +166,8 @@ namespace WS_Telcobright_Topshelf
                 string configFileNameAsOperatorName = Path.GetFileNameWithoutExtension(configFile.Name);
                 TelcobrightConfig tbc = ConfigFactory.GetConfigFromFile(configFile.FullName);
                 //populate tbCustomer name
-                string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(tbc.DatabaseSetting.DatabaseName);
+                string entityConStr =
+                    ConnectionManager.GetEntityConnectionStringByOperator(tbc.DatabaseSetting.DatabaseName);
                 using (PartnerEntities context = new PartnerEntities(entityConStr))
                 {
                     telcobrightpartner tbPartner = context.telcobrightpartners
@@ -179,11 +184,11 @@ namespace WS_Telcobright_Topshelf
             QuartzPropertyFactory quartzPropertyFactoryRuntime;
             QuartzPropertyFactory quartzPropertyFactoryDebug;
             NameValueCollection schedulerProperties = null;
-            var mefProcessContainer = (MefProcessContainer)springContext.GetObject("mefProcessContainer");
+            var mefProcessContainer = (MefProcessContainer) springContext.GetObject("mefProcessContainer");
             if (runTimeType == SchedulerRunTimeType.Runtime)
             {
                 quartzPropertyFactoryRuntime =
-                    (QuartzPropertyFactory)springContext.GetObject("quartzPropertyFactoryRuntime");
+                    (QuartzPropertyFactory) springContext.GetObject("quartzPropertyFactoryRuntime");
                 schedulerProperties = quartzPropertyFactoryRuntime.GetProperties();
                 IScheduler scheduler = QuartzSchedulerFactory.CreateSchedulerInstance(schedulerProperties);
                 return scheduler;
@@ -205,6 +210,7 @@ namespace WS_Telcobright_Topshelf
             List<TriggerKey> triggerKeysForDebug = GetSelectedTriggerKeysFromMenu(runtimeScheduler);
             ScheduleDebugJobs(runtimeScheduler, debugScheduler, triggerKeysForDebug);
         }
+
         static List<TriggerKey> GetSelectedTriggerKeysFromMenu(IScheduler runtimeScheduler)
         {
             List<TriggerKey> triggersKeys = runtimeScheduler.GetTriggerKeys(GroupMatcher<TriggerKey>.AnyGroup())
@@ -218,6 +224,7 @@ namespace WS_Telcobright_Topshelf
             }
             return triggersKeys;
         }
+
         static int ScheduleDebugJobs(IScheduler runtimeScheduler, IScheduler debugScheduler,
             List<TriggerKey> triggerKeysForDebug)
         {
@@ -264,7 +271,7 @@ namespace WS_Telcobright_Topshelf
             for (var index = 0; index < triggers.Count; index++)
             {
                 ITrigger t = triggers[index];
-                Console.WriteLine((index + 1) + ". " + t.Key);//display from 1, keep 0 for all
+                Console.WriteLine((index + 1) + ". " + t.Key); //display from 1, keep 0 for all
             }
             var readLine = Console.ReadLine();
             if (readLine.IsNullOrEmptyOrWhiteSpace())
@@ -272,7 +279,7 @@ namespace WS_Telcobright_Topshelf
                 return new List<int>();
             }
             return readLine.Split(',').Select(c => Convert.ToInt32(c))
-                .Select(c => c - 1).ToList().ToList();//displayed menu items are 1 based, change to 0 based choise
+                .Select(c => c - 1).ToList().ToList(); //displayed menu items are 1 based, change to 0 based choise
         }
 
         static ConsoleKeyInfo WaitForkeyPressForDebugMode()
@@ -296,10 +303,12 @@ namespace WS_Telcobright_Topshelf
             Console.WriteLine("The key pressed was " + k.Key);
             return k;
         }
+
         public void Stop()
         {
 
         }
+
         public void Start()
         {
             try
@@ -310,7 +319,8 @@ namespace WS_Telcobright_Topshelf
             {
                 Console.WriteLine(e1.ToString());
                 var logFileName = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "telcobright.log";
-                File.WriteAllText(logFileName, e1.Message + Environment.NewLine + (e1.InnerException != null ? e1.InnerException.ToString() : ""));
+                File.WriteAllText(logFileName,
+                    e1.Message + Environment.NewLine + (e1.InnerException != null ? e1.InnerException.ToString() : ""));
             }
         }
     }

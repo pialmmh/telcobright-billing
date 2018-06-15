@@ -16,10 +16,10 @@ namespace TelcobrightMediation.Cdr
             if (rowIdWithDates.Any() == false) return 0;
             int delCount = 0;
             int startAt = 0;
-            CollectionSegmenter<KeyValuePair<long, DateTime>> methodEnumerator =
+            CollectionSegmenter<KeyValuePair<long, DateTime>> collectionSegmenter =
                 new CollectionSegmenter<KeyValuePair<long, DateTime>>
                     (rowIdWithDates, startAt);
-            methodEnumerator.ExecuteMethodInSegments(segmentSizeForDbWrite,
+            collectionSegmenter.ExecuteMethodInSegments(segmentSizeForDbWrite,
                 segment =>
                 {
                     dbCmd.CommandText = string.Join(";", segment
