@@ -290,17 +290,17 @@ namespace TelcobrightMediation
 					this.CdrJobContext.SegmentSizeForDbWrite, this.CdrJobContext.DbCmd);
 			}
 
-			long inconsistentCount = 0,
-				errorCount = 0,
+			long writtenInconsistentCount = 0,
+				writtenErrorCount = 0,
 				nonPartialCdrCount = 0,
 				normalizedPartialCdrCount = 0,
-				cdrCount = 0;
+				writtenCdrCount = 0;
 
 			if (this.CollectionResult.CdrInconsistents.Any())
-				inconsistentCount = WriteCdrInconsistent();
+				writtenInconsistentCount = WriteCdrInconsistent();
 
 			if (this.CollectionResult.CdrErrors.Any())
-				errorCount = WriteCdrError();
+				writtenErrorCount = WriteCdrError();
 
 			var nonPartialCdrs = processedCdrExts
 				.Where(c => c.Cdr.MediationComplete == 1 && c.Cdr.PartialFlag == 0).Select(c => c.Cdr).ToList();
@@ -310,12 +310,12 @@ namespace TelcobrightMediation
 				nonPartialCdrCount = WriteCdr(nonPartialCdrs);
 			if (normalizedPartialCdrs.Any())
 				normalizedPartialCdrCount = WriteCdr(normalizedPartialCdrs);
-			cdrCount = nonPartialCdrCount + normalizedPartialCdrCount;
-			if (cdrCount != cdrsToBeWritten)
+			writtenCdrCount = nonPartialCdrCount + normalizedPartialCdrCount;
+			if (writtenCdrCount != cdrsToBeWritten)
 			{
 				throw new Exception("Written number of cdrs does not match processed cdrs count.");
 			}
-			CheckIfCdrAndSummaryDurationMatch();
+			CheckIfCdrDurationMatchesSummaryDuration();
 			List<PartialCdrContainer> partialCdrContainers = new List<PartialCdrContainer>();
 			PartialCdrWriter partialCdrWriter = null;
 			if (this.PartialProcessingEnabled)
@@ -331,14 +331,14 @@ namespace TelcobrightMediation
 			int distinctPartialCount = partialCdrContainers.Count;
 
 			if (this.CollectionResult.RawCount !=
-				(inconsistentCount + errorCount + cdrCount + rawPartialActualCount - distinctPartialCount))
+				(writtenInconsistentCount + writtenErrorCount + writtenCdrCount + rawPartialActualCount - distinctPartialCount))
 				throw new Exception(
 					"RawCount in collection result must equal (inconsistentCount+ errorCount + cdrCount+rawPartialActualCount-distintPartialCount");
 			return new CdrWritingResult()
 			{
-				CdrCount = cdrCount,
-				CdrErrorCount = errorCount,
-				CdrInconsistentCount = inconsistentCount,
+				CdrCount = writtenCdrCount,
+				CdrErrorCount = writtenErrorCount,
+				CdrInconsistentCount = writtenInconsistentCount,
 				PartialCdrWriter = partialCdrWriter,
 				TrueNonPartialCount = nonPartialCdrCount,
 				NormalizedPartialCount = normalizedPartialCdrCount
@@ -405,7 +405,7 @@ namespace TelcobrightMediation
 			return insertCount;
 		}
 
-		private void CheckIfCdrAndSummaryDurationMatch()
+		private void CheckIfCdrDurationMatchesSummaryDuration()
 		{
 			this.DbCmd.CommandText = @"select totalinsertedduration as duration from cdrmeta union all
 										select 
