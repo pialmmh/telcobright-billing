@@ -392,13 +392,21 @@ namespace TelcobrightMediation
 				segment =>
 				{
 					var segmentAsParallel = segment.AsParallel();
+					int segmentCount = segmentAsParallel.Count();
 					ParallelQuery<StringBuilder> sbs = segmentAsParallel.Select(c => c.GetExtInsertValues());
 					durationSumSegmented += segmentAsParallel.AsParallel().Sum(c => c.DurationSec);
 
 					StringBuilder extInsertCommandsForthisSegment = StringBuilderJoiner.Join(",", sbs.ToList());
-					this.DbCmd.CommandText = new StringBuilder(StaticExtInsertColumnHeaders.cdr)
-						.Append(extInsertCommandsForthisSegment).ToString();
-					insertCount += this.DbCmd.ExecuteNonQuery();
+					this.DbCmd.CommandType = CommandType.StoredProcedure;
+					this.DbCmd.CommandText = "sp_extInsert";
+
+					int affectedRecordCount= MySqlReliableWriter.WriteThroughStoredProc(dbCmd: this.DbCmd,
+							  command: new StringBuilder(StaticExtInsertColumnHeaders.cdr)
+									   .Append(extInsertCommandsForthisSegment).ToString(), 
+							  expectedRecCount: segmentCount);
+					if(affectedRecordCount!=segmentCount)
+						throw new Exception("Affected record count does not match segment count while writing cdrs.");
+					insertCount += affectedRecordCount;
 				});
 			if (durationSumNonSegmented != durationSumSegmented)
 				throw new Exception("Duration mismatch between segmented & non segmented cdrs.");

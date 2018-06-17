@@ -89,6 +89,7 @@
     <Compile Include="Math\FractionCeilingHelper.cs" />
     <Compile Include="MySqlFieldToString.cs" />
     <Compile Include="ConfigHelper\PartitionManagerPerTable.cs" />
+    <Compile Include="MySqlReliableWriter.cs" />
     <Compile Include="NullToNonNullableConverter.cs" />
     <Compile Include="NullAlternative.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

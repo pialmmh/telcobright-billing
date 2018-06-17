@@ -154,11 +154,14 @@ namespace Process
             }
             return rateCacheSizeExceeded;
         }
+
         bool CheckIncomplete(PartnerEntities context, MediationContext mediationContext)
         {
-            List<int> idJobDefs = context.enumjobdefinitions.Where(c => c.JobQueue == this.ProcessId).Select(c => c.id).ToList();
+            List<int> idJobDefs = context.enumjobdefinitions.Where(c => c.JobQueue == this.ProcessId).Select(c => c.id)
+                .ToList();
             return context.jobs.Any(c => c.CompletionTime == null && idJobDefs.Contains(c.idjobdefinition));
         }
+
         bool CheckIncomplete(PartnerEntities context, MediationContext mediationContext, ne ne)
         {
             List<int> idJobDefs = context.enumjobdefinitions.Where(c => c.JobQueue == this.ProcessId).Select(c => c.id).ToList();
