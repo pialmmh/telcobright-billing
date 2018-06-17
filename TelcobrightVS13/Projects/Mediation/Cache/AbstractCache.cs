@@ -173,8 +173,8 @@ namespace TelcobrightMediation
         {
             lock (this.locker)
             {
-                int affectedRecordCount = 0;
-                if (this.InsertedItems.Any() == false) return affectedRecordCount;
+                int insertedRecordCount = 0;
+                if (this.InsertedItems.Any() == false) return insertedRecordCount;
                 if (this.InsertCommandGenerator == null)
                 {
                     throw new Exception("InsertCommandGenerator is not set and null.");
@@ -186,16 +186,21 @@ namespace TelcobrightMediation
                 segments.ExecuteMethodInSegments(segmentSize,
                     segment =>
                     {
-                        var sqlsAsStringBuilders = segment.AsParallel().Select(c => this.InsertCommandGenerator(c));
-                        cmd.CommandText = new StringBuilder(extInsertHeader)
-                            .Append(StringBuilderJoiner.Join(",",sqlsAsStringBuilders.ToList())).ToString();
-
-                        affectedRecordCount += cmd.ExecuteNonQuery();
+                        int segmentCount=segment.Count();
+                        var sqlsAsStringBuilders = segment.AsParallel().Select(c => this.InsertCommandGenerator(c))
+                            .ToList();
+                        int affectedRecordCount = MySqlReliableWriter.WriteThroughStoredProc(dbCmd: cmd,
+                            command: new StringBuilder(extInsertHeader)
+                                .Append(StringBuilderJoiner.Join(",", sqlsAsStringBuilders)).ToString(),
+                            expectedRecCount: segmentCount);
+                        if (affectedRecordCount != segmentCount)
+                            throw new Exception("Affected record count does not match segment count while inserting cached items.");
+                        insertedRecordCount += affectedRecordCount;
                     });
-                if (affectedRecordCount != this.InsertedItems.Count)
+                if (insertedRecordCount != this.InsertedItems.Count)
                     throw new Exception("Inserted records count does not match the same number in cache.");
                 this.InsertedItems.Clear();
-                return affectedRecordCount;
+                return insertedRecordCount;
             }
         }
 
@@ -214,9 +219,15 @@ namespace TelcobrightMediation
                 segments.ExecuteMethodInSegments(segmentSize,
                     segment =>
                     {
-                        var sqlsAsStringBuilders = segment.AsParallel().Select(c => this.UpdateCommandGenerator(c));
-                        cmd.CommandText = StringBuilderJoiner.Join(";", sqlsAsStringBuilders.ToList()).ToString();
-                        updateWriteCount += cmd.ExecuteNonQuery();
+                        int segmentCount = segment.Count();//count segment instead of segmentAsParallel for cross check, ignore multiple enumeration error
+                        var sqlsAsStringBuilders = segment.AsParallel().Select(c => this.UpdateCommandGenerator(c))
+                            .ToList();
+                        int affectedRecordCount = MySqlReliableWriter.WriteThroughStoredProc(dbCmd: cmd,
+                            command: StringBuilderJoiner.Join(";", sqlsAsStringBuilders).ToString(),
+                            expectedRecCount: segmentCount);
+                        if (affectedRecordCount != segmentCount)
+                            throw new Exception("Affected record count does not match segment count while updating cached items.");
+                        updateWriteCount += affectedRecordCount;
                     });
                 if (updateWriteCount != this.UpdatedItems.Count)
                     throw new Exception("Updated records count in database does not match UpdateCache count.");
@@ -239,9 +250,15 @@ namespace TelcobrightMediation
                 segments.ExecuteMethodInSegments(segmentSize,
                     segment =>
                     {
-                        var sqlsAsStringBuilders = segment.AsParallel().Select(c => this.DeleteCommandGenerator(c));
-                        cmd.CommandText = StringBuilderJoiner.Join(";", sqlsAsStringBuilders.ToList()).ToString();
-                        deleteWriteCount+= cmd.ExecuteNonQuery();
+                        int segmentCount = segment.Count();//count segment instead of segmentAsParallel for cross check, ignore multiple enumeration error
+                        var sqlsAsStringBuilders = segment.AsParallel().Select(c => this.DeleteCommandGenerator(c))
+                            .ToList();
+                        int affectedRecordCount = MySqlReliableWriter.WriteThroughStoredProc(dbCmd: cmd,
+                            command: StringBuilderJoiner.Join(";", sqlsAsStringBuilders).ToString(),
+                            expectedRecCount: segmentCount);
+                        if (affectedRecordCount != segmentCount)
+                            throw new Exception("Affected record count does not match segment count while deleting cached items.");
+                        deleteWriteCount += affectedRecordCount;
                     });
                 if (deleteWriteCount != this.DeletedItems.Count)
                     throw new Exception("Deleted records count in database does not match DeleteCache count.");

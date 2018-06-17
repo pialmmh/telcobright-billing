@@ -12,6 +12,10 @@ namespace LibraryExtensions
 
         public CollectionSegmenter(IEnumerable<T> enumerable, int startAtZeroBasedIndex)
         {
+            if (enumerable is ParallelQuery)
+            {
+                throw new Exception("Parallel queries are not supported");
+            }
             this.Enumerable = enumerable.ToList();
             this.SkipFromStart = startAtZeroBasedIndex;
         }

@@ -355,8 +355,14 @@ namespace TelcobrightMediation
 			segmenter.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
 				segment =>
 				{
-					this.DbCmd.CommandText = "insert into cdrinconsistent values " + string.Join(",", segment);
-					inconsistentCount += this.DbCmd.ExecuteNonQuery(); //write cdr loaded
+					var stringBuilders = segment.ToList();
+					int segmentCount = stringBuilders.Count;
+					int affectedRecordCount = MySqlReliableWriter.WriteThroughStoredProc(dbCmd: this.DbCmd,
+						command: "insert into cdrinconsistent values " + string.Join(",", stringBuilders),
+						expectedRecCount: segmentCount);
+					if (affectedRecordCount != segmentCount)
+						throw new Exception("Affected record count does not match segment count while writing cdr inconsistent.");
+					inconsistentCount += affectedRecordCount ; //write cdr loaded
 				});
 			return inconsistentCount;
 		}
@@ -368,15 +374,18 @@ namespace TelcobrightMediation
 			int startAt = 0;
 			CollectionSegmenter<cdrerror> collectionSegmenter =
 				new CollectionSegmenter<cdrerror>(cdrErrors, startAt);
-			this.DbCmd.CommandType = CommandType.Text;
 			collectionSegmenter.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
 				segment =>
 				{
-					this.DbCmd.CommandText =
-						new StringBuilder(StaticExtInsertColumnHeaders.cdrerror)
+					int segmentCount = segment.Count();
+					int affectedRecordCount = MySqlReliableWriter.WriteThroughStoredProc(dbCmd: this.DbCmd,
+						command: new StringBuilder(StaticExtInsertColumnHeaders.cdrerror)
 							.Append(string.Join(",", segment.AsParallel().Select(c => c.GetExtInsertValues())))
-							.ToString();
-					errorInsertedCount += this.DbCmd.ExecuteNonQuery(); //write cdr loaded
+							.ToString(),
+						expectedRecCount: segmentCount);
+					if (affectedRecordCount != segmentCount)
+						throw new Exception("Affected record count does not match segment count while writing cdr errors.");
+					errorInsertedCount += affectedRecordCount;
 				});
 			return errorInsertedCount;
 		}
@@ -391,8 +400,8 @@ namespace TelcobrightMediation
 			collectionSegmenter.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
 				segment =>
 				{
+					int segmentCount = segment.Count();
 					var segmentAsParallel = segment.AsParallel();
-					int segmentCount = segmentAsParallel.Count();
 					ParallelQuery<StringBuilder> sbs = segmentAsParallel.Select(c => c.GetExtInsertValues());
 					durationSumSegmented += segmentAsParallel.AsParallel().Sum(c => c.DurationSec);
 
