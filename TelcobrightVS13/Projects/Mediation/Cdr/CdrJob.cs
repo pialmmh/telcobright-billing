@@ -21,8 +21,7 @@ namespace TelcobrightMediation.Cdr
         private MediationContext MediationContext => this.CdrJobContext.CdrjobInputData.MediationContext;
         private CdrSetting CdrSetting => this.MediationContext.Tbc.CdrSetting;
         private PartialCdrTesterData PartialCdrTesterData { get; }
-        private cdrmeta CdrMetaBeforeCdrjob { get; }
-
+        
         public CdrJob(CdrProcessor cdrProcessor, CdrEraser cdrEraser, int actualStepsCount,
             PartialCdrTesterData partialCdrTesterData)
         {
@@ -134,77 +133,6 @@ namespace TelcobrightMediation.Cdr
             Assert.IsTrue(
                 mediationTester.DurationSumOfNonPartialRawPartialsAndRawDurationAreTollerablyEqual(this.CdrProcessor));
         }
-        private void UpdateCdrMetaData()
-        {
-            var processedCdrExts = this.CdrProcessor.CollectionResult.ProcessedCdrExts;
-            decimal newProcessedDuration = processedCdrExts.Sum(c => c.Cdr.DurationSec);
-            cdrmeta cdrMetaAfterCdrJob = ReadCdrMetaFromDb();
-            if (newProcessedDuration != cdrMetaAfterCdrJob.totalInsertedDuration - this.CdrMetaBeforeCdrjob.totalInsertedDuration)
-            {
-                throw new Exception("New procesed duration does not match duration difference in cdrMeta before" +
-                                    " and after cdr job.");
-            }
-            decimal deletedDurationInCdrTable = cdrMetaAfterCdrJob.totalDeletedDuration;
-            decimal insertedDurationInCdrTable = cdrMetaAfterCdrJob.totalInsertedDuration;
-
-            var oldCollectionResult = this.CdrEraser?.CollectionResult;
-            cdrMetaAfterCdrJob.lastJobSegmentDeletedDuration = 0;
-            if (oldCollectionResult != null)
-            {
-                var durationSupposedToBeDeleted = oldCollectionResult.ConcurrentCdrExts.Values.Sum(c => c.Cdr.DurationSec);
-                if (durationSupposedToBeDeleted
-                    != oldCollectionResult.ProcessedCdrExts.Sum(c => c.Cdr.DurationSec))
-                {
-                    throw new Exception("Duration total supposed to be deleted does not match cdr " +
-                                        "duration total in old collection.");
-                }
-                if (durationSupposedToBeDeleted != cdrMetaAfterCdrJob.totalDeletedDuration -
-                    this.CdrMetaBeforeCdrjob.totalDeletedDuration)
-                {
-                    throw new Exception("Duration supposed to be deleted does not match duration " +
-                                        "difference in cdrMeta before and after cdr job.");
-                }
-                cdrMetaAfterCdrJob.lastJobSegmentDeletedDuration = durationSupposedToBeDeleted;
-            }
-            cdrMetaAfterCdrJob.lastJobSegmentInsertedDuration = newProcessedDuration;
-
-            decimal durationWrittenInCdrTable = insertedDurationInCdrTable - deletedDurationInCdrTable;
-            decimal summaryDurationWritten = this.CdrJobContext.Context.Database.SqlQuery<decimal>(
-                $@"select sum(actualduration) actualduration from
-                (
-                select sum(actualduration) actualduration, sum(roundedduration) roundedduration, sum(duration1) duration1, sum(duration2) duration2, sum(duration3) duration3 from sum_voice_day_01 union all
-                select sum(actualduration) actualduration, sum(roundedduration) roundedduration, sum(duration1) duration1, sum(duration2) duration2, sum(duration3) duration3 from sum_voice_day_02 union all
-                select sum(actualduration) actualduration, sum(roundedduration) roundedduration, sum(duration1) duration1, sum(duration2) duration2, sum(duration3) duration3 from sum_voice_day_03 union all
-                select sum(actualduration) actualduration, sum(roundedduration) roundedduration, sum(duration1) duration1, sum(duration2) duration2, sum(duration3) duration3 from sum_voice_day_04
-                ) dayWiseSummaries;").ToList().First();
-
-            var daySummaryCaches = this.CdrJobContext.CdrSummaryContext.TableWiseSummaryCache
-                .Where(kv => kv.Key.ToString().Contains("day")).Select(kv => kv.Value).ToList();
-            var summaryDurationFromCache = daySummaryCaches
-                .SelectMany(sc => sc.GetItems()).Sum(s => s.actualduration);
-
-            if (durationWrittenInCdrTable != summaryDurationWritten)
-            {
-                throw new Exception("Cdr metadata mismatch, duration in cdr and summary tables are not consistent.");
-            }
-            var sql = cdrMetaAfterCdrJob.GetUpdateCommand(c => $" where id={c.id}").ToString();
-            this.CdrJobContext.DbCmd.ExecuteCommandText(sql);
-        }
-
-        private cdrmeta ReadCdrMetaFromDb()
-        {
-            this.CdrJobContext.DbCmd.CommandText = "select * from cdrmeta";
-            cdrmeta cdrMetaAfterCdrJob = this.CdrJobContext.DbCmd.GetObjectsByQuery(r =>
-                new cdrmeta()
-                {
-                    id = r.GetInt32(0),
-                    lastJobSegmentInsertedDuration = r.GetDecimal(1),
-                    lastJobSegmentDeletedDuration = r.GetDecimal(2),
-                    totalInsertedDuration = r.GetDecimal(3),
-                    totalDeletedDuration = r.GetDecimal(4)
-                }
-            ).First();
-            return cdrMetaAfterCdrJob;
-        }
+        
     }
 }

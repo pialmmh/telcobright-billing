@@ -8,238 +8,35 @@ namespace MediationModel
 {
 	public partial class :ICacheble<>
 	{
-		public string GetExtInsertValues()
+		public StringBuilder GetExtInsertValues()
 		{
-			return $@"(
-				{SwitchId.ToMySqlField()},
-				{IdCall.ToMySqlField()},
-				{SequenceNumber.ToMySqlField()},
-				{FileName.ToMySqlField()},
-				{ServiceGroup.ToMySqlField()},
-				{IncomingRoute.ToMySqlField()},
-				{OriginatingIP.ToMySqlField()},
-				{OPC.ToMySqlField()},
-				{OriginatingCIC.ToMySqlField()},
-				{OriginatingCalledNumber.ToMySqlField()},
-				{TerminatingCalledNumber.ToMySqlField()},
-				{OriginatingCallingNumber.ToMySqlField()},
-				{TerminatingCallingNumber.ToMySqlField()},
-				{PrePaid.ToMySqlField()},
-				{DurationSec.ToMySqlField()},
-				{EndTime.ToMySqlField()},
-				{ConnectTime.ToMySqlField()},
-				{AnswerTime.ToMySqlField()},
-				{ChargingStatus.ToMySqlField()},
-				{PDD.ToMySqlField()},
-				{CountryCode.ToMySqlField()},
-				{AreaCodeOrLata.ToMySqlField()},
-				{ReleaseDirection.ToMySqlField()},
-				{ReleaseCauseSystem.ToMySqlField()},
-				{ReleaseCauseEgress.ToMySqlField()},
-				{OutgoingRoute.ToMySqlField()},
-				{TerminatingIP.ToMySqlField()},
-				{DPC.ToMySqlField()},
-				{TerminatingCIC.ToMySqlField()},
-				{StartTime.ToMySqlField()},
-				{InPartnerId.ToMySqlField()},
-				{CustomerRate.ToMySqlField()},
-				{OutPartnerId.ToMySqlField()},
-				{SupplierRate.ToMySqlField()},
-				{MatchedPrefixY.ToMySqlField()},
-				{UsdRateY.ToMySqlField()},
-				{MatchedPrefixCustomer.ToMySqlField()},
-				{MatchedPrefixSupplier.ToMySqlField()},
-				{InPartnerCost.ToMySqlField()},
-				{OutPartnerCost.ToMySqlField()},
-				{CostAnsIn.ToMySqlField()},
-				{CostIcxIn.ToMySqlField()},
-				{Tax1.ToMySqlField()},
-				{IgwRevenueIn.ToMySqlField()},
-				{RevenueAnsOut.ToMySqlField()},
-				{RevenueIgwOut.ToMySqlField()},
-				{RevenueIcxOut.ToMySqlField()},
-				{Tax2.ToMySqlField()},
-				{XAmount.ToMySqlField()},
-				{YAmount.ToMySqlField()},
-				{AnsPrefixOrig.ToMySqlField()},
-				{AnsIdOrig.ToMySqlField()},
-				{AnsPrefixTerm.ToMySqlField()},
-				{AnsIdTerm.ToMySqlField()},
-				{ValidFlag.ToMySqlField()},
-				{PartialFlag.ToMySqlField()},
-				{ReleaseCauseIngress.ToMySqlField()},
-				{InRoamingOpId.ToMySqlField()},
-				{OutRoamingOpId.ToMySqlField()},
-				{CalledPartyNOA.ToMySqlField()},
-				{CallingPartyNOA.ToMySqlField()},
-				{AdditionalSystemCodes.ToMySqlField()},
-				{AdditionalPartyNumber.ToMySqlField()},
-				{ResellerIds.ToMySqlField()},
-				{ZAmount.ToMySqlField()},
-				{PreviousRoutes.ToMySqlField()},
-				{E1Id.ToMySqlField()},
-				{MediaIp1.ToMySqlField()},
-				{MediaIp2.ToMySqlField()},
-				{MediaIp3.ToMySqlField()},
-				{MediaIp4.ToMySqlField()},
-				{CallReleaseDuration.ToMySqlField()},
-				{E1IdOut.ToMySqlField()},
-				{InTrunkAdditionalInfo.ToMySqlField()},
-				{OutTrunkAdditionalInfo.ToMySqlField()},
-				{InMgwId.ToMySqlField()},
-				{OutMgwId.ToMySqlField()},
-				{MediationComplete.ToMySqlField()},
-				{Codec.ToMySqlField()},
-				{ConnectedNumberType.ToMySqlField()},
-				{RedirectingNumber.ToMySqlField()},
-				{CallForwardOrRoamingType.ToMySqlField()},
-				{OtherDate.ToMySqlField()},
-				{SummaryMetaTotal.ToMySqlField()},
-				{TransactionMetaTotal.ToMySqlField()},
-				{ChargeableMetaTotal.ToMySqlField()},
-				{ErrorCode.ToMySqlField()},
-				{NERSuccess.ToMySqlField()},
-				{RoundedDuration.ToMySqlField()},
-				{PartialDuration.ToMySqlField()},
-				{PartialAnswerTime.ToMySqlField()},
-				{PartialEndTime.ToMySqlField()},
-				{FinalRecord.ToMySqlField()},
-				{Duration1.ToMySqlField()},
-				{Duration2.ToMySqlField()},
-				{Duration3.ToMySqlField()},
-				{Duration4.ToMySqlField()},
-				{PreviousPeriodCdr.ToMySqlField()},
-				{UniqueBillId.ToMySqlField()},
-				{AdditionalMetaData.ToMySqlField()},
-				{Category.ToMySqlField()},
-				{SubCategory.ToMySqlField()},
-				{ChangedByJobId.ToMySqlField()},
-				{SignalingStartTime.ToMySqlField()}
-				)";
+			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.totalInsertedAmount.ToMySqlField()).Append(",")
+				.Append(this.totalDeletedAmount.ToMySqlField()).Append(")")
+				;
 		}
-		public  string GetExtInsertCustom(Func<,string> externalInsertMethod)
+		public  StringBuilder GetExtInsertCustom(Func<,string> externalInsertMethod)
 		{
-			return externalInsertMethod.Invoke(this);
+			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
-		public  string GetUpdateCommand(Func<,string> whereClauseMethod)
+		public  StringBuilder GetUpdateCommand(Func<,string> whereClauseMethod)
 		{
-			return $@"update mockcdr set 
-				SwitchId={SwitchId.ToMySqlField()+" "},
-				IdCall={IdCall.ToMySqlField()+" "},
-				SequenceNumber={SequenceNumber.ToMySqlField()+" "},
-				FileName={FileName.ToMySqlField()+" "},
-				ServiceGroup={ServiceGroup.ToMySqlField()+" "},
-				IncomingRoute={IncomingRoute.ToMySqlField()+" "},
-				OriginatingIP={OriginatingIP.ToMySqlField()+" "},
-				OPC={OPC.ToMySqlField()+" "},
-				OriginatingCIC={OriginatingCIC.ToMySqlField()+" "},
-				OriginatingCalledNumber={OriginatingCalledNumber.ToMySqlField()+" "},
-				TerminatingCalledNumber={TerminatingCalledNumber.ToMySqlField()+" "},
-				OriginatingCallingNumber={OriginatingCallingNumber.ToMySqlField()+" "},
-				TerminatingCallingNumber={TerminatingCallingNumber.ToMySqlField()+" "},
-				PrePaid={PrePaid.ToMySqlField()+" "},
-				DurationSec={DurationSec.ToMySqlField()+" "},
-				EndTime={EndTime.ToMySqlField()+" "},
-				ConnectTime={ConnectTime.ToMySqlField()+" "},
-				AnswerTime={AnswerTime.ToMySqlField()+" "},
-				ChargingStatus={ChargingStatus.ToMySqlField()+" "},
-				PDD={PDD.ToMySqlField()+" "},
-				CountryCode={CountryCode.ToMySqlField()+" "},
-				AreaCodeOrLata={AreaCodeOrLata.ToMySqlField()+" "},
-				ReleaseDirection={ReleaseDirection.ToMySqlField()+" "},
-				ReleaseCauseSystem={ReleaseCauseSystem.ToMySqlField()+" "},
-				ReleaseCauseEgress={ReleaseCauseEgress.ToMySqlField()+" "},
-				OutgoingRoute={OutgoingRoute.ToMySqlField()+" "},
-				TerminatingIP={TerminatingIP.ToMySqlField()+" "},
-				DPC={DPC.ToMySqlField()+" "},
-				TerminatingCIC={TerminatingCIC.ToMySqlField()+" "},
-				StartTime={StartTime.ToMySqlField()+" "},
-				InPartnerId={InPartnerId.ToMySqlField()+" "},
-				CustomerRate={CustomerRate.ToMySqlField()+" "},
-				OutPartnerId={OutPartnerId.ToMySqlField()+" "},
-				SupplierRate={SupplierRate.ToMySqlField()+" "},
-				MatchedPrefixY={MatchedPrefixY.ToMySqlField()+" "},
-				UsdRateY={UsdRateY.ToMySqlField()+" "},
-				MatchedPrefixCustomer={MatchedPrefixCustomer.ToMySqlField()+" "},
-				MatchedPrefixSupplier={MatchedPrefixSupplier.ToMySqlField()+" "},
-				InPartnerCost={InPartnerCost.ToMySqlField()+" "},
-				OutPartnerCost={OutPartnerCost.ToMySqlField()+" "},
-				CostAnsIn={CostAnsIn.ToMySqlField()+" "},
-				CostIcxIn={CostIcxIn.ToMySqlField()+" "},
-				Tax1={Tax1.ToMySqlField()+" "},
-				IgwRevenueIn={IgwRevenueIn.ToMySqlField()+" "},
-				RevenueAnsOut={RevenueAnsOut.ToMySqlField()+" "},
-				RevenueIgwOut={RevenueIgwOut.ToMySqlField()+" "},
-				RevenueIcxOut={RevenueIcxOut.ToMySqlField()+" "},
-				Tax2={Tax2.ToMySqlField()+" "},
-				XAmount={XAmount.ToMySqlField()+" "},
-				YAmount={YAmount.ToMySqlField()+" "},
-				AnsPrefixOrig={AnsPrefixOrig.ToMySqlField()+" "},
-				AnsIdOrig={AnsIdOrig.ToMySqlField()+" "},
-				AnsPrefixTerm={AnsPrefixTerm.ToMySqlField()+" "},
-				AnsIdTerm={AnsIdTerm.ToMySqlField()+" "},
-				ValidFlag={ValidFlag.ToMySqlField()+" "},
-				PartialFlag={PartialFlag.ToMySqlField()+" "},
-				ReleaseCauseIngress={ReleaseCauseIngress.ToMySqlField()+" "},
-				InRoamingOpId={InRoamingOpId.ToMySqlField()+" "},
-				OutRoamingOpId={OutRoamingOpId.ToMySqlField()+" "},
-				CalledPartyNOA={CalledPartyNOA.ToMySqlField()+" "},
-				CallingPartyNOA={CallingPartyNOA.ToMySqlField()+" "},
-				AdditionalSystemCodes={AdditionalSystemCodes.ToMySqlField()+" "},
-				AdditionalPartyNumber={AdditionalPartyNumber.ToMySqlField()+" "},
-				ResellerIds={ResellerIds.ToMySqlField()+" "},
-				ZAmount={ZAmount.ToMySqlField()+" "},
-				PreviousRoutes={PreviousRoutes.ToMySqlField()+" "},
-				E1Id={E1Id.ToMySqlField()+" "},
-				MediaIp1={MediaIp1.ToMySqlField()+" "},
-				MediaIp2={MediaIp2.ToMySqlField()+" "},
-				MediaIp3={MediaIp3.ToMySqlField()+" "},
-				MediaIp4={MediaIp4.ToMySqlField()+" "},
-				CallReleaseDuration={CallReleaseDuration.ToMySqlField()+" "},
-				E1IdOut={E1IdOut.ToMySqlField()+" "},
-				InTrunkAdditionalInfo={InTrunkAdditionalInfo.ToMySqlField()+" "},
-				OutTrunkAdditionalInfo={OutTrunkAdditionalInfo.ToMySqlField()+" "},
-				InMgwId={InMgwId.ToMySqlField()+" "},
-				OutMgwId={OutMgwId.ToMySqlField()+" "},
-				MediationComplete={MediationComplete.ToMySqlField()+" "},
-				Codec={Codec.ToMySqlField()+" "},
-				ConnectedNumberType={ConnectedNumberType.ToMySqlField()+" "},
-				RedirectingNumber={RedirectingNumber.ToMySqlField()+" "},
-				CallForwardOrRoamingType={CallForwardOrRoamingType.ToMySqlField()+" "},
-				OtherDate={OtherDate.ToMySqlField()+" "},
-				SummaryMetaTotal={SummaryMetaTotal.ToMySqlField()+" "},
-				TransactionMetaTotal={TransactionMetaTotal.ToMySqlField()+" "},
-				ChargeableMetaTotal={ChargeableMetaTotal.ToMySqlField()+" "},
-				ErrorCode={ErrorCode.ToMySqlField()+" "},
-				NERSuccess={NERSuccess.ToMySqlField()+" "},
-				RoundedDuration={RoundedDuration.ToMySqlField()+" "},
-				PartialDuration={PartialDuration.ToMySqlField()+" "},
-				PartialAnswerTime={PartialAnswerTime.ToMySqlField()+" "},
-				PartialEndTime={PartialEndTime.ToMySqlField()+" "},
-				FinalRecord={FinalRecord.ToMySqlField()+" "},
-				Duration1={Duration1.ToMySqlField()+" "},
-				Duration2={Duration2.ToMySqlField()+" "},
-				Duration3={Duration3.ToMySqlField()+" "},
-				Duration4={Duration4.ToMySqlField()+" "},
-				PreviousPeriodCdr={PreviousPeriodCdr.ToMySqlField()+" "},
-				UniqueBillId={UniqueBillId.ToMySqlField()+" "},
-				AdditionalMetaData={AdditionalMetaData.ToMySqlField()+" "},
-				Category={Category.ToMySqlField()+" "},
-				SubCategory={SubCategory.ToMySqlField()+" "},
-				ChangedByJobId={ChangedByJobId.ToMySqlField()+" "},
-				SignalingStartTime={SignalingStartTime.ToMySqlField()+" "}
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder("update transactionmeta set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("totalInsertedAmount=").Append(this.totalInsertedAmount.ToMySqlField()).Append(",")
+				.Append("totalDeletedAmount=").Append(this.totalDeletedAmount.ToMySqlField())
+				.Append(whereClauseMethod.Invoke(this));
+				
 		}
-		public  string GetUpdateCommandCustom(Func<,string> updateCommandMethodCustom)
+		public  StringBuilder GetUpdateCommandCustom(Func<,string> updateCommandMethodCustom)
 		{
-			return updateCommandMethodCustom.Invoke(this);
+			return new StringBuilder(updateCommandMethodCustom.Invoke(this));
 		}
-		public  string GetDeleteCommand(Func<,string> whereClauseMethod)
+		public  StringBuilder GetDeleteCommand(Func<,string> whereClauseMethod)
 		{
-			return $@"delete from mockcdr 
-				{whereClauseMethod.Invoke(this)};
-				";
+			return new StringBuilder($@"delete from transactionmeta 
+				{whereClauseMethod.Invoke(this)}");
 		}
 	}
 }

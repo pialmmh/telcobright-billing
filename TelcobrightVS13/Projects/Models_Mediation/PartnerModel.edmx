@@ -737,16 +737,6 @@ warning 6002: The table/view 'def.platinum.cdrinconsistent' does not have a prim
           <Property Name="ChangedByJobId" Type="varchar" MaxLength="100" />
           <Property Name="SignalingStartTime" Type="varchar" MaxLength="100" Nullable="false" />
         </EntityType>
-        <EntityType Name="cdrmeta">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="int" Nullable="false" />
-          <Property Name="lastJobSegmentInsertedDuration" Type="decimal" Precision="20" Scale="8" Nullable="false" />
-          <Property Name="lastJobSegmentDeletedDuration" Type="decimal" Precision="20" Scale="8" Nullable="false" />
-          <Property Name="totalInsertedDuration" Type="decimal" Precision="24" Scale="8" Nullable="false" />
-          <Property Name="totalDeletedDuration" Type="decimal" Precision="24" Scale="8" Nullable="false" />
-        </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'def.platinum.cdrpartiallastaggregatedrawinstance' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="cdrpartiallastaggregatedrawinstance">
@@ -3794,7 +3784,6 @@ warning 6002: The table/view 'def.platinum.uom_conversion_dated' does not have a
           <EntitySet Name="causecode" EntityType="Self.causecode" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="cdrfieldlist" EntityType="Self.cdrfieldlist" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="cdrfieldmappingbyswitchtype" EntityType="Self.cdrfieldmappingbyswitchtype" Schema="platinum" store:Type="Tables" />
-          <EntitySet Name="cdrmeta" EntityType="Self.cdrmeta" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="commontg" EntityType="Self.commontg" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="country" EntityType="Self.country" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="countrycode" EntityType="Self.countrycode" Schema="platinum" store:Type="Tables" />
@@ -5733,7 +5722,6 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             <End Role="account" EntitySet="accounts" />
           </AssociationSet>
           <EntitySet Name="durationmetas" EntityType="MediationModel.durationmeta" />
-          <EntitySet Name="cdrmetas" EntityType="MediationModel.cdrmeta" />
         </EntityContainer>
         <EntityType Name="allerror">
           <Key>
@@ -9505,16 +9493,6 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="newDuration" Type="Decimal" />
           <Property Name="durationAfterJob" Type="Decimal" />
         </EntityType>
-        <EntityType Name="cdrmeta">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="lastJobSegmentInsertedDuration" Type="Decimal" Nullable="false" />
-          <Property Name="lastJobSegmentDeletedDuration" Type="Decimal" Nullable="false" />
-          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
-          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
-        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -12345,17 +12323,6 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="newDuration" ColumnName="newDuration" />
                 <ScalarProperty Name="oldDuration" ColumnName="oldDuration" />
                 <ScalarProperty Name="filename" ColumnName="filename" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="cdrmetas">
-            <EntityTypeMapping TypeName="MediationModel.cdrmeta">
-              <MappingFragment StoreEntitySet="cdrmeta">
-                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
-                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
-                <ScalarProperty Name="lastJobSegmentDeletedDuration" ColumnName="lastJobSegmentDeletedDuration" />
-                <ScalarProperty Name="lastJobSegmentInsertedDuration" ColumnName="lastJobSegmentInsertedDuration" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
