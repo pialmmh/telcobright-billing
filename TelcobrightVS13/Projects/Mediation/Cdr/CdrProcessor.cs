@@ -357,7 +357,7 @@ namespace TelcobrightMediation
 				{
 					var stringBuilders = segment.ToList();
 					int segmentCount = stringBuilders.Count;
-					int affectedRecordCount = MySqlReliableWriter.WriteThroughStoredProc(dbCmd: this.DbCmd,
+					int affectedRecordCount = DbWriterWithAccurateCount.ExecSingleStatementThroughStoredProc(dbCmd: this.DbCmd,
 						command: "insert into cdrinconsistent values " + string.Join(",", stringBuilders),
 						expectedRecCount: segmentCount);
 					if (affectedRecordCount != segmentCount)
@@ -378,7 +378,7 @@ namespace TelcobrightMediation
 				segment =>
 				{
 					int segmentCount = segment.Count();
-					int affectedRecordCount = MySqlReliableWriter.WriteThroughStoredProc(dbCmd: this.DbCmd,
+					int affectedRecordCount = DbWriterWithAccurateCount.ExecSingleStatementThroughStoredProc(dbCmd: this.DbCmd,
 						command: new StringBuilder(StaticExtInsertColumnHeaders.cdrerror)
 							.Append(string.Join(",", segment.AsParallel().Select(c => c.GetExtInsertValues())))
 							.ToString(),
@@ -409,7 +409,7 @@ namespace TelcobrightMediation
 					this.DbCmd.CommandType = CommandType.StoredProcedure;
 					this.DbCmd.CommandText = "sp_extInsert";
 
-					int affectedRecordCount= MySqlReliableWriter.WriteThroughStoredProc(dbCmd: this.DbCmd,
+					int affectedRecordCount= DbWriterWithAccurateCount.ExecSingleStatementThroughStoredProc(dbCmd: this.DbCmd,
 							  command: new StringBuilder(StaticExtInsertColumnHeaders.cdr)
 									   .Append(extInsertCommandsForthisSegment).ToString(), 
 							  expectedRecCount: segmentCount);

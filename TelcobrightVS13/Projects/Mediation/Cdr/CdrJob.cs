@@ -80,6 +80,7 @@ namespace TelcobrightMediation.Cdr
 
             
             this.CdrJobContext.AccountingContext.WriteAllChanges();
+            this.CdrJobContext.AccountingContext.CheckIfTransactionAmountMatchesLedgerSummary();
             this.CdrJobContext.AutoIncrementManager.WriteAllChanges();
             //UpdateCdrMetaData();
         }

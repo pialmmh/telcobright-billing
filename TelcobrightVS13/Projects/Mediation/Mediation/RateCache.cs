@@ -69,22 +69,18 @@ namespace TelcobrightMediation
 
         public void PopulateDicByDay(DateRange dRange,bool flagLcr, bool useInMemoryTable)
         {
-            using (DbCommand cmd=this.Context.Database.Connection.CreateCommand())
+            using (DbCommand cmd = this.Context.Database.Connection.CreateCommand())
             {
-                cmd.CommandText = "drop table if exists temp_rate;";
-                cmd.ExecuteNonQuery();
-
-                cmd.CommandText = $@"create temporary table temp_rate  engine=memory
+                cmd.CommandText = $@"insert into temp_rate
                                      select * from rate
                                      where  (
-                                     ( startdate <= {dRange.StartDate.ToMySqlStyleDateTimeStrWithQuote()} and ifnull(enddate,'9999-12-31 23:59:59') > {dRange.StartDate.ToMySqlStyleDateTimeStrWithQuote()})   
+                                     ( startdate <= {
+                        dRange.StartDate.ToMySqlStyleDateTimeStrWithQuote()
+                    } and ifnull(enddate,'9999-12-31 23:59:59') > {
+                        dRange.StartDate.ToMySqlStyleDateTimeStrWithQuote()
+                    })   
                                      or  ( startdate >= {dRange.StartDate.ToMySqlStyleDateTimeStrWithQuote()} 
                                      and startdate < {dRange.EndDate.ToMySqlStyleDateTimeStrWithQuote()}));";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText =
-                    "alter table temp_rate add index ind_rateplan_startdate_enddate (idrateplan,startdate,enddate);" +
-                    "alter table temp_rate add index ind_prefix_startdate (Prefix,startdate);" +
-                    "alter table temp_rate add index `ind_enddate` (`enddate`);";
                 cmd.ExecuteNonQuery();
             }
 

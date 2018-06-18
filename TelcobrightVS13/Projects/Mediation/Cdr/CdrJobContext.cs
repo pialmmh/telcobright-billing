@@ -77,5 +77,7 @@ namespace TelcobrightMediation
                                         .PopulateDicByDay(dateRange, flagLcr: false, useInMemoryTable: true);
                             });
         }
+
+        
     }
 }

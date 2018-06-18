@@ -189,7 +189,7 @@ namespace TelcobrightMediation
                         int segmentCount=segment.Count();
                         var sqlsAsStringBuilders = segment.AsParallel().Select(c => this.InsertCommandGenerator(c))
                             .ToList();
-                        int affectedRecordCount = MySqlReliableWriter.WriteThroughStoredProc(dbCmd: cmd,
+                        int affectedRecordCount = DbWriterWithAccurateCount.ExecSingleStatementThroughStoredProc(dbCmd: cmd,
                             command: new StringBuilder(extInsertHeader)
                                 .Append(StringBuilderJoiner.Join(",", sqlsAsStringBuilders)).ToString(),
                             expectedRecCount: segmentCount);
@@ -220,11 +220,10 @@ namespace TelcobrightMediation
                     segment =>
                     {
                         int segmentCount = segment.Count();//count segment instead of segmentAsParallel for cross check, ignore multiple enumeration error
-                        var sqlsAsStringBuilders = segment.AsParallel().Select(c => this.UpdateCommandGenerator(c))
-                            .ToList();
-                        int affectedRecordCount = MySqlReliableWriter.WriteThroughStoredProc(dbCmd: cmd,
-                            command: StringBuilderJoiner.Join(";", sqlsAsStringBuilders).ToString(),
-                            expectedRecCount: segmentCount);
+                        List<string> sqlStatements = segment.AsParallel()
+                            .Select(c => this.UpdateCommandGenerator(c).Append(";").ToString()).ToList();
+                        int affectedRecordCount = DbWriterWithAccurateCount.ExecMultipleStatementsThroughStoredProc(dbCmd: cmd,
+                            commands: sqlStatements,expectedRecCount: segmentCount);
                         if (affectedRecordCount != segmentCount)
                             throw new Exception("Affected record count does not match segment count while updating cached items.");
                         updateWriteCount += affectedRecordCount;
@@ -251,11 +250,10 @@ namespace TelcobrightMediation
                     segment =>
                     {
                         int segmentCount = segment.Count();//count segment instead of segmentAsParallel for cross check, ignore multiple enumeration error
-                        var sqlsAsStringBuilders = segment.AsParallel().Select(c => this.DeleteCommandGenerator(c))
-                            .ToList();
-                        int affectedRecordCount = MySqlReliableWriter.WriteThroughStoredProc(dbCmd: cmd,
-                            command: StringBuilderJoiner.Join(";", sqlsAsStringBuilders).ToString(),
-                            expectedRecCount: segmentCount);
+                        List<string> sqlStatements = segment.AsParallel()
+                            .Select(c => this.DeleteCommandGenerator(c).Append(";").ToString()).ToList();
+                        int affectedRecordCount = DbWriterWithAccurateCount.ExecMultipleStatementsThroughStoredProc(dbCmd: cmd,
+                            commands: sqlStatements, expectedRecCount: segmentCount);
                         if (affectedRecordCount != segmentCount)
                             throw new Exception("Affected record count does not match segment count while deleting cached items.");
                         deleteWriteCount += affectedRecordCount;

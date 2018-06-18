@@ -58,15 +58,13 @@ namespace Process
                                 {
                                     foreach (job telcobrightJob in incompleteJobs)
                                     {
-                                        Console.WriteLine("Processing CdrJob for Switch:" + ne.SwitchName +
-                                                          ", JobName:" + telcobrightJob.JobName);
+                                        Console.WriteLine("Processing CdrJob for Switch:" + ne.SwitchName + ", JobName:" + telcobrightJob.JobName);
                                         try
                                         {
                                             cmd.ExecuteCommandText("set autocommit=0;"); //transaction started
                                             ITelcobrightJob iJob = null;
                                             mediationContext.MefJobContainer.DicExtensionsIdJobWise.TryGetValue(
-                                                telcobrightJob.idjobdefinition.ToString(),
-                                                out iJob);
+                                                telcobrightJob.idjobdefinition.ToString(), out iJob);
                                             if (iJob == null)
                                                 throw new Exception("JobRule not found in MEF collection.");
                                             var cdrJobInputData =

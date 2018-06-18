@@ -121,6 +121,7 @@ namespace TelcobrightMediation
                 this.MefServiceFamilyContainer.ServiceGroupWiseTupDefs.Add(kv.Key, new TupleDefinitions(kv.Value));
             }
             CdrSummaryTypeDictionary.Initialize();
+            CreateTemporaryTables();
         }
 
         Dictionary<string, partnerprefix> PopulateANSPrefix()
@@ -228,6 +229,32 @@ namespace TelcobrightMediation
                                 throwExceptionOnFirstError: false,
                                 rules:rules);
             return mefValidator;
+        }
+        private void CreateTemporaryTables()
+        {
+            DbCommand cmd = this.Context.Database.Connection.CreateCommand();
+            cmd.CommandType = CommandType.Text;
+
+            cmd.CommandText = "drop table if exists temp_sql_statement;";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = $@"create temporary table temp_sql_statement(
+                                        id int primary key auto_increment,
+                                        statement varchar(20000) not null) engine=memory;";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "drop table if exists temp_rate;";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = $@"create temporary table temp_rate  engine=memory
+                                     select * from rate
+                                     where 1=2;";
+            cmd.ExecuteNonQuery();
+            cmd.CommandText =
+                "alter table temp_rate add index ind_rateplan_startdate_enddate (idrateplan,startdate,enddate);" +
+                "alter table temp_rate add index ind_prefix_startdate (Prefix,startdate);" +
+                "alter table temp_rate add index `ind_enddate` (`enddate`);";
+            cmd.ExecuteNonQuery();
         }
     }
 }
