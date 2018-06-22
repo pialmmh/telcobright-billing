@@ -20,7 +20,7 @@ namespace InstallConfig
     public partial class JslConfigGenerator //quartz config part
     {
         static string databaseConfigFileName = new DirectoryInfo(FileAndPathHelper.GetBinPath()).Parent.Parent.FullName
-                                               + Path.DirectorySeparatorChar + "LocalMachine.conf";
+                                               + Path.DirectorySeparatorChar + "Server.conf";
 
         PortalSettings GetPortalSettings(TelcobrightConfig tbc)
         {

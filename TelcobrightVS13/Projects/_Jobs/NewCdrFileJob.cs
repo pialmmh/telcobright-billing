@@ -89,6 +89,7 @@ namespace Jobs
             }
             return partialCdrTesterData;
         }
+
         protected virtual void ExecuteCdrJob(CdrJob cdrJob)
         {
             if (cdrJob.CdrProcessor.CollectionResult.ConcurrentCdrExts.Count > 0)
@@ -106,30 +107,15 @@ namespace Jobs
                         cdrJob.CdrProcessor.WriteCdrInconsistent();
                     }
                 }
-                if (cdrJob.CdrProcessor.CdrJobContext.MediationContext.Tbc.CdrSetting.ConsiderEmptyCdrFilesAsValid ==
-                    false)
+                if (!cdrJob.CdrProcessor.CdrJobContext.MediationContext.Tbc.CdrSetting.EmptyFileAllowed)
                 {
                     throw new Exception("Empty new cdr files are not considered valid as per cdr setting.");
                 }
                 WriteJobCompletionIfCollectionIsEmpty(cdrJob.CdrProcessor, this.Input.TelcobrightJob);
             }
-
-            //code reaching here means no error
-            using (DbCommand cmd = ConnectionManager.CreateCommandFromDbContext(this.Input.Context))
-            {
-                cmd.CommandText = " commit; ";
-                cmd.ExecuteNonQuery();
-            }
-
-            //create file copy job for all backup locations, async-don't wait
-            //Task.Run(() => ArchiveAndDeleteJobCreation(tbc, ThisJob));
-            //vault.DeleteSingleFile(ThisJob.JobName);
-            //File.Delete(fileName);
-            //todo: solve constr issue in following mehtod
-            return;
             if (this.Input.CdrSetting.DisableCdrPostProcessingJobCreationForAutomation == false)
             {
-                ArchiveAndDeleteJobCreation(this.Input.MediationContext.Tbc,
+                CreateNewCdrPostProcessingJobs(this.Input.Context, this.Input.MediationContext.Tbc,
                     cdrJob.CdrProcessor.CdrJobContext.TelcobrightJob);
             }
         }
@@ -205,33 +191,29 @@ namespace Jobs
             }
         }
 
-        protected void ArchiveAndDeleteJobCreation(TelcobrightConfig tbc, job thisJob)
+        protected void CreateNewCdrPostProcessingJobs(PartnerEntities context,TelcobrightConfig tbc, job thisJob)
         {
             List<long> dependentJobIdsBeforeDelete = new List<long>() {thisJob.id}; //cdrJob itself
             //create archiving job
-            using (PartnerEntities context = new PartnerEntities(tbc.DatabaseSetting.DatabaseName))
+            if (tbc.CdrSetting.BackupSyncPairNames != null)
             {
-                if (tbc.CdrSetting.BackupSyncPairNames != null)
+                foreach (string syncPairname in tbc.CdrSetting.BackupSyncPairNames)
                 {
-                    foreach (string syncPairname in tbc.CdrSetting.BackupSyncPairNames)
-                    {
-                        long idJob = FileUtil.CreateFileCopyJob(tbc, syncPairname, thisJob.JobName, context);
-                        dependentJobIdsBeforeDelete.Add(idJob);
-                    }
+                    long idJob = FileUtil.CreateFileCopyJob(tbc, syncPairname, thisJob.JobName, context);
+                    dependentJobIdsBeforeDelete.Add(idJob);
                 }
-
-                //create delete job
-                string vaultName = tbc.DirectorySettings.Vaults.Where(c => c.Name == thisJob.ne.SourceFileLocations).Select(c => c.Name)
-                    .First();
-                FileUtil.CreateFileDeleteJob(thisJob.JobName, tbc.DirectorySettings.FileLocations[vaultName], context,
-                    new JobPreRequisite()
-                    {
-                        ExecuteAfterJobs = dependentJobIdsBeforeDelete,
-                    }
-                );
             }
+
+            //create delete job
+            string vaultName = tbc.DirectorySettings.Vaults.Where(c => c.Name == thisJob.ne.SourceFileLocations)
+                .Select(c => c.Name)
+                .First();
+            FileUtil.CreateFileDeleteJob(thisJob.JobName, tbc.DirectorySettings.FileLocations[vaultName], context,
+                new JobPreRequisite()
+                {
+                    ExecuteAfterJobs = dependentJobIdsBeforeDelete,
+                }
+            );
         }
-        
-        
     }
 }

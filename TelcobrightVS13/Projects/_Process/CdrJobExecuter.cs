@@ -61,7 +61,7 @@ namespace Process
                                         Console.WriteLine("Processing CdrJob for Switch:" + ne.SwitchName + ", JobName:" + telcobrightJob.JobName);
                                         try
                                         {
-                                            cmd.ExecuteCommandText("set autocommit=0;"); //transaction started
+                                            cmd.ExecuteCommandText("set autocommit=0;");
                                             ITelcobrightJob iJob = null;
                                             mediationContext.MefJobContainer.DicExtensionsIdJobWise.TryGetValue(
                                                 telcobrightJob.idjobdefinition.ToString(), out iJob);
@@ -69,8 +69,9 @@ namespace Process
                                                 throw new Exception("JobRule not found in MEF collection.");
                                             var cdrJobInputData =
                                                 new CdrJobInputData(mediationContext, context, ne, telcobrightJob);
-                                            iJob.Execute(cdrJobInputData);//execute job, this includes commit if successful,
-                                        }//commit is done inside "cdrjob" as segmented jobs need commit inside for segments
+                                            iJob.Execute(cdrJobInputData); //EXECUTE
+                                            cmd.ExecuteCommandText(" commit; ");
+                                        }
                                         catch (Exception e)
                                         {
                                             try
@@ -84,7 +85,7 @@ namespace Process
                                                 Console.WriteLine(e.Message);
                                                 cmd.ExecuteCommandText(" rollback; ");
                                                 ErrorWriter wr = new ErrorWriter(e, "ProcessCdr", telcobrightJob,
-                                                    "CdrJob processing error.",tbc.DatabaseSetting.DatabaseName);
+                                                    "CdrJob processing error.", tbc.DatabaseSetting.DatabaseName);
 
                                                 //also save the error information within the job
                                                 //use try catch in case DB is not accesible
@@ -102,7 +103,8 @@ namespace Process
                                                 catch (Exception e2)
                                                 {
                                                     ErrorWriter wr2 = new ErrorWriter(e2, "ProcessCdr", telcobrightJob,
-                                                        "Exception within catch block.",tbc.DatabaseSetting.DatabaseName);
+                                                        "Exception within catch block.",
+                                                        tbc.DatabaseSetting.DatabaseName);
                                                 }
                                                 continue; //with next cdr or job
                                             }

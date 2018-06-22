@@ -238,10 +238,10 @@ namespace InstallConfig
                 }
             }
             //add archive locations to CdrSettings
-            this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>
-            {
-                vaultS3FileArchive1.Name, vaultS3CAS.Name
-            };
+            this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>();
+            //{
+            //    vaultS3FileArchive1.Name, vaultS3CAS.Name
+            //};
         }
     }
 }

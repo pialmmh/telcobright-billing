@@ -13,7 +13,7 @@ namespace InstallConfig
     public static class SchedulerConfigGenerator
     {
         static string databaseConfigFileName = new DirectoryInfo(FileAndPathHelper.GetBinPath()).Parent.Parent.FullName
-                                               + Path.DirectorySeparatorChar + "LocalMachine.conf";
+                                               + Path.DirectorySeparatorChar + "Server.conf";
 
 
         public static SchedulerSetting GeneraterateSchedulerConfig()

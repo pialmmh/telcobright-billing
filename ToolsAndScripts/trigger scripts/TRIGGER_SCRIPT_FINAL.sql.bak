@@ -1,0 +1,481 @@
+delimiter //
+drop trigger transaction_after_insert//
+CREATE TRIGGER transaction_after_insert
+AFTER INSERT
+   ON acc_transaction FOR EACH ROW
+
+BEGIN
+
+   update transactionmeta
+   set totalInsertedAmount=totalInsertedAmount+NEW.amount;
+END//
+
+drop trigger transaction_delete//
+CREATE TRIGGER transaction_delete
+before DELETE
+   ON acc_transaction FOR EACH ROW
+
+BEGIN
+	update transactionmeta
+	set totalInsertedAmount=totalInsertedAmount-old.amount
+    where id=1;
+END//
+delimiter ;
+
+delimiter //
+drop trigger acc_ledger_summary_after_insert//
+CREATE TRIGGER acc_ledger_summary_after_insert
+AFTER INSERT
+   ON acc_ledger_summary FOR EACH ROW
+
+BEGIN
+
+   update ledger_summary_meta
+   set totalInsertedAmount=totalInsertedAmount+NEW.amount;
+
+END//
+
+drop trigger acc_ledger_summary_after_update//
+CREATE TRIGGER acc_ledger_summary_after_update
+AFTER update
+   ON acc_ledger_summary FOR EACH ROW
+
+BEGIN
+
+   update ledger_summary_meta
+   set totalInsertedAmount=totalInsertedAmount+NEW.amount-OLD.amount;
+
+END//
+
+
+
+delimiter ;
+
+delimiter //
+drop TRIGGER cdr_after_insert//
+CREATE TRIGGER cdr_after_insert
+AFTER INSERT
+   ON cdr FOR EACH ROW
+
+BEGIN
+
+   update cdrmeta
+   set totalInsertedDuration=totalInsertedDuration+NEW.durationsec;
+END//
+
+drop TRIGGER cdr_delete//
+CREATE TRIGGER cdr_delete
+before DELETE
+   ON cdr FOR EACH ROW
+
+BEGIN
+	update cdrmeta
+	set totalInsertedDuration=totalInsertedDuration-old.durationsec
+    where id=1;
+END//
+delimiter ;
+
+
+delimiter //
+drop TRIGGER sum_voice_day_01_after_insert//
+CREATE TRIGGER sum_voice_day_01_after_insert
+AFTER INSERT
+   ON sum_voice_day_01 FOR EACH ROW
+
+BEGIN
+
+   update cdrsummarymeta_day_01
+   set totalInsertedDuration=totalInsertedDuration+NEW.actualduration;
+
+END;//
+delimiter ;
+
+delimiter //
+drop TRIGGER sum_voice_day_02_after_insert//
+CREATE TRIGGER sum_voice_day_02_after_insert
+AFTER INSERT
+   ON sum_voice_day_02 FOR EACH ROW
+
+BEGIN
+
+   update cdrsummarymeta_day_02
+   set totalInsertedDuration=totalInsertedDuration+NEW.actualduration;
+
+END;//
+delimiter ;
+
+delimiter //
+CREATE TRIGGER sum_voice_day_03_after_insert
+AFTER INSERT
+   ON sum_voice_day_03 FOR EACH ROW
+
+BEGIN
+
+   update cdrsummarymeta_day_03
+   set totalInsertedDuration=totalInsertedDuration+NEW.actualduration;
+
+END;//
+delimiter ;
+
+delimiter //
+CREATE TRIGGER sum_voice_day_04_after_insert
+AFTER INSERT
+   ON sum_voice_day_04 FOR EACH ROW
+
+BEGIN
+
+   update cdrsummarymeta_day_04
+   set totalInsertedDuration=totalInsertedDuration+NEW.actualduration;
+
+END;//
+delimiter ;
+
+delimiter //
+CREATE TRIGGER sum_voice_day_05_after_insert
+AFTER INSERT
+   ON sum_voice_day_05 FOR EACH ROW
+
+BEGIN
+
+   update cdrsummarymeta_day_05
+   set totalInsertedDuration=totalInsertedDuration+NEW.actualduration;
+
+END;//
+delimiter ;
+
+delimiter //
+CREATE TRIGGER sum_voice_day_06_after_insert
+AFTER INSERT
+   ON sum_voice_day_06 FOR EACH ROW
+
+BEGIN
+
+   update cdrsummarymeta_day_06
+   set totalInsertedDuration=totalInsertedDuration+NEW.actualduration;
+
+END;//
+delimiter ;
+
+
+
+#update triggers
+
+delimiter //
+CREATE TRIGGER sum_voice_day_01_after_update
+AFTER update
+   ON sum_voice_day_01 FOR EACH ROW
+
+BEGIN
+
+   update cdrsummarymeta_day_01
+   set totalInsertedDuration=totalInsertedDuration+NEW.actualduration-OLD.actualduration;
+
+END;//
+delimiter ;
+
+delimiter //
+CREATE TRIGGER sum_voice_day_02_after_update
+AFTER update
+   ON sum_voice_day_02 FOR EACH ROW
+
+BEGIN
+
+   update cdrsummarymeta_day_02
+   set totalInsertedDuration=totalInsertedDuration+NEW.actualduration-OLD.actualduration;
+
+END;//
+delimiter ;
+
+delimiter //
+CREATE TRIGGER sum_voice_day_03_after_update
+AFTER update
+   ON sum_voice_day_03 FOR EACH ROW
+
+BEGIN
+
+   update cdrsummarymeta_day_03
+   set totalInsertedDuration=totalInsertedDuration+NEW.actualduration-OLD.actualduration;
+
+END;//
+delimiter ;
+
+delimiter //
+CREATE TRIGGER sum_voice_day_04_after_update
+AFTER update
+   ON sum_voice_day_04 FOR EACH ROW
+
+BEGIN
+
+   update cdrsummarymeta_day_04
+   set totalInsertedDuration=totalInsertedDuration+NEW.actualduration-OLD.actualduration;
+
+END;//
+delimiter ;
+
+delimiter //
+CREATE TRIGGER sum_voice_day_05_after_update
+AFTER update
+   ON sum_voice_day_05 FOR EACH ROW
+
+BEGIN
+
+   update cdrsummarymeta_day_05
+   set totalInsertedDuration=totalInsertedDuration+NEW.actualduration-OLD.actualduration;
+
+END;//
+delimiter ;
+
+
+delimiter //
+CREATE TRIGGER sum_voice_day_06_after_update
+AFTER update
+   ON sum_voice_day_06 FOR EACH ROW
+
+BEGIN
+
+   update cdrsummarymeta_day_06
+   set totalInsertedDuration=totalInsertedDuration+NEW.actualduration-OLD.actualduration;
+
+END;//
+delimiter ;
+
+delimiter //
+CREATE TRIGGER sum_voice_hr_01_after_insert
+AFTER INSERT
+   ON sum_voice_hr_01 FOR EACH ROW
+
+BEGIN
+
+   update cdrsummarymeta_hr_01
+   set totalInsertedDuration=totalInsertedDuration+NEW.actualduration;
+
+END;//
+delimiter ;
+
+delimiter //
+CREATE TRIGGER sum_voice_hr_02_after_insert
+AFTER INSERT
+   ON sum_voice_hr_02 FOR EACH ROW
+
+BEGIN
+
+   update cdrsummarymeta_hr_02
+   set totalInsertedDuration=totalInsertedDuration+NEW.actualduration;
+
+END;//
+delimiter ;
+
+delimiter //
+CREATE TRIGGER sum_voice_hr_03_after_insert
+AFTER INSERT
+   ON sum_voice_hr_03 FOR EACH ROW
+
+BEGIN
+
+   update cdrsummarymeta_hr_03
+   set totalInsertedDuration=totalInsertedDuration+NEW.actualduration;
+
+END;//
+delimiter ;
+
+delimiter //
+CREATE TRIGGER sum_voice_hr_04_after_insert
+AFTER INSERT
+   ON sum_voice_hr_04 FOR EACH ROW
+
+BEGIN
+
+   update cdrsummarymeta_hr_04
+   set totalInsertedDuration=totalInsertedDuration+NEW.actualduration;
+
+END;//
+delimiter ;
+
+delimiter //
+CREATE TRIGGER sum_voice_hr_05_after_insert
+AFTER INSERT
+   ON sum_voice_hr_05 FOR EACH ROW
+
+BEGIN
+
+   update cdrsummarymeta_hr_05
+   set totalInsertedDuration=totalInsertedDuration+NEW.actualduration;
+
+END;//
+delimiter ;
+
+delimiter //
+CREATE TRIGGER sum_voice_hr_06_after_insert
+AFTER INSERT
+   ON sum_voice_hr_06 FOR EACH ROW
+
+BEGIN
+
+   update cdrsummarymeta_hr_06
+   set totalInsertedDuration=totalInsertedDuration+NEW.actualduration;
+
+END;//
+delimiter ;
+
+
+#update triggers
+
+delimiter //
+CREATE TRIGGER sum_voice_hr_01_after_update
+AFTER update
+   ON sum_voice_hr_01 FOR EACH ROW
+
+BEGIN
+
+   update cdrsummarymeta_hr_01
+   set totalInsertedDuration=totalInsertedDuration+NEW.actualduration-OLD.actualduration;
+
+END;//
+delimiter ;
+
+delimiter //
+CREATE TRIGGER sum_voice_hr_02_after_update
+AFTER update
+   ON sum_voice_hr_02 FOR EACH ROW
+
+BEGIN
+
+   update cdrsummarymeta_hr_02
+   set totalInsertedDuration=totalInsertedDuration+NEW.actualduration-OLD.actualduration;
+
+END;//
+delimiter ;
+
+delimiter //
+CREATE TRIGGER sum_voice_hr_03_after_update
+AFTER update
+   ON sum_voice_hr_03 FOR EACH ROW
+
+BEGIN
+
+   update cdrsummarymeta_hr_03
+   set totalInsertedDuration=totalInsertedDuration+NEW.actualduration-OLD.actualduration;
+
+END;//
+delimiter ;
+
+delimiter //
+CREATE TRIGGER sum_voice_hr_04_after_update
+AFTER update
+   ON sum_voice_hr_04 FOR EACH ROW
+
+BEGIN
+
+   update cdrsummarymeta_hr_04
+   set totalInsertedDuration=totalInsertedDuration+NEW.actualduration-OLD.actualduration;
+
+END;//
+delimiter ;
+
+delimiter //
+CREATE TRIGGER sum_voice_hr_05_after_update
+AFTER update
+   ON sum_voice_hr_05 FOR EACH ROW
+
+BEGIN
+
+   update cdrsummarymeta_hr_05
+   set totalInsertedDuration=totalInsertedDuration+NEW.actualduration-OLD.actualduration;
+
+END;//
+delimiter ;
+
+
+delimiter //
+CREATE TRIGGER sum_voice_hr_06_after_update
+AFTER update
+   ON sum_voice_hr_06 FOR EACH ROW
+
+BEGIN
+
+   update cdrsummarymeta_hr_06
+   set totalInsertedDuration=totalInsertedDuration+NEW.actualduration-OLD.actualduration;
+
+END;//
+delimiter ;
+
+CREATE TABLE `cdrsummarymeta_day_01` (
+  `id` int(11) NOT NULL,
+  `totalInsertedDuration` decimal(24,8) NOT NULL DEFAULT '0.00000000',
+  `totalDeletedDuration` decimal(24,8) NOT NULL DEFAULT '0.00000000',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `cdrsummarymeta_day_02` (
+  `id` int(11) NOT NULL,
+  `totalInsertedDuration` decimal(24,8) NOT NULL DEFAULT '0.00000000',
+  `totalDeletedDuration` decimal(24,8) NOT NULL DEFAULT '0.00000000',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `cdrsummarymeta_day_03` (
+  `id` int(11) NOT NULL,
+  `totalInsertedDuration` decimal(24,8) NOT NULL DEFAULT '0.00000000',
+  `totalDeletedDuration` decimal(24,8) NOT NULL DEFAULT '0.00000000',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `cdrsummarymeta_day_04` (
+  `id` int(11) NOT NULL,
+  `totalInsertedDuration` decimal(24,8) NOT NULL DEFAULT '0.00000000',
+  `totalDeletedDuration` decimal(24,8) NOT NULL DEFAULT '0.00000000',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `cdrsummarymeta_day_05` (
+  `id` int(11) NOT NULL,
+  `totalInsertedDuration` decimal(24,8) NOT NULL DEFAULT '0.00000000',
+  `totalDeletedDuration` decimal(24,8) NOT NULL DEFAULT '0.00000000',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `cdrsummarymeta_day_06` (
+  `id` int(11) NOT NULL,
+  `totalInsertedDuration` decimal(24,8) NOT NULL DEFAULT '0.00000000',
+  `totalDeletedDuration` decimal(24,8) NOT NULL DEFAULT '0.00000000',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+CREATE TABLE `cdrsummarymeta_hr_01` (
+  `id` int(11) NOT NULL,
+  `totalInsertedDuration` decimal(24,8) NOT NULL DEFAULT '0.00000000',
+  `totalDeletedDuration` decimal(24,8) NOT NULL DEFAULT '0.00000000',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `cdrsummarymeta_hr_02` (
+  `id` int(11) NOT NULL,
+  `totalInsertedDuration` decimal(24,8) NOT NULL DEFAULT '0.00000000',
+  `totalDeletedDuration` decimal(24,8) NOT NULL DEFAULT '0.00000000',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `cdrsummarymeta_hr_03` (
+  `id` int(11) NOT NULL,
+  `totalInsertedDuration` decimal(24,8) NOT NULL DEFAULT '0.00000000',
+  `totalDeletedDuration` decimal(24,8) NOT NULL DEFAULT '0.00000000',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `cdrsummarymeta_hr_04` (
+  `id` int(11) NOT NULL,
+  `totalInsertedDuration` decimal(24,8) NOT NULL DEFAULT '0.00000000',
+  `totalDeletedDuration` decimal(24,8) NOT NULL DEFAULT '0.00000000',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `cdrsummarymeta_hr_05` (
+  `id` int(11) NOT NULL,
+  `totalInsertedDuration` decimal(24,8) NOT NULL DEFAULT '0.00000000',
+  `totalDeletedDuration` decimal(24,8) NOT NULL DEFAULT '0.00000000',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `cdrsummarymeta_hr_06` (
+  `id` int(11) NOT NULL,
+  `totalInsertedDuration` decimal(24,8) NOT NULL DEFAULT '0.00000000',
+  `totalDeletedDuration` decimal(24,8) NOT NULL DEFAULT '0.00000000',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+
+

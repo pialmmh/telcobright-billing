@@ -93,13 +93,12 @@ namespace UnitTesterManual
                                 {
                                     iJob = new MockNewCdrFileJob(this.EventCollector, this.OperatorName);
                                 }
-                                //todo: fix it later
-                                //else iJob = new MockCdrDecoderDumperJob(this.EventCollector, this.OperatorName);
-
                                 var cdrJobInputData =
                                     new CdrJobInputData(mediationContext, context, ne, telcobrightJob);
                                 iJob.Execute(cdrJobInputData); //execute job, this includes commit if successful,
-                            } //commit is done inside "cdrjob" as segmented jobs need commit inside for segments
+                                cmd.CommandText = " commit; ";
+                                cmd.ExecuteNonQuery();
+                            } 
                             catch (Exception e)
                             {
                                 try

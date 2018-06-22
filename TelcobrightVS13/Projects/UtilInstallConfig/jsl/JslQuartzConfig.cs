@@ -25,6 +25,7 @@ namespace InstallConfig
             this.DaemonConfigurations.AddRange(GetLogFileJobCreatorInstances(this.Tbc.DatabaseSetting.DatabaseName));
             this.DaemonConfigurations.AddRange(GetFileCopierInstances(this.Tbc.DatabaseSetting.DatabaseName));
             this.DaemonConfigurations.AddRange(GetCdrJobProcessorInstances(this.Tbc.DatabaseSetting.DatabaseName));
+            this.DaemonConfigurations.AddRange(GetOptimizerInstances(this.Tbc.DatabaseSetting.DatabaseName));
             return this.DaemonConfigurations;
         }
 
@@ -135,6 +136,26 @@ namespace InstallConfig
                 )
             };
             return telcobrightProcessInstances;
+        }
+        private List<QuartzTbDaemonConfig> GetOptimizerInstances(string operatorName)
+        {
+            //don't use foreach, do it manually for flixibility e.g. different repeating interval
+            List<QuartzTbDaemonConfig> optimizerInstances = new List<QuartzTbDaemonConfig>()
+            {
+                new QuartzTbDaemonConfig
+                (
+                    operatorName: operatorName,
+                    identity: "Optimizer" + " [" + operatorName+"]",
+                    group: operatorName,
+                    cronExpression: "/30 * * ? * *",
+                    fireOnceIfMissFired: false,
+                    jobDataMap: new Dictionary<string, string>()
+                    {
+                        {"telcobrightProcessId", "107"},
+                        {"operatorName", operatorName},
+                    }),
+            };
+            return optimizerInstances;
         }
     }
 }

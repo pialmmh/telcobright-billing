@@ -6,7 +6,7 @@ namespace TelcobrightMediation
 {
     public class CdrSetting : LogFileProcessorSetting
     {
-        public bool ConsiderEmptyCdrFilesAsValid { get; set; }
+        public bool EmptyFileAllowed { get; set; }
         public List<int> PartialCdrEnabledNeIds { get; set; }=new List<int>();
         public List<string> PartialCdrFlagIndicators { get; set; }
         public int SegmentSizeForDbWrite { get; set; }

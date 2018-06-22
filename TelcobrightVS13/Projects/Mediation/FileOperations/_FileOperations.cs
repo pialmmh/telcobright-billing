@@ -54,15 +54,14 @@ namespace TelcobrightFileOperations
             int priority = context.enumjobdefinitions.Where(c => c.id == newJob.idjobdefinition).First().Priority;
             newJob.priority = priority;
 
-            if (context.jobs.Any(c => c.idjobdefinition == newJob.idjobdefinition && c.JobName == newJob.JobName) ==
-                true)
+            if (context.jobs.Any(c => c.idjobdefinition == newJob.idjobdefinition && c.JobName == newJob.JobName))
             {
                 //exists
                 return;
             }
 
             context.jobs.Add(newJob);
-            context.SaveChanges();
+            //context.SaveChanges();
         }
 
         public static long CreateFileCopyJob(TelcobrightConfig tbc, string syncPairName, string fileName,PartnerEntities context)
