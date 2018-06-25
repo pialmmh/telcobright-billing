@@ -59,7 +59,7 @@ namespace Process
                                     foreach (job telcobrightJob in incompleteJobs)
                                     {
                                         Console.WriteLine("Processing CdrJob for Switch:" + ne.SwitchName + ", JobName:" + telcobrightJob.JobName);
-                                        try
+                                        try  
                                         {
                                             cmd.ExecuteCommandText("set autocommit=0;");
                                             ITelcobrightJob iJob = null;

@@ -2,10 +2,13 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security.AccessControl;
+using System.Text;
+using LibraryExtensions;
 using MediationModel;
 
 namespace TelcobrightFileOperations
@@ -60,7 +63,17 @@ namespace TelcobrightFileOperations
                 return;
             }
 
-            context.jobs.Add(newJob);
+            //don't use context.add as context.Connection has been used with autocommit=0 for transaction. 
+            //use the same connection
+            DbCommand cmd = context.Database.Connection.CreateCommand();
+            cmd.CommandText= newJob.GetExtInsertCustom(
+                                    j => new StringBuilder(
+                                         $@"insert into job(idjobdefinition,priority,idne,jobname,status,jobparameter,creationtime) 
+                                         values ({newJob.idjobdefinition},{priority},{0},'{newJob.JobName}',
+                                         {newJob.Status},'{newJob.JobParameter}',{newJob.CreationTime.ToMySqlField()})")
+                                         .ToString()).ToString();
+            cmd.ExecuteNonQuery();
+            //context.jobs.Add(newJob);
             //context.SaveChanges();
         }
 
@@ -94,11 +107,25 @@ namespace TelcobrightFileOperations
             newJob.JobParameter = JsonConvert.SerializeObject(copyParam);
             //context.jobs.Add(newJob);
             newJob.CreationTime = DateTime.Now;
-            context.jobs.Add(newJob);
-            context.SaveChanges(); //canot implement segment because 2 parallel server, have to thoughout later                                }
+            DbCommand command = context.Database.Connection.CreateCommand();
+            command.CommandText=
+                newJob.GetExtInsertCustom(
+                    j=>new StringBuilder($@"insert into job(idne,idjobdefinition,jobname,status,priority,jobparameter,creationtime) 
+                                            values(
+                                            {newJob.idNE},{newJob.idjobdefinition},'{newJob.JobName}'
+                                            ,{newJob.Status},{newJob.priority},'{newJob.JobParameter}'
+                                            ,'{newJob.CreationTime.ToMySqlField()}')"
+                                        ).ToString()).ToString();
+            command.ExecuteNonQuery();
+            //context.jobs.Add(newJob);
+            //context.SaveChanges(); //canot implement segment because 2 parallel server, have to thoughout later                                }
             //get the id of the new job
-            return context.jobs.Where(c => c.idjobdefinition == newJob.idjobdefinition
-                                           && c.JobName == newJob.JobName).First().id;
+            //return context.jobs.Where(c => c.idjobdefinition == newJob.idjobdefinition
+            //                             && c.JobName == newJob.JobName).First().id;
+            command.CommandText = $@"select id from job where idjobdefinition={newJob.idjobdefinition}
+                                     and jobname='{newJob.JobName}' ";
+            int insertedJobsid = (int)command.ExecuteScalar();
+            return insertedJobsid;
         }
 
         public static void AddDirectorySecurity(string fileName, string account, FileSystemRights rights,

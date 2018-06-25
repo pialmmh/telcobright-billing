@@ -145,10 +145,11 @@ namespace TelcobrightMediation
         {
             //don't use overwrite for this
             bool fileDeleted = false;
-            if (File.Exists(this.LocalLocation.FileLocation.StartingPath + Path.DirectorySeparatorChar + relativePath) == true)
+            var fileName = this.LocalLocation.FileLocation.StartingPath + Path.DirectorySeparatorChar + relativePath;
+            if (File.Exists(fileName) == true)
             {
-                File.Delete(this.LocalLocation.FileLocation.StartingPath + Path.DirectorySeparatorChar + relativePath);
-                if (File.Exists(this.LocalLocation.FileLocation.StartingPath + Path.DirectorySeparatorChar + relativePath) == true) return false;
+                File.Delete(fileName);
+                if (File.Exists(fileName) == true) return false;
             }
             FileSyncher fs = new FileSyncher();
             foreach (SyncLocation rsl in this.RemoteFtpLocations.Where(c => c.FileLocation.Skip == false).ToList())

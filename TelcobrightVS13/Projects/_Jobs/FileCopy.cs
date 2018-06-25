@@ -21,12 +21,6 @@ namespace Jobs
         public string RuleName => "JobFileCopy";
         public string HelpText => "Copy File";
         public int Id => 6;
-
-        public JobCompletionStatus Execute(job thisJob)//dont use, just to meet the common interface requirement
-        {
-            return JobCompletionStatus.Incomplete;
-        }
-
         public FileSyncInfo GetTempSyncInfo()
         {
             string tmpfileName = Path.GetTempPath() + Guid.NewGuid().ToString() + ".tbtemp";

@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -46,8 +47,11 @@ namespace TelcobrightMediation.Cdr
             this.CdrEraser?.UndoOldSummaries();
             this.CdrEraser?.UndoOldChargeables();
             this.CdrEraser?.DeleteOldCdrs();
-
+            var prevLatencyMode = GCSettings.LatencyMode;
+            GCSettings.LatencyMode=GCLatencyMode.SustainedLowLatency;
+            //GC.TryStartNoGCRegion(1000*256);
             this.CdrProcessor?.Mediate();
+            GCSettings.LatencyMode = prevLatencyMode;
             ParallelQuery<CdrExt> parallelCdrExts = this.CdrProcessor?.GenerateSummaries();
             this.CdrProcessor?.MergeNewSummariesIntoCache(parallelCdrExts);
             this.CdrProcessor?.ProcessChargeables(parallelCdrExts);

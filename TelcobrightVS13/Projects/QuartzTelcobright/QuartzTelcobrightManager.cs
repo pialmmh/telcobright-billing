@@ -80,16 +80,21 @@ namespace QuartzTelcobright
             return TriggerBuilder.Create()
                 .WithIdentity(qData.Identity +" " +qData.Group, qData.Group)
                 .WithCronSchedule(qData.CronExpression,x=>x
-                .WithMisfireHandlingInstructionDoNothing())
-                .Build();
+                //.WithMisfireHandlingInstructionDoNothing()
+                //.WithMisfireHandlingInstructionIgnoreMisfires()
+                .WithMisfireHandlingInstructionFireAndProceed()
+                ).Build();
         }
         private ITrigger CreateTriggerWithMissFire(QuartzTbDaemonConfig qData)
         {
             return TriggerBuilder
                 .Create()
                 .WithIdentity(qData.Identity +" " +qData.Group, qData.Group)
-                .WithCronSchedule(qData.CronExpression, x => x.WithMisfireHandlingInstructionDoNothing())
-                .Build();
+                .WithCronSchedule(qData.CronExpression, x => 
+                //x.WithMisfireHandlingInstructionDoNothing()
+                //x.WithMisfireHandlingInstructionIgnoreMisfires()
+                x.WithMisfireHandlingInstructionFireAndProceed()
+                ).Build();
         }
     }
 }

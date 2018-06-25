@@ -170,35 +170,6 @@ namespace TelcobrightFileOperations
         }
         public Session GetRemoteFileTransferSession(TelcobrightConfig tbc)
         {
-            //string sessionKey = this.fileLocation.locationType + ":" + this.fileLocation.Name;
-            //fileTransferSession = null;
-            //if (tbc.resourcePool != null)
-            //{
-            //    if (tbc.resourcePool.winscpSessionPool != null)
-            //    {
-            //        Session tempSession = null;
-            //        tbc.resourcePool.winscpSessionPool.TryGetValue(sessionKey,
-            //            out tempSession);
-            //        fileTransferSession = tempSession;
-            //    }
-            //    else tbc.resourcePool.winscpSessionPool = new Dictionary<string, Session>();
-            //}
-            //else
-            //{
-            //    tbc.resourcePool = new ResourcePool();
-            //    tbc.resourcePool.winscpSessionPool = new Dictionary<string, Session>();
-            //}
-
-            //try {//winscp sessions were disposed, trap the error and continue if that happens
-            //    if (fileTransferSession != null && fileTransferSession.Opened == true)
-            //    {
-            //        return fileTransferSession;
-            //    }
-            //}
-            //catch(Exception e)
-            //{
-            //    if (e.Message != "Object is disposed") throw;
-            //}
             SessionOptions sessionOptions = new SessionOptions
             {
                 Protocol = Protocol.Ftp,//default
@@ -213,7 +184,15 @@ namespace TelcobrightFileOperations
                     break;
                 case "sftp":
                     sessionOptions.Protocol = Protocol.Sftp;
-                    sessionOptions.SshHostKeyFingerprint = this.FileLocation.Sftphostkey;
+                    if (string.IsNullOrEmpty(this.FileLocation.Sftphostkey))
+                    {
+                        sessionOptions.GiveUpSecurityAndAcceptAnySshHostKey = true;
+                    }
+                    else
+                    {
+                        sessionOptions.SshHostKeyFingerprint = this.FileLocation.Sftphostkey;
+                    }
+                    
                     break;
             }
             Session session = new Session();

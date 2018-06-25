@@ -65,12 +65,19 @@ namespace WS_Telcobright_Topshelf
     {
         public TelcobrightService()
         {
-            Console.WriteLine("Starting Telcobright Scheduler.");
-            var timer = new Timer(1000) {AutoReset = false, Enabled = true};
-            timer.Elapsed += new ElapsedEventHandler(_timer_Elapsed);
-            //TimerAction();
-            Console.WriteLine("Program Exited.");
-
+            try
+            {
+                Console.WriteLine("Starting Telcobright Scheduler.");
+                var timer = new Timer(1000) {AutoReset = false, Enabled = true};
+                timer.Elapsed += new ElapsedEventHandler(_timer_Elapsed);
+                //TimerAction();
+                Console.WriteLine("Program Exited.");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         static void _timer_Elapsed(object sender, ElapsedEventArgs e)
@@ -117,7 +124,7 @@ namespace WS_Telcobright_Topshelf
                     Console.WriteLine("Starting RAMJobStore based scheduler in debug mode....");
                     runtimeScheduler.Standby();
                     IScheduler debugScheduler = GetScheduler(SchedulerRunTimeType.Debug, springContext);
-                    ScheduleDebugJobsFromMenu(runtimeScheduler, debugScheduler);
+                    ScheduleDebugJobsThroughMenu(runtimeScheduler, debugScheduler);
                     debugScheduler.Context.Put("processes", mefProcessContainer);
                     debugScheduler.Context.Put("configs", operatorWiseConfigs);
                     debugScheduler.Start();
@@ -125,19 +132,9 @@ namespace WS_Telcobright_Topshelf
                     return;
                 }
 #endif
-                //todo: remove temp code
-                Console.WriteLine("Starting RAMJobStore based scheduler in debug mode....");
-                runtimeScheduler.Standby();
-                IScheduler debugScheduler2 = GetScheduler(SchedulerRunTimeType.Debug, springContext);
-                ScheduleDebugJobsFromMenu(runtimeScheduler, debugScheduler2);
-                debugScheduler2.Context.Put("processes", mefProcessContainer);
-                debugScheduler2.Context.Put("configs", operatorWiseConfigs);
-                debugScheduler2.Start();
-                Console.WriteLine("Telcobright Scheduler has been started in debug mode.");
-                return;
-                //
                 Console.WriteLine("Starting Scheduler in runtime mode...");
-                Console.ReadLine();
+                runtimeScheduler.ResumeTriggers(GroupMatcher<TriggerKey>.AnyGroup());
+                PauseNonSelectedTrigggersThroughMenu(runtimeScheduler);
                 runtimeScheduler.Context.Put("processes", mefProcessContainer);
                 runtimeScheduler.Context.Put("configs", operatorWiseConfigs);
                 runtimeScheduler.Start();
@@ -205,13 +202,17 @@ namespace WS_Telcobright_Topshelf
             return null;
         }
 
-        private static void ScheduleDebugJobsFromMenu(IScheduler runtimeScheduler, IScheduler debugScheduler)
+        private static void ScheduleDebugJobsThroughMenu(IScheduler runtimeScheduler, IScheduler debugScheduler)
         {
-            List<TriggerKey> triggerKeysForDebug = GetSelectedTriggerKeysFromMenu(runtimeScheduler);
+            List<TriggerKey> triggerKeysForDebug = GetSelectedTriggerKeysFromMenu(runtimeScheduler,selectToPause: false);
             ScheduleDebugJobs(runtimeScheduler, debugScheduler, triggerKeysForDebug);
         }
-
-        static List<TriggerKey> GetSelectedTriggerKeysFromMenu(IScheduler runtimeScheduler)
+        private static void PauseNonSelectedTrigggersThroughMenu(IScheduler runtimeScheduler)
+        {
+            List<TriggerKey> triggerKeysForDebug = GetSelectedTriggerKeysFromMenu(runtimeScheduler,selectToPause: true);
+            PauseNonSelectedTriggers(runtimeScheduler, triggerKeysForDebug);
+        }
+        static List<TriggerKey> GetSelectedTriggerKeysFromMenu(IScheduler runtimeScheduler,bool selectToPause)
         {
             List<TriggerKey> triggersKeys = runtimeScheduler.GetTriggerKeys(GroupMatcher<TriggerKey>.AnyGroup())
                 .ToList();
@@ -219,8 +220,17 @@ namespace WS_Telcobright_Topshelf
             List<int> selectedtriggerNumbersFromConsole = DisplayMenu(triggers);
             if (selectedtriggerNumbersFromConsole.Count > 0)
             {
-                triggersKeys = triggersKeys.Where((item, index) => selectedtriggerNumbersFromConsole.Contains(index))
-                    .Select(t => t).ToList();
+                if (selectToPause == false)
+                {
+                    triggersKeys = triggersKeys
+                        .Where((item, index) => selectedtriggerNumbersFromConsole.Contains(index))
+                        .Select(t => t).ToList();
+                }
+                else
+                {
+                    triggersKeys = triggersKeys.Where((item, index) => !selectedtriggerNumbersFromConsole.Contains(index))
+                        .Select(t => t).ToList();
+                }
             }
             return triggersKeys;
         }
@@ -254,6 +264,29 @@ namespace WS_Telcobright_Topshelf
                 return jobCount;
             }
             else throw new Exception("Scheduled job count did not match expected job count for debug scheduler.");
+        }
+
+        static void PauseNonSelectedTriggers(IScheduler runtimeScheduler, List<TriggerKey> triggerKeysToPause)
+        {
+            if (triggerKeysToPause.Count > 0)
+            {
+                List<string> groupNames = runtimeScheduler.GetJobGroupNames().ToList();
+                foreach (string groupName in groupNames)
+                {
+                    List<JobKey> jobKeys = runtimeScheduler.GetJobKeys(GroupMatcher<JobKey>.GroupEquals(groupName))
+                        .ToList();
+                    List<IJobDetail> jobDetails = jobKeys.Select(c => runtimeScheduler.GetJobDetail(c)).ToList();
+                    foreach (IJobDetail jobDetail in jobDetails)
+                    {
+                        //var builtJob=ReBuildJob<QuartzTelcobrightProcessWrapper>(jobDetail, groupName);
+                        ITrigger trigger = runtimeScheduler.GetTriggersOfJob(jobDetail.Key).First();
+                        if (triggerKeysToPause.Contains(trigger.Key))
+                        {
+                            runtimeScheduler.PauseTrigger(trigger.Key);
+                        }
+                    }
+                }
+            }
         }
 
         //static IJobDetail ReBuildJob<T>(IJobDetail jobDetail,string groupName) where T: Quartz.IJob

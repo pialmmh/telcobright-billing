@@ -14,7 +14,7 @@ using Spring.Context.Support;
 
 namespace QuartzTelcobright
 {
-    [PersistJobDataAfterExecution]
+    //[PersistJobDataAfterExecution]
     [DisallowConcurrentExecution]
     public class QuartzTelcobrightProcessWrapper : IJob
     {

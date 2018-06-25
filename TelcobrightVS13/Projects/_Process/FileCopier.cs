@@ -70,7 +70,7 @@ namespace Process
                 string sql = "";
                 var conPartner = context.Database.Connection;
                 if (conPartner.State != ConnectionState.Open) conPartner.Open();
-                using (DbCommand cmd = context.Database.Connection.CreateCommand())
+                using (DbCommand cmd = conPartner.CreateCommand())
                 {
                     foreach (job thisJob in lstIncomplete)
                     {
