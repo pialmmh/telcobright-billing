@@ -134,16 +134,9 @@ namespace TelcobrightFileOperations
             string delCommand = "";
             if (session.FileExists(delInfo.FullPath))
             {
-                try
-                {
-                    session.RemoveFiles(delInfo.FullPath);
-                    if (session.FileExists(delInfo.FullPath) == true) return false;
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
+                session.RemoveFiles(delInfo.FullPath);
+                if (session.FileExists(delInfo.FullPath) == true)
                     return false;
-                }
             }
             return true;
         }
@@ -239,27 +232,20 @@ namespace TelcobrightFileOperations
                     session.GetFiles(srcInfoRemote.FullPath, dstInfoLocal.FullPath, removeOriginal);
                 }
             }
-            
+
             if (File.Exists(dstInfoLocal.FullPath))
             {
-                if (!syncSettingsSource.SecondaryDirectory.IsNullOrEmptyOrWhiteSpace()&&
-                    syncSettingsSource.MoveFilesToSecondaryAfterCopy==true)
+                if (!syncSettingsSource.SecondaryDirectory.IsNullOrEmptyOrWhiteSpace() &&
+                    syncSettingsSource.MoveFilesToSecondaryAfterCopy == true)
                 {
-                    try
+                    string[] pathToDestinationFile = srcInfoRemote.FullPath.Split('/');
+                    string destNamePrefixedBySecondary =
+                        syncSettingsSource.SecondaryDirectory + "/" + pathToDestinationFile.Last();
+                    pathToDestinationFile[pathToDestinationFile.Length - 1] = destNamePrefixedBySecondary;
+                    string finalTargetFileName = string.Join("/", pathToDestinationFile);
+                    if (session.FileExists(srcInfoRemote.FullPath))
                     {
-                        string[] pathToDestinationFile = srcInfoRemote.FullPath.Split('/');
-                        string destNamePrefixedBySecondary =
-                            syncSettingsSource.SecondaryDirectory + "/" + pathToDestinationFile.Last();
-                        pathToDestinationFile[pathToDestinationFile.Length - 1] = destNamePrefixedBySecondary;
-                        string finalTargetFileName = string.Join("/", pathToDestinationFile);
-                        session.MoveFile(srcInfoRemote.FullPath,finalTargetFileName);
-                    }
-                    catch (Exception e)
-                    {
-                        //just log an error, ignore remote server file moving failure after download
-                        Console.WriteLine(e);
-                        new ErrorWriter(e, "FileCopier", null, "Could not move file in remote server after downloaded.",
-                            "");
+                        session.MoveFile(srcInfoRemote.FullPath, finalTargetFileName);
                     }
                 }
                 return true;

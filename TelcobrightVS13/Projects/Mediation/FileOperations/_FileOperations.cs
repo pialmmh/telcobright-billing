@@ -114,7 +114,7 @@ namespace TelcobrightFileOperations
                                             values(
                                             {newJob.idNE},{newJob.idjobdefinition},'{newJob.JobName}'
                                             ,{newJob.Status},{newJob.priority},'{newJob.JobParameter}'
-                                            ,'{newJob.CreationTime.ToMySqlField()}')"
+                                            ,{newJob.CreationTime.ToMySqlField()})"
                                         ).ToString()).ToString();
             command.ExecuteNonQuery();
             //context.jobs.Add(newJob);
@@ -124,7 +124,7 @@ namespace TelcobrightFileOperations
             //                             && c.JobName == newJob.JobName).First().id;
             command.CommandText = $@"select id from job where idjobdefinition={newJob.idjobdefinition}
                                      and jobname='{newJob.JobName}' ";
-            int insertedJobsid = (int)command.ExecuteScalar();
+            int insertedJobsid = command.ExecuteNonQuery();
             return insertedJobsid;
         }
 
