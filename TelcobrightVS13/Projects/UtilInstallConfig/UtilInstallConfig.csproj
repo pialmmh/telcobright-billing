@@ -183,7 +183,6 @@
     <Content Include="jsl\tmplPortalFtpSite.txt" />
     <Content Include="jsl\tmplPortalWebSite.txt" />
     <Content Include="_notes\installation notes.txt" />
-    <None Include="Server.conf" />
     <Content Include="tpny\tmplPortalAppPools.txt" />
     <Content Include="tpny\tmplPortalFtpSite.txt" />
     <Content Include="tpny\tmplPortalWebSite.txt" />

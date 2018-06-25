@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Data;
 using System.Linq;
 using MediationModel;
 using Quartz;
@@ -50,6 +51,8 @@ namespace Process
 
                 using (PartnerEntities context=new PartnerEntities(entityConStr))
                 {
+                    var connection = context.Database.Connection;
+                    if(connection.State!=ConnectionState.Open) connection.Open();
                     foreach (string fileName in fileNames)
                     {
                         try
