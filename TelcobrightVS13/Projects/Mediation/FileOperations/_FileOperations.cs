@@ -124,7 +124,7 @@ namespace TelcobrightFileOperations
             //                             && c.JobName == newJob.JobName).First().id;
             command.CommandText = $@"select id from job where idjobdefinition={newJob.idjobdefinition}
                                      and jobname='{newJob.JobName}' ";
-            int insertedJobsid = command.ExecuteNonQuery();
+            long insertedJobsid = (long)command.ExecuteScalar();
             return insertedJobsid;
         }
 
