@@ -152,7 +152,7 @@ namespace TelcobrightMediation.Mediation.Cdr
             cdrinconsistent inconsistentCdr = new cdrinconsistent();
             inconsistentCdr.SwitchId = txtRow[Fn.Switchid];
             inconsistentCdr.IdCall = System.Convert.ToInt64(txtRow[Fn.IdCall]).ToString();
-            inconsistentCdr.SequenceNumber = txtRow[Fn.Sequencenumber];
+            inconsistentCdr.SequenceNumber = Convert.ToInt64(txtRow[Fn.Sequencenumber]);
             inconsistentCdr.FileName = txtRow[Fn.Filename];
             inconsistentCdr.ServiceGroup = txtRow[Fn.ServiceGroup];
             inconsistentCdr.IncomingRoute = txtRow[Fn.IncomingRoute];

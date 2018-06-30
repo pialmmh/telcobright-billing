@@ -177,9 +177,6 @@
     <Compile Include="DataReaderConversion\_CdrDataRowToStrArrHelper.cs" />
     <Compile Include="DataReaderConversion\cdrerror.cs" />
     <Compile Include="DataReaderConversion\IDataReaderToStrArrConverter.cs" />
-    <Compile Include="durationmeta.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="EntityExtensions\account.cs" />
     <Compile Include="EntityExtensions\acc_transaction.cs" />
     <Compile Include="EntityExtensions\acc_chargeable.cs" />

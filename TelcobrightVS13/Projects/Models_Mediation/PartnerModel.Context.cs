@@ -25,6 +25,8 @@ namespace MediationModel
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<acc_temp_transaction> acc_temp_transaction { get; set; }
+        public virtual DbSet<account> accounts { get; set; }
         public virtual DbSet<allerror> allerrors { get; set; }
         public virtual DbSet<ansprefixextra> ansprefixextras { get; set; }
         public virtual DbSet<aspnetuserclaim> aspnetuserclaims { get; set; }
@@ -34,6 +36,19 @@ namespace MediationModel
         public virtual DbSet<causecode> causecodes { get; set; }
         public virtual DbSet<cdrfieldlist> cdrfieldlists { get; set; }
         public virtual DbSet<cdrfieldmappingbyswitchtype> cdrfieldmappingbyswitchtypes { get; set; }
+        public virtual DbSet<cdrmeta> cdrmetas { get; set; }
+        public virtual DbSet<cdrsummarymeta_day_01> cdrsummarymeta_day_01 { get; set; }
+        public virtual DbSet<cdrsummarymeta_day_02> cdrsummarymeta_day_02 { get; set; }
+        public virtual DbSet<cdrsummarymeta_day_03> cdrsummarymeta_day_03 { get; set; }
+        public virtual DbSet<cdrsummarymeta_day_04> cdrsummarymeta_day_04 { get; set; }
+        public virtual DbSet<cdrsummarymeta_day_05> cdrsummarymeta_day_05 { get; set; }
+        public virtual DbSet<cdrsummarymeta_day_06> cdrsummarymeta_day_06 { get; set; }
+        public virtual DbSet<cdrsummarymeta_hr_01> cdrsummarymeta_hr_01 { get; set; }
+        public virtual DbSet<cdrsummarymeta_hr_02> cdrsummarymeta_hr_02 { get; set; }
+        public virtual DbSet<cdrsummarymeta_hr_03> cdrsummarymeta_hr_03 { get; set; }
+        public virtual DbSet<cdrsummarymeta_hr_04> cdrsummarymeta_hr_04 { get; set; }
+        public virtual DbSet<cdrsummarymeta_hr_05> cdrsummarymeta_hr_05 { get; set; }
+        public virtual DbSet<cdrsummarymeta_hr_06> cdrsummarymeta_hr_06 { get; set; }
         public virtual DbSet<commontg> commontgs { get; set; }
         public virtual DbSet<country> countries { get; set; }
         public virtual DbSet<countrycode> countrycodes { get; set; }
@@ -77,6 +92,8 @@ namespace MediationModel
         public virtual DbSet<enumvatrule> enumvatrules { get; set; }
         public virtual DbSet<errordefinition> errordefinitions { get; set; }
         public virtual DbSet<genericparameterassignment> genericparameterassignments { get; set; }
+        public virtual DbSet<invoice> invoices { get; set; }
+        public virtual DbSet<invoice_item> invoice_item { get; set; }
         public virtual DbSet<job> jobs { get; set; }
         public virtual DbSet<jobcompletion> jobcompletions { get; set; }
         public virtual DbSet<jobsegment> jobsegments { get; set; }
@@ -84,11 +101,12 @@ namespace MediationModel
         public virtual DbSet<lcr> lcrs { get; set; }
         public virtual DbSet<lcrpoint> lcrpoints { get; set; }
         public virtual DbSet<lcrrateplan> lcrrateplans { get; set; }
+        public virtual DbSet<ledger_summary_meta> ledger_summary_meta { get; set; }
         public virtual DbSet<ne> nes { get; set; }
         public virtual DbSet<partner> partners { get; set; }
         public virtual DbSet<partnerprefix> partnerprefixes { get; set; }
         public virtual DbSet<process> processes { get; set; }
-        public virtual DbSet<rate> rates { get; set; }
+        public virtual DbSet<product> products { get; set; }
         public virtual DbSet<rateassign> rateassigns { get; set; }
         public virtual DbSet<rateplan> rateplans { get; set; }
         public virtual DbSet<rateplanassign> rateplanassigns { get; set; }
@@ -103,6 +121,7 @@ namespace MediationModel
         public virtual DbSet<routeaddressmapping> routeaddressmappings { get; set; }
         public virtual DbSet<telcobrightpartner> telcobrightpartners { get; set; }
         public virtual DbSet<timezone> timezones { get; set; }
+        public virtual DbSet<transactionmeta> transactionmetas { get; set; }
         public virtual DbSet<uom> uoms { get; set; }
         public virtual DbSet<userclaim> userclaims { get; set; }
         public virtual DbSet<userlogin> userlogins { get; set; }
@@ -114,7 +133,6 @@ namespace MediationModel
         public virtual DbSet<zone> zones { get; set; }
         public virtual DbSet<acc_chargeable> acc_chargeable { get; set; }
         public virtual DbSet<acc_ledger_summary> acc_ledger_summary { get; set; }
-        public virtual DbSet<acc_temp_transaction> acc_temp_transaction { get; set; }
         public virtual DbSet<acc_transaction> acc_transaction { get; set; }
         public virtual DbSet<cdr> cdrs { get; set; }
         public virtual DbSet<cdrdiscarded> cdrdiscardeds { get; set; }
@@ -124,39 +142,20 @@ namespace MediationModel
         public virtual DbSet<cdrpartialrawinstance> cdrpartialrawinstances { get; set; }
         public virtual DbSet<cdrpartialreference> cdrpartialreferences { get; set; }
         public virtual DbSet<mockcdr> mockcdrs { get; set; }
+        public virtual DbSet<rate> rates { get; set; }
         public virtual DbSet<sum_voice_day_01> sum_voice_day_01 { get; set; }
         public virtual DbSet<sum_voice_day_02> sum_voice_day_02 { get; set; }
         public virtual DbSet<sum_voice_day_03> sum_voice_day_03 { get; set; }
         public virtual DbSet<sum_voice_day_04> sum_voice_day_04 { get; set; }
+        public virtual DbSet<sum_voice_day_05> sum_voice_day_05 { get; set; }
+        public virtual DbSet<sum_voice_day_06> sum_voice_day_06 { get; set; }
         public virtual DbSet<sum_voice_hr_01> sum_voice_hr_01 { get; set; }
         public virtual DbSet<sum_voice_hr_02> sum_voice_hr_02 { get; set; }
         public virtual DbSet<sum_voice_hr_03> sum_voice_hr_03 { get; set; }
         public virtual DbSet<sum_voice_hr_04> sum_voice_hr_04 { get; set; }
-        public virtual DbSet<uom_conversion> uom_conversion { get; set; }
-        public virtual DbSet<uom_conversion_dated> uom_conversion_dated { get; set; }
-        public virtual DbSet<sum_voice_day_05> sum_voice_day_05 { get; set; }
-        public virtual DbSet<sum_voice_day_06> sum_voice_day_06 { get; set; }
         public virtual DbSet<sum_voice_hr_05> sum_voice_hr_05 { get; set; }
         public virtual DbSet<sum_voice_hr_06> sum_voice_hr_06 { get; set; }
-        public virtual DbSet<account> accounts { get; set; }
-        public virtual DbSet<durationmeta> durationmetas { get; set; }
-        public virtual DbSet<cdrmeta> cdrmetas { get; set; }
-        public virtual DbSet<cdrsummarymeta_day_01> cdrsummarymeta_day_01 { get; set; }
-        public virtual DbSet<cdrsummarymeta_day_02> cdrsummarymeta_day_02 { get; set; }
-        public virtual DbSet<cdrsummarymeta_day_03> cdrsummarymeta_day_03 { get; set; }
-        public virtual DbSet<cdrsummarymeta_day_04> cdrsummarymeta_day_04 { get; set; }
-        public virtual DbSet<cdrsummarymeta_day_05> cdrsummarymeta_day_05 { get; set; }
-        public virtual DbSet<cdrsummarymeta_day_06> cdrsummarymeta_day_06 { get; set; }
-        public virtual DbSet<cdrsummarymeta_hr_01> cdrsummarymeta_hr_01 { get; set; }
-        public virtual DbSet<cdrsummarymeta_hr_02> cdrsummarymeta_hr_02 { get; set; }
-        public virtual DbSet<cdrsummarymeta_hr_03> cdrsummarymeta_hr_03 { get; set; }
-        public virtual DbSet<cdrsummarymeta_hr_04> cdrsummarymeta_hr_04 { get; set; }
-        public virtual DbSet<cdrsummarymeta_hr_05> cdrsummarymeta_hr_05 { get; set; }
-        public virtual DbSet<cdrsummarymeta_hr_06> cdrsummarymeta_hr_06 { get; set; }
-        public virtual DbSet<invoice> invoices { get; set; }
-        public virtual DbSet<invoice_item> invoice_item { get; set; }
-        public virtual DbSet<ledger_summary_meta> ledger_summary_meta { get; set; }
-        public virtual DbSet<product> products { get; set; }
-        public virtual DbSet<transactionmeta> transactionmetas { get; set; }
+        public virtual DbSet<uom_conversion> uom_conversion { get; set; }
+        public virtual DbSet<uom_conversion_dated> uom_conversion_dated { get; set; }
     }
 }

@@ -361,7 +361,7 @@ warning 6002: The table/view 'def.platinum.cdrdiscarded' does not have a primary
         <EntityType Name="cdrdiscarded">
           <Key>
             <PropertyRef Name="SwitchId" />
-            
+            <PropertyRef Name="SequenceNumber" />
             <PropertyRef Name="FileName" />
             <PropertyRef Name="ServiceGroup" />
             <PropertyRef Name="DurationSec" />
@@ -617,7 +617,7 @@ warning 6002: The table/view 'def.platinum.cdrinconsistent' does not have a prim
         <EntityType Name="cdrinconsistent">
           <Key>
             <PropertyRef Name="SwitchId" />
-            
+            <PropertyRef Name="SequenceNumber" />
             <PropertyRef Name="FileName" />
             <PropertyRef Name="ServiceGroup" />
             <PropertyRef Name="DurationSec" />
@@ -1799,24 +1799,24 @@ warning 6002: The table/view 'def.platinum.rate' does not have a primary key def
         <EntityType Name="rate">
           <Key>
             <PropertyRef Name="id" />
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
+            <PropertyRef Name="ProductId" />
+            <PropertyRef Name="Prefix" />
+            <PropertyRef Name="rateamount" />
+            <PropertyRef Name="WeekDayStart" />
+            <PropertyRef Name="WeekDayEnd" />
+            <PropertyRef Name="Resolution" />
+            <PropertyRef Name="MinDurationSec" />
+            <PropertyRef Name="SurchargeTime" />
+            <PropertyRef Name="SurchargeAmount" />
+            <PropertyRef Name="field3" />
+            <PropertyRef Name="startdate" />
+            <PropertyRef Name="Inactive" />
+            <PropertyRef Name="RouteDisabled" />
+            <PropertyRef Name="Type" />
+            <PropertyRef Name="Currency" />
+            <PropertyRef Name="TimeZoneOffsetSec" />
           </Key>
-          <Property Name="id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="bigint" Nullable="false" />
           <Property Name="ProductId" Type="int" Nullable="false" />
           <Property Name="Prefix" Type="varchar" MaxLength="25" Nullable="false" />
           <Property Name="description" Type="varchar" MaxLength="200" />
@@ -5734,6 +5734,8 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
     <edmx:ConceptualModels>
       <Schema Namespace="MediationModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="PartnerEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="acc_temp_transaction" EntityType="MediationModel.acc_temp_transaction" />
+          <EntitySet Name="accounts" EntityType="MediationModel.account" />
           <EntitySet Name="allerrors" EntityType="MediationModel.allerror" />
           <EntitySet Name="ansprefixextras" EntityType="MediationModel.ansprefixextra" />
           <EntitySet Name="aspnetuserclaims" EntityType="MediationModel.aspnetuserclaim" />
@@ -5743,6 +5745,19 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <EntitySet Name="causecodes" EntityType="MediationModel.causecode" />
           <EntitySet Name="cdrfieldlists" EntityType="MediationModel.cdrfieldlist" />
           <EntitySet Name="cdrfieldmappingbyswitchtypes" EntityType="MediationModel.cdrfieldmappingbyswitchtype" />
+          <EntitySet Name="cdrmetas" EntityType="MediationModel.cdrmeta" />
+          <EntitySet Name="cdrsummarymeta_day_01" EntityType="MediationModel.cdrsummarymeta_day_01" />
+          <EntitySet Name="cdrsummarymeta_day_02" EntityType="MediationModel.cdrsummarymeta_day_02" />
+          <EntitySet Name="cdrsummarymeta_day_03" EntityType="MediationModel.cdrsummarymeta_day_03" />
+          <EntitySet Name="cdrsummarymeta_day_04" EntityType="MediationModel.cdrsummarymeta_day_04" />
+          <EntitySet Name="cdrsummarymeta_day_05" EntityType="MediationModel.cdrsummarymeta_day_05" />
+          <EntitySet Name="cdrsummarymeta_day_06" EntityType="MediationModel.cdrsummarymeta_day_06" />
+          <EntitySet Name="cdrsummarymeta_hr_01" EntityType="MediationModel.cdrsummarymeta_hr_01" />
+          <EntitySet Name="cdrsummarymeta_hr_02" EntityType="MediationModel.cdrsummarymeta_hr_02" />
+          <EntitySet Name="cdrsummarymeta_hr_03" EntityType="MediationModel.cdrsummarymeta_hr_03" />
+          <EntitySet Name="cdrsummarymeta_hr_04" EntityType="MediationModel.cdrsummarymeta_hr_04" />
+          <EntitySet Name="cdrsummarymeta_hr_05" EntityType="MediationModel.cdrsummarymeta_hr_05" />
+          <EntitySet Name="cdrsummarymeta_hr_06" EntityType="MediationModel.cdrsummarymeta_hr_06" />
           <EntitySet Name="commontgs" EntityType="MediationModel.commontg" />
           <EntitySet Name="countries" EntityType="MediationModel.country" />
           <EntitySet Name="countrycodes" EntityType="MediationModel.countrycode" />
@@ -5786,6 +5801,8 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <EntitySet Name="enumvatrules" EntityType="MediationModel.enumvatrule" />
           <EntitySet Name="errordefinitions" EntityType="MediationModel.errordefinition" />
           <EntitySet Name="genericparameterassignments" EntityType="MediationModel.genericparameterassignment" />
+          <EntitySet Name="invoices" EntityType="MediationModel.invoice" />
+          <EntitySet Name="invoice_item" EntityType="MediationModel.invoice_item" />
           <EntitySet Name="jobs" EntityType="MediationModel.job" />
           <EntitySet Name="jobcompletions" EntityType="MediationModel.jobcompletion" />
           <EntitySet Name="jobsegments" EntityType="MediationModel.jobsegment" />
@@ -5793,11 +5810,12 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <EntitySet Name="lcrs" EntityType="MediationModel.lcr" />
           <EntitySet Name="lcrpoints" EntityType="MediationModel.lcrpoint" />
           <EntitySet Name="lcrrateplans" EntityType="MediationModel.lcrrateplan" />
+          <EntitySet Name="ledger_summary_meta" EntityType="MediationModel.ledger_summary_meta" />
           <EntitySet Name="nes" EntityType="MediationModel.ne" />
           <EntitySet Name="partners" EntityType="MediationModel.partner" />
           <EntitySet Name="partnerprefixes" EntityType="MediationModel.partnerprefix" />
           <EntitySet Name="processes" EntityType="MediationModel.process" />
-          <EntitySet Name="rates" EntityType="MediationModel.rate" />
+          <EntitySet Name="products" EntityType="MediationModel.product" />
           <EntitySet Name="rateassigns" EntityType="MediationModel.rateassign" />
           <EntitySet Name="rateplans" EntityType="MediationModel.rateplan" />
           <EntitySet Name="rateplanassigns" EntityType="MediationModel.rateplanassign" />
@@ -5812,6 +5830,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <EntitySet Name="routeaddressmappings" EntityType="MediationModel.routeaddressmapping" />
           <EntitySet Name="telcobrightpartners" EntityType="MediationModel.telcobrightpartner" />
           <EntitySet Name="timezones" EntityType="MediationModel.timezone" />
+          <EntitySet Name="transactionmetas" EntityType="MediationModel.transactionmeta" />
           <EntitySet Name="uoms" EntityType="MediationModel.uom" />
           <EntitySet Name="userclaims" EntityType="MediationModel.userclaim" />
           <EntitySet Name="userlogins" EntityType="MediationModel.userlogin" />
@@ -5823,7 +5842,6 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <EntitySet Name="zones" EntityType="MediationModel.zone" />
           <EntitySet Name="acc_chargeable" EntityType="MediationModel.acc_chargeable" />
           <EntitySet Name="acc_ledger_summary" EntityType="MediationModel.acc_ledger_summary" />
-          <EntitySet Name="acc_temp_transaction" EntityType="MediationModel.acc_temp_transaction" />
           <EntitySet Name="acc_transaction" EntityType="MediationModel.acc_transaction" />
           <EntitySet Name="cdrs" EntityType="MediationModel.cdr" />
           <EntitySet Name="cdrdiscardeds" EntityType="MediationModel.cdrdiscarded" />
@@ -5833,16 +5851,33 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <EntitySet Name="cdrpartialrawinstances" EntityType="MediationModel.cdrpartialrawinstance" />
           <EntitySet Name="cdrpartialreferences" EntityType="MediationModel.cdrpartialreference" />
           <EntitySet Name="mockcdrs" EntityType="MediationModel.mockcdr" />
+          <EntitySet Name="rates" EntityType="MediationModel.rate" />
           <EntitySet Name="sum_voice_day_01" EntityType="MediationModel.sum_voice_day_01" />
           <EntitySet Name="sum_voice_day_02" EntityType="MediationModel.sum_voice_day_02" />
           <EntitySet Name="sum_voice_day_03" EntityType="MediationModel.sum_voice_day_03" />
           <EntitySet Name="sum_voice_day_04" EntityType="MediationModel.sum_voice_day_04" />
+          <EntitySet Name="sum_voice_day_05" EntityType="MediationModel.sum_voice_day_05" />
+          <EntitySet Name="sum_voice_day_06" EntityType="MediationModel.sum_voice_day_06" />
           <EntitySet Name="sum_voice_hr_01" EntityType="MediationModel.sum_voice_hr_01" />
           <EntitySet Name="sum_voice_hr_02" EntityType="MediationModel.sum_voice_hr_02" />
           <EntitySet Name="sum_voice_hr_03" EntityType="MediationModel.sum_voice_hr_03" />
           <EntitySet Name="sum_voice_hr_04" EntityType="MediationModel.sum_voice_hr_04" />
+          <EntitySet Name="sum_voice_hr_05" EntityType="MediationModel.sum_voice_hr_05" />
+          <EntitySet Name="sum_voice_hr_06" EntityType="MediationModel.sum_voice_hr_06" />
           <EntitySet Name="uom_conversion" EntityType="MediationModel.uom_conversion" />
           <EntitySet Name="uom_conversion_dated" EntityType="MediationModel.uom_conversion_dated" />
+          <AssociationSet Name="account_ibfk_1" Association="MediationModel.account_ibfk_1">
+            <End Role="partner" EntitySet="partners" />
+            <End Role="account" EntitySet="accounts" />
+          </AssociationSet>
+          <AssociationSet Name="account_ibfk_2" Association="MediationModel.account_ibfk_2">
+            <End Role="partner" EntitySet="partners" />
+            <End Role="account" EntitySet="accounts" />
+          </AssociationSet>
+          <AssociationSet Name="INVOICE_ACCOUNT" Association="MediationModel.INVOICE_ACCOUNT">
+            <End Role="account" EntitySet="accounts" />
+            <End Role="invoice" EntitySet="invoices" />
+          </AssociationSet>
           <AssociationSet Name="billingruleassignment_ibfk_2" Association="MediationModel.billingruleassignment_ibfk_2">
             <End Role="rateplanassignmenttuple" EntitySet="rateplanassignmenttuples" />
             <End Role="billingruleassignment" EntitySet="billingruleassignments" />
@@ -5879,6 +5914,10 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             <End Role="enumservicecategory" EntitySet="enumservicecategories" />
             <End Role="enumservicefamily" EntitySet="enumservicefamilies" />
           </AssociationSet>
+          <AssociationSet Name="INVCE_ITM_INVCE" Association="MediationModel.INVCE_ITM_INVCE">
+            <End Role="invoice" EntitySet="invoices" />
+            <End Role="invoice_item" EntitySet="invoice_item" />
+          </AssociationSet>
           <AssociationSet Name="job_ibfk_4" Association="MediationModel.job_ibfk_4">
             <End Role="ne" EntitySet="nes" />
             <End Role="job" EntitySet="jobs" />
@@ -5886,10 +5925,6 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <AssociationSet Name="jobcompletion_ibfk_1" Association="MediationModel.jobcompletion_ibfk_1">
             <End Role="job" EntitySet="jobs" />
             <End Role="jobcompletion" EntitySet="jobcompletions" />
-          </AssociationSet>
-          <AssociationSet Name="jobsegment_ibfk_1" Association="MediationModel.jobsegment_ibfk_1">
-            <End Role="job" EntitySet="jobs" />
-            <End Role="jobsegment" EntitySet="jobsegments" />
           </AssociationSet>
           <AssociationSet Name="fk_Ne" Association="MediationModel.fk_Ne">
             <End Role="ne" EntitySet="nes" />
@@ -5947,47 +5982,61 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             <End Role="user" EntitySet="users" />
             <End Role="userrole" EntitySet="userroles" />
           </AssociationSet>
-          <EntitySet Name="sum_voice_day_05" EntityType="MediationModel.sum_voice_day_05" />
-          <EntitySet Name="sum_voice_day_06" EntityType="MediationModel.sum_voice_day_06" />
-          <EntitySet Name="sum_voice_hr_05" EntityType="MediationModel.sum_voice_hr_05" />
-          <EntitySet Name="sum_voice_hr_06" EntityType="MediationModel.sum_voice_hr_06" />
-          <EntitySet Name="accounts" EntityType="MediationModel.account" />
-          <AssociationSet Name="account_ibfk_1" Association="MediationModel.account_ibfk_1">
-            <End Role="partner" EntitySet="partners" />
-            <End Role="account" EntitySet="accounts" />
-          </AssociationSet>
-          <AssociationSet Name="account_ibfk_2" Association="MediationModel.account_ibfk_2">
-            <End Role="partner" EntitySet="partners" />
-            <End Role="account" EntitySet="accounts" />
-          </AssociationSet>
-          <EntitySet Name="durationmetas" EntityType="MediationModel.durationmeta" />
-          <EntitySet Name="cdrmetas" EntityType="MediationModel.cdrmeta" />
-          <EntitySet Name="cdrsummarymeta_day_01" EntityType="MediationModel.cdrsummarymeta_day_01" />
-          <EntitySet Name="cdrsummarymeta_day_02" EntityType="MediationModel.cdrsummarymeta_day_02" />
-          <EntitySet Name="cdrsummarymeta_day_03" EntityType="MediationModel.cdrsummarymeta_day_03" />
-          <EntitySet Name="cdrsummarymeta_day_04" EntityType="MediationModel.cdrsummarymeta_day_04" />
-          <EntitySet Name="cdrsummarymeta_day_05" EntityType="MediationModel.cdrsummarymeta_day_05" />
-          <EntitySet Name="cdrsummarymeta_day_06" EntityType="MediationModel.cdrsummarymeta_day_06" />
-          <EntitySet Name="cdrsummarymeta_hr_01" EntityType="MediationModel.cdrsummarymeta_hr_01" />
-          <EntitySet Name="cdrsummarymeta_hr_02" EntityType="MediationModel.cdrsummarymeta_hr_02" />
-          <EntitySet Name="cdrsummarymeta_hr_03" EntityType="MediationModel.cdrsummarymeta_hr_03" />
-          <EntitySet Name="cdrsummarymeta_hr_04" EntityType="MediationModel.cdrsummarymeta_hr_04" />
-          <EntitySet Name="cdrsummarymeta_hr_05" EntityType="MediationModel.cdrsummarymeta_hr_05" />
-          <EntitySet Name="cdrsummarymeta_hr_06" EntityType="MediationModel.cdrsummarymeta_hr_06" />
-          <EntitySet Name="invoices" EntityType="MediationModel.invoice" />
-          <EntitySet Name="invoice_item" EntityType="MediationModel.invoice_item" />
-          <EntitySet Name="ledger_summary_meta" EntityType="MediationModel.ledger_summary_meta" />
-          <EntitySet Name="products" EntityType="MediationModel.product" />
-          <EntitySet Name="transactionmetas" EntityType="MediationModel.transactionmeta" />
-          <AssociationSet Name="INVOICE_ACCOUNT" Association="MediationModel.INVOICE_ACCOUNT">
-            <End Role="account" EntitySet="accounts" />
-            <End Role="invoice" EntitySet="invoices" />
-          </AssociationSet>
-          <AssociationSet Name="INVCE_ITM_INVCE" Association="MediationModel.INVCE_ITM_INVCE">
-            <End Role="invoice" EntitySet="invoices" />
-            <End Role="invoice_item" EntitySet="invoice_item" />
-          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="acc_temp_transaction">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="transactionTime" Type="DateTime" Nullable="false" />
+          <Property Name="seqId" Type="Int16" />
+          <Property Name="debitOrCredit" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="idEvent" Type="Int64" Nullable="false" />
+          <Property Name="uniqueBillId" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="description" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="glAccountId" Type="Int64" Nullable="false" />
+          <Property Name="uomId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="amount" Type="Decimal" Nullable="false" />
+          <Property Name="BalanceBefore" Type="Decimal" Nullable="false" />
+          <Property Name="BalanceAfter" Type="Decimal" Nullable="false" />
+          <Property Name="isBillable" Type="SByte" />
+          <Property Name="isPrepaid" Type="SByte" />
+          <Property Name="isBilled" Type="SByte" />
+          <Property Name="cancelled" Type="SByte" />
+          <Property Name="createdByJob" Type="Int64" />
+          <Property Name="changedByJob" Type="Int64" />
+          <Property Name="jsonDetail" Type="String" MaxLength="400" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="account">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="idParent" Type="Int64" />
+          <Property Name="idParentExternal" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="idPartner" Type="Int32" Nullable="false" />
+          <Property Name="accountName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="serviceGroup" Type="Int32" Nullable="false" />
+          <Property Name="serviceFamily" Type="Int32" Nullable="false" />
+          <Property Name="product" Type="Int32" Nullable="false" />
+          <Property Name="billableType" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="uom" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Depth" Type="Int32" Nullable="false" />
+          <Property Name="Lineage" Type="String" MaxLength="400" FixedLength="false" Unicode="false" />
+          <Property Name="remark" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="isBillable" Type="SByte" />
+          <Property Name="isCustomerAccount" Type="SByte" />
+          <Property Name="isSupplierAccount" Type="SByte" />
+          <Property Name="balanceBefore" Type="Decimal" Nullable="false" />
+          <Property Name="lastAmount" Type="Decimal" />
+          <Property Name="balanceAfter" Type="Decimal" Nullable="false" />
+          <Property Name="lastUpdated" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="superviseNegativeBalance" Type="Int32" />
+          <Property Name="negativeBalanceLimit" Type="Decimal" Nullable="false" />
+          <NavigationProperty Name="partner" Relationship="MediationModel.account_ibfk_1" FromRole="account" ToRole="partner" />
+          <NavigationProperty Name="partner1" Relationship="MediationModel.account_ibfk_2" FromRole="account" ToRole="partner" />
+          <NavigationProperty Name="invoices" Relationship="MediationModel.INVOICE_ACCOUNT" FromRole="account" ToRole="invoice" />
+        </EntityType>
         <EntityType Name="allerror">
           <Key>
             <PropertyRef Name="id" />
@@ -6088,6 +6137,110 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="BinByteLen" Type="Single" />
           <Property Name="BinByteType" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="cdrfieldlist" Relationship="MediationModel.cdrfieldmappingbyswitchtype_ibfk_1" FromRole="cdrfieldmappingbyswitchtype" ToRole="cdrfieldlist" />
+        </EntityType>
+        <EntityType Name="cdrmeta">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_day_01">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_day_02">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_day_03">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_day_04">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_day_05">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_day_06">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_hr_01">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_hr_02">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_hr_03">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_hr_04">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_hr_05">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_hr_06">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
         </EntityType>
         <EntityType Name="commontg">
           <Key>
@@ -6439,6 +6592,63 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="description" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="JsonParametersToAssign" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="invoice">
+          <Key>
+            <PropertyRef Name="INVOICE_ID" />
+          </Key>
+          <Property Name="INVOICE_ID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="INVOICE_TYPE_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PARTY_ID_FROM" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PARTY_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ROLE_TYPE_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="STATUS_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="BILLING_ACCOUNT_ID" Type="Int64" />
+          <Property Name="CONTACT_MECH_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="INVOICE_DATE" Type="DateTime" />
+          <Property Name="DUE_DATE" Type="DateTime" />
+          <Property Name="PAID_DATE" Type="DateTime" />
+          <Property Name="INVOICE_MESSAGE" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="REFERENCE_NUMBER" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="DESCRIPTION" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="CURRENCY_UOM_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="RECURRENCE_INFO_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="LAST_UPDATED_STAMP" Type="DateTime" />
+          <Property Name="LAST_UPDATED_TX_STAMP" Type="DateTime" />
+          <Property Name="CREATED_STAMP" Type="DateTime" />
+          <Property Name="CREATED_TX_STAMP" Type="DateTime" />
+          <NavigationProperty Name="account" Relationship="MediationModel.INVOICE_ACCOUNT" FromRole="invoice" ToRole="account" />
+          <NavigationProperty Name="invoice_item" Relationship="MediationModel.INVCE_ITM_INVCE" FromRole="invoice" ToRole="invoice_item" />
+        </EntityType>
+        <EntityType Name="invoice_item">
+          <Key>
+            <PropertyRef Name="INVOICE_ID" />
+            <PropertyRef Name="INVOICE_ITEM_SEQ_ID" />
+          </Key>
+          <Property Name="INVOICE_ID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="INVOICE_ITEM_SEQ_ID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="INVOICE_ITEM_TYPE_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="OVERRIDE_GL_ACCOUNT_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="OVERRIDE_ORG_PARTY_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="INVENTORY_ITEM_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PRODUCT_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PRODUCT_FEATURE_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PARENT_INVOICE_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PARENT_INVOICE_ITEM_SEQ_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="UOM_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="TAXABLE_FLAG" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="QUANTITY" Type="Decimal" />
+          <Property Name="AMOUNT" Type="Decimal" />
+          <Property Name="DESCRIPTION" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="TAX_AUTH_PARTY_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="TAX_AUTH_GEO_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="TAX_AUTHORITY_RATE_SEQ_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SALES_OPPORTUNITY_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="LAST_UPDATED_STAMP" Type="DateTime" />
+          <Property Name="LAST_UPDATED_TX_STAMP" Type="DateTime" />
+          <Property Name="CREATED_STAMP" Type="DateTime" />
+          <Property Name="CREATED_TX_STAMP" Type="DateTime" />
+          <NavigationProperty Name="invoice" Relationship="MediationModel.INVCE_ITM_INVCE" FromRole="invoice_item" ToRole="invoice" />
+        </EntityType>
         <EntityType Name="job">
           <Key>
             <PropertyRef Name="id" />
@@ -6465,7 +6675,6 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <NavigationProperty Name="enumjobstatu" Relationship="MediationModel.job_ibfk_3" FromRole="job" ToRole="enumjobstatu" />
           <NavigationProperty Name="ne" Relationship="MediationModel.job_ibfk_4" FromRole="job" ToRole="ne" />
           <NavigationProperty Name="jobcompletion" Relationship="MediationModel.jobcompletion_ibfk_1" FromRole="job" ToRole="jobcompletion" />
-          <NavigationProperty Name="jobsegments" Relationship="MediationModel.jobsegment_ibfk_1" FromRole="job" ToRole="jobsegment" />
         </EntityType>
         <EntityType Name="jobcompletion">
           <Key>
@@ -6484,7 +6693,6 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="stepsCount" Type="Int32" Nullable="false" />
           <Property Name="status" Type="Int32" />
           <Property Name="SegmentDetail" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="job" Relationship="MediationModel.jobsegment_ibfk_1" FromRole="jobsegment" ToRole="job" />
         </EntityType>
         <EntityType Name="jsonbillingrule">
           <Key>
@@ -6528,6 +6736,14 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="StartDate" Type="DateTime" Nullable="false" />
           <Property Name="JobCreated" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ledger_summary_meta">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="totalInsertedAmount" Type="Decimal" Nullable="false" />
+          <Property Name="totalDeletedAmount" Type="Decimal" Nullable="false" />
         </EntityType>
         <EntityType Name="ne">
           <Key>
@@ -6599,9 +6815,9 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="refpdd" Type="Single" />
           <Property Name="refasrfas" Type="Single" />
           <Property Name="DefaultCurrency" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="routes" Relationship="MediationModel.route_ibfk_1" FromRole="partner" ToRole="route" />
           <NavigationProperty Name="accounts" Relationship="MediationModel.account_ibfk_1" FromRole="partner" ToRole="account" />
           <NavigationProperty Name="accounts1" Relationship="MediationModel.account_ibfk_2" FromRole="partner" ToRole="account" />
+          <NavigationProperty Name="routes" Relationship="MediationModel.route_ibfk_1" FromRole="partner" ToRole="route" />
         </EntityType>
         <EntityType Name="partnerprefix">
           <Key>
@@ -6623,65 +6839,18 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="ProcessParamaterJson" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" />
           <Property Name="AdminState" Type="Int32" Nullable="false" />
         </EntityType>
-        <EntityType Name="rate">
+        <EntityType Name="product">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ProductId" Type="Int32" Nullable="false" />
-          <Property Name="Prefix" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Prefix" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="description" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="rateamount" Type="Decimal" Nullable="false" />
-          <Property Name="WeekDayStart" Type="Int32" Nullable="false" />
-          <Property Name="WeekDayEnd" Type="Int32" Nullable="false" />
-          <Property Name="starttime" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
-          <Property Name="endtime" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
-          <Property Name="Resolution" Type="Int32" Nullable="false" />
-          <Property Name="MinDurationSec" Type="Single" Nullable="false" />
-          <Property Name="SurchargeTime" Type="Int32" Nullable="false" />
-          <Property Name="SurchargeAmount" Type="Decimal" Nullable="false" />
-          <Property Name="idrateplan" Type="Int64" />
-          <Property Name="CountryCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="date1" Type="DateTime" />
-          <Property Name="field1" Type="Int32" />
-          <Property Name="field2" Type="Int32" />
-          <Property Name="field3" Type="Int32" Nullable="false" />
-          <Property Name="field4" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="field5" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="startdate" Type="DateTime" Nullable="false" />
-          <Property Name="enddate" Type="DateTime" />
-          <Property Name="Inactive" Type="Int32" Nullable="false" />
-          <Property Name="RouteDisabled" Type="Int32" Nullable="false" />
-          <Property Name="Type" Type="Int32" Nullable="false" />
-          <Property Name="Currency" Type="Int32" Nullable="false" />
-          <Property Name="OtherAmount1" Type="Decimal" />
-          <Property Name="OtherAmount2" Type="Decimal" />
-          <Property Name="OtherAmount3" Type="Decimal" />
-          <Property Name="OtherAmount4" Type="Decimal" />
-          <Property Name="OtherAmount5" Type="Decimal" />
-          <Property Name="OtherAmount6" Type="Decimal" />
-          <Property Name="OtherAmount7" Type="Single" />
-          <Property Name="OtherAmount8" Type="Single" />
-          <Property Name="OtherAmount9" Type="Single" />
-          <Property Name="OtherAmount10" Type="Single" />
-          <Property Name="TimeZoneOffsetSec" Type="Decimal" Nullable="false" />
-          <Property Name="RatePosition" Type="Int32" />
-          <Property Name="IgwPercentageIn" Type="Single" />
-          <Property Name="ConflictingRateIds" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="ChangedByTaskId" Type="Int64" />
-          <Property Name="ChangedOn" Type="DateTime" />
-          <Property Name="Status" Type="Int32" />
-          <Property Name="idPreviousRate" Type="Int64" />
-          <Property Name="EndPreviousRate" Type="SByte" />
-          <Property Name="Category" Type="SByte" />
-          <Property Name="SubCategory" Type="SByte" />
-          <Property Name="ChangeCommitted" Type="Int32" />
-          <Property Name="ConflictingRates" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="OverlappingRates" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Comment1" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="Comment2" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="billingspan" Type="Int32" />
-          <Property Name="RateAmountRoundupDecimal" Type="Int32" />
+          <Property Name="Category" Type="Int32" Nullable="false" />
+          <Property Name="SubCategory" Type="Int32" />
+          <Property Name="ServiceFamily" Type="Int64" Nullable="false" />
+          <Property Name="AccountingId" Type="Int32" />
         </EntityType>
         <EntityType Name="rateassign">
           <Key>
@@ -7050,6 +7219,14 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <NavigationProperty Name="zone" Relationship="MediationModel.fk_zone" FromRole="timezone" ToRole="zone" />
         </EntityType>
+        <EntityType Name="transactionmeta">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="totalInsertedAmount" Type="Decimal" Nullable="false" />
+          <Property Name="totalDeletedAmount" Type="Decimal" Nullable="false" />
+        </EntityType>
         <EntityType Name="uom">
           <Key>
             <PropertyRef Name="UOM_ID" />
@@ -7229,38 +7406,6 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="transactionDate" Type="DateTime" Nullable="false" />
           <Property Name="AMOUNT" Type="Decimal" Nullable="false" />
         </EntityType>
-        <EntityType Name="acc_temp_transaction">
-          <Key>
-            <PropertyRef Name="id" />
-            <PropertyRef Name="transactionTime" />
-            <PropertyRef Name="debitOrCredit" />
-            <PropertyRef Name="idEvent" />
-            <PropertyRef Name="glAccountId" />
-            <PropertyRef Name="uomId" />
-            <PropertyRef Name="amount" />
-            <PropertyRef Name="BalanceBefore" />
-            <PropertyRef Name="BalanceAfter" />
-          </Key>
-          <Property Name="id" Type="Int64" Nullable="false" />
-          <Property Name="transactionTime" Type="DateTime" Nullable="false" />
-          <Property Name="seqId" Type="Int16" />
-          <Property Name="debitOrCredit" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
-          <Property Name="idEvent" Type="Int64" Nullable="false" />
-          <Property Name="uniqueBillId" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="description" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="glAccountId" Type="Int64" Nullable="false" />
-          <Property Name="uomId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="amount" Type="Decimal" Nullable="false" />
-          <Property Name="BalanceBefore" Type="Decimal" Nullable="false" />
-          <Property Name="BalanceAfter" Type="Decimal" Nullable="false" />
-          <Property Name="isBillable" Type="SByte" />
-          <Property Name="isPrepaid" Type="SByte" />
-          <Property Name="isBilled" Type="SByte" />
-          <Property Name="cancelled" Type="SByte" />
-          <Property Name="createdByJob" Type="Int64" />
-          <Property Name="changedByJob" Type="Int64" />
-          <Property Name="jsonDetail" Type="String" MaxLength="400" FixedLength="false" Unicode="false" />
-        </EntityType>
         <EntityType Name="acc_transaction">
           <Key>
             <PropertyRef Name="id" />
@@ -7414,6 +7559,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
         <EntityType Name="cdrdiscarded">
           <Key>
             <PropertyRef Name="SwitchId" />
+            <PropertyRef Name="SequenceNumber" />
             <PropertyRef Name="FileName" />
             <PropertyRef Name="ServiceGroup" />
             <PropertyRef Name="DurationSec" />
@@ -7422,7 +7568,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           </Key>
           <Property Name="SwitchId" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="IdCall" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="SequenceNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="SequenceNumber" Type="Int64" Nullable="false" />
           <Property Name="FileName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="ServiceGroup" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="IncomingRoute" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
@@ -7644,6 +7790,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
         <EntityType Name="cdrinconsistent">
           <Key>
             <PropertyRef Name="SwitchId" />
+            <PropertyRef Name="SequenceNumber" />
             <PropertyRef Name="FileName" />
             <PropertyRef Name="ServiceGroup" />
             <PropertyRef Name="DurationSec" />
@@ -7652,7 +7799,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           </Key>
           <Property Name="SwitchId" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="IdCall" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="SequenceNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="SequenceNumber" Type="Int64" Nullable="false" />
           <Property Name="FileName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="ServiceGroup" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="IncomingRoute" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
@@ -8122,6 +8269,82 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="ChangedByJobId" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="SignalingStartTime" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="rate">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="ProductId" />
+            <PropertyRef Name="Prefix" />
+            <PropertyRef Name="rateamount" />
+            <PropertyRef Name="WeekDayStart" />
+            <PropertyRef Name="WeekDayEnd" />
+            <PropertyRef Name="Resolution" />
+            <PropertyRef Name="MinDurationSec" />
+            <PropertyRef Name="SurchargeTime" />
+            <PropertyRef Name="SurchargeAmount" />
+            <PropertyRef Name="field3" />
+            <PropertyRef Name="startdate" />
+            <PropertyRef Name="Inactive" />
+            <PropertyRef Name="RouteDisabled" />
+            <PropertyRef Name="Type" />
+            <PropertyRef Name="Currency" />
+            <PropertyRef Name="TimeZoneOffsetSec" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" />
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <Property Name="Prefix" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="description" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="rateamount" Type="Decimal" Nullable="false" />
+          <Property Name="WeekDayStart" Type="Int32" Nullable="false" />
+          <Property Name="WeekDayEnd" Type="Int32" Nullable="false" />
+          <Property Name="starttime" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="endtime" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="Resolution" Type="Int32" Nullable="false" />
+          <Property Name="MinDurationSec" Type="Single" Nullable="false" />
+          <Property Name="SurchargeTime" Type="Int32" Nullable="false" />
+          <Property Name="SurchargeAmount" Type="Decimal" Nullable="false" />
+          <Property Name="idrateplan" Type="Int64" />
+          <Property Name="CountryCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="date1" Type="DateTime" />
+          <Property Name="field1" Type="Int32" />
+          <Property Name="field2" Type="Int32" />
+          <Property Name="field3" Type="Int32" Nullable="false" />
+          <Property Name="field4" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="field5" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="startdate" Type="DateTime" Nullable="false" />
+          <Property Name="enddate" Type="DateTime" />
+          <Property Name="Inactive" Type="Int32" Nullable="false" />
+          <Property Name="RouteDisabled" Type="Int32" Nullable="false" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="Currency" Type="Int32" Nullable="false" />
+          <Property Name="OtherAmount1" Type="Decimal" />
+          <Property Name="OtherAmount2" Type="Decimal" />
+          <Property Name="OtherAmount3" Type="Decimal" />
+          <Property Name="OtherAmount4" Type="Decimal" />
+          <Property Name="OtherAmount5" Type="Decimal" />
+          <Property Name="OtherAmount6" Type="Decimal" />
+          <Property Name="OtherAmount7" Type="Single" />
+          <Property Name="OtherAmount8" Type="Single" />
+          <Property Name="OtherAmount9" Type="Single" />
+          <Property Name="OtherAmount10" Type="Single" />
+          <Property Name="TimeZoneOffsetSec" Type="Decimal" Nullable="false" />
+          <Property Name="RatePosition" Type="Int32" />
+          <Property Name="IgwPercentageIn" Type="Single" />
+          <Property Name="ConflictingRateIds" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="ChangedByTaskId" Type="Int64" />
+          <Property Name="ChangedOn" Type="DateTime" />
+          <Property Name="Status" Type="Int32" />
+          <Property Name="idPreviousRate" Type="Int64" />
+          <Property Name="EndPreviousRate" Type="SByte" />
+          <Property Name="Category" Type="SByte" />
+          <Property Name="SubCategory" Type="SByte" />
+          <Property Name="ChangeCommitted" Type="Int32" />
+          <Property Name="ConflictingRates" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="OverlappingRates" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Comment1" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Comment2" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="billingspan" Type="Int32" />
+          <Property Name="RateAmountRoundupDecimal" Type="Int32" />
+        </EntityType>
         <EntityType Name="sum_voice_day_01">
           <Key>
             <PropertyRef Name="id" />
@@ -8423,6 +8646,206 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="decimalAmount3" Type="Decimal" Nullable="false" />
         </EntityType>
         <EntityType Name="sum_voice_day_04">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="tup_switchid" />
+            <PropertyRef Name="tup_inpartnerid" />
+            <PropertyRef Name="tup_outpartnerid" />
+            <PropertyRef Name="tup_incomingroute" />
+            <PropertyRef Name="tup_outgoingroute" />
+            <PropertyRef Name="tup_customerrate" />
+            <PropertyRef Name="tup_supplierrate" />
+            <PropertyRef Name="tup_incomingip" />
+            <PropertyRef Name="tup_outgoingip" />
+            <PropertyRef Name="tup_countryorareacode" />
+            <PropertyRef Name="tup_matchedprefixcustomer" />
+            <PropertyRef Name="tup_matchedprefixsupplier" />
+            <PropertyRef Name="tup_sourceId" />
+            <PropertyRef Name="tup_destinationId" />
+            <PropertyRef Name="tup_customercurrency" />
+            <PropertyRef Name="tup_suppliercurrency" />
+            <PropertyRef Name="tup_tax1currency" />
+            <PropertyRef Name="tup_tax2currency" />
+            <PropertyRef Name="tup_vatcurrency" />
+            <PropertyRef Name="tup_starttime" />
+            <PropertyRef Name="totalcalls" />
+            <PropertyRef Name="connectedcalls" />
+            <PropertyRef Name="connectedcallsCC" />
+            <PropertyRef Name="successfulcalls" />
+            <PropertyRef Name="actualduration" />
+            <PropertyRef Name="roundedduration" />
+            <PropertyRef Name="duration1" />
+            <PropertyRef Name="duration2" />
+            <PropertyRef Name="duration3" />
+            <PropertyRef Name="PDD" />
+            <PropertyRef Name="customercost" />
+            <PropertyRef Name="suppliercost" />
+            <PropertyRef Name="tax1" />
+            <PropertyRef Name="tax2" />
+            <PropertyRef Name="vat" />
+            <PropertyRef Name="intAmount1" />
+            <PropertyRef Name="intAmount2" />
+            <PropertyRef Name="longAmount1" />
+            <PropertyRef Name="longAmount2" />
+            <PropertyRef Name="longDecimalAmount1" />
+            <PropertyRef Name="longDecimalAmount2" />
+            <PropertyRef Name="intAmount3" />
+            <PropertyRef Name="longAmount3" />
+            <PropertyRef Name="longDecimalAmount3" />
+            <PropertyRef Name="decimalAmount1" />
+            <PropertyRef Name="decimalAmount2" />
+            <PropertyRef Name="decimalAmount3" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" />
+          <Property Name="tup_switchid" Type="Int32" Nullable="false" />
+          <Property Name="tup_inpartnerid" Type="Int32" Nullable="false" />
+          <Property Name="tup_outpartnerid" Type="Int32" Nullable="false" />
+          <Property Name="tup_incomingroute" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_outgoingroute" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_customerrate" Type="Decimal" Nullable="false" />
+          <Property Name="tup_supplierrate" Type="Decimal" Nullable="false" />
+          <Property Name="tup_incomingip" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_outgoingip" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_countryorareacode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_matchedprefixcustomer" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_matchedprefixsupplier" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_sourceId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_destinationId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_customercurrency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_suppliercurrency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_tax1currency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_tax2currency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_vatcurrency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_starttime" Type="DateTime" Nullable="false" />
+          <Property Name="totalcalls" Type="Int64" Nullable="false" />
+          <Property Name="connectedcalls" Type="Int64" Nullable="false" />
+          <Property Name="connectedcallsCC" Type="Int64" Nullable="false" />
+          <Property Name="successfulcalls" Type="Int64" Nullable="false" />
+          <Property Name="actualduration" Type="Decimal" Nullable="false" />
+          <Property Name="roundedduration" Type="Decimal" Nullable="false" />
+          <Property Name="duration1" Type="Decimal" Nullable="false" />
+          <Property Name="duration2" Type="Decimal" Nullable="false" />
+          <Property Name="duration3" Type="Decimal" Nullable="false" />
+          <Property Name="PDD" Type="Decimal" Nullable="false" />
+          <Property Name="customercost" Type="Decimal" Nullable="false" />
+          <Property Name="suppliercost" Type="Decimal" Nullable="false" />
+          <Property Name="tax1" Type="Decimal" Nullable="false" />
+          <Property Name="tax2" Type="Decimal" Nullable="false" />
+          <Property Name="vat" Type="Decimal" Nullable="false" />
+          <Property Name="intAmount1" Type="Int32" Nullable="false" />
+          <Property Name="intAmount2" Type="Int32" Nullable="false" />
+          <Property Name="longAmount1" Type="Int64" Nullable="false" />
+          <Property Name="longAmount2" Type="Int64" Nullable="false" />
+          <Property Name="longDecimalAmount1" Type="Decimal" Nullable="false" />
+          <Property Name="longDecimalAmount2" Type="Decimal" Nullable="false" />
+          <Property Name="intAmount3" Type="Int32" Nullable="false" />
+          <Property Name="longAmount3" Type="Int64" Nullable="false" />
+          <Property Name="longDecimalAmount3" Type="Decimal" Nullable="false" />
+          <Property Name="decimalAmount1" Type="Decimal" Nullable="false" />
+          <Property Name="decimalAmount2" Type="Decimal" Nullable="false" />
+          <Property Name="decimalAmount3" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sum_voice_day_05">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="tup_switchid" />
+            <PropertyRef Name="tup_inpartnerid" />
+            <PropertyRef Name="tup_outpartnerid" />
+            <PropertyRef Name="tup_incomingroute" />
+            <PropertyRef Name="tup_outgoingroute" />
+            <PropertyRef Name="tup_customerrate" />
+            <PropertyRef Name="tup_supplierrate" />
+            <PropertyRef Name="tup_incomingip" />
+            <PropertyRef Name="tup_outgoingip" />
+            <PropertyRef Name="tup_countryorareacode" />
+            <PropertyRef Name="tup_matchedprefixcustomer" />
+            <PropertyRef Name="tup_matchedprefixsupplier" />
+            <PropertyRef Name="tup_sourceId" />
+            <PropertyRef Name="tup_destinationId" />
+            <PropertyRef Name="tup_customercurrency" />
+            <PropertyRef Name="tup_suppliercurrency" />
+            <PropertyRef Name="tup_tax1currency" />
+            <PropertyRef Name="tup_tax2currency" />
+            <PropertyRef Name="tup_vatcurrency" />
+            <PropertyRef Name="tup_starttime" />
+            <PropertyRef Name="totalcalls" />
+            <PropertyRef Name="connectedcalls" />
+            <PropertyRef Name="connectedcallsCC" />
+            <PropertyRef Name="successfulcalls" />
+            <PropertyRef Name="actualduration" />
+            <PropertyRef Name="roundedduration" />
+            <PropertyRef Name="duration1" />
+            <PropertyRef Name="duration2" />
+            <PropertyRef Name="duration3" />
+            <PropertyRef Name="PDD" />
+            <PropertyRef Name="customercost" />
+            <PropertyRef Name="suppliercost" />
+            <PropertyRef Name="tax1" />
+            <PropertyRef Name="tax2" />
+            <PropertyRef Name="vat" />
+            <PropertyRef Name="intAmount1" />
+            <PropertyRef Name="intAmount2" />
+            <PropertyRef Name="longAmount1" />
+            <PropertyRef Name="longAmount2" />
+            <PropertyRef Name="longDecimalAmount1" />
+            <PropertyRef Name="longDecimalAmount2" />
+            <PropertyRef Name="intAmount3" />
+            <PropertyRef Name="longAmount3" />
+            <PropertyRef Name="longDecimalAmount3" />
+            <PropertyRef Name="decimalAmount1" />
+            <PropertyRef Name="decimalAmount2" />
+            <PropertyRef Name="decimalAmount3" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" />
+          <Property Name="tup_switchid" Type="Int32" Nullable="false" />
+          <Property Name="tup_inpartnerid" Type="Int32" Nullable="false" />
+          <Property Name="tup_outpartnerid" Type="Int32" Nullable="false" />
+          <Property Name="tup_incomingroute" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_outgoingroute" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_customerrate" Type="Decimal" Nullable="false" />
+          <Property Name="tup_supplierrate" Type="Decimal" Nullable="false" />
+          <Property Name="tup_incomingip" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_outgoingip" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_countryorareacode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_matchedprefixcustomer" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_matchedprefixsupplier" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_sourceId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_destinationId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_customercurrency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_suppliercurrency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_tax1currency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_tax2currency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_vatcurrency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tup_starttime" Type="DateTime" Nullable="false" />
+          <Property Name="totalcalls" Type="Int64" Nullable="false" />
+          <Property Name="connectedcalls" Type="Int64" Nullable="false" />
+          <Property Name="connectedcallsCC" Type="Int64" Nullable="false" />
+          <Property Name="successfulcalls" Type="Int64" Nullable="false" />
+          <Property Name="actualduration" Type="Decimal" Nullable="false" />
+          <Property Name="roundedduration" Type="Decimal" Nullable="false" />
+          <Property Name="duration1" Type="Decimal" Nullable="false" />
+          <Property Name="duration2" Type="Decimal" Nullable="false" />
+          <Property Name="duration3" Type="Decimal" Nullable="false" />
+          <Property Name="PDD" Type="Decimal" Nullable="false" />
+          <Property Name="customercost" Type="Decimal" Nullable="false" />
+          <Property Name="suppliercost" Type="Decimal" Nullable="false" />
+          <Property Name="tax1" Type="Decimal" Nullable="false" />
+          <Property Name="tax2" Type="Decimal" Nullable="false" />
+          <Property Name="vat" Type="Decimal" Nullable="false" />
+          <Property Name="intAmount1" Type="Int32" Nullable="false" />
+          <Property Name="intAmount2" Type="Int32" Nullable="false" />
+          <Property Name="longAmount1" Type="Int64" Nullable="false" />
+          <Property Name="longAmount2" Type="Int64" Nullable="false" />
+          <Property Name="longDecimalAmount1" Type="Decimal" Nullable="false" />
+          <Property Name="longDecimalAmount2" Type="Decimal" Nullable="false" />
+          <Property Name="intAmount3" Type="Int32" Nullable="false" />
+          <Property Name="longAmount3" Type="Int64" Nullable="false" />
+          <Property Name="longDecimalAmount3" Type="Decimal" Nullable="false" />
+          <Property Name="decimalAmount1" Type="Decimal" Nullable="false" />
+          <Property Name="decimalAmount2" Type="Decimal" Nullable="false" />
+          <Property Name="decimalAmount3" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sum_voice_day_06">
           <Key>
             <PropertyRef Name="id" />
             <PropertyRef Name="tup_switchid" />
@@ -8922,566 +9345,6 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="decimalAmount2" Type="Decimal" Nullable="false" />
           <Property Name="decimalAmount3" Type="Decimal" Nullable="false" />
         </EntityType>
-        <EntityType Name="uom_conversion">
-          <Key>
-            <PropertyRef Name="UOM_ID" />
-            <PropertyRef Name="UOM_ID_TO" />
-          </Key>
-          <Property Name="UOM_ID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="UOM_ID_TO" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="CONVERSION_FACTOR" Type="Decimal" />
-          <Property Name="CUSTOM_METHOD_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="DECIMAL_SCALE" Type="Decimal" />
-          <Property Name="ROUNDING_MODE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="LAST_UPDATED_STAMP" Type="DateTime" />
-          <Property Name="LAST_UPDATED_TX_STAMP" Type="DateTime" />
-          <Property Name="CREATED_STAMP" Type="DateTime" />
-          <Property Name="CREATED_TX_STAMP" Type="DateTime" />
-          <NavigationProperty Name="uom" Relationship="MediationModel.uom_conversion_ibfk_1" FromRole="uom_conversion" ToRole="uom" />
-          <NavigationProperty Name="uom1" Relationship="MediationModel.uom_conversion_ibfk_2" FromRole="uom_conversion" ToRole="uom" />
-        </EntityType>
-        <EntityType Name="uom_conversion_dated">
-          <Key>
-            <PropertyRef Name="UOM_ID" />
-            <PropertyRef Name="UOM_ID_TO" />
-            <PropertyRef Name="FROM_DATE" />
-          </Key>
-          <Property Name="UOM_ID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="UOM_ID_TO" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="FROM_DATE" Type="DateTime" Nullable="false" />
-          <Property Name="THRU_DATE" Type="DateTime" />
-          <Property Name="CONVERSION_FACTOR" Type="Decimal" />
-          <Property Name="CUSTOM_METHOD_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="DECIMAL_SCALE" Type="Decimal" />
-          <Property Name="ROUNDING_MODE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="PURPOSE_ENUM_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="LAST_UPDATED_STAMP" Type="DateTime" />
-          <Property Name="LAST_UPDATED_TX_STAMP" Type="DateTime" />
-          <Property Name="CREATED_STAMP" Type="DateTime" />
-          <Property Name="CREATED_TX_STAMP" Type="DateTime" />
-          <NavigationProperty Name="uom" Relationship="MediationModel.uom_conversion_dated_ibfk_1" FromRole="uom_conversion_dated" ToRole="uom" />
-          <NavigationProperty Name="uom1" Relationship="MediationModel.uom_conversion_dated_ibfk_2" FromRole="uom_conversion_dated" ToRole="uom" />
-        </EntityType>
-        <Association Name="billingruleassignment_ibfk_2">
-          <End Type="MediationModel.rateplanassignmenttuple" Role="rateplanassignmenttuple" Multiplicity="1" />
-          <End Type="MediationModel.billingruleassignment" Role="billingruleassignment" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="rateplanassignmenttuple">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="billingruleassignment">
-              <PropertyRef Name="idRatePlanAssignmentTuple" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="cdrfieldmappingbyswitchtype_ibfk_1">
-          <End Type="MediationModel.cdrfieldlist" Role="cdrfieldlist" Multiplicity="1" />
-          <End Type="MediationModel.cdrfieldmappingbyswitchtype" Role="cdrfieldmappingbyswitchtype" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="cdrfieldlist">
-              <PropertyRef Name="fieldnumber" />
-            </Principal>
-            <Dependent Role="cdrfieldmappingbyswitchtype">
-              <PropertyRef Name="FieldNumber" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_country">
-          <End Type="MediationModel.country" Role="country" Multiplicity="0..1" />
-          <End Type="MediationModel.zone" Role="zone" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="country">
-              <PropertyRef Name="country_code" />
-            </Principal>
-            <Dependent Role="zone">
-              <PropertyRef Name="country_code" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="rateplan_ibfk_1">
-          <End Type="MediationModel.enumbillingspan" Role="enumbillingspan" Multiplicity="1" />
-          <End Type="MediationModel.rateplan" Role="rateplan" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="enumbillingspan">
-              <PropertyRef Name="ofbiz_uom_Id" />
-            </Principal>
-            <Dependent Role="rateplan">
-              <PropertyRef Name="BillingSpan" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_cdrformat">
-          <End Type="MediationModel.enumcdrformat" Role="enumcdrformat" Multiplicity="1" />
-          <End Type="MediationModel.ne" Role="ne" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="enumcdrformat">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="ne">
-              <PropertyRef Name="idcdrformat" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="enumjobdefinition_ibfk_1">
-          <End Type="MediationModel.enumjobtype" Role="enumjobtype" Multiplicity="1" />
-          <End Type="MediationModel.enumjobdefinition" Role="enumjobdefinition" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="enumjobtype">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="enumjobdefinition">
-              <PropertyRef Name="jobtypeid" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="job_ibfk_1">
-          <End Type="MediationModel.enumjobdefinition" Role="enumjobdefinition" Multiplicity="1" />
-          <End Type="MediationModel.job" Role="job" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="enumjobdefinition">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="job">
-              <PropertyRef Name="idjobdefinition" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="job_ibfk_3">
-          <End Type="MediationModel.enumjobstatu" Role="enumjobstatu" Multiplicity="1" />
-          <End Type="MediationModel.job" Role="job" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="enumjobstatu">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="job">
-              <PropertyRef Name="Status" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_catetory">
-          <End Type="MediationModel.enumservicecategory" Role="enumservicecategory" Multiplicity="1" />
-          <End Type="MediationModel.enumservicefamily" Role="enumservicefamily" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="enumservicecategory">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="enumservicefamily">
-              <PropertyRef Name="ServiceCategory" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="job_ibfk_4">
-          <End Type="MediationModel.ne" Role="ne" Multiplicity="0..1" />
-          <End Type="MediationModel.job" Role="job" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ne">
-              <PropertyRef Name="idSwitch" />
-            </Principal>
-            <Dependent Role="job">
-              <PropertyRef Name="idNE" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="jobcompletion_ibfk_1">
-          <End Type="MediationModel.job" Role="job" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="MediationModel.jobcompletion" Role="jobcompletion" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="job">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="jobcompletion">
-              <PropertyRef Name="idJob" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="jobsegment_ibfk_1">
-          <End Type="MediationModel.job" Role="job" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="MediationModel.jobsegment" Role="jobsegment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="job">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="jobsegment">
-              <PropertyRef Name="idJob" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_Ne">
-          <End Type="MediationModel.ne" Role="ne" Multiplicity="1" />
-          <End Type="MediationModel.route" Role="route" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ne">
-              <PropertyRef Name="idSwitch" />
-            </Principal>
-            <Dependent Role="route">
-              <PropertyRef Name="SwitchId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="ne_ibfk_1">
-          <End Type="MediationModel.telcobrightpartner" Role="telcobrightpartner" Multiplicity="1" />
-          <End Type="MediationModel.ne" Role="ne" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="telcobrightpartner">
-              <PropertyRef Name="idCustomer" />
-            </Principal>
-            <Dependent Role="ne">
-              <PropertyRef Name="idCustomer" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="route_ibfk_1">
-          <End Type="MediationModel.partner" Role="partner" Multiplicity="1" />
-          <End Type="MediationModel.route" Role="route" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="partner">
-              <PropertyRef Name="idPartner" />
-            </Principal>
-            <Dependent Role="route">
-              <PropertyRef Name="idPartner" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_rateplan">
-          <End Type="MediationModel.rateplan" Role="rateplan" Multiplicity="0..1" />
-          <End Type="MediationModel.ratetaskreference" Role="ratetaskreference" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="rateplan">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="ratetaskreference">
-              <PropertyRef Name="idRatePlan" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_route">
-          <End Type="MediationModel.route" Role="route" Multiplicity="0..1" />
-          <End Type="MediationModel.rateplanassignmenttuple" Role="rateplanassignmenttuple" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="route">
-              <PropertyRef Name="idroute" />
-            </Principal>
-            <Dependent Role="rateplanassignmenttuple">
-              <PropertyRef Name="route" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="userroles_ibfk_2">
-          <End Type="MediationModel.role" Role="role" Multiplicity="1" />
-          <End Type="MediationModel.userrole" Role="userrole" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="role">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="userrole">
-              <PropertyRef Name="RoleId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_zone">
-          <End Type="MediationModel.zone" Role="zone" Multiplicity="1" />
-          <End Type="MediationModel.timezone" Role="timezone" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="zone">
-              <PropertyRef Name="zone_id" />
-            </Principal>
-            <Dependent Role="timezone">
-              <PropertyRef Name="zone_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="uom_conversion_dated_ibfk_1">
-          <End Type="MediationModel.uom" Role="uom" Multiplicity="1" />
-          <End Type="MediationModel.uom_conversion_dated" Role="uom_conversion_dated" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="uom">
-              <PropertyRef Name="UOM_ID" />
-            </Principal>
-            <Dependent Role="uom_conversion_dated">
-              <PropertyRef Name="UOM_ID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="uom_conversion_dated_ibfk_2">
-          <End Type="MediationModel.uom" Role="uom" Multiplicity="1" />
-          <End Type="MediationModel.uom_conversion_dated" Role="uom_conversion_dated" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="uom">
-              <PropertyRef Name="UOM_ID" />
-            </Principal>
-            <Dependent Role="uom_conversion_dated">
-              <PropertyRef Name="UOM_ID_TO" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="uom_conversion_ibfk_1">
-          <End Type="MediationModel.uom" Role="uom" Multiplicity="1" />
-          <End Type="MediationModel.uom_conversion" Role="uom_conversion" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="uom">
-              <PropertyRef Name="UOM_ID" />
-            </Principal>
-            <Dependent Role="uom_conversion">
-              <PropertyRef Name="UOM_ID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="uom_conversion_ibfk_2">
-          <End Type="MediationModel.uom" Role="uom" Multiplicity="1" />
-          <End Type="MediationModel.uom_conversion" Role="uom_conversion" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="uom">
-              <PropertyRef Name="UOM_ID" />
-            </Principal>
-            <Dependent Role="uom_conversion">
-              <PropertyRef Name="UOM_ID_TO" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="ApplicationUser_Claims">
-          <End Type="MediationModel.user" Role="user" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="MediationModel.userclaim" Role="userclaim" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="user">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="userclaim">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="ApplicationUser_Logins">
-          <End Type="MediationModel.user" Role="user" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="MediationModel.userlogin" Role="userlogin" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="user">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="userlogin">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="userroles_ibfk_1">
-          <End Type="MediationModel.user" Role="user" Multiplicity="1" />
-          <End Type="MediationModel.userrole" Role="userrole" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="user">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="userrole">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="sum_voice_day_05">
-          <Key>
-            <PropertyRef Name="id" />
-            <PropertyRef Name="tup_switchid" />
-            <PropertyRef Name="tup_inpartnerid" />
-            <PropertyRef Name="tup_outpartnerid" />
-            <PropertyRef Name="tup_incomingroute" />
-            <PropertyRef Name="tup_outgoingroute" />
-            <PropertyRef Name="tup_customerrate" />
-            <PropertyRef Name="tup_supplierrate" />
-            <PropertyRef Name="tup_incomingip" />
-            <PropertyRef Name="tup_outgoingip" />
-            <PropertyRef Name="tup_countryorareacode" />
-            <PropertyRef Name="tup_matchedprefixcustomer" />
-            <PropertyRef Name="tup_matchedprefixsupplier" />
-            <PropertyRef Name="tup_sourceId" />
-            <PropertyRef Name="tup_destinationId" />
-            <PropertyRef Name="tup_customercurrency" />
-            <PropertyRef Name="tup_suppliercurrency" />
-            <PropertyRef Name="tup_tax1currency" />
-            <PropertyRef Name="tup_tax2currency" />
-            <PropertyRef Name="tup_vatcurrency" />
-            <PropertyRef Name="tup_starttime" />
-            <PropertyRef Name="totalcalls" />
-            <PropertyRef Name="connectedcalls" />
-            <PropertyRef Name="connectedcallsCC" />
-            <PropertyRef Name="successfulcalls" />
-            <PropertyRef Name="actualduration" />
-            <PropertyRef Name="roundedduration" />
-            <PropertyRef Name="duration1" />
-            <PropertyRef Name="duration2" />
-            <PropertyRef Name="duration3" />
-            <PropertyRef Name="PDD" />
-            <PropertyRef Name="customercost" />
-            <PropertyRef Name="suppliercost" />
-            <PropertyRef Name="tax1" />
-            <PropertyRef Name="tax2" />
-            <PropertyRef Name="vat" />
-            <PropertyRef Name="intAmount1" />
-            <PropertyRef Name="intAmount2" />
-            <PropertyRef Name="longAmount1" />
-            <PropertyRef Name="longAmount2" />
-            <PropertyRef Name="longDecimalAmount1" />
-            <PropertyRef Name="longDecimalAmount2" />
-            <PropertyRef Name="intAmount3" />
-            <PropertyRef Name="longAmount3" />
-            <PropertyRef Name="longDecimalAmount3" />
-            <PropertyRef Name="decimalAmount1" />
-            <PropertyRef Name="decimalAmount2" />
-            <PropertyRef Name="decimalAmount3" />
-          </Key>
-          <Property Name="id" Type="Int64" Nullable="false" />
-          <Property Name="tup_switchid" Type="Int32" Nullable="false" />
-          <Property Name="tup_inpartnerid" Type="Int32" Nullable="false" />
-          <Property Name="tup_outpartnerid" Type="Int32" Nullable="false" />
-          <Property Name="tup_incomingroute" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="tup_outgoingroute" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="tup_customerrate" Type="Decimal" Nullable="false" />
-          <Property Name="tup_supplierrate" Type="Decimal" Nullable="false" />
-          <Property Name="tup_incomingip" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="tup_outgoingip" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="tup_countryorareacode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="tup_matchedprefixcustomer" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="tup_matchedprefixsupplier" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="tup_sourceId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="tup_destinationId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="tup_customercurrency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="tup_suppliercurrency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="tup_tax1currency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="tup_tax2currency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="tup_vatcurrency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="tup_starttime" Type="DateTime" Nullable="false" />
-          <Property Name="totalcalls" Type="Int64" Nullable="false" />
-          <Property Name="connectedcalls" Type="Int64" Nullable="false" />
-          <Property Name="connectedcallsCC" Type="Int64" Nullable="false" />
-          <Property Name="successfulcalls" Type="Int64" Nullable="false" />
-          <Property Name="actualduration" Type="Decimal" Nullable="false" />
-          <Property Name="roundedduration" Type="Decimal" Nullable="false" />
-          <Property Name="duration1" Type="Decimal" Nullable="false" />
-          <Property Name="duration2" Type="Decimal" Nullable="false" />
-          <Property Name="duration3" Type="Decimal" Nullable="false" />
-          <Property Name="PDD" Type="Decimal" Nullable="false" />
-          <Property Name="customercost" Type="Decimal" Nullable="false" />
-          <Property Name="suppliercost" Type="Decimal" Nullable="false" />
-          <Property Name="tax1" Type="Decimal" Nullable="false" />
-          <Property Name="tax2" Type="Decimal" Nullable="false" />
-          <Property Name="vat" Type="Decimal" Nullable="false" />
-          <Property Name="intAmount1" Type="Int32" Nullable="false" />
-          <Property Name="intAmount2" Type="Int32" Nullable="false" />
-          <Property Name="longAmount1" Type="Int64" Nullable="false" />
-          <Property Name="longAmount2" Type="Int64" Nullable="false" />
-          <Property Name="longDecimalAmount1" Type="Decimal" Nullable="false" />
-          <Property Name="longDecimalAmount2" Type="Decimal" Nullable="false" />
-          <Property Name="intAmount3" Type="Int32" Nullable="false" />
-          <Property Name="longAmount3" Type="Int64" Nullable="false" />
-          <Property Name="longDecimalAmount3" Type="Decimal" Nullable="false" />
-          <Property Name="decimalAmount1" Type="Decimal" Nullable="false" />
-          <Property Name="decimalAmount2" Type="Decimal" Nullable="false" />
-          <Property Name="decimalAmount3" Type="Decimal" Nullable="false" />
-        </EntityType>
-        <EntityType Name="sum_voice_day_06">
-          <Key>
-            <PropertyRef Name="id" />
-            <PropertyRef Name="tup_switchid" />
-            <PropertyRef Name="tup_inpartnerid" />
-            <PropertyRef Name="tup_outpartnerid" />
-            <PropertyRef Name="tup_incomingroute" />
-            <PropertyRef Name="tup_outgoingroute" />
-            <PropertyRef Name="tup_customerrate" />
-            <PropertyRef Name="tup_supplierrate" />
-            <PropertyRef Name="tup_incomingip" />
-            <PropertyRef Name="tup_outgoingip" />
-            <PropertyRef Name="tup_countryorareacode" />
-            <PropertyRef Name="tup_matchedprefixcustomer" />
-            <PropertyRef Name="tup_matchedprefixsupplier" />
-            <PropertyRef Name="tup_sourceId" />
-            <PropertyRef Name="tup_destinationId" />
-            <PropertyRef Name="tup_customercurrency" />
-            <PropertyRef Name="tup_suppliercurrency" />
-            <PropertyRef Name="tup_tax1currency" />
-            <PropertyRef Name="tup_tax2currency" />
-            <PropertyRef Name="tup_vatcurrency" />
-            <PropertyRef Name="tup_starttime" />
-            <PropertyRef Name="totalcalls" />
-            <PropertyRef Name="connectedcalls" />
-            <PropertyRef Name="connectedcallsCC" />
-            <PropertyRef Name="successfulcalls" />
-            <PropertyRef Name="actualduration" />
-            <PropertyRef Name="roundedduration" />
-            <PropertyRef Name="duration1" />
-            <PropertyRef Name="duration2" />
-            <PropertyRef Name="duration3" />
-            <PropertyRef Name="PDD" />
-            <PropertyRef Name="customercost" />
-            <PropertyRef Name="suppliercost" />
-            <PropertyRef Name="tax1" />
-            <PropertyRef Name="tax2" />
-            <PropertyRef Name="vat" />
-            <PropertyRef Name="intAmount1" />
-            <PropertyRef Name="intAmount2" />
-            <PropertyRef Name="longAmount1" />
-            <PropertyRef Name="longAmount2" />
-            <PropertyRef Name="longDecimalAmount1" />
-            <PropertyRef Name="longDecimalAmount2" />
-            <PropertyRef Name="intAmount3" />
-            <PropertyRef Name="longAmount3" />
-            <PropertyRef Name="longDecimalAmount3" />
-            <PropertyRef Name="decimalAmount1" />
-            <PropertyRef Name="decimalAmount2" />
-            <PropertyRef Name="decimalAmount3" />
-          </Key>
-          <Property Name="id" Type="Int64" Nullable="false" />
-          <Property Name="tup_switchid" Type="Int32" Nullable="false" />
-          <Property Name="tup_inpartnerid" Type="Int32" Nullable="false" />
-          <Property Name="tup_outpartnerid" Type="Int32" Nullable="false" />
-          <Property Name="tup_incomingroute" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="tup_outgoingroute" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="tup_customerrate" Type="Decimal" Nullable="false" />
-          <Property Name="tup_supplierrate" Type="Decimal" Nullable="false" />
-          <Property Name="tup_incomingip" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="tup_outgoingip" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="tup_countryorareacode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="tup_matchedprefixcustomer" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="tup_matchedprefixsupplier" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="tup_sourceId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="tup_destinationId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="tup_customercurrency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="tup_suppliercurrency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="tup_tax1currency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="tup_tax2currency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="tup_vatcurrency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="tup_starttime" Type="DateTime" Nullable="false" />
-          <Property Name="totalcalls" Type="Int64" Nullable="false" />
-          <Property Name="connectedcalls" Type="Int64" Nullable="false" />
-          <Property Name="connectedcallsCC" Type="Int64" Nullable="false" />
-          <Property Name="successfulcalls" Type="Int64" Nullable="false" />
-          <Property Name="actualduration" Type="Decimal" Nullable="false" />
-          <Property Name="roundedduration" Type="Decimal" Nullable="false" />
-          <Property Name="duration1" Type="Decimal" Nullable="false" />
-          <Property Name="duration2" Type="Decimal" Nullable="false" />
-          <Property Name="duration3" Type="Decimal" Nullable="false" />
-          <Property Name="PDD" Type="Decimal" Nullable="false" />
-          <Property Name="customercost" Type="Decimal" Nullable="false" />
-          <Property Name="suppliercost" Type="Decimal" Nullable="false" />
-          <Property Name="tax1" Type="Decimal" Nullable="false" />
-          <Property Name="tax2" Type="Decimal" Nullable="false" />
-          <Property Name="vat" Type="Decimal" Nullable="false" />
-          <Property Name="intAmount1" Type="Int32" Nullable="false" />
-          <Property Name="intAmount2" Type="Int32" Nullable="false" />
-          <Property Name="longAmount1" Type="Int64" Nullable="false" />
-          <Property Name="longAmount2" Type="Int64" Nullable="false" />
-          <Property Name="longDecimalAmount1" Type="Decimal" Nullable="false" />
-          <Property Name="longDecimalAmount2" Type="Decimal" Nullable="false" />
-          <Property Name="intAmount3" Type="Int32" Nullable="false" />
-          <Property Name="longAmount3" Type="Int64" Nullable="false" />
-          <Property Name="longDecimalAmount3" Type="Decimal" Nullable="false" />
-          <Property Name="decimalAmount1" Type="Decimal" Nullable="false" />
-          <Property Name="decimalAmount2" Type="Decimal" Nullable="false" />
-          <Property Name="decimalAmount3" Type="Decimal" Nullable="false" />
-        </EntityType>
         <EntityType Name="sum_voice_hr_05">
           <Key>
             <PropertyRef Name="id" />
@@ -9682,35 +9545,45 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="decimalAmount2" Type="Decimal" Nullable="false" />
           <Property Name="decimalAmount3" Type="Decimal" Nullable="false" />
         </EntityType>
-        <EntityType Name="account">
+        <EntityType Name="uom_conversion">
           <Key>
-            <PropertyRef Name="id" />
+            <PropertyRef Name="UOM_ID" />
+            <PropertyRef Name="UOM_ID_TO" />
           </Key>
-          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="idParent" Type="Int64" />
-          <Property Name="idParentExternal" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="idPartner" Type="Int32" Nullable="false" />
-          <Property Name="accountName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="serviceGroup" Type="Int32" Nullable="false" />
-          <Property Name="serviceFamily" Type="Int32" Nullable="false" />
-          <Property Name="product" Type="Int32" Nullable="false" />
-          <Property Name="billableType" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="uom" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Depth" Type="Int32" Nullable="false" />
-          <Property Name="Lineage" Type="String" MaxLength="400" FixedLength="false" Unicode="false" />
-          <Property Name="remark" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="isBillable" Type="SByte" />
-          <Property Name="isCustomerAccount" Type="SByte" />
-          <Property Name="isSupplierAccount" Type="SByte" />
-          <Property Name="balanceBefore" Type="Decimal" Nullable="false" />
-          <Property Name="lastAmount" Type="Decimal" />
-          <Property Name="balanceAfter" Type="Decimal" Nullable="false" />
-          <Property Name="lastUpdated" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="superviseNegativeBalance" Type="Int32" />
-          <Property Name="negativeBalanceLimit" Type="Decimal" Nullable="false" />
-          <NavigationProperty Name="partner" Relationship="MediationModel.account_ibfk_1" FromRole="account" ToRole="partner" />
-          <NavigationProperty Name="partner1" Relationship="MediationModel.account_ibfk_2" FromRole="account" ToRole="partner" />
-          <NavigationProperty Name="invoices" Relationship="MediationModel.INVOICE_ACCOUNT" FromRole="account" ToRole="invoice" />
+          <Property Name="UOM_ID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="UOM_ID_TO" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="CONVERSION_FACTOR" Type="Decimal" />
+          <Property Name="CUSTOM_METHOD_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="DECIMAL_SCALE" Type="Decimal" />
+          <Property Name="ROUNDING_MODE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="LAST_UPDATED_STAMP" Type="DateTime" />
+          <Property Name="LAST_UPDATED_TX_STAMP" Type="DateTime" />
+          <Property Name="CREATED_STAMP" Type="DateTime" />
+          <Property Name="CREATED_TX_STAMP" Type="DateTime" />
+          <NavigationProperty Name="uom" Relationship="MediationModel.uom_conversion_ibfk_1" FromRole="uom_conversion" ToRole="uom" />
+          <NavigationProperty Name="uom1" Relationship="MediationModel.uom_conversion_ibfk_2" FromRole="uom_conversion" ToRole="uom" />
+        </EntityType>
+        <EntityType Name="uom_conversion_dated">
+          <Key>
+            <PropertyRef Name="UOM_ID" />
+            <PropertyRef Name="UOM_ID_TO" />
+            <PropertyRef Name="FROM_DATE" />
+          </Key>
+          <Property Name="UOM_ID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="UOM_ID_TO" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="FROM_DATE" Type="DateTime" Nullable="false" />
+          <Property Name="THRU_DATE" Type="DateTime" />
+          <Property Name="CONVERSION_FACTOR" Type="Decimal" />
+          <Property Name="CUSTOM_METHOD_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="DECIMAL_SCALE" Type="Decimal" />
+          <Property Name="ROUNDING_MODE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PURPOSE_ENUM_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="LAST_UPDATED_STAMP" Type="DateTime" />
+          <Property Name="LAST_UPDATED_TX_STAMP" Type="DateTime" />
+          <Property Name="CREATED_STAMP" Type="DateTime" />
+          <Property Name="CREATED_TX_STAMP" Type="DateTime" />
+          <NavigationProperty Name="uom" Relationship="MediationModel.uom_conversion_dated_ibfk_1" FromRole="uom_conversion_dated" ToRole="uom" />
+          <NavigationProperty Name="uom1" Relationship="MediationModel.uom_conversion_dated_ibfk_2" FromRole="uom_conversion_dated" ToRole="uom" />
         </EntityType>
         <Association Name="account_ibfk_1">
           <End Type="MediationModel.partner" Role="partner" Multiplicity="1" />
@@ -9736,206 +9609,6 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="durationmeta">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="filename" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="oldDuration" Type="Decimal" />
-          <Property Name="newDuration" Type="Decimal" />
-          <Property Name="durationAfterJob" Type="Decimal" />
-        </EntityType>
-        <EntityType Name="cdrmeta">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
-          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
-        </EntityType>
-        <EntityType Name="cdrsummarymeta_day_01">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
-          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
-        </EntityType>
-        <EntityType Name="cdrsummarymeta_day_02">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
-          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
-        </EntityType>
-        <EntityType Name="cdrsummarymeta_day_03">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
-          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
-        </EntityType>
-        <EntityType Name="cdrsummarymeta_day_04">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
-          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
-        </EntityType>
-        <EntityType Name="cdrsummarymeta_day_05">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
-          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
-        </EntityType>
-        <EntityType Name="cdrsummarymeta_day_06">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
-          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
-        </EntityType>
-        <EntityType Name="cdrsummarymeta_hr_01">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
-          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
-        </EntityType>
-        <EntityType Name="cdrsummarymeta_hr_02">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
-          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
-        </EntityType>
-        <EntityType Name="cdrsummarymeta_hr_03">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
-          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
-        </EntityType>
-        <EntityType Name="cdrsummarymeta_hr_04">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
-          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
-        </EntityType>
-        <EntityType Name="cdrsummarymeta_hr_05">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
-          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
-        </EntityType>
-        <EntityType Name="cdrsummarymeta_hr_06">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
-          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
-        </EntityType>
-        <EntityType Name="invoice">
-          <Key>
-            <PropertyRef Name="INVOICE_ID" />
-          </Key>
-          <Property Name="INVOICE_ID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="INVOICE_TYPE_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="PARTY_ID_FROM" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="PARTY_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="ROLE_TYPE_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="STATUS_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="BILLING_ACCOUNT_ID" Type="Int64" />
-          <Property Name="CONTACT_MECH_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="INVOICE_DATE" Type="DateTime" />
-          <Property Name="DUE_DATE" Type="DateTime" />
-          <Property Name="PAID_DATE" Type="DateTime" />
-          <Property Name="INVOICE_MESSAGE" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="REFERENCE_NUMBER" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
-          <Property Name="DESCRIPTION" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="CURRENCY_UOM_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="RECURRENCE_INFO_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="LAST_UPDATED_STAMP" Type="DateTime" />
-          <Property Name="LAST_UPDATED_TX_STAMP" Type="DateTime" />
-          <Property Name="CREATED_STAMP" Type="DateTime" />
-          <Property Name="CREATED_TX_STAMP" Type="DateTime" />
-          <NavigationProperty Name="account" Relationship="MediationModel.INVOICE_ACCOUNT" FromRole="invoice" ToRole="account" />
-          <NavigationProperty Name="invoice_item" Relationship="MediationModel.INVCE_ITM_INVCE" FromRole="invoice" ToRole="invoice_item" />
-        </EntityType>
-        <EntityType Name="invoice_item">
-          <Key>
-            <PropertyRef Name="INVOICE_ID" />
-            <PropertyRef Name="INVOICE_ITEM_SEQ_ID" />
-          </Key>
-          <Property Name="INVOICE_ID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="INVOICE_ITEM_SEQ_ID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="INVOICE_ITEM_TYPE_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="OVERRIDE_GL_ACCOUNT_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="OVERRIDE_ORG_PARTY_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="INVENTORY_ITEM_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="PRODUCT_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="PRODUCT_FEATURE_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="PARENT_INVOICE_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="PARENT_INVOICE_ITEM_SEQ_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="UOM_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="TAXABLE_FLAG" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
-          <Property Name="QUANTITY" Type="Decimal" />
-          <Property Name="AMOUNT" Type="Decimal" />
-          <Property Name="DESCRIPTION" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="TAX_AUTH_PARTY_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="TAX_AUTH_GEO_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="TAX_AUTHORITY_RATE_SEQ_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="SALES_OPPORTUNITY_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="LAST_UPDATED_STAMP" Type="DateTime" />
-          <Property Name="LAST_UPDATED_TX_STAMP" Type="DateTime" />
-          <Property Name="CREATED_STAMP" Type="DateTime" />
-          <Property Name="CREATED_TX_STAMP" Type="DateTime" />
-          <NavigationProperty Name="invoice" Relationship="MediationModel.INVCE_ITM_INVCE" FromRole="invoice_item" ToRole="invoice" />
-        </EntityType>
-        <EntityType Name="ledger_summary_meta">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="totalInsertedAmount" Type="Decimal" Nullable="false" />
-          <Property Name="totalDeletedAmount" Type="Decimal" Nullable="false" />
-        </EntityType>
-        <EntityType Name="product">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Prefix" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="description" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="Category" Type="Int32" Nullable="false" />
-          <Property Name="SubCategory" Type="Int32" />
-          <Property Name="ServiceFamily" Type="Int64" Nullable="false" />
-          <Property Name="AccountingId" Type="Int32" />
-        </EntityType>
-        <EntityType Name="transactionmeta">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="totalInsertedAmount" Type="Decimal" Nullable="false" />
-          <Property Name="totalDeletedAmount" Type="Decimal" Nullable="false" />
-        </EntityType>
         <Association Name="INVOICE_ACCOUNT">
           <End Type="MediationModel.account" Role="account" Multiplicity="0..1" />
           <End Type="MediationModel.invoice" Role="invoice" Multiplicity="*" />
@@ -9945,6 +9618,116 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             </Principal>
             <Dependent Role="invoice">
               <PropertyRef Name="BILLING_ACCOUNT_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="billingruleassignment_ibfk_2">
+          <End Type="MediationModel.rateplanassignmenttuple" Role="rateplanassignmenttuple" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="MediationModel.billingruleassignment" Role="billingruleassignment" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="rateplanassignmenttuple">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="billingruleassignment">
+              <PropertyRef Name="idRatePlanAssignmentTuple" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="cdrfieldmappingbyswitchtype_ibfk_1">
+          <End Type="MediationModel.cdrfieldlist" Role="cdrfieldlist" Multiplicity="1" />
+          <End Type="MediationModel.cdrfieldmappingbyswitchtype" Role="cdrfieldmappingbyswitchtype" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cdrfieldlist">
+              <PropertyRef Name="fieldnumber" />
+            </Principal>
+            <Dependent Role="cdrfieldmappingbyswitchtype">
+              <PropertyRef Name="FieldNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_country">
+          <End Type="MediationModel.country" Role="country" Multiplicity="0..1" />
+          <End Type="MediationModel.zone" Role="zone" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="country">
+              <PropertyRef Name="country_code" />
+            </Principal>
+            <Dependent Role="zone">
+              <PropertyRef Name="country_code" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="rateplan_ibfk_1">
+          <End Type="MediationModel.enumbillingspan" Role="enumbillingspan" Multiplicity="1" />
+          <End Type="MediationModel.rateplan" Role="rateplan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="enumbillingspan">
+              <PropertyRef Name="ofbiz_uom_Id" />
+            </Principal>
+            <Dependent Role="rateplan">
+              <PropertyRef Name="BillingSpan" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_cdrformat">
+          <End Type="MediationModel.enumcdrformat" Role="enumcdrformat" Multiplicity="1" />
+          <End Type="MediationModel.ne" Role="ne" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="enumcdrformat">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ne">
+              <PropertyRef Name="idcdrformat" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="enumjobdefinition_ibfk_1">
+          <End Type="MediationModel.enumjobtype" Role="enumjobtype" Multiplicity="1" />
+          <End Type="MediationModel.enumjobdefinition" Role="enumjobdefinition" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="enumjobtype">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="enumjobdefinition">
+              <PropertyRef Name="jobtypeid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="job_ibfk_1">
+          <End Type="MediationModel.enumjobdefinition" Role="enumjobdefinition" Multiplicity="1" />
+          <End Type="MediationModel.job" Role="job" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="enumjobdefinition">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="job">
+              <PropertyRef Name="idjobdefinition" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="job_ibfk_3">
+          <End Type="MediationModel.enumjobstatu" Role="enumjobstatu" Multiplicity="1" />
+          <End Type="MediationModel.job" Role="job" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="enumjobstatu">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="job">
+              <PropertyRef Name="Status" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_catetory">
+          <End Type="MediationModel.enumservicecategory" Role="enumservicecategory" Multiplicity="1" />
+          <End Type="MediationModel.enumservicefamily" Role="enumservicefamily" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="enumservicecategory">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="enumservicefamily">
+              <PropertyRef Name="ServiceCategory" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -9960,12 +9743,263 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="job_ibfk_4">
+          <End Type="MediationModel.ne" Role="ne" Multiplicity="0..1" />
+          <End Type="MediationModel.job" Role="job" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ne">
+              <PropertyRef Name="idSwitch" />
+            </Principal>
+            <Dependent Role="job">
+              <PropertyRef Name="idNE" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="jobcompletion_ibfk_1">
+          <End Type="MediationModel.job" Role="job" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="MediationModel.jobcompletion" Role="jobcompletion" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="job">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="jobcompletion">
+              <PropertyRef Name="idJob" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_Ne">
+          <End Type="MediationModel.ne" Role="ne" Multiplicity="1" />
+          <End Type="MediationModel.route" Role="route" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ne">
+              <PropertyRef Name="idSwitch" />
+            </Principal>
+            <Dependent Role="route">
+              <PropertyRef Name="SwitchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ne_ibfk_1">
+          <End Type="MediationModel.telcobrightpartner" Role="telcobrightpartner" Multiplicity="1" />
+          <End Type="MediationModel.ne" Role="ne" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="telcobrightpartner">
+              <PropertyRef Name="idCustomer" />
+            </Principal>
+            <Dependent Role="ne">
+              <PropertyRef Name="idCustomer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="route_ibfk_1">
+          <End Type="MediationModel.partner" Role="partner" Multiplicity="1" />
+          <End Type="MediationModel.route" Role="route" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="partner">
+              <PropertyRef Name="idPartner" />
+            </Principal>
+            <Dependent Role="route">
+              <PropertyRef Name="idPartner" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_rateplan">
+          <End Type="MediationModel.rateplan" Role="rateplan" Multiplicity="0..1" />
+          <End Type="MediationModel.ratetaskreference" Role="ratetaskreference" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="rateplan">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ratetaskreference">
+              <PropertyRef Name="idRatePlan" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_route">
+          <End Type="MediationModel.route" Role="route" Multiplicity="0..1" />
+          <End Type="MediationModel.rateplanassignmenttuple" Role="rateplanassignmenttuple" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="route">
+              <PropertyRef Name="idroute" />
+            </Principal>
+            <Dependent Role="rateplanassignmenttuple">
+              <PropertyRef Name="route" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="userroles_ibfk_2">
+          <End Type="MediationModel.role" Role="role" Multiplicity="1" />
+          <End Type="MediationModel.userrole" Role="userrole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="role">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="userrole">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_zone">
+          <End Type="MediationModel.zone" Role="zone" Multiplicity="1" />
+          <End Type="MediationModel.timezone" Role="timezone" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="zone">
+              <PropertyRef Name="zone_id" />
+            </Principal>
+            <Dependent Role="timezone">
+              <PropertyRef Name="zone_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="uom_conversion_dated_ibfk_1">
+          <End Type="MediationModel.uom" Role="uom" Multiplicity="1" />
+          <End Type="MediationModel.uom_conversion_dated" Role="uom_conversion_dated" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="uom">
+              <PropertyRef Name="UOM_ID" />
+            </Principal>
+            <Dependent Role="uom_conversion_dated">
+              <PropertyRef Name="UOM_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="uom_conversion_dated_ibfk_2">
+          <End Type="MediationModel.uom" Role="uom" Multiplicity="1" />
+          <End Type="MediationModel.uom_conversion_dated" Role="uom_conversion_dated" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="uom">
+              <PropertyRef Name="UOM_ID" />
+            </Principal>
+            <Dependent Role="uom_conversion_dated">
+              <PropertyRef Name="UOM_ID_TO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="uom_conversion_ibfk_1">
+          <End Type="MediationModel.uom" Role="uom" Multiplicity="1" />
+          <End Type="MediationModel.uom_conversion" Role="uom_conversion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="uom">
+              <PropertyRef Name="UOM_ID" />
+            </Principal>
+            <Dependent Role="uom_conversion">
+              <PropertyRef Name="UOM_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="uom_conversion_ibfk_2">
+          <End Type="MediationModel.uom" Role="uom" Multiplicity="1" />
+          <End Type="MediationModel.uom_conversion" Role="uom_conversion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="uom">
+              <PropertyRef Name="UOM_ID" />
+            </Principal>
+            <Dependent Role="uom_conversion">
+              <PropertyRef Name="UOM_ID_TO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ApplicationUser_Claims">
+          <End Type="MediationModel.user" Role="user" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="MediationModel.userclaim" Role="userclaim" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="userclaim">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ApplicationUser_Logins">
+          <End Type="MediationModel.user" Role="user" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="MediationModel.userlogin" Role="userlogin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="userlogin">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="userroles_ibfk_1">
+          <End Type="MediationModel.user" Role="user" Multiplicity="1" />
+          <End Type="MediationModel.userrole" Role="userrole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="userrole">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="MediationModelStoreContainer" CdmEntityContainer="PartnerEntities">
+          <EntitySetMapping Name="acc_temp_transaction">
+            <EntityTypeMapping TypeName="MediationModel.acc_temp_transaction">
+              <MappingFragment StoreEntitySet="acc_temp_transaction">
+                <ScalarProperty Name="jsonDetail" ColumnName="jsonDetail" />
+                <ScalarProperty Name="changedByJob" ColumnName="changedByJob" />
+                <ScalarProperty Name="createdByJob" ColumnName="createdByJob" />
+                <ScalarProperty Name="cancelled" ColumnName="cancelled" />
+                <ScalarProperty Name="isBilled" ColumnName="isBilled" />
+                <ScalarProperty Name="isPrepaid" ColumnName="isPrepaid" />
+                <ScalarProperty Name="isBillable" ColumnName="isBillable" />
+                <ScalarProperty Name="BalanceAfter" ColumnName="BalanceAfter" />
+                <ScalarProperty Name="BalanceBefore" ColumnName="BalanceBefore" />
+                <ScalarProperty Name="amount" ColumnName="amount" />
+                <ScalarProperty Name="uomId" ColumnName="uomId" />
+                <ScalarProperty Name="glAccountId" ColumnName="glAccountId" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="uniqueBillId" ColumnName="uniqueBillId" />
+                <ScalarProperty Name="idEvent" ColumnName="idEvent" />
+                <ScalarProperty Name="debitOrCredit" ColumnName="debitOrCredit" />
+                <ScalarProperty Name="seqId" ColumnName="seqId" />
+                <ScalarProperty Name="transactionTime" ColumnName="transactionTime" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="accounts">
+            <EntityTypeMapping TypeName="MediationModel.account">
+              <MappingFragment StoreEntitySet="account">
+                <ScalarProperty Name="negativeBalanceLimit" ColumnName="negativeBalanceLimit" />
+                <ScalarProperty Name="superviseNegativeBalance" ColumnName="superviseNegativeBalance" />
+                <ScalarProperty Name="lastUpdated" ColumnName="lastUpdated" />
+                <ScalarProperty Name="balanceAfter" ColumnName="balanceAfter" />
+                <ScalarProperty Name="lastAmount" ColumnName="lastAmount" />
+                <ScalarProperty Name="balanceBefore" ColumnName="balanceBefore" />
+                <ScalarProperty Name="isSupplierAccount" ColumnName="isSupplierAccount" />
+                <ScalarProperty Name="isCustomerAccount" ColumnName="isCustomerAccount" />
+                <ScalarProperty Name="isBillable" ColumnName="isBillable" />
+                <ScalarProperty Name="remark" ColumnName="remark" />
+                <ScalarProperty Name="Lineage" ColumnName="Lineage" />
+                <ScalarProperty Name="Depth" ColumnName="Depth" />
+                <ScalarProperty Name="uom" ColumnName="uom" />
+                <ScalarProperty Name="billableType" ColumnName="billableType" />
+                <ScalarProperty Name="product" ColumnName="product" />
+                <ScalarProperty Name="serviceFamily" ColumnName="serviceFamily" />
+                <ScalarProperty Name="serviceGroup" ColumnName="serviceGroup" />
+                <ScalarProperty Name="accountName" ColumnName="accountName" />
+                <ScalarProperty Name="idPartner" ColumnName="idPartner" />
+                <ScalarProperty Name="idParentExternal" ColumnName="idParentExternal" />
+                <ScalarProperty Name="idParent" ColumnName="idParent" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="allerrors">
             <EntityTypeMapping TypeName="MediationModel.allerror">
               <MappingFragment StoreEntitySet="allerror">
@@ -10070,6 +10104,123 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="idCdrFormat" ColumnName="idCdrFormat" />
                 <ScalarProperty Name="FieldNumber" ColumnName="FieldNumber" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cdrmetas">
+            <EntityTypeMapping TypeName="MediationModel.cdrmeta">
+              <MappingFragment StoreEntitySet="cdrmeta">
+                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
+                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cdrsummarymeta_day_01">
+            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_day_01">
+              <MappingFragment StoreEntitySet="cdrsummarymeta_day_01">
+                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
+                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cdrsummarymeta_day_02">
+            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_day_02">
+              <MappingFragment StoreEntitySet="cdrsummarymeta_day_02">
+                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
+                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cdrsummarymeta_day_03">
+            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_day_03">
+              <MappingFragment StoreEntitySet="cdrsummarymeta_day_03">
+                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
+                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cdrsummarymeta_day_04">
+            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_day_04">
+              <MappingFragment StoreEntitySet="cdrsummarymeta_day_04">
+                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
+                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cdrsummarymeta_day_05">
+            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_day_05">
+              <MappingFragment StoreEntitySet="cdrsummarymeta_day_05">
+                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
+                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cdrsummarymeta_day_06">
+            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_day_06">
+              <MappingFragment StoreEntitySet="cdrsummarymeta_day_06">
+                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
+                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cdrsummarymeta_hr_01">
+            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_hr_01">
+              <MappingFragment StoreEntitySet="cdrsummarymeta_hr_01">
+                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
+                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cdrsummarymeta_hr_02">
+            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_hr_02">
+              <MappingFragment StoreEntitySet="cdrsummarymeta_hr_02">
+                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
+                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cdrsummarymeta_hr_03">
+            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_hr_03">
+              <MappingFragment StoreEntitySet="cdrsummarymeta_hr_03">
+                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
+                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cdrsummarymeta_hr_04">
+            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_hr_04">
+              <MappingFragment StoreEntitySet="cdrsummarymeta_hr_04">
+                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
+                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cdrsummarymeta_hr_05">
+            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_hr_05">
+              <MappingFragment StoreEntitySet="cdrsummarymeta_hr_05">
+                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
+                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cdrsummarymeta_hr_06">
+            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_hr_06">
+              <MappingFragment StoreEntitySet="cdrsummarymeta_hr_06">
+                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
+                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -10457,6 +10608,61 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="invoices">
+            <EntityTypeMapping TypeName="MediationModel.invoice">
+              <MappingFragment StoreEntitySet="invoice">
+                <ScalarProperty Name="CREATED_TX_STAMP" ColumnName="CREATED_TX_STAMP" />
+                <ScalarProperty Name="CREATED_STAMP" ColumnName="CREATED_STAMP" />
+                <ScalarProperty Name="LAST_UPDATED_TX_STAMP" ColumnName="LAST_UPDATED_TX_STAMP" />
+                <ScalarProperty Name="LAST_UPDATED_STAMP" ColumnName="LAST_UPDATED_STAMP" />
+                <ScalarProperty Name="RECURRENCE_INFO_ID" ColumnName="RECURRENCE_INFO_ID" />
+                <ScalarProperty Name="CURRENCY_UOM_ID" ColumnName="CURRENCY_UOM_ID" />
+                <ScalarProperty Name="DESCRIPTION" ColumnName="DESCRIPTION" />
+                <ScalarProperty Name="REFERENCE_NUMBER" ColumnName="REFERENCE_NUMBER" />
+                <ScalarProperty Name="INVOICE_MESSAGE" ColumnName="INVOICE_MESSAGE" />
+                <ScalarProperty Name="PAID_DATE" ColumnName="PAID_DATE" />
+                <ScalarProperty Name="DUE_DATE" ColumnName="DUE_DATE" />
+                <ScalarProperty Name="INVOICE_DATE" ColumnName="INVOICE_DATE" />
+                <ScalarProperty Name="CONTACT_MECH_ID" ColumnName="CONTACT_MECH_ID" />
+                <ScalarProperty Name="BILLING_ACCOUNT_ID" ColumnName="BILLING_ACCOUNT_ID" />
+                <ScalarProperty Name="STATUS_ID" ColumnName="STATUS_ID" />
+                <ScalarProperty Name="ROLE_TYPE_ID" ColumnName="ROLE_TYPE_ID" />
+                <ScalarProperty Name="PARTY_ID" ColumnName="PARTY_ID" />
+                <ScalarProperty Name="PARTY_ID_FROM" ColumnName="PARTY_ID_FROM" />
+                <ScalarProperty Name="INVOICE_TYPE_ID" ColumnName="INVOICE_TYPE_ID" />
+                <ScalarProperty Name="INVOICE_ID" ColumnName="INVOICE_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="invoice_item">
+            <EntityTypeMapping TypeName="MediationModel.invoice_item">
+              <MappingFragment StoreEntitySet="invoice_item">
+                <ScalarProperty Name="CREATED_TX_STAMP" ColumnName="CREATED_TX_STAMP" />
+                <ScalarProperty Name="CREATED_STAMP" ColumnName="CREATED_STAMP" />
+                <ScalarProperty Name="LAST_UPDATED_TX_STAMP" ColumnName="LAST_UPDATED_TX_STAMP" />
+                <ScalarProperty Name="LAST_UPDATED_STAMP" ColumnName="LAST_UPDATED_STAMP" />
+                <ScalarProperty Name="SALES_OPPORTUNITY_ID" ColumnName="SALES_OPPORTUNITY_ID" />
+                <ScalarProperty Name="TAX_AUTHORITY_RATE_SEQ_ID" ColumnName="TAX_AUTHORITY_RATE_SEQ_ID" />
+                <ScalarProperty Name="TAX_AUTH_GEO_ID" ColumnName="TAX_AUTH_GEO_ID" />
+                <ScalarProperty Name="TAX_AUTH_PARTY_ID" ColumnName="TAX_AUTH_PARTY_ID" />
+                <ScalarProperty Name="DESCRIPTION" ColumnName="DESCRIPTION" />
+                <ScalarProperty Name="AMOUNT" ColumnName="AMOUNT" />
+                <ScalarProperty Name="QUANTITY" ColumnName="QUANTITY" />
+                <ScalarProperty Name="TAXABLE_FLAG" ColumnName="TAXABLE_FLAG" />
+                <ScalarProperty Name="UOM_ID" ColumnName="UOM_ID" />
+                <ScalarProperty Name="PARENT_INVOICE_ITEM_SEQ_ID" ColumnName="PARENT_INVOICE_ITEM_SEQ_ID" />
+                <ScalarProperty Name="PARENT_INVOICE_ID" ColumnName="PARENT_INVOICE_ID" />
+                <ScalarProperty Name="PRODUCT_FEATURE_ID" ColumnName="PRODUCT_FEATURE_ID" />
+                <ScalarProperty Name="PRODUCT_ID" ColumnName="PRODUCT_ID" />
+                <ScalarProperty Name="INVENTORY_ITEM_ID" ColumnName="INVENTORY_ITEM_ID" />
+                <ScalarProperty Name="OVERRIDE_ORG_PARTY_ID" ColumnName="OVERRIDE_ORG_PARTY_ID" />
+                <ScalarProperty Name="OVERRIDE_GL_ACCOUNT_ID" ColumnName="OVERRIDE_GL_ACCOUNT_ID" />
+                <ScalarProperty Name="INVOICE_ITEM_TYPE_ID" ColumnName="INVOICE_ITEM_TYPE_ID" />
+                <ScalarProperty Name="INVOICE_ITEM_SEQ_ID" ColumnName="INVOICE_ITEM_SEQ_ID" />
+                <ScalarProperty Name="INVOICE_ID" ColumnName="INVOICE_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="jobs">
             <EntityTypeMapping TypeName="MediationModel.job">
               <MappingFragment StoreEntitySet="job">
@@ -10543,6 +10749,15 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="StartDate" ColumnName="StartDate" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="idRatePlan" ColumnName="idRatePlan" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ledger_summary_meta">
+            <EntityTypeMapping TypeName="MediationModel.ledger_summary_meta">
+              <MappingFragment StoreEntitySet="ledger_summary_meta">
+                <ScalarProperty Name="totalDeletedAmount" ColumnName="totalDeletedAmount" />
+                <ScalarProperty Name="totalInsertedAmount" ColumnName="totalInsertedAmount" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -10638,63 +10853,16 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="rates">
-            <EntityTypeMapping TypeName="MediationModel.rate">
-              <MappingFragment StoreEntitySet="rate">
-                <ScalarProperty Name="RateAmountRoundupDecimal" ColumnName="RateAmountRoundupDecimal" />
-                <ScalarProperty Name="billingspan" ColumnName="billingspan" />
-                <ScalarProperty Name="Comment2" ColumnName="Comment2" />
-                <ScalarProperty Name="Comment1" ColumnName="Comment1" />
-                <ScalarProperty Name="OverlappingRates" ColumnName="OverlappingRates" />
-                <ScalarProperty Name="ConflictingRates" ColumnName="ConflictingRates" />
-                <ScalarProperty Name="ChangeCommitted" ColumnName="ChangeCommitted" />
+          <EntitySetMapping Name="products">
+            <EntityTypeMapping TypeName="MediationModel.product">
+              <MappingFragment StoreEntitySet="product">
+                <ScalarProperty Name="AccountingId" ColumnName="AccountingId" />
+                <ScalarProperty Name="ServiceFamily" ColumnName="ServiceFamily" />
                 <ScalarProperty Name="SubCategory" ColumnName="SubCategory" />
                 <ScalarProperty Name="Category" ColumnName="Category" />
-                <ScalarProperty Name="EndPreviousRate" ColumnName="EndPreviousRate" />
-                <ScalarProperty Name="idPreviousRate" ColumnName="idPreviousRate" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="ChangedOn" ColumnName="ChangedOn" />
-                <ScalarProperty Name="ChangedByTaskId" ColumnName="ChangedByTaskId" />
-                <ScalarProperty Name="ConflictingRateIds" ColumnName="ConflictingRateIds" />
-                <ScalarProperty Name="IgwPercentageIn" ColumnName="IgwPercentageIn" />
-                <ScalarProperty Name="RatePosition" ColumnName="RatePosition" />
-                <ScalarProperty Name="TimeZoneOffsetSec" ColumnName="TimeZoneOffsetSec" />
-                <ScalarProperty Name="OtherAmount10" ColumnName="OtherAmount10" />
-                <ScalarProperty Name="OtherAmount9" ColumnName="OtherAmount9" />
-                <ScalarProperty Name="OtherAmount8" ColumnName="OtherAmount8" />
-                <ScalarProperty Name="OtherAmount7" ColumnName="OtherAmount7" />
-                <ScalarProperty Name="OtherAmount6" ColumnName="OtherAmount6" />
-                <ScalarProperty Name="OtherAmount5" ColumnName="OtherAmount5" />
-                <ScalarProperty Name="OtherAmount4" ColumnName="OtherAmount4" />
-                <ScalarProperty Name="OtherAmount3" ColumnName="OtherAmount3" />
-                <ScalarProperty Name="OtherAmount2" ColumnName="OtherAmount2" />
-                <ScalarProperty Name="OtherAmount1" ColumnName="OtherAmount1" />
-                <ScalarProperty Name="Currency" ColumnName="Currency" />
-                <ScalarProperty Name="Type" ColumnName="Type" />
-                <ScalarProperty Name="RouteDisabled" ColumnName="RouteDisabled" />
-                <ScalarProperty Name="Inactive" ColumnName="Inactive" />
-                <ScalarProperty Name="enddate" ColumnName="enddate" />
-                <ScalarProperty Name="startdate" ColumnName="startdate" />
-                <ScalarProperty Name="field5" ColumnName="field5" />
-                <ScalarProperty Name="field4" ColumnName="field4" />
-                <ScalarProperty Name="field3" ColumnName="field3" />
-                <ScalarProperty Name="field2" ColumnName="field2" />
-                <ScalarProperty Name="field1" ColumnName="field1" />
-                <ScalarProperty Name="date1" ColumnName="date1" />
-                <ScalarProperty Name="CountryCode" ColumnName="CountryCode" />
-                <ScalarProperty Name="idrateplan" ColumnName="idrateplan" />
-                <ScalarProperty Name="SurchargeAmount" ColumnName="SurchargeAmount" />
-                <ScalarProperty Name="SurchargeTime" ColumnName="SurchargeTime" />
-                <ScalarProperty Name="MinDurationSec" ColumnName="MinDurationSec" />
-                <ScalarProperty Name="Resolution" ColumnName="Resolution" />
-                <ScalarProperty Name="endtime" ColumnName="endtime" />
-                <ScalarProperty Name="starttime" ColumnName="starttime" />
-                <ScalarProperty Name="WeekDayEnd" ColumnName="WeekDayEnd" />
-                <ScalarProperty Name="WeekDayStart" ColumnName="WeekDayStart" />
-                <ScalarProperty Name="rateamount" ColumnName="rateamount" />
                 <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Prefix" ColumnName="Prefix" />
-                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -11069,6 +11237,15 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="transactionmetas">
+            <EntityTypeMapping TypeName="MediationModel.transactionmeta">
+              <MappingFragment StoreEntitySet="transactionmeta">
+                <ScalarProperty Name="totalDeletedAmount" ColumnName="totalDeletedAmount" />
+                <ScalarProperty Name="totalInsertedAmount" ColumnName="totalInsertedAmount" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="uoms">
             <EntityTypeMapping TypeName="MediationModel.uom">
               <MappingFragment StoreEntitySet="uom">
@@ -11222,31 +11399,6 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="AMOUNT" ColumnName="AMOUNT" />
                 <ScalarProperty Name="transactionDate" ColumnName="transactionDate" />
                 <ScalarProperty Name="idAccount" ColumnName="idAccount" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="acc_temp_transaction">
-            <EntityTypeMapping TypeName="MediationModel.acc_temp_transaction">
-              <MappingFragment StoreEntitySet="acc_temp_transaction">
-                <ScalarProperty Name="jsonDetail" ColumnName="jsonDetail" />
-                <ScalarProperty Name="changedByJob" ColumnName="changedByJob" />
-                <ScalarProperty Name="createdByJob" ColumnName="createdByJob" />
-                <ScalarProperty Name="cancelled" ColumnName="cancelled" />
-                <ScalarProperty Name="isBilled" ColumnName="isBilled" />
-                <ScalarProperty Name="isPrepaid" ColumnName="isPrepaid" />
-                <ScalarProperty Name="isBillable" ColumnName="isBillable" />
-                <ScalarProperty Name="BalanceAfter" ColumnName="BalanceAfter" />
-                <ScalarProperty Name="BalanceBefore" ColumnName="BalanceBefore" />
-                <ScalarProperty Name="amount" ColumnName="amount" />
-                <ScalarProperty Name="uomId" ColumnName="uomId" />
-                <ScalarProperty Name="glAccountId" ColumnName="glAccountId" />
-                <ScalarProperty Name="description" ColumnName="description" />
-                <ScalarProperty Name="uniqueBillId" ColumnName="uniqueBillId" />
-                <ScalarProperty Name="idEvent" ColumnName="idEvent" />
-                <ScalarProperty Name="debitOrCredit" ColumnName="debitOrCredit" />
-                <ScalarProperty Name="seqId" ColumnName="seqId" />
-                <ScalarProperty Name="transactionTime" ColumnName="transactionTime" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -12058,6 +12210,67 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="rates">
+            <EntityTypeMapping TypeName="MediationModel.rate">
+              <MappingFragment StoreEntitySet="rate">
+                <ScalarProperty Name="RateAmountRoundupDecimal" ColumnName="RateAmountRoundupDecimal" />
+                <ScalarProperty Name="billingspan" ColumnName="billingspan" />
+                <ScalarProperty Name="Comment2" ColumnName="Comment2" />
+                <ScalarProperty Name="Comment1" ColumnName="Comment1" />
+                <ScalarProperty Name="OverlappingRates" ColumnName="OverlappingRates" />
+                <ScalarProperty Name="ConflictingRates" ColumnName="ConflictingRates" />
+                <ScalarProperty Name="ChangeCommitted" ColumnName="ChangeCommitted" />
+                <ScalarProperty Name="SubCategory" ColumnName="SubCategory" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+                <ScalarProperty Name="EndPreviousRate" ColumnName="EndPreviousRate" />
+                <ScalarProperty Name="idPreviousRate" ColumnName="idPreviousRate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ChangedOn" ColumnName="ChangedOn" />
+                <ScalarProperty Name="ChangedByTaskId" ColumnName="ChangedByTaskId" />
+                <ScalarProperty Name="ConflictingRateIds" ColumnName="ConflictingRateIds" />
+                <ScalarProperty Name="IgwPercentageIn" ColumnName="IgwPercentageIn" />
+                <ScalarProperty Name="RatePosition" ColumnName="RatePosition" />
+                <ScalarProperty Name="TimeZoneOffsetSec" ColumnName="TimeZoneOffsetSec" />
+                <ScalarProperty Name="OtherAmount10" ColumnName="OtherAmount10" />
+                <ScalarProperty Name="OtherAmount9" ColumnName="OtherAmount9" />
+                <ScalarProperty Name="OtherAmount8" ColumnName="OtherAmount8" />
+                <ScalarProperty Name="OtherAmount7" ColumnName="OtherAmount7" />
+                <ScalarProperty Name="OtherAmount6" ColumnName="OtherAmount6" />
+                <ScalarProperty Name="OtherAmount5" ColumnName="OtherAmount5" />
+                <ScalarProperty Name="OtherAmount4" ColumnName="OtherAmount4" />
+                <ScalarProperty Name="OtherAmount3" ColumnName="OtherAmount3" />
+                <ScalarProperty Name="OtherAmount2" ColumnName="OtherAmount2" />
+                <ScalarProperty Name="OtherAmount1" ColumnName="OtherAmount1" />
+                <ScalarProperty Name="Currency" ColumnName="Currency" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="RouteDisabled" ColumnName="RouteDisabled" />
+                <ScalarProperty Name="Inactive" ColumnName="Inactive" />
+                <ScalarProperty Name="enddate" ColumnName="enddate" />
+                <ScalarProperty Name="startdate" ColumnName="startdate" />
+                <ScalarProperty Name="field5" ColumnName="field5" />
+                <ScalarProperty Name="field4" ColumnName="field4" />
+                <ScalarProperty Name="field3" ColumnName="field3" />
+                <ScalarProperty Name="field2" ColumnName="field2" />
+                <ScalarProperty Name="field1" ColumnName="field1" />
+                <ScalarProperty Name="date1" ColumnName="date1" />
+                <ScalarProperty Name="CountryCode" ColumnName="CountryCode" />
+                <ScalarProperty Name="idrateplan" ColumnName="idrateplan" />
+                <ScalarProperty Name="SurchargeAmount" ColumnName="SurchargeAmount" />
+                <ScalarProperty Name="SurchargeTime" ColumnName="SurchargeTime" />
+                <ScalarProperty Name="MinDurationSec" ColumnName="MinDurationSec" />
+                <ScalarProperty Name="Resolution" ColumnName="Resolution" />
+                <ScalarProperty Name="endtime" ColumnName="endtime" />
+                <ScalarProperty Name="starttime" ColumnName="starttime" />
+                <ScalarProperty Name="WeekDayEnd" ColumnName="WeekDayEnd" />
+                <ScalarProperty Name="WeekDayStart" ColumnName="WeekDayStart" />
+                <ScalarProperty Name="rateamount" ColumnName="rateamount" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="Prefix" ColumnName="Prefix" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="sum_voice_day_01">
             <EntityTypeMapping TypeName="MediationModel.sum_voice_day_01">
               <MappingFragment StoreEntitySet="sum_voice_day_01">
@@ -12223,6 +12436,114 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <EntitySetMapping Name="sum_voice_day_04">
             <EntityTypeMapping TypeName="MediationModel.sum_voice_day_04">
               <MappingFragment StoreEntitySet="sum_voice_day_04">
+                <ScalarProperty Name="decimalAmount3" ColumnName="decimalAmount3" />
+                <ScalarProperty Name="decimalAmount2" ColumnName="decimalAmount2" />
+                <ScalarProperty Name="decimalAmount1" ColumnName="decimalAmount1" />
+                <ScalarProperty Name="longDecimalAmount3" ColumnName="longDecimalAmount3" />
+                <ScalarProperty Name="longAmount3" ColumnName="longAmount3" />
+                <ScalarProperty Name="intAmount3" ColumnName="intAmount3" />
+                <ScalarProperty Name="longDecimalAmount2" ColumnName="longDecimalAmount2" />
+                <ScalarProperty Name="longDecimalAmount1" ColumnName="longDecimalAmount1" />
+                <ScalarProperty Name="longAmount2" ColumnName="longAmount2" />
+                <ScalarProperty Name="longAmount1" ColumnName="longAmount1" />
+                <ScalarProperty Name="intAmount2" ColumnName="intAmount2" />
+                <ScalarProperty Name="intAmount1" ColumnName="intAmount1" />
+                <ScalarProperty Name="vat" ColumnName="vat" />
+                <ScalarProperty Name="tax2" ColumnName="tax2" />
+                <ScalarProperty Name="tax1" ColumnName="tax1" />
+                <ScalarProperty Name="suppliercost" ColumnName="suppliercost" />
+                <ScalarProperty Name="customercost" ColumnName="customercost" />
+                <ScalarProperty Name="PDD" ColumnName="PDD" />
+                <ScalarProperty Name="duration3" ColumnName="duration3" />
+                <ScalarProperty Name="duration2" ColumnName="duration2" />
+                <ScalarProperty Name="duration1" ColumnName="duration1" />
+                <ScalarProperty Name="roundedduration" ColumnName="roundedduration" />
+                <ScalarProperty Name="actualduration" ColumnName="actualduration" />
+                <ScalarProperty Name="successfulcalls" ColumnName="successfulcalls" />
+                <ScalarProperty Name="connectedcallsCC" ColumnName="connectedcallsCC" />
+                <ScalarProperty Name="connectedcalls" ColumnName="connectedcalls" />
+                <ScalarProperty Name="totalcalls" ColumnName="totalcalls" />
+                <ScalarProperty Name="tup_starttime" ColumnName="tup_starttime" />
+                <ScalarProperty Name="tup_vatcurrency" ColumnName="tup_vatcurrency" />
+                <ScalarProperty Name="tup_tax2currency" ColumnName="tup_tax2currency" />
+                <ScalarProperty Name="tup_tax1currency" ColumnName="tup_tax1currency" />
+                <ScalarProperty Name="tup_suppliercurrency" ColumnName="tup_suppliercurrency" />
+                <ScalarProperty Name="tup_customercurrency" ColumnName="tup_customercurrency" />
+                <ScalarProperty Name="tup_destinationId" ColumnName="tup_destinationId" />
+                <ScalarProperty Name="tup_sourceId" ColumnName="tup_sourceId" />
+                <ScalarProperty Name="tup_matchedprefixsupplier" ColumnName="tup_matchedprefixsupplier" />
+                <ScalarProperty Name="tup_matchedprefixcustomer" ColumnName="tup_matchedprefixcustomer" />
+                <ScalarProperty Name="tup_countryorareacode" ColumnName="tup_countryorareacode" />
+                <ScalarProperty Name="tup_outgoingip" ColumnName="tup_outgoingip" />
+                <ScalarProperty Name="tup_incomingip" ColumnName="tup_incomingip" />
+                <ScalarProperty Name="tup_supplierrate" ColumnName="tup_supplierrate" />
+                <ScalarProperty Name="tup_customerrate" ColumnName="tup_customerrate" />
+                <ScalarProperty Name="tup_outgoingroute" ColumnName="tup_outgoingroute" />
+                <ScalarProperty Name="tup_incomingroute" ColumnName="tup_incomingroute" />
+                <ScalarProperty Name="tup_outpartnerid" ColumnName="tup_outpartnerid" />
+                <ScalarProperty Name="tup_inpartnerid" ColumnName="tup_inpartnerid" />
+                <ScalarProperty Name="tup_switchid" ColumnName="tup_switchid" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sum_voice_day_05">
+            <EntityTypeMapping TypeName="MediationModel.sum_voice_day_05">
+              <MappingFragment StoreEntitySet="sum_voice_day_05">
+                <ScalarProperty Name="decimalAmount3" ColumnName="decimalAmount3" />
+                <ScalarProperty Name="decimalAmount2" ColumnName="decimalAmount2" />
+                <ScalarProperty Name="decimalAmount1" ColumnName="decimalAmount1" />
+                <ScalarProperty Name="longDecimalAmount3" ColumnName="longDecimalAmount3" />
+                <ScalarProperty Name="longAmount3" ColumnName="longAmount3" />
+                <ScalarProperty Name="intAmount3" ColumnName="intAmount3" />
+                <ScalarProperty Name="longDecimalAmount2" ColumnName="longDecimalAmount2" />
+                <ScalarProperty Name="longDecimalAmount1" ColumnName="longDecimalAmount1" />
+                <ScalarProperty Name="longAmount2" ColumnName="longAmount2" />
+                <ScalarProperty Name="longAmount1" ColumnName="longAmount1" />
+                <ScalarProperty Name="intAmount2" ColumnName="intAmount2" />
+                <ScalarProperty Name="intAmount1" ColumnName="intAmount1" />
+                <ScalarProperty Name="vat" ColumnName="vat" />
+                <ScalarProperty Name="tax2" ColumnName="tax2" />
+                <ScalarProperty Name="tax1" ColumnName="tax1" />
+                <ScalarProperty Name="suppliercost" ColumnName="suppliercost" />
+                <ScalarProperty Name="customercost" ColumnName="customercost" />
+                <ScalarProperty Name="PDD" ColumnName="PDD" />
+                <ScalarProperty Name="duration3" ColumnName="duration3" />
+                <ScalarProperty Name="duration2" ColumnName="duration2" />
+                <ScalarProperty Name="duration1" ColumnName="duration1" />
+                <ScalarProperty Name="roundedduration" ColumnName="roundedduration" />
+                <ScalarProperty Name="actualduration" ColumnName="actualduration" />
+                <ScalarProperty Name="successfulcalls" ColumnName="successfulcalls" />
+                <ScalarProperty Name="connectedcallsCC" ColumnName="connectedcallsCC" />
+                <ScalarProperty Name="connectedcalls" ColumnName="connectedcalls" />
+                <ScalarProperty Name="totalcalls" ColumnName="totalcalls" />
+                <ScalarProperty Name="tup_starttime" ColumnName="tup_starttime" />
+                <ScalarProperty Name="tup_vatcurrency" ColumnName="tup_vatcurrency" />
+                <ScalarProperty Name="tup_tax2currency" ColumnName="tup_tax2currency" />
+                <ScalarProperty Name="tup_tax1currency" ColumnName="tup_tax1currency" />
+                <ScalarProperty Name="tup_suppliercurrency" ColumnName="tup_suppliercurrency" />
+                <ScalarProperty Name="tup_customercurrency" ColumnName="tup_customercurrency" />
+                <ScalarProperty Name="tup_destinationId" ColumnName="tup_destinationId" />
+                <ScalarProperty Name="tup_sourceId" ColumnName="tup_sourceId" />
+                <ScalarProperty Name="tup_matchedprefixsupplier" ColumnName="tup_matchedprefixsupplier" />
+                <ScalarProperty Name="tup_matchedprefixcustomer" ColumnName="tup_matchedprefixcustomer" />
+                <ScalarProperty Name="tup_countryorareacode" ColumnName="tup_countryorareacode" />
+                <ScalarProperty Name="tup_outgoingip" ColumnName="tup_outgoingip" />
+                <ScalarProperty Name="tup_incomingip" ColumnName="tup_incomingip" />
+                <ScalarProperty Name="tup_supplierrate" ColumnName="tup_supplierrate" />
+                <ScalarProperty Name="tup_customerrate" ColumnName="tup_customerrate" />
+                <ScalarProperty Name="tup_outgoingroute" ColumnName="tup_outgoingroute" />
+                <ScalarProperty Name="tup_incomingroute" ColumnName="tup_incomingroute" />
+                <ScalarProperty Name="tup_outpartnerid" ColumnName="tup_outpartnerid" />
+                <ScalarProperty Name="tup_inpartnerid" ColumnName="tup_inpartnerid" />
+                <ScalarProperty Name="tup_switchid" ColumnName="tup_switchid" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sum_voice_day_06">
+            <EntityTypeMapping TypeName="MediationModel.sum_voice_day_06">
+              <MappingFragment StoreEntitySet="sum_voice_day_06">
                 <ScalarProperty Name="decimalAmount3" ColumnName="decimalAmount3" />
                 <ScalarProperty Name="decimalAmount2" ColumnName="decimalAmount2" />
                 <ScalarProperty Name="decimalAmount1" ColumnName="decimalAmount1" />
@@ -12490,149 +12811,6 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="uom_conversion">
-            <EntityTypeMapping TypeName="MediationModel.uom_conversion">
-              <MappingFragment StoreEntitySet="uom_conversion">
-                <ScalarProperty Name="CREATED_TX_STAMP" ColumnName="CREATED_TX_STAMP" />
-                <ScalarProperty Name="CREATED_STAMP" ColumnName="CREATED_STAMP" />
-                <ScalarProperty Name="LAST_UPDATED_TX_STAMP" ColumnName="LAST_UPDATED_TX_STAMP" />
-                <ScalarProperty Name="LAST_UPDATED_STAMP" ColumnName="LAST_UPDATED_STAMP" />
-                <ScalarProperty Name="ROUNDING_MODE" ColumnName="ROUNDING_MODE" />
-                <ScalarProperty Name="DECIMAL_SCALE" ColumnName="DECIMAL_SCALE" />
-                <ScalarProperty Name="CUSTOM_METHOD_ID" ColumnName="CUSTOM_METHOD_ID" />
-                <ScalarProperty Name="CONVERSION_FACTOR" ColumnName="CONVERSION_FACTOR" />
-                <ScalarProperty Name="UOM_ID_TO" ColumnName="UOM_ID_TO" />
-                <ScalarProperty Name="UOM_ID" ColumnName="UOM_ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="uom_conversion_dated">
-            <EntityTypeMapping TypeName="MediationModel.uom_conversion_dated">
-              <MappingFragment StoreEntitySet="uom_conversion_dated">
-                <ScalarProperty Name="CREATED_TX_STAMP" ColumnName="CREATED_TX_STAMP" />
-                <ScalarProperty Name="CREATED_STAMP" ColumnName="CREATED_STAMP" />
-                <ScalarProperty Name="LAST_UPDATED_TX_STAMP" ColumnName="LAST_UPDATED_TX_STAMP" />
-                <ScalarProperty Name="LAST_UPDATED_STAMP" ColumnName="LAST_UPDATED_STAMP" />
-                <ScalarProperty Name="PURPOSE_ENUM_ID" ColumnName="PURPOSE_ENUM_ID" />
-                <ScalarProperty Name="ROUNDING_MODE" ColumnName="ROUNDING_MODE" />
-                <ScalarProperty Name="DECIMAL_SCALE" ColumnName="DECIMAL_SCALE" />
-                <ScalarProperty Name="CUSTOM_METHOD_ID" ColumnName="CUSTOM_METHOD_ID" />
-                <ScalarProperty Name="CONVERSION_FACTOR" ColumnName="CONVERSION_FACTOR" />
-                <ScalarProperty Name="THRU_DATE" ColumnName="THRU_DATE" />
-                <ScalarProperty Name="FROM_DATE" ColumnName="FROM_DATE" />
-                <ScalarProperty Name="UOM_ID_TO" ColumnName="UOM_ID_TO" />
-                <ScalarProperty Name="UOM_ID" ColumnName="UOM_ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="sum_voice_day_05">
-            <EntityTypeMapping TypeName="MediationModel.sum_voice_day_05">
-              <MappingFragment StoreEntitySet="sum_voice_day_05">
-                <ScalarProperty Name="decimalAmount3" ColumnName="decimalAmount3" />
-                <ScalarProperty Name="decimalAmount2" ColumnName="decimalAmount2" />
-                <ScalarProperty Name="decimalAmount1" ColumnName="decimalAmount1" />
-                <ScalarProperty Name="longDecimalAmount3" ColumnName="longDecimalAmount3" />
-                <ScalarProperty Name="longAmount3" ColumnName="longAmount3" />
-                <ScalarProperty Name="intAmount3" ColumnName="intAmount3" />
-                <ScalarProperty Name="longDecimalAmount2" ColumnName="longDecimalAmount2" />
-                <ScalarProperty Name="longDecimalAmount1" ColumnName="longDecimalAmount1" />
-                <ScalarProperty Name="longAmount2" ColumnName="longAmount2" />
-                <ScalarProperty Name="longAmount1" ColumnName="longAmount1" />
-                <ScalarProperty Name="intAmount2" ColumnName="intAmount2" />
-                <ScalarProperty Name="intAmount1" ColumnName="intAmount1" />
-                <ScalarProperty Name="vat" ColumnName="vat" />
-                <ScalarProperty Name="tax2" ColumnName="tax2" />
-                <ScalarProperty Name="tax1" ColumnName="tax1" />
-                <ScalarProperty Name="suppliercost" ColumnName="suppliercost" />
-                <ScalarProperty Name="customercost" ColumnName="customercost" />
-                <ScalarProperty Name="PDD" ColumnName="PDD" />
-                <ScalarProperty Name="duration3" ColumnName="duration3" />
-                <ScalarProperty Name="duration2" ColumnName="duration2" />
-                <ScalarProperty Name="duration1" ColumnName="duration1" />
-                <ScalarProperty Name="roundedduration" ColumnName="roundedduration" />
-                <ScalarProperty Name="actualduration" ColumnName="actualduration" />
-                <ScalarProperty Name="successfulcalls" ColumnName="successfulcalls" />
-                <ScalarProperty Name="connectedcallsCC" ColumnName="connectedcallsCC" />
-                <ScalarProperty Name="connectedcalls" ColumnName="connectedcalls" />
-                <ScalarProperty Name="totalcalls" ColumnName="totalcalls" />
-                <ScalarProperty Name="tup_starttime" ColumnName="tup_starttime" />
-                <ScalarProperty Name="tup_vatcurrency" ColumnName="tup_vatcurrency" />
-                <ScalarProperty Name="tup_tax2currency" ColumnName="tup_tax2currency" />
-                <ScalarProperty Name="tup_tax1currency" ColumnName="tup_tax1currency" />
-                <ScalarProperty Name="tup_suppliercurrency" ColumnName="tup_suppliercurrency" />
-                <ScalarProperty Name="tup_customercurrency" ColumnName="tup_customercurrency" />
-                <ScalarProperty Name="tup_destinationId" ColumnName="tup_destinationId" />
-                <ScalarProperty Name="tup_sourceId" ColumnName="tup_sourceId" />
-                <ScalarProperty Name="tup_matchedprefixsupplier" ColumnName="tup_matchedprefixsupplier" />
-                <ScalarProperty Name="tup_matchedprefixcustomer" ColumnName="tup_matchedprefixcustomer" />
-                <ScalarProperty Name="tup_countryorareacode" ColumnName="tup_countryorareacode" />
-                <ScalarProperty Name="tup_outgoingip" ColumnName="tup_outgoingip" />
-                <ScalarProperty Name="tup_incomingip" ColumnName="tup_incomingip" />
-                <ScalarProperty Name="tup_supplierrate" ColumnName="tup_supplierrate" />
-                <ScalarProperty Name="tup_customerrate" ColumnName="tup_customerrate" />
-                <ScalarProperty Name="tup_outgoingroute" ColumnName="tup_outgoingroute" />
-                <ScalarProperty Name="tup_incomingroute" ColumnName="tup_incomingroute" />
-                <ScalarProperty Name="tup_outpartnerid" ColumnName="tup_outpartnerid" />
-                <ScalarProperty Name="tup_inpartnerid" ColumnName="tup_inpartnerid" />
-                <ScalarProperty Name="tup_switchid" ColumnName="tup_switchid" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="sum_voice_day_06">
-            <EntityTypeMapping TypeName="MediationModel.sum_voice_day_06">
-              <MappingFragment StoreEntitySet="sum_voice_day_06">
-                <ScalarProperty Name="decimalAmount3" ColumnName="decimalAmount3" />
-                <ScalarProperty Name="decimalAmount2" ColumnName="decimalAmount2" />
-                <ScalarProperty Name="decimalAmount1" ColumnName="decimalAmount1" />
-                <ScalarProperty Name="longDecimalAmount3" ColumnName="longDecimalAmount3" />
-                <ScalarProperty Name="longAmount3" ColumnName="longAmount3" />
-                <ScalarProperty Name="intAmount3" ColumnName="intAmount3" />
-                <ScalarProperty Name="longDecimalAmount2" ColumnName="longDecimalAmount2" />
-                <ScalarProperty Name="longDecimalAmount1" ColumnName="longDecimalAmount1" />
-                <ScalarProperty Name="longAmount2" ColumnName="longAmount2" />
-                <ScalarProperty Name="longAmount1" ColumnName="longAmount1" />
-                <ScalarProperty Name="intAmount2" ColumnName="intAmount2" />
-                <ScalarProperty Name="intAmount1" ColumnName="intAmount1" />
-                <ScalarProperty Name="vat" ColumnName="vat" />
-                <ScalarProperty Name="tax2" ColumnName="tax2" />
-                <ScalarProperty Name="tax1" ColumnName="tax1" />
-                <ScalarProperty Name="suppliercost" ColumnName="suppliercost" />
-                <ScalarProperty Name="customercost" ColumnName="customercost" />
-                <ScalarProperty Name="PDD" ColumnName="PDD" />
-                <ScalarProperty Name="duration3" ColumnName="duration3" />
-                <ScalarProperty Name="duration2" ColumnName="duration2" />
-                <ScalarProperty Name="duration1" ColumnName="duration1" />
-                <ScalarProperty Name="roundedduration" ColumnName="roundedduration" />
-                <ScalarProperty Name="actualduration" ColumnName="actualduration" />
-                <ScalarProperty Name="successfulcalls" ColumnName="successfulcalls" />
-                <ScalarProperty Name="connectedcallsCC" ColumnName="connectedcallsCC" />
-                <ScalarProperty Name="connectedcalls" ColumnName="connectedcalls" />
-                <ScalarProperty Name="totalcalls" ColumnName="totalcalls" />
-                <ScalarProperty Name="tup_starttime" ColumnName="tup_starttime" />
-                <ScalarProperty Name="tup_vatcurrency" ColumnName="tup_vatcurrency" />
-                <ScalarProperty Name="tup_tax2currency" ColumnName="tup_tax2currency" />
-                <ScalarProperty Name="tup_tax1currency" ColumnName="tup_tax1currency" />
-                <ScalarProperty Name="tup_suppliercurrency" ColumnName="tup_suppliercurrency" />
-                <ScalarProperty Name="tup_customercurrency" ColumnName="tup_customercurrency" />
-                <ScalarProperty Name="tup_destinationId" ColumnName="tup_destinationId" />
-                <ScalarProperty Name="tup_sourceId" ColumnName="tup_sourceId" />
-                <ScalarProperty Name="tup_matchedprefixsupplier" ColumnName="tup_matchedprefixsupplier" />
-                <ScalarProperty Name="tup_matchedprefixcustomer" ColumnName="tup_matchedprefixcustomer" />
-                <ScalarProperty Name="tup_countryorareacode" ColumnName="tup_countryorareacode" />
-                <ScalarProperty Name="tup_outgoingip" ColumnName="tup_outgoingip" />
-                <ScalarProperty Name="tup_incomingip" ColumnName="tup_incomingip" />
-                <ScalarProperty Name="tup_supplierrate" ColumnName="tup_supplierrate" />
-                <ScalarProperty Name="tup_customerrate" ColumnName="tup_customerrate" />
-                <ScalarProperty Name="tup_outgoingroute" ColumnName="tup_outgoingroute" />
-                <ScalarProperty Name="tup_incomingroute" ColumnName="tup_incomingroute" />
-                <ScalarProperty Name="tup_outpartnerid" ColumnName="tup_outpartnerid" />
-                <ScalarProperty Name="tup_inpartnerid" ColumnName="tup_inpartnerid" />
-                <ScalarProperty Name="tup_switchid" ColumnName="tup_switchid" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="sum_voice_hr_05">
             <EntityTypeMapping TypeName="MediationModel.sum_voice_hr_05">
               <MappingFragment StoreEntitySet="sum_voice_hr_05">
@@ -12741,235 +12919,38 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="accounts">
-            <EntityTypeMapping TypeName="MediationModel.account">
-              <MappingFragment StoreEntitySet="account">
-                <ScalarProperty Name="negativeBalanceLimit" ColumnName="negativeBalanceLimit" />
-                <ScalarProperty Name="superviseNegativeBalance" ColumnName="superviseNegativeBalance" />
-                <ScalarProperty Name="lastUpdated" ColumnName="lastUpdated" />
-                <ScalarProperty Name="balanceAfter" ColumnName="balanceAfter" />
-                <ScalarProperty Name="lastAmount" ColumnName="lastAmount" />
-                <ScalarProperty Name="balanceBefore" ColumnName="balanceBefore" />
-                <ScalarProperty Name="isSupplierAccount" ColumnName="isSupplierAccount" />
-                <ScalarProperty Name="isCustomerAccount" ColumnName="isCustomerAccount" />
-                <ScalarProperty Name="isBillable" ColumnName="isBillable" />
-                <ScalarProperty Name="remark" ColumnName="remark" />
-                <ScalarProperty Name="Lineage" ColumnName="Lineage" />
-                <ScalarProperty Name="Depth" ColumnName="Depth" />
-                <ScalarProperty Name="uom" ColumnName="uom" />
-                <ScalarProperty Name="billableType" ColumnName="billableType" />
-                <ScalarProperty Name="product" ColumnName="product" />
-                <ScalarProperty Name="serviceFamily" ColumnName="serviceFamily" />
-                <ScalarProperty Name="serviceGroup" ColumnName="serviceGroup" />
-                <ScalarProperty Name="accountName" ColumnName="accountName" />
-                <ScalarProperty Name="idPartner" ColumnName="idPartner" />
-                <ScalarProperty Name="idParentExternal" ColumnName="idParentExternal" />
-                <ScalarProperty Name="idParent" ColumnName="idParent" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="cdrmetas">
-            <EntityTypeMapping TypeName="MediationModel.cdrmeta">
-              <MappingFragment StoreEntitySet="cdrmeta">
-                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
-                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="cdrsummarymeta_day_01">
-            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_day_01">
-              <MappingFragment StoreEntitySet="cdrsummarymeta_day_01">
-                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
-                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="cdrsummarymeta_day_02">
-            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_day_02">
-              <MappingFragment StoreEntitySet="cdrsummarymeta_day_02">
-                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
-                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="cdrsummarymeta_day_03">
-            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_day_03">
-              <MappingFragment StoreEntitySet="cdrsummarymeta_day_03">
-                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
-                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="cdrsummarymeta_day_04">
-            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_day_04">
-              <MappingFragment StoreEntitySet="cdrsummarymeta_day_04">
-                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
-                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="cdrsummarymeta_day_05">
-            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_day_05">
-              <MappingFragment StoreEntitySet="cdrsummarymeta_day_05">
-                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
-                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="cdrsummarymeta_day_06">
-            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_day_06">
-              <MappingFragment StoreEntitySet="cdrsummarymeta_day_06">
-                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
-                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="cdrsummarymeta_hr_01">
-            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_hr_01">
-              <MappingFragment StoreEntitySet="cdrsummarymeta_hr_01">
-                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
-                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="cdrsummarymeta_hr_02">
-            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_hr_02">
-              <MappingFragment StoreEntitySet="cdrsummarymeta_hr_02">
-                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
-                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="cdrsummarymeta_hr_03">
-            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_hr_03">
-              <MappingFragment StoreEntitySet="cdrsummarymeta_hr_03">
-                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
-                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="cdrsummarymeta_hr_04">
-            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_hr_04">
-              <MappingFragment StoreEntitySet="cdrsummarymeta_hr_04">
-                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
-                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="cdrsummarymeta_hr_05">
-            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_hr_05">
-              <MappingFragment StoreEntitySet="cdrsummarymeta_hr_05">
-                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
-                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="cdrsummarymeta_hr_06">
-            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_hr_06">
-              <MappingFragment StoreEntitySet="cdrsummarymeta_hr_06">
-                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
-                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="invoices">
-            <EntityTypeMapping TypeName="MediationModel.invoice">
-              <MappingFragment StoreEntitySet="invoice">
+          <EntitySetMapping Name="uom_conversion">
+            <EntityTypeMapping TypeName="MediationModel.uom_conversion">
+              <MappingFragment StoreEntitySet="uom_conversion">
                 <ScalarProperty Name="CREATED_TX_STAMP" ColumnName="CREATED_TX_STAMP" />
                 <ScalarProperty Name="CREATED_STAMP" ColumnName="CREATED_STAMP" />
                 <ScalarProperty Name="LAST_UPDATED_TX_STAMP" ColumnName="LAST_UPDATED_TX_STAMP" />
                 <ScalarProperty Name="LAST_UPDATED_STAMP" ColumnName="LAST_UPDATED_STAMP" />
-                <ScalarProperty Name="RECURRENCE_INFO_ID" ColumnName="RECURRENCE_INFO_ID" />
-                <ScalarProperty Name="CURRENCY_UOM_ID" ColumnName="CURRENCY_UOM_ID" />
-                <ScalarProperty Name="DESCRIPTION" ColumnName="DESCRIPTION" />
-                <ScalarProperty Name="REFERENCE_NUMBER" ColumnName="REFERENCE_NUMBER" />
-                <ScalarProperty Name="INVOICE_MESSAGE" ColumnName="INVOICE_MESSAGE" />
-                <ScalarProperty Name="PAID_DATE" ColumnName="PAID_DATE" />
-                <ScalarProperty Name="DUE_DATE" ColumnName="DUE_DATE" />
-                <ScalarProperty Name="INVOICE_DATE" ColumnName="INVOICE_DATE" />
-                <ScalarProperty Name="CONTACT_MECH_ID" ColumnName="CONTACT_MECH_ID" />
-                <ScalarProperty Name="BILLING_ACCOUNT_ID" ColumnName="BILLING_ACCOUNT_ID" />
-                <ScalarProperty Name="STATUS_ID" ColumnName="STATUS_ID" />
-                <ScalarProperty Name="ROLE_TYPE_ID" ColumnName="ROLE_TYPE_ID" />
-                <ScalarProperty Name="PARTY_ID" ColumnName="PARTY_ID" />
-                <ScalarProperty Name="PARTY_ID_FROM" ColumnName="PARTY_ID_FROM" />
-                <ScalarProperty Name="INVOICE_TYPE_ID" ColumnName="INVOICE_TYPE_ID" />
-                <ScalarProperty Name="INVOICE_ID" ColumnName="INVOICE_ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="invoice_item">
-            <EntityTypeMapping TypeName="MediationModel.invoice_item">
-              <MappingFragment StoreEntitySet="invoice_item">
-                <ScalarProperty Name="CREATED_TX_STAMP" ColumnName="CREATED_TX_STAMP" />
-                <ScalarProperty Name="CREATED_STAMP" ColumnName="CREATED_STAMP" />
-                <ScalarProperty Name="LAST_UPDATED_TX_STAMP" ColumnName="LAST_UPDATED_TX_STAMP" />
-                <ScalarProperty Name="LAST_UPDATED_STAMP" ColumnName="LAST_UPDATED_STAMP" />
-                <ScalarProperty Name="SALES_OPPORTUNITY_ID" ColumnName="SALES_OPPORTUNITY_ID" />
-                <ScalarProperty Name="TAX_AUTHORITY_RATE_SEQ_ID" ColumnName="TAX_AUTHORITY_RATE_SEQ_ID" />
-                <ScalarProperty Name="TAX_AUTH_GEO_ID" ColumnName="TAX_AUTH_GEO_ID" />
-                <ScalarProperty Name="TAX_AUTH_PARTY_ID" ColumnName="TAX_AUTH_PARTY_ID" />
-                <ScalarProperty Name="DESCRIPTION" ColumnName="DESCRIPTION" />
-                <ScalarProperty Name="AMOUNT" ColumnName="AMOUNT" />
-                <ScalarProperty Name="QUANTITY" ColumnName="QUANTITY" />
-                <ScalarProperty Name="TAXABLE_FLAG" ColumnName="TAXABLE_FLAG" />
+                <ScalarProperty Name="ROUNDING_MODE" ColumnName="ROUNDING_MODE" />
+                <ScalarProperty Name="DECIMAL_SCALE" ColumnName="DECIMAL_SCALE" />
+                <ScalarProperty Name="CUSTOM_METHOD_ID" ColumnName="CUSTOM_METHOD_ID" />
+                <ScalarProperty Name="CONVERSION_FACTOR" ColumnName="CONVERSION_FACTOR" />
+                <ScalarProperty Name="UOM_ID_TO" ColumnName="UOM_ID_TO" />
                 <ScalarProperty Name="UOM_ID" ColumnName="UOM_ID" />
-                <ScalarProperty Name="PARENT_INVOICE_ITEM_SEQ_ID" ColumnName="PARENT_INVOICE_ITEM_SEQ_ID" />
-                <ScalarProperty Name="PARENT_INVOICE_ID" ColumnName="PARENT_INVOICE_ID" />
-                <ScalarProperty Name="PRODUCT_FEATURE_ID" ColumnName="PRODUCT_FEATURE_ID" />
-                <ScalarProperty Name="PRODUCT_ID" ColumnName="PRODUCT_ID" />
-                <ScalarProperty Name="INVENTORY_ITEM_ID" ColumnName="INVENTORY_ITEM_ID" />
-                <ScalarProperty Name="OVERRIDE_ORG_PARTY_ID" ColumnName="OVERRIDE_ORG_PARTY_ID" />
-                <ScalarProperty Name="OVERRIDE_GL_ACCOUNT_ID" ColumnName="OVERRIDE_GL_ACCOUNT_ID" />
-                <ScalarProperty Name="INVOICE_ITEM_TYPE_ID" ColumnName="INVOICE_ITEM_TYPE_ID" />
-                <ScalarProperty Name="INVOICE_ITEM_SEQ_ID" ColumnName="INVOICE_ITEM_SEQ_ID" />
-                <ScalarProperty Name="INVOICE_ID" ColumnName="INVOICE_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="ledger_summary_meta">
-            <EntityTypeMapping TypeName="MediationModel.ledger_summary_meta">
-              <MappingFragment StoreEntitySet="ledger_summary_meta">
-                <ScalarProperty Name="totalDeletedAmount" ColumnName="totalDeletedAmount" />
-                <ScalarProperty Name="totalInsertedAmount" ColumnName="totalInsertedAmount" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="products">
-            <EntityTypeMapping TypeName="MediationModel.product">
-              <MappingFragment StoreEntitySet="product">
-                <ScalarProperty Name="AccountingId" ColumnName="AccountingId" />
-                <ScalarProperty Name="ServiceFamily" ColumnName="ServiceFamily" />
-                <ScalarProperty Name="SubCategory" ColumnName="SubCategory" />
-                <ScalarProperty Name="Category" ColumnName="Category" />
-                <ScalarProperty Name="description" ColumnName="description" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Prefix" ColumnName="Prefix" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="transactionmetas">
-            <EntityTypeMapping TypeName="MediationModel.transactionmeta">
-              <MappingFragment StoreEntitySet="transactionmeta">
-                <ScalarProperty Name="totalDeletedAmount" ColumnName="totalDeletedAmount" />
-                <ScalarProperty Name="totalInsertedAmount" ColumnName="totalInsertedAmount" />
-                <ScalarProperty Name="id" ColumnName="id" />
+          <EntitySetMapping Name="uom_conversion_dated">
+            <EntityTypeMapping TypeName="MediationModel.uom_conversion_dated">
+              <MappingFragment StoreEntitySet="uom_conversion_dated">
+                <ScalarProperty Name="CREATED_TX_STAMP" ColumnName="CREATED_TX_STAMP" />
+                <ScalarProperty Name="CREATED_STAMP" ColumnName="CREATED_STAMP" />
+                <ScalarProperty Name="LAST_UPDATED_TX_STAMP" ColumnName="LAST_UPDATED_TX_STAMP" />
+                <ScalarProperty Name="LAST_UPDATED_STAMP" ColumnName="LAST_UPDATED_STAMP" />
+                <ScalarProperty Name="PURPOSE_ENUM_ID" ColumnName="PURPOSE_ENUM_ID" />
+                <ScalarProperty Name="ROUNDING_MODE" ColumnName="ROUNDING_MODE" />
+                <ScalarProperty Name="DECIMAL_SCALE" ColumnName="DECIMAL_SCALE" />
+                <ScalarProperty Name="CUSTOM_METHOD_ID" ColumnName="CUSTOM_METHOD_ID" />
+                <ScalarProperty Name="CONVERSION_FACTOR" ColumnName="CONVERSION_FACTOR" />
+                <ScalarProperty Name="THRU_DATE" ColumnName="THRU_DATE" />
+                <ScalarProperty Name="FROM_DATE" ColumnName="FROM_DATE" />
+                <ScalarProperty Name="UOM_ID_TO" ColumnName="UOM_ID_TO" />
+                <ScalarProperty Name="UOM_ID" ColumnName="UOM_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

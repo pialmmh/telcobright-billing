@@ -20,7 +20,5 @@ namespace MediationModel
         public int stepsCount { get; set; }
         public Nullable<int> status { get; set; }
         public string SegmentDetail { get; set; }
-    
-        public virtual job job { get; set; }
     }
 }

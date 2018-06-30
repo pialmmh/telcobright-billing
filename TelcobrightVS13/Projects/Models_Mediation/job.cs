@@ -14,12 +14,6 @@ namespace MediationModel
     
     public partial class job
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public job()
-        {
-            this.jobsegments = new HashSet<jobsegment>();
-        }
-    
         public long id { get; set; }
         public int idjobdefinition { get; set; }
         public string JobName { get; set; }
@@ -43,7 +37,5 @@ namespace MediationModel
         public virtual enumjobstatu enumjobstatu { get; set; }
         public virtual ne ne { get; set; }
         public virtual jobcompletion jobcompletion { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<jobsegment> jobsegments { get; set; }
     }
 }

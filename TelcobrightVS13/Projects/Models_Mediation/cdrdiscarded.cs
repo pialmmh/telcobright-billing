@@ -16,7 +16,7 @@ namespace MediationModel
     {
         public string SwitchId { get; set; }
         public string IdCall { get; set; }
-        public string SequenceNumber { get; set; }
+        public long SequenceNumber { get; set; }
         public string FileName { get; set; }
         public string ServiceGroup { get; set; }
         public string IncomingRoute { get; set; }

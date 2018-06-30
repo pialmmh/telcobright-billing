@@ -4,6 +4,7 @@ using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
@@ -4028,7 +4029,9 @@ public partial class ConfigRateTask : Page
                         lstRateTask = lstRateTask.Where(c => c.rateamount != "-1" &&
                             c.field2 == "0"//not having validation error
                             ).ToList();
-                        List<string> lstInsertSql = new List<string>();
+                        //List<string> lstInsertSql = new List<string>();
+                        //concurrent dictionary can hold large number of data, so use it with random key
+                        ConcurrentDictionary<int,string> lstInsertSql=new ConcurrentDictionary<int, string>();
                         foreach (ratetask thisTask in lstRateTask)
                         {
                             thisRate = RateTaskToRate(thisTask, idRatePlan);
@@ -4093,9 +4096,10 @@ public partial class ConfigRateTask : Page
                                 case 9://overlap
                                 case 12://rate position not found
 
-                                    lstInsertSql.Add(
+                                    if(lstInsertSql.TryAdd(lstInsertSql.Count+1,
                                     " update ratetask set status =" + thisRate.Status +
-                                            " where id=" + thisRate.id + ";");
+                                            " where id=" + thisRate.id + ";")==false)
+                                        throw new Exception("Could not add sql to collection.");
 
                                     break;
                                 case 2://new
@@ -4105,12 +4109,14 @@ public partial class ConfigRateTask : Page
                                         {
                                             thisRate.enddate = nextRate.startdate;
                                         }
-                                        lstInsertSql.Add(
-                                        InsertSqlRate(thisRate) + ";");
+                                        if(lstInsertSql.TryAdd(lstInsertSql.Count+1,
+                                        InsertSqlRate(thisRate) + ";")==false)
+                                            throw new Exception("Could not add sql to collection."); ;
 
-                                        lstInsertSql.Add(
+                                        if(lstInsertSql.TryAdd(lstInsertSql.Count+1,
                                         " update ratetask set changecommitted=1,status =" + thisRate.Status + " where " +
-                                            " id=" + thisRate.id + ";");
+                                            " id=" + thisRate.id + ";")==false)
+                                            throw new Exception("Could not add sql to collection."); 
                                         totalCommitCount++;
                                     }
                                     break;
@@ -4125,29 +4131,35 @@ public partial class ConfigRateTask : Page
                                         {
                                             if (prevRate.enddate == ratePos.FutureDate)//null, end previous rate with no end date
                                             {
-                                                lstInsertSql.Add(
+                                                if(lstInsertSql.TryAdd(lstInsertSql.Count+1,
                                                 " update rate set enddate='" + thisRate.startdate.ToString("yyyy-MM-dd HH:mm:ss") + "', " +
                                                 " ChangedByTaskId=" + thisRate.id +
-                                                " where id=" + prevRate.id + ";");
+                                                " where id=" + prevRate.id + ";")==false)
+                                                    throw new Exception("Could not add sql to collection."); ;
                                             }
                                             //insert the new rate
-                                            lstInsertSql.Add(
-                                            InsertSqlRate(thisRate) + ";");
-                                            lstInsertSql.Add(
+                                            if(lstInsertSql.TryAdd(lstInsertSql.Count+1,
+                                            InsertSqlRate(thisRate) + ";")==false)
+                                                throw new Exception("Could not add sql to collection."); ;
+
+                                            if(lstInsertSql.TryAdd(lstInsertSql.Count+1,
                                             " update ratetask set changecommitted=1,status =" + thisRate.Status + " where " +
-                                                " id=" + thisRate.id + ";");
+                                                " id=" + thisRate.id + ";")==false)
+                                                throw new Exception("Could not add sql to collection."); ;
                                             totalCommitCount++;
                                         }
                                         else//no previous contniued rate 
                                         {
-                                            lstInsertSql.Add(
-                                            InsertSqlRate(thisRate) + ";");
+                                            if(lstInsertSql.TryAdd(lstInsertSql.Count+1,
+                                            InsertSqlRate(thisRate) + ";")==false)
+                                                throw new Exception("Could not add sql to collection."); 
 
-                                            lstInsertSql.Add(
+                                            if(lstInsertSql.TryAdd(lstInsertSql.Count+1,
                                             " update ratetask set changecommitted=1,status =" + thisRate.Status +
                                                 " ,affectedrates='" + prevRate.id + "'" +
                                                 " where " +
-                                                " id=" + thisRate.id + ";");
+                                                " id=" + thisRate.id + ";")==false)
+                                                throw new Exception("Could not add sql to collection.");
                                             totalCommitCount++;
                                         }
                                     }
@@ -4167,10 +4179,11 @@ public partial class ConfigRateTask : Page
                                         if (prevRate != null)
                                         {
 
-                                            lstInsertSql.Add(
+                                            if(lstInsertSql.TryAdd(lstInsertSql.Count+1,
                                             " update rate set enddate='" + thisRate.startdate.ToString("yyyy-MM-dd HH:mm:ss") + "', " +
                                             " ChangedByTaskId=" + thisRate.id +
-                                                " where id=" + prevRate.id + ";");
+                                                " where id=" + prevRate.id + ";")==false)
+                                                throw new Exception("Could not add sql to collection.");
 
                                             affectedOlRates.Add(prevRate.id.ToString());
                                         }
@@ -4182,19 +4195,22 @@ public partial class ConfigRateTask : Page
                                         }
                                     }
 
-                                    lstInsertSql.Add(
-                                    InsertSqlRate(thisRate) + ";");
-                                    lstInsertSql.Add(
+                                    if(lstInsertSql.TryAdd(lstInsertSql.Count+1,
+                                    InsertSqlRate(thisRate) + ";")==false)
+                                        throw new Exception("Could not add sql to collection.");
+                                    if(lstInsertSql.TryAdd(lstInsertSql.Count+1,
                                         " update ratetask set changecommitted=1,status =" + thisRate.Status +
                                         " ,affectedrates='" + string.Join(",", affectedOlRates.ToArray()) + "'" +
                                         " where " +
-                                        " id=" + thisRate.id + ";");
+                                        " id=" + thisRate.id + ";")==false)
+                                        throw new Exception("Could not add sql to collection.");
                                     totalCommitCount++;
                                     break;
                                 case 13://existing, dont' mark as change committed
-                                    lstInsertSql.Add(
+                                    if(lstInsertSql.TryAdd(lstInsertSql.Count+1,
                                     " update ratetask set status =" + thisRate.Status + " where " +
-                                            " id=" + thisRate.id + ";");
+                                            " id=" + thisRate.id + ";")==false)
+                                    throw new Exception("Could not add sql to collection."); 
 
                                     break;
                             }
