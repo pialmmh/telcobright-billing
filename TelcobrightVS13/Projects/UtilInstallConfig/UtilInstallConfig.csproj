@@ -96,6 +96,14 @@
   <ItemGroup>
     <Compile Include="bigl\ConfigGenerator_bigl.cs" />
     <Compile Include="BIllingRulesDefiner.cs" />
+    <Compile Include="btel\BtelAPPServerConfig.cs" />
+    <Compile Include="btel\BtelAutomationConfig.cs" />
+    <Compile Include="btel\BtelDirectorySetting.cs" />
+    <Compile Include="btel\BtelPortalSetting.cs" />
+    <Compile Include="btel\BtelProductAndServiceSettings.cs" />
+    <Compile Include="btel\BtelQuartzConfig.cs" />
+    <Compile Include="btel\BtelServiceGroups.cs" />
+    <Compile Include="btel\_BtelConfigMain.cs" />
     <Compile Include="ConfigPathHelper.cs" />
     <Compile Include="FileRename.cs" />
     <Compile Include="jsl\JslProductAndServiceConfig.cs" />
@@ -125,6 +133,19 @@
     <Compile Include="CommonValidationRulesGenerator\InconsistentCdrValRulesGen.cs" />
     <Compile Include="CommonValidationRulesGenerator\CommonCdrValRulesGen.cs" />
     <None Include="app.manifest" />
+    <None Include="btel\btel.conf" />
+    <None Include="btel\scripts\apppools.xml.bak" />
+    <None Include="btel\scripts\appPool_platinum.iisScript" />
+    <None Include="btel\scripts\ftp_platinum.iisScript" />
+    <None Include="btel\scripts\ftp_platinum.iisScript.bak" />
+    <None Include="btel\scripts\http_platinum.iisScript" />
+    <None Include="btel\scripts\http_platinum.iisScript.bak" />
+    <None Include="btel\scripts\import_commands.txt.bak" />
+    <None Include="btel\scripts\sites.txt.bak" />
+    <None Include="btel\tmplPortalAppPools.txt.bak" />
+    <None Include="btel\tmplPortalAppPools.xml.bak" />
+    <None Include="btel\tmplPortalFtpSite.txt.bak" />
+    <None Include="btel\tmplPortalWebSite.txt.bak" />
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -174,6 +195,13 @@
     <Content Include="bigl\tmplPortalAppPools.txt" />
     <Content Include="bigl\tmplPortalFtpSite.txt" />
     <Content Include="bigl\tmplPortalWebSite.txt" />
+    <Content Include="btel\scripts\apppools.xml" />
+    <Content Include="btel\scripts\import_commands.txt" />
+    <Content Include="btel\scripts\sites.txt" />
+    <Content Include="btel\scripts\sites_lastworking.txt" />
+    <Content Include="btel\tmplPortalAppPools.txt" />
+    <Content Include="btel\tmplPortalFtpSite.txt" />
+    <Content Include="btel\tmplPortalWebSite.txt" />
     <Content Include="platinum\tmplPortalAppPools.txt" />
     <Content Include="platinum\tmplPortalFtpSite.txt" />
     <Content Include="platinum\tmplPortalWebSite.txt" />
