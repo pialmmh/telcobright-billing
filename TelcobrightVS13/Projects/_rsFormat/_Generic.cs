@@ -1223,7 +1223,7 @@ namespace RateSheetFormat
 
                 for (j = 1; j <= Dim2; j++)  //1 based array
                 {
-                    CellDataType? ThisColumnLike = (objArray[i, j] != null ? FindCellDataType(objArray[i, j].ToString().Trim(), DateFormats, ref DateSeparator) : CellDataType.NULL);
+                    CellDataType? ThisColumnLike = (objArray[i, j] != null ? FindCellDataTypeForLastRowChecking(objArray[i, j].ToString().Trim(), DateFormats, ref DateSeparator) : CellDataType.NULL);
                     switch (ThisColumnLike)
                     {
                         case CellDataType.NULL:
@@ -1267,7 +1267,11 @@ namespace RateSheetFormat
                     int i = FirstRow;
                     int j = ColumnIndex;
                     int Dim1 = objArray.GetLength(0);
-                    for (i = FirstRow; i <= (Dim1- FirstRow) && i <= Dim1; i++)
+                    int offsetDim1FirstRow = Dim1 - FirstRow;
+                    if (offsetDim1FirstRow <= 0)
+                        throw new Exception("Offset between vertical dimension & first row must be >0");
+                    int maxRowToScan = offsetDim1FirstRow <= 20 ? offsetDim1FirstRow : (FirstRow + 19);
+                    for (i = FirstRow; i < maxRowToScan && i <= Dim1; i++) //sampling over 20 rows will do
                     {
                         CellDataType? ThisColumnLike = (objArray[i, j] != null ? FindCellDataType(objArray[i, j].ToString(), DateFormats, ref DateSeparator) : CellDataType.NULL);
                         switch (ThisColumnLike)
@@ -1376,6 +1380,218 @@ namespace RateSheetFormat
                         ThisLike = CellDataType.Datetime;
                         return ThisLike;
                     }
+
+                    string WholeNumbers = "0123456789";
+                    bool WholeNumber = true;
+                    bool MostlyDigits = false;
+                    //value could be character separated too
+                    char[] SepArr = new char[] { ',', ':', '-', ';' };
+                    char SepChar = ',';
+                    //find separator chracter
+                    foreach (char ch in SepArr)
+                    {
+                        if (Value.Contains(ch))
+                        {
+                            SepChar = ch;
+                            break;
+                        }
+                    }
+
+                    string[] VArr = null;
+                    VArr = Value.Split(SepChar);
+
+                    //trim all
+                    for (int s = 0; s < VArr.GetLength(0); s++)
+                    {
+                        VArr[s] = VArr[s].Trim();
+                    }
+                    foreach (char ch in Value.ToCharArray())
+                    {
+                        if (WholeNumbers.Contains(ch) == false)
+                        {
+                            WholeNumber = false;
+                            break;
+                        }
+                    }
+                    if (WholeNumber == true)//prefix or country
+                    {
+                        long Num = 0;
+                        if (Int64.TryParse(VArr[0], out Num))
+                        {
+                            if (Num > 0)
+                            {
+                                if (dicCountryCode.ContainsKey(Num.ToString()))
+                                {
+                                    ThisLike = CellDataType.CountryCode;
+                                    return ThisLike;
+                                }
+                                else
+                                {
+                                    ThisLike = CellDataType.Prefix;
+                                    return ThisLike;
+                                }
+                            }
+                        }
+                    }
+                    else//not exactly numeric cell
+                    {
+                        if (dicCountryName.ContainsKey(VArr[0].ToString().ToLower()) && VArr.GetLength(0) == 1)
+                        {
+                            ThisLike = CellDataType.CountryName;
+                            return ThisLike;
+                        }
+                        if (VArr.GetLength(0) > 1)//comma separated cell
+                        {
+                            //multiple values, comma separated
+                            //cannot be single prefix
+                            //could be Multiple prefix
+                            //check against first 2 elements of array after split if they are numbers
+                            long Num = -1;
+                            long Num2 = -1;
+                            if (Int64.TryParse(VArr[0].Trim(), out Num))
+                            {
+                                if (Num >= 0)
+                                {
+                                    //make another check with the 2nd element in the array
+                                    if (Int64.TryParse(VArr[1].Trim(), out Num2))
+                                    {
+                                        if (Num2 >= 0)
+                                        {
+                                            //first two elements are numeric, so likely to be multiple prefix
+                                            ThisLike = CellDataType.MultiplePrefix;
+                                            return ThisLike;
+                                        }
+                                    }
+
+                                }
+                            }
+                            else//comma separated but values not numeric
+                            {
+                                //one last check if this cell contains prefix
+                                //check if mostly digits
+
+                                int DigitCount = 0;
+                                int NonDigitCount = 0;
+                                foreach (char ch in Value.ToCharArray())
+                                {
+                                    if (WholeNumbers.Contains(ch))
+                                    {
+                                        DigitCount++;
+                                    }
+                                    else NonDigitCount++;
+                                }
+                                if (DigitCount > NonDigitCount) MostlyDigits = true;
+
+                                if (MostlyDigits == true)
+                                {
+                                    ThisLike = CellDataType.MultiplePrefix;
+                                }
+                                else
+                                {
+                                    ThisLike = CellDataType.DescriptionMultipleWord;
+                                }
+
+                                return ThisLike;
+                            }
+
+                        }
+                        if (VArr.GetLength(0) == 1)//single cell, not comma separated and also not numeric
+                        {
+
+                            //single value only
+                            //can be single or multiple word description
+                            if (VArr[0].Split(null).GetLength(0) > 1)//split on white space yields multiple values in array
+                            {
+                                ThisLike = CellDataType.DescriptionMultipleWord;
+                                return ThisLike;
+                            }
+                            else
+                            {
+                                ThisLike = CellDataType.DescriptionSingleWord;
+                                return ThisLike;
+                            }
+                        }
+                    }//if numeric==false
+
+                    //one last check if this cell contains prefix
+                    //check if mostly digits
+                    if (ThisLike != CellDataType.CountryCode && ThisLike != CellDataType.Prefix && ThisLike != CellDataType.MultiplePrefix)
+                    {
+                        int DigitCount = 0;
+                        int NonDigitCount = 0;
+                        foreach (char ch in Value.ToCharArray())
+                        {
+                            if (WholeNumbers.Contains(ch))
+                            {
+                                DigitCount++;
+                            }
+                            else NonDigitCount++;
+                        }
+                        if (DigitCount > NonDigitCount) MostlyDigits = true;
+
+                        if (MostlyDigits == true)
+                        {
+                            ThisLike = CellDataType.MultiplePrefix;
+                        }
+                    }
+                    return ThisLike;
+                }
+                catch (Exception e1)
+                {
+                    return CellDataType.Undetermined;
+                }
+            }
+
+            CellDataType FindCellDataTypeForLastRowChecking(string Value, string[] DateFormats, ref string DateSeparator)//must send value after using tostring()
+            {
+                Value = Value.Trim();
+                CellDataType ThisLike = CellDataType.Undetermined;
+                try
+                {
+                    double rateDouble = -1;
+                    if ((Value.Contains(".") || Value.StartsWith("-")) && double.TryParse(Value, out rateDouble) == true)//-1 support
+                    {
+                        ThisLike = CellDataType.Rate;
+                        return ThisLike;
+                    }
+
+                    //DateTime myDateTime = new DateTime(1, 1, 1);
+
+                    //if ((Value.Contains("/")) &&
+                    //    DateTime.TryParseExact(Value, DateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out myDateTime))
+                    //{
+                    //    ThisLike = CellDataType.Datetime;
+                    //    DateSeparator = "/";
+                    //    return ThisLike;
+                    //}
+                    //else if ((Value.Contains("-")) &&
+                    //         DateTime.TryParseExact(Value, DateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out myDateTime))
+                    //{
+                    //    ThisLike = CellDataType.Datetime;
+                    //    DateSeparator = "-";
+                    //    return ThisLike;
+                    //}
+                    //else if ((Value.Contains(".")) &&
+                    //         DateTime.TryParseExact(Value, DateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out myDateTime))
+                    //{
+                    //    ThisLike = CellDataType.Datetime;
+                    //    DateSeparator = ".";
+                    //    return ThisLike;
+                    //}
+                    //else if ((Value.Contains(" ")) &&
+                    //         DateTime.TryParseExact(Value, DateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out myDateTime))
+                    //{
+                    //    ThisLike = CellDataType.Datetime;
+                    //    DateSeparator = " ";
+                    //    return ThisLike;
+                    //}
+
+                    ////replace "/" with "-". If dates contain "/", datetime.tryparse didn't work with 
+                    //else if (DateTime.TryParse(Value.Replace("/", "-"), out myDateTime) && (Value.Contains("/") || Value.Contains("-")))
+                    //{
+                    //    ThisLike = CellDataType.Datetime;
+                    //    return ThisLike;
+                    //}
 
                     string WholeNumbers = "0123456789";
                     bool WholeNumber = true;

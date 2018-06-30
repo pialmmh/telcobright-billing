@@ -3008,7 +3008,6 @@ public partial class ConfigRateTask : Page
                         ratetask newtask = lstRateTask[iteration];//str.Split(',');//LineToFields(str);
 
                         string newId = Convert.ToString(minidInt - iteration - 1);
-
                         string newPrefix = newtask.Prefix != null ? newtask.Prefix : "";
                         string newDesc = newtask.description != null ? newtask.description : "";
                         string newRateAmount = newtask.rateamount != null ? newtask.rateamount : "";

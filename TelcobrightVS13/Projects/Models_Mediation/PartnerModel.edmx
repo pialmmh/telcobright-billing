@@ -74,21 +74,11 @@ warning 6002: The table/view 'def.platinum.acc_ledger_summary' does not have a p
           <Property Name="transactionDate" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="AMOUNT" Type="decimal" Precision="20" Scale="8" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'def.platinum.acc_temp_transaction' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="acc_temp_transaction">
           <Key>
             <PropertyRef Name="id" />
-            <PropertyRef Name="transactionTime" />
-            <PropertyRef Name="debitOrCredit" />
-            <PropertyRef Name="idEvent" />
-            <PropertyRef Name="glAccountId" />
-            <PropertyRef Name="uomId" />
-            <PropertyRef Name="amount" />
-            <PropertyRef Name="BalanceBefore" />
-            <PropertyRef Name="BalanceAfter" />
           </Key>
-          <Property Name="id" Type="bigint" Nullable="false" />
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="transactionTime" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="seqId" Type="smallint" />
           <Property Name="debitOrCredit" Type="varchar" MaxLength="2" Nullable="false" />
@@ -371,6 +361,7 @@ warning 6002: The table/view 'def.platinum.cdrdiscarded' does not have a primary
         <EntityType Name="cdrdiscarded">
           <Key>
             <PropertyRef Name="SwitchId" />
+            
             <PropertyRef Name="FileName" />
             <PropertyRef Name="ServiceGroup" />
             <PropertyRef Name="DurationSec" />
@@ -379,7 +370,7 @@ warning 6002: The table/view 'def.platinum.cdrdiscarded' does not have a primary
           </Key>
           <Property Name="SwitchId" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="IdCall" Type="varchar" MaxLength="100" />
-          <Property Name="SequenceNumber" Type="varchar" MaxLength="100" />
+          <Property Name="SequenceNumber" Type="bigint" Nullable="false" />
           <Property Name="FileName" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="ServiceGroup" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="IncomingRoute" Type="varchar" MaxLength="100" />
@@ -626,6 +617,7 @@ warning 6002: The table/view 'def.platinum.cdrinconsistent' does not have a prim
         <EntityType Name="cdrinconsistent">
           <Key>
             <PropertyRef Name="SwitchId" />
+            
             <PropertyRef Name="FileName" />
             <PropertyRef Name="ServiceGroup" />
             <PropertyRef Name="DurationSec" />
@@ -634,7 +626,7 @@ warning 6002: The table/view 'def.platinum.cdrinconsistent' does not have a prim
           </Key>
           <Property Name="SwitchId" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="IdCall" Type="varchar" MaxLength="100" />
-          <Property Name="SequenceNumber" Type="varchar" MaxLength="100" />
+          <Property Name="SequenceNumber" Type="bigint" Nullable="false" />
           <Property Name="FileName" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="ServiceGroup" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="IncomingRoute" Type="varchar" MaxLength="100" />
@@ -736,6 +728,14 @@ warning 6002: The table/view 'def.platinum.cdrinconsistent' does not have a prim
           <Property Name="SubCategory" Type="varchar" MaxLength="100" />
           <Property Name="ChangedByJobId" Type="varchar" MaxLength="100" />
           <Property Name="SignalingStartTime" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrmeta">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="decimal" Precision="24" Scale="8" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="decimal" Precision="24" Scale="8" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'def.platinum.cdrpartiallastaggregatedrawinstance' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -995,6 +995,102 @@ warning 6002: The table/view 'def.platinum.cdrpartialreference' does not have a 
           <Property Name="commaSepIdcallsForAllInstances" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="lastFilename" Type="varchar" MaxLength="200" Nullable="false" />
         </EntityType>
+        <EntityType Name="cdrsummarymeta_day_01">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="decimal" Precision="24" Scale="8" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="decimal" Precision="24" Scale="8" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_day_02">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="decimal" Precision="24" Scale="8" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="decimal" Precision="24" Scale="8" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_day_03">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="decimal" Precision="24" Scale="8" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="decimal" Precision="24" Scale="8" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_day_04">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="decimal" Precision="24" Scale="8" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="decimal" Precision="24" Scale="8" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_day_05">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="decimal" Precision="24" Scale="8" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="decimal" Precision="24" Scale="8" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_day_06">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="decimal" Precision="24" Scale="8" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="decimal" Precision="24" Scale="8" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_hr_01">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="decimal" Precision="24" Scale="8" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="decimal" Precision="24" Scale="8" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_hr_02">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="decimal" Precision="24" Scale="8" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="decimal" Precision="24" Scale="8" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_hr_03">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="decimal" Precision="24" Scale="8" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="decimal" Precision="24" Scale="8" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_hr_04">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="decimal" Precision="24" Scale="8" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="decimal" Precision="24" Scale="8" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_hr_05">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="decimal" Precision="24" Scale="8" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="decimal" Precision="24" Scale="8" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_hr_06">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="decimal" Precision="24" Scale="8" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="decimal" Precision="24" Scale="8" Nullable="false" />
+        </EntityType>
         <EntityType Name="commontg">
           <Key>
             <PropertyRef Name="id" />
@@ -1023,16 +1119,6 @@ warning 6002: The table/view 'def.platinum.cdrpartialreference' does not have a 
           <Property Name="refccrbycc" Type="float" />
           <Property Name="refpdd" Type="float" />
           <Property Name="refasrfas" Type="float" />
-        </EntityType>
-        <EntityType Name="durationmeta">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="filename" Type="varchar" MaxLength="200" Nullable="false" />
-          <Property Name="oldDuration" Type="decimal" Precision="20" Scale="8" />
-          <Property Name="newDuration" Type="decimal" Precision="20" Scale="8" />
-          <Property Name="durationAfterJob" Type="decimal" Precision="20" Scale="8" />
         </EntityType>
         <EntityType Name="enumaccountingclass">
           <Key>
@@ -1346,6 +1432,60 @@ warning 6002: The table/view 'def.platinum.cdrpartialreference' does not have a 
           <Property Name="description" Type="varchar" MaxLength="200" />
           <Property Name="JsonParametersToAssign" Type="varchar" MaxLength="500" />
         </EntityType>
+        <EntityType Name="invoice">
+          <Key>
+            <PropertyRef Name="INVOICE_ID" />
+          </Key>
+          <Property Name="INVOICE_ID" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="INVOICE_TYPE_ID" Type="varchar" MaxLength="20" />
+          <Property Name="PARTY_ID_FROM" Type="varchar" MaxLength="20" />
+          <Property Name="PARTY_ID" Type="varchar" MaxLength="20" />
+          <Property Name="ROLE_TYPE_ID" Type="varchar" MaxLength="20" />
+          <Property Name="STATUS_ID" Type="varchar" MaxLength="20" />
+          <Property Name="BILLING_ACCOUNT_ID" Type="bigint" />
+          <Property Name="CONTACT_MECH_ID" Type="varchar" MaxLength="20" />
+          <Property Name="INVOICE_DATE" Type="datetime" Precision="0" />
+          <Property Name="DUE_DATE" Type="datetime" Precision="0" />
+          <Property Name="PAID_DATE" Type="datetime" Precision="0" />
+          <Property Name="INVOICE_MESSAGE" Type="varchar" MaxLength="255" />
+          <Property Name="REFERENCE_NUMBER" Type="varchar" MaxLength="60" />
+          <Property Name="DESCRIPTION" Type="varchar" MaxLength="255" />
+          <Property Name="CURRENCY_UOM_ID" Type="varchar" MaxLength="20" />
+          <Property Name="RECURRENCE_INFO_ID" Type="varchar" MaxLength="20" />
+          <Property Name="LAST_UPDATED_STAMP" Type="datetime" Precision="0" />
+          <Property Name="LAST_UPDATED_TX_STAMP" Type="datetime" Precision="0" />
+          <Property Name="CREATED_STAMP" Type="datetime" Precision="0" />
+          <Property Name="CREATED_TX_STAMP" Type="datetime" Precision="0" />
+        </EntityType>
+        <EntityType Name="invoice_item">
+          <Key>
+            <PropertyRef Name="INVOICE_ID" />
+            <PropertyRef Name="INVOICE_ITEM_SEQ_ID" />
+          </Key>
+          <Property Name="INVOICE_ID" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="INVOICE_ITEM_SEQ_ID" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="INVOICE_ITEM_TYPE_ID" Type="varchar" MaxLength="20" />
+          <Property Name="OVERRIDE_GL_ACCOUNT_ID" Type="varchar" MaxLength="20" />
+          <Property Name="OVERRIDE_ORG_PARTY_ID" Type="varchar" MaxLength="20" />
+          <Property Name="INVENTORY_ITEM_ID" Type="varchar" MaxLength="20" />
+          <Property Name="PRODUCT_ID" Type="varchar" MaxLength="20" />
+          <Property Name="PRODUCT_FEATURE_ID" Type="varchar" MaxLength="20" />
+          <Property Name="PARENT_INVOICE_ID" Type="varchar" MaxLength="20" />
+          <Property Name="PARENT_INVOICE_ITEM_SEQ_ID" Type="varchar" MaxLength="20" />
+          <Property Name="UOM_ID" Type="varchar" MaxLength="20" />
+          <Property Name="TAXABLE_FLAG" Type="char" MaxLength="1" />
+          <Property Name="QUANTITY" Type="decimal" Precision="18" Scale="6" />
+          <Property Name="AMOUNT" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="DESCRIPTION" Type="varchar" MaxLength="255" />
+          <Property Name="TAX_AUTH_PARTY_ID" Type="varchar" MaxLength="20" />
+          <Property Name="TAX_AUTH_GEO_ID" Type="varchar" MaxLength="20" />
+          <Property Name="TAX_AUTHORITY_RATE_SEQ_ID" Type="varchar" MaxLength="20" />
+          <Property Name="SALES_OPPORTUNITY_ID" Type="varchar" MaxLength="20" />
+          <Property Name="LAST_UPDATED_STAMP" Type="datetime" Precision="0" />
+          <Property Name="LAST_UPDATED_TX_STAMP" Type="datetime" Precision="0" />
+          <Property Name="CREATED_STAMP" Type="datetime" Precision="0" />
+          <Property Name="CREATED_TX_STAMP" Type="datetime" Precision="0" />
+        </EntityType>
         <EntityType Name="job">
           <Key>
             <PropertyRef Name="id" />
@@ -1428,6 +1568,14 @@ warning 6002: The table/view 'def.platinum.cdrpartialreference' does not have a 
           <Property Name="Description" Type="varchar" MaxLength="100" />
           <Property Name="StartDate" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="JobCreated" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ledger_summary_meta">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="totalInsertedAmount" Type="decimal" Precision="24" Scale="8" Nullable="false" />
+          <Property Name="totalDeletedAmount" Type="decimal" Precision="24" Scale="8" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'def.platinum.mockcdr' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1638,19 +1786,37 @@ warning 6002: The table/view 'def.platinum.mockcdr' does not have a primary key 
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Prefix" Type="varchar" MaxLength="50" />
-          <Property Name="Name" Type="varchar" MaxLength="45" Nullable="false" />
-          <Property Name="description" Type="varchar" MaxLength="100" />
+          <Property Name="Prefix" Type="varchar" MaxLength="200" />
+          <Property Name="Name" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="description" Type="varchar" MaxLength="200" />
           <Property Name="Category" Type="int" Nullable="false" />
           <Property Name="SubCategory" Type="int" />
           <Property Name="ServiceFamily" Type="bigint" Nullable="false" />
           <Property Name="AccountingId" Type="int" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'def.platinum.rate' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="rate">
           <Key>
             <PropertyRef Name="id" />
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
           </Key>
-          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="ProductId" Type="int" Nullable="false" />
           <Property Name="Prefix" Type="varchar" MaxLength="25" Nullable="false" />
           <Property Name="description" Type="varchar" MaxLength="200" />
@@ -3286,6 +3452,14 @@ warning 6002: The table/view 'def.platinum.sum_voice_hr_06' does not have a prim
           <Property Name="offsetdesc" Type="varchar" MaxLength="50" />
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
+        <EntityType Name="transactionmeta">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="totalInsertedAmount" Type="decimal" Precision="24" Scale="8" Nullable="false" />
+          <Property Name="totalDeletedAmount" Type="decimal" Precision="24" Scale="8" Nullable="false" />
+        </EntityType>
         <EntityType Name="uom">
           <Key>
             <PropertyRef Name="UOM_ID" />
@@ -3601,6 +3775,30 @@ warning 6002: The table/view 'def.platinum.uom_conversion_dated' does not have a
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="INVCE_ITM_INVCE">
+          <End Role="invoice" Type="Self.invoice" Multiplicity="1" />
+          <End Role="invoice_item" Type="Self.invoice_item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="invoice">
+              <PropertyRef Name="INVOICE_ID" />
+            </Principal>
+            <Dependent Role="invoice_item">
+              <PropertyRef Name="INVOICE_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="INVOICE_ACCOUNT">
+          <End Role="account" Type="Self.account" Multiplicity="0..1" />
+          <End Role="invoice" Type="Self.invoice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="account">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="invoice">
+              <PropertyRef Name="BILLING_ACCOUNT_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="job_ibfk_1">
           <End Role="enumjobdefinition" Type="Self.enumjobdefinition" Multiplicity="1" />
           <End Role="job" Type="Self.job" Multiplicity="*" />
@@ -3647,20 +3845,6 @@ warning 6002: The table/view 'def.platinum.uom_conversion_dated' does not have a
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="jobcompletion">
-              <PropertyRef Name="idJob" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="jobsegment_ibfk_1">
-          <End Role="job" Type="Self.job" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="jobsegment" Type="Self.jobsegment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="job">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="jobsegment">
               <PropertyRef Name="idJob" />
             </Dependent>
           </ReferentialConstraint>
@@ -3774,6 +3958,7 @@ warning 6002: The table/view 'def.platinum.uom_conversion_dated' does not have a
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="MediationModelStoreContainer">
+          <EntitySet Name="acc_temp_transaction" EntityType="Self.acc_temp_transaction" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="account" EntityType="Self.account" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="allerror" EntityType="Self.allerror" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="ansprefixextra" EntityType="Self.ansprefixextra" Schema="platinum" store:Type="Tables" />
@@ -3784,10 +3969,22 @@ warning 6002: The table/view 'def.platinum.uom_conversion_dated' does not have a
           <EntitySet Name="causecode" EntityType="Self.causecode" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="cdrfieldlist" EntityType="Self.cdrfieldlist" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="cdrfieldmappingbyswitchtype" EntityType="Self.cdrfieldmappingbyswitchtype" Schema="platinum" store:Type="Tables" />
+          <EntitySet Name="cdrmeta" EntityType="Self.cdrmeta" Schema="platinum" store:Type="Tables" />
+          <EntitySet Name="cdrsummarymeta_day_01" EntityType="Self.cdrsummarymeta_day_01" Schema="platinum" store:Type="Tables" />
+          <EntitySet Name="cdrsummarymeta_day_02" EntityType="Self.cdrsummarymeta_day_02" Schema="platinum" store:Type="Tables" />
+          <EntitySet Name="cdrsummarymeta_day_03" EntityType="Self.cdrsummarymeta_day_03" Schema="platinum" store:Type="Tables" />
+          <EntitySet Name="cdrsummarymeta_day_04" EntityType="Self.cdrsummarymeta_day_04" Schema="platinum" store:Type="Tables" />
+          <EntitySet Name="cdrsummarymeta_day_05" EntityType="Self.cdrsummarymeta_day_05" Schema="platinum" store:Type="Tables" />
+          <EntitySet Name="cdrsummarymeta_day_06" EntityType="Self.cdrsummarymeta_day_06" Schema="platinum" store:Type="Tables" />
+          <EntitySet Name="cdrsummarymeta_hr_01" EntityType="Self.cdrsummarymeta_hr_01" Schema="platinum" store:Type="Tables" />
+          <EntitySet Name="cdrsummarymeta_hr_02" EntityType="Self.cdrsummarymeta_hr_02" Schema="platinum" store:Type="Tables" />
+          <EntitySet Name="cdrsummarymeta_hr_03" EntityType="Self.cdrsummarymeta_hr_03" Schema="platinum" store:Type="Tables" />
+          <EntitySet Name="cdrsummarymeta_hr_04" EntityType="Self.cdrsummarymeta_hr_04" Schema="platinum" store:Type="Tables" />
+          <EntitySet Name="cdrsummarymeta_hr_05" EntityType="Self.cdrsummarymeta_hr_05" Schema="platinum" store:Type="Tables" />
+          <EntitySet Name="cdrsummarymeta_hr_06" EntityType="Self.cdrsummarymeta_hr_06" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="commontg" EntityType="Self.commontg" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="country" EntityType="Self.country" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="countrycode" EntityType="Self.countrycode" Schema="platinum" store:Type="Tables" />
-          <EntitySet Name="durationmeta" EntityType="Self.durationmeta" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="enumaccountingclass" EntityType="Self.enumaccountingclass" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="enumanstype" EntityType="Self.enumanstype" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="enumbillingspan" EntityType="Self.enumbillingspan" Schema="platinum" store:Type="Tables" />
@@ -3828,6 +4025,8 @@ warning 6002: The table/view 'def.platinum.uom_conversion_dated' does not have a
           <EntitySet Name="enumvatrule" EntityType="Self.enumvatrule" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="errordefinition" EntityType="Self.errordefinition" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="genericparameterassignment" EntityType="Self.genericparameterassignment" Schema="platinum" store:Type="Tables" />
+          <EntitySet Name="invoice" EntityType="Self.invoice" Schema="platinum" store:Type="Tables" />
+          <EntitySet Name="invoice_item" EntityType="Self.invoice_item" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="job" EntityType="Self.job" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="jobcompletion" EntityType="Self.jobcompletion" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="jobsegment" EntityType="Self.jobsegment" Schema="platinum" store:Type="Tables" />
@@ -3835,12 +4034,12 @@ warning 6002: The table/view 'def.platinum.uom_conversion_dated' does not have a
           <EntitySet Name="lcr" EntityType="Self.lcr" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="lcrpoint" EntityType="Self.lcrpoint" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="lcrrateplan" EntityType="Self.lcrrateplan" Schema="platinum" store:Type="Tables" />
+          <EntitySet Name="ledger_summary_meta" EntityType="Self.ledger_summary_meta" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="ne" EntityType="Self.ne" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="partner" EntityType="Self.partner" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="partnerprefix" EntityType="Self.partnerprefix" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="process" EntityType="Self.process" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="product" EntityType="Self.product" Schema="platinum" store:Type="Tables" />
-          <EntitySet Name="rate" EntityType="Self.rate" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="rateassign" EntityType="Self.rateassign" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="rateplan" EntityType="Self.rateplan" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="rateplanassign" EntityType="Self.rateplanassign" Schema="platinum" store:Type="Tables" />
@@ -3855,6 +4054,7 @@ warning 6002: The table/view 'def.platinum.uom_conversion_dated' does not have a
           <EntitySet Name="routeaddressmapping" EntityType="Self.routeaddressmapping" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="telcobrightpartner" EntityType="Self.telcobrightpartner" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="timezone" EntityType="Self.timezone" Schema="platinum" store:Type="Tables" />
+          <EntitySet Name="transactionmeta" EntityType="Self.transactionmeta" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="uom" EntityType="Self.uom" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="userclaims" EntityType="Self.userclaims" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="userlogins" EntityType="Self.userlogins" Schema="platinum" store:Type="Tables" />
@@ -3908,29 +4108,6 @@ FROM `acc_chargeable` AS `acc_chargeable`</DefiningQuery>
 `acc_ledger_summary`.`transactionDate`, 
 `acc_ledger_summary`.`AMOUNT`
 FROM `acc_ledger_summary` AS `acc_ledger_summary`</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="acc_temp_transaction" EntityType="Self.acc_temp_transaction" store:Type="Tables" store:Schema="platinum">
-            <DefiningQuery>SELECT
-`acc_temp_transaction`.`id`, 
-`acc_temp_transaction`.`transactionTime`, 
-`acc_temp_transaction`.`seqId`, 
-`acc_temp_transaction`.`debitOrCredit`, 
-`acc_temp_transaction`.`idEvent`, 
-`acc_temp_transaction`.`uniqueBillId`, 
-`acc_temp_transaction`.`description`, 
-`acc_temp_transaction`.`glAccountId`, 
-`acc_temp_transaction`.`uomId`, 
-`acc_temp_transaction`.`amount`, 
-`acc_temp_transaction`.`BalanceBefore`, 
-`acc_temp_transaction`.`BalanceAfter`, 
-`acc_temp_transaction`.`isBillable`, 
-`acc_temp_transaction`.`isPrepaid`, 
-`acc_temp_transaction`.`isBilled`, 
-`acc_temp_transaction`.`cancelled`, 
-`acc_temp_transaction`.`createdByJob`, 
-`acc_temp_transaction`.`changedByJob`, 
-`acc_temp_transaction`.`jsonDetail`
-FROM `acc_temp_transaction` AS `acc_temp_transaction`</DefiningQuery>
           </EntitySet>
           <EntitySet Name="acc_transaction" EntityType="Self.acc_transaction" store:Type="Tables" store:Schema="platinum">
             <DefiningQuery>SELECT
@@ -4721,6 +4898,65 @@ FROM `cdrpartialreference` AS `cdrpartialreference`</DefiningQuery>
 `mockcdr`.`SignalingStartTime`
 FROM `mockcdr` AS `mockcdr`</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="rate" EntityType="Self.rate" store:Type="Tables" store:Schema="platinum">
+            <DefiningQuery>SELECT
+`rate`.`id`, 
+`rate`.`ProductId`, 
+`rate`.`Prefix`, 
+`rate`.`description`, 
+`rate`.`rateamount`, 
+`rate`.`WeekDayStart`, 
+`rate`.`WeekDayEnd`, 
+`rate`.`starttime`, 
+`rate`.`endtime`, 
+`rate`.`Resolution`, 
+`rate`.`MinDurationSec`, 
+`rate`.`SurchargeTime`, 
+`rate`.`SurchargeAmount`, 
+`rate`.`idrateplan`, 
+`rate`.`CountryCode`, 
+`rate`.`date1`, 
+`rate`.`field1`, 
+`rate`.`field2`, 
+`rate`.`field3`, 
+`rate`.`field4`, 
+`rate`.`field5`, 
+`rate`.`startdate`, 
+`rate`.`enddate`, 
+`rate`.`Inactive`, 
+`rate`.`RouteDisabled`, 
+`rate`.`Type`, 
+`rate`.`Currency`, 
+`rate`.`OtherAmount1`, 
+`rate`.`OtherAmount2`, 
+`rate`.`OtherAmount3`, 
+`rate`.`OtherAmount4`, 
+`rate`.`OtherAmount5`, 
+`rate`.`OtherAmount6`, 
+`rate`.`OtherAmount7`, 
+`rate`.`OtherAmount8`, 
+`rate`.`OtherAmount9`, 
+`rate`.`OtherAmount10`, 
+`rate`.`TimeZoneOffsetSec`, 
+`rate`.`RatePosition`, 
+`rate`.`IgwPercentageIn`, 
+`rate`.`ConflictingRateIds`, 
+`rate`.`ChangedByTaskId`, 
+`rate`.`ChangedOn`, 
+`rate`.`Status`, 
+`rate`.`idPreviousRate`, 
+`rate`.`EndPreviousRate`, 
+`rate`.`Category`, 
+`rate`.`SubCategory`, 
+`rate`.`ChangeCommitted`, 
+`rate`.`ConflictingRates`, 
+`rate`.`OverlappingRates`, 
+`rate`.`Comment1`, 
+`rate`.`Comment2`, 
+`rate`.`billingspan`, 
+`rate`.`RateAmountRoundupDecimal`
+FROM `rate` AS `rate`</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="sum_voice_day_01" EntityType="Self.sum_voice_day_01" store:Type="Tables" store:Schema="platinum">
             <DefiningQuery>SELECT
 `sum_voice_day_01`.`id`, 
@@ -5432,6 +5668,14 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             <End Role="zone" EntitySet="zone" />
             <End Role="timezone" EntitySet="timezone" />
           </AssociationSet>
+          <AssociationSet Name="INVCE_ITM_INVCE" Association="Self.INVCE_ITM_INVCE">
+            <End Role="invoice" EntitySet="invoice" />
+            <End Role="invoice_item" EntitySet="invoice_item" />
+          </AssociationSet>
+          <AssociationSet Name="INVOICE_ACCOUNT" Association="Self.INVOICE_ACCOUNT">
+            <End Role="account" EntitySet="account" />
+            <End Role="invoice" EntitySet="invoice" />
+          </AssociationSet>
           <AssociationSet Name="job_ibfk_1" Association="Self.job_ibfk_1">
             <End Role="enumjobdefinition" EntitySet="enumjobdefinition" />
             <End Role="job" EntitySet="job" />
@@ -5447,10 +5691,6 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <AssociationSet Name="jobcompletion_ibfk_1" Association="Self.jobcompletion_ibfk_1">
             <End Role="job" EntitySet="job" />
             <End Role="jobcompletion" EntitySet="jobcompletion" />
-          </AssociationSet>
-          <AssociationSet Name="jobsegment_ibfk_1" Association="Self.jobsegment_ibfk_1">
-            <End Role="job" EntitySet="job" />
-            <End Role="jobsegment" EntitySet="jobsegment" />
           </AssociationSet>
           <AssociationSet Name="ne_ibfk_1" Association="Self.ne_ibfk_1">
             <End Role="telcobrightpartner" EntitySet="telcobrightpartner" />
@@ -5557,7 +5797,6 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <EntitySet Name="partners" EntityType="MediationModel.partner" />
           <EntitySet Name="partnerprefixes" EntityType="MediationModel.partnerprefix" />
           <EntitySet Name="processes" EntityType="MediationModel.process" />
-          <EntitySet Name="products" EntityType="MediationModel.product" />
           <EntitySet Name="rates" EntityType="MediationModel.rate" />
           <EntitySet Name="rateassigns" EntityType="MediationModel.rateassign" />
           <EntitySet Name="rateplans" EntityType="MediationModel.rateplan" />
@@ -5722,6 +5961,32 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             <End Role="account" EntitySet="accounts" />
           </AssociationSet>
           <EntitySet Name="durationmetas" EntityType="MediationModel.durationmeta" />
+          <EntitySet Name="cdrmetas" EntityType="MediationModel.cdrmeta" />
+          <EntitySet Name="cdrsummarymeta_day_01" EntityType="MediationModel.cdrsummarymeta_day_01" />
+          <EntitySet Name="cdrsummarymeta_day_02" EntityType="MediationModel.cdrsummarymeta_day_02" />
+          <EntitySet Name="cdrsummarymeta_day_03" EntityType="MediationModel.cdrsummarymeta_day_03" />
+          <EntitySet Name="cdrsummarymeta_day_04" EntityType="MediationModel.cdrsummarymeta_day_04" />
+          <EntitySet Name="cdrsummarymeta_day_05" EntityType="MediationModel.cdrsummarymeta_day_05" />
+          <EntitySet Name="cdrsummarymeta_day_06" EntityType="MediationModel.cdrsummarymeta_day_06" />
+          <EntitySet Name="cdrsummarymeta_hr_01" EntityType="MediationModel.cdrsummarymeta_hr_01" />
+          <EntitySet Name="cdrsummarymeta_hr_02" EntityType="MediationModel.cdrsummarymeta_hr_02" />
+          <EntitySet Name="cdrsummarymeta_hr_03" EntityType="MediationModel.cdrsummarymeta_hr_03" />
+          <EntitySet Name="cdrsummarymeta_hr_04" EntityType="MediationModel.cdrsummarymeta_hr_04" />
+          <EntitySet Name="cdrsummarymeta_hr_05" EntityType="MediationModel.cdrsummarymeta_hr_05" />
+          <EntitySet Name="cdrsummarymeta_hr_06" EntityType="MediationModel.cdrsummarymeta_hr_06" />
+          <EntitySet Name="invoices" EntityType="MediationModel.invoice" />
+          <EntitySet Name="invoice_item" EntityType="MediationModel.invoice_item" />
+          <EntitySet Name="ledger_summary_meta" EntityType="MediationModel.ledger_summary_meta" />
+          <EntitySet Name="products" EntityType="MediationModel.product" />
+          <EntitySet Name="transactionmetas" EntityType="MediationModel.transactionmeta" />
+          <AssociationSet Name="INVOICE_ACCOUNT" Association="MediationModel.INVOICE_ACCOUNT">
+            <End Role="account" EntitySet="accounts" />
+            <End Role="invoice" EntitySet="invoices" />
+          </AssociationSet>
+          <AssociationSet Name="INVCE_ITM_INVCE" Association="MediationModel.INVCE_ITM_INVCE">
+            <End Role="invoice" EntitySet="invoices" />
+            <End Role="invoice_item" EntitySet="invoice_item" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="allerror">
           <Key>
@@ -6357,19 +6622,6 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="LastRun" Type="DateTime" />
           <Property Name="ProcessParamaterJson" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" />
           <Property Name="AdminState" Type="Int32" Nullable="false" />
-        </EntityType>
-        <EntityType Name="product">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Prefix" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="description" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Category" Type="Int32" Nullable="false" />
-          <Property Name="SubCategory" Type="Int32" />
-          <Property Name="ServiceFamily" Type="Int64" Nullable="false" />
-          <Property Name="AccountingId" Type="Int32" />
         </EntityType>
         <EntityType Name="rate">
           <Key>
@@ -9458,6 +9710,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="negativeBalanceLimit" Type="Decimal" Nullable="false" />
           <NavigationProperty Name="partner" Relationship="MediationModel.account_ibfk_1" FromRole="account" ToRole="partner" />
           <NavigationProperty Name="partner1" Relationship="MediationModel.account_ibfk_2" FromRole="account" ToRole="partner" />
+          <NavigationProperty Name="invoices" Relationship="MediationModel.INVOICE_ACCOUNT" FromRole="account" ToRole="invoice" />
         </EntityType>
         <Association Name="account_ibfk_1">
           <End Type="MediationModel.partner" Role="partner" Multiplicity="1" />
@@ -9493,6 +9746,220 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="newDuration" Type="Decimal" />
           <Property Name="durationAfterJob" Type="Decimal" />
         </EntityType>
+        <EntityType Name="cdrmeta">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_day_01">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_day_02">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_day_03">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_day_04">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_day_05">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_day_06">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_hr_01">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_hr_02">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_hr_03">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_hr_04">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_hr_05">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cdrsummarymeta_hr_06">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="totalInsertedDuration" Type="Decimal" Nullable="false" />
+          <Property Name="totalDeletedDuration" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="invoice">
+          <Key>
+            <PropertyRef Name="INVOICE_ID" />
+          </Key>
+          <Property Name="INVOICE_ID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="INVOICE_TYPE_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PARTY_ID_FROM" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PARTY_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ROLE_TYPE_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="STATUS_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="BILLING_ACCOUNT_ID" Type="Int64" />
+          <Property Name="CONTACT_MECH_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="INVOICE_DATE" Type="DateTime" />
+          <Property Name="DUE_DATE" Type="DateTime" />
+          <Property Name="PAID_DATE" Type="DateTime" />
+          <Property Name="INVOICE_MESSAGE" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="REFERENCE_NUMBER" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="DESCRIPTION" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="CURRENCY_UOM_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="RECURRENCE_INFO_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="LAST_UPDATED_STAMP" Type="DateTime" />
+          <Property Name="LAST_UPDATED_TX_STAMP" Type="DateTime" />
+          <Property Name="CREATED_STAMP" Type="DateTime" />
+          <Property Name="CREATED_TX_STAMP" Type="DateTime" />
+          <NavigationProperty Name="account" Relationship="MediationModel.INVOICE_ACCOUNT" FromRole="invoice" ToRole="account" />
+          <NavigationProperty Name="invoice_item" Relationship="MediationModel.INVCE_ITM_INVCE" FromRole="invoice" ToRole="invoice_item" />
+        </EntityType>
+        <EntityType Name="invoice_item">
+          <Key>
+            <PropertyRef Name="INVOICE_ID" />
+            <PropertyRef Name="INVOICE_ITEM_SEQ_ID" />
+          </Key>
+          <Property Name="INVOICE_ID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="INVOICE_ITEM_SEQ_ID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="INVOICE_ITEM_TYPE_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="OVERRIDE_GL_ACCOUNT_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="OVERRIDE_ORG_PARTY_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="INVENTORY_ITEM_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PRODUCT_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PRODUCT_FEATURE_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PARENT_INVOICE_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PARENT_INVOICE_ITEM_SEQ_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="UOM_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="TAXABLE_FLAG" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="QUANTITY" Type="Decimal" />
+          <Property Name="AMOUNT" Type="Decimal" />
+          <Property Name="DESCRIPTION" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="TAX_AUTH_PARTY_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="TAX_AUTH_GEO_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="TAX_AUTHORITY_RATE_SEQ_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SALES_OPPORTUNITY_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="LAST_UPDATED_STAMP" Type="DateTime" />
+          <Property Name="LAST_UPDATED_TX_STAMP" Type="DateTime" />
+          <Property Name="CREATED_STAMP" Type="DateTime" />
+          <Property Name="CREATED_TX_STAMP" Type="DateTime" />
+          <NavigationProperty Name="invoice" Relationship="MediationModel.INVCE_ITM_INVCE" FromRole="invoice_item" ToRole="invoice" />
+        </EntityType>
+        <EntityType Name="ledger_summary_meta">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="totalInsertedAmount" Type="Decimal" Nullable="false" />
+          <Property Name="totalDeletedAmount" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="product">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Prefix" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="description" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Category" Type="Int32" Nullable="false" />
+          <Property Name="SubCategory" Type="Int32" />
+          <Property Name="ServiceFamily" Type="Int64" Nullable="false" />
+          <Property Name="AccountingId" Type="Int32" />
+        </EntityType>
+        <EntityType Name="transactionmeta">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="totalInsertedAmount" Type="Decimal" Nullable="false" />
+          <Property Name="totalDeletedAmount" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <Association Name="INVOICE_ACCOUNT">
+          <End Type="MediationModel.account" Role="account" Multiplicity="0..1" />
+          <End Type="MediationModel.invoice" Role="invoice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="account">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="invoice">
+              <PropertyRef Name="BILLING_ACCOUNT_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="INVCE_ITM_INVCE">
+          <End Type="MediationModel.invoice" Role="invoice" Multiplicity="1" />
+          <End Type="MediationModel.invoice_item" Role="invoice_item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="invoice">
+              <PropertyRef Name="INVOICE_ID" />
+            </Principal>
+            <Dependent Role="invoice_item">
+              <PropertyRef Name="INVOICE_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -10167,20 +10634,6 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="ProcessParamaterJson" ColumnName="ProcessParamaterJson" />
                 <ScalarProperty Name="LastRun" ColumnName="LastRun" />
                 <ScalarProperty Name="ProcessName" ColumnName="ProcessName" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="products">
-            <EntityTypeMapping TypeName="MediationModel.product">
-              <MappingFragment StoreEntitySet="product">
-                <ScalarProperty Name="AccountingId" ColumnName="AccountingId" />
-                <ScalarProperty Name="ServiceFamily" ColumnName="ServiceFamily" />
-                <ScalarProperty Name="SubCategory" ColumnName="SubCategory" />
-                <ScalarProperty Name="Category" ColumnName="Category" />
-                <ScalarProperty Name="description" ColumnName="description" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Prefix" ColumnName="Prefix" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -12316,13 +12769,206 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="durationmetas">
-            <EntityTypeMapping TypeName="MediationModel.durationmeta">
-              <MappingFragment StoreEntitySet="durationmeta">
-                <ScalarProperty Name="durationAfterJob" ColumnName="durationAfterJob" />
-                <ScalarProperty Name="newDuration" ColumnName="newDuration" />
-                <ScalarProperty Name="oldDuration" ColumnName="oldDuration" />
-                <ScalarProperty Name="filename" ColumnName="filename" />
+          <EntitySetMapping Name="cdrmetas">
+            <EntityTypeMapping TypeName="MediationModel.cdrmeta">
+              <MappingFragment StoreEntitySet="cdrmeta">
+                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
+                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cdrsummarymeta_day_01">
+            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_day_01">
+              <MappingFragment StoreEntitySet="cdrsummarymeta_day_01">
+                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
+                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cdrsummarymeta_day_02">
+            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_day_02">
+              <MappingFragment StoreEntitySet="cdrsummarymeta_day_02">
+                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
+                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cdrsummarymeta_day_03">
+            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_day_03">
+              <MappingFragment StoreEntitySet="cdrsummarymeta_day_03">
+                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
+                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cdrsummarymeta_day_04">
+            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_day_04">
+              <MappingFragment StoreEntitySet="cdrsummarymeta_day_04">
+                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
+                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cdrsummarymeta_day_05">
+            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_day_05">
+              <MappingFragment StoreEntitySet="cdrsummarymeta_day_05">
+                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
+                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cdrsummarymeta_day_06">
+            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_day_06">
+              <MappingFragment StoreEntitySet="cdrsummarymeta_day_06">
+                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
+                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cdrsummarymeta_hr_01">
+            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_hr_01">
+              <MappingFragment StoreEntitySet="cdrsummarymeta_hr_01">
+                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
+                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cdrsummarymeta_hr_02">
+            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_hr_02">
+              <MappingFragment StoreEntitySet="cdrsummarymeta_hr_02">
+                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
+                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cdrsummarymeta_hr_03">
+            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_hr_03">
+              <MappingFragment StoreEntitySet="cdrsummarymeta_hr_03">
+                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
+                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cdrsummarymeta_hr_04">
+            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_hr_04">
+              <MappingFragment StoreEntitySet="cdrsummarymeta_hr_04">
+                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
+                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cdrsummarymeta_hr_05">
+            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_hr_05">
+              <MappingFragment StoreEntitySet="cdrsummarymeta_hr_05">
+                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
+                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cdrsummarymeta_hr_06">
+            <EntityTypeMapping TypeName="MediationModel.cdrsummarymeta_hr_06">
+              <MappingFragment StoreEntitySet="cdrsummarymeta_hr_06">
+                <ScalarProperty Name="totalDeletedDuration" ColumnName="totalDeletedDuration" />
+                <ScalarProperty Name="totalInsertedDuration" ColumnName="totalInsertedDuration" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="invoices">
+            <EntityTypeMapping TypeName="MediationModel.invoice">
+              <MappingFragment StoreEntitySet="invoice">
+                <ScalarProperty Name="CREATED_TX_STAMP" ColumnName="CREATED_TX_STAMP" />
+                <ScalarProperty Name="CREATED_STAMP" ColumnName="CREATED_STAMP" />
+                <ScalarProperty Name="LAST_UPDATED_TX_STAMP" ColumnName="LAST_UPDATED_TX_STAMP" />
+                <ScalarProperty Name="LAST_UPDATED_STAMP" ColumnName="LAST_UPDATED_STAMP" />
+                <ScalarProperty Name="RECURRENCE_INFO_ID" ColumnName="RECURRENCE_INFO_ID" />
+                <ScalarProperty Name="CURRENCY_UOM_ID" ColumnName="CURRENCY_UOM_ID" />
+                <ScalarProperty Name="DESCRIPTION" ColumnName="DESCRIPTION" />
+                <ScalarProperty Name="REFERENCE_NUMBER" ColumnName="REFERENCE_NUMBER" />
+                <ScalarProperty Name="INVOICE_MESSAGE" ColumnName="INVOICE_MESSAGE" />
+                <ScalarProperty Name="PAID_DATE" ColumnName="PAID_DATE" />
+                <ScalarProperty Name="DUE_DATE" ColumnName="DUE_DATE" />
+                <ScalarProperty Name="INVOICE_DATE" ColumnName="INVOICE_DATE" />
+                <ScalarProperty Name="CONTACT_MECH_ID" ColumnName="CONTACT_MECH_ID" />
+                <ScalarProperty Name="BILLING_ACCOUNT_ID" ColumnName="BILLING_ACCOUNT_ID" />
+                <ScalarProperty Name="STATUS_ID" ColumnName="STATUS_ID" />
+                <ScalarProperty Name="ROLE_TYPE_ID" ColumnName="ROLE_TYPE_ID" />
+                <ScalarProperty Name="PARTY_ID" ColumnName="PARTY_ID" />
+                <ScalarProperty Name="PARTY_ID_FROM" ColumnName="PARTY_ID_FROM" />
+                <ScalarProperty Name="INVOICE_TYPE_ID" ColumnName="INVOICE_TYPE_ID" />
+                <ScalarProperty Name="INVOICE_ID" ColumnName="INVOICE_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="invoice_item">
+            <EntityTypeMapping TypeName="MediationModel.invoice_item">
+              <MappingFragment StoreEntitySet="invoice_item">
+                <ScalarProperty Name="CREATED_TX_STAMP" ColumnName="CREATED_TX_STAMP" />
+                <ScalarProperty Name="CREATED_STAMP" ColumnName="CREATED_STAMP" />
+                <ScalarProperty Name="LAST_UPDATED_TX_STAMP" ColumnName="LAST_UPDATED_TX_STAMP" />
+                <ScalarProperty Name="LAST_UPDATED_STAMP" ColumnName="LAST_UPDATED_STAMP" />
+                <ScalarProperty Name="SALES_OPPORTUNITY_ID" ColumnName="SALES_OPPORTUNITY_ID" />
+                <ScalarProperty Name="TAX_AUTHORITY_RATE_SEQ_ID" ColumnName="TAX_AUTHORITY_RATE_SEQ_ID" />
+                <ScalarProperty Name="TAX_AUTH_GEO_ID" ColumnName="TAX_AUTH_GEO_ID" />
+                <ScalarProperty Name="TAX_AUTH_PARTY_ID" ColumnName="TAX_AUTH_PARTY_ID" />
+                <ScalarProperty Name="DESCRIPTION" ColumnName="DESCRIPTION" />
+                <ScalarProperty Name="AMOUNT" ColumnName="AMOUNT" />
+                <ScalarProperty Name="QUANTITY" ColumnName="QUANTITY" />
+                <ScalarProperty Name="TAXABLE_FLAG" ColumnName="TAXABLE_FLAG" />
+                <ScalarProperty Name="UOM_ID" ColumnName="UOM_ID" />
+                <ScalarProperty Name="PARENT_INVOICE_ITEM_SEQ_ID" ColumnName="PARENT_INVOICE_ITEM_SEQ_ID" />
+                <ScalarProperty Name="PARENT_INVOICE_ID" ColumnName="PARENT_INVOICE_ID" />
+                <ScalarProperty Name="PRODUCT_FEATURE_ID" ColumnName="PRODUCT_FEATURE_ID" />
+                <ScalarProperty Name="PRODUCT_ID" ColumnName="PRODUCT_ID" />
+                <ScalarProperty Name="INVENTORY_ITEM_ID" ColumnName="INVENTORY_ITEM_ID" />
+                <ScalarProperty Name="OVERRIDE_ORG_PARTY_ID" ColumnName="OVERRIDE_ORG_PARTY_ID" />
+                <ScalarProperty Name="OVERRIDE_GL_ACCOUNT_ID" ColumnName="OVERRIDE_GL_ACCOUNT_ID" />
+                <ScalarProperty Name="INVOICE_ITEM_TYPE_ID" ColumnName="INVOICE_ITEM_TYPE_ID" />
+                <ScalarProperty Name="INVOICE_ITEM_SEQ_ID" ColumnName="INVOICE_ITEM_SEQ_ID" />
+                <ScalarProperty Name="INVOICE_ID" ColumnName="INVOICE_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ledger_summary_meta">
+            <EntityTypeMapping TypeName="MediationModel.ledger_summary_meta">
+              <MappingFragment StoreEntitySet="ledger_summary_meta">
+                <ScalarProperty Name="totalDeletedAmount" ColumnName="totalDeletedAmount" />
+                <ScalarProperty Name="totalInsertedAmount" ColumnName="totalInsertedAmount" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="products">
+            <EntityTypeMapping TypeName="MediationModel.product">
+              <MappingFragment StoreEntitySet="product">
+                <ScalarProperty Name="AccountingId" ColumnName="AccountingId" />
+                <ScalarProperty Name="ServiceFamily" ColumnName="ServiceFamily" />
+                <ScalarProperty Name="SubCategory" ColumnName="SubCategory" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Prefix" ColumnName="Prefix" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="transactionmetas">
+            <EntityTypeMapping TypeName="MediationModel.transactionmeta">
+              <MappingFragment StoreEntitySet="transactionmeta">
+                <ScalarProperty Name="totalDeletedAmount" ColumnName="totalDeletedAmount" />
+                <ScalarProperty Name="totalInsertedAmount" ColumnName="totalInsertedAmount" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>

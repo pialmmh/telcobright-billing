@@ -116,6 +116,9 @@
     <Compile Include="cdrinconsistent.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="cdrmeta.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="cdrpartiallastaggregatedrawinstance.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
@@ -123,6 +126,42 @@
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="cdrpartialreference.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrsummarymeta_day_01.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrsummarymeta_day_02.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrsummarymeta_day_03.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrsummarymeta_day_04.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrsummarymeta_day_05.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrsummarymeta_day_06.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrsummarymeta_hr_01.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrsummarymeta_hr_02.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrsummarymeta_hr_03.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrsummarymeta_hr_04.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrsummarymeta_hr_05.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrsummarymeta_hr_06.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="commontg.cs">
@@ -208,6 +247,8 @@
     <Compile Include="EntityExtensions\Crud\enumvatrule.cs" />
     <Compile Include="EntityExtensions\Crud\errordefinition.cs" />
     <Compile Include="EntityExtensions\Crud\genericparameterassignment.cs" />
+    <Compile Include="EntityExtensions\Crud\invoice.cs" />
+    <Compile Include="EntityExtensions\Crud\invoice_item.cs" />
     <Compile Include="EntityExtensions\Crud\job.cs" />
     <Compile Include="EntityExtensions\Crud\jobcompletion.cs" />
     <Compile Include="EntityExtensions\Crud\jobsegment.cs" />
@@ -234,6 +275,12 @@
     <Compile Include="EntityExtensions\Crud\route.cs" />
     <Compile Include="EntityExtensions\Crud\routeaddressmapping.cs" />
     <Compile Include="EntityExtensions\Crud\StaticExtInsertColumnParsedDic.cs" />
+    <Compile Include="EntityExtensions\Crud\sum_voice_day_04.cs" />
+    <Compile Include="EntityExtensions\Crud\sum_voice_day_05.cs" />
+    <Compile Include="EntityExtensions\Crud\sum_voice_day_06.cs" />
+    <Compile Include="EntityExtensions\Crud\sum_voice_hr_04.cs" />
+    <Compile Include="EntityExtensions\Crud\sum_voice_hr_05.cs" />
+    <Compile Include="EntityExtensions\Crud\sum_voice_hr_06.cs" />
     <Compile Include="EntityExtensions\Crud\telcobrightpartner.cs" />
     <Compile Include="EntityExtensions\Crud\timezone.cs" />
     <Compile Include="EntityExtensions\Crud\uom.cs" />
@@ -400,6 +447,12 @@
     <Compile Include="genericparameterassignment.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="invoice.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="invoice_item.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="job.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
@@ -419,6 +472,9 @@
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="lcrrateplan.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ledger_summary_meta.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="mockcdr.cs">
@@ -534,6 +590,9 @@
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="timezone.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="transactionmeta.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="uom.cs">

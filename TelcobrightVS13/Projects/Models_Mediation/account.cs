@@ -14,6 +14,12 @@ namespace MediationModel
     
     public partial class account
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public account()
+        {
+            this.invoices = new HashSet<invoice>();
+        }
+    
         public long id { get; set; }
         public Nullable<long> idParent { get; set; }
         public string idParentExternal { get; set; }
@@ -39,5 +45,7 @@ namespace MediationModel
     
         public virtual partner partner { get; set; }
         public virtual partner partner1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<invoice> invoices { get; set; }
     }
 }

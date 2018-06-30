@@ -88,7 +88,6 @@ namespace MediationModel
         public virtual DbSet<partner> partners { get; set; }
         public virtual DbSet<partnerprefix> partnerprefixes { get; set; }
         public virtual DbSet<process> processes { get; set; }
-        public virtual DbSet<product> products { get; set; }
         public virtual DbSet<rate> rates { get; set; }
         public virtual DbSet<rateassign> rateassigns { get; set; }
         public virtual DbSet<rateplan> rateplans { get; set; }
@@ -141,5 +140,23 @@ namespace MediationModel
         public virtual DbSet<sum_voice_hr_06> sum_voice_hr_06 { get; set; }
         public virtual DbSet<account> accounts { get; set; }
         public virtual DbSet<durationmeta> durationmetas { get; set; }
+        public virtual DbSet<cdrmeta> cdrmetas { get; set; }
+        public virtual DbSet<cdrsummarymeta_day_01> cdrsummarymeta_day_01 { get; set; }
+        public virtual DbSet<cdrsummarymeta_day_02> cdrsummarymeta_day_02 { get; set; }
+        public virtual DbSet<cdrsummarymeta_day_03> cdrsummarymeta_day_03 { get; set; }
+        public virtual DbSet<cdrsummarymeta_day_04> cdrsummarymeta_day_04 { get; set; }
+        public virtual DbSet<cdrsummarymeta_day_05> cdrsummarymeta_day_05 { get; set; }
+        public virtual DbSet<cdrsummarymeta_day_06> cdrsummarymeta_day_06 { get; set; }
+        public virtual DbSet<cdrsummarymeta_hr_01> cdrsummarymeta_hr_01 { get; set; }
+        public virtual DbSet<cdrsummarymeta_hr_02> cdrsummarymeta_hr_02 { get; set; }
+        public virtual DbSet<cdrsummarymeta_hr_03> cdrsummarymeta_hr_03 { get; set; }
+        public virtual DbSet<cdrsummarymeta_hr_04> cdrsummarymeta_hr_04 { get; set; }
+        public virtual DbSet<cdrsummarymeta_hr_05> cdrsummarymeta_hr_05 { get; set; }
+        public virtual DbSet<cdrsummarymeta_hr_06> cdrsummarymeta_hr_06 { get; set; }
+        public virtual DbSet<invoice> invoices { get; set; }
+        public virtual DbSet<invoice_item> invoice_item { get; set; }
+        public virtual DbSet<ledger_summary_meta> ledger_summary_meta { get; set; }
+        public virtual DbSet<product> products { get; set; }
+        public virtual DbSet<transactionmeta> transactionmetas { get; set; }
     }
 }
