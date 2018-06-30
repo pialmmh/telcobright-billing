@@ -129,7 +129,7 @@ public partial class DefaultMediation : System.Web.UI.Page
         {
             sql = ((string) this.ViewState["jobs.squery"]).Replace(";", "") + " limit 0," + this.TextBoxNoOfRecords.Text + ";";
         }
-        DataTable dt = GetDataSet(ConfigurationManager.ConnectionStrings["telcobrightmediationSql"].ConnectionString, sql).Tables[0];
+        DataTable dt = GetDataSet(ConfigurationManager.ConnectionStrings["Partner"].ConnectionString, sql).Tables[0];
         ExportToSpreadsheet(dt, "jobs_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
     }
 

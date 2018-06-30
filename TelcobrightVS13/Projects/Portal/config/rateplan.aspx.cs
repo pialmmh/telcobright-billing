@@ -131,6 +131,7 @@ public partial class ConfigSupplierRatePlan : Page
             {
                 ddlistCurrency.Items.Add(new ListItem(currency.UOM_ID, currency.UOM_ID));
             }
+            ddlistCurrency.SelectedValue = "USD";
             //ddlistCurrency.DataBind();
         }
     }
@@ -562,7 +563,7 @@ public partial class ConfigSupplierRatePlan : Page
         }
 
         //set default billing span=minute
-        ((DropDownList)this.frmSupplierRatePlanInsert.FindControl("DropDownListBillingSpan")).SelectedIndex = 1;
+        ((DropDownList)this.frmSupplierRatePlanInsert.FindControl("DropDownListBillingSpan")).SelectedValue = "TF_min";
         LoadCurrencies();
     }
 
