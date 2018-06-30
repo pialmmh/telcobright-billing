@@ -1,0 +1,3 @@
+%windir%/system32/inetsrv/appcmd add site /in < C:\sftp_root\TelcobrightVS13\Projects\UtilInstallConfig\platinum\scripts\http_platinum.iisScript
+%windir%/system32/inetsrv/appcmd add apppool /in < C:\sftp_root\TelcobrightVS13\Projects\UtilInstallConfig\platinum\scripts\appPool_platinum.iisScript
+%windir%/system32/inetsrv/appcmd add site /in < C:\sftp_root\TelcobrightVS13\Projects\UtilInstallConfig\platinum\scripts\ftp_platinum.iisScript
