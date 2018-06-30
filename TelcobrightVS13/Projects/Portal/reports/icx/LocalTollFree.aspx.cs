@@ -86,9 +86,10 @@ public partial class DefaultRptLocalTollFree : System.Web.UI.Page
         if (CheckBoxDailySummary.Checked)
         {
             string interval = "";
-            if (RadioButtonHalfHourly.Checked)
-                return interval = "" + RadioButtonHalfHourly.Text;
-            else if (RadioButtonHourly.Checked)
+            //if (RadioButtonHalfHourly.Checked)
+            //    return interval = "" + RadioButtonHalfHourly.Text;
+            //else 
+            if (RadioButtonHourly.Checked)
                 return interval = "" + RadioButtonHourly.Text;
             else if (RadioButtonDaily.Checked)
                 return interval = "" + RadioButtonDaily.Text;
@@ -184,12 +185,13 @@ public partial class DefaultRptLocalTollFree : System.Web.UI.Page
             if (CheckBoxDailySummary.Checked == true)
             {
                 string summaryInterval = "";
-                if (RadioButtonHalfHourly.Checked == true)
-                {
-                    summaryInterval = "Halfhourly";
-                    GridView1.Columns[0].HeaderText = "Half Hour";
-                }
-                else if (RadioButtonHourly.Checked == true)
+                //if (RadioButtonHalfHourly.Checked == true)
+                //{
+                //    summaryInterval = "Halfhourly";
+                //    GridView1.Columns[0].HeaderText = "Half Hour";
+                //}
+                //else 
+                if (RadioButtonHourly.Checked == true)
                 {
                     summaryInterval = "Hourly";
                     GridView1.Columns[0].HeaderText = "Hour";

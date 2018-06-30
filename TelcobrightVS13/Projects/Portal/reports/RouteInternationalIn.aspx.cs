@@ -88,9 +88,10 @@ public partial class DefaultRtIntlIn : Page
         if (CheckBoxDailySummary.Checked)
         {
             string interval = "";
-            if (RadioButtonHalfHourly.Checked)
-                return interval = "" + RadioButtonHalfHourly.Text;
-            else if (RadioButtonHourly.Checked)
+            //if (RadioButtonHalfHourly.Checked)
+            //    return interval = "" + RadioButtonHalfHourly.Text;
+            //else 
+            if (RadioButtonHourly.Checked)
                 return interval = "" + RadioButtonHourly.Text;
             else if (RadioButtonDaily.Checked)
                 return interval = "" + RadioButtonDaily.Text;
@@ -314,12 +315,13 @@ public partial class DefaultRtIntlIn : Page
             if (this.CheckBoxDailySummary.Checked == true)
             {
                 string summaryInterval = "";
-                if (this.RadioButtonHalfHourly.Checked == true)
-                {
-                    summaryInterval = "Halfhourly";
-                    this.GridView1.Columns[0].HeaderText = "Half Hour";
-                }
-                else if (this.RadioButtonHourly.Checked == true)
+                //if (this.RadioButtonHalfHourly.Checked == true)
+                //{
+                //    summaryInterval = "Halfhourly";
+                //    this.GridView1.Columns[0].HeaderText = "Half Hour";
+                //}
+                //else 
+                if (this.RadioButtonHourly.Checked == true)
                 {
                     summaryInterval = "Hourly";
                     this.GridView1.Columns[0].HeaderText = "Hour";
