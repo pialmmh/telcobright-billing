@@ -207,7 +207,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
             if (CheckBoxShowByDestination.Checked == true || CheckBoxShowByCountry.Checked == true)
             {
 
-                GridView1.Columns[1].Visible = true;//country
+                //GridView1.Columns[1].Visible = true;//country
                 if (CheckBoxShowByDestination.Checked)
                     GridView1.Columns[2].Visible = true;//destination
                 else
