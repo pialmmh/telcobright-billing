@@ -39,7 +39,9 @@ public class MyExcel
 
     public int GetVendorFormat(string filePath, ref List<ratetask> lstRateTask, rateplan rp, bool endAllPrevPrefix, string[] dateFormats)
     {
-
+        //todo: remove temp code
+        Console.WriteLine("application running under: "+Environment.UserName);
+        //end
 
         string dateSeparator = "";
         //ApplicationClass app = new ApplicationClass(); // the Excel application.

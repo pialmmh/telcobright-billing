@@ -1375,7 +1375,8 @@ namespace RateSheetFormat
                     }
 
                     //replace "/" with "-". If dates contain "/", datetime.tryparse didn't work with 
-                    else if (DateTime.TryParse(Value.Replace("/", "-"), out myDateTime) && (Value.Contains("/") || Value.Contains("-")))
+                    else if ((Value.Contains("/")&&Value.Count(ch=>ch=='/')==2 )
+                        && DateTime.TryParse(Value.Replace("/", "-"), out myDateTime) && (Value.Contains("/") || Value.Contains("-")))
                     {
                         ThisLike = CellDataType.Datetime;
                         return ThisLike;
