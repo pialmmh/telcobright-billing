@@ -199,11 +199,11 @@ namespace Jobs
             {
                 foreach (string syncPairname in tbc.CdrSetting.BackupSyncPairNames)
                 {
-                    long idJob = FileUtil.CreateFileCopyJob(tbc, syncPairname, thisJob.JobName, context);
-                    dependentJobIdsBeforeDelete.Add(idJob);
+                    job fileCopyJob= FileUtil.CreateFileCopyJob(tbc, syncPairname, thisJob.JobName, context);
+                    long insertedJobsId= FileUtil.WriteFileCopyJobSingle(fileCopyJob, context.Database.Connection);
+                    dependentJobIdsBeforeDelete.Add(insertedJobsId);
                 }
             }
-
             //create delete job
             string vaultName = tbc.DirectorySettings.Vaults.Where(c => c.Name == thisJob.ne.SourceFileLocations)
                 .Select(c => c.Name)
