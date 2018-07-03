@@ -58,7 +58,8 @@ namespace Process
                     {
                         try
                         {
-                             jobs.Add(FileUtil.CreateFileCopyJob(tbc, syncPair.Name, fileName, context));
+                            var fileCopyJob = FileUtil.CreateFileCopyJob(tbc, syncPair.Name, fileName, context);
+                            if(fileCopyJob!=null) jobs.Add(fileCopyJob);
                         }
                         catch (Exception e1)
                         {

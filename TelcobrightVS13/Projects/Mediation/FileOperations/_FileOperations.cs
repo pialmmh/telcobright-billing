@@ -144,9 +144,9 @@ namespace TelcobrightFileOperations
                         string extInsertHeader = 
                             $@"insert into job(idne,idjobdefinition,jobname,status,priority,jobparameter,creationtime) values ";
                                             
-                        List<string> sqlsExtValues = segment.AsParallel().Select(newJob =>
-                            newJob.GetExtInsertCustom(
-                                j => new StringBuilder($@"(
+                        List<string> sqlsExtValues = segment.AsParallel().Select(j =>
+                            j.GetExtInsertCustom(
+                                newJob => new StringBuilder($@"(
                                     {newJob.idNE},{newJob.idjobdefinition},'{newJob.JobName}'
                                     ,{newJob.Status},{newJob.priority},'{newJob.JobParameter}'
                                     ,{newJob.CreationTime.ToMySqlField()})"
