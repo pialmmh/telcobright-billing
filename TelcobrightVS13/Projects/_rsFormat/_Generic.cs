@@ -559,28 +559,38 @@ namespace RateSheetFormat
                         NewTask.CountryCode = (TableData.IndexCountryCode) > -1 ? ThisRow[TableData.IndexCountryCode - 1] : "";
                         //Row 6://effectivedate
                         DateTime TempDate = new DateTime();
-                        if (VFormat == VendorFormat.Bharti)//bharti specific
+                        if (VFormat == VendorFormat.Bharti) //bharti specific
                         {
                             switch (ThisRow[5].ToLower().Trim())
                             {
-                                case ""://unchanged
-                                        //NewRow[6] 
-                                    NewTask.startdate = VendorParams.paramBharti.DefaultUnchangedValidityDate.ToString("yyyy-MM-dd HH:mm:ss");
+                                case "": //unchanged
+                                    //NewRow[6] 
+                                    NewTask.startdate =
+                                        VendorParams.paramBharti.DefaultUnchangedValidityDate.ToString(
+                                            "yyyy-MM-dd HH:mm:ss");
                                     break;
                                 case "increase":
-                                    NewTask.startdate = VendorParams.paramBharti.DefaultIncreaseValidityDate.ToString("yyyy-MM-dd HH:mm:ss");
+                                    NewTask.startdate =
+                                        VendorParams.paramBharti.DefaultIncreaseValidityDate.ToString(
+                                            "yyyy-MM-dd HH:mm:ss");
                                     break;
                                 case "decrease":
-                                    NewTask.startdate = VendorParams.paramBharti.DefaultDecreaseValidityDate.ToString("yyyy-MM-dd HH:mm:ss");
+                                    NewTask.startdate =
+                                        VendorParams.paramBharti.DefaultDecreaseValidityDate.ToString(
+                                            "yyyy-MM-dd HH:mm:ss");
                                     break;
-                                default://code update
-                                    NewTask.startdate = VendorParams.paramBharti.DefaultCodeUpdateValidityDate.ToString("yyyy-MM-dd HH:mm:ss");
+                                default: //code update
+                                    NewTask.startdate =
+                                        VendorParams.paramBharti.DefaultCodeUpdateValidityDate.ToString(
+                                            "yyyy-MM-dd HH:mm:ss");
                                     break;
                             }
                         }
                         else
                         {
-                            NewTask.startdate = (TableData.IndexStartDate) > -1 ? ThisRow[TableData.IndexStartDate - 1] : "";
+                            NewTask.startdate = (TableData.IndexStartDate) > -1
+                                ? ThisRow[TableData.IndexStartDate - 1]
+                                : "";
 
                             //usally there will be only one dateformat in ratesheet
                             //program will learn that or any other using cached & noncached list
@@ -588,32 +598,33 @@ namespace RateSheetFormat
                             bool matchFound = false;
                             foreach (string format in cachedFormats)
                             {
-                                if (DateTime.TryParseExact(NewTask.startdate, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out TempDate))
+                                if (DateTime.TryParseExact(NewTask.startdate, format, CultureInfo.InvariantCulture,
+                                    DateTimeStyles.None, out TempDate))
                                 {
                                     NewTask.startdate = TempDate.ToString("yyyy-MM-dd HH:mm:ss");
                                     matchFound = true;
                                     break;
                                 }
                             }
-                            if (matchFound == false)  //format doesn't exist in the cache, try all formats
+                            if (matchFound == false) //format doesn't exist in the cache, try all formats
                             {
                                 foreach (string nonCachedFormat in DateFormats)
                                 {
-                                    if (DateTime.TryParseExact(NewTask.startdate, nonCachedFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out TempDate))
+                                    if (DateTime.TryParseExact(NewTask.startdate, nonCachedFormat,
+                                        CultureInfo.InvariantCulture, DateTimeStyles.None, out TempDate))
                                     {
-                                        cachedFormats.Insert(0, nonCachedFormat);//keep latest match at first.
+                                        cachedFormats.Insert(0, nonCachedFormat); //keep latest match at first.
                                         NewTask.startdate = TempDate.ToString("yyyy-MM-dd HH:mm:ss");
                                         matchFound = true;
                                         break;
                                     }
                                 }
                             }
-                            if (DateTime.TryParseExact(NewTask.startdate, DateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out TempDate))
+                            if (DateTime.TryParseExact(NewTask.startdate, DateFormats, CultureInfo.InvariantCulture,
+                                DateTimeStyles.None, out TempDate))
                             {
                                 NewTask.startdate = TempDate.ToString("yyyy-MM-dd HH:mm:ss");
                             }
-
-
                         }
 
                         //Row 7://enddate

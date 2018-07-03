@@ -356,6 +356,7 @@
     <Compile Include="errordefinition.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="ExceptionTester.cs" />
     <Compile Include="FluentTester.cs" />
     <Compile Include="IterationPerformanceTester.cs" />
     <Compile Include="FlexValidatorTester.cs" />

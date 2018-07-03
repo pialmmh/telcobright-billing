@@ -16,7 +16,7 @@ namespace Utils
      
         static void Main(string[] args)
         {
-            var tester = new LargelistTester();
+            var tester = new ExceptionTester();
             tester.Test();
             //tester.PerformanceTest();
             Console.WriteLine("Press a key:");
