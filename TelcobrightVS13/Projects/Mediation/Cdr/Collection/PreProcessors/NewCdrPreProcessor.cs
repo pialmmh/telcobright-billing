@@ -61,8 +61,7 @@ namespace TelcobrightMediation
         public void ConvertToCdr(string[] row,out cdrinconsistent cdrInconsistent)
         {
             cdr convertedCdr = null;
-            //cdrinconsistent 
-                cdrInconsistent = null;
+            cdrInconsistent = null;
             convertedCdr = CdrManipulatingUtil.ConvertTxtRowToCdrOrInconsistentOnFailure(row, out cdrInconsistent);
             if (convertedCdr == null && cdrInconsistent != null) return;
             if (convertedCdr != null && cdrInconsistent == null)
