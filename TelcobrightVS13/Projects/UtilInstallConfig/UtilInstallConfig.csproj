@@ -150,6 +150,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="jsl\jslRoutes.json" />
+    <None Include="Server.conf" />
     <None Include="_dbl.config" />
     <None Include="_roots.config" />
   </ItemGroup>
