@@ -53,7 +53,7 @@
     <Compile Include="SansaySostSwitchDecoder.cs" />
     <Compile Include="ZteIpTdmDecoder.cs" />
     <Compile Include="ZteTdmDecoder.cs" />
-    <Compile Include="ZteWireLineSwitchDecoder.cs" />
+    <Compile Include="ZteDecoderHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

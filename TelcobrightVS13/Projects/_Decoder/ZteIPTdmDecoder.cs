@@ -13,18 +13,17 @@ namespace Decoders
 {
 
     [Export("Decoder", typeof(IFileDecoder))]
-    public class ZteIpTdmDecoder : ZteWireLineSwitchDecoder
+    public class ZteIpTdmDecoder : IFileDecoder
     {
         public override string ToString() => this.RuleName;
-        public override string RuleName => GetType().Name;
-        private int id = 18;
-        public override int Id => this.id;
-        public override string HelpText => "Decodes ZTE IP TDM CDR.";
-        public override List<string[]> DecodeFile(CdrCollectorInputData input,out List<cdrinconsistent> inconsistentCdrs)
+        public string RuleName => GetType().Name;
+        public int Id => 18;
+        public string HelpText => "Decodes ZTE IP TDM CDR.";
+        public List<string[]> DecodeFile(CdrCollectorInputData input,out List<cdrinconsistent> inconsistentCdrs)
         {
             inconsistentCdrs = new List<cdrinconsistent>();
             //this.id = base.Id;
-            List<string[]> decodedRows = base.DecodeFile(input, out inconsistentCdrs);
+            List<string[]> decodedRows = ZteDecoderHelper.DecodeFile(input.Ne.idcdrformat,input, out inconsistentCdrs);
             decodedRows.ForEach(row =>
             {
                 SetIncomingRoute(row);
@@ -43,6 +42,7 @@ namespace Decoders
             {
                 row[Fn.IncomingRoute] = row[Fn.InTrunkAdditionalInfo];
             }
+            else throw new ArgumentOutOfRangeException($"Unexpected values of InMgw & InTrunkAdditionalInfo while setting incoming route.");
         }
         private static void SetOutgoingRoute(string[] row)
         {
@@ -54,6 +54,7 @@ namespace Decoders
             {
                 row[Fn.OutgoingRoute] = row[Fn.OutTrunkAdditionalInfo];
             }
+            else throw new ArgumentOutOfRangeException($"Unexpected values of OutMgw & OutTrunkAdditionalInfo while setting oucoming route.");
         }
     }
 }

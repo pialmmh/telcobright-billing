@@ -12,22 +12,15 @@ using TelcobrightMediation.Mediation.Cdr;
 
 namespace Decoders
 {
-
-    [Export("Decoder", typeof(IFileDecoder))]
-    public class ZteWireLineSwitchDecoder : IFileDecoder
+    public static class ZteDecoderHelper
     {
-        public override string ToString() => this.RuleName;
-        public virtual string RuleName => GetType().Name;
-        public virtual int Id => 16;
-        public virtual string HelpText => "Decodes ZTE TDM/IP CDR.";
-
-        public virtual List<string[]> DecodeFile(CdrCollectorInputData input,out List<cdrinconsistent> inconsistentCdrs)
+        public static List<string[]> DecodeFile(int idCdrFormat, CdrCollectorInputData input,out List<cdrinconsistent> inconsistentCdrs)
         {
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
 
             List<cdrfieldmappingbyswitchtype> fieldMappings = null;
-            input.MefDecodersData.DicFieldMapping.TryGetValue(this.Id, out fieldMappings);
+            input.MefDecodersData.DicFieldMapping.TryGetValue(idCdrFormat, out fieldMappings);
             string zteStartofTimeStr = "2000-01-01 00:00:00"; // <-- Valid
             string format = "yyyy-MM-dd HH:mm:ss";
             DateTime zteStartofTime;
@@ -391,7 +384,7 @@ namespace Decoders
                     Console.WriteLine(e1);
                     inconsistentCdrs.Add(CdrManipulatingUtil.ConvertTxtRowToCdrinconsistent(thisRow));
                     ErrorWriter wr = new ErrorWriter(e1, "DecodeCdr", null,
-                        this.RuleName + " encounterd error during decoding and an Inconsistent cdr has been generated."
+                        "Encounterd error during decoding with ZteDecoderHelper."
                         , input.Tbc.DatabaseSetting.DatabaseName);
                     continue;//with next switch
                 }
