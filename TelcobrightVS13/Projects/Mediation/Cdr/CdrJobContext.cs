@@ -59,10 +59,13 @@ namespace TelcobrightMediation
             this.CdrSummaryContext = new CdrSummaryContext(this.MediationContext,
                 this.AutoIncrementManager, this.Context, this.HoursInvolved);
 
-            PopulateRateCacheForDatesInvolved();
-            this.AccountingContext.PopulatePrevLedgerSummary();
-            this.CdrSummaryContext.PopulatePrevSummary();
-            this.CdrSummaryContext.ValidateDayVsHourWiseSummaryCollection();
+            if (this.DatesInvolved.Any())
+            {
+                PopulateRateCacheForDatesInvolved();
+                this.AccountingContext.PopulatePrevLedgerSummary();
+                this.CdrSummaryContext.PopulatePrevSummary();
+                this.CdrSummaryContext.ValidateDayVsHourWiseSummaryCollection();
+            }
         }
 
         private void PopulateRateCacheForDatesInvolved()

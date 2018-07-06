@@ -51,6 +51,7 @@
     <Compile Include="GenbandS3Decoder.cs" />
     <Compile Include="HuaweiSoftx3000Decoder.cs" />
     <Compile Include="SansaySostSwitchDecoder.cs" />
+    <Compile Include="ZteIpTdmDecoder.cs" />
     <Compile Include="ZteTdmDecoder.cs" />
     <Compile Include="ZteWireLineSwitchDecoder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

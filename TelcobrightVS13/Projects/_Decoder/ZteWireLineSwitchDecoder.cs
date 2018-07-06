@@ -372,7 +372,8 @@ namespace Decoders
                     //    //1: invalid; Shows an invalid CDR record. 
 
                     ////if valid answertime and partial cdr flag found
-                    if (thisRow[Fn.Partialflag].Trim().ValueIn(new[] {"1", "2", "3"}))
+                    if (!thisRow[Fn.Partialflag].IsNullOrEmptyOrWhiteSpace() 
+                        && thisRow[Fn.Partialflag].Trim().ValueIn(new[] {"1", "2", "3"}))
                     {
                         thisRow[89] = thisRow[14]; //partial duration
                         thisRow[90] = thisRow[17]; //partial answertime

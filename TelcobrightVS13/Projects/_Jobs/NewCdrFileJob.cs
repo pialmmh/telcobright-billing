@@ -107,9 +107,12 @@ namespace Jobs
                         cdrJob.CdrProcessor.WriteCdrInconsistent();
                     }
                 }
-                if (!cdrJob.CdrProcessor.CdrJobContext.MediationContext.Tbc.CdrSetting.EmptyFileAllowed)
+                else
                 {
-                    throw new Exception("Empty new cdr files are not considered valid as per cdr setting.");
+                    if (!cdrJob.CdrProcessor.CdrJobContext.MediationContext.Tbc.CdrSetting.EmptyFileAllowed)
+                    {
+                        throw new Exception("Empty new cdr files are not considered valid as per cdr setting.");
+                    }
                 }
                 WriteJobCompletionIfCollectionIsEmpty(cdrJob.CdrProcessor, this.Input.TelcobrightJob);
             }
@@ -183,8 +186,8 @@ namespace Jobs
                 string sql =
                     $" update job set CompletionTime={DateTime.Now.ToMySqlField()}, " +
                     $" status=1, " +
-                    $"NoOfSteps=0," +
-                    $"progress=0," +
+                    $"NoOfSteps={cdrProcessor.CollectionResult.RawCount}," +//could be non zero if inconsistents exist
+                    $"progress={cdrProcessor.CollectionResult.RawCount}," +
                     $"Error=null where id={telcobrightJob.id}";
                 cmd.CommandText = sql;
                 cmd.ExecuteNonQuery();
