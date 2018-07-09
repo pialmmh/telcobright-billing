@@ -57,7 +57,7 @@ namespace MediationModel
                     else//enddate not null
                         return this.enddate;
                 }
-                else//rateplan assignment has a an enddate, NOT OPEN
+                else//rateplan assignment has an enddate, NOT OPEN
                 {
                     if (this.enddate == null)
                         return this.Enddatebyrateplan;

@@ -17,6 +17,8 @@ namespace Utils
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public partner()
         {
+            this.accounts = new HashSet<account>();
+            this.accounts1 = new HashSet<account>();
             this.routes = new HashSet<route>();
         }
     
@@ -48,8 +50,11 @@ namespace Utils
         public Nullable<float> refpdd { get; set; }
         public Nullable<float> refasrfas { get; set; }
         public int DefaultCurrency { get; set; }
-        public Nullable<int> tier { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<account> accounts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<account> accounts1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<route> routes { get; set; }
     }

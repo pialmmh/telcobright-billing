@@ -6,7 +6,7 @@
     <ProjectGuid>{57C85533-C119-4D65-A910-90C70337EB43}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <NoStandardLibraries>false</NoStandardLibraries>
-    <AssemblyName>ConsoleApplication</AssemblyName>
+    <AssemblyName>Utils</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -56,8 +56,8 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="MySql.Data, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="MySql.Data.Entity.EF6, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Spring.Core, Version=2.0.1.45000, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
@@ -122,16 +122,10 @@
     <Compile Include="account.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="acc_balance.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="acc_ledger.cs">
+    <Compile Include="acc_chargeable.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="acc_ledger_summary.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="acc_prev_transaction.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="acc_temp_transaction.cs">
@@ -183,13 +177,52 @@
     <Compile Include="cdrinconsistent.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="cdrpartialaggregatedinstance.cs">
+    <Compile Include="cdrmeta.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrpartiallastaggregatedrawinstance.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrpartialrawinstance.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="cdrpartialreference.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="cdrpartialunprocessedinstance.cs">
+    <Compile Include="cdrsummarymeta_day_01.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrsummarymeta_day_02.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrsummarymeta_day_03.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrsummarymeta_day_04.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrsummarymeta_day_05.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrsummarymeta_day_06.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrsummarymeta_hr_01.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrsummarymeta_hr_02.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrsummarymeta_hr_03.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrsummarymeta_hr_04.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrsummarymeta_hr_05.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cdrsummarymeta_hr_06.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="ClassDeclarationRoo.cs" />
@@ -358,6 +391,12 @@
     </Compile>
     <Compile Include="ExceptionTester.cs" />
     <Compile Include="FluentTester.cs" />
+    <Compile Include="invoice.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="invoice_item.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="IterationPerformanceTester.cs" />
     <Compile Include="FlexValidatorTester.cs" />
     <Compile Include="genericparameterassignment.cs">
@@ -385,11 +424,18 @@
     <Compile Include="lcrrateplan.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="ledger_summary_meta.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="MediationRuleDeserializer.cs" />
     <Compile Include="MefTester.cs" />
+    <Compile Include="mockcdr.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="ne.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="OrderByTester.cs" />
     <Compile Include="PartialCdrGenerator.cs" />
     <Compile Include="partner.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
@@ -474,6 +520,15 @@
     <Compile Include="sum_voice_day_03.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="sum_voice_day_04.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sum_voice_day_05.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sum_voice_day_06.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="sum_voice_hr_01.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
@@ -481,6 +536,15 @@
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="sum_voice_hr_03.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sum_voice_hr_04.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sum_voice_hr_05.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sum_voice_hr_06.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="telcobrightpartner.cs">
@@ -516,6 +580,18 @@
     </Compile>
     <Compile Include="title.cs">
       <DependentUpon>EmployeeModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="transactionmeta.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="uom.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="uom_conversion.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="uom_conversion_dated.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="user.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>

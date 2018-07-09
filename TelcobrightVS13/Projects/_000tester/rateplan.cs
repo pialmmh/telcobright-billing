@@ -38,12 +38,11 @@ namespace Utils
         public int Resolution { get; set; }
         public float mindurationsec { get; set; }
         public int SurchargeTime { get; set; }
-        public double SurchargeAmount { get; set; }
+        public decimal SurchargeAmount { get; set; }
         public Nullable<sbyte> Category { get; set; }
         public Nullable<sbyte> SubCategory { get; set; }
         public string BillingSpan { get; set; }
         public Nullable<int> RateAmountRoundupDecimal { get; set; }
-        public Nullable<int> tier { get; set; }
     
         public virtual enumbillingspan enumbillingspan { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

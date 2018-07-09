@@ -12,14 +12,10 @@ namespace Utils
     using System;
     using System.Collections.Generic;
     
-    public partial class acc_balance
+    public partial class cdrsummarymeta_hr_02
     {
-        public long idAccount { get; set; }
-        public double BalanceBefore { get; set; }
-        public Nullable<double> lastAmount { get; set; }
-        public double BalanceAfter { get; set; }
-        public System.DateTime lastUpdated { get; set; }
-    
-        public virtual account account { get; set; }
+        public int id { get; set; }
+        public decimal totalInsertedDuration { get; set; }
+        public decimal totalDeletedDuration { get; set; }
     }
 }

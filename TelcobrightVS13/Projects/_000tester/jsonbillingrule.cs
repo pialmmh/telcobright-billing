@@ -14,20 +14,10 @@ namespace Utils
     
     public partial class jsonbillingrule
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public jsonbillingrule()
-        {
-            this.billingruleassignments = new HashSet<billingruleassignment>();
-        }
-    
         public int id { get; set; }
         public string ruleName { get; set; }
         public string description { get; set; }
         public string JsonExpression { get; set; }
         public sbyte isPrepaid { get; set; }
-        public sbyte enabled { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<billingruleassignment> billingruleassignments { get; set; }
     }
 }

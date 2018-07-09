@@ -15,10 +15,10 @@ namespace Utils
     public partial class cdrpartialreference
     {
         public string UniqueBillId { get; set; }
-        public int idswitch { get; set; }
+        public int switchid { get; set; }
         public long lastIdcall { get; set; }
         public System.DateTime CallDate { get; set; }
         public string commaSepIdcallsForAllInstances { get; set; }
-        public string Filename { get; set; }
+        public string lastFilename { get; set; }
     }
 }

@@ -16,8 +16,8 @@ namespace Utils
     {
         public int idRatePlanAssignmentTuple { get; set; }
         public Nullable<int> idBillingRule { get; set; }
+        public int idServiceGroup { get; set; }
     
-        public virtual jsonbillingrule jsonbillingrule { get; set; }
         public virtual rateplanassignmenttuple rateplanassignmenttuple { get; set; }
     }
 }

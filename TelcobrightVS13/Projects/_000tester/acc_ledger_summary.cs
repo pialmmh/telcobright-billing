@@ -17,6 +17,6 @@ namespace Utils
         public long id { get; set; }
         public long idAccount { get; set; }
         public System.DateTime transactionDate { get; set; }
-        public double AMOUNT { get; set; }
+        public decimal AMOUNT { get; set; }
     }
 }

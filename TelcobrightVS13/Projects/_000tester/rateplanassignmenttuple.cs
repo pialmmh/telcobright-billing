@@ -20,8 +20,8 @@ namespace Utils
         public Nullable<int> idpartner { get; set; }
         public Nullable<int> route { get; set; }
         public int priority { get; set; }
-        public Nullable<int> tier { get; set; }
     
         public virtual billingruleassignment billingruleassignment { get; set; }
+        public virtual route route1 { get; set; }
     }
 }

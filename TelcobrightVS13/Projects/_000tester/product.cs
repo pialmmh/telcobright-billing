@@ -22,6 +22,5 @@ namespace Utils
         public Nullable<int> SubCategory { get; set; }
         public long ServiceFamily { get; set; }
         public Nullable<int> AccountingId { get; set; }
-        public Nullable<int> tier { get; set; }
     }
 }

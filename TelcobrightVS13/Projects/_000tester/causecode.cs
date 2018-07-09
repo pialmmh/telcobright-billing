@@ -19,6 +19,5 @@ namespace Utils
         public int CC { get; set; }
         public string Description { get; set; }
         public Nullable<int> CallCompleteIndicator { get; set; }
-        public Nullable<int> tier { get; set; }
     }
 }

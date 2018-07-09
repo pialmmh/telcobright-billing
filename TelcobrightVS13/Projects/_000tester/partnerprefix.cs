@@ -19,6 +19,5 @@ namespace Utils
         public int PrefixType { get; set; }
         public string Prefix { get; set; }
         public Nullable<int> CommonTG { get; set; }
-        public Nullable<int> tier { get; set; }
     }
 }

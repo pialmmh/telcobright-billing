@@ -17,7 +17,7 @@ namespace Utils
         public long id { get; set; }
         public string Prefix { get; set; }
         public string description { get; set; }
-        public double rateamount { get; set; }
+        public decimal rateamount { get; set; }
         public int WeekDayStart { get; set; }
         public int WeekDayEnd { get; set; }
         public string starttime { get; set; }
@@ -25,7 +25,7 @@ namespace Utils
         public int Resolution { get; set; }
         public float MinDurationSec { get; set; }
         public int SurchargeTime { get; set; }
-        public double SurchargeAmount { get; set; }
+        public decimal SurchargeAmount { get; set; }
         public Nullable<long> idrateplan { get; set; }
         public string CountryCode { get; set; }
         public Nullable<System.DateTime> date1 { get; set; }
@@ -43,14 +43,14 @@ namespace Utils
         public Nullable<float> OtherAmount1 { get; set; }
         public Nullable<float> OtherAmount2 { get; set; }
         public Nullable<float> OtherAmount3 { get; set; }
-        public Nullable<double> OtherAmount4 { get; set; }
-        public Nullable<double> OtherAmount5 { get; set; }
+        public Nullable<decimal> OtherAmount4 { get; set; }
+        public Nullable<decimal> OtherAmount5 { get; set; }
         public Nullable<float> OtherAmount6 { get; set; }
         public Nullable<float> OtherAmount7 { get; set; }
         public Nullable<float> OtherAmount8 { get; set; }
         public Nullable<float> OtherAmount9 { get; set; }
         public Nullable<float> OtherAmount10 { get; set; }
-        public double TimeZoneOffsetSec { get; set; }
+        public decimal TimeZoneOffsetSec { get; set; }
         public Nullable<int> RatePosition { get; set; }
         public Nullable<float> IgwPercentageIn { get; set; }
         public string ConflictingRateIds { get; set; }
@@ -66,7 +66,6 @@ namespace Utils
         public string OverlappingRates { get; set; }
         public string Comment1 { get; set; }
         public string Comment2 { get; set; }
-        public int tier { get; set; }
         public string BillingParams { get; set; }
     }
 }

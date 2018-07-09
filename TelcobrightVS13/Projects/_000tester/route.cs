@@ -14,6 +14,12 @@ namespace Utils
     
     public partial class route
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public route()
+        {
+            this.rateplanassignmenttuples = new HashSet<rateplanassignmenttuple>();
+        }
+    
         public int idroute { get; set; }
         public string RouteName { get; set; }
         public int SwitchId { get; set; }
@@ -28,8 +34,10 @@ namespace Utils
         public Nullable<int> field3 { get; set; }
         public Nullable<int> field4 { get; set; }
         public string field5 { get; set; }
-        public Nullable<int> tier { get; set; }
     
+        public virtual ne ne { get; set; }
         public virtual partner partner { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<rateplanassignmenttuple> rateplanassignmenttuples { get; set; }
     }
 }

@@ -14,16 +14,38 @@ namespace Utils
     
     public partial class account
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public account()
+        {
+            this.invoices = new HashSet<invoice>();
+        }
+    
         public long id { get; set; }
         public Nullable<long> idParent { get; set; }
         public string idParentExternal { get; set; }
         public int idPartner { get; set; }
         public string accountName { get; set; }
-        public string iduom { get; set; }
+        public int serviceGroup { get; set; }
+        public int serviceFamily { get; set; }
+        public int product { get; set; }
+        public string billableType { get; set; }
+        public string uom { get; set; }
         public int Depth { get; set; }
         public string Lineage { get; set; }
         public string remark { get; set; }
+        public Nullable<sbyte> isBillable { get; set; }
+        public Nullable<sbyte> isCustomerAccount { get; set; }
+        public Nullable<sbyte> isSupplierAccount { get; set; }
+        public decimal balanceBefore { get; set; }
+        public Nullable<decimal> lastAmount { get; set; }
+        public decimal balanceAfter { get; set; }
+        public System.DateTime lastUpdated { get; set; }
+        public Nullable<int> superviseNegativeBalance { get; set; }
+        public decimal negativeBalanceLimit { get; set; }
     
-        public virtual acc_balance acc_balance { get; set; }
+        public virtual partner partner { get; set; }
+        public virtual partner partner1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<invoice> invoices { get; set; }
     }
 }

@@ -71,6 +71,5 @@ namespace Utils
         public Nullable<int> ExecutionOrder { get; set; }
         public Nullable<int> RateAmountRoundupDecimal { get; set; }
         public Nullable<int> ProductId { get; set; }
-        public Nullable<int> tier { get; set; }
     }
 }

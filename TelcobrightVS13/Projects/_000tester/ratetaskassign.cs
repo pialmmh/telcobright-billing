@@ -68,6 +68,5 @@ namespace Utils
         public System.DateTime PartitionDate { get; set; }
         public string Comment1 { get; set; }
         public string Comment2 { get; set; }
-        public Nullable<int> tier { get; set; }
     }
 }

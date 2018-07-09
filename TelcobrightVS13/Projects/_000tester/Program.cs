@@ -16,8 +16,9 @@ namespace Utils
      
         static void Main(string[] args)
         {
-            var tester = new ExceptionTester();
+            var tester = new OrderByTester();
             tester.Test();
+            return;
             //tester.PerformanceTest();
             Console.WriteLine("Press a key:");
             Console.WriteLine("1=Test Entity Renaming");
