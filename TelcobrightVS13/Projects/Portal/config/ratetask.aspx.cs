@@ -4237,6 +4237,8 @@ public partial class ConfigRateTask : Page
                     {
                         cmd.CommandText = " rollback;";
                         cmd.ExecuteNonQuery();
+                        cmd.CommandText = "unlock tables;";
+                        cmd.ExecuteNonQuery();
 
                         var color = ColorTranslator.FromHtml("#FA0509");
                         this.StatusLabel.ForeColor = color;
