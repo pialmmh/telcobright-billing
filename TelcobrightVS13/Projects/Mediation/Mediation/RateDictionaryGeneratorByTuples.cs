@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using LibraryExtensions;
 using MediationModel;
 using LibraryExtensions;
@@ -131,27 +132,33 @@ namespace TelcobrightMediation
             //dic tup rates is now loaded with proper tuple with list<rate>=null, populate each list
             foreach (RateTuple rt in this._lstTuples)
             {
-                RateList rateList = new RateList(rt, this.Prefix, this.Description, this.ChangeType, this.Category, this.SubCategory,
+                RateList rateList = new RateList(rt, this.Prefix, this.Description, this.ChangeType, this.Category,
+                    this.SubCategory,
                     this.Context, this._rateContainer);
 
                 //order by prefix ascending and startdate descending
-                List<Rateext> lstRates = new List<Rateext>();
+                List<Rateext> rates = new List<Rateext>();
                 //todo: remove temp code
-                lstRates = rateList.GetAllRates(useInMemoryTable).ToList();
-                if (lstRates.Count>80000)
-                {
-                    JsonHelper.SerializeToFile(lstRates,@"c:\temp\rates.json");
-                }
-                lstRates = lstRates.OrderBy(c => c.Priority).ThenBy(c => c.Prefix).ThenByDescending(c => c.startdate).ToList();
+                //lstRates = rateList.GetAllRates(useInMemoryTable).ToList();
+                //if (lstRates.Count>80000)
+                //{
+                //    JsonHelper.SerializeToFile(lstRates,@"c:\temp\rates.json");
+                //}
+                //lstRates = lstRates.OrderBy(c => c.Priority).ThenBy(c => c.Prefix).ThenByDescending(c => c.startdate).ToList();
 
-                lstRates =lstRates.OrderBy(c => c.Priority).ThenBy(c => c.Prefix).ThenByDescending(c => c.P_Startdate).ToList();
+                //lstRates =lstRates.OrderBy(c => c.Priority).ThenBy(c => c.Prefix).ThenByDescending(c => c.P_Startdate).ToList();
                 //end
                 //todo: uncomment original codes
                 //lstRates = rateList.GetAllRates(useInMemoryTable).ToList()
                 //    .OrderBy(c => c.Priority).ThenBy(c => c.Prefix).ThenByDescending(c => c.P_Startdate).ToList();
+                rates = rateList.GetAllRates(useInMemoryTable).ToList();
+                DictionaryBasedRateSorter rateSorter = new DictionaryBasedRateSorter(rates,
+                    sortByPriorityDescending: false,
+                    sortByPrefixDescending: false,
+                    sortByStartDateDescending: true);
+                rates = rateSorter.Sort();
                 //end uncommend
-                this._dicTupRates.Add(rt, lstRates);
-                
+                this._dicTupRates.Add(rt, rates);
             }
 
             //each tuple actually contains idrateplanassignment value

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using TelcobrightTester;
 using LibraryExtensions.CommonHelper;
+using MediationModel;
 using Spring.Expressions;
 using Utils.Testers;
 using Utils.Testers.Employees;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using FluentValidation;
 using FluentValidation.Internal;
 using FluentValidation.Results;
+using MediationModel;
 
 namespace Utils
 {

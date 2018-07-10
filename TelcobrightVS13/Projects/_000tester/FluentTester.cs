@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FluentValidation;
 using FluentValidation.Results;
+using MediationModel;
 using Newtonsoft.Json;
 namespace Utils
 {
