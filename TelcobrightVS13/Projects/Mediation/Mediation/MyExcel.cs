@@ -328,22 +328,6 @@ public class MyExcel
                     }
                 }
             }
-
-            //try some additional format...will make this one MEF someday hopefully
-            if (dim2 >= 2)
-            {
-                RateTableMetaData metaData = new RateTableMetaData();
-                FindTableMetaData(ref objArray, ref metaData, firstRow, VendorFormat.None, dateFormats,
-                    ref dateSeparator);
-                if (metaData.IndexDescription == 1 &&
-                    metaData.IndexPrefix1 == 2 &&
-                    metaData.IndexStartDate == 4 &&
-                    metaData.IndexRate == 3)
-                {
-                    return 12; //dbl normalized
-                }
-            }
-
             return 0;
         }
 
@@ -1066,8 +1050,9 @@ public class MyExcel
                 {
                     CellDataType? thisColumnLike = CellDataType.Null;
 
+                    string cellValue = objArray[i, j].ToString().Trim();
                     thisColumnLike = (objArray[i, j] != null
-                        ? FindCellDataType(objArray[i, j].ToString().Trim(), dateFormats, ref dateSeparator)
+                        ? FindCellDataType(cellValue, dateFormats, ref dateSeparator)
                         : CellDataType.Null);
 
                     switch (thisColumnLike)
@@ -1169,10 +1154,11 @@ public class MyExcel
                 if (offsetDim1FirstRow < 0)
                     throw new Exception("Offset between vertical dimension & first row must be >0");
                 int maxRowToScan = offsetDim1FirstRow<=20? offsetDim1FirstRow+1 :(firstRow + 19);
-                for (i = firstRow; i < maxRowToScan && i <= dim1; i++) //sampling over 20 rows will do
+                for (i = firstRow; i < (i+maxRowToScan) && i <= dim1; i++) //sampling over 20 rows will do
                 {
+                    string cellValue = objArray[i, j].ToString();
                     CellDataType? thisColumnLike = (objArray[i, j] != null
-                        ? FindCellDataType(objArray[i, j].ToString(), dateFormats, ref dateSeparator)
+                        ? FindCellDataType(cellValue, dateFormats, ref dateSeparator)
                         : CellDataType.Null);
                     switch (thisColumnLike)
                     {

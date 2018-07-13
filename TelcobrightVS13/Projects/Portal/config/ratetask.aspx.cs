@@ -4165,7 +4165,13 @@ public partial class ConfigRateTask : Page
         foreach (ratetask deltask in lstPrefixDelSingle)
         {
             DateTime delDate = Convert.ToDateTime(deltask.startdate);
-            if (dicRateCache.ContainsKey(deltask.Prefix) == false) continue;
+            if (dicRateCache.ContainsKey(deltask.Prefix) == false)
+            {
+                //update the status of the delete taks as well
+                sbSqlCodeDel.Append(" update ratetask set changecommitted=1,status =1 where " +
+                                    " id=" + deltask.id).Append(";");
+                continue;
+            }
             List<rate> lstDelRates = dicRateCache[deltask.Prefix].
                 Where(c => (c.enddate == null || c.enddate > delDate) && c.startdate <= delDate).ToList();
             foreach (rate delRate in lstDelRates)
@@ -4178,7 +4184,7 @@ public partial class ConfigRateTask : Page
 
             //update the status of the delete taks as well
             sbSqlCodeDel.Append(" update ratetask set changecommitted=1,status =1 where " +
-                                        " id=" + deltask.ChangedByTaskId).Append(";");
+                                        " id=" + deltask.id).Append(";");
         }
         foreach (ratetask deltask in lstPrefixDelLike)
         {
@@ -4196,7 +4202,7 @@ public partial class ConfigRateTask : Page
 
             //update the status of the delete taks as well
             sbSqlCodeDel.Append(" update ratetask set changecommitted=1,status =1 where " +
-                                        " id=" + deltask.ChangedByTaskId).Append(";");
+                                        " id=" + deltask.id).Append(";");
         }
         foreach (ratetask deltask in lstPrefixDelAll)
         {
@@ -4229,9 +4235,34 @@ public partial class ConfigRateTask : Page
         List<ratetask> lstDeleteTasks = lstRateTask.Where(c => c.rateamount == "-1"
                                     && c.field2 == "0"//not having validation error
                                     ).ToList();
-        lstPrefixDelAll = lstDeleteTasks.Where(c => c.Prefix == "*").Select(c => new ratetask { Prefix = "*", startdate = c.startdate, ChangedByTaskId = c.id.ToString(), Category = c.Category, SubCategory = c.SubCategory }).ToList();
-        lstPrefixDelLike = lstDeleteTasks.Where(c => c.Prefix.EndsWith("*") && c.Prefix.Length > 1).Select(c => new ratetask { Prefix = c.Prefix.Split('*')[0], startdate = c.startdate, ChangedByTaskId = c.id.ToString(), Category = c.Category, SubCategory = c.SubCategory }).ToList();
-        lstPrefixDelSingle = lstDeleteTasks.Where(c => c.Prefix.Contains("*") == false).Select(c => new ratetask { Prefix = c.Prefix, startdate = c.startdate, ChangedByTaskId = c.id.ToString(), Category = c.Category, SubCategory = c.SubCategory }).ToList();
+        lstPrefixDelAll = lstDeleteTasks.Where(c => c.Prefix == "*").Select(c => new ratetask
+        {
+            Prefix = "*",
+            startdate = c.startdate,
+            ChangedByTaskId = c.id.ToString(),
+            Category = c.Category,
+            SubCategory = c.SubCategory,
+            id=c.id
+        }).ToList();
+        lstPrefixDelLike = lstDeleteTasks.Where(c => c.Prefix.EndsWith("*") && c.Prefix.Length > 1)
+            .Select(c => new ratetask
+            {
+                Prefix = c.Prefix.Split('*')[0],
+                startdate = c.startdate,
+                ChangedByTaskId = c.id.ToString(),
+                Category = c.Category,
+                SubCategory = c.SubCategory,
+                id = c.id
+            }).ToList();
+        lstPrefixDelSingle = lstDeleteTasks.Where(c => c.Prefix.Contains("*") == false).Select(c => new ratetask
+        {
+            Prefix = c.Prefix,
+            startdate = c.startdate,
+            ChangedByTaskId = c.id.ToString(),
+            Category = c.Category,
+            SubCategory = c.SubCategory,
+            id = c.id
+        }).ToList();
     }
     private static List<rate> GetRatesByRatePlan(int idRatePlan, int segmentSize)
     {

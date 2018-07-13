@@ -1283,7 +1283,7 @@ namespace RateSheetFormat
                     if (offsetDim1FirstRow < 0)
                         throw new Exception("Offset between vertical dimension & first row must be >=0");
                     int maxRowToScan = offsetDim1FirstRow <= 20 ? offsetDim1FirstRow+1 : (FirstRow + 19);
-                    for (i = FirstRow; i <= maxRowToScan && i <= Dim1; i++) //sampling over 20 rows will do
+                    for (i = FirstRow; i <= (i+maxRowToScan-1) && i <= Dim1; i++) //sampling over 20 rows will do
                     {
                         CellDataType? ThisColumnLike = (objArray[i, j] != null ? FindCellDataType(objArray[i, j].ToString(), DateFormats, ref DateSeparator) : CellDataType.NULL);
                         switch (ThisColumnLike)
