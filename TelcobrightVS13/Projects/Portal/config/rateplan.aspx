@@ -46,8 +46,7 @@ union all
             <asp:DropDownList ID="ddlistSupplierRatePlanType" runat="server" 
                 Enabled="true" AutoPostBack="false" 
                 DataSourceID="SqlDataservices1" DataTextField="servicename" 
-                DataValueField="id"
-                >
+                DataValueField="id">
             </asp:DropDownList>
 
 

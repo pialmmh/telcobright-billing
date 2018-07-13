@@ -1166,9 +1166,9 @@ public class MyExcel
                 int j = columnIndex;
                 int dim1 = objArray.GetLength(0);
                 int offsetDim1FirstRow = dim1 - FirstRow;
-                if (offsetDim1FirstRow <= 0)
+                if (offsetDim1FirstRow < 0)
                     throw new Exception("Offset between vertical dimension & first row must be >0");
-                int maxRowToScan = offsetDim1FirstRow<=20? offsetDim1FirstRow :(firstRow + 19);
+                int maxRowToScan = offsetDim1FirstRow<=20? offsetDim1FirstRow+1 :(firstRow + 19);
                 for (i = firstRow; i < maxRowToScan && i <= dim1; i++) //sampling over 20 rows will do
                 {
                     CellDataType? thisColumnLike = (objArray[i, j] != null
@@ -1226,7 +1226,7 @@ public class MyExcel
             catch (Exception e1)
             {
                 Console.WriteLine(e1);
-                return -1;
+                throw;
             }
         }
 

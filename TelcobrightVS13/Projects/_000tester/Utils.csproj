@@ -259,6 +259,10 @@
       <Project>{4282d6f4-efd2-418a-be9f-74f09b7a45d8}</Project>
       <Name>Models_Mediation</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PowerCollections\PowerCollections.csproj">
+      <Project>{5821977d-ac2c-4912-bcd0-6e6b1a756167}</Project>
+      <Name>PowerCollections</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>

@@ -17,7 +17,7 @@ namespace Utils
      
         static void Main(string[] args)
         {
-            var tester = new OrderByTester();
+            var tester = new LargelistTester();
             tester.Test();
             return;
             //tester.PerformanceTest();

@@ -1107,6 +1107,10 @@
       <Project>{4282d6f4-efd2-418a-be9f-74f09b7a45d8}</Project>
       <Name>Models_Mediation</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PowerCollections\PowerCollections.csproj">
+      <Project>{5821977d-ac2c-4912-bcd0-6e6b1a756167}</Project>
+      <Name>PowerCollections</Name>
+    </ProjectReference>
     <ProjectReference Include="..\_jcLCR\mefJcLCR.csproj">
       <Project>{a9564cf3-228c-4cc7-9a8b-4b518907305b}</Project>
       <Name>mefJcLCR</Name>

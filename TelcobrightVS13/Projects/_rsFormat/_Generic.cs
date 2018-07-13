@@ -306,38 +306,38 @@ namespace RateSheetFormat
 
 
                     //rather than handling intlout and in cases, try a generic method, based on importing with column header
-                    if (FirstRow == 2)//there is coumn header
-                    {
-                        Dictionary<int, string> dicCols = new Dictionary<int, string>();
-                        //if at least 2 value matches 2 column names then the first row contains the columnname
-                        int MatchedColumnCount = 0;
-                        List<string> ColNames = new List<string>();
-                        ColNames.Add("prefix");
-                        ColNames.Add("rateamount");
-                        for (int j = 1; j <= Dim2; j++)
-                        {
-                            string FldName = objArray[1, j].ToString().Trim().ToLower();
-                            if (FldName != "" && dicCols.ContainsValue(FldName) == false)
-                            {
-                                dicCols.Add(j, FldName);
-                            }
+                    //if (FirstRow == 2)//there is coumn header
+                    //{
+                    //    Dictionary<int, string> dicCols = new Dictionary<int, string>();
+                    //    //if at least 2 value matches 2 column names then the first row contains the columnname
+                    //    int MatchedColumnCount = 0;
+                    //    List<string> ColNames = new List<string>();
+                    //    ColNames.Add("prefix");
+                    //    ColNames.Add("rateamount");
+                    //    for (int j = 1; j <= Dim2; j++)
+                    //    {
+                    //        string FldName = objArray[1, j].ToString().Trim().ToLower();
+                    //        if (FldName != "" && dicCols.ContainsValue(FldName) == false)
+                    //        {
+                    //            dicCols.Add(j, FldName);
+                    //        }
 
-                            if (ColNames.Contains(objArray[1, j]))
-                            {
-                                MatchedColumnCount++;
-                            }
-                        }
-                        if (MatchedColumnCount >= 2)//first row contains heading
-                        {
-                            Exception e1 = null;
-                            lstRateTask = GetRateArrayByCol(ref objArray, dicCols, ref e1);
-                            if (e1 != null)
-                            {
-                                return e1.Message + "<br/>" + e1.InnerException.ToString();
-                            }
-                            return "";
-                        }
-                    }
+                    //        if (ColNames.Contains(objArray[1, j]))
+                    //        {
+                    //            MatchedColumnCount++;
+                    //        }
+                    //    }
+                    //    if (MatchedColumnCount >= 2)//first row contains heading
+                    //    {
+                    //        Exception e1 = null;
+                    //        lstRateTask = GetRateArrayByCol(ref objArray, dicCols, ref e1);
+                    //        if (e1 != null)
+                    //        {
+                    //            return e1.Message + "<br/>" + e1.InnerException.ToString();
+                    //        }
+                    //        return "";
+                    //    }
+                    //}
 
 
                     ImportTaskType ThisSheetType = ImportTaskType.RateChanges;
@@ -418,6 +418,7 @@ namespace RateSheetFormat
                         }
                         StringBuilder sbJson = new StringBuilder().Append("{ ").Append(string.Join(",", lstJson)).Append(" }");
                         ratetask Newtask = JsonConvert.DeserializeObject<ratetask>(sbJson.ToString());
+                        Newtask.Prefix = Newtask.Prefix.Trim();
                         lstRateTask.Add(Newtask);
                     }
                 }
@@ -1279,10 +1280,10 @@ namespace RateSheetFormat
                     int j = ColumnIndex;
                     int Dim1 = objArray.GetLength(0);
                     int offsetDim1FirstRow = Dim1 - FirstRow;
-                    if (offsetDim1FirstRow <= 0)
-                        throw new Exception("Offset between vertical dimension & first row must be >0");
-                    int maxRowToScan = offsetDim1FirstRow <= 20 ? offsetDim1FirstRow : (FirstRow + 19);
-                    for (i = FirstRow; i < maxRowToScan && i <= Dim1; i++) //sampling over 20 rows will do
+                    if (offsetDim1FirstRow < 0)
+                        throw new Exception("Offset between vertical dimension & first row must be >=0");
+                    int maxRowToScan = offsetDim1FirstRow <= 20 ? offsetDim1FirstRow+1 : (FirstRow + 19);
+                    for (i = FirstRow; i <= maxRowToScan && i <= Dim1; i++) //sampling over 20 rows will do
                     {
                         CellDataType? ThisColumnLike = (objArray[i, j] != null ? FindCellDataType(objArray[i, j].ToString(), DateFormats, ref DateSeparator) : CellDataType.NULL);
                         switch (ThisColumnLike)
@@ -1336,7 +1337,7 @@ namespace RateSheetFormat
                 }
                 catch (Exception e1)
                 {
-                    return -1;
+                    throw;
                 }
             }
 
@@ -1772,25 +1773,6 @@ namespace RateSheetFormat
                 {
 
                     TableData.FirstRow = FirstRow;
-                    if (VFormat == VendorFormat.GenericExcel || VFormat == VendorFormat.GenericText)
-                    {
-                        TableData.IndexPrefix1 = 1;
-                        TableData.IndexPrefix2 = -1;//can be present e.g. code update sheet of Tata
-                        TableData.IndexDescription = 2;
-                        TableData.IndexRate = 3;
-                        TableData.IndexPulse = 4;
-                        TableData.IndexMinDuration = 5;
-                        TableData.IndexCountryCode = 6;
-                        TableData.IndexCountryName = -1;
-                        TableData.IndexStartDate = 7;
-                        TableData.IndexEndDate = 8;
-                        TableData.IndexSurchargeTime = 9;
-                        TableData.IndexSurchargeAmount = 10;
-                        TableData.IndexServiceType = 11;
-                        TableData.IndexSubServiceType = 12;
-                        return "";
-                    }
-
                     //scan by each column to find charctristic of a column
                     int Dim2 = valueArray.GetLength(1);
                     List<int> PossDateColsIndex = new List<int>();
