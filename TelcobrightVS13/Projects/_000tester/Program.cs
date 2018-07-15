@@ -17,7 +17,7 @@ namespace Utils
      
         static void Main(string[] args)
         {
-            var tester = new LargelistTester();
+            var tester = new TaskTester();
             tester.Test();
             return;
             //tester.PerformanceTest();

@@ -171,6 +171,7 @@
     <Compile Include="SpelFluentTester.cs" />
     <Compile Include="SpelTester.cs" />
     <Compile Include="SpringValidator.cs" />
+    <Compile Include="TaskTester.cs" />
     <Compile Include="Testers\CastWithInterfaceTester.cs" />
     <Compile Include="Testers\Employees\FullTextSearchTester.cs" />
     <Compile Include="Testers\FractionCeilingTester.cs" />

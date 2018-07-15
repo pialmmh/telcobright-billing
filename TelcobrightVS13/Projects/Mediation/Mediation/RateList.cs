@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime;
 using System.Text;
 using LibraryExtensions;
 using MySql.Data.MySqlClient;
@@ -57,6 +58,8 @@ namespace TelcobrightMediation
 
             lstRatePlans = GetRatePlans();
 
+            var prevLatencyMode = GCSettings.LatencyMode;
+            GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
             List<Rateext> lstRates = new List<Rateext>();
             foreach (RateAssignWithTuple ratePlan in lstRatePlans)
             {
@@ -64,6 +67,7 @@ namespace TelcobrightMediation
                 List<Rateext> newrates = GetRatesByRatePlan(ratePlan,useInMemoryTable);
                 lstRates.AddRange(newrates.Select(newRate => this._rateContainer.Append(newRate)));
             }
+            GCSettings.LatencyMode = prevLatencyMode;
             //lstRates.OrderBy(c=>c.p)
             //obRates.obj = lstRates;
 

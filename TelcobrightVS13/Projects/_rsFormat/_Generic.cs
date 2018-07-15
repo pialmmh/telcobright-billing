@@ -352,9 +352,7 @@ namespace RateSheetFormat
 
                     TableData = new RateTableMetaData();
                     FindTableMetaData(ref objArray, ref TableData, FirstRow, VFormat, DateFormats, ref DateSeparator);
-
-
-
+                    
                     List<string[]> strLines = MultipleToSinglePrefixArray(ThisSheetType, ref objArray, TableData, DateFormats, ref DateSeparator);
                     if (strLines == null)
                     {

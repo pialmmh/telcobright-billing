@@ -139,15 +139,6 @@ namespace TelcobrightMediation
                 //order by prefix ascending and startdate descending
                 List<Rateext> rates = new List<Rateext>();
                 //todo: remove temp code
-                //lstRates = rateList.GetAllRates(useInMemoryTable).ToList();
-                //if (lstRates.Count>80000)
-                //{
-                //    JsonHelper.SerializeToFile(lstRates,@"c:\temp\rates.json");
-                //}
-                //lstRates = lstRates.OrderBy(c => c.Priority).ThenBy(c => c.Prefix).ThenByDescending(c => c.startdate).ToList();
-
-                //lstRates =lstRates.OrderBy(c => c.Priority).ThenBy(c => c.Prefix).ThenByDescending(c => c.P_Startdate).ToList();
-                //end
                 //todo: uncomment original codes
                 //lstRates = rateList.GetAllRates(useInMemoryTable).ToList()
                 //    .OrderBy(c => c.Priority).ThenBy(c => c.Prefix).ThenByDescending(c => c.P_Startdate).ToList();

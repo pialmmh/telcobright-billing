@@ -202,12 +202,13 @@ public partial class ConfigBatcJob : System.Web.UI.Page
             this.DropDownListFieldList.Items.Clear();
             // deserialize JSON directly from a file
             var fieldTemplates = new List<CdrFieldTemplate>();
-            var jArray = (JArray)tbc.PortalSettings.DicConfigObjects["CdrFieldTemplate"];
-            foreach (JObject obj in jArray)
+            var cdrFieldTemplates = (List<CdrFieldTemplate>)tbc.PortalSettings.DicConfigObjects["CdrFieldTemplate"];
+            foreach (CdrFieldTemplate template in cdrFieldTemplates)
             {
-                CdrFieldTemplate cf = obj.ToObject<CdrFieldTemplate>();
-                fieldTemplates.Add(cf);
-                this.DropDownListFieldList.Items.Add(new ListItem(cf.FieldTemplateName, cf.FieldTemplateName));
+                //CdrFieldTemplate cf = template.ToObject<CdrFieldTemplate>();
+                fieldTemplates.Add(template);
+                this.DropDownListFieldList.Items.Add(
+                    new ListItem(template.FieldTemplateName, template.FieldTemplateName));
             }
             this.Session["cdrfieldtemplate"] = fieldTemplates;
 
