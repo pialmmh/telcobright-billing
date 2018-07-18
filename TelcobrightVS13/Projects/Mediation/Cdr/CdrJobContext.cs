@@ -77,7 +77,8 @@ namespace TelcobrightMediation
                                 var dateRange = new DateRange(d.Date, d.AddDays(1));
                                 if (rateCache.DateRangeWiseRateDic.ContainsKey(dateRange) == false)
                                     this.MediationContext.MefServiceFamilyContainer.RateCache
-                                        .PopulateDicByDay(dateRange, flagLcr: false, useInMemoryTable: true);
+                                        .PopulateDicByDay(dateRange, flagLcr: false, useInMemoryTable: true,
+                                            isCachingForMediation: true);
                             });
         }
 

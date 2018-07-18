@@ -128,6 +128,15 @@ namespace TelcobrightMediation.Cdr
                         this.IncrementalTransactions.Add(incTrans);
                     }
                 }
+                var incrementalAmount =
+                    newCdrExt.AccWiseTransactionContainers.Values.Sum(t => t.IncrementalTransaction.amount);
+                decimal? oldAmount = oldCdrExt?.AccWiseTransactionContainers.Values
+                    .SelectMany(t => t.OldTransactions).Sum(t => t.amount);
+                if (incrementalAmount+Convert.ToDecimal(oldAmount) != newCdrExt.Cdr.TransactionMetaTotal)
+                {
+                    throw new Exception($@"Transaction meta total does not match incremental transtions
+                                        and old cdrs sum.");
+                }
             });
         }
 

@@ -3,29 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime;
 using System.Text;
+using System.Threading.Tasks;
 using LibraryExtensions;
 using MySql.Data.MySqlClient;
 using MediationModel;
 namespace TelcobrightMediation
 {
-
-    public class RateAssignWithTuple
-    {
-        public DateRange IntersectingDateSpan = null;
-        public rateassign Rassign = null;
-        public RateTuple RTup = null;
-    }
-
-    //public class idVsDateRange : idVsDateRange
-    //{
-    //    public int Priority = 0;
-    //    public int PartnerAssignable = 0;
-    //    public long idInRateAssignTbl = 0;
-    //}
-
-
     class RateList
     {
+        public bool IsCachingForMediation { get; set; } = false;
+        public static bool IsRatePlanWiseRateCacheInitialized { get; set; } = false;
+        static Dictionary<long, List<Rateext>> RatePlanWiseCachedRatesForMediation { get; set; } =
+            new Dictionary<long, List<Rateext>>();
         RateTuple _rTup = null;
         string _prefix = "-1";
         string _description = "";
@@ -34,6 +23,7 @@ namespace TelcobrightMediation
         RateChangeType _changeType = RateChangeType.All;
         private PartnerEntities  Context { get; }
         RateContainerInMemoryLocal _rateContainer = null;
+        
         public RateList(//constructor
             RateTuple pRtup,
             string pPrefix,
@@ -55,7 +45,6 @@ namespace TelcobrightMediation
         public List<Rateext> GetAllRates(bool useInMemoryTable)
         {
             List<RateAssignWithTuple> lstRatePlans = new List<RateAssignWithTuple>();
-
             lstRatePlans = GetRatePlans();
 
             var prevLatencyMode = GCSettings.LatencyMode;
@@ -74,7 +63,6 @@ namespace TelcobrightMediation
 
             return lstRates;
         }
-
 
         List<RateAssignWithTuple> GetRatePlans()
         {
@@ -136,45 +124,62 @@ namespace TelcobrightMediation
 
             return lstRatePlan;
         }
-
-        List<Rateext> GetRatesByRatePlan(RateAssignWithTuple ratePlan,bool useInMemoryTable)
+        private static int GetIdRatePlanFromAssignmentTuple(RateAssignWithTuple rateAssignWithTuple)
         {
+            int idRatePlan = -1;
+            if (rateAssignWithTuple.RTup.IdRatePlan >= 1) //by single rateplan
+            {
+                idRatePlan = Convert.ToInt32(rateAssignWithTuple.RTup.IdRatePlan);
+            }
+            else //by assignment tuple
+            {
+                idRatePlan = rateAssignWithTuple.Rassign.Inactive;
+            }
+
+            return idRatePlan;
+        }
+        List<Rateext> GetRatesByRatePlan(RateAssignWithTuple rateAssignWithTuple,bool useInMemoryTable)
+        {
+            if (IsRatePlanWiseRateCacheInitialized == true)
+            {
+                return GetRatesFromLocalCache(rateAssignWithTuple);
+            }
             List<Rateext> lstRates = new List<Rateext>();
             StringBuilder sbRate = new StringBuilder();
 
             string strOpenRatePlan = "";
-            if (ratePlan.Rassign == null)
+            if (rateAssignWithTuple.Rassign == null)
             {
                 strOpenRatePlan = " (select -2) as OpenRateAssignment  "; //any value except 1, for rateplan based query
             }
             else
             {
-                strOpenRatePlan = " (select " + (ratePlan.Rassign.enddate == null ? "1" : "0") +
+                strOpenRatePlan = " (select " + (rateAssignWithTuple.Rassign.enddate == null ? "1" : "0") +
                                   ") as OpenRateAssignment  ";
             }
 
             string strEndDateByRatePlan = "";
 
-            if (ratePlan.Rassign == null || ratePlan.Rassign.enddate == null)
+            if (rateAssignWithTuple.Rassign == null || rateAssignWithTuple.Rassign.enddate == null)
             {
                 strEndDateByRatePlan = " (select null) ";
             }
             else
             {
-                strEndDateByRatePlan = " (select '" + Convert.ToDateTime(ratePlan.Rassign.enddate)
+                strEndDateByRatePlan = " (select '" + Convert.ToDateTime(rateAssignWithTuple.Rassign.enddate)
                                            .ToString("yyyy-MM-dd HH:mm:ss") + "') ";
             }
             strEndDateByRatePlan += " as enddatebyrateplan, ";
 
             string strStartDateByRatePlan = "";
 
-            if (ratePlan.Rassign == null || ratePlan.Rassign.startdate == null)
+            if (rateAssignWithTuple.Rassign == null || rateAssignWithTuple.Rassign.startdate == null)
             {
                 strStartDateByRatePlan = " (select null) ";
             }
             else
             {
-                strStartDateByRatePlan = " (select '" + Convert.ToDateTime(ratePlan.Rassign.startdate)
+                strStartDateByRatePlan = " (select '" + Convert.ToDateTime(rateAssignWithTuple.Rassign.startdate)
                                              .ToString("yyyy-MM-dd HH:mm:ss") + "') ";
             }
             strStartDateByRatePlan += " as startdatebyrateplan, ";
@@ -183,28 +188,31 @@ namespace TelcobrightMediation
             string rateTableNameBaseOnInMemoryFlag = useInMemoryTable == true ? "temp_rate" : "rate";
 
             sbRate.Append(" select r.*,(select " +
-                          (ratePlan.RTup.Priority == null ? " null " : ratePlan.RTup.Priority.ToString()) +
+                          (rateAssignWithTuple.RTup.Priority == null ? " null " : rateAssignWithTuple.RTup.Priority.ToString()) +
                           ") as priority, " +
                           //" (select '" + RatePlan.rassign.startdate.ToString("yyyy-MM-dd HH:mm:ss") + "') as startdatebyrateplan, " +
                           strStartDateByRatePlan +
                           strEndDateByRatePlan +
-                          " (select " + (ratePlan.RTup.IdRatePlan > 0 ? "0" : "1") + ") as AssignmentFlag, " +
-                          " (select " + (ratePlan.RTup.IdPartner == null ? "-1" : ratePlan.RTup.IdPartner.ToString()) +
+                          " (select " + (rateAssignWithTuple.RTup.IdRatePlan > 0 ? "0" : "1") + ") as AssignmentFlag, " +
+                          " (select " + (rateAssignWithTuple.RTup.IdPartner == null ? "-1" : rateAssignWithTuple.RTup.IdPartner.ToString()) +
                           ") as idPartner, " +
-                          " (select " + (ratePlan.RTup.IdRoute == null ? "-1" : ratePlan.RTup.IdRoute.ToString()) +
+                          " (select " + (rateAssignWithTuple.RTup.IdRoute == null ? "-1" : rateAssignWithTuple.RTup.IdRoute.ToString()) +
                           ") as idRoute, " +
                           strOpenRatePlan +
                           $@" from {rateTableNameBaseOnInMemoryFlag} r where ")
-                .Append(ratePlan.IntersectingDateSpan.GetWhereExpressionRates("startdate", "enddate"));
+                .Append(rateAssignWithTuple.IntersectingDateSpan.GetWhereExpressionRates("startdate", "enddate"));
 
-            if (ratePlan.RTup.IdRatePlan >= 1) //by single rateplan
+            if (this.IsCachingForMediation == false)//e.g. from portal rate query
             {
-                sbRate.Append(" and idrateplan= " + ratePlan.RTup.IdRatePlan + " ");
-            }
-            else //by assignment tuple
-            {
-                sbRate.Append(" and idrateplan= " + ratePlan.Rassign.Inactive +
-                              " "); //inactive is the idrateplan in rateassigntable
+                if (rateAssignWithTuple.RTup.IdRatePlan >= 1) //by single rateplan
+                {
+                    sbRate.Append(" and idrateplan= " + rateAssignWithTuple.RTup.IdRatePlan + " ");
+                }
+                else //by assignment tuple
+                {
+                    sbRate.Append(" and idrateplan= " + rateAssignWithTuple.Rassign.Inactive +
+                                  " "); //inactive is the idrateplan in rateassigntable
+                }
             }
             if (this._prefix.Trim() != "")
             {
@@ -230,8 +238,66 @@ namespace TelcobrightMediation
                 " select case when crt.type is not null then crt.type else crp.type end as pcurrency, rp.field4 as TechPrefix,x.* from( " +
                 sbRate.ToString() +
                 " ) x left join rateplan rp on x.idrateplan=rp.id left join enumcurrency crt on x.currency=crt.id left join enumcurrency crp on rp.currency=crp.id";
-            lstRates = this.Context.Database.SqlQuery<Rateext>(sql,typeof(Rateext)).ToList();
-            return lstRates;
+            if (this.IsCachingForMediation == false)//from portal
+            {
+                lstRates = this.Context.Database.SqlQuery<Rateext>(sql, typeof(Rateext)).ToList();
+                return lstRates;
+            }
+            else
+            {
+                if (IsRatePlanWiseRateCacheInitialized == false)
+                {
+                    RatePlanWiseCachedRatesForMediation = BuildRatePlanWiseLocalRateCache(sql, 500000);
+                    IsRatePlanWiseRateCacheInitialized = true;
+                }
+                return GetRatesFromLocalCache(rateAssignWithTuple);
+            }
+        }
+
+        private List<Rateext> GetRatesFromLocalCache(RateAssignWithTuple rateAssignWithTuple)
+        {
+            List<Rateext> rates = null;
+            int idRatePlan = GetIdRatePlanFromAssignmentTuple(rateAssignWithTuple);
+            RatePlanWiseCachedRatesForMediation.TryGetValue(idRatePlan, out rates);
+            if (rates == null)
+            {
+                return new List<Rateext>();
+            }
+            else
+            {
+                return rates;
+            }
+        }
+
+        private Dictionary<long, List<Rateext>> BuildRatePlanWiseLocalRateCache(string sql,int segmentSize)
+        {
+            List<Rateext> rates = new List<Rateext>();
+            int startLimit = 0;
+            bool rateExists = true;
+            var prevGcLatencyMode = GCSettings.LatencyMode;
+            GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
+            while (rateExists)
+            {
+                //GC.TryStartNoGCRegion(250 * 1000 * 1000);
+                var sqlWithOrderBy = sql.Replace(" ) x", $" order by r.id limit {startLimit},{segmentSize} ) x");
+                var rateSegment = this.Context.Database.SqlQuery<Rateext>
+                    (sqlWithOrderBy).ToList();
+                if (rateSegment.Any())
+                {
+                    rates.AddRange(rateSegment);
+                    startLimit += segmentSize;
+                }
+                else
+                {
+                    rateExists = false;
+                }
+                //GC.EndNoGCRegion();
+            }
+            GCSettings.LatencyMode = prevGcLatencyMode;
+            Dictionary<long, List<Rateext>> ratePlanWiseRates =
+                rates.Where(r=>r.idrateplan!=null)
+                .GroupBy(r => (long)r.idrateplan).ToDictionary(g => g.Key, g => g.ToList());
+            return ratePlanWiseRates;
         }
     }
 }

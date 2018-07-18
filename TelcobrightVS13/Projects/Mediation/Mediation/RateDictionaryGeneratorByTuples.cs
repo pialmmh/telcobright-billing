@@ -64,9 +64,8 @@ namespace TelcobrightMediation
             this.Context=context;
             this._rateContainer = rateContainer;
         }
-        public Dictionary<TupleByPeriod, List<Rateext>> GetRateDict(bool useInMemoryTable)
+        public Dictionary<TupleByPeriod, List<Rateext>> GetRateDict(bool useInMemoryTable,bool isCachingForMediation)
         {
-
             if (this.IdService < 1)//service must be selected
             {
                 throw new Exception("No service selected!");
@@ -135,7 +134,7 @@ namespace TelcobrightMediation
                 RateList rateList = new RateList(rt, this.Prefix, this.Description, this.ChangeType, this.Category,
                     this.SubCategory,
                     this.Context, this._rateContainer);
-
+                rateList.IsCachingForMediation = isCachingForMediation;
                 //order by prefix ascending and startdate descending
                 List<Rateext> rates = new List<Rateext>();
                 //todo: remove temp code
@@ -151,7 +150,6 @@ namespace TelcobrightMediation
                 //end uncommend
                 this._dicTupRates.Add(rt, rates);
             }
-
             //each tuple actually contains idrateplanassignment value
             //convert the dictionary to something simpler
             Dictionary<TupleByPeriod,List<Rateext>> dicReturn=new Dictionary<TupleByPeriod,List<Rateext>>();

@@ -17,7 +17,7 @@ namespace Utils
      
         static void Main(string[] args)
         {
-            var tester = new TaskTester();
+            var tester = new ParallelReaderToEntityTester();
             tester.Test();
             return;
             //tester.PerformanceTest();

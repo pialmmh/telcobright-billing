@@ -100,7 +100,7 @@ select (select 1) as id,(select 'Yes') as Type "
     <br />
     
 
-    <div style="min-width:1500px;min-height:100px;background-color:#f2f2f2;padding-left:10px;margin-bottom:5px;padding-top:5px;margin-top:3px;">
+    <div style="min-width:1500px;min-height:100px;background-color:#f2f2f2;padding-left:10px;margin-bottom:0px;padding-top:5px;margin-top:3px;">
     <div style="color:Black;">Create or Import New Rate Task
        <span style="padding-left:5px;"> <asp:CheckBox ID="CheckBoxAutoConvertTZ" runat="server" Text="Auto Adjust effective Date/Time for New/Import Task" Checked="true"></asp:CheckBox></span>
         <span style="padding-left:5px;"> <asp:CheckBox ID="CheckBoxAutoDetectCountry" runat="server" Text="Auto Detect Country Code" Checked="true"></asp:CheckBox></span>
@@ -505,7 +505,7 @@ select (select 1) as id,(select 'Yes') as Type "
     
         </div>
 
-     <div style="background-color:#F7F6F3;margin-top:4px;padding-left:20px;">
+     <div style="background-color:#F7F6F3;margin-top:0px;padding-left:20px;">
         
         <div style="width:900px;height:5px;"></div>
         <div style="height:24px;border-style:ridge;width:1500px;margin-left:-10px;padding-top:2.5px;background-color:#f2f2f2;color:Black;">

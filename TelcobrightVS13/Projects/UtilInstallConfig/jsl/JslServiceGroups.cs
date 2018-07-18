@@ -68,12 +68,12 @@ namespace InstallConfig
                     new List<IValidationRule<cdr>>()
                     {
                         new DurationSecGtEq0(),
-                        new CountryCodeNotEmpty(),
                         new OutgoingRouteNotEmpty(),
                         new InPartnerIdGt0(),
                         new OutPartnerIdGt0(),
                         new ServiceGroupGt0(),
                         new MatchedPrefixYNotempty(),
+                        new CountryCodeNotEmpty(),
                         new RevIcxOutNot0() {Data = .1M},
                         new BtrcRevShareTax2Gt0(){Data = .1M},
                         new XAmountGt0(){Data = .1M},

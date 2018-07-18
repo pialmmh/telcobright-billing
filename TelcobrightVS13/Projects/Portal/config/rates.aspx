@@ -335,7 +335,7 @@ union all
 
 <asp:Label ID="lblRateGlobal" runat="server" Text="" Visible="false"></asp:Label>
 
- <div id="ParamBorder" style="margin-top:-35px;float:left;padding-top:0px;padding-left:0px;height:205px;display:block;border:2px ridge #E5E4E2;margin-bottom:5px;width:1500px;">
+ <div id="ParamBorder" style="margin-top:-35px;float:left;padding-top:0px;padding-left:0px;height:197px;display:block;border:2px ridge #E5E4E2;margin-bottom:5px;width:1500px;">
     <%--  --%>
     <%--<div style="margin-left:10px;float:left;left:0px;font-weight:bold;margin-top:2px;margin-right:20px;color:Black;clear:both;"> Rates</div>--%>
 
@@ -532,7 +532,7 @@ union all
                 </ContentTemplate>
           </asp:UpdatePanel>
        
-       <div id="PartnerFilter" style="height:100px;margin-bottom:5px;padding-top:5px; width:1285px; margin-top:5px;margin-left:0px;float:left;padding-left:5px;background-color:#F7F6F3;">
+       <div id="PartnerFilter" style="height:100px;margin-bottom:5px;padding-top:0px; width:1285px; margin-top:0px;margin-left:0px;float:left;padding-left:5px;background-color:#F7F6F3;">
            
         
         <asp:UpdatePanel ID="UpdatePanel1" runat="server">

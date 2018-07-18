@@ -106,7 +106,8 @@ namespace TelcobrightMediation
         {
             //TupleByPeriod=one rateplanassignmenttuple on the day of answertime
             Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>> dicRatesByDay
-                = this.ServiceContext.MefServiceFamilyContainer.RateCache.GetRateDictsByDay(tup.DRange, flagLcr, useInMemoryTable);
+                = this.ServiceContext.MefServiceFamilyContainer.RateCache.GetRateDictsByDay(tup.DRange, flagLcr,
+                    useInMemoryTable, isCachingForMediation: true);
             Dictionary<string, List<Rateext>> dicRatesByPrefix = null;
             if (dicRatesByDay != null)
             {

@@ -214,6 +214,7 @@
     <Compile Include="Enums\PartnerRuletype.cs" />
     <Compile Include="Enums\RouteLocalityType.cs" />
     <Compile Include="Enums\ServiceFamilyType.cs" />
+    <Compile Include="Mediation\RateAssignWithTuple.cs" />
     <Compile Include="Mediation\RateContainerInMemoryLocal.cs" />
     <Compile Include="Mediation\RateDictionaryGeneratorByTuples.cs" />
     <Compile Include="MefData\ICdrRule.cs" />
