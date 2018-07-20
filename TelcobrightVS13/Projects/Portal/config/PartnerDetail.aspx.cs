@@ -351,7 +351,11 @@ public partial class ConfigPartnerDetail : System.Web.UI.Page
             //1=international
             //2=national
             //3=N/A
-            txtNatOrInt.Text = "1";
+            if (txtNatOrInt!=null)
+            {
+                txtNatOrInt.Text = "1";
+            }
+            
 
         }
 

@@ -46,8 +46,7 @@ union all
             <asp:DropDownList ID="ddlistSupplierRatePlanType" runat="server" 
                 Enabled="true" AutoPostBack="false" 
                 DataSourceID="SqlDataservices1" DataTextField="servicename" 
-                DataValueField="id"
-                >
+                DataValueField="id">
             </asp:DropDownList>
 
 
@@ -471,9 +470,7 @@ order by Type "
                 <EditItemTemplate>
                     <asp:DropDownList ID="DropDownListCurrency" runat="server" SelectedValue='<%# Bind("Currency") %>'
                         Enabled="false" >
-                        <asp:ListItem Value="1">USD</asp:ListItem>
-                        <asp:ListItem Value="2">BDT</asp:ListItem>
-                        <asp:ListItem Value="3">USD+BDT</asp:ListItem>
+                        
                     </asp:DropDownList>
                 </EditItemTemplate>
                 

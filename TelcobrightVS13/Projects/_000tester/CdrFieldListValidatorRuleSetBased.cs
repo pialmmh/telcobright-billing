@@ -1,4 +1,5 @@
 using FluentValidation;
+using MediationModel;
 
 namespace Utils
 {

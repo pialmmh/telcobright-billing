@@ -21,7 +21,7 @@ namespace UnitTesterManual
             if (input.TelcobrightJob.Status != 2) //prepare job if not prepared already
                 segmentedCdrErrorProcessor.PrepareSegments();
             List<jobsegment> jobsegments = segmentedCdrErrorProcessor.ExecuteIncompleteSegments();
-            segmentedCdrErrorProcessor.FinishJob(jobsegments); //mark job as complete
+            segmentedCdrErrorProcessor.FinishJob(jobsegments,null); //mark job as complete
             return JobCompletionStatus.Complete;
         }
     }

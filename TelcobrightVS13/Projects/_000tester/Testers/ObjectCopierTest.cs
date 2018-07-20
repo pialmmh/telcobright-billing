@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LibraryExtensions;
+using MediationModel;
 using Spring.Expressions;
 
 namespace Utils.Testers
@@ -32,9 +33,9 @@ namespace Utils.Testers
             {
                 SwitchId = 1,
                 SequenceNumber = 1001,
-                CustomerID = 99,
+                InPartnerId = 99,
                 StartTime = DateTime.Now,
-                CustomerCost = Convert.ToDouble(".2133333333333333333")
+                InPartnerCost = Convert.ToDecimal(".2133333333333333333")
             };
             
             TestExecTimeByNativeCode();
@@ -49,9 +50,9 @@ namespace Utils.Testers
             {
                 NewObject.SwitchId = OldObject.SwitchId;
                 NewObject.SequenceNumber = OldObject.SequenceNumber;
-                NewObject.CustomerID = OldObject.CustomerID;
+                NewObject.InPartnerId = OldObject.InPartnerId;
                 NewObject.StartTime = OldObject.StartTime;
-                NewObject.CustomerCost = OldObject.CustomerCost;
+                NewObject.InPartnerCost = OldObject.InPartnerCost;
             }
             var end = DateTime.Now;
             var elapsedTime = (end - start).TotalMilliseconds;

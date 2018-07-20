@@ -52,12 +52,14 @@ namespace Process
                 using (PartnerEntities context=new PartnerEntities(entityConStr))
                 {
                     var connection = context.Database.Connection;
-                    if(connection.State!=ConnectionState.Open) connection.Open();
+                    connection.Open();
+                    List<job> jobs=new List<job>();
                     foreach (string fileName in fileNames)
                     {
                         try
                         {
-                            FileUtil.CreateFileCopyJob(tbc, syncPair.Name, fileName, context);
+                            var fileCopyJob = FileUtil.CreateFileCopyJob(tbc, syncPair.Name, fileName, context);
+                            if(fileCopyJob!=null) jobs.Add(fileCopyJob);
                         }
                         catch (Exception e1)
                         {
@@ -66,6 +68,7 @@ namespace Process
                             continue; //with next file
                         }
                     }
+                    FileUtil.WriteFileCopyJobMultiple(jobs, context);
                 }
             }
             catch (Exception e1)

@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using FlexValidation;
 using LibraryExtensions;
+using MediationModel;
 using Spring.Context;
 using Spring.Context.Support;
 using Spring.Core.TypeResolution;

@@ -21,8 +21,7 @@ namespace TelcobrightMediation.Cdr
     public class CdrExt
     {
         public int NewRawCount => this.Cdr.PartialFlag == 0 ? 1 : this.PartialCdrContainer.NewRawInstances.Count;
-        private PartialCdrContainer _partialCdrContainer;
-        private readonly List<acc_transaction> _reversedTransactions = new List<acc_transaction>();
+        private PartialCdrContainer partialCdrContainer;
         public CdrNewOldType CdrNewOldType { get; }
         public string UniqueBillId => this.Cdr.UniqueBillId;
         public long IdCall => this.Cdr.IdCall;
@@ -50,7 +49,7 @@ namespace TelcobrightMediation.Cdr
                 {
                     throw new Exception("Property PartialCdrContainer cannot be used for non partial cdrs.");
                 }
-                return this._partialCdrContainer;
+                return this.partialCdrContainer;
             }
             set
             {
@@ -62,7 +61,7 @@ namespace TelcobrightMediation.Cdr
                 {
                     throw new Exception("Property PartialCdrContainer cannot be set for non partial cdrs.");
                 }
-                this._partialCdrContainer = value;
+                this.partialCdrContainer = value;
             }
         }
 

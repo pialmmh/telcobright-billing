@@ -41,7 +41,9 @@ namespace InstallConfig
                         {
                             new DurationSecGtEq0(),
                             new OutgoingRouteNotEmpty(),
+                            new InPartnerIdGt0(),
                             new OutPartnerIdGt0(),
+                            new ServiceGroupGt0(),
                             new CountryCodeNotEmpty(),
                             new MatchedPrefixCustomerNotEmpty(),
                             new InPartnerCostGt0() {Data = 0M},
@@ -70,7 +72,9 @@ namespace InstallConfig
                         {
                             new DurationSecGtEq0(),
                             new CountryCodeNotEmpty(),
-                            new OutgoingRouteNotEmpty(),
+                            new InPartnerIdGt0(),
+                            new OutPartnerIdGt0(),
+                            new ServiceGroupGt0(),
                             new OutPartnerIdGt0(),
                             new MatchedPrefixYNotempty(),
                             new MatchedPrefixSupplierNotEmpty(),

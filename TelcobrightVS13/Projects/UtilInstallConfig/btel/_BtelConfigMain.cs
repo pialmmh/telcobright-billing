@@ -32,38 +32,38 @@ namespace InstallConfig
         {
             if (string.IsNullOrWhiteSpace(this.OperatorName))
                 throw new Exception("Operator name not configured in Config Generator");
+
             CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
-            CommonCdrValRulesGen commonCdrValRulesGen=
+            CommonCdrValRulesGen commonCdrValRulesGen =
                 new CommonCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
             InconsistentCdrValRulesGen inconsistentCdrValRulesGen =
                 new InconsistentCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
-            this.Tbc.CdrSetting = new CdrSetting()
+            this.Tbc.CdrSetting = new CdrSetting
             {
                 SummaryTimeField = SummaryTimeFieldEnum.StartTime,
-                PartialCdrEnabledNeIds =new List<int>(),
+                PartialCdrEnabledNeIds = new List<int>() { 3 },
+                PartialCdrFlagIndicators = new List<string>() { "1", "2", "3" },
                 DescendingOrderWhileListingFiles = false,
                 DescendingOrderWhileProcessingListedFiles = false,
-                ValidationRulesForInconsistentCdrs = inconsistentCdrValRulesGen.GetRules(),
                 ValidationRulesForCommonMediationCheck = commonCdrValRulesGen.GetRules(),
+                ValidationRulesForInconsistentCdrs = inconsistentCdrValRulesGen.GetRules(),
                 ServiceGroupConfigurations = this.GetServiceGroupConfigurations(),
-                DisableCdrPostProcessingJobCreationForAutomation = true    
+                DisableCdrPostProcessingJobCreationForAutomation = false
             };
-            
+
             this.PrepareDirectorySetting(this.Tbc);
 
             this.PrepareProductAndServiceSettings();
-            
+
             this.PrepareAppServerSettings();
 
             DatabaseSetting databaseSetting = schedulerDatabaseSetting.GetCopy();
             databaseSetting.DatabaseName = this.OperatorName;//change dbname here if required
             this.Tbc.DatabaseSetting = databaseSetting;
+
             this.Tbc.PortalSettings = GetPortalSettings(this.Tbc);
-            
-            //automation has a interface instanciation issue with json, fix it.
-            //this.Tbc.AutomationSetting = GetAutomationSetting();            
             return this.Tbc;
         }
-        
+
     }
 }

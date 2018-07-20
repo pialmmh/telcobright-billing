@@ -77,15 +77,15 @@ namespace TelcobrightFileOperations
             //context.SaveChanges();
         }
 
-        public static long CreateFileCopyJob(TelcobrightConfig tbc, string syncPairName, string fileName,PartnerEntities context)
+        public static job CreateFileCopyJob(TelcobrightConfig tbc, string syncPairName, string fileName,PartnerEntities context)
         {
             //returns job id
             SyncPair syncPair = tbc.DirectorySettings.SyncPairs[syncPairName];
             SyncLocation srcLocation = syncPair.SrcSyncLocation;
             SyncLocation dstLocation = syncPair.DstSyncLocation;
             int priority = context.enumjobdefinitions.Where(c => c.id == 6).First().Priority;
-            job newJob = null;
-            newJob = new job();
+            job fileCopyJob = null;
+            fileCopyJob = new job();
             JobParamFileCopy copyParam = new JobParamFileCopy()
             {
                 //relative path processing
@@ -93,41 +93,82 @@ namespace TelcobrightFileOperations
                 SyncPairName = syncPair.Name
             };
 
-            newJob.idNE = 0;
-            newJob.idjobdefinition = 6;
-            newJob.JobName = syncPair.Name + "-" + copyParam.RelativeFileName;
-            if (context.jobs.Any(c => c.idjobdefinition == 6 && c.JobName == newJob.JobName) == true)
+            fileCopyJob.idNE = 0;
+            fileCopyJob.idjobdefinition = 6;
+            fileCopyJob.JobName = syncPair.Name + "-" + copyParam.RelativeFileName;
+            if (context.jobs.Any(c => c.idjobdefinition == 6 && c.JobName == fileCopyJob.JobName) == true)
             {
                 //exists
-                return -1;
+                return null;
             }
-            newJob.Status = 6; //created
-            newJob.priority = priority;
+            fileCopyJob.Status = 6; //created
+            fileCopyJob.priority = priority;
             //newJob.OwnerServer = tbc.thisServerId;
-            newJob.JobParameter = JsonConvert.SerializeObject(copyParam);
+            fileCopyJob.JobParameter = JsonConvert.SerializeObject(copyParam);
             //context.jobs.Add(newJob);
-            newJob.CreationTime = DateTime.Now;
-            DbCommand command = context.Database.Connection.CreateCommand();
-            command.CommandText=
+            fileCopyJob.CreationTime = DateTime.Now;
+            return fileCopyJob;
+        }
+        public static long WriteFileCopyJobSingle(job newJob, DbConnection connection)
+        {
+            DbCommand command = connection.CreateCommand();
+            command.CommandText =
                 newJob.GetExtInsertCustom(
-                    j=>new StringBuilder($@"insert into job(idne,idjobdefinition,jobname,status,priority,jobparameter,creationtime) 
+                    j => new StringBuilder($@"insert into job(idne,idjobdefinition,jobname,status,priority,jobparameter,creationtime) 
                                             values(
                                             {newJob.idNE},{newJob.idjobdefinition},'{newJob.JobName}'
                                             ,{newJob.Status},{newJob.priority},'{newJob.JobParameter}'
                                             ,{newJob.CreationTime.ToMySqlField()})"
-                                        ).ToString()).ToString();
+                    ).ToString()).ToString();
             command.ExecuteNonQuery();
-            //context.jobs.Add(newJob);
-            //context.SaveChanges(); //canot implement segment because 2 parallel server, have to thoughout later                                }
-            //get the id of the new job
-            //return context.jobs.Where(c => c.idjobdefinition == newJob.idjobdefinition
-            //                             && c.JobName == newJob.JobName).First().id;
             command.CommandText = $@"select id from job where idjobdefinition={newJob.idjobdefinition}
                                      and jobname='{newJob.JobName}' ";
             long insertedJobsid = (long)command.ExecuteScalar();
             return insertedJobsid;
         }
-
+        public static long WriteFileCopyJobMultiple(List<job> newJobs, PartnerEntities context)
+        {
+            if (!newJobs.Any()) return 0;
+            int insertedRecordCount = 0;
+            CollectionSegmenter<job> segments=new CollectionSegmenter<job>(newJobs,0);
+            DbCommand command = context.Database.Connection.CreateCommand();
+            try
+            {
+                command.CommandText = "set autocommit=0;";
+                command.ExecuteNonQuery();
+                int segmentSize = 10000;
+                segments.ExecuteMethodInSegments(segmentSize,
+                    segment =>
+                    {
+                        int segmentCount = segment.Count();
+                        string extInsertHeader = 
+                            $@"insert into job(idne,idjobdefinition,jobname,status,priority,jobparameter,creationtime) values ";
+                                            
+                        List<string> sqlsExtValues = segment.AsParallel().Select(j =>
+                            j.GetExtInsertCustom(
+                                newJob => new StringBuilder($@"(
+                                    {newJob.idNE},{newJob.idjobdefinition},'{newJob.JobName}'
+                                    ,{newJob.Status},{newJob.priority},'{newJob.JobParameter}'
+                                    ,{newJob.CreationTime.ToMySqlField()})"
+                                ).ToString()).ToString()
+                        ).ToList();
+                        command.CommandText=new StringBuilder(extInsertHeader)
+                            .Append(string.Join(",",sqlsExtValues)).ToString();
+                        insertedRecordCount += command.ExecuteNonQuery();
+                    });
+                if (insertedRecordCount != newJobs.Count)
+                    throw new Exception("Affected record count does not match expected count.");
+                command.CommandText = "commit;";
+                command.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                command.CommandText = "rollback;";
+                command.ExecuteNonQuery();
+                throw;
+            }
+            return insertedRecordCount;
+        }
         public static void AddDirectorySecurity(string fileName, string account, FileSystemRights rights,
             AccessControlType controlType)
         {

@@ -53,7 +53,7 @@ namespace TelcobrightMediation
 
 		public void Mediate()
 		{
-			int maxDegreeOfParallelism = -1; //-1=no thread limitation
+            int maxDegreeOfParallelism = -1; //-1=no thread limitation
 			Parallel.ForEach(this.NewCdrExts, new ParallelOptions() {MaxDegreeOfParallelism = maxDegreeOfParallelism},
 				cdrExt =>
 				{
@@ -281,14 +281,19 @@ namespace TelcobrightMediation
 			int cdrsToBeWritten = processedCdrExts.Count();
 			if (this.CdrJobContext.TelcobrightJob.idjobdefinition == 2) //cdrError
 			{
-				var idCallsOfProcessedCdrs = processedCdrExts
+                //todo: fix the delete old cdr ghapla here
+                var idCallsOfProcessedCdrs = processedCdrExts
 					.Select(c => new KeyValuePair<long, DateTime>(c.Cdr.IdCall, c.StartTime)).ToList();
 				var idCallsOfCdrErrors = this.CollectionResult.CdrErrors
 					.Select(c => new KeyValuePair<long, DateTime>(c.IdCall, c.StartTime)).ToList();
 
-				OldCdrDeleter.DeleteOldCdrs("cdrerror", idCallsOfProcessedCdrs.Concat(idCallsOfCdrErrors).ToList(),
+				int delCount= OldCdrDeleter.DeleteOldCdrs("cdrerror", idCallsOfProcessedCdrs.Concat(idCallsOfCdrErrors).ToList(),
 					this.CdrJobContext.SegmentSizeForDbWrite, this.CdrJobContext.DbCmd);
-			}
+			    if (delCount != cdrsToBeWritten)
+			    {
+			        throw new Exception("Written number of cdrs does not match processed cdrs count.");
+			    }
+            }
 
 			long writtenInconsistentCount = 0,
 				writtenErrorCount = 0,

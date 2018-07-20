@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using TelcobrightTester;
 using LibraryExtensions.CommonHelper;
+using MediationModel;
 using Spring.Expressions;
 using Utils.Testers;
 using Utils.Testers.Employees;
@@ -16,8 +17,9 @@ namespace Utils
      
         static void Main(string[] args)
         {
-            var tester = new LargelistTester();
+            var tester = new ParallelReaderToEntityTester();
             tester.Test();
+            return;
             //tester.PerformanceTest();
             Console.WriteLine("Press a key:");
             Console.WriteLine("1=Test Entity Renaming");

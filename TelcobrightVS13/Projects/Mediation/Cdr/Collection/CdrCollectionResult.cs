@@ -47,9 +47,19 @@ namespace TelcobrightMediation
         public List<cdrinconsistent> CdrInconsistents { get; }
         public BlockingCollection<CdrExt> ProcessedCdrExts { get; }=new BlockingCollection<CdrExt>();
 
-        public bool IsEmpty => this.DatesInvolved == null || this.DatesInvolved.Any() == false ||
-                               !this.ConcurrentCdrExts.Any() && !this.CdrInconsistents.Any()
-                               && !this.CdrErrors.Any() && !this.ProcessedCdrExts.Any();
+        public bool IsEmpty
+        {
+            get
+            {
+                if (this.CdrInconsistents.Any())
+                {
+                    return false;
+                }
+                return this.DatesInvolved == null || this.DatesInvolved.Any() == false ||
+                       !this.ConcurrentCdrExts.Any()&& !this.CdrErrors.Any() && !this.ProcessedCdrExts.Any();
+            }
+        }
+
         public CdrCollectionResult(ne ne, List<CdrExt> cdrExts,
             List<cdrinconsistent> cdrInconsistents, int rawCount)
         {

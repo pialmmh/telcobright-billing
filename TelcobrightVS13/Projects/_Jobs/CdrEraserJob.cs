@@ -36,7 +36,7 @@ namespace Jobs
             if (input.TelcobrightJob.Status != 2) //prepare job if not prepared already
                 segmentedCdrErrorJobProcessor.PrepareSegments();
             List<jobsegment> jobsegments = segmentedCdrErrorJobProcessor.ExecuteIncompleteSegments();
-            segmentedCdrErrorJobProcessor.FinishJob(jobsegments); //mark job as complete
+            segmentedCdrErrorJobProcessor.FinishJob(jobsegments,null); //mark job as complete
             return JobCompletionStatus.Complete;
         }
     }

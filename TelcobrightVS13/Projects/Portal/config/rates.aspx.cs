@@ -315,7 +315,7 @@ public partial class DefaultRates : Page
             
                 //DicGenerator.QueryCacheUpdateInDB(ConPartner, dRange);
                 //order by prefix ascending and startdate descending
-                Dictionary<TupleByPeriod, List<Rateext>> dicRateList = dicGenerator.GetRateDict(useInMemoryTable:false);//Get the rate dictionary
+                Dictionary<TupleByPeriod, List<Rateext>> dicRateList = dicGenerator.GetRateDict(useInMemoryTable:false,isCachingForMediation:false);//Get the rate dictionary
                 List<Rateext> combinedList = new List<Rateext>();
                 foreach (KeyValuePair<TupleByPeriod, List<Rateext>> kv in dicRateList)
                 {

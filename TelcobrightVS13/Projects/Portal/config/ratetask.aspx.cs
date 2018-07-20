@@ -12,8 +12,10 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using LibraryExtensions;
 
@@ -29,6 +31,7 @@ using PortalApp;
 using Process = System.Diagnostics.Process;
 using LibraryExtensions;
 using TelcobrightMediation.Accounting;
+using Wintellect.PowerCollections;
 
 [System.Runtime.InteropServices.Guid("5FC3FD70-56C8-4DAA-9C00-472988E7CACD")]
 public partial class ConfigRateTask : Page
@@ -2570,7 +2573,6 @@ public partial class ConfigRateTask : Page
         PartnerEntities contextTask = new PartnerEntities();
         Int32 idInt = int.Parse(newId);
         thisRate = contextTask.ratetasks.Where(c => c.id == idInt).FirstOrDefault();
-        thisServiceFamily = Convert.ToInt32(thisRate.Type);
         //call create new rate to validate the rate
         //get id of the last rateplan for this supplier
 
@@ -3450,61 +3452,12 @@ public partial class ConfigRateTask : Page
 
 
 
-    string InsertSqlRate(rate thisRate)
+    string GetExtInsertValuePartForRate(rate thisRate)
     {
         try
         {
-
-            string x = "INSERT INTO rate " +
-"(                             " +
-"`Prefix`,                     " +
-"`description`,                " +
-"`rateamount`,                 " +
-"`WeekDayStart`,               " +
-"`WeekDayEnd`,                 " +
-"`starttime`,                  " +
-"`endtime`,                    " +
-"`Resolution`,                 " +
-"`MinDurationSec`,             " +
-"`SurchargeTime`,              " +
-"`SurchargeAmount`,            " +
-"`idrateplan`,                 " +
-"`CountryCode`,                " +
-"`field1`,                     " +
-"`field2`,                     " +
-"`field3`,                     " +
-"`field4`,                     " +
-"`field5`,                     " +
-"`startdate`,                  " +
-"`enddate`,                    " +
-"`Inactive`,                   " +
-"`RouteDisabled`,              " +
-"`Type`,                       " +
-"`Currency`,                   " +
-"`OtherAmount1`,            " +
-"`OtherAmount2`,            " +
-"`OtherAmount3`,            " +
-"`OtherAmount4`,       " +
-"`OtherAmount5`,          " +
-"`OtherAmount6`,             " +
-"`OtherAmount7`,             " +
-"`OtherAmount8`,             " +
-"`OtherAmount9`,               " +
-"`OtherAmount10`,                " +
-"`TimeZoneOffsetSec`,          " +
-"`RatePosition`,               " +
-"`IgwPercentageIn`,            " +
-"`ConflictingRateIds`,         " +
-"`ChangedByTaskId`,            " +
-"`ChangedOn`,                  " +
-"`Status`,                     " +
-"`idPreviousRate`,             " +
-"`EndPreviousRate`,            " +
-"`Category`,                " +
-"`SubCategory`,`ProductId`,`RateAmountRoundupDecimal`)            " +
-"VALUES                        " +
-
-                        "(  													 " +
+            string x =
+            "(  													 " +
                         "'" + thisRate.Prefix + "'," +
                         "'" + thisRate.description + "'," +
                         "'" + thisRate.rateamount + "'," +
@@ -3686,7 +3639,6 @@ public partial class ConfigRateTask : Page
                 List<ratetask> lstTasks = new List<ratetask>();
                 lstTasks = context.ratetasks.Where(c => c.idrateplan == idTaskReference && c.changecommitted != 1
                     ).ToList();//don't include execorder in where clause here for performance through iterations
-
                 foreach (int order in lstDistinctExOrders)
                 {
                     var execlist = lstTasks.Where(c => c.ExecutionOrder == order).ToList();
@@ -3897,121 +3849,19 @@ public partial class ConfigRateTask : Page
     int ProcessRateTask(List<ratetask> lstRateTask, int idRatePlan)
     {
         int totalCommitCount = 0;
-        //<asp:ListItem Value="-1">All</asp:ListItem>
-        //<asp:ListItem Value="0">Validation Errors</asp:ListItem>
-        //<asp:ListItem Value="1">Code Deletes</asp:ListItem>
-        //<asp:ListItem Value="2">New Codes</asp:ListItem>//status
-        //<asp:ListItem Value="3">Increase</asp:ListItem>//status
-        //<asp:ListItem Value="4">Decrease</asp:ListItem>//status
-        //<asp:ListItem Value="5">Unchanged</asp:ListItem>//status
-        //<%--<asp:ListItem Value="6">Errors</asp:ListItem>--%>
-        //<asp:ListItem Value="7">Complete</asp:ListItem>
-        //<asp:ListItem Value="8">Change Uncommitted</asp:ListItem>
-        //<asp:ListItem Value="9">Overlap</asp:ListItem>//status
-        //<asp:ListItem Value="10">Overlap Adjusted</asp:ListItem>//status
-        //<asp:ListItem Value="11">Rate Param Conflict</asp:ListItem>//status
-        //<asp:ListItem Value="12">Rate Position Not Found</asp:ListItem> //status
-        //<asp:ListItem Value="13">Existing</asp:ListItem> //status
-
         rate thisRate = null;
         try
         {
-
-            List<rate> rateCache = new List<rate>();
-            Dictionary<string, List<rate>> dicRateCache = new Dictionary<string, List<rate>>();//use prefix as index
-            //this should be fine, byte per rate: ~100, 1 GB for 10 Million rates
-            using (PartnerEntities context = new PartnerEntities())
-            {
-                rateCache = context.rates.Where(c => c.idrateplan == idRatePlan).ToList();
-            }
-            foreach (rate r in rateCache)
-            {
-                List<rate> thislist = null;
-                dicRateCache.TryGetValue(r.Prefix, out thislist);
-                if (thislist == null)
-                {
-                    //prefix not in the dictionary yet, create dictionary item first.
-                    dicRateCache.Add(r.Prefix, new List<rate>());
-                    dicRateCache.TryGetValue(r.Prefix, out thislist);
-                }
-                thislist.Add(r);
-            }
-            
-            List<ratetask> lstDeleteTasks = lstRateTask.Where(c => c.rateamount == "-1"
-                            && c.field2 == "0"//not having validation error
-                            ).ToList();
-            List<ratetask> lstPrefixDelAll = lstDeleteTasks.Where(c => c.Prefix == "*").Select(c => new ratetask { Prefix = "*", startdate = c.startdate, ChangedByTaskId = c.id.ToString(), Category = c.Category, SubCategory = c.SubCategory }).ToList();
-            List<ratetask> lstPrefixDelLike = lstDeleteTasks.Where(c => c.Prefix.EndsWith("*") && c.Prefix.Length > 1).Select(c => new ratetask { Prefix = c.Prefix.Split('*')[0], startdate = c.startdate, ChangedByTaskId = c.id.ToString(), Category = c.Category, SubCategory = c.SubCategory }).ToList();
-            List<ratetask> lstPrefixDelSingle = lstDeleteTasks.Where(c => c.Prefix.Contains("*") == false).Select(c => new ratetask { Prefix = c.Prefix, startdate = c.startdate, ChangedByTaskId = c.id.ToString(), Category = c.Category, SubCategory = c.SubCategory }).ToList();
+            Dictionary<string, List<rate>> dicRateCache = PopulateRateCache(idRatePlan);
+            List<ratetask> lstPrefixDelAll, lstPrefixDelLike, lstPrefixDelSingle;
+            PopulatePendingRateTasks(lstRateTask, out lstPrefixDelAll, out lstPrefixDelLike, out lstPrefixDelSingle);
             //all code changes will be executed, so count them as commit count
             totalCommitCount = lstPrefixDelAll.Count + lstPrefixDelLike.Count + lstPrefixDelSingle.Count;
 
             StringBuilder sbSqlCodeDel = new StringBuilder();
             sbSqlCodeDel.Append("set autocommit=0;");
-
-            //populate delete Sql first
-            //delete in the order of most specific code delete instruction
-            Dictionary<string, string> dicRateDeleteSql = new Dictionary<string, string>();//idRate,Sql
-            foreach (ratetask deltask in lstPrefixDelSingle)
-            {
-                DateTime delDate = Convert.ToDateTime(deltask.startdate);
-                if(dicRateCache.ContainsKey(deltask.Prefix)==false) continue;
-                List<rate> lstDelRates = dicRateCache[deltask.Prefix].
-                    Where(c=>(c.enddate==null||c.enddate>delDate)&&c.startdate<=delDate).ToList();
-                foreach(rate delRate in lstDelRates)
-                {
-                    if (dicRateDeleteSql.ContainsKey(delRate.id.ToString())) continue;
-                    dicRateDeleteSql.Add(delRate.id.ToString(), " update rate set enddate='" + deltask.startdate + "', " +
-                                            " ChangedByTaskId=" + deltask.ChangedByTaskId +//could have used id, but kept part of previous code with new {}
-                                            " where id=" + delRate.id.ToString());
-                }
-                
-                //update the status of the delete taks as well
-                sbSqlCodeDel.Append(" update ratetask set changecommitted=1,status =1 where " +
-                                            " id=" + deltask.ChangedByTaskId).Append(";");
-            }
-            foreach (ratetask deltask in lstPrefixDelLike)
-            {
-
-                DateTime delDate = Convert.ToDateTime(deltask.startdate);
-                //dictionary is useless here
-                List<rate> lstDelRates = rateCache.Where(c =>c.Prefix.StartsWith(deltask.Prefix) && (c.enddate == null || c.enddate > delDate) && c.startdate <= delDate).ToList();
-                foreach (rate delRate in lstDelRates)
-                {
-                    if (dicRateDeleteSql.ContainsKey(delRate.id.ToString())) continue;
-                    dicRateDeleteSql.Add(delRate.id.ToString(), " update rate set enddate='" + deltask.startdate + "', " +
-                                            " ChangedByTaskId=" + deltask.ChangedByTaskId +//could have used id, but kept part of previous code with new {}
-                                            " where id=" + delRate.id.ToString());
-                }
-                
-                //update the status of the delete taks as well
-                sbSqlCodeDel.Append(" update ratetask set changecommitted=1,status =1 where " +
-                                            " id=" + deltask.ChangedByTaskId).Append(";");
-            }
-            foreach (ratetask deltask in lstPrefixDelAll)
-            {
-
-                DateTime delDate = Convert.ToDateTime(deltask.startdate);
-                //dictionary is useless here
-                List<rate> lstDelRates = rateCache.Where(c => (c.enddate == null || c.enddate > delDate) && c.startdate <= delDate).ToList();
-                foreach (rate delRate in lstDelRates)
-                {
-                    if (dicRateDeleteSql.ContainsKey(delRate.id.ToString())) continue;
-                    dicRateDeleteSql.Add(delRate.id.ToString(), " update rate set enddate='" + deltask.startdate + "', " +
-                                            " ChangedByTaskId=" + deltask.ChangedByTaskId +//could have used id, but kept part of previous code with new {}
-                                            " where id=" + delRate.id.ToString());
-                }
-                
-                //update the status of the delete taks as well
-                sbSqlCodeDel.Append(" update ratetask set changecommitted=1,status =1 where " +
-                                            " id=" + deltask.ChangedByTaskId).Append(";");
-            }
-            
-            //write back code delete sqls to sbsql
-            if(dicRateDeleteSql.Count>0)
-            {
-                sbSqlCodeDel.Append(string.Join(";", dicRateDeleteSql.Values.ToList())).Append(";");
-            }
+            var rates = dicRateCache.Values.SelectMany(r => r).ToList();
+            HandleCodeDeleteTasks(rates, dicRateCache, lstPrefixDelAll, lstPrefixDelLike, lstPrefixDelSingle, sbSqlCodeDel);
 
             //lock table to make sure I'm the only one to write the rate table
 
@@ -4031,7 +3881,9 @@ public partial class ConfigRateTask : Page
                             ).ToList();
                         //List<string> lstInsertSql = new List<string>();
                         //concurrent dictionary can hold large number of data, so use it with random key
-                        LargeList<string> lstInsertSql=new LargeList<string>(30000);
+                        BigList<string> lstInsertSql = new BigList<string>();
+                        var prevGcLatencyMode = GCSettings.LatencyMode;
+                        GCSettings.LatencyMode=GCLatencyMode.SustainedLowLatency;
                         foreach (ratetask thisTask in lstRateTask)
                         {
                             thisRate = RateTaskToRate(thisTask, idRatePlan);
@@ -4065,7 +3917,8 @@ public partial class ConfigRateTask : Page
                                 {
                                     var color = ColorTranslator.FromHtml("#FA0509");
                                     this.StatusLabel.ForeColor = color;
-                                    this.StatusLabel.Text = "Rate Conflict exists! Correct/remove them or Select Continue on Error to try with any next task.";
+                                    this.StatusLabel.Text =
+                                        "Rate Conflict exists! Correct/remove them or Select Continue on Error to try with any next task.";
 
                                     this.DropDownListMoreFilters.SelectedValue = "11";
                                     ButtonFindPrefix_Click(null, null);
@@ -4090,144 +3943,14 @@ public partial class ConfigRateTask : Page
                                 }
                             }
 
-                            //process rates which are not overlap or conflict
-                            switch (thisRate.Status)
-                            {
-                                case 9://overlap
-                                case 12://rate position not found
-
-                                    lstInsertSql.Add(
-                                    " update ratetask set status =" + thisRate.Status +
-                                            " where id=" + thisRate.id + ";");
-
-                                    break;
-                                case 2://new
-                                    if (overLap == false && rateConflict == false)
-                                    {
-                                        if (ratePos.ThisPosition == RatePositions.BeforeAll)
-                                        {
-                                            thisRate.enddate = nextRate.startdate;
-                                        }
-                                        lstInsertSql.Add(InsertSqlRate(thisRate) + ";");
-
-                                        lstInsertSql.Add(
-                                        " update ratetask set changecommitted=1,status =" + thisRate.Status + " where " +
-                                            " id=" + thisRate.id + ";"); 
-                                        totalCommitCount++;
-                                    }
-                                    break;
-                                case 5://unchanged
-                                case 3://increase
-                                case 4://decrease
-                                    //applicabl for in between and latest rates.    
-                                    if (overLap == false && rateConflict == false)
-                                    {
-                                        //end previous rate
-                                        if (prevRate != null)//if a previous continued rate exists
-                                        {
-                                            if (prevRate.enddate == ratePos.FutureDate)//null, end previous rate with no end date
-                                            {
-                                                lstInsertSql.Add(
-                                                " update rate set enddate='" + thisRate.startdate.ToString("yyyy-MM-dd HH:mm:ss") + "', " +
-                                                " ChangedByTaskId=" + thisRate.id +
-                                                " where id=" + prevRate.id + ";");
-                                            }
-                                            //insert the new rate
-                                            lstInsertSql.Add(InsertSqlRate(thisRate) + ";");
-
-                                            lstInsertSql.Add(
-                                            " update ratetask set changecommitted=1,status =" + thisRate.Status + " where " +
-                                                " id=" + thisRate.id + ";");
-                                            totalCommitCount++;
-                                        }
-                                        else//no previous contniued rate 
-                                        {
-                                            lstInsertSql.Add(InsertSqlRate(thisRate) + ";"); 
-                                            lstInsertSql.Add(
-                                            " update ratetask set changecommitted=1,status =" + thisRate.Status +
-                                                " ,affectedrates='" + prevRate.id + "'" +
-                                                " where " +
-                                                " id=" + thisRate.id + ";");
-                                            totalCommitCount++;
-                                        }
-                                    }
-                                    break;
-                                case 10://overlap adjusted
-                                    List<string> affectedOlRates = new List<string>();
-
-                                    if (ratePos.ThisOverLapType == OverlapTypes.OverlappingNext)
-                                    {
-                                        //have to change own end date as well so that it doesn't overlap the next
-                                        //AffectedOLRates.Add(ThisRate.id.ToString());--this can't be set, the taskid will be set in rate table
-                                        thisRate.enddate = nextRate.startdate;
-                                    }
-                                    else//overlappingboth or overlapbycoincide
-                                    {
-                                        //end previous rate
-                                        if (prevRate != null)
-                                        {
-
-                                            lstInsertSql.Add(
-                                            " update rate set enddate='" + thisRate.startdate.ToString("yyyy-MM-dd HH:mm:ss") + "', " +
-                                            " ChangedByTaskId=" + thisRate.id +
-                                                " where id=" + prevRate.id + ";");
-
-                                            affectedOlRates.Add(prevRate.id.ToString());
-                                        }
-                                        if ((ratePos.ThisOverLapType == OverlapTypes.OverlappingBoth) ||
-                                            (thisRate.enddate == ratePos.FutureDate))
-                                        {
-                                            //have to change own end date as well so that it doesn't overlap the next
-                                            thisRate.enddate = nextRate.startdate;
-                                        }
-                                    }
-
-                                    lstInsertSql.Add(InsertSqlRate(thisRate) + ";");
-                                    lstInsertSql.Add(
-                                        " update ratetask set changecommitted=1,status =" + thisRate.Status +
-                                        " ,affectedrates='" + string.Join(",", affectedOlRates.ToArray()) + "'" +
-                                        " where " +
-                                        " id=" + thisRate.id + ";");
-                                    totalCommitCount++;
-                                    break;
-                                case 13://existing, dont' mark as change committed
-                                    lstInsertSql.Add(
-                                    " update ratetask set status =" + thisRate.Status + " where " +
-                                            " id=" + thisRate.id + ";"); 
-
-                                    break;
-                            }
+                            totalCommitCount = ProcessRateTasksBasedOnType(totalCommitCount, thisRate, lstInsertSql, nextRate, prevRate, ratePos, overLap, rateConflict);
 
                         }//for each rate task (not code delete)
+                        GCSettings.LatencyMode = prevGcLatencyMode;
 
                         cmd.CommandText = sbSqlCodeDel.ToString();//code delete part is handled by this
                         cmd.ExecuteNonQuery();
-                        //insert part, long sql causes exception, have to create multiple batch
-                        int batchsize = 10000;
-                        int batchcount = 0;
-                        List<string> lstBatch = new List<string>();
-                        for (int l = 0; l < lstInsertSql.Count; l++)
-                        {
-                            lstBatch.Add(lstInsertSql[l]);
-                            ++batchcount;
-                            if (batchcount == batchsize)
-                            {
-                                cmd.CommandText = string.Join(" ", lstBatch);
-                                cmd.ExecuteNonQuery();
-                                lstBatch = new List<string>();
-                                batchcount = 0;
-                            }
-                        }
-
-                        if(lstBatch.Count>0)
-                        {
-                            cmd.CommandText = string.Join(" ", lstBatch);
-                            cmd.ExecuteNonQuery();
-                        }
-                        
-
-                        cmd.CommandText = " commit;";
-                        cmd.ExecuteNonQuery();
+                        WriteRateTasksToRateTable(cmd, lstInsertSql);
 
                         MyGridViewDataBind();
 
@@ -4236,6 +3959,8 @@ public partial class ConfigRateTask : Page
                     catch (Exception e1)
                     {
                         cmd.CommandText = " rollback;";
+                        cmd.ExecuteNonQuery();
+                        cmd.CommandText = "unlock tables;";
                         cmd.ExecuteNonQuery();
 
                         var color = ColorTranslator.FromHtml("#FA0509");
@@ -4260,6 +3985,391 @@ public partial class ConfigRateTask : Page
         return totalCommitCount;
 
 
+    }
+
+    private static void WriteRateTasksToRateTable(MySqlCommand cmd, BigList<string> sqls)
+    {
+        //insert part, long sql causes exception, have to create multiple batch
+        int batchsize = 10000;
+        int batchcount = 0;
+        List<string> lstBatchInsert = new List<string>();
+        List<string> lstBatchUpdate = new List<string>();
+        for (int l = 0; l < sqls.Count; l++)
+        {
+            string sql = sqls[l];
+            if (sql.StartsWith("(")) //extended insert statement
+            {
+                lstBatchInsert.Add(sql);
+            }
+            else
+            {
+                lstBatchUpdate.Add(sql);
+            }
+            ++batchcount;
+            if (batchcount == batchsize)
+            {
+                WriteInsertUpdateSqls(cmd, ref batchcount, ref lstBatchInsert, ref lstBatchUpdate);
+            }
+        }
+        WriteInsertUpdateSqls(cmd, ref batchcount, ref lstBatchInsert, ref lstBatchUpdate);
+        cmd.CommandText = " commit;";
+        cmd.ExecuteNonQuery();
+    }
+
+    private static void WriteInsertUpdateSqls(MySqlCommand cmd, ref int batchcount, ref List<string> lstBatchInsert, ref List<string> lstBatchUpdate)
+    {
+        if (lstBatchInsert.Any())
+        {
+            cmd.CommandText = new StringBuilder(GetExtInsertHeader())
+                .Append(string.Join(", ", lstBatchInsert)).ToString();
+            cmd.ExecuteNonQuery();
+            lstBatchInsert = new List<string>();
+        }
+
+        if (lstBatchUpdate.Any())
+        {
+            cmd.CommandText = string.Join(" ", lstBatchUpdate);
+            cmd.ExecuteNonQuery();
+            lstBatchUpdate = new List<string>();
+            batchcount = 0;
+        }
+    }
+
+    static string GetExtInsertHeader()
+    {
+        return "INSERT INTO rate " +
+                   "(                             " +
+                   "`Prefix`,                     " +
+                   "`description`,                " +
+                   "`rateamount`,                 " +
+                   "`WeekDayStart`,               " +
+                   "`WeekDayEnd`,                 " +
+                   "`starttime`,                  " +
+                   "`endtime`,                    " +
+                   "`Resolution`,                 " +
+                   "`MinDurationSec`,             " +
+                   "`SurchargeTime`,              " +
+                   "`SurchargeAmount`,            " +
+                   "`idrateplan`,                 " +
+                   "`CountryCode`,                " +
+                   "`field1`,                     " +
+                   "`field2`,                     " +
+                   "`field3`,                     " +
+                   "`field4`,                     " +
+                   "`field5`,                     " +
+                   "`startdate`,                  " +
+                   "`enddate`,                    " +
+                   "`Inactive`,                   " +
+                   "`RouteDisabled`,              " +
+                   "`Type`,                       " +
+                   "`Currency`,                   " +
+                   "`OtherAmount1`,            " +
+                   "`OtherAmount2`,            " +
+                   "`OtherAmount3`,            " +
+                   "`OtherAmount4`,       " +
+                   "`OtherAmount5`,          " +
+                   "`OtherAmount6`,             " +
+                   "`OtherAmount7`,             " +
+                   "`OtherAmount8`,             " +
+                   "`OtherAmount9`,               " +
+                   "`OtherAmount10`,                " +
+                   "`TimeZoneOffsetSec`,          " +
+                   "`RatePosition`,               " +
+                   "`IgwPercentageIn`,            " +
+                   "`ConflictingRateIds`,         " +
+                   "`ChangedByTaskId`,            " +
+                   "`ChangedOn`,                  " +
+                   "`Status`,                     " +
+                   "`idPreviousRate`,             " +
+                   "`EndPreviousRate`,            " +
+                   "`Category`,                " +
+                   "`SubCategory`,`ProductId`,`RateAmountRoundupDecimal`)            " +
+                   "VALUES                        ";
+    }
+
+    private int ProcessRateTasksBasedOnType(int totalCommitCount, rate thisRate, BigList<string> lstInsertSql, rate nextRate, rate prevRate, RatePositioning ratePos, bool overLap, bool rateConflict)
+    {
+        //process rates which are not overlap or conflict
+        switch (thisRate.Status)
+        {
+            case 9://overlap
+            case 12://rate position not found
+
+                lstInsertSql.Add(
+                " update ratetask set status =" + thisRate.Status +
+                        " where id=" + thisRate.id + ";");
+
+                break;
+            case 2://new
+                totalCommitCount = PrepareSqlForNewRates(totalCommitCount, thisRate, lstInsertSql, nextRate, ratePos, overLap, rateConflict);
+                break;
+            case 5://unchanged
+            case 3://increase
+            case 4://decrease
+                totalCommitCount = PrePareSqlForUnchangedIncreaseDecrease(totalCommitCount, thisRate, lstInsertSql, prevRate, ratePos, overLap, rateConflict);
+                break;
+            case 10://overlap adjusted
+                List<string> affectedOlRates = new List<string>();
+
+                if (ratePos.ThisOverLapType == OverlapTypes.OverlappingNext)
+                {
+                    //have to change own end date as well so that it doesn't overlap the next
+                    //AffectedOLRates.Add(ThisRate.id.ToString());--this can't be set, the taskid will be set in rate table
+                    thisRate.enddate = nextRate.startdate;
+                }
+                else//overlappingboth or overlapbycoincide
+                {
+                    //end previous rate
+                    if (prevRate != null)
+                    {
+
+                        lstInsertSql.Add(
+                        " update rate set enddate='" + thisRate.startdate.ToString("yyyy-MM-dd HH:mm:ss") + "', " +
+                        " ChangedByTaskId=" + thisRate.id +
+                            " where id=" + prevRate.id + ";");
+
+                        affectedOlRates.Add(prevRate.id.ToString());
+                    }
+                    if ((ratePos.ThisOverLapType == OverlapTypes.OverlappingBoth) ||
+                        (thisRate.enddate == ratePos.FutureDate))
+                    {
+                        //have to change own end date as well so that it doesn't overlap the next
+                        thisRate.enddate = nextRate.startdate;
+                    }
+                }
+
+                lstInsertSql.Add(GetExtInsertValuePartForRate(thisRate));
+                lstInsertSql.Add(
+                    " update ratetask set changecommitted=1,status =" + thisRate.Status +
+                    " ,affectedrates='" + string.Join(",", affectedOlRates.ToArray()) + "'" +
+                    " where " +
+                    " id=" + thisRate.id + ";");
+                totalCommitCount++;
+                break;
+            case 13://existing, dont' mark as change committed
+                lstInsertSql.Add(
+                " update ratetask set status =" + thisRate.Status + " where " +
+                        " id=" + thisRate.id + ";");
+
+                break;
+        }
+
+        return totalCommitCount;
+    }
+
+    private static void HandleCodeDeleteTasks(List<rate> rateCache, Dictionary<string, List<rate>> dicRateCache, List<ratetask> lstPrefixDelAll, List<ratetask> lstPrefixDelLike, List<ratetask> lstPrefixDelSingle, StringBuilder sbSqlCodeDel)
+    {
+        //populate delete Sql first
+        //delete in the order of most specific code delete instruction
+        Dictionary<string, string> dicRateDeleteSql = new Dictionary<string, string>();//idRate,Sql
+        foreach (ratetask deltask in lstPrefixDelSingle)
+        {
+            DateTime delDate = Convert.ToDateTime(deltask.startdate);
+            if (dicRateCache.ContainsKey(deltask.Prefix) == false)
+            {
+                //update the status of the delete taks as well
+                sbSqlCodeDel.Append(" update ratetask set changecommitted=1,status =1 where " +
+                                    " id=" + deltask.id).Append(";");
+                continue;
+            }
+            List<rate> lstDelRates = dicRateCache[deltask.Prefix].
+                Where(c => (c.enddate == null || c.enddate > delDate) && c.startdate <= delDate).ToList();
+            foreach (rate delRate in lstDelRates)
+            {
+                if (dicRateDeleteSql.ContainsKey(delRate.id.ToString())) continue;
+                dicRateDeleteSql.Add(delRate.id.ToString(), " update rate set enddate='" + deltask.startdate + "', " +
+                                        " ChangedByTaskId=" + deltask.ChangedByTaskId +//could have used id, but kept part of previous code with new {}
+                                        " where id=" + delRate.id.ToString());
+            }
+
+            //update the status of the delete taks as well
+            sbSqlCodeDel.Append(" update ratetask set changecommitted=1,status =1 where " +
+                                        " id=" + deltask.id).Append(";");
+        }
+        foreach (ratetask deltask in lstPrefixDelLike)
+        {
+
+            DateTime delDate = Convert.ToDateTime(deltask.startdate);
+            //dictionary is useless here
+            List<rate> lstDelRates = rateCache.Where(c => c.Prefix.StartsWith(deltask.Prefix) && (c.enddate == null || c.enddate > delDate) && c.startdate <= delDate).ToList();
+            foreach (rate delRate in lstDelRates)
+            {
+                if (dicRateDeleteSql.ContainsKey(delRate.id.ToString())) continue;
+                dicRateDeleteSql.Add(delRate.id.ToString(), " update rate set enddate='" + deltask.startdate + "', " +
+                                        " ChangedByTaskId=" + deltask.ChangedByTaskId +//could have used id, but kept part of previous code with new {}
+                                        " where id=" + delRate.id.ToString());
+            }
+
+            //update the status of the delete taks as well
+            sbSqlCodeDel.Append(" update ratetask set changecommitted=1,status =1 where " +
+                                        " id=" + deltask.id).Append(";");
+        }
+        foreach (ratetask deltask in lstPrefixDelAll)
+        {
+
+            DateTime delDate = Convert.ToDateTime(deltask.startdate);
+            //dictionary is useless here
+            List<rate> lstDelRates = rateCache.Where(c => (c.enddate == null || c.enddate > delDate) && c.startdate <= delDate).ToList();
+            foreach (rate delRate in lstDelRates)
+            {
+                if (dicRateDeleteSql.ContainsKey(delRate.id.ToString())) continue;
+                dicRateDeleteSql.Add(delRate.id.ToString(), " update rate set enddate='" + deltask.startdate + "', " +
+                                        " ChangedByTaskId=" + deltask.ChangedByTaskId +//could have used id, but kept part of previous code with new {}
+                                        " where id=" + delRate.id.ToString());
+            }
+
+            //update the status of the delete taks as well
+            sbSqlCodeDel.Append(" update ratetask set changecommitted=1,status =1 where " +
+                                        " id=" + deltask.ChangedByTaskId).Append(";");
+        }
+
+        //write back code delete sqls to sbsql
+        if (dicRateDeleteSql.Count > 0)
+        {
+            sbSqlCodeDel.Append(string.Join(";", dicRateDeleteSql.Values.ToList())).Append(";");
+        }
+    }
+
+    private static void PopulatePendingRateTasks(List<ratetask> lstRateTask, out List<ratetask> lstPrefixDelAll, out List<ratetask> lstPrefixDelLike, out List<ratetask> lstPrefixDelSingle)
+    {
+        List<ratetask> lstDeleteTasks = lstRateTask.Where(c => c.rateamount == "-1"
+                                    && c.field2 == "0"//not having validation error
+                                    ).ToList();
+        lstPrefixDelAll = lstDeleteTasks.Where(c => c.Prefix == "*").Select(c => new ratetask
+        {
+            Prefix = "*",
+            startdate = c.startdate,
+            ChangedByTaskId = c.id.ToString(),
+            Category = c.Category,
+            SubCategory = c.SubCategory,
+            id=c.id
+        }).ToList();
+        lstPrefixDelLike = lstDeleteTasks.Where(c => c.Prefix.EndsWith("*") && c.Prefix.Length > 1)
+            .Select(c => new ratetask
+            {
+                Prefix = c.Prefix.Split('*')[0],
+                startdate = c.startdate,
+                ChangedByTaskId = c.id.ToString(),
+                Category = c.Category,
+                SubCategory = c.SubCategory,
+                id = c.id
+            }).ToList();
+        lstPrefixDelSingle = lstDeleteTasks.Where(c => c.Prefix.Contains("*") == false).Select(c => new ratetask
+        {
+            Prefix = c.Prefix,
+            startdate = c.startdate,
+            ChangedByTaskId = c.id.ToString(),
+            Category = c.Category,
+            SubCategory = c.SubCategory,
+            id = c.id
+        }).ToList();
+    }
+    private static List<rate> GetRatesByRatePlan(int idRatePlan, int segmentSize)
+    {
+        List<rate> rates = new List<rate>();
+        using (PartnerEntities context = new PartnerEntities())
+        {
+            int startLimit = 0;
+            bool rateExists = true;
+            while (rateExists)
+            {
+                //GC.TryStartNoGCRegion(250 * 1000 * 1000);
+                var prevGcLatencyMode = GCSettings.LatencyMode;
+                GCSettings.LatencyMode=GCLatencyMode.SustainedLowLatency;
+                var sql = $@"select * from rate where idrateplan={idRatePlan}
+                         order by id limit {startLimit},{segmentSize}";
+                var rateSegment = context.Database.SqlQuery<rate>
+                    (sql).ToList();
+                if (rateSegment.Any())
+                {
+                    rates.AddRange(rateSegment);
+                    startLimit += segmentSize;
+                }
+                else
+                {
+                    rateExists = false;
+                }
+                //GC.EndNoGCRegion();
+                GCSettings.LatencyMode = prevGcLatencyMode;
+            }
+        }
+        return rates;
+    }
+    private static Dictionary<string, List<rate>> PopulateRateCache(int idRatePlan)
+    {
+        //this should be to load all rates in a rateplan, byte per rate: ~100, 1 GB for 10 Million rates
+        var rateCache = GetRatesByRatePlan(idRatePlan,10000);
+        Dictionary<string, List<rate>> dicRateCache = new Dictionary<string, List<rate>>();
+        foreach (rate r in rateCache)
+        {
+            List<rate> thislist = null;
+            dicRateCache.TryGetValue(r.Prefix, out thislist);
+            if (thislist == null)
+            {
+                //prefix not in the dictionary yet, create dictionary item first.
+                dicRateCache.Add(r.Prefix, new List<rate>());
+                dicRateCache.TryGetValue(r.Prefix, out thislist);
+            }
+            thislist.Add(r);
+        }
+        return dicRateCache;
+    }
+
+    private int PrepareSqlForNewRates(int totalCommitCount, rate thisRate, BigList<string> lstInsertSql, rate nextRate, RatePositioning ratePos, bool overLap, bool rateConflict)
+    {
+        if (overLap == false && rateConflict == false)
+        {
+            if (ratePos.ThisPosition == RatePositions.BeforeAll)
+            {
+                thisRate.enddate = nextRate.startdate;
+            }
+            lstInsertSql.Add(GetExtInsertValuePartForRate(thisRate));
+
+            lstInsertSql.Add(
+            " update ratetask set changecommitted=1,status =" + thisRate.Status + " where " +
+                " id=" + thisRate.id + ";");
+            totalCommitCount++;
+        }
+
+        return totalCommitCount;
+    }
+
+    private int PrePareSqlForUnchangedIncreaseDecrease(int totalCommitCount, rate thisRate, BigList<string> lstInsertSql, rate prevRate, RatePositioning ratePos, bool overLap, bool rateConflict)
+    {
+        //applicabl for in between and latest rates.    
+        if (overLap == false && rateConflict == false)
+        {
+            //end previous rate
+            if (prevRate != null)//if a previous continued rate exists
+            {
+                if (prevRate.enddate == ratePos.FutureDate)//null, end previous rate with no end date
+                {
+                    lstInsertSql.Add(
+                    " update rate set enddate='" + thisRate.startdate.ToString("yyyy-MM-dd HH:mm:ss") + "', " +
+                    " ChangedByTaskId=" + thisRate.id +
+                    " where id=" + prevRate.id + ";");
+                }
+                //insert the new rate
+                lstInsertSql.Add(GetExtInsertValuePartForRate(thisRate));
+
+                lstInsertSql.Add(
+                " update ratetask set changecommitted=1,status =" + thisRate.Status + " where " +
+                    " id=" + thisRate.id + ";");
+                totalCommitCount++;
+            }
+            else//no previous contniued rate 
+            {
+                lstInsertSql.Add(GetExtInsertValuePartForRate(thisRate));
+                lstInsertSql.Add(
+                " update ratetask set changecommitted=1,status =" + thisRate.Status +
+                    " ,affectedrates='" + prevRate.id + "'" +
+                    " where " +
+                    " id=" + thisRate.id + ";");
+                totalCommitCount++;
+            }
+        }
+
+        return totalCommitCount;
     }
 
     rate RateTaskToRate(ratetask thisTask, long idRatePlan)
@@ -5020,682 +5130,6 @@ public partial class ConfigRateTask : Page
     {
 
     }//query created
-
-
-
-
-    //protected void GetRateTasksForGridAndDelete(object sender, QueryCreatedEventArgs e, ref List<long> lstIds)
-    //{
-    //    //idrateplan column in ratetask is to be used as idRateTaskReference
-
-    //    bool ToDeleteSelected = (lstIds == null ? false : true);
-    //    int sesidRatePlan = -1;
-
-    //    if (DropDownListTaskRef.SelectedIndex < 0) DropDownListTaskRef.SelectedIndex = 0;
-    //    int TaskRefId = int.Parse(DropDownListTaskRef.SelectedValue);
-
-    //    //if (ViewState["task.sesidRatePlan"] != null)
-    //    //{
-    //    //    sesidRatePlan = (Int32)ViewState["task.sesidRatePlan"];
-    //    //}
-
-    //    sesidRatePlan = int.Parse(DropDownListTaskRef.SelectedValue);
-    //    SqlDataTaskStatus.SelectParameters["idRatePlan"].DefaultValue = DropDownListTaskRef.SelectedValue;
-
-    //    string strPrefix = TextBoxFindByPrefix.Text;
-    //    string strDescription = TextBoxFindByDescription.Text;
-
-    //    string SelectedValueMoreFilter = DropDownListMoreFilters.SelectedValue;
-    //    StringBuilder sbSql = new StringBuilder().Append(" select * from ratetask where id>0 "); 
-    //    if (strPrefix == "" && strDescription == "" && SelectedValueMoreFilter == "-1")
-    //    {
-    //        var AllTasks = (ToDeleteSelected==false? e.Query.Cast<ratetask>():null);
-    //        if (ToDeleteSelected == false)
-    //        {   
-    //            e.Query = from c in AllTasks
-    //                      where c.idrateplan == sesidRatePlan
-    //                      orderby c.Status,c.Prefix
-    //                      select c;
-    //            sbSql.Append(" and idrateplan= " + sesidRatePlan);
-    //            return;
-    //        }
-    //        if (ToDeleteSelected == true) if (ToDeleteSelected == true) using (PartnerEntities Context = new PartnerEntities())
-    //        {
-    //            lstIds = (from c in Context.ratetasks
-    //                      where c.idrateplan == sesidRatePlan
-    //                      select c.id).ToList();
-    //        }
-    //        return;
-    //    }
-    //    else if (strPrefix == "" && strDescription == "" && int.Parse(SelectedValueMoreFilter) >= 0)
-    //    {
-
-    //        //<asp:ListItem Value="-1">All</asp:ListItem>
-    //        //<asp:ListItem Value="0">Error</asp:ListItem>
-    //        //<asp:ListItem Value="1">Code Deletes</asp:ListItem>
-    //        //<asp:ListItem Value="2">New Codes</asp:ListItem>
-    //        //<asp:ListItem Value="3">Increase</asp:ListItem>
-    //        //<asp:ListItem Value="4">Decrease</asp:ListItem>
-    //        //<asp:ListItem Value="5">Unchanged</asp:ListItem>
-    //        //<asp:ListItem Value="7">Complete</asp:ListItem>
-    //        //<asp:ListItem Value="8">Change Uncommitted</asp:ListItem>
-    //        //<asp:ListItem Value="9">Overlap</asp:ListItem>
-    //        //<asp:ListItem Value="10">Overlap Adjusted</asp:ListItem>
-    //        //<asp:ListItem Value="11">Rate Param Conflict</asp:ListItem>
-    //        //<asp:ListItem Value="12">Rate Position Not Found</asp:ListItem>
-
-    //        if (int.Parse(SelectedValueMoreFilter) > 0)//
-    //        {
-
-    //            var AllTasks = (ToDeleteSelected==false? e.Query.Cast<ratetask>():null);
-
-
-    //                //find the changecommitted flag!= in the database
-    //                if (SelectedValueMoreFilter == "8")//uncommitted
-    //                {
-    //                    if (ToDeleteSelected == false)
-    //                    {
-    //                        e.Query = from c in AllTasks
-    //                                  where c.idrateplan == sesidRatePlan
-    //                                  && c.changecommitted != 1
-    //                                  orderby c.Status, c.Prefix
-    //                                  select c;
-    //                        sbSql.Append(" and idrateplan= " + sesidRatePlan).Append(" and changecommitted!=1 ");
-    //                        return;
-    //                    }
-    //                    if (ToDeleteSelected == true) if (ToDeleteSelected == true) using (PartnerEntities Context = new PartnerEntities())
-    //                            {
-    //                                lstIds = (from c in Context.ratetasks
-    //                                          where c.idrateplan == sesidRatePlan
-    //                                          && c.changecommitted != 1
-    //                                          select c.id).ToList();
-    //                                return;
-    //                            }
-    //                }
-
-
-
-    //            if (SelectedValueMoreFilter == "7")//committed
-    //            {
-    //                if (ToDeleteSelected == false)
-    //                {
-    //                    e.Query = from c in AllTasks
-    //                              where c.idrateplan == sesidRatePlan
-    //                              && c.changecommitted == 1
-    //                              orderby c.Status, c.Prefix
-    //                              select c;
-    //                    sbSql.Append(" and idrateplan= " + sesidRatePlan).Append(" and changecommitted==1 ");
-    //                    return;
-    //                }
-    //                if (ToDeleteSelected == true) using (PartnerEntities Context = new PartnerEntities())
-    //                {
-    //                    lstIds = (from c in Context.ratetasks
-    //                              where c.idrateplan == sesidRatePlan
-    //                              && c.changecommitted == 1
-    //                              select c.id).ToList();
-    //                    return;
-    //                }
-    //            }
-
-    //            if (ToDeleteSelected == false)
-    //            {
-    //                e.Query = from c in AllTasks
-    //                          where c.idrateplan == sesidRatePlan
-    //                          && c.Status == SelectedValueMoreFilter
-    //                          orderby c.Status, c.Prefix
-    //                          select c;
-    //                sbSql.Append(" and idrateplan= " + sesidRatePlan).Append(" and status= " + SelectedValueMoreFilter);
-    //                return;
-    //            }
-    //            if (ToDeleteSelected == true) using (PartnerEntities Context = new PartnerEntities())
-    //            {
-    //                lstIds = (from c in Context.ratetasks
-    //                          where c.idrateplan == sesidRatePlan
-    //                          && c.Status == SelectedValueMoreFilter
-    //                          select c.id).ToList();
-    //            }
-    //            return;
-    //        }
-    //        else if (SelectedValueMoreFilter == "0")//errors
-    //        {
-    //            var AllTasks = (ToDeleteSelected==false? e.Query.Cast<ratetask>():null);
-
-    //            if (ToDeleteSelected == false)
-    //            {
-    //                e.Query = (from c in AllTasks
-    //                           where c.idrateplan == sesidRatePlan
-    //                           && (
-    //                           (//string field, could not compare >0 using linq
-    //                                               c.field2.Contains("1") || c.field2.Contains("2") || c.field2.Contains("3")
-    //                                                || c.field2.Contains("4") || c.field2.Contains("5") || c.field2.Contains("6")
-    //                                                 || c.field2.Contains("7") || c.field2.Contains("8") || c.field2.Contains("9")
-    //                                               )
-    //                           )
-    //                           orderby c.Status, c.Prefix
-    //                           select c);
-    //                var Arr = new string[] {"'1'","'2'","'3'","'4'","'5'","'6'","'7'","'8'","'9'" };
-    //                sbSql.Append(" and idrateplan= " + sesidRatePlan).Append(" and field2 in(" + string.Join(",",Arr) +")");
-    //                return;
-    //            }
-    //            if (ToDeleteSelected == true) using (PartnerEntities Context = new PartnerEntities())
-    //            {
-    //                lstIds = (from c in Context.ratetasks
-    //                          where c.idrateplan == sesidRatePlan
-    //                          && (
-    //                          (//string field, could not compare >0 using linq
-    //                                              c.field2.Contains("1") || c.field2.Contains("2") || c.field2.Contains("3")
-    //                                               || c.field2.Contains("4") || c.field2.Contains("5") || c.field2.Contains("6")
-    //                                                || c.field2.Contains("7") || c.field2.Contains("8") || c.field2.Contains("9")
-    //                                              )
-    //                          )
-    //                          select c.id).ToList();
-    //            }
-
-    //            return;
-
-    //        }
-
-    //    }
-
-    //    //by prefix + description
-    //    if (strPrefix != "" && strDescription != "")//both filters are on
-    //    {
-    //        if (SelectedValueMoreFilter == "-1") //more filters ALL
-    //        {
-
-
-    //            var AllTasks = (ToDeleteSelected==false? e.Query.Cast<ratetask>():null);
-    //            if (ToDeleteSelected == false)
-    //            {
-    //                e.Query = (from c in AllTasks
-    //                           where c.Prefix.StartsWith(strPrefix)
-    //                           && c.idrateplan == sesidRatePlan
-    //                           && c.description.ToLower().Contains(strDescription)
-    //                           orderby c.Status, c.Prefix
-    //                           select c);
-    //                sbSql.Append(" and idrateplan= " + sesidRatePlan)
-    //                    .Append(" and prefix like '" + strPrefix + "%' ")
-    //                    .Append(" and lower(description) like '%"+  strDescription  +"%' ");
-    //                return;
-    //            }
-    //            if (ToDeleteSelected == true) using (PartnerEntities Context = new PartnerEntities())
-    //            {
-    //                lstIds = (from c in Context.ratetasks
-    //                          where c.Prefix.StartsWith(strPrefix)
-    //                          && c.idrateplan == sesidRatePlan
-    //                          && c.description.ToLower().Contains(strDescription)
-    //                          select c.id).ToList();
-    //            }
-    //            return;
-
-    //        }
-
-    //        else if (int.Parse(SelectedValueMoreFilter) > 0) //more filters: New, delete , increase decrease etc.
-    //        {
-    //            var AllTasks = (ToDeleteSelected==false? e.Query.Cast<ratetask>():null);
-
-
-    //            //find the changecommitted flag!= in the database
-    //            if (SelectedValueMoreFilter == "8")//uncommitted
-    //            {
-    //                if (ToDeleteSelected == false)
-    //                {
-    //                    e.Query = from c in AllTasks
-    //                              where c.Prefix.StartsWith(strPrefix)
-    //                              && c.idrateplan == sesidRatePlan
-    //                              && c.description.ToLower().Contains(strDescription)
-    //                              && c.Status == SelectedValueMoreFilter
-    //                              && c.changecommitted != 1
-    //                              orderby c.Status, c.Prefix
-    //                              select c;
-    //                    sbSql.Append(" and idrateplan= " + sesidRatePlan)
-    //                    .Append(" and prefix like '" + strPrefix + "%' ")
-    //                    .Append(" and lower(description) like '%" + strDescription + "%' ")
-    //                    .Append(" status== " + SelectedValueMoreFilter + " ")
-    //                    .Append(" changecommitted !=1");
-    //                    return;
-    //                }
-    //                if (ToDeleteSelected == true) using (PartnerEntities Context = new PartnerEntities())
-    //                {
-    //                    lstIds = (from c in Context.ratetasks
-    //                              where c.Prefix.StartsWith(strPrefix)
-    //                              && c.idrateplan == sesidRatePlan
-    //                              && c.description.ToLower().Contains(strDescription)
-    //                              && c.Status == SelectedValueMoreFilter
-    //                              && c.changecommitted != 1
-    //                              select c.id).ToList();
-    //                }
-    //                return;
-    //            }
-    //            if (SelectedValueMoreFilter == "7")//committed
-    //            {
-    //                if (ToDeleteSelected == false)
-    //                {
-    //                    e.Query = from c in AllTasks
-    //                              where c.Prefix.StartsWith(strPrefix)
-    //                              && c.idrateplan == sesidRatePlan
-    //                              && c.description.ToLower().Contains(strDescription)
-    //                              && c.Status == SelectedValueMoreFilter
-    //                              && c.changecommitted == 1
-    //                              orderby c.Status, c.Prefix
-    //                              select c;
-    //                    sbSql.Append(" and idrateplan= " + sesidRatePlan)
-    //                    .Append(" and prefix like '" + strPrefix + "%' ")
-    //                    .Append(" and lower(description) like '%" + strDescription + "%' ")
-    //                    .Append(" status== " + SelectedValueMoreFilter + " ")
-    //                    .Append(" changecommitted =1");
-
-    //                    return;
-    //                }
-    //                if (ToDeleteSelected == true) using (PartnerEntities Context = new PartnerEntities())
-    //                {
-    //                    lstIds = (from c in Context.ratetasks
-    //                              where c.Prefix.StartsWith(strPrefix)
-    //                              && c.idrateplan == sesidRatePlan
-    //                              && c.description.ToLower().Contains(strDescription)
-    //                              && c.Status == SelectedValueMoreFilter
-    //                              && c.changecommitted == 1
-    //                              select c.id).ToList();
-    //                }
-    //                return;
-    //            }
-
-
-    //            if (ToDeleteSelected == false)
-    //            {
-    //                e.Query = (from c in AllTasks
-    //                           where c.Prefix.StartsWith(strPrefix)
-    //                           && c.idrateplan == sesidRatePlan
-    //                           && c.description.ToLower().Contains(strDescription)
-    //                           && c.Status == SelectedValueMoreFilter
-    //                           orderby c.Status, c.Prefix
-    //                           select c);
-
-    //                sbSql.Append(" and idrateplan= " + sesidRatePlan)
-    //                    .Append(" and prefix like '" + strPrefix + "%' ")
-    //                    .Append(" and lower(description) like '%" + strDescription + "%' ")
-    //                    .Append(" status= " + SelectedValueMoreFilter + " ");
-
-    //                return;
-    //            }
-    //            if (ToDeleteSelected == true) using (PartnerEntities Context = new PartnerEntities())
-    //            {
-    //                lstIds = (from c in Context.ratetasks
-    //                          where c.Prefix.StartsWith(strPrefix)
-    //                          && c.idrateplan == sesidRatePlan
-    //                          && c.description.ToLower().Contains(strDescription)
-    //                          && c.Status == SelectedValueMoreFilter
-    //                          select c.id).ToList();
-    //            }
-    //            return;
-
-    //        }
-
-    //        else if (int.Parse(SelectedValueMoreFilter) == 0) //more filters: shoW ERRORS
-    //        {
-    //            var AllTasks = (ToDeleteSelected==false? e.Query.Cast<ratetask>():null);
-
-    //            if (ToDeleteSelected == false)
-    //                {
-    //                    e.Query = (from c in AllTasks
-    //                               where c.Prefix.StartsWith(strPrefix)
-    //                               && c.idrateplan == sesidRatePlan
-    //                               && c.description.ToLower().Contains(strDescription)
-    //                               &&
-    //                               (
-    //                               (//string field, could not compare >0 using linq
-    //                               c.field2.Contains("1") || c.field2.Contains("2") || c.field2.Contains("3")
-    //                                || c.field2.Contains("4") || c.field2.Contains("5") || c.field2.Contains("6")
-    //                                 || c.field2.Contains("7") || c.field2.Contains("8") || c.field2.Contains("9")
-    //                               )
-    //                               )
-    //                               orderby c.Status, c.Prefix
-    //                               select c);
-    //                var Arr = new string[] {"'1'","'2'","'3'","'4'","'5'","'6'","'7'","'8'","'9'" };
-    //                    sbSql.Append(" and idrateplan= " + sesidRatePlan)
-    //                         .Append(" and prefix like '" + strPrefix + "%' ")
-    //                         .Append(" and lower(description) like '%" + strDescription + "%' ")
-    //                         .Append(" and field2 in(" + string.Join(",",Arr) +")");
-
-    //                return;
-    //            }
-    //            if (ToDeleteSelected == true) using (PartnerEntities Context = new PartnerEntities())
-    //            {
-    //                lstIds = (from c in Context.ratetasks
-    //                          where c.Prefix.StartsWith(strPrefix)
-    //                          && c.idrateplan == sesidRatePlan
-    //                          && c.description.ToLower().Contains(strDescription)
-    //                          &&
-    //                          (
-    //                          (//string field, could not compare >0 using linq
-    //                          c.field2.Contains("1") || c.field2.Contains("2") || c.field2.Contains("3")
-    //                           || c.field2.Contains("4") || c.field2.Contains("5") || c.field2.Contains("6")
-    //                            || c.field2.Contains("7") || c.field2.Contains("8") || c.field2.Contains("9")
-    //                          )
-    //                          )
-    //                          select c.id).ToList();
-    //            }
-    //            return;
-    //        }
-
-    //    }
-    //    //by prefix only
-    //    if (strPrefix != "" && strDescription == "")
-    //    {
-    //        if (SelectedValueMoreFilter == "-1") //more filters ALL
-    //        {
-    //            var AllTasks = (ToDeleteSelected==false? e.Query.Cast<ratetask>():null);
-    //            if (ToDeleteSelected == false)
-    //            {
-    //                e.Query = (from c in AllTasks
-    //                           where c.Prefix.StartsWith(strPrefix)
-    //                           && c.idrateplan == sesidRatePlan
-    //                           orderby c.Status, c.Prefix
-    //                           select c);
-    //                          sbSql.Append(" and idrateplan= " + sesidRatePlan)
-    //                         .Append(" and prefix like '" + strPrefix + "%' ");
-
-    //                return;
-    //            }
-    //            if (ToDeleteSelected == true) using (PartnerEntities Context = new PartnerEntities())
-    //            {
-    //                lstIds = (from c in Context.ratetasks
-    //                          where c.Prefix.StartsWith(strPrefix)
-    //                          && c.idrateplan == sesidRatePlan
-    //                          select c.id).ToList();
-    //            }
-    //            return;
-    //        }
-
-    //        else if (int.Parse(SelectedValueMoreFilter) > 0) //more filters: increase, decrease, etc.
-    //        {
-
-    //            var AllTasks = (ToDeleteSelected==false? e.Query.Cast<ratetask>():null);
-
-    //            //find the changecommitted flag!= in the database
-    //            if (SelectedValueMoreFilter == "8")//uncommitted
-    //            {
-    //                if (ToDeleteSelected == false)
-    //                {
-    //                    e.Query = from c in AllTasks
-    //                              where c.Prefix.StartsWith(strPrefix)
-    //                              && c.idrateplan == sesidRatePlan
-    //                              && c.changecommitted != 1
-    //                              orderby c.Status, c.Prefix
-    //                              select c;
-    //                    sbSql.Append(" and idrateplan= " + sesidRatePlan)
-    //                         .Append(" and prefix like '" + strPrefix + "%' ")
-    //                         .Append(" changecommitted =1"); ;
-    //                    return;
-    //                }
-    //                if (ToDeleteSelected == true) using (PartnerEntities Context = new PartnerEntities())
-    //                {
-    //                    lstIds = (from c in Context.ratetasks
-    //                              where c.Prefix.StartsWith(strPrefix)
-    //                              && c.idrateplan == sesidRatePlan
-    //                              && c.changecommitted != 1
-    //                              select c.id).ToList();
-    //                }
-    //                return;
-    //            }
-    //            if (SelectedValueMoreFilter == "7")//committed
-    //            {
-    //                if (ToDeleteSelected == false)
-    //                {
-    //                    e.Query = from c in AllTasks
-    //                              where c.Prefix.StartsWith(strPrefix)
-    //                              && c.idrateplan == sesidRatePlan
-    //                              && c.changecommitted == 1
-    //                              orderby c.Status, c.Prefix
-    //                              select c;
-    //                    sbSql.Append(" and idrateplan= " + sesidRatePlan)
-    //                         .Append(" and prefix like '" + strPrefix + "%' ")
-    //                         .Append(" changecommitted =1");
-    //                    return;
-    //                }
-    //                if (ToDeleteSelected == true) using (PartnerEntities Context = new PartnerEntities())
-    //                {
-    //                    lstIds = (from c in Context.ratetasks
-    //                              where c.Prefix.StartsWith(strPrefix)
-    //                              && c.idrateplan == sesidRatePlan
-    //                              && c.changecommitted == 1
-    //                              select c.id).ToList();
-    //                }
-    //                return;
-    //            }
-
-    //            if (ToDeleteSelected == false)
-    //            {
-    //                e.Query = (from c in AllTasks
-    //                           where c.Prefix.StartsWith(strPrefix)
-    //                           && c.Status == SelectedValueMoreFilter
-    //                           && c.idrateplan == sesidRatePlan
-    //                           orderby c.Status, c.Prefix
-    //                           select c);
-
-    //                sbSql.Append(" and idrateplan= " + sesidRatePlan)
-    //                         .Append(" and prefix like '" + strPrefix + "%' ")
-    //                         .Append(" status= " + SelectedValueMoreFilter + " ");
-
-    //                return;
-    //            }
-    //            if (ToDeleteSelected == true) using (PartnerEntities Context = new PartnerEntities())
-    //            {
-    //                lstIds = (from c in Context.ratetasks
-    //                          where c.Prefix.StartsWith(strPrefix)
-    //                          && c.Status == SelectedValueMoreFilter
-    //                          && c.idrateplan == sesidRatePlan
-    //                          select c.id).ToList();
-    //            }
-    //            return;
-
-    //        }
-
-    //        else if (int.Parse(SelectedValueMoreFilter) == 0) //more filters: ERRORS
-    //        {
-    //            var AllTasks = (ToDeleteSelected==false? e.Query.Cast<ratetask>():null);
-    //            if (ToDeleteSelected == false)
-    //            {
-    //                e.Query = (from c in AllTasks
-    //                           where c.Prefix.StartsWith(strPrefix)
-    //                           && c.idrateplan == sesidRatePlan
-    //                           &&
-    //                            (
-    //                            (//string field, could not compare >0 using linq
-    //                           c.field2.Contains("1") || c.field2.Contains("2") || c.field2.Contains("3")
-    //                            || c.field2.Contains("4") || c.field2.Contains("5") || c.field2.Contains("6")
-    //                             || c.field2.Contains("7") || c.field2.Contains("8") || c.field2.Contains("9")
-    //                           )
-    //                            )
-    //                           orderby c.Status, c.Prefix
-    //                           select c);
-    //                var Arr = new string[] {"'1'","'2'","'3'","'4'","'5'","'6'","'7'","'8'","'9'" };
-    //                sbSql.Append(" and idrateplan= " + sesidRatePlan)
-    //                         .Append(" and prefix like '" + strPrefix + "%' ")
-    //                         .Append(" and lower(description) like '%" + strDescription + "%' ");
-    //                return;
-    //            }
-    //            if (ToDeleteSelected == true) using (PartnerEntities Context = new PartnerEntities())
-    //            {
-    //                lstIds = (from c in Context.ratetasks
-    //                          where c.Prefix.StartsWith(strPrefix)
-    //                          && c.idrateplan == sesidRatePlan
-    //                          &&
-    //                           (
-    //                           (//string field, could not compare >0 using linq
-    //                          c.field2.Contains("1") || c.field2.Contains("2") || c.field2.Contains("3")
-    //                           || c.field2.Contains("4") || c.field2.Contains("5") || c.field2.Contains("6")
-    //                            || c.field2.Contains("7") || c.field2.Contains("8") || c.field2.Contains("9")
-    //                          )
-    //                           )
-    //                          select c.id).ToList();
-    //            }
-    //            return;
-
-    //        }
-
-    //    }
-
-    //    //by description only
-    //    if (strPrefix == "" && strDescription != "")
-    //    {
-    //        if (SelectedValueMoreFilter == "-1") //more filters ALL
-    //        {
-
-    //            var AllTasks = (ToDeleteSelected==false? e.Query.Cast<ratetask>():null);
-
-    //            if (ToDeleteSelected == false)
-    //            {
-    //                e.Query = (from c in AllTasks
-    //                           where c.description.ToLower().Contains(strDescription)
-    //                           && c.idrateplan == sesidRatePlan
-    //                           orderby c.Status, c.Prefix
-    //                           select c);
-    //                sbSql.Append(" and idrateplan= " + sesidRatePlan)
-    //                         .Append(" and lower(description) like '%" + strDescription + "%' ");
-
-    //                return;
-    //            }
-    //            if (ToDeleteSelected == true) using (PartnerEntities Context = new PartnerEntities())
-    //            {
-    //                lstIds = (from c in Context.ratetasks
-    //                          where c.description.ToLower().Contains(strDescription)
-    //                          && c.idrateplan == sesidRatePlan
-    //                          select c.id).ToList();
-    //            }
-    //            return;
-    //        }
-
-    //        else if (int.Parse(SelectedValueMoreFilter) > 0) //more filters: increase, decreae etc.
-    //        {
-
-    //            var AllTasks = (ToDeleteSelected==false? e.Query.Cast<ratetask>():null);
-
-    //            //find the changecommitted flag!= in the database
-    //            if (SelectedValueMoreFilter == "8")//uncommitted
-    //            {
-    //                if (ToDeleteSelected == false)
-    //                {
-    //                    e.Query = from c in AllTasks
-    //                              where c.description.ToLower().Contains(strDescription)
-    //                              && c.idrateplan == sesidRatePlan
-    //                              && c.Status == SelectedValueMoreFilter
-    //                              && c.changecommitted != 1
-    //                              orderby c.Status, c.Prefix
-    //                              select c;
-    //                    sbSql.Append(" and idrateplan= " + sesidRatePlan)
-    //                         .Append(" and lower(description) like '%" + strDescription + "%' ")
-    //                         .Append(" status= " + SelectedValueMoreFilter + " ")
-    //                         .Append(" changecommitted =!1");
-    //                    return;
-    //                }
-    //                if (ToDeleteSelected == true) using (PartnerEntities Context = new PartnerEntities())
-    //                {
-    //                    lstIds = (from c in Context.ratetasks
-    //                              where c.description.ToLower().Contains(strDescription)
-    //                              && c.idrateplan == sesidRatePlan
-    //                              && c.Status == SelectedValueMoreFilter
-    //                              && c.changecommitted != 1
-    //                              select c.id).ToList();
-    //                }
-    //                return;
-    //            }
-    //            if (SelectedValueMoreFilter == "7")//committed
-    //            {
-    //                if (ToDeleteSelected == false)
-    //                {
-    //                    e.Query = from c in AllTasks
-    //                              where c.description.ToLower().Contains(strDescription)
-    //                              && c.idrateplan == sesidRatePlan
-    //                              && c.Status == SelectedValueMoreFilter
-    //                              && c.changecommitted == 1
-    //                              orderby c.Status, c.Prefix
-    //                              select c;
-
-    //                    sbSql.Append(" and idrateplan= " + sesidRatePlan)
-    //                         .Append(" and lower(description) like '%" + strDescription + "%' ")
-    //                         .Append(" status= " + SelectedValueMoreFilter + " ")
-    //                         .Append(" changecommitted =1");
-    //                    return;
-    //                }
-    //                if (ToDeleteSelected == true) using (PartnerEntities Context = new PartnerEntities())
-    //                {
-    //                    lstIds = (from c in Context.ratetasks
-    //                              where c.description.ToLower().Contains(strDescription)
-    //                              && c.idrateplan == sesidRatePlan
-    //                              && c.Status == SelectedValueMoreFilter
-    //                              && c.changecommitted == 1
-    //                              select c.id).ToList();
-    //                }
-    //                return;
-    //            }
-
-    //            if (ToDeleteSelected == false)
-    //            {
-    //                e.Query = (from c in AllTasks
-    //                           where c.description.ToLower().Contains(strDescription)
-    //                           && c.idrateplan == sesidRatePlan
-    //                           && c.Status == SelectedValueMoreFilter
-    //                           orderby c.Status, c.Prefix
-    //                           select c);
-    //                sbSql.Append(" and idrateplan= " + sesidRatePlan)
-    //                         .Append(" and lower(description) like '%" + strDescription + "%' ")
-    //                         .Append(" status= " + SelectedValueMoreFilter + " ");
-
-    //                return;
-    //            }
-    //            if (ToDeleteSelected == true) using (PartnerEntities Context = new PartnerEntities())
-    //            {
-    //                lstIds = (from c in Context.ratetasks
-    //                          where c.description.ToLower().Contains(strDescription)
-    //                          && c.idrateplan == sesidRatePlan
-    //                          && c.Status == SelectedValueMoreFilter
-    //                          select c.id).ToList();
-    //            }
-    //            return;
-
-    //        }
-
-    //        else if (int.Parse(SelectedValueMoreFilter) == 0) //more filters: ERRORS
-    //        {
-
-    //            var AllTasks = (ToDeleteSelected==false? e.Query.Cast<ratetask>():null);
-    //            if (ToDeleteSelected == false)
-    //                {
-    //                    e.Query = (from c in AllTasks
-    //                               where c.description.ToLower().Contains(strDescription)
-    //                               && c.idrateplan == sesidRatePlan
-    //                               && (//string field, could not compare >0 using linq
-    //                               c.field2.Contains("1") || c.field2.Contains("2") || c.field2.Contains("3")
-    //                                || c.field2.Contains("4") || c.field2.Contains("5") || c.field2.Contains("6")
-    //                                 || c.field2.Contains("7") || c.field2.Contains("8") || c.field2.Contains("9")
-    //                               )
-    //                               orderby c.Status, c.Prefix
-    //                               select c);
-
-    //                    var Arr = new string[] { "'1'", "'2'", "'3'", "'4'", "'5'", "'6'", "'7'", "'8'", "'9'" };
-    //                    sbSql.Append(" and idrateplan= " + sesidRatePlan)
-    //                         .Append(" and lower(description) like '%" + strDescription + "%' ")
-    //                         .Append(" and field2 in(" + string.Join(",", Arr) + ")");
-    //                    return;
-    //            }
-    //            if (ToDeleteSelected == true) using (PartnerEntities Context = new PartnerEntities())
-    //            {
-    //                lstIds = (from c in Context.ratetasks
-    //                          where c.description.ToLower().Contains(strDescription)
-    //                          && c.idrateplan == sesidRatePlan
-    //                          && (//string field, could not compare >0 using linq
-    //                          c.field2.Contains("1") || c.field2.Contains("2") || c.field2.Contains("3")
-    //                           || c.field2.Contains("4") || c.field2.Contains("5") || c.field2.Contains("6")
-    //                            || c.field2.Contains("7") || c.field2.Contains("8") || c.field2.Contains("9")
-    //                          )
-    //                          select c.id).ToList();
-    //            }
-    //            return;
-    //        }
-
-    //    }
-    //}
 
     protected void ListView1_ItemCommand(object sender, ListViewCommandEventArgs e)
     {

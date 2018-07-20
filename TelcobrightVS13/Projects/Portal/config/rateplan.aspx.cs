@@ -11,6 +11,7 @@ using MediationModel;
 using PortalApp;
 public partial class ConfigSupplierRatePlan : Page
 {
+    private static List<uom> Currencies { get; set; }
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!this.IsPostBack)
@@ -21,7 +22,8 @@ public partial class ConfigSupplierRatePlan : Page
             commonCodes.LoadReportTemplatesTree(ref masterTree);
 
             string localPath = this.Request.Url.LocalPath;
-            int pos2NdSlash = localPath.Substring(1, localPath.Length - 1).IndexOf("/");http://localhost:25964/config/rateplan.aspx.cs
+            int pos2NdSlash = localPath.Substring(1, localPath.Length - 1).IndexOf("/");
+            http: //localhost:25964/config/rateplan.aspx.cs
             string rootFolder = localPath.Substring(1, pos2NdSlash);
             int endOfRootFolder = this.Request.Url.AbsoluteUri.IndexOf(rootFolder);
             string urlWithQueryString = ("~" + "/" + rootFolder +
@@ -91,7 +93,7 @@ public partial class ConfigSupplierRatePlan : Page
                 this.Session["sesAllTimeZones"] = tz;
 
             }
-            
+            Currencies = LoadCurrencies();
         }
     }
 
@@ -102,11 +104,8 @@ public partial class ConfigSupplierRatePlan : Page
 
     }
 
-    void LoadCurrencies()
+    private List<uom> LoadCurrencies()
     {
-        //load currencies
-        DropDownList ddlistCurrency =
-            (DropDownList)this.frmSupplierRatePlanInsert.FindControl("DropDownListCurrency");
         List<uom> currencies = null;
         using (MySqlConnection con =
             new MySqlConnection(ConfigurationManager.ConnectionStrings["Reader"].ConnectionString))
@@ -126,13 +125,18 @@ public partial class ConfigSupplierRatePlan : Page
                         });
                 }
             }
-            ddlistCurrency.Items.Clear();
-            foreach (var currency in currencies)
-            {
-                ddlistCurrency.Items.Add(new ListItem(currency.UOM_ID, currency.UOM_ID));
-            }
-            ddlistCurrency.SelectedValue = "USD";
-            //ddlistCurrency.DataBind();
+        }
+        return currencies;
+    }
+
+    void PopulateCurrenciesInDropDownLists(DropDownList ddlistCurrency)
+    {
+        //load currencies
+
+        ddlistCurrency.Items.Clear();
+        foreach (var currency in Currencies)
+        {
+            ddlistCurrency.Items.Add(new ListItem(currency.UOM_ID, currency.UOM_ID));
         }
     }
 
@@ -166,15 +170,15 @@ public partial class ConfigSupplierRatePlan : Page
 
             ddlistTz.Enabled = false;
             ddlistCurrency.Enabled = false;
-            //set fixed currency for international incoming
-            switch (typeList.SelectedValue)
-            {
-                case "3": //international In
-                case "4": //international Out
-                    ddlistCurrency.SelectedValue = "USD";
-                    ddlistCurrency.SelectedValue = "USD";
-                    break;
-            }
+            ////set fixed currency for international incoming
+            //switch (typeList.SelectedValue)
+            //{
+            //    case "3": //international In
+            //    case "4": //international Out
+            //        ddlistCurrency.SelectedValue = "USD";
+            //        ddlistCurrency.SelectedValue = "USD";
+            //        break;
+            //}
             //ddlCountryWise.Enabled = false;
 
         }
@@ -224,29 +228,7 @@ public partial class ConfigSupplierRatePlan : Page
                 string currency = DataBinder.Eval(e.Row.DataItem, "Currency").ToString();
                 thisLabel.Text = currency;
             }
-
-            //ThisLabel = (Label)e.Row.FindControl("lblType");
-            //if (DataBinder.Eval(e.Row.DataItem, "Type") != null)
-            //{
-            //    string Type = DataBinder.Eval(e.Row.DataItem, "Type").ToString();
-
-            //    switch (Type)
-            //    {
-            //        case "1":
-            //            ThisLabel.Text = "Transit";
-            //            break;
-            //        case "3":
-            //            ThisLabel.Text = "Intl. Incoming";
-            //            break;
-            //        case "4":
-            //            ThisLabel.Text = "Intl. Outgoing";
-            //            break;
-
-            //    }
-            //}
-
-
-
+            
             //Session["sesAllTimeZones"]
             thisLabel = (Label)e.Row.FindControl("lblTimeZone");
             if (DataBinder.Eval(e.Row.DataItem, "TimeZone") != null)
@@ -335,7 +317,9 @@ public partial class ConfigSupplierRatePlan : Page
 
     protected void GridViewSupplierRatePlan_RowEditing(object sender, GridViewEditEventArgs e)
     {
-
+        var ddlistCurrency =
+            (DropDownList)this.GridViewSupplierRatePlan.FindControl("DropDownListCurrency");
+        PopulateCurrenciesInDropDownLists(ddlistCurrency);
 
     }
 
@@ -563,8 +547,11 @@ public partial class ConfigSupplierRatePlan : Page
         }
 
         //set default billing span=minute
+        DropDownList ddlistCurrency =
+            (DropDownList)this.frmSupplierRatePlanInsert.FindControl("DropDownListCurrency");
         ((DropDownList)this.frmSupplierRatePlanInsert.FindControl("DropDownListBillingSpan")).SelectedValue = "TF_min";
-        LoadCurrencies();
+        PopulateCurrenciesInDropDownLists(ddlistCurrency);
+        ddlistCurrency.SelectedValue = "USD";
     }
 
 

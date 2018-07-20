@@ -55,9 +55,10 @@ namespace TelcobrightMediation
             PrefixMatcher prefixaMatcher = new PrefixMatcher(serviceContext, phoneNumber, category, subCategory, tups,
                 answerTime, flagLcr, useInMemoryTable: true);
             Rateext matchedRateWithAssignmentTupleId = prefixaMatcher.MatchPrefix();
+            if (matchedRateWithAssignmentTupleId == null) return null;
             matchedRateWithAssignmentTupleId.rateamount =
                 matchedRateWithAssignmentTupleId.rateamount.RoundFractionsUpTo(maxDecimalPrecision);
-            if (matchedRateWithAssignmentTupleId == null) return null;
+            
 
             //iof over selling rule
             //Minute rate    other amt   Effect Rate IOF % BTRC % IOF First Amount    IOF Additional Amount IOF Total Amount    BTRC Amount

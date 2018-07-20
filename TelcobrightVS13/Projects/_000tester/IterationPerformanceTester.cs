@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FlexValidation;
 using LibraryExtensions;
+using MediationModel;
 using Spring.Core.TypeResolution;
 using Spring.Expressions;
 using ValidationResult = FlexValidation.ValidationResult;

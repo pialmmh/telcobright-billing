@@ -107,6 +107,8 @@ namespace TelcobrightMediation.Cdr
                 }
                 else //new+old cdr co-existence
                 {
+                    newCdrExt.Cdr.TransactionMetaTotal = oldCdrExt.Cdr.TransactionMetaTotal;
+                    var transactionMetaDataUpdater = new TransactionMetaDataUpdater(newCdrExt.Cdr);
                     foreach (KeyValuePair<long, AccWiseTransactionContainer> kv in newCdrExt
                         .AccWiseTransactionContainers)
                     {
@@ -118,8 +120,6 @@ namespace TelcobrightMediation.Cdr
                         {
                             throw new Exception("OldTransaction container not found in old CdrExt instance.");
                         }
-                        newCdrExt.Cdr.TransactionMetaTotal = oldCdrExt.Cdr.TransactionMetaTotal;
-                        var transactionMetaDataUpdater = new TransactionMetaDataUpdater(newCdrExt.Cdr);
                         var incTrans = newTransactionContainer.NewTransaction.Clone();
                         incTrans.amount =
                             newTransactionContainer.NewTransaction.amount -
@@ -127,6 +127,15 @@ namespace TelcobrightMediation.Cdr
                         newTransactionContainer.SetIncrementalTransaction(incTrans, transactionMetaDataUpdater);
                         this.IncrementalTransactions.Add(incTrans);
                     }
+                }
+                var incrementalAmount =
+                    newCdrExt.AccWiseTransactionContainers.Values.Sum(t => t.IncrementalTransaction.amount);
+                decimal? oldAmount = oldCdrExt?.AccWiseTransactionContainers.Values
+                    .SelectMany(t => t.OldTransactions).Sum(t => t.amount);
+                if (incrementalAmount+Convert.ToDecimal(oldAmount) != newCdrExt.Cdr.TransactionMetaTotal)
+                {
+                    throw new Exception($@"Transaction meta total does not match incremental transtions
+                                        and old cdrs sum.");
                 }
             });
         }
@@ -168,7 +177,8 @@ namespace TelcobrightMediation.Cdr
             }
             if (this.CdrProcessor != null)
             {
-                decimal sumOfAllTransMetaData = Convert.ToDecimal(newSuccessfulCdrExts.Sum(c => c.Cdr.TransactionMetaTotal));
+                decimal sumOfAllTransMetaData =
+                    Convert.ToDecimal(newSuccessfulCdrExts.Sum(c => c.Cdr.TransactionMetaTotal));
                 decimal sumOfAllIncAmount = newSuccessfulCdrExts
                     .SelectMany(c => c.AccWiseTransactionContainers.Values)
                     .Sum(tContainer => tContainer.IncrementalTransaction.amount);
@@ -176,7 +186,7 @@ namespace TelcobrightMediation.Cdr
                     .SelectMany(c => c.AccWiseTransactionContainers.Values)
                     .SelectMany(tContainer => tContainer.OldTransactions)
                     .Sum(c => c.amount);
-                if(Math.Abs(sumOfAllTransMetaData-(sumOfAllIncAmount+sumOfAllOldAmount))>fractionComparsionTollerance)
+                if(sumOfAllTransMetaData!=sumOfAllIncAmount+sumOfAllOldAmount)
                 throw new Exception("Expected transaction meta data does not match the total of " +
                                     "all incremental & old transactions amount.");
             }

@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Common.Logging.Configuration;
 using LibraryExtensions;
 using MediationModel;
 using MySql.Data.MySqlClient;
@@ -127,10 +128,11 @@ namespace TelcobrightMediation
             return incompleteSegments;
         }
 
-        public virtual void FinishJob(List<jobsegment> jobsegments)
+        public virtual void FinishJob(List<jobsegment> jobsegments,Action<DbCommand> additionalJobFinalizingTask)
         {
             using (DbCommand cmd = ConnectionManager.CreateCommandFromDbContext(this.Context))
             {
+                additionalJobFinalizingTask?.Invoke(cmd);
                 if (jobsegments.Any(c => c.status != 1) == false) //no incomplete segment
                 {
                     cmd.ExecuteCommandText(" set autocommit=0; ");

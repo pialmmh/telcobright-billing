@@ -6,7 +6,7 @@
     <ProjectGuid>{57C85533-C119-4D65-A910-90C70337EB43}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <NoStandardLibraries>false</NoStandardLibraries>
-    <AssemblyName>ConsoleApplication</AssemblyName>
+    <AssemblyName>Utils</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -56,8 +56,8 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="MySql.Data, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="MySql.Data.Entity.EF6, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Spring.Core, Version=2.0.1.45000, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
@@ -102,13 +102,6 @@
     </None>
     <None Include="Extensions\telcobright.conf" />
     <None Include="packages.config" />
-    <EntityDeploy Include="PartnerModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>PartnerModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="PartnerModel.edmx.diagram">
-      <DependentUpon>PartnerModel.edmx</DependentUpon>
-    </None>
     <EntityDeploy Include="testModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>testModel.Designer.cs</LastGenOutput>
@@ -119,90 +112,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractFluentValidationTester.cs" />
-    <Compile Include="account.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="acc_balance.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="acc_ledger.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="acc_ledger_summary.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="acc_prev_transaction.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="acc_temp_transaction.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="acc_transaction.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="allerror.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ansprefixextra.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="aspnetuserclaim.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="AsyncAwaitDemo.cs" />
-    <Compile Include="autoincrementcounter.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="BigCollectionTester.cs" />
-    <Compile Include="billingruleassignment.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="carriercontactmapping.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="causecode.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="cdr.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="cdrdiscarded.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="cdrerror.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="cdrfieldlist.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="CdrFieldListValidator.cs" />
     <Compile Include="CdrFieldListValidatorRuleSetBased.cs" />
-    <Compile Include="cdrfieldmappingbyswitchtype.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="cdrinconsistent.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="cdrpartialaggregatedinstance.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="cdrpartialreference.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="cdrpartialunprocessedinstance.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="ClassDeclarationRoo.cs" />
     <Compile Include="ClassDeclaration.cs" />
-    <Compile Include="commontg.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="country.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="countrycode.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="CrudGeneratorRoo.cs" />
     <Compile Include="CrudGenerator.cs" />
     <Compile Include="CsvImporter.cs" />
@@ -239,224 +154,17 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EmployeeModel.edmx</DependentUpon>
     </Compile>
-    <Compile Include="enumaccountingclass.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumanstype.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumbillingspan.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumbilltype.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumcalldirection.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumcallforwardingroamingtype.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumcdrformat.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumcreditrule.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumcurrency.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumdatedassignment.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumdateparsestring.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enuminvoicetemplate.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumjobautocreatetype.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumjobdefinition.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumjobstatu.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumjobtype.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumnationalorinternationalroute.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumpartnerrule.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumpartnertype.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumpostpaidinvoicestatu.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumprepaidinvoicestatu.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumprepostpaid.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumrateplanformat.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumrateplantype.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumratesheetformat.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumroutestatu.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumservicecategory.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumservicefamily.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumservicegroup.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumservicesubcategory.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumsignalingprotocol.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumss7networkindicator.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumswitchvendor.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumtaxrule.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumtelcobrightforcarriertype.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumtransactiontype.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumtransportprotocol.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="enumvatrule.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="errordefinition.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
+    <Compile Include="ExceptionTester.cs" />
     <Compile Include="FluentTester.cs" />
     <Compile Include="IterationPerformanceTester.cs" />
     <Compile Include="FlexValidatorTester.cs" />
-    <Compile Include="genericparameterassignment.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="job.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="jobcompletion.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="jobsegment.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="jsonbillingrule.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="LargelistTester.cs" />
-    <Compile Include="lcr.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="lcrpoint.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="lcrrateplan.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="MediationRuleDeserializer.cs" />
     <Compile Include="MefTester.cs" />
-    <Compile Include="ne.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
+    <Compile Include="OrderByTester.cs" />
+    <Compile Include="ParallelReaderToEntityTester.cs" />
     <Compile Include="PartialCdrGenerator.cs" />
-    <Compile Include="partner.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="PartnerModel.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>PartnerModel.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="PartnerModel.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="PartnerModel.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>PartnerModel.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="partnerprefix.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="process.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="product.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="rate.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="rateassign.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="rateplan.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="rateplanassign.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="rateplanassignmenttuple.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ratetask.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ratetaskassign.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ratetaskassignreference.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ratetaskreference.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="reporttemplate.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="role.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="route.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="routeaddressmapping.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="salary.cs">
       <DependentUpon>EmployeeModel.tt</DependentUpon>
     </Compile>
@@ -464,27 +172,7 @@
     <Compile Include="SpelFluentTester.cs" />
     <Compile Include="SpelTester.cs" />
     <Compile Include="SpringValidator.cs" />
-    <Compile Include="sum_voice_day_01.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="sum_voice_day_02.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="sum_voice_day_03.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="sum_voice_hr_01.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="sum_voice_hr_02.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="sum_voice_hr_03.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="telcobrightpartner.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
+    <Compile Include="TaskTester.cs" />
     <Compile Include="Testers\CastWithInterfaceTester.cs" />
     <Compile Include="Testers\Employees\FullTextSearchTester.cs" />
     <Compile Include="Testers\FractionCeilingTester.cs" />
@@ -510,38 +198,11 @@
     </Compile>
     <Compile Include="TestToCompareRuleVsRuleSet.cs" />
     <Compile Include="TimePeriodTester.cs" />
-    <Compile Include="timezone.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="title.cs">
       <DependentUpon>EmployeeModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="user.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="userclaim.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="userlogin.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="userrole.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="ValidationTester.cs" />
-    <Compile Include="xyzprefix.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="xyzprefixset.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="xyzselected.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="zone.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Testers\AdhocTester.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -566,16 +227,6 @@
     <Content Include="Extensions\reports.dll" />
     <Content Include="Extensions\ServiceFamilies.dll" />
     <Content Include="Extensions\ServiceGroups.dll" />
-    <Content Include="PartnerModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>PartnerModel.edmx</DependentUpon>
-      <LastGenOutput>PartnerModel.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="PartnerModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>PartnerModel.edmx</DependentUpon>
-      <LastGenOutput>PartnerModel.cs</LastGenOutput>
-    </Content>
     <Content Include="testModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>testModel.edmx</DependentUpon>
@@ -601,6 +252,18 @@
     <ProjectReference Include="..\LibraryExtensions\LibraryExtensions.csproj">
       <Project>{d4c2f34d-4d3d-43ae-84f0-e80cfedb1b48}</Project>
       <Name>LibraryExtensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Mediation\_00Mediation.csproj">
+      <Project>{1a64e6f9-903c-416c-b322-1b5c5d997001}</Project>
+      <Name>_00Mediation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Models_Mediation\Models_Mediation.csproj">
+      <Project>{4282d6f4-efd2-418a-be9f-74f09b7a45d8}</Project>
+      <Name>Models_Mediation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PowerCollections\PowerCollections.csproj">
+      <Project>{5821977d-ac2c-4912-bcd0-6e6b1a756167}</Project>
+      <Name>PowerCollections</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />

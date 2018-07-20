@@ -10,12 +10,12 @@ namespace LibraryExtensions
         public static List<TValue> AppendAndGetListIfMissing<TKey, TValue>(this Dictionary<TKey, List<TValue>> dic,
             TKey key)
         {
-            List<TValue> tempList;
-            dic.TryGetValue(key, out tempList);
-            if (tempList != null) return tempList;
-            tempList = new List<TValue>();
-            dic.Add(key, tempList);
-            return tempList;
+            List<TValue> innerList;
+            dic.TryGetValue(key, out innerList);
+            if (innerList != null) return innerList;
+            innerList = new List<TValue>();
+            dic.Add(key, innerList);
+            return innerList;
         }
     }
     public static class IDictionaryExtension

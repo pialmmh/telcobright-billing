@@ -30,6 +30,11 @@ namespace TelcobrightMediation
             List<CdrExt> newCdrExts = this.CreateNewCdrExts();
             if (newCdrExts.GroupBy(c => c.UniqueBillId).Any(g => g.Count() > 1))
                 throw new Exception("Duplicate billId for CdrExts in CdrJob");
+            var allIdCalls = newCdrExts.Select(c => c.Cdr.IdCall).ToList();
+            if (allIdCalls.GroupBy(i => i).Any(g => g.Count() > 1))
+            {
+                throw new Exception("Duplicate idcalls for CdrExts in CdrJob");
+            }
             var emptyCdrInconsistents = new List<cdrinconsistent>();
             var newCollectionResult = new CdrCollectionResult(base.CdrCollectorInputData.Ne,
                 newCdrExts, emptyCdrInconsistents, base.RawCount);
@@ -41,7 +46,11 @@ namespace TelcobrightMediation
             List<CdrExt> oldCdrExts = this.CreateOldCdrExts();
             if (oldCdrExts.GroupBy(c => c.UniqueBillId).Any(g => g.Count() > 1))
                 throw new Exception("Duplicate billId for Old CdrExts in CdrJob");
-
+            var allIdCalls = oldCdrExts.Select(c => c.Cdr.IdCall).ToList();
+            if (allIdCalls.GroupBy(i => i).Any(g => g.Count() > 1))
+            {
+                throw new Exception("Duplicate idcalls for CdrExts in CdrJob");
+            }
             List<CdrExt> successfulOldCdrExts = oldCdrExts.Where(c => c.Cdr.ChargingStatus == 1).ToList();
             if (successfulOldCdrExts.Any())
             {
