@@ -97,6 +97,7 @@
           <asp:TreeNode Value="Payment Management" Text="Payment Management"  NavigateUrl="~/config/PaymentManagement.aspx" />
           <asp:TreeNode Value="Balance Adjustment" Text="Balance Adjustment"  NavigateUrl="~/config/BalanceAdjustment.aspx" />
           <asp:TreeNode Value="Invoice Generation" Text="Invoice Generation"  NavigateUrl="~/config/InvoiceGeneration.aspx" />
+          <asp:TreeNode Value="Generated Invoices" Text="Generated Invoices"  NavigateUrl="~/config/GeneratedInvoices.aspx" />
       </asp:TreeNode>
 
     <asp:TreeNode Value="Reports" Expanded="True" Text="Reports" SelectAction="None">
