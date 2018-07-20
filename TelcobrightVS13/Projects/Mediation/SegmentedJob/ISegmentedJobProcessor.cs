@@ -12,7 +12,7 @@ namespace TelcobrightMediation
         PartnerEntities Context { get; }
         void PrepareSegments();
         ISegmentedJob CreateJobSegmentInstance(jobsegment jobSegment);
-        List<jobsegment> ExecuteIncompleteSegments();
-        void FinishJob(List<jobsegment> jobsegments, Action<DbCommand> additionalJobFinalizingTask);
+        List<jobsegment> ExecuteIncompleteSegments(Action<object> additionalSegmentCompletionTask);
+        void FinishJob(List<jobsegment> jobsegments, Action<object> additionalJobCompletionTask);
     }
 }

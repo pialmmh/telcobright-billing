@@ -119,10 +119,11 @@
     <Compile Include="Automation\AutomatedNetworkElementCli.cs" />
     <Compile Include="Automation\SessionInfo.cs" />
     <Compile Include="Automation\SingleCliCommand.cs" />
+    <Compile Include="SegmentedJob\CdrInvoicingJob.cs" />
     <Compile Include="Cdr\CdrJobFactory.cs" />
     <Compile Include="Cdr\Collection\PreProcessors\CdrErasingPreProcessor.cs" />
     <Compile Include="Cdr\IncrementalTransactionCreator.cs" />
-    <Compile Include="Cdr\CdrJob.cs" />
+    <Compile Include="SegmentedJob\CdrJob.cs" />
     <Compile Include="Cdr\CdrWritingResult.cs" />
     <Compile Include="Cdr\MediationTester.cs" />
     <Compile Include="Cdr\PartialCdrTester.cs" />
@@ -223,7 +224,7 @@
     <Compile Include="SegmentedJob\AbstractSegmentedJobProcessor.cs" />
     <Compile Include="SegmentedJob\ISegmentedJob.cs" />
     <Compile Include="SegmentedJob\ISegmentedJobProcessor.cs" />
-    <Compile Include="SegmentedJob\SegmentedInvoiceProcessor.cs" />
+    <Compile Include="SegmentedJob\SegmentedInvoiceGenerator.cs" />
     <Compile Include="SegmentedJob\SegmentedCdrReprocessor.cs" />
     <Compile Include="SegmentedJob\SegmentedCdrErrorProcessor.cs" />
     <Compile Include="Mediation\TupleDefinitions.cs" />

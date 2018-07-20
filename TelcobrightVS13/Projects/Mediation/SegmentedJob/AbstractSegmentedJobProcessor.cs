@@ -66,7 +66,7 @@ namespace TelcobrightMediation
                 }
             }
         }
-        public virtual List<jobsegment> ExecuteIncompleteSegments()
+        public virtual List<jobsegment> ExecuteIncompleteSegments(Action<object> additionalSegmentCompletionTask)
         {
             List<jobsegment> incompleteSegments = this.Context.jobsegments.Where(c => c.idJob == this.TelcobrightJob.id
                                                                                       && c.status == 6).ToList();
@@ -128,7 +128,7 @@ namespace TelcobrightMediation
             return incompleteSegments;
         }
 
-        public virtual void FinishJob(List<jobsegment> jobsegments,Action<DbCommand> additionalJobFinalizingTask)
+        public virtual void FinishJob(List<jobsegment> jobsegments,Action<object> additionalJobFinalizingTask)
         {
             using (DbCommand cmd = ConnectionManager.CreateCommandFromDbContext(this.Context))
             {

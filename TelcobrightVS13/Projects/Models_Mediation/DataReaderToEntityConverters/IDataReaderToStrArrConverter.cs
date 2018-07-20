@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MediationModel
 {
-    public interface IDataReaderToStrArrConverter
+    public interface IDataReaderToStrArrConvertable
     {
         string[] ConvertDataReaderToStrArr(object inputData, IDataReader dataReader);
     }
