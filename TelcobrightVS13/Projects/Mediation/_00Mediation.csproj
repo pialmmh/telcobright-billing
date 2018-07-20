@@ -223,6 +223,7 @@
     <Compile Include="SegmentedJob\AbstractSegmentedJobProcessor.cs" />
     <Compile Include="SegmentedJob\ISegmentedJob.cs" />
     <Compile Include="SegmentedJob\ISegmentedJobProcessor.cs" />
+    <Compile Include="SegmentedJob\SegmentedInvoiceProcessor.cs" />
     <Compile Include="SegmentedJob\SegmentedCdrReprocessor.cs" />
     <Compile Include="SegmentedJob\SegmentedCdrErrorProcessor.cs" />
     <Compile Include="Mediation\TupleDefinitions.cs" />

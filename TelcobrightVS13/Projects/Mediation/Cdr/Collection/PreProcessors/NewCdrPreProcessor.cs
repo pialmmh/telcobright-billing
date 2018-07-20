@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using FlexValidation;
 using LibraryExtensions;
 using MediationModel;
+using org.springframework.expression.spel.ast;
 using TelcobrightFileOperations;
 using TelcobrightMediation.Cdr;
 using TelcobrightMediation.Config;
@@ -99,7 +100,7 @@ namespace TelcobrightMediation
         }
         protected override List<CdrExt> CreateNewCdrExts()
         {
-            var cdrExtsForNonPartials = this.NonPartialCdrs
+            var cdrExtsForNonPartials = base.NonPartialCdrs
                 .Select(cdr => CdrExtFactory.CreateCdrExtWithNonPartialCdr(cdr, CdrNewOldType.NewCdr)).ToList();
             if (this.PartialCdrEnabled)
             {
@@ -116,14 +117,22 @@ namespace TelcobrightMediation
             var cdrExtsForPartials = this.PartialCdrContainers
                 .Select(partialContainer => CdrExtFactory.CreateCdrExtWithPartialCdrContainer(partialContainer,
                     CdrNewOldType.NewCdr)).ToList();
-            var concatedList = cdrExtsForPartials.Concat(cdrExtsForNonPartials).ToList();
-            if (concatedList.GroupBy(c => c.UniqueBillId).Any(g => g.Count() > 1))
+            var partialAndNonPartialCdrExts = cdrExtsForPartials.Concat(cdrExtsForNonPartials).ToList();
+            if (partialAndNonPartialCdrExts.GroupBy(c => c.UniqueBillId).Any(g => g.Count() > 1))
                 throw new Exception("Duplicate billId for CdrExts in CdrJob");
+            var allIdCalls = cdrExtsForNonPartials.Select(c => c.Cdr.IdCall)
+                .Concat(cdrExtsForPartials
+                    .SelectMany(c => c.PartialCdrContainer.CombinedNewAndOldUnprocessedInstance).Select(c => c.IdCall))
+                .ToList();
+            if (allIdCalls.GroupBy(i=>i).Any(g=>g.Count()>1))
+            {
+                throw new Exception("Duplicate idcalls for CdrExts in CdrJob");
+            }    
             var rawPartialCount = this.PartialCdrContainers.SelectMany(p => p.NewRawInstances).Count();
             if (this.RawCount != cdrExtsForNonPartials.Count + cdrExtsForPartials.Count +
                 rawPartialCount - this.PartialCdrContainers.Count+base.InconsistentCdrs.Count)
                 throw new Exception("Count of nonPartial and partial cdrs do not match expected with expected rawCount for this job.");
-            return concatedList;
+            return partialAndNonPartialCdrExts;
         }
         protected override CdrCollectionResult CreateOldCollectionResult()
         {
@@ -134,7 +143,11 @@ namespace TelcobrightMediation
                 {
                     Func<List<CdrExt>> oldCdrExtCreatorByLastPartialEqCloning = () => this.CreateOldCdrExts();
                     oldCdrExts = oldCdrExtCreatorByLastPartialEqCloning.Invoke();
-
+                    var allIdCalls = oldCdrExts.Select(c => c.Cdr.IdCall).ToList();
+                    if (allIdCalls.GroupBy(i => i).Any(g => g.Count() > 1))
+                    {
+                        throw new Exception("Duplicate idcalls for CdrExts in CdrJob");
+                    }
                     List<CdrExt> successfulOldCdrExts = oldCdrExts.Where(c => c.Cdr.ChargingStatus == 1).ToList();
                     if (successfulOldCdrExts.Any())
                     {

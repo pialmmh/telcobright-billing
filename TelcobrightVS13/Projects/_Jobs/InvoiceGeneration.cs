@@ -17,15 +17,15 @@ namespace Jobs
 {
 
     [Export("Job", typeof(ITelcobrightJob))]
-    public class ErrorCdrProcess : ITelcobrightJob
+    public class InvoiceGeneration : ITelcobrightJob
     {
         public override string ToString() => this.RuleName;
         public string RuleName => GetType().Name;
 
         public string HelpText =>
-            "Error Cdr processing Job, processes unprocessed CDRs in Error table in Database";
+            "Cdr based invoice generation job";
 
-        public int Id => 2;
+        public int Id => 17;
 
         public JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
         {

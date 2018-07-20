@@ -23,8 +23,12 @@ namespace TelcobrightMediation.Cdr
                 segment =>
                 {
                     dbCmd.CommandText = string.Join(";", segment
-                        .Select(kv => $@"delete from {tableName} where IdCall={kv.Key} 
-                                    and starttime={kv.Value.ToMySqlStyleDateTimeStrWithQuote()}"));
+                        .Select(kv =>
+                        {
+                            var startTime = kv.Value.Date;
+                            return $@"delete from {tableName} where IdCall={kv.Key} 
+                                    and {startTime.ToMySqlWhereClauseForOneDay("starttime")}";
+                        }));
                     delCount += dbCmd.ExecuteNonQuery();
                 });
             return delCount;

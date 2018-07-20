@@ -386,6 +386,8 @@ public partial class ConfigBatcJob : System.Web.UI.Page
                         sourceTable = "cdrerror";
                         break;
                     case "3": //re process
+                        sourceTable = "cdr";
+                        break;
                     case "4": //cdr Eraser
                         if (tbc.CdrSetting.PartialCdrEnabledNeIds.Any())
                         {
