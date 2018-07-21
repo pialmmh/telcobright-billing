@@ -44,7 +44,7 @@ namespace TelcobrightMediation.Cdr
         {
             job telcobrightJob = cdrCollectorInputData.TelcobrightJob;
 
-            this.GlAccountId = glAccountId;
+            //this.GlAccountId = glAccountId;
             this.CdrCollectorInputData = cdrCollectorInputData;
             this.Transactions = transactions;
             this.InvoicedAmountAfterLastSegment = invoicedAmountAfterLastSegment;

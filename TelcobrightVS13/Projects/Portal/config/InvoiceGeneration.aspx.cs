@@ -234,6 +234,10 @@ namespace PortalApp.config
             int jobDefinition = 12;
             int prevJobCountWithSameName =
                 context.jobs.Count(j => j.idjobdefinition == jobDefinition && j.idjobdefinition == jobDefinition);
+            string sourceTable = "acc_transaction";
+            Dictionary<string, string> jobParamsMap = new Dictionary<string, string>();
+            jobParamsMap.Add("sourceTable", sourceTable);
+            jobParamsMap.Add("serviceAccountId", serviceAccount);
             if (prevJobCountWithSameName > 0)
             {
                 serviceAccount = serviceAccount + "_" + prevJobCountWithSameName;
@@ -242,7 +246,8 @@ namespace PortalApp.config
                              + "/" + invoiceDataCollector.StartDateTimeLocal.ToMySqlStyleDateTimeStrWithoutQuote()
                              + " to " +
                              invoiceDataCollector.EndDateTimeLocal.ToMySqlStyleDateTimeStrWithoutQuote();
-            string sourceTable = "acc_transaction";
+            
+            
             List<SqlSingleWhereClauseBuilder> singleWhereClauses = new List<SqlSingleWhereClauseBuilder>();
             List<SqlMultiWhereClauseBuilder> multipleWhereClauses = new List<SqlMultiWhereClauseBuilder>();
             SqlSingleWhereClauseBuilder newParam = null;
