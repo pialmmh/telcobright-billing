@@ -138,11 +138,11 @@
                 </asp:TreeNode>
             </asp:TreeNode>
 
-        <%--<asp:TreeNode Value="CDR" Expanded="True" Text="CDR"  SelectAction="None">
+        <asp:TreeNode Value="CDR" Expanded="True" Text="CDR"  SelectAction="None">
                 <asp:TreeNode Value="View & Export" Text="View & Export" NavigateUrl="~/reports/cdr.aspx" > </asp:TreeNode>
         </asp:TreeNode>
 
-    <asp:TreeNode Value="Route Utilization" Expanded="True" Text="Route Utilization"  SelectAction="None">
+    <%--<asp:TreeNode Value="Route Utilization" Expanded="True" Text="Route Utilization"  SelectAction="None">
                 <asp:TreeNode Value="Ingress-Egress" Text="Ingress-Egress" NavigateUrl="~/reports/RouteUtilization.aspx" > </asp:TreeNode>
                 <asp:TreeNode Value="Aggregate" Text="Aggregate" NavigateUrl="~/reports/RouteUtilizationAgg.aspx" > </asp:TreeNode>
     </asp:TreeNode>--%>
