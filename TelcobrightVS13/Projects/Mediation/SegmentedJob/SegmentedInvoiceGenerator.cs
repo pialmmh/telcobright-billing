@@ -46,7 +46,7 @@ namespace TelcobrightMediation
             {
                 invoicedAmountAfterLastSegment = Convert.ToDecimal(jobStateMap["invoicedAmountAfterLastSegment"]);
             }
-            CdrInvoicingJob cdrInvoicingJob=new CdrInvoicingJob(this.CdrCollectorInput,transactions,invoicedAmountAfterLastSegment);
+            CdrInvoicingJob cdrInvoicingJob=new CdrInvoicingJob(, this.CdrCollectorInput,transactions,invoicedAmountAfterLastSegment);
             return cdrInvoicingJob;
         }
 

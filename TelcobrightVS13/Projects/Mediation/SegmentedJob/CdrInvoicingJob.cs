@@ -11,11 +11,15 @@ using javax.transaction;
 using LibraryExtensions;
 using MediationModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TelcobrightMediation.Accounting;
 
 namespace TelcobrightMediation.Cdr
 {
     public class CdrInvoicingJob : ISegmentedJob
     {
+        private AccountingContext AccountingContext { get; }
+        private int GlAccountId { get; }
+        private account GlAccount { get; }
         private List<acc_transaction> Transactions { get; }
         public int ActualStepsCount => this.Transactions.Count;
         private CdrCollectorInputData CdrCollectorInputData { get; }
@@ -38,6 +42,9 @@ namespace TelcobrightMediation.Cdr
         public CdrInvoicingJob(CdrCollectorInputData cdrCollectorInputData, List<acc_transaction> transactions,
             decimal invoicedAmountAfterLastSegment)
         {
+            job telcobrightJob = cdrCollectorInputData.TelcobrightJob;
+
+            this.GlAccountId = glAccountId;
             this.CdrCollectorInputData = cdrCollectorInputData;
             this.Transactions = transactions;
             this.InvoicedAmountAfterLastSegment = invoicedAmountAfterLastSegment;
