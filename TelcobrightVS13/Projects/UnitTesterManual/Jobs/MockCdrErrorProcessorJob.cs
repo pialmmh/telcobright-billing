@@ -20,7 +20,7 @@ namespace UnitTesterManual
                     input.CdrSetting.BatchSizeWhenPreparingLargeSqlJob, "IdCall", "starttime");
             if (input.TelcobrightJob.Status != 2) //prepare job if not prepared already
                 segmentedCdrErrorProcessor.PrepareSegments();
-            List<jobsegment> jobsegments = segmentedCdrErrorProcessor.ExecuteIncompleteSegments();
+            List<jobsegment> jobsegments = segmentedCdrErrorProcessor.ExecuteIncompleteSegments(null);
             segmentedCdrErrorProcessor.FinishJob(jobsegments,null); //mark job as complete
             return JobCompletionStatus.Complete;
         }

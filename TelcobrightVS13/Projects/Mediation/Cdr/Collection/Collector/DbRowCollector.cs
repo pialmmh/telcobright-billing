@@ -10,7 +10,7 @@ using TelcobrightMediation.Mediation.Cdr;
 
 namespace TelcobrightMediation
 {
-    public class DbRowCollector<T> where T:IDataReaderToStrArrConverter,new() 
+    public class DbRowCollector<T> where T:IDataReaderToStrArrConvertable,new() 
     {
         private CdrJobInputData CdrJobInputData { get; }
         private string SelectSql { get; }

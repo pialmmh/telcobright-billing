@@ -13,8 +13,6 @@ namespace TelcobrightMediation.Cdr
         public static CdrExt CreateCdrExtWithNonPartialCdr(cdr cdr, CdrNewOldType treatCdrAsNewOldType)
         {
             if (cdr.PartialFlag != 0) throw new Exception("Non partial cdr must have partial flag set to 0.");
-            if (cdr.FinalRecord != 1)
-                throw new Exception("Partial cdr equivalent instance must have final record set to 1.");
             return new CdrExt(cdr, treatCdrAsNewOldType)
             {
                 PartialCdrContainer = null,

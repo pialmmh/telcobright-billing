@@ -174,10 +174,11 @@
     <Compile Include="countrycode.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="DataReaderConversion\cdr.cs" />
-    <Compile Include="DataReaderConversion\_CdrDataRowToStrArrHelper.cs" />
-    <Compile Include="DataReaderConversion\cdrerror.cs" />
-    <Compile Include="DataReaderConversion\IDataReaderToStrArrConverter.cs" />
+    <Compile Include="DataReaderToEntityConverters\acc_transaction.cs" />
+    <Compile Include="DataReaderToEntityConverters\cdr.cs" />
+    <Compile Include="DataReaderToEntityConverters\_CdrDataRowToStrArrHelper.cs" />
+    <Compile Include="DataReaderToEntityConverters\cdrerror.cs" />
+    <Compile Include="DataReaderToEntityConverters\IDataReaderToStrArrConverter.cs" />
     <Compile Include="EntityExtensions\account.cs" />
     <Compile Include="EntityExtensions\acc_transaction.cs" />
     <Compile Include="EntityExtensions\acc_chargeable.cs" />
