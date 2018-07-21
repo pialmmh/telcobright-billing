@@ -134,67 +134,34 @@ namespace PortalApp.config
             }
         }
 
-        protected void gvInvoice_OnRowEditing(object sender, GridViewEditEventArgs e)
-        {
-            gvInvoice.EditIndex = e.NewEditIndex;
-            BindingList<InvoiceDataCollector> invoiceGenerations =
-                (BindingList<InvoiceDataCollector>) this.Session["igInvoiceGenList"];
-            gvInvoice.DataSource = invoiceGenerations;
-            gvInvoice.DataBind();
-        }
-
         protected void gvInvoice_OnRowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                if ((e.Row.RowState & DataControlRowState.Edit) > 0)
+                DropDownList ddlTimeZone = (DropDownList)e.Row.FindControl("ddlistTimeZone");
+                if (DataBinder.Eval(e.Row.DataItem, "TimeZone") != null)
                 {
-                    DropDownList ddlTimeZone = (DropDownList) e.Row.FindControl("ddlistTimeZone");
-                    if (DataBinder.Eval(e.Row.DataItem, "TimeZone") != null)
+                    if (this.Session["sesAllTimeZones"] != null)
                     {
-                        if (this.Session["sesAllTimeZones"] != null)
+                        List<timezone> allTimeZones = (List<timezone>)this.Session["sesAllTimeZones"];
+                        foreach (timezone t in allTimeZones)
                         {
-                            List<timezone> allTimeZones = (List<timezone>) this.Session["sesAllTimeZones"];
-                            foreach (timezone t in allTimeZones)
-                            {
-                                string zoneName = t.zone.country.country_name + " " + t.offsetdesc + " [" +
-                                                  t.zone.zone_name + "]";
-                                ddlTimeZone.Items.Add(new ListItem(zoneName, t.id.ToString()));
-                            }
+                            string zoneName = t.zone.country.country_name + " " + t.offsetdesc + " [" +
+                                              t.zone.zone_name + "]";
+                            ddlTimeZone.Items.Add(new ListItem(zoneName, t.id.ToString()));
                         }
-                        int idTimeZone = int.Parse(DataBinder.Eval(e.Row.DataItem, "TimeZone").ToString());
-                        ddlTimeZone.SelectedValue = idTimeZone.ToString();
                     }
-                }
-                else
-                {
-                    Label thisLabel = (Label) e.Row.FindControl("lblTimeZone");
-                    if (DataBinder.Eval(e.Row.DataItem, "TimeZone") != null)
-                    {
-                        int idTimeZone = int.Parse(DataBinder.Eval(e.Row.DataItem, "TimeZone").ToString());
-                        if (idTimeZone > 0)
-                        {
-                            if (this.Session["sesAllTimeZones"] != null)
-                            {
-                                List<timezone> allTimeZones = (List<timezone>) this.Session["sesAllTimeZones"];
-                                string tzName = (from c in allTimeZones
-                                    where c.id == idTimeZone
-                                    select c.zone.country.country_name + " " + c.offsetdesc + " [" + c.zone.zone_name +
-                                           "]").First();
-                                thisLabel.Text = tzName;
-                            }
-                        }
-
-                    }
+                    int idTimeZone = int.Parse(DataBinder.Eval(e.Row.DataItem, "TimeZone").ToString());
+                    ddlTimeZone.SelectedValue = idTimeZone.ToString();
                 }
             }
         }
 
         protected void btnAddInvoiceRow_OnClick(object sender, EventArgs e)
         {
-            List<timezone> allTimeZones = (List<timezone>) this.Session["sesAllTimeZones"];
+            List<timezone> allTimeZones = (List<timezone>)this.Session["sesAllTimeZones"];
             BindingList<InvoiceDataCollector> invoiceGenerations =
-                (BindingList<InvoiceDataCollector>) this.Session["igInvoiceGenList"];
+                (BindingList<InvoiceDataCollector>)this.Session["igInvoiceGenList"];
             InvoiceDataCollector ledgerSummary = new InvoiceDataCollector();
             ledgerSummary.PartnerId = Convert.ToInt32(ddlistPartner.SelectedValue);
             ledgerSummary.PartnerName = ddlistPartner.SelectedItem.Text;
@@ -210,42 +177,13 @@ namespace PortalApp.config
             gvInvoice.DataBind();
         }
 
-        protected void gvInvoice_OnRowUpdating(object sender, GridViewUpdateEventArgs e)
-        {
-            int index = e.RowIndex;
-            DropDownList ddlTimeZone = gvInvoice.Rows[index].FindControl("ddlistTimeZone") as DropDownList;
-            if (ddlTimeZone != null)
-            {
-                gvInvoice.EditIndex = -1;
-                List<timezone> allTimeZones = (List<timezone>) this.Session["sesAllTimeZones"];
-                BindingList<InvoiceDataCollector> invoiceGenerations =
-                    (BindingList<InvoiceDataCollector>) this.Session["igInvoiceGenList"];
-                InvoiceDataCollector editRow =
-                    invoiceGenerations.First(x => x.PartnerId == Convert.ToInt32(e.Keys[0]));
-                editRow.TimeZone = Convert.ToInt32(ddlTimeZone.SelectedValue);
-                editRow.GmtOffset = allTimeZones.First(x => x.id == editRow.TimeZone).gmt_offset;
-                this.Session["igInvoiceGenList"] = invoiceGenerations;
-                gvInvoice.DataSource = invoiceGenerations;
-                gvInvoice.DataBind();
-            }
-        }
-
-        protected void gvInvoice_OnRowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
-        {
-            gvInvoice.EditIndex = -1;
-            BindingList<InvoiceDataCollector> invoiceGenerations =
-                (BindingList<InvoiceDataCollector>) this.Session["igInvoiceGenList"];
-            gvInvoice.DataSource = invoiceGenerations;
-            gvInvoice.DataBind();
-        }
-
         protected void btnGenerateInvoice_OnClick(object sender, EventArgs e)
         {
             try
             {
                 int batchSizeForJobSegments = 10000;
                 BindingList<InvoiceDataCollector> boundRowsForInvoiceGeneration =
-                    (BindingList<InvoiceDataCollector>) this.Session["igInvoiceGenList"];
+                    (BindingList<InvoiceDataCollector>)this.Session["igInvoiceGenList"];
                 List<job> invoicingJobs = new List<job>();
                 if (this.gvInvoice.Rows.Count <= 0)
                 {
@@ -256,7 +194,7 @@ namespace PortalApp.config
                     for (var index = 0; index < this.gvInvoice.Rows.Count; index++)
                     {
                         GridViewRow invoiceRow = this.gvInvoice.Rows[index];
-                        CheckBox cbSelect = (CheckBox) invoiceRow.FindControl("cbSelect");
+                        CheckBox cbSelect = (CheckBox)invoiceRow.FindControl("cbSelect");
                         if (cbSelect.Checked)
                         {
                             var invoiceDataCollector = boundRowsForInvoiceGeneration[invoiceRow.RowIndex];
@@ -286,7 +224,6 @@ namespace PortalApp.config
                 this.lblStatus.ForeColor = Color.Red;
                 this.lblStatus.Text = exception.Message;
             }
-
         }
 
 
@@ -352,7 +289,7 @@ namespace PortalApp.config
                 batchSizeForJobSegment,
                 singleWhereClauses,
                 multipleWhereClauses,
-                columnExpressions: new List<string>() {"id as RowId", "transactionTime as RowDateTime"}
+                columnExpressions: new List<string>() { "id as RowId", "transactionTime as RowDateTime" }
             );
 
             job newjob = new job();
@@ -366,6 +303,21 @@ namespace PortalApp.config
             newjob.JobParameter = JsonConvert.SerializeObject(jobParam);
             newjob.priority = 5;
             return newjob;
+        }
+
+        protected void ddlistTimeZone_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DropDownList ddlTimeZone = sender as DropDownList;
+            GridViewRow row = (GridViewRow)((Control)sender).NamingContainer;
+            List<timezone> allTimeZones = (List<timezone>)this.Session["sesAllTimeZones"];
+            BindingList<InvoiceDataCollector> invoiceGenerations =
+                (BindingList<InvoiceDataCollector>)this.Session["igInvoiceGenList"];
+            InvoiceDataCollector editRow = invoiceGenerations[row.RowIndex];
+            editRow.TimeZone = Convert.ToInt32(ddlTimeZone.SelectedValue);
+            editRow.GmtOffset = allTimeZones.First(x => x.id == editRow.TimeZone).gmt_offset;
+            this.Session["igInvoiceGenList"] = invoiceGenerations;
+            gvInvoice.DataSource = invoiceGenerations;
+            gvInvoice.DataBind();
         }
     }
 }
