@@ -43,7 +43,12 @@ namespace PortalApp.ReportHelper
                 Y AS 'Y (USD)',
                 Z AS 'Z (BDT)',
                 revenueigwout,
-                suppliercost                          
+                partnercost,
+                suppliercost,
+                SupplierPrefix,
+                XRate AS 'X RATE(BDT)', 
+                YRate AS 'Y RATE(USD)', 
+                USDRate AS 'Dollar Rate' 
                 FROM
                 (
 	            SELECT {GetDateExpression(this.groupInterval)} AS Date,
@@ -69,7 +74,12 @@ namespace PortalApp.ReportHelper
                 SUM(longDecimalAmount2) AS Y,
                 SUM(longDecimalAmount3) AS Z,
                 SUM(customercost) AS revenueigwout,
-                Sum(tax1) AS suppliercost
+                Sum(tax1) AS partnercost,
+                suppliercost,
+                tup_matchedprefixsupplier AS SupplierPrefix,
+                tup_customerrate as XRate, 
+                tup_supplierrate as YRate, 
+                tup_customercurrency as USDRate 
 
 	            FROM {TableName}
                 WHERE tup_starttime>='{StartDate}'

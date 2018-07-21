@@ -222,6 +222,10 @@
             </div>
                     </ContentTemplate>
                 </asp:UpdatePanel>
+           <div style="float:left;margin-left:10px;">
+               View by Supplier Prefix:
+          <asp:CheckBox ID="CheckBoxShowBySupplierPrefix" runat="server" AutoPostBack="false" Checked="false" />
+               </div>
             <%--<br />--%>
             
            <div style="height:3px;clear:both;"></div>
@@ -341,11 +345,16 @@
                 HeaderText="CCR By CC" 
                 SortExpression="CCRByCC" />
 
+            <asp:BoundField DataField="X RATE(BDT)" DataFormatString="{0:#,0.#0}" HeaderText="X RATE(BDT)" SortExpression="X RATE(BDT)" />
+            <asp:BoundField DataField="Y RATE(USD)" DataFormatString="{0:#,0.#0}" HeaderText="Y RATE(USD)" SortExpression="Y RATE(USD)" />
+            <asp:BoundField DataField="Dollar Rate" DataFormatString="{0:#,0.#0}" HeaderText="Dollar Rate" SortExpression="Dollar Rate" />
             <asp:BoundField DataField="X (BDT)" DataFormatString="{0:#,0.#0}" HeaderText="X (BDT)" SortExpression="X (BDT)" />
             <asp:BoundField DataField="Y (USD)" DataFormatString="{0:#,0.#0}" HeaderText="Y (USD)" SortExpression="Y (USD)" />
             <asp:BoundField DataField="Z (BDT)" DataFormatString="{0:#,0.#0}" HeaderText="Z (BDT)" SortExpression="Z (BDT)" />
             <asp:BoundField DataField="revenueigwout" DataFormatString="{0:#,0.#0}" HeaderText="Revenue (BDT)" SortExpression="revenueigwout" />
-            <asp:BoundField DataField="suppliercost" DataFormatString="{0:#,0.#0}" HeaderText="Partner Cost (USD)" SortExpression="suppliercost" />
+            <asp:BoundField DataField="partnercost" DataFormatString="{0:#,0.#0}" HeaderText="Partner Cost (USD)" SortExpression="partnercost" />
+            <asp:BoundField DataField="suppliercost" DataFormatString="{0:#,0.#0}" HeaderText="Supplier Cost" SortExpression="suppliercost" />
+            <asp:BoundField DataField="SupplierPrefix" HeaderText="Supplier Prefix" SortExpression="SupplierPrefix" />
            
             
              <%-- <asp:BoundField DataField="profitminute" HeaderText="Profit/Minute" SortExpression="profitminute" />--%>

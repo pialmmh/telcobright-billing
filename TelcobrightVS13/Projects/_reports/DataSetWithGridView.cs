@@ -40,6 +40,7 @@ namespace reports
         public double ZAmount { get; set; }
         public double BtrcRevShare { get; set; }
         public double IgwRevenue { get; set; }
+        public double PartnerCost { get; set; }
         public double SupplierCost { get; set; }
         public double TotalCustomerCost { get; set; }
         public double ProfitBdt { get; set; }

@@ -54,6 +54,7 @@ public partial class DefaultRptIntlOut : System.Web.UI.Page
                                 CheckBoxIntlPartner.Checked==true?"tup_outpartnerid":string.Empty,
                                 CheckBoxShowByAns.Checked==true?"tup_sourceID":string.Empty,
                                 CheckBoxShowByIgw.Checked==true?"tup_inpartnerid":string.Empty,
+                                CheckBoxShowBySupplierPrefix.Checked==true?"tup_matchedprefixsupplier":string.Empty,
 
                             },
                       
@@ -181,9 +182,9 @@ public partial class DefaultRptIntlOut : System.Web.UI.Page
             GridView1.Columns[21].Visible = true;
             GridView1.Columns[22].Visible = true;
             GridView1.Columns[23].Visible = true;
-            //GridView1.Columns[24].Visible = true;
-            //GridView1.Columns[25].Visible = true;
-
+            GridView1.Columns[24].Visible = true;
+            GridView1.Columns[25].Visible = true;
+            GridView1.Columns[26].Visible = true;
         }
         else
         {
@@ -193,9 +194,15 @@ public partial class DefaultRptIntlOut : System.Web.UI.Page
             GridView1.Columns[21].Visible = false;
             GridView1.Columns[22].Visible = false;
             GridView1.Columns[23].Visible = false;
-            // GridView1.Columns[24].Visible = false;
-            // GridView1.Columns[25].Visible = false;
+            GridView1.Columns[24].Visible = false;
+            GridView1.Columns[25].Visible = false;
+            GridView1.Columns[26].Visible = true;
         }
+        if (CheckBoxShowBySupplierPrefix.Checked)
+        {
+            GridView1.Columns[28].Visible = true;
+        }
+        else GridView1.Columns[28].Visible = false;
 
 
         using (MySqlConnection connection = new MySqlConnection())
@@ -305,8 +312,9 @@ public partial class DefaultRptIntlOut : System.Web.UI.Page
                     tr.CallStat.TotalDuration3 += tr.ForceConvertToDouble(dr["hmsduration"]);
                     tr.CallStat.TotalDuration2 += tr.ForceConvertToDouble(dr["supplierduration"]);
                     tr.CallStat.IgwRevenue += tr.ForceConvertToDouble(dr["revenueigwout"]);
+                    tr.CallStat.PartnerCost += tr.ForceConvertToDouble(dr["partnercost"]);
                     tr.CallStat.SupplierCost += tr.ForceConvertToDouble(dr["suppliercost"]);
-                   // tr.CallStat.ProfitBdt += tr.ForceConvertToDouble(dr["profitbdt"]);
+                    // tr.CallStat.ProfitBdt += tr.ForceConvertToDouble(dr["profitbdt"]);
 
                     NoOfCallsVsPdd cpdd = new NoOfCallsVsPdd(tr.ForceConvertToLong(dr["No of Calls (Outgoing International)"]), tr.ForceConvertToDouble(dr["PDD"]));
                     callVsPdd.Add(cpdd);
@@ -342,6 +350,9 @@ public partial class DefaultRptIntlOut : System.Web.UI.Page
                 fieldSummaries.Add("pdd", tr.CallStat.Pdd);
                 fieldSummaries.Add("ccr", tr.CallStat.Ccr);
                 fieldSummaries.Add("ccrbycc", tr.CallStat.CcRbyCauseCode);
+                fieldSummaries.Add("partnercost", tr.CallStat.PartnerCost);
+                fieldSummaries.Add("suppliercost", tr.CallStat.SupplierCost);
+
                 tr.FieldSummaries = fieldSummaries;
 
                 Session["IntlOut"] = tr;//save to session

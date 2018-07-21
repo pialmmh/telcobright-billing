@@ -141,8 +141,8 @@ public partial class DefaultRptIntlIn : System.Web.UI.Page
             //GridView1.Columns[9].Visible = true;
             GridView1.Columns[10].Visible = false;
             GridView1.Columns[11].Visible = true;
-            GridView1.Columns[12].Visible = false;
-            GridView1.Columns[13].Visible = false;
+            GridView1.Columns[12].Visible = true;
+            GridView1.Columns[13].Visible = true;
             GridView1.Columns[14].Visible = false;
         }
         else
@@ -261,6 +261,9 @@ public partial class DefaultRptIntlIn : System.Web.UI.Page
                         tr.CallStat.TotalActualDuration += tr.ForceConvertToDouble(dr["Paid Minutes (International Incoming)"]);
                         tr.CallStat.TotalRoundedDuration += tr.ForceConvertToDouble(dr["RoundedDuration"]);
                         tr.CallStat.TotalDuration1 += tr.ForceConvertToDouble(dr["Duration1"]);
+                        tr.CallStat.PartnerCost += tr.ForceConvertToDouble(dr["costicxin"]);
+                        tr.CallStat.BtrcRevShare += tr.ForceConvertToDouble(dr["costvatcomissionin"]);
+                        tr.CallStat.IgwRevenue += tr.ForceConvertToDouble(dr["customercost"]);
                         NoOfCallsVsPdd cpdd = new NoOfCallsVsPdd(tr.ForceConvertToLong(dr["Number Of Calls (International Incoming)"]), tr.ForceConvertToDouble(dr["PDD"]));
                         callVsPdd.Add(cpdd);
                     }
@@ -270,6 +273,9 @@ public partial class DefaultRptIntlIn : System.Web.UI.Page
                     tr.CallStat.TotalDuration3 = Math.Round(tr.CallStat.TotalDuration3, 2);
                     tr.CallStat.TotalDuration4 = Math.Round(tr.CallStat.TotalDuration4, 2);
                     tr.CallStat.TotalRoundedDuration = Math.Round(tr.CallStat.TotalRoundedDuration, 2);
+                    tr.CallStat.PartnerCost  = Math.Round(tr.CallStat.PartnerCost, 2);
+                    tr.CallStat.BtrcRevShare = Math.Round(tr.CallStat.BtrcRevShare, 2);
+                    tr.CallStat.IgwRevenue = Math.Round(tr.CallStat.IgwRevenue, 2);
                     tr.CallStat.CalculateAsr(2);
                     tr.CallStat.CalculateAcd(2);
                     tr.CallStat.CalculateAveragePdd(callVsPdd, 2);
@@ -288,6 +294,9 @@ public partial class DefaultRptIntlIn : System.Web.UI.Page
                     fieldSummaries.Add("paid minutes (international incoming)", tr.CallStat.TotalActualDuration);
                     fieldSummaries.Add("roundedduration", tr.CallStat.TotalRoundedDuration);
                     fieldSummaries.Add("duration1", tr.CallStat.TotalDuration1);
+                    fieldSummaries.Add("costicxin", tr.CallStat.PartnerCost);
+                    fieldSummaries.Add("costvatcomissionin", tr.CallStat.BtrcRevShare);
+                    fieldSummaries.Add("customercost", tr.CallStat.IgwRevenue);
                     fieldSummaries.Add("asr", tr.CallStat.Asr);
                     fieldSummaries.Add("acd", tr.CallStat.Acd);
                     fieldSummaries.Add("pdd", tr.CallStat.Pdd);
