@@ -127,9 +127,15 @@ public partial class DefaultRptIntlOut : System.Web.UI.Page
 
         if (CheckBoxShowByCountry.Checked == true)
         {
-            GridView1.Columns[2].Visible = false;
+            GridView1.Columns[1].Visible = true;
         }
-        else GridView1.Columns[2].Visible = true;
+        else GridView1.Columns[1].Visible = false;
+
+        if (CheckBoxShowByDestination.Checked)
+        {
+            GridView1.Columns[2].Visible = true;
+        }
+        else GridView1.Columns[2].Visible = false;
 
         if (CheckBoxShowByAns.Checked == true)
         {
@@ -175,8 +181,8 @@ public partial class DefaultRptIntlOut : System.Web.UI.Page
             GridView1.Columns[21].Visible = true;
             GridView1.Columns[22].Visible = true;
             GridView1.Columns[23].Visible = true;
-            GridView1.Columns[24].Visible = true;
-            GridView1.Columns[25].Visible = true;
+            //GridView1.Columns[24].Visible = true;
+            //GridView1.Columns[25].Visible = true;
 
         }
         else
@@ -187,10 +193,9 @@ public partial class DefaultRptIntlOut : System.Web.UI.Page
             GridView1.Columns[21].Visible = false;
             GridView1.Columns[22].Visible = false;
             GridView1.Columns[23].Visible = false;
-           // GridView1.Columns[24].Visible = false;
-           // GridView1.Columns[25].Visible = false;
+            // GridView1.Columns[24].Visible = false;
+            // GridView1.Columns[25].Visible = false;
         }
-
 
 
         using (MySqlConnection connection = new MySqlConnection())
@@ -210,7 +215,7 @@ public partial class DefaultRptIntlOut : System.Web.UI.Page
             if (CheckBoxShowByDestination.Checked == true || CheckBoxShowByCountry.Checked == true)
             {
 
-                GridView1.Columns[1].Visible = true;//country
+                //GridView1.Columns[1].Visible = true;//country
                 if (CheckBoxShowByDestination.Checked)
                     GridView1.Columns[2].Visible = true;//destination
                 else
