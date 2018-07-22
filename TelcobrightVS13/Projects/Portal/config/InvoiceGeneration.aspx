@@ -1,4 +1,5 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="InvoiceGeneration.aspx.cs" Inherits="PortalApp.config.InvoiceGeneration" MasterPageFile="~/Site.master" %>
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
    
     <script src="../Scripts/moment.js" type="text/javascript"></script>
@@ -28,8 +29,18 @@
                                 <asp:DropDownList ID="ddlistTimeZone" runat="server" AutoPostBack="true" Enabled="True" OnSelectedIndexChanged="ddlistTimeZone_SelectedIndexChanged"/>
                             </ItemTemplate>
                         </asp:TemplateField>
-                        <asp:boundfield datafield="StartDateTime" headertext="From" dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" />
-                        <asp:boundfield datafield="EndDateTime" headertext="Till" dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" />
+                        <%--<asp:boundfield datafield="StartDateTime" headertext="From" dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" />--%>
+                        <asp:TemplateField HeaderText="Start Date Time" SortExpression="StartDateTime" ItemStyle-Wrap="false">
+                            <ItemTemplate >
+                                <asp:TextBox ID="txtStartDate" runat="server" AutoPostBack="true" Enabled="True" dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" OnTextChanged="txtStartDate_TextChanged"/>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <%--<asp:boundfield datafield="EndDateTime" headertext="Till" dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" />--%>
+                        <asp:TemplateField HeaderText="End Date Time" SortExpression="EndDateTime" ItemStyle-Wrap="false">
+                            <ItemTemplate >
+                                <asp:TextBox ID="txtEndDate" runat="server" AutoPostBack="true" Enabled="True" dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" OnTextChanged="txtEndDate_TextChanged"/>
+                            </ItemTemplate>
+                        </asp:TemplateField>
                         <asp:boundfield datafield="Amount" headertext="Amount" DataFormatString="{0:n2}">
                             <ItemStyle HorizontalAlign="Right" />
                         </asp:boundfield>

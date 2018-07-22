@@ -138,6 +138,7 @@ namespace PortalApp.config
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
+                // time zone
                 DropDownList ddlTimeZone = (DropDownList)e.Row.FindControl("ddlistTimeZone");
                 if (DataBinder.Eval(e.Row.DataItem, "TimeZone") != null)
                 {
@@ -153,6 +154,22 @@ namespace PortalApp.config
                     }
                     int idTimeZone = int.Parse(DataBinder.Eval(e.Row.DataItem, "TimeZone").ToString());
                     ddlTimeZone.SelectedValue = idTimeZone.ToString();
+                }
+
+                // start date time
+                TextBox txtStartDate = (TextBox)e.Row.FindControl("txtStartDate");
+                if (DataBinder.Eval(e.Row.DataItem, "StartDateTime") != null)
+                {
+                    DateTime startDate = DateTime.Parse(DataBinder.Eval(e.Row.DataItem, "StartDateTime").ToString());
+                    txtStartDate.Text = startDate.ToString("yyyy-MM-dd HH:mm:ss");
+                }
+
+                // end date time
+                TextBox txtEndDate = (TextBox)e.Row.FindControl("txtEndDate");
+                if (DataBinder.Eval(e.Row.DataItem, "EndDateTime") != null)
+                {
+                    DateTime startDate = DateTime.Parse(DataBinder.Eval(e.Row.DataItem, "EndDateTime").ToString());
+                    txtEndDate.Text = startDate.ToString("yyyy-MM-dd HH:mm:ss");
                 }
             }
         }
@@ -320,6 +337,32 @@ namespace PortalApp.config
             InvoiceDataCollector editRow = invoiceGenerations[row.RowIndex];
             editRow.TimeZone = Convert.ToInt32(ddlTimeZone.SelectedValue);
             editRow.GmtOffset = allTimeZones.First(x => x.id == editRow.TimeZone).gmt_offset;
+            this.Session["igInvoiceGenList"] = invoiceGenerations;
+            gvInvoice.DataSource = invoiceGenerations;
+            gvInvoice.DataBind();
+        }
+
+        protected void txtStartDate_TextChanged(object sender, EventArgs e)
+        {
+            TextBox txtStartDate = sender as TextBox;
+            GridViewRow row = (GridViewRow)((Control)sender).NamingContainer;
+            BindingList<InvoiceDataCollector> invoiceGenerations =
+                (BindingList<InvoiceDataCollector>)this.Session["igInvoiceGenList"];
+            InvoiceDataCollector editRow = invoiceGenerations[row.RowIndex];
+            editRow.StartDateTime = DateTime.Parse(txtStartDate.Text);
+            this.Session["igInvoiceGenList"] = invoiceGenerations;
+            gvInvoice.DataSource = invoiceGenerations;
+            gvInvoice.DataBind();
+        }
+
+        protected void txtEndDate_TextChanged(object sender, EventArgs e)
+        {
+            TextBox txtEndDate = sender as TextBox;
+            GridViewRow row = (GridViewRow)((Control)sender).NamingContainer;
+            BindingList<InvoiceDataCollector> invoiceGenerations =
+                (BindingList<InvoiceDataCollector>)this.Session["igInvoiceGenList"];
+            InvoiceDataCollector editRow = invoiceGenerations[row.RowIndex];
+            editRow.EndDateTime = DateTime.Parse(txtEndDate.Text);
             this.Session["igInvoiceGenList"] = invoiceGenerations;
             gvInvoice.DataSource = invoiceGenerations;
             gvInvoice.DataBind();
