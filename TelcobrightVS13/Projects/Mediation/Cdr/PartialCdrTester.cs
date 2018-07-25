@@ -43,9 +43,9 @@ namespace TelcobrightMediation.Cdr
             var processedPartialNewRawInstances = processedPartialCdrExts
                 .SelectMany(c => c.PartialCdrContainer.NewRawInstances).Count();
             Assert.AreEqual(this.PartialCdrTesterData.RawPartialCount + this.PartialCdrTesterData.NonPartialCount
-                -inconsistentsCount,
-                (processedNonPartialCdrExts.Count + processedPartialNewRawInstances
-                 -inconsistentsCount));
+                            - inconsistentsCount,
+                (processedNonPartialCdrExts.Count + processedPartialNewRawInstances + processedErrorCount
+                 - inconsistentsCount));
             Assert.AreEqual(this.CdrWritingResult.PartialCdrWriter.WrittenCdrPartialReferences,
                 processedPartialCdrExts.Count);
             Assert.AreEqual(this.CdrWritingResult.CdrCount, processedCdrExts.Count());
