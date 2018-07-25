@@ -12,8 +12,10 @@ using System.Web.UI.WebControls;
 using ExportToExcel;
 using MySql.Data.MySqlClient;
 using System.Web;
+using DocumentFormat.OpenXml.Drawing;
 using MediationModel;
-
+using PortalApp;
+using System.IO;
 public partial class ConfigCdr : Page
 {
 
@@ -114,7 +116,7 @@ public partial class ConfigCdr : Page
 
     protected void DropDownListSource_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if(this.DropDownListSource.SelectedIndex==0)//cdrloaded
+        if(this.DropDownListSource.SelectedIndex==0)//cdr
         {
             this.DropDownListErrorReason.Items.Clear();
             this.DropDownListErrorReason.Items.Add(new ListItem("N/A", "0"));
@@ -128,8 +130,8 @@ public partial class ConfigCdr : Page
             using (PartnerEntities context = new PartnerEntities())
             {
                 lstEs = context.Database.SqlQuery<ErrorSummary>(@"select ifnull(Reason,'Unknown') as Reason, Count from
-                                                                (select field4 as Reason,count(*) as Count
-                                                                from cdrerror group by field4) x
+                                                                (select errorcode as Reason,count(*) as Count
+                                                                from cdrerror group by errorcode) x
                                                                 order by Count desc,Reason").ToList();
                 foreach(ErrorSummary es in lstEs)
                 {
@@ -167,7 +169,9 @@ public partial class ConfigCdr : Page
             List<ne> lstSwitch;
             TelcobrightConfig tbc = PortalApp.PageUtil.GetTelcobrightConfig();
             ServiceGroupComposer serviceGroupComposer=new ServiceGroupComposer();
-            serviceGroupComposer.Compose();
+            serviceGroupComposer.ComposeFromPath(PageUtil.GetPortalBinPath() +
+                                                 System.IO.Path.DirectorySeparatorChar + ".." +
+                                                 System.IO.Path.DirectorySeparatorChar + "Extensions");
             Dictionary<int, IServiceGroup> serviceGroups =
                 serviceGroupComposer.ServiceGroups.ToDictionary(c => c.Id);
             using (PartnerEntities context = new PartnerEntities())
@@ -186,16 +190,13 @@ public partial class ConfigCdr : Page
                 //populate service group
                 this.DropDownListServiceGroup.Items.Clear();
                 this.DropDownListServiceGroup.Items.Add(new ListItem(" [All]", "-1"));
-                Dictionary<string, string>
-                    dicUniqueServiceGroup = new Dictionary<string, string>(); //serv group id, name
-                Dictionary<string, enumservicegroup> dicServiceGroups =
-                    context.enumservicegroups.ToDictionary(c => c.id.ToString());
-                
+
                 foreach (KeyValuePair<int, ServiceGroupConfiguration> kv in tbc.CdrSetting.ServiceGroupConfigurations)
                 {
                     if (serviceGroups.ContainsKey(kv.Key))
                     {
-                        this.DropDownListServiceGroup.Items.Add(new ListItem(kv.Key.ToString(),serviceGroups[kv.Key].Id.ToString()));
+                        string serviceGroupName = serviceGroups[kv.Key].RuleName;
+                        this.DropDownListServiceGroup.Items.Add(new ListItem(serviceGroupName,serviceGroups[kv.Key].Id.ToString()));
                     }
                 }
             }
@@ -213,16 +214,18 @@ public partial class ConfigCdr : Page
 
             PopulateRoute(0,-1, 0);
             PopulateRoute(0,-1, 1);
-
-
+            
             this.DropDownListFieldList.Items.Clear();
             // deserialize JSON directly from a file
-            var fieldTemplates = new List<CdrFieldTemplate>();
-            var jArray= (JArray)tbc.PortalSettings.DicConfigObjects["CdrFieldTemplate"];
-            foreach (JObject obj in jArray)
+            var fieldTemplates = (List<CdrFieldTemplate>) tbc.PortalSettings.DicConfigObjects["CdrFieldTemplate"];
+            //foreach (JObject obj in jArray)
+            //{
+            //    CdrFieldTemplate cf = obj.ToObject<CdrFieldTemplate>();
+            //    fieldTemplates.Add(cf);
+            //    this.DropDownListFieldList.Items.Add(new ListItem(cf.FieldTemplateName, cf.FieldTemplateName));
+            //}
+            foreach (CdrFieldTemplate cf in fieldTemplates)
             {
-                CdrFieldTemplate cf = obj.ToObject<CdrFieldTemplate>();
-                fieldTemplates.Add(cf);
                 this.DropDownListFieldList.Items.Add(new ListItem(cf.FieldTemplateName, cf.FieldTemplateName));
             }
             this.Session["cdrfieldtemplate"] = fieldTemplates;
@@ -468,8 +471,9 @@ public partial class ConfigCdr : Page
         int serviceGroup = Convert.ToInt32(this.DropDownListServiceGroup.SelectedValue);
         int? chargingStatus = this.DropDownListChargingStatus.SelectedIndex == 0 ? -1 : Convert.ToInt32(this.DropDownListChargingStatus.SelectedValue);
 
-        string sourceTable = this.DropDownListSource.SelectedIndex == 0 ? "cdrloaded c " : "cdrerror c ";
-        string sql = " select * from " + sourceTable + " left join partner inpartner on c.customerid=inpartner.idpartner left join partner outpartner on c.supplierid=outpartner.idpartner " +//basic string
+        string sourceTable = this.DropDownListSource.SelectedIndex == 0 ? "cdr c " : "cdrerror c ";
+        string sql = " select * from " + sourceTable + " left join partner inpartner on c.inpartnerid=inpartner.idpartner " +
+                     " left join partner outpartner on c.outpartnerid=outpartner.idpartner " +//basic string
                      " where starttime>='" + startdate + "' and starttime<='" + enddate + "' " +
                      (serviceGroup >= 0 ? " and ServiceGroup=" + serviceGroup : "")+
                      (chargingStatus >= 0 ? " and chargingstatus=" + chargingStatus : "");
@@ -478,10 +482,10 @@ public partial class ConfigCdr : Page
         if (idSwitch > 0) sql += " and switchid=" + idSwitch.ToString();
 
         int customerId = this.DropDownListInPartner.SelectedIndex == 0 ? 0 : Convert.ToInt32(this.DropDownListInPartner.SelectedValue);
-        if (customerId > 0) sql += " and customerid=" + customerId;
+        if (customerId > 0) sql += " and inpartnerid=" + customerId;
 
         int supplierId = this.DropDownListOutPartner.SelectedIndex == 0 ? 0 : Convert.ToInt32(this.DropDownListOutPartner.SelectedValue);
-        if (supplierId > 0) sql += " and supplierid=" + supplierId;
+        if (supplierId > 0) sql += " and outpartnerid=" + supplierId;
 
         string IncomingRoute = this.DropDownListInRoute.SelectedIndex == 0 ? "-1" : this.DropDownListInRoute.SelectedItem.Value;
         if (IncomingRoute != "-1")
@@ -523,7 +527,7 @@ public partial class ConfigCdr : Page
         string errorReasonField4 = this.DropDownListErrorReason.SelectedIndex == 0 ? "" : this.DropDownListErrorReason.SelectedValue;
         if (errorReasonField4 != "")
         {
-            sql += " and field4='" + errorReasonField4 + "'";
+            sql += " and ErrorCode='" + errorReasonField4 + "'";
         }
         //
         //Sql +=

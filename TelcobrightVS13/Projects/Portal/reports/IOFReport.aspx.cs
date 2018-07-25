@@ -98,7 +98,7 @@ namespace PortalApp.reports.Accounts
                                 + " from "
                                 + " (select customerid as IGW,sum(chargingstatus) as CallsIn, (sum(chargingstatus)/count(*))*100 as ASR"
                                 + " ,((sum(round(DurationSec,0))/60)/sum(chargingstatus)) as ACD,sum(duration3)/60 as roundedduration,sum(roundedduration)/60 as Billing,count(connecttime) as ConnectedCount"
-                                + " from cdrloaded "
+                                + " from cdr "
                                 + " where starttime>='" + this.txtStartDate.Text + " 00:00:00'"
                                 + " and starttime<='" + this.txtEndDate.Text + " 23:59:59'"
                                 + " and partialnextIdCall is null"

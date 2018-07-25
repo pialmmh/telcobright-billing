@@ -259,7 +259,7 @@ namespace Decoders
                             //add valid flag for this type of switch, valid flag comes from cdr for zte
                             thisNormalizedRow[54] = "1";
                             thisNormalizedRow[55] = "0";//for now mark as non-partial, single cdr
-                                                        //remove the text "end1", casue that will throw error for this field in cdrloaded
+                                                        //remove the text "end1", casue that will throw error for this field in cdr
                             thisNormalizedRow[65] = "0";//a numeric value is ok as per cdrfieldlist
                             thisNormalizedRow[Fn.FinalRecord] = "1";
                             decodedRows.Add(thisNormalizedRow);

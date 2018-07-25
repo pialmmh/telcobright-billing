@@ -106,7 +106,7 @@ namespace PortalApp.reports.Accounts
                                            +" ,OutgoingRoute"
                                            +" ,SupplierRate as rate"
                                            +" ,SupplierID"
-                                           +"  from cdrloaded c" 
+                                           +"  from cdr c" 
                                            +" where ServiceGroup=5" 
                                            +" and chargingstatus=1 "
                                            +" and customerid='"+ this._isoId+"'"

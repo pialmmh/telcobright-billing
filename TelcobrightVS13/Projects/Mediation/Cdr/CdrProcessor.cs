@@ -202,7 +202,7 @@ namespace TelcobrightMediation
 
 		private void ResetMediationStatus(cdr cdr)
 		{
-			cdr.ErrorCode = ""; //set error flag empty by default to prevent calls going to cdrloaded table...
+			cdr.ErrorCode = ""; //set error flag empty by default to prevent calls going to cdr table...
 			cdr.MediationComplete = 0;
 			cdr.AdditionalMetaData = null;
 			cdr.ChargeableMetaTotal = null;

@@ -128,7 +128,7 @@ namespace PortalApp.reports.Accounts
                                             + " ("
                                             + " select ansidorig,Count(*) as CallCount,matchedprefixy,sum(Duration3)/60 ActualDuration,"
                                             + " sum(roundedduration)/60 RoundedDuration, sum(XAmount) as X, sum(YAmount) as Y,customerid"
-                                            + " from cdrloaded c"
+                                            + " from cdr c"
                                             + " where ServiceGroup=5"
                                             + " and chargingstatus=1"
                                            

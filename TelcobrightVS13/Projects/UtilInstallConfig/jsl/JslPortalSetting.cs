@@ -106,7 +106,7 @@ namespace InstallConfig
                                 FieldTemplateName="Basic_Error",
                                 Fields=new List<string>()
                                 {
-                                    "c.field4 as `Error Reason`",
+                                    "c.errorcode as `Error Code`",
                                     "starttime as `Start Time`",
                                     "AnswerTime as `Answer Time`",
                                     "endtime as `End Time`",
@@ -132,7 +132,7 @@ namespace InstallConfig
                                 FieldTemplateName="All_Error",
                                 Fields=new List<string>()
                                 {
-                                    "c.field4 as `Error Reason`",
+                                    "c.errorcode as `Error Code`",
                                     "c.*"
                                 }
                             }

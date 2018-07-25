@@ -313,7 +313,7 @@ public partial class DefaultCauseRouteIntlInCallView2 : System.Web.UI.Page
             return "";
         }
         string sqlstring = "";
-        sqlstring = "Select OriginatingCalledNumber,OriginatingCallingNumber,TerminatingCalledNumber,TerminatingCallingNumber,IncomingRoute,OutgoingRoute,StartTime,ConnectTime,EndTime,DurationSec as ActualDuration,RoundedDuration,"+ causeCodeFieldName +" as Cause from cdrloaded where ServiceGroup=4"; //,CustomerID as ICX,SupplierID as Partner,AnsIDOrig as ANS
+        sqlstring = "Select OriginatingCalledNumber,OriginatingCallingNumber,TerminatingCalledNumber,TerminatingCallingNumber,IncomingRoute,OutgoingRoute,StartTime,ConnectTime,EndTime,DurationSec as ActualDuration,RoundedDuration,"+ causeCodeFieldName +" as Cause from cdr where ServiceGroup=4"; //,CustomerID as ICX,SupplierID as Partner,AnsIDOrig as ANS
         sqlstring += " and starttime>='"+ this._startdate+"' and starttime<='"+ this._enddate+"'";
         
         if (this._ans!="")
@@ -350,7 +350,7 @@ public partial class DefaultCauseRouteIntlInCallView2 : System.Web.UI.Page
         }
         // sqlstring += " Limit 0,1000;";
 
-        return sqlstring.Replace("from cdrloaded", " ,cc.description  from cdrloaded c left join causecode cc on  c.switchid=cc.idswitch and c."+ causeCodeFieldName +"=cc.cc ")
+        return sqlstring.Replace("from cdr", " ,cc.description  from cdr c left join causecode cc on  c.switchid=cc.idswitch and c."+ causeCodeFieldName +"=cc.cc ")
             .Replace("StartTime", "date_format(StartTime,'%Y-%m-%d %T') as StartTime")
             .Replace("ConnectTime", "date_format(ConnectTime,'%Y-%m-%d %T') as ConnectTime")
             .Replace("EndTime", "date_format(EndTime,'%Y-%m-%d %T') as EndTime");

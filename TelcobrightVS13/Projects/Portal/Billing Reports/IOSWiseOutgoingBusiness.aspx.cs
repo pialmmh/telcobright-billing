@@ -88,7 +88,7 @@ namespace PortalApp.reports.Accounts
                                             +" select date(starttime) as `Date`,ansidorig,Count(*) as CallCount,matchedprefixy,sum(Duration3) as ActualDuration,originatingip,"
                                             +" sum(roundedduration) as RoundedDuration, sum(XAmount) as X, sum(YAmount) as Y,customerid"
                                             +" ,OriginatingCallingNumber,MediaIp4"
-                                            +" from cdrloaded c"
+                                            +" from cdr c"
                                             +" where ServiceGroup=5"
                                             +" and chargingstatus=1"
                                             +" and starttime>='"+ this.txtStartDate.Text+" 00:00:00'"
