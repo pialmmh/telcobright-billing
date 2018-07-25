@@ -18,7 +18,7 @@ namespace Jobs
 {
 
     [Export("Job", typeof(ITelcobrightJob))]
-    public class InvoiceGeneration : ITelcobrightJob
+    public class CdrInvoiceGeneration : ITelcobrightJob
     {
         public override string ToString() => this.RuleName;
         public string RuleName => GetType().Name;
@@ -26,7 +26,7 @@ namespace Jobs
         public string HelpText =>
             "Cdr based invoice generation job";
 
-        public int Id => 17;
+        public int Id => 12;
 
         public JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
         {
@@ -67,6 +67,7 @@ namespace Jobs
                                     "updating job state.");
             }
         }
+        
     }
 }
 

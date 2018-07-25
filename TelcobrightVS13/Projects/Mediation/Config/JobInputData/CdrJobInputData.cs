@@ -18,7 +18,6 @@ namespace TelcobrightMediation
         public PartnerEntities Context { get; }
         public ne Ne { get; }
         public job TelcobrightJob { get; }
-
         public CdrJobInputData(MediationContext mediationContext, PartnerEntities context, ne ne, job telcobrightJob)
         {
             this.MediationContext = mediationContext;

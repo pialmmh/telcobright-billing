@@ -115,6 +115,7 @@
     <Compile Include="Accounting\BillingRule.cs" />
     <Compile Include="Accounting\LedgerSumFactory.cs" />
     <Compile Include="Accounting\AccountFactory.cs" />
+    <Compile Include="Accounting\TransactionPostingJobInputData.cs" />
     <Compile Include="AutoIncrementManager_old.cs" />
     <Compile Include="Automation\AutomatedNetworkElementCli.cs" />
     <Compile Include="Automation\SessionInfo.cs" />

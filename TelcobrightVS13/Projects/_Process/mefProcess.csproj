@@ -68,6 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccountingHelper.cs" />
     <Compile Include="FileLister.cs" />
     <Compile Include="CdrJobCreator.cs" />
     <Compile Include="AutoCreateJob.cs" />

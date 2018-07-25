@@ -254,7 +254,7 @@ namespace PortalApp.config
             string sourceTable = "acc_transaction";
             Dictionary<string, string> jobParamsMap = new Dictionary<string, string>();
             jobParamsMap.Add("sourceTable", sourceTable);
-            jobParamsMap.Add("serviceAccountId", serviceAccount);
+            jobParamsMap.Add("serviceAccountId", invoiceDataCollector.AccountId.ToString());
             if (prevJobCountWithSameName > 0)
             {
                 serviceAccount = serviceAccount + "_" + prevJobCountWithSameName;
@@ -263,8 +263,8 @@ namespace PortalApp.config
                              + "/" + invoiceDataCollector.StartDateTimeLocal.ToMySqlStyleDateTimeStrWithoutQuote()
                              + " to " +
                              invoiceDataCollector.EndDateTimeLocal.ToMySqlStyleDateTimeStrWithoutQuote();
-            
-            
+
+
             List<SqlSingleWhereClauseBuilder> singleWhereClauses = new List<SqlSingleWhereClauseBuilder>();
             List<SqlMultiWhereClauseBuilder> multipleWhereClauses = new List<SqlMultiWhereClauseBuilder>();
             SqlSingleWhereClauseBuilder newParam = null;
@@ -305,7 +305,7 @@ namespace PortalApp.config
             newParam.ParamValue = "1";
             singleWhereClauses.Add(newParam);
 
-            BatchSqlJobParamJson jobParam = new BatchSqlJobParamJson
+            BatchSqlJobParamJson sqlParam = new BatchSqlJobParamJson
             (
                 sourceTable,
                 batchSizeForJobSegment,
@@ -314,6 +314,8 @@ namespace PortalApp.config
                 columnExpressions: new List<string>() { "id as RowId", "transactionTime as RowDateTime" }
             );
 
+            int jobPriority = context.enumjobdefinitions.Where(j => j.id == 12).Select(j => j.Priority).First();
+            jobParamsMap.Add("sqlParam", JsonConvert.SerializeObject(sqlParam));
             job newjob = new job();
             newjob.Progress = 0;
             newjob.idjobdefinition = 12; //invoicing job
@@ -322,8 +324,8 @@ namespace PortalApp.config
             newjob.idjobdefinition = jobDefinition;
             newjob.CreationTime = DateTime.Now;
             newjob.idNE = 0;
-            newjob.JobParameter = JsonConvert.SerializeObject(jobParam);
-            newjob.priority = 5;
+            newjob.JobParameter = JsonConvert.SerializeObject(jobParamsMap);
+            newjob.priority = jobPriority;
             return newjob;
         }
 

@@ -70,9 +70,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CdrEraserJob.cs" />
-    <Compile Include="InvoiceGeneration.cs" />
+    <Compile Include="CdrInvoiceGeneration.cs" />
     <Compile Include="ErrorCdrProcess.cs" />
     <Compile Include="CdrReProcess.cs" />
+    <Compile Include="TransactionPosting.cs" />
     <Compile Include="FileCopy.cs" />
     <Compile Include="FileDelete.cs" />
     <Compile Include="LcrGeneration.cs" />

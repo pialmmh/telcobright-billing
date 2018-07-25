@@ -148,7 +148,7 @@ namespace TelcobrightMediation
             newSummary.tup_supplierrate = chargeableSupp.unitPriceOrCharge;
             newSummary.suppliercost = chargeableSupp.BilledAmount;
             newSummary.tup_tax1currency = "USD"; //btrc
-            newSummary.tax1 = Convert.ToDecimal(Convert.ToDouble(chargeableSupp.OtherAmount1)); //btrc
+            newSummary.tax1 = Convert.ToDecimal(Convert.ToDouble(chargeableSupp.TaxAmount1)); //btrc
 
             newSummary.tup_tax2currency = "";
             newSummary.tup_vatcurrency = "";

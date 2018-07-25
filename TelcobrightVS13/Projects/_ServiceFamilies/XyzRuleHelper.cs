@@ -59,10 +59,10 @@ namespace TelcobrightMediation
             {
                 thisCdr.CountryCode = matchedRateWithAssignmentTupleId.CountryCode;
             }
-            else if (!thisCdr.CountryCode.Equals(matchedRateWithAssignmentTupleId.CountryCode))
-            {
-                throw new Exception($@"Already set Country code {thisCdr.CountryCode} id different from matchedXyz rates country code {matchedRateWithAssignmentTupleId.CountryCode}");
-            }
+            //else if (!thisCdr.CountryCode.Equals(matchedRateWithAssignmentTupleId.CountryCode))
+            //{
+            //    throw new Exception($@"Already set Country code {thisCdr.CountryCode} id different from matchedXyz rates country code {matchedRateWithAssignmentTupleId.CountryCode}");
+            //}
             //thisCdr.CustomerRate = matchedRateWithAssignmentTupleId.OtherAmount1;
 
             //add the 100ms part 
