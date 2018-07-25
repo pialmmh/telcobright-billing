@@ -8,8 +8,10 @@ using Quartz;
 using TelcobrightMediation;
 using TelcobrightMediation.Scheduler.Quartz;
 using System.ComponentModel.Composition;
+using System.IO;
 using LibraryExtensions;
 using LibraryExtensions.ConfigHelper;
+using Newtonsoft.Json;
 using QuartzTelcobright;
 using TelcobrightMediation.Config;
 
@@ -17,8 +19,12 @@ namespace InstallConfig
 {
     public partial class BtelConfigGenerator //quartz config part
     {
+        static string databaseConfigFileName = new DirectoryInfo(FileAndPathHelper.GetBinPath()).Parent.Parent.FullName
+                                               + Path.DirectorySeparatorChar + "Server.conf";
         public PortalSettings GetPortalSettings(TelcobrightConfig tbc)
         {
+            Dictionary<string, string> settings = JsonConvert.DeserializeObject<Dictionary<string, string>>(
+                File.ReadAllText(databaseConfigFileName));
             PortalSettings portalSetting = new PortalSettings("Portal Settings")
             {
                 HomePageUrl = "~/Dashboard.aspx",
@@ -42,8 +48,8 @@ namespace InstallConfig
                             AppPoolName = this.Tbc.DatabaseSetting.DatabaseName,
                             TemplateFileName = "../../" + this.Tbc.DatabaseSetting.DatabaseName + "/tmplPortalAppPools.txt",
                         },
-                        ImpersonateUserName="Mustafa",
-                        ImpersonatePassword="Habib321"
+                        ImpersonateUserName=settings["PortalLocalAccountName"],
+                        ImpersonatePassword =settings["PortalLocalAccountPassword"]
                     },
                     new InternetSite(this.Tbc)
                     {
