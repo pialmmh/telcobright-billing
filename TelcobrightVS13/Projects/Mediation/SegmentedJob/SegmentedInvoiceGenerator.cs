@@ -9,20 +9,22 @@ using LibraryExtensions;
 using MediationModel;
 using Newtonsoft.Json;
 using TelcobrightMediation;
-using TelcobrightMediation.Cdr;
+using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Config;
+using CdrInvoicingJob = TelcobrightMediation.Cdr.CdrInvoicingJob;
 
 namespace TelcobrightMediation
 {
     public class SegmentedInvoiceGenerator : AbstractRowBasedSegmentedJobProcessor
     {
-        private CdrCollectorInputData CdrCollectorInput { get; }
-        public SegmentedInvoiceGenerator(CdrCollectorInputData cdrCollectorInput,int batchSizeWhenPreparingLargeSqlJob, 
+        private AccountingJobInputData AccountingJobInputData { get; }
+        public SegmentedInvoiceGenerator(AccountingJobInputData accountingJobInputData, 
             string indexedColumnName, string dateColumnName)
-            : base(cdrCollectorInput.TelcobrightJob, cdrCollectorInput.Context, batchSizeWhenPreparingLargeSqlJob,
-                indexedColumnName, dateColumnName)
+            : base(accountingJobInputData.TelcobrightJob, accountingJobInputData.Context, 
+                  accountingJobInputData.CdrSetting.BatchSizeWhenPreparingLargeSqlJob,
+                  indexedColumnName, dateColumnName)
         {
-            this.CdrCollectorInput = cdrCollectorInput;
+            this.AccountingJobInputData = accountingJobInputData;
         }
 
         public override ISegmentedJob CreateJobSegmentInstance(jobsegment jobSegment)
@@ -30,13 +32,13 @@ namespace TelcobrightMediation
             DayWiseRowIdsCollection dayWiseRowsIdsCollection = base.DeserializeDayWiseRowIdsCollection(jobSegment);
             string selectSql = dayWiseRowsIdsCollection.GetSelectSql();
             DbRowCollector<acc_transaction> dbRowCollector =
-                new DbRowCollector<acc_transaction>(this.CdrCollectorInput.CdrJobInputData, selectSql);
+                new DbRowCollector<acc_transaction>(this.AccountingJobInputData, selectSql);
             List<acc_transaction> transactions = dbRowCollector.Collect();
-            var con = this.CdrCollectorInput.Context.Database.Connection;
+            var con = this.AccountingJobInputData.Context.Database.Connection;
             if(con.State!=ConnectionState.Open) con.Open();
             var cmd = con.CreateCommand();
             cmd.CommandText = $"select jobstate from job where id=" +
-                              $"{this.CdrCollectorInput.TelcobrightJob.id}";
+                              $"{this.AccountingJobInputData.TelcobrightJob.id}";
             string jobStateJson = (string)cmd.ExecuteScalar();
             Dictionary<string, string> jobStateMap = null;
             if (jobStateJson.IsNullOrEmptyOrWhiteSpace()==false)
@@ -48,7 +50,7 @@ namespace TelcobrightMediation
             {
                 invoicedAmountAfterLastSegment = Convert.ToDecimal(jobStateMap["invoicedAmountAfterLastSegment"]);
             }
-            CdrInvoicingJob cdrInvoicingJob=new CdrInvoicingJob(this.CdrCollectorInput,transactions,invoicedAmountAfterLastSegment);
+            CdrInvoicingJob cdrInvoicingJob=new CdrInvoicingJob(this.AccountingJobInputData,transactions,invoicedAmountAfterLastSegment);
             return cdrInvoicingJob;
         }
         public override void FinishJob(List<jobsegment> jobsegments, Action<object> additionalJobFinalizingTask)
@@ -62,11 +64,17 @@ namespace TelcobrightMediation
                     cmd.ExecuteCommandText(" update job set completiontime='" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "', " +
                                            " status=9, Error='' " +//status 9=ready for posting
                                            " where id=" + this.TelcobrightJob.id);
+                    CreateTransactionPostingJob();
                     //delete job segments which can hold large amount of data
                     cmd.ExecuteCommandText(" delete from jobsegment where idjob=" + this.TelcobrightJob.id);
                     cmd.ExecuteCommandText(" commit; ");
                 }
             }
+        }
+
+        private void CreateTransactionPostingJob()
+        {
+            throw new NotImplementedException();
         }
     }
 }

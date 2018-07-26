@@ -13,11 +13,13 @@ namespace TelcobrightMediation
     {
         public TelcobrightConfig Tbc { get; }
         public job TelcobrightJob { get; }
+        public PartnerEntities Context { get; }
         public ne Ne { get; }
         public LcrJobInputData(TelcobrightConfig tbc, job telcobrightJob)
         {
             this.Tbc = tbc;
             this.TelcobrightJob = telcobrightJob;
+            this.Context = null;
         }
     }
 }

@@ -12,6 +12,7 @@ using System.Linq;
 using LibraryExtensions;
 using TelcobrightFileOperations;
 using MediationModel;
+using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Config;
 
 namespace Jobs
@@ -22,7 +23,7 @@ namespace Jobs
     {
         public override string ToString() => this.RuleName;
         public string RuleName => GetType().Name;
-        private CdrCollectorInputData CdrCollectorInputData { get; set; }
+        private AccountingJobInputData Input { get; set; }
         public string HelpText =>
             "Cdr based invoice generation job";
 
@@ -30,12 +31,10 @@ namespace Jobs
 
         public JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
         {
-            CdrJobInputData input = (CdrJobInputData) jobInputData;
-            this.CdrCollectorInputData = new CdrCollectorInputData(input, "");
+            this.Input= (AccountingJobInputData) jobInputData;
             SegmentedInvoiceGenerator segmentedInvoiceGenerator=
-                new SegmentedInvoiceGenerator(this.CdrCollectorInputData,
-                    input.CdrSetting.BatchSizeWhenPreparingLargeSqlJob, "id", "transactiontime");
-            if (input.TelcobrightJob.Status != 2) //prepare job if not prepared already
+                new SegmentedInvoiceGenerator(this.Input, "id", "transactiontime");
+            if (this.Input.TelcobrightJob.Status != 2) //prepare job if not prepared already
                 segmentedInvoiceGenerator.PrepareSegments();
             List<jobsegment> jobsegments = segmentedInvoiceGenerator.ExecuteIncompleteSegments(UpdateJobStateAfterSegment);
             segmentedInvoiceGenerator.FinishJob(jobsegments,null); //mark job as complete
@@ -55,7 +54,7 @@ namespace Jobs
                 }
                 decimal invoicedAmountAfterLastSegment =
                     Convert.ToDecimal(jobDataAsMap["invoicedAmountAfterLastSegment"]);
-                var cmd = this.CdrCollectorInputData.Context.Database.Connection.CreateCommand();
+                var cmd = this.Input.Context.Database.Connection.CreateCommand();
                 newJobStateAsMap.Add("segmentNumber",segmentNumber.ToString());
                 newJobStateAsMap.Add("invoicedAmountAfterLastSegment",invoicedAmountAfterLastSegment.ToString());
                 newJobStateAsMap.Add("lastSegmentExecutedOn", DateTime.Now.ToMySqlStyleDateTimeStrWithoutQuote());

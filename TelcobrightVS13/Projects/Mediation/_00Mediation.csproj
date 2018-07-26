@@ -105,6 +105,7 @@
   <ItemGroup>
     <Compile Include="Accounting\AccBalanceThresholdHandler.cs" />
     <Compile Include="Accounting\AccChargeableExt.cs" />
+    <Compile Include="Accounting\AccountingJobInput.cs" />
     <Compile Include="Accounting\BillingPeriodContants.cs" />
     <Compile Include="Accounting\CdrInvoicingJob.cs" />
     <Compile Include="Accounting\CdrPostingAccountingFinder.cs" />
@@ -120,6 +121,8 @@
     <Compile Include="Automation\AutomatedNetworkElementCli.cs" />
     <Compile Include="Automation\SessionInfo.cs" />
     <Compile Include="Automation\SingleCliCommand.cs" />
+    <Compile Include="Cdr\Collection\Collector\CdrRowCollector.cs" />
+    <Compile Include="MefData\ITelcobrightJobInput.cs" />
     <Compile Include="SegmentedJob\CdrInvoicingJob.cs" />
     <Compile Include="Cdr\CdrJobFactory.cs" />
     <Compile Include="Cdr\Collection\PreProcessors\CdrErasingPreProcessor.cs" />

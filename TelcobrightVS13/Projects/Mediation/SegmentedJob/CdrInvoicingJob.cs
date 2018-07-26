@@ -22,9 +22,8 @@ namespace TelcobrightMediation.Cdr
         private account GlAccount { get; }
         private List<acc_transaction> Transactions { get; }
         public int ActualStepsCount => this.Transactions.Count;
-        private CdrCollectorInputData CdrCollectorInputData { get; }
-        private MediationContext MediationContext => this.CdrCollectorInputData.CdrJobInputData.MediationContext;
-        private CdrSetting CdrSetting => this.MediationContext.Tbc.CdrSetting;
+        private AccountingJobInputData AccountingJobInputData { get; }
+        private CdrSetting CdrSetting => this.AccountingJobInputData.Tbc.CdrSetting;
         private decimal InvoicedAmountAfterLastSegment { get; }
         bool segmentProcessed = false;
         private decimal ProcessedInvoicedAmountSoFar
@@ -39,13 +38,12 @@ namespace TelcobrightMediation.Cdr
                 return this.ProcessedInvoicedAmountSoFar;
             }
         }
-        public CdrInvoicingJob(CdrCollectorInputData cdrCollectorInputData, List<acc_transaction> transactions,
+        public CdrInvoicingJob(AccountingJobInputData accountingJobInputData, List<acc_transaction> transactions,
             decimal invoicedAmountAfterLastSegment)
         {
-            job telcobrightJob = cdrCollectorInputData.TelcobrightJob;
-
+            job telcobrightJob = accountingJobInputData.TelcobrightJob;
             //this.GlAccountId = glAccountId;
-            this.CdrCollectorInputData = cdrCollectorInputData;
+            this.AccountingJobInputData = AccountingJobInputData;
             this.Transactions = transactions;
             this.InvoicedAmountAfterLastSegment = invoicedAmountAfterLastSegment;
         }

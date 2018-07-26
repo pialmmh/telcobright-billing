@@ -12,6 +12,7 @@ namespace TelcobrightMediation.Accounting
         public AccountingContext AccountingContext { get; }
         public List<acc_transaction> TransactionsTobePosted { get; }
         public job TelcobrightJob { get; }
+        public PartnerEntities Context { get; }
 
         public TransactionPostingJobInputData(AccountingContext accountingContext,
             List<acc_transaction> transactionsTobePosted, job telcobrightJob)
@@ -19,6 +20,7 @@ namespace TelcobrightMediation.Accounting
             AccountingContext = accountingContext;
             TransactionsTobePosted = transactionsTobePosted;
             this.TelcobrightJob = telcobrightJob;
+            this.Context = null;
         }
     }
 }
