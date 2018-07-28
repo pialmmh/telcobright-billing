@@ -1,0 +1,1 @@
+<%@ Application Codebehind="Global.asax.cs" Inherits="DXWebReportViewer.Global_asax" Language="C#" %>

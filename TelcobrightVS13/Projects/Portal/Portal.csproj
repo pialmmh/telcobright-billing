@@ -429,6 +429,7 @@
     <Content Include="config\PackageAssignment.aspx" />
     <Content Include="config\PaymentHistory.aspx" />
     <Content Include="config\PaymentManagement.aspx" />
+    <Content Include="config\ConversionRates.aspx" />
     <Content Include="config\ViewRoutes.aspx" />
     <Content Include="config\Partner.aspx" />
     <Content Include="config\PartnerDetail.aspx" />
@@ -718,6 +719,13 @@
     </Compile>
     <Compile Include="config\PaymentManagement.aspx.designer.cs">
       <DependentUpon>PaymentManagement.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="config\ConversionRates.aspx.cs">
+      <DependentUpon>ConversionRates.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="config\ConversionRates.aspx.designer.cs">
+      <DependentUpon>ConversionRates.aspx</DependentUpon>
     </Compile>
     <Compile Include="config\ViewRoutes.aspx.cs">
       <DependentUpon>ViewRoutes.aspx</DependentUpon>

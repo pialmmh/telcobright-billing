@@ -90,6 +90,7 @@
       <asp:TreeNode Value="Rates" Text="Rates"  NavigateUrl="~/config/rates.aspx" />
       <asp:TreeNode Value="Least Cost Routing (LCR)" Text="LCR"  NavigateUrl="~/config/lcr.aspx" />
       <asp:TreeNode Value="View Routes" Text="View Routes"  NavigateUrl="~/config/ViewRoutes.aspx" />
+      <asp:TreeNode Value="Conversion Rates" Text="Conversion Rates"  NavigateUrl="~/config/ConversionRates.aspx" />
      
       
     </asp:TreeNode>
