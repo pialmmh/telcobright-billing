@@ -14,8 +14,7 @@ namespace MediationModel
     
     public partial class rateassign
     {
-        public long id { get; set; }
-        public string Prefix { get; set; }
+        public int Prefix { get; set; }
         public string description { get; set; }
         public decimal rateamount { get; set; }
         public int WeekDayStart { get; set; }
@@ -67,5 +66,8 @@ namespace MediationModel
         public string Comment1 { get; set; }
         public string Comment2 { get; set; }
         public string BillingParams { get; set; }
+    
+        public virtual rateplan rateplan { get; set; }
+        public virtual rateplanassignmenttuple rateplanassignmenttuple { get; set; }
     }
 }

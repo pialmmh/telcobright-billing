@@ -27,7 +27,7 @@ namespace MediationModel
         public float MinDurationSec { get; set; }
         public int SurchargeTime { get; set; }
         public decimal SurchargeAmount { get; set; }
-        public Nullable<long> idrateplan { get; set; }
+        public Nullable<int> idrateplan { get; set; }
         public string CountryCode { get; set; }
         public Nullable<System.DateTime> date1 { get; set; }
         public Nullable<int> field1 { get; set; }

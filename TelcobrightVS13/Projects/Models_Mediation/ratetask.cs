@@ -26,7 +26,7 @@ namespace MediationModel
         public string MinDurationSec { get; set; }
         public string SurchargeTime { get; set; }
         public string SurchargeAmount { get; set; }
-        public long idrateplan { get; set; }
+        public int idrateplan { get; set; }
         public string CountryCode { get; set; }
         public string date1 { get; set; }
         public string field1 { get; set; }

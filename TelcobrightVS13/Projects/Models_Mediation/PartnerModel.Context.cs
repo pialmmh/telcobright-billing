@@ -32,7 +32,6 @@ namespace MediationModel
         public virtual DbSet<aspnetuserclaim> aspnetuserclaims { get; set; }
         public virtual DbSet<autoincrementcounter> autoincrementcounters { get; set; }
         public virtual DbSet<billingruleassignment> billingruleassignments { get; set; }
-        public virtual DbSet<carriercontactmapping> carriercontactmappings { get; set; }
         public virtual DbSet<causecode> causecodes { get; set; }
         public virtual DbSet<cdrfieldlist> cdrfieldlists { get; set; }
         public virtual DbSet<cdrfieldmappingbyswitchtype> cdrfieldmappingbyswitchtypes { get; set; }
@@ -123,6 +122,7 @@ namespace MediationModel
         public virtual DbSet<timezone> timezones { get; set; }
         public virtual DbSet<transactionmeta> transactionmetas { get; set; }
         public virtual DbSet<uom> uoms { get; set; }
+        public virtual DbSet<uom_conversion_dated> uom_conversion_dated { get; set; }
         public virtual DbSet<userclaim> userclaims { get; set; }
         public virtual DbSet<userlogin> userlogins { get; set; }
         public virtual DbSet<userrole> userroles { get; set; }
@@ -156,6 +156,5 @@ namespace MediationModel
         public virtual DbSet<sum_voice_hr_05> sum_voice_hr_05 { get; set; }
         public virtual DbSet<sum_voice_hr_06> sum_voice_hr_06 { get; set; }
         public virtual DbSet<uom_conversion> uom_conversion { get; set; }
-        public virtual DbSet<uom_conversion_dated> uom_conversion_dated { get; set; }
     }
 }

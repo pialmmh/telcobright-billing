@@ -207,25 +207,6 @@ warning 6002: The table/view 'def.platinum.acc_transaction' does not have a prim
           <Property Name="idBillingRule" Type="int" />
           <Property Name="idServiceGroup" Type="int" Nullable="false" />
         </EntityType>
-        <EntityType Name="carriercontactmapping">
-          <Key>
-            <PropertyRef Name="idCarrierContactMapping" />
-          </Key>
-          <Property Name="idCarrierContactMapping" Type="int" Nullable="false" />
-          <Property Name="Name" Type="varchar" MaxLength="45" Nullable="false" />
-          <Property Name="Designation" Type="varchar" MaxLength="45" />
-          <Property Name="Department" Type="varchar" MaxLength="45" />
-          <Property Name="OfficePhone" Type="varchar" MaxLength="45" />
-          <Property Name="Mobile" Type="varchar" MaxLength="45" />
-          <Property Name="email" Type="varchar" MaxLength="45" />
-          <Property Name="idCarrier" Type="int" Nullable="false" />
-          <Property Name="date1" Type="datetime" Precision="0" />
-          <Property Name="field1" Type="int" />
-          <Property Name="field2" Type="int" />
-          <Property Name="field3" Type="int" />
-          <Property Name="field4" Type="varchar" MaxLength="45" />
-          <Property Name="field5" Type="varchar" MaxLength="45" />
-        </EntityType>
         <EntityType Name="causecode">
           <Key>
             <PropertyRef Name="id" />
@@ -619,7 +600,6 @@ warning 6002: The table/view 'def.platinum.cdrinconsistent' does not have a prim
             <PropertyRef Name="SwitchId" />
             <PropertyRef Name="SequenceNumber" />
             <PropertyRef Name="FileName" />
-            <PropertyRef Name="ServiceGroup" />
             <PropertyRef Name="DurationSec" />
             <PropertyRef Name="EndTime" />
             <PropertyRef Name="SignalingStartTime" />
@@ -628,7 +608,7 @@ warning 6002: The table/view 'def.platinum.cdrinconsistent' does not have a prim
           <Property Name="IdCall" Type="varchar" MaxLength="100" />
           <Property Name="SequenceNumber" Type="bigint" Nullable="false" />
           <Property Name="FileName" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="ServiceGroup" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="ServiceGroup" Type="varchar" MaxLength="100" />
           <Property Name="IncomingRoute" Type="varchar" MaxLength="100" />
           <Property Name="OriginatingIP" Type="varchar" MaxLength="100" />
           <Property Name="OPC" Type="varchar" MaxLength="100" />
@@ -1829,7 +1809,7 @@ warning 6002: The table/view 'def.platinum.rate' does not have a primary key def
           <Property Name="MinDurationSec" Type="float" Nullable="false" />
           <Property Name="SurchargeTime" Type="int" Nullable="false" />
           <Property Name="SurchargeAmount" Type="decimal" Precision="20" Scale="8" Nullable="false" />
-          <Property Name="idrateplan" Type="bigint" />
+          <Property Name="idrateplan" Type="int" />
           <Property Name="CountryCode" Type="varchar" MaxLength="20" />
           <Property Name="date1" Type="datetime" Precision="0" />
           <Property Name="field1" Type="int" />
@@ -1874,10 +1854,9 @@ warning 6002: The table/view 'def.platinum.rate' does not have a primary key def
         </EntityType>
         <EntityType Name="rateassign">
           <Key>
-            <PropertyRef Name="id" />
+            <PropertyRef Name="Prefix" />
           </Key>
-          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Prefix" Type="varchar" MaxLength="25" Nullable="false" />
+          <Property Name="Prefix" Type="int" Nullable="false" />
           <Property Name="description" Type="varchar" MaxLength="200" />
           <Property Name="rateamount" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="WeekDayStart" Type="int" Nullable="false" />
@@ -1934,7 +1913,7 @@ warning 6002: The table/view 'def.platinum.rate' does not have a primary key def
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id" Type="int" Nullable="false" />
           <Property Name="Type" Type="int" Nullable="false" />
           <Property Name="RatePlanName" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="Description" Type="varchar" MaxLength="200" />
@@ -1989,7 +1968,7 @@ warning 6002: The table/view 'def.platinum.rate' does not have a primary key def
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" Nullable="false" />
-          <Property Name="idService" Type="bigint" Nullable="false" />
+          <Property Name="idService" Type="int" Nullable="false" />
           <Property Name="AssignDirection" Type="int" Nullable="false" />
           <Property Name="idpartner" Type="int" />
           <Property Name="route" Type="int" />
@@ -2011,7 +1990,7 @@ warning 6002: The table/view 'def.platinum.rate' does not have a primary key def
           <Property Name="MinDurationSec" Type="varchar" MaxLength="100" />
           <Property Name="SurchargeTime" Type="varchar" MaxLength="100" />
           <Property Name="SurchargeAmount" Type="varchar" MaxLength="100" />
-          <Property Name="idrateplan" Type="bigint" Nullable="false" />
+          <Property Name="idrateplan" Type="int" Nullable="false" />
           <Property Name="CountryCode" Type="varchar" MaxLength="100" />
           <Property Name="date1" Type="varchar" MaxLength="100" />
           <Property Name="field1" Type="varchar" MaxLength="100" />
@@ -2129,7 +2108,7 @@ warning 6002: The table/view 'def.platinum.rate' does not have a primary key def
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="idRatePlan" Type="bigint" />
+          <Property Name="idRatePlan" Type="int" />
           <Property Name="Description" Type="varchar" MaxLength="300" />
         </EntityType>
         <EntityType Name="reporttemplate">
@@ -3491,14 +3470,11 @@ warning 6002: The table/view 'def.platinum.uom_conversion' does not have a prima
           <Property Name="CREATED_STAMP" Type="datetime" Precision="0" />
           <Property Name="CREATED_TX_STAMP" Type="datetime" Precision="0" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'def.platinum.uom_conversion_dated' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="uom_conversion_dated">
           <Key>
-            <PropertyRef Name="UOM_ID" />
-            <PropertyRef Name="UOM_ID_TO" />
-            <PropertyRef Name="FROM_DATE" />
+            <PropertyRef Name="id" />
           </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UOM_ID" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="UOM_ID_TO" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="FROM_DATE" Type="datetime" Precision="0" Nullable="false" />
@@ -3691,6 +3667,18 @@ warning 6002: The table/view 'def.platinum.uom_conversion_dated' does not have a
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_BillingRule">
+          <End Role="jsonbillingrule" Type="Self.jsonbillingrule" Multiplicity="0..1" />
+          <End Role="billingruleassignment" Type="Self.billingruleassignment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="jsonbillingrule">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="billingruleassignment">
+              <PropertyRef Name="idBillingRule" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_catetory">
           <End Role="enumservicecategory" Type="Self.enumservicecategory" Multiplicity="1" />
           <End Role="enumservicefamily" Type="Self.enumservicefamily" Multiplicity="*" />
@@ -3739,8 +3727,22 @@ warning 6002: The table/view 'def.platinum.uom_conversion_dated' does not have a
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_rateplan">
-          <End Role="rateplan" Type="Self.rateplan" Multiplicity="0..1" />
+        <Association Name="fk_rate_Plan">
+          <End Role="rateplan" Type="Self.rateplan" Multiplicity="1" />
+          <End Role="rateassign" Type="Self.rateassign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="rateplan">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="rateassign">
+              <PropertyRef Name="Inactive" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RatePlan">
+          <End Role="rateplan" Type="Self.rateplan" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="ratetaskreference" Type="Self.ratetaskreference" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="rateplan">
@@ -3748,6 +3750,18 @@ warning 6002: The table/view 'def.platinum.uom_conversion_dated' does not have a
             </Principal>
             <Dependent Role="ratetaskreference">
               <PropertyRef Name="idRatePlan" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_ratePlanAssignTup">
+          <End Role="rateplanassignmenttuple" Type="Self.rateplanassignmenttuple" Multiplicity="1" />
+          <End Role="rateassign" Type="Self.rateassign" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="rateplanassignmenttuple">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="rateassign">
+              <PropertyRef Name="Prefix" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3760,6 +3774,18 @@ warning 6002: The table/view 'def.platinum.uom_conversion_dated' does not have a
             </Principal>
             <Dependent Role="rateplanassignmenttuple">
               <PropertyRef Name="route" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_timezone">
+          <End Role="timezone" Type="Self.timezone" Multiplicity="1" />
+          <End Role="rateplan" Type="Self.rateplan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="timezone">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="rateplan">
+              <PropertyRef Name="TimeZone" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3965,7 +3991,6 @@ warning 6002: The table/view 'def.platinum.uom_conversion_dated' does not have a
           <EntitySet Name="aspnetuserclaims" EntityType="Self.aspnetuserclaims" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="autoincrementcounter" EntityType="Self.autoincrementcounter" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="billingruleassignment" EntityType="Self.billingruleassignment" Schema="platinum" store:Type="Tables" />
-          <EntitySet Name="carriercontactmapping" EntityType="Self.carriercontactmapping" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="causecode" EntityType="Self.causecode" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="cdrfieldlist" EntityType="Self.cdrfieldlist" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="cdrfieldmappingbyswitchtype" EntityType="Self.cdrfieldmappingbyswitchtype" Schema="platinum" store:Type="Tables" />
@@ -4056,6 +4081,7 @@ warning 6002: The table/view 'def.platinum.uom_conversion_dated' does not have a
           <EntitySet Name="timezone" EntityType="Self.timezone" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="transactionmeta" EntityType="Self.transactionmeta" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="uom" EntityType="Self.uom" Schema="platinum" store:Type="Tables" />
+          <EntitySet Name="uom_conversion_dated" EntityType="Self.uom_conversion_dated" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="userclaims" EntityType="Self.userclaims" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="userlogins" EntityType="Self.userlogins" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="userroles" EntityType="Self.userroles" Schema="platinum" store:Type="Tables" />
@@ -5595,23 +5621,6 @@ FROM `sum_voice_hr_06` AS `sum_voice_hr_06`</DefiningQuery>
 `uom_conversion`.`CREATED_TX_STAMP`
 FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="uom_conversion_dated" EntityType="Self.uom_conversion_dated" store:Type="Tables" store:Schema="platinum">
-            <DefiningQuery>SELECT
-`uom_conversion_dated`.`UOM_ID`, 
-`uom_conversion_dated`.`UOM_ID_TO`, 
-`uom_conversion_dated`.`FROM_DATE`, 
-`uom_conversion_dated`.`THRU_DATE`, 
-`uom_conversion_dated`.`CONVERSION_FACTOR`, 
-`uom_conversion_dated`.`CUSTOM_METHOD_ID`, 
-`uom_conversion_dated`.`DECIMAL_SCALE`, 
-`uom_conversion_dated`.`ROUNDING_MODE`, 
-`uom_conversion_dated`.`PURPOSE_ENUM_ID`, 
-`uom_conversion_dated`.`LAST_UPDATED_STAMP`, 
-`uom_conversion_dated`.`LAST_UPDATED_TX_STAMP`, 
-`uom_conversion_dated`.`CREATED_STAMP`, 
-`uom_conversion_dated`.`CREATED_TX_STAMP`
-FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
-          </EntitySet>
           <AssociationSet Name="account_ibfk_1" Association="Self.account_ibfk_1">
             <End Role="partner" EntitySet="partner" />
             <End Role="account" EntitySet="account" />
@@ -5640,6 +5649,10 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             <End Role="enumjobtype" EntitySet="enumjobtype" />
             <End Role="enumjobdefinition" EntitySet="enumjobdefinition" />
           </AssociationSet>
+          <AssociationSet Name="fk_BillingRule" Association="Self.fk_BillingRule">
+            <End Role="jsonbillingrule" EntitySet="jsonbillingrule" />
+            <End Role="billingruleassignment" EntitySet="billingruleassignment" />
+          </AssociationSet>
           <AssociationSet Name="fk_catetory" Association="Self.fk_catetory">
             <End Role="enumservicecategory" EntitySet="enumservicecategory" />
             <End Role="enumservicefamily" EntitySet="enumservicefamily" />
@@ -5656,13 +5669,25 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             <End Role="ne" EntitySet="ne" />
             <End Role="route" EntitySet="route" />
           </AssociationSet>
-          <AssociationSet Name="fk_rateplan" Association="Self.fk_rateplan">
+          <AssociationSet Name="fk_rate_Plan" Association="Self.fk_rate_Plan">
+            <End Role="rateplan" EntitySet="rateplan" />
+            <End Role="rateassign" EntitySet="rateassign" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RatePlan" Association="Self.fk_RatePlan">
             <End Role="rateplan" EntitySet="rateplan" />
             <End Role="ratetaskreference" EntitySet="ratetaskreference" />
+          </AssociationSet>
+          <AssociationSet Name="fk_ratePlanAssignTup" Association="Self.fk_ratePlanAssignTup">
+            <End Role="rateplanassignmenttuple" EntitySet="rateplanassignmenttuple" />
+            <End Role="rateassign" EntitySet="rateassign" />
           </AssociationSet>
           <AssociationSet Name="fk_route" Association="Self.fk_route">
             <End Role="route" EntitySet="route" />
             <End Role="rateplanassignmenttuple" EntitySet="rateplanassignmenttuple" />
+          </AssociationSet>
+          <AssociationSet Name="fk_timezone" Association="Self.fk_timezone">
+            <End Role="timezone" EntitySet="timezone" />
+            <End Role="rateplan" EntitySet="rateplan" />
           </AssociationSet>
           <AssociationSet Name="fk_zone" Association="Self.fk_zone">
             <End Role="zone" EntitySet="zone" />
@@ -5741,7 +5766,6 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <EntitySet Name="aspnetuserclaims" EntityType="MediationModel.aspnetuserclaim" />
           <EntitySet Name="autoincrementcounters" EntityType="MediationModel.autoincrementcounter" />
           <EntitySet Name="billingruleassignments" EntityType="MediationModel.billingruleassignment" />
-          <EntitySet Name="carriercontactmappings" EntityType="MediationModel.carriercontactmapping" />
           <EntitySet Name="causecodes" EntityType="MediationModel.causecode" />
           <EntitySet Name="cdrfieldlists" EntityType="MediationModel.cdrfieldlist" />
           <EntitySet Name="cdrfieldmappingbyswitchtypes" EntityType="MediationModel.cdrfieldmappingbyswitchtype" />
@@ -5832,6 +5856,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <EntitySet Name="timezones" EntityType="MediationModel.timezone" />
           <EntitySet Name="transactionmetas" EntityType="MediationModel.transactionmeta" />
           <EntitySet Name="uoms" EntityType="MediationModel.uom" />
+          <EntitySet Name="uom_conversion_dated" EntityType="MediationModel.uom_conversion_dated" />
           <EntitySet Name="userclaims" EntityType="MediationModel.userclaim" />
           <EntitySet Name="userlogins" EntityType="MediationModel.userlogin" />
           <EntitySet Name="userroles" EntityType="MediationModel.userrole" />
@@ -5865,7 +5890,6 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <EntitySet Name="sum_voice_hr_05" EntityType="MediationModel.sum_voice_hr_05" />
           <EntitySet Name="sum_voice_hr_06" EntityType="MediationModel.sum_voice_hr_06" />
           <EntitySet Name="uom_conversion" EntityType="MediationModel.uom_conversion" />
-          <EntitySet Name="uom_conversion_dated" EntityType="MediationModel.uom_conversion_dated" />
           <AssociationSet Name="account_ibfk_1" Association="MediationModel.account_ibfk_1">
             <End Role="partner" EntitySet="partners" />
             <End Role="account" EntitySet="accounts" />
@@ -5880,6 +5904,10 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           </AssociationSet>
           <AssociationSet Name="billingruleassignment_ibfk_2" Association="MediationModel.billingruleassignment_ibfk_2">
             <End Role="rateplanassignmenttuple" EntitySet="rateplanassignmenttuples" />
+            <End Role="billingruleassignment" EntitySet="billingruleassignments" />
+          </AssociationSet>
+          <AssociationSet Name="fk_BillingRule" Association="MediationModel.fk_BillingRule">
+            <End Role="jsonbillingrule" EntitySet="jsonbillingrules" />
             <End Role="billingruleassignment" EntitySet="billingruleassignments" />
           </AssociationSet>
           <AssociationSet Name="cdrfieldmappingbyswitchtype_ibfk_1" Association="MediationModel.cdrfieldmappingbyswitchtype_ibfk_1">
@@ -5938,9 +5966,21 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             <End Role="partner" EntitySet="partners" />
             <End Role="route" EntitySet="routes" />
           </AssociationSet>
-          <AssociationSet Name="fk_rateplan" Association="MediationModel.fk_rateplan">
+          <AssociationSet Name="fk_rate_Plan" Association="MediationModel.fk_rate_Plan">
+            <End Role="rateplan" EntitySet="rateplans" />
+            <End Role="rateassign" EntitySet="rateassigns" />
+          </AssociationSet>
+          <AssociationSet Name="fk_ratePlanAssignTup" Association="MediationModel.fk_ratePlanAssignTup">
+            <End Role="rateplanassignmenttuple" EntitySet="rateplanassignmenttuples" />
+            <End Role="rateassign" EntitySet="rateassigns" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RatePlan" Association="MediationModel.fk_RatePlan">
             <End Role="rateplan" EntitySet="rateplans" />
             <End Role="ratetaskreference" EntitySet="ratetaskreferences" />
+          </AssociationSet>
+          <AssociationSet Name="fk_timezone" Association="MediationModel.fk_timezone">
+            <End Role="timezone" EntitySet="timezones" />
+            <End Role="rateplan" EntitySet="rateplans" />
           </AssociationSet>
           <AssociationSet Name="fk_route" Association="MediationModel.fk_route">
             <End Role="route" EntitySet="routes" />
@@ -6085,25 +6125,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="idBillingRule" Type="Int32" />
           <Property Name="idServiceGroup" Type="Int32" Nullable="false" />
           <NavigationProperty Name="rateplanassignmenttuple" Relationship="MediationModel.billingruleassignment_ibfk_2" FromRole="billingruleassignment" ToRole="rateplanassignmenttuple" />
-        </EntityType>
-        <EntityType Name="carriercontactmapping">
-          <Key>
-            <PropertyRef Name="idCarrierContactMapping" />
-          </Key>
-          <Property Name="idCarrierContactMapping" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="Designation" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="Department" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="OfficePhone" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="Mobile" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="email" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="idCarrier" Type="Int32" Nullable="false" />
-          <Property Name="date1" Type="DateTime" />
-          <Property Name="field1" Type="Int32" />
-          <Property Name="field2" Type="Int32" />
-          <Property Name="field3" Type="Int32" />
-          <Property Name="field4" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="field5" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="jsonbillingrule" Relationship="MediationModel.fk_BillingRule" FromRole="billingruleassignment" ToRole="jsonbillingrule" />
         </EntityType>
         <EntityType Name="causecode">
           <Key>
@@ -6703,6 +6725,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="description" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="JsonExpression" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="isPrepaid" Type="SByte" Nullable="false" />
+          <NavigationProperty Name="billingruleassignments" Relationship="MediationModel.fk_BillingRule" FromRole="jsonbillingrule" ToRole="billingruleassignment" />
         </EntityType>
         <EntityType Name="lcr">
           <Key>
@@ -6854,10 +6877,9 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
         </EntityType>
         <EntityType Name="rateassign">
           <Key>
-            <PropertyRef Name="id" />
+            <PropertyRef Name="Prefix" />
           </Key>
-          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Prefix" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="Prefix" Type="Int32" Nullable="false" />
           <Property Name="description" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="rateamount" Type="Decimal" Nullable="false" />
           <Property Name="WeekDayStart" Type="Int32" Nullable="false" />
@@ -6909,12 +6931,14 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="Comment1" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="Comment2" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="BillingParams" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="rateplan" Relationship="MediationModel.fk_rate_Plan" FromRole="rateassign" ToRole="rateplan" />
+          <NavigationProperty Name="rateplanassignmenttuple" Relationship="MediationModel.fk_ratePlanAssignTup" FromRole="rateassign" ToRole="rateplanassignmenttuple" />
         </EntityType>
         <EntityType Name="rateplan">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="Int32" Nullable="false" />
           <Property Name="Type" Type="Int32" Nullable="false" />
           <Property Name="RatePlanName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
@@ -6938,7 +6962,9 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="BillingSpan" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="RateAmountRoundupDecimal" Type="Int32" />
           <NavigationProperty Name="enumbillingspan" Relationship="MediationModel.rateplan_ibfk_1" FromRole="rateplan" ToRole="enumbillingspan" />
-          <NavigationProperty Name="ratetaskreferences" Relationship="MediationModel.fk_rateplan" FromRole="rateplan" ToRole="ratetaskreference" />
+          <NavigationProperty Name="rateassigns" Relationship="MediationModel.fk_rate_Plan" FromRole="rateplan" ToRole="rateassign" />
+          <NavigationProperty Name="ratetaskreferences" Relationship="MediationModel.fk_RatePlan" FromRole="rateplan" ToRole="ratetaskreference" />
+          <NavigationProperty Name="timezone1" Relationship="MediationModel.fk_timezone" FromRole="rateplan" ToRole="timezone" />
         </EntityType>
         <EntityType Name="rateplanassign">
           <Key>
@@ -6971,12 +6997,13 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="idService" Type="Int64" Nullable="false" />
+          <Property Name="idService" Type="Int32" Nullable="false" />
           <Property Name="AssignDirection" Type="Int32" Nullable="false" />
           <Property Name="idpartner" Type="Int32" />
           <Property Name="route" Type="Int32" />
           <Property Name="priority" Type="Int32" Nullable="false" />
           <NavigationProperty Name="billingruleassignment" Relationship="MediationModel.billingruleassignment_ibfk_2" FromRole="rateplanassignmenttuple" ToRole="billingruleassignment" />
+          <NavigationProperty Name="rateassign" Relationship="MediationModel.fk_ratePlanAssignTup" FromRole="rateplanassignmenttuple" ToRole="rateassign" />
           <NavigationProperty Name="route1" Relationship="MediationModel.fk_route" FromRole="rateplanassignmenttuple" ToRole="route" />
         </EntityType>
         <EntityType Name="ratetask">
@@ -6995,7 +7022,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="MinDurationSec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="SurchargeTime" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="SurchargeAmount" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="idrateplan" Type="Int64" Nullable="false" />
+          <Property Name="idrateplan" Type="Int32" Nullable="false" />
           <Property Name="CountryCode" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="date1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="field1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
@@ -7113,9 +7140,9 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="idRatePlan" Type="Int64" />
+          <Property Name="idRatePlan" Type="Int32" />
           <Property Name="Description" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="rateplan" Relationship="MediationModel.fk_rateplan" FromRole="ratetaskreference" ToRole="rateplan" />
+          <NavigationProperty Name="rateplan" Relationship="MediationModel.fk_RatePlan" FromRole="ratetaskreference" ToRole="rateplan" />
         </EntityType>
         <EntityType Name="reporttemplate">
           <Key>
@@ -7217,6 +7244,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="dst" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
           <Property Name="offsetdesc" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="rateplans" Relationship="MediationModel.fk_timezone" FromRole="timezone" ToRole="rateplan" />
           <NavigationProperty Name="zone" Relationship="MediationModel.fk_zone" FromRole="timezone" ToRole="zone" />
         </EntityType>
         <EntityType Name="transactionmeta">
@@ -7243,6 +7271,27 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <NavigationProperty Name="uom_conversion_dated1" Relationship="MediationModel.uom_conversion_dated_ibfk_2" FromRole="uom" ToRole="uom_conversion_dated" />
           <NavigationProperty Name="uom_conversion" Relationship="MediationModel.uom_conversion_ibfk_1" FromRole="uom" ToRole="uom_conversion" />
           <NavigationProperty Name="uom_conversion1" Relationship="MediationModel.uom_conversion_ibfk_2" FromRole="uom" ToRole="uom_conversion" />
+        </EntityType>
+        <EntityType Name="uom_conversion_dated">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UOM_ID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="UOM_ID_TO" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="FROM_DATE" Type="DateTime" Nullable="false" />
+          <Property Name="THRU_DATE" Type="DateTime" />
+          <Property Name="CONVERSION_FACTOR" Type="Decimal" />
+          <Property Name="CUSTOM_METHOD_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="DECIMAL_SCALE" Type="Decimal" />
+          <Property Name="ROUNDING_MODE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PURPOSE_ENUM_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="LAST_UPDATED_STAMP" Type="DateTime" />
+          <Property Name="LAST_UPDATED_TX_STAMP" Type="DateTime" />
+          <Property Name="CREATED_STAMP" Type="DateTime" />
+          <Property Name="CREATED_TX_STAMP" Type="DateTime" />
+          <NavigationProperty Name="uom" Relationship="MediationModel.uom_conversion_dated_ibfk_1" FromRole="uom_conversion_dated" ToRole="uom" />
+          <NavigationProperty Name="uom1" Relationship="MediationModel.uom_conversion_dated_ibfk_2" FromRole="uom_conversion_dated" ToRole="uom" />
         </EntityType>
         <EntityType Name="userclaim">
           <Key>
@@ -7792,7 +7841,6 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             <PropertyRef Name="SwitchId" />
             <PropertyRef Name="SequenceNumber" />
             <PropertyRef Name="FileName" />
-            <PropertyRef Name="ServiceGroup" />
             <PropertyRef Name="DurationSec" />
             <PropertyRef Name="EndTime" />
             <PropertyRef Name="SignalingStartTime" />
@@ -7801,7 +7849,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="IdCall" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="SequenceNumber" Type="Int64" Nullable="false" />
           <Property Name="FileName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ServiceGroup" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ServiceGroup" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="IncomingRoute" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="OriginatingIP" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="OPC" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
@@ -8302,7 +8350,7 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <Property Name="MinDurationSec" Type="Single" Nullable="false" />
           <Property Name="SurchargeTime" Type="Int32" Nullable="false" />
           <Property Name="SurchargeAmount" Type="Decimal" Nullable="false" />
-          <Property Name="idrateplan" Type="Int64" />
+          <Property Name="idrateplan" Type="Int32" />
           <Property Name="CountryCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="date1" Type="DateTime" />
           <Property Name="field1" Type="Int32" />
@@ -9563,28 +9611,6 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
           <NavigationProperty Name="uom" Relationship="MediationModel.uom_conversion_ibfk_1" FromRole="uom_conversion" ToRole="uom" />
           <NavigationProperty Name="uom1" Relationship="MediationModel.uom_conversion_ibfk_2" FromRole="uom_conversion" ToRole="uom" />
         </EntityType>
-        <EntityType Name="uom_conversion_dated">
-          <Key>
-            <PropertyRef Name="UOM_ID" />
-            <PropertyRef Name="UOM_ID_TO" />
-            <PropertyRef Name="FROM_DATE" />
-          </Key>
-          <Property Name="UOM_ID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="UOM_ID_TO" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="FROM_DATE" Type="DateTime" Nullable="false" />
-          <Property Name="THRU_DATE" Type="DateTime" />
-          <Property Name="CONVERSION_FACTOR" Type="Decimal" />
-          <Property Name="CUSTOM_METHOD_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="DECIMAL_SCALE" Type="Decimal" />
-          <Property Name="ROUNDING_MODE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="PURPOSE_ENUM_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="LAST_UPDATED_STAMP" Type="DateTime" />
-          <Property Name="LAST_UPDATED_TX_STAMP" Type="DateTime" />
-          <Property Name="CREATED_STAMP" Type="DateTime" />
-          <Property Name="CREATED_TX_STAMP" Type="DateTime" />
-          <NavigationProperty Name="uom" Relationship="MediationModel.uom_conversion_dated_ibfk_1" FromRole="uom_conversion_dated" ToRole="uom" />
-          <NavigationProperty Name="uom1" Relationship="MediationModel.uom_conversion_dated_ibfk_2" FromRole="uom_conversion_dated" ToRole="uom" />
-        </EntityType>
         <Association Name="account_ibfk_1">
           <End Type="MediationModel.partner" Role="partner" Multiplicity="1" />
           <End Type="MediationModel.account" Role="account" Multiplicity="*" />
@@ -9632,6 +9658,18 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             </Principal>
             <Dependent Role="billingruleassignment">
               <PropertyRef Name="idRatePlanAssignmentTuple" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_BillingRule">
+          <End Type="MediationModel.jsonbillingrule" Role="jsonbillingrule" Multiplicity="0..1" />
+          <End Type="MediationModel.billingruleassignment" Role="billingruleassignment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="jsonbillingrule">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="billingruleassignment">
+              <PropertyRef Name="idBillingRule" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -9805,8 +9843,34 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_rateplan">
-          <End Type="MediationModel.rateplan" Role="rateplan" Multiplicity="0..1" />
+        <Association Name="fk_rate_Plan">
+          <End Type="MediationModel.rateplan" Role="rateplan" Multiplicity="1" />
+          <End Type="MediationModel.rateassign" Role="rateassign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="rateplan">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="rateassign">
+              <PropertyRef Name="Inactive" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_ratePlanAssignTup">
+          <End Type="MediationModel.rateplanassignmenttuple" Role="rateplanassignmenttuple" Multiplicity="1" />
+          <End Type="MediationModel.rateassign" Role="rateassign" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="rateplanassignmenttuple">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="rateassign">
+              <PropertyRef Name="Prefix" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RatePlan">
+          <End Type="MediationModel.rateplan" Role="rateplan" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Type="MediationModel.ratetaskreference" Role="ratetaskreference" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="rateplan">
@@ -9814,6 +9878,18 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
             </Principal>
             <Dependent Role="ratetaskreference">
               <PropertyRef Name="idRatePlan" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_timezone">
+          <End Type="MediationModel.timezone" Role="timezone" Multiplicity="1" />
+          <End Type="MediationModel.rateplan" Role="rateplan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="timezone">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="rateplan">
+              <PropertyRef Name="TimeZone" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -10050,26 +10126,6 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="idServiceGroup" ColumnName="idServiceGroup" />
                 <ScalarProperty Name="idBillingRule" ColumnName="idBillingRule" />
                 <ScalarProperty Name="idRatePlanAssignmentTuple" ColumnName="idRatePlanAssignmentTuple" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="carriercontactmappings">
-            <EntityTypeMapping TypeName="MediationModel.carriercontactmapping">
-              <MappingFragment StoreEntitySet="carriercontactmapping">
-                <ScalarProperty Name="field5" ColumnName="field5" />
-                <ScalarProperty Name="field4" ColumnName="field4" />
-                <ScalarProperty Name="field3" ColumnName="field3" />
-                <ScalarProperty Name="field2" ColumnName="field2" />
-                <ScalarProperty Name="field1" ColumnName="field1" />
-                <ScalarProperty Name="date1" ColumnName="date1" />
-                <ScalarProperty Name="idCarrier" ColumnName="idCarrier" />
-                <ScalarProperty Name="email" ColumnName="email" />
-                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
-                <ScalarProperty Name="OfficePhone" ColumnName="OfficePhone" />
-                <ScalarProperty Name="Department" ColumnName="Department" />
-                <ScalarProperty Name="Designation" ColumnName="Designation" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="idCarrierContactMapping" ColumnName="idCarrierContactMapping" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -10922,7 +10978,6 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="rateamount" ColumnName="rateamount" />
                 <ScalarProperty Name="description" ColumnName="description" />
                 <ScalarProperty Name="Prefix" ColumnName="Prefix" />
-                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -11257,6 +11312,26 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="ABBREVIATION" ColumnName="ABBREVIATION" />
                 <ScalarProperty Name="UOM_TYPE_ID" ColumnName="UOM_TYPE_ID" />
                 <ScalarProperty Name="UOM_ID" ColumnName="UOM_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="uom_conversion_dated">
+            <EntityTypeMapping TypeName="MediationModel.uom_conversion_dated">
+              <MappingFragment StoreEntitySet="uom_conversion_dated">
+                <ScalarProperty Name="CREATED_TX_STAMP" ColumnName="CREATED_TX_STAMP" />
+                <ScalarProperty Name="CREATED_STAMP" ColumnName="CREATED_STAMP" />
+                <ScalarProperty Name="LAST_UPDATED_TX_STAMP" ColumnName="LAST_UPDATED_TX_STAMP" />
+                <ScalarProperty Name="LAST_UPDATED_STAMP" ColumnName="LAST_UPDATED_STAMP" />
+                <ScalarProperty Name="PURPOSE_ENUM_ID" ColumnName="PURPOSE_ENUM_ID" />
+                <ScalarProperty Name="ROUNDING_MODE" ColumnName="ROUNDING_MODE" />
+                <ScalarProperty Name="DECIMAL_SCALE" ColumnName="DECIMAL_SCALE" />
+                <ScalarProperty Name="CUSTOM_METHOD_ID" ColumnName="CUSTOM_METHOD_ID" />
+                <ScalarProperty Name="CONVERSION_FACTOR" ColumnName="CONVERSION_FACTOR" />
+                <ScalarProperty Name="THRU_DATE" ColumnName="THRU_DATE" />
+                <ScalarProperty Name="FROM_DATE" ColumnName="FROM_DATE" />
+                <ScalarProperty Name="UOM_ID_TO" ColumnName="UOM_ID_TO" />
+                <ScalarProperty Name="UOM_ID" ColumnName="UOM_ID" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -12930,25 +13005,6 @@ FROM `uom_conversion_dated` AS `uom_conversion_dated`</DefiningQuery>
                 <ScalarProperty Name="DECIMAL_SCALE" ColumnName="DECIMAL_SCALE" />
                 <ScalarProperty Name="CUSTOM_METHOD_ID" ColumnName="CUSTOM_METHOD_ID" />
                 <ScalarProperty Name="CONVERSION_FACTOR" ColumnName="CONVERSION_FACTOR" />
-                <ScalarProperty Name="UOM_ID_TO" ColumnName="UOM_ID_TO" />
-                <ScalarProperty Name="UOM_ID" ColumnName="UOM_ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="uom_conversion_dated">
-            <EntityTypeMapping TypeName="MediationModel.uom_conversion_dated">
-              <MappingFragment StoreEntitySet="uom_conversion_dated">
-                <ScalarProperty Name="CREATED_TX_STAMP" ColumnName="CREATED_TX_STAMP" />
-                <ScalarProperty Name="CREATED_STAMP" ColumnName="CREATED_STAMP" />
-                <ScalarProperty Name="LAST_UPDATED_TX_STAMP" ColumnName="LAST_UPDATED_TX_STAMP" />
-                <ScalarProperty Name="LAST_UPDATED_STAMP" ColumnName="LAST_UPDATED_STAMP" />
-                <ScalarProperty Name="PURPOSE_ENUM_ID" ColumnName="PURPOSE_ENUM_ID" />
-                <ScalarProperty Name="ROUNDING_MODE" ColumnName="ROUNDING_MODE" />
-                <ScalarProperty Name="DECIMAL_SCALE" ColumnName="DECIMAL_SCALE" />
-                <ScalarProperty Name="CUSTOM_METHOD_ID" ColumnName="CUSTOM_METHOD_ID" />
-                <ScalarProperty Name="CONVERSION_FACTOR" ColumnName="CONVERSION_FACTOR" />
-                <ScalarProperty Name="THRU_DATE" ColumnName="THRU_DATE" />
-                <ScalarProperty Name="FROM_DATE" ColumnName="FROM_DATE" />
                 <ScalarProperty Name="UOM_ID_TO" ColumnName="UOM_ID_TO" />
                 <ScalarProperty Name="UOM_ID" ColumnName="UOM_ID" />
               </MappingFragment>

@@ -14,12 +14,12 @@ namespace Utils
 {
     class Program
     {
-     
+             
         static void Main(string[] args)
         {
-            var tester = new ParallelReaderToEntityTester();
-            tester.Test();
-            return;
+            //var tester = new ParallelReaderToEntityTester();
+            //tester.Test();
+            //return;
             //tester.PerformanceTest();
             Console.WriteLine("Press a key:");
             Console.WriteLine("1=Test Entity Renaming");
@@ -68,12 +68,10 @@ namespace Utils
                         break;
                     }
                     Console.WriteLine("Processing 4=Process 1 Job in JobQueCdr...");
-
                     Console.WriteLine("Processing Complete...");
                     break;
                 case '5':
                     Console.WriteLine("Processing 5=Process JobQueCdr...");
-
                     Console.WriteLine("Processing Complete...");
                     break;
                 case '6':

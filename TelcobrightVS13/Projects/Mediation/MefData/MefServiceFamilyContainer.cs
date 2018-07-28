@@ -16,7 +16,7 @@ namespace TelcobrightMediation
         public RateCache RateCache { get; set; }
         public Dictionary<int, rateplanassignmenttuple> IdWiseRateplanAssignmenttuplesIncludingBillingRules { get; set; }
         public Dictionary<int,TupleDefinitions> ServiceGroupWiseTupDefs { get; set; }
-        public Dictionary<long, rateplan> DicRateplans { get; set; }//to fetch currency & other infor during rating
+        public Dictionary<int, rateplan> DicRateplans { get; set; }//to fetch currency & other infor during rating
         public Dictionary<int,BillingRule> BillingRules { get; set; }
         public UoMConvRateCache UsdBcsCache { get; private set; }
         public MefServiceFamilyContainer()
@@ -25,7 +25,7 @@ namespace TelcobrightMediation
             this.CmpServiceFamily=new ServiceFamilyComposer();
             this.DicExtensions=new Dictionary<int, IServiceFamily>();
             this.RateCache = null;
-            this.DicRateplans=new Dictionary<long, rateplan>();
+            this.DicRateplans=new Dictionary<int, rateplan>();
             this.BillingRules=new Dictionary<int, BillingRule>();
             this.ServiceGroupWiseTupDefs=new Dictionary<int, TupleDefinitions>();
         }

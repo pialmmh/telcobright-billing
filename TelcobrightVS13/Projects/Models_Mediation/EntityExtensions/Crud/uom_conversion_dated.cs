@@ -11,6 +11,7 @@ namespace MediationModel
 		public StringBuilder GetExtInsertValues()
 		{
 			return new StringBuilder("(")
+				.Append(this.id.ToMySqlField()).Append(",")
 				.Append(this.UOM_ID.ToMySqlField()).Append(",")
 				.Append(this.UOM_ID_TO.ToMySqlField()).Append(",")
 				.Append(this.FROM_DATE.ToMySqlField()).Append(",")
@@ -33,6 +34,7 @@ namespace MediationModel
 		public  StringBuilder GetUpdateCommand(Func<uom_conversion_dated,string> whereClauseMethod)
 		{
 			return new StringBuilder("update uom_conversion_dated set ")
+				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
 				.Append("UOM_ID=").Append(this.UOM_ID.ToMySqlField()).Append(",")
 				.Append("UOM_ID_TO=").Append(this.UOM_ID_TO.ToMySqlField()).Append(",")
 				.Append("FROM_DATE=").Append(this.FROM_DATE.ToMySqlField()).Append(",")

@@ -11,7 +11,6 @@ namespace MediationModel
 		public StringBuilder GetExtInsertValues()
 		{
 			return new StringBuilder("(")
-				.Append(this.id.ToMySqlField()).Append(",")
 				.Append(this.Prefix.ToMySqlField()).Append(",")
 				.Append(this.description.ToMySqlField()).Append(",")
 				.Append(this.rateamount.ToMySqlField()).Append(",")
@@ -73,7 +72,6 @@ namespace MediationModel
 		public  StringBuilder GetUpdateCommand(Func<rateassign,string> whereClauseMethod)
 		{
 			return new StringBuilder("update rateassign set ")
-				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
 				.Append("Prefix=").Append(this.Prefix.ToMySqlField()).Append(",")
 				.Append("description=").Append(this.description.ToMySqlField()).Append(",")
 				.Append("rateamount=").Append(this.rateamount.ToMySqlField()).Append(",")

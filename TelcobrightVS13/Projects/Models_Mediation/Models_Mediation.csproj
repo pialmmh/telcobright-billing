@@ -93,9 +93,6 @@
     <Compile Include="billingruleassignment.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="carriercontactmapping.cs">
-      <DependentUpon>PartnerModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="causecode.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
@@ -192,7 +189,6 @@
     <Compile Include="EntityExtensions\Crud\aspnetuserclaim.cs" />
     <Compile Include="EntityExtensions\Crud\autoincrementcounter.cs" />
     <Compile Include="EntityExtensions\Crud\billingruleassignment.cs" />
-    <Compile Include="EntityExtensions\Crud\carriercontactmapping.cs" />
     <Compile Include="EntityExtensions\Crud\causecode.cs" />
     <Compile Include="EntityExtensions\Crud\cdr.cs" />
     <Compile Include="EntityExtensions\Crud\cdrdiscarded.cs" />

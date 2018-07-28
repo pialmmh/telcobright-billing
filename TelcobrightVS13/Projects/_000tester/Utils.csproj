@@ -253,13 +253,9 @@
       <Project>{d4c2f34d-4d3d-43ae-84f0-e80cfedb1b48}</Project>
       <Name>LibraryExtensions</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Mediation\_00Mediation.csproj">
-      <Project>{1a64e6f9-903c-416c-b322-1b5c5d997001}</Project>
-      <Name>_00Mediation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Models_Mediation\Models_Mediation.csproj">
+    <ProjectReference Include="..\PartnerModelForTesting\ModelsMediationCopy.csproj">
       <Project>{4282d6f4-efd2-418a-be9f-74f09b7a45d8}</Project>
-      <Name>Models_Mediation</Name>
+      <Name>ModelsMediationCopy</Name>
     </ProjectReference>
     <ProjectReference Include="..\PowerCollections\PowerCollections.csproj">
       <Project>{5821977d-ac2c-4912-bcd0-6e6b1a756167}</Project>

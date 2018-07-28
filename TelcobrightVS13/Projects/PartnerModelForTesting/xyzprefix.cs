@@ -12,21 +12,22 @@ namespace MediationModel
     using System;
     using System.Collections.Generic;
     
-    public partial class carriercontactmapping
+    public partial class xyzprefix
     {
-        public int idCarrierContactMapping { get; set; }
-        public string Name { get; set; }
-        public string Designation { get; set; }
-        public string Department { get; set; }
-        public string OfficePhone { get; set; }
-        public string Mobile { get; set; }
-        public string email { get; set; }
-        public int idCarrier { get; set; }
-        public Nullable<System.DateTime> date1 { get; set; }
+        public string Prefix { get; set; }
+        public string Description { get; set; }
+        public string CountryCode { get; set; }
+        public System.DateTime date1 { get; set; }
         public Nullable<int> field1 { get; set; }
         public Nullable<int> field2 { get; set; }
         public Nullable<int> field3 { get; set; }
         public string field4 { get; set; }
         public string field5 { get; set; }
+        public Nullable<float> refasr { get; set; }
+        public Nullable<float> refacd { get; set; }
+        public Nullable<float> refccr { get; set; }
+        public Nullable<float> refccrbycc { get; set; }
+        public Nullable<float> refpdd { get; set; }
+        public Nullable<float> refasrfas { get; set; }
     }
 }

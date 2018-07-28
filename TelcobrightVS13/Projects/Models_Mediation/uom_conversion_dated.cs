@@ -14,6 +14,7 @@ namespace MediationModel
     
     public partial class uom_conversion_dated
     {
+        public int id { get; set; }
         public string UOM_ID { get; set; }
         public string UOM_ID_TO { get; set; }
         public System.DateTime FROM_DATE { get; set; }

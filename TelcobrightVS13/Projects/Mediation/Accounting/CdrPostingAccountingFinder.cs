@@ -34,7 +34,7 @@ namespace TelcobrightMediation.Accounting
         {
             account postingAccount = null;
             string idCurrencyUoM = this.ServiceContext.CdrProcessor.CdrJobContext.MediationContext.MefServiceFamilyContainer
-                .DicRateplans[Convert.ToInt64(this.RateExtWihtAssignmentTupleId.idrateplan)].Currency;
+                .DicRateplans[Convert.ToInt32(this.RateExtWihtAssignmentTupleId.idrateplan)].Currency;
             AccountFactory accountFactory=new AccountFactory(this.AccountingContext);
             if (this.ServiceContext.AssignDir== ServiceAssignmentDirection.Customer)
             {

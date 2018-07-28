@@ -105,11 +105,13 @@
   <ItemGroup>
     <Compile Include="Accounting\AccBalanceThresholdHandler.cs" />
     <Compile Include="Accounting\AccChargeableExt.cs" />
+    <Compile Include="Accounting\AccountCreatorFromRatePlanAssignment.cs" />
     <Compile Include="Accounting\AccountingJobInput.cs" />
     <Compile Include="Accounting\BillingPeriodContants.cs" />
     <Compile Include="Accounting\CdrInvoicingJob.cs" />
     <Compile Include="Accounting\CdrPostingAccountingFinder.cs" />
     <Compile Include="Accounting\DateInterval.cs" />
+    <Compile Include="Accounting\IAccountCreator.cs" />
     <Compile Include="Accounting\IBillingRule.cs" />
     <Compile Include="Accounting\InvoiceDataCollector.cs" />
     <Compile Include="Accounting\ITimeRangeImplementer.cs" />

@@ -15,13 +15,14 @@ namespace MediationModel
     public partial class rateplanassignmenttuple
     {
         public int id { get; set; }
-        public long idService { get; set; }
+        public int idService { get; set; }
         public int AssignDirection { get; set; }
         public Nullable<int> idpartner { get; set; }
         public Nullable<int> route { get; set; }
         public int priority { get; set; }
     
         public virtual billingruleassignment billingruleassignment { get; set; }
+        public virtual rateassign rateassign { get; set; }
         public virtual route route1 { get; set; }
     }
 }
