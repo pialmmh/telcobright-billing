@@ -160,7 +160,7 @@ namespace Jobs
                 .Include("partner").ToList();
 
             //exclude one or all routes of a supplier based on exclusion flag (field3) in rateassign table
-            List<string> idAssignmentTuplesStr = context.rateassigns.Where(c => c.field3 == 1)
+            List<int> idAssignmentTuplesStr = context.rateassigns.Where(c => c.field3 == 1)
                 .Select(c => c.Prefix).ToList();
             List<long> idAssignmentTuples = new List<long>();
             idAssignmentTuplesStr.ForEach(c => idAssignmentTuples.Add(Convert.ToInt64(c)));

@@ -14,6 +14,7 @@ namespace MediationModel
     
     public partial class rateassign
     {
+        public int id { get; set; }
         public int Prefix { get; set; }
         public string description { get; set; }
         public decimal rateamount { get; set; }

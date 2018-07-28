@@ -19,6 +19,7 @@ namespace MediationModel
         {
             this.rateassigns = new HashSet<rateassign>();
             this.ratetaskreferences = new HashSet<ratetaskreference>();
+            this.ratetaskassigns = new HashSet<ratetaskassign>();
         }
     
         public int id { get; set; }
@@ -51,5 +52,7 @@ namespace MediationModel
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ratetaskreference> ratetaskreferences { get; set; }
         public virtual timezone timezone1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ratetaskassign> ratetaskassigns { get; set; }
     }
 }

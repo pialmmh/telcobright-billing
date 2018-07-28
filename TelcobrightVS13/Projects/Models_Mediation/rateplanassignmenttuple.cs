@@ -14,6 +14,13 @@ namespace MediationModel
     
     public partial class rateplanassignmenttuple
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public rateplanassignmenttuple()
+        {
+            this.rateassigns = new HashSet<rateassign>();
+            this.ratetaskassigns = new HashSet<ratetaskassign>();
+        }
+    
         public int id { get; set; }
         public int idService { get; set; }
         public int AssignDirection { get; set; }
@@ -22,7 +29,10 @@ namespace MediationModel
         public int priority { get; set; }
     
         public virtual billingruleassignment billingruleassignment { get; set; }
-        public virtual rateassign rateassign { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<rateassign> rateassigns { get; set; }
         public virtual route route1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ratetaskassign> ratetaskassigns { get; set; }
     }
 }

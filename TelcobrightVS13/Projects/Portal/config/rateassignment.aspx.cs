@@ -1513,11 +1513,11 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                 }
 
                 Dictionary<long, string> dicRatePlan = (Dictionary<long, string>)Session["assign.dicRatePlan"];
-                long IdRatePlan = Convert.ToInt64(DataBinder.Eval(e.Row.DataItem, "inactive"));
+                int idRatePlan = Convert.ToInt32(DataBinder.Eval(e.Row.DataItem, "inactive"));
                 string PlanName = "";
-                dicRatePlan.TryGetValue(IdRatePlan, out PlanName);
+                dicRatePlan.TryGetValue(idRatePlan, out PlanName);
                 rateplan OneRatePlan = new rateplan();
-                OneRatePlan.id = IdRatePlan;
+                OneRatePlan.id = idRatePlan;
                 OneRatePlan.RatePlanName = PlanName;
                 List<rateplan> TmpRatePlan = new List<rateplan>();
                 TmpRatePlan.Add(OneRatePlan);
@@ -2245,7 +2245,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
             InvalidPrefix = true;
         }
 
-        if (InvalidPrefix == false) ThisTask.Prefix = newPrefix;
+        if (InvalidPrefix == false) ThisTask.Prefix = Convert.ToInt32(newPrefix);
 
 
 
@@ -2328,7 +2328,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
             int NewFlag = SetBitInteger(Convert.ToInt32(ThisTask.field2), 18);
             ThisTask.field2 = NewFlag.ToString();
         }
-        ThisTask.CountryCode = newCountry;//no validation
+        ThisTask.CountryCode =  Convert.ToInt32(newCountry);//idpartner
 
         string format = "yyyy-MM-dd HH:mm:ss"; //effective date
 
@@ -2617,7 +2617,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
         //ThisRate.OtherAmount9           =OtherAmount9         ;
         //ThisRate.OtherAmount10            =OtherAmount10          ;
 
-        ThisTask.Inactive = newInactive;
+        ThisTask.Inactive = Convert.ToInt32(newInactive);
         ThisTask.RouteDisabled = newRouteDisabled;
 
         //find out new, increase or decrease; delete has been set along with rateamount
@@ -2842,14 +2842,14 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
 
                 //set rateplan
                 DropDownList ddlRatePlan = (DropDownList)(GridViewSupplierRates.Rows[e.RowIndex].FindControl("DropDownListRatePlan"));
-                ThisRateTask.Inactive = ddlRatePlan.SelectedValue;
+                ThisRateTask.Inactive = Convert.ToInt32(ddlRatePlan.SelectedValue);
                 ContextTask.SaveChanges();
                 CommitChanges();// to make the changes permanent in the rateassign table
             }//if uncommited task
             else
             {//committed task, allow only change of end date
                 //for commited task, only end date change is allowed
-                string ThisPrefix = ((Label)row.FindControl("lblPrefix")).Text;
+                string thisPrefix = ((Label)row.FindControl("lblPrefix")).Text;
                 Label lblRateErrors = (Label)(GridViewSupplierRates.Rows[e.RowIndex].FindControl("lblRateErrors"));
                 DateTime ChangedEndDateTime = new DateTime();
                 DateTime SaveStartDateTimeThisRate = new DateTime();
@@ -2875,7 +2875,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                         rate NextRate = null;
                         using (PartnerEntities Context = new PartnerEntities())
                         {
-                            NextRate = Context.rates.Where(c => c.idrateplan == 1 && c.Prefix == ThisPrefix
+                            NextRate = Context.rates.Where(c => c.idrateplan == 1 && c.Prefix == thisPrefix
                                                                 && c.startdate > SaveStartDateTimeThisRate)
                                 .OrderBy(c => c.startdate).Take(1).ToList().FirstOrDefault();
                         }
@@ -2898,7 +2898,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                         //ratetaskassign and rateassign has be in synced always
                         using (PartnerEntities Context = new PartnerEntities())
                         {
-                            rateassign ThisRate = Context.rateassigns.Where(c => c.idrateplan == 1 && c.Prefix == ThisPrefix
+                            rateassign ThisRate = Context.rateassigns.Where(c => c.idrateplan == 1 && c.Prefix == Convert.ToInt32(thisPrefix)
                                                                                  && c.startdate == SaveStartDateTimeThisRate).FirstOrDefault();
 
                             using (MySqlConnection Con = new MySqlConnection(ConfigurationManager.ConnectionStrings["partner"].ConnectionString))
@@ -3680,7 +3680,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                     dRange.EndDate = (EffectiveEndDate == null ? new DateTime(9999, 12, 31, 23, 59, 59) : Convert.ToDateTime(EffectiveEndDate));
 
                     //load all the assigned rateplans for this tuple
-                    List<rateassign> lstAssignments = Context.rateassigns.Where(c => c.Prefix == ExistingTuple.id.ToString()).ToList();
+                    List<rateassign> lstAssignments = Context.rateassigns.Where(c => c.Prefix == ExistingTuple.id).ToList();
                     //there can be only one assignment with enddate=null
                     int ExistingAssignmentCount = lstAssignments.Count;
                     int OpenAssignmentsCount = lstAssignments.Where(c => c.enddate == null).Count();
@@ -3779,13 +3779,13 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
 
                 //get the id of the tuple
                 //surprise, setting nullable var=null then using it in linq doesn't work
-                long TupleId = -1;
+                int tupleId = -1;
 
                 if (NewRoute == -1)//route not used
                 {
                     if (NewidPartner == 0)
                     {
-                        TupleId = Context.rateplanassignmenttuples.Where(c => c.idpartner == null &&
+                        tupleId = Context.rateplanassignmenttuples.Where(c => c.idpartner == null &&
                                                                               c.route == null &&
                                                                               c.idService == NewserviceId &&
                                                                               c.priority == NewPriority &&
@@ -3793,7 +3793,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                     }
                     else
                     {
-                        TupleId = Context.rateplanassignmenttuples.Where(c => c.idpartner == NewidPartner &&
+                        tupleId = Context.rateplanassignmenttuples.Where(c => c.idpartner == NewidPartner &&
                                                                               c.route == null &&
                                                                               c.idService == NewserviceId &&
                                                                               c.priority == NewPriority &&
@@ -3804,7 +3804,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                 {
                     if (NewidPartner == 0)
                     {
-                        TupleId = Context.rateplanassignmenttuples.Where(c => c.idpartner == null &&
+                        tupleId = Context.rateplanassignmenttuples.Where(c => c.idpartner == null &&
                                                                               c.route == NewRoute &&
                                                                               c.idService == NewserviceId &&
                                                                               c.priority == NewPriority &&
@@ -3812,7 +3812,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                     }
                     else
                     {
-                        TupleId = Context.rateplanassignmenttuples.Where(c => c.idpartner == NewidPartner &&
+                        tupleId = Context.rateplanassignmenttuples.Where(c => c.idpartner == NewidPartner &&
                                                                               c.route == NewRoute &&
                                                                               c.idService == NewserviceId &&
                                                                               c.priority == NewPriority &&
@@ -3820,9 +3820,9 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                     }
                 }
 
-                NewRate.Prefix = TupleId.ToString();//represents the tuple
+                NewRate.Prefix = tupleId;//represents the tuple
                 NewRate.RouteDisabled = newRouteDisabled;
-                NewRate.Inactive = newInactive;//id rate plan
+                NewRate.Inactive = Convert.ToInt32(newInactive);//id rate plan
 
                 //LCR Flag
                 var ddlExcludeLCR = frmSupplierRatePlanInsert.FindControl("ddlExcludeLCR") as DropDownList;
@@ -4006,110 +4006,6 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
             return "";
         }
     }
-
-    int SaveRateTaskDB(List<ratetaskassign> lstRate)
-    {
-        try
-        {
-            List<string> lstValues = new List<string>();
-            string Header = "INSERT INTO ratetaskassign " +
-                            "(                             " +
-                            "`Prefix`,                     " +
-                            "`description`,                " +
-                            "`rateamount`,                 " +
-                            "`WeekDayStart`,               " +
-                            "`WeekDayEnd`,                 " +
-                            "`starttime`,                  " +
-                            "`endtime`,                    " +
-                            "`Resolution`,                 " +
-                            "`MinDurationSec`,             " +
-                            "`SurchargeTime`,              " +
-                            "`SurchargeAmount`,            " +
-                            "`idrateplan`,                 " +
-                            "`CountryCode`,                " +
-                            "`field1`,                     " +
-                            "`field2`,                     " +
-                            "`field3`,                     " +
-                            "`field4`,                     " +
-                            "`field5`,                     " +
-                            "`startdate`,                  " +
-                            "`enddate`,                    " +
-                            "`Inactive`,                   " +
-                            "`RouteDisabled`,              " +
-                            "`Type`,                       " +
-                            "`Currency`,                   " +
-                            "`OtherAmount1`,            " +
-                            "`OtherAmount2`,            " +
-                            "`OtherAmount3`,            " +
-                            "`OtherAmount4`,       " +
-                            "`OtherAmount5`,          " +
-                            "`OtherAmount6`,             " +
-                            "`OtherAmount7`,             " +
-                            "`OtherAmount8`,             " +
-                            "`OtherAmount9`,               " +
-                            "`OtherAmount10`,                " +
-                            "`TimeZoneOffsetSec`,          " +
-                            "`RatePosition`,               " +
-                            "`IgwPercentageIn`,            " +
-                            "`ConflictingRateIds`,         " +
-                            "`ChangedByTaskId`,            " +
-                            "`ChangedOn`,                  " +
-                            "`Status`,                     " +
-                            "`idPreviousRate`,             " +
-                            "`EndPreviousRate`,            " +
-                            "`Category`,                " +
-                            "`SubCategory`,             " +
-                            "`ChangeCommitted`            " +
-                            //  "`BillingParams`)            " +
-                            "VALUES                        ";
-
-            foreach (ratetaskassign ThisRate in lstRate)
-            {
-                //rates not saved yet in database will have negative id
-                if (ThisRate.id > 0) continue;//already saved
-
-                int RetVal = InsertSqlRateTask(RateTaskToRate(ThisRate, ThisRate.idrateplan), ref lstValues);
-                //when saving as task, taskref no is acuaully kept in idrateplan field
-                if (RetVal == 0)
-                {
-                    var color = ColorTranslator.FromHtml("#FA0509");
-                    StatusLabel.ForeColor = color;
-                    StatusLabel.Text += "<br/> Error occured generating Sql for task row!";
-                    return 0;
-                }
-
-            }//for each rate
-            if (lstValues.Count > 0)
-            {
-                MySqlConnection Con = new MySqlConnection(ConfigurationManager.ConnectionStrings["partner"].ConnectionString);
-                Con.Open();
-                string Sql = Header + string.Join(",", lstValues.ToArray()) + ";";
-                MySqlCommand cmd = new MySqlCommand(Sql, Con);
-                cmd.ExecuteNonQuery();
-                //success
-                var color1 = ColorTranslator.FromHtml("#008000");
-                StatusLabel.ForeColor = color1;
-                StatusLabel.Text = lstValues.Count.ToString() + " Rate Task(s) Saved Successfully!";
-
-            }
-            else
-            {
-                var color = ColorTranslator.FromHtml("#FA0509");
-                StatusLabel.ForeColor = color;
-                StatusLabel.Text = "No task to save to database!";
-                return 0;
-            }
-            return 1;
-        }
-        catch (Exception e1)
-        {
-            var color = ColorTranslator.FromHtml("#FA0509");
-            StatusLabel.ForeColor = color;
-            StatusLabel.Text = e1.Message + "<br/>" + e1.InnerException;
-            return 0;
-        }
-    }
-
     int InsertSqlRateTask(rateassign ThisRate, ref List<string> lstValues)
     {
 
@@ -4224,11 +4120,11 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
         int DelIdTask = Convert.ToInt32(((LinkButton)sender).CommandArgument);
         using (PartnerEntities Context = new PartnerEntities())
         {
-            ratetaskassign ThisRateTask = Context.ratetaskassigns.Where(c => c.id == DelIdTask).FirstOrDefault();
+            ratetaskassign thisRateTask = Context.ratetaskassigns.Where(c => c.id == DelIdTask).FirstOrDefault();
             DateTime startdate = new DateTime();
-            DateTime.TryParseExact(ThisRateTask.startdate, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out startdate);
-            rateassign ThisRate = Context.rateassigns.Where(c => c.idrateplan == 1 &&
-                                                                 c.Prefix == ThisRateTask.Prefix &&
+            DateTime.TryParseExact(thisRateTask.startdate, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out startdate);
+            rateassign thisRate = Context.rateassigns.Where(c => c.idrateplan == 1 &&
+                                                                 c.Prefix == Convert.ToInt32(thisRateTask.Prefix) &&
                                                                  c.startdate == startdate).FirstOrDefault();
 
             using (MySqlConnection con = new MySqlConnection(ConfigurationManager.ConnectionStrings["partner"].ConnectionString))
@@ -4241,9 +4137,9 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                     cmd.CommandText = " delete from ratetaskassign where id=" + DelIdTask;
                     cmd.ExecuteNonQuery();
 
-                    if (ThisRateTask.changecommitted == 1)
+                    if (thisRateTask.changecommitted == 1)
                     {
-                        if (ThisRate != null)
+                        if (thisRate != null)
                         {
                             //cmd.CommandText = " delete from rateassign where id=" + ThisRate.id;
                             //cmd.ExecuteNonQuery();
@@ -4377,31 +4273,32 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                                                             && c.field2 == "0"//not having validation error
             ).ToList();
 
-            List<ratetaskassign> lstPrefixDelAll = lstDeleteTasks.Where(c => c.Prefix == "*").Select(c => new ratetaskassign { Prefix = "*", startdate = c.startdate, ChangedByTaskId = c.id.ToString(), Category = c.Category, SubCategory = c.SubCategory }).ToList();
-            List<ratetaskassign> lstPrefixDelLike = lstDeleteTasks.Where(c => c.Prefix.Contains("*") && c.Prefix.Length > 1).Select(c => new ratetaskassign { Prefix = c.Prefix.Split('*')[0], startdate = c.startdate, ChangedByTaskId = c.id.ToString(), Category = c.Category, SubCategory = c.SubCategory }).ToList();
-            List<ratetaskassign> lstPrefixDelSingle = lstDeleteTasks.Where(c => c.Prefix.Contains("*") == false).Select(c => new ratetaskassign { Prefix = c.Prefix, startdate = c.startdate, ChangedByTaskId = c.id.ToString(), Category = c.Category, SubCategory = c.SubCategory }).ToList();
+            List<ratetaskassign> lstPrefixDelAll = lstDeleteTasks.Where(c => c.Prefix.ToString() == "*").Select(c => new ratetaskassign { Prefix = -1, startdate = c.startdate, ChangedByTaskId = c.id.ToString(), Category = c.Category, SubCategory = c.SubCategory }).ToList();
+            //List<ratetaskassign> lstPrefixDelLike = lstDeleteTasks.Where(c => c.Prefix.ToString().Contains("*") && c.Prefix.ToString().Length > 1).Select(c => new ratetaskassign { Prefix = c.Prefix.Split('*')[0], startdate = c.startdate, ChangedByTaskId = c.id.ToString(), Category = c.Category, SubCategory = c.SubCategory }).ToList();
+            List<ratetaskassign> lstPrefixDelLike = lstDeleteTasks.Where(c => c.Prefix.ToString().Contains("*") && c.Prefix.ToString().Length > 1).Select(c => new ratetaskassign { Prefix = -1, startdate = c.startdate, ChangedByTaskId = c.id.ToString(), Category = c.Category, SubCategory = c.SubCategory }).ToList();
+            List<ratetaskassign> lstPrefixDelSingle = lstDeleteTasks.Where(c => c.Prefix.ToString().Contains("*") == false).Select(c => new ratetaskassign { Prefix = c.Prefix, startdate = c.startdate, ChangedByTaskId = c.id.ToString(), Category = c.Category, SubCategory = c.SubCategory }).ToList();
 
             List<rateassign> lstDelAll = new List<rateassign>();
             List<rateassign> lstDelLike = new List<rateassign>();
             List<rateassign> lstDelSingle = new List<rateassign>();
 
             List<rateassign> RateCache = new List<rateassign>();
-            Dictionary<string, List<rateassign>> dicRateCache = new Dictionary<string, List<rateassign>>();//use prefix as index
+            Dictionary<int, List<rateassign>> dicRateCache = new Dictionary<int, List<rateassign>>();//use prefix as index
             using (PartnerEntities Context = new PartnerEntities())
             {
                 RateCache = Context.rateassigns.Where(c => c.idrateplan == idRatePlan).ToList();
             }
             foreach (rateassign R in RateCache)
             {
-                List<rateassign> Thislist = null;
-                dicRateCache.TryGetValue(R.Prefix, out Thislist);
-                if (Thislist == null)
+                List<rateassign> thislist = null;
+                dicRateCache.TryGetValue(R.Prefix, out thislist);
+                if (thislist == null)
                 {
                     //prefix not in the dictionary yet, create dictionary item first.
                     dicRateCache.Add(R.Prefix, new List<rateassign>());
-                    dicRateCache.TryGetValue(R.Prefix, out Thislist);
+                    dicRateCache.TryGetValue(R.Prefix, out thislist);
                 }
-                Thislist.Add(R);
+                thislist.Add(R);
 
                 //check for matching code delete entries
 
@@ -4429,7 +4326,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                 {
                     DateTime DelDate = new DateTime(2000, 1, 1);
                     DateTime.TryParseExact(rTask.startdate, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out DelDate);
-                    if (R.Prefix.StartsWith(rTask.Prefix)
+                    if (R.Prefix.ToString().StartsWith(rTask.Prefix.ToString())
                         && DelDate > (new DateTime(2000, 1, 1))
                         && (R.startdate <= DelDate)
                         && (R.enddate == null || DelDate < R.enddate))
@@ -4452,7 +4349,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                 {
                     DateTime DelDate = new DateTime(2000, 1, 1);
                     DateTime.TryParseExact(rTask.startdate, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out DelDate);
-                    if (R.Prefix == (rTask.Prefix)
+                    if (R.Prefix.ToString() == rTask.Prefix.ToString()
                         && DelDate > (new DateTime(2000, 1, 1))
                         && (R.startdate <= DelDate)
                         && (R.enddate == null || DelDate < R.enddate)
@@ -4733,78 +4630,78 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
 
     }
 
-    rateassign RateTaskToRate(ratetaskassign ThisTask, long idRatePlan)
+    rateassign RateTaskToRate(ratetaskassign rateTaskAssign, long idRatePlan)
     {
         try
         {
-            rateassign ThisRate = new rateassign();
-            ThisRate.id = ThisTask.id;
-            ThisRate.Prefix = ThisTask.Prefix;
-            ThisRate.description = ThisTask.description;
-            ThisRate.rateamount = Convert.ToDecimal(ThisTask.rateamount);
-            ThisRate.WeekDayStart = Convert.ToInt32(ThisTask.WeekDayStart);
-            ThisRate.WeekDayEnd = Convert.ToInt32(ThisTask.WeekDayEnd);
-            ThisRate.starttime = ThisTask.starttime;
-            ThisRate.endtime = ThisTask.endtime;
-            ThisRate.Resolution = Convert.ToInt32(ThisTask.Resolution);
-            ThisRate.MinDurationSec = Convert.ToSingle(ThisTask.MinDurationSec);
-            ThisRate.SurchargeTime = Convert.ToInt32(ThisTask.SurchargeTime);
-            ThisRate.SurchargeAmount = Convert.ToDecimal(ThisTask.SurchargeAmount);
-            ThisRate.idrateplan = idRatePlan;//ThisTask.idrateplan;
-            ThisRate.CountryCode = ThisTask.CountryCode;
+            rateassign rateAssign = new rateassign();
+            rateAssign.id = rateTaskAssign.id;
+            rateAssign.Prefix = Convert.ToInt32(rateTaskAssign.Prefix);
+            rateAssign.description = rateTaskAssign.description;
+            rateAssign.rateamount = Convert.ToDecimal(rateTaskAssign.rateamount);
+            rateAssign.WeekDayStart = Convert.ToInt32(rateTaskAssign.WeekDayStart);
+            rateAssign.WeekDayEnd = Convert.ToInt32(rateTaskAssign.WeekDayEnd);
+            rateAssign.starttime = rateTaskAssign.starttime;
+            rateAssign.endtime = rateTaskAssign.endtime;
+            rateAssign.Resolution = Convert.ToInt32(rateTaskAssign.Resolution);
+            rateAssign.MinDurationSec = Convert.ToSingle(rateTaskAssign.MinDurationSec);
+            rateAssign.SurchargeTime = Convert.ToInt32(rateTaskAssign.SurchargeTime);
+            rateAssign.SurchargeAmount = Convert.ToDecimal(rateTaskAssign.SurchargeAmount);
+            rateAssign.idrateplan = idRatePlan;//ThisTask.idrateplan;
+            rateAssign.CountryCode = rateTaskAssign.CountryCode.ToString();
 
             DateTime TempDate = new DateTime(2000, 1, 1, 0, 0, 0);
-            DateTime.TryParseExact(ThisTask.date1, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out TempDate);
-            ThisRate.date1 = TempDate;
+            DateTime.TryParseExact(rateTaskAssign.date1, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out TempDate);
+            rateAssign.date1 = TempDate;
 
-            ThisRate.Status = Convert.ToInt32(ThisTask.Status);
-            ThisRate.field2 = Convert.ToInt32(ThisTask.field2);
-            ThisRate.field3 = Convert.ToInt32(ThisTask.field3);
-            ThisRate.field4 = ThisTask.field4;
-            ThisRate.field5 = ThisTask.field5;
+            rateAssign.Status = Convert.ToInt32(rateTaskAssign.Status);
+            rateAssign.field2 = Convert.ToInt32(rateTaskAssign.field2);
+            rateAssign.field3 = Convert.ToInt32(rateTaskAssign.field3);
+            rateAssign.field4 = rateTaskAssign.field4;
+            rateAssign.field5 = rateTaskAssign.field5;
 
             DateTime TempDatest = new DateTime(2000, 1, 1, 0, 0, 0);
-            DateTime.TryParseExact(ThisTask.startdate, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out TempDatest);
-            ThisRate.startdate = TempDatest;
+            DateTime.TryParseExact(rateTaskAssign.startdate, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out TempDatest);
+            rateAssign.startdate = TempDatest;
 
             DateTime TempDate1 = new DateTime(2000, 1, 1, 0, 0, 0);
-            DateTime.TryParseExact(ThisTask.enddate, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out TempDate1);
-            ThisRate.enddate = TempDate1;
+            DateTime.TryParseExact(rateTaskAssign.enddate, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out TempDate1);
+            rateAssign.enddate = TempDate1;
 
-            ThisRate.Inactive = Convert.ToInt32(ThisTask.Inactive);
+            rateAssign.Inactive = Convert.ToInt32(rateTaskAssign.Inactive);
             int TempRouteDisabled = 0;
-            ThisRate.RouteDisabled = TempRouteDisabled;
-            int.TryParse(ThisTask.RouteDisabled, out TempRouteDisabled);
-            ThisRate.RouteDisabled = TempRouteDisabled;
-            ThisRate.Type = Convert.ToInt32(ThisTask.Type);
-            ThisRate.Currency = Convert.ToInt32(ThisTask.Currency);
-            ThisRate.OtherAmount1 = Convert.ToSingle(ThisTask.OtherAmount1);
-            ThisRate.OtherAmount2 = Convert.ToSingle(ThisTask.OtherAmount2);
-            ThisRate.OtherAmount3 = Convert.ToSingle(ThisTask.OtherAmount3);
-            ThisRate.OtherAmount4 = Convert.ToDecimal(ThisTask.OtherAmount4);
-            ThisRate.OtherAmount5 = Convert.ToDecimal(ThisTask.OtherAmount5);
-            ThisRate.OtherAmount6 = Convert.ToSingle(ThisTask.OtherAmount6);
-            ThisRate.OtherAmount7 = Convert.ToSingle(ThisTask.OtherAmount7);
-            ThisRate.OtherAmount8 = Convert.ToSingle(ThisTask.OtherAmount8);
-            ThisRate.OtherAmount9 = Convert.ToSingle(ThisTask.OtherAmount9);
-            ThisRate.OtherAmount10 = Convert.ToSingle(ThisTask.OtherAmount10);
-            ThisRate.TimeZoneOffsetSec = Convert.ToDecimal(ThisTask.TimeZoneOffsetSec);
-            ThisRate.RatePosition = Convert.ToInt32(ThisTask.RatePosition);
-            ThisRate.IgwPercentageIn = Convert.ToSingle(ThisTask.IgwPercentageIn);
-            ThisRate.ConflictingRateIds = ThisTask.ConflictingRateIds;
-            ThisRate.ChangedByTaskId = Convert.ToInt32(ThisTask.ChangedByTaskId);
+            rateAssign.RouteDisabled = TempRouteDisabled;
+            int.TryParse(rateTaskAssign.RouteDisabled, out TempRouteDisabled);
+            rateAssign.RouteDisabled = TempRouteDisabled;
+            rateAssign.Type = Convert.ToInt32(rateTaskAssign.Type);
+            rateAssign.Currency = Convert.ToInt32(rateTaskAssign.Currency);
+            rateAssign.OtherAmount1 = Convert.ToSingle(rateTaskAssign.OtherAmount1);
+            rateAssign.OtherAmount2 = Convert.ToSingle(rateTaskAssign.OtherAmount2);
+            rateAssign.OtherAmount3 = Convert.ToSingle(rateTaskAssign.OtherAmount3);
+            rateAssign.OtherAmount4 = Convert.ToDecimal(rateTaskAssign.OtherAmount4);
+            rateAssign.OtherAmount5 = Convert.ToDecimal(rateTaskAssign.OtherAmount5);
+            rateAssign.OtherAmount6 = Convert.ToSingle(rateTaskAssign.OtherAmount6);
+            rateAssign.OtherAmount7 = Convert.ToSingle(rateTaskAssign.OtherAmount7);
+            rateAssign.OtherAmount8 = Convert.ToSingle(rateTaskAssign.OtherAmount8);
+            rateAssign.OtherAmount9 = Convert.ToSingle(rateTaskAssign.OtherAmount9);
+            rateAssign.OtherAmount10 = Convert.ToSingle(rateTaskAssign.OtherAmount10);
+            rateAssign.TimeZoneOffsetSec = Convert.ToDecimal(rateTaskAssign.TimeZoneOffsetSec);
+            rateAssign.RatePosition = Convert.ToInt32(rateTaskAssign.RatePosition);
+            rateAssign.IgwPercentageIn = Convert.ToSingle(rateTaskAssign.IgwPercentageIn);
+            rateAssign.ConflictingRateIds = rateTaskAssign.ConflictingRateIds;
+            rateAssign.ChangedByTaskId = Convert.ToInt32(rateTaskAssign.ChangedByTaskId);
 
             DateTime TempDateco = new DateTime(2000, 1, 1, 0, 0, 0);
-            DateTime.TryParseExact(ThisTask.date1, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out TempDateco);
-            ThisRate.ChangedOn = TempDateco;
-            ThisRate.Status = Convert.ToInt32(ThisTask.Status);
-            ThisRate.idPreviousRate = Convert.ToInt32(ThisTask.idPreviousRate);
-            ThisRate.EndPreviousRate = Convert.ToSByte(ThisTask.EndPreviousRate);
-            ThisRate.Category = Convert.ToSByte(ThisTask.Category);
-            ThisRate.SubCategory = Convert.ToSByte(ThisTask.SubCategory);
+            DateTime.TryParseExact(rateTaskAssign.date1, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out TempDateco);
+            rateAssign.ChangedOn = TempDateco;
+            rateAssign.Status = Convert.ToInt32(rateTaskAssign.Status);
+            rateAssign.idPreviousRate = Convert.ToInt32(rateTaskAssign.idPreviousRate);
+            rateAssign.EndPreviousRate = Convert.ToSByte(rateTaskAssign.EndPreviousRate);
+            rateAssign.Category = Convert.ToSByte(rateTaskAssign.Category);
+            rateAssign.SubCategory = Convert.ToSByte(rateTaskAssign.SubCategory);
             //ThisRate.ChangeCommitted = ThisTask.ChangeCommitted;
 
-            return ThisRate;
+            return rateAssign;
         }
         catch (Exception e1)
         {
@@ -4814,7 +4711,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
         }
     }
 
-    int SurroundingRates(ref Dictionary<string, List<rateassign>> dicRateCache, rateassign ThisRate, int idRatePlan, ref rateassign PresentRate, ref rateassign NextRate, ref rateassign PrevRate, ref rateassign LastInstance)
+    int SurroundingRates(ref Dictionary<int, List<rateassign>> dicRateCache, rateassign ThisRate, int idRatePlan, ref rateassign PresentRate, ref rateassign NextRate, ref rateassign PrevRate, ref rateassign LastInstance)
     {
         try
         {
@@ -5607,13 +5504,13 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
 
             }
 
-            Dictionary<long, string> dicRatePlan = (Dictionary<long, string>)Session["assign.dicRatePlan"];
-            long IdRatePlan = Convert.ToInt64(DataBinder.Eval(e.Row.DataItem, "inactive"));
-            string PlanName = "";
-            dicRatePlan.TryGetValue(IdRatePlan, out PlanName);
+            Dictionary<int, string> dicRatePlan = (Dictionary<int, string>)Session["assign.dicRatePlan"];
+            int idRatePlan = Convert.ToInt32(DataBinder.Eval(e.Row.DataItem, "inactive"));
+            string planName = "";
+            dicRatePlan.TryGetValue(idRatePlan, out planName);
             rateplan tmprateplan = new rateplan();
-            tmprateplan.id = IdRatePlan;
-            tmprateplan.RatePlanName = PlanName;
+            tmprateplan.id = idRatePlan;
+            tmprateplan.RatePlanName = planName;
             var lstPlan = new List<rateplan>();
             lstPlan.Add(tmprateplan);
 
@@ -6247,7 +6144,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
         {
             newEndDateAndTime = newEndDate + " " + newEndTime;
         }
-        string ThisPrefix = ((Label)row.FindControl("lblPrefix")).Text;
+        string thisPrefix = ((Label)row.FindControl("lblPrefix")).Text;
         Label lblRateErrors = (Label)(GridViewRateAssign.Rows[e.RowIndex].FindControl("lblRateErrors"));
         Label lblBillingInfo = (Label)(GridViewRateAssign.Rows[e.RowIndex].FindControl("lblBillingInfo"));
         DateTime ChangedEndDateTime = new DateTime();
@@ -6272,7 +6169,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                 rateassign NextRate = null;
                 using (PartnerEntities Context = new PartnerEntities())
                 {
-                    NextRate = Context.rateassigns.Where(c => c.idrateplan == 1 && c.Prefix == ThisPrefix
+                    NextRate = Context.rateassigns.Where(c => c.idrateplan == 1 && c.Prefix == Convert.ToInt32(thisPrefix)
                                                               && c.startdate > SaveStartDateTimeThisRate)
                         .OrderBy(c => c.startdate).Take(1).ToList().FirstOrDefault();
                 }
@@ -6294,7 +6191,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
 
                 using (PartnerEntities Context = new PartnerEntities())
                 {
-                    rateassign ThisRate = Context.rateassigns.Where(c => c.idrateplan == 1 && c.Prefix == ThisPrefix
+                    rateassign ThisRate = Context.rateassigns.Where(c => c.idrateplan == 1 && c.Prefix == Convert.ToInt32(thisPrefix)
                                                                          && c.startdate == SaveStartDateTimeThisRate).FirstOrDefault();
 
                     DropDownList ddlRatePlan = (DropDownList)(GridViewRateAssign.Rows[e.RowIndex].FindControl("DropDownListRatePlan"));
@@ -6327,7 +6224,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
 
             using (PartnerEntities Context = new PartnerEntities())
             {
-                rateassign ThisRate = Context.rateassigns.Where(c => c.idrateplan == 1 && c.Prefix == ThisPrefix
+                rateassign thisRate = Context.rateassigns.Where(c => c.idrateplan == 1 && c.Prefix == Convert.ToInt32(thisPrefix)
                                                                      && c.startdate == SaveStartDateTimeThisRate).FirstOrDefault();
 
                 DropDownList ddlRatePlan = (DropDownList)(GridViewRateAssign.Rows[e.RowIndex].FindControl("DropDownListRatePlan"));
@@ -6343,7 +6240,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                         //use changecommitted field as deactive
                         Cmd.CommandText = " update rateassign set " + " inactive=" + ddlRatePlan.SelectedValue + ", changecommitted=" + Deactive +
                                           " ,field3= " + (GridViewRateAssign.Rows[e.RowIndex].FindControl("ddlExcludeLCR") as DropDownList).SelectedValue +
-                                          " where id=" + ThisRate.id.ToString();
+                                          " where id=" + thisRate.id.ToString();
                         Cmd.ExecuteNonQuery();
 
                         StatusLabel.ForeColor = Color.Green;

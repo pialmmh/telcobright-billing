@@ -14,8 +14,8 @@ namespace MediationModel
     
     public partial class ratetaskassign
     {
-        public long id { get; set; }
-        public string Prefix { get; set; }
+        public int id { get; set; }
+        public Nullable<int> Prefix { get; set; }
         public string description { get; set; }
         public string rateamount { get; set; }
         public string WeekDayStart { get; set; }
@@ -27,7 +27,7 @@ namespace MediationModel
         public string SurchargeTime { get; set; }
         public string SurchargeAmount { get; set; }
         public long idrateplan { get; set; }
-        public string CountryCode { get; set; }
+        public Nullable<int> CountryCode { get; set; }
         public string date1 { get; set; }
         public string field1 { get; set; }
         public string field2 { get; set; }
@@ -36,7 +36,7 @@ namespace MediationModel
         public string field5 { get; set; }
         public string startdate { get; set; }
         public string enddate { get; set; }
-        public string Inactive { get; set; }
+        public Nullable<int> Inactive { get; set; }
         public string RouteDisabled { get; set; }
         public string Type { get; set; }
         public string Currency { get; set; }
@@ -68,5 +68,9 @@ namespace MediationModel
         public System.DateTime PartitionDate { get; set; }
         public string Comment1 { get; set; }
         public string Comment2 { get; set; }
+    
+        public virtual partner partner { get; set; }
+        public virtual rateplan rateplan { get; set; }
+        public virtual rateplanassignmenttuple rateplanassignmenttuple { get; set; }
     }
 }

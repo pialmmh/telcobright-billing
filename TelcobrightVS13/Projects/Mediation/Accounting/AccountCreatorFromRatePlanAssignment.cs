@@ -23,14 +23,10 @@ namespace TelcobrightMediation.Accounting
         private void PopulateRatePlanAssignmentInfo()
         {
             List<rateplanassignmenttuple> rTuples =
-                Context.rateplanassignmenttuples.Include(rp=>rp.rateassign.rateplan)
-                .Include(rp => rp.billingruleassignment.jsonbillingrule).ToList();
+                Context.rateplanassignmenttuples
+                .Include(rt => rt.billingruleassignment.jsonbillingrule)
+                .Include(rt=>rt.rateassigns).ToList();
 
-            //Dictionary<int, BillingRule> billingRules = Context.jsonbillingrules
-            //    .ToDictionary(jb => jb.id,jb=>JsonBillingRuleToBillingRuleConverter.Convert(jb));
-            //Dictionary<int, rateassign> rateAssignments =
-            //    Context.rateassigns.ToDictionary(r => Convert.ToInt32(r.Prefix));
-            //Dictionary<int, rateplan> rateplans = Context.rateplans.ToDictionary(rp => rp.id);
             foreach (rateplanassignmenttuple tup in rTuples)
             {
                 int productId = 0;//if req find use cases for this later
@@ -46,7 +42,7 @@ namespace TelcobrightMediation.Accounting
                 int idServiceFamily = tup.idService;
                 if (idServiceFamily <= 0)
                     throw new Exception("Service family id must be >=0;");
-                string uom = tup.rateassign.rateplan.Currency;
+                string uom = tup.rateassigns.First().rateplan.Currency;
                 if(string.IsNullOrEmpty(uom))
                     throw new Exception("Found currency is empty in rateplan, which is not supported " +
                                         "and possibly erroneous.");

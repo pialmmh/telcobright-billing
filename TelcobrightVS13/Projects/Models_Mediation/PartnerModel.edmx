@@ -1854,8 +1854,9 @@ warning 6002: The table/view 'def.platinum.rate' does not have a primary key def
         </EntityType>
         <EntityType Name="rateassign">
           <Key>
-            <PropertyRef Name="Prefix" />
+            <PropertyRef Name="id" />
           </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Prefix" Type="int" Nullable="false" />
           <Property Name="description" Type="varchar" MaxLength="200" />
           <Property Name="rateamount" Type="decimal" Precision="20" Scale="8" Nullable="false" />
@@ -2040,8 +2041,8 @@ warning 6002: The table/view 'def.platinum.rate' does not have a primary key def
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Prefix" Type="varchar" MaxLength="100" />
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="Prefix" Type="int" />
           <Property Name="description" Type="varchar" MaxLength="100" />
           <Property Name="rateamount" Type="varchar" MaxLength="100" />
           <Property Name="WeekDayStart" Type="varchar" MaxLength="100" />
@@ -2053,7 +2054,7 @@ warning 6002: The table/view 'def.platinum.rate' does not have a primary key def
           <Property Name="SurchargeTime" Type="varchar" MaxLength="100" />
           <Property Name="SurchargeAmount" Type="varchar" MaxLength="100" />
           <Property Name="idrateplan" Type="bigint" Nullable="false" />
-          <Property Name="CountryCode" Type="varchar" MaxLength="100" />
+          <Property Name="CountryCode" Type="int" />
           <Property Name="date1" Type="varchar" MaxLength="100" />
           <Property Name="field1" Type="varchar" MaxLength="100" />
           <Property Name="field2" Type="varchar" MaxLength="100" />
@@ -2062,7 +2063,7 @@ warning 6002: The table/view 'def.platinum.rate' does not have a primary key def
           <Property Name="field5" Type="varchar" MaxLength="100" />
           <Property Name="startdate" Type="varchar" MaxLength="100" />
           <Property Name="enddate" Type="varchar" MaxLength="100" />
-          <Property Name="Inactive" Type="varchar" MaxLength="100" />
+          <Property Name="Inactive" Type="int" />
           <Property Name="RouteDisabled" Type="varchar" MaxLength="100" />
           <Property Name="Type" Type="varchar" MaxLength="100" />
           <Property Name="Currency" Type="varchar" MaxLength="100" />
@@ -3755,7 +3756,7 @@ warning 6002: The table/view 'def.platinum.uom_conversion' does not have a prima
         </Association>
         <Association Name="fk_ratePlanAssignTup">
           <End Role="rateplanassignmenttuple" Type="Self.rateplanassignmenttuple" Multiplicity="1" />
-          <End Role="rateassign" Type="Self.rateassign" Multiplicity="0..1" />
+          <End Role="rateassign" Type="Self.rateassign" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="rateplanassignmenttuple">
               <PropertyRef Name="id" />
@@ -3896,6 +3897,42 @@ warning 6002: The table/view 'def.platinum.uom_conversion' does not have a prima
             </Principal>
             <Dependent Role="rateplan">
               <PropertyRef Name="BillingSpan" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ratetaskassign_ibfk_1">
+          <End Role="rateplanassignmenttuple" Type="Self.rateplanassignmenttuple" Multiplicity="0..1" />
+          <End Role="ratetaskassign" Type="Self.ratetaskassign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="rateplanassignmenttuple">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ratetaskassign">
+              <PropertyRef Name="Prefix" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ratetaskassign_ibfk_2">
+          <End Role="rateplan" Type="Self.rateplan" Multiplicity="0..1" />
+          <End Role="ratetaskassign" Type="Self.ratetaskassign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="rateplan">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ratetaskassign">
+              <PropertyRef Name="Inactive" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ratetaskassign_ibfk_3">
+          <End Role="partner" Type="Self.partner" Multiplicity="0..1" />
+          <End Role="ratetaskassign" Type="Self.ratetaskassign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="partner">
+              <PropertyRef Name="idPartner" />
+            </Principal>
+            <Dependent Role="ratetaskassign">
+              <PropertyRef Name="CountryCode" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -5725,6 +5762,18 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
             <End Role="enumbillingspan" EntitySet="enumbillingspan" />
             <End Role="rateplan" EntitySet="rateplan" />
           </AssociationSet>
+          <AssociationSet Name="ratetaskassign_ibfk_1" Association="Self.ratetaskassign_ibfk_1">
+            <End Role="rateplanassignmenttuple" EntitySet="rateplanassignmenttuple" />
+            <End Role="ratetaskassign" EntitySet="ratetaskassign" />
+          </AssociationSet>
+          <AssociationSet Name="ratetaskassign_ibfk_2" Association="Self.ratetaskassign_ibfk_2">
+            <End Role="rateplan" EntitySet="rateplan" />
+            <End Role="ratetaskassign" EntitySet="ratetaskassign" />
+          </AssociationSet>
+          <AssociationSet Name="ratetaskassign_ibfk_3" Association="Self.ratetaskassign_ibfk_3">
+            <End Role="partner" EntitySet="partner" />
+            <End Role="ratetaskassign" EntitySet="ratetaskassign" />
+          </AssociationSet>
           <AssociationSet Name="route_ibfk_1" Association="Self.route_ibfk_1">
             <End Role="partner" EntitySet="partner" />
             <End Role="route" EntitySet="route" />
@@ -5962,6 +6011,10 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
             <End Role="telcobrightpartner" EntitySet="telcobrightpartners" />
             <End Role="ne" EntitySet="nes" />
           </AssociationSet>
+          <AssociationSet Name="ratetaskassign_ibfk_3" Association="MediationModel.ratetaskassign_ibfk_3">
+            <End Role="partner" EntitySet="partners" />
+            <End Role="ratetaskassign" EntitySet="ratetaskassigns" />
+          </AssociationSet>
           <AssociationSet Name="route_ibfk_1" Association="MediationModel.route_ibfk_1">
             <End Role="partner" EntitySet="partners" />
             <End Role="route" EntitySet="routes" />
@@ -5982,9 +6035,17 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
             <End Role="timezone" EntitySet="timezones" />
             <End Role="rateplan" EntitySet="rateplans" />
           </AssociationSet>
+          <AssociationSet Name="ratetaskassign_ibfk_2" Association="MediationModel.ratetaskassign_ibfk_2">
+            <End Role="rateplan" EntitySet="rateplans" />
+            <End Role="ratetaskassign" EntitySet="ratetaskassigns" />
+          </AssociationSet>
           <AssociationSet Name="fk_route" Association="MediationModel.fk_route">
             <End Role="route" EntitySet="routes" />
             <End Role="rateplanassignmenttuple" EntitySet="rateplanassignmenttuples" />
+          </AssociationSet>
+          <AssociationSet Name="ratetaskassign_ibfk_1" Association="MediationModel.ratetaskassign_ibfk_1">
+            <End Role="rateplanassignmenttuple" EntitySet="rateplanassignmenttuples" />
+            <End Role="ratetaskassign" EntitySet="ratetaskassigns" />
           </AssociationSet>
           <AssociationSet Name="userroles_ibfk_2" Association="MediationModel.userroles_ibfk_2">
             <End Role="role" EntitySet="roles" />
@@ -6840,6 +6901,7 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <Property Name="DefaultCurrency" Type="Int32" Nullable="false" />
           <NavigationProperty Name="accounts" Relationship="MediationModel.account_ibfk_1" FromRole="partner" ToRole="account" />
           <NavigationProperty Name="accounts1" Relationship="MediationModel.account_ibfk_2" FromRole="partner" ToRole="account" />
+          <NavigationProperty Name="ratetaskassigns" Relationship="MediationModel.ratetaskassign_ibfk_3" FromRole="partner" ToRole="ratetaskassign" />
           <NavigationProperty Name="routes" Relationship="MediationModel.route_ibfk_1" FromRole="partner" ToRole="route" />
         </EntityType>
         <EntityType Name="partnerprefix">
@@ -6877,8 +6939,9 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
         </EntityType>
         <EntityType Name="rateassign">
           <Key>
-            <PropertyRef Name="Prefix" />
+            <PropertyRef Name="id" />
           </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Prefix" Type="Int32" Nullable="false" />
           <Property Name="description" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="rateamount" Type="Decimal" Nullable="false" />
@@ -6965,6 +7028,7 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <NavigationProperty Name="rateassigns" Relationship="MediationModel.fk_rate_Plan" FromRole="rateplan" ToRole="rateassign" />
           <NavigationProperty Name="ratetaskreferences" Relationship="MediationModel.fk_RatePlan" FromRole="rateplan" ToRole="ratetaskreference" />
           <NavigationProperty Name="timezone1" Relationship="MediationModel.fk_timezone" FromRole="rateplan" ToRole="timezone" />
+          <NavigationProperty Name="ratetaskassigns" Relationship="MediationModel.ratetaskassign_ibfk_2" FromRole="rateplan" ToRole="ratetaskassign" />
         </EntityType>
         <EntityType Name="rateplanassign">
           <Key>
@@ -7003,8 +7067,9 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <Property Name="route" Type="Int32" />
           <Property Name="priority" Type="Int32" Nullable="false" />
           <NavigationProperty Name="billingruleassignment" Relationship="MediationModel.billingruleassignment_ibfk_2" FromRole="rateplanassignmenttuple" ToRole="billingruleassignment" />
-          <NavigationProperty Name="rateassign" Relationship="MediationModel.fk_ratePlanAssignTup" FromRole="rateplanassignmenttuple" ToRole="rateassign" />
+          <NavigationProperty Name="rateassigns" Relationship="MediationModel.fk_ratePlanAssignTup" FromRole="rateplanassignmenttuple" ToRole="rateassign" />
           <NavigationProperty Name="route1" Relationship="MediationModel.fk_route" FromRole="rateplanassignmenttuple" ToRole="route" />
+          <NavigationProperty Name="ratetaskassigns" Relationship="MediationModel.ratetaskassign_ibfk_1" FromRole="rateplanassignmenttuple" ToRole="ratetaskassign" />
         </EntityType>
         <EntityType Name="ratetask">
           <Key>
@@ -7072,8 +7137,8 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Prefix" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="Prefix" Type="Int32" />
           <Property Name="description" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="rateamount" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="WeekDayStart" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
@@ -7085,7 +7150,7 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <Property Name="SurchargeTime" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="SurchargeAmount" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="idrateplan" Type="Int64" Nullable="false" />
-          <Property Name="CountryCode" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CountryCode" Type="Int32" />
           <Property Name="date1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="field1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="field2" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
@@ -7094,7 +7159,7 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <Property Name="field5" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="startdate" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="enddate" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Inactive" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Inactive" Type="Int32" />
           <Property Name="RouteDisabled" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="Type" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="Currency" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
@@ -7126,6 +7191,9 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <Property Name="PartitionDate" Type="DateTime" Nullable="false" />
           <Property Name="Comment1" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="Comment2" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="partner" Relationship="MediationModel.ratetaskassign_ibfk_3" FromRole="ratetaskassign" ToRole="partner" />
+          <NavigationProperty Name="rateplan" Relationship="MediationModel.ratetaskassign_ibfk_2" FromRole="ratetaskassign" ToRole="rateplan" />
+          <NavigationProperty Name="rateplanassignmenttuple" Relationship="MediationModel.ratetaskassign_ibfk_1" FromRole="ratetaskassign" ToRole="rateplanassignmenttuple" />
         </EntityType>
         <EntityType Name="ratetaskassignreference">
           <Key>
@@ -9831,6 +9899,18 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="ratetaskassign_ibfk_3">
+          <End Type="MediationModel.partner" Role="partner" Multiplicity="0..1" />
+          <End Type="MediationModel.ratetaskassign" Role="ratetaskassign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="partner">
+              <PropertyRef Name="idPartner" />
+            </Principal>
+            <Dependent Role="ratetaskassign">
+              <PropertyRef Name="CountryCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="route_ibfk_1">
           <End Type="MediationModel.partner" Role="partner" Multiplicity="1" />
           <End Type="MediationModel.route" Role="route" Multiplicity="*" />
@@ -9857,7 +9937,7 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
         </Association>
         <Association Name="fk_ratePlanAssignTup">
           <End Type="MediationModel.rateplanassignmenttuple" Role="rateplanassignmenttuple" Multiplicity="1" />
-          <End Type="MediationModel.rateassign" Role="rateassign" Multiplicity="0..1" />
+          <End Type="MediationModel.rateassign" Role="rateassign" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="rateplanassignmenttuple">
               <PropertyRef Name="id" />
@@ -9893,6 +9973,18 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="ratetaskassign_ibfk_2">
+          <End Type="MediationModel.rateplan" Role="rateplan" Multiplicity="0..1" />
+          <End Type="MediationModel.ratetaskassign" Role="ratetaskassign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="rateplan">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ratetaskassign">
+              <PropertyRef Name="Inactive" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_route">
           <End Type="MediationModel.route" Role="route" Multiplicity="0..1" />
           <End Type="MediationModel.rateplanassignmenttuple" Role="rateplanassignmenttuple" Multiplicity="*" />
@@ -9902,6 +9994,18 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
             </Principal>
             <Dependent Role="rateplanassignmenttuple">
               <PropertyRef Name="route" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ratetaskassign_ibfk_1">
+          <End Type="MediationModel.rateplanassignmenttuple" Role="rateplanassignmenttuple" Multiplicity="0..1" />
+          <End Type="MediationModel.ratetaskassign" Role="ratetaskassign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="rateplanassignmenttuple">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ratetaskassign">
+              <PropertyRef Name="Prefix" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -10978,6 +11082,7 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
                 <ScalarProperty Name="rateamount" ColumnName="rateamount" />
                 <ScalarProperty Name="description" ColumnName="description" />
                 <ScalarProperty Name="Prefix" ColumnName="Prefix" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -35,7 +35,7 @@ namespace ServiceFamilies
                 cdr.Duration1 = finalDuration;
                 rateplan dicRateplan = null;
                 serviceContext.CdrProcessor.CdrJobContext.MediationContext.MefServiceFamilyContainer
-                    .DicRateplans.TryGetValue((long)rateWithAssignmentTupleId.idrateplan,out dicRateplan);
+                    .DicRateplans.TryGetValue((int)rateWithAssignmentTupleId.idrateplan,out dicRateplan);
                 if (dicRateplan == null) throw new Exception("Could not find rateplan.");
                 string idCurrencyUoM = dicRateplan.Currency;
                 int idChargedPartner = GetChargedOrChargingPartnerId(cdrExt, serviceContext);

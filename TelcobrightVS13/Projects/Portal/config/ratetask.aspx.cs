@@ -1978,7 +1978,7 @@ public partial class ConfigRateTask : Page
 
 
     private ratetask CreateNewRateTask(
-                                        long currentIdRatePlan,
+                                        int currentIdRatePlan,
                                         string newId,//will be -1 for insert, will be >0 for update
                                         string newPrefix,
                                         string newDesc,
@@ -4372,7 +4372,7 @@ public partial class ConfigRateTask : Page
         return totalCommitCount;
     }
 
-    rate RateTaskToRate(ratetask thisTask, long idRatePlan)
+    rate RateTaskToRate(ratetask thisTask, int idRatePlan)
     {
 
         try

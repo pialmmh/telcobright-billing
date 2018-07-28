@@ -112,7 +112,7 @@ namespace TelcobrightMediation
             account postingAccount = postingAccountingFinder.GetPostingAccount();
             rateplan dicRateplan = null;
             serviceContext.CdrProcessor.CdrJobContext.MediationContext.MefServiceFamilyContainer
-                .DicRateplans.TryGetValue((long)matchedRateWithAssignmentTupleId.idrateplan, out dicRateplan);
+                .DicRateplans.TryGetValue((int)matchedRateWithAssignmentTupleId.idrateplan, out dicRateplan);
             if (dicRateplan==null)
             {
                 throw new Exception("Could not find rateplan.");
