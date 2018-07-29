@@ -23,7 +23,8 @@ namespace MediationModel
 
 		public static Dictionary<string, string> GetParsedDic()
 		{
-			if(IsParsed==false) throw new Exception("Static properties are not parsed to dictionary, method 'Parse()' must be called once before using this property.");
+			if(IsParsed==false) Parse();
+                //throw new Exception("Static properties are not parsed to dictionary, method 'Parse()' must be called once before using this property.");
 			return _parsedInsertHeaders;
 		}
 	}

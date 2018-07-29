@@ -1,0 +1,2 @@
+1. solve autoInc problem with maxvalue
+2. find a way to delete autoInc request history
