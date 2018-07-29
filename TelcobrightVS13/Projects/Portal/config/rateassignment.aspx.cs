@@ -871,7 +871,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                 populateDropDownForBillingRule();
                 DropDownList ddlist = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListPartner");
                 DropDownList ddlistType = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListPartnerType");
-                Dictionary<long, string> dicRatePlan = new Dictionary<long, string>();
+                Dictionary<int, string> dicRatePlan = new Dictionary<int, string>();
                 using (PartnerEntities Context = new PartnerEntities())
                 {
                     foreach (rateplan ThisPlan in Context.rateplans.ToList())
@@ -3015,7 +3015,513 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
     {
         frmSupplierRatePlanInsert.Visible = false;
         myGridViewDataBind();
+    }
+    
+    protected void frmSupplierRatePlanInsert_ItemInserting(object sender, FormViewInsertEventArgs e)
+    {
 
+        try
+        {
+            string newDesc = "";
+            string newPrefix = "9999"; //tuple, will be found later
+
+            //partner
+            string newCountry = ((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListPartner")).SelectedValue;
+
+            //route
+            string newRouteDisabled = ((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListRoute")).SelectedValue;
+
+
+            //rating rule
+            string newServiceType = ((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListservice")).SelectedValue;
+
+            //priority
+            string newResolution = ((TextBox)frmSupplierRatePlanInsert.FindControl("txtResolution")).Text;
+
+            //assigned direction
+            string newSubServiceType = ((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListAssignedDirection")).SelectedValue;
+
+
+
+            DropDownList ServiceType = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListAssignedDirection");
+            DropDownList ddlistSf = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListservice");
+            DropDownList ddlBillingRule = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownBillingRule");
+            if (ServiceType.SelectedIndex == 2)
+            {
+                billingRule = "";
+                paymentMode = "";
+            }
+            else
+            {
+                billingRule = ddlBillingRule.SelectedValue;
+            }
+            // BillingInformation bl = new BillingInformation(billingRule, paymentMode);
+            // var jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(bl);
+            //Console.WriteLine(jsonString);
+            if (ddlistSf.SelectedIndex == 0)
+            {
+                StatusLabel.ForeColor = Color.Red;
+                StatusLabel.Text = "No Service Family Selected!";
+                return;
+            }
+            if (ddlBillingRule.SelectedIndex == 0)
+            {
+                StatusLabel.ForeColor = Color.Red;
+                StatusLabel.Text = "No Billing Rule Selected!";
+                return;
+            }
+            Dictionary<string, enumservicefamily> dicServiceFamily = new Dictionary<string, enumservicefamily>();
+            using (PartnerEntities Context = new PartnerEntities())
+            {
+                dicServiceFamily = Context.enumservicefamilies.ToDictionary(c => c.id.ToString());
+            }
+            enumservicefamily ThisSf = dicServiceFamily[ddlistSf.SelectedValue];
+            if (ThisSf.PartnerAssignNotNeeded == 0)//partner assign required
+            {
+                if (Convert.ToInt32(newCountry) <= 0)
+                {
+                    StatusLabel.ForeColor = Color.Red;
+                    StatusLabel.Text = "No Partner Selected!";
+                    return;
+                }
+                if (Convert.ToInt32(newSubServiceType) <= 0)
+                {
+                    StatusLabel.ForeColor = Color.Red;
+                    StatusLabel.Text = "Rateplan Assignment Direction is not selected!";
+                    return;
+                }
+            }
+
+            //if assignment not applicable, set it to 0
+            using (PartnerEntities Conmed = new PartnerEntities())
+            {
+                using (PartnerEntities Context = new PartnerEntities())
+                {
+                    int Tempservice = Convert.ToInt32(newServiceType);
+                    int CarAssignNotReq = Convert.ToInt32(Conmed.enumservicefamilies.Where(c => c.id == Tempservice).First().PartnerAssignNotNeeded);
+                    if (CarAssignNotReq == 1)
+                    {
+                        newSubServiceType = "0";
+                    }
+                }
+            }
+            //id rate plan
+            string stridRatePlan = ((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListRatePlan")).SelectedValue;
+            int tempint = -1;
+            if (int.TryParse(stridRatePlan, out tempint) == false)
+            {
+                StatusLabel.ForeColor = Color.Red;
+                StatusLabel.Text = "No Rate Plan Selected!";
+                return;
+            }
+
+
+
+            string newInactive = tempint.ToString();
+
+            string newMinDurationSec = "1";
+            string newStartDate = ((TextBox)frmSupplierRatePlanInsert.FindControl("TextBoxStartDatePickerFrm")).Text;
+            string newStartTime = ((TextBox)frmSupplierRatePlanInsert.FindControl("TextBoxStartDateTimePickerFrm")).Text;
+            string newStartDateAndTime = "";
+            if (newStartDate != "")
+            {
+                newStartDateAndTime = newStartDate + " " + newStartTime;
+            }
+
+            //validate start date time in advance
+            DateTime EffectiveStartDate = new DateTime();
+            if (DateTime.TryParseExact(newStartDateAndTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out EffectiveStartDate) == false)
+            {
+                StatusLabel.Text = "No Effective Datetime!";
+                return;
+            }
+
+            string newEndDate = ((TextBox)frmSupplierRatePlanInsert.FindControl("TextBoxEndDatePickerFrm")).Text;
+            string newEndTime = ((TextBox)frmSupplierRatePlanInsert.FindControl("TextBoxEndDateTimePickerFrm")).Text;
+            string newEndDateAndTime = "";
+            if (newEndDate != "")
+            {
+                newEndDateAndTime = newEndDate + " " + newEndTime;
+            }
+
+            DateTime? EffectiveEndDate = null;    //end date can be null, so assign null if no valid enddate time is present
+            DateTime TempEndDate = new DateTime();
+            if (DateTime.TryParseExact(newEndDateAndTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out TempEndDate) == true)
+            {
+                EffectiveEndDate = TempEndDate;
+            }
+
+
+
+            string newRateAmount = "100";
+            string newWeekDayStart = "1";
+            string newWeekDayEnd = "1";
+            string newStartTimeOfDay = "1";
+            string newEndTimeOfDay = "1";
+            string newSurchargeTime = "1";
+            string newSurchargeAmount = "1";
+            string newOtherAmount1 = "1";
+            string newOtherAmount2 = "1";
+            string newOtherAmount3 = "1";
+            string newOtherAmount4 = "1";
+            string newOtherAmount5 = "1";
+            string newOtherAmount6 = "1";
+            string newOtherAmount7 = "1";
+            string newOtherAmount8 = "1";
+            string newOtherAmount9 = "1";
+            string newOtherAmount10 = "1";
+
+
+
+            string newId = "-1";
+
+            //call create new rate to validate the rate
+
+            int idCurrentRatePlan = -1;
+            //if (ViewState["sesidRatePlan"] != null)
+            //{
+            //    idCurrentRatePlan = (int)ViewState["sesidRatePlan"];
+            //}
+            idCurrentRatePlan = int.Parse(DropDownListTaskRef.SelectedValue);
+
+            //get own telcobrightcustomreid from telcobrightmediation database by matching databaes name
+            //from Partner
+
+            string ThisConectionString = ConfigurationManager.ConnectionStrings["partner"].ConnectionString;
+
+            MySqlConnection connection = new MySqlConnection(ThisConectionString);
+            string database = connection.Database.ToString();
+            int idTimeZone = -1;
+            using (PartnerEntities Context = new PartnerEntities())
+            {
+                telcobrightpartner ThisCustomer = (from c in Context.telcobrightpartners
+                    where c.databasename == database
+                    select c).First();
+                int ThisOperatorId = ThisCustomer.idCustomer;
+                idTimeZone = Context.telcobrightpartners.Where(c => c.idCustomer == ThisOperatorId).First().NativeTimeZone;
+            }
+
+            double TimeZoneOffsetSec = -360000;//set to some invalid timezone offset (in this case 100 hours)
+            using (PartnerEntities Context = new PartnerEntities())
+            {
+                TimeZoneOffsetSec = Context.timezones.Where(c => c.id == idTimeZone).First().gmt_offset;
+            }
+
+            int newType = -1;
+            if (Session["assign.sesRatePlanType"] != null)
+            {
+                newType = (int)Session["assign.sesRatePlanType"];
+            }
+
+            int newCurrency = -1;
+            if (Session["assign.sesCurrency"] != null)
+            {
+                newCurrency = (int)Session["assign.sesCurrency"];
+            }
+
+            int idOperatorType = -1;
+            if (Session["assign.sesidOperatorType"] != null)
+            {
+                idOperatorType = (int)Session["assign.sesidOperatorType"];
+            }
+
+
+
+            ratetaskassign NewRate = CreateNewRateTask(idCurrentRatePlan,
+                newId, newPrefix, newDesc, newRateAmount, newResolution, newMinDurationSec
+                , newCountry, newStartDateAndTime,
+                newEndDateAndTime, newInactive, newRouteDisabled,
+                newWeekDayStart,
+                newWeekDayEnd,
+                newStartTimeOfDay,
+                newEndTimeOfDay,
+                newSurchargeTime,
+                newSurchargeAmount,
+                newType.ToString(),
+                newOtherAmount1,
+                newOtherAmount2,
+                newOtherAmount3,
+                newOtherAmount4,
+                newOtherAmount5,
+                newOtherAmount6,
+                newOtherAmount7,
+                newOtherAmount8,
+                newOtherAmount9,
+                newOtherAmount10,
+                newCurrency.ToString(),
+                idOperatorType,
+                TimeZoneOffsetSec,
+                newSurchargeTime,
+                newSurchargeAmount,
+                newServiceType,
+                newSubServiceType
+            );
+
+
+            using (PartnerEntities Context = new PartnerEntities())
+            {
+                //first check if the rate assignment tuple exists in rateplanassignmenttuple
+                int? NewidPartner = Convert.ToInt32(NewRate.CountryCode);
+                int? NewRoute = null;
+                int tInt = 0;
+                if (int.TryParse(NewRate.RouteDisabled, out tInt))
+                {
+                    NewRoute = tInt;
+                }
+                int NewserviceId = Convert.ToInt32(NewRate.Category);
+                int NewPriority = Convert.ToInt32(NewRate.Resolution);
+                int NewAssignDirection = Convert.ToInt32(NewRate.SubCategory);
+
+
+                rateplanassignmenttuple ExistingTuple = null;
+                if (NewRoute == -1)//route not used
+                {
+                    if (NewidPartner == 0)
+                    {
+                        ExistingTuple = Context.rateplanassignmenttuples.Where(c => c.idpartner == null &&
+                                                                                    c.route == null &&
+                                                                                    c.idService == NewserviceId &&
+                                                                                    c.priority == NewPriority &&
+                                                                                    c.AssignDirection == NewAssignDirection).ToList().FirstOrDefault();
+                    }
+                    else
+                    {
+                        ExistingTuple = Context.rateplanassignmenttuples.Where(c => c.idpartner == NewidPartner &&
+                                                                                    c.route == null &&
+                                                                                    c.idService == NewserviceId &&
+                                                                                    c.priority == NewPriority &&
+                                                                                    c.AssignDirection == NewAssignDirection).ToList().FirstOrDefault();
+                    }
+                }
+                else//route used
+                {
+                    if (NewidPartner == 0)
+                    {
+                        ExistingTuple = Context.rateplanassignmenttuples.Where(c => c.idpartner == null &&
+                                                                                    c.route == NewRoute &&
+                                                                                    c.idService == NewserviceId &&
+                                                                                    c.priority == NewPriority &&
+                                                                                    c.AssignDirection == NewAssignDirection).ToList().FirstOrDefault();
+                    }
+                    else
+                    {
+                        ExistingTuple = Context.rateplanassignmenttuples.Where(c => c.idpartner == NewidPartner &&
+                                                                                    c.route == NewRoute &&
+                                                                                    c.idService == NewserviceId &&
+                                                                                    c.priority == NewPriority &&
+                                                                                    c.AssignDirection == NewAssignDirection).ToList().FirstOrDefault();
+                    }
+                }
+                //following is an extra validation to check overlap, if it is validated here
+                //the code goes through ratetask assignment routine, gets validated again there.
+                //purpose is to tyr to prevent the ratetaskassignment additional griview to show up
+                if (ExistingTuple != null)
+                {
+                    DateRange dRange = new DateRange();
+                    dRange.StartDate = EffectiveStartDate;
+                    dRange.EndDate = (EffectiveEndDate == null ? new DateTime(9999, 12, 31, 23, 59, 59) : Convert.ToDateTime(EffectiveEndDate));
+
+                    //load all the assigned rateplans for this tuple
+                    List<rateassign> lstAssignments = Context.rateassigns.Where(c => c.Prefix == ExistingTuple.id).ToList();
+                    //there can be only one assignment with enddate=null
+                    int ExistingAssignmentCount = lstAssignments.Count;
+                    int OpenAssignmentsCount = lstAssignments.Where(c => c.enddate == null).Count();
+                    if (ExistingAssignmentCount > 0)
+                    {
+                        if (OpenAssignmentsCount > 1)
+                        {
+                            StatusLabel.ForeColor = Color.Red;
+                            StatusLabel.Text = "There can be only one assigned rateplan open i.e. without end date!";
+                            return;
+                        }
+                        rateassign LatestAssignment = lstAssignments.OrderByDescending(c => c.startdate).First();
+                        rateassign FirstAssignment = lstAssignments.OrderByDescending(c => c.startdate).First();
+                        //if this assignemnt=the latest assignment
+                        if (LatestAssignment != null && dRange.StartDate == LatestAssignment.startdate)
+                        {
+                            StatusLabel.ForeColor = Color.Red;
+                            StatusLabel.Text = "Effective Datetime overlaps with existing assignment starting at " + LatestAssignment.startdate.ToString("yyyy-MM-dd HH:mm:ss") + ". " +
+                                               " To Assign multiple Rateplan for the same combination of [Service Family, Assigned Order, Assign Direction, Customer/Supplier/Route!],<br/>" +
+                                               " Use a different value for Assigned Order or a different effective datetime which does not overlap any existing assignment.";
+                            e.Cancel = true;
+                            return;
+                        }
+                        if (dRange.StartDate < FirstAssignment.startdate)//before all
+                        {
+                            EffectiveEndDate = FirstAssignment.startdate;
+                        }
+                        //check overlap with all assignment except latest one
+                        List<rateassign> AllExceptLatest = lstAssignments.Where(c => c.id != LatestAssignment.id).ToList();
+                        foreach (rateassign ra in AllExceptLatest)
+                        {
+                            DateRange CompareWith = new DateRange() { StartDate = ra.startdate, EndDate = Convert.ToDateTime(ra.enddate) };
+                            if (Util.DateIntersection(dRange, CompareWith) != null)
+                            {
+                                StatusLabel.ForeColor = Color.Red;
+                                StatusLabel.Text = "Effective Datetime overlaps with existing assignment starting at " + ra.startdate.ToString("yyyy-MM-dd HH:mm:ss") + ". " +
+                                                   " To Assign multiple Rateplan for the same combination of [Service Family, Assigned Order, Assign Direction, Customer/Supplier/Route!],<br/>" +
+                                                   " Use a different value for Assigned Order or a different effective datetime which does not overlap any existing assignment.";
+                                e.Cancel = true;
+                                return;
+                            }
+                        }
+                    }
+                    //else.....first assignment of this kind
+
+
+                }
+
+                if (ExistingTuple == null)//tuple does not exist
+                {
+                    //todo: fix autoincrement work around currently implemented for billingRuleassignment
+                    int maxIdRatePlanAssignmentTuple = 0;
+                    using (PartnerEntities context = new PartnerEntities())
+                    {
+                        if (context.rateplanassignmenttuples.Any())
+                        {
+                            maxIdRatePlanAssignmentTuple = context.rateplanassignmenttuples.Max(c => c.id);
+                        }
+                    }
+                    rateplanassignmenttuple newTuple =
+                        new rateplanassignmenttuple() { id = ++maxIdRatePlanAssignmentTuple };
+                    if (NewidPartner == 0)//has to be null in the database
+                    {
+                        newTuple.idpartner = null;
+                    }
+                    else
+                    {
+                        newTuple.idpartner = NewidPartner;
+                    }
+                    if (NewRoute == -1)
+                    {
+                        newTuple.route = null;
+                    }
+                    else
+                    {
+                        newTuple.route = NewRoute;
+                    }
+                    newTuple.idService = NewserviceId;
+                    newTuple.priority = NewPriority;
+                    newTuple.AssignDirection = NewAssignDirection;
+                    Context.rateplanassignmenttuples.Add(newTuple);
+                    //insert billingRule
+                    ddlBillingRule = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownBillingRule");
+                    DropDownList ddlserviceGroup = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListServiceGroup");
+                    int selectedBillingRule = Convert.ToInt32(ddlBillingRule.SelectedValue);
+                    int selectedServiceGroup = Convert.ToInt32(ddlserviceGroup.SelectedValue);
+                    billingruleassignment billingruleassignment = new billingruleassignment()
+                    {
+                        idRatePlanAssignmentTuple = newTuple.id,
+                        idServiceGroup = selectedServiceGroup,
+                        idBillingRule = selectedBillingRule
+                    };
+                    Context.billingruleassignments.Add(billingruleassignment);
+                    Context.SaveChanges();
+                }
+
+                //get the id of the tuple
+                //surprise, setting nullable var=null then using it in linq doesn't work
+                int tupleId = -1;
+
+                if (NewRoute == -1)//route not used
+                {
+                    if (NewidPartner == 0)
+                    {
+                        tupleId = Context.rateplanassignmenttuples.Where(c => c.idpartner == null &&
+                                                                              c.route == null &&
+                                                                              c.idService == NewserviceId &&
+                                                                              c.priority == NewPriority &&
+                                                                              c.AssignDirection == NewAssignDirection).FirstOrDefault().id;
+                    }
+                    else
+                    {
+                        tupleId = Context.rateplanassignmenttuples.Where(c => c.idpartner == NewidPartner &&
+                                                                              c.route == null &&
+                                                                              c.idService == NewserviceId &&
+                                                                              c.priority == NewPriority &&
+                                                                              c.AssignDirection == NewAssignDirection).FirstOrDefault().id;
+                    }
+                }
+                else//route used
+                {
+                    if (NewidPartner == 0)
+                    {
+                        tupleId = Context.rateplanassignmenttuples.Where(c => c.idpartner == null &&
+                                                                              c.route == NewRoute &&
+                                                                              c.idService == NewserviceId &&
+                                                                              c.priority == NewPriority &&
+                                                                              c.AssignDirection == NewAssignDirection).FirstOrDefault().id;
+                    }
+                    else
+                    {
+                        tupleId = Context.rateplanassignmenttuples.Where(c => c.idpartner == NewidPartner &&
+                                                                              c.route == NewRoute &&
+                                                                              c.idService == NewserviceId &&
+                                                                              c.priority == NewPriority &&
+                                                                              c.AssignDirection == NewAssignDirection).FirstOrDefault().id;
+                    }
+                }
+
+                NewRate.Prefix = tupleId;//represents the tuple
+                NewRate.RouteDisabled = newRouteDisabled;
+                NewRate.Inactive = Convert.ToInt32(newInactive);//id rate plan
+
+                //LCR Flag
+                var ddlExcludeLCR = frmSupplierRatePlanInsert.FindControl("ddlExcludeLCR") as DropDownList;
+                NewRate.field3 = ddlExcludeLCR.SelectedValue;
+
+                
+                Context.ratetaskassigns.Add(NewRate);
+                Context.SaveChanges();//entry  has been added to ratetaskassign table
+
+
+                //call commit changes to add them in the rateassign table
+                CommitChanges();
+                //bad code for now, not transaction support 
+                //find a way to fix it sometime
+                //  string billingRuleName = ((DropDownList) frmSupplierRatePlanInsert.FindControl("DropDownBillingRule")).SelectedItem.Value;
+                //genericparameterassignment g =
+                //GetAdditionalBillingParamsAsGenericAssignment(NewRate.Prefix, Context);
+                //try
+                //{
+                //  Context.genericparameterassignments.Add(additionalBillingParamsAsGenericAssignment);
+                // Context.SaveChanges();
+                //}
+                //catch (Exception exception)
+                //{
+
+                //  throw;
+                //}
+            }
+
+            frmSupplierRatePlanInsert.Visible = false;
+            CreateCustomerServiceAccounts();
+            myGridViewDataBind();
+            Response.Redirect("rateassignment.aspx");
+            //var color = ColorTranslator.FromHtml("#B1B1B3");
+            //StatusLabel.ForeColor = color;
+            //StatusLabel.Text = "Changes are not committed to rate table until 'Save All Changes' clicked!";
+            StatusLabel.ForeColor = Color.Green;
+            StatusLabel.Text = "Rateplan Successfully Assigned";
+        }
+        catch (Exception e1)
+        {
+            StatusLabel.ForeColor = Color.Red;
+            StatusLabel.Text = e1.Message + "<br/>" + (e1.InnerException != null ? e1.InnerException.ToString() : "");
+        }
+
+    }
+
+    private static void CreateCustomerServiceAccounts()
+    {
+        using (PartnerEntities context = new PartnerEntities())
+        {
+            AccountingContext accContext = new AccountingContext(context, 0, 
+                new AutoIncrementManagerManualInt(context), new List<DateTime>(), 10000);
+            AccountCreatorFromRatePlanAssignment accountCreator =
+                new AccountCreatorFromRatePlanAssignment(accContext, context);
+            accountCreator.CreateAllMissingCustomerAccountsFromRatePlanAssignmentInfo();
+        }
     }
 
     protected void frmSupplierRatePlanInsert_Load(object sender, EventArgs e)
@@ -3375,498 +3881,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
     string billingRule = null;
     string paymentMode = null;
 
-    protected void frmSupplierRatePlanInsert_ItemInserting(object sender, FormViewInsertEventArgs e)
-    {
-
-        try
-        {
-            string newDesc = "";
-            string newPrefix = "9999"; //tuple, will be found later
-
-            //partner
-            string newCountry = ((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListPartner")).SelectedValue;
-
-            //route
-            string newRouteDisabled = ((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListRoute")).SelectedValue;
-
-
-            //rating rule
-            string newServiceType = ((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListservice")).SelectedValue;
-
-            //priority
-            string newResolution = ((TextBox)frmSupplierRatePlanInsert.FindControl("txtResolution")).Text;
-
-            //assigned direction
-            string newSubServiceType = ((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListAssignedDirection")).SelectedValue;
-
-
-
-            DropDownList ServiceType = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListAssignedDirection");
-            DropDownList ddlistSf = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListservice");
-            DropDownList ddlBillingRule = (DropDownList) frmSupplierRatePlanInsert.FindControl("DropDownBillingRule");
-            if (ServiceType.SelectedIndex == 2)
-            {
-                billingRule = "";
-                paymentMode = "";
-            }
-            else
-            {
-                billingRule = ddlBillingRule.SelectedValue;
-            }
-            // BillingInformation bl = new BillingInformation(billingRule, paymentMode);
-            // var jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(bl);
-            //Console.WriteLine(jsonString);
-            if (ddlistSf.SelectedIndex == 0)
-            {
-                StatusLabel.ForeColor = Color.Red;
-                StatusLabel.Text = "No Service Family Selected!";
-                return;
-            }
-            if (ddlBillingRule.SelectedIndex == 0)
-            {
-                StatusLabel.ForeColor = Color.Red;
-                StatusLabel.Text = "No Billing Rule Selected!";
-                return;
-            }
-            Dictionary<string, enumservicefamily> dicServiceFamily = new Dictionary<string, enumservicefamily>();
-            using (PartnerEntities Context = new PartnerEntities())
-            {
-                dicServiceFamily = Context.enumservicefamilies.ToDictionary(c => c.id.ToString());
-            }
-            enumservicefamily ThisSf = dicServiceFamily[ddlistSf.SelectedValue];
-            if (ThisSf.PartnerAssignNotNeeded == 0)//partner assign required
-            {
-                if (Convert.ToInt32(newCountry) <= 0)
-                {
-                    StatusLabel.ForeColor = Color.Red;
-                    StatusLabel.Text = "No Partner Selected!";
-                    return;
-                }
-                if (Convert.ToInt32(newSubServiceType) <= 0)
-                {
-                    StatusLabel.ForeColor = Color.Red;
-                    StatusLabel.Text = "Rateplan Assignment Direction is not selected!";
-                    return;
-                }
-            }
-
-            //if assignment not applicable, set it to 0
-            using (PartnerEntities Conmed = new PartnerEntities())
-            {
-                using (PartnerEntities Context = new PartnerEntities())
-                {
-                    int Tempservice = Convert.ToInt32(newServiceType);
-                    int CarAssignNotReq = Convert.ToInt32(Conmed.enumservicefamilies.Where(c => c.id == Tempservice).First().PartnerAssignNotNeeded);
-                    if (CarAssignNotReq == 1)
-                    {
-                        newSubServiceType = "0";
-                    }
-                }
-            }
-            //id rate plan
-            string stridRatePlan = ((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListRatePlan")).SelectedValue;
-            int tempint = -1;
-            if (int.TryParse(stridRatePlan, out tempint) == false)
-            {
-                StatusLabel.ForeColor = Color.Red;
-                StatusLabel.Text = "No Rate Plan Selected!";
-                return;
-            }
-
-
-
-            string newInactive = tempint.ToString();
-
-            string newMinDurationSec = "1";
-            string newStartDate = ((TextBox)frmSupplierRatePlanInsert.FindControl("TextBoxStartDatePickerFrm")).Text;
-            string newStartTime = ((TextBox)frmSupplierRatePlanInsert.FindControl("TextBoxStartDateTimePickerFrm")).Text;
-            string newStartDateAndTime = "";
-            if (newStartDate != "")
-            {
-                newStartDateAndTime = newStartDate + " " + newStartTime;
-            }
-
-            //validate start date time in advance
-            DateTime EffectiveStartDate = new DateTime();
-            if (DateTime.TryParseExact(newStartDateAndTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out EffectiveStartDate) == false)
-            {
-                StatusLabel.Text = "No Effective Datetime!";
-                return;
-            }
-
-            string newEndDate = ((TextBox)frmSupplierRatePlanInsert.FindControl("TextBoxEndDatePickerFrm")).Text;
-            string newEndTime = ((TextBox)frmSupplierRatePlanInsert.FindControl("TextBoxEndDateTimePickerFrm")).Text;
-            string newEndDateAndTime = "";
-            if (newEndDate != "")
-            {
-                newEndDateAndTime = newEndDate + " " + newEndTime;
-            }
-
-            DateTime? EffectiveEndDate = null;    //end date can be null, so assign null if no valid enddate time is present
-            DateTime TempEndDate = new DateTime();
-            if (DateTime.TryParseExact(newEndDateAndTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out TempEndDate) == true)
-            {
-                EffectiveEndDate = TempEndDate;
-            }
-
-
-
-            string newRateAmount = "100";
-            string newWeekDayStart = "1";
-            string newWeekDayEnd = "1";
-            string newStartTimeOfDay = "1";
-            string newEndTimeOfDay = "1";
-            string newSurchargeTime = "1";
-            string newSurchargeAmount = "1";
-            string newOtherAmount1 = "1";
-            string newOtherAmount2 = "1";
-            string newOtherAmount3 = "1";
-            string newOtherAmount4 = "1";
-            string newOtherAmount5 = "1";
-            string newOtherAmount6 = "1";
-            string newOtherAmount7 = "1";
-            string newOtherAmount8 = "1";
-            string newOtherAmount9 = "1";
-            string newOtherAmount10 = "1";
-
-
-
-            string newId = "-1";
-
-            //call create new rate to validate the rate
-
-            int idCurrentRatePlan = -1;
-            //if (ViewState["sesidRatePlan"] != null)
-            //{
-            //    idCurrentRatePlan = (int)ViewState["sesidRatePlan"];
-            //}
-            idCurrentRatePlan = int.Parse(DropDownListTaskRef.SelectedValue);
-
-            //get own telcobrightcustomreid from telcobrightmediation database by matching databaes name
-            //from Partner
-
-            string ThisConectionString = ConfigurationManager.ConnectionStrings["partner"].ConnectionString;
-
-            MySqlConnection connection = new MySqlConnection(ThisConectionString);
-            string database = connection.Database.ToString();
-            int idTimeZone = -1;
-            using (PartnerEntities Context = new PartnerEntities())
-            {
-                telcobrightpartner ThisCustomer = (from c in Context.telcobrightpartners
-                                                   where c.databasename == database
-                                                   select c).First();
-                int ThisOperatorId = ThisCustomer.idCustomer;
-                idTimeZone = Context.telcobrightpartners.Where(c => c.idCustomer == ThisOperatorId).First().NativeTimeZone;
-            }
-
-            double TimeZoneOffsetSec = -360000;//set to some invalid timezone offset (in this case 100 hours)
-            using (PartnerEntities Context = new PartnerEntities())
-            {
-                TimeZoneOffsetSec = Context.timezones.Where(c => c.id == idTimeZone).First().gmt_offset;
-            }
-
-            int newType = -1;
-            if (Session["assign.sesRatePlanType"] != null)
-            {
-                newType = (int)Session["assign.sesRatePlanType"];
-            }
-
-            int newCurrency = -1;
-            if (Session["assign.sesCurrency"] != null)
-            {
-                newCurrency = (int)Session["assign.sesCurrency"];
-            }
-
-            int idOperatorType = -1;
-            if (Session["assign.sesidOperatorType"] != null)
-            {
-                idOperatorType = (int)Session["assign.sesidOperatorType"];
-            }
-
-
-
-            ratetaskassign NewRate = CreateNewRateTask(idCurrentRatePlan,
-                newId, newPrefix, newDesc, newRateAmount, newResolution, newMinDurationSec
-                , newCountry, newStartDateAndTime,
-                newEndDateAndTime, newInactive, newRouteDisabled,
-                newWeekDayStart,
-                newWeekDayEnd,
-                newStartTimeOfDay,
-                newEndTimeOfDay,
-                newSurchargeTime,
-                newSurchargeAmount,
-                newType.ToString(),
-                newOtherAmount1,
-                newOtherAmount2,
-                newOtherAmount3,
-                newOtherAmount4,
-                newOtherAmount5,
-                newOtherAmount6,
-                newOtherAmount7,
-                newOtherAmount8,
-                newOtherAmount9,
-                newOtherAmount10,
-                newCurrency.ToString(),
-                idOperatorType,
-                TimeZoneOffsetSec,
-                newSurchargeTime,
-                newSurchargeAmount,
-                newServiceType,
-                newSubServiceType
-            );
-
-
-            using (PartnerEntities Context = new PartnerEntities())
-            {
-                //first check if the rate assignment tuple exists in rateplanassignmenttuple
-                int? NewidPartner = Convert.ToInt32(NewRate.CountryCode);
-                int? NewRoute = null;
-                int tInt = 0;
-                if (int.TryParse(NewRate.RouteDisabled, out tInt))
-                {
-                    NewRoute = tInt;
-                }
-                int NewserviceId = Convert.ToInt32(NewRate.Category);
-                int NewPriority = Convert.ToInt32(NewRate.Resolution);
-                int NewAssignDirection = Convert.ToInt32(NewRate.SubCategory);
-
-
-                rateplanassignmenttuple ExistingTuple = null;
-                if (NewRoute == -1)//route not used
-                {
-                    if (NewidPartner == 0)
-                    {
-                        ExistingTuple = Context.rateplanassignmenttuples.Where(c => c.idpartner == null &&
-                                                                                    c.route == null &&
-                                                                                    c.idService == NewserviceId &&
-                                                                                    c.priority == NewPriority &&
-                                                                                    c.AssignDirection == NewAssignDirection).ToList().FirstOrDefault();
-                    }
-                    else
-                    {
-                        ExistingTuple = Context.rateplanassignmenttuples.Where(c => c.idpartner == NewidPartner &&
-                                                                                    c.route == null &&
-                                                                                    c.idService == NewserviceId &&
-                                                                                    c.priority == NewPriority &&
-                                                                                    c.AssignDirection == NewAssignDirection).ToList().FirstOrDefault();
-                    }
-                }
-                else//route used
-                {
-                    if (NewidPartner == 0)
-                    {
-                        ExistingTuple = Context.rateplanassignmenttuples.Where(c => c.idpartner == null &&
-                                                                                    c.route == NewRoute &&
-                                                                                    c.idService == NewserviceId &&
-                                                                                    c.priority == NewPriority &&
-                                                                                    c.AssignDirection == NewAssignDirection).ToList().FirstOrDefault();
-                    }
-                    else
-                    {
-                        ExistingTuple = Context.rateplanassignmenttuples.Where(c => c.idpartner == NewidPartner &&
-                                                                                    c.route == NewRoute &&
-                                                                                    c.idService == NewserviceId &&
-                                                                                    c.priority == NewPriority &&
-                                                                                    c.AssignDirection == NewAssignDirection).ToList().FirstOrDefault();
-                    }
-                }
-                //following is an extra validation to check overlap, if it is validated here
-                //the code goes through ratetask assignment routine, gets validated again there.
-                //purpose is to tyr to prevent the ratetaskassignment additional griview to show up
-                if (ExistingTuple != null)
-                {
-                    DateRange dRange = new DateRange();
-                    dRange.StartDate = EffectiveStartDate;
-                    dRange.EndDate = (EffectiveEndDate == null ? new DateTime(9999, 12, 31, 23, 59, 59) : Convert.ToDateTime(EffectiveEndDate));
-
-                    //load all the assigned rateplans for this tuple
-                    List<rateassign> lstAssignments = Context.rateassigns.Where(c => c.Prefix == ExistingTuple.id).ToList();
-                    //there can be only one assignment with enddate=null
-                    int ExistingAssignmentCount = lstAssignments.Count;
-                    int OpenAssignmentsCount = lstAssignments.Where(c => c.enddate == null).Count();
-                    if (ExistingAssignmentCount > 0)
-                    {
-                        if (OpenAssignmentsCount > 1)
-                        {
-                            StatusLabel.ForeColor = Color.Red;
-                            StatusLabel.Text = "There can be only one assigned rateplan open i.e. without end date!";
-                            return;
-                        }
-                        rateassign LatestAssignment = lstAssignments.OrderByDescending(c => c.startdate).First();
-                        rateassign FirstAssignment = lstAssignments.OrderByDescending(c => c.startdate).First();
-                        //if this assignemnt=the latest assignment
-                        if (LatestAssignment != null && dRange.StartDate == LatestAssignment.startdate)
-                        {
-                            StatusLabel.ForeColor = Color.Red;
-                            StatusLabel.Text = "Effective Datetime overlaps with existing assignment starting at " + LatestAssignment.startdate.ToString("yyyy-MM-dd HH:mm:ss") + ". " +
-                                               " To Assign multiple Rateplan for the same combination of [Service Family, Assigned Order, Assign Direction, Customer/Supplier/Route!],<br/>" +
-                                               " Use a different value for Assigned Order or a different effective datetime which does not overlap any existing assignment.";
-                            e.Cancel = true;
-                            return;
-                        }
-                        if (dRange.StartDate < FirstAssignment.startdate)//before all
-                        {
-                            EffectiveEndDate = FirstAssignment.startdate;
-                        }
-                        //check overlap with all assignment except latest one
-                        List<rateassign> AllExceptLatest = lstAssignments.Where(c => c.id != LatestAssignment.id).ToList();
-                        foreach (rateassign ra in AllExceptLatest)
-                        {
-                            DateRange CompareWith = new DateRange() { StartDate = ra.startdate, EndDate = Convert.ToDateTime(ra.enddate) };
-                            if (Util.DateIntersection(dRange, CompareWith) != null)
-                            {
-                                StatusLabel.ForeColor = Color.Red;
-                                StatusLabel.Text = "Effective Datetime overlaps with existing assignment starting at " + ra.startdate.ToString("yyyy-MM-dd HH:mm:ss") + ". " +
-                                                   " To Assign multiple Rateplan for the same combination of [Service Family, Assigned Order, Assign Direction, Customer/Supplier/Route!],<br/>" +
-                                                   " Use a different value for Assigned Order or a different effective datetime which does not overlap any existing assignment.";
-                                e.Cancel = true;
-                                return;
-                            }
-                        }
-                    }
-                    //else.....first assignment of this kind
-
-
-                }
-
-                if (ExistingTuple == null)//tuple does not exist
-                {
-                    //todo: fix autoincrement work around currently implemented for billingRuleassignment
-                    int maxIdRatePlanAssignmentTuple = 0;
-                    using (PartnerEntities context = new PartnerEntities())
-                    {
-                        if (context.rateplanassignmenttuples.Any())
-                        {
-                            maxIdRatePlanAssignmentTuple = context.rateplanassignmenttuples.Max(c => c.id);
-                        }
-                    }
-                    rateplanassignmenttuple newTuple =
-                        new rateplanassignmenttuple() {id = ++maxIdRatePlanAssignmentTuple};
-                    if (NewidPartner == 0)//has to be null in the database
-                    {
-                        newTuple.idpartner = null;
-                    }
-                    else
-                    {
-                        newTuple.idpartner = NewidPartner;
-                    }
-                    if (NewRoute == -1)
-                    {
-                        newTuple.route = null;
-                    }
-                    else
-                    {
-                        newTuple.route = NewRoute;
-                    }
-                    newTuple.idService = NewserviceId;
-                    newTuple.priority = NewPriority;
-                    newTuple.AssignDirection = NewAssignDirection;
-                    Context.rateplanassignmenttuples.Add(newTuple);
-                    //insert billingRule
-                    ddlBillingRule = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownBillingRule");
-                    DropDownList ddlserviceGroup = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListServiceGroup");
-                    int selectedBillingRule = Convert.ToInt32(ddlBillingRule.SelectedValue);
-                    int selectedServiceGroup = Convert.ToInt32(ddlserviceGroup.SelectedValue);
-                    billingruleassignment billingruleassignment = new billingruleassignment()
-                    {
-                        idRatePlanAssignmentTuple = newTuple.id,
-                        idServiceGroup = selectedServiceGroup,
-                        idBillingRule = selectedBillingRule
-                    };
-                    Context.billingruleassignments.Add(billingruleassignment);
-                    Context.SaveChanges();
-                }
-
-                //get the id of the tuple
-                //surprise, setting nullable var=null then using it in linq doesn't work
-                int tupleId = -1;
-
-                if (NewRoute == -1)//route not used
-                {
-                    if (NewidPartner == 0)
-                    {
-                        tupleId = Context.rateplanassignmenttuples.Where(c => c.idpartner == null &&
-                                                                              c.route == null &&
-                                                                              c.idService == NewserviceId &&
-                                                                              c.priority == NewPriority &&
-                                                                              c.AssignDirection == NewAssignDirection).FirstOrDefault().id;
-                    }
-                    else
-                    {
-                        tupleId = Context.rateplanassignmenttuples.Where(c => c.idpartner == NewidPartner &&
-                                                                              c.route == null &&
-                                                                              c.idService == NewserviceId &&
-                                                                              c.priority == NewPriority &&
-                                                                              c.AssignDirection == NewAssignDirection).FirstOrDefault().id;
-                    }
-                }
-                else//route used
-                {
-                    if (NewidPartner == 0)
-                    {
-                        tupleId = Context.rateplanassignmenttuples.Where(c => c.idpartner == null &&
-                                                                              c.route == NewRoute &&
-                                                                              c.idService == NewserviceId &&
-                                                                              c.priority == NewPriority &&
-                                                                              c.AssignDirection == NewAssignDirection).FirstOrDefault().id;
-                    }
-                    else
-                    {
-                        tupleId = Context.rateplanassignmenttuples.Where(c => c.idpartner == NewidPartner &&
-                                                                              c.route == NewRoute &&
-                                                                              c.idService == NewserviceId &&
-                                                                              c.priority == NewPriority &&
-                                                                              c.AssignDirection == NewAssignDirection).FirstOrDefault().id;
-                    }
-                }
-
-                NewRate.Prefix = tupleId;//represents the tuple
-                NewRate.RouteDisabled = newRouteDisabled;
-                NewRate.Inactive = Convert.ToInt32(newInactive);//id rate plan
-
-                //LCR Flag
-                var ddlExcludeLCR = frmSupplierRatePlanInsert.FindControl("ddlExcludeLCR") as DropDownList;
-                NewRate.field3 = ddlExcludeLCR.SelectedValue;
-
-                Context.ratetaskassigns.Add(NewRate);
-                Context.SaveChanges();//entry  has been added to ratetaskassign table
-
-
-                //call commit changes to add them in the rateassign table
-                CommitChanges();
-                //bad code for now, not transaction support 
-                //find a way to fix it sometime
-                //  string billingRuleName = ((DropDownList) frmSupplierRatePlanInsert.FindControl("DropDownBillingRule")).SelectedItem.Value;
-                //genericparameterassignment g =
-                //GetAdditionalBillingParamsAsGenericAssignment(NewRate.Prefix, Context);
-                //try
-                //{
-                //  Context.genericparameterassignments.Add(additionalBillingParamsAsGenericAssignment);
-                // Context.SaveChanges();
-                //}
-                //catch (Exception exception)
-                //{
-
-                //  throw;
-                //}
-            }
-
-            frmSupplierRatePlanInsert.Visible = false;
-            myGridViewDataBind();
-            Response.Redirect("rateassignment.aspx");
-            //var color = ColorTranslator.FromHtml("#B1B1B3");
-            //StatusLabel.ForeColor = color;
-            //StatusLabel.Text = "Changes are not committed to rate table until 'Save All Changes' clicked!";
-            StatusLabel.ForeColor = Color.Green;
-            StatusLabel.Text = "Rateplan Successfully Assigned";
-        }
-        catch (Exception e1)
-        {
-            StatusLabel.ForeColor = Color.Red;
-            StatusLabel.Text = e1.Message + "<br/>" + (e1.InnerException != null ? e1.InnerException.ToString() : "");
-        }
-
-    }
+    
 
 
 

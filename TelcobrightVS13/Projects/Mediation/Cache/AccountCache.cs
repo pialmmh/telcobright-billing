@@ -52,9 +52,12 @@ namespace TelcobrightMediation
         {
             lock (this.locker)
             {
-                if (this.IndexById.TryAdd(acc.id.ToString(), acc.accountName) == false)
+                if (this.IndexById.ContainsKey(acc.id.ToString())==false)
                 {
-                    throw new Exception("Could not update concurrent dictionary IndexByid in AccountCache.");
+                    if (this.IndexById.TryAdd(acc.id.ToString(), acc.accountName) == false)
+                    {
+                        throw new Exception("Could not update concurrent dictionary IndexByid in AccountCache.");
+                    }
                 }
             }
         }

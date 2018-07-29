@@ -8,7 +8,7 @@ using MediationModel;
 using LibraryExtensions;
 using TelcobrightMediation.Cache;
 using TelcobrightMediation.Config;
-
+using TelcobrightMediation;
 namespace TelcobrightMediation.Accounting
 {
 	public class AccountingContext
@@ -18,7 +18,7 @@ namespace TelcobrightMediation.Accounting
 		public SummaryCache<acc_ledger_summary, ValueTuple<long, DateTime>> LedgerSummaryCache { get;}
 		public TransactionCache TransactionCache { get;}
 		public ChargeableCache ChargeableCache { get; }
-		public AutoIncrementManager AutoIncrementManager { get; }
+		public IAutoIncrementManager AutoIncrementManager { get; }
 		public int AccountingLevelOrDepth { get; set; }
 		public List<DateTime> DatesInvolved { get; }
 		private DbCommand Cmd { get; }
@@ -27,7 +27,7 @@ namespace TelcobrightMediation.Accounting
 			=new LedgerSummaryFactory<acc_transaction>();
 				
 		public AccountingContext(PartnerEntities context, int accountingLevelOrDepth,
-			AutoIncrementManager autoIncrementManager, List<DateTime> datesInvolved, int segmentSizeForDbWrite)
+			IAutoIncrementManager autoIncrementManager, List<DateTime> datesInvolved, int segmentSizeForDbWrite)
 		{
 			this.Context = context;
 			this.Cmd = ConnectionManager.CreateCommandFromDbContext(this.Context);

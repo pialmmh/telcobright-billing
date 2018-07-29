@@ -30,6 +30,8 @@ namespace MediationModel
         public virtual DbSet<allerror> allerrors { get; set; }
         public virtual DbSet<ansprefixextra> ansprefixextras { get; set; }
         public virtual DbSet<aspnetuserclaim> aspnetuserclaims { get; set; }
+        public virtual DbSet<autoinc_manual_int> autoinc_manual_int { get; set; }
+        public virtual DbSet<autoinc_manual_long> autoinc_manual_long { get; set; }
         public virtual DbSet<autoincrementcounter> autoincrementcounters { get; set; }
         public virtual DbSet<billingruleassignment> billingruleassignments { get; set; }
         public virtual DbSet<causecode> causecodes { get; set; }

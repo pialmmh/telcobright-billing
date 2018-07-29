@@ -1,0 +1,32 @@
+select FileName,starttime as `Start Time`,cr.partnername as 'Source Network',
+(select 'Robi') as `Destination Network`,OriginatingCallingNumber 'Caller Number (A NUM)',
+originatingCalledNumber 'Called Number (B Num)',duration1 as `BilledDuration`,
+RedirectingNumber as `Redirect Number`,
+(select 'Call Forwarding Case') as Remarks
+from 
+cdr c
+left join partner cr on 
+c.InPartnerId=cr.idpartner
+where starttime>='2017-07-01'
+and endtime<'2017-07-05'
+and OutgoingRoute in 
+(
+select routename from route 
+where idpartner=24
+and NationalOrInternational=1
+)
+and servicegroup=1
+and 
+(originatingcallingnumber like '18%'
+or originatingcallingnumber like '018%'
+or originatingcallingnumber like '88018%'
+or originatingcallingnumber like '018%'
+or originatingcallingnumber like '88018%'
+or originatingcallingnumber like '16%'
+or originatingcallingnumber like '016%'
+or originatingcallingnumber like '88016%'
+or originatingcallingnumber like '016%'
+or originatingcallingnumber like '88016%'
+)
+
+

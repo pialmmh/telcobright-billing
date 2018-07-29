@@ -14,7 +14,7 @@ using TelcobrightMediation.Config;
 
 namespace TelcobrightMediation
 {
-    public class AutoIncrementManager : AbstractCache<autoincrementcounter, int> //int=autoincrementCountertype enum
+    public class AutoIncrementManager : AbstractCache<autoincrementcounter, int>,IAutoIncrementManager //int=autoincrementCountertype enum
     {
         private static readonly object Locker = new object();
         private DbCommand DbCmd { get; }
@@ -41,7 +41,7 @@ namespace TelcobrightMediation
                         "Could not add existing account to concurrent dictionary while populating AccountCache, probably duplicate item.");
             }
         }
-
+        
         public long GetNewCounter(AutoIncrementCounterType counterType) //don't use .ToLower() for performance
         {
             lock (Locker)

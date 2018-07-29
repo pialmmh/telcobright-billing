@@ -90,6 +90,12 @@
     <Compile Include="autoincrementcounter.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="autoinc_manual_int.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="autoinc_manual_long.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="billingruleassignment.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>

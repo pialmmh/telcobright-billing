@@ -15,9 +15,9 @@ namespace TelcobrightMediation
         public override string EntityOrTableName { get; }
         private AutoIncrementCounterType EntityTypeAsEnum { get; }
         private readonly object locker = new object();
-        private AutoIncrementManager AutoIncrementManager { get; }
+        private IAutoIncrementManager AutoIncrementManager { get; }
 
-        public SummaryCache(string entityName, AutoIncrementManager autoIncrementManager,
+        public SummaryCache(string entityName, IAutoIncrementManager autoIncrementManager,
             Func<TEntity, TKey> dictionaryKeyGenerator,
             Func<TEntity, StringBuilder> insertCommandGenerator,
             Func<TEntity, StringBuilder> updateCommandGenerator,

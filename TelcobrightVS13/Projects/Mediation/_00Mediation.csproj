@@ -119,11 +119,13 @@
     <Compile Include="Accounting\LedgerSumFactory.cs" />
     <Compile Include="Accounting\AccountFactory.cs" />
     <Compile Include="Accounting\TransactionPostingJobInputData.cs" />
-    <Compile Include="AutoIncrementManager_old.cs" />
+    <Compile Include="AutoIncrementManagerManual.cs" />
+    <Compile Include="AutoIncrementManagerManualInt.cs" />
     <Compile Include="Automation\AutomatedNetworkElementCli.cs" />
     <Compile Include="Automation\SessionInfo.cs" />
     <Compile Include="Automation\SingleCliCommand.cs" />
     <Compile Include="Cdr\Collection\Collector\CdrRowCollector.cs" />
+    <Compile Include="IAutoincrementManager.cs" />
     <Compile Include="MefData\ITelcobrightJobInput.cs" />
     <Compile Include="SegmentedJob\CdrInvoicingJob.cs" />
     <Compile Include="Cdr\CdrJobFactory.cs" />
