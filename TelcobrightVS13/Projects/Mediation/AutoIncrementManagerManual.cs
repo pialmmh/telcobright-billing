@@ -51,9 +51,17 @@ namespace TelcobrightMediation
                               $"where incrementRequestedOn={requestedDateTime.ToMySqlField()} " +
                               $"and randomNumber={randomNumber};";
             T newCounter = (T) cmd.ExecuteScalar();
+            DeleteOldCountersOfAge24HoursOrMore(cmd,tableName);
             return newCounter;
         }
 
+        void DeleteOldCountersOfAge24HoursOrMore(DbCommand cmd,string tableName)
+        {
+            DateTime deleteBeforeDate = DateTime.Now.AddHours(-24);
+            cmd.CommandText = $" delete from  {tableName} " +
+                              $" where incrementRequestedOn<{deleteBeforeDate.ToMySqlField()};";
+            cmd.ExecuteNonQuery();
+        }
         public void WriteAllChanges()
         {
             //do nothing
