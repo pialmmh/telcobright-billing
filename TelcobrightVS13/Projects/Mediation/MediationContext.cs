@@ -242,13 +242,16 @@ namespace TelcobrightMediation
                                         id int primary key auto_increment,
                                         statement varchar(20000) not null) engine=memory;";
             cmd.ExecuteNonQuery();
+            DropAndCreateTempRateTable(cmd);
+        }
 
+        public static void DropAndCreateTempRateTable(DbCommand cmd)
+        {
             cmd.CommandText = "drop table if exists temp_rate;";
             cmd.ExecuteNonQuery();
 
             cmd.CommandText = $@"create temporary table temp_rate  engine=memory
-                                     select * from rate
-                                     where 1=2;";
+                                     select * from rate where 1=2;";
             cmd.ExecuteNonQuery();
             cmd.CommandText =
                 "alter table temp_rate add index ind_rateplan_startdate_enddate (idrateplan,startdate,enddate);" +

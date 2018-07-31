@@ -76,29 +76,17 @@ namespace Process
                                         {
                                             try
                                             {
-                                                bool rateCacheSizeExceeded =
-                                                    HandleOufOfMemoryExceptionForRateCache(mediationContext, e);
-                                                if (rateCacheSizeExceeded) continue;
-                                                Console.WriteLine("xxxErrorxxx Processing CdrJob for Switch:" +
-                                                                  ne.SwitchName + ", JobName:" +
-                                                                  telcobrightJob.JobName);
-                                                Console.WriteLine(e.Message);
                                                 cmd.ExecuteCommandText(" rollback; ");
+                                                bool cacheLimitExceeded = CheckAndClearRateCache(mediationContext, e);
+                                                if (cacheLimitExceeded) continue;
+                                                cacheLimitExceeded = ClearTempRateTable(mediationContext, e,cmd);
+                                                if (cacheLimitExceeded) continue;
+                                                PrintErrorMessageToConsole(ne, telcobrightJob, e);
                                                 ErrorWriter wr = new ErrorWriter(e, "ProcessCdr", telcobrightJob,
                                                     "CdrJob processing error.", tbc.DatabaseSetting.DatabaseName);
-
-                                                //also save the error information within the job
-                                                //use try catch in case DB is not accesible
                                                 try
                                                 {
-                                                    cmd.CommandText = " update job set `Error`= '" +
-                                                                      e.Message.Replace("'", "") +
-                                                                      Environment.NewLine +
-                                                                      (e.InnerException?.ToString().Replace("'", "") ??
-                                                                       "")
-                                                                      + "' " +
-                                                                      " where id=" + telcobrightJob.id;
-                                                    cmd.ExecuteNonQuery();
+                                                    UpdateJobWithErrorInfo(cmd, telcobrightJob, e);
                                                 }
                                                 catch (Exception e2)
                                                 {
@@ -134,17 +122,16 @@ namespace Process
                 ErrorWriter wr = new ErrorWriter(e1,"ProcessCdr",null,"",operatorName);
             }
         }
-
-        bool HandleOufOfMemoryExceptionForRateCache(MediationContext mediationContext, Exception e)
+        bool CheckAndClearRateCache(MediationContext mediationContext, Exception e)
         {
-            bool rateCacheSizeExceeded = false;
+            bool cacheLimitExceeded = false;
             try
             {
                 if (e.Message.Contains("OutOfMemory")) //ratecache too big and exceeds c#'s limit
                 {
                     mediationContext.MefServiceFamilyContainer.RateCache
                         .ClearRateCache(); //involves GC as well to freeup memory instantly
-                    rateCacheSizeExceeded = true;
+                    cacheLimitExceeded = true;
                 }
             }
             catch (Exception e1)
@@ -152,9 +139,42 @@ namespace Process
                 Console.WriteLine(e);
                 throw;
             }
-            return rateCacheSizeExceeded;
+            return cacheLimitExceeded;
+        }
+        bool ClearTempRateTable(MediationContext mediationContext, Exception e,DbCommand cmd)
+        {
+            bool cacheLimitExceeded = false;
+            try
+            {
+                if (e.Message.Contains("The table 'temp_rate' is full"))
+                {
+                    //rollback is already done, so its safe to call ddl statement without causing implicit commit
+                    MediationContext.DropAndCreateTempRateTable(cmd);
+                    cacheLimitExceeded = true;
+                }
+            }
+            catch (Exception e1)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            return cacheLimitExceeded;
+        }
+        private static void PrintErrorMessageToConsole(ne ne, job telcobrightJob, Exception e)
+        {
+            Console.WriteLine("xxxErrorxxx Processing CdrJob for Switch:" +
+                              ne.SwitchName + ", JobName:" + telcobrightJob.JobName);
+            Console.WriteLine(e.Message);
         }
 
+        private static void UpdateJobWithErrorInfo(DbCommand cmd, job telcobrightJob, Exception e)
+        {
+            cmd.CommandText = " update job set `Error`= '" +
+                                e.Message.Replace("'", "") +
+                                Environment.NewLine +(e.InnerException?.ToString().Replace("'", "") ??"")
+                                + "' " +" where id=" + telcobrightJob.id;
+            cmd.ExecuteNonQuery();
+        }
         bool CheckIncomplete(PartnerEntities context, MediationContext mediationContext)
         {
             List<int> idJobDefs = context.enumjobdefinitions.Where(c => c.JobQueue == this.ProcessId).Select(c => c.id)
