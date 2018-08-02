@@ -66,8 +66,8 @@ namespace TelcobrightMediation
                         status = 6,//6=create, consistent to job status
                         SegmentDetail = JsonConvert.SerializeObject(
                             new DayWiseRowIdsCollection(segment.GroupBy(c => c.RowDateTime.Date)
-                                    .ToDictionary(g => g.Key,
-                                        g => g.Select(rowIdVsDate => rowIdVsDate.RowId.ToString()).ToList()),
+                                .ToDictionary(g => g.Key,
+                                g => g.Select(rowIdVsDate => rowIdVsDate.RowId.ToString()).ToList()),
                                 sourceTable, this.IndexedRowIdColumnName, this.DateColumnName,
                                 string.Empty))
                     };

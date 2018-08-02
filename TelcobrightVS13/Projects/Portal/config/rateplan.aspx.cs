@@ -132,7 +132,6 @@ public partial class ConfigSupplierRatePlan : Page
     void PopulateCurrenciesInDropDownLists(DropDownList ddlistCurrency)
     {
         //load currencies
-
         ddlistCurrency.Items.Clear();
         foreach (var currency in Currencies)
         {
@@ -317,10 +316,15 @@ public partial class ConfigSupplierRatePlan : Page
 
     protected void GridViewSupplierRatePlan_RowEditing(object sender, GridViewEditEventArgs e)
     {
-        var ddlistCurrency =
-            (DropDownList)this.GridViewSupplierRatePlan.FindControl("DropDownListCurrency");
+        var gridView = this.GridViewSupplierRatePlan;
+        if (gridView.EditIndex == -1)
+        {
+            gridView.EditIndex = e.NewEditIndex;
+            gridView.DataBind();
+        }
+        var ddlistCurrency = (DropDownList) gridView.Rows[e.NewEditIndex].Controls[0]
+            .FindControl("DropDownListCurrency");
         PopulateCurrenciesInDropDownLists(ddlistCurrency);
-
     }
 
     protected void GridViewSupplierRatePlan_RowUpdating(object sender, GridViewUpdateEventArgs e)

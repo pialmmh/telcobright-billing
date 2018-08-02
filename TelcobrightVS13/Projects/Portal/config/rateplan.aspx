@@ -469,8 +469,8 @@ order by Type "
                 
                 <EditItemTemplate>
                     <asp:DropDownList ID="DropDownListCurrency" runat="server" SelectedValue='<%# Bind("Currency") %>'
-                        Enabled="false" >
-                        
+                    Enabled="false" >
+                        <asp:ListItem Selected="True" Value="0" Text="USD"></asp:ListItem>
                     </asp:DropDownList>
                 </EditItemTemplate>
                 

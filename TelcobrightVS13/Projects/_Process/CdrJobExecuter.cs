@@ -17,6 +17,7 @@ using System.Data.Entity;
 using Quartz;
 using LibraryExtensions;
 using QuartzTelcobright;
+using TelcobrightMediation.Cdr;
 using TelcobrightMediation.Config;
 
 namespace Process
@@ -77,9 +78,9 @@ namespace Process
                                             try
                                             {
                                                 cmd.ExecuteCommandText(" rollback; ");
-                                                bool cacheLimitExceeded = CheckAndClearRateCache(mediationContext, e);
+                                                bool cacheLimitExceeded = RateCacheCleaner.CheckAndClearRateCache(mediationContext, e);
                                                 if (cacheLimitExceeded) continue;
-                                                cacheLimitExceeded = ClearTempRateTable(mediationContext, e,cmd);
+                                                cacheLimitExceeded = RateCacheCleaner.ClearTempRateTable(mediationContext, e,cmd);
                                                 if (cacheLimitExceeded) continue;
                                                 PrintErrorMessageToConsole(ne, telcobrightJob, e);
                                                 ErrorWriter wr = new ErrorWriter(e, "ProcessCdr", telcobrightJob,
@@ -122,44 +123,7 @@ namespace Process
                 ErrorWriter wr = new ErrorWriter(e1,"ProcessCdr",null,"",operatorName);
             }
         }
-        bool CheckAndClearRateCache(MediationContext mediationContext, Exception e)
-        {
-            bool cacheLimitExceeded = false;
-            try
-            {
-                if (e.Message.Contains("OutOfMemory")) //ratecache too big and exceeds c#'s limit
-                {
-                    mediationContext.MefServiceFamilyContainer.RateCache
-                        .ClearRateCache(); //involves GC as well to freeup memory instantly
-                    cacheLimitExceeded = true;
-                }
-            }
-            catch (Exception e1)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-            return cacheLimitExceeded;
-        }
-        bool ClearTempRateTable(MediationContext mediationContext, Exception e,DbCommand cmd)
-        {
-            bool cacheLimitExceeded = false;
-            try
-            {
-                if (e.Message.Contains("The table 'temp_rate' is full"))
-                {
-                    //rollback is already done, so its safe to call ddl statement without causing implicit commit
-                    MediationContext.DropAndCreateTempRateTable(cmd);
-                    cacheLimitExceeded = true;
-                }
-            }
-            catch (Exception e1)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-            return cacheLimitExceeded;
-        }
+        
         private static void PrintErrorMessageToConsole(ne ne, job telcobrightJob, Exception e)
         {
             Console.WriteLine("xxxErrorxxx Processing CdrJob for Switch:" +

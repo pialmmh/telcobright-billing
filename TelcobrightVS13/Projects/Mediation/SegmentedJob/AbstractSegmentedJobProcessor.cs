@@ -96,29 +96,30 @@ namespace TelcobrightMediation
                         {
                             Console.WriteLine(e);
                             cmd.ExecuteCommandText("rollback;"); //rollback immediately
-                            if (e.Message.Contains("OutOfMemory")) //clear ratecache which has exceeded c#'s limit
+                            if (segmentedJob != null)
                             {
-                                if (segmentedJob != null)
+                                if (segmentedJob.GetType() == typeof(CdrJob))
                                 {
-                                    if (segmentedJob.GetType() == typeof(CdrJob))
-                                    {
-                                        CdrJob cdrJob = (CdrJob) segmentedJob;
-                                        cdrJob?.CdrProcessor.CdrJobContext.MediationContext.MefServiceFamilyContainer.RateCache
-                                            .ClearRateCache(); //involves GC as well to freeup memory instantly
-                                        continue; //rateCache overflow handled, continue...
-                                    }
+                                    CdrJob cdrJob = (CdrJob) segmentedJob;
+                                    var mediationContext = cdrJob.CdrProcessor.CdrJobContext.MediationContext;
+                                    bool cacheLimitExceeded =
+                                        RateCacheCleaner.CheckAndClearRateCache(mediationContext, e);
+                                    if (cacheLimitExceeded) continue;
+                                    cacheLimitExceeded = RateCacheCleaner.ClearTempRateTable(mediationContext, e, cmd);
+                                    if (cacheLimitExceeded) continue;
+                                    mediationContext?.MefServiceFamilyContainer.RateCache
+                                        .ClearRateCache(); //involves GC as well to freeup memory instantly
+                                    continue; //rateCache overflow handled, continue...
                                 }
                             }
-                            ErrorWriter wr = new ErrorWriter(e, $@"Segmented Job Processor",
-                                this.TelcobrightJob,
+                            ErrorWriter wr = new ErrorWriter(e, $@"Segmented Job Processor",this.TelcobrightJob,
                                 "Error Processing Segments of batch job " + this.TelcobrightJob.JobName, "");
                             throw; // do not continue on error other than rateCache exception for cdrJobs
                         }
                         catch (Exception e1)
                         {
                             Console.WriteLine(e1);
-                            ErrorWriter wr = new ErrorWriter(e, $@"Segmented Job Processor",
-                                this.TelcobrightJob,
+                            ErrorWriter wr = new ErrorWriter(e, $@"Segmented Job Processor", this.TelcobrightJob,
                                 "Error Processing Segments of batch job " + this.TelcobrightJob.JobName, "");
                             throw;
                         }
