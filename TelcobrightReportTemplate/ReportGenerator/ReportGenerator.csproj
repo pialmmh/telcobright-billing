@@ -73,8 +73,10 @@
       <DependentUpon>InternationalIncomingToForeignCarrier.cs</DependentUpon>
     </Compile>
     <Compile Include="reports\invoice\IInvoiceReport.cs" />
+    <Compile Include="reports\invoice\InvoiceReportExtensions.cs" />
     <Compile Include="reports\invoice\Invoice.cs" />
     <Compile Include="reports\invoice\InvoiceItem.cs" />
+    <Compile Include="reports\invoice\InvoiceReportType.cs" />
     <Compile Include="reports\invoice\Partner.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -8,6 +8,8 @@ namespace ReportGenerator.reports.invoice
 {
     public interface IInvoiceReport
     {
-        string getReportTitle();
+        InvoiceReportType reportType { get; }
+
+        void saveToPdf(String fileName);
     }
 }

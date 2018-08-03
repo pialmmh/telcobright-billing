@@ -17,9 +17,11 @@ namespace ReportGenerator.reports.invoice.igw
             generateReport(invoice);
         }
 
-        public string getReportTitle()
+        public InvoiceReportType reportType { get { return InvoiceReportType.InternationalIncomingToForeignCarrier; } }
+
+        public void saveToPdf(string fileName)
         {
-            return "IGW International Incoming To Foreign Carrier";
+            this.ExportToPdf(fileName);
         }
 
         private void generateReport(Invoice invoice)
