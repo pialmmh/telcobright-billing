@@ -1,4 +1,5 @@
 ﻿using DevExpress.XtraReports.UI;
+using DXWebReportViewer.Helper;
 using ReportGenerator.reports.invoice;
 using ReportGenerator.reports.invoice.igw;
 using System;
@@ -14,8 +15,8 @@ namespace DXWebReportViewer
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            InvoiceDataForReport invoiceDataForReport = new InvoiceDataForReport();
-            XtraReport InternationalIncomingToForeignCarrier = new InternationalIncomingToForeignCarrier(invoiceDataForReport);
+            Invoice invoice = InvoiceHelper.IGWInternational_Incoming_To_Foreign_Carrier();
+            XtraReport InternationalIncomingToForeignCarrier = new InternationalIncomingToForeignCarrierDetails2(invoice);
             ASPxDocumentViewer1.Report = (XtraReport)InternationalIncomingToForeignCarrier;
         }
     }

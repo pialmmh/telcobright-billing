@@ -41,9 +41,6 @@
     <Reference Include="DevExpress.XtraCharts.v15.1, Version=15.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraGauges.v15.1.Core, Version=15.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraReports.v15.1, Version=15.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="MediationModel">
-      <HintPath>..\..\TelcobrightVS13\Projects\Models_Mediation\bin\Debug\MediationModel.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -55,17 +52,39 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helper\CurrencyHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="reports\invoice\igw\InternationalIncomingToForeignCarrierDetails2.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="reports\invoice\igw\InternationalIncomingToForeignCarrierDetails2.Designer.cs">
+      <DependentUpon>InternationalIncomingToForeignCarrierDetails2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="reports\invoice\igw\InternationalIncomingToForeignCarrierDetails1.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="reports\invoice\igw\InternationalIncomingToForeignCarrierDetails1.Designer.cs">
+      <DependentUpon>InternationalIncomingToForeignCarrierDetails1.cs</DependentUpon>
+    </Compile>
     <Compile Include="reports\invoice\igw\InternationalIncomingToForeignCarrier.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="reports\invoice\igw\InternationalIncomingToForeignCarrier.Designer.cs">
       <DependentUpon>InternationalIncomingToForeignCarrier.cs</DependentUpon>
     </Compile>
-    <Compile Include="reports\invoice\InvoiceDataForReport.cs" />
+    <Compile Include="reports\invoice\IInvoiceReport.cs" />
+    <Compile Include="reports\invoice\Invoice.cs" />
+    <Compile Include="reports\invoice\InvoiceItem.cs" />
+    <Compile Include="reports\invoice\Partner.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\licenses.licx" />
+    <EmbeddedResource Include="reports\invoice\igw\InternationalIncomingToForeignCarrierDetails2.resx">
+      <DependentUpon>InternationalIncomingToForeignCarrierDetails2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="reports\invoice\igw\InternationalIncomingToForeignCarrierDetails1.resx">
+      <DependentUpon>InternationalIncomingToForeignCarrierDetails1.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="reports\invoice\igw\InternationalIncomingToForeignCarrier.resx">
       <DependentUpon>InternationalIncomingToForeignCarrier.cs</DependentUpon>
     </EmbeddedResource>
