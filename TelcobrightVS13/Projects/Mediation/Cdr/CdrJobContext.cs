@@ -73,14 +73,16 @@ namespace TelcobrightMediation
             this.DatesInvolved.ForEach(
                             d =>
                             {
-                                Console.Write($"Populating ratecache for {d.ToMySqlStyleDateTimeStrWithoutQuote()}...");
                                 var rateCache = this.MediationContext.MefServiceFamilyContainer.RateCache;
                                 var dateRange = new DateRange(d.Date, d.AddDays(1));
                                 if (rateCache.DateRangeWiseRateDic.ContainsKey(dateRange) == false)
+                                {
+                                    Console.Write($"Populating ratecache for {d.Date.ToMySqlStyleDateTimeStrWithoutQuote()}...");
                                     this.MediationContext.MefServiceFamilyContainer.RateCache
                                         .PopulateDicByDay(dateRange, flagLcr: false, useInMemoryTable: true,
                                             isCachingForMediation: true);
-                                Console.WriteLine("FINISHED.");
+                                    Console.WriteLine("FINISHED.");
+                                }
                             });
         }
 
