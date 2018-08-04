@@ -9,15 +9,15 @@ using System.Globalization;
 
 namespace ReportGenerator.reports.invoice.igw
 {
-    public partial class InternationalIncomingToForeignCarrier : DevExpress.XtraReports.UI.XtraReport, IInvoiceReport
+    public partial class InternationalOutgoingToIOS : DevExpress.XtraReports.UI.XtraReport, IInvoiceReport
     {
-        public InternationalIncomingToForeignCarrier(Invoice invoice)
+        public InternationalOutgoingToIOS(Invoice invoice)
         {
             InitializeComponent();
             generateReport(invoice);
         }
 
-        public InvoiceReportType reportType { get { return InvoiceReportType.InternationalIncomingToForeignCarrier; } }
+        public InvoiceReportType reportType { get { return InvoiceReportType.InternationalOutgoingToIOS; } }
 
         public void saveToPdf(string fileName)
         {
@@ -45,10 +45,12 @@ namespace ReportGenerator.reports.invoice.igw
 
             #region Report Body
             xrTableCellReference.DataBindings.Add("Text", this.DataSource, "Reference");
-            xrTableCellDescription.DataBindings.Add("Text", this.DataSource, "Description");
-            xrTableCellUnitsCalls.DataBindings.Add("Text", this.DataSource, "Quantity", "{0:n0}");
-            xrTableCellUnitsCallsUoM.DataBindings.Add("Text", this.DataSource, "UoM");
+            xrTableCellUnitsCalls.DataBindings.Add("Text", this.DataSource, "UoM");
+            xrTableCellUnitsCallsUoM.DataBindings.Add("Text", this.DataSource, "Quantity", "{0:n0}");
             xrTableCellTotalMinutes.DataBindings.Add("Text", this.DataSource, "TotalMinutes", "{0:n2}");
+            xrTableCellXAmountBDT.DataBindings.Add("Text", this.DataSource, "XAmount", "{0:n2}");
+            xrTableCellYAmountBDT.DataBindings.Add("Text", this.DataSource, "YAmount", "{0:n2}");
+            xrTableCellXYAmountBDT.DataBindings.Add("Text", this.DataSource, "XYAmount", "{0:n2}");
             xrTableCellAmount.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
 
             decimal subTotalAmount = invoice.InvoiceItems.Sum(x => x.Amount);
@@ -56,23 +58,12 @@ namespace ReportGenerator.reports.invoice.igw
             xrTableCellSubTotalAmount.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
             xrTableCellInvoiceTotal.Text = string.Format("{0:n2}", subTotalAmount);
             xrTableCellAmountDueforPayment.Text = string.Format("{0:n2}", subTotalAmount);
-
             #endregion
 
             #region Report Footer
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
-            xrLabelAmountInwords.Text = textInfo.ToTitleCase(CurrencyHelper.NumberToWords(Convert.ToDouble(subTotalAmount)));
-
-            xrLabelPaymentAdvice.Text = "Account Name: Bangla Tel Ltd.\r\n" +
-                "A / C No. 13251120032737\r\n" +
-                "Bank Name: Prime Bank Limited, Banani Branch\r\n" +
-                "Bank Address: House # 62, Block # E, Kemal Ataturk Avenue,\r\n" +
-                "Banani, Dhaka 1213, Bangladesh\r\n" +
-                "SWIFT code: PRBLBDDH020";
-
-            xrLabelAddress.Text = "Red Crescent Borak Tower, Level-M, 37/3/A, Eskaton Garden Road, Dhaka-1000, Bagnladesh\r\n" +
-                "PABX: +88028332924, 9334781, 9334782, Fax: +8802833275, Email: info @banglatel.com.bd\r\n" +
-                "Website : www.banglatel.com.bd";
+            xrLabelAmountInwords.Text = textInfo.ToTitleCase(CurrencyHelper.NumberToTakaWords(Convert.ToDouble(subTotalAmount)));
+            xrLabelConversionRate.Text = string.Format("As per Sonali Bank Rate (1USD = BDT {0:n2}) as on {1:dd-MMM-yyyy}", invoice.ConversionRate, invoice.ConversionRateDate);
             #endregion
         }
     }

@@ -41,9 +41,6 @@
     <Reference Include="DevExpress.XtraCharts.v15.1, Version=15.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraGauges.v15.1.Core, Version=15.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraReports.v15.1, Version=15.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="MediationModel">
-      <HintPath>..\..\TelcobrightVS13\Projects\Models_Mediation\bin\Debug\MediationModel.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -55,24 +52,100 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helper\CurrencyHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="reports\invoice\icx\DomesticToANS.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="reports\invoice\icx\DomesticToANS.Designer.cs">
+      <DependentUpon>DomesticToANS.cs</DependentUpon>
+    </Compile>
+    <Compile Include="reports\invoice\icx\DomesticToANSDetails1.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="reports\invoice\icx\DomesticToANSDetails1.Designer.cs">
+      <DependentUpon>DomesticToANSDetails1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="reports\invoice\icx\DomesticToANSDetails2.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="reports\invoice\icx\DomesticToANSDetails2.Designer.cs">
+      <DependentUpon>DomesticToANSDetails2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="reports\invoice\igw\InternationalOutgoingToIOSDetails2.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="reports\invoice\igw\InternationalOutgoingToIOSDetails2.Designer.cs">
+      <DependentUpon>InternationalOutgoingToIOSDetails2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="reports\invoice\igw\InternationalOutgoingToIOSDetails1.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="reports\invoice\igw\InternationalOutgoingToIOSDetails1.Designer.cs">
+      <DependentUpon>InternationalOutgoingToIOSDetails1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="reports\invoice\igw\InternationalOutgoingToIOS.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="reports\invoice\igw\InternationalOutgoingToIOS.Designer.cs">
+      <DependentUpon>InternationalOutgoingToIOS.cs</DependentUpon>
+    </Compile>
+    <Compile Include="reports\invoice\igw\InternationalIncomingToForeignCarrierDetails2.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="reports\invoice\igw\InternationalIncomingToForeignCarrierDetails2.Designer.cs">
+      <DependentUpon>InternationalIncomingToForeignCarrierDetails2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="reports\invoice\igw\InternationalIncomingToForeignCarrierDetails1.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="reports\invoice\igw\InternationalIncomingToForeignCarrierDetails1.Designer.cs">
+      <DependentUpon>InternationalIncomingToForeignCarrierDetails1.cs</DependentUpon>
+    </Compile>
     <Compile Include="reports\invoice\igw\InternationalIncomingToForeignCarrier.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="reports\invoice\igw\InternationalIncomingToForeignCarrier.Designer.cs">
       <DependentUpon>InternationalIncomingToForeignCarrier.cs</DependentUpon>
     </Compile>
-    <Compile Include="reports\invoice\InvoiceDataForReport.cs" />
+    <Compile Include="reports\invoice\IInvoiceReport.cs" />
+    <Compile Include="reports\invoice\InvoiceReportExtensions.cs" />
+    <Compile Include="reports\invoice\Invoice.cs" />
+    <Compile Include="reports\invoice\InvoiceItem.cs" />
+    <Compile Include="reports\invoice\InvoiceReportType.cs" />
+    <Compile Include="reports\invoice\Partner.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\licenses.licx" />
+    <EmbeddedResource Include="reports\invoice\icx\DomesticToANS.resx">
+      <DependentUpon>DomesticToANS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="reports\invoice\icx\DomesticToANSDetails1.resx">
+      <DependentUpon>DomesticToANSDetails1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="reports\invoice\icx\DomesticToANSDetails2.resx">
+      <DependentUpon>DomesticToANSDetails2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="reports\invoice\igw\InternationalOutgoingToIOSDetails2.resx">
+      <DependentUpon>InternationalOutgoingToIOSDetails2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="reports\invoice\igw\InternationalOutgoingToIOSDetails1.resx">
+      <DependentUpon>InternationalOutgoingToIOSDetails1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="reports\invoice\igw\InternationalOutgoingToIOS.resx">
+      <DependentUpon>InternationalOutgoingToIOS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="reports\invoice\igw\InternationalIncomingToForeignCarrierDetails2.resx">
+      <DependentUpon>InternationalIncomingToForeignCarrierDetails2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="reports\invoice\igw\InternationalIncomingToForeignCarrierDetails1.resx">
+      <DependentUpon>InternationalIncomingToForeignCarrierDetails1.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="reports\invoice\igw\InternationalIncomingToForeignCarrier.resx">
       <DependentUpon>InternationalIncomingToForeignCarrier.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="reports\invoice\icx\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

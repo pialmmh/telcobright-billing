@@ -9,15 +9,15 @@ using System.Globalization;
 
 namespace ReportGenerator.reports.invoice.igw
 {
-    public partial class InternationalIncomingToForeignCarrier : DevExpress.XtraReports.UI.XtraReport, IInvoiceReport
+    public partial class DomesticToANS : DevExpress.XtraReports.UI.XtraReport, IInvoiceReport
     {
-        public InternationalIncomingToForeignCarrier(Invoice invoice)
+        public DomesticToANS(Invoice invoice)
         {
             InitializeComponent();
             generateReport(invoice);
         }
 
-        public InvoiceReportType reportType { get { return InvoiceReportType.InternationalIncomingToForeignCarrier; } }
+        public InvoiceReportType reportType { get { return InvoiceReportType.DomesticToANS; } }
 
         public void saveToPdf(string fileName)
         {
@@ -29,7 +29,7 @@ namespace ReportGenerator.reports.invoice.igw
             this.DataSource = invoice.InvoiceItems;
 
             #region Page Header
-            xrLabelVatRegNo.Text = "VAT Reg. No. 18141080328";
+            xrLabelVatRegNo.Text = "VAT Reg. No. 19061116647";
             xrLabelPartnerName.Text = invoice.Partner.PartnerName;
             xrLabelPartnerAddress.Text = invoice.Partner.PartnerAddress;
             xrLabelPartnerVatRegNo.Text = invoice.Partner.VatRegNo;
@@ -61,18 +61,7 @@ namespace ReportGenerator.reports.invoice.igw
 
             #region Report Footer
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
-            xrLabelAmountInwords.Text = textInfo.ToTitleCase(CurrencyHelper.NumberToWords(Convert.ToDouble(subTotalAmount)));
-
-            xrLabelPaymentAdvice.Text = "Account Name: Bangla Tel Ltd.\r\n" +
-                "A / C No. 13251120032737\r\n" +
-                "Bank Name: Prime Bank Limited, Banani Branch\r\n" +
-                "Bank Address: House # 62, Block # E, Kemal Ataturk Avenue,\r\n" +
-                "Banani, Dhaka 1213, Bangladesh\r\n" +
-                "SWIFT code: PRBLBDDH020";
-
-            xrLabelAddress.Text = "Red Crescent Borak Tower, Level-M, 37/3/A, Eskaton Garden Road, Dhaka-1000, Bagnladesh\r\n" +
-                "PABX: +88028332924, 9334781, 9334782, Fax: +8802833275, Email: info @banglatel.com.bd\r\n" +
-                "Website : www.banglatel.com.bd";
+            xrLabelAmountInwords.Text = textInfo.ToTitleCase(CurrencyHelper.NumberToTakaWords(Convert.ToDouble(subTotalAmount)));
             #endregion
         }
     }

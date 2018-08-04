@@ -1,4 +1,5 @@
 ﻿using DevExpress.XtraReports.UI;
+using DXWebReportViewer.Helper;
 using ReportGenerator.reports.invoice;
 using ReportGenerator.reports.invoice.igw;
 using System;
@@ -14,8 +15,10 @@ namespace DXWebReportViewer
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            InvoiceDataForReport invoiceDataForReport = new InvoiceDataForReport();
-            XtraReport InternationalIncomingToForeignCarrier = new InternationalIncomingToForeignCarrier(invoiceDataForReport);
+            Invoice invoice = InvoiceHelper.GetInvoice();
+            IInvoiceReport InternationalIncomingToForeignCarrier = new DomesticToANS(invoice);
+            InternationalIncomingToForeignCarrier.saveToPdf("E:\\Files\\telcobright\\demo.pdf");
+            string reportTitle = InternationalIncomingToForeignCarrier.getReportTitle();
             ASPxDocumentViewer1.Report = (XtraReport)InternationalIncomingToForeignCarrier;
         }
     }

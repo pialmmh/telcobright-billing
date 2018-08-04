@@ -1,6 +1,6 @@
 ﻿namespace ReportGenerator.reports.invoice.igw
 {
-    partial class InternationalIncomingToForeignCarrier
+    partial class DomesticToANS
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InternationalIncomingToForeignCarrier));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DomesticToANS));
             DevExpress.XtraReports.UI.XRSummary xrSummary1 = new DevExpress.XtraReports.UI.XRSummary();
             this.Detail = new DevExpress.XtraReports.UI.DetailBand();
             this.xrTable1 = new DevExpress.XtraReports.UI.XRTable();
@@ -61,7 +61,6 @@
             this.xrLabelPartnerName = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel2 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrPictureBox1 = new DevExpress.XtraReports.UI.XRPictureBox();
-            this.xrPictureBox2 = new DevExpress.XtraReports.UI.XRPictureBox();
             this.xrLine1 = new DevExpress.XtraReports.UI.XRLine();
             this.xrTable2 = new DevExpress.XtraReports.UI.XRTable();
             this.xrTableRow2 = new DevExpress.XtraReports.UI.XRTableRow();
@@ -71,7 +70,6 @@
             this.xrTableCell5 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCell6 = new DevExpress.XtraReports.UI.XRTableCell();
             this.PageFooter = new DevExpress.XtraReports.UI.PageFooterBand();
-            this.xrLabelAddress = new DevExpress.XtraReports.UI.XRLabel();
             this.xrPageInfo1 = new DevExpress.XtraReports.UI.XRPageInfo();
             this.ReportFooter = new DevExpress.XtraReports.UI.ReportFooterBand();
             this.xrLabel15 = new DevExpress.XtraReports.UI.XRLabel();
@@ -232,7 +230,6 @@
             this.xrLabelPartnerName,
             this.xrLabel2,
             this.xrPictureBox1,
-            this.xrPictureBox2,
             this.xrLine1,
             this.xrTable2});
             this.PageHeader.HeightF = 379.5834F;
@@ -431,14 +428,6 @@
             this.xrPictureBox1.SizeF = new System.Drawing.SizeF(152.0001F, 37.49999F);
             this.xrPictureBox1.Sizing = DevExpress.XtraPrinting.ImageSizeMode.ZoomImage;
             // 
-            // xrPictureBox2
-            // 
-            this.xrPictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("xrPictureBox2.Image")));
-            this.xrPictureBox2.LocationFloat = new DevExpress.Utils.PointFloat(9.999998F, 10.00001F);
-            this.xrPictureBox2.Name = "xrPictureBox2";
-            this.xrPictureBox2.SizeF = new System.Drawing.SizeF(373.9583F, 98.95832F);
-            this.xrPictureBox2.Sizing = DevExpress.XtraPrinting.ImageSizeMode.ZoomImage;
-            // 
             // xrLine1
             // 
             this.xrLine1.ForeColor = System.Drawing.Color.Purple;
@@ -532,27 +521,9 @@
             // PageFooter
             // 
             this.PageFooter.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
-            this.xrLabelAddress,
             this.xrPageInfo1});
-            this.PageFooter.HeightF = 85F;
+            this.PageFooter.HeightF = 32.99997F;
             this.PageFooter.Name = "PageFooter";
-            // 
-            // xrLabelAddress
-            // 
-            this.xrLabelAddress.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
-            | DevExpress.XtraPrinting.BorderSide.Right) 
-            | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.xrLabelAddress.Font = new System.Drawing.Font("Arial Narrow", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xrLabelAddress.LocationFloat = new DevExpress.Utils.PointFloat(10.00001F, 9.999974F);
-            this.xrLabelAddress.Multiline = true;
-            this.xrLabelAddress.Name = "xrLabelAddress";
-            this.xrLabelAddress.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.xrLabelAddress.SizeF = new System.Drawing.SizeF(625F, 65F);
-            this.xrLabelAddress.StylePriority.UseBorders = false;
-            this.xrLabelAddress.StylePriority.UseFont = false;
-            this.xrLabelAddress.StylePriority.UseTextAlignment = false;
-            this.xrLabelAddress.Text = "Address";
-            this.xrLabelAddress.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             // 
             // xrPageInfo1
             // 
@@ -605,8 +576,10 @@
             this.xrLabelPaymentAdvice.Multiline = true;
             this.xrLabelPaymentAdvice.Name = "xrLabelPaymentAdvice";
             this.xrLabelPaymentAdvice.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.xrLabelPaymentAdvice.SizeF = new System.Drawing.SizeF(289.7916F, 112.75F);
-            this.xrLabelPaymentAdvice.Text = "Account Name: Bangla Tel Ltd.";
+            this.xrLabelPaymentAdvice.SizeF = new System.Drawing.SizeF(598.2499F, 22.99998F);
+            this.xrLabelPaymentAdvice.StylePriority.UseTextAlignment = false;
+            this.xrLabelPaymentAdvice.Text = "Amount Payable by Crossed Cheque in favor of \"Jibondhara Solutions Limited\"";
+            this.xrLabelPaymentAdvice.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
             // 
             // xrLabel12
             // 
@@ -788,17 +761,19 @@
             // 
             // xrLabel1
             // 
+            this.xrLabel1.Borders = DevExpress.XtraPrinting.BorderSide.Top;
             this.xrLabel1.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xrLabel1.LocationFloat = new DevExpress.Utils.PointFloat(0F, 257.9226F);
             this.xrLabel1.Name = "xrLabel1";
             this.xrLabel1.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.xrLabel1.SizeF = new System.Drawing.SizeF(727F, 23F);
+            this.xrLabel1.SizeF = new System.Drawing.SizeF(300F, 23.00003F);
+            this.xrLabel1.StylePriority.UseBorders = false;
             this.xrLabel1.StylePriority.UseFont = false;
             this.xrLabel1.StylePriority.UseTextAlignment = false;
-            this.xrLabel1.Text = "\"This Is An Electronic Invoice & No Signature Required\"";
+            this.xrLabel1.Text = "Authorized Signatory (Acc. and Fin.)";
             this.xrLabel1.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             // 
-            // InternationalIncomingToForeignCarrier
+            // DomesticToANS
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
             this.Detail,
@@ -844,7 +819,6 @@
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell5;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell6;
         private DevExpress.XtraReports.UI.XRPictureBox xrPictureBox1;
-        private DevExpress.XtraReports.UI.XRPictureBox xrPictureBox2;
         private DevExpress.XtraReports.UI.XRLine xrLine1;
         private DevExpress.XtraReports.UI.XRLabel xrLabelTimeZone;
         private DevExpress.XtraReports.UI.XRLabel xrLabelCurrency;
@@ -882,7 +856,6 @@
         private DevExpress.XtraReports.UI.XRLabel xrLabelAmountInwords;
         private DevExpress.XtraReports.UI.XRLabel xrLabel4;
         private DevExpress.XtraReports.UI.XRLine xrLine2;
-        private DevExpress.XtraReports.UI.XRLabel xrLabelAddress;
         private DevExpress.XtraReports.UI.XRLabel xrLabel15;
         private DevExpress.XtraReports.UI.XRLabel xrLabel14;
         private DevExpress.XtraReports.UI.XRLabel xrLabelPaymentAdvice;
