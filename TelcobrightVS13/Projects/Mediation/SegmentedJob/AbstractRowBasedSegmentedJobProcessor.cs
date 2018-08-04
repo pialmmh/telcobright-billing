@@ -42,44 +42,52 @@ namespace TelcobrightMediation
             List<jobsegment> jobSegments = new List<jobsegment>();
             //there could be millions of rows e.g. cdrs, FETCH rowId+starttime in batches of fixed size, 
             //default 1M, this should be a bigger chunk for performance, looping limit in blocks of 5000 will be slow
+            long totalOfAllSegments = 0;
             while (keepLooping)
             {
                 sql += "order by " + this.IndexedRowIdColumnName + " limit " +
                        limitStart + //IdCall is indexed for performance
                        "," + this.BatchSizeWhenPreparingLargeSqlJob;
                 limitStart += this.BatchSizeWhenPreparingLargeSqlJob;
-                List<RowIdVsDate<long>> IdCallAndDates =
+                List<RowIdVsDate<long>> idCallAndDates =
                     this.Context.Database.SqlQuery<RowIdVsDate<long>>(sql).ToList();
-
+                totalOfAllSegments += idCallAndDates.Count;
                 //segment the job to defined batch size e.g. 5000-10000 configured in the config file
-                var collectionSegmenter = new CollectionSegmenter<RowIdVsDate<long>>(IdCallAndDates, 0);
-                List<RowIdVsDate<long>> segment = new List<RowIdVsDate<long>>();
+                var collectionSegmenter = new CollectionSegmenter<RowIdVsDate<long>>(idCallAndDates, 0);
+                List<RowIdVsDate<long>> segmentedCollection = new List<RowIdVsDate<long>>();
                 int currentSegmentNumber = 0;
-                segment = collectionSegmenter.GetNextSegment(batchSize).ToList();
-                while ((keepLooping = segment.Any()) == true)
+                segmentedCollection = collectionSegmenter.GetNextSegment(batchSize).ToList();
+                while ((keepLooping = segmentedCollection.Any()) == true)
                 {
-                    jobsegment js = new jobsegment()
+                    var dayWiseRowIds = segmentedCollection.GroupBy(c => c.RowDateTime.Date)
+                        .ToDictionary(g => g.Key,
+                        g => g.Select(rowIdVsDate => rowIdVsDate.RowId.ToString()).ToList());
+                    foreach (var kv in dayWiseRowIds)
                     {
-                        idJob = this.TelcobrightJob.id,
-                        segmentNumber = ++currentSegmentNumber,
-                        stepsCount = segment.Count,
-                        status = 6,//6=create, consistent to job status
-                        SegmentDetail = JsonConvert.SerializeObject(
-                            new DayWiseRowIdsCollection(segment.GroupBy(c => c.RowDateTime.Date)
-                                .ToDictionary(g => g.Key,
-                                g => g.Select(rowIdVsDate => rowIdVsDate.RowId.ToString()).ToList()),
-                                sourceTable, this.IndexedRowIdColumnName, this.DateColumnName,
-                                string.Empty))
-                    };
-                    jobSegments.Add(js);
-                    segment = collectionSegmenter.GetNextSegment(batchSize).ToList();
+                        jobsegment js = new jobsegment()
+                        {
+                            idJob = this.TelcobrightJob.id,
+                            segmentNumber = ++currentSegmentNumber,
+                            stepsCount = segmentedCollection.Count,
+                            status = 6,//6=create, consistent to job status
+                            SegmentDetail = JsonConvert.SerializeObject(
+                                new RowIdsCollectionForSingleDay(kv.Key,kv.Value,
+                                    sourceTable: sourceTable, indexedRowIdColName: this.IndexedRowIdColumnName,
+                                    dateColName: this.DateColumnName,
+                                    quoteCharToEncloseNonNumericRowIdValues: string.Empty))
+                        };
+                        jobSegments.Add(js);
+                    }
+                    segmentedCollection = collectionSegmenter.GetNextSegment(batchSize).ToList();
                 } //while to to create smaller segments of 5000-10000 or whatever is defined
             } //while for Millions of IdCalls & dates
+            if(totalOfAllSegments!=jobSegments.Sum(s=>s.stepsCount))
+                throw new Exception("Sum of all segments count do not match total raw records received.");
             base.SaveSegmentsToDb(jobSegments);
         }
-        public DayWiseRowIdsCollection DeserializeDayWiseRowIdsCollection(jobsegment segment)
+        public RowIdsCollectionForSingleDay DeserializeDayWiseRowIdsCollection(jobsegment segment)
         {
-            return JsonConvert.DeserializeObject<DayWiseRowIdsCollection>
+            return JsonConvert.DeserializeObject<RowIdsCollectionForSingleDay>
                 (segment.SegmentDetail.Trim(Convert.ToChar("\"")));
         }
     }

@@ -30,6 +30,15 @@ public partial class ConfigSupplierRatePlan {
     protected global::System.Web.UI.WebControls.SqlDataSource SqlDataTimeZone;
     
     /// <summary>
+    /// SqlDataCurrency control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.SqlDataSource SqlDataCurrency;
+    
+    /// <summary>
     /// SqlDataservices1 control.
     /// </summary>
     /// <remarks>

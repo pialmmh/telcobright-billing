@@ -9,40 +9,43 @@ using MediationModel;
 
 namespace TelcobrightMediation
 {
-    public class DayWiseRowIdsCollection
+    public class RowIdsCollectionForSingleDay
     {
         //both get;set; are required for json deserialization
         public Dictionary<DateTime, List<string>> DayWiseRowIds { get; set; }
+        private DateTime Date { get; }
+        private List<string> RowIds { get; }
         public string IndexedRowIdColumnName { get; set; }
 
         public string DateColumnName { get; set; }
         public string SourceTable { get; set; }
         private string QuoteCharToEncloseNonNumericRowIdValues { get; set; }
-        public DayWiseRowIdsCollection() { }//default constructor for json serialization
-        public DayWiseRowIdsCollection(Dictionary<DateTime, List<string>> dayWiseRowIds, string sourceTable,
+        public RowIdsCollectionForSingleDay() { }//default constructor for json serialization
+        public RowIdsCollectionForSingleDay(DateTime date, List<string> rowIds, string sourceTable,
             string indexedRowIdColName, string dateColName, string quoteCharToEncloseNonNumericRowIdValues)
         {
+            if (rowIds.Any()==false)
+            {
+                throw new Exception("Ther is no row id in day wise collection, probably erroneous call.");
+            }
+            this.Date = date.Date;
+            this.RowIds = rowIds;
             this.QuoteCharToEncloseNonNumericRowIdValues = quoteCharToEncloseNonNumericRowIdValues;
-            this.DayWiseRowIds = dayWiseRowIds;
             this.SourceTable = sourceTable;
             this.IndexedRowIdColumnName = indexedRowIdColName;
             this.DateColumnName = dateColName;
         }
+
         public string GetSelectSql()
         {
-            if (this.DayWiseRowIds.Any())
-            {
-                string sql = string.Join(" union all ",
-                    this.DayWiseRowIds.Select(kv =>
-                        $@"select * from {this.SourceTable} where 
-                       {kv.Key.ToMySqlWhereClauseForOneDay(this.DateColumnName)} 
-                       and {this.IndexedRowIdColumnName} 
-                       in ({string.Join(",",
-                            kv.Value.Select(rowId => rowId.EncloseWith(this.QuoteCharToEncloseNonNumericRowIdValues)))
-                            })").ToList());
-                return sql;
-            }
-            return string.Empty;
+            string sql =
+                $@"select * from {this.SourceTable} where 
+                    {this.Date.ToMySqlWhereClauseForOneDay(this.DateColumnName)} 
+                    and {this.IndexedRowIdColumnName} in ({
+                    string.Join(",",
+                    this.RowIds.Select(id => id.EncloseWith(this.QuoteCharToEncloseNonNumericRowIdValues)
+                    .ToList()))})";
+            return sql;
         }
 
         public string GetDeleteSql()

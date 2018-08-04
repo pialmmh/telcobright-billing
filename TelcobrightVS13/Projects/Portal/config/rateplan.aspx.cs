@@ -316,15 +316,7 @@ public partial class ConfigSupplierRatePlan : Page
 
     protected void GridViewSupplierRatePlan_RowEditing(object sender, GridViewEditEventArgs e)
     {
-        var gridView = this.GridViewSupplierRatePlan;
-        if (gridView.EditIndex == -1)
-        {
-            gridView.EditIndex = e.NewEditIndex;
-            gridView.DataBind();
-        }
-        var ddlistCurrency = (DropDownList) gridView.Rows[e.NewEditIndex].Controls[0]
-            .FindControl("DropDownListCurrency");
-        PopulateCurrenciesInDropDownLists(ddlistCurrency);
+        
     }
 
     protected void GridViewSupplierRatePlan_RowUpdating(object sender, GridViewUpdateEventArgs e)
