@@ -662,7 +662,8 @@ namespace InstallConfig
                     con.Open();
                     using (MySqlCommand cmd = new MySqlCommand("", con))
                     {
-                        cmd.CommandText = " set autocommit=0; delete from jsonbillingrule;";
+                        cmd.CommandText = "set foreign_key_checks=0; " +
+                                          "set autocommit=0; delete from jsonbillingrule;";
                         cmd.ExecuteNonQuery();
                         foreach (var br in BIllingRulesDefiner.BillingRules)
                         {
@@ -673,13 +674,15 @@ namespace InstallConfig
                                             ,{(JsonConvert.SerializeObject(br)).EncloseWith("'")});";
                             cmd.ExecuteNonQuery();
                         }
-                        cmd.CommandText = "commit;";
+                        cmd.CommandText = "set foreign_key_checks=1;" +
+                                          "commit;";
                         cmd.ExecuteNonQuery();
                     }
                 }
                 catch (Exception e)
                 {
-                    using (MySqlCommand cmd = new MySqlCommand("rollback;", con))
+                    using (MySqlCommand cmd = new MySqlCommand("set foreign_key_checks=1;" +
+                                                               "rollback;", con))
                     {
                         cmd.ExecuteNonQuery();
                     }
