@@ -80,7 +80,7 @@ namespace TelcobrightMediation
                                     this.MediationContext.MefServiceFamilyContainer.RateCache
                                         .PopulateDicByDay(dateRange, flagLcr: false, useInMemoryTable: true,
                                             isCachingForMediation: true);
-                                Console.Write("FINISHED.");
+                                Console.WriteLine("FINISHED.");
                             });
         }
 
