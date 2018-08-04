@@ -77,7 +77,7 @@ namespace TelcobrightMediation
                                 var dateRange = new DateRange(d.Date, d.AddDays(1));
                                 if (rateCache.DateRangeWiseRateDic.ContainsKey(dateRange) == false)
                                 {
-                                    Console.Write($"Populating ratecache for {d.Date.ToMySqlStyleDateTimeStrWithoutQuote()}...");
+                                    Console.Write($"Populating ratecache for {d.ToString("yyyy-MM-dd")}...");
                                     this.MediationContext.MefServiceFamilyContainer.RateCache
                                         .PopulateDicByDay(dateRange, flagLcr: false, useInMemoryTable: true,
                                             isCachingForMediation: true);
