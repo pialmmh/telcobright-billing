@@ -27,6 +27,24 @@ namespace ReportGenerator.reports.invoice
         [Description("ICX Domestic To ANS Details 1")]
         DomesticToANSDetails1,
         [Description("ICX Domestic To ANS Details 2")]
-        DomesticToANSDetails2
+        DomesticToANSDetails2,
+        [Description("ICX International Outgoing To ANS")]
+        InternationalOutgoingToANS,
+        [Description("ICX International Outgoing To ANS Details 1")]
+        InternationalOutgoingToANSDetails1,
+        [Description("ICX International Outgoing To ANS Details 2")]
+        InternationalOutgoingToANSDetails2,
+        [Description("ICX International To IOS")]
+        InternationalToIOS,
+        [Description("ICX International To IOS Details 1")]
+        InternationalToIOSDetails1,
+        [Description("ICX International To IOS Details 2")]
+        InternationalToIOSDetails2,
+        [Description("ICX LTFS To IPTSP")]
+        LTFSToIPTSP,
+        [Description("ICX LTFS To IPTSP Details 1")]
+        LTFSToIPTSPDetails1,
+        [Description("ICX LTFS To IPTSP Details 2")]
+        LTFSToIPTSPDetails2
     }
 }
