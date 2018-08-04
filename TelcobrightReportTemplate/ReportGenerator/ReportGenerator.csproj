@@ -54,6 +54,24 @@
   <ItemGroup>
     <Compile Include="Helper\CurrencyHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="reports\invoice\igw\InternationalOutgoingToIOSDetails2.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="reports\invoice\igw\InternationalOutgoingToIOSDetails2.Designer.cs">
+      <DependentUpon>InternationalOutgoingToIOSDetails2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="reports\invoice\igw\InternationalOutgoingToIOSDetails1.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="reports\invoice\igw\InternationalOutgoingToIOSDetails1.Designer.cs">
+      <DependentUpon>InternationalOutgoingToIOSDetails1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="reports\invoice\igw\InternationalOutgoingToIOS.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="reports\invoice\igw\InternationalOutgoingToIOS.Designer.cs">
+      <DependentUpon>InternationalOutgoingToIOS.cs</DependentUpon>
+    </Compile>
     <Compile Include="reports\invoice\igw\InternationalIncomingToForeignCarrierDetails2.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -81,6 +99,15 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\licenses.licx" />
+    <EmbeddedResource Include="reports\invoice\igw\InternationalOutgoingToIOSDetails2.resx">
+      <DependentUpon>InternationalOutgoingToIOSDetails2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="reports\invoice\igw\InternationalOutgoingToIOSDetails1.resx">
+      <DependentUpon>InternationalOutgoingToIOSDetails1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="reports\invoice\igw\InternationalOutgoingToIOS.resx">
+      <DependentUpon>InternationalOutgoingToIOS.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="reports\invoice\igw\InternationalIncomingToForeignCarrierDetails2.resx">
       <DependentUpon>InternationalIncomingToForeignCarrierDetails2.cs</DependentUpon>
     </EmbeddedResource>

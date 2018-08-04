@@ -16,6 +16,10 @@ namespace ReportGenerator.reports.invoice
         public String InvoiceNo { get; set; }
         public String Currency { get; set; }
         public String TimeZone { get; set; }
+
+        public decimal ConversionRate { get; set; }
+        public DateTime ConversionRateDate { get; set; }
+
         public Partner Partner { get; set; }
         public List<InvoiceItem> InvoiceItems { get; set; }
 

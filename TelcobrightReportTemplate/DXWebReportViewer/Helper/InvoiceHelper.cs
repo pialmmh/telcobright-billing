@@ -8,8 +8,9 @@ namespace DXWebReportViewer.Helper
 {
     public static class InvoiceHelper
     {
-        public static Invoice IGWInternational_Incoming_To_Foreign_Carrier()
+        public static Invoice GetInvoice()
         {
+            /* 
             return new Invoice()
             {
                 Partner = GetPartner(),
@@ -23,6 +24,24 @@ namespace DXWebReportViewer.Helper
                 TimeZone = "UTC+6",
                 InvoiceItems = GetInvoiceItems()
             };
+            */
+
+            return new Invoice()
+            {
+                Partner = GetPartner(),
+                Type = "ANS",
+                BillingFrom = new DateTime(2018, 4, 9),
+                BillingTo = new DateTime(2018, 4, 15),
+                InvoiceDate = new DateTime(2018, 4, 16),
+                DueDate = new DateTime(2018, 4, 22),
+                InvoiceNo = "BTEL/INV/INT/Spectron-18/04-121",
+                Currency = "BDT",
+                TimeZone = "UTC+6",
+                ConversionRate = 83.5m,
+                ConversionRateDate = new DateTime(2018, 5, 1),
+                InvoiceItems = GetInvoiceItems()
+            };
+
         }
 
         private static Partner GetPartner()
@@ -84,6 +103,7 @@ namespace DXWebReportViewer.Helper
             return invoiceItems;
             */
 
+            /*
             return new List<InvoiceItem>
             {
                 new InvoiceItem()
@@ -107,6 +127,53 @@ namespace DXWebReportViewer.Helper
                     Amount = 0.02m
                 }
             };
+            */
+
+            /*
+            return new List<InvoiceItem>
+            {
+                new InvoiceItem()
+                {
+                    Reference = "Int'l Outbound Calls",
+                    UoM = "Calls",
+                    Quantity = 35964,
+                    TotalMinutes = 50899.75,
+                    XAmount = 402300.50m,
+                    YAmount = 213702.15m,
+                    Amount = 241991.90m
+                }
+            };
+            */
+
+            return new List<InvoiceItem>
+            {
+                new InvoiceItem()
+                {
+                    Reference = "International Outbound Calls",
+                    Date = new DateTime(2018, 4, 9),
+                    Description = "BDCOMONLINE LTD. (IPTSP)",
+                    UoM = "Minutes",
+                    Quantity = 121.50,
+                    XAmount = 758.50m,
+                    YAmount = 322.57m,
+                    Revenue = 387.96m,
+                    Amount = 387.96m
+                },
+                new InvoiceItem()
+                {
+                    Reference = "International Outbound Calls",
+                    Date = new DateTime(2018, 4, 9),
+                    Description = "UNKNOWN",
+                    UoM = "Minutes",
+                    Quantity = 317.00,
+                    XAmount = 2329.50m,
+                    YAmount = 1218.06m,
+                    Revenue = 1384.78m,
+                    Amount = 1384.78m
+                }
+
+            };
+
         }
     }
 }
