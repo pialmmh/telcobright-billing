@@ -16,7 +16,7 @@ namespace DXWebReportViewer
         protected void Page_Load(object sender, EventArgs e)
         {
             Invoice invoice = InvoiceHelper.GetInvoice();
-            IInvoiceReport InternationalIncomingToForeignCarrier = new InternationalOutgoingToIOSDetails2(invoice);
+            IInvoiceReport InternationalIncomingToForeignCarrier = new DomesticToANS(invoice);
             InternationalIncomingToForeignCarrier.saveToPdf("E:\\Files\\telcobright\\demo.pdf");
             string reportTitle = InternationalIncomingToForeignCarrier.getReportTitle();
             ASPxDocumentViewer1.Report = (XtraReport)InternationalIncomingToForeignCarrier;

@@ -17,7 +17,7 @@ namespace ReportGenerator.reports.invoice.igw
             generateReport(invoice);
         }
 
-        public InvoiceReportType reportType { get { return InvoiceReportType.InternationalIncomingToForeignCarrierDetails1; } }
+        public InvoiceReportType reportType { get { return InvoiceReportType.InternationalOutgoingToIOSDetails1; } }
 
         public void saveToPdf(string fileName)
         {

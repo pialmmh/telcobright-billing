@@ -9,15 +9,15 @@ using System.Globalization;
 
 namespace ReportGenerator.reports.invoice.igw
 {
-    public partial class InternationalOutgoingToIOSDetails2 : DevExpress.XtraReports.UI.XtraReport, IInvoiceReport
+    public partial class DomesticToANSDetails1 : DevExpress.XtraReports.UI.XtraReport, IInvoiceReport
     {
-        public InternationalOutgoingToIOSDetails2(Invoice invoice)
+        public DomesticToANSDetails1(Invoice invoice)
         {
             InitializeComponent();
             generateReport(invoice);
         }
 
-        public InvoiceReportType reportType { get { return InvoiceReportType.InternationalOutgoingToIOSDetails2; } }
+        public InvoiceReportType reportType { get { return InvoiceReportType.DomesticToANSDetails1; } }
 
         public void saveToPdf(string fileName)
         {
@@ -29,7 +29,7 @@ namespace ReportGenerator.reports.invoice.igw
             this.DataSource = invoice.InvoiceItems;
 
             #region Page Header
-            xrLabelVatRegNo.Text = "VAT Reg. No. 18141080328";
+            xrLabelVatRegNo.Text = "VAT Reg. No. 19061116647";
             xrLabelPartnerName.Text = invoice.Partner.PartnerName;
             xrLabelPartnerVatRegNo.Text = invoice.Partner.VatRegNo;
             xrLabelType.Text = string.Format("Type: {0}", invoice.Type);
@@ -43,12 +43,10 @@ namespace ReportGenerator.reports.invoice.igw
 
             #region Report Body
             xrTableCellReference.DataBindings.Add("Text", this.DataSource, "Reference");
-            xrTableCellDate.DataBindings.Add("Text", this.DataSource, "Date", "{0:dd-MMM-yyyy}");
+            xrTableCellTermOperator.DataBindings.Add("Text", this.DataSource, "Description");
             xrTableCellUnitsCallsUoM.DataBindings.Add("Text", this.DataSource, "UoM");
             xrTableCellQuantity.DataBindings.Add("Text", this.DataSource, "Quantity", "{0:n2}");
-            xrTableCellXAMOUNT.DataBindings.Add("Text", this.DataSource, "XAmount", "{0:n2}");
-            xrTableCellYAMOUNT.DataBindings.Add("Text", this.DataSource, "YAmount", "{0:n2}");
-            xrTableCellXYAMOUNT.DataBindings.Add("Text", this.DataSource, "XYAmount", "{0:n2}");
+            xrTableCellRate.DataBindings.Add("Text", this.DataSource, "Rate", "{0:n2}");
             xrTableCellRevenue.DataBindings.Add("Text", this.DataSource, "Revenue", "{0:n2}");
             xrTableCellAmount.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
 

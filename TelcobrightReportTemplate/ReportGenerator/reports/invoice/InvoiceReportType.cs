@@ -16,6 +16,17 @@ namespace ReportGenerator.reports.invoice
         [Description("IGW International Incoming To Foreign Carrier Details 2")]
         InternationalIncomingToForeignCarrierDetails2,
         [Description("IGW International Outgoing To IOS")]
-        InternationalOutgoingToIOS
+        InternationalOutgoingToIOS,
+        [Description("IGW International Outgoing To IOS Details 1")]
+        InternationalOutgoingToIOSDetails1,
+        [Description("IGW International Outgoing To IOS Details 2")]
+        InternationalOutgoingToIOSDetails2,
+
+        [Description("ICX Domestic To ANS")]
+        DomesticToANS,
+        [Description("ICX Domestic To ANS Details 1")]
+        DomesticToANSDetails1,
+        [Description("ICX Domestic To ANS Details 2")]
+        DomesticToANSDetails2
     }
 }
