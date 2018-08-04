@@ -4,8 +4,8 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" Runat="Server">
 
-  
-        <asp:EntityDataSource ID="EntityDataSupplierRatePlan" runat="server" 
+          
+    <asp:EntityDataSource ID="EntityDataSupplierRatePlan" runat="server" 
             ConnectionString="name=PartnerEntities" DefaultContainerName="PartnerEntities" 
             EnableDelete="True" EnableFlattening="False" EnableInsert="True" 
             EnableUpdate="True" EntitySetName="rateplans" 
@@ -25,7 +25,12 @@ join country c
 using(country_code)
 order by c.country_name"></asp:SqlDataSource>
 
-
+<asp:SqlDataSource ID="SqlDataCurrency" runat="server" 
+                   ConnectionString="<%$ ConnectionStrings:Partner %>" 
+                   ProviderName="<%$ ConnectionStrings:Partner.ProviderName %>" 
+                   SelectCommand="SELECT uom_id as id FROM btel.uom
+                                  where uom_type_id='CURRENCY_MEASURE'"
+></asp:SqlDataSource>
 
  <%--   </div>
 <span style="color:Black;"><b>Rate Plans</b></span>
@@ -469,8 +474,8 @@ order by Type "
                 
                 <EditItemTemplate>
                     <asp:DropDownList ID="DropDownListCurrency" runat="server" SelectedValue='<%# Bind("Currency") %>'
-                    Enabled="false" >
-                        <asp:ListItem Selected="True" Value="0" Text="USD"></asp:ListItem>
+                    DataSourceID="SqlDataCurrency" DataTextField="id" DataValueField="id" Enabled="false">
+                        
                     </asp:DropDownList>
                 </EditItemTemplate>
                 
@@ -552,12 +557,12 @@ order by Type "
 
             </asp:TemplateField>
 
-            <asp:TemplateField HeaderText="Min Duration (Sec)" SortExpression="MinDurationSec" ControlStyle-Width="30px" >
+            <asp:TemplateField HeaderText="Min Duration (Sec)" SortExpression="mindurationsec" ControlStyle-Width="30px" >
                 <ItemTemplate>
-                    <asp:Label ID="lblMinDurationSec" runat="server" Text='<%#Eval("MinDurationSec")!=null?Eval("MinDurationSec").ToString():"" %>'></asp:Label>
+                    <asp:Label ID="lblMinDurationSec" runat="server" Text='<%#Eval("mindurationSec")!=null?Eval("MinDurationSec").ToString():"" %>'></asp:Label>
                 </ItemTemplate>
                 <EditItemTemplate>
-                    <asp:TextBox ID="txtMinDurationSec" Enabled="True" runat="server" Text='<%# Bind("minDurationSec") %>'></asp:TextBox>
+                    <asp:TextBox ID="txtMinDurationSec" Enabled="True" runat="server" Text='<%# Bind("mindurationsec") %>'></asp:TextBox>
                 </EditItemTemplate>
 
 <ControlStyle Width="30px"></ControlStyle>

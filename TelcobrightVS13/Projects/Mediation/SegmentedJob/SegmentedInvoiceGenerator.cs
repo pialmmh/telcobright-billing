@@ -29,7 +29,7 @@ namespace TelcobrightMediation
 
         public override ISegmentedJob CreateJobSegmentInstance(jobsegment jobSegment)
         {
-            DayWiseRowIdsCollection dayWiseRowsIdsCollection = base.DeserializeDayWiseRowIdsCollection(jobSegment);
+            RowIdsCollectionForSingleDay dayWiseRowsIdsCollection = base.DeserializeDayWiseRowIdsCollection(jobSegment);
             string selectSql = dayWiseRowsIdsCollection.GetSelectSql();
             DbRowCollector<acc_transaction> dbRowCollector =
                 new DbRowCollector<acc_transaction>(this.AccountingJobInputData, selectSql);
