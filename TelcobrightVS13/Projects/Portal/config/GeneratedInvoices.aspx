@@ -15,8 +15,7 @@
                 <asp:GridView ID="gvInvoice" runat="server" AutoGenerateColumns="False" DataKeyNames="PartnerId"
                     CellPadding="4" ForeColor="#333333" GridLines="Vertical"
                     Font-Size="9pt" BorderColor="Silver" BorderStyle="Solid"
-                    OnRowEditing="gvInvoice_OnRowEditing" OnRowDataBound="gvInvoice_OnRowDataBound"
-                    OnRowUpdating="gvInvoice_OnRowUpdating" OnRowCancelingEdit="gvInvoice_OnRowCancelingEdit">
+                    OnRowEditing="gvInvoice_OnRowEditing" OnRowDataBound="gvInvoice_OnRowDataBound">
                     <AlternatingRowStyle BackColor="#f2f2f2" ForeColor="#284775"></AlternatingRowStyle>
                     <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
                     <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
@@ -58,5 +57,10 @@
                 
             </Triggers>
         </asp:UpdatePanel>
+    </div>
+    <div>
+        <asp:Label runat="server" Text="Report Template:"/>
+        <asp:DropDownList runat="server" ID="DropDownListReportTemplate" />
+        <asp:Button runat="server" ID="ButtonSaveReport" Text="Save Report" OnClick="ButtonSaveReport_Click" />
     </div>
 </asp:Content>

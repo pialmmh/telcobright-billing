@@ -18,6 +18,10 @@ using TelcobrightMediation;
 using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Config;
 using Itenso.TimePeriod;
+using ReportGenerator.reports.invoice;
+using ReportGenerator.reports.invoice.igw;
+using PortalApp.Models;
+
 namespace PortalApp.config
 {
     public partial class GeneratedInvoices : System.Web.UI.Page
@@ -114,6 +118,12 @@ namespace PortalApp.config
                     gvInvoice.DataBind();
 
                 }
+
+                foreach (var item in Enum.GetValues(typeof(InvoiceReportType)))
+                {
+                    DropDownListReportTemplate.Items.Add(item.ToString());
+                }
+
             }
         }
 
@@ -171,6 +181,13 @@ namespace PortalApp.config
                     }
                 }
             }
+        }
+
+        protected void ButtonSaveReport_Click(object sender, EventArgs e)
+        {
+            Invoice invoice = InvoiceHelper.GetInvoice();
+            IInvoiceReport invoiceReport = new DomesticToANS(invoice);
+            invoiceReport.saveToPdf("E:\\Files\\telcobright\\demo.pdf");
         }
     }
 }
