@@ -68,7 +68,7 @@ namespace TelcobrightMediation
                         {
                             idJob = this.TelcobrightJob.id,
                             segmentNumber = ++currentSegmentNumber,
-                            stepsCount = segmentedCollection.Count,
+                            stepsCount = kv.Value.Count,
                             status = 6,//6=create, consistent to job status
                             SegmentDetail = JsonConvert.SerializeObject(
                                 new RowIdsCollectionForSingleDay(kv.Key,kv.Value,
