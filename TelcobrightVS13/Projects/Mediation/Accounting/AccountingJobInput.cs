@@ -11,7 +11,7 @@ namespace TelcobrightMediation.Accounting
     {
         public TelcobrightConfig Tbc { get; }
         public CdrSetting CdrSetting => this.Tbc.CdrSetting;
-        private AccountingContext AccountingContext { get; }
+        public AccountingContext AccountingContext { get; }
         public PartnerEntities Context { get; }
         public ne Ne { get; }
         public job TelcobrightJob { get; }

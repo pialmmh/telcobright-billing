@@ -9,7 +9,7 @@ using TelcobrightMediation;
 
 namespace UnitTesterManual
 {
-    public class MockCdrErrorProcessorJob : CdrReProcess
+    public class MockCdrErrorProcessorJob : CdrReProcessingJob
     {
         public override JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
         {

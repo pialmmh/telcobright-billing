@@ -9,14 +9,14 @@ using TelcobrightMediation;
 
 namespace UnitTesterManual
 {
-    public class MockCdrReProcessorJob:CdrReProcess
+    public class MockCdrReProcessorJob:CdrReProcessingJob
     {
         public override JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
         {
             CdrJobInputData input = (CdrJobInputData)jobInputData;
             CdrCollectorInputData cdrCollectorInput = new CdrCollectorInputData(input, "");
-            SegmentedCdrReprocessor segmentedCdrReprocessJobProcessor =
-                new SegmentedCdrReprocessor(cdrCollectorInput,
+            SegmentedCdrReprocessJobProcessor segmentedCdrReprocessJobProcessor =
+                new SegmentedCdrReprocessJobProcessor(cdrCollectorInput,
                     input.CdrSetting.BatchSizeWhenPreparingLargeSqlJob, "IdCall", "starttime");
             if (input.TelcobrightJob.Status != 2) //prepare job if not prepared already
                 segmentedCdrReprocessJobProcessor.PrepareSegments();

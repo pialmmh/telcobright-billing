@@ -69,10 +69,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CdrEraserJob.cs" />
-    <Compile Include="CdrInvoiceGeneration.cs" />
-    <Compile Include="ErrorCdrProcess.cs" />
-    <Compile Include="CdrReProcess.cs" />
+    <Compile Include="CdrErase\CdrEraserJob.cs" />
+    <Compile Include="CdrInvoicer\TransactionInvoicingJob.cs" />
+    <Compile Include="CdrError\ErrorCdrProcessingJob.cs" />
+    <Compile Include="CdrReProcess\CdrReProcessingJob.cs" />
+    <Compile Include="CdrInvoicer\TransactionInvoicingJobSegment.cs" />
+    <Compile Include="CdrErase\SegmentedCdrErasingProcessor.cs" />
+    <Compile Include="CdrError\SegmentedCdrErrorProcessor.cs" />
+    <Compile Include="CdrReProcess\SegmentedCdrReprocessJobProcessor.cs" />
+    <Compile Include="CdrInvoicer\SegmentedCdrInvoicingJobProcessor.cs" />
     <Compile Include="TransactionPosting.cs" />
     <Compile Include="FileCopy.cs" />
     <Compile Include="FileDelete.cs" />

@@ -10,11 +10,10 @@ using TelcobrightMediation.Cdr;
 
 namespace TelcobrightMediation
 {
-    public class SegmentedCdrEraser : AbstractRowBasedSegmentedJobProcessor
+    public class SegmentedCdrReprocessJobProcessor : AbstractRowBasedSegmentedJobProcessor
     {
         private CdrCollectorInputData CdrCollectorInput { get; }
-
-        public SegmentedCdrEraser(CdrCollectorInputData cdrCollectorInput, int batchSizeWhenPreparingLargeSqlJob,
+        public SegmentedCdrReprocessJobProcessor(CdrCollectorInputData cdrCollectorInput,int batchSizeWhenPreparingLargeSqlJob, 
             string indexedColumnName, string dateColumnName)
             : base(cdrCollectorInput.TelcobrightJob, cdrCollectorInput.Context, batchSizeWhenPreparingLargeSqlJob,
                 indexedColumnName, dateColumnName)
@@ -29,17 +28,19 @@ namespace TelcobrightMediation
             DbRowCollector<cdr> dbRowCollector =
                 new DbRowCollector<cdr>(this.CdrCollectorInput.CdrJobInputData, selectSql);
             List<cdr> finalCdrs = dbRowCollector.Collect();
-            CdrErasingPreProcessor reprocessingPreProcessor =
-                new CdrErasingPreProcessor(this.CdrCollectorInput, finalCdrs);
+            CdrReProcessingPreProcessor preProcessor =
+                new CdrReProcessingPreProcessor(this.CdrCollectorInput, finalCdrs);
 
-            CdrCollectionResult newCollectionResult = null, oldCollectionResult = null;
-            reprocessingPreProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
-
+            CdrCollectionResult newCollectionResult, oldCollectionResult = null;
+            preProcessor.GetCollectionResults(out newCollectionResult,out oldCollectionResult);
             CdrJobContext cdrJobContext = new CdrJobContext(this.CdrCollectorInput.CdrJobInputData,
-                oldCollectionResult.HoursInvolved);
+                newCollectionResult.HoursInvolved);
+            CdrProcessor cdrProcessor = new CdrProcessor(cdrJobContext, newCollectionResult);
             CdrEraser cdrEraser = new CdrEraser(cdrJobContext, oldCollectionResult);
-            CdrJob cdrJob = new CdrJob(null, cdrEraser, oldCollectionResult.RawCount,partialCdrTesterData:null);
+            CdrJob cdrJob = new CdrJob(cdrProcessor, cdrEraser, cdrProcessor.CollectionResult.RawCount,
+                partialCdrTesterData:null);
             return cdrJob;
         }
+
     }
 }
