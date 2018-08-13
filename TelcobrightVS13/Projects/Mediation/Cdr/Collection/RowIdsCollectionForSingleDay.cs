@@ -16,7 +16,6 @@ namespace TelcobrightMediation
         public DateTime Date { get; }
         public List<string> RowIds { get; }
         public string IndexedRowIdColumnName { get; set; }
-
         public string DateColumnName { get; set; }
         public string SourceTable { get; set; }
         private string QuoteCharToEncloseNonNumericRowIdValues { get; set; }

@@ -24,7 +24,7 @@ namespace Jobs
 
         public JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
         {
-            TransactionPostingJobInputData input = (TransactionPostingJobInputData) jobInputData;
+            
             return JobCompletionStatus.Complete;
         } //execute
     }
