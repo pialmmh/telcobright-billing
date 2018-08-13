@@ -13,8 +13,8 @@ namespace TelcobrightMediation
     {
         //both get;set; are required for json deserialization
         public Dictionary<DateTime, List<string>> DayWiseRowIds { get; set; }
-        private DateTime Date { get; }
-        private List<string> RowIds { get; }
+        public DateTime Date { get; }
+        public List<string> RowIds { get; }
         public string IndexedRowIdColumnName { get; set; }
 
         public string DateColumnName { get; set; }

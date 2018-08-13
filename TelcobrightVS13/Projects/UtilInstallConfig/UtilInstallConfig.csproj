@@ -152,7 +152,7 @@
     <None Include="jsl\jslRoutes.json" />
     <None Include="Server.conf" />
     <None Include="_dbl.config" />
-    <None Include="_roots.config" />
+    <None Include="tpny\_roots.config" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
