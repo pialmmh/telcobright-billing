@@ -17,7 +17,7 @@ namespace TelcobrightMediation
         public string IndexedRowIdColumnName { get; set; }
         public string DateColumnName { get; set; }
         public string SourceTable { get; set; }
-        private string QuoteCharToEncloseNonNumericRowIdValues { get; set; }
+        public string QuoteCharToEncloseNonNumericRowIdValues { get; set; }
         public RowIdsCollectionForSingleDay() { }//default constructor for json serialization
         public RowIdsCollectionForSingleDay(DateTime date, List<string> rowIds, string sourceTable,
             string indexedRowIdColName, string dateColName, string quoteCharToEncloseNonNumericRowIdValues)
