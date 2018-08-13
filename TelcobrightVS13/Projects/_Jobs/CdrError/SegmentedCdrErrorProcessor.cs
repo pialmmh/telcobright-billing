@@ -32,10 +32,10 @@ namespace TelcobrightMediation
 
         public override ISegmentedJob CreateJobSegmentInstance(jobsegment jobSegment)
         {
-            RowIdsCollectionForSingleDay dayWiseRowsIdsCollection = base.DeserializeDayWiseRowIdsCollection(jobSegment);
+            RowIdsCollectionForSingleDay rowIdsCollectionForSingleDay = base.DeserializeDayWiseRowIdsCollection(jobSegment);
             CdrRowCollector<cdrerror> dbRowCollector =
                 new CdrRowCollector<cdrerror>(this.CdrCollectorInput.CdrJobInputData,
-                    dayWiseRowsIdsCollection.GetSelectSql());
+                    rowIdsCollectionForSingleDay.GetSelectSql());
             List<string[]> txtRows = dbRowCollector.CollectAsTxtRows();
             NewCdrPreProcessor preProcessor =
                 new NewCdrPreProcessor(txtRows, new List<cdrinconsistent>(), this.CdrCollectorInput);
