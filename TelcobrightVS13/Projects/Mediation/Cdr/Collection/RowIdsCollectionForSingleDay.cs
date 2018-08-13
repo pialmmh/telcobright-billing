@@ -12,7 +12,6 @@ namespace TelcobrightMediation
     public class RowIdsCollectionForSingleDay
     {
         //both get;set; are required for json deserialization
-        public Dictionary<DateTime, List<string>> DayWiseRowIds { get; set; }
         public DateTime Date { get; }
         public List<string> RowIds { get; }
         public string IndexedRowIdColumnName { get; set; }
@@ -49,14 +48,12 @@ namespace TelcobrightMediation
 
         public string GetDeleteSql()
         {
-            if (this.DayWiseRowIds.Any())
+            if (this.RowIds.Any())
             {
-                string sql = string.Join(";",
-                    this.DayWiseRowIds.Select(kv =>
-                        $@"delete from {this.SourceTable} where 
-                   {kv.Key.ToMySqlWhereClauseForOneDay(this.DateColumnName)}                 
+                string sql = $@"delete from {this.SourceTable} where 
+                   {this.Date.ToMySqlWhereClauseForOneDay(this.DateColumnName)}                 
                    and {this.IndexedRowIdColumnName}
-                   in ({string.Join(",", kv.Value.Select(rowId => rowId.EncloseWith(this.QuoteCharToEncloseNonNumericRowIdValues)))})"));
+                   in ({string.Join(",", this.RowIds.Select(id=>id.EncloseWith(this.QuoteCharToEncloseNonNumericRowIdValues)))})";
                 return sql;
             }
             return string.Empty;
