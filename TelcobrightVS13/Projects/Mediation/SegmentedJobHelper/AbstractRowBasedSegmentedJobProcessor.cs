@@ -88,7 +88,9 @@ namespace TelcobrightMediation
         public RowIdsCollectionForSingleDay DeserializeDayWiseRowIdsCollection(jobsegment segment)
         {
             return JsonConvert.DeserializeObject<RowIdsCollectionForSingleDay>
+                //(segment.SegmentDetail.Trim(Convert.ToChar("\"")));
                 (segment.SegmentDetail.Trim(Convert.ToChar("\"")));
+
         }
     }
     

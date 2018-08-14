@@ -36,13 +36,14 @@ namespace TelcobrightMediation
 
         public string GetSelectSql()
         {
+            string commaSepRowids = string.Join(",",
+                this.RowIds.Select(id => id.EncloseWith(this.QuoteCharToEncloseNonNumericRowIdValues)));
             string sql =
                 $@"select * from {this.SourceTable} where 
                     {this.Date.ToMySqlWhereClauseForOneDay(this.DateColumnName)} 
                     and {this.IndexedRowIdColumnName} in ({
-                    string.Join(",",
-                    this.RowIds.Select(id => id.EncloseWith(this.QuoteCharToEncloseNonNumericRowIdValues)
-                    .ToList()))})";
+                    commaSepRowids
+                    })";
             return sql;
         }
 
