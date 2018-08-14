@@ -80,7 +80,7 @@ namespace Process
                                                 cmd.ExecuteCommandText(" rollback; ");
                                                 bool cacheLimitExceeded = RateCacheCleaner.CheckAndClearRateCache(mediationContext, e);
                                                 if (cacheLimitExceeded) continue;
-                                                cacheLimitExceeded = RateCacheCleaner.ClearTempRateTable(mediationContext, e,cmd);
+                                                cacheLimitExceeded = RateCacheCleaner.ClearTempRateTable(e,cmd);
                                                 if (cacheLimitExceeded) continue;
                                                 PrintErrorMessageToConsole(ne, telcobrightJob, e);
                                                 ErrorWriter wr = new ErrorWriter(e, "ProcessCdr", telcobrightJob,

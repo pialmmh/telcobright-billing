@@ -24,7 +24,6 @@ namespace TelcobrightMediation
         public PartnerEntities Context { get; }
         public abstract ISegmentedJob CreateJobSegmentInstance(jobsegment jobSegment);
         public abstract void PrepareSegments();
-
         protected AbstractSegmentedJobProcessor(job telcobrightJob, PartnerEntities context)
         {
             this.TelcobrightJob = telcobrightJob;
@@ -97,23 +96,7 @@ namespace TelcobrightMediation
                         {
                             Console.WriteLine(e);
                             cmd.ExecuteCommandText("rollback;"); //rollback immediately
-                            if (segmentedJob != null)
-                            {
-                                if (segmentedJob.GetType() == typeof(CdrJob))
-                                {
-                                    CdrJob cdrJob = (CdrJob) segmentedJob;
-                                    var mediationContext = cdrJob.CdrProcessor.CdrJobContext.MediationContext;
-                                    bool cacheLimitExceeded =
-                                        RateCacheCleaner.CheckAndClearRateCache(mediationContext, e);
-                                    if (cacheLimitExceeded) continue;
-                                    cacheLimitExceeded = RateCacheCleaner.ClearTempRateTable(mediationContext, e, cmd);
-                                    if (cacheLimitExceeded) continue;
-                                    mediationContext?.MefServiceFamilyContainer.RateCache
-                                        .ClearRateCache(); //involves GC as well to freeup memory instantly
-                                    continue; //rateCache overflow handled, continue...
-                                }
-                            }
-                            ErrorWriter wr = new ErrorWriter(e, $@"Segmented Job Processor",this.TelcobrightJob,
+                            ErrorWriter wr = new ErrorWriter(e, $@"Segmented Job Processor", this.TelcobrightJob,
                                 "Error Processing Segments of batch job " + this.TelcobrightJob.JobName, "");
                             throw; // do not continue on error other than rateCache exception for cdrJobs
                         }

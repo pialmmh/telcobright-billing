@@ -279,7 +279,7 @@ namespace TelcobrightMediation
 
 		public CdrWritingResult WriteCdrs(ParallelQuery<CdrExt> processedCdrExts)
 		{
-			int cdrsToBeWritten = processedCdrExts.Count();
+			int numberOfProcessedCdrs = processedCdrExts.Count();
 			if (this.CdrJobContext.TelcobrightJob.idjobdefinition == 2) //cdrError
 			{
                 //todo: fix the delete old cdr ghapla here
@@ -290,7 +290,7 @@ namespace TelcobrightMediation
 
 				int delCount= OldCdrDeleter.DeleteOldCdrs("cdrerror", idCallsOfProcessedCdrs.Concat(idCallsOfCdrErrors).ToList(),
 					this.CdrJobContext.SegmentSizeForDbWrite, this.CdrJobContext.DbCmd);
-			    if (delCount != cdrsToBeWritten)
+			    if (delCount != (numberOfProcessedCdrs+this.CollectionResult.CdrErrors.Count))
 			    {
 			        throw new Exception("Written number of cdrs does not match processed cdrs count.");
 			    }
@@ -317,7 +317,7 @@ namespace TelcobrightMediation
 			if (normalizedPartialCdrs.Any())
 				normalizedPartialCdrCount = WriteCdr(normalizedPartialCdrs);
 			writtenCdrCount = nonPartialCdrCount + normalizedPartialCdrCount;
-			if (writtenCdrCount != cdrsToBeWritten)
+			if (writtenCdrCount != numberOfProcessedCdrs)
 			{
 				throw new Exception("Written number of cdrs does not match processed cdrs count.");
 			}

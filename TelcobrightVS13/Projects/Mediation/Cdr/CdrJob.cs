@@ -37,55 +37,68 @@ namespace TelcobrightMediation.Cdr
         public void Execute()
         {
 
-            this.CdrEraser?.RegenerateOldSummaries();
-            this.CdrEraser?.ValidateSummaryReGeneration();
-            if (this.CdrEraser != null)
+            try
             {
-                ValidateCdrEraserWithMediationTester(this.CdrJobContext.CdrjobInputData,
-                    this.CdrEraser.CollectionResult.ConcurrentCdrExts.Values.AsParallel());
+                this.CdrEraser?.RegenerateOldSummaries();
+                this.CdrEraser?.ValidateSummaryReGeneration();
+                if (this.CdrEraser != null)
+                {
+                    ValidateCdrEraserWithMediationTester(this.CdrJobContext.CdrjobInputData,
+                        this.CdrEraser.CollectionResult.ConcurrentCdrExts.Values.AsParallel());
+                }
+                this.CdrEraser?.UndoOldSummaries();
+                this.CdrEraser?.UndoOldChargeables();
+                this.CdrEraser?.DeleteOldCdrs();
+                var prevLatencyMode = GCSettings.LatencyMode;
+                GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
+                //GC.TryStartNoGCRegion(1000*256);
+                this.CdrProcessor?.Mediate();
+                GCSettings.LatencyMode = prevLatencyMode;
+                ParallelQuery<CdrExt> parallelCdrExts = this.CdrProcessor?.GenerateSummaries();
+                this.CdrProcessor?.MergeNewSummariesIntoCache(parallelCdrExts);
+                this.CdrProcessor?.ProcessChargeables(parallelCdrExts);
+
+                IncrementalTransactionCreator transactionProcessor = new IncrementalTransactionCreator(this);
+                List<acc_transaction> incrementalTransactions = transactionProcessor.CreateIncrementalTransactions();
+                transactionProcessor.ValidateTransactions();
+                this.CdrJobContext.AccountingContext.ExecuteTransactions(incrementalTransactions);
+
+                if (this.CdrProcessor != null)
+                {
+                    ValidateCdrProcessorWithMediationTester(this.CdrJobContext.CdrjobInputData,
+                        parallelCdrExts);
+                }
+                //write summaries, so that durationTotal in summary can be validated after writing cdrs
+                foreach (var summaryCache in this.CdrJobContext.CdrSummaryContext.TableWiseSummaryCache.Values)
+                {
+                    summaryCache.WriteAllChanges(this.CdrJobContext.DbCmd,
+                        this.CdrJobContext.SegmentSizeForDbWrite);
+                }
+                var cdrWritingResult = this.CdrProcessor?.WriteCdrs(parallelCdrExts);
+
+                if (this.CdrProcessor != null && this.CdrProcessor.PartialProcessingEnabled)
+                {
+                    PartialCdrTester partialCdrTester =
+                        new PartialCdrTester(this, cdrWritingResult, this.PartialCdrTesterData);
+                    partialCdrTester.ValidatePartialCdrMediation();
+                }
+
+
+                this.CdrJobContext.AccountingContext.WriteAllChanges();
+                this.CdrJobContext.AccountingContext.CheckIfTransactionAmountMatchesLedgerSummary();
+                this.CdrJobContext.AutoIncrementManager.WriteAllChanges();
+                //UpdateCdrMetaData();
             }
-            this.CdrEraser?.UndoOldSummaries();
-            this.CdrEraser?.UndoOldChargeables();
-            this.CdrEraser?.DeleteOldCdrs();
-            var prevLatencyMode = GCSettings.LatencyMode;
-            GCSettings.LatencyMode=GCLatencyMode.SustainedLowLatency;
-            //GC.TryStartNoGCRegion(1000*256);
-            this.CdrProcessor?.Mediate();
-            GCSettings.LatencyMode = prevLatencyMode;
-            ParallelQuery<CdrExt> parallelCdrExts = this.CdrProcessor?.GenerateSummaries();
-            this.CdrProcessor?.MergeNewSummariesIntoCache(parallelCdrExts);
-            this.CdrProcessor?.ProcessChargeables(parallelCdrExts);
-
-            IncrementalTransactionCreator transactionProcessor = new IncrementalTransactionCreator(this);
-            List<acc_transaction> incrementalTransactions = transactionProcessor.CreateIncrementalTransactions();
-            transactionProcessor.ValidateTransactions();
-            this.CdrJobContext.AccountingContext.ExecuteTransactions(incrementalTransactions);
-
-            if (this.CdrProcessor != null)
+            catch (Exception e)
             {
-                ValidateCdrProcessorWithMediationTester(this.CdrJobContext.CdrjobInputData,
-                    parallelCdrExts);
+                Console.WriteLine(e);
+                var mediationContext = this.CdrProcessor?.CdrJobContext.MediationContext;
+                bool cacheLimitExceeded = false;
+                cacheLimitExceeded = RateCacheCleaner.CheckAndClearRateCache(mediationContext, e);
+                if (cacheLimitExceeded == false) throw;
+                cacheLimitExceeded = RateCacheCleaner.ClearTempRateTable(e, this.CdrJobContext.DbCmd);
+                if (cacheLimitExceeded == false) throw;
             }
-            //write summaries, so that durationTotal in summary can be validated after writing cdrs
-            foreach (var summaryCache in this.CdrJobContext.CdrSummaryContext.TableWiseSummaryCache.Values)
-            {
-                summaryCache.WriteAllChanges(this.CdrJobContext.DbCmd,
-                    this.CdrJobContext.SegmentSizeForDbWrite);
-            }
-            var cdrWritingResult = this.CdrProcessor?.WriteCdrs(parallelCdrExts);
-
-            if (this.CdrProcessor != null && this.CdrProcessor.PartialProcessingEnabled)
-            {
-                PartialCdrTester partialCdrTester =
-                    new PartialCdrTester(this, cdrWritingResult, this.PartialCdrTesterData);
-                partialCdrTester.ValidatePartialCdrMediation();
-            }
-
-            
-            this.CdrJobContext.AccountingContext.WriteAllChanges();
-            this.CdrJobContext.AccountingContext.CheckIfTransactionAmountMatchesLedgerSummary();
-            this.CdrJobContext.AutoIncrementManager.WriteAllChanges();
-            //UpdateCdrMetaData();
         }
 
         protected void ValidateCdrProcessorWithMediationTester(CdrJobInputData input, ParallelQuery<CdrExt> processedCdrExts)

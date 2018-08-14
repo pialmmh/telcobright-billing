@@ -28,7 +28,7 @@ namespace TelcobrightMediation.Cdr
             }
             return cacheLimitExceeded;
         }
-        public static bool ClearTempRateTable(MediationContext mediationContext, Exception e, DbCommand cmd)
+        public static bool ClearTempRateTable(Exception e, DbCommand cmd)
         {
             bool cacheLimitExceeded = false;
             try
@@ -42,7 +42,7 @@ namespace TelcobrightMediation.Cdr
             }
             catch (Exception e1)
             {
-                Console.WriteLine(e);
+                Console.WriteLine(e1);
                 throw;
             }
             return cacheLimitExceeded;

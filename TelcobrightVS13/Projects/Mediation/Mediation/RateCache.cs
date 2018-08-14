@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using LibraryExtensions;
 using MediationModel;
+using TelcobrightMediation.Cdr;
 using TelcobrightMediation.Config;
 
 namespace TelcobrightMediation
@@ -72,20 +73,22 @@ namespace TelcobrightMediation
             RateList.IsRatePlanWiseRateCacheInitialized = false;
             using (DbCommand cmd = this.Context.Database.Connection.CreateCommand())
             {
-                cmd.CommandText = $@"insert into temp_rate
-                                     select * from rate
-                                     where  (
-                                     ( startdate <= {
-                        dRange.StartDate.ToMySqlStyleDateTimeStrWithQuote()
-                    } and ifnull(enddate,'9999-12-31 23:59:59') > {
-                        dRange.StartDate.ToMySqlStyleDateTimeStrWithQuote()
-                    })   
-                                     or  ( startdate >= {dRange.StartDate.ToMySqlStyleDateTimeStrWithQuote()} 
-                                     and startdate < {dRange.EndDate.ToMySqlStyleDateTimeStrWithQuote()}));";
-                cmd.ExecuteNonQuery();
+                try
+                {
+                    InsertRatesToTempTable(dRange, cmd);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    bool cacheLimitExceeded = RateCacheCleaner.ClearTempRateTable(e, cmd);
+                    if (cacheLimitExceeded == false) throw;
+                    InsertRatesToTempTable(dRange,cmd);
+                }
             }
-            Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>> dicByDay = new Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>>
-                (new TupleByPeriod.EqualityComparer());
+
+            Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>> dicByDay =
+                new Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>>
+                    (new TupleByPeriod.EqualityComparer());
 
             //for non assignable services
             Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>> tempDic =
@@ -117,6 +120,36 @@ namespace TelcobrightMediation
                 GC.Collect();
             }
             this.DateRangeWiseRateDic.Add(dRange, dicByDay);
+        }
+
+        private static void InsertRatesToTempTable(DateRange dRange, DbCommand cmd)
+        {
+            try
+            {
+                InsertRatesIntoTempInMemoryTable(dRange, cmd);
+            }
+            catch (Exception e)
+            {
+                bool cacheLimitExceeded = false;
+                cacheLimitExceeded = RateCacheCleaner.ClearTempRateTable(e,cmd);
+                if (cacheLimitExceeded == false) throw;
+                InsertRatesIntoTempInMemoryTable(dRange, cmd);
+            }
+        }
+
+        private static void InsertRatesIntoTempInMemoryTable(DateRange dRange, DbCommand cmd)
+        {
+            cmd.CommandText = $@"insert into temp_rate
+                                     select * from rate
+                                     where  (
+                                     ( startdate <= {
+                                                    dRange.StartDate.ToMySqlStyleDateTimeStrWithQuote()
+                                                } and ifnull(enddate,'9999-12-31 23:59:59') > {
+                                                    dRange.StartDate.ToMySqlStyleDateTimeStrWithQuote()
+                                                })   
+                                     or  ( startdate >= {dRange.StartDate.ToMySqlStyleDateTimeStrWithQuote()} 
+                                     and startdate < {dRange.EndDate.ToMySqlStyleDateTimeStrWithQuote()}));";
+            cmd.ExecuteNonQuery();
         }
 
         private Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>> GetRateDicNonPartnerAssignable(DateRange dRange,bool flagLcr,

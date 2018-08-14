@@ -71,7 +71,7 @@ namespace TelcobrightMediation
                             stepsCount = kv.Value.Count,
                             status = 6,//6=create, consistent to job status
                             SegmentDetail = JsonConvert.SerializeObject(
-                                new RowIdsCollectionForSingleDay(kv.Key,kv.Value,
+                                new RowIdsCollectionForSingleDay(kv.Key, kv.Value,
                                     sourceTable: sourceTable, indexedRowIdColName: this.IndexedRowIdColumnName,
                                     dateColName: this.DateColumnName,
                                     quoteCharToEncloseNonNumericRowIdValues: string.Empty))
@@ -81,17 +81,15 @@ namespace TelcobrightMediation
                     segmentedCollection = collectionSegmenter.GetNextSegment(batchSize).ToList();
                 } //while to to create smaller segments of 5000-10000 or whatever is defined
             } //while for Millions of IdCalls & dates
-            if(totalOfAllSegments!=jobSegments.Sum(s=>s.stepsCount))
+            if (totalOfAllSegments != jobSegments.Sum(s => s.stepsCount))
                 throw new Exception("Sum of all segments count do not match total raw records received.");
             base.SaveSegmentsToDb(jobSegments);
         }
         public RowIdsCollectionForSingleDay DeserializeDayWiseRowIdsCollection(jobsegment segment)
         {
             return JsonConvert.DeserializeObject<RowIdsCollectionForSingleDay>
-                //(segment.SegmentDetail.Trim(Convert.ToChar("\"")));
                 (segment.SegmentDetail.Trim(Convert.ToChar("\"")));
-
         }
     }
-    
+
 }
