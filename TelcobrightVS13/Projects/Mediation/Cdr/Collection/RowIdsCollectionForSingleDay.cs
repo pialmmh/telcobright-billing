@@ -12,8 +12,8 @@ namespace TelcobrightMediation
     public class RowIdsCollectionForSingleDay
     {
         //both get;set; are required for json deserialization
-        public DateTime Date { get; }
-        public List<string> RowIds { get; }
+        public DateTime Date { get; set; }
+        public List<string> RowIds { get; set; }
         public string IndexedRowIdColumnName { get; set; }
         public string DateColumnName { get; set; }
         public string SourceTable { get; set; }
