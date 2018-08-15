@@ -1432,7 +1432,7 @@ warning 6002: The table/view 'def.platinum.cdrpartialreference' does not have a 
           <Key>
             <PropertyRef Name="INVOICE_ID" />
           </Key>
-          <Property Name="INVOICE_ID" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="INVOICE_ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="INVOICE_TYPE_ID" Type="varchar" MaxLength="20" />
           <Property Name="PARTY_ID_FROM" Type="varchar" MaxLength="20" />
           <Property Name="PARTY_ID" Type="varchar" MaxLength="20" />
@@ -1455,11 +1455,10 @@ warning 6002: The table/view 'def.platinum.cdrpartialreference' does not have a 
         </EntityType>
         <EntityType Name="invoice_item">
           <Key>
-            <PropertyRef Name="INVOICE_ID" />
             <PropertyRef Name="INVOICE_ITEM_SEQ_ID" />
           </Key>
-          <Property Name="INVOICE_ID" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="INVOICE_ITEM_SEQ_ID" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="INVOICE_ID" Type="bigint" Nullable="false" />
+          <Property Name="INVOICE_ITEM_SEQ_ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="INVOICE_ITEM_TYPE_ID" Type="varchar" MaxLength="20" />
           <Property Name="OVERRIDE_GL_ACCOUNT_ID" Type="varchar" MaxLength="20" />
           <Property Name="OVERRIDE_ORG_PARTY_ID" Type="varchar" MaxLength="20" />
@@ -3732,6 +3731,18 @@ warning 6002: The table/view 'def.platinum.uom_conversion' does not have a prima
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_invoice">
+          <End Role="invoice" Type="Self.invoice" Multiplicity="1" />
+          <End Role="invoice_item" Type="Self.invoice_item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="invoice">
+              <PropertyRef Name="INVOICE_ID" />
+            </Principal>
+            <Dependent Role="invoice_item">
+              <PropertyRef Name="INVOICE_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_Ne">
           <End Role="ne" Type="Self.ne" Multiplicity="1" />
           <End Role="route" Type="Self.route" Multiplicity="*" />
@@ -3815,18 +3826,6 @@ warning 6002: The table/view 'def.platinum.uom_conversion' does not have a prima
             </Principal>
             <Dependent Role="timezone">
               <PropertyRef Name="zone_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="INVCE_ITM_INVCE">
-          <End Role="invoice" Type="Self.invoice" Multiplicity="1" />
-          <End Role="invoice_item" Type="Self.invoice_item" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="invoice">
-              <PropertyRef Name="INVOICE_ID" />
-            </Principal>
-            <Dependent Role="invoice_item">
-              <PropertyRef Name="INVOICE_ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -5720,6 +5719,10 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
             <End Role="country" EntitySet="country" />
             <End Role="zone" EntitySet="zone" />
           </AssociationSet>
+          <AssociationSet Name="fk_invoice" Association="Self.fk_invoice">
+            <End Role="invoice" EntitySet="invoice" />
+            <End Role="invoice_item" EntitySet="invoice_item" />
+          </AssociationSet>
           <AssociationSet Name="fk_Ne" Association="Self.fk_Ne">
             <End Role="ne" EntitySet="ne" />
             <End Role="route" EntitySet="route" />
@@ -5747,10 +5750,6 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <AssociationSet Name="fk_zone" Association="Self.fk_zone">
             <End Role="zone" EntitySet="zone" />
             <End Role="timezone" EntitySet="timezone" />
-          </AssociationSet>
-          <AssociationSet Name="INVCE_ITM_INVCE" Association="Self.INVCE_ITM_INVCE">
-            <End Role="invoice" EntitySet="invoice" />
-            <End Role="invoice_item" EntitySet="invoice_item" />
           </AssociationSet>
           <AssociationSet Name="INVOICE_ACCOUNT" Association="Self.INVOICE_ACCOUNT">
             <End Role="account" EntitySet="account" />
@@ -6011,7 +6010,7 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
             <End Role="enumservicecategory" EntitySet="enumservicecategories" />
             <End Role="enumservicefamily" EntitySet="enumservicefamilies" />
           </AssociationSet>
-          <AssociationSet Name="INVCE_ITM_INVCE" Association="MediationModel.INVCE_ITM_INVCE">
+          <AssociationSet Name="fk_invoice" Association="MediationModel.fk_invoice">
             <End Role="invoice" EntitySet="invoices" />
             <End Role="invoice_item" EntitySet="invoice_item" />
           </AssociationSet>
@@ -6715,7 +6714,7 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <Key>
             <PropertyRef Name="INVOICE_ID" />
           </Key>
-          <Property Name="INVOICE_ID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="INVOICE_ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="INVOICE_TYPE_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="PARTY_ID_FROM" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="PARTY_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
@@ -6736,15 +6735,14 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <Property Name="CREATED_STAMP" Type="DateTime" />
           <Property Name="CREATED_TX_STAMP" Type="DateTime" />
           <NavigationProperty Name="account" Relationship="MediationModel.INVOICE_ACCOUNT" FromRole="invoice" ToRole="account" />
-          <NavigationProperty Name="invoice_item" Relationship="MediationModel.INVCE_ITM_INVCE" FromRole="invoice" ToRole="invoice_item" />
+          <NavigationProperty Name="invoice_item" Relationship="MediationModel.fk_invoice" FromRole="invoice" ToRole="invoice_item" />
         </EntityType>
         <EntityType Name="invoice_item">
           <Key>
-            <PropertyRef Name="INVOICE_ID" />
             <PropertyRef Name="INVOICE_ITEM_SEQ_ID" />
           </Key>
-          <Property Name="INVOICE_ID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="INVOICE_ITEM_SEQ_ID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="INVOICE_ID" Type="Int64" Nullable="false" />
+          <Property Name="INVOICE_ITEM_SEQ_ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="INVOICE_ITEM_TYPE_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="OVERRIDE_GL_ACCOUNT_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="OVERRIDE_ORG_PARTY_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
@@ -6766,7 +6764,7 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <Property Name="LAST_UPDATED_TX_STAMP" Type="DateTime" />
           <Property Name="CREATED_STAMP" Type="DateTime" />
           <Property Name="CREATED_TX_STAMP" Type="DateTime" />
-          <NavigationProperty Name="invoice" Relationship="MediationModel.INVCE_ITM_INVCE" FromRole="invoice_item" ToRole="invoice" />
+          <NavigationProperty Name="invoice" Relationship="MediationModel.fk_invoice" FromRole="invoice_item" ToRole="invoice" />
         </EntityType>
         <EntityType Name="job">
           <Key>
@@ -9873,7 +9871,7 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="INVCE_ITM_INVCE">
+        <Association Name="fk_invoice">
           <End Type="MediationModel.invoice" Role="invoice" Multiplicity="1" />
           <End Type="MediationModel.invoice_item" Role="invoice_item" Multiplicity="*" />
           <ReferentialConstraint>
