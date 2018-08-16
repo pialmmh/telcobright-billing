@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MediationModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace TelcobrightMediation.Accounting
 {
     public class BlockAccountAction : IAccountAction
     {
-        public bool execute()
+        public bool execute(partner partner)
         {
             throw new NotImplementedException();
         }

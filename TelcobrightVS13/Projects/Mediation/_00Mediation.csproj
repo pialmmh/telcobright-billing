@@ -108,8 +108,10 @@
     <Compile Include="Accounting\AccountCreatorFromRatePlanAssignment.cs" />
     <Compile Include="Accounting\AccountingJobInput.cs" />
     <Compile Include="Accounting\BillingPeriodContants.cs" />
+    <Compile Include="Accounting\BlockAccountAction.cs" />
     <Compile Include="Accounting\CdrPostingAccountingFinder.cs" />
     <Compile Include="Accounting\DateInterval.cs" />
+    <Compile Include="Accounting\IAccountAction.cs" />
     <Compile Include="Accounting\IAccountCreator.cs" />
     <Compile Include="Accounting\IBillingRule.cs" />
     <Compile Include="Accounting\IInvoiceCreator.cs" />
@@ -120,6 +122,8 @@
     <Compile Include="Accounting\BillingRule.cs" />
     <Compile Include="Accounting\LedgerSumFactory.cs" />
     <Compile Include="Accounting\AccountFactory.cs" />
+    <Compile Include="Accounting\SendAlertEmailAccountAction.cs" />
+    <Compile Include="Accounting\SendSMSAccountAction.cs" />
     <Compile Include="Accounting\TempTransactionCreator.cs" />
     <Compile Include="AutoIncrementManagerManual.cs" />
     <Compile Include="AutoIncrementManagerManualInt.cs" />
