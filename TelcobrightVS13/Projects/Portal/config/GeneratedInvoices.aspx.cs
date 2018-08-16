@@ -131,7 +131,7 @@ namespace PortalApp.config
         {
             gvInvoice.EditIndex = e.NewEditIndex;
             BindingList<InvoiceDataCollector> invoiceGenerations =
-                (BindingList<InvoiceDataCollector>) this.Session["igInvoiceGenList"];
+                (BindingList<InvoiceDataCollector>)this.Session["igInvoiceGenList"];
             gvInvoice.DataSource = invoiceGenerations;
             gvInvoice.DataBind();
         }
@@ -142,12 +142,12 @@ namespace PortalApp.config
             {
                 if ((e.Row.RowState & DataControlRowState.Edit) > 0)
                 {
-                    DropDownList ddlTimeZone = (DropDownList) e.Row.FindControl("ddlistTimeZone");
+                    DropDownList ddlTimeZone = (DropDownList)e.Row.FindControl("ddlistTimeZone");
                     if (DataBinder.Eval(e.Row.DataItem, "TimeZone") != null)
                     {
                         if (this.Session["sesAllTimeZones"] != null)
                         {
-                            List<timezone> allTimeZones = (List<timezone>) this.Session["sesAllTimeZones"];
+                            List<timezone> allTimeZones = (List<timezone>)this.Session["sesAllTimeZones"];
                             foreach (timezone t in allTimeZones)
                             {
                                 string zoneName = t.zone.country.country_name + " " + t.offsetdesc + " [" +
@@ -161,7 +161,7 @@ namespace PortalApp.config
                 }
                 else
                 {
-                    Label thisLabel = (Label) e.Row.FindControl("lblTimeZone");
+                    Label thisLabel = (Label)e.Row.FindControl("lblTimeZone");
                     if (DataBinder.Eval(e.Row.DataItem, "TimeZone") != null)
                     {
                         int idTimeZone = int.Parse(DataBinder.Eval(e.Row.DataItem, "TimeZone").ToString());
@@ -169,15 +169,14 @@ namespace PortalApp.config
                         {
                             if (this.Session["sesAllTimeZones"] != null)
                             {
-                                List<timezone> allTimeZones = (List<timezone>) this.Session["sesAllTimeZones"];
+                                List<timezone> allTimeZones = (List<timezone>)this.Session["sesAllTimeZones"];
                                 string tzName = (from c in allTimeZones
-                                    where c.id == idTimeZone
-                                    select c.zone.country.country_name + " " + c.offsetdesc + " [" + c.zone.zone_name +
-                                           "]").First();
+                                                 where c.id == idTimeZone
+                                                 select c.zone.country.country_name + " " + c.offsetdesc + " [" + c.zone.zone_name +
+                                                        "]").First();
                                 thisLabel.Text = tzName;
                             }
                         }
-
                     }
                 }
             }
@@ -186,9 +185,8 @@ namespace PortalApp.config
         protected void ButtonSaveReport_Click(object sender, EventArgs e)
         {
             Invoice invoice = InvoiceHelper.GetInvoice();
-            Type reportType = Type.GetType(DropDownListReportTemplate.Text);
-            IInvoiceReport invoiceReport = (IInvoiceReport)Activator.CreateInstance(reportType, invoice);
-            invoiceReport.saveToPdf("E:\\Files\\telcobright\\demo.pdf");
+            IInvoiceReport invoiceReport = new DomesticToANS(invoice);
+            invoiceReport.saveToPdf("C:\\Users\\Mustafa\\Desktop\\pdf\\demo.pdf");
         }
     }
 }

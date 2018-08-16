@@ -14,8 +14,8 @@ namespace MediationModel
     
     public partial class invoice_item
     {
-        public string INVOICE_ID { get; set; }
-        public string INVOICE_ITEM_SEQ_ID { get; set; }
+        public long INVOICE_ID { get; set; }
+        public long INVOICE_ITEM_SEQ_ID { get; set; }
         public string INVOICE_ITEM_TYPE_ID { get; set; }
         public string OVERRIDE_GL_ACCOUNT_ID { get; set; }
         public string OVERRIDE_ORG_PARTY_ID { get; set; }

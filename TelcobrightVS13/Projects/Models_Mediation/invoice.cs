@@ -20,7 +20,7 @@ namespace MediationModel
             this.invoice_item = new HashSet<invoice_item>();
         }
     
-        public string INVOICE_ID { get; set; }
+        public long INVOICE_ID { get; set; }
         public string INVOICE_TYPE_ID { get; set; }
         public string PARTY_ID_FROM { get; set; }
         public string PARTY_ID { get; set; }

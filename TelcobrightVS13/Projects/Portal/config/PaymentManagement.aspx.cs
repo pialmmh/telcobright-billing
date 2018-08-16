@@ -11,6 +11,7 @@ using System.Web.UI.WebControls;
 using MediationModel;
 using PortalApp._myCodes;
 using TelcobrightMediation;
+using TelcobrightMediation.Accounting;
 
 
 namespace PortalApp.config
@@ -52,24 +53,11 @@ namespace PortalApp.config
                     var con = context.Database.Connection;
                     using (DbCommand cmd=con.CreateCommand())
                     {
-                        if(con.State!=ConnectionState.Open) con.Open();
+                        if (con.State != ConnectionState.Open) con.Open();
                         account account = context.accounts.Where(x => x.id == accountId).ToList().First();
-                        acc_temp_transaction transaction = new acc_temp_transaction();
-                        transaction.transactionTime = payDate;
-                        transaction.amount = amount;
-                        transaction.glAccountId = accountId;
-                        transaction.debitOrCredit = "d";
-                        transaction.idEvent = -1;
-                        transaction.uomId = account.uom;
-                        transaction.BalanceBefore = 0;
-                        transaction.BalanceAfter = 0;
-                        transaction.jsonDetail = string.Empty;
-                        cmd.CommandText = string.Concat(
-                            StaticExtInsertColumnHeaders.acc_temp_transaction.Replace("(id,", "("),
-                            transaction.GetExtInsertValues().Replace("(0,", "("));
-                        cmd.ExecuteNonQuery();
+                        TempTransactionCreator.CreateTempTransaction(accountId, amount, payDate, cmd, account);
                     }
-                    
+
                     //context.Database.Log = logInfo => FileLogger.Log(logInfo);
                     //context.acc_temp_transaction.Add(transaction);
                     //context.SaveChanges();
@@ -83,6 +71,7 @@ namespace PortalApp.config
             }
         }
 
+        
 
         protected void Page_Load(object sender, EventArgs e)
         {
