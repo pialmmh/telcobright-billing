@@ -9,14 +9,8 @@
     </span>
     <asp:ToolkitScriptManager ID="ScriptManager1" runat="server">
 </asp:ToolkitScriptManager>
-     <asp:GridView ID="GridView" OnRowDataBound="GridView_RowDataBound"
-                Font-Names="Arial"  DataKeyNames="id"
-                Font-Size="9pt" 
-                CellPadding="4" 
-                ForeColor="#333333"
-                AutoGenerateColumns="False"
-                runat="server">
-                
+     <asp:GridView ID="GridView" OnRowDataBound="GridView_RowDataBound" runat="server"
+                Font-Names="Arial"  DataKeyNames="id" Font-Size="9pt" CellPadding="4" ForeColor="#333333" AutoGenerateColumns="False">                
                 <EditRowStyle BackColor="#999999" />
                 <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
                 
@@ -124,6 +118,34 @@ CancelControlID="btnCancel" BackgroundCssClass="modalBackground" >
         <td align="right">Amount: </td>    
         <td style="padding:3px"><asp:TextBox id="txtAmount" Runat="server" /> </td>
     </tr>
+        <tr>
+            <td colspan="2" align="center">Threshhold Settings</td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center">
+                <asp:GridView ID="gvThreshhold" runat="server"
+                    Font-Names="Arial"  DataKeyNames="id" Font-Size="9pt" CellPadding="4" ForeColor="#333333" AutoGenerateColumns="False">
+                <EditRowStyle BackColor="#999999" />
+                <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />                
+                <HeaderStyle BackColor="#5D7B9D" ForeColor="white" Font-Bold="True" />
+                <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+                <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
+                <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
+                <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
+                <SortedAscendingCellStyle BackColor="#E9E7E2" />
+                <SortedAscendingHeaderStyle BackColor="#506C8C" />
+                <SortedDescendingCellStyle BackColor="#FFFDF8" />
+                <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
+                    <Columns>
+                        <asp:TemplateField HeaderText="Limit">
+                            <ItemTemplate>
+                                <asp:TextBox runat="server" ID="thLimit" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                    </Columns>
+                </asp:GridView>
+            </td>
+        </tr>
     <%--<tr> <td align="center"><button onclick="addNewServiceRow();" type="button">Add New</button></td></tr>--%>
     <tr>
         <td></td>
