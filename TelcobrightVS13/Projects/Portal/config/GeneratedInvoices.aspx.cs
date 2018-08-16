@@ -185,8 +185,9 @@ namespace PortalApp.config
         protected void ButtonSaveReport_Click(object sender, EventArgs e)
         {
             Invoice invoice = InvoiceHelper.GetInvoice();
-            IInvoiceReport invoiceReport = new DomesticToANS(invoice);
-            invoiceReport.saveToPdf("C:\\Users\\Mustafa\\Desktop\\pdf\\demo.pdf");
+            Type reportType = Type.GetType(DropDownListReportTemplate.Text);
+            IInvoiceReport invoiceReport = (IInvoiceReport)Activator.CreateInstance(reportType, invoice);
+            invoiceReport.saveToPdf("E:\\Files\\telcobright\\demo.pdf");
         }
     }
 }
