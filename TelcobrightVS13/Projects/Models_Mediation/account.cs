@@ -17,6 +17,7 @@ namespace MediationModel
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public account()
         {
+            this.acc_action = new HashSet<acc_action>();
             this.invoices = new HashSet<invoice>();
         }
     
@@ -43,6 +44,8 @@ namespace MediationModel
         public Nullable<int> superviseNegativeBalance { get; set; }
         public decimal negativeBalanceLimit { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<acc_action> acc_action { get; set; }
         public virtual partner partner { get; set; }
         public virtual partner partner1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

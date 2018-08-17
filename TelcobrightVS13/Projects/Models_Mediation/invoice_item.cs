@@ -33,6 +33,7 @@ namespace MediationModel
         public string TAX_AUTH_GEO_ID { get; set; }
         public string TAX_AUTHORITY_RATE_SEQ_ID { get; set; }
         public string SALES_OPPORTUNITY_ID { get; set; }
+        public string JSON_DETAIL { get; set; }
         public Nullable<System.DateTime> LAST_UPDATED_STAMP { get; set; }
         public Nullable<System.DateTime> LAST_UPDATED_TX_STAMP { get; set; }
         public Nullable<System.DateTime> CREATED_STAMP { get; set; }

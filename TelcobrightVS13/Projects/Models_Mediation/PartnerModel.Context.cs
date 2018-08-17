@@ -25,6 +25,7 @@ namespace MediationModel
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<acc_action> acc_action { get; set; }
         public virtual DbSet<acc_temp_transaction> acc_temp_transaction { get; set; }
         public virtual DbSet<account> accounts { get; set; }
         public virtual DbSet<allerror> allerrors { get; set; }

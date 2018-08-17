@@ -27,6 +27,22 @@ namespace TelcobrightMediation.Cdr
         public long IdCall => this.Cdr.IdCall;
         public DateTime StartTime => this.Cdr.StartTime;
         public cdr Cdr { get; set; }
+        private cdrerror cdrError;
+        public cdrerror CdrError
+        {
+            get
+            {
+                if(this.Cdr!=null)
+                    throw new Exception("Both Cdr & cdrerror cannot be not null at the same time.");
+                return cdrError;
+            }
+            set
+            {
+                cdrError = value;
+                this.Cdr = null;
+            }
+        }
+
         public Dictionary<CdrSummaryType, AbstractCdrSummary> TableWiseSummaries { get; set; }
 
         public Dictionary<ValueTuple<int, int, int>, acc_chargeable> Chargeables { get; }

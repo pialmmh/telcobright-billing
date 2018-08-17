@@ -174,7 +174,7 @@ namespace TelcobrightMediation
 				this.CollectionResult.AddNonPartialCdrExtToCdrErrors(cdrExt, errorMessage);
 			else if (cdrExt.PartialCdrContainer != null && cdrExt.Cdr.PartialFlag != 0)
 			{
-				this.CollectionResult.AddNewRawPartialCdrsToCdrErrors(cdrExt, errorMessage);
+				this.CollectionResult.AddPartialCdrToCdrErrors(cdrExt, errorMessage);
 			}
 			else throw new InvalidDataContractException("Cdr must be either partial or non-partial.");
 		}
@@ -282,15 +282,15 @@ namespace TelcobrightMediation
 			int numberOfProcessedCdrs = processedCdrExts.Count();
 			if (this.CdrJobContext.TelcobrightJob.idjobdefinition == 2) //cdrError
 			{
-                //todo: fix the delete old cdr ghapla here
+
                 var idCallsOfProcessedCdrs = processedCdrExts
 					.Select(c => new KeyValuePair<long, DateTime>(c.Cdr.IdCall, c.StartTime)).ToList();
-				var idCallsOfCdrErrors = this.CollectionResult.CdrErrors
+				var idCallsOfCdrErrors = this.CollectionResult.CdrExtErrors
 					.Select(c => new KeyValuePair<long, DateTime>(c.IdCall, c.StartTime)).ToList();
 
 				int delCount= OldCdrDeleter.DeleteOldCdrs("cdrerror", idCallsOfProcessedCdrs.Concat(idCallsOfCdrErrors).ToList(),
 					this.CdrJobContext.SegmentSizeForDbWrite, this.CdrJobContext.DbCmd);
-			    if (delCount != (numberOfProcessedCdrs+this.CollectionResult.CdrErrors.Count))
+			    if (delCount != (numberOfProcessedCdrs+this.CollectionResult.CdrExtErrors.Count))
 			    {
 			        throw new Exception("Written number of cdrs does not match processed cdrs count.");
 			    }
@@ -305,7 +305,7 @@ namespace TelcobrightMediation
 			if (this.CollectionResult.CdrInconsistents.Any())
 				writtenInconsistentCount = WriteCdrInconsistent();
 
-			if (this.CollectionResult.CdrErrors.Any())
+			if (this.CollectionResult.CdrExtErrors.Any())
 				writtenErrorCount = WriteCdrError();
 
 			var nonPartialCdrs = processedCdrExts
@@ -375,18 +375,18 @@ namespace TelcobrightMediation
 
 		long WriteCdrError()
 		{
-			List<cdrerror> cdrErrors = this.CollectionResult.CdrErrors.ToList();
+			List<CdrExt> cdrErrors = this.CollectionResult.CdrExtErrors.ToList();
 			long errorInsertedCount = 0;
 			int startAt = 0;
-			CollectionSegmenter<cdrerror> collectionSegmenter =
-				new CollectionSegmenter<cdrerror>(cdrErrors, startAt);
+			CollectionSegmenter<CdrExt> collectionSegmenter =
+				new CollectionSegmenter<CdrExt>(cdrErrors, startAt);
 			collectionSegmenter.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
 				segment =>
 				{
 					int segmentCount = segment.Count();
 					int affectedRecordCount = DbWriterWithAccurateCount.ExecSingleStatementThroughStoredProc(dbCmd: this.DbCmd,
 						command: new StringBuilder(StaticExtInsertColumnHeaders.cdrerror)
-							.Append(string.Join(",", segment.AsParallel().Select(c => c.GetExtInsertValues())))
+							.Append(string.Join(",", segment.AsParallel().Select(c => c.CdrError.GetExtInsertValues())))
 							.ToString(),
 						expectedRecCount: segmentCount);
 					if (affectedRecordCount != segmentCount)

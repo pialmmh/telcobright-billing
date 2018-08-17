@@ -22,8 +22,8 @@ namespace TelcobrightMediation
     {
         public CollectionResultProcessingState CollectionResultProcessingState { get; set; } =
             CollectionResultProcessingState.BeforeMediation;
-        private readonly BlockingCollection<cdrerror> cdrErrors = new BlockingCollection<cdrerror>();
-        public IReadOnlyCollection<cdrerror> CdrErrors => this.cdrErrors.ToList().AsReadOnly();
+        private readonly BlockingCollection<CdrExt> cdrExtErrors = new BlockingCollection<CdrExt>();
+        public IReadOnlyCollection<CdrExt> CdrExtErrors => this.cdrExtErrors.ToList().AsReadOnly();
         public int RawCount { get; }
         public decimal RawDurationTotalOfConsistentCdrs { get; set; }
         private readonly ConcurrentDictionary<string, CdrExt> concurrentCdrExts = new ConcurrentDictionary<string, CdrExt>();
@@ -56,7 +56,7 @@ namespace TelcobrightMediation
                     return false;
                 }
                 return this.DatesInvolved == null || this.DatesInvolved.Any() == false ||
-                       !this.ConcurrentCdrExts.Any()&& !this.CdrErrors.Any() && !this.ProcessedCdrExts.Any();
+                       !this.ConcurrentCdrExts.Any()&& !this.CdrExtErrors.Any() && !this.ProcessedCdrExts.Any();
             }
         }
 
@@ -66,7 +66,7 @@ namespace TelcobrightMediation
             this.Ne = ne;
             cdrExts.ForEach(c =>
             {
-                if(this.ConcurrentCdrExts.TryAdd(c.UniqueBillId, c)==false)
+                if (this.ConcurrentCdrExts.TryAdd(c.UniqueBillId, c)==false)
                     throw new Exception("Could not add cdrExt to concurrent dictionary, probably duplicate item.");
             });
             this.HoursInvolved = this.ConcurrentCdrExts.Values.Select(c => c.StartTime.RoundDownToHour()).Distinct().ToList();
@@ -87,7 +87,8 @@ namespace TelcobrightMediation
             {
                 throw new Exception("Partial cdrExt must be added to cdrErrors through appropriate method.");
             }
-            this.cdrErrors.Add(ConvertCdrToCdrError(cdrExt.Cdr, errorMessage));
+            cdrExt.CdrError = ConvertCdrToCdrError(cdrExt.Cdr, errorMessage);
+            this.cdrExtErrors.Add(cdrExt);
             CdrExt removedCdrExt = null;
             if (this.ConcurrentCdrExts.TryRemove(cdrExt.UniqueBillId, out removedCdrExt)==false)
             {
@@ -96,16 +97,14 @@ namespace TelcobrightMediation
             }
         }
 
-        public void AddNewRawPartialCdrsToCdrErrors(CdrExt cdrExt,string errorMessage)
+        public void AddPartialCdrToCdrErrors(CdrExt cdrExt,string errorMessage)
         {
             if (cdrExt.Cdr.PartialFlag == 0 && cdrExt.PartialCdrContainer == null)
             {
                 throw new Exception("Non partial cdrExt must be added to cdrErrors through appropriate method.");
             }
-            cdrExt.PartialCdrContainer.NewRawInstances.ForEach(r =>
-            {
-                this.cdrErrors.Add(ConvertCdrToCdrError(r, errorMessage));
-            });
+            cdrExt.CdrError = ConvertCdrToCdrError(cdrExt.Cdr, errorMessage);
+            this.cdrExtErrors.Add(cdrExt);
             CdrExt removedCdrExt = null;
             if (this.ConcurrentCdrExts.TryRemove(cdrExt.UniqueBillId, out removedCdrExt) == false)
             {
