@@ -278,11 +278,11 @@ namespace TelcobrightMediation
 		}
 
 		public CdrWritingResult WriteCdrs(ParallelQuery<CdrExt> processedCdrExts)
+
 		{
-			int numberOfProcessedCdrs = processedCdrExts.Count();
+		    int numberOfProcessedCdrs = processedCdrExts.Count();
 			if (this.CdrJobContext.TelcobrightJob.idjobdefinition == 2) //cdrError
 			{
-
                 var idCallsOfProcessedCdrs = processedCdrExts
 					.Select(c => new KeyValuePair<long, DateTime>(c.Cdr.IdCall, c.StartTime)).ToList();
 				var idCallsOfCdrErrors = this.CollectionResult.CdrExtErrors
@@ -295,11 +295,10 @@ namespace TelcobrightMediation
 			        throw new Exception("Written number of cdrs does not match processed cdrs count.");
 			    }
             }
-
-			long writtenInconsistentCount = 0,
+            long writtenInconsistentCount = 0,
 				writtenErrorCount = 0,
-				nonPartialCdrCount = 0,
-				normalizedPartialCdrCount = 0,
+				writtenNonPartialCdrCount = 0,
+				writtenNormalizedPartialCdrCount = 0,
 				writtenCdrCount = 0;
 
 			if (this.CollectionResult.CdrInconsistents.Any())
@@ -312,11 +311,22 @@ namespace TelcobrightMediation
 				.Where(c => c.Cdr.MediationComplete == 1 && c.Cdr.PartialFlag == 0).Select(c => c.Cdr).ToList();
 			var normalizedPartialCdrs = processedCdrExts
 				.Where(c => c.Cdr.MediationComplete == 1 && c.Cdr.PartialFlag > 0).Select(c => c.Cdr).ToList();
-			if (nonPartialCdrs.Any())
-				nonPartialCdrCount = WriteCdr(nonPartialCdrs);
+		    var normalizedPartialCdrErrors = this.CollectionResult.CdrExtErrors
+		        .Where(c => c.Cdr.MediationComplete == 1 && c.Cdr.PartialFlag > 0).Select(c => c.CdrError).ToList();
+		    var nonPartialIdCalls = nonPartialCdrs.Select(c => c.IdCall);
+		    var partialNewAndPrevIdCalls = normalizedPartialCdrs.Select(c => c.IdCall)
+		        .Concat(normalizedPartialCdrErrors.Select(c => c.IdCall));
+		    var allSupposedTobeUniqueIdCalls = nonPartialIdCalls.Concat(partialNewAndPrevIdCalls).ToList();
+            if (allSupposedTobeUniqueIdCalls.GroupBy(c=>c)
+                .Any(g=>g.Count()>1))
+		    {
+		        throw new Exception("Idcalls must be unique.");
+		    }
+            if (nonPartialCdrs.Any())
+				writtenNonPartialCdrCount = WriteCdr(nonPartialCdrs);
 			if (normalizedPartialCdrs.Any())
-				normalizedPartialCdrCount = WriteCdr(normalizedPartialCdrs);
-			writtenCdrCount = nonPartialCdrCount + normalizedPartialCdrCount;
+				writtenNormalizedPartialCdrCount = WriteCdr(normalizedPartialCdrs);
+			writtenCdrCount = writtenNonPartialCdrCount + writtenNormalizedPartialCdrCount;
 			if (writtenCdrCount != numberOfProcessedCdrs)
 			{
 				throw new Exception("Written number of cdrs does not match processed cdrs count.");
@@ -326,18 +336,30 @@ namespace TelcobrightMediation
 			PartialCdrWriter partialCdrWriter = null;
 			if (this.PartialProcessingEnabled)
 			{
-				partialCdrWriter = new PartialCdrWriter(
-					processedCdrExts
-						.Where(e => e.Cdr.PartialFlag != 0 && e.PartialCdrContainer != null)
-						.Select(e => e.PartialCdrContainer).ToList(), this.CdrJobContext);
+			    List<PartialCdrContainer> processedPartialCdrs = processedCdrExts
+			        .Where(e => e.Cdr.PartialFlag != 0 && e.PartialCdrContainer != null)
+			        .Select(e => e.PartialCdrContainer).ToList();
+			    List<PartialCdrContainer> errorPartialCdrs = this.CollectionResult.CdrExtErrors
+			        .Where(e => e.CdrError.PartialFlag != "0" && e.PartialCdrContainer != null)
+			        .Select(e => e.PartialCdrContainer).ToList();
+                partialCdrWriter = new PartialCdrWriter(
+					processedPartialCdrs.Concat(errorPartialCdrs).ToList(), this.CdrJobContext);
 				partialCdrWriter.Write();
 				partialCdrContainers = partialCdrWriter.PartialCdrContainers;
 			}
 			int rawPartialActualCount = partialCdrContainers.Sum(c => c.NewRawInstances.Count);
-			int distinctPartialCount = partialCdrContainers.Count;
+		    if (partialCdrWriter?.WrittenNewRawInstances!=rawPartialActualCount)
+		    {
+		        throw new Exception("Written number of new partial raw instances does not match actual count.");
+		    }
+            int distinctPartialCount = partialCdrContainers.Count;
+		    if (this.CollectionResult.RawCount !=
+		        writtenNonPartialCdrCount+partialCdrWriter.WrittenNewRawInstances+writtenInconsistentCount)
+		        throw new Exception(
+		            "RawCount in collection result must equal (nonPartialCount+ newRawPartialInstances+inconsistentCount.");
 
-			if (this.CollectionResult.RawCount !=
-				(writtenInconsistentCount + writtenErrorCount + writtenCdrCount + rawPartialActualCount - distinctPartialCount))
+            if (nonPartialCdrs.Count+normalizedPartialCdrs.Count + normalizedPartialCdrErrors.Count!=
+				writtenErrorCount + writtenCdrCount)
 				throw new Exception(
 					"RawCount in collection result must equal (inconsistentCount+ errorCount + cdrCount+rawPartialActualCount-distintPartialCount");
 			return new CdrWritingResult()
@@ -346,12 +368,12 @@ namespace TelcobrightMediation
 				CdrErrorCount = writtenErrorCount,
 				CdrInconsistentCount = writtenInconsistentCount,
 				PartialCdrWriter = partialCdrWriter,
-				TrueNonPartialCount = nonPartialCdrCount,
-				NormalizedPartialCount = normalizedPartialCdrCount
+				TrueNonPartialCount = writtenNonPartialCdrCount,
+				NormalizedPartialCount = writtenNormalizedPartialCdrCount
 			};
 		}
-
-		public long WriteCdrInconsistent()
+        
+	    public long WriteCdrInconsistent()
 		{
 			long inconsistentCount = 0;
 			int startAt = 0;

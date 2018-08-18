@@ -66,6 +66,9 @@
     <Compile Include="account.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="acc_action.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="acc_chargeable.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
@@ -186,6 +189,7 @@
     <Compile Include="EntityExtensions\acc_transaction.cs" />
     <Compile Include="EntityExtensions\acc_chargeable.cs" />
     <Compile Include="EntityExtensions\Crud\account.cs" />
+    <Compile Include="EntityExtensions\Crud\acc_action.cs" />
     <Compile Include="EntityExtensions\Crud\acc_chargeable.cs" />
     <Compile Include="EntityExtensions\Crud\acc_ledger_summary.cs" />
     <Compile Include="EntityExtensions\Crud\acc_temp_transaction.cs" />
