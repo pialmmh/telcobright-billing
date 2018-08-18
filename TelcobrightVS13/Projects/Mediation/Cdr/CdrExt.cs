@@ -23,7 +23,7 @@ namespace TelcobrightMediation.Cdr
         public int NewRawCount => this.Cdr.PartialFlag == 0 ? 1 : this.PartialCdrContainer.NewRawInstances.Count;
         private PartialCdrContainer partialCdrContainer;
         public CdrNewOldType CdrNewOldType { get; }
-        public string UniqueBillId => this.Cdr.UniqueBillId;
+        public string UniqueBillId => this.Cdr!=null?this.Cdr.UniqueBillId:this.CdrError.UniqueBillId;
         public long IdCall => this.Cdr.IdCall;
         public DateTime StartTime => this.Cdr.StartTime;
         public cdr Cdr { get; set; }

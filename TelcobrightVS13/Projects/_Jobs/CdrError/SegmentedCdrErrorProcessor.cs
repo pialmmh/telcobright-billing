@@ -9,6 +9,7 @@ using MediationModel;
 using Newtonsoft.Json;
 using TelcobrightMediation;
 using TelcobrightMediation.Cdr;
+using TelcobrightMediation.Mediation.Cdr;
 
 namespace TelcobrightMediation
 {
@@ -32,68 +33,34 @@ namespace TelcobrightMediation
 
         public override ISegmentedJob CreateJobSegmentInstance(jobsegment jobSegment)
         {
-            RowIdsCollectionForSingleDay rowIdsCollectionForSingleDay = base.DeserializeDayWiseRowIdsCollection(jobSegment);
+            RowIdsCollectionForSingleDay rowIdsCollectionForSingleDay =
+                base.DeserializeDayWiseRowIdsCollection(jobSegment);
             CdrRowCollector<cdrerror> dbRowCollector =
                 new CdrRowCollector<cdrerror>(this.CdrCollectorInput.CdrJobInputData,
                     rowIdsCollectionForSingleDay.GetSelectSql());
             List<string[]> txtRows = dbRowCollector.CollectAsTxtRows();
-            NewCdrPreProcessor preProcessor =
-                new NewCdrPreProcessor(txtRows, new List<cdrinconsistent>(), this.CdrCollectorInput);
-            MefValidator<string[]> inconsistentValidator = CreateValidatorInstance();
-            Parallel.ForEach(txtRows, txtRow =>
+            List<cdr> cdrs = new List<cdr>();
+            txtRows.ForEach(c =>
             {
-                preProcessor
-                    .CheckAndConvertIfInconsistent(this.CdrCollectorInput.CdrJobInputData, inconsistentValidator,
-                        txtRow);
-                cdrinconsistent cdrInconsistent = null;
-                preProcessor.ConvertToCdr(txtRow, out cdrInconsistent);
-                if (cdrInconsistent != null) preProcessor.InconsistentCdrs.Add(cdrInconsistent);
+                cdrinconsistent inconsistentCdr = null;
+                cdr convertedCdr =
+                    CdrManipulatingUtil.ConvertTxtRowToCdrOrInconsistentOnFailure(c, out inconsistentCdr);
+                cdrs.Add(convertedCdr);
             });
+
+            CdrErrorPreProcessor preProcessor =
+                new CdrErrorPreProcessor(this.CdrCollectorInput, cdrs);
             CdrCollectionResult newCollectionResult = null, oldCollectionResult = null;
             preProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
-
-            PartialCdrTesterData partialCdrTesterData =
-                OrganizeTestDataForPartialCdrs(preProcessor, newCollectionResult);
-            CdrJob cdrJob =
-                (new CdrJobFactory(this.CdrCollectorInput.CdrJobInputData, this.RawCount)).CreateCdrJob(preProcessor,
-                    newCollectionResult, oldCollectionResult, partialCdrTesterData);
+            
+            CdrJobContext cdrJobContext = new CdrJobContext(this.CdrCollectorInput.CdrJobInputData,
+                newCollectionResult.HoursInvolved);
+            CdrProcessor cdrProcessor = new CdrProcessor(cdrJobContext, newCollectionResult);
+            CdrEraser cdrEraser = null;
+            CdrJob cdrJob = new CdrJob(cdrProcessor, cdrEraser, cdrProcessor.CollectionResult.RawCount,
+                partialCdrTesterData: null);
             return cdrJob;
-        }
 
-        public PartialCdrTesterData OrganizeTestDataForPartialCdrs(NewCdrPreProcessor preProcessor,
-            CdrCollectionResult newCollectionResult)
-        {
-            this.RawCount = preProcessor.RawCount;
-            newCollectionResult.RawDurationTotalOfConsistentCdrs =
-                preProcessor.NonPartialCdrs.Sum(c => c.DurationSec) + preProcessor.PartialCdrContainers
-                    .SelectMany(pc => pc.NewRawInstances).Sum(r => r.DurationSec);
-            this.RawDurationTotalOfConsistentCdrs = newCollectionResult.RawDurationTotalOfConsistentCdrs;
-            PartialCdrTesterData partialCdrTesterData = null;
-            if (this.PartialCollectionEnabled)
-            {
-                this.NonPartialCount = preProcessor.TxtCdrRows.Count(r => r[Fn.Partialflag] == "0");
-                List<string[]> partialRows = preProcessor.TxtCdrRows.Where(r =>
-                    this.CdrCollectorInput.CdrSetting.PartialCdrFlagIndicators.Contains(r[Fn.Partialflag])).ToList();
-                this.RawPartialCount = partialRows.Count;
-                if (preProcessor.TxtCdrRows.Count != this.NonPartialCount + this.RawPartialCount)
-                    throw new Exception(
-                        "TxtCdr rows with partial & non-partial flag do not match total decoded text rows");
-                this.DistinctPartialCount = partialRows.GroupBy(r => r[Fn.UniqueBillId]).Count();
-                partialCdrTesterData = new PartialCdrTesterData(this.NonPartialCount, this.RawCount,
-                    newCollectionResult.RawDurationTotalOfConsistentCdrs, this.RawPartialCount);
-            }
-            return partialCdrTesterData;
-        }
-
-        private MefValidator<string[]> CreateValidatorInstance()
-        {
-            List<IValidationRule<string[]>> rules = this.CdrCollectorInput.CdrJobInputData.MediationContext.Tbc
-                .CdrSetting.ValidationRulesForInconsistentCdrs;
-            rules = rules.Where(rule => rule.ValidationMessage.StartsWith("SequenceNumber") == false
-                                        || rule.ValidationMessage.StartsWith("StartTime") == false).ToList();
-            var validator = new MefValidator<string[]>(continueOnError: false,
-                throwExceptionOnFirstError: false, rules: rules);
-            return validator;
         }
     }
 }

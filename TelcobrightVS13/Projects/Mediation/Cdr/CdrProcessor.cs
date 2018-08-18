@@ -311,8 +311,11 @@ namespace TelcobrightMediation
 				.Where(c => c.Cdr.MediationComplete == 1 && c.Cdr.PartialFlag == 0).Select(c => c.Cdr).ToList();
 			var normalizedPartialCdrs = processedCdrExts
 				.Where(c => c.Cdr.MediationComplete == 1 && c.Cdr.PartialFlag > 0).Select(c => c.Cdr).ToList();
-		    var normalizedPartialCdrErrors = this.CollectionResult.CdrExtErrors
-		        .Where(c => c.Cdr.MediationComplete == 1 && c.Cdr.PartialFlag > 0).Select(c => c.CdrError).ToList();
+		    var partialFlagIndicators = this.CdrJobContext.MediationContext.CdrSetting.PartialCdrFlagIndicators;
+		    var nonPartialCdrErrors = this.CollectionResult.CdrExtErrors
+		        .Where(c => c.CdrError.PartialFlag=="0").Select(c => c.CdrError).ToList();
+            var normalizedPartialCdrErrors = this.CollectionResult.CdrExtErrors
+		        .Where(c => partialFlagIndicators.Contains(c.CdrError.PartialFlag)).Select(c => c.CdrError).ToList();
 		    var nonPartialIdCalls = nonPartialCdrs.Select(c => c.IdCall);
 		    var partialNewAndPrevIdCalls = normalizedPartialCdrs.Select(c => c.IdCall)
 		        .Concat(normalizedPartialCdrErrors.Select(c => c.IdCall));
@@ -354,12 +357,13 @@ namespace TelcobrightMediation
 		    }
             int distinctPartialCount = partialCdrContainers.Count;
 		    if (this.CollectionResult.RawCount !=
-		        writtenNonPartialCdrCount+partialCdrWriter.WrittenNewRawInstances+writtenInconsistentCount)
+		        writtenNonPartialCdrCount+partialCdrWriter.WrittenNewRawInstances+writtenInconsistentCount
+                +nonPartialCdrErrors.Count)
 		        throw new Exception(
 		            "RawCount in collection result must equal (nonPartialCount+ newRawPartialInstances+inconsistentCount.");
 
-            if (nonPartialCdrs.Count+normalizedPartialCdrs.Count + normalizedPartialCdrErrors.Count!=
-				writtenErrorCount + writtenCdrCount)
+            if (nonPartialCdrs.Count+normalizedPartialCdrs.Count + normalizedPartialCdrErrors.Count
+                +nonPartialCdrErrors.Count!= writtenErrorCount + writtenCdrCount)
 				throw new Exception(
 					"RawCount in collection result must equal (inconsistentCount+ errorCount + cdrCount+rawPartialActualCount-distintPartialCount");
 			return new CdrWritingResult()

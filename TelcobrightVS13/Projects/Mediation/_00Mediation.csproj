@@ -132,6 +132,8 @@
     <Compile Include="Automation\SingleCliCommand.cs" />
     <Compile Include="Cdr\CdrJob.cs" />
     <Compile Include="Cdr\Collection\Collector\CdrRowCollector.cs" />
+    <Compile Include="Cdr\Collection\PreProcessors\CdrErrorPreProcessor.cs" />
+    <Compile Include="Cdr\Collection\PreProcessors\AbstractCdrReProcessingPreProcessor.cs" />
     <Compile Include="Cdr\Collection\RowIdsCollectionForSingleDay.cs" />
     <Compile Include="Cdr\RateCacheCleaner.cs" />
     <Compile Include="IAutoincrementManager.cs" />
