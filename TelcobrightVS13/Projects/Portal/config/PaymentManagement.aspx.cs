@@ -162,7 +162,7 @@ namespace PortalApp.config
                     Rule = new AccountActionRule()
                     {
                         IsPercent = true,
-                        Amount = 80
+                        Amount = 20
                     }
                 });
                 actions.Add(new AccActionEx()
@@ -173,7 +173,7 @@ namespace PortalApp.config
                     Rule = new AccountActionRule()
                     {
                         IsPercent = true,
-                        Amount = 90
+                        Amount = 10
                     }
                 });
 
@@ -202,8 +202,22 @@ namespace PortalApp.config
                 String RuleDescription = DataBinder.Eval(e.Row.DataItem, "RuleDescription").ToString();
                 Label lblRule = (Label)e.Row.FindControl("lblRule");
                 lblRule.Text = RuleDescription;
+
+                LinkButton lb = new LinkButton();
+                lb.ID = "ruleBtn";
+                lb.Text = "Rule";
+                lb.CommandName = "ShowPopup";
+                lb.Click += new System.EventHandler(ruleBtn_Click);
+                e.Row.Cells[2].Controls.Add(lb);
+
             }
 
+        }
+
+        protected void ruleBtn_Click(object sender, EventArgs e)
+        {
+            //this.ModalPopupExtender1.Hide();
+            this.ModalPopupExtender2.Show();
         }
 
         protected void txtAmount_TextChanged(object sender, EventArgs e)

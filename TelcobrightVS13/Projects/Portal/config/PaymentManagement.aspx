@@ -66,9 +66,9 @@
             </script>
 
 <asp:ModalPopupExtender ID="ModalPopupExtender1" runat="server" TargetControlID="btnShowPopup" PopupControlID="pnlpopup"
-CancelControlID="btnCancel" BackgroundCssClass="modalBackground" >
+CancelControlID="btnCancel" BackgroundCssClass="modalBackground" BehaviorID="pnlpopup" >
 </asp:ModalPopupExtender>
-<asp:Panel ID="pnlpopup" runat="server" BackColor="White" Height="269px" Width="400px" style="display:none">
+<asp:Panel ID="pnlpopup" runat="server" BackColor="White" Height="269px" Width="400px" style="display:none; z-index:20 !important">
     <table width="100%" style="border:Solid 3px #0094ff; width:100%; height:100%" cellpadding="0" cellspacing="0">
     <tr style="background-color:#0094ff">
         <td colspan="2" style=" height:10%; color:White; font-weight:bold; font-size:larger" align="center">Carrier Details</td>
@@ -145,7 +145,8 @@ CancelControlID="btnCancel" BackgroundCssClass="modalBackground" >
                         </asp:TemplateField>
                         <asp:TemplateField HeaderText="Action">
                             <ItemTemplate>
-                                <asp:DropDownList runat="server" ID="ddlAccountAction" DataTextField="ActionName" DataValueField="Id" OnSelectedIndexChanged="ddlAccountAction_SelectedIndexChanged" AutoPostBack="true" />
+                                <asp:DropDownList runat="server" ID="ddlAccountAction" DataTextField="ActionName" DataValueField="Id" 
+                                    OnSelectedIndexChanged="ddlAccountAction_SelectedIndexChanged" AutoPostBack="true" />
                             </ItemTemplate>
                         </asp:TemplateField>
                         <asp:TemplateField HeaderText="Rule">
@@ -168,4 +169,23 @@ CancelControlID="btnCancel" BackgroundCssClass="modalBackground" >
 </table>
 
 </asp:Panel>
+
+    <asp:Button ID="btnShowRule" runat="server" style="display:none" />
+    <asp:ModalPopupExtender ID="ModalPopupExtender2" runat="server" TargetControlID="btnShowRule" PopupControlID="pnlRule"
+    CancelControlID="btnRuleCancel" BackgroundCssClass="modalBackground" BehaviorID="pnlRule" >
+    </asp:ModalPopupExtender>
+    <asp:Panel ID="pnlRule" runat="server" BackColor="White" Height="269px" Width="400px" style="display:none;z-index:30 !important">
+        <table width="100%" style="border:Solid 3px #0094ff; width:100%; height:100%" cellpadding="0" cellspacing="0">
+            <tr style="background-color:#0094ff">
+                <td colspan="2" style=" height:10%; color:White; font-weight:bold; font-size:larger" align="center">Account Action Rule</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                        <asp:Button ID="btnRuleOK" runat="server" CommandName="OK" Text="OK"  />
+                        <asp:Button ID="btnRuleCancel" runat="server" Text="Cancel" />
+                </td>
+            </tr>
+        </table>
+    </asp:Panel>
 </asp:Content>
