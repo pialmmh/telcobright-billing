@@ -12,14 +12,16 @@ using MediationModel;
 using PortalApp._myCodes;
 using TelcobrightMediation;
 using TelcobrightMediation.Accounting;
-
+using System.ComponentModel;
 
 namespace PortalApp.config
 {
     public partial class PaymentManagement : System.Web.UI.Page
     {
-
         private static TelcobrightConfig Tbc { get; set; }
+        private static List<AccountAction> availableActions { get; set; }
+
+        private BindingList<AccActionEx> actions = new BindingList<AccActionEx>();
 
         protected void GridView_RowDataBound(object sender, GridViewRowEventArgs e)
         {
@@ -62,6 +64,21 @@ namespace PortalApp.config
                     //context.acc_temp_transaction.Add(transaction);
                     //context.SaveChanges();
 
+                    actions = (BindingList<AccActionEx>)this.Session["pmActions"];
+                    List<acc_action> existingActions = context.acc_action.Where(x => x.idAccount == accountId).ToList();
+                    foreach (acc_action item in existingActions)
+                    {
+                        context.acc_action.Remove(item);
+                    }
+                    foreach (AccActionEx item in actions)
+                    {
+                        acc_action action = new acc_action();
+                        action.idAccount = accountId;
+                        action.idAccountAction = item.idAccountAction;
+                        action.threshhold_value = item.threshhold_value;
+                        context.acc_action.Add(action);
+                    }
+                    context.SaveChanges();
                 }
             }
             catch (Exception exception)
@@ -84,6 +101,12 @@ namespace PortalApp.config
             {
                 "/custBilled", "/suppBilled", "/billable"
             };
+
+            // TODO: get this from config
+            availableActions = new List<AccountAction>();
+            availableActions.Add(new SendAlertEmailAccountAction());
+            availableActions.Add(new SendSMSAccountAction());
+            availableActions.Add(new BlockAccountAction());
 
             using (PartnerEntities context = new PartnerEntities())
             {
@@ -119,8 +142,116 @@ namespace PortalApp.config
                 lblID.Text = accountId.ToString();
                 lblusername.Text = ((List<partner>)Session["allPartners"]).First(x => x.idPartner == account.idPartner).PartnerName;
                 lblSer.Text = gvrow.Cells[2].Text;
+
+                actions.Add(new AccActionEx()
+                {
+                    idAccount = account.id,
+                    threshhold_value = 0,
+                    idAccountAction = 1,
+                    Rule = new AccountActionRule()
+                    {
+                        IsPercent = true,
+                        Amount = 50
+                    }
+                });
+                actions.Add(new AccActionEx()
+                {
+                    idAccount = account.id,
+                    threshhold_value = 0,
+                    idAccountAction = 1,
+                    Rule = new AccountActionRule()
+                    {
+                        IsPercent = true,
+                        Amount = 80
+                    }
+                });
+                actions.Add(new AccActionEx()
+                {
+                    idAccount = account.id,
+                    threshhold_value = 0,
+                    idAccountAction = 3,
+                    Rule = new AccountActionRule()
+                    {
+                        IsPercent = true,
+                        Amount = 90
+                    }
+                });
+
+                this.Session["pmActions"] = actions;
+                gvThreshhold.DataSource = actions;
+                gvThreshhold.DataBind();
+
                 this.ModalPopupExtender1.Show();
             }
+        }
+
+        protected void gvThreshhold_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                TextBox txtLimit = (TextBox)e.Row.FindControl("txtLimit");
+                String threshhold_value = DataBinder.Eval(e.Row.DataItem, "threshhold_value").ToString();
+                txtLimit.Text = threshhold_value;
+
+                DropDownList ddlAccountAction = (DropDownList)e.Row.FindControl("ddlAccountAction");
+                ddlAccountAction.DataSource = availableActions;
+                ddlAccountAction.DataBind();
+                string idAccountAction = DataBinder.Eval(e.Row.DataItem, "idAccountAction").ToString();
+                ddlAccountAction.Items.FindByValue(idAccountAction).Selected = true;
+
+                String RuleDescription = DataBinder.Eval(e.Row.DataItem, "RuleDescription").ToString();
+                Label lblRule = (Label)e.Row.FindControl("lblRule");
+                lblRule.Text = RuleDescription;
+            }
+
+        }
+
+        protected void txtAmount_TextChanged(object sender, EventArgs e)
+        {
+            actions = (BindingList<AccActionEx>)this.Session["pmActions"];
+            decimal Amount = Convert.ToDecimal(txtAmount.Text);
+            foreach (AccActionEx item in actions)
+            {
+                if (item.Rule.IsPercent)
+                {
+                    item.threshhold_value = Amount * item.Rule.Amount / 100;
+                }
+            }
+
+            this.Session["pmActions"] = actions;
+            gvThreshhold.DataSource = actions;
+            gvThreshhold.DataBind();
+
+            this.ModalPopupExtender1.Show();
+        }
+
+        protected void txtLimit_TextChanged(object sender, EventArgs e)
+        {
+            TextBox txtLimit = sender as TextBox;
+            GridViewRow row = (GridViewRow)((Control)sender).NamingContainer;
+            actions = (BindingList<AccActionEx>)this.Session["pmActions"];
+            AccActionEx editRow = actions[row.RowIndex];
+            editRow.threshhold_value = Convert.ToDecimal(txtLimit.Text);
+            editRow.Rule = new AccountActionRule() { IsFixedAmount = true };
+            this.Session["pmActions"] = actions;
+            gvThreshhold.DataSource = actions;
+            gvThreshhold.DataBind();
+
+            this.ModalPopupExtender1.Show();
+        }
+
+        protected void ddlAccountAction_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DropDownList ddlAccountAction = sender as DropDownList;
+            GridViewRow row = (GridViewRow)((Control)sender).NamingContainer;
+            actions = (BindingList<AccActionEx>)this.Session["pmActions"];
+            AccActionEx editRow = actions[row.RowIndex];
+            editRow.idAccountAction = Convert.ToInt32(ddlAccountAction.SelectedValue);
+            this.Session["pmActions"] = actions;
+            gvThreshhold.DataSource = actions;
+            gvThreshhold.DataBind();
+
+            this.ModalPopupExtender1.Show();
         }
     }
 

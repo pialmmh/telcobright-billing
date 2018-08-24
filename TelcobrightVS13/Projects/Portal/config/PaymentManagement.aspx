@@ -116,7 +116,7 @@ CancelControlID="btnCancel" BackgroundCssClass="modalBackground" >
     </tr>
     <tr id="addPaymentRow">
         <td align="right">Amount: </td>    
-        <td style="padding:3px"><asp:TextBox id="txtAmount" Runat="server" /> </td>
+        <td style="padding:3px"><asp:TextBox id="txtAmount" Runat="server" AutoPostBack="true" OnTextChanged="txtAmount_TextChanged" /> </td>
     </tr>
         <tr>
             <td colspan="2" align="center">Threshhold Settings</td>
@@ -124,7 +124,8 @@ CancelControlID="btnCancel" BackgroundCssClass="modalBackground" >
         <tr>
             <td colspan="2" align="center">
                 <asp:GridView ID="gvThreshhold" runat="server"
-                    Font-Names="Arial"  DataKeyNames="id" Font-Size="9pt" CellPadding="4" ForeColor="#333333" AutoGenerateColumns="False">
+                    Font-Names="Arial"  DataKeyNames="id" Font-Size="9pt" CellPadding="4" ForeColor="#333333" AutoGenerateColumns="False"
+                    OnRowDataBound="gvThreshhold_RowDataBound">
                 <EditRowStyle BackColor="#999999" />
                 <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />                
                 <HeaderStyle BackColor="#5D7B9D" ForeColor="white" Font-Bold="True" />
@@ -139,7 +140,17 @@ CancelControlID="btnCancel" BackgroundCssClass="modalBackground" >
                     <Columns>
                         <asp:TemplateField HeaderText="Limit">
                             <ItemTemplate>
-                                <asp:TextBox runat="server" ID="thLimit" />
+                                <asp:TextBox runat="server" ID="txtLimit" OnTextChanged="txtLimit_TextChanged" AutoPostBack="true" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Action">
+                            <ItemTemplate>
+                                <asp:DropDownList runat="server" ID="ddlAccountAction" DataTextField="ActionName" DataValueField="Id" OnSelectedIndexChanged="ddlAccountAction_SelectedIndexChanged" AutoPostBack="true" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Rule">
+                            <ItemTemplate>
+                                <asp:Label runat="server" ID="lblRule" />
                             </ItemTemplate>
                         </asp:TemplateField>
                     </Columns>

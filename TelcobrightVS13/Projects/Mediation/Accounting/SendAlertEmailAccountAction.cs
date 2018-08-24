@@ -8,9 +8,14 @@ using System.Threading.Tasks;
 
 namespace TelcobrightMediation.Accounting
 {
-    public class SendAlertEmailAccountAction : IAccountAction
+    public class SendAlertEmailAccountAction : AccountAction
     {
-        public bool execute(partner partner)
+        public SendAlertEmailAccountAction()
+        {
+            this.Id = 1;
+            this.ActionName = "Send Alert Email";
+        }
+        public override bool execute(partner partner)
         {
             SmtpClient smtpClient = new SmtpClient("mail.telcobright.com", 25);
 
