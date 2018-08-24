@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace TelcobrightMediation.Accounting
 {
-    public static class AccountHelper
+    public static class AccountBalanceHelper
     {
-        public static decimal getCurrentBalance(this account account)
+        public static decimal getCurrentBalanceWithTempTransaction(this account account)
         {
             decimal tempBalance;
             using (PartnerEntities context = new PartnerEntities())
