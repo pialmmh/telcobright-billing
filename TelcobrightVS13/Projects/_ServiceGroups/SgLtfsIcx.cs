@@ -13,7 +13,6 @@ namespace TelcobrightMediation
     [Export("ServiceGroup", typeof(IServiceGroup))]
     public class SgLtfsIcx : IServiceGroup
     {
-        public InvoiceGenerator InvoiceGenerator { get; set; }
         private readonly SgIntlTransitVoice sgIntlTransitVoice = new SgIntlTransitVoice();
         public override string ToString() => this.RuleName;
         public string RuleName => "LTFS Calls [ICX]";
@@ -77,7 +76,6 @@ namespace TelcobrightMediation
                 }
             }
         }
-
         public void SetServiceGroupWiseSummaryParams(CdrExt cdrExt, AbstractCdrSummary newSummary)
         {
             //this._sgIntlTransitVoice.SetServiceGroupWiseSummaryParams(cdrExt, newSummary);
@@ -95,6 +93,15 @@ namespace TelcobrightMediation
             this.sgIntlTransitVoice.SetChargingSummaryInCustomerDirection(chargeableCust, newSummary);
             newSummary.tax1 = Convert.ToDecimal(chargeableCust.TaxAmount1);
         }
-        
+
+        public void ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ExecInvoicePostProcessing(InvoiceGenerationInputData invoiceGenerationInputData)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

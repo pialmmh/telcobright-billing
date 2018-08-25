@@ -14,28 +14,22 @@ using TelcobrightFileOperations;
 using MediationModel;
 using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Config;
-
+using TelcobrightMediation;
 namespace Jobs
 {
 
     [Export("Job", typeof(ITelcobrightJob))]
-    public class CdrBasedInvoicingJob : ITelcobrightJob
+    public class InvoicingJob : ITelcobrightJob
     {
         public override string ToString() => this.RuleName;
         public string RuleName => GetType().Name;
-        private AccountingJobInputData Input { get; set; }
-        public string HelpText => "Cdr based invoice generation job";
+        private InvoiceGenerationInputData Input { get; set; }
+        public string HelpText => "Invoice generation job";
         public int Id => 12;
         public JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
         {
-            this.Input = (AccountingJobInputData) jobInputData;
-            SegmentedCdrInvoicingJobProcessor segmentedInvoiceProcessor =
-                new SegmentedCdrInvoicingJobProcessor(this.Input, "id", "transactiontime");
-            if (this.Input.TelcobrightJob.Status != 2) //prepare job if not prepared already
-                segmentedInvoiceProcessor.PrepareSegments();
-            List<jobsegment> jobsegments =
-                segmentedInvoiceProcessor.ExecuteIncompleteSegments();
-            segmentedInvoiceProcessor.FinishJob(jobsegments, null); //mark job as complete
+            this.Input = (InvoiceGenerationInputData) jobInputData;
+            this.Input.InvoiceGenerationRule.Execute(this.Input);
             return JobCompletionStatus.Complete;
         }
         private Action<object> actionOnFinish = jobInput =>

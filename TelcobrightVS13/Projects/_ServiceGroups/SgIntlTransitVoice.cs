@@ -13,7 +13,6 @@ namespace TelcobrightMediation
     public class SgIntlTransitVoice : IServiceGroup
     {
         public override string ToString() => this.RuleName;
-        public InvoiceGenerator InvoiceGenerator { get; set; }
         public string RuleName => "Transit Calls [Wholesale Voice]";
         public string HelpText => "Service group for international transit voice.";
         public int Id => 100;
@@ -69,7 +68,17 @@ namespace TelcobrightMediation
             }
             SetChargingSummaryInSupplierDirection(chargeableSupp, newSummary);
         }
-        
+
+        public void ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ExecInvoicePostProcessing(InvoiceGenerationInputData invoiceGenerationInputData)
+        {
+            throw new NotImplementedException();
+        }
+
         public void SetChargingSummaryInCustomerDirection(acc_chargeable chargeableCust, AbstractCdrSummary newSummary)
         {
             newSummary.tup_matchedprefixcustomer = chargeableCust.Prefix;

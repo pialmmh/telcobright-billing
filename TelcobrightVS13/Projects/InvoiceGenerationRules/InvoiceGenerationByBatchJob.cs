@@ -23,23 +23,19 @@ namespace InvoiceGenerationRules
         public string HelpText => "Generate invoice from raw transactions in batches.";
         public int Id => 1;
 
-        public void Execute(object data)//incomplete
+        public void Execute(object data) //incomplete
         {
-            InvoiceGenerationInputData invoiceData = (InvoiceGenerationInputData) data;
-            InvoiceDataCollector invoiceDataCollector = invoiceData.InvoiceDataCollector;
-            PartnerEntities context = invoiceData.Context;
-            int batchSizeForJobSegments = invoiceData.BatchSizeForJobSegment;
-
+            InvoiceGenerationInputData input = (InvoiceGenerationInputData) data;
+            InvoiceDataCollector invoiceDataCollector = input.InvoiceDataCollector;
+            PartnerEntities context = input.Context;
+            int batchSizeForJobSegments = input.BatchSizeForJobSegment;
             SegmentedCdrInvoicingJobProcessor segmentedInvoiceProcessor =
-                new SegmentedCdrInvoicingJobProcessor(this.Input, "id", "transactiontime");
-            if (this.Input.TelcobrightJob.Status != 2) //prepare job if not prepared already
+                new SegmentedCdrInvoicingJobProcessor(input, "id", "transactiontime");
+            if (input.TelcobrightJob.Status != 2) //prepare job if not prepared already
                 segmentedInvoiceProcessor.PrepareSegments();
             List<jobsegment> jobsegments =
                 segmentedInvoiceProcessor.ExecuteIncompleteSegments();
             segmentedInvoiceProcessor.FinishJob(jobsegments, null); //mark job as complete
-            return JobCompletionStatus.Complete;
-
-
         }
     }
 }

@@ -98,7 +98,7 @@ namespace PortalApp.config
                                 var regex = kv.Key;
                                 if (regex.Matches(invoiceGeneration.AccountName).Count > 0)
                                 {
-                                    invoiceGeneration.ServiceAccount = kv.Value;
+                                    invoiceGeneration.ServiceAccount = Convert.ToInt32(kv.Value);
                                     break;
                                 }
                             }
@@ -182,7 +182,7 @@ namespace PortalApp.config
             InvoiceDataCollector ledgerSummary = new InvoiceDataCollector();
             ledgerSummary.PartnerId = Convert.ToInt32(ddlistPartner.SelectedValue);
             ledgerSummary.PartnerName = ddlistPartner.SelectedItem.Text;
-            ledgerSummary.ServiceAccount = ddlistServiceAccount.Text;
+            ledgerSummary.ServiceAccount = Convert.ToInt32(ddlistServiceAccount.Text);
             ledgerSummary.StartDateTime = Convert.ToDateTime(txtDate.Text);
             ledgerSummary.EndDateTime = Convert.ToDateTime(txtDate1.Text);
             ledgerSummary.TimeZone = Convert.ToInt32(ddlistTimeZone.SelectedValue);
@@ -247,7 +247,7 @@ namespace PortalApp.config
         protected job CreateInvoiceGenerationJob(InvoiceDataCollector invoiceDataCollector,
             PartnerEntities context, int batchSizeForJobSegment)
         {
-            string serviceAccount = invoiceDataCollector.ServiceAccount;
+            string serviceAccount = invoiceDataCollector.ServiceAccount.ToString();
             int jobDefinition = 12;
             int prevJobCountWithSameName =
                 context.jobs.Count(j => j.idjobdefinition == jobDefinition && j.idjobdefinition == jobDefinition);

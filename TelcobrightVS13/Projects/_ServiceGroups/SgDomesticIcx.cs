@@ -12,7 +12,6 @@ namespace TelcobrightMediation
     [Export("ServiceGroup", typeof(IServiceGroup))]
     public class SgDomesticIcx : IServiceGroup
     {
-        public InvoiceGenerator InvoiceGenerator { get; set; }
         private readonly SgIntlTransitVoice _sgIntlTransitVoice = new SgIntlTransitVoice();
         public override string ToString() => this.RuleName;
         public string RuleName => "Domestic Calls [ICX]";
@@ -79,6 +78,14 @@ namespace TelcobrightMediation
             newSummary.tax1 = Convert.ToDecimal(chargeableCust.TaxAmount1);
         }
 
-        
+        public void ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ExecInvoicePostProcessing(InvoiceGenerationInputData invoiceGenerationInputData)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

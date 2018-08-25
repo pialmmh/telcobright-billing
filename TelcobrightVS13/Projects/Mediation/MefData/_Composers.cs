@@ -100,8 +100,25 @@ namespace TelcobrightMediation
 			container.ComposeParts(this);
 		}
 	}
+    public class InvoiceGenerationRuleComposer
+    {
+        [ImportMany("InvoiceGenerationRule", typeof(IInvoiceGenerationRule))]
+        public IEnumerable<IInvoiceGenerationRule> InvoiceGenerationRules { get; set; }
 
-	public class PartnerRuleComposer
+        public void Compose()
+        {
+            var catalog = new DirectoryCatalog(@"..\..\Extensions\");
+            var container = new CompositionContainer(catalog);
+            container.ComposeParts(this);
+        }
+        public void ComposeFromPath(string path)
+        {
+            var catalog = new DirectoryCatalog(path);
+            var container = new CompositionContainer(catalog);
+            container.ComposeParts(this);
+        }
+    }
+    public class PartnerRuleComposer
 	{
 		[ImportMany("Partner", typeof(IPartnerRule))]
 		public IEnumerable<IPartnerRule> Partners { get; set; }

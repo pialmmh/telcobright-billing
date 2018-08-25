@@ -17,7 +17,7 @@ namespace TelcobrightMediation.Accounting
         public DateTime StartDateTime { get; set; }
         public DateTime EndDateTime { get; set; }
 
-        public String ServiceAccount { get; set; }
+        public int ServiceAccount { get; set; }
         public int TimeZone { get; set; }
         public int GmtOffset { get; set; }
 

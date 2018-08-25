@@ -13,7 +13,6 @@ namespace TelcobrightMediation
     [Export("ServiceGroup", typeof(IServiceGroup))]
     public class SgIntlInIgw : IServiceGroup
     {
-        public InvoiceGenerator InvoiceGenerator { get; set; }
         private readonly SgIntlTransitVoice _sgIntlTransitVoice = new SgIntlTransitVoice();
         public override string ToString() => this.RuleName;
         public string RuleName => "International Incoming Calls [IGW]";
@@ -164,6 +163,14 @@ namespace TelcobrightMediation
             newSummary.longDecimalAmount2 = 0;
         }
 
-        
+        public void ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ExecInvoicePostProcessing(InvoiceGenerationInputData invoiceGenerationInputData)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

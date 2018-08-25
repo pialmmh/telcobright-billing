@@ -102,7 +102,7 @@ namespace PortalApp.config
                                 var regex = kv.Key;
                                 if (regex.Matches(invoiceGeneration.AccountName).Count > 0)
                                 {
-                                    invoiceGeneration.ServiceAccount = kv.Value;
+                                    invoiceGeneration.ServiceAccount = Convert.ToInt32(kv.Value);
                                     break;
                                 }
                             }

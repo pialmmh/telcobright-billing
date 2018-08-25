@@ -118,8 +118,7 @@
     <Compile Include="Accounting\IAccountAction.cs" />
     <Compile Include="Accounting\IAccountCreator.cs" />
     <Compile Include="Accounting\IBillingRule.cs" />
-    <Compile Include="Accounting\IInvoiceCreator.cs" />
-    <Compile Include="Accounting\InvoiceCreatorForVoiceService.cs" />
+    <Compile Include="Accounting\InvoiceableTransactionCollector.cs" />
     <Compile Include="Accounting\InvoiceDataCollector.cs" />
     <Compile Include="Accounting\InvoiceGenerationInputData.cs" />
     <Compile Include="Accounting\InvoiceGenerator.cs" />

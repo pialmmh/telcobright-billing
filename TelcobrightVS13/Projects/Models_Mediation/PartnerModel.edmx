@@ -9,7 +9,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="bigint" Nullable="false" />
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="idAccount" Type="bigint" Nullable="false" />
           <Property Name="threshhold_value" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="idAccountAction" Type="bigint" Nullable="false" />
@@ -6163,7 +6163,7 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="Int64" Nullable="false" />
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="idAccount" Type="Int64" Nullable="false" />
           <Property Name="threshhold_value" Type="Decimal" Nullable="false" />
           <Property Name="idAccountAction" Type="Int64" Nullable="false" />
