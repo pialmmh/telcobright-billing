@@ -17,7 +17,7 @@ namespace TelcobrightMediation.Accounting
                 if (Rule.IsPercent)
                     return string.Format("{0}%", Rule.Amount);
                 else if (Rule.IsFormulaBased)
-                    return string.Format("ACR:{0}, ACD:{1}, Minute:{2}", Rule.ACR, Rule.ACD, Rule.Amount);
+                    return string.Format("ACR:{0}$, ACD:{1}Sec, Minute:{2}, Ports: {3}", Rule.ACR, Rule.ACD, Rule.Amount, Rule.NoOfPorts);
                 else
                     return "Fixed Amount";
             }

@@ -14,5 +14,6 @@ namespace TelcobrightMediation.Accounting
         public decimal Amount { get; set; }
         public decimal ACR { get; set; }
         public decimal ACD { get; set; }
+        public int NoOfPorts { get; set; }
     }
 }

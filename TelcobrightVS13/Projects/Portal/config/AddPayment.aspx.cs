@@ -1,0 +1,337 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
+using System.Data.Entity.Validation;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using MediationModel;
+using PortalApp._myCodes;
+using TelcobrightMediation;
+using TelcobrightMediation.Accounting;
+using System.ComponentModel;
+
+namespace PortalApp.config
+{
+    public partial class AddPayment : System.Web.UI.Page
+    {
+        private static TelcobrightConfig Tbc { get; set; }
+        private static List<AccountAction> availableActions { get; set; }
+        private account account { get; set; }
+
+        private BindingList<AccActionEx> actions = new BindingList<AccActionEx>();
+        
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!IsPostBack)
+            {
+                Tbc = PageUtil.GetTelcobrightConfig();
+                List<KeyValuePair<Regex, string>> serviceAliases = Tbc.ServiceAliasesRegex;
+                int accountId = Convert.ToInt32(Request.QueryString["accountId"]);
+                using (PartnerEntities context = new PartnerEntities()) {
+                    account = context.accounts.First(x => x.id == accountId);
+                    foreach (var kv in serviceAliases)
+                    {
+                        var regex = kv.Key;
+                        if (regex.Matches(account.accountName).Count > 0)
+                        {
+                            account.accountName = kv.Value;
+                            break;
+                        }
+                    }
+                    this.Session["pmAccount"] = account;
+                }
+
+                // TODO: get this from config
+                availableActions = new List<AccountAction>();
+                availableActions.Add(new SendAlertEmailAccountAction());
+                availableActions.Add(new SendSMSAccountAction());
+                availableActions.Add(new BlockAccountAction());
+
+                actions.Add(new AccActionEx()
+                {
+                    idAccount = account.id,
+                    threshhold_value = 0,
+                    idAccountAction = 1,
+                    Rule = new AccountActionRule()
+                    {
+                        IsPercent = true,
+                        Amount = 50
+                    }
+                });
+                actions.Add(new AccActionEx()
+                {
+                    idAccount = account.id,
+                    threshhold_value = 0,
+                    idAccountAction = 1,
+                    Rule = new AccountActionRule()
+                    {
+                        IsPercent = true,
+                        Amount = 20
+                    }
+                });
+                actions.Add(new AccActionEx()
+                {
+                    idAccount = account.id,
+                    threshhold_value = 0,
+                    idAccountAction = 3,
+                    Rule = new AccountActionRule()
+                    {
+                        IsPercent = true,
+                        Amount = 10
+                    }
+                });
+                this.Session["pmActions"] = actions;
+
+                ddlAccountAction.DataSource = availableActions;
+                ddlAccountAction.DataBind();
+            }
+
+            account = (account)this.Session["pmAccount"];
+            lblID.Text = account.id.ToString();
+            lblusername.Text = ((List<partner>)Session["allPartners"]).First(x => x.idPartner == account.idPartner).PartnerName;
+            lblSer.Text = account.accountName;
+            actions = (BindingList<AccActionEx>)this.Session["pmActions"];
+            gvThreshhold.DataSource = actions;
+            gvThreshhold.DataBind();
+
+        }
+
+
+        protected void gvThreshhold_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                TextBox txtLimit = (TextBox)e.Row.FindControl("txtLimit");
+                String threshhold_value = DataBinder.Eval(e.Row.DataItem, "threshhold_value").ToString();
+                txtLimit.Text = threshhold_value;
+
+                DropDownList ddlAccountAction = (DropDownList)e.Row.FindControl("ddlAccountAction");
+                ddlAccountAction.DataSource = availableActions;
+                ddlAccountAction.DataBind();
+                string idAccountAction = DataBinder.Eval(e.Row.DataItem, "idAccountAction").ToString();
+                ddlAccountAction.Items.FindByValue(idAccountAction).Selected = true;
+
+                String RuleDescription = DataBinder.Eval(e.Row.DataItem, "RuleDescription").ToString();
+                Label lblRule = (Label)e.Row.FindControl("lblRule");
+                lblRule.Text = RuleDescription;
+
+                LinkButton lb = new LinkButton();
+                lb.ID = "btnShowRule";
+                lb.Text = "Change";
+                lb.CommandName = "ShowPopup";
+                lb.Click += new System.EventHandler(ruleBtn_Click);
+                e.Row.Cells[2].Controls.Add(lb);
+            }
+
+        }
+
+        protected void ruleBtn_Click(object sender, EventArgs e)
+        {
+            LinkButton btndetails = sender as LinkButton;
+            GridViewRow gvrow = (GridViewRow)btndetails.NamingContainer;
+            hfRowIndex.Value = gvrow.RowIndex.ToString();
+            AccActionEx action = actions[gvrow.RowIndex];
+            ddlAccountAction.SelectedValue = action.idAccountAction.ToString();
+            if (action.Rule.IsFixedAmount)
+            {
+                rbIsFixedAmount.Checked = true;
+                txtFixedAmount.Text = action.threshhold_value.ToString();
+            }
+            else if (action.Rule.IsPercent)
+            {
+                rbIsPercent.Checked = true;
+                txtPercentage.Text = action.Rule.Amount.ToString();
+            }
+            else if (action.Rule.IsFormulaBased)
+            {
+                rbIsFormulaBased.Checked = true;
+                txtACD.Text = action.Rule.ACD.ToString();
+                txtACR.Text = action.Rule.ACR.ToString();
+                txtMinute.Text = action.Rule.Amount.ToString();
+                txtNoOfPorts.Text = action.Rule.NoOfPorts.ToString();
+            }
+            txtResult.Text = action.threshhold_value.ToString();
+
+            this.mpeRule.Show();
+        }
+
+        protected void txtAmount_TextChanged(object sender, EventArgs e)
+        {
+            account = (account)this.Session["pmAccount"];
+            actions = (BindingList<AccActionEx>)this.Session["pmActions"];
+            decimal Amount = Convert.ToDecimal(txtAmount.Text) + account.getCurrentBalanceWithTempTransaction();
+            foreach (AccActionEx item in actions)
+            {
+                if (item.Rule.IsPercent)
+                {
+                    item.threshhold_value = (Amount) * item.Rule.Amount / 100;
+                }
+                else if (item.Rule.IsFormulaBased)
+                {
+                    item.threshhold_value = (item.Rule.Amount * 60 / item.Rule.ACD) * item.Rule.ACR * item.Rule.NoOfPorts;
+                }
+            }
+
+            this.Session["pmActions"] = actions;
+            gvThreshhold.DataSource = actions;
+            gvThreshhold.DataBind();
+        }
+
+        /*
+        protected void txtLimit_TextChanged(object sender, EventArgs e)
+        {
+            TextBox txtLimit = sender as TextBox;
+            GridViewRow row = (GridViewRow)((Control)sender).NamingContainer;
+            actions = (BindingList<AccActionEx>)this.Session["pmActions"];
+            AccActionEx editRow = actions[row.RowIndex];
+            editRow.threshhold_value = Convert.ToDecimal(txtLimit.Text);
+            editRow.Rule = new AccountActionRule() { IsFixedAmount = true };
+            this.Session["pmActions"] = actions;
+            gvThreshhold.DataSource = actions;
+            gvThreshhold.DataBind();
+        }
+
+        protected void ddlAccountAction_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DropDownList ddlAccountAction = sender as DropDownList;
+            GridViewRow row = (GridViewRow)((Control)sender).NamingContainer;
+            actions = (BindingList<AccActionEx>)this.Session["pmActions"];
+            AccActionEx editRow = actions[row.RowIndex];
+            editRow.idAccountAction = Convert.ToInt32(ddlAccountAction.SelectedValue);
+            this.Session["pmActions"] = actions;
+            gvThreshhold.DataSource = actions;
+            gvThreshhold.DataBind();
+        }
+        */
+
+        protected void btnOK_Click(object sender, EventArgs e)
+        {
+            string log = string.Empty;
+            try
+            {
+                account = (account)this.Session["pmAccount"];
+                decimal amount = decimal.Parse(txtAmount.Text);
+                DateTime payDate = Convert.ToDateTime(txtDate.Text);
+                using (PartnerEntities context = new PartnerEntities())
+                {
+                    actions = (BindingList<AccActionEx>)this.Session["pmActions"];
+                    List<acc_action> existingActions = context.acc_action.Where(x => x.idAccount == account.id).ToList();
+                    foreach (acc_action item in existingActions)
+                    {
+                        context.acc_action.Remove(item);
+                    }
+                    foreach (AccActionEx item in actions)
+                    {
+                        acc_action action = new acc_action();
+                        action.idAccount = account.id;
+                        action.idAccountAction = item.idAccountAction;
+                        action.threshhold_value = item.threshhold_value;
+                        context.acc_action.Add(action);
+                    }
+                    context.SaveChanges();
+
+                    var con = context.Database.Connection;
+                    using (DbCommand cmd = con.CreateCommand())
+                    {
+                        if (con.State != ConnectionState.Open) con.Open();
+                        TempTransactionCreator.CreateTempTransaction(account.id, amount, payDate, cmd, account);
+                    }
+
+                    //context.Database.Log = logInfo => FileLogger.Log(logInfo);
+                    //context.acc_temp_transaction.Add(transaction);
+                    //context.SaveChanges();
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                throw;
+            }
+        }
+
+        protected void btnCancel_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("~/config/PaymentManagement.aspx", false);
+            Context.ApplicationInstance.CompleteRequest();
+        }
+
+        protected void btnRuleOK_Click(object sender, EventArgs e)
+        {
+            int RowIndex = Convert.ToInt32(hfRowIndex.Value);
+            AccActionEx action = actions[RowIndex];
+            AccountActionRule aar = action.Rule;
+            aar.IsFixedAmount = rbIsFixedAmount.Checked;
+            aar.IsPercent = rbIsPercent.Checked;
+            aar.IsFormulaBased = rbIsFormulaBased.Checked;
+            if (aar.IsFixedAmount)
+            {
+                aar.Amount = Convert.ToDecimal(txtFixedAmount.Text);
+            }
+            else if (aar.IsPercent)
+            {
+                aar.Amount = Convert.ToDecimal(txtPercentage.Text);
+            }
+            else if (aar.IsFormulaBased)
+            {
+                aar.ACR = Convert.ToDecimal(txtACR.Text);
+                aar.ACD = Convert.ToDecimal(txtACD.Text);
+                aar.Amount = Convert.ToDecimal(txtMinute.Text);
+                aar.NoOfPorts = Convert.ToInt32(txtNoOfPorts.Text);
+            }
+            action.idAccountAction = Convert.ToInt32(ddlAccountAction.SelectedValue);
+            action.threshhold_value = Convert.ToDecimal(txtResult.Text);
+            this.Session["pmActions"] = actions;
+            gvThreshhold.DataSource = actions;
+            gvThreshhold.DataBind();
+        }
+
+        protected void CalculateThreshholdValue(object sender, EventArgs e)
+        {
+            account = (account)this.Session["pmAccount"];
+            decimal Amount = Convert.ToDecimal(txtAmount.Text) + account.getCurrentBalanceWithTempTransaction();
+            if (rbIsFixedAmount.Checked)
+            {
+                txtResult.Text = txtFixedAmount.Text;
+            }
+            else if (rbIsPercent.Checked)
+            {
+                decimal percent = Convert.ToDecimal(txtPercentage.Text);
+                txtResult.Text = ((Amount) * percent / 100).ToString();
+            }
+            else if (rbIsFormulaBased.Checked)
+            {
+                decimal ACD = Convert.ToDecimal(txtACD.Text);
+                decimal ACR = Convert.ToDecimal(txtACR.Text);
+                decimal Minute = Convert.ToDecimal(txtMinute.Text);
+                int NoOfPorts = Convert.ToInt32(txtNoOfPorts.Text);
+                txtResult.Text = ((Minute * 60 / ACD) * ACR * NoOfPorts).ToString();
+            }
+        }
+
+        protected void lbAddRule_Click(object sender, EventArgs e)
+        {
+            account = (account)this.Session["pmAccount"];
+            actions = (BindingList<AccActionEx>)this.Session["pmActions"];
+            actions.Add(new AccActionEx()
+            {
+                idAccount = account.id,
+                threshhold_value = 0,
+                idAccountAction = 1,
+                Rule = new AccountActionRule()
+                {
+                    IsFixedAmount = true,
+                    Amount = 0
+                }
+            });
+            this.Session["pmActions"] = actions;
+            gvThreshhold.DataSource = actions;
+            gvThreshhold.DataBind();
+        }
+    }
+}
+
+
