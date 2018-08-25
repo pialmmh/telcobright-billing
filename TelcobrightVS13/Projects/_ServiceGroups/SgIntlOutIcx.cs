@@ -4,6 +4,7 @@ using MediationModel;
 using System.Collections.Generic;
 using System.Linq;
 using LibraryExtensions;
+using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Cdr;
 using TransactionTuple = System.ValueTuple<int, int, long, int,long>;
 
@@ -13,6 +14,7 @@ namespace TelcobrightMediation
     [Export("ServiceGroup", typeof(IServiceGroup))]
     public class SgIntlOutIcx : IServiceGroup
     {
+        public InvoiceGenerator InvoiceGenerator { get; set; }
         private readonly SgIntlTransitVoice sgIntlTransitVoice = new SgIntlTransitVoice();
         public override string ToString() => this.RuleName;
         public string RuleName => "International Outgoing Calls [ICX]";
@@ -80,5 +82,7 @@ namespace TelcobrightMediation
             newSummary.longDecimalAmount3 = Convert.ToDecimal(chargeableCust.OtherAmount3); //z amount
             newSummary.tax1 = Convert.ToDecimal(chargeableCust.TaxAmount1);//btrc rev share
         }
+
+        
     }
 }

@@ -3753,6 +3753,20 @@ warning 6002: The table/view 'def.platinum.uom_conversion' does not have a prima
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_job">
+          <End Role="job" Type="Self.job" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="jobsegment" Type="Self.jobsegment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="job">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="jobsegment">
+              <PropertyRef Name="idJob" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_Ne">
           <End Role="ne" Type="Self.ne" Multiplicity="1" />
           <End Role="route" Type="Self.route" Multiplicity="*" />
@@ -5748,6 +5762,10 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
             <End Role="invoice" EntitySet="invoice" />
             <End Role="invoice_item" EntitySet="invoice_item" />
           </AssociationSet>
+          <AssociationSet Name="fk_job" Association="Self.fk_job">
+            <End Role="job" EntitySet="job" />
+            <End Role="jobsegment" EntitySet="jobsegment" />
+          </AssociationSet>
           <AssociationSet Name="fk_Ne" Association="Self.fk_Ne">
             <End Role="ne" EntitySet="ne" />
             <End Role="route" EntitySet="route" />
@@ -6047,6 +6065,10 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <AssociationSet Name="fk_invoice" Association="MediationModel.fk_invoice">
             <End Role="invoice" EntitySet="invoices" />
             <End Role="invoice_item" EntitySet="invoice_item" />
+          </AssociationSet>
+          <AssociationSet Name="fk_job" Association="MediationModel.fk_job">
+            <End Role="job" EntitySet="jobs" />
+            <End Role="jobsegment" EntitySet="jobsegments" />
           </AssociationSet>
           <AssociationSet Name="job_ibfk_4" Association="MediationModel.job_ibfk_4">
             <End Role="ne" EntitySet="nes" />
@@ -6836,6 +6858,7 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <Property Name="JobAdditionalInfo" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="enumjobdefinition" Relationship="MediationModel.job_ibfk_1" FromRole="job" ToRole="enumjobdefinition" />
           <NavigationProperty Name="enumjobstatu" Relationship="MediationModel.job_ibfk_3" FromRole="job" ToRole="enumjobstatu" />
+          <NavigationProperty Name="jobsegments" Relationship="MediationModel.fk_job" FromRole="job" ToRole="jobsegment" />
           <NavigationProperty Name="ne" Relationship="MediationModel.job_ibfk_4" FromRole="job" ToRole="ne" />
           <NavigationProperty Name="jobcompletion" Relationship="MediationModel.jobcompletion_ibfk_1" FromRole="job" ToRole="jobcompletion" />
         </EntityType>
@@ -6856,6 +6879,7 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <Property Name="stepsCount" Type="Int32" Nullable="false" />
           <Property Name="status" Type="Int32" />
           <Property Name="SegmentDetail" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="job" Relationship="MediationModel.fk_job" FromRole="jobsegment" ToRole="job" />
         </EntityType>
         <EntityType Name="jsonbillingrule">
           <Key>
@@ -9940,6 +9964,20 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
             </Principal>
             <Dependent Role="invoice_item">
               <PropertyRef Name="INVOICE_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_job">
+          <End Type="MediationModel.job" Role="job" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="MediationModel.jobsegment" Role="jobsegment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="job">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="jobsegment">
+              <PropertyRef Name="idJob" />
             </Dependent>
           </ReferentialConstraint>
         </Association>

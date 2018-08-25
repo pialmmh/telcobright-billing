@@ -3,6 +3,7 @@ using System;
 using MediationModel;
 using System.Collections.Generic;
 using LibraryExtensions;
+using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Cdr;
 using TransactionTuple = System.ValueTuple<int, int, long, int,long>;
 namespace TelcobrightMediation
@@ -12,6 +13,7 @@ namespace TelcobrightMediation
     public class SgIntlTransitVoice : IServiceGroup
     {
         public override string ToString() => this.RuleName;
+        public InvoiceGenerator InvoiceGenerator { get; set; }
         public string RuleName => "Transit Calls [Wholesale Voice]";
         public string HelpText => "Service group for international transit voice.";
         public int Id => 100;
@@ -67,7 +69,7 @@ namespace TelcobrightMediation
             }
             SetChargingSummaryInSupplierDirection(chargeableSupp, newSummary);
         }
-
+        
         public void SetChargingSummaryInCustomerDirection(acc_chargeable chargeableCust, AbstractCdrSummary newSummary)
         {
             newSummary.tup_matchedprefixcustomer = chargeableCust.Prefix;

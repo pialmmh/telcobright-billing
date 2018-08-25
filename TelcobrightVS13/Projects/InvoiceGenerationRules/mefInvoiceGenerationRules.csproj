@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InvoiceGenerationByLedgerSummary.cs" />
     <Compile Include="InvoiceGenerationByBatchJob.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -76,6 +77,10 @@
     <ProjectReference Include="..\Models_Mediation\Models_Mediation.csproj">
       <Project>{4282d6f4-efd2-418a-be9f-74f09b7a45d8}</Project>
       <Name>Models_Mediation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\_Jobs\mefJobs.csproj">
+      <Project>{1547F11A-F3C7-4F92-AE9E-D9783FCD8A5D}</Project>
+      <Name>mefJobs</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

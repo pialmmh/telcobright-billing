@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using MediationModel;
+using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Cdr;
 
 namespace TelcobrightMediation
@@ -15,5 +16,6 @@ namespace TelcobrightMediation
         void ExecutePostRatingActions(CdrExt cdrExt, object postRatingData);
         Dictionary<CdrSummaryType, Type> GetSummaryTargetTables();
         void SetServiceGroupWiseSummaryParams(CdrExt cdrExt, AbstractCdrSummary newSummary);
+        InvoiceGenerator InvoiceGenerator { get; set; }
     }
 }

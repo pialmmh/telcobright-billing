@@ -4,6 +4,7 @@ using MediationModel;
 using System.Collections.Generic;
 using System.Linq;
 using LibraryExtensions;
+using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Cdr;
 using TransactionTuple = System.ValueTuple<int, int, long, int, long>;
 
@@ -12,6 +13,7 @@ namespace TelcobrightMediation
     [Export("ServiceGroup", typeof(IServiceGroup))]
     public class SgLtfsIcx : IServiceGroup
     {
+        public InvoiceGenerator InvoiceGenerator { get; set; }
         private readonly SgIntlTransitVoice sgIntlTransitVoice = new SgIntlTransitVoice();
         public override string ToString() => this.RuleName;
         public string RuleName => "LTFS Calls [ICX]";
@@ -93,5 +95,6 @@ namespace TelcobrightMediation
             this.sgIntlTransitVoice.SetChargingSummaryInCustomerDirection(chargeableCust, newSummary);
             newSummary.tax1 = Convert.ToDecimal(chargeableCust.TaxAmount1);
         }
+        
     }
 }

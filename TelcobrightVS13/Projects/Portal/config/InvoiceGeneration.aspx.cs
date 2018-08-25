@@ -251,10 +251,15 @@ namespace PortalApp.config
             int jobDefinition = 12;
             int prevJobCountWithSameName =
                 context.jobs.Count(j => j.idjobdefinition == jobDefinition && j.idjobdefinition == jobDefinition);
+            long glAccountId = invoiceDataCollector.AccountId;
             string sourceTable = "acc_transaction";
             Dictionary<string, string> jobParamsMap = new Dictionary<string, string>();
             jobParamsMap.Add("sourceTable", sourceTable);
-            jobParamsMap.Add("serviceAccountId", invoiceDataCollector.AccountId.ToString());
+            jobParamsMap.Add("serviceAccountId", glAccountId.ToString());
+            jobParamsMap.Add("startDate", invoiceDataCollector.StartDateTimeLocal.ToMySqlStyleDateTimeStrWithoutQuote());
+            jobParamsMap.Add("endDate", invoiceDataCollector.EndDateTime.ToMySqlStyleDateTimeStrWithoutQuote());
+            jobParamsMap.Add("timeZoneOffsetSec", invoiceDataCollector.GmtOffset.ToString());
+
             if (prevJobCountWithSameName > 0)
             {
                 serviceAccount = serviceAccount + "_" + prevJobCountWithSameName;
@@ -263,7 +268,6 @@ namespace PortalApp.config
                              + "/" + invoiceDataCollector.StartDateTimeLocal.ToMySqlStyleDateTimeStrWithoutQuote()
                              + " to " +
                              invoiceDataCollector.EndDateTimeLocal.ToMySqlStyleDateTimeStrWithoutQuote();
-
 
             List<SqlSingleWhereClauseBuilder> singleWhereClauses = new List<SqlSingleWhereClauseBuilder>();
             List<SqlMultiWhereClauseBuilder> multipleWhereClauses = new List<SqlMultiWhereClauseBuilder>();
@@ -280,7 +284,6 @@ namespace PortalApp.config
             newParam.ParamValue = invoiceDataCollector.EndDateTimeLocal.ToMySqlStyleDateTimeStrWithoutQuote();
             singleWhereClauses.Add(newParam);
 
-            long glAccountId = invoiceDataCollector.AccountId;
             newParam = new SqlSingleWhereClauseBuilder(SqlWhereAndOrType.And);
             newParam.Expression = "glAccountId=";
             newParam.ParamType = SqlWhereParamType.Numeric;

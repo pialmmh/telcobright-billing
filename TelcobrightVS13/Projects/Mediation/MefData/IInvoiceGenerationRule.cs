@@ -7,6 +7,6 @@ namespace TelcobrightMediation
         string RuleName { get; }
         string HelpText { get; }
         int Id { get; }
-        void Execute(object data);
+        invoice Execute(object data);
     }
 }

@@ -3,6 +3,7 @@ using System.ComponentModel.Composition;
 using MediationModel;
 using System.Collections.Generic;
 using LibraryExtensions;
+using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Cdr;
 using TransactionTuple = System.ValueTuple<int, int, long, int, long>;
 
@@ -12,6 +13,7 @@ namespace TelcobrightMediation
     [Export("ServiceGroup", typeof(IServiceGroup))]
     public class SgIntlOutIGw : IServiceGroup
     {
+        public InvoiceGenerator InvoiceGenerator { get; set; }
         private readonly SgIntlTransitVoice sgIntlTransitVoice = new SgIntlTransitVoice();
         public override string ToString() => this.RuleName;
         public string RuleName => "International Outgoing Calls [IGW]";
@@ -38,12 +40,12 @@ namespace TelcobrightMediation
 
         public void ExecutePostRatingActions(CdrExt cdrExt, object postRatingData)
         {
-            
+
         }
 
         public void SetAdditionalParams(Dictionary<string, object> additionalParams)
         {
-            
+
         }
 
         public void Execute(cdr thisCdr, CdrProcessor cdrProcessor)
@@ -153,7 +155,7 @@ namespace TelcobrightMediation
             newSummary.longDecimalAmount1 = Convert.ToDecimal(chargeableCust.OtherAmount1); //x amount
             newSummary.longDecimalAmount2 = Convert.ToDecimal(chargeableCust.OtherAmount2); //y amount
             newSummary.longDecimalAmount3 = Convert.ToDecimal(chargeableCust.OtherAmount3); //z amount
-            newSummary.tax1 = Convert.ToDecimal(chargeableCust.TaxAmount1);//btrc
+            newSummary.tax1 = Convert.ToDecimal(chargeableCust.TaxAmount1); //btrc
             acc_chargeable chargeableSupp = null;
             cdrExt.Chargeables.TryGetValue(new ValueTuple<int, int, int>(this.Id, 1, 2), out chargeableSupp);
             if (chargeableSupp == null)
@@ -162,5 +164,7 @@ namespace TelcobrightMediation
             }
             this.sgIntlTransitVoice.SetChargingSummaryInSupplierDirection(chargeableSupp, newSummary);
         }
+
+        
     }
 }

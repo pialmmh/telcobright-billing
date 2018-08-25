@@ -11,6 +11,7 @@ namespace TelcobrightMediation
     public class TelcobrightConfig
     {
         //temporarily keep connection strings with help of ne, change later
+        public int DefaultTimeZoneId { get; set; } = 3251;
         public TelecomOperatortype TelecomOperatortype { get;}
         public List<QuartzTbDaemonConfig> SchedulerDaemonConfigs { get; set; }
         public ResourcePool ResourcePool{ get; set; }

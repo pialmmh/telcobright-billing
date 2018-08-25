@@ -21,8 +21,8 @@ namespace TelcobrightMediation.Cdr
         private AccountingContext AccountingContext { get; }
         private List<acc_transaction> Transactions { get; }
         public int ActualStepsCount => this.Transactions.Count;
-        private AccountingJobInputData AccountingJobInputData { get; }
-        private CdrSetting CdrSetting => this.AccountingJobInputData.Tbc.CdrSetting;
+        private InvoiceGenerationInputData InvoiceGenerationInputData { get; }
+        private CdrSetting CdrSetting => this.InvoiceGenerationInputData.Tbc.CdrSetting;
         bool segmentProcessed = false;
         private decimal processedInvoicedAmountSoFar;
         private PartnerEntities Context { get; }
@@ -41,16 +41,16 @@ namespace TelcobrightMediation.Cdr
             set { this.processedInvoicedAmountSoFar = value; }
         }
 
-        public TransactionInvoicingJobSegment(AccountingJobInputData accountingJobInputData,
+        public TransactionInvoicingJobSegment(InvoiceGenerationInputData invoiceGenerationInputData,
             List<acc_transaction> transactions,
             int jobSegmentNumber, decimal invoicedAmountAfterLastSegment)
         {
             if (jobSegmentNumber <= 0)
                 throw new Exception("Segment number must be > 0.");
-            this.Context = this.AccountingJobInputData.Context;
+            this.InvoiceGenerationInputData = invoiceGenerationInputData;
+            this.Context = this.InvoiceGenerationInputData.Context;
             this.JobSegmentNumber = jobSegmentNumber;
-            this.AccountingJobInputData = accountingJobInputData;
-            this.AccountingContext = this.AccountingJobInputData.AccountingContext;
+            this.AccountingContext = this.InvoiceGenerationInputData.AccountingContext;
             this.Transactions = transactions;
             this.ProcessedInvoicedAmountSoFar = invoicedAmountAfterLastSegment;
         }
@@ -81,7 +81,7 @@ namespace TelcobrightMediation.Cdr
             newJobStateAsMap.Add("invoicedAmountAfterLastSegment", this.ProcessedInvoicedAmountSoFar.ToString());
             newJobStateAsMap.Add("lastSegmentExecutedOn", DateTime.Now.ToMySqlStyleDateTimeStrWithoutQuote());
             cmd.CommandText = $" update job set jobstate='{JsonConvert.SerializeObject(newJobStateAsMap)}'" +
-                              $" where id={this.AccountingJobInputData.TelcobrightJob.id}";
+                              $" where id={this.InvoiceGenerationInputData.TelcobrightJob.id}";
             cmd.ExecuteNonQuery();
         }
     }

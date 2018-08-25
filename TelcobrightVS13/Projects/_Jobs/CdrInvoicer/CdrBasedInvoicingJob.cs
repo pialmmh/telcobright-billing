@@ -19,7 +19,7 @@ namespace Jobs
 {
 
     [Export("Job", typeof(ITelcobrightJob))]
-    public class TransactionInvoicingJob : ITelcobrightJob
+    public class CdrBasedInvoicingJob : ITelcobrightJob
     {
         public override string ToString() => this.RuleName;
         public string RuleName => GetType().Name;

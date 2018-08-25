@@ -17,33 +17,34 @@ namespace TelcobrightMediation
 {
     public class SegmentedCdrInvoicingJobProcessor : AbstractRowBasedSegmentedJobProcessor
     {
-        private AccountingJobInputData AccountingJobInputData { get; }
+        private InvoiceGenerationInputData InvoiceGenerationInputData { get; }
 
-        public SegmentedCdrInvoicingJobProcessor(AccountingJobInputData accountingJobInputData,
+        public SegmentedCdrInvoicingJobProcessor(InvoiceGenerationInputData invoiceGenerationInputData,
             string indexedColumnName, string dateColumnName)
-            : base(accountingJobInputData.TelcobrightJob, accountingJobInputData.Context,
-                accountingJobInputData.CdrSetting.BatchSizeWhenPreparingLargeSqlJob,
+            : base(invoiceGenerationInputData.TelcobrightJob, invoiceGenerationInputData.Context,
+                invoiceGenerationInputData.Tbc.CdrSetting.BatchSizeWhenPreparingLargeSqlJob,
                 indexedColumnName, dateColumnName)
         {
-            this.AccountingJobInputData = accountingJobInputData;
+            this.InvoiceGenerationInputData = invoiceGenerationInputData;
         }
 
         public override ISegmentedJob CreateJobSegmentInstance(jobsegment jobSegment)
         {
             List<acc_transaction> transactions = CollectTransactionsForThisSegment(jobSegment);
             decimal invoicedAmountAfterLastSegment = GetInvoiceAmountAfterLastSegment();
-            TransactionInvoicingJobSegment cdrInvoicingJob = new TransactionInvoicingJobSegment(this.AccountingJobInputData, transactions,
+            TransactionInvoicingJobSegment cdrInvoicingJob = 
+                new TransactionInvoicingJobSegment(this.InvoiceGenerationInputData, transactions,
                 jobSegment.segmentNumber,invoicedAmountAfterLastSegment);
             return cdrInvoicingJob;
         }
 
         private decimal GetInvoiceAmountAfterLastSegment()
         {
-            var con = this.AccountingJobInputData.Context.Database.Connection;
+            var con = this.InvoiceGenerationInputData.Context.Database.Connection;
             if (con.State != ConnectionState.Open) con.Open();
             var cmd = con.CreateCommand();
             cmd.CommandText = $"select jobstate from job where id=" +
-                              $"{this.AccountingJobInputData.TelcobrightJob.id}";
+                              $"{this.InvoiceGenerationInputData.TelcobrightJob.id}";
             string jobStateJson = (string)cmd.ExecuteScalar();
             Dictionary<string, string> jobStateMap = null;
             if (jobStateJson.IsNullOrEmptyOrWhiteSpace() == false)
@@ -63,7 +64,7 @@ namespace TelcobrightMediation
             RowIdsCollectionForSingleDay dayWiseRowsIdsCollection = base.DeserializeDayWiseRowIdsCollection(jobSegment);
             string selectSql = dayWiseRowsIdsCollection.GetSelectSql();
             DbRowCollector<acc_transaction> dbRowCollector =
-                new DbRowCollector<acc_transaction>(this.AccountingJobInputData, selectSql);
+                new DbRowCollector<acc_transaction>(this.InvoiceGenerationInputData, selectSql);
             List<acc_transaction> transactions = dbRowCollector.Collect();
             return transactions;
         }

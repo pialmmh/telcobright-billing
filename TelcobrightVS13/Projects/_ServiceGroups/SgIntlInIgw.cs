@@ -3,6 +3,7 @@ using System;
 using MediationModel;
 using System.Collections.Generic;
 using LibraryExtensions;
+using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Cdr;
 using TransactionTuple = System.ValueTuple<int, int, long, int, long>;
 
@@ -12,6 +13,7 @@ namespace TelcobrightMediation
     [Export("ServiceGroup", typeof(IServiceGroup))]
     public class SgIntlInIgw : IServiceGroup
     {
+        public InvoiceGenerator InvoiceGenerator { get; set; }
         private readonly SgIntlTransitVoice _sgIntlTransitVoice = new SgIntlTransitVoice();
         public override string ToString() => this.RuleName;
         public string RuleName => "International Incoming Calls [IGW]";
@@ -161,5 +163,7 @@ namespace TelcobrightMediation
             newSummary.longDecimalAmount1 = 0;
             newSummary.longDecimalAmount2 = 0;
         }
+
+        
     }
 }

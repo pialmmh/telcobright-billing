@@ -3,6 +3,7 @@ using System;
 using MediationModel;
 using System.Collections.Generic;
 using LibraryExtensions;
+using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Cdr;
 using TransactionTuple = System.ValueTuple<int, int, long, int, long>;
 
@@ -11,6 +12,7 @@ namespace TelcobrightMediation
     [Export("ServiceGroup", typeof(IServiceGroup))]
     public class SgDomesticIcx : IServiceGroup
     {
+        public InvoiceGenerator InvoiceGenerator { get; set; }
         private readonly SgIntlTransitVoice _sgIntlTransitVoice = new SgIntlTransitVoice();
         public override string ToString() => this.RuleName;
         public string RuleName => "Domestic Calls [ICX]";
@@ -26,17 +28,20 @@ namespace TelcobrightMediation
                 {CdrSummaryType.sum_voice_hr_01, typeof(sum_voice_hr_01)},
             };
         }
+
         public Dictionary<CdrSummaryType, Type> GetSummaryTargetTables()
         {
             return this.SummaryTargetTables;
         }
+
         public void ExecutePostRatingActions(CdrExt cdrExt, object postRatingData)
         {
 
         }
+
         public void SetAdditionalParams(Dictionary<string, object> additionalParams)
         {
-            
+
         }
 
         public void Execute(cdr thisCdr, CdrProcessor cdrProcessor)
@@ -73,5 +78,7 @@ namespace TelcobrightMediation
             this._sgIntlTransitVoice.SetChargingSummaryInCustomerDirection(chargeableCust, newSummary);
             newSummary.tax1 = Convert.ToDecimal(chargeableCust.TaxAmount1);
         }
+
+        
     }
 }
