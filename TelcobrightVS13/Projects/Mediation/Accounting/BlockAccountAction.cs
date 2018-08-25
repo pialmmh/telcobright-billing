@@ -7,9 +7,15 @@ using System.Threading.Tasks;
 
 namespace TelcobrightMediation.Accounting
 {
-    public class BlockAccountAction : IAccountAction
+    public class BlockAccountAction : AccountAction
     {
-        public bool execute(partner partner)
+        public BlockAccountAction()
+        {
+            this.Id = 3;
+            this.ActionName = "Block Account";
+        }
+
+        public override bool execute(partner partner)
         {
             throw new NotImplementedException();
         }

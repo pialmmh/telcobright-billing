@@ -103,9 +103,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Accounting\AccActionEx.cs" />
     <Compile Include="Accounting\AccBalanceThresholdHandler.cs" />
     <Compile Include="Accounting\AccChargeableExt.cs" />
+    <Compile Include="Accounting\AccountAction.cs" />
+    <Compile Include="Accounting\AccountActionRule.cs" />
     <Compile Include="Accounting\AccountCreatorFromRatePlanAssignment.cs" />
+    <Compile Include="Accounting\AccountBalanceHelper.cs" />
     <Compile Include="Accounting\AccountingJobInput.cs" />
     <Compile Include="Accounting\BillingPeriodContants.cs" />
     <Compile Include="Accounting\BlockAccountAction.cs" />

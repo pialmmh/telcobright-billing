@@ -10,7 +10,7 @@ namespace TelcobrightMediation.Accounting
 {
     public static class TempTransactionCreator
     {
-        public static void CreateTempTransaction(int accountId, decimal amount, DateTime payDate, DbCommand cmd, account account)
+        public static void CreateTempTransaction(long accountId, decimal amount, DateTime payDate, DbCommand cmd, account account)
         {
             acc_temp_transaction transaction = new acc_temp_transaction();
             transaction.transactionTime = payDate;
