@@ -30,7 +30,7 @@ namespace TelcobrightMediation.Accounting
             mail.To.Add(new MailAddress(partner.email));
             // mail.CC.Add(new MailAddress("MyEmailID@gmail.com"));
             mail.Subject = "Account balance below threshold value";
-            mail.Body = "Dear Valued Partner, \n Our system indicates that you account balance is below threshhold value. \n\n BR \n\n Telcobright Billing Portal";
+            mail.Body = "Dear Valued Partner, \n Our system indicates that you account balance is below threshold value. \n\n BR \n\n Telcobright Billing Portal";
 
             smtpClient.Send(mail);
             return true;

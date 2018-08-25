@@ -95,13 +95,13 @@ namespace PortalApp.config
             lblusername.Text = ((List<partner>)Session["allPartners"]).First(x => x.idPartner == account.idPartner).PartnerName;
             lblSer.Text = account.accountName;
             actions = (BindingList<AccActionEx>)this.Session["pmActions"];
-            gvThreshhold.DataSource = actions;
-            gvThreshhold.DataBind();
+            gvThreshold.DataSource = actions;
+            gvThreshold.DataBind();
 
         }
 
 
-        protected void gvThreshhold_RowDataBound(object sender, GridViewRowEventArgs e)
+        protected void gvThreshold_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
@@ -177,36 +177,9 @@ namespace PortalApp.config
             }
 
             this.Session["pmActions"] = actions;
-            gvThreshhold.DataSource = actions;
-            gvThreshhold.DataBind();
+            gvThreshold.DataSource = actions;
+            gvThreshold.DataBind();
         }
-
-        /*
-        protected void txtLimit_TextChanged(object sender, EventArgs e)
-        {
-            TextBox txtLimit = sender as TextBox;
-            GridViewRow row = (GridViewRow)((Control)sender).NamingContainer;
-            actions = (BindingList<AccActionEx>)this.Session["pmActions"];
-            AccActionEx editRow = actions[row.RowIndex];
-            editRow.threshhold_value = Convert.ToDecimal(txtLimit.Text);
-            editRow.Rule = new AccountActionRule() { IsFixedAmount = true };
-            this.Session["pmActions"] = actions;
-            gvThreshhold.DataSource = actions;
-            gvThreshhold.DataBind();
-        }
-
-        protected void ddlAccountAction_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            DropDownList ddlAccountAction = sender as DropDownList;
-            GridViewRow row = (GridViewRow)((Control)sender).NamingContainer;
-            actions = (BindingList<AccActionEx>)this.Session["pmActions"];
-            AccActionEx editRow = actions[row.RowIndex];
-            editRow.idAccountAction = Convert.ToInt32(ddlAccountAction.SelectedValue);
-            this.Session["pmActions"] = actions;
-            gvThreshhold.DataSource = actions;
-            gvThreshhold.DataBind();
-        }
-        */
 
         protected void btnOK_Click(object sender, EventArgs e)
         {
@@ -285,11 +258,11 @@ namespace PortalApp.config
             action.idAccountAction = Convert.ToInt32(ddlAccountAction.SelectedValue);
             action.threshhold_value = Convert.ToDecimal(txtResult.Text);
             this.Session["pmActions"] = actions;
-            gvThreshhold.DataSource = actions;
-            gvThreshhold.DataBind();
+            gvThreshold.DataSource = actions;
+            gvThreshold.DataBind();
         }
 
-        protected void CalculateThreshholdValue(object sender, EventArgs e)
+        protected void CalculateThresholdValue(object sender, EventArgs e)
         {
             account = (account)this.Session["pmAccount"];
             decimal Amount = Convert.ToDecimal(txtAmount.Text) + account.getCurrentBalanceWithTempTransaction();
@@ -328,8 +301,8 @@ namespace PortalApp.config
                 }
             });
             this.Session["pmActions"] = actions;
-            gvThreshhold.DataSource = actions;
-            gvThreshhold.DataBind();
+            gvThreshold.DataSource = actions;
+            gvThreshold.DataBind();
         }
     }
 }

@@ -76,13 +76,13 @@ namespace PortalApp.config {
         protected global::System.Web.UI.WebControls.TextBox txtAmount;
         
         /// <summary>
-        /// gvThreshhold control.
+        /// gvThreshold control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvThreshhold;
+        protected global::System.Web.UI.WebControls.GridView gvThreshold;
         
         /// <summary>
         /// lbAddRule control.
