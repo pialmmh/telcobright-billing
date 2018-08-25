@@ -61,13 +61,13 @@
         <td style="padding:3px"><asp:TextBox id="txtAmount" Runat="server" AutoPostBack="true" OnTextChanged="txtAmount_TextChanged" Text="0" /> </td>
     </tr>
         <tr>
-            <td colspan="2" align="center">Threshhold Settings</td>
+            <td colspan="2" align="center">Threshold Settings</td>
         </tr>
         <tr>
             <td colspan="2" align="center">
-                <asp:GridView ID="gvThreshhold" runat="server"
+                <asp:GridView ID="gvThreshold" runat="server"
                     Font-Names="Arial"  DataKeyNames="id" Font-Size="9pt" CellPadding="4" ForeColor="#333333" AutoGenerateColumns="False"
-                    OnRowDataBound="gvThreshhold_RowDataBound">
+                    OnRowDataBound="gvThreshold_RowDataBound">
                 <EditRowStyle BackColor="#999999" />
                 <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />                
                 <HeaderStyle BackColor="#5D7B9D" ForeColor="white" Font-Bold="True" />
@@ -134,19 +134,19 @@ CancelControlID="btnRuleCancel" BackgroundCssClass="modalBackground" BehaviorID=
                 </tr>
                 <tr>
                     <td><asp:RadioButton runat="server" ID="rbIsFixedAmount" Text="Fixed Amount" GroupName="grpRule" /></td>
-                    <td><asp:TextBox runat="server" ID="txtFixedAmount" Text="0" OnTextChanged="CalculateThreshholdValue" AutoPostBack="true" /></td>
+                    <td><asp:TextBox runat="server" ID="txtFixedAmount" Text="0" OnTextChanged="CalculateThresholdValue" AutoPostBack="true" /></td>
                 </tr>
                 <tr>
                     <td><asp:RadioButton runat="server" ID="rbIsPercent" Text="Percentage" GroupName="grpRule" /></td>
-                    <td><asp:TextBox runat="server" ID="txtPercentage" Text="0" OnTextChanged="CalculateThreshholdValue" AutoPostBack="true" /> %</td>
+                    <td><asp:TextBox runat="server" ID="txtPercentage" Text="0" OnTextChanged="CalculateThresholdValue" AutoPostBack="true" /> %</td>
                 </tr>
                 <tr>
                     <td><asp:RadioButton runat="server" ID="rbIsFormulaBased" Text="Formula Based" GroupName="grpRule" /></td>
                     <td>
-                        <asp:Label runat="server" Text="ACD:" Width="60px" /><asp:TextBox runat="server" ID="txtACD" Text="0" OnTextChanged="CalculateThreshholdValue" AutoPostBack="true" /> Sec<br />
-                        <asp:Label runat="server" Text="ACR:" Width="60px" /><asp:TextBox runat="server" ID="txtACR" Text="0" OnTextChanged="CalculateThreshholdValue" AutoPostBack="true" /> $<br />
-                        <asp:Label runat="server" Text="Minute:" Width="60px" /><asp:TextBox runat="server" ID="txtMinute" Text="0" OnTextChanged="CalculateThreshholdValue" AutoPostBack="true" />
-                        <asp:Label runat="server" Text="Ports:" Width="60px" /><asp:TextBox runat="server" ID="txtNoOfPorts" Text="0" OnTextChanged="CalculateThreshholdValue" AutoPostBack="true" />
+                        <asp:Label runat="server" Text="ACD:" Width="60px" /><asp:TextBox runat="server" ID="txtACD" Text="0" OnTextChanged="CalculateThresholdValue" AutoPostBack="true" /> Sec<br />
+                        <asp:Label runat="server" Text="ACR:" Width="60px" /><asp:TextBox runat="server" ID="txtACR" Text="0" OnTextChanged="CalculateThresholdValue" AutoPostBack="true" /> $<br />
+                        <asp:Label runat="server" Text="Minute:" Width="60px" /><asp:TextBox runat="server" ID="txtMinute" Text="0" OnTextChanged="CalculateThresholdValue" AutoPostBack="true" />
+                        <asp:Label runat="server" Text="Ports:" Width="60px" /><asp:TextBox runat="server" ID="txtNoOfPorts" Text="0" OnTextChanged="CalculateThresholdValue" AutoPostBack="true" />
                     </td>
                 </tr>
                 <tr>
