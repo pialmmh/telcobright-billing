@@ -30,6 +30,87 @@ public partial class ConversionRates {
     protected global::System.Web.UI.WebControls.Label lblAssignedPlans;
     
     /// <summary>
+    /// ddlistFromCurrency control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlistFromCurrency;
+    
+    /// <summary>
+    /// ddlistToCurrency control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlistToCurrency;
+    
+    /// <summary>
+    /// txtDateFrom control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtDateFrom;
+    
+    /// <summary>
+    /// CalendarStartDate control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::AjaxControlToolkit.CalendarExtender CalendarStartDate;
+    
+    /// <summary>
+    /// txtDateTo control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtDateTo;
+    
+    /// <summary>
+    /// CalendarEndDate control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::AjaxControlToolkit.CalendarExtender CalendarEndDate;
+    
+    /// <summary>
+    /// txtConversionRate control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtConversionRate;
+    
+    /// <summary>
+    /// ddlPurpose control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlPurpose;
+    
+    /// <summary>
+    /// btnAdd control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Button btnAdd;
+    
+    /// <summary>
     /// EntityDataConversionRates control.
     /// </summary>
     /// <remarks>

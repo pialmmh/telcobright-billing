@@ -12,7 +12,73 @@ Theme="" AutoEventWireup="True" CodeBehind="ConversionRates.aspx.cs" Inherits="C
     <ajaxToolkit:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server" > </ajaxToolkit:ToolkitScriptManager>
     
 </div>
-    <asp:Label ID="lblAssignedPlans" runat="server" Text="Conversion Rates" Font-Bold="true"></asp:Label>
+    <div>
+        <asp:Label ID="lblAssignedPlans" runat="server" Text="Conversion Rates" Font-Bold="true"></asp:Label>
+    </div>
+    <div style="clear: both; padding-top: 10px;">
+        <span style="color: black;"><b>Add new conversion rate:</b></span> <br/>
+        <table width="800px" cellpadding="2" cellspacing="2" border="0">
+            <tr>
+                <td style="width: 15%; horiz-align: left">
+                    From Currency
+                </td>
+                <td style="width: 35%; horiz-align: left">
+                    <asp:DropDownList ID="ddlistFromCurrency" runat="server"  Enabled="true" AutoPostBack="false" 
+                        DataSourceID="SqlDataUOM" DataTextField="DESCRIPTION" DataValueField="UOM_ID" OnDataBound="ddlistFromCurrency_DataBound" />
+                </td>
+                <td style="width: 15%; horiz-align: left">
+                    To Currency
+                </td>
+                <td style="width: 35%; horiz-align: left">
+                    <asp:DropDownList ID="ddlistToCurrency" runat="server" Enabled="true" AutoPostBack="false" 
+                        DataSourceID="SqlDataUOM" DataTextField="DESCRIPTION" DataValueField="UOM_ID" OnDataBound="ddlistToCurrency_DataBound" />
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 15%; horiz-align: left">
+                    From Date [Time]
+                </td>
+                <td style="width: 35%; horiz-align: left">
+                    <asp:TextBox ID="txtDateFrom" runat="server" />
+                    <ajaxToolkit:CalendarExtender ID="CalendarStartDate" runat="server"
+                                                    TargetControlID="txtDateFrom" PopupButtonID="txtDateFrom" Format="yyyy-MM-dd 23:59:59">
+                    </ajaxToolkit:CalendarExtender>
+                </td>
+                <td style="width: 15%; horiz-align: left">
+                    Till Date [Time]
+                </td>
+                <td style="width: 35%; horiz-align: left">
+                    <asp:TextBox ID="txtDateTo" runat="server" />
+                    <ajaxToolkit:CalendarExtender ID="CalendarEndDate" runat="server"
+                                                    TargetControlID="txtDateTo" PopupButtonID="txtDateTo" Format="yyyy-MM-dd 23:59:59">
+                    </ajaxToolkit:CalendarExtender>                            
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 15%; horiz-align: left">
+                    Conversion Rate
+                </td>
+                <td style="width: 35%; horiz-align: left">
+                    <asp:TextBox runat="server" ID="txtConversionRate" />
+                </td>
+                <td style="width: 15%; horiz-align: left">
+                    Purpose
+                </td>
+                <td style="width: 35%; horiz-align: left">
+                    <asp:DropDownList ID="ddlPurpose" runat="server" AutoPostBack="false" Enabled="True">
+                        <asp:ListItem Text="External Conversion" Value="EXTERNAL_CONVERSION" Selected="True" />
+                    </asp:DropDownList>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 15%; horiz-align: left">&nbsp;</td>
+                <td style="width: 85%; horiz-align: left" colspan="3">
+                    <asp:Button runat="server" ID="btnAdd" Text="Add" OnClick="btnAdd_Click" />
+                </td>
+            </tr>
+        </table>
+    </div>    
+    <div>
     <asp:EntityDataSource ID="EntityDataConversionRates" runat="server" 
         ConnectionString="name=PartnerEntities" DefaultContainerName="PartnerEntities" 
         EnableDelete="True" EnableFlattening="False" EnableInsert="True" 
@@ -51,7 +117,7 @@ Theme="" AutoEventWireup="True" CodeBehind="ConversionRates.aspx.cs" Inherits="C
                     <asp:LinkButton ID="LinkButtonDelete" Visible="false"  CommandName="myDelete"  runat="server">Delete</asp:LinkButton>
                 </EditItemTemplate>
             </asp:TemplateField>
-            <asp:TemplateField>
+            <asp:TemplateField HeaderText="From Currency">
                 <ItemTemplate>
                     <asp:DropDownList ID="DropDownListUOM_ID" runat="server" AutoPostBack="True" 
                         DataSourceID="SqlDataUOM" DataTextField="DESCRIPTION" DataValueField="UOM_ID" SelectedValue='<%# Bind("UOM_ID") %>'
@@ -65,7 +131,7 @@ Theme="" AutoEventWireup="True" CodeBehind="ConversionRates.aspx.cs" Inherits="C
                     </asp:DropDownList>
                 </EditItemTemplate>
             </asp:TemplateField>
-            <asp:TemplateField>
+            <asp:TemplateField HeaderText="To Currency">
                 <ItemTemplate>
                     <asp:DropDownList ID="DropDownListUOM_ID_TO" runat="server" AutoPostBack="True" 
                         DataSourceID="SqlDataUOM" DataTextField="DESCRIPTION" DataValueField="UOM_ID" SelectedValue='<%# Bind("UOM_ID_TO") %>'
@@ -154,6 +220,7 @@ Theme="" AutoEventWireup="True" CodeBehind="ConversionRates.aspx.cs" Inherits="C
                 
                 </EditItemTemplate>
         </asp:TemplateField>
+            <asp:BoundField DataField="CONVERSION_FACTOR" HeaderText="Conversion Rate" SortExpression="CONVERSION_FACTOR" Visible="true" />
             <asp:BoundField DataField="PURPOSE_ENUM_ID" HeaderText="Purpose" SortExpression="PURPOSE_ENUM_ID" Visible="true" />
         </Columns>
     <EditRowStyle BackColor="#999999" />
@@ -169,4 +236,5 @@ Theme="" AutoEventWireup="True" CodeBehind="ConversionRates.aspx.cs" Inherits="C
     <SortedDescendingCellStyle BackColor="#FFFDF8" />
     <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
     </asp:GridView>
+    </div>
 </asp:Content>
