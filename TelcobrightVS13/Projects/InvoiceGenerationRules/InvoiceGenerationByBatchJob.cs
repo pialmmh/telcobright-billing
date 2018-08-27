@@ -26,7 +26,7 @@ namespace InvoiceGenerationRules
         public void Execute(object data) //incomplete
         {
             InvoiceGenerationInputData input = (InvoiceGenerationInputData) data;
-            InvoiceDataCollector invoiceDataCollector = input.InvoiceDataCollector;
+            //InvoiceDataCollector invoiceDataCollector = input.InvoiceDataCollector;
             PartnerEntities context = input.Context;
             int batchSizeForJobSegments = input.BatchSizeForJobSegment;
             SegmentedCdrInvoicingJobProcessor segmentedInvoiceProcessor =

@@ -28,10 +28,35 @@ namespace Jobs
         public int Id => 12;
         public JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
         {
-            this.Input = (InvoiceGenerationInputData) jobInputData;
-            this.Input.InvoiceGenerationRule.Execute(this.Input);
+            this.Input = (InvoiceGenerationInputData)jobInputData;
+            IServiceGroup serviceGroup = GetServiceGroup();
+            InvoiceGenerationHelper invoiceGenerationHelper = new InvoiceGenerationHelper(this.Input,
+                serviceGroup.ExecInvoicePreProcessing, serviceGroup.ExecInvoicePostProcessing);
+            invoiceGenerationHelper.ExecInvoicePreProcessing();
+            invoiceGenerationHelper.GenerateInvoice();
+            invoiceGenerationHelper.ExecInvoicePostProcessing();
             return JobCompletionStatus.Complete;
         }
+
+        private IServiceGroup GetServiceGroup()
+        {
+            PartnerEntities context = this.Input.Context;
+            job telcobrightJob = this.Input.TelcobrightJob;
+            Dictionary<string, string> jobParamsMap =
+                JsonConvert.DeserializeObject<Dictionary<string, string>>(telcobrightJob.jobsegments.Single()
+                    .SegmentDetail);
+            long serviceAccountId = Convert.ToInt64(jobParamsMap["serviceAccountId"]);
+            int idServiceGroup = context.accounts.Where(c => c.id == serviceAccountId)
+                .ToList().Single().serviceGroup;
+            IServiceGroup serviceGroup = null;
+            this.Input.ServiceGroups.TryGetValue(idServiceGroup, out serviceGroup);
+            if (serviceGroup==null)
+            {
+                throw new Exception("Could not find service group.");
+            }
+            return serviceGroup;
+        }
+
         private Action<object> actionOnFinish = jobInput =>
         {
             var input = (AccountingJobInputData) jobInput;

@@ -49,6 +49,7 @@ namespace InstallConfig
                         new OutPartnerCostGt0() {Data = .09M},
                         new BtrcRevShareTax1Gt0() {Data = .09M},
                      },
+                InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary"
             });
 
             serviceGroupConfigurations.Add(new ServiceGroupConfiguration(idServiceGroup: 2) //intlOutIgw
@@ -80,6 +81,7 @@ namespace InstallConfig
                         new YAmountGt0(){Data = .1M},
                         new RoundedDurationGt0(){Data = .1M}
                     },
+                InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary"
             });
 
             serviceGroupConfigurations.Add(new ServiceGroupConfiguration(idServiceGroup: 1) //domestic
@@ -106,6 +108,7 @@ namespace InstallConfig
                         new InPartnerCostGt0() {Data = .09M},
                         new BtrcRevShareTax1Gt0(){Data = .09M},
                      },
+                InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary"
             });
             serviceGroupConfigurations.Add(
                 new ServiceGroupConfiguration(idServiceGroup: 3) //intlInIcx
@@ -132,6 +135,7 @@ namespace InstallConfig
                             new InPartnerCostGt0() {Data = .09M},
                             new BtrcRevShareTax1Gt0() {Data = .09M},
                         },
+                    InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary"
                 });
             return serviceGroupConfigurations.ToDictionary(s => s.IdServiceGroup);
         }

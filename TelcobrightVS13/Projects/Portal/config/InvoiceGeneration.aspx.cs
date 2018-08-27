@@ -259,7 +259,7 @@ namespace PortalApp.config
             jobParamsMap.Add("startDate", invoiceDataCollector.StartDateTimeLocal.ToMySqlStyleDateTimeStrWithoutQuote());
             jobParamsMap.Add("endDate", invoiceDataCollector.EndDateTime.ToMySqlStyleDateTimeStrWithoutQuote());
             jobParamsMap.Add("timeZoneOffsetSec", invoiceDataCollector.GmtOffset.ToString());
-
+            
             if (prevJobCountWithSameName > 0)
             {
                 serviceAccount = serviceAccount + "_" + prevJobCountWithSameName;

@@ -122,7 +122,7 @@
     <Compile Include="Accounting\InvoiceableTransactionCollector.cs" />
     <Compile Include="Accounting\InvoiceDataCollector.cs" />
     <Compile Include="Accounting\InvoiceGenerationInputData.cs" />
-    <Compile Include="Accounting\InvoiceGenerator.cs" />
+    <Compile Include="Accounting\InvoiceGenerationHelper.cs" />
     <Compile Include="Accounting\ITimeRangeImplementer.cs" />
     <Compile Include="Accounting\BillingRule.cs" />
     <Compile Include="Accounting\LedgerSumFactory.cs" />

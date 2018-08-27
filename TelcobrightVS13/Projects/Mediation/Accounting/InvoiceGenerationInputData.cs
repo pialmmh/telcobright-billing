@@ -7,34 +7,29 @@ using MediationModel;
 
 namespace TelcobrightMediation.Accounting
 {
-    public class InvoiceGenerationInputData:ITelcobrightJobInput
+    public class InvoiceGenerationInputData : ITelcobrightJobInput
     {
-        public IServiceGroup ServiceGroup { get; }
-        private Dictionary<string, IInvoiceGenerationRule> InvoiceGenerationRules { get; set; }
-        public IInvoiceGenerationRule InvoiceGenerationRule { get; set; }
+        public Dictionary<string, IInvoiceGenerationRule> InvoiceGenerationRules { get;}
+        public Dictionary<int,IServiceGroup> ServiceGroups { get; }
         public TelcobrightConfig Tbc { get; }
         public PartnerEntities Context { get; }
         public int BatchSizeForJobSegment { get; set; }
-        public InvoiceDataCollector InvoiceDataCollector { get; set; }
-        public AccountingContext AccountingContext { get; set; }
-        public job TelcobrightJob { get;}
-        public InvoiceGenerationInputData(TelcobrightConfig tbc,AccountingContext accountingContext, 
-            PartnerEntities context, string invoiceGenerationRuleName,int batchSizeForJobSegment, 
-            InvoiceDataCollector invoiceDataCollector,job telcobrightJob,
-            IServiceGroup serviceGroup)
+        public job TelcobrightJob { get; }
+        public IServiceGroup SelectedServiceGroup { get; set; } = null;
+        public InvoiceGenerationInputData(TelcobrightConfig tbc,
+            PartnerEntities context, job telcobrightJob)
         {
             this.Tbc = tbc;
-            this.AccountingContext = accountingContext;
             Context = context;
-            BatchSizeForJobSegment = batchSizeForJobSegment;
-            InvoiceDataCollector = invoiceDataCollector;
+            BatchSizeForJobSegment = this.Tbc.CdrSetting.SegmentSizeForDbWrite;
             this.TelcobrightJob = telcobrightJob;
-            InvoiceGenerationRuleComposer invoiceGenerationRuleComposer=new InvoiceGenerationRuleComposer();
+            InvoiceGenerationRuleComposer invoiceGenerationRuleComposer = new InvoiceGenerationRuleComposer();
             invoiceGenerationRuleComposer.Compose();
             this.InvoiceGenerationRules = invoiceGenerationRuleComposer.InvoiceGenerationRules
                 .ToDictionary(c => c.RuleName);
-            this.InvoiceGenerationRule = this.InvoiceGenerationRules[invoiceGenerationRuleName];
-            this.ServiceGroup = serviceGroup;
+            ServiceGroupComposer serviceGroupComposer = new ServiceGroupComposer();
+            serviceGroupComposer.Compose();
+            this.ServiceGroups = serviceGroupComposer.ServiceGroups.ToDictionary(c => c.Id);
         }
     }
 }

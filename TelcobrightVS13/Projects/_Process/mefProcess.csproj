@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccountingHelper.cs" />
+    <Compile Include="InvoiceGenerator.cs" />
     <Compile Include="FileLister.cs" />
     <Compile Include="CdrJobCreator.cs" />
     <Compile Include="AutoCreateJob.cs" />

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using MediationModel;
-using TelcobrightMediation;
+using TelcobrightMediation.Accounting;
 namespace TelcobrightMediation
 {
     public class ServiceGroupConfiguration
@@ -11,6 +11,7 @@ namespace TelcobrightMediation
         public List<IValidationRule<cdr>> MediationChecklistForAnsweredCdrs { get; set; }
         public int IdServiceGroup { get; }
         public Dictionary<string, string> Params { get; set; }=new Dictionary<string, string>();
+        public string InvoiceGenerationRuleName { get; set; }
         public ServiceGroupConfiguration(int idServiceGroup)
         {
             this.IdServiceGroup = idServiceGroup;

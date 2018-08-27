@@ -49,7 +49,7 @@ namespace TelcobrightMediation.Cdr
             this.InvoiceGenerationInputData = invoiceGenerationInputData;
             this.Context = this.InvoiceGenerationInputData.Context;
             this.JobSegmentNumber = jobSegmentNumber;
-            this.AccountingContext = this.InvoiceGenerationInputData.AccountingContext;
+            //this.AccountingContext = this.InvoiceGenerationInputData.AccountingContext;
             this.Transactions = transactions;
             this.ProcessedInvoicedAmountSoFar = invoicedAmountAfterLastSegment;
         }

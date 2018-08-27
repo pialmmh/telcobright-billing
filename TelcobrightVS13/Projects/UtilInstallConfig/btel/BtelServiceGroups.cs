@@ -52,6 +52,7 @@ namespace InstallConfig
                             new AnsIdTermGt0(),
                             new RoundedDurationGt0(){Data = .09M},
                          },
+                    InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary"
                 }, //end dictionary item
                 new ServiceGroupConfiguration(idServiceGroup: 5) //intlOutIgw
                 {
@@ -84,6 +85,7 @@ namespace InstallConfig
                             new YAmountGt0() {Data = .1M},
                             new RoundedDurationGt0() {Data = .1M}
                         },
+                    InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary"
                 }
             };
             return serviceGroupConfigurations.ToDictionary(s => s.IdServiceGroup);
