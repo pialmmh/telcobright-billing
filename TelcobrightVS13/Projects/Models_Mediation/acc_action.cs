@@ -18,6 +18,7 @@ namespace MediationModel
         public long idAccount { get; set; }
         public decimal threshhold_value { get; set; }
         public long idAccountAction { get; set; }
+        public sbyte isNotified { get; set; }
     
         public virtual account account { get; set; }
     }

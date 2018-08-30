@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace TelcobrightMediation.Accounting
 {
-    public interface IAccountAction
+    public interface IAutomationAction
     {
-        bool execute(partner partner);
+        int Id { get; set; }
+        String ActionName { get; set; }
+        void Execute(object automationData);
     }
 }

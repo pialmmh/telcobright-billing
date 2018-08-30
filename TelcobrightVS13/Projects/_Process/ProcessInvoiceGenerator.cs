@@ -24,7 +24,7 @@ using TelcobrightMediation.Config;
 namespace Process
 {
     [Export("TelcobrightProcess", typeof(ITelcobrightProcess))]
-    public class InvoiceGenerator : ITelcobrightProcess
+    public class ProcessInvoiceGenerator : ITelcobrightProcess
     {
         public override string ToString()
         {

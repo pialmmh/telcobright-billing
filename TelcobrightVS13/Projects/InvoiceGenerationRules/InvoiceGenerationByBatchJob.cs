@@ -23,7 +23,7 @@ namespace InvoiceGenerationRules
         public string HelpText => "Generate invoice from raw transactions in batches.";
         public int Id => 1;
 
-        public void Execute(object data) //incomplete
+        public InvoicePostProcessingData Execute(object data) //incomplete
         {
             InvoiceGenerationInputData input = (InvoiceGenerationInputData) data;
             //InvoiceDataCollector invoiceDataCollector = input.InvoiceDataCollector;
@@ -36,6 +36,7 @@ namespace InvoiceGenerationRules
             List<jobsegment> jobsegments =
                 segmentedInvoiceProcessor.ExecuteIncompleteSegments();
             segmentedInvoiceProcessor.FinishJob(jobsegments, null); //mark job as complete
+            return null;//incomplete, finish later
         }
     }
 }

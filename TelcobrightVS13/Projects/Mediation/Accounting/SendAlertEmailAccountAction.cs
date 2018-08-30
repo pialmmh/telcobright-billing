@@ -8,15 +8,20 @@ using System.Threading.Tasks;
 
 namespace TelcobrightMediation.Accounting
 {
-    public class SendAlertEmailAccountAction : AccountAction
+    public class SendAlertEmailAccountAction : IAutomationAction
     {
+        public int Id { get; set; }
+        public string ActionName { get; set; }
+
         public SendAlertEmailAccountAction()
         {
             this.Id = 1;
             this.ActionName = "Send Alert Email";
         }
-        public override bool execute(partner partner)
+
+        public void Execute(object data)
         {
+            partner partner = (partner) data;
             SmtpClient smtpClient = new SmtpClient("mail.telcobright.com", 25);
 
             smtpClient.Credentials = new System.Net.NetworkCredential("noreply@telcobright.com", "myPassword");
@@ -30,10 +35,11 @@ namespace TelcobrightMediation.Accounting
             mail.To.Add(new MailAddress(partner.email));
             // mail.CC.Add(new MailAddress("MyEmailID@gmail.com"));
             mail.Subject = "Account balance below threshold value";
-            mail.Body = "Dear Valued Partner, \n Our system indicates that you account balance is below threshold value. \n\n BR \n\n Telcobright Billing Portal";
+            mail.Body =
+                "Dear Valued Partner, \n Our system indicates that you account balance is below threshold value. \n\n BR \n\n Telcobright Billing Portal";
 
             smtpClient.Send(mail);
-            return true;
+
         }
     }
 }

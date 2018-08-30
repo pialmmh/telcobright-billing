@@ -19,7 +19,7 @@ namespace Jobs
 {
 
     [Export("Job", typeof(ITelcobrightJob))]
-    public class InvoicingJob : ITelcobrightJob
+    public class MefInvoicingJob : ITelcobrightJob
     {
         public override string ToString() => this.RuleName;
         public string RuleName => GetType().Name;
@@ -33,8 +33,8 @@ namespace Jobs
             InvoiceGenerationHelper invoiceGenerationHelper = new InvoiceGenerationHelper(this.Input,
                 serviceGroup.ExecInvoicePreProcessing, serviceGroup.ExecInvoicePostProcessing);
             invoiceGenerationHelper.ExecInvoicePreProcessing();
-            invoiceGenerationHelper.GenerateInvoice();
-            invoiceGenerationHelper.ExecInvoicePostProcessing();
+            InvoicePostProcessingData invoicePostProcessingData= invoiceGenerationHelper.GenerateInvoice();
+            invoiceGenerationHelper.ExecInvoicePostProcessing(invoicePostProcessingData);
             return JobCompletionStatus.Complete;
         }
 

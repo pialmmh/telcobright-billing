@@ -65,6 +65,7 @@ namespace MediationModel
         public virtual DbSet<enumcurrency> enumcurrencies { get; set; }
         public virtual DbSet<enumdatedassignment> enumdatedassignments { get; set; }
         public virtual DbSet<enumdateparsestring> enumdateparsestrings { get; set; }
+        public virtual DbSet<enumeration> enumerations { get; set; }
         public virtual DbSet<enuminvoicetemplate> enuminvoicetemplates { get; set; }
         public virtual DbSet<enumjobautocreatetype> enumjobautocreatetypes { get; set; }
         public virtual DbSet<enumjobdefinition> enumjobdefinitions { get; set; }

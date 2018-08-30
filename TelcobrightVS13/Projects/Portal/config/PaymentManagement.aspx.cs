@@ -19,7 +19,7 @@ namespace PortalApp.config
     public partial class PaymentManagement : System.Web.UI.Page
     {
         private static TelcobrightConfig Tbc { get; set; }
-        private static List<AccountAction> availableActions { get; set; }
+        private static List<IAutomationAction> availableActions { get; set; }
 
         private BindingList<AccActionEx> actions = new BindingList<AccActionEx>();
 

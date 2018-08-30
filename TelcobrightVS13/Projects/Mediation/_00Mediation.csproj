@@ -106,7 +106,6 @@
     <Compile Include="Accounting\AccActionEx.cs" />
     <Compile Include="Accounting\AccBalanceThresholdHandler.cs" />
     <Compile Include="Accounting\AccChargeableExt.cs" />
-    <Compile Include="Accounting\AccountAction.cs" />
     <Compile Include="Accounting\AccountActionRule.cs" />
     <Compile Include="Accounting\AccountCreatorFromRatePlanAssignment.cs" />
     <Compile Include="Accounting\AccountBalanceHelper.cs" />
@@ -116,13 +115,14 @@
     <Compile Include="Accounting\CdrPostingAccountingFinder.cs" />
     <Compile Include="Accounting\DateInterval.cs" />
     <Compile Include="Accounting\AccountActionService.cs" />
-    <Compile Include="Accounting\IAccountAction.cs" />
+    <Compile Include="Accounting\IAutomationAction.cs" />
     <Compile Include="Accounting\IAccountCreator.cs" />
     <Compile Include="Accounting\IBillingRule.cs" />
     <Compile Include="Accounting\InvoiceableTransactionCollector.cs" />
     <Compile Include="Accounting\InvoiceDataCollector.cs" />
     <Compile Include="Accounting\InvoiceGenerationInputData.cs" />
     <Compile Include="Accounting\InvoiceGenerationHelper.cs" />
+    <Compile Include="Accounting\InvoicePostProcessingData.cs" />
     <Compile Include="Accounting\ITimeRangeImplementer.cs" />
     <Compile Include="Accounting\BillingRule.cs" />
     <Compile Include="Accounting\LedgerSumFactory.cs" />

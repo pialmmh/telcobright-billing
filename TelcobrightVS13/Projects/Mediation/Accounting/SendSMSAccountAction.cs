@@ -7,15 +7,17 @@ using System.Threading.Tasks;
 
 namespace TelcobrightMediation.Accounting
 {
-    public class SendSMSAccountAction : AccountAction
+    public class SMSAccountAction : IAutomationAction
     {
-        public SendSMSAccountAction()
+        public int Id { get; set; }
+        public string ActionName { get; set; }
+        public SMSAccountAction()
         {
             this.Id = 2;
             this.ActionName = "Send SMS";
         }
 
-        public override bool execute(partner partner)
+        public void Execute(object data)
         {
             throw new NotImplementedException();
         }

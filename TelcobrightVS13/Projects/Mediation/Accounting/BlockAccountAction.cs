@@ -7,15 +7,11 @@ using System.Threading.Tasks;
 
 namespace TelcobrightMediation.Accounting
 {
-    public class BlockAccountAction : AccountAction
+    public class ActionBlockingAutomation : IAutomationAction
     {
-        public BlockAccountAction()
-        {
-            this.Id = 3;
-            this.ActionName = "Block Account";
-        }
-
-        public override bool execute(partner partner)
+        public int Id { get; set; }
+        public string ActionName { get; set; }
+        public void Execute(object automationData)
         {
             throw new NotImplementedException();
         }

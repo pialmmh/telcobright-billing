@@ -19,7 +19,7 @@ namespace PortalApp.config
     public partial class AddPayment : System.Web.UI.Page
     {
         private static TelcobrightConfig Tbc { get; set; }
-        private static List<AccountAction> availableActions { get; set; }
+        private static List<IAutomationAction> availableActions { get; set; }
         private account account { get; set; }
 
         private BindingList<AccActionEx> actions = new BindingList<AccActionEx>();
@@ -46,10 +46,10 @@ namespace PortalApp.config
                 }
 
                 // TODO: get this from config
-                availableActions = new List<AccountAction>();
+                availableActions = new List<IAutomationAction>();
                 availableActions.Add(new SendAlertEmailAccountAction());
-                availableActions.Add(new SendSMSAccountAction());
-                availableActions.Add(new BlockAccountAction());
+                availableActions.Add(new SMSAccountAction());
+                availableActions.Add(new ActionBlockingAutomation());
 
                 actions.Add(new AccActionEx()
                 {

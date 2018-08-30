@@ -17,6 +17,6 @@ namespace TelcobrightMediation
         Dictionary<CdrSummaryType, Type> GetSummaryTargetTables();
         void SetServiceGroupWiseSummaryParams(CdrExt cdrExt, AbstractCdrSummary newSummary);
         void ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData);
-        void ExecInvoicePostProcessing(InvoiceGenerationInputData invoiceGenerationInputData);
+        InvoicePostProcessingData ExecInvoicePostProcessing(InvoicePostProcessingData invoicePostProcessingData);
     }
 }

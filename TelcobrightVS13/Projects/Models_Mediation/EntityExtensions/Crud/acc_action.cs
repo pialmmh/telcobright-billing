@@ -14,7 +14,8 @@ namespace MediationModel
 				.Append(this.id.ToMySqlField()).Append(",")
 				.Append(this.idAccount.ToMySqlField()).Append(",")
 				.Append(this.threshhold_value.ToMySqlField()).Append(",")
-				.Append(this.idAccountAction.ToMySqlField()).Append(")")
+				.Append(this.idAccountAction.ToMySqlField()).Append(",")
+				.Append(this.isNotified.ToMySqlField()).Append(")")
 				;
 		}
 		public  StringBuilder GetExtInsertCustom(Func<acc_action,string> externalInsertMethod)
@@ -27,7 +28,8 @@ namespace MediationModel
 				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
 				.Append("idAccount=").Append(this.idAccount.ToMySqlField()).Append(",")
 				.Append("threshhold_value=").Append(this.threshhold_value.ToMySqlField()).Append(",")
-				.Append("idAccountAction=").Append(this.idAccountAction.ToMySqlField())
+				.Append("idAccountAction=").Append(this.idAccountAction.ToMySqlField()).Append(",")
+				.Append("isNotified=").Append(this.isNotified.ToMySqlField())
 				.Append(whereClauseMethod.Invoke(this));
 				
 		}

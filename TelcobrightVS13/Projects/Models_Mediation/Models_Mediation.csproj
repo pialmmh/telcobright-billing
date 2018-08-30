@@ -361,6 +361,9 @@
     <Compile Include="enumdateparsestring.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="enumeration.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="enuminvoicetemplate.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>

@@ -2,7 +2,9 @@
 using System;
 using MediationModel;
 using System.Collections.Generic;
+using System.Linq;
 using LibraryExtensions;
+using Newtonsoft.Json;
 using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Cdr;
 using TransactionTuple = System.ValueTuple<int, int, long, int,long>;
@@ -81,10 +83,33 @@ namespace TelcobrightMediation
 
         public void ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData)
         {
-            throw new NotImplementedException();
+            job telcobrightJob = invoiceGenerationInputData.TelcobrightJob;
+            Dictionary<string, string> jobParamsMap =
+                JsonConvert.DeserializeObject<Dictionary<string, string>>(telcobrightJob.jobsegments.Single()
+                    .SegmentDetail);
+            DateTime startDate = Convert.ToDateTime(jobParamsMap["startDate"]);
+            DateTime endDate = Convert.ToDateTime(jobParamsMap["endDate"]);
+            if (startDate.Day != 1 || endDate.Day != DateTime.DaysInMonth(startDate.Year, startDate.Month)
+                || startDate.Hour != 0 || startDate.Minute != 0 || startDate.Second != 0 ||
+                endDate.Hour != 23 || endDate.Minute != 59 || endDate.Second != 59)
+            {
+                throw new Exception("Start date & end date must be first & last day of a month.");
+            }
+            var context = invoiceGenerationInputData.Context;
+            DateTime lastHourOfPrevMonth = startDate.AddSeconds(-1);
+            uom_conversion_dated usdConversionDated = context.uom_conversion_dated.Where(
+                    c => c.PURPOSE_ENUM_ID == "EXTERNAL_CONVERSION"
+                         && c.UOM_ID == "USD" && c.UOM_ID_TO == "BDT" && c.FROM_DATE == lastHourOfPrevMonth).ToList()
+                .FirstOrDefault();
+            if (usdConversionDated == null)
+                throw new Exception("Usd rate not found in uom_conversion_dated table.");
+            Dictionary<string, string> invoiceData = new Dictionary<string, string>()
+            {
+                {"usdRate", usdConversionDated.CONVERSION_FACTOR.ToString()}
+            };
         }
 
-        public void ExecInvoicePostProcessing(InvoiceGenerationInputData invoiceGenerationInputData)
+        public InvoicePostProcessingData ExecInvoicePostProcessing(InvoicePostProcessingData invoicePostProcessingData)
         {
             throw new NotImplementedException();
         }

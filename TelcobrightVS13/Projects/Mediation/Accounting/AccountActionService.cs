@@ -10,16 +10,16 @@ namespace TelcobrightMediation.Accounting
 {
     public class AccountActionService
     {
-        private List<AccountAction> AvailableActions { get; set; }
+        private List<IAutomationAction> AccountAutomationActions { get; set; }
         private List<partner> AllPartners { get; set; }
 
         public AccountActionService()
         {
             // TODO: get this from config
-            AvailableActions = new List<AccountAction>();
-            AvailableActions.Add(new SendAlertEmailAccountAction());
-            AvailableActions.Add(new SendSMSAccountAction());
-            AvailableActions.Add(new BlockAccountAction());
+            AccountAutomationActions = new List<IAutomationAction>();
+            AccountAutomationActions.Add(new SendAlertEmailAccountAction());
+            AccountAutomationActions.Add(new SMSAccountAction());
+            AccountAutomationActions.Add(new ActionBlockingAutomation());
 
             using (PartnerEntities context = new PartnerEntities())
             {
@@ -49,10 +49,10 @@ namespace TelcobrightMediation.Accounting
                             if (account.getCurrentBalanceWithTempTransaction() <= action.threshhold_value)
                             {
                                 // TODO: Check for already executed action
-                                AccountAction accountAction = AvailableActions.Where(x => x.Id == action.idAccountAction).FirstOrDefault();
+                                IAutomationAction accountAction = AccountAutomationActions.Where(x => x.Id == action.idAccountAction).FirstOrDefault();
                                 if (accountAction != null)
                                 {
-                                    accountAction.execute(partner);
+                                    accountAction.Execute(partner);
                                     // TODO: Save action execution history
                                 }
                             }

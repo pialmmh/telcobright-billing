@@ -1,4 +1,5 @@
 using MediationModel;
+using TelcobrightMediation.Accounting;
 
 namespace TelcobrightMediation
 {
@@ -7,6 +8,6 @@ namespace TelcobrightMediation
         string RuleName { get; }
         string HelpText { get; }
         int Id { get; }
-        void Execute(object data);
+        InvoicePostProcessingData Execute(object data);
     }
 }

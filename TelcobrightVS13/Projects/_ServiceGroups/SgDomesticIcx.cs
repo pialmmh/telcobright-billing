@@ -83,7 +83,7 @@ namespace TelcobrightMediation
             throw new NotImplementedException();
         }
 
-        public void ExecInvoicePostProcessing(InvoiceGenerationInputData invoiceGenerationInputData)
+        public InvoicePostProcessingData ExecInvoicePostProcessing(InvoicePostProcessingData invoicePostProcessingData)
         {
             throw new NotImplementedException();
         }
