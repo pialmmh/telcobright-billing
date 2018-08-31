@@ -12,15 +12,13 @@ namespace TelcobrightMediation.Accounting
     {
         private List<IAutomationAction> AccountAutomationActions { get; set; }
         private List<partner> AllPartners { get; set; }
+        private TelcobrightConfig Tbc { get; set; }
 
-        public AccountActionService()
+        public AccountActionService(TelcobrightConfig tbc)
         {
-            // TODO: get this from config
-            AccountAutomationActions = new List<IAutomationAction>();
-            AccountAutomationActions.Add(new SendAlertEmailAccountAction());
-            AccountAutomationActions.Add(new SMSAccountAction());
-            AccountAutomationActions.Add(new ActionBlockingAutomation());
-
+            this.Tbc = tbc;
+            // TODO: Replace 4 with correct variable
+            AccountAutomationActions = tbc.CdrSetting.ServiceGroupConfigurations[4].AccountActions;
             using (PartnerEntities context = new PartnerEntities())
             {
                 AllPartners = context.partners.ToList();
@@ -31,8 +29,7 @@ namespace TelcobrightMediation.Accounting
         {
             using (PartnerEntities context = new PartnerEntities())
             {
-                TelcobrightConfig tbc = new TelcobrightConfig();/* = PageUtil.GetTelcobrightConfig();*/
-                List<KeyValuePair<Regex, string>> serviceAliases = tbc.ServiceAliasesRegex;
+                List<KeyValuePair<Regex, string>> serviceAliases = Tbc.ServiceAliasesRegex;
                 List<string> billableType = new List<string>()
                 {
                     "/custBilled", "/suppBilled", "/billable"
@@ -48,12 +45,17 @@ namespace TelcobrightMediation.Accounting
                         {
                             if (account.getCurrentBalanceWithTempTransaction() <= action.threshhold_value)
                             {
-                                // TODO: Check for already executed action
-                                IAutomationAction accountAction = AccountAutomationActions.Where(x => x.Id == action.idAccountAction).FirstOrDefault();
-                                if (accountAction != null)
+                                if (action.isNotified != 1)
                                 {
-                                    accountAction.Execute(partner);
-                                    // TODO: Save action execution history
+                                    IAutomationAction accountAction = AccountAutomationActions.Where(x => x.Id == action.idAccountAction).FirstOrDefault();
+                                    accountAction.Tbc = this.Tbc;
+                                    if (accountAction != null)
+                                    {
+                                        accountAction.Execute(partner);
+                                        action.isNotified = 1;
+                                        context.SaveChanges();
+                                        break;
+                                    }
                                 }
                             }
                         }

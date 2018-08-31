@@ -11,6 +11,7 @@ namespace TelcobrightMediation.Accounting
     {
         int Id { get; set; }
         String ActionName { get; set; }
+        TelcobrightConfig Tbc { get; set; }
         void Execute(object automationData);
     }
 }

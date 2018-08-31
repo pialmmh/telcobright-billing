@@ -45,11 +45,8 @@ namespace PortalApp.config
                     this.Session["pmAccount"] = account;
                 }
 
-                // TODO: get this from config
-                availableActions = new List<IAutomationAction>();
-                availableActions.Add(new SendAlertEmailAccountAction());
-                availableActions.Add(new SMSAccountAction());
-                availableActions.Add(new ActionBlockingAutomation());
+                // TODO: Replace 4 with correct variable
+                availableActions = Tbc.CdrSetting.ServiceGroupConfigurations[4].AccountActions;
 
                 actions.Add(new AccActionEx()
                 {

@@ -62,6 +62,18 @@ namespace InstallConfig
             this.Tbc.DatabaseSetting = databaseSetting;
 
             this.Tbc.PortalSettings = GetPortalSettings(this.Tbc);
+
+            this.Tbc.EmailSenderConfig = new EmailSenderConfig
+            {
+                SmtpHost = "mail.telcobright.com",
+                SmtpPort = 25,
+                Username = "noreply@telcobright.com",
+                Password = "myPassword",
+                MailFrom = "noreply@telcobright.com",
+                MailFromDisplayName = "Telcobright Billing Portal",
+                EnableSsl = true
+            };
+
             return this.Tbc;
         }
 

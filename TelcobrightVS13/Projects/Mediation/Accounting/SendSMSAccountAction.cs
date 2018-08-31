@@ -11,6 +11,7 @@ namespace TelcobrightMediation.Accounting
     {
         public int Id { get; set; }
         public string ActionName { get; set; }
+        public TelcobrightConfig Tbc { get; set; }
         public SMSAccountAction()
         {
             this.Id = 2;

@@ -15,6 +15,7 @@ using LibraryExtensions.ConfigHelper;
 using MediationModel;
 using QuartzTelcobright;
 using TelcobrightMediation.Config;
+using TelcobrightMediation.Accounting;
 
 namespace InstallConfig
 {
@@ -52,7 +53,13 @@ namespace InstallConfig
                             new AnsIdTermGt0(),
                             new RoundedDurationGt0(){Data = .09M},
                          },
-                    InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary"
+                    InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary", 
+                    AccountActions = new List<IAutomationAction>
+                    {
+                        new SendAlertEmailAccountAction(),
+                        new SMSAccountAction(),
+                        new ActionBlockingAutomation()
+                    }
                 }, //end dictionary item
                 new ServiceGroupConfiguration(idServiceGroup: 5) //intlOutIgw
                 {
