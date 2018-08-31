@@ -141,6 +141,8 @@
     <Compile Include="Cdr\Collection\PreProcessors\AbstractCdrReProcessingPreProcessor.cs" />
     <Compile Include="Cdr\Collection\RowIdsCollectionForSingleDay.cs" />
     <Compile Include="Cdr\RateCacheCleaner.cs" />
+    <Compile Include="Config\EmailSenderConfig.cs" />
+    <Compile Include="Config\SmsSenderConfig.cs" />
     <Compile Include="IAutoincrementManager.cs" />
     <Compile Include="MefData\IInvoiceGenerationRule.cs" />
     <Compile Include="MefData\ITelcobrightJobInput.cs" />

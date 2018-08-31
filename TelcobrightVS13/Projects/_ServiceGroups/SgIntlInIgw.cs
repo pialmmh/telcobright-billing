@@ -163,7 +163,7 @@ namespace TelcobrightMediation
             newSummary.longDecimalAmount2 = 0;
         }
 
-        public void ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData)
+        public InvoiceGenerationInputData ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData)
         {
             throw new NotImplementedException();
         }

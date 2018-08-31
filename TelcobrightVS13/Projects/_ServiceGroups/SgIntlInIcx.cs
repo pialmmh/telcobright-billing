@@ -11,7 +11,6 @@ using TransactionTuple = System.ValueTuple<int, int, long, int,long>;
 
 namespace TelcobrightMediation
 {
-
     [Export("ServiceGroup", typeof(IServiceGroup))]
     public class SgIntlInIcx : IServiceGroup
     {
@@ -81,7 +80,7 @@ namespace TelcobrightMediation
             newSummary.tax1 = Convert.ToDecimal(chargeableCust.TaxAmount1);
         }
 
-        public void ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData)
+        public InvoiceGenerationInputData ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData)
         {
             job telcobrightJob = invoiceGenerationInputData.TelcobrightJob;
             Dictionary<string, string> jobParamsMap =
@@ -103,15 +102,38 @@ namespace TelcobrightMediation
                 .FirstOrDefault();
             if (usdConversionDated == null)
                 throw new Exception("Usd rate not found in uom_conversion_dated table.");
-            Dictionary<string, string> invoiceData = new Dictionary<string, string>()
+            List<acc_chargeable> sampleChargeablesForThisPeriod = context.acc_chargeable.Where(c => c.transactionTime >= startDate
+                                                                && c.transactionTime < endDate).Take(20).ToList();
+
+            if (sampleChargeablesForThisPeriod.Any(c=>c.OtherDecAmount3!=usdConversionDated.CONVERSION_FACTOR))
             {
-                {"usdRate", usdConversionDated.CONVERSION_FACTOR.ToString()}
-            };
+                throw new Exception(
+                    $"Usd rates for outgoing calls for this period must be {usdConversionDated.CONVERSION_FACTOR}");
+            }
+            invoiceGenerationInputData.OtherDataAsObjectMap.Add("usdRate",
+                usdConversionDated.CONVERSION_FACTOR.ToString());
+            return invoiceGenerationInputData;
         }
 
         public InvoicePostProcessingData ExecInvoicePostProcessing(InvoicePostProcessingData invoicePostProcessingData)
         {
-            throw new NotImplementedException();
+            invoice invoiceWithItem = invoicePostProcessingData.Invoice;
+            PartnerEntities context = invoicePostProcessingData.InvoiceGenerationInputData.Context;
+            job telcobrightJob = invoicePostProcessingData.InvoiceGenerationInputData.TelcobrightJob;
+            Dictionary<string, string> jobParamsMap =
+                JsonConvert.DeserializeObject<Dictionary<string, string>>(telcobrightJob.jobsegments.Single()
+                    .SegmentDetail);
+            long serviceAccountId = Convert.ToInt64(jobParamsMap["serviceAccountId"]);
+            DateTime startDate = Convert.ToDateTime(jobParamsMap["startDate"]);
+            DateTime endDate = Convert.ToDateTime(jobParamsMap["endDate"]);
+            account acc =context.accounts.Where(c=>c.id==serviceAccountId).ToList().Single();
+            int inPartnerId = acc.idPartner;
+            //List<XyzInvoiceDataRow> xyzInvoiceDataRows = context.Database.SqlQuery<XyzInvoiceDataRow>(
+            //    $""
+            //    );
+            return null;
+
+
         }
     }
 }

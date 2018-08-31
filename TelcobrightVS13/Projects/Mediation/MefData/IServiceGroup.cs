@@ -16,7 +16,7 @@ namespace TelcobrightMediation
         void ExecutePostRatingActions(CdrExt cdrExt, object postRatingData);
         Dictionary<CdrSummaryType, Type> GetSummaryTargetTables();
         void SetServiceGroupWiseSummaryParams(CdrExt cdrExt, AbstractCdrSummary newSummary);
-        void ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData);
+        InvoiceGenerationInputData ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData);
         InvoicePostProcessingData ExecInvoicePostProcessing(InvoicePostProcessingData invoicePostProcessingData);
     }
 }

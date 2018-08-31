@@ -30,10 +30,11 @@ namespace Jobs
         {
             this.Input = (InvoiceGenerationInputData)jobInputData;
             IServiceGroup serviceGroup = GetServiceGroup();
-            InvoiceGenerationHelper invoiceGenerationHelper = new InvoiceGenerationHelper(this.Input,
+            InvoiceGenerationHelper invoiceGenerationHelper = new InvoiceGenerationHelper(
                 serviceGroup.ExecInvoicePreProcessing, serviceGroup.ExecInvoicePostProcessing);
-            invoiceGenerationHelper.ExecInvoicePreProcessing();
-            InvoicePostProcessingData invoicePostProcessingData= invoiceGenerationHelper.GenerateInvoice();
+            InvoiceGenerationInputData modifiedInput= invoiceGenerationHelper.ExecInvoicePreProcessing(Input);
+            InvoicePostProcessingData invoicePostProcessingData =
+                invoiceGenerationHelper.GenerateInvoice(modifiedInput);
             invoiceGenerationHelper.ExecInvoicePostProcessing(invoicePostProcessingData);
             return JobCompletionStatus.Complete;
         }

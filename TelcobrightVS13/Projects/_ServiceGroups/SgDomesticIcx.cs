@@ -78,7 +78,7 @@ namespace TelcobrightMediation
             newSummary.tax1 = Convert.ToDecimal(chargeableCust.TaxAmount1);
         }
 
-        public void ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData)
+        public InvoiceGenerationInputData ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData)
         {
             throw new NotImplementedException();
         }

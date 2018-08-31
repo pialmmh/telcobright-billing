@@ -69,6 +69,7 @@
     <Compile Include="SfIntlInIgwT1.cs" />
     <Compile Include="SfXyzIcx.cs" />
     <Compile Include="SfXyzIgw.cs" />
+    <Compile Include="XyzInvoiceDataRow.cs" />
     <Compile Include="XyzRuleHelper.cs" />
   </ItemGroup>
   <ItemGroup>

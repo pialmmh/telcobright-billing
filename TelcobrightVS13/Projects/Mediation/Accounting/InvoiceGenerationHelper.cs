@@ -10,26 +10,21 @@ namespace TelcobrightMediation.Accounting
 {
     public class InvoiceGenerationHelper
     {
-        private InvoiceGenerationInputData InvoiceGenerationInputData { get; set; }
-        private Action<InvoiceGenerationInputData> InvoicePreProcessingAction { get; set; }
+        private Func<InvoiceGenerationInputData,InvoiceGenerationInputData> InvoicePreProcessingAction { get; set; }
         private Func<InvoicePostProcessingData,InvoicePostProcessingData> InvoicePostProcessingAction { get; set; }
         private DbCommand Cmd { get; set; }
         private IServiceGroup ServiceGroup { get; set; }
         private TelcobrightConfig Tbc { get; set; }
-        public InvoiceGenerationHelper(InvoiceGenerationInputData invoiceGenerationInputData,
-            Action<InvoiceGenerationInputData>invoicePreProcessingAction, 
-            Func<InvoicePostProcessingData,InvoicePostProcessingData> invoicePostProcessingAction)
+
+        public InvoiceGenerationHelper(
+            Func<InvoiceGenerationInputData, InvoiceGenerationInputData>invoicePreProcessingAction,
+            Func<InvoicePostProcessingData, InvoicePostProcessingData> invoicePostProcessingAction)
         {
-            this.InvoiceGenerationInputData = invoiceGenerationInputData;
             this.InvoicePreProcessingAction = invoicePreProcessingAction;
             this.InvoicePostProcessingAction = invoicePostProcessingAction;
-            this.Cmd = this.InvoiceGenerationInputData.Context.Database.Connection.CreateCommand();
-            this.ServiceGroup = this.InvoiceGenerationInputData.SelectedServiceGroup;
-            if(this.ServiceGroup==null)
-                throw new Exception("Servicegroup not found for invoice to be generated.");
-            this.Tbc = this.InvoiceGenerationInputData.Tbc;
         }
-        public InvoicePostProcessingData GenerateInvoice()
+
+        public InvoicePostProcessingData GenerateInvoice(InvoiceGenerationInputData invoiceGenerationInputData)
         {
             int idServiceGroup = this.ServiceGroup.Id;
             ServiceGroupConfiguration serviceGroupConfiguration = null;
@@ -37,17 +32,19 @@ namespace TelcobrightMediation.Accounting
             if(serviceGroupConfiguration == null) throw new Exception("serviceGroupConfiguration cannot be null.");
             string configuredInvoiceGenerationRuleName = serviceGroupConfiguration.InvoiceGenerationRuleName;
             IInvoiceGenerationRule invoiceGenerationRule =
-                this.InvoiceGenerationInputData.InvoiceGenerationRules[configuredInvoiceGenerationRuleName];
-            InvoicePostProcessingData invoicePostProcessingData= invoiceGenerationRule.Execute(this.InvoiceGenerationInputData);
+                invoiceGenerationInputData.InvoiceGenerationRules[configuredInvoiceGenerationRuleName];
+            InvoicePostProcessingData invoicePostProcessingData= invoiceGenerationRule.Execute(invoiceGenerationInputData);
             return invoicePostProcessingData;
         }
-        public void ExecInvoicePreProcessing()
+        public InvoiceGenerationInputData ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData)
         {
-            this.InvoicePreProcessingAction.Invoke(this.InvoiceGenerationInputData);
+            this.InvoicePreProcessingAction.Invoke(invoiceGenerationInputData);
+            return invoiceGenerationInputData;
         }
-        public void ExecInvoicePostProcessing(InvoicePostProcessingData invoicePostProcessingData)
+        public InvoicePostProcessingData ExecInvoicePostProcessing(InvoicePostProcessingData invoicePostProcessingData)
         {
             this.InvoicePostProcessingAction.Invoke(invoicePostProcessingData);
+            return invoicePostProcessingData;
         }
     }
 }

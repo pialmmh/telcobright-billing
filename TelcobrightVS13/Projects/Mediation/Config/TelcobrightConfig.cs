@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using LibraryExtensions.ConfigHelper;
 using QuartzTelcobright;
 using TelcobrightMediation.Automation;
+using TelcobrightMediation.Config;
 using TelcobrightMediation.Scheduler.Quartz;
 
 namespace TelcobrightMediation
@@ -25,6 +26,8 @@ namespace TelcobrightMediation
         public Dictionary<string, ApplicationServerConfig> ApplicationServersConfig { get; set; }//server id as string
         public int IdTelcobrightPartner { get; set; }
         public Dictionary<int,AutomatedNetworkElementCli> AutomatedNetworkElementClis { get; set; }
+        public EmailSenderConfig EmailSenderConfig { get; set; }
+        public SmsSenderConfig SmsSenderConfig { get; set; }
         public TelcobrightConfig() { }//required by some non cdr process e.g. directorySYnc
 
         public List<KeyValuePair<Regex, string>> ServiceAliasesRegex { get; set; } =

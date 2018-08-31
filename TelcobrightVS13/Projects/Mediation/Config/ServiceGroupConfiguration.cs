@@ -12,6 +12,7 @@ namespace TelcobrightMediation
         public int IdServiceGroup { get; }
         public Dictionary<string, string> Params { get; set; }=new Dictionary<string, string>();
         public string InvoiceGenerationRuleName { get; set; }
+        public List<IAutomationAction> AccountActions { get; set; }
         public ServiceGroupConfiguration(int idServiceGroup)
         {
             this.IdServiceGroup = idServiceGroup;
