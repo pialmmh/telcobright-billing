@@ -129,6 +129,15 @@ public partial class ConversionRates {
     protected global::System.Web.UI.WebControls.SqlDataSource SqlDataUOM;
     
     /// <summary>
+    /// SqlDataEnumeration control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.SqlDataSource SqlDataEnumeration;
+    
+    /// <summary>
     /// GridViewConversionRates control.
     /// </summary>
     /// <remarks>

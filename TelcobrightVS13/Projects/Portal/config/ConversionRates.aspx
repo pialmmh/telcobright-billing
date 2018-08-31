@@ -65,9 +65,8 @@ Theme="" AutoEventWireup="True" CodeBehind="ConversionRates.aspx.cs" Inherits="C
                     Purpose
                 </td>
                 <td style="width: 35%; horiz-align: left">
-                    <asp:DropDownList ID="ddlPurpose" runat="server" AutoPostBack="false" Enabled="True">
-                        <asp:ListItem Text="External Conversion" Value="EXTERNAL_CONVERSION" Selected="True" />
-                    </asp:DropDownList>
+                    <asp:DropDownList ID="ddlPurpose" runat="server" AutoPostBack="false" Enabled="True" 
+                        DataSourceID="SqlDataEnumeration" DataTextField="DESCRIPTION" DataValueField="ENUM_ID" />
                 </td>
             </tr>
             <tr>
@@ -88,6 +87,10 @@ Theme="" AutoEventWireup="True" CodeBehind="ConversionRates.aspx.cs" Inherits="C
         ConnectionString="<%$ ConnectionStrings:Partner %>" 
         ProviderName="<%$ ConnectionStrings:Partner.ProviderName %>" 
         SelectCommand="select UOM_ID, DESCRIPTION from uom where UOM_TYPE_ID = 'CURRENCY_MEASURE' order by DESCRIPTION" />
+    <asp:SqlDataSource ID="SqlDataEnumeration" runat="server" 
+        ConnectionString="<%$ ConnectionStrings:Partner %>" 
+        ProviderName="<%$ ConnectionStrings:Partner.ProviderName %>" 
+        SelectCommand="select ENUM_ID, DESCRIPTION from enumeration where ENUM_TYPE_ID = 'CONVERSION_PURPOSE' order by DESCRIPTION" />
 
     <asp:GridView ID="GridViewConversionRates" runat="server" DataSourceID="EntityDataConversionRates"
               AutoGenerateColumns="False" DataKeyNames="id" CellPadding="4" ForeColor="#333333" 
@@ -221,7 +224,21 @@ Theme="" AutoEventWireup="True" CodeBehind="ConversionRates.aspx.cs" Inherits="C
                 </EditItemTemplate>
         </asp:TemplateField>
             <asp:BoundField DataField="CONVERSION_FACTOR" HeaderText="Conversion Rate" SortExpression="CONVERSION_FACTOR" Visible="true" />
-            <asp:BoundField DataField="PURPOSE_ENUM_ID" HeaderText="Purpose" SortExpression="PURPOSE_ENUM_ID" Visible="true" />
+            <asp:TemplateField HeaderText="Purpose">
+                <ItemTemplate>
+                    <asp:DropDownList ID="DropDownListPurpose" runat="server" AutoPostBack="True" 
+                        DataSourceID="SqlDataEnumeration" DataTextField="DESCRIPTION" DataValueField="ENUM_ID" SelectedValue='<%# Bind("PURPOSE_ENUM_ID") %>'
+                        Enabled="false" >
+                    </asp:DropDownList>
+                </ItemTemplate>
+                <EditItemTemplate>
+                    <asp:DropDownList ID="DropDownListPurpose" runat="server" AutoPostBack="True" 
+                        DataSourceID="SqlDataEnumeration" DataTextField="DESCRIPTION" DataValueField="ENUM_ID" SelectedValue='<%# Bind("PURPOSE_ENUM_ID") %>'
+                        Enabled="True" >
+                    </asp:DropDownList>
+                </EditItemTemplate>
+            </asp:TemplateField>
+            <%--<asp:BoundField DataField="PURPOSE_ENUM_ID" HeaderText="Purpose" SortExpression="PURPOSE_ENUM_ID" Visible="true" />--%>
         </Columns>
     <EditRowStyle BackColor="#999999" />
     <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
