@@ -10,6 +10,7 @@ namespace TelcobrightMediation.Accounting
         public invoice Invoice { get; set; }
         public invoice_item InvoiceItem { get; private set; }
         public Dictionary<string,string> OtherDataAsMap { get; set; }
+        public acc_temp_transaction TempTransaction { get; set; }
         public InvoicePostProcessingData(InvoiceGenerationInputData invoiceGenerationInputData, invoice invoiceWithItem, 
             Dictionary<string, string> otherDataAsMap)
         {

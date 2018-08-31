@@ -57,24 +57,25 @@ namespace InvoiceGenerationRules
                 throw new Exception("Account balance [= ledger summary+temp transaction amount] " +
                                     " must be >0");
             }
-            var cmd = input.Context.Database.Connection.CreateCommand();
             string invoiceDescription = serviceGroup.RuleName + $" [{startDate.ToMySqlStyleDateTimeStrWithoutQuote()}" +
                                         $"-{endDate.ToMySqlStyleDateTimeStrWithoutQuote()}]";
-            cmd.CommandText = $"insert into invoice (billing_account_id,description) values(" +
-                              $"{serviceAccountId.ToString()},'{invoiceDescription}');";
-            cmd.ExecuteNonQuery();
-            cmd.CommandText = "last_insert_id();";
-            long generatedInvoiceId = (long) cmd.ExecuteScalar();
             string uom = input.Context.accounts.Where(c => c.id == serviceAccountId).ToList().Single().uom;
-            cmd.CommandText = $"insert into invoice_item " +
-                              $"(invoice_id,product_id,uom_Id,amount) values (" +
-                              $"{generatedInvoiceId},'{serviceGroup.RuleName}','{uom}'," +
-                              $"{invoiceAmount})";
-            cmd.ExecuteNonQuery();
-            invoice generatedInvoiceWithItem = context.invoices.Where(c => c.INVOICE_ID == generatedInvoiceId)
-                .Include(c => c.invoice_item).ToList().Single();
+            invoice newInvoice = new invoice()
+            {
+                BILLING_ACCOUNT_ID = serviceAccountId,
+                DESCRIPTION = invoiceDescription,
+                invoice_item = new List<invoice_item>()
+                {
+                    new invoice_item()
+                    {
+                        PRODUCT_ID = serviceGroup.RuleName,
+                        UOM_ID = uom,
+                        AMOUNT = invoiceAmount
+                    }
+                }
+            };
             InvoicePostProcessingData invoicePostProcessingData =
-                new InvoicePostProcessingData(input, generatedInvoiceWithItem, new Dictionary<string, string>());
+                new InvoicePostProcessingData(input, newInvoice, new Dictionary<string, string>());
             return invoicePostProcessingData;
         }
     }

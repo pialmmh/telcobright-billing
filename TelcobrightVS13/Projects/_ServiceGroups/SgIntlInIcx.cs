@@ -118,6 +118,7 @@ namespace TelcobrightMediation
         public InvoicePostProcessingData ExecInvoicePostProcessing(InvoicePostProcessingData invoicePostProcessingData)
         {
             invoice invoiceWithItem = invoicePostProcessingData.Invoice;
+            invoice_item invoiceItem = invoiceWithItem.invoice_item.Single();
             PartnerEntities context = invoicePostProcessingData.InvoiceGenerationInputData.Context;
             job telcobrightJob = invoicePostProcessingData.InvoiceGenerationInputData.TelcobrightJob;
             Dictionary<string, string> jobParamsMap =
@@ -128,12 +129,22 @@ namespace TelcobrightMediation
             DateTime endDate = Convert.ToDateTime(jobParamsMap["endDate"]);
             account acc =context.accounts.Where(c=>c.id==serviceAccountId).ToList().Single();
             int inPartnerId = acc.idPartner;
-            //List<XyzInvoiceDataRow> xyzInvoiceDataRows = context.Database.SqlQuery<XyzInvoiceDataRow>(
-            //    $""
-            //    );
-            return null;
-
-
+            List<XyzInvoiceDataRow> xyzInvoiceDataRows = context.Database.SqlQuery<XyzInvoiceDataRow>(
+                $@"select 
+                sum(successfulcalls 	)	as successfulcalls,   
+                sum(roundedduration   )  as roundedduration,   
+                sum(longDecimalAmount1)  as longDecimalAmount1,
+                sum(longDecimalAmount2)  as longDecimalAmount2,
+                sum(longDecimalAmount3)  as longDecimalAmount3,
+                sum(customercost      )  as customercost      
+                from sum_voice_day_02
+                where tup_starttime>={startDate.ToMySqlStyleDateTimeStrWithQuote()} 
+                and tup_starttime < {endDate.ToMySqlStyleDateTimeStrWithQuote()}
+                group by tup_outpartnerid;"
+                ).ToList();
+            jobParamsMap.Add("summaryRows",JsonConvert.SerializeObject(xyzInvoiceDataRows));
+            invoiceItem.JSON_DETAIL = JsonConvert.SerializeObject(jobParamsMap);
+            return invoicePostProcessingData;
         }
     }
 }
