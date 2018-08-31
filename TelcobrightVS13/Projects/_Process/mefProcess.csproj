@@ -68,6 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutomationHandler.cs" />
     <Compile Include="AccountingHelper.cs" />
     <Compile Include="ProcessInvoiceGenerator.cs" />
     <Compile Include="FileLister.cs" />

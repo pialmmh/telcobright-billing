@@ -31,8 +31,8 @@ namespace TelcobrightMediation.Accounting
         {
             using (PartnerEntities context = new PartnerEntities())
             {
-                TelcobrightConfig Tbc = new TelcobrightConfig();/* = PageUtil.GetTelcobrightConfig();*/
-                List<KeyValuePair<Regex, string>> serviceAliases = Tbc.ServiceAliasesRegex;
+                TelcobrightConfig tbc = new TelcobrightConfig();/* = PageUtil.GetTelcobrightConfig();*/
+                List<KeyValuePair<Regex, string>> serviceAliases = tbc.ServiceAliasesRegex;
                 List<string> billableType = new List<string>()
                 {
                     "/custBilled", "/suppBilled", "/billable"
