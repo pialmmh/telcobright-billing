@@ -102,7 +102,7 @@ namespace PortalApp.config
                                 var regex = kv.Key;
                                 if (regex.Matches(invoiceGeneration.AccountName).Count > 0)
                                 {
-                                    invoiceGeneration.ServiceAccount = Convert.ToInt32(kv.Value);
+                                    invoiceGeneration.ServiceAccount = kv.Value;
                                     break;
                                 }
                             }
@@ -184,7 +184,8 @@ namespace PortalApp.config
 
         protected void ButtonSaveReport_Click(object sender, EventArgs e)
         {
-            Invoice invoice = InvoiceHelper.GetInvoice();
+            InvoiceReportType invoiceReportType = (InvoiceReportType)Enum.Parse(typeof(InvoiceReportType), DropDownListReportTemplate.Text, true);
+            Invoice invoice = InvoiceHelper.GetInvoice(invoiceReportType);
             Type reportType = Type.GetType(DropDownListReportTemplate.Text);
             IInvoiceReport invoiceReport = (IInvoiceReport)Activator.CreateInstance(reportType, invoice);
             invoiceReport.saveToPdf("E:\\Files\\telcobright\\demo.pdf");

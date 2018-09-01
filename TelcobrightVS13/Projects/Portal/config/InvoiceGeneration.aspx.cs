@@ -98,7 +98,7 @@ namespace PortalApp.config
                                 var regex = kv.Key;
                                 if (regex.Matches(invoiceGeneration.AccountName).Count > 0)
                                 {
-                                    invoiceGeneration.ServiceAccount = Convert.ToInt32(kv.Value);
+                                    invoiceGeneration.ServiceAccount = kv.Value;
                                     break;
                                 }
                             }
@@ -182,7 +182,7 @@ namespace PortalApp.config
             InvoiceDataCollector ledgerSummary = new InvoiceDataCollector();
             ledgerSummary.PartnerId = Convert.ToInt32(ddlistPartner.SelectedValue);
             ledgerSummary.PartnerName = ddlistPartner.SelectedItem.Text;
-            ledgerSummary.ServiceAccount = Convert.ToInt32(ddlistServiceAccount.Text);
+            ledgerSummary.ServiceAccount = ddlistServiceAccount.Text;
             ledgerSummary.StartDateTime = Convert.ToDateTime(txtDate.Text);
             ledgerSummary.EndDateTime = Convert.ToDateTime(txtDate1.Text);
             ledgerSummary.TimeZone = Convert.ToInt32(ddlistTimeZone.SelectedValue);

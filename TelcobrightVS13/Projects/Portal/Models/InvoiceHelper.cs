@@ -1,6 +1,10 @@
-﻿using ReportGenerator.reports.invoice;
+﻿using MediationModel;
+using MySql.Data.MySqlClient;
+using ReportGenerator.reports.invoice;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
 using System.Linq;
 using System.Web;
 
@@ -8,8 +12,42 @@ namespace PortalApp.Models
 {
     public static class InvoiceHelper
     {
-        public static Invoice GetInvoice()
+        public static Invoice GetInvoice(InvoiceReportType reportType)
         {
+
+            using (MySqlConnection connection = new MySqlConnection())
+            {
+                connection.ConnectionString = ConfigurationManager.ConnectionStrings["reader"].ConnectionString;
+                connection.Open();
+                MySqlCommand cmd = new MySqlCommand(GetQuery(reportType), connection);
+                cmd.Connection = connection;
+                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                DataSet dataset = new DataSet();
+                da.Fill(dataset);
+
+                DataTable dt = dataset.Tables[0];
+                bool hasRows = dataset.Tables.Cast<DataTable>().Any(table => table.Rows.Count != 0);
+                if (hasRows)
+                {
+
+                }
+                return new Invoice()
+                {
+                    Partner = GetPartner(1),
+                    Type = "ANS",
+                    BillingFrom = new DateTime(2018, 4, 9),
+                    BillingTo = new DateTime(2018, 4, 15),
+                    InvoiceDate = new DateTime(2018, 4, 16),
+                    DueDate = new DateTime(2018, 4, 22),
+                    InvoiceNo = "BTEL/INV/INT/Spectron-18/04-121",
+                    Currency = "BDT",
+                    TimeZone = "UTC+6",
+                    ConversionRate = 83.5m,
+                    ConversionRateDate = new DateTime(2018, 5, 1),
+                    InvoiceItems = GetInvoiceItems(dt)
+                };
+            }
+
             /* 
             return new Invoice()
             {
@@ -26,37 +64,40 @@ namespace PortalApp.Models
             };
             */
 
-            return new Invoice()
-            {
-                Partner = GetPartner(),
-                Type = "ANS",
-                BillingFrom = new DateTime(2018, 4, 9),
-                BillingTo = new DateTime(2018, 4, 15),
-                InvoiceDate = new DateTime(2018, 4, 16),
-                DueDate = new DateTime(2018, 4, 22),
-                InvoiceNo = "BTEL/INV/INT/Spectron-18/04-121",
-                Currency = "BDT",
-                TimeZone = "UTC+6",
-                ConversionRate = 83.5m,
-                ConversionRateDate = new DateTime(2018, 5, 1),
-                InvoiceItems = GetInvoiceItems()
-            };
 
         }
 
-        private static Partner GetPartner()
+        private static Partner GetPartner(int idPartner)
         {
-            return new Partner()
+            using (PartnerEntities context = new PartnerEntities())
             {
-                PartnerName = "Spactron Ltd",
-                PartnerAddress = "4th Floor, Serhal Building, Sami El Solh Av,\n" +
-                    "Badaro Sector, Beirut, Lebanon",
-                VatRegNo = "-"
-            };
+                partner partner = context.partners.First(x => x.idPartner == idPartner);
+                return new Partner()
+                {
+                    PartnerName = partner.PartnerName,
+                    PartnerAddress = partner.Address1,
+                    VatRegNo = "-"
+                };
+            }
         }
 
-        private static List<InvoiceItem> GetInvoiceItems()
+        private static List<InvoiceItem> GetInvoiceItems(DataTable dt)
         {
+            List<InvoiceItem> invoiceItems = new List<InvoiceItem>();
+            foreach (DataRow item in dt.Rows)
+            {
+                InvoiceItem invoiceItem = new InvoiceItem() {
+                    Reference = "Int'l Inbound Calls",
+                    Description = "Call Carrying Charges",
+                    Quantity = 23,
+                    UoM = "Calls",
+                    TotalMinutes = 7.22,
+                    Amount = 0.18m
+                };
+                invoiceItems.Add(invoiceItem);
+            }
+            return invoiceItems;
+
             /*
             List<InvoiceItem> invoiceItems = new List<InvoiceItem>();
             invoiceItems.Add(new InvoiceItem()
@@ -129,7 +170,7 @@ namespace PortalApp.Models
             };
             */
 
-
+            /*
             return new List<InvoiceItem>
             {
                 new InvoiceItem()
@@ -143,6 +184,7 @@ namespace PortalApp.Models
                     Amount = 241991.90m
                 }
             };
+            */
 
 
             /*
@@ -175,6 +217,19 @@ namespace PortalApp.Models
 
             };
             */
+        }
+
+        private static string GetQuery(InvoiceReportType reportType)
+        {
+            string constructedSQL = string.Empty;
+            switch (reportType)
+            {
+                case InvoiceReportType.InternationalOutgoingToIOS:
+                    break;
+                default:
+                    break;
+            }
+            return constructedSQL;
         }
     }
 }
