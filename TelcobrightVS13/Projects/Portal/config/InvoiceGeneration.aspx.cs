@@ -109,6 +109,7 @@ namespace PortalApp.config
 
                     BindingList<InvoiceDataCollector> invoiceGenerations =
                         new BindingList<InvoiceDataCollector>(summaryForInvoiceGenerations);
+                    invoiceGenerations.OrderBy(x => x.PartnerName).ThenBy(x => x.ServiceAccount);
                     this.Session["igInvoiceGenList"] = invoiceGenerations;
                     gvInvoice.DataSource = invoiceGenerations;
                     gvInvoice.DataBind();
@@ -189,6 +190,7 @@ namespace PortalApp.config
             ledgerSummary.GmtOffset = allTimeZones.First(x => x.id == ledgerSummary.TimeZone).gmt_offset;
             ledgerSummary.InvoiceDates.Add(ledgerSummary.StartDateTime);
             invoiceGenerations.Add(ledgerSummary);
+            invoiceGenerations.OrderBy(x => x.PartnerName).ThenBy(x => x.ServiceAccount);
             this.Session["igInvoiceGenList"] = invoiceGenerations;
             gvInvoice.DataSource = invoiceGenerations;
             gvInvoice.DataBind();
