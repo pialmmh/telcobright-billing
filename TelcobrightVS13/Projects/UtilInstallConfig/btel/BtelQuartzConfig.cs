@@ -24,6 +24,7 @@ namespace InstallConfig
             this.DaemonConfigurations.AddRange(GetFileListerInstances(this.Tbc.DatabaseSetting.DatabaseName));
             this.DaemonConfigurations.AddRange(GetLogFileJobCreatorInstances(this.Tbc.DatabaseSetting.DatabaseName));
             this.DaemonConfigurations.AddRange(GetCdrJobProcessorInstances(this.Tbc.DatabaseSetting.DatabaseName));
+            this.DaemonConfigurations.AddRange(GetInvoiceGeneratorInstances(this.Tbc.DatabaseSetting.DatabaseName));
             return this.DaemonConfigurations;
         }
 
@@ -106,6 +107,25 @@ namespace InstallConfig
                     jobDataMap: new Dictionary<string, string>()
                     {
                         {"telcobrightProcessId", "103"},
+                        {"operatorName", operatorName}
+                    }
+                )
+            };
+            return telcobrightProcessInstances;
+        }
+        private List<QuartzTbDaemonConfig> GetInvoiceGeneratorInstances(string operatorName)
+        {
+            var telcobrightProcessInstances = new List<QuartzTbDaemonConfig>()
+            {
+                new QuartzTbDaemonConfig(
+                    operatorName: operatorName,
+                    identity: "InvoiceGenerator" + " [" + operatorName+"]",
+                    @group: operatorName,
+                    fireOnceIfMissFired: false,
+                    cronExpression: "/5 * * ? * *",
+                    jobDataMap: new Dictionary<string, string>()
+                    {
+                        {"telcobrightProcessId", "108"},
                         {"operatorName", operatorName}
                     }
                 )

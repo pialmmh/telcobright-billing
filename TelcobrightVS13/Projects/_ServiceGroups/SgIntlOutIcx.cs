@@ -4,6 +4,7 @@ using MediationModel;
 using System.Collections.Generic;
 using System.Linq;
 using LibraryExtensions;
+using Newtonsoft.Json;
 using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Cdr;
 using TransactionTuple = System.ValueTuple<int, int, long, int,long>;
@@ -84,12 +85,14 @@ namespace TelcobrightMediation
 
         public InvoiceGenerationInputData ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData)
         {
-            throw new NotImplementedException();
+            invoiceGenerationInputData= XyzRuleHelper.ExecInvoicePreProcessing(invoiceGenerationInputData);
+            return invoiceGenerationInputData;
         }
 
         public InvoicePostProcessingData ExecInvoicePostProcessing(InvoicePostProcessingData invoicePostProcessingData)
         {
-            throw new NotImplementedException();
+            invoicePostProcessingData = XyzRuleHelper.ExecInvoicePostProcessing(invoicePostProcessingData);
+            return invoicePostProcessingData;
         }
     }
 }

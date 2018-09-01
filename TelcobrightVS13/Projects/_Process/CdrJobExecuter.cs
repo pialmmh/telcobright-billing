@@ -136,7 +136,7 @@ namespace Process
             cmd.CommandText = " update job set `Error`= '" +
                                 e.Message.Replace("'", "") +
                                 Environment.NewLine +(e.InnerException?.ToString().Replace("'", "") ??"")
-                                + "' " +" where id=" + telcobrightJob.id;
+                                + "' " +" where id=" + telcobrightJob.id+";commit;";
             cmd.ExecuteNonQuery();
         }
         bool CheckIncomplete(PartnerEntities context, MediationContext mediationContext)

@@ -69,8 +69,6 @@
     <Compile Include="SfIntlInIgwT1.cs" />
     <Compile Include="SfXyzIcx.cs" />
     <Compile Include="SfXyzIgw.cs" />
-    <Compile Include="XyzInvoiceDataRow.cs" />
-    <Compile Include="XyzRuleHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LibraryExtensions\LibraryExtensions.csproj">
@@ -92,8 +90,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy $(TargetPath) $(SolutionDir)WS_Topshelf_Quartz\Extensions\$(TargetFileName)
-copy $(TargetPath) $(SolutionDir)UnitTesterManual\Extensions\$(TargetFileName)
+    <PostBuildEvent>copy $(TargetPath) $(SolutionDir)WS_Topshelf_Quartz\bin\Extensions\$(TargetFileName)
+copy $(TargetPath) $(SolutionDir)UnitTesterManual\bin\Extensions\$(TargetFileName)
 copy $(TargetPath) $(SolutionDir)Portal\extensions\$(TargetFileName)
 
 

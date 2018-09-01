@@ -12,7 +12,7 @@ namespace PortalApp
         public static void Populate(DropDownList ddlserviceGroup, TelcobrightConfig tbc)
         {
             ServiceGroupComposer serviceGroupComposer = new ServiceGroupComposer();
-            serviceGroupComposer.ComposeFromPath(PageUtil.GetPortalBinPath() + "\\..\\Extensions");
+            serviceGroupComposer.ComposeFromPath(PageUtil.GetPortalBinPath() + "\\..\\bin\\Extensions");
             Dictionary<int, IServiceGroup> mefServiceGroups =
                 serviceGroupComposer.ServiceGroups.ToDictionary(c => c.Id);
             foreach (KeyValuePair<int, ServiceGroupConfiguration> kv in tbc.CdrSetting.ServiceGroupConfigurations)

@@ -71,8 +71,8 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy $(TargetPath) $(SolutionDir)Portal\Extensions\$(TargetFileName)
-copy $(TargetPath) $(SolutionDir)WS_Topshelf_Quartz\Extensions\$(TargetFileName)
-copy $(TargetPath) $(SolutionDir)UnitTesterManual\Extensions\$(TargetFileName)
+copy $(TargetPath) $(SolutionDir)WS_Topshelf_Quartz\bin\Extensions\$(TargetFileName)
+copy $(TargetPath) $(SolutionDir)UnitTesterManual\bin\Extensions\$(TargetFileName)
 
 
 

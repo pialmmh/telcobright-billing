@@ -98,7 +98,7 @@ namespace PortalApp.config
                                 var regex = kv.Key;
                                 if (regex.Matches(invoiceGeneration.AccountName).Count > 0)
                                 {
-                                    invoiceGeneration.ServiceAccount = kv.Value;
+                                    invoiceGeneration.ServiceAccountAlias = kv.Value;
                                     break;
                                 }
                             }
@@ -108,8 +108,8 @@ namespace PortalApp.config
                     }
 
                     BindingList<InvoiceDataCollector> invoiceGenerations =
-                        new BindingList<InvoiceDataCollector>(summaryForInvoiceGenerations);
-                    invoiceGenerations.OrderBy(x => x.PartnerName).ThenBy(x => x.ServiceAccount);
+                        new BindingList<InvoiceDataCollector>(summaryForInvoiceGenerations.OrderBy(x => x.PartnerName)
+                            .ThenBy(x => x.ServiceAccountAlias).ToList());
                     this.Session["igInvoiceGenList"] = invoiceGenerations;
                     gvInvoice.DataSource = invoiceGenerations;
                     gvInvoice.DataBind();
@@ -183,14 +183,16 @@ namespace PortalApp.config
             InvoiceDataCollector ledgerSummary = new InvoiceDataCollector();
             ledgerSummary.PartnerId = Convert.ToInt32(ddlistPartner.SelectedValue);
             ledgerSummary.PartnerName = ddlistPartner.SelectedItem.Text;
-            ledgerSummary.ServiceAccount = ddlistServiceAccount.Text;
+            ledgerSummary.ServiceAccountAlias = ddlistServiceAccount.Text;
             ledgerSummary.StartDateTime = Convert.ToDateTime(txtDate.Text);
             ledgerSummary.EndDateTime = Convert.ToDateTime(txtDate1.Text);
             ledgerSummary.TimeZone = Convert.ToInt32(ddlistTimeZone.SelectedValue);
             ledgerSummary.GmtOffset = allTimeZones.First(x => x.id == ledgerSummary.TimeZone).gmt_offset;
             ledgerSummary.InvoiceDates.Add(ledgerSummary.StartDateTime);
             invoiceGenerations.Add(ledgerSummary);
-            invoiceGenerations.OrderBy(x => x.PartnerName).ThenBy(x => x.ServiceAccount);
+            invoiceGenerations =
+                new BindingList<InvoiceDataCollector>(invoiceGenerations.OrderBy(x => x.PartnerName)
+                    .ThenBy(x => x.ServiceAccountAlias).ToList());
             this.Session["igInvoiceGenList"] = invoiceGenerations;
             gvInvoice.DataSource = invoiceGenerations;
             gvInvoice.DataBind();
@@ -249,13 +251,13 @@ namespace PortalApp.config
         protected job CreateInvoiceGenerationJob(InvoiceDataCollector invoiceDataCollector,
             PartnerEntities context, int batchSizeForJobSegment)
         {
-            string serviceAccount = invoiceDataCollector.ServiceAccount.ToString();
+            string serviceAccount = invoiceDataCollector.ServiceAccountAlias;
             int jobDefinition = 12;
             int prevJobCountWithSameName =
                 context.jobs.Count(j => j.idjobdefinition == jobDefinition && j.idjobdefinition == jobDefinition);
             long glAccountId = invoiceDataCollector.AccountId;
-            string sourceTable = "acc_transaction";
             Dictionary<string, string> jobParamsMap = new Dictionary<string, string>();
+            string sourceTable = "acc_transaction";
             jobParamsMap.Add("sourceTable", sourceTable);
             jobParamsMap.Add("serviceAccountId", glAccountId.ToString());
             jobParamsMap.Add("startDate", invoiceDataCollector.StartDateTimeLocal.ToMySqlStyleDateTimeStrWithoutQuote());

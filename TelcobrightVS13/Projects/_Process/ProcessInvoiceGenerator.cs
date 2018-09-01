@@ -43,9 +43,9 @@ namespace Process
                 TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(
                     schedulerContext, operatorName);
                 string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName);
-                MefJobComposer mefJobComposer=new MefJobComposer();
+                MefJobComposer mefJobComposer = new MefJobComposer();
                 mefJobComposer.Compose();
-                ITelcobrightJob mefInvoicingJob = mefJobComposer.Jobs.Single(c => c.RuleName == "InvoicingJob");
+                ITelcobrightJob mefInvoicingJob = mefJobComposer.Jobs.Single(c => c.RuleName == "MefInvoicingJob");
                 using (PartnerEntities context = new PartnerEntities(entityConStr))
                 {
                     context.Database.Connection.Open();
@@ -54,57 +54,47 @@ namespace Process
                     while (CheckIncomplete(context))
                     {
                         tbc.GetPathIndependentApplicationDirectory();
-                        try
+                        List<job> incompleteJobs = context.jobs //jobs other than newcdr
+                            .Where(c => c.CompletionTime == null && idJobDefs.Contains(c.idjobdefinition))
+                            .OrderBy(c => c.priority).ToList();
+                        using (DbCommand cmd = context.Database.Connection.CreateCommand())
                         {
-                            List<job> incompleteJobs = context.jobs //jobs other than newcdr
-                                .Where(c => c.CompletionTime == null && idJobDefs.Contains(c.idjobdefinition))
-                                .OrderBy(c => c.priority).ToList();
-                            using (DbCommand cmd = context.Database.Connection.CreateCommand())
+                            foreach (job telcobrightJob in incompleteJobs)
                             {
-                                foreach (job telcobrightJob in incompleteJobs)
+                                try
+                                {
+                                    cmd.ExecuteCommandText("set autocommit=0;");
+                                    InvoiceGenerationInputData invoiceGenerationInputData =
+                                        new InvoiceGenerationInputData(tbc, context, telcobrightJob);
+                                    mefInvoicingJob.Execute(invoiceGenerationInputData); //EXECUTE
+                                    cmd.ExecuteCommandText(" commit; ");
+                                }
+                                catch (Exception e)
                                 {
                                     try
                                     {
-                                        cmd.ExecuteCommandText("set autocommit=0;");
-                                        InvoiceGenerationInputData invoiceGenerationInputData =
-                                            new InvoiceGenerationInputData(tbc,context,telcobrightJob);
-                                        mefInvoicingJob.Execute(invoiceGenerationInputData); //EXECUTE
-                                        cmd.ExecuteCommandText(" commit; ");
-                                    }
-                                    catch (Exception e)
-                                    {
+                                        cmd.ExecuteCommandText(" rollback; ");
                                         try
                                         {
-                                            cmd.ExecuteCommandText(" rollback; ");
-                                            try
-                                            {
-                                                UpdateJobWithErrorInfo(cmd, telcobrightJob, e);
-                                            }
-                                            catch (Exception e2)
-                                            {
-                                                ErrorWriter wr2 = new ErrorWriter(e2, "ProcessInvoiceGenerator", telcobrightJob,
-                                                    "Exception within catch block.",
-                                                    tbc.DatabaseSetting.DatabaseName);
-                                            }
-                                            continue; //with next cdr or job
+                                            UpdateJobWithErrorInfo(cmd, telcobrightJob, e);
                                         }
-                                        catch (Exception)
+                                        catch (Exception e2)
                                         {
-                                            //reaching here would be database problem
-                                            context.Database.Connection.Close();
+                                            ErrorWriter wr2 = new ErrorWriter(e2, "ProcessInvoiceGenerator",
+                                                telcobrightJob,
+                                                "Exception within catch block.",
+                                                tbc.DatabaseSetting.DatabaseName);
                                         }
-                                    } //end catch
-                                } //for each job
-                            } //using mysql command
-                        } //try for each NE
-
-                        catch (Exception e1)
-                        {
-                            Console.WriteLine(e1);
-                            ErrorWriter wr = new ErrorWriter(e1, "ProcessInvoiceGenerator", null,null,
-                                tbc.DatabaseSetting.DatabaseName);
-                            continue; //with next switch
-                        }
+                                        continue; //with next cdr or job
+                                    }
+                                    catch (Exception)
+                                    {
+                                        //reaching here would be database problem
+                                        context.Database.Connection.Close();
+                                    }
+                                }
+                            } //for each job
+                        } //using mysql command
                     } //while
                 }
             } //try
@@ -127,7 +117,7 @@ namespace Process
             cmd.CommandText = " update job set `Error`= '" +
                               e.Message.Replace("'", "") +
                               Environment.NewLine + (e.InnerException?.ToString().Replace("'", "") ?? "")
-                              + "' " + " where id=" + telcobrightJob.id;
+                              + "' " + " where id=" + telcobrightJob.id + ";commit;";
             cmd.ExecuteNonQuery();
         }
 
@@ -155,7 +145,7 @@ namespace Process
             }
             return mefJobData;
         }
-               
+
     }
 }
 

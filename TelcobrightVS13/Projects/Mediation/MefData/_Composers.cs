@@ -13,7 +13,7 @@ namespace TelcobrightMediation
 		public IEnumerable<IAutoCreateJob> AutoCreateJobs { get; set; }
 		public void Compose()
 		{
-			var catalog = new DirectoryCatalog(@"..\..\Extensions\");
+			var catalog = new DirectoryCatalog(@"..\..\bin\Extensions\");
 			var container = new CompositionContainer(catalog);
 			container.ComposeParts(this);
 		}
@@ -26,7 +26,7 @@ namespace TelcobrightMediation
 
 		public void Compose()
 		{
-			var catalog = new DirectoryCatalog(@"..\..\Extensions\");
+			var catalog = new DirectoryCatalog(@"..\..\bin\Extensions\");
 			var container = new CompositionContainer(catalog);
 			container.ComposeParts(this);
 		}
@@ -40,7 +40,7 @@ namespace TelcobrightMediation
 
 		public void Compose()
 		{
-			var catalog = new DirectoryCatalog(@"..\..\Extensions\");
+			var catalog = new DirectoryCatalog(@"..\..\bin\Extensions\");
 			var container = new CompositionContainer(catalog);
 			container.ComposeParts(this);
 		}
@@ -53,7 +53,7 @@ namespace TelcobrightMediation
 
 		public void Compose()
 		{
-			var catalog = new DirectoryCatalog(@"..\..\Extensions\");
+			var catalog = new DirectoryCatalog(@"..\..\bin\Extensions\");
 			var container = new CompositionContainer(catalog);
 			container.ComposeParts(this);
 		}
@@ -71,7 +71,7 @@ namespace TelcobrightMediation
 
 		public void Compose()
 		{
-			var catalog = new DirectoryCatalog(@"..\..\Extensions\");
+			var catalog = new DirectoryCatalog(@"..\..\bin\Extensions\");
 			var container = new CompositionContainer(catalog);
 			container.ComposeParts(this);
 		}
@@ -89,7 +89,7 @@ namespace TelcobrightMediation
 
 		public void Compose()
 		{
-			var catalog = new DirectoryCatalog(@"..\..\Extensions\");
+			var catalog = new DirectoryCatalog(@"..\..\bin\Extensions\");
 			var container = new CompositionContainer(catalog);
 			container.ComposeParts(this);
 		}
@@ -107,7 +107,7 @@ namespace TelcobrightMediation
 
         public void Compose()
         {
-            var catalog = new DirectoryCatalog(@"..\..\Extensions\");
+            var catalog = new DirectoryCatalog(@"..\..\bin\Extensions\");
             var container = new CompositionContainer(catalog);
             container.ComposeParts(this);
         }
@@ -125,7 +125,7 @@ namespace TelcobrightMediation
 
 		public void Compose()
 		{
-			var catalog = new DirectoryCatalog(@"..\..\Extensions\");
+			var catalog = new DirectoryCatalog(@"..\..\bin\Extensions\");
 			var container = new CompositionContainer(catalog);
 			container.ComposeParts(this);
 		}
@@ -138,7 +138,7 @@ namespace TelcobrightMediation
 
 		public void Compose()
 		{
-			var catalog = new DirectoryCatalog(@"..\..\Extensions\");
+			var catalog = new DirectoryCatalog(@"..\..\bin\Extensions\");
 			var container = new CompositionContainer(catalog);
 			container.ComposeParts(this);
 		}
@@ -178,7 +178,7 @@ namespace TelcobrightMediation
 
 		public void Compose(string path = "")
 		{
-			string assemblyPath = (path == "" ? @"..\..\Extensions\" : path);
+			string assemblyPath = (path == "" ? @"..\..\bin\Extensions\" : path);
 			var catalog = new DirectoryCatalog(assemblyPath);
 			var container = new CompositionContainer(catalog);
 			container.ComposeParts(this);

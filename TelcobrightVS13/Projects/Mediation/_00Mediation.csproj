@@ -295,8 +295,8 @@
     <Compile Include="FileOperations\_WriteError.cs" />
     <Compile Include="MefData\ServiceContext.cs" />
     <Compile Include="Models\PortalObjects.cs" />
-    <Compile Include="_Rating\PrefixMatcher.cs" />
-    <Compile Include="_Rating\A2ZRater.cs" />
+    <Compile Include="Rating\PrefixMatcher.cs" />
+    <Compile Include="Rating\A2ZRater.cs" />
     <Compile Include="Mediation\BinCdrFunctions.cs" />
     <Compile Include="MediationDicAndCollections.cs" />
     <Compile Include="Cdr\MediationValidator.cs" />
@@ -310,7 +310,9 @@
     <Compile Include="Mediation\TelcobrightProcess.cs" />
     <Compile Include="MefData\_Composers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="_Rating\RateSorter.cs" />
+    <Compile Include="Rating\RateSorter.cs" />
+    <Compile Include="Rating\XyzInvoiceDataRow.cs" />
+    <Compile Include="Rating\XyzRuleHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

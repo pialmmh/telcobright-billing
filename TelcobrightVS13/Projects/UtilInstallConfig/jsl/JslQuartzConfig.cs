@@ -26,6 +26,7 @@ namespace InstallConfig
             this.DaemonConfigurations.AddRange(GetFileCopierInstances(this.Tbc.DatabaseSetting.DatabaseName));
             this.DaemonConfigurations.AddRange(GetCdrJobProcessorInstances(this.Tbc.DatabaseSetting.DatabaseName));
             this.DaemonConfigurations.AddRange(GetOptimizerInstances(this.Tbc.DatabaseSetting.DatabaseName));
+            this.DaemonConfigurations.AddRange(GetInvoiceGeneratorInstances(this.Tbc.DatabaseSetting.DatabaseName));
             return this.DaemonConfigurations;
         }
 
@@ -156,6 +157,25 @@ namespace InstallConfig
                     }),
             };
             return optimizerInstances;
+        }
+        private List<QuartzTbDaemonConfig> GetInvoiceGeneratorInstances(string operatorName)
+        {
+            var telcobrightProcessInstances = new List<QuartzTbDaemonConfig>()
+            {
+                new QuartzTbDaemonConfig(
+                    operatorName: operatorName,
+                    identity: "InvoiceGenerator" + " [" + operatorName+"]",
+                    @group: operatorName,
+                    fireOnceIfMissFired: false,
+                    cronExpression: "/5 * * ? * *",
+                    jobDataMap: new Dictionary<string, string>()
+                    {
+                        {"telcobrightProcessId", "108"},
+                        {"operatorName", operatorName}
+                    }
+                )
+            };
+            return telcobrightProcessInstances;
         }
     }
 }

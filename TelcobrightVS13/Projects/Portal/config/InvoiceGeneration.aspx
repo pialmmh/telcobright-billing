@@ -23,7 +23,7 @@
                     <RowStyle BackColor="white" ForeColor="#333333" />
                     <Columns>
                         <asp:boundfield datafield="PartnerName" headertext="Partner"/>
-                        <asp:boundfield datafield="ServiceAccount" headertext="Service Account"/>
+                        <asp:boundfield datafield="ServiceAccountAlias" headertext="Service Account"/>
                         <asp:TemplateField HeaderText="Time Zone" SortExpression="TimeZone" ItemStyle-Wrap="false">
                             <ItemTemplate>
                                 <asp:DropDownList ID="ddlistTimeZone" runat="server" AutoPostBack="true" Enabled="True" Width="280px"

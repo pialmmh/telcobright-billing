@@ -84,10 +84,6 @@
       <Project>{4282d6f4-efd2-418a-be9f-74f09b7a45d8}</Project>
       <Name>Models_Mediation</Name>
     </ProjectReference>
-    <ProjectReference Include="..\_ServiceFamilies\mefServiceFamilies.csproj">
-      <Project>{EF80C1E3-4017-4019-BA8C-411723C462B4}</Project>
-      <Name>mefServiceFamilies</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -95,9 +91,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy $(TargetPath) $(SolutionDir)WS_Topshelf_Quartz\Extensions\$(TargetFileName)
+    <PostBuildEvent>copy $(TargetPath) $(SolutionDir)WS_Topshelf_Quartz\bin\Extensions\$(TargetFileName)
 copy $(TargetPath) $(SolutionDir)Portal\Extensions\$(TargetFileName)
-copy $(TargetPath) $(SolutionDir)UnitTesterManual\Extensions\$(TargetFileName)
+copy $(TargetPath) $(SolutionDir)UnitTesterManual\bin\Extensions\$(TargetFileName)
 
 
 </PostBuildEvent>

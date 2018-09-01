@@ -28,9 +28,9 @@ namespace Jobs
         public JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
         {
             InvoiceGenerationInputData invoiceGenerationInputData = (InvoiceGenerationInputData)jobInputData;
-            IServiceGroup serviceGroup = GetServiceGroup(invoiceGenerationInputData);
-            InvoiceGenerationHelper invoiceGenerationHelper = new InvoiceGenerationHelper(
-                serviceGroup.ExecInvoicePreProcessing, serviceGroup.ExecInvoicePostProcessing);
+            InvoiceGenerationHelper invoiceGenerationHelper =
+                new InvoiceGenerationHelper(invoiceGenerationInputData, null, null);//null will use invoice pre & processing 
+                                            //from serviceGroup, if not null then servicGroups methods will be overridden.
             invoiceGenerationInputData = invoiceGenerationHelper.ExecInvoicePreProcessing(invoiceGenerationInputData);
             InvoicePostProcessingData invoicePostProcessingData =
                 invoiceGenerationHelper.GenerateInvoice(invoiceGenerationInputData);
@@ -79,25 +79,6 @@ namespace Jobs
                               $"{tempTransaction.glAccountId},{tempTransaction.amount}," +
                               $"{invoiceGenerationInputData.TelcobrightJob.id})";
         }
-        private IServiceGroup GetServiceGroup(InvoiceGenerationInputData invoiceGenerationInputData)
-        {
-            PartnerEntities context = invoiceGenerationInputData.Context;
-            job telcobrightJob = invoiceGenerationInputData.TelcobrightJob;
-            Dictionary<string, string> jobParamsMap =
-                JsonConvert.DeserializeObject<Dictionary<string, string>>(telcobrightJob.jobsegments.Single()
-                    .SegmentDetail);
-            long serviceAccountId = Convert.ToInt64(jobParamsMap["serviceAccountId"]);
-            int idServiceGroup = context.accounts.Where(c => c.id == serviceAccountId)
-                .ToList().Single().serviceGroup;
-            IServiceGroup serviceGroup = null;
-            invoiceGenerationInputData.ServiceGroups.TryGetValue(idServiceGroup, out serviceGroup);
-            if (serviceGroup==null)
-            {
-                throw new Exception("Could not find service group.");
-            }
-            return serviceGroup;
-        }
-
         private Action<object> actionOnFinish = jobInput =>
         {
             var input = (AccountingJobInputData) jobInput;
