@@ -47,138 +47,18 @@ namespace PortalApp.config
                     this.Session["sesAllTimeZones"] = tz;
 
                     List<KeyValuePair<Regex, string>> serviceAliases = Tbc.ServiceAliasesRegex;
-                    List<InvoiceDataCollector> summaryForInvoiceGenerations =
-                        new List<InvoiceDataCollector>();
-                    List<BillingRule> billingRules = context.jsonbillingrules.ToList()
-                        .Select(c => JsonConvert.DeserializeObject<BillingRule>(c.JsonExpression)).ToList();
-                    List<long> accountIds = context.accounts.Where(x => x.isCustomerAccount == 1 && x.isBillable == 1)
-                        .Select(x => x.id).ToList();
-                    List<acc_ledger_summary> accLedgerSummaries =
-                        context.acc_ledger_summary.Where(x => accountIds.Contains(x.idAccount) && x.AMOUNT != 0)
-                            .ToList();
-                    bool isAlreadyExists = false;
-                    foreach (acc_ledger_summary ledgerSummary in accLedgerSummaries)
-                    {
-                        var serviceGroup = context.accounts.First(x => x.id == ledgerSummary.idAccount).serviceGroup;
-                        var idBillingRule = context.billingruleassignments.First(x => x.idServiceGroup == serviceGroup)
-                            .idBillingRule;
-                        BillingRule billingRule = billingRules.First(x => x.Id == idBillingRule);
-                        TimeRange timeRange =
-                            billingRule.GetBillingCycleByBillableItemsDate(ledgerSummary.transactionDate);
-                        account account = allAccounts.First(x => x.id == ledgerSummary.idAccount);
-                        partner partner = allPartners.First(x => x.idPartner == account.idPartner);
-
-                        if (summaryForInvoiceGenerations.Count > 0)
-                        {
-                            InvoiceDataCollector cycle = summaryForInvoiceGenerations
-                                .FirstOrDefault(x => x.AccountId == ledgerSummary.idAccount &&
-                                                     x.PartnerId == partner.idPartner &&
-                                                     x.StartDateTime.Equals(timeRange.Start) &&
-                                                     x.EndDateTime.Equals(timeRange.End));
-                            if (cycle != null)
-                            {
-                                cycle.Amount += ledgerSummary.AMOUNT;
-                                cycle.InvoiceDates.Add(ledgerSummary.transactionDate);
-                                isAlreadyExists = true;
-                            }
-                        }
-
-                        if (!isAlreadyExists)
-                        {
-                            InvoiceDataCollector invoiceGeneration = new InvoiceDataCollector();
-                            invoiceGeneration.PartnerId = partner.idPartner;
-                            invoiceGeneration.PartnerName = partner.PartnerName;
-                            invoiceGeneration.AccountId = account.id;
-                            invoiceGeneration.AccountName = account.accountName;
-                            invoiceGeneration.StartDateTime = timeRange.Start;
-                            invoiceGeneration.EndDateTime = timeRange.End;
-                            invoiceGeneration.Amount = ledgerSummary.AMOUNT;
-                            invoiceGeneration.TimeZone = DefaultTimeZoneId;
-                            invoiceGeneration.GmtOffset = GmtOffset;
-                            invoiceGeneration.InvoiceDates.Add(ledgerSummary.transactionDate);
-
-                            foreach (var kv in serviceAliases)
-                            {
-                                var regex = kv.Key;
-                                if (regex.Matches(invoiceGeneration.AccountName).Count > 0)
-                                {
-                                    invoiceGeneration.ServiceAccount = kv.Value;
-                                    break;
-                                }
-                            }
-
-                            summaryForInvoiceGenerations.Add(invoiceGeneration);
-                        }
-                    }
-
-                    BindingList<InvoiceDataCollector> invoiceGenerations =
-                        new BindingList<InvoiceDataCollector>(summaryForInvoiceGenerations);
-                    this.Session["igInvoiceGenList"] = invoiceGenerations;
-                    gvInvoice.DataSource = invoiceGenerations;
+                    List<invoice> generatedInvoices = context.invoices.Where(x => x.PAID_DATE == null).OrderByDescending(x => x.INVOICE_DATE).ToList();
+                    gvInvoice.DataSource = generatedInvoices;
                     gvInvoice.DataBind();
 
                 }
 
+                // TODO: Remove this from production code
                 foreach (var item in Enum.GetValues(typeof(InvoiceReportType)))
                 {
                     DropDownListReportTemplate.Items.Add(item.ToString());
                 }
 
-            }
-        }
-
-        protected void gvInvoice_OnRowEditing(object sender, GridViewEditEventArgs e)
-        {
-            gvInvoice.EditIndex = e.NewEditIndex;
-            BindingList<InvoiceDataCollector> invoiceGenerations =
-                (BindingList<InvoiceDataCollector>)this.Session["igInvoiceGenList"];
-            gvInvoice.DataSource = invoiceGenerations;
-            gvInvoice.DataBind();
-        }
-
-        protected void gvInvoice_OnRowDataBound(object sender, GridViewRowEventArgs e)
-        {
-            if (e.Row.RowType == DataControlRowType.DataRow)
-            {
-                if ((e.Row.RowState & DataControlRowState.Edit) > 0)
-                {
-                    DropDownList ddlTimeZone = (DropDownList)e.Row.FindControl("ddlistTimeZone");
-                    if (DataBinder.Eval(e.Row.DataItem, "TimeZone") != null)
-                    {
-                        if (this.Session["sesAllTimeZones"] != null)
-                        {
-                            List<timezone> allTimeZones = (List<timezone>)this.Session["sesAllTimeZones"];
-                            foreach (timezone t in allTimeZones)
-                            {
-                                string zoneName = t.zone.country.country_name + " " + t.offsetdesc + " [" +
-                                                  t.zone.zone_name + "]";
-                                ddlTimeZone.Items.Add(new ListItem(zoneName, t.id.ToString()));
-                            }
-                        }
-                        int idTimeZone = int.Parse(DataBinder.Eval(e.Row.DataItem, "TimeZone").ToString());
-                        ddlTimeZone.SelectedValue = idTimeZone.ToString();
-                    }
-                }
-                else
-                {
-                    Label thisLabel = (Label)e.Row.FindControl("lblTimeZone");
-                    if (DataBinder.Eval(e.Row.DataItem, "TimeZone") != null)
-                    {
-                        int idTimeZone = int.Parse(DataBinder.Eval(e.Row.DataItem, "TimeZone").ToString());
-                        if (idTimeZone > 0)
-                        {
-                            if (this.Session["sesAllTimeZones"] != null)
-                            {
-                                List<timezone> allTimeZones = (List<timezone>)this.Session["sesAllTimeZones"];
-                                string tzName = (from c in allTimeZones
-                                                 where c.id == idTimeZone
-                                                 select c.zone.country.country_name + " " + c.offsetdesc + " [" + c.zone.zone_name +
-                                                        "]").First();
-                                thisLabel.Text = tzName;
-                            }
-                        }
-                    }
-                }
             }
         }
 
@@ -189,6 +69,53 @@ namespace PortalApp.config
             Type reportType = Type.GetType(DropDownListReportTemplate.Text);
             IInvoiceReport invoiceReport = (IInvoiceReport)Activator.CreateInstance(reportType, invoice);
             invoiceReport.saveToPdf("E:\\Files\\telcobright\\demo.pdf");
+        }
+
+        protected void gvInvoice_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                // Invoice type
+                DropDownList ddlistInvoiceType = (DropDownList)e.Row.FindControl("ddlistInvoiceType");
+                foreach (var item in Enum.GetValues(typeof(InvoiceReportType)))
+                {
+                    ddlistInvoiceType.Items.Add(item.ToString());
+                }
+                string invoiceType = DataBinder.Eval(e.Row.DataItem, "INVOICE_TYPE_ID").ToString();
+                ddlistInvoiceType.SelectedValue = invoiceType;
+
+                // Partner
+                List<partner> allPartners = (List<partner>)this.Session["sesAllPartners"];
+                DropDownList ddlistPartner = (DropDownList)e.Row.FindControl("ddlistPartner");
+                ddlistPartner.DataSource = allPartners;
+                ddlistPartner.DataBind();
+                int idPartner = int.Parse(DataBinder.Eval(e.Row.DataItem, "PARTY_ID").ToString());
+                ddlistPartner.SelectedValue = idPartner.ToString();
+
+                // Invoice Date
+                TextBox txtInvoiceDate = (TextBox)e.Row.FindControl("txtInvoiceDate");
+                DateTime invoiceDate = DateTime.Parse(DataBinder.Eval(e.Row.DataItem, "INVOICE_DATE").ToString());
+                txtInvoiceDate.Text = invoiceDate.ToString("yyyy-MM-dd HH:mm:ss");
+
+                // Due Date
+                TextBox txtDueDate = (TextBox)e.Row.FindControl("txtDueDate");
+                DateTime dueDate = DateTime.Parse(DataBinder.Eval(e.Row.DataItem, "DUE_DATE").ToString());
+                txtDueDate.Text = dueDate.ToString("yyyy-MM-dd HH:mm:ss");
+            }
+        }
+
+        protected void lbSaveAsPdf_Click(object sender, EventArgs e)
+        {
+            LinkButton lbSaveAsPdf = sender as LinkButton;
+            GridViewRow gvrow = (GridViewRow)lbSaveAsPdf.NamingContainer;
+            int invoiceId = Convert.ToInt32(gvInvoice.DataKeys[gvrow.RowIndex].Value);
+            DropDownList ddlistInvoiceType = (DropDownList)gvrow.FindControl("ddlistInvoiceType");
+            InvoiceReportType invoiceReportType = (InvoiceReportType)Enum.Parse(typeof(InvoiceReportType), ddlistInvoiceType.SelectedValue, true);
+            Invoice invoice = InvoiceHelper.GetInvoice(invoiceReportType);
+            Type reportType = Type.GetType(ddlistInvoiceType.SelectedValue);
+            IInvoiceReport invoiceReport = (IInvoiceReport)Activator.CreateInstance(reportType, invoice);
+            invoiceReport.saveToPdf("E:\\Files\\telcobright\\demo.pdf");
+
         }
     }
 }
