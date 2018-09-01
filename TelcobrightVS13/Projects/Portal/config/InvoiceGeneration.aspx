@@ -26,19 +26,22 @@
                         <asp:boundfield datafield="ServiceAccount" headertext="Service Account"/>
                         <asp:TemplateField HeaderText="Time Zone" SortExpression="TimeZone" ItemStyle-Wrap="false">
                             <ItemTemplate>
-                                <asp:DropDownList ID="ddlistTimeZone" runat="server" AutoPostBack="true" Enabled="True" OnSelectedIndexChanged="ddlistTimeZone_SelectedIndexChanged"/>
+                                <asp:DropDownList ID="ddlistTimeZone" runat="server" AutoPostBack="true" Enabled="True" Width="280px"
+                                    OnSelectedIndexChanged="ddlistTimeZone_SelectedIndexChanged"/>
                             </ItemTemplate>
                         </asp:TemplateField>
                         <%--<asp:boundfield datafield="StartDateTime" headertext="From" dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" />--%>
                         <asp:TemplateField HeaderText="Start Date Time" SortExpression="StartDateTime" ItemStyle-Wrap="false">
                             <ItemTemplate >
-                                <asp:TextBox ID="txtStartDate" runat="server" AutoPostBack="true" Enabled="True" dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" OnTextChanged="txtStartDate_TextChanged"/>
+                                <asp:TextBox ID="txtStartDate" runat="server" AutoPostBack="true" Enabled="True" Width="140px"
+                                    dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" OnTextChanged="txtStartDate_TextChanged"/>
                             </ItemTemplate>
                         </asp:TemplateField>
                         <%--<asp:boundfield datafield="EndDateTime" headertext="Till" dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" />--%>
                         <asp:TemplateField HeaderText="End Date Time" SortExpression="EndDateTime" ItemStyle-Wrap="false">
                             <ItemTemplate >
-                                <asp:TextBox ID="txtEndDate" runat="server" AutoPostBack="true" Enabled="True" dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" OnTextChanged="txtEndDate_TextChanged"/>
+                                <asp:TextBox ID="txtEndDate" runat="server" AutoPostBack="true" Enabled="True" Width="140px"
+                                    dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" OnTextChanged="txtEndDate_TextChanged"/>
                             </ItemTemplate>
                         </asp:TemplateField>
                         <asp:boundfield datafield="Amount" headertext="Amount" DataFormatString="{0:n2}">
