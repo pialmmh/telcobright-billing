@@ -10,16 +10,23 @@ using System.Web;
 
 namespace PortalApp.Models
 {
-    public static class InvoiceHelper
+    public class InvoiceHelper
     {
-        public static Invoice GetInvoice(InvoiceReportType reportType)
+        private invoice invoice;
+
+        public InvoiceHelper(invoice invoice)
+        {
+            this.invoice = invoice;
+        }
+
+        public Invoice GetInvoice()
         {
 
             using (MySqlConnection connection = new MySqlConnection())
             {
                 connection.ConnectionString = ConfigurationManager.ConnectionStrings["reader"].ConnectionString;
                 connection.Open();
-                MySqlCommand cmd = new MySqlCommand(GetQuery(reportType), connection);
+                MySqlCommand cmd = new MySqlCommand(GetQuery(), connection);
                 cmd.Connection = connection;
                 MySqlDataAdapter da = new MySqlDataAdapter(cmd);
                 DataSet dataset = new DataSet();
@@ -29,48 +36,31 @@ namespace PortalApp.Models
                 bool hasRows = dataset.Tables.Cast<DataTable>().Any(table => table.Rows.Count != 0);
                 if (hasRows)
                 {
-
+                    return new Invoice()
+                    {
+                        Partner = GetPartner(),
+                        Type = "ANS",
+                        BillingFrom = new DateTime(2018, 4, 9),
+                        BillingTo = new DateTime(2018, 4, 15),
+                        InvoiceDate = new DateTime(2018, 4, 16),
+                        DueDate = new DateTime(2018, 4, 22),
+                        InvoiceNo = "BTEL/INV/INT/Spectron-18/04-121",
+                        Currency = "BDT",
+                        TimeZone = "UTC+6",
+                        ConversionRate = 83.5m,
+                        ConversionRateDate = new DateTime(2018, 5, 1),
+                        InvoiceItems = GetInvoiceItems(dt)
+                    };
                 }
-                return new Invoice()
-                {
-                    Partner = GetPartner(1),
-                    Type = "ANS",
-                    BillingFrom = new DateTime(2018, 4, 9),
-                    BillingTo = new DateTime(2018, 4, 15),
-                    InvoiceDate = new DateTime(2018, 4, 16),
-                    DueDate = new DateTime(2018, 4, 22),
-                    InvoiceNo = "BTEL/INV/INT/Spectron-18/04-121",
-                    Currency = "BDT",
-                    TimeZone = "UTC+6",
-                    ConversionRate = 83.5m,
-                    ConversionRateDate = new DateTime(2018, 5, 1),
-                    InvoiceItems = GetInvoiceItems(dt)
-                };
+                else return null;
             }
-
-            /* 
-            return new Invoice()
-            {
-                Partner = GetPartner(),
-                Type = "INT",
-                BillingFrom = new DateTime(2018, 4, 9),
-                BillingTo = new DateTime(2018, 4, 15),
-                InvoiceDate = new DateTime(2018, 4, 16),
-                DueDate = new DateTime(2018, 4, 22),
-                InvoiceNo = "BTEL/INV/INT/Spectron-18/04-121",
-                Currency = "USD",
-                TimeZone = "UTC+6",
-                InvoiceItems = GetInvoiceItems()
-            };
-            */
-
-
         }
 
-        private static Partner GetPartner(int idPartner)
+        private Partner GetPartner()
         {
             using (PartnerEntities context = new PartnerEntities())
             {
+                int idPartner = Convert.ToInt32(this.invoice.PARTY_ID);
                 partner partner = context.partners.First(x => x.idPartner == idPartner);
                 return new Partner()
                 {
@@ -81,150 +71,34 @@ namespace PortalApp.Models
             }
         }
 
-        private static List<InvoiceItem> GetInvoiceItems(DataTable dt)
+        private List<InvoiceItem> GetInvoiceItems(DataTable dt)
         {
             List<InvoiceItem> invoiceItems = new List<InvoiceItem>();
             foreach (DataRow item in dt.Rows)
             {
                 InvoiceItem invoiceItem = new InvoiceItem() {
-                    Reference = "Int'l Inbound Calls",
-                    Description = "Call Carrying Charges",
-                    Quantity = 23,
-                    UoM = "Calls",
-                    TotalMinutes = 7.22,
-                    Amount = 0.18m
+                    Reference = item["Reference"].ToString(),
+                    Description = item["Description"].ToString(),
+                    Quantity = Convert.ToDouble(item["Quantity"]),
+                    UoM = item["UoM"].ToString(),
+                    TotalMinutes = Convert.ToDouble(item["TotalMinutes"]),
+                    Amount = Convert.ToDecimal(item["Amount"])
                 };
                 invoiceItems.Add(invoiceItem);
             }
             return invoiceItems;
-
-            /*
-            List<InvoiceItem> invoiceItems = new List<InvoiceItem>();
-            invoiceItems.Add(new InvoiceItem()
-            {
-                Reference = "Int'l Inbound Calls",
-                Description = "Call Carrying Charges",
-                Quantity = 23,
-                UoM = "Calls",
-                TotalMinutes = 7.22,
-                Amount = 0.18m
-            });
-            return invoiceItems;
-            */
-
-            /*
-            List<InvoiceItem> invoiceItems = new List<InvoiceItem>();
-            invoiceItems.Add(new InvoiceItem()
-            {
-                Reference = "International Inbound Calls",
-                Description = "Robi Axiata Limited",
-                UoM = "Minutes",
-                Quantity = 0.13,
-                Revenue = 0.00m,
-                Amount = 0.00m
-            });
-            invoiceItems.Add(new InvoiceItem()
-            {
-                Reference = "International Inbound Calls",
-                Description = "BANGLALINK DIGITAL COMMUNICATIONS LTD.",
-                UoM = "Minutes",
-                Quantity = 0.13,
-                Revenue = 0.00m,
-                Amount = 0.00m
-            });
-            invoiceItems.Add(new InvoiceItem()
-            {
-                Reference = "International Inbound Calls",
-                Description = "GrameenPhone Limited",
-                UoM = "Minutes",
-                Quantity = 6.67,
-                Revenue = 0.17m,
-                Amount = 0.17m
-            });
-            return invoiceItems;
-            */
-
-            /*
-            return new List<InvoiceItem>
-            {
-                new InvoiceItem()
-                {
-                    Reference = "International Inbound Calls",
-                    Date = new DateTime(2018, 4, 9),
-                    UoM = "Minutes",
-                    Quantity = 6.55,
-                    Rate = 0.025m,
-                    Revenue = 0.16m,
-                    Amount = 0.16m
-                },
-                new InvoiceItem()
-                {
-                    Reference = "International Inbound Calls",
-                    Date = new DateTime(2018, 4, 11),
-                    UoM = "Minutes",
-                    Quantity = 0.67,
-                    Rate = 0.025001m,
-                    Revenue = 0.02m,
-                    Amount = 0.02m
-                }
-            };
-            */
-
-            /*
-            return new List<InvoiceItem>
-            {
-                new InvoiceItem()
-                {
-                    Reference = "Int'l Outbound Calls",
-                    UoM = "Calls",
-                    Quantity = 35964,
-                    TotalMinutes = 50899.75,
-                    XAmount = 402300.50m,
-                    YAmount = 213702.15m,
-                    Amount = 241991.90m
-                }
-            };
-            */
-
-
-            /*
-            return new List<InvoiceItem>
-            {
-                new InvoiceItem()
-                {
-                    Reference = "International Outbound Calls",
-                    Date = new DateTime(2018, 4, 9),
-                    Description = "BDCOMONLINE LTD. (IPTSP)",
-                    UoM = "Minutes",
-                    Quantity = 121.50,
-                    XAmount = 758.50m,
-                    YAmount = 322.57m,
-                    Revenue = 387.96m,
-                    Amount = 387.96m
-                },
-                new InvoiceItem()
-                {
-                    Reference = "International Outbound Calls",
-                    Date = new DateTime(2018, 4, 9),
-                    Description = "UNKNOWN",
-                    UoM = "Minutes",
-                    Quantity = 317.00,
-                    XAmount = 2329.50m,
-                    YAmount = 1218.06m,
-                    Revenue = 1384.78m,
-                    Amount = 1384.78m
-                }
-
-            };
-            */
         }
 
-        private static string GetQuery(InvoiceReportType reportType)
+        private string GetQuery()
         {
             string constructedSQL = string.Empty;
+            InvoiceReportType reportType = (InvoiceReportType)Enum.Parse(typeof(InvoiceReportType), this.invoice.INVOICE_TYPE_ID, true);
             switch (reportType)
             {
-                case InvoiceReportType.InternationalOutgoingToIOS:
+                case InvoiceReportType.InternationalToIOS:
+                    constructedSQL = "select 0.26 as Amount, STR_TO_DATE('2018/07/01', '%Y/%m/%d') as `Date`, 'Call Carrying Charges' as Description, 23 as Quantity, 0.025 as Rate, " +
+                        "'International Inbound Calls' as Reference, 0.16 as Revenue, 7.22 as TotalMinutes, 'Calls' as UoM, " +
+                        "0.16 as XAmount, 0.06 as YAmount, 0.10 as XYAmount from users";
                     break;
                 default:
                     break;

@@ -64,11 +64,11 @@ namespace PortalApp.config
 
         protected void ButtonSaveReport_Click(object sender, EventArgs e)
         {
-            InvoiceReportType invoiceReportType = (InvoiceReportType)Enum.Parse(typeof(InvoiceReportType), DropDownListReportTemplate.Text, true);
-            Invoice invoice = InvoiceHelper.GetInvoice(invoiceReportType);
-            Type reportType = Type.GetType(DropDownListReportTemplate.Text);
-            IInvoiceReport invoiceReport = (IInvoiceReport)Activator.CreateInstance(reportType, invoice);
-            invoiceReport.saveToPdf("E:\\Files\\telcobright\\demo.pdf");
+            //InvoiceReportType invoiceReportType = (InvoiceReportType)Enum.Parse(typeof(InvoiceReportType), DropDownListReportTemplate.Text, true);
+            //Invoice invoice = InvoiceHelper.GetInvoice(invoiceReportType);
+            //Type reportType = Type.GetType(DropDownListReportTemplate.Text);
+            //IInvoiceReport invoiceReport = (IInvoiceReport)Activator.CreateInstance(reportType, invoice);
+            //invoiceReport.saveToPdf("E:\\Files\\telcobright\\demo.pdf");
         }
 
         protected void gvInvoice_RowDataBound(object sender, GridViewRowEventArgs e)
@@ -106,16 +106,23 @@ namespace PortalApp.config
 
         protected void lbSaveAsPdf_Click(object sender, EventArgs e)
         {
-            LinkButton lbSaveAsPdf = sender as LinkButton;
-            GridViewRow gvrow = (GridViewRow)lbSaveAsPdf.NamingContainer;
-            int invoiceId = Convert.ToInt32(gvInvoice.DataKeys[gvrow.RowIndex].Value);
-            DropDownList ddlistInvoiceType = (DropDownList)gvrow.FindControl("ddlistInvoiceType");
-            InvoiceReportType invoiceReportType = (InvoiceReportType)Enum.Parse(typeof(InvoiceReportType), ddlistInvoiceType.SelectedValue, true);
-            Invoice invoice = InvoiceHelper.GetInvoice(invoiceReportType);
-            Type reportType = Type.GetType(ddlistInvoiceType.SelectedValue);
-            IInvoiceReport invoiceReport = (IInvoiceReport)Activator.CreateInstance(reportType, invoice);
-            invoiceReport.saveToPdf("E:\\Files\\telcobright\\demo.pdf");
+            using (PartnerEntities context = new PartnerEntities())
+            {
+                LinkButton lbSaveAsPdf = sender as LinkButton;
+                GridViewRow gvrow = (GridViewRow)lbSaveAsPdf.NamingContainer;
+                int invoiceId = Convert.ToInt32(gvInvoice.DataKeys[gvrow.RowIndex].Value);
+                invoice invoice = context.invoices.First(x => x.INVOICE_ID == invoiceId);
 
+                InvoiceHelper invoiceHelper = new InvoiceHelper(invoice);
+                Invoice preparedInvoice = invoiceHelper.GetInvoice();
+                if (preparedInvoice != null)
+                {
+                    Type reportType = Type.GetType("ReportGenerator.reports.invoice.igw." + invoice.INVOICE_TYPE_ID);
+                    IInvoiceReport invoiceReport = (IInvoiceReport)Activator.CreateInstance(reportType, preparedInvoice);
+                    invoiceReport.saveToPdf("E:\\Files\\telcobright\\demo.pdf");
+                }
+                else throw new Exception("Invalid invoice data");
+            }
         }
     }
 }
