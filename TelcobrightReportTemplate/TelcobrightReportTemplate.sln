@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DXWebReportViewer", "DXWebReportViewer\DXWebReportViewer.csproj", "{1B99D527-1C20-4409-BD3C-73B3C22A26D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportGenerator", "ReportGenerator\ReportGenerator.csproj", "{026CA12F-1A70-430B-AA9F-846D4D461B91}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mefInvoice", "ReportGenerator\mefInvoice.csproj", "{026CA12F-1A70-430B-AA9F-846D4D461B91}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

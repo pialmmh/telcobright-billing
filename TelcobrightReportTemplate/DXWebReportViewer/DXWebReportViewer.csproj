@@ -124,9 +124,9 @@
     <EmbeddedResource Include="Properties\licenses.licx" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ReportGenerator\ReportGenerator.csproj">
+    <ProjectReference Include="..\ReportGenerator\mefInvoice.csproj">
       <Project>{026ca12f-1a70-430b-aa9f-846d4d461b91}</Project>
-      <Name>ReportGenerator</Name>
+      <Name>mefInvoice</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

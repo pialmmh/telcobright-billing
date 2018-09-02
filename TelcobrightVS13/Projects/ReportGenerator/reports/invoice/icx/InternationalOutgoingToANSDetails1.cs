@@ -6,6 +6,8 @@ using DevExpress.XtraReports.UI;
 using System.Linq;
 using ReportGenerator.Helper;
 using System.Globalization;
+using TelcobrightMediation;
+
 
 namespace ReportGenerator.reports.invoice.igw
 {

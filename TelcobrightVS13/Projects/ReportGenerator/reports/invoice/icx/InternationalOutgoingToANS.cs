@@ -7,6 +7,7 @@ using System.Linq;
 using ReportGenerator.Helper;
 using System.Globalization;
 using System.Collections.Generic;
+using TelcobrightMediation;
 
 namespace ReportGenerator.reports.invoice.igw
 {
@@ -26,9 +27,9 @@ namespace ReportGenerator.reports.invoice.igw
 
         public void GenerateInvoice(object data)
         {
-            /*
-            this.DataSource = invoice.InvoiceItems;
+            this.DataSource = this.GetReportData(data);
 
+            /*
             #region Page Header
             xrLabelVatRegNo.Text = "VAT Reg. No. 19061116647";
             xrLabelPartnerName.Text = invoice.Partner.PartnerName;
@@ -71,7 +72,7 @@ namespace ReportGenerator.reports.invoice.igw
 
         private List<InvoiceDataBasic> GetReportData(object data)
         {
-            List<InvoiceDataBasic> InvoiceDataBasic = new List<invoice.InvoiceDataBasic>();
+            List<InvoiceDataBasic> InvoiceDataBasic = new List<InvoiceDataBasic>();
             return InvoiceDataBasic;
         }
     }
