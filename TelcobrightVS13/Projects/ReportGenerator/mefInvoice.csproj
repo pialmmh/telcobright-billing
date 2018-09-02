@@ -54,171 +54,171 @@
   <ItemGroup>
     <Compile Include="Helper\CurrencyHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="reports\invoice\icx\LTFSToIPTSP.cs">
+    <Compile Include="Reports\InvoiceReports\ICX\LTFSToIPTSP.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="reports\invoice\icx\LTFSToIPTSP.Designer.cs">
+    <Compile Include="Reports\InvoiceReports\ICX\LTFSToIPTSP.Designer.cs">
       <DependentUpon>LTFSToIPTSP.cs</DependentUpon>
     </Compile>
-    <Compile Include="reports\invoice\icx\InternationalToIOS.cs">
+    <Compile Include="Reports\InvoiceReports\ICX\InternationalToIOS.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="reports\invoice\icx\InternationalToIOS.Designer.cs">
+    <Compile Include="Reports\InvoiceReports\ICX\InternationalToIOS.Designer.cs">
       <DependentUpon>InternationalToIOS.cs</DependentUpon>
     </Compile>
-    <Compile Include="reports\invoice\icx\DomesticToANS.cs">
+    <Compile Include="Reports\InvoiceReports\ICX\DomesticToANS.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="reports\invoice\icx\DomesticToANS.Designer.cs">
+    <Compile Include="Reports\InvoiceReports\ICX\DomesticToANS.Designer.cs">
       <DependentUpon>DomesticToANS.cs</DependentUpon>
     </Compile>
-    <Compile Include="reports\invoice\icx\LTFSToIPTSPDetails1.cs">
+    <Compile Include="Reports\InvoiceReports\ICX\LTFSToIPTSPDetails1.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="reports\invoice\icx\LTFSToIPTSPDetails1.Designer.cs">
+    <Compile Include="Reports\InvoiceReports\ICX\LTFSToIPTSPDetails1.Designer.cs">
       <DependentUpon>LTFSToIPTSPDetails1.cs</DependentUpon>
     </Compile>
-    <Compile Include="reports\invoice\icx\InternationalToIOSDetails1.cs">
+    <Compile Include="Reports\InvoiceReports\ICX\InternationalToIOSDetails1.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="reports\invoice\icx\InternationalToIOSDetails1.Designer.cs">
+    <Compile Include="Reports\InvoiceReports\ICX\InternationalToIOSDetails1.Designer.cs">
       <DependentUpon>InternationalToIOSDetails1.cs</DependentUpon>
     </Compile>
-    <Compile Include="reports\invoice\icx\DomesticToANSDetails1.cs">
+    <Compile Include="Reports\InvoiceReports\ICX\DomesticToANSDetails1.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="reports\invoice\icx\DomesticToANSDetails1.Designer.cs">
+    <Compile Include="Reports\InvoiceReports\ICX\DomesticToANSDetails1.Designer.cs">
       <DependentUpon>DomesticToANSDetails1.cs</DependentUpon>
     </Compile>
-    <Compile Include="reports\invoice\icx\LTFSToIPTSPDetails2.cs">
+    <Compile Include="Reports\InvoiceReports\ICX\LTFSToIPTSPDetails2.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="reports\invoice\icx\LTFSToIPTSPDetails2.Designer.cs">
+    <Compile Include="Reports\InvoiceReports\ICX\LTFSToIPTSPDetails2.Designer.cs">
       <DependentUpon>LTFSToIPTSPDetails2.cs</DependentUpon>
     </Compile>
-    <Compile Include="reports\invoice\icx\InternationalToIOSDetails2.cs">
+    <Compile Include="Reports\InvoiceReports\ICX\InternationalToIOSDetails2.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="reports\invoice\icx\InternationalToIOSDetails2.Designer.cs">
+    <Compile Include="Reports\InvoiceReports\ICX\InternationalToIOSDetails2.Designer.cs">
       <DependentUpon>InternationalToIOSDetails2.cs</DependentUpon>
     </Compile>
-    <Compile Include="reports\invoice\icx\DomesticToANSDetails2.cs">
+    <Compile Include="Reports\InvoiceReports\ICX\DomesticToANSDetails2.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="reports\invoice\icx\DomesticToANSDetails2.Designer.cs">
+    <Compile Include="Reports\InvoiceReports\ICX\DomesticToANSDetails2.Designer.cs">
       <DependentUpon>DomesticToANSDetails2.cs</DependentUpon>
     </Compile>
-    <Compile Include="reports\invoice\icx\InternationalOutgoingToANS.cs">
+    <Compile Include="Reports\InvoiceReports\ICX\InternationalOutgoingToANS.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="reports\invoice\icx\InternationalOutgoingToANS.Designer.cs">
+    <Compile Include="Reports\InvoiceReports\ICX\InternationalOutgoingToANS.Designer.cs">
       <DependentUpon>InternationalOutgoingToANS.cs</DependentUpon>
     </Compile>
-    <Compile Include="reports\invoice\icx\InternationalOutgoingToANSDetails1.cs">
+    <Compile Include="Reports\InvoiceReports\ICX\InternationalOutgoingToANSDetails1.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="reports\invoice\icx\InternationalOutgoingToANSDetails1.Designer.cs">
+    <Compile Include="Reports\InvoiceReports\ICX\InternationalOutgoingToANSDetails1.Designer.cs">
       <DependentUpon>InternationalOutgoingToANSDetails1.cs</DependentUpon>
     </Compile>
-    <Compile Include="reports\invoice\icx\InternationalOutgoingToANSDetails2.cs">
+    <Compile Include="Reports\InvoiceReports\ICX\InternationalOutgoingToANSDetails2.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="reports\invoice\icx\InternationalOutgoingToANSDetails2.Designer.cs">
+    <Compile Include="Reports\InvoiceReports\ICX\InternationalOutgoingToANSDetails2.Designer.cs">
       <DependentUpon>InternationalOutgoingToANSDetails2.cs</DependentUpon>
     </Compile>
-    <Compile Include="reports\invoice\igw\InternationalOutgoingToIOSDetails2.cs">
+    <Compile Include="Reports\InvoiceReports\IGW\InternationalOutgoingToIOSDetails2.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="reports\invoice\igw\InternationalOutgoingToIOSDetails2.Designer.cs">
+    <Compile Include="Reports\InvoiceReports\IGW\InternationalOutgoingToIOSDetails2.Designer.cs">
       <DependentUpon>InternationalOutgoingToIOSDetails2.cs</DependentUpon>
     </Compile>
-    <Compile Include="reports\invoice\igw\InternationalOutgoingToIOSDetails1.cs">
+    <Compile Include="Reports\InvoiceReports\IGW\InternationalOutgoingToIOSDetails1.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="reports\invoice\igw\InternationalOutgoingToIOSDetails1.Designer.cs">
+    <Compile Include="Reports\InvoiceReports\IGW\InternationalOutgoingToIOSDetails1.Designer.cs">
       <DependentUpon>InternationalOutgoingToIOSDetails1.cs</DependentUpon>
     </Compile>
-    <Compile Include="reports\invoice\igw\InternationalOutgoingToIOS.cs">
+    <Compile Include="Reports\InvoiceReports\IGW\InternationalOutgoingToIOS.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="reports\invoice\igw\InternationalOutgoingToIOS.Designer.cs">
+    <Compile Include="Reports\InvoiceReports\IGW\InternationalOutgoingToIOS.Designer.cs">
       <DependentUpon>InternationalOutgoingToIOS.cs</DependentUpon>
     </Compile>
-    <Compile Include="reports\invoice\igw\InternationalIncomingToForeignCarrierDetails2.cs">
+    <Compile Include="Reports\InvoiceReports\IGW\InternationalIncomingToForeignCarrierDetails2.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="reports\invoice\igw\InternationalIncomingToForeignCarrierDetails2.Designer.cs">
+    <Compile Include="Reports\InvoiceReports\IGW\InternationalIncomingToForeignCarrierDetails2.Designer.cs">
       <DependentUpon>InternationalIncomingToForeignCarrierDetails2.cs</DependentUpon>
     </Compile>
-    <Compile Include="reports\invoice\igw\InternationalIncomingToForeignCarrierDetails1.cs">
+    <Compile Include="Reports\InvoiceReports\IGW\InternationalIncomingToForeignCarrierDetails1.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="reports\invoice\igw\InternationalIncomingToForeignCarrierDetails1.Designer.cs">
+    <Compile Include="Reports\InvoiceReports\IGW\InternationalIncomingToForeignCarrierDetails1.Designer.cs">
       <DependentUpon>InternationalIncomingToForeignCarrierDetails1.cs</DependentUpon>
     </Compile>
-    <Compile Include="reports\invoice\igw\InternationalIncomingToForeignCarrier.cs">
+    <Compile Include="Reports\InvoiceReports\IGW\InternationalIncomingToForeignCarrier.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="reports\invoice\igw\InternationalIncomingToForeignCarrier.Designer.cs">
+    <Compile Include="Reports\InvoiceReports\IGW\InternationalIncomingToForeignCarrier.Designer.cs">
       <DependentUpon>InternationalIncomingToForeignCarrier.cs</DependentUpon>
     </Compile>
-    <Compile Include="reports\invoice\Invoice.cs" />
-    <Compile Include="reports\invoice\Partner.cs" />
+    <Compile Include="Reports\InvoiceReports\InvoiceCommonData.cs" />
+    <Compile Include="Reports\InvoiceReports\PartnerEx.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\licenses.licx" />
-    <EmbeddedResource Include="reports\invoice\icx\LTFSToIPTSP.resx">
+    <EmbeddedResource Include="Reports\InvoiceReports\ICX\LTFSToIPTSP.resx">
       <DependentUpon>LTFSToIPTSP.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="reports\invoice\icx\InternationalToIOS.resx">
+    <EmbeddedResource Include="Reports\InvoiceReports\ICX\InternationalToIOS.resx">
       <DependentUpon>InternationalToIOS.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="reports\invoice\icx\DomesticToANS.resx">
+    <EmbeddedResource Include="Reports\InvoiceReports\ICX\DomesticToANS.resx">
       <DependentUpon>DomesticToANS.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="reports\invoice\icx\LTFSToIPTSPDetails1.resx">
+    <EmbeddedResource Include="Reports\InvoiceReports\ICX\LTFSToIPTSPDetails1.resx">
       <DependentUpon>LTFSToIPTSPDetails1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="reports\invoice\icx\InternationalToIOSDetails1.resx">
+    <EmbeddedResource Include="Reports\InvoiceReports\ICX\InternationalToIOSDetails1.resx">
       <DependentUpon>InternationalToIOSDetails1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="reports\invoice\icx\DomesticToANSDetails1.resx">
+    <EmbeddedResource Include="Reports\InvoiceReports\ICX\DomesticToANSDetails1.resx">
       <DependentUpon>DomesticToANSDetails1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="reports\invoice\icx\LTFSToIPTSPDetails2.resx">
+    <EmbeddedResource Include="Reports\InvoiceReports\ICX\LTFSToIPTSPDetails2.resx">
       <DependentUpon>LTFSToIPTSPDetails2.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="reports\invoice\icx\InternationalToIOSDetails2.resx">
+    <EmbeddedResource Include="Reports\InvoiceReports\ICX\InternationalToIOSDetails2.resx">
       <DependentUpon>InternationalToIOSDetails2.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="reports\invoice\icx\DomesticToANSDetails2.resx">
+    <EmbeddedResource Include="Reports\InvoiceReports\ICX\DomesticToANSDetails2.resx">
       <DependentUpon>DomesticToANSDetails2.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="reports\invoice\icx\InternationalOutgoingToANS.resx">
+    <EmbeddedResource Include="Reports\InvoiceReports\ICX\InternationalOutgoingToANS.resx">
       <DependentUpon>InternationalOutgoingToANS.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="reports\invoice\icx\InternationalOutgoingToANSDetails1.resx">
+    <EmbeddedResource Include="Reports\InvoiceReports\ICX\InternationalOutgoingToANSDetails1.resx">
       <DependentUpon>InternationalOutgoingToANSDetails1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="reports\invoice\icx\InternationalOutgoingToANSDetails2.resx">
+    <EmbeddedResource Include="Reports\InvoiceReports\ICX\InternationalOutgoingToANSDetails2.resx">
       <DependentUpon>InternationalOutgoingToANSDetails2.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="reports\invoice\igw\InternationalOutgoingToIOSDetails2.resx">
+    <EmbeddedResource Include="Reports\InvoiceReports\IGW\InternationalOutgoingToIOSDetails2.resx">
       <DependentUpon>InternationalOutgoingToIOSDetails2.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="reports\invoice\igw\InternationalOutgoingToIOSDetails1.resx">
+    <EmbeddedResource Include="Reports\InvoiceReports\IGW\InternationalOutgoingToIOSDetails1.resx">
       <DependentUpon>InternationalOutgoingToIOSDetails1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="reports\invoice\igw\InternationalOutgoingToIOS.resx">
+    <EmbeddedResource Include="Reports\InvoiceReports\IGW\InternationalOutgoingToIOS.resx">
       <DependentUpon>InternationalOutgoingToIOS.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="reports\invoice\igw\InternationalIncomingToForeignCarrierDetails2.resx">
+    <EmbeddedResource Include="Reports\InvoiceReports\IGW\InternationalIncomingToForeignCarrierDetails2.resx">
       <DependentUpon>InternationalIncomingToForeignCarrierDetails2.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="reports\invoice\igw\InternationalIncomingToForeignCarrierDetails1.resx">
+    <EmbeddedResource Include="Reports\InvoiceReports\IGW\InternationalIncomingToForeignCarrierDetails1.resx">
       <DependentUpon>InternationalIncomingToForeignCarrierDetails1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="reports\invoice\igw\InternationalIncomingToForeignCarrier.resx">
+    <EmbeddedResource Include="Reports\InvoiceReports\IGW\InternationalIncomingToForeignCarrier.resx">
       <DependentUpon>InternationalIncomingToForeignCarrier.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
