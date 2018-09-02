@@ -1500,7 +1500,7 @@ warning 6002: The table/view 'def.platinum.cdrpartialreference' does not have a 
           <Property Name="TAX_AUTH_GEO_ID" Type="varchar" MaxLength="20" />
           <Property Name="TAX_AUTHORITY_RATE_SEQ_ID" Type="varchar" MaxLength="20" />
           <Property Name="SALES_OPPORTUNITY_ID" Type="varchar" MaxLength="20" />
-          <Property Name="JSON_DETAIL" Type="varchar" MaxLength="2000" />
+          <Property Name="JSON_DETAIL" Type="mediumtext" />
           <Property Name="LAST_UPDATED_STAMP" Type="datetime" Precision="0" />
           <Property Name="LAST_UPDATED_TX_STAMP" Type="datetime" Precision="0" />
           <Property Name="CREATED_STAMP" Type="datetime" Precision="0" />
@@ -6859,7 +6859,7 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <Property Name="TAX_AUTH_GEO_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="TAX_AUTHORITY_RATE_SEQ_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="SALES_OPPORTUNITY_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="JSON_DETAIL" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+          <Property Name="JSON_DETAIL" Type="String" MaxLength="16777215" FixedLength="false" Unicode="false" />
           <Property Name="LAST_UPDATED_STAMP" Type="DateTime" />
           <Property Name="LAST_UPDATED_TX_STAMP" Type="DateTime" />
           <Property Name="CREATED_STAMP" Type="DateTime" />

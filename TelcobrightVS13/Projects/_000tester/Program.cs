@@ -17,7 +17,7 @@ namespace Utils
              
         static void Main(string[] args)
         {
-            //var tester = new ParallelReaderToEntityTester();
+            //var tester = new JsonCompressionTester();
             //tester.Test();
             //return;
             //tester.PerformanceTest();
