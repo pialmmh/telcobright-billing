@@ -16,10 +16,11 @@ namespace DXWebReportViewer
         protected void Page_Load(object sender, EventArgs e)
         {
             Invoice invoice = InvoiceHelper.GetInvoice();
-            IInvoiceReport InternationalIncomingToForeignCarrier = new DomesticToANS(invoice);
-            InternationalIncomingToForeignCarrier.saveToPdf("E:\\Files\\telcobright\\demo.pdf");
-            string reportTitle = InternationalIncomingToForeignCarrier.getReportTitle();
-            ASPxDocumentViewer1.Report = (XtraReport)InternationalIncomingToForeignCarrier;
+            IInvoiceTemplate reportTemplate = new DomesticToANS();
+            reportTemplate.GenerateInvoice(invoice);
+            reportTemplate.SaveToPdf("E:\\Files\\telcobright\\demo.pdf");
+            // string reportTitle = InternationalIncomingToForeignCarrier.getReportTitle();
+            ASPxDocumentViewer1.Report = (XtraReport)reportTemplate;
         }
     }
 }

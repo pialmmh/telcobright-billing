@@ -162,8 +162,7 @@
     <Compile Include="reports\invoice\igw\InternationalIncomingToForeignCarrier.Designer.cs">
       <DependentUpon>InternationalIncomingToForeignCarrier.cs</DependentUpon>
     </Compile>
-    <Compile Include="reports\invoice\IInvoiceReport.cs" />
-    <Compile Include="reports\invoice\InvoiceReportExtensions.cs" />
+    <Compile Include="reports\invoice\IInvoiceTemplate.cs" />
     <Compile Include="reports\invoice\Invoice.cs" />
     <Compile Include="reports\invoice\InvoiceItem.cs" />
     <Compile Include="reports\invoice\InvoiceReportType.cs" />

@@ -9,23 +9,23 @@ using System.Globalization;
 
 namespace ReportGenerator.reports.invoice.igw
 {
-    public partial class InternationalIncomingToForeignCarrier : DevExpress.XtraReports.UI.XtraReport, IInvoiceReport
+    public partial class InternationalIncomingToForeignCarrier : DevExpress.XtraReports.UI.XtraReport, IInvoiceTemplate
     {
-        public InternationalIncomingToForeignCarrier(Invoice invoice)
+        public string TemplateName => this.GetType().Name;
+
+        public InternationalIncomingToForeignCarrier()
         {
             InitializeComponent();
-            generateReport(invoice);
         }
 
-        public InvoiceReportType reportType { get { return InvoiceReportType.InternationalIncomingToForeignCarrier; } }
-
-        public void saveToPdf(string fileName)
+        public void SaveToPdf(string fileName)
         {
             this.ExportToPdf(fileName);
         }
 
-        private void generateReport(Invoice invoice)
+        public void GenerateInvoice(object data)
         {
+            /*
             this.DataSource = invoice.InvoiceItems;
 
             #region Page Header
@@ -74,6 +74,7 @@ namespace ReportGenerator.reports.invoice.igw
                 "PABX: +88028332924, 9334781, 9334782, Fax: +8802833275, Email: info @banglatel.com.bd\r\n" +
                 "Website : www.banglatel.com.bd";
             #endregion
+            */
         }
     }
 }

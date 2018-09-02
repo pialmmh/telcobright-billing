@@ -9,23 +9,23 @@ using System.Globalization;
 
 namespace ReportGenerator.reports.invoice.igw
 {
-    public partial class InternationalToIOS : DevExpress.XtraReports.UI.XtraReport, IInvoiceReport
+    public partial class InternationalToIOS : DevExpress.XtraReports.UI.XtraReport, IInvoiceTemplate
     {
-        public InternationalToIOS(Invoice invoice)
+        public string TemplateName => this.GetType().Name;
+
+        public InternationalToIOS()
         {
             InitializeComponent();
-            generateReport(invoice);
         }
 
-        public InvoiceReportType reportType { get { return InvoiceReportType.InternationalToIOS; } }
-
-        public void saveToPdf(string fileName)
+        public void SaveToPdf(string fileName)
         {
             this.ExportToPdf(fileName);
         }
 
-        private void generateReport(Invoice invoice)
+        public void GenerateInvoice(object data)
         {
+            /*
             this.DataSource = invoice.InvoiceItems;
 
             #region Page Header
@@ -64,6 +64,7 @@ namespace ReportGenerator.reports.invoice.igw
             xrLabelAmountInwords.Text = textInfo.ToTitleCase(CurrencyHelper.NumberToTakaWords(Convert.ToDouble(subTotalAmount)));
             xrLabelConversionRate.Text = string.Format("As per Sonali Bank Rate (1USD = BDT {0:n2}) as on {1:dd-MMM-yyyy}", invoice.ConversionRate, invoice.ConversionRateDate);
             #endregion
+            */
         }
     }
 }

@@ -9,23 +9,23 @@ using System.Globalization;
 
 namespace ReportGenerator.reports.invoice.igw
 {
-    public partial class InternationalIncomingToForeignCarrierDetails1 : DevExpress.XtraReports.UI.XtraReport, IInvoiceReport
+    public partial class InternationalIncomingToForeignCarrierDetails1 : DevExpress.XtraReports.UI.XtraReport, IInvoiceTemplate
     {
-        public InternationalIncomingToForeignCarrierDetails1(Invoice invoice)
+        public string TemplateName => this.GetType().Name;
+
+        public InternationalIncomingToForeignCarrierDetails1()
         {
             InitializeComponent();
-            generateReport(invoice);
         }
 
-        public InvoiceReportType reportType { get { return InvoiceReportType.InternationalIncomingToForeignCarrierDetails1; } }
-
-        public void saveToPdf(string fileName)
+        public void SaveToPdf(string fileName)
         {
             this.ExportToPdf(fileName);
         }
 
-        private void generateReport(Invoice invoice)
+        public void GenerateInvoice(object data)
         {
+            /*
             this.DataSource = invoice.InvoiceItems;
 
             #region Page Header
@@ -53,7 +53,7 @@ namespace ReportGenerator.reports.invoice.igw
             xrTableCellRevenueTotal.DataBindings.Add("Text", this.DataSource, "Revenue", "{0:n2}");
             xrTableCellSubTotalAmount.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
             #endregion
-
+            */
         }
     }
 }

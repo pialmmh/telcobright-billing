@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace ReportGenerator.reports.invoice
 {
-    public interface IInvoiceReport
+    public interface IInvoiceTemplate
     {
-        InvoiceReportType reportType { get; }
-
-        void saveToPdf(String fileName);
+        string TemplateName { get; }
+        void GenerateInvoice(object data);
+        void SaveToPdf(String fileName);
     }
 }

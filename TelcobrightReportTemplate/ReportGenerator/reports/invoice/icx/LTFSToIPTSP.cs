@@ -9,23 +9,23 @@ using System.Globalization;
 
 namespace ReportGenerator.reports.invoice.igw
 {
-    public partial class LTFSToIPTSP : DevExpress.XtraReports.UI.XtraReport, IInvoiceReport
+    public partial class LTFSToIPTSP : DevExpress.XtraReports.UI.XtraReport, IInvoiceTemplate
     {
-        public LTFSToIPTSP(Invoice invoice)
+        public string TemplateName => this.GetType().Name;
+
+        public LTFSToIPTSP()
         {
             InitializeComponent();
-            generateReport(invoice);
         }
 
-        public InvoiceReportType reportType { get { return InvoiceReportType.LTFSToIPTSP; } }
-
-        public void saveToPdf(string fileName)
+        public void SaveToPdf(string fileName)
         {
             this.ExportToPdf(fileName);
         }
 
-        private void generateReport(Invoice invoice)
+        public void GenerateInvoice(object data)
         {
+            /*
             this.DataSource = invoice.InvoiceItems;
 
             #region Page Header
@@ -63,6 +63,7 @@ namespace ReportGenerator.reports.invoice.igw
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
             xrLabelAmountInwords.Text = textInfo.ToTitleCase(CurrencyHelper.NumberToTakaWords(Convert.ToDouble(subTotalAmount)));
             #endregion
+            */
         }
     }
 }
