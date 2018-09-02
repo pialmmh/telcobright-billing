@@ -31,7 +31,7 @@ namespace ReportGenerator.Reports.InvoiceReports.IGW
         public void GenerateInvoice(object data)
         {
             invoice invoice = (invoice)data;
-            List<InvoiceDataBasic> invoiceBasicDatas = this.GetReportData(invoice);
+            List<VoiceCallInvoiceData> invoiceBasicDatas = this.GetReportData(invoice);
             this.DataSource = invoiceBasicDatas;
 
             /*
@@ -84,9 +84,9 @@ namespace ReportGenerator.Reports.InvoiceReports.IGW
             #endregion
         }
 
-        private List<InvoiceDataBasic> GetReportData(invoice invoice)
+        private List<VoiceCallInvoiceData> GetReportData(invoice invoice)
         {
-            List<InvoiceDataBasic> invoiceBasicDatas = new List<InvoiceDataBasic>();
+            List<VoiceCallInvoiceData> invoiceBasicDatas = new List<VoiceCallInvoiceData>();
             invoice_item invoice_item = invoice.invoice_item.Single();
             Dictionary<string, string> invoiceMap =
                 JsonConvert.DeserializeObject<Dictionary<string, string>>(invoice_item.JSON_DETAIL);
@@ -95,8 +95,8 @@ namespace ReportGenerator.Reports.InvoiceReports.IGW
                 .ToDictionary(s => s.TemplateName);
 
             var section = invoiceSections["Section-1"];
-            JsonCompressor<InvoiceDataBasic> jsonCompressor = new JsonCompressor<InvoiceDataBasic>();
-            InvoiceDataBasic invoiceDataBasic = jsonCompressor.DeSerializeToObject(section.SerializedData);
+            JsonCompressor<VoiceCallInvoiceData> jsonCompressor = new JsonCompressor<VoiceCallInvoiceData>();
+            VoiceCallInvoiceData invoiceDataBasic = jsonCompressor.DeSerializeToObject(section.SerializedData);
 
             return invoiceBasicDatas;
         }

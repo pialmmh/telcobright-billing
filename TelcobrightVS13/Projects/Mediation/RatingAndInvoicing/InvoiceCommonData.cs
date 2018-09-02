@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TelcobrightMediation;
 
-
-namespace ReportGenerator.Reports.InvoiceReports
+namespace TelcobrightMediation
 {
     public class InvoiceCommonData
     {
@@ -23,11 +18,11 @@ namespace ReportGenerator.Reports.InvoiceReports
         public DateTime ConversionRateDate { get; set; }
 
         public PartnerEx Partner { get; set; }
-        public List<InvoiceDataBasic> InvoiceItems { get; set; }
+        public List<VoiceCallInvoiceData> InvoiceItems { get; set; }
 
         public InvoiceCommonData()
         {
-            InvoiceItems = new List<InvoiceDataBasic>();
+            InvoiceItems = new List<VoiceCallInvoiceData>();
         }
     }
 }

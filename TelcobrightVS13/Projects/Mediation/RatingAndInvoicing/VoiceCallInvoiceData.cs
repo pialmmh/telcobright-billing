@@ -2,7 +2,7 @@
 
 namespace TelcobrightMediation
 {
-    public class InvoiceDataBasic
+    public class VoiceCallInvoiceData
     {
         public string Reference { get; set; }
         public DateTime Date { get; set; }

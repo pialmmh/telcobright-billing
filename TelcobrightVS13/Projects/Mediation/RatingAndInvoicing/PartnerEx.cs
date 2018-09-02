@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ReportGenerator.Reports.InvoiceReports
+namespace TelcobrightMediation
 {
     public class PartnerEx
     {

@@ -166,8 +166,6 @@
     <Compile Include="Reports\InvoiceReports\IGW\InternationalIncomingToForeignCarrier.Designer.cs">
       <DependentUpon>InternationalIncomingToForeignCarrier.cs</DependentUpon>
     </Compile>
-    <Compile Include="Reports\InvoiceReports\InvoiceCommonData.cs" />
-    <Compile Include="Reports\InvoiceReports\PartnerEx.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\licenses.licx" />
