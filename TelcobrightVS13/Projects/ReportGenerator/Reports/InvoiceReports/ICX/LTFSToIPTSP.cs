@@ -7,6 +7,10 @@ using System.Linq;
 using ReportGenerator.Helper;
 using System.Globalization;
 using TelcobrightMediation;
+using System.Collections.Generic;
+using MediationModel;
+using Newtonsoft.Json;
+using LibraryExtensions;
 
 namespace ReportGenerator.Reports.InvoiceReports.ICX
 {
@@ -26,9 +30,11 @@ namespace ReportGenerator.Reports.InvoiceReports.ICX
 
         public void GenerateInvoice(object data)
         {
-            /*
-            this.DataSource = invoice.InvoiceItems;
+            invoice invoice = (invoice)data;
+            List<InvoiceDataBasic> invoiceBasicDatas = this.GetReportData(invoice);
+            this.DataSource = invoiceBasicDatas;
 
+            /*
             #region Page Header
             xrLabelVatRegNo.Text = "VAT Reg. No. 19061116647";
             xrLabelPartnerName.Text = invoice.Partner.PartnerName;
@@ -43,6 +49,7 @@ namespace ReportGenerator.Reports.InvoiceReports.ICX
             xrLabelCurrency.Text = invoice.Currency;
             xrLabelTimeZone.Text = invoice.TimeZone;
             #endregion
+            */
 
             #region Report Body
             xrTableCellReference.DataBindings.Add("Text", this.DataSource, "Reference");
@@ -52,7 +59,7 @@ namespace ReportGenerator.Reports.InvoiceReports.ICX
             xrTableCellTotalMinutes.DataBindings.Add("Text", this.DataSource, "TotalMinutes", "{0:n2}");
             xrTableCellAmount.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
 
-            decimal subTotalAmount = invoice.InvoiceItems.Sum(x => x.Amount);
+            decimal subTotalAmount = invoiceBasicDatas.Sum(x => x.Amount);
 
             xrTableCellSubTotalAmount.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
             xrTableCellInvoiceTotal.Text = string.Format("{0:n2}", subTotalAmount);
@@ -64,7 +71,24 @@ namespace ReportGenerator.Reports.InvoiceReports.ICX
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
             xrLabelAmountInwords.Text = textInfo.ToTitleCase(CurrencyHelper.NumberToTakaWords(Convert.ToDouble(subTotalAmount)));
             #endregion
-            */
         }
+
+        private List<InvoiceDataBasic> GetReportData(invoice invoice)
+        {
+            List<InvoiceDataBasic> invoiceBasicDatas = new List<InvoiceDataBasic>();
+            invoice_item invoice_item = invoice.invoice_item.Single();
+            Dictionary<string, string> invoiceMap =
+                JsonConvert.DeserializeObject<Dictionary<string, string>>(invoice_item.JSON_DETAIL);
+            Dictionary<string, InvoiceSection> invoiceSections = invoiceMap.Where(kv => kv.Key.StartsWith("Section-"))
+                .Select(kv => JsonConvert.DeserializeObject<InvoiceSection>(kv.Value))
+                .ToDictionary(s => s.TemplateName);
+
+            var section = invoiceSections["Section-1"];
+            JsonCompressor<InvoiceDataBasic> jsonCompressor = new JsonCompressor<InvoiceDataBasic>();
+            InvoiceDataBasic invoiceDataBasic = jsonCompressor.DeSerializeToObject(section.SerializedData);
+
+            return invoiceBasicDatas;
+        }
+
     }
 }
