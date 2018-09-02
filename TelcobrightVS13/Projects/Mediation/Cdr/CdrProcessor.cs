@@ -53,9 +53,12 @@ namespace TelcobrightMediation
 
 		public void Mediate()
 		{
-            //todo: change to parallel
             int maxDegreeOfParallelism = -1; //-1=no thread limitation
-			Parallel.ForEach(this.NewCdrExts, new ParallelOptions() {MaxDegreeOfParallelism = maxDegreeOfParallelism},
+            if (this.CdrJobContext.MediationContext.CdrSetting.DisableParallelMediation==true)
+            {
+                maxDegreeOfParallelism = 1;
+            }
+            Parallel.ForEach(this.NewCdrExts, new ParallelOptions() {MaxDegreeOfParallelism = maxDegreeOfParallelism},
 				cdrExt =>
 				{
 					try

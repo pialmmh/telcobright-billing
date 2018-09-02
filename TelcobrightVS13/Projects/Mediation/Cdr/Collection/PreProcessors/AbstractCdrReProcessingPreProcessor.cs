@@ -43,7 +43,7 @@ namespace TelcobrightMediation
             {
                 var clonedCdr = new IcdrImplConverter<cdr>().Convert(CdrManipulatingUtil.Clone(nonPartialCdr));
                 clonedCdr = metaDataRemoverInCaseOfReProcessing.Invoke(clonedCdr);
-                newCdrExts.Add(CdrExtFactory.CreateCdrExtWithNonPartialCdr(cdr: clonedCdr,
+                newCdrExts.Add(CdrExtFactory.CreateCdrExtWithNonPartialOrFinalInstance(cdr: clonedCdr,
                     treatCdrAsNewOldType: CdrNewOldType.NewCdr));
             });
             return newCdrExts;

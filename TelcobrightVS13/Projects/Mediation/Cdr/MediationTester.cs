@@ -20,7 +20,7 @@ namespace TelcobrightMediation
             this.FractionComparisionTollerance = fractionComparisionTollerance;
         }
 
-        public bool DurationSumOfNonPartialRawPartialsAndRawDurationAreTollerablyEqual(CdrProcessor cdrProcessor)
+        public bool DurationSumOfNonPartialRawPartialsAndRawDurationAreEqual(CdrProcessor cdrProcessor)
         {
             var processedCdrExts = cdrProcessor.CollectionResult.ProcessedCdrExts;
             var nonPartialCdrs =processedCdrExts.Where(c => c.Cdr.PartialFlag == 0);
@@ -29,19 +29,17 @@ namespace TelcobrightMediation
             var nonPartialDurationSum = nonPartialCdrs.Sum(c => c.Cdr.DurationSec);
             var rawPartialDurationSum = newRawPartialCdrs.Sum(c => c.DurationSec);
             var errorDuration = cdrProcessor.CollectionResult.CdrExtErrors.Sum(c => Convert.ToDecimal(c.CdrError.DurationSec));
-            bool result = Math.Abs(nonPartialDurationSum + rawPartialDurationSum+errorDuration
-                                   - cdrProcessor.CollectionResult.RawDurationTotalOfConsistentCdrs) <=
-                          this.FractionComparisionTollerance;
+            bool result = nonPartialDurationSum + rawPartialDurationSum + errorDuration
+                          == cdrProcessor.CollectionResult.RawDurationTotalOfConsistentCdrs;
             return result;
         }
-        public bool DurationSumInCdrAndSummaryAreTollerablyEqual(ParallelQuery<CdrExt> processedCdrExts)
+        public bool DurationSumInCdrAndSummaryAreEqual(ParallelQuery<CdrExt> processedCdrExts)
         {
             decimal durationSumInCdr = processedCdrExts.Sum(c => Convert.ToDecimal(c.Cdr?.DurationSec));
             decimal durationSumInSummaries = processedCdrExts.
                 Sum(c => c.TableWiseSummaries.Values.Sum(s => Convert.ToDecimal(s?.actualduration)));
             int summaryTypeCount = 2;//at this moment just hr & day
-            bool result = Math.Abs(durationSumInCdr - decimal.Divide(durationSumInSummaries, summaryTypeCount)) 
-                <= this.FractionComparisionTollerance;
+            bool result = durationSumInCdr == decimal.Divide(durationSumInSummaries, summaryTypeCount);
             return result;
         }
         public bool CdrDurationMatchesSumOfInsertedAndUpdatedSummaryDurationInCache(CdrProcessor cdrProcessor)

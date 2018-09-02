@@ -36,7 +36,8 @@ namespace TelcobrightMediation.Cdr
 
         public void Execute()
         {
-
+            if(this.CdrSetting.DisableParallelMediation==true)
+                Console.WriteLine("WARNING!!! PARALLEL MEDIATION IS DISABLED. THIS WILL AFFECT PERFORMANCE.");
             try
             {
                 this.CdrEraser?.RegenerateOldSummaries();
@@ -76,7 +77,8 @@ namespace TelcobrightMediation.Cdr
                 }
                 var cdrWritingResult = this.CdrProcessor?.WriteCdrs(parallelCdrExts);
 
-                if (this.CdrProcessor != null && this.CdrProcessor.PartialProcessingEnabled)
+                if (this.CdrProcessor != null && this.CdrProcessor.PartialProcessingEnabled
+                    &&this.CdrProcessor.CdrJobContext.TelcobrightJob.idjobdefinition!=3)//3=reprocess
                 {
                     PartialCdrTester partialCdrTester =
                         new PartialCdrTester(this, cdrWritingResult, this.PartialCdrTesterData);
@@ -105,7 +107,7 @@ namespace TelcobrightMediation.Cdr
         {
             MediationTester mediationTester =
                 new MediationTester(input.Tbc.CdrSetting.FractionalNumberComparisonTollerance);
-            if (!mediationTester.DurationSumInCdrAndSummaryAreTollerablyEqual(processedCdrExts))
+            if (!mediationTester.DurationSumInCdrAndSummaryAreEqual(processedCdrExts))
                 throw new Exception("Duration sum in cdr and summary are not tollerably equal");
             if (!mediationTester.SummaryCountTwiceAsCdrCount(processedCdrExts))
                 throw new Exception("Summary count is not twice as cdr count");
@@ -116,7 +118,7 @@ namespace TelcobrightMediation.Cdr
             //        this.CdrProcessor))
             //    throw new Exception("Sum of prev day wise durations and new summary instances is not equal to same " +
             //                        "in merged summary cache");
-            if (!mediationTester.DurationSumOfNonPartialRawPartialsAndRawDurationAreTollerablyEqual(this.CdrProcessor))
+            if (!mediationTester.DurationSumOfNonPartialRawPartialsAndRawDurationAreEqual(this.CdrProcessor))
                 throw new Exception("Duration sum Of non partial and raw Partial cdrs " +
                                     "are not equal to duration in raw instances.");
         }
@@ -124,7 +126,7 @@ namespace TelcobrightMediation.Cdr
         {
             MediationTester mediationTester =
                 new MediationTester(input.Tbc.CdrSetting.FractionalNumberComparisonTollerance);
-            if (!mediationTester.DurationSumInCdrAndSummaryAreTollerablyEqual(processedCdrExts))
+            if (!mediationTester.DurationSumInCdrAndSummaryAreEqual(processedCdrExts))
                 throw new Exception("Duration sum in cdr and summary are not tollerably equal");
             if (!mediationTester.SummaryCountTwiceAsCdrCount(processedCdrExts))
                 throw new Exception("Summary count is not twice as cdr count");
@@ -141,14 +143,14 @@ namespace TelcobrightMediation.Cdr
         {
             MediationTester mediationTester =
                 new MediationTester(input.Tbc.CdrSetting.FractionalNumberComparisonTollerance);
-            Assert.IsTrue(mediationTester.DurationSumInCdrAndSummaryAreTollerablyEqual(processedCdrExts));
+            Assert.IsTrue(mediationTester.DurationSumInCdrAndSummaryAreEqual(processedCdrExts));
             Assert.IsTrue(mediationTester.SummaryCountTwiceAsCdrCount(processedCdrExts));
             //todo: do something about this test which makes database trip & need to modify this to work with both eraser & processor
             //Assert.IsTrue(mediationTester
             //  .SumOfPrevDayWiseDurationsAndNewSummaryInstancesIsEqualToSameInMergedSummaryCache(
             //        this.CdrProcessor));
             Assert.IsTrue(
-                mediationTester.DurationSumOfNonPartialRawPartialsAndRawDurationAreTollerablyEqual(this.CdrProcessor));
+                mediationTester.DurationSumOfNonPartialRawPartialsAndRawDurationAreEqual(this.CdrProcessor));
         }
         
     }

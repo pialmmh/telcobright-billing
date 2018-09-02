@@ -242,6 +242,7 @@
     <Compile Include="Mediation\RateContainerInMemoryLocal.cs" />
     <Compile Include="Mediation\RateDictionaryGeneratorByTuples.cs" />
     <Compile Include="MefData\ICdrRule.cs" />
+    <Compile Include="RatingAndInvoicing\IInvoiceTemplate.cs" />
     <Compile Include="SegmentedJobHelper\IJobSegmentPostProcessor.cs" />
     <Compile Include="SegmentedJobHelper\RowIdVsDate.cs" />
     <Compile Include="SegmentedJobHelper\AbstractSegmentedJobProcessor.cs" />
@@ -295,8 +296,8 @@
     <Compile Include="FileOperations\_WriteError.cs" />
     <Compile Include="MefData\ServiceContext.cs" />
     <Compile Include="Models\PortalObjects.cs" />
-    <Compile Include="Rating\PrefixMatcher.cs" />
-    <Compile Include="Rating\A2ZRater.cs" />
+    <Compile Include="RatingAndInvoicing\PrefixMatcher.cs" />
+    <Compile Include="RatingAndInvoicing\A2ZRater.cs" />
     <Compile Include="Mediation\BinCdrFunctions.cs" />
     <Compile Include="MediationDicAndCollections.cs" />
     <Compile Include="Cdr\MediationValidator.cs" />
@@ -310,9 +311,9 @@
     <Compile Include="Mediation\TelcobrightProcess.cs" />
     <Compile Include="MefData\_Composers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rating\RateSorter.cs" />
-    <Compile Include="Rating\XyzInvoiceDataRow.cs" />
-    <Compile Include="Rating\XyzRuleHelper.cs" />
+    <Compile Include="RatingAndInvoicing\RateSorter.cs" />
+    <Compile Include="RatingAndInvoicing\XyzInvoiceDataRow.cs" />
+    <Compile Include="RatingAndInvoicing\XyzRuleHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

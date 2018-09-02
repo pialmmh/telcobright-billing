@@ -101,7 +101,7 @@ namespace TelcobrightMediation
         protected override List<CdrExt> CreateNewCdrExts()
         {
             var cdrExtsForNonPartials = base.NonPartialCdrs
-                .Select(cdr => CdrExtFactory.CreateCdrExtWithNonPartialCdr(cdr, CdrNewOldType.NewCdr)).ToList();
+                .Select(cdr => CdrExtFactory.CreateCdrExtWithNonPartialOrFinalInstance(cdr, CdrNewOldType.NewCdr)).ToList();
             if (this.PartialCdrEnabled)
             {
                 if (base.RawPartialCdrInstances?.Any() == true)

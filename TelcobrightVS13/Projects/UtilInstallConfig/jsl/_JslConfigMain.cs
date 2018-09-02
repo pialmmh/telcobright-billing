@@ -48,7 +48,8 @@ namespace InstallConfig
                 ValidationRulesForCommonMediationCheck = commonCdrValRulesGen.GetRules(),
                 ValidationRulesForInconsistentCdrs = inconsistentCdrValRulesGen.GetRules(),
                 ServiceGroupConfigurations = this.GetServiceGroupConfigurations(),
-                DisableCdrPostProcessingJobCreationForAutomation = false
+                DisableCdrPostProcessingJobCreationForAutomation = false,
+                DisableParallelMediation = true
             };
 
             this.PrepareDirectorySettings(this.Tbc);
