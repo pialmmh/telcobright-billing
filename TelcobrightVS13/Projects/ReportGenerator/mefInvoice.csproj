@@ -227,10 +227,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LibraryExtensions\LibraryExtensions.csproj">
-      <Project>{d4c2f34d-4d3d-43ae-84f0-e80cfedb1b48}</Project>
-      <Name>LibraryExtensions</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Mediation\_00Mediation.csproj">
       <Project>{1a64e6f9-903c-416c-b322-1b5c5d997001}</Project>
       <Name>_00Mediation</Name>

@@ -82,19 +82,18 @@ namespace ReportGenerator.Reports.InvoiceReports.ICX
             invoice_item invoice_item = invoice.invoice_item.Single();
             Dictionary<string, string> invoiceMap =
                 JsonConvert.DeserializeObject<Dictionary<string, string>>(invoice_item.JSON_DETAIL);
+            /*
             //example of retrieving otherparams
             string companyAddress = invoiceMap["companyAddress"];//actual may vary
+            */
             Dictionary<string, InvoiceSection> invoiceSections = invoiceMap.Where(kv => kv.Key.StartsWith("Section-"))
                 .Select(kv => JsonConvert.DeserializeObject<InvoiceSection>(kv.Value))
                 .ToDictionary(s => s.TemplateName);
 
-            //example of deserializing section data to InvoiceDataBasic
             var section = invoiceSections["Section-1"];
             JsonCompressor<InvoiceDataBasic> jsonCompressor=new JsonCompressor<InvoiceDataBasic>();
             InvoiceDataBasic invoiceDataBasic = jsonCompressor.DeSerializeToObject(section.SerializedData);
 
-            //InvoiceSection invoiceSection = JsonConvert.DeserializeObject<InvoiceSection>(invoiceMap[this.TemplateName]);
-            //invoiceBasicDatas = JsonConvert.DeserializeObject<List<InvoiceDataBasic>>(invoiceSection.SerializedData);
             return invoiceBasicDatas;
         }
     }
