@@ -21,6 +21,9 @@ using Itenso.TimePeriod;
 using ReportGenerator.reports.invoice;
 using ReportGenerator.reports.invoice.igw;
 using PortalApp.Models;
+using System.Reflection;
+using System.IO;
+using PortalApp.Handler;
 
 namespace PortalApp.config
 {
@@ -52,23 +55,7 @@ namespace PortalApp.config
                     gvInvoice.DataBind();
 
                 }
-
-                // TODO: Remove this from production code
-                foreach (var item in Enum.GetValues(typeof(InvoiceReportType)))
-                {
-                    DropDownListReportTemplate.Items.Add(item.ToString());
-                }
-
             }
-        }
-
-        protected void ButtonSaveReport_Click(object sender, EventArgs e)
-        {
-            //InvoiceReportType invoiceReportType = (InvoiceReportType)Enum.Parse(typeof(InvoiceReportType), DropDownListReportTemplate.Text, true);
-            //Invoice invoice = InvoiceHelper.GetInvoice(invoiceReportType);
-            //Type reportType = Type.GetType(DropDownListReportTemplate.Text);
-            //IInvoiceReport invoiceReport = (IInvoiceReport)Activator.CreateInstance(reportType, invoice);
-            //invoiceReport.saveToPdf("E:\\Files\\telcobright\\demo.pdf");
         }
 
         protected void gvInvoice_RowDataBound(object sender, GridViewRowEventArgs e)
@@ -118,8 +105,24 @@ namespace PortalApp.config
                 if (preparedInvoice != null)
                 {
                     Type reportType = Type.GetType("ReportGenerator.reports.invoice.igw." + invoice.INVOICE_TYPE_ID);
+                    if (reportType == null)
+                    {
+                        foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
+                        {
+                            reportType = asm.GetType("ReportGenerator.reports.invoice.igw." + invoice.INVOICE_TYPE_ID);
+                            if (reportType != null)
+                                break;
+                        }
+                    }
+
+                    String refNo = Guid.NewGuid().ToString();
                     IInvoiceReport invoiceReport = (IInvoiceReport)Activator.CreateInstance(reportType, preparedInvoice);
-                    invoiceReport.saveToPdf("E:\\Files\\telcobright\\demo.pdf");
+                    string pathtofile = string.Format("{0}\\{1}.pdf", Server.MapPath("/InvoicePdfs"), refNo);
+                    invoiceReport.saveToPdf(pathtofile);
+
+                    // show pdf
+                    Response.Redirect("~/config/ViewPDF.aspx?refNo=" + HttpUtility.UrlEncode(refNo), false);
+                    Context.ApplicationInstance.CompleteRequest();
                 }
                 else throw new Exception("Invalid invoice data");
             }

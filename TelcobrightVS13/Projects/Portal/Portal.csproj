@@ -446,6 +446,7 @@
     <Content Include="config\AddPayment.aspx" />
     <Content Include="config\PaymentManagement.aspx" />
     <Content Include="config\ConversionRates.aspx" />
+    <Content Include="config\ViewPDF.aspx" />
     <Content Include="config\ViewRoutes.aspx" />
     <Content Include="config\Partner.aspx" />
     <Content Include="config\PartnerDetail.aspx" />
@@ -750,6 +751,13 @@
     <Compile Include="config\ConversionRates.aspx.designer.cs">
       <DependentUpon>ConversionRates.aspx</DependentUpon>
     </Compile>
+    <Compile Include="config\ViewPDF.aspx.cs">
+      <DependentUpon>ViewPDF.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="config\ViewPDF.aspx.designer.cs">
+      <DependentUpon>ViewPDF.aspx</DependentUpon>
+    </Compile>
     <Compile Include="config\ViewRoutes.aspx.cs">
       <DependentUpon>ViewRoutes.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -764,6 +772,7 @@
     <Compile Include="Dashboard.aspx.designer.cs">
       <DependentUpon>Dashboard.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Handler\PdfHandler.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\InvoiceHelper.cs" />
     <Compile Include="ReportHelper\AbstractSqlHelper.cs" />

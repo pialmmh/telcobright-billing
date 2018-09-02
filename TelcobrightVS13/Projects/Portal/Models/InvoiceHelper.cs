@@ -74,16 +74,21 @@ namespace PortalApp.Models
         private List<InvoiceItem> GetInvoiceItems(DataTable dt)
         {
             List<InvoiceItem> invoiceItems = new List<InvoiceItem>();
-            foreach (DataRow item in dt.Rows)
+            foreach (DataRow row in dt.Rows)
             {
-                InvoiceItem invoiceItem = new InvoiceItem() {
-                    Reference = item["Reference"].ToString(),
-                    Description = item["Description"].ToString(),
-                    Quantity = Convert.ToDouble(item["Quantity"]),
-                    UoM = item["UoM"].ToString(),
-                    TotalMinutes = Convert.ToDouble(item["TotalMinutes"]),
-                    Amount = Convert.ToDecimal(item["Amount"])
-                };
+                InvoiceItem invoiceItem = new InvoiceItem();
+                if (row.Table.Columns.Contains("Amount")) invoiceItem.Amount = row["Amount"] == DBNull.Value ? 0 : Convert.ToDecimal(row["Amount"]);
+                if (row.Table.Columns.Contains("Date")) invoiceItem.Date = row["Date"] == DBNull.Value ? DateTime.Now.Date : Convert.ToDateTime(row["Date"]);
+                if (row.Table.Columns.Contains("Description")) invoiceItem.Description = row["Description"] == DBNull.Value ? null : row["Description"].ToString();
+                if (row.Table.Columns.Contains("Quantity")) invoiceItem.Quantity = row["Quantity"] == DBNull.Value ? 0 : Convert.ToDouble(row["Quantity"]);
+                if (row.Table.Columns.Contains("Rate")) invoiceItem.Rate = row["Rate"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(row["Rate"]);
+                if (row.Table.Columns.Contains("Reference")) invoiceItem.Reference = row["Reference"] == DBNull.Value ? null : row["Reference"].ToString();
+                if (row.Table.Columns.Contains("Revenue")) invoiceItem.Revenue = row["Revenue"] == DBNull.Value ? 0 : Convert.ToDecimal(row["Revenue"]);
+                if (row.Table.Columns.Contains("TotalMinutes")) invoiceItem.TotalMinutes = row["TotalMinutes"] == DBNull.Value ? 0 : Convert.ToDouble(row["TotalMinutes"]);
+                if (row.Table.Columns.Contains("UoM")) invoiceItem.UoM = row["UoM"] == DBNull.Value ? null : row["UoM"].ToString();
+                if (row.Table.Columns.Contains("XAmount")) invoiceItem.XAmount = row["XAmount"] == DBNull.Value ? 0 : Convert.ToDecimal(row["XAmount"]);
+                if (row.Table.Columns.Contains("YAmount")) invoiceItem.YAmount = row["YAmount"] == DBNull.Value ? 0 : Convert.ToDecimal(row["YAmount"]);
+                if (row.Table.Columns.Contains("XYAmount")) invoiceItem.XYAmount = row["XYAmount"] == DBNull.Value ? 0 : Convert.ToDecimal(row["XYAmount"]);
                 invoiceItems.Add(invoiceItem);
             }
             return invoiceItems;
@@ -97,7 +102,7 @@ namespace PortalApp.Models
             {
                 case InvoiceReportType.InternationalToIOS:
                     constructedSQL = "select 0.26 as Amount, STR_TO_DATE('2018/07/01', '%Y/%m/%d') as `Date`, 'Call Carrying Charges' as Description, 23 as Quantity, 0.025 as Rate, " +
-                        "'International Inbound Calls' as Reference, 0.16 as Revenue, 7.22 as TotalMinutes, 'Calls' as UoM, " +
+                        "null as Reference, 0.16 as Revenue, 7.22 as TotalMinutes, 'Calls' as UoM, " +
                         "0.16 as XAmount, 0.06 as YAmount, 0.10 as XYAmount from users";
                     break;
                 default:

@@ -19,9 +19,6 @@ namespace ReportGenerator.reports.invoice
         public decimal? Rate { get; set; }
         public decimal Revenue { get; set; }
         public decimal Amount { get; set; }
-
-        public decimal XYAmount {
-            get { return XAmount - YAmount; }
-        }
+        public decimal XYAmount { get; set; }
     }
 }

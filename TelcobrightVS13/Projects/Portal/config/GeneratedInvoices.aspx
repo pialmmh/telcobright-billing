@@ -2,7 +2,6 @@
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
    
     <script src="../Scripts/moment.js" type="text/javascript"></script>
-
     <%--Page Load and Other Server Side Asp.net scripts--%>
        
 </asp:Content>
@@ -53,10 +52,5 @@
                 
             </Triggers>
         </asp:UpdatePanel>
-    </div>
-    <div>
-        <asp:Label runat="server" Text="Report Template:"/>
-        <asp:DropDownList runat="server" ID="DropDownListReportTemplate" />
-        <asp:Button runat="server" ID="ButtonSaveReport" Text="Save Report" OnClick="ButtonSaveReport_Click" />
     </div>
 </asp:Content>
