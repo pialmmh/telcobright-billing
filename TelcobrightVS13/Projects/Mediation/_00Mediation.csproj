@@ -144,6 +144,18 @@
     <Compile Include="Config\EmailSenderConfig.cs" />
     <Compile Include="Config\SmsSenderConfig.cs" />
     <Compile Include="IAutoincrementManager.cs" />
+    <Compile Include="MefData\Composers\AutoCreateJobComposer.cs" />
+    <Compile Include="MefData\Composers\CdrRuleComposer.cs" />
+    <Compile Include="MefData\Composers\DecoderComposer.cs" />
+    <Compile Include="MefData\Composers\InvoiceGenerationRuleComposer.cs" />
+    <Compile Include="MefData\Composers\MefGenericAssignmentFactoryComposer.cs" />
+    <Compile Include="MefData\Composers\MefJobComposer.cs" />
+    <Compile Include="MefData\Composers\MefNerCalculationRuleComposer.cs" />
+    <Compile Include="MefData\Composers\PartnerRuleComposer.cs" />
+    <Compile Include="MefData\Composers\RouteDisplayClassComposer.cs" />
+    <Compile Include="MefData\Composers\InvoiceTemplateComposer.cs" />
+    <Compile Include="MefData\Composers\ServiceFamilyComposer.cs" />
+    <Compile Include="MefData\Composers\ServiceGroupComposer.cs" />
     <Compile Include="MefData\IInvoiceGenerationRule.cs" />
     <Compile Include="MefData\ITelcobrightJobInput.cs" />
     <Compile Include="Cdr\CdrJobFactory.cs" />
@@ -311,7 +323,7 @@
     <Compile Include="Mediation\RateList.cs" />
     <Compile Include="Mediation\TelcoBrightAdhocMethods.cs" />
     <Compile Include="Mediation\TelcobrightProcess.cs" />
-    <Compile Include="MefData\_Composers.cs" />
+    <Compile Include="MefData\RouteDisplayClassData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RatingAndInvoicing\RateSorter.cs" />
     <Compile Include="RatingAndInvoicing\XyzInvoiceDataRow.cs" />
