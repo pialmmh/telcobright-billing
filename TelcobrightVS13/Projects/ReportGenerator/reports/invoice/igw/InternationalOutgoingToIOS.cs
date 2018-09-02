@@ -6,15 +6,14 @@ using DevExpress.XtraReports.UI;
 using System.Linq;
 using ReportGenerator.Helper;
 using System.Globalization;
-using System.Collections.Generic;
 
 namespace ReportGenerator.reports.invoice.igw
 {
-    public partial class InternationalOutgoingToANS : DevExpress.XtraReports.UI.XtraReport, IInvoiceTemplate
+    public partial class InternationalOutgoingToIOS : DevExpress.XtraReports.UI.XtraReport, IInvoiceTemplate
     {
         public string TemplateName => this.GetType().Name;
 
-        public InternationalOutgoingToANS()
+        public InternationalOutgoingToIOS()
         {
             InitializeComponent();
         }
@@ -30,7 +29,7 @@ namespace ReportGenerator.reports.invoice.igw
             this.DataSource = invoice.InvoiceItems;
 
             #region Page Header
-            xrLabelVatRegNo.Text = "VAT Reg. No. 19061116647";
+            xrLabelVatRegNo.Text = "VAT Reg. No. 18141080328";
             xrLabelPartnerName.Text = invoice.Partner.PartnerName;
             xrLabelPartnerAddress.Text = invoice.Partner.PartnerAddress;
             xrLabelPartnerVatRegNo.Text = invoice.Partner.VatRegNo;
@@ -67,12 +66,6 @@ namespace ReportGenerator.reports.invoice.igw
             xrLabelConversionRate.Text = string.Format("As per Sonali Bank Rate (1USD = BDT {0:n2}) as on {1:dd-MMM-yyyy}", invoice.ConversionRate, invoice.ConversionRateDate);
             #endregion
             */
-        }
-
-        private List<InvoiceDataBasic> GetReportData(object data)
-        {
-            List<InvoiceDataBasic> InvoiceDataBasic = new List<invoice.InvoiceDataBasic>();
-            return InvoiceDataBasic;
         }
     }
 }

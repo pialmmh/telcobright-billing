@@ -55,7 +55,7 @@ namespace DXWebReportViewer.Helper
             };
         }
 
-        private static List<InvoiceItem> GetInvoiceItems()
+        private static List<InvoiceDataBasic> GetInvoiceItems()
         {
             /*
             List<InvoiceItem> invoiceItems = new List<InvoiceItem>();
@@ -130,9 +130,9 @@ namespace DXWebReportViewer.Helper
             */
 
             
-            return new List<InvoiceItem>
+            return new List<InvoiceDataBasic>
             {
-                new InvoiceItem()
+                new InvoiceDataBasic()
                 {
                     Reference = "Int'l Outbound Calls",
                     UoM = "Calls",

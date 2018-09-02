@@ -18,8 +18,6 @@ using TelcobrightMediation;
 using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Config;
 using Itenso.TimePeriod;
-using ReportGenerator.reports.invoice;
-using ReportGenerator.reports.invoice.igw;
 using PortalApp.Models;
 using System.Reflection;
 using System.IO;
@@ -64,10 +62,12 @@ namespace PortalApp.config
             {
                 // Invoice type
                 DropDownList ddlistInvoiceType = (DropDownList)e.Row.FindControl("ddlistInvoiceType");
+                /*
                 foreach (var item in Enum.GetValues(typeof(InvoiceReportType)))
                 {
                     ddlistInvoiceType.Items.Add(item.ToString());
                 }
+                */
                 string invoiceType = DataBinder.Eval(e.Row.DataItem, "INVOICE_TYPE_ID").ToString();
                 ddlistInvoiceType.SelectedValue = invoiceType;
 
@@ -101,6 +101,7 @@ namespace PortalApp.config
                 invoice invoice = context.invoices.First(x => x.INVOICE_ID == invoiceId);
 
                 InvoiceHelper invoiceHelper = new InvoiceHelper(invoice);
+                /*
                 Invoice preparedInvoice = invoiceHelper.GetInvoice();
                 if (preparedInvoice != null)
                 {
@@ -125,6 +126,7 @@ namespace PortalApp.config
                     Context.ApplicationInstance.CompleteRequest();
                 }
                 else throw new Exception("Invalid invoice data");
+                */
             }
         }
     }

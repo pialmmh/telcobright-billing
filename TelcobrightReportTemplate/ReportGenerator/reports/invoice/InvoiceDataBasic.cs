@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ReportGenerator.reports.invoice
 {
-    public class InvoiceItem
+    public class InvoiceDataBasic
     {
         public string Reference { get; set; }
         public DateTime Date { get; set; }

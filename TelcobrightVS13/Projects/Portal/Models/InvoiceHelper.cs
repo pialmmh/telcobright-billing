@@ -1,6 +1,5 @@
 ﻿using MediationModel;
 using MySql.Data.MySqlClient;
-using ReportGenerator.reports.invoice;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -18,7 +17,7 @@ namespace PortalApp.Models
         {
             this.invoice = invoice;
         }
-
+        /*
         public Invoice GetInvoice()
         {
 
@@ -110,5 +109,6 @@ namespace PortalApp.Models
             }
             return constructedSQL;
         }
+        */
     }
 }
