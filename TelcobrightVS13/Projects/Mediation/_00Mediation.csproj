@@ -243,6 +243,8 @@
     <Compile Include="Mediation\RateDictionaryGeneratorByTuples.cs" />
     <Compile Include="MefData\ICdrRule.cs" />
     <Compile Include="RatingAndInvoicing\IInvoiceTemplate.cs" />
+    <Compile Include="RatingAndInvoicing\InvoiceDataBasic.cs" />
+    <Compile Include="RatingAndInvoicing\InvoiceSection.cs" />
     <Compile Include="SegmentedJobHelper\IJobSegmentPostProcessor.cs" />
     <Compile Include="SegmentedJobHelper\RowIdVsDate.cs" />
     <Compile Include="SegmentedJobHelper\AbstractSegmentedJobProcessor.cs" />

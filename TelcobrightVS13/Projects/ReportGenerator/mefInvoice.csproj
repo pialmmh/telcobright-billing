@@ -162,9 +162,7 @@
     <Compile Include="reports\invoice\igw\InternationalIncomingToForeignCarrier.Designer.cs">
       <DependentUpon>InternationalIncomingToForeignCarrier.cs</DependentUpon>
     </Compile>
-    <Compile Include="reports\invoice\IInvoiceTemplate.cs" />
     <Compile Include="reports\invoice\Invoice.cs" />
-    <Compile Include="reports\invoice\InvoiceDataBasic.cs" />
     <Compile Include="reports\invoice\Partner.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -225,6 +223,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Mediation\_00Mediation.csproj">
+      <Project>{1a64e6f9-903c-416c-b322-1b5c5d997001}</Project>
+      <Name>_00Mediation</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Models_Mediation\Models_Mediation.csproj">
       <Project>{4282d6f4-efd2-418a-be9f-74f09b7a45d8}</Project>
       <Name>Models_Mediation</Name>

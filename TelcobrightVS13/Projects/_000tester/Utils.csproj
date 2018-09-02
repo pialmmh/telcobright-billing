@@ -158,6 +158,7 @@
     <Compile Include="FluentTester.cs" />
     <Compile Include="IterationPerformanceTester.cs" />
     <Compile Include="FlexValidatorTester.cs" />
+    <Compile Include="JsonCompressionTester.cs" />
     <Compile Include="LargelistTester.cs" />
     <Compile Include="MediationRuleDeserializer.cs" />
     <Compile Include="MefTester.cs" />
