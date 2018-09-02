@@ -9,6 +9,7 @@ using System.Globalization;
 using System.Collections.Generic;
 using TelcobrightMediation;
 using MediationModel;
+using Newtonsoft.Json;
 
 namespace ReportGenerator.Reports.InvoiceReports.ICX
 {
@@ -28,7 +29,9 @@ namespace ReportGenerator.Reports.InvoiceReports.ICX
 
         public void GenerateInvoice(object data)
         {
-            this.DataSource = this.GetReportData(data);
+            invoice invoice = (invoice)data;
+            List<InvoiceDataBasic> invoiceBasicDatas = this.GetReportData(invoice);
+            this.DataSource = invoiceBasicDatas;
 
             /*
             #region Page Header
@@ -45,6 +48,7 @@ namespace ReportGenerator.Reports.InvoiceReports.ICX
             xrLabelCurrency.Text = invoice.Currency;
             xrLabelTimeZone.Text = invoice.TimeZone;
             #endregion
+            */
 
             #region Report Body
             xrTableCellReference.DataBindings.Add("Text", this.DataSource, "Reference");
@@ -56,13 +60,14 @@ namespace ReportGenerator.Reports.InvoiceReports.ICX
             xrTableCellXYAmountBDT.DataBindings.Add("Text", this.DataSource, "XYAmount", "{0:n2}");
             xrTableCellAmount.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
 
-            decimal subTotalAmount = invoice.InvoiceItems.Sum(x => x.Amount);
+            decimal subTotalAmount = invoiceBasicDatas.Sum(x => x.Amount);
 
             xrTableCellSubTotalAmount.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
             xrTableCellInvoiceTotal.Text = string.Format("{0:n2}", subTotalAmount);
             xrTableCellAmountDueforPayment.Text = string.Format("{0:n2}", subTotalAmount);
             #endregion
 
+            /*
             #region Report Footer
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
             xrLabelAmountInwords.Text = textInfo.ToTitleCase(CurrencyHelper.NumberToTakaWords(Convert.ToDouble(subTotalAmount)));
@@ -71,11 +76,14 @@ namespace ReportGenerator.Reports.InvoiceReports.ICX
             */
         }
 
-        private List<InvoiceDataBasic> GetReportData(object data)
+        private List<InvoiceDataBasic> GetReportData(invoice invoice)
         {
-            invoice invoice = (MediationModel.invoice)data;
-            List<InvoiceDataBasic> InvoiceDataBasic = new List<InvoiceDataBasic>();
-            return InvoiceDataBasic;
+            List<InvoiceDataBasic> invoiceBasicDatas = new List<InvoiceDataBasic>();
+            invoice_item invoice_item = invoice.invoice_item.Single();
+            Dictionary<string, string> invoiceItemMap = JsonConvert.DeserializeObject<Dictionary<string, string>>(invoice_item.JSON_DETAIL);
+            InvoiceSection invoiceSection = JsonConvert.DeserializeObject<InvoiceSection>(invoiceItemMap[this.TemplateName]);
+            invoiceBasicDatas = JsonConvert.DeserializeObject<List<InvoiceDataBasic>>(invoiceSection.SerializedData);
+            return invoiceBasicDatas;
         }
     }
 }
