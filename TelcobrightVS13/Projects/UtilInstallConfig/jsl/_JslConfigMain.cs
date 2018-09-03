@@ -49,7 +49,7 @@ namespace InstallConfig
                 ValidationRulesForInconsistentCdrs = inconsistentCdrValRulesGen.GetRules(),
                 ServiceGroupConfigurations = this.GetServiceGroupConfigurations(),
                 DisableCdrPostProcessingJobCreationForAutomation = false,
-                DisableParallelMediation = true
+                DisableParallelMediation = false
             };
 
             this.PrepareDirectorySettings(this.Tbc);
