@@ -51,6 +51,8 @@ namespace MediationModel
         public Nullable<float> refpdd { get; set; }
         public Nullable<float> refasrfas { get; set; }
         public int DefaultCurrency { get; set; }
+        public string invoiceAddress { get; set; }
+        public string vatRegistrationNo { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<account> accounts { get; set; }

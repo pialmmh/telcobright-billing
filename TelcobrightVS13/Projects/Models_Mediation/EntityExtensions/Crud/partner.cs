@@ -38,7 +38,9 @@ namespace MediationModel
 				.Append(this.refccrbycc.ToMySqlField()).Append(",")
 				.Append(this.refpdd.ToMySqlField()).Append(",")
 				.Append(this.refasrfas.ToMySqlField()).Append(",")
-				.Append(this.DefaultCurrency.ToMySqlField()).Append(")")
+				.Append(this.DefaultCurrency.ToMySqlField()).Append(",")
+				.Append(this.invoiceAddress.ToMySqlField()).Append(",")
+				.Append(this.vatRegistrationNo.ToMySqlField()).Append(")")
 				;
 		}
 		public  StringBuilder GetExtInsertCustom(Func<partner,string> externalInsertMethod)
@@ -75,7 +77,9 @@ namespace MediationModel
 				.Append("refccrbycc=").Append(this.refccrbycc.ToMySqlField()).Append(",")
 				.Append("refpdd=").Append(this.refpdd.ToMySqlField()).Append(",")
 				.Append("refasrfas=").Append(this.refasrfas.ToMySqlField()).Append(",")
-				.Append("DefaultCurrency=").Append(this.DefaultCurrency.ToMySqlField())
+				.Append("DefaultCurrency=").Append(this.DefaultCurrency.ToMySqlField()).Append(",")
+				.Append("invoiceAddress=").Append(this.invoiceAddress.ToMySqlField()).Append(",")
+				.Append("vatRegistrationNo=").Append(this.vatRegistrationNo.ToMySqlField())
 				.Append(whereClauseMethod.Invoke(this));
 				
 		}

@@ -1780,6 +1780,8 @@ warning 6002: The table/view 'def.platinum.mockcdr' does not have a primary key 
           <Property Name="refpdd" Type="float" />
           <Property Name="refasrfas" Type="float" />
           <Property Name="DefaultCurrency" Type="int" Nullable="false" />
+          <Property Name="invoiceAddress" Type="varchar" MaxLength="200" />
+          <Property Name="vatRegistrationNo" Type="varchar" MaxLength="45" />
         </EntityType>
         <EntityType Name="partnerprefix">
           <Key>
@@ -7035,6 +7037,8 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <Property Name="refpdd" Type="Single" />
           <Property Name="refasrfas" Type="Single" />
           <Property Name="DefaultCurrency" Type="Int32" Nullable="false" />
+          <Property Name="invoiceAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="vatRegistrationNo" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="accounts" Relationship="MediationModel.account_ibfk_1" FromRole="partner" ToRole="account" />
           <NavigationProperty Name="accounts1" Relationship="MediationModel.account_ibfk_2" FromRole="partner" ToRole="account" />
           <NavigationProperty Name="ratetaskassigns" Relationship="MediationModel.ratetaskassign_ibfk_3" FromRole="partner" ToRole="ratetaskassign" />
@@ -11169,6 +11173,8 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <EntitySetMapping Name="partners">
             <EntityTypeMapping TypeName="MediationModel.partner">
               <MappingFragment StoreEntitySet="partner">
+                <ScalarProperty Name="vatRegistrationNo" ColumnName="vatRegistrationNo" />
+                <ScalarProperty Name="invoiceAddress" ColumnName="invoiceAddress" />
                 <ScalarProperty Name="DefaultCurrency" ColumnName="DefaultCurrency" />
                 <ScalarProperty Name="refasrfas" ColumnName="refasrfas" />
                 <ScalarProperty Name="refpdd" ColumnName="refpdd" />
