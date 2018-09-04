@@ -77,7 +77,7 @@ namespace TelcobrightMediation
                         FROM {summaryTableName}
                         where actualduration>0
                         and tup_starttime in 
-                        ({string.Join(",", datesOrHoursInvolved.Select(c => c.ToMySqlStyleDateTimeStrWithQuote()))})
+                        ({string.Join(",", datesOrHoursInvolved.Select(c => c.ToMySqlFormatWithQuote()))})
                         group by tup_starttime";
                 var cmd = cdrProcessor.CdrJobContext.DbCmd;
                 cmd.CommandText = sql;

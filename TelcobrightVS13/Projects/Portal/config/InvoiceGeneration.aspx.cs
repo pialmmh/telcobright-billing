@@ -81,29 +81,28 @@ namespace PortalApp.config
 
                         if (!isAlreadyExists)
                         {
-                            InvoiceDataCollector invoiceGeneration = new InvoiceDataCollector();
-                            invoiceGeneration.PartnerId = partner.idPartner;
-                            invoiceGeneration.PartnerName = partner.PartnerName;
-                            invoiceGeneration.AccountId = account.id;
-                            invoiceGeneration.AccountName = account.accountName;
-                            invoiceGeneration.StartDateTime = timeRange.Start;
-                            invoiceGeneration.EndDateTime = timeRange.End;
-                            invoiceGeneration.Amount = ledgerSummary.AMOUNT;
-                            invoiceGeneration.TimeZone = DefaultTimeZoneId;
-                            invoiceGeneration.GmtOffset = GmtOffset;
-                            invoiceGeneration.InvoiceDates.Add(ledgerSummary.transactionDate);
+                            InvoiceDataCollector invoiceDataCollector = new InvoiceDataCollector();
+                            invoiceDataCollector.PartnerId = partner.idPartner;
+                            invoiceDataCollector.PartnerName = partner.PartnerName;
+                            invoiceDataCollector.AccountId = account.id;
+                            invoiceDataCollector.AccountName = account.accountName;
+                            invoiceDataCollector.StartDateTime = timeRange.Start;
+                            invoiceDataCollector.EndDateTime = timeRange.End;
+                            invoiceDataCollector.Amount = ledgerSummary.AMOUNT;
+                            invoiceDataCollector.TimeZone = DefaultTimeZoneId;
+                            invoiceDataCollector.GmtOffset = GmtOffset;
+                            invoiceDataCollector.InvoiceDates.Add(ledgerSummary.transactionDate);
 
                             foreach (var kv in serviceAliases)
                             {
                                 var regex = kv.Key;
-                                if (regex.Matches(invoiceGeneration.AccountName).Count > 0)
+                                if (regex.Matches(invoiceDataCollector.AccountName).Count > 0)
                                 {
-                                    invoiceGeneration.ServiceAccountAlias = kv.Value;
+                                    invoiceDataCollector.ServiceAccountAlias = kv.Value;
                                     break;
                                 }
                             }
-
-                            summaryForInvoiceGenerations.Add(invoiceGeneration);
+                            summaryForInvoiceGenerations.Add(invoiceDataCollector);
                         }
                     }
 
@@ -260,18 +259,18 @@ namespace PortalApp.config
             string sourceTable = "acc_transaction";
             jobParamsMap.Add("sourceTable", sourceTable);
             jobParamsMap.Add("serviceAccountId", glAccountId.ToString());
-            jobParamsMap.Add("startDate", invoiceDataCollector.StartDateTimeLocal.ToMySqlStyleDateTimeStrWithoutQuote());
-            jobParamsMap.Add("endDate", invoiceDataCollector.EndDateTime.ToMySqlStyleDateTimeStrWithoutQuote());
+            jobParamsMap.Add("startDate", invoiceDataCollector.StartDateTimeLocal.ToMySqlFormatWithoutQuote());
+            jobParamsMap.Add("endDate", invoiceDataCollector.EndDateTime.ToMySqlFormatWithoutQuote());
             jobParamsMap.Add("timeZoneOffsetSec", invoiceDataCollector.GmtOffset.ToString());
-            
+            jobParamsMap.Add("timeZoneId", invoiceDataCollector.TimeZone.ToString());
             if (prevJobCountWithSameName > 0)
             {
                 serviceAccount = serviceAccount + "_" + prevJobCountWithSameName;
             }
             string jobName = invoiceDataCollector.PartnerName + "/" + serviceAccount
-                             + "/" + invoiceDataCollector.StartDateTimeLocal.ToMySqlStyleDateTimeStrWithoutQuote()
+                             + "/" + invoiceDataCollector.StartDateTimeLocal.ToMySqlFormatWithoutQuote()
                              + " to " +
-                             invoiceDataCollector.EndDateTimeLocal.ToMySqlStyleDateTimeStrWithoutQuote();
+                             invoiceDataCollector.EndDateTimeLocal.ToMySqlFormatWithoutQuote();
 
             List<SqlSingleWhereClauseBuilder> singleWhereClauses = new List<SqlSingleWhereClauseBuilder>();
             List<SqlMultiWhereClauseBuilder> multipleWhereClauses = new List<SqlMultiWhereClauseBuilder>();
@@ -279,13 +278,13 @@ namespace PortalApp.config
             newParam = new SqlSingleWhereClauseBuilder(SqlWhereAndOrType.FirstBeforeAndOr);
             newParam.Expression = "transactionTime>=";
             newParam.ParamType = SqlWhereParamType.Datetime;
-            newParam.ParamValue = invoiceDataCollector.StartDateTimeLocal.ToMySqlStyleDateTimeStrWithoutQuote();
+            newParam.ParamValue = invoiceDataCollector.StartDateTimeLocal.ToMySqlFormatWithoutQuote();
             singleWhereClauses.Add(newParam);
 
             newParam = new SqlSingleWhereClauseBuilder(SqlWhereAndOrType.And);
             newParam.Expression = "transactionTime<=";
             newParam.ParamType = SqlWhereParamType.Datetime;
-            newParam.ParamValue = invoiceDataCollector.EndDateTimeLocal.ToMySqlStyleDateTimeStrWithoutQuote();
+            newParam.ParamValue = invoiceDataCollector.EndDateTimeLocal.ToMySqlFormatWithoutQuote();
             singleWhereClauses.Add(newParam);
 
             newParam = new SqlSingleWhereClauseBuilder(SqlWhereAndOrType.And);

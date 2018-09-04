@@ -78,7 +78,7 @@ namespace TelcobrightMediation.Cdr
             var cmd = this.Context.Database.Connection.CreateCommand();
             newJobStateAsMap.Add("lastProcessedSegmentNumber", this.JobSegmentNumber.ToString());
             newJobStateAsMap.Add("invoicedAmountAfterLastSegment", this.ProcessedInvoicedAmountSoFar.ToString());
-            newJobStateAsMap.Add("lastSegmentExecutedOn", DateTime.Now.ToMySqlStyleDateTimeStrWithoutQuote());
+            newJobStateAsMap.Add("lastSegmentExecutedOn", DateTime.Now.ToMySqlFormatWithoutQuote());
             cmd.CommandText = $" update job set jobstate='{JsonConvert.SerializeObject(newJobStateAsMap)}'" +
                               $" where id={this.InvoiceGenerationInputData.TelcobrightJob.id}";
             cmd.ExecuteNonQuery();

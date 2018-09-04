@@ -24,7 +24,7 @@ public partial class DefaultRptIntlOut : System.Web.UI.Page
     {
 
         string StartDate = txtDate.Text;
-        string EndtDate = (txtDate1.Text.ConvertToDateTimeFromMySqlFormat()).AddSeconds(1).ToMySqlStyleDateTimeStrWithoutQuote();
+        string EndtDate = (txtDate1.Text.ConvertToDateTimeFromMySqlFormat()).AddSeconds(1).ToMySqlFormatWithoutQuote();
         string tableName = DropDownListReportSource.SelectedValue+"02";
 
 

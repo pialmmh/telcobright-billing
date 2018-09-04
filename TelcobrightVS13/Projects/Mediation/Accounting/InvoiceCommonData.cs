@@ -18,11 +18,11 @@ namespace TelcobrightMediation
         public DateTime ConversionRateDate { get; set; }
 
         public PartnerEx Partner { get; set; }
-        public List<VoiceCallInvoiceData> InvoiceItems { get; set; }
+        public List<VoiceCallInvoiceSectionData> InvoiceItems { get; set; }
 
         public InvoiceCommonData()
         {
-            InvoiceItems = new List<VoiceCallInvoiceData>();
+            InvoiceItems = new List<VoiceCallInvoiceSectionData>();
         }
     }
 }

@@ -9,11 +9,11 @@ namespace LibraryExtensions
         {
             return val.ToSqlField(MySqldateFormat);
         }
-        public static string ToMySqlStyleDateTimeStrWithoutQuote(this DateTime val)
+        public static string ToMySqlFormatWithoutQuote(this DateTime val)
         {
             return val.ToString(MySqldateFormat);
         }
-        public static string ToMySqlStyleDateTimeStrWithQuote(this DateTime val)
+        public static string ToMySqlFormatWithQuote(this DateTime val)
         {
             return val.ToString(MySqldateFormat).EncloseWith("'");
         }

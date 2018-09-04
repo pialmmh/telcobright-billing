@@ -26,27 +26,11 @@ namespace InvoiceGenerationRules
 
         public InvoicePostProcessingData Execute(object data)
         {
-            InvoiceGenerationInputData input = (InvoiceGenerationInputData) data;
+            InvoiceGenerationInputData input = (InvoiceGenerationInputData)data;
             PartnerEntities context = input.Context;
-            job telcobrightJob = input.TelcobrightJob;
-            Dictionary<string, string> jobParamsMap =
-                JsonConvert.DeserializeObject<Dictionary<string, string>>(telcobrightJob.jobsegments.Single()
-                    .SegmentDetail);
-            long serviceAccountId = Convert.ToInt64(jobParamsMap["serviceAccountId"]);
-            DateTime startDate = Convert.ToDateTime(jobParamsMap["startDate"]);
-            DateTime endDate = Convert.ToDateTime(jobParamsMap["endDate"]);
-            int timeZoneOffsetSecForInvoicing = Convert.ToInt32(jobParamsMap["timeZoneOffsetSec"]);
-            IServiceGroup serviceGroup = input.SelectedServiceGroup;
-            if (serviceGroup == null)
-                throw new Exception("Service group should be set already thus cannot be null while " +
-                                    "executing invoice generation by ledger summary.");
-            int timeZoneIdInTelcobrightConfig = input.Tbc.DefaultTimeZoneId;
-            timezone configuredTimeZone = context.timezones.Where(c => c.id == timeZoneIdInTelcobrightConfig).ToList()
-                .Single();
-            if (timeZoneOffsetSecForInvoicing != configuredTimeZone.gmt_offset)
-            {
-                throw new Exception($"Timezone must be {configuredTimeZone.abbreviation}");
-            }
+            Dictionary<string, string> invoiceJsonDetail = input.InvoiceJsonDetail;
+            long serviceAccountId = Convert.ToInt64(invoiceJsonDetail["serviceAccountId"]);
+            ValidateIfLocalTimeZoneUsed(input, context, invoiceJsonDetail);
             decimal ledgerSummaryAmount = context.acc_ledger_summary.Where(c => c.id == serviceAccountId)
                 .Sum(c => c.AMOUNT);
             decimal tempTransactionAmount = context.acc_temp_transaction.Where(c => c.glAccountId == serviceAccountId)
@@ -57,26 +41,69 @@ namespace InvoiceGenerationRules
                 throw new Exception("Account balance [= ledger summary+temp transaction amount] " +
                                     " must be >0");
             }
-            string invoiceDescription = serviceGroup.RuleName + $" [{startDate.ToMySqlStyleDateTimeStrWithoutQuote()}" +
-                                        $"-{endDate.ToMySqlStyleDateTimeStrWithoutQuote()}]";
-            string uom = input.Context.accounts.Where(c => c.id == serviceAccountId).ToList().Single().uom;
-            invoice newInvoice = new invoice()
+            IServiceGroup serviceGroup = null;
+            int idServiceGroup = Convert.ToInt32(invoiceJsonDetail["idServiceGroup"]);
+            input.ServiceGroups.TryGetValue(idServiceGroup, out serviceGroup);
+            if (serviceGroup == null)
+                throw new Exception("Service group should be set already thus cannot be null while " +
+                                    "executing invoice generation by ledger summary.");
+            DateTime startDate = Convert.ToDateTime(invoiceJsonDetail["startDate"]);
+            DateTime endDate = Convert.ToDateTime(invoiceJsonDetail["endDate"]);
+            string invoiceDescription = serviceGroup.RuleName + $" [{startDate.ToMySqlFormatWithoutQuote()}" +
+                                        $"-{endDate.ToMySqlFormatWithoutQuote()}]";
+            string uom = invoiceJsonDetail["uom"];
+            int timeZoneId = Convert.ToInt32(invoiceJsonDetail["timeZoneId"]);
+            invoiceJsonDetail.Add("currency", uom);
+            partner customer = context.Database.SqlQuery<partner>($"select * from partner " +
+                                                                  $"where idpartner in (" +
+                                                                  $"select idpartner from account where " +
+                                                                  $"id={serviceAccountId})").ToList().Single();
+            invoiceJsonDetail.Add("billingPeriod", $"{startDate.ToMySqlFormatWithoutQuote()}" +
+                                                   $" - {endDate.ToMySqlFormatWithoutQuote()}");
+            invoiceJsonDetail.Add("companyName", customer.AlternateNameInvoice);
+            invoiceJsonDetail.Add("billingAddress", customer.invoiceAddress);
+            invoiceJsonDetail.Add("vatRegNo", customer.vatRegistrationNo);
+            var tz = context.timezones.Where(c => c.id == timeZoneId).ToList().Single();
+            invoiceJsonDetail.Add("timeZone", tz.abbreviation + (tz.gmt_offset < 0 ? "-" : "+") +
+                                              NumberFormatter.RoundToWholeIfFractionPartIsZero(Math.Round((double)tz.gmt_offset / 3600, 2)));
+            invoice newInvoice = CreateInvoiceWithItem(invoiceJsonDetail, serviceAccountId, invoiceAmount, serviceGroup,
+                invoiceDescription, uom);
+            InvoicePostProcessingData invoicePostProcessingData =
+                new InvoicePostProcessingData(input, newInvoice, serviceAccountId, startDate, endDate);
+            return invoicePostProcessingData;
+        }
+
+        private static invoice CreateInvoiceWithItem(Dictionary<string, string> invoiceJsonDetail, 
+            long serviceAccountId, decimal invoiceAmount, IServiceGroup serviceGroup, string invoiceDescription, string uom)
+        {
+            return new invoice()
             {
                 BILLING_ACCOUNT_ID = serviceAccountId,
                 DESCRIPTION = invoiceDescription,
+                INVOICE_DATE = DateTime.Now.Date,
                 invoice_item = new List<invoice_item>()
                 {
                     new invoice_item()
                     {
                         PRODUCT_ID = serviceGroup.RuleName,
                         UOM_ID = uom,
-                        AMOUNT = invoiceAmount
+                        AMOUNT = invoiceAmount,
+                        JSON_DETAIL = JsonConvert.SerializeObject(invoiceJsonDetail)
                     }
                 }
             };
-            InvoicePostProcessingData invoicePostProcessingData =
-                new InvoicePostProcessingData(input, newInvoice, new Dictionary<string, string>());
-            return invoicePostProcessingData;
         }
-    }
+
+        private static void ValidateIfLocalTimeZoneUsed(InvoiceGenerationInputData input, PartnerEntities context, Dictionary<string, string> invoiceJsonDetail)
+        {
+            int timeZoneOffsetSecForInvoicing = Convert.ToInt32(invoiceJsonDetail["timeZoneOffsetSec"]);
+            int timeZoneIdInTelcobrightConfig = input.Tbc.DefaultTimeZoneId;
+            timezone configuredTimeZone = context.timezones.Where(c => c.id == timeZoneIdInTelcobrightConfig).ToList()
+                .Single();
+            if (timeZoneOffsetSecForInvoicing != configuredTimeZone.gmt_offset)
+            {
+                throw new Exception($"Timezone must be {configuredTimeZone.abbreviation}");
+            }
+        }
+        }
 }

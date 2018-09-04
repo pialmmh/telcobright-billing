@@ -1754,6 +1754,8 @@ warning 6002: The table/view 'def.platinum.mockcdr' does not have a primary key 
           </Key>
           <Property Name="idPartner" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="PartnerName" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="AlternateNameInvoice" Type="varchar" MaxLength="400" />
+          <Property Name="AlternateNameOther" Type="varchar" MaxLength="100" />
           <Property Name="Address1" Type="varchar" MaxLength="100" />
           <Property Name="Address2" Type="varchar" MaxLength="100" />
           <Property Name="City" Type="varchar" MaxLength="45" />
@@ -7011,6 +7013,8 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           </Key>
           <Property Name="idPartner" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="PartnerName" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="AlternateNameInvoice" Type="String" MaxLength="400" FixedLength="false" Unicode="false" />
+          <Property Name="AlternateNameOther" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="Address1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="Address2" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="City" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
@@ -11201,6 +11205,8 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
                 <ScalarProperty Name="City" ColumnName="City" />
                 <ScalarProperty Name="Address2" ColumnName="Address2" />
                 <ScalarProperty Name="Address1" ColumnName="Address1" />
+                <ScalarProperty Name="AlternateNameOther" ColumnName="AlternateNameOther" />
+                <ScalarProperty Name="AlternateNameInvoice" ColumnName="AlternateNameInvoice" />
                 <ScalarProperty Name="PartnerName" ColumnName="PartnerName" />
                 <ScalarProperty Name="idPartner" ColumnName="idPartner" />
               </MappingFragment>

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
+using com.google.common.@base;
 using TelcobrightMediation.Accounting;
 using MediationModel;
 using MySql.Data.MySqlClient;
@@ -221,7 +222,8 @@ namespace TelcobrightMediation
                 throw new Exception(
                     $"Usd rates for outgoing calls for this period must be {usdConversionDated.CONVERSION_FACTOR}");
             }
-            invoiceGenerationInputData.OtherDataAsObjectMap.Add("usdRate",
+            invoiceGenerationInputData.InvoiceJsonDetail = jobParamsMap;
+            invoiceGenerationInputData.InvoiceJsonDetail.Add("usdRate",
                 usdConversionDated.CONVERSION_FACTOR.ToString());
             return invoiceGenerationInputData;
         }
@@ -232,16 +234,23 @@ namespace TelcobrightMediation
             invoice_item invoiceItem = invoiceWithItem.invoice_item.Single();
             PartnerEntities context = invoicePostProcessingData.InvoiceGenerationInputData.Context;
             job telcobrightJob = invoicePostProcessingData.InvoiceGenerationInputData.TelcobrightJob;
-            Dictionary<string, string> jobParamsMap =
+            Dictionary<string, string> jsonDetail =
                 JsonConvert.DeserializeObject<Dictionary<string, string>>(telcobrightJob.jobsegments.Single()
                     .SegmentDetail);
-            long serviceAccountId = Convert.ToInt64(jobParamsMap["serviceAccountId"]);
-            DateTime startDate = Convert.ToDateTime(jobParamsMap["startDate"]);
-            DateTime endDate = Convert.ToDateTime(jobParamsMap["endDate"]);
-            account acc = context.accounts.Where(c => c.id == serviceAccountId).ToList().Single();
+            
+            account acc = context.accounts.Where(c => c.id == invoicePostProcessingData.ServiceAccountId).ToList().Single();
             int inPartnerId = acc.idPartner;
-            List<XyzInvoiceDataRow> xyzInvoiceDataRows = context.Database.SqlQuery<XyzInvoiceDataRow>(
-                $@"select 
+            List<XyzInvoiceDataRow> xyzInvoiceDataRows = GetSection3Data(context, invoicePostProcessingData.StartDate,
+                invoicePostProcessingData.EndDate);
+            jsonDetail.Add("summaryRows", JsonConvert.SerializeObject(xyzInvoiceDataRows));
+            invoiceItem.JSON_DETAIL = JsonConvert.SerializeObject(jsonDetail);
+            return invoicePostProcessingData;
+        }
+
+        private static List<XyzInvoiceDataRow> GetSection3Data(PartnerEntities context, DateTime startDate, DateTime endDate)
+        {
+            return context.Database.SqlQuery<XyzInvoiceDataRow>(
+                            $@"select 
                 sum(successfulcalls 	)	as successfulcalls,   
                 sum(roundedduration   )  as roundedduration,   
                 sum(longDecimalAmount1)  as longDecimalAmount1,
@@ -249,13 +258,10 @@ namespace TelcobrightMediation
                 sum(longDecimalAmount3)  as longDecimalAmount3,
                 sum(customercost      )  as customercost      
                 from sum_voice_day_02
-                where tup_starttime>={startDate.ToMySqlStyleDateTimeStrWithQuote()} 
-                and tup_starttime < {endDate.ToMySqlStyleDateTimeStrWithQuote()}
+                where tup_starttime>={startDate.ToMySqlFormatWithQuote()} 
+                and tup_starttime < {endDate.ToMySqlFormatWithQuote()}
                 group by tup_outpartnerid;"
-            ).ToList();
-            jobParamsMap.Add("summaryRows", JsonConvert.SerializeObject(xyzInvoiceDataRows));
-            invoiceItem.JSON_DETAIL = JsonConvert.SerializeObject(jobParamsMap);
-            return invoicePostProcessingData;
+                        ).ToList();
         }
     }
 }

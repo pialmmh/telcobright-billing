@@ -39,7 +39,7 @@ namespace TelcobrightMediation.Accounting
 				transaction => $@" where uniquebillid={transaction.uniqueBillId.EncloseWithSingleQuotes()} 
 											  and id= {transaction.id.ToString()}
 											  and transactiontime= {
-						transaction.transactionTime.ToMySqlStyleDateTimeStrWithQuote()
+						transaction.transactionTime.ToMySqlFormatWithQuote()
 					}";
 			this.TransactionCache = new TransactionCache(e => e.id.ToString(),
 				e => e.GetExtInsertValues(),
@@ -51,7 +51,7 @@ namespace TelcobrightMediation.Accounting
 			this.ChargeableCache = new ChargeableCache(c => c.id.ToString(), c => c.GetExtInsertValues(), null,
 				e=>e.GetDeleteCommand(c => $@"where uniquebillid={c.uniqueBillId.EncloseWithSingleQuotes()} 
 									 and id={c.id.ToString()} and transactionTime={
-						c.transactionTime.ToMySqlStyleDateTimeStrWithQuote()
+						c.transactionTime.ToMySqlFormatWithQuote()
 					}"));
 			this.ChargeableCache.PopulateCache(() => new Dictionary<string, acc_chargeable>());
 			this.LedgerSummaryCache=new SummaryCache<acc_ledger_summary, ValueTuple<long, DateTime>>(
@@ -59,7 +59,7 @@ namespace TelcobrightMediation.Accounting
 				autoIncrementManager:this.AutoIncrementManager,
 				insertCommandGenerator: c=>c.GetExtInsertValues(),
 				updateCommandGenerator: c=>c.GetUpdateCommand(l=>$@" where id={l.id} 
-									and transactiondate={l.transactionDate.ToMySqlStyleDateTimeStrWithQuote()}"),
+									and transactiondate={l.transactionDate.ToMySqlFormatWithQuote()}"),
 				deleteCommandGenerator: null);
 			
 			if (this.AccountCache == null || this.LedgerSummaryCache == null)

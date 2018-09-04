@@ -25,6 +25,8 @@ namespace MediationModel
     
         public int idPartner { get; set; }
         public string PartnerName { get; set; }
+        public string AlternateNameInvoice { get; set; }
+        public string AlternateNameOther { get; set; }
         public string Address1 { get; set; }
         public string Address2 { get; set; }
         public string City { get; set; }

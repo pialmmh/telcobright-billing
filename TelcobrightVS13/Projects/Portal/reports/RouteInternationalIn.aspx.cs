@@ -23,7 +23,7 @@ public partial class DefaultRtIntlIn : Page
     {
 
         string StartDate = txtDate.Text;
-        string EndtDate = (txtDate1.Text.ConvertToDateTimeFromMySqlFormat()).AddSeconds(1).ToMySqlStyleDateTimeStrWithoutQuote();
+        string EndtDate = (txtDate1.Text.ConvertToDateTimeFromMySqlFormat()).AddSeconds(1).ToMySqlFormatWithoutQuote();
         string tableName = DropDownListReportSource.SelectedValue + "03";
 
         string groupInterval = getSelectedRadioButtonText();

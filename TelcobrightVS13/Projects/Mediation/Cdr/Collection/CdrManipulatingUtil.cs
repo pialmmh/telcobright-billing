@@ -369,7 +369,7 @@ namespace TelcobrightMediation.Mediation.Cdr
         public static cdrerror ConvertCdrToCdrError(ICdr sourceCdr)
         {
             Func<DateTime, string> dateToString = sourceDate =>
-                sourceDate.ToMySqlStyleDateTimeStrWithoutQuote();
+                sourceDate.ToMySqlFormatWithoutQuote();
             Func<DateTime?, string> nullableDateToString = sourceDate =>
             {
                 string strDate = "";

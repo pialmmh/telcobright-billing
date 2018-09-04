@@ -13,12 +13,10 @@ namespace TelcobrightMediation.Accounting
 {
     public class InvoiceGenerationHelper
     {
-        private DbCommand Cmd { get; set; }
-        private InvoiceGenerationInputData InvoiceGenerationInputData { get; set; }
-        private IServiceGroup ServiceGroup { get; set; }
-        private TelcobrightConfig Tbc { get; set; }
+        private InvoiceGenerationInputData InvoiceGenerationInputData { get; }
         private Func<InvoiceGenerationInputData, InvoiceGenerationInputData> InvoicePreProcessingAction { get;}
         private Func<InvoicePostProcessingData, InvoicePostProcessingData> InvoicePostProcessingAction { get; }
+        private account Account { get; }
         public InvoiceGenerationHelper(InvoiceGenerationInputData invoiceGenerationInputData,
             Func<InvoiceGenerationInputData, InvoiceGenerationInputData> invoicePreProcessingAction,
             Func<InvoicePostProcessingData, InvoicePostProcessingData> invoicePostProcessingAction)
@@ -28,29 +26,31 @@ namespace TelcobrightMediation.Accounting
             Dictionary<string, string> jobParamsMap =
                 JsonConvert.DeserializeObject<Dictionary<string, string>>(telcobrightJob.JobParameter);
             long serviceAccountId = Convert.ToInt64(jobParamsMap["serviceAccountId"]);
-            var context = invoiceGenerationInputData.Context;
-            int idServiceGroup = context.accounts.Where(c => c.id == serviceAccountId).ToList().Single().serviceGroup;
+            var context = this.InvoiceGenerationInputData.Context;
+            this.Account = context.accounts.Where(c => c.id == serviceAccountId).ToList().Single();
             IServiceGroup serviceGroup = null;
-            invoiceGenerationInputData.ServiceGroups.TryGetValue(idServiceGroup, out serviceGroup);
+            this.InvoiceGenerationInputData.ServiceGroups.TryGetValue(this.Account.serviceGroup, out serviceGroup);
             if (serviceGroup == null)
                 throw new Exception("Service group should be set already thus cannot be null while " +
                                     "executing invoice generation by ledger summary.");
-            this.ServiceGroup = serviceGroup;
+            jobParamsMap.Add("idServiceGroup",this.Account.serviceGroup.ToString());
+            jobParamsMap.Add("uom", this.Account.uom);
+            this.InvoiceGenerationInputData.InvoiceJsonDetail = jobParamsMap;
             if (invoicePreProcessingAction == null)
             {
-                this.InvoicePreProcessingAction = this.ServiceGroup.ExecInvoicePreProcessing;
+                this.InvoicePreProcessingAction = serviceGroup.ExecInvoicePreProcessing;
             }
             if (invoicePostProcessingAction==null)
             {
-                this.InvoicePostProcessingAction = this.ServiceGroup.ExecInvoicePostProcessing;
+                this.InvoicePostProcessingAction = serviceGroup.ExecInvoicePostProcessing;
             }
         }
 
         public InvoicePostProcessingData GenerateInvoice(InvoiceGenerationInputData invoiceGenerationInputData)
         {
-            int idServiceGroup = this.ServiceGroup.Id;
             ServiceGroupConfiguration serviceGroupConfiguration = null;
-            this.Tbc.CdrSetting.ServiceGroupConfigurations.TryGetValue(idServiceGroup, out serviceGroupConfiguration);
+            this.InvoiceGenerationInputData.Tbc.CdrSetting.ServiceGroupConfigurations.TryGetValue(this.Account.serviceGroup,
+                out serviceGroupConfiguration);
             if(serviceGroupConfiguration == null) throw new Exception("serviceGroupConfiguration cannot be null.");
             string configuredInvoiceGenerationRuleName = serviceGroupConfiguration.InvoiceGenerationRuleName;
             IInvoiceGenerationRule invoiceGenerationRule =

@@ -93,7 +93,7 @@ namespace TelcobrightMediation.Cdr
                         this.CdrJobContext.DbCmd.CommandText = new StringBuilder()
                             .Append(string.Join(";", segment.Select(c => $@" delete from cdrpartiallastaggregatedrawinstance where 
                                                                              uniquebillid={c.UniqueBillId.EncloseWith("'")}
-                                                                             and starttime={c.StartTime.ToMySqlStyleDateTimeStrWithQuote()} 
+                                                                             and starttime={c.StartTime.ToMySqlFormatWithQuote()} 
                                                                            "))).ToString();
                         deletedCount += this.CdrJobContext.DbCmd.ExecuteNonQuery(); //write cdr loaded
                     });
@@ -149,7 +149,7 @@ namespace TelcobrightMediation.Cdr
                                 }
                                                                              and calldate=
                                                                              {
-                                    c.CallDate.ToMySqlStyleDateTimeStrWithQuote()
+                                    c.CallDate.ToMySqlFormatWithQuote()
                                 } 
                                                                            "))).ToString();
                         delCount = this.CdrJobContext.DbCmd.ExecuteNonQuery();

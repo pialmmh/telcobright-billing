@@ -143,12 +143,12 @@ namespace TelcobrightMediation
                                      select * from rate
                                      where  (
                                      ( startdate <= {
-                                                    dRange.StartDate.ToMySqlStyleDateTimeStrWithQuote()
+                                                    dRange.StartDate.ToMySqlFormatWithQuote()
                                                 } and ifnull(enddate,'9999-12-31 23:59:59') > {
-                                                    dRange.StartDate.ToMySqlStyleDateTimeStrWithQuote()
+                                                    dRange.StartDate.ToMySqlFormatWithQuote()
                                                 })   
-                                     or  ( startdate >= {dRange.StartDate.ToMySqlStyleDateTimeStrWithQuote()} 
-                                     and startdate < {dRange.EndDate.ToMySqlStyleDateTimeStrWithQuote()}));";
+                                     or  ( startdate >= {dRange.StartDate.ToMySqlFormatWithQuote()} 
+                                     and startdate < {dRange.EndDate.ToMySqlFormatWithQuote()}));";
             cmd.ExecuteNonQuery();
         }
 
