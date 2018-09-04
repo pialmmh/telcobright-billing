@@ -118,11 +118,13 @@
     <Compile Include="Accounting\IAutomationAction.cs" />
     <Compile Include="Accounting\IAccountCreator.cs" />
     <Compile Include="Accounting\IBillingRule.cs" />
-    <Compile Include="Accounting\InvoiceableTransactionCollector.cs" />
-    <Compile Include="Accounting\InvoiceDataCollector.cs" />
-    <Compile Include="Accounting\InvoiceGenerationInputData.cs" />
-    <Compile Include="Accounting\InvoiceGenerationHelper.cs" />
-    <Compile Include="Accounting\InvoicePostProcessingData.cs" />
+    <Compile Include="Accounting\Invoice\InvoiceableTransactionCollector.cs" />
+    <Compile Include="Accounting\Invoice\InvoiceGenDataCollectionRow.cs" />
+    <Compile Include="Accounting\Invoice\InvoiceGenerationInputData.cs" />
+    <Compile Include="Accounting\Invoice\InvoiceGenerationHelper.cs" />
+    <Compile Include="Accounting\Invoice\InvoicePostProcessingData.cs" />
+    <Compile Include="Accounting\Invoice\InvoiceSectionCreator.cs" />
+    <Compile Include="Accounting\Invoice\InvoiceSectionDataRetriever.cs" />
     <Compile Include="Accounting\ITimeRangeImplementer.cs" />
     <Compile Include="Accounting\BillingRule.cs" />
     <Compile Include="Accounting\LedgerSumFactory.cs" />
@@ -255,10 +257,10 @@
     <Compile Include="Mediation\RateDictionaryGeneratorByTuples.cs" />
     <Compile Include="MefData\ICdrRule.cs" />
     <Compile Include="Rating\IInvoiceTemplate.cs" />
-    <Compile Include="Accounting\InvoiceCommonData.cs" />
+    <Compile Include="Accounting\Invoice\InvoiceCommonData.cs" />
     <Compile Include="Rating\PartnerEx.cs" />
-    <Compile Include="Accounting\VoiceCallInvoiceData.cs" />
-    <Compile Include="Accounting\InvoiceSection.cs" />
+    <Compile Include="Accounting\Invoice\InvoiceSectionDataRowForVoiceCall.cs" />
+    <Compile Include="Accounting\Invoice\InvoiceSection.cs" />
     <Compile Include="SegmentedJobHelper\IJobSegmentPostProcessor.cs" />
     <Compile Include="SegmentedJobHelper\RowIdVsDate.cs" />
     <Compile Include="SegmentedJobHelper\AbstractSegmentedJobProcessor.cs" />
@@ -328,7 +330,6 @@
     <Compile Include="MefData\RouteDisplayClassData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rating\RateSorter.cs" />
-    <Compile Include="Rating\XyzInvoiceDataRow.cs" />
     <Compile Include="Rating\XyzRuleHelper.cs" />
   </ItemGroup>
   <ItemGroup>

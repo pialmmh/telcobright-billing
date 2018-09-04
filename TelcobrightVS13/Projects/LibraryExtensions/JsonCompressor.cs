@@ -11,7 +11,7 @@ namespace LibraryExtensions
 {
     public class JsonCompressor<T> where T:class 
     {
-        public string SerializeToCompressedBase64String(T obj)
+        public string SerializeToCompressedBase64(T obj)
         {
             string json = JsonConvert.SerializeObject(obj);
             byte[] inputBytes = Encoding.UTF8.GetBytes(json);

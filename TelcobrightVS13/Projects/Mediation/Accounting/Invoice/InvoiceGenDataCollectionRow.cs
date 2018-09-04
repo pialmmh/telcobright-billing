@@ -7,7 +7,7 @@ using jdk.nashorn.@internal.ir;
 
 namespace TelcobrightMediation.Accounting
 {
-    public class InvoiceDataCollector
+    public class InvoiceGenDataCollectionRow
     {
         public int PartnerId { get; set; }
         public string PartnerName { get; set; }
@@ -35,7 +35,7 @@ namespace TelcobrightMediation.Accounting
 
         public List<DateTime> InvoiceDates { get; set; }
 
-        public InvoiceDataCollector()
+        public InvoiceGenDataCollectionRow()
         {
             InvoiceDates = new List<DateTime>();
         }

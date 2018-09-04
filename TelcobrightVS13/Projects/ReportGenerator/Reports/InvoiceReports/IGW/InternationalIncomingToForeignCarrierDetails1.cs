@@ -31,7 +31,7 @@ namespace ReportGenerator.Reports.InvoiceReports.IGW
         public void GenerateInvoice(object data)
         {
             invoice invoice = (invoice)data;
-            List<VoiceCallInvoiceData> invoiceBasicDatas = this.GetReportData(invoice);
+            List<InvoiceSectionDataRowForVoiceCall> invoiceBasicDatas = this.GetReportData(invoice);
             this.DataSource = invoiceBasicDatas;
 
             /*
@@ -63,20 +63,20 @@ namespace ReportGenerator.Reports.InvoiceReports.IGW
             #endregion
         }
 
-        private List<VoiceCallInvoiceData> GetReportData(invoice invoice)
+        private List<InvoiceSectionDataRowForVoiceCall> GetReportData(invoice invoice)
         {
-            List<VoiceCallInvoiceData> invoiceBasicDatas = new List<VoiceCallInvoiceData>();
+            List<InvoiceSectionDataRowForVoiceCall> invoiceBasicDatas = new List<InvoiceSectionDataRowForVoiceCall>();
             invoice_item invoice_item = invoice.invoice_item.Single();
             Dictionary<string, string> invoiceMap =
                 JsonConvert.DeserializeObject<Dictionary<string, string>>(invoice_item.JSON_DETAIL);
             Dictionary<string, InvoiceSection> invoiceSections = invoiceMap.Where(kv => kv.Key.StartsWith("Section-"))
                 .Select(kv => JsonConvert.DeserializeObject<InvoiceSection>(kv.Value))
                 .ToDictionary(s => s.TemplateName);
-
             var section = invoiceSections["Section-2"];
-            JsonCompressor<VoiceCallInvoiceData> jsonCompressor = new JsonCompressor<VoiceCallInvoiceData>();
-            VoiceCallInvoiceData invoiceDataBasic = jsonCompressor.DeSerializeToObject(section.SerializedData);
-
+            JsonCompressor<List<InvoiceSectionDataRowForVoiceCall>> jsonCompressor =
+                new JsonCompressor<List<InvoiceSectionDataRowForVoiceCall>>();
+            List<InvoiceSectionDataRowForVoiceCall> sectionDataRows =
+                jsonCompressor.DeSerializeToObject(section.SerializedData);
             return invoiceBasicDatas;
         }
 

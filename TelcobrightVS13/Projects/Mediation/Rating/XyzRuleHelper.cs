@@ -233,35 +233,78 @@ namespace TelcobrightMediation
             invoice invoiceWithItem = invoicePostProcessingData.Invoice;
             invoice_item invoiceItem = invoiceWithItem.invoice_item.Single();
             PartnerEntities context = invoicePostProcessingData.InvoiceGenerationInputData.Context;
-            job telcobrightJob = invoicePostProcessingData.InvoiceGenerationInputData.TelcobrightJob;
-            Dictionary<string, string> jsonDetail =
-                JsonConvert.DeserializeObject<Dictionary<string, string>>(telcobrightJob.jobsegments.Single()
-                    .SegmentDetail);
-            
-            account acc = context.accounts.Where(c => c.id == invoicePostProcessingData.ServiceAccountId).ToList().Single();
-            int inPartnerId = acc.idPartner;
-            List<XyzInvoiceDataRow> xyzInvoiceDataRows = GetSection3Data(context, invoicePostProcessingData.StartDate,
-                invoicePostProcessingData.EndDate);
-            jsonDetail.Add("summaryRows", JsonConvert.SerializeObject(xyzInvoiceDataRows));
+            Dictionary<string, string> jsonDetail = JsonConvert.DeserializeObject<Dictionary<string,string>>
+                                                    (invoiceItem.JSON_DETAIL);
+            InvoiceSection invoiceSection1 = GetInvoiceSection1(invoicePostProcessingData);
+            jsonDetail.Add(invoiceSection1.SectionName, JsonConvert.SerializeObject(invoiceSection1));
+            InvoiceSection invoiceSection2 = GetInvoiceSection2(invoicePostProcessingData);
+            jsonDetail.Add(invoiceSection2.SectionName, JsonConvert.SerializeObject(invoiceSection2));
+            InvoiceSection invoiceSection3 = GetInvoiceSection3(invoicePostProcessingData);
+            jsonDetail.Add(invoiceSection3.SectionName, JsonConvert.SerializeObject(invoiceSection3));
             invoiceItem.JSON_DETAIL = JsonConvert.SerializeObject(jsonDetail);
             return invoicePostProcessingData;
         }
-
-        private static List<XyzInvoiceDataRow> GetSection3Data(PartnerEntities context, DateTime startDate, DateTime endDate)
+        private static InvoiceSection
+            GetInvoiceSection1(InvoicePostProcessingData invoicePostProcessingData)
         {
-            return context.Database.SqlQuery<XyzInvoiceDataRow>(
-                            $@"select 
-                sum(successfulcalls 	)	as successfulcalls,   
-                sum(roundedduration   )  as roundedduration,   
-                sum(longDecimalAmount1)  as longDecimalAmount1,
-                sum(longDecimalAmount2)  as longDecimalAmount2,
-                sum(longDecimalAmount3)  as longDecimalAmount3,
-                sum(customercost      )  as customercost      
-                from sum_voice_day_02
-                where tup_starttime>={startDate.ToMySqlFormatWithQuote()} 
-                and tup_starttime < {endDate.ToMySqlFormatWithQuote()}
-                group by tup_outpartnerid;"
-                        ).ToList();
+            InvoiceSectionCreator<InvoiceSectionDataRowForVoiceCall>
+                invoiceSectionCreator = new InvoiceSectionCreator<InvoiceSectionDataRowForVoiceCall>(
+                    invoicePostProcessingData: invoicePostProcessingData, sectionNumber: 1,
+                    templateName: "InternationalOutgoingToANS");
+            string sql = $@"select                                                         
+                       sum(successfulcalls 	)	as TotalCalls,    
+                       sum(roundedduration   )/60  as TotalMinutes,   
+                       sum(longDecimalAmount1)  as XAmount,
+                       sum(longDecimalAmount2)  as YAmount,
+                       sum(longDecimalAmount3)  as XYAmount,
+                       sum(customercost      )  as Amount      
+                       from sum_voice_day_02                          
+                       where {invoiceSectionCreator.GetWhereClauseForDateRange()};";
+            return invoiceSectionCreator.CreateInvoiceSection(sql);
+        }
+        private static InvoiceSection
+            GetInvoiceSection2(InvoicePostProcessingData invoicePostProcessingData)
+        {
+            InvoiceSectionCreator<InvoiceSectionDataRowForVoiceCall>
+                invoiceSectionCreator = new InvoiceSectionCreator<InvoiceSectionDataRowForVoiceCall>(
+                    invoicePostProcessingData: invoicePostProcessingData, sectionNumber: 2,
+                    templateName: "InternationalOutgoingToANSDetails1");
+            string sql=$@"select p.partnername as OutPartnerName,x.TotalCalls,x.TotalMinutes,x.XAmount,
+                       x.YAmount,x.XYAmount,x.Revenue from
+                       (select                                                         
+                       tup_outpartnerid,
+                       sum(successfulcalls 	)	as TotalCalls,    
+                       sum(roundedduration   )/60  as TotalMinutes,   
+                       sum(longDecimalAmount1)  as XAmount,
+                       sum(longDecimalAmount2)  as YAmount,
+                       sum(longDecimalAmount3)  as XYAmount,
+                       sum(customercost      )  as Revenue      
+                       from sum_voice_day_02                          
+                       where {invoiceSectionCreator.GetWhereClauseForDateRange()}
+                       group by tup_outpartnerid) x                     
+                       left join partner p
+                       on x.tup_outpartnerid=p.idpartner;";
+            return invoiceSectionCreator.CreateInvoiceSection(sql);
+        }
+        private static InvoiceSection
+            GetInvoiceSection3(InvoicePostProcessingData invoicePostProcessingData)
+        {
+            InvoiceSectionCreator<InvoiceSectionDataRowForVoiceCall>
+                invoiceSectionCreator = new InvoiceSectionCreator<InvoiceSectionDataRowForVoiceCall>(
+                    invoicePostProcessingData: invoicePostProcessingData, sectionNumber: 3,
+                    templateName: "InternationalOutgoingToANSDetails2");
+            string sql=$@"select                                                         
+                          tup_starttime as `Date`,
+                          sum(successfulcalls 	)	as TotalCalls,    
+                          sum(roundedduration   )/60  as TotalMinutes,   
+                          sum(longDecimalAmount1)  as XAmount,
+                          sum(longDecimalAmount2)  as YAmount,
+                          sum(longDecimalAmount3)  as XYAmount,
+                          sum(customercost      )  as Revenue      
+                          from sum_voice_day_02                          
+                          where {invoiceSectionCreator.GetWhereClauseForDateRange()}
+                          group by tup_starttime;";
+            return invoiceSectionCreator.CreateInvoiceSection(sql);
         }
     }
 }
