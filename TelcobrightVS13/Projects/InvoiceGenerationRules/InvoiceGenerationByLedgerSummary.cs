@@ -51,21 +51,9 @@ namespace InvoiceGenerationRules
             DateTime endDate = Convert.ToDateTime(invoiceJsonDetail["endDate"]);
             string invoiceDescription = serviceGroup.RuleName + $" [{startDate.ToMySqlFormatWithoutQuote()}" +
                                         $"-{endDate.ToMySqlFormatWithoutQuote()}]";
+            
+            
             string uom = invoiceJsonDetail["uom"];
-            int timeZoneId = Convert.ToInt32(invoiceJsonDetail["timeZoneId"]);
-            invoiceJsonDetail.Add("currency", uom);
-            partner customer = context.Database.SqlQuery<partner>($"select * from partner " +
-                                                                  $"where idpartner in (" +
-                                                                  $"select idpartner from account where " +
-                                                                  $"id={serviceAccountId})").ToList().Single();
-            invoiceJsonDetail.Add("billingPeriod", $"{startDate.ToMySqlFormatWithoutQuote()}" +
-                                                   $" to {endDate.ToMySqlFormatWithoutQuote()}");
-            invoiceJsonDetail.Add("companyName", customer.AlternateNameInvoice);
-            invoiceJsonDetail.Add("billingAddress", customer.invoiceAddress);
-            invoiceJsonDetail.Add("vatRegNo", customer.vatRegistrationNo);
-            var tz = context.timezones.Where(c => c.id == timeZoneId).ToList().Single();
-            invoiceJsonDetail.Add("timeZone", tz.abbreviation + (tz.gmt_offset < 0 ? "-" : "+") +
-                                              NumberFormatter.RoundToWholeIfFractionPartIsZero(Math.Round((double)tz.gmt_offset / 3600, 2)));
             invoice newInvoice = CreateInvoiceWithItem(invoiceJsonDetail, serviceAccountId, invoiceAmount, serviceGroup,
                 invoiceDescription, uom);
             InvoicePostProcessingData invoicePostProcessingData =

@@ -62,15 +62,22 @@ namespace Jobs
             cmd.CommandText = $"insert into invoice (billing_account_id,description) values(" +
                               $"{invoiceWithItem.BILLING_ACCOUNT_ID},'{invoiceWithItem.DESCRIPTION}');";
             cmd.ExecuteNonQuery();
-            cmd.CommandText = "last_insert_id();";
-            long generatedInvoiceId = (long)cmd.ExecuteScalar();
-            string uom = context.accounts.Where(c => c.id == invoiceWithItem.BILLING_ACCOUNT_ID).ToList()
-                .Single().uom;
+            cmd.CommandText = "SELECT LAST_INSERT_ID();";
+            long generatedInvoiceId = 0;
+            using (DbDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    generatedInvoiceId = Convert.ToInt64(reader[0].ToString());
+                }
+                reader.Close();
+            }
+            string uom = invoiceGenerationInputData.InvoiceJsonDetail["uom"];
             invoice_item invoiceItem = invoiceWithItem.invoice_item.Single();
             cmd.CommandText = $"insert into invoice_item " +
-                              $"(invoice_id,product_id,uom_Id,amount) values (" +
+                              $"(invoice_id,product_id,uom_Id,amount,json_detail) values (" +
                               $"{generatedInvoiceId},'{invoiceItem.PRODUCT_ID}','{uom}'," +
-                              $"{invoiceItem.UOM_ID})";
+                              $"{invoiceItem.AMOUNT},'{invoiceItem.JSON_DETAIL}')";
             cmd.ExecuteNonQuery();
             acc_temp_transaction tempTransaction = invoicePostProcessingData.TempTransaction;
             cmd.CommandText = $"insert into acc_temp_transaction" +
