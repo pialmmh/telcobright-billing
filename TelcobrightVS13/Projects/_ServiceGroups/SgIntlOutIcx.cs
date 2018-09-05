@@ -85,7 +85,7 @@ namespace TelcobrightMediation
 
         public InvoiceGenerationInputData ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData)
         {
-            invoiceGenerationInputData= XyzRuleHelper.ExecInvoicePreProcessing(invoiceGenerationInputData);
+            invoiceGenerationInputData= XyzRuleHelper.ExecInvoicePreProcessing(invoiceGenerationInputData,XyzRatingType.Icx);
             return invoiceGenerationInputData;
         }
 

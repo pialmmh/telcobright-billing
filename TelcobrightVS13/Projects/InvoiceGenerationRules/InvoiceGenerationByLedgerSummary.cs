@@ -31,12 +31,12 @@ namespace InvoiceGenerationRules
             Dictionary<string, string> invoiceJsonDetail = input.InvoiceJsonDetail;
             long serviceAccountId = Convert.ToInt64(invoiceJsonDetail["serviceAccountId"]);
             ValidateIfLocalTimeZoneUsed(input, context, invoiceJsonDetail);
-            decimal ledgerSummaryAmount = context.acc_ledger_summary.Where(c => c.id == serviceAccountId)
+            decimal ledgerSummaryAmount = context.acc_ledger_summary.Where(c => c.idAccount == serviceAccountId)
                 .Sum(c => c.AMOUNT);
-            decimal tempTransactionAmount = context.acc_temp_transaction.Where(c => c.glAccountId == serviceAccountId)
-                .Sum(c => c.amount);
-            decimal invoiceAmount = ledgerSummaryAmount + tempTransactionAmount;
-            if (invoiceAmount <= 0)
+            decimal? tempTransactionAmount = context.acc_temp_transaction.Where(c => c.glAccountId == serviceAccountId)
+                .Sum(c => (decimal?)c.amount);
+            decimal invoiceAmount = ledgerSummaryAmount + Convert.ToDecimal(tempTransactionAmount);
+            if (-1*invoiceAmount <= 0)
             {
                 throw new Exception("Account balance [= ledger summary+temp transaction amount] " +
                                     " must be >0");

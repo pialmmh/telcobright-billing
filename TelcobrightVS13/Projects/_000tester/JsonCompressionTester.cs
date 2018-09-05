@@ -20,7 +20,7 @@ namespace Utils
                 string json = JsonConvert.SerializeObject(summaries);
                 Console.WriteLine($"Size of json data: {json.Length}");
                 JsonCompressor<List<sum_voice_day_02>> compressor=new JsonCompressor<List<sum_voice_day_02>>();
-                string compressedString = compressor.SerializeToCompressedBase64String(summaries);
+                string compressedString = compressor.SerializeToCompressedBase64(summaries);
                 Console.WriteLine($"Size of compressed data {compressedString.Length}");
                 summaries = compressor.DeSerializeToObject(compressedString);
                 Console.WriteLine($"Count after deserialization: {summaries.Count}");

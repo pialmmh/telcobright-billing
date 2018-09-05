@@ -18,12 +18,14 @@ namespace TelcobrightMediation
         public PrefixMatcher PrefixMatcher { get; set; }
         IServiceFamily Sf { get; set; }
         private UoMConvRateCache UsdBcsCache { get; }
-
-        public XyzRuleHelper(UoMConvRateCache usdBcsCache, PrefixMatcher prefixMatcher, IServiceFamily sf)
+        private XyzRatingType XyzRatingType { get; }
+        public XyzRuleHelper(UoMConvRateCache usdBcsCache, PrefixMatcher prefixMatcher, IServiceFamily sf,
+            XyzRatingType xyzRatingType)
         {
             this.UsdBcsCache = usdBcsCache;
             this.PrefixMatcher = prefixMatcher;
             this.Sf = sf;
+            this.XyzRatingType = xyzRatingType;
         }
 
         private account GetPostingAccount(CdrExt newCdrExt, ServiceContext serviceContext, string idCurrencyUoM)
@@ -38,8 +40,7 @@ namespace TelcobrightMediation
         }
 
         public AccChargeableExt ExecuteXyzRating(Rateext matchedRateWithAssignmentTupleId, CdrExt cdrExt,
-            ServiceContext serviceContext,
-            XyzRatingType xyzRatingType)
+            ServiceContext serviceContext)
         {
             cdr thisCdr = cdrExt.Cdr;
             long finalDuration = 0; //xyz is rounded always
@@ -82,7 +83,7 @@ namespace TelcobrightMediation
                 (Convert.ToDecimal(zAmount * matchedRateWithAssignmentTupleId.OtherAmount2) / 100).RoundFractionsUpTo(
                     serviceContext.MaxDecimalPrecision);
             decimal finalAmount = 0;
-            switch (xyzRatingType)
+            switch (this.XyzRatingType)
             {
                 case XyzRatingType.Igw:
                     finalAmount = fifteenPcOfZ + yBdt;
@@ -93,7 +94,7 @@ namespace TelcobrightMediation
                     thisCdr.RevenueIcxOut = finalAmount;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(xyzRatingType), xyzRatingType, null);
+                    throw new ArgumentOutOfRangeException(nameof(this.XyzRatingType), this.XyzRatingType, null);
             }
             decimal btrcRevSharePercentage = Convert.ToDecimal(matchedRateWithAssignmentTupleId.OtherAmount3)
                 .RoundFractionsUpTo(serviceContext.MaxDecimalPrecision);
@@ -193,8 +194,10 @@ namespace TelcobrightMediation
             else return this.UsdBcsCache.GetNearestEarlierDateTime(lastMonthsUsdbBcsDateTime);
         }
 
-        public static InvoiceGenerationInputData ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData)
+        public static InvoiceGenerationInputData ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData,
+            XyzRatingType xyzRatingType)
         {
+            int idserviceGroup = xyzRatingType == XyzRatingType.Icx ? 2 : 5;
             job telcobrightJob = invoiceGenerationInputData.TelcobrightJob;
             Dictionary<string, string> jobParamsMap =
                 JsonConvert.DeserializeObject<Dictionary<string, string>>(telcobrightJob.JobParameter);
@@ -214,8 +217,9 @@ namespace TelcobrightMediation
                 .FirstOrDefault();
             if (usdConversionDated == null)
                 throw new Exception("Usd rate not found in uom_conversion_dated table.");
-            List<acc_chargeable> sampleChargeablesForThisPeriod = context.acc_chargeable.Where(c => c.transactionTime >= startDate
-                                                                                                    && c.transactionTime < endDate).Take(20).ToList();
+            List<acc_chargeable> sampleChargeablesForThisPeriod = context.acc_chargeable.Where(
+                c => c.servicegroup == idserviceGroup && c.transactionTime >= startDate
+                     && c.transactionTime < endDate).Take(20).ToList();
 
             if (sampleChargeablesForThisPeriod.Any(c => c.OtherDecAmount3 != usdConversionDated.CONVERSION_FACTOR))
             {

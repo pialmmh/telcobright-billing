@@ -40,8 +40,8 @@ namespace TelcobrightMediation
             Rateext matchedRateWithIdRatePlanAssignTuple = pr.MatchPrefix();
             if (matchedRateWithIdRatePlanAssignTuple == null) return null;
             AccChargeableExt chargeableExt =
-                new XyzRuleHelper(serviceContext.MefServiceFamilyContainer.UsdBcsCache, pr, this).ExecuteXyzRating(
-                    matchedRateWithIdRatePlanAssignTuple, cdrExt, serviceContext, XyzRatingType.Icx);
+                new XyzRuleHelper(serviceContext.MefServiceFamilyContainer.UsdBcsCache, pr, this, XyzRatingType.Icx)
+                .ExecuteXyzRating(matchedRateWithIdRatePlanAssignTuple, cdrExt, serviceContext);
             return chargeableExt;
         }
         public acc_transaction GetTransaction(AccChargeableExt accChargeableExt, ServiceContext serviceContext)
