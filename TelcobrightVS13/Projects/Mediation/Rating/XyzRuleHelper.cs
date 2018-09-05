@@ -237,12 +237,16 @@ namespace TelcobrightMediation
             invoice_item invoiceItem = invoiceWithItem.invoice_item.Single();
             Dictionary<string, string> jsonDetail = JsonConvert.DeserializeObject<Dictionary<string,string>>
                                                     (invoiceItem.JSON_DETAIL);
+            Action<InvoiceSection> sectionAdder = section =>
+            {
+                jsonDetail.Add(section.SectionName + ", " + "Template-" + section.TemplateName, section.SerializedData);
+            };
             InvoiceSection invoiceSection1 = GetInvoiceSection1(invoicePostProcessingData);
-            jsonDetail.Add(invoiceSection1.SectionName, JsonConvert.SerializeObject(invoiceSection1));
+            sectionAdder.Invoke(invoiceSection1);
             InvoiceSection invoiceSection2 = GetInvoiceSection2(invoicePostProcessingData);
-            jsonDetail.Add(invoiceSection2.SectionName, JsonConvert.SerializeObject(invoiceSection2));
+            sectionAdder.Invoke(invoiceSection2);
             InvoiceSection invoiceSection3 = GetInvoiceSection3(invoicePostProcessingData);
-            jsonDetail.Add(invoiceSection3.SectionName, JsonConvert.SerializeObject(invoiceSection3));
+            sectionAdder.Invoke(invoiceSection3);
             invoiceItem.JSON_DETAIL = JsonConvert.SerializeObject(jsonDetail);
             return invoicePostProcessingData;
         }

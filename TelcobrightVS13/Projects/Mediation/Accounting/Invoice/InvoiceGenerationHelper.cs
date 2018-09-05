@@ -53,7 +53,7 @@ namespace TelcobrightMediation.Accounting
             invoiceJsonDetail.Add("billingAddress", customer.invoiceAddress);
             invoiceJsonDetail.Add("vatRegNo", customer.vatRegistrationNo);
             var tz = context.timezones.Where(c => c.id == timeZoneId).ToList().Single();
-            invoiceJsonDetail.Add("timeZone", tz.abbreviation + (tz.gmt_offset < 0 ? "-" : "+") +
+            invoiceJsonDetail.Add("timeZone", "GMT" + (tz.gmt_offset < 0 ? " - " : " + ") +
                                               NumberFormatter.RoundToWholeIfFractionPartIsZero(Math.Round((double)tz.gmt_offset / 3600, 2)));
             if (invoicePreProcessingAction == null)
             {

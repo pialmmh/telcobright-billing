@@ -46,7 +46,7 @@ namespace Jobs
             {
                 transactionTime = DateTime.Now,
                 glAccountId = Convert.ToInt64(invoicePostProcessingData.Invoice.BILLING_ACCOUNT_ID),
-                amount = Convert.ToDecimal(invoicePostProcessingData.Invoice.invoice_item.Single().AMOUNT),
+                amount = -1*Convert.ToDecimal(invoicePostProcessingData.Invoice.invoice_item.Single().AMOUNT),
                 createdByJob = invoicePostProcessingData.InvoiceGenerationInputData.TelcobrightJob.id
             };
             return tempTransaction;
@@ -77,14 +77,15 @@ namespace Jobs
             cmd.CommandText = $"insert into invoice_item " +
                               $"(invoice_id,product_id,uom_Id,amount,json_detail) values (" +
                               $"{generatedInvoiceId},'{invoiceItem.PRODUCT_ID}','{uom}'," +
-                              $"{invoiceItem.AMOUNT},'{invoiceItem.JSON_DETAIL}')";
+                              $"{invoiceItem.AMOUNT}," +
+                              $"'{invoiceItem.JSON_DETAIL}')";
             cmd.ExecuteNonQuery();
             acc_temp_transaction tempTransaction = invoicePostProcessingData.TempTransaction;
             cmd.CommandText = $"insert into acc_temp_transaction" +
-                              $"(transactionTime,glAccountId,amount,createdByJobId) values" +
+                              $"(transactionTime,glAccountId,amount,createdByJob) values" +
                               $"({tempTransaction.transactionTime.ToMySqlField()},{tempTransaction.glAccountId}," +
-                              $"{tempTransaction.glAccountId},{tempTransaction.amount}," +
-                              $"{invoiceGenerationInputData.TelcobrightJob.id})";
+                              $"{tempTransaction.amount},{invoiceGenerationInputData.TelcobrightJob.id})";
+            cmd.ExecuteNonQuery();
         }
         private Action<object> actionOnFinish = jobInput =>
         {

@@ -67,6 +67,11 @@ namespace Process
                                     InvoiceGenerationInputData invoiceGenerationInputData =
                                         new InvoiceGenerationInputData(tbc, context, telcobrightJob);
                                     mefInvoicingJob.Execute(invoiceGenerationInputData); //EXECUTE
+                                    cmd.CommandText = $"update job set CompletionTime={DateTime.Now.ToMySqlField()}, " +
+                                                      $"status=1, NoOfSteps=1," +
+                                                      $"progress=1," +
+                                                      $"Error=null where id={telcobrightJob.id}";
+                                    cmd.ExecuteNonQuery();
                                     cmd.ExecuteCommandText(" commit; ");
                                 }
                                 catch (Exception e)

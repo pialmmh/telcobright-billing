@@ -13,14 +13,12 @@ namespace TelcobrightMediation
     {
         public List<T> GetSectionData(invoice invoice,int sectionNumber)
         {
-            List<T> sectionData = new List<T>();
-            invoice_item invoice_item = invoice.invoice_item.Single();
+            invoice_item invoiceItem = invoice.invoice_item.Single();
             Dictionary<string, string> invoiceMap =
-                JsonConvert.DeserializeObject<Dictionary<string, string>>(invoice_item.JSON_DETAIL);
-            InvoiceSection section = invoiceMap.Where(kv => kv.Key == "Section-" + sectionNumber.ToString())
-                .Select(kv => JsonConvert.DeserializeObject<InvoiceSection>(kv.Value)).Single();
-            JsonCompressor<List<T>> jsonCompressor = new JsonCompressor<List<T>>();
-            sectionData = jsonCompressor.DeSerializeToObject(section.SerializedData);
+                JsonConvert.DeserializeObject<Dictionary<string, string>>(invoiceItem.JSON_DETAIL);
+            List<T> sectionData = invoiceMap.Where(kv => 
+                kv.Key.StartsWith("Section-" + sectionNumber.ToString()))
+                .Select(kv => new JsonCompressor<List<T>>().DeSerializeToObject(kv.Value)).Single();
             return sectionData;
         }
     }
