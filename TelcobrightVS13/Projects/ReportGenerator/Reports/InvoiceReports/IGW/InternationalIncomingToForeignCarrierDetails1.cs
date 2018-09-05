@@ -65,19 +65,11 @@ namespace ReportGenerator.Reports.InvoiceReports.IGW
 
         private List<InvoiceSectionDataRowForVoiceCall> GetReportData(invoice invoice)
         {
-            List<InvoiceSectionDataRowForVoiceCall> invoiceBasicDatas = new List<InvoiceSectionDataRowForVoiceCall>();
-            invoice_item invoice_item = invoice.invoice_item.Single();
-            Dictionary<string, string> invoiceMap =
-                JsonConvert.DeserializeObject<Dictionary<string, string>>(invoice_item.JSON_DETAIL);
-            Dictionary<string, InvoiceSection> invoiceSections = invoiceMap.Where(kv => kv.Key.StartsWith("Section-"))
-                .Select(kv => JsonConvert.DeserializeObject<InvoiceSection>(kv.Value))
-                .ToDictionary(s => s.TemplateName);
-            var section = invoiceSections["Section-2"];
-            JsonCompressor<List<InvoiceSectionDataRowForVoiceCall>> jsonCompressor =
-                new JsonCompressor<List<InvoiceSectionDataRowForVoiceCall>>();
-            List<InvoiceSectionDataRowForVoiceCall> sectionDataRows =
-                jsonCompressor.DeSerializeToObject(section.SerializedData);
-            return invoiceBasicDatas;
+            InvoiceSectionDataRetriever<InvoiceSectionDataRowForVoiceCall> sectionDataRetriever =
+                new InvoiceSectionDataRetriever<InvoiceSectionDataRowForVoiceCall>();
+            List<InvoiceSectionDataRowForVoiceCall> sectionData =
+                sectionDataRetriever.GetSectionData(invoice, sectionNumber: 2);
+            return sectionData;
         }
 
     }
