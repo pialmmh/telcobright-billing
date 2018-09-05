@@ -199,8 +199,7 @@ namespace TelcobrightMediation
         {
             int idserviceGroup = xyzRatingType == XyzRatingType.Icx ? 2 : 5;
             job telcobrightJob = invoiceGenerationInputData.TelcobrightJob;
-            Dictionary<string, string> jobParamsMap =
-                JsonConvert.DeserializeObject<Dictionary<string, string>>(telcobrightJob.JobParameter);
+            Dictionary<string, string> jobParamsMap = invoiceGenerationInputData.InvoiceJsonDetail;
             DateTime startDate = Convert.ToDateTime(jobParamsMap["startDate"]);
             DateTime endDate = Convert.ToDateTime(jobParamsMap["endDate"]);
             if (startDate.Day != 1 || endDate.Day != DateTime.DaysInMonth(startDate.Year, startDate.Month)
@@ -236,7 +235,6 @@ namespace TelcobrightMediation
         {
             invoice invoiceWithItem = invoicePostProcessingData.Invoice;
             invoice_item invoiceItem = invoiceWithItem.invoice_item.Single();
-            PartnerEntities context = invoicePostProcessingData.InvoiceGenerationInputData.Context;
             Dictionary<string, string> jsonDetail = JsonConvert.DeserializeObject<Dictionary<string,string>>
                                                     (invoiceItem.JSON_DETAIL);
             InvoiceSection invoiceSection1 = GetInvoiceSection1(invoicePostProcessingData);

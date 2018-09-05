@@ -39,7 +39,7 @@ namespace InvoiceGenerationRules
             if (-1*invoiceAmount <= 0)
             {
                 throw new Exception("Account balance [= ledger summary+temp transaction amount] " +
-                                    " must be >0");
+                                    " must be < 0");
             }
             IServiceGroup serviceGroup = null;
             int idServiceGroup = Convert.ToInt32(invoiceJsonDetail["idServiceGroup"]);
@@ -59,7 +59,7 @@ namespace InvoiceGenerationRules
                                                                   $"select idpartner from account where " +
                                                                   $"id={serviceAccountId})").ToList().Single();
             invoiceJsonDetail.Add("billingPeriod", $"{startDate.ToMySqlFormatWithoutQuote()}" +
-                                                   $" - {endDate.ToMySqlFormatWithoutQuote()}");
+                                                   $" to {endDate.ToMySqlFormatWithoutQuote()}");
             invoiceJsonDetail.Add("companyName", customer.AlternateNameInvoice);
             invoiceJsonDetail.Add("billingAddress", customer.invoiceAddress);
             invoiceJsonDetail.Add("vatRegNo", customer.vatRegistrationNo);
