@@ -69,6 +69,9 @@ namespace TelcobrightMediation.Accounting
         {
             IInvoiceGenerationRule invoiceGenerationRule = GetInvoiceGenRuleFromServiceGroupConfig(invoiceGenerationInputData);
             InvoicePostProcessingData invoicePostProcessingData = invoiceGenerationRule.Execute(invoiceGenerationInputData);
+            Dictionary<string, string> jsonDetail = invoicePostProcessingData.InvoiceGenerationInputData.InvoiceJsonDetail;
+            jsonDetail.Remove("sqlParam");
+            invoicePostProcessingData.Invoice.invoice_item.Single().JSON_DETAIL = JsonConvert.SerializeObject(jsonDetail);
             return invoicePostProcessingData;
         }
 

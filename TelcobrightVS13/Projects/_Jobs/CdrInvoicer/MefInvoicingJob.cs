@@ -30,16 +30,16 @@ namespace Jobs
             InvoiceGenerationInputData invoiceGenerationInputData = (InvoiceGenerationInputData)jobInputData;
             InvoiceGenerationHelper invoiceGenerationHelper =
                 new InvoiceGenerationHelper(invoiceGenerationInputData, null, null);//null will use invoice pre & processing 
-                                            //from serviceGroup, if not null then servicGroups methods will be overridden.
+                                                                                    //from serviceGroup, if not null then servicGroups methods will be overridden.
             invoiceGenerationInputData = invoiceGenerationHelper.ExecInvoicePreProcessing(invoiceGenerationInputData);
             InvoicePostProcessingData invoicePostProcessingData =
                 invoiceGenerationHelper.GenerateInvoice(invoiceGenerationInputData);
-            invoicePostProcessingData= invoiceGenerationHelper.ExecInvoicePostProcessing(invoicePostProcessingData);
+            invoicePostProcessingData = invoiceGenerationHelper.ExecInvoicePostProcessing(invoicePostProcessingData);
             invoicePostProcessingData.TempTransaction = CreateTempTransaction(invoicePostProcessingData);
             WriteToDb(invoicePostProcessingData);
             return JobCompletionStatus.Complete;
         }
-
+        
         private acc_temp_transaction CreateTempTransaction(InvoicePostProcessingData invoicePostProcessingData)
         {
             acc_temp_transaction tempTransaction = new acc_temp_transaction()
