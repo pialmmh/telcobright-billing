@@ -37,7 +37,9 @@ namespace PortalApp.config
                 Tbc = PageUtil.GetTelcobrightConfig();
 
                 InvoiceTemplateComposer invoiceTemplateComposer = new InvoiceTemplateComposer();
-                invoiceTemplateComposer.ComposeFromPath(PageUtil.GetPortalBinPath());
+                DirectoryInfo dllDir = new DirectoryInfo(PageUtil.GetPortalBinPath()).Parent.GetDirectories("Extensions")
+                    .Single();
+                invoiceTemplateComposer.ComposeFromPath(dllDir.FullName);
                 invoiceTemplates = invoiceTemplateComposer.InvoiceTemplates.ToDictionary(c => c.TemplateName);
 
                 using (PartnerEntities context = new PartnerEntities())

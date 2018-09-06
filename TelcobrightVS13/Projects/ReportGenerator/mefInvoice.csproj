@@ -7,8 +7,8 @@
     <ProjectGuid>{026CA12F-1A70-430B-AA9F-846D4D461B91}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ReportGenerator</RootNamespace>
-    <AssemblyName>ReportGenerator</AssemblyName>
+    <RootNamespace>TelcobrightMediation</RootNamespace>
+    <AssemblyName>MefInvoices</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -245,7 +245,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy $(TargetPath) $(SolutionDir)\Portal\bin\$(TargetFileName)
+    <PostBuildEvent>copy $(TargetPath) $(SolutionDir)\Portal\Extensions\$(TargetFileName)
 
 
 </PostBuildEvent>

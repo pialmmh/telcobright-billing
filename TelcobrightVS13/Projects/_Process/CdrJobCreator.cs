@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using TelcobrightFileOperations;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using MediationModel;
 using MySql.Data.MySqlClient;
@@ -29,6 +30,12 @@ namespace Process
         
         public void Execute(IJobExecutionContext schedulerContext)
         {
+            //todo: remove temp code
+            Console.WriteLine("Going to sleep");
+            Thread.Sleep(10000);
+            Console.WriteLine("Sleep complete");
+            return;
+            //
             string operatorName = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");
             try
             {

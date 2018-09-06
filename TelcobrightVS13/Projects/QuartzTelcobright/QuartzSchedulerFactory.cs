@@ -9,8 +9,7 @@ namespace QuartzTelcobright
         public static IScheduler CreateSchedulerInstance(NameValueCollection schedulerProperties)
         {
             var schedularFactory = GetSchedulerFactory(schedulerProperties);
-            
-            return schedularFactory.GetScheduler();
+                        return schedularFactory.GetScheduler();
             
         }
 

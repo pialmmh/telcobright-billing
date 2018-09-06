@@ -16,6 +16,7 @@ using QuartzTelcobright;
 using TelcobrightMediation.Scheduler.Quartz;
 using System.Configuration;
 using System.Diagnostics;
+using CrystalQuartz.Core.SchedulerProviders;
 using Quartz.Impl;
 using Quartz.Impl.Matchers;
 using QuartzTelcobright.MefComposers;
@@ -34,6 +35,13 @@ namespace WS_Telcobright_Topshelf
 
         static void Main(string[] args)
         {
+            //todo: remove test code
+            RemoteSchedulerProvider provider= new RemoteSchedulerProvider
+            {
+                SchedulerHost = "tcp://localhost:555/QuartzScheduler"
+            };
+            provider.Init();
+            //
 
             ProcessParamater procParam = new ProcessParamater(1000);
             string json = JsonConvert.SerializeObject(procParam);
