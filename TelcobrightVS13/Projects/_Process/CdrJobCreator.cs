@@ -30,12 +30,6 @@ namespace Process
         
         public void Execute(IJobExecutionContext schedulerContext)
         {
-            //todo: remove temp code
-            Console.WriteLine("Going to sleep");
-            Thread.Sleep(10000);
-            Console.WriteLine("Sleep complete");
-            return;
-            //
             string operatorName = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");
             try
             {

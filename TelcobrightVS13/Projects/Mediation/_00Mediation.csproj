@@ -132,6 +132,7 @@
     <Compile Include="Accounting\SendAlertEmailAccountAction.cs" />
     <Compile Include="Accounting\SendSMSAccountAction.cs" />
     <Compile Include="Accounting\TempTransactionCreator.cs" />
+    <Compile Include="Accounting\TransactionJobInputData.cs" />
     <Compile Include="AutoIncrementManagerManual.cs" />
     <Compile Include="AutoIncrementManagerManualInt.cs" />
     <Compile Include="Automation\AutomatedNetworkElementCli.cs" />

@@ -21,10 +21,21 @@ namespace Jobs
         public string RuleName => "TransactionPosting";
         public string HelpText => "Posts a transaction to accounting context with automatic update of ledger summary";
         public int Id => 14;
-
         public JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
         {
-            
+            TransactionJobInputData input = (TransactionJobInputData) jobInputData;
+            List<acc_temp_transaction> tempTransactions = input.TempTransactions;
+            List<DateTime> datesInvolved = tempTransactions.Select(t => t.transactionTime.Date).Distinct().ToList();
+            int segmentSizeForDbWrite = input.Tbc.CdrSetting.SegmentSizeForDbWrite;
+            AutoIncrementManager autoIncrementManager = new AutoIncrementManager(
+                    counter => (int) AutoIncrementTypeDictionary.EnumTypes[counter.tableName],
+                    counter => counter.GetExtInsertValues(),
+                    counter => counter.GetUpdateCommand(
+                    c => $@" where tableName='{AutoIncrementTypeDictionary.EnumTypes[counter.tableName]}'"),
+                    null, input.Context.Database.Connection.CreateCommand(), segmentSizeForDbWrite);
+            AccountingContext accountingContext = new AccountingContext(input.Context,0,autoIncrementManager,
+                datesInvolved,segmentSizeForDbWrite);
+            //accountingContext.ExecuteTransactions();
             return JobCompletionStatus.Complete;
         } //execute
     }
