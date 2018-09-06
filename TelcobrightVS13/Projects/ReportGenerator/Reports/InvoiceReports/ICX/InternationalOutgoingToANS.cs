@@ -34,24 +34,25 @@ namespace ReportGenerator.Reports.InvoiceReports.ICX
         {
             invoice invoice = (invoice)data;
             List<InvoiceSectionDataRowForVoiceCall> invoiceBasicDatas = this.GetReportData(invoice);
+            invoice_item invoiceItem = invoice.invoice_item.Single();
+            Dictionary<string, string> invoiceMap = JsonConvert.DeserializeObject<Dictionary<string, string>>(invoiceItem.JSON_DETAIL);
+
             this.DataSource = invoiceBasicDatas;
 
-            /*
             #region Page Header
             xrLabelVatRegNo.Text = "VAT Reg. No. 19061116647";
-            xrLabelPartnerName.Text = invoice.Partner.PartnerName;
-            xrLabelPartnerAddress.Text = invoice.Partner.PartnerAddress;
-            xrLabelPartnerVatRegNo.Text = invoice.Partner.VatRegNo;
-            xrLabelType.Text = string.Format("Type: {0}", invoice.Type);
+            xrLabelPartnerName.Text = invoiceMap["companyName"];
+            xrLabelPartnerAddress.Text = invoiceMap["billingAddress"];
+            xrLabelPartnerVatRegNo.Text = invoiceMap["vatRegNo"];
+            xrLabelType.Text = string.Format("Type: {0}", invoiceMap["customerType"]);
 
-            xrLabelBillingPeriod.Text = string.Format("from {0:dd-MMM-yyyy} to {1:dd-MMM-yyyy}", invoice.BillingFrom, invoice.BillingTo);
-            xrLabelInvoiceDate.Text = string.Format("{0:dd-MMM-yyyy}", invoice.InvoiceDate);
-            xrLabelInvoiceDueDate.Text = string.Format("{0:dd-MMM-yyyy}", invoice.DueDate);
-            xrLabelInvoiceNo.Text = invoice.InvoiceNo;
-            xrLabelCurrency.Text = invoice.Currency;
-            xrLabelTimeZone.Text = invoice.TimeZone;
+            xrLabelBillingPeriod.Text = string.Format("from {0:dd-MMM-yyyy} to {1:dd-MMM-yyyy}", invoiceMap["startDate"], invoiceMap["endDate"]);
+            xrLabelInvoiceDate.Text = string.Format("{0:dd-MMM-yyyy}", invoice.INVOICE_DATE);
+            xrLabelInvoiceDueDate.Text = string.Format("{0:dd-MMM-yyyy}", invoice.DUE_DATE);
+            xrLabelInvoiceNo.Text = invoice.REFERENCE_NUMBER;
+            xrLabelCurrency.Text = invoiceMap["uom"];
+            xrLabelTimeZone.Text = invoiceMap["timeZone"];
             #endregion
-            */
 
             #region Report Body
             xrTableCellReference.DataBindings.Add("Text", this.DataSource, "Reference");
