@@ -11,8 +11,11 @@ using TelcobrightMediation;
 using MediationModel;
 using Newtonsoft.Json;
 using LibraryExtensions;
+using System.ComponentModel.Composition;
+
 namespace ReportGenerator.Reports.InvoiceReports.ICX
 {
+    [Export("InvoiceTemplate", typeof(IInvoiceTemplate))]
     public partial class InternationalOutgoingToANS : DevExpress.XtraReports.UI.XtraReport, IInvoiceTemplate
     {
         public string TemplateName => this.GetType().Name;

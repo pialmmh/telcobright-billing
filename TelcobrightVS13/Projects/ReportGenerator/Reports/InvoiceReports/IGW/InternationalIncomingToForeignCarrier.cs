@@ -11,9 +11,11 @@ using Newtonsoft.Json;
 using MediationModel;
 using System.Collections.Generic;
 using LibraryExtensions;
+using System.ComponentModel.Composition;
 
 namespace ReportGenerator.Reports.InvoiceReports.IGW
 {
+    [Export("InvoiceTemplate", typeof(IInvoiceTemplate))]
     public partial class InternationalIncomingToForeignCarrier : DevExpress.XtraReports.UI.XtraReport, IInvoiceTemplate
     {
         public string TemplateName => this.GetType().Name;
