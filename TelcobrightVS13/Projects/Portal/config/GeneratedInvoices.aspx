@@ -19,7 +19,9 @@
                     <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
                     <RowStyle BackColor="white" ForeColor="#333333" />
                     <Columns>
-                        <asp:BoundField DataField="REFERENCE_NUMBER" HeaderText="Reference Number" />
+                        <asp:BoundField DataField="DESCRIPTION" HeaderText="Description" />
+                        <asp:BoundField DataField="" />
+<%--                        <asp:BoundField DataField="REFERENCE_NUMBER" HeaderText="Reference Number" />
                         <asp:TemplateField HeaderText="Type" SortExpression="INVOICE_TYPE_ID" ItemStyle-Wrap="false">
                             <ItemTemplate>
                                 <asp:DropDownList runat="server" ID="ddlistInvoiceType" Enabled="false" />
@@ -44,7 +46,7 @@
                             <ItemTemplate>
                                 <asp:LinkButton runat="server" ID="lbSaveAsPdf" OnClick="lbSaveAsPdf_Click" Text="Save As PDF" />
                             </ItemTemplate>
-                        </asp:TemplateField>
+                        </asp:TemplateField>--%>
                     </Columns>
                 </asp:GridView>
             </ContentTemplate>

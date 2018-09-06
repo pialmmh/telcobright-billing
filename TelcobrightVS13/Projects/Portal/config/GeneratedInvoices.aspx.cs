@@ -49,6 +49,7 @@ namespace PortalApp.config
 
                     List<KeyValuePair<Regex, string>> serviceAliases = Tbc.ServiceAliasesRegex;
                     List<invoice> generatedInvoices = context.invoices.Where(x => x.PAID_DATE == null).OrderByDescending(x => x.INVOICE_DATE).ToList();
+                    this.Session["generatedInvoices"] = generatedInvoices;
                     gvInvoice.DataSource = generatedInvoices;
                     gvInvoice.DataBind();
 
@@ -60,14 +61,21 @@ namespace PortalApp.config
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
+                int INVOICE_ID = Convert.ToInt32(DataBinder.Eval(e.Row.DataItem, "INVOICE_ID"));
+                List<invoice> generatedInvoices = (List<invoice>)this.Session["generatedInvoices"];
+                invoice invoice = generatedInvoices.First(x => x.INVOICE_ID == INVOICE_ID);
+                InvoiceSectionDataRetriever<InvoiceSectionDataRowForVoiceCall> sectionDataRetriever =
+                    new InvoiceSectionDataRetriever<InvoiceSectionDataRowForVoiceCall>();
+                List<InvoiceSectionDataRowForVoiceCall> sectionData =
+                    sectionDataRetriever.GetSectionData(invoice, sectionNumber: 1);
+                sectionData.Count();
                 // Invoice type
-                DropDownList ddlistInvoiceType = (DropDownList)e.Row.FindControl("ddlistInvoiceType");
                 /*
+                DropDownList ddlistInvoiceType = (DropDownList)e.Row.FindControl("ddlistInvoiceType");
                 foreach (var item in Enum.GetValues(typeof(InvoiceReportType)))
                 {
                     ddlistInvoiceType.Items.Add(item.ToString());
                 }
-                */
                 string invoiceType = DataBinder.Eval(e.Row.DataItem, "INVOICE_TYPE_ID").ToString();
                 ddlistInvoiceType.SelectedValue = invoiceType;
 
@@ -88,6 +96,7 @@ namespace PortalApp.config
                 TextBox txtDueDate = (TextBox)e.Row.FindControl("txtDueDate");
                 DateTime dueDate = DateTime.Parse(DataBinder.Eval(e.Row.DataItem, "DUE_DATE").ToString());
                 txtDueDate.Text = dueDate.ToString("yyyy-MM-dd HH:mm:ss");
+                */
             }
         }
 
