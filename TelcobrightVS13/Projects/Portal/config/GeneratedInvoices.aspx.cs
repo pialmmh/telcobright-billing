@@ -38,7 +38,7 @@ namespace PortalApp.config
 
                 InvoiceTemplateComposer invoiceTemplateComposer = new InvoiceTemplateComposer();
                 DirectoryInfo dllDir = new DirectoryInfo(PageUtil.GetPortalBinPath()).Parent.GetDirectories("Extensions")
-                    .Single();
+                    .Single().GetDirectories("InvoiceTemplates").Single();
                 invoiceTemplateComposer.ComposeFromPath(dllDir.FullName);
                 invoiceTemplates = invoiceTemplateComposer.InvoiceTemplates.ToDictionary(c => c.TemplateName);
 
