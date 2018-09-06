@@ -34,8 +34,7 @@
             this.xrTable1 = new DevExpress.XtraReports.UI.XRTable();
             this.xrTableRow1 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCellReference = new DevExpress.XtraReports.UI.XRTableCell();
-            this.xrTableCellUnitsCallsUoM = new DevExpress.XtraReports.UI.XRTableCell();
-            this.xrTableCellUnitsCalls = new DevExpress.XtraReports.UI.XRTableCell();
+            this.xrTableCellTotalCalls = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCellTotalMinutes = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCellXAmountBDT = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCellYAmountBDT = new DevExpress.XtraReports.UI.XRTableCell();
@@ -129,8 +128,7 @@
             // 
             this.xrTableRow1.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
             this.xrTableCellReference,
-            this.xrTableCellUnitsCallsUoM,
-            this.xrTableCellUnitsCalls,
+            this.xrTableCellTotalCalls,
             this.xrTableCellTotalMinutes,
             this.xrTableCellXAmountBDT,
             this.xrTableCellYAmountBDT,
@@ -152,24 +150,15 @@
             this.xrTableCellReference.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
             this.xrTableCellReference.Weight = 0.57771661115396966D;
             // 
-            // xrTableCellUnitsCallsUoM
+            // xrTableCellTotalCalls
             // 
-            this.xrTableCellUnitsCallsUoM.Name = "xrTableCellUnitsCallsUoM";
-            this.xrTableCellUnitsCallsUoM.StylePriority.UsePadding = false;
-            this.xrTableCellUnitsCallsUoM.StylePriority.UseTextAlignment = false;
-            this.xrTableCellUnitsCallsUoM.Text = "UoM";
-            this.xrTableCellUnitsCallsUoM.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
-            this.xrTableCellUnitsCallsUoM.Weight = 0.2269601035973875D;
-            // 
-            // xrTableCellUnitsCalls
-            // 
-            this.xrTableCellUnitsCalls.Name = "xrTableCellUnitsCalls";
-            this.xrTableCellUnitsCalls.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 2, 0, 0, 100F);
-            this.xrTableCellUnitsCalls.StylePriority.UsePadding = false;
-            this.xrTableCellUnitsCalls.StylePriority.UseTextAlignment = false;
-            this.xrTableCellUnitsCalls.Text = "Units";
-            this.xrTableCellUnitsCalls.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
-            this.xrTableCellUnitsCalls.Weight = 0.33837690060023862D;
+            this.xrTableCellTotalCalls.Name = "xrTableCellTotalCalls";
+            this.xrTableCellTotalCalls.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 2, 0, 0, 100F);
+            this.xrTableCellTotalCalls.StylePriority.UsePadding = false;
+            this.xrTableCellTotalCalls.StylePriority.UseTextAlignment = false;
+            this.xrTableCellTotalCalls.Text = "Units";
+            this.xrTableCellTotalCalls.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
+            this.xrTableCellTotalCalls.Weight = 0.56533700419762611D;
             // 
             // xrTableCellTotalMinutes
             // 
@@ -513,7 +502,7 @@
             this.xrTableCell2.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 0, 0, 0, 100F);
             this.xrTableCell2.StylePriority.UsePadding = false;
             this.xrTableCell2.StylePriority.UseTextAlignment = false;
-            this.xrTableCell2.Text = "Units";
+            this.xrTableCell2.Text = "Total Calls";
             this.xrTableCell2.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             this.xrTableCell2.Weight = 0.56533671942118247D;
             // 
@@ -872,8 +861,7 @@
         private DevExpress.XtraReports.UI.XRTable xrTable1;
         private DevExpress.XtraReports.UI.XRTableRow xrTableRow1;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCellReference;
-        private DevExpress.XtraReports.UI.XRTableCell xrTableCellUnitsCallsUoM;
-        private DevExpress.XtraReports.UI.XRTableCell xrTableCellUnitsCalls;
+        private DevExpress.XtraReports.UI.XRTableCell xrTableCellTotalCalls;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCellTotalMinutes;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCellAmount;
         private DevExpress.XtraReports.UI.PageHeaderBand PageHeader;

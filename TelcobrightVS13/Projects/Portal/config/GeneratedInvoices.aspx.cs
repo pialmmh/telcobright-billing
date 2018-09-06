@@ -29,6 +29,7 @@ namespace PortalApp.config
     {
         private static TelcobrightConfig Tbc { get; set; }
         private static Dictionary<string, IInvoiceTemplate> invoiceTemplates { get; set; }
+        private static List<invoice> generatedInvoices { get; set; }
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -44,26 +45,13 @@ namespace PortalApp.config
 
                 using (PartnerEntities context = new PartnerEntities())
                 {
-
-                    List<partner> allPartners = context.partners.OrderBy(i => i.PartnerName).ToList();
-                    this.Session["sesAllPartners"] = allPartners;
-                    List<account> allAccounts = context.accounts.ToList();
-
-                    List<timezone> tz = context.timezones.Include("zone.country")
-                        .OrderBy(o => o.zone.country.country_name).ToList();
-                    this.Session["sesAllTimeZones"] = tz;
-
-                    List<KeyValuePair<Regex, string>> serviceAliases = Tbc.ServiceAliasesRegex;
-                    List<invoice> generatedInvoices = context.invoices.Where(x => x.PAID_DATE == null).OrderByDescending(x => x.INVOICE_DATE).ToList();
-                    this.Session["generatedInvoices"] = generatedInvoices;
+                    generatedInvoices = context.invoices.Where(x => x.PAID_DATE == null).OrderByDescending(x => x.INVOICE_DATE).ToList();
                     gvInvoice.DataSource = generatedInvoices;
                     gvInvoice.DataBind();
-
                 }
             }
             else
             {
-                List<invoice> generatedInvoices = (List<invoice>)this.Session["generatedInvoices"];
                 gvInvoice.DataSource = generatedInvoices;
                 gvInvoice.DataBind();
             }
@@ -74,7 +62,6 @@ namespace PortalApp.config
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
                 int INVOICE_ID = Convert.ToInt32(DataBinder.Eval(e.Row.DataItem, "INVOICE_ID"));
-                List<invoice> generatedInvoices = (List<invoice>)this.Session["generatedInvoices"];
                 invoice invoice = generatedInvoices.First(x => x.INVOICE_ID == INVOICE_ID);
                 invoice_item invoiceItem = invoice.invoice_item.Single();
                 Dictionary<string, string> invoiceMap = JsonConvert.DeserializeObject<Dictionary<string, string>>(invoiceItem.JSON_DETAIL);
@@ -140,7 +127,6 @@ namespace PortalApp.config
 
             GridViewRow gvrow = (GridViewRow)linkButton.NamingContainer;
             int INVOICE_ID = Convert.ToInt32(gvInvoice.DataKeys[gvrow.RowIndex].Value);
-            List<invoice> generatedInvoices = (List<invoice>)this.Session["generatedInvoices"];
             invoice invoice = generatedInvoices.First(x => x.INVOICE_ID == INVOICE_ID);
 
             String refNo = Guid.NewGuid().ToString();
@@ -152,45 +138,6 @@ namespace PortalApp.config
             Response.Redirect("~/config/ViewPDF.aspx?refNo=" + HttpUtility.UrlEncode(refNo), false);
             Context.ApplicationInstance.CompleteRequest();
 
-        }
-
-        protected void lbSaveAsPdf_Click(object sender, EventArgs e)
-        {
-            using (PartnerEntities context = new PartnerEntities())
-            {
-                LinkButton lbSaveAsPdf = sender as LinkButton;
-                GridViewRow gvrow = (GridViewRow)lbSaveAsPdf.NamingContainer;
-                int invoiceId = Convert.ToInt32(gvInvoice.DataKeys[gvrow.RowIndex].Value);
-                invoice invoice = context.invoices.First(x => x.INVOICE_ID == invoiceId);
-
-                InvoiceHelper invoiceHelper = new InvoiceHelper(invoice);
-                /*
-                Invoice preparedInvoice = invoiceHelper.GetInvoice();
-                if (preparedInvoice != null)
-                {
-                    Type reportType = Type.GetType("ReportGenerator.reports.invoice.igw." + invoice.INVOICE_TYPE_ID);
-                    if (reportType == null)
-                    {
-                        foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
-                        {
-                            reportType = asm.GetType("ReportGenerator.reports.invoice.igw." + invoice.INVOICE_TYPE_ID);
-                            if (reportType != null)
-                                break;
-                        }
-                    }
-
-                    String refNo = Guid.NewGuid().ToString();
-                    IInvoiceReport invoiceReport = (IInvoiceReport)Activator.CreateInstance(reportType, preparedInvoice);
-                    string pathtofile = string.Format("{0}\\{1}.pdf", Server.MapPath("/InvoicePdfs"), refNo);
-                    invoiceReport.saveToPdf(pathtofile);
-
-                    // show pdf
-                    Response.Redirect("~/config/ViewPDF.aspx?refNo=" + HttpUtility.UrlEncode(refNo), false);
-                    Context.ApplicationInstance.CompleteRequest();
-                }
-                else throw new Exception("Invalid invoice data");
-                */
-            }
         }
     }
 }
