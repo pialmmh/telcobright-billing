@@ -25,7 +25,7 @@ namespace PortalApp.config
         private static TelcobrightConfig Tbc { get; set; }
         private static int DefaultTimeZoneId = 3251;
         private static int GmtOffset = 21600;
-
+        private static Dictionary<int, IServiceGroup> MefServiceGroups { get; set; }
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -43,8 +43,8 @@ namespace PortalApp.config
                     this.Session["sesAllTimeZones"] = tz;
 
                     List<KeyValuePair<Regex, string>> serviceAliases = Tbc.ServiceAliasesRegex;
-                    List<InvoiceGenDataCollectionRow> summaryForInvoiceGenerations =
-                        new List<InvoiceGenDataCollectionRow>();
+                    List<InvoiceGenRowDataCollector> summaryForInvoiceGenerations =
+                        new List<InvoiceGenRowDataCollector>();
                     List<BillingRule> billingRules = context.jsonbillingrules.ToList()
                         .Select(c => JsonConvert.DeserializeObject<BillingRule>(c.JsonExpression)).ToList();
                     List<long> accountIds = context.accounts.Where(x => x.isCustomerAccount == 1 && x.isBillable == 1)
@@ -53,6 +53,9 @@ namespace PortalApp.config
                         context.acc_ledger_summary.Where(x => accountIds.Contains(x.idAccount) && x.AMOUNT != 0)
                             .ToList();
                     bool isAlreadyExists = false;
+                    ServiceGroupComposer composer=new ServiceGroupComposer();
+                    composer.Compose();
+                    MefServiceGroups = composer.ServiceGroups.ToDictionary(s=>s.Id);
                     foreach (acc_ledger_summary ledgerSummary in accLedgerSummaries)
                     {
                         var serviceGroup = context.accounts.First(x => x.id == ledgerSummary.idAccount).serviceGroup;
@@ -66,7 +69,7 @@ namespace PortalApp.config
 
                         if (summaryForInvoiceGenerations.Count > 0)
                         {
-                            InvoiceGenDataCollectionRow cycle = summaryForInvoiceGenerations
+                            InvoiceGenRowDataCollector cycle = summaryForInvoiceGenerations
                                 .FirstOrDefault(x => x.AccountId == ledgerSummary.idAccount &&
                                                      x.PartnerId == partner.idPartner &&
                                                      x.StartDateTime.Equals(timeRange.Start) &&
@@ -81,16 +84,19 @@ namespace PortalApp.config
 
                         if (!isAlreadyExists)
                         {
-                            InvoiceGenDataCollectionRow invoiceDataCollector = new InvoiceGenDataCollectionRow();
-                            invoiceDataCollector.PartnerId = partner.idPartner;
-                            invoiceDataCollector.PartnerName = partner.PartnerName;
-                            invoiceDataCollector.AccountId = account.id;
-                            invoiceDataCollector.AccountName = account.accountName;
-                            invoiceDataCollector.StartDateTime = timeRange.Start;
-                            invoiceDataCollector.EndDateTime = timeRange.End;
-                            invoiceDataCollector.Amount = ledgerSummary.AMOUNT;
-                            invoiceDataCollector.TimeZone = DefaultTimeZoneId;
-                            invoiceDataCollector.GmtOffset = GmtOffset;
+                            InvoiceGenRowDataCollector invoiceDataCollector =
+                                new InvoiceGenRowDataCollector(MefServiceGroups)
+                                {
+                                    PartnerId = partner.idPartner,
+                                    PartnerName = partner.PartnerName,
+                                    AccountId = account.id,
+                                    AccountName = account.accountName,
+                                    StartDateTime = timeRange.Start,
+                                    EndDateTime = timeRange.End,
+                                    Amount = ledgerSummary.AMOUNT,
+                                    TimeZone = DefaultTimeZoneId,
+                                    GmtOffset = GmtOffset
+                                };
                             invoiceDataCollector.InvoiceDates.Add(ledgerSummary.transactionDate);
 
                             foreach (var kv in serviceAliases)
@@ -106,8 +112,8 @@ namespace PortalApp.config
                         }
                     }
 
-                    BindingList<InvoiceGenDataCollectionRow> invoiceGenerations =
-                        new BindingList<InvoiceGenDataCollectionRow>(summaryForInvoiceGenerations.OrderBy(x => x.PartnerName)
+                    BindingList<InvoiceGenRowDataCollector> invoiceGenerations =
+                        new BindingList<InvoiceGenRowDataCollector>(summaryForInvoiceGenerations.OrderBy(x => x.PartnerName)
                             .ThenBy(x => x.ServiceAccountAlias).ToList());
                     this.Session["igInvoiceGenList"] = invoiceGenerations;
                     gvInvoice.DataSource = invoiceGenerations;
@@ -177,20 +183,23 @@ namespace PortalApp.config
         protected void btnAddInvoiceRow_OnClick(object sender, EventArgs e)
         {
             List<timezone> allTimeZones = (List<timezone>)this.Session["sesAllTimeZones"];
-            BindingList<InvoiceGenDataCollectionRow> invoiceGenerations =
-                (BindingList<InvoiceGenDataCollectionRow>)this.Session["igInvoiceGenList"];
-            InvoiceGenDataCollectionRow ledgerSummary = new InvoiceGenDataCollectionRow();
-            ledgerSummary.PartnerId = Convert.ToInt32(ddlistPartner.SelectedValue);
-            ledgerSummary.PartnerName = ddlistPartner.SelectedItem.Text;
-            ledgerSummary.ServiceAccountAlias = ddlistServiceAccount.Text;
-            ledgerSummary.StartDateTime = Convert.ToDateTime(txtDate.Text);
-            ledgerSummary.EndDateTime = Convert.ToDateTime(txtDate1.Text);
-            ledgerSummary.TimeZone = Convert.ToInt32(ddlistTimeZone.SelectedValue);
+            BindingList<InvoiceGenRowDataCollector> invoiceGenerations =
+                (BindingList<InvoiceGenRowDataCollector>)this.Session["igInvoiceGenList"];
+            InvoiceGenRowDataCollector ledgerSummary =
+                new InvoiceGenRowDataCollector(MefServiceGroups)
+                {
+                    PartnerId = Convert.ToInt32(ddlistPartner.SelectedValue),
+                    PartnerName = ddlistPartner.SelectedItem.Text,
+                    ServiceAccountAlias = ddlistServiceAccount.Text,
+                    StartDateTime = Convert.ToDateTime(txtDate.Text),
+                    EndDateTime = Convert.ToDateTime(txtDate1.Text),
+                    TimeZone = Convert.ToInt32(ddlistTimeZone.SelectedValue)
+                };
             ledgerSummary.GmtOffset = allTimeZones.First(x => x.id == ledgerSummary.TimeZone).gmt_offset;
             ledgerSummary.InvoiceDates.Add(ledgerSummary.StartDateTime);
             invoiceGenerations.Add(ledgerSummary);
             invoiceGenerations =
-                new BindingList<InvoiceGenDataCollectionRow>(invoiceGenerations.OrderBy(x => x.PartnerName)
+                new BindingList<InvoiceGenRowDataCollector>(invoiceGenerations.OrderBy(x => x.PartnerName)
                     .ThenBy(x => x.ServiceAccountAlias).ToList());
             this.Session["igInvoiceGenList"] = invoiceGenerations;
             gvInvoice.DataSource = invoiceGenerations;
@@ -202,8 +211,8 @@ namespace PortalApp.config
             try
             {
                 int batchSizeForJobSegments = 10000;
-                BindingList<InvoiceGenDataCollectionRow> boundRowsForInvoiceGeneration =
-                    (BindingList<InvoiceGenDataCollectionRow>)this.Session["igInvoiceGenList"];
+                BindingList<InvoiceGenRowDataCollector> boundRowsForInvoiceGeneration =
+                    (BindingList<InvoiceGenRowDataCollector>)this.Session["igInvoiceGenList"];
                 List<job> invoicingJobs = new List<job>();
                 if (this.gvInvoice.Rows.Count <= 0)
                 {
@@ -217,19 +226,20 @@ namespace PortalApp.config
                         CheckBox cbSelect = (CheckBox)invoiceRow.FindControl("cbSelect");
                         if (cbSelect.Checked)
                         {
-                            var invoiceDataCollector = boundRowsForInvoiceGeneration[invoiceRow.RowIndex];
-                            if (invoiceDataCollector.EndDateTimeLocal <
-                                invoiceDataCollector.StartDateTimeLocal)
+                            InvoiceGenRowDataCollector invoiceGenRowDataCollector = boundRowsForInvoiceGeneration[invoiceRow.RowIndex];
+                            if (invoiceGenRowDataCollector.EndDateTimeLocal <
+                                invoiceGenRowDataCollector.StartDateTimeLocal)
                             {
                                 throw new Exception("EndDatetime must be >= StartDateTime for all rows, check row no:" +
                                                     index + 1);
                             }
-                            if (invoiceDataCollector.AccountId <= 0)
+                            if (invoiceGenRowDataCollector.AccountId <= 0)
                             {
                                 throw new Exception("AccountId must be >=0, check row no:" + index + 1);
                             }
-                            job invoicingJob = CreateInvoiceGenerationJob(invoiceDataCollector, context,
+                            job invoicingJob = CreateInvoiceGenerationJob(invoiceGenRowDataCollector, context,
                                 batchSizeForJobSegments);
+
                             invoicingJobs.Add(invoicingJob);
                         }
                     }
@@ -247,7 +257,7 @@ namespace PortalApp.config
         }
 
 
-        protected job CreateInvoiceGenerationJob(InvoiceGenDataCollectionRow invoiceDataCollector,
+        protected job CreateInvoiceGenerationJob(InvoiceGenRowDataCollector invoiceDataCollector,
             PartnerEntities context, int batchSizeForJobSegment)
         {
             string serviceAccount = invoiceDataCollector.ServiceAccountAlias;
@@ -269,9 +279,35 @@ namespace PortalApp.config
             }
             string jobName = invoiceDataCollector.PartnerName + "/" + serviceAccount
                              + "/" + invoiceDataCollector.StartDateTimeLocal.ToMySqlFormatWithoutQuote()
-                             + " to " +
-                             invoiceDataCollector.EndDateTimeLocal.ToMySqlFormatWithoutQuote();
+                             + " to " + invoiceDataCollector.EndDateTimeLocal.ToMySqlFormatWithoutQuote();
+            BatchSqlJobParamJson sqlParam =
+                PrepareSqlParams(invoiceDataCollector, batchSizeForJobSegment, glAccountId, sourceTable);
 
+            int jobPriority = context.enumjobdefinitions.Where(j => j.id == 12).Select(j => j.Priority).First();
+            jobParamsMap.Add("sqlParam", JsonConvert.SerializeObject(sqlParam));
+            job newjob = new job
+            {
+                Progress = 0,
+                idjobdefinition = jobDefinition,
+                Status = 6,
+                JobName = jobName,
+                CreationTime = DateTime.Now,
+                idNE = 0,
+                JobParameter = JsonConvert.SerializeObject(jobParamsMap),
+                priority = jobPriority
+            };
+            int idServiceGroup = context.accounts.Single(a => a.id == glAccountId).serviceGroup;
+            IServiceGroup serviceGroup = null;
+            invoiceDataCollector.MefServiceGroups.TryGetValue(idServiceGroup, out serviceGroup);
+            InvoiceGenerationValidatorInput validatorInput=new InvoiceGenerationValidatorInput(context,newjob);
+            if (serviceGroup == null)
+                throw new Exception("Service group not found.");
+            serviceGroup.ValidateInvoiceGenerationParams(validatorInput);
+            return newjob;
+        }
+
+        private static BatchSqlJobParamJson PrepareSqlParams(InvoiceGenRowDataCollector invoiceDataCollector, int batchSizeForJobSegment, long glAccountId, string sourceTable)
+        {
             List<SqlSingleWhereClauseBuilder> singleWhereClauses = new List<SqlSingleWhereClauseBuilder>();
             List<SqlMultiWhereClauseBuilder> multipleWhereClauses = new List<SqlMultiWhereClauseBuilder>();
             SqlSingleWhereClauseBuilder newParam = null;
@@ -319,20 +355,7 @@ namespace PortalApp.config
                 multipleWhereClauses,
                 columnExpressions: new List<string>() { "id as RowId", "transactionTime as RowDateTime" }
             );
-
-            int jobPriority = context.enumjobdefinitions.Where(j => j.id == 12).Select(j => j.Priority).First();
-            jobParamsMap.Add("sqlParam", JsonConvert.SerializeObject(sqlParam));
-            job newjob = new job();
-            newjob.Progress = 0;
-            newjob.idjobdefinition = 12; //invoicing job
-            newjob.Status = 6; //created
-            newjob.JobName = jobName;
-            newjob.idjobdefinition = jobDefinition;
-            newjob.CreationTime = DateTime.Now;
-            newjob.idNE = 0;
-            newjob.JobParameter = JsonConvert.SerializeObject(jobParamsMap);
-            newjob.priority = jobPriority;
-            return newjob;
+            return sqlParam;
         }
 
         protected void ddlistTimeZone_SelectedIndexChanged(object sender, EventArgs e)
@@ -340,9 +363,9 @@ namespace PortalApp.config
             DropDownList ddlTimeZone = sender as DropDownList;
             GridViewRow row = (GridViewRow)((Control)sender).NamingContainer;
             List<timezone> allTimeZones = (List<timezone>)this.Session["sesAllTimeZones"];
-            BindingList<InvoiceGenDataCollectionRow> invoiceGenerations =
-                (BindingList<InvoiceGenDataCollectionRow>)this.Session["igInvoiceGenList"];
-            InvoiceGenDataCollectionRow editRow = invoiceGenerations[row.RowIndex];
+            BindingList<InvoiceGenRowDataCollector> invoiceGenerations =
+                (BindingList<InvoiceGenRowDataCollector>)this.Session["igInvoiceGenList"];
+            InvoiceGenRowDataCollector editRow = invoiceGenerations[row.RowIndex];
             editRow.TimeZone = Convert.ToInt32(ddlTimeZone.SelectedValue);
             editRow.GmtOffset = allTimeZones.First(x => x.id == editRow.TimeZone).gmt_offset;
             this.Session["igInvoiceGenList"] = invoiceGenerations;
@@ -354,9 +377,9 @@ namespace PortalApp.config
         {
             TextBox txtStartDate = sender as TextBox;
             GridViewRow row = (GridViewRow)((Control)sender).NamingContainer;
-            BindingList<InvoiceGenDataCollectionRow> invoiceGenerations =
-                (BindingList<InvoiceGenDataCollectionRow>)this.Session["igInvoiceGenList"];
-            InvoiceGenDataCollectionRow editRow = invoiceGenerations[row.RowIndex];
+            BindingList<InvoiceGenRowDataCollector> invoiceGenerations =
+                (BindingList<InvoiceGenRowDataCollector>)this.Session["igInvoiceGenList"];
+            InvoiceGenRowDataCollector editRow = invoiceGenerations[row.RowIndex];
             editRow.StartDateTime = DateTime.Parse(txtStartDate.Text);
             this.Session["igInvoiceGenList"] = invoiceGenerations;
             gvInvoice.DataSource = invoiceGenerations;
@@ -367,9 +390,9 @@ namespace PortalApp.config
         {
             TextBox txtEndDate = sender as TextBox;
             GridViewRow row = (GridViewRow)((Control)sender).NamingContainer;
-            BindingList<InvoiceGenDataCollectionRow> invoiceGenerations =
-                (BindingList<InvoiceGenDataCollectionRow>)this.Session["igInvoiceGenList"];
-            InvoiceGenDataCollectionRow editRow = invoiceGenerations[row.RowIndex];
+            BindingList<InvoiceGenRowDataCollector> invoiceGenerations =
+                (BindingList<InvoiceGenRowDataCollector>)this.Session["igInvoiceGenList"];
+            InvoiceGenRowDataCollector editRow = invoiceGenerations[row.RowIndex];
             editRow.EndDateTime = DateTime.Parse(txtEndDate.Text);
             this.Session["igInvoiceGenList"] = invoiceGenerations;
             gvInvoice.DataSource = invoiceGenerations;

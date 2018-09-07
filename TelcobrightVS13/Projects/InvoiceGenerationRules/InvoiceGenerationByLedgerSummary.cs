@@ -11,7 +11,6 @@ using TelcobrightMediation.Accounting;
 
 namespace InvoiceGenerationRules
 {
-
     [Export("InvoiceGenerationRule", typeof(IInvoiceGenerationRule))]
     public class InvoiceGenerationByLedgerSummary : IInvoiceGenerationRule
     {
@@ -19,7 +18,6 @@ namespace InvoiceGenerationRules
         {
             return this.RuleName;
         }
-
         public string RuleName => GetType().Name;
         public string HelpText => "Generate invoice from ledger summary.";
         public int Id => 2;

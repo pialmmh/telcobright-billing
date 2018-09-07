@@ -118,13 +118,16 @@
     <Compile Include="Accounting\IAutomationAction.cs" />
     <Compile Include="Accounting\IAccountCreator.cs" />
     <Compile Include="Accounting\IBillingRule.cs" />
+    <Compile Include="Accounting\Invoice\IInvoiceSectionGenerator.cs" />
     <Compile Include="Accounting\Invoice\InvoiceableTransactionCollector.cs" />
-    <Compile Include="Accounting\Invoice\InvoiceGenDataCollectionRow.cs" />
+    <Compile Include="Accounting\Invoice\InvoiceGenerationValidatorInput.cs" />
+    <Compile Include="Accounting\Invoice\InvoiceGenRowDataCollector.cs" />
     <Compile Include="Accounting\Invoice\InvoiceGenerationInputData.cs" />
     <Compile Include="Accounting\Invoice\InvoiceGenerationHelper.cs" />
     <Compile Include="Accounting\Invoice\InvoicePostProcessingData.cs" />
     <Compile Include="Accounting\Invoice\InvoiceSectionCreator.cs" />
     <Compile Include="Accounting\Invoice\InvoiceSectionDataRetriever.cs" />
+    <Compile Include="Accounting\Invoice\InvoiceSectionGeneratorData.cs" />
     <Compile Include="Accounting\ITimeRangeImplementer.cs" />
     <Compile Include="Accounting\BillingRule.cs" />
     <Compile Include="Accounting\LedgerSumFactory.cs" />
@@ -257,7 +260,8 @@
     <Compile Include="Mediation\RateContainerInMemoryLocal.cs" />
     <Compile Include="Mediation\RateDictionaryGeneratorByTuples.cs" />
     <Compile Include="MefData\ICdrRule.cs" />
-    <Compile Include="Rating\IInvoiceTemplate.cs" />
+    <Compile Include="Rating\A2zInvoiceGenerationHelper.cs" />
+    <Compile Include="Accounting\Invoice\IInvoiceTemplate.cs" />
     <Compile Include="Accounting\Invoice\InvoiceCommonData.cs" />
     <Compile Include="Rating\PartnerEx.cs" />
     <Compile Include="Accounting\Invoice\InvoiceSectionDataRowForVoiceCall.cs" />

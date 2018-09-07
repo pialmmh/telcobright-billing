@@ -7,8 +7,9 @@ using jdk.nashorn.@internal.ir;
 
 namespace TelcobrightMediation.Accounting
 {
-    public class InvoiceGenDataCollectionRow
+    public class InvoiceGenRowDataCollector
     {
+        public Dictionary<int,IServiceGroup> MefServiceGroups { get;}
         public int PartnerId { get; set; }
         public string PartnerName { get; set; }
         public long AccountId { get; set; }
@@ -35,9 +36,10 @@ namespace TelcobrightMediation.Accounting
 
         public List<DateTime> InvoiceDates { get; set; }
 
-        public InvoiceGenDataCollectionRow()
+        public InvoiceGenRowDataCollector(Dictionary<int,IServiceGroup> mefServiceGroups)
         {
             InvoiceDates = new List<DateTime>();
+            this.MefServiceGroups = mefServiceGroups;
         }
     }
 }
