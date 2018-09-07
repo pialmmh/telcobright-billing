@@ -73,7 +73,7 @@ namespace ReportGenerator.Reports.InvoiceReports.ICX
             InvoiceSectionDataRetriever<InvoiceSectionDataRowForVoiceCall> sectionDataRetriever =
                 new InvoiceSectionDataRetriever<InvoiceSectionDataRowForVoiceCall>();
             List<InvoiceSectionDataRowForVoiceCall> sectionData =
-                sectionDataRetriever.GetSectionData(invoice, sectionNumber: 1);
+                sectionDataRetriever.GetSectionData(invoice, sectionNumber: 3);
             foreach (InvoiceSectionDataRowForVoiceCall item in sectionData)
             {
                 item.Reference = invoiceItem.PRODUCT_ID;

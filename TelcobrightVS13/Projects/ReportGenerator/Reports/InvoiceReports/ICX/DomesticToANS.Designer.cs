@@ -36,7 +36,6 @@
             this.xrTableCellReference = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCellDescription = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCellUnitsCalls = new DevExpress.XtraReports.UI.XRTableCell();
-            this.xrTableCellUnitsCallsUoM = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCellTotalMinutes = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCellAmount = new DevExpress.XtraReports.UI.XRTableCell();
             this.TopMargin = new DevExpress.XtraReports.UI.TopMarginBand();
@@ -125,7 +124,6 @@
             this.xrTableCellReference,
             this.xrTableCellDescription,
             this.xrTableCellUnitsCalls,
-            this.xrTableCellUnitsCallsUoM,
             this.xrTableCellTotalMinutes,
             this.xrTableCellAmount});
             this.xrTableRow1.Name = "xrTableRow1";
@@ -162,17 +160,7 @@
             this.xrTableCellUnitsCalls.StylePriority.UseTextAlignment = false;
             this.xrTableCellUnitsCalls.Text = "Units (Calls)";
             this.xrTableCellUnitsCalls.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
-            this.xrTableCellUnitsCalls.Weight = 0.350756556640363D;
-            // 
-            // xrTableCellUnitsCallsUoM
-            // 
-            this.xrTableCellUnitsCallsUoM.Name = "xrTableCellUnitsCallsUoM";
-            this.xrTableCellUnitsCallsUoM.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 0, 0, 0, 100F);
-            this.xrTableCellUnitsCallsUoM.StylePriority.UsePadding = false;
-            this.xrTableCellUnitsCallsUoM.StylePriority.UseTextAlignment = false;
-            this.xrTableCellUnitsCallsUoM.Text = "UoM";
-            this.xrTableCellUnitsCallsUoM.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            this.xrTableCellUnitsCallsUoM.Weight = 0.24759285812296586D;
+            this.xrTableCellUnitsCalls.Weight = 0.598349741011879D;
             // 
             // xrTableCellTotalMinutes
             // 
@@ -182,7 +170,7 @@
             this.xrTableCellTotalMinutes.StylePriority.UseTextAlignment = false;
             this.xrTableCellTotalMinutes.Text = "Total Minutes";
             this.xrTableCellTotalMinutes.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
-            this.xrTableCellTotalMinutes.Weight = 0.45392023953393068D;
+            this.xrTableCellTotalMinutes.Weight = 0.45391998766947139D;
             // 
             // xrTableCellAmount
             // 
@@ -192,7 +180,7 @@
             this.xrTableCellAmount.StylePriority.UseTextAlignment = false;
             this.xrTableCellAmount.Text = "Amount";
             this.xrTableCellAmount.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
-            this.xrTableCellAmount.Weight = 0.46217361823148961D;
+            this.xrTableCellAmount.Weight = 0.46217352378231735D;
             // 
             // TopMargin
             // 
@@ -494,7 +482,7 @@
             this.xrTableCell3.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 2, 0, 0, 100F);
             this.xrTableCell3.StylePriority.UsePadding = false;
             this.xrTableCell3.StylePriority.UseTextAlignment = false;
-            this.xrTableCell3.Text = "Units (Calls)";
+            this.xrTableCell3.Text = "Total Calls";
             this.xrTableCell3.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             this.xrTableCell3.Weight = 0.59834941735471847D;
             // 
@@ -805,7 +793,6 @@
         private DevExpress.XtraReports.UI.XRTableCell xrTableCellReference;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCellDescription;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCellUnitsCalls;
-        private DevExpress.XtraReports.UI.XRTableCell xrTableCellUnitsCallsUoM;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCellTotalMinutes;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCellAmount;
         private DevExpress.XtraReports.UI.PageHeaderBand PageHeader;
