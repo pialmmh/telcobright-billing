@@ -12,7 +12,7 @@
     <form id="form1" runat="server">
     <div>
     
-        <dx:ASPxDocumentViewer ID="ASPxDocumentViewer1" runat="server">
+        <dx:ASPxDocumentViewer ID="ASPxDocumentViewer1" runat="server" SettingsReportViewer-ShouldDisposeReport="false">
         </dx:ASPxDocumentViewer>
     
     </div>

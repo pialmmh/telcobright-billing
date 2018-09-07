@@ -130,14 +130,16 @@ namespace PortalApp.config
             invoice invoice = generatedInvoices.First(x => x.INVOICE_ID == INVOICE_ID);
 
             String refNo = Guid.NewGuid().ToString();
-            string pathtofile = string.Format("{0}\\{1}.pdf", Server.MapPath("/InvoicePdfs"), refNo);
             template.GenerateInvoice(invoice);
-            template.SaveToPdf(pathtofile);
-
-            // show pdf
-            Response.Redirect("~/config/ViewPDF.aspx?refNo=" + HttpUtility.UrlEncode(refNo), false);
+            this.Session[refNo] = template;
+            Response.Redirect("~/config/ViewReport.aspx?refNo=" + HttpUtility.UrlEncode(refNo), false);
             Context.ApplicationInstance.CompleteRequest();
 
+            //string pathtofile = string.Format("{0}\\{1}.pdf", Server.MapPath("/InvoicePdfs"), refNo);
+            //template.SaveToPdf(pathtofile);
+            // show pdf
+            //Response.Redirect("~/config/ViewPDF.aspx?refNo=" + HttpUtility.UrlEncode(refNo), false);
+            //Context.ApplicationInstance.CompleteRequest();
         }
     }
 }
