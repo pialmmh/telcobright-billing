@@ -35,8 +35,10 @@
             this.xrTableRow1 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCellReference = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCellOrigOperator = new DevExpress.XtraReports.UI.XRTableCell();
-            this.xrTableCellUnitsCallsUoM = new DevExpress.XtraReports.UI.XRTableCell();
+            this.xrTableCellTotalCalls = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCellQuantity = new DevExpress.XtraReports.UI.XRTableCell();
+            this.xrTableCellXAMOUNT = new DevExpress.XtraReports.UI.XRTableCell();
+            this.xrTableCellYAMOUNT = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCellXYAMOUNT = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCellRevenue = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCellAmount = new DevExpress.XtraReports.UI.XRTableCell();
@@ -65,6 +67,8 @@
             this.xrTableCell2 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCell3 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCell5 = new DevExpress.XtraReports.UI.XRTableCell();
+            this.xrTableCell11 = new DevExpress.XtraReports.UI.XRTableCell();
+            this.xrTableCell12 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCell7 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCell8 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCell6 = new DevExpress.XtraReports.UI.XRTableCell();
@@ -77,10 +81,6 @@
             this.xrTableCell4 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCellRevenueTotal = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCellSubTotalAmount = new DevExpress.XtraReports.UI.XRTableCell();
-            this.xrTableCellYAMOUNT = new DevExpress.XtraReports.UI.XRTableCell();
-            this.xrTableCellXAMOUNT = new DevExpress.XtraReports.UI.XRTableCell();
-            this.xrTableCell11 = new DevExpress.XtraReports.UI.XRTableCell();
-            this.xrTableCell12 = new DevExpress.XtraReports.UI.XRTableCell();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable3)).BeginInit();
@@ -112,7 +112,7 @@
             this.xrTableRow1.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
             this.xrTableCellReference,
             this.xrTableCellOrigOperator,
-            this.xrTableCellUnitsCallsUoM,
+            this.xrTableCellTotalCalls,
             this.xrTableCellQuantity,
             this.xrTableCellXAMOUNT,
             this.xrTableCellYAMOUNT,
@@ -144,17 +144,17 @@
             this.xrTableCellOrigOperator.StylePriority.UseTextAlignment = false;
             this.xrTableCellOrigOperator.Text = "Orig. Operator";
             this.xrTableCellOrigOperator.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
-            this.xrTableCellOrigOperator.Weight = 0.57771661960043641D;
+            this.xrTableCellOrigOperator.Weight = 0.49518567381878809D;
             // 
-            // xrTableCellUnitsCallsUoM
+            // xrTableCellTotalCalls
             // 
-            this.xrTableCellUnitsCallsUoM.Name = "xrTableCellUnitsCallsUoM";
-            this.xrTableCellUnitsCallsUoM.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 0, 0, 0, 100F);
-            this.xrTableCellUnitsCallsUoM.StylePriority.UsePadding = false;
-            this.xrTableCellUnitsCallsUoM.StylePriority.UseTextAlignment = false;
-            this.xrTableCellUnitsCallsUoM.Text = "Unit";
-            this.xrTableCellUnitsCallsUoM.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            this.xrTableCellUnitsCallsUoM.Weight = 0.19394772522760023D;
+            this.xrTableCellTotalCalls.Name = "xrTableCellTotalCalls";
+            this.xrTableCellTotalCalls.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 2, 0, 0, 100F);
+            this.xrTableCellTotalCalls.StylePriority.UsePadding = false;
+            this.xrTableCellTotalCalls.StylePriority.UseTextAlignment = false;
+            this.xrTableCellTotalCalls.Text = "Unit";
+            this.xrTableCellTotalCalls.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
+            this.xrTableCellTotalCalls.Weight = 0.27647867100924856D;
             // 
             // xrTableCellQuantity
             // 
@@ -165,6 +165,26 @@
             this.xrTableCellQuantity.Text = "Quantity";
             this.xrTableCellQuantity.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
             this.xrTableCellQuantity.Weight = 0.30949105332386373D;
+            // 
+            // xrTableCellXAMOUNT
+            // 
+            this.xrTableCellXAMOUNT.Name = "xrTableCellXAMOUNT";
+            this.xrTableCellXAMOUNT.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 2, 0, 0, 100F);
+            this.xrTableCellXAMOUNT.StylePriority.UsePadding = false;
+            this.xrTableCellXAMOUNT.StylePriority.UseTextAlignment = false;
+            this.xrTableCellXAMOUNT.Text = "X AMOUNT";
+            this.xrTableCellXAMOUNT.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
+            this.xrTableCellXAMOUNT.Weight = 0.3094910401614851D;
+            // 
+            // xrTableCellYAMOUNT
+            // 
+            this.xrTableCellYAMOUNT.Name = "xrTableCellYAMOUNT";
+            this.xrTableCellYAMOUNT.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 2, 0, 0, 100F);
+            this.xrTableCellYAMOUNT.StylePriority.UsePadding = false;
+            this.xrTableCellYAMOUNT.StylePriority.UseTextAlignment = false;
+            this.xrTableCellYAMOUNT.Text = "Y AMOUNT";
+            this.xrTableCellYAMOUNT.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
+            this.xrTableCellYAMOUNT.Weight = 0.30949104016148532D;
             // 
             // xrTableCellXYAMOUNT
             // 
@@ -451,7 +471,7 @@
             this.xrTableCell2.StylePriority.UseTextAlignment = false;
             this.xrTableCell2.Text = "Orig. Operator";
             this.xrTableCell2.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
-            this.xrTableCell2.Weight = 0.57771661454865708D;
+            this.xrTableCell2.Weight = 0.49518566903479055D;
             // 
             // xrTableCell3
             // 
@@ -459,9 +479,9 @@
             this.xrTableCell3.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 2, 0, 0, 100F);
             this.xrTableCell3.StylePriority.UsePadding = false;
             this.xrTableCell3.StylePriority.UseTextAlignment = false;
-            this.xrTableCell3.Text = "Unit";
+            this.xrTableCell3.Text = "Total Calls";
             this.xrTableCell3.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
-            this.xrTableCell3.Weight = 0.19394759292885197D;
+            this.xrTableCell3.Weight = 0.27647853844271852D;
             // 
             // xrTableCell5
             // 
@@ -469,9 +489,29 @@
             this.xrTableCell5.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 2, 0, 0, 100F);
             this.xrTableCell5.StylePriority.UsePadding = false;
             this.xrTableCell5.StylePriority.UseTextAlignment = false;
-            this.xrTableCell5.Text = "Quantity";
+            this.xrTableCell5.Text = "Total Minutes";
             this.xrTableCell5.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             this.xrTableCell5.Weight = 0.30949111467464946D;
+            // 
+            // xrTableCell11
+            // 
+            this.xrTableCell11.Name = "xrTableCell11";
+            this.xrTableCell11.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 2, 0, 0, 100F);
+            this.xrTableCell11.StylePriority.UsePadding = false;
+            this.xrTableCell11.StylePriority.UseTextAlignment = false;
+            this.xrTableCell11.Text = "X AMOUNT BDT";
+            this.xrTableCell11.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
+            this.xrTableCell11.Weight = 0.309491029285418D;
+            // 
+            // xrTableCell12
+            // 
+            this.xrTableCell12.Name = "xrTableCell12";
+            this.xrTableCell12.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 2, 0, 0, 100F);
+            this.xrTableCell12.StylePriority.UsePadding = false;
+            this.xrTableCell12.StylePriority.UseTextAlignment = false;
+            this.xrTableCell12.Text = "Y AMOUNT BDT";
+            this.xrTableCell12.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
+            this.xrTableCell12.Weight = 0.30949118359705674D;
             // 
             // xrTableCell7
             // 
@@ -591,46 +631,6 @@
             this.xrTableCellSubTotalAmount.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
             this.xrTableCellSubTotalAmount.Weight = 0.33012403769160015D;
             // 
-            // xrTableCellYAMOUNT
-            // 
-            this.xrTableCellYAMOUNT.Name = "xrTableCellYAMOUNT";
-            this.xrTableCellYAMOUNT.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 2, 0, 0, 100F);
-            this.xrTableCellYAMOUNT.StylePriority.UsePadding = false;
-            this.xrTableCellYAMOUNT.StylePriority.UseTextAlignment = false;
-            this.xrTableCellYAMOUNT.Text = "Y AMOUNT";
-            this.xrTableCellYAMOUNT.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
-            this.xrTableCellYAMOUNT.Weight = 0.30949104016148532D;
-            // 
-            // xrTableCellXAMOUNT
-            // 
-            this.xrTableCellXAMOUNT.Name = "xrTableCellXAMOUNT";
-            this.xrTableCellXAMOUNT.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 2, 0, 0, 100F);
-            this.xrTableCellXAMOUNT.StylePriority.UsePadding = false;
-            this.xrTableCellXAMOUNT.StylePriority.UseTextAlignment = false;
-            this.xrTableCellXAMOUNT.Text = "X AMOUNT";
-            this.xrTableCellXAMOUNT.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
-            this.xrTableCellXAMOUNT.Weight = 0.3094910401614851D;
-            // 
-            // xrTableCell11
-            // 
-            this.xrTableCell11.Name = "xrTableCell11";
-            this.xrTableCell11.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 2, 0, 0, 100F);
-            this.xrTableCell11.StylePriority.UsePadding = false;
-            this.xrTableCell11.StylePriority.UseTextAlignment = false;
-            this.xrTableCell11.Text = "X AMOUNT BDT";
-            this.xrTableCell11.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
-            this.xrTableCell11.Weight = 0.309491029285418D;
-            // 
-            // xrTableCell12
-            // 
-            this.xrTableCell12.Name = "xrTableCell12";
-            this.xrTableCell12.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 2, 0, 0, 100F);
-            this.xrTableCell12.StylePriority.UsePadding = false;
-            this.xrTableCell12.StylePriority.UseTextAlignment = false;
-            this.xrTableCell12.Text = "Y AMOUNT BDT";
-            this.xrTableCell12.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
-            this.xrTableCell12.Weight = 0.30949118359705674D;
-            // 
             // InternationalOutgoingToIOSDetails1
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
@@ -662,7 +662,7 @@
         private DevExpress.XtraReports.UI.XRTableRow xrTableRow1;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCellReference;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCellOrigOperator;
-        private DevExpress.XtraReports.UI.XRTableCell xrTableCellUnitsCallsUoM;
+        private DevExpress.XtraReports.UI.XRTableCell xrTableCellTotalCalls;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCellQuantity;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCellAmount;
         private DevExpress.XtraReports.UI.PageHeaderBand PageHeader;

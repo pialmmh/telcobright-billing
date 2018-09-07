@@ -20,18 +20,7 @@
                     <RowStyle BackColor="white" ForeColor="#333333" />
                     <Columns>
                         <asp:BoundField DataField="DESCRIPTION" HeaderText="Description" />
-                        <asp:BoundField DataField="" />
-<%--                        <asp:BoundField DataField="REFERENCE_NUMBER" HeaderText="Reference Number" />
-                        <asp:TemplateField HeaderText="Type" SortExpression="INVOICE_TYPE_ID" ItemStyle-Wrap="false">
-                            <ItemTemplate>
-                                <asp:DropDownList runat="server" ID="ddlistInvoiceType" Enabled="false" />
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Partner" SortExpression="PARTY_ID" ItemStyle-Wrap="false">
-                            <ItemTemplate>
-                                <asp:DropDownList runat="server" ID="ddlistPartner" DataTextField="PartnerName" DataValueField="idPartner" Enabled="false" />
-                            </ItemTemplate>
-                        </asp:TemplateField>
+                        <asp:BoundField DataField="REFERENCE_NUMBER" HeaderText="Reference Number" />
                         <asp:TemplateField HeaderText="Invoice Date" SortExpression="INVOICE_DATE" ItemStyle-Wrap="false">
                             <ItemTemplate>
                                 <asp:TextBox runat="server" ID="txtInvoiceDate" Enabled="false" dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" />
@@ -42,11 +31,7 @@
                                 <asp:TextBox runat="server" ID="txtDueDate" Enabled="false" dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" />
                             </ItemTemplate>
                         </asp:TemplateField>
-                        <asp:TemplateField>
-                            <ItemTemplate>
-                                <asp:LinkButton runat="server" ID="lbSaveAsPdf" OnClick="lbSaveAsPdf_Click" Text="Save As PDF" />
-                            </ItemTemplate>
-                        </asp:TemplateField>--%>
+                        <asp:BoundField DataField="" />
                     </Columns>
                 </asp:GridView>
             </ContentTemplate>

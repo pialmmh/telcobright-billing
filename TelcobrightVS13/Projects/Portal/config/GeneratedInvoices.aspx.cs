@@ -67,6 +67,25 @@ namespace PortalApp.config
                 Dictionary<string, string> invoiceMap = JsonConvert.DeserializeObject<Dictionary<string, string>>(invoiceItem.JSON_DETAIL);
                 List<KeyValuePair<string, string>> sectionData = invoiceMap.Where(kv => kv.Key.StartsWith("Section-")).ToList();
 
+                // Invoice Date
+                TextBox txtInvoiceDate = (TextBox)e.Row.FindControl("txtInvoiceDate");
+                var dtInvoice = DataBinder.Eval(e.Row.DataItem, "INVOICE_DATE");
+                if (dtInvoice != null)
+                {
+                    DateTime invoiceDate = DateTime.Parse(dtInvoice.ToString());
+                    txtInvoiceDate.Text = ((DateTime)invoiceDate).ToString("yyyy-MM-dd HH:mm:ss");
+                }
+                else txtInvoiceDate.Text = string.Empty;
+                // Due Date
+                TextBox txtDueDate = (TextBox)e.Row.FindControl("txtDueDate");
+                var dtDue = DataBinder.Eval(e.Row.DataItem, "INVOICE_DATE");
+                if (dtDue != null)
+                {
+                    DateTime dueDate = DateTime.Parse(dtDue.ToString());
+                    txtDueDate.Text = ((DateTime)dueDate).ToString("yyyy-MM-dd HH:mm:ss");
+                }
+                else txtDueDate.Text = string.Empty;
+
                 int sectionNumber = 0;
                 foreach (KeyValuePair<string, string> item in sectionData)
                 {
@@ -76,42 +95,12 @@ namespace PortalApp.config
                     lb.Text = "Section " + sectionNumber;
                     lb.CommandName = item.Key;
                     lb.Click += ViewReportOnClick;
-                    e.Row.Cells[1].Controls.Add(lb);
+                    e.Row.Cells[4].Controls.Add(lb);
 
                     Label lbl = new Label();
                     lbl.Text = " ";
-                    e.Row.Cells[1].Controls.Add(lbl);
+                    e.Row.Cells[4].Controls.Add(lbl);
                 }
-
-
-                // Invoice type
-                /*
-                DropDownList ddlistInvoiceType = (DropDownList)e.Row.FindControl("ddlistInvoiceType");
-                foreach (var item in Enum.GetValues(typeof(InvoiceReportType)))
-                {
-                    ddlistInvoiceType.Items.Add(item.ToString());
-                }
-                string invoiceType = DataBinder.Eval(e.Row.DataItem, "INVOICE_TYPE_ID").ToString();
-                ddlistInvoiceType.SelectedValue = invoiceType;
-
-                // Partner
-                List<partner> allPartners = (List<partner>)this.Session["sesAllPartners"];
-                DropDownList ddlistPartner = (DropDownList)e.Row.FindControl("ddlistPartner");
-                ddlistPartner.DataSource = allPartners;
-                ddlistPartner.DataBind();
-                int idPartner = int.Parse(DataBinder.Eval(e.Row.DataItem, "PARTY_ID").ToString());
-                ddlistPartner.SelectedValue = idPartner.ToString();
-
-                // Invoice Date
-                TextBox txtInvoiceDate = (TextBox)e.Row.FindControl("txtInvoiceDate");
-                DateTime invoiceDate = DateTime.Parse(DataBinder.Eval(e.Row.DataItem, "INVOICE_DATE").ToString());
-                txtInvoiceDate.Text = invoiceDate.ToString("yyyy-MM-dd HH:mm:ss");
-
-                // Due Date
-                TextBox txtDueDate = (TextBox)e.Row.FindControl("txtDueDate");
-                DateTime dueDate = DateTime.Parse(DataBinder.Eval(e.Row.DataItem, "DUE_DATE").ToString());
-                txtDueDate.Text = dueDate.ToString("yyyy-MM-dd HH:mm:ss");
-                */
             }
         }
 

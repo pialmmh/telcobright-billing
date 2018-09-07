@@ -34,44 +34,49 @@ namespace ReportGenerator.Reports.InvoiceReports.IGW
         {
             invoice invoice = (invoice)data;
             List<InvoiceSectionDataRowForVoiceCall> invoiceBasicDatas = this.GetReportData(invoice);
+            invoice_item invoiceItem = invoice.invoice_item.Single();
+            Dictionary<string, string> invoiceMap = JsonConvert.DeserializeObject<Dictionary<string, string>>(invoiceItem.JSON_DETAIL);
             this.DataSource = invoiceBasicDatas;
 
-            /*
             #region Page Header
             xrLabelVatRegNo.Text = "VAT Reg. No. 18141080328";
-            xrLabelPartnerName.Text = invoice.Partner.PartnerName;
-            xrLabelPartnerVatRegNo.Text = invoice.Partner.VatRegNo;
-            xrLabelType.Text = string.Format("Type: {0}", invoice.Type);
+            xrLabelPartnerName.Text = invoiceMap["companyName"];
+            xrLabelPartnerVatRegNo.Text = invoiceMap["vatRegNo"];
+            xrLabelType.Text = string.Format("Type: {0}", invoiceMap["customerType"]);
 
-            xrLabelBillingPeriod.Text = string.Format("from {0:dd-MMM-yyyy} to {1:dd-MMM-yyyy}", invoice.BillingFrom, invoice.BillingTo);
-            xrLabelInvoiceDate.Text = string.Format("{0:dd-MMM-yyyy}", invoice.InvoiceDate);
-            xrLabelInvoiceNo.Text = invoice.InvoiceNo;
-            xrLabelCurrency.Text = invoice.Currency;
-            xrLabelTimeZone.Text = invoice.TimeZone;
+            xrLabelBillingPeriod.Text = invoiceMap["billingPeriod"];
+            xrLabelInvoiceDate.Text = string.Format("{0:dd-MMM-yyyy}", invoice.INVOICE_DATE);
+            xrLabelInvoiceNo.Text = invoice.REFERENCE_NUMBER;
+            xrLabelCurrency.Text = invoiceMap["uom"];
+            xrLabelTimeZone.Text = invoiceMap["timeZone"];
             #endregion
-            */
 
             #region Report Body
             xrTableCellReference.DataBindings.Add("Text", this.DataSource, "Reference");
-            xrTableCellOrigOperator.DataBindings.Add("Text", this.DataSource, "Description");
-            xrTableCellUnitsCallsUoM.DataBindings.Add("Text", this.DataSource, "UoM");
-            xrTableCellQuantity.DataBindings.Add("Text", this.DataSource, "Quantity", "{0:n2}");
+            xrTableCellOrigOperator.DataBindings.Add("Text", this.DataSource, "InPartnerName");
+            xrTableCellTotalCalls.DataBindings.Add("Text", this.DataSource, "TotalCalls", "{0:n0}");
+            xrTableCellQuantity.DataBindings.Add("Text", this.DataSource, "TotalMinutes", "{0:n2}");
             xrTableCellXAMOUNT.DataBindings.Add("Text", this.DataSource, "XAmount", "{0:n2}");
             xrTableCellYAMOUNT.DataBindings.Add("Text", this.DataSource, "YAmount", "{0:n2}");
             xrTableCellXYAMOUNT.DataBindings.Add("Text", this.DataSource, "XYAmount", "{0:n2}");
-            xrTableCellRevenue.DataBindings.Add("Text", this.DataSource, "Revenue", "{0:n2}");
+            xrTableCellRevenue.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
             xrTableCellAmount.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
 
-            xrTableCellRevenueTotal.DataBindings.Add("Text", this.DataSource, "Revenue", "{0:n2}");
+            xrTableCellRevenueTotal.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
             xrTableCellSubTotalAmount.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
             #endregion
         }
         private List<InvoiceSectionDataRowForVoiceCall> GetReportData(invoice invoice)
         {
+            invoice_item invoiceItem = invoice.invoice_item.Single();
             InvoiceSectionDataRetriever<InvoiceSectionDataRowForVoiceCall> sectionDataRetriever =
                 new InvoiceSectionDataRetriever<InvoiceSectionDataRowForVoiceCall>();
             List<InvoiceSectionDataRowForVoiceCall> sectionData =
                 sectionDataRetriever.GetSectionData(invoice, sectionNumber: 2);
+            foreach (InvoiceSectionDataRowForVoiceCall item in sectionData)
+            {
+                item.Reference = invoiceItem.PRODUCT_ID;
+            }
             return sectionData;
         }
 
