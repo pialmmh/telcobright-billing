@@ -164,6 +164,11 @@ namespace TelcobrightMediation
             this.sgIntlTransitVoice.SetChargingSummaryInSupplierDirection(chargeableSupp, newSummary);
         }
 
+        public void ValidateInvoiceGenerationParams(object validationInput)
+        {
+            
+        }
+
         public InvoiceGenerationInputData ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData)
         {
             throw new NotImplementedException();

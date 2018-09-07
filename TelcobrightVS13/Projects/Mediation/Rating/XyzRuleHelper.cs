@@ -194,12 +194,12 @@ namespace TelcobrightMediation
             else return this.UsdBcsCache.GetNearestEarlierDateTime(lastMonthsUsdbBcsDateTime);
         }
 
-        public static InvoiceGenerationInputData ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData,
-            XyzRatingType xyzRatingType)
+        public static void ValidateInvoiceGenerationParams(InvoiceGenerationValidatorInput validationInput, XyzRatingType xyzRatingType)
         {
             int idserviceGroup = xyzRatingType == XyzRatingType.Icx ? 2 : 5;
-            job telcobrightJob = invoiceGenerationInputData.TelcobrightJob;
-            Dictionary<string, string> jobParamsMap = invoiceGenerationInputData.InvoiceJsonDetail;
+            InvoiceGenerationValidatorInput input = (InvoiceGenerationValidatorInput)validationInput;
+            Dictionary<string, string> jobParamsMap =
+                JsonConvert.DeserializeObject<Dictionary<string, string>>(input.TelcobrightJob.JobParameter);
             DateTime startDate = Convert.ToDateTime(jobParamsMap["startDate"]);
             DateTime endDate = Convert.ToDateTime(jobParamsMap["endDate"]);
             if (startDate.Day != 1 || endDate.Day != DateTime.DaysInMonth(startDate.Year, startDate.Month)
@@ -208,7 +208,7 @@ namespace TelcobrightMediation
             {
                 throw new Exception("Start date & end date must be first & last day of a month.");
             }
-            var context = invoiceGenerationInputData.Context;
+            var context = input.Context;
             DateTime lastSecondOfPrevMonth = startDate.AddSeconds(-1);
             uom_conversion_dated usdConversionDated = context.uom_conversion_dated.Where(
                     c => c.PURPOSE_ENUM_ID == "EXTERNAL_CONVERSION"
@@ -225,6 +225,19 @@ namespace TelcobrightMediation
                 throw new Exception(
                     $"Usd rates for outgoing calls for this period must be {usdConversionDated.CONVERSION_FACTOR}");
             }
+        }
+        public static InvoiceGenerationInputData ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData,
+            XyzRatingType xyzRatingType)
+        {
+            Dictionary<string, string> jobParamsMap = invoiceGenerationInputData.InvoiceJsonDetail;
+            DateTime startDate = Convert.ToDateTime(jobParamsMap["startDate"]);
+            DateTime endDate = Convert.ToDateTime(jobParamsMap["endDate"]);
+            var context = invoiceGenerationInputData.Context;
+            DateTime lastSecondOfPrevMonth = startDate.AddSeconds(-1);
+            uom_conversion_dated usdConversionDated = context.uom_conversion_dated.Where(
+                    c => c.PURPOSE_ENUM_ID == "EXTERNAL_CONVERSION"
+                    && c.UOM_ID == "USD" && c.UOM_ID_TO == "BDT" && c.FROM_DATE == lastSecondOfPrevMonth).ToList()
+                    .FirstOrDefault();
             invoiceGenerationInputData.InvoiceJsonDetail = jobParamsMap;
             invoiceGenerationInputData.InvoiceJsonDetail.Add("usdRate",
                 usdConversionDated.CONVERSION_FACTOR.ToString());

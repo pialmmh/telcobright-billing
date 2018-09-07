@@ -83,9 +83,16 @@ namespace TelcobrightMediation
             newSummary.tax1 = Convert.ToDecimal(chargeableCust.TaxAmount1);//btrc rev share
         }
 
+        public void ValidateInvoiceGenerationParams(object validationInput)
+        {
+            InvoiceGenerationValidatorInput input = (InvoiceGenerationValidatorInput) validationInput;
+            XyzRuleHelper.ValidateInvoiceGenerationParams(input, XyzRatingType.Icx);
+        }
+
         public InvoiceGenerationInputData ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData)
         {
-            invoiceGenerationInputData= XyzRuleHelper.ExecInvoicePreProcessing(invoiceGenerationInputData,XyzRatingType.Icx);
+            invoiceGenerationInputData =
+                XyzRuleHelper.ExecInvoicePreProcessing(invoiceGenerationInputData, XyzRatingType.Icx);
             return invoiceGenerationInputData;
         }
 
