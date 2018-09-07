@@ -9,6 +9,7 @@ using TelcobrightMediation.Accounting;
 using MediationModel;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
+using TelcobrightMediation.Accounting.Invoice;
 using TelcobrightMediation.Cdr;
 
 namespace TelcobrightMediation
@@ -19,6 +20,7 @@ namespace TelcobrightMediation
         IServiceFamily Sf { get; set; }
         private UoMConvRateCache UsdBcsCache { get; }
         private XyzRatingType XyzRatingType { get; }
+
         public XyzRuleHelper(UoMConvRateCache usdBcsCache, PrefixMatcher prefixMatcher, IServiceFamily sf,
             XyzRatingType xyzRatingType)
         {
@@ -33,7 +35,8 @@ namespace TelcobrightMediation
             account postingAccount = null;
             AccountFactory accountFactory =
                 new AccountFactory(serviceContext.CdrProcessor.CdrJobContext.AccountingContext);
-            postingAccount = accountFactory.CreateOrGetBillable(0, serviceContext.ServiceGroupConfiguration.IdServiceGroup,
+            postingAccount = accountFactory.CreateOrGetBillable(0,
+                serviceContext.ServiceGroupConfiguration.IdServiceGroup,
                 Convert.ToInt32(newCdrExt.Cdr.InPartnerId),
                 serviceContext.ServiceFamily.Id, 0, idCurrencyUoM);
             return postingAccount;
@@ -108,30 +111,30 @@ namespace TelcobrightMediation
             {
                 var chargeable = new acc_chargeable()
                 {
-                    id =serviceContext.CdrProcessor.CdrJobContext.AccountingContext.AutoIncrementManager
-                            .GetNewCounter(AutoIncrementCounterType.acc_chargeable),
+                    id = serviceContext.CdrProcessor.CdrJobContext.AccountingContext.AutoIncrementManager
+                        .GetNewCounter(AutoIncrementCounterType.acc_chargeable),
                     uniqueBillId = thisCdr.UniqueBillId,
                     idEvent = Convert.ToInt64(thisCdr.IdCall),
                     transactionTime = callDate,
                     servicegroup = serviceContext.ServiceGroupConfiguration.IdServiceGroup,
-                    assignedDirection =1, //charged to customer, although does not have assigndir 
+                    assignedDirection = 1, //charged to customer, although does not have assigndir 
                     servicefamily = serviceContext.ServiceFamily.Id,
                     ProductId = matchedRateWithAssignmentTupleId.ProductId,
                     idBilledUom = "BDT",
                     idQuantityUom = "TF_s", //seconds
-                    BilledAmount = finalAmount,//invoiceAmount
+                    BilledAmount = finalAmount, //invoiceAmount
                     Quantity = finalDuration,
-                    OtherAmount1 = xAmountBdt,//xAmount
-                    OtherAmount2 = yAmountUsd,//yAmount
-                    OtherAmount3 = zAmount,//zAmount
+                    OtherAmount1 = xAmountBdt, //xAmount
+                    OtherAmount2 = yAmountUsd, //yAmount
+                    OtherAmount3 = zAmount, //zAmount
                     TaxAmount1 = btrcRevShareAmount,
                     unitPriceOrCharge = matchedRateWithAssignmentTupleId.rateamount,
                     Prefix = matchedRateWithAssignmentTupleId.Prefix,
                     RateId = matchedRateWithAssignmentTupleId.id,
                     glAccountId = postingAccount.id,
-                    OtherDecAmount1 = matchedRateWithAssignmentTupleId.rateamount,//xRate
-                    OtherDecAmount2 = matchedRateWithAssignmentTupleId.OtherAmount1,//yRate
-                    OtherDecAmount3 = thisCdr.UsdRateY,//usdRate
+                    OtherDecAmount1 = matchedRateWithAssignmentTupleId.rateamount, //xRate
+                    OtherDecAmount2 = matchedRateWithAssignmentTupleId.OtherAmount1, //yRate
+                    OtherDecAmount3 = thisCdr.UsdRateY, //usdRate
                     changedByJob = serviceContext.CdrProcessor.CdrJobContext.TelcobrightJob.id,
                     idBillingrule = billingRule.Id,
                 };
@@ -160,10 +163,11 @@ namespace TelcobrightMediation
             rateplanassignmenttuple idWiseRateplanAssignmenttuplesIncludingBillingRule = null;
             serviceContext.MefServiceFamilyContainer
                 .IdWiseRateplanAssignmenttuplesIncludingBillingRules
-                .TryGetValue(idRatePlanAssignmentTuple,out idWiseRateplanAssignmenttuplesIncludingBillingRule);
+                .TryGetValue(idRatePlanAssignmentTuple, out idWiseRateplanAssignmenttuplesIncludingBillingRule);
             if (idWiseRateplanAssignmenttuplesIncludingBillingRule == null)
             {
-                throw new Exception($@"Billing rule not found for service family={serviceContext.ServiceFamily.ToString()}");
+                throw new Exception(
+                    $@"Billing rule not found for service family={serviceContext.ServiceFamily.ToString()}");
             }
             int idbillingRule = Convert.ToInt32(idWiseRateplanAssignmenttuplesIncludingBillingRule
                 .billingruleassignment.idBillingRule);
@@ -194,10 +198,11 @@ namespace TelcobrightMediation
             else return this.UsdBcsCache.GetNearestEarlierDateTime(lastMonthsUsdbBcsDateTime);
         }
 
-        public static void ValidateInvoiceGenerationParams(InvoiceGenerationValidatorInput validationInput, XyzRatingType xyzRatingType)
+        public static void ValidateInvoiceGenerationParams(InvoiceGenerationValidatorInput validationInput,
+            XyzRatingType xyzRatingType)
         {
             int idserviceGroup = xyzRatingType == XyzRatingType.Icx ? 2 : 5;
-            InvoiceGenerationValidatorInput input = (InvoiceGenerationValidatorInput)validationInput;
+            InvoiceGenerationValidatorInput input = (InvoiceGenerationValidatorInput) validationInput;
             Dictionary<string, string> jobParamsMap =
                 JsonConvert.DeserializeObject<Dictionary<string, string>>(input.TelcobrightJob.JobParameter);
             DateTime startDate = Convert.ToDateTime(jobParamsMap["startDate"]);
@@ -226,104 +231,37 @@ namespace TelcobrightMediation
                     $"Usd rates for outgoing calls for this period must be {usdConversionDated.CONVERSION_FACTOR}");
             }
         }
-        public static InvoiceGenerationInputData ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData,
-            XyzRatingType xyzRatingType)
+
+        public static InvoiceGenerationInputData ExecInvoicePreProcessing(
+            InvoiceGenerationInputData invoiceGenerationInputData)
         {
             Dictionary<string, string> jobParamsMap = invoiceGenerationInputData.InvoiceJsonDetail;
             DateTime startDate = Convert.ToDateTime(jobParamsMap["startDate"]);
-            DateTime endDate = Convert.ToDateTime(jobParamsMap["endDate"]);
             var context = invoiceGenerationInputData.Context;
             DateTime lastSecondOfPrevMonth = startDate.AddSeconds(-1);
             uom_conversion_dated usdConversionDated = context.uom_conversion_dated.Where(
                     c => c.PURPOSE_ENUM_ID == "EXTERNAL_CONVERSION"
-                    && c.UOM_ID == "USD" && c.UOM_ID_TO == "BDT" && c.FROM_DATE == lastSecondOfPrevMonth).ToList()
-                    .FirstOrDefault();
+                         && c.UOM_ID == "USD" && c.UOM_ID_TO == "BDT" && c.FROM_DATE == lastSecondOfPrevMonth).ToList()
+                .FirstOrDefault();
+            if (usdConversionDated == null)
+                throw new Exception("Usd conversion rate not found.");
             invoiceGenerationInputData.InvoiceJsonDetail = jobParamsMap;
             invoiceGenerationInputData.InvoiceJsonDetail.Add("usdRate",
                 usdConversionDated.CONVERSION_FACTOR.ToString());
             return invoiceGenerationInputData;
         }
 
-        public static InvoicePostProcessingData ExecInvoicePostProcessing(InvoicePostProcessingData invoicePostProcessingData)
+        public static InvoicePostProcessingData ExecInvoicePostProcessing(
+            InvoicePostProcessingData invoicePostProcessingData)
         {
-            invoice invoiceWithItem = invoicePostProcessingData.Invoice;
-            invoice_item invoiceItem = invoiceWithItem.invoice_item.Single();
-            Dictionary<string, string> jsonDetail = JsonConvert.DeserializeObject<Dictionary<string,string>>
-                                                    (invoiceItem.JSON_DETAIL);
-            Action<InvoiceSection> sectionAdder = section =>
-            {
-                jsonDetail.Add(section.SectionName + ", " + "Template-" + section.TemplateName, section.SerializedData);
-            };
-            InvoiceSection invoiceSection1 = GetInvoiceSection1(invoicePostProcessingData);
-            sectionAdder.Invoke(invoiceSection1);
-            InvoiceSection invoiceSection2 = GetInvoiceSection2(invoicePostProcessingData);
-            sectionAdder.Invoke(invoiceSection2);
-            InvoiceSection invoiceSection3 = GetInvoiceSection3(invoicePostProcessingData);
-            sectionAdder.Invoke(invoiceSection3);
-            invoiceItem.JSON_DETAIL = JsonConvert.SerializeObject(jsonDetail);
-            return invoicePostProcessingData;
-        }
-        private static InvoiceSection
-            GetInvoiceSection1(InvoicePostProcessingData invoicePostProcessingData)
-        {
-            InvoiceSectionCreator<InvoiceSectionDataRowForVoiceCall>
-                invoiceSectionCreator = new InvoiceSectionCreator<InvoiceSectionDataRowForVoiceCall>(
-                    invoicePostProcessingData: invoicePostProcessingData, sectionNumber: 1,
-                    templateName: "InternationalOutgoingToANS");
-            string sql = $@"select                                                         
-                       sum(successfulcalls 	)	as TotalCalls,    
-                       sum(roundedduration   )/60  as TotalMinutes,   
-                       sum(longDecimalAmount1)  as XAmount,
-                       sum(longDecimalAmount2)  as YAmount,
-                       sum(longDecimalAmount3)  as XYAmount,
-                       sum(customercost      )  as Amount      
-                       from sum_voice_day_02                          
-                       where {invoiceSectionCreator.GetWhereClauseForDateRange()};";
-            return invoiceSectionCreator.CreateInvoiceSection(sql);
-        }
-        private static InvoiceSection
-            GetInvoiceSection2(InvoicePostProcessingData invoicePostProcessingData)
-        {
-            InvoiceSectionCreator<InvoiceSectionDataRowForVoiceCall>
-                invoiceSectionCreator = new InvoiceSectionCreator<InvoiceSectionDataRowForVoiceCall>(
-                    invoicePostProcessingData: invoicePostProcessingData, sectionNumber: 2,
-                    templateName: "InternationalOutgoingToANSDetails1");
-            string sql=$@"select p.partnername as OutPartnerName,x.TotalCalls,x.TotalMinutes,x.XAmount,
-                       x.YAmount,x.XYAmount,x.Revenue from
-                       (select                                                         
-                       tup_outpartnerid,
-                       sum(successfulcalls 	)	as TotalCalls,    
-                       sum(roundedduration   )/60  as TotalMinutes,   
-                       sum(longDecimalAmount1)  as XAmount,
-                       sum(longDecimalAmount2)  as YAmount,
-                       sum(longDecimalAmount3)  as XYAmount,
-                       sum(customercost      )  as Revenue      
-                       from sum_voice_day_02                          
-                       where {invoiceSectionCreator.GetWhereClauseForDateRange()}
-                       group by tup_outpartnerid) x                     
-                       left join partner p
-                       on x.tup_outpartnerid=p.idpartner;";
-            return invoiceSectionCreator.CreateInvoiceSection(sql);
-        }
-        private static InvoiceSection
-            GetInvoiceSection3(InvoicePostProcessingData invoicePostProcessingData)
-        {
-            InvoiceSectionCreator<InvoiceSectionDataRowForVoiceCall>
-                invoiceSectionCreator = new InvoiceSectionCreator<InvoiceSectionDataRowForVoiceCall>(
-                    invoicePostProcessingData: invoicePostProcessingData, sectionNumber: 3,
-                    templateName: "InternationalOutgoingToANSDetails2");
-            string sql=$@"select                                                         
-                          tup_starttime as `Date`,
-                          sum(successfulcalls 	)	as TotalCalls,    
-                          sum(roundedduration   )/60  as TotalMinutes,   
-                          sum(longDecimalAmount1)  as XAmount,
-                          sum(longDecimalAmount2)  as YAmount,
-                          sum(longDecimalAmount3)  as XYAmount,
-                          sum(customercost      )  as Revenue      
-                          from sum_voice_day_02                          
-                          where {invoiceSectionCreator.GetWhereClauseForDateRange()}
-                          group by tup_starttime;";
-            return invoiceSectionCreator.CreateInvoiceSection(sql);
+            invoice_item invoiceItem = invoicePostProcessingData.InvoiceItem;
+            Dictionary<string, string> jsonDetail = JsonConvert.DeserializeObject<Dictionary<string, string>>
+                (invoiceItem.JSON_DETAIL);
+            int idServiceGroup = Convert.ToInt32(jsonDetail["idServiceGroup"]);
+            string cdrOrSummarytableName = $"sum_voice_day_0{idServiceGroup}";
+            CommonInvoicePostProcessor commonInvoicePostProcessor
+                = new CommonInvoicePostProcessor(invoicePostProcessingData, cdrOrSummarytableName, jsonDetail);
+            return commonInvoicePostProcessor.Process();
         }
     }
 }

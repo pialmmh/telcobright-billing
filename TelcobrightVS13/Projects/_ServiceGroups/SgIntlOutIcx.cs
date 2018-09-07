@@ -7,7 +7,7 @@ using LibraryExtensions;
 using Newtonsoft.Json;
 using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Cdr;
-using TransactionTuple = System.ValueTuple<int, int, long, int,long>;
+using TransactionTuple = System.ValueTuple<int, int, long, int, long>;
 
 namespace TelcobrightMediation
 {
@@ -21,7 +21,7 @@ namespace TelcobrightMediation
         public string HelpText => "Service group International Outgoing for BD ICX.";
         public int Id => 2;
         private Dictionary<CdrSummaryType, Type> SummaryTargetTables { get; }
-        private List<ICdrRule> CdrRules { get; set; }=new List<ICdrRule>();
+        private List<ICdrRule> CdrRules { get; set; } = new List<ICdrRule>();
         public SgIntlOutIcx() //constructor
         {
             this.SummaryTargetTables = new Dictionary<CdrSummaryType, Type>()
@@ -38,7 +38,7 @@ namespace TelcobrightMediation
 
         public void ExecutePostRatingActions(CdrExt cdrExt, object postRatingData)
         {
-            
+
         }
 
         public void SetAdditionalParams(Dictionary<string, object> additionalParams)
@@ -49,7 +49,7 @@ namespace TelcobrightMediation
 
         public void Execute(cdr thisCdr, CdrProcessor cdrProcessor)
         {
-            
+
             foreach (ICdrRule cdrRule in this.CdrRules)
             {
                 if (cdrRule.CheckIfTrue(thisCdr))
@@ -85,21 +85,19 @@ namespace TelcobrightMediation
 
         public void ValidateInvoiceGenerationParams(object validationInput)
         {
-            InvoiceGenerationValidatorInput input = (InvoiceGenerationValidatorInput) validationInput;
+            InvoiceGenerationValidatorInput input = (InvoiceGenerationValidatorInput)validationInput;
             XyzRuleHelper.ValidateInvoiceGenerationParams(input, XyzRatingType.Icx);
         }
 
-        public InvoiceGenerationInputData ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData)
+        public InvoiceGenerationInputData ExecInvoicePreProcessing(
+            InvoiceGenerationInputData invoiceGenerationInputData)
         {
-            invoiceGenerationInputData =
-                XyzRuleHelper.ExecInvoicePreProcessing(invoiceGenerationInputData, XyzRatingType.Icx);
-            return invoiceGenerationInputData;
+            return XyzRuleHelper.ExecInvoicePreProcessing(invoiceGenerationInputData);
         }
 
         public InvoicePostProcessingData ExecInvoicePostProcessing(InvoicePostProcessingData invoicePostProcessingData)
         {
-            invoicePostProcessingData = XyzRuleHelper.ExecInvoicePostProcessing(invoicePostProcessingData);
-            return invoicePostProcessingData;
+            return XyzRuleHelper.ExecInvoicePostProcessing(invoicePostProcessingData);
         }
     }
 }

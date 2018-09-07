@@ -118,6 +118,8 @@
     <Compile Include="Accounting\IAutomationAction.cs" />
     <Compile Include="Accounting\IAccountCreator.cs" />
     <Compile Include="Accounting\IBillingRule.cs" />
+    <Compile Include="Accounting\Invoice\AbstractInvoiceSectionGenerator.cs" />
+    <Compile Include="Accounting\Invoice\CommonInvoicePostProcessor.cs" />
     <Compile Include="Accounting\Invoice\IInvoiceSectionGenerator.cs" />
     <Compile Include="Accounting\Invoice\InvoiceableTransactionCollector.cs" />
     <Compile Include="Accounting\Invoice\InvoiceGenerationValidatorInput.cs" />
@@ -125,7 +127,9 @@
     <Compile Include="Accounting\Invoice\InvoiceGenerationInputData.cs" />
     <Compile Include="Accounting\Invoice\InvoiceGenerationHelper.cs" />
     <Compile Include="Accounting\Invoice\InvoicePostProcessingData.cs" />
+    <Compile Include="Accounting\Invoice\InvoiceGenerationConfig.cs" />
     <Compile Include="Accounting\Invoice\InvoiceSectionCreator.cs" />
+    <Compile Include="Accounting\Invoice\InvoiceSectionDataPopulator.cs" />
     <Compile Include="Accounting\Invoice\InvoiceSectionDataRetriever.cs" />
     <Compile Include="Accounting\Invoice\InvoiceSectionGeneratorData.cs" />
     <Compile Include="Accounting\ITimeRangeImplementer.cs" />
@@ -157,6 +161,7 @@
     <Compile Include="MefData\Composers\MefGenericAssignmentFactoryComposer.cs" />
     <Compile Include="MefData\Composers\MefJobComposer.cs" />
     <Compile Include="MefData\Composers\MefNerCalculationRuleComposer.cs" />
+    <Compile Include="MefData\Composers\GenericMefComposer.cs" />
     <Compile Include="MefData\Composers\PartnerRuleComposer.cs" />
     <Compile Include="MefData\Composers\RouteDisplayClassComposer.cs" />
     <Compile Include="MefData\Composers\InvoiceTemplateComposer.cs" />
@@ -260,11 +265,10 @@
     <Compile Include="Mediation\RateContainerInMemoryLocal.cs" />
     <Compile Include="Mediation\RateDictionaryGeneratorByTuples.cs" />
     <Compile Include="MefData\ICdrRule.cs" />
-    <Compile Include="Rating\A2zInvoiceGenerationHelper.cs" />
     <Compile Include="Accounting\Invoice\IInvoiceTemplate.cs" />
     <Compile Include="Accounting\Invoice\InvoiceCommonData.cs" />
     <Compile Include="Rating\PartnerEx.cs" />
-    <Compile Include="Accounting\Invoice\InvoiceSectionDataRowForVoiceCall.cs" />
+    <Compile Include="Accounting\Invoice\InvoiceSectionDataRowForA2ZVoice.cs" />
     <Compile Include="Accounting\Invoice\InvoiceSection.cs" />
     <Compile Include="SegmentedJobHelper\IJobSegmentPostProcessor.cs" />
     <Compile Include="SegmentedJobHelper\RowIdVsDate.cs" />

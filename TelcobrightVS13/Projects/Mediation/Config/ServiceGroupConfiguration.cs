@@ -11,7 +11,7 @@ namespace TelcobrightMediation
         public List<IValidationRule<cdr>> MediationChecklistForAnsweredCdrs { get; set; }
         public int IdServiceGroup { get; }
         public Dictionary<string, string> Params { get; set; }=new Dictionary<string, string>();
-        public string InvoiceGenerationRuleName { get; set; }
+        public InvoiceGenerationConfig InvoiceGenerationConfig { get; set; }
         public List<IAutomationAction> AccountActions { get; set; }
         public ServiceGroupConfiguration(int idServiceGroup)
         {

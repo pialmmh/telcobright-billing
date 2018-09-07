@@ -81,7 +81,8 @@ namespace TelcobrightMediation.Accounting
             this.InvoiceGenerationInputData.Tbc.CdrSetting.ServiceGroupConfigurations.TryGetValue(this.Account.serviceGroup,
                 out serviceGroupConfiguration);
             if (serviceGroupConfiguration == null) throw new Exception("serviceGroupConfiguration cannot be null.");
-            string configuredInvoiceGenerationRuleName = serviceGroupConfiguration.InvoiceGenerationRuleName;
+            string configuredInvoiceGenerationRuleName = serviceGroupConfiguration
+                .InvoiceGenerationConfig.InvoiceGenerationRuleName;
             IInvoiceGenerationRule invoiceGenerationRule =
                 invoiceGenerationInputData.InvoiceGenerationRules[configuredInvoiceGenerationRuleName];
             return invoiceGenerationRule;

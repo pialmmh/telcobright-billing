@@ -2,8 +2,11 @@
 using System;
 using MediationModel;
 using System.Collections.Generic;
+using System.Linq;
 using LibraryExtensions;
+using Newtonsoft.Json;
 using TelcobrightMediation.Accounting;
+using TelcobrightMediation.Accounting.Invoice;
 using TelcobrightMediation.Cdr;
 using TransactionTuple = System.ValueTuple<int, int, long, int, long>;
 
@@ -170,12 +173,19 @@ namespace TelcobrightMediation
 
         public InvoiceGenerationInputData ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData)
         {
-            throw new NotImplementedException();
+            return invoiceGenerationInputData;
         }
 
         public InvoicePostProcessingData ExecInvoicePostProcessing(InvoicePostProcessingData invoicePostProcessingData)
         {
-            throw new NotImplementedException();
+            invoice_item invoiceItem = invoicePostProcessingData.InvoiceItem;
+            Dictionary<string, string> jsonDetail = JsonConvert.DeserializeObject<Dictionary<string, string>>
+                (invoiceItem.JSON_DETAIL);
+            string cdrOrSummarytableName = this.SummaryTargetTables.Single(t => t.Key.ToString().Contains("day"))
+                .Key.ToString();
+            CommonInvoicePostProcessor commonInvoicePostProcessor
+                = new CommonInvoicePostProcessor(invoicePostProcessingData, cdrOrSummarytableName, jsonDetail);
+            return commonInvoicePostProcessor.Process();
         }
     }
 }

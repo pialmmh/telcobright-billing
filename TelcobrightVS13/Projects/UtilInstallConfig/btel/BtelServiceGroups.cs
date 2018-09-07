@@ -53,7 +53,16 @@ namespace InstallConfig
                             new AnsIdTermGt0(),
                             new RoundedDurationGt0(){Data = .09M},
                          },
-                    InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary", 
+                    InvoiceGenerationConfig = new InvoiceGenerationConfig()
+                    {
+                        InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary",
+                        SectionGeneratorVsTemplateNames = new Dictionary<string, string>()
+                        {
+                            {"A2ZInvoiceSection1Generator","InternationalIncomingToForeignCarrier" },
+                            {"A2ZInvoiceSection2Generator","InternationalIncomingToForeignCarrierDetails1" },
+                            {"A2ZInvoiceSection3Generator","InternationalIncomingToForeignCarrierDetails2" }
+                        }
+                    },
                     AccountActions = new List<IAutomationAction>
                     {
                         new SendAlertEmailAccountAction(),
@@ -92,7 +101,16 @@ namespace InstallConfig
                             new YAmountGt0() {Data = .1M},
                             new RoundedDurationGt0() {Data = .1M}
                         },
-                    InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary"
+                    InvoiceGenerationConfig = new InvoiceGenerationConfig()
+                    {
+                        InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary",
+                        SectionGeneratorVsTemplateNames = new Dictionary<string, string>()
+                        {
+                            {"XyzSection1GeneratorIgw","InternationalOutgoingToIOS" },
+                            {"XyzSection2GeneratorIgw","InternationalOutgoingToIOSDetails1" },
+                            {"XyzSection3GeneratorIgw","InternationalOutgoingToIOSDetails2" }
+                        }
+                    }
                 }
             };
             return serviceGroupConfigurations.ToDictionary(s => s.IdServiceGroup);

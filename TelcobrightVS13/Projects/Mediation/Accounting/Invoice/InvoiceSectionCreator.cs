@@ -26,11 +26,6 @@ namespace TelcobrightMediation
             this.SectionName = "Section-" + sectionNumber.ToString();
             this.TemplateName = templateName;
         }
-        public string GetWhereClauseForDateRange()
-        {
-            return $@"tup_starttime>= {this.StartDate.ToMySqlFormatWithQuote()}
-                    and tup_starttime < {this.EndDate.ToMySqlFormatWithQuote()}";
-        }
         public InvoiceSection CreateInvoiceSection(string sql)
         {
             List<T> data = this.Context.Database.SqlQuery<T>(sql).ToList();

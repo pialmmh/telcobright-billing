@@ -61,8 +61,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="A2ZInvoiceSectionStd1Genarator.cs" />
+    <Compile Include="TollFreeInvoiceSection3Generator.cs" />
+    <Compile Include="TollFreeInvoiceSection2Generator.cs" />
+    <Compile Include="TollFreeInvoiceSection1Generator.cs" />
+    <Compile Include="XyzSection1GeneratorIgw.cs" />
+    <Compile Include="XyzSection2GeneratorIgw.cs" />
+    <Compile Include="XyzSection2Generator.cs" />
+    <Compile Include="XyzSection1Generator.cs" />
+    <Compile Include="A2ZInvoiceSection3Generator.cs" />
+    <Compile Include="A2ZInvoiceSection2Generator.cs" />
+    <Compile Include="A2ZInvoiceSection1Generator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="XyzSection3GeneratorIgw.cs" />
+    <Compile Include="XyzSection3Generator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mediation\_00Mediation.csproj">

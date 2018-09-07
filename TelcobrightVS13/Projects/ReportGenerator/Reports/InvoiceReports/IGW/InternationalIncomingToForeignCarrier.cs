@@ -33,7 +33,7 @@ namespace ReportGenerator.Reports.InvoiceReports.IGW
         public void GenerateInvoice(object data)
         {
             invoice invoice = (invoice)data;
-            List<InvoiceSectionDataRowForVoiceCall> invoiceBasicDatas = this.GetReportData(invoice);
+            List<InvoiceSectionDataRowForA2ZVoice> invoiceBasicDatas = this.GetReportData(invoice);
             invoice_item invoiceItem = invoice.invoice_item.Single();
             Dictionary<string, string> invoiceMap = JsonConvert.DeserializeObject<Dictionary<string, string>>(invoiceItem.JSON_DETAIL);
             this.DataSource = invoiceBasicDatas;
@@ -85,14 +85,14 @@ namespace ReportGenerator.Reports.InvoiceReports.IGW
             #endregion
         }
 
-        private List<InvoiceSectionDataRowForVoiceCall> GetReportData(invoice invoice)
+        private List<InvoiceSectionDataRowForA2ZVoice> GetReportData(invoice invoice)
         {
             invoice_item invoiceItem = invoice.invoice_item.Single();
-            InvoiceSectionDataRetriever<InvoiceSectionDataRowForVoiceCall> sectionDataRetriever =
-                new InvoiceSectionDataRetriever<InvoiceSectionDataRowForVoiceCall>();
-            List<InvoiceSectionDataRowForVoiceCall> sectionData =
+            InvoiceSectionDataRetriever<InvoiceSectionDataRowForA2ZVoice> sectionDataRetriever =
+                new InvoiceSectionDataRetriever<InvoiceSectionDataRowForA2ZVoice>();
+            List<InvoiceSectionDataRowForA2ZVoice> sectionData =
                 sectionDataRetriever.GetSectionData(invoice, sectionNumber: 1);
-            foreach (InvoiceSectionDataRowForVoiceCall item in sectionData)
+            foreach (InvoiceSectionDataRowForA2ZVoice item in sectionData)
             {
                 item.Reference = invoiceItem.PRODUCT_ID;
             }

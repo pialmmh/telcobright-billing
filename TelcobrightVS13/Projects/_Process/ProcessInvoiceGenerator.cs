@@ -65,8 +65,12 @@ namespace Process
                                 {
                                     cmd.ExecuteCommandText("set autocommit=0;");
                                     InvoiceGenerationInputData invoiceGenerationInputData =
-                                        new InvoiceGenerationInputData(tbc, context, telcobrightJob);
+                                        new InvoiceGenerationInputData(tbc, context, telcobrightJob,
+                                            GetInvoiceGenerationConfigs(tbc), ComposeInvoiceGenerationRules(),
+                                            ComposeServiceGroups(), ComposeInvoiceSectionGenerators());
+
                                     mefInvoicingJob.Execute(invoiceGenerationInputData); //EXECUTE
+
                                     cmd.CommandText = $"update job set CompletionTime={DateTime.Now.ToMySqlField()}, " +
                                                       $"status=1, NoOfSteps=1," +
                                                       $"progress=1," +
@@ -110,6 +114,31 @@ namespace Process
             }
         }
 
+        private static Dictionary<int,InvoiceGenerationConfig> GetInvoiceGenerationConfigs(TelcobrightConfig tbc)
+        {
+            return tbc.CdrSetting.ServiceGroupConfigurations
+                .ToDictionary(kv => kv.Key, kv => kv.Value.InvoiceGenerationConfig);
+        }
+
+        private Dictionary<int, IServiceGroup> ComposeServiceGroups()
+        {
+            ServiceGroupComposer serviceGroupComposer = new ServiceGroupComposer();
+            serviceGroupComposer.Compose();
+            return serviceGroupComposer.ServiceGroups.ToDictionary(c => c.Id);
+        }
+        private Dictionary<string,IInvoiceGenerationRule> ComposeInvoiceGenerationRules()
+        {
+            InvoiceGenerationRuleComposer invoiceGenerationRuleComposer =
+                                                    new InvoiceGenerationRuleComposer();
+            invoiceGenerationRuleComposer.Compose();
+            return invoiceGenerationRuleComposer.InvoiceGenerationRules.ToDictionary(c => c.RuleName);
+        }
+        private Dictionary<string, IInvoiceSectionGenerator> ComposeInvoiceSectionGenerators()
+        {
+            InvoiceSectionGeneratorComposer composer = new InvoiceSectionGeneratorComposer();
+            composer.Compose();
+            return composer.InvoiceSectionGenerators.ToDictionary(c => c.RuleName);
+        }
         private static void PrintErrorMessageToConsole(ne ne, job telcobrightJob, Exception e)
         {
             Console.WriteLine("xxxErrorxxx Processing CdrJob for Switch:" +

@@ -14,6 +14,7 @@ using LibraryExtensions;
 using LibraryExtensions.ConfigHelper;
 using MediationModel;
 using QuartzTelcobright;
+using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Config;
 
 namespace InstallConfig
@@ -49,7 +50,16 @@ namespace InstallConfig
                         new OutPartnerCostGt0() {Data = .09M},
                         new BtrcRevShareTax1Gt0() {Data = .09M},
                      },
-                InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary"
+                InvoiceGenerationConfig = new InvoiceGenerationConfig()
+                {
+                    InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary",
+                    SectionGeneratorVsTemplateNames = new Dictionary<string, string>()
+                    {
+                        {"TollFreeInvoiceSection1Generator","LTFSToIPTSP" },
+                        {"TollFreeInvoiceSection2Generator","LTFSToIPTSPDetails1" },
+                        {"TollFreeInvoiceSection3Generator","LTFSToIPTSPDetails2" }
+                    }
+                }
             });
 
             serviceGroupConfigurations.Add(new ServiceGroupConfiguration(idServiceGroup: 2) //intlOutIgw
@@ -81,7 +91,16 @@ namespace InstallConfig
                         new YAmountGt0(){Data = .1M},
                         new RoundedDurationGt0(){Data = .1M}
                     },
-                InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary"
+                InvoiceGenerationConfig = new InvoiceGenerationConfig()
+                {
+                    InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary",
+                    SectionGeneratorVsTemplateNames = new Dictionary<string, string>()
+                    {
+                        {"XyzSection1Generator","InternationalOutgoingToANS" },
+                        {"XyzSection2Generator","InternationalOutgoingToANSDetails1" },
+                        {"XyzSection3Generator","InternationalOutgoingToANSDetails2" }
+                    }
+                }
             });
 
             serviceGroupConfigurations.Add(new ServiceGroupConfiguration(idServiceGroup: 1) //domestic
@@ -108,7 +127,16 @@ namespace InstallConfig
                         new InPartnerCostGt0() {Data = .09M},
                         new BtrcRevShareTax1Gt0(){Data = .09M},
                      },
-                InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary"
+                InvoiceGenerationConfig = new InvoiceGenerationConfig()
+                {
+                    InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary",
+                    SectionGeneratorVsTemplateNames = new Dictionary<string, string>()
+                    {
+                        {"A2ZInvoiceSection1Generator","DomesticToANS" },
+                        {"A2ZInvoiceSection2Generator","DomesticToANSDetails1" },
+                        {"A2ZInvoiceSection3Generator","DomesticToANSDetails2" }
+                    }
+                }
             });
             serviceGroupConfigurations.Add(
                 new ServiceGroupConfiguration(idServiceGroup: 3) //intlInIcx
@@ -135,7 +163,16 @@ namespace InstallConfig
                             new InPartnerCostGt0() {Data = .09M},
                             new BtrcRevShareTax1Gt0() {Data = .09M},
                         },
-                    InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary"
+                    InvoiceGenerationConfig = new InvoiceGenerationConfig()
+                    {
+                        InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary",
+                        SectionGeneratorVsTemplateNames = new Dictionary<string, string>()
+                        {
+                            {"A2ZInvoiceSection1Generator","InternationalToIOS" },
+                            {"A2ZInvoiceSection2Generator","InternationalToIOSDetails1" },
+                            {"A2ZInvoiceSection3Generator","InternationalToIOSDetails2" }
+                        }
+                    }
                 });
             return serviceGroupConfigurations.ToDictionary(s => s.IdServiceGroup);
         }
