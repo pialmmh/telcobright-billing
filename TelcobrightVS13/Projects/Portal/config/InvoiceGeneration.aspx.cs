@@ -118,6 +118,12 @@ namespace PortalApp.config
                     BindingList<InvoiceGenRowDataCollector> invoiceGenerations =
                         new BindingList<InvoiceGenRowDataCollector>(summaryForInvoiceGenerations.OrderBy(x => x.PartnerName)
                             .ThenBy(x => x.ServiceAccountAlias).ToList());
+
+                    // show current balance
+                    foreach (InvoiceGenRowDataCollector item in invoiceGenerations)
+                    {
+                        item.Amount = allAccounts.First(x => x.id == item.AccountId).getCurrentBalanceWithTempTransaction();
+                    }
                     this.Session["igInvoiceGenList"] = invoiceGenerations;
                     gvInvoice.DataSource = invoiceGenerations;
                     gvInvoice.DataBind();

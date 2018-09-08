@@ -24,6 +24,9 @@
                     <Columns>
                         <asp:boundfield datafield="PartnerName" headertext="Partner"/>
                         <asp:boundfield datafield="ServiceAccountAlias" headertext="Service Account"/>
+                        <asp:boundfield datafield="Amount" headertext="Balance" DataFormatString="{0:n2}">
+                            <ItemStyle HorizontalAlign="Right" />
+                        </asp:boundfield>
                         <asp:TemplateField HeaderText="Time Zone" SortExpression="TimeZone" ItemStyle-Wrap="false">
                             <ItemTemplate>
                                 <asp:DropDownList ID="ddlistTimeZone" runat="server" AutoPostBack="true" Enabled="True" Width="280px"
@@ -44,9 +47,6 @@
                                     dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" OnTextChanged="txtEndDate_TextChanged"/>
                             </ItemTemplate>
                         </asp:TemplateField>
-                        <asp:boundfield datafield="Amount" headertext="Amount" DataFormatString="{0:n2}">
-                            <ItemStyle HorizontalAlign="Right" />
-                        </asp:boundfield>
                         <asp:TemplateField>
                             <ItemTemplate>
                                 <asp:CheckBox runat="server" id="cbSelect" Checked="False"/>
