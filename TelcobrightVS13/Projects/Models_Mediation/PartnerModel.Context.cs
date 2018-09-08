@@ -105,6 +105,7 @@ namespace MediationModel
         public virtual DbSet<lcrpoint> lcrpoints { get; set; }
         public virtual DbSet<lcrrateplan> lcrrateplans { get; set; }
         public virtual DbSet<ledger_summary_meta> ledger_summary_meta { get; set; }
+        public virtual DbSet<login_history> login_history { get; set; }
         public virtual DbSet<ne> nes { get; set; }
         public virtual DbSet<partner> partners { get; set; }
         public virtual DbSet<partnerprefix> partnerprefixes { get; set; }

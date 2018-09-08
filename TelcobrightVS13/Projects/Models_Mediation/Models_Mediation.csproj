@@ -485,6 +485,9 @@
     <Compile Include="ledger_summary_meta.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="login_history.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="mockcdr.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>

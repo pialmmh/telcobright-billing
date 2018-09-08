@@ -1487,7 +1487,7 @@ warning 6002: The table/view 'def.platinum.cdrpartialreference' does not have a 
           <Property Name="OVERRIDE_GL_ACCOUNT_ID" Type="varchar" MaxLength="20" />
           <Property Name="OVERRIDE_ORG_PARTY_ID" Type="varchar" MaxLength="20" />
           <Property Name="INVENTORY_ITEM_ID" Type="varchar" MaxLength="20" />
-          <Property Name="PRODUCT_ID" Type="varchar" MaxLength="20" />
+          <Property Name="PRODUCT_ID" Type="varchar" MaxLength="200" />
           <Property Name="PRODUCT_FEATURE_ID" Type="varchar" MaxLength="20" />
           <Property Name="PARENT_INVOICE_ID" Type="varchar" MaxLength="20" />
           <Property Name="PARENT_INVOICE_ITEM_SEQ_ID" Type="varchar" MaxLength="20" />
@@ -1596,6 +1596,15 @@ warning 6002: The table/view 'def.platinum.cdrpartialreference' does not have a 
           <Property Name="id" Type="int" Nullable="false" />
           <Property Name="totalInsertedAmount" Type="decimal" Precision="24" Scale="8" Nullable="false" />
           <Property Name="totalDeletedAmount" Type="decimal" Precision="24" Scale="8" Nullable="false" />
+        </EntityType>
+        <EntityType Name="login_history">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="username" Type="varchar" MaxLength="256" />
+          <Property Name="remote_ip" Type="varchar" MaxLength="45" />
+          <Property Name="login_time" Type="datetime" Precision="0" StoreGeneratedPattern="Identity" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'def.platinum.mockcdr' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -4173,6 +4182,7 @@ warning 6002: The table/view 'def.platinum.uom_conversion' does not have a prima
           <EntitySet Name="lcrpoint" EntityType="Self.lcrpoint" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="lcrrateplan" EntityType="Self.lcrrateplan" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="ledger_summary_meta" EntityType="Self.ledger_summary_meta" Schema="platinum" store:Type="Tables" />
+          <EntitySet Name="login_history" EntityType="Self.login_history" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="ne" EntityType="Self.ne" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="partner" EntityType="Self.partner" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="partnerprefix" EntityType="Self.partnerprefix" Schema="platinum" store:Type="Tables" />
@@ -5972,6 +5982,7 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <EntitySet Name="lcrpoints" EntityType="MediationModel.lcrpoint" />
           <EntitySet Name="lcrrateplans" EntityType="MediationModel.lcrrateplan" />
           <EntitySet Name="ledger_summary_meta" EntityType="MediationModel.ledger_summary_meta" />
+          <EntitySet Name="login_history" EntityType="MediationModel.login_history" />
           <EntitySet Name="nes" EntityType="MediationModel.ne" />
           <EntitySet Name="partners" EntityType="MediationModel.partner" />
           <EntitySet Name="partnerprefixes" EntityType="MediationModel.partnerprefix" />
@@ -6850,7 +6861,7 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <Property Name="OVERRIDE_GL_ACCOUNT_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="OVERRIDE_ORG_PARTY_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="INVENTORY_ITEM_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="PRODUCT_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PRODUCT_ID" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="PRODUCT_FEATURE_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="PARENT_INVOICE_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="PARENT_INVOICE_ITEM_SEQ_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
@@ -6968,6 +6979,15 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <Property Name="id" Type="Int32" Nullable="false" />
           <Property Name="totalInsertedAmount" Type="Decimal" Nullable="false" />
           <Property Name="totalDeletedAmount" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="login_history">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="username" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
+          <Property Name="remote_ip" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="login_time" Type="DateTime" annotation:StoreGeneratedPattern="Identity" />
         </EntityType>
         <EntityType Name="ne">
           <Key>
@@ -11135,6 +11155,16 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
               <MappingFragment StoreEntitySet="ledger_summary_meta">
                 <ScalarProperty Name="totalDeletedAmount" ColumnName="totalDeletedAmount" />
                 <ScalarProperty Name="totalInsertedAmount" ColumnName="totalInsertedAmount" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="login_history">
+            <EntityTypeMapping TypeName="MediationModel.login_history">
+              <MappingFragment StoreEntitySet="login_history">
+                <ScalarProperty Name="login_time" ColumnName="login_time" />
+                <ScalarProperty Name="remote_ip" ColumnName="remote_ip" />
+                <ScalarProperty Name="username" ColumnName="username" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
