@@ -405,6 +405,12 @@ public partial class ConfigPartner : System.Web.UI.Page
         TextBox thisTextBoxPost = (TextBox)frmPartnerInsert.FindControl("PostalCodeTextBox");
         TextBox thisTextBoxCountry = (TextBox)frmPartnerInsert.FindControl("CountryTextBox");
 
+        TextBox thisAlternateNameInvoiceTextBox = (TextBox)frmPartnerInsert.FindControl("AlternateNameInvoiceTextBox");
+        TextBox thisAlternateNameOtherTextBox = (TextBox)frmPartnerInsert.FindControl("AlternateNameOtherTextBox");
+        TextBox thisvatRegistrationNoTextBox = (TextBox)frmPartnerInsert.FindControl("vatRegistrationNoTextBox");
+        TextBox thisInvoiceAddressTextBox = (TextBox)frmPartnerInsert.FindControl("InvoiceAddressTextBox");
+
+
         DropDownList ddlPre = (DropDownList)frmPartnerInsert.FindControl("ddlistPrePostAdd");
         DropDownList ddlType = (DropDownList)frmPartnerInsert.FindControl("ddlistCustomerTypeAdd");
 
@@ -420,7 +426,11 @@ public partial class ConfigPartner : System.Web.UI.Page
         ",City" +
         ",State" +
         ",PostalCode" +
-        ", Country)" +
+        ", Country" +
+        ", AlternateNameInvoice" +
+        ", AlternateNameOther" +
+        ", invoiceAddress" +
+        ", vatRegistrationNo)" +
         " values( " +
         " '" + thisTextBoxName.Text + "'" +
         " ,'" + thisTextBoxTel.Text + "'" +
@@ -432,7 +442,11 @@ public partial class ConfigPartner : System.Web.UI.Page
         " ,'" + thisTextBoxCity.Text + "'" +
         " ,'" + thisTextBoxState.Text + "'" +
         " ,'" + thisTextBoxPost.Text + "'" +
-        " ,'" + thisTextBoxCountry.Text + "')";
+        " ,'" + thisTextBoxCountry.Text + "'" +
+        " ,'" + thisAlternateNameInvoiceTextBox.Text + "'" +
+        " ,'" + thisAlternateNameOtherTextBox.Text + "'" +
+        " ,'" + thisInvoiceAddressTextBox.Text + "'" +
+        " ,'" + thisvatRegistrationNoTextBox.Text + "')";
 
         using (MySqlConnection connection = new MySqlConnection())
         {
@@ -460,7 +474,11 @@ public partial class ConfigPartner : System.Web.UI.Page
         thisTextBoxState.Text = "";
         thisTextBoxPost.Text = "";
         thisTextBoxCountry.Text = "";
-        
+        thisAlternateNameInvoiceTextBox.Text = "";
+        thisAlternateNameOtherTextBox.Text = "";
+        thisInvoiceAddressTextBox.Text = "";
+        thisvatRegistrationNoTextBox.Text = "";
+
 
     }
     protected void frmPartnerInsert_ModeChanging(object sender, FormViewModeEventArgs e)

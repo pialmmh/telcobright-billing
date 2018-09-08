@@ -2,6 +2,7 @@
 using System.Web;
 using System.Web.UI;
 using Microsoft.AspNet.Identity.Owin;
+using MediationModel;
 
 namespace WebApplication1.Account
 {
@@ -35,6 +36,14 @@ namespace WebApplication1.Account
                 switch (result)
                 {
                     case SignInStatus.Success:
+                        using (PartnerEntities context = new PartnerEntities())
+                        {
+                            login_history history = new login_history();
+                            history.username = this.Email.Text;
+                            history.remote_ip = Request.UserHostAddress;
+                            context.login_history.Add(history);
+                            context.SaveChanges();
+                        }
                         IdentityHelper.RedirectToReturnUrl(this.Request.QueryString["ReturnUrl"], this.Response);
                         break;
                     case SignInStatus.LockedOut:

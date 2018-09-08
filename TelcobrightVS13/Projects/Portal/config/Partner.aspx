@@ -100,6 +100,13 @@
                     <div style="height: 7px;"></div>
                     <b> PartnerType:</b>
                     <div style="height: 5px;"></div>
+                    <b> Alternate Name (Invoice):</b>
+                    <div style="height: 5px;"></div>
+                    Alternate Name(Other):
+                    <div style="height: 5px;"></div>
+                    VAT Registration No:
+                    <div style="height: 5px;"></div>
+
                 </div>
                 <div style="text-align: left; float: left;">
 
@@ -133,6 +140,15 @@
                         DataSourceID="SqlDataPartnerTypeEdit" DataTextField="type" DataValueField="id"
                         Enabled="True" Width="173px">
                     </asp:DropDownList>
+                    <div style="height: 5px;"></div>
+                    <asp:TextBox ID="AlternateNameInvoiceTextBox" runat="server" Text="" />
+
+                    <div style="height: 5px;"></div>
+                    <asp:TextBox ID="AlternateNameOtherTextBox" runat="server" Text="" />
+
+                    <div style="height: 5px;"></div>
+                    <asp:TextBox ID="vatRegistrationNoTextBox" runat="server" Text="" />
+
                     <br />
 
 
@@ -163,6 +179,9 @@
                 <br />
                 Country:
                 <asp:TextBox ID="CountryTextBox" runat="server" Text="" />
+                <br />
+                InvoiceAddress:
+                <asp:TextBox ID="InvoiceAddressTextBox" runat="server" TextMode="MultiLine" Text="" />
                 <br />
                 
                 </div>

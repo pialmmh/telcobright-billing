@@ -19,16 +19,25 @@
                     <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
                     <RowStyle BackColor="white" ForeColor="#333333" />
                     <Columns>
+                         <asp:TemplateField>
+                            <ItemTemplate>
+                                <asp:LinkButton ID="LinkButtonEdit" CommandName="Edit"  runat="server">Edit</asp:LinkButton>
+                            </ItemTemplate>
+                            <EditItemTemplate>
+                                <asp:LinkButton ID="LinkButtonEdit"  CommandName="Update"  runat="server" CausesValidation="false" ValidationGroup="allcontrols">Update</asp:LinkButton>
+                                <asp:LinkButton ID="LinkButtonCancel"  CommandName="Cancel"  runat="server">Cancel</asp:LinkButton>
+                            </EditItemTemplate>
+                        </asp:TemplateField>
                         <asp:BoundField DataField="DESCRIPTION" HeaderText="Description" />
                         <asp:BoundField DataField="REFERENCE_NUMBER" HeaderText="Reference Number" />
                         <asp:TemplateField HeaderText="Invoice Date" SortExpression="INVOICE_DATE" ItemStyle-Wrap="false">
                             <ItemTemplate>
-                                <asp:TextBox runat="server" ID="txtInvoiceDate" Enabled="false" dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" />
+                                <asp:TextBox runat="server" ID="txtInvoiceDate" Enabled="false" dataformatstring="{0:yyyy-MM-dd}" />
                             </ItemTemplate>
                         </asp:TemplateField>
                         <asp:TemplateField HeaderText="Due Date" SortExpression="DUE_DATE" ItemStyle-Wrap="false">
                             <ItemTemplate>
-                                <asp:TextBox runat="server" ID="txtDueDate" Enabled="false" dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" />
+                                <asp:TextBox runat="server" ID="txtDueDate" Enabled="false" dataformatstring="{0:yyyy-MM-dd}" />
                             </ItemTemplate>
                         </asp:TemplateField>
                         <asp:BoundField DataField="" />
