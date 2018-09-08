@@ -33,11 +33,11 @@ namespace ReportGenerator.Reports.InvoiceReports.ICX
         public void GenerateInvoice(object data)
         {
             invoice invoice = (invoice)data;
-            List<InvoiceSectionDataRowForVoiceCall> invoiceBasicDatas = this.GetReportData(invoice);
+            List<InvoiceSectionDataRowForA2ZVoice> invoiceBasicDatas = this.GetReportData(invoice);
             invoice_item invoiceItem = invoice.invoice_item.Single();
             Dictionary<string, string> invoiceMap = JsonConvert.DeserializeObject<Dictionary<string, string>>(invoiceItem.JSON_DETAIL);
             this.DataSource = invoiceBasicDatas;
-
+            
             #region Page Header
             xrLabelVatRegNo.Text = "VAT Reg. No. 19061116647";
             xrLabelPartnerName.Text = invoiceMap["companyName"];
@@ -74,14 +74,14 @@ namespace ReportGenerator.Reports.InvoiceReports.ICX
             #endregion
         }
 
-        private List<InvoiceSectionDataRowForVoiceCall> GetReportData(invoice invoice)
+        private List<InvoiceSectionDataRowForA2ZVoice> GetReportData(invoice invoice)
         {
             invoice_item invoiceItem = invoice.invoice_item.Single();
-            InvoiceSectionDataRetriever<InvoiceSectionDataRowForVoiceCall> sectionDataRetriever =
-                new InvoiceSectionDataRetriever<InvoiceSectionDataRowForVoiceCall>();
-            List<InvoiceSectionDataRowForVoiceCall> sectionData =
+            InvoiceSectionDataRetriever<InvoiceSectionDataRowForA2ZVoice> sectionDataRetriever =
+                new InvoiceSectionDataRetriever<InvoiceSectionDataRowForA2ZVoice>();
+            List<InvoiceSectionDataRowForA2ZVoice> sectionData =
                 sectionDataRetriever.GetSectionData(invoice, sectionNumber: 1);
-            foreach (InvoiceSectionDataRowForVoiceCall item in sectionData)
+            foreach (InvoiceSectionDataRowForA2ZVoice item in sectionData)
             {
                 item.Reference = invoiceItem.PRODUCT_ID;
                 item.Description = "Call Carrying Charges";

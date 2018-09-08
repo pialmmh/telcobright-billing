@@ -246,6 +246,6 @@ ModelManifest.xml
 
 # Telcobright Extensions dll/conf
 **/Extensions/*.dll
-**/Extensions/InvoiceTemplates/*.dll
+**/InvoiceTemplates/*.dll
 **/*.conf
 **/InvoicePdfs/*.pdf

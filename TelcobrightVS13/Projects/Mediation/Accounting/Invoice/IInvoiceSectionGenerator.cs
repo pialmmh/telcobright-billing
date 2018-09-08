@@ -4,7 +4,7 @@ namespace TelcobrightMediation
 {
     public interface IInvoiceSectionGenerator
     {
-        string SectionType { get; }
+        string RuleName { get; }
         InvoiceSection GetInvoiceSection(InvoiceSectionGeneratorData invoiceSectionGeneratorData);
     }
 }

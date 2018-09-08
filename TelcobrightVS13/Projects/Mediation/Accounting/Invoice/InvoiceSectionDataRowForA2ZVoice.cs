@@ -2,7 +2,7 @@
 
 namespace TelcobrightMediation
 {
-    public class InvoiceSectionDataRowForVoiceCall
+    public class InvoiceSectionDataRowForA2ZVoice
     {
         public string InPartnerName { get; set; }
         public string OutPartnerName { get; set; }

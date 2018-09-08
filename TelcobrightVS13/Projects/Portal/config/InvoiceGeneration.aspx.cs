@@ -18,6 +18,7 @@ using TelcobrightMediation;
 using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Config;
 using Itenso.TimePeriod;
+using System.IO;
 namespace PortalApp.config
 {
     public partial class InvoiceGeneration : System.Web.UI.Page
@@ -54,7 +55,9 @@ namespace PortalApp.config
                             .ToList();
                     bool isAlreadyExists = false;
                     ServiceGroupComposer composer=new ServiceGroupComposer();
-                    composer.Compose();
+                    var dir=new DirectoryInfo(PageUtil.GetPortalBinPath());
+                    composer.ComposeFromPath(dir.Parent.GetDirectories().Single(d => d.Name == "Extensions")
+                        .FullName);
                     MefServiceGroups = composer.ServiceGroups.ToDictionary(s=>s.Id);
                     foreach (acc_ledger_summary ledgerSummary in accLedgerSummaries)
                     {

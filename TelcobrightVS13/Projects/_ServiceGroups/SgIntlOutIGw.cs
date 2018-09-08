@@ -169,14 +169,15 @@ namespace TelcobrightMediation
             
         }
 
-        public InvoiceGenerationInputData ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData)
+        public InvoiceGenerationInputData ExecInvoicePreProcessing(
+            InvoiceGenerationInputData invoiceGenerationInputData)
         {
-            throw new NotImplementedException();
+            return XyzRuleHelper.ExecInvoicePreProcessing(invoiceGenerationInputData);
         }
 
         public InvoicePostProcessingData ExecInvoicePostProcessing(InvoicePostProcessingData invoicePostProcessingData)
         {
-            throw new NotImplementedException();
+            return XyzRuleHelper.ExecInvoicePostProcessing(invoicePostProcessingData);
         }
     }
 }
