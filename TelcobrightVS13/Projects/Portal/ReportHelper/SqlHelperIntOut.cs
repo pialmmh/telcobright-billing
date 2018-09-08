@@ -75,7 +75,7 @@ namespace PortalApp.ReportHelper
                 SUM(longDecimalAmount3) AS Z,
                 SUM(customercost) AS revenueigwout,
                 Sum(tax1) AS partnercost,
-                suppliercost,
+                Sum(suppliercost) suppliercost,
                 tup_matchedprefixsupplier AS SupplierPrefix,
                 tup_customerrate as XRate, 
                 tup_supplierrate as YRate, 

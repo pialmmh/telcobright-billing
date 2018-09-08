@@ -130,5 +130,15 @@ namespace PortalApp.config
             //Response.Redirect("~/config/ViewPDF.aspx?refNo=" + HttpUtility.UrlEncode(refNo), false);
             //Context.ApplicationInstance.CompleteRequest();
         }
+
+        protected void btnOK_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void LinkButtonEdit_Click(object sender, EventArgs e)
+        {
+            this.mpeInvoice.Show();
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="GeneratedInvoices.aspx.cs" Inherits="PortalApp.config.GeneratedInvoices" MasterPageFile="~/Site.master" %>
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
    
     <script src="../Scripts/moment.js" type="text/javascript"></script>
@@ -21,12 +22,8 @@
                     <Columns>
                          <asp:TemplateField>
                             <ItemTemplate>
-                                <asp:LinkButton ID="LinkButtonEdit" CommandName="Edit"  runat="server">Edit</asp:LinkButton>
+                                <asp:LinkButton ID="LinkButtonEdit" Text="Edit" runat="server" OnClick="LinkButtonEdit_Click" />
                             </ItemTemplate>
-                            <EditItemTemplate>
-                                <asp:LinkButton ID="LinkButtonEdit"  CommandName="Update"  runat="server" CausesValidation="false" ValidationGroup="allcontrols">Update</asp:LinkButton>
-                                <asp:LinkButton ID="LinkButtonCancel"  CommandName="Cancel"  runat="server">Cancel</asp:LinkButton>
-                            </EditItemTemplate>
                         </asp:TemplateField>
                         <asp:BoundField DataField="DESCRIPTION" HeaderText="Description" />
                         <asp:BoundField DataField="REFERENCE_NUMBER" HeaderText="Reference Number" />
@@ -49,4 +46,36 @@
             </Triggers>
         </asp:UpdatePanel>
     </div>
+
+<%--<asp:ToolkitScriptManager ID="ScriptManager1" runat="server" />--%>
+<asp:Button ID="btnShowRule" runat="server" style="display:none" />
+<asp:ModalPopupExtender ID="mpeInvoice" runat="server" TargetControlID="btnShowRule" PopupControlID="pnlInvoice"
+CancelControlID="btnCancel" BackgroundCssClass="modalBackground" BehaviorID="pnlInvoice" >
+</asp:ModalPopupExtender>
+<asp:Panel ID="pnlInvoice" runat="server" BackColor="White" Height="269px" Width="400px" style="display:none;">
+    <table width="100%" style="border:Solid 3px #0094ff; width:100%; height:100%" cellpadding="0" cellspacing="0">
+        <tr style="background-color:#0094ff">
+            <td colspan="2" style=" height:10%; color:White; font-weight:bold; font-size:larger" align="center">Invoice Details</td>
+        </tr>
+        <tr>
+            <td style="width:120px">Reference Number:</td>
+            <td><asp:TextBox runat="server" ID="TextBoxReferenceNumber"  /></td>
+        </tr>
+        <tr>
+            <td style="width:120px">Invoice Date:</td>
+            <td><asp:TextBox runat="server" ID="TextBoxInvoiceDate"  /></td>
+        </tr>
+        <tr>
+            <td style="width:120px">Due Date:</td>
+            <td><asp:TextBox runat="server" ID="TextBoxDueDate"  /></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                    <asp:Button ID="btnOK" runat="server" CommandName="OK" Text="OK" OnClick="btnOK_Click"  />
+                    <asp:Button ID="btnCancel" runat="server" Text="Cancel" />
+            </td>
+        </tr>
+    </table>
+</asp:Panel>
 </asp:Content>

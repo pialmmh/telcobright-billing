@@ -177,14 +177,14 @@ public partial class DefaultRptIntlOut : System.Web.UI.Page
 
         if (CheckBoxShowCost.Checked == true)
         {
-            GridView1.Columns[19].Visible = true;
-            GridView1.Columns[20].Visible = true;
+            GridView1.Columns[19].Visible = false;
+            GridView1.Columns[20].Visible = false;
             GridView1.Columns[21].Visible = true;
             GridView1.Columns[22].Visible = true;
             GridView1.Columns[23].Visible = true;
             GridView1.Columns[24].Visible = true;
             GridView1.Columns[25].Visible = true;
-            GridView1.Columns[26].Visible = true;
+            GridView1.Columns[26].Visible = false;
         }
         else
         {
@@ -196,7 +196,7 @@ public partial class DefaultRptIntlOut : System.Web.UI.Page
             GridView1.Columns[23].Visible = false;
             GridView1.Columns[24].Visible = false;
             GridView1.Columns[25].Visible = false;
-            GridView1.Columns[26].Visible = true;
+            GridView1.Columns[26].Visible = false;
         }
         if (CheckBoxShowBySupplierPrefix.Checked)
         {

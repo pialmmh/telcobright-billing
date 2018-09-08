@@ -353,7 +353,7 @@
             <asp:BoundField DataField="Z (BDT)" DataFormatString="{0:#,0.#0}" HeaderText="Z (BDT)" SortExpression="Z (BDT)" />
             <asp:BoundField DataField="revenueigwout" DataFormatString="{0:#,0.#0}" HeaderText="Revenue (BDT)" SortExpression="revenueigwout" />
             <asp:BoundField DataField="partnercost" DataFormatString="{0:#,0.#0}" HeaderText="Partner Cost (USD)" SortExpression="partnercost" />
-            <asp:BoundField DataField="suppliercost" DataFormatString="{0:#,0.#0}" HeaderText="Supplier Cost" SortExpression="suppliercost" />
+            <asp:BoundField DataField="suppliercost" DataFormatString="{0:#,0.###0}" HeaderText="Supplier Cost" SortExpression="suppliercost" />
             <asp:BoundField DataField="SupplierPrefix" HeaderText="Supplier Prefix" SortExpression="SupplierPrefix" />
            
             
