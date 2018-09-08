@@ -478,6 +478,12 @@ namespace WebApplication1.Account
                 }
             }
         }
+
+        protected void LinkButtonLoginHistory_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("~/AccountAdmin/LoginHistory.aspx", false);
+            Context.ApplicationInstance.CompleteRequest();
+        }
     }
 
 }

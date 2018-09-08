@@ -345,6 +345,7 @@
     <Content Include="AccountAdmin\Confirm.aspx" />
     <Content Include="AccountAdmin\Forgot.aspx" />
     <Content Include="AccountAdmin\Lockout.aspx" />
+    <Content Include="AccountAdmin\LoginHistory.aspx" />
     <Content Include="Account\Login.aspx" />
     <Content Include="AccountAdmin\Manage.aspx" />
     <Content Include="AccountAdmin\ManageLogins.aspx" />
@@ -567,6 +568,13 @@
     </Compile>
     <Compile Include="AccountAdmin\Lockout.aspx.designer.cs">
       <DependentUpon>Lockout.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="AccountAdmin\LoginHistory.aspx.cs">
+      <DependentUpon>LoginHistory.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AccountAdmin\LoginHistory.aspx.designer.cs">
+      <DependentUpon>LoginHistory.aspx</DependentUpon>
     </Compile>
     <Compile Include="Account\Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>

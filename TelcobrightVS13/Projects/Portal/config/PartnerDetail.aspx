@@ -79,6 +79,14 @@
                 
                 <div style="height:3px;"></div>
                 Billing Day in Month:
+
+                <div style="height: 5px;"></div>
+                <b> Alternate Name (Invoice):</b>
+                <div style="height: 5px;"></div>
+                Alternate Name(Other):
+                <div style="height: 5px;"></div>
+                VAT Registration No:
+                <div style="height: 5px;"></div>
                 
                 <br />
                     
@@ -115,6 +123,16 @@
                 
                 <asp:TextBox ID="TextBox7" runat="server"  Width="170px"
                     Text='<%# Bind("billingdate") %>' />
+
+                    <div style="height: 5px;"></div>
+                    <asp:TextBox ID="AlternateNameInvoiceTextBox" runat="server" Text='<%# Bind("AlternateNameInvoice") %>' />
+
+                    <div style="height: 5px;"></div>
+                    <asp:TextBox ID="AlternateNameOtherTextBox" runat="server" Text='<%# Bind("AlternateNameOther") %>' />
+
+                    <div style="height: 5px;"></div>
+                    <asp:TextBox ID="vatRegistrationNoTextBox" runat="server" Text='<%# Bind("vatRegistrationNo") %>' />
+
                 <br />
                     
             </div>
@@ -144,6 +162,9 @@
                 <br />
                 Country:
                 <asp:TextBox ID="CountryTextBox" runat="server" Text='<%# Bind("Country") %>' />
+                <br />
+                InvoiceAddress:
+                <asp:TextBox ID="InvoiceAddressTextBox" runat="server" TextMode="MultiLine" Text='<%# Bind("invoiceAddress") %>' />
                 <br />
                 
                 </div>

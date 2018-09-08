@@ -79,6 +79,8 @@
         
         <asp:LinkButton ID="LinkButtonNewUser" runat="server" OnClick="LinkButtonNewUser_Click">Create New User</asp:LinkButton>
         <br />
+        <asp:LinkButton ID="LinkButtonLoginHistory" runat="server" OnClick="LinkButtonLoginHistory_Click">Login History</asp:LinkButton>
+        <br />
         <asp:Label ID="lblStatus" runat="server" Text=""></asp:Label>
         <div id="DivManageUser" runat="server">
             
