@@ -252,6 +252,7 @@ namespace InstallConfig
                                 SpringExpressionIfRole = new List<string>()
                                 {
                                     "nodes['Configuration'].Expanded=true",
+                                    "nodes['Billing'].Expanded=true",
                                     "nodes['Mediation'].Expanded=true",
                                     "nodes['Settings'].Expanded=true",
                                     "nodes['Billing Reports'].Expanded=true",
@@ -260,6 +261,7 @@ namespace InstallConfig
                                 SpringExpressionIfNotRole = new List<string>()
                                 {
                                     "nodes['Configuration'].Expanded=false",
+                                    "nodes['Billing'].Expanded=false",
                                     "nodes['Mediation'].Expanded=false",
                                     "nodes['Settings'].Expanded=false",
                                     "nodes['Billing Reports'].Expanded=false",
@@ -275,6 +277,7 @@ namespace InstallConfig
                                 SpringExpressionIfRole = new List<string>()
                                 {
                                     "nodes['Configuration'].Expanded=true",
+                                    "nodes['Billing'].Expanded=true",
                                     "nodes['Mediation'].Expanded=true",
                                     "nodes['Settings'].Expanded=true",
                                     "nodes['Billing Reports'].Expanded=true",
