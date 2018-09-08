@@ -84,6 +84,7 @@ namespace ReportGenerator.Reports.InvoiceReports.ICX
             foreach (InvoiceSectionDataRowForVoiceCall item in sectionData)
             {
                 item.Reference = invoiceItem.PRODUCT_ID;
+                item.Description = "Call Carrying Charges";
             }
             return sectionData;
         }

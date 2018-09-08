@@ -53,7 +53,7 @@ namespace ReportGenerator.Reports.InvoiceReports.ICX
 
             #region Report Body
             xrTableCellReference.DataBindings.Add("Text", this.DataSource, "Reference");
-            xrTableCellTermOperator.DataBindings.Add("Text", this.DataSource, "OutPartnerName");
+            xrTableCellTermOperator.DataBindings.Add("Text", this.DataSource, "InPartnerName");
             xrTableCellTotalCalls.DataBindings.Add("Text", this.DataSource, "TotalCalls", "{0:n0}");
             xrTableCellTotalMinutes.DataBindings.Add("Text", this.DataSource, "TotalMinutes", "{0:n2}");
             xrTableCellRate.DataBindings.Add("Text", this.DataSource, "Rate", "{0:n2}");
