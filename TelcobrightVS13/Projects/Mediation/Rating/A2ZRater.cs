@@ -4,6 +4,7 @@ using LibraryExtensions;
 using System.Collections.Generic;
 using MediationModel;
 using TelcobrightMediation.Accounting;
+using TelcobrightMediation.Rating;
 
 namespace TelcobrightMediation
 {
@@ -53,9 +54,29 @@ namespace TelcobrightMediation
             int category = tempCategory>0?tempCategory: 1;//default 1=call
             int subCategory = tempSubCategory>0?tempSubCategory:1;//default 1=voice
 
-            string phoneNumber = (this.ServiceContext.AssignDir == ServiceAssignmentDirection.Customer
-                ? this.Cdr.OriginatingCalledNumber
-                : this.Cdr.TerminatingCalledNumber);//change per service family#####
+            string phoneNumber = "";
+            DigitRulesData digitRulesData = this.ServiceContext.DigitRulesData;
+            if (digitRulesData == null)
+            {
+                phoneNumber = (this.ServiceContext.AssignDir == ServiceAssignmentDirection.Customer
+                    ? this.Cdr.OriginatingCalledNumber
+                    : this.Cdr.TerminatingCalledNumber); //change per service family#####
+            }
+            else
+            {
+                phoneNumber =
+                    PhoneNumberSelector.GetPhoneNumberForRating(this.Cdr, digitRulesData.PhoneNumberLeg);
+                var digitRuleId = digitRulesData.DigitRuleId;
+                if (digitRuleId > 0)
+                {
+                    IDigitRule digitRule = null;
+                    this.ServiceContext.MefServiceFamilyContainer.DigitRules.TryGetValue(digitRuleId, out digitRule);
+                    if (digitRule == null)
+                        throw new Exception("Digit rule not found in service family container.");
+                    phoneNumber = digitRule.GetModifiedDigits(digitRulesData, phoneNumber);
+                }
+            }
+
             //following will return tuples for the day of answer time. If rateplans are assigned to routes, then routetuples
             //in the rateplanassignment table will be fetched, otherwise partner tuples will be returned
             //TupleByPeriod=one rateplanassignmenttuple on the day of answertime

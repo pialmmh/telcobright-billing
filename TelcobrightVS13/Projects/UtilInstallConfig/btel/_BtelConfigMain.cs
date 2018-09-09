@@ -21,6 +21,7 @@ namespace InstallConfig
     {
         public string OperatorName { get;}
         public TelcobrightConfig Tbc { get; }
+
         public BtelConfigGenerator()
         {
             int thisServerId = 1;
@@ -28,6 +29,7 @@ namespace InstallConfig
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Igw, thisServerId);
             this.Tbc.IdTelcobrightPartner = 1;
         }
+
         public TelcobrightConfig GenerateConfig(DatabaseSetting schedulerDatabaseSetting)
         {
             if (string.IsNullOrWhiteSpace(this.OperatorName))
@@ -48,8 +50,9 @@ namespace InstallConfig
                 ValidationRulesForCommonMediationCheck = commonCdrValRulesGen.GetRules(),
                 ValidationRulesForInconsistentCdrs = inconsistentCdrValRulesGen.GetRules(),
                 ServiceGroupConfigurations = this.GetServiceGroupConfigurations(),
-                DisableCdrPostProcessingJobCreationForAutomation = false
-            };
+                DisableCdrPostProcessingJobCreationForAutomation = false,
+                DisableParallelMediation = false
+        };
 
             this.PrepareDirectorySetting(this.Tbc);
 

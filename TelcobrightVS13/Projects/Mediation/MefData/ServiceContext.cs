@@ -16,9 +16,11 @@ namespace TelcobrightMediation
         public ServiceAssignmentDirection AssignDir { get; set; }
         public CdrSetting CdrSetting { get; }
         public int MaxDecimalPrecision => this.CdrSetting.MaxDecimalPrecision;
+        public DigitRulesData DigitRulesData { get; }
         public ServiceContext(CdrProcessor cdrProcessor,
             ServiceGroupConfiguration serviceGroupConfiguration, IServiceFamily serviceFamily,
-            ServiceAssignmentDirection assignDir, int productIdToOverrideServiceFamilyAccount)
+            ServiceAssignmentDirection assignDir, int productIdToOverrideServiceFamilyAccount,
+            DigitRulesData digitRulesData)
         {
             this.CdrProcessor = cdrProcessor;
             this.MefServiceFamilyContainer = this.CdrProcessor.CdrJobContext.MediationContext.MefServiceFamilyContainer;
@@ -27,6 +29,7 @@ namespace TelcobrightMediation
             this.ServiceFamily = serviceFamily;
             this.ProductIdToOverrideServiceFamilyAccount = productIdToOverrideServiceFamilyAccount;
             this.AssignDir = assignDir;
+            this.DigitRulesData = digitRulesData;
         }
     }
 }

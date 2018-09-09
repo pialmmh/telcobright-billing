@@ -65,7 +65,7 @@ namespace TelcobrightMediation.Cdr
                 this.CdrJobContext.AccountingContext.ExecuteTransactions(incrementalTransactions);
 
                 if (this.CdrProcessor != null)
-                {
+                {//applicable for only new cdrs 
                     ValidateCdrProcessorWithMediationTester(this.CdrJobContext.CdrjobInputData,
                         parallelCdrExts);
                 }
@@ -78,7 +78,7 @@ namespace TelcobrightMediation.Cdr
                 var cdrWritingResult = this.CdrProcessor?.WriteCdrs(parallelCdrExts);
 
                 if (this.CdrProcessor != null && this.CdrProcessor.PartialProcessingEnabled
-                    &&this.CdrProcessor.CdrJobContext.TelcobrightJob.idjobdefinition!=3)//3=reprocess
+                    &&this.CdrProcessor.CdrJobContext.TelcobrightJob.idjobdefinition==1)//1=new cdr only
                 {
                     PartialCdrTester partialCdrTester =
                         new PartialCdrTester(this, cdrWritingResult, this.PartialCdrTesterData);

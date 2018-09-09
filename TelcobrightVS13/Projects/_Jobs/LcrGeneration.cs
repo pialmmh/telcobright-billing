@@ -109,7 +109,7 @@ namespace Jobs
                 ServiceContext serviceContext = new ServiceContext(cdrProcessor, 
                     serviceGroupConfiguration 
                     , a2ZServiceFamily,
-                    ServiceAssignmentDirection.Supplier, 0);
+                    ServiceAssignmentDirection.Supplier, 0,null);
                 Random random = new Random();
                 List<string[]> thisRowAsList = new List<string[]>();
                 //thisRowAsList.Add(thisRow);

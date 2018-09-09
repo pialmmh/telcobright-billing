@@ -33,13 +33,11 @@ namespace TelcobrightMediation
         public Dictionary<string, enumbillingspan> BillingSpans { get; }
         public Dictionary<ValueTuple<int,string>, route> Routes { get; }
         public List<ansprefixextra> LstAnsPrefixExtra{get;private set;} //required for failed intl in calls where term number might be missing
-
         public Dictionary<string, partnerprefix>
             DictAnsOrig { get; private set; } //ANSTermprefix partner dictionary with AnsPrefix as Key
         public Dictionary<int, cdrfieldlist> CdrFieldLists { get; private set; }
         public Dictionary<int, Dictionary<int, ServiceGroupConfiguration>>
             ServiceGroupConfigurations { get; } //<switchid,dic<servicegroupID,medruleassignment>>
-
         public Dictionary<int, SwitchWiseLookup> SwitchWiseLookups { get; }
         public Dictionary<string, ne> Nes { get; } //load only nes for corresponding telcobright partner
 
@@ -203,6 +201,9 @@ namespace TelcobrightMediation
             this.MefNerRulesContainer.NerComposer.Compose();
             foreach (var ext in this.MefNerRulesContainer.NerComposer.NerRules)
                 this.MefNerRulesContainer.DicExtensions.Add(ext.RuleName, ext);
+            DigitRuleComposer digitRuleComposer=new DigitRuleComposer();
+            digitRuleComposer.Compose();
+            this.MefServiceFamilyContainer.DigitRules = digitRuleComposer.DigitRules.ToDictionary(r => r.Id);
         }
 
         private void CreateServiceGroupWiseValidatorInstances()

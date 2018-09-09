@@ -259,7 +259,7 @@ namespace TelcobrightMediation
 							: rule.AssignDirection == 2
 								? ServiceAssignmentDirection.Supplier
 								: ServiceAssignmentDirection.None
-						, idProductForIndividualAccount);
+						, idProductForIndividualAccount,rule.DigitRulesData);
 					//execute rating & accounting
 					AccChargeableExt chargeableExt = sf.Execute(cdrExt, serviceContext, false);
 					if (chargeableExt != null)
@@ -289,7 +289,7 @@ namespace TelcobrightMediation
                 var idCallsOfProcessedCdrs = processedCdrExts
 					.Select(c => new KeyValuePair<long, DateTime>(c.Cdr.IdCall, c.StartTime)).ToList();
 				var idCallsOfCdrErrors = this.CollectionResult.CdrExtErrors
-					.Select(c => new KeyValuePair<long, DateTime>(c.IdCall, c.StartTime)).ToList();
+					.Select(c => new KeyValuePair<long, DateTime>(c.CdrError.IdCall, c.CdrError.StartTime)).ToList();
 
 				int delCount= OldCdrDeleter.DeleteOldCdrs("cdrerror", idCallsOfProcessedCdrs.Concat(idCallsOfCdrErrors).ToList(),
 					this.CdrJobContext.SegmentSizeForDbWrite, this.CdrJobContext.DbCmd);

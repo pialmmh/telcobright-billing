@@ -52,7 +52,9 @@ namespace TelcobrightMediation
                 new CdrErrorPreProcessor(this.CdrCollectorInput, cdrs);
             CdrCollectionResult newCollectionResult = null, oldCollectionResult = null;
             preProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
-            
+            newCollectionResult.RawDurationTotalOfConsistentCdrs =
+                preProcessor.NonPartialCdrs.Sum(c => c.DurationSec) + preProcessor.PartialCdrContainers
+                    .SelectMany(pc => pc.NewRawInstances).Sum(r => r.DurationSec);
             CdrJobContext cdrJobContext = new CdrJobContext(this.CdrCollectorInput.CdrJobInputData,
                 newCollectionResult.HoursInvolved);
             CdrProcessor cdrProcessor = new CdrProcessor(cdrJobContext, newCollectionResult);

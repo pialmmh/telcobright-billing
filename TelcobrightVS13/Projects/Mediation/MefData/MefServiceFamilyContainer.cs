@@ -19,6 +19,7 @@ namespace TelcobrightMediation
         public Dictionary<int, rateplan> DicRateplans { get; set; }//to fetch currency & other infor during rating
         public Dictionary<int,BillingRule> BillingRules { get; set; }
         public UoMConvRateCache UsdBcsCache { get; private set; }
+        public Dictionary<int, IDigitRule> DigitRules { get; set; }=new Dictionary<int, IDigitRule>();
         public MefServiceFamilyContainer()
         {
             this.DicRouteIncludingPartner = new Dictionary<ValueTuple<int, string>, route>();

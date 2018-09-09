@@ -16,6 +16,7 @@ using MediationModel;
 using QuartzTelcobright;
 using TelcobrightMediation.Config;
 using TelcobrightMediation.Accounting;
+using TelcobrightMediation.Rating;
 
 namespace InstallConfig
 {
@@ -79,7 +80,16 @@ namespace InstallConfig
                     },
                     Ratingtrules = new List<RatingRule>()
                     {
-                        new RatingRule() {IdServiceFamily = ServiceFamilyType.A2Z, AssignDirection = 2},
+                        new RatingRule()
+                        {
+                            IdServiceFamily = ServiceFamilyType.A2Z, AssignDirection = 2,
+                            DigitRulesData = new DigitRulesData()
+                            {
+                                DigitRuleId = 1,
+                                PhoneNumberLeg = PhoneNumberLeg.OriginatingCalledNumber,
+                                PrefixToTrim = "00"
+                            }
+                        },
                         //keep xyz after a2z, there is logic in xyz sf rules for icx & igw that will change
                         //country code only if empty, or throw exception if different
                         new RatingRule() {IdServiceFamily = ServiceFamilyType.XyzIgw, AssignDirection = 0}
@@ -110,8 +120,8 @@ namespace InstallConfig
                             {"XyzSection2GeneratorIgw","InternationalOutgoingToIOSDetails1" },
                             {"XyzSection3GeneratorIgw","InternationalOutgoingToIOSDetails2" }
                         }
+                    },
                     }
-                }
             };
             return serviceGroupConfigurations.ToDictionary(s => s.IdServiceGroup);
         }
