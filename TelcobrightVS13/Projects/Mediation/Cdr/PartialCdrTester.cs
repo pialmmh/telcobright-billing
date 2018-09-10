@@ -25,7 +25,10 @@ namespace TelcobrightMediation.Cdr
         {
             //partial cdrs tests here...
             var collectionResult = this.CdrJob.CdrProcessor.CollectionResult;
-            int processedErrorCount = collectionResult.CdrExtErrors.Count;
+            int processedNonPartialErrorCount = collectionResult.CdrExtErrors
+                .Count(c => c.CdrError.PartialFlag == "0");
+            int processedPartialErrorCount = collectionResult.CdrExtErrors
+                .Count(c => Convert.ToInt32(c.CdrError.PartialFlag) > 0);
             int inconsistentsCount = collectionResult.CdrInconsistents.Count;
             var processedCdrExts = collectionResult.ProcessedCdrExts;
             var processedNonPartialCdrExts = processedCdrExts.Where(c => c.Cdr.PartialFlag == 0).ToList();
@@ -44,10 +47,10 @@ namespace TelcobrightMediation.Cdr
                 .SelectMany(c => c.PartialCdrContainer.NewRawInstances).Count();
             Assert.AreEqual(this.PartialCdrTesterData.RawPartialCount + this.PartialCdrTesterData.NonPartialCount
                             - inconsistentsCount,
-                (processedNonPartialCdrExts.Count + processedPartialNewRawInstances + processedErrorCount
-                 - inconsistentsCount));
+                (processedNonPartialCdrExts.Count + processedPartialNewRawInstances + processedNonPartialErrorCount
+                 +processedPartialErrorCount- inconsistentsCount));
             Assert.AreEqual(this.CdrWritingResult.PartialCdrWriter.WrittenCdrPartialReferences,
-                processedPartialCdrExts.Count);
+                processedPartialCdrExts.Count+ processedPartialErrorCount);
             Assert.AreEqual(this.CdrWritingResult.CdrCount, processedCdrExts.Count());
             Assert.AreEqual(collectionResult.RawCount,
                 this.CdrWritingResult.CdrErrorCount + this.CdrWritingResult.CdrInconsistentCount

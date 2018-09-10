@@ -32,8 +32,6 @@ namespace TelcobrightMediation.Cdr
         {
             get
             {
-                if(this.Cdr!=null)
-                    throw new Exception("Both Cdr & cdrerror cannot be not null at the same time.");
                 return cdrError;
             }
             set
@@ -57,13 +55,21 @@ namespace TelcobrightMediation.Cdr
         {
             get
             {
-                if (this.CdrNewOldType == CdrNewOldType.OldCdr)//old cdr
-                {
+                if (this.CdrNewOldType == CdrNewOldType.OldCdr) //old cdr
+
                     throw new Exception("Property PartialCdrContainer cannot be used for old cdrs.");
-                }
-                else if (this.Cdr.PartialFlag == 0)//new non partial cdr
+                else
                 {
-                    throw new Exception("Property PartialCdrContainer cannot be used for non partial cdrs.");
+                    if (this.CdrError == null)
+                    {
+                        if (this.Cdr.PartialFlag == 0) //new non partial cdr
+                            throw new Exception("Property PartialCdrContainer cannot be used for non partial cdrs.");
+                    }
+                    else
+                    {
+                        if (this.CdrError.PartialFlag == "0") //new non partial cdr
+                            throw new Exception("Property PartialCdrContainer cannot be used for non partial cdrs.");
+                    }
                 }
                 return this.partialCdrContainer;
             }
