@@ -58,6 +58,15 @@ namespace PortalApp.config {
         protected global::System.Web.UI.WebControls.Panel pnlInvoice;
         
         /// <summary>
+        /// LabelDESCRIPTION control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label LabelDESCRIPTION;
+        
+        /// <summary>
         /// TextBoxReferenceNumber control.
         /// </summary>
         /// <remarks>
@@ -101,5 +110,14 @@ namespace PortalApp.config {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnCancel;
+        
+        /// <summary>
+        /// hfRowIndex control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hfRowIndex;
     }
 }

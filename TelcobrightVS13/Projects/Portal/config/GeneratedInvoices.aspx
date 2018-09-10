@@ -57,6 +57,11 @@ CancelControlID="btnCancel" BackgroundCssClass="modalBackground" BehaviorID="pnl
         <tr style="background-color:#0094ff">
             <td colspan="2" style=" height:10%; color:White; font-weight:bold; font-size:larger" align="center">Invoice Details</td>
         </tr>
+        <tr style="background-color:#0094ff">
+            <td colspan="2" style=" height:10%; color:White; font-weight:bold; font-size:larger" align="center">
+                <asp:Label ID="LabelDESCRIPTION" runat="server" />
+            </td>
+        </tr>
         <tr>
             <td style="width:120px">Reference Number:</td>
             <td><asp:TextBox runat="server" ID="TextBoxReferenceNumber"  /></td>
@@ -74,6 +79,7 @@ CancelControlID="btnCancel" BackgroundCssClass="modalBackground" BehaviorID="pnl
             <td>
                     <asp:Button ID="btnOK" runat="server" CommandName="OK" Text="OK" OnClick="btnOK_Click"  />
                     <asp:Button ID="btnCancel" runat="server" Text="Cancel" />
+                    <asp:HiddenField runat="server" ID="hfRowIndex" />
             </td>
         </tr>
     </table>

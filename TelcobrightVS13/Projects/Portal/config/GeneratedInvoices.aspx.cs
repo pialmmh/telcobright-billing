@@ -138,6 +138,12 @@ namespace PortalApp.config
 
         protected void LinkButtonEdit_Click(object sender, EventArgs e)
         {
+            LinkButton btnEdit = sender as LinkButton;
+            GridViewRow gvrow = (GridViewRow)btnEdit.NamingContainer;
+            hfRowIndex.Value = gvrow.RowIndex.ToString();
+            invoice invoice = generatedInvoices[gvrow.RowIndex];
+            LabelDESCRIPTION.Text = invoice.DESCRIPTION;
+            TextBoxReferenceNumber.Text = invoice.DESCRIPTION;
             this.mpeInvoice.Show();
         }
     }

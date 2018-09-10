@@ -325,7 +325,12 @@ public partial class ConfigPartnerDetail : System.Web.UI.Page
 
     protected void FormViewRouteAdd_ItemInserting(object sender, FormViewInsertEventArgs e)
     {
-
+        int sesidPartner = -1;
+        if (this.Session["sesidPartner"] != null)
+        {
+            sesidPartner = (Int32)this.Session["sesidPartner"];
+        }
+        e.Values["idPartner"] = sesidPartner;
     }
 
     protected void FormViewRouteAdd_ItemCreated(object sender, EventArgs e)
