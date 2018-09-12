@@ -27,12 +27,12 @@
                 <asp:BoundField DataField="REFERENCE_NUMBER" HeaderText="Reference Number" />
                 <asp:TemplateField HeaderText="Invoice Date" SortExpression="INVOICE_DATE" ItemStyle-Wrap="false">
                     <ItemTemplate>
-                        <asp:TextBox runat="server" ID="txtInvoiceDate" Enabled="false" dataformatstring="{0:yyyy-MM-dd}" />
+                        <asp:Label runat="server" ID="lblInvoiceDate" Enabled="false" dataformatstring="{0:yyyy-MM-dd}" />
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="Due Date" SortExpression="DUE_DATE" ItemStyle-Wrap="false">
                     <ItemTemplate>
-                        <asp:TextBox runat="server" ID="txtDueDate" Enabled="false" dataformatstring="{0:yyyy-MM-dd}" />
+                        <asp:Label runat="server" ID="lblDueDate" Enabled="false" dataformatstring="{0:yyyy-MM-dd}" />
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:BoundField DataField="" />

@@ -68,23 +68,23 @@ namespace PortalApp.config
                 List<KeyValuePair<string, string>> sectionData = invoiceMap.Where(kv => kv.Key.StartsWith("Section-")).ToList();
 
                 // Invoice Date
-                TextBox txtInvoiceDate = (TextBox)e.Row.FindControl("txtInvoiceDate");
+                Label lblInvoiceDate = (Label)e.Row.FindControl("lblInvoiceDate");
                 var dtInvoice = DataBinder.Eval(e.Row.DataItem, "INVOICE_DATE");
                 if (dtInvoice != null)
                 {
                     DateTime invoiceDate = DateTime.Parse(dtInvoice.ToString());
-                    txtInvoiceDate.Text = ((DateTime)invoiceDate).ToString("yyyy-MM-dd");
+                    lblInvoiceDate.Text = ((DateTime)invoiceDate).ToString("yyyy-MM-dd");
                 }
-                else txtInvoiceDate.Text = string.Empty;
+                else lblInvoiceDate.Text = string.Empty;
                 // Due Date
-                TextBox txtDueDate = (TextBox)e.Row.FindControl("txtDueDate");
+                Label lblDueDate = (Label)e.Row.FindControl("lblDueDate");
                 var dtDue = DataBinder.Eval(e.Row.DataItem, "Due_DATE");
                 if (dtDue != null)
                 {
                     DateTime dueDate = DateTime.Parse(dtDue.ToString());
-                    txtDueDate.Text = ((DateTime)dueDate).ToString("yyyy-MM-dd");
+                    lblDueDate.Text = ((DateTime)dueDate).ToString("yyyy-MM-dd");
                 }
-                else txtDueDate.Text = string.Empty;
+                else lblDueDate.Text = string.Empty;
 
                 int sectionNumber = 0;
                 foreach (KeyValuePair<string, string> item in sectionData)
