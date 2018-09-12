@@ -34,6 +34,13 @@ namespace TelcobrightMediation.Accounting
             get { return this.EndDateTime.AddSeconds(DefaultGmtOffset - this.GmtOffset); }
         }
 
+        public bool IsDue {
+            get {
+                if (DateTime.Now >= EndDateTimeLocal) return true;
+                else return false;
+            }
+        }
+
         public List<DateTime> InvoiceDates { get; set; }
 
         public InvoiceGenRowDataCollector(Dictionary<int,IServiceGroup> mefServiceGroups)

@@ -30,6 +30,22 @@ namespace InstallConfig
                 CronExpressionForBillingCycle = "0 0 0 1 * ? *",
                 BillingInterval = DateInterval.Months,
                 BillDuration = 1,
+                /*
+                IsPrepaid = false,
+                Description = "",
+                InvoiceOverdueInDay = 7,
+                CronExpressionForBillingCycle = "0 0 0 ? * SUN *",
+                BillingInterval = DateInterval.Days,
+                BillDuration = 7,
+                */
+                /*
+                IsPrepaid = false,
+                Description = "",
+                InvoiceOverdueInDay = 7,
+                CronExpressionForBillingCycle = "0 0 0 2,16 * ? *",
+                BillingInterval = DateInterval.Days,
+                BillDuration = 15,
+                */
             }
         };
     }

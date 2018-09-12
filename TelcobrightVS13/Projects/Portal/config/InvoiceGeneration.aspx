@@ -47,6 +47,11 @@
                                     dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" OnTextChanged="txtEndDate_TextChanged"/>
                             </ItemTemplate>
                         </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Due" SortExpression="IsDue" ItemStyle-Wrap="false">
+                            <ItemTemplate>
+                                <asp:Label runat="server" ID="lblDue" Enabled="false" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
                         <asp:TemplateField>
                             <ItemTemplate>
                                 <asp:CheckBox runat="server" id="cbSelect" Checked="False"/>

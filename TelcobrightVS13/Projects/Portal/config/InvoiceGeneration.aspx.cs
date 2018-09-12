@@ -186,6 +186,11 @@ namespace PortalApp.config
                     DateTime startDate = DateTime.Parse(DataBinder.Eval(e.Row.DataItem, "EndDateTime").ToString());
                     txtEndDate.Text = startDate.ToString("yyyy-MM-dd HH:mm:ss");
                 }
+
+                // is due
+                Label lblDue = (Label)e.Row.FindControl("lblDue");
+                if (Convert.ToBoolean(DataBinder.Eval(e.Row.DataItem, "IsDue"))) lblDue.Text = "Yes";
+                else lblDue.Text = "No";
             }
         }
 
