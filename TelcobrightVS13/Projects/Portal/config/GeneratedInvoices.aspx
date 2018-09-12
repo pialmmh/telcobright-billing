@@ -10,41 +10,34 @@
     <ajaxToolkit:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server" />
     <div>
         <span style="color: black;"><b>Generated Invoices:</b></span><br/>
-        <asp:UpdatePanel runat="server">
-            <ContentTemplate>
-                <asp:GridView ID="gvInvoice" runat="server" AutoGenerateColumns="False" DataKeyNames="INVOICE_ID"
-                    CellPadding="4" ForeColor="#333333" GridLines="Vertical"
-                    Font-Size="9pt" BorderColor="Silver" BorderStyle="Solid" OnRowDataBound="gvInvoice_RowDataBound">
-                    <AlternatingRowStyle BackColor="#f2f2f2" ForeColor="#284775"></AlternatingRowStyle>
-                    <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
-                    <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
-                    <RowStyle BackColor="white" ForeColor="#333333" />
-                    <Columns>
-                         <asp:TemplateField>
-                            <ItemTemplate>
-                                <asp:LinkButton ID="LinkButtonEdit" Text="Edit" runat="server" OnClick="LinkButtonEdit_Click" />
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                        <asp:BoundField DataField="DESCRIPTION" HeaderText="Description" />
-                        <asp:BoundField DataField="REFERENCE_NUMBER" HeaderText="Reference Number" />
-                        <asp:TemplateField HeaderText="Invoice Date" SortExpression="INVOICE_DATE" ItemStyle-Wrap="false">
-                            <ItemTemplate>
-                                <asp:TextBox runat="server" ID="txtInvoiceDate" Enabled="false" dataformatstring="{0:yyyy-MM-dd}" />
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Due Date" SortExpression="DUE_DATE" ItemStyle-Wrap="false">
-                            <ItemTemplate>
-                                <asp:TextBox runat="server" ID="txtDueDate" Enabled="false" dataformatstring="{0:yyyy-MM-dd}" />
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                        <asp:BoundField DataField="" />
-                    </Columns>
-                </asp:GridView>
-            </ContentTemplate>
-            <Triggers>
-                
-            </Triggers>
-        </asp:UpdatePanel>
+        <asp:GridView ID="gvInvoice" runat="server" AutoGenerateColumns="False" DataKeyNames="INVOICE_ID"
+            CellPadding="4" ForeColor="#333333" GridLines="Vertical"
+            Font-Size="9pt" BorderColor="Silver" BorderStyle="Solid" OnRowDataBound="gvInvoice_RowDataBound">
+            <AlternatingRowStyle BackColor="#f2f2f2" ForeColor="#284775"></AlternatingRowStyle>
+            <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
+            <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
+            <RowStyle BackColor="white" ForeColor="#333333" />
+            <Columns>
+                    <asp:TemplateField>
+                    <ItemTemplate>
+                        <asp:LinkButton ID="LinkButtonEdit" Text="Edit" runat="server" OnClick="LinkButtonEdit_Click" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:BoundField DataField="DESCRIPTION" HeaderText="Description" />
+                <asp:BoundField DataField="REFERENCE_NUMBER" HeaderText="Reference Number" />
+                <asp:TemplateField HeaderText="Invoice Date" SortExpression="INVOICE_DATE" ItemStyle-Wrap="false">
+                    <ItemTemplate>
+                        <asp:TextBox runat="server" ID="txtInvoiceDate" Enabled="false" dataformatstring="{0:yyyy-MM-dd}" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Due Date" SortExpression="DUE_DATE" ItemStyle-Wrap="false">
+                    <ItemTemplate>
+                        <asp:TextBox runat="server" ID="txtDueDate" Enabled="false" dataformatstring="{0:yyyy-MM-dd}" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:BoundField DataField="" />
+            </Columns>
+        </asp:GridView>
     </div>
 
 <%--<asp:ToolkitScriptManager ID="ScriptManager1" runat="server" />--%>
@@ -68,18 +61,28 @@ CancelControlID="btnCancel" BackgroundCssClass="modalBackground" BehaviorID="pnl
         </tr>
         <tr>
             <td style="width:120px">Invoice Date:</td>
-            <td><asp:TextBox runat="server" ID="TextBoxInvoiceDate"  /></td>
+            <td>
+                <asp:TextBox runat="server" ID="TextBoxInvoiceDate"  />
+                <asp:CalendarExtender ID="CalendarInvoiceDate" runat="server"
+                    TargetControlID="TextBoxInvoiceDate" PopupButtonID="TextBoxInvoiceDate" Format="yyyy-MM-dd">
+                </asp:CalendarExtender>
+            </td>
         </tr>
         <tr>
             <td style="width:120px">Due Date:</td>
-            <td><asp:TextBox runat="server" ID="TextBoxDueDate"  /></td>
+            <td>
+                <asp:TextBox runat="server" ID="TextBoxDueDate"  />
+                <asp:CalendarExtender ID="CalendarExtenderDueDate" runat="server"
+                    TargetControlID="TextBoxDueDate" PopupButtonID="TextBoxDueDate" Format="yyyy-MM-dd">
+                </asp:CalendarExtender>
+            </td>
         </tr>
         <tr>
             <td></td>
             <td>
                     <asp:Button ID="btnOK" runat="server" CommandName="OK" Text="OK" OnClick="btnOK_Click"  />
                     <asp:Button ID="btnCancel" runat="server" Text="Cancel" />
-                    <asp:HiddenField runat="server" ID="hfRowIndex" />
+                    <asp:HiddenField runat="server" ID="hfInvoiceId" />
             </td>
         </tr>
     </table>

@@ -85,6 +85,15 @@ namespace PortalApp.config {
         protected global::System.Web.UI.WebControls.TextBox TextBoxInvoiceDate;
         
         /// <summary>
+        /// CalendarInvoiceDate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::AjaxControlToolkit.CalendarExtender CalendarInvoiceDate;
+        
+        /// <summary>
         /// TextBoxDueDate control.
         /// </summary>
         /// <remarks>
@@ -92,6 +101,15 @@ namespace PortalApp.config {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox TextBoxDueDate;
+        
+        /// <summary>
+        /// CalendarExtenderDueDate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::AjaxControlToolkit.CalendarExtender CalendarExtenderDueDate;
         
         /// <summary>
         /// btnOK control.
@@ -112,12 +130,12 @@ namespace PortalApp.config {
         protected global::System.Web.UI.WebControls.Button btnCancel;
         
         /// <summary>
-        /// hfRowIndex control.
+        /// hfInvoiceId control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hfRowIndex;
+        protected global::System.Web.UI.WebControls.HiddenField hfInvoiceId;
     }
 }

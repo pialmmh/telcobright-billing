@@ -73,16 +73,16 @@ namespace PortalApp.config
                 if (dtInvoice != null)
                 {
                     DateTime invoiceDate = DateTime.Parse(dtInvoice.ToString());
-                    txtInvoiceDate.Text = ((DateTime)invoiceDate).ToString("yyyy-MM-dd HH:mm:ss");
+                    txtInvoiceDate.Text = ((DateTime)invoiceDate).ToString("yyyy-MM-dd");
                 }
                 else txtInvoiceDate.Text = string.Empty;
                 // Due Date
                 TextBox txtDueDate = (TextBox)e.Row.FindControl("txtDueDate");
-                var dtDue = DataBinder.Eval(e.Row.DataItem, "INVOICE_DATE");
+                var dtDue = DataBinder.Eval(e.Row.DataItem, "Due_DATE");
                 if (dtDue != null)
                 {
                     DateTime dueDate = DateTime.Parse(dtDue.ToString());
-                    txtDueDate.Text = ((DateTime)dueDate).ToString("yyyy-MM-dd HH:mm:ss");
+                    txtDueDate.Text = ((DateTime)dueDate).ToString("yyyy-MM-dd");
                 }
                 else txtDueDate.Text = string.Empty;
 
@@ -133,17 +133,33 @@ namespace PortalApp.config
 
         protected void btnOK_Click(object sender, EventArgs e)
         {
+            using (PartnerEntities context = new PartnerEntities())
+            {
+                int invoiceId = Convert.ToInt32(hfInvoiceId.Value);
+                invoice invoice = context.invoices.First(x => x.INVOICE_ID == invoiceId);
+                invoice.REFERENCE_NUMBER = TextBoxReferenceNumber.Text;
+                invoice.INVOICE_DATE = Convert.ToDateTime(TextBoxInvoiceDate.Text);
+                invoice.DUE_DATE = Convert.ToDateTime(TextBoxDueDate.Text);
+                context.SaveChanges();
 
+                generatedInvoices = context.invoices.Where(x => x.PAID_DATE == null).OrderByDescending(x => x.INVOICE_DATE).ToList();
+                gvInvoice.DataSource = generatedInvoices;
+                gvInvoice.DataBind();
+            }
         }
 
         protected void LinkButtonEdit_Click(object sender, EventArgs e)
         {
             LinkButton btnEdit = sender as LinkButton;
             GridViewRow gvrow = (GridViewRow)btnEdit.NamingContainer;
-            hfRowIndex.Value = gvrow.RowIndex.ToString();
             invoice invoice = generatedInvoices[gvrow.RowIndex];
+            hfInvoiceId.Value = invoice.INVOICE_ID.ToString();
             LabelDESCRIPTION.Text = invoice.DESCRIPTION;
-            TextBoxReferenceNumber.Text = invoice.DESCRIPTION;
+            TextBoxReferenceNumber.Text = invoice.REFERENCE_NUMBER;
+            if (invoice.INVOICE_DATE !=null)
+                TextBoxInvoiceDate.Text = ((DateTime)invoice.INVOICE_DATE).ToString("yyyy-MM-dd");
+            if (invoice.DUE_DATE != null)
+                TextBoxDueDate.Text = ((DateTime)invoice.DUE_DATE).ToString("yyyy-MM-dd");
             this.mpeInvoice.Show();
         }
     }
