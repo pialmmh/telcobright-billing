@@ -47,7 +47,7 @@ namespace TelcobrightMediation
             return this.NonPartialCdrs
                 .Select(cdr => 
                         CdrExtFactory.CreateCdrExtWithNonPartialOrFinalInstance(
-                        cdr: new IcdrImplConverter<cdr>().Convert(CdrManipulatingUtil.Clone(cdr))
+                        cdr: new IcdrImplConverter<cdr>().Convert(CdrConversionUtil.Clone(cdr))
                         , treatCdrAsNewOldType: CdrNewOldType.OldCdr)
                 ).ToList();
         }

@@ -382,7 +382,7 @@ namespace Decoders
                 catch (Exception e1)
                 {
                     Console.WriteLine(e1);
-                    inconsistentCdrs.Add(CdrManipulatingUtil.ConvertTxtRowToCdrinconsistent(thisRow));
+                    inconsistentCdrs.Add(CdrConversionUtil.ConvertTxtRowToCdrinconsistent(thisRow));
                     ErrorWriter wr = new ErrorWriter(e1, "DecodeCdr", null,
                         "Encounterd error during decoding with ZteDecoderHelper."
                         , input.Tbc.DatabaseSetting.DatabaseName);

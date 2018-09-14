@@ -37,7 +37,7 @@ namespace TelcobrightMediation
                 if (rule.Validate(txtRow) == false)
                 {
                     txtRow[Fn.ErrorCode] = rule.ValidationMessage;
-                    base.InconsistentCdrs.Add(CdrManipulatingUtil.ConvertTxtRowToCdrinconsistent(txtRow));
+                    base.InconsistentCdrs.Add(CdrConversionUtil.ConvertTxtRowToCdrinconsistent(txtRow));
                     return;
                 }
             }
@@ -54,7 +54,7 @@ namespace TelcobrightMediation
                 dupRow =>
                 {
                     dupRow[Fn.ErrorCode] = "Duplicate billids are not allowed when partial cdrs are disabled.";
-                    base.InconsistentCdrs.Add(CdrManipulatingUtil.ConvertTxtRowToCdrinconsistent(dupRow));
+                    base.InconsistentCdrs.Add(CdrConversionUtil.ConvertTxtRowToCdrinconsistent(dupRow));
                 });
             return txtRows;
         }
@@ -63,7 +63,7 @@ namespace TelcobrightMediation
         {
             cdr convertedCdr = null;
             cdrInconsistent = null;
-            convertedCdr = CdrManipulatingUtil.ConvertTxtRowToCdrOrInconsistentOnFailure(row, out cdrInconsistent);
+            convertedCdr = CdrConversionUtil.ConvertTxtRowToCdrOrInconsistentOnFailure(row, out cdrInconsistent);
             if (convertedCdr == null && cdrInconsistent != null) return;
             if (convertedCdr != null && cdrInconsistent == null)
             {
@@ -72,14 +72,10 @@ namespace TelcobrightMediation
                 else
                 {
                     if (convertedCdr.PartialFlag > 0)
-                    {
                         base.RawPartialCdrInstances.Add(
                             new IcdrImplConverter<cdrpartialrawinstance>().Convert(convertedCdr));
-                    }
                     else
-                    {
                         throw new Exception("Converted cdr from txtRow must have valid numeric partial flag.");
-                    }
                 }
             }
             else throw new Exception("Both converted & inconsistent cdrs cannot be null or not null at the same time.");
@@ -88,52 +84,63 @@ namespace TelcobrightMediation
         public override void GetCollectionResults(out CdrCollectionResult newCollectionResult,
             out CdrCollectionResult oldCollectionResult)
         {
+            if (this.PartialCdrEnabled && base.RawPartialCdrInstances.Any())
+            {
+                BlockingCollection<PartialCdrContainer> partialCdrContainers = CollectPartialCdrs();
+                AggregatePartialCdrs(partialCdrContainers.Where(c => c.IsErrorCdr == false));
+                AggregatePartialCdrs(partialCdrContainers.Where(c => c.IsErrorCdr == true));
+                base.PartialCdrContainers = partialCdrContainers;
+            }
             newCollectionResult = CreateNewCollectionResult();
             oldCollectionResult = CreateOldCollectionResult();
         }
         protected  override CdrCollectionResult CreateNewCollectionResult()
         {
-            List<CdrExt> newCdrExts = this.CreateNewCdrExts();
-            var newCollectionResult = new CdrCollectionResult(base.CdrCollectorInputData.Ne, newCdrExts,
+            List<CdrExt> newPartialNonPartialCdrExts = this.CreateNewCdrExts();
+            List<CdrExt> newCdrExtErrors = this.CreateNewCdrExtErrorsForPreExistingPartialCdrInError();
+            ValidateCdrExtCreation(newPartialNonPartialCdrExts, newCdrExtErrors);
+            var collectionResult= new CdrCollectionResult(base.CdrCollectorInputData.Ne, newPartialNonPartialCdrExts,
                 base.InconsistentCdrs.ToList(), base.RawCount);
-            return newCollectionResult;
+            newCdrExtErrors.ForEach(c => collectionResult.SendPreExistingPartialCdrToCdrErrors(c, c.CdrError.ErrorCode));
+            return collectionResult;
         }
         protected override List<CdrExt> CreateNewCdrExts()
         {
             var cdrExtsForNonPartials = base.NonPartialCdrs
-                .Select(cdr => CdrExtFactory.CreateCdrExtWithNonPartialOrFinalInstance(cdr, CdrNewOldType.NewCdr)).ToList();
-            if (this.PartialCdrEnabled)
-            {
-                if (base.RawPartialCdrInstances?.Any() == true)
-                {
-                    PartialCdrCollector partialCdrCollector = new PartialCdrCollector(
-                        this.CdrCollectorInputData, base.RawPartialCdrInstances.ToList());
-                    partialCdrCollector.CollectPartialCdrHistory();
-                    partialCdrCollector.ValidateCollectionStatus();
-                    base.PartialCdrContainers = partialCdrCollector.AggregateAll() ??
-                                                new BlockingCollection<PartialCdrContainer>();
-                }
-            }
-            var cdrExtsForPartials = this.PartialCdrContainers
+                .Select(cdr => CdrExtFactory.CreateCdrExtWithNonPartialOrFinalInstance(cdr, CdrNewOldType.NewCdr));
+            var cdrExtsForPartials = base.PartialCdrContainers.Where(pc => pc.IsErrorCdr == false)
+                .Select(partialContainer => CdrExtFactory.CreateCdrExtWithPartialCdrContainer(partialContainer,
+                    CdrNewOldType.NewCdr));
+            return cdrExtsForPartials.Concat(cdrExtsForNonPartials).ToList();
+        }
+
+        protected List<CdrExt> CreateNewCdrExtErrorsForPreExistingPartialCdrInError()
+        {
+            var cdrExtErrors= base.PartialCdrContainers.Where(pc => pc.IsErrorCdr == true)
                 .Select(partialContainer => CdrExtFactory.CreateCdrExtWithPartialCdrContainer(partialContainer,
                     CdrNewOldType.NewCdr)).ToList();
-            var partialAndNonPartialCdrExts = cdrExtsForPartials.Concat(cdrExtsForNonPartials).ToList();
-            if (partialAndNonPartialCdrExts.GroupBy(c => c.UniqueBillId).Any(g => g.Count() > 1))
-                throw new Exception("Duplicate billId for CdrExts in CdrJob");
-            var allIdCalls = cdrExtsForNonPartials.Select(c => c.Cdr.IdCall)
-                .Concat(cdrExtsForPartials
-                    .SelectMany(c => c.PartialCdrContainer.CombinedNewAndOldUnprocessedInstance).Select(c => c.IdCall))
-                .ToList();
-            if (allIdCalls.GroupBy(i=>i).Any(g=>g.Count()>1))
-            {
-                throw new Exception("Duplicate idcalls for CdrExts in CdrJob");
-            }    
-            var rawPartialCount = this.PartialCdrContainers.SelectMany(p => p.NewRawInstances).Count();
-            if (this.RawCount != cdrExtsForNonPartials.Count + cdrExtsForPartials.Count +
-                rawPartialCount - this.PartialCdrContainers.Count+base.InconsistentCdrs.Count)
-                throw new Exception("Count of nonPartial and partial cdrs do not match expected with expected rawCount for this job.");
-            return partialAndNonPartialCdrExts;
+            cdrExtErrors.ForEach(c=>c.CdrError=CdrConversionUtil.ConvertCdrToCdrError(c.Cdr));
+            return cdrExtErrors;
         }
+        private BlockingCollection<PartialCdrContainer> CollectPartialCdrs()
+        {
+            PartialCdrCollector partialCdrCollector = new PartialCdrCollector(
+                this.CdrCollectorInputData, base.RawPartialCdrInstances.ToList());
+            partialCdrCollector.CollectPartialCdrHistory();
+            partialCdrCollector.ValidateCollectionStatus();
+            return partialCdrCollector.CreatePartialCdrContainers() ??
+                   new BlockingCollection<PartialCdrContainer>();
+        }
+        private void AggregatePartialCdrs(IEnumerable<PartialCdrContainer> partialCdrContainers)
+        {
+            foreach (var partialCdrContainer in partialCdrContainers)
+            {
+                partialCdrContainer.Aggregate();
+                partialCdrContainer.ValidateAggregation();
+            }
+        }
+        
+
         protected override CdrCollectionResult CreateOldCollectionResult()
         {
             List<CdrExt> oldCdrExts = new List<CdrExt>();
@@ -170,6 +177,26 @@ namespace TelcobrightMediation
             return partialCdrContainers
                 .Select(partialContainer => CdrExtFactory.CreateCdrExtWithPartialCdrContainer(partialContainer,
                     CdrNewOldType.OldCdr)).ToList();
+        }
+
+        private void ValidateCdrExtCreation(List<CdrExt> newCdrExts, List<CdrExt> errorCdrExts)
+        {
+            var cdrExtsForNonPartials = newCdrExts.Where(c => c.Cdr.PartialFlag == 0).ToList();
+            var cdrExtsForPartials = newCdrExts.Where(c => c.Cdr.PartialFlag != 0).ToList();
+            if (newCdrExts.GroupBy(c => c.UniqueBillId).Any(g => g.Count() > 1))
+                throw new Exception("Duplicate billId for CdrExts in CdrJob");
+            var allIdCalls = cdrExtsForNonPartials.Select(c => c.Cdr.IdCall)
+                .Concat(cdrExtsForPartials
+                .SelectMany(c => c.PartialCdrContainer.CombinedNewAndOldUnprocessedInstance).Select(c => c.IdCall))
+                .Concat(errorCdrExts.Select(c=>c.CdrError.IdCall)).ToList();
+            if (allIdCalls.GroupBy(i => i).Any(g => g.Count() > 1))
+            {
+                throw new Exception("Duplicate idcalls for CdrExts in CdrJob");
+            }
+            var rawPartialCount = this.PartialCdrContainers.SelectMany(p => p.NewRawInstances).Count();
+            if (this.RawCount != cdrExtsForNonPartials.Count + cdrExtsForPartials.Count + errorCdrExts.Count+
+                rawPartialCount - this.PartialCdrContainers.Count + base.InconsistentCdrs.Count)
+                throw new Exception("Count of nonPartial and partial cdrs do not match expected with expected rawCount for this job.");
         }
 
         public void SetAllBlankFieldsToZerolengthString(string[] thisRow)

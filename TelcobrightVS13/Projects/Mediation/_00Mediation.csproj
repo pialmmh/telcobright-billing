@@ -204,7 +204,7 @@
     <Compile Include="Cdr\Summary\CdrSummaryContext.cs" />
     <Compile Include="Cdr\CdrJobResult.cs" />
     <Compile Include="Cdr\Collection\CdrCollectionResult.cs" />
-    <Compile Include="Cdr\Collection\CdrManipulatingUtil.cs" />
+    <Compile Include="Cdr\Collection\CdrConversionUtil.cs" />
     <Compile Include="Cdr\Collection\IcdrImplConverter.cs" />
     <Compile Include="Cdr\Collection\PartialCdrCollector.cs" />
     <Compile Include="Cdr\Collection\PartialCdrContainer.cs" />

@@ -301,6 +301,7 @@
     <Compile Include="EntityExtensions\Crud\zone.cs" />
     <Compile Include="EntityExtensions\Crud\_StaticExtInsertColumnHeaders.cs" />
     <Compile Include="EntityExtensions\enumratesheetformat.cs" />
+    <Compile Include="EntityExtensions\IBillingEvent.cs" />
     <Compile Include="EntityExtensions\ICdrAssignment.cs" />
     <Compile Include="EntityExtensions\SerializingAttrAdder.cs" />
     <Compile Include="EntityExtensions\ICachebale.cs" />

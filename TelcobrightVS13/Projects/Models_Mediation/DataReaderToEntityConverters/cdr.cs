@@ -4,7 +4,7 @@ using System.Data;
 
 namespace MediationModel
 {
-    public partial class cdr : IDataReaderToStrArrConvertable
+    public partial class cdr : IDataReaderToStrArrConvertable, IBillingEvent
     {
         public string[] ConvertDataReaderToStrArr(object inputData, IDataReader reader)
         {

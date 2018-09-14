@@ -245,7 +245,7 @@ namespace Decoders
                 {//if error found for one row, add this to inconsistent
 
                     Console.WriteLine(e1);
-                    inconsistentCdrs.Add(CdrManipulatingUtil.ConvertTxtRowToCdrinconsistent(thisRow));
+                    inconsistentCdrs.Add(CdrConversionUtil.ConvertTxtRowToCdrinconsistent(thisRow));
                     ErrorWriter wr = new ErrorWriter(e1, "DecodeCdr", null,
                         this.RuleName + " encounterd error during decoding and an Inconsistent cdr has been generated."
                         , input.Tbc.DatabaseSetting.DatabaseName);

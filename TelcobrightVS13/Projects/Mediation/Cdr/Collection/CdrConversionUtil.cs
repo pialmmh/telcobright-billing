@@ -9,7 +9,7 @@ using TelcobrightFileOperations;
 
 namespace TelcobrightMediation.Mediation.Cdr
 {
-    public static class CdrManipulatingUtil
+    public static class CdrConversionUtil
     {
         public static void SetMissingAnswerWithStartTimeForAnsweredCdr(CdrSetting cdrSettings, ICdr cdrToValidate)
         {

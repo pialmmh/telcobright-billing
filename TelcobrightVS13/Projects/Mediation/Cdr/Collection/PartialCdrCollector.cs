@@ -57,35 +57,27 @@ namespace TelcobrightMediation.Mediation.Cdr
                 .SqlQuery<cdrpartiallastaggregatedrawinstance>(sql)
                 .ToDictionary(c => c.UniqueBillId);
 
-            this.BillIdWiseLastProcessedCdrInstance = CollectLastProcessedCdrInstances();
-            this.BillIdWiseLastProcessedErrorInstance = CollectLastProcessedErrorInstances();
+            this.BillIdWiseLastProcessedCdrInstance = CollectLastProcessedCdrOrErrorInstances<cdr>();
+            this.BillIdWiseLastProcessedErrorInstance = CollectLastProcessedCdrOrErrorInstances<cdrerror>();
         }
 
-        Dictionary<string, cdr> CollectLastProcessedCdrInstances()
+        Dictionary<string, T> CollectLastProcessedCdrOrErrorInstances<T>() where T:IBillingEvent
         {
-            if(this.BillIdWiseReferences.Any()==false) return new Dictionary<string, cdr>();
+            if(this.BillIdWiseReferences.Any()==false) return new Dictionary<string, T>();
             var dayWisePartialReferences = this.BillIdWiseReferences.Values
                 .GroupBy(r => r.CallDate.Date).ToDictionary(g => g.Key, g => g.Select(r => r.lastIdcall).ToList());
             string sql = string.Join(" union all ",
                 dayWisePartialReferences.Select(kv =>
-                    $@" select * from cdr where switchid={this.IdSwitch} 
+                {
+                    var tableName = typeof(T).Name;
+                    return $@" select * from {tableName} where switchid={this.IdSwitch} 
                     and IdCall in ({string.Join(",", kv.Value)}) and {
-                    kv.Key.ToMySqlWhereClauseForOneDay("starttime")}"));
-            return this.Context.Database.SqlQuery<cdr>(sql).ToDictionary(c => c.UniqueBillId);
+                            kv.Key.ToMySqlWhereClauseForOneDay("starttime")
+                        }";
+                }));
+            return this.Context.Database.SqlQuery<T>(sql).ToDictionary(c => c.UniqueBillId);
         }
-        Dictionary<string, cdrerror> CollectLastProcessedErrorInstances()
-        {
-            if (this.BillIdWiseReferences.Any() == false) return new Dictionary<string, cdrerror>();
-            var dayWisePartialReferences = this.BillIdWiseReferences.Values
-                .GroupBy(r => r.CallDate.Date).ToDictionary(g => g.Key, g => g.Select(r => r.lastIdcall).ToList());
-            string sql = string.Join(" union all ",
-                dayWisePartialReferences.Select(kv =>
-                    $@" select * from cdrerror where switchid='{this.IdSwitch}' 
-                    and IdCall in ({string.Join(",", kv.Value)}) and {
-                        kv.Key.ToMySqlWhereClauseForOneDay("starttime")}"));
-            return this.Context.Database.SqlQuery<cdrerror>(sql).ToDictionary(c => c.UniqueBillId);
-        }
-        public BlockingCollection<PartialCdrContainer> AggregateAll()
+        public BlockingCollection<PartialCdrContainer> CreatePartialCdrContainers()
         {
             BlockingCollection<PartialCdrContainer> partialCdrContainers = new BlockingCollection<PartialCdrContainer>();
             foreach (KeyValuePair<string, List<cdrpartialrawinstance>> kv in this.BillIdWiseNewRawInstances)
@@ -103,13 +95,41 @@ namespace TelcobrightMediation.Mediation.Cdr
                         : null,
                     prevProcessedCdrInstance: this.BillIdWiseLastProcessedCdrInstance.ContainsKey(kv.Key) == true
                         ? this.BillIdWiseLastProcessedCdrInstance[kv.Key]
+                        : null,
+                    prevProcessedErrorInstance: this.BillIdWiseLastProcessedErrorInstance.ContainsKey(kv.Key) == true
+                        ? this.BillIdWiseLastProcessedErrorInstance[kv.Key]
                         : null);
-                partialCdrContainer.Aggregate();
-                partialCdrContainer.ValidateAggregation(this.CdrSetting.FractionalNumberComparisonTollerance);
                 partialCdrContainers.Add(partialCdrContainer);
             }
             return partialCdrContainers;
         }
+        //public BlockingCollection<PartialCdrContainer> AggregateAll()
+        //{
+        //    BlockingCollection<PartialCdrContainer> partialCdrContainers = new BlockingCollection<PartialCdrContainer>();
+        //    foreach (KeyValuePair<string, List<cdrpartialrawinstance>> kv in this.BillIdWiseNewRawInstances)
+        //    {
+        //        var partialCdrContainer = new PartialCdrContainer(
+        //            newRawInstances: kv.Value,
+        //            prevRawInstances: this.BillIdWisePrevRawInstances.ContainsKey(kv.Key)
+        //                ? this.BillIdWisePrevRawInstances[kv.Key]
+        //                : new List<cdrpartialrawinstance>(),
+        //            cdrPartialreference: this.BillIdWiseReferences.ContainsKey(kv.Key)
+        //                ? this.BillIdWiseReferences[kv.Key]
+        //                : null,
+        //            lastAggregatedRawInstance: this.BillIdWiseLastAggregatedRawInstances.ContainsKey(kv.Key) == true
+        //                ? this.BillIdWiseLastAggregatedRawInstances[kv.Key]
+        //                : null,
+        //            prevProcessedCdrInstance: this.BillIdWiseLastProcessedCdrInstance.ContainsKey(kv.Key) == true
+        //                ? this.BillIdWiseLastProcessedCdrInstance[kv.Key]
+        //                : null,
+        //            prevProcessedErrorInstance: this.BillIdWiseLastProcessedErrorInstance.ContainsKey(kv.Key) == true
+        //                ? this.BillIdWiseLastProcessedErrorInstance[kv.Key]
+        //                : null);
+                
+        //        partialCdrContainers.Add(partialCdrContainer);
+        //    }
+        //    return partialCdrContainers;
+        //}
 
         private string CreateSqlToCollectPrevPartialCdrInfo(List<string> uniqueBillIds,string tableName)
         {
@@ -243,6 +263,14 @@ namespace TelcobrightMediation.Mediation.Cdr
             {
                 var matchingLastAggInstance = this.BillIdWiseLastAggregatedRawInstances[c.UniqueBillId];
                 if (c.DurationSec!=matchingLastAggInstance.DurationSec)
+                {
+                    throw new Exception("Individual duration of last processed cdrs must match corresponding lastAggRawInstance's duration.");
+                }
+            });
+            lastProcessedCdrErrors.ForEach(c =>
+            {
+                var matchingLastAggInstance = this.BillIdWiseLastAggregatedRawInstances[c.UniqueBillId];
+                if ( Convert.ToDecimal(c.DurationSec) != matchingLastAggInstance.DurationSec)
                 {
                     throw new Exception("Individual duration of last processed cdrs must match corresponding lastAggRawInstance's duration.");
                 }

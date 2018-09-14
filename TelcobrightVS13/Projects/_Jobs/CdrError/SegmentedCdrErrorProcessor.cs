@@ -44,7 +44,7 @@ namespace TelcobrightMediation
             {
                 cdrinconsistent inconsistentCdr = null;
                 cdr convertedCdr =
-                    CdrManipulatingUtil.ConvertTxtRowToCdrOrInconsistentOnFailure(c, out inconsistentCdr);
+                    CdrConversionUtil.ConvertTxtRowToCdrOrInconsistentOnFailure(c, out inconsistentCdr);
                 cdrs.Add(convertedCdr);
             });
 
