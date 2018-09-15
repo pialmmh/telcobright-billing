@@ -1,5 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
@@ -17,27 +18,31 @@ namespace TelcobrightMediation
         public Dictionary<string, rateplan> DicRatePlan = new Dictionary<string, rateplan>();//key=id as string
         public long MaxRateInDic = 0;
         private PartnerEntities Context { get; }
+        public static ConcurrentDictionary<ValueTuple<int, TupleByPeriod>, Dictionary<string, RatesWithAssignmentTuple>>
+            PriorityAndTupleWisePrefixDicWithAssignmentTuples { get; private set; }
         public RateCache(long pMaxRateInDic,PartnerEntities context)
         {
             this.Context = context;
             this.MaxRateInDic = pMaxRateInDic;
             this.RateContainer = new RateContainerInMemoryLocal(this.Context);
+            PriorityAndTupleWisePrefixDicWithAssignmentTuples =
+                new ConcurrentDictionary<ValueTuple<int, TupleByPeriod>, Dictionary<string, RatesWithAssignmentTuple>>();
         }
         //MAIN RATE CACHE
         //ratedictionary loaded per date, all rates are loaded per day in the cache
         public Dictionary<DateRange, Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>>> DateRangeWiseRateDic
-            = new Dictionary<DateRange, Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>>>
-                (new DateRange.EqualityComparer());
+            = new Dictionary<DateRange, Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>>>(new DateRange.EqualityComparer());
 
         //add a clearratecache method public to allow resuming after memory exception at any stage
         public void ClearRateCache()
         {
             this.DateRangeWiseRateDic.Clear();
+            PriorityAndTupleWisePrefixDicWithAssignmentTuples =
+                new ConcurrentDictionary<ValueTuple<int, TupleByPeriod>, Dictionary<string, RatesWithAssignmentTuple>>();
             GC.Collect();
         }
 
-        public Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>>
-            GetRateDictsByDay(DateRange dRange,bool flagLcr,bool useInMemoryTable,bool isCachingForMediation)
+        public Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>> GetRateDictsByDay(DateRange dRange,bool flagLcr,bool useInMemoryTable,bool isCachingForMediation)
         {
             Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>> todaysDict = null;
 
@@ -53,8 +58,7 @@ namespace TelcobrightMediation
         private long GetCount()
         {
             long cnt = 0;
-            foreach (KeyValuePair<DateRange, Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>>>
-                kv in this.DateRangeWiseRateDic)
+            foreach (KeyValuePair<DateRange, Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>>> kv in this.DateRangeWiseRateDic)
             {
                 foreach (KeyValuePair<TupleByPeriod, Dictionary<string, List<Rateext>>> kvInner in kv.Value)
                 {
@@ -87,8 +91,7 @@ namespace TelcobrightMediation
             }
 
             Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>> dicByDay =
-                new Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>>
-                    (new TupleByPeriod.EqualityComparer());
+                new Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>>(new TupleByPeriod.EqualityComparer());
 
             //for non assignable services
             Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>> tempDic =
@@ -156,8 +159,7 @@ namespace TelcobrightMediation
             bool useInMemoryTable,bool isCachingForMediation)
         {
             Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>> dicRateDic =
-                new Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>>
-                    (new TupleByPeriod.EqualityComparer());
+                new Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>>(new TupleByPeriod.EqualityComparer());
             List<int> lstIdservices = new List<int>();
             lstIdservices = this.Context.enumservicefamilies.Where(c => c.PartnerAssignNotNeeded == 1).Select(c => c.id)
                 .ToList();
@@ -169,8 +171,7 @@ namespace TelcobrightMediation
                         this.Context, this.RateContainer);
 
                     //order by prefix ascending and startdate descending
-                    Dictionary<TupleByPeriod, List<Rateext>>
-                        dicRateList = dicGenerator.GetRateDict(useInMemoryTable,isCachingForMediation); //Get the rate dictionary
+                    Dictionary<TupleByPeriod, List<Rateext>> dicRateList = dicGenerator.GetRateDict(useInMemoryTable,isCachingForMediation); //Get the rate dictionary
                     foreach (KeyValuePair<TupleByPeriod, List<Rateext>> kv in dicRateList)
                     {
                         Dictionary<string, List<Rateext>> dicRates = RateListToDictionary(kv.Value, flagLcr);
@@ -187,8 +188,7 @@ namespace TelcobrightMediation
             bool flagLcr,bool useInMemoryTable,bool isCachingForMediation)
         {
             Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>> dicRateDic =
-                new Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>>
-                    (new TupleByPeriod.EqualityComparer());
+                new Dictionary<TupleByPeriod, Dictionary<string, List<Rateext>>>(new TupleByPeriod.EqualityComparer());
             List<int> lstIdservices = new List<int>();
             lstIdservices = this.Context.enumservicefamilies.Where(c => c.PartnerAssignNotNeeded != 1).Select(c => c.id)
                 .ToList();
@@ -200,8 +200,7 @@ namespace TelcobrightMediation
                     this.Context, this.RateContainer);
 
                 //order by prefix ascending and startdate descending
-                Dictionary<TupleByPeriod, List<Rateext>>
-                    dicRateList = dicGenerator.GetRateDict(useInMemoryTable,isCachingForMediation); //Get the rate dictionary
+                Dictionary<TupleByPeriod, List<Rateext>> dicRateList = dicGenerator.GetRateDict(useInMemoryTable,isCachingForMediation); //Get the rate dictionary
                 List<Rateext> combinedList = new List<Rateext>();
                 foreach (KeyValuePair<TupleByPeriod, List<Rateext>> kv in dicRateList)
                 {
@@ -246,7 +245,6 @@ namespace TelcobrightMediation
             }
             return dicRates;
         }
-
     }
 }
 

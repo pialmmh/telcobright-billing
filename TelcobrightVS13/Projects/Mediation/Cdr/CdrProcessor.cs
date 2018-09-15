@@ -284,21 +284,34 @@ namespace TelcobrightMediation
 
 		{
 		    int numberOfProcessedCdrs = processedCdrExts.Count();
-			if (this.CdrJobContext.TelcobrightJob.idjobdefinition == 2) //cdrError
-			{
-                var idCallsOfProcessedCdrs = processedCdrExts
-					.Select(c => new KeyValuePair<long, DateTime>(c.Cdr.IdCall, c.StartTime)).ToList();
-				var idCallsOfCdrErrors = this.CollectionResult.CdrExtErrors
-					.Select(c => new KeyValuePair<long, DateTime>(c.CdrError.IdCall, c.CdrError.StartTime)).ToList();
-
-				int delCount= OldCdrDeleter.DeleteOldCdrs("cdrerror", idCallsOfProcessedCdrs.Concat(idCallsOfCdrErrors).ToList(),
-					this.CdrJobContext.SegmentSizeForDbWrite, this.CdrJobContext.DbCmd);
-			    if (delCount != (numberOfProcessedCdrs+this.CollectionResult.CdrExtErrors.Count))
-			    {
-			        throw new Exception("Written number of cdrs does not match processed cdrs count.");
-			    }
-            }
-            long writtenInconsistentCount = 0,
+		    Action<List<KeyValuePair<long, DateTime>>,int> cdrErrorDeleter = (idCallsToDelete,expectedDelCount) =>
+		    {
+		        int delCount = OldCdrDeleter.DeleteOldCdrs("cdrerror", idCallsToDelete,
+		            this.CdrJobContext.SegmentSizeForDbWrite, this.CdrJobContext.DbCmd);
+		        if (delCount != expectedDelCount)
+		            throw new Exception("Number of deleted cdrerrors does not match count in collectionResult.");
+		    };
+		    if (this.CdrJobContext.TelcobrightJob.idjobdefinition == 2) //cdrError
+		    {
+		        var idCallsOfProcessedCdrs = processedCdrExts
+		            .Select(c => new KeyValuePair<long, DateTime>(c.Cdr.IdCall, c.StartTime)).ToList();
+		        var idCallsOfCdrErrors = this.CollectionResult.CdrExtErrors
+		            .Select(c => new KeyValuePair<long, DateTime>(c.CdrError.IdCall, c.CdrError.StartTime)).ToList();
+		        var idCallsInCdrErrorToDelete = idCallsOfProcessedCdrs.Concat(idCallsOfCdrErrors).ToList();
+		        cdrErrorDeleter.Invoke(idCallsInCdrErrorToDelete,
+		            numberOfProcessedCdrs + this.CollectionResult.CdrExtErrors.Count);
+		    }
+		    if (this.CdrJobContext.TelcobrightJob.idjobdefinition == 1) //newCdr
+		    {
+		        var idCallsOfCdrErrorsForPreExistingErrorPartial = this.CollectionResult.CdrExtErrors
+                    .Where(c=>c.IsPartial==true&&c.PartialCdrContainer.LastProcessedAggregatedRawInstance!=null
+                    &&c.HasPreExistingCdrError==true).Select(c => new KeyValuePair<long, DateTime>
+		            (c.PartialCdrContainer.LastProcessedAggregatedRawInstance.IdCall, c.CdrError.StartTime)).ToList();
+		        if (idCallsOfCdrErrorsForPreExistingErrorPartial.Any())
+		            cdrErrorDeleter.Invoke(idCallsOfCdrErrorsForPreExistingErrorPartial,
+		                idCallsOfCdrErrorsForPreExistingErrorPartial.Count);
+		    }
+		    long writtenInconsistentCount = 0,
 				writtenErrorCount = 0,
 				writtenNonPartialCdrCount = 0,
 				writtenNormalizedPartialCdrCount = 0,

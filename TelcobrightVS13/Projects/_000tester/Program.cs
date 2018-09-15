@@ -17,9 +17,9 @@ namespace Utils
              
         static void Main(string[] args)
         {
-            //var tester = new JsonCompressionTester();
-            //tester.Test();
-            //return;
+            var tester = new ParallelStringGeneratorTest();
+            tester.Test();
+            return;
             //tester.PerformanceTest();
             Console.WriteLine("Press a key:");
             Console.WriteLine("1=Test Entity Renaming");

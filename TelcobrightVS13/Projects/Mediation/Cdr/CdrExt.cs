@@ -28,6 +28,8 @@ namespace TelcobrightMediation.Cdr
         public DateTime StartTime => this.Cdr.StartTime;
         public cdr Cdr { get; set; }
         private cdrerror cdrError;
+        public bool IsPartial { get; private set; } = false;
+        public bool HasPreExistingCdrError { get; set; } = false;
         public cdrerror CdrError
         {
             get
@@ -83,6 +85,7 @@ namespace TelcobrightMediation.Cdr
                 {
                     throw new Exception("Property PartialCdrContainer cannot be set for non partial cdrs.");
                 }
+                this.IsPartial = value != null;
                 this.partialCdrContainer = value;
             }
         }

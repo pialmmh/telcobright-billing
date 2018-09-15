@@ -173,7 +173,7 @@ namespace TelcobrightMediation
         protected override List<CdrExt> CreateOldCdrExts()
         {
             var partialCdrContainers = this.PartialCdrContainers
-                .Where(c => c.LastProcessedAggregatedRawInstance != null).ToList();
+                .Where(c => c.IsErrorCdr==false&&c.LastProcessedAggregatedRawInstance != null).ToList();
             return partialCdrContainers
                 .Select(partialContainer => CdrExtFactory.CreateCdrExtWithPartialCdrContainer(partialContainer,
                     CdrNewOldType.OldCdr)).ToList();

@@ -1,22 +1,13 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using LibraryExtensions;
 using System.Linq;
 using System.Threading.Tasks;
 using MediationModel;
 namespace TelcobrightMediation
 {
-    class RatesWithAssignmentTuple
-    {
-        public TupleByPeriod Tup { get; }
-        public List<Rateext> Rates { get; }
-
-        public RatesWithAssignmentTuple(TupleByPeriod tup, List<Rateext> rates)
-        {
-            this.Tup = tup;
-            this.Rates = rates;
-        }
-    }
     public class PrefixMatcher
     {
         private Dictionary<string, rateplan> DicRatePlan { get; set; }
@@ -26,9 +17,13 @@ namespace TelcobrightMediation
         private int subCategory;
         private DateTime answerTime;
         private string[] phoneNumbersAsArray;
-        List<Dictionary<string, RatesWithAssignmentTuple>> priorityWisePrefixDicWithAssignTuple =
-            new List<Dictionary<string, RatesWithAssignmentTuple>>();
-        public PrefixMatcher(ServiceContext serviceContext, string phoneNumber, int category, 
+        private static long nonParallelExecTime = 0;
+        private static long parallelExecTime = 0;
+        private Rateext[] prefixWiseMatchedRates = new Rateext[50];
+        private List<Dictionary<string, RatesWithAssignmentTuple>> PriorityWisePrefixDicWithAssignTuple { get; }
+            = new List<Dictionary<string, RatesWithAssignmentTuple>>();
+
+        public PrefixMatcher(ServiceContext serviceContext, string phoneNumber, int category,
             int subCategory, List<TupleByPeriod> tups, DateTime answerTime, bool flagLcr,
             bool useInMemoryTable)
         {
@@ -41,34 +36,72 @@ namespace TelcobrightMediation
                 throw new Exception("Max decimal precision must be >=0 and <=8.");
             this.DicRatePlan = serviceContext.MefServiceFamilyContainer.RateCache.DicRatePlan;
             //TupleByPeriod=one rateplanassignmenttuple on the day of answertime
-            foreach (TupleByPeriod tup in tups.OrderBy(c => c.Priority))//ToList()
+            foreach (TupleByPeriod tup in tups.OrderBy(c => c.Priority)) //ToList()
             {
-                Dictionary<string, List<Rateext>> prefixDic = null;
-                prefixDic = GetPrefixWiseRateInstances(tup, flagLcr, useInMemoryTable);
-                Dictionary<string, RatesWithAssignmentTuple> prefixDicWithAssignmentTuples
-                    = new Dictionary<string, RatesWithAssignmentTuple>();
-                foreach (KeyValuePair<string, List<Rateext>> kv in prefixDic)
+                Dictionary<string, RatesWithAssignmentTuple>
+                    prefixDicWithAssignmentTuples = null; //= new Dictionary<string, RatesWithAssignmentTuple>();
+                var tupUniqueKeyWithPriority = new ValueTuple<int, TupleByPeriod>(tup.Priority, tup);
+                RateCache.PriorityAndTupleWisePrefixDicWithAssignmentTuples.TryGetValue(
+                    tupUniqueKeyWithPriority, out prefixDicWithAssignmentTuples);
+                if (prefixDicWithAssignmentTuples != null)
                 {
-                    prefixDicWithAssignmentTuples.Add(kv.Key, new RatesWithAssignmentTuple(tup, kv.Value));
+                    this.PriorityWisePrefixDicWithAssignTuple.Add(prefixDicWithAssignmentTuples);
                 }
-                if (prefixDic != null) priorityWisePrefixDicWithAssignTuple.Add(prefixDicWithAssignmentTuples);
+                else
+                {
+                    Dictionary<string, List<Rateext>> prefixDic = null;
+                    prefixDic = GetPrefixWiseRateInstances(tup, flagLcr, useInMemoryTable);
+                    prefixDicWithAssignmentTuples = new Dictionary<string, RatesWithAssignmentTuple>();
+                    foreach (KeyValuePair<string, List<Rateext>> kv in prefixDic)
+                    {
+                        prefixDicWithAssignmentTuples.Add(kv.Key, new RatesWithAssignmentTuple(tup, kv.Value));
+                    }
+                    if (RateCache.PriorityAndTupleWisePrefixDicWithAssignmentTuples.TryAdd(tupUniqueKeyWithPriority,
+                        prefixDicWithAssignmentTuples)==false)
+                    {
+                        if (RateCache.PriorityAndTupleWisePrefixDicWithAssignmentTuples
+                                .ContainsKey(tupUniqueKeyWithPriority) == false)
+                        {
+                            throw new Exception($"Could not add item to RateCache.PriorityAndTupleWisePrefixDicWithAssignmentTuples, " +
+                                                $"also item with the same key has not been added by a parallel process.");
+                        }
+                    }
+                    ;
+                    this.PriorityWisePrefixDicWithAssignTuple.Add(prefixDicWithAssignmentTuples);
+                }
+                //if (prefixDic != null) PriorityWisePrefixDicWithAssignTuple.Add(prefixDicWithAssignmentTuples);
             }
-            var phCharArray=phoneNumber.ToCharArray();
-            this.phoneNumbersAsArray=new string[phoneNumber.Length];
+            var phCharArray = phoneNumber.ToCharArray();
+            this.phoneNumbersAsArray = new string[phoneNumber.Length];
             for (int i = 0; i < phCharArray.Length; i++)
             {
                 this.phoneNumbersAsArray[i] = new string(phCharArray, 0, phCharArray.Length - i);
             }
-            //for (int i = phoneNumber.Length; i > 0; i--)
-            //{
-            //    this.phoneNumbersAsArray[i-1]=(phoneNumber.Substring(0, i));
-            //}
         }
 
         public Rateext MatchPrefix()
         {
-            foreach (Dictionary<string, RatesWithAssignmentTuple> prefixDic in 
-                this.priorityWisePrefixDicWithAssignTuple)
+            Rateext rateext = null;
+            //Stopwatch stopwatch = new Stopwatch();
+            //stopwatch.Start();
+            //rateext= MatchPrefixNonParallel();
+            //stopwatch.Stop();
+            //nonParallelExecTime += stopwatch.ElapsedTicks;
+            //Console.WriteLine("Non parallel EXEC TIME {0}", nonParallelExecTime);
+
+            //rateext = null;
+            //stopwatch.Reset();
+            //stopwatch.Start();
+            rateext = MatchPrefixParallel();
+            //stopwatch.Stop();
+            //parallelExecTime += stopwatch.ElapsedTicks;
+            //Console.WriteLine("Parallel EXEC TIME {0}", parallelExecTime);
+            return rateext;
+        }
+        public Rateext MatchPrefixNonParallel()
+        {
+            foreach (Dictionary<string, RatesWithAssignmentTuple> prefixDic in
+                this.PriorityWisePrefixDicWithAssignTuple)
             {
                 Rateext matchedRate = null;
                 bool matchFound = false;
@@ -97,6 +130,44 @@ namespace TelcobrightMediation
                     }
                 }
                 if (matchedRate != null) return matchedRate;
+            }
+            return null;
+        }
+
+        public Rateext MatchPrefixParallel()
+        {
+            foreach (Dictionary<string, RatesWithAssignmentTuple> prefixDic in
+                this.PriorityWisePrefixDicWithAssignTuple)
+            {
+                bool matchFound = false;
+                Parallel.For((int)0, this.phoneNumbersAsArray.Length, i =>
+               {
+                   var prefix = this.phoneNumbersAsArray[i];
+                   RatesWithAssignmentTuple ratesWithAssignmentTuple = null;
+                   prefixDic.TryGetValue(prefix, out ratesWithAssignmentTuple);
+                   if (ratesWithAssignmentTuple != null)
+                   {
+                       List<Rateext> lstRates = ratesWithAssignmentTuple.Rates;
+                       foreach (Rateext thisRate in lstRates)
+                       {
+                           if (thisRate.Category == this.category && thisRate.SubCategory == this.subCategory
+                               && this.answerTime >= thisRate.P_Startdate && this.answerTime <
+                               (thisRate.P_Enddate != null
+                                   ? thisRate.P_Enddate
+                                   : new DateTime(9999, 12, 31, 23, 59, 59)))
+                           {
+                               var matchedRateForthisPrefix = thisRate;
+                               matchedRateForthisPrefix.IdRatePlanAssignmentTuple =
+                                   Convert.ToInt32(ratesWithAssignmentTuple.Tup.IdAssignmentTuple);
+                               this.prefixWiseMatchedRates[i] = matchedRateForthisPrefix;
+                               matchFound = true;
+                           }
+                       }
+                   }
+               });
+                if (matchFound == false) return null;
+                for (var i = this.prefixWiseMatchedRates.Length - 1; i >= 0; i--)
+                    return this.prefixWiseMatchedRates[i] ?? null;
             }
             return null;
         }

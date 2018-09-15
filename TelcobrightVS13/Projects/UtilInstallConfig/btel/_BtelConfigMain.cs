@@ -17,9 +17,9 @@ using TelcobrightMediation.Automation;
 namespace InstallConfig
 {
     [Export(typeof(IConfigGenerator))]
-    public partial class BtelConfigGenerator:IConfigGenerator
+    public partial class BtelConfigGenerator : IConfigGenerator
     {
-        public string OperatorName { get;}
+        public string OperatorName { get; }
         public TelcobrightConfig Tbc { get; }
 
         public BtelConfigGenerator()
@@ -52,7 +52,7 @@ namespace InstallConfig
                 ServiceGroupConfigurations = this.GetServiceGroupConfigurations(),
                 DisableCdrPostProcessingJobCreationForAutomation = false,
                 DisableParallelMediation = false
-        };
+            };
 
             this.PrepareDirectorySetting(this.Tbc);
 

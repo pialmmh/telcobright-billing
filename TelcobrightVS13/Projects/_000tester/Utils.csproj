@@ -164,6 +164,7 @@
     <Compile Include="MefTester.cs" />
     <Compile Include="OrderByTester.cs" />
     <Compile Include="ParallelReaderToEntityTester.cs" />
+    <Compile Include="ParallelStringGeneratorTest.cs" />
     <Compile Include="PartialCdrGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="salary.cs">

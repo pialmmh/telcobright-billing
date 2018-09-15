@@ -11,6 +11,7 @@ namespace TelcobrightMediation
         public int? IdAssignmentTuple { get; set; }
         public DateRange DRange { get; set; }
         public int Priority { get; set; }
+
         public override string ToString()
         {
             return this.IdAssignmentTuple.ToString() + "/" + this.DRange.ToString();
@@ -32,24 +33,23 @@ namespace TelcobrightMediation
         {
             return Equals(obj as TupleByPeriod);
         }
+
         public bool Equals(TupleByPeriod obj)
         {
             return obj != null &&
-                (
-                obj.IdAssignmentTuple == this.IdAssignmentTuple &&
-                obj.DRange.Equals(this.DRange));
+                   (
+                       obj.IdAssignmentTuple == this.IdAssignmentTuple &&
+                       obj.DRange.Equals(this.DRange));
         }
 
-        public class EqualityComparer : IEqualityComparer<TupleByPeriod>//for dictionary key lookup
+        public class EqualityComparer : IEqualityComparer<TupleByPeriod> //for dictionary key lookup
         {
-
             public bool Equals(TupleByPeriod x, TupleByPeriod y)
             {
-                return x!=null
-                    && y!=null
-                    && (x.DRange.Equals(y.DRange) && x.IdAssignmentTuple == y.IdAssignmentTuple);
+                return x != null
+                       && y != null
+                       && (x.DRange.Equals(y.DRange) && x.IdAssignmentTuple == y.IdAssignmentTuple);
             }
-
             public int GetHashCode(TupleByPeriod x)
             {
                 unchecked // Overflow is fine, just wrap
@@ -61,11 +61,9 @@ namespace TelcobrightMediation
                     return hash;
                 }
             }
-
         }
-
-        
     }
+
     public class RateTuple: IEquatable<RateTuple>
     {
         public int? IdRateplanAssignmenttuple = -1;

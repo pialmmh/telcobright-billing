@@ -126,6 +126,7 @@ namespace TelcobrightMediation
             {
                 throw new Exception("Non partial cdrExt must be added to cdrErrors through appropriate method.");
             }
+            cdrExt.HasPreExistingCdrError = true;
             this.cdrExtErrors.Add(cdrExt);
         }
     }
