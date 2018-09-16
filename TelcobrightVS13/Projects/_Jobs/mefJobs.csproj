@@ -76,6 +76,7 @@
     <Compile Include="CdrErase\SegmentedCdrErasingProcessor.cs" />
     <Compile Include="CdrError\SegmentedCdrErrorProcessor.cs" />
     <Compile Include="CdrReProcess\SegmentedCdrReprocessJobProcessor.cs" />
+    <Compile Include="EmailSending.cs" />
     <Compile Include="TransactionPosting.cs" />
     <Compile Include="FileCopy.cs" />
     <Compile Include="FileDelete.cs" />

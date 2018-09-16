@@ -140,34 +140,37 @@ namespace TelcobrightMediation
                 this.PriorityWisePrefixDicWithAssignTuple)
             {
                 bool matchFound = false;
-                Parallel.For((int)0, this.phoneNumbersAsArray.Length, i =>
-               {
-                   var prefix = this.phoneNumbersAsArray[i];
-                   RatesWithAssignmentTuple ratesWithAssignmentTuple = null;
-                   prefixDic.TryGetValue(prefix, out ratesWithAssignmentTuple);
-                   if (ratesWithAssignmentTuple != null)
-                   {
-                       List<Rateext> lstRates = ratesWithAssignmentTuple.Rates;
-                       foreach (Rateext thisRate in lstRates)
-                       {
-                           if (thisRate.Category == this.category && thisRate.SubCategory == this.subCategory
-                               && this.answerTime >= thisRate.P_Startdate && this.answerTime <
-                               (thisRate.P_Enddate != null
-                                   ? thisRate.P_Enddate
-                                   : new DateTime(9999, 12, 31, 23, 59, 59)))
-                           {
-                               var matchedRateForthisPrefix = thisRate;
-                               matchedRateForthisPrefix.IdRatePlanAssignmentTuple =
-                                   Convert.ToInt32(ratesWithAssignmentTuple.Tup.IdAssignmentTuple);
-                               this.prefixWiseMatchedRates[i] = matchedRateForthisPrefix;
-                               matchFound = true;
-                           }
-                       }
-                   }
-               });
+                Parallel.For((int) 0, this.phoneNumbersAsArray.Length, i =>
+                {
+                    var prefix =
+                        this.phoneNumbersAsArray[i]; //max length of prefix is processed first i.e. the whole number
+                    RatesWithAssignmentTuple ratesWithAssignmentTuple = null;
+                    prefixDic.TryGetValue(prefix, out ratesWithAssignmentTuple);
+                    if (ratesWithAssignmentTuple != null)
+                    {
+                        List<Rateext> lstRates = ratesWithAssignmentTuple.Rates;
+                        foreach (Rateext thisRate in lstRates)
+                        {
+                            if (thisRate.Category == this.category && thisRate.SubCategory == this.subCategory
+                                && this.answerTime >= thisRate.P_Startdate && this.answerTime <
+                                (thisRate.P_Enddate != null
+                                    ? thisRate.P_Enddate
+                                    : new DateTime(9999, 12, 31, 23, 59, 59)))
+                            {
+                                var matchedRateForthisPrefix = thisRate;
+                                matchedRateForthisPrefix.IdRatePlanAssignmentTuple =
+                                    Convert.ToInt32(ratesWithAssignmentTuple.Tup.IdAssignmentTuple);
+                                this.prefixWiseMatchedRates[i] = matchedRateForthisPrefix;
+                                matchFound = true;
+                            }
+                        }
+                    }
+                });
                 if (matchFound == false) return null;
-                for (var i = this.prefixWiseMatchedRates.Length - 1; i >= 0; i--)
-                    return this.prefixWiseMatchedRates[i] ?? null;
+                foreach (Rateext t in this.prefixWiseMatchedRates) //first matched is the longest match
+                {
+                    if (t != null) return t;
+                }
             }
             return null;
         }

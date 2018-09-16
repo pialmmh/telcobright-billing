@@ -163,6 +163,8 @@ namespace WS_Telcobright_Topshelf
 
         private static Dictionary<string, TelcobrightConfig> GetTelcobrightConfigs()
         {
+            bool disableParallelMediationForDebug =
+                Convert.ToBoolean(ConfigurationManager.AppSettings["disableParallelMediationForDebug"]);
             DirectoryInfo dir =
                 new DirectoryInfo(ExecutablePathFinder.GetBinPath() + Path.DirectorySeparatorChar + "config");
             Dictionary<string, TelcobrightConfig> operatorWiseConfigs = new Dictionary<string, TelcobrightConfig>();
@@ -178,7 +180,10 @@ namespace WS_Telcobright_Topshelf
                     telcobrightpartner tbPartner = context.telcobrightpartners
                         .Where(p => p.databasename == tbc.DatabaseSetting.DatabaseName).ToList().First();
                 }
-
+                if (Debugger.IsAttached)
+                {
+                    tbc.CdrSetting.DisableParallelMediation = disableParallelMediationForDebug;
+                }
                 operatorWiseConfigs.Add(configFileNameAsOperatorName, tbc);
             }
             return operatorWiseConfigs;

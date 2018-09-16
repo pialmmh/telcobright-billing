@@ -388,9 +388,10 @@ namespace TelcobrightMediation
 				CdrErrorCount = writtenErrorCount,
 				CdrInconsistentCount = writtenInconsistentCount,
 				PartialCdrWriter = partialCdrWriter,
-				TrueNonPartialCount = writtenNonPartialCdrCount,
-				NormalizedPartialCount = writtenNormalizedPartialCdrCount
-			};
+				NonPartialCdrCount = writtenNonPartialCdrCount,
+                NonPartialErrorCount = this.CollectionResult.CdrExtErrors.Count(c => c.IsPartial==false),
+                NormalizedPartialCount = writtenNormalizedPartialCdrCount+ this.CollectionResult.CdrExtErrors.Count(c=>c.IsPartial),
+            };
 		}
         
 	    public long WriteCdrInconsistent()

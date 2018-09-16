@@ -27,8 +27,11 @@ namespace TelcobrightMediation.Cdr
             var collectionResult = this.CdrJob.CdrProcessor.CollectionResult;
             int processedNonPartialErrorCount = collectionResult.CdrExtErrors
                 .Count(c => c.CdrError.PartialFlag == "0");
-            int processedPartialErrorCount = collectionResult.CdrExtErrors
-                .Count(c => Convert.ToInt32(c.CdrError.PartialFlag) > 0);
+            var errorPartialCdrExts = collectionResult.CdrExtErrors
+                .Where(c => c.IsPartial == true && c.CdrError.PartialFlag != "0").ToList();
+            var errorCdrExts = collectionResult.CdrExtErrors;
+            var errorNonPartialCdrExts = errorCdrExts
+                .Where(c => c.IsPartial == false && c.CdrError.PartialFlag == "0").ToList();
             int inconsistentsCount = collectionResult.CdrInconsistents.Count;
             var processedCdrExts = collectionResult.ProcessedCdrExts;
             var processedNonPartialCdrExts = processedCdrExts.Where(c => c.Cdr.PartialFlag == 0).ToList();
@@ -39,22 +42,30 @@ namespace TelcobrightMediation.Cdr
                 processedNonPartialCdrExts.Count + processedPartialCdrExts.Count);
             Assert.AreEqual(this.CdrWritingResult.CdrErrorCount, collectionResult.CdrExtErrors.Count);
             Assert.AreEqual(this.CdrWritingResult.CdrInconsistentCount, collectionResult.CdrInconsistents.Count);
-            Assert.AreEqual(this.CdrWritingResult.TrueNonPartialCount, processedNonPartialCdrExts.Count);
-            Assert.AreEqual(this.CdrWritingResult.NormalizedPartialCount, processedPartialCdrExts.Count);
+            Assert.AreEqual(this.CdrWritingResult.NonPartialCdrCount, processedNonPartialCdrExts.Count);
+
+            Assert.AreEqual(processedPartialCdrExts.Count + errorPartialCdrExts.Count,
+                this.CdrWritingResult.NormalizedPartialCount);
+            
             Assert.AreEqual(this.CdrWritingResult.CdrCount,
                 (processedNonPartialCdrExts.Count + processedPartialCdrExts.Count));
             var processedPartialNewRawInstances = processedPartialCdrExts
                 .SelectMany(c => c.PartialCdrContainer.NewRawInstances).Count();
+            var errorPartialNewRawInstances = errorPartialCdrExts.SelectMany(c => c.PartialCdrContainer.NewRawInstances)
+                .ToList();
             Assert.AreEqual(this.PartialCdrTesterData.RawPartialCount + this.PartialCdrTesterData.NonPartialCount
                             - inconsistentsCount,
-                (processedNonPartialCdrExts.Count + processedPartialNewRawInstances + processedNonPartialErrorCount
-                 +processedPartialErrorCount- inconsistentsCount));
+                (processedNonPartialCdrExts.Count + processedNonPartialErrorCount + processedPartialNewRawInstances
+                 + errorPartialNewRawInstances.Count- inconsistentsCount));
             Assert.AreEqual(this.CdrWritingResult.PartialCdrWriter.WrittenCdrPartialReferences,
-                processedPartialCdrExts.Count+ processedPartialErrorCount);
+                processedPartialCdrExts.Count+ errorPartialCdrExts.Count);
             Assert.AreEqual(this.CdrWritingResult.CdrCount, processedCdrExts.Count());
-            Assert.AreEqual(collectionResult.RawCount,
-                this.CdrWritingResult.CdrErrorCount + this.CdrWritingResult.CdrInconsistentCount
-                + processedCdrExts.Select(c => c.NewRawCount).Sum());
+
+            Assert.AreEqual(CdrWritingResult.CdrCount+CdrWritingResult.CdrErrorCount+CdrWritingResult.CdrInconsistentCount,
+                processedCdrExts.Count+errorPartialCdrExts.Count+errorNonPartialCdrExts.Count+inconsistentsCount);
+            Assert.AreEqual(collectionResult.RawCount- inconsistentsCount-processedPartialCdrExts.SelectMany(c=>c.PartialCdrContainer.NewRawInstances).Count()
+                -errorPartialCdrExts.SelectMany(c => c.PartialCdrContainer.NewRawInstances).Count(),
+                this.CdrWritingResult.NonPartialCdrCount+this.CdrWritingResult.NonPartialErrorCount);
             processedPartialCdrExts.ForEach(
                 c => Assert.IsNotNull(c.PartialCdrContainer.NewAggregatedRawInstance));
             processedPartialCdrExts.ForEach(c => Assert.IsNotNull(c.PartialCdrContainer.NewCdrEquivalent));
