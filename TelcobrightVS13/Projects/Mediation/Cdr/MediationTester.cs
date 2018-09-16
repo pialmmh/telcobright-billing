@@ -14,10 +14,24 @@ namespace TelcobrightMediation
 {
     public class MediationTester
     {
-        private decimal FractionComparisionTollerance { get; }
-        public MediationTester(decimal fractionComparisionTollerance)
+        private CdrReProcessingType CdrReProcessingType { get; }
+
+        public MediationTester(job telcobrightJob)
         {
-            this.FractionComparisionTollerance = fractionComparisionTollerance;
+            switch (telcobrightJob.idjobdefinition)
+            {
+                case 1: //new cdr
+                    this.CdrReProcessingType = CdrReProcessingType.NoneOrNew;
+                    break;
+                case 2: //error cdr
+                    this.CdrReProcessingType = CdrReProcessingType.ErrorProcess;
+                    break;
+                case 3:
+                    this.CdrReProcessingType = CdrReProcessingType.ReProcess;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("Unknown cdr job type.");
+            }
         }
 
         public bool DurationSumOfNonPartialRawPartialsAndRawDurationAreEqual(CdrProcessor cdrProcessor)
@@ -25,7 +39,8 @@ namespace TelcobrightMediation
             var processedCdrExts = cdrProcessor.CollectionResult.ProcessedCdrExts;
             var nonPartialCdrs =processedCdrExts.Where(c => c.Cdr.PartialFlag == 0);
             var partialCdrExts = processedCdrExts.Where(c => c.Cdr.PartialFlag > 0);
-            var newRawPartialCdrs = partialCdrExts.SelectMany(c => c.PartialCdrContainer.NewRawInstances);
+            var newRawPartialCdrs = partialCdrExts.Where(c=>c.PartialCdrContainer!=null)//where req during reProcess
+                .SelectMany(c => c.PartialCdrContainer.NewRawInstances).ToList();
             var nonPartialDurationSum = nonPartialCdrs.Sum(c => c.Cdr.DurationSec);
             var rawPartialDurationSum = newRawPartialCdrs.Sum(c => c.DurationSec);
             var nonPartialCdrExtError = cdrProcessor.CollectionResult.CdrExtErrors
@@ -38,9 +53,18 @@ namespace TelcobrightMediation
                 .Sum(c => c.PartialCdrContainer.NewCdrEquivalent.DurationSec-
                           Convert.ToDecimal(c.PartialCdrContainer.LastProcessedAggregatedRawInstance?.DurationSec));
             var errorDuration = nonPartialErrorDuration + partialErrorDuration;
-            bool result = nonPartialDurationSum + rawPartialDurationSum + errorDuration
-                          == cdrProcessor.CollectionResult.RawDurationTotalOfConsistentCdrs;
-            return result;
+            
+            if (this.CdrReProcessingType==CdrReProcessingType.NoneOrNew)//for new cdr
+            {
+                return nonPartialDurationSum + rawPartialDurationSum + errorDuration
+                        == cdrProcessor.CollectionResult.RawDurationTotalOfConsistentCdrs;
+            }
+            //for reprocess, all cdrs are considered non-partial
+            var errorCdrExtsDurationReProcess =
+                cdrProcessor.CollectionResult.CdrExtErrors.Sum(c => Convert.ToDecimal(c.CdrError.DurationSec));
+            var cdrExtDurationReProcess = processedCdrExts.Sum(c => c.Cdr.DurationSec);
+            return cdrProcessor.CollectionResult.RawDurationTotalOfConsistentCdrs
+                   == errorCdrExtsDurationReProcess+cdrExtDurationReProcess;
         }
         public bool DurationSumInCdrAndSummaryAreEqual(ParallelQuery<CdrExt> processedCdrExts)
         {
@@ -119,7 +143,7 @@ namespace TelcobrightMediation
                         .Sum(summary => summary.actualduration);
                     decimal totalSupposedToBeDuration =
                         newDurationForThisDayOrHourInNewCdrExtSummaries + prevDurationForThisDayOrHourFromSummaryTable;
-                    if (Math.Abs(totalSupposedToBeDuration-updatedDurationInSummaryContext)>this.FractionComparisionTollerance)
+                    if (totalSupposedToBeDuration!=updatedDurationInSummaryContext)
                         return false;
                 }
             }

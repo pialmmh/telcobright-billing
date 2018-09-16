@@ -71,7 +71,7 @@ namespace TelcobrightMediation
                 throw new Exception("Regenerated summary total do not match ");
             }
             MediationTester mediationTester =
-                new MediationTester(this.CdrSetting.FractionalNumberComparisonTollerance);
+                new MediationTester(this.CdrJobContext.TelcobrightJob);
             if (!mediationTester.DurationSumInCdrAndSummaryAreEqual(
                 this.CollectionResult.ConcurrentCdrExts.Values.AsParallel()))
                 throw new Exception("Duration sum in cdr and Summaries are not tollerably equal");
