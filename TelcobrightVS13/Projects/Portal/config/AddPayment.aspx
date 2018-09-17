@@ -11,8 +11,8 @@
 </asp:ToolkitScriptManager>
 
     <div align="left">
-    <table width="100%" style="border:Solid 3px #0094ff; width:480px; height:100%" cellpadding="0" cellspacing="0">
-    <tr style="background-color:#0094ff">
+    <table width="100%" style="border:Solid 3px #5d7b9d; width:480px; height:100%" cellpadding="0" cellspacing="0">
+    <tr style="background-color:#5d7b9d">
         <td colspan="2" style=" height:10%; color:White; font-weight:bold; font-size:larger" align="center">Carrier Details</td>
     </tr>
     <tr>
@@ -26,6 +26,10 @@
     <tr>
         <td align="right">Service: </td>
         <td style="padding:3px"><asp:Label ID="lblSer" runat="server"></asp:Label></td>
+    </tr>
+    <tr>
+        <td align="right">Current Balance: </td>
+        <td style="padding:3px"><asp:Label ID="lblCurrentBalance" runat="server"></asp:Label></td>
     </tr>
 <%--    <tr>
         <td align="right">Type: </td>
@@ -124,8 +128,8 @@ CancelControlID="btnRuleCancel" BackgroundCssClass="modalBackground" BehaviorID=
 <asp:Panel ID="pnlRule" runat="server" BackColor="White" Height="269px" Width="400px" style="display:none;">
     <asp:UpdatePanel runat="server">
         <ContentTemplate>
-            <table width="100%" style="border:Solid 3px #0094ff; width:100%; height:100%" cellpadding="0" cellspacing="0">
-                <tr style="background-color:#0094ff">
+            <table width="100%" style="border:Solid 3px #5d7b9d; width:100%; height:100%" cellpadding="0" cellspacing="0">
+                <tr style="background-color:#5d7b9d">
                     <td colspan="2" style=" height:10%; color:White; font-weight:bold; font-size:larger" align="center">Account Action Rule</td>
                 </tr>
                 <tr>

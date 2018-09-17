@@ -38,7 +38,7 @@ namespace PortalApp.config
                 lb.Text = "Add Payment";
                 lb.CommandName = "ShowPopup";
                 lb.Click += new System.EventHandler(paymentBtn_Click);
-                e.Row.Cells[5].Controls.Add(lb);
+                e.Row.Cells[6].Controls.Add(lb);
             }
         }        
 
@@ -70,6 +70,7 @@ namespace PortalApp.config
                             break;
                         }
                     }
+                    account.balanceAfter = account.getCurrentBalanceWithTempTransaction();
                 }
 
                 GridView.DataSource = payableAccounts;

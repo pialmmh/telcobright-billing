@@ -24,10 +24,10 @@
             </ItemTemplate>
         </asp:TemplateField>
         <asp:BoundField DataField="accountName" HeaderText="Account Name"/>
-        <asp:BoundField DataField="serviceGroup" HeaderText="Service Group"/>
-        <asp:BoundField DataField="uom" HeaderText="Currency"/>
+            <asp:BoundField DataField="serviceGroup" HeaderText="Service Group"/>
+            <asp:BoundField DataField="uom" HeaderText="Currency"/>
+            <asp:BoundField DataField="balanceAfter" HeaderText="Current Balance"/>
 <%--         <asp:BoundField DataField="PaymentMode" HeaderText="PaymentMode"/>
-         <asp:BoundField DataField="CurrentBalance" HeaderText="CurrentBalance"/>
          <asp:BoundField DataField="MaxCreditLimit" HeaderText="MaxCreditLimit"/>
          <asp:BoundField DataField="LastCreditedAmount" HeaderText="LastCreditedAmount"/>
         <asp:BoundField DataField="Date" HeaderText="PaymentDate" />

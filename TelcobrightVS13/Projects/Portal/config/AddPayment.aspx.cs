@@ -91,6 +91,7 @@ namespace PortalApp.config
             lblID.Text = account.id.ToString();
             lblusername.Text = ((List<partner>)Session["allPartners"]).First(x => x.idPartner == account.idPartner).PartnerName;
             lblSer.Text = account.accountName;
+            lblCurrentBalance.Text = account.getCurrentBalanceWithTempTransaction().ToString();
             actions = (BindingList<AccActionEx>)this.Session["pmActions"];
             gvThreshold.DataSource = actions;
             gvThreshold.DataBind();

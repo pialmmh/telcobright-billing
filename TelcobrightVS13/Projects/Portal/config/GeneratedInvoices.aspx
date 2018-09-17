@@ -46,11 +46,11 @@
 CancelControlID="btnCancel" BackgroundCssClass="modalBackground" BehaviorID="pnlInvoice" >
 </asp:ModalPopupExtender>
 <asp:Panel ID="pnlInvoice" runat="server" BackColor="White" Height="269px" Width="400px" style="display:none;">
-    <table width="100%" style="border:Solid 3px #0094ff; width:100%; height:100%" cellpadding="0" cellspacing="0">
-        <tr style="background-color:#0094ff">
+    <table width="100%" style="border:Solid 3px #5d7b9d; width:100%; height:100%" cellpadding="0" cellspacing="0">
+        <tr style="background-color:#5d7b9d">
             <td colspan="2" style=" height:10%; color:White; font-weight:bold; font-size:larger" align="center">Invoice Details</td>
         </tr>
-        <tr style="background-color:#0094ff">
+        <tr style="background-color:#5d7b9d">
             <td colspan="2" style=" height:10%; color:White; font-weight:bold; font-size:larger" align="center">
                 <asp:Label ID="LabelDESCRIPTION" runat="server" />
             </td>
