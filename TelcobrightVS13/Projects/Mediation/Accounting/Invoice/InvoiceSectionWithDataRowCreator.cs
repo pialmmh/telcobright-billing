@@ -9,7 +9,7 @@ using TelcobrightMediation.Accounting;
 
 namespace TelcobrightMediation
 {
-    public class InvoiceSectionCreator<T>
+    public class InvoiceSectionWithDataRowCreator<T>
     {
         private InvoicePostProcessingData InvoicePostProcessingData { get; set; }
         private PartnerEntities Context { get; }
@@ -17,7 +17,7 @@ namespace TelcobrightMediation
         private DateTime EndDate { get; }
         private string SectionName { get; }
         private string TemplateName { get; }
-        public InvoiceSectionCreator(InvoicePostProcessingData invoicePostProcessingData,
+        public InvoiceSectionWithDataRowCreator(InvoicePostProcessingData invoicePostProcessingData,
             string templateName, int sectionNumber)
         {
             this.Context = invoicePostProcessingData.InvoiceGenerationInputData.Context;

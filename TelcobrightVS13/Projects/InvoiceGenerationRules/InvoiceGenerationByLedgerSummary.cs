@@ -26,7 +26,7 @@ namespace InvoiceGenerationRules
         {
             InvoiceGenerationInputData input = (InvoiceGenerationInputData)data;
             PartnerEntities context = input.Context;
-            Dictionary<string, string> invoiceJsonDetail = input.InvoiceJsonDetail;
+            Dictionary<string, string> invoiceJsonDetail = input.JsonDetail;
             long serviceAccountId = Convert.ToInt64(invoiceJsonDetail["serviceAccountId"]);
             ValidateIfLocalTimeZoneUsed(input, context, invoiceJsonDetail);
             decimal ledgerSummaryAmount = context.acc_ledger_summary.Where(c => c.idAccount == serviceAccountId)
@@ -49,8 +49,6 @@ namespace InvoiceGenerationRules
             DateTime endDate = Convert.ToDateTime(invoiceJsonDetail["endDate"]);
             string invoiceDescription = serviceGroup.RuleName + $" [{startDate.ToMySqlFormatWithoutQuote()}" +
                                         $"-{endDate.ToMySqlFormatWithoutQuote()}]";
-            
-            
             string uom = invoiceJsonDetail["uom"];
             invoice newInvoice = CreateInvoiceWithItem(invoiceJsonDetail, serviceAccountId, invoiceAmount, serviceGroup,
                 invoiceDescription, uom);

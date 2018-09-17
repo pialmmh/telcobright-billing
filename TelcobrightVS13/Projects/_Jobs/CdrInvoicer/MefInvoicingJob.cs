@@ -72,7 +72,7 @@ namespace Jobs
                 }
                 reader.Close();
             }
-            string uom = invoiceGenerationInputData.InvoiceJsonDetail["uom"];
+            string uom = invoiceGenerationInputData.JsonDetail["uom"];
             invoice_item invoiceItem = invoiceWithItem.invoice_item.Single();
             cmd.CommandText = $"insert into invoice_item " +
                               $"(invoice_id,product_id,uom_Id,amount,json_detail) values (" +

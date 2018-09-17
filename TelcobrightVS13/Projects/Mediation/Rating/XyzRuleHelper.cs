@@ -235,7 +235,7 @@ namespace TelcobrightMediation
         public static InvoiceGenerationInputData ExecInvoicePreProcessing(
             InvoiceGenerationInputData invoiceGenerationInputData)
         {
-            Dictionary<string, string> jobParamsMap = invoiceGenerationInputData.InvoiceJsonDetail;
+            Dictionary<string, string> jobParamsMap = invoiceGenerationInputData.JsonDetail;
             DateTime startDate = Convert.ToDateTime(jobParamsMap["startDate"]);
             var context = invoiceGenerationInputData.Context;
             DateTime lastSecondOfPrevMonth = startDate.AddSeconds(-1);
@@ -245,8 +245,8 @@ namespace TelcobrightMediation
                 .FirstOrDefault();
             if (usdConversionDated == null)
                 throw new Exception("Usd conversion rate not found.");
-            invoiceGenerationInputData.InvoiceJsonDetail = jobParamsMap;
-            invoiceGenerationInputData.InvoiceJsonDetail.Add("usdRate",
+            invoiceGenerationInputData.JsonDetail = jobParamsMap;
+            invoiceGenerationInputData.JsonDetail.Add("usdRate",
                 usdConversionDated.CONVERSION_FACTOR.ToString());
             return invoiceGenerationInputData;
         }

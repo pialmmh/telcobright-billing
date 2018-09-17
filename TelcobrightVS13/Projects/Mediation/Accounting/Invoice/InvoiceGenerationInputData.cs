@@ -16,7 +16,7 @@ namespace TelcobrightMediation.Accounting
         public PartnerEntities Context { get; }
         public int BatchSizeForJobSegment { get; set; }
         public job TelcobrightJob { get; }
-        public Dictionary<string,string> InvoiceJsonDetail { get; set; }
+        public Dictionary<string,string> JsonDetail { get; set; }
         public Dictionary<int,InvoiceGenerationConfig> ServiceGroupWiseInvoiceGenerationConfigs { get; set; }
         public InvoiceGenerationInputData(TelcobrightConfig tbc,PartnerEntities context,job telcobrightJob,
             Dictionary<int,InvoiceGenerationConfig> serviceGroupWiseinvoiceGenerationConfigs,

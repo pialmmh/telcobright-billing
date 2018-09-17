@@ -4,7 +4,7 @@ using System.ComponentModel.Composition;
 using MediationModel;
 using TelcobrightMediation.Accounting;
 
-namespace PartnerRules
+namespace InvoiceSectionGenerator
 {
     [Export("InvoiceSectionGenerator", typeof(IInvoiceSectionGenerator))]
     public class XyzSection1GeneratorIgw : AbstractInvoiceSectionGenerator
@@ -20,7 +20,7 @@ namespace PartnerRules
                        sum(longDecimalAmount3)  as XYAmount,
                        sum(customercost      )  as Amount      
                        from {invoiceSectionGeneratorData.CdrOrSummaryTableName}                                              
-                       where {invoiceSectionGeneratorData.GetWhereClauseForDateRange()};";
+                       where {invoiceSectionGeneratorData.GetWhereClauseForDateServiceGroup("inPartnerId")};";
             return base.GetInvoiceSection<InvoiceSectionDataRowForA2ZVoice>(invoiceSectionGeneratorData, sql);
         }
     }

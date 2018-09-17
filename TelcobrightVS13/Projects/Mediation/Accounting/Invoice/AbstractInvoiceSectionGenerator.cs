@@ -7,10 +7,10 @@ namespace TelcobrightMediation
         public abstract string RuleName { get; }
         public abstract InvoiceSection GetInvoiceSection(InvoiceSectionGeneratorData invoiceSectionGeneratorData);
         protected InvoiceSection GetInvoiceSection<T>(InvoiceSectionGeneratorData invoiceSectionGeneratorData
-            ,string sql)
+            , string sql)
         {
-            InvoiceSectionCreator<T>
-                invoiceSectionCreator = new InvoiceSectionCreator<T>(
+            InvoiceSectionWithDataRowCreator<T>
+                invoiceSectionCreator = new InvoiceSectionWithDataRowCreator<T>(
                     invoicePostProcessingData: invoiceSectionGeneratorData.InvoicePostProcessingData,
                     sectionNumber: invoiceSectionGeneratorData.SectionNumber,
                     templateName: invoiceSectionGeneratorData.TemplateName);

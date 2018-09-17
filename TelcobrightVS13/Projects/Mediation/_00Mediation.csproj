@@ -128,7 +128,7 @@
     <Compile Include="Accounting\Invoice\InvoiceGenerationHelper.cs" />
     <Compile Include="Accounting\Invoice\InvoicePostProcessingData.cs" />
     <Compile Include="Accounting\Invoice\InvoiceGenerationConfig.cs" />
-    <Compile Include="Accounting\Invoice\InvoiceSectionCreator.cs" />
+    <Compile Include="Accounting\Invoice\InvoiceSectionWithDataRowCreator.cs" />
     <Compile Include="Accounting\Invoice\InvoiceSectionDataPopulator.cs" />
     <Compile Include="Accounting\Invoice\InvoiceSectionDataRetriever.cs" />
     <Compile Include="Accounting\Invoice\InvoiceSectionGeneratorData.cs" />

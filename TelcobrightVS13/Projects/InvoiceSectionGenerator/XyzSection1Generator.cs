@@ -1,10 +1,9 @@
 ﻿using System;
-using TelcobrightMediation;
 using System.ComponentModel.Composition;
-using MediationModel;
+using TelcobrightMediation;
 using TelcobrightMediation.Accounting;
 
-namespace PartnerRules
+namespace InvoiceSectionGenerator
 {
     [Export("InvoiceSectionGenerator", typeof(IInvoiceSectionGenerator))]
     public class XyzSection1Generator : AbstractInvoiceSectionGenerator
@@ -12,6 +11,8 @@ namespace PartnerRules
         public override string RuleName => this.GetType().Name;
         public override InvoiceSection GetInvoiceSection(InvoiceSectionGeneratorData invoiceSectionGeneratorData)
         {
+            var jsonDetail = invoiceSectionGeneratorData.JsonDetail;
+            
             string sql = $@"select                                                         
                        sum(successfulcalls 	)	as TotalCalls,    
                        sum(roundedduration   )/60  as TotalMinutes,   
@@ -20,7 +21,7 @@ namespace PartnerRules
                        sum(longDecimalAmount3)  as XYAmount,
                        sum(customercost      )  as Amount      
                        from {invoiceSectionGeneratorData.CdrOrSummaryTableName}                                              
-                       where {invoiceSectionGeneratorData.GetWhereClauseForDateRange()};";
+                       where {invoiceSectionGeneratorData.GetWhereClauseForDateServiceGroup("idPartnerId")};";
             return base.GetInvoiceSection<InvoiceSectionDataRowForA2ZVoice>(invoiceSectionGeneratorData, sql);
         }
     }

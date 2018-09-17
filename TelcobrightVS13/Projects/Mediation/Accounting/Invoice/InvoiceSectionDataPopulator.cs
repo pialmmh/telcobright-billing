@@ -33,7 +33,7 @@ namespace TelcobrightMediation.Accounting.Invoice
         public IEnumerable<InvoiceSection> Populate()
         {
             int idServiceGroup = Convert.ToInt32(
-                this.InvoicePostProcessingData.InvoiceGenerationInputData.InvoiceJsonDetail["idServiceGroup"]);
+                this.InvoicePostProcessingData.InvoiceGenerationInputData.JsonDetail["idServiceGroup"]);
             InvoiceGenerationConfig invoiceGenerationConfig = null;
             var invoiceGenerationInputData = this.InvoicePostProcessingData.InvoiceGenerationInputData;
             invoiceGenerationInputData

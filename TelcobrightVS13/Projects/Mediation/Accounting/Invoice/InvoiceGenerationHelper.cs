@@ -26,7 +26,7 @@ namespace TelcobrightMediation.Accounting
             Dictionary<string, string> jobParamsMap =
                 JsonConvert.DeserializeObject<Dictionary<string, string>>(telcobrightJob.JobParameter);
             var invoiceJsonDetail = jobParamsMap;//carry on jobs param along with invoice detail
-            this.InvoiceGenerationInputData.InvoiceJsonDetail = invoiceJsonDetail;
+            this.InvoiceGenerationInputData.JsonDetail = invoiceJsonDetail;
             long serviceAccountId = Convert.ToInt64(invoiceJsonDetail["serviceAccountId"]);
             var context = this.InvoiceGenerationInputData.Context;
             this.Account = context.accounts.Where(c => c.id == serviceAccountId).ToList().Single();
@@ -48,6 +48,7 @@ namespace TelcobrightMediation.Accounting
             DateTime endDate = Convert.ToDateTime(invoiceJsonDetail["endDate"]);
             invoiceJsonDetail.Add("billingPeriod", $"{startDate.ToMySqlFormatWithoutQuote()}" +
                                                    $" to {endDate.ToMySqlFormatWithoutQuote()}");
+            invoiceJsonDetail.Add("idPartner", customer.idPartner.ToString());
             invoiceJsonDetail.Add("companyName", customer.AlternateNameInvoice);
             invoiceJsonDetail.Add("customerType",partnerType);
             invoiceJsonDetail.Add("billingAddress", customer.invoiceAddress);
@@ -69,7 +70,7 @@ namespace TelcobrightMediation.Accounting
         {
             IInvoiceGenerationRule invoiceGenerationRule = GetInvoiceGenRuleFromServiceGroupConfig(invoiceGenerationInputData);
             InvoicePostProcessingData invoicePostProcessingData = invoiceGenerationRule.Execute(invoiceGenerationInputData);
-            Dictionary<string, string> jsonDetail = invoicePostProcessingData.InvoiceGenerationInputData.InvoiceJsonDetail;
+            Dictionary<string, string> jsonDetail = invoicePostProcessingData.InvoiceGenerationInputData.JsonDetail;
             jsonDetail.Remove("sqlParam");
             invoicePostProcessingData.Invoice.invoice_item.Single().JSON_DETAIL = JsonConvert.SerializeObject(jsonDetail);
             return invoicePostProcessingData;
