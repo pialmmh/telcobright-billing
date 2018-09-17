@@ -122,7 +122,7 @@ namespace PortalApp.config
                     // show current balance
                     foreach (InvoiceGenRowDataCollector item in invoiceGenerations)
                     {
-                        item.Amount = allAccounts.First(x => x.id == item.AccountId).getCurrentBalanceWithTempTransaction();
+                        item.CurrentBalance = allAccounts.First(x => x.id == item.AccountId).getCurrentBalanceWithTempTransaction();
                     }
                     this.Session["igInvoiceGenList"] = invoiceGenerations;
                     gvInvoice.DataSource = invoiceGenerations;

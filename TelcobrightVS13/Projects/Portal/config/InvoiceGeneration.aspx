@@ -24,7 +24,7 @@
                     <Columns>
                         <asp:boundfield datafield="PartnerName" headertext="Partner"/>
                         <asp:boundfield datafield="ServiceAccountAlias" headertext="Service Account"/>
-                        <asp:boundfield datafield="Amount" headertext="Balance" DataFormatString="{0:n2}">
+                        <asp:boundfield datafield="CurrentBalance" headertext="Balance" DataFormatString="{0:n2}">
                             <ItemStyle HorizontalAlign="Right" />
                         </asp:boundfield>
                         <asp:TemplateField HeaderText="Time Zone" SortExpression="TimeZone" ItemStyle-Wrap="false">
@@ -47,6 +47,9 @@
                                     dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" OnTextChanged="txtEndDate_TextChanged"/>
                             </ItemTemplate>
                         </asp:TemplateField>
+                        <asp:boundfield datafield="Amount" headertext="Amount" DataFormatString="{0:n2}">
+                            <ItemStyle HorizontalAlign="Right" />
+                        </asp:boundfield>
                         <asp:TemplateField HeaderText="Due" SortExpression="IsDue" ItemStyle-Wrap="false">
                             <ItemTemplate>
                                 <asp:Label runat="server" ID="lblDue" Enabled="false" />

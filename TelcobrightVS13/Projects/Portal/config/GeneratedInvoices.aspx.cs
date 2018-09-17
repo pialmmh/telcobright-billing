@@ -30,6 +30,8 @@ namespace PortalApp.config
         private static TelcobrightConfig Tbc { get; set; }
         private static Dictionary<string, IInvoiceTemplate> invoiceTemplates { get; set; }
         private static List<invoice> generatedInvoices { get; set; }
+        private static List<partner> allPartners { get; set; }
+        private static List<account> allAccounts { get; set; }
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -45,6 +47,9 @@ namespace PortalApp.config
 
                 using (PartnerEntities context = new PartnerEntities())
                 {
+                    allPartners = context.partners.OrderBy(i => i.PartnerName).ToList();
+                    allAccounts = context.accounts.ToList();
+
                     generatedInvoices = context.invoices.Where(x => x.PAID_DATE == null).OrderByDescending(x => x.INVOICE_DATE).ToList();
                     gvInvoice.DataSource = generatedInvoices;
                     gvInvoice.DataBind();
@@ -66,6 +71,10 @@ namespace PortalApp.config
                 invoice_item invoiceItem = invoice.invoice_item.Single();
                 Dictionary<string, string> invoiceMap = JsonConvert.DeserializeObject<Dictionary<string, string>>(invoiceItem.JSON_DETAIL);
                 List<KeyValuePair<string, string>> sectionData = invoiceMap.Where(kv => kv.Key.StartsWith("Section-")).ToList();
+
+                Label lblPartner = (Label)e.Row.FindControl("lblPartner");
+                account account = allAccounts.First(x => x.id == invoice.BILLING_ACCOUNT_ID);
+                lblPartner.Text = allPartners.First(x => x.idPartner == account.idPartner).PartnerName;
 
                 // Invoice Date
                 Label lblInvoiceDate = (Label)e.Row.FindControl("lblInvoiceDate");
@@ -95,11 +104,11 @@ namespace PortalApp.config
                     lb.Text = "Section " + sectionNumber;
                     lb.CommandName = item.Key;
                     lb.Click += ViewReportOnClick;
-                    e.Row.Cells[5].Controls.Add(lb);
+                    e.Row.Cells[6].Controls.Add(lb);
 
                     Label lbl = new Label();
                     lbl.Text = " ";
-                    e.Row.Cells[5].Controls.Add(lbl);
+                    e.Row.Cells[6].Controls.Add(lbl);
                 }
             }
         }

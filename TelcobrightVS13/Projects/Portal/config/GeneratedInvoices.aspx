@@ -23,6 +23,11 @@
                         <asp:LinkButton ID="LinkButtonEdit" Text="Edit" runat="server" OnClick="LinkButtonEdit_Click" />
                     </ItemTemplate>
                 </asp:TemplateField>
+                <asp:TemplateField HeaderText="Partner">
+                    <ItemTemplate>
+                        <asp:Label runat="server" ID="lblPartner" />
+                    </ItemTemplate>
+                </asp:TemplateField>
                 <asp:BoundField DataField="DESCRIPTION" HeaderText="Description" />
                 <asp:BoundField DataField="REFERENCE_NUMBER" HeaderText="Reference Number" />
                 <asp:TemplateField HeaderText="Invoice Date" SortExpression="INVOICE_DATE" ItemStyle-Wrap="false">
