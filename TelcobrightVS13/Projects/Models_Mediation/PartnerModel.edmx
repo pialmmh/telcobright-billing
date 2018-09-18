@@ -84,6 +84,20 @@ warning 6002: The table/view 'def.platinum.acc_ledger_summary' does not have a p
           <Property Name="transactionDate" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="AMOUNT" Type="decimal" Precision="20" Scale="8" Nullable="false" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'def.platinum.acc_ledger_summary_billed' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="acc_ledger_summary_billed">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="idAccount" />
+            <PropertyRef Name="transactionDate" />
+            <PropertyRef Name="AMOUNT" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="idAccount" Type="bigint" Nullable="false" />
+          <Property Name="transactionDate" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="AMOUNT" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+        </EntityType>
         <EntityType Name="acc_temp_transaction">
           <Key>
             <PropertyRef Name="id" />
@@ -4258,6 +4272,14 @@ FROM `acc_chargeable` AS `acc_chargeable`</DefiningQuery>
 `acc_ledger_summary`.`AMOUNT`
 FROM `acc_ledger_summary` AS `acc_ledger_summary`</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="acc_ledger_summary_billed" EntityType="Self.acc_ledger_summary_billed" store:Type="Tables" store:Schema="platinum">
+            <DefiningQuery>SELECT
+`acc_ledger_summary_billed`.`id`, 
+`acc_ledger_summary_billed`.`idAccount`, 
+`acc_ledger_summary_billed`.`transactionDate`, 
+`acc_ledger_summary_billed`.`AMOUNT`
+FROM `acc_ledger_summary_billed` AS `acc_ledger_summary_billed`</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="acc_transaction" EntityType="Self.acc_transaction" store:Type="Tables" store:Schema="platinum">
             <DefiningQuery>SELECT
 `acc_transaction`.`id`, 
@@ -6015,6 +6037,7 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <EntitySet Name="zones" EntityType="MediationModel.zone" />
           <EntitySet Name="acc_chargeable" EntityType="MediationModel.acc_chargeable" />
           <EntitySet Name="acc_ledger_summary" EntityType="MediationModel.acc_ledger_summary" />
+          <EntitySet Name="acc_ledger_summary_billed" EntityType="MediationModel.acc_ledger_summary_billed" />
           <EntitySet Name="acc_transaction" EntityType="MediationModel.acc_transaction" />
           <EntitySet Name="cdrs" EntityType="MediationModel.cdr" />
           <EntitySet Name="cdrdiscardeds" EntityType="MediationModel.cdrdiscarded" />
@@ -7683,6 +7706,18 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
             <PropertyRef Name="AMOUNT" />
           </Key>
           <Property Name="id" Type="Int64" Nullable="false" />
+          <Property Name="idAccount" Type="Int64" Nullable="false" />
+          <Property Name="transactionDate" Type="DateTime" Nullable="false" />
+          <Property Name="AMOUNT" Type="Decimal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="acc_ledger_summary_billed">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="idAccount" />
+            <PropertyRef Name="transactionDate" />
+            <PropertyRef Name="AMOUNT" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="idAccount" Type="Int64" Nullable="false" />
           <Property Name="transactionDate" Type="DateTime" Nullable="false" />
           <Property Name="AMOUNT" Type="Decimal" Nullable="false" />
@@ -11827,6 +11862,16 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <EntitySetMapping Name="acc_ledger_summary">
             <EntityTypeMapping TypeName="MediationModel.acc_ledger_summary">
               <MappingFragment StoreEntitySet="acc_ledger_summary">
+                <ScalarProperty Name="AMOUNT" ColumnName="AMOUNT" />
+                <ScalarProperty Name="transactionDate" ColumnName="transactionDate" />
+                <ScalarProperty Name="idAccount" ColumnName="idAccount" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="acc_ledger_summary_billed">
+            <EntityTypeMapping TypeName="MediationModel.acc_ledger_summary_billed">
+              <MappingFragment StoreEntitySet="acc_ledger_summary_billed">
                 <ScalarProperty Name="AMOUNT" ColumnName="AMOUNT" />
                 <ScalarProperty Name="transactionDate" ColumnName="transactionDate" />
                 <ScalarProperty Name="idAccount" ColumnName="idAccount" />

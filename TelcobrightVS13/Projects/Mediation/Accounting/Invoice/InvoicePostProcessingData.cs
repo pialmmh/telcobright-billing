@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using LibraryExtensions;
 using MediationModel;
 using org.springframework.beans.propertyeditors;
 
@@ -25,6 +26,13 @@ namespace TelcobrightMediation.Accounting
             this.ServiceAccountId = serviceAccountId;
             this.StartDate = startDate;
             this.EndDate = endDate;
+        }
+        public string GetWhereClauseForDateRange()
+        {
+            var startDate = this.StartDate;
+            var endDate = this.EndDate;
+            return $@"tup_starttime>= {startDate.ToMySqlFormatWithQuote()}
+                    and tup_starttime <= {endDate.ToMySqlFormatWithQuote()}";
         }
     }
 }

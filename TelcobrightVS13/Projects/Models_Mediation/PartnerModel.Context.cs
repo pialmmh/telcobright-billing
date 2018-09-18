@@ -138,6 +138,7 @@ namespace MediationModel
         public virtual DbSet<zone> zones { get; set; }
         public virtual DbSet<acc_chargeable> acc_chargeable { get; set; }
         public virtual DbSet<acc_ledger_summary> acc_ledger_summary { get; set; }
+        public virtual DbSet<acc_ledger_summary_billed> acc_ledger_summary_billed { get; set; }
         public virtual DbSet<acc_transaction> acc_transaction { get; set; }
         public virtual DbSet<cdr> cdrs { get; set; }
         public virtual DbSet<cdrdiscarded> cdrdiscardeds { get; set; }

@@ -21,10 +21,7 @@ namespace TelcobrightMediation.Accounting
         }
         public string GetWhereClauseForDateRange()
         {
-            var startDate = this.InvoicePostProcessingData.StartDate;
-            var endDate = this.InvoicePostProcessingData.EndDate;
-            return $@"tup_starttime>= {startDate.ToMySqlFormatWithQuote()}
-                    and tup_starttime <= {endDate.ToMySqlFormatWithQuote()}";
+            return this.InvoicePostProcessingData.GetWhereClauseForDateRange();
         }
         public string GetWhereClauseForServiceGroup() => $" serviceGroup={this.JsonDetail["idServiceGroup"]} ";
         public string GetWhereClauseForCustomerId(string colNameForInOrOutParnter) =>

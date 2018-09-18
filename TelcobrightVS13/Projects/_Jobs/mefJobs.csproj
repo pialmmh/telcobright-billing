@@ -70,7 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CdrErase\CdrEraserJob.cs" />
-    <Compile Include="CdrInvoicer\MefInvoicingJob.cs" />
+    <Compile Include="InvoiceGeneration\MefCdrInvoicingJob.cs" />
     <Compile Include="CdrError\ErrorCdrProcessingJob.cs" />
     <Compile Include="CdrReProcess\CdrReProcessingJob.cs" />
     <Compile Include="CdrErase\SegmentedCdrErasingProcessor.cs" />

@@ -75,6 +75,9 @@
     <Compile Include="acc_ledger_summary.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="acc_ledger_summary_billed.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="acc_temp_transaction.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>

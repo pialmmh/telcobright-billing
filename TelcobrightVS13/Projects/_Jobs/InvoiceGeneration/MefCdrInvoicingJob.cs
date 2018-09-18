@@ -19,7 +19,7 @@ namespace Jobs
 {
 
     [Export("Job", typeof(ITelcobrightJob))]
-    public class MefInvoicingJob : ITelcobrightJob
+    public class MefCdrInvoicingJob : ITelcobrightJob
     {
         public override string ToString() => this.RuleName;
         public string RuleName => GetType().Name;
@@ -46,7 +46,7 @@ namespace Jobs
             {
                 transactionTime = DateTime.Now,
                 glAccountId = Convert.ToInt64(invoicePostProcessingData.Invoice.BILLING_ACCOUNT_ID),
-                amount = -1*Convert.ToDecimal(invoicePostProcessingData.Invoice.invoice_item.Single().AMOUNT),
+                amount = Convert.ToDecimal(invoicePostProcessingData.Invoice.invoice_item.Single().AMOUNT),
                 createdByJob = invoicePostProcessingData.InvoiceGenerationInputData.TelcobrightJob.id
             };
             return tempTransaction;
@@ -82,9 +82,16 @@ namespace Jobs
             cmd.ExecuteNonQuery();
             acc_temp_transaction tempTransaction = invoicePostProcessingData.TempTransaction;
             cmd.CommandText = $"insert into acc_temp_transaction" +
-                              $"(transactionTime,glAccountId,amount,createdByJob,debitOrCredit,idEvent,uomId,balanceBefore,balanceAfter) values" +
+                              $"(transactionTime,glAccountId,amount,createdByJob,debitOrCredit,idEvent,uomId,balanceBefore" +
+                              $",balanceAfter) values" +
                               $"({tempTransaction.transactionTime.ToMySqlField()},{tempTransaction.glAccountId}," +
-                              $"{tempTransaction.amount},{invoiceGenerationInputData.TelcobrightJob.id},'d',-1,'{invoicePostProcessingData.Currency}',0,0)";
+                              $"{tempTransaction.amount},{invoiceGenerationInputData.TelcobrightJob.id},'d'," +
+                              $"{generatedInvoiceId}," +
+                              $"'{invoicePostProcessingData.Currency}',0,0)";
+            cmd.ExecuteNonQuery();
+            cmd.CommandText = $" insert into acc_ledger_summary_billed (idAccount,transactionDate,amount) " +
+                              $" values ({invoicePostProcessingData.ServiceAccountId}," +
+                              $"{invoicePostProcessingData.StartDate.ToMySqlField()},{invoiceItem.AMOUNT});";
             cmd.ExecuteNonQuery();
             
         }

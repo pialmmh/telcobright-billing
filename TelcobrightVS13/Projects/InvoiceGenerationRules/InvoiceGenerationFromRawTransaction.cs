@@ -12,7 +12,7 @@ namespace InvoiceGenerationRules
 {
 
     [Export("InvoiceGenerationRule", typeof(IInvoiceGenerationRule))]
-    public class InvoiceGenerationByBatchJob : IInvoiceGenerationRule
+    public class InvoiceGenerationFromRawTransaction : IInvoiceGenerationRule
     {
         public override string ToString()
         {

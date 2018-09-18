@@ -21,7 +21,7 @@ namespace InvoiceSectionGenerator
                        sum(longDecimalAmount3)  as XYAmount,
                        sum(customercost      )  as Amount      
                        from {invoiceSectionGeneratorData.CdrOrSummaryTableName}                                              
-                       where {invoiceSectionGeneratorData.GetWhereClauseForDateCustomerId("idPartnerId")};";
+                       where {invoiceSectionGeneratorData.GetWhereClauseForDateCustomerId("tup_inPartnerId")};";
             return base.GetInvoiceSection<InvoiceSectionDataRowForA2ZVoice>(invoiceSectionGeneratorData, sql);
         }
     }

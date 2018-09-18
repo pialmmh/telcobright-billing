@@ -45,7 +45,7 @@ namespace Process
                 string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName);
                 MefJobComposer mefJobComposer = new MefJobComposer();
                 mefJobComposer.Compose();
-                ITelcobrightJob mefInvoicingJob = mefJobComposer.Jobs.Single(c => c.RuleName == "MefInvoicingJob");
+                ITelcobrightJob mefInvoicingJob = mefJobComposer.Jobs.Single(c => c.RuleName == "MefCdrInvoicingJob");
                 using (PartnerEntities context = new PartnerEntities(entityConStr))
                 {
                     context.Database.Connection.Open();
