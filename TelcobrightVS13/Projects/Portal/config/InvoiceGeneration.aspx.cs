@@ -27,6 +27,9 @@ namespace PortalApp.config
         private static int DefaultTimeZoneId = 3251;
         private static int GmtOffset = 21600;
         private static Dictionary<int, IServiceGroup> MefServiceGroups { get; set; }
+        private static List<partner> allPartners { get; set; }
+        private static List<timezone> allTimeZones { get; set; }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -35,13 +38,11 @@ namespace PortalApp.config
                 using (PartnerEntities context = new PartnerEntities())
                 {
 
-                    List<partner> allPartners = context.partners.OrderBy(i => i.PartnerName).ToList();
-                    this.Session["sesAllPartners"] = allPartners;
+                    allPartners = context.partners.OrderBy(i => i.PartnerName).ToList();
                     List<account> allAccounts = context.accounts.ToList();
 
-                    List<timezone> tz = context.timezones.Include("zone.country")
+                    allTimeZones = context.timezones.Include("zone.country")
                         .OrderBy(o => o.zone.country.country_name).ToList();
-                    this.Session["sesAllTimeZones"] = tz;
 
                     List<KeyValuePair<Regex, string>> serviceAliases = Tbc.ServiceAliasesRegex;
                     List<InvoiceGenRowDataCollector> summaryForInvoiceGenerations =
@@ -136,7 +137,7 @@ namespace PortalApp.config
                         ddlistServiceAccount.Items.Add(kv.Value);
                     }
 
-                    foreach (timezone t in tz)
+                    foreach (timezone t in allTimeZones)
                     {
                         string zoneName = t.zone.country.country_name + " " + t.offsetdesc + " [" + t.zone.zone_name +
                                           "]";
@@ -157,9 +158,8 @@ namespace PortalApp.config
                 DropDownList ddlTimeZone = (DropDownList)e.Row.FindControl("ddlistTimeZone");
                 if (DataBinder.Eval(e.Row.DataItem, "TimeZone") != null)
                 {
-                    if (this.Session["sesAllTimeZones"] != null)
+                    if (allTimeZones != null)
                     {
-                        List<timezone> allTimeZones = (List<timezone>)this.Session["sesAllTimeZones"];
                         foreach (timezone t in allTimeZones)
                         {
                             string zoneName = t.zone.country.country_name + " " + t.offsetdesc + " [" +
@@ -196,7 +196,6 @@ namespace PortalApp.config
 
         protected void btnAddInvoiceRow_OnClick(object sender, EventArgs e)
         {
-            List<timezone> allTimeZones = (List<timezone>)this.Session["sesAllTimeZones"];
             BindingList<InvoiceGenRowDataCollector> invoiceGenerations =
                 (BindingList<InvoiceGenRowDataCollector>)this.Session["igInvoiceGenList"];
             InvoiceGenRowDataCollector ledgerSummary =
@@ -376,7 +375,6 @@ namespace PortalApp.config
         {
             DropDownList ddlTimeZone = sender as DropDownList;
             GridViewRow row = (GridViewRow)((Control)sender).NamingContainer;
-            List<timezone> allTimeZones = (List<timezone>)this.Session["sesAllTimeZones"];
             BindingList<InvoiceGenRowDataCollector> invoiceGenerations =
                 (BindingList<InvoiceGenRowDataCollector>)this.Session["igInvoiceGenList"];
             InvoiceGenRowDataCollector editRow = invoiceGenerations[row.RowIndex];
@@ -395,6 +393,7 @@ namespace PortalApp.config
                 (BindingList<InvoiceGenRowDataCollector>)this.Session["igInvoiceGenList"];
             InvoiceGenRowDataCollector editRow = invoiceGenerations[row.RowIndex];
             editRow.StartDateTime = DateTime.Parse(txtStartDate.Text);
+            editRow.Amount = getAmount(editRow);
             this.Session["igInvoiceGenList"] = invoiceGenerations;
             gvInvoice.DataSource = invoiceGenerations;
             gvInvoice.DataBind();
@@ -408,9 +407,26 @@ namespace PortalApp.config
                 (BindingList<InvoiceGenRowDataCollector>)this.Session["igInvoiceGenList"];
             InvoiceGenRowDataCollector editRow = invoiceGenerations[row.RowIndex];
             editRow.EndDateTime = DateTime.Parse(txtEndDate.Text);
+            editRow.Amount = getAmount(editRow);
             this.Session["igInvoiceGenList"] = invoiceGenerations;
             gvInvoice.DataSource = invoiceGenerations;
             gvInvoice.DataBind();
+        }
+
+        private decimal getAmount(InvoiceGenRowDataCollector editRow)
+        {
+            decimal Amount = 0;
+            using (PartnerEntities context = new PartnerEntities())
+            {
+                List<acc_ledger_summary> accLedgerSummaries =
+                    context.acc_ledger_summary.Where(x => x.idAccount == editRow.AccountId && x.AMOUNT != 0)
+                        .ToList();
+                foreach (acc_ledger_summary ledgerSummary in accLedgerSummaries) {
+                    if (ledgerSummary.transactionDate >= editRow.StartDateTime && ledgerSummary.transactionDate <= editRow.EndDateTime)
+                        Amount += ledgerSummary.AMOUNT;
+                }
+            }
+            return Amount;
         }
     }
 }

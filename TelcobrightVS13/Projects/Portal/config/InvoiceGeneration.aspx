@@ -38,6 +38,8 @@
                             <ItemTemplate >
                                 <asp:TextBox ID="txtStartDate" runat="server" AutoPostBack="true" Enabled="True" Width="140px"
                                     dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" OnTextChanged="txtStartDate_TextChanged"/>
+                                <asp:CalendarExtender ID="CalendarStartDate" runat="server" 
+                                  TargetControlID="txtStartDate"  PopupButtonID="txtStartDate" Format="yyyy-MM-dd 00:00:00" />
                             </ItemTemplate>
                         </asp:TemplateField>
                         <%--<asp:boundfield datafield="EndDateTime" headertext="Till" dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" />--%>
@@ -45,6 +47,8 @@
                             <ItemTemplate >
                                 <asp:TextBox ID="txtEndDate" runat="server" AutoPostBack="true" Enabled="True" Width="140px"
                                     dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" OnTextChanged="txtEndDate_TextChanged"/>
+                                <asp:CalendarExtender ID="CalendarEndDate" runat="server" 
+                                  TargetControlID="txtEndDate"  PopupButtonID="txtEndDate" Format="yyyy-MM-dd 23:59:59" />
                             </ItemTemplate>
                         </asp:TemplateField>
                         <asp:boundfield datafield="Amount" headertext="Amount" DataFormatString="{0:n2}">
