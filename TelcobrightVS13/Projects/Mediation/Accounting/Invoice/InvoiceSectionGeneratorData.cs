@@ -30,9 +30,9 @@ namespace TelcobrightMediation.Accounting
         public string GetWhereClauseForCustomerId(string colNameForInOrOutParnter) =>
             $" {colNameForInOrOutParnter}={this.JsonDetail["idPartner"]} ";
 
-        public string GetWhereClauseForDateServiceGroup(string colNameForInOrOutParnter) =>
-            GetWhereClauseForDateRange() + " and " + GetWhereClauseForServiceGroup()
-            + " and " + GetWhereClauseForCustomerId(colNameForInOrOutParnter);
+        public string GetWhereClauseForDateCustomerId(string colNameForInOrOutParnter) =>
+            GetWhereClauseForDateRange() + " and " + GetWhereClauseForCustomerId(colNameForInOrOutParnter);
+        
         public string GetWhereClauseForDatePartnerServiceGroup(string colNameForInOrOutParnter) =>
             GetWhereClauseForDateRange() + " and " + GetWhereClauseForServiceGroup()
             + " and " + GetWhereClauseForCustomerId(colNameForInOrOutParnter);
