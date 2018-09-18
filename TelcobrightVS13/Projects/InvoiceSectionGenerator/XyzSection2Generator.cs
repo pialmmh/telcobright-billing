@@ -23,7 +23,7 @@ namespace InvoiceSectionGenerator
                        sum(longDecimalAmount3)  as XYAmount,
                        sum(customercost      )  as Revenue      
                        from {invoiceSectionGeneratorData.CdrOrSummaryTableName}                                               
-                       where {invoiceSectionGeneratorData.GetWhereClauseForDateCustomerId("inPartnerId")}
+                       where {invoiceSectionGeneratorData.GetWhereClauseForDateCustomerId("tup_inPartnerId")}
                        group by tup_outpartnerid) x                     
                        left join partner p
                        on x.tup_outpartnerid=p.idpartner;";

@@ -17,7 +17,7 @@ namespace InvoiceSectionGenerator
                            sum(duration1)/60  as TotalMinutes,   
                            sum(customercost)  as Amount      
                            from {invoiceSectionGeneratorData.CdrOrSummaryTableName}                          
-                           where {invoiceSectionGeneratorData.GetWhereClauseForDateCustomerId("inPartnerId")};";
+                           where {invoiceSectionGeneratorData.GetWhereClauseForDateCustomerId("tup_inPartnerId")};";
             return base.GetInvoiceSection<InvoiceSectionDataRowForA2ZVoice>(invoiceSectionGeneratorData, sql);
         }
     }

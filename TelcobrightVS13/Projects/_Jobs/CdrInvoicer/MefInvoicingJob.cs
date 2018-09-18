@@ -82,10 +82,11 @@ namespace Jobs
             cmd.ExecuteNonQuery();
             acc_temp_transaction tempTransaction = invoicePostProcessingData.TempTransaction;
             cmd.CommandText = $"insert into acc_temp_transaction" +
-                              $"(transactionTime,glAccountId,amount,createdByJob) values" +
+                              $"(transactionTime,glAccountId,amount,createdByJob,debitOrCredit,idEvent,uomId,balanceBefore,balanceAfter) values" +
                               $"({tempTransaction.transactionTime.ToMySqlField()},{tempTransaction.glAccountId}," +
-                              $"{tempTransaction.amount},{invoiceGenerationInputData.TelcobrightJob.id})";
+                              $"{tempTransaction.amount},{invoiceGenerationInputData.TelcobrightJob.id},'d',-1,'{invoicePostProcessingData.Currency}',0,0)";
             cmd.ExecuteNonQuery();
+            
         }
         private Action<object> actionOnFinish = jobInput =>
         {
