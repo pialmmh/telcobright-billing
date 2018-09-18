@@ -19,7 +19,7 @@ namespace InvoiceSectionGenerator
                             sum(duration1)/60  as TotalMinutes,                                   
                             sum(customercost)  as Amount                                          
                             from {invoiceSectionGeneratorData.CdrOrSummaryTableName}                          
-                            where {invoiceSectionGeneratorData.GetWhereClauseForDateCustomerId("outPartnerId")}
+                            where {invoiceSectionGeneratorData.GetWhereClauseForDateCustomerId("tup_OutPartnerId")}
                             group by tup_inpartnerId,tup_customerrate) x
                             left join partner p
                             on x.tup_inPartnerId=p.idpartner;";
