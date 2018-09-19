@@ -14,18 +14,30 @@ namespace LibraryExtensions
         public string SerializeToCompressedBase64(T obj)
         {
             string json = JsonConvert.SerializeObject(obj);
-            byte[] inputBytes = Encoding.UTF8.GetBytes(json);
+            return CompressToGzipBase64(json);
+        }
+
+        public static string CompressToGzipBase64(string str)
+        {
+            byte[] inputBytes = Encoding.UTF8.GetBytes(str);
+            byte[] outputBytes = null;
             using (var outputStream = new MemoryStream())
             {
                 using (var gZipStream = new GZipStream(outputStream, CompressionMode.Compress))
                     gZipStream.Write(inputBytes, 0, inputBytes.Length);
-
-                var outputBytes = outputStream.ToArray();
-                var outputbase64 = Convert.ToBase64String(outputBytes);
-                return outputbase64;
+                outputBytes = outputStream.ToArray();
             }
+            var outputbase64 = Convert.ToBase64String(outputBytes);
+            return outputbase64;
         }
+
         public T DeSerializeToObject(string compresedString)
+        {
+            string decompressedString = DeCompressFromGzipBase64(compresedString);
+            return JsonConvert.DeserializeObject<T>(decompressedString);
+        }
+
+        public static string DeCompressFromGzipBase64(string compresedString)
         {
             byte[] inputBytes = Convert.FromBase64String(compresedString);
             string decompressedString;
@@ -37,7 +49,7 @@ namespace LibraryExtensions
                 var outputBytes = outputStream.ToArray();
                 decompressedString = Encoding.UTF8.GetString(outputBytes);
             }
-            return JsonConvert.DeserializeObject<T>(decompressedString);
+            return decompressedString;
         }
     }
 }

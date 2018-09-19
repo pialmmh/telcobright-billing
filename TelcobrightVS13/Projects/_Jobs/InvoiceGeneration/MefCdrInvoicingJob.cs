@@ -89,9 +89,13 @@ namespace Jobs
                               $"{generatedInvoiceId}," +
                               $"'{invoicePostProcessingData.Currency}',0,0)";
             cmd.ExecuteNonQuery();
-            cmd.CommandText = $" insert into acc_ledger_summary_billed (idAccount,transactionDate,amount) " +
+            var dayWiseAmounts =
+                invoicePostProcessingData.DayWiseLedgerSummaries.ToDictionary(kv => kv.Key, kv => (-1)*kv.Value.AMOUNT);
+            var jsonCompressor= new JsonCompressor<Dictionary<DateTime, decimal>>(); 
+            cmd.CommandText = $" insert into acc_ledger_summary_billed (idAccount,transactionDate,dayWiseAmounts) " +
                               $" values ({invoicePostProcessingData.ServiceAccountId}," +
-                              $"{invoicePostProcessingData.StartDate.ToMySqlField()},{invoiceItem.AMOUNT});";
+                              $"{invoicePostProcessingData.StartDate.ToMySqlField()}," +
+                              $"'{jsonCompressor.SerializeToCompressedBase64(dayWiseAmounts)}');";
             cmd.ExecuteNonQuery();
             
         }

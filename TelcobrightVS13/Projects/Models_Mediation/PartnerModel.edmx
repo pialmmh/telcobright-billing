@@ -91,12 +91,12 @@ warning 6002: The table/view 'def.platinum.acc_ledger_summary_billed' does not h
             <PropertyRef Name="id" />
             <PropertyRef Name="idAccount" />
             <PropertyRef Name="transactionDate" />
-            <PropertyRef Name="AMOUNT" />
+            <PropertyRef Name="dayWiseLedgerSummaries" />
           </Key>
           <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="idAccount" Type="bigint" Nullable="false" />
           <Property Name="transactionDate" Type="datetime" Precision="0" Nullable="false" />
-          <Property Name="AMOUNT" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="dayWiseLedgerSummaries" Type="mediumtext" Nullable="false" />
         </EntityType>
         <EntityType Name="acc_temp_transaction">
           <Key>
@@ -4277,7 +4277,7 @@ FROM `acc_ledger_summary` AS `acc_ledger_summary`</DefiningQuery>
 `acc_ledger_summary_billed`.`id`, 
 `acc_ledger_summary_billed`.`idAccount`, 
 `acc_ledger_summary_billed`.`transactionDate`, 
-`acc_ledger_summary_billed`.`AMOUNT`
+`acc_ledger_summary_billed`.`dayWiseLedgerSummaries`
 FROM `acc_ledger_summary_billed` AS `acc_ledger_summary_billed`</DefiningQuery>
           </EntitySet>
           <EntitySet Name="acc_transaction" EntityType="Self.acc_transaction" store:Type="Tables" store:Schema="platinum">
@@ -7715,12 +7715,12 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
             <PropertyRef Name="id" />
             <PropertyRef Name="idAccount" />
             <PropertyRef Name="transactionDate" />
-            <PropertyRef Name="AMOUNT" />
+            <PropertyRef Name="dayWiseLedgerSummaries" />
           </Key>
           <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="idAccount" Type="Int64" Nullable="false" />
           <Property Name="transactionDate" Type="DateTime" Nullable="false" />
-          <Property Name="AMOUNT" Type="Decimal" Nullable="false" />
+          <Property Name="dayWiseLedgerSummaries" Type="String" Nullable="false" MaxLength="16777215" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="acc_transaction">
           <Key>
@@ -11872,7 +11872,7 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <EntitySetMapping Name="acc_ledger_summary_billed">
             <EntityTypeMapping TypeName="MediationModel.acc_ledger_summary_billed">
               <MappingFragment StoreEntitySet="acc_ledger_summary_billed">
-                <ScalarProperty Name="AMOUNT" ColumnName="AMOUNT" />
+                <ScalarProperty Name="dayWiseLedgerSummaries" ColumnName="dayWiseLedgerSummaries" />
                 <ScalarProperty Name="transactionDate" ColumnName="transactionDate" />
                 <ScalarProperty Name="idAccount" ColumnName="idAccount" />
                 <ScalarProperty Name="id" ColumnName="id" />

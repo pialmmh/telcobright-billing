@@ -30,7 +30,6 @@ namespace Process
         {
             return this.RuleName;
         }
-
         public string RuleName => this.GetType().ToString();
         public string HelpText => "Invoice Generator";
         public int ProcessId => 108;

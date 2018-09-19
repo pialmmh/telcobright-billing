@@ -29,8 +29,12 @@ namespace InvoiceGenerationRules
             Dictionary<string, string> invoiceJsonDetail = input.JsonDetail;
             long serviceAccountId = Convert.ToInt64(invoiceJsonDetail["serviceAccountId"]);
             ValidateIfLocalTimeZoneUsed(input, context, invoiceJsonDetail);
-            decimal ledgerSummaryAmount = context.acc_ledger_summary.Where(c => c.idAccount == serviceAccountId)
-                .Sum(c => c.AMOUNT);
+            DateTime startDate = Convert.ToDateTime(invoiceJsonDetail["startDate"]);
+            DateTime endDate = Convert.ToDateTime(invoiceJsonDetail["endDate"]);
+            Dictionary<DateTime,acc_ledger_summary> dayWiseLedgerSummaries = context.acc_ledger_summary
+                .Where(c => c.idAccount == serviceAccountId && c.transactionDate >= startDate
+                && c.transactionDate <= endDate).OrderBy(c=>c.transactionDate).ToDictionary(c=>c.transactionDate);
+            decimal ledgerSummaryAmount = dayWiseLedgerSummaries.Values.Sum(c => c.AMOUNT);
             decimal? tempTransactionAmount = context.acc_temp_transaction.Where(c => c.glAccountId == serviceAccountId)
                 .Sum(c => (decimal?)c.amount);
             decimal invoiceAmount = -1*(ledgerSummaryAmount + Convert.ToDecimal(tempTransactionAmount));
@@ -45,15 +49,14 @@ namespace InvoiceGenerationRules
             if (serviceGroup == null)
                 throw new Exception("Service group should be set already thus cannot be null while " +
                                     "executing invoice generation by ledger summary.");
-            DateTime startDate = Convert.ToDateTime(invoiceJsonDetail["startDate"]);
-            DateTime endDate = Convert.ToDateTime(invoiceJsonDetail["endDate"]);
             string invoiceDescription = serviceGroup.RuleName + $" [{startDate.ToMySqlFormatWithoutQuote()}" +
                                         $"-{endDate.ToMySqlFormatWithoutQuote()}]";
             string uom = invoiceJsonDetail["uom"];
             invoice newInvoice = CreateInvoiceWithItem(invoiceJsonDetail, serviceAccountId, invoiceAmount, serviceGroup,
                 invoiceDescription, uom);
             InvoicePostProcessingData invoicePostProcessingData =
-                new InvoicePostProcessingData(input, newInvoice, serviceAccountId, startDate, endDate);
+                new InvoicePostProcessingData(input, newInvoice, serviceAccountId, startDate, endDate,
+                dayWiseLedgerSummaries);
             return invoicePostProcessingData;
         }
 

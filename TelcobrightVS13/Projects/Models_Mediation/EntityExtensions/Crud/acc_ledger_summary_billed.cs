@@ -14,7 +14,7 @@ namespace MediationModel
 				.Append(this.id.ToMySqlField()).Append(",")
 				.Append(this.idAccount.ToMySqlField()).Append(",")
 				.Append(this.transactionDate.ToMySqlField()).Append(",")
-				.Append(this.AMOUNT.ToMySqlField()).Append(")")
+				.Append(this.dayWiseLedgerSummaries.ToMySqlField()).Append(")")
 				;
 		}
 		public  StringBuilder GetExtInsertCustom(Func<acc_ledger_summary_billed,string> externalInsertMethod)
@@ -27,7 +27,7 @@ namespace MediationModel
 				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
 				.Append("idAccount=").Append(this.idAccount.ToMySqlField()).Append(",")
 				.Append("transactionDate=").Append(this.transactionDate.ToMySqlField()).Append(",")
-				.Append("AMOUNT=").Append(this.AMOUNT.ToMySqlField())
+				.Append("dayWiseLedgerSummaries=").Append(this.dayWiseLedgerSummaries.ToMySqlField())
 				.Append(whereClauseMethod.Invoke(this));
 				
 		}

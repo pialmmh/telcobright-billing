@@ -17,6 +17,6 @@ namespace MediationModel
         public long id { get; set; }
         public long idAccount { get; set; }
         public System.DateTime transactionDate { get; set; }
-        public decimal AMOUNT { get; set; }
+        public string dayWiseLedgerSummaries { get; set; }
     }
 }

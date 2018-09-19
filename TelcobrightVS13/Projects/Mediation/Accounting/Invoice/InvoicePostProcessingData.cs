@@ -17,8 +17,10 @@ namespace TelcobrightMediation.Accounting
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public string Currency => this.InvoiceItem.UOM_ID;
+        public Dictionary<DateTime,acc_ledger_summary> DayWiseLedgerSummaries { get; }
         public InvoicePostProcessingData(InvoiceGenerationInputData invoiceGenerationInputData, invoice invoiceWithItem,
-            long serviceAccountId, DateTime startDate, DateTime endDate)
+            long serviceAccountId, DateTime startDate, DateTime endDate,
+            Dictionary<DateTime, acc_ledger_summary> dayWiseledgerSummaries)
         {
             this.InvoiceGenerationInputData = invoiceGenerationInputData;
             this.Invoice = invoiceWithItem;
@@ -26,6 +28,7 @@ namespace TelcobrightMediation.Accounting
             this.ServiceAccountId = serviceAccountId;
             this.StartDate = startDate;
             this.EndDate = endDate;
+            this.DayWiseLedgerSummaries = dayWiseledgerSummaries;
         }
         public string GetWhereClauseForDateRange()
         {
