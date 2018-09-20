@@ -88,31 +88,44 @@ namespace PortalApp.config
 
                         if (!isAlreadyExists)
                         {
-                            InvoiceGenRowDataCollector invoiceDataCollector =
-                                new InvoiceGenRowDataCollector(MefServiceGroups)
-                                {
-                                    PartnerId = partner.idPartner,
-                                    PartnerName = partner.PartnerName,
-                                    AccountId = account.id,
-                                    AccountName = account.accountName,
-                                    StartDateTime = timeRange.Start,
-                                    EndDateTime = timeRange.End,
-                                    Amount = ledgerSummary.AMOUNT,
-                                    TimeZone = DefaultTimeZoneId,
-                                    GmtOffset = GmtOffset
-                                };
-                            invoiceDataCollector.InvoiceDates.Add(ledgerSummary.transactionDate);
-
-                            foreach (var kv in serviceAliases)
+                            decimal billedSum = 0;
+                            List<acc_ledger_summary_billed> billedItems = context.acc_ledger_summary_billed
+                                .Where(x => x.idAccount == account.id).ToList();
+                            foreach (acc_ledger_summary_billed billed in billedItems)
                             {
-                                var regex = kv.Key;
-                                if (regex.Matches(invoiceDataCollector.AccountName).Count > 0)
-                                {
-                                    invoiceDataCollector.ServiceAccountAlias = kv.Value;
-                                    break;
-                                }
+                                Dictionary<DateTime, decimal> items = new JsonCompressor<Dictionary<DateTime, decimal>>().DeSerializeToObject(billed.dayWiseLedgerSummaries);
+                                billedSum += items.Sum(x => x.Value);
                             }
-                            summaryForInvoiceGenerations.Add(invoiceDataCollector);
+                            ledgerSummary.AMOUNT += billedSum;
+
+                            if (ledgerSummary.AMOUNT != 0)
+                            {
+                                InvoiceGenRowDataCollector invoiceDataCollector =
+                                    new InvoiceGenRowDataCollector(MefServiceGroups)
+                                    {
+                                        PartnerId = partner.idPartner,
+                                        PartnerName = partner.PartnerName,
+                                        AccountId = account.id,
+                                        AccountName = account.accountName,
+                                        StartDateTime = timeRange.Start,
+                                        EndDateTime = timeRange.End,
+                                        Amount = ledgerSummary.AMOUNT,
+                                        TimeZone = DefaultTimeZoneId,
+                                        GmtOffset = GmtOffset
+                                    };
+                                invoiceDataCollector.InvoiceDates.Add(ledgerSummary.transactionDate);
+
+                                foreach (var kv in serviceAliases)
+                                {
+                                    var regex = kv.Key;
+                                    if (regex.Matches(invoiceDataCollector.AccountName).Count > 0)
+                                    {
+                                        invoiceDataCollector.ServiceAccountAlias = kv.Value;
+                                        break;
+                                    }
+                                }
+                                summaryForInvoiceGenerations.Add(invoiceDataCollector);
+                            }
                         }
                     }
 
