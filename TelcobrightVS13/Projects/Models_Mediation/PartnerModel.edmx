@@ -98,7 +98,7 @@ warning 6002: The table/view 'def.platinum.acc_ledger_summary_billed' does not h
           <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="idAccount" Type="bigint" Nullable="false" />
           <Property Name="transactionDate" Type="datetime" Precision="0" Nullable="false" />
-          <Property Name="billedAmount" Type="decimal" Precision="10" Scale="0" Nullable="false" />
+          <Property Name="billedAmount" Type="decimal" Precision="20" Scale="8" Nullable="false" />
           <Property Name="eventType" Type="varchar" MaxLength="1" Nullable="false" />
           <Property Name="invoiceOrEventId" Type="bigint" Nullable="false" />
         </EntityType>
