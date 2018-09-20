@@ -88,14 +88,12 @@ namespace PortalApp.config
 
                         if (!isAlreadyExists)
                         {
-                            decimal billedSum = 0;
-                            List<acc_ledger_summary_billed> billedItems = context.acc_ledger_summary_billed
-                                .Where(x => x.idAccount == account.id).ToList();
-                            foreach (acc_ledger_summary_billed billed in billedItems)
-                            {
-                                //Dictionary<DateTime, decimal> items = new JsonCompressor<Dictionary<DateTime, decimal>>().DeSerializeToObject(billed.dayWiseLedgerSummaries);
-                                //billedSum += items.Sum(x => x.Value);
-                            }
+                            decimal billedSum = context.acc_ledger_summary_billed
+                                .Where(x => x.idAccount == account.id && x.transactionDate >= timeRange.Start &&
+                                            x.transactionDate <= timeRange.End)
+                                            .Select(l => l.billedAmount)
+                                            .DefaultIfEmpty(0)
+                                            .Sum();
                             ledgerSummary.AMOUNT += billedSum;
 
                             if (ledgerSummary.AMOUNT != 0)
@@ -130,7 +128,7 @@ namespace PortalApp.config
                     }
 
                     BindingList<InvoiceGenRowDataCollector> invoiceGenerations =
-                        new BindingList<InvoiceGenRowDataCollector>(summaryForInvoiceGenerations.OrderBy(x => x.PartnerName)
+                        new BindingList<InvoiceGenRowDataCollector>(summaryForInvoiceGenerations.Where(x => x.Amount != 0).OrderBy(x => x.PartnerName)
                             .ThenBy(x => x.ServiceAccountAlias).ToList());
 
                     // show current balance
@@ -428,7 +426,7 @@ namespace PortalApp.config
 
         private decimal getAmount(InvoiceGenRowDataCollector editRow)
         {
-            decimal Amount = 0;
+            decimal amount = 0;
             using (PartnerEntities context = new PartnerEntities())
             {
                 List<acc_ledger_summary> accLedgerSummaries =
@@ -436,10 +434,19 @@ namespace PortalApp.config
                         .ToList();
                 foreach (acc_ledger_summary ledgerSummary in accLedgerSummaries) {
                     if (ledgerSummary.transactionDate >= editRow.StartDateTime && ledgerSummary.transactionDate <= editRow.EndDateTime)
-                        Amount += ledgerSummary.AMOUNT;
+                        amount += ledgerSummary.AMOUNT;
                 }
+
+                decimal billedSum = context.acc_ledger_summary_billed
+                    .Where(x => x.idAccount == editRow.AccountId && x.transactionDate >= editRow.StartDateTime &&
+                                x.transactionDate <= editRow.EndDateTime)
+                    .Select(l => l.billedAmount)
+                    .DefaultIfEmpty(0)
+                    .Sum();
+
+                amount += billedSum;
             }
-            return Amount;
+            return amount;
         }
     }
 }
