@@ -17,6 +17,8 @@ namespace MediationModel
         public long id { get; set; }
         public long idAccount { get; set; }
         public System.DateTime transactionDate { get; set; }
-        public string dayWiseLedgerSummaries { get; set; }
+        public decimal billedAmount { get; set; }
+        public string eventType { get; set; }
+        public long invoiceOrEventId { get; set; }
     }
 }

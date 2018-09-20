@@ -9,6 +9,7 @@ using System.Data.Common;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using LibraryExtensions;
 using TelcobrightFileOperations;
 using MediationModel;
@@ -91,11 +92,16 @@ namespace Jobs
             cmd.ExecuteNonQuery();
             var dayWiseAmounts =
                 invoicePostProcessingData.DayWiseLedgerSummaries.ToDictionary(kv => kv.Key, kv => (-1)*kv.Value.AMOUNT);
-            var jsonCompressor= new JsonCompressor<Dictionary<DateTime, decimal>>(); 
-            cmd.CommandText = $" insert into acc_ledger_summary_billed (idAccount,transactionDate,dayWiseAmounts) " +
-                              $" values ({invoicePostProcessingData.ServiceAccountId}," +
-                              $"{invoicePostProcessingData.StartDate.ToMySqlField()}," +
-                              $"'{jsonCompressor.SerializeToCompressedBase64(dayWiseAmounts)}');";
+            StringBuilder sbSql=
+                new StringBuilder($" insert into acc_ledger_summary_billed (idAccount,transactionDate,billedAmount, " +
+                                                  $"eventType,invoiceOrEventId) values ");
+            sbSql.Append(string.Join(",", dayWiseAmounts.Select(kv =>
+                new StringBuilder("(").Append(
+                        $"{invoicePostProcessingData.ServiceAccountId},{kv.Key.ToMySqlFormatWithQuote()},{kv.Value}," +
+                        $"'i',{generatedInvoiceId}")
+                    .Append(")").ToString())));
+                
+            cmd.CommandText = sbSql.ToString();
             cmd.ExecuteNonQuery();
             
         }

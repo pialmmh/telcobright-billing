@@ -5,7 +5,7 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="63f86689ce6641aab623f8a575cbfc48" Name="Diagram1" ZoomLevel="71">
-        <EntityTypeShape EntityType="MediationModel.acc_action" Width="1.5" PointX="7.5" PointY="50" />
+        <EntityTypeShape EntityType="MediationModel.acc_action" Width="1.5" PointX="7.5" PointY="43.375" />
         <EntityTypeShape EntityType="MediationModel.acc_temp_transaction" Width="1.5" PointX="14.75" PointY="19.5" />
         <EntityTypeShape EntityType="MediationModel.account" Width="1.5" PointX="5.25" PointY="44.75" />
         <EntityTypeShape EntityType="MediationModel.allerror" Width="1.5" PointX="0.75" PointY="10.5" />
@@ -40,7 +40,7 @@
         <EntityTypeShape EntityType="MediationModel.enumbilltype" Width="1.5" PointX="11.75" PointY="23.5" />
         <EntityTypeShape EntityType="MediationModel.enumcalldirection" Width="1.5" PointX="22.75" PointY="19.5" />
         <EntityTypeShape EntityType="MediationModel.enumcallforwardingroamingtype" Width="1.5" PointX="22.75" PointY="22.5" />
-        <EntityTypeShape EntityType="MediationModel.enumcdrformat" Width="1.5" PointX="0.75" PointY="27.25" />
+        <EntityTypeShape EntityType="MediationModel.enumcdrformat" Width="1.5" PointX="0.75" PointY="20.875" />
         <EntityTypeShape EntityType="MediationModel.enumcreditrule" Width="1.5" PointX="23.75" PointY="1.5" />
         <EntityTypeShape EntityType="MediationModel.enumcurrency" Width="1.5" PointX="23.75" PointY="4.5" />
         <EntityTypeShape EntityType="MediationModel.enumdatedassignment" Width="1.5" PointX="23.75" PointY="7.5" />
@@ -75,8 +75,8 @@
         <EntityTypeShape EntityType="MediationModel.enumvatrule" Width="1.5" PointX="27.75" PointY="10.5" />
         <EntityTypeShape EntityType="MediationModel.errordefinition" Width="1.5" PointX="11.75" PointY="28.5" />
         <EntityTypeShape EntityType="MediationModel.genericparameterassignment" Width="1.5" PointX="27.75" PointY="13.5" />
-        <EntityTypeShape EntityType="MediationModel.invoice" Width="1.5" PointX="7.5" PointY="43.75" />
-        <EntityTypeShape EntityType="MediationModel.invoice_item" Width="1.5" PointX="9.75" PointY="43.375" />
+        <EntityTypeShape EntityType="MediationModel.invoice" Width="1.5" PointX="7.5" PointY="46.625" />
+        <EntityTypeShape EntityType="MediationModel.invoice_item" Width="1.5" PointX="9.75" PointY="46.375" />
         <EntityTypeShape EntityType="MediationModel.job" Width="1.5" PointX="5.25" PointY="19.25" />
         <EntityTypeShape EntityType="MediationModel.jobcompletion" Width="1.5" PointX="7.5" PointY="23.75" />
         <EntityTypeShape EntityType="MediationModel.jobsegment" Width="1.5" PointX="7.5" PointY="20.625" />
@@ -103,11 +103,11 @@
         <EntityTypeShape EntityType="MediationModel.role" Width="1.5" PointX="8.75" PointY="0.75" />
         <EntityTypeShape EntityType="MediationModel.route" Width="1.5" PointX="5.25" PointY="27.25" />
         <EntityTypeShape EntityType="MediationModel.routeaddressmapping" Width="1.5" PointX="29.75" PointY="7.5" />
-        <EntityTypeShape EntityType="MediationModel.telcobrightpartner" Width="1.5" PointX="0.75" PointY="20.875" />
+        <EntityTypeShape EntityType="MediationModel.telcobrightpartner" Width="1.5" PointX="0.75" PointY="23.5" />
         <EntityTypeShape EntityType="MediationModel.timezone" Width="1.5" PointX="5.25" PointY="15" />
         <EntityTypeShape EntityType="MediationModel.transactionmeta" Width="1.5" PointX="29.75" PointY="13.5" />
         <EntityTypeShape EntityType="MediationModel.uom" Width="1.5" PointX="14.75" PointY="4.375" />
-        <EntityTypeShape EntityType="MediationModel.uom_conversion_dated" Width="1.5" PointX="17" PointY="6" />
+        <EntityTypeShape EntityType="MediationModel.uom_conversion_dated" Width="1.5" PointX="17" PointY="2" />
         <EntityTypeShape EntityType="MediationModel.userclaim" Width="1.5" PointX="8" PointY="3.25" />
         <EntityTypeShape EntityType="MediationModel.userlogin" Width="1.5" PointX="8" PointY="7.75" />
         <EntityTypeShape EntityType="MediationModel.userrole" Width="1.5" PointX="11" PointY="4.5" />
@@ -141,7 +141,7 @@
         <EntityTypeShape EntityType="MediationModel.sum_voice_hr_04" Width="1.5" PointX="29.75" PointY="38.5" />
         <EntityTypeShape EntityType="MediationModel.sum_voice_hr_05" Width="1.5" PointX="38.75" PointY="1.5" />
         <EntityTypeShape EntityType="MediationModel.sum_voice_hr_06" Width="1.5" PointX="0.75" PointY="39.5" />
-        <EntityTypeShape EntityType="MediationModel.uom_conversion" Width="1.5" PointX="17" PointY="2" />
+        <EntityTypeShape EntityType="MediationModel.uom_conversion" Width="1.5" PointX="17" PointY="6.875" />
         <AssociationConnector Association="MediationModel.id_account_acc_threshhold" />
         <AssociationConnector Association="MediationModel.account_ibfk_1" />
         <AssociationConnector Association="MediationModel.account_ibfk_2" />
