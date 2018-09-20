@@ -93,8 +93,8 @@ namespace PortalApp.config
                                 .Where(x => x.idAccount == account.id).ToList();
                             foreach (acc_ledger_summary_billed billed in billedItems)
                             {
-                                Dictionary<DateTime, decimal> items = new JsonCompressor<Dictionary<DateTime, decimal>>().DeSerializeToObject(billed.dayWiseLedgerSummaries);
-                                billedSum += items.Sum(x => x.Value);
+                                //Dictionary<DateTime, decimal> items = new JsonCompressor<Dictionary<DateTime, decimal>>().DeSerializeToObject(billed.dayWiseLedgerSummaries);
+                                //billedSum += items.Sum(x => x.Value);
                             }
                             ledgerSummary.AMOUNT += billedSum;
 
