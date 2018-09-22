@@ -399,6 +399,8 @@ namespace PortalApp.config
         protected void txtStartDate_TextChanged(object sender, EventArgs e)
         {
             TextBox txtStartDate = sender as TextBox;
+            DateTime startDate = Convert.ToDateTime(txtStartDate.Text);
+            txtStartDate.Text = startDate.ToString("yyyy-MM-dd 00:00:00");
             GridViewRow row = (GridViewRow)((Control)sender).NamingContainer;
             BindingList<InvoiceGenRowDataCollector> invoiceGenerations =
                 (BindingList<InvoiceGenRowDataCollector>)this.Session["igInvoiceGenList"];
@@ -413,6 +415,8 @@ namespace PortalApp.config
         protected void txtEndDate_TextChanged(object sender, EventArgs e)
         {
             TextBox txtEndDate = sender as TextBox;
+            DateTime endDate = Convert.ToDateTime(txtEndDate.Text);
+            txtEndDate.Text = endDate.ToString("yyyy-MM-dd 23:59:59");
             GridViewRow row = (GridViewRow)((Control)sender).NamingContainer;
             BindingList<InvoiceGenRowDataCollector> invoiceGenerations =
                 (BindingList<InvoiceGenRowDataCollector>)this.Session["igInvoiceGenList"];
