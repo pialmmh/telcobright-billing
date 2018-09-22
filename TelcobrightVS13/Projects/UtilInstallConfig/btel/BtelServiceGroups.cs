@@ -60,7 +60,7 @@ namespace InstallConfig
                         SectionGeneratorVsTemplateNames = new Dictionary<string, string>()
                         {
                             {"A2ZInvoiceSection1Generator","InternationalIncomingToForeignCarrier" },
-                            {"A2ZInvoiceSection2Generator","InternationalIncomingToForeignCarrierDetails1" },
+                            {"A2ZInvoiceSection2GeneratorMatchedPrefixCustomer","InternationalIncomingToForeignCarrierDetails1" },
                             {"A2ZInvoiceSection3Generator","InternationalIncomingToForeignCarrierDetails2" }
                         }
                     },

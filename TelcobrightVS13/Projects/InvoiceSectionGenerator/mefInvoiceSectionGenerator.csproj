@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="A2ZInvoiceSection1GeneratorWithTax.cs" />
     <Compile Include="A2ZInvoiceSection1GeneratorWithCurrencyConversion.cs" />
+    <Compile Include="A2ZInvoiceSection2GeneratorMatchedPrefixCustomer.cs" />
     <Compile Include="A2ZInvoiceSection2GeneratorWithTax.cs" />
     <Compile Include="A2ZInvoiceSection2GeneratorWithCurrencyConversion.cs" />
     <Compile Include="A2ZInvoiceSection3GeneratorWithTax.cs" />
@@ -82,6 +83,10 @@
     <Compile Include="XyzSection3Generator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LibraryExtensions\LibraryExtensions.csproj">
+      <Project>{D4C2F34D-4D3D-43AE-84F0-E80CFEDB1B48}</Project>
+      <Name>LibraryExtensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Mediation\_00Mediation.csproj">
       <Project>{1a64e6f9-903c-416c-b322-1b5c5d997001}</Project>
       <Name>_00Mediation</Name>

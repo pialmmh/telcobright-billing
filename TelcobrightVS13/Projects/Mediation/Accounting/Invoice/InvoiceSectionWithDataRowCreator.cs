@@ -17,6 +17,7 @@ namespace TelcobrightMediation
         private DateTime EndDate { get; }
         private string SectionName { get; }
         private string TemplateName { get; }
+
         public InvoiceSectionWithDataRowCreator(InvoicePostProcessingData invoicePostProcessingData,
             string templateName, int sectionNumber)
         {
@@ -26,12 +27,18 @@ namespace TelcobrightMediation
             this.SectionName = "Section-" + sectionNumber.ToString();
             this.TemplateName = templateName;
         }
+
         public InvoiceSection CreateInvoiceSection(string sql)
         {
             List<T> data = this.Context.Database.SqlQuery<T>(sql).ToList();
             return new InvoiceSection(sectionName: this.SectionName,
                 templateName: this.TemplateName,
                 serializedData: new JsonCompressor<List<T>>().SerializeToCompressedBase64(data));
+        }
+
+        public List<T> CreateInvoiceSectionRowDataOnly(string sql)
+        {
+            return this.Context.Database.SqlQuery<T>(sql).ToList();
         }
     }
 }

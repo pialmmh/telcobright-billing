@@ -6,6 +6,7 @@ namespace TelcobrightMediation
     {
         public string InPartnerName { get; set; }
         public string OutPartnerName { get; set; }
+        public string Destination { get; set; }
         public string Reference { get; set; }
         public DateTime Date { get; set; }
         public string Description { get; set; }
