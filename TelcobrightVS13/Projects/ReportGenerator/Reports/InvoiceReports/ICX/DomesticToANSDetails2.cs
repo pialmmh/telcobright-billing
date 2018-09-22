@@ -61,7 +61,7 @@ namespace ReportGenerator.Reports.InvoiceReports.ICX
             xrTableCellAmount.DataBindings.Add("Text", this.DataSource, "GrandTotalAmount", "{0:n2}");
 
             xrTableCellRevenueTotal.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
-            xrTableCellSubTotalAmount.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
+            xrTableCellSubTotalAmount.DataBindings.Add("Text", this.DataSource, "GrandTotalAmount", "{0:n2}");
             #endregion
         }
         private List<InvoiceSectionDataRowForA2ZVoice> GetReportData(invoice invoice)

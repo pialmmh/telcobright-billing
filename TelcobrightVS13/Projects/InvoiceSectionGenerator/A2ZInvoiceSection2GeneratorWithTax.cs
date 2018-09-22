@@ -15,7 +15,7 @@ namespace InvoiceSectionGenerator
             decimal vatPercentage = Convert.ToDecimal(invoiceSectionGeneratorData.InvoicePostProcessingData
                 .JsonDetail["vat"]);
             string sql = $@"select p.partnerName as OutPartnerName,tup_customerrate as Rate, 
-                            TotalCalls,TotalMinutes, Amount from
+                            TotalCalls,TotalMinutes,Amount,TaxOrVatAmount,GrandTotalAmount from
                             (select tup_outpartnerId,tup_customerrate,
                             sum(successfulcalls)	as TotalCalls,                                  
                             sum(duration1)/60  as TotalMinutes,                                   

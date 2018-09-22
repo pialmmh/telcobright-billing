@@ -60,8 +60,13 @@ namespace Jobs
             var context = invoiceGenerationInputData.Context;
             var cmd = context.Database.Connection.CreateCommand();
             invoice invoiceWithItem = invoicePostProcessingData.Invoice;
-            cmd.CommandText = $"insert into invoice (billing_account_id,description) values(" +
-                              $"{invoiceWithItem.BILLING_ACCOUNT_ID},'{invoiceWithItem.DESCRIPTION}');";
+            cmd.CommandText = $"insert into invoice (billing_account_id,description,originalCurrency," +
+                              $"convertedFinalCurrency,originalAmount,convertedFinalAmount," +
+                              $"currencyConversionFactor) values(" +
+                              $"{invoiceWithItem.BILLING_ACCOUNT_ID},'{invoiceWithItem.DESCRIPTION}'," +
+                              $"'{invoiceWithItem.originalCurrency}', '{invoiceWithItem.convertedFinalCurrency}'," +
+                              $"{invoiceWithItem.originalAmount},{invoiceWithItem.convertedFinalAmount}," +
+                              $"{invoiceWithItem.currencyConversionFactor});";
             cmd.ExecuteNonQuery();
             cmd.CommandText = "SELECT LAST_INSERT_ID();";
             long generatedInvoiceId = 0;
