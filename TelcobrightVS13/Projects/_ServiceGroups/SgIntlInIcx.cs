@@ -88,14 +88,32 @@ namespace TelcobrightMediation
 
         public InvoiceGenerationInputData ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData)
         {
+            Dictionary<string, string> jobParamsMap = invoiceGenerationInputData.JsonDetail;
+            DateTime startDate = Convert.ToDateTime(jobParamsMap["startDate"]);
+            var context = invoiceGenerationInputData.Context;
+            DateTime lastSecondOfPrevMonth = startDate.AddSeconds(-1);
+            uom_conversion_dated usdConversionDated = context.uom_conversion_dated.Where(
+                    c => c.PURPOSE_ENUM_ID == "INTERNAL_CONVERSION"
+                         && c.UOM_ID == "USD" && c.UOM_ID_TO == "BDT" && c.FROM_DATE == lastSecondOfPrevMonth)
+                         .ToList().FirstOrDefault();
+            if (usdConversionDated == null)
+                throw new Exception("Usd conversion rate not found.");
+            invoiceGenerationInputData.JsonDetail = jobParamsMap;
+            invoiceGenerationInputData.JsonDetail.Add("usdRate",
+                usdConversionDated.CONVERSION_FACTOR.ToString());
             return invoiceGenerationInputData;
         }
 
         public InvoicePostProcessingData ExecInvoicePostProcessing(InvoicePostProcessingData invoicePostProcessingData)
         {
+            invoice invoice = invoicePostProcessingData.Invoice;
             invoice_item invoiceItem = invoicePostProcessingData.InvoiceItem;
             Dictionary<string, string> jsonDetail = JsonConvert.DeserializeObject<Dictionary<string, string>>
                 (invoiceItem.JSON_DETAIL);
+            decimal usdRateTtClean = Convert.ToDecimal(jsonDetail["usdRate"]);
+            invoice.currencyConversionFactor = usdRateTtClean;
+            invoice.convertedFinalCurrency = "USD";
+            invoice.convertedFinalAmount = usdRateTtClean * invoice.originalAmount;
             string cdrOrSummarytableName = this.SummaryTargetTables.Single(t => t.Key.ToString().Contains("day"))
                 .Key.ToString();
             CommonInvoicePostProcessor commonInvoicePostProcessor

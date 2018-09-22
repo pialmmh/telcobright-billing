@@ -60,14 +60,19 @@ namespace InvoiceGenerationRules
             return invoicePostProcessingData;
         }
 
-        private static invoice CreateInvoiceWithItem(Dictionary<string, string> invoiceJsonDetail, 
-            long serviceAccountId, decimal invoiceAmount, IServiceGroup serviceGroup, string invoiceDescription, string uom)
+        public static invoice CreateInvoiceWithItem(Dictionary<string, string> invoiceJsonDetail, 
+            long serviceAccountId, decimal invoiceAmount, IServiceGroup serviceGroup, string invoiceDescription, 
+            string uom)
         {
             return new invoice()
             {
                 BILLING_ACCOUNT_ID = serviceAccountId,
                 DESCRIPTION = invoiceDescription,
                 INVOICE_DATE = DateTime.Now.Date,
+                originalAmount = invoiceAmount,
+                convertedFinalAmount = invoiceAmount,
+                originalCurrency = uom,
+                convertedFinalCurrency = uom,
                 invoice_item = new List<invoice_item>()
                 {
                     new invoice_item()

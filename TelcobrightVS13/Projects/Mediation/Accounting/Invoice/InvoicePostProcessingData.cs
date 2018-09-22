@@ -18,6 +18,8 @@ namespace TelcobrightMediation.Accounting
         public DateTime EndDate { get; set; }
         public string Currency => this.InvoiceItem.UOM_ID;
         public Dictionary<DateTime,acc_ledger_summary> DayWiseLedgerSummaries { get; }
+        public Dictionary<string,string> JsonDetail=> this.InvoiceGenerationInputData.JsonDetail;
+
         public InvoicePostProcessingData(InvoiceGenerationInputData invoiceGenerationInputData, invoice invoiceWithItem,
             long serviceAccountId, DateTime startDate, DateTime endDate,
             Dictionary<DateTime, acc_ledger_summary> dayWiseledgerSummaries)
@@ -30,6 +32,7 @@ namespace TelcobrightMediation.Accounting
             this.EndDate = endDate;
             this.DayWiseLedgerSummaries = dayWiseledgerSummaries;
         }
+
         public string GetWhereClauseForDateRange()
         {
             var startDate = this.StartDate;

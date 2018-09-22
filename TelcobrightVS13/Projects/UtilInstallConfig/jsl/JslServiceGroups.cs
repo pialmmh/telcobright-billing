@@ -132,9 +132,9 @@ namespace InstallConfig
                     InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary",
                     SectionGeneratorVsTemplateNames = new Dictionary<string, string>()
                     {
-                        {"A2ZInvoiceSection1Generator","DomesticToANS" },
-                        {"A2ZInvoiceSection2Generator","DomesticToANSDetails1" },
-                        {"A2ZInvoiceSection3Generator","DomesticToANSDetails2" }
+                        {"A2ZInvoiceSection1GeneratorWithTax","DomesticToANS" },
+                        {"A2ZInvoiceSection2GeneratorWithTax","DomesticToANSDetails1" },
+                        {"A2ZInvoiceSection3GeneratorWithTax","DomesticToANSDetails2" }
                     }
                 }
             });
@@ -168,9 +168,9 @@ namespace InstallConfig
                         InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary",
                         SectionGeneratorVsTemplateNames = new Dictionary<string, string>()
                         {
-                            {"A2ZInvoiceSection1Generator","InternationalToIOS" },
-                            {"A2ZInvoiceSection2Generator","InternationalToIOSDetails1" },
-                            {"A2ZInvoiceSection3Generator","InternationalToIOSDetails2" }
+                            {"A2ZInvoiceSection1GeneratorWithCurrencyConversion","InternationalToIOS" },
+                            {"A2ZInvoiceSection2GeneratorWithCurrencyConversion","InternationalToIOSDetails1" },
+                            {"A2ZInvoiceSection3GeneratorWithCurrencyConversion","InternationalToIOSDetails2" }
                         }
                     }
                 });

@@ -19,5 +19,7 @@ namespace TelcobrightMediation
         public decimal XAmount { get; set; }
         public decimal YAmount { get; set; }
         public decimal XYAmount { get; set; }
+        public decimal TaxOrVatAmount { get; set; }
+        public decimal GrandTotalAmount { get; set; }
     }
 }

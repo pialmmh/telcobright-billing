@@ -27,6 +27,11 @@ namespace MediationModel
         public string ROLE_TYPE_ID { get; set; }
         public string STATUS_ID { get; set; }
         public Nullable<long> BILLING_ACCOUNT_ID { get; set; }
+        public string originalCurrency { get; set; }
+        public string convertedFinalCurrency { get; set; }
+        public decimal originalAmount { get; set; }
+        public decimal convertedFinalAmount { get; set; }
+        public decimal currencyConversionFactor { get; set; }
         public string CONTACT_MECH_ID { get; set; }
         public Nullable<System.DateTime> INVOICE_DATE { get; set; }
         public Nullable<System.DateTime> DUE_DATE { get; set; }

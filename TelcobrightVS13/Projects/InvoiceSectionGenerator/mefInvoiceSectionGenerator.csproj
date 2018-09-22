@@ -61,6 +61,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="A2ZInvoiceSection1GeneratorWithTax.cs" />
+    <Compile Include="A2ZInvoiceSection1GeneratorWithCurrencyConversion.cs" />
+    <Compile Include="A2ZInvoiceSection2GeneratorWithTax.cs" />
+    <Compile Include="A2ZInvoiceSection2GeneratorWithCurrencyConversion.cs" />
+    <Compile Include="A2ZInvoiceSection3GeneratorWithTax.cs" />
+    <Compile Include="A2ZInvoiceSection3GeneratorWithCurrencyConversion.cs" />
     <Compile Include="TollFreeInvoiceSection3Generator.cs" />
     <Compile Include="TollFreeInvoiceSection2Generator.cs" />
     <Compile Include="TollFreeInvoiceSection1Generator.cs" />
