@@ -80,24 +80,24 @@ namespace Process
                             //Console.WriteLine("Processing Non-CDR job: " + ThisJob.JobName + ", type: " + ThisJob.idjobdefinition);
                             ITelcobrightJob iJob = null;
                             jobData.DicExtensions.TryGetValue(thisJob.idjobdefinition.ToString(), out iJob);
-                            if (iJob != null)
+                            if (iJob == null)
+                                throw new Exception("Filecopy Job definition not found " +
+                                                    "after mef composition.");
+                            FileCopyJobInputData fileCopyJobInputData = new FileCopyJobInputData(tbc, thisJob);
+                            JobCompletionStatus jobStatus = iJob.Execute(fileCopyJobInputData);
+                            if (jobStatus == JobCompletionStatus.Complete)
                             {
-                                FileCopyJobInputData fileCopyJobInputData = new FileCopyJobInputData(tbc, thisJob);
-                                JobCompletionStatus jobStatus = iJob.Execute(fileCopyJobInputData);
-                                if (jobStatus == JobCompletionStatus.Complete)
-                                {
-                                    sql = " update job set CompletionTime='" +
-                                          DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "'," +
-                                          " Status=1, " +
-                                          " Error='' " +
-                                          " where id=" + thisJob.id;
-                                    cmd.CommandText = sql;
-                                    cmd.ExecuteNonQuery();
+                                sql = " update job set CompletionTime='" +
+                                      DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "'," +
+                                      " Status=1, " +
+                                      " Error='' " +
+                                      " where id=" + thisJob.id;
+                                cmd.CommandText = sql;
+                                cmd.ExecuteNonQuery();
 
-                                    sql = " commit; ";
-                                    cmd.CommandText = sql;
-                                    cmd.ExecuteNonQuery();
-                                }
+                                sql = " commit; ";
+                                cmd.CommandText = sql;
+                                cmd.ExecuteNonQuery();
                             }
                         }
                         catch (Exception e1)
