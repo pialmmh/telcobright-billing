@@ -112,7 +112,7 @@ namespace TelcobrightMediation
                 (invoiceItem.JSON_DETAIL);
             decimal usdRateTtClean = Convert.ToDecimal(jsonDetail["usdRate"]);
             invoice.currencyConversionFactor = usdRateTtClean;
-            invoice.convertedFinalCurrency = "USD";
+            invoice.convertedFinalCurrency = "BDT";
             invoice.convertedFinalAmount = usdRateTtClean * invoice.originalAmount;
             string cdrOrSummarytableName = this.SummaryTargetTables.Single(t => t.Key.ToString().Contains("day"))
                 .Key.ToString();
