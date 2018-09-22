@@ -104,11 +104,11 @@ namespace PortalApp.config
                     lb.Text = "Section " + sectionNumber;
                     lb.CommandName = item.Key;
                     lb.Click += ViewReportOnClick;
-                    e.Row.Cells[6].Controls.Add(lb);
+                    e.Row.Cells[8].Controls.Add(lb);
 
                     Label lbl = new Label();
                     lbl.Text = " ";
-                    e.Row.Cells[6].Controls.Add(lbl);
+                    e.Row.Cells[8].Controls.Add(lbl);
                 }
             }
         }

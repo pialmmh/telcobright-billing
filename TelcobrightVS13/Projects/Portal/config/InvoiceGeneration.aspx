@@ -24,6 +24,7 @@
                     <Columns>
                         <asp:boundfield datafield="PartnerName" headertext="Partner"/>
                         <asp:boundfield datafield="ServiceAccountAlias" headertext="Service Account"/>
+                        <asp:BoundField DataField="Currency" HeaderText="Currency"/>
                         <asp:boundfield datafield="CurrentBalance" headertext="Balance" DataFormatString="{0:n2}">
                             <ItemStyle HorizontalAlign="Right" />
                         </asp:boundfield>
@@ -54,7 +55,6 @@
                         <asp:boundfield datafield="Amount" headertext="Amount" DataFormatString="{0:n2}">
                             <ItemStyle HorizontalAlign="Right" />
                         </asp:boundfield>
-                        <asp:BoundField DataField="Currency" HeaderText="Currency"/>
                         <asp:TemplateField HeaderText="Due" SortExpression="IsDue" ItemStyle-Wrap="false">
                             <ItemTemplate>
                                 <asp:Label runat="server" ID="lblDue" Enabled="false" />

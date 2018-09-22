@@ -40,6 +40,8 @@
                         <asp:Label runat="server" ID="lblDueDate" Enabled="false" dataformatstring="{0:yyyy-MM-dd}" />
                     </ItemTemplate>
                 </asp:TemplateField>
+                <asp:BoundField DataField="convertedFinalCurrency" HeaderText="Currency"/>
+                <asp:BoundField DataField="convertedFinalAmount" HeaderText="Amount"/>
                 <asp:BoundField DataField="" />
             </Columns>
         </asp:GridView>
