@@ -14,6 +14,7 @@ namespace TelcobrightMediation.Accounting
         public string PartnerName { get; set; }
         public long AccountId { get; set; }
         public string AccountName { get; set; }
+        public string Currency { get; set; }
         public decimal CurrentBalance { get; set; }
         public decimal Amount { get; set; }
         public DateTime StartDateTime { get; set; }

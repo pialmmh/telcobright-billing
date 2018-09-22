@@ -54,6 +54,7 @@
                         <asp:boundfield datafield="Amount" headertext="Amount" DataFormatString="{0:n2}">
                             <ItemStyle HorizontalAlign="Right" />
                         </asp:boundfield>
+                        <asp:BoundField DataField="Currency" HeaderText="Currency"/>
                         <asp:TemplateField HeaderText="Due" SortExpression="IsDue" ItemStyle-Wrap="false">
                             <ItemTemplate>
                                 <asp:Label runat="server" ID="lblDue" Enabled="false" />
@@ -66,6 +67,10 @@
                         </asp:TemplateField>
                     </Columns>
                 </asp:GridView>
+                <asp:SqlDataSource ID="SqlDataUOM" runat="server" 
+                                   ConnectionString="<%$ ConnectionStrings:Partner %>" 
+                                   ProviderName="<%$ ConnectionStrings:Partner.ProviderName %>" 
+                                   SelectCommand="select UOM_ID, DESCRIPTION from uom where UOM_TYPE_ID = 'CURRENCY_MEASURE' order by DESCRIPTION" />
             </ContentTemplate>
             <Triggers>
                 <asp:AsyncPostBackTrigger ControlID="btnAddInvoiceRow" EventName="Click" />

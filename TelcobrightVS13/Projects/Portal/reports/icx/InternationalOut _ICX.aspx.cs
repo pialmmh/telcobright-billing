@@ -54,6 +54,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                                 CheckBoxShowByAns.Checked==true?"tup_sourceID":string.Empty,
                                 CheckBoxShowByIgw.Checked==true?"tup_inpartnerid":string.Empty,
                                 CheckBoxShowByCustomerRate.Checked==true?"tup_customerrate":string.Empty,
+                                "tup_customercurrency",
                             },
                       
                          new List<string>()
@@ -62,7 +63,8 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                                 CheckBoxShowByDestination.Checked==true?DropDownPrefix.SelectedIndex>0?"tup_matchedprefixcustomer="+DropDownPrefix.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxIntlPartner.Checked==true?DropDownListIntlCarier.SelectedIndex>0?" tup_outpartnerid="+DropDownListIntlCarier.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxShowByAns.Checked==true?DropDownListAns.SelectedIndex>0?" tup_sourceID="+DropDownListAns.SelectedValue:string.Empty:string.Empty,
-                                CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_inpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty
+                                CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_inpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty,
+                                " totalcalls>0"
                             }).getSQLString();
 
         //File.WriteAllText("c:" + Path.DirectorySeparatorChar + "temp" + Path.DirectorySeparatorChar + "testQuery.txt", constructedSQL);

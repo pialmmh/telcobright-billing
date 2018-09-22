@@ -31,6 +31,15 @@ namespace PortalApp.config {
         protected global::System.Web.UI.WebControls.GridView gvInvoice;
         
         /// <summary>
+        /// SqlDataUOM control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.SqlDataSource SqlDataUOM;
+        
+        /// <summary>
         /// btnGenerateInvoice control.
         /// </summary>
         /// <remarks>

@@ -109,7 +109,8 @@ namespace PortalApp.config
                                         EndDateTime = timeRange.End,
                                         Amount = ledgerSummary.AMOUNT,
                                         TimeZone = DefaultTimeZoneId,
-                                        GmtOffset = GmtOffset
+                                        GmtOffset = GmtOffset,
+                                        Currency = account.uom
                                     };
                                 invoiceDataCollector.InvoiceDates.Add(ledgerSummary.transactionDate);
 
