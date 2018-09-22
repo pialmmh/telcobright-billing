@@ -24,7 +24,8 @@ namespace CdrValidationRules
         {
             if (this.IsPrepared == false)
                 throw new Exception("Rule is not prepared, method Prepare must be called first.");
-            return obj.DurationSec >= this.minDurationSec ? obj.CostIcxIn > 0 : obj.CostIcxIn == 0;
+            //return obj.DurationSec >= this.minDurationSec ? obj.CostIcxIn > 0 : obj.CostIcxIn == 0;
+            return obj.DurationSec < this.minDurationSec || obj.CostIcxIn > 0;
         }
     }
 }
