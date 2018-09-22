@@ -95,6 +95,7 @@ namespace ReportGenerator.Reports.InvoiceReports.IGW
             foreach (InvoiceSectionDataRowForA2ZVoice item in sectionData)
             {
                 item.Reference = invoiceItem.PRODUCT_ID;
+                item.Description = "Call Carrying Charges";
             }
             return sectionData;
         }

@@ -35,7 +35,7 @@
             this.xrTable1 = new DevExpress.XtraReports.UI.XRTable();
             this.xrTableRow1 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCellReference = new DevExpress.XtraReports.UI.XRTableCell();
-            this.xrTableCellTermOperator = new DevExpress.XtraReports.UI.XRTableCell();
+            this.xrTableCellDestination = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCellTotalCalls = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCellTotalMinutes = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCellRate = new DevExpress.XtraReports.UI.XRTableCell();
@@ -108,7 +108,7 @@
             // 
             this.xrTableRow1.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
             this.xrTableCellReference,
-            this.xrTableCellTermOperator,
+            this.xrTableCellDestination,
             this.xrTableCellTotalCalls,
             this.xrTableCellTotalMinutes,
             this.xrTableCellRate,
@@ -131,15 +131,15 @@
             this.xrTableCellReference.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
             this.xrTableCellReference.Weight = 0.61898208828560175D;
             // 
-            // xrTableCellTermOperator
+            // xrTableCellDestination
             // 
-            this.xrTableCellTermOperator.Name = "xrTableCellTermOperator";
-            this.xrTableCellTermOperator.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 0, 0, 0, 100F);
-            this.xrTableCellTermOperator.StylePriority.UsePadding = false;
-            this.xrTableCellTermOperator.StylePriority.UseTextAlignment = false;
-            this.xrTableCellTermOperator.Text = "Term. Operator";
-            this.xrTableCellTermOperator.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            this.xrTableCellTermOperator.Weight = 0.61898208828560153D;
+            this.xrTableCellDestination.Name = "xrTableCellDestination";
+            this.xrTableCellDestination.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 0, 0, 0, 100F);
+            this.xrTableCellDestination.StylePriority.UsePadding = false;
+            this.xrTableCellDestination.StylePriority.UseTextAlignment = false;
+            this.xrTableCellDestination.Text = "Destination";
+            this.xrTableCellDestination.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
+            this.xrTableCellDestination.Weight = 0.61898208828560153D;
             // 
             // xrTableCellTotalCalls
             // 
@@ -442,7 +442,7 @@
             this.xrTableCell2.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 0, 0, 0, 100F);
             this.xrTableCell2.StylePriority.UsePadding = false;
             this.xrTableCell2.StylePriority.UseTextAlignment = false;
-            this.xrTableCell2.Text = "Term. Operator";
+            this.xrTableCell2.Text = "Destination";
             this.xrTableCell2.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             this.xrTableCell2.Weight = 0.61898208660332144D;
             // 
@@ -617,7 +617,7 @@
         private DevExpress.XtraReports.UI.XRTable xrTable1;
         private DevExpress.XtraReports.UI.XRTableRow xrTableRow1;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCellReference;
-        private DevExpress.XtraReports.UI.XRTableCell xrTableCellTermOperator;
+        private DevExpress.XtraReports.UI.XRTableCell xrTableCellDestination;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCellTotalCalls;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCellTotalMinutes;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCellAmount;

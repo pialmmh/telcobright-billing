@@ -28,7 +28,8 @@ public partial class DefaultAspx : Page
         
         if (!string.IsNullOrEmpty(telcobrightConfig.PortalSettings.HomePageUrl))
         {
-            this.Response.Redirect(telcobrightConfig.PortalSettings.HomePageUrl);
+            this.Response.Redirect(telcobrightConfig.PortalSettings.HomePageUrl, false);
+            Context.ApplicationInstance.CompleteRequest();
         }
         using (PartnerEntities conTelco = new PartnerEntities())
         {
