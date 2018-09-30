@@ -132,7 +132,6 @@
     <Compile Include="Accounting\Invoice\InvoiceSectionDataPopulator.cs" />
     <Compile Include="Accounting\Invoice\InvoiceSectionDataRetriever.cs" />
     <Compile Include="Accounting\Invoice\InvoiceSectionGeneratorData.cs" />
-    <Compile Include="Accounting\ITimeRangeImplementer.cs" />
     <Compile Include="Accounting\BillingRule.cs" />
     <Compile Include="Accounting\LedgerSumFactory.cs" />
     <Compile Include="Accounting\AccountFactory.cs" />

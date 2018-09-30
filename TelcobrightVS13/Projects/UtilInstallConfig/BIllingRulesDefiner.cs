@@ -28,7 +28,7 @@ namespace InstallConfig
                 Description = "",
                 InvoiceOverdueInDay = 7,
                 CronExpressionForBillingCycle = "0 0 0 1 * ? *",
-                BillingInterval = DateInterval.Months,
+                BillingInterval = DateInterval.Month,
                 BillDuration = 1,
                 /*
                 IsPrepaid = false,

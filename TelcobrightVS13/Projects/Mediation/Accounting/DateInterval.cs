@@ -8,12 +8,13 @@ namespace TelcobrightMediation.Accounting
 {
     public enum DateInterval
     {
-        Years,
-        Months,
-        Weeks,
-        Days,
-        Hours,
-        Minutes,
-        Seconds
+        Year,
+        Month,
+        Fortnight,
+        Week,
+        Day,
+        Hour,
+        Minute,
+        Second
     }
 }
