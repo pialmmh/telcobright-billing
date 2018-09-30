@@ -3,6 +3,7 @@ using System;
 using MediationModel;
 using System.Collections.Generic;
 using LibraryExtensions;
+using MediationModel.enums;
 using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Cdr;
 using TransactionTuple = System.ValueTuple<int, int, long, int,long>;

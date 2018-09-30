@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Itenso.TimePeriod;
 using LibraryExtensions;
 using MediationModel;
+using MediationModel.enums;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TelcobrightMediation.Cdr;
 using CdrSummaryTuple = System.ValueTuple<int, int, int, string, string, decimal, decimal, System.ValueTuple<string, string, string, string, string, string, string, System.ValueTuple<string, string, string, string, string, string>>>;

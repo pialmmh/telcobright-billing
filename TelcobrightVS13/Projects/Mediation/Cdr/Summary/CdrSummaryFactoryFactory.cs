@@ -1,5 +1,6 @@
 using System;
 using MediationModel;
+using MediationModel.enums;
 using TelcobrightMediation.Cdr;
 
 namespace TelcobrightMediation

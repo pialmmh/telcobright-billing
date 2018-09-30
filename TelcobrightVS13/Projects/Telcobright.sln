@@ -93,7 +93,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mefInvoiceSectionGenerator"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mefDigitRules", "DigitRules\mefDigitRules.csproj", "{7E4C0181-C13E-4E45-8996-6017C3B90C81}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mefBillingCycles", "BillingCycles\mefBillingCycles.csproj", "{772D1251-32E5-448D-8D00-C27199CC637A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mefTimeCycles", "TimeCycles\mefTimeCycles.csproj", "{772D1251-32E5-448D-8D00-C27199CC637A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

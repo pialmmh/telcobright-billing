@@ -23,6 +23,7 @@ using TelcobrightMediation.Mediation.Cdr;
 using System.IO;
 using System.Text.RegularExpressions;
 using Itenso.TimePeriod;
+using MediationModel.enums;
 using TransactionTuple = System.ValueTuple<int, int, long, int>;
 using CdrSummaryTuple = System.ValueTuple<int, int, int, string, string, decimal, decimal, System.ValueTuple<string, string, string, string, string, string, string, System.ValueTuple<string, string, string, string, string, string>>>;
 
@@ -147,7 +148,6 @@ namespace TelcobrightMediation
 
 		public ParallelQuery<CdrExt> GenerateSummaries()
 		{
-			//Parallel.ForEach(this.CollectionResult.ProcessedCdrExts, processedCdrExt =>
 			ParallelQuery<CdrExt> parallelCdrs = this.CollectionResult.ProcessedCdrExts.AsParallel();
 			parallelCdrs.ForAll(processedCdrExt =>
 			{

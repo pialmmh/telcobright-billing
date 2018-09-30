@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TelcobrightMediation.Config;
 using Itenso.TimePeriod;
+using LibraryExtensions.TimeCycle;
 using Quartz;
 
 namespace TelcobrightMediation.Accounting
@@ -19,11 +20,11 @@ namespace TelcobrightMediation.Accounting
         public int InvoiceOverdueInDay { get; set; }
         public string CronExpressionForBillingCycle { get; set; }
         public TimeRange TimeRangeAsBillingPeriod { get; set; }
-        public ITimeRangePopulator TimeRangePopulator { get; set; }
         public Single AvgRateForVoice { get; set; }
         public Single AcdInMinuteForVoice { get; set; }
         public Dictionary<string, string> JsonParameters { get; set; }
-        private IBillingCycle BillingCycle { get; set; }
+        public TimeCycleFactory TimeCycleFactory { get; set; }
+        private ITimeCycle TimeCycle { get; set; }
         public BillingRule(int id, string ruleName)
         {
             this.RuleName = ruleName;
@@ -31,48 +32,53 @@ namespace TelcobrightMediation.Accounting
         }
         public TimeRange GetBillingCycleByBillableItemsDate(DateTime billablesDate)
         {
-            TimeZoneInfo timeZoneInfo = TimeZoneInfo.Local;
             DateTimeOffset billDate = DateTime.SpecifyKind(billablesDate, DateTimeKind.Local);
-            CronExpression quartzHelper = new CronExpression(CronExpressionForBillingCycle);
-            //quartzHelper.TimeZone = timeZoneInfo;
-            DateTimeOffset? nextScheduledJob = quartzHelper.GetNextValidTimeAfter(billDate);
-            DateTimeOffset nextTriggerDateTime = new DateTimeOffset();
-            if (nextScheduledJob != null)
+            CronExpression cron = new CronExpression(CronExpressionForBillingCycle);
+            DateTimeOffset? nextValidTriggerDate = cron.GetNextValidTimeAfter(billDate);
+            if (nextValidTriggerDate == null)
+                throw new Exception("No next valid occurance found from cron, possibly invalid expression.");
+            DateTime nextTriggerDate = ((DateTimeOffset)nextValidTriggerDate).LocalDateTime;
+            ITimeCycle timeCycle= this.TimeCycleFactory.GetTimeCycle();
+            var data = new Dictionary<string, object>()
             {
-                int billDuration = this.BillingCycle.BillDuration;
-                TimeSpan ts = (DateTimeOffset) nextScheduledJob - billDate;
-                if (ts.TotalSeconds > 0) billDuration = -billDuration;
-                switch (this.BillingInterval)
-                {
-                    case DateInterval.Minute:
-                        nextTriggerDateTime = ((DateTimeOffset) nextScheduledJob).LocalDateTime.AddMinutes(billDuration);
-                        break;
-                    case DateInterval.Hour:
-                        nextTriggerDateTime = ((DateTimeOffset) nextScheduledJob).LocalDateTime.AddHours(billDuration);
-                        break;
-                    case DateInterval.Day:
-                        nextTriggerDateTime = ((DateTimeOffset) nextScheduledJob).LocalDateTime.AddDays(billDuration);
-                        nextScheduledJob = ((DateTimeOffset) nextScheduledJob).LocalDateTime.AddDays(-1);
-                        break;
-                    case DateInterval.Week:
-                        nextTriggerDateTime = ((DateTimeOffset) nextScheduledJob).LocalDateTime.AddDays(billDuration * 7);
-                        nextScheduledJob = ((DateTimeOffset) nextScheduledJob).LocalDateTime.AddSeconds(-1);
-                        break;
-                    case DateInterval.Month:
-                        nextTriggerDateTime = ((DateTimeOffset) nextScheduledJob).LocalDateTime.AddMonths(billDuration);
-                        nextScheduledJob = ((DateTimeOffset) nextScheduledJob).LocalDateTime.AddSeconds(-1);
-                        break;
-                    case DateInterval.Year:
-                        nextTriggerDateTime = ((DateTimeOffset) nextScheduledJob).LocalDateTime.AddYears(billDuration);
-                        nextScheduledJob = ((DateTimeOffset) nextScheduledJob).LocalDateTime.AddDays(-1);
-                        break;
-                }
-                return new TimeRange(nextTriggerDateTime.DateTime, ((DateTimeOffset) nextScheduledJob).DateTime);
-            }
-            else throw new Exception("Billing cycle definition expression not recognized.");
+                {"billDate",billDate},
+                {"nextTriggerDate",nextTriggerDate},
+                {"cycleDuration",this.TimeCycleFactory.Duration}
+            };
+            return timeCycle.Resolve(data);
         }
 
-        
-        
+        //private TimeRange ResolveTimeCycle(DateTime nextTriggerDate)
+        //{
+        //    DateTime timeRangeStart = new DateTime();
+        //    DateTime timeRangeEnd = new DateTime();
+        //    int cycleDuration = this.TimeCycle.Duration;
+        //    switch (this.TimeCycle.Interval)
+        //    {
+        //        case TimeCycleInterval.Minute:
+        //            timeRangeStart = nextTriggerDate.AddMinutes(-1 * cycleDuration);//-1* more readable
+        //            break;
+        //        case TimeCycleInterval.Hour:
+        //            timeRangeStart = nextTriggerDate.AddHours(-1 * cycleDuration);
+        //            break;
+        //        case TimeCycleInterval.Day:
+        //            timeRangeStart = nextTriggerDate.AddDays(-1 * cycleDuration);
+        //            timeRangeEnd = nextTriggerDate.AddSeconds(-1);
+        //            break;
+        //        case TimeCycleInterval.Week:
+        //            timeRangeStart = nextTriggerDate.AddDays(-1 * cycleDuration * 7);
+        //            timeRangeEnd = nextTriggerDate.AddSeconds(-1);
+        //            break;
+        //        case TimeCycleInterval.Month:
+        //            timeRangeStart = nextTriggerDate.AddMonths(-1 * cycleDuration);
+        //            timeRangeEnd = nextTriggerDate.AddSeconds(-1);
+        //            break;
+        //        case TimeCycleInterval.Year:
+        //            timeRangeStart = nextTriggerDate.AddYears(-1 * cycleDuration);
+        //            timeRangeEnd = nextTriggerDate.AddSeconds(-1);
+        //            break;
+        //    }
+        //    return new TimeRange(timeRangeStart, timeRangeEnd);
+        //}
     }
 }

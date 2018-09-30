@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LibraryExtensions.TimeCycle;
 using TelcobrightMediation.Accounting;
 namespace InstallConfig
 {
@@ -28,8 +29,12 @@ namespace InstallConfig
                 Description = "",
                 InvoiceOverdueInDay = 7,
                 CronExpressionForBillingCycle = "0 0 0 1 * ? *",
-                BillingInterval = DateInterval.Month,
-                BillDuration = 1,
+                TimeCycleFactory = new TimeCycleFactory()
+                {
+                    TimeCycleName = "MonthlyTimeCycle",
+                    Duration = 1
+                }
+                
                 /*
                 IsPrepaid = false,
                 Description = "",

@@ -8,8 +8,8 @@
     <ProjectGuid>{772D1251-32E5-448D-8D00-C27199CC637A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PartnerRules</RootNamespace>
-    <AssemblyName>PartnerRules</AssemblyName>
+    <RootNamespace>TimeCycles</RootNamespace>
+    <AssemblyName>TimeCycles</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -34,6 +34,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Common.Logging, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.3.3.1\lib\net40\Common.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.Core.3.3.1\lib\net40\Common.Logging.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
@@ -48,6 +56,10 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Quartz, Version=2.5.0.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Quartz.2.5.0\lib\net40\Quartz.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -65,10 +77,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Yearly.cs" />
+    <Compile Include="AbstractTimeCycleResolver.cs" />
+    <Compile Include="MinutelyTimeCycle.cs" />
+    <Compile Include="DailyTimeCycle.cs" />
+    <Compile Include="FortnightlyTimeCycle.cs" />
+    <Compile Include="WeeklyTimeCycle.cs" />
+    <Compile Include="MonthlyTimeCycle.cs" />
+    <Compile Include="HourlyTimeCycle.cs" />
+    <Compile Include="YearlyTimeCycle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LibraryExtensions\LibraryExtensions.csproj">
+      <Project>{d4c2f34d-4d3d-43ae-84f0-e80cfedb1b48}</Project>
+      <Name>LibraryExtensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Mediation\_00Mediation.csproj">
       <Project>{1a64e6f9-903c-416c-b322-1b5c5d997001}</Project>
       <Name>_00Mediation</Name>
@@ -80,6 +103,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="job_scheduling_data_2_0.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace MediationModel
+﻿namespace MediationModel.enums
 {
     public enum CdrSummaryType
     {

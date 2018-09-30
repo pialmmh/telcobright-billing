@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using MediationModel;
+using MediationModel.enums;
 using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Cdr;
 

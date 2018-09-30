@@ -113,11 +113,9 @@
     <Compile Include="Accounting\BillingPeriodContants.cs" />
     <Compile Include="Accounting\BlockAccountAction.cs" />
     <Compile Include="Accounting\CdrPostingAccountingFinder.cs" />
-    <Compile Include="Accounting\DateInterval.cs" />
     <Compile Include="Accounting\AccountActionService.cs" />
     <Compile Include="Accounting\IAutomationAction.cs" />
     <Compile Include="Accounting\IAccountCreator.cs" />
-    <Compile Include="Accounting\IBillingRule.cs" />
     <Compile Include="Accounting\Invoice\AbstractInvoiceSectionGenerator.cs" />
     <Compile Include="Accounting\Invoice\CommonInvoicePostProcessor.cs" />
     <Compile Include="Accounting\Invoice\IInvoiceSectionGenerator.cs" />
@@ -182,7 +180,6 @@
     <Compile Include="Cdr\Summary\DailyCdrSummaryFactory.cs" />
     <Compile Include="Cdr\Summary\CdrSummaryFactory.cs" />
     <Compile Include="Cdr\Summary\AbstractSummaryFactory.cs" />
-    <Compile Include="Accounting\ITimeRangePopulator.cs" />
     <Compile Include="Accounting\JsonBillingRuleToBillingRuleConverter.cs" />
     <Compile Include="Accounting\AccountingContext.cs" />
     <Compile Include="Accounting\PaymentProcessor.cs" />
