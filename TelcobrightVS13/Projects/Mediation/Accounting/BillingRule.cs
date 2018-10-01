@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TelcobrightMediation.Config;
 using Itenso.TimePeriod;
+using LibraryExtensions;
 using LibraryExtensions.TimeCycle;
 using Quartz;
 
@@ -38,6 +40,9 @@ namespace TelcobrightMediation.Accounting
             if (nextValidTriggerDate == null)
                 throw new Exception("No next valid occurance found from cron, possibly invalid expression.");
             DateTime nextTriggerDate = ((DateTimeOffset)nextValidTriggerDate).LocalDateTime;
+            var extensionDir=new DirectoryInfo(FileAndPathHelper.GetBinPath()).Parent.GetDirectories()
+                .Single(c=>c.Name=="Extensions");
+            this.TimeCycleFactory.ComposeMefRules(extensionDir.FullName);
             ITimeCycle timeCycle= this.TimeCycleFactory.GetTimeCycle();
             var data = new Dictionary<string, object>()
             {

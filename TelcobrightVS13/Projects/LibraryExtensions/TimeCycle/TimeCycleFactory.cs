@@ -15,15 +15,14 @@ namespace LibraryExtensions.TimeCycle
         public ITimeCycle GetTimeCycle()
         {
             if (!IsMefComposed)
-            {
-                ComposeBillingCycles();
-            }
+                throw new Exception("MefTimeCycleRules are not composed, " +
+                                    "method ComposeMefRules must be called first.");
             return TimeCyclesDictionary[this.TimeCycleName];
         }
-        private void ComposeBillingCycles()
+        public void ComposeMefRules(string mefCatalogPath)
         {
             TimeCycleComposer composer = new TimeCycleComposer();
-            composer.Compose();
+            composer.ComposeFromPath(mefCatalogPath);
             TimeCyclesDictionary = composer.TimeCycles.ToDictionary(c => c.Name);
             IsMefComposed = true;
         }

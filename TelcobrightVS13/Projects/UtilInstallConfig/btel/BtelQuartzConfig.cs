@@ -23,6 +23,7 @@ namespace InstallConfig
             this.DaemonConfigurations = new List<QuartzTbDaemonConfig>();
             this.DaemonConfigurations.AddRange(GetFileListerInstances(this.Tbc.DatabaseSetting.DatabaseName));
             this.DaemonConfigurations.AddRange(GetLogFileJobCreatorInstances(this.Tbc.DatabaseSetting.DatabaseName));
+            this.DaemonConfigurations.AddRange(GetFileCopierInstances(this.Tbc.DatabaseSetting.DatabaseName));
             this.DaemonConfigurations.AddRange(GetCdrJobProcessorInstances(this.Tbc.DatabaseSetting.DatabaseName));
             this.DaemonConfigurations.AddRange(GetInvoiceGeneratorInstances(this.Tbc.DatabaseSetting.DatabaseName));
             return this.DaemonConfigurations;
@@ -131,6 +132,67 @@ namespace InstallConfig
                 )
             };
             return telcobrightProcessInstances;
+        }
+        private List<QuartzTbDaemonConfig> GetFileCopierInstances(string operatorName)
+        {
+            //don't use foreach, do it manually for flixibility e.g. different repeating interval
+            List<QuartzTbDaemonConfig> fileCopierInstances = new List<QuartzTbDaemonConfig>()
+            {
+                new QuartzTbDaemonConfig
+                (
+                    operatorName: operatorName,
+                    identity: "FileCopier [BtelZteDhk:Vault]" + " [" + operatorName+"]",
+                    group: operatorName,
+                    cronExpression: "/5 * * ? * *",
+                    fireOnceIfMissFired: false,
+                    jobDataMap: new Dictionary<string, string>()
+                    {
+                        {"telcobrightProcessId", "104"},
+                        {"operatorName", operatorName},
+                        {"SyncPair", "BtelZteDhk:Vault"}
+                    }),
+                new QuartzTbDaemonConfig
+                (
+                    operatorName: operatorName,
+                    identity: "FileCopier [Vault:FileArchive1Zip]" + " [" + operatorName+"]",
+                    group: operatorName,
+                    cronExpression: "/5 * * ? * *",
+                    fireOnceIfMissFired: false,
+                    jobDataMap: new Dictionary<string, string>()
+                    {
+                        {"telcobrightProcessId", "104"},
+                        {"operatorName", operatorName},
+                        {"SyncPair", "Vault:FileArchive1Zip"}
+                    }),
+                new QuartzTbDaemonConfig
+                (
+                    operatorName: operatorName,
+                    identity: "FileCopier [Vault:FileArchive2]" + " [" + operatorName+"]",
+                    group: operatorName,
+                    cronExpression: "/5 * * ? * *",
+                    fireOnceIfMissFired: false,
+                    jobDataMap: new Dictionary<string, string>()
+                    {
+                        {"telcobrightProcessId", "104"},
+                        {"operatorName", operatorName},
+                        {"SyncPair","Vault:FileArchive2" }
+                    }),
+                new QuartzTbDaemonConfig
+                (
+                    operatorName: operatorName,
+                    identity: "FileCopier [Vault:IOF]" + " [" + operatorName+"]",
+                    group: operatorName,
+                    cronExpression: "/5 * * ? * *",
+                    fireOnceIfMissFired: false,
+                    jobDataMap: new Dictionary<string, string>()
+                    {
+                        {"telcobrightProcessId", "104"},
+                        {"operatorName", operatorName},
+                        {"SyncPair","Vault:IOF" }
+                    })
+
+            };
+            return fileCopierInstances;
         }
     }
 }
