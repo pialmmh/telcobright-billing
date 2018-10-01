@@ -46,7 +46,7 @@ namespace InstallConfig
                 LocationType = "ftp",
                 OsType = "windows",
                 PathSeparator = "/",
-                ServerIp = "10.100.201.22",
+                ServerIp = "10.0.0.10",
                 StartingPath = "Resources/CDR/btel/BtelZteDhk",
                 User = "ftpuser",
                 Pass = "Takay1takaane",
@@ -57,7 +57,7 @@ namespace InstallConfig
                 LocationType = "ftp",
                 OsType = "windows",
                 PathSeparator = "/",
-                ServerIp = "10.100.201.23",
+                ServerIp = "10.0.0.12",
                 StartingPath = "Resources/CDR/btel/BtelZteDhk",
                 User = "ftpuser",
                 Pass = "Takay1takaane",
@@ -221,7 +221,7 @@ namespace InstallConfig
             };
             SyncPair vaultIof = new SyncPair("Vault:IOF")
             {
-                SkipCopyingToDestination = false,
+                SkipCopyingToDestination = true,
                 SkipSourceFileListing = true,
                 SrcSyncLocation = new SyncLocation("Vault_BtelZteDhk")
                 {
@@ -266,7 +266,6 @@ namespace InstallConfig
                 }
             }
             tbc.DirectorySettings = directorySettings;
-            
             //add archive locations to CdrSettings
             tbc.CdrSetting.BackupSyncPairNames = new List<string>
             {
