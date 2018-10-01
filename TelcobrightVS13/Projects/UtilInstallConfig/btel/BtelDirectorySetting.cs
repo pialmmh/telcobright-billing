@@ -78,7 +78,7 @@ namespace InstallConfig
                 PathSeparator = "/",
                 StartingPath = "/home/zxss10_bsvr/data/bfile/bill/zsmart_media_bak",
                 Sftphostkey = "",
-                ServerIp = "10.133.34.12",
+                ServerIp = "10.33.34.12",
                 User = "igwbill",
                 Pass = "igw123",
                 ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
