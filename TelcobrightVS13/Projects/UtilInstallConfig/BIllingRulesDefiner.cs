@@ -43,13 +43,17 @@ namespace InstallConfig
                 BillingInterval = DateInterval.Days,
                 BillDuration = 7,
                 */
+                
                 /*
                 IsPrepaid = false,
                 Description = "",
                 InvoiceOverdueInDay = 7,
-                CronExpressionForBillingCycle = "0 0 0 2,16 * ? *",
-                BillingInterval = DateInterval.Days,
-                BillDuration = 15,
+                CronExpressionForBillingCycle = "0 0 0 1,15 * ? *",
+                TimeCycleFactory = new TimeCycleFactory()
+                {
+                    TimeCycleName = "FortnightlyTimeCycle",
+                    Duration = 15
+                }
                 */
             }
         };

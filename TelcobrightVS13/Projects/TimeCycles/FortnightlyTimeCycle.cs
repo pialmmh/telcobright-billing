@@ -18,9 +18,13 @@ namespace TimeCycles
         public TimeRange Resolve(Dictionary<string,object> data)
         {
             base.Initialize(data);
-            DateTime timeRangeStartOfMonth = base.NextTriggerDate.AddMonths(-1 * base.CycleDuration);
-            //put your logic here.
-            return null;
+            DateTime timeRangeStart;
+            if (base.NextTriggerDate.Day == 1)
+                timeRangeStart = base.NextTriggerDate.AddMonths(-1).AddDays(base.CycleDuration);
+            else
+                timeRangeStart = base.NextTriggerDate.AddDays(-base.CycleDuration).AddDays(1);
+
+            return base.ResolveWithMilliSecSubstraction(timeRangeStart);
         }
     }
 }
