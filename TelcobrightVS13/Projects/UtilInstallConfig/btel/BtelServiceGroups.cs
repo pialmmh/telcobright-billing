@@ -26,6 +26,42 @@ namespace InstallConfig
         {
             List<ServiceGroupConfiguration> serviceGroupConfigurations = new List<ServiceGroupConfiguration>()
             {
+                new ServiceGroupConfiguration(idServiceGroup: 6) //LTFS
+                {
+                    Params = new Dictionary<string, string>() { {"prefixes","000" } },
+                    PartnerRules = new List<int>()
+                    {
+                        PartnerRuletype.InPartnerByIncomingRoute,
+                        PartnerRuletype.OutPartnerByOutgoingRoute
+                    },
+                    Ratingtrules = new List<RatingRule>()
+                    {
+                        new RatingRule() {IdServiceFamily = ServiceFamilyType.SfTollFreeEgressCharging, AssignDirection = 2},
+                    },
+                    MediationChecklistForAnsweredCdrs =
+                        new List<IValidationRule<cdr>>()
+                        {
+                            new DurationSecGtEq0(),
+                            new OutgoingRouteNotEmpty(),
+                            new InPartnerIdGt0(),
+                            new OutPartnerIdGt0(),
+                            new ServiceGroupGt0(),
+                            new MatchedPrefixSupplierNotEmpty(),
+                            new Duration2Gt0() {Data = .09M},
+                            new OutPartnerCostGt0() {Data = .09M},
+                            new BtrcRevShareTax1Gt0() {Data = .09M},
+                        },
+                    InvoiceGenerationConfig = new InvoiceGenerationConfig()
+                    {
+                        InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary",
+                        SectionGeneratorVsTemplateNames = new Dictionary<string, string>()
+                        {
+                            {"TollFreeInvoiceSection1Generator","LTFSToIPTSP" },
+                            {"TollFreeInvoiceSection2Generator","LTFSToIPTSPDetails1" },
+                            {"TollFreeInvoiceSection3Generator","LTFSToIPTSPDetails2" }
+                        }
+                    }
+                },
                 new ServiceGroupConfiguration(idServiceGroup: 4) //intlInIgw
                 {
                     PartnerRules = new List<int>()
