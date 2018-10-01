@@ -46,31 +46,6 @@ namespace InstallConfig
                         {"telcobrightProcessId", "106"},
                         {"operatorName", operatorName}
                     }),
-                new QuartzTbDaemonConfig
-                (
-                    operatorName: operatorName,
-                    identity: "FileLister [Vault:FileArchive1]" + " [" + operatorName+"]",
-                    group: operatorName,
-                    cronExpression: "/30 * * ? * *",
-                    fireOnceIfMissFired: false,
-                    jobDataMap: new Dictionary<string, string>()
-                    {
-                        {"telcobrightProcessId", "106"},
-                        {"operatorName", operatorName}
-                    }),
-                new QuartzTbDaemonConfig
-                (
-                    operatorName: operatorName,
-                    identity: "FileLister [Vault:IOF]" + " [" + operatorName+"]",
-                    group: operatorName,
-                    cronExpression: "/30 * * ? * *",
-                    fireOnceIfMissFired: false,
-                    jobDataMap: new Dictionary<string, string>()
-                    {
-                        {"telcobrightProcessId", "106"},
-                        {"operatorName", operatorName}
-                    }),
-
             };
             return fileListerInstances;
         }
