@@ -37,14 +37,15 @@ namespace InstallConfig
                 new QuartzTbDaemonConfig
                 (
                     operatorName: operatorName,
-                    identity: "FileLister [PltDhkDL:Vault]" + " [" + operatorName+"]",
+                    identity: "FileLister [BtelZteDhk:Vault]" + " [" + operatorName+"]",
                     group: operatorName,
                     cronExpression: "/30 * * ? * *",
                     fireOnceIfMissFired: false,
                     jobDataMap: new Dictionary<string, string>()
                     {
                         {"telcobrightProcessId", "106"},
-                        {"operatorName", operatorName}
+                        {"operatorName", operatorName},
+                        {"SyncPair", "BtelZteDhk:Vault"}
                     }),
             };
             return fileListerInstances;
