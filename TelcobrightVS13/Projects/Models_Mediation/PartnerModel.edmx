@@ -1990,7 +1990,7 @@ warning 6002: The table/view 'def.platinum.rate' does not have a primary key def
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Type" Type="int" Nullable="false" />
           <Property Name="RatePlanName" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="Description" Type="varchar" MaxLength="200" />
@@ -7204,7 +7204,7 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Type" Type="Int32" Nullable="false" />
           <Property Name="RatePlanName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
