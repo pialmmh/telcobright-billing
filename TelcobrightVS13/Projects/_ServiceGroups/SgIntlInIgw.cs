@@ -25,7 +25,7 @@ namespace TelcobrightMediation
 
         public int Id => 4;
         private Dictionary<CdrSummaryType, Type> SummaryTargetTables { get; }
-
+        private static readonly string[] MnoMnpPrefixes = new[] { "51", "61", "71", "81", "91" };
         public SgIntlInIgw() //constructor
         {
             this.SummaryTargetTables = new Dictionary<CdrSummaryType, Type>()
@@ -68,9 +68,19 @@ namespace TelcobrightMediation
                     string terminatingCalledNumber = thisCdr.TerminatingCalledNumber.ToString();
                     if (terminatingCalledNumber != "" && terminatingCalledNumber.Length >= 5)
                     {
-                        terminatingCalledNumber =
-                            terminatingCalledNumber.Substring(5,
-                                terminatingCalledNumber.Length - 5); //trim igwprefix+0 terminating
+                        string thisMnoPrefix = terminatingCalledNumber.Substring(4, 2);
+                        if (MnoMnpPrefixes.Contains(thisMnoPrefix))
+                        {
+                            terminatingCalledNumber =
+                                terminatingCalledNumber.Substring(4, terminatingCalledNumber.Length - 4);
+                        }
+                        else
+                        {
+                            terminatingCalledNumber =
+                                terminatingCalledNumber.Substring(5,
+                                    terminatingCalledNumber.Length - 5); //trim igwprefix+0 terminating
+                        }
+                        
                     }
                     else //Term. call number may not be present in failed calls...in that case
                     {
