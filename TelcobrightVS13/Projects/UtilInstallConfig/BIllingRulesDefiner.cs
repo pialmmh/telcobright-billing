@@ -25,6 +25,7 @@ namespace InstallConfig
             },
             new BillingRule(id:2,ruleName: "OnFirstDayOfEachMonth,ForPreviousMonth")
             {
+                /*
                 IsPrepaid = false,
                 Description = "",
                 InvoiceOverdueInDay = 7,
@@ -34,7 +35,8 @@ namespace InstallConfig
                     TimeCycleName = "MonthlyTimeCycle",
                     Duration = 1
                 }
-                
+                */
+
                 /*
                 IsPrepaid = false,
                 Description = "",
@@ -43,7 +45,7 @@ namespace InstallConfig
                 BillingInterval = DateInterval.Days,
                 BillDuration = 7,
                 */
-                
+
                 /*
                 IsPrepaid = false,
                 Description = "",
@@ -55,6 +57,16 @@ namespace InstallConfig
                     Duration = 15
                 }
                 */
+
+                IsPrepaid = false,
+                Description = "",
+                InvoiceOverdueInDay = 7,
+                CronExpressionForBillingCycle = "0 0 0 ? * * *",
+                TimeCycleFactory = new TimeCycleFactory()
+                {
+                    TimeCycleName = "DailyTimeCycle",
+                    Duration = 1
+                }
             }
         };
     }
