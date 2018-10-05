@@ -144,9 +144,19 @@ namespace PortalApp.config
                     ddlistPartner.DataSource = allPartners;
                     ddlistPartner.DataBind();
 
+                    ddlistPartnerFilter.Items.Clear();
+                    ddlistPartnerFilter.Items.Add(new ListItem(" [All]", "-1"));
+                    foreach (partner p in allPartners)
+                    {
+                        ddlistPartnerFilter.Items.Add(new ListItem(p.PartnerName, p.idPartner.ToString()));
+                    }
+
+                    ddlistServiceAccountFilter.Items.Clear();
+                    ddlistServiceAccountFilter.Items.Add(new ListItem(" [All]", "-1"));
                     foreach (var kv in serviceAliases)
                     {
                         ddlistServiceAccount.Items.Add(kv.Value);
+                        ddlistPartnerFilter.Items.Add(new ListItem(kv.Key.ToString(), kv.Value));
                     }
 
                     foreach (timezone t in allTimeZones)
@@ -452,6 +462,42 @@ namespace PortalApp.config
                 amount += billedSum;
             }
             return amount;
+        }
+
+        protected void cbPartnerFilter_OnCheckedChanged(object sender, EventArgs e)
+        {
+            ddlistPartnerFilter.SelectedIndex = -1;
+            ddlistPartnerFilter.Enabled = cbPartnerFilter.Checked;
+        }
+
+        protected void cbServiceAccountFilter_OnCheckedChanged(object sender, EventArgs e)
+        {
+            ddlistServiceAccountFilter.SelectedIndex = -1;
+            ddlistServiceAccountFilter.Enabled = cbServiceAccountFilter.Checked;
+        }
+
+        protected void cbDueOnly_OnCheckedChanged(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected void ddlistPartnerFilter_OnSelectedIndexChanged(object sender, EventArgs e)
+        {
+            BindingList<InvoiceGenRowDataCollector> invoiceGenerations =
+                (BindingList<InvoiceGenRowDataCollector>)this.Session["igInvoiceGenList"];
+            if (cbPartnerFilter.Checked)
+            {
+                if (ddlistPartnerFilter.SelectedIndex != 0)
+                {
+                    int idPartner = Convert.ToInt32(ddlistPartnerFilter.SelectedValue);
+                    gvInvoice.DataSource = invoiceGenerations
+                        .Where(x => x.PartnerId == idPartner).ToList();
+                }
+                else
+                    gvInvoice.DataSource = invoiceGenerations;
+            }
+            else gvInvoice.DataSource = invoiceGenerations;
+            gvInvoice.DataBind();
         }
     }
 }

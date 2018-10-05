@@ -13,60 +13,74 @@
         <span style="color: black;"><b>Due Invoices to be generated:</b></span><br/>
         <asp:UpdatePanel runat="server">
             <ContentTemplate>
-                <asp:GridView ID="gvInvoice" runat="server" AutoGenerateColumns="False" DataKeyNames="PartnerId"
-                    CellPadding="4" ForeColor="#333333" GridLines="Vertical"
-                    Font-Size="9pt" BorderColor="Silver" BorderStyle="Solid"
-                    OnRowDataBound="gvInvoice_OnRowDataBound">
-                    <AlternatingRowStyle BackColor="#f2f2f2" ForeColor="#284775"></AlternatingRowStyle>
-                    <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
-                    <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
-                    <RowStyle BackColor="white" ForeColor="#333333" />
-                    <Columns>
-                        <asp:boundfield datafield="PartnerName" headertext="Partner"/>
-                        <asp:boundfield datafield="ServiceAccountAlias" headertext="Service Account"/>
-                        <asp:BoundField DataField="Currency" HeaderText="Currency"/>
-                        <asp:boundfield datafield="CurrentBalance" headertext="Balance" DataFormatString="{0:n2}">
-                            <ItemStyle HorizontalAlign="Right" />
-                        </asp:boundfield>
-                        <asp:TemplateField HeaderText="Time Zone" SortExpression="TimeZone" ItemStyle-Wrap="false">
-                            <ItemTemplate>
-                                <asp:DropDownList ID="ddlistTimeZone" runat="server" AutoPostBack="true" Enabled="True" Width="280px"
-                                    OnSelectedIndexChanged="ddlistTimeZone_SelectedIndexChanged"/>
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                        <%--<asp:boundfield datafield="StartDateTime" headertext="From" dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" />--%>
-                        <asp:TemplateField HeaderText="Start Date Time" SortExpression="StartDateTime" ItemStyle-Wrap="false">
-                            <ItemTemplate >
-                                <asp:TextBox ID="txtStartDate" runat="server" AutoPostBack="true" Enabled="True" Width="140px"
-                                    dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" OnTextChanged="txtStartDate_TextChanged"/>
-                                <asp:CalendarExtender ID="CalendarStartDate" runat="server" 
-                                  TargetControlID="txtStartDate"  PopupButtonID="txtStartDate" Format="yyyy-MM-dd 00:00:00" />
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                        <%--<asp:boundfield datafield="EndDateTime" headertext="Till" dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" />--%>
-                        <asp:TemplateField HeaderText="End Date Time" SortExpression="EndDateTime" ItemStyle-Wrap="false">
-                            <ItemTemplate >
-                                <asp:TextBox ID="txtEndDate" runat="server" AutoPostBack="true" Enabled="True" Width="140px"
-                                    dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" OnTextChanged="txtEndDate_TextChanged"/>
-                                <asp:CalendarExtender ID="CalendarEndDate" runat="server" 
-                                  TargetControlID="txtEndDate"  PopupButtonID="txtEndDate" Format="yyyy-MM-dd 23:59:59" />
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                        <asp:boundfield datafield="Amount" headertext="Amount" DataFormatString="{0:n2}">
-                            <ItemStyle HorizontalAlign="Right" />
-                        </asp:boundfield>
-                        <asp:TemplateField HeaderText="Due" SortExpression="IsDue" ItemStyle-Wrap="false">
-                            <ItemTemplate>
-                                <asp:Label runat="server" ID="lblDue" Enabled="false" />
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                        <asp:TemplateField>
-                            <ItemTemplate>
-                                <asp:CheckBox runat="server" id="cbSelect" Checked="False"/>
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                    </Columns>
-                </asp:GridView>
+                <div>
+                    <asp:CheckBox runat="server" ID="cbPartnerFilter" Text="Partner" Checked="False" 
+                        OnCheckedChanged="cbPartnerFilter_OnCheckedChanged" AutoPostBack="True" />
+                    <asp:DropDownList ID="ddlistPartnerFilter" runat="server" 
+                                      Enabled="False" AutoPostBack="True" OnSelectedIndexChanged="ddlistPartnerFilter_OnSelectedIndexChanged" />
+                    <asp:CheckBox runat="server" ID="cbServiceAccountFilter" Text="Service Account" Checked="False" 
+                        OnCheckedChanged="cbServiceAccountFilter_OnCheckedChanged" AutoPostBack="True" />
+                    <asp:DropDownList ID="ddlistServiceAccountFilter" runat="server" 
+                                      Enabled="False" AutoPostBack="True" />
+                    <asp:CheckBox runat="server" ID="cbDueOnly" Text="Due Only" Checked="True" 
+                        OnCheckedChanged="cbDueOnly_OnCheckedChanged" AutoPostBack="True" />
+                </div>
+                <div>
+                    <asp:GridView ID="gvInvoice" runat="server" AutoGenerateColumns="False" DataKeyNames="PartnerId"
+                                  CellPadding="4" ForeColor="#333333" GridLines="Vertical"
+                                  Font-Size="9pt" BorderColor="Silver" BorderStyle="Solid"
+                                  OnRowDataBound="gvInvoice_OnRowDataBound">
+                        <AlternatingRowStyle BackColor="#f2f2f2" ForeColor="#284775"></AlternatingRowStyle>
+                        <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
+                        <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
+                        <RowStyle BackColor="white" ForeColor="#333333" />
+                        <Columns>
+                            <asp:TemplateField>
+                                <ItemTemplate>
+                                    <asp:CheckBox runat="server" id="cbSelect" Checked="False"/>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:boundfield datafield="PartnerName" headertext="Partner"/>
+                            <asp:boundfield datafield="ServiceAccountAlias" headertext="Service Account"/>
+                            <asp:TemplateField HeaderText="Start Date Time" SortExpression="StartDateTime" ItemStyle-Wrap="false">
+                                <ItemTemplate >
+                                    <asp:TextBox ID="txtStartDate" runat="server" AutoPostBack="true" Enabled="True" Width="140px"
+                                                 dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" OnTextChanged="txtStartDate_TextChanged"/>
+                                    <asp:CalendarExtender ID="CalendarStartDate" runat="server" 
+                                                          TargetControlID="txtStartDate"  PopupButtonID="txtStartDate" Format="yyyy-MM-dd 00:00:00" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="End Date Time" SortExpression="EndDateTime" ItemStyle-Wrap="false">
+                                <ItemTemplate >
+                                    <asp:TextBox ID="txtEndDate" runat="server" AutoPostBack="true" Enabled="True" Width="140px"
+                                                 dataformatstring="{0:yyyy-MM-dd HH:mm:ss}" OnTextChanged="txtEndDate_TextChanged"/>
+                                    <asp:CalendarExtender ID="CalendarEndDate" runat="server" 
+                                                          TargetControlID="txtEndDate"  PopupButtonID="txtEndDate" Format="yyyy-MM-dd 23:59:59" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Time Zone" SortExpression="TimeZone" ItemStyle-Wrap="false">
+                                <ItemTemplate>
+                                    <asp:DropDownList ID="ddlistTimeZone" runat="server" AutoPostBack="true" Enabled="True" Width="280px"
+                                                      OnSelectedIndexChanged="ddlistTimeZone_SelectedIndexChanged"/>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:BoundField DataField="Currency" HeaderText="Currency"/>
+                            <asp:boundfield datafield="CurrentBalance" headertext="Balance" DataFormatString="{0:n2}">
+                                <ItemStyle HorizontalAlign="Right" />
+                            </asp:boundfield>
+                            <asp:boundfield datafield="Amount" headertext="Amount" DataFormatString="{0:n2}">
+                                <ItemStyle HorizontalAlign="Right" />
+                            </asp:boundfield>
+                            <asp:TemplateField HeaderText="Due" SortExpression="IsDue" ItemStyle-Wrap="false">
+                                <ItemTemplate>
+                                    <asp:Label runat="server" ID="lblDue" Enabled="false" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        </Columns>
+                    </asp:GridView>
+                    
+                </div>
+
                 <asp:SqlDataSource ID="SqlDataUOM" runat="server" 
                                    ConnectionString="<%$ ConnectionStrings:Partner %>" 
                                    ProviderName="<%$ ConnectionStrings:Partner.ProviderName %>" 
