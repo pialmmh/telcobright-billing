@@ -10,6 +10,9 @@ namespace ReportGenerator.Helper
     {
         public static string NumberToWords(double doubleNumber)
         {
+            // round to 2 decimal
+            doubleNumber = Math.Round(doubleNumber, 2);
+
             var beforeFloatingPoint = (int)Math.Floor(doubleNumber);
             var beforeFloatingPointWord = $"{NumberToWords(beforeFloatingPoint)} dollars";
             var afterFloatingPointWord =

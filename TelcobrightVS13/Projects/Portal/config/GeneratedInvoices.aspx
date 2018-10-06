@@ -10,41 +10,63 @@
     <ajaxToolkit:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server" />
     <div>
         <span style="color: black;"><b>Generated Invoices:</b></span><br/>
-        <asp:GridView ID="gvInvoice" runat="server" AutoGenerateColumns="False" DataKeyNames="INVOICE_ID"
-            CellPadding="4" ForeColor="#333333" GridLines="Vertical"
-            Font-Size="9pt" BorderColor="Silver" BorderStyle="Solid" OnRowDataBound="gvInvoice_RowDataBound">
-            <AlternatingRowStyle BackColor="#f2f2f2" ForeColor="#284775"></AlternatingRowStyle>
-            <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
-            <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
-            <RowStyle BackColor="white" ForeColor="#333333" />
-            <Columns>
-                    <asp:TemplateField>
-                    <ItemTemplate>
-                        <asp:LinkButton ID="LinkButtonEdit" Text="Edit" runat="server" OnClick="LinkButtonEdit_Click" />
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField HeaderText="Partner">
-                    <ItemTemplate>
-                        <asp:Label runat="server" ID="lblPartner" />
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:BoundField DataField="DESCRIPTION" HeaderText="Description" />
-                <asp:BoundField DataField="REFERENCE_NUMBER" HeaderText="Reference Number" />
-                <asp:TemplateField HeaderText="Invoice Date" SortExpression="INVOICE_DATE" ItemStyle-Wrap="false">
-                    <ItemTemplate>
-                        <asp:Label runat="server" ID="lblInvoiceDate" Enabled="false" dataformatstring="{0:yyyy-MM-dd}" />
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField HeaderText="Due Date" SortExpression="DUE_DATE" ItemStyle-Wrap="false">
-                    <ItemTemplate>
-                        <asp:Label runat="server" ID="lblDueDate" Enabled="false" dataformatstring="{0:yyyy-MM-dd}" />
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:BoundField DataField="convertedFinalCurrency" HeaderText="Currency"/>
-                <asp:BoundField DataField="convertedFinalAmount" HeaderText="Amount"/>
-                <asp:BoundField DataField="" />
-            </Columns>
-        </asp:GridView>
+        <asp:UpdatePanel runat="server">
+            <ContentTemplate>
+                <fieldset>
+                    <div>
+                        <asp:CheckBox runat="server" ID="cbPartnerFilter" Text="Partner" Checked="False" 
+                                      OnCheckedChanged="cbPartnerFilter_OnCheckedChanged" AutoPostBack="True" />
+                        <asp:DropDownList ID="ddlistPartnerFilter" runat="server" 
+                                          Enabled="False" AutoPostBack="False" />
+                        <asp:Button runat="server" ID="btnShow" Text="Show" OnClick="btnShow_OnClick"/>
+                    </div>
+                </fieldset>
+            </ContentTemplate>
+        </asp:UpdatePanel>
+        <asp:UpdatePanel runat="server">
+            <ContentTemplate>
+                <div>
+                    <asp:GridView ID="gvInvoice" runat="server" AutoGenerateColumns="False" DataKeyNames="INVOICE_ID"
+                                  CellPadding="4" ForeColor="#333333" GridLines="Vertical"
+                                  Font-Size="9pt" BorderColor="Silver" BorderStyle="Solid" OnRowDataBound="gvInvoice_RowDataBound">
+                        <AlternatingRowStyle BackColor="#f2f2f2" ForeColor="#284775"></AlternatingRowStyle>
+                        <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
+                        <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
+                        <RowStyle BackColor="white" ForeColor="#333333" />
+                        <Columns>
+                            <asp:TemplateField>
+                                <ItemTemplate>
+                                    <asp:LinkButton ID="LinkButtonEdit" Text="Edit" runat="server" OnClick="LinkButtonEdit_Click" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Partner">
+                                <ItemTemplate>
+                                    <asp:Label runat="server" ID="lblPartner" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:BoundField DataField="DESCRIPTION" HeaderText="Description" />
+                            <asp:BoundField DataField="REFERENCE_NUMBER" HeaderText="Reference Number" />
+                            <asp:TemplateField HeaderText="Invoice Date" SortExpression="INVOICE_DATE" ItemStyle-Wrap="false">
+                                <ItemTemplate>
+                                    <asp:Label runat="server" ID="lblInvoiceDate" Enabled="false" dataformatstring="{0:yyyy-MM-dd}" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Due Date" SortExpression="DUE_DATE" ItemStyle-Wrap="false">
+                                <ItemTemplate>
+                                    <asp:Label runat="server" ID="lblDueDate" Enabled="false" dataformatstring="{0:yyyy-MM-dd}" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:BoundField DataField="convertedFinalCurrency" HeaderText="Currency" ItemStyle-HorizontalAlign="Center"/>
+                            <asp:BoundField DataField="convertedFinalAmount" HeaderText="Amount" DataFormatString="{0:n2}" ItemStyle-HorizontalAlign="Right"/>
+                            <asp:BoundField DataField="" />
+                        </Columns>
+                    </asp:GridView>
+                </div>
+            </ContentTemplate>
+            <Triggers>
+                <asp:AsyncPostBackTrigger ControlID="btnShow" EventName="Click"/>
+            </Triggers>
+        </asp:UpdatePanel>
     </div>
 
 <%--<asp:ToolkitScriptManager ID="ScriptManager1" runat="server" />--%>

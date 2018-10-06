@@ -51,13 +51,20 @@ namespace PortalApp.config
                     allAccounts = context.accounts.ToList();
 
                     generatedInvoices = context.invoices.Where(x => x.PAID_DATE == null).OrderByDescending(x => x.INVOICE_DATE).ToList();
-                    gvInvoice.DataSource = generatedInvoices;
+                    gvInvoice.DataSource = GetFilteredItems(generatedInvoices);
                     gvInvoice.DataBind();
+
+                    ddlistPartnerFilter.Items.Clear();
+                    ddlistPartnerFilter.Items.Add(new ListItem(" [All]", "-1"));
+                    foreach (partner p in allPartners)
+                    {
+                        ddlistPartnerFilter.Items.Add(new ListItem(p.PartnerName, p.idPartner.ToString()));
+                    }
                 }
             }
             else
             {
-                gvInvoice.DataSource = generatedInvoices;
+                gvInvoice.DataSource = GetFilteredItems(generatedInvoices);
                 gvInvoice.DataBind();
             }
         }
@@ -152,7 +159,7 @@ namespace PortalApp.config
                 context.SaveChanges();
 
                 generatedInvoices = context.invoices.Where(x => x.PAID_DATE == null).OrderByDescending(x => x.INVOICE_DATE).ToList();
-                gvInvoice.DataSource = generatedInvoices;
+                gvInvoice.DataSource = GetFilteredItems(generatedInvoices);
                 gvInvoice.DataBind();
             }
         }
@@ -170,6 +177,36 @@ namespace PortalApp.config
             if (invoice.DUE_DATE != null)
                 TextBoxDueDate.Text = ((DateTime)invoice.DUE_DATE).ToString("yyyy-MM-dd");
             this.mpeInvoice.Show();
+        }
+
+        private List<invoice> GetFilteredItems(List<invoice> generatedInvoices)
+        {
+            using (PartnerEntities context = new PartnerEntities())
+            {
+                List<invoice> filteredInvoices = generatedInvoices;
+
+                if (cbPartnerFilter.Checked && ddlistPartnerFilter.SelectedIndex != 0)
+                {
+                    int idPartner = Convert.ToInt32(ddlistPartnerFilter.SelectedValue);
+                    List<long> accountIds = context.accounts.Where(x => x.idPartner == idPartner).Select(x => x.id).ToList();
+                    filteredInvoices = filteredInvoices
+                        .Where(x => accountIds.Contains((long) x.BILLING_ACCOUNT_ID)).ToList();
+                }
+
+                return filteredInvoices;
+            }
+        }
+
+        protected void cbPartnerFilter_OnCheckedChanged(object sender, EventArgs e)
+        {
+            ddlistPartnerFilter.SelectedIndex = -1;
+            ddlistPartnerFilter.Enabled = cbPartnerFilter.Checked;
+        }
+
+        protected void btnShow_OnClick(object sender, EventArgs e)
+        {
+            gvInvoice.DataSource = GetFilteredItems(generatedInvoices);
+            gvInvoice.DataBind();
         }
     }
 }
