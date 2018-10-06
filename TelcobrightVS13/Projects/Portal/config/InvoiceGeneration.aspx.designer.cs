@@ -22,24 +22,6 @@ namespace PortalApp.config {
         protected global::AjaxControlToolkit.ToolkitScriptManager ToolkitScriptManager1;
         
         /// <summary>
-        /// cbPartnerFilter control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbPartnerFilter;
-        
-        /// <summary>
-        /// ddlistPartnerFilter control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlistPartnerFilter;
-        
-        /// <summary>
         /// cbServiceAccountFilter control.
         /// </summary>
         /// <remarks>
@@ -58,6 +40,24 @@ namespace PortalApp.config {
         protected global::System.Web.UI.WebControls.DropDownList ddlistServiceAccountFilter;
         
         /// <summary>
+        /// cbPartnerFilter control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbPartnerFilter;
+        
+        /// <summary>
+        /// ddlistPartnerFilter control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlistPartnerFilter;
+        
+        /// <summary>
         /// cbDueOnly control.
         /// </summary>
         /// <remarks>
@@ -65,6 +65,15 @@ namespace PortalApp.config {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox cbDueOnly;
+        
+        /// <summary>
+        /// btnShow control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnShow;
         
         /// <summary>
         /// gvInvoice control.

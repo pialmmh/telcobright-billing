@@ -13,20 +13,26 @@
         <span style="color: black;"><b>Due Invoices to be generated:</b></span><br/>
         <asp:UpdatePanel runat="server">
             <ContentTemplate>
+                <fieldset>
+                    <div>
+                        <asp:CheckBox runat="server" ID="cbServiceAccountFilter" Text="Service Account" Checked="False" 
+                                      OnCheckedChanged="cbServiceAccountFilter_OnCheckedChanged" AutoPostBack="True" />
+                        <asp:DropDownList ID="ddlistServiceAccountFilter" runat="server" 
+                                          Enabled="False" AutoPostBack="False" />
+                        <asp:CheckBox runat="server" ID="cbPartnerFilter" Text="Partner" Checked="False" 
+                                      OnCheckedChanged="cbPartnerFilter_OnCheckedChanged" AutoPostBack="True" />
+                        <asp:DropDownList ID="ddlistPartnerFilter" runat="server" 
+                                          Enabled="False" AutoPostBack="False" />
+                        <asp:CheckBox runat="server" ID="cbDueOnly" Text="Due Only" Checked="True" AutoPostBack="False" />
+                        <asp:Button runat="server" ID="btnShow" Text="Show" OnClick="btnShow_OnClick"/>
+                    </div>
+                </fieldset>
+            </ContentTemplate>
+        </asp:UpdatePanel>
+        <asp:UpdatePanel runat="server">
+            <ContentTemplate>
                 <div>
-                    <asp:CheckBox runat="server" ID="cbPartnerFilter" Text="Partner" Checked="False" 
-                        OnCheckedChanged="cbPartnerFilter_OnCheckedChanged" AutoPostBack="True" />
-                    <asp:DropDownList ID="ddlistPartnerFilter" runat="server" 
-                                      Enabled="False" AutoPostBack="True" OnSelectedIndexChanged="ddlistPartnerFilter_OnSelectedIndexChanged" />
-                    <asp:CheckBox runat="server" ID="cbServiceAccountFilter" Text="Service Account" Checked="False" 
-                        OnCheckedChanged="cbServiceAccountFilter_OnCheckedChanged" AutoPostBack="True" />
-                    <asp:DropDownList ID="ddlistServiceAccountFilter" runat="server" 
-                                      Enabled="False" AutoPostBack="True" />
-                    <asp:CheckBox runat="server" ID="cbDueOnly" Text="Due Only" Checked="True" 
-                        OnCheckedChanged="cbDueOnly_OnCheckedChanged" AutoPostBack="True" />
-                </div>
-                <div>
-                    <asp:GridView ID="gvInvoice" runat="server" AutoGenerateColumns="False" DataKeyNames="PartnerId"
+                    <asp:GridView ID="gvInvoice" runat="server" AutoGenerateColumns="False" DataKeyNames="RowId"
                                   CellPadding="4" ForeColor="#333333" GridLines="Vertical"
                                   Font-Size="9pt" BorderColor="Silver" BorderStyle="Solid"
                                   OnRowDataBound="gvInvoice_OnRowDataBound">
@@ -87,6 +93,7 @@
                                    SelectCommand="select UOM_ID, DESCRIPTION from uom where UOM_TYPE_ID = 'CURRENCY_MEASURE' order by DESCRIPTION" />
             </ContentTemplate>
             <Triggers>
+                <asp:AsyncPostBackTrigger ControlID="btnShow" EventName="Click"/>
                 <asp:AsyncPostBackTrigger ControlID="btnAddInvoiceRow" EventName="Click" />
             </Triggers>
         </asp:UpdatePanel>

@@ -133,12 +133,15 @@ namespace PortalApp.config
                             .ThenBy(x => x.ServiceAccountAlias).ToList());
 
                     // show current balance
+                    int RowId = -1;
                     foreach (InvoiceGenRowDataCollector item in invoiceGenerations)
                     {
+                        RowId += 1;
+                        item.RowId = RowId;
                         item.CurrentBalance = allAccounts.First(x => x.id == item.AccountId).getCurrentBalanceWithTempTransaction();
                     }
                     this.Session["igInvoiceGenList"] = invoiceGenerations;
-                    gvInvoice.DataSource = invoiceGenerations;
+                    gvInvoice.DataSource = GetFilteredItems(invoiceGenerations);
                     gvInvoice.DataBind();
 
                     ddlistPartner.DataSource = allPartners;
@@ -156,7 +159,7 @@ namespace PortalApp.config
                     foreach (var kv in serviceAliases)
                     {
                         ddlistServiceAccount.Items.Add(kv.Value);
-                        ddlistPartnerFilter.Items.Add(new ListItem(kv.Key.ToString(), kv.Value));
+                        ddlistServiceAccountFilter.Items.Add(kv.Value);
                     }
 
                     foreach (timezone t in allTimeZones)
@@ -232,12 +235,13 @@ namespace PortalApp.config
                 };
             ledgerSummary.GmtOffset = allTimeZones.First(x => x.id == ledgerSummary.TimeZone).gmt_offset;
             ledgerSummary.InvoiceDates.Add(ledgerSummary.StartDateTime);
+            ledgerSummary.RowId = invoiceGenerations.Max(x => x.RowId) + 1;
             invoiceGenerations.Add(ledgerSummary);
             invoiceGenerations =
                 new BindingList<InvoiceGenRowDataCollector>(invoiceGenerations.OrderBy(x => x.PartnerName)
                     .ThenBy(x => x.ServiceAccountAlias).ToList());
             this.Session["igInvoiceGenList"] = invoiceGenerations;
-            gvInvoice.DataSource = invoiceGenerations;
+            gvInvoice.DataSource = GetFilteredItems(invoiceGenerations);
             gvInvoice.DataBind();
         }
 
@@ -397,13 +401,14 @@ namespace PortalApp.config
         {
             DropDownList ddlTimeZone = sender as DropDownList;
             GridViewRow row = (GridViewRow)((Control)sender).NamingContainer;
+            int rowId = Convert.ToInt32(gvInvoice.DataKeys[row.RowIndex].Value);
             BindingList<InvoiceGenRowDataCollector> invoiceGenerations =
                 (BindingList<InvoiceGenRowDataCollector>)this.Session["igInvoiceGenList"];
-            InvoiceGenRowDataCollector editRow = invoiceGenerations[row.RowIndex];
+            InvoiceGenRowDataCollector editRow = invoiceGenerations.First(x => x.RowId == rowId);
             editRow.TimeZone = Convert.ToInt32(ddlTimeZone.SelectedValue);
             editRow.GmtOffset = allTimeZones.First(x => x.id == editRow.TimeZone).gmt_offset;
             this.Session["igInvoiceGenList"] = invoiceGenerations;
-            gvInvoice.DataSource = invoiceGenerations;
+            gvInvoice.DataSource = GetFilteredItems(invoiceGenerations);
             gvInvoice.DataBind();
         }
 
@@ -413,13 +418,14 @@ namespace PortalApp.config
             DateTime startDate = Convert.ToDateTime(txtStartDate.Text);
             txtStartDate.Text = startDate.ToString("yyyy-MM-dd 00:00:00");
             GridViewRow row = (GridViewRow)((Control)sender).NamingContainer;
+            int rowId = Convert.ToInt32(gvInvoice.DataKeys[row.RowIndex].Value);
             BindingList<InvoiceGenRowDataCollector> invoiceGenerations =
                 (BindingList<InvoiceGenRowDataCollector>)this.Session["igInvoiceGenList"];
-            InvoiceGenRowDataCollector editRow = invoiceGenerations[row.RowIndex];
+            InvoiceGenRowDataCollector editRow = invoiceGenerations.First(x => x.RowId == rowId);
             editRow.StartDateTime = DateTime.Parse(txtStartDate.Text);
             editRow.Amount = getAmount(editRow);
             this.Session["igInvoiceGenList"] = invoiceGenerations;
-            gvInvoice.DataSource = invoiceGenerations;
+            gvInvoice.DataSource = GetFilteredItems(invoiceGenerations);
             gvInvoice.DataBind();
         }
 
@@ -429,13 +435,14 @@ namespace PortalApp.config
             DateTime endDate = Convert.ToDateTime(txtEndDate.Text);
             txtEndDate.Text = endDate.ToString("yyyy-MM-dd 23:59:59");
             GridViewRow row = (GridViewRow)((Control)sender).NamingContainer;
+            int rowId = Convert.ToInt32(gvInvoice.DataKeys[row.RowIndex].Value);
             BindingList<InvoiceGenRowDataCollector> invoiceGenerations =
                 (BindingList<InvoiceGenRowDataCollector>)this.Session["igInvoiceGenList"];
-            InvoiceGenRowDataCollector editRow = invoiceGenerations[row.RowIndex];
+            InvoiceGenRowDataCollector editRow = invoiceGenerations.First(x => x.RowId == rowId);
             editRow.EndDateTime = DateTime.Parse(txtEndDate.Text);
             editRow.Amount = getAmount(editRow);
             this.Session["igInvoiceGenList"] = invoiceGenerations;
-            gvInvoice.DataSource = invoiceGenerations;
+            gvInvoice.DataSource = GetFilteredItems(invoiceGenerations);
             gvInvoice.DataBind();
         }
 
@@ -476,28 +483,40 @@ namespace PortalApp.config
             ddlistServiceAccountFilter.Enabled = cbServiceAccountFilter.Checked;
         }
 
-        protected void cbDueOnly_OnCheckedChanged(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected void ddlistPartnerFilter_OnSelectedIndexChanged(object sender, EventArgs e)
+        protected void btnShow_OnClick(object sender, EventArgs e)
         {
             BindingList<InvoiceGenRowDataCollector> invoiceGenerations =
                 (BindingList<InvoiceGenRowDataCollector>)this.Session["igInvoiceGenList"];
-            if (cbPartnerFilter.Checked)
-            {
-                if (ddlistPartnerFilter.SelectedIndex != 0)
-                {
-                    int idPartner = Convert.ToInt32(ddlistPartnerFilter.SelectedValue);
-                    gvInvoice.DataSource = invoiceGenerations
-                        .Where(x => x.PartnerId == idPartner).ToList();
-                }
-                else
-                    gvInvoice.DataSource = invoiceGenerations;
-            }
-            else gvInvoice.DataSource = invoiceGenerations;
+            gvInvoice.DataSource = GetFilteredItems(invoiceGenerations);
             gvInvoice.DataBind();
         }
+
+        private List<InvoiceGenRowDataCollector> GetFilteredItems(
+            BindingList<InvoiceGenRowDataCollector> invoiceGenerations)
+        {
+            List<InvoiceGenRowDataCollector> filteredInvoiceGenerations = invoiceGenerations.ToList();
+
+            if (cbPartnerFilter.Checked && ddlistPartnerFilter.SelectedIndex != 0)
+            {
+                int idPartner = Convert.ToInt32(ddlistPartnerFilter.SelectedValue);
+                filteredInvoiceGenerations = filteredInvoiceGenerations
+                    .Where(x => x.PartnerId == idPartner).ToList();
+            }
+
+            if (cbServiceAccountFilter.Checked && ddlistServiceAccountFilter.SelectedIndex != 0)
+            {
+                filteredInvoiceGenerations = filteredInvoiceGenerations
+                    .Where(x => x.ServiceAccountAlias == ddlistServiceAccountFilter.SelectedValue.ToString()).ToList();
+            }
+
+            if (cbDueOnly.Checked)
+            {
+                filteredInvoiceGenerations = filteredInvoiceGenerations
+                    .Where(x => x.IsDue).ToList();
+            }
+
+            return filteredInvoiceGenerations;
+        }
+
     }
 }

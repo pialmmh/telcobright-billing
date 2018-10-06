@@ -9,6 +9,7 @@ namespace TelcobrightMediation.Accounting
 {
     public class InvoiceGenRowDataCollector
     {
+        public int RowId { get; set; }
         public Dictionary<int,IServiceGroup> MefServiceGroups { get;}
         public int PartnerId { get; set; }
         public string PartnerName { get; set; }
