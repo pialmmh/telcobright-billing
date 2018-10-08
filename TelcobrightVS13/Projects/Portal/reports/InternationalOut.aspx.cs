@@ -55,7 +55,7 @@ public partial class DefaultRptIntlOut : System.Web.UI.Page
                                 CheckBoxShowByAns.Checked==true?"tup_sourceID":string.Empty,
                                 CheckBoxShowByIgw.Checked==true?"tup_inpartnerid":string.Empty,
                                 CheckBoxShowBySupplierPrefix.Checked==true?"tup_matchedprefixsupplier":string.Empty,
-                                "tup_customercurrency",
+                                //"tup_customercurrency",
                             },
                       
                          new List<string>()

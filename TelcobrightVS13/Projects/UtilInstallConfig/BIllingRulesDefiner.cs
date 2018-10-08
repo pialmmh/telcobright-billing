@@ -27,47 +27,39 @@ namespace InstallConfig
             {
                 IsPrepaid = false,
                 Description = "",
-                InvoiceOverdueInDay = 7,
+                InvoiceOverdueInDay = 30,
                 CronExpressionForBillingCycle = "0 0 0 1 * ? *",
                 TimeCycleFactory = new TimeCycleFactory()
                 {
                     TimeCycleName = "MonthlyTimeCycle",
                     Duration = 1
                 }
-
-                /*
+            },
+            new BillingRule(id:3,ruleName: "OnFirstDayOfEachWeek,ForPreviousWeek")
+            {
                 IsPrepaid = false,
                 Description = "",
                 InvoiceOverdueInDay = 7,
                 CronExpressionForBillingCycle = "0 0 0 ? * SUN *",
-                BillingInterval = DateInterval.Days,
-                BillDuration = 7,
-                */
-
-                /*
+                TimeCycleFactory = new TimeCycleFactory()
+                {
+                    TimeCycleName = "WeeklyTimeCycle",
+                    Duration = 7
+                }
+            },
+            new BillingRule(id:4,ruleName: "OnFirstAndFifteenthDayOfEachMonth,ForPreviousTwoWeek")
+            {
                 IsPrepaid = false,
                 Description = "",
-                InvoiceOverdueInDay = 7,
+                InvoiceOverdueInDay = 15,
                 CronExpressionForBillingCycle = "0 0 0 1,15 * ? *",
                 TimeCycleFactory = new TimeCycleFactory()
                 {
                     TimeCycleName = "FortnightlyTimeCycle",
                     Duration = 15
                 }
-                */
-
-                /*
-                IsPrepaid = false,
-                Description = "",
-                InvoiceOverdueInDay = 7,
-                CronExpressionForBillingCycle = "0 0 0 ? * * *",
-                TimeCycleFactory = new TimeCycleFactory()
-                {
-                    TimeCycleName = "DailyTimeCycle",
-                    Duration = 1
-                }
-                */
             }
+
         };
     }
 }
