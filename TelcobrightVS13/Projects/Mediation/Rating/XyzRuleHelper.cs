@@ -258,7 +258,7 @@ namespace TelcobrightMediation
             Dictionary<string, string> jsonDetail = JsonConvert.DeserializeObject<Dictionary<string, string>>
                 (invoiceItem.JSON_DETAIL);
             int idServiceGroup = Convert.ToInt32(jsonDetail["idServiceGroup"]);
-            string cdrOrSummarytableName = $"sum_voice_day_0{idServiceGroup}";
+            string cdrOrSummarytableName = $"sum_voice_day_02";
             CommonInvoicePostProcessor commonInvoicePostProcessor
                 = new CommonInvoicePostProcessor(invoicePostProcessingData, cdrOrSummarytableName, jsonDetail);
             return commonInvoicePostProcessor.Process();

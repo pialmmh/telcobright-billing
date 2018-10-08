@@ -43,7 +43,7 @@ namespace ReportGenerator.Reports.InvoiceReports.IGW
             xrLabelPartnerName.Text = invoiceMap["companyName"];
             xrLabelPartnerAddress.Text = invoiceMap["billingAddress"];
             xrLabelPartnerVatRegNo.Text = invoiceMap["vatRegNo"];
-            xrLabelType.Text = string.Format("Type: {0}", invoiceMap["customerType"]);
+//            xrLabelType.Text = string.Format("Type: {0}", invoiceMap["customerType"]);
 
             xrLabelBillingPeriod.Text = invoiceMap["billingPeriod"];
             xrLabelInvoiceDate.Text = string.Format("{0:dd-MMM-yyyy}", invoice.INVOICE_DATE);

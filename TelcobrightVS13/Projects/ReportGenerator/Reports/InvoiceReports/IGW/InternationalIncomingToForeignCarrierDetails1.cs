@@ -42,7 +42,7 @@ namespace ReportGenerator.Reports.InvoiceReports.IGW
             xrLabelVatRegNo.Text = "VAT Reg. No. 18141080328";
             xrLabelPartnerName.Text = invoiceMap["companyName"];
             xrLabelPartnerVatRegNo.Text = invoiceMap["vatRegNo"];
-            xrLabelType.Text = string.Format("Type: {0}", invoiceMap["customerType"]);
+//            xrLabelType.Text = string.Format("Type: {0}", invoiceMap["customerType"]);
 
             xrLabelBillingPeriod.Text = invoiceMap["billingPeriod"];
             xrLabelInvoiceDate.Text = string.Format("{0:dd-MMM-yyyy}", invoice.INVOICE_DATE);
