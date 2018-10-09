@@ -46,8 +46,10 @@ namespace TelcobrightMediation.Accounting
             string partnerType = context.enumpartnertypes.Where(c => c.id == customer.PartnerType).ToList().Single().Type;
             DateTime startDate = Convert.ToDateTime(invoiceJsonDetail["startDate"]);
             DateTime endDate = Convert.ToDateTime(invoiceJsonDetail["endDate"]);
-            invoiceJsonDetail.Add("billingPeriod", $"{startDate.ToMySqlFormatWithoutQuote()}" +
-                                                   $" to {endDate.ToMySqlFormatWithoutQuote()}");
+            //invoiceJsonDetail.Add("billingPeriod", $"{startDate.ToMySqlFormatWithoutQuote()}" +
+            //                                       $" to {endDate.ToMySqlFormatWithoutQuote()}");
+            invoiceJsonDetail.Add("billingStartDate", $"{startDate.ToMySqlFormatWithoutQuote()}");
+            invoiceJsonDetail.Add("billingEndDate", $"{endDate.ToMySqlFormatWithoutQuote()}");
             invoiceJsonDetail.Add("idPartner", customer.idPartner.ToString());
             invoiceJsonDetail.Add("companyName", customer.AlternateNameInvoice);
             invoiceJsonDetail.Add("customerType",partnerType);

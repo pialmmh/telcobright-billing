@@ -62,11 +62,11 @@ namespace Jobs
             invoice invoiceWithItem = invoicePostProcessingData.Invoice;
             cmd.CommandText = $"insert into invoice (billing_account_id,description,originalCurrency," +
                               $"convertedFinalCurrency,originalAmount,convertedFinalAmount," +
-                              $"currencyConversionFactor) values(" +
+                              $"currencyConversionFactor,INVOICE_DATE) values(" +
                               $"{invoiceWithItem.BILLING_ACCOUNT_ID},'{invoiceWithItem.DESCRIPTION}'," +
                               $"'{invoiceWithItem.originalCurrency}', '{invoiceWithItem.convertedFinalCurrency}'," +
                               $"{invoiceWithItem.originalAmount},{invoiceWithItem.convertedFinalAmount}," +
-                              $"{invoiceWithItem.currencyConversionFactor});";
+                              $"{invoiceWithItem.currencyConversionFactor},{invoiceWithItem.INVOICE_DATE.ToMySqlField()});";
             cmd.ExecuteNonQuery();
             cmd.CommandText = "SELECT LAST_INSERT_ID();";
             long generatedInvoiceId = 0;
