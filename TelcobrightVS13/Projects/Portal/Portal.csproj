@@ -446,10 +446,11 @@
     <Content Include="bin\zh-Hant\Microsoft.Data.OData.resources.dll" />
     <Content Include="bin\zh-Hant\System.Spatial.resources.dll" />
     <Content Include="cal.png" />
-    <Content Include="config\BalanceAdjustment.aspx" />
+    <Content Include="config\BalanceAdjustment_old.aspx" />
     <Content Include="config\calendar.png" />
     <Content Include="config\BatchJob.aspx" />
     <Content Include="config\GeneratedInvoices.aspx" />
+    <Content Include="config\BalanceAdjustment.aspx" />
     <Content Include="config\InvoiceGeneration.aspx" />
     <Content Include="config\PackageAssignment.aspx" />
     <Content Include="config\PaymentHistory.aspx" />
@@ -706,12 +707,12 @@
     <Compile Include="Billing Reports\IOSWiseOutgoingSummary.aspx.designer.cs">
       <DependentUpon>IOSWiseOutgoingSummary.aspx</DependentUpon>
     </Compile>
-    <Compile Include="config\BalanceAdjustment.aspx.cs">
-      <DependentUpon>BalanceAdjustment.aspx</DependentUpon>
+    <Compile Include="config\BalanceAdjustment_old.aspx.cs">
+      <DependentUpon>BalanceAdjustment_old.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="config\BalanceAdjustment.aspx.designer.cs">
-      <DependentUpon>BalanceAdjustment.aspx</DependentUpon>
+    <Compile Include="config\BalanceAdjustment_old.aspx.designer.cs">
+      <DependentUpon>BalanceAdjustment_old.aspx</DependentUpon>
     </Compile>
     <Compile Include="config\BatchJob.aspx.cs">
       <DependentUpon>BatchJob.aspx</DependentUpon>
@@ -726,6 +727,13 @@
     </Compile>
     <Compile Include="config\GeneratedInvoices.aspx.designer.cs">
       <DependentUpon>GeneratedInvoices.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="config\BalanceAdjustment.aspx.cs">
+      <DependentUpon>BalanceAdjustment.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="config\BalanceAdjustment.aspx.designer.cs">
+      <DependentUpon>BalanceAdjustment.aspx</DependentUpon>
     </Compile>
     <Compile Include="config\InvoiceGeneration.aspx.cs">
       <DependentUpon>InvoiceGeneration.aspx</DependentUpon>

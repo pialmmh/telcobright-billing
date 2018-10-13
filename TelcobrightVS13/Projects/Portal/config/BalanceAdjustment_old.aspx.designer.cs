@@ -10,7 +10,8 @@
 namespace PortalApp.config {
     
     
-    public partial class BalanceAdjustment {
+    public partial class BalanceAdjustment_old
+    {
         
         /// <summary>
         /// ToolkitScriptManager1 control.
@@ -22,84 +23,66 @@ namespace PortalApp.config {
         protected global::AjaxControlToolkit.ToolkitScriptManager ToolkitScriptManager1;
         
         /// <summary>
-        /// cbServiceAccountFilter control.
+        /// ddlistPartner control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbServiceAccountFilter;
+        protected global::System.Web.UI.WebControls.DropDownList ddlistPartner;
         
         /// <summary>
-        /// ddlistServiceAccountFilter control.
+        /// ddlistServiceAccount control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlistServiceAccountFilter;
+        protected global::System.Web.UI.WebControls.DropDownList ddlistServiceAccount;
         
         /// <summary>
-        /// cbPartnerFilter control.
+        /// txtDate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbPartnerFilter;
+        protected global::System.Web.UI.WebControls.TextBox txtDate;
         
         /// <summary>
-        /// ddlistPartnerFilter control.
+        /// CalendarStartDate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlistPartnerFilter;
+        protected global::AjaxControlToolkit.CalendarExtender CalendarStartDate;
         
         /// <summary>
-        /// btnShow control.
+        /// txtAmount control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnShow;
+        protected global::System.Web.UI.WebControls.TextBox txtAmount;
         
         /// <summary>
-        /// gvInvoice control.
+        /// RegularExpressionValidator1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvInvoice;
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator RegularExpressionValidator1;
         
         /// <summary>
-        /// SqlDataUOM control.
+        /// btnAddAdjustment control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.SqlDataSource SqlDataUOM;
-        
-        /// <summary>
-        /// btnBalanceAdjustment control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnBalanceAdjustment;
-        
-        /// <summary>
-        /// lblStatus control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblStatus;
+        protected global::System.Web.UI.WebControls.Button btnAddAdjustment;
     }
 }

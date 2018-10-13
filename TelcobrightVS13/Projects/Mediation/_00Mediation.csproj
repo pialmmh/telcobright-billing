@@ -104,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Accounting\AccActionEx.cs" />
+    <Compile Include="Accounting\AccBalanceAdjRowDataCollector.cs" />
     <Compile Include="Accounting\AccBalanceThresholdHandler.cs" />
     <Compile Include="Accounting\AccChargeableExt.cs" />
     <Compile Include="Accounting\AccountActionRule.cs" />
