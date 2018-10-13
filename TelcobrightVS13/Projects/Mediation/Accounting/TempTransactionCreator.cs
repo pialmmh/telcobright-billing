@@ -27,5 +27,6 @@ namespace TelcobrightMediation.Accounting
                 transaction.GetExtInsertValues().Replace("(0,", "("));
             cmd.ExecuteNonQuery();
         }
+        
     }
 }
