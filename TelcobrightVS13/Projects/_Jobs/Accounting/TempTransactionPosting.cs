@@ -15,7 +15,7 @@ namespace Jobs
 {
 
     [Export("Job", typeof(ITelcobrightJob))]
-    public class TempTransactionPosting : ITelcobrightJob
+    public class TempTransactionPosting2 : ITelcobrightJob
     {
         public override string ToString() => this.RuleName;
         public string RuleName => "TransactionPosting";
