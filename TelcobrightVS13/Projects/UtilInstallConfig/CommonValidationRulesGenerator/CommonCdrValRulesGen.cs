@@ -41,7 +41,6 @@ namespace InstallConfig._CommonValidation
                 new FileNameNotEmpty(),
                 new FinalRecordMustBe1(),
                 new ChargingStatus1WhenDurationGt0(),
-                new ServiceGroupGt0()
              };
         }
     }

@@ -70,7 +70,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Accounting\MefAccountBalanceAdjustment.cs" />
-    <Compile Include="Accounting\TempTransactionPosting.cs" />
     <Compile Include="CdrErase\CdrEraserJob.cs" />
     <Compile Include="Accounting\MefCdrInvoicingJob.cs" />
     <Compile Include="CdrError\ErrorCdrProcessingJob.cs" />
@@ -79,6 +78,7 @@
     <Compile Include="CdrError\SegmentedCdrErrorProcessor.cs" />
     <Compile Include="CdrReProcess\SegmentedCdrReprocessJobProcessor.cs" />
     <Compile Include="EmailSending.cs" />
+    <Compile Include="Accounting\TempTransactionPosting.cs" />
     <Compile Include="FileCopy.cs" />
     <Compile Include="FileDelete.cs" />
     <Compile Include="LcrGeneration.cs" />
