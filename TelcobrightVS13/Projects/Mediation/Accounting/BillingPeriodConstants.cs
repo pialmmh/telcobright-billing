@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TelcobrightMediation.Accounting
 {
-    public static class BillingPeriodContants
+    public static class BillingPeriodConstants
     {
         public const string century = "TF_century";
         public const string day = "TF_day";

@@ -111,7 +111,7 @@
     <Compile Include="Accounting\AccountCreatorFromRatePlanAssignment.cs" />
     <Compile Include="Accounting\AccountBalanceHelper.cs" />
     <Compile Include="Accounting\AccountingJobInput.cs" />
-    <Compile Include="Accounting\BillingPeriodContants.cs" />
+    <Compile Include="Accounting\BillingPeriodConstants.cs" />
     <Compile Include="Accounting\BlockAccountAction.cs" />
     <Compile Include="Accounting\CdrPostingAccountingFinder.cs" />
     <Compile Include="Accounting\AccountActionService.cs" />

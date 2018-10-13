@@ -15,7 +15,7 @@ namespace Jobs
 {
 
     [Export("Job", typeof(ITelcobrightJob))]
-    public class TransactionPosting : ITelcobrightJob
+    public class TempTransactionPosting : ITelcobrightJob
     {
         public override string ToString() => this.RuleName;
         public string RuleName => "TransactionPosting";
@@ -35,8 +35,9 @@ namespace Jobs
                     null, input.Context.Database.Connection.CreateCommand(), segmentSizeForDbWrite);
             AccountingContext accountingContext = new AccountingContext(input.Context,0,autoIncrementManager,
                 datesInvolved,segmentSizeForDbWrite);
-            //accountingContext.ExecuteTransactions();
+            accountingContext.ExecuteTransactions(
+               tempTransactions.Select(TempTransactionHelper.ConvertTempTransactionToTransaction));
             return JobCompletionStatus.Complete;
-        } //execute
+        } 
     }
 }

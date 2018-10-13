@@ -209,7 +209,7 @@ namespace PortalApp.config
                     using (DbCommand cmd = con.CreateCommand())
                     {
                         if (con.State != ConnectionState.Open) con.Open();
-                        TempTransactionCreator.CreateTempTransaction(account.id, amount, payDate, cmd, account);
+                        TempTransactionHelper.CreateTempTransaction(account.id, amount, payDate, cmd, account);
                     }
 
                     //context.Database.Log = logInfo => FileLogger.Log(logInfo);

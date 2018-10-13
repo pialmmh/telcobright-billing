@@ -8,9 +8,10 @@ using MediationModel;
 
 namespace TelcobrightMediation.Accounting
 {
-    public static class TempTransactionCreator
+    public static class TempTransactionHelper
     {
-        public static void CreateTempTransaction(long accountId, decimal amount, DateTime payDate, DbCommand cmd, account account)
+        public static void CreateTempTransaction(long accountId, decimal amount, DateTime payDate, DbCommand cmd,
+            account account)
         {
             acc_temp_transaction transaction = new acc_temp_transaction();
             transaction.transactionTime = payDate;
@@ -27,6 +28,31 @@ namespace TelcobrightMediation.Accounting
                 transaction.GetExtInsertValues().Replace("(0,", "("));
             cmd.ExecuteNonQuery();
         }
-        
+
+        public static acc_transaction ConvertTempTransactionToTransaction(acc_temp_transaction tempTrans)
+        {
+            return new acc_transaction
+            {
+                id = tempTrans.id,
+                transactionTime = tempTrans.transactionTime,
+                seqId = tempTrans.seqId,
+                debitOrCredit = tempTrans.debitOrCredit,
+                idEvent = tempTrans.idEvent,
+                uniqueBillId = tempTrans.uniqueBillId,
+                description = tempTrans.description,
+                glAccountId = tempTrans.glAccountId,
+                uomId = tempTrans.uomId,
+                amount = tempTrans.amount,
+                BalanceBefore = tempTrans.BalanceBefore,
+                BalanceAfter = tempTrans.BalanceAfter,
+                isBillable = tempTrans.isBillable,
+                isPrepaid = tempTrans.isPrepaid,
+                isBilled = tempTrans.isBilled,
+                cancelled = tempTrans.cancelled,
+                createdByJob = tempTrans.createdByJob,
+                changedByJob = tempTrans.changedByJob,
+                jsonDetail = tempTrans.jsonDetail
+            };
+        }
     }
 }
