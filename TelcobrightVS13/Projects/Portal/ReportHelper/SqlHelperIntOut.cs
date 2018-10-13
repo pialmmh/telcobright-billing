@@ -84,6 +84,7 @@ namespace PortalApp.ReportHelper
 	            FROM {TableName}
                 WHERE tup_starttime>='{StartDate}'
                 AND tup_starttime<'{EndDate}'
+                {IsShowRevenue()}
                 {GetWhereClauseAdditional()}
                 {GetGroupBy()}
             
@@ -99,6 +100,15 @@ namespace PortalApp.ReportHelper
             LEFT JOIN CountryCode cn
             ON cx.CountryCode=cn.Code
             ORDER BY " + (GetGroupBy().Contains("tup_starttime") ? "Date, " : string.Empty) + " Successfulcalls DESC ;";
+        }
+
+        private string IsShowRevenue()
+        {
+            if (groupExpressions.Contains("tup_customercurrency"))
+            {
+                return "AND successfulcalls > 0 ";
+            }
+            else return string.Empty;
         }
     }
 }

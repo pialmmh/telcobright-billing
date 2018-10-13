@@ -109,12 +109,18 @@
 </div>
  
  <div id="ParamBorder" style="float:left;padding-top:3px;padding-left:10px;height:150px;display:block;border:2px ridge #E5E4E2;margin-bottom:5px;width:1300px;">
-    <div style="height:20px;background-color:#f2f2f2;color:black;"> 
-        <span style="float:left;font-weight:bold;padding-left:20px;">   Show Performance <asp:CheckBox ID="CheckBoxShowPerformance" runat="server" Checked="true" /></span> 
-        <%--<div style="clear:right;"></div>--%>
-        <span style="float:left;font-weight:bold;padding-left:20px;">   Show Revenue <asp:CheckBox ID="CheckBoxShowCost" runat="server" Checked="false" /></span> 
-    </div>
-    <br />
+     <asp:UpdatePanel runat="server">
+         <ContentTemplate>
+             <div style="height:20px;background-color:#f2f2f2;color:black;"> 
+                 <span style="float:left;font-weight:bold;padding-left:20px;">   Show Performance <asp:CheckBox ID="CheckBoxShowPerformance" runat="server" Checked="true" 
+                     OnCheckedChanged="CheckBoxShowPerformance_OnCheckedChanged" AutoPostBack="True" /></span> 
+                 <%--<div style="clear:right;"></div>--%>
+                 <span style="float:left;font-weight:bold;padding-left:20px;">   Show Revenue <asp:CheckBox ID="CheckBoxShowCost" runat="server" Checked="false" 
+                     OnCheckedChanged="CheckBoxShowCost_OnCheckedChanged" AutoPostBack="True" /></span> 
+             </div>
+             <br />
+         </ContentTemplate>
+     </asp:UpdatePanel>
     <%--date time div--%>
      <div id="DateTimeDiv" style="padding-left:5px;position:relative;float:left;left:10px;top:-11px;width:630px;z-index:10;background-color:#F7F6F3;height:70px;"> <%--Start OF date time/months field DIV--%>
      <span style="padding-left:0px;">

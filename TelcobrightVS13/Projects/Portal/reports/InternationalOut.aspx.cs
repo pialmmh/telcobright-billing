@@ -55,7 +55,7 @@ public partial class DefaultRptIntlOut : System.Web.UI.Page
                                 CheckBoxShowByAns.Checked==true?"tup_sourceID":string.Empty,
                                 CheckBoxShowByIgw.Checked==true?"tup_inpartnerid":string.Empty,
                                 CheckBoxShowBySupplierPrefix.Checked==true?"tup_matchedprefixsupplier":string.Empty,
-                                //"tup_customercurrency",
+                                CheckBoxShowCost.Checked==true?"tup_customercurrency":string.Empty,
                             },
                       
                          new List<string>()
@@ -156,6 +156,11 @@ public partial class DefaultRptIntlOut : System.Web.UI.Page
             GridView1.Columns[5].Visible = true;
         }
         else GridView1.Columns[5].Visible = false;
+        if (CheckBoxShowCost.Checked)
+        {
+            GridView1.Columns[6].Visible = false;
+        }
+        else GridView1.Columns[6].Visible = true;
 
         if (CheckBoxShowPerformance.Checked == true)
         {
@@ -1326,5 +1331,20 @@ public partial class DefaultRptIntlOut : System.Web.UI.Page
         }
 
     }
-    
+
+    protected void CheckBoxShowPerformance_OnCheckedChanged(object sender, EventArgs e)
+    {
+        if (CheckBoxShowPerformance.Checked)
+        {
+            CheckBoxShowCost.Checked = false;
+        }
+    }
+
+    protected void CheckBoxShowCost_OnCheckedChanged(object sender, EventArgs e)
+    {
+        if (CheckBoxShowCost.Checked)
+        {
+            CheckBoxShowPerformance.Checked = false;
+        }
+    }
 }
