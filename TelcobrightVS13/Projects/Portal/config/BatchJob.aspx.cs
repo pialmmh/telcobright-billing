@@ -518,7 +518,7 @@ public partial class ConfigBatcJob : System.Web.UI.Page
             if (customerId > 0)
             {
                 newParam = new SqlSingleWhereClauseBuilder(SqlWhereAndOrType.And);
-                newParam.Expression = "customerid=";
+                newParam.Expression = "inpartnerid=";
                 newParam.ParamType = SqlWhereParamType.Numeric;
                 newParam.ParamValue = customerId.ToString();
                 lstWhereParamsSingle.Add(newParam);
@@ -531,7 +531,7 @@ public partial class ConfigBatcJob : System.Web.UI.Page
             if (supplierId > 0)
             {
                 newParam = new SqlSingleWhereClauseBuilder(SqlWhereAndOrType.And);
-                newParam.Expression = "supplierid=";
+                newParam.Expression = "outpartnerid=";
                 newParam.ParamType = SqlWhereParamType.Numeric;
                 newParam.ParamValue = supplierId.ToString();
                 lstWhereParamsSingle.Add(newParam);
@@ -639,7 +639,7 @@ public partial class ConfigBatcJob : System.Web.UI.Page
             if (errorReasonField4 != "")
             {
                 newParam = new SqlSingleWhereClauseBuilder(SqlWhereAndOrType.And);
-                newParam.Expression = "field4=";
+                newParam.Expression = "errorcode=";
                 newParam.ParamType = SqlWhereParamType.Text;
                 newParam.ParamValue = errorReasonField4;
                 lstWhereParamsSingle.Add(newParam);
