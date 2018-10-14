@@ -381,11 +381,11 @@ public partial class DefaultCIntlInCallView1 : System.Web.UI.Page
         }
         if (this._icx!="")
         {
-            sqlstring += " and SupplierID='"+ this._icxid+"'";
+            sqlstring += " and outpartnerid='" + this._icxid+"'";
         }
         if (this._partner!="")
         {
-            sqlstring += " and CustomerID='"+ this._partnerid+"'";
+            sqlstring += " and inpartnerid='" + this._partnerid+"'";
         }
         if (this._causecode != "")
         {
