@@ -49,51 +49,6 @@
                     
                     //get latest usd rate
                     Single usdExchangeRate = 0;
-                    var connectionString = ConfigurationManager.ConnectionStrings["reader"].ConnectionString;
-                    using (MySqlConnection connection = new MySqlConnection(connectionString))
-                    {
-                        connection.Open();
-                        string sql;
-                        sql = " select RateAmount from usdexchangerateagainstbdt where field1=2 order by Field2 desc limit 0,1;";
-                        using (MySqlCommand command = new MySqlCommand(sql, connection))
-                        {
-
-                            command.CommandType = CommandType.Text;
-
-                            MySqlDataReader myReader;
-                            myReader = command.ExecuteReader();
-                            try
-                            {
-                                while (myReader.Read())
-                                {
-
-                                    if (Single.Parse(myReader["RateAmount"].ToString()) > 0)
-                                    {
-
-                                        usdExchangeRate = Single.Parse(myReader["RateAmount"].ToString());
-
-                                    }
-
-                                }
-                            }
-                            catch (Exception e1)
-                            {
-                                //Console.WriteLine("{0} Exception caught.", e);
-                                usdExchangeRate = 0;
-
-                            }
-
-                            finally
-                            {
-
-                                myReader.Close();
-                                connection.Close();
-                            }
-
-                            this.TextBoxUsdRate.Text = usdExchangeRate.ToString();
-
-                        }//using mysql command
-                    }//using mysql connection	
 
                     this.TextBoxYear.Text = DateTime.Now.ToString("yyyy");
                     this.TextBoxYear1.Text = DateTime.Now.ToString("yyyy");
@@ -492,7 +447,7 @@
         <asp:RadioButton ID="RadioButtonYearly" Text="Yearly" GroupName="Time" runat="server" AutoPostBack="false"/>
     </div>
 </div>    
-     <asp:TextBox ID="TextBoxUsdRate" runat="server" Visible="false"></asp:TextBox>
+     <asp:TextBox ID="TextBoxUsdRate" runat="server" Visible="false" Text="1"></asp:TextBox>
        <div id="PartnerFilter" style="margin-top:-4px;margin-left:10px;float:left;padding-left:5px;background-color:#f2f2f2;">
             <div style="text-align:left;float:left">
             View By Country:
