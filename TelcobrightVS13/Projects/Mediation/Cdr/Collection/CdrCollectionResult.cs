@@ -103,7 +103,22 @@ namespace TelcobrightMediation
                                     "to cdrError.");
             }
         }
-
+        public void AddPartialCdrAsNonPartialCdrErrorDuringReProcess(CdrExt cdrExt, string errorMessage)
+        {
+            if (cdrExt.Cdr.PartialFlag == 0)
+            {
+                throw new Exception("Partial cdrExt must have flag>0 to be added to " +
+                                    "cdrErrors as non partial cdr during error/re-process.");
+            }
+            cdrExt.CdrError = ConvertCdrToCdrError(cdrExt.Cdr, errorMessage);
+            this.cdrExtErrors.Add(cdrExt);
+            CdrExt removedCdrExt = null;
+            if (this.ConcurrentCdrExts.TryRemove(cdrExt.UniqueBillId, out removedCdrExt) == false)
+            {
+                throw new Exception("Could not remove cdrExt from collection after converting cdr " +
+                                    "to cdrError.");
+            }
+        }
         public void AddPartialCdrToCdrErrors(CdrExt cdrExt, string errorMessage)
         {
             if (cdrExt.Cdr.PartialFlag == 0 && cdrExt.PartialCdrContainer == null)

@@ -191,11 +191,13 @@ namespace TelcobrightMediation
 		{
 			if (cdrExt.Cdr.PartialFlag == 0)
 				this.CollectionResult.AddNonPartialCdrExtToCdrErrors(cdrExt, errorMessage);
-			else if (cdrExt.PartialCdrContainer != null && cdrExt.Cdr.PartialFlag != 0)
-			{
-				this.CollectionResult.AddPartialCdrToCdrErrors(cdrExt, errorMessage);
-			}
-			else throw new InvalidDataContractException("Cdr must be either partial or non-partial.");
+            else if (this.CdrReProcessingType == CdrReProcessingType.NoneOrNew == false) //error or reProcess
+		        this.CollectionResult.AddPartialCdrAsNonPartialCdrErrorDuringReProcess(cdrExt, errorMessage);
+		    else if (cdrExt.PartialCdrContainer != null && cdrExt.Cdr.PartialFlag != 0)
+		    {
+		        this.CollectionResult.AddPartialCdrToCdrErrors(cdrExt, errorMessage);
+		    }
+		    else throw new InvalidDataContractException("Cdr must be either partial or non-partial.");
 		}
 
 		private IServiceGroup ExecuteServiceGroups(CdrExt newCdrExt,

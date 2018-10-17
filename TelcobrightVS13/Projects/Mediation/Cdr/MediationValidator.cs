@@ -20,7 +20,7 @@ namespace TelcobrightMediation
             }
             var sgData = cdrJobContext.MediationContext.MefServiceGroupContainer;
             int idServiceGroup = cdrExt.Cdr.ServiceGroup;
-            if (idServiceGroup <= 1) return "ServiceGroup must be > 0";
+            if (idServiceGroup <= 0) return "ServiceGroup must be > 0";
             if (cdrExt.MediationResult.ChargingStatus == 0) //if still true, check against answered checklist
             {
                 sgData.MediationChecklistValidatorForUnAnsweredCdrs.TryGetValue(idServiceGroup, out validator);
