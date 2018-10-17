@@ -10,7 +10,7 @@ namespace TelcobrightMediation.Accounting
 {
     public static class TempTransactionHelper
     {
-        public static void CreateTempTransaction(long accountId, decimal amount, DateTime payDate, DbCommand cmd,
+        public static void CreateTempTransaction(long accountId, decimal amount, DateTime payDate, string payType, DbCommand cmd,
             account account)
         {
             acc_temp_transaction transaction = new acc_temp_transaction();
@@ -22,7 +22,7 @@ namespace TelcobrightMediation.Accounting
             transaction.uomId = account.uom;
             transaction.BalanceBefore = 0;
             transaction.BalanceAfter = 0;
-            transaction.jsonDetail = string.Empty;
+            transaction.jsonDetail = "{\"PaymentType\": \"" + payType + "\"}";
             cmd.CommandText = string.Concat(
                 StaticExtInsertColumnHeaders.acc_temp_transaction.Replace("(id,", "("),
                 transaction.GetExtInsertValues().Replace("(0,", "("));

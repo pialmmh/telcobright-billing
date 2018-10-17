@@ -45,6 +45,14 @@ namespace PortalApp.config
                     this.Session["pmAccount"] = account;
                 }
 
+                ddlistType.Items.Clear();
+                ddlistType.Items.Add("PrevBalance");
+                if (account.billableType == "/custBilled")      // prepaid
+                {
+                    ddlistType.Items.Add("TopUp");
+                    ddlistType.Items.Add("Credit");
+                }
+
                 // TODO: Replace 4 with correct variable
                 availableActions = Tbc.CdrSetting.ServiceGroupConfigurations[4].AccountActions;
 
@@ -181,7 +189,6 @@ namespace PortalApp.config
 
         protected void btnOK_Click(object sender, EventArgs e)
         {
-            string log = string.Empty;
             try
             {
                 account = (account)this.Session["pmAccount"];
@@ -189,32 +196,31 @@ namespace PortalApp.config
                 DateTime payDate = Convert.ToDateTime(txtDate.Text);
                 using (PartnerEntities context = new PartnerEntities())
                 {
-                    actions = (BindingList<AccActionEx>)this.Session["pmActions"];
-                    List<acc_action> existingActions = context.acc_action.Where(x => x.idAccount == account.id).ToList();
-                    foreach (acc_action item in existingActions)
+                    if (cbThresholdSettings.Checked)
                     {
-                        context.acc_action.Remove(item);
+                        actions = (BindingList<AccActionEx>)this.Session["pmActions"];
+                        List<acc_action> existingActions = context.acc_action.Where(x => x.idAccount == account.id).ToList();
+                        foreach (acc_action item in existingActions)
+                        {
+                            context.acc_action.Remove(item);
+                        }
+                        foreach (AccActionEx item in actions)
+                        {
+                            acc_action action = new acc_action();
+                            action.idAccount = account.id;
+                            action.idAccountAction = item.idAccountAction;
+                            action.threshhold_value = item.threshhold_value;
+                            context.acc_action.Add(action);
+                        }
+                        context.SaveChanges();
                     }
-                    foreach (AccActionEx item in actions)
-                    {
-                        acc_action action = new acc_action();
-                        action.idAccount = account.id;
-                        action.idAccountAction = item.idAccountAction;
-                        action.threshhold_value = item.threshhold_value;
-                        context.acc_action.Add(action);
-                    }
-                    context.SaveChanges();
 
                     var con = context.Database.Connection;
                     using (DbCommand cmd = con.CreateCommand())
                     {
                         if (con.State != ConnectionState.Open) con.Open();
-                        TempTransactionHelper.CreateTempTransaction(account.id, amount, payDate, cmd, account);
+                        TempTransactionHelper.CreateTempTransaction(account.id, amount, payDate, ddlistType.SelectedValue, cmd, account);
                     }
-
-                    //context.Database.Log = logInfo => FileLogger.Log(logInfo);
-                    //context.acc_temp_transaction.Add(transaction);
-                    //context.SaveChanges();
                 }
             }
             catch (Exception exception)

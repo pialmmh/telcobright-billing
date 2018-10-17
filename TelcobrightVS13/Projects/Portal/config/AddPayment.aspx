@@ -52,6 +52,12 @@
         <td style="padding:3px"><asp:TextBox ID="comment" runat="server" TextMode="MultiLine"> </asp:TextBox></td>
     </tr>--%>
     <tr>
+        <td align="right">Type: </td>
+        <td style="padding:3px">
+            <asp:DropDownList ID="ddlistType" runat="server" AutoPostBack="false" />
+        </td>
+    </tr>
+    <tr>
         <td align="right">Date: </td>
         <td style="padding:3px">
             <asp:TextBox id="txtDate" Runat="server" /> 
@@ -65,7 +71,7 @@
         <td style="padding:3px"><asp:TextBox id="txtAmount" Runat="server" AutoPostBack="true" OnTextChanged="txtAmount_TextChanged" Text="0" /> </td>
     </tr>
         <tr>
-            <td colspan="2" align="center">Threshold Settings</td>
+            <td colspan="2" align="center"><asp:CheckBox runat="server" Text="Update Threshold Settings" ID="cbThresholdSettings"/></td>
         </tr>
         <tr>
             <td colspan="2" align="center">

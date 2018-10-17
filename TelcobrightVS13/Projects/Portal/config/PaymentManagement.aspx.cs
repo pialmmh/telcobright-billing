@@ -51,8 +51,8 @@ namespace PortalApp.config
             List<KeyValuePair<Regex, string>> serviceAliases = Tbc.ServiceAliasesRegex;
             List<string> billableType = new List<string>()
             {
-                //"/custBilled", "/suppBilled", "/billable"
-                "/custBilled"
+                "/custBilled", "/suppBilled", "/billable"
+                //"/custBilled"
             };
 
             using (PartnerEntities context = new PartnerEntities())
