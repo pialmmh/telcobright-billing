@@ -539,65 +539,43 @@
                     <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                     <Columns>
                         <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" ItemStyle-Wrap="false" />
-                        <asp:BoundField DataField="International Partner" HeaderText="International Partner" SortExpression="International Partner" />
+                        <asp:BoundField DataField="In Partner" HeaderText="In Partner" SortExpression="In Partner" />
+                        <asp:BoundField DataField="Out Partner" HeaderText="Out Partner" SortExpression="Out Partner" />
                         <asp:BoundField DataField="tup_matchedprefixcustomer" HeaderText="Customer Prefix" SortExpression="tup_matchedprefixcustomer" />
                         <asp:BoundField DataField="tup_matchedprefixsupplier" HeaderText="Supplier Prefix" SortExpression="tup_matchedprefixsupplier" />
 
-                        <asp:BoundField DataField="CallsCount"
+                        <asp:BoundField DataField="Total Calls"
                             HeaderText="Total Calls"
-                            SortExpression="CallsCount" />
+                            SortExpression="Total Calls" />
 
-                        <asp:BoundField DataField="Number Of Calls (International Incoming)"
+                        <asp:BoundField DataField="Successful Calls"
                             HeaderText="Successful Calls"
-                            SortExpression="Number Of Calls (International Incoming)" />
+                            SortExpression="Successful Calls" />
 
-                        <asp:BoundField DataField="ConnectedCount"
+                        <asp:BoundField DataField="Connected Calls"
                             HeaderText="Connected Calls"
-                            SortExpression="ConnectedCount" />
+                            SortExpression="Connected Calls" />
 
-                        <asp:BoundField DataField="Paid Minutes (International Incoming)"
+                        <asp:BoundField DataField="Customer Duration"
                             DataFormatString="{0:F2}"
-                            HeaderText="Actual Duration"
-                            SortExpression="Paid Minutes (International Incoming)" />
-                        <asp:BoundField DataField="RoundedDuration"
+                            HeaderText="Customer Duration"
+                            SortExpression="Customer Duration" />
+                        <asp:BoundField DataField="Supplier Duration"
                             DataFormatString="{0:F2}"
-                            HeaderText="Billed Duration"
-                            SortExpression="RoundedDuration" />
-                        <asp:BoundField DataField="Duration1"
+                            HeaderText="Supplier Duration"
+                            SortExpression="Supplier Duration" />
+                        <asp:BoundField DataField="Cost"
                             DataFormatString="{0:F2}"
-                            HeaderText="Carrier Duration"
-                            SortExpression="Duration1" />
-                        <asp:BoundField DataField="costansin"
+                            HeaderText="Cost"
+                            SortExpression="Cost" />
+                        <asp:BoundField DataField="Revenue"
                             DataFormatString="{0:F2}"
-                            HeaderText="ANS (USD)"
-                            SortExpression="costansin" />
-                        <asp:BoundField DataField="costicxin"
+                            HeaderText="Revenue"
+                            SortExpression="Revenue" />
+                        <asp:BoundField DataField="Margin"
                             DataFormatString="{0:F2}"
-                            HeaderText="ICX/IOS (USD)"
-                            SortExpression="costicxin" />
-                        <asp:BoundField DataField="costvatcomissionin"
-                            DataFormatString="{0:F2}"
-                            HeaderText="BTRC (USD)"
-                            SortExpression="costvatcomissionin" />
-
-
-
-                        <asp:BoundField DataField="customercost"
-                            DataFormatString="{0:F2}"
-                            HeaderText="Revenue [USD]"
-                            SortExpression="customercost" />
-
-                        <asp:BoundField DataField="igwrevenuein"
-                            DataFormatString="{0:F2}"
-                            HeaderText="IGW $"
-                            SortExpression="igwrevenuein" />
-
-                        <asp:BoundField DataField="profit" Visible="false"
-                            DataFormatString="{0:F2}"
-                            HeaderText="Profit (USD)"
-                            SortExpression="profit" />
-
-
+                            HeaderText="Margin"
+                            SortExpression="Margin" />
                         <asp:BoundField DataField="ASR"
                             DataFormatString="{0:F2}"
                             HeaderText="ASR"
@@ -622,10 +600,6 @@
                             DataFormatString="{0:F2}"
                             HeaderText="CCR By CC"
                             SortExpression="CCRByCC" />
-
-
-
-
                     </Columns>
                     <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
                     <EditRowStyle BackColor="#999999" />

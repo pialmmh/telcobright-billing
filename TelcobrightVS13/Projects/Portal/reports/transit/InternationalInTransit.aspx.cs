@@ -128,9 +128,9 @@ public partial class InternationalInTransit : System.Web.UI.Page
         //else GridView1.Columns[3].Visible = false;
         if (CheckBoxMatchedCustomerPrefix.Checked)
         {
-            GridView1.Columns[2].Visible = true;
+            GridView1.Columns[3].Visible = true;
         }
-        else GridView1.Columns[2].Visible = false;
+        else GridView1.Columns[3].Visible = false;
 
         //if (CheckBoxShowByIgw.Checked == true)
         //{
@@ -139,9 +139,9 @@ public partial class InternationalInTransit : System.Web.UI.Page
         //else GridView1.Columns[2].Visible = false;
         if (CheckBoxMatchedSupplierPrefix.Checked)
         {
-            GridView1.Columns[3].Visible = true;
+            GridView1.Columns[4].Visible = true;
         }
-        else GridView1.Columns[3].Visible = false;
+        else GridView1.Columns[4].Visible = false;
 
         if (CheckBoxPartner.Checked == true)
         {
@@ -150,44 +150,38 @@ public partial class InternationalInTransit : System.Web.UI.Page
         else GridView1.Columns[1].Visible = false;
         if (CheckBoxShowCost.Checked == true)
         {
-            //GridView1.Columns[9].Visible = true;
-            GridView1.Columns[10].Visible = false;
-            GridView1.Columns[11].Visible = false;
-            GridView1.Columns[12].Visible = false;
-            GridView1.Columns[13].Visible = false;
-            GridView1.Columns[14].Visible = false;
+            GridView1.Columns[10].Visible = true;
+            GridView1.Columns[11].Visible = true;
+            GridView1.Columns[12].Visible = true;
         }
         else
         {
-            //GridView1.Columns[9].Visible = false;
             GridView1.Columns[10].Visible = false;
             GridView1.Columns[11].Visible = false;
             GridView1.Columns[12].Visible = false;
-            GridView1.Columns[13].Visible = false;
-            GridView1.Columns[14].Visible = false;
         }
         if (CheckBoxShowPerformance.Checked == true)
         {
+            GridView1.Columns[13].Visible = true;
+            GridView1.Columns[14].Visible = true;
             GridView1.Columns[15].Visible = true;
             GridView1.Columns[16].Visible = true;
             GridView1.Columns[17].Visible = true;
             GridView1.Columns[18].Visible = true;
-            //GridView1.Columns[19].Visible = true;
-            GridView1.Columns[20].Visible = true;
 
         }
         else
         {
+            GridView1.Columns[13].Visible = false;
+            GridView1.Columns[14].Visible = false;
             GridView1.Columns[15].Visible = false;
             GridView1.Columns[16].Visible = false;
             GridView1.Columns[17].Visible = false;
             GridView1.Columns[18].Visible = false;
-            //GridView1.Columns[19].Visible = false;
-            GridView1.Columns[20].Visible = false;
 
         }
         //make profit invisible, it's useless
-        GridView1.Columns[15].Visible = false;
+        //GridView1.Columns[15].Visible = false;
         //GridView1.Columns[9].Visible = true;//carrier's duration
 
         using (MySqlConnection connection = new MySqlConnection())
@@ -299,16 +293,16 @@ public partial class InternationalInTransit : System.Web.UI.Page
                     //display summary information in the footer
                     Dictionary<string, dynamic> fieldSummaries = new Dictionary<string, dynamic>();//key=colname,val=colindex in grid
                                                                                                    //all keys have to be lowercase, because db fields are lower case at times
-                    fieldSummaries.Add("callscount", tr.CallStat.TotalCalls);
-                    fieldSummaries.Add("connectedcount", tr.CallStat.ConnectedCalls);
-                    fieldSummaries.Add("connectbycc", tr.CallStat.ConnectedCallsbyCauseCodes);
-                    fieldSummaries.Add("number of calls (international incoming)", tr.CallStat.SuccessfullCalls);
-                    fieldSummaries.Add("paid minutes (international incoming)", tr.CallStat.TotalActualDuration);
-                    fieldSummaries.Add("roundedduration", tr.CallStat.TotalRoundedDuration);
-                    fieldSummaries.Add("duration1", tr.CallStat.TotalDuration1);
-                    fieldSummaries.Add("costicxin", tr.CallStat.PartnerCost);
-                    fieldSummaries.Add("costvatcomissionin", tr.CallStat.BtrcRevShare);
-                    fieldSummaries.Add("customercost", tr.CallStat.IgwRevenue);
+                    fieldSummaries.Add("Total Calls", tr.CallStat.TotalCalls);
+                    fieldSummaries.Add("Connected Calls", tr.CallStat.ConnectedCalls);
+                    //fieldSummaries.Add("connectbycc", tr.CallStat.ConnectedCallsbyCauseCodes);
+                    fieldSummaries.Add("Successful Calls", tr.CallStat.SuccessfullCalls);
+                    fieldSummaries.Add("Customer Duration", tr.CallStat.TotalActualDuration);
+                    fieldSummaries.Add("Supplier Duration", tr.CallStat.TotalRoundedDuration);
+                    //fieldSummaries.Add("duration1", tr.CallStat.TotalDuration1);
+                    fieldSummaries.Add("Cost", tr.CallStat.PartnerCost);
+                    fieldSummaries.Add("Margin", tr.CallStat.BtrcRevShare);
+                    fieldSummaries.Add("Revenue", tr.CallStat.IgwRevenue);
                     fieldSummaries.Add("asr", tr.CallStat.Asr);
                     fieldSummaries.Add("acd", tr.CallStat.Acd);
                     fieldSummaries.Add("pdd", tr.CallStat.Pdd);
@@ -316,7 +310,7 @@ public partial class InternationalInTransit : System.Web.UI.Page
                     fieldSummaries.Add("ccrbycc", tr.CallStat.CcRbyCauseCode);
                     tr.FieldSummaries = fieldSummaries;
 
-                    Session["IntlIn"] = tr;//save to session
+                    Session["IntlInTr"] = tr;//save to session
 
                     //populate footer
                     //clear first
@@ -363,9 +357,9 @@ public partial class InternationalInTransit : System.Web.UI.Page
 
     protected void Button1_Click(object sender, EventArgs e)
     {
-        if (Session["IntlIn"] != null) //THIS MUST BE CHANGED IN EACH PAGE
+        if (Session["IntlInTr"] != null) //THIS MUST BE CHANGED IN EACH PAGE
         {
-            TrafficReportDatasetBased tr = (TrafficReportDatasetBased)Session["IntlIn"];
+            TrafficReportDatasetBased tr = (TrafficReportDatasetBased)Session["IntlInTr"];
             DataSetWithGridView dsG = new DataSetWithGridView(tr, GridView1);//invisible columns are removed in constructor
             CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(tr.Ds, "IntlIncoming_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                     + ".xlsx", Response);
