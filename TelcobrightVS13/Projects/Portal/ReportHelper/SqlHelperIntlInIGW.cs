@@ -42,13 +42,17 @@ namespace PortalApp.ReportHelper
                 PDD,
                 CCR,
                 ConectbyCC,
-                CCRbyCC             
+                CCRbyCC, 
+                tup_matchedprefixcustomer, 
+                tup_matchedprefixsupplier 
                 FROM
                 (
 	            SELECT {GetDateExpression(this.groupInterval)} AS Date,
                 tup_inpartnerid,              
 	            tup_destinationId ,       
 	            tup_outpartnerid ,  
+                tup_matchedprefixcustomer, 
+                tup_matchedprefixsupplier, 
                 SUM(totalcalls) AS TotalCalls, 
 				SUM(successfulcalls) AS Successfulcalls, 
 				SUM(connectedcalls) AS ConnectedCalls,

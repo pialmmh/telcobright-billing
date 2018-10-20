@@ -94,21 +94,21 @@
                     {
                         DropDownListPartner.Items.Add(new ListItem(p.PartnerName, p.idPartner.ToString()));
                     }
-                    var ANSList = contex.partners.Where(c => c.PartnerType == 1).ToList();
-                    DropDownListAns.Items.Clear();
-                    DropDownListAns.Items.Add(new ListItem("[All]","-1"));
-                    foreach (partner p in ANSList)
-                    {
-                        DropDownListAns.Items.Add(new ListItem(p.PartnerName, p.idPartner.ToString()));
-                    }
+                    //var ANSList = contex.partners.Where(c => c.PartnerType == 1).ToList();
+                    //DropDownListAns.Items.Clear();
+                    //DropDownListAns.Items.Add(new ListItem("[All]","-1"));
+                    //foreach (partner p in ANSList)
+                    //{
+                    //    DropDownListAns.Items.Add(new ListItem(p.PartnerName, p.idPartner.ToString()));
+                    //}
 
-                    var IGWList = contex.partners.Where(c => c.PartnerType == 2).ToList();
-                    DropDownListIgw.Items.Clear();
-                    DropDownListIgw.Items.Add(new ListItem("[All]", "-1"));
-                    foreach(partner p in IGWList)
-                    {
-                        DropDownListIgw.Items.Add(new ListItem(p.PartnerName, p.idPartner.ToString()));
-                    }
+                    //var IGWList = contex.partners.Where(c => c.PartnerType == 2).ToList();
+                    //DropDownListIgw.Items.Clear();
+                    //DropDownListIgw.Items.Add(new ListItem("[All]", "-1"));
+                    //foreach(partner p in IGWList)
+                    //{
+                    //    DropDownListIgw.Items.Add(new ListItem(p.PartnerName, p.idPartner.ToString()));
+                    //}
 
                 }
 
@@ -469,6 +469,12 @@
                         </asp:DropDownList>
 
                     </div>
+                    <div style="float: left; margin-left: 15px;">
+                        <asp:CheckBox ID="CheckBoxMatchedCustomerPrefix" runat="server" AutoPostBack="false" Checked="false" Text="Matched Customer Prefix" />
+                    </div>
+                    <div style="float: left; margin-left: 15px;">
+                        <asp:CheckBox ID="CheckBoxMatchedSupplierPrefix" runat="server" AutoPostBack="false" Checked="false" Text="Matched Supplier Prefix" />
+                    </div>
 <%--                    <div style="float: left; margin-left: 15px;">
                         View by ANS: 
                                 <asp:CheckBox ID="CheckBoxShowByAns" runat="server" AutoPostBack="True"
@@ -534,8 +540,8 @@
                     <Columns>
                         <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" ItemStyle-Wrap="false" />
                         <asp:BoundField DataField="International Partner" HeaderText="International Partner" SortExpression="International Partner" />
-                        <asp:BoundField DataField="IGW" HeaderText="ICX/IOS" SortExpression="IGW" />
-                        <asp:BoundField DataField="ANS" HeaderText="ANS" SortExpression="ANS" />
+                        <asp:BoundField DataField="tup_matchedprefixcustomer" HeaderText="Customer Prefix" SortExpression="tup_matchedprefixcustomer" />
+                        <asp:BoundField DataField="tup_matchedprefixsupplier" HeaderText="Supplier Prefix" SortExpression="tup_matchedprefixsupplier" />
 
                         <asp:BoundField DataField="CallsCount"
                             HeaderText="Total Calls"

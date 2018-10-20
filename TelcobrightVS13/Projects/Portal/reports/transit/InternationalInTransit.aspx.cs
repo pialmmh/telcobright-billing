@@ -48,14 +48,16 @@ public partial class InternationalInTransit : System.Web.UI.Page
                                 //groupInterval=="Hourly"?"tup_starttime":string.Empty,
                                 getInterval(groupInterval), 
                                 CheckBoxPartner.Checked==true?"tup_inpartnerid":string.Empty,
-                                CheckBoxShowByAns.Checked==true?"tup_destinationId":string.Empty,
-                                CheckBoxShowByIgw.Checked==true?"tup_outpartnerid":string.Empty,
+                                CheckBoxMatchedCustomerPrefix.Checked==true?"tup_matchedprefixcustomer":string.Empty,
+                                CheckBoxMatchedSupplierPrefix.Checked==true?"tup_matchedprefixsupplier":string.Empty,
+                                //CheckBoxShowByAns.Checked==true?"tup_destinationId":string.Empty,
+                                //CheckBoxShowByIgw.Checked==true?"tup_outpartnerid":string.Empty,
                             },
                          new List<string>()
                             {
                                 CheckBoxPartner.Checked==true?DropDownListPartner.SelectedIndex>0?" tup_inpartnerid="+DropDownListPartner.SelectedValue:string.Empty:string.Empty,
-                                CheckBoxShowByAns.Checked==true?DropDownListAns.SelectedIndex>0?" tup_destinationId="+DropDownListAns.SelectedValue:string.Empty:string.Empty,
-                                CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_outpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty
+                                //CheckBoxShowByAns.Checked==true?DropDownListAns.SelectedIndex>0?" tup_destinationId="+DropDownListAns.SelectedValue:string.Empty:string.Empty,
+                                //CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_outpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty
                             }).getSQLString();
 
        
@@ -109,27 +111,37 @@ public partial class InternationalInTransit : System.Web.UI.Page
 
     protected void submit_Click(object sender, EventArgs e)
     {
-        if (CheckBoxShowByAns.Checked == true)
-        {
-            GridView1.Columns[3].Visible = true;
-            //load ANS KPI
-            Dictionary<string, partner> dicKpiAns = new Dictionary<string, partner>();
-            using (PartnerEntities context = new PartnerEntities())
-            {
-                foreach (partner thisPartner in context.partners.Where(c => c.PartnerType == 1).ToList())
-                {
-                    dicKpiAns.Add(thisPartner.PartnerName, thisPartner);
-                }
-                ViewState["dicKpiAns"] = dicKpiAns;
-            }
-        }
-        else GridView1.Columns[3].Visible = false;
-
-        if (CheckBoxShowByIgw.Checked == true)
+        //if (CheckBoxShowByAns.Checked == true)
+        //{
+        //    GridView1.Columns[3].Visible = true;
+        //    //load ANS KPI
+        //    Dictionary<string, partner> dicKpiAns = new Dictionary<string, partner>();
+        //    using (PartnerEntities context = new PartnerEntities())
+        //    {
+        //        foreach (partner thisPartner in context.partners.Where(c => c.PartnerType == 1).ToList())
+        //        {
+        //            dicKpiAns.Add(thisPartner.PartnerName, thisPartner);
+        //        }
+        //        ViewState["dicKpiAns"] = dicKpiAns;
+        //    }
+        //}
+        //else GridView1.Columns[3].Visible = false;
+        if (CheckBoxMatchedCustomerPrefix.Checked)
         {
             GridView1.Columns[2].Visible = true;
         }
         else GridView1.Columns[2].Visible = false;
+
+        //if (CheckBoxShowByIgw.Checked == true)
+        //{
+        //    GridView1.Columns[2].Visible = true;
+        //}
+        //else GridView1.Columns[2].Visible = false;
+        if (CheckBoxMatchedSupplierPrefix.Checked)
+        {
+            GridView1.Columns[3].Visible = true;
+        }
+        else GridView1.Columns[3].Visible = false;
 
         if (CheckBoxPartner.Checked == true)
         {
@@ -376,19 +388,19 @@ public partial class InternationalInTransit : System.Web.UI.Page
 
     protected void CheckBoxShowByAns_CheckedChanged(object sender, EventArgs e)
     {
-        if (CheckBoxShowByAns.Checked == true)
-        {
-            DropDownListAns.Enabled = true;
-        }
-        else DropDownListAns.Enabled = false;
+        //if (CheckBoxShowByAns.Checked == true)
+        //{
+        //    DropDownListAns.Enabled = true;
+        //}
+        //else DropDownListAns.Enabled = false;
     }
     protected void CheckBoxShowByIgw_CheckedChanged(object sender, EventArgs e)
     {
-        if (CheckBoxShowByIgw.Checked == true)
-        {
-            DropDownListIgw.Enabled = true;
-        }
-        else DropDownListIgw.Enabled = false;
+        //if (CheckBoxShowByIgw.Checked == true)
+        //{
+        //    DropDownListIgw.Enabled = true;
+        //}
+        //else DropDownListIgw.Enabled = false;
     
     }
   
@@ -504,120 +516,120 @@ public partial class InternationalInTransit : System.Web.UI.Page
             return;
         }
         
-        if (CheckBoxShowByAns.Checked == true)
-        {
-            Dictionary<string,partner> dicKpiAns = null;
-            if (e.Row.RowType == DataControlRowType.DataRow)
-            {
-                if (ViewState["dicKpiAns"] != null)
-                {
-                    dicKpiAns = (Dictionary<string,partner>)ViewState["dicKpiAns"];
-                }
-                else
-                {
-                    return;
-                }
-                //Label lblCountry = (Label)e.Row.FindControl("Label3");
-                string thisAnsName = DataBinder.Eval(e.Row.DataItem, "ANS").ToString();
-                Single thisAsr = 0;
-                Single thisAcd = 0;
-                Single thisCcr = 0;
-                Single thisPdd = 0;
-                Single thisCcRbyCc = 0;
-                Single.TryParse(DataBinder.Eval(e.Row.DataItem, "ASR").ToString(),out thisAsr);
-                Single.TryParse(DataBinder.Eval(e.Row.DataItem, "ACD").ToString(), out thisAcd);
-                Single.TryParse(DataBinder.Eval(e.Row.DataItem, "CCR").ToString(), out thisCcr);
-                Single.TryParse(DataBinder.Eval(e.Row.DataItem, "PDD").ToString(), out thisPdd);
-                Single.TryParse(DataBinder.Eval(e.Row.DataItem, "CCRByCC").ToString(), out thisCcRbyCc);
-                partner thisPartner = null;
-                dicKpiAns.TryGetValue(thisAnsName, out thisPartner);
-                if (thisPartner != null)
-                {
-                    Color redColor=ColorTranslator.FromHtml("#FF0000");
-                    //ASR
-                    Single refAsr = 0;
-                    if (Convert.ToSingle(thisPartner.refasr) > 0)
-                    {
-                        refAsr=Convert.ToSingle(thisPartner.refasr);
-                    }
-                    if ((thisAsr < refAsr) || (thisAsr == 0))
-                    {
-                        e.Row.Cells[16].ForeColor = Color.White;
-                        e.Row.Cells[16].BackColor = redColor;
-                        e.Row.Cells[16].Font.Bold = true;
-                    }
+        //if (CheckBoxShowByAns.Checked == true)
+        //{
+        //    Dictionary<string,partner> dicKpiAns = null;
+        //    if (e.Row.RowType == DataControlRowType.DataRow)
+        //    {
+        //        if (ViewState["dicKpiAns"] != null)
+        //        {
+        //            dicKpiAns = (Dictionary<string,partner>)ViewState["dicKpiAns"];
+        //        }
+        //        else
+        //        {
+        //            return;
+        //        }
+        //        //Label lblCountry = (Label)e.Row.FindControl("Label3");
+        //        string thisAnsName = DataBinder.Eval(e.Row.DataItem, "ANS").ToString();
+        //        Single thisAsr = 0;
+        //        Single thisAcd = 0;
+        //        Single thisCcr = 0;
+        //        Single thisPdd = 0;
+        //        Single thisCcRbyCc = 0;
+        //        Single.TryParse(DataBinder.Eval(e.Row.DataItem, "ASR").ToString(),out thisAsr);
+        //        Single.TryParse(DataBinder.Eval(e.Row.DataItem, "ACD").ToString(), out thisAcd);
+        //        Single.TryParse(DataBinder.Eval(e.Row.DataItem, "CCR").ToString(), out thisCcr);
+        //        Single.TryParse(DataBinder.Eval(e.Row.DataItem, "PDD").ToString(), out thisPdd);
+        //        Single.TryParse(DataBinder.Eval(e.Row.DataItem, "CCRByCC").ToString(), out thisCcRbyCc);
+        //        partner thisPartner = null;
+        //        dicKpiAns.TryGetValue(thisAnsName, out thisPartner);
+        //        if (thisPartner != null)
+        //        {
+        //            Color redColor=ColorTranslator.FromHtml("#FF0000");
+        //            //ASR
+        //            Single refAsr = 0;
+        //            if (Convert.ToSingle(thisPartner.refasr) > 0)
+        //            {
+        //                refAsr=Convert.ToSingle(thisPartner.refasr);
+        //            }
+        //            if ((thisAsr < refAsr) || (thisAsr == 0))
+        //            {
+        //                e.Row.Cells[16].ForeColor = Color.White;
+        //                e.Row.Cells[16].BackColor = redColor;
+        //                e.Row.Cells[16].Font.Bold = true;
+        //            }
 
-                    //fas detection
-                    double tempDbl = 0;
-                    double refAsrFas = refAsr + refAsr * .5;//fas threshold= 30% of ref asr by default
-                    double.TryParse(thisPartner.refasrfas.ToString(), out tempDbl);
-                    if (tempDbl > 0) refAsrFas = tempDbl;
+        //            //fas detection
+        //            double tempDbl = 0;
+        //            double refAsrFas = refAsr + refAsr * .5;//fas threshold= 30% of ref asr by default
+        //            double.TryParse(thisPartner.refasrfas.ToString(), out tempDbl);
+        //            if (tempDbl > 0) refAsrFas = tempDbl;
 
-                    if (thisAsr > refAsrFas && refAsrFas>0)
-                    {
-                        e.Row.Cells[16].ForeColor = Color.White;
-                        e.Row.Cells[16].BackColor = Color.Blue;
-                        e.Row.Cells[16].Font.Bold = true;
-                    }
+        //            if (thisAsr > refAsrFas && refAsrFas>0)
+        //            {
+        //                e.Row.Cells[16].ForeColor = Color.White;
+        //                e.Row.Cells[16].BackColor = Color.Blue;
+        //                e.Row.Cells[16].Font.Bold = true;
+        //            }
 
-                    //ACD
-                    Single refAcd = 0;
-                    if (Convert.ToSingle(thisPartner.refacd) > 0)
-                    {
-                        refAcd = Convert.ToSingle(thisPartner.refacd);
-                    }
-                    if (thisAcd < refAcd)
-                    {
-                        //e.Row.Cells[16].ForeColor = RedColor;
-                        e.Row.Cells[17].ForeColor = Color.White;
-                        e.Row.Cells[17].BackColor = redColor;
-                        e.Row.Cells[17].Font.Bold = true;
-                    }
+        //            //ACD
+        //            Single refAcd = 0;
+        //            if (Convert.ToSingle(thisPartner.refacd) > 0)
+        //            {
+        //                refAcd = Convert.ToSingle(thisPartner.refacd);
+        //            }
+        //            if (thisAcd < refAcd)
+        //            {
+        //                //e.Row.Cells[16].ForeColor = RedColor;
+        //                e.Row.Cells[17].ForeColor = Color.White;
+        //                e.Row.Cells[17].BackColor = redColor;
+        //                e.Row.Cells[17].Font.Bold = true;
+        //            }
 
-                    //PDD
-                    Single refPdd = 0;
-                    if (Convert.ToSingle(thisPartner.refpdd) > 0)
-                    {
-                        refPdd = Convert.ToSingle(thisPartner.refpdd);
-                    }
-                    if (thisPdd > refPdd)
-                    {
-                        //e.Row.Cells[17].ForeColor = RedColor;
-                        e.Row.Cells[18].ForeColor = Color.White;
-                        e.Row.Cells[18].BackColor = redColor;
-                        e.Row.Cells[18].Font.Bold = true;
-                    }
+        //            //PDD
+        //            Single refPdd = 0;
+        //            if (Convert.ToSingle(thisPartner.refpdd) > 0)
+        //            {
+        //                refPdd = Convert.ToSingle(thisPartner.refpdd);
+        //            }
+        //            if (thisPdd > refPdd)
+        //            {
+        //                //e.Row.Cells[17].ForeColor = RedColor;
+        //                e.Row.Cells[18].ForeColor = Color.White;
+        //                e.Row.Cells[18].BackColor = redColor;
+        //                e.Row.Cells[18].Font.Bold = true;
+        //            }
 
-                    //CCR
-                    Single refCcr = 0;
-                    if (Convert.ToSingle(thisPartner.refccr) > 0)
-                    {
-                        refCcr = Convert.ToSingle(thisPartner.refccr);
-                    }
-                    if (thisCcr < refCcr)
-                    {
-                        //e.Row.Cells[18].ForeColor = RedColor;
-                        e.Row.Cells[19].ForeColor = Color.White;
-                        e.Row.Cells[19].BackColor = redColor;
-                        e.Row.Cells[19].Font.Bold = true;
-                    }
+        //            //CCR
+        //            Single refCcr = 0;
+        //            if (Convert.ToSingle(thisPartner.refccr) > 0)
+        //            {
+        //                refCcr = Convert.ToSingle(thisPartner.refccr);
+        //            }
+        //            if (thisCcr < refCcr)
+        //            {
+        //                //e.Row.Cells[18].ForeColor = RedColor;
+        //                e.Row.Cells[19].ForeColor = Color.White;
+        //                e.Row.Cells[19].BackColor = redColor;
+        //                e.Row.Cells[19].Font.Bold = true;
+        //            }
 
-                    //CCRByCauseCode
-                    Single refCcrCc = 0;
-                    if (Convert.ToSingle(thisPartner.refccrbycc) > 0)
-                    {
-                        refCcrCc = Convert.ToSingle(thisPartner.refccrbycc);
-                    }
-                    if (thisCcRbyCc < refCcrCc)
-                    {
-                        //e.Row.Cells[20].ForeColor = RedColor;
-                        e.Row.Cells[21].ForeColor = Color.White;
-                        e.Row.Cells[21].BackColor = redColor;
-                        e.Row.Cells[21].Font.Bold = true;
-                    }
-                }
-            }
-        }//if checkbox ans
+        //            //CCRByCauseCode
+        //            Single refCcrCc = 0;
+        //            if (Convert.ToSingle(thisPartner.refccrbycc) > 0)
+        //            {
+        //                refCcrCc = Convert.ToSingle(thisPartner.refccrbycc);
+        //            }
+        //            if (thisCcRbyCc < refCcrCc)
+        //            {
+        //                //e.Row.Cells[20].ForeColor = RedColor;
+        //                e.Row.Cells[21].ForeColor = Color.White;
+        //                e.Row.Cells[21].BackColor = redColor;
+        //                e.Row.Cells[21].Font.Bold = true;
+        //            }
+        //        }
+        //    }
+        //}//if checkbox ans
         
         //0 ASR highlighting
         if (e.Row.RowType == DataControlRowType.DataRow)
