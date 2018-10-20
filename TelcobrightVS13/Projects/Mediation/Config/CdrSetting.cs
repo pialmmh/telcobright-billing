@@ -30,7 +30,7 @@ namespace TelcobrightMediation
         {
             this.NerCalculationRule = "NerByCauseCode";
             this.SegmentSizeForDbWrite = 30000;
-            this.BatchSizeWhenPreparingLargeSqlJob = 1000000; //1M
+            this.BatchSizeWhenPreparingLargeSqlJob = 100000;
             this.DaysToAddBeforeAndAfterUniqueDaysForSafePartialCollection = 1;
             this.IllegalStrToRemoveFromFields = new List<string>();
             this.CallConnectTimePresent = true;
