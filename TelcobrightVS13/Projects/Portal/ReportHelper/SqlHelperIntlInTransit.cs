@@ -22,21 +22,16 @@ namespace PortalApp.ReportHelper
         {
             return $@"
                 SELECT Date,
-                cr.partnerName AS 'International Partner',
-                cr1.partnerName AS ANS,
-                cr2.partnerName AS IGW,
-                TotalCalls AS CallsCount,
-                Successfulcalls  AS 'Number Of Calls (International Incoming)',
-                ConnectedCalls AS ConnectedCount,
-                MinutesIn AS 'Paid Minutes (International Incoming)',
-                roundedduration AS 'RoundedDuration', 
-                duration1 AS 'Duration1',
-                costansin,
-                costicxin,
-                costvatcomissionin,
-                customercost,
-                igwrevenuein,
-                profit,
+                inPartner.partnerName AS 'In Partner',
+                outPartner.partnerName AS 'Out Partner',
+                TotalCalls AS 'Total Calls',
+                Successfulcalls  AS 'Successful Calls',
+                ConnectedCalls AS 'Connected Calls',
+                customerduration as 'Customer Duration',
+                supplierDuration AS 'Supplier Duration', 
+                customercost as 'Revenue',
+                supplierCost as 'Cost',
+                customercost-suppliercost as 'Margin',
                 ASR,
                 ACD,
                 PDD,
@@ -49,42 +44,34 @@ namespace PortalApp.ReportHelper
                 (
 	            SELECT {GetDateExpression(this.groupInterval)} AS Date,
                 tup_inpartnerid,              
-	            tup_destinationId ,       
-	            tup_outpartnerid ,  
+                tup_outpartnerid ,  
                 tup_matchedprefixcustomer, 
                 tup_matchedprefixsupplier, 
                 SUM(totalcalls) AS TotalCalls, 
-				SUM(successfulcalls) AS Successfulcalls, 
-				SUM(connectedcalls) AS ConnectedCalls,
-		        SUM((actualduration)/60)AS MinutesIn, 
-                sum(roundedduration)/60 AS roundedduration, 
-                sum(duration1)/60 AS duration1,
-		        (SELECT 0) AS costansin,
-		        SUM(suppliercost) AS costicxin, 
-		        SUM(tax1) AS costvatcomissionin,
-		        Sum(customercost) AS customercost,
-                (SELECT 0) AS igwrevenuein,
-		        (SELECT 0) AS profit,
-		        ((SUM(Successfulcalls)*100)/SUM(totalcalls)) AS ASR, 
-		        ((SUM(actualDuration)/60)/SUM(Successfulcalls)) AS ACD,
-		        (SUM(pdd)/SUM(Successfulcalls))AS PDD ,
-		        100*(SUM(connectedCalls)/SUM(totalcalls)) AS CCR,
+                SUM(successfulcalls) AS Successfulcalls, 
+                SUM(connectedcalls) AS ConnectedCalls,
+                sum(duration1)/60 AS customerDuration,
+                sum(duration2)/60 AS supplierDuration,
+                Sum(customercost) AS customercost,
+                Sum(suppliercost) AS suppliercost,
+                ((SUM(Successfulcalls)*100)/SUM(totalcalls)) AS ASR, 
+                ((SUM(actualDuration)/60)/SUM(Successfulcalls)) AS ACD,
+                (SUM(pdd)/SUM(Successfulcalls))AS PDD ,
+                100*(SUM(connectedCalls)/SUM(totalcalls)) AS CCR,
                 SUM(connectedCallscc) AS ConectbyCC ,
-		        100*(SUM(connectedCallsCC)/SUM(totalcalls)) AS CCRByCC 
-	            FROM {TableName}
+                100*(SUM(connectedCallsCC)/SUM(totalcalls)) AS CCRByCC 
+                FROM {TableName}
                 WHERE tup_starttime>='{StartDate}'
                 AND tup_starttime<'{EndDate}'
                 {GetWhereClauseAdditional()}
                 {GetGroupBy()}
             
             ) x
-            LEFT JOIN partner cr
-            ON x.tup_inpartnerid = cr.idpartner
-            LEFT JOIN partner cr1
-            ON x.tup_destinationId = cr1.idpartner
-            LEFT JOIN partner cr2
-            ON x.tup_outpartnerid = cr2.idpartner
-            ORDER BY " + (GetGroupBy().Contains("tup_starttime") ? "Date, " : string.Empty) + " Successfulcalls,costansin DESC ;";
+            LEFT JOIN partner inPartner
+            ON x.tup_inpartnerid = inPartner.idpartner
+            LEFT JOIN partner outPartner
+            ON x.tup_outPartnerid = outPartner.idpartner
+            ORDER BY " + (GetGroupBy().Contains("tup_starttime") ? "Date, " : string.Empty) + " Successfulcalls DESC ;";
         }
     }
 }

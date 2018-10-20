@@ -266,24 +266,24 @@ public partial class InternationalInTransit : System.Web.UI.Page
                     List<NoOfCallsVsPdd> callVsPdd = new List<NoOfCallsVsPdd>();
                     foreach (DataRow dr in tr.Ds.Tables[0].Rows)
                     {
-                        tr.CallStat.TotalCalls += tr.ForceConvertToLong(dr["CallsCount"]);
-                        tr.CallStat.ConnectedCalls += tr.ForceConvertToLong(dr["ConnectedCount"]);
-                        tr.CallStat.ConnectedCallsbyCauseCodes += tr.ForceConvertToLong(dr["ConectbyCC"]);
-                        tr.CallStat.SuccessfullCalls += tr.ForceConvertToLong(dr["Number Of Calls (International Incoming)"]);
-                        tr.CallStat.TotalActualDuration += tr.ForceConvertToDouble(dr["Paid Minutes (International Incoming)"]);
-                        tr.CallStat.TotalRoundedDuration += tr.ForceConvertToDouble(dr["RoundedDuration"]);
-                        tr.CallStat.TotalDuration1 += tr.ForceConvertToDouble(dr["Duration1"]);
-                        tr.CallStat.PartnerCost += tr.ForceConvertToDouble(dr["costicxin"]);
-                        tr.CallStat.BtrcRevShare += tr.ForceConvertToDouble(dr["costvatcomissionin"]);
-                        tr.CallStat.IgwRevenue += tr.ForceConvertToDouble(dr["customercost"]);
-                        NoOfCallsVsPdd cpdd = new NoOfCallsVsPdd(tr.ForceConvertToLong(dr["Number Of Calls (International Incoming)"]), tr.ForceConvertToDouble(dr["PDD"]));
+                        tr.CallStat.TotalCalls += tr.ForceConvertToLong(dr["Total Calls"]);
+                        tr.CallStat.ConnectedCalls += tr.ForceConvertToLong(dr["Connected Calls"]);
+                        //tr.CallStat.ConnectedCallsbyCauseCodes += tr.ForceConvertToLong(dr["ConectbyCC"]);
+                        tr.CallStat.SuccessfullCalls += tr.ForceConvertToLong(dr["Successful Calls"]);
+                        tr.CallStat.TotalActualDuration += tr.ForceConvertToDouble(dr["Customer Duration"]);
+                        tr.CallStat.TotalRoundedDuration += tr.ForceConvertToDouble(dr["Supplier Duration"]);
+                        //tr.CallStat.TotalDuration1 += tr.ForceConvertToDouble(dr["Duration1"]);
+                        tr.CallStat.PartnerCost += tr.ForceConvertToDouble(dr["Cost"]);
+                        tr.CallStat.BtrcRevShare += tr.ForceConvertToDouble(dr["Margin"]);
+                        tr.CallStat.IgwRevenue += tr.ForceConvertToDouble(dr["Revenue"]);
+                        NoOfCallsVsPdd cpdd = new NoOfCallsVsPdd(tr.ForceConvertToLong(dr["Successful Calls"]), tr.ForceConvertToDouble(dr["PDD"]));
                         callVsPdd.Add(cpdd);
                     }
                     tr.CallStat.TotalActualDuration = Math.Round(tr.CallStat.TotalActualDuration, 2);
-                    tr.CallStat.TotalDuration1 = Math.Round(tr.CallStat.TotalDuration1, 2);
-                    tr.CallStat.TotalDuration2 = Math.Round(tr.CallStat.TotalDuration2, 2);
-                    tr.CallStat.TotalDuration3 = Math.Round(tr.CallStat.TotalDuration3, 2);
-                    tr.CallStat.TotalDuration4 = Math.Round(tr.CallStat.TotalDuration4, 2);
+                    //tr.CallStat.TotalDuration1 = Math.Round(tr.CallStat.TotalDuration1, 2);
+                    //tr.CallStat.TotalDuration2 = Math.Round(tr.CallStat.TotalDuration2, 2);
+                    //tr.CallStat.TotalDuration3 = Math.Round(tr.CallStat.TotalDuration3, 2);
+                    //tr.CallStat.TotalDuration4 = Math.Round(tr.CallStat.TotalDuration4, 2);
                     tr.CallStat.TotalRoundedDuration = Math.Round(tr.CallStat.TotalRoundedDuration, 2);
                     tr.CallStat.PartnerCost  = Math.Round(tr.CallStat.PartnerCost, 2);
                     tr.CallStat.BtrcRevShare = Math.Round(tr.CallStat.BtrcRevShare, 2);
