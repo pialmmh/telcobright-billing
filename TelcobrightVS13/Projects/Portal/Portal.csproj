@@ -520,6 +520,7 @@
     <None Include="Properties\PublishProfiles\PlatinumNewPortal.pubxml" />
     <Content Include="reports\cdr.json" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
+    <Content Include="reports\transit\InternationalInTransit.aspx" />
     <Content Include="Scripts\jquery-2.1.3.js" />
     <Content Include="Scripts\jquery-2.1.3.min.js" />
     <Content Include="Scripts\moment-with-locales.js" />
@@ -870,6 +871,13 @@
     </Compile>
     <Compile Include="reports\OutgoingCallAnalysis.aspx.designer.cs">
       <DependentUpon>OutgoingCallAnalysis.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\transit\InternationalInTransit.aspx.cs">
+      <DependentUpon>InternationalInTransit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\transit\InternationalInTransit.aspx.designer.cs">
+      <DependentUpon>InternationalInTransit.aspx</DependentUpon>
     </Compile>
     <Compile Include="Site.master.cs">
       <DependentUpon>Site.master</DependentUpon>

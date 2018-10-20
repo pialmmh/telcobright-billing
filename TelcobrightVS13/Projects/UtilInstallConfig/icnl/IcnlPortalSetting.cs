@@ -256,7 +256,8 @@ namespace InstallConfig
                                     "nodes['Settings'].Expanded=true",
                                     "nodes['Billing Reports'].Expanded=true",
                                     "nodes['Reports/ICX'].Expanded=false",
-                                    "nodes['Reports/IGW'].Expanded=true"
+                                    "nodes['Reports/IGW'].Expanded=false",
+                                    "nodes['Reports/Transit'].Expanded=true"
                                 },
                                 SpringExpressionIfNotRole = new List<string>()
                                 {
@@ -266,7 +267,8 @@ namespace InstallConfig
                                     "nodes['Settings'].Expanded=false",
                                     "nodes['Billing Reports'].Expanded=false",
                                     "nodes['Reports/ICX'].Expanded=false",
-                                    "nodes['Reports/IGW'].Expanded=true"
+                                    "nodes['Reports/IGW'].Expanded=false",
+                                    "nodes['Reports/Transit'].Expanded=false"
                                 }
                             },
                             new SettingByRoles()
@@ -283,7 +285,8 @@ namespace InstallConfig
                                     "nodes['Settings'].Expanded=true",
                                     "nodes['Billing Reports'].Expanded=true",
                                     "nodes['Reports/ICX'].Expanded=false",
-                                    "nodes['Reports/IGW'].Expanded=true",
+                                    "nodes['Reports/IGW'].Expanded=false",
+                                    "nodes['Reports/Transit'].Expanded=true",
                                     "nodes['Settings/Manage Users'].Expanded=false"
                                 },
                                 SpringExpressionIfNotRole = new List<string>()
@@ -294,12 +297,13 @@ namespace InstallConfig
                                     "nodes['Settings'].Expanded=false",
                                     "nodes['Billing Reports'].Expanded=false",
                                     "nodes['Reports/ICX'].Expanded=false",
-                                    "nodes['Reports/IGW'].Expanded=true"
+                                    "nodes['Reports/IGW'].Expanded=false",
+                                    "nodes['Reports/Transit'].Expanded=false"
                                 }
                             }
                         }//list of settings by Roles
                     },
-                    { "~/reports/InternationalIn.aspx",//settings for report pages
+                    { "~/reports/transit/InternationalInTransit.aspx",//settings for report pages
                         settingIntlIn
                     },
                 },//dictionary of page settings
