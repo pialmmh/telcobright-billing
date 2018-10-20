@@ -37,7 +37,7 @@ public partial class InternationalInTransit : System.Web.UI.Page
 
         }
 
-        string constructedSQL = new SqlHelperIntlInIgw
+        string constructedSQL = new SqlHelperIntlInTransit
                         (StartDate,
                          EndtDate,
                          groupInterval,
