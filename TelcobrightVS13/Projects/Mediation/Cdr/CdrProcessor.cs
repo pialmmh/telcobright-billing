@@ -386,7 +386,8 @@ namespace TelcobrightMediation
 				partialCdrContainers = partialCdrWriter.PartialCdrContainers;
 			}
 			int rawPartialActualCount = partialCdrContainers.Sum(c => c.NewRawInstances.Count);
-		    if (partialCdrWriter?.WrittenNewRawInstances!=rawPartialActualCount)
+		    int writtenNewRawInstances = partialCdrWriter?.WrittenNewRawInstances??0;
+		    if (writtenNewRawInstances!=rawPartialActualCount)
 		    {
 		        throw new Exception("Written number of new partial raw instances does not match actual count.");
 		    }
@@ -394,7 +395,7 @@ namespace TelcobrightMediation
             if (this.CdrReProcessingType==CdrReProcessingType.NoneOrNew)//newCdrFile
 		    {
 		        if (this.CollectionResult.RawCount !=
-		            writtenNonPartialCdrCount + partialCdrWriter.WrittenNewRawInstances + writtenInconsistentCount
+		            writtenNonPartialCdrCount + writtenNewRawInstances + writtenInconsistentCount
 		            + nonPartialCdrErrors.Count)
 		            throw new Exception(
 		                "RawCount in collection result must equal (nonPartialCount+ newRawPartialInstances+inconsistentCount.");

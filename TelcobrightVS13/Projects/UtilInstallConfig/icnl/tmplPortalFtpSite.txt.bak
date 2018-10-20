@@ -1,0 +1,107 @@
+<SITE SITE.NAME="localftp" SITE.ID="`%siteId%`" bindings="ftp/`%bindAddress%`:" state="Unknown">
+
+        <site name="localftp" id="`%siteId%`">
+
+            <bindings>
+
+                <binding protocol="ftp" bindingInformation="`%bindAddress%`:" />
+
+            </bindings>
+
+            <limits />
+
+            <logFile>
+
+                <customFields>
+
+                </customFields>
+
+            </logFile>
+
+            <traceFailedRequestsLogging />
+
+            <applicationDefaults />
+
+            <virtualDirectoryDefaults />
+
+            <ftpServer>
+
+                <connections />
+
+                <security>
+
+                    <dataChannelSecurity />
+
+                    <commandFiltering>
+
+                    </commandFiltering>
+
+                    <ssl controlChannelPolicy="SslAllow" dataChannelPolicy="SslAllow" />
+
+                    <sslClientCertificates />
+
+                    <authentication>
+
+                        <anonymousAuthentication />
+
+                        <basicAuthentication enabled="true" />
+
+                        <clientCertAuthentication />
+
+                        <customAuthentication>
+
+                            <providers>
+
+                            </providers>
+
+                        </customAuthentication>
+
+                    </authentication>
+
+                    <customAuthorization>
+
+                        <provider />
+
+                    </customAuthorization>
+
+                </security>
+
+                <customFeatures>
+
+                    <providers>
+
+                    </providers>
+
+                </customFeatures>
+
+                <messages />
+
+                <fileHandling />
+
+                <firewallSupport />
+
+                <userIsolation>
+
+                    <activeDirectory />
+
+                </userIsolation>
+
+                <directoryBrowse />
+
+                <logFile />
+
+            </ftpServer>
+
+            <application path="/">
+
+                <virtualDirectoryDefaults />
+
+                <virtualDirectory path="/" physicalPath="`%ftpPhysicalPath%`" />
+
+            </application>
+
+        </site>
+
+    </SITE>
+
+</appcmd>

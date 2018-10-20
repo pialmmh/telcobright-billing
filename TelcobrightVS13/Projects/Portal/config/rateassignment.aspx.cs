@@ -6239,8 +6239,10 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
 
             using (PartnerEntities Context = new PartnerEntities())
             {
-                rateassign thisRate = Context.rateassigns.Where(c => c.idrateplan == 1 && c.Prefix == Convert.ToInt32(thisPrefix)
-                                                                     && c.startdate == SaveStartDateTimeThisRate).FirstOrDefault();
+                int thisPrefixAsInt = Convert.ToInt32(thisPrefix);
+                rateassign thisRate = Context.rateassigns.FirstOrDefault(c => c.idrateplan == 1 
+                                        && c.Prefix == thisPrefixAsInt
+                                        && c.startdate == SaveStartDateTimeThisRate);
 
                 DropDownList ddlRatePlan = (DropDownList)(GridViewRateAssign.Rows[e.RowIndex].FindControl("DropDownListRatePlan"));
                 int Deactive = Convert.ToInt32(((CheckBox)row.FindControl("CheckBox1")).Checked);
