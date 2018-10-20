@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace TelcobrightMediation
@@ -6,22 +7,32 @@ namespace TelcobrightMediation
     {
         public string TableName { get; set; }
         public int BatchSize { get; set; }
+        public DateTime StartPartitionDate { get; set; }
+        public DateTime EndPartitionDate { get; set; }
+        public string PartitionColName { get; set; }
+        public string RowIdColName { get; set; }
         public List<SqlSingleWhereClauseBuilder> LstWhereParamsSingle { get; set; }
         public List<SqlMultiWhereClauseBuilder> LstWhereParamsMultiple { get; set; }
         public List<string> ColumnExpressions { get; } 
         public BatchSqlJobParamJson(string tableName, int batchSize, List<SqlSingleWhereClauseBuilder> lstWhereParamsSingle,
-            List<SqlMultiWhereClauseBuilder> lstWhereParamsMulti,List<string> columnExpressions)
+            List<SqlMultiWhereClauseBuilder> lstWhereParamsMulti,List<string> columnExpressions,
+            DateTime startPartitionDate,DateTime endPartitionDate,string partitionColName,string rowIdColName)
         {
             this.TableName = tableName;
             this.BatchSize = batchSize;
             this.LstWhereParamsSingle = lstWhereParamsSingle;
             this.LstWhereParamsMultiple = lstWhereParamsMulti;
             this.ColumnExpressions = columnExpressions;
+            this.StartPartitionDate = startPartitionDate;
+            this.EndPartitionDate = endPartitionDate;
+            this.PartitionColName = partitionColName;
+            this.RowIdColName = rowIdColName;
         }
         public BatchSqlJobParamJson GetCopy()
         {
             return new BatchSqlJobParamJson(this.TableName, this.BatchSize, this.LstWhereParamsSingle,
-                this.LstWhereParamsMultiple, this.ColumnExpressions);
+                this.LstWhereParamsMultiple, this.ColumnExpressions,this.StartPartitionDate,this.EndPartitionDate,
+                this.PartitionColName,this.RowIdColName);
         }
         private string GetFullWhereClause()
         {

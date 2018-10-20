@@ -378,6 +378,8 @@ public partial class ConfigBatcJob : System.Web.UI.Page
             string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName);
             List<ne> lstSwitch=new List<ne>();
             Dictionary<string, route> dicRoutes = new Dictionary<string, route>();
+            DateTime dstartdate = Convert.ToDateTime("1800-01-01", CultureInfo.InvariantCulture);
+            DateTime denddate = Convert.ToDateTime("1800-01-01", CultureInfo.InvariantCulture);
             using (PartnerEntities context = new PartnerEntities(entityConStr))
             {
                 switch (this.DropDownListJobType.SelectedValue)
@@ -423,8 +425,6 @@ public partial class ConfigBatcJob : System.Web.UI.Page
             List<SqlSingleWhereClauseBuilder> lstWhereParamsSingle = new List<SqlSingleWhereClauseBuilder>();
             List<SqlMultiWhereClauseBuilder> lstWhereParamsMultiple = new List<SqlMultiWhereClauseBuilder>();
             SqlSingleWhereClauseBuilder newParam = null;
-            DateTime dstartdate = Convert.ToDateTime("1800-01-01", CultureInfo.InvariantCulture);
-            DateTime denddate = Convert.ToDateTime("1800-01-01", CultureInfo.InvariantCulture);
             DateTime comparedate = dstartdate;
             string startdate = this.txtDate.Text;
             string enddate = this.txtDate1.Text;
@@ -647,15 +647,19 @@ public partial class ConfigBatcJob : System.Web.UI.Page
             }
             //
 
-            BatchSqlJobParamJson baseJobParam = new BatchSqlJobParamJson
+            BatchSqlJobParamJson batchJobParam = new BatchSqlJobParamJson
             (
                 sourceTable,
                 batchSize,
                 lstWhereParamsSingle,
                 lstWhereParamsMultiple,
-                columnExpressions: new List<string>() { "IdCall as RowId", "starttime as RowDateTime" }
+                columnExpressions: new List<string>() { "IdCall as RowId", "starttime as RowDateTime" },
+                startPartitionDate: dstartdate.Date,
+                endPartitionDate: denddate.Date,
+                partitionColName:"starttime",
+                rowIdColName:"idCall"
             );
-
+            
             int jobCount = 0;
             if (idSwitch <= 0) //all switch
             {
@@ -671,7 +675,7 @@ public partial class ConfigBatcJob : System.Web.UI.Page
             {
                 foreach (ne thisSwitch in lstSwitch) //create a job for each selected ne
                 {
-                    BatchSqlJobParamJson thisJobParam = baseJobParam.GetCopy();
+                    BatchSqlJobParamJson thisJobParam = batchJobParam.GetCopy();
                     //create a switchid param for this job
                     newParam = new SqlSingleWhereClauseBuilder(SqlWhereAndOrType.And);
                     newParam.Expression = "switchid=";

@@ -392,7 +392,11 @@ namespace PortalApp.config
                 batchSizeForJobSegment,
                 singleWhereClauses,
                 multipleWhereClauses,
-                columnExpressions: new List<string>() { "id as RowId", "transactionTime as RowDateTime" }
+                columnExpressions: new List<string>() { "id as RowId", "transactionTime as RowDateTime" },
+                startPartitionDate:new DateTime(), 
+                endPartitionDate:new DateTime(), 
+                partitionColName:"transactionTime",
+                rowIdColName:"id"
             );
             return sqlParam;
         }
