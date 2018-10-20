@@ -813,8 +813,8 @@
     <Compile Include="ReportHelper\SqlHelperDomestic.cs" />
     <Compile Include="ReportHelper\SqlHelperInIGWRouteWise.cs" />
     <Compile Include="ReportHelper\SqlHelperIntlInICX.cs" />
-    <Compile Include="ReportHelper\SqlHelperIntlInTransit.cs" />
     <Compile Include="ReportHelper\SqlHelperIntlInIGW.cs" />
+    <Compile Include="ReportHelper\SqlHelperIntlInTransit.cs" />
     <Compile Include="ReportHelper\SqlHelperIntOutICX.cs" />
     <Compile Include="ReportHelper\SqlHelperIntOut.cs" />
     <Compile Include="reports\BTRCReport.aspx.cs">
