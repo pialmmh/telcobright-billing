@@ -62,14 +62,20 @@ namespace PortalApp.config
                     MefServiceGroups = composer.ServiceGroups.ToDictionary(s=>s.Id);
                     foreach (acc_ledger_summary ledgerSummary in accLedgerSummaries)
                     {
-                        var serviceGroup = context.accounts.First(x => x.id == ledgerSummary.idAccount).serviceGroup;
-                        var idBillingRule = context.billingruleassignments.First(x => x.idServiceGroup == serviceGroup)
-                            .idBillingRule;
+                        account account = allAccounts.First(x => x.id == ledgerSummary.idAccount);
+                        partner partner = allPartners.First(x => x.idPartner == account.idPartner);
+                        var serviceFamily = account.serviceFamily;
+                        var serviceGroup = account.serviceGroup;
+                        var matchingRatePlanAssignTups = context.rateplanassignmenttuples
+                            .Where(r => r.idpartner == partner.idPartner && r.idService == serviceFamily)
+                            .Select(r => r.id).ToList();
+                        var idBillingRule = context.billingruleassignments
+                            .Where(b => matchingRatePlanAssignTups.Contains(b.idRatePlanAssignmentTuple)
+                            && b.idServiceGroup==serviceGroup).Select(b=>b.idBillingRule).First();
                         BillingRule billingRule = billingRules.First(x => x.Id == idBillingRule);
                         TimeRange timeRange =
                             billingRule.GetBillingCycleByBillableItemsDate(ledgerSummary.transactionDate);
-                        account account = allAccounts.First(x => x.id == ledgerSummary.idAccount);
-                        partner partner = allPartners.First(x => x.idPartner == account.idPartner);
+                        
 
                         if (summaryForInvoiceGenerations.Count > 0)
                         {
