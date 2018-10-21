@@ -633,9 +633,9 @@ public partial class InternationalInTransit : System.Web.UI.Page
             Color redColor2 = ColorTranslator.FromHtml("#FF0000");
             if (asr <= 0)
             {
-                e.Row.Cells[16].ForeColor = Color.White;
-                e.Row.Cells[16].BackColor = redColor2;
-                e.Row.Cells[16].Font.Bold = true;
+                e.Row.Cells[14].ForeColor = Color.White;
+                e.Row.Cells[14].BackColor = redColor2;
+                e.Row.Cells[14].Font.Bold = true;
             }
         }
 
