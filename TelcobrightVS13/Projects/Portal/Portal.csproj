@@ -453,6 +453,7 @@
     <Content Include="config\BalanceAdjustment.aspx" />
     <Content Include="config\InvoiceGeneration.aspx" />
     <Content Include="config\PackageAssignment.aspx" />
+    <Content Include="config\AccountDetails.aspx" />
     <Content Include="config\PaymentHistory.aspx" />
     <Content Include="config\AddPayment.aspx" />
     <Content Include="config\PaymentManagement.aspx" />
@@ -749,6 +750,13 @@
     </Compile>
     <Compile Include="config\PackageAssignment.aspx.designer.cs">
       <DependentUpon>PackageAssignment.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="config\AccountDetails.aspx.cs">
+      <DependentUpon>AccountDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="config\AccountDetails.aspx.designer.cs">
+      <DependentUpon>AccountDetails.aspx</DependentUpon>
     </Compile>
     <Compile Include="config\PaymentHistory.aspx.cs">
       <DependentUpon>PaymentHistory.aspx</DependentUpon>

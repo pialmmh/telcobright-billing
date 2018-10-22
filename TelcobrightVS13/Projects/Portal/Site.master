@@ -84,6 +84,7 @@
   <Nodes>
     <asp:TreeNode Value="Configuration" Expanded="True" Text="Configuration"  SelectAction="None">
       <asp:TreeNode Value="Partners" Text="Partners"  NavigateUrl="~/config/Partner.aspx" />
+      <asp:TreeNode Value="Account Details" Text="Account Details"  NavigateUrl="~/config/AccountDetails.aspx" />
       <asp:TreeNode Value="Route Import" Text="Route Import"  NavigateUrl="~/config/RouteImport.aspx" />
       <asp:TreeNode Value="Rate Plan" Text="Rate Plan"  NavigateUrl="~/config/rateplan.aspx" />
       <asp:TreeNode Value="Rate Plan Assignment" Text="Rate Plan Assignment"  NavigateUrl="~/config/rateassignment.aspx" />

@@ -54,7 +54,9 @@ namespace PortalApp.config
                 }
 
                 // TODO: Replace 4 with correct variable
-                availableActions = Tbc.CdrSetting.ServiceGroupConfigurations[4].AccountActions;
+                List<int> serviceGroupWithActions = new List<int>() {4, 100};
+                availableActions = Tbc.CdrSetting.ServiceGroupConfigurations
+                    .First(x => serviceGroupWithActions.Contains(x.Key)).Value.AccountActions;
 
                 actions.Add(new AccActionEx()
                 {
