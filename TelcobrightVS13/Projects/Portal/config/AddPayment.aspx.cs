@@ -32,6 +32,9 @@ namespace PortalApp.config
                 List<KeyValuePair<Regex, string>> serviceAliases = Tbc.ServiceAliasesRegex;
                 int accountId = Convert.ToInt32(Request.QueryString["accountId"]);
                 using (PartnerEntities context = new PartnerEntities()) {
+                    List<partner> allPartners = context.partners.OrderBy(p => p.PartnerName).ToList();
+                    Session["allPartners"] = allPartners;
+
                     account = context.accounts.First(x => x.id == accountId);
                     foreach (var kv in serviceAliases)
                     {
