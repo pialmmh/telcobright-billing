@@ -117,7 +117,7 @@ public partial class AccountDetails : System.Web.UI.Page
             using (PartnerEntities context = new PartnerEntities())
             {
                 List<KeyValuePair<Regex, string>> serviceAliases = Tbc.ServiceAliasesRegex;
-                List<account> accounts = context.accounts.Where(p => p.idPartner == idPartner /*&& p.isBillable == 1 && p.isCustomerAccount == 1*/).ToList();
+                List<account> accounts = context.accounts.Where(p => p.idPartner == idPartner /*&& p.isBillable == 1*/ && p.isCustomerAccount == 1).ToList();
                 foreach (account account in accounts)
                 {
                     foreach (var kv in serviceAliases)
