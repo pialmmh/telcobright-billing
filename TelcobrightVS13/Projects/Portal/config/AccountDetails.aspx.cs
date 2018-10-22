@@ -521,6 +521,10 @@ public partial class AccountDetails : System.Web.UI.Page
 
     protected void lbEditAction_OnClick(object sender, EventArgs e)
     {
-        Response.Redirect("~/config/AddPayment.aspx");
+        LinkButton btndetails = sender as LinkButton;
+        GridViewRow gvrow = (GridViewRow)btndetails.NamingContainer;
+        //int accountId = Convert.ToInt32(GridView.DataKeys[gvrow.RowIndex].Value);
+        Response.Redirect("~/config/AddPayment.aspx?accountId=" + 2147483641, false);
+        Context.ApplicationInstance.CompleteRequest();
     }
 }
