@@ -293,16 +293,16 @@ public partial class InternationalInTransit : System.Web.UI.Page
                     //display summary information in the footer
                     Dictionary<string, dynamic> fieldSummaries = new Dictionary<string, dynamic>();//key=colname,val=colindex in grid
                                                                                                    //all keys have to be lowercase, because db fields are lower case at times
-                    fieldSummaries.Add("Total Calls", tr.CallStat.TotalCalls);
-                    fieldSummaries.Add("Connected Calls", tr.CallStat.ConnectedCalls);
+                    fieldSummaries.Add("total calls", tr.CallStat.TotalCalls);
+                    fieldSummaries.Add("connected calls", tr.CallStat.ConnectedCalls);
                     //fieldSummaries.Add("connectbycc", tr.CallStat.ConnectedCallsbyCauseCodes);
-                    fieldSummaries.Add("Successful Calls", tr.CallStat.SuccessfullCalls);
-                    fieldSummaries.Add("Customer Duration", tr.CallStat.TotalActualDuration);
-                    fieldSummaries.Add("Supplier Duration", tr.CallStat.TotalRoundedDuration);
+                    fieldSummaries.Add("successful calls", tr.CallStat.SuccessfullCalls);
+                    fieldSummaries.Add("customer duration", tr.CallStat.TotalActualDuration);
+                    fieldSummaries.Add("supplier duration", tr.CallStat.TotalRoundedDuration);
                     //fieldSummaries.Add("duration1", tr.CallStat.TotalDuration1);
-                    fieldSummaries.Add("Cost", tr.CallStat.PartnerCost);
-                    fieldSummaries.Add("Margin", tr.CallStat.BtrcRevShare);
-                    fieldSummaries.Add("Revenue", tr.CallStat.IgwRevenue);
+                    fieldSummaries.Add("cost", tr.CallStat.PartnerCost);
+                    fieldSummaries.Add("margin", tr.CallStat.BtrcRevShare);
+                    fieldSummaries.Add("revenue", tr.CallStat.IgwRevenue);
                     fieldSummaries.Add("asr", tr.CallStat.Asr);
                     fieldSummaries.Add("acd", tr.CallStat.Acd);
                     fieldSummaries.Add("pdd", tr.CallStat.Pdd);

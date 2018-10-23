@@ -523,8 +523,10 @@ public partial class AccountDetails : System.Web.UI.Page
     {
         LinkButton btndetails = sender as LinkButton;
         GridViewRow gvrow = (GridViewRow)btndetails.NamingContainer;
+        GridView gvAccount = (GridView) gvrow.NamingContainer;
+        int accountId = Convert.ToInt32(gvAccount.DataKeys[gvrow.RowIndex].Value);
         //int accountId = Convert.ToInt32(GridView.DataKeys[gvrow.RowIndex].Value);
-        Response.Redirect("~/config/AddPayment.aspx?accountId=" + 2147483641, false);
+        Response.Redirect("~/config/AddPayment.aspx?accountId=" + accountId, false);
         Context.ApplicationInstance.CompleteRequest();
     }
 }
