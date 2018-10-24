@@ -249,7 +249,8 @@ namespace InstallConfig
                                     "nodes['Settings'].Expanded=true",
                                     "nodes['Billing Reports'].Expanded=true",
                                     "nodes['Reports/ICX'].Expanded=false",
-                                    "nodes['Reports/IGW'].Expanded=true"
+                                    "nodes['Reports/IGW'].Expanded=true",
+                                    "nodes['Billing/Generated Invoices'].Expanded=false",
                                 },
                                 SpringExpressionIfNotRole = new List<string>()
                                 {
@@ -258,7 +259,8 @@ namespace InstallConfig
                                     "nodes['Settings'].Expanded=false",
                                     "nodes['Billing Reports'].Expanded=false",
                                     "nodes['Reports/ICX'].Expanded=false",
-                                    "nodes['Reports/IGW'].Expanded=true"
+                                    "nodes['Reports/IGW'].Expanded=true",
+                                    "nodes['Billing/Generated Invoices'].Expanded=false",
                                 }
                             },
                             new SettingByRoles()
@@ -275,7 +277,8 @@ namespace InstallConfig
                                     "nodes['Billing Reports'].Expanded=true",
                                     "nodes['Reports/ICX'].Expanded=false",
                                     "nodes['Reports/IGW'].Expanded=true",
-                                    "nodes['Settings/Manage Users'].Expanded=false"
+                                    "nodes['Settings/Manage Users'].Expanded=false",
+                                    "nodes['Billing/Generated Invoices'].Expanded=false",
                                 },
                                 SpringExpressionIfNotRole = new List<string>()
                                 {
@@ -284,7 +287,8 @@ namespace InstallConfig
                                     "nodes['Settings'].Expanded=false",
                                     "nodes['Billing Reports'].Expanded=false",
                                     "nodes['Reports/ICX'].Expanded=false",
-                                    "nodes['Reports/IGW'].Expanded=true"
+                                    "nodes['Reports/IGW'].Expanded=true",
+                                    "nodes['Billing/Generated Invoices'].Expanded=false",
                                 }
                             }
                         }//list of settings by Roles
