@@ -12,13 +12,18 @@ using LibraryExtensions;
 using LibraryExtensions.ConfigHelper;
 using QuartzTelcobright;
 using TelcobrightMediation.Config;
-
+using Newtonsoft.Json;
+using System.IO;
 namespace InstallConfig
 {
     public partial class PlatinumConfigGenerator //quartz config part
     {
+        static string databaseConfigFileName = new DirectoryInfo(FileAndPathHelper.GetBinPath()).Parent.Parent.FullName
+                                               + Path.DirectorySeparatorChar + "Server.conf";
         public PortalSettings GetPortalSettings(TelcobrightConfig tbc)
         {
+                        Dictionary<string, string> settings = JsonConvert.DeserializeObject<Dictionary<string, string>>(
+                File.ReadAllText(databaseConfigFileName));
             PortalSettings portalSetting = new PortalSettings("Portal Settings")
             {
                 HomePageUrl = "~/Dashboard.aspx",
@@ -42,8 +47,8 @@ namespace InstallConfig
                             AppPoolName = this.Tbc.DatabaseSetting.DatabaseName,
                             TemplateFileName = "../../" + this.Tbc.DatabaseSetting.DatabaseName + "/tmplPortalAppPools.txt",
                         },
-                        ImpersonateUserName="Mustafa",
-                        ImpersonatePassword="Habib321"
+                        ImpersonateUserName=settings["PortalLocalAccountName"],
+                        ImpersonatePassword =settings["PortalLocalAccountPassword"]
                     },
                     new InternetSite(this.Tbc)
                     {
@@ -250,6 +255,7 @@ namespace InstallConfig
                                     "nodes['Billing Reports'].Expanded=true",
                                     "nodes['Reports/ICX'].Expanded=false",
                                     "nodes['Reports/IGW'].Expanded=true",
+                                    "nodes['Reports/Transit'].Expanded=false",
                                     "nodes['Billing/Generated Invoices'].Expanded=false",
                                 },
                                 SpringExpressionIfNotRole = new List<string>()
@@ -260,6 +266,7 @@ namespace InstallConfig
                                     "nodes['Billing Reports'].Expanded=false",
                                     "nodes['Reports/ICX'].Expanded=false",
                                     "nodes['Reports/IGW'].Expanded=true",
+                                    "nodes['Reports/Transit'].Expanded=false",
                                     "nodes['Billing/Generated Invoices'].Expanded=false",
                                 }
                             },
@@ -277,6 +284,7 @@ namespace InstallConfig
                                     "nodes['Billing Reports'].Expanded=true",
                                     "nodes['Reports/ICX'].Expanded=false",
                                     "nodes['Reports/IGW'].Expanded=true",
+                                    "nodes['Reports/Transit'].Expanded=false",
                                     "nodes['Settings/Manage Users'].Expanded=false",
                                     "nodes['Billing/Generated Invoices'].Expanded=false",
                                 },
@@ -288,6 +296,7 @@ namespace InstallConfig
                                     "nodes['Billing Reports'].Expanded=false",
                                     "nodes['Reports/ICX'].Expanded=false",
                                     "nodes['Reports/IGW'].Expanded=true",
+                                    "nodes['Reports/Transit'].Expanded=false",
                                     "nodes['Billing/Generated Invoices'].Expanded=false",
                                 }
                             }

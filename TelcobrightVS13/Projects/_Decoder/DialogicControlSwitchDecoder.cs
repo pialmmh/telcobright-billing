@@ -27,11 +27,7 @@ namespace Decoders
         {
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
-
-            if (this.Input == null)
-            {
-                this.Input = input;
-            }
+            this.Input = input;
             List<cdrfieldmappingbyswitchtype> lstFieldMapping = null;
             input.MefDecodersData.DicFieldMapping.TryGetValue(this.Id, out lstFieldMapping);
             List<string[]> tempTable = GetTxtCdrs();
@@ -42,6 +38,8 @@ namespace Decoders
             int currentFieldNo = 0;
             foreach (string[] csvRow in tempTable) //for each row
             {
+                if (csvRow[6].Trim() == "I")
+                    continue;
                 try
                 {
                     normalizedRow = null;

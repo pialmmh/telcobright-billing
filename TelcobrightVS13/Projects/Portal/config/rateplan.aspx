@@ -28,7 +28,7 @@ order by c.country_name"></asp:SqlDataSource>
 <asp:SqlDataSource ID="SqlDataCurrency" runat="server" 
                    ConnectionString="<%$ ConnectionStrings:Partner %>" 
                    ProviderName="<%$ ConnectionStrings:Partner.ProviderName %>" 
-                   SelectCommand="SELECT uom_id as id FROM btel.uom
+                   SelectCommand="SELECT uom_id as id FROM uom
                                   where uom_type_id='CURRENCY_MEASURE'"
 ></asp:SqlDataSource>
 

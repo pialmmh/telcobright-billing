@@ -45,7 +45,7 @@ namespace InstallConfig
                     {
                         {"telcobrightProcessId", "106"},
                         {"operatorName", operatorName},
-                        {"SyncPair", "Icnl:Vault"}
+                        {"syncPair", "Icnl:Vault"}
                     }),
             };
             return fileListerInstances;
@@ -125,7 +125,7 @@ namespace InstallConfig
                     {
                         {"telcobrightProcessId", "104"},
                         {"operatorName", operatorName},
-                        {"SyncPair", "Icnl:Vault"}
+                        {"syncPair", "Icnl:Vault"}
                     }),
                 new QuartzTbDaemonConfig
                 (
@@ -138,7 +138,7 @@ namespace InstallConfig
                     {
                         {"telcobrightProcessId", "104"},
                         {"operatorName", operatorName},
-                        {"SyncPair", "Vault:FileArchive1Zip"}
+                        {"syncPair", "Vault:FileArchive1Zip"}
                     }),
                 new QuartzTbDaemonConfig
                 (
@@ -151,7 +151,7 @@ namespace InstallConfig
                     {
                         {"telcobrightProcessId", "104"},
                         {"operatorName", operatorName},
-                        {"SyncPair","Vault:FileArchive2" }
+                        {"syncPair","Vault:FileArchive2" }
                     }),
                 new QuartzTbDaemonConfig
                 (
@@ -164,7 +164,7 @@ namespace InstallConfig
                     {
                         {"telcobrightProcessId", "104"},
                         {"operatorName", operatorName},
-                        {"SyncPair","Vault:IOF" }
+                        {"syncPair","Vault:IOF" }
                     })
 
             };

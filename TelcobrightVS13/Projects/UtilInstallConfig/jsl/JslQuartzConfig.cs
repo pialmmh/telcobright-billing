@@ -46,7 +46,7 @@ namespace InstallConfig
                     {
                         {"telcobrightProcessId", "106"},
                         {"operatorName", operatorName},
-                        {"SyncPair", "JslZteDhk:Vault"}
+                        {"syncPair", "JslZteDhk:Vault"}
                     }),
             };
             return fileListerInstances;
@@ -67,7 +67,7 @@ namespace InstallConfig
                     {
                         {"telcobrightProcessId", "104"},
                         {"operatorName", operatorName},
-                        {"SyncPair", "JslZteDhk:Vault"}
+                        {"syncPair", "JslZteDhk:Vault"}
                     }),
                 new QuartzTbDaemonConfig
                 (
@@ -80,7 +80,7 @@ namespace InstallConfig
                     {
                         {"telcobrightProcessId", "104"},
                         {"operatorName", operatorName},
-                        {"SyncPair", "Vault:FileArchive1"}
+                        {"syncPair", "Vault:FileArchive1"}
                     }),
                 new QuartzTbDaemonConfig
                 (
@@ -93,7 +93,7 @@ namespace InstallConfig
                     {
                         {"telcobrightProcessId", "104"},
                         {"operatorName", operatorName},
-                        {"SyncPair","Vault:CAS" }
+                        {"syncPair","Vault:CAS" }
                     }),
 
             };
