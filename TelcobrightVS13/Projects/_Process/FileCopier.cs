@@ -36,7 +36,7 @@ namespace Process
             TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(
                 schedulerContext, operatorName);
             JobDataMap jobDataMap = schedulerContext.JobDetail.JobDataMap;
-            SyncPair syncPair = tbc.DirectorySettings.SyncPairs[jobDataMap.GetString("SyncPair")];
+            SyncPair syncPair = tbc.DirectorySettings.SyncPairs[jobDataMap.GetString("syncPair")];
             if (syncPair.SkipCopyingToDestination == true) return;
             string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName);
             using (PartnerEntities context = new PartnerEntities(entityConStr))

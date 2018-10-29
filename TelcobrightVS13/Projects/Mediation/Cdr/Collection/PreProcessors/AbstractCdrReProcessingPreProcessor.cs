@@ -17,8 +17,9 @@ namespace TelcobrightMediation
         protected override CdrCollectionResult CreateNewCollectionResult()
         {
             List<CdrExt> newCdrExts = this.CreateNewCdrExts();
-            if (newCdrExts.GroupBy(c => c.UniqueBillId).Any(g => g.Count() > 1))
-                throw new Exception("Duplicate billId for CdrExts in CdrJob");
+            var dupCdrsByBillId = newCdrExts.GroupBy(c => c.UniqueBillId).Where(g => g.Count() > 1).ToList();
+            if (dupCdrsByBillId.Count > 0)
+                throw new Exception("Duplicate billId for CdrExts in CdrJob for billid=" + dupCdrsByBillId.First().First().UniqueBillId);
             var allIdCalls = newCdrExts.Select(c => c.Cdr.IdCall).ToList();
             if (allIdCalls.GroupBy(i => i).Any(g => g.Count() > 1))
             {

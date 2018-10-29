@@ -3470,7 +3470,8 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                 var ddlExcludeLCR = frmSupplierRatePlanInsert.FindControl("ddlExcludeLCR") as DropDownList;
                 NewRate.field3 = ddlExcludeLCR.SelectedValue;
 
-                
+
+                if (NewRate.CountryCode == 0) NewRate.CountryCode = null;//countryCode in ratetaskassign=idpartner,0=null=no partner
                 Context.ratetaskassigns.Add(NewRate);
                 Context.SaveChanges();//entry  has been added to ratetaskassign table
 

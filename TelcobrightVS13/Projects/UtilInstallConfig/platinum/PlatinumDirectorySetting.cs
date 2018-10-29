@@ -149,7 +149,8 @@ namespace InstallConfig
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
-                    SecondaryDirectory = "Downloaded",
+                    SecondaryDirectory = "../secondary",
+                    MoveFilesToSecondaryAfterCopy=true,
                     ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('icdr')
                                                                 and
                                                                 (Name.EndsWith('.0') or Name.EndsWith('.1'))

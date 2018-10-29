@@ -41,7 +41,7 @@ namespace Process
             {
                 TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(
                     schedulerContext, operatorName);
-                SyncPair syncPair = tbc.DirectorySettings.SyncPairs[jobDataMap.GetString("SyncPair")];
+                SyncPair syncPair = tbc.DirectorySettings.SyncPairs[jobDataMap.GetString("syncPair")];
                 if (syncPair.SkipSourceFileListing == true) return;
                 SyncLocation srcLocation = syncPair.SrcSyncLocation;
                 SyncLocation dstLocation = syncPair.DstSyncLocation;

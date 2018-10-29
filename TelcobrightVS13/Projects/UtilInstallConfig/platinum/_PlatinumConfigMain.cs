@@ -41,6 +41,7 @@ namespace InstallConfig
             {
                 SummaryTimeField = SummaryTimeFieldEnum.StartTime,
                 PartialCdrEnabledNeIds =new List<int>(),
+                PartialCdrFlagIndicators = new List<string>(),
                 DescendingOrderWhileListingFiles = false,
                 DescendingOrderWhileProcessingListedFiles = false,
                 ValidationRulesForInconsistentCdrs = inconsistentCdrValRulesGen.GetRules(),
