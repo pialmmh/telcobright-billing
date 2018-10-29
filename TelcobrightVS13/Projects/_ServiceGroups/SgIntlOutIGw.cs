@@ -167,7 +167,8 @@ namespace TelcobrightMediation
 
         public void ValidateInvoiceGenerationParams(object validationInput)
         {
-            
+            InvoiceGenerationValidatorInput input = (InvoiceGenerationValidatorInput)validationInput;
+            XyzRuleHelper.ValidateInvoiceGenerationParams(input, XyzRatingType.Icx);
         }
 
         public InvoiceGenerationInputData ExecInvoicePreProcessing(
