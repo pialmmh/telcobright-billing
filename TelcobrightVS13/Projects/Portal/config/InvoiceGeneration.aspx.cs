@@ -285,10 +285,11 @@ namespace PortalApp.config
                     for (var index = 0; index < this.gvInvoice.Rows.Count; index++)
                     {
                         GridViewRow invoiceRow = this.gvInvoice.Rows[index];
+                        int rowId = Convert.ToInt32(gvInvoice.DataKeys[invoiceRow.RowIndex].Value);
                         CheckBox cbSelect = (CheckBox)invoiceRow.FindControl("cbSelect");
                         if (cbSelect.Checked)
                         {
-                            InvoiceGenRowDataCollector invoiceGenRowDataCollector = boundRowsForInvoiceGeneration[invoiceRow.RowIndex];
+                            InvoiceGenRowDataCollector invoiceGenRowDataCollector = boundRowsForInvoiceGeneration.First(x => x.RowId == rowId);
                             if (invoiceGenRowDataCollector.EndDateTimeLocal <
                                 invoiceGenRowDataCollector.StartDateTimeLocal)
                             {

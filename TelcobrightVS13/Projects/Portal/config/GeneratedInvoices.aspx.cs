@@ -162,6 +162,7 @@ namespace PortalApp.config
                 gvInvoice.DataSource = GetFilteredItems(generatedInvoices);
                 gvInvoice.DataBind();
             }
+            this.mpeInvoice.Hide();
         }
 
         protected void LinkButtonEdit_Click(object sender, EventArgs e)
@@ -176,6 +177,7 @@ namespace PortalApp.config
                 TextBoxInvoiceDate.Text = ((DateTime)invoice.INVOICE_DATE).ToString("yyyy-MM-dd");
             if (invoice.DUE_DATE != null)
                 TextBoxDueDate.Text = ((DateTime)invoice.DUE_DATE).ToString("yyyy-MM-dd");
+            this.upInner.Update();
             this.mpeInvoice.Show();
         }
 
@@ -207,6 +209,11 @@ namespace PortalApp.config
         {
             gvInvoice.DataSource = GetFilteredItems(generatedInvoices);
             gvInvoice.DataBind();
+        }
+
+        protected void btnCancel_OnClick(object sender, EventArgs e)
+        {
+            this.mpeInvoice.Hide();
         }
     }
 }
