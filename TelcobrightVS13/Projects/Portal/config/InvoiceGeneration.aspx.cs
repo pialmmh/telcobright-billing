@@ -66,9 +66,24 @@ namespace PortalApp.config
                         partner partner = allPartners.First(x => x.idPartner == account.idPartner);
                         var serviceFamily = account.serviceFamily;
                         var serviceGroup = account.serviceGroup;
-                        var matchingRatePlanAssignTups = context.rateplanassignmenttuples
-                            .Where(r => r.idpartner == partner.idPartner && r.idService == serviceFamily)
-                            .Select(r => r.id).ToList();
+                        List<int> matchingRatePlanAssignTups;
+                        var idServiceFamiliesNonPartnerAssignable = context.enumservicefamilies
+                            .Where(c => c.PartnerAssignNotNeeded == 1).Select(c => c.id).ToList();
+                        if (idServiceFamiliesNonPartnerAssignable.Contains(serviceFamily))
+                        {
+                            matchingRatePlanAssignTups = context.rateplanassignmenttuples
+                                .Where(r => r.idService == serviceFamily)
+                                .Select(r => r.id).ToList();
+                        }
+                        else
+                        {
+                            matchingRatePlanAssignTups = context.rateplanassignmenttuples
+                                .Where(r => r.idpartner == partner.idPartner && r.idService == serviceFamily)
+                                .Select(r => r.id).ToList();
+                        }
+                        
+                        
+
                         var idBillingRule = context.billingruleassignments
                             .Where(b => matchingRatePlanAssignTups.Contains(b.idRatePlanAssignmentTuple)
                             && b.idServiceGroup==serviceGroup).Select(b=>b.idBillingRule).First();
