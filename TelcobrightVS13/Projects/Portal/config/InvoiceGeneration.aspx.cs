@@ -35,6 +35,7 @@ namespace PortalApp.config
             if (!IsPostBack)
             {
                 Tbc = PageUtil.GetTelcobrightConfig();
+                bool isAlreadyExists = false;
                 using (PartnerEntities context = new PartnerEntities())
                 {
 
@@ -54,7 +55,7 @@ namespace PortalApp.config
                     List<acc_ledger_summary> accLedgerSummaries =
                         context.acc_ledger_summary.Where(x => accountIds.Contains(x.idAccount) && x.AMOUNT != 0)
                             .ToList();
-                    bool isAlreadyExists = false;
+                    
                     ServiceGroupComposer composer=new ServiceGroupComposer();
                     var dir=new DirectoryInfo(PageUtil.GetPortalBinPath());
                     composer.ComposeFromPath(dir.Parent.GetDirectories().Single(d => d.Name == "Extensions")
@@ -62,6 +63,7 @@ namespace PortalApp.config
                     MefServiceGroups = composer.ServiceGroups.ToDictionary(s=>s.Id);
                     foreach (acc_ledger_summary ledgerSummary in accLedgerSummaries)
                     {
+                        isAlreadyExists = false;
                         account account = allAccounts.First(x => x.id == ledgerSummary.idAccount);
                         partner partner = allPartners.First(x => x.idPartner == account.idPartner);
                         var serviceFamily = account.serviceFamily;
