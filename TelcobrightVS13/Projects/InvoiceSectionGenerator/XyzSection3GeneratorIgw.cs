@@ -22,6 +22,7 @@ namespace InvoiceSectionGenerator
                           sum(customercost      )  as Revenue      
                           from {invoiceSectionGeneratorData.CdrOrSummaryTableName}                                             
                           where {invoiceSectionGeneratorData.GetWhereClauseForDateCustomerId("tup_inPartnerId")}
+                          and totalcalls>0
                           group by tup_starttime;";
             return base.GetInvoiceSection<InvoiceSectionDataRowForA2ZVoice>(invoiceSectionGeneratorData, sql);
         }
