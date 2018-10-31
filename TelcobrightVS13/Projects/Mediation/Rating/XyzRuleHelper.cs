@@ -221,15 +221,16 @@ namespace TelcobrightMediation
                 .FirstOrDefault();
             if (usdConversionDated == null)
                 throw new Exception("Usd rate not found in uom_conversion_dated table.");
-            List<acc_chargeable> sampleChargeablesForThisPeriod = context.acc_chargeable.Where(
-                c => c.servicegroup == idserviceGroup && c.transactionTime >= startDate
-                     && c.transactionTime < endDate).Take(20).ToList();
+            DateTime tillDate = startDate.AddDays(1);
+            //List<acc_chargeable> sampleChargeablesForThisPeriod = context.acc_chargeable.Where(
+            //    c => c.servicegroup == idserviceGroup && c.transactionTime >= startDate
+            //         && c.transactionTime < tillDate).Take(20).ToList();
 
-            if (sampleChargeablesForThisPeriod.Any(c => c.OtherDecAmount3 != usdConversionDated.CONVERSION_FACTOR))
-            {
-                throw new Exception(
-                    $"Usd rates for outgoing calls for this period must be {usdConversionDated.CONVERSION_FACTOR}");
-            }
+            //if (sampleChargeablesForThisPeriod.Any(c => c.OtherDecAmount3 != usdConversionDated.CONVERSION_FACTOR))
+            //{
+            //    throw new Exception(
+            //        $"Usd rates for outgoing calls for this period must be {usdConversionDated.CONVERSION_FACTOR}");
+            //}
         }
 
         public static InvoiceGenerationInputData ExecInvoicePreProcessing(

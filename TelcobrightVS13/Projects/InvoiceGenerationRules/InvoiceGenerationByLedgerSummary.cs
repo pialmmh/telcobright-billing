@@ -35,8 +35,12 @@ namespace InvoiceGenerationRules
                 .Where(c => c.idAccount == serviceAccountId && c.transactionDate >= startDate
                 && c.transactionDate <= endDate).OrderBy(c=>c.transactionDate).ToDictionary(c=>c.transactionDate);
             decimal ledgerSummaryAmount = dayWiseLedgerSummaries.Values.Sum(c => c.AMOUNT);
-            decimal? tempTransactionAmount = context.acc_temp_transaction.Where(c => c.glAccountId == serviceAccountId)
-                .Sum(c => (decimal?)c.amount);
+            Dictionary<DateTime, acc_ledger_summary_billed> dayWisetempTransactionAmount = context.acc_ledger_summary_billed
+                .Where(c => c.idAccount == serviceAccountId && c.transactionDate >= startDate
+                            && c.transactionDate <= endDate).OrderBy(c => c.transactionDate).ToDictionary(c => c.transactionDate);
+            decimal tempTransactionAmount = dayWisetempTransactionAmount.Values.Sum(c => c.billedAmount);
+            //decimal? tempTransactionAmount = context.acc_temp_transaction.Where(c => c.glAccountId == serviceAccountId)
+            //    .Sum(c => (decimal?)c.amount);
             decimal invoiceAmount = -1*(ledgerSummaryAmount + Convert.ToDecimal(tempTransactionAmount));
             if (invoiceAmount <= 0)
             {
