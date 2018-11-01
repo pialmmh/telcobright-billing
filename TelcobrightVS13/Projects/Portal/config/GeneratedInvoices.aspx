@@ -75,45 +75,49 @@
 CancelControlID="btnCancel" BackgroundCssClass="modalBackground" BehaviorID="pnlInvoice" >
 </asp:ModalPopupExtender>
 <asp:Panel ID="pnlInvoice" runat="server" BackColor="White" Height="269px" Width="400px" style="display:none;">
-    <table width="100%" style="border:Solid 3px #5d7b9d; width:100%; height:100%" cellpadding="0" cellspacing="0">
-        <tr style="background-color:#5d7b9d">
-            <td colspan="2" style=" height:10%; color:White; font-weight:bold; font-size:larger" align="center">Invoice Details</td>
-        </tr>
-        <tr style="background-color:#5d7b9d">
-            <td colspan="2" style=" height:10%; color:White; font-weight:bold; font-size:larger" align="center">
-                <asp:Label ID="LabelDESCRIPTION" runat="server" />
-            </td>
-        </tr>
-        <tr>
-            <td style="width:120px">Reference Number:</td>
-            <td><asp:TextBox runat="server" ID="TextBoxReferenceNumber"  /></td>
-        </tr>
-        <tr>
-            <td style="width:120px">Invoice Date:</td>
-            <td>
-                <asp:TextBox runat="server" ID="TextBoxInvoiceDate"  />
-                <asp:CalendarExtender ID="CalendarInvoiceDate" runat="server"
-                    TargetControlID="TextBoxInvoiceDate" PopupButtonID="TextBoxInvoiceDate" Format="yyyy-MM-dd">
-                </asp:CalendarExtender>
-            </td>
-        </tr>
-        <tr>
-            <td style="width:120px">Due Date:</td>
-            <td>
-                <asp:TextBox runat="server" ID="TextBoxDueDate"  />
-                <asp:CalendarExtender ID="CalendarExtenderDueDate" runat="server"
-                    TargetControlID="TextBoxDueDate" PopupButtonID="TextBoxDueDate" Format="yyyy-MM-dd">
-                </asp:CalendarExtender>
-            </td>
-        </tr>
-        <tr>
-            <td></td>
-            <td>
-                    <asp:Button ID="btnOK" runat="server" CommandName="OK" Text="OK" OnClick="btnOK_Click"  />
-                    <asp:Button ID="btnCancel" runat="server" Text="Cancel" />
-                    <asp:HiddenField runat="server" ID="hfInvoiceId" />
-            </td>
-        </tr>
-    </table>
+    <asp:UpdatePanel runat="server" ID="upInner" UpdateMode="Conditional">
+        <ContentTemplate>
+            <table width="100%" style="border:Solid 3px #5d7b9d; width:100%; height:100%" cellpadding="0" cellspacing="0">
+                <tr style="background-color:#5d7b9d">
+                    <td colspan="2" style=" height:10%; color:White; font-weight:bold; font-size:larger" align="center">Invoice Details</td>
+                </tr>
+                <tr style="background-color:#5d7b9d">
+                    <td colspan="2" style=" height:10%; color:White; font-weight:bold; font-size:larger" align="center">
+                        <asp:Label ID="LabelDESCRIPTION" runat="server" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:120px">Reference Number:</td>
+                    <td><asp:TextBox runat="server" ID="TextBoxReferenceNumber"  /></td>
+                </tr>
+                <tr>
+                    <td style="width:120px">Invoice Date:</td>
+                    <td>
+                        <asp:TextBox runat="server" ID="TextBoxInvoiceDate"  />
+                        <asp:CalendarExtender ID="CalendarInvoiceDate" runat="server"
+                                              TargetControlID="TextBoxInvoiceDate" PopupButtonID="TextBoxInvoiceDate" Format="yyyy-MM-dd">
+                        </asp:CalendarExtender>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:120px">Due Date:</td>
+                    <td>
+                        <asp:TextBox runat="server" ID="TextBoxDueDate"  />
+                        <asp:CalendarExtender ID="CalendarExtenderDueDate" runat="server"
+                                              TargetControlID="TextBoxDueDate" PopupButtonID="TextBoxDueDate" Format="yyyy-MM-dd">
+                        </asp:CalendarExtender>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <asp:Button ID="btnOK" runat="server" CommandName="OK" Text="OK" OnClick="btnOK_Click"  />
+                        <asp:Button ID="btnCancel" runat="server" Text="Cancel" OnClick="btnCancel_OnClick" />
+                        <asp:HiddenField runat="server" ID="hfInvoiceId" />
+                    </td>
+                </tr>
+            </table>
+        </ContentTemplate>
+    </asp:UpdatePanel>
 </asp:Panel>
 </asp:Content>

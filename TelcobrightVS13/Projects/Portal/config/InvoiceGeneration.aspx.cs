@@ -35,6 +35,7 @@ namespace PortalApp.config
             if (!IsPostBack)
             {
                 Tbc = PageUtil.GetTelcobrightConfig();
+                bool isAlreadyExists = false;
                 using (PartnerEntities context = new PartnerEntities())
                 {
 
@@ -54,7 +55,7 @@ namespace PortalApp.config
                     List<acc_ledger_summary> accLedgerSummaries =
                         context.acc_ledger_summary.Where(x => accountIds.Contains(x.idAccount) && x.AMOUNT != 0)
                             .ToList();
-                    bool isAlreadyExists = false;
+                    
                     ServiceGroupComposer composer=new ServiceGroupComposer();
                     var dir=new DirectoryInfo(PageUtil.GetPortalBinPath());
                     composer.ComposeFromPath(dir.Parent.GetDirectories().Single(d => d.Name == "Extensions")
@@ -62,13 +63,29 @@ namespace PortalApp.config
                     MefServiceGroups = composer.ServiceGroups.ToDictionary(s=>s.Id);
                     foreach (acc_ledger_summary ledgerSummary in accLedgerSummaries)
                     {
+                        isAlreadyExists = false;
                         account account = allAccounts.First(x => x.id == ledgerSummary.idAccount);
                         partner partner = allPartners.First(x => x.idPartner == account.idPartner);
                         var serviceFamily = account.serviceFamily;
                         var serviceGroup = account.serviceGroup;
-                        var matchingRatePlanAssignTups = context.rateplanassignmenttuples
-                            .Where(r => r.idpartner == partner.idPartner && r.idService == serviceFamily)
-                            .Select(r => r.id).ToList();
+                        List<int> matchingRatePlanAssignTups;
+                        var idServiceFamiliesNonPartnerAssignable = context.enumservicefamilies
+                            .Where(c => c.PartnerAssignNotNeeded == 1).Select(c => c.id).ToList();
+                        if (idServiceFamiliesNonPartnerAssignable.Contains(serviceFamily))
+                        {
+                            matchingRatePlanAssignTups = context.rateplanassignmenttuples
+                                .Where(r => r.idService == serviceFamily)
+                                .Select(r => r.id).ToList();
+                        }
+                        else
+                        {
+                            matchingRatePlanAssignTups = context.rateplanassignmenttuples
+                                .Where(r => r.idpartner == partner.idPartner && r.idService == serviceFamily)
+                                .Select(r => r.id).ToList();
+                        }
+                        
+                        
+
                         var idBillingRule = context.billingruleassignments
                             .Where(b => matchingRatePlanAssignTups.Contains(b.idRatePlanAssignmentTuple)
                             && b.idServiceGroup==serviceGroup).Select(b=>b.idBillingRule).First();
@@ -268,10 +285,11 @@ namespace PortalApp.config
                     for (var index = 0; index < this.gvInvoice.Rows.Count; index++)
                     {
                         GridViewRow invoiceRow = this.gvInvoice.Rows[index];
+                        int rowId = Convert.ToInt32(gvInvoice.DataKeys[invoiceRow.RowIndex].Value);
                         CheckBox cbSelect = (CheckBox)invoiceRow.FindControl("cbSelect");
                         if (cbSelect.Checked)
                         {
-                            InvoiceGenRowDataCollector invoiceGenRowDataCollector = boundRowsForInvoiceGeneration[invoiceRow.RowIndex];
+                            InvoiceGenRowDataCollector invoiceGenRowDataCollector = boundRowsForInvoiceGeneration.First(x => x.RowId == rowId);
                             if (invoiceGenRowDataCollector.EndDateTimeLocal <
                                 invoiceGenRowDataCollector.StartDateTimeLocal)
                             {

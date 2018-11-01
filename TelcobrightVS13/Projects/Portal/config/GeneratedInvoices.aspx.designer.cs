@@ -85,6 +85,15 @@ namespace PortalApp.config {
         protected global::System.Web.UI.WebControls.Panel pnlInvoice;
         
         /// <summary>
+        /// upInner control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel upInner;
+        
+        /// <summary>
         /// LabelDESCRIPTION control.
         /// </summary>
         /// <remarks>
