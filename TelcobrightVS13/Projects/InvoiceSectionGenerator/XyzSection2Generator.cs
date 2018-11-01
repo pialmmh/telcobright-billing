@@ -24,7 +24,7 @@ namespace InvoiceSectionGenerator
                        sum(customercost      )  as Revenue      
                        from {invoiceSectionGeneratorData.CdrOrSummaryTableName}                                               
                        where {invoiceSectionGeneratorData.GetWhereClauseForDateCustomerId("tup_inPartnerId")}
-                       and totalcalls>0
+                       and successfulcalls>0
                        group by tup_outpartnerid) x                     
                        left join partner p
                        on x.tup_outpartnerid=p.idpartner;";

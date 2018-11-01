@@ -39,9 +39,9 @@ namespace ReportGenerator.Reports.InvoiceReports.IGW
             this.DataSource = invoiceBasicDatas;
 
             #region Page Header
-            xrLabelVatRegNo.Text = "VAT Reg. No. 18141080328";
+            xrLabelVatRegNo.Text = "VAT Reg. No. 001288116";
             xrLabelPartnerName.Text = invoiceMap["companyName"];
-            xrLabelPartnerVatRegNo.Text = invoiceMap["vatRegNo"];
+            xrLabelPartnerVatRegNo.Text = "VAT Reg. No. " + invoiceMap["vatRegNo"];
             //            xrLabelType.Text = string.Format("Type: {0}", invoiceMap["customerType"]);
 
             DateTime startDate = DateTime.ParseExact(invoiceMap["billingStartDate"], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
