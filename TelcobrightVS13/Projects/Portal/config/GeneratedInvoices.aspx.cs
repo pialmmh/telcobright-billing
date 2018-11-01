@@ -169,7 +169,8 @@ namespace PortalApp.config
         {
             LinkButton btnEdit = sender as LinkButton;
             GridViewRow gvrow = (GridViewRow)btnEdit.NamingContainer;
-            invoice invoice = generatedInvoices[gvrow.RowIndex];
+            int INVOICE_ID = Convert.ToInt32(gvInvoice.DataKeys[gvrow.RowIndex].Value);
+            invoice invoice = generatedInvoices.First(x => x.INVOICE_ID == INVOICE_ID);
             hfInvoiceId.Value = invoice.INVOICE_ID.ToString();
             LabelDESCRIPTION.Text = invoice.DESCRIPTION;
             TextBoxReferenceNumber.Text = invoice.REFERENCE_NUMBER;
