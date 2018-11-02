@@ -57,7 +57,7 @@ namespace ReportGenerator.Reports.InvoiceReports.IGW
             xrTableCellReference.DataBindings.Add("Text", this.DataSource, "Reference");
             xrTableCellDestination.DataBindings.Add("Text", this.DataSource, "Destination");
             xrTableCellTotalCalls.DataBindings.Add("Text", this.DataSource, "TotalCalls", "{0:n0}");
-            xrTableCellTotalMinutes.DataBindings.Add("Text", this.DataSource, "Quantity", "{0:n2}");
+            xrTableCellTotalMinutes.DataBindings.Add("Text", this.DataSource, "TotalMinutes", "{0:n2}");
             xrTableCellRate.DataBindings.Add("Text", this.DataSource, "Rate", "{0:##0.######}");
             xrTableCellRevenue.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
             xrTableCellAmount.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
