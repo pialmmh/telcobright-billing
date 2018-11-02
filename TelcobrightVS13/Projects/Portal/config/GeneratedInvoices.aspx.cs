@@ -45,13 +45,17 @@ namespace PortalApp.config
                 invoiceTemplateComposer.ComposeFromPath(dllDir.FullName);
                 invoiceTemplates = invoiceTemplateComposer.InvoiceTemplates.ToDictionary(c => c.TemplateName);
 
+                TextBoxYear.Text = DateTime.Now.Year.ToString();
+                DropDownListMonth.SelectedValue = DateTime.Now.Month.ToString("00");
+
                 using (PartnerEntities context = new PartnerEntities())
                 {
                     allPartners = context.partners.OrderBy(i => i.PartnerName).ToList();
                     allAccounts = context.accounts.ToList();
 
-                    generatedInvoices = context.invoices.Where(x => x.PAID_DATE == null).OrderByDescending(x => x.INVOICE_DATE).ToList();
-                    gvInvoice.DataSource = GetFilteredItems(generatedInvoices);
+                    List<invoice> invoices = context.invoices.Where(x => x.PAID_DATE == null).OrderByDescending(x => x.INVOICE_DATE).ToList();
+                    generatedInvoices = GetFilteredItems(invoices);
+                    gvInvoice.DataSource = generatedInvoices;
                     gvInvoice.DataBind();
 
                     ddlistPartnerFilter.Items.Clear();
@@ -73,72 +77,78 @@ namespace PortalApp.config
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                int INVOICE_ID = Convert.ToInt32(DataBinder.Eval(e.Row.DataItem, "INVOICE_ID"));
-                invoice invoice = generatedInvoices.First(x => x.INVOICE_ID == INVOICE_ID);
-                invoice_item invoiceItem = invoice.invoice_item.Single();
-                Dictionary<string, string> invoiceMap = JsonConvert.DeserializeObject<Dictionary<string, string>>(invoiceItem.JSON_DETAIL);
-                List<KeyValuePair<string, string>> sectionData = invoiceMap.Where(kv => kv.Key.StartsWith("Section-")).ToList();
-
-                Label lblPartner = (Label)e.Row.FindControl("lblPartner");
-                account account = allAccounts.First(x => x.id == invoice.BILLING_ACCOUNT_ID);
-                lblPartner.Text = allPartners.First(x => x.idPartner == account.idPartner).PartnerName;
-
-                // Invoice Date
-                Label lblInvoiceDate = (Label)e.Row.FindControl("lblInvoiceDate");
-                var dtInvoice = DataBinder.Eval(e.Row.DataItem, "INVOICE_DATE");
-                if (dtInvoice != null)
+                using (PartnerEntities context = new PartnerEntities())
                 {
-                    DateTime invoiceDate = DateTime.Parse(dtInvoice.ToString());
-                    lblInvoiceDate.Text = ((DateTime)invoiceDate).ToString("yyyy-MM-dd");
-                }
-                else lblInvoiceDate.Text = string.Empty;
-                // Due Date
-                Label lblDueDate = (Label)e.Row.FindControl("lblDueDate");
-                var dtDue = DataBinder.Eval(e.Row.DataItem, "Due_DATE");
-                if (dtDue != null)
-                {
-                    DateTime dueDate = DateTime.Parse(dtDue.ToString());
-                    lblDueDate.Text = ((DateTime)dueDate).ToString("yyyy-MM-dd");
-                }
-                else lblDueDate.Text = string.Empty;
+                    int INVOICE_ID = Convert.ToInt32(DataBinder.Eval(e.Row.DataItem, "INVOICE_ID"));
+                    invoice invoice = context.invoices.First(x => x.INVOICE_ID == INVOICE_ID);
+                    invoice_item invoiceItem = invoice.invoice_item.Single();
+                    Dictionary<string, string> invoiceMap = JsonConvert.DeserializeObject<Dictionary<string, string>>(invoiceItem.JSON_DETAIL);
+                    List<KeyValuePair<string, string>> sectionData = invoiceMap.Where(kv => kv.Key.StartsWith("Section-")).ToList();
 
-                int sectionNumber = 0;
-                foreach (KeyValuePair<string, string> item in sectionData)
-                {
-                    sectionNumber += 1;
-                    LinkButton lb = new LinkButton();
-                    lb.ID = "btnViewSection_" + sectionNumber;
-                    lb.Text = "Section " + sectionNumber;
-                    lb.CommandName = item.Key;
-                    lb.Click += ViewReportOnClick;
-                    e.Row.Cells[8].Controls.Add(lb);
+                    Label lblPartner = (Label)e.Row.FindControl("lblPartner");
+                    account account = allAccounts.First(x => x.id == invoice.BILLING_ACCOUNT_ID);
+                    lblPartner.Text = allPartners.First(x => x.idPartner == account.idPartner).PartnerName;
 
-                    Label lbl = new Label();
-                    lbl.Text = " ";
-                    e.Row.Cells[8].Controls.Add(lbl);
+                    // Invoice Date
+                    Label lblInvoiceDate = (Label)e.Row.FindControl("lblInvoiceDate");
+                    var dtInvoice = DataBinder.Eval(e.Row.DataItem, "INVOICE_DATE");
+                    if (dtInvoice != null)
+                    {
+                        DateTime invoiceDate = DateTime.Parse(dtInvoice.ToString());
+                        lblInvoiceDate.Text = ((DateTime)invoiceDate).ToString("yyyy-MM-dd");
+                    }
+                    else lblInvoiceDate.Text = string.Empty;
+                    // Due Date
+                    Label lblDueDate = (Label)e.Row.FindControl("lblDueDate");
+                    var dtDue = DataBinder.Eval(e.Row.DataItem, "Due_DATE");
+                    if (dtDue != null)
+                    {
+                        DateTime dueDate = DateTime.Parse(dtDue.ToString());
+                        lblDueDate.Text = ((DateTime)dueDate).ToString("yyyy-MM-dd");
+                    }
+                    else lblDueDate.Text = string.Empty;
+
+                    int sectionNumber = 0;
+                    foreach (KeyValuePair<string, string> item in sectionData)
+                    {
+                        sectionNumber += 1;
+                        LinkButton lb = new LinkButton();
+                        lb.ID = "btnViewSection_" + sectionNumber;
+                        lb.Text = "Section " + sectionNumber;
+                        lb.CommandName = item.Key;
+                        lb.Click += ViewReportOnClick;
+                        e.Row.Cells[8].Controls.Add(lb);
+
+                        Label lbl = new Label();
+                        lbl.Text = " ";
+                        e.Row.Cells[8].Controls.Add(lbl);
+                    }
                 }
             }
         }
 
         private void ViewReportOnClick(object sender, EventArgs eventArgs)
         {
-            LinkButton linkButton = (LinkButton)sender;
-            String reportName = linkButton.CommandName;
-            int startPos = reportName.LastIndexOf("Template-", StringComparison.Ordinal) + "Template-".Length;
-            int length = reportName.Length - startPos;
-            reportName = reportName.Substring(startPos, length);
+            using (PartnerEntities context = new PartnerEntities())
+            {
+                LinkButton linkButton = (LinkButton)sender;
+                String reportName = linkButton.CommandName;
+                int startPos = reportName.LastIndexOf("Template-", StringComparison.Ordinal) + "Template-".Length;
+                int length = reportName.Length - startPos;
+                reportName = reportName.Substring(startPos, length);
 
-            IInvoiceTemplate template = invoiceTemplates[reportName];
+                IInvoiceTemplate template = invoiceTemplates[reportName];
 
-            GridViewRow gvrow = (GridViewRow)linkButton.NamingContainer;
-            int INVOICE_ID = Convert.ToInt32(gvInvoice.DataKeys[gvrow.RowIndex].Value);
-            invoice invoice = generatedInvoices.First(x => x.INVOICE_ID == INVOICE_ID);
+                GridViewRow gvrow = (GridViewRow)linkButton.NamingContainer;
+                int INVOICE_ID = Convert.ToInt32(gvInvoice.DataKeys[gvrow.RowIndex].Value);
+                invoice invoice = context.invoices.First(x => x.INVOICE_ID == INVOICE_ID);
 
-            String refNo = Guid.NewGuid().ToString();
-            template.GenerateInvoice(invoice);
-            this.Session[refNo] = template;
-            Response.Redirect("~/config/ViewReport.aspx?refNo=" + HttpUtility.UrlEncode(refNo), false);
-            Context.ApplicationInstance.CompleteRequest();
+                String refNo = Guid.NewGuid().ToString();
+                template.GenerateInvoice(invoice);
+                this.Session[refNo] = template;
+                Response.Redirect("~/config/ViewReport.aspx?refNo=" + HttpUtility.UrlEncode(refNo), false);
+                Context.ApplicationInstance.CompleteRequest();
+            }
 
             //string pathtofile = string.Format("{0}\\{1}.pdf", Server.MapPath("/InvoicePdfs"), refNo);
             //template.SaveToPdf(pathtofile);
@@ -158,8 +168,9 @@ namespace PortalApp.config
                 invoice.DUE_DATE = Convert.ToDateTime(TextBoxDueDate.Text);
                 context.SaveChanges();
 
-                generatedInvoices = context.invoices.Where(x => x.PAID_DATE == null).OrderByDescending(x => x.INVOICE_DATE).ToList();
-                gvInvoice.DataSource = GetFilteredItems(generatedInvoices);
+                List<invoice> invoices = context.invoices.Where(x => x.PAID_DATE == null).OrderByDescending(x => x.INVOICE_DATE).ToList();
+                generatedInvoices = GetFilteredItems(invoices);
+                gvInvoice.DataSource = generatedInvoices;
                 gvInvoice.DataBind();
             }
             this.mpeInvoice.Hide();
@@ -167,19 +178,22 @@ namespace PortalApp.config
 
         protected void LinkButtonEdit_Click(object sender, EventArgs e)
         {
-            LinkButton btnEdit = sender as LinkButton;
-            GridViewRow gvrow = (GridViewRow)btnEdit.NamingContainer;
-            int INVOICE_ID = Convert.ToInt32(gvInvoice.DataKeys[gvrow.RowIndex].Value);
-            invoice invoice = generatedInvoices.First(x => x.INVOICE_ID == INVOICE_ID);
-            hfInvoiceId.Value = invoice.INVOICE_ID.ToString();
-            LabelDESCRIPTION.Text = invoice.DESCRIPTION;
-            TextBoxReferenceNumber.Text = invoice.REFERENCE_NUMBER;
-            if (invoice.INVOICE_DATE !=null)
-                TextBoxInvoiceDate.Text = ((DateTime)invoice.INVOICE_DATE).ToString("yyyy-MM-dd");
-            if (invoice.DUE_DATE != null)
-                TextBoxDueDate.Text = ((DateTime)invoice.DUE_DATE).ToString("yyyy-MM-dd");
-            this.upInner.Update();
-            this.mpeInvoice.Show();
+            using (PartnerEntities context = new PartnerEntities())
+            {
+                LinkButton btnEdit = sender as LinkButton;
+                GridViewRow gvrow = (GridViewRow)btnEdit.NamingContainer;
+                int INVOICE_ID = Convert.ToInt32(gvInvoice.DataKeys[gvrow.RowIndex].Value);
+                invoice invoice = context.invoices.First(x => x.INVOICE_ID == INVOICE_ID);
+                hfInvoiceId.Value = invoice.INVOICE_ID.ToString();
+                LabelDESCRIPTION.Text = invoice.DESCRIPTION;
+                TextBoxReferenceNumber.Text = invoice.REFERENCE_NUMBER;
+                if (invoice.INVOICE_DATE != null)
+                    TextBoxInvoiceDate.Text = ((DateTime)invoice.INVOICE_DATE).ToString("yyyy-MM-dd");
+                if (invoice.DUE_DATE != null)
+                    TextBoxDueDate.Text = ((DateTime)invoice.DUE_DATE).ToString("yyyy-MM-dd");
+                this.upInner.Update();
+                this.mpeInvoice.Show();
+            }
         }
 
         private List<invoice> GetFilteredItems(List<invoice> generatedInvoices)
@@ -196,6 +210,14 @@ namespace PortalApp.config
                         .Where(x => accountIds.Contains((long) x.BILLING_ACCOUNT_ID)).ToList();
                 }
 
+                if (cbMonthFilter.Checked)
+                {
+                    DateTime fromDate = new DateTime(Convert.ToInt32(TextBoxYear.Text), Convert.ToInt32(DropDownListMonth.SelectedValue), 1);
+                    DateTime tillDate = fromDate.AddMonths(1).AddDays(-1);
+                    filteredInvoices = filteredInvoices
+                        .Where(x => x.INVOICE_DATE >= fromDate && x.INVOICE_DATE <= tillDate).ToList();
+                }
+
                 return filteredInvoices;
             }
         }
@@ -208,13 +230,24 @@ namespace PortalApp.config
 
         protected void btnShow_OnClick(object sender, EventArgs e)
         {
-            gvInvoice.DataSource = GetFilteredItems(generatedInvoices);
-            gvInvoice.DataBind();
+            using (PartnerEntities context = new PartnerEntities())
+            {
+                List<invoice> invoices = context.invoices.Where(x => x.PAID_DATE == null).OrderByDescending(x => x.INVOICE_DATE).ToList();
+                generatedInvoices = GetFilteredItems(invoices);
+                gvInvoice.DataSource = generatedInvoices;
+                gvInvoice.DataBind();
+            }
         }
 
         protected void btnCancel_OnClick(object sender, EventArgs e)
         {
             this.mpeInvoice.Hide();
+        }
+
+        protected void cbMonthFilter_OnCheckedChanged(object sender, EventArgs e)
+        {
+            TextBoxYear.Enabled = cbMonthFilter.Checked;
+            DropDownListMonth.Enabled = cbMonthFilter.Checked;
         }
     }
 }

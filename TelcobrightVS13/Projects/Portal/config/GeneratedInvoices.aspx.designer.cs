@@ -40,6 +40,33 @@ namespace PortalApp.config {
         protected global::System.Web.UI.WebControls.DropDownList ddlistPartnerFilter;
         
         /// <summary>
+        /// cbMonthFilter control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbMonthFilter;
+        
+        /// <summary>
+        /// TextBoxYear control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TextBoxYear;
+        
+        /// <summary>
+        /// DropDownListMonth control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList DropDownListMonth;
+        
+        /// <summary>
         /// btnShow control.
         /// </summary>
         /// <remarks>
