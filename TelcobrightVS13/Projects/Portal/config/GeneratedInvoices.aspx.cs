@@ -38,7 +38,7 @@ namespace PortalApp.config
             if (!IsPostBack)
             {
                 Tbc = PageUtil.GetTelcobrightConfig();
-
+                List<KeyValuePair<Regex, string>> serviceAliases = Tbc.ServiceAliasesRegex;
                 InvoiceTemplateComposer invoiceTemplateComposer = new InvoiceTemplateComposer();
                 DirectoryInfo dllDir = new DirectoryInfo(PageUtil.GetPortalBinPath()).Parent.GetDirectories("Extensions")
                     .Single().GetDirectories("InvoiceTemplates").Single();
@@ -63,6 +63,13 @@ namespace PortalApp.config
                     foreach (partner p in allPartners)
                     {
                         ddlistPartnerFilter.Items.Add(new ListItem(p.PartnerName, p.idPartner.ToString()));
+                    }
+
+                    ddlistServiceAccountFilter.Items.Clear();
+                    ddlistServiceAccountFilter.Items.Add(new ListItem(" [All]", "-1"));
+                    foreach (var kv in serviceAliases)
+                    {
+                        ddlistServiceAccountFilter.Items.Add(kv.Value);
                     }
                 }
             }
@@ -210,6 +217,26 @@ namespace PortalApp.config
                         .Where(x => accountIds.Contains((long) x.BILLING_ACCOUNT_ID)).ToList();
                 }
 
+                if (cbServiceAccountFilter.Checked && ddlistServiceAccountFilter.SelectedIndex != 0)
+                {
+                    List<KeyValuePair<Regex, string>> serviceAliases = Tbc.ServiceAliasesRegex;
+                    List<invoice> tempInvoices = new List<invoice>();
+                    foreach (invoice filteredInvoice in filteredInvoices)
+                    {
+                        account account = context.accounts.First(x => x.id == filteredInvoice.BILLING_ACCOUNT_ID);
+                        foreach (var kv in serviceAliases)
+                        {
+                            var regex = kv.Key;
+                            if (regex.Matches(account.accountName).Count > 0 && kv.Value == ddlistServiceAccountFilter.SelectedValue)
+                            {
+                                tempInvoices.Add(filteredInvoice);
+                                break;
+                            }
+                        }
+                    }
+                    filteredInvoices = tempInvoices;
+                }
+
                 if (cbMonthFilter.Checked)
                 {
                     DateTime fromDate = new DateTime(Convert.ToInt32(TextBoxYear.Text), Convert.ToInt32(DropDownListMonth.SelectedValue), 1);
@@ -248,6 +275,12 @@ namespace PortalApp.config
         {
             TextBoxYear.Enabled = cbMonthFilter.Checked;
             DropDownListMonth.Enabled = cbMonthFilter.Checked;
+        }
+
+        protected void cbServiceAccountFilter_OnCheckedChanged(object sender, EventArgs e)
+        {
+            ddlistServiceAccountFilter.SelectedIndex = -1;
+            ddlistServiceAccountFilter.Enabled = cbServiceAccountFilter.Checked;
         }
     }
 }

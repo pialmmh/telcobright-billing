@@ -14,6 +14,10 @@
             <ContentTemplate>
                 <fieldset>
                     <div>
+                        <asp:CheckBox runat="server" ID="cbServiceAccountFilter" Text="Service Account" Checked="False" 
+                                      OnCheckedChanged="cbServiceAccountFilter_OnCheckedChanged" AutoPostBack="True" />
+                        <asp:DropDownList ID="ddlistServiceAccountFilter" runat="server" 
+                                          Enabled="False" AutoPostBack="False" />                        
                         <asp:CheckBox runat="server" ID="cbPartnerFilter" Text="Partner" Checked="False" 
                                       OnCheckedChanged="cbPartnerFilter_OnCheckedChanged" AutoPostBack="True" />
                         <asp:DropDownList ID="ddlistPartnerFilter" runat="server" 
