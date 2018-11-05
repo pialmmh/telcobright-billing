@@ -21,6 +21,13 @@ namespace InstallConfig
                     new AccBalanceThresholdAction(thresholdNumber:1),
                     new AccBalanceThresholdAction(thresholdNumber:2),
                     new AccBalanceThresholdAction(thresholdNumber:3)
+                },
+                InvoiceOverdueInDay = 30,
+                CronExpressionForBillingCycle = "0 0 0 1 * ? *",
+                TimeCycleFactory = new TimeCycleFactory()
+                {
+                    TimeCycleName = "MonthlyTimeCycle",
+                    Duration = 1
                 }
             },
             new BillingRule(id:2,ruleName: "OnFirstDayOfEachMonth,ForPreviousMonth")
