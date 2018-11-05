@@ -28,7 +28,6 @@ namespace PortalApp.config
     public partial class GeneratedInvoices : System.Web.UI.Page
     {
         private static TelcobrightConfig Tbc { get; set; }
-        private static Dictionary<string, IInvoiceTemplate> invoiceTemplates { get; set; }
         private static List<invoice> generatedInvoices { get; set; }
         private static List<partner> allPartners { get; set; }
         private static List<account> allAccounts { get; set; }
@@ -39,11 +38,6 @@ namespace PortalApp.config
             {
                 Tbc = PageUtil.GetTelcobrightConfig();
                 List<KeyValuePair<Regex, string>> serviceAliases = Tbc.ServiceAliasesRegex;
-                InvoiceTemplateComposer invoiceTemplateComposer = new InvoiceTemplateComposer();
-                DirectoryInfo dllDir = new DirectoryInfo(PageUtil.GetPortalBinPath()).Parent.GetDirectories("Extensions")
-                    .Single().GetDirectories("InvoiceTemplates").Single();
-                invoiceTemplateComposer.ComposeFromPath(dllDir.FullName);
-                invoiceTemplates = invoiceTemplateComposer.InvoiceTemplates.ToDictionary(c => c.TemplateName);
 
                 TextBoxYear.Text = DateTime.Now.Year.ToString();
                 DropDownListMonth.SelectedValue = DateTime.Now.Month.ToString("00");
@@ -123,7 +117,8 @@ namespace PortalApp.config
                         lb.ID = "btnViewSection_" + sectionNumber;
                         lb.Text = "Section " + sectionNumber;
                         lb.CommandName = item.Key;
-                        lb.Click += ViewReportOnClick;
+                        //lb.Click += ViewReportOnClick;
+                        lb.OnClientClick = "window.open('PrepareReport.aspx?reportName=" + HttpUtility.HtmlDecode(item.Key) + "&invoiceId=" + DataBinder.Eval(e.Row.DataItem, "INVOICE_ID") + "'); return false;";
                         e.Row.Cells[8].Controls.Add(lb);
 
                         Label lbl = new Label();
@@ -132,36 +127,6 @@ namespace PortalApp.config
                     }
                 }
             }
-        }
-
-        private void ViewReportOnClick(object sender, EventArgs eventArgs)
-        {
-            using (PartnerEntities context = new PartnerEntities())
-            {
-                LinkButton linkButton = (LinkButton)sender;
-                String reportName = linkButton.CommandName;
-                int startPos = reportName.LastIndexOf("Template-", StringComparison.Ordinal) + "Template-".Length;
-                int length = reportName.Length - startPos;
-                reportName = reportName.Substring(startPos, length);
-
-                IInvoiceTemplate template = invoiceTemplates[reportName];
-
-                GridViewRow gvrow = (GridViewRow)linkButton.NamingContainer;
-                int INVOICE_ID = Convert.ToInt32(gvInvoice.DataKeys[gvrow.RowIndex].Value);
-                invoice invoice = context.invoices.First(x => x.INVOICE_ID == INVOICE_ID);
-
-                String refNo = Guid.NewGuid().ToString();
-                template.GenerateInvoice(invoice);
-                this.Session[refNo] = template;
-                Response.Redirect("~/config/ViewReport.aspx?refNo=" + HttpUtility.UrlEncode(refNo), false);
-                Context.ApplicationInstance.CompleteRequest();
-            }
-
-            //string pathtofile = string.Format("{0}\\{1}.pdf", Server.MapPath("/InvoicePdfs"), refNo);
-            //template.SaveToPdf(pathtofile);
-            // show pdf
-            //Response.Redirect("~/config/ViewPDF.aspx?refNo=" + HttpUtility.UrlEncode(refNo), false);
-            //Context.ApplicationInstance.CompleteRequest();
         }
 
         protected void btnOK_Click(object sender, EventArgs e)
