@@ -25,9 +25,9 @@ namespace InvoiceSectionGenerator
                        from {invoiceSectionGeneratorData.CdrOrSummaryTableName}                                               
                        where {invoiceSectionGeneratorData.GetWhereClauseForDateCustomerId("tup_inPartnerId")}
                        and successfulcalls>0
-                       group by tup_outpartnerid) x                     
+                       group by tup_sourceId) x                     
                        left join partner p
-                       on x.tup_outpartnerid=p.idpartner;";
+                       on x.tup_sourceId=p.idpartner;";
             return base.GetInvoiceSection<InvoiceSectionDataRowForA2ZVoice>(invoiceSectionGeneratorData, sql);
         }
     }
