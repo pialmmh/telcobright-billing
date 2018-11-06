@@ -15,7 +15,7 @@ namespace InvoiceSectionGenerator
             string sql = $@"select p.partnername as OutPartnerName,x.TotalCalls,x.TotalMinutes,x.XAmount,
                        x.YAmount,x.XYAmount,x.Revenue from
                        (select                                                         
-                       tup_outpartnerid,
+                       tup_sourceId,
                        sum(successfulcalls 	)	as TotalCalls,    
                        sum(roundedduration   )/60  as TotalMinutes,   
                        sum(longDecimalAmount1)  as XAmount,
