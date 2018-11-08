@@ -49,12 +49,12 @@ namespace TelcobrightMediation
             }
             List<jobsegment> jobSegments = new List<jobsegment>();
             long totalOfAllSegments = 0;
+            int currentSegmentNumber = 0;
             foreach (var partitionDate in partitionDates)
             {
                 bool recordExists = true;
                 long maxRowIdForThisDate = 0;
-                int currentSegmentNumber = 0;
-                while (recordExists)
+                                while (recordExists)
                 {
                     string sql = baseSql + " and " + partitionDate.ToMySqlWhereClauseForOneDay(partitionColName) +
                                  " and " + rowIdColName + "> " + maxRowIdForThisDate +

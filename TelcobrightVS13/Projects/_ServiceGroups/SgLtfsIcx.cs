@@ -104,6 +104,9 @@ namespace TelcobrightMediation
 
         public InvoiceGenerationInputData ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData)
         {
+            Dictionary<string, string> jobParamsMap = invoiceGenerationInputData.JsonDetail;
+            invoiceGenerationInputData.JsonDetail = jobParamsMap;
+            invoiceGenerationInputData.JsonDetail.Add("vat", ".15");//todo: for now harcode
             return invoiceGenerationInputData;
         }
 

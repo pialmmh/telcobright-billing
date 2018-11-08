@@ -68,6 +68,9 @@
     <Compile Include="A2ZInvoiceSection2GeneratorWithCurrencyConversion.cs" />
     <Compile Include="A2ZInvoiceSection3GeneratorWithTax.cs" />
     <Compile Include="A2ZInvoiceSection3GeneratorWithCurrencyConversion.cs" />
+    <Compile Include="TollFreeInvoiceSection1GeneratorWithTax.cs" />
+    <Compile Include="TollFreeInvoiceSection2GeneratorWithTax.cs" />
+    <Compile Include="TollFreeInvoiceSection3GeneratorWithTax.cs" />
     <Compile Include="TollFreeInvoiceSection3Generator.cs" />
     <Compile Include="TollFreeInvoiceSection2Generator.cs" />
     <Compile Include="TollFreeInvoiceSection1Generator.cs" />

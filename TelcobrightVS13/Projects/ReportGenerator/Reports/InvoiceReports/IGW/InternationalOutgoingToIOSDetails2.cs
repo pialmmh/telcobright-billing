@@ -61,17 +61,20 @@ namespace ReportGenerator.Reports.InvoiceReports.IGW
             xrTableCellXAMOUNT.DataBindings.Add("Text", this.DataSource, "XAmount", "{0:n2}");
             xrTableCellYAMOUNT.DataBindings.Add("Text", this.DataSource, "YAmount", "{0:n2}");
             xrTableCellXYAMOUNT.DataBindings.Add("Text", this.DataSource, "XYAmount", "{0:n2}");
-            xrTableCellRevenue.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
-            xrTableCellAmount.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
+            xrTableCellRevenue.DataBindings.Add("Text", this.DataSource, "Revenue", "{0:n2}");
+            xrTableCellAmount.DataBindings.Add("Text", this.DataSource, "Revenue", "{0:n2}");
 
-            xrTableCellRevenueTotal.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
-            xrTableCellSubTotalAmount.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
+            xrTableCellRevenueTotal.DataBindings.Add("Text", this.DataSource, "Revenue", "{0:n2}");
+            xrTableCellSubTotalAmount.DataBindings.Add("Text", this.DataSource, "Revenue", "{0:n2}");
             #endregion
         }
 
         private List<InvoiceSectionDataRowForA2ZVoice> GetReportData(invoice invoice)
         {
             invoice_item invoiceItem = invoice.invoice_item.Single();
+            Dictionary<string, string> invoiceMap =
+                JsonConvert.DeserializeObject<Dictionary<string, string>>(invoiceItem.JSON_DETAIL);
+            decimal usdRate = Convert.ToDecimal(invoiceMap.Where(x => x.Key == "usdRate").Select(x => x.Value).Single());
             InvoiceSectionDataRetriever<InvoiceSectionDataRowForA2ZVoice> sectionDataRetriever =
                 new InvoiceSectionDataRetriever<InvoiceSectionDataRowForA2ZVoice>();
             List<InvoiceSectionDataRowForA2ZVoice> sectionData =
@@ -79,6 +82,7 @@ namespace ReportGenerator.Reports.InvoiceReports.IGW
             foreach (InvoiceSectionDataRowForA2ZVoice item in sectionData)
             {
                 item.Reference = invoiceItem.PRODUCT_ID;
+                item.YAmount = item.YAmount * usdRate;
             }
             return sectionData;
         }

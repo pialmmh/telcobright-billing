@@ -84,7 +84,7 @@
             this.xrTableCellSubTotalAmount = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableRow4 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell7 = new DevExpress.XtraReports.UI.XRTableCell();
-            this.xrTableCell8 = new DevExpress.XtraReports.UI.XRTableCell();
+            this.xrTableCellVAT = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableRow5 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell9 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCellInvoiceTotal = new DevExpress.XtraReports.UI.XRTableCell();
@@ -659,7 +659,7 @@
             // 
             this.xrTableRow4.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
             this.xrTableCell7,
-            this.xrTableCell8});
+            this.xrTableCellVAT});
             this.xrTableRow4.Name = "xrTableRow4";
             this.xrTableRow4.Weight = 1D;
             // 
@@ -669,17 +669,19 @@
             this.xrTableCell7.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 0, 0, 0, 100F);
             this.xrTableCell7.StylePriority.UsePadding = false;
             this.xrTableCell7.StylePriority.UseTextAlignment = false;
-            this.xrTableCell7.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
+            this.xrTableCell7.Text = "VAT (15%)";
+            this.xrTableCell7.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
             this.xrTableCell7.Weight = 1.0522695972601954D;
             // 
-            // xrTableCell8
+            // xrTableCellVAT
             // 
-            this.xrTableCell8.Name = "xrTableCell8";
-            this.xrTableCell8.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 2, 0, 0, 100F);
-            this.xrTableCell8.StylePriority.UsePadding = false;
-            this.xrTableCell8.StylePriority.UseTextAlignment = false;
-            this.xrTableCell8.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
-            this.xrTableCell8.Weight = 0.46217354288003354D;
+            this.xrTableCellVAT.Name = "xrTableCellVAT";
+            this.xrTableCellVAT.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 2, 0, 0, 100F);
+            this.xrTableCellVAT.StylePriority.UsePadding = false;
+            this.xrTableCellVAT.StylePriority.UseTextAlignment = false;
+            this.xrTableCellVAT.Text = "Amount";
+            this.xrTableCellVAT.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
+            this.xrTableCellVAT.Weight = 0.46217354288003354D;
             // 
             // xrTableRow5
             // 
@@ -832,7 +834,7 @@
         private DevExpress.XtraReports.UI.XRTableCell xrTableCellSubTotalAmount;
         private DevExpress.XtraReports.UI.XRTableRow xrTableRow4;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell7;
-        private DevExpress.XtraReports.UI.XRTableCell xrTableCell8;
+        private DevExpress.XtraReports.UI.XRTableCell xrTableCellVAT;
         private DevExpress.XtraReports.UI.XRTableRow xrTableRow5;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell9;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCellInvoiceTotal;

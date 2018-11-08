@@ -14,10 +14,30 @@
             <ContentTemplate>
                 <fieldset>
                     <div>
+                        <asp:CheckBox runat="server" ID="cbServiceAccountFilter" Text="Service Account" Checked="False" 
+                                      OnCheckedChanged="cbServiceAccountFilter_OnCheckedChanged" AutoPostBack="True" />
+                        <asp:DropDownList ID="ddlistServiceAccountFilter" runat="server" 
+                                          Enabled="False" AutoPostBack="False" />                        
                         <asp:CheckBox runat="server" ID="cbPartnerFilter" Text="Partner" Checked="False" 
                                       OnCheckedChanged="cbPartnerFilter_OnCheckedChanged" AutoPostBack="True" />
                         <asp:DropDownList ID="ddlistPartnerFilter" runat="server" 
                                           Enabled="False" AutoPostBack="False" />
+                        <asp:CheckBox runat="server" ID="cbMonthFilter" Text="Year/Month:" Checked="True" AutoPostBack="True" OnCheckedChanged="cbMonthFilter_OnCheckedChanged"/>
+                        <asp:TextBox ID="TextBoxYear" runat="server" Text="" Width="30px"></asp:TextBox>
+                        <asp:DropDownList ID="DropDownListMonth" runat="server" AutoPostBack="False">
+                            <asp:ListItem Value="01">Jan</asp:ListItem>
+                            <asp:ListItem Value="02">Feb</asp:ListItem>
+                            <asp:ListItem Value="03">Mar</asp:ListItem>
+                            <asp:ListItem Value="04">Apr</asp:ListItem>
+                            <asp:ListItem Value="05">May</asp:ListItem>
+                            <asp:ListItem Value="06">Jun</asp:ListItem>
+                            <asp:ListItem Value="07">Jul</asp:ListItem>
+                            <asp:ListItem Value="08">Aug</asp:ListItem>
+                            <asp:ListItem Value="09">Sep</asp:ListItem>
+                            <asp:ListItem Value="10">Oct</asp:ListItem>
+                            <asp:ListItem Value="11">Nov</asp:ListItem>
+                            <asp:ListItem Value="12">Dec</asp:ListItem>
+                        </asp:DropDownList>
                         <asp:Button runat="server" ID="btnShow" Text="Show" OnClick="btnShow_OnClick"/>
                     </div>
                 </fieldset>

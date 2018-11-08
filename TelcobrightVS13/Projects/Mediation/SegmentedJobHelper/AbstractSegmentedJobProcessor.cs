@@ -74,8 +74,16 @@ namespace TelcobrightMediation
             {
                 foreach (jobsegment jobSegment in incompleteSegments)
                 {
+                    string sqlProgress = " select ifnull(progress,0) as progress from job " +
+                                        " where id=" + this.TelcobrightJob.id;
+                    cmd.CommandText = sqlProgress;
+                    object retVal= cmd.ExecuteScalar();
+                    int progressSoFar = Convert.ToInt32(retVal);
+                    if (progressSoFar > this.TelcobrightJob.NoOfSteps)
+                        throw new Exception("Progress cannot be > total no of steps for a job.");
                     Console.WriteLine("Processing Segment:" + (jobSegment.segmentNumber) + " for job "
-                                      + this.TelcobrightJob.JobName);
+                                      + this.TelcobrightJob.JobName + ". Progress="+progressSoFar +"/"
+                                      +this.TelcobrightJob.NoOfSteps);
                     ISegmentedJob segmentedJob = null;
                     try
                     {
@@ -84,10 +92,10 @@ namespace TelcobrightMediation
                         segmentedJob.Execute();//execute segment
                         jobSegment.status = 1; //finished
                         cmd.ExecuteCommandText($@"update jobsegment set status=1 where id={jobSegment.id}");
-                        cmd.ExecuteCommandText(
+                                                cmd.ExecuteCommandText(
                             $" update job set lastexecuted=\'{DateTime.Now:yyyy-MM-dd HH:mm:ss}\', " +
                             $" progress=ifnull(progress,0)+{segmentedJob.ActualStepsCount} " +
-                            $" where id={this.TelcobrightJob.id}");
+                            $" where id={TelcobrightJob.id}");
                         cmd.ExecuteCommandText(" commit; ");
                     }
                     catch (Exception e)
