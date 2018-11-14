@@ -23,8 +23,12 @@ namespace TelcobrightMediation.Cdr
             CdrJobContext cdrJobContext =
                 new CdrJobContext(this.Input, newCollectionResult.HoursInvolved);
             CdrProcessor cdrProcessor = new CdrProcessor(cdrJobContext, newCollectionResult);
-            if (cdrProcessor.CollectionResult.IsEmpty)
+            if (cdrProcessor.CollectionResult.IsEmpty
+                && this.Input.Tbc.CdrSetting.EmptyFileAllowed == false)
+            {
                 throw new Exception("Newcdr collection in cdrProcessor cannot be empty.");
+            }
+                
             CdrEraser cdrEraser = oldCollectionResult?.IsEmpty == false
                 ? new CdrEraser(cdrJobContext, oldCollectionResult) : null;
             if (cdrEraser != null)
