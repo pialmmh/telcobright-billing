@@ -15,7 +15,7 @@ namespace InvoiceSectionGenerator
             string sql = $@"select p.partnername as OutPartnerName,x.TotalCalls,x.TotalMinutes,x.XAmount,
                        x.YAmount,x.XYAmount,x.Revenue from
                        (select                                                         
-                       tup_outpartnerid,
+                       tup_sourceId,
                        sum(successfulcalls 	)	as TotalCalls,    
                        sum(roundedduration   )/60  as TotalMinutes,   
                        sum(longDecimalAmount1)  as XAmount,
@@ -24,9 +24,10 @@ namespace InvoiceSectionGenerator
                        sum(customercost      )  as Revenue      
                        from {invoiceSectionGeneratorData.CdrOrSummaryTableName}                                               
                        where {invoiceSectionGeneratorData.GetWhereClauseForDateCustomerId("tup_inPartnerId")}
-                       group by tup_outpartnerid) x                     
+                       and successfulcalls>0
+                       group by tup_sourceId) x                     
                        left join partner p
-                       on x.tup_outpartnerid=p.idpartner;";
+                       on x.tup_sourceId=p.idpartner;";
             return base.GetInvoiceSection<InvoiceSectionDataRowForA2ZVoice>(invoiceSectionGeneratorData, sql);
         }
     }

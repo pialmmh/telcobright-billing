@@ -39,10 +39,10 @@ namespace ReportGenerator.Reports.InvoiceReports.ICX
             this.DataSource = invoiceBasicDatas;
 
             #region Page Header
-            xrLabelVatRegNo.Text = "VAT Reg. No. 19061116647";
+            xrLabelVatRegNo.Text = "VAT Reg. No. 001285404";
             xrLabelPartnerName.Text = invoiceMap["companyName"];
             xrLabelPartnerAddress.Text = invoiceMap["billingAddress"];
-            xrLabelPartnerVatRegNo.Text = invoiceMap["vatRegNo"];
+            xrLabelPartnerVatRegNo.Text = "VAT Reg. No. " + invoiceMap["vatRegNo"];
             xrLabelType.Text = string.Format("Type: {0}", invoiceMap["customerType"]);
 
             DateTime startDate = DateTime.ParseExact(invoiceMap["billingStartDate"], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
@@ -63,16 +63,18 @@ namespace ReportGenerator.Reports.InvoiceReports.ICX
             xrTableCellAmount.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
 
             decimal subTotalAmount = invoiceBasicDatas.Sum(x => x.Amount);
+            decimal invTotalAmount = invoiceBasicDatas.Sum(x => x.GrandTotalAmount);
 
             xrTableCellSubTotalAmount.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
-            xrTableCellInvoiceTotal.Text = string.Format("{0:n2}", subTotalAmount);
-            xrTableCellAmountDueforPayment.Text = string.Format("{0:n2}", subTotalAmount);
+            xrTableCellVAT.Text = string.Format("{0:n2}", invTotalAmount - subTotalAmount);
+            xrTableCellInvoiceTotal.Text = string.Format("{0:n2}", invTotalAmount);
+            xrTableCellAmountDueforPayment.Text = string.Format("{0:n2}", invTotalAmount);
 
             #endregion
 
             #region Report Footer
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
-            xrLabelAmountInwords.Text = textInfo.ToTitleCase(CurrencyHelper.NumberToTakaWords(Convert.ToDouble(subTotalAmount)));
+            xrLabelAmountInwords.Text = textInfo.ToTitleCase(CurrencyHelper.NumberToTakaWords(Convert.ToDouble(invTotalAmount)));
             #endregion
         }
 

@@ -113,25 +113,6 @@ namespace TelcobrightMediation.Accounting
 			ledgerSummary.AMOUNT = transaction.amount;
 			this.LedgerSummaryCache.Merge(ledgerSummary, SummaryMergeType.Add, sum => sum.id > 0);
 		}
-		public void CheckIfTransactionAmountMatchesLedgerSummary()
-		{
-			this.Cmd.CommandText = @"select totalinsertedAmount as amount from transactionmeta union all
-								  select totalinsertedamount from ledger_summary_meta as amount;";
-			DbDataReader reader = this.Cmd.ExecuteReader();
-			decimal amountInTransaction = -1;
-			int durationRowCount = 0;
-			while (reader.Read())
-			{
-				if (++durationRowCount == 1)
-					amountInTransaction = reader.GetDecimal(0);
-				else
-				{
-					decimal ledgerSummaryAmount = reader.GetDecimal(0);
-					if (ledgerSummaryAmount != amountInTransaction)
-						throw new Exception("Amount in transaction & ledger summary tables do not match after writing transactions.");
-				}
-			}
-			reader.Close();
-		}
+		
 	}
 }

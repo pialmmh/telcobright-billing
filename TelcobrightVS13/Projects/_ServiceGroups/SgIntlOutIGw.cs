@@ -65,12 +65,13 @@ namespace TelcobrightMediation
                     {
                         thisCdr.AnsIdOrig = thisRoute.field1;
                     }
-                    string originatingCallingNumber = (thisCdr.OriginatingCallingNumber.StartsWith("+") == false
+                    //cli may not be present in some case...
+                    if (thisCdr.OriginatingCallingNumber != string.Empty
+                        && string.IsNullOrWhiteSpace(thisCdr.OriginatingCallingNumber) ==false)
+                    {
+                        string originatingCallingNumber = (thisCdr.OriginatingCallingNumber.StartsWith("+") == false
                         ? thisCdr.OriginatingCallingNumber
                         : thisCdr.OriginatingCallingNumber.Substring(1, thisCdr.OriginatingCallingNumber.Length - 1));
-                    //cli may not be present in some case...
-                    if (originatingCallingNumber != "")
-                    {
                         //normalize orig calling number from 00880, 880, 01x...
                         if (originatingCallingNumber.Substring(0, 1) == "0")
                         {
@@ -167,7 +168,8 @@ namespace TelcobrightMediation
 
         public void ValidateInvoiceGenerationParams(object validationInput)
         {
-            
+            InvoiceGenerationValidatorInput input = (InvoiceGenerationValidatorInput)validationInput;
+            XyzRuleHelper.ValidateInvoiceGenerationParams(input, XyzRatingType.Icx);
         }
 
         public InvoiceGenerationInputData ExecInvoicePreProcessing(

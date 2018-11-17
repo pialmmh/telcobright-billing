@@ -55,9 +55,9 @@ namespace InstallConfig
                     InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary",
                     SectionGeneratorVsTemplateNames = new Dictionary<string, string>()
                     {
-                        {"TollFreeInvoiceSection1Generator","LTFSToIPTSP" },
-                        {"TollFreeInvoiceSection2Generator","LTFSToIPTSPDetails1" },
-                        {"TollFreeInvoiceSection3Generator","LTFSToIPTSPDetails2" }
+                        {"TollFreeInvoiceSection1GeneratorWithTax","LTFSToIPTSP" },
+                        {"TollFreeInvoiceSection2GeneratorWithTax","LTFSToIPTSPDetails1" },
+                        {"TollFreeInvoiceSection3GeneratorWithTax","LTFSToIPTSPDetails2" }
                     }
                 }
             });

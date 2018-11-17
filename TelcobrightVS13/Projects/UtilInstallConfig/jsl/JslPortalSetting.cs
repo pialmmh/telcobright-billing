@@ -256,7 +256,8 @@ namespace InstallConfig
                                     "nodes['Mediation'].Expanded=true",
                                     "nodes['Settings'].Expanded=true",
                                     "nodes['Billing Reports'].Expanded=true",
-                                    "nodes['Reports/IGW'].Expanded=false"
+                                    "nodes['Reports/IGW'].Expanded=false",
+                                    "nodes['Reports/Transit'].Expanded=false"
                                 },
                                 SpringExpressionIfNotRole = new List<string>()
                                 {
@@ -265,7 +266,8 @@ namespace InstallConfig
                                     "nodes['Mediation'].Expanded=false",
                                     "nodes['Settings'].Expanded=false",
                                     "nodes['Billing Reports'].Expanded=false",
-                                    "nodes['Reports/IGW'].Expanded=false"
+                                    "nodes['Reports/IGW'].Expanded=false",
+                                    "nodes['Reports/Transit'].Expanded=false"
                                 }
                             },
                             new SettingByRoles()
@@ -281,7 +283,8 @@ namespace InstallConfig
                                     "nodes['Mediation'].Expanded=true",
                                     "nodes['Settings'].Expanded=true",
                                     "nodes['Billing Reports'].Expanded=true",
-                                    "nodes['Reports/IGW'].Expanded=false"
+                                    "nodes['Reports/IGW'].Expanded=false",
+                                    "nodes['Reports/Transit'].Expanded=false"
                                 },
                                 SpringExpressionIfNotRole = new List<string>()
                                 {

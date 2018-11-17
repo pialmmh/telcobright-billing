@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Runtime;
 using System.Text;
@@ -22,7 +23,7 @@ namespace TelcobrightMediation.Cdr
         private MediationContext MediationContext => this.CdrJobContext.CdrjobInputData.MediationContext;
         private CdrSetting CdrSetting => this.MediationContext.Tbc.CdrSetting;
         private PartialCdrTesterData PartialCdrTesterData { get; }
-        
+        private DbCommand DbCmd => this.CdrEraser.CdrJobContext.DbCmd;
         public CdrJob(CdrProcessor cdrProcessor, CdrEraser cdrEraser, int actualStepsCount,
             PartialCdrTesterData partialCdrTesterData)
         {
@@ -65,7 +66,8 @@ namespace TelcobrightMediation.Cdr
                 this.CdrJobContext.AccountingContext.ExecuteTransactions(incrementalTransactions);
 
                 if (this.CdrProcessor != null)
-                {//applicable for only new cdrs 
+                {
+//applicable for only new cdrs 
                     ValidateCdrProcessorWithMediationTester(this.CdrJobContext.CdrjobInputData,
                         parallelCdrExts);
                 }
@@ -78,18 +80,14 @@ namespace TelcobrightMediation.Cdr
                 var cdrWritingResult = this.CdrProcessor?.WriteCdrs(parallelCdrExts);
 
                 if (this.CdrProcessor != null && this.CdrProcessor.PartialProcessingEnabled
-                    &&this.CdrProcessor.CdrJobContext.TelcobrightJob.idjobdefinition==1)//1=new cdr only
+                    && this.CdrProcessor.CdrJobContext.TelcobrightJob.idjobdefinition == 1) //1=new cdr only
                 {
                     PartialCdrTester partialCdrTester =
                         new PartialCdrTester(this, cdrWritingResult, this.PartialCdrTesterData);
                     partialCdrTester.ValidatePartialCdrMediation();
                 }
-
-
                 this.CdrJobContext.AccountingContext.WriteAllChanges();
-                this.CdrJobContext.AccountingContext.CheckIfTransactionAmountMatchesLedgerSummary();
                 this.CdrJobContext.AutoIncrementManager.WriteAllChanges();
-                //UpdateCdrMetaData();
             }
             catch (Exception e)
             {
@@ -102,7 +100,6 @@ namespace TelcobrightMediation.Cdr
                 if (cacheLimitExceeded == false) throw;
             }
         }
-
         protected void ValidateCdrProcessorWithMediationTester(CdrJobInputData input, ParallelQuery<CdrExt> processedCdrExts)
         {
             MediationTester mediationTester =

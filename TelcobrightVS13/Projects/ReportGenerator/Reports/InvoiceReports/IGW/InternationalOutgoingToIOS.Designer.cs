@@ -827,7 +827,7 @@
             this.xrLabel1.StylePriority.UseBorders = false;
             this.xrLabel1.StylePriority.UseFont = false;
             this.xrLabel1.StylePriority.UseTextAlignment = false;
-            this.xrLabel1.Text = "Deputy Manager, Accounts and Finance";
+            this.xrLabel1.Text = "Authorized Signatory (Acc. and Fin.)";
             this.xrLabel1.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             // 
             // InternationalOutgoingToIOS

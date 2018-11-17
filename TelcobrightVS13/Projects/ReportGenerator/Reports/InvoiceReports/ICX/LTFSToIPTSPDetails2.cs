@@ -39,9 +39,9 @@ namespace ReportGenerator.Reports.InvoiceReports.ICX
             this.DataSource = invoiceBasicDatas;
 
             #region Page Header
-            xrLabelVatRegNo.Text = "VAT Reg. No. 19061116647";
+            xrLabelVatRegNo.Text = "VAT Reg. No. 001285404";
             xrLabelPartnerName.Text = invoiceMap["companyName"];
-            xrLabelPartnerVatRegNo.Text = invoiceMap["vatRegNo"];
+            xrLabelPartnerVatRegNo.Text = "VAT Reg. No. " + invoiceMap["vatRegNo"];
             xrLabelType.Text = string.Format("Type: {0}", invoiceMap["customerType"]);
 
             DateTime startDate = DateTime.ParseExact(invoiceMap["billingStartDate"], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
@@ -60,10 +60,10 @@ namespace ReportGenerator.Reports.InvoiceReports.ICX
             xrTableCellTotalMinutes.DataBindings.Add("Text", this.DataSource, "TotalMinutes", "{0:n2}");
             xrTableCellRate.DataBindings.Add("Text", this.DataSource, "Rate", "{0:##0.######}");
             xrTableCellRevenue.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
-            xrTableCellAmount.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
+            xrTableCellAmount.DataBindings.Add("Text", this.DataSource, "GrandTotalAmount", "{0:n2}");
 
             xrTableCellRevenueTotal.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
-            xrTableCellSubTotalAmount.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
+            xrTableCellSubTotalAmount.DataBindings.Add("Text", this.DataSource, "GrandTotalAmount", "{0:n2}");
             #endregion
         }
 

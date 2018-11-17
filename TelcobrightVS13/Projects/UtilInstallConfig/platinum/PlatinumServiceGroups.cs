@@ -45,10 +45,10 @@ namespace InstallConfig
                             new MatchedPrefixCustomerNotEmpty(),
                             new CountryCodeNotEmpty(),
                             new InPartnerCostGt0() {Data = 0M},
-                            new CostIcxInGt0() {Data = .09M},
-                            new BtrcRevShareTax1Gt0() {Data = .09M},
+                            new CostIcxInGt0() {Data = .1M},
+                            new BtrcRevShareTax1Gt0() {Data = .1M},
                             new AnsIdTermGt0(),
-                            new RoundedDurationGt0(){Data = .09M},
+                            new RoundedDurationGt0(){Data = .1M},
                          },
                 }, //end dictionary item
                 new ServiceGroupConfiguration(idServiceGroup: 5) //intlOutIgw

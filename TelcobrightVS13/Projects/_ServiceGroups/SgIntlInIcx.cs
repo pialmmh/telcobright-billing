@@ -84,7 +84,25 @@ namespace TelcobrightMediation
 
         public void ValidateInvoiceGenerationParams(object validationInput)
         {
-            
+            InvoiceGenerationValidatorInput input = (InvoiceGenerationValidatorInput)validationInput;
+            Dictionary<string, string> jobParamsMap =
+                JsonConvert.DeserializeObject<Dictionary<string, string>>(input.TelcobrightJob.JobParameter);
+            DateTime startDate = Convert.ToDateTime(jobParamsMap["startDate"]);
+            DateTime endDate = Convert.ToDateTime(jobParamsMap["endDate"]);
+            if (startDate.Day != 1 || endDate.Day != DateTime.DaysInMonth(startDate.Year, startDate.Month)
+                || startDate.Hour != 0 || startDate.Minute != 0 || startDate.Second != 0 ||
+                endDate.Hour != 23 || endDate.Minute != 59 || endDate.Second != 59)
+            {
+                throw new Exception("Start date & end date must be first & last day of a month.");
+            }
+            var context = input.Context;
+            DateTime lastSecondOfPrevMonth = startDate.AddSeconds(-1);
+            uom_conversion_dated usdConversionDated = context.uom_conversion_dated.Where(
+                    c => c.PURPOSE_ENUM_ID == "INTERNAL_CONVERSION"
+                         && c.UOM_ID == "USD" && c.UOM_ID_TO == "BDT" && c.FROM_DATE == lastSecondOfPrevMonth).ToList()
+                .FirstOrDefault();
+            if (usdConversionDated == null)
+                throw new Exception("Usd rate not found in uom_conversion_dated table.");
         }
 
         public InvoiceGenerationInputData ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData)

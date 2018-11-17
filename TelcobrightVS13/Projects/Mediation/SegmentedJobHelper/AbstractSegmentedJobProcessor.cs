@@ -11,6 +11,7 @@ using MediationModel;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using TelcobrightFileOperations;
+using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Cdr;
 using TelcobrightMediation.Config;
 
@@ -46,7 +47,8 @@ namespace TelcobrightMediation
                     cmd.ExecuteCommandText(" update job set " +
                                            " status=2," + "NoOfSteps=" + jobSegments.Sum(s => s.stepsCount) +
                                            " where id= " + this.TelcobrightJob.id);
-                    cmd.ExecuteCommandText("commit;");
+                    //cmd.ExecuteCommandText("commit;");
+                    CdrJobCommiter.Commit(cmd);
                 }
                 catch (Exception e)
                 {
@@ -74,8 +76,16 @@ namespace TelcobrightMediation
             {
                 foreach (jobsegment jobSegment in incompleteSegments)
                 {
+                    string sqlProgress = " select ifnull(progress,0) as progress from job " +
+                                         " where id=" + this.TelcobrightJob.id;
+                    cmd.CommandText = sqlProgress;
+                    object retVal= cmd.ExecuteScalar();
+                    int progressSoFar = Convert.ToInt32(retVal);
+                    if (progressSoFar > this.TelcobrightJob.NoOfSteps)
+                        throw new Exception("Progress cannot be > total no of steps for a job.");
                     Console.WriteLine("Processing Segment:" + (jobSegment.segmentNumber) + " for job "
-                                      + this.TelcobrightJob.JobName);
+                                      + this.TelcobrightJob.JobName + ". Progress="+progressSoFar +"/"
+                                      + this.TelcobrightJob.NoOfSteps);
                     ISegmentedJob segmentedJob = null;
                     try
                     {
@@ -84,11 +94,12 @@ namespace TelcobrightMediation
                         segmentedJob.Execute();//execute segment
                         jobSegment.status = 1; //finished
                         cmd.ExecuteCommandText($@"update jobsegment set status=1 where id={jobSegment.id}");
-                        cmd.ExecuteCommandText(
+                                                cmd.ExecuteCommandText(
                             $" update job set lastexecuted=\'{DateTime.Now:yyyy-MM-dd HH:mm:ss}\', " +
                             $" progress=ifnull(progress,0)+{segmentedJob.ActualStepsCount} " +
-                            $" where id={this.TelcobrightJob.id}");
-                        cmd.ExecuteCommandText(" commit; ");
+                            $" where id={TelcobrightJob.id}");
+                        //cmd.ExecuteCommandText(" commit; ");
+                        CdrJobCommiter.Commit(cmd);
                     }
                     catch (Exception e)
                     {
@@ -126,7 +137,8 @@ namespace TelcobrightMediation
                                            " where id=" +this.TelcobrightJob.id);
                     //delete job segments which can hold large amount of data
                     cmd.ExecuteCommandText(" delete from jobsegment where idjob=" + this.TelcobrightJob.id);
-                    cmd.ExecuteCommandText(" commit; ");
+                    //cmd.ExecuteCommandText(" commit; ");
+                    CdrJobCommiter.Commit(cmd);
                 }
             }
         }
