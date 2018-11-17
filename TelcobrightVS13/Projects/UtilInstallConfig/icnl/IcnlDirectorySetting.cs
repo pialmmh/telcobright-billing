@@ -23,7 +23,7 @@ namespace InstallConfig
         {
             DirectorySettings directorySettings = new DirectorySettings("Directory Settings")
             {
-                ApplicationRootDirectory = "c:/Telcobright"
+                ApplicationRootDirectory = "D:/Telcobright"
             };
             
             //***FILE LOCATIONS**********************************************
@@ -36,7 +36,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "C:/telcobright/Vault/Resources/CDR/Icnl/dialogic",
+                StartingPath = "D:/telcobright/Vault/Resources/CDR/Icnl/dialogic",
                 User = "",
                 Pass = "",
             };
