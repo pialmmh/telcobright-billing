@@ -24,10 +24,14 @@ namespace InstallConfig
     {
         public Dictionary<int, ServiceGroupConfiguration> GetServiceGroupConfigurations()
         {
+
+
             List<ServiceGroupConfiguration> serviceGroupConfigurations = new List<ServiceGroupConfiguration>()
             {
-                new ServiceGroupConfiguration(idServiceGroup: 100) //transit
+                new ServiceGroupConfiguration(idServiceGroup: 20) //local
                 {
+                    Params = new Dictionary<string, string>()
+                        { { "idCdrRules", "3" } },//LocalCallByTgTypeAndPrefix=3
                     PartnerRules = new List<int>()
                     {
                         PartnerRuletype.InPartnerByIncomingRoute,
