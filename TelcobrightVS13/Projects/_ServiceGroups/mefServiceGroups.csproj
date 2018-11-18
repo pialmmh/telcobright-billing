@@ -63,7 +63,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SgLocalIcnl.cs" />
+    <Compile Include="SgIcnlIncoming.cs" />
+    <Compile Include="SgIcnlOutgoing.cs" />
+    <Compile Include="SgIcnlLocal.cs" />
     <Compile Include="SgLtfsIcx.cs" />
     <Compile Include="SgIntlTransitVoice.cs" />
     <Compile Include="SgDomesticIcx.cs" />

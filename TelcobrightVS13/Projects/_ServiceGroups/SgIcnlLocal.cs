@@ -14,7 +14,7 @@ using TransactionTuple = System.ValueTuple<int, int, long, int, long>;
 namespace TelcobrightMediation
 {
     [Export("ServiceGroup", typeof(IServiceGroup))]
-    public class SgLocalIcnl : IServiceGroup
+    public class SgIcnlLocal : IServiceGroup
     {
         private readonly SgIntlTransitVoice _sgIntlTransitVoice = new SgIntlTransitVoice();
         public override string ToString() => this.RuleName;
@@ -23,7 +23,7 @@ namespace TelcobrightMediation
         public int Id => 20;
         private Dictionary<CdrSummaryType, Type> SummaryTargetTables { get; }
         private List<ICdrRule> CdrRules { get; set; } = new List<ICdrRule>();
-        public SgLocalIcnl() //constructor
+        public SgIcnlLocal() //constructor
         {
             this.SummaryTargetTables = new Dictionary<CdrSummaryType, Type>()
             {
