@@ -361,7 +361,7 @@ idpartner,priority,service, goes to table rateplanassignmenttuple, id in the tab
                                 </span>
 
                             </div>
-
+                            
                         </td>
 
        
@@ -1079,7 +1079,7 @@ select (select 13) as status  ,(select 'Existing') as Description,count(*) as cn
     <ControlStyle Width="50px"></ControlStyle>
 </asp:TemplateField>
 
-<asp:TemplateField HeaderText="Billing Rule">
+<asp:TemplateField HeaderText="Billing Rule" ControlStyle-Width="150px">
     <ItemTemplate>
         <asp:DropDownList runat="server" ID="DropDownListBillingRule" AutoPostBack="False" Enabled="False"/>
     </ItemTemplate>

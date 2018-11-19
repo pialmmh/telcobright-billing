@@ -37,9 +37,11 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
    
         
     TelcobrightConfig Tbc = null;
+    static List<BillingRule> billingRules;
+
     public void populateDropDownForBillingRule()
     {
-        List<BillingRule> billingRules = null;
+
         //  List<>
         DropDownList ruleddl = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownBillingRule");
         DropDownList cyclelistddl = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListBillingCycle");
@@ -978,6 +980,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
 
                 //load rateplanassignmenttuple
                 Dictionary<long, rateplanassignmenttuple> dicTuple = new Dictionary<long, rateplanassignmenttuple>();
+                Dictionary<long, billingruleassignment> dicBillRules = new Dictionary<long, billingruleassignment>();
                 Dictionary<long, enumservicefamily> dicservice = new Dictionary<long, enumservicefamily>();
                 var dicRoutes = new Dictionary<int, string>();
                 using (PartnerEntities Conmed = new PartnerEntities())
@@ -996,9 +999,14 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                         {
                             dicRoutes.Add(r.idroute, r.RouteName);
                         }
+                        foreach (billingruleassignment ThisRule in Context.billingruleassignments)
+                        {
+                            dicBillRules.Add(ThisRule.idRatePlanAssignmentTuple, ThisRule);
+                        }
                     }
                 }
                 Session["assign.sessdictuple"] = dicTuple;
+                Session["assign.sessdicBillRules"] = dicBillRules;
                 Session["assign.sessdicservice"] = dicservice;
                 Session["assign.sessdicroute"] = dicRoutes;
 
@@ -5470,6 +5478,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
 
 
             Dictionary<long, rateplanassignmenttuple> dicTuple = (Dictionary<long, rateplanassignmenttuple>)Session["assign.sessdictuple"];
+            Dictionary<long, billingruleassignment> dicBillRules = (Dictionary<long, billingruleassignment>)Session["assign.sessdicBillRules"];
             Dictionary<long, enumservicefamily> dicservice = (Dictionary<long, enumservicefamily>)Session["assign.sessdicservice"];
             var dicroute = (Dictionary<int, string>)Session["assign.sessdicroute"];
             Label LabelRoute = (Label)e.Row.FindControl("lblRoute");
@@ -5532,6 +5541,15 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
 
             ((DropDownList)e.Row.FindControl("DropDownListRatePlan")).DataSource = lstPlan;
             ((DropDownList)e.Row.FindControl("DropDownListRatePlan")).DataBind();
+
+            DropDownList DropDownListBillingRule =  ((DropDownList)e.Row.FindControl("DropDownListBillingRule"));
+            foreach (BillingRule jsb in billingRules)
+            {
+                DropDownListBillingRule.Items.Add(new ListItem(jsb.RuleName, jsb.Id.ToString()));
+            }
+            billingruleassignment billingruleassignment = null;
+            dicBillRules.TryGetValue(tupleId, out billingruleassignment);
+            DropDownListBillingRule.SelectedValue = billingruleassignment.idBillingRule.ToString();
 
             if ((e.Row.RowState & DataControlRowState.Edit) > 0)
             {
