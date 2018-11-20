@@ -5539,8 +5539,10 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
             var lstPlan = new List<rateplan>();
             lstPlan.Add(tmprateplan);
 
-            ((DropDownList)e.Row.FindControl("DropDownListRatePlan")).DataSource = lstPlan;
-            ((DropDownList)e.Row.FindControl("DropDownListRatePlan")).DataBind();
+            DropDownList DropDownListRatePlan = (DropDownList) e.Row.FindControl("DropDownListRatePlan");
+            DropDownListRatePlan.DataSource = lstPlan;
+            DropDownListRatePlan.DataBind();
+            DropDownListRatePlan.SelectedValue = idRatePlan.ToString();
 
             DropDownList DropDownListBillingRule =  ((DropDownList)e.Row.FindControl("DropDownListBillingRule"));
             foreach (BillingRule jsb in billingRules)
@@ -6229,6 +6231,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                                                                          && c.startdate == SaveStartDateTimeThisRate).FirstOrDefault();
 
                     DropDownList ddlRatePlan = (DropDownList)(GridViewRateAssign.Rows[e.RowIndex].FindControl("DropDownListRatePlan"));
+                    DropDownList ddlBillingRule = (DropDownList)(GridViewRateAssign.Rows[e.RowIndex].FindControl("DropDownListBillingRule"));
                     int Deactive = Convert.ToInt32(((CheckBox)row.FindControl("CheckBox1")).Checked);
                     using (MySqlConnection Con = new MySqlConnection(ConfigurationManager.ConnectionStrings["partner"].ConnectionString))
                     {
@@ -6242,6 +6245,11 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                             Cmd.CommandText = " update rateassign set enddate='" + EndDateStr + "', inactive=" + ddlRatePlan.SelectedValue + ", changecommitted=" + Deactive +
                                               " ,field3= " + (GridViewRateAssign.Rows[e.RowIndex].FindControl("ddlExcludeLCR") as DropDownList).SelectedValue +
                                               " where id=" + ThisRate.id.ToString();
+                            Cmd.ExecuteNonQuery();
+
+                            Cmd.CommandText =
+                                "update billingruleassignment set idBillingRule = " + ddlBillingRule.SelectedValue + 
+                                " where idRatePlanAssignmentTuple = " + thisPrefix + "";
                             Cmd.ExecuteNonQuery();
 
                             StatusLabel.ForeColor = Color.Green;
@@ -6264,6 +6272,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                                         && c.startdate == SaveStartDateTimeThisRate);
 
                 DropDownList ddlRatePlan = (DropDownList)(GridViewRateAssign.Rows[e.RowIndex].FindControl("DropDownListRatePlan"));
+                DropDownList ddlBillingRule = (DropDownList)(GridViewRateAssign.Rows[e.RowIndex].FindControl("DropDownListBillingRule"));
                 int Deactive = Convert.ToInt32(((CheckBox)row.FindControl("CheckBox1")).Checked);
                 using (MySqlConnection Con = new MySqlConnection(ConfigurationManager.ConnectionStrings["partner"].ConnectionString))
                 {
@@ -6277,6 +6286,11 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                         Cmd.CommandText = " update rateassign set " + " inactive=" + ddlRatePlan.SelectedValue + ", changecommitted=" + Deactive +
                                           " ,field3= " + (GridViewRateAssign.Rows[e.RowIndex].FindControl("ddlExcludeLCR") as DropDownList).SelectedValue +
                                           " where id=" + thisRate.id.ToString();
+                        Cmd.ExecuteNonQuery();
+
+                        Cmd.CommandText =
+                            "update billingruleassignment set idBillingRule = " + ddlBillingRule.SelectedValue +
+                            " where idRatePlanAssignmentTuple = " + thisPrefix + "";
                         Cmd.ExecuteNonQuery();
 
                         StatusLabel.ForeColor = Color.Green;

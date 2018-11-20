@@ -1049,7 +1049,7 @@ select (select 13) as status  ,(select 'Existing') as Description,count(*) as cn
     </EditItemTemplate>
 </asp:TemplateField>
 
-<asp:TemplateField HeaderText="Rate Plan" SortExpression="Category">
+<asp:TemplateField HeaderText="Rate Plan" SortExpression="Category" ControlStyle-Width="150px">
                 
     <ItemTemplate>
         <asp:DropDownList ID="DropDownListRatePlan" runat="server" AutoPostBack="false" 
