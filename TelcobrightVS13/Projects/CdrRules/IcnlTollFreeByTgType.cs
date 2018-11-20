@@ -8,7 +8,7 @@ namespace CdrRules
 {
 
     [Export("CdrRule", typeof(ICdrRule))]
-    public class IcnlIntlIncoming : ICdrRule
+    public class IcnlTollFreeByTgType : ICdrRule
     {
         public override string ToString() => this.RuleName;
         public string RuleName => GetType().Name;
@@ -36,7 +36,7 @@ namespace CdrRules
             this.SwitchWiseRoutes.TryGetValue(key, out outRoute);
             if (outRoute != null)
             {
-                return outRoute.NationalOrInternational == RouteLocalityType.International;
+                return outRoute.NationalOrInternational == RouteLocalityType.TollFree;
             }
             return false;
         }

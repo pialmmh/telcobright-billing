@@ -49,10 +49,16 @@ namespace TelcobrightMediation
 
         public void Execute(cdr thisCdr, CdrProcessor cdrProcessor)
         {
-            var trueForAll = this.CdrRules.All(r => r.CheckIfTrue(thisCdr));
-            if (trueForAll)
+            var dicRoutes = cdrProcessor.CdrJobContext.MediationContext.MefServiceGroupContainer.SwitchWiseRoutes;
+            var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
+            route thisRoute = null;
+            dicRoutes.TryGetValue(key, out thisRoute);
+            if (thisRoute != null)
             {
-                thisCdr.ServiceGroup = this.Id;
+                if (thisRoute.NationalOrInternational == RouteLocalityType.International)
+                {
+                    thisCdr.ServiceGroup = this.Id; 
+                }
             }
         }
 

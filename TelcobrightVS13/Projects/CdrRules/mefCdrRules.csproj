@@ -61,7 +61,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IcnlIntlIncoming.cs" />
+    <Compile Include="IcnlTollFreeByTgType.cs" />
+    <Compile Include="IcnlIntlIncomingByTgType.cs" />
     <Compile Include="IcnlOutgoingCallByTgType.cs" />
     <Compile Include="LocalCallByTgTypeAndPrefix.cs" />
     <Compile Include="IcxOutgoingCallByInTgType.cs" />
