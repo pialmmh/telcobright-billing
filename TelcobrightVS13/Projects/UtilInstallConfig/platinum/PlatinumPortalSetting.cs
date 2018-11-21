@@ -27,6 +27,7 @@ namespace InstallConfig
             PortalSettings portalSetting = new PortalSettings("Portal Settings")
             {
                 HomePageUrl = "~/Dashboard.aspx",
+                AlternateDisplayName = "IGW Manager",
                 RouteTypeEnums = new Dictionary<string, int>()
                 {
                     {"Select",-1 },

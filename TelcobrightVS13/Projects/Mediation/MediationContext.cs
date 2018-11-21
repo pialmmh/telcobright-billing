@@ -172,8 +172,7 @@ namespace TelcobrightMediation
                         cdrRuleComposer.CdrRules
                             .Where(c => configuredIdCdrRules.Contains(c.Id)).ToList().ForEach(cdrRule =>
                             {
-                                cdrRule.Data = this.Routes;
-                                cdrRule.Prepare();
+                                cdrRule.Prepare(this);
                                 cdrRules.Add(cdrRule);
                             });
                     }
