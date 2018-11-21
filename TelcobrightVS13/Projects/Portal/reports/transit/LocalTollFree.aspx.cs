@@ -12,7 +12,7 @@ using ExportToExcel;
 using MediationModel;
 using LibraryExtensions;
 using PortalApp.ReportHelper;
-public partial class LocalTransit : System.Web.UI.Page
+public partial class TransitRptLocalTollFree : System.Web.UI.Page
 {
     private int _mShowByCountry=0;
     private int _mShowByAns = 0;
@@ -22,7 +22,7 @@ public partial class LocalTransit : System.Web.UI.Page
 
         string StartDate =txtDate.Text;
         string EndtDate = (txtDate1.Text.ConvertToDateTimeFromMySqlFormat()).AddSeconds(1).ToMySqlFormatWithoutQuote();
-        string tableName = DropDownListReportSource.SelectedValue + "01";
+        string tableName = DropDownListReportSource.SelectedValue + "04";
 
         string groupInterval = getSelectedRadioButtonText();
         switch (groupInterval)
@@ -37,7 +37,7 @@ public partial class LocalTransit : System.Web.UI.Page
 
         }
 
-        string constructedSQL = new SqlHelperIntlInTransit
+        string constructedSQL = new SqlHelperIntlInIcx
                         (StartDate,
                          EndtDate,
                          groupInterval,
@@ -48,16 +48,14 @@ public partial class LocalTransit : System.Web.UI.Page
                                 //groupInterval=="Hourly"?"tup_starttime":string.Empty,
                                 getInterval(groupInterval), 
                                 CheckBoxPartner.Checked==true?"tup_inpartnerid":string.Empty,
-                                CheckBoxMatchedCustomerPrefix.Checked==true?"tup_matchedprefixcustomer":string.Empty,
-                                CheckBoxMatchedSupplierPrefix.Checked==true?"tup_matchedprefixsupplier":string.Empty,
-                                //CheckBoxShowByAns.Checked==true?"tup_destinationId":string.Empty,
-                                //CheckBoxShowByIgw.Checked==true?"tup_outpartnerid":string.Empty,
+                                CheckBoxShowByAns.Checked==true?"tup_destinationId":string.Empty,
+                                CheckBoxShowByIgw.Checked==true?"tup_outpartnerid":string.Empty,
                             },
                          new List<string>()
                             {
                                 CheckBoxPartner.Checked==true?DropDownListPartner.SelectedIndex>0?" tup_inpartnerid="+DropDownListPartner.SelectedValue:string.Empty:string.Empty,
-                                //CheckBoxShowByAns.Checked==true?DropDownListAns.SelectedIndex>0?" tup_destinationId="+DropDownListAns.SelectedValue:string.Empty:string.Empty,
-                                //CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_outpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty
+                                CheckBoxShowByAns.Checked==true?DropDownListAns.SelectedIndex>0?" tup_destinationId="+DropDownListAns.SelectedValue:string.Empty:string.Empty,
+                                CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_outpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty
                             }).getSQLString();
 
        
@@ -111,37 +109,29 @@ public partial class LocalTransit : System.Web.UI.Page
 
     protected void submit_Click(object sender, EventArgs e)
     {
-        //if (CheckBoxShowByAns.Checked == true)
-        //{
-        //    GridView1.Columns[3].Visible = true;
-        //    //load ANS KPI
-        //    Dictionary<string, partner> dicKpiAns = new Dictionary<string, partner>();
-        //    using (PartnerEntities context = new PartnerEntities())
-        //    {
-        //        foreach (partner thisPartner in context.partners.Where(c => c.PartnerType == 1).ToList())
-        //        {
-        //            dicKpiAns.Add(thisPartner.PartnerName, thisPartner);
-        //        }
-        //        ViewState["dicKpiAns"] = dicKpiAns;
-        //    }
-        //}
-        //else GridView1.Columns[3].Visible = false;
-        if (CheckBoxMatchedCustomerPrefix.Checked)
+        /*
+        if (CheckBoxShowByAns.Checked == true)
         {
             GridView1.Columns[3].Visible = true;
+            //load ANS KPI
+            Dictionary<string, partner> dicKpiAns = new Dictionary<string, partner>();
+            using (PartnerEntities context = new PartnerEntities())
+            {
+                foreach (partner thisPartner in context.partners.Where(c => c.PartnerType == 1).ToList())
+                {
+                    dicKpiAns.Add(thisPartner.PartnerName, thisPartner);
+                }
+                ViewState["dicKpiAns"] = dicKpiAns;
+            }
         }
         else GridView1.Columns[3].Visible = false;
+        */
 
-        //if (CheckBoxShowByIgw.Checked == true)
-        //{
-        //    GridView1.Columns[2].Visible = true;
-        //}
-        //else GridView1.Columns[2].Visible = false;
-        if (CheckBoxMatchedSupplierPrefix.Checked)
+        if (CheckBoxShowByIgw.Checked == true)
         {
-            GridView1.Columns[4].Visible = true;
+            GridView1.Columns[2].Visible = true;
         }
-        else GridView1.Columns[4].Visible = false;
+        else GridView1.Columns[2].Visible = false;
 
         if (CheckBoxPartner.Checked == true)
         {
@@ -150,40 +140,26 @@ public partial class LocalTransit : System.Web.UI.Page
         else GridView1.Columns[1].Visible = false;
         if (CheckBoxShowCost.Checked == true)
         {
-            GridView1.Columns[10].Visible = true;
-            GridView1.Columns[11].Visible = true;
             GridView1.Columns[12].Visible = true;
+            GridView1.Columns[13].Visible = true;
         }
         else
         {
-            GridView1.Columns[10].Visible = false;
-            GridView1.Columns[11].Visible = false;
             GridView1.Columns[12].Visible = false;
+            GridView1.Columns[13].Visible = false;
         }
         if (CheckBoxShowPerformance.Checked == true)
         {
-            GridView1.Columns[13].Visible = true;
-            GridView1.Columns[14].Visible = true;
-            GridView1.Columns[15].Visible = true;
-            GridView1.Columns[16].Visible = true;
             GridView1.Columns[17].Visible = true;
-            GridView1.Columns[18].Visible = true;
-
         }
         else
         {
-            GridView1.Columns[13].Visible = false;
-            GridView1.Columns[14].Visible = false;
-            GridView1.Columns[15].Visible = false;
-            GridView1.Columns[16].Visible = false;
             GridView1.Columns[17].Visible = false;
-            GridView1.Columns[18].Visible = false;
-
         }
         //make profit invisible, it's useless
-        //GridView1.Columns[15].Visible = false;
+        GridView1.Columns[15].Visible = false;
         //GridView1.Columns[9].Visible = true;//carrier's duration
-
+        
         using (MySqlConnection connection = new MySqlConnection())
         {
             connection.ConnectionString = ConfigurationManager.ConnectionStrings["reader"].ConnectionString;
@@ -260,28 +236,25 @@ public partial class LocalTransit : System.Web.UI.Page
                     List<NoOfCallsVsPdd> callVsPdd = new List<NoOfCallsVsPdd>();
                     foreach (DataRow dr in tr.Ds.Tables[0].Rows)
                     {
-                        tr.CallStat.TotalCalls += tr.ForceConvertToLong(dr["Total Calls"]);
-                        tr.CallStat.ConnectedCalls += tr.ForceConvertToLong(dr["Connected Calls"]);
-                        //tr.CallStat.ConnectedCallsbyCauseCodes += tr.ForceConvertToLong(dr["ConectbyCC"]);
-                        tr.CallStat.SuccessfullCalls += tr.ForceConvertToLong(dr["Successful Calls"]);
-                        tr.CallStat.TotalActualDuration += tr.ForceConvertToDouble(dr["Customer Duration"]);
-                        tr.CallStat.TotalRoundedDuration += tr.ForceConvertToDouble(dr["Supplier Duration"]);
-                        //tr.CallStat.TotalDuration1 += tr.ForceConvertToDouble(dr["Duration1"]);
-                        tr.CallStat.PartnerCost += tr.ForceConvertToDouble(dr["Cost"]);
-                        tr.CallStat.BtrcRevShare += tr.ForceConvertToDouble(dr["Margin"]);
-                        tr.CallStat.IgwRevenue += tr.ForceConvertToDouble(dr["Revenue"]);
-                        NoOfCallsVsPdd cpdd = new NoOfCallsVsPdd(tr.ForceConvertToLong(dr["Successful Calls"]), tr.ForceConvertToDouble(dr["PDD"]));
+                        tr.CallStat.TotalCalls += tr.ForceConvertToLong(dr["CallsCount"]);
+                        tr.CallStat.ConnectedCalls += tr.ForceConvertToLong(dr["ConnectedCount"]);
+                        tr.CallStat.ConnectedCallsbyCauseCodes += tr.ForceConvertToLong(dr["ConectbyCC"]);
+                        tr.CallStat.SuccessfullCalls += tr.ForceConvertToLong(dr["Number Of Calls (International Incoming)"]);
+                        tr.CallStat.TotalActualDuration += tr.ForceConvertToDouble(dr["Paid Minutes (International Incoming)"]);
+                        tr.CallStat.TotalRoundedDuration += tr.ForceConvertToDouble(dr["RoundedDuration"]);
+                        tr.CallStat.TotalDuration1 += tr.ForceConvertToDouble(dr["Duration1"]);
+                        tr.CallStat.TotalCustomerCost += tr.ForceConvertToDouble(dr["customercost"]);
+                        tr.CallStat.BtrcRevShare += tr.ForceConvertToDouble(dr["tax1"]);
+                    NoOfCallsVsPdd cpdd = new NoOfCallsVsPdd(tr.ForceConvertToLong(dr["Number Of Calls (International Incoming)"]), tr.ForceConvertToDouble(dr["PDD"]));
                         callVsPdd.Add(cpdd);
                     }
                     tr.CallStat.TotalActualDuration = Math.Round(tr.CallStat.TotalActualDuration, 2);
-                    //tr.CallStat.TotalDuration1 = Math.Round(tr.CallStat.TotalDuration1, 2);
-                    //tr.CallStat.TotalDuration2 = Math.Round(tr.CallStat.TotalDuration2, 2);
-                    //tr.CallStat.TotalDuration3 = Math.Round(tr.CallStat.TotalDuration3, 2);
-                    //tr.CallStat.TotalDuration4 = Math.Round(tr.CallStat.TotalDuration4, 2);
+                    tr.CallStat.TotalDuration1 = Math.Round(tr.CallStat.TotalDuration1, 2);
+                    tr.CallStat.TotalDuration2 = Math.Round(tr.CallStat.TotalDuration2, 2);
+                    tr.CallStat.TotalDuration3 = Math.Round(tr.CallStat.TotalDuration3, 2);
+                    tr.CallStat.TotalDuration4 = Math.Round(tr.CallStat.TotalDuration4, 2);
                     tr.CallStat.TotalRoundedDuration = Math.Round(tr.CallStat.TotalRoundedDuration, 2);
-                    tr.CallStat.PartnerCost  = Math.Round(tr.CallStat.PartnerCost, 2);
-                    tr.CallStat.BtrcRevShare = Math.Round(tr.CallStat.BtrcRevShare, 2);
-                    tr.CallStat.IgwRevenue = Math.Round(tr.CallStat.IgwRevenue, 2);
+                    tr.CallStat.TotalCustomerCost = Math.Round(tr.CallStat.TotalCustomerCost, 2);
                     tr.CallStat.CalculateAsr(2);
                     tr.CallStat.CalculateAcd(2);
                     tr.CallStat.CalculateAveragePdd(callVsPdd, 2);
@@ -293,24 +266,23 @@ public partial class LocalTransit : System.Web.UI.Page
                     //display summary information in the footer
                     Dictionary<string, dynamic> fieldSummaries = new Dictionary<string, dynamic>();//key=colname,val=colindex in grid
                                                                                                    //all keys have to be lowercase, because db fields are lower case at times
-                    fieldSummaries.Add("total calls", tr.CallStat.TotalCalls);
-                    fieldSummaries.Add("connected calls", tr.CallStat.ConnectedCalls);
-                    //fieldSummaries.Add("connectbycc", tr.CallStat.ConnectedCallsbyCauseCodes);
-                    fieldSummaries.Add("successful calls", tr.CallStat.SuccessfullCalls);
-                    fieldSummaries.Add("customer duration", tr.CallStat.TotalActualDuration);
-                    fieldSummaries.Add("supplier duration", tr.CallStat.TotalRoundedDuration);
-                    //fieldSummaries.Add("duration1", tr.CallStat.TotalDuration1);
-                    fieldSummaries.Add("cost", tr.CallStat.PartnerCost);
-                    fieldSummaries.Add("margin", tr.CallStat.BtrcRevShare);
-                    fieldSummaries.Add("revenue", tr.CallStat.IgwRevenue);
+                    fieldSummaries.Add("callscount", tr.CallStat.TotalCalls);
+                    fieldSummaries.Add("connectedcount", tr.CallStat.ConnectedCalls);
+                    fieldSummaries.Add("connectbycc", tr.CallStat.ConnectedCallsbyCauseCodes);
+                    fieldSummaries.Add("number of calls (international incoming)", tr.CallStat.SuccessfullCalls);
+                    fieldSummaries.Add("paid minutes (international incoming)", tr.CallStat.TotalActualDuration);
+                    fieldSummaries.Add("roundedduration", tr.CallStat.TotalRoundedDuration);
+                    fieldSummaries.Add("duration1", tr.CallStat.TotalDuration1);
                     fieldSummaries.Add("asr", tr.CallStat.Asr);
                     fieldSummaries.Add("acd", tr.CallStat.Acd);
                     fieldSummaries.Add("pdd", tr.CallStat.Pdd);
                     fieldSummaries.Add("ccr", tr.CallStat.Ccr);
                     fieldSummaries.Add("ccrbycc", tr.CallStat.CcRbyCauseCode);
+                    fieldSummaries.Add("customercost", tr.CallStat.TotalCustomerCost);
+                    fieldSummaries.Add("tax1", tr.CallStat.BtrcRevShare);
                     tr.FieldSummaries = fieldSummaries;
 
-                    Session["IntlInTr"] = tr;//save to session
+                    Session["IntlIn"] = tr;//save to session
 
                     //populate footer
                     //clear first
@@ -357,9 +329,9 @@ public partial class LocalTransit : System.Web.UI.Page
 
     protected void Button1_Click(object sender, EventArgs e)
     {
-        if (Session["IntlInTr"] != null) //THIS MUST BE CHANGED IN EACH PAGE
+        if (Session["IntlIn"] != null) //THIS MUST BE CHANGED IN EACH PAGE
         {
-            TrafficReportDatasetBased tr = (TrafficReportDatasetBased)Session["IntlInTr"];
+            TrafficReportDatasetBased tr = (TrafficReportDatasetBased)Session["IntlIn"];
             DataSetWithGridView dsG = new DataSetWithGridView(tr, GridView1);//invisible columns are removed in constructor
             CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(tr.Ds, "IntlIncoming_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                     + ".xlsx", Response);
@@ -382,19 +354,19 @@ public partial class LocalTransit : System.Web.UI.Page
 
     protected void CheckBoxShowByAns_CheckedChanged(object sender, EventArgs e)
     {
-        //if (CheckBoxShowByAns.Checked == true)
-        //{
-        //    DropDownListAns.Enabled = true;
-        //}
-        //else DropDownListAns.Enabled = false;
+        if (CheckBoxShowByAns.Checked == true)
+        {
+            DropDownListAns.Enabled = true;
+        }
+        else DropDownListAns.Enabled = false;
     }
     protected void CheckBoxShowByIgw_CheckedChanged(object sender, EventArgs e)
     {
-        //if (CheckBoxShowByIgw.Checked == true)
-        //{
-        //    DropDownListIgw.Enabled = true;
-        //}
-        //else DropDownListIgw.Enabled = false;
+        if (CheckBoxShowByIgw.Checked == true)
+        {
+            DropDownListIgw.Enabled = true;
+        }
+        else DropDownListIgw.Enabled = false;
     
     }
   
@@ -510,120 +482,120 @@ public partial class LocalTransit : System.Web.UI.Page
             return;
         }
         
-        //if (CheckBoxShowByAns.Checked == true)
-        //{
-        //    Dictionary<string,partner> dicKpiAns = null;
-        //    if (e.Row.RowType == DataControlRowType.DataRow)
-        //    {
-        //        if (ViewState["dicKpiAns"] != null)
-        //        {
-        //            dicKpiAns = (Dictionary<string,partner>)ViewState["dicKpiAns"];
-        //        }
-        //        else
-        //        {
-        //            return;
-        //        }
-        //        //Label lblCountry = (Label)e.Row.FindControl("Label3");
-        //        string thisAnsName = DataBinder.Eval(e.Row.DataItem, "ANS").ToString();
-        //        Single thisAsr = 0;
-        //        Single thisAcd = 0;
-        //        Single thisCcr = 0;
-        //        Single thisPdd = 0;
-        //        Single thisCcRbyCc = 0;
-        //        Single.TryParse(DataBinder.Eval(e.Row.DataItem, "ASR").ToString(),out thisAsr);
-        //        Single.TryParse(DataBinder.Eval(e.Row.DataItem, "ACD").ToString(), out thisAcd);
-        //        Single.TryParse(DataBinder.Eval(e.Row.DataItem, "CCR").ToString(), out thisCcr);
-        //        Single.TryParse(DataBinder.Eval(e.Row.DataItem, "PDD").ToString(), out thisPdd);
-        //        Single.TryParse(DataBinder.Eval(e.Row.DataItem, "CCRByCC").ToString(), out thisCcRbyCc);
-        //        partner thisPartner = null;
-        //        dicKpiAns.TryGetValue(thisAnsName, out thisPartner);
-        //        if (thisPartner != null)
-        //        {
-        //            Color redColor=ColorTranslator.FromHtml("#FF0000");
-        //            //ASR
-        //            Single refAsr = 0;
-        //            if (Convert.ToSingle(thisPartner.refasr) > 0)
-        //            {
-        //                refAsr=Convert.ToSingle(thisPartner.refasr);
-        //            }
-        //            if ((thisAsr < refAsr) || (thisAsr == 0))
-        //            {
-        //                e.Row.Cells[16].ForeColor = Color.White;
-        //                e.Row.Cells[16].BackColor = redColor;
-        //                e.Row.Cells[16].Font.Bold = true;
-        //            }
+        if (CheckBoxShowByAns.Checked == true)
+        {
+            Dictionary<string,partner> dicKpiAns = null;
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                if (ViewState["dicKpiAns"] != null)
+                {
+                    dicKpiAns = (Dictionary<string,partner>)ViewState["dicKpiAns"];
+                }
+                else
+                {
+                    return;
+                }
+                //Label lblCountry = (Label)e.Row.FindControl("Label3");
+                string thisAnsName = DataBinder.Eval(e.Row.DataItem, "ANS").ToString();
+                Single thisAsr = 0;
+                Single thisAcd = 0;
+                Single thisCcr = 0;
+                Single thisPdd = 0;
+                Single thisCcRbyCc = 0;
+                Single.TryParse(DataBinder.Eval(e.Row.DataItem, "ASR").ToString(),out thisAsr);
+                Single.TryParse(DataBinder.Eval(e.Row.DataItem, "ACD").ToString(), out thisAcd);
+                Single.TryParse(DataBinder.Eval(e.Row.DataItem, "CCR").ToString(), out thisCcr);
+                Single.TryParse(DataBinder.Eval(e.Row.DataItem, "PDD").ToString(), out thisPdd);
+                Single.TryParse(DataBinder.Eval(e.Row.DataItem, "CCRByCC").ToString(), out thisCcRbyCc);
+                partner thisPartner = null;
+                dicKpiAns.TryGetValue(thisAnsName, out thisPartner);
+                if (thisPartner != null)
+                {
+                    Color redColor=ColorTranslator.FromHtml("#FF0000");
+                    //ASR
+                    Single refAsr = 0;
+                    if (Convert.ToSingle(thisPartner.refasr) > 0)
+                    {
+                        refAsr=Convert.ToSingle(thisPartner.refasr);
+                    }
+                    if ((thisAsr < refAsr) || (thisAsr == 0))
+                    {
+                        e.Row.Cells[16].ForeColor = Color.White;
+                        e.Row.Cells[16].BackColor = redColor;
+                        e.Row.Cells[16].Font.Bold = true;
+                    }
 
-        //            //fas detection
-        //            double tempDbl = 0;
-        //            double refAsrFas = refAsr + refAsr * .5;//fas threshold= 30% of ref asr by default
-        //            double.TryParse(thisPartner.refasrfas.ToString(), out tempDbl);
-        //            if (tempDbl > 0) refAsrFas = tempDbl;
+                    //fas detection
+                    double tempDbl = 0;
+                    double refAsrFas = refAsr + refAsr * .5;//fas threshold= 30% of ref asr by default
+                    double.TryParse(thisPartner.refasrfas.ToString(), out tempDbl);
+                    if (tempDbl > 0) refAsrFas = tempDbl;
 
-        //            if (thisAsr > refAsrFas && refAsrFas>0)
-        //            {
-        //                e.Row.Cells[16].ForeColor = Color.White;
-        //                e.Row.Cells[16].BackColor = Color.Blue;
-        //                e.Row.Cells[16].Font.Bold = true;
-        //            }
+                    if (thisAsr > refAsrFas && refAsrFas>0)
+                    {
+                        e.Row.Cells[16].ForeColor = Color.White;
+                        e.Row.Cells[16].BackColor = Color.Blue;
+                        e.Row.Cells[16].Font.Bold = true;
+                    }
 
-        //            //ACD
-        //            Single refAcd = 0;
-        //            if (Convert.ToSingle(thisPartner.refacd) > 0)
-        //            {
-        //                refAcd = Convert.ToSingle(thisPartner.refacd);
-        //            }
-        //            if (thisAcd < refAcd)
-        //            {
-        //                //e.Row.Cells[16].ForeColor = RedColor;
-        //                e.Row.Cells[17].ForeColor = Color.White;
-        //                e.Row.Cells[17].BackColor = redColor;
-        //                e.Row.Cells[17].Font.Bold = true;
-        //            }
+                    //ACD
+                    Single refAcd = 0;
+                    if (Convert.ToSingle(thisPartner.refacd) > 0)
+                    {
+                        refAcd = Convert.ToSingle(thisPartner.refacd);
+                    }
+                    if (thisAcd < refAcd)
+                    {
+                        //e.Row.Cells[16].ForeColor = RedColor;
+                        e.Row.Cells[17].ForeColor = Color.White;
+                        e.Row.Cells[17].BackColor = redColor;
+                        e.Row.Cells[17].Font.Bold = true;
+                    }
 
-        //            //PDD
-        //            Single refPdd = 0;
-        //            if (Convert.ToSingle(thisPartner.refpdd) > 0)
-        //            {
-        //                refPdd = Convert.ToSingle(thisPartner.refpdd);
-        //            }
-        //            if (thisPdd > refPdd)
-        //            {
-        //                //e.Row.Cells[17].ForeColor = RedColor;
-        //                e.Row.Cells[18].ForeColor = Color.White;
-        //                e.Row.Cells[18].BackColor = redColor;
-        //                e.Row.Cells[18].Font.Bold = true;
-        //            }
+                    //PDD
+                    Single refPdd = 0;
+                    if (Convert.ToSingle(thisPartner.refpdd) > 0)
+                    {
+                        refPdd = Convert.ToSingle(thisPartner.refpdd);
+                    }
+                    if (thisPdd > refPdd)
+                    {
+                        //e.Row.Cells[17].ForeColor = RedColor;
+                        e.Row.Cells[18].ForeColor = Color.White;
+                        e.Row.Cells[18].BackColor = redColor;
+                        e.Row.Cells[18].Font.Bold = true;
+                    }
 
-        //            //CCR
-        //            Single refCcr = 0;
-        //            if (Convert.ToSingle(thisPartner.refccr) > 0)
-        //            {
-        //                refCcr = Convert.ToSingle(thisPartner.refccr);
-        //            }
-        //            if (thisCcr < refCcr)
-        //            {
-        //                //e.Row.Cells[18].ForeColor = RedColor;
-        //                e.Row.Cells[19].ForeColor = Color.White;
-        //                e.Row.Cells[19].BackColor = redColor;
-        //                e.Row.Cells[19].Font.Bold = true;
-        //            }
+                    //CCR
+                    Single refCcr = 0;
+                    if (Convert.ToSingle(thisPartner.refccr) > 0)
+                    {
+                        refCcr = Convert.ToSingle(thisPartner.refccr);
+                    }
+                    if (thisCcr < refCcr)
+                    {
+                        //e.Row.Cells[18].ForeColor = RedColor;
+                        e.Row.Cells[19].ForeColor = Color.White;
+                        e.Row.Cells[19].BackColor = redColor;
+                        e.Row.Cells[19].Font.Bold = true;
+                    }
 
-        //            //CCRByCauseCode
-        //            Single refCcrCc = 0;
-        //            if (Convert.ToSingle(thisPartner.refccrbycc) > 0)
-        //            {
-        //                refCcrCc = Convert.ToSingle(thisPartner.refccrbycc);
-        //            }
-        //            if (thisCcRbyCc < refCcrCc)
-        //            {
-        //                //e.Row.Cells[20].ForeColor = RedColor;
-        //                e.Row.Cells[21].ForeColor = Color.White;
-        //                e.Row.Cells[21].BackColor = redColor;
-        //                e.Row.Cells[21].Font.Bold = true;
-        //            }
-        //        }
-        //    }
-        //}//if checkbox ans
+                    //CCRByCauseCode
+                    Single refCcrCc = 0;
+                    if (Convert.ToSingle(thisPartner.refccrbycc) > 0)
+                    {
+                        refCcrCc = Convert.ToSingle(thisPartner.refccrbycc);
+                    }
+                    if (thisCcRbyCc < refCcrCc)
+                    {
+                        //e.Row.Cells[20].ForeColor = RedColor;
+                        e.Row.Cells[21].ForeColor = Color.White;
+                        e.Row.Cells[21].BackColor = redColor;
+                        e.Row.Cells[21].Font.Bold = true;
+                    }
+                }
+            }
+        }//if checkbox ans
         
         //0 ASR highlighting
         if (e.Row.RowType == DataControlRowType.DataRow)
@@ -633,9 +605,9 @@ public partial class LocalTransit : System.Web.UI.Page
             Color redColor2 = ColorTranslator.FromHtml("#FF0000");
             if (asr <= 0)
             {
-                e.Row.Cells[14].ForeColor = Color.White;
-                e.Row.Cells[14].BackColor = redColor2;
-                e.Row.Cells[14].Font.Bold = true;
+                e.Row.Cells[16].ForeColor = Color.White;
+                e.Row.Cells[16].BackColor = redColor2;
+                e.Row.Cells[16].Font.Bold = true;
             }
         }
 
