@@ -18,8 +18,8 @@ namespace TelcobrightMediation
     {
         private readonly SgIntlTransitVoice _sgIntlTransitVoice = new SgIntlTransitVoice();
         public override string ToString() => this.RuleName;
-        public string RuleName => "Outgoing";
-        public string HelpText => "Service group Domestic for ICNL";
+        public string RuleName => "Incoming";
+        public string HelpText => "Service group International Incoming for ICNL";
         public int Id => 22;
         private Dictionary<CdrSummaryType, Type> SummaryTargetTables { get; }
         private List<ICdrRule> CdrRules { get; set; } = new List<ICdrRule>();
