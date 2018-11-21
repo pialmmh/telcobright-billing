@@ -31,7 +31,7 @@ namespace InstallConfig
                 new ServiceGroupConfiguration(idServiceGroup: 20) //local
                 {
                     Params = new Dictionary<string, string>()
-                        { { "idCdrRules", "3" } },//LocalCallByTgTypeAndPrefix=3
+                        {{"idCdrRules", "3"}}, //LocalCallByTgTypeAndPrefix=3
                     PartnerRules = new List<int>()
                     {
                         PartnerRuletype.InPartnerByIncomingRoute,
@@ -53,19 +53,22 @@ namespace InstallConfig
                             new MatchedPrefixCustomerNotEmpty(),
                             //new CountryCodeNotEmpty(),
                             new InPartnerCostGt0() {Data = 0M},
-                            new Duration1Gt0(){Data = 0M},
+                            new Duration1Gt0() {Data = 0M},
                             //new MatchedPrefixSupplierNotEmpty(),
                             //new OutPartnerCostGt0() {Data = 0M},
                             //new Duration2Gt0(){Data = 0M},
-                         },
+                        },
                     InvoiceGenerationConfig = new InvoiceGenerationConfig()
                     {
                         InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary",
                         SectionGeneratorVsTemplateNames = new Dictionary<string, string>()
                         {
-                            {"A2ZInvoiceSection1Generator","InternationalIncomingToForeignCarrier" },
-                            {"A2ZInvoiceSection2GeneratorMatchedPrefixCustomer","InternationalIncomingToForeignCarrierDetails1" },
-                            {"A2ZInvoiceSection3Generator","InternationalIncomingToForeignCarrierDetails2" }
+                            {"A2ZInvoiceSection1Generator", "InternationalIncomingToForeignCarrier"},
+                            {
+                                "A2ZInvoiceSection2GeneratorMatchedPrefixCustomer",
+                                "InternationalIncomingToForeignCarrierDetails1"
+                            },
+                            {"A2ZInvoiceSection3Generator", "InternationalIncomingToForeignCarrierDetails2"}
                         }
                     },
                     AccountActions = new List<IAutomationAction>
@@ -77,7 +80,7 @@ namespace InstallConfig
                 }, //end dictionary item
                 new ServiceGroupConfiguration(idServiceGroup: 21) //outgoing
                 {
-                    Params = new Dictionary<string, string>(){ { "idCdrRules", "4" } },
+                    Params = new Dictionary<string, string>() {{"idCdrRules", "4"}},
                     PartnerRules = new List<int>()
                     {
                         PartnerRuletype.InPartnerByIncomingRoute,
@@ -99,7 +102,7 @@ namespace InstallConfig
                             new MatchedPrefixCustomerNotEmpty(),
                             new CountryCodeNotEmpty(),
                             //new InPartnerCostGt0() {Data = 0M},
-                            new Duration1Gt0(){Data = 0M},
+                            new Duration1Gt0() {Data = 0M},
                             //new MatchedPrefixSupplierNotEmpty(),
                             //new OutPartnerCostGt0() {Data = 0M},
                             //new Duration2Gt0(){Data = 0M},
@@ -109,9 +112,12 @@ namespace InstallConfig
                         InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary",
                         SectionGeneratorVsTemplateNames = new Dictionary<string, string>()
                         {
-                            {"A2ZInvoiceSection1Generator","InternationalIncomingToForeignCarrier" },
-                            {"A2ZInvoiceSection2GeneratorMatchedPrefixCustomer","InternationalIncomingToForeignCarrierDetails1" },
-                            {"A2ZInvoiceSection3Generator","InternationalIncomingToForeignCarrierDetails2" }
+                            {"A2ZInvoiceSection1Generator", "InternationalIncomingToForeignCarrier"},
+                            {
+                                "A2ZInvoiceSection2GeneratorMatchedPrefixCustomer",
+                                "InternationalIncomingToForeignCarrierDetails1"
+                            },
+                            {"A2ZInvoiceSection3Generator", "InternationalIncomingToForeignCarrierDetails2"}
                         }
                     },
                     AccountActions = new List<IAutomationAction>
@@ -123,7 +129,7 @@ namespace InstallConfig
                 }, //end dictionary item
                 new ServiceGroupConfiguration(idServiceGroup: 22) //incoming
                 {
-                    Params = new Dictionary<string, string>(){ { "idCdrRules", "5" } },
+                    Params = new Dictionary<string, string>() {{"idCdrRules", "5"}},
                     PartnerRules = new List<int>()
                     {
                         PartnerRuletype.InPartnerByIncomingRoute,
@@ -145,7 +151,7 @@ namespace InstallConfig
                             new MatchedPrefixCustomerNotEmpty(),
                             new CountryCodeNotEmpty(),
                             new InPartnerCostGt0() {Data = 0M},
-                            new Duration1Gt0(){Data = 0M},
+                            new Duration1Gt0() {Data = 0M},
                             //new MatchedPrefixSupplierNotEmpty(),
                             //new OutPartnerCostGt0() {Data = 0M},
                             //new Duration2Gt0(){Data = 0M},
@@ -155,9 +161,12 @@ namespace InstallConfig
                         InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary",
                         SectionGeneratorVsTemplateNames = new Dictionary<string, string>()
                         {
-                            {"A2ZInvoiceSection1Generator","InternationalIncomingToForeignCarrier" },
-                            {"A2ZInvoiceSection2GeneratorMatchedPrefixCustomer","InternationalIncomingToForeignCarrierDetails1" },
-                            {"A2ZInvoiceSection3Generator","InternationalIncomingToForeignCarrierDetails2" }
+                            {"A2ZInvoiceSection1Generator", "InternationalIncomingToForeignCarrier"},
+                            {
+                                "A2ZInvoiceSection2GeneratorMatchedPrefixCustomer",
+                                "InternationalIncomingToForeignCarrierDetails1"
+                            },
+                            {"A2ZInvoiceSection3Generator", "InternationalIncomingToForeignCarrierDetails2"}
                         }
                     },
                     AccountActions = new List<IAutomationAction>
@@ -167,6 +176,46 @@ namespace InstallConfig
                         new ActionBlockingAutomation()
                     }
                 }, //end dictionary item
+                new ServiceGroupConfiguration(idServiceGroup: 6) //toll free
+                {
+                    Params = new Dictionary<string, string>() {{"prefixes", "622"}},
+                    PartnerRules = new List<int>()
+                    {
+                        PartnerRuletype.InPartnerByIncomingRoute,
+                        PartnerRuletype.OutPartnerByOutgoingRoute
+                    },
+                    Ratingtrules = new List<RatingRule>()
+                    {
+                        new RatingRule()
+                        {
+                            IdServiceFamily = ServiceFamilyType.SfTollFreeEgressCharging,
+                            AssignDirection = 2
+                        },
+                    },
+                    MediationChecklistForAnsweredCdrs =
+                        new List<IValidationRule<cdr>>()
+                        {
+                            new DurationSecGtEq0(),
+                            new OutgoingRouteNotEmpty(),
+                            new InPartnerIdGt0(),
+                            new OutPartnerIdGt0(),
+                            new ServiceGroupGt0(),
+                            new MatchedPrefixSupplierNotEmpty(),
+                            new Duration2Gt0() {Data = 0M},
+                            new OutPartnerCostGt0() {Data = 0M},
+                            new BtrcRevShareTax1Gt0() {Data = 0M},
+                        },
+                    InvoiceGenerationConfig = new InvoiceGenerationConfig()
+                    {
+                        InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary",
+                        SectionGeneratorVsTemplateNames = new Dictionary<string, string>()
+                        {
+                            {"TollFreeInvoiceSection1GeneratorWithTax", "LTFSToIPTSP"},
+                            {"TollFreeInvoiceSection2GeneratorWithTax", "LTFSToIPTSPDetails1"},
+                            {"TollFreeInvoiceSection3GeneratorWithTax", "LTFSToIPTSPDetails2"}
+                        }
+                    }
+                }
             };
             return serviceGroupConfigurations.ToDictionary(s => s.IdServiceGroup);
         }
