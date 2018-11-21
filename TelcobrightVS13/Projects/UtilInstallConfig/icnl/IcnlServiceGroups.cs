@@ -176,7 +176,7 @@ namespace InstallConfig
                         new ActionBlockingAutomation()
                     }
                 }, //end dictionary item
-                new ServiceGroupConfiguration(idServiceGroup: 6) //toll free
+                new ServiceGroupConfiguration(idServiceGroup: 23) //toll free
                 {
                     Params = new Dictionary<string, string>() {{"prefixes", "622"}},
                     PartnerRules = new List<int>()
@@ -203,7 +203,47 @@ namespace InstallConfig
                             new MatchedPrefixSupplierNotEmpty(),
                             new Duration2Gt0() {Data = 0M},
                             new OutPartnerCostGt0() {Data = 0M},
-                            new BtrcRevShareTax1Gt0() {Data = 0M},
+                            
+                        },
+                    InvoiceGenerationConfig = new InvoiceGenerationConfig()
+                    {
+                        InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary",
+                        SectionGeneratorVsTemplateNames = new Dictionary<string, string>()
+                        {
+                            {"TollFreeInvoiceSection1GeneratorWithTax", "LTFSToIPTSP"},
+                            {"TollFreeInvoiceSection2GeneratorWithTax", "LTFSToIPTSPDetails1"},
+                            {"TollFreeInvoiceSection3GeneratorWithTax", "LTFSToIPTSPDetails2"}
+                        }
+                    }
+                },
+                new ServiceGroupConfiguration(idServiceGroup: 24) //toll free premium
+                {
+                    Params = new Dictionary<string, string>() {{"prefixes", "800"}},
+                    PartnerRules = new List<int>()
+                    {
+                        PartnerRuletype.InPartnerByIncomingRoute,
+                        PartnerRuletype.OutPartnerByOutgoingRoute
+                    },
+                    Ratingtrules = new List<RatingRule>()
+                    {
+                        new RatingRule()
+                        {
+                            IdServiceFamily = ServiceFamilyType.SfTollFreeEgressCharging,
+                            AssignDirection = 2
+                        },
+                    },
+                    MediationChecklistForAnsweredCdrs =
+                        new List<IValidationRule<cdr>>()
+                        {
+                            new DurationSecGtEq0(),
+                            new OutgoingRouteNotEmpty(),
+                            new InPartnerIdGt0(),
+                            new OutPartnerIdGt0(),
+                            new ServiceGroupGt0(),
+                            new MatchedPrefixSupplierNotEmpty(),
+                            new Duration2Gt0() {Data = 0M},
+                            new OutPartnerCostGt0() {Data = 0M},
+                            
                         },
                     InvoiceGenerationConfig = new InvoiceGenerationConfig()
                     {
