@@ -66,6 +66,8 @@
     <Compile Include="SgIcnlIncoming.cs" />
     <Compile Include="SgIcnlOutgoing.cs" />
     <Compile Include="SgIcnlLocal.cs" />
+    <Compile Include="SgIcnlTollFreePremium.cs" />
+    <Compile Include="SgIcnlTollFree.cs" />
     <Compile Include="SgLtfsIcx.cs" />
     <Compile Include="SgIntlTransitVoice.cs" />
     <Compile Include="SgDomesticIcx.cs" />

@@ -40,7 +40,7 @@ namespace InstallConfig
                     Ratingtrules = new List<RatingRule>()
                     {
                         new RatingRule() {IdServiceFamily = ServiceFamilyType.A2Z, AssignDirection = 1},
-                        new RatingRule() {IdServiceFamily = ServiceFamilyType.A2Z, AssignDirection = 2},
+                        //new RatingRule() {IdServiceFamily = ServiceFamilyType.A2Z, AssignDirection = 2},
                     },
                     MediationChecklistForAnsweredCdrs =
                         new List<IValidationRule<cdr>>()
@@ -51,12 +51,12 @@ namespace InstallConfig
                             new OutPartnerIdGt0(),
                             new ServiceGroupGt0(),
                             new MatchedPrefixCustomerNotEmpty(),
-                            new CountryCodeNotEmpty(),
+                            //new CountryCodeNotEmpty(),
                             new InPartnerCostGt0() {Data = 0M},
                             new Duration1Gt0(){Data = 0M},
-                            new MatchedPrefixSupplierNotEmpty(),
-                            new OutPartnerCostGt0() {Data = 0M},
-                            new Duration2Gt0(){Data = 0M},
+                            //new MatchedPrefixSupplierNotEmpty(),
+                            //new OutPartnerCostGt0() {Data = 0M},
+                            //new Duration2Gt0(){Data = 0M},
                          },
                     InvoiceGenerationConfig = new InvoiceGenerationConfig()
                     {
@@ -86,7 +86,7 @@ namespace InstallConfig
                     Ratingtrules = new List<RatingRule>()
                     {
                         new RatingRule() {IdServiceFamily = ServiceFamilyType.A2Z, AssignDirection = 1},
-                        new RatingRule() {IdServiceFamily = ServiceFamilyType.A2Z, AssignDirection = 2},
+                        //new RatingRule() {IdServiceFamily = ServiceFamilyType.A2Z, AssignDirection = 2},
                     },
                     MediationChecklistForAnsweredCdrs =
                         new List<IValidationRule<cdr>>()
@@ -98,11 +98,11 @@ namespace InstallConfig
                             new ServiceGroupGt0(),
                             new MatchedPrefixCustomerNotEmpty(),
                             new CountryCodeNotEmpty(),
-                            new InPartnerCostGt0() {Data = 0M},
+                            //new InPartnerCostGt0() {Data = 0M},
                             new Duration1Gt0(){Data = 0M},
-                            new MatchedPrefixSupplierNotEmpty(),
-                            new OutPartnerCostGt0() {Data = 0M},
-                            new Duration2Gt0(){Data = 0M},
+                            //new MatchedPrefixSupplierNotEmpty(),
+                            //new OutPartnerCostGt0() {Data = 0M},
+                            //new Duration2Gt0(){Data = 0M},
                         },
                     InvoiceGenerationConfig = new InvoiceGenerationConfig()
                     {
@@ -127,12 +127,12 @@ namespace InstallConfig
                     PartnerRules = new List<int>()
                     {
                         PartnerRuletype.InPartnerByIncomingRoute,
-                        PartnerRuletype.OutPartnerByOutgoingRoute
+                        //PartnerRuletype.OutPartnerByOutgoingRoute
                     },
                     Ratingtrules = new List<RatingRule>()
                     {
                         new RatingRule() {IdServiceFamily = ServiceFamilyType.A2Z, AssignDirection = 1},
-                        new RatingRule() {IdServiceFamily = ServiceFamilyType.A2Z, AssignDirection = 2},
+                        //new RatingRule() {IdServiceFamily = ServiceFamilyType.A2Z, AssignDirection = 2},
                     },
                     MediationChecklistForAnsweredCdrs =
                         new List<IValidationRule<cdr>>()
@@ -146,9 +146,9 @@ namespace InstallConfig
                             new CountryCodeNotEmpty(),
                             new InPartnerCostGt0() {Data = 0M},
                             new Duration1Gt0(){Data = 0M},
-                            new MatchedPrefixSupplierNotEmpty(),
-                            new OutPartnerCostGt0() {Data = 0M},
-                            new Duration2Gt0(){Data = 0M},
+                            //new MatchedPrefixSupplierNotEmpty(),
+                            //new OutPartnerCostGt0() {Data = 0M},
+                            //new Duration2Gt0(){Data = 0M},
                         },
                     InvoiceGenerationConfig = new InvoiceGenerationConfig()
                     {
