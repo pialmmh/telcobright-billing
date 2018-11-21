@@ -12,7 +12,7 @@ using ExportToExcel;
 using MediationModel;
 using LibraryExtensions;
 using PortalApp.ReportHelper;
-public partial class InternationalInTransit : System.Web.UI.Page
+public partial class InternationalOutTransit : System.Web.UI.Page
 {
     private int _mShowByCountry=0;
     private int _mShowByAns = 0;
@@ -22,7 +22,7 @@ public partial class InternationalInTransit : System.Web.UI.Page
 
         string StartDate =txtDate.Text;
         string EndtDate = (txtDate1.Text.ConvertToDateTimeFromMySqlFormat()).AddSeconds(1).ToMySqlFormatWithoutQuote();
-        string tableName = DropDownListReportSource.SelectedValue + "03";
+        string tableName = DropDownListReportSource.SelectedValue + "02";
 
         string groupInterval = getSelectedRadioButtonText();
         switch (groupInterval)

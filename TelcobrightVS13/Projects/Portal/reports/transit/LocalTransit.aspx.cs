@@ -12,7 +12,7 @@ using ExportToExcel;
 using MediationModel;
 using LibraryExtensions;
 using PortalApp.ReportHelper;
-public partial class InternationalInTransit : System.Web.UI.Page
+public partial class LocalTransit : System.Web.UI.Page
 {
     private int _mShowByCountry=0;
     private int _mShowByAns = 0;
