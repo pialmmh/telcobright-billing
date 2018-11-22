@@ -105,6 +105,9 @@
     <Compile Include="billingruleassignment.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="bridgedroute.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="causecode.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>

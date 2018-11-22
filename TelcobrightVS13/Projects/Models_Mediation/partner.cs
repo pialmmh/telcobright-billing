@@ -21,6 +21,8 @@ namespace MediationModel
             this.accounts1 = new HashSet<account>();
             this.ratetaskassigns = new HashSet<ratetaskassign>();
             this.routes = new HashSet<route>();
+            this.bridgedroutes = new HashSet<bridgedroute>();
+            this.bridgedroutes1 = new HashSet<bridgedroute>();
         }
     
         public int idPartner { get; set; }
@@ -64,5 +66,9 @@ namespace MediationModel
         public virtual ICollection<ratetaskassign> ratetaskassigns { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<route> routes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<bridgedroute> bridgedroutes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<bridgedroute> bridgedroutes1 { get; set; }
     }
 }

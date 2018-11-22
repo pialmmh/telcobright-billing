@@ -251,6 +251,15 @@ warning 6002: The table/view 'def.platinum.acc_transaction' does not have a prim
           <Property Name="idBillingRule" Type="int" />
           <Property Name="idServiceGroup" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="bridgedroute">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="tgName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="inPartner" Type="int" Nullable="false" />
+          <Property Name="outPartner" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="causecode">
           <Key>
             <PropertyRef Name="id" />
@@ -642,8 +651,8 @@ warning 6002: The table/view 'def.platinum.cdrinconsistent' does not have a prim
         <EntityType Name="cdrinconsistent">
           <Key>
             <PropertyRef Name="SwitchId" />
-            <PropertyRef Name="SequenceNumber" />
             <PropertyRef Name="FileName" />
+            <PropertyRef Name="SequenceNumber" />
             <PropertyRef Name="DurationSec" />
             <PropertyRef Name="EndTime" />
             <PropertyRef Name="SignalingStartTime" />
@@ -3720,6 +3729,30 @@ warning 6002: The table/view 'def.platinum.uom_conversion' does not have a prima
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="bridgedroute_ibfk_1">
+          <End Role="partner" Type="Self.partner" Multiplicity="1" />
+          <End Role="bridgedroute" Type="Self.bridgedroute" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="partner">
+              <PropertyRef Name="idPartner" />
+            </Principal>
+            <Dependent Role="bridgedroute">
+              <PropertyRef Name="inPartner" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="bridgedroute_ibfk_2">
+          <End Role="partner" Type="Self.partner" Multiplicity="1" />
+          <End Role="bridgedroute" Type="Self.bridgedroute" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="partner">
+              <PropertyRef Name="idPartner" />
+            </Principal>
+            <Dependent Role="bridgedroute">
+              <PropertyRef Name="outPartner" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="cdrfieldmappingbyswitchtype_ibfk_1">
           <End Role="cdrfieldlist" Type="Self.cdrfieldlist" Multiplicity="1" />
           <End Role="cdrfieldmappingbyswitchtype" Type="Self.cdrfieldmappingbyswitchtype" Multiplicity="*" />
@@ -4135,6 +4168,7 @@ warning 6002: The table/view 'def.platinum.uom_conversion' does not have a prima
           <EntitySet Name="autoinc_manual_long" EntityType="Self.autoinc_manual_long" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="autoincrementcounter" EntityType="Self.autoincrementcounter" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="billingruleassignment" EntityType="Self.billingruleassignment" Schema="platinum" store:Type="Tables" />
+          <EntitySet Name="bridgedroute" EntityType="Self.bridgedroute" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="causecode" EntityType="Self.causecode" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="cdrfieldlist" EntityType="Self.cdrfieldlist" Schema="platinum" store:Type="Tables" />
           <EntitySet Name="cdrfieldmappingbyswitchtype" EntityType="Self.cdrfieldmappingbyswitchtype" Schema="platinum" store:Type="Tables" />
@@ -5797,6 +5831,14 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
             <End Role="rateplanassignmenttuple" EntitySet="rateplanassignmenttuple" />
             <End Role="billingruleassignment" EntitySet="billingruleassignment" />
           </AssociationSet>
+          <AssociationSet Name="bridgedroute_ibfk_1" Association="Self.bridgedroute_ibfk_1">
+            <End Role="partner" EntitySet="partner" />
+            <End Role="bridgedroute" EntitySet="bridgedroute" />
+          </AssociationSet>
+          <AssociationSet Name="bridgedroute_ibfk_2" Association="Self.bridgedroute_ibfk_2">
+            <End Role="partner" EntitySet="partner" />
+            <End Role="bridgedroute" EntitySet="bridgedroute" />
+          </AssociationSet>
           <AssociationSet Name="cdrfieldmappingbyswitchtype_ibfk_1" Association="Self.cdrfieldmappingbyswitchtype_ibfk_1">
             <End Role="cdrfieldlist" EntitySet="cdrfieldlist" />
             <End Role="cdrfieldmappingbyswitchtype" EntitySet="cdrfieldmappingbyswitchtype" />
@@ -6223,6 +6265,15 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <AssociationSet Name="userroles_ibfk_1" Association="MediationModel.userroles_ibfk_1">
             <End Role="user" EntitySet="users" />
             <End Role="userrole" EntitySet="userroles" />
+          </AssociationSet>
+          <EntitySet Name="bridgedroutes" EntityType="MediationModel.bridgedroute" />
+          <AssociationSet Name="bridgedroute_ibfk_1" Association="MediationModel.bridgedroute_ibfk_1">
+            <End Role="partner" EntitySet="partners" />
+            <End Role="bridgedroute" EntitySet="bridgedroutes" />
+          </AssociationSet>
+          <AssociationSet Name="bridgedroute_ibfk_2" Association="MediationModel.bridgedroute_ibfk_2">
+            <End Role="partner" EntitySet="partners" />
+            <End Role="bridgedroute" EntitySet="bridgedroutes" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="acc_action">
@@ -7106,6 +7157,8 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <NavigationProperty Name="accounts1" Relationship="MediationModel.account_ibfk_2" FromRole="partner" ToRole="account" />
           <NavigationProperty Name="ratetaskassigns" Relationship="MediationModel.ratetaskassign_ibfk_3" FromRole="partner" ToRole="ratetaskassign" />
           <NavigationProperty Name="routes" Relationship="MediationModel.route_ibfk_1" FromRole="partner" ToRole="route" />
+          <NavigationProperty Name="bridgedroutes" Relationship="MediationModel.bridgedroute_ibfk_1" FromRole="partner" ToRole="bridgedroute" />
+          <NavigationProperty Name="bridgedroutes1" Relationship="MediationModel.bridgedroute_ibfk_2" FromRole="partner" ToRole="bridgedroute" />
         </EntityType>
         <EntityType Name="partnerprefix">
           <Key>
@@ -10368,6 +10421,41 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="bridgedroute">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="tgName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="inPartner" Type="Int32" Nullable="false" />
+          <Property Name="outPartner" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="partner" Relationship="MediationModel.bridgedroute_ibfk_1" FromRole="bridgedroute" ToRole="partner" />
+          <NavigationProperty Name="partner1" Relationship="MediationModel.bridgedroute_ibfk_2" FromRole="bridgedroute" ToRole="partner" />
+        </EntityType>
+        <Association Name="bridgedroute_ibfk_1">
+          <End Type="MediationModel.partner" Role="partner" Multiplicity="1" />
+          <End Type="MediationModel.bridgedroute" Role="bridgedroute" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="partner">
+              <PropertyRef Name="idPartner" />
+            </Principal>
+            <Dependent Role="bridgedroute">
+              <PropertyRef Name="inPartner" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="bridgedroute_ibfk_2">
+          <End Type="MediationModel.partner" Role="partner" Multiplicity="1" />
+          <End Type="MediationModel.bridgedroute" Role="bridgedroute" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="partner">
+              <PropertyRef Name="idPartner" />
+            </Principal>
+            <Dependent Role="bridgedroute">
+              <PropertyRef Name="outPartner" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -13435,6 +13523,16 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
                 <ScalarProperty Name="CONVERSION_FACTOR" ColumnName="CONVERSION_FACTOR" />
                 <ScalarProperty Name="UOM_ID_TO" ColumnName="UOM_ID_TO" />
                 <ScalarProperty Name="UOM_ID" ColumnName="UOM_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="bridgedroutes">
+            <EntityTypeMapping TypeName="MediationModel.bridgedroute">
+              <MappingFragment StoreEntitySet="bridgedroute">
+                <ScalarProperty Name="outPartner" ColumnName="outPartner" />
+                <ScalarProperty Name="inPartner" ColumnName="inPartner" />
+                <ScalarProperty Name="tgName" ColumnName="tgName" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

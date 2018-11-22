@@ -162,5 +162,6 @@ namespace MediationModel
         public virtual DbSet<sum_voice_hr_05> sum_voice_hr_05 { get; set; }
         public virtual DbSet<sum_voice_hr_06> sum_voice_hr_06 { get; set; }
         public virtual DbSet<uom_conversion> uom_conversion { get; set; }
+        public virtual DbSet<bridgedroute> bridgedroutes { get; set; }
     }
 }

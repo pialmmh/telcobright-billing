@@ -180,6 +180,9 @@
         <AssociationConnector Association="MediationModel.ApplicationUser_Claims" />
         <AssociationConnector Association="MediationModel.ApplicationUser_Logins" />
         <AssociationConnector Association="MediationModel.userroles_ibfk_1" />
+        <EntityTypeShape EntityType="MediationModel.bridgedroute" Width="1.5" PointX="5.25" PointY="0.75" />
+        <AssociationConnector Association="MediationModel.bridgedroute_ibfk_1" />
+        <AssociationConnector Association="MediationModel.bridgedroute_ibfk_2" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
