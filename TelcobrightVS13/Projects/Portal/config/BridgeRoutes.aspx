@@ -30,14 +30,14 @@ Theme="" AutoEventWireup="True" CodeBehind="BridgeRoutes.aspx.cs" Inherits="Brid
             </tr>
             <tr>
                 <td style="width: 15%; horiz-align: left">
-                    Incoming Partner
+                    Carrier 1
                 </td>
                 <td style="width: 35%; horiz-align: left">
                     <asp:DropDownList ID="ddlistIncomingPartner" runat="server"  Enabled="true" AutoPostBack="false" 
                         DataSourceID="SqlDataUOM" DataTextField="PartnerName" DataValueField="idPartner" />
                 </td>
                 <td style="width: 15%; horiz-align: left">
-                    Outgoing Partner
+                    Carrier 2
                 </td>
                 <td style="width: 35%; horiz-align: left">
                     <asp:DropDownList ID="ddlistOutgoingPartner" runat="server" Enabled="true" AutoPostBack="false" 
@@ -92,7 +92,7 @@ Theme="" AutoEventWireup="True" CodeBehind="BridgeRoutes.aspx.cs" Inherits="Brid
                 </EditItemTemplate>
             </asp:TemplateField>
             <asp:BoundField DataField="tgName" HeaderText="TG Name" SortExpression="tgName" Visible="true" />
-            <asp:TemplateField HeaderText="Incoming Partner">
+            <asp:TemplateField HeaderText="Carrier 1">
                 <ItemTemplate>
                     <asp:DropDownList ID="DropDownListIncomingPartner" runat="server" AutoPostBack="True" 
                         DataSourceID="SqlDataUOM" DataTextField="PartnerName" DataValueField="idPartner" SelectedValue='<%# Bind("inPartner") %>'
@@ -106,7 +106,7 @@ Theme="" AutoEventWireup="True" CodeBehind="BridgeRoutes.aspx.cs" Inherits="Brid
                     </asp:DropDownList>
                 </EditItemTemplate>
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Outgoing Partner">
+            <asp:TemplateField HeaderText="Carrier 2">
                 <ItemTemplate>
                     <asp:DropDownList ID="DropDownListOutgoingPartner" runat="server" AutoPostBack="True" 
                         DataSourceID="SqlDataUOM" DataTextField="PartnerName" DataValueField="idPartner" SelectedValue='<%# Bind("outPartner") %>'
