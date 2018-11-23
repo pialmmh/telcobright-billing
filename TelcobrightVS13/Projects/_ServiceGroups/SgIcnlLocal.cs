@@ -49,7 +49,15 @@ namespace TelcobrightMediation
 
         public void Execute(cdr thisCdr, CdrProcessor cdrProcessor)
         {
-            var trueForAll = this.CdrRules.All(r => r.CheckIfTrue(thisCdr));
+            var trueForAll = true;
+            foreach (var r in this.CdrRules)
+            {
+                if (r.CheckIfTrue(thisCdr) == false)
+                {
+                    trueForAll = false;
+                    break;
+                }
+            }
             if (trueForAll)
             {
                 thisCdr.ServiceGroup = this.Id;

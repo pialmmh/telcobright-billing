@@ -4,12 +4,13 @@ using System.ComponentModel.Composition;
 using MediationModel;
 using TelcobrightMediation;
 using TelcobrightMediation.Cdr;
+using System.Linq;
 
 namespace CdrRules
 {
 
     [Export("CdrRule", typeof(ICdrRule))]
-    public class LocalCallByTgTypeAndPrefix : ICdrRule
+    public class IcnlLocalByTgTypeAndPrefix : ICdrRule
     {
         public override string ToString() => this.RuleName;
         public string RuleName => GetType().Name;
@@ -17,12 +18,13 @@ namespace CdrRules
         public int Id => 3;
         public object Data { get; set; }
         public bool IsPrepared { get; private set; }
-        private Dictionary<ValueTuple<int, string>, route> switchWiseRoutes;
+        private Dictionary<ValueTuple<int, string>, route> switchWiseRoutes = 
+            new Dictionary<ValueTuple<int, string>, route>();
         private Dictionary<string, partnerprefix> AnsPrefixes { get; set; } 
         public void Prepare(object input)
         {
             MediationContext mediationContext = (MediationContext) input;
-            this.switchWiseRoutes = this.Data as Dictionary<ValueTuple<int, string>, route>;
+            this.switchWiseRoutes = mediationContext.Routes;
             this.AnsPrefixes = mediationContext.DictAnsOrig;
             this.IsPrepared = true;
         }
