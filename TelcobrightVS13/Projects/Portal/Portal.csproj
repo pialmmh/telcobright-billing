@@ -449,6 +449,7 @@
     <Content Include="config\BalanceAdjustment_old.aspx" />
     <Content Include="config\calendar.png" />
     <Content Include="config\BatchJob.aspx" />
+    <Content Include="config\BridgeRoutes.aspx" />
     <Content Include="config\GeneratedInvoices.aspx" />
     <Content Include="config\BalanceAdjustment.aspx" />
     <Content Include="config\InvoiceGeneration.aspx" />
@@ -727,6 +728,13 @@
     </Compile>
     <Compile Include="config\BatchJob.aspx.designer.cs">
       <DependentUpon>BatchJob.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="config\BridgeRoutes.aspx.cs">
+      <DependentUpon>BridgeRoutes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="config\BridgeRoutes.aspx.designer.cs">
+      <DependentUpon>BridgeRoutes.aspx</DependentUpon>
     </Compile>
     <Compile Include="config\GeneratedInvoices.aspx.cs">
       <DependentUpon>GeneratedInvoices.aspx</DependentUpon>
