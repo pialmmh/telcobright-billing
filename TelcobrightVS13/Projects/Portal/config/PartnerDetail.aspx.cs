@@ -218,8 +218,8 @@ public partial class ConfigPartnerDetail : System.Web.UI.Page
                 //ans can't insert route
                 if (thisPartnerType == 1)//partner type=ans
                 {
-                    this.LinkButton1.Visible = true;
-                    this.lblRoute.Visible = true;
+                    this.LinkButton1.Visible = false;
+                    this.lblRoute.Visible = false;
 
                     //hide common TG and PrefixDirection  in gridview
                     this.GridViewPrefix.Columns[5].Visible = false;
