@@ -61,6 +61,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PrtOutByBridgeTg.cs" />
+    <Compile Include="PrtInByBridgeTg.cs" />
     <Compile Include="PrtInByTg.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PrtOutByTg.cs" />

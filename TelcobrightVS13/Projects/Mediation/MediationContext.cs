@@ -41,7 +41,7 @@ namespace TelcobrightMediation
             ServiceGroupConfigurations { get; } //<switchid,dic<servicegroupID,medruleassignment>>
         public Dictionary<int, SwitchWiseLookup> SwitchWiseLookups { get; }
         public Dictionary<string, ne> Nes { get; } //load only nes for corresponding telcobright partner
-
+        public Dictionary<int,partner> Partners { get; }
         public MediationContext(TelcobrightConfig tbc, PartnerEntities context)
         {
             StaticExtInsertColumnParsedDic.Parse();
@@ -123,6 +123,8 @@ namespace TelcobrightMediation
             }
             CdrSummaryTypeDictionary.Initialize();
             CreateTemporaryTables();
+            this.Partners = context.partners.ToDictionary(c => c.idPartner);
+            this.MefPartnerRuleContainer.MediationContext = this;
         }
 
         Dictionary<string, partnerprefix> PopulateANSPrefix()

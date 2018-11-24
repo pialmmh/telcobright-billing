@@ -24,18 +24,19 @@ namespace InstallConfig
     {
         public Dictionary<int, ServiceGroupConfiguration> GetServiceGroupConfigurations()
         {
-
-
             List<ServiceGroupConfiguration> serviceGroupConfigurations = new List<ServiceGroupConfiguration>()
             {
                 new ServiceGroupConfiguration(idServiceGroup: 20) //local
                 {
+                    Disabled = false,
                     Params = new Dictionary<string, string>()
                         {{"idCdrRules", "3"}}, //LocalCallByTgTypeAndPrefix=3
                     PartnerRules = new List<int>()
                     {
                         PartnerRuletype.InPartnerByIncomingRoute,
-                        PartnerRuletype.OutPartnerByOutgoingRoute
+                        PartnerRuletype.InPartnerByBridgeRoute,
+                        PartnerRuletype.OutPartnerByOutgoingRoute,
+                        PartnerRuletype.OutPartnerByBridgeRoute
                     },
                     Ratingtrules = new List<RatingRule>()
                     {
@@ -80,11 +81,14 @@ namespace InstallConfig
                 }, //end dictionary item
                 new ServiceGroupConfiguration(idServiceGroup: 21) //outgoing
                 {
+                    Disabled = true,
                     Params = new Dictionary<string, string>() {{"idCdrRules", "4"}},
                     PartnerRules = new List<int>()
                     {
                         PartnerRuletype.InPartnerByIncomingRoute,
-                        PartnerRuletype.OutPartnerByOutgoingRoute
+                        PartnerRuletype.InPartnerByBridgeRoute,
+                        PartnerRuletype.OutPartnerByOutgoingRoute,
+                        PartnerRuletype.OutPartnerByBridgeRoute
                     },
                     Ratingtrules = new List<RatingRule>()
                     {
@@ -129,6 +133,7 @@ namespace InstallConfig
                 }, //end dictionary item
                 new ServiceGroupConfiguration(idServiceGroup: 22) //incoming
                 {
+                    Disabled = true,
                     Params = new Dictionary<string, string>() {{"idCdrRules", "5"}},
                     PartnerRules = new List<int>()
                     {
@@ -178,11 +183,14 @@ namespace InstallConfig
                 }, //end dictionary item
                 new ServiceGroupConfiguration(idServiceGroup: 23) //toll free
                 {
+                    Disabled = true,
                     Params = new Dictionary<string, string>() {{"prefixes", "622"}},
                     PartnerRules = new List<int>()
                     {
                         PartnerRuletype.InPartnerByIncomingRoute,
-                        PartnerRuletype.OutPartnerByOutgoingRoute
+                        PartnerRuletype.InPartnerByBridgeRoute,
+                        PartnerRuletype.OutPartnerByOutgoingRoute,
+                        PartnerRuletype.OutPartnerByBridgeRoute
                     },
                     Ratingtrules = new List<RatingRule>()
                     {
@@ -218,11 +226,14 @@ namespace InstallConfig
                 },
                 new ServiceGroupConfiguration(idServiceGroup: 24) //toll free premium
                 {
+                    Disabled = true,
                     Params = new Dictionary<string, string>() {{"prefixes", "800"}},
                     PartnerRules = new List<int>()
                     {
                         PartnerRuletype.InPartnerByIncomingRoute,
-                        PartnerRuletype.OutPartnerByOutgoingRoute
+                        PartnerRuletype.InPartnerByBridgeRoute,
+                        PartnerRuletype.OutPartnerByOutgoingRoute,
+                        PartnerRuletype.OutPartnerByBridgeRoute
                     },
                     Ratingtrules = new List<RatingRule>()
                     {
