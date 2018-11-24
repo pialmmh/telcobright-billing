@@ -18,13 +18,16 @@ namespace CdrRules
         public int Id => 3;
         public object Data { get; set; }
         public bool IsPrepared { get; private set; }
-        private Dictionary<ValueTuple<int, string>, route> switchWiseRoutes = 
+        private Dictionary<ValueTuple<int, string>, route> routes = 
             new Dictionary<ValueTuple<int, string>, route>();
+        private Dictionary<ValueTuple<int, string>, bridgedroute> bridgedRoutes =
+            new Dictionary<ValueTuple<int, string>, bridgedroute>();
         private Dictionary<string, partnerprefix> AnsPrefixes { get; set; } 
         public void Prepare(object input)
         {
             MediationContext mediationContext = (MediationContext) input;
-            this.switchWiseRoutes = mediationContext.Routes;
+            this.routes = mediationContext.Routes;
+            this.bridgedRoutes = mediationContext.BridgedRoutes;
             this.AnsPrefixes = mediationContext.DictAnsOrig;
             this.IsPrepared = true;
         }
@@ -33,14 +36,32 @@ namespace CdrRules
         {
             if(this.IsPrepared==false) throw new Exception("Rule is not prepared, method Prepare needs to be called first.");
             thisCdr.AnsIdOrig = null;
-            AnsPrefixFinder.FindOriginatingAnsPrefix(thisCdr,this.AnsPrefixes,thisCdr.OriginatingCallingNumber);
-            var dicRoutes = this.switchWiseRoutes;
-            var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
             route incomingRoute = null;
-            dicRoutes.TryGetValue(key, out incomingRoute);
-            key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.OutgoingRoute);
             route outgoingRoute = null;
-            dicRoutes.TryGetValue(key, out outgoingRoute);
+            bridgedroute incomingBridgeRoute = null;
+            bridgedroute outgoingBridgeRoute = null;
+
+            AnsPrefixFinder.FindOriginatingAnsPrefix(thisCdr,this.AnsPrefixes,thisCdr.OriginatingCallingNumber);
+
+            var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
+            this.routes.TryGetValue(key, out incomingRoute);
+            if (incomingRoute == null)
+            {
+                key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
+                this.bridgedRoutes.TryGetValue(key, out incomingBridgeRoute);
+            }
+            
+            key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.OutgoingRoute);
+            this.routes.TryGetValue(key, out outgoingRoute);
+            if (outgoingRoute == null)
+            {
+                key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.OutgoingRoute);
+                this.bridgedRoutes.TryGetValue(key, out outgoingBridgeRoute);
+            }
+
+
+
+            this.routes.TryGetValue(key, out outgoingRoute);
             return incomingRoute?.NationalOrInternational == RouteLocalityType.National
                 &&outgoingRoute?.NationalOrInternational==RouteLocalityType.National
                    && thisCdr.AnsIdOrig > 0;

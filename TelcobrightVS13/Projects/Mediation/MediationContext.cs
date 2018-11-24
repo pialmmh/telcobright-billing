@@ -72,8 +72,8 @@ namespace TelcobrightMediation
             this.BillingSpans = context.enumbillingspans.ToDictionary(c => c.ofbiz_uom_Id); //route data
             this.Routes = context.routes.Include(r=>r.partner)
                 .ToDictionary(r => new ValueTuple<int,string>(r.SwitchId,r.RouteName));
-            this.Routes = context.bridgedroutes.Include(r => r.partner).Include(r=>r.partner1)
-                .ToDictionary(r => new ValueTuple<int, string>(r., r.RouteName));
+            this.BridgedRoutes = context.bridgedroutes.Include(r => r.partner).Include(r=>r.partner1)
+                .ToDictionary(r => new ValueTuple<int, string>(r.idSwitch, r.tgName));
             this.DictAnsOrig = new Dictionary<string, partnerprefix>();
             this.DictAnsOrig = PopulateANSPrefix();
             this.LstAnsPrefixExtra = context.ansprefixextras.OrderByDescending(c => c.PrefixBeforeAnsNumber.Length)
