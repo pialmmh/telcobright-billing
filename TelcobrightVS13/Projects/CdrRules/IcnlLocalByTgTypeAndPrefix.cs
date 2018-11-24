@@ -59,12 +59,14 @@ namespace CdrRules
                 this.bridgedRoutes.TryGetValue(key, out outgoingBridgeRoute);
             }
 
+            int inRouteLocalityType = Convert.ToInt32(incomingRoute?.NationalOrInternational ??
+                                                      incomingBridgeRoute?.nationalOrInternational);
 
+            int outRouteLocalityType = Convert.ToInt32(outgoingRoute?.NationalOrInternational ??
+                                                       outgoingBridgeRoute?.nationalOrInternational);
 
-            this.routes.TryGetValue(key, out outgoingRoute);
-            return incomingRoute?.NationalOrInternational == RouteLocalityType.National
-                &&outgoingRoute?.NationalOrInternational==RouteLocalityType.National
-                   && thisCdr.AnsIdOrig > 0;
+            return inRouteLocalityType == RouteLocalityType.National
+                && outRouteLocalityType==RouteLocalityType.National && thisCdr.AnsIdOrig > 0;
         }
     }
 }
