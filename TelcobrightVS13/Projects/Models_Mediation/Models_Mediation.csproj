@@ -607,6 +607,9 @@
     <Compile Include="telcobrightpartner.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="temp_rate.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="timezone.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>

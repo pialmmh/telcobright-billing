@@ -14,7 +14,7 @@ namespace Utils
 {
     class Program
     {
-             
+            
         static void Main(string[] args)
         {
             //var tester = new ParallelStringGeneratorTest();

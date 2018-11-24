@@ -12,6 +12,7 @@ namespace MediationModel
 		{
 			return new StringBuilder("(")
 				.Append(this.id.ToMySqlField()).Append(",")
+				.Append(this.idSwitch.ToMySqlField()).Append(",")
 				.Append(this.tgName.ToMySqlField()).Append(",")
 				.Append(this.inPartner.ToMySqlField()).Append(",")
 				.Append(this.outPartner.ToMySqlField()).Append(")")
@@ -25,6 +26,7 @@ namespace MediationModel
 		{
 			return new StringBuilder("update bridgedroute set ")
 				.Append("id=").Append(this.id.ToMySqlField()).Append(",")
+				.Append("idSwitch=").Append(this.idSwitch.ToMySqlField()).Append(",")
 				.Append("tgName=").Append(this.tgName.ToMySqlField()).Append(",")
 				.Append("inPartner=").Append(this.inPartner.ToMySqlField()).Append(",")
 				.Append("outPartner=").Append(this.outPartner.ToMySqlField())

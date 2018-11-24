@@ -35,6 +35,7 @@ namespace MediationModel
         public virtual DbSet<autoinc_manual_long> autoinc_manual_long { get; set; }
         public virtual DbSet<autoincrementcounter> autoincrementcounters { get; set; }
         public virtual DbSet<billingruleassignment> billingruleassignments { get; set; }
+        public virtual DbSet<bridgedroute> bridgedroutes { get; set; }
         public virtual DbSet<causecode> causecodes { get; set; }
         public virtual DbSet<cdrfieldlist> cdrfieldlists { get; set; }
         public virtual DbSet<cdrfieldmappingbyswitchtype> cdrfieldmappingbyswitchtypes { get; set; }
@@ -161,7 +162,7 @@ namespace MediationModel
         public virtual DbSet<sum_voice_hr_04> sum_voice_hr_04 { get; set; }
         public virtual DbSet<sum_voice_hr_05> sum_voice_hr_05 { get; set; }
         public virtual DbSet<sum_voice_hr_06> sum_voice_hr_06 { get; set; }
+        public virtual DbSet<temp_rate> temp_rate { get; set; }
         public virtual DbSet<uom_conversion> uom_conversion { get; set; }
-        public virtual DbSet<bridgedroute> bridgedroutes { get; set; }
     }
 }

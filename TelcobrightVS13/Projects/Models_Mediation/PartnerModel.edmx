@@ -256,6 +256,7 @@ warning 6002: The table/view 'def.platinum.acc_transaction' does not have a prim
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="idSwitch" Type="int" />
           <Property Name="tgName" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="inPartner" Type="int" Nullable="false" />
           <Property Name="outPartner" Type="int" Nullable="false" />
@@ -652,14 +653,10 @@ warning 6002: The table/view 'def.platinum.cdrinconsistent' does not have a prim
           <Key>
             <PropertyRef Name="SwitchId" />
             <PropertyRef Name="FileName" />
-            <PropertyRef Name="SequenceNumber" />
-            <PropertyRef Name="DurationSec" />
-            <PropertyRef Name="EndTime" />
-            <PropertyRef Name="SignalingStartTime" />
           </Key>
           <Property Name="SwitchId" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="IdCall" Type="varchar" MaxLength="100" />
-          <Property Name="SequenceNumber" Type="bigint" Nullable="false" />
+          <Property Name="SequenceNumber" Type="bigint" />
           <Property Name="FileName" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="ServiceGroup" Type="varchar" MaxLength="100" />
           <Property Name="IncomingRoute" Type="varchar" MaxLength="100" />
@@ -671,8 +668,8 @@ warning 6002: The table/view 'def.platinum.cdrinconsistent' does not have a prim
           <Property Name="OriginatingCallingNumber" Type="varchar" MaxLength="100" />
           <Property Name="TerminatingCallingNumber" Type="varchar" MaxLength="100" />
           <Property Name="PrePaid" Type="varchar" MaxLength="100" />
-          <Property Name="DurationSec" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="EndTime" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="DurationSec" Type="varchar" MaxLength="100" />
+          <Property Name="EndTime" Type="varchar" MaxLength="100" />
           <Property Name="ConnectTime" Type="varchar" MaxLength="100" />
           <Property Name="AnswerTime" Type="varchar" MaxLength="100" />
           <Property Name="ChargingStatus" Type="varchar" MaxLength="100" />
@@ -760,7 +757,7 @@ warning 6002: The table/view 'def.platinum.cdrinconsistent' does not have a prim
           <Property Name="Category" Type="varchar" MaxLength="100" />
           <Property Name="SubCategory" Type="varchar" MaxLength="100" />
           <Property Name="ChangedByJobId" Type="varchar" MaxLength="100" />
-          <Property Name="SignalingStartTime" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="SignalingStartTime" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="cdrmeta">
           <Key>
@@ -3505,6 +3502,84 @@ warning 6002: The table/view 'def.platinum.sum_voice_hr_06' does not have a prim
           <Property Name="AutoDeleteStartHour" Type="float" />
           <Property Name="AutoDeleteEndHour" Type="float" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'def.platinum.temp_rate' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="temp_rate">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="ProductId" />
+            <PropertyRef Name="Prefix" />
+            <PropertyRef Name="rateamount" />
+            <PropertyRef Name="WeekDayStart" />
+            <PropertyRef Name="WeekDayEnd" />
+            <PropertyRef Name="Resolution" />
+            <PropertyRef Name="MinDurationSec" />
+            <PropertyRef Name="SurchargeTime" />
+            <PropertyRef Name="SurchargeAmount" />
+            <PropertyRef Name="field3" />
+            <PropertyRef Name="startdate" />
+            <PropertyRef Name="Inactive" />
+            <PropertyRef Name="RouteDisabled" />
+            <PropertyRef Name="Type" />
+            <PropertyRef Name="Currency" />
+            <PropertyRef Name="TimeZoneOffsetSec" />
+          </Key>
+          <Property Name="id" Type="bigint" Nullable="false" />
+          <Property Name="ProductId" Type="int" Nullable="false" />
+          <Property Name="Prefix" Type="varchar" MaxLength="25" Nullable="false" />
+          <Property Name="description" Type="varchar" MaxLength="200" />
+          <Property Name="rateamount" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="WeekDayStart" Type="int" Nullable="false" />
+          <Property Name="WeekDayEnd" Type="int" Nullable="false" />
+          <Property Name="starttime" Type="varchar" MaxLength="6" />
+          <Property Name="endtime" Type="varchar" MaxLength="6" />
+          <Property Name="Resolution" Type="int" Nullable="false" />
+          <Property Name="MinDurationSec" Type="float" Nullable="false" />
+          <Property Name="SurchargeTime" Type="int" Nullable="false" />
+          <Property Name="SurchargeAmount" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="idrateplan" Type="int" />
+          <Property Name="CountryCode" Type="varchar" MaxLength="20" />
+          <Property Name="date1" Type="datetime" Precision="0" />
+          <Property Name="field1" Type="int" />
+          <Property Name="field2" Type="int" />
+          <Property Name="field3" Type="int" Nullable="false" />
+          <Property Name="field4" Type="varchar" MaxLength="45" />
+          <Property Name="field5" Type="varchar" MaxLength="45" />
+          <Property Name="startdate" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="enddate" Type="datetime" Precision="0" />
+          <Property Name="Inactive" Type="int" Nullable="false" />
+          <Property Name="RouteDisabled" Type="int" Nullable="false" />
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="Currency" Type="int" Nullable="false" />
+          <Property Name="OtherAmount1" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="OtherAmount2" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="OtherAmount3" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="OtherAmount4" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="OtherAmount5" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="OtherAmount6" Type="decimal" Precision="20" Scale="8" />
+          <Property Name="OtherAmount7" Type="float" />
+          <Property Name="OtherAmount8" Type="float" />
+          <Property Name="OtherAmount9" Type="float" />
+          <Property Name="OtherAmount10" Type="float" />
+          <Property Name="TimeZoneOffsetSec" Type="decimal" Precision="20" Scale="8" Nullable="false" />
+          <Property Name="RatePosition" Type="int" />
+          <Property Name="IgwPercentageIn" Type="float" />
+          <Property Name="ConflictingRateIds" Type="varchar" MaxLength="300" />
+          <Property Name="ChangedByTaskId" Type="bigint" />
+          <Property Name="ChangedOn" Type="datetime" Precision="0" />
+          <Property Name="Status" Type="int" />
+          <Property Name="idPreviousRate" Type="bigint" />
+          <Property Name="EndPreviousRate" Type="tinyint" />
+          <Property Name="Category" Type="tinyint" />
+          <Property Name="SubCategory" Type="tinyint" />
+          <Property Name="ChangeCommitted" Type="int" />
+          <Property Name="ConflictingRates" Type="varchar" MaxLength="50" />
+          <Property Name="OverlappingRates" Type="varchar" MaxLength="50" />
+          <Property Name="Comment1" Type="varchar" MaxLength="200" />
+          <Property Name="Comment2" Type="varchar" MaxLength="200" />
+          <Property Name="billingspan" Type="int" />
+          <Property Name="RateAmountRoundupDecimal" Type="int" />
+        </EntityType>
         <EntityType Name="timezone">
           <Key>
             <PropertyRef Name="id" />
@@ -3910,6 +3985,18 @@ warning 6002: The table/view 'def.platinum.uom_conversion' does not have a prima
             </Principal>
             <Dependent Role="rateplanassignmenttuple">
               <PropertyRef Name="route" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_switch">
+          <End Role="ne" Type="Self.ne" Multiplicity="0..1" />
+          <End Role="bridgedroute" Type="Self.bridgedroute" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ne">
+              <PropertyRef Name="idSwitch" />
+            </Principal>
+            <Dependent Role="bridgedroute">
+              <PropertyRef Name="idSwitch" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -5797,6 +5884,65 @@ FROM `sum_voice_hr_05` AS `sum_voice_hr_05`</DefiningQuery>
 `sum_voice_hr_06`.`decimalAmount3`
 FROM `sum_voice_hr_06` AS `sum_voice_hr_06`</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="temp_rate" EntityType="Self.temp_rate" store:Type="Tables" store:Schema="platinum">
+            <DefiningQuery>SELECT
+`temp_rate`.`id`, 
+`temp_rate`.`ProductId`, 
+`temp_rate`.`Prefix`, 
+`temp_rate`.`description`, 
+`temp_rate`.`rateamount`, 
+`temp_rate`.`WeekDayStart`, 
+`temp_rate`.`WeekDayEnd`, 
+`temp_rate`.`starttime`, 
+`temp_rate`.`endtime`, 
+`temp_rate`.`Resolution`, 
+`temp_rate`.`MinDurationSec`, 
+`temp_rate`.`SurchargeTime`, 
+`temp_rate`.`SurchargeAmount`, 
+`temp_rate`.`idrateplan`, 
+`temp_rate`.`CountryCode`, 
+`temp_rate`.`date1`, 
+`temp_rate`.`field1`, 
+`temp_rate`.`field2`, 
+`temp_rate`.`field3`, 
+`temp_rate`.`field4`, 
+`temp_rate`.`field5`, 
+`temp_rate`.`startdate`, 
+`temp_rate`.`enddate`, 
+`temp_rate`.`Inactive`, 
+`temp_rate`.`RouteDisabled`, 
+`temp_rate`.`Type`, 
+`temp_rate`.`Currency`, 
+`temp_rate`.`OtherAmount1`, 
+`temp_rate`.`OtherAmount2`, 
+`temp_rate`.`OtherAmount3`, 
+`temp_rate`.`OtherAmount4`, 
+`temp_rate`.`OtherAmount5`, 
+`temp_rate`.`OtherAmount6`, 
+`temp_rate`.`OtherAmount7`, 
+`temp_rate`.`OtherAmount8`, 
+`temp_rate`.`OtherAmount9`, 
+`temp_rate`.`OtherAmount10`, 
+`temp_rate`.`TimeZoneOffsetSec`, 
+`temp_rate`.`RatePosition`, 
+`temp_rate`.`IgwPercentageIn`, 
+`temp_rate`.`ConflictingRateIds`, 
+`temp_rate`.`ChangedByTaskId`, 
+`temp_rate`.`ChangedOn`, 
+`temp_rate`.`Status`, 
+`temp_rate`.`idPreviousRate`, 
+`temp_rate`.`EndPreviousRate`, 
+`temp_rate`.`Category`, 
+`temp_rate`.`SubCategory`, 
+`temp_rate`.`ChangeCommitted`, 
+`temp_rate`.`ConflictingRates`, 
+`temp_rate`.`OverlappingRates`, 
+`temp_rate`.`Comment1`, 
+`temp_rate`.`Comment2`, 
+`temp_rate`.`billingspan`, 
+`temp_rate`.`RateAmountRoundupDecimal`
+FROM `temp_rate` AS `temp_rate`</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="uom_conversion" EntityType="Self.uom_conversion" store:Type="Tables" store:Schema="platinum">
             <DefiningQuery>SELECT
 `uom_conversion`.`UOM_ID`, 
@@ -5890,6 +6036,10 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <AssociationSet Name="fk_route" Association="Self.fk_route">
             <End Role="route" EntitySet="route" />
             <End Role="rateplanassignmenttuple" EntitySet="rateplanassignmenttuple" />
+          </AssociationSet>
+          <AssociationSet Name="fk_switch" Association="Self.fk_switch">
+            <End Role="ne" EntitySet="ne" />
+            <End Role="bridgedroute" EntitySet="bridgedroute" />
           </AssociationSet>
           <AssociationSet Name="fk_timezone" Association="Self.fk_timezone">
             <End Role="timezone" EntitySet="timezone" />
@@ -5987,6 +6137,7 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <EntitySet Name="autoinc_manual_long" EntityType="MediationModel.autoinc_manual_long" />
           <EntitySet Name="autoincrementcounters" EntityType="MediationModel.autoincrementcounter" />
           <EntitySet Name="billingruleassignments" EntityType="MediationModel.billingruleassignment" />
+          <EntitySet Name="bridgedroutes" EntityType="MediationModel.bridgedroute" />
           <EntitySet Name="causecodes" EntityType="MediationModel.causecode" />
           <EntitySet Name="cdrfieldlists" EntityType="MediationModel.cdrfieldlist" />
           <EntitySet Name="cdrfieldmappingbyswitchtypes" EntityType="MediationModel.cdrfieldmappingbyswitchtype" />
@@ -6113,6 +6264,7 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <EntitySet Name="sum_voice_hr_04" EntityType="MediationModel.sum_voice_hr_04" />
           <EntitySet Name="sum_voice_hr_05" EntityType="MediationModel.sum_voice_hr_05" />
           <EntitySet Name="sum_voice_hr_06" EntityType="MediationModel.sum_voice_hr_06" />
+          <EntitySet Name="temp_rate" EntityType="MediationModel.temp_rate" />
           <EntitySet Name="uom_conversion" EntityType="MediationModel.uom_conversion" />
           <AssociationSet Name="id_account_acc_threshhold" Association="MediationModel.id_account_acc_threshhold">
             <End Role="account" EntitySet="accounts" />
@@ -6137,6 +6289,18 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <AssociationSet Name="fk_BillingRule" Association="MediationModel.fk_BillingRule">
             <End Role="jsonbillingrule" EntitySet="jsonbillingrules" />
             <End Role="billingruleassignment" EntitySet="billingruleassignments" />
+          </AssociationSet>
+          <AssociationSet Name="bridgedroute_ibfk_1" Association="MediationModel.bridgedroute_ibfk_1">
+            <End Role="partner" EntitySet="partners" />
+            <End Role="bridgedroute" EntitySet="bridgedroutes" />
+          </AssociationSet>
+          <AssociationSet Name="bridgedroute_ibfk_2" Association="MediationModel.bridgedroute_ibfk_2">
+            <End Role="partner" EntitySet="partners" />
+            <End Role="bridgedroute" EntitySet="bridgedroutes" />
+          </AssociationSet>
+          <AssociationSet Name="fk_switch" Association="MediationModel.fk_switch">
+            <End Role="ne" EntitySet="nes" />
+            <End Role="bridgedroute" EntitySet="bridgedroutes" />
           </AssociationSet>
           <AssociationSet Name="cdrfieldmappingbyswitchtype_ibfk_1" Association="MediationModel.cdrfieldmappingbyswitchtype_ibfk_1">
             <End Role="cdrfieldlist" EntitySet="cdrfieldlists" />
@@ -6265,15 +6429,6 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <AssociationSet Name="userroles_ibfk_1" Association="MediationModel.userroles_ibfk_1">
             <End Role="user" EntitySet="users" />
             <End Role="userrole" EntitySet="userroles" />
-          </AssociationSet>
-          <EntitySet Name="bridgedroutes" EntityType="MediationModel.bridgedroute" />
-          <AssociationSet Name="bridgedroute_ibfk_1" Association="MediationModel.bridgedroute_ibfk_1">
-            <End Role="partner" EntitySet="partners" />
-            <End Role="bridgedroute" EntitySet="bridgedroutes" />
-          </AssociationSet>
-          <AssociationSet Name="bridgedroute_ibfk_2" Association="MediationModel.bridgedroute_ibfk_2">
-            <End Role="partner" EntitySet="partners" />
-            <End Role="bridgedroute" EntitySet="bridgedroutes" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="acc_action">
@@ -6407,6 +6562,19 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <Property Name="idServiceGroup" Type="Int32" Nullable="false" />
           <NavigationProperty Name="rateplanassignmenttuple" Relationship="MediationModel.billingruleassignment_ibfk_2" FromRole="billingruleassignment" ToRole="rateplanassignmenttuple" />
           <NavigationProperty Name="jsonbillingrule" Relationship="MediationModel.fk_BillingRule" FromRole="billingruleassignment" ToRole="jsonbillingrule" />
+        </EntityType>
+        <EntityType Name="bridgedroute">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="idSwitch" Type="Int32" />
+          <Property Name="tgName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="inPartner" Type="Int32" Nullable="false" />
+          <Property Name="outPartner" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="partner" Relationship="MediationModel.bridgedroute_ibfk_1" FromRole="bridgedroute" ToRole="partner" />
+          <NavigationProperty Name="partner1" Relationship="MediationModel.bridgedroute_ibfk_2" FromRole="bridgedroute" ToRole="partner" />
+          <NavigationProperty Name="ne" Relationship="MediationModel.fk_switch" FromRole="bridgedroute" ToRole="ne" />
         </EntityType>
         <EntityType Name="causecode">
           <Key>
@@ -7112,6 +7280,7 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <Property Name="ExistingSummaryCacheSpanHr" Type="Int32" Nullable="false" />
           <Property Name="BatchToDecodeRatio" Type="Int32" Nullable="false" />
           <Property Name="PrependLocationNumberToFileName" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="bridgedroutes" Relationship="MediationModel.fk_switch" FromRole="ne" ToRole="bridgedroute" />
           <NavigationProperty Name="enumcdrformat" Relationship="MediationModel.fk_cdrformat" FromRole="ne" ToRole="enumcdrformat" />
           <NavigationProperty Name="jobs" Relationship="MediationModel.job_ibfk_4" FromRole="ne" ToRole="job" />
           <NavigationProperty Name="routes" Relationship="MediationModel.fk_Ne" FromRole="ne" ToRole="route" />
@@ -7155,10 +7324,10 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <Property Name="vatRegistrationNo" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="accounts" Relationship="MediationModel.account_ibfk_1" FromRole="partner" ToRole="account" />
           <NavigationProperty Name="accounts1" Relationship="MediationModel.account_ibfk_2" FromRole="partner" ToRole="account" />
-          <NavigationProperty Name="ratetaskassigns" Relationship="MediationModel.ratetaskassign_ibfk_3" FromRole="partner" ToRole="ratetaskassign" />
-          <NavigationProperty Name="routes" Relationship="MediationModel.route_ibfk_1" FromRole="partner" ToRole="route" />
           <NavigationProperty Name="bridgedroutes" Relationship="MediationModel.bridgedroute_ibfk_1" FromRole="partner" ToRole="bridgedroute" />
           <NavigationProperty Name="bridgedroutes1" Relationship="MediationModel.bridgedroute_ibfk_2" FromRole="partner" ToRole="bridgedroute" />
+          <NavigationProperty Name="ratetaskassigns" Relationship="MediationModel.ratetaskassign_ibfk_3" FromRole="partner" ToRole="ratetaskassign" />
+          <NavigationProperty Name="routes" Relationship="MediationModel.route_ibfk_1" FromRole="partner" ToRole="route" />
         </EntityType>
         <EntityType Name="partnerprefix">
           <Key>
@@ -8179,15 +8348,11 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
         <EntityType Name="cdrinconsistent">
           <Key>
             <PropertyRef Name="SwitchId" />
-            <PropertyRef Name="SequenceNumber" />
             <PropertyRef Name="FileName" />
-            <PropertyRef Name="DurationSec" />
-            <PropertyRef Name="EndTime" />
-            <PropertyRef Name="SignalingStartTime" />
           </Key>
           <Property Name="SwitchId" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="IdCall" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="SequenceNumber" Type="Int64" Nullable="false" />
+          <Property Name="SequenceNumber" Type="Int64" />
           <Property Name="FileName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="ServiceGroup" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="IncomingRoute" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
@@ -8199,8 +8364,8 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <Property Name="OriginatingCallingNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="TerminatingCallingNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="PrePaid" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="DurationSec" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="EndTime" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DurationSec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="EndTime" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="ConnectTime" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="AnswerTime" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="ChargingStatus" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
@@ -8288,7 +8453,7 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <Property Name="Category" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="SubCategory" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="ChangedByJobId" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="SignalingStartTime" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="SignalingStartTime" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="cdrpartiallastaggregatedrawinstance">
           <Key>
@@ -9933,6 +10098,82 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <Property Name="decimalAmount2" Type="Decimal" Nullable="false" />
           <Property Name="decimalAmount3" Type="Decimal" Nullable="false" />
         </EntityType>
+        <EntityType Name="temp_rate">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="ProductId" />
+            <PropertyRef Name="Prefix" />
+            <PropertyRef Name="rateamount" />
+            <PropertyRef Name="WeekDayStart" />
+            <PropertyRef Name="WeekDayEnd" />
+            <PropertyRef Name="Resolution" />
+            <PropertyRef Name="MinDurationSec" />
+            <PropertyRef Name="SurchargeTime" />
+            <PropertyRef Name="SurchargeAmount" />
+            <PropertyRef Name="field3" />
+            <PropertyRef Name="startdate" />
+            <PropertyRef Name="Inactive" />
+            <PropertyRef Name="RouteDisabled" />
+            <PropertyRef Name="Type" />
+            <PropertyRef Name="Currency" />
+            <PropertyRef Name="TimeZoneOffsetSec" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" />
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <Property Name="Prefix" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="description" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="rateamount" Type="Decimal" Nullable="false" />
+          <Property Name="WeekDayStart" Type="Int32" Nullable="false" />
+          <Property Name="WeekDayEnd" Type="Int32" Nullable="false" />
+          <Property Name="starttime" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="endtime" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="Resolution" Type="Int32" Nullable="false" />
+          <Property Name="MinDurationSec" Type="Single" Nullable="false" />
+          <Property Name="SurchargeTime" Type="Int32" Nullable="false" />
+          <Property Name="SurchargeAmount" Type="Decimal" Nullable="false" />
+          <Property Name="idrateplan" Type="Int32" />
+          <Property Name="CountryCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="date1" Type="DateTime" />
+          <Property Name="field1" Type="Int32" />
+          <Property Name="field2" Type="Int32" />
+          <Property Name="field3" Type="Int32" Nullable="false" />
+          <Property Name="field4" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="field5" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="startdate" Type="DateTime" Nullable="false" />
+          <Property Name="enddate" Type="DateTime" />
+          <Property Name="Inactive" Type="Int32" Nullable="false" />
+          <Property Name="RouteDisabled" Type="Int32" Nullable="false" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="Currency" Type="Int32" Nullable="false" />
+          <Property Name="OtherAmount1" Type="Decimal" />
+          <Property Name="OtherAmount2" Type="Decimal" />
+          <Property Name="OtherAmount3" Type="Decimal" />
+          <Property Name="OtherAmount4" Type="Decimal" />
+          <Property Name="OtherAmount5" Type="Decimal" />
+          <Property Name="OtherAmount6" Type="Decimal" />
+          <Property Name="OtherAmount7" Type="Single" />
+          <Property Name="OtherAmount8" Type="Single" />
+          <Property Name="OtherAmount9" Type="Single" />
+          <Property Name="OtherAmount10" Type="Single" />
+          <Property Name="TimeZoneOffsetSec" Type="Decimal" Nullable="false" />
+          <Property Name="RatePosition" Type="Int32" />
+          <Property Name="IgwPercentageIn" Type="Single" />
+          <Property Name="ConflictingRateIds" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="ChangedByTaskId" Type="Int64" />
+          <Property Name="ChangedOn" Type="DateTime" />
+          <Property Name="Status" Type="Int32" />
+          <Property Name="idPreviousRate" Type="Int64" />
+          <Property Name="EndPreviousRate" Type="SByte" />
+          <Property Name="Category" Type="SByte" />
+          <Property Name="SubCategory" Type="SByte" />
+          <Property Name="ChangeCommitted" Type="Int32" />
+          <Property Name="ConflictingRates" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="OverlappingRates" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Comment1" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Comment2" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="billingspan" Type="Int32" />
+          <Property Name="RateAmountRoundupDecimal" Type="Int32" />
+        </EntityType>
         <EntityType Name="uom_conversion">
           <Key>
             <PropertyRef Name="UOM_ID" />
@@ -10024,6 +10265,42 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
             </Principal>
             <Dependent Role="billingruleassignment">
               <PropertyRef Name="idBillingRule" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="bridgedroute_ibfk_1">
+          <End Type="MediationModel.partner" Role="partner" Multiplicity="1" />
+          <End Type="MediationModel.bridgedroute" Role="bridgedroute" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="partner">
+              <PropertyRef Name="idPartner" />
+            </Principal>
+            <Dependent Role="bridgedroute">
+              <PropertyRef Name="inPartner" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="bridgedroute_ibfk_2">
+          <End Type="MediationModel.partner" Role="partner" Multiplicity="1" />
+          <End Type="MediationModel.bridgedroute" Role="bridgedroute" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="partner">
+              <PropertyRef Name="idPartner" />
+            </Principal>
+            <Dependent Role="bridgedroute">
+              <PropertyRef Name="outPartner" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_switch">
+          <End Type="MediationModel.ne" Role="ne" Multiplicity="0..1" />
+          <End Type="MediationModel.bridgedroute" Role="bridgedroute" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ne">
+              <PropertyRef Name="idSwitch" />
+            </Principal>
+            <Dependent Role="bridgedroute">
+              <PropertyRef Name="idSwitch" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -10421,41 +10698,6 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="bridgedroute">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="tgName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="inPartner" Type="Int32" Nullable="false" />
-          <Property Name="outPartner" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="partner" Relationship="MediationModel.bridgedroute_ibfk_1" FromRole="bridgedroute" ToRole="partner" />
-          <NavigationProperty Name="partner1" Relationship="MediationModel.bridgedroute_ibfk_2" FromRole="bridgedroute" ToRole="partner" />
-        </EntityType>
-        <Association Name="bridgedroute_ibfk_1">
-          <End Type="MediationModel.partner" Role="partner" Multiplicity="1" />
-          <End Type="MediationModel.bridgedroute" Role="bridgedroute" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="partner">
-              <PropertyRef Name="idPartner" />
-            </Principal>
-            <Dependent Role="bridgedroute">
-              <PropertyRef Name="inPartner" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="bridgedroute_ibfk_2">
-          <End Type="MediationModel.partner" Role="partner" Multiplicity="1" />
-          <End Type="MediationModel.bridgedroute" Role="bridgedroute" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="partner">
-              <PropertyRef Name="idPartner" />
-            </Principal>
-            <Dependent Role="bridgedroute">
-              <PropertyRef Name="outPartner" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -10594,6 +10836,17 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
                 <ScalarProperty Name="idServiceGroup" ColumnName="idServiceGroup" />
                 <ScalarProperty Name="idBillingRule" ColumnName="idBillingRule" />
                 <ScalarProperty Name="idRatePlanAssignmentTuple" ColumnName="idRatePlanAssignmentTuple" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="bridgedroutes">
+            <EntityTypeMapping TypeName="MediationModel.bridgedroute">
+              <MappingFragment StoreEntitySet="bridgedroute">
+                <ScalarProperty Name="outPartner" ColumnName="outPartner" />
+                <ScalarProperty Name="inPartner" ColumnName="inPartner" />
+                <ScalarProperty Name="tgName" ColumnName="tgName" />
+                <ScalarProperty Name="idSwitch" ColumnName="idSwitch" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -13510,6 +13763,67 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="temp_rate">
+            <EntityTypeMapping TypeName="MediationModel.temp_rate">
+              <MappingFragment StoreEntitySet="temp_rate">
+                <ScalarProperty Name="RateAmountRoundupDecimal" ColumnName="RateAmountRoundupDecimal" />
+                <ScalarProperty Name="billingspan" ColumnName="billingspan" />
+                <ScalarProperty Name="Comment2" ColumnName="Comment2" />
+                <ScalarProperty Name="Comment1" ColumnName="Comment1" />
+                <ScalarProperty Name="OverlappingRates" ColumnName="OverlappingRates" />
+                <ScalarProperty Name="ConflictingRates" ColumnName="ConflictingRates" />
+                <ScalarProperty Name="ChangeCommitted" ColumnName="ChangeCommitted" />
+                <ScalarProperty Name="SubCategory" ColumnName="SubCategory" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+                <ScalarProperty Name="EndPreviousRate" ColumnName="EndPreviousRate" />
+                <ScalarProperty Name="idPreviousRate" ColumnName="idPreviousRate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ChangedOn" ColumnName="ChangedOn" />
+                <ScalarProperty Name="ChangedByTaskId" ColumnName="ChangedByTaskId" />
+                <ScalarProperty Name="ConflictingRateIds" ColumnName="ConflictingRateIds" />
+                <ScalarProperty Name="IgwPercentageIn" ColumnName="IgwPercentageIn" />
+                <ScalarProperty Name="RatePosition" ColumnName="RatePosition" />
+                <ScalarProperty Name="TimeZoneOffsetSec" ColumnName="TimeZoneOffsetSec" />
+                <ScalarProperty Name="OtherAmount10" ColumnName="OtherAmount10" />
+                <ScalarProperty Name="OtherAmount9" ColumnName="OtherAmount9" />
+                <ScalarProperty Name="OtherAmount8" ColumnName="OtherAmount8" />
+                <ScalarProperty Name="OtherAmount7" ColumnName="OtherAmount7" />
+                <ScalarProperty Name="OtherAmount6" ColumnName="OtherAmount6" />
+                <ScalarProperty Name="OtherAmount5" ColumnName="OtherAmount5" />
+                <ScalarProperty Name="OtherAmount4" ColumnName="OtherAmount4" />
+                <ScalarProperty Name="OtherAmount3" ColumnName="OtherAmount3" />
+                <ScalarProperty Name="OtherAmount2" ColumnName="OtherAmount2" />
+                <ScalarProperty Name="OtherAmount1" ColumnName="OtherAmount1" />
+                <ScalarProperty Name="Currency" ColumnName="Currency" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="RouteDisabled" ColumnName="RouteDisabled" />
+                <ScalarProperty Name="Inactive" ColumnName="Inactive" />
+                <ScalarProperty Name="enddate" ColumnName="enddate" />
+                <ScalarProperty Name="startdate" ColumnName="startdate" />
+                <ScalarProperty Name="field5" ColumnName="field5" />
+                <ScalarProperty Name="field4" ColumnName="field4" />
+                <ScalarProperty Name="field3" ColumnName="field3" />
+                <ScalarProperty Name="field2" ColumnName="field2" />
+                <ScalarProperty Name="field1" ColumnName="field1" />
+                <ScalarProperty Name="date1" ColumnName="date1" />
+                <ScalarProperty Name="CountryCode" ColumnName="CountryCode" />
+                <ScalarProperty Name="idrateplan" ColumnName="idrateplan" />
+                <ScalarProperty Name="SurchargeAmount" ColumnName="SurchargeAmount" />
+                <ScalarProperty Name="SurchargeTime" ColumnName="SurchargeTime" />
+                <ScalarProperty Name="MinDurationSec" ColumnName="MinDurationSec" />
+                <ScalarProperty Name="Resolution" ColumnName="Resolution" />
+                <ScalarProperty Name="endtime" ColumnName="endtime" />
+                <ScalarProperty Name="starttime" ColumnName="starttime" />
+                <ScalarProperty Name="WeekDayEnd" ColumnName="WeekDayEnd" />
+                <ScalarProperty Name="WeekDayStart" ColumnName="WeekDayStart" />
+                <ScalarProperty Name="rateamount" ColumnName="rateamount" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="Prefix" ColumnName="Prefix" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="uom_conversion">
             <EntityTypeMapping TypeName="MediationModel.uom_conversion">
               <MappingFragment StoreEntitySet="uom_conversion">
@@ -13523,16 +13837,6 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
                 <ScalarProperty Name="CONVERSION_FACTOR" ColumnName="CONVERSION_FACTOR" />
                 <ScalarProperty Name="UOM_ID_TO" ColumnName="UOM_ID_TO" />
                 <ScalarProperty Name="UOM_ID" ColumnName="UOM_ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="bridgedroutes">
-            <EntityTypeMapping TypeName="MediationModel.bridgedroute">
-              <MappingFragment StoreEntitySet="bridgedroute">
-                <ScalarProperty Name="outPartner" ColumnName="outPartner" />
-                <ScalarProperty Name="inPartner" ColumnName="inPartner" />
-                <ScalarProperty Name="tgName" ColumnName="tgName" />
-                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
