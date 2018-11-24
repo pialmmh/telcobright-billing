@@ -256,7 +256,7 @@ warning 6002: The table/view 'def.platinum.acc_transaction' does not have a prim
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="idSwitch" Type="int" />
+          <Property Name="idSwitch" Type="int" Nullable="false" />
           <Property Name="tgName" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="inPartner" Type="int" Nullable="false" />
           <Property Name="outPartner" Type="int" Nullable="false" />
@@ -3989,7 +3989,7 @@ warning 6002: The table/view 'def.platinum.uom_conversion' does not have a prima
           </ReferentialConstraint>
         </Association>
         <Association Name="fk_switch">
-          <End Role="ne" Type="Self.ne" Multiplicity="0..1" />
+          <End Role="ne" Type="Self.ne" Multiplicity="1" />
           <End Role="bridgedroute" Type="Self.bridgedroute" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ne">
@@ -6568,7 +6568,7 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="idSwitch" Type="Int32" />
+          <Property Name="idSwitch" Type="Int32" Nullable="false" />
           <Property Name="tgName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="inPartner" Type="Int32" Nullable="false" />
           <Property Name="outPartner" Type="Int32" Nullable="false" />
@@ -10293,7 +10293,7 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           </ReferentialConstraint>
         </Association>
         <Association Name="fk_switch">
-          <End Type="MediationModel.ne" Role="ne" Multiplicity="0..1" />
+          <End Type="MediationModel.ne" Role="ne" Multiplicity="1" />
           <End Type="MediationModel.bridgedroute" Role="bridgedroute" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ne">

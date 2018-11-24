@@ -14,53 +14,53 @@ namespace MediationModel
     
     public partial class sum_voice_hr_01
     {
-        public override long id { get; set; }
-        public override int tup_switchid { get; set; }
-        public override int tup_inpartnerid { get; set; }
-        public override int tup_outpartnerid { get; set; }
-        public override string tup_incomingroute { get; set; }
-        public override string tup_outgoingroute { get; set; }
-        public override decimal tup_customerrate { get; set; }
-        public override decimal tup_supplierrate { get; set; }
-        public override string tup_incomingip { get; set; }
-        public override string tup_outgoingip { get; set; }
-        public override string tup_countryorareacode { get; set; }
-        public override string tup_matchedprefixcustomer { get; set; }
-        public override string tup_matchedprefixsupplier { get; set; }
-        public override string tup_sourceId { get; set; }
-        public override string tup_destinationId { get; set; }
-        public override string tup_customercurrency { get; set; }
-        public override string tup_suppliercurrency { get; set; }
-        public override string tup_tax1currency { get; set; }
-        public override string tup_tax2currency { get; set; }
-        public override string tup_vatcurrency { get; set; }
-        public override System.DateTime tup_starttime { get; set; }
-        public override long totalcalls { get; set; }
-        public override long connectedcalls { get; set; }
-        public override long connectedcallsCC { get; set; }
-        public override long successfulcalls { get; set; }
-        public override decimal actualduration { get; set; }
-        public override decimal roundedduration { get; set; }
-        public override decimal duration1 { get; set; }
-        public override decimal duration2 { get; set; }
-        public override decimal duration3 { get; set; }
-        public override decimal PDD { get; set; }
-        public override decimal customercost { get; set; }
-        public override decimal suppliercost { get; set; }
-        public override decimal tax1 { get; set; }
-        public override decimal tax2 { get; set; }
-        public override decimal vat { get; set; }
-        public override int intAmount1 { get; set; }
-        public override int intAmount2 { get; set; }
-        public override long longAmount1 { get; set; }
-        public override long longAmount2 { get; set; }
-        public override decimal longDecimalAmount1 { get; set; }
-        public override decimal longDecimalAmount2 { get; set; }
-        public override int intAmount3 { get; set; }
-        public override long longAmount3 { get; set; }
-        public override decimal longDecimalAmount3 { get; set; }
-        public override decimal decimalAmount1 { get; set; }
-        public override decimal decimalAmount2 { get; set; }
-        public override decimal decimalAmount3 { get; set; }
+        public long id { get; set; }
+        public int tup_switchid { get; set; }
+        public int tup_inpartnerid { get; set; }
+        public int tup_outpartnerid { get; set; }
+        public string tup_incomingroute { get; set; }
+        public string tup_outgoingroute { get; set; }
+        public decimal tup_customerrate { get; set; }
+        public decimal tup_supplierrate { get; set; }
+        public string tup_incomingip { get; set; }
+        public string tup_outgoingip { get; set; }
+        public string tup_countryorareacode { get; set; }
+        public string tup_matchedprefixcustomer { get; set; }
+        public string tup_matchedprefixsupplier { get; set; }
+        public string tup_sourceId { get; set; }
+        public string tup_destinationId { get; set; }
+        public string tup_customercurrency { get; set; }
+        public string tup_suppliercurrency { get; set; }
+        public string tup_tax1currency { get; set; }
+        public string tup_tax2currency { get; set; }
+        public string tup_vatcurrency { get; set; }
+        public System.DateTime tup_starttime { get; set; }
+        public long totalcalls { get; set; }
+        public long connectedcalls { get; set; }
+        public long connectedcallsCC { get; set; }
+        public long successfulcalls { get; set; }
+        public decimal actualduration { get; set; }
+        public decimal roundedduration { get; set; }
+        public decimal duration1 { get; set; }
+        public decimal duration2 { get; set; }
+        public decimal duration3 { get; set; }
+        public decimal PDD { get; set; }
+        public decimal customercost { get; set; }
+        public decimal suppliercost { get; set; }
+        public decimal tax1 { get; set; }
+        public decimal tax2 { get; set; }
+        public decimal vat { get; set; }
+        public int intAmount1 { get; set; }
+        public int intAmount2 { get; set; }
+        public long longAmount1 { get; set; }
+        public long longAmount2 { get; set; }
+        public decimal longDecimalAmount1 { get; set; }
+        public decimal longDecimalAmount2 { get; set; }
+        public int intAmount3 { get; set; }
+        public long longAmount3 { get; set; }
+        public decimal longDecimalAmount3 { get; set; }
+        public decimal decimalAmount1 { get; set; }
+        public decimal decimalAmount2 { get; set; }
+        public decimal decimalAmount3 { get; set; }
     }
 }
