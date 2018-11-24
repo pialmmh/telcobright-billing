@@ -256,8 +256,8 @@ warning 6002: The table/view 'def.platinum.acc_transaction' does not have a prim
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="idSwitch" Type="int" Nullable="false" />
-          <Property Name="tgName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="switchId" Type="int" Nullable="false" />
+          <Property Name="routeName" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="inPartner" Type="int" Nullable="false" />
           <Property Name="outPartner" Type="int" Nullable="false" />
           <Property Name="nationalOrInternational" Type="int" />
@@ -3997,7 +3997,7 @@ warning 6002: The table/view 'def.platinum.uom_conversion' does not have a prima
               <PropertyRef Name="idSwitch" />
             </Principal>
             <Dependent Role="bridgedroute">
-              <PropertyRef Name="idSwitch" />
+              <PropertyRef Name="switchId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -6569,8 +6569,8 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="idSwitch" Type="Int32" Nullable="false" />
-          <Property Name="tgName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="switchId" Type="Int32" Nullable="false" />
+          <Property Name="routeName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="inPartner" Type="Int32" Nullable="false" />
           <Property Name="outPartner" Type="Int32" Nullable="false" />
           <Property Name="nationalOrInternational" Type="Int32" />
@@ -10302,7 +10302,7 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
               <PropertyRef Name="idSwitch" />
             </Principal>
             <Dependent Role="bridgedroute">
-              <PropertyRef Name="idSwitch" />
+              <PropertyRef Name="switchId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -10847,8 +10847,8 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
                 <ScalarProperty Name="nationalOrInternational" ColumnName="nationalOrInternational" />
                 <ScalarProperty Name="outPartner" ColumnName="outPartner" />
                 <ScalarProperty Name="inPartner" ColumnName="inPartner" />
-                <ScalarProperty Name="tgName" ColumnName="tgName" />
-                <ScalarProperty Name="idSwitch" ColumnName="idSwitch" />
+                <ScalarProperty Name="routeName" ColumnName="routeName" />
+                <ScalarProperty Name="switchId" ColumnName="switchId" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>

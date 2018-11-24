@@ -15,8 +15,8 @@ namespace MediationModel
     public partial class bridgedroute
     {
         public int id { get; set; }
-        public int idSwitch { get; set; }
-        public string tgName { get; set; }
+        public int switchId { get; set; }
+        public string routeName { get; set; }
         public int inPartner { get; set; }
         public int outPartner { get; set; }
         public Nullable<int> nationalOrInternational { get; set; }

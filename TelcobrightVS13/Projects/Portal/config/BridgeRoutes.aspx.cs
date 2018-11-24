@@ -34,7 +34,7 @@ public partial class BridgeRoutes : System.Web.UI.Page
         {
             context.bridgedroutes.Add(new bridgedroute()
             {
-                tgName = txtTGName.Text,
+                routeName = txtTGName.Text,
                 inPartner = Convert.ToInt32(ddlistIncomingPartner.SelectedValue),
                 outPartner = Convert.ToInt32(ddlistOutgoingPartner.SelectedValue)
             });
