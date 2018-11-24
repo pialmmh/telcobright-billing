@@ -44,21 +44,14 @@ namespace TelcobrightMediation
 
         public void SetAdditionalParams(Dictionary<string, object> additionalParams)
         {
-
+            var cdrRules = additionalParams["cdrRules"] as List<ICdrRule>;
+            this.CdrRules = cdrRules;
         }
 
         public void Execute(cdr thisCdr, CdrProcessor cdrProcessor)
         {
-            var trueForAll = true;
-            foreach (var r in this.CdrRules)
-            {
-                if (r.CheckIfTrue(thisCdr) == false)
-                {
-                    trueForAll = false;
-                    break;
-                }
-            }
-            if (trueForAll)
+            var atleastOneFalse = this.CdrRules.Any(r => r.CheckIfTrue(thisCdr) == false);
+            if (atleastOneFalse==false)
             {
                 thisCdr.ServiceGroup = this.Id;
             }

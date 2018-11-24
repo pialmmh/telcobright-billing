@@ -32,6 +32,7 @@ namespace TelcobrightMediation
         public MefServiceFamilyContainer MefServiceFamilyContainer { get; }
         public Dictionary<string, enumbillingspan> BillingSpans { get; }
         public Dictionary<ValueTuple<int,string>, route> Routes { get; }
+        public Dictionary<ValueTuple<int, string>, bridgedroute> BridgedRoutes { get; }
         public List<ansprefixextra> LstAnsPrefixExtra{get;private set;} //required for failed intl in calls where term number might be missing
         public Dictionary<string, partnerprefix>
             DictAnsOrig { get; private set; } //ANSTermprefix partner dictionary with AnsPrefix as Key
@@ -71,6 +72,8 @@ namespace TelcobrightMediation
             this.BillingSpans = context.enumbillingspans.ToDictionary(c => c.ofbiz_uom_Id); //route data
             this.Routes = context.routes.Include(r=>r.partner)
                 .ToDictionary(r => new ValueTuple<int,string>(r.SwitchId,r.RouteName));
+            this.Routes = context.bridgedroutes.Include(r => r.partner).Include(r=>r.partner1)
+                .ToDictionary(r => new ValueTuple<int, string>(r., r.RouteName));
             this.DictAnsOrig = new Dictionary<string, partnerprefix>();
             this.DictAnsOrig = PopulateANSPrefix();
             this.LstAnsPrefixExtra = context.ansprefixextras.OrderByDescending(c => c.PrefixBeforeAnsNumber.Length)

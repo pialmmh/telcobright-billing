@@ -44,7 +44,8 @@ namespace TelcobrightMediation
 
         public void SetAdditionalParams(Dictionary<string, object> additionalParams)
         {
-            
+            var cdrRules = additionalParams["cdrRules"] as List<ICdrRule>;
+            this.CdrRules = cdrRules;
         }
 
         public void Execute(cdr thisCdr, CdrProcessor cdrProcessor)

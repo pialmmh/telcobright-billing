@@ -21,6 +21,7 @@ namespace TelcobrightMediation
         public string RuleName => "Toll Free";
         public string HelpText => "Icnl toll free";
         public int Id => 23;
+        private List<ICdrRule> CdrRules { get; set; } = new List<ICdrRule>();
         private Dictionary<CdrSummaryType, Type> SummaryTargetTables { get; }
         private List<string> PrefixesOrderedByMaxLenFirst { get; set; }
 
@@ -45,6 +46,8 @@ namespace TelcobrightMediation
 
         public void SetAdditionalParams(Dictionary<string, object> additionalParams)
         {
+            var cdrRules = additionalParams["cdrRules"] as List<ICdrRule>;
+            this.CdrRules = cdrRules;
             if (additionalParams.ContainsKey("prefixes"))
             {
                 this.PrefixesOrderedByMaxLenFirst = ((string)additionalParams["prefixes"]).Split(',')
