@@ -15,7 +15,8 @@ namespace MediationModel
 				.Append(this.idSwitch.ToMySqlField()).Append(",")
 				.Append(this.tgName.ToMySqlField()).Append(",")
 				.Append(this.inPartner.ToMySqlField()).Append(",")
-				.Append(this.outPartner.ToMySqlField()).Append(")")
+				.Append(this.outPartner.ToMySqlField()).Append(",")
+				.Append(this.nationalOrInternational.ToMySqlField()).Append(")")
 				;
 		}
 		public  StringBuilder GetExtInsertCustom(Func<bridgedroute,string> externalInsertMethod)
@@ -29,7 +30,8 @@ namespace MediationModel
 				.Append("idSwitch=").Append(this.idSwitch.ToMySqlField()).Append(",")
 				.Append("tgName=").Append(this.tgName.ToMySqlField()).Append(",")
 				.Append("inPartner=").Append(this.inPartner.ToMySqlField()).Append(",")
-				.Append("outPartner=").Append(this.outPartner.ToMySqlField())
+				.Append("outPartner=").Append(this.outPartner.ToMySqlField()).Append(",")
+				.Append("nationalOrInternational=").Append(this.nationalOrInternational.ToMySqlField())
 				.Append(whereClauseMethod.Invoke(this));
 				
 		}

@@ -19,6 +19,7 @@ namespace MediationModel
         public string tgName { get; set; }
         public int inPartner { get; set; }
         public int outPartner { get; set; }
+        public Nullable<int> nationalOrInternational { get; set; }
     
         public virtual partner partner { get; set; }
         public virtual partner partner1 { get; set; }
