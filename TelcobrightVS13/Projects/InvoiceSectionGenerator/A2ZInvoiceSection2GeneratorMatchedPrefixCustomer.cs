@@ -22,7 +22,9 @@ namespace InvoiceSectionGenerator
         public override InvoiceSection GetInvoiceSection(InvoiceSectionGeneratorData invoiceSectionGeneratorData)
         {
             this.InvoiceSectionGeneratorData = invoiceSectionGeneratorData;
-            string sql = $@"select tup_matchedPrefixCustomer as Destination,tup_customerrate as Rate, 
+            string sql = $@"select concat(p.name,' (',Destination,')') as Destination,Rate, 
+                            TotalCalls,TotalMinutes, Amount from (
+                            select tup_matchedPrefixCustomer as Destination,tup_customerrate as Rate, 
                             TotalCalls,TotalMinutes, Amount from
                             (select tup_matchedPrefixCustomer, tup_outpartnerId,tup_customerrate,
                             sum(successfulcalls)	as TotalCalls,                                  
@@ -31,7 +33,13 @@ namespace InvoiceSectionGenerator
                             from {invoiceSectionGeneratorData.CdrOrSummaryTableName}                          
                             where {invoiceSectionGeneratorData.GetWhereClauseForDateCustomerId("tup_inPartnerId")}
                             group by tup_matchedPrefixCustomer,tup_customerrate) x
-                            where totalcalls>0;";
+                            where totalcalls>0
+                            ) x
+                            left join (
+                            select prefix, max(`name`) as `name` from product 
+                            group by prefix 
+                            ) p
+                            on x.destination=p.prefix";
             
             List<InvoiceSectionDataRowForA2ZVoice> sectiondataRows =
                 this.GetInvoiceSectionDataRowsOnly<InvoiceSectionDataRowForA2ZVoice>(invoiceSectionGeneratorData, sql);
