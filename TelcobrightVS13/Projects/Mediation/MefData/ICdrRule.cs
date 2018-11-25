@@ -10,8 +10,8 @@ namespace TelcobrightMediation
         string RuleName { get; }
         string HelpText { get; }
         int Id { get; }
-        object Data { get; set; }
-        void Prepare();
+        object Data { get;}
+        void Prepare(object input);
         bool IsPrepared { get; }
         bool CheckIfTrue(cdr cdr);
     }

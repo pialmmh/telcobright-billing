@@ -17,9 +17,11 @@ namespace CdrRules
         public object Data { get; set; }
         public bool IsPrepared { get; private set; }
 
-        public void Prepare()
+        public void Prepare(object input)
         {
-            this.SwitchWiseRoutes = this.Data as Dictionary<ValueTuple<int, string>, route>;
+            MediationContext mediationContext = (MediationContext) input;
+            this.Data = mediationContext.Routes;
+            this.SwitchWiseRoutes = (Dictionary<ValueTuple<int, string>, route>) this.Data;
             this.IsPrepared = true;
         }
 

@@ -361,7 +361,7 @@ idpartner,priority,service, goes to table rateplanassignmenttuple, id in the tab
                                 </span>
 
                             </div>
-
+                            
                         </td>
 
        
@@ -1049,7 +1049,7 @@ select (select 13) as status  ,(select 'Existing') as Description,count(*) as cn
     </EditItemTemplate>
 </asp:TemplateField>
 
-<asp:TemplateField HeaderText="Rate Plan" SortExpression="Category">
+<asp:TemplateField HeaderText="Rate Plan" SortExpression="Category" ControlStyle-Width="150px">
                 
     <ItemTemplate>
         <asp:DropDownList ID="DropDownListRatePlan" runat="server" AutoPostBack="false" 
@@ -1079,7 +1079,14 @@ select (select 13) as status  ,(select 'Existing') as Description,count(*) as cn
     <ControlStyle Width="50px"></ControlStyle>
 </asp:TemplateField>
 
-            
+<asp:TemplateField HeaderText="Billing Rule" ControlStyle-Width="150px">
+    <ItemTemplate>
+        <asp:DropDownList runat="server" ID="DropDownListBillingRule" AutoPostBack="False" Enabled="False"/>
+    </ItemTemplate>
+    <EditItemTemplate>
+        <asp:DropDownList runat="server" ID="DropDownListBillingRule" AutoPostBack="False" Enabled="True"/>
+    </EditItemTemplate>
+</asp:TemplateField>             
            
 
 <asp:TemplateField HeaderText="Effective Since" SortExpression="startdate" ControlStyle-Width="125px">

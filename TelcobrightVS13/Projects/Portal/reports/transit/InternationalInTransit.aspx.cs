@@ -22,7 +22,7 @@ public partial class InternationalInTransit : System.Web.UI.Page
 
         string StartDate =txtDate.Text;
         string EndtDate = (txtDate1.Text.ConvertToDateTimeFromMySqlFormat()).AddSeconds(1).ToMySqlFormatWithoutQuote();
-        string tableName = DropDownListReportSource.SelectedValue + "01";
+        string tableName = DropDownListReportSource.SelectedValue + "03";
 
         string groupInterval = getSelectedRadioButtonText();
         switch (groupInterval)

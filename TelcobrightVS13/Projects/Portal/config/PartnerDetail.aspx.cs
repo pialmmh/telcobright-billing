@@ -220,6 +220,11 @@ public partial class ConfigPartnerDetail : System.Web.UI.Page
                 {
                     this.LinkButton1.Visible = false;
                     this.lblRoute.Visible = false;
+                    if (Tbc.CdrSetting.EnableTgCreationForAns)
+                    {
+                        this.LinkButton1.Visible = true;
+                        this.lblRoute.Visible = true;
+                    }
 
                     //hide common TG and PrefixDirection  in gridview
                     this.GridViewPrefix.Columns[5].Visible = false;

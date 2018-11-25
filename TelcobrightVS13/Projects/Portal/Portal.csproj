@@ -449,6 +449,7 @@
     <Content Include="config\BalanceAdjustment_old.aspx" />
     <Content Include="config\calendar.png" />
     <Content Include="config\BatchJob.aspx" />
+    <Content Include="config\BridgeRoutes.aspx" />
     <Content Include="config\GeneratedInvoices.aspx" />
     <Content Include="config\BalanceAdjustment.aspx" />
     <Content Include="config\InvoiceGeneration.aspx" />
@@ -522,6 +523,10 @@
     <None Include="Properties\PublishProfiles\PlatinumNewPortal.pubxml" />
     <Content Include="reports\cdr.json" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
+    <Content Include="reports\transit\LocalTollFreePremium.aspx" />
+    <Content Include="reports\transit\LocalTollFree.aspx" />
+    <Content Include="reports\transit\LocalTransit.aspx" />
+    <Content Include="reports\transit\InternationalOutTransit.aspx" />
     <Content Include="reports\transit\InternationalInTransit.aspx" />
     <Content Include="Scripts\jquery-2.1.3.js" />
     <Content Include="Scripts\jquery-2.1.3.min.js" />
@@ -724,6 +729,13 @@
     <Compile Include="config\BatchJob.aspx.designer.cs">
       <DependentUpon>BatchJob.aspx</DependentUpon>
     </Compile>
+    <Compile Include="config\BridgeRoutes.aspx.cs">
+      <DependentUpon>BridgeRoutes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="config\BridgeRoutes.aspx.designer.cs">
+      <DependentUpon>BridgeRoutes.aspx</DependentUpon>
+    </Compile>
     <Compile Include="config\GeneratedInvoices.aspx.cs">
       <DependentUpon>GeneratedInvoices.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -888,6 +900,34 @@
     </Compile>
     <Compile Include="reports\OutgoingCallAnalysis.aspx.designer.cs">
       <DependentUpon>OutgoingCallAnalysis.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\transit\LocalTollFreePremium.aspx.cs">
+      <DependentUpon>LocalTollFreePremium.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\transit\LocalTollFreePremium.aspx.designer.cs">
+      <DependentUpon>LocalTollFreePremium.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\transit\LocalTollFree.aspx.cs">
+      <DependentUpon>LocalTollFree.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\transit\LocalTollFree.aspx.designer.cs">
+      <DependentUpon>LocalTollFree.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\transit\LocalTransit.aspx.cs">
+      <DependentUpon>LocalTransit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\transit\LocalTransit.aspx.designer.cs">
+      <DependentUpon>LocalTransit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\transit\InternationalOutTransit.aspx.cs">
+      <DependentUpon>InternationalOutTransit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\transit\InternationalOutTransit.aspx.designer.cs">
+      <DependentUpon>InternationalOutTransit.aspx</DependentUpon>
     </Compile>
     <Compile Include="reports\transit\InternationalInTransit.aspx.cs">
       <DependentUpon>InternationalInTransit.aspx</DependentUpon>

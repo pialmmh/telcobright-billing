@@ -32,6 +32,7 @@ namespace TelcobrightMediation
         public MefServiceFamilyContainer MefServiceFamilyContainer { get; }
         public Dictionary<string, enumbillingspan> BillingSpans { get; }
         public Dictionary<ValueTuple<int,string>, route> Routes { get; }
+        public Dictionary<ValueTuple<int, string>, bridgedroute> BridgedRoutes { get; }
         public List<ansprefixextra> LstAnsPrefixExtra{get;private set;} //required for failed intl in calls where term number might be missing
         public Dictionary<string, partnerprefix>
             DictAnsOrig { get; private set; } //ANSTermprefix partner dictionary with AnsPrefix as Key
@@ -40,7 +41,7 @@ namespace TelcobrightMediation
             ServiceGroupConfigurations { get; } //<switchid,dic<servicegroupID,medruleassignment>>
         public Dictionary<int, SwitchWiseLookup> SwitchWiseLookups { get; }
         public Dictionary<string, ne> Nes { get; } //load only nes for corresponding telcobright partner
-
+        public Dictionary<int,partner> Partners { get; }
         public MediationContext(TelcobrightConfig tbc, PartnerEntities context)
         {
             StaticExtInsertColumnParsedDic.Parse();
@@ -71,6 +72,8 @@ namespace TelcobrightMediation
             this.BillingSpans = context.enumbillingspans.ToDictionary(c => c.ofbiz_uom_Id); //route data
             this.Routes = context.routes.Include(r=>r.partner)
                 .ToDictionary(r => new ValueTuple<int,string>(r.SwitchId,r.RouteName));
+            this.BridgedRoutes = context.bridgedroutes.Include(r => r.partner).Include(r=>r.partner1)
+                .ToDictionary(r => new ValueTuple<int, string>(r.switchId, r.routeName));
             this.DictAnsOrig = new Dictionary<string, partnerprefix>();
             this.DictAnsOrig = PopulateANSPrefix();
             this.LstAnsPrefixExtra = context.ansprefixextras.OrderByDescending(c => c.PrefixBeforeAnsNumber.Length)
@@ -120,6 +123,8 @@ namespace TelcobrightMediation
             }
             CdrSummaryTypeDictionary.Initialize();
             CreateTemporaryTables();
+            this.Partners = context.partners.ToDictionary(c => c.idPartner);
+            this.MefPartnerRuleContainer.MediationContext = this;
         }
 
         Dictionary<string, partnerprefix> PopulateANSPrefix()
@@ -172,8 +177,7 @@ namespace TelcobrightMediation
                         cdrRuleComposer.CdrRules
                             .Where(c => configuredIdCdrRules.Contains(c.Id)).ToList().ForEach(cdrRule =>
                             {
-                                cdrRule.Data = this.Routes;
-                                cdrRule.Prepare();
+                                cdrRule.Prepare(this);
                                 cdrRules.Add(cdrRule);
                             });
                     }

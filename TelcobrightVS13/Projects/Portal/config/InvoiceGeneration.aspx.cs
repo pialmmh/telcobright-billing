@@ -38,7 +38,6 @@ namespace PortalApp.config
                 bool isAlreadyExists = false;
                 using (PartnerEntities context = new PartnerEntities())
                 {
-
                     allPartners = context.partners.OrderBy(i => i.PartnerName).ToList();
                     List<account> allAccounts = context.accounts.ToList();
 

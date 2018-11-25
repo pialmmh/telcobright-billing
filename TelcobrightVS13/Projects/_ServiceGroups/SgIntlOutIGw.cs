@@ -105,36 +105,12 @@ namespace TelcobrightMediation
                             }
 
                         }
-                        int iteration = 0;
-                        //ansidorig might already be set for roaming calls..in that case ignore
-                        int tempInt = -1;
-                        int.TryParse(thisCdr.AnsIdOrig.ToString(), out tempInt);
-                        if (tempInt <= 0) //call wasn't roaming and ansidorig was not set before
-                        {
-                            string ansPrefixOrig = "";
-                            int? ansIdOrig = null;
-                            for (iteration = 0; iteration < originatingCallingNumber.Length; iteration++)
-                            {
-                                partnerprefix thisPrefix = null;
-                                string matchStr = originatingCallingNumber.Substring(0, iteration + 1);
-                                cdrProcessor.CdrJobContext.MediationContext.DictAnsOrig.TryGetValue(matchStr,
-                                    out thisPrefix);
-                                if (thisPrefix != null)
-                                {
-                                    ansPrefixOrig = thisPrefix.Prefix;
-                                    ansIdOrig = thisPrefix.idPartner;
-                                    continue;
-                                }
-                            }
-                            thisCdr.AnsPrefixOrig = ansPrefixOrig;
-                            thisCdr.AnsIdOrig = ansIdOrig;
-                        }
+                        AnsPrefixFinder.FindOriginatingAnsPrefix(thisCdr, 
+                            cdrProcessor.CdrJobContext.MediationContext.DictAnsOrig, originatingCallingNumber);
                     } //if originatingcallingnumber present
                 }
             }
         }
-
-
         public void SetServiceGroupWiseSummaryParams(CdrExt cdrExt, AbstractCdrSummary newSummary)
         {
             newSummary.tup_matchedprefixcustomer = cdrExt.Cdr.MatchedPrefixY;

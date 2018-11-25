@@ -23,7 +23,7 @@ namespace InstallConfig
         {
             DirectorySettings directorySettings = new DirectorySettings("Directory Settings")
             {
-                ApplicationRootDirectory = "c:/Telcobright"
+                ApplicationRootDirectory = "C:/Telcobright"
             };
             
             //***FILE LOCATIONS**********************************************

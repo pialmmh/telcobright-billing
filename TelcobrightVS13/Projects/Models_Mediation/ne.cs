@@ -17,6 +17,7 @@ namespace MediationModel
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ne()
         {
+            this.bridgedroutes = new HashSet<bridgedroute>();
             this.jobs = new HashSet<job>();
             this.routes = new HashSet<route>();
         }
@@ -51,6 +52,8 @@ namespace MediationModel
         public int BatchToDecodeRatio { get; set; }
         public int PrependLocationNumberToFileName { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<bridgedroute> bridgedroutes { get; set; }
         public virtual enumcdrformat enumcdrformat { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<job> jobs { get; set; }
