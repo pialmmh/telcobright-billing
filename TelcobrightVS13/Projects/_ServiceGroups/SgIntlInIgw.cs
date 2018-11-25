@@ -77,8 +77,8 @@ namespace TelcobrightMediation
                         else
                         {
                             terminatingCalledNumber =
-                                terminatingCalledNumber.Substring(5,
-                                    terminatingCalledNumber.Length - 5); //trim igwprefix+0 terminating
+                                terminatingCalledNumber.Substring(4,
+                                    terminatingCalledNumber.Length - 4); //trim igwprefix+0 terminating
                         }
                         
                     }
