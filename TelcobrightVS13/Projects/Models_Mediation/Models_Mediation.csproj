@@ -105,6 +105,9 @@
     <Compile Include="billingruleassignment.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="bridgedroute.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="causecode.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
@@ -602,6 +605,9 @@
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="telcobrightpartner.cs">
+      <DependentUpon>PartnerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="temp_rate.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="timezone.cs">

@@ -115,6 +115,7 @@
     <Compile Include="Accounting\BalanceAdjustmentPostProcessingData.cs" />
     <Compile Include="Accounting\BillingPeriodConstants.cs" />
     <Compile Include="Accounting\BlockAccountAction.cs" />
+    <Compile Include="Cdr\AnsPrefixFinder.cs" />
     <Compile Include="Cdr\CdrJobCommiter.cs" />
     <Compile Include="Accounting\CdrPostingAccountingFinder.cs" />
     <Compile Include="Accounting\AccountActionService.cs" />

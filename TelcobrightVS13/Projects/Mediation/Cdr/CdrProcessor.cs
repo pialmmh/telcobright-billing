@@ -209,6 +209,7 @@ namespace TelcobrightMediation
                 this.CdrJobContext.MediationContext.Tbc.CdrSetting.ServiceGroupConfigurations;
             foreach (KeyValuePair<int, ServiceGroupConfiguration> kv in serviceGroupConfigurations)
             {
+                if (kv.Value.Disabled) continue;
                 this.CdrJobContext.MediationContext.MefServiceGroupContainer.IdServiceGroupWiseServiceGroups
                     .TryGetValue(kv.Key, out serviceGroup);
                 if (serviceGroup != null)

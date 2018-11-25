@@ -305,6 +305,18 @@ namespace InstallConfig
                     { "~/reports/transit/InternationalInTransit.aspx",//settings for report pages
                         settingIntlIn
                     },
+                    { "~/reports/transit/InternationalOutTransit.aspx",//settings for report pages
+                        settingIntlIn
+                    },
+                    { "~/reports/transit/LocalTransit.aspx",//settings for report pages
+                        settingIntlIn
+                    },
+                    { "~/reports/transit/LocalTollFree.aspx",//settings for report pages
+                        settingIntlIn
+                    },
+                    { "~/reports/transit/LocalTollFreePremium.aspx",//settings for report pages
+                        settingIntlIn
+                    },
                 },//dictionary of page settings
 
             };

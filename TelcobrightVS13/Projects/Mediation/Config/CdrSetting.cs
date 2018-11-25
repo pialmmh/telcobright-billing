@@ -26,6 +26,7 @@ namespace TelcobrightMediation
         public bool CallConnectTimePresent { get; set; }
         public bool DisableCdrPostProcessingJobCreationForAutomation { get; set; }
         public bool DisableParallelMediation { get; set; }
+        public bool EnableTgCreationForAns { get; set; }
         public CdrSetting()
         {
             this.NerCalculationRule = "NerByCauseCode";

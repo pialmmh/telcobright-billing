@@ -220,6 +220,11 @@ public partial class ConfigPartnerDetail : System.Web.UI.Page
                 {
                     this.LinkButton1.Visible = false;
                     this.lblRoute.Visible = false;
+                    if (Tbc.CdrSetting.EnableTgCreationForAns)
+                    {
+                        this.LinkButton1.Visible = true;
+                        this.lblRoute.Visible = true;
+                    }
 
                     //hide common TG and PrefixDirection  in gridview
                     this.GridViewPrefix.Columns[5].Visible = false;
@@ -408,10 +413,10 @@ public partial class ConfigPartnerDetail : System.Web.UI.Page
         thisText = (TextBox) this.FormViewPrefix.FindControl("PrefixTextBox");
         thisPrefix.Prefix = thisText.Text;
 
-        DropDownList thisList = (DropDownList) this.FormViewPrefix.FindControl("DropDownListCommonTG");
-        thisPrefix.CommonTG = int.Parse( thisList.SelectedValue);
+        //DropDownList thisList = (DropDownList) this.FormViewPrefix.FindControl("DropDownListCommonTG");
+        //thisPrefix.CommonTG = int.Parse( thisList.SelectedValue);
 
-        thisList = (DropDownList) this.FormViewPrefix.FindControl("DropDownListPType");
+        DropDownList thisList = (DropDownList) this.FormViewPrefix.FindControl("DropDownListPType");
         thisPrefix.PrefixType = int.Parse(thisList.SelectedValue);
 
         using (PartnerEntities context = new PartnerEntities())
