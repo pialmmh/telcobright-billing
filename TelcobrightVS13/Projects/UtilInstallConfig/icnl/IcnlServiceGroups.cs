@@ -31,10 +31,13 @@ namespace InstallConfig
                     Disabled = false,
                     Params = new Dictionary<string, string>()
                         {{"idCdrRules", "3"}}, //LocalCallByTgTypeAndPrefix=3
-                    PartnerRules = new List<int>()
+                    InPartnerFirstMatchRules = new List<int>()
                     {
                         PartnerRuletype.InPartnerByIncomingRoute,
                         PartnerRuletype.InPartnerByBridgeRoute,
+                    },
+                    OutPartnerFirstMatchRules = new List<int>()
+                    {
                         PartnerRuletype.OutPartnerByOutgoingRoute,
                         PartnerRuletype.OutPartnerByBridgeRoute
                     },
