@@ -56,124 +56,95 @@
         <EditItemTemplate>
           
 
-          <table border="0" style="min-width:925px">
-            <tr>
-            <td style="min-width:260px"> <%--first column--%>
-                
-                <div style="text-align:right;width:200px;float:left;">
-                <b> PartnerName:</b>
-                <div style="height:3px;"></div>
-                
-                Telephone:
-                
-                <div style="height:4px;"></div>
-                <b> Email:</b>
-                
-                <div style="height:5px;"></div>
-                
-                <b> Pre/Post Paid:</b>
-                
-                <div style="height:3px;"></div>
-                
-                <b> PartnerType:</b>
-                
-                <div style="height:3px;"></div>
-                Billing Day in Month:
-
-                <div style="height: 5px;"></div>
-                <b> Alternate Name (Invoice):</b>
-                <div style="height: 5px;"></div>
-                Alternate Name(Other):
-                <div style="height: 5px;"></div>
-                VAT Registration No:
-                <div style="height: 5px;"></div>
-                
-                <br />
-                    
-            </div>
-                <%--values--%>
-                <div style="text-align:left;width:200px;float:left;padding-left:5px;">
-                <asp:TextBox ID="TextBox4" runat="server" Width="170px"
-                    Text='<%# Bind("PartnerName") %>' />
-                <br />
-                <asp:TextBox ID="TextBox5" runat="server"  Width="170px"
-                    Text='<%# Bind("Telephone") %>' />
-                <br />
-                
-                <asp:TextBox ID="TextBox6" runat="server"  Width="170px" Text='<%# Bind("email") %>' />
-                <br />
-                
-                    <asp:DropDownList ID="DropDownList1" runat="server" AutoPostBack="True" 
-                        DataSourceID="SqlDataPrePost" DataTextField="type" DataValueField="id"
-                        SelectedValue='<%# Bind("CustomerPrePaid") %>'
-                        Enabled="false" Width="173px">
+            <table style="width: 720px;">
+                <tr>
+                    <td style="width: 460px; padding-left: 30px;" valign="top"> <%--first column--%>
+                        <table cellpadding="2" cellspacing="0" border="0">
+                            <tr>
+                                <td align="right"><b>PartnerName: </b></td>
+                                <td align="left"><asp:TextBox ID="TextBox4" runat="server" Width="170px" Text='<%# Bind("PartnerName") %>' /></td>
+                            </tr>
+                            <tr>
+                                <td align="right">Telephone: </td>
+                                <td align="left"><asp:TextBox ID="TextBox5" runat="server"  Width="170px" Text='<%# Bind("Telephone") %>' /></td>
+                            </tr>
+                            <tr>
+                                <td align="right">Email: </td>
+                                <td align="left"><asp:TextBox ID="TextBox6" runat="server"  Width="170px" Text='<%# Bind("email") %>' /></td>
+                            </tr>
+                            <tr>
+                                <td align="right"><b>Pre/Post Paid: </b></td>
+                                <td align="left"><asp:DropDownList ID="DropDownList1" runat="server" AutoPostBack="True" 
+                                                                   DataSourceID="SqlDataPrePost" DataTextField="type" DataValueField="id"
+                                                                   SelectedValue='<%# Bind("CustomerPrePaid") %>'
+                                                                   Enabled="false" Width="173px">
                         
-                    </asp:DropDownList>
-                
-                <br />
-                
-                <asp:DropDownList ID="DropDownList2" runat="server" AutoPostBack="True" 
-                    DataSourceID="SqlDataPartnerTypeEdit" DataTextField="type" DataValueField="id"
-                    SelectedValue='<%# Bind("PartnerType") %>'
-                    Enabled="false" Width="173px">
+                                </asp:DropDownList></td>
+                            </tr>
+                            <tr>
+                                <td align="right"><b>PartnerType: </b></td>
+                                <td align="left"><asp:DropDownList ID="DropDownList2" runat="server" AutoPostBack="True" 
+                                                                   DataSourceID="SqlDataPartnerTypeEdit" DataTextField="type" DataValueField="id"
+                                                                   SelectedValue='<%# Bind("PartnerType") %>'
+                                                                   Enabled="false" Width="173px">
                         
-                </asp:DropDownList>
-                
-                <br />
-                
-                <asp:TextBox ID="TextBox7" runat="server"  Width="170px"
-                    Text='<%# Bind("billingdate") %>' />
-
-                    <div style="height: 5px;"></div>
-                    <asp:TextBox ID="AlternateNameInvoiceTextBox" runat="server" Text='<%# Bind("AlternateNameInvoice") %>' />
-
-                    <div style="height: 5px;"></div>
-                    <asp:TextBox ID="AlternateNameOtherTextBox" runat="server" Text='<%# Bind("AlternateNameOther") %>' />
-
-                    <div style="height: 5px;"></div>
-                    <asp:TextBox ID="vatRegistrationNoTextBox" runat="server" Text='<%# Bind("vatRegistrationNo") %>' />
-
-                <br />
-                    
-            </div>
-
-            </td>
+                                </asp:DropDownList></td>
+                            </tr>
+                            <tr>
+                                <td align="right">Billing Day in Month:</td>
+                                <td align="left"><asp:TextBox ID="TextBox7" runat="server"  Width="170px" Text='<%# Bind("billingdate") %>' /></td>
+                            </tr>
+                            <tr>
+                                <td align="right"><b>Alternate Name (Invoice): </b></td>
+                                <td align="left"><asp:TextBox ID="AlternateNameInvoiceTextBox" runat="server" Text='<%# Bind("AlternateNameInvoice") %>' /></td>
+                            </tr>
+                            <tr>
+                                <td align="right">Alternate Name(Other): </td>
+                                <td align="left"><asp:TextBox ID="AlternateNameOtherTextBox" runat="server" Text='<%# Bind("AlternateNameOther") %>' /></td>
+                            </tr>
+                            <tr>
+                                <td align="right">VAT Registration No: </td>
+                                <td align="left"><asp:TextBox ID="vatRegistrationNoTextBox" runat="server" Text='<%# Bind("vatRegistrationNo") %>' /></td>
+                            </tr>
+                        </table>
+                    </td>
             
             
-            <td style="min-width:260px;"> <%--Column 2--%>
-                <div style="text-align:right;margin-right:200px;">
-                Address1:
-                <asp:TextBox ID="Address1TextBox" runat="server" 
-                    Text='<%# Bind("Address1") %>' />
-                <br />
-                Address2:
-                <asp:TextBox ID="Address2TextBox" runat="server" 
-                    Text='<%# Bind("Address2") %>' />
-                <br />
-                City:
-                <asp:TextBox ID="CityTextBox" runat="server" Text='<%# Bind("City") %>' />
-                <br />
-                State:
-                <asp:TextBox ID="StateTextBox" runat="server" Text='<%# Bind("State") %>' />
-                <br />
-                PostalCode:
-                <asp:TextBox ID="PostalCodeTextBox" runat="server" 
-                    Text='<%# Bind("PostalCode") %>' />
-                <br />
-                Country:
-                <asp:TextBox ID="CountryTextBox" runat="server" Text='<%# Bind("Country") %>' />
-                <br />
-                InvoiceAddress:
-                <asp:TextBox ID="InvoiceAddressTextBox" runat="server" TextMode="MultiLine" Text='<%# Bind("invoiceAddress") %>' />
-                <br />
-                
-                </div>
-
-            </td>
-            </tr>
+                    <td style="width: 260px; padding-left: 30px;" valign="top"> <%--Column 2--%>
+                        <table cellpadding="2" cellspacing="0" border="0">
+                            <tr>
+                                <td align="right">Address1: </td>
+                                <td align="left"><asp:TextBox ID="Address1TextBox" runat="server" Text='<%# Bind("Address1") %>' /></td>
+                            </tr>
+                            <tr>
+                                <td align="right">Address2: </td>
+                                <td align="left"><asp:TextBox ID="Address2TextBox" runat="server" Text='<%# Bind("Address2") %>' /></td>
+                            </tr>
+                            <tr>
+                                <td align="right">City: </td>
+                                <td align="left"><asp:TextBox ID="CityTextBox" runat="server" Text='<%# Bind("City") %>' /></td>
+                            </tr>
+                            <tr>
+                                <td align="right">State: </td>
+                                <td align="left"><asp:TextBox ID="StateTextBox" runat="server" Text='<%# Bind("State") %>' /></td>
+                            </tr>
+                            <tr>
+                                <td align="right">PostalCode: </td>
+                                <td align="left"><asp:TextBox ID="PostalCodeTextBox" runat="server" Text='<%# Bind("PostalCode") %>' /></td>
+                            </tr>
+                            <tr>
+                                <td align="right">Country: </td>
+                                <td align="left"><asp:TextBox ID="CountryTextBox" runat="server" Text='<%# Bind("Country") %>' /></td>
+                            </tr>
+                            <tr>
+                                <td align="right"><b>InvoiceAddress: </b></td>
+                                <td align="left"><asp:TextBox ID="InvoiceAddressTextBox" Width="167px" runat="server" TextMode="MultiLine" Text='<%# Bind("invoiceAddress") %>' /></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
             
-           </table>
-           
+            </table>           
             
             <asp:LinkButton ID="InsertButton" runat="server" CausesValidation="True" 
                 CommandName="Update" Text="Update" />

@@ -85,107 +85,83 @@
         <InsertItemTemplate>
           
 
-          <table style="width: 680px;">
+          <table style="width: 720px;">
             <tr>
-            <td style="width: 460px; padding-left: 30px;"> <%--first column--%>
-                
-                <div style="text-align: right; float: left;">
-                    <b> PartnerName:</b>    
-                    <div style="height: 9px;"></div>
-                    Telephone:
-                    <div style="height: 12px;"></div>
-                    Email:
-                    <div style="height: 7px;"></div>
-                    <b> Pre/Post Paid:</b>
-                    <div style="height: 7px;"></div>
-                    <b> PartnerType:</b>
-                    <div style="height: 5px;"></div>
-                    <b> Alternate Name (Invoice):</b>
-                    <div style="height: 5px;"></div>
-                    Alternate Name(Other):
-                    <div style="height: 5px;"></div>
-                    VAT Registration No:
-                    <div style="height: 5px;"></div>
-
-                </div>
-                <div style="text-align: left; float: left;">
-
-
-
-
-                    <asp:TextBox ID="PartnerNameTextBox" runat="server"
-                        Text="" />
-                    <div style="height: 5px;"></div>
-
-                    <asp:TextBox ID="TelephoneTextBox" runat="server"
-                        Text="" />
-                    <div style="height: 5px;"></div>
-
-                    <asp:TextBox ID="EmailTextBox" runat="server" Text="" />
-                    <div style="height: 5px;"></div>
-                    
-
-
-                        <asp:DropDownList ID="ddlistPrePostAdd" runat="server" AutoPostBack="True"
-                            DataSourceID="SqlDataPrePost" DataTextField="type" DataValueField="id"
-                            Enabled="True" Width="173px">
-                        </asp:DropDownList>
-                    
-                    <div style="height: 5px;"></div>
-                    
-
-
-
-                    <asp:DropDownList ID="ddlistCustomerTypeAdd" runat="server" AutoPostBack="True"
-                        DataSourceID="SqlDataPartnerTypeEdit" DataTextField="type" DataValueField="id"
-                        Enabled="True" Width="173px">
-                    </asp:DropDownList>
-                    <div style="height: 5px;"></div>
-                    <asp:TextBox ID="AlternateNameInvoiceTextBox" runat="server" Text="" />
-
-                    <div style="height: 5px;"></div>
-                    <asp:TextBox ID="AlternateNameOtherTextBox" runat="server" Text="" />
-
-                    <div style="height: 5px;"></div>
-                    <asp:TextBox ID="vatRegistrationNoTextBox" runat="server" Text="" />
-
-                    <br />
-
-
-                </div>
-
+            <td style="width: 460px; padding-left: 30px;" valign="top"> <%--first column--%>
+                <table cellpadding="2" cellspacing="0" border="0">
+                    <tr>
+                        <td align="right"><b>PartnerName: </b></td>
+                        <td align="left"><asp:TextBox ID="PartnerNameTextBox" runat="server" Text="" /></td>
+                    </tr>
+                    <tr>
+                        <td align="right">Telephone: </td>
+                        <td align="left"><asp:TextBox ID="TelephoneTextBox" runat="server" Text="" /></td>
+                    </tr>
+                    <tr>
+                        <td align="right">Email: </td>
+                        <td align="left"><asp:TextBox ID="EmailTextBox" runat="server" Text="" /></td>
+                    </tr>
+                    <tr>
+                        <td align="right"><b>Pre/Post Paid: </b></td>
+                        <td align="left"><asp:DropDownList ID="ddlistPrePostAdd" runat="server" AutoPostBack="True"
+                                                           DataSourceID="SqlDataPrePost" DataTextField="type" DataValueField="id"
+                                                           Enabled="True" Width="173px">
+                        </asp:DropDownList></td>
+                    </tr>
+                    <tr>
+                        <td align="right"><b>PartnerType: </b></td>
+                        <td align="left"><asp:DropDownList ID="ddlistCustomerTypeAdd" runat="server" AutoPostBack="True"
+                                                           DataSourceID="SqlDataPartnerTypeEdit" DataTextField="type" DataValueField="id"
+                                                           Enabled="True" Width="173px">
+                        </asp:DropDownList></td>
+                    </tr>
+                    <tr>
+                        <td align="right"><b>Alternate Name (Invoice): </b></td>
+                        <td align="left"><asp:TextBox ID="AlternateNameInvoiceTextBox" runat="server" Text="" /></td>
+                    </tr>
+                    <tr>
+                        <td align="right">Alternate Name(Other): </td>
+                        <td align="left"><asp:TextBox ID="AlternateNameOtherTextBox" runat="server" Text="" /></td>
+                    </tr>
+                    <tr>
+                        <td align="right">VAT Registration No: </td>
+                        <td align="left"><asp:TextBox ID="vatRegistrationNoTextBox" runat="server" Text="" /></td>
+                    </tr>
+                </table>
             </td>
             
             
-            <td style="width: 300px;"> <%--Column 2--%>
-                <div style="text-align:right;">
-                Address1:
-                <asp:TextBox ID="Address1TextBox" runat="server" 
-                    Text="" />
-                <br />
-                Address2:
-                <asp:TextBox ID="Address2TextBox" runat="server" 
-                    Text="" />
-                <br />
-                City:
-                <asp:TextBox ID="CityTextBox" runat="server" Text="" />
-                <br />
-                State:
-                <asp:TextBox ID="StateTextBox" runat="server" Text="" />
-                <br />
-                PostalCode:
-                <asp:TextBox ID="PostalCodeTextBox" runat="server" 
-                    Text="" />
-                <br />
-                Country:
-                <asp:TextBox ID="CountryTextBox" runat="server" Text="" />
-                <br />
-                InvoiceAddress:
-                <asp:TextBox ID="InvoiceAddressTextBox" runat="server" TextMode="MultiLine" Text="" />
-                <br />
-                
-                </div>
-
+            <td style="width: 260px; padding-left: 30px;" valign="top"> <%--Column 2--%>
+                <table cellpadding="2" cellspacing="0" border="0">
+                    <tr>
+                        <td align="right">Address1: </td>
+                        <td align="left"><asp:TextBox ID="Address1TextBox" runat="server" Text="" /></td>
+                    </tr>
+                    <tr>
+                        <td align="right">Address2: </td>
+                        <td align="left"><asp:TextBox ID="Address2TextBox" runat="server" Text="" /></td>
+                    </tr>
+                    <tr>
+                        <td align="right">City: </td>
+                        <td align="left"><asp:TextBox ID="CityTextBox" runat="server" Text="" /></td>
+                    </tr>
+                    <tr>
+                        <td align="right">State: </td>
+                        <td align="left"><asp:TextBox ID="StateTextBox" runat="server" Text="" /></td>
+                    </tr>
+                    <tr>
+                        <td align="right">PostalCode: </td>
+                        <td align="left"><asp:TextBox ID="PostalCodeTextBox" runat="server" Text="" /></td>
+                    </tr>
+                    <tr>
+                        <td align="right">Country: </td>
+                        <td align="left"><asp:TextBox ID="CountryTextBox" runat="server" Text="" /></td>
+                    </tr>
+                    <tr>
+                        <td align="right"><b>InvoiceAddress: </b></td>
+                        <td align="left"><asp:TextBox ID="InvoiceAddressTextBox" runat="server" Width="167px" TextMode="MultiLine" Text="" /></td>
+                    </tr>
+                </table>
             </td>
             </tr>
             
