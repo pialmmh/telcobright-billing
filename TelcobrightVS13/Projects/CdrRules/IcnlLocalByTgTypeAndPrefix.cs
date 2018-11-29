@@ -41,7 +41,20 @@ namespace CdrRules
             bridgedroute incomingBridgeRoute = null;
             bridgedroute outgoingBridgeRoute = null;
 
-            AnsPrefixFinder.FindOriginatingAnsPrefix(thisCdr,this.AnsPrefixes,thisCdr.OriginatingCallingNumber);
+            string originatingCallingNumber = thisCdr.OriginatingCallingNumber;
+            if (originatingCallingNumber.StartsWith("234234"))
+                originatingCallingNumber = originatingCallingNumber.Substring(6);
+            else if (originatingCallingNumber.StartsWith("234"))
+                originatingCallingNumber = originatingCallingNumber.Substring(3);
+            else if (originatingCallingNumber.StartsWith("0"))
+                originatingCallingNumber = originatingCallingNumber.Substring(1);
+            
+            AnsPrefixFinder.FindOriginatingAnsPrefix(thisCdr,this.AnsPrefixes,originatingCallingNumber);
+            if (thisCdr.AnsIdOrig == null || thisCdr.AnsIdOrig <= 0)
+            {
+                thisCdr.AreaCodeOrLata = "i";//keep a flag that it could be international incoming through domestic TG
+                return false;
+            }
 
             var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
             this.routes.TryGetValue(key, out incomingRoute);
@@ -64,9 +77,12 @@ namespace CdrRules
 
             int outRouteLocalityType = Convert.ToInt32(outgoingRoute?.NationalOrInternational ??
                                                        outgoingBridgeRoute?.nationalOrInternational);
-
-            return inRouteLocalityType == RouteLocalityType.National
-                && outRouteLocalityType==RouteLocalityType.National && thisCdr.AnsIdOrig > 0;
+            if (thisCdr.DurationSec > 0)
+            {
+                return inRouteLocalityType == RouteLocalityType.National
+                    && outRouteLocalityType == RouteLocalityType.National && thisCdr.AnsIdOrig > 0;
+            }
+            return inRouteLocalityType == RouteLocalityType.National && thisCdr.AnsIdOrig > 0;
         }
     }
 }

@@ -7,6 +7,7 @@ using MediationModel;
 
 namespace TelcobrightMediation.Cdr
 {
+    
     public static class AnsPrefixFinder
     {
         public static void FindOriginatingAnsPrefix(cdr thisCdr, Dictionary<string, partnerprefix> ansPrefixes, string originatingCallingNumber)

@@ -54,6 +54,22 @@ namespace TelcobrightMediation
             if (atleastOneFalse==false)
             {
                 thisCdr.ServiceGroup = this.Id;
+                string originatingCalledNumber = thisCdr.OriginatingCalledNumber;
+                thisCdr.RedirectingNumber = originatingCalledNumber;
+                if (originatingCalledNumber.StartsWith("234234"))
+                    originatingCalledNumber = originatingCalledNumber.Substring(6);
+                else if (originatingCalledNumber.StartsWith("234"))
+                    originatingCalledNumber = originatingCalledNumber.Substring(3);
+                else if (originatingCalledNumber.StartsWith("0"))
+                    originatingCalledNumber = originatingCalledNumber.Substring(1);
+
+                int lenOfMobileNumbers = 10;
+                if (originatingCalledNumber.Length > lenOfMobileNumbers)
+                {
+                    originatingCalledNumber = originatingCalledNumber.Substring(originatingCalledNumber.Length -
+                                                                                lenOfMobileNumbers);
+                }
+                thisCdr.OriginatingCalledNumber = originatingCalledNumber;
             }
         }
 

@@ -31,6 +31,7 @@ namespace InstallConfig
                 RouteTypeEnums = new Dictionary<string, int>()
                 {
                     {"Select",-1 },
+                    { "National",1},
                     { "International",2},
                 },
                 PortalSites = new List<InternetSite>()

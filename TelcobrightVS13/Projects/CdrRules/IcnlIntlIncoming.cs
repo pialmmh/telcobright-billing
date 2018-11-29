@@ -8,7 +8,7 @@ namespace CdrRules
 {
 
     [Export("CdrRule", typeof(ICdrRule))]
-    public class IcnlIntlIncomingByTgType : ICdrRule
+    public class IcnlIntlIncoming : ICdrRule
     {
         public override string ToString() => this.RuleName;
         public string RuleName => GetType().Name;
@@ -28,6 +28,10 @@ namespace CdrRules
         {
             if (this.IsPrepared == false)
                 throw new Exception("Rule is not prepared, method Prepare needs to be called first.");
+            if (InternationalInCallThroughLocalTg(thisCdr))
+            {
+                return true;
+            }
             ValueTuple<int, string> key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
             route inRoute = null;
             this.SwitchWiseRoutes.TryGetValue(key, out inRoute);
@@ -37,6 +41,15 @@ namespace CdrRules
             if (outRoute != null)
             {
                 return outRoute.NationalOrInternational == RouteLocalityType.International;
+            }
+            return false;
+        }
+
+        public bool InternationalInCallThroughLocalTg(cdr thisCdr)
+        {
+            if (thisCdr.AreaCodeOrLata=="i")//already set while checking rule IcnlLocalByTgTypeAndPrefix
+            {
+                return true;
             }
             return false;
         }

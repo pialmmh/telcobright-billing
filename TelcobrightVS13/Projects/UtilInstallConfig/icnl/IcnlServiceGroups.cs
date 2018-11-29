@@ -84,12 +84,15 @@ namespace InstallConfig
                 }, //end dictionary item
                 new ServiceGroupConfiguration(idServiceGroup: 21) //outgoing
                 {
-                    Disabled = true,
+                    Disabled = false,
                     Params = new Dictionary<string, string>() {{"idCdrRules", "4"}},
-                    PartnerRules = new List<int>()
+                    InPartnerFirstMatchRules = new List<int>()
                     {
                         PartnerRuletype.InPartnerByIncomingRoute,
                         PartnerRuletype.InPartnerByBridgeRoute,
+                    },
+                    OutPartnerFirstMatchRules = new List<int>()
+                    {
                         PartnerRuletype.OutPartnerByOutgoingRoute,
                         PartnerRuletype.OutPartnerByBridgeRoute
                     },
@@ -136,7 +139,7 @@ namespace InstallConfig
                 }, //end dictionary item
                 new ServiceGroupConfiguration(idServiceGroup: 22) //incoming
                 {
-                    Disabled = true,
+                    Disabled = false,
                     Params = new Dictionary<string, string>() {{"idCdrRules", "5"}},
                     PartnerRules = new List<int>()
                     {
@@ -188,10 +191,13 @@ namespace InstallConfig
                 {
                     Disabled = true,
                     Params = new Dictionary<string, string>() {{"prefixes", "622"}},
-                    PartnerRules = new List<int>()
+                    InPartnerFirstMatchRules = new List<int>()
                     {
                         PartnerRuletype.InPartnerByIncomingRoute,
                         PartnerRuletype.InPartnerByBridgeRoute,
+                    },
+                    OutPartnerFirstMatchRules = new List<int>()
+                    {
                         PartnerRuletype.OutPartnerByOutgoingRoute,
                         PartnerRuletype.OutPartnerByBridgeRoute
                     },
@@ -231,10 +237,13 @@ namespace InstallConfig
                 {
                     Disabled = true,
                     Params = new Dictionary<string, string>() {{"prefixes", "800"}},
-                    PartnerRules = new List<int>()
+                    InPartnerFirstMatchRules = new List<int>()
                     {
                         PartnerRuletype.InPartnerByIncomingRoute,
                         PartnerRuletype.InPartnerByBridgeRoute,
+                    },
+                    OutPartnerFirstMatchRules = new List<int>()
+                    {
                         PartnerRuletype.OutPartnerByOutgoingRoute,
                         PartnerRuletype.OutPartnerByBridgeRoute
                     },
