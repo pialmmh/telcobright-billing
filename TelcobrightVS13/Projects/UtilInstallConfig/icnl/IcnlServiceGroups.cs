@@ -22,6 +22,10 @@ namespace InstallConfig
 {
     public partial class IcnlConfigGenerator //quartz config part
     {
+        public List<int> GetServiceGroupPreProcessingRules()
+        {
+            return new List<int>(1);//copy orig call number to redirect num field
+        }
         public Dictionary<int, ServiceGroupConfiguration> GetServiceGroupConfigurations()
         {
             List<ServiceGroupConfiguration> serviceGroupConfigurations = new List<ServiceGroupConfiguration>()

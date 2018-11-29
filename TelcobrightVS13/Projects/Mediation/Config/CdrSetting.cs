@@ -21,6 +21,7 @@ namespace TelcobrightMediation
         public DateTime NotAllowedCallDateTimeBefore { get; set; } = new DateTime(2008,1,1);
         public List<IValidationRule<string[]>> ValidationRulesForInconsistentCdrs { get; set; }
         public List<IValidationRule<cdr>> ValidationRulesForCommonMediationCheck { get; set; }
+        public List<int> ServiceGroupPreProcessingRules { get; set; }=new List<int>();
         public Dictionary<int, ServiceGroupConfiguration> ServiceGroupConfigurations { get; set; }
         public string NerCalculationRule { get; set; }
         public bool CallConnectTimePresent { get; set; }
