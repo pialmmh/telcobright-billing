@@ -28,30 +28,15 @@ namespace CdrRules
         {
             if (this.IsPrepared == false)
                 throw new Exception("Rule is not prepared, method Prepare needs to be called first.");
-            if (InternationalInCallThroughLocalTg(thisCdr))
-            {
-                return true;
-            }
             ValueTuple<int, string> key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
             route inRoute = null;
             this.SwitchWiseRoutes.TryGetValue(key, out inRoute);
-            key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
-            route outRoute = null;
-            this.SwitchWiseRoutes.TryGetValue(key, out outRoute);
-            if (outRoute != null)
+            if (inRoute != null)
             {
-                return outRoute.NationalOrInternational == RouteLocalityType.International;
+                return inRoute.NationalOrInternational == RouteLocalityType.International;
             }
             return false;
         }
-
-        public bool InternationalInCallThroughLocalTg(cdr thisCdr)
-        {
-            if (thisCdr.AreaCodeOrLata=="i")//already set while checking rule IcnlLocalByTgTypeAndPrefix
-            {
-                return true;
-            }
-            return false;
-        }
+        
     }
 }

@@ -14,7 +14,7 @@ using TransactionTuple = System.ValueTuple<int, int, long, int, long>;
 namespace TelcobrightMediation
 {
     [Export("ServiceGroup", typeof(IServiceGroup))]
-    public class SgIcnlIncoming : IServiceGroup
+    public class SgIcnlIntlIncoming : IServiceGroup
     {
         private readonly SgIntlTransitVoice _sgIntlTransitVoice = new SgIntlTransitVoice();
         public override string ToString() => this.RuleName;
@@ -23,7 +23,7 @@ namespace TelcobrightMediation
         public int Id => 22;
         private Dictionary<CdrSummaryType, Type> SummaryTargetTables { get; }
         private List<ICdrRule> CdrRules { get; set; } = new List<ICdrRule>();
-        public SgIcnlIncoming() //constructor
+        public SgIcnlIntlIncoming() //constructor
         {
             this.SummaryTargetTables = new Dictionary<CdrSummaryType, Type>()
             {
@@ -50,19 +50,27 @@ namespace TelcobrightMediation
 
         public void Execute(cdr thisCdr, CdrProcessor cdrProcessor)
         {
-            var dicRoutes = cdrProcessor.CdrJobContext.MediationContext.MefServiceGroupContainer.SwitchWiseRoutes;
-            var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
-            route thisRoute = null;
-            dicRoutes.TryGetValue(key, out thisRoute);
-            if (thisRoute != null)
+            if (InternationalInCallThroughLocalTg(thisCdr))
             {
-                if (thisRoute.NationalOrInternational == RouteLocalityType.International)
+                thisCdr.ServiceGroup = this.Id;
+            }
+            else 
+            {
+                var atleastOneFalse = this.CdrRules.Any(r => r.CheckIfTrue(thisCdr) == false);
+                if (atleastOneFalse == false)
                 {
-                    thisCdr.ServiceGroup = this.Id; 
+                    thisCdr.ServiceGroup = this.Id;
                 }
             }
         }
-
+        private bool InternationalInCallThroughLocalTg(cdr thisCdr)
+        {
+            if (thisCdr.AreaCodeOrLata == "i")//already set while checking rule IcnlLocalByTgTypeAndPrefix
+            {
+                return true;
+            }
+            return false;
+        }
         public void SetServiceGroupWiseSummaryParams(CdrExt cdrExt, AbstractCdrSummary newSummary)
         {
             //this._sgIntlTransitVoice.SetServiceGroupWiseSummaryParams(cdrExt, newSummary);
