@@ -16,6 +16,8 @@ using DocumentFormat.OpenXml.Drawing;
 using MediationModel;
 using PortalApp;
 using System.IO;
+using DevExpress.Web;
+
 public partial class ConfigCdr : Page
 {
 
@@ -168,7 +170,7 @@ public partial class ConfigCdr : Page
             string database = connection.Database.ToString();
             List<ne> lstSwitch;
             TelcobrightConfig tbc = PortalApp.PageUtil.GetTelcobrightConfig();
-            ServiceGroupComposer serviceGroupComposer=new ServiceGroupComposer();
+            ServiceGroupComposer serviceGroupComposer = new ServiceGroupComposer();
             serviceGroupComposer.ComposeFromPath(PageUtil.GetPortalBinPath() +
                                                  System.IO.Path.DirectorySeparatorChar + ".." +
                                                  System.IO.Path.DirectorySeparatorChar + "Extensions");
@@ -196,7 +198,8 @@ public partial class ConfigCdr : Page
                     if (serviceGroups.ContainsKey(kv.Key))
                     {
                         string serviceGroupName = serviceGroups[kv.Key].RuleName;
-                        this.DropDownListServiceGroup.Items.Add(new ListItem(serviceGroupName,serviceGroups[kv.Key].Id.ToString()));
+                        this.DropDownListServiceGroup.Items.Add(new ListItem(serviceGroupName,
+                            serviceGroups[kv.Key].Id.ToString()));
                     }
                 }
             }
@@ -212,9 +215,9 @@ public partial class ConfigCdr : Page
             PopulatePartner(switchId, 0);
             PopulatePartner(switchId, 1);
 
-            PopulateRoute(0,-1, 0);
-            PopulateRoute(0,-1, 1);
-            
+            PopulateRoute(0, -1, 0);
+            PopulateRoute(0, -1, 1);
+
             this.DropDownListFieldList.Items.Clear();
             // deserialize JSON directly from a file
             var fieldTemplates = (List<CdrFieldTemplate>) tbc.PortalSettings.DicConfigObjects["CdrFieldTemplate"];
@@ -231,7 +234,13 @@ public partial class ConfigCdr : Page
             this.Session["cdrfieldtemplate"] = fieldTemplates;
 
 
-        }//if !postback
+        } //if !postback
+        else
+        {
+            this._dt = (DataTable)this.Session["dtCDR"];
+            this.gridViewDx.DataSource = this._dt;
+            this.gridViewDx.DataBind();
+        }
     }
 
     void PopulatePartner(int switchId,int inOrOut)
@@ -583,6 +592,12 @@ public partial class ConfigCdr : Page
 
         }
         // int cccnnntt = dtTable2.Rows.Count;
+
+        this.gridViewDx.DataSource = this._dt;
+        this.gridViewDx.DataBind();
+        this.Session["dtCDR"] = _dt;
+
+/*
         this.gridView.DataSource = this._dt;// dtSet;
         this.gridView.AllowPaging = true;
         if (this._dt.Rows.Count > 1)
@@ -597,7 +612,7 @@ public partial class ConfigCdr : Page
         this._totalNumRowsTemp = this._totalNumRows;
         //_gridActiveIndexTemp = gridactiveindex;
         SetPaging1(this.gridView);
-
+*/
     }
 
 
@@ -869,5 +884,27 @@ public partial class ConfigCdr : Page
     protected void gridView_DataBound(object sender, EventArgs e)
     {
         
+    }
+
+    protected void gridViewDx_OnCustomColumnDisplayText(object sender, ASPxGridViewColumnDisplayTextEventArgs e)
+    {
+        if (e.Column.GetType() == typeof(GridViewDataDateColumn))
+        {
+            ((GridViewDataDateColumn)e.Column).PropertiesDateEdit.DisplayFormatString = "yyyy-MM-dd HH:mm:ss";
+        }
+    }
+
+    protected void gridViewDx_OnDataBound(object sender, EventArgs e)
+    {
+        var hasCommandColumn = gridViewDx.Columns.Cast<GridViewColumn>().Any(c => c is GridViewCommandColumn);
+        if (!hasCommandColumn)
+        {
+            var commandColumn = new GridViewCommandColumn();
+            commandColumn.ShowEditButton = true;
+            // commandColumn.EditButton.Visible = true;
+            // commandColumn.NewButton.Visible = true;
+            // commandColumn.DeleteButton.Visible = true;
+            gridViewDx.Columns.Add(commandColumn);
+        }
     }
 }

@@ -1,4 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="True" CodeBehind="cdr.aspx.cs" Inherits="ConfigCdr" %>
+
+<%@ Register Assembly="DevExpress.Web.v15.1, Version=15.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.Web" TagPrefix="dx" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
    
@@ -458,7 +460,21 @@ union all
       
 
         <div style="margin-top:0px;">
-            <asp:GridView ID="gridView" AllowPaging="True"
+            <dx:ASPxGridView ID="gridViewDx" runat="server" Width="100%" 
+                OnDataBound="gridViewDx_OnDataBound"
+                OnCustomColumnDisplayText="gridViewDx_OnCustomColumnDisplayText" KeyFieldName="IdCall">
+                <Styles>
+                    <Header Wrap="True"></Header>
+                </Styles>
+                <SettingsPager PageSize="100">
+                </SettingsPager>
+                <SettingsEditing Mode="EditForm">
+                </SettingsEditing>
+                <Settings HorizontalScrollBarMode="Auto" />
+                <SettingsBehavior AllowGroup="False" ConfirmDelete="True" />
+                <SettingsDataSecurity AllowDelete="False" AllowInsert="False" />
+            </dx:ASPxGridView>
+<%--            <asp:GridView ID="gridView" AllowPaging="True"
                 runat="server" 
                 CellPadding="4" ForeColor="#333333" GridLines="Vertical" 
                 Font-Size="Smaller" PageSize="5000" OnDataBound="gridView_DataBound"  OnRowDataBound="gridView_RowDataBound">
@@ -482,7 +498,7 @@ union all
                 <SortedAscendingHeaderStyle BackColor="#506C8C" />
                 <SortedDescendingCellStyle BackColor="#FFFDF8" />
                 <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
-            </asp:GridView>
+            </asp:GridView>--%>
     </div>
             
         
