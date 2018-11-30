@@ -466,7 +466,7 @@ union all
                 OnCellEditorInitialize="gridViewDx_OnCellEditorInitialize"
                 OnRowUpdating="gridViewDx_OnRowUpdating">
                 <Styles><Header Wrap="True"></Header></Styles>
-                <SettingsEditing Mode="EditForm"></SettingsEditing>
+                <SettingsEditing Mode="PopupEditForm"></SettingsEditing>
                 <SettingsPager PageSize="100"></SettingsPager>
                 <Settings HorizontalScrollBarMode="Auto" />
                 <SettingsDataSecurity AllowDelete="False" AllowInsert="False" />

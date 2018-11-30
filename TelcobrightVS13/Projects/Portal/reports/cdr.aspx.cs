@@ -17,9 +17,11 @@ using DocumentFormat.OpenXml.Drawing;
 using MediationModel;
 using PortalApp;
 using System.IO;
+using DevExpress.Utils;
 using DevExpress.Web;
 using DevExpress.Web.Data;
 using DevExpress.Xpo;
+using LibraryExtensions;
 
 public partial class ConfigCdr : Page
 {
@@ -893,6 +895,26 @@ public partial class ConfigCdr : Page
     protected void gridViewDx_OnDataBound(object sender, EventArgs e)
     {
         ASPxGridView grid = sender as ASPxGridView;
+        foreach (var c in grid.Columns)
+        {
+            if (c.GetType() != typeof(GridViewCommandColumn))
+            {
+                switch (((GridViewDataColumn)c).FieldName)
+                {
+                    case "Ingress Calling Number":
+                    case "Ingress Called Number":
+                    case "Egress Calling Number":
+                    case "Egress Called Number":
+                    case "Duration1":
+                    case "Duration2":
+                    case "Duration3":
+                        break;
+                    default:
+                        ((GridViewDataColumn)c).EditFormSettings.Visible = DefaultBoolean.False;
+                        break;
+                }
+            }
+        }
         if (grid.Columns.IndexOf(grid.Columns["CommandColumn"]) != -1)
             return;
         GridViewCommandColumn col = new GridViewCommandColumn();
@@ -900,6 +922,7 @@ public partial class ConfigCdr : Page
         col.ShowEditButton = true;
         col.VisibleIndex = 0;
         grid.Columns.Insert(0, col);
+
     }
 
     protected void gridViewDx_OnDataBinding(object sender, EventArgs e)
@@ -922,21 +945,14 @@ public partial class ConfigCdr : Page
             (e.Column.PropertiesEdit as DateEditProperties).EditFormatString = "yyyy-MM-dd HH:mm:ss";
             (e.Column.PropertiesEdit as DateEditProperties).TimeSectionProperties.Visible = true;
         }
-        else
-        {
-            switch (e.Column.FieldName)
-            {
-                case "StartTime":
-                case "IdCall":
-                    e.Editor.ReadOnly = true;
-                    break;;
-            }
-        }
     }
 
     protected void gridViewDx_OnRowUpdating(object sender, ASPxDataUpdatingEventArgs e)
     {
         string sourceTable = this.DropDownListSource.SelectedIndex == 0 ? "cdr " : "cdrerror ";
+        var cdrFieldTemplates = (List<CdrFieldTemplate>)this.Session["cdrfieldtemplate"];
+        CdrFieldTemplate selectedTemplate = cdrFieldTemplates.Where(c => c.FieldTemplateName == this.DropDownListFieldList.SelectedValue).First();
+
         using (MySqlConnection connection = new MySqlConnection())
         {
             connection.ConnectionString = ConfigurationManager.ConnectionStrings["reader"].ConnectionString;
@@ -944,10 +960,25 @@ public partial class ConfigCdr : Page
             MySqlCommand cmd = new MySqlCommand();
             cmd.Connection = connection;
 
-            string strUpdateCmd = "update " + sourceTable;
-            strUpdateCmd += " where IdCall = @IdCall and StartTime = @StartTime";
+            string strUpdateCmd = "update " + sourceTable + "set ";
+            foreach (string key in e.NewValues.Keys)
+            {
+                string colName = selectedTemplate.Fields.First(x => x.Contains(key)).Split(new string[] { " as " }, StringSplitOptions.None).First().Trim();
+                if (e.NewValues[key] != null)
+                    strUpdateCmd += colName + " = '" + e.NewValues[key] + "', ";
+                else
+                    strUpdateCmd += colName + " = null, ";
+            }
+            strUpdateCmd = strUpdateCmd.Substring(0, strUpdateCmd.Length - 2);
+            int editingRowVisibleIndex = gridViewDx.EditingRowVisibleIndex;
+            DateTime starttime = (DateTime) gridViewDx.GetRowValues(editingRowVisibleIndex, "Start Time");
+            strUpdateCmd += " where IdCall = " + e.Keys["IdCall"] + " and StartTime = " + starttime.ToMySqlField() + "";
             cmd.CommandText = strUpdateCmd;
-            //cmd.ExecuteNonQuery();
+            cmd.ExecuteNonQuery();
+            gridViewDx.CancelEdit();
+            e.Cancel = true;
         }
+
+        ButtonFind_Click(ButtonFind, EventArgs.Empty);
     }
 }
