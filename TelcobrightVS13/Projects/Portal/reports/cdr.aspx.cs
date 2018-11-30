@@ -18,6 +18,7 @@ using MediationModel;
 using PortalApp;
 using System.IO;
 using DevExpress.Web;
+using DevExpress.Web.Data;
 using DevExpress.Xpo;
 
 public partial class ConfigCdr : Page
@@ -911,5 +912,42 @@ public partial class ConfigCdr : Page
         //});
         this._dt = (DataTable)this.Session["dtCDR"];
         this.gridViewDx.DataSource = this._dt;
+    }
+
+    protected void gridViewDx_OnCellEditorInitialize(object sender, ASPxGridViewEditorEventArgs e)
+    {
+        if (e.Column.GetType() == typeof(GridViewDataDateColumn))
+        {
+            (e.Column.PropertiesEdit as DateEditProperties).DisplayFormatString = "yyyy-MM-dd HH:mm:ss";
+            (e.Column.PropertiesEdit as DateEditProperties).EditFormatString = "yyyy-MM-dd HH:mm:ss";
+            (e.Column.PropertiesEdit as DateEditProperties).TimeSectionProperties.Visible = true;
+        }
+        else
+        {
+            switch (e.Column.FieldName)
+            {
+                case "StartTime":
+                case "IdCall":
+                    e.Editor.ReadOnly = true;
+                    break;;
+            }
+        }
+    }
+
+    protected void gridViewDx_OnRowUpdating(object sender, ASPxDataUpdatingEventArgs e)
+    {
+        string sourceTable = this.DropDownListSource.SelectedIndex == 0 ? "cdr " : "cdrerror ";
+        using (MySqlConnection connection = new MySqlConnection())
+        {
+            connection.ConnectionString = ConfigurationManager.ConnectionStrings["reader"].ConnectionString;
+            connection.Open();
+            MySqlCommand cmd = new MySqlCommand();
+            cmd.Connection = connection;
+
+            string strUpdateCmd = "update " + sourceTable;
+            strUpdateCmd += " where IdCall = @IdCall and StartTime = @StartTime";
+            cmd.CommandText = strUpdateCmd;
+            //cmd.ExecuteNonQuery();
+        }
     }
 }

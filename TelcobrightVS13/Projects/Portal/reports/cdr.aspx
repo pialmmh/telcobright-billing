@@ -462,7 +462,9 @@ union all
         <div style="margin-top:0px;">
             <dx:ASPxGridView ID="gridViewDx" runat="server" Width="100%" KeyFieldName="IdCall"
                 OnDataBinding="gridViewDx_OnDataBinding" OnDataBound="gridViewDx_OnDataBound" 
-                OnCustomColumnDisplayText="gridViewDx_OnCustomColumnDisplayText">
+                OnCustomColumnDisplayText="gridViewDx_OnCustomColumnDisplayText"
+                OnCellEditorInitialize="gridViewDx_OnCellEditorInitialize"
+                OnRowUpdating="gridViewDx_OnRowUpdating">
                 <Styles><Header Wrap="True"></Header></Styles>
                 <SettingsEditing Mode="EditForm"></SettingsEditing>
                 <SettingsPager PageSize="100"></SettingsPager>
