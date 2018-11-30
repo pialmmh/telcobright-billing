@@ -63,7 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SgIcnlIncoming.cs" />
+    <Compile Include="SgIcnlIntlIncoming.cs" />
     <Compile Include="SgIcnlOutgoing.cs" />
     <Compile Include="SgIcnlLocal.cs" />
     <Compile Include="SgIcnlTollFreePremium.cs" />
