@@ -460,18 +460,13 @@ union all
       
 
         <div style="margin-top:0px;">
-            <dx:ASPxGridView ID="gridViewDx" runat="server" Width="100%" 
-                OnDataBound="gridViewDx_OnDataBound"
-                OnCustomColumnDisplayText="gridViewDx_OnCustomColumnDisplayText" KeyFieldName="IdCall">
-                <Styles>
-                    <Header Wrap="True"></Header>
-                </Styles>
-                <SettingsPager PageSize="100">
-                </SettingsPager>
-                <SettingsEditing Mode="EditForm">
-                </SettingsEditing>
+            <dx:ASPxGridView ID="gridViewDx" runat="server" Width="100%" KeyFieldName="IdCall"
+                OnDataBinding="gridViewDx_OnDataBinding" OnDataBound="gridViewDx_OnDataBound" 
+                OnCustomColumnDisplayText="gridViewDx_OnCustomColumnDisplayText">
+                <Styles><Header Wrap="True"></Header></Styles>
+                <SettingsEditing Mode="EditForm"></SettingsEditing>
+                <SettingsPager PageSize="100"></SettingsPager>
                 <Settings HorizontalScrollBarMode="Auto" />
-                <SettingsBehavior AllowGroup="False" ConfirmDelete="True" />
                 <SettingsDataSecurity AllowDelete="False" AllowInsert="False" />
             </dx:ASPxGridView>
 <%--            <asp:GridView ID="gridView" AllowPaging="True"

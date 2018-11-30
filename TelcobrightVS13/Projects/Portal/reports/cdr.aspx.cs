@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Globalization;
@@ -17,6 +18,7 @@ using MediationModel;
 using PortalApp;
 using System.IO;
 using DevExpress.Web;
+using DevExpress.Xpo;
 
 public partial class ConfigCdr : Page
 {
@@ -235,12 +237,6 @@ public partial class ConfigCdr : Page
 
 
         } //if !postback
-        else
-        {
-            this._dt = (DataTable)this.Session["dtCDR"];
-            this.gridViewDx.DataSource = this._dt;
-            this.gridViewDx.DataBind();
-        }
     }
 
     void PopulatePartner(int switchId,int inOrOut)
@@ -593,9 +589,8 @@ public partial class ConfigCdr : Page
         }
         // int cccnnntt = dtTable2.Rows.Count;
 
-        this.gridViewDx.DataSource = this._dt;
-        this.gridViewDx.DataBind();
         this.Session["dtCDR"] = _dt;
+        this.gridViewDx.DataBind();
 
 /*
         this.gridView.DataSource = this._dt;// dtSet;
@@ -896,15 +891,25 @@ public partial class ConfigCdr : Page
 
     protected void gridViewDx_OnDataBound(object sender, EventArgs e)
     {
-        var hasCommandColumn = gridViewDx.Columns.Cast<GridViewColumn>().Any(c => c is GridViewCommandColumn);
-        if (!hasCommandColumn)
-        {
-            var commandColumn = new GridViewCommandColumn();
-            commandColumn.ShowEditButton = true;
-            // commandColumn.EditButton.Visible = true;
-            // commandColumn.NewButton.Visible = true;
-            // commandColumn.DeleteButton.Visible = true;
-            gridViewDx.Columns.Add(commandColumn);
-        }
+        ASPxGridView grid = sender as ASPxGridView;
+        if (grid.Columns.IndexOf(grid.Columns["CommandColumn"]) != -1)
+            return;
+        GridViewCommandColumn col = new GridViewCommandColumn();
+        col.Name = "CommandColumn";
+        col.ShowEditButton = true;
+        col.VisibleIndex = 0;
+        grid.Columns.Insert(0, col);
+    }
+
+    protected void gridViewDx_OnDataBinding(object sender, EventArgs e)
+    {
+        //BindingList<partner> _data = new BindingList<partner>();
+        //_data.Add(new partner()
+        //{
+        //    idPartner = 1,
+        //    PartnerName = "First Partner"
+        //});
+        this._dt = (DataTable)this.Session["dtCDR"];
+        this.gridViewDx.DataSource = this._dt;
     }
 }

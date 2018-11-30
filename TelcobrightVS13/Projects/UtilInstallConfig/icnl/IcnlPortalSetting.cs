@@ -71,6 +71,7 @@ namespace InstallConfig
                                 FieldTemplateName="Basic",
                                 Fields=new List<string>()
                                 {
+                                    "IdCall",
                                     "starttime as `Start Time`",
                                     "AnswerTime as `Answer Time`",
                                     "endtime as `End Time`",
