@@ -49,6 +49,7 @@ namespace InstallConfig
                 DescendingOrderWhileProcessingListedFiles = false,
                 ValidationRulesForCommonMediationCheck = commonCdrValRulesGen.GetRules(),
                 ValidationRulesForInconsistentCdrs = inconsistentCdrValRulesGen.GetRules(),
+                ServiceGroupPreProcessingRules = this.GetServiceGroupPreProcessingRules(),
                 ServiceGroupConfigurations = this.GetServiceGroupConfigurations(),
                 DisableCdrPostProcessingJobCreationForAutomation = false,
                 DisableParallelMediation = false,

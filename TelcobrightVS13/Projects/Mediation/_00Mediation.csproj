@@ -169,11 +169,13 @@
     <Compile Include="MefData\Composers\PartnerRuleComposer.cs" />
     <Compile Include="MefData\Composers\RouteDisplayClassComposer.cs" />
     <Compile Include="MefData\Composers\InvoiceTemplateComposer.cs" />
+    <Compile Include="MefData\Composers\ServiceGroupPreProcessorComposer.cs" />
     <Compile Include="MefData\Composers\ServiceFamilyComposer.cs" />
     <Compile Include="MefData\Composers\ServiceGroupComposer.cs" />
     <Compile Include="MefData\DigitRulesData.cs" />
     <Compile Include="MefData\IInvoiceGenerationRule.cs" />
     <Compile Include="MefData\IDigitRule.cs" />
+    <Compile Include="MefData\IServiceGroupPreProcessor.cs" />
     <Compile Include="MefData\ITelcobrightJobInput.cs" />
     <Compile Include="Cdr\CdrJobFactory.cs" />
     <Compile Include="Cdr\Collection\PreProcessors\CdrErasingPreProcessor.cs" />

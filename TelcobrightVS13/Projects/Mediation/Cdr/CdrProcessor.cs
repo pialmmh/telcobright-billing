@@ -80,7 +80,13 @@ namespace TelcobrightMediation
                 {
                     try
                     {
-                        ResetMediationStatus(cdrExt.Cdr);
+                        cdr thisCdr = cdrExt.Cdr;
+                        ResetMediationStatus(thisCdr);
+                        foreach (var serviceGroupPreProcessor in 
+                            this.MediationContext.MefServiceGroupContainer.ServiceGroupPreProcessors.Values)
+                        {
+                            serviceGroupPreProcessor.Execute(thisCdr,this);
+                        }
                         IServiceGroup serviceGroup = null;
                         ServiceGroupConfiguration serviceGroupConfiguration = null;
                         if (this.SkipServiceGroupRules == true)

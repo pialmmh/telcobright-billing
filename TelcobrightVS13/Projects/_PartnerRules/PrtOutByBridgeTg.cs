@@ -26,7 +26,7 @@ namespace PartnerRules
             if (brRoute != null)
             {
                 int idPartner = brRoute.outPartner;
-                thisCdr.InPartnerId = idPartner;
+                thisCdr.OutPartnerId = idPartner;
                 return idPartner;
             }
             thisCdr.OutPartnerId = 0;

@@ -5,11 +5,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7E569C06-1C0D-407C-8DFD-1386D810E330}</ProjectGuid>
+    <ProjectGuid>{E38E73FA-0774-4647-B317-B22D7DDD03CC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CdrRules</RootNamespace>
-    <AssemblyName>CdrRules</AssemblyName>
+    <RootNamespace>ServiceGroupPreProcessor</RootNamespace>
+    <AssemblyName>ServiceGroupPreProcessor</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -24,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -61,15 +62,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IcnlTollFreeByTgType.cs" />
-    <Compile Include="IcnlIntlIncoming.cs" />
-    <Compile Include="IcnlOutgoingCallByTgType.cs" />
-    <Compile Include="IcnlLocalByTgTypeAndPrefix.cs" />
-    <Compile Include="IcxOutgoingCallByInTgType.cs" />
-    <Compile Include="IcxOutgoingCallByInOutTg.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SgpCopyOrigCallToRedirect.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LibraryExtensions\LibraryExtensions.csproj">
+      <Project>{d4c2f34d-4d3d-43ae-84f0-e80cfedb1b48}</Project>
+      <Name>LibraryExtensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Mediation\_00Mediation.csproj">
       <Project>{1a64e6f9-903c-416c-b322-1b5c5d997001}</Project>
       <Name>_00Mediation</Name>
@@ -83,11 +83,13 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy $(TargetPath) $(SolutionDir)WS_Topshelf_Quartz\bin\Extensions\$(TargetFileName)
+copy $(TargetPath) $(SolutionDir)Portal\Extensions\$(TargetFileName)
 copy $(TargetPath) $(SolutionDir)UnitTesterManual\bin\Extensions\$(TargetFileName)
+
+
 </PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
