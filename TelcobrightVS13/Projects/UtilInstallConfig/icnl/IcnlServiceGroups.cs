@@ -145,10 +145,15 @@ namespace InstallConfig
                 {
                     Disabled = false,
                     Params = new Dictionary<string, string>() {{"idCdrRules", "5"}},
-                    PartnerRules = new List<int>()
+                    InPartnerFirstMatchRules = new List<int>()
                     {
                         PartnerRuletype.InPartnerByIncomingRoute,
-                        //PartnerRuletype.OutPartnerByOutgoingRoute
+                        PartnerRuletype.InPartnerByBridgeRoute,
+                    },
+                    OutPartnerFirstMatchRules = new List<int>()
+                    {
+                        PartnerRuletype.OutPartnerByOutgoingRoute,
+                        PartnerRuletype.OutPartnerByBridgeRoute
                     },
                     Ratingtrules = new List<RatingRule>()
                     {
