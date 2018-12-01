@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Accounting.Invoice;
 using TelcobrightMediation.Cdr;
+using TelcobrightMediation.Rating;
 using TransactionTuple = System.ValueTuple<int, int, long, int, long>;
 
 namespace TelcobrightMediation
@@ -51,30 +52,12 @@ namespace TelcobrightMediation
         public void Execute(cdr thisCdr, CdrProcessor cdrProcessor)
         {
             var atleastOneFalse = this.CdrRules.Any(r => r.CheckIfTrue(thisCdr) == false);
-            if (atleastOneFalse==false)
+            if (atleastOneFalse == false)
             {
                 thisCdr.ServiceGroup = this.Id;
-                string originatingCalledNumber = thisCdr.OriginatingCalledNumber;
-                thisCdr.RedirectingNumber = originatingCalledNumber;
-                if (originatingCalledNumber.StartsWith("234234"))
-                    originatingCalledNumber = originatingCalledNumber.Substring(3);//remove first 234
-
-                if (originatingCalledNumber.StartsWith("234"))
-                {
-                    originatingCalledNumber = originatingCalledNumber.Substring(3);
-                    if (originatingCalledNumber.Length >= 12) //234-4081412019895 or 234-408141201989
-                    {
-                        originatingCalledNumber = originatingCalledNumber.Substring(2);
-                    }
-                }
-                else if (originatingCalledNumber.StartsWith("0"))
-                {
-                    originatingCalledNumber = originatingCalledNumber.Substring(1);
-                }
-                thisCdr.OriginatingCalledNumber = originatingCalledNumber;
             }
         }
-
+        
         public void SetServiceGroupWiseSummaryParams(CdrExt cdrExt, AbstractCdrSummary newSummary)
         {
             //this._sgIntlTransitVoice.SetServiceGroupWiseSummaryParams(cdrExt, newSummary);
