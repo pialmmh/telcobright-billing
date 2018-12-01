@@ -48,6 +48,7 @@ public partial class LocalTransit : System.Web.UI.Page
                                 //groupInterval=="Hourly"?"tup_starttime":string.Empty,
                                 getInterval(groupInterval), 
                                 CheckBoxPartner.Checked==true?"tup_inpartnerid":string.Empty,
+                                CheckBoxOutPartner.Checked==true?"tup_outpartnerid":string.Empty,
                                 CheckBoxMatchedCustomerPrefix.Checked==true?"tup_matchedprefixcustomer":string.Empty,
                                 CheckBoxMatchedSupplierPrefix.Checked==true?"tup_matchedprefixsupplier":string.Empty,
                                 //CheckBoxShowByAns.Checked==true?"tup_destinationId":string.Empty,
@@ -56,6 +57,7 @@ public partial class LocalTransit : System.Web.UI.Page
                          new List<string>()
                             {
                                 CheckBoxPartner.Checked==true?DropDownListPartner.SelectedIndex>0?" tup_inpartnerid="+DropDownListPartner.SelectedValue:string.Empty:string.Empty,
+                                CheckBoxOutPartner.Checked==true?DropDownListOutPartner.SelectedIndex>0?" tup_outpartnerid="+DropDownListOutPartner.SelectedValue:string.Empty:string.Empty,
                                 //CheckBoxShowByAns.Checked==true?DropDownListAns.SelectedIndex>0?" tup_destinationId="+DropDownListAns.SelectedValue:string.Empty:string.Empty,
                                 //CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_outpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty
                             }).getSQLString();
@@ -148,6 +150,13 @@ public partial class LocalTransit : System.Web.UI.Page
             GridView1.Columns[1].Visible = true;
         }
         else GridView1.Columns[1].Visible = false;
+        if (CheckBoxOutPartner.Checked == true)
+        {
+            GridView1.Columns[2].Visible = true;
+        }
+        else GridView1.Columns[2].Visible = false;
+
+
         if (CheckBoxShowCost.Checked == true)
         {
             GridView1.Columns[10].Visible = true;
@@ -640,4 +649,14 @@ public partial class LocalTransit : System.Web.UI.Page
         }
 
     }
+
+    protected void CheckBoxOutPartner_OnCheckedChanged(object sender, EventArgs e)
+    {
+        if (CheckBoxOutPartner.Checked == true)
+        {
+            DropDownListOutPartner.Enabled = true;
+        }
+        else DropDownListOutPartner.Enabled = false;
+    }
+
 }

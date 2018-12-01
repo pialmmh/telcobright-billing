@@ -89,10 +89,13 @@
                     var IOSList = contex.partners.Where(c => c.PartnerType == 3).ToList();
 
                     DropDownListPartner.Items.Clear();
+                    DropDownListOutPartner.Items.Clear();
                     DropDownListPartner.Items.Add(new ListItem(" [All]", "-1"));
+                    DropDownListOutPartner.Items.Add(new ListItem(" [All]", "-1"));
                     foreach (partner p in IOSList)
                     {
                         DropDownListPartner.Items.Add(new ListItem(p.PartnerName, p.idPartner.ToString()));
+                        DropDownListOutPartner.Items.Add(new ListItem(p.PartnerName, p.idPartner.ToString()));
                     }
                     //var ANSList = contex.partners.Where(c => c.PartnerType == 1).ToList();
                     //DropDownListAns.Items.Clear();
@@ -460,7 +463,7 @@
                 <div style="float: left; height: 25px; min-width: 1400px;">
 
                     <div style="float: left;">
-                        View by International Partner: 
+                        View by In Partner: 
                             <asp:CheckBox ID="CheckBoxPartner" runat="server" AutoPostBack="True"
                                 OnCheckedChanged="CheckBoxShowByPartner_CheckedChanged" Checked="True" />
                        
@@ -469,11 +472,21 @@
                         </asp:DropDownList>
 
                     </div>
-                    <div style="float: left; margin-left: 15px;">
-                        <asp:CheckBox ID="CheckBoxMatchedCustomerPrefix" runat="server" AutoPostBack="false" Checked="false" Text="Matched Customer Prefix" />
+                    <div style="float: left;">
+                        View by Out Partner: 
+                        <asp:CheckBox ID="CheckBoxOutPartner" runat="server" AutoPostBack="True"
+                                      OnCheckedChanged="CheckBoxOutPartner_OnCheckedChanged" Checked="True" />
+                       
+                        <asp:DropDownList ID="DropDownListOutPartner" runat="server"
+                                          Enabled="true">
+                        </asp:DropDownList>
+
                     </div>
                     <div style="float: left; margin-left: 15px;">
-                        <asp:CheckBox ID="CheckBoxMatchedSupplierPrefix" runat="server" AutoPostBack="false" Checked="false" Text="Matched Supplier Prefix" />
+                        <asp:CheckBox ID="CheckBoxMatchedCustomerPrefix" runat="server" AutoPostBack="false" Checked="false" Text="View By Customer Prefix" />
+                    </div>
+                    <div style="float: left; margin-left: 15px;">
+                        <asp:CheckBox ID="CheckBoxMatchedSupplierPrefix" runat="server" AutoPostBack="false" Checked="false" Text="View By Supplier Prefix" />
                     </div>
 <%--                    <div style="float: left; margin-left: 15px;">
                         View by ANS: 

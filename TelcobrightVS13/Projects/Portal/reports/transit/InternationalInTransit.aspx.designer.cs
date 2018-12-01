@@ -282,6 +282,24 @@ public partial class InternationalInTransit {
     protected global::System.Web.UI.WebControls.DropDownList DropDownListPartner;
     
     /// <summary>
+    /// CheckBoxOutPartner control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.CheckBox CheckBoxOutPartner;
+    
+    /// <summary>
+    /// DropDownListOutPartner control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList DropDownListOutPartner;
+    
+    /// <summary>
     /// CheckBoxMatchedCustomerPrefix control.
     /// </summary>
     /// <remarks>
