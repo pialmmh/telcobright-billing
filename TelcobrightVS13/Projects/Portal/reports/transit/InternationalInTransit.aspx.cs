@@ -49,6 +49,8 @@ public partial class InternationalInTransit : System.Web.UI.Page
                                 getInterval(groupInterval), 
                                 CheckBoxPartner.Checked==true?"tup_inpartnerid":string.Empty,
                                 CheckBoxOutPartner.Checked==true?"tup_outpartnerid":string.Empty,
+                                CheckBoxInRoute.Checked==true?"tup_incomingroute":string.Empty,
+                                CheckBoxOutRoute.Checked==true?"tup_outgoingroute":string.Empty,
                                 CheckBoxMatchedCustomerPrefix.Checked==true?"tup_matchedprefixcustomer":string.Empty,
                                 CheckBoxMatchedSupplierPrefix.Checked==true?"tup_matchedprefixsupplier":string.Empty,
                                 //CheckBoxShowByAns.Checked==true?"tup_destinationId":string.Empty,
