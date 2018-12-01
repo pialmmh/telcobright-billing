@@ -24,7 +24,7 @@ namespace InstallConfig
     {
         public List<int> GetServiceGroupPreProcessingRules()
         {
-            return new List<int>(1);//copy orig call number to redirect num field
+            return new List<int>();
         }
         public Dictionary<int, ServiceGroupConfiguration> GetServiceGroupConfigurations()
         {
