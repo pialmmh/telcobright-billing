@@ -86,7 +86,8 @@
 
                 using (PartnerEntities contex = new PartnerEntities())
                 {
-                    var IOSList = contex.partners.Where(c => c.PartnerType == 3).ToList();
+                    // var IOSList = contex.partners.Where(c => c.PartnerType == 3).ToList();
+                    var IOSList = contex.partners.ToList();
 
                     DropDownListPartner.Items.Clear();
                     DropDownListOutPartner.Items.Clear();
