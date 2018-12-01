@@ -884,7 +884,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
             {
                 dicRatePlan.Add(ThisPlan.id, ThisPlan.RatePlanName);
             }
-            var lstParters = Context.partners.ToList();
+            var lstParters = Context.partners.OrderBy(p=>p.PartnerName).ToList();
             ddlist.Items.Clear();
             ddlist.Items.Add(new ListItem(" [Select]", "-1"));
             ddlist.Items.Add(new ListItem(" [None]", "0"));
@@ -5413,7 +5413,6 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
         if (e.Row.RowType == DataControlRowType.DataRow)
         {
             Dictionary<long, rateplanassignmenttuple> dicTuple = (Dictionary<long, rateplanassignmenttuple>)Session["assign.sessdictuple"];
-            Dictionary<long, billingruleassignment> dicBillRules = (Dictionary<long, billingruleassignment>)Session["assign.sessdicBillRules"];
             Dictionary<long, enumservicefamily> dicservice = (Dictionary<long, enumservicefamily>)Session["assign.sessdicservice"];
             var dicroute = (Dictionary<int, string>)Session["assign.sessdicroute"];
             Label LabelRoute = (Label)e.Row.FindControl("lblRoute");

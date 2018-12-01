@@ -17,6 +17,7 @@ namespace TelcobrightMediation
     public abstract class AutoIncrementManagerManual<T> : IAutoIncrementManager<T>
         where T : struct
     {
+        private static readonly Random Rnd = new Random();
         protected PartnerEntities Context { get; }
         private DbConnection con { get; }
         private T t { get; }
@@ -37,8 +38,7 @@ namespace TelcobrightMediation
 
         protected virtual T GetCounterFromDb<T>(string tableName)
         {
-            Random r = new Random();
-            int randomNumber = r.Next();
+            int randomNumber = Rnd.Next();
             DateTime requestedDateTime = DateTime.Now;
             string sql = $" insert into {tableName} (incrementRequestedOn,randomNumber) values( " +
                          $" {requestedDateTime.ToMySqlField()},{randomNumber}" +

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using MediationModel;
 
 namespace TelcobrightMediation
@@ -11,7 +12,8 @@ namespace TelcobrightMediation
         public override int GetNewCounter()
         {
             int newCounter = base.GetCounterFromDb<int>("autoinc_manual_int");
-            return Int32.MaxValue - Convert.ToInt32(newCounter) + 1;
+            var counter = Int32.MaxValue - Convert.ToInt32(newCounter) + 1;
+            return counter;
         }
 
         public override long GetNewCounter(AutoIncrementCounterType counterType)
