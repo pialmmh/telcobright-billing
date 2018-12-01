@@ -15,7 +15,7 @@ namespace TelcobrightMediation.Rating
             {
                 case PhoneNumberLeg.OriginatingCalledNumber:
                     return cdr.OriginatingCalledNumber;
-                    case PhoneNumberLeg.OriginatingCallingNumber:
+                case PhoneNumberLeg.OriginatingCallingNumber:
                         return cdr.OriginatingCallingNumber;
                 case PhoneNumberLeg.TerminatingCalledNumber:
                     return cdr.TerminatingCalledNumber;
