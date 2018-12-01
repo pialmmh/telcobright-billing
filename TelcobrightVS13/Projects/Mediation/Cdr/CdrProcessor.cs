@@ -82,10 +82,14 @@ namespace TelcobrightMediation
                     {
                         cdr thisCdr = cdrExt.Cdr;
                         ResetMediationStatus(thisCdr);
-                        foreach (var serviceGroupPreProcessor in 
+                        foreach (var serviceGroupPreProcessor in
                             this.MediationContext.MefServiceGroupContainer.ServiceGroupPreProcessors.Values)
                         {
-                            serviceGroupPreProcessor.Execute(thisCdr,this);
+                            if (this.CdrJobContext.MediationContext.Tbc.CdrSetting
+                                .ServiceGroupPreProcessingRules.Any())
+                            {
+                                serviceGroupPreProcessor.Execute(thisCdr, this);
+                            }
                         }
                         IServiceGroup serviceGroup = null;
                         ServiceGroupConfiguration serviceGroupConfiguration = null;

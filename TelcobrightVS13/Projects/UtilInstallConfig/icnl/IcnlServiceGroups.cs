@@ -122,7 +122,7 @@ namespace InstallConfig
                             new ServiceGroupGt0(),
                             new MatchedPrefixCustomerNotEmpty(),
                             //new CountryCodeNotEmpty(),
-                            new InPartnerCostGt0() {Data = 0M},
+                            //new InPartnerCostGt0() {Data = 0M},free call exists
                             new Duration1Gt0() {Data = 0M},
                             //new MatchedPrefixSupplierNotEmpty(),
                             //new OutPartnerCostGt0() {Data = 0M},
