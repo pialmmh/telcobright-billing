@@ -501,13 +501,15 @@
                 <div style="float: left; height: 25px; min-width: 1250px;">
                     <div style="float: left;">
                         View by In Route: 
-                        <asp:CheckBox ID="CheckBoxInRoute" runat="server" AutoPostBack="True" Checked="False" />
-                        <asp:DropDownList ID="DropDownListInRoute" runat="server" Enabled="true" />
+                        <asp:CheckBox ID="CheckBoxInRoute" runat="server" AutoPostBack="True" 
+                            OnCheckedChanged="CheckBoxInRoute_OnCheckedChanged" Checked="False" />
+                        <asp:DropDownList ID="DropDownListInRoute" runat="server" Enabled="False" />
                     </div>
                     <div style="float: left;">&nbsp;
                         View by Out Route: 
-                        <asp:CheckBox ID="CheckBoxOutRoute" runat="server" AutoPostBack="True" Checked="False" />
-                        <asp:DropDownList ID="DropDownListOutRoute" runat="server" Enabled="true" />
+                        <asp:CheckBox ID="CheckBoxOutRoute" runat="server" AutoPostBack="True" 
+                            OnCheckedChanged="CheckBoxOutRoute_OnCheckedChanged" Checked="False" />
+                        <asp:DropDownList ID="DropDownListOutRoute" runat="server" Enabled="False" />
                     </div>
                     <div style="float: left;">&nbsp;
                         <asp:CheckBox ID="CheckBoxMatchedCustomerPrefix" runat="server" AutoPostBack="false" Checked="false" Text="View By Customer Prefix" />

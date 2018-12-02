@@ -672,4 +672,22 @@ public partial class InternationalInTransit : System.Web.UI.Page
         }
         else DropDownListOutPartner.Enabled = false;
     }
+
+    protected void CheckBoxInRoute_OnCheckedChanged(object sender, EventArgs e)
+    {
+        if (CheckBoxInRoute.Checked == true)
+        {
+            DropDownListInRoute.Enabled = true;
+        }
+        else DropDownListInRoute.Enabled = false;
+    }
+
+    protected void CheckBoxOutRoute_OnCheckedChanged(object sender, EventArgs e)
+    {
+        if (CheckBoxOutRoute.Checked == true)
+        {
+            DropDownListOutRoute.Enabled = true;
+        }
+        else DropDownListOutRoute.Enabled = false;
+    }
 }
