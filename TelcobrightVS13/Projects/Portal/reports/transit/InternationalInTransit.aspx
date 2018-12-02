@@ -550,7 +550,9 @@
                     <Columns>
                         <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" ItemStyle-Wrap="false" />
                         <asp:BoundField DataField="In Partner" HeaderText="In Partner" SortExpression="In Partner" />
+                        <asp:BoundField DataField="In Route" HeaderText="In Route" SortExpression="In Route" />
                         <asp:BoundField DataField="Out Partner" HeaderText="Out Partner" SortExpression="Out Partner" />
+                        <asp:BoundField DataField="Out Route" HeaderText="Out Route" SortExpression="Out Route" />
                         <asp:BoundField DataField="tup_matchedprefixcustomer" HeaderText="Customer Prefix" SortExpression="tup_matchedprefixcustomer" />
                         <asp:BoundField DataField="tup_matchedprefixsupplier" HeaderText="Supplier Prefix" SortExpression="tup_matchedprefixsupplier" />
 
