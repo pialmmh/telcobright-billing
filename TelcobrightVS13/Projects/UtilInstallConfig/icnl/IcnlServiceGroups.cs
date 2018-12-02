@@ -30,6 +30,114 @@ namespace InstallConfig
         {
             List<ServiceGroupConfiguration> serviceGroupConfigurations = new List<ServiceGroupConfiguration>()
             {
+                new ServiceGroupConfiguration(idServiceGroup: 24) //alpha 700
+                {
+                    Disabled = false,
+                    Params = new Dictionary<string, string>() {{"prefixes", "234700"}},
+                    InPartnerFirstMatchRules = new List<int>()
+                    {
+                        PartnerRuletype.InPartnerByIncomingRoute,
+                        PartnerRuletype.InPartnerByBridgeRoute,
+                    },
+                    OutPartnerFirstMatchRules = new List<int>()
+                    {
+                        PartnerRuletype.OutPartnerByOutgoingRoute,
+                        PartnerRuletype.OutPartnerByBridgeRoute
+                    },
+                    Ratingtrules = new List<RatingRule>()
+                    {
+                        new RatingRule()
+                        {
+                            IdServiceFamily = ServiceFamilyType.A2Z, AssignDirection = 1,
+                            DigitRulesData = new DigitRulesData()
+                            {
+                                DigitRuleId = 2,
+                                PhoneNumberLeg = PhoneNumberLeg.OriginatingCalledNumber,
+                            }
+                        },
+                    },
+                    MediationChecklistForAnsweredCdrs =
+                        new List<IValidationRule<cdr>>()
+                        {
+                            new DurationSecGtEq0(),
+                            new OutgoingRouteNotEmpty(),
+                            new InPartnerIdGt0(),
+                            new OutPartnerIdGt0(),
+                            new ServiceGroupGt0(),
+                            new MatchedPrefixCustomerNotEmpty(),
+                            //new CountryCodeNotEmpty(),
+                            //new InPartnerCostGt0() {Data = 0M},free call exists
+                            new Duration1Gt0() {Data = 0M},
+                            //new MatchedPrefixSupplierNotEmpty(),
+                            //new OutPartnerCostGt0() {Data = 0M},
+                            //new Duration2Gt0(){Data = 0M},
+                        },
+                    InvoiceGenerationConfig = new InvoiceGenerationConfig()
+                    {
+                        InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary",
+                        SectionGeneratorVsTemplateNames = new Dictionary<string, string>()
+                        {
+                            {"A2ZInvoiceSection1Generator", "InternationalIncomingToForeignCarrier"},
+                            {
+                                "A2ZInvoiceSection2GeneratorMatchedPrefixCustomer",
+                                "InternationalIncomingToForeignCarrierDetails1"
+                            },
+                            {"A2ZInvoiceSection3Generator", "InternationalIncomingToForeignCarrierDetails2"}
+                        }
+                    },
+                    AccountActions = new List<IAutomationAction>
+                    {
+                        new SendAlertEmailAccountAction(),
+                        new SMSAccountAction(),
+                        new ActionBlockingAutomation()
+                    }
+                }, //end dictionary item
+                new ServiceGroupConfiguration(idServiceGroup: 23) //toll free
+                {
+                    Disabled = true,
+                    Params = new Dictionary<string, string>() {{"prefixes", "622,800"}},
+                    InPartnerFirstMatchRules = new List<int>()
+                    {
+                        PartnerRuletype.InPartnerByIncomingRoute,
+                        PartnerRuletype.InPartnerByBridgeRoute,
+                    },
+                    OutPartnerFirstMatchRules = new List<int>()
+                    {
+                        PartnerRuletype.OutPartnerByOutgoingRoute,
+                        PartnerRuletype.OutPartnerByBridgeRoute
+                    },
+                    Ratingtrules = new List<RatingRule>()
+                    {
+                        new RatingRule()
+                        {
+                            IdServiceFamily = ServiceFamilyType.SfTollFreeEgressCharging,
+                            AssignDirection = 2
+                        },
+                    },
+                    MediationChecklistForAnsweredCdrs =
+                        new List<IValidationRule<cdr>>()
+                        {
+                            new DurationSecGtEq0(),
+                            new OutgoingRouteNotEmpty(),
+                            new InPartnerIdGt0(),
+                            new OutPartnerIdGt0(),
+                            new ServiceGroupGt0(),
+                            new MatchedPrefixSupplierNotEmpty(),
+                            new Duration2Gt0() {Data = 0M},
+                            new OutPartnerCostGt0() {Data = 0M},
+
+                        },
+                    InvoiceGenerationConfig = new InvoiceGenerationConfig()
+                    {
+                        InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary",
+                        SectionGeneratorVsTemplateNames = new Dictionary<string, string>()
+                        {
+                            {"TollFreeInvoiceSection1GeneratorWithTax", "LTFSToIPTSP"},
+                            {"TollFreeInvoiceSection2GeneratorWithTax", "LTFSToIPTSPDetails1"},
+                            {"TollFreeInvoiceSection3GeneratorWithTax", "LTFSToIPTSPDetails2"}
+                        }
+                    }
+                },
                 new ServiceGroupConfiguration(idServiceGroup: 21) //outgoing
                 {
                     Disabled = false,
@@ -210,98 +318,7 @@ namespace InstallConfig
                         new ActionBlockingAutomation()
                     }
                 }, //end dictionary item
-                new ServiceGroupConfiguration(idServiceGroup: 23) //toll free
-                {
-                    Disabled = true,
-                    Params = new Dictionary<string, string>() {{"prefixes", "622"}},
-                    InPartnerFirstMatchRules = new List<int>()
-                    {
-                        PartnerRuletype.InPartnerByIncomingRoute,
-                        PartnerRuletype.InPartnerByBridgeRoute,
-                    },
-                    OutPartnerFirstMatchRules = new List<int>()
-                    {
-                        PartnerRuletype.OutPartnerByOutgoingRoute,
-                        PartnerRuletype.OutPartnerByBridgeRoute
-                    },
-                    Ratingtrules = new List<RatingRule>()
-                    {
-                        new RatingRule()
-                        {
-                            IdServiceFamily = ServiceFamilyType.SfTollFreeEgressCharging,
-                            AssignDirection = 2
-                        },
-                    },
-                    MediationChecklistForAnsweredCdrs =
-                        new List<IValidationRule<cdr>>()
-                        {
-                            new DurationSecGtEq0(),
-                            new OutgoingRouteNotEmpty(),
-                            new InPartnerIdGt0(),
-                            new OutPartnerIdGt0(),
-                            new ServiceGroupGt0(),
-                            new MatchedPrefixSupplierNotEmpty(),
-                            new Duration2Gt0() {Data = 0M},
-                            new OutPartnerCostGt0() {Data = 0M},
-                            
-                        },
-                    InvoiceGenerationConfig = new InvoiceGenerationConfig()
-                    {
-                        InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary",
-                        SectionGeneratorVsTemplateNames = new Dictionary<string, string>()
-                        {
-                            {"TollFreeInvoiceSection1GeneratorWithTax", "LTFSToIPTSP"},
-                            {"TollFreeInvoiceSection2GeneratorWithTax", "LTFSToIPTSPDetails1"},
-                            {"TollFreeInvoiceSection3GeneratorWithTax", "LTFSToIPTSPDetails2"}
-                        }
-                    }
-                },
-                new ServiceGroupConfiguration(idServiceGroup: 24) //toll free premium
-                {
-                    Disabled = true,
-                    Params = new Dictionary<string, string>() {{"prefixes", "800"}},
-                    InPartnerFirstMatchRules = new List<int>()
-                    {
-                        PartnerRuletype.InPartnerByIncomingRoute,
-                        PartnerRuletype.InPartnerByBridgeRoute,
-                    },
-                    OutPartnerFirstMatchRules = new List<int>()
-                    {
-                        PartnerRuletype.OutPartnerByOutgoingRoute,
-                        PartnerRuletype.OutPartnerByBridgeRoute
-                    },
-                    Ratingtrules = new List<RatingRule>()
-                    {
-                        new RatingRule()
-                        {
-                            IdServiceFamily = ServiceFamilyType.SfTollFreeEgressCharging,
-                            AssignDirection = 2
-                        },
-                    },
-                    MediationChecklistForAnsweredCdrs =
-                        new List<IValidationRule<cdr>>()
-                        {
-                            new DurationSecGtEq0(),
-                            new OutgoingRouteNotEmpty(),
-                            new InPartnerIdGt0(),
-                            new OutPartnerIdGt0(),
-                            new ServiceGroupGt0(),
-                            new MatchedPrefixSupplierNotEmpty(),
-                            new Duration2Gt0() {Data = 0M},
-                            new OutPartnerCostGt0() {Data = 0M},
-                            
-                        },
-                    InvoiceGenerationConfig = new InvoiceGenerationConfig()
-                    {
-                        InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary",
-                        SectionGeneratorVsTemplateNames = new Dictionary<string, string>()
-                        {
-                            {"TollFreeInvoiceSection1GeneratorWithTax", "LTFSToIPTSP"},
-                            {"TollFreeInvoiceSection2GeneratorWithTax", "LTFSToIPTSPDetails1"},
-                            {"TollFreeInvoiceSection3GeneratorWithTax", "LTFSToIPTSPDetails2"}
-                        }
-                    }
-                }
+                
             };
             return serviceGroupConfigurations.ToDictionary(s => s.IdServiceGroup);
         }

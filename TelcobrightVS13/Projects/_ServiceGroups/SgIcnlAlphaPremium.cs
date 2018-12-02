@@ -14,17 +14,16 @@ using TransactionTuple = System.ValueTuple<int, int, long, int, long>;
 namespace TelcobrightMediation
 {
     [Export("ServiceGroup", typeof(IServiceGroup))]
-    public class SgIcnlTollFreePremium : IServiceGroup
+    public class SgIcnlAlphaPremium : IServiceGroup
     {
         private readonly SgIntlTransitVoice sgIntlTransitVoice = new SgIntlTransitVoice();
         public override string ToString() => this.RuleName;
-        public string RuleName => "Toll Free Premium";
-        public string HelpText => "Icnl toll free premium";
+        public string RuleName => "Alphatech700";
+        public string HelpText => this.RuleName;
         public int Id => 24;
         private Dictionary<CdrSummaryType, Type> SummaryTargetTables { get; }
         private List<string> PrefixesOrderedByMaxLenFirst { get; set; }
-
-        public SgIcnlTollFreePremium() //constructor
+        public SgIcnlAlphaPremium() //constructor
         {
             this.SummaryTargetTables = new Dictionary<CdrSummaryType, Type>()
             {
@@ -60,20 +59,17 @@ namespace TelcobrightMediation
         {
             var dicRoutes = cdrProcessor.CdrJobContext.MediationContext.MefServiceGroupContainer.SwitchWiseRoutes;
             var key = new ValueTuple<int, string>(cdr.SwitchId, cdr.IncomingRoute);
-            route incomingRoute = null;
-            dicRoutes.TryGetValue(key, out incomingRoute);
             route outgoingRoute = null;
             dicRoutes.TryGetValue(key, out outgoingRoute);
             if (outgoingRoute != null)
             {
-                if (incomingRoute.NationalOrInternational== RouteLocalityType.International && 
-                    outgoingRoute.NationalOrInternational == RouteLocalityType.TollFreePremium)
+                if (outgoingRoute.NationalOrInternational == RouteLocalityType.National)
                 {
                     foreach (string prefix in this.PrefixesOrderedByMaxLenFirst)
                     {
                         if (cdr.OriginatingCalledNumber.StartsWith(prefix))
                         {
-                            cdr.ServiceGroup = this.Id; //LTFS in ICX           
+                            cdr.ServiceGroup = this.Id;   
                             break;
                         }
                     }
@@ -89,7 +85,7 @@ namespace TelcobrightMediation
             if (cdrExt.Cdr.ChargingStatus != 1) return;
 
             acc_chargeable chargeableCust = null;
-            cdrExt.Chargeables.TryGetValue(new ValueTuple<int, int, int>(this.Id, 5, 1), out chargeableCust);
+            cdrExt.Chargeables.TryGetValue(new ValueTuple<int, int, int>(this.Id, 1, 1), out chargeableCust);
             if (chargeableCust == null)
             {
                 throw new Exception("Chargeable info not found for customer direction.");
@@ -100,14 +96,14 @@ namespace TelcobrightMediation
 
         public void ValidateInvoiceGenerationParams(object validationInput)
         {
-            
+
         }
 
         public InvoiceGenerationInputData ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData)
         {
             Dictionary<string, string> jobParamsMap = invoiceGenerationInputData.JsonDetail;
             invoiceGenerationInputData.JsonDetail = jobParamsMap;
-            invoiceGenerationInputData.JsonDetail.Add("vat", ".15");//todo: for now harcode
+            invoiceGenerationInputData.JsonDetail.Add("vat", "0");//todo: for now harcode
             return invoiceGenerationInputData;
         }
 

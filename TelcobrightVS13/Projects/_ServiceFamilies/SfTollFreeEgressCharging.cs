@@ -18,7 +18,6 @@ namespace ServiceFamilies
         {
             return this.RuleName;
         }
-
         public override string RuleName => GetType().Name;
         public override string HelpText => "Toll Free Egress Charging";
         public override int Id => 5;
