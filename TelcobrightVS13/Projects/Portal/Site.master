@@ -187,8 +187,8 @@
     <asp:TreeNode Value="Mediation" Expanded="True" Text="Mediation" SelectAction="None">
       
       <asp:TreeNode Value="Jobs" Text="Jobs" NavigateUrl="~/Mediation/Mediation.aspx" />
-      <asp:TreeNode Value="Error Calls" Text="Error Calls" NavigateUrl="~/Mediation/CdrError.aspx" > </asp:TreeNode>
-      <asp:TreeNode Value="Mediation Errors" Text="Mediation Errors" NavigateUrl="~/Mediation/MediationError.aspx" > </asp:TreeNode>
+      <%--<asp:TreeNode Value="Error Calls" Text="Error Calls" NavigateUrl="~/Mediation/CdrError.aspx" > </asp:TreeNode>
+      <asp:TreeNode Value="Mediation Errors" Text="Mediation Errors" NavigateUrl="~/Mediation/MediationError.aspx" > </asp:TreeNode>--%>
       
       <asp:TreeNode Value="Create Batch Job" Text="Create Batch Job" NavigateUrl="~/config/Batchjob.aspx" />
       <%--<asp:TreeNode Value="View Batch Job" Text="View Batch Job" NavigateUrl="~/reports/MediationBatch.aspx" />--%>
