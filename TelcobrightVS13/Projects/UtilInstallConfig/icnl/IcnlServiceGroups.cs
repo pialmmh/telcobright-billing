@@ -95,11 +95,6 @@ namespace InstallConfig
                         new RatingRule()
                         {
                             IdServiceFamily = ServiceFamilyType.A2Z, AssignDirection = 1,
-                            DigitRulesData = new DigitRulesData()
-                            {
-                                DigitRuleId = 2,
-                                PhoneNumberLeg = PhoneNumberLeg.OriginatingCalledNumber,
-                            }
                         },
                     },
                     MediationChecklistForAnsweredCdrs =
