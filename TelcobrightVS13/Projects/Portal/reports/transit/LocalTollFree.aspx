@@ -148,7 +148,7 @@
 
                 if (lblScreenTitle.Text == "")
                 {
-                    lblScreenTitle.Text = "Reports/LTF/Traffic";
+                    lblScreenTitle.Text = "Reports/TF/Traffic";
                 }
                 //End of Site Map Part *******************************************************************
 

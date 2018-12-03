@@ -116,7 +116,7 @@
             <asp:TreeNode Value="Local" Text="Local" SelectAction="Select" NavigateUrl="~/reports/transit/LocalTransit.aspx"> </asp:TreeNode>
             <asp:TreeNode Value="Intl. Incoming" Text="Intl. Incoming" SelectAction="Select" NavigateUrl="~/reports/transit/InternationalInTransit.aspx"> </asp:TreeNode>
             <asp:TreeNode Value="Intl. Outgoing" Text="Intl. Outgoing" SelectAction="Select" NavigateUrl="~/reports/transit/InternationalOutTransit.aspx"> </asp:TreeNode>
-            <asp:TreeNode Value="Local Toll Free" Text="Local Toll Free" SelectAction="Select" NavigateUrl="~/reports/transit/LocalTollFree.aspx"> </asp:TreeNode>
+            <asp:TreeNode Value="Toll Free" Text="Toll Free" SelectAction="Select" NavigateUrl="~/reports/transit/LocalTollFree.aspx"> </asp:TreeNode>
             <asp:TreeNode Value="Alphatech Premium" Text="Alphatech Premium" SelectAction="Select" NavigateUrl="~/reports/transit/AlphatechPremium.aspx"> </asp:TreeNode>
 
 <%--            <asp:TreeNode Value="Local" Expanded="True" Text="Local" SelectAction="None">
