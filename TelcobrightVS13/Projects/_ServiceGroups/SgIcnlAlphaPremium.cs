@@ -58,7 +58,7 @@ namespace TelcobrightMediation
         public void Execute(cdr cdr, CdrProcessor cdrProcessor)
         {
             var dicRoutes = cdrProcessor.CdrJobContext.MediationContext.MefServiceGroupContainer.SwitchWiseRoutes;
-            var key = new ValueTuple<int, string>(cdr.SwitchId, cdr.IncomingRoute);
+            var key = new ValueTuple<int, string>(cdr.SwitchId, cdr.OutgoingRoute);
             route outgoingRoute = null;
             dicRoutes.TryGetValue(key, out outgoingRoute);
             if (outgoingRoute != null)
