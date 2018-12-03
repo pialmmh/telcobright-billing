@@ -525,6 +525,7 @@
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="reports\transit\LocalTollFreePremium.aspx" />
     <Content Include="reports\transit\LocalTollFree.aspx" />
+    <Content Include="reports\transit\AlphatechPremium.aspx" />
     <Content Include="reports\transit\LocalTransit.aspx" />
     <Content Include="reports\transit\InternationalOutTransit.aspx" />
     <Content Include="reports\transit\InternationalInTransit.aspx" />
@@ -914,6 +915,13 @@
     </Compile>
     <Compile Include="reports\transit\LocalTollFree.aspx.designer.cs">
       <DependentUpon>LocalTollFree.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\transit\AlphatechPremium.aspx.cs">
+      <DependentUpon>AlphatechPremium.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\transit\AlphatechPremium.aspx.designer.cs">
+      <DependentUpon>AlphatechPremium.aspx</DependentUpon>
     </Compile>
     <Compile Include="reports\transit\LocalTransit.aspx.cs">
       <DependentUpon>LocalTransit.aspx</DependentUpon>

@@ -464,7 +464,7 @@ union all
                 OnDataBinding="gridViewDx_OnDataBinding" OnDataBound="gridViewDx_OnDataBound" 
                 OnCustomColumnDisplayText="gridViewDx_OnCustomColumnDisplayText"
                 OnCellEditorInitialize="gridViewDx_OnCellEditorInitialize"
-                OnRowUpdating="gridViewDx_OnRowUpdating">
+                OnRowUpdating="gridViewDx_OnRowUpdating" Theme="Aqua">
                 <Styles><Header Wrap="True"></Header></Styles>
                 <SettingsEditing Mode="PopupEditForm"></SettingsEditing>
                 <SettingsPager PageSize="100"></SettingsPager>
