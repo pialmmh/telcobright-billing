@@ -104,6 +104,7 @@ namespace InstallConfig
                                 FieldTemplateName="Basic_Error",
                                 Fields=new List<string>()
                                 {
+                                    "IdCall as `IdCall`",
                                     "c.errorcode as `Error Code`",
                                     "starttime as `Start Time`",
                                     "AnswerTime as `Answer Time`",
@@ -316,7 +317,7 @@ namespace InstallConfig
                     { "~/reports/transit/LocalTollFree.aspx",//settings for report pages
                         settingIntlIn
                     },
-                    { "~/reports/transit/LocalTollFreePremium.aspx",//settings for report pages
+                    { "~/reports/transit/AlphatechPremium.aspx",//settings for report pages
                         settingIntlIn
                     },
                 },//dictionary of page settings

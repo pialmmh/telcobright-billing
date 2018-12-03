@@ -465,11 +465,15 @@ union all
                 OnCustomColumnDisplayText="gridViewDx_OnCustomColumnDisplayText"
                 OnCellEditorInitialize="gridViewDx_OnCellEditorInitialize"
                 OnRowUpdating="gridViewDx_OnRowUpdating" Theme="Aqua">
-                <Styles><Header Wrap="True"></Header></Styles>
+                <Styles>
+                    <Header Wrap="False"></Header>
+                    <Cell Wrap="False"></Cell>
+                </Styles>
                 <SettingsEditing Mode="PopupEditForm"></SettingsEditing>
                 <SettingsPager PageSize="100"></SettingsPager>
                 <Settings HorizontalScrollBarMode="Auto" />
                 <SettingsDataSecurity AllowDelete="False" AllowInsert="False" />
+                <SettingsBehavior ColumnResizeMode="Control" />
             </dx:ASPxGridView>
 <%--            <asp:GridView ID="gridView" AllowPaging="True"
                 runat="server" 
