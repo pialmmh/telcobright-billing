@@ -37,7 +37,7 @@ public partial class LocalTransit : System.Web.UI.Page
 
         }
 
-        string constructedSQL = new SqlHelperLclTrnTransit
+        string constructedSQL = new SqlHelperIntlInTransit
                         (StartDate,
                          EndtDate,
                          groupInterval,

@@ -37,7 +37,7 @@ public partial class AlphatechPremium : System.Web.UI.Page
 
         }
 
-        string constructedSQL = new SqlHelperAlfPreTransit
+        string constructedSQL = new SqlHelperIntlInTransit
                         (StartDate,
                          EndtDate,
                          groupInterval,
