@@ -37,7 +37,7 @@ public partial class AlphatechPremium : System.Web.UI.Page
 
         }
 
-        string constructedSQL = new SqlHelperIntlInTransit
+        string constructedSQL = new SqlHelperAlfPreTransit
                         (StartDate,
                          EndtDate,
                          groupInterval,
@@ -333,7 +333,7 @@ public partial class AlphatechPremium : System.Web.UI.Page
                     fieldSummaries.Add("ccrbycc", tr.CallStat.CcRbyCauseCode);
                     tr.FieldSummaries = fieldSummaries;
 
-                    Session["IntlInTr"] = tr;//save to session
+                    Session["AlfPreTr"] = tr;//save to session
 
                     //populate footer
                     //clear first
@@ -380,11 +380,11 @@ public partial class AlphatechPremium : System.Web.UI.Page
 
     protected void Button1_Click(object sender, EventArgs e)
     {
-        if (Session["IntlInTr"] != null) //THIS MUST BE CHANGED IN EACH PAGE
+        if (Session["AlfPreTr"] != null) //THIS MUST BE CHANGED IN EACH PAGE
         {
-            TrafficReportDatasetBased tr = (TrafficReportDatasetBased)Session["IntlInTr"];
+            TrafficReportDatasetBased tr = (TrafficReportDatasetBased)Session["AlfPreTr"];
             DataSetWithGridView dsG = new DataSetWithGridView(tr, GridView1);//invisible columns are removed in constructor
-            CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(tr.Ds, "IntlIncoming_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+            CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(tr.Ds, "AlfPremium_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                     + ".xlsx", Response);
         }
     }
