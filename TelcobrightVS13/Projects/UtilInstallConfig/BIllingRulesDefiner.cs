@@ -51,7 +51,7 @@ namespace InstallConfig
                 TimeCycleFactory = new TimeCycleFactory()
                 {
                     TimeCycleName = "WeeklyTimeCycle",
-                    Duration = 7
+                    Duration = 1
                 }
             },
             new BillingRule(id:4,ruleName: "OnFirstAndFifteenthDayOfEachMonth,ForPreviousTwoWeek")
@@ -75,7 +75,7 @@ namespace InstallConfig
                 TimeCycleFactory = new TimeCycleFactory()
                 {
                     TimeCycleName = "WeeklyTimeCycle",
-                    Duration = 7
+                    Duration = 1
                 }
             },
             new BillingRule(id:6,ruleName: "OnThursdayOfEachWeek,ForPreviousWeek")
@@ -87,7 +87,7 @@ namespace InstallConfig
                 TimeCycleFactory = new TimeCycleFactory()
                 {
                     TimeCycleName = "WeeklyTimeCycle",
-                    Duration = 7
+                    Duration = 1
                 }
             }
 
