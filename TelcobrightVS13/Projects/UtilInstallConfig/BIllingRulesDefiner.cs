@@ -65,6 +65,30 @@ namespace InstallConfig
                     TimeCycleName = "FortnightlyTimeCycle",
                     Duration = 15
                 }
+            },
+            new BillingRule(id:5,ruleName: "OnMondayOfEachWeek,ForPreviousWeek")
+            {
+                IsPrepaid = false,
+                Description = "",
+                InvoiceOverdueInDay = 7,
+                CronExpressionForBillingCycle = "0 0 0 ? * MON *",
+                TimeCycleFactory = new TimeCycleFactory()
+                {
+                    TimeCycleName = "WeeklyTimeCycle",
+                    Duration = 7
+                }
+            },
+            new BillingRule(id:6,ruleName: "OnThursdayOfEachWeek,ForPreviousWeek")
+            {
+                IsPrepaid = false,
+                Description = "",
+                InvoiceOverdueInDay = 7,
+                CronExpressionForBillingCycle = "0 0 0 ? * THU *",
+                TimeCycleFactory = new TimeCycleFactory()
+                {
+                    TimeCycleName = "WeeklyTimeCycle",
+                    Duration = 7
+                }
             }
 
         };
