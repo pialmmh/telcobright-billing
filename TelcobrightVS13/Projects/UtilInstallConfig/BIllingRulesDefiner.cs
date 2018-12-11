@@ -42,7 +42,7 @@ namespace InstallConfig
                     Duration = 1
                 }
             },
-            new BillingRule(id:3,ruleName: "OnFirstDayOfEachWeek,ForPreviousWeek")
+            new BillingRule(id:3,ruleName: "OnSundayOfEachWeek,ForPreviousWeek")
             {
                 IsPrepaid = false,
                 Description = "",
@@ -54,7 +54,7 @@ namespace InstallConfig
                     Duration = 1
                 }
             },
-            new BillingRule(id:4,ruleName: "OnFirstAndFifteenthDayOfEachMonth,ForPreviousTwoWeek")
+            new BillingRule(id:4,ruleName: "OnFirstAndSixteenthDayOfEachMonth,ForPreviousTwoWeek")
             {
                 IsPrepaid = false,
                 Description = "",
@@ -84,6 +84,18 @@ namespace InstallConfig
                 Description = "",
                 InvoiceOverdueInDay = 7,
                 CronExpressionForBillingCycle = "0 0 0 ? * THU *",
+                TimeCycleFactory = new TimeCycleFactory()
+                {
+                    TimeCycleName = "WeeklyTimeCycle",
+                    Duration = 1
+                }
+            },
+            new BillingRule(id:7,ruleName: "OnTuesdayOfEachWeek,ForPreviousWeek")
+            {
+                IsPrepaid = false,
+                Description = "",
+                InvoiceOverdueInDay = 7,
+                CronExpressionForBillingCycle = "0 0 0 ? * TUE *",
                 TimeCycleFactory = new TimeCycleFactory()
                 {
                     TimeCycleName = "WeeklyTimeCycle",
