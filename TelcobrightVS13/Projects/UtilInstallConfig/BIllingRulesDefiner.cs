@@ -59,7 +59,7 @@ namespace InstallConfig
                 IsPrepaid = false,
                 Description = "",
                 InvoiceOverdueInDay = 15,
-                CronExpressionForBillingCycle = "0 0 0 1,15 * ? *",
+                CronExpressionForBillingCycle = "0 0 0 1,16 * ? *",
                 TimeCycleFactory = new TimeCycleFactory()
                 {
                     TimeCycleName = "FortnightlyTimeCycle",
