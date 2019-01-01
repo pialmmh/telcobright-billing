@@ -179,6 +179,11 @@ namespace TelcobrightMediation
         {
             var year = callDate.Year;
             var month = callDate.Month - 1;
+            if (callDate.Month == 1)
+            {
+                year = callDate.Year - 1;
+                month = 12;
+            }
             DateTime lastMonthsUsdbBcsDateTime =
                 new DateTime(year, month, DateTime.DaysInMonth(year, month), 23, 59, 59);
             CachedItem<string, uom_conversion_dated> convRate = null;
