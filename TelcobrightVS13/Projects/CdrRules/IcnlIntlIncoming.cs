@@ -8,7 +8,7 @@ namespace CdrRules
 {
 
     [Export("CdrRule", typeof(ICdrRule))]
-    public class IcnlIntlIncomingByTgType : ICdrRule
+    public class IcnlIntlIncoming : ICdrRule
     {
         public override string ToString() => this.RuleName;
         public string RuleName => GetType().Name;
@@ -31,14 +31,12 @@ namespace CdrRules
             ValueTuple<int, string> key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
             route inRoute = null;
             this.SwitchWiseRoutes.TryGetValue(key, out inRoute);
-            key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
-            route outRoute = null;
-            this.SwitchWiseRoutes.TryGetValue(key, out outRoute);
-            if (outRoute != null)
+            if (inRoute != null)
             {
-                return outRoute.NationalOrInternational == RouteLocalityType.International;
+                return inRoute.NationalOrInternational == RouteLocalityType.International;
             }
             return false;
         }
+        
     }
 }

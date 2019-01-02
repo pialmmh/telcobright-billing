@@ -5,7 +5,9 @@ namespace TelcobrightMediation
 {
     public class ServiceGroupConfiguration
     {
-        public List<int> PartnerRules { get; set; }
+        public List<int> PartnerRules { get; set; }=new List<int>();
+        public List<int> InPartnerFirstMatchRules { get; set; }
+        public List<int> OutPartnerFirstMatchRules { get; set; }
         public List<RatingRule> Ratingtrules { get; set; }
         public List<IValidationRule<cdr>> MediationChecklistForUnAnsweredCdrs { get; set; }
         public List<IValidationRule<cdr>> MediationChecklistForAnsweredCdrs { get; set; }

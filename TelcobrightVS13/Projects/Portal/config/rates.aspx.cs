@@ -723,7 +723,6 @@ public partial class DefaultRates : Page
                 cmd.ExecuteNonQuery();
             }
         }
-        
         //MyGridViewDataBound();//not refresing the gridview
         this.Response.Redirect((string) this.ViewState["qstring"]);
     }//submit click

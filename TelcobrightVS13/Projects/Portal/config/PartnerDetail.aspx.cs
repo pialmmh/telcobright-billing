@@ -89,13 +89,13 @@ public partial class ConfigPartnerDetail : System.Web.UI.Page
             args.IsValid = false;
             return;
         }
-        else if (new[] { @",", @"/", @"`", @"@", @"#", @"$", @"%", @"^", @"*", @";", @"\", "\"" }.Any(txtValid.Text.Contains))
-        {
-            this.cvAll.ErrorMessage = "Field Route Name cannot contain characters" +
-                string.Join(" ", new[] { @",", @"/", @"`", @"@", @"#", @"$", @"%", @"^", @"*", @";", @"\", "\"" }) + "!";
-            args.IsValid = false;
-            return;
-        }
+        //else if (new[] { @",", @"/", @"`", @"@", @"#", @"$", @"%", @"^", @"*", @";", @"\", "\"" }.Any(txtValid.Text.Contains))
+        //{
+        //    this.cvAll.ErrorMessage = "Field Route Name cannot contain characters" +
+        //        string.Join(" ", new[] { @",", @"/", @"`", @"@", @"#", @"$", @"%", @"^", @"*", @";", @"\", "\"" }) + "!";
+        //    args.IsValid = false;
+        //    return;
+        //}
         else
         {
             using (PartnerEntities context = new PartnerEntities())

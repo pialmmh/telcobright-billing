@@ -25,10 +25,10 @@ namespace TelcobrightMediation.Accounting
         {
             List<rateplanassignmenttuple> rTuples =
                 Context.rateplanassignmenttuples
-                    .Where(rp => rp.AssignDirection == 1 && rp.idpartner>0)
+                    .Where(rp => rp.AssignDirection == 1 && rp.idpartner > 0)
                     .Include(rt => rt.billingruleassignment.jsonbillingrule)
                     .Include(rt => rt.rateassigns)
-                    .Where(rp=>rp.rateassigns.Any()).ToList();//tuple may exist without assigned rateplan
+                    .Where(rp => rp.rateassigns.Any()).ToList();//tuple may exist without assigned rateplan
 
             foreach (rateplanassignmenttuple tup in rTuples)
             {

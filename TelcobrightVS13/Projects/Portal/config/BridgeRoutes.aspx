@@ -91,7 +91,7 @@ Theme="" AutoEventWireup="True" CodeBehind="BridgeRoutes.aspx.cs" Inherits="Brid
                     <asp:LinkButton ID="LinkButtonDelete" Visible="false"  CommandName="myDelete"  runat="server">Delete</asp:LinkButton>
                 </EditItemTemplate>
             </asp:TemplateField>
-            <asp:BoundField DataField="tgName" HeaderText="TG Name" SortExpression="tgName" Visible="true" />
+            <asp:BoundField DataField="routeName" HeaderText="TG Name" SortExpression="routeName" Visible="true" />
             <asp:TemplateField HeaderText="Carrier 1">
                 <ItemTemplate>
                     <asp:DropDownList ID="DropDownListIncomingPartner" runat="server" AutoPostBack="True" 

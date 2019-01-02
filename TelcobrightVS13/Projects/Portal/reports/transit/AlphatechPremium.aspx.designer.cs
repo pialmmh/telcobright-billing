@@ -9,70 +9,25 @@
 
 
 
-public partial class ConfigCdr {
+public partial class AlphatechPremium {
     
     /// <summary>
-    /// ScriptManager1 control.
+    /// DropDownListReportSource control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::AjaxControlToolkit.ToolkitScriptManager ScriptManager1;
+    protected global::System.Web.UI.WebControls.DropDownList DropDownListReportSource;
     
     /// <summary>
-    /// ButtonFind control.
+    /// submit control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Button ButtonFind;
-    
-    /// <summary>
-    /// lblStatus control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblStatus;
-    
-    /// <summary>
-    /// divExport control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divExport;
-    
-    /// <summary>
-    /// ButtonExport control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Button ButtonExport;
-    
-    /// <summary>
-    /// Button2 control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Button Button2;
-    
-    /// <summary>
-    /// TextBoxNoOfRecords control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox TextBoxNoOfRecords;
+    protected global::System.Web.UI.WebControls.Button submit;
     
     /// <summary>
     /// Button1 control.
@@ -84,22 +39,103 @@ public partial class ConfigCdr {
     protected global::System.Web.UI.WebControls.Button Button1;
     
     /// <summary>
-    /// UpdatePanel2 control.
+    /// ShowHideFilter control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.UpdatePanel UpdatePanel2;
+    protected global::System.Web.UI.WebControls.Button ShowHideFilter;
     
     /// <summary>
-    /// UpdatePanel1 control.
+    /// ButtonTemplate control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.UpdatePanel UpdatePanel1;
+    protected global::System.Web.UI.WebControls.Button ButtonTemplate;
+    
+    /// <summary>
+    /// Label1 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label Label1;
+    
+    /// <summary>
+    /// CheckBoxRealTimeUpdate control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.CheckBox CheckBoxRealTimeUpdate;
+    
+    /// <summary>
+    /// TextBoxDuration control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox TextBoxDuration;
+    
+    /// <summary>
+    /// hidValueFilter control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlInputHidden hidValueFilter;
+    
+    /// <summary>
+    /// hidValueSubmitClickFlag control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlInputHidden hidValueSubmitClickFlag;
+    
+    /// <summary>
+    /// hidValueTemplate control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlInputHidden hidValueTemplate;
+    
+    /// <summary>
+    /// ToolkitScriptManager1 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::AjaxControlToolkit.ToolkitScriptManager ToolkitScriptManager1;
+    
+    /// <summary>
+    /// CheckBoxShowPerformance control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.CheckBox CheckBoxShowPerformance;
+    
+    /// <summary>
+    /// CheckBoxShowCost control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.CheckBox CheckBoxShowCost;
     
     /// <summary>
     /// TextBoxYear control.
@@ -183,15 +219,6 @@ public partial class ConfigCdr {
     protected global::System.Web.UI.WebControls.CheckBox CheckBoxDailySummary;
     
     /// <summary>
-    /// RadioButtonHalfHourly control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.RadioButton RadioButtonHalfHourly;
-    
-    /// <summary>
     /// RadioButtonHourly control.
     /// </summary>
     /// <remarks>
@@ -199,24 +226,6 @@ public partial class ConfigCdr {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.RadioButton RadioButtonHourly;
-    
-    /// <summary>
-    /// RadioButtonYesterday control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.RadioButton RadioButtonYesterday;
-    
-    /// <summary>
-    /// RadioButtonLast2Days control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.RadioButton RadioButtonLast2Days;
     
     /// <summary>
     /// RadioButtonDaily control.
@@ -237,40 +246,49 @@ public partial class ConfigCdr {
     protected global::System.Web.UI.WebControls.RadioButton RadioButtonWeekly;
     
     /// <summary>
-    /// UpdatePanel3 control.
+    /// RadioButtonMonthly control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.UpdatePanel UpdatePanel3;
+    protected global::System.Web.UI.WebControls.RadioButton RadioButtonMonthly;
     
     /// <summary>
-    /// DropDownListSwitch control.
+    /// RadioButtonYearly control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList DropDownListSwitch;
+    protected global::System.Web.UI.WebControls.RadioButton RadioButtonYearly;
     
     /// <summary>
-    /// DropDownListInPartner control.
+    /// CheckBoxPartner control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList DropDownListInPartner;
+    protected global::System.Web.UI.WebControls.CheckBox CheckBoxPartner;
     
     /// <summary>
-    /// DropDownListInRoute control.
+    /// DropDownListPartner control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList DropDownListInRoute;
+    protected global::System.Web.UI.WebControls.DropDownList DropDownListPartner;
+    
+    /// <summary>
+    /// CheckBoxOutPartner control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.CheckBox CheckBoxOutPartner;
     
     /// <summary>
     /// DropDownListOutPartner control.
@@ -282,6 +300,33 @@ public partial class ConfigCdr {
     protected global::System.Web.UI.WebControls.DropDownList DropDownListOutPartner;
     
     /// <summary>
+    /// CheckBoxInRoute control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.CheckBox CheckBoxInRoute;
+    
+    /// <summary>
+    /// DropDownListInRoute control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList DropDownListInRoute;
+    
+    /// <summary>
+    /// CheckBoxOutRoute control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.CheckBox CheckBoxOutRoute;
+    
+    /// <summary>
     /// DropDownListOutRoute control.
     /// </summary>
     /// <remarks>
@@ -291,146 +336,56 @@ public partial class ConfigCdr {
     protected global::System.Web.UI.WebControls.DropDownList DropDownListOutRoute;
     
     /// <summary>
-    /// ddlistIngressCalled control.
+    /// CheckBoxMatchedCustomerPrefix control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlistIngressCalled;
+    protected global::System.Web.UI.WebControls.CheckBox CheckBoxMatchedCustomerPrefix;
     
     /// <summary>
-    /// TextBoxIngressCalled control.
+    /// CheckBoxMatchedSupplierPrefix control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox TextBoxIngressCalled;
+    protected global::System.Web.UI.WebControls.CheckBox CheckBoxMatchedSupplierPrefix;
     
     /// <summary>
-    /// ddlistIngressCalling control.
+    /// SqlDataSource4 control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlistIngressCalling;
+    protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSource4;
     
     /// <summary>
-    /// TextBoxIngressCalling control.
+    /// SqlDataSource3 control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox TextBoxIngressCalling;
+    protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSource3;
     
     /// <summary>
-    /// ddlistEgressCalled control.
+    /// GridView1 control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlistEgressCalled;
+    protected global::System.Web.UI.WebControls.GridView GridView1;
     
     /// <summary>
-    /// TextBoxEgressCalled control.
+    /// Timer1 control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox TextBoxEgressCalled;
-    
-    /// <summary>
-    /// ddlistEgressCalling control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlistEgressCalling;
-    
-    /// <summary>
-    /// TextBoxEgressCalling control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox TextBoxEgressCalling;
-    
-    /// <summary>
-    /// UpdatePanel5 control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.UpdatePanel UpdatePanel5;
-    
-    /// <summary>
-    /// DropDownListSource control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList DropDownListSource;
-    
-    /// <summary>
-    /// lblErrorReason control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblErrorReason;
-    
-    /// <summary>
-    /// DropDownListErrorReason control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList DropDownListErrorReason;
-    
-    /// <summary>
-    /// DropDownListFieldList control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList DropDownListFieldList;
-    
-    /// <summary>
-    /// DropDownListServiceGroup control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList DropDownListServiceGroup;
-    
-    /// <summary>
-    /// DropDownListChargingStatus control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList DropDownListChargingStatus;
-    
-    /// <summary>
-    /// gridViewDx control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::DevExpress.Web.ASPxGridView gridViewDx;
+    protected global::System.Web.UI.Timer Timer1;
 }

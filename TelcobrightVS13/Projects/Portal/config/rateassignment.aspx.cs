@@ -33,9 +33,9 @@ using Excel = Microsoft.Office.Interop.Excel;
 
 public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Page
 {
+    Dictionary<long, billingruleassignment> dicBillRules = new Dictionary<long, billingruleassignment>();
 
-   
-        
+
     TelcobrightConfig Tbc = null;
     static List<BillingRule> billingRules;
 
@@ -74,11 +74,11 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
             lstSwitch = context.nes.Where(c => c.idCustomer == thisOperatorId).ToList();
             ddlserviceGroup.Items.Clear();
             ddlserviceGroup.Items.Add(new ListItem(" [Select]", "-1"));
-            ServiceGroupPopulatorForDropDown.Populate(ddlserviceGroup,this.Tbc);
+            ServiceGroupPopulatorForDropDown.Populate(ddlserviceGroup, this.Tbc);
         }
     }
 
-    
+
 
     private void PopulateDropdownlistService(ServiceGroupConfiguration serviceGroupConfig)
     {
@@ -100,8 +100,9 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
 
     protected void DropDownListServiceGroup_SelectedIndexChanged(object sender, EventArgs e)
     {
-        int serviceGroupId =Convert.ToInt32(((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListServiceGroup")).SelectedItem.Value);
-        if (serviceGroupId== -1){
+        int serviceGroupId = Convert.ToInt32(((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListServiceGroup")).SelectedItem.Value);
+        if (serviceGroupId == -1)
+        {
             DropDownList dropservice = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListservice");
             dropservice.Items.Clear();
         }
@@ -109,7 +110,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
         {
             PopulateDropdownlistService(Tbc.CdrSetting.ServiceGroupConfigurations[serviceGroupId]);
         }
-       
+
     }
 
     protected void DropDownBillingRule_SelectedIndexChanged(object sender, EventArgs e)
@@ -126,7 +127,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
             cyclelistddl.Enabled = false;
         }
     }
-  
+
 
     enum OverlapTypes
     {
@@ -852,7 +853,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                 }
             }
         }
-        
+
     }
 
     protected void Page_Load(object sender, EventArgs e)
@@ -860,398 +861,335 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
         //applicabel for postback and initial load
 
         Tbc = PortalApp.PageUtil.GetTelcobrightConfig();
-        
-            if (IsPostBack)
+        PartnerEntities Context = new PartnerEntities();
+        foreach (billingruleassignment ThisRule in Context.billingruleassignments)
+        {
+            dicBillRules.Add(ThisRule.idRatePlanAssignmentTuple, ThisRule);
+        }
+        Session["assign.sessdicBillRules"] = dicBillRules;
+        if (IsPostBack)
+        {
+            //required for script manager, checking code delete existence
+            Session["assign.vsRateTaskId"] =
+                DropDownListTaskRef.SelectedValue; //view state didn't work, have to live with session
+        }
+        else
+        {
+            //!postback
+            populateDropDownForBillingRule();
+            DropDownList ddlist = (DropDownList) frmSupplierRatePlanInsert.FindControl("DropDownListPartner");
+            DropDownList ddlistType = (DropDownList) frmSupplierRatePlanInsert.FindControl("DropDownListPartnerType");
+            Dictionary<int, string> dicRatePlan = new Dictionary<int, string>();
+            foreach (rateplan ThisPlan in Context.rateplans.ToList())
             {
-                //required for script manager, checking code delete existence
-                Session["assign.vsRateTaskId"] = DropDownListTaskRef.SelectedValue;//view state didn't work, have to live with session
-
+                dicRatePlan.Add(ThisPlan.id, ThisPlan.RatePlanName);
             }
-            else
-            {//!postback
+            var lstParters = Context.partners.OrderBy(p=>p.PartnerName).ToList();
+            ddlist.Items.Clear();
+            ddlist.Items.Add(new ListItem(" [Select]", "-1"));
+            ddlist.Items.Add(new ListItem(" [None]", "0"));
+            foreach (partner p in lstParters)
+            {
+                ddlist.Items.Add(new ListItem(p.PartnerName, p.idPartner.ToString()));
+            }
+            //ddlistType.Width = ddlist.Width;
+            Session["assign.dicRatePlan"] = dicRatePlan;
+            //load all rateassigns in a dictionary to show the startdate and enddate values from this table 
+            //in the ratetaskassign gridview's startdate and end date
+            //Dictionary<string, rateassign> dicRateAssign = new Dictionary<string, rateassign>();
 
-                populateDropDownForBillingRule();
-                DropDownList ddlist = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListPartner");
-                DropDownList ddlistType = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListPartnerType");
-                Dictionary<int, string> dicRatePlan = new Dictionary<int, string>();
-                using (PartnerEntities Context = new PartnerEntities())
-                {
-                    foreach (rateplan ThisPlan in Context.rateplans.ToList())
-                    {
-                        dicRatePlan.Add(ThisPlan.id, ThisPlan.RatePlanName);
-                    }
-                    var lstParters = Context.partners.ToList();
-                    ddlist.Items.Clear();
-                    ddlist.Items.Add(new ListItem(" [Select]", "-1"));
-                    ddlist.Items.Add(new ListItem(" [None]", "0"));
-                    foreach (partner p in lstParters)
-                    {
-                        ddlist.Items.Add(new ListItem(p.PartnerName, p.idPartner.ToString()));
-                    }
-                    //ddlistType.Width = ddlist.Width;
-                }
-                Session["assign.dicRatePlan"] = dicRatePlan;
-                //load all rateassigns in a dictionary to show the startdate and enddate values from this table 
-                //in the ratetaskassign gridview's startdate and end date
-                //Dictionary<string, rateassign> dicRateAssign = new Dictionary<string, rateassign>();
+            //Retrieve Path from TreeView for displaying in the master page caption label
 
-                //Retrieve Path from TreeView for displaying in the master page caption label
+            //Load Report Templates in TreeView dynamically from database.
+            TreeView MasterTree = (TreeView) Master.FindControl("TreeView1");
+            CommonCode CommonCodes = new CommonCode();
+            CommonCodes.LoadReportTemplatesTree(ref MasterTree);
 
-                //Load Report Templates in TreeView dynamically from database.
-                TreeView MasterTree = (TreeView)Master.FindControl("TreeView1");
-                CommonCode CommonCodes = new CommonCode();
-                CommonCodes.LoadReportTemplatesTree(ref MasterTree);
-
-                string LocalPath = Request.Url.LocalPath;
-                int Pos2ndSlash = LocalPath.Substring(1, LocalPath.Length - 1).IndexOf("/");
-                string Root_Folder = LocalPath.Substring(1, Pos2ndSlash);
-                int EndOfRootFolder = Request.Url.AbsoluteUri.IndexOf(Root_Folder);
-                string UrlWithQueryString = ("~/" + Root_Folder + Request.Url.AbsoluteUri.Substring((EndOfRootFolder + Root_Folder.Length), Request.Url.AbsoluteUri.Length - (EndOfRootFolder + Root_Folder.Length))).Replace("%20", " ");
-                TreeNodeCollection cNodes = MasterTree.Nodes;
-                TreeNode MatchedNode = null;
-                foreach (TreeNode N in cNodes)//for each nodes at root level, loop through children
-                {
-                    MatchedNode = CommonCodes.RetrieveNodes(N, UrlWithQueryString);
-                    if (MatchedNode != null)
-                    {
-                        break;
-                    }
-                }
-                //set screentile/caption in the master page...
-                Label lblScreenTitle = (Label)Master.FindControl("lblScreenTitle");
+            string LocalPath = Request.Url.LocalPath;
+            int Pos2ndSlash = LocalPath.Substring(1, LocalPath.Length - 1).IndexOf("/");
+            string Root_Folder = LocalPath.Substring(1, Pos2ndSlash);
+            int EndOfRootFolder = Request.Url.AbsoluteUri.IndexOf(Root_Folder);
+            string UrlWithQueryString = ("~/" + Root_Folder +
+                                         Request.Url.AbsoluteUri.Substring((EndOfRootFolder + Root_Folder.Length),
+                                             Request.Url.AbsoluteUri.Length - (EndOfRootFolder + Root_Folder.Length)))
+                .Replace("%20", " ");
+            TreeNodeCollection cNodes = MasterTree.Nodes;
+            TreeNode MatchedNode = null;
+            foreach (TreeNode N in cNodes) //for each nodes at root level, loop through children
+            {
+                MatchedNode = CommonCodes.RetrieveNodes(N, UrlWithQueryString);
                 if (MatchedNode != null)
                 {
-                    lblScreenTitle.Text = MatchedNode.ValuePath;
+                    break;
                 }
-                else
-                {
-                    lblScreenTitle.Text = "";
-                }
+            }
+            //set screentile/caption in the master page...
+            Label lblScreenTitle = (Label) Master.FindControl("lblScreenTitle");
+            if (MatchedNode != null)
+            {
+                lblScreenTitle.Text = MatchedNode.ValuePath;
+            }
+            else
+            {
+                lblScreenTitle.Text = "";
+            }
 
 
-                //End of Site Map Part *******************************************************************
+            //End of Site Map Part *******************************************************************
 
 
-                List<enumservicefamily> Lstrules = new List<enumservicefamily>();
-                DropDownList dropPartner = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListPartner");
-                DropDownList dropservice = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListservice");
-                if (dropPartner != null)
-                {
-                    using (PartnerEntities Context = new PartnerEntities())
-                    {
-                        //foreach (rateassign ThisRate in Context.rateassigns.ToList())
-                        //{
-                        //    dicRateAssign.Add(ThisRate.Prefix + "#" + ThisRate.startdate.ToString("yyyy-MM-dd HH:mm:ss"), ThisRate);
-                        //}
-                        //Session["assign.dicRateAssign"] = dicRateAssign;
-                        if (dropPartner.SelectedValue == "0")//none
-                        {
-                            Lstrules = (from c in Context.enumservicefamilies
-                                        where c.id == 5 ||
-                                              c.id == 6 ||
-                                              c.id == 9 ||
-                                              c.id == 10 ||
-                                              c.id == 11 ||
-                                              c.id == 12
-                                        select c).ToList();
-                        }
-                        else if (dropPartner.SelectedValue == "-1")//select
-                        {
-                            //nothing in the dropdownlist
-                        }
-                        else//a partner has been selected
-                        {
-                            Lstrules = (from c in Context.enumservicefamilies
-                                        where c.id != 5 &&
-                                              c.id != 6 &&
-                                              c.id != 9 &&
-                                              c.id != 10 &&
-                                              c.id != 11 &&
-                                              c.id != 12
-                                        select c).ToList();
-                        }
-                    }
-                    dropservice.Items.Clear();
-                    foreach (enumservicefamily ThisRule in Lstrules)
-                    {
-                        dropservice.Items.Add(new ListItem(ThisRule.ServiceName, ThisRule.id.ToString()));
-                    }
-                }
-
-                //load rateplanassignmenttuple
-                Dictionary<long, rateplanassignmenttuple> dicTuple = new Dictionary<long, rateplanassignmenttuple>();
-                Dictionary<long, billingruleassignment> dicBillRules = new Dictionary<long, billingruleassignment>();
-                Dictionary<long, enumservicefamily> dicservice = new Dictionary<long, enumservicefamily>();
-                var dicRoutes = new Dictionary<int, string>();
-                using (PartnerEntities Conmed = new PartnerEntities())
-                {
-                    using (PartnerEntities Context = new PartnerEntities())
-                    {
-                        foreach (rateplanassignmenttuple ThisTuple in Context.rateplanassignmenttuples.ToList())
-                        {
-                            dicTuple.Add(ThisTuple.id, ThisTuple);
-                        }
-                        foreach (enumservicefamily ThisRule in Conmed.enumservicefamilies.ToList())
-                        {
-                            dicservice.Add(ThisRule.id, ThisRule);
-                        }
-                        foreach (route r in Context.routes.ToList())
-                        {
-                            dicRoutes.Add(r.idroute, r.RouteName);
-                        }
-                        foreach (billingruleassignment ThisRule in Context.billingruleassignments)
-                        {
-                            dicBillRules.Add(ThisRule.idRatePlanAssignmentTuple, ThisRule);
-                        }
-                    }
-                }
-                Session["assign.sessdictuple"] = dicTuple;
-                Session["assign.sessdicBillRules"] = dicBillRules;
-                Session["assign.sessdicservice"] = dicservice;
-                Session["assign.sessdicroute"] = dicRoutes;
-
-                TextBoxDefaultDate.Text = DateTime.Today.ToString("yyyy-MM-dd");
-                TextBoxDefaultDeleteDate.Text = DateTime.Today.ToString("yyyy-MM-dd");
-
-                //DropDownListFormat.SelectedIndex = 1;
-                ddlTypeFind.DataBind();
-                ddlTypeFind.SelectedIndex = 0;
-
-
-                //HttpRequest q = Request;
-                //NameValueCollection n = q.QueryString;
-                //int v = -1;
-                //if (n.HasKeys())
+            List<enumservicefamily> Lstrules = new List<enumservicefamily>();
+            DropDownList dropPartner = (DropDownList) frmSupplierRatePlanInsert.FindControl("DropDownListPartner");
+            DropDownList dropservice = (DropDownList) frmSupplierRatePlanInsert.FindControl("DropDownListservice");
+            if (dropPartner != null)
+            {
+                //foreach (rateassign ThisRate in Context.rateassigns.ToList())
                 //{
-                //    string k = n.GetKey(0);
-                //    if (k == "idRatePlan")
-                //    {
-                //        v = Convert.ToInt32(n.Get(0));
-                //    }
-                //    //if (k == "two")
-                //    //{
-                //    //    string v = n.Get(0);
-                //    //}
+                //    dicRateAssign.Add(ThisRate.Prefix + "#" + ThisRate.startdate.ToString("yyyy-MM-dd HH:mm:ss"), ThisRate);
                 //}
-                ////test code
-                //v = 3;//purple
-
-
-
-
-                int v = 1;
-                ViewState["sesidRatePlan"] = v;
-
-
-
-
-                //SqlDataTaskStatus.SelectParameters["idRatePlan"].DefaultValue = v.ToString();
-                timezone TzRatePlan = null;
-                int RatePlanType = 0;
-                //using (PartnerEntities conigw = new PartnerEntities())
-                //{
-                //    rateplanassign ThisPlan = conigw.rateplanassigns.Where(c => c.id == v).First();
-
-                //    TzRatePlan = conigw.timezones.Where(c => c.id == ThisPlan.TimeZone).First();
-                //    lblTimeZone.Text = TzRatePlan.zone.country.country_name + " " + TzRatePlan.offsetdesc + " [" + TzRatePlan.zone.zone_name + "]";
-                //    RatePlanType = ThisPlan.Type;
-                //    Session["assign.sesRatePlanType"] = RatePlanType;
-
-                //    lblRatePlan.Text = ThisPlan.RatePlanName;
-                //    ViewState["vsRatePlan"] = ThisPlan;
-                //}
-
-
-
-
-                //find if any rate Task reference exists
-                //if not create one default instance
-
-                using (PartnerEntities Context = new PartnerEntities())
+                //Session["assign.dicRateAssign"] = dicRateAssign;
+                if (dropPartner.SelectedValue == "0") //none
                 {
-                    List<ratetaskassignreference> LstTaskRef = Context.ratetaskassignreferences.Where(c => c.idRatePlan == v).OrderByDescending(c => c.id).ToList();
-                    if (LstTaskRef.Count == 0)
-                    {
-                        //add default instance
-                        ratetaskassignreference Newref = new ratetaskassignreference();
-                        Newref.Description = "Default";
-                        Newref.idRatePlan = v;
-                        Context.ratetaskassignreferences.Add(Newref);
-                        Context.SaveChanges();
-                        LstTaskRef = Context.ratetaskassignreferences.Where(c => c.idRatePlan == v).OrderByDescending(c => c.id).ToList();
-                    }
-
-                    DropDownListTaskRef.Items.Clear();
-                    DropDownListTaskRef.Items.Add(new ListItem("default", "1"));
-
-                    DropDownListTaskRef.SelectedIndex = 0;//only if not post back
-                    SqlDataTaskStatus.SelectParameters["idRatePlan"].DefaultValue = DropDownListTaskRef.SelectedValue;
+                    Lstrules = (from c in Context.enumservicefamilies
+                        where c.id == 5 ||
+                              c.id == 6 ||
+                              c.id == 9 ||
+                              c.id == 10 ||
+                              c.id == 11 ||
+                              c.id == 12
+                        select c).ToList();
                 }
-                //required for script manager, checking code delete existence
-                Session["assign.vsRateTaskId"] = DropDownListTaskRef.SelectedValue;//view state didn't work, have to live with session
-
-
-                //get own telcobrightcustomreid from telcobrightmediation database by matching databaes name
-                //from Partner
-
-                string ThisConectionString = ConfigurationManager.ConnectionStrings["partner"].ConnectionString;
-
-                MySqlConnection connection = new MySqlConnection(ThisConectionString);
-                string database = connection.Database.ToString();
-
-                using (PartnerEntities Context = new PartnerEntities())
+                else if (dropPartner.SelectedValue == "-1") //select
                 {
-                    telcobrightpartner ThisCustomer = (from c in Context.telcobrightpartners
-                                                       where c.databasename == database
-                                                       select c).First();
-                    int ThisOperatorId = ThisCustomer.idCustomer;
-                    int idOperatorType = Convert.ToInt32(ThisCustomer.idOperatorType);
+                    //nothing in the dropdownlist
+                }
+                else //a partner has been selected
+                {
+                    Lstrules = (from c in Context.enumservicefamilies
+                        where c.id != 5 &&
+                              c.id != 6 &&
+                              c.id != 9 &&
+                              c.id != 10 &&
+                              c.id != 11 &&
+                              c.id != 12
+                        select c).ToList();
+                }
+                dropservice.Items.Clear();
+                foreach (enumservicefamily ThisRule in Lstrules)
+                {
+                    dropservice.Items.Add(new ListItem(ThisRule.ServiceName, ThisRule.id.ToString()));
+                }
+            }
+
+            //load rateplanassignmenttuple
+            Dictionary<long, rateplanassignmenttuple> dicTuple = new Dictionary<long, rateplanassignmenttuple>();
+            Dictionary<long, enumservicefamily> dicservice = new Dictionary<long, enumservicefamily>();
+            var dicRoutes = new Dictionary<int, string>();
+            using (PartnerEntities Conmed = new PartnerEntities())
+            {
+                foreach (rateplanassignmenttuple ThisTuple in Context.rateplanassignmenttuples.ToList())
+                {
+                    dicTuple.Add(ThisTuple.id, ThisTuple);
+                }
+                foreach (enumservicefamily ThisRule in Conmed.enumservicefamilies.ToList())
+                {
+                    dicservice.Add(ThisRule.id, ThisRule);
+                }
+                foreach (route r in Context.routes.ToList())
+                {
+                    dicRoutes.Add(r.idroute, r.RouteName);
+                }
+            }
+            Session["assign.sessdictuple"] = dicTuple;
+            Session["assign.sessdicservice"] = dicservice;
+            Session["assign.sessdicroute"] = dicRoutes;
+
+            TextBoxDefaultDate.Text = DateTime.Today.ToString("yyyy-MM-dd");
+            TextBoxDefaultDeleteDate.Text = DateTime.Today.ToString("yyyy-MM-dd");
+
+            //DropDownListFormat.SelectedIndex = 1;
+            ddlTypeFind.DataBind();
+            ddlTypeFind.SelectedIndex = 0;
+
+            int v = 1;
+            ViewState["sesidRatePlan"] = v;
 
 
+            //SqlDataTaskStatus.SelectParameters["idRatePlan"].DefaultValue = v.ToString();
+            timezone TzRatePlan = null;
+            int RatePlanType = 0;
+            List<ratetaskassignreference> LstTaskRef = Context.ratetaskassignreferences
+                .Where(c => c.idRatePlan == v).OrderByDescending(c => c.id).ToList();
+            if (LstTaskRef.Count == 0)
+            {
+                //add default instance
+                ratetaskassignreference Newref = new ratetaskassignreference();
+                Newref.Description = "Default";
+                Newref.idRatePlan = v;
+                Context.ratetaskassignreferences.Add(Newref);
+                Context.SaveChanges();
+                LstTaskRef = Context.ratetaskassignreferences.Where(c => c.idRatePlan == v)
+                    .OrderByDescending(c => c.id).ToList();
+            }
 
-                    Session["assign.sesidOperator"] = ThisOperatorId;
-                    timezone tzNative = new timezone();
-                    using (PartnerEntities ConPartner = new PartnerEntities())
+            DropDownListTaskRef.Items.Clear();
+            DropDownListTaskRef.Items.Add(new ListItem("default", "1"));
+
+            DropDownListTaskRef.SelectedIndex = 0; //only if not post back
+            SqlDataTaskStatus.SelectParameters["idRatePlan"].DefaultValue = DropDownListTaskRef.SelectedValue;
+            //required for script manager, checking code delete existence
+            Session["assign.vsRateTaskId"] =
+                DropDownListTaskRef.SelectedValue; //view state didn't work, have to live with session
+
+
+            //get own telcobrightcustomreid from telcobrightmediation database by matching databaes name
+            //from Partner
+
+            string ThisConectionString = ConfigurationManager.ConnectionStrings["partner"].ConnectionString;
+
+            MySqlConnection connection = new MySqlConnection(ThisConectionString);
+            string database = connection.Database.ToString();
+            telcobrightpartner ThisCustomer = (from c in Context.telcobrightpartners
+                where c.databasename == database
+                select c).First();
+            int ThisOperatorId = ThisCustomer.idCustomer;
+            int idOperatorType = Convert.ToInt32(ThisCustomer.idOperatorType);
+
+
+            Session["assign.sesidOperator"] = ThisOperatorId;
+            timezone tzNative = new timezone();
+            using (PartnerEntities ConPartner = new PartnerEntities())
+            {
+                tzNative = ConPartner.timezones.Where(c => c.id == ThisCustomer.NativeTimeZone).FirstOrDefault();
+            }
+
+            //long TimeZoneDifference = tzNative.gmt_offset - TzRatePlan.gmt_offset;
+            //ViewState["vsTimeZoneDifference"] = TimeZoneDifference;
+
+            Session["assign.sesidOperatorType"] = idOperatorType;
+
+            //set visible/invisible for OtherAmount10 text box based on operator type
+            //in FormView and Gridview
+            switch (idOperatorType)
+            {
+                case 2: //icx
+                    int i = 0;
+                    //in formview is handled in formview_item created
+
+                    //in GridView
+                    for (i = 0; i < GridViewSupplierRates.Columns.Count; i++)
                     {
-                        tzNative = ConPartner.timezones.Where(c => c.id == ThisCustomer.NativeTimeZone).FirstOrDefault();
+                        switch (GridViewSupplierRates.Columns[i].SortExpression)
+                        {
+                            case "OtherAmount10":
+                                GridViewSupplierRates.Columns[i].Visible = true;
+                                break;
+                        }
                     }
+                    break;
+                default: //if operator type not icx
+                    //in formview is handled in formview_item created
 
-                    //long TimeZoneDifference = tzNative.gmt_offset - TzRatePlan.gmt_offset;
-                    //ViewState["vsTimeZoneDifference"] = TimeZoneDifference;
-
-                    Session["assign.sesidOperatorType"] = idOperatorType;
-
-                    //set visible/invisible for OtherAmount10 text box based on operator type
-                    //in FormView and Gridview
-                    switch (idOperatorType)
+                    //in GridView
+                    for (i = 0; i < GridViewSupplierRates.Columns.Count; i++)
                     {
-                        case 2://icx
-                            int i = 0;
-                            //in formview is handled in formview_item created
+                        switch (GridViewSupplierRates.Columns[i].SortExpression)
+                        {
+                            case "OtherAmount10":
+                                GridViewSupplierRates.Columns[i].Visible = false;
+                                break;
+                        }
+                    }
+                    break;
+            }
+            int idRatePlan = v;
+            List<ratetaskassign> sesSupplierRates = (from c in Context.ratetaskassigns
+                where c.idrateplan == v
+                select c).ToList();
 
-                            //in GridView
-                            for (i = 0; i < GridViewSupplierRates.Columns.Count; i++)
-                            {
-                                switch (GridViewSupplierRates.Columns[i].SortExpression)
-                                {
-                                    case "OtherAmount10":
-                                        GridViewSupplierRates.Columns[i].Visible = true;
-                                        break;
-                                }
-                            }
+            Session["assign.sesSupplierRates"] = sesSupplierRates;
+
+
+            List<partner> sesCountryCodes = Context.partners.ToList();
+            Session["assign.sesCountryCodes"] = sesCountryCodes;
+
+            //set visibility of gridview controls based on supplierrateplan type
+            if (RatePlanType == 3) //international incoming
+            {
+                int i = 0;
+                //make gridview controls visible for International In
+                //and invisible for Intl Out
+                for (i = 0; i < GridViewSupplierRates.Columns.Count; i++)
+                {
+                    switch (GridViewSupplierRates.Columns[i].SortExpression)
+                    {
+                        case "OtherAmount1":
+                        case "OtherAmount2":
+                        case "OtherAmount3":
+                            GridViewSupplierRates.Columns[i].Visible = true;
                             break;
-                        default: //if operator type not icx
-                                 //in formview is handled in formview_item created
 
-                            //in GridView
-                            for (i = 0; i < GridViewSupplierRates.Columns.Count; i++)
-                            {
-                                switch (GridViewSupplierRates.Columns[i].SortExpression)
-                                {
-                                    case "OtherAmount10":
-                                        GridViewSupplierRates.Columns[i].Visible = false;
-                                        break;
-                                }
-                            }
+                        case "OtherAmount4":
+                        case "OtherAmount5":
+                        case "OtherAmount6":
+                        case "OtherAmount7":
+                        case "OtherAmount8":
+                        case "OtherAmount9":
+                            GridViewSupplierRates.Columns[i].Visible = false;
                             break;
                     }
-
                 }
-
-                using (PartnerEntities Context = new PartnerEntities())
+                //set formview controls visible for International In
+                //and invisible for Intl Out
+                for (i = 0; i < frmSupplierRatePlanInsert.Controls.Count; i++)
                 {
-                    int idRatePlan = v;
-                    List<ratetaskassign> sesSupplierRates = (from c in Context.ratetaskassigns
-                                                             where c.idrateplan == v
-                                                             select c).ToList();
-
-                    Session["assign.sesSupplierRates"] = sesSupplierRates;
-
-
-                    List<partner> sesCountryCodes = Context.partners.ToList();
-                    Session["assign.sesCountryCodes"] = sesCountryCodes;
-
-                    //set visibility of gridview controls based on supplierrateplan type
-                    if (RatePlanType == 3)//international incoming
+                    switch (frmSupplierRatePlanInsert.Controls[i].ID)
                     {
-                        int i = 0;
-                        //make gridview controls visible for International In
-                        //and invisible for Intl Out
-                        for (i = 0; i < GridViewSupplierRates.Columns.Count; i++)
-                        {
-                            switch (GridViewSupplierRates.Columns[i].SortExpression)
-                            {
-                                case "OtherAmount1":
-                                case "OtherAmount2":
-                                case "OtherAmount3":
-                                    GridViewSupplierRates.Columns[i].Visible = true;
-                                    break;
+                        case "txtOtherAmount1":
+                        case "txtOtherAmount2":
+                        case "txtOtherAmount3":
+                            frmSupplierRatePlanInsert.Controls[i].Visible = true;
+                            break;
 
-                                case "OtherAmount4":
-                                case "OtherAmount5":
-                                case "OtherAmount6":
-                                case "OtherAmount7":
-                                case "OtherAmount8":
-                                case "OtherAmount9":
-                                    GridViewSupplierRates.Columns[i].Visible = false;
-                                    break;
-                            }
-                        }
-                        //set formview controls visible for International In
-                        //and invisible for Intl Out
-                        for (i = 0; i < frmSupplierRatePlanInsert.Controls.Count; i++)
-                        {
-                            switch (frmSupplierRatePlanInsert.Controls[i].ID)
-                            {
-                                case "txtOtherAmount1":
-                                case "txtOtherAmount2":
-                                case "txtOtherAmount3":
-                                    frmSupplierRatePlanInsert.Controls[i].Visible = true;
-                                    break;
-
-                                case "OtherAmount4":
-                                case "OtherAmount5":
-                                case "OtherAmount6":
-                                case "OtherAmount7":
-                                case "OtherAmount8":
-                                case "OtherAmount9":
-                                    frmSupplierRatePlanInsert.Controls[i].Visible = false;
-                                    break;
-                            }
-                        }
+                        case "OtherAmount4":
+                        case "OtherAmount5":
+                        case "OtherAmount6":
+                        case "OtherAmount7":
+                        case "OtherAmount8":
+                        case "OtherAmount9":
+                            frmSupplierRatePlanInsert.Controls[i].Visible = false;
+                            break;
                     }
-                    else if (RatePlanType == 4)//make gridview controls visible for International OUT
-                                               //and invisible for Intl Incoming
-                    {
-                        int i = 0;
-                        for (i = 0; i < GridViewSupplierRates.Columns.Count; i++)
-                        {
-                            switch (GridViewSupplierRates.Columns[i].SortExpression)
-                            {
-                                case "OtherAmount4":
-                                case "OtherAmount5":
-                                case "OtherAmount6":
-                                case "OtherAmount7":
-                                case "OtherAmount8":
-                                case "OtherAmount9":
-                                    GridViewSupplierRates.Columns[i].Visible = true;
-                                    break;
-
-                                case "OtherAmount1":
-                                case "OtherAmount2":
-                                case "OtherAmount3":
-                                    GridViewSupplierRates.Columns[i].Visible = false;
-                                    break;
-                            }
-                        }
-
-                    }
-
-                    myGridViewDataBind();
                 }
+            }
+            else if (RatePlanType == 4) //make gridview controls visible for International OUT
+                //and invisible for Intl Incoming
+            {
+                int i = 0;
+                for (i = 0; i < GridViewSupplierRates.Columns.Count; i++)
+                {
+                    switch (GridViewSupplierRates.Columns[i].SortExpression)
+                    {
+                        case "OtherAmount4":
+                        case "OtherAmount5":
+                        case "OtherAmount6":
+                        case "OtherAmount7":
+                        case "OtherAmount8":
+                        case "OtherAmount9":
+                            GridViewSupplierRates.Columns[i].Visible = true;
+                            break;
 
+                        case "OtherAmount1":
+                        case "OtherAmount2":
+                        case "OtherAmount3":
+                            GridViewSupplierRates.Columns[i].Visible = false;
+                            break;
+                    }
+                }
+            }
 
-            }//!postback
+            myGridViewDataBind();
+        } //!postback
     }
 
     //    protected void ModifySupplierGrid(int Action,int id,string Prefix,string Description,Single rateamount,
@@ -2336,7 +2274,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
             int NewFlag = SetBitInteger(Convert.ToInt32(ThisTask.field2), 18);
             ThisTask.field2 = NewFlag.ToString();
         }
-        ThisTask.CountryCode =  Convert.ToInt32(newCountry);//idpartner
+        ThisTask.CountryCode = Convert.ToInt32(newCountry);//idpartner
 
         string format = "yyyy-MM-dd HH:mm:ss"; //effective date
 
@@ -3024,7 +2962,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
         frmSupplierRatePlanInsert.Visible = false;
         myGridViewDataBind();
     }
-    
+
     protected void frmSupplierRatePlanInsert_ItemInserting(object sender, FormViewInsertEventArgs e)
     {
 
@@ -3203,8 +3141,8 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
             using (PartnerEntities Context = new PartnerEntities())
             {
                 telcobrightpartner ThisCustomer = (from c in Context.telcobrightpartners
-                    where c.databasename == database
-                    select c).First();
+                                                   where c.databasename == database
+                                                   select c).First();
                 int ThisOperatorId = ThisCustomer.idCustomer;
                 idTimeZone = Context.telcobrightpartners.Where(c => c.idCustomer == ThisOperatorId).First().NativeTimeZone;
             }
@@ -3525,7 +3463,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
     {
         using (PartnerEntities context = new PartnerEntities())
         {
-            AccountingContext accContext = new AccountingContext(context, 0, 
+            AccountingContext accContext = new AccountingContext(context, 0,
                 new AutoIncrementManagerManualInt(context), new List<DateTime>(), 10000);
             AccountCreatorFromRatePlanAssignment accountCreator =
                 new AccountCreatorFromRatePlanAssignment(accContext, context);
@@ -3890,7 +3828,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
     string billingRule = null;
     string paymentMode = null;
 
-    
+
 
 
 
@@ -4017,8 +3955,8 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                        "'" + ThisRate.EndPreviousRate + "'," +
                        "'" + ThisRate.Category + "'," +
                        "'" + ThisRate.SubCategory + "'," +
-                       "'" + ThisRate.Category + "'" +")";
-            
+                       "'" + ThisRate.Category + "'" + ")";
+
             return x;
         }
         catch (Exception e1)
@@ -5450,7 +5388,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
 
     protected void service_SelectedIndexChanged(object sender, EventArgs e)
     {
-      
+
 
         int Category = Convert.ToInt32(((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListservice")).SelectedValue);
         using (PartnerEntities Context = new PartnerEntities())
@@ -5474,11 +5412,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
     {
         if (e.Row.RowType == DataControlRowType.DataRow)
         {
-
-
-
             Dictionary<long, rateplanassignmenttuple> dicTuple = (Dictionary<long, rateplanassignmenttuple>)Session["assign.sessdictuple"];
-            Dictionary<long, billingruleassignment> dicBillRules = (Dictionary<long, billingruleassignment>)Session["assign.sessdicBillRules"];
             Dictionary<long, enumservicefamily> dicservice = (Dictionary<long, enumservicefamily>)Session["assign.sessdicservice"];
             var dicroute = (Dictionary<int, string>)Session["assign.sessdicroute"];
             Label LabelRoute = (Label)e.Row.FindControl("lblRoute");
@@ -5539,12 +5473,12 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
             var lstPlan = new List<rateplan>();
             lstPlan.Add(tmprateplan);
 
-            DropDownList DropDownListRatePlan = (DropDownList) e.Row.FindControl("DropDownListRatePlan");
+            DropDownList DropDownListRatePlan = (DropDownList)e.Row.FindControl("DropDownListRatePlan");
             DropDownListRatePlan.DataSource = lstPlan;
             DropDownListRatePlan.DataBind();
             DropDownListRatePlan.SelectedValue = idRatePlan.ToString();
 
-            DropDownList DropDownListBillingRule =  ((DropDownList)e.Row.FindControl("DropDownListBillingRule"));
+            DropDownList DropDownListBillingRule = ((DropDownList)e.Row.FindControl("DropDownListBillingRule"));
             foreach (BillingRule jsb in billingRules)
             {
                 DropDownListBillingRule.Items.Add(new ListItem(jsb.RuleName, jsb.Id.ToString()));
@@ -6248,7 +6182,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                             Cmd.ExecuteNonQuery();
 
                             Cmd.CommandText =
-                                "update billingruleassignment set idBillingRule = " + ddlBillingRule.SelectedValue + 
+                                "update billingruleassignment set idBillingRule = " + ddlBillingRule.SelectedValue +
                                 " where idRatePlanAssignmentTuple = " + thisPrefix + "";
                             Cmd.ExecuteNonQuery();
 
@@ -6267,7 +6201,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
             using (PartnerEntities Context = new PartnerEntities())
             {
                 int thisPrefixAsInt = Convert.ToInt32(thisPrefix);
-                rateassign thisRate = Context.rateassigns.FirstOrDefault(c => c.idrateplan == 1 
+                rateassign thisRate = Context.rateassigns.FirstOrDefault(c => c.idrateplan == 1
                                         && c.Prefix == thisPrefixAsInt
                                         && c.startdate == SaveStartDateTimeThisRate);
 
@@ -6364,5 +6298,5 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
         //code does not come here...
     }
 
-  
+
 }

@@ -153,7 +153,13 @@ namespace TelcobrightMediation
             this.MefDecoderContainer.CmpDecoder.Compose();
             foreach (var ext in this.MefDecoderContainer.CmpDecoder.Decoders)
                 this.MefDecoderContainer.DicExtensions.Add(ext.Id, ext);
-
+            this.MefServiceGroupContainer.CmpServiceGroupPre.Compose();
+            foreach (var serviceGroupPreProcessor 
+                in this.MefServiceGroupContainer.CmpServiceGroupPre.ServiceGroupPreProcessors)
+            {
+                this.MefServiceGroupContainer.ServiceGroupPreProcessors.Add(serviceGroupPreProcessor.Id,
+                    serviceGroupPreProcessor);
+            }
             this.MefServiceGroupContainer.CmpServiceGroup.Compose();
             CdrRuleComposer cdrRuleComposer = new CdrRuleComposer();
             cdrRuleComposer.Compose();

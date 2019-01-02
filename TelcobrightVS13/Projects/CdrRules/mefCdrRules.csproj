@@ -62,7 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IcnlTollFreeByTgType.cs" />
-    <Compile Include="IcnlIntlIncomingByTgType.cs" />
+    <Compile Include="IcnlIntlIncoming.cs" />
     <Compile Include="IcnlOutgoingCallByTgType.cs" />
     <Compile Include="IcnlLocalByTgTypeAndPrefix.cs" />
     <Compile Include="IcxOutgoingCallByInTgType.cs" />

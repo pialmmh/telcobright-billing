@@ -9,8 +9,7 @@
 
 
 
-public partial class LocalTransit
-{
+public partial class LocalTransit {
     
     /// <summary>
     /// DropDownListReportSource control.
@@ -281,6 +280,60 @@ public partial class LocalTransit
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.DropDownList DropDownListPartner;
+    
+    /// <summary>
+    /// CheckBoxOutPartner control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.CheckBox CheckBoxOutPartner;
+    
+    /// <summary>
+    /// DropDownListOutPartner control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList DropDownListOutPartner;
+    
+    /// <summary>
+    /// CheckBoxInRoute control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.CheckBox CheckBoxInRoute;
+    
+    /// <summary>
+    /// DropDownListInRoute control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList DropDownListInRoute;
+    
+    /// <summary>
+    /// CheckBoxOutRoute control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.CheckBox CheckBoxOutRoute;
+    
+    /// <summary>
+    /// DropDownListOutRoute control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList DropDownListOutRoute;
     
     /// <summary>
     /// CheckBoxMatchedCustomerPrefix control.

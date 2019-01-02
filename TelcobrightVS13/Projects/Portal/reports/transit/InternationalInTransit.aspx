@@ -86,13 +86,32 @@
 
                 using (PartnerEntities contex = new PartnerEntities())
                 {
-                    var IOSList = contex.partners.Where(c => c.PartnerType == 3).ToList();
+                    // var IOSList = contex.partners.Where(c => c.PartnerType == 3).ToList();
+                    var IOSList = contex.partners.OrderBy(x => x.PartnerName).ToList();
 
                     DropDownListPartner.Items.Clear();
+                    DropDownListOutPartner.Items.Clear();
                     DropDownListPartner.Items.Add(new ListItem(" [All]", "-1"));
+                    DropDownListOutPartner.Items.Add(new ListItem(" [All]", "-1"));
                     foreach (partner p in IOSList)
                     {
                         DropDownListPartner.Items.Add(new ListItem(p.PartnerName, p.idPartner.ToString()));
+                        DropDownListOutPartner.Items.Add(new ListItem(p.PartnerName, p.idPartner.ToString()));
+                    }
+
+                    var queryRoute = from route in contex.routes select route.RouteName;
+                    var queryBridgeRoute = from bridgedroute in contex.bridgedroutes select bridgedroute.routeName;
+                    var query = queryRoute.Union(queryBridgeRoute);
+                    var routes = query.ToList().OrderBy(x => x.ToString());
+
+                    DropDownListInRoute.Items.Clear();
+                    DropDownListOutRoute.Items.Clear();
+                    DropDownListInRoute.Items.Add(new ListItem(" [All]", "-1"));
+                    DropDownListOutRoute.Items.Add(new ListItem(" [All]", "-1"));
+                    foreach (string route in routes)
+                    {
+                        DropDownListInRoute.Items.Add(route);
+                        DropDownListOutRoute.Items.Add(route);
                     }
                     //var ANSList = contex.partners.Where(c => c.PartnerType == 1).ToList();
                     //DropDownListAns.Items.Clear();
@@ -359,7 +378,7 @@
 
     </div>
 
-    <div id="ParamBorder" style="float: left; padding-top: 3px; padding-left: 10px; height: 135px; display: block; border: 2px ridge #E5E4E2; margin-bottom: 5px; width: 1300px;">
+    <div id="ParamBorder" style="float: left; padding-top: 3px; padding-left: 10px; height: 155px; display: block; border: 2px ridge #E5E4E2; margin-bottom: 5px; width: 1300px;">
         <div style="height: 20px; background-color: #f2f2f2; color: black;">
             <span style="float: left; font-weight: bold; padding-left: 20px;">Show Performance
                 <asp:CheckBox ID="CheckBoxShowPerformance" runat="server" Checked="true" /></span>
@@ -457,10 +476,9 @@
 
             <div style="text-align: left;">
 
-                <div style="float: left; height: 25px; min-width: 1400px;">
-
+                <div style="float: left; height: 25px; min-width: 1250px;">
                     <div style="float: left;">
-                        View by International Partner: 
+                        View by In Partner: 
                             <asp:CheckBox ID="CheckBoxPartner" runat="server" AutoPostBack="True"
                                 OnCheckedChanged="CheckBoxShowByPartner_CheckedChanged" Checked="True" />
                        
@@ -469,44 +487,38 @@
                         </asp:DropDownList>
 
                     </div>
-                    <div style="float: left; margin-left: 15px;">
-                        <asp:CheckBox ID="CheckBoxMatchedCustomerPrefix" runat="server" AutoPostBack="false" Checked="false" Text="Matched Customer Prefix" />
-                    </div>
-                    <div style="float: left; margin-left: 15px;">
-                        <asp:CheckBox ID="CheckBoxMatchedSupplierPrefix" runat="server" AutoPostBack="false" Checked="false" Text="Matched Supplier Prefix" />
-                    </div>
-<%--                    <div style="float: left; margin-left: 15px;">
-                        View by ANS: 
-                                <asp:CheckBox ID="CheckBoxShowByAns" runat="server" AutoPostBack="True"
-                                    OnCheckedChanged="CheckBoxShowByAns_CheckedChanged" Checked="false" />
-                        <asp:DropDownList ID="DropDownListAns" runat="server"
-                            Enabled="False">
+                    <div style="float: left;">&nbsp;
+                        View by Out Partner: 
+                        <asp:CheckBox ID="CheckBoxOutPartner" runat="server" AutoPostBack="True"
+                                      OnCheckedChanged="CheckBoxOutPartner_OnCheckedChanged" Checked="True" />
+                       
+                        <asp:DropDownList ID="DropDownListOutPartner" runat="server"
+                                          Enabled="true">
                         </asp:DropDownList>
 
                     </div>
-
-                    <div style="float: left; margin-left: 18px;">
-                        View by ICX/IOS:
-                        <asp:CheckBox ID="CheckBoxShowByIgw" runat="server"
-                            AutoPostBack="True" OnCheckedChanged="CheckBoxShowByIgw_CheckedChanged" Checked="false" />
-                        <asp:DropDownList ID="DropDownListIgw" runat="server"
-                             Enabled="False">
-                        </asp:DropDownList>
-
-                    </div>--%>
-                    &nbsp;&nbsp;
-
-                <div style="width: 750px; padding-left: 28px;">
-
-                    <span style="width: 300px; padding-left: 127px;">&nbsp;</span>
-
-                    <span style="width: 50px; padding-left: 100px;">&nbsp;</span>
-
+                </div>
+                <div style="float: left; height: 25px; min-width: 1250px;">
+                    <div style="float: left;">
+                        View by In Route: 
+                        <asp:CheckBox ID="CheckBoxInRoute" runat="server" AutoPostBack="True" 
+                            OnCheckedChanged="CheckBoxInRoute_OnCheckedChanged" Checked="False" />
+                        <asp:DropDownList ID="DropDownListInRoute" runat="server" Enabled="False" />
+                    </div>
+                    <div style="float: left;">&nbsp;
+                        View by Out Route: 
+                        <asp:CheckBox ID="CheckBoxOutRoute" runat="server" AutoPostBack="True" 
+                            OnCheckedChanged="CheckBoxOutRoute_OnCheckedChanged" Checked="False" />
+                        <asp:DropDownList ID="DropDownListOutRoute" runat="server" Enabled="False" />
+                    </div>
+                    <div style="float: left;">&nbsp;
+                        <asp:CheckBox ID="CheckBoxMatchedCustomerPrefix" runat="server" AutoPostBack="false" Checked="false" Text="View By Customer Prefix" />
+                    </div>
+                    <div style="float: left;">&nbsp;
+                        <asp:CheckBox ID="CheckBoxMatchedSupplierPrefix" runat="server" AutoPostBack="false" Checked="false" Text="View By Supplier Prefix" />
+                    </div>
 
                 </div>
-
-                </div>
-
             </div>
         </div>
         <%--End Div Partner***************************************************--%>
@@ -540,7 +552,9 @@
                     <Columns>
                         <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" ItemStyle-Wrap="false" />
                         <asp:BoundField DataField="In Partner" HeaderText="In Partner" SortExpression="In Partner" />
+                        <asp:BoundField DataField="In Route" HeaderText="In Route" SortExpression="In Route" />
                         <asp:BoundField DataField="Out Partner" HeaderText="Out Partner" SortExpression="Out Partner" />
+                        <asp:BoundField DataField="Out Route" HeaderText="Out Route" SortExpression="Out Route" />
                         <asp:BoundField DataField="tup_matchedprefixcustomer" HeaderText="Customer Prefix" SortExpression="tup_matchedprefixcustomer" />
                         <asp:BoundField DataField="tup_matchedprefixsupplier" HeaderText="Supplier Prefix" SortExpression="tup_matchedprefixsupplier" />
 

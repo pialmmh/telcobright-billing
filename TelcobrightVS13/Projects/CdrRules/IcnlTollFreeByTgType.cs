@@ -28,10 +28,7 @@ namespace CdrRules
         {
             if (this.IsPrepared == false)
                 throw new Exception("Rule is not prepared, method Prepare needs to be called first.");
-            ValueTuple<int, string> key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
-            route inRoute = null;
-            this.SwitchWiseRoutes.TryGetValue(key, out inRoute);
-            key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.OutgoingRoute);
+            ValueTuple<int, string> key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.OutgoingRoute);
             route outRoute = null;
             this.SwitchWiseRoutes.TryGetValue(key, out outRoute);
             if (outRoute != null)

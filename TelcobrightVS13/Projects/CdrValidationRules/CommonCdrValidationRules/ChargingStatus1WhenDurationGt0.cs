@@ -23,7 +23,8 @@ namespace CdrValidationRules
         {
             if (this.IsPrepared == false)
                 throw new Exception("Rule is not prepared, method Prepare must be called first.");
-            return obj.DurationSec > 0 ? obj.ChargingStatus == 1 : obj.ChargingStatus == 0;
+            return obj.DurationSec > 0 ? obj.ChargingStatus == 1 
+                : (obj.ChargingStatus == 0 || obj.ChargingStatus == 1);
         }
     }
 }

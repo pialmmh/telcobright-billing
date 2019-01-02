@@ -83,6 +83,9 @@ namespace ReportGenerator.Reports.InvoiceReports.ICX
         private List<InvoiceSectionDataRowForA2ZVoice> GetReportData(invoice invoice)
         {
             invoice_item invoiceItem = invoice.invoice_item.Single();
+            Dictionary<string, string> invoiceMap =
+                JsonConvert.DeserializeObject<Dictionary<string, string>>(invoiceItem.JSON_DETAIL);
+            decimal usdRate = Convert.ToDecimal(invoiceMap.Where(x => x.Key == "usdRate").Select(x => x.Value).Single());
             InvoiceSectionDataRetriever<InvoiceSectionDataRowForA2ZVoice> sectionDataRetriever =
                 new InvoiceSectionDataRetriever<InvoiceSectionDataRowForA2ZVoice>();
             List<InvoiceSectionDataRowForA2ZVoice> sectionData =
@@ -90,6 +93,7 @@ namespace ReportGenerator.Reports.InvoiceReports.ICX
             foreach (InvoiceSectionDataRowForA2ZVoice item in sectionData)
             {
                 item.Reference = invoiceItem.PRODUCT_ID;
+                item.YAmount = item.YAmount * usdRate;
             }
             return sectionData;
         }

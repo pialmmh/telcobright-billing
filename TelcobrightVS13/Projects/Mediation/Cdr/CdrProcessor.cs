@@ -80,7 +80,17 @@ namespace TelcobrightMediation
                 {
                     try
                     {
-                        ResetMediationStatus(cdrExt.Cdr);
+                        cdr thisCdr = cdrExt.Cdr;
+                        ResetMediationStatus(thisCdr);
+                        foreach (var serviceGroupPreProcessor in
+                            this.MediationContext.MefServiceGroupContainer.ServiceGroupPreProcessors.Values)
+                        {
+                            if (this.CdrJobContext.MediationContext.Tbc.CdrSetting
+                                .ServiceGroupPreProcessingRules.Any())
+                            {
+                                serviceGroupPreProcessor.Execute(thisCdr, this);
+                            }
+                        }
                         IServiceGroup serviceGroup = null;
                         ServiceGroupConfiguration serviceGroupConfiguration = null;
                         if (this.SkipServiceGroupRules == true)
@@ -95,7 +105,19 @@ namespace TelcobrightMediation
 
                         if (serviceGroup != null)
                         {
-                            var allPartnersFound = ExecutePartnerRules(cdrExt, serviceGroupConfiguration);
+                            bool allPartnersFound = false;
+                            if (serviceGroupConfiguration.PartnerRules.Any())
+                            {
+                                allPartnersFound = FindPartnersByPartnerRules(cdrExt, serviceGroupConfiguration);
+                            }
+                            else
+                            {
+                                if (serviceGroupConfiguration.InPartnerFirstMatchRules.Any()
+                                    || serviceGroupConfiguration.OutPartnerFirstMatchRules.Any())
+                                {
+                                    allPartnersFound = FindPartnersByFirstMatchRules(cdrExt, serviceGroupConfiguration);
+                                }
+                            }
                             if (allPartnersFound)
                             {
                                 ExecuteRating(serviceGroupConfiguration, serviceGroupConfiguration.Ratingtrules,
@@ -128,24 +150,65 @@ namespace TelcobrightMediation
             this.CollectionResult.CollectionResultProcessingState = CollectionResultProcessingState.AfterMediation;
         }
 
-        private bool ExecutePartnerRules(CdrExt cdrExt, ServiceGroupConfiguration serviceGroupConfiguration)
+        private bool FindPartnersByPartnerRules(CdrExt cdrExt, ServiceGroupConfiguration serviceGroupConfiguration)
         {
+            bool allPartnersFound = true;
             foreach (var idPartnerRule in serviceGroupConfiguration.PartnerRules
                 .Where(r => !this.PartnerRulesToSkip.Contains(r)))
             {
-                IPartnerRule partnerRule = null;
-                this.CdrJobContext.MediationContext.MefPartnerRuleContainer.DicExtensions.TryGetValue(idPartnerRule,
-                    out partnerRule);
-                if (partnerRule == null) return false;
+                var partnerRule = GefMefPartnerRule(idPartnerRule);
                 if (partnerRule.Execute(cdrExt.Cdr,
                         this.CdrJobContext.MediationContext.MefPartnerRuleContainer) <= 0)
                 {
                     return false;
                 }
             }
-            return true;
+            return allPartnersFound;
         }
-
+        private bool FindPartnersByFirstMatchRules(CdrExt cdrExt, ServiceGroupConfiguration serviceGroupConfiguration)
+        {
+            bool allPartnersFound = true;
+            Func<List<int>, bool> firstMatchRulesMatcher = rules =>
+            {
+                bool match = false;
+                foreach (var idPartnerRule in rules)
+                {
+                    var partnerRule = GefMefPartnerRule(idPartnerRule);
+                    if (partnerRule.Execute(cdrExt.Cdr,
+                            this.CdrJobContext.MediationContext.MefPartnerRuleContainer) > 0)
+                    {
+                        match = true;
+                        break;
+                    }
+                    else//todo: remote
+                    {
+                        var x = false;
+                    }
+                }
+                return match;
+            };
+            if (serviceGroupConfiguration.InPartnerFirstMatchRules.Any())
+            {
+                allPartnersFound = firstMatchRulesMatcher(serviceGroupConfiguration.InPartnerFirstMatchRules);
+                if (allPartnersFound == false) return false;
+            }
+            
+            if (serviceGroupConfiguration.OutPartnerFirstMatchRules.Any())
+            {
+                allPartnersFound = firstMatchRulesMatcher(serviceGroupConfiguration.OutPartnerFirstMatchRules);
+                if (allPartnersFound == false) return false;
+            }
+            return allPartnersFound;
+        }
+        IPartnerRule GefMefPartnerRule(int idRule)
+        {
+            IPartnerRule rule = null;
+            this.CdrJobContext.MediationContext.MefPartnerRuleContainer.DicExtensions.TryGetValue(idRule,
+                out rule);
+            if (rule == null)
+                throw new Exception("Partnerrule with id=" + idRule + "not found.");
+            return rule;
+        }
         public ParallelQuery<CdrExt> GenerateSummaries()
         {
             ParallelQuery<CdrExt> parallelCdrs = this.CollectionResult.ProcessedCdrExts.AsParallel();

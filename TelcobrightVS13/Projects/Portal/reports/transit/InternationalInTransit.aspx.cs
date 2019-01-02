@@ -48,6 +48,9 @@ public partial class InternationalInTransit : System.Web.UI.Page
                                 //groupInterval=="Hourly"?"tup_starttime":string.Empty,
                                 getInterval(groupInterval), 
                                 CheckBoxPartner.Checked==true?"tup_inpartnerid":string.Empty,
+                                CheckBoxOutPartner.Checked==true?"tup_outpartnerid":string.Empty,
+                                CheckBoxInRoute.Checked==true?"tup_incomingroute":string.Empty,
+                                CheckBoxOutRoute.Checked==true?"tup_outgoingroute":string.Empty,
                                 CheckBoxMatchedCustomerPrefix.Checked==true?"tup_matchedprefixcustomer":string.Empty,
                                 CheckBoxMatchedSupplierPrefix.Checked==true?"tup_matchedprefixsupplier":string.Empty,
                                 //CheckBoxShowByAns.Checked==true?"tup_destinationId":string.Empty,
@@ -56,6 +59,9 @@ public partial class InternationalInTransit : System.Web.UI.Page
                          new List<string>()
                             {
                                 CheckBoxPartner.Checked==true?DropDownListPartner.SelectedIndex>0?" tup_inpartnerid="+DropDownListPartner.SelectedValue:string.Empty:string.Empty,
+                                CheckBoxOutPartner.Checked==true?DropDownListOutPartner.SelectedIndex>0?" tup_outpartnerid="+DropDownListOutPartner.SelectedValue:string.Empty:string.Empty,
+                                CheckBoxInRoute.Checked==true?DropDownListInRoute.SelectedIndex>0?" tup_incomingroute='"+DropDownListInRoute.SelectedValue+"'":string.Empty:string.Empty,
+                                CheckBoxOutRoute.Checked==true?DropDownListOutRoute.SelectedIndex>0?" tup_outpartnerid='"+DropDownListOutRoute.SelectedValue+"'":string.Empty:string.Empty,
                                 //CheckBoxShowByAns.Checked==true?DropDownListAns.SelectedIndex>0?" tup_destinationId="+DropDownListAns.SelectedValue:string.Empty:string.Empty,
                                 //CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_outpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty
                             }).getSQLString();
@@ -128,9 +134,9 @@ public partial class InternationalInTransit : System.Web.UI.Page
         //else GridView1.Columns[3].Visible = false;
         if (CheckBoxMatchedCustomerPrefix.Checked)
         {
-            GridView1.Columns[3].Visible = true;
+            GridView1.Columns[5].Visible = true;
         }
-        else GridView1.Columns[3].Visible = false;
+        else GridView1.Columns[5].Visible = false;
 
         //if (CheckBoxShowByIgw.Checked == true)
         //{
@@ -139,45 +145,62 @@ public partial class InternationalInTransit : System.Web.UI.Page
         //else GridView1.Columns[2].Visible = false;
         if (CheckBoxMatchedSupplierPrefix.Checked)
         {
-            GridView1.Columns[4].Visible = true;
+            GridView1.Columns[6].Visible = true;
         }
-        else GridView1.Columns[4].Visible = false;
+        else GridView1.Columns[6].Visible = false;
 
         if (CheckBoxPartner.Checked == true)
         {
             GridView1.Columns[1].Visible = true;
         }
         else GridView1.Columns[1].Visible = false;
+        if (CheckBoxInRoute.Checked == true)
+        {
+            GridView1.Columns[2].Visible = true;
+        }
+        else GridView1.Columns[2].Visible = false;
+
+        if (CheckBoxOutPartner.Checked == true)
+        {
+            GridView1.Columns[3].Visible = true;
+        }
+        else GridView1.Columns[3].Visible = false;
+        if (CheckBoxOutRoute.Checked == true)
+        {
+            GridView1.Columns[4].Visible = true;
+        }
+        else GridView1.Columns[4].Visible = false;
+
         if (CheckBoxShowCost.Checked == true)
         {
-            GridView1.Columns[10].Visible = true;
-            GridView1.Columns[11].Visible = true;
             GridView1.Columns[12].Visible = true;
+            GridView1.Columns[13].Visible = true;
+            GridView1.Columns[14].Visible = true;
         }
         else
         {
-            GridView1.Columns[10].Visible = false;
-            GridView1.Columns[11].Visible = false;
             GridView1.Columns[12].Visible = false;
+            GridView1.Columns[13].Visible = false;
+            GridView1.Columns[14].Visible = false;
         }
         if (CheckBoxShowPerformance.Checked == true)
         {
-            GridView1.Columns[13].Visible = true;
-            GridView1.Columns[14].Visible = true;
             GridView1.Columns[15].Visible = true;
             GridView1.Columns[16].Visible = true;
             GridView1.Columns[17].Visible = true;
             GridView1.Columns[18].Visible = true;
+            GridView1.Columns[19].Visible = true;
+            GridView1.Columns[20].Visible = true;
 
         }
         else
         {
-            GridView1.Columns[13].Visible = false;
-            GridView1.Columns[14].Visible = false;
             GridView1.Columns[15].Visible = false;
             GridView1.Columns[16].Visible = false;
             GridView1.Columns[17].Visible = false;
             GridView1.Columns[18].Visible = false;
+            GridView1.Columns[19].Visible = false;
+            GridView1.Columns[20].Visible = false;
 
         }
         //make profit invisible, it's useless
@@ -639,5 +662,32 @@ public partial class InternationalInTransit : System.Web.UI.Page
             }
         }
 
+    }
+
+    protected void CheckBoxOutPartner_OnCheckedChanged(object sender, EventArgs e)
+    {
+        if (CheckBoxOutPartner.Checked == true)
+        {
+            DropDownListOutPartner.Enabled = true;
+        }
+        else DropDownListOutPartner.Enabled = false;
+    }
+
+    protected void CheckBoxInRoute_OnCheckedChanged(object sender, EventArgs e)
+    {
+        if (CheckBoxInRoute.Checked == true)
+        {
+            DropDownListInRoute.Enabled = true;
+        }
+        else DropDownListInRoute.Enabled = false;
+    }
+
+    protected void CheckBoxOutRoute_OnCheckedChanged(object sender, EventArgs e)
+    {
+        if (CheckBoxOutRoute.Checked == true)
+        {
+            DropDownListOutRoute.Enabled = true;
+        }
+        else DropDownListOutRoute.Enabled = false;
     }
 }

@@ -31,6 +31,7 @@ namespace InstallConfig
                 RouteTypeEnums = new Dictionary<string, int>()
                 {
                     {"Select",-1 },
+                    { "National",1},
                     { "International",2},
                 },
                 PortalSites = new List<InternetSite>()
@@ -70,6 +71,7 @@ namespace InstallConfig
                                 FieldTemplateName="Basic",
                                 Fields=new List<string>()
                                 {
+                                    "IdCall as `IdCall`",
                                     "starttime as `Start Time`",
                                     "AnswerTime as `Answer Time`",
                                     "endtime as `End Time`",
@@ -102,6 +104,7 @@ namespace InstallConfig
                                 FieldTemplateName="Basic_Error",
                                 Fields=new List<string>()
                                 {
+                                    "IdCall as `IdCall`",
                                     "c.errorcode as `Error Code`",
                                     "starttime as `Start Time`",
                                     "AnswerTime as `Answer Time`",
@@ -151,22 +154,22 @@ namespace InstallConfig
                         {
                             "CheckBoxShowCost.Enabled=true",
                             "CheckBoxShowCost.Checked=true",
-                            "GridView1.Columns[7].Visible=true",//actual duration
-                            "GridView1.Columns[8].Visible=true",//duration1
-                            "GridView1.Columns[9].Visible=true",//Connect count
-                            "GridView1.Columns[16].Visible=true",//CCR
-                            "GridView1.Columns[17].Visible=false",//Connect count by cc
-                            "GridView1.Columns[18].Visible=false",//CCR by cc
+                            "GridView1.Columns[9].Visible=true",//actual duration
+                            "GridView1.Columns[10].Visible=true",//duration1
+                            "GridView1.Columns[11].Visible=true",//Connect count
+                            "GridView1.Columns[18].Visible=true",//CCR
+                            "GridView1.Columns[19].Visible=false",//Connect count by cc
+                            "GridView1.Columns[20].Visible=false",//CCR by cc
                         },
                         SpringExpressionIfNotRole = new List<string>()
                         {
                             "CheckBoxShowCost.Enabled=false",
-                            "GridView1.Columns[7].Visible=true",//Connect count
-                            "GridView1.Columns[8].Visible=false",
-                            "GridView1.Columns[9].Visible=false",
-                            "GridView1.Columns[16].Visible=true",//CCR
-                            "GridView1.Columns[17].Visible=false",//Connect count by cc
-                            "GridView1.Columns[18].Visible=false",//CCR by cc
+                            "GridView1.Columns[9].Visible=true",//Connect count
+                            "GridView1.Columns[10].Visible=false",
+                            "GridView1.Columns[11].Visible=false",
+                            "GridView1.Columns[18].Visible=true",//CCR
+                            "GridView1.Columns[19].Visible=false",//Connect count by cc
+                            "GridView1.Columns[20].Visible=false",//CCR by cc
                         }
                     }
                 }
@@ -314,7 +317,7 @@ namespace InstallConfig
                     { "~/reports/transit/LocalTollFree.aspx",//settings for report pages
                         settingIntlIn
                     },
-                    { "~/reports/transit/LocalTollFreePremium.aspx",//settings for report pages
+                    { "~/reports/transit/AlphatechPremium.aspx",//settings for report pages
                         settingIntlIn
                     },
                 },//dictionary of page settings

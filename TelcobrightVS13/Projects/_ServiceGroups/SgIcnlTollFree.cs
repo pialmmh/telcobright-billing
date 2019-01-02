@@ -62,15 +62,12 @@ namespace TelcobrightMediation
         public void Execute(cdr cdr, CdrProcessor cdrProcessor)
         {
             var dicRoutes = cdrProcessor.CdrJobContext.MediationContext.MefServiceGroupContainer.SwitchWiseRoutes;
-            var key = new ValueTuple<int, string>(cdr.SwitchId, cdr.IncomingRoute);
-            route incomingRoute = null;
-            dicRoutes.TryGetValue(key, out incomingRoute);
-            route outgoingRoute = null;
+            var key = new ValueTuple<int, string>(cdr.SwitchId, cdr.OutgoingRoute);
+                        route outgoingRoute = null;
             dicRoutes.TryGetValue(key, out outgoingRoute);
             if (outgoingRoute != null)
             {
-                if (incomingRoute.NationalOrInternational== RouteLocalityType.International && 
-                    outgoingRoute.NationalOrInternational == RouteLocalityType.TollFree)
+                if (outgoingRoute.NationalOrInternational == RouteLocalityType.National)
                 {
                     foreach (string prefix in this.PrefixesOrderedByMaxLenFirst)
                     {
@@ -110,7 +107,7 @@ namespace TelcobrightMediation
         {
             Dictionary<string, string> jobParamsMap = invoiceGenerationInputData.JsonDetail;
             invoiceGenerationInputData.JsonDetail = jobParamsMap;
-            invoiceGenerationInputData.JsonDetail.Add("vat", ".15");//todo: for now harcode
+            invoiceGenerationInputData.JsonDetail.Add("vat", "0");//todo: for now harcode
             return invoiceGenerationInputData;
         }
 

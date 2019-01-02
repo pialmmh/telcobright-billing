@@ -1,5 +1,5 @@
 ﻿<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="True"
-    CodeBehind="LocalTransit.aspx.cs" Inherits="LocalTransit" %>
+    CodeBehind="AlphatechPremium.aspx.cs" Inherits="AlphatechPremium" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Import Namespace="MediationModel" %>
 <%@ Import Namespace="TelcobrightMediation" %>
@@ -166,7 +166,7 @@
 
                 if (lblScreenTitle.Text == "")
                 {
-                    lblScreenTitle.Text = "Reports/Local/Traffic";
+                    lblScreenTitle.Text = "Reports/Local/Alphatech Premium";
                 }
                 //End of Site Map Part *******************************************************************
 

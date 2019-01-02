@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Accounting.Invoice;
 using TelcobrightMediation.Cdr;
+using TelcobrightMediation.Rating;
 using TransactionTuple = System.ValueTuple<int, int, long, int, long>;
 
 namespace TelcobrightMediation
@@ -51,12 +52,12 @@ namespace TelcobrightMediation
         public void Execute(cdr thisCdr, CdrProcessor cdrProcessor)
         {
             var atleastOneFalse = this.CdrRules.Any(r => r.CheckIfTrue(thisCdr) == false);
-            if (atleastOneFalse==false)
+            if (atleastOneFalse == false)
             {
                 thisCdr.ServiceGroup = this.Id;
             }
         }
-
+        
         public void SetServiceGroupWiseSummaryParams(CdrExt cdrExt, AbstractCdrSummary newSummary)
         {
             //this._sgIntlTransitVoice.SetServiceGroupWiseSummaryParams(cdrExt, newSummary);
@@ -84,7 +85,7 @@ namespace TelcobrightMediation
         {
             Dictionary<string, string> jobParamsMap = invoiceGenerationInputData.JsonDetail;
             invoiceGenerationInputData.JsonDetail = jobParamsMap;
-            invoiceGenerationInputData.JsonDetail.Add("vat",".15");//todo: for now harcode
+            invoiceGenerationInputData.JsonDetail.Add("vat","0");//todo: for now harcode
             return invoiceGenerationInputData;
         }
 

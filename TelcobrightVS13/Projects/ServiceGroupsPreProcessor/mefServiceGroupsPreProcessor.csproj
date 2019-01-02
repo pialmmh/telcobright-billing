@@ -5,11 +5,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D9FFC405-8711-4288-ADF7-7144475CD5EC}</ProjectGuid>
+    <ProjectGuid>{E38E73FA-0774-4647-B317-B22D7DDD03CC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ServiceGroups</RootNamespace>
-    <AssemblyName>ServiceGroups</AssemblyName>
+    <RootNamespace>ServiceGroupPreProcessor</RootNamespace>
+    <AssemblyName>ServiceGroupPreProcessor</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -63,18 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SgIcnlIntlIncoming.cs" />
-    <Compile Include="SgIcnlOutgoing.cs" />
-    <Compile Include="SgIcnlLocal.cs" />
-    <Compile Include="SgIcnlAlphaPremium.cs" />
-    <Compile Include="SgIcnlTollFree.cs" />
-    <Compile Include="SgLtfsIcx.cs" />
-    <Compile Include="SgIntlTransitVoice.cs" />
-    <Compile Include="SgDomesticIcx.cs" />
-    <Compile Include="SgIntlInIcx.cs" />
-    <Compile Include="SgIntlInIgw.cs" />
-    <Compile Include="SgIntlOutIcx.cs" />
-    <Compile Include="SgIntlOutIGw.cs" />
+    <Compile Include="SgpCopyOrigCallToRedirect.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LibraryExtensions\LibraryExtensions.csproj">

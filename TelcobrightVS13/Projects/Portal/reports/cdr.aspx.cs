@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Globalization;
@@ -16,6 +17,12 @@ using DocumentFormat.OpenXml.Drawing;
 using MediationModel;
 using PortalApp;
 using System.IO;
+using DevExpress.Utils;
+using DevExpress.Web;
+using DevExpress.Web.Data;
+using DevExpress.Xpo;
+using LibraryExtensions;
+
 public partial class ConfigCdr : Page
 {
 
@@ -168,7 +175,7 @@ public partial class ConfigCdr : Page
             string database = connection.Database.ToString();
             List<ne> lstSwitch;
             TelcobrightConfig tbc = PortalApp.PageUtil.GetTelcobrightConfig();
-            ServiceGroupComposer serviceGroupComposer=new ServiceGroupComposer();
+            ServiceGroupComposer serviceGroupComposer = new ServiceGroupComposer();
             serviceGroupComposer.ComposeFromPath(PageUtil.GetPortalBinPath() +
                                                  System.IO.Path.DirectorySeparatorChar + ".." +
                                                  System.IO.Path.DirectorySeparatorChar + "Extensions");
@@ -196,7 +203,8 @@ public partial class ConfigCdr : Page
                     if (serviceGroups.ContainsKey(kv.Key))
                     {
                         string serviceGroupName = serviceGroups[kv.Key].RuleName;
-                        this.DropDownListServiceGroup.Items.Add(new ListItem(serviceGroupName,serviceGroups[kv.Key].Id.ToString()));
+                        this.DropDownListServiceGroup.Items.Add(new ListItem(serviceGroupName,
+                            serviceGroups[kv.Key].Id.ToString()));
                     }
                 }
             }
@@ -212,9 +220,9 @@ public partial class ConfigCdr : Page
             PopulatePartner(switchId, 0);
             PopulatePartner(switchId, 1);
 
-            PopulateRoute(0,-1, 0);
-            PopulateRoute(0,-1, 1);
-            
+            PopulateRoute(0, -1, 0);
+            PopulateRoute(0, -1, 1);
+
             this.DropDownListFieldList.Items.Clear();
             // deserialize JSON directly from a file
             var fieldTemplates = (List<CdrFieldTemplate>) tbc.PortalSettings.DicConfigObjects["CdrFieldTemplate"];
@@ -231,7 +239,7 @@ public partial class ConfigCdr : Page
             this.Session["cdrfieldtemplate"] = fieldTemplates;
 
 
-        }//if !postback
+        } //if !postback
     }
 
     void PopulatePartner(int switchId,int inOrOut)
@@ -583,6 +591,11 @@ public partial class ConfigCdr : Page
 
         }
         // int cccnnntt = dtTable2.Rows.Count;
+
+        this.Session["dtCDR"] = _dt;
+        this.gridViewDx.DataBind();
+
+/*
         this.gridView.DataSource = this._dt;// dtSet;
         this.gridView.AllowPaging = true;
         if (this._dt.Rows.Count > 1)
@@ -597,7 +610,7 @@ public partial class ConfigCdr : Page
         this._totalNumRowsTemp = this._totalNumRows;
         //_gridActiveIndexTemp = gridactiveindex;
         SetPaging1(this.gridView);
-
+*/
     }
 
 
@@ -869,5 +882,103 @@ public partial class ConfigCdr : Page
     protected void gridView_DataBound(object sender, EventArgs e)
     {
         
+    }
+
+    protected void gridViewDx_OnCustomColumnDisplayText(object sender, ASPxGridViewColumnDisplayTextEventArgs e)
+    {
+        if (e.Column.GetType() == typeof(GridViewDataDateColumn))
+        {
+            ((GridViewDataDateColumn)e.Column).PropertiesDateEdit.DisplayFormatString = "yyyy-MM-dd HH:mm:ss";
+        }
+    }
+
+    protected void gridViewDx_OnDataBound(object sender, EventArgs e)
+    {
+        ASPxGridView grid = sender as ASPxGridView;
+        foreach (var c in grid.Columns)
+        {
+            if (c.GetType() != typeof(GridViewCommandColumn))
+            {
+                switch (((GridViewDataColumn)c).FieldName)
+                {
+                    case "Ingress Calling Number":
+                    case "Ingress Called Number":
+                    case "Egress Calling Number":
+                    case "Egress Called Number":
+                    case "Duration1":
+                    case "Duration2":
+                    case "Duration3":
+                        break;
+                    default:
+                        ((GridViewDataColumn)c).EditFormSettings.Visible = DefaultBoolean.False;
+                        break;
+                }
+            }
+        }
+        if (grid.Columns.IndexOf(grid.Columns["CommandColumn"]) != -1)
+            return;
+        GridViewCommandColumn col = new GridViewCommandColumn();
+        col.Name = "CommandColumn";
+        col.ShowEditButton = true;
+        col.VisibleIndex = 0;
+        grid.Columns.Insert(0, col);
+
+    }
+
+    protected void gridViewDx_OnDataBinding(object sender, EventArgs e)
+    {
+        //BindingList<partner> _data = new BindingList<partner>();
+        //_data.Add(new partner()
+        //{
+        //    idPartner = 1,
+        //    PartnerName = "First Partner"
+        //});
+        this._dt = (DataTable)this.Session["dtCDR"];
+        this.gridViewDx.DataSource = this._dt;
+    }
+
+    protected void gridViewDx_OnCellEditorInitialize(object sender, ASPxGridViewEditorEventArgs e)
+    {
+        if (e.Column.GetType() == typeof(GridViewDataDateColumn))
+        {
+            (e.Column.PropertiesEdit as DateEditProperties).DisplayFormatString = "yyyy-MM-dd HH:mm:ss";
+            (e.Column.PropertiesEdit as DateEditProperties).EditFormatString = "yyyy-MM-dd HH:mm:ss";
+            (e.Column.PropertiesEdit as DateEditProperties).TimeSectionProperties.Visible = true;
+        }
+    }
+
+    protected void gridViewDx_OnRowUpdating(object sender, ASPxDataUpdatingEventArgs e)
+    {
+        string sourceTable = this.DropDownListSource.SelectedIndex == 0 ? "cdr " : "cdrerror ";
+        var cdrFieldTemplates = (List<CdrFieldTemplate>)this.Session["cdrfieldtemplate"];
+        CdrFieldTemplate selectedTemplate = cdrFieldTemplates.Where(c => c.FieldTemplateName == this.DropDownListFieldList.SelectedValue).First();
+
+        using (MySqlConnection connection = new MySqlConnection())
+        {
+            connection.ConnectionString = ConfigurationManager.ConnectionStrings["reader"].ConnectionString;
+            connection.Open();
+            MySqlCommand cmd = new MySqlCommand();
+            cmd.Connection = connection;
+
+            string strUpdateCmd = "update " + sourceTable + "set ";
+            foreach (string key in e.NewValues.Keys)
+            {
+                string colName = selectedTemplate.Fields.First(x => x.Contains(key)).Split(new string[] { " as " }, StringSplitOptions.None).First().Trim();
+                if (e.NewValues[key] != null)
+                    strUpdateCmd += colName + " = '" + e.NewValues[key] + "', ";
+                else
+                    strUpdateCmd += colName + " = null, ";
+            }
+            strUpdateCmd = strUpdateCmd.Substring(0, strUpdateCmd.Length - 2);
+            int editingRowVisibleIndex = gridViewDx.EditingRowVisibleIndex;
+            DateTime starttime = (DateTime) gridViewDx.GetRowValues(editingRowVisibleIndex, "Start Time");
+            strUpdateCmd += " where IdCall = " + e.Keys["IdCall"] + " and StartTime = " + starttime.ToMySqlField() + "";
+            cmd.CommandText = strUpdateCmd;
+            cmd.ExecuteNonQuery();
+            gridViewDx.CancelEdit();
+            e.Cancel = true;
+        }
+
+        ButtonFind_Click(ButtonFind, EventArgs.Empty);
     }
 }
