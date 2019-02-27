@@ -469,7 +469,7 @@ namespace RateSheetFormat
                     ////concat country+prefix for tata
                     foreach (ratetask rTask in lstTask)
                     {
-                        rTask.Prefix = rTask.CountryCode + rTask.Prefix;
+                        //rTask.Prefix = rTask.CountryCode + rTask.Prefix;
                     }
                 }
 
