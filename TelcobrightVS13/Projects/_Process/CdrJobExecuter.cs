@@ -62,6 +62,7 @@ namespace Process
                                         Console.WriteLine("Processing CdrJob for Switch:" + ne.SwitchName + ", JobName:" + telcobrightJob.JobName);
                                         try  
                                         {
+                                            if (cmd.Connection.State != ConnectionState.Open) cmd.Connection.Open();
                                             cmd.ExecuteCommandText("set autocommit=0;");
                                             ITelcobrightJob iJob = null;
                                             mediationContext.MefJobContainer.DicExtensionsIdJobWise.TryGetValue(
@@ -77,6 +78,7 @@ namespace Process
                                         {
                                             try
                                             {
+                                                if (cmd.Connection.State != ConnectionState.Open) cmd.Connection.Open();
                                                 cmd.ExecuteCommandText(" rollback; ");
                                                 bool cacheLimitExceeded = RateCacheCleaner.CheckAndClearRateCache(mediationContext, e);
                                                 if (cacheLimitExceeded) continue;
