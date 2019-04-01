@@ -49,7 +49,14 @@ namespace InstallConfig
                 ValidationRulesForInconsistentCdrs = inconsistentCdrValRulesGen.GetRules(),
                 ServiceGroupConfigurations = this.GetServiceGroupConfigurations(),
                 DisableCdrPostProcessingJobCreationForAutomation = false,
-                DisableParallelMediation = false
+                DisableParallelMediation = false,
+                FileSplitSetting = new FileSplitSetting()
+                {
+                    FileSplitType = "byte",
+                    BytesPerRecord = 559,
+                    MaxRecordsInSingleFile = 30000,
+                    SplitFileIfSizeBiggerThanMbyte = 559*30000
+                }
             };
 
             this.PrepareDirectorySettings(this.Tbc);

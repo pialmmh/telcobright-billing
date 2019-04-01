@@ -28,6 +28,7 @@ namespace TelcobrightMediation
         public bool DisableCdrPostProcessingJobCreationForAutomation { get; set; }
         public bool DisableParallelMediation { get; set; }
         public bool EnableTgCreationForAns { get; set; }
+        public FileSplitSetting FileSplitSetting { get; set; } = null;
         public CdrSetting()
         {
             this.NerCalculationRule = "NerByCauseCode";

@@ -43,16 +43,21 @@ namespace TelcobrightMediation
                 }
             }
         }
-        public List<string> GetFileList()
+
+        public List<FileInfo> GetFileListLocal()
+        {
+            Dictionary<string, FileInfo> fileNames = new Dictionary<string, FileInfo>();
+            List<FileInfo> localFiles = this.LocalLocation.GetLocalFilesNonRecursive();
+            return localFiles;
+            //foreach (FileInfo lf in localFiles)
+            //{
+            //    fileNames.Add(lf.Name, lf);
+            //}
+            //return fileNames; //already sorted because dic key
+        }
+        public List<string> GetFileListRemote()
         {
             Dictionary<string, string> fileNames = new Dictionary<string, string>();
-            List<FileInfo> localFiles = this.LocalLocation.GetLocalFilesNonRecursive();
-
-            foreach (FileInfo lf in localFiles)
-            {
-                fileNames.Add(lf.Name, "");
-            }
-
             foreach (SyncLocation rsl in this.RemoteFtpLocations.Where(c => c.FileLocation.Skip == false).ToList())
             {
                 try
@@ -69,11 +74,11 @@ namespace TelcobrightMediation
                 catch (Exception e1)
                 {
                     Console.WriteLine(e1);
-                    ErrorWriter wr = new ErrorWriter(e1, "GetFileListFromInsideClassVault",null,"", this.Tbc.DatabaseSetting.DatabaseName);
+                    ErrorWriter wr = new ErrorWriter(e1, "GetFileListFromInsideClassVault", null, "",
+                        this.Tbc.DatabaseSetting.DatabaseName);
                 }
             }
-            return fileNames.Keys.ToList();//already sorted because dic key
-
+            return fileNames.Keys.ToList(); //already sorted because dic key
         }
         public string GetSingleFile(FileSyncInfo localInfo)
         {

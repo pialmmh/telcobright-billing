@@ -92,6 +92,7 @@
     <Compile Include="ExecutablePathFinder.cs" />
     <Compile Include="FileAndPathHelper.cs" />
     <Compile Include="CommonDbClientExtensions.cs" />
+    <Compile Include="FileSplitter.cs" />
     <Compile Include="JsonCompressor.cs" />
     <Compile Include="JsonHelper.cs" />
     <Compile Include="LargeList.cs" />
