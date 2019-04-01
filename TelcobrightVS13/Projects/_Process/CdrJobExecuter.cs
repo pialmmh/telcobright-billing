@@ -32,6 +32,10 @@ namespace Process
         public string RuleName => this.GetType().ToString();
         public string HelpText => "Processes CDR";
         public int ProcessId => 103;
+        private void RestartProcess(IJobExecutionContext schedulerContext)
+        {
+            Execute(schedulerContext);
+        }
         public void Execute(IJobExecutionContext schedulerContext)
         {
             string operatorName = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");
@@ -44,14 +48,14 @@ namespace Process
                 {
                     context.Database.Connection.Open();
                     var mediationContext = new MediationContext(tbc,context);
-                    while (CheckIncomplete(context, mediationContext))
+                    while (CheckIncomplete(context))
                     {
                         tbc.GetPathIndependentApplicationDirectory();
                         foreach (ne ne in mediationContext.Nes.Values)
                         {
                             try
                             {
-                                if (ne.SkipCdrDecoded == 1 || CheckIncomplete(context, mediationContext, ne) == false)
+                                if (ne.SkipCdrDecoded == 1 || CheckIncomplete(context, ne) == false)
                                     continue;
                                 List<job> incompleteJobs = GetReProcessJobs(context, ne, ne.DecodingSpanCount);
                                 incompleteJobs.AddRange(GetNewCdrJobs(tbc,context, ne, ne.DecodingSpanCount)); //combine
@@ -62,7 +66,6 @@ namespace Process
                                         Console.WriteLine("Processing CdrJob for Switch:" + ne.SwitchName + ", JobName:" + telcobrightJob.JobName);
                                         try  
                                         {
-                                            if (cmd.Connection.State != ConnectionState.Open) cmd.Connection.Open();
                                             cmd.ExecuteCommandText("set autocommit=0;");
                                             ITelcobrightJob iJob = null;
                                             mediationContext.MefJobContainer.DicExtensionsIdJobWise.TryGetValue(
@@ -78,12 +81,11 @@ namespace Process
                                         {
                                             try
                                             {
-                                                if (cmd.Connection.State != ConnectionState.Open) cmd.Connection.Open();
                                                 cmd.ExecuteCommandText(" rollback; ");
                                                 bool cacheLimitExceeded = RateCacheCleaner.CheckAndClearRateCache(mediationContext, e);
-                                                if (cacheLimitExceeded) continue;
-                                                cacheLimitExceeded = RateCacheCleaner.ClearTempRateTable(e,cmd);
-                                                if (cacheLimitExceeded) continue;
+                                                //if (cacheLimitExceeded) continue;
+                                                cacheLimitExceeded = RateCacheCleaner.ClearTempRateTable(e, cmd);
+                                                //if (cacheLimitExceeded) continue;
                                                 PrintErrorMessageToConsole(ne, telcobrightJob, e);
                                                 ErrorWriter wr = new ErrorWriter(e, "ProcessCdr", telcobrightJob,
                                                     "CdrJob processing error.", tbc.DatabaseSetting.DatabaseName);
@@ -97,23 +99,25 @@ namespace Process
                                                         "Exception within catch block.",
                                                         tbc.DatabaseSetting.DatabaseName);
                                                 }
-                                                continue; //with next cdr or job
+                                                //continue; //with next cdr or job
+                                                RestartProcess(schedulerContext);
                                             }
                                             catch (Exception)
                                             {
                                                 //reaching here would be database problem
                                                 context.Database.Connection.Close();
+                                                RestartProcess(schedulerContext);
                                             }
                                         } //end catch
                                     } //for each job
                                 } //using mysql command
                             } //try for each NE
-
                             catch (Exception e1)
                             {
                                 Console.WriteLine(e1);
                                 ErrorWriter wr = new ErrorWriter(e1, "ProcessCdr", null, "NE:" + ne.idSwitch,tbc.DatabaseSetting.DatabaseName);
-                                continue; //with next switch
+                                RestartProcess(schedulerContext);
+                                //continue; //with next switch
                             }
                         } //for each NE
                     } //while
@@ -141,14 +145,14 @@ namespace Process
                                 + "' " +" where id=" + telcobrightJob.id+";commit;";
             cmd.ExecuteNonQuery();
         }
-        bool CheckIncomplete(PartnerEntities context, MediationContext mediationContext)
+        bool CheckIncomplete(PartnerEntities context)
         {
             List<int> idJobDefs = context.enumjobdefinitions.Where(c => c.JobQueue == this.ProcessId).Select(c => c.id)
                 .ToList();
             return context.jobs.Any(c => c.CompletionTime == null && idJobDefs.Contains(c.idjobdefinition));
         }
 
-        bool CheckIncomplete(PartnerEntities context, MediationContext mediationContext, ne ne)
+        bool CheckIncomplete(PartnerEntities context, ne ne)
         {
             List<int> idJobDefs = context.enumjobdefinitions.Where(c => c.JobQueue == this.ProcessId).Select(c => c.id).ToList();
             return context.jobs.Any(c => c.CompletionTime == null && idJobDefs.Contains(c.idjobdefinition)
