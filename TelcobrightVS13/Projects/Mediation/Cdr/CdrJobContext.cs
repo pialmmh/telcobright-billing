@@ -33,6 +33,7 @@ namespace TelcobrightMediation
 
     public class CdrJobContext
     {
+        private readonly object parallelDbCallLock = new object();
         public CdrJobInputData CdrjobInputData { get; }
         public MediationContext MediationContext => this.CdrjobInputData.MediationContext;
         public AccountingContext AccountingContext { get; }
@@ -70,20 +71,23 @@ namespace TelcobrightMediation
 
         private void PopulateRateCacheForDatesInvolved()
         {
-            this.DatesInvolved.ForEach(
-                            d =>
-                            {
-                                var rateCache = this.MediationContext.MefServiceFamilyContainer.RateCache;
-                                var dateRange = new DateRange(d.Date, d.AddDays(1));
-                                if (rateCache.DateRangeWiseRateDic.ContainsKey(dateRange) == false)
-                                {
-                                    Console.Write($"Populating ratecache for {d.ToString("yyyy-MM-dd")}...");
-                                    this.MediationContext.MefServiceFamilyContainer.RateCache
-                                        .PopulateDicByDay(dateRange, flagLcr: false, useInMemoryTable: true,
-                                            isCachingForMediation: true);
-                                    Console.WriteLine("FINISHED.");
-                                }
-                            });
+            //lock (parallelDbCallLock)
+            {
+                this.DatesInvolved.ForEach(
+                    d =>
+                    {
+                        var rateCache = this.MediationContext.MefServiceFamilyContainer.RateCache;
+                        var dateRange = new DateRange(d.Date, d.AddDays(1));
+                        if (rateCache.DateRangeWiseRateDic.ContainsKey(dateRange) == false)
+                        {
+                            Console.Write($"Populating ratecache for {d.ToString("yyyy-MM-dd")}...");
+                            this.MediationContext.MefServiceFamilyContainer.RateCache
+                                .PopulateDicByDay(dateRange, flagLcr: false, useInMemoryTable: true,
+                                    isCachingForMediation: true);
+                            Console.WriteLine("FINISHED.");
+                        }
+                    });
+            }
         }
 
         
