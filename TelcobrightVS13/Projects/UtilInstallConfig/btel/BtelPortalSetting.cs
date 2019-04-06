@@ -157,7 +157,7 @@ namespace InstallConfig
                             "GridView1.Columns[6].Visible=true",//Connect count
                             "GridView1.Columns[19].Visible=true",//CCR
                             "GridView1.Columns[20].Visible=false",//Connect count by cc
-                            "GridView1.Columns[21].Visible=false",//CCR by cc
+                            "GridView1.Columns[21].Visible=true",//CCR by cc
                         },
                         SpringExpressionIfNotRole = new List<string>()
                         {
@@ -168,7 +168,7 @@ namespace InstallConfig
                             "GridView1.Columns[8].HeaderText=Duration",
                             "GridView1.Columns[19].Visible=true",//CCR
                             "GridView1.Columns[20].Visible=false",//Connect count by cc
-                            "GridView1.Columns[21].Visible=false",//CCR by cc
+                            "GridView1.Columns[21].Visible=true",//CCR by cc
                         }
                     }
                 }
