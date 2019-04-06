@@ -221,7 +221,7 @@ namespace InstallConfig
                             "GridView1.Columns[12].Visible=true",//supplier duration
                             "GridView1.Columns[16].Visible=false",//CCR
                             "GridView1.Columns[17].Visible=false",//connect by cc
-                            "GridView1.Columns[18].Visible=false",//CCR by cc
+                            "GridView1.Columns[18].Visible=true",//CCR by cc
                         },
                         SpringExpressionIfNotRole = new List<string>()
                         {
@@ -231,7 +231,7 @@ namespace InstallConfig
                             "GridView1.Columns[12].Visible=false",//supplier duration
                             "GridView1.Columns[16].Visible=false",//CCR
                             "GridView1.Columns[17].Visible=false",//connect by cc
-                            "GridView1.Columns[18].Visible=false",//CCR by cc
+                            "GridView1.Columns[18].Visible=true",//CCR by cc
                         }
                     }
                 }
