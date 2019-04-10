@@ -91,14 +91,14 @@
 
                     DropDownListPartner.Items.Clear();
                     DropDownListPartner.Items.Add(new ListItem(" [All]", "-1"));
-                    foreach (partner p in IOSList)
+                    foreach (partner p in IOSList.OrderBy(x => x.PartnerName))
                     {
                         DropDownListPartner.Items.Add(new ListItem(p.PartnerName, p.idPartner.ToString()));
                     }
                     var ANSList = contex.partners.Where(c => c.PartnerType == 1).ToList();
                     DropDownListAns.Items.Clear();
                     DropDownListAns.Items.Add(new ListItem("[All]","-1"));
-                    foreach (partner p in ANSList)
+                    foreach (partner p in ANSList.OrderBy(x => x.PartnerName))
                     {
                         DropDownListAns.Items.Add(new ListItem(p.PartnerName, p.idPartner.ToString()));
                     }
@@ -106,7 +106,7 @@
                     var IGWList = contex.partners.Where(c => c.PartnerType == 2).ToList();
                     DropDownListIgw.Items.Clear();
                     DropDownListIgw.Items.Add(new ListItem("[All]", "-1"));
-                    foreach(partner p in IGWList)
+                    foreach(partner p in IGWList.OrderBy(x => x.PartnerName))
                     {
                         DropDownListIgw.Items.Add(new ListItem(p.PartnerName, p.idPartner.ToString()));
                     }

@@ -456,7 +456,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
 
                 DropDownListCountry.Items.Clear();
                 DropDownListCountry.Items.Add(new ListItem(" [All]", "-1"));
-                foreach (countrycode c in CountryList)
+                foreach (countrycode c in CountryList.OrderBy(x => x.Name))
                 {
                     DropDownListCountry.Items.Add(new ListItem(c.Name, c.Code.ToString()));
                 }
@@ -471,21 +471,21 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                 var ANSList = contex.partners.Where(p => p.PartnerType == 1).ToList();
                 DropDownListAns.Items.Clear();
                 DropDownListAns.Items.Add(new ListItem(" [All]", "-1"));
-                foreach (partner p in ANSList)
+                foreach (partner p in ANSList.OrderBy(x => x.PartnerName))
                 {
                     DropDownListAns.Items.Add(new ListItem(p.PartnerName, p.idPartner.ToString()));
                 }
                 var IOSList = contex.partners.Where(p => p.PartnerType == 2).ToList();
                 DropDownListIgw.Items.Clear();
                 DropDownListIgw.Items.Add(new ListItem(" [All]", "-1"));
-                foreach (partner p in IOSList)
+                foreach (partner p in IOSList.OrderBy(x => x.PartnerName))
                 {
                     DropDownListIgw.Items.Add(new ListItem(p.PartnerName, p.idPartner.ToString()));
                 }
                 var PartnerList = contex.partners.Where(p => p.PartnerType == 3).ToList();
                 DropDownListIntlCarier.Items.Clear();
                 DropDownListIntlCarier.Items.Add(new ListItem(" [All]", "-1"));
-                foreach (partner p in PartnerList)
+                foreach (partner p in PartnerList.OrderBy(x => x.PartnerName))
                 {
                     DropDownListIntlCarier.Items.Add(new ListItem(p.PartnerName, p.idPartner.ToString()));
                 }
