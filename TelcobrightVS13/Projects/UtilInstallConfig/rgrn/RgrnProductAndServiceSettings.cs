@@ -23,11 +23,7 @@ namespace InstallConfig
         {
             List<KeyValuePair<Regex, string>> serviceAliases = new List<KeyValuePair<Regex, string>>
             {
-                new KeyValuePair<Regex, string>(new Regex(@".*/sg20/.*/sf1/.*"), "Local"),
-                new KeyValuePair<Regex, string>(new Regex(@".*/sg21/.*/sf1/.*"), "International Out"),
-                new KeyValuePair<Regex, string>(new Regex(@".*/sg22/.*/sf1/.*"), "International In"),
-                new KeyValuePair<Regex, string>(new Regex(@".*/sg23/.*/sf5/.*"), "Toll-Free"),
-                new KeyValuePair<Regex, string>(new Regex(@".*/sg24/.*/sf1/.*"), "Alphatech Premium"),
+                new KeyValuePair<Regex, string>(new Regex(@".*/sg100/.*/sf1/.*"), "Transit"),
             };
             this.Tbc.ServiceAliasesRegex = serviceAliases;
         }

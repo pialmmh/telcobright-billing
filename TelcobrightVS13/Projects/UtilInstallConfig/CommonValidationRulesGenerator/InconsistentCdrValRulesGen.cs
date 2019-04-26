@@ -25,6 +25,7 @@ namespace InstallConfig._CommonValidation
                 new StrUniqueBillidNotEmpty(),
                 new StrSeqNumGreaterThanZero(),
                 new StrIncomingRouteNotEmpty(),
+                
                 new StrOriginatingCalledNumberNotEmpty(),
                 new StrDurationSecGtEq0(),
                 new StrStartTimeIsValidAndWithinLimit()

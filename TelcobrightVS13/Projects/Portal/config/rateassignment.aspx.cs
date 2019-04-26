@@ -33,11 +33,12 @@ using Excel = Microsoft.Office.Interop.Excel;
 
 public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Page
 {
-    Dictionary<long, billingruleassignment> dicBillRules = new Dictionary<long, billingruleassignment>();
+    Dictionary<int, billingruleassignment> dicBillRules = new Dictionary<int, billingruleassignment>();
 
 
     TelcobrightConfig Tbc = null;
     static List<BillingRule> billingRules;
+    private PartnerEntities Context = new PartnerEntities();
 
     public void populateDropDownForBillingRule()
     {
@@ -861,12 +862,11 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
         //applicabel for postback and initial load
 
         Tbc = PortalApp.PageUtil.GetTelcobrightConfig();
-        PartnerEntities Context = new PartnerEntities();
-        foreach (billingruleassignment ThisRule in Context.billingruleassignments)
+        foreach (billingruleassignment thisRule in Context.billingruleassignments)
         {
-            dicBillRules.Add(ThisRule.idRatePlanAssignmentTuple, ThisRule);
+            dicBillRules.Add(thisRule.idRatePlanAssignmentTuple, thisRule);
         }
-        Session["assign.sessdicBillRules"] = dicBillRules;
+        //Session["assign.sessdicBillRules"] = dicBillRules;
         if (IsPostBack)
         {
             //required for script manager, checking code delete existence
@@ -5431,7 +5431,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
 
             //Label TempLabel = (Label)e.Row.FindControl("lblservice");
             rateplanassignmenttuple thisTuple = null;
-            long tupleId = Convert.ToInt64(DataBinder.Eval(e.Row.DataItem, "prefix"));
+            int tupleId = Convert.ToInt32(DataBinder.Eval(e.Row.DataItem, "prefix"));
             long idservice = -1;
             if (dicTuple.TryGetValue(tupleId, out thisTuple))
             {
@@ -5489,6 +5489,11 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                 DropDownListBillingRule.Items.Add(new ListItem(jsb.RuleName, jsb.Id.ToString()));
             }
             billingruleassignment billingruleassignment = null;
+            dicBillRules = Context.billingruleassignments.ToDictionary(b => b.idRatePlanAssignmentTuple);
+            //foreach (billingruleassignment thisRule in Context.billingruleassignments)
+            //{
+            //    dicBillRules.Add(thisRule.idRatePlanAssignmentTuple, thisRule);
+            //}
             dicBillRules.TryGetValue(tupleId, out billingruleassignment);
             DropDownListBillingRule.SelectedValue = billingruleassignment.idBillingRule.ToString();
 

@@ -27,7 +27,7 @@ namespace InstallConfig
             int thisServerId = 1;
             this.OperatorName = "rgrn";
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Igw, thisServerId);
-            this.Tbc.IdTelcobrightPartner = 1;
+            this.Tbc.IdTelcobrightPartner = 9;
         }
 
         public TelcobrightConfig GenerateConfig(DatabaseSetting schedulerDatabaseSetting)
@@ -53,7 +53,7 @@ namespace InstallConfig
                 ServiceGroupConfigurations = this.GetServiceGroupConfigurations(),
                 DisableCdrPostProcessingJobCreationForAutomation = false,
                 DisableParallelMediation = false,
-                EnableTgCreationForAns = true
+                EnableTgCreationForAns = false
             };
 
             this.PrepareDirectorySetting(this.Tbc);

@@ -36,7 +36,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "c:/telcobright/Vault/Resources/CDR/Rgrn/dialogic",
+                StartingPath = "c:/telcobright/Vault/Resources/CDR/Rgrn/Sansay",
                 User = "",
                 Pass = "",
             };
@@ -47,7 +47,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = "/",
                 ServerIp = "10.0.0.10",
-                StartingPath = "Resources/CDR/btel/Rgrn",
+                StartingPath = "Resources/CDR/Rgrn",
                 User = "ftpuser",
                 Pass = "Takay1takaane",
             };
@@ -58,7 +58,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = "/",
                 ServerIp = "10.0.0.12",
-                StartingPath = "Resources/CDR/btel/Rgrn",
+                StartingPath = "Resources/CDR/Rgrn",
                 User = "ftpuser",
                 Pass = "Takay1takaane",
                 Skip = true
@@ -147,7 +147,7 @@ namespace InstallConfig
                 SrcSettings = new SyncSettingsSource()
                 {
                     SecondaryDirectory = "Downloaded",
-                    ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('icdr')")
+                    ExpFileNameFilter = new SpringExpression(@"Name.EndsWith('.cdr')")
                 },
                 DstSettings = new SyncSettingsDest()
                 {
@@ -190,63 +190,13 @@ namespace InstallConfig
                     )
                 }
             };
-            SyncPair vaultFileArchive2 = new SyncPair("Vault:FileArchive2")
-            {
-                SkipCopyingToDestination = false,
-                SkipSourceFileListing = true,
-                SrcSyncLocation = new SyncLocation("Vault_Rgrn")
-                {
-                    FileLocation = vaultRgrn
-                },
-                DstSyncLocation = new SyncLocation("FileArchive2")
-                {
-                    FileLocation = fileArchive2
-                },
-                SrcSettings = new SyncSettingsSource()
-                {
-                    SecondaryDirectory = "Downloaded",
-                    ExpFileNameFilter = null,
-                },
-                DstSettings = new SyncSettingsDest()
-                {
-                    FileExtensionForSafeCopyWithTempFile = ".tmp",
-                    Overwrite = true,
-                    ExpDestFileName = new SpringExpression(""),
-                    CompressionType = CompressionType.None,
-                    SubDirRule = null
-                }
-            };
-            SyncPair vaultIof = new SyncPair("Vault:IOF")
-            {
-                SkipCopyingToDestination = true,
-                SkipSourceFileListing = true,
-                SrcSyncLocation = new SyncLocation("Vault_Rgrn")
-                {
-                    FileLocation = vaultRgrn
-                },
-                DstSyncLocation = new SyncLocation("IOF")
-                {
-                    FileLocation = fileArchiveIof
-                },
-                SrcSettings = new SyncSettingsSource()
-                {
-                    ExpFileNameFilter = null,//source filter not required, job created after newcdr for this pair
-                },
-                DstSettings = new SyncSettingsDest()
-                {
-                    FileExtensionForSafeCopyWithTempFile = ".tmp",
-                    Overwrite = true,
-                    ExpDestFileName = new SpringExpression(""),
-                    CompressionType = CompressionType.None,
-                    SubDirRule = null
-                }
-            };
+            
+
+            
 
             //add sync pairs to directory config
             directorySettings.SyncPairs.Add(RgrnVault.Name, RgrnVault);
             directorySettings.SyncPairs.Add(vaultFileArchive1Zip.Name, vaultFileArchive1Zip);
-            directorySettings.SyncPairs.Add(vaultFileArchive2.Name, vaultFileArchive2);
-            directorySettings.SyncPairs.Add(vaultIof.Name, vaultIof);
             //load the syncpairs in dictioinary, first by source
             foreach (SyncPair sp in directorySettings.SyncPairs.Values)
             {
@@ -266,7 +216,7 @@ namespace InstallConfig
             //add archive locations to CdrSettings
             tbc.CdrSetting.BackupSyncPairNames = new List<string>
             {
-                vaultFileArchive1Zip.Name, vaultIof.Name
+                vaultFileArchive1Zip.Name, vaultFileArchive1Zip.Name
             };
             tbc.CdrSetting.DisableCdrPostProcessingJobCreationForAutomation = true;
         }
