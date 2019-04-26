@@ -22,7 +22,7 @@ namespace PartnerRules
             if (phoneNumber.StartsWith("234"))
             {
                 phoneNumber = phoneNumber.Substring(3);
-                if (phoneNumber.Length >= 12) //234-4081412019895 or 234-408141201989
+                if (phoneNumber.Length >= 12 && phoneNumber.Length <= 13) //234-4081412019895 or 234-408141201989
                 {
                     phoneNumber = phoneNumber.Substring(2);
                 }

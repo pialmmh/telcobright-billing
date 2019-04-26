@@ -1458,7 +1458,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                     idservice = ThisTuple.idService;
                 }
 
-                Dictionary<long, string> dicRatePlan = (Dictionary<long, string>)Session["assign.dicRatePlan"];
+                Dictionary<int, string> dicRatePlan = (Dictionary<int, string>)Session["assign.dicRatePlan"];
                 int idRatePlan = Convert.ToInt32(DataBinder.Eval(e.Row.DataItem, "inactive"));
                 string PlanName = "";
                 dicRatePlan.TryGetValue(idRatePlan, out PlanName);
@@ -4085,8 +4085,9 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
             ratetaskassign thisRateTask = Context.ratetaskassigns.Where(c => c.id == DelIdTask).FirstOrDefault();
             DateTime startdate = new DateTime();
             DateTime.TryParseExact(thisRateTask.startdate, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out startdate);
+            var prefix = Convert.ToInt32(thisRateTask.Prefix);
             rateassign thisRate = Context.rateassigns.Where(c => c.idrateplan == 1 &&
-                                                                 c.Prefix == Convert.ToInt32(thisRateTask.Prefix) &&
+                                                                 c.Prefix == prefix &&
                                                                  c.startdate == startdate).FirstOrDefault();
 
             using (MySqlConnection con = new MySqlConnection(ConfigurationManager.ConnectionStrings["partner"].ConnectionString))
@@ -4477,12 +4478,16 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                                             using (PartnerEntities Context = new PartnerEntities())
                                             {
                                                 string PreviousRatesDate = PrevRate.startdate.ToString("yyyy-MM-dd HH:mm:ss");
-                                                ratetaskassign PrevTask = Context.ratetaskassigns.Where(c => c.Prefix == PrevRate.Prefix && c.idrateplan == 1
-                                                                                                             && c.startdate == PreviousRatesDate
-                                                ).FirstOrDefault();
-                                                sbSQL.Append(
+                                                ratetaskassign PrevTask = Context.ratetaskassigns
+                                                    .Where(c => c.Prefix == PrevRate.Prefix && c.idrateplan == 1
+                                                    && c.startdate == PreviousRatesDate).FirstOrDefault();
+                                                if (PrevTask != null)
+                                                {
+                                                    sbSQL.Append(
                                                     " update ratetaskassign set enddate='" + thisRate.startdate.ToString("yyyy-MM-dd HH:mm:ss") + "' " +
                                                     " where id=" + PrevTask.id).Append(";");
+                                                }
+                                                
                                             }
                                         }
                                         //insert the new rate

@@ -333,7 +333,7 @@ public partial class InternationalOutTransit : System.Web.UI.Page
                     fieldSummaries.Add("ccrbycc", tr.CallStat.CcRbyCauseCode);
                     tr.FieldSummaries = fieldSummaries;
 
-                    Session["IntlInTr"] = tr;//save to session
+                    Session["IntlOutTr"] = tr;//save to session
 
                     //populate footer
                     //clear first
@@ -380,11 +380,11 @@ public partial class InternationalOutTransit : System.Web.UI.Page
 
     protected void Button1_Click(object sender, EventArgs e)
     {
-        if (Session["IntlInTr"] != null) //THIS MUST BE CHANGED IN EACH PAGE
+        if (Session["IntlOutTr"] != null) //THIS MUST BE CHANGED IN EACH PAGE
         {
-            TrafficReportDatasetBased tr = (TrafficReportDatasetBased)Session["IntlInTr"];
+            TrafficReportDatasetBased tr = (TrafficReportDatasetBased)Session["IntlOutTr"];
             DataSetWithGridView dsG = new DataSetWithGridView(tr, GridView1);//invisible columns are removed in constructor
-            CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(tr.Ds, "IntlIncoming_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+            CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(tr.Ds, "IntlOutgoing_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                     + ".xlsx", Response);
         }
     }

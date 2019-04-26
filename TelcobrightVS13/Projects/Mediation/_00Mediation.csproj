@@ -154,6 +154,7 @@
     <Compile Include="Cdr\Collection\RowIdsCollectionForSingleDay.cs" />
     <Compile Include="Cdr\RateCacheCleaner.cs" />
     <Compile Include="Config\EmailSenderConfig.cs" />
+    <Compile Include="Config\FileSplitSetting.cs" />
     <Compile Include="Config\JobInputData\StandardTelcobrightJobInput.cs" />
     <Compile Include="Config\SmsSenderConfig.cs" />
     <Compile Include="IAutoincrementManager.cs" />

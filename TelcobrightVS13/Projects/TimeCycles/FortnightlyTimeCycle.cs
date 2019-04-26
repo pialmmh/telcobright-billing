@@ -22,7 +22,8 @@ namespace TimeCycles
             if (base.NextTriggerDate.Day == 1)
                 timeRangeStart = base.NextTriggerDate.AddMonths(-1).AddDays(base.CycleDuration);
             else
-                timeRangeStart = base.NextTriggerDate.AddDays(-base.CycleDuration).AddDays(1);
+                //timeRangeStart = base.NextTriggerDate.AddDays(-base.CycleDuration).AddDays(1);
+                timeRangeStart = base.NextTriggerDate.AddDays(-base.CycleDuration);
 
             return base.ResolveWithMilliSecSubstraction(timeRangeStart);
         }

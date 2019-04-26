@@ -96,7 +96,8 @@ namespace MediationModel
 		{
 			this.totalcalls += newSummary.totalcalls;
 			this.connectedcalls += newSummary.connectedcalls;
-			this.successfulcalls += newSummary.successfulcalls;
+            this.connectedcallsCC += newSummary.connectedcallsCC;
+            this.successfulcalls += newSummary.successfulcalls;
 			this.actualduration += newSummary.actualduration;
 			this.roundedduration += newSummary.roundedduration;
 			this.duration1 += newSummary.duration1;

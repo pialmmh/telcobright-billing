@@ -532,7 +532,7 @@ union all
                 </ContentTemplate>
           </asp:UpdatePanel>
        
-       <div id="PartnerFilter" style="height:100px;margin-bottom:5px;padding-top:0px; width:1285px; margin-top:0px;margin-left:0px;float:left;padding-left:5px;background-color:#F7F6F3;">
+       <div id="PartnerFilter" style="height:100px;margin-bottom:5px;padding-top:0px; width:1400px; margin-top:0px;margin-left:0px;float:left;padding-left:5px;background-color:#F7F6F3;">
            
         
         <asp:UpdatePanel ID="UpdatePanel1" runat="server">

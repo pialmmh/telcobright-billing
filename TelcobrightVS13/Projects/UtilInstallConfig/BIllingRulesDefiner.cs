@@ -42,7 +42,7 @@ namespace InstallConfig
                     Duration = 1
                 }
             },
-            new BillingRule(id:3,ruleName: "OnFirstDayOfEachWeek,ForPreviousWeek")
+            new BillingRule(id:3,ruleName: "OnSundayOfEachWeek,ForPreviousWeek")
             {
                 IsPrepaid = false,
                 Description = "",
@@ -51,19 +51,55 @@ namespace InstallConfig
                 TimeCycleFactory = new TimeCycleFactory()
                 {
                     TimeCycleName = "WeeklyTimeCycle",
-                    Duration = 7
+                    Duration = 1
                 }
             },
-            new BillingRule(id:4,ruleName: "OnFirstAndFifteenthDayOfEachMonth,ForPreviousTwoWeek")
+            new BillingRule(id:4,ruleName: "OnFirstAndSixteenthDayOfEachMonth,ForPreviousTwoWeek")
             {
                 IsPrepaid = false,
                 Description = "",
                 InvoiceOverdueInDay = 15,
-                CronExpressionForBillingCycle = "0 0 0 1,15 * ? *",
+                CronExpressionForBillingCycle = "0 0 0 1,16 * ? *",
                 TimeCycleFactory = new TimeCycleFactory()
                 {
                     TimeCycleName = "FortnightlyTimeCycle",
                     Duration = 15
+                }
+            },
+            new BillingRule(id:5,ruleName: "OnMondayOfEachWeek,ForPreviousWeek")
+            {
+                IsPrepaid = false,
+                Description = "",
+                InvoiceOverdueInDay = 7,
+                CronExpressionForBillingCycle = "0 0 0 ? * MON *",
+                TimeCycleFactory = new TimeCycleFactory()
+                {
+                    TimeCycleName = "WeeklyTimeCycle",
+                    Duration = 1
+                }
+            },
+            new BillingRule(id:6,ruleName: "OnThursdayOfEachWeek,ForPreviousWeek")
+            {
+                IsPrepaid = false,
+                Description = "",
+                InvoiceOverdueInDay = 7,
+                CronExpressionForBillingCycle = "0 0 0 ? * THU *",
+                TimeCycleFactory = new TimeCycleFactory()
+                {
+                    TimeCycleName = "WeeklyTimeCycle",
+                    Duration = 1
+                }
+            },
+            new BillingRule(id:7,ruleName: "OnTuesdayOfEachWeek,ForPreviousWeek")
+            {
+                IsPrepaid = false,
+                Description = "",
+                InvoiceOverdueInDay = 7,
+                CronExpressionForBillingCycle = "0 0 0 ? * TUE *",
+                TimeCycleFactory = new TimeCycleFactory()
+                {
+                    TimeCycleName = "WeeklyTimeCycle",
+                    Duration = 1
                 }
             }
 
