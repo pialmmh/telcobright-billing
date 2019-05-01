@@ -46,8 +46,8 @@ namespace InstallConfig
                 LocationType = "ftp",
                 OsType = "windows",
                 PathSeparator = "/",
-                ServerIp = "10.0.0.10",
-                StartingPath = "Resources/CDR/Rgrn",
+                ServerIp = "10.21.21.12",
+                StartingPath = "Resources/CDR/Sansay",
                 User = "ftpuser",
                 Pass = "Takay1takaane",
             };
@@ -57,8 +57,8 @@ namespace InstallConfig
                 LocationType = "ftp",
                 OsType = "windows",
                 PathSeparator = "/",
-                ServerIp = "10.0.0.12",
-                StartingPath = "Resources/CDR/Rgrn",
+                ServerIp = "10.21.21.13",
+                StartingPath = "Resources/CDR/Sansay",
                 User = "ftpuser",
                 Pass = "Takay1takaane",
                 Skip = true
@@ -70,18 +70,32 @@ namespace InstallConfig
             Vault Rgrnvault = new Vault("Vault.Rgrn",tbc , ftpLocations);
             Rgrnvault.LocalLocation = new SyncLocation(vaultRgrn.Name) { FileLocation = vaultRgrn };//don't pass this to constructor and set there, causes problem in json serialize
             directorySettings.Vaults.Add(Rgrnvault);
-            FileLocation Rgrn = new FileLocation()
+            FileLocation s31 = new FileLocation()
             {
-                Name = "Rgrn",
+                Name = "S3_1",
                 LocationType = "sftp",
                 OsType = "linux",
                 PathSeparator = "/",
-                StartingPath = "/home/zxss10_bsvr/data/bfile/bill/zsmart_media_bak",
+                StartingPath = "/home/cdr/CDR",
                 Sftphostkey = "",
-                ServerIp = "10.33.34.12",
-                User = "igwbill",
-                Pass = "igw123",
-                ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
+                ServerIp = "10.21.21.4",
+                User = "cdr",
+                Pass = "cdrpass",
+                ExcludeBefore = new DateTime(2019, 5, 1, 0, 0, 0),
+                IgnoreZeroLenghFile = 1
+            };
+            FileLocation s32 = new FileLocation()
+            {
+                Name = "S3_2",
+                LocationType = "sftp",
+                OsType = "linux",
+                PathSeparator = "/",
+                StartingPath = "/home/cdr/CDR",
+                Sftphostkey = "",
+                ServerIp = "10.21.21.5",
+                User = "cdr",
+                Pass = "cdrpass",
+                ExcludeBefore = new DateTime(2019, 5, 1, 0, 0, 0),
                 IgnoreZeroLenghFile = 1
             };
             FileLocation fileArchive1Zip = new FileLocation()//raw cdr archive
@@ -96,6 +110,7 @@ namespace InstallConfig
                 Pass = "cdr13531",
                 IgnoreZeroLenghFile = 1
             };
+            /*
             FileLocation fileArchive2 = new FileLocation()//raw cdr archive
             {
                 Name = "FileArchive2",
@@ -120,24 +135,26 @@ namespace InstallConfig
                 Pass = "blt#.45",
                 IgnoreZeroLenghFile = 1,
             };
+            */
             //add locations to directory settings
             directorySettings.FileLocations.Add(vaultRgrn.Name, vaultRgrn);
             directorySettings.FileLocations.Add(appServerFtp1.Name, appServerFtp1);
             directorySettings.FileLocations.Add(appServerFtp2.Name, appServerFtp2);
-            directorySettings.FileLocations.Add(Rgrn.Name, Rgrn);
-            
-            directorySettings.FileLocations.Add(fileArchive1Zip.Name, fileArchive1Zip);
-            directorySettings.FileLocations.Add(fileArchive2.Name, fileArchive2);
-            directorySettings.FileLocations.Add(fileArchiveIof.Name, fileArchiveIof);
+            directorySettings.FileLocations.Add(s31.Name, s31);
+            directorySettings.FileLocations.Add(s32.Name, s32);
+
+            //directorySettings.FileLocations.Add(fileArchive1Zip.Name, fileArchive1Zip);
+            //directorySettings.FileLocations.Add(fileArchive2.Name, fileArchive2);
+            //directorySettings.FileLocations.Add(fileArchiveIof.Name, fileArchiveIof);
 
 
             //sync pair platinum:Vault
-            SyncPair RgrnVault = new SyncPair("Rgrn:Vault")
+            SyncPair RgrnVault = new SyncPair("S3_1:Vault")
             {
                 SkipSourceFileListing = false,
-                SrcSyncLocation = new SyncLocation("Rgrn")
+                SrcSyncLocation = new SyncLocation("S3_1")
                 {
-                    FileLocation = Rgrn,
+                    FileLocation = s31,
                     DescendingFileListByFileName = tbc.CdrSetting.DescendingOrderWhileListingFiles
                 },
                 DstSyncLocation = new SyncLocation("Vault_Rgrn")
