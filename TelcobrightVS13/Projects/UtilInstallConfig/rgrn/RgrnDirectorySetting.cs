@@ -70,34 +70,20 @@ namespace InstallConfig
             Vault Rgrnvault = new Vault("Vault.Rgrn",tbc , ftpLocations);
             Rgrnvault.LocalLocation = new SyncLocation(vaultRgrn.Name) { FileLocation = vaultRgrn };//don't pass this to constructor and set there, causes problem in json serialize
             directorySettings.Vaults.Add(Rgrnvault);
-            FileLocation s31 = new FileLocation()
+            FileLocation SansayVIP = new FileLocation()
             {
-                Name = "S3_1",
+                Name = "SansayVIP",
                 LocationType = "sftp",
                 OsType = "linux",
                 PathSeparator = "/",
                 StartingPath = "/home/cdr/CDR",
                 Sftphostkey = "",
-                ServerIp = "10.21.21.4",
+                ServerIp = "10.21.21.6",
                 User = "cdr",
                 Pass = "cdrpass",
-                ExcludeBefore = new DateTime(2019, 5, 1, 0, 0, 0),
                 IgnoreZeroLenghFile = 1
             };
-            FileLocation s32 = new FileLocation()
-            {
-                Name = "S3_2",
-                LocationType = "sftp",
-                OsType = "linux",
-                PathSeparator = "/",
-                StartingPath = "/home/cdr/CDR",
-                Sftphostkey = "",
-                ServerIp = "10.21.21.5",
-                User = "cdr",
-                Pass = "cdrpass",
-                ExcludeBefore = new DateTime(2019, 5, 1, 0, 0, 0),
-                IgnoreZeroLenghFile = 1
-            };
+            
             FileLocation fileArchive1Zip = new FileLocation()//raw cdr archive
             {
                 Name = "FileArchive1Zip",
@@ -110,51 +96,19 @@ namespace InstallConfig
                 Pass = "cdr13531",
                 IgnoreZeroLenghFile = 1
             };
-            /*
-            FileLocation fileArchive2 = new FileLocation()//raw cdr archive
-            {
-                Name = "FileArchive2",
-                LocationType = "ftp",
-                OsType = "linux",
-                PathSeparator = "/",
-                StartingPath = @"/medi/data/igw_src/igw_src_bk",
-                ServerIp = "10.100.201.10", //server = "172.16.16.242",
-                User = "medi",
-                Pass = "medi",
-                IgnoreZeroLenghFile = 1,
-            };
-            FileLocation fileArchiveIof = new FileLocation()//raw cdr archive
-            {
-                Name = "FileArchiveIof",
-                LocationType = "ftp",
-                OsType = "linux",
-                PathSeparator = "/",
-                StartingPath = @"/medi/data/igw_src/igw_src_bk",
-                ServerIp = "10.100.201.13",
-                User = "iofcdr",
-                Pass = "blt#.45",
-                IgnoreZeroLenghFile = 1,
-            };
-            */
+            
             //add locations to directory settings
             directorySettings.FileLocations.Add(vaultRgrn.Name, vaultRgrn);
             directorySettings.FileLocations.Add(appServerFtp1.Name, appServerFtp1);
             directorySettings.FileLocations.Add(appServerFtp2.Name, appServerFtp2);
-            directorySettings.FileLocations.Add(s31.Name, s31);
-            directorySettings.FileLocations.Add(s32.Name, s32);
-
-            //directorySettings.FileLocations.Add(fileArchive1Zip.Name, fileArchive1Zip);
-            //directorySettings.FileLocations.Add(fileArchive2.Name, fileArchive2);
-            //directorySettings.FileLocations.Add(fileArchiveIof.Name, fileArchiveIof);
-
-
-            //sync pair platinum:Vault
-            SyncPair RgrnVault = new SyncPair("S3_1:Vault")
+            directorySettings.FileLocations.Add(SansayVIP.Name, SansayVIP);
+            
+            SyncPair RgrnVault = new SyncPair("SansayVip:Vault")
             {
                 SkipSourceFileListing = false,
-                SrcSyncLocation = new SyncLocation("S3_1")
+                SrcSyncLocation = new SyncLocation("SansayVip")
                 {
-                    FileLocation = s31,
+                    FileLocation = SansayVIP,
                     DescendingFileListByFileName = tbc.CdrSetting.DescendingOrderWhileListingFiles
                 },
                 DstSyncLocation = new SyncLocation("Vault_Rgrn")
@@ -175,45 +129,10 @@ namespace InstallConfig
                 }
             };
 
-
-            //sync pair Vault_S3:FileArchive1
-            SyncPair vaultFileArchive1Zip = new SyncPair("Vault:FileArchive1Zip")
-            {
-                SkipCopyingToDestination = false,
-                SkipSourceFileListing = true,
-                SrcSyncLocation = new SyncLocation("Vault_Rgrn")
-                {
-                    FileLocation = vaultRgrn
-                },
-                DstSyncLocation = new SyncLocation("FileArchive1Zip")
-                {
-                    FileLocation = fileArchive1Zip
-                },
-                SrcSettings = new SyncSettingsSource()
-                {
-                    SecondaryDirectory = "Downloaded",
-                    ExpFileNameFilter = null,
-                },
-                DstSettings = new SyncSettingsDest()
-                {
-                    FileExtensionForSafeCopyWithTempFile = ".tmp",
-                    Overwrite = true,
-                    CompressionType = CompressionType.Sevenzip,
-                    SubDirRule = new SyncSettingsDstSubDirectoryRule
-                    (
-                        DateWiseSubDirCreationType.ByFileName,
-                        new SpringExpression(@"Name.Substring(3,8)"), //"S3_2_" is appended at vault
-                        "yyyyMMdd", true
-                    )
-                }
-            };
             
-
-            
-
             //add sync pairs to directory config
             directorySettings.SyncPairs.Add(RgrnVault.Name, RgrnVault);
-            directorySettings.SyncPairs.Add(vaultFileArchive1Zip.Name, vaultFileArchive1Zip);
+            //directorySettings.SyncPairs.Add(vaultFileArchive1Zip.Name, vaultFileArchive1Zip);
             //load the syncpairs in dictioinary, first by source
             foreach (SyncPair sp in directorySettings.SyncPairs.Values)
             {
@@ -233,7 +152,7 @@ namespace InstallConfig
             //add archive locations to CdrSettings
             tbc.CdrSetting.BackupSyncPairNames = new List<string>
             {
-                vaultFileArchive1Zip.Name, vaultFileArchive1Zip.Name
+                //vaultFileArchive1Zip.Name, vaultFileArchive1Zip.Name
             };
             tbc.CdrSetting.DisableCdrPostProcessingJobCreationForAutomation = true;
         }

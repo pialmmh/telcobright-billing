@@ -53,7 +53,8 @@ namespace InstallConfig
                 ServiceGroupConfigurations = this.GetServiceGroupConfigurations(),
                 DisableCdrPostProcessingJobCreationForAutomation = false,
                 DisableParallelMediation = false,
-                EnableTgCreationForAns = false
+                EnableTgCreationForAns = false,
+                EmptyFileAllowed = true
             };
 
             this.PrepareDirectorySetting(this.Tbc);
