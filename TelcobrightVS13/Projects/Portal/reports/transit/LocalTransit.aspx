@@ -378,7 +378,7 @@
 
     </div>
 
-    <div id="ParamBorder" style="float: left; padding-top: 3px; padding-left: 10px; height: 155px; display: block; border: 2px ridge #E5E4E2; margin-bottom: 5px; width: 1300px;">
+    <div id="ParamBorder" style="float: left; padding-top: 3px; padding-left: 10px; height: 180px; display: block; border: 2px ridge #E5E4E2; margin-bottom: 5px; width: 1300px;">
         <div style="height: 20px; background-color: #f2f2f2; color: black;">
             <span style="float: left; font-weight: bold; padding-left: 20px;">Show Performance
                 <asp:CheckBox ID="CheckBoxShowPerformance" runat="server" Checked="true" /></span>
@@ -518,6 +518,24 @@
                         <asp:CheckBox ID="CheckBoxMatchedSupplierPrefix" runat="server" AutoPostBack="false" Checked="false" Text="View By Supplier Prefix" />
                     </div>
 
+                </div>
+                <div style="float: left; height: 25px; min-width: 1250px;">
+                    <div style="float: left;">
+                        View by Incoming IP: 
+                        <asp:CheckBox ID="CheckBoxInIp" runat="server" AutoPostBack="True" 
+                                      OnCheckedChanged="CheckBoxInIp_OnCheckedChanged" Checked="False" />
+                        <asp:CheckBox runat="server" AutoPostBack="True" ID="CheckBoxInIpAll" Text="All" 
+                            OnCheckedChanged="CheckBoxInIpAll_OnCheckedChanged" Checked="True" Enabled="False"/>
+                        <asp:TextBox ID="TextBoxInIp" runat="server" Enabled="False" />
+                    </div>
+                    <div style="float: left;">
+                        View by Outgoing IP: 
+                        <asp:CheckBox ID="CheckBoxOutIp" runat="server" AutoPostBack="True" 
+                                      OnCheckedChanged="CheckBoxOutIp_OnCheckedChanged" Checked="False" />
+                        <asp:CheckBox runat="server" AutoPostBack="True" ID="CheckBoxOutIpAll" Text="All" 
+                                      OnCheckedChanged="CheckBoxOutIpAll_OnCheckedChanged" Checked="True" Enabled="False"/>
+                        <asp:TextBox ID="TextBoxOutIp" runat="server" Enabled="False" />
+                    </div>
                 </div>
             </div>
         </div>

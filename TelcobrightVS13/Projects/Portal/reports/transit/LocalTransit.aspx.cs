@@ -53,6 +53,8 @@ public partial class LocalTransit : System.Web.UI.Page
                                 CheckBoxOutRoute.Checked==true?"tup_outgoingroute":string.Empty,
                                 CheckBoxMatchedCustomerPrefix.Checked==true?"tup_matchedprefixcustomer":string.Empty,
                                 CheckBoxMatchedSupplierPrefix.Checked==true?"tup_matchedprefixsupplier":string.Empty,
+                                CheckBoxInIp.Checked==true?"tup_incomingip":string.Empty,
+                                CheckBoxOutIp.Checked==true?"tup_outgoingip":string.Empty,
                                 //CheckBoxShowByAns.Checked==true?"tup_destinationId":string.Empty,
                                 //CheckBoxShowByIgw.Checked==true?"tup_outpartnerid":string.Empty,
                             },
@@ -62,6 +64,8 @@ public partial class LocalTransit : System.Web.UI.Page
                                 CheckBoxOutPartner.Checked==true?DropDownListOutPartner.SelectedIndex>0?" tup_outpartnerid="+DropDownListOutPartner.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxInRoute.Checked==true?DropDownListInRoute.SelectedIndex>0?" tup_incomingroute='"+DropDownListInRoute.SelectedValue+"'":string.Empty:string.Empty,
                                 CheckBoxOutRoute.Checked==true?DropDownListOutRoute.SelectedIndex>0?" tup_outpartnerid='"+DropDownListOutRoute.SelectedValue+"'":string.Empty:string.Empty,
+                                CheckBoxInIp.Checked==true?CheckBoxInIpAll.Checked==false?" tup_incomingip='"+TextBoxInIp.Text+"'":string.Empty:string.Empty,
+                                CheckBoxOutIp.Checked==true?CheckBoxOutIpAll.Checked==false?" tup_outgoingip='"+TextBoxOutIp.Text+"'":string.Empty:string.Empty,
                                 //CheckBoxShowByAns.Checked==true?DropDownListAns.SelectedIndex>0?" tup_destinationId="+DropDownListAns.SelectedValue:string.Empty:string.Empty,
                                 //CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_outpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty
                             }).getSQLString();
@@ -689,5 +693,27 @@ public partial class LocalTransit : System.Web.UI.Page
             DropDownListOutRoute.Enabled = true;
         }
         else DropDownListOutRoute.Enabled = false;
+    }
+
+    protected void CheckBoxInIp_OnCheckedChanged(object sender, EventArgs e)
+    {
+        CheckBoxInIpAll.Enabled = CheckBoxInIp.Checked;
+        TextBoxInIp.Enabled = !CheckBoxInIpAll.Checked && CheckBoxInIp.Checked;
+    }
+
+    protected void CheckBoxOutIp_OnCheckedChanged(object sender, EventArgs e)
+    {
+        CheckBoxOutIpAll.Enabled = CheckBoxOutIp.Checked;
+        TextBoxOutIp.Enabled = !CheckBoxOutIpAll.Checked && CheckBoxOutIp.Checked;
+    }
+
+    protected void CheckBoxInIpAll_OnCheckedChanged(object sender, EventArgs e)
+    {
+        TextBoxInIp.Enabled = !CheckBoxInIpAll.Checked;
+    }
+
+    protected void CheckBoxOutIpAll_OnCheckedChanged(object sender, EventArgs e)
+    {
+        TextBoxOutIp.Enabled = !CheckBoxOutIpAll.Checked;
     }
 }
