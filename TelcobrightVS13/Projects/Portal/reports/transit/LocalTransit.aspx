@@ -575,6 +575,8 @@
                         <asp:BoundField DataField="Out Route" HeaderText="Out Route" SortExpression="Out Route" />
                         <asp:BoundField DataField="tup_matchedprefixcustomer" HeaderText="Customer Prefix" SortExpression="tup_matchedprefixcustomer" />
                         <asp:BoundField DataField="tup_matchedprefixsupplier" HeaderText="Supplier Prefix" SortExpression="tup_matchedprefixsupplier" />
+                        <asp:BoundField DataField="tup_incomingip" HeaderText="Incoming IP" SortExpression="tup_incomingip" />
+                        <asp:BoundField DataField="tup_outgoingip" HeaderText="Outgoing IP" SortExpression="tup_outgoingip" />
 
                         <asp:BoundField DataField="Total Calls"
                             HeaderText="Total Calls"

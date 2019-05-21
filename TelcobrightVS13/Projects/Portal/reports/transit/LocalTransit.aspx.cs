@@ -64,8 +64,8 @@ public partial class LocalTransit : System.Web.UI.Page
                                 CheckBoxOutPartner.Checked==true?DropDownListOutPartner.SelectedIndex>0?" tup_outpartnerid="+DropDownListOutPartner.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxInRoute.Checked==true?DropDownListInRoute.SelectedIndex>0?" tup_incomingroute='"+DropDownListInRoute.SelectedValue+"'":string.Empty:string.Empty,
                                 CheckBoxOutRoute.Checked==true?DropDownListOutRoute.SelectedIndex>0?" tup_outpartnerid='"+DropDownListOutRoute.SelectedValue+"'":string.Empty:string.Empty,
-                                CheckBoxInIp.Checked==true?CheckBoxInIpAll.Checked==false?" tup_incomingip='"+TextBoxInIp.Text+"'":string.Empty:string.Empty,
-                                CheckBoxOutIp.Checked==true?CheckBoxOutIpAll.Checked==false?" tup_outgoingip='"+TextBoxOutIp.Text+"'":string.Empty:string.Empty,
+                                CheckBoxInIp.Checked==true?CheckBoxInIpAll.Checked==false?" tup_incomingip like '%"+TextBoxInIp.Text+"%'":string.Empty:string.Empty,
+                                CheckBoxOutIp.Checked==true?CheckBoxOutIpAll.Checked==false?" tup_outgoingip like '%"+TextBoxOutIp.Text+"%'":string.Empty:string.Empty,
                                 //CheckBoxShowByAns.Checked==true?DropDownListAns.SelectedIndex>0?" tup_destinationId="+DropDownListAns.SelectedValue:string.Empty:string.Empty,
                                 //CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_outpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty
                             }).getSQLString();
@@ -136,23 +136,12 @@ public partial class LocalTransit : System.Web.UI.Page
         //    }
         //}
         //else GridView1.Columns[3].Visible = false;
-        if (CheckBoxMatchedCustomerPrefix.Checked)
-        {
-            GridView1.Columns[5].Visible = true;
-        }
-        else GridView1.Columns[5].Visible = false;
 
         //if (CheckBoxShowByIgw.Checked == true)
         //{
         //    GridView1.Columns[2].Visible = true;
         //}
         //else GridView1.Columns[2].Visible = false;
-        if (CheckBoxMatchedSupplierPrefix.Checked)
-        {
-            GridView1.Columns[6].Visible = true;
-        }
-        else GridView1.Columns[6].Visible = false;
-
         if (CheckBoxPartner.Checked == true)
         {
             GridView1.Columns[1].Visible = true;
@@ -174,37 +163,49 @@ public partial class LocalTransit : System.Web.UI.Page
             GridView1.Columns[4].Visible = true;
         }
         else GridView1.Columns[4].Visible = false;
+        if (CheckBoxMatchedCustomerPrefix.Checked)
+        {
+            GridView1.Columns[5].Visible = true;
+        }
+        else GridView1.Columns[5].Visible = false;
+        if (CheckBoxMatchedSupplierPrefix.Checked)
+        {
+            GridView1.Columns[6].Visible = true;
+        }
+        else GridView1.Columns[6].Visible = false;
+        GridView1.Columns[7].Visible = CheckBoxInIp.Checked;
+        GridView1.Columns[8].Visible = CheckBoxOutIp.Checked;
 
         if (CheckBoxShowCost.Checked == true)
         {
-            GridView1.Columns[12].Visible = true;
-            GridView1.Columns[13].Visible = true;
             GridView1.Columns[14].Visible = true;
+            GridView1.Columns[15].Visible = true;
+            GridView1.Columns[16].Visible = true;
         }
         else
         {
-            GridView1.Columns[12].Visible = false;
-            GridView1.Columns[13].Visible = false;
             GridView1.Columns[14].Visible = false;
+            GridView1.Columns[15].Visible = false;
+            GridView1.Columns[16].Visible = false;
         }
         if (CheckBoxShowPerformance.Checked == true)
         {
-            GridView1.Columns[15].Visible = true;
-            GridView1.Columns[16].Visible = true;
             GridView1.Columns[17].Visible = true;
             GridView1.Columns[18].Visible = true;
             GridView1.Columns[19].Visible = true;
             GridView1.Columns[20].Visible = true;
+            GridView1.Columns[21].Visible = true;
+            GridView1.Columns[22].Visible = true;
 
         }
         else
         {
-            GridView1.Columns[15].Visible = false;
-            GridView1.Columns[16].Visible = false;
             GridView1.Columns[17].Visible = false;
             GridView1.Columns[18].Visible = false;
             GridView1.Columns[19].Visible = false;
             GridView1.Columns[20].Visible = false;
+            GridView1.Columns[21].Visible = false;
+            GridView1.Columns[22].Visible = false;
 
         }
         //make profit invisible, it's useless

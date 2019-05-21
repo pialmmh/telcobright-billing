@@ -363,15 +363,6 @@ public partial class LocalTransit {
     protected global::System.Web.UI.WebControls.CheckBox CheckBoxInIp;
     
     /// <summary>
-    /// TextBoxInIp control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox TextBoxInIp;
-    
-    /// <summary>
     /// CheckBoxInIpAll control.
     /// </summary>
     /// <remarks>
@@ -379,6 +370,15 @@ public partial class LocalTransit {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.CheckBox CheckBoxInIpAll;
+    
+    /// <summary>
+    /// TextBoxInIp control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox TextBoxInIp;
     
     /// <summary>
     /// CheckBoxOutIp control.
@@ -390,15 +390,6 @@ public partial class LocalTransit {
     protected global::System.Web.UI.WebControls.CheckBox CheckBoxOutIp;
     
     /// <summary>
-    /// TextBoxOutIp control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox TextBoxOutIp;
-    
-    /// <summary>
     /// CheckBoxOutIpAll control.
     /// </summary>
     /// <remarks>
@@ -406,6 +397,15 @@ public partial class LocalTransit {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.CheckBox CheckBoxOutIpAll;
+    
+    /// <summary>
+    /// TextBoxOutIp control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox TextBoxOutIp;
     
     /// <summary>
     /// SqlDataSource4 control.
