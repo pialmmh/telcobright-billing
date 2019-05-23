@@ -76,7 +76,11 @@ namespace InstallConfig
                                     "AnswerTime as `Answer Time`",
                                     "endtime as `End Time`",
                                     "inpartner.partnername as `In Partner`",
+                                    "OriginatingIP as `Originating IP`",
+                                    "CustomerRate as `Customer Rate`",
                                     "outpartner.partnername as `Out Partner`",
+                                    "TerminatingIP as `Terminating IP`",
+                                    "SupplierRate as `Supplier Rate`",
                                     "concat(switchid,'-',IncomingRoute) as `Ingress Route`",
                                     "concat(switchid,'-',OutgoingRoute)  as `Egress Route`",
                                     "OriginatingCallingNumber as `Ingress Calling Number`",
@@ -89,6 +93,7 @@ namespace InstallConfig
                                     "duration2 as Duration2",
                                     "Duration3 as Duration3",
                                     "releasecauseingress as `Ingress CauseCode`",
+                                    "CountryCode as `Country Code`",
                                 }
                             },
                             new CdrFieldTemplate()
