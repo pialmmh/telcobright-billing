@@ -301,45 +301,6 @@ namespace RateSheetFormat
                     }
                     FirstRow = FindFirstRow(ref objArray, DateFormats, ref DateSeparator);
 
-
-
-
-
-                    //rather than handling intlout and in cases, try a generic method, based on importing with column header
-                    //if (FirstRow == 2)//there is coumn header
-                    //{
-                    //    Dictionary<int, string> dicCols = new Dictionary<int, string>();
-                    //    //if at least 2 value matches 2 column names then the first row contains the columnname
-                    //    int MatchedColumnCount = 0;
-                    //    List<string> ColNames = new List<string>();
-                    //    ColNames.Add("prefix");
-                    //    ColNames.Add("rateamount");
-                    //    for (int j = 1; j <= Dim2; j++)
-                    //    {
-                    //        string FldName = objArray[1, j].ToString().Trim().ToLower();
-                    //        if (FldName != "" && dicCols.ContainsValue(FldName) == false)
-                    //        {
-                    //            dicCols.Add(j, FldName);
-                    //        }
-
-                    //        if (ColNames.Contains(objArray[1, j]))
-                    //        {
-                    //            MatchedColumnCount++;
-                    //        }
-                    //    }
-                    //    if (MatchedColumnCount >= 2)//first row contains heading
-                    //    {
-                    //        Exception e1 = null;
-                    //        lstRateTask = GetRateArrayByCol(ref objArray, dicCols, ref e1);
-                    //        if (e1 != null)
-                    //        {
-                    //            return e1.Message + "<br/>" + e1.InnerException.ToString();
-                    //        }
-                    //        return "";
-                    //    }
-                    //}
-
-
                     ImportTaskType ThisSheetType = ImportTaskType.RateChanges;
                     if (ImportTaskType == ImportTaskType.RateChanges)//vendor format already set after rate changes sheet processing
                     {
@@ -352,7 +313,13 @@ namespace RateSheetFormat
 
                     TableData = new RateTableMetaData();
                     FindTableMetaData(ref objArray, ref TableData, FirstRow, VFormat, DateFormats, ref DateSeparator);
-                    
+                    if (TableData.IndexRate<1 && TableData.IndexCountryCode>=1)
+                    {
+                        TableData.IndexRate = TableData.IndexCountryCode;
+                        TableData.IndexCountryCode = -1;
+                    }
+
+
                     List<string[]> strLines = MultipleToSinglePrefixArray(ThisSheetType, ref objArray, TableData, DateFormats, ref DateSeparator);
                     if (strLines == null)
                     {
@@ -1283,6 +1250,7 @@ namespace RateSheetFormat
                     int maxRowToScan = offsetDim1FirstRow <= 20 ? offsetDim1FirstRow+1 : (FirstRow + 19);
                     for (i = FirstRow; i <= (i+maxRowToScan-1) && i <= Dim1; i++) //sampling over 20 rows will do
                     {
+                        if (i > maxRowToScan) break;
                         CellDataType? ThisColumnLike = (objArray[i, j] != null ? FindCellDataType(objArray[i, j].ToString(), DateFormats, ref DateSeparator) : CellDataType.NULL);
                         switch (ThisColumnLike)
                         {
