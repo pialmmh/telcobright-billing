@@ -93,7 +93,8 @@ namespace InstallConfig
                                     "duration2 as Duration2",
                                     "Duration3 as Duration3",
                                     "releasecauseingress as `Ingress CauseCode`",
-                                    "CountryCode as `Country Code`"
+                                    "CountryCode as `Country Code`",
+                                    "cc.Name as `Country Name`"
                                 }
                             },
                             new CdrFieldTemplate()

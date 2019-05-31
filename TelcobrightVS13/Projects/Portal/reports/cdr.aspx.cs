@@ -482,6 +482,7 @@ public partial class ConfigCdr : Page
         string sourceTable = this.DropDownListSource.SelectedIndex == 0 ? "cdr c " : "cdrerror c ";
         string sql = " select * from " + sourceTable + " left join partner inpartner on c.inpartnerid=inpartner.idpartner " +
                      " left join partner outpartner on c.outpartnerid=outpartner.idpartner " +//basic string
+                     " left outer join countrycode cc on c.CountryCode = cc.Code " +
                      " where starttime>='" + startdate + "' and starttime<='" + enddate + "' " +
                      (serviceGroup >= 0 ? " and ServiceGroup=" + serviceGroup : "")+
                      (chargingStatus >= 0 ? " and chargingstatus=" + chargingStatus : "");
