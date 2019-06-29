@@ -6,13 +6,14 @@ using System.Linq;
 using MediationModel;
 using Newtonsoft.Json;
 using ReportGenerator.Helper;
+using TelcobrightMediation.Helper;
 
 namespace TelcobrightMediation.Reports.InvoiceReports.btel.IGW
 {
     [Export("InvoiceTemplate", typeof(IInvoiceTemplate))]
     public partial class InternationalOutgoingToIOS : DevExpress.XtraReports.UI.XtraReport, IInvoiceTemplate
     {
-        public string TemplateName => $"btel#{this.GetType().Name}";
+        public string TemplateName => TemplateNameHelper.GetTemplateName(GetType());
 
         public InternationalOutgoingToIOS()
         {

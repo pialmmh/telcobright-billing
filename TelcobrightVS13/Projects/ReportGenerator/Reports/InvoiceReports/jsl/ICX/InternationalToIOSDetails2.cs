@@ -5,13 +5,14 @@ using System.Globalization;
 using System.Linq;
 using MediationModel;
 using Newtonsoft.Json;
+using TelcobrightMediation.Helper;
 
 namespace TelcobrightMediation.Reports.InvoiceReports.jsl.ICX
 {
     [Export("InvoiceTemplate", typeof(IInvoiceTemplate))]
     public partial class InternationalToIOSDetails2 : DevExpress.XtraReports.UI.XtraReport, IInvoiceTemplate
     {
-        public string TemplateName => $"jsl#{this.GetType().Name}";
+        public string TemplateName => TemplateNameHelper.GetTemplateName(GetType());
 
         public InternationalToIOSDetails2()
         {

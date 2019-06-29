@@ -5,13 +5,14 @@ using System.Globalization;
 using System.Linq;
 using MediationModel;
 using Newtonsoft.Json;
+using TelcobrightMediation.Helper;
 
 namespace TelcobrightMediation.Reports.InvoiceReports.rgrn.Transit
 {
     [Export("InvoiceTemplate", typeof(IInvoiceTemplate))]
     public partial class InternationalIncomingToForeignCarrierDetails2 : DevExpress.XtraReports.UI.XtraReport, IInvoiceTemplate
     {
-        public string TemplateName => $"rgrn#{this.GetType().Name}";
+        public string TemplateName => TemplateNameHelper.GetTemplateName(GetType());
 
         public InternationalIncomingToForeignCarrierDetails2()
         {
@@ -40,7 +41,9 @@ namespace TelcobrightMediation.Reports.InvoiceReports.rgrn.Transit
             xrLabelBillingPeriod.Text = $@"Period: {startDate:yyyy-MM-dd HH:mm:ss} to {endDate:yyyy-MM-dd HH:mm:ss}";
             xrLabelInvoiceDate.Text = $@"Invoice: {$"{invoice.INVOICE_DATE:yyyy-MM-dd}"}";
             xrLabelInvoiceNo.Text = $@"Invoice No: {invoice.REFERENCE_NUMBER}";
-            xrLabelTimeZone.Text = $@"Time Zone: {invoiceMap["timeZone"]}";
+            //xrLabelTimeZone.Text = $@"Time Zone: {invoiceMap["timeZone"]}";
+            xrLabelTimeZone.Text = $@"Time Zone: GMT+0:00";
+
             #endregion
 
             #region Report Body

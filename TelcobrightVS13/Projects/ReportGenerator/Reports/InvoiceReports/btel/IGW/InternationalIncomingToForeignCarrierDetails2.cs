@@ -5,13 +5,14 @@ using System.Globalization;
 using System.Linq;
 using MediationModel;
 using Newtonsoft.Json;
+using TelcobrightMediation.Helper;
 
 namespace TelcobrightMediation.Reports.InvoiceReports.btel.IGW
 {
     [Export("InvoiceTemplate", typeof(IInvoiceTemplate))]
     public partial class InternationalIncomingToForeignCarrierDetails2 : DevExpress.XtraReports.UI.XtraReport, IInvoiceTemplate
     {
-        public string TemplateName => $"btel#{this.GetType().Name}";
+        public string TemplateName => TemplateNameHelper.GetTemplateName(GetType());
 
         public InternationalIncomingToForeignCarrierDetails2()
         {
