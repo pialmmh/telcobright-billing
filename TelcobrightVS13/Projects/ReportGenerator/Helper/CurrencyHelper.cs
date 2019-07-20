@@ -16,7 +16,7 @@ namespace ReportGenerator.Helper
             var beforeFloatingPoint = (int)Math.Floor(doubleNumber);
             var beforeFloatingPointWord = $"{NumberToWords(beforeFloatingPoint)} dollars";
             var afterFloatingPointWord =
-                $"{SmallNumberToWord((int)((doubleNumber - beforeFloatingPoint) * 100), "")} cents";
+                $"{SmallNumberToWord((int)Math.Round(((doubleNumber - beforeFloatingPoint) * 100), 0), "")} cents";
             return $"{beforeFloatingPointWord} and {afterFloatingPointWord}";
         }
 
