@@ -60,16 +60,18 @@ namespace TelcobrightMediation.Reports.InvoiceReports.jsl.ICX
             xrTableCellAmount.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
 
             decimal subTotalAmount = invoiceBasicDatas.Sum(x => x.Amount);
+            decimal invTotalAmount = invoiceBasicDatas.Sum(x => x.GrandTotalAmount);
 
             xrTableCellSubTotalAmount.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
-            xrTableCellInvoiceTotal.Text = string.Format("{0:n2}", subTotalAmount);
-            xrTableCellAmountDueforPayment.Text = string.Format("{0:n2}", subTotalAmount);
+            xrTableCellVAT.Text = string.Format("{0:n2}", invTotalAmount - subTotalAmount);
+            xrTableCellInvoiceTotal.Text = string.Format("{0:n2}", invTotalAmount);
+            xrTableCellAmountDueforPayment.Text = string.Format("{0:n2}", invTotalAmount);
             #endregion
 
             
             #region Report Footer
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
-            xrLabelAmountInwords.Text = textInfo.ToTitleCase(CurrencyHelper.NumberToTakaWords(Convert.ToDouble(subTotalAmount)));
+            xrLabelAmountInwords.Text = textInfo.ToTitleCase(CurrencyHelper.NumberToTakaWords(Convert.ToDouble(invTotalAmount)));
             xrLabelConversionRate.Text = string.Format("As per Sonali Bank Rate (1USD = BDT {0:n2}) as on {1:dd-MMM-yyyy}", invoiceMap["usdRate"], invoiceMap["endDate"]);
             #endregion
             
