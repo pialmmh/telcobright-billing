@@ -237,7 +237,7 @@ namespace TelcobrightMediation
         {
             txtRow[0] = this.CdrCollectorInputData.Ne.idSwitch.ToString();
         }
-
+        
         public void SetJobNameWithFileName(string cdrFileName, string[] txtRow)
         {
             txtRow[3] = cdrFileName; //filename

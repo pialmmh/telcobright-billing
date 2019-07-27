@@ -127,6 +127,10 @@ namespace Jobs
         {
             var collectorinput = this.CollectorInput;
             SetIdCallsInSameOrderAsCollected(preProcessor, collectorinput);
+            if (this.CollectorInput.CdrSetting.UseIdCallAsBillId==true)
+            {
+                SetIdCallAsBillId(preProcessor);
+            }
             MefValidator<string[]> inconistentValidator =
                 NewCdrPreProcessor.CreateValidatorForInconsistencyCheck(collectorinput);
             if (!collectorinput.CdrJobInputData.MediationContext.Tbc.CdrSetting.PartialCdrEnabledNeIds
@@ -162,8 +166,12 @@ namespace Jobs
             //keep the cdrs in the same order as received, don't use parallel
             preProcessor.TxtCdrRows.ForEach(txtRow => preProcessor.SetIdCall(collectorinput.AutoIncrementManager, txtRow));
         }
+        private static void SetIdCallAsBillId(NewCdrPreProcessor preProcessor)
+        {
+            preProcessor.TxtCdrRows.ForEach(txtRow => txtRow[98]=txtRow[1]);
+        }
 
-        
+
         protected void WriteJobCompletionIfCollectionNotEmpty(CdrProcessor cdrProcessor, job telcobrightJob)
         {
             using (DbCommand cmd = ConnectionManager.CreateCommandFromDbContext(cdrProcessor.CdrJobContext.Context))

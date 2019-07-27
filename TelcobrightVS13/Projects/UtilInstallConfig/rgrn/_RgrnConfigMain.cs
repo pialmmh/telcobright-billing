@@ -54,7 +54,8 @@ namespace InstallConfig
                 DisableCdrPostProcessingJobCreationForAutomation = false,
                 DisableParallelMediation = false,
                 EnableTgCreationForAns = false,
-                EmptyFileAllowed = true
+                EmptyFileAllowed = true,
+                UseIdCallAsBillId = true
             };
 
             this.PrepareDirectorySetting(this.Tbc);

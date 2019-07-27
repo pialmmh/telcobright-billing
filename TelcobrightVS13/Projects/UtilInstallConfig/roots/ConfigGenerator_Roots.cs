@@ -34,7 +34,8 @@ namespace InstallConfig
                 IllegalStrToRemoveFromFields = new List<string>()
                 {
                     "\\",
-                }
+                },
+                UseIdCallAsBillId = true
             };
             //write all configuration first in ws_topshelf / bin/debug, for production
             //also, in tester/bin/debug
