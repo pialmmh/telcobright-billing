@@ -56,10 +56,10 @@ namespace TelcobrightMediation.Reports.InvoiceReports.jsl.ICX
             xrTableCellYAMOUNT.DataBindings.Add("Text", this.DataSource, "YAmount", "{0:n2}");
             xrTableCellXYAMOUNT.DataBindings.Add("Text", this.DataSource, "XYAmount", "{0:n2}");
             xrTableCellRevenue.DataBindings.Add("Text", this.DataSource, "Revenue", "{0:n2}");
-            xrTableCellAmount.DataBindings.Add("Text", this.DataSource, "Revenue", "{0:n2}");
+            xrTableCellAmount.DataBindings.Add("Text", this.DataSource, "GrandTotalAmount", "{0:n2}");
 
             xrTableCellRevenueTotal.DataBindings.Add("Text", this.DataSource, "Revenue", "{0:n2}");
-            xrTableCellSubTotalAmount.DataBindings.Add("Text", this.DataSource, "Revenue", "{0:n2}");
+            xrTableCellSubTotalAmount.DataBindings.Add("Text", this.DataSource, "GrandTotalAmount", "{0:n2}");
             #endregion
         }
 

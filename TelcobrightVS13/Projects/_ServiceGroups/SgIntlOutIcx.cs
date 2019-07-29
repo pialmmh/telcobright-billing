@@ -93,6 +93,7 @@ namespace TelcobrightMediation
         public InvoiceGenerationInputData ExecInvoicePreProcessing(
             InvoiceGenerationInputData invoiceGenerationInputData)
         {
+            invoiceGenerationInputData.JsonDetail.Add("vat", ".15");//todo: for now harcode
             return XyzRuleHelper.ExecInvoicePreProcessing(invoiceGenerationInputData);
         }
 
