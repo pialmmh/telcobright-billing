@@ -63,9 +63,22 @@ namespace TelcobrightMediation.Reports.InvoiceReports.jsl.ICX
             decimal invTotalAmount = invoiceBasicDatas.Sum(x => x.GrandTotalAmount);
 
             xrTableCellSubTotalAmount.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
-            xrTableCellVAT.Text = string.Format("{0:n2}", invTotalAmount - subTotalAmount);
-            xrTableCellInvoiceTotal.Text = string.Format("{0:n2}", invTotalAmount);
-            xrTableCellAmountDueforPayment.Text = string.Format("{0:n2}", invTotalAmount);
+            if (startDate >= new DateTime(2019, 7, 1))
+            {
+                xrTableCellVAT.Text = string.Format("{0:n2}", invTotalAmount - subTotalAmount);
+                xrTableCellInvoiceTotal.Text = string.Format("{0:n2}", invTotalAmount);
+                xrTableCellAmountDueforPayment.Text = string.Format("{0:n2}", invTotalAmount);
+            }
+            else
+            {
+                invTotalAmount = subTotalAmount;
+                xrTableCellVatText.Text = string.Empty;
+                xrTableCellVAT.Text = string.Empty;
+                xrTableCellInvoiceTotalText.Text = string.Empty;
+                xrTableCellInvoiceTotal.Text = string.Empty;
+                xrTableCellAmountDueforPayment.Text = string.Format("{0:n2}", invTotalAmount);
+            }
+
             #endregion
 
             

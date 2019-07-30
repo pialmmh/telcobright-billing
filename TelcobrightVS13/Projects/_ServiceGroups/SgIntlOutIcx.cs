@@ -93,7 +93,9 @@ namespace TelcobrightMediation
         public InvoiceGenerationInputData ExecInvoicePreProcessing(
             InvoiceGenerationInputData invoiceGenerationInputData)
         {
-            invoiceGenerationInputData.JsonDetail.Add("vat", ".15");//todo: for now harcode
+            Dictionary<string, string> jobParamsMap = invoiceGenerationInputData.JsonDetail;
+            DateTime startDate = Convert.ToDateTime(jobParamsMap["startDate"]);
+            invoiceGenerationInputData.JsonDetail.Add("vat", startDate >= new DateTime(2019, 7, 1) ? ".15" : "0");
             return XyzRuleHelper.ExecInvoicePreProcessing(invoiceGenerationInputData);
         }
 
