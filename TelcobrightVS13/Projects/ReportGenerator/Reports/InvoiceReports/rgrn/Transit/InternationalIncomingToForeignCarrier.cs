@@ -71,7 +71,8 @@ namespace TelcobrightMediation.Reports.InvoiceReports.rgrn.Transit
             xrLabelPaymentAdvice.Text = $"Account Name : Royal Green Limited\r\n" +
                                         $"Account No : 04666485418\r\n" +
                                         $"ACH routing Number: 011000138\r\n" +
-                                        $"Bank Name: Bank Of America";
+                                        $"Bank Name: Bank Of America\r\n" +
+                                        $"Swift Code:  BOFAUS3N";
 
             #endregion
         }

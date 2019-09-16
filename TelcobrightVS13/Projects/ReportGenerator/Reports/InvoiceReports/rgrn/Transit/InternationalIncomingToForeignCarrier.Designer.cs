@@ -43,6 +43,7 @@
             this.TopMargin = new DevExpress.XtraReports.UI.TopMarginBand();
             this.BottomMargin = new DevExpress.XtraReports.UI.BottomMarginBand();
             this.PageHeader = new DevExpress.XtraReports.UI.PageHeaderBand();
+            this.xrLabelCustomerId = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel3 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabelTimeZone = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabelInvoiceNo = new DevExpress.XtraReports.UI.XRLabel();
@@ -83,7 +84,7 @@
             this.xrTableCell9 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCellInvoiceTotal = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrLabel1 = new DevExpress.XtraReports.UI.XRLabel();
-            this.xrLabelCustomerId = new DevExpress.XtraReports.UI.XRLabel();
+            this.xrLabelFooter = new DevExpress.XtraReports.UI.XRLabel();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable3)).BeginInit();
@@ -225,6 +226,16 @@
             this.xrTable2});
             this.PageHeader.HeightF = 322.9167F;
             this.PageHeader.Name = "PageHeader";
+            // 
+            // xrLabelCustomerId
+            // 
+            this.xrLabelCustomerId.LocationFloat = new DevExpress.Utils.PointFloat(0F, 238.4584F);
+            this.xrLabelCustomerId.Name = "xrLabelCustomerId";
+            this.xrLabelCustomerId.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
+            this.xrLabelCustomerId.SizeF = new System.Drawing.SizeF(300F, 23F);
+            this.xrLabelCustomerId.StylePriority.UseTextAlignment = false;
+            this.xrLabelCustomerId.Text = "Customer ID:";
+            this.xrLabelCustomerId.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
             // 
             // xrLabel3
             // 
@@ -430,6 +441,7 @@
             // PageFooter
             // 
             this.PageFooter.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
+            this.xrLabelFooter,
             this.xrLine2,
             this.xrPageInfo1});
             this.PageFooter.HeightF = 85F;
@@ -655,15 +667,16 @@
             this.xrLabel1.Text = "Note : This is a computer generated invoice, no signature is required";
             this.xrLabel1.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
             // 
-            // xrLabelCustomerId
+            // xrLabelFooter
             // 
-            this.xrLabelCustomerId.LocationFloat = new DevExpress.Utils.PointFloat(0F, 238.4584F);
-            this.xrLabelCustomerId.Name = "xrLabelCustomerId";
-            this.xrLabelCustomerId.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.xrLabelCustomerId.SizeF = new System.Drawing.SizeF(300F, 23F);
-            this.xrLabelCustomerId.StylePriority.UseTextAlignment = false;
-            this.xrLabelCustomerId.Text = "Customer ID:";
-            this.xrLabelCustomerId.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
+            this.xrLabelFooter.LocationFloat = new DevExpress.Utils.PointFloat(0F, 32.375F);
+            this.xrLabelFooter.Name = "xrLabelFooter";
+            this.xrLabelFooter.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
+            this.xrLabelFooter.SizeF = new System.Drawing.SizeF(727F, 22.99998F);
+            this.xrLabelFooter.StylePriority.UseTextAlignment = false;
+            this.xrLabelFooter.Text = "Royal Green Limited. Registered(Statutory) Office at:1712Pioneer Ave.1057,Cheyenn" +
+    "e,WY 82001.";
+            this.xrLabelFooter.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             // 
             // InternationalIncomingToForeignCarrier
             // 
@@ -743,5 +756,6 @@
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell13;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell14;
         private DevExpress.XtraReports.UI.XRLabel xrLabelCustomerId;
+        private DevExpress.XtraReports.UI.XRLabel xrLabelFooter;
     }
 }
