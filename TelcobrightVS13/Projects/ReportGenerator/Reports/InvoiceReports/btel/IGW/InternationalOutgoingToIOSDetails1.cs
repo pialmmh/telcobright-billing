@@ -33,7 +33,7 @@ namespace TelcobrightMediation.Reports.InvoiceReports.btel.IGW
             this.DataSource = invoiceBasicDatas;
 
             #region Page Header
-            xrLabelVatRegNo.Text = "VAT Reg. No. 001288116";
+            xrLabelVatRegNo.Text = "BIN: 001288116-0208";
             xrLabelPartnerName.Text = invoiceMap["companyName"];
             xrLabelPartnerVatRegNo.Text = "VAT Reg. No. " + invoiceMap["vatRegNo"];
             xrLabelType.Text = string.Format("Type: {0}", invoiceMap["customerType"]);
