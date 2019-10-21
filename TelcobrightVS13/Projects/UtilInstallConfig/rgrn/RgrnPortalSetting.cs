@@ -308,7 +308,38 @@ namespace InstallConfig
                                     "nodes['Reports/IGW'].Expanded=false",
                                     "nodes['Reports/Transit'].Expanded=false"
                                 }
+                            },
+                            new SettingByRoles()
+                            {
+                                RoleNames = new List<string>()
+                                {
+                                    "noc"
+                                },
+                                SpringExpressionIfRole = new List<string>()
+                                {
+                                    "nodes['Configuration'].Expanded=false",
+                                    "nodes['Billing'].Expanded=false",
+                                    "nodes['Mediation'].Expanded=false",
+                                    "nodes['Settings'].Expanded=false",
+                                    "nodes['Billing Reports'].Expanded=false",
+                                    "nodes['Reports/ICX'].Expanded=false",
+                                    "nodes['Reports/IGW'].Expanded=false",
+                                    "nodes['Reports/Transit'].Expanded=true",
+                                    "nodes['Settings/Manage Users'].Expanded=false"
+                                },
+                                SpringExpressionIfNotRole = new List<string>()
+                                {
+                                    "nodes['Configuration'].Expanded=false",
+                                    "nodes['Billing'].Expanded=false",
+                                    "nodes['Mediation'].Expanded=false",
+                                    "nodes['Settings'].Expanded=false",
+                                    "nodes['Billing Reports'].Expanded=false",
+                                    "nodes['Reports/ICX'].Expanded=false",
+                                    "nodes['Reports/IGW'].Expanded=false",
+                                    "nodes['Reports/Transit'].Expanded=false"
+                                }
                             }
+
                         }//list of settings by Roles
                     },
                     { "~/reports/transit/InternationalInTransit.aspx",//settings for report pages
