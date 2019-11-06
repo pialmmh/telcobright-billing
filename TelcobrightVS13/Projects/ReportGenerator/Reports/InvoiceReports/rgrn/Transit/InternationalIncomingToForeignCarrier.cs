@@ -68,11 +68,15 @@ namespace TelcobrightMediation.Reports.InvoiceReports.rgrn.Transit
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
             xrLabelAmountInwords.Text = textInfo.ToTitleCase(CurrencyHelper.NumberToWords(Convert.ToDouble(subTotalAmount)));
 
-            xrLabelPaymentAdvice.Text = $"Account Name : Royal Green Limited\r\n" +
-                                        $"Account No : 04666485418\r\n" +
-                                        $"ACH routing Number: 011000138\r\n" +
-                                        $"Bank Name: Bank Of America\r\n" +
-                                        $"Swift Code:  BOFAUS3N";
+            xrLabelPaymentAdvice.Text = $"Account Name: ROYAL GREEN PTE LTD.\r\n" +
+                                        $"SGD Account: 460-354-999-0\r\n" +
+                                        $"USD Account: 352-956-792-6\r\n" +
+                                        $"Bank Name: United Overseas Bank Limited.\r\n" +
+                                        $"Bank Swift: UOVBSGSG\r\n" +
+                                        $"Bank Code: 7375\r\n" +
+                                        $"Branch Code: 001\r\n" +
+                                        $"Branch name: UOB MAIN\r\n" +
+                                        $"Bank Address: 80 Raffles Place # 01-00 UOB Plaza 2, Singapore 048624.";
 
             #endregion
         }
