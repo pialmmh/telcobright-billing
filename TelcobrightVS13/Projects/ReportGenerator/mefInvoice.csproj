@@ -188,7 +188,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Reports\InvoiceReports\jsl\ICX\LTFSToIPTSP.resx">
       <DependentUpon>LTFSToIPTSP.cs</DependentUpon>
     </EmbeddedResource>
