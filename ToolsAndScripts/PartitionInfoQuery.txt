@@ -1,0 +1,12 @@
+select * from information_schema.partitions p
+left join 
+(select * from information_schema.tables
+where TABLE_SCHEMA='jsl'
+and table_name not like 'lcr%'
+and table_name not like 'rate%') t
+on p.table_name=t.table_name
+where p.TABLE_SCHEMA='jsl'
+and p.partition_name is not null
+and p.table_name not like 'lcr%'
+and p.table_name not like 'rate%';
+
