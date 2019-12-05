@@ -30,6 +30,8 @@ namespace TelcobrightMediation
         public bool EnableTgCreationForAns { get; set; }
         public FileSplitSetting FileSplitSetting { get; set; } = null;
         public bool UseIdCallAsBillId { get; set; } = false;
+        public bool AutoCorrectDuplicateBillId { get; set; } = false;
+        public bool AutoCorrectBillIdsWithPrevChargeableIssue { get; set; } = false;
         public CdrSetting()
         {
             this.NerCalculationRule = "NerByCauseCode";

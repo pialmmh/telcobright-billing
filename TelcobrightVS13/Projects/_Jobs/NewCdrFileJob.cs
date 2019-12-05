@@ -133,10 +133,19 @@ namespace Jobs
             }
             MefValidator<string[]> inconistentValidator =
                 NewCdrPreProcessor.CreateValidatorForInconsistencyCheck(collectorinput);
-            if (!collectorinput.CdrJobInputData.MediationContext.Tbc.CdrSetting.PartialCdrEnabledNeIds
+            var cdrSetting = collectorinput.CdrJobInputData.MediationContext.Tbc.CdrSetting;
+            if (cdrSetting.PartialCdrEnabledNeIds
                 .Contains(collectorinput.Ne.idSwitch))
             {
-                preProcessor.TxtCdrRows = preProcessor.FilterCdrsWithDuplicateBillIdsAsInconsistent(preProcessor.TxtCdrRows);
+                if (cdrSetting.AutoCorrectDuplicateBillId == true)
+                {
+                    preProcessor.TxtCdrRows = preProcessor.ChangeDuplicateBillIds(preProcessor.TxtCdrRows);
+                }
+                else preProcessor.TxtCdrRows = preProcessor.FilterCdrsWithDuplicateBillIdsAsInconsistent(preProcessor.TxtCdrRows);
+            }
+            if (cdrSetting.AutoCorrectBillIdsWithPrevChargeableIssue==true)
+            {
+                preProcessor.TxtCdrRows= CdrJob.ChangeBillIdsWithPrevChargeableIssue(preProcessor.TxtCdrRows);
             }
             Parallel.ForEach(preProcessor.TxtCdrRows, txtRow =>
             {
@@ -160,6 +169,8 @@ namespace Jobs
             }
             
         }
+
+        
 
         private static void SetIdCallsInSameOrderAsCollected(NewCdrPreProcessor preProcessor, CdrCollectorInputData collectorinput)
         {

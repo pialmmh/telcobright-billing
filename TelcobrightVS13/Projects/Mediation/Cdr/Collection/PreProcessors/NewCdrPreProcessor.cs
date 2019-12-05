@@ -43,6 +43,18 @@ namespace TelcobrightMediation
             }
         }
 
+        public List<string[]> ChangeDuplicateBillIds(List<string[]> txtRows)
+        {
+            var partialBillIdsWithNonPartialFlag = txtRows.GroupBy(c => c[Fn.UniqueBillId]).Where(g => g.Count() > 1)
+                .Select(g => g.Key).ToList();
+            foreach (string[] dupRow in txtRows.Where(row=> partialBillIdsWithNonPartialFlag.Contains(row[Fn.UniqueBillId])))
+            {
+                dupRow[Fn.UniqueBillId] = "d" + dupRow[Fn.UniqueBillId];
+                dupRow[Fn.Partialflag] = "2";
+            }
+            return txtRows;
+        }
+
         public List<string[]> FilterCdrsWithDuplicateBillIdsAsInconsistent(List<string[]> txtRows)
         {
             List<string[]> dupRows = txtRows.GroupBy(c => c[Fn.UniqueBillId]).Where(g => g.Count() > 1)
@@ -185,6 +197,7 @@ namespace TelcobrightMediation
             var cdrExtsForPartials = newCdrExts.Where(c => c.Cdr.PartialFlag != 0).ToList();
             if (newCdrExts.GroupBy(c => c.UniqueBillId).Any(g => g.Count() > 1))
                 throw new Exception("Duplicate billId for CdrExts in CdrJob");
+            
             var allIdCalls = cdrExtsForNonPartials.Select(c => c.Cdr.IdCall)
                 .Concat(cdrExtsForPartials
                 .SelectMany(c => c.PartialCdrContainer.CombinedNewAndOldUnprocessedInstance).Select(c => c.IdCall))

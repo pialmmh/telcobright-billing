@@ -50,6 +50,8 @@ namespace InstallConfig
                 ServiceGroupConfigurations = this.GetServiceGroupConfigurations(),
                 DisableCdrPostProcessingJobCreationForAutomation = false,
                 DisableParallelMediation = false,
+                AutoCorrectDuplicateBillId = true,
+                AutoCorrectBillIdsWithPrevChargeableIssue = true,
                 FileSplitSetting = new FileSplitSetting()
                 {
                     FileSplitType = "byte",
