@@ -64,6 +64,7 @@
             this.xrTableCell5 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCell6 = new DevExpress.XtraReports.UI.XRTableCell();
             this.PageFooter = new DevExpress.XtraReports.UI.PageFooterBand();
+            this.xrLabelFooter = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLine2 = new DevExpress.XtraReports.UI.XRLine();
             this.xrPageInfo1 = new DevExpress.XtraReports.UI.XRPageInfo();
             this.ReportFooter = new DevExpress.XtraReports.UI.ReportFooterBand();
@@ -84,7 +85,6 @@
             this.xrTableCell9 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCellInvoiceTotal = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrLabel1 = new DevExpress.XtraReports.UI.XRLabel();
-            this.xrLabelFooter = new DevExpress.XtraReports.UI.XRLabel();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable3)).BeginInit();
@@ -447,6 +447,17 @@
             this.PageFooter.HeightF = 85F;
             this.PageFooter.Name = "PageFooter";
             // 
+            // xrLabelFooter
+            // 
+            this.xrLabelFooter.LocationFloat = new DevExpress.Utils.PointFloat(0F, 32.375F);
+            this.xrLabelFooter.Name = "xrLabelFooter";
+            this.xrLabelFooter.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
+            this.xrLabelFooter.SizeF = new System.Drawing.SizeF(727F, 22.99998F);
+            this.xrLabelFooter.StylePriority.UseTextAlignment = false;
+            this.xrLabelFooter.Text = "Royal Green Limited. Registered(Statutory) Office at:1712Pioneer Ave.1057,Cheyenn" +
+    "e,WY 82001.";
+            this.xrLabelFooter.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
+            // 
             // xrLine2
             // 
             this.xrLine2.ForeColor = System.Drawing.Color.Black;
@@ -506,7 +517,7 @@
             this.xrLabelPaymentAdvice.Multiline = true;
             this.xrLabelPaymentAdvice.Name = "xrLabelPaymentAdvice";
             this.xrLabelPaymentAdvice.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.xrLabelPaymentAdvice.SizeF = new System.Drawing.SizeF(289.7916F, 112.75F);
+            this.xrLabelPaymentAdvice.SizeF = new System.Drawing.SizeF(450.2083F, 112.75F);
             this.xrLabelPaymentAdvice.Text = "Account Name: Bangla Tel Ltd.";
             // 
             // xrLabel12
@@ -666,17 +677,6 @@
             this.xrLabel1.StylePriority.UseTextAlignment = false;
             this.xrLabel1.Text = "Note : This is a computer generated invoice, no signature is required";
             this.xrLabel1.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            // 
-            // xrLabelFooter
-            // 
-            this.xrLabelFooter.LocationFloat = new DevExpress.Utils.PointFloat(0F, 32.375F);
-            this.xrLabelFooter.Name = "xrLabelFooter";
-            this.xrLabelFooter.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.xrLabelFooter.SizeF = new System.Drawing.SizeF(727F, 22.99998F);
-            this.xrLabelFooter.StylePriority.UseTextAlignment = false;
-            this.xrLabelFooter.Text = "Royal Green Limited. Registered(Statutory) Office at:1712Pioneer Ave.1057,Cheyenn" +
-    "e,WY 82001.";
-            this.xrLabelFooter.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             // 
             // InternationalIncomingToForeignCarrier
             // 
