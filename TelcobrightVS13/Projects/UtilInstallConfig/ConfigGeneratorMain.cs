@@ -49,7 +49,10 @@ namespace InstallConfig
                 Start:
                 Console.Clear();
                 //tb operator name
-                string tbOperatorName = ConfigurationManager.AppSettings["JsonConfigFileNameForPortalCopyForSingleOperator"].Split('_')[1];
+                //string tbOperatorName = ConfigurationManager.AppSettings["JsonConfigFileNameForPortalCopyForSingleOperator"].Split('_')[1];
+                var splitArr = ConfigurationManager.AppSettings["JsonConfigFileNameForPortalCopyForSingleOperator"]
+                    .Split('_').ToList();
+                string tbOperatorName = String.Join("_", splitArr.Where((s, index) => index !=splitArr.Count-1 & index!=0));
 
                 Console.WriteLine("Welcome to Telcobright Initial Configuration Utility");
                 Console.WriteLine("Partner Database Name: [" + tbOperatorName + "]");
@@ -339,34 +342,34 @@ namespace InstallConfig
             DatabaseSetting dbSettings = tbc.DatabaseSetting;
             WriteBillingRules(dbSettings);
             //reset partitions
-            Console.WriteLine($@"Reset datewise partitions for {tbc.DatabaseSetting.DatabaseName} tables (Y/N)? this will recreate the tables.");
-            ConsoleKeyInfo kinfo = Console.ReadKey();
-            if (kinfo.KeyChar == 'Y' || kinfo.KeyChar == 'y')
-            {
-                Console.WriteLine();
-                Console.WriteLine($@"Resetting partitions for {tbc.DatabaseSetting.DatabaseName}...");
-                PartitionManager partitionManager = new PartitionManager(tbc.DatabaseSetting);
-                partitionManager.ResetPartitions();
-                Console.WriteLine("Partitions were reset successfully for "+tbc.DatabaseSetting.DatabaseName);
-            }
-            else
-            {
-                Console.WriteLine();
-                Console.WriteLine("Partitions were not reset for "+tbc.DatabaseSetting.DatabaseName);
-            }
+            //Console.WriteLine($@"Reset datewise partitions for {tbc.DatabaseSetting.DatabaseName} tables (Y/N)? this will recreate the tables.");
+            //ConsoleKeyInfo kinfo = Console.ReadKey();
+            //if (kinfo.KeyChar == 'Y' || kinfo.KeyChar == 'y')
+            //{
+            //    Console.WriteLine();
+            //    Console.WriteLine($@"Resetting partitions for {tbc.DatabaseSetting.DatabaseName}...");
+            //    //PartitionManager partitionManager = new PartitionManager(tbc.DatabaseSetting);
+            //    //partitionManager.ResetPartitions();
+            //    Console.WriteLine("Partitions were reset successfully for "+tbc.DatabaseSetting.DatabaseName);
+            //}
+            //else
+            //{
+            //    Console.WriteLine();
+            //    Console.WriteLine("Partitions were not reset for "+tbc.DatabaseSetting.DatabaseName);
+            //}
             //reset routes
-            Console.WriteLine(Environment.NewLine + "Reset routes for " + tbc.DatabaseSetting.DatabaseName + " (Y/N)?");
-            ConsoleKeyInfo keyInfo = Console.ReadKey();
-            if (keyInfo.KeyChar == 'Y' || keyInfo.KeyChar == 'y')
-            {
-                ResetParnerRoutes(tbc,configPathHelper); //reset routes per operator with confirmation for each
-                Console.WriteLine();
-            }
-            else
-            {
-                Console.WriteLine();
-                Console.WriteLine("Routes were not reset for " + tbc.DatabaseSetting.DatabaseName);
-            }
+            //Console.WriteLine(Environment.NewLine + "Reset routes for " + tbc.DatabaseSetting.DatabaseName + " (Y/N)?");
+            //ConsoleKeyInfo keyInfo = Console.ReadKey();
+            //if (keyInfo.KeyChar == 'Y' || keyInfo.KeyChar == 'y')
+            //{
+            //    ResetParnerRoutes(tbc,configPathHelper); //reset routes per operator with confirmation for each
+            //    Console.WriteLine();
+            //}
+            //else
+            //{
+            //    Console.WriteLine();
+            //    Console.WriteLine("Routes were not reset for " + tbc.DatabaseSetting.DatabaseName);
+            //}
             NameValueCollection configFiles = (NameValueCollection)ConfigurationManager.GetSection("appSettings");
             foreach (string key in configFiles)
             {
