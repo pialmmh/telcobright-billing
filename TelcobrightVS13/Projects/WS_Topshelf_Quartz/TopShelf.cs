@@ -217,7 +217,8 @@ namespace WS_Telcobright_Topshelf
 
         private static void ScheduleDebugJobsThroughMenu(IScheduler runtimeScheduler, IScheduler debugScheduler)
         {
-            List<TriggerKey> triggerKeysForDebug = GetSelectedTriggerKeysFromMenu(runtimeScheduler,selectToPause: false);
+            List<TriggerKey> triggerKeysForDebug = GetSelectedTriggerKeysFromMenu(runtimeScheduler, selectToPause: false)
+                .OrderBy(t => t.Name).ToList();
             ScheduleDebugJobs(runtimeScheduler, debugScheduler, triggerKeysForDebug);
         }
         private static void PauseNonSelectedTrigggersThroughMenu(IScheduler runtimeScheduler)
@@ -228,7 +229,7 @@ namespace WS_Telcobright_Topshelf
         static List<TriggerKey> GetSelectedTriggerKeysFromMenu(IScheduler runtimeScheduler,bool selectToPause)
         {
             List<TriggerKey> triggersKeys = runtimeScheduler.GetTriggerKeys(GroupMatcher<TriggerKey>.AnyGroup())
-                .ToList();
+                                .ToList();
             List<ITrigger> triggers = triggersKeys.Select(tk => runtimeScheduler.GetTrigger(tk)).ToList();
             List<int> selectedtriggerNumbersFromConsole = DisplayMenu(triggers);
             if (selectedtriggerNumbersFromConsole.Count > 0)

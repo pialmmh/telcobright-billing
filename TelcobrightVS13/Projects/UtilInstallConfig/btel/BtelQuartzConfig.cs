@@ -130,7 +130,7 @@ namespace InstallConfig
                 new QuartzTbDaemonConfig
                 (
                     operatorName: operatorName,
-                    identity: "FileCopier [Vault:FileArchive1Zip]" + " [" + operatorName+"]",
+                    identity: "FileCopier [Vault:FileArchive1]" + " [" + operatorName+"]",
                     group: operatorName,
                     cronExpression: "/5 * * ? * *",
                     fireOnceIfMissFired: false,
@@ -138,20 +138,7 @@ namespace InstallConfig
                     {
                         {"telcobrightProcessId", "104"},
                         {"operatorName", operatorName},
-                        {"syncPair", "Vault:FileArchive1Zip"}
-                    }),
-                new QuartzTbDaemonConfig
-                (
-                    operatorName: operatorName,
-                    identity: "FileCopier [Vault:FileArchive2]" + " [" + operatorName+"]",
-                    group: operatorName,
-                    cronExpression: "/5 * * ? * *",
-                    fireOnceIfMissFired: false,
-                    jobDataMap: new Dictionary<string, string>()
-                    {
-                        {"telcobrightProcessId", "104"},
-                        {"operatorName", operatorName},
-                        {"syncPair","Vault:FileArchive2" }
+                        {"syncPair", "Vault:FileArchive1"}
                     }),
                 new QuartzTbDaemonConfig
                 (

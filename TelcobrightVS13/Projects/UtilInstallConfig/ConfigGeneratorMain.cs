@@ -62,8 +62,7 @@ namespace InstallConfig
                 Console.WriteLine("3=[Not Set]");
                 Console.WriteLine("4=Copy Portal to IIS Directory");
                 Console.WriteLine("5=Not Set");
-                Console.WriteLine("6=Generate Configuration");
-                Console.WriteLine("7=Generate Configuration & Reset Scheduler data");
+                Console.WriteLine("6=Generate Configuration & Reset Scheduler data");
                 Console.WriteLine("q=Quit");
                 ConsoleKeyInfo ki = new ConsoleKeyInfo();
                 ki = Console.ReadKey(true);
@@ -99,7 +98,6 @@ namespace InstallConfig
                         if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' || Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
                         break;
                     case '6':
-                    case '7':
                         SchedulerSetting schedulerSetting = SchedulerConfigGenerator.GeneraterateSchedulerConfig();
                         string[] operatorNames = ConfigurationManager.AppSettings["OperatorsToBeConfigured"].Split(',');
                         List<IConfigGenerator> operatorsToBeConfigured
@@ -138,7 +136,7 @@ namespace InstallConfig
                         var k = Convert.ToChar((Console.ReadKey(true)).Key);
                         if (k == 'q' || k== 'Q')
                         {
-                            return;
+                            Environment.Exit(0);
                         }
                             
                         break;

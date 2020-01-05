@@ -54,7 +54,7 @@ namespace Decoders
             {
                 row[Fn.OutgoingRoute] = row[Fn.OutTrunkAdditionalInfo];
             }
-            else throw new ArgumentOutOfRangeException($"Unexpected values of OutMgw & OutTrunkAdditionalInfo while setting oucoming route.");
+            //else throw new ArgumentOutOfRangeException($"Unexpected values of OutMgw & OutTrunkAdditionalInfo while setting oucoming route.");
         }
     }
 }
