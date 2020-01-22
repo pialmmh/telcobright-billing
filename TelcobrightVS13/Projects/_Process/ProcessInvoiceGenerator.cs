@@ -54,7 +54,7 @@ namespace Process
                     {
                         tbc.GetPathIndependentApplicationDirectory();
                         List<job> incompleteJobs = context.jobs //jobs other than newcdr
-                            .Where(c => c.CompletionTime == null && idJobDefs.Contains(c.idjobdefinition))
+                            .Where(c => c.Status!=1 && c.CompletionTime == null && idJobDefs.Contains(c.idjobdefinition))
                             .OrderBy(c => c.priority).ToList();
                         using (DbCommand cmd = context.Database.Connection.CreateCommand())
                         {
