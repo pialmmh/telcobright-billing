@@ -39,7 +39,7 @@ namespace TelcobrightMediation.Cdr
         protected abstract List<CdrExt> CreateOldCdrExts();
         protected abstract CdrCollectionResult CreateNewCollectionResult();
         protected abstract CdrCollectionResult CreateOldCollectionResult();
-
+        private static readonly Random rndSuffixForDupCorrection = new Random();
         protected AbstractCdrJobPreProcessor(CdrCollectorInputData cdrCollectorInputData, int rawCount,
             List<cdrinconsistent> inconsistentCdrs)
         {
@@ -103,6 +103,17 @@ namespace TelcobrightMediation.Cdr
                     File.AppendAllText("InconsistentBillId.txt", c.UniqueBillId + Environment.NewLine);
                 }
             });
+        }
+        public static List<string[]> ChangeDuplicateBillIds(List<string[]> txtRows)
+        {
+            var duplicateBillIds = txtRows.GroupBy(c => c[Fn.UniqueBillId]).Where(g => g.Count() > 1)
+                                            .Select(g => g.Key).ToList();
+            foreach (string[] dupRow in txtRows.Where(row => duplicateBillIds.Contains(row[Fn.UniqueBillId])))
+            {
+                dupRow[Fn.UniqueBillId] = "d" + dupRow[Fn.UniqueBillId] + "_" + rndSuffixForDupCorrection.Next();
+                dupRow[Fn.Partialflag] = "2";
+            }
+            return txtRows;
         }
     }
 }

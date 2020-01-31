@@ -43,17 +43,7 @@ namespace TelcobrightMediation
             }
         }
 
-        public List<string[]> ChangeDuplicateBillIds(List<string[]> txtRows)
-        {
-            var partialBillIdsWithNonPartialFlag = txtRows.GroupBy(c => c[Fn.UniqueBillId]).Where(g => g.Count() > 1)
-                .Select(g => g.Key).ToList();
-            foreach (string[] dupRow in txtRows.Where(row=> partialBillIdsWithNonPartialFlag.Contains(row[Fn.UniqueBillId])))
-            {
-                dupRow[Fn.UniqueBillId] = "d" + dupRow[Fn.UniqueBillId];
-                dupRow[Fn.Partialflag] = "2";
-            }
-            return txtRows;
-        }
+        
 
         public List<string[]> FilterCdrsWithDuplicateBillIdsAsInconsistent(List<string[]> txtRows)
         {

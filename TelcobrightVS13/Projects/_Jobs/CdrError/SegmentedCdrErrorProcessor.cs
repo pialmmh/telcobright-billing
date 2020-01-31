@@ -39,6 +39,10 @@ namespace TelcobrightMediation
                 new CdrRowCollector<cdrerror>(this.CdrCollectorInput.CdrJobInputData,
                     rowIdsCollectionForSingleDay.GetSelectSql());
             List<string[]> txtRows = dbRowCollector.CollectAsTxtRows();
+            if (this.CdrCollectorInput.CdrSetting.AutoCorrectDuplicateBillIdBeforeErrorProcess == true)
+            {
+                txtRows = AbstractCdrJobPreProcessor.ChangeDuplicateBillIds(txtRows);
+            }
             List<cdr> cdrs = new List<cdr>();
             txtRows.ForEach(c =>
             {
@@ -47,7 +51,7 @@ namespace TelcobrightMediation
                     CdrConversionUtil.ConvertTxtRowToCdrOrInconsistentOnFailure(c, out inconsistentCdr);
                 cdrs.Add(convertedCdr);
             });
-
+            
             CdrErrorPreProcessor preProcessor =
                 new CdrErrorPreProcessor(this.CdrCollectorInput, cdrs);
             CdrCollectionResult newCollectionResult = null, oldCollectionResult = null;

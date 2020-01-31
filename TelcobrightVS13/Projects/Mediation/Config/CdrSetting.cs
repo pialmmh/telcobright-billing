@@ -31,6 +31,7 @@ namespace TelcobrightMediation
         public FileSplitSetting FileSplitSetting { get; set; } = null;
         public bool UseIdCallAsBillId { get; set; } = false;
         public bool AutoCorrectDuplicateBillId { get; set; } = false;
+        public bool AutoCorrectDuplicateBillIdBeforeErrorProcess { get; set; } = false;
         public bool AutoCorrectBillIdsWithPrevChargeableIssue { get; set; } = false;
         public CdrSetting()
         {
