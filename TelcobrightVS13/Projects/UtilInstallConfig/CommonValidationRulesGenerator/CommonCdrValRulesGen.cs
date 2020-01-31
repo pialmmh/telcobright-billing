@@ -40,7 +40,7 @@ namespace InstallConfig._CommonValidation
                 new IdCallGt0(),
                 new FileNameNotEmpty(),
                 new InPartnerIdGt0(),
-                new FinalRecordMustBe1(),
+                //new FinalRecordMustBe1(),
                 new ChargingStatus1WhenDurationGt0(),
              };
         }
