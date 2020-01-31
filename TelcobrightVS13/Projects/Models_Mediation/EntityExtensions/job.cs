@@ -5,7 +5,7 @@ namespace MediationModel
         public object AdditionalData { get; set; }
         public override string ToString()
         {
-            return this.ne + this.JobName;
+            return this.ne.SwitchName + this.JobName;
         }
     }
 }
