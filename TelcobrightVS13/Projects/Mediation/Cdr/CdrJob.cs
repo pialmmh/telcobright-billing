@@ -189,7 +189,11 @@ namespace TelcobrightMediation.Cdr
 
         private static List<string> ReadInconsistentBillIsdFromLogFile()
         {
-            return File.ReadAllLines("InconsistentBillId.txt").ToList();
+            string inconsistentFilenames = "InconsistentBillId.txt";
+            if (File.Exists(inconsistentFilenames)==false){
+                File.CreateText(inconsistentFilenames).Close();
+            }
+            return File.ReadAllLines(inconsistentFilenames).ToList();
         }
     }
 }
