@@ -113,7 +113,8 @@
 
                 }
 
-
+                DropDownListPartner_OnSelectedIndexChanged(DropDownListPartner, EventArgs.Empty);
+                DropDownListIgw_OnSelectedIndexChanged(DropDownListIgw, EventArgs.Empty);
 
 
                 //Retrieve Path from TreeView for displaying in the master page caption label
@@ -360,7 +361,7 @@
 
     </div>
 
-    <div id="ParamBorder" style="float: left; padding-top: 3px; padding-left: 10px; height: 135px; display: block; border: 2px ridge #E5E4E2; margin-bottom: 5px; width: 1300px;">
+    <div id="ParamBorder" style="float: left; padding-top: 3px; padding-left: 10px; height: 155px; display: block; border: 2px ridge #E5E4E2; margin-bottom: 5px; width: 1300px;">
         <div style="height: 20px; background-color: #f2f2f2; color: black;">
             <span style="float: left; font-weight: bold; padding-left: 20px;">Show Performance
                 <asp:CheckBox ID="CheckBoxShowPerformance" runat="server" Checked="true" /></span>
@@ -458,15 +459,15 @@
 
             <div style="text-align: left;">
 
-                <div style="float: left; height: 25px; min-width: 1400px;">
+                <div style="float: left; height: 25px; min-width: 1285px;">
 
                     <div style="float: left;">
                         View by Incoming ANS: 
                             <asp:CheckBox ID="CheckBoxPartner" runat="server" AutoPostBack="True"
                                 OnCheckedChanged="CheckBoxShowByPartner_CheckedChanged" Checked="True" />
                        
-                        <asp:DropDownList ID="DropDownListPartner" runat="server"
-                            Enabled="true">
+                        <asp:DropDownList ID="DropDownListPartner" runat="server" OnSelectedIndexChanged="DropDownListPartner_OnSelectedIndexChanged"
+                            Enabled="true" AutoPostBack="True">
                         </asp:DropDownList>
 
                     </div>
@@ -474,7 +475,7 @@
                         <%--View by ANS: --%>
                                 <asp:CheckBox ID="CheckBoxShowByAns" runat="server" AutoPostBack="True"
                                     OnCheckedChanged="CheckBoxShowByAns_CheckedChanged" Checked="false" Visible="False" />
-                        <asp:DropDownList ID="DropDownListAns" runat="server"
+                        <asp:DropDownList ID="DropDownListAns" runat="server" 
                             Enabled="False" Visible="False">
                         </asp:DropDownList>
 
@@ -484,8 +485,8 @@
                         View by Outgoing ANS:
                         <asp:CheckBox ID="CheckBoxShowByIgw" runat="server"
                             AutoPostBack="True" OnCheckedChanged="CheckBoxShowByIgw_CheckedChanged" Checked="false" />
-                        <asp:DropDownList ID="DropDownListIgw" runat="server"
-                             Enabled="False">
+                        <asp:DropDownList ID="DropDownListIgw" runat="server" OnSelectedIndexChanged="DropDownListIgw_OnSelectedIndexChanged"
+                             Enabled="False" AutoPostBack="True">
                         </asp:DropDownList>
 
                     </div>
@@ -499,6 +500,49 @@
 
 
                 </div>
+
+                </div>
+
+            </div>
+        </div>
+        
+        <div id="RouteFilter" style="margin-top: -4px; margin-left: 10px; float: left; padding-left: 5px; background-color: #f2f2f2;">
+            <%--<span style="font-size: smaller;position:relative;left:-53px;padding-left:0px;clear:right;">[Enter only Date in "dd/MM/yyyy (e.g. 21/11/2012) or Date+Time in "dd/MM/yyyy HH:mm:ss" (e.g. 21/11/2012 19:01:59) format]</span>   --%>
+
+            <div style="text-align: left;">
+
+                <div style="float: left; height: 25px; min-width: 1285px;">
+
+                    <div style="float: left;">
+                        View by Incoming Route: 
+                        <asp:CheckBox ID="CheckBoxViewIncomingRoute" runat="server" AutoPostBack="True"
+                                      OnCheckedChanged="CheckBoxViewIncomingRoute_CheckedChanged" Checked="False" />
+                       
+                        <asp:DropDownList ID="DropDownListViewIncomingRoute" runat="server"
+                                          Enabled="False">
+                        </asp:DropDownList>
+
+                    </div>
+
+                    <div style="float: left; margin-left: 18px;">
+                        View by Outgoing Route:
+                        <asp:CheckBox ID="CheckBoxViewOutgoingRoute" runat="server"
+                                      AutoPostBack="True" OnCheckedChanged="CheckBoxViewOutgoingRoute_CheckedChanged" Checked="false" />
+                        <asp:DropDownList ID="DropDownListViewOutgoingRoute" runat="server"
+                                          Enabled="False">
+                        </asp:DropDownList>
+
+                    </div>
+                    &nbsp;&nbsp;
+
+                    <div style="width: 750px; padding-left: 28px;">
+
+                        <span style="width: 300px; padding-left: 127px;">&nbsp;</span>
+
+                        <span style="width: 50px; padding-left: 100px;">&nbsp;</span>
+
+
+                    </div>
 
                 </div>
 
@@ -535,7 +579,9 @@
                     <Columns>
                         <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" ItemStyle-Wrap="false" />
                         <asp:BoundField DataField="International Partner" HeaderText="Incoming ANS" SortExpression="International Partner" />
+                        <asp:BoundField DataField="tup_incomingroute" HeaderText="Incoming Route" SortExpression="tup_incomingroute" />
                         <asp:BoundField DataField="IGW" HeaderText="Outgoing ANS" SortExpression="IGW" />
+                        <asp:BoundField DataField="tup_outgoingroute" HeaderText="Outgoing Route" SortExpression="tup_outgoingroute" />
                         <asp:BoundField DataField="ANS" HeaderText="ANS" SortExpression="ANS" />
 
                         <asp:BoundField DataField="CallsCount"
