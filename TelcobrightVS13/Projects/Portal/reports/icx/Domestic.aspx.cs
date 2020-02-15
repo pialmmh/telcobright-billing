@@ -59,7 +59,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
                                 CheckBoxShowByAns.Checked==true?DropDownListAns.SelectedIndex>0?" tup_destinationId="+DropDownListAns.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_outpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxViewIncomingRoute.Checked==true?DropDownListViewIncomingRoute.SelectedIndex>0?" tup_incomingroute="+DropDownListViewIncomingRoute.SelectedItem.Text:string.Empty:string.Empty,
-                                CheckBoxViewOutgoingRoute.Checked==true?DropDownListViewOutgoingRoute.SelectedIndex>0?" tup_outgoingroute="+DropDownListViewOutgoingRoute.SelectedItem.Text:string.Empty:string.Empty
+                                CheckBoxViewOutgoingRoute.Checked==true?DropDownListViewOutgoingRoute.SelectedIndex>0?" tup_outgoingroute="+DropDownListViewOutgoingRoute.SelectedItem.Text:string.Empty:string.Empty,
                             }).getSQLString();
 
        
@@ -154,7 +154,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
             GridView1.Columns[19].Visible = false;
         }
         //make profit invisible, it's useless
-        GridView1.Columns[18].Visible = false;
+        GridView1.Columns[17].Visible = false;
         //GridView1.Columns[9].Visible = true;//carrier's duration
         
         using (MySqlConnection connection = new MySqlConnection())
