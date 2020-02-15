@@ -1077,9 +1077,9 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                     }
                     if ((thisAsr < refAsr) || (thisAsr == 0))
                     {
-                        e.Row.Cells[13].ForeColor = Color.White;
-                        e.Row.Cells[13].BackColor = redColor;
-                        e.Row.Cells[13].Font.Bold = true;
+                        e.Row.Cells[15].ForeColor = Color.White;
+                        e.Row.Cells[15].BackColor = redColor;
+                        e.Row.Cells[15].Font.Bold = true;
                     }
 
                     //fas detection
@@ -1090,9 +1090,9 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                     
                     if (thisAsr > refAsrFas && refAsrFas>0)
                     {
-                        e.Row.Cells[13].ForeColor = Color.White;
-                        e.Row.Cells[13].BackColor = Color.Blue;
-                        e.Row.Cells[13].Font.Bold = true;
+                        e.Row.Cells[15].ForeColor = Color.White;
+                        e.Row.Cells[15].BackColor = Color.Blue;
+                        e.Row.Cells[15].Font.Bold = true;
                     }
 
                     //ACD
@@ -1104,9 +1104,9 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                     if (thisAcd < refAcd)
                     {
                         //e.Row.Cells[12].ForeColor = RedColor;
-                        e.Row.Cells[14].ForeColor = Color.White;
-                        e.Row.Cells[14].BackColor = redColor;
-                        e.Row.Cells[14].Font.Bold = true;
+                        e.Row.Cells[16].ForeColor = Color.White;
+                        e.Row.Cells[16].BackColor = redColor;
+                        e.Row.Cells[16].Font.Bold = true;
                     }
 
                     //PDD
@@ -1118,9 +1118,9 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                     if (thisPdd > refPdd)
                     {
                         //e.Row.Cells[13].ForeColor = RedColor;
-                        e.Row.Cells[15].ForeColor = Color.White;
-                        e.Row.Cells[15].BackColor = redColor;
-                        e.Row.Cells[15].Font.Bold = true;
+                        e.Row.Cells[17].ForeColor = Color.White;
+                        e.Row.Cells[17].BackColor = redColor;
+                        e.Row.Cells[17].Font.Bold = true;
                     }
 
                     //CCR
@@ -1132,9 +1132,9 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                     if (thisCcr < refCcr)
                     {
                         //e.Row.Cells[14].ForeColor = RedColor;
-                        e.Row.Cells[16].ForeColor = Color.White;
-                        e.Row.Cells[16].BackColor = redColor;
-                        e.Row.Cells[16].Font.Bold = true;
+                        e.Row.Cells[18].ForeColor = Color.White;
+                        e.Row.Cells[18].BackColor = redColor;
+                        e.Row.Cells[18].Font.Bold = true;
                     }
 
                     //CCRByCauseCode
@@ -1146,9 +1146,9 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                     if (thisCcRbyCc < refCcrCc)
                     {
                         //e.Row.Cells[16].ForeColor = RedColor;
-                        e.Row.Cells[18].ForeColor = Color.White;
-                        e.Row.Cells[18].BackColor = redColor;
-                        e.Row.Cells[18].Font.Bold = true;
+                        e.Row.Cells[20].ForeColor = Color.White;
+                        e.Row.Cells[20].BackColor = redColor;
+                        e.Row.Cells[20].Font.Bold = true;
                     }
                 }
             }
@@ -1210,9 +1210,9 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                     if ((thisAsr < refAsr) || (thisAsr == 0))
                     {
                         //e.Row.Cells[12].ForeColor = RedColor;
-                        e.Row.Cells[13].ForeColor = Color.White;
-                        e.Row.Cells[13].BackColor = redColor;
-                        e.Row.Cells[13].Font.Bold = true;
+                        e.Row.Cells[15].ForeColor = Color.White;
+                        e.Row.Cells[15].BackColor = redColor;
+                        e.Row.Cells[15].Font.Bold = true;
                     }
 
                     //fas detection
@@ -1223,9 +1223,9 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
 
                     if (thisAsr > refAsrFas && refAsrFas>0)
                     {
-                        e.Row.Cells[13].ForeColor = Color.White;
-                        e.Row.Cells[13].BackColor = Color.Blue;
-                        e.Row.Cells[13].Font.Bold = true;
+                        e.Row.Cells[15].ForeColor = Color.White;
+                        e.Row.Cells[15].BackColor = Color.Blue;
+                        e.Row.Cells[15].Font.Bold = true;
                     }
 
                     //ACD
@@ -1237,9 +1237,9 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                     if (thisAcd < refAcd)
                     {
                         //e.Row.Cells[13].ForeColor = RedColor;
-                        e.Row.Cells[14].ForeColor = Color.White;
-                        e.Row.Cells[14].BackColor = redColor;
-                        e.Row.Cells[14].Font.Bold = true; 
+                        e.Row.Cells[16].ForeColor = Color.White;
+                        e.Row.Cells[16].BackColor = redColor;
+                        e.Row.Cells[16].Font.Bold = true; 
                     }
 
                     //PDD
@@ -1250,9 +1250,9 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                     }
                     if (thisPdd > refPdd)
                     {
-                        e.Row.Cells[15].ForeColor = Color.White;
-                        e.Row.Cells[15].BackColor = redColor;
-                        e.Row.Cells[15].Font.Bold = true ;
+                        e.Row.Cells[17].ForeColor = Color.White;
+                        e.Row.Cells[17].BackColor = redColor;
+                        e.Row.Cells[17].Font.Bold = true ;
                     }
 
                     //CCR
@@ -1263,9 +1263,9 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                     }
                     if (thisCcr < refCcr)
                     {
-                        e.Row.Cells[16].ForeColor = Color.White;
-                        e.Row.Cells[16].BackColor = redColor;
-                        e.Row.Cells[16].Font.Bold = true ;
+                        e.Row.Cells[18].ForeColor = Color.White;
+                        e.Row.Cells[18].BackColor = redColor;
+                        e.Row.Cells[18].Font.Bold = true ;
                     }
 
                     //CCRByCauseCode
@@ -1276,9 +1276,9 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                     }
                     if (thisCcRbyCc < refCcrCc)
                     {
-                        e.Row.Cells[18].ForeColor = Color.White;
-                        e.Row.Cells[18].BackColor = redColor;
-                        e.Row.Cells[18].Font.Bold = true;
+                        e.Row.Cells[20].ForeColor = Color.White;
+                        e.Row.Cells[20].BackColor = redColor;
+                        e.Row.Cells[20].Font.Bold = true;
                     }
                 }
             }
@@ -1295,9 +1295,9 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
             Color redColor2 = ColorTranslator.FromHtml("#FF0000");
             if (asr <= 0)
             {
-                e.Row.Cells[13].ForeColor = Color.White;
-                e.Row.Cells[13].BackColor = redColor2;
-                e.Row.Cells[13].Font.Bold = true;
+                e.Row.Cells[15].ForeColor = Color.White;
+                e.Row.Cells[15].BackColor = redColor2;
+                e.Row.Cells[15].Font.Bold = true;
             }
         }
 
