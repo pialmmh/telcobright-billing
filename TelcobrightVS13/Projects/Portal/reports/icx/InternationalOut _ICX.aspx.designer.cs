@@ -273,15 +273,6 @@ public partial class DefaultRptIntlOutIcx {
     protected global::System.Web.UI.WebControls.TextBox TextBoxUsdRate;
     
     /// <summary>
-    /// UpdatePanel1 control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.UpdatePanel UpdatePanel1;
-    
-    /// <summary>
     /// CheckBoxShowByCountry control.
     /// </summary>
     /// <remarks>
@@ -318,15 +309,6 @@ public partial class DefaultRptIntlOutIcx {
     protected global::System.Web.UI.WebControls.DropDownList DropDownPrefix;
     
     /// <summary>
-    /// UpdatePanel2 control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.UpdatePanel UpdatePanel2;
-    
-    /// <summary>
     /// CheckBoxShowByAns control.
     /// </summary>
     /// <remarks>
@@ -345,15 +327,6 @@ public partial class DefaultRptIntlOutIcx {
     protected global::System.Web.UI.WebControls.DropDownList DropDownListAns;
     
     /// <summary>
-    /// UpdatePanel3 control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.UpdatePanel UpdatePanel3;
-    
-    /// <summary>
     /// CheckBoxShowByIgw control.
     /// </summary>
     /// <remarks>
@@ -370,15 +343,6 @@ public partial class DefaultRptIntlOutIcx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.DropDownList DropDownListIgw;
-    
-    /// <summary>
-    /// UpdatePanel4 control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.UpdatePanel UpdatePanel4;
     
     /// <summary>
     /// CheckBoxIntlPartner control.
@@ -406,6 +370,42 @@ public partial class DefaultRptIntlOutIcx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.CheckBox CheckBoxShowByCustomerRate;
+    
+    /// <summary>
+    /// CheckBoxViewIncomingRoute control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.CheckBox CheckBoxViewIncomingRoute;
+    
+    /// <summary>
+    /// DropDownListViewIncomingRoute control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList DropDownListViewIncomingRoute;
+    
+    /// <summary>
+    /// CheckBoxViewOutgoingRoute control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.CheckBox CheckBoxViewOutgoingRoute;
+    
+    /// <summary>
+    /// DropDownListViewOutgoingRoute control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList DropDownListViewOutgoingRoute;
     
     /// <summary>
     /// GridView1 control.

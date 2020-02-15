@@ -50,54 +50,16 @@ namespace PortalApp.config
 
                 ddlistType.Items.Clear();
                 ddlistType.Items.Add("PrevBalance");
-                if (account.billableType == "/custBilled")      // prepaid
+                switch (account.billableType)
                 {
-                    ddlistType.Items.Add("TopUp");
-                    ddlistType.Items.Add("Credit");
+                    case "/billable":           // postpaid
+                        break;
+                    case "/custBilled":         // prepaid
+                        ddlistType.Items.Add("TopUp");
+                        ddlistType.Items.Add("Credit");
+                        AddDefaultAccountActions();
+                        break;
                 }
-
-                // TODO: Replace 4 with correct variable
-                List<int> serviceGroupWithActions = new List<int>() {4, 100};
-                availableActions = Tbc.CdrSetting.ServiceGroupConfigurations
-                    .First(x => serviceGroupWithActions.Contains(x.Key)).Value.AccountActions;
-
-                actions.Add(new AccActionEx()
-                {
-                    idAccount = account.id,
-                    threshhold_value = 0,
-                    idAccountAction = 1,
-                    Rule = new AccountActionRule()
-                    {
-                        IsPercent = true,
-                        Amount = 50
-                    }
-                });
-                actions.Add(new AccActionEx()
-                {
-                    idAccount = account.id,
-                    threshhold_value = 0,
-                    idAccountAction = 1,
-                    Rule = new AccountActionRule()
-                    {
-                        IsPercent = true,
-                        Amount = 20
-                    }
-                });
-                actions.Add(new AccActionEx()
-                {
-                    idAccount = account.id,
-                    threshhold_value = 0,
-                    idAccountAction = 3,
-                    Rule = new AccountActionRule()
-                    {
-                        IsPercent = true,
-                        Amount = 10
-                    }
-                });
-                this.Session["pmActions"] = actions;
-
-                ddlAccountAction.DataSource = availableActions;
-                ddlAccountAction.DataBind();
             }
 
             account = (account)this.Session["pmAccount"];
@@ -109,6 +71,52 @@ namespace PortalApp.config
             gvThreshold.DataSource = actions;
             gvThreshold.DataBind();
 
+        }
+
+        private void AddDefaultAccountActions()
+        {
+            // TODO: Replace 4 with correct variable
+            List<int> serviceGroupWithActions = new List<int>() {4, 100};
+            availableActions = Tbc.CdrSetting.ServiceGroupConfigurations
+                .First(x => serviceGroupWithActions.Contains(x.Key)).Value.AccountActions;
+
+            actions.Add(new AccActionEx()
+            {
+                idAccount = account.id,
+                threshhold_value = 0,
+                idAccountAction = 1,
+                Rule = new AccountActionRule()
+                {
+                    IsPercent = true,
+                    Amount = 50
+                }
+            });
+            actions.Add(new AccActionEx()
+            {
+                idAccount = account.id,
+                threshhold_value = 0,
+                idAccountAction = 1,
+                Rule = new AccountActionRule()
+                {
+                    IsPercent = true,
+                    Amount = 20
+                }
+            });
+            actions.Add(new AccActionEx()
+            {
+                idAccount = account.id,
+                threshhold_value = 0,
+                idAccountAction = 3,
+                Rule = new AccountActionRule()
+                {
+                    IsPercent = true,
+                    Amount = 10
+                }
+            });
+            this.Session["pmActions"] = actions;
+
+            ddlAccountAction.DataSource = availableActions;
+            ddlAccountAction.DataBind();
         }
 
 
