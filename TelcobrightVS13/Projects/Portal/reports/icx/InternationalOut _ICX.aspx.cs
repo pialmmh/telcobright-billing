@@ -1326,7 +1326,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                     List<int> ansList = contex.partners.Where(c => c.PartnerType == 2).Select(c => c.idPartner).ToList();
                     foreach (route route in contex.routes.Where(x => ansList.Contains(x.idPartner)))
                     {
-                        DropDownListViewIncomingRoute.Items.Add(new ListItem(route.RouteName, route.idroute.ToString()));
+                        DropDownListViewIncomingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.idroute.ToString()));
                     }
                 }
             }
@@ -1337,7 +1337,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                     int idPartner = Convert.ToInt32(DropDownListIgw.SelectedValue);
                     foreach (route route in contex.routes.Where(x => x.idPartner == idPartner))
                     {
-                        DropDownListViewIncomingRoute.Items.Add(new ListItem(route.RouteName, route.idroute.ToString()));
+                        DropDownListViewIncomingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.idroute.ToString()));
                     }
                 }
             }
@@ -1357,7 +1357,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                     List<int> ansList = contex.partners.Where(c => c.PartnerType == 3).Select(c => c.idPartner).ToList();
                     foreach (route route in contex.routes.Where(x => ansList.Contains(x.idPartner)))
                     {
-                        DropDownListViewOutgoingRoute.Items.Add(new ListItem(route.RouteName, route.idroute.ToString()));
+                        DropDownListViewOutgoingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.idroute.ToString()));
                     }
                 }
             }
@@ -1368,7 +1368,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                     int idPartner = Convert.ToInt32(DropDownListIntlCarier.SelectedValue);
                     foreach (route route in contex.routes.Where(x => x.idPartner == idPartner))
                     {
-                        DropDownListViewOutgoingRoute.Items.Add(new ListItem(route.RouteName, route.idroute.ToString()));
+                        DropDownListViewOutgoingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.idroute.ToString()));
                     }
                 }
             }

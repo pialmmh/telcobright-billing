@@ -35,7 +35,7 @@ namespace PortalApp.ReportHelper
                 from 
                 (
                     select ac.idPartner, 
-                    {(GetGroupBy().Contains("transactionTime") ? "transactionTime " : string.Empty)} as transactionTime, 
+                    {(GetGroupBy().Contains("transactionTime") ? "transactionTime" : "null")} as transactionTime, 
                     ac.uom Currency, 
                     sum(att.amount) as Amount 
                     from {TableName} att
