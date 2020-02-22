@@ -65,6 +65,7 @@ namespace PortalApp.config
                     default:
                         throw new Exception("Unsupported account type");
                 }
+                txtDate.Text = DateTime.Now.Date.ToString("yyyy-MM-dd");
             }
 
             account = (account)this.Session["pmAccount"];
@@ -78,7 +79,6 @@ namespace PortalApp.config
 
             lbAddRule.Visible = account.billableType == "/custBilled";
             cbThresholdSettings.Visible = account.billableType == "/custBilled";
-            txtDate.Text = DateTime.Now.Date.ToString("yyyy-MM-dd");
         }
 
         private void AddDefaultAccountActions()
