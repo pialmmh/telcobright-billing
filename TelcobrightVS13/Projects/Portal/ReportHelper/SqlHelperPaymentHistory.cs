@@ -30,12 +30,12 @@ namespace PortalApp.ReportHelper
         public override string getSQLString()
         {
             return $@"
-                select x.Date, p.PartnerName, x.Amount, 
+                select {GetDateExpression(this.groupInterval)} as Date, p.PartnerName, x.Amount, 
                 x.Currency
                 from 
                 (
                     select ac.idPartner, 
-                    {GetDateExpression(this.groupInterval)} as Date, 
+                    {(GetGroupBy().Contains("transactionTime") ? "transactionTime " : string.Empty)} as transactionTime, 
                     ac.uom Currency, 
                     sum(att.amount) as Amount 
                     from {TableName} att
@@ -47,7 +47,7 @@ namespace PortalApp.ReportHelper
                     {GetGroupBy()}
                 ) x
                 inner join partner p on p.idPartner = x.idPartner
-                order by " + (GetGroupBy().Contains("tup_starttime") ? "Date, " : string.Empty) + " p.PartnerName asc;";
+                order by " + (GetGroupBy().Contains("transactionTime") ? "transactionTime desc, " : string.Empty) + " p.PartnerName asc;";
         }
 
         protected override string GetDateExpression(string interval)
