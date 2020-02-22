@@ -133,7 +133,7 @@ namespace PortalApp
 		}
 
 
-		protected string GetDateExpression(string groupInterval)
+		protected virtual string GetDateExpression(string groupInterval)
 		{
 		    if (groupInterval != string.Empty)
 		        return dateExpressions[groupInterval];
