@@ -43,7 +43,6 @@ namespace PortalApp.reports
 
 	                TrafficReportDatasetBased tr = new TrafficReportDatasetBased(dataset);
 	                tr.Ds = dataset;
-	                List<NoOfCallsVsPdd> callVsPdd = new List<NoOfCallsVsPdd>();
 	                foreach (DataRow dr in tr.Ds.Tables[0].Rows)
 	                {
 	                    tr.CallStat.PartnerCost += tr.ForceConvertToDouble(dr["Amount"]);
@@ -100,9 +99,9 @@ namespace PortalApp.reports
 	    {
 	        if (Session["PaymentHistory"] != null) //THIS MUST BE CHANGED IN EACH PAGE
 	        {
-	            TrafficReportDatasetBased tr = (TrafficReportDatasetBased)Session["IntlIn"];
+	            TrafficReportDatasetBased tr = (TrafficReportDatasetBased)Session["PaymentHistory"];
 	            DataSetWithGridView dsG = new DataSetWithGridView(tr, GridView1);//invisible columns are removed in constructor
-	            CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(tr.Ds, "IntlIncoming_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+	            CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(tr.Ds, "PaymentHistory_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
 	                                                                                                + ".xlsx", Response);
 	        }
 	    }
@@ -129,6 +128,7 @@ namespace PortalApp.reports
 	            new List<string>()
 	            {
 	                getInterval(groupInterval),
+                    "uom", 
                     CheckBoxPartner.Checked==true?"idPartner":string.Empty,
 	            },
 	            new List<string>()

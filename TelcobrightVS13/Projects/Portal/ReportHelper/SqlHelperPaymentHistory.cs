@@ -47,7 +47,7 @@ namespace PortalApp.ReportHelper
                     {GetGroupBy()}
                 ) x
                 inner join partner p on p.idPartner = x.idPartner
-                order by " + (GetGroupBy().Contains("tup_starttime") ? "Date, " : string.Empty) + " Amount Desc;";
+                order by " + (GetGroupBy().Contains("tup_starttime") ? "Date, " : string.Empty) + " p.PartnerName asc;";
         }
 
         protected override string GetDateExpression(string interval)
