@@ -58,8 +58,8 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
                                 CheckBoxPartner.Checked==true?DropDownListPartner.SelectedIndex>0?" tup_inpartnerid="+DropDownListPartner.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxShowByAns.Checked==true?DropDownListAns.SelectedIndex>0?" tup_destinationId="+DropDownListAns.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_outpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty,
-                                CheckBoxViewIncomingRoute.Checked==true?DropDownListViewIncomingRoute.SelectedIndex>0?" tup_incomingroute="+DropDownListViewIncomingRoute.SelectedItem.Text:string.Empty:string.Empty,
-                                CheckBoxViewOutgoingRoute.Checked==true?DropDownListViewOutgoingRoute.SelectedIndex>0?" tup_outgoingroute="+DropDownListViewOutgoingRoute.SelectedItem.Text:string.Empty:string.Empty,
+                                CheckBoxViewIncomingRoute.Checked==true?DropDownListViewIncomingRoute.SelectedIndex>0?" tup_incomingroute="+DropDownListViewIncomingRoute.SelectedItem.Value:string.Empty:string.Empty,
+                                CheckBoxViewOutgoingRoute.Checked==true?DropDownListViewOutgoingRoute.SelectedIndex>0?" tup_outgoingroute="+DropDownListViewOutgoingRoute.SelectedItem.Value:string.Empty:string.Empty,
                             }).getSQLString();
 
        
@@ -633,7 +633,7 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
                     List<int> ansList = contex.partners.Where(c => c.PartnerType == 3).Select(c => c.idPartner).ToList();
                     foreach (route route in contex.routes.Where(x => ansList.Contains(x.idPartner)))
                     {
-                        DropDownListViewIncomingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.idroute.ToString()));
+                        DropDownListViewIncomingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
                     }
                 }
             }
@@ -644,7 +644,7 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
                     int idPartner = Convert.ToInt32(DropDownListPartner.SelectedValue);
                     foreach (route route in contex.routes.Where(x => x.idPartner == idPartner))
                     {
-                        DropDownListViewIncomingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.idroute.ToString()));
+                        DropDownListViewIncomingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
                     }
                 }
             }
@@ -664,7 +664,7 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
                     List<int> ansList = contex.partners.Where(c => c.PartnerType == 2).Select(c => c.idPartner).ToList();
                     foreach (route route in contex.routes.Where(x => ansList.Contains(x.idPartner)))
                     {
-                        DropDownListViewOutgoingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.idroute.ToString()));
+                        DropDownListViewOutgoingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
                     }
                 }
             }
@@ -675,7 +675,7 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
                     int idPartner = Convert.ToInt32(DropDownListIgw.SelectedValue);
                     foreach (route route in contex.routes.Where(x => x.idPartner == idPartner))
                     {
-                        DropDownListViewOutgoingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.idroute.ToString()));
+                        DropDownListViewOutgoingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
                     }
                 }
             }
