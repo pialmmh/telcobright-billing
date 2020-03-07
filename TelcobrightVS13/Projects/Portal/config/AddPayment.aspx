@@ -11,24 +11,24 @@
 </asp:ToolkitScriptManager>
 
     <div align="left">
-    <table width="100%" style="border:Solid 3px #5d7b9d; width:480px; height:100%" cellpadding="0" cellspacing="0">
+    <table width="100%" style="border:Solid 3px #5d7b9d; width:680px; height:100%" cellpadding="0" cellspacing="2">
     <tr style="background-color:#5d7b9d">
-        <td colspan="2" style=" height:10%; color:White; font-weight:bold; font-size:larger" align="center">Carrier Details</td>
+        <td colspan="2" style=" height:10%; color:White; font-weight:bold; font-size:larger" align="center">Add Payment</td>
     </tr>
     <tr>
-        <td align="right" style=" width:45%">ID:</td>
+        <td align="right" style=" width:25%"><strong>ID: </strong></td>
         <td><asp:Label ID="lblID" runat="server"></asp:Label></td>
     </tr>
     <tr>
-        <td align="right">Partner:</td>
+        <td align="right"><strong>Partner: </strong></td>
         <td style="padding:3px"><asp:Label ID="lblusername" runat="server"></asp:Label></td>
     </tr>
     <tr>
-        <td align="right">Service: </td>
+        <td align="right"><strong>Service: </strong></td>
         <td style="padding:3px"><asp:Label ID="lblSer" runat="server"></asp:Label></td>
     </tr>
     <tr>
-        <td align="right">Current Balance: </td>
+        <td align="right"><strong>Current Balance: </strong></td>
         <td style="padding:3px"><asp:Label ID="lblCurrentBalance" runat="server"></asp:Label></td>
     </tr>
 <%--    <tr>
@@ -52,13 +52,13 @@
         <td style="padding:3px"><asp:TextBox ID="comment" runat="server" TextMode="MultiLine"> </asp:TextBox></td>
     </tr>--%>
     <tr>
-        <td align="right">Type: </td>
+        <td align="right"><strong>Type: </strong></td>
         <td style="padding:3px">
             <asp:DropDownList ID="ddlistType" runat="server" AutoPostBack="false" />
         </td>
     </tr>
     <tr>
-        <td align="right">Date: </td>
+        <td align="right"><strong>Date: </strong></td>
         <td style="padding:3px">
             <asp:TextBox id="txtDate" Runat="server" /> 
             <asp:CalendarExtender ID="CalendarStartDate" runat="server" 
@@ -66,8 +66,14 @@
             </asp:CalendarExtender>
         </td>
     </tr>
+    <tr>
+        <td></td>
+        <td>
+            <div style="font-size: smaller; text-align: left; overflow: visible; clear: left; color: #8B4500;">[Enter only Date in "yyyy-MM-dd (e.g. 2012-11-21) format]</div>
+        </td>
+    </tr>
     <tr id="addPaymentRow">
-        <td align="right">Amount: </td>    
+        <td align="right"><strong>Amount: </strong></td>    
         <td style="padding:3px"><asp:TextBox id="txtAmount" Runat="server" AutoPostBack="true" OnTextChanged="txtAmount_TextChanged" Text="0" /> </td>
     </tr>
         <tr>

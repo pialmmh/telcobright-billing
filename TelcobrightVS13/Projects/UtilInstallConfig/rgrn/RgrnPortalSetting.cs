@@ -77,6 +77,10 @@ namespace InstallConfig
                                     "endtime as `End Time`",
                                     "inpartner.partnername as `In Partner`",
                                     "outpartner.partnername as `Out Partner`",
+                                    "OriginatingIP as `Originating IP`",
+                                    "TerminatingIP as `Terminating IP`",
+                                    "CustomerRate as `Customer Rate`",
+                                    "SupplierRate as `Supplier Rate`",
                                     "concat(switchid,'-',IncomingRoute) as `Ingress Route`",
                                     "concat(switchid,'-',OutgoingRoute)  as `Egress Route`",
                                     "OriginatingCallingNumber as `Ingress Calling Number`",
@@ -89,6 +93,8 @@ namespace InstallConfig
                                     "duration2 as Duration2",
                                     "Duration3 as Duration3",
                                     "releasecauseingress as `Ingress CauseCode`",
+                                    "CountryCode as `Country Code`",
+                                    "cc.Name as `Country Name`"
                                 }
                             },
                             new CdrFieldTemplate()
@@ -154,22 +160,22 @@ namespace InstallConfig
                         {
                             "CheckBoxShowCost.Enabled=true",
                             "CheckBoxShowCost.Checked=true",
-                            "GridView1.Columns[9].Visible=true",//actual duration
-                            "GridView1.Columns[10].Visible=true",//duration1
-                            "GridView1.Columns[11].Visible=true",//Connect count
-                            "GridView1.Columns[18].Visible=true",//CCR
-                            "GridView1.Columns[19].Visible=false",//Connect count by cc
-                            "GridView1.Columns[20].Visible=false",//CCR by cc
+                            "GridView1.Columns[12].Visible=true",//actual duration
+                            "GridView1.Columns[13].Visible=true",//duration1
+                            "GridView1.Columns[14].Visible=true",//Connect count
+                            "GridView1.Columns[23].Visible=true",//CCR
+                            "GridView1.Columns[24].Visible=false",//Connect count by cc
+                            "GridView1.Columns[25].Visible=false",//CCR by cc
                         },
                         SpringExpressionIfNotRole = new List<string>()
                         {
                             "CheckBoxShowCost.Enabled=false",
-                            "GridView1.Columns[9].Visible=true",//Connect count
-                            "GridView1.Columns[10].Visible=false",
-                            "GridView1.Columns[11].Visible=false",
-                            "GridView1.Columns[18].Visible=true",//CCR
-                            "GridView1.Columns[19].Visible=false",//Connect count by cc
-                            "GridView1.Columns[20].Visible=false",//CCR by cc
+                            "GridView1.Columns[12].Visible=true",//Connect count
+                            "GridView1.Columns[13].Visible=false",
+                            "GridView1.Columns[14].Visible=false",
+                            "GridView1.Columns[23].Visible=true",//CCR
+                            "GridView1.Columns[24].Visible=false",//Connect count by cc
+                            "GridView1.Columns[25].Visible=false",//CCR by cc
                         }
                     }
                 }
@@ -302,7 +308,38 @@ namespace InstallConfig
                                     "nodes['Reports/IGW'].Expanded=false",
                                     "nodes['Reports/Transit'].Expanded=false"
                                 }
+                            },
+                            new SettingByRoles()
+                            {
+                                RoleNames = new List<string>()
+                                {
+                                    "noc"
+                                },
+                                SpringExpressionIfRole = new List<string>()
+                                {
+                                    "nodes['Configuration'].Expanded=false",
+                                    "nodes['Billing'].Expanded=false",
+                                    "nodes['Mediation'].Expanded=false",
+                                    "nodes['Settings'].Expanded=false",
+                                    "nodes['Billing Reports'].Expanded=false",
+                                    "nodes['Reports/ICX'].Expanded=false",
+                                    "nodes['Reports/IGW'].Expanded=false",
+                                    "nodes['Reports/Transit'].Expanded=true",
+                                    "nodes['Settings/Manage Users'].Expanded=false"
+                                },
+                                SpringExpressionIfNotRole = new List<string>()
+                                {
+                                    "nodes['Configuration'].Expanded=false",
+                                    "nodes['Billing'].Expanded=false",
+                                    "nodes['Mediation'].Expanded=false",
+                                    "nodes['Settings'].Expanded=false",
+                                    "nodes['Billing Reports'].Expanded=false",
+                                    "nodes['Reports/ICX'].Expanded=false",
+                                    "nodes['Reports/IGW'].Expanded=false",
+                                    "nodes['Reports/Transit'].Expanded=false"
+                                }
                             }
+
                         }//list of settings by Roles
                     },
                     { "~/reports/transit/InternationalInTransit.aspx",//settings for report pages

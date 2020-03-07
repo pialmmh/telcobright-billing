@@ -51,7 +51,10 @@ namespace InstallConfig
                 ValidationRulesForInconsistentCdrs = inconsistentCdrValRulesGen.GetRules(),
                 ServiceGroupConfigurations = this.GetServiceGroupConfigurations(),
                 DisableCdrPostProcessingJobCreationForAutomation = false,
-                DisableParallelMediation = false
+                DisableParallelMediation = false,
+                AutoCorrectBillIdsWithPrevChargeableIssue=true,
+                AutoCorrectDuplicateBillId=true,
+                AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
             };
 
             this.PrepareDirectorySetting(this.Tbc);

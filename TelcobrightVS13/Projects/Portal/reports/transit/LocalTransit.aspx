@@ -378,7 +378,7 @@
 
     </div>
 
-    <div id="ParamBorder" style="float: left; padding-top: 3px; padding-left: 10px; height: 155px; display: block; border: 2px ridge #E5E4E2; margin-bottom: 5px; width: 1300px;">
+    <div id="ParamBorder" style="float: left; padding-top: 3px; padding-left: 10px; height: 180px; display: block; border: 2px ridge #E5E4E2; margin-bottom: 5px; width: 1300px;">
         <div style="height: 20px; background-color: #f2f2f2; color: black;">
             <span style="float: left; font-weight: bold; padding-left: 20px;">Show Performance
                 <asp:CheckBox ID="CheckBoxShowPerformance" runat="server" Checked="true" /></span>
@@ -519,6 +519,24 @@
                     </div>
 
                 </div>
+                <div style="float: left; height: 25px; min-width: 1250px;">
+                    <div style="float: left;">
+                        View by Incoming IP: 
+                        <asp:CheckBox ID="CheckBoxInIp" runat="server" AutoPostBack="True" 
+                                      OnCheckedChanged="CheckBoxInIp_OnCheckedChanged" Checked="False" />
+                        <asp:CheckBox runat="server" AutoPostBack="True" ID="CheckBoxInIpAll" Text="All" 
+                            OnCheckedChanged="CheckBoxInIpAll_OnCheckedChanged" Checked="True" Enabled="False"/>
+                        <asp:TextBox ID="TextBoxInIp" runat="server" Enabled="False" />
+                    </div>
+                    <div style="float: left;">
+                        View by Outgoing IP: 
+                        <asp:CheckBox ID="CheckBoxOutIp" runat="server" AutoPostBack="True" 
+                                      OnCheckedChanged="CheckBoxOutIp_OnCheckedChanged" Checked="False" />
+                        <asp:CheckBox runat="server" AutoPostBack="True" ID="CheckBoxOutIpAll" Text="All" 
+                                      OnCheckedChanged="CheckBoxOutIpAll_OnCheckedChanged" Checked="True" Enabled="False"/>
+                        <asp:TextBox ID="TextBoxOutIp" runat="server" Enabled="False" />
+                    </div>
+                </div>
             </div>
         </div>
         <%--End Div Partner***************************************************--%>
@@ -554,66 +572,29 @@
                         <asp:BoundField DataField="In Partner" HeaderText="In Partner" SortExpression="In Partner" />
                         <asp:BoundField DataField="In Route" HeaderText="In Route" SortExpression="In Route" />
                         <asp:BoundField DataField="Out Partner" HeaderText="Out Partner" SortExpression="Out Partner" />
+                        <asp:BoundField DataField="Destination" HeaderText="Destination" SortExpression="Destination" />
                         <asp:BoundField DataField="Out Route" HeaderText="Out Route" SortExpression="Out Route" />
                         <asp:BoundField DataField="tup_matchedprefixcustomer" HeaderText="Customer Prefix" SortExpression="tup_matchedprefixcustomer" />
                         <asp:BoundField DataField="tup_matchedprefixsupplier" HeaderText="Supplier Prefix" SortExpression="tup_matchedprefixsupplier" />
+                        <asp:BoundField DataField="tup_incomingip" HeaderText="Incoming IP" SortExpression="tup_incomingip" />
+                        <asp:BoundField DataField="tup_outgoingip" HeaderText="Outgoing IP" SortExpression="tup_outgoingip" />
 
-                        <asp:BoundField DataField="Total Calls"
-                            HeaderText="Total Calls"
-                            SortExpression="Total Calls" />
-
-                        <asp:BoundField DataField="Successful Calls"
-                            HeaderText="Successful Calls"
-                            SortExpression="Successful Calls" />
-
-                        <asp:BoundField DataField="Connected Calls"
-                            HeaderText="Connected Calls"
-                            SortExpression="Connected Calls" />
-
-                        <asp:BoundField DataField="Customer Duration"
-                            DataFormatString="{0:F2}"
-                            HeaderText="Customer Duration"
-                            SortExpression="Customer Duration" />
-                        <asp:BoundField DataField="Supplier Duration"
-                            DataFormatString="{0:F2}"
-                            HeaderText="Supplier Duration"
-                            SortExpression="Supplier Duration" />
-                        <asp:BoundField DataField="Cost"
-                            DataFormatString="{0:F2}"
-                            HeaderText="Cost"
-                            SortExpression="Cost" />
-                        <asp:BoundField DataField="Revenue"
-                            DataFormatString="{0:F2}"
-                            HeaderText="Revenue"
-                            SortExpression="Revenue" />
-                        <asp:BoundField DataField="Margin"
-                            DataFormatString="{0:F2}"
-                            HeaderText="Margin"
-                            SortExpression="Margin" />
-                        <asp:BoundField DataField="ASR"
-                            DataFormatString="{0:F2}"
-                            HeaderText="ASR"
-                            SortExpression="ASR" />
-                        <asp:BoundField DataField="ACD"
-                            DataFormatString="{0:F2}"
-                            HeaderText="ACD"
-                            SortExpression="ACD" />
-                        <asp:BoundField DataField="PDD"
-                            DataFormatString="{0:F2}"
-                            HeaderText="PDD"
-                            SortExpression="PDD" />
-                        <asp:BoundField DataField="CCR"
-                            DataFormatString="{0:F2}"
-                            HeaderText="CCR"
-                            SortExpression="CCR" />
-                        <asp:BoundField DataField="ConectbyCC"
-                            DataFormatString="{0:F0}"
-                            HeaderText="Connect Count (CC)"
-                            SortExpression="ConnectByCC" />
-                        <asp:BoundField DataField="CCRByCC"
-                            DataFormatString="{0:F2}"
-                            HeaderText="CCR By CC"
-                            SortExpression="CCRByCC" />
+                        <asp:BoundField DataField="Total Calls" HeaderText="Total Calls" SortExpression="Total Calls" />
+                        <asp:BoundField DataField="Successful Calls" HeaderText="Successful Calls" SortExpression="Successful Calls" />
+                        <asp:BoundField DataField="Connected Calls" HeaderText="Connected Calls" SortExpression="Connected Calls" />
+                        <asp:BoundField DataField="Customer Duration" DataFormatString="{0:F2}" HeaderText="Customer Duration" SortExpression="Customer Duration" />
+                        <asp:BoundField DataField="Supplier Duration" DataFormatString="{0:F2}" HeaderText="Supplier Duration" SortExpression="Supplier Duration" />
+                        <asp:BoundField DataField="tup_customerrate" DataFormatString="{0:F4}" HeaderText="BTRC rate" SortExpression="tup_customerrate" />
+                        <asp:BoundField DataField="tup_supplierrate" DataFormatString="{0:F4}" HeaderText="Supplier rate" SortExpression="tup_supplierrate" />
+                        <asp:BoundField DataField="Cost" DataFormatString="{0:F2}" HeaderText="Cost" SortExpression="Cost" />
+                        <asp:BoundField DataField="Revenue" DataFormatString="{0:F2}" HeaderText="Revenue" SortExpression="Revenue" />
+                        <asp:BoundField DataField="Margin" DataFormatString="{0:F2}" HeaderText="Margin" SortExpression="Margin" />
+                        <asp:BoundField DataField="ASR" DataFormatString="{0:F2}" HeaderText="ASR" SortExpression="ASR" />
+                        <asp:BoundField DataField="ACD" DataFormatString="{0:F2}" HeaderText="ACD" SortExpression="ACD" />
+                        <asp:BoundField DataField="PDD" DataFormatString="{0:F2}" HeaderText="PDD" SortExpression="PDD" />
+                        <asp:BoundField DataField="CCR" DataFormatString="{0:F2}" HeaderText="CCR" SortExpression="CCR" />
+                        <asp:BoundField DataField="ConectbyCC" DataFormatString="{0:F0}" HeaderText="Connect Count (CC)" SortExpression="ConnectByCC" />
+                        <asp:BoundField DataField="CCRByCC" DataFormatString="{0:F2}" HeaderText="CCR By CC" SortExpression="CCRByCC" />
                     </Columns>
                     <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
                     <EditRowStyle BackColor="#999999" />

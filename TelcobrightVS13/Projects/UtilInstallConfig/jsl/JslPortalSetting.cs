@@ -155,19 +155,19 @@ namespace InstallConfig
                         {
                             "CheckBoxShowCost.Enabled=true",
                             "CheckBoxShowCost.Checked=true",
-                            "GridView1.Columns[3].Visible=false",//fake ans
-                            "GridView1.Columns[6].Visible=false",//connected calls
-                            "GridView1.Columns[7].Visible=false",//actual duration
-                            "GridView1.Columns[9].Visible=false",//carrier duration
-                            "GridView1.Columns[10].Visible=false",//ANS $
-                            "GridView1.Columns[11].Visible=false",//ICX/IOS
-                            "GridView1.Columns[14].Visible=false",//IGW$
-                            "GridView1.Columns[15].Visible=false",//Profit
-                            "GridView1.Columns[16].Visible=false",//ASR
-                            "GridView1.Columns[18].Visible=false",//PDD
-                            "GridView1.Columns[19].Visible=false",//CCR
-                            "GridView1.Columns[20].Visible=false",//Connect count by cc
-                            "GridView1.Columns[21].Visible=false",//CCR by cc
+                            "GridView1.Columns[5].Visible=false",//fake ans
+                            "GridView1.Columns[8].Visible=false",//connected calls
+                            "GridView1.Columns[9].Visible=false",//actual duration
+                            "GridView1.Columns[11].Visible=false",//carrier duration
+                            "GridView1.Columns[12].Visible=false",//ANS $
+                            "GridView1.Columns[13].Visible=false",//ICX/IOS
+                            "GridView1.Columns[16].Visible=false",//IGW$
+                            "GridView1.Columns[17].Visible=false",//Profit
+                            "GridView1.Columns[18].Visible=false",//ASR
+                            "GridView1.Columns[20].Visible=false",//PDD
+                            "GridView1.Columns[21].Visible=false",//CCR
+                            "GridView1.Columns[22].Visible=false",//Connect count by cc
+                            "GridView1.Columns[23].Visible=false",//CCR by cc
                         },
                         SpringExpressionIfNotRole = new List<string>()
                         {
@@ -220,14 +220,14 @@ namespace InstallConfig
                         {
                             "CheckBoxShowCost.Enabled=true",
                             "GridView1.Columns[3].Visible=false",//fake ans
-                            "GridView1.Columns[8].Visible=false",//connected calls
-                            "GridView1.Columns[9].Visible=false",//actual duration
-                            "GridView1.Columns[12].Visible=false",//supplier duration
-                            "GridView1.Columns[13].Visible=false",//ASR
-                            "GridView1.Columns[15].Visible=false",//PDD
-                            "GridView1.Columns[16].Visible=false",//CCR
-                            "GridView1.Columns[17].Visible=false",//connect by cc
-                            "GridView1.Columns[18].Visible=false",//CCR by cc
+                            "GridView1.Columns[10].Visible=false",//connected calls
+                            "GridView1.Columns[11].Visible=false",//actual duration
+                            "GridView1.Columns[14].Visible=false",//supplier duration
+                            "GridView1.Columns[15].Visible=false",//ASR
+                            "GridView1.Columns[17].Visible=false",//PDD
+                            "GridView1.Columns[18].Visible=false",//CCR
+                            "GridView1.Columns[19].Visible=false",//connect by cc
+                            "GridView1.Columns[20].Visible=false",//CCR by cc
                         },
                         SpringExpressionIfNotRole = new List<string>()
                         {

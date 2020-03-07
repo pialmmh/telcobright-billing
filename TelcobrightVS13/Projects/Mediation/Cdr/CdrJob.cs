@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.IO;
 using System.Linq;
 using System.Runtime;
 using System.Text;
@@ -149,6 +150,50 @@ namespace TelcobrightMediation.Cdr
             Assert.IsTrue(
                 mediationTester.DurationSumOfNonPartialRawPartialsAndRawDurationAreEqual(this.CdrProcessor));
         }
-        
+
+        public static List<string[]> ChangeBillIdsWithPrevChargeableIssue(List<string[]> txtCdrRows)
+        {
+            List<string> billIdsWithPrevChargeableIssue = ReadInconsistentBillIsdFromLogFile();
+            if (billIdsWithPrevChargeableIssue.Any())
+            {
+                var randomPrefix = RandomStringGenerator.Next(2);
+                var rowsWithIssues = txtCdrRows
+                    .Where(row => billIdsWithPrevChargeableIssue.Contains(row[Fn.UniqueBillId]))
+                    .ToList();
+                foreach (string[] rowWithIssue in rowsWithIssues)
+                {
+                    rowWithIssue[Fn.UniqueBillId] = randomPrefix + rowWithIssue[Fn.UniqueBillId];
+                }
+                billIdsWithPrevChargeableIssue = billIdsWithPrevChargeableIssue
+                    .Except(rowsWithIssues.Select(r => r[Fn.UniqueBillId])).ToList();
+                WriteInconsistentBillIdsToLogFile(billIdsWithPrevChargeableIssue);
+            }
+            return txtCdrRows;
+        }
+
+        public static List<cdr> SkipBillIdsWithPrevChargeableIssue(List<cdr> cdrRows)
+        {
+            List<string> billIdsWithPrevChargeableIssue = ReadInconsistentBillIsdFromLogFile();
+            if (billIdsWithPrevChargeableIssue.Any())
+            {
+                WriteInconsistentBillIdsToLogFile(billIdsWithPrevChargeableIssue);
+                cdrRows = cdrRows.Where(c => !billIdsWithPrevChargeableIssue.Contains(c.UniqueBillId)).ToList();
+            }
+            return cdrRows;
+        }
+
+        private static void WriteInconsistentBillIdsToLogFile(List<string> billIdsWithPrevChargeableIssue)
+        {
+            File.WriteAllLines("InconsistentBillId.txt", billIdsWithPrevChargeableIssue);
+        }
+
+        private static List<string> ReadInconsistentBillIsdFromLogFile()
+        {
+            string inconsistentFilenames = "InconsistentBillId.txt";
+            if (File.Exists(inconsistentFilenames)==false){
+                File.CreateText(inconsistentFilenames).Close();
+            }
+            return File.ReadAllLines(inconsistentFilenames).ToList();
+        }
     }
 }

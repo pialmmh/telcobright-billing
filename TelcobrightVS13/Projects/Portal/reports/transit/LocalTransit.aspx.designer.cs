@@ -354,6 +354,60 @@ public partial class LocalTransit {
     protected global::System.Web.UI.WebControls.CheckBox CheckBoxMatchedSupplierPrefix;
     
     /// <summary>
+    /// CheckBoxInIp control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.CheckBox CheckBoxInIp;
+    
+    /// <summary>
+    /// CheckBoxInIpAll control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.CheckBox CheckBoxInIpAll;
+    
+    /// <summary>
+    /// TextBoxInIp control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox TextBoxInIp;
+    
+    /// <summary>
+    /// CheckBoxOutIp control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.CheckBox CheckBoxOutIp;
+    
+    /// <summary>
+    /// CheckBoxOutIpAll control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.CheckBox CheckBoxOutIpAll;
+    
+    /// <summary>
+    /// TextBoxOutIp control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox TextBoxOutIp;
+    
+    /// <summary>
     /// SqlDataSource4 control.
     /// </summary>
     /// <remarks>

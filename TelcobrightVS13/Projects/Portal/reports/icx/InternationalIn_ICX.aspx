@@ -112,8 +112,8 @@
 
                 }
 
-
-
+                DropDownListPartner_OnSelectedIndexChanged(DropDownListPartner, EventArgs.Empty);
+                DropDownListIgw_OnSelectedIndexChanged(DropDownListIgw, EventArgs.Empty);
 
                 //Retrieve Path from TreeView for displaying in the master page caption label
                 //set screentile/caption in the master page...
@@ -358,153 +358,200 @@
         <ajaxToolkit:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server"></ajaxToolkit:ToolkitScriptManager>
 
     </div>
+    
+    <asp:UpdatePanel runat="server">
+        <ContentTemplate>
+            <div id="ParamBorder" style="float: left; padding-top: 3px; padding-left: 10px; height: 155px; display: block; border: 2px ridge #E5E4E2; margin-bottom: 5px; width: 1300px;">
+                <div style="height: 20px; background-color: #f2f2f2; color: black;">
+                    <span style="float: left; font-weight: bold; padding-left: 20px;">Show Performance
+                        <asp:CheckBox ID="CheckBoxShowPerformance" runat="server" Checked="true" /></span>
+                    <%--<div style="clear:right;"></div>--%>
+                    <span style="float: left; font-weight: bold; padding-left: 20px;">Show Revenue
+                        <asp:CheckBox ID="CheckBoxShowCost" runat="server" Checked="false" /></span>
+                </div>
+                <br />
+                <%--date time div--%>
+                <div id="DateTimeDiv" style="padding-left: 5px; position: relative; float: left; left: 10px; top: -11px; width: 630px; z-index: 10; background-color: #F7F6F3; height: 70px;">
+                    <%--Start OF date time/months field DIV--%>
+                    <span style="padding-left: 0px;">Start Year/Month: 
+                        <asp:TextBox ID="TextBoxYear" runat="server" Text="" Width="30px"></asp:TextBox>
+                        Month
+                        <asp:DropDownList ID="DropDownListMonth" runat="server"
+                                          OnSelectedIndexChanged="DropDownListMonth_SelectedIndexChanged"
+                                          AutoPostBack="True">
+                            <asp:ListItem Value="01">Jan</asp:ListItem>
+                            <asp:ListItem Value="02">Feb</asp:ListItem>
+                            <asp:ListItem Value="03">Mar</asp:ListItem>
+                            <asp:ListItem Value="04">Apr</asp:ListItem>
+                            <asp:ListItem Value="05">May</asp:ListItem>
+                            <asp:ListItem Value="06">Jun</asp:ListItem>
+                            <asp:ListItem Value="07">Jul</asp:ListItem>
+                            <asp:ListItem Value="08">Aug</asp:ListItem>
+                            <asp:ListItem Value="09">Sep</asp:ListItem>
+                            <asp:ListItem Value="10">Oct</asp:ListItem>
+                            <asp:ListItem Value="11">Nov</asp:ListItem>
+                            <asp:ListItem Value="12">Dec</asp:ListItem>
+                        </asp:DropDownList>
 
-    <div id="ParamBorder" style="float: left; padding-top: 3px; padding-left: 10px; height: 135px; display: block; border: 2px ridge #E5E4E2; margin-bottom: 5px; width: 1300px;">
-        <div style="height: 20px; background-color: #f2f2f2; color: black;">
-            <span style="float: left; font-weight: bold; padding-left: 20px;">Show Performance
-                <asp:CheckBox ID="CheckBoxShowPerformance" runat="server" Checked="true" /></span>
-            <%--<div style="clear:right;"></div>--%>
-            <span style="float: left; font-weight: bold; padding-left: 20px;">Show Revenue
-                <asp:CheckBox ID="CheckBoxShowCost" runat="server" Checked="false" /></span>
-        </div>
-        <br />
-        <%--date time div--%>
-        <div id="DateTimeDiv" style="padding-left: 5px; position: relative; float: left; left: 10px; top: -11px; width: 630px; z-index: 10; background-color: #F7F6F3; height: 70px;">
-            <%--Start OF date time/months field DIV--%>
-            <span style="padding-left: 0px;">Start Year/Month: 
-        <asp:TextBox ID="TextBoxYear" runat="server" Text="" Width="30px"></asp:TextBox>
-                Month
-                <asp:DropDownList ID="DropDownListMonth" runat="server"
-                    OnSelectedIndexChanged="DropDownListMonth_SelectedIndexChanged"
-                    AutoPostBack="True">
-                    <asp:ListItem Value="01">Jan</asp:ListItem>
-                    <asp:ListItem Value="02">Feb</asp:ListItem>
-                    <asp:ListItem Value="03">Mar</asp:ListItem>
-                    <asp:ListItem Value="04">Apr</asp:ListItem>
-                    <asp:ListItem Value="05">May</asp:ListItem>
-                    <asp:ListItem Value="06">Jun</asp:ListItem>
-                    <asp:ListItem Value="07">Jul</asp:ListItem>
-                    <asp:ListItem Value="08">Aug</asp:ListItem>
-                    <asp:ListItem Value="09">Sep</asp:ListItem>
-                    <asp:ListItem Value="10">Oct</asp:ListItem>
-                    <asp:ListItem Value="11">Nov</asp:ListItem>
-                    <asp:ListItem Value="12">Dec</asp:ListItem>
-                </asp:DropDownList>
+                        End Year/Month: 
+                        <asp:TextBox ID="TextBoxYear1" runat="server" Text="" Width="30px"></asp:TextBox>
+                        Month
+                        <asp:DropDownList ID="DropDownListMonth1" runat="server"
+                                          OnSelectedIndexChanged="DropDownListMonth1_SelectedIndexChanged" AutoPostBack="True">
+                            <asp:ListItem Value="01">Jan</asp:ListItem>
+                            <asp:ListItem Value="02">Feb</asp:ListItem>
+                            <asp:ListItem Value="03">Mar</asp:ListItem>
+                            <asp:ListItem Value="04">Apr</asp:ListItem>
+                            <asp:ListItem Value="05">May</asp:ListItem>
+                            <asp:ListItem Value="06">Jun</asp:ListItem>
+                            <asp:ListItem Value="07">Jul</asp:ListItem>
+                            <asp:ListItem Value="08">Aug</asp:ListItem>
+                            <asp:ListItem Value="09">Sep</asp:ListItem>
+                            <asp:ListItem Value="10">Oct</asp:ListItem>
+                            <asp:ListItem Value="11">Nov</asp:ListItem>
+                            <asp:ListItem Value="12">Dec</asp:ListItem>
+                        </asp:DropDownList>
 
-                End Year/Month: 
-        <asp:TextBox ID="TextBoxYear1" runat="server" Text="" Width="30px"></asp:TextBox>
-                Month
-                <asp:DropDownList ID="DropDownListMonth1" runat="server"
-                    OnSelectedIndexChanged="DropDownListMonth1_SelectedIndexChanged" AutoPostBack="True">
-                    <asp:ListItem Value="01">Jan</asp:ListItem>
-                    <asp:ListItem Value="02">Feb</asp:ListItem>
-                    <asp:ListItem Value="03">Mar</asp:ListItem>
-                    <asp:ListItem Value="04">Apr</asp:ListItem>
-                    <asp:ListItem Value="05">May</asp:ListItem>
-                    <asp:ListItem Value="06">Jun</asp:ListItem>
-                    <asp:ListItem Value="07">Jul</asp:ListItem>
-                    <asp:ListItem Value="08">Aug</asp:ListItem>
-                    <asp:ListItem Value="09">Sep</asp:ListItem>
-                    <asp:ListItem Value="10">Oct</asp:ListItem>
-                    <asp:ListItem Value="11">Nov</asp:ListItem>
-                    <asp:ListItem Value="12">Dec</asp:ListItem>
-                </asp:DropDownList>
-
-            </span>
-
-
-            <div style="float: left; width: 280px;">
-                Start Date [Time]
-                <asp:TextBox ID="txtDate" runat="server" />
-                <asp:CalendarExtender ID="CalendarStartDate" runat="server"
-                    TargetControlID="txtDate" PopupButtonID="txtDate" Format="yyyy-MM-dd 00:00:00">
-                </asp:CalendarExtender>
+                    </span>
 
 
-            </div>
+                    <div style="float: left; width: 280px;">
+                        Start Date [Time]
+                        <asp:TextBox ID="txtDate" runat="server" />
+                        <asp:CalendarExtender ID="CalendarStartDate" runat="server"
+                                              TargetControlID="txtDate" PopupButtonID="txtDate" Format="yyyy-MM-dd 00:00:00">
+                        </asp:CalendarExtender>
 
-            <div style="float: left; width: 280px;">
-                End Date [Time]
-                <asp:TextBox ID="txtDate1" runat="server" />
-                <asp:CalendarExtender ID="CalendarEndDate" runat="server"
-                    TargetControlID="txtDate1" PopupButtonID="txtDate1" Format="yyyy-MM-dd 23:59:59">
-                </asp:CalendarExtender>
-            </div>
 
-            <div style="font-size: smaller; text-align: left; overflow: visible; clear: left; color: #8B4500;">[Enter only Date in "dd/MM/yyyy (e.g. 21/11/2012) or Date+Time in "dd/MM/yyyy HH:mm:ss" (e.g. 21/11/2012 19:01:59) format]</div>
+                    </div>
 
-        </div>
-        <%--END OF date time/months field DIV--%>
-        <div id="TimeSummary" style="float: left; margin-left: 15px; padding-left: 20px; height: 70px; width: 280px; background-color: #faebd7; margin-top: -10px;">
-            <div style="font-weight: bold; float: left;">Period wise Summary<asp:CheckBox ID="CheckBoxDailySummary" runat="server" /></div>
-            <div style="clear: left; margin-top: 5px;"></div>
-            <div style="float: left; margin-right: 5px;">
-                <%--<asp:RadioButton ID="RadioButtonHalfHourly" Text="Half Hourly" GroupName="Time" runat="server" AutoPostBack="false" /><br />--%>
-                <asp:RadioButton ID="RadioButtonHourly" Text="Hourly" GroupName="Time" runat="server" AutoPostBack="false" />
-            </div>
-            <div style="float: left; margin-right: 5px;">
-                <asp:RadioButton ID="RadioButtonDaily" Text="Daily" GroupName="Time" runat="server" AutoPostBack="false" Checked="true" /><br />
-                <asp:RadioButton ID="RadioButtonWeekly" Text="Weekly" GroupName="Time" runat="server" AutoPostBack="false" Checked="false" /><br />
-            </div>
-            <div style="float: left;">
-                <asp:RadioButton ID="RadioButtonMonthly" Text="Monthly" GroupName="Time" runat="server" AutoPostBack="false" Checked="false" /><br />
-                <asp:RadioButton ID="RadioButtonYearly" Text="Yearly" GroupName="Time" runat="server" AutoPostBack="false" />
-            </div>
-        </div>
+                    <div style="float: left; width: 280px;">
+                        End Date [Time]
+                        <asp:TextBox ID="txtDate1" runat="server" />
+                        <asp:CalendarExtender ID="CalendarEndDate" runat="server"
+                                              TargetControlID="txtDate1" PopupButtonID="txtDate1" Format="yyyy-MM-dd 23:59:59">
+                        </asp:CalendarExtender>
+                    </div>
 
-        <div id="PartnerFilter" style="margin-top: -4px; margin-left: 10px; float: left; padding-left: 5px; background-color: #f2f2f2;">
-            <%--<span style="font-size: smaller;position:relative;left:-53px;padding-left:0px;clear:right;">[Enter only Date in "dd/MM/yyyy (e.g. 21/11/2012) or Date+Time in "dd/MM/yyyy HH:mm:ss" (e.g. 21/11/2012 19:01:59) format]</span>   --%>
+                    <div style="font-size: smaller; text-align: left; overflow: visible; clear: left; color: #8B4500;">[Enter only Date in "dd/MM/yyyy (e.g. 21/11/2012) or Date+Time in "dd/MM/yyyy HH:mm:ss" (e.g. 21/11/2012 19:01:59) format]</div>
 
-            <div style="text-align: left;">
-
-                <div style="float: left; height: 25px; min-width: 1400px;">
-
+                </div>
+                <%--END OF date time/months field DIV--%>
+                <div id="TimeSummary" style="float: left; margin-left: 15px; padding-left: 20px; height: 70px; width: 280px; background-color: #faebd7; margin-top: -10px;">
+                    <div style="font-weight: bold; float: left;">Period wise Summary<asp:CheckBox ID="CheckBoxDailySummary" runat="server" /></div>
+                    <div style="clear: left; margin-top: 5px;"></div>
+                    <div style="float: left; margin-right: 5px;">
+                        <%--<asp:RadioButton ID="RadioButtonHalfHourly" Text="Half Hourly" GroupName="Time" runat="server" AutoPostBack="false" /><br />--%>
+                        <asp:RadioButton ID="RadioButtonHourly" Text="Hourly" GroupName="Time" runat="server" AutoPostBack="false" />
+                    </div>
+                    <div style="float: left; margin-right: 5px;">
+                        <asp:RadioButton ID="RadioButtonDaily" Text="Daily" GroupName="Time" runat="server" AutoPostBack="false" Checked="true" /><br />
+                        <asp:RadioButton ID="RadioButtonWeekly" Text="Weekly" GroupName="Time" runat="server" AutoPostBack="false" Checked="false" /><br />
+                    </div>
                     <div style="float: left;">
-                        View by IOS: 
-                            <asp:CheckBox ID="CheckBoxPartner" runat="server" AutoPostBack="True"
-                                OnCheckedChanged="CheckBoxShowByPartner_CheckedChanged" Checked="True" />
+                        <asp:RadioButton ID="RadioButtonMonthly" Text="Monthly" GroupName="Time" runat="server" AutoPostBack="false" Checked="false" /><br />
+                        <asp:RadioButton ID="RadioButtonYearly" Text="Yearly" GroupName="Time" runat="server" AutoPostBack="false" />
+                    </div>
+                </div>
+
+                <div id="PartnerFilter" style="margin-top: -4px; margin-left: 10px; float: left; padding-left: 5px; background-color: #f2f2f2;">
+                    <%--<span style="font-size: smaller;position:relative;left:-53px;padding-left:0px;clear:right;">[Enter only Date in "dd/MM/yyyy (e.g. 21/11/2012) or Date+Time in "dd/MM/yyyy HH:mm:ss" (e.g. 21/11/2012 19:01:59) format]</span>   --%>
+
+                    <div style="text-align: left;">
+
+                        <div style="float: left; height: 25px; min-width: 1285px;">
+
+                            <div style="float: left;">
+                                View by IOS: 
+                                <asp:CheckBox ID="CheckBoxPartner" runat="server" AutoPostBack="True"
+                                              OnCheckedChanged="CheckBoxShowByPartner_CheckedChanged" Checked="True" />
                        
-                        <asp:DropDownList ID="DropDownListPartner" runat="server"
-                            Enabled="true">
-                        </asp:DropDownList>
+                                <asp:DropDownList ID="DropDownListPartner" runat="server" OnSelectedIndexChanged="DropDownListPartner_OnSelectedIndexChanged"
+                                                  Enabled="true" AutoPostBack="True">
+                                </asp:DropDownList>
 
-                    </div>
-                    <div style="float: left; margin-left: 15px;">
-                        <%--View by ANS: --%>
+                            </div>
+                            <div style="float: left; margin-left: 15px;">
+                                <%--View by ANS: --%>
                                 <asp:CheckBox ID="CheckBoxShowByAns" runat="server" AutoPostBack="True"
-                                    OnCheckedChanged="CheckBoxShowByAns_CheckedChanged" Checked="false" Visible="False" />
-                        <asp:DropDownList ID="DropDownListAns" runat="server"
-                            Enabled="False" Visible="False">
-                        </asp:DropDownList>
+                                              OnCheckedChanged="CheckBoxShowByAns_CheckedChanged" Checked="false" Visible="False" />
+                                <asp:DropDownList ID="DropDownListAns" runat="server"
+                                                  Enabled="False" Visible="False">
+                                </asp:DropDownList>
+
+                            </div>
+
+                            <div style="float: left; margin-left: 18px;">
+                                View by ANS:
+                                <asp:CheckBox ID="CheckBoxShowByIgw" runat="server"
+                                              AutoPostBack="True" OnCheckedChanged="CheckBoxShowByIgw_CheckedChanged" Checked="false" />
+                                <asp:DropDownList ID="DropDownListIgw" runat="server" OnSelectedIndexChanged="DropDownListIgw_OnSelectedIndexChanged"
+                                                  Enabled="False" AutoPostBack="True">
+                                </asp:DropDownList>
+
+                            </div>
+                            &nbsp;&nbsp;
+
+                            <div style="width: 750px; padding-left: 28px;">
+
+                                <span style="width: 300px; padding-left: 127px;">&nbsp;</span>
+
+                                <span style="width: 50px; padding-left: 100px;">&nbsp;</span>
+
+
+                            </div>
+
+                        </div>
 
                     </div>
+                </div>
+                <div id="RouteFilter" style="margin-top: -4px; margin-left: 10px; float: left; padding-left: 5px; background-color: #f2f2f2;">
+                    <%--<span style="font-size: smaller;position:relative;left:-53px;padding-left:0px;clear:right;">[Enter only Date in "dd/MM/yyyy (e.g. 21/11/2012) or Date+Time in "dd/MM/yyyy HH:mm:ss" (e.g. 21/11/2012 19:01:59) format]</span>   --%>
 
-                    <div style="float: left; margin-left: 18px;">
-                        View by ANS:
-                        <asp:CheckBox ID="CheckBoxShowByIgw" runat="server"
-                            AutoPostBack="True" OnCheckedChanged="CheckBoxShowByIgw_CheckedChanged" Checked="false" />
-                        <asp:DropDownList ID="DropDownListIgw" runat="server"
-                             Enabled="False">
-                        </asp:DropDownList>
+                    <div style="text-align: left;">
+
+                        <div style="float: left; height: 25px; min-width: 1285px;">
+
+                            <div style="float: left;">
+                                View by Incoming Route: 
+                                <asp:CheckBox ID="CheckBoxViewIncomingRoute" runat="server" AutoPostBack="True"
+                                              OnCheckedChanged="CheckBoxViewIncomingRoute_CheckedChanged" Checked="False" />
+                       
+                                <asp:DropDownList ID="DropDownListViewIncomingRoute" runat="server"
+                                                  Enabled="False">
+                                </asp:DropDownList>
+
+                            </div>
+
+                            <div style="float: left; margin-left: 18px;">
+                                View by Outgoing Route:
+                                <asp:CheckBox ID="CheckBoxViewOutgoingRoute" runat="server"
+                                              AutoPostBack="True" OnCheckedChanged="CheckBoxViewOutgoingRoute_CheckedChanged" Checked="false" />
+                                <asp:DropDownList ID="DropDownListViewOutgoingRoute" runat="server"
+                                                  Enabled="False">
+                                </asp:DropDownList>
+
+                            </div>
+                            &nbsp;&nbsp;
+
+                            <div style="width: 750px; padding-left: 28px;">
+
+                                <span style="width: 300px; padding-left: 127px;">&nbsp;</span>
+
+                                <span style="width: 50px; padding-left: 100px;">&nbsp;</span>
+
+
+                            </div>
+
+                        </div>
 
                     </div>
-                    &nbsp;&nbsp;
-
-                <div style="width: 750px; padding-left: 28px;">
-
-                    <span style="width: 300px; padding-left: 127px;">&nbsp;</span>
-
-                    <span style="width: 50px; padding-left: 100px;">&nbsp;</span>
-
-
                 </div>
-
-                </div>
-
+                <%--End Div Partner***************************************************--%>
             </div>
-        </div>
-        <%--End Div Partner***************************************************--%>
-    </div>
+
+        </ContentTemplate>
+    </asp:UpdatePanel>
     <%--Param Border--%>
     <%--Common--%>
 
@@ -534,7 +581,9 @@
                     <Columns>
                         <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" ItemStyle-Wrap="false" />
                         <asp:BoundField DataField="International Partner" HeaderText="International Partner" SortExpression="International Partner" />
+                        <asp:BoundField DataField="tup_incomingroute" HeaderText="Incoming Route" SortExpression="tup_incomingroute" />
                         <asp:BoundField DataField="IGW" HeaderText="ANS" SortExpression="IGW" />
+                        <asp:BoundField DataField="tup_outgoingroute" HeaderText="Outgoing Route" SortExpression="tup_outgoingroute" />
                         <asp:BoundField DataField="ANS" HeaderText="ANS" SortExpression="ANS" />
 
                         <asp:BoundField DataField="CallsCount"

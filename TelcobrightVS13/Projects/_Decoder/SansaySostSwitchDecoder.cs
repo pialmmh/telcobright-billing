@@ -40,6 +40,7 @@ namespace Decoders
             }
             foreach (string[] thisRow in tempTable) //for each row
             {
+                if (thisRow[10].Trim()=="998") continue;
                 try
                 {//sansay was set to try next field in case of error with one field
                     //the code has been changed to make exception handling per row basis like other decoding formats

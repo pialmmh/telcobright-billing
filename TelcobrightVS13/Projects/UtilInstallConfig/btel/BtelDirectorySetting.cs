@@ -76,7 +76,8 @@ namespace InstallConfig
                 LocationType = "sftp",
                 OsType = "linux",
                 PathSeparator = "/",
-                StartingPath = "/home/zxss10_bsvr/data/bfile/bill/zsmart_media_bak",
+                StartingPath = "/home/zxss10_bsvr/data/bfile/bill",
+                //StartingPath = "/home/zxss10_bsvr/data/bfile/bill/zsmart_media_bak",
                 Sftphostkey = "",
                 ServerIp = "10.33.34.12",
                 User = "igwbill",
@@ -90,35 +91,23 @@ namespace InstallConfig
                 LocationType = "ftp",
                 OsType = "windows",
                 PathSeparator = @"/",//backslash didn't work with winscp
-                StartingPath = @"/RAW_DATA/IGW_CDR",
-                ServerIp = "10.100.201.20", //server = "172.16.16.242",
-                User = "cdr",
-                Pass = "cdr13531",
+                StartingPath = @"/IGW_CDR_BK",
+                ServerIp = "10.100.201.13", //server = "172.16.16.242",
+                User = "iofcdr",
+                Pass = "blt#.45",
                 IgnoreZeroLenghFile = 1
-            };
-            FileLocation fileArchive2 = new FileLocation()//raw cdr archive
-            {
-                Name = "FileArchive2",
-                LocationType = "ftp",
-                OsType = "linux",
-                PathSeparator = "/",
-                StartingPath = @"/medi/data/igw_src/igw_src_bk",
-                ServerIp = "10.100.201.10", //server = "172.16.16.242",
-                User = "medi",
-                Pass = "medi",
-                IgnoreZeroLenghFile = 1,
             };
             FileLocation fileArchiveIof = new FileLocation()//raw cdr archive
             {
                 Name = "FileArchiveIof",
                 LocationType = "ftp",
-                OsType = "linux",
-                PathSeparator = "/",
-                StartingPath = @"/medi/data/igw_src/igw_src_bk",
-                ServerIp = "10.100.201.13",
+                OsType = "windows",
+                PathSeparator = @"/",//backslash didn't work with winscp
+                StartingPath = @"/IGW_TO_IOF2",
+                ServerIp = "10.100.201.13", //server = "172.16.16.242",
                 User = "iofcdr",
                 Pass = "blt#.45",
-                IgnoreZeroLenghFile = 1,
+                IgnoreZeroLenghFile = 1
             };
             //add locations to directory settings
             directorySettings.FileLocations.Add(vaultBtelZteDhk.Name, vaultBtelZteDhk);
@@ -127,11 +116,9 @@ namespace InstallConfig
             directorySettings.FileLocations.Add(BtelZteDhk.Name, BtelZteDhk);
             
             directorySettings.FileLocations.Add(fileArchive1Zip.Name, fileArchive1Zip);
-            directorySettings.FileLocations.Add(fileArchive2.Name, fileArchive2);
             directorySettings.FileLocations.Add(fileArchiveIof.Name, fileArchiveIof);
 
 
-            //sync pair platinum:Vault
             SyncPair BtelZteDhkVault = new SyncPair("BtelZteDhk:Vault")
             {
                 SkipSourceFileListing = false,
@@ -163,7 +150,7 @@ namespace InstallConfig
 
 
             //sync pair Vault_S3:FileArchive1
-            SyncPair vaultFileArchive1Zip = new SyncPair("Vault:FileArchive1Zip")
+            SyncPair vaultFileArchive1Zip = new SyncPair("Vault:FileArchive1")
             {
                 SkipCopyingToDestination = false,
                 SkipSourceFileListing = true,
@@ -184,44 +171,13 @@ namespace InstallConfig
                 {
                     FileExtensionForSafeCopyWithTempFile = ".tmp",
                     Overwrite = true,
-                    CompressionType = CompressionType.Sevenzip,
-                    SubDirRule = new SyncSettingsDstSubDirectoryRule
-                    (
-                        DateWiseSubDirCreationType.ByFileName,
-                        new SpringExpression(@"Name.Substring(3,8)"), //"S3_2_" is appended at vault
-                        "yyyyMMdd", true
-                    )
-                }
-            };
-            SyncPair vaultFileArchive2 = new SyncPair("Vault:FileArchive2")
-            {
-                SkipCopyingToDestination = false,
-                SkipSourceFileListing = true,
-                SrcSyncLocation = new SyncLocation("Vault_BtelZteDhk")
-                {
-                    FileLocation = vaultBtelZteDhk
-                },
-                DstSyncLocation = new SyncLocation("FileArchive2")
-                {
-                    FileLocation = fileArchive2
-                },
-                SrcSettings = new SyncSettingsSource()
-                {
-                    SecondaryDirectory = "Downloaded",
-                    ExpFileNameFilter = null,
-                },
-                DstSettings = new SyncSettingsDest()
-                {
-                    FileExtensionForSafeCopyWithTempFile = ".tmp",
-                    Overwrite = true,
-                    ExpDestFileName = new SpringExpression(""),
                     CompressionType = CompressionType.None,
-                    SubDirRule = null
                 }
             };
+            
             SyncPair vaultIof = new SyncPair("Vault:IOF")
             {
-                SkipCopyingToDestination = true,
+                SkipCopyingToDestination = false,
                 SkipSourceFileListing = true,
                 SrcSyncLocation = new SyncLocation("Vault_BtelZteDhk")
                 {
@@ -248,7 +204,6 @@ namespace InstallConfig
             //add sync pairs to directory config
             directorySettings.SyncPairs.Add(BtelZteDhkVault.Name, BtelZteDhkVault);
             directorySettings.SyncPairs.Add(vaultFileArchive1Zip.Name, vaultFileArchive1Zip);
-            directorySettings.SyncPairs.Add(vaultFileArchive2.Name, vaultFileArchive2);
             directorySettings.SyncPairs.Add(vaultIof.Name, vaultIof);
             //load the syncpairs in dictioinary, first by source
             foreach (SyncPair sp in directorySettings.SyncPairs.Values)
@@ -269,9 +224,10 @@ namespace InstallConfig
             //add archive locations to CdrSettings
             tbc.CdrSetting.BackupSyncPairNames = new List<string>
             {
-                vaultFileArchive1Zip.Name, vaultIof.Name
+                vaultFileArchive1Zip.Name,
+                vaultIof.Name,
             };
-            tbc.CdrSetting.DisableCdrPostProcessingJobCreationForAutomation = true;
+            
         }
     }
 }

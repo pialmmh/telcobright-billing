@@ -24,7 +24,7 @@ namespace InstallConfig
         public PlatinumConfigGenerator()
         {
             int thisServerId = 1;
-            this.OperatorName = "platinum";
+            this.OperatorName = "platinum_2020";
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Igw, thisServerId);
             this.Tbc.IdTelcobrightPartner = 1;
         }

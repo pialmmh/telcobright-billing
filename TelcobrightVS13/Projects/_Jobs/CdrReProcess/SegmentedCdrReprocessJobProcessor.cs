@@ -28,6 +28,7 @@ namespace TelcobrightMediation
             DbRowCollector<cdr> dbRowCollector =
                 new DbRowCollector<cdr>(this.CdrCollectorInput.CdrJobInputData, selectSql);
             List<cdr> finalCdrs = dbRowCollector.Collect();
+            finalCdrs= CdrJob.SkipBillIdsWithPrevChargeableIssue(finalCdrs);
             CdrReProcessingPreProcessor preProcessor =
                 new CdrReProcessingPreProcessor(this.CdrCollectorInput, finalCdrs);
 

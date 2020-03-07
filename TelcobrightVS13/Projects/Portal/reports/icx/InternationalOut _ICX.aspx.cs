@@ -55,6 +55,8 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                                 CheckBoxShowByIgw.Checked==true?"tup_inpartnerid":string.Empty,
                                 CheckBoxShowByCustomerRate.Checked==true?"tup_customerrate":string.Empty,
                                 "tup_customercurrency",
+                                CheckBoxViewIncomingRoute.Checked==true?"tup_incomingroute":string.Empty,
+                                CheckBoxViewOutgoingRoute.Checked==true?"tup_outgoingroute":string.Empty,
                             },
                       
                          new List<string>()
@@ -64,7 +66,9 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                                 CheckBoxIntlPartner.Checked==true?DropDownListIntlCarier.SelectedIndex>0?" tup_outpartnerid="+DropDownListIntlCarier.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxShowByAns.Checked==true?DropDownListAns.SelectedIndex>0?" tup_sourceID="+DropDownListAns.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_inpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty,
-                                " totalcalls>0"
+                                CheckBoxViewIncomingRoute.Checked==true?DropDownListViewIncomingRoute.SelectedIndex>0?" tup_incomingroute="+DropDownListViewIncomingRoute.SelectedItem.Value:string.Empty:string.Empty,
+                                CheckBoxViewOutgoingRoute.Checked==true?DropDownListViewOutgoingRoute.SelectedIndex>0?" tup_outgoingroute="+DropDownListViewOutgoingRoute.SelectedItem.Value:string.Empty:string.Empty,
+                                " totalcalls>0",
                             }).getSQLString();
 
         //File.WriteAllText("c:" + Path.DirectorySeparatorChar + "temp" + Path.DirectorySeparatorChar + "testQuery.txt", constructedSQL);
@@ -126,69 +130,43 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
             GridView1.Columns[1].Visible = false;
             GridView1.Columns[2].Visible = false;
             GridView1.Columns[3].Visible = false;
-            GridView1.Columns[5].Visible = false;
+            GridView1.Columns[6].Visible = false;
         }
         //GridView1.Columns[1].Visible = true;
         //GridView1.Columns[2].Visible = false;
         //GridView1.Columns[3].Visible = false;
-        GridView1.Columns[4].Visible = false;
+        GridView1.Columns[5].Visible = false;
         //*****************************
 
-        if (CheckBoxShowByCountry.Checked == true)
-        {
-            GridView1.Columns[1].Visible = true;
-        }
-        else GridView1.Columns[1].Visible = false;
-
-        if (CheckBoxShowByDestination.Checked == true)
-        {
-            GridView1.Columns[2].Visible = true;
-        }
-        else GridView1.Columns[2].Visible = false;
-
-        if (CheckBoxShowByIgw.Checked == true)
-        {
-            GridView1.Columns[3].Visible = true;
-        }
-        else GridView1.Columns[3].Visible = false;
-
-        if (CheckBoxIntlPartner.Checked == true)
-        {
-            GridView1.Columns[5].Visible = true;
-        }
-        else GridView1.Columns[5].Visible = false;
-
-        
-        if (CheckBoxShowPerformance.Checked == true)
-        {
-            GridView1.Columns[14].Visible = true;
-        }
-        else
-        {
-            GridView1.Columns[14].Visible = false;
-        }
+        GridView1.Columns[1].Visible = CheckBoxShowByCountry.Checked;
+        GridView1.Columns[2].Visible = CheckBoxShowByDestination.Checked;
+        GridView1.Columns[3].Visible = CheckBoxShowByIgw.Checked;
+        GridView1.Columns[4].Visible = CheckBoxViewIncomingRoute.Checked;
+        GridView1.Columns[6].Visible = CheckBoxIntlPartner.Checked;
+        GridView1.Columns[7].Visible = CheckBoxViewOutgoingRoute.Checked;
+        GridView1.Columns[16].Visible = CheckBoxShowPerformance.Checked;
 
         if (CheckBoxShowCost.Checked == true)
         {
-            GridView1.Columns[19].Visible = false;
-            GridView1.Columns[20].Visible = false;
-            GridView1.Columns[21].Visible = true;
-            GridView1.Columns[22].Visible = true;
+            GridView1.Columns[21].Visible = false;
+            GridView1.Columns[22].Visible = false;
             GridView1.Columns[23].Visible = true;
             GridView1.Columns[24].Visible = true;
             GridView1.Columns[25].Visible = true;
             GridView1.Columns[26].Visible = true;
+            GridView1.Columns[27].Visible = true;
+            GridView1.Columns[28].Visible = true;
         }
         else
         {
-            GridView1.Columns[19].Visible = false;
-            GridView1.Columns[20].Visible = false;
             GridView1.Columns[21].Visible = false;
             GridView1.Columns[22].Visible = false;
             GridView1.Columns[23].Visible = false;
             GridView1.Columns[24].Visible = false;
             GridView1.Columns[25].Visible = false;
             GridView1.Columns[26].Visible = false;
+            GridView1.Columns[27].Visible = false;
+            GridView1.Columns[28].Visible = false;
         }
         
 
@@ -491,6 +469,10 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                 }
 
             }
+
+            DropDownListIgw_OnSelectedIndexChanged(DropDownListIgw, EventArgs.Empty);
+            DropDownListIntlCarier_OnSelectedIndexChanged(DropDownListIntlCarier, EventArgs.Empty);
+
             #region Comment protion for table name change
             //using (MySqlConnection connection = new MySqlConnection(connectionString))
             //{
@@ -1095,9 +1077,9 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                     }
                     if ((thisAsr < refAsr) || (thisAsr == 0))
                     {
-                        e.Row.Cells[13].ForeColor = Color.White;
-                        e.Row.Cells[13].BackColor = redColor;
-                        e.Row.Cells[13].Font.Bold = true;
+                        e.Row.Cells[15].ForeColor = Color.White;
+                        e.Row.Cells[15].BackColor = redColor;
+                        e.Row.Cells[15].Font.Bold = true;
                     }
 
                     //fas detection
@@ -1108,9 +1090,9 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                     
                     if (thisAsr > refAsrFas && refAsrFas>0)
                     {
-                        e.Row.Cells[13].ForeColor = Color.White;
-                        e.Row.Cells[13].BackColor = Color.Blue;
-                        e.Row.Cells[13].Font.Bold = true;
+                        e.Row.Cells[15].ForeColor = Color.White;
+                        e.Row.Cells[15].BackColor = Color.Blue;
+                        e.Row.Cells[15].Font.Bold = true;
                     }
 
                     //ACD
@@ -1122,9 +1104,9 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                     if (thisAcd < refAcd)
                     {
                         //e.Row.Cells[12].ForeColor = RedColor;
-                        e.Row.Cells[14].ForeColor = Color.White;
-                        e.Row.Cells[14].BackColor = redColor;
-                        e.Row.Cells[14].Font.Bold = true;
+                        e.Row.Cells[16].ForeColor = Color.White;
+                        e.Row.Cells[16].BackColor = redColor;
+                        e.Row.Cells[16].Font.Bold = true;
                     }
 
                     //PDD
@@ -1136,9 +1118,9 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                     if (thisPdd > refPdd)
                     {
                         //e.Row.Cells[13].ForeColor = RedColor;
-                        e.Row.Cells[15].ForeColor = Color.White;
-                        e.Row.Cells[15].BackColor = redColor;
-                        e.Row.Cells[15].Font.Bold = true;
+                        e.Row.Cells[17].ForeColor = Color.White;
+                        e.Row.Cells[17].BackColor = redColor;
+                        e.Row.Cells[17].Font.Bold = true;
                     }
 
                     //CCR
@@ -1150,9 +1132,9 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                     if (thisCcr < refCcr)
                     {
                         //e.Row.Cells[14].ForeColor = RedColor;
-                        e.Row.Cells[16].ForeColor = Color.White;
-                        e.Row.Cells[16].BackColor = redColor;
-                        e.Row.Cells[16].Font.Bold = true;
+                        e.Row.Cells[18].ForeColor = Color.White;
+                        e.Row.Cells[18].BackColor = redColor;
+                        e.Row.Cells[18].Font.Bold = true;
                     }
 
                     //CCRByCauseCode
@@ -1164,9 +1146,9 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                     if (thisCcRbyCc < refCcrCc)
                     {
                         //e.Row.Cells[16].ForeColor = RedColor;
-                        e.Row.Cells[18].ForeColor = Color.White;
-                        e.Row.Cells[18].BackColor = redColor;
-                        e.Row.Cells[18].Font.Bold = true;
+                        e.Row.Cells[20].ForeColor = Color.White;
+                        e.Row.Cells[20].BackColor = redColor;
+                        e.Row.Cells[20].Font.Bold = true;
                     }
                 }
             }
@@ -1228,9 +1210,9 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                     if ((thisAsr < refAsr) || (thisAsr == 0))
                     {
                         //e.Row.Cells[12].ForeColor = RedColor;
-                        e.Row.Cells[13].ForeColor = Color.White;
-                        e.Row.Cells[13].BackColor = redColor;
-                        e.Row.Cells[13].Font.Bold = true;
+                        e.Row.Cells[15].ForeColor = Color.White;
+                        e.Row.Cells[15].BackColor = redColor;
+                        e.Row.Cells[15].Font.Bold = true;
                     }
 
                     //fas detection
@@ -1241,9 +1223,9 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
 
                     if (thisAsr > refAsrFas && refAsrFas>0)
                     {
-                        e.Row.Cells[13].ForeColor = Color.White;
-                        e.Row.Cells[13].BackColor = Color.Blue;
-                        e.Row.Cells[13].Font.Bold = true;
+                        e.Row.Cells[15].ForeColor = Color.White;
+                        e.Row.Cells[15].BackColor = Color.Blue;
+                        e.Row.Cells[15].Font.Bold = true;
                     }
 
                     //ACD
@@ -1255,9 +1237,9 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                     if (thisAcd < refAcd)
                     {
                         //e.Row.Cells[13].ForeColor = RedColor;
-                        e.Row.Cells[14].ForeColor = Color.White;
-                        e.Row.Cells[14].BackColor = redColor;
-                        e.Row.Cells[14].Font.Bold = true; 
+                        e.Row.Cells[16].ForeColor = Color.White;
+                        e.Row.Cells[16].BackColor = redColor;
+                        e.Row.Cells[16].Font.Bold = true; 
                     }
 
                     //PDD
@@ -1268,9 +1250,9 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                     }
                     if (thisPdd > refPdd)
                     {
-                        e.Row.Cells[15].ForeColor = Color.White;
-                        e.Row.Cells[15].BackColor = redColor;
-                        e.Row.Cells[15].Font.Bold = true ;
+                        e.Row.Cells[17].ForeColor = Color.White;
+                        e.Row.Cells[17].BackColor = redColor;
+                        e.Row.Cells[17].Font.Bold = true ;
                     }
 
                     //CCR
@@ -1281,9 +1263,9 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                     }
                     if (thisCcr < refCcr)
                     {
-                        e.Row.Cells[16].ForeColor = Color.White;
-                        e.Row.Cells[16].BackColor = redColor;
-                        e.Row.Cells[16].Font.Bold = true ;
+                        e.Row.Cells[18].ForeColor = Color.White;
+                        e.Row.Cells[18].BackColor = redColor;
+                        e.Row.Cells[18].Font.Bold = true ;
                     }
 
                     //CCRByCauseCode
@@ -1294,9 +1276,9 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                     }
                     if (thisCcRbyCc < refCcrCc)
                     {
-                        e.Row.Cells[18].ForeColor = Color.White;
-                        e.Row.Cells[18].BackColor = redColor;
-                        e.Row.Cells[18].Font.Bold = true;
+                        e.Row.Cells[20].ForeColor = Color.White;
+                        e.Row.Cells[20].BackColor = redColor;
+                        e.Row.Cells[20].Font.Bold = true;
                     }
                 }
             }
@@ -1313,12 +1295,83 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
             Color redColor2 = ColorTranslator.FromHtml("#FF0000");
             if (asr <= 0)
             {
-                e.Row.Cells[13].ForeColor = Color.White;
-                e.Row.Cells[13].BackColor = redColor2;
-                e.Row.Cells[13].Font.Bold = true;
+                e.Row.Cells[15].ForeColor = Color.White;
+                e.Row.Cells[15].BackColor = redColor2;
+                e.Row.Cells[15].Font.Bold = true;
             }
         }
 
     }
-    
+
+    protected void CheckBoxViewIncomingRoute_CheckedChanged(object sender, EventArgs e)
+    {
+        DropDownListViewIncomingRoute.Enabled = CheckBoxViewIncomingRoute.Checked;
+    }
+
+    protected void CheckBoxViewOutgoingRoute_CheckedChanged(object sender, EventArgs e)
+    {
+        DropDownListViewOutgoingRoute.Enabled = CheckBoxViewOutgoingRoute.Checked;
+    }
+
+    protected void DropDownListIgw_OnSelectedIndexChanged(object sender, EventArgs e)
+    {
+        DropDownListViewIncomingRoute.Items.Clear();
+        DropDownListViewIncomingRoute.Items.Add(new ListItem("[All]", "-1"));
+        if (DropDownListIgw.SelectedValue != String.Empty)
+        {
+            if (DropDownListIgw.SelectedValue == "-1")
+            {
+                using (PartnerEntities contex = new PartnerEntities())
+                {
+                    List<int> ansList = contex.partners.Where(c => c.PartnerType == 2).Select(c => c.idPartner).ToList();
+                    foreach (route route in contex.routes.Where(x => ansList.Contains(x.idPartner)))
+                    {
+                        DropDownListViewIncomingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
+                    }
+                }
+            }
+            else
+            {
+                using (PartnerEntities contex = new PartnerEntities())
+                {
+                    int idPartner = Convert.ToInt32(DropDownListIgw.SelectedValue);
+                    foreach (route route in contex.routes.Where(x => x.idPartner == idPartner))
+                    {
+                        DropDownListViewIncomingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
+                    }
+                }
+            }
+        }
+    }
+
+    protected void DropDownListIntlCarier_OnSelectedIndexChanged(object sender, EventArgs e)
+    {
+        DropDownListViewOutgoingRoute.Items.Clear();
+        DropDownListViewOutgoingRoute.Items.Add(new ListItem("[All]", "-1"));
+        if (DropDownListIntlCarier.SelectedValue != String.Empty)
+        {
+            if (DropDownListIntlCarier.SelectedValue == "-1")
+            {
+                using (PartnerEntities contex = new PartnerEntities())
+                {
+                    List<int> ansList = contex.partners.Where(c => c.PartnerType == 3).Select(c => c.idPartner).ToList();
+                    foreach (route route in contex.routes.Where(x => ansList.Contains(x.idPartner)))
+                    {
+                        DropDownListViewOutgoingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
+                    }
+                }
+            }
+            else
+            {
+                using (PartnerEntities contex = new PartnerEntities())
+                {
+                    int idPartner = Convert.ToInt32(DropDownListIntlCarier.SelectedValue);
+                    foreach (route route in contex.routes.Where(x => x.idPartner == idPartner))
+                    {
+                        DropDownListViewOutgoingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
+                    }
+                }
+            }
+        }
+    }
 }

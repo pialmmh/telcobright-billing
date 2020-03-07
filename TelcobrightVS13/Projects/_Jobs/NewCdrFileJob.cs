@@ -127,12 +127,9 @@ namespace Jobs
         {
             var collectorinput = this.CollectorInput;
             SetIdCallsInSameOrderAsCollected(preProcessor, collectorinput);
-            MefValidator<string[]> inconistentValidator =
-                NewCdrPreProcessor.CreateValidatorForInconsistencyCheck(collectorinput);
-            if (!collectorinput.CdrJobInputData.MediationContext.Tbc.CdrSetting.PartialCdrEnabledNeIds
-                .Contains(collectorinput.Ne.idSwitch))
+            if (this.CollectorInput.CdrSetting.UseIdCallAsBillId==true)
             {
-                preProcessor.TxtCdrRows = preProcessor.FilterCdrsWithDuplicateBillIdsAsInconsistent(preProcessor.TxtCdrRows);
+                SetIdCallAsBillId(preProcessor);
             }
             Parallel.ForEach(preProcessor.TxtCdrRows, txtRow =>
             {
@@ -144,7 +141,27 @@ namespace Jobs
                 preProcessor
                     .AdjustStartTimeBasedOnCdrSettingsForSummaryTimeField(
                         collectorinput.Tbc.CdrSetting.SummaryTimeField, txtRow);
-                preProcessor.CheckAndConvertIfInconsistent(collectorinput.CdrJobInputData,
+            });
+            MefValidator<string[]> inconistentValidator =
+                NewCdrPreProcessor.CreateValidatorForInconsistencyCheck(collectorinput);
+            var cdrSetting = collectorinput.CdrJobInputData.MediationContext.Tbc.CdrSetting;
+            if (cdrSetting.PartialCdrEnabledNeIds
+                .Contains(collectorinput.Ne.idSwitch))
+            {
+                if (cdrSetting.AutoCorrectDuplicateBillId == true)
+                {
+                    preProcessor.TxtCdrRows = AbstractCdrJobPreProcessor.ChangeDuplicateBillIds(preProcessor.TxtCdrRows);
+                }
+            }
+            else preProcessor.TxtCdrRows = preProcessor.FilterCdrsWithDuplicateBillIdsAsInconsistent(preProcessor.TxtCdrRows);
+
+            if (cdrSetting.AutoCorrectBillIdsWithPrevChargeableIssue==true)
+            {
+                preProcessor.TxtCdrRows= CdrJob.ChangeBillIdsWithPrevChargeableIssue(preProcessor.TxtCdrRows);
+            }
+            Parallel.ForEach(preProcessor.TxtCdrRows, txtRow =>
+            {
+                    preProcessor.CheckAndConvertIfInconsistent(collectorinput.CdrJobInputData,
                     inconistentValidator, txtRow);
             });
             if (preProcessor.InconsistentCdrs.Any())
@@ -157,13 +174,19 @@ namespace Jobs
             
         }
 
+        
+
         private static void SetIdCallsInSameOrderAsCollected(NewCdrPreProcessor preProcessor, CdrCollectorInputData collectorinput)
         {
             //keep the cdrs in the same order as received, don't use parallel
             preProcessor.TxtCdrRows.ForEach(txtRow => preProcessor.SetIdCall(collectorinput.AutoIncrementManager, txtRow));
         }
+        private static void SetIdCallAsBillId(NewCdrPreProcessor preProcessor)
+        {
+            preProcessor.TxtCdrRows.ForEach(txtRow => txtRow[98]=txtRow[1]);
+        }
 
-        
+
         protected void WriteJobCompletionIfCollectionNotEmpty(CdrProcessor cdrProcessor, job telcobrightJob)
         {
             using (DbCommand cmd = ConnectionManager.CreateCommandFromDbContext(cdrProcessor.CdrJobContext.Context))

@@ -50,54 +50,22 @@ namespace PortalApp.config
 
                 ddlistType.Items.Clear();
                 ddlistType.Items.Add("PrevBalance");
-                if (account.billableType == "/custBilled")      // prepaid
+                switch (account.billableType)
                 {
-                    ddlistType.Items.Add("TopUp");
-                    ddlistType.Items.Add("Credit");
+                    case "/billable":           // postpaid
+                        ddlistType.Items.Add("Payment");
+                        ddlistType.SelectedValue = "Payment";
+                        break;
+                    case "/custBilled":         // prepaid
+                        ddlistType.Items.Add("TopUp");
+                        ddlistType.Items.Add("Credit");
+                        ddlistType.SelectedValue = "TopUp";
+                        AddDefaultAccountActions();
+                        break;
+                    default:
+                        throw new Exception("Unsupported account type");
                 }
-
-                // TODO: Replace 4 with correct variable
-                List<int> serviceGroupWithActions = new List<int>() {4, 100};
-                availableActions = Tbc.CdrSetting.ServiceGroupConfigurations
-                    .First(x => serviceGroupWithActions.Contains(x.Key)).Value.AccountActions;
-
-                actions.Add(new AccActionEx()
-                {
-                    idAccount = account.id,
-                    threshhold_value = 0,
-                    idAccountAction = 1,
-                    Rule = new AccountActionRule()
-                    {
-                        IsPercent = true,
-                        Amount = 50
-                    }
-                });
-                actions.Add(new AccActionEx()
-                {
-                    idAccount = account.id,
-                    threshhold_value = 0,
-                    idAccountAction = 1,
-                    Rule = new AccountActionRule()
-                    {
-                        IsPercent = true,
-                        Amount = 20
-                    }
-                });
-                actions.Add(new AccActionEx()
-                {
-                    idAccount = account.id,
-                    threshhold_value = 0,
-                    idAccountAction = 3,
-                    Rule = new AccountActionRule()
-                    {
-                        IsPercent = true,
-                        Amount = 10
-                    }
-                });
-                this.Session["pmActions"] = actions;
-
-                ddlAccountAction.DataSource = availableActions;
-                ddlAccountAction.DataBind();
+                txtDate.Text = DateTime.Now.Date.ToString("yyyy-MM-dd");
             }
 
             account = (account)this.Session["pmAccount"];
@@ -109,6 +77,54 @@ namespace PortalApp.config
             gvThreshold.DataSource = actions;
             gvThreshold.DataBind();
 
+            lbAddRule.Visible = account.billableType == "/custBilled";
+            cbThresholdSettings.Visible = account.billableType == "/custBilled";
+        }
+
+        private void AddDefaultAccountActions()
+        {
+            // TODO: Replace 4 with correct variable
+            List<int> serviceGroupWithActions = new List<int>() {4, 100};
+            availableActions = Tbc.CdrSetting.ServiceGroupConfigurations
+                .First(x => serviceGroupWithActions.Contains(x.Key)).Value.AccountActions;
+
+            actions.Add(new AccActionEx()
+            {
+                idAccount = account.id,
+                threshhold_value = 0,
+                idAccountAction = 1,
+                Rule = new AccountActionRule()
+                {
+                    IsPercent = true,
+                    Amount = 50
+                }
+            });
+            actions.Add(new AccActionEx()
+            {
+                idAccount = account.id,
+                threshhold_value = 0,
+                idAccountAction = 1,
+                Rule = new AccountActionRule()
+                {
+                    IsPercent = true,
+                    Amount = 20
+                }
+            });
+            actions.Add(new AccActionEx()
+            {
+                idAccount = account.id,
+                threshhold_value = 0,
+                idAccountAction = 3,
+                Rule = new AccountActionRule()
+                {
+                    IsPercent = true,
+                    Amount = 10
+                }
+            });
+            this.Session["pmActions"] = actions;
+
+            ddlAccountAction.DataSource = availableActions;
+            ddlAccountAction.DataBind();
         }
 
 
@@ -173,23 +189,31 @@ namespace PortalApp.config
         protected void txtAmount_TextChanged(object sender, EventArgs e)
         {
             account = (account)this.Session["pmAccount"];
-            actions = (BindingList<AccActionEx>)this.Session["pmActions"];
-            decimal Amount = Convert.ToDecimal(txtAmount.Text) + account.getCurrentBalanceWithTempTransaction();
-            foreach (AccActionEx item in actions)
+            switch (account.billableType)
             {
-                if (item.Rule.IsPercent)
-                {
-                    item.threshhold_value = (Amount) * item.Rule.Amount / 100;
-                }
-                else if (item.Rule.IsFormulaBased)
-                {
-                    item.threshhold_value = (item.Rule.Amount * 60 / item.Rule.ACD) * item.Rule.ACR * item.Rule.NoOfPorts;
-                }
-            }
+                case "/custBilled":
+                    actions = (BindingList<AccActionEx>)this.Session["pmActions"];
+                    decimal amount = Convert.ToDecimal(txtAmount.Text) + account.getCurrentBalanceWithTempTransaction();
+                    foreach (AccActionEx item in actions)
+                    {
+                        if (item.Rule.IsPercent)
+                        {
+                            item.threshhold_value = (amount) * item.Rule.Amount / 100;
+                        }
+                        else if (item.Rule.IsFormulaBased)
+                        {
+                            item.threshhold_value = (item.Rule.Amount * 60 / item.Rule.ACD) * item.Rule.ACR * item.Rule.NoOfPorts;
+                        }
+                    }
 
-            this.Session["pmActions"] = actions;
-            gvThreshold.DataSource = actions;
-            gvThreshold.DataBind();
+                    this.Session["pmActions"] = actions;
+                    gvThreshold.DataSource = actions;
+                    gvThreshold.DataBind();
+                    break;
+                case "/billable": break;
+                default:
+                    throw new Exception("Unsupported account type");
+            }
         }
 
         protected void btnOK_Click(object sender, EventArgs e)
@@ -198,6 +222,7 @@ namespace PortalApp.config
             {
                 account = (account)this.Session["pmAccount"];
                 decimal amount = decimal.Parse(txtAmount.Text);
+                if (amount <= 0) throw new Exception("Please enter a positive amount");
                 DateTime payDate = Convert.ToDateTime(txtDate.Text);
                 using (PartnerEntities context = new PartnerEntities())
                 {
@@ -225,6 +250,7 @@ namespace PortalApp.config
                     {
                         if (con.State != ConnectionState.Open) con.Open();
                         TempTransactionHelper.CreateTempTransaction(account.id, amount, payDate, ddlistType.SelectedValue, cmd, account);
+                        Response.Redirect("~/config/PaymentManagement.aspx", false);
                     }
                 }
             }

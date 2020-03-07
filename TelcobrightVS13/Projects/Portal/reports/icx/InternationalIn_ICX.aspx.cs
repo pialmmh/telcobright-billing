@@ -50,12 +50,16 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
                                 CheckBoxPartner.Checked==true?"tup_inpartnerid":string.Empty,
                                 CheckBoxShowByAns.Checked==true?"tup_destinationId":string.Empty,
                                 CheckBoxShowByIgw.Checked==true?"tup_outpartnerid":string.Empty,
+                                CheckBoxViewIncomingRoute.Checked==true?"tup_incomingroute":string.Empty,
+                                CheckBoxViewOutgoingRoute.Checked==true?"tup_outgoingroute":string.Empty,
                             },
                          new List<string>()
                             {
                                 CheckBoxPartner.Checked==true?DropDownListPartner.SelectedIndex>0?" tup_inpartnerid="+DropDownListPartner.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxShowByAns.Checked==true?DropDownListAns.SelectedIndex>0?" tup_destinationId="+DropDownListAns.SelectedValue:string.Empty:string.Empty,
-                                CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_outpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty
+                                CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_outpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty,
+                                CheckBoxViewIncomingRoute.Checked==true?DropDownListViewIncomingRoute.SelectedIndex>0?" tup_incomingroute="+DropDownListViewIncomingRoute.SelectedItem.Value:string.Empty:string.Empty,
+                                CheckBoxViewOutgoingRoute.Checked==true?DropDownListViewOutgoingRoute.SelectedIndex>0?" tup_outgoingroute="+DropDownListViewOutgoingRoute.SelectedItem.Value:string.Empty:string.Empty,
                             }).getSQLString();
 
        
@@ -127,37 +131,30 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
         else GridView1.Columns[3].Visible = false;
         */
 
-        if (CheckBoxShowByIgw.Checked == true)
-        {
-            GridView1.Columns[2].Visible = true;
-        }
-        else GridView1.Columns[2].Visible = false;
-
-        if (CheckBoxPartner.Checked == true)
-        {
-            GridView1.Columns[1].Visible = true;
-        }
-        else GridView1.Columns[1].Visible = false;
+        GridView1.Columns[1].Visible = CheckBoxPartner.Checked;
+        GridView1.Columns[2].Visible = CheckBoxViewIncomingRoute.Checked;
+        GridView1.Columns[3].Visible = CheckBoxShowByIgw.Checked;
+        GridView1.Columns[4].Visible = CheckBoxViewOutgoingRoute.Checked;
         if (CheckBoxShowCost.Checked == true)
         {
-            GridView1.Columns[12].Visible = true;
-            GridView1.Columns[13].Visible = true;
+            GridView1.Columns[14].Visible = true;
+            GridView1.Columns[15].Visible = true;
         }
         else
         {
-            GridView1.Columns[12].Visible = false;
-            GridView1.Columns[13].Visible = false;
+            GridView1.Columns[14].Visible = false;
+            GridView1.Columns[15].Visible = false;
         }
         if (CheckBoxShowPerformance.Checked == true)
         {
-            GridView1.Columns[17].Visible = true;
+            GridView1.Columns[19].Visible = true;
         }
         else
         {
-            GridView1.Columns[17].Visible = false;
+            GridView1.Columns[19].Visible = false;
         }
         //make profit invisible, it's useless
-        GridView1.Columns[15].Visible = false;
+        GridView1.Columns[17].Visible = false;
         //GridView1.Columns[9].Visible = true;//carrier's duration
 
         using (MySqlConnection connection = new MySqlConnection())
@@ -611,5 +608,77 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
             }
         }
 
+    }
+
+    protected void CheckBoxViewIncomingRoute_CheckedChanged(object sender, EventArgs e)
+    {
+        DropDownListViewIncomingRoute.Enabled = CheckBoxViewIncomingRoute.Checked;
+    }
+
+    protected void CheckBoxViewOutgoingRoute_CheckedChanged(object sender, EventArgs e)
+    {
+        DropDownListViewOutgoingRoute.Enabled = CheckBoxViewOutgoingRoute.Checked;
+    }
+
+    protected void DropDownListPartner_OnSelectedIndexChanged(object sender, EventArgs e)
+    {
+        DropDownListViewIncomingRoute.Items.Clear();
+        DropDownListViewIncomingRoute.Items.Add(new ListItem("[All]", "-1"));
+        if (DropDownListPartner.SelectedValue != String.Empty)
+        {
+            if (DropDownListPartner.SelectedValue == "-1")
+            {
+                using (PartnerEntities contex = new PartnerEntities())
+                {
+                    List<int> ansList = contex.partners.Where(c => c.PartnerType == 3).Select(c => c.idPartner).ToList();
+                    foreach (route route in contex.routes.Where(x => ansList.Contains(x.idPartner)))
+                    {
+                        DropDownListViewIncomingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
+                    }
+                }
+            }
+            else
+            {
+                using (PartnerEntities contex = new PartnerEntities())
+                {
+                    int idPartner = Convert.ToInt32(DropDownListPartner.SelectedValue);
+                    foreach (route route in contex.routes.Where(x => x.idPartner == idPartner))
+                    {
+                        DropDownListViewIncomingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
+                    }
+                }
+            }
+        }
+    }
+
+    protected void DropDownListIgw_OnSelectedIndexChanged(object sender, EventArgs e)
+    {
+        DropDownListViewOutgoingRoute.Items.Clear();
+        DropDownListViewOutgoingRoute.Items.Add(new ListItem("[All]", "-1"));
+        if (DropDownListIgw.SelectedValue != String.Empty)
+        {
+            if (DropDownListIgw.SelectedValue == "-1")
+            {
+                using (PartnerEntities contex = new PartnerEntities())
+                {
+                    List<int> ansList = contex.partners.Where(c => c.PartnerType == 2).Select(c => c.idPartner).ToList();
+                    foreach (route route in contex.routes.Where(x => ansList.Contains(x.idPartner)))
+                    {
+                        DropDownListViewOutgoingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
+                    }
+                }
+            }
+            else
+            {
+                using (PartnerEntities contex = new PartnerEntities())
+                {
+                    int idPartner = Convert.ToInt32(DropDownListIgw.SelectedValue);
+                    foreach (route route in contex.routes.Where(x => x.idPartner == idPartner))
+                    {
+                        DropDownListViewOutgoingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
+                    }
+                }
+            }
+        }
     }
 }

@@ -62,7 +62,7 @@ namespace InstallConfig
                 }
             });
 
-            serviceGroupConfigurations.Add(new ServiceGroupConfiguration(idServiceGroup: 2) //intlOutIgw
+            serviceGroupConfigurations.Add(new ServiceGroupConfiguration(idServiceGroup: 2) //intlOutIcx
             {
                 Params = new Dictionary<string, string>()
                 { { "idCdrRules", "2" } },//IcxOutgoingCallByInOutTg=2, IcxOutgoingCallByInTgType=1
@@ -96,9 +96,9 @@ namespace InstallConfig
                     InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary",
                     SectionGeneratorVsTemplateNames = new Dictionary<string, string>()
                     {
-                        {"XyzSection1Generator","InternationalOutgoingToANS" },
-                        {"XyzSection2Generator","InternationalOutgoingToANSDetails1" },
-                        {"XyzSection3Generator","InternationalOutgoingToANSDetails2" }
+                        {"XyzSection1GeneratorWithTax","InternationalOutgoingToANS" },
+                        {"XyzSection2GeneratorWithTax","InternationalOutgoingToANSDetails1" },
+                        {"XyzSection3GeneratorWithTax","InternationalOutgoingToANSDetails2" }
                     }
                 }
             });

@@ -76,8 +76,7 @@ namespace Process
                     {
                         try
                         {
-                            //this console out makes cdrjob processing ipossible
-                            //Console.WriteLine("Processing Non-CDR job: " + ThisJob.JobName + ", type: " + ThisJob.idjobdefinition);
+                            Console.WriteLine("Processing File Copy Job: " + thisJob.JobName);
                             ITelcobrightJob iJob = null;
                             jobData.DicExtensions.TryGetValue(thisJob.idjobdefinition.ToString(), out iJob);
                             if (iJob == null)

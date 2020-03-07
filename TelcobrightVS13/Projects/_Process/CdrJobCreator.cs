@@ -53,7 +53,7 @@ namespace Process
                             Vault vault = tbc.DirectorySettings.Vaults.First(c => c.Name == vaultName);
                             var fileNames = vault.GetFileListLocal();
                             if (tbc.CdrSetting.DescendingOrderWhileListingFiles == true)
-                                fileNames = fileNames.OrderByDescending(c => c).ToList();
+                                fileNames = fileNames.OrderByDescending(c => c.Name).ToList();
                             foreach (FileInfo fileInfo in fileNames)
                             {
                                 if (fileInfo.Name.EndsWith(".tmp") || fileInfo.Name.Contains(".filepart")

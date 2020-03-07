@@ -379,11 +379,11 @@ public partial class DefaultCIntlOutCallView1 : System.Web.UI.Page
         }
         if (this._icx!="")
         {
-            sqlstring += " and CustomerID='"+ this._icxid+"'";
+            sqlstring += " and InPartnerId='" + this._icxid+"'";
         }
         if (this._partner!="")
         {
-            sqlstring += " and SupplierID='"+ this._partnerid+"'";
+            sqlstring += " and OutPartnerId='" + this._partnerid+"'";
         }
         if (this._causecode != "")
         {

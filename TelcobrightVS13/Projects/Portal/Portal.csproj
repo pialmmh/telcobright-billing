@@ -510,6 +510,7 @@
     <Content Include="reports\IOFReport.aspx" />
     <Content Include="reports\OutgoingCallAnalysis.aspx" />
     <Content Include="reports\PasswordRecovery.aspx" />
+    <Content Include="reports\PaymentHistory.aspx" />
     <Content Include="reports\RouteInternationalIn.aspx" />
     <Content Include="reports\RouteUtilization.aspx" />
     <Content Include="reports\RouteUtilizationAgg.aspx" />
@@ -846,6 +847,7 @@
     <Compile Include="ReportHelper\SqlHelperIntlInTransit.cs" />
     <Compile Include="ReportHelper\SqlHelperIntOutICX.cs" />
     <Compile Include="ReportHelper\SqlHelperIntOut.cs" />
+    <Compile Include="ReportHelper\SqlHelperPaymentHistory.cs" />
     <Compile Include="reports\BTRCReport.aspx.cs">
       <DependentUpon>BTRCReport.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -901,6 +903,13 @@
     </Compile>
     <Compile Include="reports\OutgoingCallAnalysis.aspx.designer.cs">
       <DependentUpon>OutgoingCallAnalysis.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\PaymentHistory.aspx.cs">
+      <DependentUpon>PaymentHistory.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\PaymentHistory.aspx.designer.cs">
+      <DependentUpon>PaymentHistory.aspx</DependentUpon>
     </Compile>
     <Compile Include="reports\transit\LocalTollFreePremium.aspx.cs">
       <DependentUpon>LocalTollFreePremium.aspx</DependentUpon>

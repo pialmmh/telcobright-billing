@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -72,9 +73,16 @@ namespace TelcobrightMediation.Cdr.CollectionRelated.Collector
                                     .GroupBy(c => c.uniqueBillId).ToDictionary(g => g.Key, g => g.ToList());
                 foreach (var kv in billidWisePrevChargeables)
                 {
-                    List<acc_chargeable> chargeablesForOneCdrExt = kv.Value;
-                    chargeablesForOneCdrExt.ForEach(oldChargeable => this.BillIdWiseCdrExts[kv.Key]
-                                        .Chargeables.Add(oldChargeable.GetTuple(), oldChargeable));
+                    try
+                    {
+                        List<acc_chargeable> chargeablesForOneCdrExt = kv.Value;
+                        chargeablesForOneCdrExt.ForEach(oldChargeable => this.BillIdWiseCdrExts[kv.Key]
+                            .Chargeables.Add(oldChargeable.GetTuple(), oldChargeable));
+                    }
+                    catch (Exception e)
+                    {
+                        File.AppendAllText("InconsistentBillId.txt", kv.Key + Environment.NewLine);
+                    }
                 }
             }
         }

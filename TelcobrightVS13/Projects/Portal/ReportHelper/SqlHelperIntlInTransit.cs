@@ -26,6 +26,10 @@ namespace PortalApp.ReportHelper
                 outPartner.partnerName AS 'Out Partner',
                 tup_incomingroute AS 'In Route', 
                 tup_outgoingroute AS 'Out Route', 
+                tup_incomingip, 
+                tup_outgoingip, 
+                tup_customerrate, 
+                tup_supplierrate,
                 TotalCalls AS 'Total Calls',
                 Successfulcalls  AS 'Successful Calls',
                 ConnectedCalls AS 'Connected Calls',
@@ -41,7 +45,8 @@ namespace PortalApp.ReportHelper
                 ConectbyCC,
                 CCRbyCC, 
                 tup_matchedprefixcustomer, 
-                tup_matchedprefixsupplier 
+                tup_matchedprefixsupplier,
+                product.name as 'Destination' 
                 FROM
                 (
 	            SELECT {GetDateExpression(this.groupInterval)} AS Date,
@@ -49,6 +54,8 @@ namespace PortalApp.ReportHelper
                 tup_outpartnerid ,  
                 tup_incomingroute, 
                 tup_outgoingroute, 
+                tup_incomingip, 
+                tup_outgoingip, 
                 tup_matchedprefixcustomer, 
                 tup_matchedprefixsupplier, 
                 SUM(totalcalls) AS TotalCalls, 
@@ -56,6 +63,8 @@ namespace PortalApp.ReportHelper
                 SUM(connectedcalls) AS ConnectedCalls,
                 sum(duration1)/60 AS customerDuration,
                 sum(duration2)/60 AS supplierDuration,
+                tup_customerrate,
+                tup_supplierrate,
                 Sum(customercost) AS customercost,
                 Sum(suppliercost) AS suppliercost,
                 ((SUM(Successfulcalls)*100)/SUM(totalcalls)) AS ASR, 
@@ -74,7 +83,8 @@ namespace PortalApp.ReportHelper
             LEFT JOIN partner inPartner
             ON x.tup_inpartnerid = inPartner.idpartner
             LEFT JOIN partner outPartner
-            ON x.tup_outPartnerid = outPartner.idpartner
+            ON x.tup_outPartnerid = outPartner.idpartner 
+            left join product on product.Prefix = tup_matchedprefixcustomer and product.ServiceFamily = 1 
             ORDER BY " + (GetGroupBy().Contains("tup_starttime") ? "Date, " : string.Empty) + " Successfulcalls DESC ;";
         }
     }

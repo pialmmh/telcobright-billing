@@ -51,6 +51,7 @@ namespace TelcobrightMediation.Accounting
             invoiceJsonDetail.Add("billingStartDate", $"{startDate.ToMySqlFormatWithoutQuote()}");
             invoiceJsonDetail.Add("billingEndDate", $"{endDate.ToMySqlFormatWithoutQuote()}");
             invoiceJsonDetail.Add("idPartner", customer.idPartner.ToString());
+            invoiceJsonDetail.Add("partnerName", customer.PartnerName);
             invoiceJsonDetail.Add("companyName", customer.AlternateNameInvoice);
             invoiceJsonDetail.Add("customerType",partnerType);
             invoiceJsonDetail.Add("billingAddress", customer.invoiceAddress);

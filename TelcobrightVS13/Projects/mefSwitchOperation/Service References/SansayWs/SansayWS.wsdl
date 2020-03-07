@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://ws.sansay.com" name="SansayWS" targetNamespace="http://ws.sansay.com" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xsd:schema xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://ws.sansay.com">
+      <xsd:element name="uploadParams">
+        <xsd:complexType>
+          <xsd:all>
+            <xsd:element name="xmlfile" type="xsd:string" />
+            <xsd:element name="table" type="xsd:string" />
+            <xsd:element name="username" type="xsd:string" />
+            <xsd:element name="password" type="xsd:string" />
+          </xsd:all>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="uploadResult">
+        <xsd:complexType>
+          <xsd:all>
+            <xsd:element name="retCode" type="xsd:int" />
+            <xsd:element name="msg" type="xsd:string" />
+          </xsd:all>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="replaceLargeParams">
+        <xsd:complexType>
+          <xsd:all>
+            <xsd:element xmime:expectedContentTypes="application/octet-stream" name="binfile" type="xsd:base64Binary" />
+            <xsd:element name="table" type="xsd:string" />
+            <xsd:element name="tableID" type="xsd:int" />
+            <xsd:element name="username" type="xsd:string" />
+            <xsd:element name="password" type="xsd:string" />
+          </xsd:all>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="replaceResult">
+        <xsd:complexType>
+          <xsd:all>
+            <xsd:element name="retCode" type="xsd:int" />
+            <xsd:element name="msg" type="xsd:string" />
+          </xsd:all>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="updateParams">
+        <xsd:complexType>
+          <xsd:all>
+            <xsd:element name="xmlfile" type="xsd:string" />
+            <xsd:element name="table" type="xsd:string" />
+            <xsd:element name="username" type="xsd:string" />
+            <xsd:element name="password" type="xsd:string" />
+          </xsd:all>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="updateLargeParams">
+        <xsd:complexType>
+          <xsd:all>
+            <xsd:element xmime:expectedContentTypes="application/octet-stream" name="binfile" type="xsd:base64Binary" />
+            <xsd:element name="table" type="xsd:string" />
+            <xsd:element name="username" type="xsd:string" />
+            <xsd:element name="password" type="xsd:string" />
+          </xsd:all>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="updateResult">
+        <xsd:complexType>
+          <xsd:all>
+            <xsd:element name="retCode" type="xsd:int" />
+            <xsd:element name="msg" type="xsd:string" />
+          </xsd:all>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="deleteParams">
+        <xsd:complexType>
+          <xsd:all>
+            <xsd:element name="xmlfile" type="xsd:string" />
+            <xsd:element name="table" type="xsd:string" />
+            <xsd:element name="username" type="xsd:string" />
+            <xsd:element name="password" type="xsd:string" />
+          </xsd:all>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="deleteLargeParams">
+        <xsd:complexType>
+          <xsd:all>
+            <xsd:element xmime:expectedContentTypes="application/octet-stream" name="binfile" type="xsd:base64Binary" />
+            <xsd:element name="table" type="xsd:string" />
+            <xsd:element name="username" type="xsd:string" />
+            <xsd:element name="password" type="xsd:string" />
+          </xsd:all>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="deleteResult">
+        <xsd:complexType>
+          <xsd:all>
+            <xsd:element name="retCode" type="xsd:int" />
+            <xsd:element name="msg" type="xsd:string" />
+          </xsd:all>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="downloadParams">
+        <xsd:complexType>
+          <xsd:all>
+            <xsd:element name="table" type="xsd:string" />
+            <xsd:element name="username" type="xsd:string" />
+            <xsd:element name="password" type="xsd:string" />
+            <xsd:element name="page" type="xsd:int" />
+          </xsd:all>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="downloadLargeParams">
+        <xsd:complexType>
+          <xsd:all>
+            <xsd:element name="table" type="xsd:string" />
+            <xsd:element name="username" type="xsd:string" />
+            <xsd:element name="password" type="xsd:string" />
+          </xsd:all>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="downloadResult">
+        <xsd:complexType>
+          <xsd:all>
+            <xsd:element name="retCode" type="xsd:int" />
+            <xsd:element name="msg" type="xsd:string" />
+            <xsd:element name="xmlfile" type="xsd:string" />
+            <xsd:element name="hasMore" type="xsd:int" />
+          </xsd:all>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="downloadLargeResult">
+        <xsd:complexType>
+          <xsd:all>
+            <xsd:element name="retCode" type="xsd:int" />
+            <xsd:element name="msg" type="xsd:string" />
+            <xsd:element xmime:expectedContentTypes="application/octet-stream" name="binfile" type="xsd:base64Binary" />
+          </xsd:all>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="queryParams">
+        <xsd:complexType>
+          <xsd:all>
+            <xsd:element name="table" type="xsd:string" />
+            <xsd:element name="username" type="xsd:string" />
+            <xsd:element name="password" type="xsd:string" />
+            <xsd:element name="page" type="xsd:int" />
+            <xsd:element name="queryString" type="xsd:string" />
+          </xsd:all>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="queryResult">
+        <xsd:complexType>
+          <xsd:all>
+            <xsd:element name="retCode" type="xsd:int" />
+            <xsd:element name="msg" type="xsd:string" />
+            <xsd:element name="xmlfile" type="xsd:string" />
+            <xsd:element name="hasMore" type="xsd:int" />
+          </xsd:all>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="routelookupParams">
+        <xsd:complexType>
+          <xsd:all>
+            <xsd:element name="username" type="xsd:string" />
+            <xsd:element name="password" type="xsd:string" />
+            <xsd:element name="queryString" type="xsd:string" />
+          </xsd:all>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="routelookupResult">
+        <xsd:complexType>
+          <xsd:all>
+            <xsd:element name="retCode" type="xsd:int" />
+            <xsd:element name="msg" type="xsd:string" />
+            <xsd:element name="xmlfile" type="xsd:string" />
+          </xsd:all>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="realTimeStatsParams">
+        <xsd:complexType>
+          <xsd:all>
+            <xsd:element name="username" type="xsd:string" />
+            <xsd:element name="password" type="xsd:string" />
+            <xsd:element name="statName" type="xsd:string" />
+          </xsd:all>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="realTimeStatsResult">
+        <xsd:complexType>
+          <xsd:all>
+            <xsd:element name="retCode" type="xsd:int" />
+            <xsd:element name="msg" type="xsd:string" />
+            <xsd:element name="xmlfile" type="xsd:string" />
+          </xsd:all>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="SystemStatsParams">
+        <xsd:complexType>
+          <xsd:all>
+            <xsd:element name="username" type="xsd:string" />
+            <xsd:element name="password" type="xsd:string" />
+            <xsd:element name="sysStatName" type="xsd:string" />
+          </xsd:all>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="SystemStatsResult">
+        <xsd:complexType>
+          <xsd:all>
+            <xsd:element name="retCode" type="xsd:int" />
+            <xsd:element name="msg" type="xsd:string" />
+            <xsd:element name="xmlfile" type="xsd:string" />
+          </xsd:all>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </types>
+  <message name="upload">
+    <part name="params" element="tns:uploadParams" />
+  </message>
+  <message name="uploadResult">
+    <part name="result" element="tns:uploadResult" />
+  </message>
+  <message name="replaceLarge">
+    <part name="params" element="tns:replaceLargeParams" />
+  </message>
+  <message name="replaceResult">
+    <part name="result" element="tns:replaceResult" />
+  </message>
+  <message name="delete">
+    <part name="params" element="tns:deleteParams" />
+  </message>
+  <message name="deleteLarge">
+    <part name="params" element="tns:deleteLargeParams" />
+  </message>
+  <message name="deleteResult">
+    <part name="result" element="tns:deleteResult" />
+  </message>
+  <message name="update">
+    <part name="params" element="tns:updateParams" />
+  </message>
+  <message name="updateLarge">
+    <part name="params" element="tns:updateLargeParams" />
+  </message>
+  <message name="updateResult">
+    <part name="result" element="tns:updateResult" />
+  </message>
+  <message name="download">
+    <part name="params" element="tns:downloadParams" />
+  </message>
+  <message name="downloadResult">
+    <part name="result" element="tns:downloadResult" />
+  </message>
+  <message name="downloadLarge">
+    <part name="params" element="tns:downloadLargeParams" />
+  </message>
+  <message name="downloadLargeResult">
+    <part name="result" element="tns:downloadLargeResult" />
+  </message>
+  <message name="query">
+    <part name="params" element="tns:queryParams" />
+  </message>
+  <message name="queryResult">
+    <part name="result" element="tns:queryResult" />
+  </message>
+  <message name="routelookup">
+    <part name="params" element="tns:routelookupParams" />
+  </message>
+  <message name="routelookupResult">
+    <part name="result" element="tns:routelookupResult" />
+  </message>
+  <message name="realTimeStats">
+    <part name="params" element="tns:realTimeStatsParams" />
+  </message>
+  <message name="realTimeStatsResult">
+    <part name="result" element="tns:realTimeStatsResult" />
+  </message>
+  <message name="SystemStats">
+    <part name="params" element="tns:SystemStatsParams" />
+  </message>
+  <message name="SystemStatsResult">
+    <part name="result" element="tns:SystemStatsResult" />
+  </message>
+  <portType name="SansayWS">
+    <operation name="doUploadXmlFile">
+      <input message="tns:upload" />
+      <output message="tns:uploadResult" />
+    </operation>
+    <operation name="doReplaceLarge">
+      <input message="tns:replaceLarge" />
+      <output message="tns:replaceResult" />
+    </operation>
+    <operation name="doDelete">
+      <input message="tns:delete" />
+      <output message="tns:deleteResult" />
+    </operation>
+    <operation name="doDeleteLarge">
+      <input message="tns:deleteLarge" />
+      <output message="tns:deleteResult" />
+    </operation>
+    <operation name="doUpdate">
+      <input message="tns:update" />
+      <output message="tns:updateResult" />
+    </operation>
+    <operation name="doUpdateLarge">
+      <input message="tns:updateLarge" />
+      <output message="tns:updateResult" />
+    </operation>
+    <operation name="doDownloadXmlFile">
+      <input message="tns:download" />
+      <output message="tns:downloadResult" />
+    </operation>
+    <operation name="doDownloadLargeXmlFile">
+      <input message="tns:downloadLarge" />
+      <output message="tns:downloadLargeResult" />
+    </operation>
+    <operation name="doQueryXmlFile">
+      <input message="tns:query" />
+      <output message="tns:queryResult" />
+    </operation>
+    <operation name="doRouteLookup">
+      <input message="tns:routelookup" />
+      <output message="tns:routelookupResult" />
+    </operation>
+    <operation name="doRealTimeStats">
+      <input message="tns:realTimeStats" />
+      <output message="tns:realTimeStatsResult" />
+    </operation>
+    <operation name="doSystemStats">
+      <input message="tns:SystemStats" />
+      <output message="tns:SystemStatsResult" />
+    </operation>
+  </portType>
+  <binding name="SansayWSPortBinding" type="tns:SansayWS">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="doUploadXmlFile">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="doReplaceLarge">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="doDelete">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="doDeleteLarge">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="doUpdate">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="doUpdateLarge">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="doDownloadXmlFile">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="doDownloadLargeXmlFile">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="doQueryXmlFile">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="doRouteLookup">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="doRealTimeStats">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="doSystemStats">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+  <service name="SansayWS">
+    <port name="SansayWSPort" binding="tns:SansayWSPortBinding">
+      <soap:address location="https://localhost:8888/SSConfig/SansayWS" />
+    </port>
+  </service>
+</definitions>
