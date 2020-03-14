@@ -96,6 +96,13 @@
   <ItemGroup>
     <Compile Include="bigl\ConfigGenerator_bigl.cs" />
     <Compile Include="BIllingRulesDefiner.cs" />
+    <Compile Include="purple\purpleAppServerConfig.cs" />
+    <Compile Include="purple\purpleDirectorySettings.cs" />
+    <Compile Include="purple\purplePortalSetting.cs" />
+    <Compile Include="purple\purpleProductAndServiceConfig.cs" />
+    <Compile Include="purple\purpleQuartzConfig.cs" />
+    <Compile Include="purple\purpleServiceGroups.cs" />
+    <Compile Include="purple\_purpleConfigMain.cs" />
     <Compile Include="platinum_2020\PlatinumAPPServerConfig.cs" />
     <Compile Include="platinum_2020\PlatinumAutomationConfig.cs" />
     <Compile Include="platinum_2020\PlatinumDirectorySetting.cs" />
@@ -149,6 +156,7 @@
     <Compile Include="CommonValidationRulesGenerator\InconsistentCdrValRulesGen.cs" />
     <Compile Include="CommonValidationRulesGenerator\CommonCdrValRulesGen.cs" />
     <None Include="app.manifest" />
+    <None Include="purple\jslRoutes.json" />
     <None Include="rgrn\rgrn.conf" />
     <None Include="rgrn\scripts\apppools.xml.bak" />
     <None Include="rgrn\scripts\appPool_platinum.iisScript" />
@@ -232,12 +240,14 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="banglatel\" />
-    <Folder Include="purple\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="bigl\tmplPortalAppPools.txt" />
     <Content Include="bigl\tmplPortalFtpSite.txt" />
     <Content Include="bigl\tmplPortalWebSite.txt" />
+    <Content Include="purple\tmplPortalAppPools.txt" />
+    <Content Include="purple\tmplPortalFtpSite.txt" />
+    <Content Include="purple\tmplPortalWebSite.txt" />
     <Content Include="platinum_2020\tmplPortalAppPools.txt" />
     <Content Include="platinum_2020\tmplPortalFtpSite.txt" />
     <Content Include="platinum_2020\tmplPortalWebSite.txt" />
