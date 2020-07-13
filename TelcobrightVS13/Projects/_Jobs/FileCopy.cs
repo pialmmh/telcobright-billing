@@ -82,24 +82,25 @@ namespace Jobs
                     {
                         if (compType == CompressionType.None)
                         {
-                            Session session = srcLocation.GetRemoteFileTransferSession(input.Tbc);
-                            if ( fs.CopyFileInsideRemote(session,sourceSyncInfo,destinationSyncInfo,true) == false)
+                            using (Session session = srcLocation.GetRemoteFileTransferSession(input.Tbc))
                             {
-                                throw new Exception("Could not copy file inside remote server!");
+                                if (fs.CopyFileInsideRemote(session, sourceSyncInfo, destinationSyncInfo, true) == false)
+                                {
+                                    throw new Exception("Could not copy file inside remote server!");
+                                }
                             }
-                            session.Close();
                         }
                         else//compression
                         {
                             //download to temp file first
                             FileSyncInfo tempInfo = GetTempSyncInfo();
-                            Session session = srcLocation.GetRemoteFileTransferSession(input.Tbc);
-                            if (fs.CopyFileRemoteLocal(syncPair.DstSettings,session, sourceSyncInfo,tempInfo
-                                ,true, false,null) == false)
+                            using (Session session = srcLocation.GetRemoteFileTransferSession(input.Tbc))
                             {
-                                throw new Exception("Could not copy file from remote server!");
+                                if (fs.CopyFileRemoteLocal(syncPair.DstSettings, session, sourceSyncInfo, tempInfo, true, false, null) == false)
+                                {
+                                    throw new Exception("Could not copy file from remote server!");
+                                }
                             }
-                            session.Close();
                             //compress to temp compressed file
                             FileCompressor fCompressor = new FileCompressor();
                             string compressedFileNameWithExtesion = tempInfo.FullPath.Replace(".tbtemp", fCompressor.GetFileExtensionByCompressionType(compType));
@@ -110,14 +111,14 @@ namespace Jobs
                                 throw new Exception("Error Compressing File!" + Environment.NewLine + output);
                             }
                             //upload compressed file
-                            session = dstLocation.GetRemoteFileTransferSession(input.Tbc);
                             FileSyncInfo compressedInfo = GetDummySyncInfoLocal(compressedFileNameWithExtesion);
-                            if (fs.CopyFileLocalRemote(syncPair.DstSettings, session,
-                                compressedInfo,destinationSyncInfo,true, false) == false)
+                            using (Session session = dstLocation.GetRemoteFileTransferSession(input.Tbc))
                             {
-                                throw new Exception("Could not upload compressed file to remote server!");
+                                if (fs.CopyFileLocalRemote(syncPair.DstSettings, session, compressedInfo, destinationSyncInfo, true, false) == false)
+                                {
+                                    throw new Exception("Could not upload compressed file to remote server!");
+                                }
                             }
-                            session.Close();
                             //delete temp file
                             File.Delete(tempInfo.FullPath);
                             File.Delete(compressedInfo.FullPath);
@@ -130,21 +131,23 @@ namespace Jobs
                         {
                             //copy to a temp file in local first
                             FileSyncInfo tempInfo = GetTempSyncInfo();
-                            Session session = srcLocation.GetRemoteFileTransferSession(input.Tbc);
-                            if (fs.CopyFileRemoteLocal(syncPair.DstSettings,session,sourceSyncInfo,
-                                tempInfo, true, false,syncSettingSrc) == false)
+                            using (Session session = srcLocation.GetRemoteFileTransferSession(input.Tbc))
                             {
-                                throw new Exception("Could not copy file from remote server!");
+                                if (fs.CopyFileRemoteLocal(syncPair.DstSettings, session, sourceSyncInfo,
+                                        tempInfo, true, false, syncSettingSrc) == false)
+                                {
+                                    throw new Exception("Could not copy file from remote server!");
+                                }
                             }
-                            session.Close();
                             //upload to dst remote server
-                            session = dstLocation.GetRemoteFileTransferSession(input.Tbc);
-                            if (fs.CopyFileLocalRemote(syncPair.DstSettings,session,
-                                tempInfo,destinationSyncInfo, true, false) == false)
+                            using (Session session = dstLocation.GetRemoteFileTransferSession(input.Tbc))
                             {
-                                throw new Exception("Could not upload file to remote server!");
+                                if (fs.CopyFileLocalRemote(syncPair.DstSettings, session, tempInfo, destinationSyncInfo, true, false) == false)
+                                {
+                                    throw new Exception("Could not upload file to remote server!");
+                                }
+                                session.Close();
                             }
-                            session.Close();
                             //delete temp file
                             File.Delete(tempInfo.FullPath);
                         }
@@ -152,13 +155,13 @@ namespace Jobs
                         {
                             //copy to a temp file in local first
                             FileSyncInfo tempInfo = GetTempSyncInfo();
-                            Session session = srcLocation.GetRemoteFileTransferSession(input.Tbc);
-                            if (fs.CopyFileRemoteLocal(syncPair.DstSettings,session,sourceSyncInfo, 
-                                tempInfo, true, false,syncSettingSrc) == false)
+                            using (Session session = srcLocation.GetRemoteFileTransferSession(input.Tbc))
                             {
-                                throw new Exception("Could not copy file from remote server!");
+                                if (fs.CopyFileRemoteLocal(syncPair.DstSettings, session, sourceSyncInfo, tempInfo, true, false, syncSettingSrc) == false)
+                                {
+                                    throw new Exception("Could not copy file from remote server!");
+                                }
                             }
-                            session.Close();
                             //compress to temp compressed file
                             FileCompressor fCompressor = new FileCompressor();
                             string compressedFileNameWithExtesion = tempInfo.FullPath.Replace(".tbtemp", fCompressor.GetFileExtensionByCompressionType(compType));
@@ -170,13 +173,13 @@ namespace Jobs
                             }
                             //upload compressed file
                             FileSyncInfo compressedInfo = GetDummySyncInfoLocal(compressedFileNameWithExtesion);
-                            session = dstLocation.GetRemoteFileTransferSession(input.Tbc);
-                            if (fs.CopyFileLocalRemote(syncPair.DstSettings, session,
-                                compressedInfo, destinationSyncInfo, true, false) == false)
+                            using (Session session = dstLocation.GetRemoteFileTransferSession(input.Tbc))
                             {
-                                throw new Exception("Could not upload compressed file to remote server!");
+                                if (fs.CopyFileLocalRemote(syncPair.DstSettings, session, compressedInfo, destinationSyncInfo, true, false) == false)
+                                {
+                                    throw new Exception("Could not upload compressed file to remote server!");
+                                }
                             }
-                            session.Close();
                             //delete temp file
                             File.Delete(tempInfo.FullPath);
                             File.Delete(compressedInfo.FullPath);
@@ -186,53 +189,51 @@ namespace Jobs
                 //if destination location type local: REMOTE->LOCAL or REMOTE->VAULT
                 else
                 {
-                    Session session = srcLocation.GetRemoteFileTransferSession(input.Tbc);
-                    if (compType== CompressionType.None)//REMOTE->LOCAL
+                    using (Session session = srcLocation.GetRemoteFileTransferSession(input.Tbc))
                     {
-                        if (fs.CopyFileRemoteLocal(syncPair.DstSettings,session,
-                            sourceSyncInfo,destinationSyncInfo
-                            , true, false,syncSettingSrc) == false)
+                        if (compType == CompressionType.None)//REMOTE->LOCAL
                         {
-                            throw new Exception("Could not copy file from remote server!");
+                            if (fs.CopyFileRemoteLocal(syncPair.DstSettings, session,
+                                    sourceSyncInfo, destinationSyncInfo
+                                    , true, false, syncSettingSrc) == false)
+                            {
+                                throw new Exception("Could not copy file from remote server!");
+                            }
+                            //sync if vault
+                            if (dstLocation.FileLocation.LocationType == "vault")
+                            {
+                                string vaultName = dstLocation.FileLocation.Name;
+                                input.Tbc.DirectorySettings.Vaults.First(c => c.Name == vaultName).SyncOthers(destinationSyncInfo);
+                            }
                         }
-                        session.Close();
-                        //sync if vault
-                        if(dstLocation.FileLocation.LocationType=="vault")
+                        else//REMOTE->LOCAL+ compression
                         {
-                            string vaultName = dstLocation.FileLocation.Name;
-                            input.Tbc.DirectorySettings.Vaults.First(c => c.Name==vaultName).SyncOthers(destinationSyncInfo);
+                            //copy to a temp file in local first
+                            FileSyncInfo tempInfo = GetTempSyncInfo();
+                            if (fs.CopyFileRemoteLocal(syncPair.DstSettings, session, sourceSyncInfo,
+                                    tempInfo, true, false, syncSettingSrc) == false)
+                            {
+                                throw new Exception("Could not copy file from remote server!");
+                            }
+                            //compress to temp compressed file
+                            FileCompressor fCompressor = new FileCompressor();
+                            string compressedFileNameWithExtesion = tempInfo.FullPath.Replace(".tbtemp", fCompressor.GetFileExtensionByCompressionType(compType));
+                            string output = fCompressor.CompressFile(compType, tempInfo.FullPath,
+                                compressedFileNameWithExtesion, 7);
+                            if (output != "OK")//output has the whole output of the console session
+                            {
+                                throw new Exception("Error Compressing File!" + Environment.NewLine + output);
+                            }
+                            //move compressed file to final local destination
+                            FileSyncInfo compressedInfo = GetDummySyncInfoLocal(compressedFileNameWithExtesion);
+                            if (fs.CopyFileInsideLocal(compressedInfo, destinationSyncInfo, true) == false)
+                            {
+                                throw new Exception("Could not copy file from local to local!");
+                            }
+                            File.Delete(tempInfo.FullPath);
+                            File.Delete(compressedInfo.FullPath);
                         }
                     }
-                    else//REMOTE->LOCAL+ compression
-                    {
-                        //copy to a temp file in local first
-                        FileSyncInfo tempInfo = GetTempSyncInfo();
-                        session = srcLocation.GetRemoteFileTransferSession(input.Tbc);
-                        if (fs.CopyFileRemoteLocal(syncPair.DstSettings,session,sourceSyncInfo,
-                            tempInfo , true, false,syncSettingSrc) == false)
-                        {
-                            throw new Exception("Could not copy file from remote server!");
-                        }
-                        session.Close();
-                        //compress to temp compressed file
-                        FileCompressor fCompressor = new FileCompressor();
-                        string compressedFileNameWithExtesion = tempInfo.FullPath.Replace(".tbtemp", fCompressor.GetFileExtensionByCompressionType(compType));
-                        string output = fCompressor.CompressFile(compType, tempInfo.FullPath,
-                            compressedFileNameWithExtesion, 7);
-                        if (output != "OK")//output has the whole output of the console session
-                        {
-                            throw new Exception("Error Compressing File!" + Environment.NewLine + output);
-                        }
-                        //move compressed file to final local destination
-                        FileSyncInfo compressedInfo = GetDummySyncInfoLocal(compressedFileNameWithExtesion);
-                        if (fs.CopyFileInsideLocal(compressedInfo,destinationSyncInfo, true) == false)
-                        {
-                            throw new Exception("Could not copy file from local to local!");
-                        }
-                        File.Delete(tempInfo.FullPath);
-                        File.Delete(compressedInfo.FullPath);
-                    }
-                    
                 }
             }
             //if source location type local
@@ -292,13 +293,14 @@ namespace Jobs
                 {
                     if (compType == CompressionType.None)//LOCAL->REMOTE
                     {
-                        Session session = dstLocation.GetRemoteFileTransferSession(input.Tbc);
-                        string srcFileName = srcLocation.FileLocation.StartingPath + "/" + paramFileCopy.RelativeFileName;
-                        if (fs.CopyFileLocalRemote(syncPair.DstSettings, session, sourceSyncInfo, destinationSyncInfo, true, false) == false)
+                        using (Session session = dstLocation.GetRemoteFileTransferSession(input.Tbc))
                         {
-                            throw new Exception("Could not copy file from local to remote!");
+                            string srcFileName = srcLocation.FileLocation.StartingPath + "/" + paramFileCopy.RelativeFileName;
+                            if (fs.CopyFileLocalRemote(syncPair.DstSettings, session, sourceSyncInfo, destinationSyncInfo, true, false) == false)
+                            {
+                                throw new Exception("Could not copy file from local to remote!");
+                            }
                         }
-                        session.Close();
                     }
                     else//LOCAL->REMOTE+COMPRESSION
                     {
@@ -318,13 +320,14 @@ namespace Jobs
                         destinationSyncInfo.FileNameOnly = destinationSyncInfo.FileNameOnly + compExt;
                         destinationSyncInfo.FullPath = destinationSyncInfo.FullPath + compExt;
                         destinationSyncInfo.RelativePath= destinationSyncInfo.RelativePath + compExt;
-                        Session session = dstLocation.GetRemoteFileTransferSession(input.Tbc);
-                        if (fs.CopyFileLocalRemote(syncPair.DstSettings, session,
-                            tempInfo, destinationSyncInfo, true, false) == false)
+                        using (Session session = dstLocation.GetRemoteFileTransferSession(input.Tbc))
                         {
-                            throw new Exception("Could not copy file from local to remote!");
+                            if (fs.CopyFileLocalRemote(syncPair.DstSettings, session,
+                                    tempInfo, destinationSyncInfo, true, false) == false)
+                            {
+                                throw new Exception("Could not copy file from local to remote!");
+                            }
                         }
-                        session.Close();
                         File.Delete(tempInfo.FullPath);
                     }
                 }

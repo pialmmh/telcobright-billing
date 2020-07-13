@@ -103,11 +103,14 @@ namespace TelcobrightMediation
                     try
                     {
                         FileSyncInfo sourceInfo = new FileSyncInfo(localInfo.RelativePath, rsl);
-                        if (fs.CopyFileRemoteLocal(dstSettings, rsl.GetRemoteFileTransferSession(this.Tbc), sourceInfo, destinationInfo, true, false,null) == true)
+                        using (Session session = rsl.GetRemoteFileTransferSession(this.Tbc))
                         {
-                            if (File.Exists(localInfo.FullPath))
+                            if (fs.CopyFileRemoteLocal(dstSettings, session, sourceInfo, destinationInfo, true, false, null) == true)
                             {
-                                return localInfo.FullPath;
+                                if (File.Exists(localInfo.FullPath))
+                                {
+                                    return localInfo.FullPath;
+                                }
                             }
                         }
                     }
@@ -136,7 +139,10 @@ namespace TelcobrightMediation
                     try
                     {
                         FileSyncInfo destinationInfo = new FileSyncInfo(sourceInfo.RelativePath, rsl);
-                        fs.CopyFileLocalRemote(dstSettings, rsl.GetRemoteFileTransferSession(this.Tbc), sourceInfo, destinationInfo, false, false);
+                        using (Session session = rsl.GetRemoteFileTransferSession(this.Tbc))
+                        {
+                            fs.CopyFileLocalRemote(dstSettings, session, sourceInfo, destinationInfo, false, false);
+                        }
                     }
                     catch (Exception e1)
                     {
@@ -162,9 +168,12 @@ namespace TelcobrightMediation
                 try
                 {
                     FileSyncInfo destinationInfo = new FileSyncInfo(relativePath, rsl);
-                    fileDeleted = fs.DeleteFileRemote(rsl.GetRemoteFileTransferSession(this.Tbc), destinationInfo);
-                    //if for one location file cannot be delete, just return, jobqueue will try again
-                    if (fileDeleted == false) return false;
+                    using (Session session = rsl.GetRemoteFileTransferSession(this.Tbc))
+                    {
+                        fileDeleted = fs.DeleteFileRemote(session, destinationInfo);
+                        //if for one location file cannot be delete, just return, jobqueue will try again
+                        if (fileDeleted == false) return false;
+                    }
                 }
                 catch (Exception e1)
                 {
