@@ -73,19 +73,14 @@ namespace InstallConfig
             FileLocation IcxDhk = new FileLocation()
             {
                 Name = "IcxDhk",
-                LocationType = "sftp",
-                OsType = "linux",
+                LocationType = "ftp",
+                OsType = "windows",
                 PathSeparator = "/",
-                StartingPath = "/home/zxss10_bsvr/data/bfile/bill",
-                //StartingPath = "/home/zxss10_bsvr/data/bfile/bill/zsmart_media_bak",
+                StartingPath = "/",
                 Sftphostkey = string.Empty,
-                //Sftphostkey = "ssh-rsa 2048 44:56:0b:fa:3a:79:c2:ee:1c:95:d9:05:b5:9b:56:4a",
-                ServerIp = "10.133.34.12",
-                User = "icxbill",
-                Pass = "icx123",
-                //ServerIp = "192.168.0.105",
-                //User = "ftpuser",
-                //Pass = "Takay1takaane",
+                ServerIp = "10.0.30.52",
+                User = "ftpuser",
+                Pass = "ftpuser",
                 ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
                 IgnoreZeroLenghFile = 1
             };
@@ -102,14 +97,25 @@ namespace InstallConfig
                 Pass = "blt#.45",
                 IgnoreZeroLenghFile = 1
             };
-            
+            FileLocation cas = new FileLocation()
+            {
+                Name = "CAS",
+                LocationType = "ftp",
+                OsType = "linux",
+                PathSeparator = @"/",
+                StartingPath = @"/",
+                ServerIp = "192.168.100.137",
+                User = "adnpurple",
+                Pass = "puricx276#",
+                IgnoreZeroLenghFile = 1
+            };
             //add locations to directory settings
             tbc.DirectorySettings.FileLocations.Add(vaultIcxDhk.Name, vaultIcxDhk);
             tbc.DirectorySettings.FileLocations.Add(appServerFtp1.Name, appServerFtp1);
             tbc.DirectorySettings.FileLocations.Add(appServerFtp2.Name, appServerFtp2);
             tbc.DirectorySettings.FileLocations.Add(IcxDhk.Name, IcxDhk);
             tbc.DirectorySettings.FileLocations.Add(fileArchive1.Name, fileArchive1);
-            
+            tbc.DirectorySettings.FileLocations.Add(cas.Name, cas);
 
 
             SyncPair IcxDhkVault = new SyncPair("IcxDhk:Vault")
@@ -168,12 +174,38 @@ namespace InstallConfig
                     CompressionType = CompressionType.None,
                 }
             };
-            
+
+            //sync pair Vault_S3:cas
+            SyncPair spCAS = new SyncPair("spCas")
+            {
+                SkipCopyingToDestination = false,
+                SkipSourceFileListing = true,
+                SrcSyncLocation = new SyncLocation("Vault_IcxDhk")
+                {
+                    FileLocation = vaultIcxDhk
+                },
+                DstSyncLocation = new SyncLocation("cas")
+                {
+                    FileLocation = cas
+                },
+                SrcSettings = new SyncSettingsSource()
+                {
+                    SecondaryDirectory = "",
+                    ExpFileNameFilter = null,
+                },
+                DstSettings = new SyncSettingsDest()
+                {
+                    FileExtensionForSafeCopyWithTempFile = ".tmp",
+                    Overwrite = true,
+                    CompressionType = CompressionType.None,
+                }
+            };
 
             //add sync pairs to directory config
             directorySetting.SyncPairs.Add(IcxDhkVault.Name, IcxDhkVault);
             directorySetting.SyncPairs.Add(vaultS3FileArchive1.Name, vaultS3FileArchive1);
-            
+            directorySetting.SyncPairs.Add(cas.Name, spCAS);
+
             //load the syncpairs in dictioinary, first by source
             foreach (SyncPair sp in directorySetting.SyncPairs.Values)
             {
@@ -192,7 +224,8 @@ namespace InstallConfig
             //add archive locations to CdrSettings
             this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
             {
-                //vaultS3FileArchive1.Name,
+                vaultS3FileArchive1.Name,
+                spCAS.Name
             };
         }
     }
