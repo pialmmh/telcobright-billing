@@ -132,11 +132,11 @@ namespace InstallConfig
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
-                    SecondaryDirectory = "downloaded",
+                    SecondaryDirectory = "secondary",
                     MoveFilesToSecondaryAfterCopy = true,
                     ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('p')
                                                                 and
-                                                                (Name.EndsWith('.DAT'))
+                                                                (Name.EndsWith('.dat'))
                                                                 and Length>0")
                 },
                 DstSettings = new SyncSettingsDest()
