@@ -179,13 +179,13 @@ namespace Jobs
             Parallel.ForEach(preProcessor.TxtCdrRows, txtRow =>
             {
                 preProcessor.SetAllBlankFieldsToZerolengthString(txtRow);
-                preProcessor.RemoveIllegalCharacters(collectorinput.Tbc.CdrSetting
+                preProcessor.RemoveIllegalCharacters(this.CollectorInput.Tbc.CdrSetting
                     .IllegalStrToRemoveFromFields, txtRow);
                 preProcessor.SetSwitchid(txtRow);
-                preProcessor.SetJobNameWithFileName(collectorinput.TelcobrightJob.JobName, txtRow);
+                preProcessor.SetJobNameWithFileName(this.CollectorInput.TelcobrightJob.JobName, txtRow);
                 preProcessor
                     .AdjustStartTimeBasedOnCdrSettingsForSummaryTimeField(
-                        collectorinput.Tbc.CdrSetting.SummaryTimeField, txtRow);
+                        this.CollectorInput.Tbc.CdrSetting.SummaryTimeField, txtRow);
             });
         }
 

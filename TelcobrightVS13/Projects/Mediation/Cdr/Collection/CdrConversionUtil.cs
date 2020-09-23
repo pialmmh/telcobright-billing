@@ -22,6 +22,7 @@ namespace TelcobrightMediation.Mediation.Cdr
         }
 
         public static cdr ConvertTxtRowToCdrOrInconsistentOnFailure(string[] txtRow,
+            List<IExceptionalCdrPreProcessor> exceptionalCdrPreProcessors,
             out cdrinconsistent cdrInconsistent)
         {
             cdrInconsistent = null;
@@ -86,7 +87,7 @@ namespace TelcobrightMediation.Mediation.Cdr
                 convertedCdr.ValidFlag = txtRow[Fn.Validflag].GetValueOrNull<int>();
                 convertedCdr.PartialFlag = txtRow[Fn.Partialflag].GetValueOrNull<sbyte>();
                 convertedCdr.ReleaseCauseIngress = txtRow[Fn.ReleaseCauseIngress].GetValueOrNull<int>();
-                convertedCdr.InRoamingOpId = txtRow[Fn.InRoamingOpId].GetValueOrNull<int    >();
+                convertedCdr.InRoamingOpId = txtRow[Fn.InRoamingOpId].GetValueOrNull<int>();
                 convertedCdr.OutRoamingOpId = txtRow[Fn.OutRoamingOpId].GetValueOrNull<int>();
                 convertedCdr.CalledPartyNOA = txtRow[Fn.CalledpartyNOA].GetValueOrNull<byte>();
                 convertedCdr.CallingPartyNOA = txtRow[Fn.CallingPartyNOA].GetValueOrNull<byte>();
@@ -144,6 +145,9 @@ namespace TelcobrightMediation.Mediation.Cdr
                 cdrInconsistent.ErrorCode = e.Message;
                 return null;
             }
+            exceptionalCdrPreProcessors?.ForEach(processor => {
+                convertedCdr= processor.Process(convertedCdr);
+            });
             return convertedCdr;
         }
 

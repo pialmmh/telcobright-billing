@@ -63,7 +63,6 @@ namespace InstallConfig
                 {
                     { "DateChangerForCdr",new Dictionary<string, string>()
                         {
-                            { "enabled","true"},
                             { "random","true"},
                             { "changeDateStart","2020-09-08 15:00:00" },
                             { "changeDateEnd","2020-09-08 1:00:00" },

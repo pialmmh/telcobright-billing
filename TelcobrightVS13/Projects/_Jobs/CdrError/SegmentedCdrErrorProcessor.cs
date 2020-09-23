@@ -47,8 +47,9 @@ namespace TelcobrightMediation
             txtRows.ForEach(c =>
             {
                 cdrinconsistent inconsistentCdr = null;
+                List<IExceptionalCdrPreProcessor> exceptionalCdrPreProcessor = new List<IExceptionalCdrPreProcessor>();
                 cdr convertedCdr =
-                    CdrConversionUtil.ConvertTxtRowToCdrOrInconsistentOnFailure(c, out inconsistentCdr);
+                    CdrConversionUtil.ConvertTxtRowToCdrOrInconsistentOnFailure(c,exceptionalCdrPreProcessor, out inconsistentCdr);
                 cdrs.Add(convertedCdr);
             });
             
