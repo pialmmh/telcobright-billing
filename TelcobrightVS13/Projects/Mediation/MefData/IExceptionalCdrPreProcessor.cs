@@ -7,6 +7,6 @@ namespace TelcobrightMediation
         string RuleName { get; }
         int Id { get; }
         string HelpText { get; }
-        string[] Process(string[] cdr);
+        cdr Process(cdr c);
     }
 }

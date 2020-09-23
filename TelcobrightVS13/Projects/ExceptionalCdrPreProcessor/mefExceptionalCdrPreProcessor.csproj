@@ -8,8 +8,8 @@
     <ProjectGuid>{2440D45D-6122-4661-82FE-E127129C6CB3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CdrRules</RootNamespace>
-    <AssemblyName>CdrRules</AssemblyName>
+    <RootNamespace>Default</RootNamespace>
+    <AssemblyName>ExceptionalCdrPreProcessor</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

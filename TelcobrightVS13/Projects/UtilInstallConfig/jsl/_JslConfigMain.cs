@@ -58,6 +58,17 @@ namespace InstallConfig
                     BytesPerRecord = 559,
                     MaxRecordsInSingleFile = 30000,
                     SplitFileIfSizeBiggerThanMbyte = 559*30000
+                },
+                ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>()
+                {
+                    { "DateChangerForCdr",new Dictionary<string, string>()
+                        {
+                            { "enabled","true"},
+                            { "random","true"},
+                            { "changeDateStart","2020-09-08 15:00:00" },
+                            { "changeDateEnd","2020-09-08 1:00:00" },
+                        }
+                    }
                 }
             };
 

@@ -53,12 +53,7 @@ namespace InstallConfig
                 AutoCorrectDuplicateBillId = true,
                 AutoCorrectBillIdsWithPrevChargeableIssue = true,
                 UseIdCallAsBillId=true,
-                ExceptionalCdrPreProcessingData=new Dictionary<string, string>()
-                {
-                    { "random","true"},
-                    { "changeDateStart","2020-09-08 15:00:00" },
-                    { "changeDateEnd","2020-09-08 15:00:00" },
-                }
+                
             };
 
             this.PrepareDirectorySettings(this.Tbc);
