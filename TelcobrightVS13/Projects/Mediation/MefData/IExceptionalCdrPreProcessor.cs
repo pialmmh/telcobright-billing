@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using MediationModel;
 namespace TelcobrightMediation
@@ -7,6 +8,7 @@ namespace TelcobrightMediation
         string RuleName { get; }
         int Id { get; }
         string HelpText { get; }
+        void Prepare(object input);
         cdr Process(cdr c);
     }
 }

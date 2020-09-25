@@ -194,7 +194,8 @@ namespace Process
                 jobs=contextTb.jobs
                     .Where(c => c.CompletionTime == null
                                 && c.idNE == thisSwitch.idSwitch
-                                && c.Status == 7 && c.idjobdefinition == 1) //downloaded & new cdr
+                                && c.Status == 7 && c.idjobdefinition == 1
+                                && c.JobState != "paused") //downloaded & new cdr
                     .Include(c => c.ne.enumcdrformat)
                     .Include(c => c.ne.telcobrightpartner)
                     .OrderByDescending(c => c.JobName)
@@ -205,7 +206,8 @@ namespace Process
                 jobs=contextTb.jobs
                     .Where(c => c.CompletionTime == null
                                 && c.idNE == thisSwitch.idSwitch
-                                && c.Status == 7 && c.idjobdefinition == 1) //downloaded & new cdr
+                                && c.Status == 7 && c.idjobdefinition == 1
+                                && c.JobState != "paused") //downloaded & new cdr
                     .Include(c => c.ne.enumcdrformat)
                     .Include(c => c.ne.telcobrightpartner)
                     .OrderBy(c => c.JobName)

@@ -30,7 +30,8 @@ namespace TelcobrightMediation
         public MefValidator<string[]> InconsistentCdrCheckListValidator { get; private set; }
         public MefValidator<cdr> CommonMediationCheckListValidator { get; private set; }
         public MefServiceFamilyContainer MefServiceFamilyContainer { get; }
-        public MefExceptionalCdrPreProcessorContainer MefExceptionalCdrPreProcessorContainer { get; }
+        public MefExceptionalCdrPreProcessorContainer MefExceptionalCdrPreProcessorContainer = 
+            new MefExceptionalCdrPreProcessorContainer();
         public Dictionary<string, enumbillingspan> BillingSpans { get; }
         public Dictionary<ValueTuple<int,string>, route> Routes { get; }
         public Dictionary<ValueTuple<int, string>, bridgedroute> BridgedRoutes { get; }
@@ -217,6 +218,7 @@ namespace TelcobrightMediation
             this.MefServiceFamilyContainer.DigitRules = digitRuleComposer.DigitRules.ToDictionary(r => r.Id);
             this.MefExceptionalCdrPreProcessorContainer.composer.Compose();
             foreach(var ext in this.MefExceptionalCdrPreProcessorContainer.composer.ExceptionalCdrPreProcessors) {
+                ext.Prepare(this);
                 this.MefExceptionalCdrPreProcessorContainer.DicExtensions.Add(ext.RuleName, ext);
             }
             

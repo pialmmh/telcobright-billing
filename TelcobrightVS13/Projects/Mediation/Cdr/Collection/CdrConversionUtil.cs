@@ -135,6 +135,10 @@ namespace TelcobrightMediation.Mediation.Cdr
                 convertedCdr.SubCategory = txtRow[Fn.Subcategory].GetValueOrNull<int>();
                 convertedCdr.ChangedByJobId = txtRow[Fn.ChangedByJobId].GetValueOrNull<long>();
                 convertedCdr.SignalingStartTime = txtRow[Fn.SignalingStartTime].ConvertToDateTimeFromMySqlFormat();
+
+                exceptionalCdrPreProcessors?.ForEach(processor => {
+                    convertedCdr = processor.Process(convertedCdr);
+                });
             }
             catch (Exception e)
             {
@@ -145,9 +149,7 @@ namespace TelcobrightMediation.Mediation.Cdr
                 cdrInconsistent.ErrorCode = e.Message;
                 return null;
             }
-            exceptionalCdrPreProcessors?.ForEach(processor => {
-                convertedCdr= processor.Process(convertedCdr);
-            });
+            
             return convertedCdr;
         }
 
