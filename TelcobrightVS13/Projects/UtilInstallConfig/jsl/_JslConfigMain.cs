@@ -56,8 +56,8 @@ namespace InstallConfig
                 {
                     FileSplitType = "byte",
                     BytesPerRecord = 559,
-                    MaxRecordsInSingleFile = 30000,
-                    SplitFileIfSizeBiggerThanMbyte = 559*30000
+                    MaxRecordsInSingleFile = 300000,
+                    SplitFileIfSizeBiggerThanMbyte = 559*300000
                 }
             };
 
