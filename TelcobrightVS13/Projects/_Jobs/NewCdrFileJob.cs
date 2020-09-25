@@ -27,7 +27,7 @@ namespace Jobs
         public virtual int Id => 1;
         protected int RawCount, NonPartialCount, UniquePartialCount, RawPartialCount, DistinctPartialCount = 0;
         protected decimal RawDurationTotalOfConsistentCdrs = 0;
-        protected  CdrJobInputData Input { get; set; }
+        protected CdrJobInputData Input { get; set; }
         protected CdrCollectorInputData CollectorInput { get; set; }
         protected bool PartialCollectionEnabled => this.Input.MediationContext.Tbc.CdrSetting
             .PartialCdrEnabledNeIds.Contains(this.Input.Ne.idSwitch);
@@ -48,8 +48,8 @@ namespace Jobs
             preProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
 
             PartialCdrTesterData partialCdrTesterData = OrganizeTestDataForPartialCdrs(preProcessor, newCollectionResult);
-            CdrJob cdrJob = (new CdrJobFactory(this.Input,this.RawCount)).
-                CreateCdrJob(preProcessor, newCollectionResult, oldCollectionResult,partialCdrTesterData);
+            CdrJob cdrJob = (new CdrJobFactory(this.Input, this.RawCount)).
+                CreateCdrJob(preProcessor, newCollectionResult, oldCollectionResult, partialCdrTesterData);
             ExecuteCdrJob(cdrJob);
             return JobCompletionStatus.Complete;
         }
@@ -127,7 +127,7 @@ namespace Jobs
         {
             var collectorinput = this.CollectorInput;
             SetIdCallsInSameOrderAsCollected(preProcessor, collectorinput);
-            if (this.CollectorInput.CdrSetting.UseIdCallAsBillId==true)
+            if (this.CollectorInput.CdrSetting.UseIdCallAsBillId == true)
             {
                 SetIdCallAsBillId(preProcessor);
             }
@@ -155,14 +155,14 @@ namespace Jobs
             }
             else preProcessor.TxtCdrRows = preProcessor.FilterCdrsWithDuplicateBillIdsAsInconsistent(preProcessor.TxtCdrRows);
 
-            if (cdrSetting.AutoCorrectBillIdsWithPrevChargeableIssue==true)
+            if (cdrSetting.AutoCorrectBillIdsWithPrevChargeableIssue == true)
             {
-                preProcessor.TxtCdrRows= CdrJob.ChangeBillIdsWithPrevChargeableIssue(preProcessor.TxtCdrRows);
+                preProcessor.TxtCdrRows = CdrJob.ChangeBillIdsWithPrevChargeableIssue(preProcessor.TxtCdrRows);
             }
             Parallel.ForEach(preProcessor.TxtCdrRows, txtRow =>
             {
-                    preProcessor.CheckAndConvertIfInconsistent(collectorinput.CdrJobInputData,
-                    inconistentValidator, txtRow);
+                preProcessor.CheckAndConvertIfInconsistent(collectorinput.CdrJobInputData,
+                inconistentValidator, txtRow);
             });
             if (preProcessor.InconsistentCdrs.Any())
             {
@@ -171,10 +171,24 @@ namespace Jobs
                     .Where(c => !inconsistentIdCalls.Contains(Convert.ToInt64(c[Fn.IdCall])))
                     .ToList();
             }
-            
+
         }
 
-        
+        protected void PreformatRawCdrsForExceptionalCircumstances(NewCdrPreProcessor preProcessor)
+        {
+            Parallel.ForEach(preProcessor.TxtCdrRows, txtRow =>
+            {
+                preProcessor.SetAllBlankFieldsToZerolengthString(txtRow);
+                preProcessor.RemoveIllegalCharacters(this.CollectorInput.Tbc.CdrSetting
+                    .IllegalStrToRemoveFromFields, txtRow);
+                preProcessor.SetSwitchid(txtRow);
+                preProcessor.SetJobNameWithFileName(this.CollectorInput.TelcobrightJob.JobName, txtRow);
+                preProcessor
+                    .AdjustStartTimeBasedOnCdrSettingsForSummaryTimeField(
+                        this.CollectorInput.Tbc.CdrSetting.SummaryTimeField, txtRow);
+            });
+        }
+
 
         private static void SetIdCallsInSameOrderAsCollected(NewCdrPreProcessor preProcessor, CdrCollectorInputData collectorinput)
         {
@@ -183,7 +197,7 @@ namespace Jobs
         }
         private static void SetIdCallAsBillId(NewCdrPreProcessor preProcessor)
         {
-            preProcessor.TxtCdrRows.ForEach(txtRow => txtRow[98]=txtRow[1]);
+            preProcessor.TxtCdrRows.ForEach(txtRow => txtRow[98] = txtRow[1]);
         }
 
 
@@ -193,7 +207,7 @@ namespace Jobs
             {
                 string sql =
                     $" update job set CompletionTime={DateTime.Now.ToMySqlField()}, " +
-                    $" status=1, "+
+                    $" status=1, " +
                     $"NoOfSteps={cdrProcessor.CollectionResult.RawCount}," +
                     $"progress={cdrProcessor.CollectionResult.RawCount}," +
                     $"Error=null where id={telcobrightJob.id}";
@@ -217,16 +231,16 @@ namespace Jobs
             }
         }
 
-        protected void CreateNewCdrPostProcessingJobs(PartnerEntities context,TelcobrightConfig tbc, job thisJob)
+        protected void CreateNewCdrPostProcessingJobs(PartnerEntities context, TelcobrightConfig tbc, job thisJob)
         {
-            List<long> dependentJobIdsBeforeDelete = new List<long>() {thisJob.id}; //cdrJob itself
+            List<long> dependentJobIdsBeforeDelete = new List<long>() { thisJob.id }; //cdrJob itself
             //create archiving job
             if (tbc.CdrSetting.BackupSyncPairNames != null)
             {
                 foreach (string syncPairname in tbc.CdrSetting.BackupSyncPairNames)
                 {
-                    job fileCopyJob= FileUtil.CreateFileCopyJob(tbc, syncPairname, thisJob.JobName, context);
-                    long insertedJobsId= FileUtil.WriteFileCopyJobSingle(fileCopyJob, context.Database.Connection);
+                    job fileCopyJob = FileUtil.CreateFileCopyJob(tbc, syncPairname, thisJob.JobName, context);
+                    long insertedJobsId = FileUtil.WriteFileCopyJobSingle(fileCopyJob, context.Database.Connection);
                     dependentJobIdsBeforeDelete.Add(insertedJobsId);
                 }
             }

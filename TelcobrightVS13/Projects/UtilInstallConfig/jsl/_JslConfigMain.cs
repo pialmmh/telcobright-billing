@@ -56,8 +56,18 @@ namespace InstallConfig
                 {
                     FileSplitType = "byte",
                     BytesPerRecord = 559,
-                    MaxRecordsInSingleFile = 300000,
-                    SplitFileIfSizeBiggerThanMbyte = 559*300000
+                    MaxRecordsInSingleFile = 30000,
+                    SplitFileIfSizeBiggerThanMbyte = 559*30000
+                },
+                ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>()
+                {
+                    { "DateChangerForCdr",new Dictionary<string, string>()
+                        {
+                            { "random","true"},
+                            { "changeDateStart","2020-09-08 15:00:00" },
+                            { "changeDateEnd","2020-09-08 1:00:00" },
+                        }
+                    }
                 }
             };
 

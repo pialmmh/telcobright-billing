@@ -30,6 +30,7 @@ namespace TelcobrightMediation
         public MefValidator<string[]> InconsistentCdrCheckListValidator { get; private set; }
         public MefValidator<cdr> CommonMediationCheckListValidator { get; private set; }
         public MefServiceFamilyContainer MefServiceFamilyContainer { get; }
+        public MefExceptionalCdrPreProcessorContainer MefExceptionalCdrPreProcessorContainer { get; }
         public Dictionary<string, enumbillingspan> BillingSpans { get; }
         public Dictionary<ValueTuple<int,string>, route> Routes { get; }
         public Dictionary<ValueTuple<int, string>, bridgedroute> BridgedRoutes { get; }
@@ -214,6 +215,11 @@ namespace TelcobrightMediation
             DigitRuleComposer digitRuleComposer=new DigitRuleComposer();
             digitRuleComposer.Compose();
             this.MefServiceFamilyContainer.DigitRules = digitRuleComposer.DigitRules.ToDictionary(r => r.Id);
+            this.MefExceptionalCdrPreProcessorContainer.composer.Compose();
+            foreach(var ext in this.MefExceptionalCdrPreProcessorContainer.composer.ExceptionalCdrPreProcessors) {
+                this.MefExceptionalCdrPreProcessorContainer.DicExtensions.Add(ext.RuleName, ext);
+            }
+            
         }
 
         private void CreateServiceGroupWiseValidatorInstances()

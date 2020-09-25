@@ -65,7 +65,9 @@ namespace TelcobrightMediation
         {
             cdr convertedCdr = null;
             cdrInconsistent = null;
-            convertedCdr = CdrConversionUtil.ConvertTxtRowToCdrOrInconsistentOnFailure(row, out cdrInconsistent);
+            List<IExceptionalCdrPreProcessor> exceptionalCdrPreProcessor = 
+                base.CdrCollectorInputData.MediationContext.MefExceptionalCdrPreProcessorContainer.DicExtensions.Values.ToList();
+            convertedCdr = CdrConversionUtil.ConvertTxtRowToCdrOrInconsistentOnFailure(row, exceptionalCdrPreProcessor, out cdrInconsistent);
             if (convertedCdr == null && cdrInconsistent != null) return;
             if (convertedCdr != null && cdrInconsistent == null)
             {

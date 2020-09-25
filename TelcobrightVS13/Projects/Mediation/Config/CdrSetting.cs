@@ -33,6 +33,7 @@ namespace TelcobrightMediation
         public bool AutoCorrectDuplicateBillId { get; set; } = false;
         public bool AutoCorrectDuplicateBillIdBeforeErrorProcess { get; set; } = false;
         public bool AutoCorrectBillIdsWithPrevChargeableIssue { get; set; } = false;
+        public Dictionary<string, Dictionary<string, string>> ExceptionalCdrPreProcessingData { get; set; } = new Dictionary<string, Dictionary<string, string>>();
         public CdrSetting()
         {
             this.NerCalculationRule = "NerByCauseCode";

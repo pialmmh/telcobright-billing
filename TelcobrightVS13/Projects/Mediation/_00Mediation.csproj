@@ -170,10 +170,12 @@
     <Compile Include="MefData\Composers\PartnerRuleComposer.cs" />
     <Compile Include="MefData\Composers\RouteDisplayClassComposer.cs" />
     <Compile Include="MefData\Composers\InvoiceTemplateComposer.cs" />
+    <Compile Include="MefData\Composers\ExceptionalCdrPreProcessorComposer.cs" />
     <Compile Include="MefData\Composers\ServiceGroupPreProcessorComposer.cs" />
     <Compile Include="MefData\Composers\ServiceFamilyComposer.cs" />
     <Compile Include="MefData\Composers\ServiceGroupComposer.cs" />
     <Compile Include="MefData\DigitRulesData.cs" />
+    <Compile Include="MefData\IExceptionalCdrPreProcessor.cs" />
     <Compile Include="MefData\IInvoiceGenerationRule.cs" />
     <Compile Include="MefData\IDigitRule.cs" />
     <Compile Include="MefData\IServiceGroupPreProcessor.cs" />
@@ -275,6 +277,7 @@
     <Compile Include="MefData\ICdrRule.cs" />
     <Compile Include="Accounting\Invoice\IInvoiceTemplate.cs" />
     <Compile Include="Accounting\Invoice\InvoiceCommonData.cs" />
+    <Compile Include="MefData\MefExceptionalCdrPreProcessorContainer.cs" />
     <Compile Include="Rating\PartnerEx.cs" />
     <Compile Include="Accounting\Invoice\InvoiceSectionDataRowForA2ZVoice.cs" />
     <Compile Include="Accounting\Invoice\InvoiceSection.cs" />
