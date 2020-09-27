@@ -78,6 +78,36 @@ namespace InstallConfig
                                             ICX19200908174537679_0003.DAT"
                             }
                         }
+                    },
+                    { "IdCallChangerForCdr",new Dictionary<string, string>()
+                        {
+                            { "jobNames",$@"ICX19200824134037680.DAT,
+                                            ICX19200824134537681.DAT,
+                                            ICX19200824135037682.DAT,
+                                            ICX19200824140237760.DAT,
+                                            ICX19200824140537761.DAT,
+                                            ICX19200824141037762.DAT,
+                                            ICX19200824141537763.DAT,
+                                            ICX19200908174537679_0001.DAT,
+                                            ICX19200908174537679_0002.DAT,
+                                            ICX19200908174537679_0003.DAT"
+                            }
+                        }
+                    },
+                    { "PartialToNonPartialChangerForCdr",new Dictionary<string, string>()
+                        {
+                            { "jobNames",$@"ICX19200824134037680.DAT,
+                                            ICX19200824134537681.DAT,
+                                            ICX19200824135037682.DAT,
+                                            ICX19200824140237760.DAT,
+                                            ICX19200824140537761.DAT,
+                                            ICX19200824141037762.DAT,
+                                            ICX19200824141537763.DAT,
+                                            ICX19200908174537679_0001.DAT,
+                                            ICX19200908174537679_0002.DAT,
+                                            ICX19200908174537679_0003.DAT"
+                            }
+                        }
                     }
                 }
             };
