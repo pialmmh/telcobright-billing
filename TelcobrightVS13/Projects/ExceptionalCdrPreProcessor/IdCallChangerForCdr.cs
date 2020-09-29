@@ -31,7 +31,7 @@ namespace Default
             {
                 return c;
             }
-            var randomId = RandomStringGenerator.Next(2);
+            var randomId = RandomStringGenerator.Next(25);
             c.UniqueBillId = randomId;
             return c;
         }

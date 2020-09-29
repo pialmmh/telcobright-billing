@@ -114,7 +114,7 @@ namespace Process
                 //this is required to backup original file instead of the split versions after cdr job processing
                 string historyFileName = unsplitPath + Path.DirectorySeparatorChar +
                            Path.GetFileNameWithoutExtension(fileInfo.Name) + ".history";
-                File.AppendAllLines(historyFileName,);
+                //File.AppendAllLines(historyFileName,);
 
                 var dirInfo = new DirectoryInfo(fileInfo.DirectoryName);
                 string searchPattern = $"{Path.GetFileNameWithoutExtension(fileInfo.Name)}*" +
