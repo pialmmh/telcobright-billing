@@ -100,6 +100,22 @@ namespace Process
                 FileSplitter.SplitFile(fileInfo,
                     fileSplitSetting.BytesPerRecord * fileSplitSetting.MaxRecordsInSingleFile);
                 File.Delete(fileInfo.FullName);
+
+                //save original file in unsplit directory before spliting
+                DirectoryInfo currentDir = new DirectoryInfo(fileInfo.DirectoryName);
+                var unsplitPath = currentDir.FullName + Path.DirectorySeparatorChar + "unsplit";
+                bool unsplitExists = Directory.Exists(unsplitPath);
+                if (unsplitExists == false)
+                {
+                    Directory.CreateDirectory(unsplitPath);
+                }
+                File.Copy(fileInfo.FullName, unsplitPath + Path.DirectorySeparatorChar + fileInfo.Name);
+                //create a database file to log the association of the split files to the original unsplit
+                //this is required to backup original file instead of the split versions after cdr job processing
+                string historyFileName = unsplitPath + Path.DirectorySeparatorChar +
+                           Path.GetFileNameWithoutExtension(fileInfo.Name) + ".history";
+                File.AppendAllLines(historyFileName,);
+
                 var dirInfo = new DirectoryInfo(fileInfo.DirectoryName);
                 string searchPattern = $"{Path.GetFileNameWithoutExtension(fileInfo.Name)}*" +
                                     $"{fileInfo.Extension}";
