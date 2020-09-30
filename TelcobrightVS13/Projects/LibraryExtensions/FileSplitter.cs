@@ -10,8 +10,10 @@ namespace LibraryExtensions
 {
     public static class FileSplitter
     {
-        public static void SplitFile(FileInfo inputFile, int chunkSize)
+        static List<string> splitedFileNames;
+        public static List<string> SplitFile(FileInfo inputFile, int chunkSize)
         {
+            splitedFileNames=new List<string>();
             const int BUFFER_SIZE = 20 * 1024;
             byte[] buffer = new byte[BUFFER_SIZE];
 
@@ -26,6 +28,7 @@ namespace LibraryExtensions
                     string targetFileName = inputFile.DirectoryName+ Path.DirectorySeparatorChar
                                + Path.GetFileNameWithoutExtension(inputFile.Name)
                                +"_" + fileNumber+inputFile.Extension;
+                    splitedFileNames.Add(targetFileName);
                     using (Stream output = File.Create(targetFileName))
                     {
                         int remaining = chunkSize, bytesRead;
@@ -40,6 +43,7 @@ namespace LibraryExtensions
                     Console.WriteLine($"Spliting large cdr file. Progress {fileNumber} of {expectedNoOfFiles}.");
                     Thread.Sleep(500); // experimental; perhaps try it
                 }
+                return splitedFileNames;
             }
         }
     }

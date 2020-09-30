@@ -97,9 +97,6 @@ namespace Process
                 if (fileInfo.Length % fileSplitSetting.BytesPerRecord > 0)
                     throw new Exception($@"Filesize ({fileInfo.Length}) is not a multiple of 
                                                                 number of bytes per cdr ({fileSplitSetting.BytesPerRecord})");
-                FileSplitter.SplitFile(fileInfo,
-                    fileSplitSetting.BytesPerRecord * fileSplitSetting.MaxRecordsInSingleFile);
-                File.Delete(fileInfo.FullName);
 
                 //save original file in unsplit directory before spliting
                 DirectoryInfo currentDir = new DirectoryInfo(fileInfo.DirectoryName);
@@ -109,12 +106,27 @@ namespace Process
                 {
                     Directory.CreateDirectory(unsplitPath);
                 }
-                File.Copy(fileInfo.FullName, unsplitPath + Path.DirectorySeparatorChar + fileInfo.Name);
+                string unsplitBackupFileName = unsplitPath + Path.DirectorySeparatorChar + fileInfo.Name;
+                if (File.Exists(unsplitBackupFileName))
+                {
+                    File.Delete(unsplitBackupFileName);
+                }
+                File.Copy(fileInfo.FullName, unsplitBackupFileName);
+
+                List<string> splitedFileNames=FileSplitter.SplitFile(fileInfo,//split the files
+                    fileSplitSetting.BytesPerRecord * fileSplitSetting.MaxRecordsInSingleFile);
+                File.Delete(fileInfo.FullName);
+
                 //create a database file to log the association of the split files to the original unsplit
                 //this is required to backup original file instead of the split versions after cdr job processing
                 string historyFileName = unsplitPath + Path.DirectorySeparatorChar +
-                           Path.GetFileNameWithoutExtension(fileInfo.Name) + ".history";
-                //File.AppendAllLines(historyFileName,);
+                                         fileInfo.Name + ".history";
+                if (File.Exists(historyFileName))
+                {
+                    File.Delete(historyFileName);   
+                }
+                string splitHistory = string.Join(",", splitedFileNames.Select(f => Path.GetFileName(f)));
+                File.AppendAllText(historyFileName,splitHistory+Environment.NewLine);
 
                 var dirInfo = new DirectoryInfo(fileInfo.DirectoryName);
                 string searchPattern = $"{Path.GetFileNameWithoutExtension(fileInfo.Name)}*" +
@@ -148,6 +160,28 @@ namespace Process
         private static void CreateSingleCdrJob(PartnerEntities context, ne thisSwitch, FileInfo fileInfo,
             string jobName)
         {
+            //confirm to check if there is an original, unsplit version of this file
+            DirectoryInfo currentDir = new DirectoryInfo(fileInfo.DirectoryName);
+            var unsplitPath = currentDir.FullName + Path.DirectorySeparatorChar + "unsplit";
+            bool unsplitExists = Directory.Exists(unsplitPath);
+            if (unsplitExists == false)
+            {
+                Directory.CreateDirectory(unsplitPath);
+            }
+            var extension = Path.GetExtension(fileInfo.Name);
+            var fileNameAsArr = fileInfo.Name.Split('_');
+            string historyFileNameOnly = String.Join("_", fileNameAsArr.Take(fileNameAsArr.Length - 1)) 
+                 + extension + ".history";
+            string historyFileName = unsplitPath + Path.DirectorySeparatorChar + historyFileNameOnly;
+            string unsplitFileName = "";
+            if (File.Exists(historyFileName) == true)
+            {
+                List<string> splitHistory = File.ReadAllText(historyFileName).Split(',').ToList();
+                if (splitHistory.Contains(fileInfo.Name))
+                {
+                    unsplitFileName = historyFileName.Replace(".history","");
+                }
+            }
             //check if that filename already exists
             job newCdr = new job();
             newCdr.JobName = jobName;
@@ -161,6 +195,7 @@ namespace Process
                 newCdr.Status = 7; //local, so downloaded in local switch directory
                 newCdr.priority = priority;
                 newCdr.idjobdefinition = 1; //new cdr
+                newCdr.JobParameter = "unsplitFileName=" + unsplitFileName;
                 context.jobs.Add(newCdr);
                 context.SaveChanges();
             }
