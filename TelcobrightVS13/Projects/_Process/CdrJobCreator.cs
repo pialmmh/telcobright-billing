@@ -176,12 +176,15 @@ namespace Process
             string unsplitFileName = "";
             if (File.Exists(historyFileName) == true)
             {
-                List<string> splitHistory = File.ReadAllText(historyFileName).Split(',').ToList();
+                List<string> splitHistory = File.ReadAllText(historyFileName).Split(',')
+                    .Select(name=>name.Trim()).ToList();
                 if (splitHistory.Contains(fileInfo.Name))
                 {
-                    unsplitFileName = historyFileName.Replace(".history","");
+                    unsplitFileName = "unsplit" + Path.DirectorySeparatorChar + 
+                        Path.GetFileName(historyFileName.Replace(".history",""));
                 }
             }
+
             //check if that filename already exists
             job newCdr = new job();
             newCdr.JobName = jobName;

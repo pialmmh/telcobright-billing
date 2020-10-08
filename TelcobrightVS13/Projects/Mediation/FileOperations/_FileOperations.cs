@@ -49,7 +49,7 @@ namespace TelcobrightFileOperations
             {
                 idjobdefinition = 8,
                 idNE = 0,
-                JobName = fileLocation.Name + "-" + fileName,
+                JobName = fileLocation.Name + "-" + fileName.Replace(@"\", @"\\"),
                 Status = 6, //created
                 JobParameter = JsonConvert.SerializeObject(jobParamFileDel),
                 CreationTime = DateTime.Now
@@ -70,7 +70,7 @@ namespace TelcobrightFileOperations
                                     j => new StringBuilder(
                                          $@"insert into job(idjobdefinition,priority,idne,jobname,status,jobparameter,creationtime) 
                                          values ({newJob.idjobdefinition},{priority},{0},'{newJob.JobName}',
-                                         {newJob.Status},'{newJob.JobParameter}',{newJob.CreationTime.ToMySqlField()})")
+                                         {newJob.Status},'{newJob.JobParameter}',{newJob.CreationTime.ToMySqlField()});")
                                          .ToString()).ToString();
             cmd.ExecuteNonQuery();
             //context.jobs.Add(newJob);
@@ -95,7 +95,8 @@ namespace TelcobrightFileOperations
 
             fileCopyJob.idNE = 0;
             fileCopyJob.idjobdefinition = 6;
-            fileCopyJob.JobName = syncPair.Name + "-" + copyParam.RelativeFileName;
+            //fileCopyJob.JobName = syncPair.Name + "-" + copyParam.RelativeFileName;
+            fileCopyJob.JobName = syncPair.Name + "-" + copyParam.RelativeFileName.Replace(@"\",@"\\");
             if (context.jobs.Any(c => c.idjobdefinition == 6 && c.JobName == fileCopyJob.JobName) == true)
             {
                 //exists

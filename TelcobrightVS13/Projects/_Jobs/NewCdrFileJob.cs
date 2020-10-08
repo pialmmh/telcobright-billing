@@ -231,17 +231,82 @@ namespace Jobs
             }
         }
 
-        protected void CreateNewCdrPostProcessingJobs(PartnerEntities context, TelcobrightConfig tbc, job thisJob)
+        protected void CreateNewCdrPostProcessingJobs(PartnerEntities context, TelcobrightConfig tbc, job cdrJob)
         {
-            List<long> dependentJobIdsBeforeDelete = new List<long>() { thisJob.id }; //cdrJob itself
-            //create archiving job
+            List<long> dependentJobIdsBeforeDelete = new List<long>() { cdrJob.id }; //cdrJob itself
+                                                                                      //create archiving job
+            string jobParam = cdrJob.JobParameter;
+            string unsplitFileName = jobParam.Split('=')[1];
+            if (unsplitFileName.IsNullOrEmptyOrWhiteSpace())
+            {
+                createJobsForUnsplitCase(context, tbc, cdrJob);
+            }
+            else
+            {
+                createJobsForSplitCase(context, tbc, cdrJob,unsplitFileName);
+            }
+            /*string fileToCopy = unsplitFileName.IsNullOrEmptyOrWhiteSpace()? thisJob.JobName
+                :unsplitFileName;*/
+
+        }
+        private static void createJobsForSplitCase(PartnerEntities context, TelcobrightConfig tbc, job cdrJob, 
+            string unsplitFileName)
+        {
+            List<long> dependentJobIdsBeforeDelete = new List<long>();
+            string vaultName = tbc.DirectorySettings.Vaults.Where(c => c.Name == cdrJob.ne.SourceFileLocations)
+                .Select(c => c.Name)
+                .First();
             if (tbc.CdrSetting.BackupSyncPairNames != null)
             {
                 foreach (string syncPairname in tbc.CdrSetting.BackupSyncPairNames)
                 {
-                    job fileCopyJob = FileUtil.CreateFileCopyJob(tbc, syncPairname, thisJob.JobName, context);
-                    long insertedJobsId = FileUtil.WriteFileCopyJobSingle(fileCopyJob, context.Database.Connection);
-                    dependentJobIdsBeforeDelete.Add(insertedJobsId);
+                    job fileCopyJob = FileUtil.CreateFileCopyJob(tbc, syncPairname, unsplitFileName, context);
+                    string doubleSlashNormalizedFileName = fileCopyJob.JobName.Replace(@"\\", @"\");
+                    bool fileCopyJobExists =
+                        context.jobs.Any(j =>j.JobName == doubleSlashNormalizedFileName && j.idjobdefinition == 6);
+                    if (fileCopyJobExists == false)
+                    {
+                        long insertedJobsId = FileUtil.WriteFileCopyJobSingle(fileCopyJob, context.Database.Connection);
+                        dependentJobIdsBeforeDelete.Add(insertedJobsId);
+                        //create delete job for unsplitFile
+                        FileUtil.CreateFileDeleteJob(unsplitFileName, tbc.DirectorySettings.FileLocations[vaultName],
+                            context,
+                            new JobPreRequisite()
+                            {
+                                ExecuteAfterJobs = dependentJobIdsBeforeDelete,
+                            }
+                        );
+                    }
+                }
+            }
+            //create delete job for cdr
+            dependentJobIdsBeforeDelete = new List<long>() {cdrJob.id};
+            FileUtil.CreateFileDeleteJob(cdrJob.JobName, tbc.DirectorySettings.FileLocations[vaultName], context,
+                new JobPreRequisite()
+                {
+                    ExecuteAfterJobs = dependentJobIdsBeforeDelete,
+                }
+            );
+        }
+        private static void createJobsForUnsplitCase(PartnerEntities context, TelcobrightConfig tbc, job thisJob)
+        {
+            string fileToCopy = thisJob.JobName;
+            List<long> dependentJobIdsBeforeDelete = new List<long>();
+            if (tbc.CdrSetting.BackupSyncPairNames != null)
+            {
+                using (context)
+                {
+                    foreach (string syncPairname in tbc.CdrSetting.BackupSyncPairNames)
+                    {
+                        job fileCopyJob = FileUtil.CreateFileCopyJob(tbc, syncPairname, fileToCopy, context);
+                        bool jobExists =
+                            context.jobs.Any(j => j.JobName == fileCopyJob.JobName && j.idjobdefinition == 6);
+                        if (jobExists == false)
+                        {
+                            long insertedJobsId = FileUtil.WriteFileCopyJobSingle(fileCopyJob, context.Database.Connection);
+                            dependentJobIdsBeforeDelete.Add(insertedJobsId);
+                        }
+                    }
                 }
             }
             //create delete job
