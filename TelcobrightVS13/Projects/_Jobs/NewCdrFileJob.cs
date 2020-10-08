@@ -288,32 +288,29 @@ namespace Jobs
                 }
             );
         }
-        private static void createJobsForUnsplitCase(PartnerEntities context, TelcobrightConfig tbc, job thisJob)
+        private static void createJobsForUnsplitCase(PartnerEntities context, TelcobrightConfig tbc, job cdrJob)
         {
-            string fileToCopy = thisJob.JobName;
-            List<long> dependentJobIdsBeforeDelete = new List<long>();
+            string fileToCopy = cdrJob.JobName;
+            List<long> dependentJobIdsBeforeDelete = new List<long>() {cdrJob.id};
             if (tbc.CdrSetting.BackupSyncPairNames != null)
             {
-                using (context)
+                foreach (string syncPairname in tbc.CdrSetting.BackupSyncPairNames)
                 {
-                    foreach (string syncPairname in tbc.CdrSetting.BackupSyncPairNames)
+                    job fileCopyJob = FileUtil.CreateFileCopyJob(tbc, syncPairname, fileToCopy, context);
+                    bool jobExists =
+                        context.jobs.Any(j => j.JobName == fileCopyJob.JobName && j.idjobdefinition == 6);
+                    if (jobExists == false)
                     {
-                        job fileCopyJob = FileUtil.CreateFileCopyJob(tbc, syncPairname, fileToCopy, context);
-                        bool jobExists =
-                            context.jobs.Any(j => j.JobName == fileCopyJob.JobName && j.idjobdefinition == 6);
-                        if (jobExists == false)
-                        {
-                            long insertedJobsId = FileUtil.WriteFileCopyJobSingle(fileCopyJob, context.Database.Connection);
-                            dependentJobIdsBeforeDelete.Add(insertedJobsId);
-                        }
+                        long insertedJobsId = FileUtil.WriteFileCopyJobSingle(fileCopyJob, context.Database.Connection);
+                        dependentJobIdsBeforeDelete.Add(insertedJobsId);
                     }
                 }
             }
             //create delete job
-            string vaultName = tbc.DirectorySettings.Vaults.Where(c => c.Name == thisJob.ne.SourceFileLocations)
+            string vaultName = tbc.DirectorySettings.Vaults.Where(c => c.Name == cdrJob.ne.SourceFileLocations)
                 .Select(c => c.Name)
                 .First();
-            FileUtil.CreateFileDeleteJob(thisJob.JobName, tbc.DirectorySettings.FileLocations[vaultName], context,
+            FileUtil.CreateFileDeleteJob(cdrJob.JobName, tbc.DirectorySettings.FileLocations[vaultName], context,
                 new JobPreRequisite()
                 {
                     ExecuteAfterJobs = dependentJobIdsBeforeDelete,

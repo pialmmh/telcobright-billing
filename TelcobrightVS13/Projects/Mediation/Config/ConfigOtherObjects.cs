@@ -160,6 +160,11 @@ namespace TelcobrightMediation
             if (File.Exists(fileName) == true)
             {
                 File.Delete(fileName);
+                string historyFileName = fileName+".history";
+                if (File.Exists(historyFileName))
+                {
+                    File.Delete(historyFileName);
+                }
                 if (File.Exists(fileName) == true) return false;
             }
             FileSyncher fs = new FileSyncher();

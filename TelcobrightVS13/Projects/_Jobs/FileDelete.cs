@@ -57,8 +57,11 @@ namespace Jobs
             if (jobParameter.Contains("\"PathSeparator\":\"\\"))
             {
                 jobParameter = jobParameter.Replace("\"PathSeparator\":\"\\", "\"PathSeparator\":\"`");
+                jobParameter = jobParameter.Replace("unsplit\\", "unsplit`");
                 delParam = JsonConvert.DeserializeObject<JobParamFileDelete>(jobParameter);
                 delParam.FileLocation.PathSeparator = delParam.FileLocation.PathSeparator.Replace("`", "\\");
+                delParam.FileName= delParam.FileName.Replace("`", "\\");
+
                 return delParam;
             }
             delParam = JsonConvert.DeserializeObject<JobParamFileDelete>(jobParameter);
