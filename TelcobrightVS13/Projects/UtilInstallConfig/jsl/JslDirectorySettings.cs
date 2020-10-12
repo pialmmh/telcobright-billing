@@ -102,15 +102,27 @@ namespace InstallConfig
                 Pass = "blt#.45",
                 IgnoreZeroLenghFile = 1
             };
-            
+
+            FileLocation fileArchiveCAS = new FileLocation()//raw cdr archive
+            {
+                Name = "fileArchiveCAS",
+                LocationType = "ftp",
+                OsType = "windows",
+                PathSeparator = @"/",//backslash didn't work with winscp
+                StartingPath = @"/ICX_CDR_TO_BTRC_CAS",
+                ServerIp = "10.100.201.13", //server = "172.16.16.242",
+                User = "iofcdr",
+                Pass = "blt#.45",
+                IgnoreZeroLenghFile = 1
+            };
+
             //add locations to directory settings
             tbc.DirectorySettings.FileLocations.Add(vaultJslZteDhk.Name, vaultJslZteDhk);
             tbc.DirectorySettings.FileLocations.Add(appServerFtp1.Name, appServerFtp1);
             tbc.DirectorySettings.FileLocations.Add(appServerFtp2.Name, appServerFtp2);
             tbc.DirectorySettings.FileLocations.Add(JslZteDhk.Name, JslZteDhk);
             tbc.DirectorySettings.FileLocations.Add(fileArchive1.Name, fileArchive1);
-            
-
+            tbc.DirectorySettings.FileLocations.Add(fileArchiveCAS.Name, fileArchiveCAS);
 
             SyncPair jslZteDhkVault = new SyncPair("JslZteDhk:Vault")
             {
@@ -168,13 +180,39 @@ namespace InstallConfig
                     CompressionType = CompressionType.None,
                 }
             };
-            
+
+            //sync pair Vault_S3:FileArchive1
+            SyncPair vaultCAS = new SyncPair("Vault:CAS")
+            {
+                SkipCopyingToDestination = false,
+                SkipSourceFileListing = true,
+                SrcSyncLocation = new SyncLocation("Vault_JslZteDhk")
+                {
+                    FileLocation = vaultJslZteDhk
+                },
+                DstSyncLocation = new SyncLocation("fileArchiveCAS")
+                {
+                    FileLocation = fileArchiveCAS
+                },
+                SrcSettings = new SyncSettingsSource()
+                {
+                    SecondaryDirectory = "downloaded",
+                    ExpFileNameFilter = null,
+                },
+                DstSettings = new SyncSettingsDest()
+                {
+                    FileExtensionForSafeCopyWithTempFile = ".tmp",
+                    Overwrite = true,
+                    CompressionType = CompressionType.None,
+                }
+            };
 
             //add sync pairs to directory config
             directorySetting.SyncPairs.Add(jslZteDhkVault.Name, jslZteDhkVault);
             directorySetting.SyncPairs.Add(vaultS3FileArchive1.Name, vaultS3FileArchive1);
-            
-            //load the syncpairs in dictioinary, first by source
+            directorySetting.SyncPairs.Add(vaultCAS.Name, vaultCAS);
+
+            //load the syncpairs in dictionary, first by source
             foreach (SyncPair sp in directorySetting.SyncPairs.Values)
             {
                 if (directorySetting.SyncLocations.ContainsKey(sp.SrcSyncLocation.Name) == false)
@@ -193,6 +231,7 @@ namespace InstallConfig
             this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
             {
                 vaultS3FileArchive1.Name,
+                vaultCAS.Name
             };
         }
     }

@@ -51,7 +51,9 @@ namespace Jobs
         {
             FileCopyJobInputData input = (FileCopyJobInputData) jobInputData;
             JobParamFileCopy paramFileCopy = new JobParamFileCopy();
-            paramFileCopy = JsonConvert.DeserializeObject<JobParamFileCopy>(input.TelcobrightJob.JobParameter);
+            paramFileCopy = JsonConvert.DeserializeObject<JobParamFileCopy>
+                (input.TelcobrightJob.JobParameter.Replace("unsplit\\", "unsplit`"));
+            paramFileCopy.RelativeFileName = paramFileCopy.RelativeFileName.Replace("unsplit`",@"unsplit\");
             SyncPair syncPair = input.Tbc.DirectorySettings.SyncPairs[paramFileCopy.SyncPairName];
             SyncLocation srcLocation = syncPair.SrcSyncLocation;
             SyncLocation dstLocation = syncPair.DstSyncLocation;
