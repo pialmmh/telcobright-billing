@@ -6,12 +6,14 @@ using System.Data.Common;
 using System.IO;
 using TelcobrightFileOperations;
 using System.Linq;
+using System.Text;
 using MediationModel;
 using System.Threading.Tasks;
 using FlexValidation;
 using LibraryExtensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySql.Data.MySqlClient;
+using Newtonsoft.Json;
 using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Cdr;
 using TelcobrightMediation.Config;
@@ -266,16 +268,55 @@ namespace Jobs
                         context.jobs.Any(j =>j.JobName == doubleSlashNormalizedFileName && j.idjobdefinition == 6);
                     if (fileCopyJobExists == false)
                     {
-                        long insertedJobsId = FileUtil.WriteFileCopyJobSingle(fileCopyJob, context.Database.Connection);
-                        dependentJobIdsBeforeDelete.Add(insertedJobsId);
+                        long fileCopyJobsId = FileUtil.WriteFileCopyJobSingle(fileCopyJob, context.Database.Connection);
+                        dependentJobIdsBeforeDelete.Add(fileCopyJobsId);
                         //create delete job for unsplitFile
-                        FileUtil.CreateFileDeleteJob(unsplitFileName, tbc.DirectorySettings.FileLocations[vaultName],
+                        job newDelJob= FileUtil.CreateFileDeleteJob(unsplitFileName, tbc.DirectorySettings.FileLocations[vaultName],
                             context,
                             new JobPreRequisite()
                             {
                                 ExecuteAfterJobs = dependentJobIdsBeforeDelete,
                             }
                         );
+                        newDelJob.JobName = newDelJob.JobName.Replace(@"\\", @"\");
+                        job existingDelJob =
+                            context.jobs.FirstOrDefault(c => c.idjobdefinition == newDelJob.idjobdefinition &&
+                                                             c.JobName == newDelJob.JobName);
+                        if (existingDelJob!=null)
+                        {
+                            //exists, update job prerequisite
+                            existingDelJob.JobParameter =existingDelJob.JobParameter.Replace(@"\", @"`");
+                            JobParamFileDelete existingDeljobParam = JsonConvert.DeserializeObject<JobParamFileDelete>(existingDelJob.JobParameter);
+                            existingDeljobParam.FileName= existingDeljobParam.FileName.Replace("`", @"\");
+                            existingDeljobParam.FileLocation.PathSeparator= 
+                                existingDeljobParam.FileLocation.PathSeparator.Replace("`", @"\");
+                            existingDeljobParam.JobPrerequisite.ExecuteAfterJobs.Add(fileCopyJobsId);
+                            existingDelJob.JobParameter = JsonConvert.SerializeObject(existingDeljobParam);
+                            DbCommand cmd = context.Database.Connection.CreateCommand();
+                            cmd.CommandText = $@"update job set JobParameter='{existingDelJob.JobParameter}'
+                                                 where id={existingDelJob.id};";
+                            cmd.ExecuteNonQuery();
+                        }
+                        else
+                        {
+                            //don't use context.add as context.Connection has been used with autocommit=0 for transaction. 
+                            //use the same connection
+                            DbCommand cmd = context.Database.Connection.CreateCommand();
+                            cmd.CommandText = newDelJob.GetExtInsertCustom(
+                                j =>
+                                {
+                                    string jobName = newDelJob.JobName.Replace(@"\",@"\\");
+                                    return new StringBuilder(
+                                            $@"insert into job(idjobdefinition,priority,idne,jobname,status,jobparameter,creationtime) 
+                                         values ({newDelJob.idjobdefinition},{newDelJob.priority},{0},'{jobName}',
+                                         {newDelJob.Status},'{newDelJob.JobParameter}',{
+                                                    newDelJob.CreationTime.ToMySqlField()
+                                                });")
+                                        .ToString();
+                                }).ToString();
+                            cmd.ExecuteNonQuery();
+                        }
+                        
                     }
                 }
             }

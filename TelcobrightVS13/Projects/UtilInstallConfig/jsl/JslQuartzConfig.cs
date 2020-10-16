@@ -82,8 +82,20 @@ namespace InstallConfig
                         {"operatorName", operatorName},
                         {"syncPair", "Vault:FileArchive1"}
                     }),
-                
 
+                new QuartzTbDaemonConfig
+                (
+                    operatorName: operatorName,
+                    identity: "FileCopier [Vault:CAS]" + " [" + operatorName+"]",
+                    group: operatorName,
+                    cronExpression: "/5 * * ? * *",
+                    fireOnceIfMissFired: false,
+                    jobDataMap: new Dictionary<string, string>()
+                    {
+                        {"telcobrightProcessId", "104"},
+                        {"operatorName", operatorName},
+                        {"syncPair", "Vault:CAS"}
+                    }),
             };
             return fileCopierInstances;
         }

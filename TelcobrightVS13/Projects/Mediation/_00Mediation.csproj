@@ -156,7 +156,9 @@
     <Compile Include="Config\EmailSenderConfig.cs" />
     <Compile Include="Config\FileSplitSetting.cs" />
     <Compile Include="Config\JobInputData\StandardTelcobrightJobInput.cs" />
+    <Compile Include="Config\JobPreRequisite.cs" />
     <Compile Include="Config\SmsSenderConfig.cs" />
+    <Compile Include="FileOperations\JobParamFileDelete.cs" />
     <Compile Include="IAutoincrementManager.cs" />
     <Compile Include="MefData\Composers\AutoCreateJobComposer.cs" />
     <Compile Include="MefData\Composers\CdrRuleComposer.cs" />

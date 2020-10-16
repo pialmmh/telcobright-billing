@@ -68,9 +68,6 @@ namespace Process
                                 .ToList();
                         }
                         else lstIncomplete = lstIncomplete.OrderBy(c => c.priority).ToList();
-                        //shuffle the list for almost equal distribution of delete files in different sources
-                        lstIncomplete.Shuffle();
-
                         string sql = "";
                         using (DbCommand cmd = ConnectionManager.CreateCommandFromDbContext(context))
                         {

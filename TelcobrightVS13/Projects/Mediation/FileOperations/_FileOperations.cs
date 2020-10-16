@@ -18,27 +18,11 @@ namespace TelcobrightFileOperations
         public string SyncPairName { get; set; }
         public string RelativeFileName { get; set; }
     }
-    public class JobParamFileDelete
-    {
-        public string FileName { get; set; }
-        public FileLocation FileLocation { get; set; }
-        public JobPreRequisite JobPrerequisite { get; set; }
-        public JobParamFileDelete()//default , for json
-        {
-            this.JobPrerequisite = new JobPreRequisite();
-        }
-        public JobParamFileDelete(string filename, FileLocation filelocation)
-        {
-            this.FileName = filename;
-            this.FileLocation = filelocation;
-            this.JobPrerequisite = new JobPreRequisite();
-        }
-    }
 
 
     public static class FileUtil
     {
-        public static void CreateFileDeleteJob(string fileName,FileLocation fileLocation,
+        public static job CreateFileDeleteJob(string fileName,FileLocation fileLocation,
             PartnerEntities context,JobPreRequisite jobPreReq)
         {
             JobParamFileDelete jobParamFileDel = new JobParamFileDelete(fileName, fileLocation)
@@ -56,26 +40,8 @@ namespace TelcobrightFileOperations
             };
             int priority = context.enumjobdefinitions.Where(c => c.id == newJob.idjobdefinition).First().Priority;
             newJob.priority = priority;
-
-            if (context.jobs.Any(c => c.idjobdefinition == newJob.idjobdefinition && c.JobName == newJob.JobName))
-            {
-                //exists
-                return;
-            }
-
-            //don't use context.add as context.Connection has been used with autocommit=0 for transaction. 
-            //use the same connection
-            DbCommand cmd = context.Database.Connection.CreateCommand();
-            cmd.CommandText= newJob.GetExtInsertCustom(
-                                    j => new StringBuilder(
-                                         $@"insert into job(idjobdefinition,priority,idne,jobname,status,jobparameter,creationtime) 
-                                         values ({newJob.idjobdefinition},{priority},{0},'{newJob.JobName}',
-                                         {newJob.Status},'{newJob.JobParameter}',{newJob.CreationTime.ToMySqlField()});")
-                                         .ToString()).ToString();
-            cmd.ExecuteNonQuery();
-            //context.jobs.Add(newJob);
-            //context.SaveChanges();
-        }
+            return newJob;
+         }
 
         public static job CreateFileCopyJob(TelcobrightConfig tbc, string syncPairName, string fileName,PartnerEntities context)
         {
