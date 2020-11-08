@@ -235,8 +235,6 @@ namespace Jobs
 
         protected void CreateNewCdrPostProcessingJobs(PartnerEntities context, TelcobrightConfig tbc, job cdrJob)
         {
-            List<long> dependentJobIdsBeforeDelete = new List<long>() { cdrJob.id }; //cdrJob itself
-                                                                                      //create archiving job
             string jobParam = cdrJob.JobParameter;
             string unsplitFileName = jobParam.Split('=')[1];
             if (unsplitFileName.IsNullOrEmptyOrWhiteSpace())
@@ -247,11 +245,11 @@ namespace Jobs
             {
                 createJobsForSplitCase(context, tbc, cdrJob,unsplitFileName);
             }
-            /*string fileToCopy = unsplitFileName.IsNullOrEmptyOrWhiteSpace()? thisJob.JobName
-                :unsplitFileName;*/
+            
 
         }
-        private static void createJobsForSplitCase(PartnerEntities context, TelcobrightConfig tbc, job cdrJob, 
+
+        private static void createJobsForSplitCase(PartnerEntities context, TelcobrightConfig tbc, job cdrJob,
             string unsplitFileName)
         {
             List<long> dependentJobIdsBeforeDelete = new List<long>();
@@ -265,13 +263,14 @@ namespace Jobs
                     job fileCopyJob = FileUtil.CreateFileCopyJob(tbc, syncPairname, unsplitFileName, context);
                     string doubleSlashNormalizedFileName = fileCopyJob.JobName.Replace(@"\\", @"\");
                     bool fileCopyJobExists =
-                        context.jobs.Any(j =>j.JobName == doubleSlashNormalizedFileName && j.idjobdefinition == 6);
+                        context.jobs.Any(j => j.JobName == doubleSlashNormalizedFileName && j.idjobdefinition == 6);
                     if (fileCopyJobExists == false)
                     {
                         long fileCopyJobsId = FileUtil.WriteFileCopyJobSingle(fileCopyJob, context.Database.Connection);
                         dependentJobIdsBeforeDelete.Add(fileCopyJobsId);
                         //create delete job for unsplitFile
-                        job newDelJob= FileUtil.CreateFileDeleteJob(unsplitFileName, tbc.DirectorySettings.FileLocations[vaultName],
+                        job newDelJob = FileUtil.CreateFileDeleteJob(unsplitFileName,
+                            tbc.DirectorySettings.FileLocations[vaultName],
                             context,
                             new JobPreRequisite()
                             {
@@ -279,56 +278,13 @@ namespace Jobs
                             }
                         );
                         newDelJob.JobName = newDelJob.JobName.Replace(@"\\", @"\");
-                        job existingDelJob =
-                            context.jobs.FirstOrDefault(c => c.idjobdefinition == newDelJob.idjobdefinition &&
-                                                             c.JobName == newDelJob.JobName);
-                        if (existingDelJob!=null)
-                        {
-                            //exists, update job prerequisite
-                            existingDelJob.JobParameter =existingDelJob.JobParameter.Replace(@"\", @"`");
-                            JobParamFileDelete existingDeljobParam = JsonConvert.DeserializeObject<JobParamFileDelete>(existingDelJob.JobParameter);
-                            existingDeljobParam.FileName= existingDeljobParam.FileName.Replace("`", @"\");
-                            existingDeljobParam.FileLocation.PathSeparator= 
-                                existingDeljobParam.FileLocation.PathSeparator.Replace("`", @"\");
-                            existingDeljobParam.JobPrerequisite.ExecuteAfterJobs.Add(fileCopyJobsId);
-                            existingDelJob.JobParameter = JsonConvert.SerializeObject(existingDeljobParam);
-                            DbCommand cmd = context.Database.Connection.CreateCommand();
-                            cmd.CommandText = $@"update job set JobParameter='{existingDelJob.JobParameter}'
-                                                 where id={existingDelJob.id};";
-                            cmd.ExecuteNonQuery();
-                        }
-                        else
-                        {
-                            //don't use context.add as context.Connection has been used with autocommit=0 for transaction. 
-                            //use the same connection
-                            DbCommand cmd = context.Database.Connection.CreateCommand();
-                            cmd.CommandText = newDelJob.GetExtInsertCustom(
-                                j =>
-                                {
-                                    string jobName = newDelJob.JobName.Replace(@"\",@"\\");
-                                    return new StringBuilder(
-                                            $@"insert into job(idjobdefinition,priority,idne,jobname,status,jobparameter,creationtime) 
-                                         values ({newDelJob.idjobdefinition},{newDelJob.priority},{0},'{jobName}',
-                                         {newDelJob.Status},'{newDelJob.JobParameter}',{
-                                                    newDelJob.CreationTime.ToMySqlField()
-                                                });")
-                                        .ToString();
-                                }).ToString();
-                            cmd.ExecuteNonQuery();
-                        }
-                        
+                        InsertOrUpdateDeleteJob(context, fileCopyJobsId, newDelJob);
+
                     }
                 }
             }
-            //create delete job for cdr
-            dependentJobIdsBeforeDelete = new List<long>() {cdrJob.id};
-            FileUtil.CreateFileDeleteJob(cdrJob.JobName, tbc.DirectorySettings.FileLocations[vaultName], context,
-                new JobPreRequisite()
-                {
-                    ExecuteAfterJobs = dependentJobIdsBeforeDelete,
-                }
-            );
         }
+
         private static void createJobsForUnsplitCase(PartnerEntities context, TelcobrightConfig tbc, job cdrJob)
         {
             string fileToCopy = cdrJob.JobName;
@@ -351,12 +307,52 @@ namespace Jobs
             string vaultName = tbc.DirectorySettings.Vaults.Where(c => c.Name == cdrJob.ne.SourceFileLocations)
                 .Select(c => c.Name)
                 .First();
-            FileUtil.CreateFileDeleteJob(cdrJob.JobName, tbc.DirectorySettings.FileLocations[vaultName], context,
+            job newDelJob= FileUtil.CreateFileDeleteJob(cdrJob.JobName, tbc.DirectorySettings.FileLocations[vaultName], context,
                 new JobPreRequisite()
                 {
                     ExecuteAfterJobs = dependentJobIdsBeforeDelete,
                 }
             );
+            newDelJob.JobName = newDelJob.JobName.Replace(@"\\", @"\");
+            InsertOrUpdateDeleteJob(context, -1, newDelJob);
+        }
+        private static void InsertOrUpdateDeleteJob(PartnerEntities context, long fileCopyJobsId, job newDelJob)
+        {
+            job existingDelJob =
+                context.jobs.FirstOrDefault(c => c.idjobdefinition == newDelJob.idjobdefinition &&
+                                                 c.JobName == newDelJob.JobName);
+            if (existingDelJob != null)
+            {
+                //exists, update job prerequisite
+                existingDelJob.JobParameter = existingDelJob.JobParameter.Replace(@"\", @"`");
+                JobParamFileDelete existingDeljobParam = JsonConvert.DeserializeObject<JobParamFileDelete>(existingDelJob.JobParameter);
+                existingDeljobParam.FileName = existingDeljobParam.FileName.Replace("`", @"\");
+                existingDeljobParam.FileLocation.PathSeparator =
+                    existingDeljobParam.FileLocation.PathSeparator.Replace("`", @"\");
+                existingDeljobParam.JobPrerequisite.ExecuteAfterJobs.Add(fileCopyJobsId);
+                existingDelJob.JobParameter = JsonConvert.SerializeObject(existingDeljobParam);
+                DbCommand cmd = context.Database.Connection.CreateCommand();
+                cmd.CommandText = $@"update job set JobParameter='{existingDelJob.JobParameter}'
+                                                 where id={existingDelJob.id};";
+                cmd.ExecuteNonQuery();
+            }
+            else
+            {
+                DbCommand cmd = context.Database.Connection.CreateCommand();
+                cmd.CommandText = newDelJob.GetExtInsertCustom(
+                    j =>
+                    {
+                        string jobName = newDelJob.JobName.Replace(@"\", @"\\");
+                        return new StringBuilder(
+                                $@"insert into job(idjobdefinition,priority,idne,jobname,status,jobparameter,creationtime) 
+                                         values ({newDelJob.idjobdefinition},{newDelJob.priority},{0},'{jobName}',
+                                         {newDelJob.Status},'{newDelJob.JobParameter}',{
+                                        newDelJob.CreationTime.ToMySqlField()
+                                    });")
+                            .ToString();
+                    }).ToString();
+                cmd.ExecuteNonQuery();
+            }
         }
     }
 }
