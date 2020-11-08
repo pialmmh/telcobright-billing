@@ -293,12 +293,27 @@ public partial class DefaultMediation : System.Web.UI.Page
             //job status
             if (this.DropDownListJobStatus.SelectedValue != "-1")
             {
-                sql += " and status=" + this.DropDownListJobStatus.SelectedValue;
+                if (CheckBoxNegateStatus.Checked == false)
+                {
+                    sql += " and status=" + this.DropDownListJobStatus.SelectedValue;
+                }
+                else
+                {
+                    sql += " and status!=" + this.DropDownListJobStatus.SelectedValue;
+                }
+                
             }
             //jobname contains
             if(this.TextBoxJobName.Text.Trim()!="")
             {
-                sql += " and lower(jobname) like '%" + this.TextBoxJobName.Text.Trim().ToLower() + "%'";
+                if (CheckBoxJobNameContains.Checked == false)
+                {
+                    sql += " and lower(jobname) like '%" + this.TextBoxJobName.Text.Trim().ToLower() + "%'";
+                }
+                else
+                {
+                    sql += " and lower(jobname) not like '%" + this.TextBoxJobName.Text.Trim().ToLower() + "%'";
+                }
             }
             //order by latest completed first, latest listed first
             sql += " order by ifnull(completiontime,'0001-01-01') desc,creationtime desc ";

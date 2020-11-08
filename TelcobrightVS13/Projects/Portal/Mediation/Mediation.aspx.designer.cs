@@ -57,6 +57,15 @@ public partial class DefaultMediation {
     protected global::System.Web.UI.WebControls.Label Label3;
     
     /// <summary>
+    /// CheckBoxNegateStatus control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.CheckBox CheckBoxNegateStatus;
+    
+    /// <summary>
     /// DropDownListJobStatus control.
     /// </summary>
     /// <remarks>
@@ -73,6 +82,24 @@ public partial class DefaultMediation {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label Label4;
+    
+    /// <summary>
+    /// CheckBoxJobNameContains control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.CheckBox CheckBoxJobNameContains;
+    
+    /// <summary>
+    /// Label5 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label Label5;
     
     /// <summary>
     /// TextBoxJobName control.

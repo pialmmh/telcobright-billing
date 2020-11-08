@@ -324,8 +324,13 @@
          <asp:Label ID="Label2" runat="server" Font-Bold="true" Text="Job Type"></asp:Label>
          <asp:DropDownList ID="DropDownListJobtype" runat="server" DataValueField="id" DataTextField="type"></asp:DropDownList>
          <asp:Label ID="Label3" runat="server" Font-Bold="true" Text="Job Status"  DataValueField="id" DataTextField="type"></asp:Label>
-         <asp:DropDownList ID="DropDownListJobStatus" runat="server"></asp:DropDownList>
-     <asp:Label ID="Label4" runat="server" Font-Bold="true" Text="Job name contains "></asp:Label><asp:TextBox ID="TextBoxJobName" runat="server"></asp:TextBox>
+     <asp:CheckBox ID="CheckBoxNegateStatus" runat="server" Text="Not" />
+     <asp:DropDownList ID="DropDownListJobStatus" runat="server"></asp:DropDownList>
+     <asp:Label ID="Label4" runat="server" Font-Bold="true" Text="Job name ["></asp:Label>
+     <asp:CheckBox ID="CheckBoxJobNameContains" runat="server" Text="does not" />
+     <asp:Label ID="Label5" runat="server" Font-Bold="true" Text="] contain(s) "></asp:Label>
+     
+     <asp:TextBox ID="TextBoxJobName" runat="server"></asp:TextBox>
                     <asp:EntityDataSource ID="EntityDataSwitch" runat="server" 
                         ConnectionString="name=PartnerEntities" 
                         DefaultContainerName="PartnerEntities" EnableFlattening="False" 
