@@ -25,7 +25,7 @@ namespace InstallConfig
             {
                 ApplicationRootDirectory = "c:/Telcobright"
             };
-            
+
             //***FILE LOCATIONS**********************************************
             //local/vault1: all app servers will use same local file location
             //the object "vault" will have a copy of below object for each app servers with server id as key and location as dictionary value
@@ -37,6 +37,17 @@ namespace InstallConfig
                 PathSeparator = @"\",
                 ServerIp = "",
                 StartingPath = "C:/telcobright/Vault/Resources/CDR/btel/BtelZteDhk",
+                User = "",
+                Pass = "",
+            };
+            FileLocation vaultBtelCataleya = new FileLocation()
+            {
+                Name = "Vault.btelCataleya",//this is refered in ne table, name MUST start with "Vault"
+                LocationType = "vault",//locationtype always lowercase
+                OsType = "windows",
+                PathSeparator = @"\",
+                ServerIp = "",
+                StartingPath = "C:/telcobright/Vault/Resources/CDR/btel/btelCataleya",
                 User = "",
                 Pass = "",
             };
@@ -67,12 +78,31 @@ namespace InstallConfig
             List<FileLocation> ftpLocations = new List<FileLocation>();
             ftpLocations.Add(appServerFtp1);
             ftpLocations.Add(appServerFtp2);
-            Vault BtelZteDhkvault = new Vault("Vault.BtelZteDhk",tbc , ftpLocations);
+            Vault BtelZteDhkvault = new Vault("Vault.BtelZteDhk", tbc, ftpLocations);
+            Vault BtelCataleyaVault = new Vault("Vault.btelCataleya", tbc, ftpLocations);
+
             BtelZteDhkvault.LocalLocation = new SyncLocation(vaultBtelZteDhk.Name) { FileLocation = vaultBtelZteDhk };//don't pass this to constructor and set there, causes problem in json serialize
+            BtelCataleyaVault.LocalLocation = new SyncLocation(vaultBtelCataleya.Name) { FileLocation = vaultBtelCataleya };//don't pass this to constructor and set there, causes problem in json serialize
             directorySettings.Vaults.Add(BtelZteDhkvault);
+            directorySettings.Vaults.Add(BtelCataleyaVault);
             FileLocation BtelZteDhk = new FileLocation()
             {
                 Name = "BtelZteDhk",
+                LocationType = "sftp",
+                OsType = "linux",
+                PathSeparator = "/",
+                StartingPath = "/home/zxss10_bsvr/data/bfile/bill",
+                //StartingPath = "/home/zxss10_bsvr/data/bfile/bill/zsmart_media_bak",
+                Sftphostkey = "",
+                ServerIp = "10.33.34.12",
+                User = "igwbill",
+                Pass = "igw123",
+                ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
+                IgnoreZeroLenghFile = 1
+            };
+            FileLocation btelCataleya = new FileLocation()
+            {
+                Name = "btelCataleya",
                 LocationType = "sftp",
                 OsType = "linux",
                 PathSeparator = "/",
@@ -111,15 +141,16 @@ namespace InstallConfig
             };
             //add locations to directory settings
             directorySettings.FileLocations.Add(vaultBtelZteDhk.Name, vaultBtelZteDhk);
+            directorySettings.FileLocations.Add(vaultBtelCataleya.Name, vaultBtelCataleya);
             directorySettings.FileLocations.Add(appServerFtp1.Name, appServerFtp1);
             directorySettings.FileLocations.Add(appServerFtp2.Name, appServerFtp2);
             directorySettings.FileLocations.Add(BtelZteDhk.Name, BtelZteDhk);
-            
+
             directorySettings.FileLocations.Add(fileArchive1Zip.Name, fileArchive1Zip);
             directorySettings.FileLocations.Add(fileArchiveIof.Name, fileArchiveIof);
 
 
-            SyncPair BtelZteDhkVault = new SyncPair("BtelZteDhk:Vault")
+            SyncPair spBtelZteDhkVault = new SyncPair("BtelZteDhk:Vault")
             {
                 SkipSourceFileListing = false,
                 SrcSyncLocation = new SyncLocation("BtelZteDhk")
@@ -137,6 +168,35 @@ namespace InstallConfig
                     ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('IGW')
                                                                 and
                                                                 (Name.EndsWith('.DAT'))
+                                                                and Length>0")
+                },
+                DstSettings = new SyncSettingsDest()
+                {
+                    FileExtensionForSafeCopyWithTempFile = ".tmp",//make sure when copying to vault always .tmp ext used
+                    Overwrite = true,
+                    ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
+                    CompressionType = CompressionType.None
+                }
+            };
+            //cataleya
+            SyncPair spBtelCataleyaVault = new SyncPair("btelCataleya:Vault")
+            {
+                SkipSourceFileListing = false,
+                SrcSyncLocation = new SyncLocation("BtelZteDhk")
+                {
+                    FileLocation = btelCataleya,
+                    DescendingFileListByFileName = tbc.CdrSetting.DescendingOrderWhileListingFiles
+                },
+                DstSyncLocation = new SyncLocation("Vault.btelCataleya")
+                {
+                    FileLocation = vaultBtelCataleya
+                },
+                SrcSettings = new SyncSettingsSource()
+                {
+                    //SecondaryDirectory = "Downloaded",
+                    ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('esdr')
+                                                                and
+                                                                (Name.EndsWith('.bin'))
                                                                 and Length>0")
                 },
                 DstSettings = new SyncSettingsDest()
@@ -174,7 +234,7 @@ namespace InstallConfig
                     CompressionType = CompressionType.None,
                 }
             };
-            
+
             SyncPair vaultIof = new SyncPair("Vault:IOF")
             {
                 SkipCopyingToDestination = false,
@@ -202,7 +262,8 @@ namespace InstallConfig
             };
 
             //add sync pairs to directory config
-            directorySettings.SyncPairs.Add(BtelZteDhkVault.Name, BtelZteDhkVault);
+            directorySettings.SyncPairs.Add(spBtelZteDhkVault.Name, spBtelZteDhkVault);
+            directorySettings.SyncPairs.Add(spBtelCataleyaVault.Name, spBtelCataleyaVault);
             directorySettings.SyncPairs.Add(vaultFileArchive1Zip.Name, vaultFileArchive1Zip);
             directorySettings.SyncPairs.Add(vaultIof.Name, vaultIof);
             //load the syncpairs in dictioinary, first by source
@@ -227,7 +288,7 @@ namespace InstallConfig
                 vaultFileArchive1Zip.Name,
                 vaultIof.Name,
             };
-            
+
         }
     }
 }

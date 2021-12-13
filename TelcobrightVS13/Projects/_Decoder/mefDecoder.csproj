@@ -41,12 +41,17 @@
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="protobuf-net">
+      <HintPath>..\packages\protobuf-net.2.3.17\lib\net40\protobuf-net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsteriskDecoder.cs" />
+    <Compile Include="CataleyaDecoder.cs" />
     <Compile Include="DialogicControlSwitchDecoder.cs" />
     <Compile Include="GenbandS3Decoder.cs" />
     <Compile Include="HuaweiSoftx3000Decoder.cs" />
@@ -57,6 +62,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CataleySdrExtractor\CataleyaSdrExtractor.csproj">
+      <Project>{b6601454-c94c-45b0-aade-6a71f6c9c71c}</Project>
+      <Name>CataleyaSdrExtractor</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LibraryExtensions\LibraryExtensions.csproj">
       <Project>{D4C2F34D-4D3D-43AE-84F0-E80CFEDB1B48}</Project>
       <Name>LibraryExtensions</Name>

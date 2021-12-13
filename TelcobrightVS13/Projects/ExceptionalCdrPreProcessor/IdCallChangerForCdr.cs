@@ -25,6 +25,7 @@ namespace Default
         public cdr Process(cdr c)
         {
             var allRulesData = (Dictionary<string, Dictionary<string, string>>)this.Data;
+            if (!allRulesData.Any()) return c;
             Dictionary<string, string> data = allRulesData["IdCallChangerForCdr"];
             List<string> jobNames = data["jobNames"].Split(',').Select(s => s.Trim()).ToList();
             if (!jobNames.Contains(c.FileName))

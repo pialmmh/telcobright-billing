@@ -1,0 +1,11 @@
+SELECT StartTime, AnswerTime, EndTime,
+OriginatingCalledNumber as CalledNumber,OriginatingCallingNumber as CallingNumber
+INTO OUTFILE '/tmp/mal.txt'
+    FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
+    LINES TERMINATED BY '\n'
+FROM cdr
+where starttime >='2021-02-01'
+and starttime < '2021-03-01'
+and servicegroup=4
+and (originatingcallingnumber like '60%' or originatingcallingnumber like '0060%');
+

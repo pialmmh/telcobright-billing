@@ -101,6 +101,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mefSwitchOperation", "mefSw
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mefExceptionalCdrPreProcessor", "ExceptionalCdrPreProcessor\mefExceptionalCdrPreProcessor.csproj", "{2440D45D-6122-4661-82FE-E127129C6CB3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CataleyaSdrExtractor", "CataleySdrExtractor\CataleyaSdrExtractor.csproj", "{B6601454-C94C-45B0-AADE-6A71F6C9C71C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -714,6 +716,22 @@ Global
 		{2440D45D-6122-4661-82FE-E127129C6CB3}.Release|x64.Build.0 = Release|Any CPU
 		{2440D45D-6122-4661-82FE-E127129C6CB3}.Release|x86.ActiveCfg = Release|Any CPU
 		{2440D45D-6122-4661-82FE-E127129C6CB3}.Release|x86.Build.0 = Release|Any CPU
+		{B6601454-C94C-45B0-AADE-6A71F6C9C71C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6601454-C94C-45B0-AADE-6A71F6C9C71C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6601454-C94C-45B0-AADE-6A71F6C9C71C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{B6601454-C94C-45B0-AADE-6A71F6C9C71C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{B6601454-C94C-45B0-AADE-6A71F6C9C71C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B6601454-C94C-45B0-AADE-6A71F6C9C71C}.Debug|x64.Build.0 = Debug|Any CPU
+		{B6601454-C94C-45B0-AADE-6A71F6C9C71C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B6601454-C94C-45B0-AADE-6A71F6C9C71C}.Debug|x86.Build.0 = Debug|Any CPU
+		{B6601454-C94C-45B0-AADE-6A71F6C9C71C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6601454-C94C-45B0-AADE-6A71F6C9C71C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6601454-C94C-45B0-AADE-6A71F6C9C71C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{B6601454-C94C-45B0-AADE-6A71F6C9C71C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{B6601454-C94C-45B0-AADE-6A71F6C9C71C}.Release|x64.ActiveCfg = Release|Any CPU
+		{B6601454-C94C-45B0-AADE-6A71F6C9C71C}.Release|x64.Build.0 = Release|Any CPU
+		{B6601454-C94C-45B0-AADE-6A71F6C9C71C}.Release|x86.ActiveCfg = Release|Any CPU
+		{B6601454-C94C-45B0-AADE-6A71F6C9C71C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -755,5 +773,6 @@ Global
 		{E38E73FA-0774-4647-B317-B22D7DDD03CC} = {9B52CFB9-24E2-4113-91C4-DE7DD46A0B6C}
 		{8B7748F5-00F9-4C17-BA27-9C7706E7BF07} = {9B52CFB9-24E2-4113-91C4-DE7DD46A0B6C}
 		{2440D45D-6122-4661-82FE-E127129C6CB3} = {9B52CFB9-24E2-4113-91C4-DE7DD46A0B6C}
+		{B6601454-C94C-45B0-AADE-6A71F6C9C71C} = {9B52CFB9-24E2-4113-91C4-DE7DD46A0B6C}
 	EndGlobalSection
 EndGlobal

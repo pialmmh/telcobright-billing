@@ -151,10 +151,7 @@ namespace InstallConfig
                 {
                     SecondaryDirectory = "../secondary",
                     MoveFilesToSecondaryAfterCopy=true,
-                    ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('icdr')
-                                                                and
-                                                                (Name.EndsWith('.0') or Name.EndsWith('.1'))
-                                                                and Length>0")
+                    ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('CDR')")
                 },
                 DstSettings = new SyncSettingsDest()
                 {

@@ -201,7 +201,8 @@ namespace TelcobrightFileOperations
             return 0;
         }
         
-        public static List<string[]> ParseTextFileToListOfStrArray(string path, char separator, int linesToSkipBefore)
+        public static List<string[]> ParseTextFileToListOfStrArray(string path, char separator, int linesToSkipBefore,
+            char enclosingCharToRemove='\0')
         {
             List<string[]> parsedData = new List<string[]>();
             using (StreamReader readFile = new StreamReader(path))
@@ -221,11 +222,92 @@ namespace TelcobrightFileOperations
                         continue;
                     }
                     row = line.Split(separator);
+                    if (enclosingCharToRemove!='\0')
+                    {
+                        row = row.Select(arrItem => arrItem.Trim(enclosingCharToRemove)).ToArray();
+                    }
                     parsedData.Add(row);
                     thisLine += 1;
                 }
             }
             return parsedData;
+        }
+
+
+        public static List<string[]> ParseCsvWithEnclosedAndUnenclosedFields(string path, char delimeter, int linesToSkipBefore,
+            string enclosingChar, string charToReplaceDelimiterInsideField)
+        {
+            List<string> lines = new List<string>();
+            using (StreamReader readFile = new StreamReader(path))
+            {
+                lines = readFile.ReadToEnd().Split('\n')
+                    .Skip(linesToSkipBefore)
+                    .Select(line => line.Replace('\r', '\0'))
+                    .Where(line=>line.Trim()!="").ToList();
+            }
+            //temp
+            //lines = new List<string>();
+            //string tempLine = File.ReadAllText(@"c:\temp\oneLiner.txt");
+            //lines.Add(tempLine);
+            //Func<List<string[]>> test= ()=>;
+
+            //List<string[]> rowsWithFieldArrs = lines.Select(
+            //    line =>
+            //    {
+            //        var delReplaced = ReplaceDelimeterInsideField(line, delimeter, enclosingChar, ";");
+            //        string[] quoteReplaced = delReplaced.Split(',').Select(c => c.Replace("\"", "")).ToArray();
+            //        return quoteReplaced;
+            //    }).ToList();
+
+            //File.WriteAllText(@"c:\temp\oneLinerProcessed.txt", lines[0]);
+
+            List<string[]> rowsWithFieldArrs = lines.Select(
+                line => ReplaceDelimeterInsideField(line, delimeter, enclosingChar, ";"))
+                        .Select(line => line.Split(delimeter))
+                        .Select(fieldArray => fieldArray.Select(field => field.Replace(enclosingChar, "")).ToArray())
+                        .ToList();
+            return rowsWithFieldArrs;                        
+        }
+
+
+        static string ReplaceDelimeterInsideField(string line, char delimeter, string enclosingCharStr, string charToReplaceDelimiterInsideField)
+        {
+            line = line.Replace(new string(new char[] { '\"', '\"', '\"', '\"' }), "");
+            var lineChars = line.ToCharArray();
+            char enclosingChar = Convert.ToChar(enclosingCharStr);
+            bool quoteOpen = false;
+            char[] allowedCharsAfterQuoteClosed = new char[] { ',', '\r', '\n' };
+            int len = lineChars.GetLength(0);
+            for (int i = 0; i < len; i++)
+            {
+                char c = lineChars[i];
+
+                if (c == delimeter)
+                {
+                    if (quoteOpen)
+                    {
+                        lineChars[i] = Convert.ToChar(charToReplaceDelimiterInsideField);
+                    }
+                }
+                else if (c == enclosingChar)
+                {
+                    //if (quoteOpen)
+                    //{//bug in cdr row, remove unnecessary double quote
+                    //    lineChars[i] = '\0';
+                    //}
+                    quoteOpen = !quoteOpen;
+                    //if ((!quoteOpen && i > 0) && (len - i >= 2))
+                    //{
+                    //    char nextChar = lineChars[i + 1];
+                    //    if (!allowedCharsAfterQuoteClosed.Contains(nextChar))
+                    //    {
+                    //        lineChars[i + 1] = '\0';
+                    //    }
+                    //}
+                }
+            }
+            var nullReplaced = lineChars.Where(c => c != '\0').ToArray();
+            return new string(nullReplaced.ToArray());
         }
 
         public static byte[] GetBytesFromFile(string fullFilePath)

@@ -124,6 +124,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CataleySdrExtractor\CataleyaSdrExtractor.csproj">
+      <Project>{b6601454-c94c-45b0-aade-6a71f6c9c71c}</Project>
+      <Name>CataleyaSdrExtractor</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LibraryExtensions\LibraryExtensions.csproj">
       <Project>{d4c2f34d-4d3d-43ae-84f0-e80cfedb1b48}</Project>
       <Name>LibraryExtensions</Name>

@@ -8,7 +8,6 @@ using TelcobrightMediation.Config;
 
 namespace TelcobrightMediation
 {
-
     public class Vault
     {
         public string Name { get; set; }

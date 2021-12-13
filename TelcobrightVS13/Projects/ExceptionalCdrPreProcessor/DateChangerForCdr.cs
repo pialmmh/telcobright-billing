@@ -24,6 +24,7 @@ namespace Default
         public cdr Process(cdr c)
         {
             var allRulesData = (Dictionary<string, Dictionary<string, string>>) this.Data;
+            if (!allRulesData.Any()) return c;
             Dictionary<string, string> data = allRulesData["DateChangerForCdr"];
             bool randomizeDates = Convert.ToBoolean(data["random"]) ;
             DateTime changeDateStart = Convert.ToDateTime(data["changeDateStart"]);
