@@ -50,71 +50,90 @@ namespace Decoders
                         ts => DateTimeExtensions.UnixTimeStampToDateTime(ts).ToString("yyyy-MM-dd hh:mm:ss");
                     normalizedRow[Fn.SignalingStartTime] = unixTsToMySqlDateTime(record.IngressCallInfo.InvitingTs.Sec);
                     normalizedRow[Fn.StartTime] = normalizedRow[Fn.SignalingStartTime];
-
+                    normalizedRow[Fn.Endtime] = unixTsToMySqlDateTime(record.IngressCallInfo.DisconnectTs.Sec);
+                    normalizedRow[Fn.UniqueBillId] = record.Icid;
                     Func<string, Dictionary<string, string>> getSplitPartyInfo = party =>
+                    {
+                        var partyInfo=new Dictionary<string, string>()
+                            {
+                                { "phoneNumber",""},
+                                { "ipAndPort", ""},
+                            };
+                        if (!String.IsNullOrEmpty(party))
                         {
                             var tempArr = party.Split('@');
                             var phoneNumber = tempArr[0].Split(':')[1];
-                            return new Dictionary<string, string>()
-                            {
-                                { "phoneNumber",phoneNumber},
-                                { "ipAndPort", tempArr[1]},
-                            };
-                        };
+                            partyInfo["phoneNumber"] = phoneNumber;
+                            partyInfo["ipAndPort"] = tempArr[1];
+                        }
+                        return partyInfo;
+                    };
+                    switch (record.ReleaseDirection)
+                    {
+                        case PbReleaseDirectionType.InternalReleaseDirection:
+                            normalizedRow[Fn.ReleaseDirection] = "7";//internal release due to some problem, matching with zte and dialogic
+                            break;
+                        case PbReleaseDirectionType.OriginationReleaseDirection:
+                            normalizedRow[Fn.ReleaseDirection] = "0";
+                            break;
+                        case PbReleaseDirectionType.TerminationReleaseDirection:
+                            normalizedRow[Fn.ReleaseDirection] = "1";
+                            break;
+                        case PbReleaseDirectionType.UndefinedReleaseDirection:
+                            normalizedRow[Fn.ReleaseDirection] = "8";
+                            break;
+                    }
+                    
+                    //ingress
+                    PbSdrCallInfo ingressCallInfo = record.IngressCallInfo;
+                    Dictionary<string, string> ingressCallingPartyInfo = getSplitPartyInfo(ingressCallInfo.CallingParty);
+                    normalizedRow[Fn.OriginatingCallingNumber] = ingressCallingPartyInfo["phoneNumber"];
+                    normalizedRow[Fn.Originatingip] = ingressCallingPartyInfo["ipAndPort"].Split(';')[0].Trim();
+                    normalizedRow[Fn.IncomingRoute] = ingressCallInfo.ZoneId.ToString();
+                    Dictionary<string, string> ingressCalledPartyInfo = getSplitPartyInfo(ingressCallInfo.CalledParty);
+                    normalizedRow[Fn.OriginatingCalledNumber] = ingressCalledPartyInfo["phoneNumber"];
+                    normalizedRow[Fn.ReleaseCauseIngress] = record.SipStatusCode.ToString();
+
+                    normalizedRow[Fn.DurationSec] = "0";
+                    normalizedRow[Fn.ChargingStatus] = "0";
+                    //egress
                     PbSdrCallInfo egressCallInfo = record.EgressCallInfo;
-                    if (egressCallInfo != null) {
+                    if (egressCallInfo != null)
+                    {
                         Dictionary<string, string> egressCallingPartyInfo = getSplitPartyInfo(egressCallInfo.CallingParty);
                         normalizedRow[Fn.TerminatingCallingNumber] = egressCallingPartyInfo["phoneNumber"];
 
                         Dictionary<string, string> egressCalledPartyInfo = getSplitPartyInfo(egressCallInfo.CalledParty);
                         normalizedRow[Fn.TerminatingCalledNumber] = egressCalledPartyInfo["phoneNumber"];
                         normalizedRow[Fn.TerminatingIp] = egressCalledPartyInfo["ipAndPort"].Split(';')[0];
-                        normalizedRow[Fn.OutgoingRoute] = egressCallInfo.ZoneTgid;
+                        normalizedRow[Fn.OutgoingRoute] = egressCallInfo.ZoneId.ToString();
 
                         PbTime ringingTs = egressCallInfo.RingingTs;
                         normalizedRow[Fn.ConnectTime] = ringingTs != null ?
-                            unixTsToMySqlDateTime(ringingTs.MilliSec) : "";
-                        
-                        PbTime answerTs = egressCallInfo.AnswerTs;
-                        normalizedRow[Fn.AnswerTime] = answerTs != null ? unixTsToMySqlDateTime(answerTs.MilliSec) : "";
+                            unixTsToMySqlDateTime(ringingTs.Sec) : "";
+
+                        //duration and answertime
+                        double durationSec = 0;
+                        if (egressCallInfo.AnswerTs != null) {
+                            var answerTs = egressCallInfo.AnswerTs;
+                            var dateTimeStrWithMilliSec = unixTsToMySqlDateTime(answerTs.Sec) + '.' + answerTs.MilliSec;
+                            DateTime answerTime = Convert.ToDateTime(dateTimeStrWithMilliSec);
+
+                            var endTs = egressCallInfo.DisconnectTs;
+                            dateTimeStrWithMilliSec = unixTsToMySqlDateTime(endTs.Sec) + '.' + endTs.MilliSec;
+                            DateTime endTime = Convert.ToDateTime(dateTimeStrWithMilliSec);
+                            durationSec = (endTime - answerTime).TotalMilliseconds / 1000;
+                            normalizedRow[Fn.AnswerTime] = answerTime.ToString("yyyy-MM-dd hh:mm:ss");
+                        }
+                        normalizedRow[Fn.DurationSec] = durationSec.ToString(CultureInfo.InvariantCulture);
+                        normalizedRow[Fn.ChargingStatus] = durationSec > 0 ? "1" : "0";
                     }
 
-                    PbSdrCallInfo ingressCallInfo = record.IngressCallInfo;
-                    Dictionary<string, string> ingressCallingPartyInfo = getSplitPartyInfo(ingressCallInfo.CallingParty);
-                    normalizedRow[Fn.OriginatingCallingNumber] = ingressCallingPartyInfo["phoneNumber"];
-                    normalizedRow[Fn.Originatingip] = ingressCallingPartyInfo["ipAndPort"];
-                    normalizedRow[Fn.IncomingRoute] = ingressCallInfo.ZoneTgid;
-
-                    Dictionary<string, string> ingressCalledPartyInfo = getSplitPartyInfo(ingressCallInfo.CalledParty);
-                    normalizedRow[Fn.OriginatingCalledNumber] = ingressCalledPartyInfo["phoneNumber"];
-
-                    switch (record.ReleaseDirection)
-                    {
-                            case PbReleaseDirectionType.InternalReleaseDirection:
-                                normalizedRow[Fn.ReleaseDirection] = "7";//internal release due to some problem, matching with zte and dialogic
-                                break;
-                            case PbReleaseDirectionType.OriginationReleaseDirection:
-                                normalizedRow[Fn.ReleaseDirection] = "0";
-                                break;
-                            case PbReleaseDirectionType.TerminationReleaseDirection:
-                                normalizedRow[Fn.ReleaseDirection] = "1";
-                                break;
-                            case PbReleaseDirectionType.UndefinedReleaseDirection:
-                                normalizedRow[Fn.ReleaseDirection] = "8";
-                                break;
-                    }
-                    normalizedRow[Fn.ReleaseCauseIngress] = record.SipStatusCode.ToString();
-                    double durationSec = Convert.ToDouble(record.Duration) / 1000;
-                    normalizedRow[Fn.DurationSec] = durationSec.ToString(CultureInfo.InvariantCulture);
-                    normalizedRow[Fn.ChargingStatus] = durationSec > 0 ? "1" : "0";
-                    
                     //add valid flag for this type of switch, valid flag comes from cdr for zte
                     normalizedRow[Fn.Validflag] = "1";
                     normalizedRow[Fn.Partialflag] = "0";
                     normalizedRow[Fn.FinalRecord] = "1";
-                    normalizedRow[Fn.ConnectTime] = normalizedRow[Fn.StartTime];
                     decodedRows.Add(normalizedRow);
-                    
                 }
                 catch (Exception e1)
                 {
@@ -132,7 +151,7 @@ namespace Decoders
             return decodedRows;
         }
 
-        
+
 
 
     }

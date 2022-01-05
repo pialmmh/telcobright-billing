@@ -69,7 +69,9 @@
     
         <%--<div style="width:95%; margin:10px auto;">--%>
 <%--<div style="height:1px;clear:both"></div>--%>  
-<div id="leftCol" style="font-size:90%;float:left;min-height:1500px;margin-left:30px;background-color:#F7F6F3;border-right-style:ridge;border-top-style:none;border-bottom-style:ridge;min-width:180px;">
+<div id="leftCol" style="font-size:90%;float:left;min-height:1500px;
+margin-left:30px;background-color:#F7F6F3;border-right-style:ridge;border-top-style:none;
+border-bottom-style:ridge;min-width:180px;padding-top:25px;">
 
 <div id="TreeView">
 
@@ -238,7 +240,7 @@
            
 </div>
 
-            <div id="mainCont" style="float:left;min-height:1500px;min-width:1500px;margin:2px;"> 
+            <div id="mainCont" style="float:left;min-height:1500px;min-width:1500px;margin:2px;padding-top:58px;"> 
               <div style="padding-right:50px;width:1480px;">
                 <asp:ContentPlaceHolder id="MainContent" runat="server"> 
                 </asp:ContentPlaceHolder>

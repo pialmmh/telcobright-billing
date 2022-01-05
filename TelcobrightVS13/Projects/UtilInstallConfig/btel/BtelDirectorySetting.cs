@@ -106,12 +106,12 @@ namespace InstallConfig
                 LocationType = "sftp",
                 OsType = "linux",
                 PathSeparator = "/",
-                StartingPath = "/home/zxss10_bsvr/data/bfile/bill",
+                StartingPath = "/sdr/incoming_sdr_bin/",
                 //StartingPath = "/home/zxss10_bsvr/data/bfile/bill/zsmart_media_bak",
                 Sftphostkey = "",
-                ServerIp = "10.33.34.12",
-                User = "igwbill",
-                Pass = "igw123",
+                ServerIp = "10.33.42.4",
+                User = "banglatel_sdr",
+                Pass = "B@ngL@TEL@2021!_1",
                 ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
                 IgnoreZeroLenghFile = 1
             };
@@ -182,7 +182,7 @@ namespace InstallConfig
             SyncPair spBtelCataleyaVault = new SyncPair("btelCataleya:Vault")
             {
                 SkipSourceFileListing = false,
-                SrcSyncLocation = new SyncLocation("BtelZteDhk")
+                SrcSyncLocation = new SyncLocation("btelCataleya")
                 {
                     FileLocation = btelCataleya,
                     DescendingFileListByFileName = tbc.CdrSetting.DescendingOrderWhileListingFiles

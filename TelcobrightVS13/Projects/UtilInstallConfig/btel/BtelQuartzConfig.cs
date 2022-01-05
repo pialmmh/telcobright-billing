@@ -47,6 +47,19 @@ namespace InstallConfig
                         {"operatorName", operatorName},
                         {"syncPair", "BtelZteDhk:Vault"}
                     }),
+                new QuartzTbDaemonConfig
+                (
+                    operatorName: operatorName,
+                    identity: "FileLister [btelCataleya:Vault]" + " [" + operatorName+"]",
+                    group: operatorName,
+                    cronExpression: "/30 * * ? * *",
+                    fireOnceIfMissFired: false,
+                    jobDataMap: new Dictionary<string, string>()
+                    {
+                        {"telcobrightProcessId", "106"},
+                        {"operatorName", operatorName},
+                        {"syncPair", "btelCataleya:Vault"}
+                    })
             };
             return fileListerInstances;
         }
@@ -126,6 +139,19 @@ namespace InstallConfig
                         {"telcobrightProcessId", "104"},
                         {"operatorName", operatorName},
                         {"syncPair", "BtelZteDhk:Vault"}
+                    }),
+                new QuartzTbDaemonConfig
+                (
+                    operatorName: operatorName,
+                    identity: "FileCopier [btelCataleya:Vault]" + " [" + operatorName+"]",
+                    group: operatorName,
+                    cronExpression: "/5 * * ? * *",
+                    fireOnceIfMissFired: false,
+                    jobDataMap: new Dictionary<string, string>()
+                    {
+                        {"telcobrightProcessId", "104"},
+                        {"operatorName", operatorName},
+                        {"syncPair", "btelCataleya:Vault"}
                     }),
                 new QuartzTbDaemonConfig
                 (

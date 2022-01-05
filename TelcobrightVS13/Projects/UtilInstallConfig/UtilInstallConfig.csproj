@@ -238,9 +238,7 @@
       <Name>QuartzTelcobright</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="banglatel\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="bigl\tmplPortalAppPools.txt" />
     <Content Include="bigl\tmplPortalFtpSite.txt" />
