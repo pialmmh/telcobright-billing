@@ -51,16 +51,13 @@ namespace Process
                             Console.WriteLine("Listing Files in Switch:" + thisSwitch.SwitchName);
                             string vaultName = thisSwitch.SourceFileLocations;
                             Vault vault = tbc.DirectorySettings.Vaults.First(c => c.Name == vaultName);
-                            var fileNames = vault.GetFileListLocal();
+                            var fileNames = vault.GetFileListLocal()
+                                .Where(fInfo=>fInfo.Extension==thisSwitch.FileExtension
+                                    && !fInfo.Name.EndsWith(".tmp") && !fInfo.Name.Contains(".filepart")).ToList();
                             if (tbc.CdrSetting.DescendingOrderWhileListingFiles == true)
                                 fileNames = fileNames.OrderByDescending(c => c.Name).ToList();
                             foreach (FileInfo fileInfo in fileNames)
                             {
-                                if (fileInfo.Name.EndsWith(".tmp") || fileInfo.Name.Contains(".filepart")
-                                ) //make sure when copying to vault always .tmp ext used
-                                {
-                                    continue;
-                                }
                                 FileSplitSetting fileSplitSetting = tbc.CdrSetting.FileSplitSetting;
                                 if (fileSplitSetting == null ||
                                     fileInfo.Length <= fileSplitSetting.SplitFileIfSizeBiggerThanMbyte)

@@ -52,20 +52,22 @@
 
                     using (PartnerEntities contex = new PartnerEntities())
                     {
-                        var IOSList = contex.routes.Where(r => r.NationalOrInternational == 1).ToList();
+                        var foreignPartnerIds = contex.partners.Where(p => p.PartnerType == 3).Select(p => p.idPartner).ToList();
+                        List<route> routeList = contex.routes.Where(r => foreignPartnerIds.Contains(r.idPartner)).ToList();
 
                         DropDownListPartner.Items.Clear();
                         DropDownListPartner.Items.Add(new ListItem(" [All]", "-1"));
-                        foreach (route r in IOSList)
+                        foreach (route r in routeList)
                         {
-                            DropDownListPartner.Items.Add(new ListItem("1-"+r.RouteName, r.RouteName.ToString()));
+                            DropDownListPartner.Items.Add(new ListItem(r.SwitchId + "-"+r.RouteName, r.RouteName.ToString()));
                         }
-                        var ANSList = contex.routes.Where(r => r.NationalOrInternational == 2).ToList();
+                        var terminatingPartnerIds = contex.partners.Where(p => p.PartnerType == 2).Select(p => p.idPartner).ToList();
+                        routeList = contex.routes.Where(r => terminatingPartnerIds.Contains(r.idPartner)).ToList();
                         DropDownListIgw.Items.Clear();
                         DropDownListIgw.Items.Add(new ListItem("[All]", "-1"));
-                        foreach (route r in ANSList)
+                        foreach (route r in routeList)
                         {
-                            DropDownListIgw.Items.Add(new ListItem("1-"+r.RouteName, r.RouteName.ToString()));
+                            DropDownListIgw.Items.Add(new ListItem(r.SwitchId + "-"+r.RouteName, r.RouteName.ToString()));
                         }
                     }
                     //set controls if page is called for a template

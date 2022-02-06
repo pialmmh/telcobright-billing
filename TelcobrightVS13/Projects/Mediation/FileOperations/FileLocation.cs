@@ -19,6 +19,10 @@ namespace TelcobrightFileOperations
         public Dictionary<string,string> ExistingPaths { get; set; }
         public string RelativeCurrentDirectory { get; set; }
 
+        public override string ToString()
+        {
+            return this.Name;
+        }
         public FileLocation()
         {
             this.ExistingPaths = new Dictionary<string, string>();

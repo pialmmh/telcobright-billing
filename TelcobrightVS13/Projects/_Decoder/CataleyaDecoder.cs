@@ -46,11 +46,16 @@ namespace Decoders
                 try
                 {
                     normalizedRow[Fn.Sequencenumber] = record.SeqNum.ToString();
-                    Func<double, string> unixTsToMySqlDateTime =
-                        ts => DateTimeExtensions.UnixTimeStampToDateTime(ts).ToString("yyyy-MM-dd hh:mm:ss");
-                    normalizedRow[Fn.SignalingStartTime] = unixTsToMySqlDateTime(record.IngressCallInfo.InvitingTs.Sec);
+                    Func<PbTime, DateTime> unixTsToDateTimeWithMs = pbTime =>
+                    {
+                        var dateTime = DateTimeExtensions.UnixTimeStampToDateTime(pbTime.Sec).AddMilliseconds(pbTime.MilliSec);
+                        return dateTime;
+                    };
+                    normalizedRow[Fn.SignalingStartTime] = unixTsToDateTimeWithMs(record.IngressCallInfo.InvitingTs)
+                        .ToMySqlFormatWithoutQuote();
                     normalizedRow[Fn.StartTime] = normalizedRow[Fn.SignalingStartTime];
-                    normalizedRow[Fn.Endtime] = unixTsToMySqlDateTime(record.IngressCallInfo.DisconnectTs.Sec);
+                    normalizedRow[Fn.Endtime] = unixTsToDateTimeWithMs(record.IngressCallInfo.DisconnectTs)
+                        .ToMySqlFormatWithoutQuote();
                     normalizedRow[Fn.UniqueBillId] = record.Icid;
                     Func<string, Dictionary<string, string>> getSplitPartyInfo = party =>
                     {
@@ -101,29 +106,28 @@ namespace Decoders
                     if (egressCallInfo != null)
                     {
                         Dictionary<string, string> egressCallingPartyInfo = getSplitPartyInfo(egressCallInfo.CallingParty);
-                        normalizedRow[Fn.TerminatingCallingNumber] = egressCallingPartyInfo["phoneNumber"];
+                        normalizedRow[Fn.TerminatingCallingNumber] = 
+                            egressCallInfo.TransCallingParty.Split(':')[1].Split('@')[0];
 
                         Dictionary<string, string> egressCalledPartyInfo = getSplitPartyInfo(egressCallInfo.CalledParty);
-                        normalizedRow[Fn.TerminatingCalledNumber] = egressCalledPartyInfo["phoneNumber"];
+                        normalizedRow[Fn.TerminatingCalledNumber] =
+                        egressCallInfo.TransCalledParty.Split(':')[1].Split('@')[0];
+                        
+                        
                         normalizedRow[Fn.TerminatingIp] = egressCalledPartyInfo["ipAndPort"].Split(';')[0];
                         normalizedRow[Fn.OutgoingRoute] = egressCallInfo.ZoneId.ToString();
 
                         PbTime ringingTs = egressCallInfo.RingingTs;
                         normalizedRow[Fn.ConnectTime] = ringingTs != null ?
-                            unixTsToMySqlDateTime(ringingTs.Sec) : "";
+                            unixTsToDateTimeWithMs(ringingTs).ToMySqlFormatWithoutQuote() : "";
 
                         //duration and answertime
                         double durationSec = 0;
                         if (egressCallInfo.AnswerTs != null) {
-                            var answerTs = egressCallInfo.AnswerTs;
-                            var dateTimeStrWithMilliSec = unixTsToMySqlDateTime(answerTs.Sec) + '.' + answerTs.MilliSec;
-                            DateTime answerTime = Convert.ToDateTime(dateTimeStrWithMilliSec);
-
-                            var endTs = egressCallInfo.DisconnectTs;
-                            dateTimeStrWithMilliSec = unixTsToMySqlDateTime(endTs.Sec) + '.' + endTs.MilliSec;
-                            DateTime endTime = Convert.ToDateTime(dateTimeStrWithMilliSec);
+                            DateTime answerTime = unixTsToDateTimeWithMs(egressCallInfo.AnswerTs);
+                            DateTime endTime = unixTsToDateTimeWithMs(egressCallInfo.DisconnectTs);
                             durationSec = (endTime - answerTime).TotalMilliseconds / 1000;
-                            normalizedRow[Fn.AnswerTime] = answerTime.ToString("yyyy-MM-dd hh:mm:ss");
+                            normalizedRow[Fn.AnswerTime] = answerTime.ToMySqlFormatWithoutQuote();
                         }
                         normalizedRow[Fn.DurationSec] = durationSec.ToString(CultureInfo.InvariantCulture);
                         normalizedRow[Fn.ChargingStatus] = durationSec > 0 ? "1" : "0";

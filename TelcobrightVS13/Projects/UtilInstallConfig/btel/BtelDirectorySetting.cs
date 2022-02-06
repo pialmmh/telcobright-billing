@@ -47,7 +47,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "C:/telcobright/Vault/Resources/CDR/btel/btelCataleya",
+                StartingPath = "C:/telcobright/Vault/Resources/CDR/btel/BtelZteDhk",
                 User = "",
                 Pass = "",
             };
@@ -164,7 +164,8 @@ namespace InstallConfig
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
-                    SecondaryDirectory = "Downloaded",
+                    SecondaryDirectory = "downloaded",
+                    MoveFilesToSecondaryAfterCopy=true,
                     ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('IGW')
                                                                 and
                                                                 (Name.EndsWith('.DAT'))
@@ -193,7 +194,8 @@ namespace InstallConfig
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
-                    //SecondaryDirectory = "Downloaded",
+                    SecondaryDirectory = "incoming_sdr_bin_backup",
+                    MoveFilesToSecondaryAfterCopy=true,
                     ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('esdr')
                                                                 and
                                                                 (Name.EndsWith('.bin'))
@@ -224,7 +226,7 @@ namespace InstallConfig
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
-                    SecondaryDirectory = "Downloaded",
+                    SecondaryDirectory = "downloaded",
                     ExpFileNameFilter = null,
                 },
                 DstSettings = new SyncSettingsDest()

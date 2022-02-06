@@ -44,6 +44,10 @@ namespace TelcobrightFileOperations
         {
             this.Name = name;
         }
+        public override string ToString()
+        {
+            return this.Name;
+        }
         public string GetUrlWithSubUrl()
         {
             return (this.FileLocation.ServerIp + Path.DirectorySeparatorChar + this.FileLocation.StartingPath).Replace("/", Path.DirectorySeparatorChar.ToString());
@@ -168,7 +172,7 @@ namespace TelcobrightFileOperations
             }
             return fileNames;
         }
-        public Session GetRemoteFileTransferSession(TelcobrightConfig tbc)
+        public Session GetRemoteFileTransferSession(TelcobrightConfig tbc)//deprecated, use GetRemoteFileTransferSessionOptions, below
         {
             SessionOptions sessionOptions = new SessionOptions
             {
@@ -204,6 +208,36 @@ namespace TelcobrightFileOperations
             //if (tbc.resourcePool.winscpSessionPool.ContainsKey(sessionKey)) tbc.resourcePool.winscpSessionPool.Remove(sessionKey);
             //tbc.resourcePool.winscpSessionPool.Add(sessionKey, fileTransferSession);
             return session;
+        }
+        public SessionOptions GetRemoteFileTransferSessionOptions(TelcobrightConfig tbc)
+        {
+            SessionOptions sessionOptions = new SessionOptions
+            {
+                Protocol = Protocol.Ftp,//default
+                HostName = this.FileLocation.ServerIp,
+                UserName = this.FileLocation.User,
+                Password = this.FileLocation.Pass,
+                
+            };
+            switch (this.FileLocation.LocationType)
+            {
+                case "ftp":
+                    sessionOptions.Protocol = Protocol.Ftp;
+                    break;
+                case "sftp":
+                    sessionOptions.Protocol = Protocol.Sftp;
+                    if (string.IsNullOrEmpty(this.FileLocation.Sftphostkey))
+                    {
+                        sessionOptions.GiveUpSecurityAndAcceptAnySshHostKey = true;
+                    }
+                    else
+                    {
+                        sessionOptions.SshHostKeyFingerprint = this.FileLocation.Sftphostkey;
+                    }
+
+                    break;
+            }
+            return sessionOptions;
         }
 
     }

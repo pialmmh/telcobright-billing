@@ -233,7 +233,7 @@ namespace TelcobrightFileOperations
                 }
             }
 
-            if (File.Exists(dstInfoLocal.FullPath))
+            if (File.Exists(dstInfoLocal.FullPath))//the file has already been copied to local, somehow the process failed or was stopped before updating job
             {
                 if (!syncSettingsSource.SecondaryDirectory.IsNullOrEmptyOrWhiteSpace() &&
                     syncSettingsSource.MoveFilesToSecondaryAfterCopy == true)
@@ -245,7 +245,15 @@ namespace TelcobrightFileOperations
                     string finalTargetFileName = string.Join("/", pathToDestinationFile);
                     if (session.FileExists(srcInfoRemote.FullPath))
                     {
-                        session.MoveFile(srcInfoRemote.FullPath, finalTargetFileName);
+                        try//as the file was copied before, no need to propagate the exception so that job won't update
+                        {
+                            session.MoveFile(srcInfoRemote.FullPath, finalTargetFileName);
+                            //string targetMoveDirOnly = Path.GetDirectoryName(finalTargetFileName);
+                            //session.MoveFile(srcInfoRemote.FullPath, targetMoveDirOnly);
+                        }
+                        catch (Exception e) {
+                            Console.WriteLine(e.Message);
+                        }
                     }
                 }
                 return true;
