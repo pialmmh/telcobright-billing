@@ -2146,7 +2146,7 @@ public partial class ConfigRateTask : Page
         int starCount = 0;
         foreach (char chr in newPrefix.ToCharArray())
         {
-            if (digits.Contains(chr.ToString()) == false)
+            if (digits.Contains(chr.ToString()) == false && chr.ToString()!="+")//+ allowed for phone numbers
             {
                 //invalid prefix
                 int newFlag = SetBitInteger(Convert.ToInt32(thisTask.field2), 1);
