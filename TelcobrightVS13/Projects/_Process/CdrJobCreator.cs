@@ -47,8 +47,9 @@ namespace Process
                     {
                         try
                         {
+                            List<job> newJobCacheForWritingAtOnceToDB = new List<job>();
                             if (thisSwitch.SkipCdrListed == 1) continue;
-                            Console.WriteLine("Listing Files in Switch:" + thisSwitch.SwitchName);
+                            Console.WriteLine($"Checking new cdr files for Switch {thisSwitch.SwitchName} in vault...");
                             string vaultName = thisSwitch.SourceFileLocations;
                             Vault vault = tbc.DirectorySettings.Vaults.First(c => c.Name == vaultName);
                             var fileNames = vault.GetFileListLocal()
@@ -62,13 +63,21 @@ namespace Process
                                 if (fileSplitSetting == null ||
                                     fileInfo.Length <= fileSplitSetting.SplitFileIfSizeBiggerThanMbyte)
                                 {
-                                    CreateSingleCdrJob(context, thisSwitch, fileInfo, fileInfo.Name);
+                                    job newJob= CreateSingleCdrJob(context, thisSwitch, fileInfo, fileInfo.Name);
+                                    newJobCacheForWritingAtOnceToDB.Add(newJob);
+                                    //Console.WriteLine("Found cdr file for switch " + thisSwitch.SwitchName + ": " + newJob.JobName);
+                                    if (tbc.CdrSetting.BatchSizeForCdrJobCreationCheckingExistence ==
+                                        newJobCacheForWritingAtOnceToDB.Count)
+                                    {
+                                        writeJobs(context, thisSwitch, newJobCacheForWritingAtOnceToDB);
+                                    }
                                 }
                                 else if (fileInfo.Length > fileSplitSetting.SplitFileIfSizeBiggerThanMbyte)
                                 {
                                     SplitFileByByteLen(context, thisSwitch, fileInfo, fileSplitSetting);
                                 }
                             }
+                            writeJobs(context, thisSwitch, newJobCacheForWritingAtOnceToDB);
                         } //try
                         catch (Exception e1)
                         {
@@ -85,6 +94,26 @@ namespace Process
                 Console.WriteLine(e1);
                 ErrorWriter wr = new ErrorWriter(e1, "CdrJobCreator", null, "", operatorName);
             }
+        }
+
+        private static void writeJobs(PartnerEntities context, ne thisSwitch, List<job> newJobCacheForWritingAtOnceToDB)
+        {
+            Console.WriteLine($"Found {newJobCacheForWritingAtOnceToDB.Count} cdr files in vault, excluding duplicates...");
+            List<string> newJobNames = newJobCacheForWritingAtOnceToDB.Select(j => j.JobName).ToList();
+            List<string> existingJobNames = context.jobs.Where(dbRecord => dbRecord.idNE == thisSwitch.idSwitch
+                                                        && dbRecord.idjobdefinition == 1
+                                                        && !newJobNames.Contains(dbRecord.JobName))
+                                                        .Select(dbRecord => dbRecord.JobName).ToList();
+            List<job> jobsToWrite = newJobCacheForWritingAtOnceToDB
+                .Where(j => existingJobNames.Contains(j.JobName)).ToList();
+
+            if (jobsToWrite.Any()) {
+                Console.WriteLine("Writing " + jobsToWrite.Count + " cdr jobs to db...");
+                context.jobs.AddRange(jobsToWrite);
+                context.SaveChanges();
+            }
+            Console.WriteLine(jobsToWrite.Count +  " cdrjobs created successfully.");
+            newJobCacheForWritingAtOnceToDB = new List<job>();
         }
 
         private static void SplitFileByByteLen(PartnerEntities context, ne thisSwitch, FileInfo fileInfo, FileSplitSetting fileSplitSetting)
@@ -154,7 +183,7 @@ namespace Process
             }
         }
 
-        private static void CreateSingleCdrJob(PartnerEntities context, ne thisSwitch, FileInfo fileInfo,
+        private static job CreateSingleCdrJob(PartnerEntities context, ne thisSwitch, FileInfo fileInfo,
             string jobName)
         {
             //confirm to check if there is an original, unsplit version of this file
@@ -185,10 +214,9 @@ namespace Process
             //check if that filename already exists
             job newCdr = new job();
             newCdr.JobName = jobName;
-            bool exists = context.jobs.Any(c => c.JobName == newCdr.JobName
-                                                && c.idNE == thisSwitch.idSwitch);
-            if (exists == false) //File Name Does not exist
-            {
+            
+            //if (exists == false) //File Name Does not exist
+            //{
                 int priority = context.enumjobdefinitions.First(c => c.id == 1).Priority;
                 newCdr.idNE = thisSwitch.idSwitch;
                 newCdr.CreationTime = DateTime.Now;
@@ -196,9 +224,10 @@ namespace Process
                 newCdr.priority = priority;
                 newCdr.idjobdefinition = 1; //new cdr
                 newCdr.JobParameter = "unsplitFileName=" + unsplitFileName;
-                context.jobs.Add(newCdr);
-                context.SaveChanges();
-            }
+            return newCdr;    
+            //context.jobs.Add(newCdr);
+                //context.SaveChanges();
+            //}
         }
     }
 }
