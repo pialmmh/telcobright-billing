@@ -122,31 +122,17 @@ namespace WS_Telcobright_Topshelf
                         Console.WriteLine("Unable to start debug scheduler, " +
                                           "telcobright service needs to be turned off.");
                     }
-                    Console.Read();
-                    Environment.Exit(1);
+                    throw (e);
                 }
-
-#if DEBUG
-                if (Debugger.IsAttached)
-                {
-                    Console.WriteLine("Starting RAMJobStore based scheduler in debug mode....");
-                    runtimeScheduler.Standby();
-                    IScheduler debugScheduler = GetScheduler(SchedulerRunTimeType.Debug, springContext);
-                    ScheduleDebugJobsThroughMenu(runtimeScheduler, debugScheduler);
-                    debugScheduler.Context.Put("processes", mefProcessContainer);
-                    debugScheduler.Context.Put("configs", operatorWiseConfigs);
-                    debugScheduler.Start();
-                    Console.WriteLine("Telcobright Scheduler has been started in debug mode.");
-                    return;
-                }
-#endif
-                Console.WriteLine("Starting Scheduler in runtime mode...");
-                runtimeScheduler.ResumeTriggers(GroupMatcher<TriggerKey>.AnyGroup());
-                PauseNonSelectedTrigggersThroughMenu(runtimeScheduler);
-                runtimeScheduler.Context.Put("processes", mefProcessContainer);
-                runtimeScheduler.Context.Put("configs", operatorWiseConfigs);
-                runtimeScheduler.Start();
-                Console.WriteLine("Telcobright Scheduler has been started in runtime mode.");
+                Console.WriteLine("Starting RAMJobStore based scheduler....");
+                runtimeScheduler.Standby();
+                IScheduler debugScheduler = GetScheduler(SchedulerRunTimeType.Debug, springContext);
+                ScheduleDebugJobsThroughMenu(runtimeScheduler, debugScheduler);
+                debugScheduler.Context.Put("processes", mefProcessContainer);
+                debugScheduler.Context.Put("configs", operatorWiseConfigs);
+                debugScheduler.Start();
+                Console.WriteLine("Telcobright Scheduler has been started.");
+                return;
             }
             catch (Exception e)
             {
@@ -217,40 +203,37 @@ namespace WS_Telcobright_Topshelf
 
         private static void ScheduleDebugJobsThroughMenu(IScheduler runtimeScheduler, IScheduler debugScheduler)
         {
-            List<TriggerKey> triggerKeysForDebug = GetSelectedTriggerKeysFromMenu(runtimeScheduler, selectToPause: false)
-                .OrderBy(t => t.Name).ToList();
+            List<TriggerKeyExt> triggerKeysForDebug = GetSelectedTriggerKeysFromMenu(runtimeScheduler)
+                .OrderBy(t => t.TriggerKey.Name).ToList();
             ScheduleDebugJobs(runtimeScheduler, debugScheduler, triggerKeysForDebug);
         }
         private static void PauseNonSelectedTrigggersThroughMenu(IScheduler runtimeScheduler)
         {
-            List<TriggerKey> triggerKeysForDebug = GetSelectedTriggerKeysFromMenu(runtimeScheduler,selectToPause: true);
+            List<TriggerKeyExt> triggerKeysForDebug = GetSelectedTriggerKeysFromMenu(runtimeScheduler);
             PauseNonSelectedTriggers(runtimeScheduler, triggerKeysForDebug);
         }
-        static List<TriggerKey> GetSelectedTriggerKeysFromMenu(IScheduler runtimeScheduler,bool selectToPause)
+        static List<TriggerKeyExt> GetSelectedTriggerKeysFromMenu(IScheduler runtimeScheduler)
         {
-            List<TriggerKey> triggersKeys = runtimeScheduler.GetTriggerKeys(GroupMatcher<TriggerKey>.AnyGroup())
-                                .ToList();
+            List<TriggerKey> triggersKeys = runtimeScheduler.GetTriggerKeys(GroupMatcher<TriggerKey>.AnyGroup()).ToList();
             List<ITrigger> triggers = triggersKeys.Select(tk => runtimeScheduler.GetTrigger(tk)).ToList();
-            List<int> selectedtriggerNumbersFromConsole = DisplayMenu(triggers);
-            if (selectedtriggerNumbersFromConsole.Count > 0)
+            Dictionary<int, string> selectedtriggersFromConsoleWithArgs = DisplayMenu(triggers);
+            List<TriggerKeyExt> selectedTriggerKeysFinal = new List<TriggerKeyExt>();
+            if (selectedtriggersFromConsoleWithArgs.Count > 0)
             {
-                if (selectToPause == false)
-                {
-                    triggersKeys = triggersKeys
-                        .Where((item, index) => selectedtriggerNumbersFromConsole.Contains(index))
-                        .Select(t => t).ToList();
-                }
-                else
-                {
-                    triggersKeys = triggersKeys.Where((item, index) => !selectedtriggerNumbersFromConsole.Contains(index))
-                        .Select(t => t).ToList();
-                }
+                selectedTriggerKeysFinal= triggersKeys
+                        .Where((item, index) => selectedtriggersFromConsoleWithArgs.Select(kv=>kv.Key).Contains(index))
+                        .Select((t,index) => {
+                            string argsStr = "";
+                            selectedtriggersFromConsoleWithArgs.TryGetValue(index, out argsStr);
+                            return new TriggerKeyExt(t, argsStr);
+                            }).ToList();
+                
             }
-            return triggersKeys;
+            return selectedTriggerKeysFinal;
         }
 
         static int ScheduleDebugJobs(IScheduler runtimeScheduler, IScheduler debugScheduler,
-            List<TriggerKey> triggerKeysForDebug)
+            List<TriggerKeyExt> triggerKeysForDebug)
         {
             int jobCount = 0;
             if (triggerKeysForDebug.Count > 0)
@@ -265,8 +248,13 @@ namespace WS_Telcobright_Topshelf
                     {
                         //var builtJob=ReBuildJob<QuartzTelcobrightProcessWrapper>(jobDetail, groupName);
                         ITrigger trigger = runtimeScheduler.GetTriggersOfJob(jobDetail.Key).First();
-                        if (triggerKeysForDebug.Contains(trigger.Key))
+                        if (triggerKeysForDebug.Select(t=>t.TriggerKey).Contains(trigger.Key))
                         {
+                            Dictionary<string,string> argsTelcobright = triggerKeysForDebug.Where(t => t.TriggerKey == trigger.Key)
+                                .FirstOrDefault()?.ArgsTelcobright;
+                            if (argsTelcobright!=null) {
+                                jobDetail.JobDataMap.Put("args", argsTelcobright);
+                            }
                             debugScheduler.ScheduleJob(jobDetail, trigger);
                             jobCount++;
                         }
@@ -280,7 +268,7 @@ namespace WS_Telcobright_Topshelf
             else throw new Exception("Scheduled job count did not match expected job count for debug scheduler.");
         }
 
-        static void PauseNonSelectedTriggers(IScheduler runtimeScheduler, List<TriggerKey> triggerKeysToPause)
+        static void PauseNonSelectedTriggers(IScheduler runtimeScheduler, List<TriggerKeyExt> triggerKeysToPause)
         {
             if (triggerKeysToPause.Count > 0)
             {
@@ -294,7 +282,7 @@ namespace WS_Telcobright_Topshelf
                     {
                         //var builtJob=ReBuildJob<QuartzTelcobrightProcessWrapper>(jobDetail, groupName);
                         ITrigger trigger = runtimeScheduler.GetTriggersOfJob(jobDetail.Key).First();
-                        if (triggerKeysToPause.Contains(trigger.Key))
+                        if (triggerKeysToPause.Select(t=>t.TriggerKey).Contains(trigger.Key))
                         {
                             runtimeScheduler.PauseTrigger(trigger.Key);
                         }
@@ -310,7 +298,7 @@ namespace WS_Telcobright_Topshelf
         //        .UsingJobData(jobDetail.JobDataMap)
         //        .Build();
         //}
-        private static List<int> DisplayMenu(List<ITrigger> triggers)
+        private static Dictionary<int, string> DisplayMenu(List<ITrigger> triggers)
         {
             Console.Clear();
             Console.WriteLine("Enter trigger numbers to debug with scheduler, separated by comma...");
@@ -323,10 +311,16 @@ namespace WS_Telcobright_Topshelf
             var readLine = Console.ReadLine();
             if (readLine.IsNullOrEmptyOrWhiteSpace())
             {
-                return new List<int>();
+                return new Dictionary<int, string>();
             }
-            return readLine.Split(',').Select(c => Convert.ToInt32(c))
-                .Select(c => c - 1).ToList().ToList(); //displayed menu items are 1 based, change to 0 based choise
+            return readLine.Split(',').Select(keyWithArgs =>
+            {
+                var arr = keyWithArgs.Split(null).Select(item => item.Trim()).ToArray();
+                int key = Convert.ToInt32(arr[0]) - 1;//displayed menu items are 1 based, change to 0 based choise
+                string args = arr.Length>1? arr[1]:"";
+                return new KeyValuePair<int, string>(key, args);
+            }).ToDictionary(kv => kv.Key, kv => kv.Value);
+        //        .Select(c => c - 1).ToList().ToList(); //displayed menu items are 1 based, change to 0 based choise
         }
 
         static ConsoleKeyInfo WaitForkeyPressForDebugMode()

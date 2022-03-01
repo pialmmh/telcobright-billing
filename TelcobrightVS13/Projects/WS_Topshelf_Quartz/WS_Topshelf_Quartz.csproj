@@ -113,6 +113,7 @@
     <Compile Include="SimpleMessage.cs" />
     <Compile Include="TopShelf.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TriggerKeyExt.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
