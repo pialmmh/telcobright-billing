@@ -29,7 +29,7 @@ namespace Process
         public string RuleName => this.GetType().ToString();
         public string HelpText => "Method to Create Cdr Job";
         public int ProcessId => 101;
-        
+
         public void Execute(IJobExecutionContext schedulerContext)
         {
             string operatorName = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");
@@ -53,7 +53,7 @@ namespace Process
                             string vaultName = thisSwitch.SourceFileLocations;
                             Vault vault = tbc.DirectorySettings.Vaults.First(c => c.Name == vaultName);
                             var fileNames = vault.GetFileListLocal()
-                                .Where(fInfo=>fInfo.Extension==thisSwitch.FileExtension
+                                .Where(fInfo => fInfo.Extension == thisSwitch.FileExtension
                                     && !fInfo.Name.EndsWith(".tmp") && !fInfo.Name.Contains(".filepart")).ToList();
                             if (tbc.CdrSetting.DescendingOrderWhileListingFiles == true)
                                 fileNames = fileNames.OrderByDescending(c => c.Name).ToList();
@@ -63,7 +63,7 @@ namespace Process
                                 if (fileSplitSetting == null ||
                                     fileInfo.Length <= fileSplitSetting.SplitFileIfSizeBiggerThanMbyte)
                                 {
-                                    job newJob= CreateSingleCdrJob(context, thisSwitch, fileInfo, fileInfo.Name);
+                                    job newJob = CreateSingleCdrJob(context, thisSwitch, fileInfo, fileInfo.Name);
                                     newJobCacheForWritingAtOnceToDB.Add(newJob);
                                     //Console.WriteLine("Found cdr file for switch " + thisSwitch.SwitchName + ": " + newJob.JobName);
                                     if (tbc.CdrSetting.BatchSizeForCdrJobCreationCheckingExistence ==
@@ -98,21 +98,28 @@ namespace Process
 
         private static void writeJobs(PartnerEntities context, ne thisSwitch, List<job> newJobCacheForWritingAtOnceToDB)
         {
+            if (!newJobCacheForWritingAtOnceToDB.Any())
+            {
+                Console.WriteLine(" No new cdr file found, exiting...");
+            }
             Console.WriteLine($"Found {newJobCacheForWritingAtOnceToDB.Count} cdr files in vault, excluding duplicates...");
             List<string> newJobNames = newJobCacheForWritingAtOnceToDB.Select(j => j.JobName).ToList();
-            List<string> existingJobNames = context.jobs.Where(dbRecord => dbRecord.idNE == thisSwitch.idSwitch
-                                                        && dbRecord.idjobdefinition == 1
-                                                        && !newJobNames.Contains(dbRecord.JobName))
-                                                        .Select(dbRecord => dbRecord.JobName).ToList();
+            var sql = $@"select * from ({string.Join(" union all ", newJobNames.Select(name => "select '" + name + "' as jobname "))})
+                                            as newJob 
+                                            where jobname not in 
+                                            (select jobname from job where idne={thisSwitch.idSwitch.ToString()} 
+                                            and idjobdefinition=1)";
+            List<string> nonExistingJobNames = context.Database.SqlQuery<string>(sql).ToList();
             List<job> jobsToWrite = newJobCacheForWritingAtOnceToDB
-                .Where(j => existingJobNames.Contains(j.JobName)).ToList();
+                .Where(j => nonExistingJobNames.Contains(j.JobName)).ToList();
 
-            if (jobsToWrite.Any()) {
+            if (jobsToWrite.Any())
+            {
                 Console.WriteLine("Writing " + jobsToWrite.Count + " cdr jobs to db...");
                 context.jobs.AddRange(jobsToWrite);
                 context.SaveChanges();
             }
-            Console.WriteLine(jobsToWrite.Count +  " cdrjobs created successfully.");
+            Console.WriteLine(jobsToWrite.Count + " cdrjobs created successfully for switch: " + thisSwitch.SwitchName);
             newJobCacheForWritingAtOnceToDB = new List<job>();
         }
 
@@ -139,7 +146,7 @@ namespace Process
                 }
                 File.Copy(fileInfo.FullName, unsplitBackupFileName);
 
-                List<string> splitedFileNames=FileSplitter.SplitFile(fileInfo,//split the files
+                List<string> splitedFileNames = FileSplitter.SplitFile(fileInfo,//split the files
                     fileSplitSetting.BytesPerRecord * fileSplitSetting.MaxRecordsInSingleFile);
                 File.Delete(fileInfo.FullName);
 
@@ -149,10 +156,10 @@ namespace Process
                                          fileInfo.Name + ".history";
                 if (File.Exists(historyFileName))
                 {
-                    File.Delete(historyFileName);   
+                    File.Delete(historyFileName);
                 }
                 string splitHistory = string.Join(",", splitedFileNames.Select(f => Path.GetFileName(f)));
-                File.AppendAllText(historyFileName,splitHistory+Environment.NewLine);
+                File.AppendAllText(historyFileName, splitHistory + Environment.NewLine);
 
                 var dirInfo = new DirectoryInfo(fileInfo.DirectoryName);
                 string searchPattern = $"{Path.GetFileNameWithoutExtension(fileInfo.Name)}*" +
@@ -163,7 +170,7 @@ namespace Process
                 if (fileInfo.Length % chunkSize > 0) expectedSplitCount++;
                 if (splitFileInfos.Any() == false || splitFileInfos.Count != expectedSplitCount)
                 {
-                    splitFileInfos.ForEach(f=>f.MoveTo(f.FullName+".tmp"));
+                    splitFileInfos.ForEach(f => f.MoveTo(f.FullName + ".tmp"));
                     throw new Exception($"File count after split({splitFileInfos?.Count}) " +
                                         $" does not match expected count({expectedSplitCount}).");
                 }
@@ -174,7 +181,7 @@ namespace Process
                     throw new Exception($"Total size of splitted files ({splitFilesSize}) " +
                                         $"is not equal to original file size({fileInfo.Length})");
                 }
-                
+
             }
             else
             {
@@ -196,37 +203,37 @@ namespace Process
             }
             var extension = Path.GetExtension(fileInfo.Name);
             var fileNameAsArr = fileInfo.Name.Split('_');
-            string historyFileNameOnly = String.Join("_", fileNameAsArr.Take(fileNameAsArr.Length - 1)) 
+            string historyFileNameOnly = String.Join("_", fileNameAsArr.Take(fileNameAsArr.Length - 1))
                  + extension + ".history";
             string historyFileName = unsplitPath + Path.DirectorySeparatorChar + historyFileNameOnly;
             string unsplitFileName = "";
             if (File.Exists(historyFileName) == true)
             {
                 List<string> splitHistory = File.ReadAllText(historyFileName).Split(',')
-                    .Select(name=>name.Trim()).ToList();
+                    .Select(name => name.Trim()).ToList();
                 if (splitHistory.Contains(fileInfo.Name))
                 {
-                    unsplitFileName = "unsplit" + Path.DirectorySeparatorChar + 
-                        Path.GetFileName(historyFileName.Replace(".history",""));
+                    unsplitFileName = "unsplit" + Path.DirectorySeparatorChar +
+                        Path.GetFileName(historyFileName.Replace(".history", ""));
                 }
             }
 
             //check if that filename already exists
             job newCdr = new job();
             newCdr.JobName = jobName;
-            
+
             //if (exists == false) //File Name Does not exist
             //{
-                int priority = context.enumjobdefinitions.First(c => c.id == 1).Priority;
-                newCdr.idNE = thisSwitch.idSwitch;
-                newCdr.CreationTime = DateTime.Now;
-                newCdr.Status = 7; //local, so downloaded in local switch directory
-                newCdr.priority = priority;
-                newCdr.idjobdefinition = 1; //new cdr
-                newCdr.JobParameter = "unsplitFileName=" + unsplitFileName;
-            return newCdr;    
+            int priority = context.enumjobdefinitions.First(c => c.id == 1).Priority;
+            newCdr.idNE = thisSwitch.idSwitch;
+            newCdr.CreationTime = DateTime.Now;
+            newCdr.Status = 7; //local, so downloaded in local switch directory
+            newCdr.priority = priority;
+            newCdr.idjobdefinition = 1; //new cdr
+            newCdr.JobParameter = "unsplitFileName=" + unsplitFileName;
+            return newCdr;
             //context.jobs.Add(newCdr);
-                //context.SaveChanges();
+            //context.SaveChanges();
             //}
         }
     }
