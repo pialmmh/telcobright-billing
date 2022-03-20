@@ -41,23 +41,16 @@ namespace Decoders
             this.Input = input;
             List<cdrfieldmappingbyswitchtype> fieldMappings = null;
             input.MefDecodersData.DicFieldMapping.TryGetValue(this.Id, out fieldMappings);
-            int maxFieldPositionInInputCsv = fieldMappings.Max(
-                cdrFldMapping => Convert.ToInt32(cdrFldMapping.FieldPositionInCDRRow));
             List<string[]> tempTable = GetTxtCdrs();
 
-            String inputFilename = "esdr.001.20211124115052.01.000023.bin";
             SdrExtractor sdrExtractor = new SdrExtractor();
-            List<PbSdrRecord> sdrs = sdrExtractor.GetSdrs(inputFilename);
+            List<PbSdrRecord> sdrs = sdrExtractor.GetSdrs(input.TelcobrightJob.JobName);
             Console.WriteLine(sdrs.Count);
             Console.ReadLine();
 
             string[] replaceChars = new string[] { "'", "<", ">" };
             foreach (var rowCsv in tempTable) //for each row
             {
-                //if (rowCsv.Length < 15) {
-                //    Console.WriteLine("hello");
-                //    continue;
-                //}
                 try
                 {
                     string[] normalizedRow = new string[input.MefDecodersData.Totalfieldtelcobright];
