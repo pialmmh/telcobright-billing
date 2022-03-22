@@ -96,6 +96,7 @@
   <ItemGroup>
     <Compile Include="bigl\ConfigGenerator_bigl.cs" />
     <Compile Include="BIllingRulesDefiner.cs" />
+    <Compile Include="btel\BtelDatabaseSettings.cs" />
     <Compile Include="purple\purpleAppServerConfig.cs" />
     <Compile Include="purple\purpleDirectorySettings.cs" />
     <Compile Include="purple\purplePortalSetting.cs" />

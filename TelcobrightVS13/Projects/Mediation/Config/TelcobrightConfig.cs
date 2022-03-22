@@ -21,7 +21,7 @@ namespace TelcobrightMediation
         public AutomationSetting AutomationSetting { get; set; }
         public int ServerId { get; set; }
         public DirectorySettings DirectorySettings { get; set; }
-        public DatabaseSetting DatabaseSetting { get; set; }
+        public DatabaseSetting DatabaseSetting { get; set; } = new DatabaseSetting();
         public PortalSettings PortalSettings { get; set; }
         public Dictionary<string, ApplicationServerConfig> ApplicationServersConfig { get; set; }//server id as string
         public int IdTelcobrightPartner { get; set; }

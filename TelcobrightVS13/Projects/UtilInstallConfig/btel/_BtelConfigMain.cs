@@ -65,7 +65,8 @@ namespace InstallConfig
 
             DatabaseSetting databaseSetting = schedulerDatabaseSetting.GetCopy();
             databaseSetting.DatabaseName = this.OperatorName;//change dbname here if required
-            this.Tbc.DatabaseSetting = databaseSetting;
+            //this.Tbc.DatabaseSetting = databaseSetting;
+            this.Tbc.DatabaseSetting = this.OverrideDatabaseSettingsIfEnabled(this.Tbc);
 
             this.Tbc.PortalSettings = GetPortalSettings(this.Tbc);
 

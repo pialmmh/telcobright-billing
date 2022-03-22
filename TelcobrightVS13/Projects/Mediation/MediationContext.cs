@@ -61,7 +61,7 @@ namespace TelcobrightMediation
             this.MefDecoderContainer = new MefDecoderContainer(this.Context);
             this.MefServiceFamilyContainer = new MefServiceFamilyContainer();
             this.Nes = context.nes.Include(n=>n.telcobrightpartner)
-                .Where(n => n.telcobrightpartner.databasename == tbc.DatabaseSetting.DatabaseName)
+                .Where(n => n.telcobrightpartner.databasename == tbc.DatabaseSetting.GetOperatorName)
                 .ToDictionary(c => c.idSwitch.ToString());
             this.SwitchWiseLookups = new Dictionary<int, SwitchWiseLookup>();
             this.ServiceGroupConfigurations = new Dictionary<int, Dictionary<int, ServiceGroupConfiguration>>();
@@ -105,7 +105,7 @@ namespace TelcobrightMediation
             DateRange dRange = new DateRange() {StartDate = DateTime.Today, EndDate = DateTime.Today.AddDays(1)};
             this.MefServiceFamilyContainer.RateCache =
                 new RateCache(
-                    context.telcobrightpartners.First(c => c.databasename == this.Tbc.DatabaseSetting.DatabaseName)
+                    context.telcobrightpartners.First(c => c.databasename == this.Tbc.DatabaseSetting.GetOperatorName)
                         .RateDictionaryMaxRecords, this.Context)
                 {
                     DicRatePlan = context.rateplans.Include("enumbillingspan")

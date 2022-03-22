@@ -374,7 +374,7 @@ public partial class ConfigBatcJob : System.Web.UI.Page
                 return;
             }
             TelcobrightConfig tbc = PageUtil.GetTelcobrightConfig();
-            string operatorName = tbc.DatabaseSetting.DatabaseName;
+            string operatorName = tbc.DatabaseSetting.GetOperatorName;
             string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName);
             List<ne> lstSwitch=new List<ne>();
             Dictionary<string, route> dicRoutes = new Dictionary<string, route>();

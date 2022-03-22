@@ -41,7 +41,7 @@ namespace Process
                 using (PartnerEntities context = new PartnerEntities(entityConStr))
                 {
                     int idOprator = context.telcobrightpartners
-                        .Where(c => c.databasename == tbc.DatabaseSetting.DatabaseName).Select(c => c.idCustomer)
+                        .Where(c => c.databasename == tbc.DatabaseSetting.GetOperatorName).Select(c => c.idCustomer)
                         .First();
                     foreach (ne thisSwitch in context.nes.Where(c => c.idCustomer == idOprator).ToList())
                     {
@@ -55,6 +55,7 @@ namespace Process
                             var fileNames = vault.GetFileListLocal()
                                 .Where(fInfo => fInfo.Extension == thisSwitch.FileExtension
                                     && !fInfo.Name.EndsWith(".tmp") && !fInfo.Name.Contains(".filepart")).ToList();
+                            Console.WriteLine($"Found {fileNames.Count} files, checking split history...");
                             if (tbc.CdrSetting.DescendingOrderWhileListingFiles == true)
                                 fileNames = fileNames.OrderByDescending(c => c.Name).ToList();
                             foreach (FileInfo fileInfo in fileNames)

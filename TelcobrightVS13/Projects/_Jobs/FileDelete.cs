@@ -24,7 +24,7 @@ namespace Jobs
             //in that case the job must not be marked as "complete" in database
             OptimizerJobInputData input = (OptimizerJobInputData)jobInputData;
             string entityConStr =
-                ConnectionManager.GetEntityConnectionStringByOperator(input.Tbc.DatabaseSetting.DatabaseName);
+                ConnectionManager.GetEntityConnectionStringByOperator(input.Tbc.DatabaseSetting.GetOperatorName);
             JobParamFileDelete delParam = null;
             delParam = GetJobParamByHandlingDeserializeErrorFromBackslash(input);
             //check if prereq jobs have been finished or not

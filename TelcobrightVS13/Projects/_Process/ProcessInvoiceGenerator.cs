@@ -91,7 +91,7 @@ namespace Process
                                             ErrorWriter wr2 = new ErrorWriter(e2, "ProcessInvoiceGenerator",
                                                 telcobrightJob,
                                                 "Exception within catch block.",
-                                                tbc.DatabaseSetting.DatabaseName);
+                                                tbc.DatabaseSetting.GetOperatorName);
                                         }
                                         continue; //with next cdr or job
                                     }

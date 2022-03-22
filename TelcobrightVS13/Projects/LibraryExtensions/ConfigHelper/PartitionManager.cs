@@ -23,7 +23,7 @@ namespace LibraryExtensions.ConfigHelper
                        password={
                             this.DatabaseSetting.AdminPassword
                         };Persist Security Info=True;default command timeout=3600;
-                       database={this.DatabaseSetting.DatabaseName}");
+                       database={this.DatabaseSetting.GetDataBaseName}");
             this.Con.Open();
         }
 

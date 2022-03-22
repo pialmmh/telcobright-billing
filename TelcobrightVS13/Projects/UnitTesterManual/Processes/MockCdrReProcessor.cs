@@ -88,7 +88,7 @@ namespace UnitTesterManual
                                         Console.WriteLine(e.Message);
                                         context.Database.Connection.CreateCommand().ExecuteCommandText(" rollback; ");
                                         ErrorWriter wr = new ErrorWriter(e, "ProcessCdr", telcobrightJob,
-                                            "CdrJob processing error.", tbc.DatabaseSetting.DatabaseName);
+                                            "CdrJob processing error.", tbc.DatabaseSetting.GetOperatorName);
 
                                         //also save the error information within the job
                                         //use try catch in case DB is not accesible
@@ -104,7 +104,7 @@ namespace UnitTesterManual
                                         catch (Exception e2)
                                         {
                                             ErrorWriter wr2 = new ErrorWriter(e2, "ProcessCdr", telcobrightJob,
-                                                "Exception within catch block.", tbc.DatabaseSetting.DatabaseName);
+                                                "Exception within catch block.", tbc.DatabaseSetting.GetOperatorName);
                                         }
                                         continue; //with next cdr or job
                                     }

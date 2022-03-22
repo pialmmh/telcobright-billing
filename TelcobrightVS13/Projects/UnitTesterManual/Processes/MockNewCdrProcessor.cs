@@ -64,7 +64,7 @@ namespace UnitTesterManual
                     var mediationContext = new MediationContext(tbc, context);
                     tbc.GetPathIndependentApplicationDirectory();
                     ne ne = context.nes.Include(n => n.telcobrightpartner)
-                        .Where(n => n.telcobrightpartner.databasename == tbc.DatabaseSetting.DatabaseName &&
+                        .Where(n => n.telcobrightpartner.databasename == tbc.DatabaseSetting.GetOperatorName &&
                                     (n.SkipCdrDecoded == null || n.SkipCdrDecoded != 1)).ToList().FirstOrDefault();
                     if (ne == null)
                     {
@@ -112,7 +112,7 @@ namespace UnitTesterManual
                                     Console.WriteLine(e.Message);
                                     context.Database.Connection.CreateCommand().ExecuteCommandText(" rollback; ");
                                     ErrorWriter wr = new ErrorWriter(e, "ProcessCdr", telcobrightJob,
-                                        "CdrJob processing error.", tbc.DatabaseSetting.DatabaseName);
+                                        "CdrJob processing error.", tbc.DatabaseSetting.GetOperatorName);
 
                                     //also save the error information within the job
                                     //use try catch in case DB is not accesible
@@ -129,7 +129,7 @@ namespace UnitTesterManual
                                     catch (Exception e2)
                                     {
                                         ErrorWriter wr2 = new ErrorWriter(e2, "ProcessCdr", telcobrightJob,
-                                            "Exception within catch block.", tbc.DatabaseSetting.DatabaseName);
+                                            "Exception within catch block.", tbc.DatabaseSetting.GetOperatorName);
                                     }
                                     continue; //with next cdr or job
                                 }

@@ -181,7 +181,7 @@ namespace InstallConfig
             string constr =
                 "server=" + tbc.DatabaseSetting.ServerName + ";User Id=" + tbc.DatabaseSetting.AdminUserName +
                 ";password=" + tbc.DatabaseSetting.AdminPassword + ";Persist Security Info=True;" +
-                "database="+tbc.DatabaseSetting.DatabaseName+";";
+                "database="+tbc.DatabaseSetting.GetDataBaseName+";";
             using (MySqlConnection con = new MySqlConnection(constr))
             {
                 con.Open();
@@ -190,8 +190,8 @@ namespace InstallConfig
                     try
                     {
                         string routeImportFilename =
-                            configPathHelper.GetOperatorWiseConfigDirInUtil(tbc.DatabaseSetting.DatabaseName)
-                            + Path.DirectorySeparatorChar + tbc.DatabaseSetting.DatabaseName + "Routes.json";
+                            configPathHelper.GetOperatorWiseConfigDirInUtil(tbc.DatabaseSetting.GetOperatorName)
+                            + Path.DirectorySeparatorChar + tbc.DatabaseSetting.GetOperatorName + "Routes.json";
                         List<ParnerRouteImportInfo> parnerRouteImportInfos =
                             JsonConvert.DeserializeObject<List<ParnerRouteImportInfo>>(
                                 File.ReadAllText(routeImportFilename));
@@ -254,7 +254,7 @@ namespace InstallConfig
                 }
             }
             Console.WriteLine();
-            Console.WriteLine("Routes have been reset successfully for " + tbc.DatabaseSetting.DatabaseName + ".");
+            Console.WriteLine("Routes have been reset successfully for " + tbc.DatabaseSetting.GetOperatorName + ".");
             
         }
 
@@ -283,13 +283,13 @@ namespace InstallConfig
                     };
                     Action createDb = () =>
                     {
-                        cmd.CommandText = "CREATE SCHEMA `" + databaseSetting.DatabaseName +
+                        cmd.CommandText = "CREATE SCHEMA `" + databaseSetting.GetDataBaseName +
                                           "` DEFAULT CHARACTER SET utf8 ;";
                         cmd.ExecuteNonQuery();
                     };
                     Action createTables = () =>
                     {
-                        cmd.CommandText = "use " + databaseSetting.DatabaseName;
+                        cmd.CommandText = "use " + databaseSetting.GetDataBaseName;
                         cmd.ExecuteNonQuery();
                         cmd.CommandText = File.ReadAllText(configPathHelper.GetSchedulerScriptPath()
                                                            + Path.DirectorySeparatorChar + "CreateTables.txt");
@@ -299,7 +299,7 @@ namespace InstallConfig
                     {
                         if (dbExists())
                         {
-                            cmd.CommandText = "drop database " + databaseSetting.DatabaseName + ";";
+                            cmd.CommandText = "drop database " + databaseSetting.GetDataBaseName + ";";
                             cmd.ExecuteNonQuery();
                         }
                         createDb();
@@ -322,7 +322,7 @@ namespace InstallConfig
         {
             Console.WriteLine("Generating Configuration for " + configGenerator.OperatorName);
             TelcobrightConfig tbc = configGenerator.GenerateConfig(schedulerDatabaseSetting);
-            Console.WriteLine("Writng Configuration Files for " + tbc.DatabaseSetting.DatabaseName);
+            Console.WriteLine("Writng Configuration Files for " + configGenerator.OperatorName);
             WriteConfigOperatorWise(tbc, configPathHelper);
             return tbc;
         }
@@ -377,43 +377,28 @@ namespace InstallConfig
                         dbSettings, tbc.PortalSettings);
                 }
             }
-            string shortName = tbc.DatabaseSetting.DatabaseName;
+            string operatorShortName = tbc.DatabaseSetting.GetOperatorName;
             //write config to operator's folder in util directory
-            string targetDir = configPathHelper.GetOperatorWiseConfigDirInUtil(shortName);
+            string targetDir = configPathHelper.GetOperatorWiseConfigDirInUtil(operatorShortName);
             FileAndPathHelper.DeleteFileContaining(targetDir, "*.conf");
-            SerializeConfig(tbc, configPathHelper.GetOperatorWiseTargetFileNameInUtil(shortName));
+            SerializeConfig(tbc, configPathHelper.GetOperatorWiseTargetFileNameInUtil(operatorShortName));
             //write config for windows service
             targetDir = configPathHelper.GetTopShelfConfigDir();
-            SerializeConfig(tbc, configPathHelper.GetOperatorWiseTargetFileNameInTopShelf(shortName));
+            SerializeConfig(tbc, configPathHelper.GetOperatorWiseTargetFileNameInTopShelf(operatorShortName));
             //write config for portal
             targetDir = configPathHelper.GetPortalBinPath();
-            SerializeConfig(tbc, configPathHelper.GetTargetFileNameForPortal(shortName));
-            Console.WriteLine("Successfully written configuration template for " + tbc.DatabaseSetting.DatabaseName);
+            SerializeConfig(tbc, configPathHelper.GetTargetFileNameForPortal(operatorShortName));
+            Console.WriteLine("Successfully written configuration template for " + operatorShortName);
         }
 
 
 
         static void SerializeConfig(TelcobrightConfig tbc, string targetConfigFile)
         {
-            //remove database connection related info from tbc for security, these should be only kept in web or app.conf
-            tbc.DatabaseSetting.AdminPassword = "";
-            tbc.DatabaseSetting.AdminUserName = "";
-            tbc.DatabaseSetting.ServerName = "";
             if (File.Exists(targetConfigFile))
             {
                 File.Delete(targetConfigFile); //debug directory
             }
-            //prev serializing version
-            //using (FileStream fs = File.Open(targetConfigFile, FileMode.Create))
-            //using (StreamWriter sw = new StreamWriter(fs))
-            //using (JsonWriter jw = new JsonTextWriter(sw))
-            //{
-            //    jw.Formatting = Formatting.Indented;
-            //    JsonSerializer serializer = new JsonSerializer();
-                
-            //    serializer.Serialize(jw, tbc);
-            //}
-            //end prev
 
             String jsonfile = targetConfigFile;
             var settings = new JsonSerializerSettings()
@@ -465,7 +450,7 @@ namespace InstallConfig
 
         static void WriteIisScriptsForWebAndFtp(TelcobrightConfig tbc, string configRootDir)
         {
-            string scriptDir = configRootDir + Path.DirectorySeparatorChar + tbc.DatabaseSetting.DatabaseName
+            string scriptDir = configRootDir + Path.DirectorySeparatorChar + tbc.DatabaseSetting.GetOperatorName
                     + Path.DirectorySeparatorChar + "scripts";
             if (Directory.Exists(scriptDir) == false)
             {
@@ -480,17 +465,17 @@ namespace InstallConfig
             {
                 //site xml part
                 string script = ReplaceParametersInConfigFiles(site.GetDicProperties(), site.TemplateFileName);
-                string scriptFileName = configRootDir + Path.DirectorySeparatorChar + tbc.DatabaseSetting.DatabaseName + Path.DirectorySeparatorChar
+                string scriptFileName = configRootDir + Path.DirectorySeparatorChar + tbc.DatabaseSetting.GetOperatorName + Path.DirectorySeparatorChar
                     + "scripts" + Path.DirectorySeparatorChar +
-                    site.SiteType + "_" + tbc.DatabaseSetting.DatabaseName + ".iisScript";
+                    site.SiteType + "_" + tbc.DatabaseSetting.GetOperatorName + ".iisScript";
                 File.WriteAllText(scriptFileName, script);
                 //app pool part
                 if (site.SiteType == "http")
                 {
                     script = ReplaceParametersInConfigFiles(site.ApplicationPool.GetDicProperties(), site.ApplicationPool.TemplateFileName);
-                    string appPoolScriptFileName = configRootDir + Path.DirectorySeparatorChar + tbc.DatabaseSetting.DatabaseName + Path.DirectorySeparatorChar
+                    string appPoolScriptFileName = configRootDir + Path.DirectorySeparatorChar + tbc.DatabaseSetting.GetOperatorName + Path.DirectorySeparatorChar
                         + "scripts" + Path.DirectorySeparatorChar +
-                        "appPool" + "_" + tbc.DatabaseSetting.DatabaseName + ".iisScript";
+                        "appPool" + "_" + tbc.DatabaseSetting.GetOperatorName + ".iisScript";
                     File.WriteAllText(appPoolScriptFileName, script);
 
                     //write import_commands to help during installation
@@ -651,10 +636,13 @@ namespace InstallConfig
 
         private static void WriteBillingRules(DatabaseSetting databaseSetting)
         {
+            var serverName = databaseSetting.ServerName;
+
+            
             string constr =
-                "server=" + databaseSetting.ServerName + ";User Id=" + databaseSetting.AdminUserName +
+                "server=" + serverName + ";User Id=" + databaseSetting.AdminUserName +
                 ";password=" + databaseSetting.AdminPassword +
-                ";Persist Security Info=True;database=" + databaseSetting.DatabaseName;
+                ";Persist Security Info=True;database=" + databaseSetting.GetDataBaseName;
 
             using (MySqlConnection con = new MySqlConnection(constr))
             {

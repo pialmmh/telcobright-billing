@@ -8,8 +8,19 @@ namespace LibraryExtensions.ConfigHelper
 {
     public class DatabaseSetting
     {
+        public bool OverrideDatabaseSettingsFromAppConfig { get; set; }
+        public string OperatorShortNameAliasToOverride { get; set; }
         public String ServerName { get; set; }
-        public string DatabaseName { get; set; }
+        private string mDatabaseName = "";
+        public string DatabaseName {
+            private get { return mDatabaseName; }
+            set { mDatabaseName = value; }
+        }
+        public string GetDataBaseName => DatabaseName;
+        public string GetOperatorName => string.IsNullOrWhiteSpace(OperatorShortNameAliasToOverride) == true ?
+                        DatabaseName : OperatorShortNameAliasToOverride;
+    
+        //public string DatabaseName { get; set; }
         public string AdminUserName { get; set; }
         public string AdminPassword { get; set; }
         public string ReadOnlyUserName { get; set; }

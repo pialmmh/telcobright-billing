@@ -9,11 +9,11 @@ namespace TelcobrightFileOperations
     public class ErrorWriter
     {
         public ErrorWriter(Exception e,string processInformation,job telcobrightJob,string messageToPrepend,
-            string databaseName)
+            string operatorName)
         {
             try
             {
-                string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(databaseName);
+                string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName);
                 using (PartnerEntities context = new PartnerEntities(entityConStr))
                 {
                     allerror thisError = new allerror

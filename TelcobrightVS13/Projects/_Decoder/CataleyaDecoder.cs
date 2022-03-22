@@ -9,7 +9,7 @@ using TelcobrightMediation.Mediation.Cdr;
 using System.Linq;
 using System.Globalization;
 using CataleySdrExtractor;
-
+using LibraryExtensions;
 namespace Decoders
 {
 
@@ -29,13 +29,7 @@ namespace Decoders
 
         public List<string[]> DecodeFile(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs)
         {
-
             
-
-
-
-
-
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
             this.Input = input;
@@ -44,100 +38,126 @@ namespace Decoders
             List<string[]> tempTable = GetTxtCdrs();
 
             SdrExtractor sdrExtractor = new SdrExtractor();
-            List<PbSdrRecord> sdrs = sdrExtractor.GetSdrs(input.TelcobrightJob.JobName);
-            Console.WriteLine(sdrs.Count);
-            Console.ReadLine();
+            List<PbSdrRecord> sdrs = sdrExtractor.GetSdrs(input.FullPath);
 
             string[] replaceChars = new string[] { "'", "<", ">" };
-            foreach (var rowCsv in tempTable) //for each row
+            foreach (var record in sdrs) //for each row
             {
+                string[] normalizedRow = new string[104];
                 try
                 {
-                    string[] normalizedRow = new string[input.MefDecodersData.Totalfieldtelcobright];
-                    foreach (cdrfieldmappingbyswitchtype thisField in fieldMappings) //for each field
+                    normalizedRow[Fn.Sequencenumber] = record.SeqNum.ToString();
+                    Func<PbTime, DateTime> unixTsToDateTimeWithMs = pbTime =>
                     {
-                        string strThisField = "";
-                        int fieldPosInCsv = thisField.FieldPositionInCDRRow != null &&
-                            thisField.FieldPositionInCDRRow > -1 
-                            ? Convert.ToInt32(thisField.FieldPositionInCDRRow) : -1;
-                        string val = fieldPosInCsv>-1?rowCsv[fieldPosInCsv]:"";
-                        foreach (string c in replaceChars) {
-                            val = val.Replace(c, "");
-                        }
-                        //temp code
-                        
-                        if (val.Contains("<")|| val.Contains("'")|| val.Contains(">")) {
-                            Console.WriteLine("found");
-                        }
-                        if (val.Contains("0034711303061432"))
+                        var dateTime = DateTimeExtensions.UnixTimeStampToDateTime(pbTime.Sec).AddMilliseconds(pbTime.MilliSec);
+                        return dateTime;
+                    };
+                    normalizedRow[Fn.SignalingStartTime] = unixTsToDateTimeWithMs(record.IngressCallInfo.InvitingTs)
+                        .ToMySqlFormatWithoutQuote();
+                    normalizedRow[Fn.StartTime] = normalizedRow[Fn.SignalingStartTime];
+                    normalizedRow[Fn.Endtime] = unixTsToDateTimeWithMs(record.IngressCallInfo.DisconnectTs)
+                        .ToMySqlFormatWithoutQuote();
+                    normalizedRow[Fn.UniqueBillId] = record.Icid;
+                    Func<string, Dictionary<string, string>> getSplitPartyInfo = party =>
+                    {
+                        var partyInfo = new Dictionary<string, string>()
+                            {
+                                { "phoneNumber",""},
+                                { "ipAndPort", ""},
+                            };
+                        if (!String.IsNullOrEmpty(party))
                         {
-                            Console.WriteLine("found");
+                            var tempArr = party.Split('@');
+                            var phoneNumber = tempArr[0].Split(':')[1];
+                            partyInfo["phoneNumber"] = phoneNumber;
+                            partyInfo["ipAndPort"] = tempArr[1];
                         }
-                        switch (thisField.FieldNumber) {
-                            case Fn.Sequencenumber:
-                                strThisField= val.Replace(".", "");
-                                break;
-                            case Fn.IncomingRoute:
-                            case Fn.OutgoingRoute:
-                                if (string.IsNullOrEmpty(val))
-                                {
-                                    strThisField= "";
-                                }
-                                strThisField= val.Split('/')[1].Split('-')[0];
-                                break;
-                            case Fn.ChargingStatus:
-                                strThisField = (val == "ANSWERED" ? "1" : "0");
-                                break;
-                            case Fn.TerminatingCalledNumber:
-                                if (val.Contains("/"))
-                                {
-                                    strThisField = val.Split('/')[1].Split('@')[0];
-                                }
-                                else {
-                                    strThisField = val;
-                                }
-                                break;
-                            default:
-                                strThisField = val;
-                                break;
+                        return partyInfo;
+                    };
+                    switch (record.ReleaseDirection)
+                    {
+                        case PbReleaseDirectionType.InternalReleaseDirection:
+                            normalizedRow[Fn.ReleaseDirection] = "7";//internal release due to some problem, matching with zte and dialogic
+                            break;
+                        case PbReleaseDirectionType.OriginationReleaseDirection:
+                            normalizedRow[Fn.ReleaseDirection] = "0";
+                            break;
+                        case PbReleaseDirectionType.TerminationReleaseDirection:
+                            normalizedRow[Fn.ReleaseDirection] = "1";
+                            break;
+                        case PbReleaseDirectionType.UndefinedReleaseDirection:
+                            normalizedRow[Fn.ReleaseDirection] = "8";
+                            break;
+                    }
+
+                    //ingress
+                    PbSdrCallInfo ingressCallInfo = record.IngressCallInfo;
+                    Dictionary<string, string> ingressCallingPartyInfo = getSplitPartyInfo(ingressCallInfo.CallingParty);
+                    normalizedRow[Fn.OriginatingCallingNumber] = ingressCallingPartyInfo["phoneNumber"];
+                    normalizedRow[Fn.Originatingip] = ingressCallingPartyInfo["ipAndPort"].Split(';')[0].Trim();
+                    normalizedRow[Fn.IncomingRoute] = ingressCallInfo.ZoneId.ToString();
+                    Dictionary<string, string> ingressCalledPartyInfo = getSplitPartyInfo(ingressCallInfo.CalledParty);
+                    normalizedRow[Fn.OriginatingCalledNumber] = ingressCalledPartyInfo["phoneNumber"];
+                    normalizedRow[Fn.ReleaseCauseIngress] = record.SipStatusCode.ToString();
+
+                    normalizedRow[Fn.DurationSec] = "0";
+                    normalizedRow[Fn.ChargingStatus] = "0";
+                    //egress
+                    PbSdrCallInfo egressCallInfo = record.EgressCallInfo;
+                    if (egressCallInfo != null)
+                    {
+                        Dictionary<string, string> egressCallingPartyInfo = getSplitPartyInfo(egressCallInfo.CallingParty);
+                        normalizedRow[Fn.TerminatingCallingNumber] =
+                            egressCallInfo.TransCallingParty.Split(':')[1].Split('@')[0];
+
+                        Dictionary<string, string> egressCalledPartyInfo = getSplitPartyInfo(egressCallInfo.CalledParty);
+                        normalizedRow[Fn.TerminatingCalledNumber] =
+                        egressCallInfo.TransCalledParty.Split(':')[1].Split('@')[0];
+
+
+                        normalizedRow[Fn.TerminatingIp] = egressCalledPartyInfo["ipAndPort"].Split(';')[0];
+                        normalizedRow[Fn.OutgoingRoute] = egressCallInfo.ZoneId.ToString();
+
+                        PbTime ringingTs = egressCallInfo.RingingTs;
+                        normalizedRow[Fn.ConnectTime] = ringingTs != null ?
+                            unixTsToDateTimeWithMs(ringingTs).ToMySqlFormatWithoutQuote() : "";
+
+                        //duration and answertime
+                        double durationSec = 0;
+                        if (egressCallInfo.AnswerTs != null)
+                        {
+                            DateTime answerTime = unixTsToDateTimeWithMs(egressCallInfo.AnswerTs);
+                            DateTime endTime = unixTsToDateTimeWithMs(egressCallInfo.DisconnectTs);
+                            durationSec = (endTime - answerTime).TotalMilliseconds / 1000;
+                            normalizedRow[Fn.AnswerTime] = answerTime.ToMySqlFormatWithoutQuote();
                         }
-                        string replaceChar = "'";
-                        if (strThisField.Contains(replaceChar)) {
-                            strThisField.Replace(replaceChar, "");
-                        }
-                        normalizedRow[thisField.FieldNumber] = strThisField;
-                    } // for each field
-                    
+                        normalizedRow[Fn.DurationSec] = durationSec.ToString(CultureInfo.InvariantCulture);
+                        normalizedRow[Fn.ChargingStatus] = durationSec > 0 ? "1" : "0";
+                    }
+
                     //add valid flag for this type of switch, valid flag comes from cdr for zte
                     normalizedRow[Fn.Validflag] = "1";
                     normalizedRow[Fn.Partialflag] = "0";
                     normalizedRow[Fn.FinalRecord] = "1";
-                    normalizedRow[Fn.ConnectTime] = normalizedRow[Fn.StartTime];
-                    //ignore 0 duration
-                    if (Convert.ToDouble(normalizedRow[Fn.DurationSec]) <= 0 &&
-                        normalizedRow[Fn.ChargingStatus]=="1") {
-                        normalizedRow[Fn.ChargingStatus] = "0";
-                    }
                     decodedRows.Add(normalizedRow);
-                    
                 }
                 catch (Exception e1)
                 {
                     //if error found for one row, add this to inconsistent
                     Console.WriteLine(e1);
-                    var inconsistentCdr = CdrConversionUtil.ConvertTxtRowToCdrinconsistent(rowCsv);
+                    var inconsistentCdr = CdrConversionUtil.ConvertTxtRowToCdrinconsistent(normalizedRow);
                     inconsistentCdr.SwitchId = input.Ne.idSwitch.ToString();
                     inconsistentCdr.FileName = input.TelcobrightJob.JobName;
                     inconsistentCdrs.Add(inconsistentCdr);
                     ErrorWriter wr = new ErrorWriter(e1, "DecodeCdr", null,
                         this.RuleName + " encounterd error during decoding and an Inconsistent cdr has been generated."
-                        , input.Tbc.DatabaseSetting.DatabaseName);
+                        , input.Tbc.DatabaseSetting.GetOperatorName);
                 }
             }//for each row
             return decodedRows;
         }
 
-        
+
 
 
     }

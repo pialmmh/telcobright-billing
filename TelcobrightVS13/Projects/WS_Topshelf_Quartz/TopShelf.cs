@@ -159,12 +159,15 @@ namespace WS_Telcobright_Topshelf
                 string configFileNameAsOperatorName = Path.GetFileNameWithoutExtension(configFile.Name);
                 TelcobrightConfig tbc = ConfigFactory.GetConfigFromFile(configFile.FullName);
                 //populate tbCustomer name
+                //string entityConStr =
+                  //  ConnectionManager.GetEntityConnectionStringByOperator(tbc.DatabaseSetting.DatabaseName, tbc);
                 string entityConStr =
-                    ConnectionManager.GetEntityConnectionStringByOperator(tbc.DatabaseSetting.DatabaseName);
+                    ConnectionManager.GetEntityConnectionStringByOperator(configFileNameAsOperatorName, tbc);
                 using (PartnerEntities context = new PartnerEntities(entityConStr))
                 {
+                    var operatorShortName = tbc.DatabaseSetting.GetOperatorName;
                     telcobrightpartner tbPartner = context.telcobrightpartners
-                        .Where(p => p.databasename == tbc.DatabaseSetting.DatabaseName).ToList().First();
+                        .Where(p => p.databasename == operatorShortName).ToList().First();
                 }
                 if (Debugger.IsAttached)
                 {

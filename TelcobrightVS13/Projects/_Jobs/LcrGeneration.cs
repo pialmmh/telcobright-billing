@@ -30,7 +30,7 @@ namespace Jobs
             MediationContext mediationContext = null;
             CdrJob cdrJob = null;
             string entityConStr =
-                ConnectionManager.GetEntityConnectionStringByOperator(lcrJobInputData.Tbc.DatabaseSetting.DatabaseName);
+                ConnectionManager.GetEntityConnectionStringByOperator(lcrJobInputData.Tbc.DatabaseSetting.GetOperatorName);
             using (PartnerEntities partnerContext = new PartnerEntities(entityConStr))
             {
                 partnerContext.Database.Connection.Open();
@@ -82,7 +82,7 @@ namespace Jobs
                           " where id=" + lcrJobInputData.TelcobrightJob.id;
                     cmd.CommandText = sql;
                     cmd.ExecuteNonQuery();
-                    string databaseName = lcrJobInputData.Tbc.DatabaseSetting.DatabaseName;
+                    string databaseName = lcrJobInputData.Tbc.DatabaseSetting.GetDataBaseName;
                     cmd.CommandText =
                         "use " + databaseName + ";"; //must change back immediately, even if rollback occurs
                     cmd.ExecuteNonQuery();

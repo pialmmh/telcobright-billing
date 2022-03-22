@@ -385,7 +385,7 @@ namespace Decoders
                     inconsistentCdrs.Add(CdrConversionUtil.ConvertTxtRowToCdrinconsistent(thisRow));
                     ErrorWriter wr = new ErrorWriter(e1, "DecodeCdr", null,
                         "Encounterd error during decoding with ZteDecoderHelper."
-                        , input.Tbc.DatabaseSetting.DatabaseName);
+                        , input.Tbc.DatabaseSetting.GetOperatorName);
                     continue;//with next switch
                 }
             }//for each row in byte array
