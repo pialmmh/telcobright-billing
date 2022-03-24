@@ -23,23 +23,22 @@ namespace Decoders
         protected CdrCollectorInputData Input { get; set; }
         protected virtual List<string[]> GetTxtCdrs()
         {
-            return FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(this.Input.FullPath, ',', 0,"\"",";");
+            return new List<string[]>();
         }
 
 
         public List<string[]> DecodeFile(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs)
         {
-            
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
             this.Input = input;
             List<cdrfieldmappingbyswitchtype> fieldMappings = null;
-            input.MefDecodersData.DicFieldMapping.TryGetValue(this.Id, out fieldMappings);
-            List<string[]> tempTable = GetTxtCdrs();
-
+            //input.MefDecodersData.DicFieldMapping.TryGetValue(this.Id, out fieldMappings);
+            //int maxFieldPositionInInputCsv = fieldMappings.Max(
+            //    cdrFldMapping => Convert.ToInt32(cdrFldMapping.FieldPositionInCDRRow));
+            String inputFilename = this.Input.FullPath;
             SdrExtractor sdrExtractor = new SdrExtractor();
-            List<PbSdrRecord> sdrs = sdrExtractor.GetSdrs(input.FullPath);
-
+            List<PbSdrRecord> sdrs = sdrExtractor.GetSdrs(inputFilename);
             string[] replaceChars = new string[] { "'", "<", ">" };
             foreach (var record in sdrs) //for each row
             {

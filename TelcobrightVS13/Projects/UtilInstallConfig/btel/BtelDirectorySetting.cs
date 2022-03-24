@@ -47,7 +47,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "C:/telcobright/Vault/Resources/CDR/btel/btelCataleya",
+                StartingPath = "C:/telcobright/Vault/Resources/CDR/btel/BtelZteDhk",
                 User = "",
                 Pass = "",
             };
@@ -79,11 +79,12 @@ namespace InstallConfig
             ftpLocations.Add(appServerFtp1);
             ftpLocations.Add(appServerFtp2);
             Vault BtelZteDhkvault = new Vault("Vault.BtelZteDhk", tbc, ftpLocations);
-            Vault BtelCataleya = new Vault("Vault.btelCataleya", tbc, ftpLocations);
+            Vault BtelCataleyaVault = new Vault("Vault.btelCataleya", tbc, ftpLocations);
 
             BtelZteDhkvault.LocalLocation = new SyncLocation(vaultBtelZteDhk.Name) { FileLocation = vaultBtelZteDhk };//don't pass this to constructor and set there, causes problem in json serialize
+            BtelCataleyaVault.LocalLocation = new SyncLocation(vaultBtelCataleya.Name) { FileLocation = vaultBtelCataleya };//don't pass this to constructor and set there, causes problem in json serialize
             directorySettings.Vaults.Add(BtelZteDhkvault);
-            directorySettings.Vaults.Add(BtelCataleya);
+            directorySettings.Vaults.Add(BtelCataleyaVault);
             FileLocation BtelZteDhk = new FileLocation()
             {
                 Name = "BtelZteDhk",
@@ -96,6 +97,21 @@ namespace InstallConfig
                 ServerIp = "10.33.34.12",
                 User = "igwbill",
                 Pass = "igw123",
+                ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
+                IgnoreZeroLenghFile = 1
+            };
+            FileLocation btelCataleya = new FileLocation()
+            {
+                Name = "btelCataleya",
+                LocationType = "sftp",
+                OsType = "linux",
+                PathSeparator = "/",
+                StartingPath = "/sdr/incoming_sdr_bin/",
+                //StartingPath = "/home/zxss10_bsvr/data/bfile/bill/zsmart_media_bak",
+                Sftphostkey = "",
+                ServerIp = "10.33.42.4",
+                User = "banglatel_sdr",
+                Pass = "B@ngL@TEL@2021!_1",
                 ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
                 IgnoreZeroLenghFile = 1
             };
@@ -125,6 +141,7 @@ namespace InstallConfig
             };
             //add locations to directory settings
             directorySettings.FileLocations.Add(vaultBtelZteDhk.Name, vaultBtelZteDhk);
+            directorySettings.FileLocations.Add(vaultBtelCataleya.Name, vaultBtelCataleya);
             directorySettings.FileLocations.Add(appServerFtp1.Name, appServerFtp1);
             directorySettings.FileLocations.Add(appServerFtp2.Name, appServerFtp2);
             directorySettings.FileLocations.Add(BtelZteDhk.Name, BtelZteDhk);
@@ -133,7 +150,7 @@ namespace InstallConfig
             directorySettings.FileLocations.Add(fileArchiveIof.Name, fileArchiveIof);
 
 
-            SyncPair BtelZteDhkVault = new SyncPair("BtelZteDhk:Vault")
+            SyncPair spBtelZteDhkVault = new SyncPair("BtelZteDhk:Vault")
             {
                 SkipSourceFileListing = false,
                 SrcSyncLocation = new SyncLocation("BtelZteDhk")
@@ -147,10 +164,41 @@ namespace InstallConfig
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
-                    SecondaryDirectory = "Downloaded",
+                    SecondaryDirectory = "downloaded",
+                    MoveFilesToSecondaryAfterCopy = true,
                     ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('IGW')
                                                                 and
                                                                 (Name.EndsWith('.DAT'))
+                                                                and Length>0")
+                },
+                DstSettings = new SyncSettingsDest()
+                {
+                    FileExtensionForSafeCopyWithTempFile = ".tmp",//make sure when copying to vault always .tmp ext used
+                    Overwrite = true,
+                    ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
+                    CompressionType = CompressionType.None
+                }
+            };
+            //cataleya
+            SyncPair spBtelCataleyaVault = new SyncPair("btelCataleya:Vault")
+            {
+                SkipSourceFileListing = false,
+                SrcSyncLocation = new SyncLocation("btelCataleya")
+                {
+                    FileLocation = btelCataleya,
+                    DescendingFileListByFileName = tbc.CdrSetting.DescendingOrderWhileListingFiles
+                },
+                DstSyncLocation = new SyncLocation("Vault.btelCataleya")
+                {
+                    FileLocation = vaultBtelCataleya
+                },
+                SrcSettings = new SyncSettingsSource()
+                {
+                    SecondaryDirectory = "incoming_sdr_bin_backup",
+                    MoveFilesToSecondaryAfterCopy = true,
+                    ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('esdr')
+                                                                and
+                                                                (Name.EndsWith('.bin'))
                                                                 and Length>0")
                 },
                 DstSettings = new SyncSettingsDest()
@@ -178,7 +226,7 @@ namespace InstallConfig
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
-                    SecondaryDirectory = "Downloaded",
+                    SecondaryDirectory = "downloaded",
                     ExpFileNameFilter = null,
                 },
                 DstSettings = new SyncSettingsDest()
@@ -216,7 +264,8 @@ namespace InstallConfig
             };
 
             //add sync pairs to directory config
-            directorySettings.SyncPairs.Add(BtelZteDhkVault.Name, BtelZteDhkVault);
+            directorySettings.SyncPairs.Add(spBtelZteDhkVault.Name, spBtelZteDhkVault);
+            directorySettings.SyncPairs.Add(spBtelCataleyaVault.Name, spBtelCataleyaVault);
             directorySettings.SyncPairs.Add(vaultFileArchive1Zip.Name, vaultFileArchive1Zip);
             directorySettings.SyncPairs.Add(vaultIof.Name, vaultIof);
             //load the syncpairs in dictioinary, first by source
