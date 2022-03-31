@@ -11,7 +11,7 @@ namespace LibraryExtensions.ConfigHelper
         public bool OverrideDatabaseSettingsFromAppConfig { get; set; }
         public string OperatorShortNameAliasToOverride { get; set; }
         public String ServerName { get; set; }
-        private string mDatabaseName = "";
+        public string mDatabaseName = "";//needs to be public for Json serializer to pickup
         public string DatabaseName {
             private get { return mDatabaseName; }
             set { mDatabaseName = value; }

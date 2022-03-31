@@ -400,7 +400,7 @@ namespace TelcobrightMediation
                 writtenCdrCount = 0;
 
             if (this.CollectionResult.CdrInconsistents.Any())
-                writtenInconsistentCount = WriteCdrInconsistent();
+                writtenInconsistentCount = WriteCdrInconsistent();//code changed, from now on inconsistent will be written to cdrError too.
 
             if (this.CollectionResult.CdrExtErrors.Any())
                 writtenErrorCount = WriteCdrError();
@@ -501,7 +501,8 @@ namespace TelcobrightMediation
                     int segmentCount = stringBuilders.Count;
                     int affectedRecordCount = DbWriterWithAccurateCount.ExecSingleStatementThroughStoredProc(
                         dbCmd: this.DbCmd,
-                        command: "insert into cdrinconsistent values " + string.Join(",", stringBuilders),
+                        //command: "insert into cdrinconsistent values " + string.Join(",", stringBuilders),
+                        command: "insert into cdrerror values " + string.Join(",", stringBuilders),
                         expectedRecCount: segmentCount);
                     if (affectedRecordCount != segmentCount)
                         throw new Exception(
