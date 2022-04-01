@@ -375,7 +375,7 @@ public partial class ConfigBatcJob : System.Web.UI.Page
             }
             TelcobrightConfig tbc = PageUtil.GetTelcobrightConfig();
             string operatorName = tbc.DatabaseSetting.GetOperatorName;
-            string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName);
+            string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName, tbc);
             List<ne> lstSwitch=new List<ne>();
             Dictionary<string, route> dicRoutes = new Dictionary<string, route>();
             DateTime dstartdate = Convert.ToDateTime("1800-01-01", CultureInfo.InvariantCulture);
