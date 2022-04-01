@@ -22,14 +22,6 @@ namespace InstallConfig
     {
         public DatabaseSetting OverrideDatabaseSettingsIfEnabled(TelcobrightConfig tbc)
         {
-            //DatabaseSetting dataBaseSetting = tbc.DatabaseSetting;
-            //dataBaseSetting.OverrideDatabaseSettingsFromAppConfig = true;
-            //dataBaseSetting.ServerName = "10.0.0.9";
-            //dataBaseSetting.DatabaseName = "btel2";
-            //dataBaseSetting.AdminPassword = "btelReProcess12#";
-            //dataBaseSetting.AdminUserName = "btel";
-            //dataBaseSetting.OperatorShortNameAliasToOverride = "btel";
-
             DatabaseSetting dataBaseSetting = tbc.DatabaseSetting;
             dataBaseSetting.OverrideDatabaseSettingsFromAppConfig = true;
             dataBaseSetting.ServerName = "10.0.0.9";
@@ -37,6 +29,8 @@ namespace InstallConfig
             dataBaseSetting.AdminPassword = "Takay1#$ane";
             dataBaseSetting.AdminUserName = "root";
             dataBaseSetting.OperatorShortNameAliasToOverride = "btel";
+            dataBaseSetting.ReadOnlyUserName = "dbreader";
+            dataBaseSetting.ReadOnlyPassword = "Takay1takaane";
 
             return dataBaseSetting;
         }
