@@ -686,7 +686,7 @@ public partial class ConfigBatcJob : System.Web.UI.Page
                     newjob.Progress = 0;
                     newjob.idjobdefinition = jobType;
                     newjob.Status = 6; //created
-                    newjob.JobName = jobName;
+                    newjob.JobName = jobName+ "_" + thisSwitch.SwitchName;
                     newjob.idjobdefinition = jobType;
                     newjob.CreationTime = DateTime.Now;
                     newjob.idNE = thisSwitch.idSwitch;
@@ -702,7 +702,8 @@ public partial class ConfigBatcJob : System.Web.UI.Page
         }
         catch (Exception e1)
         {
-            this.lblStatus.Text = e1.Message;
+            string message = e1?.InnerException?.InnerException?.Message;
+            this.lblStatus.Text = string.IsNullOrEmpty(message) ? e1.Message : message;
         }
     }
 }
