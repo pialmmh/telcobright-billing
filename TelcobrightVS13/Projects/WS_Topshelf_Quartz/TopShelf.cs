@@ -306,17 +306,18 @@ namespace WS_Telcobright_Topshelf
             Console.Clear();
             Console.WriteLine("Enter trigger numbers to debug with scheduler, separated by comma...");
             Console.WriteLine("Press Enter to resume all...");
+            string choices = "";
             for (var index = 0; index < triggers.Count; index++)
             {
                 ITrigger t = triggers[index];
                 Console.WriteLine((index + 1) + ". " + t.Key); //display from 1, keep 0 for all
             }
-            var readLine = Console.ReadLine();
-            if (readLine.IsNullOrEmptyOrWhiteSpace())
+            choices = Console.ReadLine();
+            if (choices.IsNullOrEmptyOrWhiteSpace())
             {
-                return new Dictionary<int, string>();
+                choices = string.Join(",", Enumerable.Range(1, triggers.Count).Select(num => num.ToString()));
             }
-            return readLine.Split(',').Select(keyWithArgs =>
+            return choices.Split(',').Select(keyWithArgs =>
             {
                 var arr = keyWithArgs.Split(null).Select(item => item.Trim()).ToArray();
                 int key = Convert.ToInt32(arr[0]) - 1;//displayed menu items are 1 based, change to 0 based choise
