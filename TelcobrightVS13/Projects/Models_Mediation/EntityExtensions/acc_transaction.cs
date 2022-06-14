@@ -10,29 +10,28 @@ namespace MediationModel
     {
         public acc_transaction Clone()
         {
-            return new acc_transaction()
-            {
-                id = this.id,
-                transactionTime = this.transactionTime,
-                seqId = this.seqId,
-                debitOrCredit = this.debitOrCredit,
-                idEvent = this.idEvent,
-                uniqueBillId = this.uniqueBillId,
-                description = this.description,
-                glAccountId = this.glAccountId,
-                uomId = this.uomId,
-                amount = this.amount,
-                BalanceBefore = this.BalanceBefore,
-                BalanceAfter = this.BalanceAfter,
-                isBillable = this.isBillable,
-                isPrepaid = this.isPrepaid,
-                isBilled = this.isBilled,
-                cancelled = this.cancelled,
-                createdByJob = this.createdByJob,
-                changedByJob = this.changedByJob,
-                jsonDetail = this.jsonDetail
+            var newTrans = new acc_transaction();
+            newTrans.id = this.id;
+            newTrans.transactionTime = this.transactionTime;
+            newTrans.seqId = this.seqId;
+            newTrans.debitOrCredit = this.debitOrCredit;
+            newTrans.idEvent = this.idEvent;
+            newTrans.uniqueBillId = this.uniqueBillId;
+            newTrans.description = this.description;
+            newTrans.glAccountId = this.glAccountId;
+            newTrans.uomId = this.uomId;
+            newTrans.amount = this.amount;
+            newTrans.BalanceBefore = this.BalanceBefore;
+            newTrans.BalanceAfter = this.BalanceAfter;
+            newTrans.isBillable = this.isBillable;
+            newTrans.isPrepaid = this.isPrepaid;
+            newTrans.isBilled = this.isBilled;
+            newTrans.cancelled = this.cancelled;
+            newTrans.createdByJob = this.createdByJob;
+            newTrans.changedByJob = this.changedByJob;
+            newTrans.jsonDetail = this.jsonDetail;
 
-            };
+            return newTrans;
         }
     }
 }

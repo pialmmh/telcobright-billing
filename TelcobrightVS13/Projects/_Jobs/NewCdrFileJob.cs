@@ -152,10 +152,16 @@ namespace Jobs
             {
                 if (cdrSetting.AutoCorrectDuplicateBillId == true)
                 {
-                    preProcessor.TxtCdrRows = AbstractCdrJobPreProcessor.ChangeDuplicateBillIds(preProcessor.TxtCdrRows);
+                    preProcessor.TxtCdrRows =
+                        AbstractCdrJobPreProcessor.ChangeDuplicateBillIds(preProcessor.TxtCdrRows);
                 }
             }
-            else preProcessor.TxtCdrRows = preProcessor.FilterCdrsWithDuplicateBillIdsAsInconsistent(preProcessor.TxtCdrRows);
+            else
+            {
+                preProcessor.TxtCdrRows =
+                    preProcessor.FilterCdrsWithDuplicateBillIdsAsInconsistent(preProcessor.TxtCdrRows);
+                preProcessor.TxtCdrRows.AsParallel().ForAll(row=>row[Fn.Partialflag]="0");
+            }
 
             if (cdrSetting.AutoCorrectBillIdsWithPrevChargeableIssue == true)
             {
