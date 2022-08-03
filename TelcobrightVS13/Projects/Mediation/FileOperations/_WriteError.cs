@@ -9,14 +9,22 @@ namespace TelcobrightFileOperations
     public class ErrorWriter
     {
         public ErrorWriter(Exception e,string processInformation,job telcobrightJob,string messageToPrepend,
-            string operatorName)
+            string operatorName, PartnerEntities partnerEntities=null)
         {
             try
             {
-                string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName);
-                using (PartnerEntities context = new PartnerEntities(entityConStr))
+                string entityConStr = "";
+                PartnerEntities context = null;
+                if (partnerEntities == null)
                 {
-                    allerror thisError = new allerror
+                    entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName);
+                    context = new PartnerEntities(entityConStr);
+                }
+                else {
+                    context = partnerEntities;
+                }
+
+                allerror thisError = new allerror
                     {
                         TimeRaised = DateTime.Now,
                         Status = 1,
@@ -27,7 +35,7 @@ namespace TelcobrightFileOperations
                     };
                     context.allerrors.Add(thisError);
                     context.SaveChanges();
-                }
+                
             }
             catch (Exception e2)//database error
             {

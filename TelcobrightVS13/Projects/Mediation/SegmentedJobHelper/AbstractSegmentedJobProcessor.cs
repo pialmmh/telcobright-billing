@@ -103,21 +103,23 @@ namespace TelcobrightMediation
                     }
                     catch (Exception e)
                     {
-                        try
+                        //try
                         {
                             Console.WriteLine(e);
                             cmd.ExecuteCommandText("rollback;"); //rollback immediately
                             ErrorWriter wr = new ErrorWriter(e, $@"Segmented Job Processor", this.TelcobrightJob,
-                                "Error Processing Segments of batch job " + this.TelcobrightJob.JobName, "");
+                                "Error Processing Segments of batch job " + this.TelcobrightJob.JobName, 
+                                "", this.Context);
                             throw; // do not continue on error other than rateCache exception for cdrJobs
                         }
-                        catch (Exception e1)
-                        {
-                            Console.WriteLine(e1);
-                            ErrorWriter wr = new ErrorWriter(e, $@"Segmented Job Processor", this.TelcobrightJob,
-                                "Error Processing Segments of batch job " + this.TelcobrightJob.JobName, "");
-                            throw;
-                        }
+                        //catch (Exception e1)
+                        //{
+                        //    Console.WriteLine(e1);
+                        //    ErrorWriter wr = new ErrorWriter(e, $@"Segmented Job Processor", this.TelcobrightJob,
+                        //        "Error Processing Segments of batch job " + this.TelcobrightJob.JobName,
+                        //        "",this.Context);
+                        //    throw;
+                        //}
                     }
                 } //for each segment
             }
