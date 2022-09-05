@@ -43,6 +43,7 @@ namespace TelcobrightMediation
             this.DaysToAddBeforeAndAfterUniqueDaysForSafePartialCollection = 1;
             this.IllegalStrToRemoveFromFields = new List<string>();
             this.CallConnectTimePresent = true;
+           
         }
 
     }

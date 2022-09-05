@@ -55,6 +55,7 @@ namespace InstallConfig
                 AutoCorrectBillIdsWithPrevChargeableIssue=true,
                 AutoCorrectDuplicateBillId=true,
                 AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
+                UseIdCallAsBillId=true
             };
 
             this.PrepareDirectorySetting(this.Tbc);
