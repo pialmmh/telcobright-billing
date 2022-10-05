@@ -81,8 +81,11 @@ namespace TelcobrightMediation.Reports.InvoiceReports.jsl.ICX
 
             #endregion
 
-            
             #region Report Footer
+            if (invoiceMap.ContainsKey("paymentAdvice") && invoiceMap["paymentAdvice"] != null)
+            {
+                xrLabelPaymentAdvice.Text = invoiceMap["paymentAdvice"].ToString();
+            }
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
             xrLabelAmountInwords.Text = textInfo.ToTitleCase(CurrencyHelper.NumberToTakaWords(Convert.ToDouble(invTotalAmount)));
             xrLabelConversionRate.Text = string.Format("As per Sonali Bank Rate (1USD = BDT {0:n2}) as on {1:dd-MMM-yyyy}", invoiceMap["usdRate"], invoiceMap["endDate"]);
