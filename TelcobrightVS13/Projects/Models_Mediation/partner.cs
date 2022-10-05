@@ -57,7 +57,8 @@ namespace MediationModel
         public int DefaultCurrency { get; set; }
         public string invoiceAddress { get; set; }
         public string vatRegistrationNo { get; set; }
-    
+        public string paymentAdvice { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<account> accounts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

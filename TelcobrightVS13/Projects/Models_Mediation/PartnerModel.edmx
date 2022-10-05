@@ -1822,6 +1822,7 @@ warning 6002: The table/view 'def.platinum.mockcdr' does not have a primary key 
           <Property Name="refasrfas" Type="float" />
           <Property Name="DefaultCurrency" Type="int" Nullable="false" />
           <Property Name="invoiceAddress" Type="varchar" MaxLength="200" />
+          <Property Name="paymentAdvice" Type="varchar" MaxLength="1000" />
           <Property Name="vatRegistrationNo" Type="varchar" MaxLength="45" />
         </EntityType>
         <EntityType Name="partnerprefix">
@@ -7323,6 +7324,7 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <Property Name="refasrfas" Type="Single" />
           <Property Name="DefaultCurrency" Type="Int32" Nullable="false" />
           <Property Name="invoiceAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="paymentAdvice" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="vatRegistrationNo" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="accounts" Relationship="MediationModel.account_ibfk_1" FromRole="partner" ToRole="account" />
           <NavigationProperty Name="accounts1" Relationship="MediationModel.account_ibfk_2" FromRole="partner" ToRole="account" />
@@ -11613,6 +11615,7 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
               <MappingFragment StoreEntitySet="partner">
                 <ScalarProperty Name="vatRegistrationNo" ColumnName="vatRegistrationNo" />
                 <ScalarProperty Name="invoiceAddress" ColumnName="invoiceAddress" />
+                <ScalarProperty Name="paymentAdvice" ColumnName="paymentAdvice" />
                 <ScalarProperty Name="DefaultCurrency" ColumnName="DefaultCurrency" />
                 <ScalarProperty Name="refasrfas" ColumnName="refasrfas" />
                 <ScalarProperty Name="refpdd" ColumnName="refpdd" />

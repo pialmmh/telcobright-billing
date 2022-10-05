@@ -42,7 +42,8 @@ namespace MediationModel
 				.Append(this.refasrfas.ToMySqlField()).Append(",")
 				.Append(this.DefaultCurrency.ToMySqlField()).Append(",")
 				.Append(this.invoiceAddress.ToMySqlField()).Append(",")
-				.Append(this.vatRegistrationNo.ToMySqlField()).Append(")")
+                .Append(this.paymentAdvice.ToMySqlField()).Append(",")
+                .Append(this.vatRegistrationNo.ToMySqlField()).Append(")")
 				;
 		}
 		public  StringBuilder GetExtInsertCustom(Func<partner,string> externalInsertMethod)
@@ -83,7 +84,8 @@ namespace MediationModel
 				.Append("refasrfas=").Append(this.refasrfas.ToMySqlField()).Append(",")
 				.Append("DefaultCurrency=").Append(this.DefaultCurrency.ToMySqlField()).Append(",")
 				.Append("invoiceAddress=").Append(this.invoiceAddress.ToMySqlField()).Append(",")
-				.Append("vatRegistrationNo=").Append(this.vatRegistrationNo.ToMySqlField())
+                .Append("paymentAdvice=").Append(this.paymentAdvice.ToMySqlField()).Append(",")
+                .Append("vatRegistrationNo=").Append(this.vatRegistrationNo.ToMySqlField())
 				.Append(whereClauseMethod.Invoke(this));
 				
 		}

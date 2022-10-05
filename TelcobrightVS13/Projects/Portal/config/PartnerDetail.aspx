@@ -56,9 +56,9 @@
         <EditItemTemplate>
           
 
-            <table style="width: 720px;">
+            <table style="width: 100%;">
                 <tr>
-                    <td style="width: 460px; padding-left: 30px;" valign="top"> <%--first column--%>
+                    <td style="width: 50%; padding-left: 30px;" valign="top"> <%--first column--%>
                         <table cellpadding="2" cellspacing="0" border="0">
                             <tr>
                                 <td align="right"><b>PartnerName: </b></td>
@@ -110,35 +110,45 @@
                     </td>
             
             
-                    <td style="width: 260px; padding-left: 30px;" valign="top"> <%--Column 2--%>
+                    <td style="width: 50%; padding-left: 30px;" valign="top"> <%--Column 2--%>
                         <table cellpadding="2" cellspacing="0" border="0">
                             <tr>
                                 <td align="right">Address1: </td>
-                                <td align="left"><asp:TextBox ID="Address1TextBox" runat="server" Text='<%# Bind("Address1") %>' /></td>
+                                <td align="left"><asp:TextBox ID="Address1TextBox" Width="267px" runat="server" Text='<%# Bind("Address1") %>' /></td>
                             </tr>
                             <tr>
                                 <td align="right">Address2: </td>
-                                <td align="left"><asp:TextBox ID="Address2TextBox" runat="server" Text='<%# Bind("Address2") %>' /></td>
+                                <td align="left"><asp:TextBox ID="Address2TextBox" Width="267px" runat="server" Text='<%# Bind("Address2") %>' /></td>
                             </tr>
                             <tr>
                                 <td align="right">City: </td>
-                                <td align="left"><asp:TextBox ID="CityTextBox" runat="server" Text='<%# Bind("City") %>' /></td>
+                                <td align="left"><asp:TextBox ID="CityTextBox" Width="267px" runat="server" Text='<%# Bind("City") %>' /></td>
                             </tr>
                             <tr>
                                 <td align="right">State: </td>
-                                <td align="left"><asp:TextBox ID="StateTextBox" runat="server" Text='<%# Bind("State") %>' /></td>
+                                <td align="left"><asp:TextBox ID="StateTextBox" Width="267px" runat="server" Text='<%# Bind("State") %>' /></td>
                             </tr>
                             <tr>
                                 <td align="right">PostalCode: </td>
-                                <td align="left"><asp:TextBox ID="PostalCodeTextBox" runat="server" Text='<%# Bind("PostalCode") %>' /></td>
+                                <td align="left"><asp:TextBox ID="PostalCodeTextBox" Width="267px" runat="server" Text='<%# Bind("PostalCode") %>' /></td>
                             </tr>
                             <tr>
                                 <td align="right">Country: </td>
-                                <td align="left"><asp:TextBox ID="CountryTextBox" runat="server" Text='<%# Bind("Country") %>' /></td>
+                                <td align="left"><asp:TextBox ID="CountryTextBox" Width="267px" runat="server" Text='<%# Bind("Country") %>' /></td>
                             </tr>
                             <tr>
-                                <td align="right"><b>InvoiceAddress: </b></td>
-                                <td align="left"><asp:TextBox ID="InvoiceAddressTextBox" Width="167px" runat="server" TextMode="MultiLine" Text='<%# Bind("invoiceAddress") %>' /></td>
+                                <td align="right" valign="top"><b>Invoice Address: </b></td>
+                                <td align="left"><asp:TextBox ID="InvoiceAddressTextBox" Width="267px" Rows="4" runat="server" TextMode="MultiLine" Text='<%# Bind("invoiceAddress") %>' /></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 100%; padding-left: 30px;" valign="top" colspan="2">
+                        <table cellpadding="2" cellspacing="0" border="0">
+                            <tr>
+                                <td align="right" style="width: 158px;" valign="top"><b>Payment Advice: </b></td>
+                                <td align="left"><asp:TextBox ID="PaymentAdviceTextBox" Width="667px" Rows="6" runat="server" TextMode="MultiLine" Text='<%# Bind("paymentAdvice") %>' /></td>
                             </tr>
                         </table>
                     </td>
