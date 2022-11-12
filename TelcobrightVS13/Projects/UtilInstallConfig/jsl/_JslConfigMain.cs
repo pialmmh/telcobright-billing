@@ -52,6 +52,8 @@ namespace InstallConfig
                 DisableParallelMediation = false,
                 AutoCorrectDuplicateBillId = true,
                 AutoCorrectBillIdsWithPrevChargeableIssue = true,
+                AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
+                UseIdCallAsBillId = true,
                 FileSplitSetting = new FileSplitSetting()
                 {
                     FileSplitType = "byte",
