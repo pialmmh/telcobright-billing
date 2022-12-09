@@ -97,6 +97,14 @@
     <Compile Include="bigl\ConfigGenerator_bigl.cs" />
     <Compile Include="BIllingRulesDefiner.cs" />
     <Compile Include="btel\BtelDatabaseSettings.cs" />
+    <Compile Include="srtelecom\SrtAppServerConfig.cs" />
+    <Compile Include="srtelecom\SrtDatabaseSettings.cs" />
+    <Compile Include="srtelecom\SrtDirectorySettings.cs" />
+    <Compile Include="srtelecom\SrtPortalSetting.cs" />
+    <Compile Include="srtelecom\SrtProductAndServiceConfig.cs" />
+    <Compile Include="srtelecom\SrtQuartzConfig.cs" />
+    <Compile Include="srtelecom\SrtServiceGroups.cs" />
+    <Compile Include="srtelecom\_SrtConfigMain.cs" />
     <Compile Include="jsl\JslDatabaseSettings.cs" />
     <Compile Include="purple\purpleAppServerConfig.cs" />
     <Compile Include="purple\purpleDirectorySettings.cs" />
@@ -245,6 +253,9 @@
     <Content Include="bigl\tmplPortalAppPools.txt" />
     <Content Include="bigl\tmplPortalFtpSite.txt" />
     <Content Include="bigl\tmplPortalWebSite.txt" />
+    <Content Include="srtelecom\tmplPortalAppPools.txt" />
+    <Content Include="srtelecom\tmplPortalFtpSite.txt" />
+    <Content Include="srtelecom\tmplPortalWebSite.txt" />
     <Content Include="purple\tmplPortalAppPools.txt" />
     <Content Include="purple\tmplPortalFtpSite.txt" />
     <Content Include="purple\tmplPortalWebSite.txt" />
