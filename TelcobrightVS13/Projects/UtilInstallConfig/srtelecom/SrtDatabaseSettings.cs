@@ -24,11 +24,11 @@ namespace InstallConfig
         {
             DatabaseSetting dataBaseSetting = tbc.DatabaseSetting;
             dataBaseSetting.OverrideDatabaseSettingsFromAppConfig = true;
-            dataBaseSetting.ServerName = "10.0.0.5";
-            dataBaseSetting.DatabaseName = "jsl";
+            dataBaseSetting.ServerName = "172.16.100.6";
+            dataBaseSetting.DatabaseName = "srtelecom";
             dataBaseSetting.AdminPassword = "Takay1#$ane";
             dataBaseSetting.AdminUserName = "root";
-            dataBaseSetting.OperatorShortNameAliasToOverride = "jsl";
+            dataBaseSetting.OperatorShortNameAliasToOverride = "srtelecom";
 
             return dataBaseSetting;
         }

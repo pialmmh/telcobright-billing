@@ -65,7 +65,7 @@ namespace TelcobrightFileOperations
             using (Session session = GetRemoteFileTransferSession(tbc))
             {
                 DirectoryLister dirlister = new DirectoryLister();
-                return dirlister.ListRemoteDirectoryNonRecursive(session, this.FileLocation.StartingPath);
+                return dirlister.ListRemoteDirectoryRecursive(session, this.FileLocation.StartingPath);
             }
         }
         public List<FileInfo> GetLocalFilesNonRecursive()
@@ -138,7 +138,6 @@ namespace TelcobrightFileOperations
         {
             //get list of files
             List<FileInfo> localFiles = new List<FileInfo>();
-            List<RemoteFileInfo> remoteFiles = new List<RemoteFileInfo>();
             List<string> fileNames = new List<string>();
             switch (this.FileLocation.LocationType)
             {
@@ -148,7 +147,14 @@ namespace TelcobrightFileOperations
                     break;
                 case "sftp":
                 case "ftp":
-                    GetRemoteFiles(srcSettings,tbc).ForEach(c => fileNames.Add(c.Name.Replace("\\", "/")));
+                    if (srcSettings.Recursive == false)
+                    {
+                        GetRemoteFiles(srcSettings, tbc).ForEach(c => fileNames.Add(c.Name.Replace("\\", "/")));
+                    }
+                    else {
+                        List<RemoteFileInfo> remoteFiles = GetRemoteFiles(srcSettings, tbc);
+                        remoteFiles.ForEach(f => fileNames.Add(f.Name));
+                    }
                     break;
             }
             return fileNames;

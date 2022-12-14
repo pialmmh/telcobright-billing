@@ -18,6 +18,11 @@ namespace InstallConfig
 {
     public partial class SrtConfigGenerator //quartz config part
     {
+        public static Dictionary<string, string> SrtConfigHelperMap = new Dictionary<string, string>()
+        {
+            { "vaultName","vault"},
+            //{}
+        };
         public void PrepareDirectorySettings(TelcobrightConfig tbc)
         {
             DirectorySettings directorySetting = new DirectorySettings("Directory Settings")
@@ -140,6 +145,7 @@ namespace InstallConfig
                 {
                     SecondaryDirectory = "downloaded",
                     MoveFilesToSecondaryAfterCopy = true,
+                    Recursive=true,
                     ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('SRT')
                                                                 and
                                                                 (Name.EndsWith('.dat'))

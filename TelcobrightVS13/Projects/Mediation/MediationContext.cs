@@ -259,7 +259,7 @@ namespace TelcobrightMediation
 
             cmd.CommandText = $@"create temporary table temp_sql_statement(
                                         id int primary key auto_increment,
-                                        statement varchar(20000) not null) engine=memory;";
+                                        statement text not null) engine=memory;";
             cmd.ExecuteNonQuery();
             DropAndCreateTempRateTable(cmd);
         }

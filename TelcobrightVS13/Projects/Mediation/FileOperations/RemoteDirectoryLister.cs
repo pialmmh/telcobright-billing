@@ -5,28 +5,56 @@ namespace TelcobrightFileOperations
 {
     class DirectoryLister
     {
+        List<RemoteFileInfo> GetFilesOnlyWithoutFolders(RemoteDirectoryInfo directoryInfo)
+        {
+            List<RemoteFileInfo> filesOnly = new List<RemoteFileInfo>();
+            foreach (RemoteFileInfo fileInfo in directoryInfo.Files)
+            {
+                if (!fileInfo.IsDirectory)
+                {
+                    filesOnly.Add(fileInfo);
+                }
+            }
+            return filesOnly;
+        }
+        List<RemoteFileInfo> GetFoldersOnly(RemoteDirectoryInfo directoryInfo)
+        {
+            List<RemoteFileInfo> foldersOnly = new List<RemoteFileInfo>();
+            foreach (RemoteFileInfo fileInfo in directoryInfo.Files)
+            {
+                if (fileInfo.IsDirectory)
+                {
+                    if ((fileInfo.Name != ".") && (fileInfo.Name != "..")) {
+                        foldersOnly.Add(fileInfo);
+                    }
+                }
+            }
+            return foldersOnly;
+        }
+        bool HasSubDirectory(RemoteDirectoryInfo directoryInfo) {
+            foreach (RemoteFileInfo fileInfo in directoryInfo.Files)
+            {
+                if ((fileInfo.Name == ".") || (fileInfo.Name == "..")) continue;
+                if (fileInfo.IsDirectory)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         public List<RemoteFileInfo> ListRemoteDirectoryRecursive(Session session, string relativePath)
         {
             List<RemoteFileInfo> remoteFiles = new List<RemoteFileInfo>();
             RemoteDirectoryInfo directoryInfo = session.ListDirectory(relativePath);
-            foreach (RemoteFileInfo fileInfo in directoryInfo.Files)
-            {
-                string remoteFilePath = relativePath + "/" + fileInfo.Name;
-                if (fileInfo.IsDirectory)
-                {
-                    // Skip references to current and parent directories
-                    if ((fileInfo.Name != ".") &&
-                        (fileInfo.Name != ".."))
-                    {
-                        ListRemoteDirectoryRecursive(session, remoteFilePath);
-                    }
-                }
-                else
-                {
-                    remoteFiles.Add(fileInfo);
-                }
+            List<RemoteFileInfo> filesOnly = GetFilesOnlyWithoutFolders(directoryInfo);
+            if (HasSubDirectory(directoryInfo) == false) return filesOnly;
+            List<RemoteFileInfo> foldersOnly = GetFoldersOnly(directoryInfo);
+            foreach (RemoteFileInfo subDir in foldersOnly) {
+                string subDirRelativePath = relativePath + subDir.Name + "/";
+                filesOnly.AddRange(ListRemoteDirectoryRecursive(session, subDirRelativePath));
             }
-            return remoteFiles;
+            return filesOnly;
+            
         }
         public List<RemoteFileInfo> ListRemoteDirectoryNonRecursive(Session session, string relativePath)
         {
