@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using WinSCP;
 using System.IO;
+using System.Linq;
 namespace TelcobrightFileOperations
 {
     class DirectoryLister
@@ -42,19 +43,19 @@ namespace TelcobrightFileOperations
             }
             return false;
         }
-        public List<RemoteFileInfo> ListRemoteDirectoryRecursive(Session session, string relativePath)
+        public List<RemoteFileInfoExt> ListRemoteDirectoryRecursive(Session session, string relativePath)
         {
             List<RemoteFileInfo> remoteFiles = new List<RemoteFileInfo>();
             RemoteDirectoryInfo directoryInfo = session.ListDirectory(relativePath);
             List<RemoteFileInfo> filesOnly = GetFilesOnlyWithoutFolders(directoryInfo);
-            if (HasSubDirectory(directoryInfo) == false) return filesOnly;
+            List<RemoteFileInfoExt> fileInfoExtOnly = filesOnly.Select(f => new RemoteFileInfoExt(f,relativePath)).ToList();
+            if (HasSubDirectory(directoryInfo) == false) return fileInfoExtOnly;
             List<RemoteFileInfo> foldersOnly = GetFoldersOnly(directoryInfo);
             foreach (RemoteFileInfo subDir in foldersOnly) {
                 string subDirRelativePath = relativePath + subDir.Name + "/";
-                filesOnly.AddRange(ListRemoteDirectoryRecursive(session, subDirRelativePath));
+                fileInfoExtOnly.AddRange(ListRemoteDirectoryRecursive(session, subDirRelativePath));
             }
-            return filesOnly;
-            
+            return fileInfoExtOnly;
         }
         public List<RemoteFileInfo> ListRemoteDirectoryNonRecursive(Session session, string relativePath)
         {

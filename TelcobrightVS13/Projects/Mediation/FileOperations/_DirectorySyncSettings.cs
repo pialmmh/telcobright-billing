@@ -6,7 +6,7 @@ using Spring.Expressions;
 using System;
 using System.Globalization;
 using TelcobrightMediation;
-
+using System.Linq;
 namespace TelcobrightFileOperations
 {
     public enum CompressionType
@@ -60,7 +60,7 @@ namespace TelcobrightFileOperations
                 return dirlister.ListRemoteDirectoryNonRecursive(session, this.FileLocation.StartingPath);
             }
         }
-        public List<RemoteFileInfo> GetRemoteFilesRecursive(TelcobrightConfig tbc)
+        public List<RemoteFileInfoExt> GetRemoteFilesRecursive(TelcobrightConfig tbc)
         {
             using (Session session = GetRemoteFileTransferSession(tbc))
             {
@@ -113,7 +113,8 @@ namespace TelcobrightFileOperations
             }
             else if (srcSettings.Recursive == true)
             {
-                tempFiles = GetRemoteFilesRecursive(tbc);
+                //List<RemoteFileInfoExt> tempFilesExt = GetRemoteFilesRecursive(tbc);
+                throw new Exception("Can't call getRemoteFiles with Recursive search enabled.");
             }
 
             if (srcSettings.ExpFileNameFilter.Expression == "")
@@ -132,6 +133,35 @@ namespace TelcobrightFileOperations
             return filteredFiles;
         }
 
+        public List<RemoteFileInfoExt> GetRemoteFilesRecursive(SyncSettingsSource srcSettings, TelcobrightConfig tbc)
+        {
+            List<RemoteFileInfoExt> tempFilesExt = new List<RemoteFileInfoExt>();
+            if (srcSettings.Recursive == false)
+            {
+                //tempFiles = GetRemoteFilesNonRecursive(tbc);
+                throw new Exception("Can't call getRemoteFilesRecustive with Recursive search=false.");
+            }
+            else if (srcSettings.Recursive == true)
+            {
+                tempFilesExt = GetRemoteFilesRecursive(tbc);
+            }
+
+            if (srcSettings.ExpFileNameFilter.Expression == "")
+            {
+                return tempFilesExt;
+            }
+            List<RemoteFileInfoExt> filteredFiles = new List<RemoteFileInfoExt>();
+            IExpression exp = srcSettings.ExpFileNameFilter.GetParsedExpression();
+            foreach (RemoteFileInfoExt fileInfoExt in tempFilesExt)
+            {
+                RemoteFileInfo fileInfo = fileInfoExt.RemoteFileInfo;
+                if (fileInfo.GetBoolByExpression(exp) == true)
+                {
+                    filteredFiles.Add(fileInfoExt);
+                }
+            }
+            return filteredFiles;
+        }
 
 
         public List<string> GetFileNames(SyncSettingsSource srcSettings, TelcobrightConfig tbc)
@@ -152,8 +182,8 @@ namespace TelcobrightFileOperations
                         GetRemoteFiles(srcSettings, tbc).ForEach(c => fileNames.Add(c.Name.Replace("\\", "/")));
                     }
                     else {
-                        List<RemoteFileInfo> remoteFiles = GetRemoteFiles(srcSettings, tbc);
-                        remoteFiles.ForEach(f => fileNames.Add(f.Name));
+                        List<RemoteFileInfoExt> remoteFiles = GetRemoteFilesRecursive(srcSettings, tbc);
+                        remoteFiles.ForEach(f => fileNames.Add(f.FullRelativePath));
                     }
                     break;
             }
@@ -163,7 +193,6 @@ namespace TelcobrightFileOperations
         {
             //get list of files
             List<FileInfo> localFiles = new List<FileInfo>();
-            List<RemoteFileInfo> remoteFiles = new List<RemoteFileInfo>();
             List<string> fileNames = new List<string>();
             switch (this.FileLocation.LocationType)
             {
@@ -173,7 +202,15 @@ namespace TelcobrightFileOperations
                     break;
                 case "sftp":
                 case "ftp":
-                    GetRemoteFiles(srcSettings,tbc).ForEach(c => fileNames.Add(c.Name.Replace("\\", "/")));
+                    if (srcSettings.Recursive == false)
+                    {
+                        GetRemoteFiles(srcSettings, tbc).ForEach(c => fileNames.Add(c.Name.Replace("\\", "/")));
+                    }
+                    else {
+                        List<RemoteFileInfoExt> remoteFiles = GetRemoteFilesRecursive(srcSettings, tbc);
+                        remoteFiles.ForEach(f => 
+                            fileNames.Add(f.FullRelativePath));
+                    }
                     break;
             }
             return fileNames;

@@ -159,6 +159,7 @@
     <Compile Include="Config\JobPreRequisite.cs" />
     <Compile Include="Config\SmsSenderConfig.cs" />
     <Compile Include="FileOperations\JobParamFileDelete.cs" />
+    <Compile Include="FileOperations\RemoteFileInfoExt.cs" />
     <Compile Include="IAutoincrementManager.cs" />
     <Compile Include="MefData\Composers\AutoCreateJobComposer.cs" />
     <Compile Include="MefData\Composers\CdrRuleComposer.cs" />

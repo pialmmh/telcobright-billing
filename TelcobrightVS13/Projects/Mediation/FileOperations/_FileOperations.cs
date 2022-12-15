@@ -52,10 +52,12 @@ namespace TelcobrightFileOperations
             int priority = context.enumjobdefinitions.Where(c => c.id == 6).First().Priority;
             job fileCopyJob = null;
             fileCopyJob = new job();
+            int startingPathLen = srcLocation.FileLocation.StartingPath.Length;
             JobParamFileCopy copyParam = new JobParamFileCopy()
             {
                 //relative path processing
-                RelativeFileName = fileName.Replace(srcLocation.FileLocation.StartingPath, ""),
+                RelativeFileName = fileName.StartsWith(srcLocation.FileLocation.StartingPath) ?
+                    fileName.Substring(startingPathLen) : fileName,
                 SyncPairName = syncPair.Name
             };
 

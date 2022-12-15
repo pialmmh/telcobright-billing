@@ -322,7 +322,7 @@ namespace InstallConfig
         {
             Console.WriteLine("Generating Configuration for " + configGenerator.OperatorName);
             TelcobrightConfig tbc = configGenerator.GenerateConfig(schedulerDatabaseSetting);
-            Console.WriteLine("Writng Configuration Files for " + configGenerator.OperatorName);
+            Console.WriteLine("Writing Configuration Files for " + configGenerator.OperatorName);
             WriteConfigOperatorWise(tbc, configPathHelper);
             return tbc;
         }

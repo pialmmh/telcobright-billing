@@ -160,33 +160,7 @@ namespace InstallConfig
                 }
             };
 
-
-            //sync pair Vault_S3:FileArchive1
-            //SyncPair vaultS3FileArchive1 = new SyncPair("Vault:FileArchive1")
-            //{
-            //    SkipCopyingToDestination = false,
-            //    SkipSourceFileListing = true,
-            //    SrcSyncLocation = new SyncLocation("Vault_JslZteDhk")
-            //    {
-            //        FileLocation = vault
-            //    },
-            //    DstSyncLocation = new SyncLocation("FileArchive1")
-            //    {
-            //        FileLocation = fileArchive1
-            //    },
-            //    SrcSettings = new SyncSettingsSource()
-            //    {
-            //        SecondaryDirectory = "downloaded",
-            //        ExpFileNameFilter = null,
-            //    },
-            //    DstSettings = new SyncSettingsDest()
-            //    {
-            //        FileExtensionForSafeCopyWithTempFile = ".tmp",
-            //        Overwrite = true,
-            //        CompressionType = CompressionType.None,
-            //    }
-            //};
-
+            
             //sync pair Vault_S3:FileArchive1
             SyncPair vaultCAS = new SyncPair("Vault:CAS")
             {
