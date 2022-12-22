@@ -207,11 +207,31 @@ namespace TelcobrightFileOperations
             {
                 throw new Exception("Can't invoke remote-local file copy when file location type is local.");
             }
+            //if()
             if (overwrite == false)
             {
                 if (File.Exists(dstInfoLocal.FullPath))
                 {
                     return true; //throw new System.Exception("File " + dstInfoLocal.fullPath + " exists!");
+                }
+            }
+            else {//overwrite
+                if (File.Exists(dstInfoLocal.FullPath))
+                {
+                    File.Delete(dstInfoLocal.FullPath);
+                }
+                string tempExt = "";
+                if (dstSettings.FileExtensionForSafeCopyWithTempFile != "")
+                {
+                    tempExt = dstSettings.FileExtensionForSafeCopyWithTempFile;
+                    dstInfoLocal.CreatePaths(null);
+                    session.GetFiles(srcInfoRemote.FullPath, dstInfoLocal.FullPath + tempExt, removeOriginal);
+                    File.Move(dstInfoLocal.FullPath + tempExt, dstInfoLocal.FullPath);
+                }
+                else
+                {
+                    dstInfoLocal.CreatePaths(null);
+                    session.GetFiles(srcInfoRemote.FullPath, dstInfoLocal.FullPath, removeOriginal);
                 }
             }
             if (!File.Exists(dstInfoLocal.FullPath))

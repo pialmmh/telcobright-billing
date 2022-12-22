@@ -44,16 +44,17 @@ namespace InstallConfig
                 PartialCdrEnabledNeIds = new List<int>() {},//7, was set to non-partial processing mode due to duplicate billid problem.
                 PartialCdrFlagIndicators = new List<string>() {},//{"1", "2", "3"},
                 DescendingOrderWhileListingFiles = false,
-                DescendingOrderWhileProcessingListedFiles = false,
+                DescendingOrderWhileProcessingListedFiles = true,
                 ValidationRulesForCommonMediationCheck = commonCdrValRulesGen.GetRules(),
                 ValidationRulesForInconsistentCdrs = inconsistentCdrValRulesGen.GetRules(),
                 ServiceGroupConfigurations = this.GetServiceGroupConfigurations(),
                 DisableCdrPostProcessingJobCreationForAutomation = false,
+                BatchSizeForCdrJobCreationCheckingExistence=10000,
                 DisableParallelMediation = false,
-                AutoCorrectDuplicateBillId = true,
+                AutoCorrectDuplicateBillId = false,
                 AutoCorrectBillIdsWithPrevChargeableIssue = true,
                 AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
-                UseIdCallAsBillId = false,
+                UseIdCallAsBillId = true,
                 ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>()
             };
 

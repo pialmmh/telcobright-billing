@@ -123,9 +123,9 @@ namespace InstallConfig
                         new OutPartnerIdGt0(),
                         new ServiceGroupGt0(),
                         new MatchedPrefixCustomerNotEmpty(),
-                        new Duration1Gt0() {Data = .09M},
-                        new InPartnerCostGt0() {Data = .09M},
-                        new BtrcRevShareTax1Gt0(){Data = .09M},
+                        new Duration1Gt0() {Data = .1M},//all was .09
+                        new InPartnerCostGt0() {Data = .1M},
+                        new BtrcRevShareTax1Gt0(){Data = .1M},
                      },
                 InvoiceGenerationConfig = new InvoiceGenerationConfig()
                 {

@@ -71,6 +71,7 @@ namespace Process
                                         newJobCacheForWritingAtOnceToDB.Count)
                                     {
                                         writeJobs(context, thisSwitch, newJobCacheForWritingAtOnceToDB);
+                                        newJobCacheForWritingAtOnceToDB = new List<job>();
                                     }
                                 }
                                 else if (fileInfo.Length > fileSplitSetting.SplitFileIfSizeBiggerThanMbyte)
@@ -120,7 +121,7 @@ namespace Process
                 context.jobs.AddRange(jobsToWrite);
                 context.SaveChanges();
             }
-            Console.WriteLine(jobsToWrite.Count + " cdrjobs created successfully for switch: " + thisSwitch.SwitchName);
+            Console.WriteLine("switch: " + thisSwitch.SwitchName + ", new cdr job created:" + jobsToWrite.Count + ", already existing:" + newJobNames.Count);
             newJobCacheForWritingAtOnceToDB = new List<job>();
         }
 

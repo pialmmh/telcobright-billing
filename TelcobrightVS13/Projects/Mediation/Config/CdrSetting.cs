@@ -34,7 +34,7 @@ namespace TelcobrightMediation
         public bool AutoCorrectDuplicateBillIdBeforeErrorProcess { get; set; } = false;
         public bool AutoCorrectBillIdsWithPrevChargeableIssue { get; set; } = false;
         public Dictionary<string, Dictionary<string, string>> ExceptionalCdrPreProcessingData { get; set; } = new Dictionary<string, Dictionary<string, string>>();
-        public int BatchSizeForCdrJobCreationCheckingExistence { get; set; } = 1000000;
+        public int BatchSizeForCdrJobCreationCheckingExistence { get; set; } = 10000;
         public CdrSetting()
         {
             this.NerCalculationRule = "NerByCauseCode";
@@ -43,9 +43,6 @@ namespace TelcobrightMediation
             this.DaysToAddBeforeAndAfterUniqueDaysForSafePartialCollection = 1;
             this.IllegalStrToRemoveFromFields = new List<string>();
             this.CallConnectTimePresent = true;
-           
         }
-
     }
-
 }

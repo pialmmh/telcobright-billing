@@ -144,7 +144,7 @@ namespace InstallConfig
                 SrcSettings = new SyncSettingsSource()
                 {
                     SecondaryDirectory = "downloaded",
-                    MoveFilesToSecondaryAfterCopy = true,
+                    MoveFilesToSecondaryAfterCopy = false,
                     Recursive=true,
                     ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('SRT')
                                                                 and
@@ -211,7 +211,7 @@ namespace InstallConfig
             this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
             {
                 //vaultS3FileArchive1.Name,
-                vaultCAS.Name
+                //vaultCAS.Name
             };
         }
     }
