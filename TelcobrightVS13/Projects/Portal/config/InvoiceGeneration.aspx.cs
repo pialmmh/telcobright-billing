@@ -60,6 +60,10 @@ namespace PortalApp.config
                     composer.ComposeFromPath(dir.Parent.GetDirectories().Single(d => d.Name == "Extensions")
                         .FullName);
                     MefServiceGroups = composer.ServiceGroups.ToDictionary(s=>s.Id);
+                    List<int> idServiceFamiliesNonPartnerAssignable = context.enumservicefamilies
+                            .Where(c => c.PartnerAssignNotNeeded == 1).Select(c => c.id).ToList();
+                    List<rateplanassignmenttuple> ratePlanAssignmentTuples= context.rateplanassignmenttuples.ToList();
+                    List<billingruleassignment> billingRuleAssignments = context.billingruleassignments.ToList();
                     foreach (acc_ledger_summary ledgerSummary in accLedgerSummaries)
                     {
                         isAlreadyExists = false;
@@ -68,24 +72,21 @@ namespace PortalApp.config
                         var serviceFamily = account.serviceFamily;
                         var serviceGroup = account.serviceGroup;
                         List<int> matchingRatePlanAssignTups;
-                        var idServiceFamiliesNonPartnerAssignable = context.enumservicefamilies
-                            .Where(c => c.PartnerAssignNotNeeded == 1).Select(c => c.id).ToList();
+                        
                         if (idServiceFamiliesNonPartnerAssignable.Contains(serviceFamily))
                         {
-                            matchingRatePlanAssignTups = context.rateplanassignmenttuples
+                            matchingRatePlanAssignTups = ratePlanAssignmentTuples
                                 .Where(r => r.idService == serviceFamily)
                                 .Select(r => r.id).ToList();
                         }
                         else
                         {
-                            matchingRatePlanAssignTups = context.rateplanassignmenttuples
+                            matchingRatePlanAssignTups = ratePlanAssignmentTuples
                                 .Where(r => r.idpartner == partner.idPartner && r.idService == serviceFamily)
                                 .Select(r => r.id).ToList();
                         }
-                        
-                        
 
-                        var idBillingRule = context.billingruleassignments
+                        var idBillingRule = billingRuleAssignments
                             .Where(b => matchingRatePlanAssignTups.Contains(b.idRatePlanAssignmentTuple)
                             && b.idServiceGroup==serviceGroup).Select(b=>b.idBillingRule).First();
                         BillingRule billingRule = billingRules.First(x => x.Id == idBillingRule);

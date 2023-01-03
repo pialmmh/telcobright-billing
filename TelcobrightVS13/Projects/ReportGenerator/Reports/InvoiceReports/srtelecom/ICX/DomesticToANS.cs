@@ -33,9 +33,9 @@ namespace TelcobrightMediation.Reports.InvoiceReports.srtelecom.ICX
             invoice_item invoiceItem = invoice.invoice_item.Single();
             Dictionary<string, string> invoiceMap = JsonConvert.DeserializeObject<Dictionary<string, string>>(invoiceItem.JSON_DETAIL);
             this.DataSource = invoiceBasicDatas;
-            
+
             #region Page Header
-            xrLabelVatRegNo.Text = "BIN: 001285404-0208";
+            //xrLabelVatRegNo.Text = "BIN: 001285404-0208";
             xrLabelPartnerName.Text = invoiceMap["companyName"];
             xrLabelPartnerAddress.Text = invoiceMap["billingAddress"];
             xrLabelPartnerVatRegNo.Text = "BIN: " + invoiceMap["vatRegNo"];
@@ -45,7 +45,7 @@ namespace TelcobrightMediation.Reports.InvoiceReports.srtelecom.ICX
             DateTime endDate = DateTime.ParseExact(invoiceMap["billingEndDate"], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
             xrLabelBillingPeriod.Text = $@"from {startDate.ToString("dd-MMM-yyyy")} to {endDate.ToString("dd-MMM-yyyy")}";
             xrLabelInvoiceDate.Text = string.Format("{0:dd-MMM-yyyy}", invoice.INVOICE_DATE);
-            xrLabelInvoiceDueDate.Text = string.Format("{0:dd-MMM-yyyy}", invoice.DUE_DATE);
+            //xrLabelInvoiceDueDate.Text = string.Format("{0:dd-MMM-yyyy}", invoice.DUE_DATE);
             xrLabelInvoiceNo.Text = invoice.REFERENCE_NUMBER;
             xrLabelCurrency.Text = invoiceMap["uom"];
             xrLabelTimeZone.Text = invoiceMap["timeZone"];
