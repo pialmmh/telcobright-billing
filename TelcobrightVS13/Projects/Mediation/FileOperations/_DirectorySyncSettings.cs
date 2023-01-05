@@ -163,32 +163,7 @@ namespace TelcobrightFileOperations
             return filteredFiles;
         }
 
-
-        public List<string> GetFileNames(SyncSettingsSource srcSettings, TelcobrightConfig tbc)
-        {
-            //get list of files
-            List<FileInfo> localFiles = new List<FileInfo>();
-            List<string> fileNames = new List<string>();
-            switch (this.FileLocation.LocationType)
-            {
-                case "local":
-                case "local-linux":
-                    GetLocalFiles(srcSettings).ForEach(c => fileNames.Add(c.Name.Replace("\\", "/")));
-                    break;
-                case "sftp":
-                case "ftp":
-                    if (srcSettings.Recursive == false)
-                    {
-                        GetRemoteFiles(srcSettings, tbc).ForEach(c => fileNames.Add(c.Name.Replace("\\", "/")));
-                    }
-                    else {
-                        List<RemoteFileInfoExt> remoteFiles = GetRemoteFilesRecursive(srcSettings, tbc);
-                        remoteFiles.ForEach(f => fileNames.Add(f.FullRelativePath));
-                    }
-                    break;
-            }
-            return fileNames;
-        }
+        
         public List<string> GetFileNamesFiltered(SyncSettingsSource srcSettings, TelcobrightConfig tbc)
         {
             //get list of files
@@ -204,15 +179,29 @@ namespace TelcobrightFileOperations
                 case "ftp":
                     if (srcSettings.Recursive == false)
                     {
-                        GetRemoteFiles(srcSettings, tbc).ForEach(c => fileNames.Add(c.Name.Replace("\\", "/")));
+                        GetRemoteFiles(srcSettings, tbc).ForEach(
+                            f => {
+                                DateTime currentTime = DateTime.Now;
+                                if ((currentTime - f.LastWriteTime).TotalSeconds
+                                    > srcSettings.DurationSecToSkipVeryNewPossiblyIncompleteFiles)
+                                {
+                                    fileNames.Add(f.Name.Replace("\\", "/"));
+                                }
+                            });
                     }
-                    else {
+                    else {//recursive
                         List<RemoteFileInfoExt> remoteFiles = GetRemoteFilesRecursive(srcSettings, tbc);
-                        remoteFiles.ForEach(f => 
-                            fileNames.Add(f.FullRelativePath));
+                        remoteFiles.ForEach(f => {
+                            DateTime currentTime = DateTime.Now;
+                            if ((currentTime - f.RemoteFileInfo.LastWriteTime).TotalSeconds
+                                    > srcSettings.DurationSecToSkipVeryNewPossiblyIncompleteFiles)
+                            {
+                                fileNames.Add(f.FullRelativePath);
+                            }});
                     }
                     break;
             }
+            
             return fileNames;
         }
         public Session GetRemoteFileTransferSession(TelcobrightConfig tbc)//deprecated, use GetRemoteFileTransferSessionOptions, below
@@ -290,6 +279,7 @@ namespace TelcobrightFileOperations
         public string SecondaryDirectory { get; set; }
         public bool MoveFilesToSecondaryAfterCopy { get; set; }
         public bool Recursive { get; set; }
+        public int DurationSecToSkipVeryNewPossiblyIncompleteFiles { get; set; } = 40;
     }
     public enum DateWiseSubDirCreationType
     {

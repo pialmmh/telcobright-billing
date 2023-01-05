@@ -79,7 +79,8 @@ namespace Process
                                     SplitFileByByteLen(context, thisSwitch, fileInfo, fileSplitSetting);
                                 }
                             }
-                            writeJobs(context, thisSwitch, newJobCacheForWritingAtOnceToDB);
+                            if(newJobCacheForWritingAtOnceToDB.Count>0)
+                                writeJobs(context, thisSwitch, newJobCacheForWritingAtOnceToDB);
                         } //try
                         catch (Exception e1)
                         {

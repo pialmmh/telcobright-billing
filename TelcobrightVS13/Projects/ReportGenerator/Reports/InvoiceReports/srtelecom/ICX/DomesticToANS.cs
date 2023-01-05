@@ -45,8 +45,8 @@ namespace TelcobrightMediation.Reports.InvoiceReports.srtelecom.ICX
             DateTime endDate = DateTime.ParseExact(invoiceMap["billingEndDate"], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
             xrLabelBillingPeriod.Text = $@"from {startDate.ToString("dd-MMM-yyyy")} to {endDate.ToString("dd-MMM-yyyy")}";
             xrLabelInvoiceDate.Text = string.Format("{0:dd-MMM-yyyy}", invoice.INVOICE_DATE);
-            //xrLabelInvoiceDueDate.Text = string.Format("{0:dd-MMM-yyyy}", invoice.DUE_DATE);
             xrLabelInvoiceNo.Text = invoice.REFERENCE_NUMBER;
+            //xrLabelInvoiceDueDate.Text = string.Format("{0:dd-MMM-yyyy}", invoice.DUE_DATE);
             xrLabelCurrency.Text = invoiceMap["uom"];
             xrLabelTimeZone.Text = invoiceMap["timeZone"];
             #endregion
