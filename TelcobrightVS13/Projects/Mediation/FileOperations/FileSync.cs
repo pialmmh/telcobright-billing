@@ -225,13 +225,30 @@ namespace TelcobrightFileOperations
                 {
                     tempExt = dstSettings.FileExtensionForSafeCopyWithTempFile;
                     dstInfoLocal.CreatePaths(null);
-                    session.GetFiles(srcInfoRemote.FullPath, dstInfoLocal.FullPath + tempExt, removeOriginal);
+                    string tempFile = dstInfoLocal.FullPath + tempExt;
+                    RemoteFileInfo remoteFileInfo= session.GetFileInfo(srcInfoRemote.FullPath);
+                    session.GetFiles(srcInfoRemote.FullPath, tempFile, removeOriginal);
+                    long tempFileLength = new FileInfo(tempFile).Length;
+                    if (tempFileLength != remoteFileInfo.Length) {
+                        throw new Exception("Length of Downloaded File with temporary extension " + tempFileLength + " != remoteFile's length " + remoteFileInfo.Length);
+                    }
                     File.Move(dstInfoLocal.FullPath + tempExt, dstInfoLocal.FullPath);
+                    long renamedFileLength = new FileInfo(dstInfoLocal.FullPath).Length;
+                    if (tempFileLength != renamedFileLength)
+                    {
+                        throw new Exception("Length of Downloaded File after renaming " + renamedFileLength + " != " + tempFileLength);
+                    }
                 }
                 else
                 {
                     dstInfoLocal.CreatePaths(null);
+                                        RemoteFileInfo remoteFileInfo = session.GetFileInfo(srcInfoRemote.FullPath);
                     session.GetFiles(srcInfoRemote.FullPath, dstInfoLocal.FullPath, removeOriginal);
+                    long downloadedFileLength = new FileInfo(dstInfoLocal.FullPath).Length;
+                    if (downloadedFileLength != remoteFileInfo.Length)
+                    {
+                        throw new Exception("Length of Downloaded File " + downloadedFileLength + " != " + remoteFileInfo.Length);
+                    }
                 }
             }
             if (!File.Exists(dstInfoLocal.FullPath))

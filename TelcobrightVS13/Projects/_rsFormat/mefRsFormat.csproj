@@ -68,10 +68,6 @@
     <Reference Include="WindowsBase">
       <Private>True</Private>
     </Reference>
-    <Reference Include="WinSCPnet, Version=1.2.10.5874, Culture=neutral, PublicKeyToken=2271ec4a3c56d0bf, processorArchitecture=MSIL">
-      <HintPath>..\packages\WinSCP.5.7.6\lib\WinSCPnet.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="OpenXmlHelper.cs" />

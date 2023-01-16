@@ -63,9 +63,8 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="WinSCPnet, Version=1.2.10.5874, Culture=neutral, PublicKeyToken=2271ec4a3c56d0bf, processorArchitecture=MSIL">
-      <HintPath>..\packages\WinSCP.5.7.6\lib\WinSCPnet.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="WinSCPnet">
+      <HintPath>..\..\..\WinSCP-5.21.6-Automation\WinSCPnet.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

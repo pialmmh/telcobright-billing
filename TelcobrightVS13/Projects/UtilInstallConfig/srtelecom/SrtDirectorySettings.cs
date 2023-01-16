@@ -164,7 +164,7 @@ namespace InstallConfig
             //sync pair Vault_S3:FileArchive1
             SyncPair vaultCAS = new SyncPair("Vault:CAS")
             {
-                SkipCopyingToDestination = true,
+                SkipCopyingToDestination = false,
                 SkipSourceFileListing = true,
                 SrcSyncLocation = new SyncLocation("Vault")
                 {
@@ -211,7 +211,7 @@ namespace InstallConfig
             this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
             {
                 //vaultS3FileArchive1.Name,
-                //vaultCAS.Name
+                vaultCAS.Name
             };
         }
     }
