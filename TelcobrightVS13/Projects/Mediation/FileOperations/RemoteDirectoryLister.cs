@@ -52,7 +52,8 @@ namespace TelcobrightFileOperations
             if (HasSubDirectory(directoryInfo) == false) return fileInfoExtOnly;
             List<RemoteFileInfo> foldersOnly = GetFoldersOnly(directoryInfo);
             foreach (RemoteFileInfo subDir in foldersOnly) {
-                string subDirRelativePath = relativePath + subDir.Name + "/";
+                string subDirRelativePath = !relativePath.EndsWith("/") ? relativePath+"/" + subDir.Name + "/"
+                    : relativePath + subDir.Name + "/";
                 fileInfoExtOnly.AddRange(ListRemoteDirectoryRecursive(session, subDirRelativePath));
             }
             return fileInfoExtOnly;

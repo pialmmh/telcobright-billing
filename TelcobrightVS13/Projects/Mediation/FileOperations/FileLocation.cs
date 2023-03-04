@@ -7,6 +7,7 @@ namespace TelcobrightFileOperations
         public string Name { get; set; }
         public string LocationType { get; set; }
         public string OsType { get; set; }
+        public bool UseActiveModeForFTP { get; set; }
         public string PathSeparator { get; set; }//char caused problem with json serializing
         public string ServerIp { get; set; }
         public string StartingPath { get; set; }

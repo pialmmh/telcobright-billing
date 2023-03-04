@@ -79,7 +79,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConfigHelper\PartitionManager.cs" />
     <Compile Include="DecimalExtensions.cs" />
     <Compile Include="DateTimeExtensions.cs" />
     <Compile Include="EntityHelper\ischema_columns.cs" />

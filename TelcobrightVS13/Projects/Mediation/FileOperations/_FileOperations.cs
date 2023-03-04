@@ -53,11 +53,13 @@ namespace TelcobrightFileOperations
             job fileCopyJob = null;
             fileCopyJob = new job();
             int startingPathLen = srcLocation.FileLocation.StartingPath.Length;
+            string relativeFileName = fileName.StartsWith(srcLocation.FileLocation.StartingPath) ?
+                    fileName.Substring(startingPathLen) : fileName;
+            relativeFileName = relativeFileName.StartsWith("/") ? relativeFileName.Substring(1) : relativeFileName;
             JobParamFileCopy copyParam = new JobParamFileCopy()
             {
                 //relative path processing
-                RelativeFileName = fileName.StartsWith(srcLocation.FileLocation.StartingPath) ?
-                    fileName.Substring(startingPathLen) : fileName,
+                RelativeFileName = relativeFileName,
                 SyncPairName = syncPair.Name
             };
 

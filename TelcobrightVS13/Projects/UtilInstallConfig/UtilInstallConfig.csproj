@@ -97,6 +97,7 @@
     <Compile Include="bigl\ConfigGenerator_bigl.cs" />
     <Compile Include="BIllingRulesDefiner.cs" />
     <Compile Include="btel\BtelDatabaseSettings.cs" />
+    <Compile Include="PartitionInfo.cs" />
     <Compile Include="srtelecom\SrtAppServerConfig.cs" />
     <Compile Include="srtelecom\SrtDatabaseSettings.cs" />
     <Compile Include="srtelecom\SrtDirectorySettings.cs" />
@@ -161,6 +162,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="roots\RootsQuartzConfigGen.cs" />
     <Compile Include="SchedulerConfigGenerator.cs" />
+    <Compile Include="summit\SummitAppServerConfig.cs" />
+    <Compile Include="summit\SummitDatabaseSettings.cs" />
+    <Compile Include="summit\SummitDirectorySettings.cs" />
+    <Compile Include="summit\SummitPortalSetting.cs" />
+    <Compile Include="summit\SummitProductAndServiceConfig.cs" />
+    <Compile Include="summit\SummitQuartzConfig.cs" />
+    <Compile Include="summit\SummitServiceGroups.cs" />
+    <Compile Include="summit\_SummitConfigMain.cs" />
+    <Compile Include="TableWisePartitionManagementInfo.cs" />
     <Compile Include="tpny\ConfigHelper_tpny.cs" />
     <Compile Include="utility\util_Del_CompletedCDRFilesLocal.cs" />
     <Compile Include="CommonValidationRulesGenerator\InconsistentCdrValRulesGen.cs" />
@@ -211,6 +221,10 @@
     </None>
     <None Include="jsl\jslRoutes.json" />
     <None Include="Server.conf" />
+    <None Include="summit\scripts\appPool_tpny.iisScript" />
+    <None Include="summit\scripts\ftp_tpny.iisScript" />
+    <None Include="summit\scripts\http_tpny.iisScript" />
+    <None Include="summit\summit.conf" />
     <None Include="_dbl.config" />
     <None Include="tpny\_roots.config" />
   </ItemGroup>
@@ -288,6 +302,10 @@
     <Content Include="jsl\tmplPortalAppPools.txt" />
     <Content Include="jsl\tmplPortalFtpSite.txt" />
     <Content Include="jsl\tmplPortalWebSite.txt" />
+    <Content Include="summit\scripts\import_commands.txt" />
+    <Content Include="summit\tmplPortalAppPools.txt" />
+    <Content Include="summit\tmplPortalFtpSite.txt" />
+    <Content Include="summit\tmplPortalWebSite.txt" />
     <Content Include="_notes\installation notes.txt" />
     <Content Include="tpny\tmplPortalAppPools.txt" />
     <Content Include="tpny\tmplPortalFtpSite.txt" />

@@ -16,7 +16,7 @@ namespace InstallConfig
                                                + Path.DirectorySeparatorChar + "Server.conf";
 
 
-        public static SchedulerSetting GeneraterateSchedulerConfig()
+        public static SchedulerSetting GeneraterateSchedulerConfig(string operatorName="")
         {
             DatabaseSetting databaseSetting = new DatabaseSetting();
             Dictionary<string, string> settings = JsonConvert.DeserializeObject<Dictionary<string, string>>(
@@ -29,6 +29,16 @@ namespace InstallConfig
             databaseSetting.ReadOnlyUserName = settings["ReadOnlyUserName"];
             databaseSetting.ReadOnlyPassword = settings["ReadOnlyPassword"];
 
+            databaseSetting.DatabaseEngine = settings["DatabaseEngine"];
+            databaseSetting.StorageEngineForPartitionedTables = settings["StorageEngineForPartitionedTables"];
+            databaseSetting.PartitionStartDate = Convert.ToDateTime(settings["PartitionStartDate"]);
+            databaseSetting.PartitionLenInDays = Convert.ToInt32(settings["PartitionLenInDays"]);
+
+            if (!string.IsNullOrEmpty(operatorName)) {
+                string key = "db_" + operatorName;
+                string dbName = settings[key];
+                databaseSetting.operatorWiseDatabaseNames.Add(key, dbName);
+            }
             SchedulerSetting generaterateSchedulerConfig = new SchedulerSetting(
                 schedulerType: "quartz",
                 databaseSetting: databaseSetting);

@@ -139,7 +139,7 @@ namespace TelcobrightFileOperations
             if (srcSettings.Recursive == false)
             {
                 //tempFiles = GetRemoteFilesNonRecursive(tbc);
-                throw new Exception("Can't call getRemoteFilesRecustive with Recursive search=false.");
+                throw new Exception("Can't call getRemoteFilesRecursive with Recursive search=false.");
             }
             else if (srcSettings.Recursive == true)
             {
@@ -212,6 +212,7 @@ namespace TelcobrightFileOperations
                 HostName = this.FileLocation.ServerIp,
                 UserName = this.FileLocation.User,
                 Password = this.FileLocation.Pass,
+                FtpMode= this.FileLocation.UseActiveModeForFTP==true? FtpMode.Active:FtpMode.Passive,
             };
             switch (this.FileLocation.LocationType)
             {
@@ -249,7 +250,7 @@ namespace TelcobrightFileOperations
                 HostName = this.FileLocation.ServerIp,
                 UserName = this.FileLocation.User,
                 Password = this.FileLocation.Pass,
-                
+                FtpMode = this.FileLocation.UseActiveModeForFTP == true ? FtpMode.Active : FtpMode.Passive,
             };
             switch (this.FileLocation.LocationType)
             {

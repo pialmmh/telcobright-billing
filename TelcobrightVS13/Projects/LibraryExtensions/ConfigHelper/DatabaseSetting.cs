@@ -25,15 +25,40 @@ namespace LibraryExtensions.ConfigHelper
         public string AdminPassword { get; set; }
         public string ReadOnlyUserName { get; set; }
         public string ReadOnlyPassword { get; set; }
-        public string DatabaseEngine { get; set; }
+        public string DatabaseEngine { get; set; } = "innodb";
         public List<string> DateWisePartitionedTablesWithPartitionColName { get; set; }
-        public DateTime PartitionStartDate { get; set; }
-        public readonly int NoOfPartitions = 1024;
-
+        public readonly int MaxPartitionsPerTable = 1024;
+        public DateTime PartitionStartDate { get; set; } = new DateTime(2000, 1, 1);
+        public string StorageEngineForPartitionedTables { get; set; } = "innodb";
+        public int PartitionLenInDays { get; set; } = 1;
+        public List<string> PartitionedTables = new List<string>();
+        public Dictionary<string, string> operatorWiseDatabaseNames = new Dictionary<string, string>();
         public DatabaseSetting()
         {
-            this.DatabaseEngine = "innodb";
-            this.PartitionStartDate= DateTime.Now.Date.AddYears(-1);
+            this.PartitionedTables = new List<string>
+            {
+                "acc_chargeable",
+                "acc_ledger_summary",
+                "acc_ledger_summary_billed",
+                "acc_transaction",
+                "cdr",
+                "cdrerror",
+                "cdrpartiallastaggregatedrawinstance",
+                "cdrpartialrawinstance",
+                "cdrpartialreference",
+                "sum_voice_day_01",
+                "sum_voice_day_02",
+                "sum_voice_day_03",
+                "sum_voice_day_04",
+                "sum_voice_day_05",
+                "sum_voice_day_06",
+                "sum_voice_hr_01",
+                "sum_voice_hr_02",
+                "sum_voice_hr_03",
+                "sum_voice_hr_04",
+                "sum_voice_hr_05",
+                "sum_voice_hr_06",
+            };
             this.DateWisePartitionedTablesWithPartitionColName=new List<string>()
             {
                 "acc_chargeable/transactiontime",
@@ -56,15 +81,8 @@ namespace LibraryExtensions.ConfigHelper
 
         public DatabaseSetting GetCopy()
         {
-            return new DatabaseSetting()
-            {
-                ServerName=this.ServerName,
-                DatabaseName = this.DatabaseName,
-                AdminUserName=this.AdminUserName,
-                AdminPassword = this.AdminPassword,
-                ReadOnlyUserName = this.ReadOnlyUserName,
-                ReadOnlyPassword = this.ReadOnlyPassword
-            };
+            var databasettings= (DatabaseSetting)this.MemberwiseClone();
+            return databasettings;
         }
     }
 }
