@@ -33,6 +33,8 @@ namespace InstallConfig
             dataBaseSetting.StorageEngineForPartitionedTables = "tokudb";
             dataBaseSetting.PartitionStartDate = new DateTime(2023, 1, 1);
             dataBaseSetting.PartitionLenInDays = 1;
+            dataBaseSetting.ReadOnlyUserName = "dbreader";
+            dataBaseSetting.ReadOnlyPassword = "Takay1takaane";
             return dataBaseSetting;
         }
     }

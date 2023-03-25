@@ -86,8 +86,11 @@
     <Compile Include="InconsistentValidationRules\StrUniqueBillidNotEmpty.cs" />
     <Compile Include="InconsistentValidationRules\StrValidFlagMustBe1.cs" />
     <Compile Include="OtherCdrFieldsRule\AnsIdOrigGt0.cs" />
+    <Compile Include="OtherCdrFieldsRule\BtrcRevShareTax1Gt0ExceptPrefix.cs" />
+    <Compile Include="OtherCdrFieldsRule\BtrcRevShareTax2Gt0.cs" />
     <Compile Include="OtherCdrFieldsRule\Duration1Gt0 .cs" />
     <Compile Include="OtherCdrFieldsRule\CostIcxInGt0.cs" />
+    <Compile Include="OtherCdrFieldsRule\InPartnerCostGt0ExceptPrefix.cs" />
     <Compile Include="OtherCdrFieldsRule\MatchedPrefixCustomerNotEmpty.cs" />
     <Compile Include="OtherCdrFieldsRule\InPartnerCostGt0.cs" />
     <Compile Include="OtherCdrFieldsRule\AnsIdTermGt0.cs" />
@@ -95,7 +98,7 @@
     <Compile Include="OtherCdrFieldsRule\RoundedDurationGt0.cs" />
     <Compile Include="OtherCdrFieldsRule\YAmountGt0.cs" />
     <Compile Include="OtherCdrFieldsRule\XAmountGt0.cs" />
-    <Compile Include="OtherCdrFieldsRule\BtrcRevShareTax2Gt0.cs" />
+    <Compile Include="OtherCdrFieldsRule\BtrcRevShareTax2Gt0ExceptPrefix.cs" />
     <Compile Include="OtherCdrFieldsRule\CountryCodeNotEmpty.cs" />
     <Compile Include="OtherCdrFieldsRule\Duration2Gt0.cs" />
     <Compile Include="OtherCdrFieldsRule\MatchedPrefixYNotempty.cs" />

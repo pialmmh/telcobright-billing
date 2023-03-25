@@ -33,7 +33,7 @@ namespace InstallConfig
             databaseSetting.StorageEngineForPartitionedTables = settings["StorageEngineForPartitionedTables"];
             databaseSetting.PartitionStartDate = Convert.ToDateTime(settings["PartitionStartDate"]);
             databaseSetting.PartitionLenInDays = Convert.ToInt32(settings["PartitionLenInDays"]);
-
+            
             if (!string.IsNullOrEmpty(operatorName)) {
                 string key = "db_" + operatorName;
                 string dbName = settings[key];

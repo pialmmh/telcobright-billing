@@ -85,7 +85,7 @@ namespace TelcobrightMediation
                         throw new Exception("Progress cannot be > total no of steps for a job.");
                     Console.WriteLine("Processing Segment:" + (jobSegment.segmentNumber) + " for job "
                                       + this.TelcobrightJob.JobName + ". Progress="+progressSoFar +"/"
-                                      + this.TelcobrightJob.NoOfSteps);
+                                      + this.TelcobrightJob.NoOfSteps.ToString());
                     ISegmentedJob segmentedJob = null;
                     try
                     {

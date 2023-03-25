@@ -123,9 +123,16 @@ namespace InstallConfig
                         new OutPartnerIdGt0(),
                         new ServiceGroupGt0(),
                         new MatchedPrefixCustomerNotEmpty(),
-                        new Duration1Gt0() {Data = .1M},//all was .09
-                        new InPartnerCostGt0() {Data = .1M},
-                        new BtrcRevShareTax1Gt0(){Data = .1M},
+                        new Duration1Gt0() {Data = .09M},//all was .09
+                        //new InPartnerCostGt0() {Data = .1M},
+                        new InPartnerCostGt0ExceptPrefix() {Data = new Dictionary<string,object> {
+                            { "minDurationSec",.09M },
+                            { "prefixesToExclude",new List<string> { "333"} }
+                        } },
+                        new BtrcRevShareTax1Gt0ExceptPrefix(){Data = new Dictionary<string,object> {
+                            { "minDurationSec",.09M },
+                            { "prefixesToExclude",new List<string> { "333"} }
+                        } },
                      },
                 InvoiceGenerationConfig = new InvoiceGenerationConfig()
                 {

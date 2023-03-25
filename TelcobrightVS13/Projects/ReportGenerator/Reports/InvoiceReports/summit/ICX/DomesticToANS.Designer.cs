@@ -1,4 +1,4 @@
-﻿namespace TelcobrightMediation.Reports.InvoiceReports.srtelecom.ICX
+﻿namespace TelcobrightMediation.Reports.InvoiceReports.summit.ICX
 {
     partial class DomesticToANS
     {
@@ -41,9 +41,6 @@
             this.TopMargin = new DevExpress.XtraReports.UI.TopMarginBand();
             this.BottomMargin = new DevExpress.XtraReports.UI.BottomMarginBand();
             this.PageHeader = new DevExpress.XtraReports.UI.PageHeaderBand();
-            this.xrLabel12 = new DevExpress.XtraReports.UI.XRLabel();
-            this.xrLabel11 = new DevExpress.XtraReports.UI.XRLabel();
-            this.xrLabel3 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabelTimeZone = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabelCurrency = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabelInvoiceNo = new DevExpress.XtraReports.UI.XRLabel();
@@ -54,7 +51,6 @@
             this.xrLabel6 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel5 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabelBillingPeriod = new DevExpress.XtraReports.UI.XRLabel();
-            this.xrLabelType = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabelPartnerVatRegNo = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabelPartnerAddress = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabelPartnerName = new DevExpress.XtraReports.UI.XRLabel();
@@ -90,6 +86,7 @@
             this.xrTableRow6 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell10 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCellAmountDueforPayment = new DevExpress.XtraReports.UI.XRTableCell();
+            this.xrLabelType = new DevExpress.XtraReports.UI.XRLabel();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable3)).BeginInit();
@@ -197,9 +194,7 @@
             // PageHeader
             // 
             this.PageHeader.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
-            this.xrLabel12,
-            this.xrLabel11,
-            this.xrLabel3,
+            this.xrLabelType,
             this.xrLabelTimeZone,
             this.xrLabelCurrency,
             this.xrLabelInvoiceNo,
@@ -210,7 +205,6 @@
             this.xrLabel6,
             this.xrLabel5,
             this.xrLabelBillingPeriod,
-            this.xrLabelType,
             this.xrLabelPartnerVatRegNo,
             this.xrLabelPartnerAddress,
             this.xrLabelPartnerName,
@@ -220,40 +214,6 @@
             this.xrTable2});
             this.PageHeader.HeightF = 379.5834F;
             this.PageHeader.Name = "PageHeader";
-            // 
-            // xrLabel12
-            // 
-            this.xrLabel12.Font = new System.Drawing.Font("Arial Narrow", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xrLabel12.LocationFloat = new DevExpress.Utils.PointFloat(0F, 272.25F);
-            this.xrLabel12.Name = "xrLabel12";
-            this.xrLabel12.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.xrLabel12.SizeF = new System.Drawing.SizeF(300F, 23.00002F);
-            this.xrLabel12.StylePriority.UseFont = false;
-            this.xrLabel12.StylePriority.UseTextAlignment = false;
-            this.xrLabel12.Text = "SR Telecom Limited";
-            this.xrLabel12.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            // 
-            // xrLabel11
-            // 
-            this.xrLabel11.LocationFloat = new DevExpress.Utils.PointFloat(0.0001271566F, 295.25F);
-            this.xrLabel11.Name = "xrLabel11";
-            this.xrLabel11.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.xrLabel11.SizeF = new System.Drawing.SizeF(300F, 23F);
-            this.xrLabel11.StylePriority.UseTextAlignment = false;
-            this.xrLabel11.Text = "Address : KA 18/1, Rasulbagh, Mohakhali, Dhaka-1212";
-            this.xrLabel11.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            // 
-            // xrLabel3
-            // 
-            this.xrLabel3.Font = new System.Drawing.Font("Arial Narrow", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xrLabel3.LocationFloat = new DevExpress.Utils.PointFloat(0.0001271566F, 249.25F);
-            this.xrLabel3.Name = "xrLabel3";
-            this.xrLabel3.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.xrLabel3.SizeF = new System.Drawing.SizeF(100F, 23F);
-            this.xrLabel3.StylePriority.UseFont = false;
-            this.xrLabel3.StylePriority.UseTextAlignment = false;
-            this.xrLabel3.Text = "From";
-            this.xrLabel3.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
             // 
             // xrLabelTimeZone
             // 
@@ -354,18 +314,6 @@
             this.xrLabelBillingPeriod.StylePriority.UseTextAlignment = false;
             this.xrLabelBillingPeriod.Text = "Billing period";
             this.xrLabelBillingPeriod.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            // 
-            // xrLabelType
-            // 
-            this.xrLabelType.Font = new System.Drawing.Font("Arial Narrow", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xrLabelType.LocationFloat = new DevExpress.Utils.PointFloat(0.0001271566F, 318.25F);
-            this.xrLabelType.Name = "xrLabelType";
-            this.xrLabelType.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.xrLabelType.SizeF = new System.Drawing.SizeF(100F, 23F);
-            this.xrLabelType.StylePriority.UseFont = false;
-            this.xrLabelType.StylePriority.UseTextAlignment = false;
-            this.xrLabelType.Text = "Type : INT";
-            this.xrLabelType.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
             // 
             // xrLabelPartnerVatRegNo
             // 
@@ -542,7 +490,7 @@
             // 
             this.xrLabel13.Borders = DevExpress.XtraPrinting.BorderSide.Top;
             this.xrLabel13.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xrLabel13.LocationFloat = new DevExpress.Utils.PointFloat(427.0001F, 346.375F);
+            this.xrLabel13.LocationFloat = new DevExpress.Utils.PointFloat(389.1667F, 346.375F);
             this.xrLabel13.Name = "xrLabel13";
             this.xrLabel13.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
             this.xrLabel13.SizeF = new System.Drawing.SizeF(260F, 23.00003F);
@@ -570,7 +518,8 @@
             this.xrLabelPaymentAdvice.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
             this.xrLabelPaymentAdvice.SizeF = new System.Drawing.SizeF(727F, 22.99998F);
             this.xrLabelPaymentAdvice.StylePriority.UseTextAlignment = false;
-            this.xrLabelPaymentAdvice.Text = "Payment Advice: Amount Payable by Crossed Cheque in favor of \"SR Telecom Ltd.\"";
+            this.xrLabelPaymentAdvice.Text = "Payment Advice: Amount Payable by Crossed Cheque in favor of \"Summit Communicatio" +
+    "n Ltd.\"";
             this.xrLabelPaymentAdvice.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
             this.xrLabelPaymentAdvice.WordWrap = false;
             // 
@@ -744,6 +693,18 @@
             this.xrTableCellAmountDueforPayment.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
             this.xrTableCellAmountDueforPayment.Weight = 0.462173542880034D;
             // 
+            // xrLabelType
+            // 
+            this.xrLabelType.Font = new System.Drawing.Font("Arial Narrow", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xrLabelType.LocationFloat = new DevExpress.Utils.PointFloat(0F, 251.0417F);
+            this.xrLabelType.Name = "xrLabelType";
+            this.xrLabelType.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
+            this.xrLabelType.SizeF = new System.Drawing.SizeF(100F, 23F);
+            this.xrLabelType.StylePriority.UseFont = false;
+            this.xrLabelType.StylePriority.UseTextAlignment = false;
+            this.xrLabelType.Text = "Type : INT";
+            this.xrLabelType.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
+            // 
             // DomesticToANS
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
@@ -799,7 +760,6 @@
         private DevExpress.XtraReports.UI.XRLabel xrLabel6;
         private DevExpress.XtraReports.UI.XRLabel xrLabel5;
         private DevExpress.XtraReports.UI.XRLabel xrLabelBillingPeriod;
-        private DevExpress.XtraReports.UI.XRLabel xrLabelType;
         private DevExpress.XtraReports.UI.XRLabel xrLabelPartnerVatRegNo;
         private DevExpress.XtraReports.UI.XRLabel xrLabelPartnerAddress;
         private DevExpress.XtraReports.UI.XRLabel xrLabelPartnerName;
@@ -823,10 +783,8 @@
         private DevExpress.XtraReports.UI.XRLine xrLine2;
         private DevExpress.XtraReports.UI.XRLabel xrLabel14;
         private DevExpress.XtraReports.UI.XRLabel xrLabel13;
-        private DevExpress.XtraReports.UI.XRLabel xrLabel12;
-        private DevExpress.XtraReports.UI.XRLabel xrLabel11;
-        private DevExpress.XtraReports.UI.XRLabel xrLabel3;
         private DevExpress.XtraReports.UI.XRLabel xrLabelPaymentAdvice;
         private DevExpress.XtraReports.UI.XRPageInfo xrPageInfo1;
+        private DevExpress.XtraReports.UI.XRLabel xrLabelType;
     }
 }
