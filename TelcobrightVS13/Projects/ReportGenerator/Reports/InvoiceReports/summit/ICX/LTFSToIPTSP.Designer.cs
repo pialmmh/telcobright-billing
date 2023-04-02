@@ -71,9 +71,9 @@
             this.PageFooter = new DevExpress.XtraReports.UI.PageFooterBand();
             this.xrPageInfo1 = new DevExpress.XtraReports.UI.XRPageInfo();
             this.ReportFooter = new DevExpress.XtraReports.UI.ReportFooterBand();
+            this.xrLabel1 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel13 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel14 = new DevExpress.XtraReports.UI.XRLabel();
-            this.xrLabelPaymentAdvice = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabelAmountInwords = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel4 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLine2 = new DevExpress.XtraReports.UI.XRLine();
@@ -90,6 +90,7 @@
             this.xrTableRow6 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell10 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCellAmountDueforPayment = new DevExpress.XtraReports.UI.XRTableCell();
+            this.xrLabelPaymentAdvice = new DevExpress.XtraReports.UI.XRLabel();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable3)).BeginInit();
@@ -508,7 +509,7 @@
             // 
             this.PageFooter.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrPageInfo1});
-            this.PageFooter.HeightF = 32.99997F;
+            this.PageFooter.HeightF = 42.79163F;
             this.PageFooter.Name = "PageFooter";
             // 
             // xrPageInfo1
@@ -524,9 +525,10 @@
             // ReportFooter
             // 
             this.ReportFooter.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
+            this.xrLabelPaymentAdvice,
+            this.xrLabel1,
             this.xrLabel13,
             this.xrLabel14,
-            this.xrLabelPaymentAdvice,
             this.xrLabelAmountInwords,
             this.xrLabel4,
             this.xrLine2,
@@ -534,11 +536,22 @@
             this.ReportFooter.HeightF = 320.9226F;
             this.ReportFooter.Name = "ReportFooter";
             // 
+            // xrLabel1
+            // 
+            this.xrLabel1.LocationFloat = new DevExpress.Utils.PointFloat(0.0001589457F, 277.0893F);
+            this.xrLabel1.Multiline = true;
+            this.xrLabel1.Name = "xrLabel1";
+            this.xrLabel1.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
+            this.xrLabel1.SizeF = new System.Drawing.SizeF(726.9999F, 43.83334F);
+            this.xrLabel1.StylePriority.UseTextAlignment = false;
+            this.xrLabel1.Text = resources.GetString("xrLabel1.Text");
+            this.xrLabel1.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
+            // 
             // xrLabel13
             // 
             this.xrLabel13.Borders = DevExpress.XtraPrinting.BorderSide.Top;
             this.xrLabel13.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xrLabel13.LocationFloat = new DevExpress.Utils.PointFloat(427.0002F, 287.9226F);
+            this.xrLabel13.LocationFloat = new DevExpress.Utils.PointFloat(427.0002F, 226.4643F);
             this.xrLabel13.Name = "xrLabel13";
             this.xrLabel13.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
             this.xrLabel13.SizeF = new System.Drawing.SizeF(260F, 23.00003F);
@@ -557,19 +570,6 @@
             this.xrLabel14.StylePriority.UseTextAlignment = false;
             this.xrLabel14.Text = ":";
             this.xrLabel14.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            // 
-            // xrLabelPaymentAdvice
-            // 
-            this.xrLabelPaymentAdvice.LocationFloat = new DevExpress.Utils.PointFloat(0F, 133F);
-            this.xrLabelPaymentAdvice.Multiline = true;
-            this.xrLabelPaymentAdvice.Name = "xrLabelPaymentAdvice";
-            this.xrLabelPaymentAdvice.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.xrLabelPaymentAdvice.SizeF = new System.Drawing.SizeF(727F, 22.99998F);
-            this.xrLabelPaymentAdvice.StylePriority.UseTextAlignment = false;
-            this.xrLabelPaymentAdvice.Text = "Payment Advice: Amount Payable by Crossed Cheque in favor of \"Summit Communicatio" +
-    "n Ltd\"";
-            this.xrLabelPaymentAdvice.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            this.xrLabelPaymentAdvice.WordWrap = false;
             // 
             // xrLabelAmountInwords
             // 
@@ -741,6 +741,19 @@
             this.xrTableCellAmountDueforPayment.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
             this.xrTableCellAmountDueforPayment.Weight = 0.462173542880034D;
             // 
+            // xrLabelPaymentAdvice
+            // 
+            this.xrLabelPaymentAdvice.LocationFloat = new DevExpress.Utils.PointFloat(0F, 133F);
+            this.xrLabelPaymentAdvice.Multiline = true;
+            this.xrLabelPaymentAdvice.Name = "xrLabelPaymentAdvice";
+            this.xrLabelPaymentAdvice.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
+            this.xrLabelPaymentAdvice.SizeF = new System.Drawing.SizeF(727F, 22.99998F);
+            this.xrLabelPaymentAdvice.StylePriority.UseTextAlignment = false;
+            this.xrLabelPaymentAdvice.Text = "Payment Advice: Amount Payable by Crossed Cheque in favor of \"Summit Communicatio" +
+    "n Ltd.\"";
+            this.xrLabelPaymentAdvice.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
+            this.xrLabelPaymentAdvice.WordWrap = false;
+            // 
             // LTFSToIPTSP
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
@@ -823,7 +836,8 @@
         private DevExpress.XtraReports.UI.XRLabel xrLabel4;
         private DevExpress.XtraReports.UI.XRLine xrLine2;
         private DevExpress.XtraReports.UI.XRLabel xrLabel14;
-        private DevExpress.XtraReports.UI.XRLabel xrLabelPaymentAdvice;
         private DevExpress.XtraReports.UI.XRLabel xrLabel13;
+        private DevExpress.XtraReports.UI.XRLabel xrLabel1;
+        private DevExpress.XtraReports.UI.XRLabel xrLabelPaymentAdvice;
     }
 }

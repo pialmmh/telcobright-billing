@@ -43,6 +43,7 @@
             this.TopMargin = new DevExpress.XtraReports.UI.TopMarginBand();
             this.BottomMargin = new DevExpress.XtraReports.UI.BottomMarginBand();
             this.PageHeader = new DevExpress.XtraReports.UI.PageHeaderBand();
+            this.xrLabelType = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabelTimeZone = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabelCurrency = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabelInvoiceNo = new DevExpress.XtraReports.UI.XRLabel();
@@ -94,7 +95,7 @@
             this.xrTableRow6 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell10 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCellAmountDueforPayment = new DevExpress.XtraReports.UI.XRTableCell();
-            this.xrLabelType = new DevExpress.XtraReports.UI.XRLabel();
+            this.xrLabel1 = new DevExpress.XtraReports.UI.XRLabel();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable3)).BeginInit();
@@ -244,6 +245,18 @@
             this.xrTable2});
             this.PageHeader.HeightF = 411.2501F;
             this.PageHeader.Name = "PageHeader";
+            // 
+            // xrLabelType
+            // 
+            this.xrLabelType.Font = new System.Drawing.Font("Arial Narrow", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xrLabelType.LocationFloat = new DevExpress.Utils.PointFloat(0F, 251.0417F);
+            this.xrLabelType.Name = "xrLabelType";
+            this.xrLabelType.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
+            this.xrLabelType.SizeF = new System.Drawing.SizeF(100F, 23F);
+            this.xrLabelType.StylePriority.UseFont = false;
+            this.xrLabelType.StylePriority.UseTextAlignment = false;
+            this.xrLabelType.Text = "Type : INT";
+            this.xrLabelType.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
             // 
             // xrLabelTimeZone
             // 
@@ -529,6 +542,7 @@
             // ReportFooter
             // 
             this.ReportFooter.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
+            this.xrLabel1,
             this.xrLabel13,
             this.xrLabel11,
             this.xrLabelPaymentAdvice,
@@ -548,7 +562,7 @@
             // 
             this.xrLabel13.Borders = DevExpress.XtraPrinting.BorderSide.Top;
             this.xrLabel13.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xrLabel13.LocationFloat = new DevExpress.Utils.PointFloat(457F, 372.0894F);
+            this.xrLabel13.LocationFloat = new DevExpress.Utils.PointFloat(391.375F, 276.256F);
             this.xrLabel13.Name = "xrLabel13";
             this.xrLabel13.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
             this.xrLabel13.SizeF = new System.Drawing.SizeF(260F, 23.00003F);
@@ -789,17 +803,16 @@
             this.xrTableCellAmountDueforPayment.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
             this.xrTableCellAmountDueforPayment.Weight = 0.462173542880034D;
             // 
-            // xrLabelType
+            // xrLabel1
             // 
-            this.xrLabelType.Font = new System.Drawing.Font("Arial Narrow", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xrLabelType.LocationFloat = new DevExpress.Utils.PointFloat(0F, 251.0417F);
-            this.xrLabelType.Name = "xrLabelType";
-            this.xrLabelType.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.xrLabelType.SizeF = new System.Drawing.SizeF(100F, 23F);
-            this.xrLabelType.StylePriority.UseFont = false;
-            this.xrLabelType.StylePriority.UseTextAlignment = false;
-            this.xrLabelType.Text = "Type : INT";
-            this.xrLabelType.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
+            this.xrLabel1.LocationFloat = new DevExpress.Utils.PointFloat(0F, 411.256F);
+            this.xrLabel1.Multiline = true;
+            this.xrLabel1.Name = "xrLabel1";
+            this.xrLabel1.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
+            this.xrLabel1.SizeF = new System.Drawing.SizeF(726.9999F, 43.83334F);
+            this.xrLabel1.StylePriority.UseTextAlignment = false;
+            this.xrLabel1.Text = resources.GetString("xrLabel1.Text");
+            this.xrLabel1.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             // 
             // InternationalOutgoingToANS
             // 
@@ -890,5 +903,6 @@
         private DevExpress.XtraReports.UI.XRLabel xrLabelPaymentAdvice;
         private DevExpress.XtraReports.UI.XRPageInfo xrPageInfo1;
         private DevExpress.XtraReports.UI.XRLabel xrLabelType;
+        private DevExpress.XtraReports.UI.XRLabel xrLabel1;
     }
 }

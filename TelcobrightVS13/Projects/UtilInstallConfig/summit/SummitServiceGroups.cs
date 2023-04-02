@@ -58,10 +58,10 @@ namespace InstallConfig
                         {"TollFreeInvoiceSection1GeneratorWithTax","LTFSToIPTSP" },
                         {"TollFreeInvoiceSection2GeneratorWithTax","LTFSToIPTSPDetails1" },
                         {"TollFreeInvoiceSection3GeneratorWithTax","LTFSToIPTSPDetails2" }
-                    }
+                    },
                 }
             });
-
+            
             serviceGroupConfigurations.Add(new ServiceGroupConfiguration(idServiceGroup: 2) //intlOutIcx
             {
                 Params = new Dictionary<string, string>()
@@ -142,6 +142,9 @@ namespace InstallConfig
                         {"A2ZInvoiceSection1GeneratorWithTax","DomesticToANS" },
                         {"A2ZInvoiceSection2GeneratorWithTax","DomesticToANSDetails1" },
                         {"A2ZInvoiceSection3GeneratorWithTax","DomesticToANSDetails2" }
+                    },
+                    OtherParams = new Dictionary<string, string>() {
+                        { "MergeAdditionalServiceGroups","6"} //ltfs icx to be merged with domestic for summit icx
                     }
                 }
             });

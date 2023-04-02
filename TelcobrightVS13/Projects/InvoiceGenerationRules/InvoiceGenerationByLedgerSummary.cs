@@ -31,17 +31,18 @@ namespace InvoiceGenerationRules
             ValidateIfLocalTimeZoneUsed(input, context, invoiceJsonDetail);
             DateTime startDate = Convert.ToDateTime(invoiceJsonDetail["startDate"]);
             DateTime endDate = Convert.ToDateTime(invoiceJsonDetail["endDate"]);
+
             Dictionary<DateTime,acc_ledger_summary> dayWiseLedgerSummaries = context.acc_ledger_summary
                 .Where(c => c.idAccount == serviceAccountId && c.transactionDate >= startDate
                 && c.transactionDate <= endDate).OrderBy(c=>c.transactionDate).ToDictionary(c=>c.transactionDate);
             decimal ledgerSummaryAmount = dayWiseLedgerSummaries.Values.Sum(c => c.AMOUNT);
-            Dictionary<DateTime, acc_ledger_summary_billed> dayWisetempTransactionAmount = context.acc_ledger_summary_billed
+
+            Dictionary<DateTime, acc_ledger_summary_billed> dayWiseledgerSummaryBilledAmount = context.acc_ledger_summary_billed
                 .Where(c => c.idAccount == serviceAccountId && c.transactionDate >= startDate
                             && c.transactionDate <= endDate).OrderBy(c => c.transactionDate).ToDictionary(c => c.transactionDate);
-            decimal tempTransactionAmount = dayWisetempTransactionAmount.Values.Sum(c => c.billedAmount);
-            //decimal? tempTransactionAmount = context.acc_temp_transaction.Where(c => c.glAccountId == serviceAccountId)
-            //    .Sum(c => (decimal?)c.amount);
-            decimal invoiceAmount = -1*(ledgerSummaryAmount + Convert.ToDecimal(tempTransactionAmount));
+
+            decimal ledgerSummaryBilledAmount = dayWiseledgerSummaryBilledAmount.Values.Sum(c => c.billedAmount);
+            decimal invoiceAmount = -1*(ledgerSummaryAmount + Convert.ToDecimal(ledgerSummaryBilledAmount));
             if (invoiceAmount <= 0)
             {
                 throw new Exception("Account balance [= ledger summary+temp transaction amount] " +
