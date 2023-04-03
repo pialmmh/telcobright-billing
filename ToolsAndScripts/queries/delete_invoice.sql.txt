@@ -1,0 +1,38 @@
+select * from invoice;
+
+#select * 
+
+delete 
+from invoice
+where invoice_id=14;
+
+
+
+#select * 
+
+delete 
+from invoice_item
+
+where invoice_id=14;
+
+
+
+#select * 
+
+delete
+from acc_ledger_summary_billed
+
+where invoiceOrEventId=14;
+
+
+
+delete 
+from acc_temp_transaction
+
+where idEvent=14;
+
+
+
+select * from acc_transaction
+limit 0,1000;
+

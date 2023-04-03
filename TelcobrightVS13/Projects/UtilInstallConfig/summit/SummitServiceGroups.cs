@@ -144,7 +144,7 @@ namespace InstallConfig
                         {"A2ZInvoiceSection3GeneratorWithTax","DomesticToANSDetails2" }
                     },
                     OtherParams = new Dictionary<string, string>() {
-                        { "MergeAdditionalServiceGroups","6"} //ltfs icx to be merged with domestic for summit icx
+                        { "serviceGroupsToMergeInvoice","6"} //ltfs icx to be merged with domestic for summit icx
                     }
                 }
             });

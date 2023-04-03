@@ -29,9 +29,26 @@ namespace Jobs
         public JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
         {
             InvoiceGenerationInputData invoiceGenerationInputData = (InvoiceGenerationInputData)jobInputData;
+            job telcobrightJob = invoiceGenerationInputData.TelcobrightJob;
+            Dictionary<string, string> jobParamsMap =
+                JsonConvert.DeserializeObject<Dictionary<string, string>>(telcobrightJob.JobParameter);
+            var jsonDetail = jobParamsMap;//carry on jobs param along with invoice detail
+            invoiceGenerationInputData.JsonDetail = jsonDetail;
+            PartnerEntities context = jobInputData.Context;
+            long serviceAccountId = Convert.ToInt64(jsonDetail["serviceAccountId"]);
+            account parentAccount = context.accounts.Where(a => a.id == serviceAccountId).ToList().Single();
+            IServiceGroup serviceGroup = null;
+            invoiceGenerationInputData.ServiceGroups.TryGetValue(parentAccount.serviceGroup, out serviceGroup);
+            if (serviceGroup == null)
+                throw new Exception("Service group should be set already thus cannot be null while " +
+                                    "executing invoice generation by ledger summary.");
+            jsonDetail.Add("idServiceGroup", parentAccount.serviceGroup.ToString());
+            jsonDetail.Add("uom", parentAccount.uom);
+            invoiceGenerationInputData.JsonDetail = jsonDetail;
             InvoiceGenerationHelper invoiceGenerationHelperMain =
                 new InvoiceGenerationHelper(invoiceGenerationInputData, null, null);//null will use invoice pre & processing 
                                                                                     //from serviceGroup, if not null then servicGroups methods will be overridden.
+
             invoiceGenerationInputData = invoiceGenerationHelperMain.ExecInvoicePreProcessing(invoiceGenerationInputData);
             InvoicePostProcessingData invoicePostProcessingData =
                 invoiceGenerationHelperMain.GenerateInvoice(invoiceGenerationInputData);
@@ -41,14 +58,7 @@ namespace Jobs
 
             //mustafa invoice merging part********
             //job telcobrightJob = invoiceGenerationInputData.TelcobrightJob;
-            Dictionary<string,string> jsonDetail = invoiceGenerationInputData.JsonDetail;//carry on jobs param along with invoice detail
-            long serviceAccountId = Convert.ToInt64(jsonDetail["serviceAccountId"]);
-            PartnerEntities context = jobInputData.Context;
-            account parentAccount = context.accounts.Where(a => a.id == serviceAccountId).ToList().Single();
             //invoiceGenerationInputData.ServiceGroupWiseInvoiceGenerationConfigs
-            IServiceGroup serviceGroup = null;
-            invoiceGenerationInputData.ServiceGroups.TryGetValue(parentAccount.serviceGroup, out serviceGroup);
-
             InvoiceGenerationConfig invoiceGenerationConfig = null;
             invoiceGenerationInputData.ServiceGroupWiseInvoiceGenerationConfigs.TryGetValue(serviceGroup.Id, out invoiceGenerationConfig);
             string serviceGroupsToMergeInvoiceStr="";
@@ -59,12 +69,13 @@ namespace Jobs
 
             //generate invoice for each child servicegroup to be merged
             foreach (int serviceGroupToMerge in serviceGroupsToMergeInvoice) {
-                account childAccount = context.accounts.Where(a => a.id == serviceGroupToMerge
+                account childAccount = context.accounts.Where(a => a.serviceGroup == serviceGroupToMerge && a.uom==parentAccount.uom
                     && a.idPartner == parentAccount.idPartner).ToList().SingleOrDefault();
                 long childServiceAccountId = childAccount?.id ?? -1;
                 if (childServiceAccountId > 0) {
                     Dictionary<string, string> childJsonDetail = jsonDetail.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
                     childJsonDetail["serviceAccountId"] = childServiceAccountId.ToString();
+                    childJsonDetail["idServiceGroup"] = serviceGroupToMerge.ToString();
                     invoiceGenerationInputData.JsonDetail = childJsonDetail;//change the service account to the new service account that needs to be merged.
                     InvoiceGenerationHelper invoiceGenerationHelperChild =
                         new InvoiceGenerationHelper(invoiceGenerationInputData, null, null);//null will use invoice pre & processing 
