@@ -7,6 +7,7 @@ using MediationModel;
 using Newtonsoft.Json;
 using ReportGenerator.Helper;
 using TelcobrightMediation.Helper;
+using System.Collections;
 
 namespace TelcobrightMediation.Reports.InvoiceReports.summit.ICX
 {
@@ -25,9 +26,24 @@ namespace TelcobrightMediation.Reports.InvoiceReports.summit.ICX
         {
             this.ExportToPdf(fileName);
         }
-
+        public bool IsDictionary(object o)
+        {
+            if (o == null) return false;
+            return o is IDictionary &&
+                   o.GetType().IsGenericType &&
+                   o.GetType().GetGenericTypeDefinition().IsAssignableFrom(typeof(Dictionary<,>));
+        }
         public void GenerateInvoice(object data)
         {
+            invoice invoice = null;
+            List<int> childInvoices = new List<int>();
+            if (IsDictionary(data)) {
+                //{ "invoice",invoice},
+                //          { "mergedInvoices", mergedInvoices}
+                var map = (Dictionary<string, object>)data;
+                invoice = (invoice)map["invoice"];
+
+            }
             invoice invoice = (invoice)data;
             List<InvoiceSectionDataRowForA2ZVoice> invoiceBasicDatas = this.GetReportData(invoice);
             invoice_item invoiceItem = invoice.invoice_item.Single();

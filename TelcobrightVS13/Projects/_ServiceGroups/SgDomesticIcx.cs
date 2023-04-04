@@ -91,7 +91,13 @@ namespace TelcobrightMediation
         {
             Dictionary<string, string> jobParamsMap = invoiceGenerationInputData.JsonDetail;
             invoiceGenerationInputData.JsonDetail = jobParamsMap;
-            invoiceGenerationInputData.JsonDetail.Add("vat",".15");//todo: for now harcode
+            if (invoiceGenerationInputData.JsonDetail.ContainsKey("vat") == false)
+            {
+                invoiceGenerationInputData.JsonDetail.Add("vat", ".15");//todo: for now harcode
+            }
+            else {
+                invoiceGenerationInputData.JsonDetail["vat"]= ".15";//todo: for now harcode
+            }
             return invoiceGenerationInputData;
         }
 

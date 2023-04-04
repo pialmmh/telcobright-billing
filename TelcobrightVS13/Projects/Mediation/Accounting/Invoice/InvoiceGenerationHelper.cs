@@ -19,8 +19,10 @@ namespace TelcobrightMediation.Accounting
         private account Account { get; }
         public InvoiceGenerationHelper(InvoiceGenerationInputData invoiceGenerationInputData,
             Func<InvoiceGenerationInputData, InvoiceGenerationInputData> invoicePreProcessingAction,
-            Func<InvoicePostProcessingData, InvoicePostProcessingData> invoicePostProcessingAction)
+            Func<InvoicePostProcessingData, InvoicePostProcessingData> invoicePostProcessingAction,
+            account _account, partner customer, string partnerType)
         {
+            this.Account = _account;
             this.InvoiceGenerationInputData = invoiceGenerationInputData;
             //job telcobrightJob = invoiceGenerationInputData.TelcobrightJob;
             //Dictionary<string, string> jobParamsMap =
@@ -31,12 +33,7 @@ namespace TelcobrightMediation.Accounting
             long serviceAccountId = Convert.ToInt64(jsonDetail["serviceAccountId"]);
             int timeZoneId = Convert.ToInt32(jsonDetail["timeZoneId"]);
             PartnerEntities context = invoiceGenerationInputData.Context;
-            this.Account = context.accounts.Where(a => a.id == serviceAccountId).ToList().Single();
-            partner customer = context.Database.SqlQuery<partner>($"select * from partner " +
-                                                                  $"where idpartner in (" +
-                                                                  $"select idpartner from account where " +
-                                                                  $"id={serviceAccountId})").ToList().Single();
-            string partnerType = context.enumpartnertypes.Where(c => c.id == customer.PartnerType).ToList().Single().Type;
+            
             DateTime startDate = Convert.ToDateTime(jsonDetail["startDate"]);
             DateTime endDate = Convert.ToDateTime(jsonDetail["endDate"]);
             //invoiceJsonDetail.Add("billingPeriod", $"{startDate.ToMySqlFormatWithoutQuote()}" +
@@ -45,17 +42,18 @@ namespace TelcobrightMediation.Accounting
             int idServiceGroup = Convert.ToInt32(jsonDetail["idServiceGroup"]);
             IServiceGroup serviceGroup = null;
             invoiceGenerationInputData.ServiceGroups.TryGetValue(idServiceGroup, out serviceGroup);
-            jsonDetail.Add("billingStartDate", $"{startDate.ToMySqlFormatWithoutQuote()}");
-            jsonDetail.Add("billingEndDate", $"{endDate.ToMySqlFormatWithoutQuote()}");
-            jsonDetail.Add("idPartner", customer.idPartner.ToString());
-            jsonDetail.Add("partnerName", customer.PartnerName);
-            jsonDetail.Add("companyName", customer.AlternateNameInvoice);
-            jsonDetail.Add("customerType",partnerType);
-            jsonDetail.Add("billingAddress", customer.invoiceAddress);
-            jsonDetail.Add("vatRegNo", customer.vatRegistrationNo);
-            jsonDetail.Add("paymentAdvice", customer.paymentAdvice);
+            if(!jsonDetail.ContainsKey("billingStartDate")) jsonDetail.Add("billingStartDate", $"{startDate.ToMySqlFormatWithoutQuote()}");
+            if (!jsonDetail.ContainsKey("billingEndDate")) jsonDetail.Add("billingEndDate", $"{endDate.ToMySqlFormatWithoutQuote()}");
+            if (!jsonDetail.ContainsKey("idPartner")) jsonDetail.Add("idPartner", customer.idPartner.ToString());
+            if (!jsonDetail.ContainsKey("partnerName")) jsonDetail.Add("partnerName", customer.PartnerName);
+            if (!jsonDetail.ContainsKey("companyName")) jsonDetail.Add("companyName", customer.AlternateNameInvoice);
+            if (!jsonDetail.ContainsKey("customerType")) jsonDetail.Add("customerType",partnerType);
+            if (!jsonDetail.ContainsKey("billingAddress")) jsonDetail.Add("billingAddress", customer.invoiceAddress);
+            if (!jsonDetail.ContainsKey("vatRegNo")) jsonDetail.Add("vatRegNo", customer.vatRegistrationNo);
+            if (!jsonDetail.ContainsKey("paymentAdvice")) jsonDetail.Add("paymentAdvice", customer.paymentAdvice);
             var tz = context.timezones.Where(c => c.id == timeZoneId).ToList().Single();
-            jsonDetail.Add("timeZone", "GMT" + (tz.gmt_offset < 0 ? " - " : " + ") +
+            if(!jsonDetail.ContainsKey("timeZone"))
+                jsonDetail.Add("timeZone", "GMT" + (tz.gmt_offset < 0 ? " - " : " + ") +
                                               NumberFormatter.RoundToWholeIfFractionPartIsZero(Math.Round((double)tz.gmt_offset / 3600, 2)));
             if (invoicePreProcessingAction == null)
             {

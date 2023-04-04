@@ -8,7 +8,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using MediationModel;
 using TelcobrightMediation;
-
+using Newtonsoft.Json;
 namespace PortalApp.config
 {
     public partial class PrepareReport : System.Web.UI.Page
@@ -45,8 +45,27 @@ namespace PortalApp.config
                     int INVOICE_ID = Convert.ToInt32(invoiceId);
                     invoice invoice = context.invoices.First(x => x.INVOICE_ID == INVOICE_ID);
 
+                    invoice_item invoiceItem = context.invoice_item.First(ii => ii.INVOICE_ID == invoice.INVOICE_ID);
+                    Dictionary<string, string> jsonDetail = JsonConvert.DeserializeObject<Dictionary<string, string>>(invoiceItem.JSON_DETAIL);
+                    List<int> mergedInvoices = new List<int>();
+                    if (!string.IsNullOrEmpty(jsonDetail["mergedInvoices"]) && !string.IsNullOrWhiteSpace(jsonDetail["mergedInvoices"]))
+                    {
+                        mergedInvoices = jsonDetail["mergedInvoices"].Split(',').Select(childInvoiceId => Convert.ToInt32(childInvoiceId)).ToList();
+                    }
+
                     String refNo = Guid.NewGuid().ToString();
-                    template.GenerateInvoice(invoice);
+                    if (mergedInvoices.Any())
+                    {
+                        Dictionary<string, object> invoiceWithMergeIds = new Dictionary<string, object>()
+                        {
+                            { "invoice",invoice},
+                            { "mergedInvoices", mergedInvoices}
+                        };
+                        template.GenerateInvoice(invoiceWithMergeIds);
+                    }
+                    else {
+                        template.GenerateInvoice(invoice);
+                    }
                     this.Session[refNo] = template;
                     Response.Redirect("~/config/ViewReport.aspx?refNo=" + HttpUtility.UrlEncode(refNo), false);
                     Context.ApplicationInstance.CompleteRequest();

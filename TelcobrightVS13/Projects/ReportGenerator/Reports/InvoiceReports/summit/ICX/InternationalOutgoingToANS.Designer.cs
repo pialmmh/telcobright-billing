@@ -72,6 +72,7 @@
             this.PageFooter = new DevExpress.XtraReports.UI.PageFooterBand();
             this.xrPageInfo1 = new DevExpress.XtraReports.UI.XRPageInfo();
             this.ReportFooter = new DevExpress.XtraReports.UI.ReportFooterBand();
+            this.xrLabel1 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel13 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel11 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabelPaymentAdvice = new DevExpress.XtraReports.UI.XRLabel();
@@ -95,7 +96,6 @@
             this.xrTableRow6 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell10 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCellAmountDueforPayment = new DevExpress.XtraReports.UI.XRTableCell();
-            this.xrLabel1 = new DevExpress.XtraReports.UI.XRLabel();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable3)).BeginInit();
@@ -525,14 +525,15 @@
             // PageFooter
             // 
             this.PageFooter.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
-            this.xrPageInfo1});
-            this.PageFooter.HeightF = 33F;
+            this.xrPageInfo1,
+            this.xrLabel1});
+            this.PageFooter.HeightF = 71.54166F;
             this.PageFooter.Name = "PageFooter";
             // 
             // xrPageInfo1
             // 
             this.xrPageInfo1.Format = "Section 1, Page {0} of {1}";
-            this.xrPageInfo1.LocationFloat = new DevExpress.Utils.PointFloat(599.1666F, 10F);
+            this.xrPageInfo1.LocationFloat = new DevExpress.Utils.PointFloat(599.1666F, 43.83335F);
             this.xrPageInfo1.Name = "xrPageInfo1";
             this.xrPageInfo1.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
             this.xrPageInfo1.SizeF = new System.Drawing.SizeF(117.8334F, 23F);
@@ -542,7 +543,6 @@
             // ReportFooter
             // 
             this.ReportFooter.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
-            this.xrLabel1,
             this.xrLabel13,
             this.xrLabel11,
             this.xrLabelPaymentAdvice,
@@ -554,9 +554,20 @@
             this.xrLabel4,
             this.xrLine2,
             this.xrTable3});
-            this.ReportFooter.HeightF = 455.0893F;
+            this.ReportFooter.HeightF = 447.7977F;
             this.ReportFooter.Name = "ReportFooter";
             this.ReportFooter.StylePriority.UseTextAlignment = false;
+            // 
+            // xrLabel1
+            // 
+            this.xrLabel1.LocationFloat = new DevExpress.Utils.PointFloat(0F, 0F);
+            this.xrLabel1.Multiline = true;
+            this.xrLabel1.Name = "xrLabel1";
+            this.xrLabel1.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
+            this.xrLabel1.SizeF = new System.Drawing.SizeF(726.9999F, 43.83334F);
+            this.xrLabel1.StylePriority.UseTextAlignment = false;
+            this.xrLabel1.Text = resources.GetString("xrLabel1.Text");
+            this.xrLabel1.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             // 
             // xrLabel13
             // 
@@ -802,17 +813,6 @@
             this.xrTableCellAmountDueforPayment.Text = "Amount";
             this.xrTableCellAmountDueforPayment.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
             this.xrTableCellAmountDueforPayment.Weight = 0.462173542880034D;
-            // 
-            // xrLabel1
-            // 
-            this.xrLabel1.LocationFloat = new DevExpress.Utils.PointFloat(0F, 411.256F);
-            this.xrLabel1.Multiline = true;
-            this.xrLabel1.Name = "xrLabel1";
-            this.xrLabel1.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.xrLabel1.SizeF = new System.Drawing.SizeF(726.9999F, 43.83334F);
-            this.xrLabel1.StylePriority.UseTextAlignment = false;
-            this.xrLabel1.Text = resources.GetString("xrLabel1.Text");
-            this.xrLabel1.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             // 
             // InternationalOutgoingToANS
             // 

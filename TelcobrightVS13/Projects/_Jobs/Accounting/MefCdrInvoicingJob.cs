@@ -32,66 +32,90 @@ namespace Jobs
             job telcobrightJob = invoiceGenerationInputData.TelcobrightJob;
             Dictionary<string, string> jobParamsMap =
                 JsonConvert.DeserializeObject<Dictionary<string, string>>(telcobrightJob.JobParameter);
-            var jsonDetail = jobParamsMap;//carry on jobs param along with invoice detail
-            invoiceGenerationInputData.JsonDetail = jsonDetail;
+            var jsonDetailMainServiceGroup = jobParamsMap;//carry on jobs param along with invoice detail
+            invoiceGenerationInputData.JsonDetail = jsonDetailMainServiceGroup;
             PartnerEntities context = jobInputData.Context;
-            long serviceAccountId = Convert.ToInt64(jsonDetail["serviceAccountId"]);
+            long serviceAccountId = Convert.ToInt64(jsonDetailMainServiceGroup["serviceAccountId"]);
             account parentAccount = context.accounts.Where(a => a.id == serviceAccountId).ToList().Single();
+            partner customer = context.Database.SqlQuery<partner>($"select * from partner " +
+                                                                  $"where idpartner in (" +
+                                                                  $"select idpartner from account where " +
+                                                                  $"id={serviceAccountId})").ToList().Single();
+            string partnerType = context.enumpartnertypes.Where(c => c.id == customer.PartnerType).ToList().Single().Type;
             IServiceGroup serviceGroup = null;
             invoiceGenerationInputData.ServiceGroups.TryGetValue(parentAccount.serviceGroup, out serviceGroup);
             if (serviceGroup == null)
                 throw new Exception("Service group should be set already thus cannot be null while " +
                                     "executing invoice generation by ledger summary.");
-            jsonDetail.Add("idServiceGroup", parentAccount.serviceGroup.ToString());
-            jsonDetail.Add("uom", parentAccount.uom);
-            invoiceGenerationInputData.JsonDetail = jsonDetail;
-            InvoiceGenerationHelper invoiceGenerationHelperMain =
-                new InvoiceGenerationHelper(invoiceGenerationInputData, null, null);//null will use invoice pre & processing 
-                                                                                    //from serviceGroup, if not null then servicGroups methods will be overridden.
+            jsonDetailMainServiceGroup.Add("idServiceGroup", parentAccount.serviceGroup.ToString());
+            jsonDetailMainServiceGroup.Add("uom", parentAccount.uom);
+            jsonDetailMainServiceGroup.Add("idPartner", customer.idPartner.ToString());
+            jsonDetailMainServiceGroup.Add("partnerType", partnerType);
 
-            invoiceGenerationInputData = invoiceGenerationHelperMain.ExecInvoicePreProcessing(invoiceGenerationInputData);
+            invoiceGenerationInputData.JsonDetail = jsonDetailMainServiceGroup.ToDictionary(kv=>kv.Key,kv=>kv.Value);
+
+            InvoiceGenerationHelper invoiceGenerationHelper =
+                new InvoiceGenerationHelper(invoiceGenerationInputData, null, null, parentAccount, customer, partnerType);//null will use invoice pre & processing 
+                                                                                                                          //from serviceGroup, if not null then servicGroups methods will be overridden.
+            List<long> childInvoicesIds = 
+                GenerateChildInvoicesToBeMerged(invoiceGenerationInputData, jsonDetailMainServiceGroup, context, 
+                                                parentAccount, customer, partnerType, serviceGroup, invoiceGenerationHelper);
+
+            jsonDetailMainServiceGroup.Add("mergedInvoices", string.Join(",", childInvoicesIds));
+            invoiceGenerationInputData.JsonDetail = jsonDetailMainServiceGroup;
+
+            invoiceGenerationInputData = invoiceGenerationHelper.ExecInvoicePreProcessing(invoiceGenerationInputData);
             InvoicePostProcessingData invoicePostProcessingData =
-                invoiceGenerationHelperMain.GenerateInvoice(invoiceGenerationInputData);
-            invoicePostProcessingData = invoiceGenerationHelperMain.ExecInvoicePostProcessing(invoicePostProcessingData);
+                invoiceGenerationHelper.GenerateInvoice(invoiceGenerationInputData);
+            invoicePostProcessingData = invoiceGenerationHelper.ExecInvoicePostProcessing(invoicePostProcessingData);
             invoicePostProcessingData.TempTransaction = CreateTempTransaction(invoicePostProcessingData);
+            WriteToDb(invoicePostProcessingData);//write the main invoice to db
+            return JobCompletionStatus.Complete;
+        }
 
-
-            //mustafa invoice merging part********
-            //job telcobrightJob = invoiceGenerationInputData.TelcobrightJob;
-            //invoiceGenerationInputData.ServiceGroupWiseInvoiceGenerationConfigs
+        private List<long> GenerateChildInvoicesToBeMerged(InvoiceGenerationInputData invoiceGenerationInputData, 
+            Dictionary<string, string> jsonDetail, PartnerEntities context, 
+            account parentAccount, partner customer, 
+            string partnerType, IServiceGroup serviceGroup, InvoiceGenerationHelper invoiceGenerationHelperMain)
+        {
             InvoiceGenerationConfig invoiceGenerationConfig = null;
             invoiceGenerationInputData.ServiceGroupWiseInvoiceGenerationConfigs.TryGetValue(serviceGroup.Id, out invoiceGenerationConfig);
-            string serviceGroupsToMergeInvoiceStr="";
-            if (invoiceGenerationConfig.OtherParams != null) {
+            string serviceGroupsToMergeInvoiceStr = "";
+            if (invoiceGenerationConfig.OtherParams != null)
+            {
                 invoiceGenerationConfig.OtherParams.TryGetValue("serviceGroupsToMergeInvoice", out serviceGroupsToMergeInvoiceStr);
             }
             List<int> serviceGroupsToMergeInvoice = serviceGroupsToMergeInvoiceStr.Split(',').Select(s => Convert.ToInt32(s.Trim())).ToList();
 
             //generate invoice for each child servicegroup to be merged
-            foreach (int serviceGroupToMerge in serviceGroupsToMergeInvoice) {
-                account childAccount = context.accounts.Where(a => a.serviceGroup == serviceGroupToMerge && a.uom==parentAccount.uom
+            List<long> childInvoicesIds = new List<long>();
+            foreach (int serviceGroupToMerge in serviceGroupsToMergeInvoice)
+            {
+                account childAccount = context.accounts.Where(a => a.serviceGroup == serviceGroupToMerge && a.uom == parentAccount.uom
                     && a.idPartner == parentAccount.idPartner).ToList().SingleOrDefault();
                 long childServiceAccountId = childAccount?.id ?? -1;
-                if (childServiceAccountId > 0) {
+                if (childServiceAccountId > 0)
+                {
                     Dictionary<string, string> childJsonDetail = jsonDetail.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
                     childJsonDetail["serviceAccountId"] = childServiceAccountId.ToString();
                     childJsonDetail["idServiceGroup"] = serviceGroupToMerge.ToString();
                     invoiceGenerationInputData.JsonDetail = childJsonDetail;//change the service account to the new service account that needs to be merged.
                     InvoiceGenerationHelper invoiceGenerationHelperChild =
-                        new InvoiceGenerationHelper(invoiceGenerationInputData, null, null);//null will use invoice pre & processing 
-                                                                                    //from serviceGroup, if not null then servicGroups methods will be overridden.
-                    invoiceGenerationInputData = invoiceGenerationHelperMain.ExecInvoicePreProcessing(invoiceGenerationInputData);
+                        new InvoiceGenerationHelper(invoiceGenerationInputData, null, null,
+                        childAccount, customer, partnerType);//null will use invoice pre & processing 
+                                                             //from serviceGroup, if not null then servicGroups methods will be overridden.
+                    invoiceGenerationInputData = invoiceGenerationHelperChild.ExecInvoicePreProcessing(invoiceGenerationInputData);
                     InvoicePostProcessingData invoicePostProcessingDataChild =
                         invoiceGenerationHelperMain.GenerateInvoice(invoiceGenerationInputData);
-                    invoicePostProcessingDataChild = invoiceGenerationHelperMain.ExecInvoicePostProcessing(invoicePostProcessingData);
-                    invoicePostProcessingDataChild.TempTransaction = CreateTempTransaction(invoicePostProcessingData);
+                    invoicePostProcessingDataChild = invoiceGenerationHelperChild.ExecInvoicePostProcessing(invoicePostProcessingDataChild);
+                    invoicePostProcessingDataChild.TempTransaction = CreateTempTransaction(invoicePostProcessingDataChild);
+                    long generatedInvoiceId = WriteToDb(invoicePostProcessingDataChild);
+                    childInvoicesIds.Add(generatedInvoiceId);
                 }
             }
-            //end invoice merging part************
-            WriteToDb(invoicePostProcessingData);
-            return JobCompletionStatus.Complete;
+            return childInvoicesIds;
         }
-        
+
         private acc_temp_transaction CreateTempTransaction(InvoicePostProcessingData invoicePostProcessingData)
         {
             acc_temp_transaction tempTransaction = new acc_temp_transaction()
@@ -104,7 +128,7 @@ namespace Jobs
             return tempTransaction;
         }
         
-        private void WriteToDb(InvoicePostProcessingData invoicePostProcessingData)
+        private long WriteToDb(InvoicePostProcessingData invoicePostProcessingData)
         {
             InvoiceGenerationInputData invoiceGenerationInputData =
                                        invoicePostProcessingData.InvoiceGenerationInputData;
@@ -159,7 +183,7 @@ namespace Jobs
                 
             cmd.CommandText = sbSql.ToString();
             cmd.ExecuteNonQuery();
-            
+            return generatedInvoiceId;
         }
         private Action<object> actionOnFinish = jobInput =>
         {
