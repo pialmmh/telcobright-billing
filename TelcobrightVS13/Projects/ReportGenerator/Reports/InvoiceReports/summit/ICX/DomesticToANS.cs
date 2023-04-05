@@ -36,19 +36,25 @@ namespace TelcobrightMediation.Reports.InvoiceReports.summit.ICX
         public void GenerateInvoice(object data)
         {
             invoice invoice = null;
-            List<int> childInvoices = new List<int>();
+            invoice mergedInvoice = null;
             if (IsDictionary(data)) {
-                //{ "invoice",invoice},
-                //          { "mergedInvoices", mergedInvoices}
                 var map = (Dictionary<string, object>)data;
                 invoice = (invoice)map["invoice"];
-
+                mergedInvoice = (invoice)map["mergedInvoice"];
             }
-            invoice invoice = (invoice)data;
+            else {
+                invoice = (invoice)data;
+            }
             List<InvoiceSectionDataRowForA2ZVoice> invoiceBasicDatas = this.GetReportData(invoice);
+            List<InvoiceSectionDataRowForA2ZVoice> invoiceBasicDatasMerged = this.GetReportData(mergedInvoice);
+
+            //invoice_item mergeInvoiceItem = mergedInvoice.invoice_item.Single();
             invoice_item invoiceItem = invoice.invoice_item.Single();
+            invoice_item invoiceItemMerged = mergedInvoice.invoice_item.Single();
             Dictionary<string, string> invoiceMap = JsonConvert.DeserializeObject<Dictionary<string, string>>(invoiceItem.JSON_DETAIL);
+            Dictionary<string, string> invoiceMapMerged = JsonConvert.DeserializeObject<Dictionary<string, string>>(invoiceItemMerged.JSON_DETAIL);
             this.DataSource = invoiceBasicDatas;
+            //this.DataSource = mergeInvoiceBasicDatas;
 
             #region Page Header
             //xrLabelVatRegNo.Text = "BIN: 001285404-0208";
@@ -73,14 +79,28 @@ namespace TelcobrightMediation.Reports.InvoiceReports.summit.ICX
             xrTableCellUnitsCalls.DataBindings.Add("Text", this.DataSource, "TotalCalls", "{0:n0}");
             xrTableCellTotalMinutes.DataBindings.Add("Text", this.DataSource, "TotalMinutes", "{0:n2}");
             xrTableCellAmount.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
+            xrTableCell8.DataBindings.Add("Text", invoiceBasicDatasMerged, "Reference");
+            xrTableCell15.DataBindings.Add("Text", invoiceBasicDatasMerged, "Description");
+            xrTableCell16.DataBindings.Add("Text", invoiceBasicDatasMerged, "TotalCalls", "{0:n0}");
+            xrTableCell17.DataBindings.Add("Text", invoiceBasicDatasMerged, "TotalMinutes", "{0:n2}");
+            xrTableCell18.DataBindings.Add("Text", invoiceBasicDatasMerged, "Amount", "{0:n2}");
 
             decimal subTotalAmount = invoiceBasicDatas.Sum(x => x.Amount);
             decimal invTotalAmount = invoiceBasicDatas.Sum(x => x.GrandTotalAmount);
+            decimal subTotalAmountMerged = invoiceBasicDatasMerged.Sum(x => x.Amount);
+            decimal invTotalAmountMerged = invoiceBasicDatasMerged.Sum(x => x.GrandTotalAmount);
+            decimal invTotalAmountBoth = invTotalAmount + invTotalAmountMerged;
+            decimal invVat = invTotalAmount - subTotalAmount;
+            decimal invMergedVat = invTotalAmountMerged - subTotalAmountMerged;
+            decimal totalVat = invVat + invMergedVat;
+            decimal subTotalAmountBoth = subTotalAmount + subTotalAmountMerged;
+            //decimal mergedInvoiceAmount = mergedInvoice.originalAmount;
 
-            xrTableCellSubTotalAmount.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
-            xrTableCellVAT.Text = string.Format("{0:n2}", invTotalAmount - subTotalAmount);
-            xrTableCellInvoiceTotal.Text = string.Format("{0:n2}", invTotalAmount);
-            xrTableCellAmountDueforPayment.Text = string.Format("{0:n2}", invTotalAmount);
+            //xrTableCellSubTotalAmount.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
+            xrTableCellSubTotalAmount.Text = string.Format("{0:n2}", subTotalAmountBoth);
+            xrTableCellVAT.Text = string.Format("{0:n2}", totalVat);
+            xrTableCellInvoiceTotal.Text = string.Format("{0:n2}", invTotalAmountBoth);
+            xrTableCellAmountDueforPayment.Text = string.Format("{0:n2}", invTotalAmountBoth);
 
             #endregion
 
@@ -90,13 +110,14 @@ namespace TelcobrightMediation.Reports.InvoiceReports.summit.ICX
                 xrLabelPaymentAdvice.Text = invoiceMap["paymentAdvice"].ToString();
             }
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
-            xrLabelAmountInwords.Text = textInfo.ToTitleCase(CurrencyHelper.NumberToTakaWords(Convert.ToDouble(invTotalAmount)));
+            xrLabelAmountInwords.Text = textInfo.ToTitleCase(CurrencyHelper.NumberToTakaWords(Convert.ToDouble(invTotalAmountBoth)));
             #endregion
         }
 
-        private List<InvoiceSectionDataRowForA2ZVoice> GetReportData(invoice invoice)
+        private List<InvoiceSectionDataRowForA2ZVoice> GetReportData(invoice invoice/*,invoice mergedInvoice*/)
         {
             invoice_item invoiceItem = invoice.invoice_item.Single();
+            //invoice_item mergeInvoiceItem = mergedInvoice.invoice_item.Single();
             InvoiceSectionDataRetriever<InvoiceSectionDataRowForA2ZVoice> sectionDataRetriever =
                 new InvoiceSectionDataRetriever<InvoiceSectionDataRowForA2ZVoice>();
             List<InvoiceSectionDataRowForA2ZVoice> sectionData =

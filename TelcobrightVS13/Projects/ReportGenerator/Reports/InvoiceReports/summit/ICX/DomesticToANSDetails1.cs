@@ -5,7 +5,9 @@ using System.Globalization;
 using System.Linq;
 using MediationModel;
 using Newtonsoft.Json;
+using ReportGenerator.Helper;
 using TelcobrightMediation.Helper;
+using System.Collections;
 
 namespace TelcobrightMediation.Reports.InvoiceReports.summit.ICX
 {
@@ -24,12 +26,34 @@ namespace TelcobrightMediation.Reports.InvoiceReports.summit.ICX
             this.ExportToPdf(fileName);
         }
 
+        public bool IsDictionary(object o)
+        {
+            if (o == null) return false;
+            return o is IDictionary &&
+                   o.GetType().IsGenericType &&
+                   o.GetType().GetGenericTypeDefinition().IsAssignableFrom(typeof(Dictionary<,>));
+        }
+
         public void GenerateInvoice(object data)
         {
-            invoice invoice = (invoice)data;
+            invoice invoice = null;
+            invoice mergedInvoice = null;
+            if (IsDictionary(data))
+            {
+                var map = (Dictionary<string, object>)data;
+                invoice = (invoice)map["invoice"];
+                mergedInvoice = (invoice)map["mergedInvoice"];
+            }
+            else
+            {
+                invoice = (invoice)data;
+            }
             List<InvoiceSectionDataRowForA2ZVoice> invoiceBasicDatas = this.GetReportData(invoice);
+            List<InvoiceSectionDataRowForA2ZVoice> invoiceBasicDatasMerged = this.GetReportData(mergedInvoice);
             invoice_item invoiceItem = invoice.invoice_item.Single();
+            invoice_item invoiceItemMerged = mergedInvoice.invoice_item.Single();
             Dictionary<string, string> invoiceMap = JsonConvert.DeserializeObject<Dictionary<string, string>>(invoiceItem.JSON_DETAIL);
+            Dictionary<string, string> invoiceMapMerged = JsonConvert.DeserializeObject<Dictionary<string, string>>(invoiceItemMerged.JSON_DETAIL);
             this.DataSource = invoiceBasicDatas;
 
             #region Page Header
@@ -56,9 +80,23 @@ namespace TelcobrightMediation.Reports.InvoiceReports.summit.ICX
             xrTableCellRevenue.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
             xrTableCellAmount.DataBindings.Add("Text", this.DataSource, "GrandTotalAmount", "{0:n2}");
 
+
             xrTableCellRevenueTotal.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
             xrTableCellSubTotalAmount.DataBindings.Add("Text", this.DataSource, "GrandTotalAmount", "{0:n2}");
+
+            // xrTableCell16.DataBindings.Add("Text", invoiceBasicDatasMerged, "Reference");
+            //xrTableCell17.DataBindings.Add("Text", invoiceBasicDatasMerged, "InPartnerName");
+            //xrTableCell18.DataBindings.Add("Text", invoiceBasicDatasMerged, "TotalCalls", "{0:n0}");
+            //xrTableCell19.DataBindings.Add("Text", invoiceBasicDatasMerged, "TotalMinutes", "{0:n2}");
+            //xrTableCell20.DataBindings.Add("Text", invoiceBasicDatasMerged, "Rate", "{0:##0.######}");
+            //xrTableCell21.DataBindings.Add("Text", invoiceBasicDatasMerged, "Amount", "{0:n2}");
+            //xrTableCell22.DataBindings.Add("Text", invoiceBasicDatasMerged, "GrandTotalAmount", "{0:n2}");
+
+            //xrTableCell34.DataBindings.Add("Text", invoiceBasicDatasMerged, "Amount", "{0:n2}");
+            //xrTableCell35.DataBindings.Add("Text", invoiceBasicDatasMerged, "GrandTotalAmount", "{0:n2}");
             #endregion
+
+            
         }
 
         private List<InvoiceSectionDataRowForA2ZVoice> GetReportData(invoice invoice)

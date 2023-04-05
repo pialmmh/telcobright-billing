@@ -47,19 +47,24 @@ namespace PortalApp.config
 
                     invoice_item invoiceItem = context.invoice_item.First(ii => ii.INVOICE_ID == invoice.INVOICE_ID);
                     Dictionary<string, string> jsonDetail = JsonConvert.DeserializeObject<Dictionary<string, string>>(invoiceItem.JSON_DETAIL);
-                    List<int> mergedInvoices = new List<int>();
-                    if (!string.IsNullOrEmpty(jsonDetail["mergedInvoices"]) && !string.IsNullOrWhiteSpace(jsonDetail["mergedInvoices"]))
+                    List<long> mergedInvoiceIds = new List<long>();
+                    List<invoice> mergedInvoices = new List<invoice>();
+                    if (jsonDetail.ContainsKey("mergedInvoices") 
+                        && !string.IsNullOrEmpty(jsonDetail["mergedInvoices"]) && !string.IsNullOrWhiteSpace(jsonDetail["mergedInvoices"]))
                     {
-                        mergedInvoices = jsonDetail["mergedInvoices"].Split(',').Select(childInvoiceId => Convert.ToInt32(childInvoiceId)).ToList();
+                        mergedInvoiceIds = jsonDetail["mergedInvoices"].Split(',').Select(childInvoiceId => Convert.ToInt64(childInvoiceId)).ToList();
                     }
-
                     String refNo = Guid.NewGuid().ToString();
-                    if (mergedInvoices.Any())
+                    if (mergedInvoiceIds.Any())
                     {
+                        //mergedInvoices = context.Database.SqlQuery<invoice>($@"select * from invoice where invoice_id in ({string.Join(",", mergedInvoiceIds)})").ToList();
+
+                        mergedInvoices = context.invoices.Where(i => mergedInvoiceIds.Contains(i.INVOICE_ID)).ToList();
+
                         Dictionary<string, object> invoiceWithMergeIds = new Dictionary<string, object>()
                         {
                             { "invoice",invoice},
-                            { "mergedInvoices", mergedInvoices}
+                            { "mergedInvoice", mergedInvoices.First()}//do one for now
                         };
                         template.GenerateInvoice(invoiceWithMergeIds);
                     }

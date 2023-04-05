@@ -48,22 +48,24 @@ namespace Jobs
                 throw new Exception("Service group should be set already thus cannot be null while " +
                                     "executing invoice generation by ledger summary.");
             jsonDetailMainServiceGroup.Add("idServiceGroup", parentAccount.serviceGroup.ToString());
+            jsonDetailMainServiceGroup["serviceAccountId"] = serviceAccountId.ToString();
             jsonDetailMainServiceGroup.Add("uom", parentAccount.uom);
             jsonDetailMainServiceGroup.Add("idPartner", customer.idPartner.ToString());
             jsonDetailMainServiceGroup.Add("partnerType", partnerType);
 
+
             invoiceGenerationInputData.JsonDetail = jsonDetailMainServiceGroup.ToDictionary(kv=>kv.Key,kv=>kv.Value);
 
-            InvoiceGenerationHelper invoiceGenerationHelper =
-                new InvoiceGenerationHelper(invoiceGenerationInputData, null, null, parentAccount, customer, partnerType);//null will use invoice pre & processing 
-                                                                                                                          //from serviceGroup, if not null then servicGroups methods will be overridden.
+            
             List<long> childInvoicesIds = 
                 GenerateChildInvoicesToBeMerged(invoiceGenerationInputData, jsonDetailMainServiceGroup, context, 
-                                                parentAccount, customer, partnerType, serviceGroup, invoiceGenerationHelper);
+                                                parentAccount, customer, partnerType, serviceGroup);
 
             jsonDetailMainServiceGroup.Add("mergedInvoices", string.Join(",", childInvoicesIds));
             invoiceGenerationInputData.JsonDetail = jsonDetailMainServiceGroup;
-
+            InvoiceGenerationHelper invoiceGenerationHelper =
+                new InvoiceGenerationHelper(invoiceGenerationInputData, null, null, parentAccount, customer, partnerType);//null will use invoice pre & processing 
+                                                                                                                          //from serviceGroup, if not null then servicGroups methods will be overridden.
             invoiceGenerationInputData = invoiceGenerationHelper.ExecInvoicePreProcessing(invoiceGenerationInputData);
             InvoicePostProcessingData invoicePostProcessingData =
                 invoiceGenerationHelper.GenerateInvoice(invoiceGenerationInputData);
@@ -76,7 +78,7 @@ namespace Jobs
         private List<long> GenerateChildInvoicesToBeMerged(InvoiceGenerationInputData invoiceGenerationInputData, 
             Dictionary<string, string> jsonDetail, PartnerEntities context, 
             account parentAccount, partner customer, 
-            string partnerType, IServiceGroup serviceGroup, InvoiceGenerationHelper invoiceGenerationHelperMain)
+            string partnerType, IServiceGroup serviceGroup)
         {
             InvoiceGenerationConfig invoiceGenerationConfig = null;
             invoiceGenerationInputData.ServiceGroupWiseInvoiceGenerationConfigs.TryGetValue(serviceGroup.Id, out invoiceGenerationConfig);
@@ -106,7 +108,7 @@ namespace Jobs
                                                              //from serviceGroup, if not null then servicGroups methods will be overridden.
                     invoiceGenerationInputData = invoiceGenerationHelperChild.ExecInvoicePreProcessing(invoiceGenerationInputData);
                     InvoicePostProcessingData invoicePostProcessingDataChild =
-                        invoiceGenerationHelperMain.GenerateInvoice(invoiceGenerationInputData);
+                        invoiceGenerationHelperChild.GenerateInvoice(invoiceGenerationInputData);
                     invoicePostProcessingDataChild = invoiceGenerationHelperChild.ExecInvoicePostProcessing(invoicePostProcessingDataChild);
                     invoicePostProcessingDataChild.TempTransaction = CreateTempTransaction(invoicePostProcessingDataChild);
                     long generatedInvoiceId = WriteToDb(invoicePostProcessingDataChild);
