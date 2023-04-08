@@ -23,7 +23,7 @@ namespace PortalApp.config
 {
     public partial class InvoiceGeneration : System.Web.UI.Page
     {
-        private static TelcobrightConfig Tbc { get; set; }
+        private static TelcobrightConfig tbc { get; set; }
         private static int DefaultTimeZoneId = 3251;
         private static int GmtOffset = 21600;
         private static Dictionary<int, IServiceGroup> MefServiceGroups { get; set; }
@@ -34,7 +34,7 @@ namespace PortalApp.config
         {
             if (!IsPostBack)
             {
-                Tbc = PageUtil.GetTelcobrightConfig();
+                tbc = PageUtil.GetTelcobrightConfig();
                 bool isAlreadyExists = false;
                 using (PartnerEntities context = new PartnerEntities())
                 {
@@ -44,17 +44,43 @@ namespace PortalApp.config
                     allTimeZones = context.timezones.Include("zone.country")
                         .OrderBy(o => o.zone.country.country_name).ToList();
 
-                    List<KeyValuePair<Regex, string>> serviceAliases = Tbc.ServiceAliasesRegex;
+                    List<KeyValuePair<Regex, string>> serviceAliases = tbc.ServiceAliasesRegex;
                     List<InvoiceGenRowDataCollector> summaryForInvoiceGenerations =
                         new List<InvoiceGenRowDataCollector>();
                     List<BillingRule> billingRules = context.jsonbillingrules.ToList()
                         .Select(c => JsonConvert.DeserializeObject<BillingRule>(c.JsonExpression)).ToList();
                     List<long> accountIds = context.accounts.Where(x => x.isCustomerAccount == 1 && x.isBillable == 1)
                         .Select(x => x.id).ToList();
-                    List<acc_ledger_summary> accLedgerSummaries =
-                        context.acc_ledger_summary.Where(x => accountIds.Contains(x.idAccount) && x.AMOUNT != 0)
-                            .ToList();
-                    
+
+                    List<long> excludeAccountsForInvoiceGen = new List<long>();
+                    foreach (ServiceGroupConfiguration sgConfig in tbc.CdrSetting.ServiceGroupConfigurations.Values) {
+                        string paramVal =
+                            sgConfig.InvoiceGenerationConfig.OtherParams?["serviceGroupsToMergeInvoice"];
+                        if (!string.IsNullOrEmpty(paramVal) && !string.IsNullOrWhiteSpace(paramVal)) {
+                            List<int> serviceGroupidstoExclude =
+                                paramVal.Split(',').Where(s => !string.IsNullOrEmpty(s) && !string.IsNullOrWhiteSpace(s))
+                                .Select(s => Convert.ToInt32(s)).ToList();
+                            List<long> accountsToExclude= context.accounts
+                                .Where(a=> serviceGroupidstoExclude.Contains(a.serviceGroup))
+                                .Select(a=>a.id).ToList();
+                            if (accountsToExclude.Any()) {
+                                excludeAccountsForInvoiceGen.AddRange(accountsToExclude);
+                            }
+                        }
+                    }
+
+                    List<acc_ledger_summary> accLedgerSummaries = new List<acc_ledger_summary>();
+                    if (excludeAccountsForInvoiceGen.Any())
+                    {
+                        accLedgerSummaries =
+                            context.acc_ledger_summary.Where(lsum => accountIds.Contains(lsum.idAccount) && lsum.AMOUNT != 0
+                            && !excludeAccountsForInvoiceGen.Contains(lsum.idAccount)).ToList();
+                    }
+                    else {
+                        accLedgerSummaries =
+                            context.acc_ledger_summary.Where(x => accountIds.Contains(x.idAccount) && x.AMOUNT != 0).ToList();
+                    }
+
                     ServiceGroupComposer composer=new ServiceGroupComposer();
                     var dir=new DirectoryInfo(PageUtil.GetPortalBinPath());
                     composer.ComposeFromPath(dir.Parent.GetDirectories().Single(d => d.Name == "Extensions")
@@ -93,7 +119,6 @@ namespace PortalApp.config
                         TimeRange timeRange =
                             billingRule.GetBillingCycleByBillableItemsDate(ledgerSummary.transactionDate);
                         
-
                         if (summaryForInvoiceGenerations.Count > 0)
                         {
                             InvoiceGenRowDataCollector cycle = summaryForInvoiceGenerations
