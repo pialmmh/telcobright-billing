@@ -100,14 +100,16 @@ namespace TelcobrightMediation.Reports.InvoiceReports.summit.ICX
                 SubBand1.Visible = false;
             }
 
-            if(invoiceBasicDatasMerged != null)
+            decimal invTotalAmountBoth = 0;
+            decimal invTotalAmount = 0;
+            if (invoiceBasicDatasMerged != null)
             {
 
                 decimal subTotalAmount = invoiceBasicDatas.Sum(x => x.Amount);
-                decimal invTotalAmount = invoiceBasicDatas.Sum(x => x.GrandTotalAmount);
+                invTotalAmount = invoiceBasicDatas.Sum(x => x.GrandTotalAmount);
                 decimal subTotalAmountMerged = invoiceBasicDatasMerged.Sum(x => x.Amount);
                 decimal invTotalAmountMerged = invoiceBasicDatasMerged.Sum(x => x.GrandTotalAmount);
-                decimal invTotalAmountBoth = invTotalAmount + invTotalAmountMerged;
+                invTotalAmountBoth = invTotalAmount + invTotalAmountMerged;
                 decimal invVat = invTotalAmount - subTotalAmount;
                 decimal invMergedVat = invTotalAmountMerged - subTotalAmountMerged;
                 decimal totalVat = invVat + invMergedVat;
@@ -123,7 +125,7 @@ namespace TelcobrightMediation.Reports.InvoiceReports.summit.ICX
             else
             {
                 decimal subTotalAmount = invoiceBasicDatas.Sum(x => x.Amount);
-                decimal invTotalAmount = invoiceBasicDatas.Sum(x => x.GrandTotalAmount);
+                invTotalAmount = invoiceBasicDatas.Sum(x => x.GrandTotalAmount);
                 decimal invVat = invTotalAmount - subTotalAmount;
 
                 xrTableCellSubTotalAmount.Text = string.Format("{0:n2}", subTotalAmount);
@@ -142,13 +144,11 @@ namespace TelcobrightMediation.Reports.InvoiceReports.summit.ICX
             if(invoiceBasicDatasMerged != null)
             {
                 TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
-                object invTotalAmountBoth = null;
                 xrLabelAmountInwords.Text = textInfo.ToTitleCase(CurrencyHelper.NumberToTakaWords(Convert.ToDouble(invTotalAmountBoth)));
             }
             else
             {
                 TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
-                object invTotalAmount = null;
                 xrLabelAmountInwords.Text = textInfo.ToTitleCase(CurrencyHelper.NumberToTakaWords(Convert.ToDouble(invTotalAmount)));
             }            
             #endregion
