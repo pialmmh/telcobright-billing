@@ -87,7 +87,9 @@ namespace Jobs
             {
                 invoiceGenerationConfig.OtherParams.TryGetValue("serviceGroupsToMergeInvoice", out serviceGroupsToMergeInvoiceStr);
             }
-            List<int> serviceGroupsToMergeInvoice = serviceGroupsToMergeInvoiceStr.Split(',').Select(s => Convert.ToInt32(s.Trim())).ToList();
+            List<int> serviceGroupsToMergeInvoice = !(string.IsNullOrEmpty(serviceGroupsToMergeInvoiceStr)) && !(string.IsNullOrWhiteSpace(serviceGroupsToMergeInvoiceStr)) ?
+                serviceGroupsToMergeInvoiceStr.Split(',').Select(s => Convert.ToInt32(s.Trim())).ToList()
+                :new List<int>();
 
             //generate invoice for each child servicegroup to be merged
             List<long> childInvoicesIds = new List<long>();

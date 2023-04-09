@@ -13,9 +13,10 @@ namespace QuartzTelcobright.PropertyGen
     {
         private string SchedulerDatabaseName { get; set; }
         private int TcpPortNumber { get; set; }
-        public QuartzPropGenRemoteSchedulerAdoRuntime(int tcpPortNumber)
+        public QuartzPropGenRemoteSchedulerAdoRuntime(int tcpPortNumber,string schedulerDatabaseName="")
         {
             this.TcpPortNumber = tcpPortNumber;
+            this.SchedulerDatabaseName = schedulerDatabaseName;
         }
         protected override NameValueCollection GenerateSchedulerProperties()
         {

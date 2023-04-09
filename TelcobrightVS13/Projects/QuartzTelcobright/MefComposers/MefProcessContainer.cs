@@ -11,7 +11,7 @@ namespace QuartzTelcobright.MefComposers
     {
         public Dictionary<string, ITelcobrightProcess> Processes { get; set; }
 
-        MefProcessContainer(MefCollectiveAssemblyComposer mefCollectiveAssemblyComposer)
+        public MefProcessContainer(MefCollectiveAssemblyComposer mefCollectiveAssemblyComposer)
         {
             this.Processes = new Dictionary<string, ITelcobrightProcess>();
             foreach (KeyValuePair<string, object> keyValuePair in mefCollectiveAssemblyComposer

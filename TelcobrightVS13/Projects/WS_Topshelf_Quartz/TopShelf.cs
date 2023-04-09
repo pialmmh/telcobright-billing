@@ -31,11 +31,12 @@ namespace WS_Telcobright_Topshelf
 {
     public class TopShelf
     {
-        public MefCollectiveAssemblyComposer MefColllectiveAssemblyComposer { get; set; }
-
+        public static MefCollectiveAssemblyComposer mefColllectiveAssemblyComposer { get; set; }
+        public static MefProcessContainer mefProcessContainer { get; set; }
         static void Main(string[] args)
         {
             //todo: remove test code
+            mefColllectiveAssemblyComposer = new MefCollectiveAssemblyComposer("..//..//bin//Extensions//");
             RemoteSchedulerProvider provider= new RemoteSchedulerProvider
             {
                 SchedulerHost = "tcp://localhost:555/QuartzScheduler"
@@ -106,14 +107,19 @@ namespace WS_Telcobright_Topshelf
         {
             try
             {
-                IApplicationContext
-                    springContext = ContextRegistry.GetContext(); //don't use "using", it auto disposes spring context
-                MefProcessContainer mefProcessContainer = GetMefProcessContainerFromIoC(springContext);
-                Dictionary<string, TelcobrightConfig> operatorWiseConfigs = GetTelcobrightConfigs();
+                //IApplicationContext
+                  //  springContext = ContextRegistry.GetContext(); //don't use "using", it auto disposes spring context
+                //MefProcessContainer mefProcessContainer = GetMefProcessContainerFromIoC(springContext);
+                TopShelf.mefProcessContainer = new MefProcessContainer(TopShelf.mefColllectiveAssemblyComposer);
+                //     < object name = "mefProcessContainer" type = "QuartzTelcobright.MefComposers.MefProcessContainer,QuartzTelcobright" singleton = "true" >
+                //< constructor - arg name = "mefCollectiveAssemblyComposer" ref= "mefCollectiveAssemblyComposer" />
+                //   </ object >
+
+                Dictionary <string, TelcobrightConfig> operatorWiseConfigs = GetTelcobrightConfigs();
                 IScheduler runtimeScheduler = null;
                 try
                 {
-                    runtimeScheduler = GetScheduler(SchedulerRunTimeType.Runtime, springContext);
+                    runtimeScheduler = GetScheduler(SchedulerRunTimeType.Runtime);
                 }
                 catch (Exception e)
                 {
@@ -126,9 +132,9 @@ namespace WS_Telcobright_Topshelf
                 }
                 Console.WriteLine("Starting RAMJobStore based scheduler....");
                 runtimeScheduler.Standby();
-                IScheduler debugScheduler = GetScheduler(SchedulerRunTimeType.Debug, springContext);
+                IScheduler debugScheduler = GetScheduler(SchedulerRunTimeType.Debug);
                 ScheduleDebugJobsThroughMenu(runtimeScheduler, debugScheduler);
-                debugScheduler.Context.Put("processes", mefProcessContainer);
+                debugScheduler.Context.Put("processes", TopShelf.mefProcessContainer);
                 debugScheduler.Context.Put("configs", operatorWiseConfigs);
                 debugScheduler.Start();
                 Console.WriteLine("Telcobright Scheduler has been started.");
@@ -178,16 +184,26 @@ namespace WS_Telcobright_Topshelf
             return operatorWiseConfigs;
         }
 
-        static IScheduler GetScheduler(SchedulerRunTimeType runTimeType, IApplicationContext springContext)
+        static IScheduler GetScheduler(SchedulerRunTimeType runTimeType)// IApplicationContext springContext)
         {
             QuartzPropertyFactory quartzPropertyFactoryRuntime;
             QuartzPropertyFactory quartzPropertyFactoryDebug;
             NameValueCollection schedulerProperties = null;
-            var mefProcessContainer = (MefProcessContainer) springContext.GetObject("mefProcessContainer");
+            var mefProcessContainer = TopShelf.mefProcessContainer;// (MefProcessContainer) springContext.GetObject("mefProcessContainer");
             if (runTimeType == SchedulerRunTimeType.Runtime)
             {
+                //quartzPropertyFactoryRuntime =
+                //    (QuartzPropertyFactory) springContext.GetObject("quartzPropertyFactoryRuntime");
+                QuartzPropGenRemoteSchedulerAdoRuntime quartzPropGenRemoteSchedulerAdoRuntime =
+                    new QuartzTelcobright.PropertyGen.QuartzPropGenRemoteSchedulerAdoRuntime(555, "scheduler");
+
                 quartzPropertyFactoryRuntime =
-                    (QuartzPropertyFactory) springContext.GetObject("quartzPropertyFactoryRuntime");
+                    new QuartzPropertyFactory(quartzPropGenRemoteSchedulerAdoRuntime);
+
+
+                //quartzPropertyFactoryRuntime =
+                  //  (QuartzPropertyFactory)springContext.GetObject("quartzPropertyFactoryRuntime");
+
                 schedulerProperties = quartzPropertyFactoryRuntime.GetProperties();
                 IScheduler scheduler = QuartzSchedulerFactory.CreateSchedulerInstance(schedulerProperties);
                 return scheduler;
