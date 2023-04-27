@@ -59,6 +59,7 @@
                                     <asp:LinkButton ID="LinkButtonEdit" Text="Edit" runat="server" OnClick="LinkButtonEdit_Click" />
                                 </ItemTemplate>
                             </asp:TemplateField>
+                            
                             <asp:TemplateField HeaderText="Partner">
                                 <ItemTemplate>
                                     <asp:Label runat="server" ID="lblPartner" />
@@ -79,6 +80,12 @@
                             <asp:BoundField DataField="convertedFinalCurrency" HeaderText="Currency" ItemStyle-HorizontalAlign="Center"/>
                             <asp:BoundField DataField="convertedFinalAmount" HeaderText="Amount" DataFormatString="{0:n2}" ItemStyle-HorizontalAlign="Right"/>
                             <asp:BoundField DataField="" />
+                            <asp:TemplateField>
+                                <ItemTemplate>
+                                    <asp:LinkButton ID="LinkButtonDelete" Text="Delete" runat="server" OnClick="LinkButtonDelete_Click"
+                                        OnClientClick='return confirm("Are you sure you want to delete this entry?");' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
                         </Columns>
                     </asp:GridView>
                 </div>

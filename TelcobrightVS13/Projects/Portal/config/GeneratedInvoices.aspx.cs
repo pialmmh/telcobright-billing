@@ -168,6 +168,36 @@ namespace PortalApp.config
             }
         }
 
+        protected void LinkButtonDelete_Click(object sender, EventArgs e)
+        {
+            using (PartnerEntities context = new PartnerEntities())
+            {
+                context.Database.Connection.Open();
+                System.Data.Common.DbCommand cmd = context.Database.Connection.CreateCommand();
+                LinkButton btnEdit = sender as LinkButton;
+                GridViewRow gvrow = (GridViewRow)btnEdit.NamingContainer;
+                int invoiceId = Convert.ToInt32(gvInvoice.DataKeys[gvrow.RowIndex].Value);
+                invoice invoice = context.invoices.First(x => x.INVOICE_ID == invoiceId);
+
+                try
+                {
+                    cmd.ExecuteCommandText($@" set autocommit = 0; ");
+                    cmd.ExecuteCommandText($@" delete from invoice_item where invoice_id ={invoiceId}; ");
+                    cmd.ExecuteCommandText($@" delete from invoice where invoice_id = {invoiceId}; ");
+                    cmd.ExecuteCommandText($@" delete from acc_ledger_summary_billed where invoiceOrEventId={invoiceId}; ");
+                    cmd.ExecuteCommandText($@" delete from acc_temp_transaction where idEvent={invoiceId}; ");
+                    cmd.ExecuteCommandText($@" set autocommit = 1; ");
+                }
+                catch (Exception e1) {
+                    cmd.ExecuteCommandText($@" rollback; ");
+                    cmd.ExecuteCommandText($@" set autocommit=1; ");
+                    throw e1;
+                }
+                this.upInner.Update();
+                //this.mpeInvoice.Show();
+            }
+        }
+
         private List<invoice> GetFilteredItems(List<invoice> generatedInvoices)
         {
             using (PartnerEntities context = new PartnerEntities())
