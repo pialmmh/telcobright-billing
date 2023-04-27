@@ -24,7 +24,7 @@ namespace InstallConfig
         {
             DatabaseSetting dataBaseSetting = tbc.DatabaseSetting;
             dataBaseSetting.OverrideDatabaseSettingsFromAppConfig = true;
-            dataBaseSetting.ServerName = "10.100.201.10";
+            dataBaseSetting.ServerName = "103.26.244.74";
             dataBaseSetting.DatabaseName = "summit";
             dataBaseSetting.AdminPassword = "Takay1#$ane";
             dataBaseSetting.AdminUserName = "root";
