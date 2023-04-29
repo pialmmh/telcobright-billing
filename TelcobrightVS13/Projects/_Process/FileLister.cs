@@ -16,15 +16,15 @@ namespace Process
 {
     [Export("TelcobrightProcess", typeof(ITelcobrightProcess))]
 
-    public class ProcessFileLister : ITelcobrightProcess
+    public class ProcessFileLister : AbstractTelcobrightProcess
     {
         public override string ToString()
         {
             return this.RuleName;
         }
         public string RuleName => "ProcessFileLister";
-        public string HelpText => "Sync one source local or remote directory to multiple local or remote directories";
-        public int ProcessId => 106;
+        public override string HelpText => "Sync one source local or remote directory to multiple local or remote directories";
+        public override int ProcessId => 106;
 
         public class FileSyncPair
         {
@@ -32,8 +32,9 @@ namespace Process
             public FileLocation DstLocation { get; set; }
         }
 
-        public void Execute(IJobExecutionContext schedulerContext)
+        public override void Execute(IJobExecutionContext schedulerContext)
         {
+            //return;//todo
             JobDataMap jobDataMap = schedulerContext.JobDetail.JobDataMap;
             string operatorName = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");
             string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName);

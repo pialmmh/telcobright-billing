@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractTelcobrightProcess.cs" />
     <Compile Include="PropertyGen\AbstractQuartzPropertyGenerator.cs" />
     <Compile Include="ITelcobrightProcess.cs" />
     <Compile Include="MefComposers\IMefComposer.cs" />

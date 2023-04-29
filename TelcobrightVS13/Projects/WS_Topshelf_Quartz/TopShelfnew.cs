@@ -219,21 +219,31 @@ namespace WS_Telcobright_Topshelf
                 }
             }
         }
-        
+
         private static Dictionary<int, string> DisplayMenu(List<ITrigger> triggers)
         {
             Console.Clear();
-            Console.WriteLine("Enter trigger numbers to debug with scheduler, separated by comma...");
-            Console.WriteLine("Press Enter to resume all...");
+
             string choices = "";
             for (var index = 0; index < triggers.Count; index++)
             {
                 ITrigger t = triggers[index];
                 Console.WriteLine((index + 1) + ". " + t.Key); //display from 1, keep 0 for all
             }
-            choices = Console.ReadLine();
-            if (choices.IsNullOrEmptyOrWhiteSpace())
+            bool keyWasPressedForMenu = WaitForkeyPressForDebugMode();
+            if (keyWasPressedForMenu)
             {
+                Console.Write("\r{0}   ", "Enter trigger numbers to start process selectively, separated by comma...    ");
+                Console.WriteLine("Press Enter to start all...");
+                choices = Console.ReadLine();
+                if (choices.IsNullOrEmptyOrWhiteSpace())
+                {
+                    choices = string.Join(",", Enumerable.Range(1, triggers.Count).Select(num => num.ToString()));
+                }
+            }
+            else
+            {//no key was pressed...
+                Console.WriteLine(Environment.NewLine + "No keys were pressed, starting all process...");
                 choices = string.Join(",", Enumerable.Range(1, triggers.Count).Select(num => num.ToString()));
             }
             return choices.Split(',').Select(keyWithArgs =>
@@ -244,27 +254,25 @@ namespace WS_Telcobright_Topshelf
                 return new KeyValuePair<int, string>(key, args);
             }).ToDictionary(kv => kv.Key, kv => kv.Value);
         }
-
-        static ConsoleKeyInfo WaitForkeyPressForDebugMode()
+        static bool WaitForkeyPressForDebugMode()
         {
-            ConsoleKeyInfo k = new ConsoleKeyInfo();
-            Console.WriteLine("Press 'D' in the next 3 seconds for entering scheduler debug mode...");
-            for (int cnt = 3; cnt > 0; cnt--)
+            ConsoleKeyInfo k= new ConsoleKeyInfo();
+            int pressMenuWithinSec = 5;
+            Console.Write("\r{0}   ", $"Press any key within {pressMenuWithinSec} seconds to selectively run processes from menu...");
+            for (int cnt = pressMenuWithinSec; cnt > -1; cnt--)
             {
                 if (Console.KeyAvailable == true)
                 {
                     k = Console.ReadKey();
-                    break;
+                    return true;
                 }
                 else
                 {
-                    Console.WriteLine(cnt.ToString());
+                    Console.Write("\r{0}   ", $"Press any key within {cnt} seconds to selectively run processes from menu...");
                     System.Threading.Thread.Sleep(1000);
                 }
             }
-            Console.WriteLine();
-            Console.WriteLine("The key pressed was " + k.Key);
-            return k;
+            return false;
         }
     }
 }
