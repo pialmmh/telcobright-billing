@@ -223,7 +223,6 @@ namespace WS_Telcobright_Topshelf
         private static Dictionary<int, string> DisplayMenu(List<ITrigger> triggers)
         {
             Console.Clear();
-
             string choices = "";
             for (var index = 0; index < triggers.Count; index++)
             {

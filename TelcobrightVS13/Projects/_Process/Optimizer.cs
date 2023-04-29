@@ -21,18 +21,18 @@ using TelcobrightMediation.Config;
 namespace Process
 {
 
-    [Export("TelcobrightProcess", typeof(ITelcobrightProcess))]
-    public class ProcessOptimizer : ITelcobrightProcess
+    [Export("TelcobrightProcess", typeof(AbstractTelcobrightProcess))]
+    public class ProcessOptimizer : AbstractTelcobrightProcess
     {
         public override string ToString()
         {
             return this.RuleName;
         }
-        public string RuleName => "ProcessOptimizer";
-        public string HelpText => "Peforms clean up by deleting file or data";
-        public int ProcessId => 107;
+        public override string RuleName => "ProcessOptimizer";
+        public override string HelpText => "Peforms clean up by deleting file or data";
+        public override int ProcessId => 107;
 
-        public void Execute(IJobExecutionContext schedulerContext)
+        public override void Execute(IJobExecutionContext schedulerContext)
         {
             string operatorName = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");
             try

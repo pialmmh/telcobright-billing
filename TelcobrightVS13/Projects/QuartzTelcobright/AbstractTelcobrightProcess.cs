@@ -9,6 +9,7 @@ namespace QuartzTelcobright
 {
     public abstract class AbstractTelcobrightProcess : ITelcobrightProcess
     {
+        public abstract string RuleName { get; }
         public abstract string HelpText { get; }
 
         public abstract int ProcessId { get; }

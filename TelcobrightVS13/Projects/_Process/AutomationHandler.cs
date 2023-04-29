@@ -21,18 +21,17 @@ using TelcobrightMediation.Config;
 
 namespace Process
 {
-    [Export("TelcobrightProcess", typeof(ITelcobrightProcess))]
-    public class AutomationHandler : ITelcobrightProcess
+    [Export("TelcobrightProcess", typeof(AbstractTelcobrightProcess))]
+    public class AutomationHandler : AbstractTelcobrightProcess
     {
         public override string ToString()
         {
             return this.RuleName;
         }
-
-        public string RuleName => this.GetType().ToString();
-        public string HelpText => "";
-        public int ProcessId => 118;
-        public void Execute(IJobExecutionContext schedulerContext)
+        public override string RuleName => this.GetType().ToString();
+        public override string HelpText => "";
+        public override int ProcessId => 118;
+        public override void Execute(IJobExecutionContext schedulerContext)
         {
             string operatorName = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");
             try

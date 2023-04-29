@@ -14,23 +14,19 @@ using QuartzTelcobright;
 namespace Process
 {
 
-    [Export("TelcobrightProcess", typeof(ITelcobrightProcess))]
-    public class TpAutoCreateJob:ITelcobrightProcess 
+    [Export("TelcobrightProcess", typeof(AbstractTelcobrightProcess))]
+    public class TpAutoCreateJob: AbstractTelcobrightProcess
     {
         public override string ToString()
         {
             return this.RuleName;
         }
-
-        public void Execute(IJobExecutionContext context)
+        public override void Execute(IJobExecutionContext context)
         {
             throw new NotImplementedException();
         }
-
-        public string RuleName => this.GetType().ToString();
-        public string HelpText => "method AutoCrateJob";
-        public int ProcessId => 105;
-
-        
+        public override string RuleName => this.GetType().ToString();
+        public override string HelpText => "method AutoCrateJob";
+        public override int ProcessId => 105;
     }
 }

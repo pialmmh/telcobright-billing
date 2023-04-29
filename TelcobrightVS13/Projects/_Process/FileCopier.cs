@@ -20,17 +20,17 @@ using LibraryExtensions;
 namespace Process
 {
 
-    [Export("TelcobrightProcess", typeof(ITelcobrightProcess))]
-    public class FileCopier : ITelcobrightProcess
+    [Export("TelcobrightProcess", typeof(AbstractTelcobrightProcess))]
+    public class FileCopier : AbstractTelcobrightProcess
     {
         public override string ToString()
         {
             return this.RuleName;
         }
-        public string RuleName => "ProcessFilecopy";
-        public string HelpText => "Copies Files between SyncPairs";
-        public int ProcessId => 104;
-        public void Execute(IJobExecutionContext schedulerContext)
+        public override string RuleName => "ProcessFilecopy";
+        public override string HelpText => "Copies Files between SyncPairs";
+        public override int ProcessId => 104;
+        public override void Execute(IJobExecutionContext schedulerContext)
         {
             string operatorName = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");
             TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(

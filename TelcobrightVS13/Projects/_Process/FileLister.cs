@@ -14,15 +14,14 @@ using TelcobrightMediation.Config;
 
 namespace Process
 {
-    [Export("TelcobrightProcess", typeof(ITelcobrightProcess))]
-
+    [Export("TelcobrightProcess", typeof(AbstractTelcobrightProcess))]
     public class ProcessFileLister : AbstractTelcobrightProcess
     {
         public override string ToString()
         {
             return this.RuleName;
         }
-        public string RuleName => "ProcessFileLister";
+        public override string RuleName => "ProcessFileLister";
         public override string HelpText => "Sync one source local or remote directory to multiple local or remote directories";
         public override int ProcessId => 106;
 

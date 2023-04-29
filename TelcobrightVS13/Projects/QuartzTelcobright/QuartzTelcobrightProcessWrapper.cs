@@ -21,7 +21,7 @@ namespace QuartzTelcobright
         public ITelcobrightProcess Process { get; set; }
         public void Execute(IJobExecutionContext context)
         {
-            ITelcobrightProcess process = null;
+            AbstractTelcobrightProcess process = null;
             JobDataMap jobDataMap = context.JobDetail.JobDataMap;
             string identity = jobDataMap.GetString("identity");
             int telcobrightProcessId = Convert.ToInt32(jobDataMap.GetString("telcobrightProcessId"));

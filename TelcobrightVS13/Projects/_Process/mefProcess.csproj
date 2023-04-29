@@ -108,7 +108,6 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy $(TargetPath) $(SolutionDir)WS_Topshelf_Quartz\bin\Extensions\$(TargetFileName)
-copy $(TargetPath) $(SolutionDir)UnitTesterManual\bin\Extensions\$(TargetFileName)
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
