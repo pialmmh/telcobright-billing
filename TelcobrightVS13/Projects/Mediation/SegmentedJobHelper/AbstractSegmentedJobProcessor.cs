@@ -37,16 +37,16 @@ namespace TelcobrightMediation
             {
                 try
                 {
-                    cmd.ExecuteCommandText("set autocommit=0;"); //start transaction
+                    //cmd.ExecuteCommandText("set autocommit=0;"); //start transaction
                     foreach (jobsegment s in jobSegments)
                     {
                         cmd.ExecuteCommandText($@"insert into jobsegment(idjob,segmentNumber,stepsCount,status,segmentdetail) values(
                                         {s.idJob},{s.segmentNumber},{s.stepsCount},
                                         {s.status},'{JsonConvert.SerializeObject(s.SegmentDetail)}')");
                     }
-                    cmd.ExecuteCommandText(" update job set " +
-                                           " status=2," + "NoOfSteps=" + jobSegments.Sum(s => s.stepsCount) +
-                                           " where id= " + this.TelcobrightJob.id);
+                    //cmd.ExecuteCommandText(" update job set " +
+                    //                       " status=2," + "NoOfSteps=" + jobSegments.Sum(s => s.stepsCount) +
+                    //                       " where id= " + this.TelcobrightJob.id);
                     //cmd.ExecuteCommandText("commit;");
                     CdrJobCommiter.Commit(cmd);
                 }
@@ -67,6 +67,7 @@ namespace TelcobrightMediation
                 }
             }
         }
+
         public virtual List<jobsegment> ExecuteIncompleteSegments()
         {
             List<jobsegment> incompleteSegments = this.Context.jobsegments
