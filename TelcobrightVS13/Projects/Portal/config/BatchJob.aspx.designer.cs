@@ -363,6 +363,24 @@ public partial class ConfigBatcJob {
     protected global::System.Web.UI.WebControls.DropDownList DropDownListChargingStatus;
     
     /// <summary>
+    /// DropDownListDuration control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList DropDownListDuration;
+    
+    /// <summary>
+    /// TextBoxDuration control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox TextBoxDuration;
+    
+    /// <summary>
     /// DropDownListFieldList control.
     /// </summary>
     /// <remarks>

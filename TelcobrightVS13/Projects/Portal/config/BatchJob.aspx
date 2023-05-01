@@ -139,7 +139,20 @@
         
           <script type="text/javascript">
 
-              
+              function jsDecimals(e) {
+
+                  const evt = (e) ? e : window.event;
+                  const input= (evt.keyCode) ? evt.key : evt.which;
+                  if (input != null) {
+                      if (input === '.') return true;
+                      var x = parseFloat(input);
+                      if (!isNaN(x)) {
+                          return true;
+                      }
+                      return false;
+                  }
+                  return false;
+              }
 
               function SetCdrSource()
               {
@@ -381,6 +394,18 @@
                                                         <asp:ListItem Text="Successful" Value="1"/>    
                                                         <asp:ListItem Text="Failed" Value="2" />    
                                                     </asp:DropDownList>
+                                                    
+
+                                                    <span style="padding-left:5px;">Actual Duration </span>
+                                                    <asp:DropDownList ID="DropDownListDuration"  runat="server" Enabled="true">
+                                                        <asp:ListItem Text="=" Value="="/>    
+                                                        <asp:ListItem Text=">" Value=">"/> 
+                                                        <asp:ListItem Text=">=" Value=">=" Selected="True"/>    
+                                                        <asp:ListItem Text="<" Value="<" /> 
+                                                        <asp:ListItem Text="<=" Value="<=" />   
+                                                    </asp:DropDownList>
+                                                    <span style="padding-left: 5px;"></span>
+                                                    <asp:TextBox ID="TextBoxDuration" runat="server" onkeypress="return jsDecimals(event);"></asp:TextBox>
                                                     
                                                    <span style="padding-left:5px;visibility:hidden;">Field List</span>
                                                     <asp:DropDownList ID="DropDownListFieldList" runat="server" Enabled="false" Visible="false">

@@ -56,7 +56,8 @@ namespace InstallConfig
                 AutoCorrectBillIdsWithPrevChargeableIssue = true,
                 AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
                 UseIdCallAsBillId = true,
-                ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>()
+                ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>(),
+                BatchSizeWhenPreparingLargeSqlJob=100000
             };
 
             this.PrepareDirectorySettings(this.Tbc);

@@ -538,6 +538,32 @@ public partial class ConfigBatcJob : System.Web.UI.Page
                 //Sql += " and supplierid=" + SupplierId;
             }
 
+            //duration filter
+            string strDuration = this.TextBoxDuration.Text;
+            double durationFilter = 0;
+            if (!string.IsNullOrEmpty(strDuration) && !string.IsNullOrWhiteSpace(strDuration)) {
+                if (Double.TryParse(strDuration, out durationFilter) == false) {
+                    this.lblStatus.Text = "Invalid value for duration!";
+                    return;
+                }
+                string comparisonOperator = this.DropDownListDuration.SelectedValue;
+                newParam = new SqlSingleWhereClauseBuilder(SqlWhereAndOrType.And);
+                newParam.Expression = "durationsec" + comparisonOperator;
+                newParam.ParamType = SqlWhereParamType.Numeric;
+                newParam.ParamValue = durationFilter.ToString();
+                lstWhereParamsSingle.Add(newParam);
+            }
+            if (supplierId > 0)
+            {
+                newParam = new SqlSingleWhereClauseBuilder(SqlWhereAndOrType.And);
+                newParam.Expression = "outpartnerid=";
+                newParam.ParamType = SqlWhereParamType.Numeric;
+                newParam.ParamValue = supplierId.ToString();
+                lstWhereParamsSingle.Add(newParam);
+                //Sql += " and supplierid=" + SupplierId;
+            }
+
+
             string IncomingRoute = this.DropDownListInRoute.SelectedIndex == 0
                 ? "-1"
                 : this.DropDownListInRoute.SelectedItem.Value;
