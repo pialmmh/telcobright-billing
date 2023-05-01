@@ -70,13 +70,14 @@ namespace TelcobrightMediation
 
         public virtual List<jobsegment> ExecuteIncompleteSegments()
         {
-            List<jobsegment> incompleteSegments = this.Context.jobsegments
+            List<long> incompleteSegmentIds = this.Context.jobsegments
                                                   .Where(c => c.idJob == this.TelcobrightJob.id
-                                                   && c.status == 6).ToList();
+                                                   && c.status == 6).Select(js=>js.id).ToList();
             using (DbCommand cmd = ConnectionManager.CreateCommandFromDbContext(this.Context))
             {
-                foreach (jobsegment jobSegment in incompleteSegments)
+                foreach (int idJobSegment in incompleteSegmentIds)
                 {
+                    jobsegment jobSegment = this.Context.jobsegments.Where(js => js.id == idJobSegment).ToList().First();
                     string sqlProgress = " select ifnull(progress,0) as progress from job " +
                                          " where id=" + this.TelcobrightJob.id;
                     cmd.CommandText = sqlProgress;
@@ -113,17 +114,12 @@ namespace TelcobrightMediation
                                 "", this.Context);
                             throw; // do not continue on error other than rateCache exception for cdrJobs
                         }
-                        //catch (Exception e1)
-                        //{
-                        //    Console.WriteLine(e1);
-                        //    ErrorWriter wr = new ErrorWriter(e, $@"Segmented Job Processor", this.TelcobrightJob,
-                        //        "Error Processing Segments of batch job " + this.TelcobrightJob.JobName,
-                        //        "",this.Context);
-                        //    throw;
-                        //}
                     }
                 } //for each segment
             }
+            List<jobsegment> incompleteSegments = this.Context.jobsegments
+                                                  .Where(c => c.idJob == this.TelcobrightJob.id
+                                                   && c.status == 6).ToList();
             return incompleteSegments;
         }
 

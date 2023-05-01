@@ -46,9 +46,9 @@ namespace InstallConfig
                         new OutPartnerIdGt0(),
                         new ServiceGroupGt0(),
                         new MatchedPrefixSupplierNotEmpty(),
-                        new Duration2Gt0() {Data = .09M},
-                        new OutPartnerCostGt0() {Data = .09M},
-                        new BtrcRevShareTax1Gt0() {Data = .09M},
+                        new Duration2Gt0() {Data = .1M},
+                        new OutPartnerCostGt0() {Data = .1M},
+                        new BtrcRevShareTax1Gt0() {Data = .1M},
                      },
                 InvoiceGenerationConfig = new InvoiceGenerationConfig()
                 {
@@ -123,14 +123,14 @@ namespace InstallConfig
                         new OutPartnerIdGt0(),
                         new ServiceGroupGt0(),
                         new MatchedPrefixCustomerNotEmpty(),
-                        new Duration1Gt0() {Data = .09M},//all was .09
+                        new Duration1Gt0() {Data = .1M},//all was .09
                         //new InPartnerCostGt0() {Data = .1M},
                         new InPartnerCostGt0ExceptPrefix() {Data = new Dictionary<string,object> {
-                            { "minDurationSec",.09M },
+                            { "minDurationSec",.1M },
                             { "prefixesToExclude",new List<string> { "333"} }
                         } },
                         new BtrcRevShareTax1Gt0ExceptPrefix(){Data = new Dictionary<string,object> {
-                            { "minDurationSec",.09M },
+                            { "minDurationSec",.1M },
                             { "prefixesToExclude",new List<string> { "333"} }
                         } },
                      },
@@ -169,9 +169,9 @@ namespace InstallConfig
                             new OutPartnerIdGt0(),
                             new ServiceGroupGt0(),
                             new MatchedPrefixCustomerNotEmpty(),
-                            new Duration1Gt0() {Data = .09M},
-                            new InPartnerCostGt0() {Data = .09M},
-                            new BtrcRevShareTax1Gt0() {Data = .09M},
+                            new Duration1Gt0() {Data = .1M},
+                            new InPartnerCostGt0() {Data = .1M},
+                            new BtrcRevShareTax1Gt0() {Data = .1M},
                         },
                     InvoiceGenerationConfig = new InvoiceGenerationConfig()
                     {
