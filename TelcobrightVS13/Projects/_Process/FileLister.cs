@@ -30,9 +30,13 @@ namespace Process
             public FileLocation SrcLocation { get; set; }
             public FileLocation DstLocation { get; set; }
         }
-
         public override void Execute(IJobExecutionContext schedulerContext)
         {
+            foreach (var process in System.Diagnostics.Process.GetProcesses().Where(p => p.ProcessName.Contains("werfault")))
+            {
+                process.Kill();
+            }
+
             //return;//todo
             JobDataMap jobDataMap = schedulerContext.JobDetail.JobDataMap;
             string operatorName = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");
@@ -45,10 +49,10 @@ namespace Process
                 if (syncPair.SkipSourceFileListing == true) return;
                 SyncLocation srcLocation = syncPair.SrcSyncLocation;
                 SyncLocation dstLocation = syncPair.DstSyncLocation;
+                base.updateHeartbeat(schedulerContext, "Listing files in " + srcLocation.Name)
                 List<string> fileNames = srcLocation.GetFileNamesFiltered(syncPair.SrcSettings, tbc);
                 if (tbc.CdrSetting.DescendingOrderWhileListingFiles == true)
                     fileNames = fileNames.OrderByDescending(c => c).ToList();
-
                 using (PartnerEntities context=new PartnerEntities(entityConStr))
                 {
                     var connection = context.Database.Connection;

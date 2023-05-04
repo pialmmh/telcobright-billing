@@ -498,6 +498,7 @@
     <Content Include="reports\CauseRouteInternationalInCallView.aspx" />
     <Content Include="Mediation\CdrError.aspx" />
     <Content Include="reports\cdr.aspx" />
+    <Content Include="reports\icx\btrc\DailyReport.aspx" />
     <Content Include="reports\icx\LocalTollFree.aspx" />
     <Content Include="reports\icx\Domestic.aspx" />
     <Content Include="reports\icx\InternationalIn_ICX.aspx" />
@@ -862,6 +863,14 @@
     <Compile Include="reports\cdr.aspx.designer.cs">
       <DependentUpon>cdr.aspx</DependentUpon>
     </Compile>
+    <Compile Include="reports\icx\btrc\DailyReport.aspx.cs">
+      <DependentUpon>DailyReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\icx\btrc\DailyReport.aspx.designer.cs">
+      <DependentUpon>DailyReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\icx\btrc\BtrcReport.cs" />
     <Compile Include="reports\icx\LocalTollFree.aspx.cs">
       <DependentUpon>LocalTollFree.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

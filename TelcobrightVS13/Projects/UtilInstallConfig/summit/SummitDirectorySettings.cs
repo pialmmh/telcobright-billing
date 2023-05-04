@@ -62,7 +62,8 @@ namespace InstallConfig
                 User = "icxreve",
                 Pass = "icxreve123",
                 //ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
-                IgnoreZeroLenghFile = 1
+                IgnoreZeroLenghFile = 1,
+                FtpSessionCloseAndReOpeningtervalByFleTransferCount=1000
             };
 
             FileLocation fileArchive1 = new FileLocation()//raw cdr archive
@@ -113,7 +114,7 @@ namespace InstallConfig
                 {
                     SecondaryDirectory = "downloaded",
                     MoveFilesToSecondaryAfterCopy = false,
-                    Recursive=true,
+                    Recursive=false,
                     ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('ICX')
                                                                 and
                                                                 (Name.EndsWith('.DAT'))

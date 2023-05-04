@@ -25,20 +25,29 @@ namespace WS_Telcobright_Topshelf
         Debug
     }
 
+    
     public class TelcobrightService
     {
         public static MefCollectiveAssemblyComposer mefColllectiveAssemblyComposer { get; set; }
         public static MefProcessContainer mefProcessContainer { get; set; }
+        private static string getLogFileName()
+        {
+            var binPath = System.IO.Path.GetDirectoryName(
+                            System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
+            binPath = binPath.Substring(6);
+            string logFileName = binPath + Path.DirectorySeparatorChar + "telcobright.log";
+            return logFileName;
+        }
         static void Main(string[] args)
         {
-            //todo: remove test code
+            string logFileName=getLogFileName();
             mefColllectiveAssemblyComposer = new MefCollectiveAssemblyComposer("..//..//bin//Extensions//");
             RemoteSchedulerProvider provider = new RemoteSchedulerProvider
             {
                 SchedulerHost = "tcp://localhost:555/QuartzScheduler"
             };
             provider.Init();
-
+            File.WriteAllLines(logFileName, new string[] { DateTime.Now.ToMySqlFormatWithoutQuote() + ": Telcobright started at " + provider.SchedulerHost } );
             try
             {
                 Console.WriteLine("Starting Telcobright Scheduler.");
@@ -74,8 +83,11 @@ namespace WS_Telcobright_Topshelf
                 Console.WriteLine(e);
                 throw;
             }
-            
+
         }
+
+        
+
         private static Dictionary<string, TelcobrightConfig> GetTelcobrightConfigs()
         {
             bool disableParallelMediationForDebug =

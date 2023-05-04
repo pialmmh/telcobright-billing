@@ -166,6 +166,11 @@ border-bottom-style:ridge;min-width:180px;padding-top:25px;">
                 </asp:TreeNode>
             </asp:TreeNode>
 
+        <asp:TreeNode Value="btrc" Expanded="True" Text="BTRC Reports " SelectAction="None">
+            <asp:TreeNode Value="daily" Text="Daily Report" SelectAction="Select" NavigateUrl="~/reports/icx/btrc/DailyReport.aspx"> </asp:TreeNode>    
+        </asp:TreeNode>
+
+
         <asp:TreeNode Value="CDR" Expanded="True" Text="CDR"  SelectAction="None">
                 <asp:TreeNode Value="View & Export" Text="View & Export" NavigateUrl="~/reports/cdr.aspx" > </asp:TreeNode>
         </asp:TreeNode>

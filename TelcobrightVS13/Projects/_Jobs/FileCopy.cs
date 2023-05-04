@@ -9,7 +9,7 @@ using System.Linq;
 using System.Collections.Generic;
 using MediationModel;
 using TelcobrightMediation.Config;
-
+using System.Diagnostics;
 
 namespace Jobs
 {
@@ -17,6 +17,7 @@ namespace Jobs
     {
         //Tuple<string,string>= Tuple<src fileLocationName,serverIP, startingpath, protocol (e.g. ftp or sftp)>
         public static Dictionary<Tuple<string, string,string,string>, Session> sessionCache = new Dictionary<Tuple<string, string,string,string>, Session>();
+        public static Dictionary<Tuple<string, string, string, string>, int> sessionCacheUsage = new Dictionary<Tuple<string, string, string, string>, int>();
     }
 
     [Export("Job", typeof(ITelcobrightJob))]
@@ -199,11 +200,52 @@ namespace Jobs
                     SessionOptions sessionOptions = srcLocation.GetRemoteFileTransferSessionOptions(input.Tbc);
                     var sessionLookupKey = new Tuple<string, string,string,string>
                         (srcLocation.Name, srcLocation.FileLocation.ServerIp, srcLocation.FileLocation.StartingPath, sessionOptions.Protocol.ToString());
+                    int sessionReOpeningInterval = srcLocation.FileLocation.FtpSessionCloseAndReOpeningtervalByFleTransferCount;//tyring to save winscp from crashing by closign it in every 100 attempts
                     Session session = null;
                     var sessionCache = FileTransferSessionCache.sessionCache;
+                    var sessionCacheUsage = FileTransferSessionCache.sessionCacheUsage;
+                    int sessionUsageCount = 0;
                     sessionCache.TryGetValue(sessionLookupKey, out session);
+                    if (session != null)
+                    {
+                        sessionCacheUsage.TryGetValue(sessionLookupKey, out sessionUsageCount);
+
+                        if (sessionUsageCount % sessionReOpeningInterval == 0)
+                        {
+                            sessionUsageCount = 0;
+                            session.Abort();
+                            session.Dispose();
+                            session = null;
+                            sessionCache.Remove(sessionLookupKey);
+                            sessionCacheUsage.Remove(sessionLookupKey);
+                            foreach (var process in Process.GetProcesses().Where(p =>
+                            {
+                                var processName = p.ProcessName.ToLower();
+                                return processName.Contains("winscp") || processName.Contains("werfault");//kill winscp crashed window or windows process that is reporting the fault
+                            }))
+                            {
+                                process.Kill();
+                            }
+                        }
+                        else
+                        {
+                            sessionCacheUsage.Remove(sessionLookupKey);
+                            sessionCacheUsage.Add(sessionLookupKey, ++sessionUsageCount);
+                        }
+                    }
                     if (session == null || session.Opened==false)
                     {
+                        if (session?.Opened == false) {
+                            session.Abort();
+                            session.Dispose();
+                            session = null;
+                            sessionCache.Remove(sessionLookupKey);
+                            sessionCacheUsage.Remove(sessionLookupKey);
+                            foreach (var process in Process.GetProcesses().Where(p => p.ProcessName.ToLower().Contains("winscp")))
+                            {
+                                process.Kill();
+                            }
+                        }
                         session = new Session();
                         session.SessionLogPath = null;
                         session.Open(sessionOptions);
@@ -211,6 +253,7 @@ namespace Jobs
                             sessionCache.Remove(sessionLookupKey);
                         }
                         sessionCache.Add(sessionLookupKey, session);
+                        sessionCacheUsage.Add(sessionLookupKey, ++sessionUsageCount);
                     }
 
 
