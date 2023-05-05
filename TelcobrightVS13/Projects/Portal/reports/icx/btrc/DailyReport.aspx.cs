@@ -108,24 +108,33 @@ public partial class DefaultRptBtrcDailyIcx : System.Web.UI.Page
         else return string.Empty;
     }
 
-    List<BtrcReport> getBtrcReport(MySqlConnection connection, string sql)
+    DataSet getBtrcReport(MySqlConnection connection, string sql)
     {
         MySqlCommand cmd = new MySqlCommand(sql, connection);
         cmd.Connection = connection;
         MySqlDataAdapter domDataAdapter = new MySqlDataAdapter(cmd);
         DataSet ds = new DataSet();
         domDataAdapter.Fill(ds);
+        return ds;    
+    }
+    List<BtrcReportRow> ConvertBtrcDataSetToList(DataSet ds, Dictionary<int, string> partnerNames) {
         bool hasRecords = ds.Tables.Cast<DataTable>()
                            .Any(table => table.Rows.Count != 0);
-        List<BtrcReport> records = new List<BtrcReport>();
+        List<BtrcReportRow> records = new List<BtrcReportRow>();
         if (hasRecords == true)
         {
             foreach (DataTable table in ds.Tables)
             {
                 foreach (DataRow row in table.Rows)
                 {
-                    BtrcReport record = new BtrcReport();
-                    record.partnerId = row.Field<int>("partnerid");
+                    BtrcReportRow record = new BtrcReportRow();
+                    int partnerId = row.Field<int>("partnerid");
+                    string partnerName = "";
+                    if (partnerNames.TryGetValue(partnerId, out partnerName) == false)
+                    {
+                        throw new Exception("Could not find partner name for partner id=" + partnerId);
+                    }
+                    record.partnerName = partnerName;
                     record.minutes = row.Field<Decimal>("minutes");
                     records.Add(record);
                 }
@@ -133,24 +142,24 @@ public partial class DefaultRptBtrcDailyIcx : System.Web.UI.Page
         }
         return records;
     }
-    List<BtrcReport> getDomesticReport(MySqlConnection connection)
+    DataSet getDomesticReport(MySqlConnection connection)
     {
         string domSql =
- $@"select tup_inpartnerid as partnerid,sum(duration1)/60 as minutes 
-from 
-(select * from sum_voice_day_01
-where tup_starttime >= '2023-04-01' and tup_starttime < '2023-04-02'
-union all 
-select * from sum_voice_day_04
-where tup_starttime >= '2023-04-01' and tup_starttime < '2023-04-02') x
-group by tup_inpartnerid;";
+         $@"select tup_inpartnerid as partnerid,sum(duration1)/60 as minutes 
+        from 
+        (select * from sum_voice_day_01
+        where tup_starttime >= '2023-04-01' and tup_starttime < '2023-04-02'
+        union all 
+        select * from sum_voice_day_04
+        where tup_starttime >= '2023-04-01' and tup_starttime < '2023-04-02') x
+        group by tup_inpartnerid;";
 
-        List<BtrcReport> records= getBtrcReport(connection, domSql);
-        return records;
+        DataSet ds= getBtrcReport(connection, domSql);
+        return ds;
     }
 
 
-    List<BtrcReport> getInternatinonalInComingReport_1(MySqlConnection connection)
+    DataSet getInternatinonalInComingReport_1(MySqlConnection connection)
     {
         string intI_1_Sql =
  $@"select tup_inpartnerid as partnerid,sum(duration1)/60 as minutes 
@@ -158,13 +167,13 @@ from sum_voice_day_03
 where tup_starttime >= '2023-04-01' and tup_starttime < '2023-04-02'
 group by tup_inpartnerid;";
 
-        List<BtrcReport> records = getBtrcReport(connection, intI_1_Sql);
-        return records;
+        DataSet ds = getBtrcReport(connection, intI_1_Sql);
+        return ds;
     }
 
 
 
-    List<BtrcReport> getInternatinonalInComingReport_2(MySqlConnection connection)
+    DataSet  getInternatinonalInComingReport_2(MySqlConnection connection)
     {
 
         string intI_2_Sql =
@@ -173,12 +182,12 @@ from sum_voice_day_03
 where tup_starttime >= '2023-04-01' and tup_starttime < '2023-04-02'
 group by tup_inpartnerid;";
 
-        List<BtrcReport> records = getBtrcReport(connection, intI_2_Sql);
-        return records;
+        DataSet ds = getBtrcReport(connection, intI_2_Sql);
+        return ds;
     }
 
 
-    List<BtrcReport> getInternatinonalOutComingReport_1(MySqlConnection connection)
+    DataSet  getInternatinonalOutComingReport_1(MySqlConnection connection)
     {
         string intO_1_Sql =
  $@"select tup_inpartnerid as partnerid,sum(duration3)/60 as minutes 
@@ -186,12 +195,12 @@ from sum_voice_day_02
 where tup_starttime >= '2023-04-01' and tup_starttime < '2023-04-02'
 group by tup_inpartnerid;";
 
-        List<BtrcReport> records = getBtrcReport(connection, intO_1_Sql);
-        return records;
+        DataSet ds = getBtrcReport(connection, intO_1_Sql);
+        return ds;
     }
 
 
-    List<BtrcReport> getInternatinonalOutComingReport_2(MySqlConnection connection)
+    DataSet getInternatinonalOutComingReport_2(MySqlConnection connection)
     {
         string intO_2_Sql =
  $@"select tup_outpartnerid as partnerid,sum(duration3)/60 as minutes 
@@ -199,44 +208,50 @@ from sum_voice_day_02
 where tup_starttime >= '2023-04-01' and tup_starttime < '2023-04-02'
 group by tup_inpartnerid;";
 
-        List<BtrcReport> records = getBtrcReport(connection, intO_2_Sql);
-        return records;
+        DataSet ds = getBtrcReport(connection, intO_2_Sql);
+        return ds;
     }
 
     protected void submit_Click(object sender, EventArgs e)
     {
         
-        List<BtrcReport> domesticRecords = new List<BtrcReport>();
-        List<BtrcReport> intInComing_1_Records = new List<BtrcReport>();
-        List<BtrcReport> intInComing_2_Records = new List<BtrcReport>();
-        List<BtrcReport> intOutComing_1_Records = new List<BtrcReport>();
-        List<BtrcReport> intOutComing_2_Records = new List<BtrcReport>();
-
+        List<BtrcReportRow> domesticRecords = new List<BtrcReportRow>();
+        List<BtrcReportRow> intInComing_1_Records = new List<BtrcReportRow>();
+        List<BtrcReportRow> intInComing_2_Records = new List<BtrcReportRow>();
+        List<BtrcReportRow> intOutComing_1_Records = new List<BtrcReportRow>();
+        List<BtrcReportRow> intOutComing_2_Records = new List<BtrcReportRow>();
+       
+        Dictionary<int, string> partnerNames = null;
+        using (PartnerEntities context = new PartnerEntities()) {
+            partnerNames = context.partners.ToList().ToDictionary(p => p.idPartner, p => p.PartnerName);
+        }
         using (MySqlConnection connection = new MySqlConnection())
         {
             connection.ConnectionString = ConfigurationManager.ConnectionStrings["reader"].ConnectionString;
             connection.Open();
 
-
-            domesticRecords = getDomesticReport(connection);
+            DataSet domesticDs = getDomesticReport(connection);
+            domesticRecords = ConvertBtrcDataSetToList(domesticDs,partnerNames);
             Gvdom.DataSource = domesticRecords;
             Gvdom.DataBind();
 
-           
-            intInComing_1_Records = getInternatinonalInComingReport_1(connection);
+            DataSet intInComing_1_Ds = getInternatinonalInComingReport_1(connection);
+            intInComing_1_Records = ConvertBtrcDataSetToList(intInComing_1_Ds, partnerNames);
             GvIntlin1.DataSource = intInComing_1_Records;
             GvIntlin1.DataBind();
 
-           
-            intInComing_2_Records = getInternatinonalInComingReport_2(connection);
+            DataSet intInComing_2_Ds = getInternatinonalInComingReport_1(connection);
+            intInComing_2_Records = ConvertBtrcDataSetToList(intInComing_2_Ds, partnerNames);
             GvIntlin2.DataSource = intInComing_2_Records;
             GvIntlin2.DataBind();
 
-            intOutComing_1_Records = getInternatinonalOutComingReport_1(connection);
+            DataSet intOutComing_1_Ds = getInternatinonalOutComingReport_1(connection);
+            intOutComing_1_Records = ConvertBtrcDataSetToList(intOutComing_1_Ds, partnerNames);
             GvIntlout1.DataSource = intOutComing_1_Records;
             GvIntlout1.DataBind();
 
-            intOutComing_2_Records = getInternatinonalOutComingReport_2(connection);
+            DataSet intOutComing_2_Ds = getInternatinonalOutComingReport_2(connection);
+            intOutComing_2_Records = ConvertBtrcDataSetToList(intOutComing_2_Ds, partnerNames);
             GvIntlout2.DataSource = intOutComing_2_Records;
             GvIntlout2.DataBind();
 
@@ -303,100 +318,100 @@ group by tup_inpartnerid;";
             //                      .Any(table => table.Rows.Count != 0);
             //    if (hasRows == true)
             //    {
-                   //  GridView1.ShowFooter = true;//set it here before setting footer text, setting this to true clears already set footer text
-                   //Label1.Text = "";
-                   // Button1.Visible = true; //show export
-                   //                         //Summary calculation for grid view*************************
-                   // TrafficReportDatasetBased tr = new TrafficReportDatasetBased(dataset);
-                   // tr.Ds = dataset;
-                   // List<NoOfCallsVsPdd> callVsPdd = new List<NoOfCallsVsPdd>();
-                   // foreach (DataRow dr in tr.Ds.Tables[0].Rows)
-                   // {
-                   //     tr.CallStat.TotalCalls += tr.ForceConvertToLong(dr["CallsCount"]);
-                   //     tr.CallStat.ConnectedCalls += tr.ForceConvertToLong(dr["ConnectedCount"]);
-                   //     tr.CallStat.ConnectedCallsbyCauseCodes += tr.ForceConvertToLong(dr["ConectbyCC"]);
-                   //     tr.CallStat.SuccessfullCalls += tr.ForceConvertToLong(dr["Number Of Calls (International Incoming)"]);
-                   //     tr.CallStat.TotalActualDuration += tr.ForceConvertToDouble(dr["Paid Minutes (International Incoming)"]);
-                   //     tr.CallStat.TotalRoundedDuration += tr.ForceConvertToDouble(dr["RoundedDuration"]);
-                   //     tr.CallStat.TotalDuration1 += tr.ForceConvertToDouble(dr["Duration1"]);
-                   //     tr.CallStat.TotalCustomerCost += tr.ForceConvertToDouble(dr["customercost"]);
-                   //     tr.CallStat.BtrcRevShare += tr.ForceConvertToDouble(dr["tax1"]);
-                   // NoOfCallsVsPdd cpdd = new NoOfCallsVsPdd(tr.ForceConvertToLong(dr["Number Of Calls (International Incoming)"]), tr.ForceConvertToDouble(dr["PDD"]));
-                   //     callVsPdd.Add(cpdd);
-                   // }
-                   // tr.CallStat.TotalActualDuration = Math.Round(tr.CallStat.TotalActualDuration, 2);
-                   // tr.CallStat.TotalDuration1 = Math.Round(tr.CallStat.TotalDuration1, 2);
-                   // tr.CallStat.TotalDuration2 = Math.Round(tr.CallStat.TotalDuration2, 2);
-                   // tr.CallStat.TotalDuration3 = Math.Round(tr.CallStat.TotalDuration3, 2);
-                   // tr.CallStat.TotalDuration4 = Math.Round(tr.CallStat.TotalDuration4, 2);
-                   // tr.CallStat.TotalRoundedDuration = Math.Round(tr.CallStat.TotalRoundedDuration, 2);
-                   // tr.CallStat.TotalCustomerCost = Math.Round(tr.CallStat.TotalCustomerCost, 2);
-                   // tr.CallStat.CalculateAsr(2);
-                   // tr.CallStat.CalculateAcd(2);
-                   // tr.CallStat.CalculateAveragePdd(callVsPdd, 2);
-                   // tr.CallStat.CalculateCcr(2);
-                   // tr.CallStat.CalculateCcRbyCauseCode(2);
-                   // //SUMMARY CALCULATION FOR GRIDVIEW COMPLETE
+            //  GridView1.ShowFooter = true;//set it here before setting footer text, setting this to true clears already set footer text
+            //Label1.Text = "";
+            // Button1.Visible = true; //show export
+            //                         //Summary calculation for grid view*************************
+            // TrafficReportDatasetBased tr = new TrafficReportDatasetBased(dataset);
+            // tr.Ds = dataset;
+            // List<NoOfCallsVsPdd> callVsPdd = new List<NoOfCallsVsPdd>();
+            // foreach (DataRow dr in tr.Ds.Tables[0].Rows)
+            // {
+            //     tr.CallStat.TotalCalls += tr.ForceConvertToLong(dr["CallsCount"]);
+            //     tr.CallStat.ConnectedCalls += tr.ForceConvertToLong(dr["ConnectedCount"]);
+            //     tr.CallStat.ConnectedCallsbyCauseCodes += tr.ForceConvertToLong(dr["ConectbyCC"]);
+            //     tr.CallStat.SuccessfullCalls += tr.ForceConvertToLong(dr["Number Of Calls (International Incoming)"]);
+            //     tr.CallStat.TotalActualDuration += tr.ForceConvertToDouble(dr["Paid Minutes (International Incoming)"]);
+            //     tr.CallStat.TotalRoundedDuration += tr.ForceConvertToDouble(dr["RoundedDuration"]);
+            //     tr.CallStat.TotalDuration1 += tr.ForceConvertToDouble(dr["Duration1"]);
+            //     tr.CallStat.TotalCustomerCost += tr.ForceConvertToDouble(dr["customercost"]);
+            //     tr.CallStat.BtrcRevShare += tr.ForceConvertToDouble(dr["tax1"]);
+            // NoOfCallsVsPdd cpdd = new NoOfCallsVsPdd(tr.ForceConvertToLong(dr["Number Of Calls (International Incoming)"]), tr.ForceConvertToDouble(dr["PDD"]));
+            //     callVsPdd.Add(cpdd);
+            // }
+            // tr.CallStat.TotalActualDuration = Math.Round(tr.CallStat.TotalActualDuration, 2);
+            // tr.CallStat.TotalDuration1 = Math.Round(tr.CallStat.TotalDuration1, 2);
+            // tr.CallStat.TotalDuration2 = Math.Round(tr.CallStat.TotalDuration2, 2);
+            // tr.CallStat.TotalDuration3 = Math.Round(tr.CallStat.TotalDuration3, 2);
+            // tr.CallStat.TotalDuration4 = Math.Round(tr.CallStat.TotalDuration4, 2);
+            // tr.CallStat.TotalRoundedDuration = Math.Round(tr.CallStat.TotalRoundedDuration, 2);
+            // tr.CallStat.TotalCustomerCost = Math.Round(tr.CallStat.TotalCustomerCost, 2);
+            // tr.CallStat.CalculateAsr(2);
+            // tr.CallStat.CalculateAcd(2);
+            // tr.CallStat.CalculateAveragePdd(callVsPdd, 2);
+            // tr.CallStat.CalculateCcr(2);
+            // tr.CallStat.CalculateCcRbyCauseCode(2);
+            // //SUMMARY CALCULATION FOR GRIDVIEW COMPLETE
 
 
-                   // //display summary information in the footer
-                   // Dictionary<string, dynamic> fieldSummaries = new Dictionary<string, dynamic>();//key=colname,val=colindex in grid
-                   //                                                                                //all keys have to be lowercase, because db fields are lower case at times
-                   // fieldSummaries.Add("callscount", tr.CallStat.TotalCalls);
-                   // fieldSummaries.Add("connectedcount", tr.CallStat.ConnectedCalls);
-                   // fieldSummaries.Add("connectbycc", tr.CallStat.ConnectedCallsbyCauseCodes);
-                   // fieldSummaries.Add("number of calls (international incoming)", tr.CallStat.SuccessfullCalls);
-                   // fieldSummaries.Add("paid minutes (international incoming)", tr.CallStat.TotalActualDuration);
-                   // fieldSummaries.Add("roundedduration", tr.CallStat.TotalRoundedDuration);
-                   // fieldSummaries.Add("duration1", tr.CallStat.TotalDuration1);
-                   // fieldSummaries.Add("asr", tr.CallStat.Asr);
-                   // fieldSummaries.Add("acd", tr.CallStat.Acd);
-                   // fieldSummaries.Add("pdd", tr.CallStat.Pdd);
-                   // fieldSummaries.Add("ccr", tr.CallStat.Ccr);
-                   // fieldSummaries.Add("ccrbycc", tr.CallStat.CcRbyCauseCode);
-                   // fieldSummaries.Add("customercost", tr.CallStat.TotalCustomerCost);
-                   // fieldSummaries.Add("tax1", tr.CallStat.BtrcRevShare);
-                   // tr.FieldSummaries = fieldSummaries;
+            // //display summary information in the footer
+            // Dictionary<string, dynamic> fieldSummaries = new Dictionary<string, dynamic>();//key=colname,val=colindex in grid
+            //                                                                                //all keys have to be lowercase, because db fields are lower case at times
+            // fieldSummaries.Add("callscount", tr.CallStat.TotalCalls);
+            // fieldSummaries.Add("connectedcount", tr.CallStat.ConnectedCalls);
+            // fieldSummaries.Add("connectbycc", tr.CallStat.ConnectedCallsbyCauseCodes);
+            // fieldSummaries.Add("number of calls (international incoming)", tr.CallStat.SuccessfullCalls);
+            // fieldSummaries.Add("paid minutes (international incoming)", tr.CallStat.TotalActualDuration);
+            // fieldSummaries.Add("roundedduration", tr.CallStat.TotalRoundedDuration);
+            // fieldSummaries.Add("duration1", tr.CallStat.TotalDuration1);
+            // fieldSummaries.Add("asr", tr.CallStat.Asr);
+            // fieldSummaries.Add("acd", tr.CallStat.Acd);
+            // fieldSummaries.Add("pdd", tr.CallStat.Pdd);
+            // fieldSummaries.Add("ccr", tr.CallStat.Ccr);
+            // fieldSummaries.Add("ccrbycc", tr.CallStat.CcRbyCauseCode);
+            // fieldSummaries.Add("customercost", tr.CallStat.TotalCustomerCost);
+            // fieldSummaries.Add("tax1", tr.CallStat.BtrcRevShare);
+            // tr.FieldSummaries = fieldSummaries;
 
-                   // Session["IntlIn"] = tr;//save to session
+            // Session["IntlIn"] = tr;//save to session
 
-                   // //populate footer
-                   // //clear first
-                   // bool captionSetForTotal = false;
-                   // for (int c = 0; c < GridView1.Columns.Count; c++)
-                   // {
-                   //     GridView1.Columns[c].FooterText = "";
-                   // }
-                   // for (int c = 0; c < GridView1.Columns.Count; c++)
-                   // {
-                   //     if (captionSetForTotal == false && GridView1.Columns[c].Visible == true)
-                   //     {
-                   //         GridView1.Columns[c].FooterText = "Total: ";//first visible column
-                   //         captionSetForTotal = true;
-                   //     }
-                   //     string key = GridView1.Columns[c].SortExpression.ToLower();
-                   //     if (key == "") continue;
-                   //     if (tr.FieldSummaries.ContainsKey(key))
-                   //     {
-                   //         GridView1.Columns[c].FooterText += (tr.GetDataColumnSummary(key)).ToString();//+ required to cocat "Total:"
-                   //     }
-                   // }
-                   // GridView1.DataBind();//call it here after setting footer, footer text doesn't show sometime otherwise, may be a bug
-                   // GridView1.ShowFooter = true;//don't set it now, set before footer text setting, weird! it clears the footer text
-                   //                             //hide filters...
-                   // Page.ClientScript.RegisterStartupScript(GetType(), "MyKey", "HideParamBorderDivSubmit();", true);
-                   // hidValueSubmitClickFlag.Value = "false";
+            // //populate footer
+            // //clear first
+            // bool captionSetForTotal = false;
+            // for (int c = 0; c < GridView1.Columns.Count; c++)
+            // {
+            //     GridView1.Columns[c].FooterText = "";
+            // }
+            // for (int c = 0; c < GridView1.Columns.Count; c++)
+            // {
+            //     if (captionSetForTotal == false && GridView1.Columns[c].Visible == true)
+            //     {
+            //         GridView1.Columns[c].FooterText = "Total: ";//first visible column
+            //         captionSetForTotal = true;
+            //     }
+            //     string key = GridView1.Columns[c].SortExpression.ToLower();
+            //     if (key == "") continue;
+            //     if (tr.FieldSummaries.ContainsKey(key))
+            //     {
+            //         GridView1.Columns[c].FooterText += (tr.GetDataColumnSummary(key)).ToString();//+ required to cocat "Total:"
+            //     }
+            // }
+            // GridView1.DataBind();//call it here after setting footer, footer text doesn't show sometime otherwise, may be a bug
+            // GridView1.ShowFooter = true;//don't set it now, set before footer text setting, weird! it clears the footer text
+            //                             //hide filters...
+            // Page.ClientScript.RegisterStartupScript(GetType(), "MyKey", "HideParamBorderDivSubmit();", true);
+            // hidValueSubmitClickFlag.Value = "false";
 
-                //}//if has rows
+            //}//if has rows
 
-                else
-                {
-                    GridView1.DataBind();
-                    Label1.Text = "No Data!";
-                    Button1.Visible = false; //hide export
-                }
+            else
+            {
+                GridView1.DataBind();
+                Label1.Text = "No Data!";
+                Button1.Visible = false; //hide export
+            }
 
-            }//using mysql connection
+        }//using mysql connection
 
 
 
@@ -405,18 +420,96 @@ group by tup_inpartnerid;";
 
     protected void Button1_Click(object sender, EventArgs e)
     {
-        if (Session["IntlIn"] != null) //THIS MUST BE CHANGED IN EACH PAGE
+        //if (Session["IntlIn"] != null) //THIS MUST BE CHANGED IN EACH PAGE
+        //{
+        //    TrafficReportDatasetBased tr = (TrafficReportDatasetBased)Session["IntlIn"];
+        //    DataSetWithGridView dsG = new DataSetWithGridView(tr, GridView1);//invisible columns are removed in constructor
+        //    CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(tr.Ds, "IntlIncoming_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+        //            + ".xlsx", Response);
+        //}
+
+        List<BtrcReportRow> domesticRecords = new List<BtrcReportRow>();
+        List<BtrcReportRow> intInComing_1_Records = new List<BtrcReportRow>();
+           List<BtrcReportRow> intInComing_2_Records = new List<BtrcReportRow>();
+        List<BtrcReportRow> intOutComing_1_Records = new List<BtrcReportRow>();
+        List<BtrcReportRow> intOutComing_2_Records = new List<BtrcReportRow>();
+        Dictionary<int, string> partnerNames = null;
+        using (PartnerEntities context = new PartnerEntities())
         {
-            TrafficReportDatasetBased tr = (TrafficReportDatasetBased)Session["IntlIn"];
-            DataSetWithGridView dsG = new DataSetWithGridView(tr, GridView1);//invisible columns are removed in constructor
-            CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(tr.Ds, "IntlIncoming_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
-                    + ".xlsx", Response);
+            partnerNames = context.partners.ToList().ToDictionary(p => p.idPartner, p => p.PartnerName);
         }
+
+        using (MySqlConnection connection = new MySqlConnection())
+        {
+            connection.ConnectionString = ConfigurationManager.ConnectionStrings["reader"].ConnectionString;
+            connection.Open();
+
+
+
+            DataSet domesticDs = getDomesticReport(connection);
+            domesticRecords = ConvertBtrcDataSetToList(domesticDs, partnerNames);
+
+
+            DataSet intInComing_1_Ds = getInternatinonalInComingReport_1(connection);
+            intInComing_1_Records = ConvertBtrcDataSetToList(intInComing_1_Ds, partnerNames);
+           
+
+            DataSet intInComing_2_Ds = getInternatinonalInComingReport_1(connection);
+            intInComing_2_Records = ConvertBtrcDataSetToList(intInComing_2_Ds, partnerNames);
+           
+
+            DataSet intOutComing_1_Ds = getInternatinonalOutComingReport_1(connection);
+            intOutComing_1_Records = ConvertBtrcDataSetToList(intOutComing_1_Ds, partnerNames);
+            
+            DataSet intOutComing_2_Ds = getInternatinonalOutComingReport_2(connection);
+            intOutComing_2_Records = ConvertBtrcDataSetToList(intOutComing_2_Ds, partnerNames);
+
+
+            ExcelExporterForBtrcReport.ExportToExcelBtrcReport("Btrc_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                    + ".xlsx", Response, domesticRecords, intInComing_1_Records, intInComing_2_Records, intOutComing_1_Records, intOutComing_2_Records);
+
+
+
+            //DataSet intInComing_1_Ds = getInternatinonalInComingReport_1(connection);
+            //intInComing_1_Records = ConvertBtrcDataSetToList(intInComing_1_Ds, partnerNames);
+            //GvIntlin1.DataSource = intInComing_1_Records;
+            //ExcelExporterForBtrcReport.ExportToExcelBtrcReport(intInComing_1_Records, "IntlIncoming_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+            //        + ".xlsx","D1", Response);
+            //Gvdom.DataSource = domesticRecords;
+            //CreateExcelFileAspNet.ExportToExcelBtrcReport(domesticDs, "Btrc_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+            //        + ".xlsx", Response);
+
+
+            //DataSet intInComing_1_Ds = getInternatinonalInComingReport_1(connection);
+            //GvIntlin1.DataSource = intInComing_1_Records;
+            //CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(intInComing_1_Ds, "IntlIncoming_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+            //        + ".xlsx", Response);
+
+
+            //DataSet intInComing_2_Ds = getInternatinonalInComingReport_1(connection);
+            //GvIntlin2.DataSource = intInComing_2_Records;
+            //CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(intInComing_2_Ds, "IntlIncoming_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+            //        + ".xlsx", Response);
+
+            //DataSet intOutComing_1_Ds = getInternatinonalOutComingReport_1(connection);
+            //GvIntlout1.DataSource = intOutComing_1_Records;
+            //CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(intOutComing_1_Ds, "IntlIncoming_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+            //                    + ".xlsx", Response);
+
+
+            //DataSet intOutComing_2_Ds = getInternatinonalOutComingReport_2(connection);
+            //GvIntlout2.DataSource = intOutComing_2_Records;
+            //CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(intOutComing_2_Ds, "IntlIncoming_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+            //                    + ".xlsx", Response);
+
+            return;
+        }
+        }
+
+    private List<BtrcReportRow> ConvertBtrcDataSetToList(DataSet domesticDs, object partnerName)
+    {
+        throw new NotImplementedException();
     }
-
-    
-
-
 
     protected void CheckBoxShowByPartner_CheckedChanged(object sender, EventArgs e)
     {

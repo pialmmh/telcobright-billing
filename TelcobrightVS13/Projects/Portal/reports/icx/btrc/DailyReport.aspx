@@ -340,7 +340,7 @@
 
         <asp:Button ID="submit" runat="server" Text="Show Report" OnClick="submit_Click" OnClientClick="SethidValueSubmitClickFlag('true');" />
         <asp:Button ID="Button1" runat="server" OnClick="Button1_Click"
-            Style="margin-left: 0px" Text="Export" Visible="False" />
+            Style="margin-left: 0px" Text="Export" Visible="true" />
         <asp:Button ID="ShowHideFilter" runat="server" ViewStateMode="Enabled"
             Style="margin-left: 0px" Text="Hide Filter" Visible="True" OnClientClick="ToggleParamBorderDiv();return false;" />
         <asp:Button ID="ButtonTemplate" runat="server" OnClientClick="var value = prompt('Enter name of the Report Template:'); SetHidValueTemplate(value);" OnClick="ButtonTemplate_Click"
@@ -583,7 +583,7 @@
                             CellPadding="4" ForeColor="#333333" GridLines="Vertical" visible="true">
                             <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                             <Columns>
-                                <asp:BoundField DataField="partnerId" HeaderText="Partner id" SortExpression="partnerId" ItemStyle-Wrap="false" />
+                                <asp:BoundField DataField="partnerName" HeaderText="Partner Name" SortExpression="partnerName" ItemStyle-Wrap="false" />
                                 <asp:BoundField DataField="minutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="minutes" />
                             </Columns>
                             <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
@@ -603,7 +603,7 @@
                             CellPadding="4" ForeColor="#333333" GridLines="Vertical" visible="true">
                             <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                             <Columns>
-                                <asp:BoundField DataField="partnerId" HeaderText="Partner id" SortExpression="partnerId" ItemStyle-Wrap="false" />
+                                <asp:BoundField DataField="partnerName" HeaderText="Partner Name" SortExpression="partnerName" ItemStyle-Wrap="false" />
                                 <asp:BoundField DataField="minutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="minutes" />
                             </Columns>
                             <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
@@ -625,7 +625,7 @@
                             CellPadding="4" ForeColor="#333333" GridLines="Vertical" visible="true">
                             <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                             <Columns>
-                                <asp:BoundField DataField="partnerId" HeaderText="Partner id" SortExpression="partnerId" ItemStyle-Wrap="false" />
+                                <asp:BoundField DataField="partnerName" HeaderText="Partner Name" SortExpression="partnerName" ItemStyle-Wrap="false" />
                                 <asp:BoundField DataField="minutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="minutes" />
                             </Columns>
                             <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
@@ -645,7 +645,7 @@
                             CellPadding="4" ForeColor="#333333" GridLines="Vertical" visible="true">
                             <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                             <Columns>
-                                <asp:BoundField DataField="partnerId" HeaderText="Partner id" SortExpression="partnerId" ItemStyle-Wrap="false" />
+                                <asp:BoundField DataField="partnerName" HeaderText="Partner Name" SortExpression="partnerName" ItemStyle-Wrap="false" />
                                 <asp:BoundField DataField="minutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="minutes" />
                             </Columns>
                             <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
@@ -666,7 +666,7 @@
                             CellPadding="4" ForeColor="#333333" GridLines="Vertical" visible="true">
                             <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                             <Columns>
-                                <asp:BoundField DataField="partnerId" HeaderText="Partner id" SortExpression="partnerId" ItemStyle-Wrap="false" />
+                                <asp:BoundField DataField="partnerName" HeaderText="Partner Name" SortExpression="partnerName" ItemStyle-Wrap="false" />
                                 <asp:BoundField DataField="minutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="minutes" />
                             </Columns>
                             <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />

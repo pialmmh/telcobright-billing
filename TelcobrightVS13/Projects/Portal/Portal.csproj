@@ -870,7 +870,8 @@
     <Compile Include="reports\icx\btrc\DailyReport.aspx.designer.cs">
       <DependentUpon>DailyReport.aspx</DependentUpon>
     </Compile>
-    <Compile Include="reports\icx\btrc\BtrcReport.cs" />
+    <Compile Include="reports\icx\btrc\BtrcReportRow.cs" />
+    <Compile Include="reports\icx\btrc\ExcelExporterForBtrcReport.cs" />
     <Compile Include="reports\icx\LocalTollFree.aspx.cs">
       <DependentUpon>LocalTollFree.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
