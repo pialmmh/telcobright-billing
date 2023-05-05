@@ -324,7 +324,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
         }
     
 
-    protected void Button1_Click(object sender, EventArgs e)
+    protected void Button1_Click(object sender, EventArgs e)//export to excel
     {
         if (Session["IntlIn"] != null) //THIS MUST BE CHANGED IN EACH PAGE
         {

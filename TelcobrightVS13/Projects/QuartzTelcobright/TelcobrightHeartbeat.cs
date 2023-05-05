@@ -12,21 +12,21 @@ namespace QuartzTelcobright
         public string ProcessName { get; }
         public string HeartbeatMsg { get; }
         public string LogFileName { get; }
-        public int HeartbeatSerialNo { get; }
-        public DateTime StartTime { get; }
-        public DateTime EndTime { get; }
-        public TelcobrightHeartbeat() {
+        public int HeartbeatId { get; }
+        public TelcobrightHeartbeat(int heartbeatId, string heartbeatMsg) {
             var binPath = System.IO.Path.GetDirectoryName(
                 System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
             binPath = binPath.Substring(6);
             this.LogFileName = binPath + Path.DirectorySeparatorChar + "telcobright.log";
+            this.HeartbeatId = heartbeatId;
+            this.HeartbeatMsg = heartbeatMsg;
         }
         public void start() {
-            File.AppendAllLines(this.LogFileName, new string[] { $@"Process:{this.ProcessName},heartbeatSerialNo:{this.HeartbeatSerialNo},heartbeatStart:{DateTime.Now.ToMySqlFormatWithoutQuote()},msg:{this.HeartbeatMsg}" });
+            File.AppendAllLines(this.LogFileName, new string[] { $@"Process:{this.ProcessName},heartbeatId:{this.HeartbeatId},heartbeatStart:{DateTime.Now.ToMySqlFormatWithoutQuote()},msg:{this.HeartbeatMsg}" });
         }
         public void end()
         {
-            File.AppendAllLines(this.LogFileName, new string[] { $@"Process:{this.ProcessName},heartbeatSerialNo:{this.HeartbeatSerialNo},heartbeatEnd:{DateTime.Now.ToMySqlFormatWithoutQuote()},msg:{this.HeartbeatMsg}" });
+            File.AppendAllLines(this.LogFileName, new string[] { $@"Process:{this.ProcessName},heartbeatId:{this.HeartbeatId},heartbeatEnd:{DateTime.Now.ToMySqlFormatWithoutQuote()},msg:{this.HeartbeatMsg}" });
         }
     }
 }

@@ -36,7 +36,8 @@ namespace Process
             {
                 process.Kill();
             }
-
+            TelcobrightHeartbeat heartbeat1 = new TelcobrightHeartbeat(1, "Listing files from remote server.");
+            TelcobrightHeartbeat heartbeat2 = new TelcobrightHeartbeat(2, "Writing jobs to db.");
             //return;//todo
             JobDataMap jobDataMap = schedulerContext.JobDetail.JobDataMap;
             string operatorName = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");
@@ -49,10 +50,11 @@ namespace Process
                 if (syncPair.SkipSourceFileListing == true) return;
                 SyncLocation srcLocation = syncPair.SrcSyncLocation;
                 SyncLocation dstLocation = syncPair.DstSyncLocation;
-                base.updateHeartbeat(schedulerContext, "Listing files in " + srcLocation.Name)
+                heartbeat1.start();//heatrbit1 start
                 List<string> fileNames = srcLocation.GetFileNamesFiltered(syncPair.SrcSettings, tbc);
                 if (tbc.CdrSetting.DescendingOrderWhileListingFiles == true)
                     fileNames = fileNames.OrderByDescending(c => c).ToList();
+                if (fileNames.Any()) heartbeat1.end(); //heartbit1 successful
                 using (PartnerEntities context=new PartnerEntities(entityConStr))
                 {
                     var connection = context.Database.Connection;
@@ -72,7 +74,11 @@ namespace Process
                             continue; //with next file
                         }
                     }
-                    FileUtil.WriteFileCopyJobMultiple(jobs, context);
+                    if (jobs.Any()) {
+                        heartbeat2.start();// heartbit2 start, probe for successful db write.
+                        FileUtil.WriteFileCopyJobMultiple(jobs, context);
+                        heartbeat2.end();
+                    }
                 }
             }
             catch (Exception e1)

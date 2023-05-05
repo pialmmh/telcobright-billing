@@ -432,6 +432,84 @@ namespace ExportToExcel
             }
         }
 
+        //btrc
+        public static bool ExportToExcelBtrcReport(DataSet ds, string filename, HttpResponse response)
+        {
+            try
+            {
+                using (ExcelPackage pck = new ExcelPackage())
+                {
+                    //Create the worksheet
+                    DataTable tbl = ds.Tables[0];//
+                    ExcelWorksheet ws = pck.Workbook.Worksheets.Add("Sheet1");
+
+                    //Load the datatable into the sheet, starting from cell A1. Print the column names on row 1
+                    ws.Cells["A1"].LoadFromDataTable(tbl, true);
+                    int noOfCols = tbl.Columns.Count;
+                    string lastColExcel = IndexToColumn(noOfCols);
+                    int noOfRows = tbl.Rows.Count;
+                    int summaryRowIndex = noOfRows + 1;
+                    // Set columns to auto-fit
+                    for (int i = 1; i <= ws.Dimension.Columns; i++)
+                    {
+                        ws.Column(i).AutoFit();
+                    }
+                    //set numberformat
+                    int dtColIndex = 0;
+                    //foreach (DataColumn dc in tbl.Columns)
+                    //{
+                    //    string numberFormat = "";
+                    //    if (dc.ExtendedProperties.ContainsKey("NumberFormat"))
+                    //    {
+                    //        numberFormat = dc.ExtendedProperties["NumberFormat"].ToString();
+                    //        string excelColIndexAlphabet = IndexToColumn(dtColIndex + 1);
+                    //        using (ExcelRange rng = ws.Cells[excelColIndexAlphabet + 2 + ":" + excelColIndexAlphabet + summaryRowIndex])
+                    //        {
+                    //            rng.Style.Numberformat.Format = numberFormat;
+                    //            rng.Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                    //        }
+                    //        //right align header text for number fields
+                    //        using (ExcelRange rng = ws.Cells[excelColIndexAlphabet + 1 + ":" + excelColIndexAlphabet + 1])
+                    //        {
+                    //            rng.Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                    //        }
+                    //    }
+                    //    dtColIndex++;
+                    //}
+                    ////Format the header
+                    //using (ExcelRange rng = ws.Cells["A1:" + lastColExcel + "1"])
+                    //{
+                    //    rng.Style.Font.Bold = true;
+                    //    rng.Style.Fill.PatternType = ExcelFillStyle.Solid;                      //Set Pattern for the background to Solid
+                    //    rng.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.FromArgb(79, 129, 189));  //Set color to dark blue
+                    //    rng.Style.Font.Color.SetColor(System.Drawing.Color.White);
+                    //    rng.Style.WrapText = true;
+                    //    rng.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+                    //}
+                    ////Format the SummaryRow
+                    //using (ExcelRange rng = ws.Cells["A" + summaryRowIndex + ":" + lastColExcel + summaryRowIndex])
+                    //{
+                    //    rng.Style.Font.Bold = true;
+                    //    rng.Style.Fill.PatternType = ExcelFillStyle.Solid;                      //Set Pattern for the background to Solid
+                    //    rng.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.FromArgb(79, 129, 189));  //Set color to dark blue
+                    //    rng.Style.Font.Color.SetColor(System.Drawing.Color.White);
+                    //}
+                    //Write it back to the client
+                    response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    response.AddHeader("content-disposition", "attachment;  filename=" + filename + "");
+                    response.BinaryWrite(pck.GetAsByteArray());
+                    response.End();
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine("Failed, exception thrown: " + ex.Message);
+                return false;
+            }
+        }
+
         public static bool CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(DataSet ds, string filename, HttpResponse response)
         {
             //this one threw out of memory exception for large file with about 60,000 ratetask
