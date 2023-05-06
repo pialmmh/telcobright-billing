@@ -13,10 +13,11 @@ namespace QuartzTelcobright
         public string HeartbeatMsg { get; }
         public string LogFileName { get; }
         public int HeartbeatId { get; }
-        public TelcobrightHeartbeat(int heartbeatId, string heartbeatMsg) {
+        public TelcobrightHeartbeat(string processName, int heartbeatId, string heartbeatMsg) {
             var binPath = System.IO.Path.GetDirectoryName(
                 System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
             binPath = binPath.Substring(6);
+            this.ProcessName = processName;
             this.LogFileName = binPath + Path.DirectorySeparatorChar + "telcobright.log";
             this.HeartbeatId = heartbeatId;
             this.HeartbeatMsg = heartbeatMsg;

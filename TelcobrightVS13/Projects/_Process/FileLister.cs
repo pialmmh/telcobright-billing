@@ -36,8 +36,8 @@ namespace Process
             {
                 process.Kill();
             }
-            TelcobrightHeartbeat heartbeat1 = new TelcobrightHeartbeat(1, "Listing files from remote server.");
-            TelcobrightHeartbeat heartbeat2 = new TelcobrightHeartbeat(2, "Writing jobs to db.");
+            TelcobrightHeartbeat heartbeat1 = new TelcobrightHeartbeat("",1, "Listing files from remote server.");
+            TelcobrightHeartbeat heartbeat2 = new TelcobrightHeartbeat("",2, "Writing jobs to db.");
             //return;//todo
             JobDataMap jobDataMap = schedulerContext.JobDetail.JobDataMap;
             string operatorName = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");

@@ -433,7 +433,7 @@ group by tup_inpartnerid;";
            List<BtrcReportRow> intInComing_2_Records = new List<BtrcReportRow>();
         List<BtrcReportRow> intOutComing_1_Records = new List<BtrcReportRow>();
         List<BtrcReportRow> intOutComing_2_Records = new List<BtrcReportRow>();
-        Dictionary<int, string> partnerNames = null;
+        Dictionary<int, string> partnerNames= null;
         using (PartnerEntities context = new PartnerEntities())
         {
             partnerNames = context.partners.ToList().ToDictionary(p => p.idPartner, p => p.PartnerName);
@@ -469,38 +469,6 @@ group by tup_inpartnerid;";
                     + ".xlsx", Response, domesticRecords, intInComing_1_Records, intInComing_2_Records, intOutComing_1_Records, intOutComing_2_Records);
 
 
-
-            //DataSet intInComing_1_Ds = getInternatinonalInComingReport_1(connection);
-            //intInComing_1_Records = ConvertBtrcDataSetToList(intInComing_1_Ds, partnerNames);
-            //GvIntlin1.DataSource = intInComing_1_Records;
-            //ExcelExporterForBtrcReport.ExportToExcelBtrcReport(intInComing_1_Records, "IntlIncoming_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
-            //        + ".xlsx","D1", Response);
-            //Gvdom.DataSource = domesticRecords;
-            //CreateExcelFileAspNet.ExportToExcelBtrcReport(domesticDs, "Btrc_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
-            //        + ".xlsx", Response);
-
-
-            //DataSet intInComing_1_Ds = getInternatinonalInComingReport_1(connection);
-            //GvIntlin1.DataSource = intInComing_1_Records;
-            //CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(intInComing_1_Ds, "IntlIncoming_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
-            //        + ".xlsx", Response);
-
-
-            //DataSet intInComing_2_Ds = getInternatinonalInComingReport_1(connection);
-            //GvIntlin2.DataSource = intInComing_2_Records;
-            //CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(intInComing_2_Ds, "IntlIncoming_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
-            //        + ".xlsx", Response);
-
-            //DataSet intOutComing_1_Ds = getInternatinonalOutComingReport_1(connection);
-            //GvIntlout1.DataSource = intOutComing_1_Records;
-            //CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(intOutComing_1_Ds, "IntlIncoming_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
-            //                    + ".xlsx", Response);
-
-
-            //DataSet intOutComing_2_Ds = getInternatinonalOutComingReport_2(connection);
-            //GvIntlout2.DataSource = intOutComing_2_Records;
-            //CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(intOutComing_2_Ds, "IntlIncoming_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
-            //                    + ".xlsx", Response);
 
             return;
         }
