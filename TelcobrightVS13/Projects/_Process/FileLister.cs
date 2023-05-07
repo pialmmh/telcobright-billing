@@ -32,7 +32,8 @@ namespace Process
         }
         public override void Execute(IJobExecutionContext schedulerContext)
         {
-            foreach (var process in System.Diagnostics.Process.GetProcesses().Where(p => p.ProcessName.Contains("werfault")))
+            var processes = System.Diagnostics.Process.GetProcesses().ToList();
+            foreach (var process in processes.Where(p => p.ProcessName.ToLower().Contains("werfault")))
             {
                 process.Kill();
             }
