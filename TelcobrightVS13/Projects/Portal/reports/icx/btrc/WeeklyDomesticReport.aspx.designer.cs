@@ -9,7 +9,7 @@
 
 
 
-public partial class DefaultRptBtrcDailyIcx {
+public partial class DefaultRptDomesticWeeklyIcx {
     
     /// <summary>
     /// DropDownListReportSource control.
@@ -174,13 +174,13 @@ public partial class DefaultRptBtrcDailyIcx {
     protected global::System.Web.UI.WebControls.DropDownList DropDownListMonth1;
     
     /// <summary>
-    /// txtDate control.
+    /// txtStartDate control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtDate;
+    protected global::System.Web.UI.WebControls.TextBox txtStartDate;
     
     /// <summary>
     /// CalendarStartDate control.
@@ -192,13 +192,13 @@ public partial class DefaultRptBtrcDailyIcx {
     protected global::AjaxControlToolkit.CalendarExtender CalendarStartDate;
     
     /// <summary>
-    /// txtDate1 control.
+    /// txtEndDate control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtDate1;
+    protected global::System.Web.UI.WebControls.TextBox txtEndDate;
     
     /// <summary>
     /// CalendarEndDate control.

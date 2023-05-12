@@ -20,6 +20,7 @@
 <body>
     <form id="mainform" runat="server">
     
+
     <div class="page">
         
             <div class="header" id="mygradient2" style="min-width:2200px;">
@@ -167,7 +168,10 @@ border-bottom-style:ridge;min-width:180px;padding-top:25px;">
             </asp:TreeNode>
 
         <asp:TreeNode Value="btrc" Expanded="True" Text="BTRC Reports " SelectAction="None">
+            
             <asp:TreeNode Value="daily" Text="Daily Report" SelectAction="Select" NavigateUrl="~/reports/icx/btrc/DailyReport.aspx"> </asp:TreeNode>    
+            <asp:TreeNode Value="weekly domestic" Text="Weekly Domestic Report" SelectAction="Select" NavigateUrl="~/reports/icx/btrc/WeeklyDomesticReport.aspx"> </asp:TreeNode>    
+
         </asp:TreeNode>
 
 

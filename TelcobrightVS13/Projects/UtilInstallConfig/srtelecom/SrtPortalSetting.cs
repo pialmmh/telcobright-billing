@@ -314,6 +314,12 @@ namespace InstallConfig
                     },
                     { "~/reports/icx/LocalTollFree.aspx",
                         settingIntlIn
+                    },
+                    { "~/reports/icx/btrc/DailyReport.aspx",
+                        settingIntlIn
+                    },
+                    { "~/reports/icx/btrc/WeeklyDomesticReport.aspx",
+                        settingIntlIn
                     }
                 },//dictionary of page settings
 

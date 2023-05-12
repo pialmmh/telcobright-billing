@@ -37,8 +37,8 @@ namespace Process
             {
                 process.Kill();
             }
-            TelcobrightHeartbeat heartbeat1 = new TelcobrightHeartbeat("",1, "Listing files from remote server.");
-            TelcobrightHeartbeat heartbeat2 = new TelcobrightHeartbeat("",2, "Writing jobs to db.");
+            TelcobrightHeartbeat heartbeat1 = new TelcobrightHeartbeat("FileLister",1,3600, "Listing files from remote server.",3600);//todo: change to 3600
+            TelcobrightHeartbeat heartbeat2 = new TelcobrightHeartbeat("FileLister",2,3600, "Writing jobs to db.",3600);
             //return;//todo
             JobDataMap jobDataMap = schedulerContext.JobDetail.JobDataMap;
             string operatorName = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");
@@ -55,7 +55,7 @@ namespace Process
                 List<string> fileNames = srcLocation.GetFileNamesFiltered(syncPair.SrcSettings, tbc);
                 if (tbc.CdrSetting.DescendingOrderWhileListingFiles == true)
                     fileNames = fileNames.OrderByDescending(c => c).ToList();
-                if (fileNames.Any()) heartbeat1.end(); //heartbit1 successful
+                if(fileNames.Any()) heartbeat1.end(); //heartbit1 successful, expect at least one good heartbeat in an hour
                 using (PartnerEntities context=new PartnerEntities(entityConStr))
                 {
                     var connection = context.Database.Connection;
@@ -88,6 +88,5 @@ namespace Process
                 ErrorWriter wr = new ErrorWriter(e1, "FileLister", null, "",operatorName);
             }
         }
-
     }
 }

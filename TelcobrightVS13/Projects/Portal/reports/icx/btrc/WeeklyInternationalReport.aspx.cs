@@ -12,7 +12,7 @@ using ExportToExcel;
 using MediationModel;
 using LibraryExtensions;
 using PortalApp.ReportHelper;
-public partial class DefaultRptBtrcDailyIcx : System.Web.UI.Page
+public partial class DefaultRptInternationalWeeklyIcx : System.Web.UI.Page
 {
     private int _mShowByCountry=0;
     private int _mShowByAns = 0;
@@ -20,8 +20,8 @@ public partial class DefaultRptBtrcDailyIcx : System.Web.UI.Page
     private string GetQuery()
     {
 
-        string StartDate =txtDate.Text;
-        string EndtDate = (txtDate1.Text.ConvertToDateTimeFromMySqlFormat()).AddSeconds(1).ToMySqlFormatWithoutQuote();
+        string StartDate =txtStartDate.Text;
+        string EndtDate = (txtEndDate.Text.ConvertToDateTimeFromMySqlFormat()).AddSeconds(1).ToMySqlFormatWithoutQuote();
         string tableName = DropDownListReportSource.SelectedValue + "01";
 
         string groupInterval = getSelectedRadioButtonText();
@@ -110,7 +110,6 @@ public partial class DefaultRptBtrcDailyIcx : System.Web.UI.Page
 
     DataSet getBtrcReport(MySqlConnection connection, string sql)
     {
-
         MySqlCommand cmd = new MySqlCommand(sql, connection);
         cmd.Connection = connection;
         MySqlDataAdapter domDataAdapter = new MySqlDataAdapter(cmd);
@@ -143,16 +142,16 @@ public partial class DefaultRptBtrcDailyIcx : System.Web.UI.Page
         }
         return records;
     }
-    DataSet getDomesticReport(MySqlConnection connection)
+    DataSet getDomesticWeeklyReport(MySqlConnection connection)
     {
         string domSql =
-         $@"select tup_inpartnerid as partnerid,sum(duration1)/60 as minutes 
+          $@"select tup_inpartnerid as partnerid,sum(duration1)/60 as minutes 
         from 
         (select * from sum_voice_day_01
-        where tup_starttime >= '{txtDate.Text}' and tup_starttime < '{txtDate1.Text}'
+        where tup_starttime >= '{txtStartDate.Text}' and tup_starttime < '{txtEndDate.Text}'
         union all 
         select * from sum_voice_day_04
-        where tup_starttime >= '{txtDate.Text}' and tup_starttime < '{txtDate1.Text}') x
+        where tup_starttime >= '{txtStartDate.Text}' and tup_starttime < '{txtEndDate.Text}') x
         group by tup_inpartnerid;";
 
         DataSet ds= getBtrcReport(connection, domSql);
@@ -160,67 +159,11 @@ public partial class DefaultRptBtrcDailyIcx : System.Web.UI.Page
     }
 
 
-    DataSet getInternatinonalInComingReport_1(MySqlConnection connection)
-    {
-        string intlIn_1_Sql =
- $@"select tup_inpartnerid as partnerid,sum(duration1)/60 as minutes 
-from sum_voice_day_03
-where tup_starttime >= '{txtDate.Text}' and tup_starttime < '{txtDate1.Text}'
-group by tup_inpartnerid;";
-
-        DataSet ds = getBtrcReport(connection, intlIn_1_Sql);
-        return ds;
-    }
-
-
-
-    DataSet  getInternatinonalInComingReport_2(MySqlConnection connection)
-    {
-
-        string intlIn_2_Sql =
-$@"select tup_outpartnerid as partnerid,sum(duration1)/60 as minutes 
-from sum_voice_day_03
-where tup_starttime >= '{txtDate.Text}' and tup_starttime < '{txtDate1.Text}'
-group by tup_inpartnerid;";
-
-        DataSet ds = getBtrcReport(connection, intlIn_2_Sql);
-        return ds;
-    }
-
-
-    DataSet  getInternatinonalOutComingReport_1(MySqlConnection connection)
-    {
-        string intlOut_1_Sql =
- $@"select tup_inpartnerid as partnerid,sum(duration3)/60 as minutes 
-from sum_voice_day_02
-where tup_starttime >= '{txtDate.Text}' and tup_starttime < '{txtDate1.Text}'
-group by tup_inpartnerid;";
-
-        DataSet ds = getBtrcReport(connection, intlOut_1_Sql);
-        return ds;
-    }
-
-
-    DataSet getInternatinonalOutComingReport_2(MySqlConnection connection)
-    {
-        string intlOut_2_Sql =
- $@"select tup_outpartnerid as partnerid,sum(duration3)/60 as minutes 
-from sum_voice_day_02
-where tup_starttime >= '{txtDate.Text}' and tup_starttime < '{txtDate1.Text}'
-group by tup_inpartnerid;";
-
-        DataSet ds = getBtrcReport(connection, intlOut_2_Sql);
-        return ds;
-    }
-
     protected void submit_Click(object sender, EventArgs e)
     {
         
-        List<BtrcReportRow> domesticRecords = new List<BtrcReportRow>();
-        List<BtrcReportRow> intInComing_1_Records = new List<BtrcReportRow>();
-        List<BtrcReportRow> intInComing_2_Records = new List<BtrcReportRow>();
-        List<BtrcReportRow> intOutComing_1_Records = new List<BtrcReportRow>();
-        List<BtrcReportRow> intOutComing_2_Records = new List<BtrcReportRow>();
+        List<BtrcReportRow> domesticWeeklyRecords = new List<BtrcReportRow>();
+        
        
         Dictionary<int, string> partnerNames = null;
         using (PartnerEntities context = new PartnerEntities()) {
@@ -231,34 +174,13 @@ group by tup_inpartnerid;";
             connection.ConnectionString = ConfigurationManager.ConnectionStrings["reader"].ConnectionString;
             connection.Open();
 
-            DataSet domesticDs = getDomesticReport(connection);
-            domesticRecords = ConvertBtrcDataSetToList(domesticDs,partnerNames);
-            DomHeader.Text = "Domestic Calls";
-            Gvdom.DataSource = domesticRecords;
+            DataSet domesticDs = getDomesticWeeklyReport(connection);
+            domesticWeeklyRecords = ConvertBtrcDataSetToList(domesticDs,partnerNames);
+            DomHeader.Text = "Weekly Domestic Calls";
+            Gvdom.DataSource = domesticWeeklyRecords;
             Gvdom.DataBind();
 
-            DataSet intInComing_1_Ds = getInternatinonalInComingReport_1(connection);
-            intInComing_1_Records = ConvertBtrcDataSetToList(intInComing_1_Ds, partnerNames);
-            IntlInHeader.Text = "International Incoming Calls";
-            GvIntlin1.DataSource = intInComing_1_Records;
-            GvIntlin1.DataBind();
-
-            DataSet intInComing_2_Ds = getInternatinonalInComingReport_1(connection);
-            intInComing_2_Records = ConvertBtrcDataSetToList(intInComing_2_Ds, partnerNames);
-            GvIntlin2.DataSource = intInComing_2_Records;
-            GvIntlin2.DataBind();
-
-            DataSet intOutComing_1_Ds = getInternatinonalOutComingReport_1(connection);
-            intOutComing_1_Records = ConvertBtrcDataSetToList(intOutComing_1_Ds, partnerNames);
-            IntlOutHeader.Text = "International Outcoming Calls";
-            GvIntlout1.DataSource = intOutComing_1_Records;
-            GvIntlout1.DataBind();
-
-            DataSet intOutComing_2_Ds = getInternatinonalOutComingReport_2(connection);
-            intOutComing_2_Records = ConvertBtrcDataSetToList(intOutComing_2_Ds, partnerNames);
-            GvIntlout2.DataSource = intOutComing_2_Records;
-            GvIntlout2.DataBind();
-
+            
             return;
 
 
@@ -432,11 +354,8 @@ group by tup_inpartnerid;";
         //            + ".xlsx", Response);
         //}
 
-        List<BtrcReportRow> domesticRecords = new List<BtrcReportRow>();
-        List<BtrcReportRow> intInComing_1_Records = new List<BtrcReportRow>();
-           List<BtrcReportRow> intInComing_2_Records = new List<BtrcReportRow>();
-        List<BtrcReportRow> intOutComing_1_Records = new List<BtrcReportRow>();
-        List<BtrcReportRow> intOutComing_2_Records = new List<BtrcReportRow>();
+        List<BtrcReportRow> domesticWeeklyRecords = new List<BtrcReportRow>();
+   
         Dictionary<int, string> partnerNames= null;
         using (PartnerEntities context = new PartnerEntities())
         {
@@ -449,30 +368,12 @@ group by tup_inpartnerid;";
             connection.Open();
 
 
-
-            DataSet domesticDs = getDomesticReport(connection);
-            domesticRecords = ConvertBtrcDataSetToList(domesticDs, partnerNames);
-
-
-            DataSet intInComing_1_Ds = getInternatinonalInComingReport_1(connection);
-            intInComing_1_Records = ConvertBtrcDataSetToList(intInComing_1_Ds, partnerNames);
-           
-
-            DataSet intInComing_2_Ds = getInternatinonalInComingReport_1(connection);
-            intInComing_2_Records = ConvertBtrcDataSetToList(intInComing_2_Ds, partnerNames);
-           
-
-            DataSet intOutComing_1_Ds = getInternatinonalOutComingReport_1(connection);
-            intOutComing_1_Records = ConvertBtrcDataSetToList(intOutComing_1_Ds, partnerNames);
-            
-            DataSet intOutComing_2_Ds = getInternatinonalOutComingReport_2(connection);
-            intOutComing_2_Records = ConvertBtrcDataSetToList(intOutComing_2_Ds, partnerNames);
+            DataSet domesticDs = getDomesticWeeklyReport(connection);
+            domesticWeeklyRecords = ConvertBtrcDataSetToList(domesticDs, partnerNames);
 
 
-            ExcelExporterForBtrcReport.ExportToExcelBtrcReport("Btrc_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
-                    + ".xlsx", Response, domesticRecords, intInComing_1_Records, intInComing_2_Records, intOutComing_1_Records, intOutComing_2_Records);
-
-
+            ExcelExporterForBtrcReport.ExportToExcelDomesticWeeklyReport("Domestic_Weekly_Report_From_" + txtStartDate.Text + "_To_" + txtEndDate.Text
+                    + ".xlsx", Response, domesticWeeklyRecords);
 
             return;
         }
@@ -527,11 +428,11 @@ group by tup_inpartnerid;";
 
             TextBoxYear.Enabled = false;
             DropDownListMonth.Enabled = false;
-            txtDate.Enabled = false;
+            txtStartDate.Enabled = false;
 
             TextBoxYear1.Enabled = false;
             DropDownListMonth1.Enabled = false;
-            txtDate1.Enabled = false;
+            txtEndDate.Enabled = false;
             
             //Enable Timers,Duration,country
             //CheckBoxShowByCountry.Checked = true;
@@ -555,11 +456,11 @@ group by tup_inpartnerid;";
 
             TextBoxYear.Enabled = true;
             DropDownListMonth.Enabled = true;
-            txtDate.Enabled = true;
+            txtStartDate.Enabled = true;
 
             TextBoxYear1.Enabled = true;
             DropDownListMonth1.Enabled = true;
-            txtDate1.Enabled = true;
+            txtEndDate.Enabled = true;
 
             //Disable Timers,Duration,
             //CheckBoxShowByCountry.Checked = false;
@@ -586,8 +487,8 @@ group by tup_inpartnerid;";
 
             DateTime endtime = DateTime.Now;
             DateTime starttime = endtime.AddMinutes(a * (-1));
-            txtDate1.Text = endtime.ToString("dd/MM/yyyy HH:mm:ss");
-            txtDate.Text = starttime.ToString("dd/MM/yyyy HH:mm:ss");
+            txtEndDate.Text = endtime.ToString("dd/MM/yyyy HH:mm:ss");
+            txtStartDate.Text = starttime.ToString("dd/MM/yyyy HH:mm:ss");
 
             //return true;
         }
@@ -607,6 +508,25 @@ group by tup_inpartnerid;";
 
             TextBoxDuration.Text = "30";
         }
+    }
+
+    protected void CalendarEndDate_TextChanged(object sender, EventArgs e)
+    {
+        CalendarStartDate.SelectedDate = txtStartDate.Text.ConvertToDateTimeFromMySqlFormat();
+        DateTime startDate = CalendarStartDate.SelectedDate ?? DateTime.Now;
+        DateTime endDate = startDate.AddDays(6);
+        CalendarEndDate.SelectedDate = endDate;
+        //txtStartDate.Text = startDate.ToString("yyyy-MM-dd 00:00:00");
+        //txtEndDate.Text = endDate.ToString("yyyy-MM-dd 23:59:59");
+    }
+    protected void CalendarStartDate_TextChanged(object sender, EventArgs e)
+    {
+        CalendarEndDate.SelectedDate = txtEndDate.Text.ConvertToDateTimeFromMySqlFormat();
+        DateTime endDate = CalendarEndDate.SelectedDate ?? DateTime.Now;
+        DateTime startDate = endDate.AddDays(-6);
+        CalendarStartDate.SelectedDate = startDate;
+        //txtStartDate.Text = startDate.ToString("yyyy-MM-dd 00:00:00");
+        //txtEndDate.Text = endDate.ToString("yyyy-MM-dd 23:59:59");
     }
 
     protected void Timer1_Tick(object sender, EventArgs e)
