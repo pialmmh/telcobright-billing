@@ -510,7 +510,7 @@
     <Content Include="Mediation\Mediation.aspx" />
     <Content Include="Mediation\MediationBatch.aspx" />
     <Content Include="Mediation\MediationError.aspx" />
-    <Content Include="reports\IOFReport.aspx" />
+    <Content Include="reports\icx\btrc\IOFReport.aspx" />
     <Content Include="reports\OutgoingCallAnalysis.aspx" />
     <Content Include="reports\PasswordRecovery.aspx" />
     <Content Include="reports\PaymentHistory.aspx" />
@@ -916,11 +916,11 @@
     <Compile Include="reports\icx\InternationalOut _ICX.aspx.designer.cs">
       <DependentUpon>InternationalOut _ICX.aspx</DependentUpon>
     </Compile>
-    <Compile Include="reports\IOFReport.aspx.cs">
+    <Compile Include="reports\icx\btrc\IOFReport.aspx.cs">
       <DependentUpon>IOFReport.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="reports\IOFReport.aspx.designer.cs">
+    <Compile Include="reports\icx\btrc\IOFReport.aspx.designer.cs">
       <DependentUpon>IOFReport.aspx</DependentUpon>
     </Compile>
     <Compile Include="reports\OutgoingCallAnalysis.aspx.cs">

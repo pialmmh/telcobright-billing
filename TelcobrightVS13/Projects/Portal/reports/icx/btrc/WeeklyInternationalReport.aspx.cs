@@ -14,13 +14,13 @@ using LibraryExtensions;
 using PortalApp.ReportHelper;
 public partial class DefaultRptInternationalWeeklyIcx : System.Web.UI.Page
 {
-    private int _mShowByCountry=0;
+    private int _mShowByCountry = 0;
     private int _mShowByAns = 0;
     DataTable _dt;
     private string GetQuery()
     {
 
-        string StartDate =txtStartDate.Text;
+        string StartDate = txtStartDate.Text;
         string EndtDate = (txtEndDate.Text.ConvertToDateTimeFromMySqlFormat()).AddSeconds(1).ToMySqlFormatWithoutQuote();
         string tableName = DropDownListReportSource.SelectedValue + "01";
 
@@ -42,7 +42,7 @@ public partial class DefaultRptInternationalWeeklyIcx : System.Web.UI.Page
                          EndtDate,
                          groupInterval,
                          tableName,
-                         
+
                          new List<string>()
                             {
                                 // groupInterval=="Hourly"?"tup_starttime":string.Empty,
@@ -62,7 +62,7 @@ public partial class DefaultRptInternationalWeeklyIcx : System.Web.UI.Page
                                 CheckBoxViewOutgoingRoute.Checked==true?DropDownListViewOutgoingRoute.SelectedIndex>0?" tup_outgoingroute="+DropDownListViewOutgoingRoute.SelectedItem.Value:string.Empty:string.Empty,
                             }).getSQLString();
 
-       
+
         return constructedSQL;
     }
 
@@ -115,9 +115,10 @@ public partial class DefaultRptInternationalWeeklyIcx : System.Web.UI.Page
         MySqlDataAdapter domDataAdapter = new MySqlDataAdapter(cmd);
         DataSet ds = new DataSet();
         domDataAdapter.Fill(ds);
-        return ds;    
+        return ds;
     }
-    List<BtrcReportRow> ConvertBtrcDataSetToList(DataSet ds, Dictionary<int, string> partnerNames) {
+    List<BtrcReportRow> ConvertBtrcDataSetToList(DataSet ds, Dictionary<int,string> partnerNames)
+    {
         bool hasRecords = ds.Tables.Cast<DataTable>()
                            .Any(table => table.Rows.Count != 0);
         List<BtrcReportRow> records = new List<BtrcReportRow>();
@@ -135,6 +136,8 @@ public partial class DefaultRptInternationalWeeklyIcx : System.Web.UI.Page
                         throw new Exception("Could not find partner name for partner id=" + partnerId);
                     }
                     record.partnerName = partnerName;
+                    //record.noOfCalls = row.Field<Decimal>("noofcalls");
+                    record.noOfCalls = Convert.ToDecimal(row["noofcalls"]);
                     record.minutes = row.Field<Decimal>("minutes");
                     records.Add(record);
                 }
@@ -142,31 +145,72 @@ public partial class DefaultRptInternationalWeeklyIcx : System.Web.UI.Page
         }
         return records;
     }
-    DataSet getDomesticWeeklyReport(MySqlConnection connection)
+    DataSet getInternatinonalInComingReport_1(MySqlConnection connection)
     {
-        string domSql =
-          $@"select tup_inpartnerid as partnerid,sum(duration1)/60 as minutes 
-        from 
-        (select * from sum_voice_day_01
-        where tup_starttime >= '{txtStartDate.Text}' and tup_starttime < '{txtEndDate.Text}'
-        union all 
-        select * from sum_voice_day_04
-        where tup_starttime >= '{txtStartDate.Text}' and tup_starttime < '{txtEndDate.Text}') x
-        group by tup_inpartnerid;";
+        string intlIn_1_Sql =
+ $@"select tup_inpartnerid as partnerid,sum(duration1)/60 as minutes,count(*) as noofcalls
+from sum_voice_day_03
+where tup_starttime >= '{txtStartDate.Text}' and tup_starttime < '{txtEndDate.Text}'
+group by tup_inpartnerid;";
 
-        DataSet ds= getBtrcReport(connection, domSql);
+        DataSet ds = getBtrcReport(connection, intlIn_1_Sql);
+        return ds;
+    }
+
+
+
+//    DataSet getInternatinonalInComingReport_2(MySqlConnection connection)
+//    {
+
+//        string intlIn_2_Sql =
+//$@"select tup_outpartnerid as partnerid,sum(duration1)/60 as minutes ,count(*) as noofcalls
+//from sum_voice_day_03
+//where tup_starttime >= '{txtStartDate.Text}' and tup_starttime < '{txtEndDate.Text}'
+//group by tup_inpartnerid;";
+
+//        DataSet ds = getBtrcReport(connection, intlIn_2_Sql);
+//        return ds;
+//    }
+
+
+    DataSet getInternatinonalOutComingReport_1(MySqlConnection connection)
+    {
+        string intlOut_1_Sql =
+ $@"select tup_inpartnerid as partnerid,sum(duration3)/60 as minutes,count(*) as noofcalls
+from sum_voice_day_02
+where tup_starttime >= '{txtStartDate.Text}' and tup_starttime < '{txtEndDate.Text}'
+group by tup_inpartnerid;";
+
+        DataSet ds = getBtrcReport(connection, intlOut_1_Sql);
+        return ds;
+    }
+
+
+    DataSet getInternatinonalOutComingReport_2(MySqlConnection connection)
+    {
+        string intlOut_2_Sql =
+ $@"select tup_outpartnerid as partnerid,sum(duration3)/60 as minutes 
+from sum_voice_day_02
+where tup_starttime >= '{txtStartDate.Text}' and tup_starttime < '{txtEndDate.Text}'
+group by tup_inpartnerid;";
+
+        DataSet ds = getBtrcReport(connection, intlOut_2_Sql);
         return ds;
     }
 
 
     protected void submit_Click(object sender, EventArgs e)
     {
-        
-        List<BtrcReportRow> domesticWeeklyRecords = new List<BtrcReportRow>();
-        
-       
+
+        List<BtrcReportRow> intInComing_1_Records = new List<BtrcReportRow>();
+        //List<BtrcReportRow> intInComing_2_Records = new List<BtrcReportRow>();
+        List<BtrcReportRow> intOutComing_1_Records = new List<BtrcReportRow>();
+        //List<BtrcReportRow> intOutComing_2_Records = new List<BtrcReportRow>();
+
+
         Dictionary<int, string> partnerNames = null;
-        using (PartnerEntities context = new PartnerEntities()) {
+        using (PartnerEntities context = new PartnerEntities())
+        {
             partnerNames = context.partners.ToList().ToDictionary(p => p.idPartner, p => p.PartnerName);
         }
         using (MySqlConnection connection = new MySqlConnection())
@@ -174,13 +218,29 @@ public partial class DefaultRptInternationalWeeklyIcx : System.Web.UI.Page
             connection.ConnectionString = ConfigurationManager.ConnectionStrings["reader"].ConnectionString;
             connection.Open();
 
-            DataSet domesticDs = getDomesticWeeklyReport(connection);
-            domesticWeeklyRecords = ConvertBtrcDataSetToList(domesticDs,partnerNames);
-            DomHeader.Text = "Weekly Domestic Calls";
-            Gvdom.DataSource = domesticWeeklyRecords;
-            Gvdom.DataBind();
+            DataSet intInComing_1_Ds = getInternatinonalInComingReport_1(connection);
+            intInComing_1_Records = ConvertBtrcDataSetToList(intInComing_1_Ds, partnerNames);
+            IntlInHeader.Text = "International Incoming Calls";
+            GvIntlin1.DataSource = intInComing_1_Records;
+            GvIntlin1.DataBind();
 
-            
+            //DataSet intInComing_2_Ds = getInternatinonalInComingReport_1(connection);
+            //intInComing_2_Records = ConvertBtrcDataSetToList(intInComing_2_Ds, partnerNames);
+            //GvIntlin2.DataSource = intInComing_2_Records;
+            //GvIntlin2.DataBind();
+
+            //DataSet intOutComing_1_Ds = getInternatinonalOutComingReport_1(connection);
+            //intOutComing_1_Records = ConvertBtrcDataSetToList(intOutComing_1_Ds, partnerNames);
+            //IntlOutHeader.Text = "International Outcoming Calls";
+            //GvIntlout1.DataSource = intOutComing_1_Records;
+            //GvIntlout1.DataBind();
+
+            //DataSet intOutComing_2_Ds = getInternatinonalOutComingReport_2(connection);
+            //intOutComing_2_Records = ConvertBtrcDataSetToList(intOutComing_2_Ds, partnerNames);
+            //GvIntlout2.DataSource = intOutComing_2_Records;
+            //GvIntlout2.DataBind();
+
+
             return;
 
 
@@ -341,8 +401,8 @@ public partial class DefaultRptInternationalWeeklyIcx : System.Web.UI.Page
 
 
 
-        }
-    
+    }
+
 
     protected void Button1_Click(object sender, EventArgs e)
     {
@@ -354,9 +414,12 @@ public partial class DefaultRptInternationalWeeklyIcx : System.Web.UI.Page
         //            + ".xlsx", Response);
         //}
 
-        List<BtrcReportRow> domesticWeeklyRecords = new List<BtrcReportRow>();
-   
-        Dictionary<int, string> partnerNames= null;
+        List<BtrcReportRow> intInComing_1_Records = new List<BtrcReportRow>();
+        List<BtrcReportRow> intInComing_2_Records = new List<BtrcReportRow>();
+        List<BtrcReportRow> intOutComing_1_Records = new List<BtrcReportRow>();
+        List<BtrcReportRow> intOutComing_2_Records = new List<BtrcReportRow>();
+
+        Dictionary<int, string> partnerNames = null;
         using (PartnerEntities context = new PartnerEntities())
         {
             partnerNames = context.partners.ToList().ToDictionary(p => p.idPartner, p => p.PartnerName);
@@ -367,17 +430,26 @@ public partial class DefaultRptInternationalWeeklyIcx : System.Web.UI.Page
             connection.ConnectionString = ConfigurationManager.ConnectionStrings["reader"].ConnectionString;
             connection.Open();
 
+            DataSet intInComing_1_Ds = getInternatinonalInComingReport_1(connection);
+            intInComing_1_Records = ConvertBtrcDataSetToList(intInComing_1_Ds, partnerNames);
 
-            DataSet domesticDs = getDomesticWeeklyReport(connection);
-            domesticWeeklyRecords = ConvertBtrcDataSetToList(domesticDs, partnerNames);
+
+            DataSet intInComing_2_Ds = getInternatinonalInComingReport_1(connection);
+            intInComing_2_Records = ConvertBtrcDataSetToList(intInComing_2_Ds, partnerNames);
 
 
-            ExcelExporterForBtrcReport.ExportToExcelDomesticWeeklyReport("Domestic_Weekly_Report_From_" + txtStartDate.Text + "_To_" + txtEndDate.Text
-                    + ".xlsx", Response, domesticWeeklyRecords);
+            DataSet intOutComing_1_Ds = getInternatinonalOutComingReport_1(connection);
+            intOutComing_1_Records = ConvertBtrcDataSetToList(intOutComing_1_Ds, partnerNames);
 
+            DataSet intOutComing_2_Ds = getInternatinonalOutComingReport_2(connection);
+            intOutComing_2_Records = ConvertBtrcDataSetToList(intOutComing_2_Ds, partnerNames);
+
+
+            ExcelExporterForBtrcReport.ExportToExcelInternationalWeeklyReport("Domestic_Weekly_Report_From_" + txtStartDate.Text + "_To_" + txtEndDate.Text
+                    + ".xlsx", Response, intInComing_1_Records, intInComing_2_Records, intOutComing_1_Records, intOutComing_2_Records);
             return;
         }
-        }
+    }
 
     private List<BtrcReportRow> ConvertBtrcDataSetToList(DataSet domesticDs, object partnerName)
     {
@@ -409,10 +481,10 @@ public partial class DefaultRptInternationalWeeklyIcx : System.Web.UI.Page
             DropDownListIgw.Enabled = true;
         }
         else DropDownListIgw.Enabled = false;
-    
+
     }
-  
-    
+
+
 
     protected void CheckBoxRealTimeUpdate_CheckedChanged(object sender, EventArgs e)
     {
@@ -423,7 +495,7 @@ public partial class DefaultRptInternationalWeeklyIcx : System.Web.UI.Page
             CheckBoxDailySummary.Checked = false;
             CheckBoxDailySummary.Enabled = false;
 
-           // CheckBoxShowByDestination.Checked = false;
+            // CheckBoxShowByDestination.Checked = false;
             //CheckBoxShowByDestination.Enabled = false;
 
             TextBoxYear.Enabled = false;
@@ -433,7 +505,7 @@ public partial class DefaultRptInternationalWeeklyIcx : System.Web.UI.Page
             TextBoxYear1.Enabled = false;
             DropDownListMonth1.Enabled = false;
             txtEndDate.Enabled = false;
-            
+
             //Enable Timers,Duration,country
             //CheckBoxShowByCountry.Checked = true;
             TextBoxDuration.Enabled = true;
@@ -451,8 +523,8 @@ public partial class DefaultRptInternationalWeeklyIcx : System.Web.UI.Page
             //CheckBoxDailySummary.Checked = true;
             CheckBoxDailySummary.Enabled = true;
 
-           // CheckBoxShowByDestination.Checked = true;
-           // CheckBoxShowByDestination.Enabled = true;
+            // CheckBoxShowByDestination.Checked = true;
+            // CheckBoxShowByDestination.Enabled = true;
 
             TextBoxYear.Enabled = true;
             DropDownListMonth.Enabled = true;
@@ -542,15 +614,15 @@ public partial class DefaultRptInternationalWeeklyIcx : System.Web.UI.Page
         {
             return;
         }
-        
+
         if (CheckBoxShowByAns.Checked == true)
         {
-            Dictionary<string,partner> dicKpiAns = null;
+            Dictionary<string, partner> dicKpiAns = null;
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
                 if (ViewState["dicKpiAns"] != null)
                 {
-                    dicKpiAns = (Dictionary<string,partner>)ViewState["dicKpiAns"];
+                    dicKpiAns = (Dictionary<string, partner>)ViewState["dicKpiAns"];
                 }
                 else
                 {
@@ -563,7 +635,7 @@ public partial class DefaultRptInternationalWeeklyIcx : System.Web.UI.Page
                 Single thisCcr = 0;
                 Single thisPdd = 0;
                 Single thisCcRbyCc = 0;
-                Single.TryParse(DataBinder.Eval(e.Row.DataItem, "ASR").ToString(),out thisAsr);
+                Single.TryParse(DataBinder.Eval(e.Row.DataItem, "ASR").ToString(), out thisAsr);
                 Single.TryParse(DataBinder.Eval(e.Row.DataItem, "ACD").ToString(), out thisAcd);
                 Single.TryParse(DataBinder.Eval(e.Row.DataItem, "CCR").ToString(), out thisCcr);
                 Single.TryParse(DataBinder.Eval(e.Row.DataItem, "PDD").ToString(), out thisPdd);
@@ -572,12 +644,12 @@ public partial class DefaultRptInternationalWeeklyIcx : System.Web.UI.Page
                 dicKpiAns.TryGetValue(thisAnsName, out thisPartner);
                 if (thisPartner != null)
                 {
-                    Color redColor=ColorTranslator.FromHtml("#FF0000");
+                    Color redColor = ColorTranslator.FromHtml("#FF0000");
                     //ASR
                     Single refAsr = 0;
                     if (Convert.ToSingle(thisPartner.refasr) > 0)
                     {
-                        refAsr=Convert.ToSingle(thisPartner.refasr);
+                        refAsr = Convert.ToSingle(thisPartner.refasr);
                     }
                     if ((thisAsr < refAsr) || (thisAsr == 0))
                     {
@@ -592,7 +664,7 @@ public partial class DefaultRptInternationalWeeklyIcx : System.Web.UI.Page
                     double.TryParse(thisPartner.refasrfas.ToString(), out tempDbl);
                     if (tempDbl > 0) refAsrFas = tempDbl;
 
-                    if (thisAsr > refAsrFas && refAsrFas>0)
+                    if (thisAsr > refAsrFas && refAsrFas > 0)
                     {
                         e.Row.Cells[16].ForeColor = Color.White;
                         e.Row.Cells[16].BackColor = Color.Blue;
@@ -657,7 +729,7 @@ public partial class DefaultRptInternationalWeeklyIcx : System.Web.UI.Page
                 }
             }
         }//if checkbox ans
-        
+
         //0 ASR highlighting
         if (e.Row.RowType == DataControlRowType.DataRow)
         {

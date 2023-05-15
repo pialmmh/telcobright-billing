@@ -312,6 +312,9 @@ namespace InstallConfig
                     },
                     { "~/reports/icx/btrc/WeeklyDomesticReport.aspx",
                         settingIntlIn
+                    },
+                    { "~/reports/icx/btrc/WeeklyInternationalReport.aspx",
+                        settingIntlIn
                     }
                 },//dictionary of page settings
 

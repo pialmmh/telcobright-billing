@@ -399,33 +399,6 @@ public partial class DefaultRptDomesticWeeklyIcx {
     protected global::System.Web.UI.WebControls.GridView GvIntlin2;
     
     /// <summary>
-    /// IntlOutHeader control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Label IntlOutHeader;
-    
-    /// <summary>
-    /// GvIntlout1 control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.GridView GvIntlout1;
-    
-    /// <summary>
-    /// GvIntlout2 control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.GridView GvIntlout2;
-    
-    /// <summary>
     /// DomHeader control.
     /// </summary>
     /// <remarks>

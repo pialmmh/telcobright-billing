@@ -143,6 +143,72 @@ namespace PortalApp.ReportHelper
 
 
         //btrc
+        public static bool ExportToExcelInternationalWeeklyReport(string filename, HttpResponse response,List<BtrcReportRow> intInComing_1_Records,
+List<BtrcReportRow> intInComing_2_Records,
+List<BtrcReportRow> intOutComing_1_Records,
+List<BtrcReportRow> intOutComing_2_Records
+)
+        {
+            try
+            {
+                using (ExcelPackage pck = new ExcelPackage())
+                {
+                    //Create the worksheet
+                    ExcelWorksheet ws = pck.Workbook.Worksheets.Add("Sheet1");
+
+
+                    //Load the datatable into the sheet, starting from cell A1. Print the column names on row 1
+                    string icxCell = "A2";
+                    ws.Cells[icxCell].Value = "NAME OF ICX:";
+                    ws.Cells[icxCell].Style.Font.Bold = true;
+                    ws.Cells[icxCell].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    ws.Cells[icxCell].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    ws.Cells["B2:E2"].Merge = true;
+                    ws.Cells["B2"].Value = "Summit Communication Ltd";
+                    ws.Cells["B2"].Style.Font.Bold = true;
+                    string dateCell = "A3";
+                    ws.Cells[dateCell].Value = "Date:";
+                    ws.Cells[dateCell].Style.Font.Bold = true;
+                    ws.Cells[dateCell].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    ws.Cells[dateCell].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    ws.Cells["B3"].Value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                    ws.Cells["B3"].Style.Font.Bold = true;
+
+                    createBtrcHeader(ws, "A7:E7", 8, "International Incoming Calls");
+
+                    createBtrcReportInExcel(ws, intInComing_1_Records, "A", 8, "Name of ANS");
+
+                    createBtrcReportInExcel(ws, intInComing_2_Records, "D", 8, "Name of IOS");
+
+                    createBtrcHeader(ws, "A19:E19", 20, "International Outgoing Calls");
+
+                    createBtrcReportInExcel(ws, intOutComing_1_Records, "A", 20, "Name of ANS");
+
+                    createBtrcReportInExcel(ws, intOutComing_2_Records, "D", 20, "Name of IOS");
+
+                    // Set columns to auto-fit
+                    for (int i = 1; i <= ws.Dimension.Columns; i++)
+                    {
+                        ws.Column(i).AutoFit();
+                    }
+
+                    //Write it back to the client
+                    response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    response.AddHeader("content-disposition", "attachment;  filename=" + filename + "");
+                    response.BinaryWrite(pck.GetAsByteArray());
+                    response.End();
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                Trace.WriteLine("Failed, exception thrown: " + ex.Message);
+                return false;
+            }
+        }
+
+        //btrc
         public static bool ExportToExcelBtrcReport(string filename, HttpResponse response, List<BtrcReportRow> domesticRecords,
 List<BtrcReportRow> intInComing_1_Records,
 List<BtrcReportRow> intInComing_2_Records,

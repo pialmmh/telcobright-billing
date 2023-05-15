@@ -266,7 +266,7 @@
 
         }
 
-       
+
 
     </script>
 
@@ -328,7 +328,7 @@
 
             function SethidValueSubmitClickFlag(value) {
                 document.getElementById("<%=hidValueSubmitClickFlag.ClientID%>").value = value;
-        }
+            }
 
         </script>
 
@@ -433,7 +433,7 @@
 
                     <div style="float: left; width: 280px;">
                         End Date [Time]
-                        <asp:TextBox ID="txtEndDate"  AutoPostBack="true" OnTextChanged="CalendarStartDate_TextChanged" runat="server" />
+                        <asp:TextBox ID="txtEndDate" AutoPostBack="true" OnTextChanged="CalendarStartDate_TextChanged" runat="server" />
                         <asp:CalendarExtender ID="CalendarEndDate" runat="server"
                             TargetControlID="txtEndDate" PopupButtonID="txtEndDate" Format="yyyy-MM-dd 23:59:59">
                         </asp:CalendarExtender>
@@ -579,7 +579,7 @@
         <div style="float: left; text-align: left; width: 900px; position: relative; top: 0px; padding-left: 5px;">
 
 
-            <div style="text-align: center;">
+            <div style="/*text-align: center; */">
                 <div style="clear: both;"></div>
                 <div style="padding-left: 25%; padding-bottom: 5px;">
                     <asp:Label ID="IntlInHeader" runat="server" Text="" ForeColor="#5D7B9D" Font-Bold="true" Font-Size="Large"></asp:Label>
@@ -591,6 +591,7 @@
                             <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                             <Columns>
                                 <asp:BoundField DataField="partnerName" HeaderText="Partner Name" SortExpression="partnerName" ItemStyle-Wrap="false" />
+                                <asp:BoundField DataField="noofcalls" DataFormatString="{0:F2}" HeaderText="No. of Calls" SortExpression="noOfCalls" />
                                 <asp:BoundField DataField="minutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="minutes" />
                             </Columns>
                             <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
@@ -611,6 +612,7 @@
                             <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                             <Columns>
                                 <asp:BoundField DataField="partnerName" HeaderText="Partner Name" SortExpression="partnerName" ItemStyle-Wrap="false" />
+                                <asp:BoundField DataField="noOfCalls" DataFormatString="{0:F2}" HeaderText="No. of Calls" SortExpression="noOfCalls" />
                                 <asp:BoundField DataField="minutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="minutes" />
                             </Columns>
                             <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
@@ -635,6 +637,7 @@
                             <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                             <Columns>
                                 <asp:BoundField DataField="partnerName" HeaderText="Partner Name" SortExpression="partnerName" ItemStyle-Wrap="false" />
+                                <asp:BoundField DataField="noOfCalls" DataFormatString="{0:F2}" HeaderText="No. of Calls" SortExpression="noOfCalls" />
                                 <asp:BoundField DataField="minutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="minutes" />
                             </Columns>
                             <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
@@ -655,6 +658,7 @@
                             <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                             <Columns>
                                 <asp:BoundField DataField="partnerName" HeaderText="Partner Name" SortExpression="partnerName" ItemStyle-Wrap="false" />
+                                <asp:BoundField DataField="noOfCalls" DataFormatString="{0:F2}" HeaderText="No. of Calls" SortExpression="noOfCalls" />
                                 <asp:BoundField DataField="minutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="minutes" />
                             </Columns>
                             <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
@@ -679,6 +683,7 @@
                             <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                             <Columns>
                                 <asp:BoundField DataField="partnerName" HeaderText="Partner Name" SortExpression="partnerName" ItemStyle-Wrap="false" />
+                                <asp:BoundField DataField="noOfCalls" DataFormatString="{0:F2}" HeaderText="No. of Calls" SortExpression="noOfCalls" />
                                 <asp:BoundField DataField="minutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="minutes" />
                             </Columns>
                             <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />

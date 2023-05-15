@@ -10,6 +10,7 @@ namespace PortalApp.ReportHelper
     {
         public string partnerName{ get; set; }
         public Decimal minutes { get; set; }
+        public Decimal noOfCalls { get; set; }
     }
-  
+
 }

@@ -434,7 +434,7 @@ group by tup_inpartnerid;";
 
         List<BtrcReportRow> domesticRecords = new List<BtrcReportRow>();
         List<BtrcReportRow> intInComing_1_Records = new List<BtrcReportRow>();
-           List<BtrcReportRow> intInComing_2_Records = new List<BtrcReportRow>();
+        List<BtrcReportRow> intInComing_2_Records = new List<BtrcReportRow>();
         List<BtrcReportRow> intOutComing_1_Records = new List<BtrcReportRow>();
         List<BtrcReportRow> intOutComing_2_Records = new List<BtrcReportRow>();
         Dictionary<int, string> partnerNames= null;
