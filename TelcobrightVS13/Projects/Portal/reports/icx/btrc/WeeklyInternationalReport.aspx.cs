@@ -117,18 +117,18 @@ public partial class DefaultRptInternationalWeeklyIcx : System.Web.UI.Page
         domDataAdapter.Fill(ds);
         return ds;
     }
-    List<BtrcReportRow> ConvertBtrcDataSetToList(DataSet ds, Dictionary<int,string> partnerNames)
+    List<InternationalReportRow> ConvertBtrcDataSetToList(DataSet ds, Dictionary<int,string> partnerNames)
     {
         bool hasRecords = ds.Tables.Cast<DataTable>()
                            .Any(table => table.Rows.Count != 0);
-        List<BtrcReportRow> records = new List<BtrcReportRow>();
+        List<InternationalReportRow> records = new List<InternationalReportRow>();
         if (hasRecords == true)
         {
             foreach (DataTable table in ds.Tables)
             {
                 foreach (DataRow row in table.Rows)
                 {
-                    BtrcReportRow record = new BtrcReportRow();
+                    InternationalReportRow record = new InternationalReportRow();
                     int partnerId = row.Field<int>("partnerid");
                     string partnerName = "";
                     if (partnerNames.TryGetValue(partnerId, out partnerName) == false)
@@ -202,10 +202,10 @@ group by tup_inpartnerid;";
     protected void submit_Click(object sender, EventArgs e)
     {
 
-        List<BtrcReportRow> intInComing_1_Records = new List<BtrcReportRow>();
-        //List<BtrcReportRow> intInComing_2_Records = new List<BtrcReportRow>();
-        List<BtrcReportRow> intOutComing_1_Records = new List<BtrcReportRow>();
-        //List<BtrcReportRow> intOutComing_2_Records = new List<BtrcReportRow>();
+        List<InternationalReportRow> intInComing_1_Records = new List<InternationalReportRow>();
+        //List<InternationalReportRow> intInComing_2_Records = new List<InternationalReportRow>();
+        List<InternationalReportRow> intOutComing_1_Records = new List<InternationalReportRow>();
+        //List<InternationalReportRow> intOutComing_2_Records = new List<InternationalReportRow>();
 
 
         Dictionary<int, string> partnerNames = null;
@@ -414,10 +414,10 @@ group by tup_inpartnerid;";
         //            + ".xlsx", Response);
         //}
 
-        List<BtrcReportRow> intInComing_1_Records = new List<BtrcReportRow>();
-        List<BtrcReportRow> intInComing_2_Records = new List<BtrcReportRow>();
-        List<BtrcReportRow> intOutComing_1_Records = new List<BtrcReportRow>();
-        List<BtrcReportRow> intOutComing_2_Records = new List<BtrcReportRow>();
+        List<InternationalReportRow> intInComing_1_Records = new List<InternationalReportRow>();
+        List<InternationalReportRow> intInComing_2_Records = new List<InternationalReportRow>();
+        List<InternationalReportRow> intOutComing_1_Records = new List<InternationalReportRow>();
+        List<InternationalReportRow> intOutComing_2_Records = new List<InternationalReportRow>();
 
         Dictionary<int, string> partnerNames = null;
         using (PartnerEntities context = new PartnerEntities())
@@ -451,7 +451,7 @@ group by tup_inpartnerid;";
         }
     }
 
-    private List<BtrcReportRow> ConvertBtrcDataSetToList(DataSet domesticDs, object partnerName)
+    private List<InternationalReportRow> ConvertBtrcDataSetToList(DataSet domesticDs, object partnerName)
     {
         throw new NotImplementedException();
     }

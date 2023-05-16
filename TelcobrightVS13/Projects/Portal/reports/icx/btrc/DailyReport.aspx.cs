@@ -14,13 +14,13 @@ using LibraryExtensions;
 using PortalApp.ReportHelper;
 public partial class DefaultRptBtrcDailyIcx : System.Web.UI.Page
 {
-    private int _mShowByCountry=0;
+    private int _mShowByCountry = 0;
     private int _mShowByAns = 0;
     DataTable _dt;
     private string GetQuery()
     {
 
-        string StartDate =txtDate.Text;
+        string StartDate = txtDate.Text;
         string EndtDate = (txtDate1.Text.ConvertToDateTimeFromMySqlFormat()).AddSeconds(1).ToMySqlFormatWithoutQuote();
         string tableName = DropDownListReportSource.SelectedValue + "01";
 
@@ -42,7 +42,7 @@ public partial class DefaultRptBtrcDailyIcx : System.Web.UI.Page
                          EndtDate,
                          groupInterval,
                          tableName,
-                         
+
                          new List<string>()
                             {
                                 // groupInterval=="Hourly"?"tup_starttime":string.Empty,
@@ -62,7 +62,7 @@ public partial class DefaultRptBtrcDailyIcx : System.Web.UI.Page
                                 CheckBoxViewOutgoingRoute.Checked==true?DropDownListViewOutgoingRoute.SelectedIndex>0?" tup_outgoingroute="+DropDownListViewOutgoingRoute.SelectedItem.Value:string.Empty:string.Empty,
                             }).getSQLString();
 
-       
+
         return constructedSQL;
     }
 
@@ -116,9 +116,10 @@ public partial class DefaultRptBtrcDailyIcx : System.Web.UI.Page
         MySqlDataAdapter domDataAdapter = new MySqlDataAdapter(cmd);
         DataSet ds = new DataSet();
         domDataAdapter.Fill(ds);
-        return ds;    
+        return ds;
     }
-    List<BtrcReportRow> ConvertBtrcDataSetToList(DataSet ds, Dictionary<int, string> partnerNames) {
+    List<BtrcReportRow> ConvertBtrcDataSetToList(DataSet ds, Dictionary<int, string> partnerNames)
+    {
         bool hasRecords = ds.Tables.Cast<DataTable>()
                            .Any(table => table.Rows.Count != 0);
         List<BtrcReportRow> records = new List<BtrcReportRow>();
@@ -155,7 +156,7 @@ public partial class DefaultRptBtrcDailyIcx : System.Web.UI.Page
         where tup_starttime >= '{txtDate.Text}' and tup_starttime < '{txtDate1.Text}') x
         group by tup_inpartnerid;";
 
-        DataSet ds= getBtrcReport(connection, domSql);
+        DataSet ds = getBtrcReport(connection, domSql);
         return ds;
     }
 
@@ -163,10 +164,10 @@ public partial class DefaultRptBtrcDailyIcx : System.Web.UI.Page
     DataSet getInternatinonalInComingReport_1(MySqlConnection connection)
     {
         string intlIn_1_Sql =
- $@"select tup_inpartnerid as partnerid,sum(duration1)/60 as minutes 
+ $@"select tup_outpartnerid as partnerid,sum(duration1)/60 as minutes 
 from sum_voice_day_03
 where tup_starttime >= '{txtDate.Text}' and tup_starttime < '{txtDate1.Text}'
-group by tup_inpartnerid;";
+group by tup_outpartnerid;";
 
         DataSet ds = getBtrcReport(connection, intlIn_1_Sql);
         return ds;
@@ -174,7 +175,7 @@ group by tup_inpartnerid;";
 
 
 
-    DataSet  getInternatinonalInComingReport_2(MySqlConnection connection)
+    DataSet getInternatinonalInComingReport_2(MySqlConnection connection)
     {
 
         string intlIn_2_Sql =
@@ -188,7 +189,7 @@ group by tup_inpartnerid;";
     }
 
 
-    DataSet  getInternatinonalOutComingReport_1(MySqlConnection connection)
+    DataSet getInternatinonalOutComingReport_1(MySqlConnection connection)
     {
         string intlOut_1_Sql =
  $@"select tup_inpartnerid as partnerid,sum(duration3)/60 as minutes 
@@ -207,7 +208,7 @@ group by tup_inpartnerid;";
  $@"select tup_outpartnerid as partnerid,sum(duration3)/60 as minutes 
 from sum_voice_day_02
 where tup_starttime >= '{txtDate.Text}' and tup_starttime < '{txtDate1.Text}'
-group by tup_inpartnerid;";
+group by tup_outpartnerid;";
 
         DataSet ds = getBtrcReport(connection, intlOut_2_Sql);
         return ds;
@@ -215,49 +216,77 @@ group by tup_inpartnerid;";
 
     protected void submit_Click(object sender, EventArgs e)
     {
-        
+
         List<BtrcReportRow> domesticRecords = new List<BtrcReportRow>();
         List<BtrcReportRow> intInComing_1_Records = new List<BtrcReportRow>();
         List<BtrcReportRow> intInComing_2_Records = new List<BtrcReportRow>();
         List<BtrcReportRow> intOutComing_1_Records = new List<BtrcReportRow>();
         List<BtrcReportRow> intOutComing_2_Records = new List<BtrcReportRow>();
-       
+
         Dictionary<int, string> partnerNames = null;
-        using (PartnerEntities context = new PartnerEntities()) {
+        using (PartnerEntities context = new PartnerEntities())
+        {
             partnerNames = context.partners.ToList().ToDictionary(p => p.idPartner, p => p.PartnerName);
         }
         using (MySqlConnection connection = new MySqlConnection())
         {
             connection.ConnectionString = ConfigurationManager.ConnectionStrings["reader"].ConnectionString;
             connection.Open();
-
+            Decimal sum;
             DataSet domesticDs = getDomesticReport(connection);
-            domesticRecords = ConvertBtrcDataSetToList(domesticDs,partnerNames);
-            DomHeader.Text = "Domestic Calls";
-            Gvdom.DataSource = domesticRecords;
-            Gvdom.DataBind();
+            bool hasdomesticDs = domesticDs.Tables.Cast<DataTable>()
+                           .Any(table => table.Rows.Count != 0);
+            if (hasdomesticDs == true)
+            {
+                domesticRecords = ConvertBtrcDataSetToList(domesticDs, partnerNames);
+                sum = domesticRecords.Sum(r => r.minutes);
+                DomHeader.Text = "Domestic Calls";
+                Gvdom.DataSource = domesticRecords;
+                ((BoundField)Gvdom.Columns[1]).FooterText = $"{sum:n0}";
+                Gvdom.DataBind();
+            }
 
             DataSet intInComing_1_Ds = getInternatinonalInComingReport_1(connection);
-            intInComing_1_Records = ConvertBtrcDataSetToList(intInComing_1_Ds, partnerNames);
-            IntlInHeader.Text = "International Incoming Calls";
-            GvIntlin1.DataSource = intInComing_1_Records;
-            GvIntlin1.DataBind();
+            bool hasIntInComing_1_Ds = intInComing_1_Ds.Tables.Cast<DataTable>()
+                           .Any(table => table.Rows.Count != 0);
+            if (hasIntInComing_1_Ds == true)
+            {
+                intInComing_1_Records = ConvertBtrcDataSetToList(intInComing_1_Ds, partnerNames);
+                sum = intInComing_1_Records.Sum(r => r.minutes);
+                IntlInHeader.Text = "International Incoming Calls";
+                GvIntlin1.DataSource = intInComing_1_Records;
+                ((BoundField)GvIntlin1.Columns[1]).FooterText = $"{sum:n0}";
+                GvIntlin1.DataBind();
 
-            DataSet intInComing_2_Ds = getInternatinonalInComingReport_1(connection);
-            intInComing_2_Records = ConvertBtrcDataSetToList(intInComing_2_Ds, partnerNames);
-            GvIntlin2.DataSource = intInComing_2_Records;
-            GvIntlin2.DataBind();
+                DataSet intInComing_2_Ds = getInternatinonalInComingReport_2(connection);
+                intInComing_2_Records = ConvertBtrcDataSetToList(intInComing_2_Ds, partnerNames);
+                sum = intInComing_2_Records.Sum(r => r.minutes);
+                GvIntlin2.DataSource = intInComing_2_Records;
+                ((BoundField)GvIntlin2.Columns[1]).FooterText = $"{sum:n0}";
+                GvIntlin2.DataBind();
+            }
+
 
             DataSet intOutComing_1_Ds = getInternatinonalOutComingReport_1(connection);
-            intOutComing_1_Records = ConvertBtrcDataSetToList(intOutComing_1_Ds, partnerNames);
-            IntlOutHeader.Text = "International Outcoming Calls";
-            GvIntlout1.DataSource = intOutComing_1_Records;
-            GvIntlout1.DataBind();
+            bool hasIntOutComing_1_Ds = intOutComing_1_Ds.Tables.Cast<DataTable>()
+                           .Any(table => table.Rows.Count != 0);
+            if (hasIntOutComing_1_Ds == true)
+            {
+                intOutComing_1_Records = ConvertBtrcDataSetToList(intOutComing_1_Ds, partnerNames);
+                sum = intOutComing_1_Records.Sum(r => r.minutes);
+                IntlOutHeader.Text = "International Outcoming Calls";
+                GvIntlout1.DataSource = intOutComing_1_Records;
+                ((BoundField)GvIntlout1.Columns[1]).FooterText = $"{sum:n0}";
+                GvIntlout1.DataBind();
 
-            DataSet intOutComing_2_Ds = getInternatinonalOutComingReport_2(connection);
-            intOutComing_2_Records = ConvertBtrcDataSetToList(intOutComing_2_Ds, partnerNames);
-            GvIntlout2.DataSource = intOutComing_2_Records;
-            GvIntlout2.DataBind();
+                DataSet intOutComing_2_Ds = getInternatinonalOutComingReport_2(connection);
+                intOutComing_2_Records = ConvertBtrcDataSetToList(intOutComing_2_Ds, partnerNames);
+                sum = intOutComing_2_Records.Sum(r => r.minutes);
+                GvIntlout2.DataSource = intOutComing_2_Records;
+                ((BoundField)GvIntlout2.Columns[1]).FooterText = $"{sum:n0}";
+                GvIntlout2.DataBind();
+            }
+
 
             return;
 
@@ -419,8 +448,8 @@ group by tup_inpartnerid;";
 
 
 
-        }
-    
+    }
+
 
     protected void Button1_Click(object sender, EventArgs e)
     {
@@ -437,7 +466,7 @@ group by tup_inpartnerid;";
         List<BtrcReportRow> intInComing_2_Records = new List<BtrcReportRow>();
         List<BtrcReportRow> intOutComing_1_Records = new List<BtrcReportRow>();
         List<BtrcReportRow> intOutComing_2_Records = new List<BtrcReportRow>();
-        Dictionary<int, string> partnerNames= null;
+        Dictionary<int, string> partnerNames = null;
         using (PartnerEntities context = new PartnerEntities())
         {
             partnerNames = context.partners.ToList().ToDictionary(p => p.idPartner, p => p.PartnerName);
@@ -456,15 +485,15 @@ group by tup_inpartnerid;";
 
             DataSet intInComing_1_Ds = getInternatinonalInComingReport_1(connection);
             intInComing_1_Records = ConvertBtrcDataSetToList(intInComing_1_Ds, partnerNames);
-           
 
-            DataSet intInComing_2_Ds = getInternatinonalInComingReport_1(connection);
+
+            DataSet intInComing_2_Ds = getInternatinonalInComingReport_2(connection);
             intInComing_2_Records = ConvertBtrcDataSetToList(intInComing_2_Ds, partnerNames);
-           
+
 
             DataSet intOutComing_1_Ds = getInternatinonalOutComingReport_1(connection);
             intOutComing_1_Records = ConvertBtrcDataSetToList(intOutComing_1_Ds, partnerNames);
-            
+
             DataSet intOutComing_2_Ds = getInternatinonalOutComingReport_2(connection);
             intOutComing_2_Records = ConvertBtrcDataSetToList(intOutComing_2_Ds, partnerNames);
 
@@ -476,7 +505,7 @@ group by tup_inpartnerid;";
 
             return;
         }
-        }
+    }
 
     private List<BtrcReportRow> ConvertBtrcDataSetToList(DataSet domesticDs, object partnerName)
     {
@@ -508,10 +537,10 @@ group by tup_inpartnerid;";
             DropDownListIgw.Enabled = true;
         }
         else DropDownListIgw.Enabled = false;
-    
+
     }
-  
-    
+
+
 
     protected void CheckBoxRealTimeUpdate_CheckedChanged(object sender, EventArgs e)
     {
@@ -522,7 +551,7 @@ group by tup_inpartnerid;";
             CheckBoxDailySummary.Checked = false;
             CheckBoxDailySummary.Enabled = false;
 
-           // CheckBoxShowByDestination.Checked = false;
+            // CheckBoxShowByDestination.Checked = false;
             //CheckBoxShowByDestination.Enabled = false;
 
             TextBoxYear.Enabled = false;
@@ -532,7 +561,7 @@ group by tup_inpartnerid;";
             TextBoxYear1.Enabled = false;
             DropDownListMonth1.Enabled = false;
             txtDate1.Enabled = false;
-            
+
             //Enable Timers,Duration,country
             //CheckBoxShowByCountry.Checked = true;
             TextBoxDuration.Enabled = true;
@@ -550,8 +579,8 @@ group by tup_inpartnerid;";
             //CheckBoxDailySummary.Checked = true;
             CheckBoxDailySummary.Enabled = true;
 
-           // CheckBoxShowByDestination.Checked = true;
-           // CheckBoxShowByDestination.Enabled = true;
+            // CheckBoxShowByDestination.Checked = true;
+            // CheckBoxShowByDestination.Enabled = true;
 
             TextBoxYear.Enabled = true;
             DropDownListMonth.Enabled = true;
@@ -622,15 +651,15 @@ group by tup_inpartnerid;";
         {
             return;
         }
-        
+
         if (CheckBoxShowByAns.Checked == true)
         {
-            Dictionary<string,partner> dicKpiAns = null;
+            Dictionary<string, partner> dicKpiAns = null;
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
                 if (ViewState["dicKpiAns"] != null)
                 {
-                    dicKpiAns = (Dictionary<string,partner>)ViewState["dicKpiAns"];
+                    dicKpiAns = (Dictionary<string, partner>)ViewState["dicKpiAns"];
                 }
                 else
                 {
@@ -643,7 +672,7 @@ group by tup_inpartnerid;";
                 Single thisCcr = 0;
                 Single thisPdd = 0;
                 Single thisCcRbyCc = 0;
-                Single.TryParse(DataBinder.Eval(e.Row.DataItem, "ASR").ToString(),out thisAsr);
+                Single.TryParse(DataBinder.Eval(e.Row.DataItem, "ASR").ToString(), out thisAsr);
                 Single.TryParse(DataBinder.Eval(e.Row.DataItem, "ACD").ToString(), out thisAcd);
                 Single.TryParse(DataBinder.Eval(e.Row.DataItem, "CCR").ToString(), out thisCcr);
                 Single.TryParse(DataBinder.Eval(e.Row.DataItem, "PDD").ToString(), out thisPdd);
@@ -652,12 +681,12 @@ group by tup_inpartnerid;";
                 dicKpiAns.TryGetValue(thisAnsName, out thisPartner);
                 if (thisPartner != null)
                 {
-                    Color redColor=ColorTranslator.FromHtml("#FF0000");
+                    Color redColor = ColorTranslator.FromHtml("#FF0000");
                     //ASR
                     Single refAsr = 0;
                     if (Convert.ToSingle(thisPartner.refasr) > 0)
                     {
-                        refAsr=Convert.ToSingle(thisPartner.refasr);
+                        refAsr = Convert.ToSingle(thisPartner.refasr);
                     }
                     if ((thisAsr < refAsr) || (thisAsr == 0))
                     {
@@ -672,7 +701,7 @@ group by tup_inpartnerid;";
                     double.TryParse(thisPartner.refasrfas.ToString(), out tempDbl);
                     if (tempDbl > 0) refAsrFas = tempDbl;
 
-                    if (thisAsr > refAsrFas && refAsrFas>0)
+                    if (thisAsr > refAsrFas && refAsrFas > 0)
                     {
                         e.Row.Cells[16].ForeColor = Color.White;
                         e.Row.Cells[16].BackColor = Color.Blue;
@@ -737,7 +766,7 @@ group by tup_inpartnerid;";
                 }
             }
         }//if checkbox ans
-        
+
         //0 ASR highlighting
         if (e.Row.RowType == DataControlRowType.DataRow)
         {

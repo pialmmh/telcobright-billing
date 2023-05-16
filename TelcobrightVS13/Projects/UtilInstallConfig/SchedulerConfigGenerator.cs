@@ -23,7 +23,7 @@ namespace InstallConfig
                 File.ReadAllText(databaseConfigFileName));
 
             databaseSetting.ServerName = settings["ServerName"];
-            databaseSetting.DatabaseName = settings["DatabaseName"];
+            //databaseSetting.DatabaseName = settings["DatabaseName"];
             databaseSetting.AdminUserName = settings["AdminUserName"];
             databaseSetting.AdminPassword = settings["AdminPassword"];
             databaseSetting.ReadOnlyUserName = settings["ReadOnlyUserName"];

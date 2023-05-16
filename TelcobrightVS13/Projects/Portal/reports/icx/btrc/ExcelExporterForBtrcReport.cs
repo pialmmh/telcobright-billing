@@ -41,8 +41,40 @@ namespace PortalApp.ReportHelper
         }
 
 
+        //public static void createBtrcReportInExcel(ExcelWorksheet ws, List<BtrcReportRow>  data, string cell, int cellNo, string partnerName)
+        //{
+        //    int rowCount = data.Count;
+        //    decimal sum = data.Sum(r => r.minutes);
+        //    string reportStartCol = cell;
+        //    int reportStartRow = cellNo;
+        //    int totalStartRow = reportStartRow + rowCount + 1;
+        //    string reportStartRange = reportStartCol + reportStartRow.ToString();
+        //    string totalStartRange = reportStartCol + totalStartRow.ToString();
+        //    ws.Cells[reportStartRange].LoadFromCollection<BtrcReportRow>(data, true);
+        //    ws.Cells[totalStartRange].Value = "Total";
+        //    ws.Cells[totalStartRange].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+        //    ws.Cells[totalStartRange].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+        //    ws.Cells[totalStartRange].Style.Font.Bold = true;
+        //    string nextCol = getNextRangeAtRight(totalStartRange);
+        //    ws.Cells[nextCol].Value = $"{sum:n0}";
+        //    ws.Cells[nextCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+        //    ws.Cells[nextCol].Style.Font.Bold = true;
+        //    ws.Cells[reportStartRange + ":" + nextCol].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+        //    ws.Cells[reportStartRange + ":" + nextCol].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+        //    ws.Cells[reportStartRange + ":" + nextCol].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+        //    ws.Cells[reportStartRange + ":" + nextCol].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+        //    ws.Cells[reportStartRange].Value = partnerName;
+        //    ws.Cells[reportStartRange].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+        //    ws.Cells[reportStartRange].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+        //    string mntCol = getNextRangeAtRight(reportStartRange);
+        //    ws.Cells[mntCol].Value = "No.of Minutes";
+        //    ws.Cells[mntCol].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+        //    ws.Cells[mntCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+        //    return;
+        //}
+
         public static void createBtrcReportInExcel(ExcelWorksheet ws, List<BtrcReportRow> data, string cell, int cellNo, string partnerName)
-        {
+            {
             int rowCount = data.Count;
             decimal sum = data.Sum(r => r.minutes);
             string reportStartCol = cell;
@@ -143,10 +175,10 @@ namespace PortalApp.ReportHelper
 
 
         //btrc
-        public static bool ExportToExcelInternationalWeeklyReport(string filename, HttpResponse response,List<BtrcReportRow> intInComing_1_Records,
-List<BtrcReportRow> intInComing_2_Records,
-List<BtrcReportRow> intOutComing_1_Records,
-List<BtrcReportRow> intOutComing_2_Records
+        public static bool ExportToExcelInternationalWeeklyReport(string filename, HttpResponse response,List<InternationalReportRow> intInComing_1_Records,
+List<InternationalReportRow> intInComing_2_Records,
+List<InternationalReportRow> intOutComing_1_Records,
+List<InternationalReportRow> intOutComing_2_Records
 )
         {
             try
@@ -176,15 +208,15 @@ List<BtrcReportRow> intOutComing_2_Records
 
                     createBtrcHeader(ws, "A7:E7", 8, "International Incoming Calls");
 
-                    createBtrcReportInExcel(ws, intInComing_1_Records, "A", 8, "Name of ANS");
+                    //createBtrcReportInExcel(ws, intInComing_1_Records, "A", 8, "Name of ANS");
 
-                    createBtrcReportInExcel(ws, intInComing_2_Records, "D", 8, "Name of IOS");
+                    //createBtrcReportInExcel(ws, intInComing_2_Records, "D", 8, "Name of IOS");
 
-                    createBtrcHeader(ws, "A19:E19", 20, "International Outgoing Calls");
+                    //createBtrcHeader(ws, "A19:E19", 20, "International Outgoing Calls");
 
-                    createBtrcReportInExcel(ws, intOutComing_1_Records, "A", 20, "Name of ANS");
+                    //createBtrcReportInExcel(ws, intOutComing_1_Records, "A", 20, "Name of ANS");
 
-                    createBtrcReportInExcel(ws, intOutComing_2_Records, "D", 20, "Name of IOS");
+                    //createBtrcReportInExcel(ws, intOutComing_2_Records, "D", 20, "Name of IOS");
 
                     // Set columns to auto-fit
                     for (int i = 1; i <= ws.Dimension.Columns; i++)

@@ -1,5 +1,6 @@
 ﻿<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="True"
     CodeBehind="DailyReport.aspx.cs" Inherits="DefaultRptBtrcDailyIcx" %>
+
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Import Namespace="MediationModel" %>
 <%@ Import Namespace="TelcobrightMediation" %>
@@ -97,7 +98,7 @@
                     }
                     var ANSList = contex.partners.Where(c => c.PartnerType == 1).ToList();
                     DropDownListAns.Items.Clear();
-                    DropDownListAns.Items.Add(new ListItem("[All]","-1"));
+                    DropDownListAns.Items.Add(new ListItem("[All]", "-1"));
                     foreach (partner p in ANSList.OrderBy(x => x.PartnerName))
                     {
                         DropDownListAns.Items.Add(new ListItem(p.PartnerName, p.idPartner.ToString()));
@@ -106,7 +107,7 @@
                     var IGWList = contex.partners.Where(c => c.PartnerType == 2).ToList();
                     DropDownListIgw.Items.Clear();
                     DropDownListIgw.Items.Add(new ListItem("[All]", "-1"));
-                    foreach(partner p in IGWList.OrderBy(x => x.PartnerName))
+                    foreach (partner p in IGWList.OrderBy(x => x.PartnerName))
                     {
                         DropDownListIgw.Items.Add(new ListItem(p.PartnerName, p.idPartner.ToString()));
                     }
@@ -279,43 +280,43 @@
                 if (filter.style.display == 'none') {
                     filter.style.display = 'block';
                     document.getElementById("<%= ShowHideFilter.ClientID %>").value = "Hide Filter";
-                SetHidValueFilter("visible");
+                    SetHidValueFilter("visible");
+                }
+                else {
+                    filter.style.display = 'none';
+                    document.getElementById("<%= ShowHideFilter.ClientID %>").value = "Show Filter";
+                    SetHidValueFilter("invisible");
+                }
             }
-            else {
+            function HideParamBorderDiv() {
+                var filter = document.getElementById('ParamBorder');
                 filter.style.display = 'none';
                 document.getElementById("<%= ShowHideFilter.ClientID %>").value = "Show Filter";
                 SetHidValueFilter("invisible");
+
             }
-        }
-        function HideParamBorderDiv() {
-            var filter = document.getElementById('ParamBorder');
-            filter.style.display = 'none';
-            document.getElementById("<%= ShowHideFilter.ClientID %>").value = "Show Filter";
-            SetHidValueFilter("invisible");
 
-        }
+            function HideParamBorderDivSubmit() {
+                var filter = document.getElementById('ParamBorder');
+                filter.style.display = 'none';
+                document.getElementById("<%= ShowHideFilter.ClientID %>").value = "Show Filter";
+                SetHidValueFilter("invisible");
 
-        function HideParamBorderDivSubmit() {
-            var filter = document.getElementById('ParamBorder');
-            filter.style.display = 'none';
-            document.getElementById("<%= ShowHideFilter.ClientID %>").value = "Show Filter";
-            SetHidValueFilter("invisible");
+            }
 
-        }
+            function ShowParamBorderDiv() {
+                var filter = document.getElementById('ParamBorder');
+                filter.style.display = 'block';
+                document.getElementById("<%= ShowHideFilter.ClientID %>").value = "Hide Filter";
+                SetHidValueFilter("visible");
+            }
 
-        function ShowParamBorderDiv() {
-            var filter = document.getElementById('ParamBorder');
-            filter.style.display = 'block';
-            document.getElementById("<%= ShowHideFilter.ClientID %>").value = "Hide Filter";
-            SetHidValueFilter("visible");
-        }
+            function ShowMessage(message) {
+                alert(message);
+            }
 
-        function ShowMessage(message) {
-            alert(message);
-        }
-
-        function SetHidValueFilter(value) {
-            document.getElementById("<%=hidValueFilter.ClientID%>").value = value;
+            function SetHidValueFilter(value) {
+                document.getElementById("<%=hidValueFilter.ClientID%>").value = value;
         }
 
         function SetHidValueTemplate(value) {
@@ -331,11 +332,11 @@
 
         <span style="padding-left: 0px; float: left; left: 0px; font-weight: bold; margin-top: 2px; margin-right: 20px; color: Black;">Report:</span>
         <span style="font-weight: bold;">Source</span>
-         <asp:DropDownList ID="DropDownListReportSource" Enabled="false" runat="server" >
-         <asp:ListItem Value="sum_voice_day_">Day Wise</asp:ListItem>
-         <asp:ListItem Value="sum_voice_hr_">Hour Wise</asp:ListItem>
-        
-     </asp:DropDownList>
+        <asp:DropDownList ID="DropDownListReportSource" Enabled="false" runat="server">
+            <asp:ListItem Value="sum_voice_day_">Day Wise</asp:ListItem>
+            <asp:ListItem Value="sum_voice_hr_">Hour Wise</asp:ListItem>
+
+        </asp:DropDownList>
 
 
         <asp:Button ID="submit" runat="server" Text="Show Report" OnClick="submit_Click" OnClientClick="SethidValueSubmitClickFlag('true');" />
@@ -363,12 +364,12 @@
 
     <asp:UpdatePanel runat="server">
         <ContentTemplate>
-            <div id="ParamBorder" style="float: left; padding-top:3px; padding-left:10px; height: 85px; display: block; border: 2px ridge #E5E4E2; margin-bottom: 5px; width: 653px;">
-                <div style="visibility:hidden; height: 1px; background-color: #f2f2f2; color: black;">
-                    <span style="/*float: left;*/ font-weight: bold; padding-left: 20px;">Show Performance
+            <div id="ParamBorder" style="float: left; padding-top: 3px; padding-left: 10px; height: 85px; display: block; border: 2px ridge #E5E4E2; margin-bottom: 5px; width: 653px;">
+                <div style="visibility: hidden; height: 1px; background-color: #f2f2f2; color: black;">
+                    <span style="/*float: left; */ font-weight: bold; padding-left: 20px;">Show Performance
                         <asp:CheckBox ID="CheckBoxShowPerformance" runat="server" Checked="true" /></span>
                     <%--<div style="clear:right;"></div>--%>
-                    <span style="/*float: left;*/ font-weight: bold; padding-left: 20px;">Show Revenue
+                    <span style="/*float: left; */ font-weight: bold; padding-left: 20px;">Show Revenue
                         <asp:CheckBox ID="CheckBoxShowCost" runat="server" Checked="false" /></span>
                 </div>
                 <br />
@@ -379,8 +380,8 @@
                         <asp:TextBox ID="TextBoxYear" runat="server" Text="" Width="30px"></asp:TextBox>
                         Month
                         <asp:DropDownList ID="DropDownListMonth" runat="server"
-                                          OnSelectedIndexChanged="DropDownListMonth_SelectedIndexChanged"
-                                          AutoPostBack="True">
+                            OnSelectedIndexChanged="DropDownListMonth_SelectedIndexChanged"
+                            AutoPostBack="True">
                             <asp:ListItem Value="01">Jan</asp:ListItem>
                             <asp:ListItem Value="02">Feb</asp:ListItem>
                             <asp:ListItem Value="03">Mar</asp:ListItem>
@@ -399,7 +400,7 @@
                         <asp:TextBox ID="TextBoxYear1" runat="server" Text="" Width="30px"></asp:TextBox>
                         Month
                         <asp:DropDownList ID="DropDownListMonth1" runat="server"
-                                          OnSelectedIndexChanged="DropDownListMonth1_SelectedIndexChanged" AutoPostBack="True">
+                            OnSelectedIndexChanged="DropDownListMonth1_SelectedIndexChanged" AutoPostBack="True">
                             <asp:ListItem Value="01">Jan</asp:ListItem>
                             <asp:ListItem Value="02">Feb</asp:ListItem>
                             <asp:ListItem Value="03">Mar</asp:ListItem>
@@ -421,7 +422,7 @@
                         Start Date [Time]
                         <asp:TextBox ID="txtDate" runat="server" />
                         <asp:CalendarExtender ID="CalendarStartDate" runat="server"
-                                              TargetControlID="txtDate" PopupButtonID="txtDate" Format="yyyy-MM-dd 00:00:00">
+                            TargetControlID="txtDate" PopupButtonID="txtDate" Format="yyyy-MM-dd 00:00:00">
                         </asp:CalendarExtender>
 
 
@@ -431,7 +432,7 @@
                         End Date [Time]
                         <asp:TextBox ID="txtDate1" runat="server" />
                         <asp:CalendarExtender ID="CalendarEndDate" runat="server"
-                                              TargetControlID="txtDate1" PopupButtonID="txtDate1" Format="yyyy-MM-dd 23:59:59">
+                            TargetControlID="txtDate1" PopupButtonID="txtDate1" Format="yyyy-MM-dd 23:59:59">
                         </asp:CalendarExtender>
                     </div>
 
@@ -439,7 +440,7 @@
 
                 </div>
                 <%--END OF date time/months field DIV--%>
-                <div id="TimeSummary" style="visibility:hidden; float: left; margin-left: 15px; padding-left: 20px; height: 70px; width: 280px; background-color: #faebd7; margin-top: -10px;">
+                <div id="TimeSummary" style="visibility: hidden; float: left; margin-left: 15px; padding-left: 20px; height: 70px; width: 280px; background-color: #faebd7; margin-top: -10px;">
                     <div style="font-weight: bold; float: left;">Period wise Summary<asp:CheckBox ID="CheckBoxDailySummary" runat="server" /></div>
                     <div style="clear: left; margin-top: 5px;"></div>
                     <div style="float: left; margin-right: 5px;">
@@ -456,7 +457,7 @@
                     </div>
                 </div>
 
-                <div id="PartnerFilter" style="visibility:hidden; margin-top: -4px; margin-left: 10px; float: left; padding-left: 5px; background-color: #f2f2f2;">
+                <div id="PartnerFilter" style="visibility: hidden; margin-top: -4px; margin-left: 10px; float: left; padding-left: 5px; background-color: #f2f2f2;">
                     <%--<span style="font-size: smaller;position:relative;left:-53px;padding-left:0px;clear:right;">[Enter only Date in "dd/MM/yyyy (e.g. 21/11/2012) or Date+Time in "dd/MM/yyyy HH:mm:ss" (e.g. 21/11/2012 19:01:59) format]</span>   --%>
 
                     <div style="text-align: left;">
@@ -466,19 +467,19 @@
                             <div style="float: left;">
                                 View by Incoming ANS: 
                                 <asp:CheckBox ID="CheckBoxPartner" runat="server" AutoPostBack="True"
-                                              OnCheckedChanged="CheckBoxShowByPartner_CheckedChanged" Checked="True" />
-                       
+                                    OnCheckedChanged="CheckBoxShowByPartner_CheckedChanged" Checked="True" />
+
                                 <asp:DropDownList ID="DropDownListPartner" runat="server" OnSelectedIndexChanged="DropDownListPartner_OnSelectedIndexChanged"
-                                                  Enabled="true" AutoPostBack="True">
+                                    Enabled="true" AutoPostBack="True">
                                 </asp:DropDownList>
 
                             </div>
                             <div style="float: left; margin-left: 15px;">
                                 <%--View by ANS: --%>
                                 <asp:CheckBox ID="CheckBoxShowByAns" runat="server" AutoPostBack="True"
-                                              OnCheckedChanged="CheckBoxShowByAns_CheckedChanged" Checked="false" Visible="False" />
-                                <asp:DropDownList ID="DropDownListAns" runat="server" 
-                                                  Enabled="False" Visible="False">
+                                    OnCheckedChanged="CheckBoxShowByAns_CheckedChanged" Checked="false" Visible="False" />
+                                <asp:DropDownList ID="DropDownListAns" runat="server"
+                                    Enabled="False" Visible="False">
                                 </asp:DropDownList>
 
                             </div>
@@ -486,9 +487,9 @@
                             <div style="float: left; margin-left: 18px;">
                                 View by Outgoing ANS:
                                 <asp:CheckBox ID="CheckBoxShowByIgw" runat="server"
-                                              AutoPostBack="True" OnCheckedChanged="CheckBoxShowByIgw_CheckedChanged" Checked="false" />
+                                    AutoPostBack="True" OnCheckedChanged="CheckBoxShowByIgw_CheckedChanged" Checked="false" />
                                 <asp:DropDownList ID="DropDownListIgw" runat="server" OnSelectedIndexChanged="DropDownListIgw_OnSelectedIndexChanged"
-                                                  Enabled="False" AutoPostBack="True">
+                                    Enabled="False" AutoPostBack="True">
                                 </asp:DropDownList>
 
                             </div>
@@ -507,8 +508,8 @@
 
                     </div>
                 </div>
-        
-                <div id="RouteFilter" style="visibility:hidden; margin-top: -4px; margin-left: 10px; float: left; padding-left: 5px; background-color: #f2f2f2;">
+
+                <div id="RouteFilter" style="visibility: hidden; margin-top: -4px; margin-left: 10px; float: left; padding-left: 5px; background-color: #f2f2f2;">
                     <%--<span style="font-size: smaller;position:relative;left:-53px;padding-left:0px;clear:right;">[Enter only Date in "dd/MM/yyyy (e.g. 21/11/2012) or Date+Time in "dd/MM/yyyy HH:mm:ss" (e.g. 21/11/2012 19:01:59) format]</span>   --%>
 
                     <div style="text-align: left;">
@@ -518,10 +519,10 @@
                             <div style="float: left;">
                                 View by Incoming Route: 
                                 <asp:CheckBox ID="CheckBoxViewIncomingRoute" runat="server" AutoPostBack="True"
-                                              OnCheckedChanged="CheckBoxViewIncomingRoute_CheckedChanged" Checked="False" />
-                       
+                                    OnCheckedChanged="CheckBoxViewIncomingRoute_CheckedChanged" Checked="False" />
+
                                 <asp:DropDownList ID="DropDownListViewIncomingRoute" runat="server"
-                                                  Enabled="False">
+                                    Enabled="False">
                                 </asp:DropDownList>
 
                             </div>
@@ -529,9 +530,9 @@
                             <div style="float: left; margin-left: 18px;">
                                 View by Outgoing Route:
                                 <asp:CheckBox ID="CheckBoxViewOutgoingRoute" runat="server"
-                                              AutoPostBack="True" OnCheckedChanged="CheckBoxViewOutgoingRoute_CheckedChanged" Checked="false" />
+                                    AutoPostBack="True" OnCheckedChanged="CheckBoxViewOutgoingRoute_CheckedChanged" Checked="false" />
                                 <asp:DropDownList ID="DropDownListViewOutgoingRoute" runat="server"
-                                                  Enabled="False">
+                                    Enabled="False">
                                 </asp:DropDownList>
 
                             </div>
@@ -575,19 +576,19 @@
         <div style="float: left; text-align: left; width: 900px; position: relative; top: 0px; padding-left: 5px;">
 
 
-            <div <%--style="text-align: center;--%>">
-                 <div style="clear:both;"></div>
-                        <div style="padding-left:25%; padding-bottom:5px;">    
-                            <asp:Label ID="IntlInHeader" runat="server" Text="" ForeColor="#5D7B9D" Font-Bold="true" Font-Size="Large"></asp:Label>
-                        </div
-                 <div style="text-align: left;">
-                     <div style="text-align:left;float:left;">
-                         <asp:GridView ID="GvIntlin1" runat="server" AutoGenerateColumns="False"
-                            CellPadding="4" ForeColor="#333333" GridLines="Vertical" visible="true">
+            <div <%--style="text-align: center;"--%>>
+                <div style="clear: both;"></div>
+                <div style="padding-left: 25%; padding-bottom: 5px;">
+                    <asp:Label ID="IntlInHeader" runat="server" Text="" ForeColor="#5D7B9D" Font-Bold="true" Font-Size="Large"></asp:Label>
+                </div>
+                <div style="text-align: left;">
+                    <div style="text-align: left; float: left;">
+                        <asp:GridView ID="GvIntlin1" runat="server" AutoGenerateColumns="False" 
+                            ShowFooter="true" CellPadding="4" ForeColor="#333333" GridLines="Vertical" Visible="true">
                             <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                             <Columns>
-                                <asp:BoundField DataField="partnerName" HeaderText="Partner Name" SortExpression="partnerName" ItemStyle-Wrap="false" />
-                                <asp:BoundField DataField="minutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="minutes" />
+                                <asp:BoundField DataField="partnerName" HeaderText="Partner Name" SortExpression="partnerName" ItemStyle-Wrap="false" FooterText="Total"/>
+                                <asp:BoundField DataField="minutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="minutes" FooterText="" />
                             </Columns>
                             <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
                             <EditRowStyle BackColor="#999999" />
@@ -600,14 +601,14 @@
                             <SortedDescendingCellStyle BackColor="#FFFDF8" />
                             <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
                         </asp:GridView>
-                     </div>
-                     <div style="text-align:left;float:left; margin-left:10px; margin-bottom:10px; clear:right">
-                         <asp:GridView ID="GvIntlin2" runat="server" AutoGenerateColumns="False"
-                            CellPadding="4" ForeColor="#333333" GridLines="Vertical" visible="true">
+                    </div>
+                    <div style="text-align: left; float: left; margin-left: 10px; margin-bottom: 10px; clear: right">
+                        <asp:GridView ID="GvIntlin2" runat="server" AutoGenerateColumns="False"
+                            ShowFooter="true" CellPadding="4" ForeColor="#333333" GridLines="Vertical" Visible="true">
                             <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                             <Columns>
-                                <asp:BoundField DataField="partnerName" HeaderText="Partner Name" SortExpression="partnerName" ItemStyle-Wrap="false" />
-                                <asp:BoundField DataField="minutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="minutes" />
+                                <asp:BoundField DataField="partnerName" HeaderText="Partner Name" SortExpression="partnerName" ItemStyle-Wrap="false" FooterText="Total"/>
+                                <asp:BoundField DataField="minutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="minutes" FooterText="" />
                             </Columns>
                             <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
                             <EditRowStyle BackColor="#999999" />
@@ -620,18 +621,18 @@
                             <SortedDescendingCellStyle BackColor="#FFFDF8" />
                             <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
                         </asp:GridView>
-                     </div>
-                      <div style="clear:both;"></div>
-                        <div style="padding-left:25%;padding-bottom:5px;">    
-                            <asp:Label ID="IntlOutHeader" runat="server" Text="" ForeColor="#5D7B9D" Font-Bold="true" Font-Size="Large"></asp:Label>
-                        </div>
-                     <div style="text-align:left;float:left;clear:left;margin-bottom:10px">
-                         <asp:GridView ID="GvIntlout1" runat="server" AutoGenerateColumns="False"
-                            CellPadding="4" ForeColor="#333333" GridLines="Vertical" visible="true">
+                    </div>
+                    <div style="clear: both;"></div>
+                    <div style="padding-left: 25%; padding-bottom: 5px;">
+                        <asp:Label ID="IntlOutHeader" runat="server" Text="" ForeColor="#5D7B9D" Font-Bold="true" Font-Size="Large"></asp:Label>
+                    </div>
+                    <div style="text-align: left; float: left; clear: left; margin-bottom: 10px">
+                        <asp:GridView ID="GvIntlout1" runat="server" AutoGenerateColumns="False"
+                            ShowFooter="true" CellPadding="4" ForeColor="#333333" GridLines="Vertical" Visible="true">
                             <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                             <Columns>
-                                <asp:BoundField DataField="partnerName" HeaderText="Partner Name" SortExpression="partnerName" ItemStyle-Wrap="false" />
-                                <asp:BoundField DataField="minutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="minutes" />
+                                <asp:BoundField DataField="partnerName" HeaderText="Partner Name" SortExpression="partnerName" ItemStyle-Wrap="false" FooterText="Total"/>
+                                <asp:BoundField DataField="minutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="minutes" FooterText=""/>
                             </Columns>
                             <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
                             <EditRowStyle BackColor="#999999" />
@@ -644,14 +645,14 @@
                             <SortedDescendingCellStyle BackColor="#FFFDF8" />
                             <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
                         </asp:GridView>
-                     </div>
-                     <div style="text-align:left;float:left; margin-left:10px; clear:right">
-                         <asp:GridView ID="GvIntlout2" runat="server" AutoGenerateColumns="False"
-                            CellPadding="4" ForeColor="#333333" GridLines="Vertical" visible="true">
+                    </div>
+                    <div style="text-align: left; float: left; margin-left: 10px; clear: right">
+                        <asp:GridView ID="GvIntlout2" runat="server" AutoGenerateColumns="False"
+                            CellPadding="4" ForeColor="#333333" GridLines="Vertical" Visible="true" ShowFooter="true">
                             <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                             <Columns>
-                                <asp:BoundField DataField="partnerName" HeaderText="Partner Name" SortExpression="partnerName" ItemStyle-Wrap="false" />
-                                <asp:BoundField DataField="minutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="minutes" />
+                                <asp:BoundField DataField="partnerName" HeaderText="Partner Name" SortExpression="partnerName" ItemStyle-Wrap="false" FooterText="Total"/>
+                                <asp:BoundField DataField="minutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="minutes" FooterText=""/>
                             </Columns>
                             <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
                             <EditRowStyle BackColor="#999999" />
@@ -664,18 +665,18 @@
                             <SortedDescendingCellStyle BackColor="#FFFDF8" />
                             <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
                         </asp:GridView>
-                     </div>
-                     <div style="clear:both;"></div>
-                        <div style="padding-left:10%;padding-bottom:5px;">    
-                            <asp:Label ID="DomHeader" runat="server" Text="" ForeColor="#5D7B9D" Font-Bold="true" Font-Size="Large"></asp:Label>
-                        </div>
-                     <div style="text-align:left;float:left;clear:left">
-                         <asp:GridView ID="Gvdom" runat="server" AutoGenerateColumns="False"
-                            CellPadding="4" ForeColor="#333333" GridLines="Vertical" visible="true">
+                    </div>
+                    <div style="clear: both;"></div>
+                    <div style="padding-left: 10%; padding-bottom: 5px;">
+                        <asp:Label ID="DomHeader" runat="server" Text="" ForeColor="#5D7B9D" Font-Bold="true" Font-Size="Large"></asp:Label>
+                    </div>
+                    <div style="text-align: left; float: left; clear: left">
+                        <asp:GridView ID="Gvdom" runat="server" AutoGenerateColumns="False"
+                            CellPadding="4" ForeColor="#333333" GridLines="Vertical" Visible="true" ShowFooter="true">
                             <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                             <Columns>
-                                <asp:BoundField DataField="partnerName" HeaderText="Partner Name" SortExpression="partnerName" ItemStyle-Wrap="false" />
-                                <asp:BoundField DataField="minutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="minutes" />
+                                <asp:BoundField DataField="partnerName" HeaderText="Partner Name" SortExpression="partnerName" ItemStyle-Wrap="false" FooterText="Total" />
+                                <asp:BoundField DataField="minutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="minutes" FooterText=""/>
                             </Columns>
                             <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
                             <EditRowStyle BackColor="#999999" />
@@ -688,15 +689,15 @@
                             <SortedDescendingCellStyle BackColor="#FFFDF8" />
                             <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
                         </asp:GridView>
-                     </div>
-                 </div>
-                
+                    </div>
+                </div>
+
 
 
 
                 <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False"
                     CellPadding="4" ForeColor="#333333" GridLines="Vertical"
-                    OnRowDataBound="GridView1_RowDataBound" visible="false">
+                    OnRowDataBound="GridView1_RowDataBound" Visible="false">
                     <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                     <Columns>
                         <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" ItemStyle-Wrap="false" />
