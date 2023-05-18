@@ -21,6 +21,26 @@ namespace PortalApp
 {
     public static class PageUtil
     {
+        public static string GetOperatorName() {
+            string conStrPartner = ConfigurationManager.ConnectionStrings["partner"].ConnectionString;
+            string dbNameAppConf = "";
+            foreach (string param in conStrPartner.Split(';'))
+            {
+                if (param.ToLower().Contains("database"))
+                {
+                    dbNameAppConf = param.Split('=')[1].Trim('"');
+                    break;
+                }
+            }
+            telcobrightpartner thisPartner = null;
+            string binpath = System.Web.HttpRuntime.BinDirectory;
+            TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
+            using (PartnerEntities conTelco = new PartnerEntities())
+            {
+                thisPartner = conTelco.telcobrightpartners.Where(c => c.databasename == dbNameAppConf).ToList().First();
+            }
+            return thisPartner.CustomerName;
+        }
         public static string GetPortalBinPath()
         {
             return HttpContext.Current.Server.MapPath("~/bin");

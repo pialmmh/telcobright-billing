@@ -100,7 +100,8 @@ namespace InstallConfig
                         if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' || Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
                         break;
                     case '6':
-                        SchedulerSetting schedulerSetting = SchedulerConfigGenerator.GeneraterateSchedulerConfig();
+                        //SchedulerSetting schedulerSetting = SchedulerConfigGenerator.GeneraterateSchedulerConfig();
+                        SchedulerSetting schedulerSetting = null;
                         string[] operatorNames = ConfigurationManager.AppSettings["OperatorsToBeConfigured"].Split(',');
                         List<IConfigGenerator> operatorsToBeConfigured
                             = new MefConfigImportComposer().Compose()
@@ -113,7 +114,7 @@ namespace InstallConfig
                         {
                             //generate tbc & config file for each operator configure in app.config in installConfig
                             TelcobrightConfig tbc = ConfigureSingleOperator(configGenerator,
-                                schedulerSetting.DatabaseSetting,
+                                null,
                                 configPathHelper);
                             tbc.SchedulerDaemonConfigs = configGenerator.GetSchedulerDaemonConfigs();
                             operatorConfigs.Add(tbc);

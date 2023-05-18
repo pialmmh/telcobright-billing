@@ -29,6 +29,8 @@ namespace InstallConfig
 
             PortalSettings portalSetting = new PortalSettings("Portal Settings")
             {
+                PortalLocalAccountNameAdministrator="Administrator",
+                PortalLocalAccountPassword="Takay1#$ane%%",
                 HomePageUrl = "~/Dashboard.aspx",
                 AlternateDisplayName = "ICX Manager",
                 RouteTypeEnums = new Dictionary<string, int>()

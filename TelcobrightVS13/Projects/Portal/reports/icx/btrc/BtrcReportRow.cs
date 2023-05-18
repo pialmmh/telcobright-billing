@@ -14,8 +14,11 @@ namespace PortalApp.ReportHelper
     public class InternationalReportRow
     {
         public string partnerName { get; set; }
-        public Decimal minutes { get; set; }
-        public Decimal noOfCalls { get; set; }
+        public Decimal inNoOfCalls { get; set; }
+        public Decimal incomingMinutes { get; set; }
+        public Decimal outNoOfCalls { get; set; }
+        public Decimal outgoingMinutes { get; set; }
+
     }
 
 }

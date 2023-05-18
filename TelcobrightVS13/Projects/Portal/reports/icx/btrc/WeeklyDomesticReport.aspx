@@ -18,6 +18,7 @@
         protected void Page_Load(object sender, EventArgs e)
         {
             TelcobrightConfig tbc = PageUtil.GetTelcobrightConfig();
+            this.operatorName = PageUtil.GetOperatorName();
             PageUtil.ApplyPageSettings(this, false, tbc);
             //common code for report pages
             //view state of ParamBorder div
@@ -266,7 +267,7 @@
 
         }
 
-       
+
 
     </script>
 
@@ -328,7 +329,7 @@
 
             function SethidValueSubmitClickFlag(value) {
                 document.getElementById("<%=hidValueSubmitClickFlag.ClientID%>").value = value;
-        }
+            }
 
         </script>
 
@@ -433,7 +434,7 @@
 
                     <div style="float: left; width: 280px;">
                         End Date [Time]
-                        <asp:TextBox ID="txtEndDate"  AutoPostBack="true" OnTextChanged="CalendarStartDate_TextChanged" runat="server" />
+                        <asp:TextBox ID="txtEndDate" AutoPostBack="true" OnTextChanged="CalendarStartDate_TextChanged" runat="server" />
                         <asp:CalendarExtender ID="CalendarEndDate" runat="server"
                             TargetControlID="txtEndDate" PopupButtonID="txtEndDate" Format="yyyy-MM-dd 23:59:59">
                         </asp:CalendarExtender>
@@ -631,11 +632,11 @@
                     </div>
                     <div style="text-align: left; float: left; clear: left">
                         <asp:GridView ID="Gvdom" runat="server" AutoGenerateColumns="False"
-                            CellPadding="4" ForeColor="#333333" GridLines="Vertical" Visible="true">
+                            CellPadding="4" ForeColor="#333333" GridLines="Vertical" Visible="true" ShowFooter="true">
                             <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                             <Columns>
-                                <asp:BoundField DataField="partnerName" HeaderText="Partner Name" SortExpression="partnerName" ItemStyle-Wrap="false" />
-                                <asp:BoundField DataField="minutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="minutes" />
+                                <asp:BoundField DataField="partnerName" HeaderText="Partner Name" SortExpression="partnerName" ItemStyle-Wrap="false" FooterText="Total" />
+                                <asp:BoundField DataField="minutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="minutes" FooterText="" />
                             </Columns>
                             <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
                             <EditRowStyle BackColor="#999999" />

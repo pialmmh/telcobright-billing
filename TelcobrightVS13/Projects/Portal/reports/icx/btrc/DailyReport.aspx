@@ -18,6 +18,7 @@
         protected void Page_Load(object sender, EventArgs e)
         {
             TelcobrightConfig tbc = PageUtil.GetTelcobrightConfig();
+            this.operatorName = PageUtil.GetOperatorName();
             PageUtil.ApplyPageSettings(this, false, tbc);
             //common code for report pages
             //view state of ParamBorder div

@@ -20,22 +20,22 @@ namespace InstallConfig
 {
     public partial class SummitConfigGenerator //quartz config part
     {
-        public DatabaseSetting OverrideDatabaseSettingsIfEnabled(TelcobrightConfig tbc)
+        public DatabaseSetting GetDatabaseSettings()
         {
-            DatabaseSetting dataBaseSetting = tbc.DatabaseSetting;
-            dataBaseSetting.OverrideDatabaseSettingsFromAppConfig = true;
-            dataBaseSetting.ServerName = "172.18.0.2";
-            dataBaseSetting.DatabaseName = "summit";
-            dataBaseSetting.AdminPassword = "Takay1#$ane";
-            dataBaseSetting.AdminUserName = "root";
-            dataBaseSetting.OperatorShortNameAliasToOverride = "summit";
-            dataBaseSetting.DatabaseEngine = "innodb";
-            dataBaseSetting.StorageEngineForPartitionedTables = "tokudb";
-            dataBaseSetting.PartitionStartDate = new DateTime(2023, 1, 1);
-            dataBaseSetting.PartitionLenInDays = 1;
-            dataBaseSetting.ReadOnlyUserName = "dbreader";
-            dataBaseSetting.ReadOnlyPassword = "Takay1takaane";
-            return dataBaseSetting;
+            return new DatabaseSetting()
+            {
+                ServerName = "172.18.0.2",
+                DatabaseName = "summit",
+                AdminPassword = "Takay1#$ane",
+                AdminUserName = "root",
+                OperatorShortNameAliasToOverride = "summit",
+                DatabaseEngine = "innodb",
+                StorageEngineForPartitionedTables = "tokudb",
+                PartitionStartDate = new DateTime(2023, 1, 1),
+                PartitionLenInDays = 1,
+                ReadOnlyUserName = "dbreader",
+                ReadOnlyPassword = "Takay1takaane"
+            };
         }
     }
 }

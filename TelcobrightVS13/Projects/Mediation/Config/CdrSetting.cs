@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TelcobrightMediation.Accounting;
 using MediationModel;
+using TelcobrightMediation.Config;
 namespace TelcobrightMediation
 {
     public class CdrSetting : LogFileProcessorSetting

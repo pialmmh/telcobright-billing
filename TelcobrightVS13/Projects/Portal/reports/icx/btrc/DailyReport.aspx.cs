@@ -14,6 +14,7 @@ using LibraryExtensions;
 using PortalApp.ReportHelper;
 public partial class DefaultRptBtrcDailyIcx : System.Web.UI.Page
 {
+    public string operatorName;
     private int _mShowByCountry = 0;
     private int _mShowByAns = 0;
     DataTable _dt;
@@ -179,7 +180,7 @@ group by tup_outpartnerid;";
     {
 
         string intlIn_2_Sql =
-$@"select tup_outpartnerid as partnerid,sum(duration1)/60 as minutes 
+$@"select tup_inpartnerid as partnerid,sum(duration1)/60 as minutes 
 from sum_voice_day_03
 where tup_starttime >= '{txtDate.Text}' and tup_starttime < '{txtDate1.Text}'
 group by tup_inpartnerid;";
@@ -498,8 +499,8 @@ group by tup_outpartnerid;";
             intOutComing_2_Records = ConvertBtrcDataSetToList(intOutComing_2_Ds, partnerNames);
 
 
-            ExcelExporterForBtrcReport.ExportToExcelBtrcReport("Btrc_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
-                    + ".xlsx", Response, domesticRecords, intInComing_1_Records, intInComing_2_Records, intOutComing_1_Records, intOutComing_2_Records);
+            ExcelExporterForBtrcReport.ExportToExcelBtrcReport("Btrc_" + txtDate.Text
+                    + ".xlsx", Response, domesticRecords, intInComing_1_Records, intInComing_2_Records, intOutComing_1_Records, intOutComing_2_Records,txtDate.Text, operatorName);
 
 
 

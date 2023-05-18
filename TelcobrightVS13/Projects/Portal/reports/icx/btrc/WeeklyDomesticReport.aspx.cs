@@ -14,6 +14,7 @@ using LibraryExtensions;
 using PortalApp.ReportHelper;
 public partial class DefaultRptDomesticWeeklyIcx : System.Web.UI.Page
 {
+    public string operatorName;
     private int _mShowByCountry=0;
     private int _mShowByAns = 0;
     DataTable _dt;
@@ -175,12 +176,19 @@ public partial class DefaultRptDomesticWeeklyIcx : System.Web.UI.Page
             connection.Open();
 
             DataSet domesticDs = getDomesticWeeklyReport(connection);
-            domesticWeeklyRecords = ConvertBtrcDataSetToList(domesticDs,partnerNames);
-            DomHeader.Text = "Weekly Domestic Calls";
-            Gvdom.DataSource = domesticWeeklyRecords;
-            Gvdom.DataBind();
+           
 
-            
+            bool hasdomesticDs = domesticDs.Tables.Cast<DataTable>()
+                          .Any(table => table.Rows.Count != 0);
+            if (hasdomesticDs == true)
+            {
+                domesticWeeklyRecords = ConvertBtrcDataSetToList(domesticDs, partnerNames);
+                Decimal sum = domesticWeeklyRecords.Sum(r => r.minutes);
+                DomHeader.Text = "Weekly Domestic Calls";
+                Gvdom.DataSource = domesticWeeklyRecords;
+                ((BoundField)Gvdom.Columns[1]).FooterText = $"{sum:n0}";
+                Gvdom.DataBind();
+            }
             return;
 
 
@@ -371,9 +379,9 @@ public partial class DefaultRptDomesticWeeklyIcx : System.Web.UI.Page
             DataSet domesticDs = getDomesticWeeklyReport(connection);
             domesticWeeklyRecords = ConvertBtrcDataSetToList(domesticDs, partnerNames);
 
-
-            ExcelExporterForBtrcReport.ExportToExcelDomesticWeeklyReport("Domestic_Weekly_Report_From_" + txtStartDate.Text + "_To_" + txtEndDate.Text
-                    + ".xlsx", Response, domesticWeeklyRecords);
+            
+            ExcelExporterForBtrcReport.ExportToExcelDomesticWeeklyReport("DomesticWeeklyReport From " + txtStartDate.Text + " To " + txtEndDate.Text
+                    + ".xlsx", Response, domesticWeeklyRecords,txtStartDate.Text,txtEndDate.Text, this.operatorName);
 
             return;
         }

@@ -18,6 +18,7 @@
         protected void Page_Load(object sender, EventArgs e)
         {
             TelcobrightConfig tbc = PageUtil.GetTelcobrightConfig();
+            this.operatorName = PageUtil.GetOperatorName();
             PageUtil.ApplyPageSettings(this, false, tbc);
             //common code for report pages
             //view state of ParamBorder div
@@ -582,17 +583,21 @@
             <div style="/*text-align: center; */">
                 <div style="clear: both;"></div>
                 <div style="padding-left: 25%; padding-bottom: 5px;">
-                    <asp:Label ID="IntlInHeader" runat="server" Text="" ForeColor="#5D7B9D" Font-Bold="true" Font-Size="Large"></asp:Label>
+                    <asp:Label Visible="false" ID="IntlInHeader" runat="server" Text="" Height="20px" Width="173px"  style="padding:2px;" BorderColor="LightGray" BorderWidth="1px" BorderStyle="Solid" ForeColor="#333333" HorizontalAlign="Center"></asp:Label> 
+
+                    <asp:Label Visible="false" ID="IntlOutHeader" runat="server" Text="" style="padding:2px;" BorderStyle="Solid" BorderColor="LightGray" BorderWidth="1px" ForeColor="#333333"  Width="167px" Height="20px"></asp:Label> 
                 </div>
                 <div style="text-align: left;">
                     <div style="text-align: left; float: left;">
                         <asp:GridView ID="GvIntlin1" runat="server" AutoGenerateColumns="False"
-                            CellPadding="4" ForeColor="#333333" GridLines="Vertical" Visible="true">
+                            CellPadding="4" ForeColor="#333333" GridLines="Vertical" Visible="true" ShowFooter="true">
                             <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                             <Columns>
-                                <asp:BoundField DataField="partnerName" HeaderText="Partner Name" SortExpression="partnerName" ItemStyle-Wrap="false" />
-                                <asp:BoundField DataField="noofcalls" DataFormatString="{0:F2}" HeaderText="No. of Calls" SortExpression="noOfCalls" />
-                                <asp:BoundField DataField="minutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="minutes" />
+                                <asp:BoundField DataField="partnerName" HeaderText="Partner Name" SortExpression="partnerName" ItemStyle-Wrap="false" FooterText="Total" />
+                                <asp:BoundField DataField="inNoOfCalls" DataFormatString="{0:F2}" HeaderText="No. of Calls" SortExpression="inNoOfCalls" FooterText="" />
+                                <asp:BoundField DataField="incomingMinutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="incomingMinutes" FooterText="" />
+                                <asp:BoundField DataField="outNoOfCalls" DataFormatString="{0:F2}" HeaderText="No. of Calls" SortExpression="outNoOfCalls" FooterText="" />
+                                <asp:BoundField DataField="outgoingMinutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="outgoingMinutes" FooterText="" />
                             </Columns>
                             <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
                             <EditRowStyle BackColor="#999999" />
@@ -629,7 +634,7 @@
                     </div>
                     <div style="clear: both;"></div>
                     <div style="padding-left: 25%; padding-bottom: 5px;">
-                        <asp:Label ID="IntlOutHeader" runat="server" Text="" ForeColor="#5D7B9D" Font-Bold="true" Font-Size="Large"></asp:Label>
+                        <%--                        <asp:Label ID="IntlOutHeader" runat="server" Text="" ForeColor="#5D7B9D" Font-Bold="true" Font-Size="Large"></asp:Label>--%>
                     </div>
                     <div style="text-align: left; float: left; clear: left; margin-bottom: 10px">
                         <asp:GridView ID="GvIntlout1" runat="server" AutoGenerateColumns="False"

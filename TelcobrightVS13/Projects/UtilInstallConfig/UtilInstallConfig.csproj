@@ -220,7 +220,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="jsl\jslRoutes.json" />
-    <None Include="Server.conf" />
+    <None Include="instance.conf" />
     <None Include="summit\scripts\appPool_tpny.iisScript" />
     <None Include="summit\scripts\ftp_tpny.iisScript" />
     <None Include="summit\scripts\http_tpny.iisScript" />
