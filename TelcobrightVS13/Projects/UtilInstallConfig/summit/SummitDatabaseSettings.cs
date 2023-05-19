@@ -28,7 +28,6 @@ namespace InstallConfig
                 DatabaseName = "summit",
                 AdminPassword = "Takay1#$ane",
                 AdminUserName = "root",
-                OperatorShortNameAliasToOverride = "summit",
                 DatabaseEngine = "innodb",
                 StorageEngineForPartitionedTables = "tokudb",
                 PartitionStartDate = new DateTime(2023, 1, 1),

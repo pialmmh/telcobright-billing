@@ -19,21 +19,18 @@ namespace InstallConfig
     [Export(typeof(IConfigGenerator))]
     public partial class PurpleConfigGenerator:IConfigGenerator
     {
-        public string OperatorName => this.Tbc.Telcobrightpartner.CustomerName;
         public TelcobrightConfig Tbc { get; }
-
         public PurpleConfigGenerator()
         {
             int thisServerId = 1;
-            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, thisServerId);
+            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, thisServerId, "Purple Telecom Ltd.");
         }
-
-        public TelcobrightConfig GenerateConfig(DatabaseSetting schedulerDatabaseSetting)
+        public TelcobrightConfig GenerateConfig()
         {
             this.Tbc.Telcobrightpartner = new telcobrightpartner
             {
                 idCustomer = 2,
-                CustomerName = "Purple Telecom",
+                CustomerName = this.Tbc.OperatorName,
                 idOperatorType = 2,
                 databasename = "purple",
                 databasetype = "mysql",
@@ -113,7 +110,6 @@ namespace InstallConfig
                 AutoCorrectDuplicateBillId = true,
                 AutoCorrectBillIdsWithPrevChargeableIssue = true,
                 UseIdCallAsBillId=true,
-                
             };
 
             this.PrepareDirectorySettings(this.Tbc);
@@ -121,10 +117,7 @@ namespace InstallConfig
             this.PrepareProductAndServiceConfiguration();
             
             this.PrepareApplicationServerConfig();
-
-            DatabaseSetting databaseSetting = schedulerDatabaseSetting.GetCopy();
-            databaseSetting.DatabaseName = this.OperatorName;//change dbname here if required
-            this.Tbc.DatabaseSetting = databaseSetting;
+            this.Tbc.DatabaseSetting = this.GetDatabaseSettings();
 
             this.Tbc.PortalSettings = GetPortalSettings(this.Tbc);
             return this.Tbc;

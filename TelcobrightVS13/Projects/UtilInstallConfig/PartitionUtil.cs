@@ -13,7 +13,7 @@ namespace InstallConfig
     {
         public static void ModifyPartitions(DatabaseSetting databaseSetting, string operatorName)
         {
-            string operatorDatabaseName = databaseSetting.operatorWiseDatabaseNames["db_" + operatorName];
+            string operatorDatabaseName = databaseSetting.DatabaseName;
             List<string> partitionedTables = databaseSetting.PartitionedTables;
             int MaxPartitionsPerTable = databaseSetting.MaxPartitionsPerTable;
             DateTime partitionStartDate = databaseSetting.PartitionStartDate;

@@ -11,15 +11,11 @@ namespace InstallConfig
 {
     public static class DbConnectionUtil
     {
-        public static MySqlConnection getDbConnection(DatabaseSetting databaseSetting, string operatorName)
+        public static string getDbConStr(DatabaseSetting databaseSetting, string operatorName)
         {
-            string operatorDatabaseName = databaseSetting.operatorWiseDatabaseNames["db_" + operatorName];
-            List<string> partitionedTables = databaseSetting.PartitionedTables;
-            string constr =
+            return 
                 "server=" + databaseSetting.ServerName + ";User Id=" + databaseSetting.AdminUserName +
                 ";password=" + databaseSetting.AdminPassword + ";Persist Security Info=True; default command timeout=3600";
-            MySqlConnection con= new MySqlConnection(constr);
-            return con;
         }
     }
 }

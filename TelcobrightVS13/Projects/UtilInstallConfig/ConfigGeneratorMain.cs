@@ -104,8 +104,7 @@ namespace InstallConfig
                         SchedulerSetting schedulerSetting = null;
                         string[] operatorNames = ConfigurationManager.AppSettings["OperatorsToBeConfigured"].Split(',');
                         List<IConfigGenerator> operatorsToBeConfigured
-                            = new MefConfigImportComposer().Compose()
-                                .Where(c => operatorNames.Contains(c.OperatorName)).ToList();
+                            = new MefConfigImportComposer().Compose().Where(op=>operatorNames.Contains(op.Tbc.OperatorName)).ToList();
                         ConfigPathHelper configPathHelper =
                             new ConfigPathHelper("WS_Topshelf_Quartz", "portal", "UtilInstallConfig", "SchedulerScripts");
                         List<TelcobrightConfig> operatorConfigs = new List<TelcobrightConfig>();
@@ -118,7 +117,6 @@ namespace InstallConfig
                                 configPathHelper);
                             tbc.SchedulerDaemonConfigs = configGenerator.GetSchedulerDaemonConfigs();
                             operatorConfigs.Add(tbc);
-                            
                         }
                         Console.WriteLine("Config Files have been generated successfully.");
                         //reset job store
@@ -145,7 +143,9 @@ namespace InstallConfig
                         break;
                     case '7':
                         string operatorName = ConfigurationManager.AppSettings["OperatorsToBeConfigured"].Split(',')[0];
-                        schedulerSetting = SchedulerConfigGenerator.GeneraterateSchedulerConfig(operatorName);
+                        schedulerSetting = new SchedulerSetting(
+                            schedulerType: "quartz",
+                            databaseSetting: databaseSetting);
                         PartitionUtil.ModifyPartitions(schedulerSetting.DatabaseSetting,operatorName);
                         Console.WriteLine("Partition modification is successful, press 'q' to quit");
                         k = Convert.ToChar((Console.ReadKey(true)).Key);
@@ -153,9 +153,7 @@ namespace InstallConfig
                         {
                             Environment.Exit(0);
                         }
-
                         break;
-
                     case 'q':
                     case 'Q':
                         return;
@@ -339,10 +337,10 @@ namespace InstallConfig
         private static TelcobrightConfig ConfigureSingleOperator(IConfigGenerator configGenerator, DatabaseSetting schedulerDatabaseSetting,
             ConfigPathHelper configPathHelper)
         {
-            Console.WriteLine("Generating Configuration for " + configGenerator.OperatorName);
-            //DbConnectionUtil.getDbConnection()
-            TelcobrightConfig tbc = configGenerator.GenerateConfig(schedulerDatabaseSetting);
-            Console.WriteLine("Writing Configuration Files for " + configGenerator.OperatorName);
+            Console.WriteLine("Generating Configuration for " + configGenerator.Tbc.OperatorName);
+            
+            TelcobrightConfig tbc = configGenerator.GenerateConfig();
+            Console.WriteLine("Writing Configuration Files for " + configGenerator.Tbc.OperatorName);
             WriteConfigOperatorWise(tbc, configPathHelper);
             return tbc;
         }

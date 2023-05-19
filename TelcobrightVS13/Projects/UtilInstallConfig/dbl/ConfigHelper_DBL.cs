@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Text.RegularExpressions;
 using LibraryExtensions.ConfigHelper;
+using MediationModel;
 using TelcobrightMediation;
 using TelcobrightMediation.Config;
 using TelcobrightMediation.Scheduler.Quartz;
@@ -13,26 +14,71 @@ using TelcobrightMediation.Scheduler.Quartz;
 namespace InstallConfig
 {
     [Export(typeof(IConfigGenerator))]
-    public class DblConfigGeneratorHelper:IConfigGenerator
+    public partial class DblConfigGeneratorHelper:IConfigGenerator
     {
         public List<QuartzTbDaemonConfig> GetSchedulerDaemonConfigs()
         {
             throw new NotImplementedException();
         }
-
-        public string OperatorName { get; set; }
         public TelcobrightConfig Tbc { get; }
-
         public DblConfigGeneratorHelper()
         {
             int thisServerId = 1;
-            this.OperatorName = "dbl";
-            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Igw, thisServerId);
+            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Igw, thisServerId, "DBL Telecom");
         }
-        public TelcobrightConfig GenerateConfig(DatabaseSetting schedulerDatabaseSetting)
+        public TelcobrightConfig GenerateConfig()
         {
-            if (string.IsNullOrWhiteSpace(this.OperatorName))
-                throw new Exception("Operator name not configured in Config Generator");
+            this.Tbc.Telcobrightpartner = new telcobrightpartner
+            {
+                idCustomer = 4,
+                CustomerName = this.Tbc.OperatorName,
+                idOperatorType = 4,
+                databasename = "dbl",
+                NativeTimeZone = 3251,
+                IgwPrefix = "240",
+                RateDictionaryMaxRecords = 3000000,
+                MinMSForIntlOut = 100,
+                RawCdrKeepDurationDays = 90,
+                SummaryKeepDurationDays = 730,
+                AutoDeleteOldData = 1,
+                AutoDeleteStartHour = 4,
+                AutoDeleteEndHour = 6
+            };
+            this.Tbc.Nes = new List<ne>()
+            {
+                new ne
+                {
+                    idSwitch= 4,
+                    idCustomer= 4,
+                    idcdrformat= 1,
+                    idMediationRule= 1,
+                    SwitchName= "dhkS3",
+                    CDRPrefix= "S3",
+                    FileExtension= ".CDR",
+                    Description= null,
+                    SourceFileLocations= "Vault.S3",
+                    BackupFileLocations= null,
+                    LoadingStopFlag= null,
+                    LoadingSpanCount= 100,
+                    TransactionSizeForCDRLoading= 100,
+                    DecodingSpanCount= 5000,
+                    SkipAutoCreateJob= 1,
+                    SkipCdrListed= 1,
+                    SkipCdrReceived= 1,
+                    SkipCdrDecoded= 1,
+                    SkipCdrBackedup= 1,
+                    KeepDecodedCDR= 0,
+                    KeepReceivedCdrServer= 1,
+                    CcrCauseCodeField= 23,
+                    SwitchTimeZoneId= null,
+                    CallConnectIndicator= "CT",
+                    FieldNoForTimeSummary= 29,
+                    EnableSummaryGeneration= "1",
+                    ExistingSummaryCacheSpanHr= 6,
+                    BatchToDecodeRatio= 3,
+                    PrependLocationNumberToFileName= 1
+                }
+            };
 
             this.Tbc.CdrSetting = new CdrSetting()
             {
@@ -351,9 +397,7 @@ namespace InstallConfig
             this.Tbc.ApplicationServersConfig.Add(serverConfig1.ServerId.ToString(), serverConfig1);
             this.Tbc.ApplicationServersConfig.Add(serverConfig2.ServerId.ToString(), serverConfig1);
 
-            DatabaseSetting databaseSetting = schedulerDatabaseSetting;
-            databaseSetting.DatabaseName = "dbl";
-            this.Tbc.DatabaseSetting = databaseSetting;
+            this.Tbc.DatabaseSetting = this.GetDatabaseSettings();
 
             PortalSettings portalSetting = new PortalSettings("Portal Settings")
             {

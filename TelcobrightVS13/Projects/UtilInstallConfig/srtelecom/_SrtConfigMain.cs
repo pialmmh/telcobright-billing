@@ -19,21 +19,19 @@ namespace InstallConfig
     [Export(typeof(IConfigGenerator))]
     public partial class SrtConfigGenerator : IConfigGenerator
     {
-        public string OperatorName => this.Tbc.Telcobrightpartner.CustomerName;
         public TelcobrightConfig Tbc { get; }
-
         public SrtConfigGenerator()
         {
             int thisServerId = 1;
-            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, thisServerId);
+            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, thisServerId, "SR Telecom Ltd");
         }
 
-        public TelcobrightConfig GenerateConfig(DatabaseSetting schedulerDatabaseSetting)
+        public TelcobrightConfig GenerateConfig()
         {
             this.Tbc.Telcobrightpartner = new telcobrightpartner
             {
                 idCustomer = 8,
-                CustomerName = "SR Telecom Ltd",
+                CustomerName = this.Tbc.OperatorName,
                 idOperatorType = 2,
                 databasename = "srtelecom",
                 databasetype = "",
@@ -123,10 +121,7 @@ namespace InstallConfig
             
             this.PrepareApplicationServerConfig();
 
-            DatabaseSetting databaseSetting = schedulerDatabaseSetting.GetCopy();
-            databaseSetting.DatabaseName = this.OperatorName;//change dbname here if required
-            this.Tbc.DatabaseSetting = databaseSetting;
-
+            this.Tbc.DatabaseSetting = this.GetDatabaseSettings();
             this.Tbc.PortalSettings = GetPortalSettings(this.Tbc);
             return this.Tbc;
         }

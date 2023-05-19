@@ -11,6 +11,7 @@ using TelcobrightMediation;
 using TelcobrightMediation.Config;
 using FlexValidation;
 using InstallConfig._CommonValidation;
+using MediationModel;
 using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Automation;
 
@@ -19,20 +20,67 @@ namespace InstallConfig
     [Export(typeof(IConfigGenerator))]
     public partial class BtelConfigGenerator : IConfigGenerator
     {
-        public string OperatorName => this.Tbc.Telcobrightpartner.CustomerName;
         public TelcobrightConfig Tbc { get; }
-
         public BtelConfigGenerator()
         {
             int thisServerId = 1;
-            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Igw, thisServerId);
+            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Igw, thisServerId, "Bangla Tel Ltd");
             this.Tbc.IdTelcobrightPartner = 1;
         }
 
-        public TelcobrightConfig GenerateConfig(DatabaseSetting schedulerDatabaseSetting)
+        public TelcobrightConfig GenerateConfig()
         {
-            if (string.IsNullOrWhiteSpace(this.OperatorName))
-                throw new Exception("Operator name not configured in Config Generator");
+            this.Tbc.Telcobrightpartner = new telcobrightpartner
+            {
+                idCustomer = 3,
+                CustomerName = this.Tbc.OperatorName,
+                idOperatorType = 4,
+                databasename = "banglatel",
+                NativeTimeZone = 3251,
+                IgwPrefix = "320",
+                RateDictionaryMaxRecords = 3000000,
+                MinMSForIntlOut = 100,
+                RawCdrKeepDurationDays = 90,
+                SummaryKeepDurationDays = 730,
+                AutoDeleteOldData = 1,
+                AutoDeleteStartHour = 2,
+                AutoDeleteEndHour = 3
+            };
+            this.Tbc.Nes = new List<ne>()
+            {
+                new ne
+                {
+                    idSwitch= 3,
+                    idCustomer= 3,
+                    idcdrformat= 16,
+                    idMediationRule= 1,
+                    SwitchName= "BtelZteDhk",
+                    CDRPrefix= "IGW",
+                    FileExtension= ".DAT",
+                    Description= null,
+                    SourceFileLocations= "ftp://127.0.0.1/banglatel/",
+                    BackupFileLocations= null,
+                    LoadingStopFlag= null,
+                    LoadingSpanCount= 100,
+                    TransactionSizeForCDRLoading= 1500,
+                    DecodingSpanCount= 100,
+                    SkipAutoCreateJob= 1,
+                    SkipCdrListed= 1,
+                    SkipCdrReceived= 1,
+                    SkipCdrDecoded= 1,
+                    SkipCdrBackedup= 1,
+                    KeepDecodedCDR= 0,
+                    KeepReceivedCdrServer= 1,
+                    CcrCauseCodeField= 56,
+                    SwitchTimeZoneId= null,
+                    CallConnectIndicator= "F5",
+                    FieldNoForTimeSummary= 29,
+                    EnableSummaryGeneration= "1",
+                    ExistingSummaryCacheSpanHr= 6,
+                    BatchToDecodeRatio= 3,
+                    PrependLocationNumberToFileName= 0
+                },
+            };
 
             CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
             CommonCdrValRulesGen commonCdrValRulesGen =
@@ -58,16 +106,9 @@ namespace InstallConfig
             };
 
             this.PrepareDirectorySetting(this.Tbc);
-
             this.PrepareProductAndServiceSettings();
-
             this.PrepareAppServerSettings();
-
-            DatabaseSetting databaseSetting = schedulerDatabaseSetting.GetCopy();
-            databaseSetting.DatabaseName = this.OperatorName;//change dbname here if required
-            //this.Tbc.DatabaseSetting = databaseSetting;
-            this.Tbc.DatabaseSetting = this.OverrideDatabaseSettingsIfEnabled(this.Tbc);
-
+            this.Tbc.DatabaseSetting = this.GetDatabaseSettings();
             this.Tbc.PortalSettings = GetPortalSettings(this.Tbc);
 
             this.Tbc.EmailSenderConfig = new EmailSenderConfig

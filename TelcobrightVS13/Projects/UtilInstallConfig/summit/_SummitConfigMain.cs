@@ -20,20 +20,18 @@ namespace InstallConfig
     public partial class SummitConfigGenerator : IConfigGenerator
     {
         public TelcobrightConfig Tbc { get; }
-        public string OperatorName => this.Tbc.Telcobrightpartner.CustomerName;
-
         public SummitConfigGenerator()
         {
             int thisServerId = 1;
-            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, thisServerId);
+            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, thisServerId, "Summit Communications Ltd.");
         }
 
-        public TelcobrightConfig GenerateConfig(DatabaseSetting schedulerDatabaseSetting)
+        public TelcobrightConfig GenerateConfig()
         {
             this.Tbc.Telcobrightpartner = new telcobrightpartner
             {
                 idCustomer = 9,
-                CustomerName = "Summit Communications Ltd.",
+                CustomerName = this.Tbc.OperatorName,
                 idOperatorType = 2,
                 databasename = "summit",
                 NativeTimeZone = 3251,

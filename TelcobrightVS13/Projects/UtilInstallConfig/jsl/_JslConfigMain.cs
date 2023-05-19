@@ -19,21 +19,20 @@ namespace InstallConfig
     [Export(typeof(IConfigGenerator))]
     public partial class JslConfigGenerator:IConfigGenerator
     {
-        public string OperatorName => this.Tbc.Telcobrightpartner.CustomerName;
         public TelcobrightConfig Tbc { get; }
 
         public JslConfigGenerator()
         {
             int thisServerId = 1;
-            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, thisServerId);
+            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, thisServerId, "Jibondhara Solutions Ltd.");
         }
 
-        public TelcobrightConfig GenerateConfig(DatabaseSetting schedulerDatabaseSetting)
+        public TelcobrightConfig GenerateConfig()
         {
             this.Tbc.Telcobrightpartner = new telcobrightpartner
             {
                 idCustomer = 7,
-                CustomerName = "Jibondhara Solutions Ltd",
+                CustomerName = this.Tbc.OperatorName,
                 idOperatorType = 2,
                 databasename = "jsl",
                 databasetype = "mysql",
@@ -237,8 +236,8 @@ namespace InstallConfig
             
             this.PrepareApplicationServerConfig();
 
-            DatabaseSetting databaseSetting = schedulerDatabaseSetting.GetCopy();
-            databaseSetting.DatabaseName = this.OperatorName;//change dbname here if required
+            DatabaseSetting databaseSetting = this.GetDatabaseSettings();
+            databaseSetting.DatabaseName = this.Tbc.OperatorName;//change dbname here if required
             this.Tbc.DatabaseSetting = databaseSetting;
 
             this.Tbc.PortalSettings = GetPortalSettings(this.Tbc);

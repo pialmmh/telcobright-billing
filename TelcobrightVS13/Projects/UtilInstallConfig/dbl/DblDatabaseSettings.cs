@@ -18,18 +18,18 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class SrtConfigGenerator //quartz config part
+    public partial class DblConfigGeneratorHelper //quartz config part
     {
         public DatabaseSetting GetDatabaseSettings()
         {
             return new DatabaseSetting()
             {
                 ServerName = "172.16.100.6",
-                DatabaseName = "srtelecom",
+                DatabaseName = "dbl",
                 AdminPassword = "Takay1#$ane",
                 AdminUserName = "root",
                 DatabaseEngine = "innodb",
-                StorageEngineForPartitionedTables = "innodb",
+                StorageEngineForPartitionedTables = "tokudb",
                 PartitionStartDate = new DateTime(2023, 1, 1),
                 PartitionLenInDays = 1,
                 ReadOnlyUserName = "dbreader",

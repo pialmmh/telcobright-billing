@@ -8,8 +8,6 @@ namespace LibraryExtensions.ConfigHelper
 {
     public class DatabaseSetting
     {
-        public bool OverrideDatabaseSettingsFromAppConfig { get; set; }
-        public string OperatorShortNameAliasToOverride { get; set; }
         public String ServerName { get; set; }
         public string DatabaseName { get; set; }
         public string AdminUserName { get; set; }
@@ -22,8 +20,7 @@ namespace LibraryExtensions.ConfigHelper
         public DateTime PartitionStartDate { get; set; } = new DateTime(2000, 1, 1);
         public string StorageEngineForPartitionedTables { get; set; } = "innodb";
         public int PartitionLenInDays { get; set; } = 1;
-        public List<string> PartitionedTables = new List<string>();
-        public Dictionary<string, string> operatorWiseDatabaseNames = new Dictionary<string, string>();
+        public List<string> PartitionedTables { get; }
         public DatabaseSetting()
         {
             this.PartitionedTables = new List<string>

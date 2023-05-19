@@ -20,17 +20,21 @@ namespace InstallConfig
 {
     public partial class JslConfigGenerator //quartz config part
     {
-        public DatabaseSetting OverrideDatabaseSettingsIfEnabled(TelcobrightConfig tbc)
+        public DatabaseSetting GetDatabaseSettings()
         {
-            DatabaseSetting dataBaseSetting = tbc.DatabaseSetting;
-            dataBaseSetting.OverrideDatabaseSettingsFromAppConfig = true;
-            dataBaseSetting.ServerName = "10.0.0.5";
-            dataBaseSetting.DatabaseName = "jsl";
-            dataBaseSetting.AdminPassword = "Takay1#$ane";
-            dataBaseSetting.AdminUserName = "root";
-            dataBaseSetting.OperatorShortNameAliasToOverride = "jsl";
-
-            return dataBaseSetting;
+            return new DatabaseSetting()
+            {
+                ServerName = "10.0.0.5",
+                DatabaseName = "jsl",
+                AdminPassword = "Takay1#$ane",
+                AdminUserName = "root",
+                DatabaseEngine = "innodb",
+                StorageEngineForPartitionedTables = "tokudb",
+                PartitionStartDate = new DateTime(2023, 1, 1),
+                PartitionLenInDays = 1,
+                ReadOnlyUserName = "dbreader",
+                ReadOnlyPassword = "Takay1takaane"
+            };
         }
     }
 }

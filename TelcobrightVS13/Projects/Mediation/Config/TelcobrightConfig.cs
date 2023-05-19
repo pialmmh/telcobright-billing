@@ -12,7 +12,7 @@ namespace TelcobrightMediation
 {
     public class TelcobrightConfig
     {
-        //temporarily keep connection strings with help of ne, change later
+        public string OperatorName { get; set; }
         public telcobrightpartner Telcobrightpartner { get; set; }
         public List<ne> Nes { get; set; }
         public int DefaultTimeZoneId { get; set; } = 3251;
@@ -36,12 +36,13 @@ namespace TelcobrightMediation
         public List<KeyValuePair<Regex, string>> ServiceAliasesRegex { get; set; } =
             new List<KeyValuePair<Regex, string>>();
         public TelcobrightConfig(TelecomOperatortype telecomOperatortype,
-            int thisServerId)
+            int thisServerId, string operatorName)
         {
             this.ServerId = thisServerId;
             this.ApplicationServersConfig = new Dictionary<string, ApplicationServerConfig>();
             this.ResourcePool = new ResourcePool();
             this.TelecomOperatortype = telecomOperatortype;
+            this.OperatorName = operatorName;
         }
 
         public string GetPathIndependentApplicationDirectory()

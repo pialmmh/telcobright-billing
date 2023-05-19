@@ -28,11 +28,11 @@ namespace TelcobrightMediation.Config
 
             DatabaseSetting dbSettings = null;
             operatorWiseDatabasettings.TryGetValue(operatorShortName, out dbSettings);
-            if (dbSettings.OverrideDatabaseSettingsFromAppConfig == false)
-            {
-                return ConfigurationManager.ConnectionStrings[$"{connectionType}"].ConnectionString
-                        .Replace("#DatabaseName#", operatorShortName);
-            }
+            //if (dbSettings.OverrideDatabaseSettingsFromAppConfig == false)
+            //{
+            //    return ConfigurationManager.ConnectionStrings[$"{connectionType}"].ConnectionString
+            //            .Replace("#DatabaseName#", operatorShortName);
+            //}
             string constr = "";
             switch (connectionType) {
                 case "Partner":

@@ -7,9 +7,9 @@ namespace TelcobrightMediation.Config
     public interface IConfigGenerator
     {
         TelcobrightConfig Tbc { get; }
-        TelcobrightConfig GenerateConfig(DatabaseSetting schedulerDatabaseSetting);
+        TelcobrightConfig GenerateConfig();
         List<QuartzTbDaemonConfig> GetSchedulerDaemonConfigs();
-        string OperatorName { get; }
+        DatabaseSetting GetDatabaseSettings();
     }
 }
 
