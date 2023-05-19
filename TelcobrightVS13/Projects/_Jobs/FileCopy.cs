@@ -408,7 +408,7 @@ namespace Jobs
             SyncLocation srcLocation = syncPair.SrcSyncLocation;
             SyncLocation dstLocation = syncPair.DstSyncLocation;
             List<string> fileNames = srcLocation.GetFileNamesFiltered(syncPair.SrcSettings, tbc);
-            string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(tbc.DatabaseSetting.GetOperatorName);
+            string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(tbc.Telcobrightpartner.CustomerName);
             using (PartnerEntities context = new PartnerEntities(entityConStr))
             {
                 int priority = context.enumjobdefinitions.First(c => c.id == 6).Priority;

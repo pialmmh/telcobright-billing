@@ -22,15 +22,15 @@ namespace InstallConfig
         static string databaseConfigFileName = new DirectoryInfo(FileAndPathHelper.GetBinPath()).Parent.Parent.FullName
                                                + Path.DirectorySeparatorChar + "Server.conf";
 
-        PortalSettings GetPortalSettings(TelcobrightConfig tbc)
+        PortalSettings GetPortalSettings(string operatorName)
         {
-            Dictionary<string, string> settings = JsonConvert.DeserializeObject<Dictionary<string, string>>(
-                File.ReadAllText(databaseConfigFileName));
+            string portalLocalAccountNameAdministrator = "Administrator";
+            string portalLocalAccountPassword = "Takay1#$ane%%";
 
             PortalSettings portalSetting = new PortalSettings("Portal Settings")
             {
-                PortalLocalAccountNameAdministrator="Administrator",
-                PortalLocalAccountPassword="Takay1#$ane%%",
+                PortalLocalAccountNameAdministrator = portalLocalAccountNameAdministrator,
+                PortalLocalAccountPassword = portalLocalAccountPassword,
                 HomePageUrl = "~/Dashboard.aspx",
                 AlternateDisplayName = "ICX Manager",
                 RouteTypeEnums = new Dictionary<string, int>()
@@ -44,20 +44,19 @@ namespace InstallConfig
                     new InternetSite(this.Tbc)//make sure that first one always the http portal
                     {
                         SiteType = "http",
-                        SiteName = tbc.DatabaseSetting.GetOperatorName,
+                        SiteName = operatorName,
                         SiteId = 1,
-                        PhysicalPath = "C:/inetpub/wwwroot/" + this.Tbc.DatabaseSetting.GetOperatorName,
+                        PhysicalPath = "C:/inetpub/wwwroot/" + this.Tbc.Telcobrightpartner.CustomerName,
                         BindAddress = "127.0.0.1:80",
-                        TemplateFileName = "../../" + this.Tbc.DatabaseSetting.GetOperatorName + "/tmplPortalWebSite.txt",
+                        TemplateFileName = "../../" + this.Tbc.Telcobrightpartner.CustomerName + "/tmplPortalWebSite.txt",
                         ApplicationPool=new IisApplicationPool()
                         {
-                            AppPoolName = this.Tbc.DatabaseSetting.GetOperatorName,
-                            TemplateFileName = "../../" + this.Tbc.DatabaseSetting.GetOperatorName + "/tmplPortalAppPools.txt",
+                            AppPoolName = this.Tbc.Telcobrightpartner.CustomerName,
+                            TemplateFileName = "../../" + this.Tbc.Telcobrightpartner.CustomerName + "/tmplPortalAppPools.txt",
                         },
-                        ImpersonateUserName=settings["PortalLocalAccountName"],
-                        ImpersonatePassword =settings["PortalLocalAccountPassword"]
-        },
-                    
+                        ImpersonateUserName =portalLocalAccountNameAdministrator,
+                        ImpersonatePassword =portalLocalAccountPassword
+                    },
                 },
                 DicConfigObjects = new Dictionary<string, object>()
                 {

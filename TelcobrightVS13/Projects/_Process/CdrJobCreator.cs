@@ -41,7 +41,7 @@ namespace Process
                 using (PartnerEntities context = new PartnerEntities(entityConStr))
                 {
                     int idOprator = context.telcobrightpartners
-                        .Where(c => c.databasename == tbc.DatabaseSetting.GetOperatorName).Select(c => c.idCustomer)
+                        .Where(c => c.databasename == tbc.Telcobrightpartner.CustomerName).Select(c => c.idCustomer)
                         .First();
                     foreach (ne thisSwitch in context.nes.Where(c => c.idCustomer == idOprator).ToList())
                     {

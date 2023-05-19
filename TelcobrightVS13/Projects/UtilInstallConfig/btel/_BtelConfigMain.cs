@@ -19,13 +19,12 @@ namespace InstallConfig
     [Export(typeof(IConfigGenerator))]
     public partial class BtelConfigGenerator : IConfigGenerator
     {
-        public string OperatorName { get; }
+        public string OperatorName => this.Tbc.Telcobrightpartner.CustomerName;
         public TelcobrightConfig Tbc { get; }
 
         public BtelConfigGenerator()
         {
             int thisServerId = 1;
-            this.OperatorName = "btel";
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Igw, thisServerId);
             this.Tbc.IdTelcobrightPartner = 1;
         }

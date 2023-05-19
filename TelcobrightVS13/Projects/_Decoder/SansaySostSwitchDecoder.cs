@@ -249,7 +249,7 @@ namespace Decoders
                     inconsistentCdrs.Add(CdrConversionUtil.ConvertTxtRowToCdrinconsistent(thisRow));
                     ErrorWriter wr = new ErrorWriter(e1, "DecodeCdr", null,
                         this.RuleName + " encounterd error during decoding and an Inconsistent cdr has been generated."
-                        , input.Tbc.DatabaseSetting.GetOperatorName);
+                        , input.Tbc.Telcobrightpartner.CustomerName);
                     continue;//with next switch
                 }
             }//for each row

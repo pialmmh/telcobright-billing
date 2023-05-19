@@ -26,7 +26,6 @@ namespace QuartzTelcobright.PropertyGen
 
         }
 
-
         private string GetConnectionStringForJobStore()
         {
             //connection strings are not available at this moment in app.conf
@@ -34,7 +33,7 @@ namespace QuartzTelcobright.PropertyGen
                     User Id = {this.DatabaseSetting.AdminUserName}; 
                     password = {this.DatabaseSetting.AdminPassword}; Persist Security Info = True;
                     default command timeout = 3600; 
-                    database = {this.DatabaseSetting.GetDataBaseName}";
+                    database = {this.DatabaseSetting.DatabaseName}";
 
         }
     }

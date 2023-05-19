@@ -86,7 +86,7 @@ namespace Process
                                             if (cacheLimitExceeded) continue;
                                             PrintErrorMessageToConsole(ne, telcobrightJob, e);
                                             ErrorWriter wr = new ErrorWriter(e, "ProcessCdr", telcobrightJob,
-                                                "CdrJob processing error.", tbc.DatabaseSetting.GetOperatorName);
+                                                "CdrJob processing error.", tbc.Telcobrightpartner.CustomerName);
                                             try
                                             {
                                                 UpdateJobWithErrorInfo(cmd, telcobrightJob, e);
@@ -95,7 +95,7 @@ namespace Process
                                             {
                                                 ErrorWriter wr2 = new ErrorWriter(e2, "ProcessCdr", telcobrightJob,
                                                     "Exception within catch block.",
-                                                    tbc.DatabaseSetting.GetOperatorName);
+                                                    tbc.Telcobrightpartner.CustomerName);
                                             }
                                             continue; //with next cdr or job
                                         }
@@ -113,7 +113,7 @@ namespace Process
                         {
                             Console.WriteLine(e1);
                             ErrorWriter wr = new ErrorWriter(e1, "ProcessCdr", null, "NE:" + ne.idSwitch,
-                                tbc.DatabaseSetting.GetOperatorName);
+                                tbc.Telcobrightpartner.CustomerName);
                             continue; //with next switch
                         }
                     } //for each NE

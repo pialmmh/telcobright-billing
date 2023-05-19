@@ -21,10 +21,10 @@ namespace InstallConfig
         public List<QuartzTbDaemonConfig> GetSchedulerDaemonConfigs()
         {
             this.DaemonConfigurations = new List<QuartzTbDaemonConfig>();
-            this.DaemonConfigurations.AddRange(GetFileListerInstances(this.Tbc.DatabaseSetting.GetOperatorName));
-            this.DaemonConfigurations.AddRange(GetLogFileJobCreatorInstances(this.Tbc.DatabaseSetting.GetOperatorName));
-            this.DaemonConfigurations.AddRange(GetFileCopierInstances(this.Tbc.DatabaseSetting.GetOperatorName));
-            this.DaemonConfigurations.AddRange(GetCdrJobProcessorInstances(this.Tbc.DatabaseSetting.GetOperatorName));
+            this.DaemonConfigurations.AddRange(GetFileListerInstances(this.Tbc.Telcobrightpartner.CustomerName));
+            this.DaemonConfigurations.AddRange(GetLogFileJobCreatorInstances(this.Tbc.Telcobrightpartner.CustomerName));
+            this.DaemonConfigurations.AddRange(GetFileCopierInstances(this.Tbc.Telcobrightpartner.CustomerName));
+            this.DaemonConfigurations.AddRange(GetCdrJobProcessorInstances(this.Tbc.Telcobrightpartner.CustomerName));
             return this.DaemonConfigurations;
         }
 

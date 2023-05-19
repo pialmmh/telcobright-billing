@@ -76,7 +76,7 @@ namespace Process
                                         Console.WriteLine(e.Message);
                                         cmd.ExecuteCommandText(" rollback; ");
                                         ErrorWriter wr = new ErrorWriter(e, "AccountingHelper", telcobrightJob,
-                                            "Accounting job error.", tbc.DatabaseSetting.GetOperatorName);
+                                            "Accounting job error.", tbc.Telcobrightpartner.CustomerName);
                                         try
                                         {
                                             cmd.CommandText = " update job set `Error`= '" +
@@ -91,7 +91,7 @@ namespace Process
                                         catch (Exception e2)
                                         {
                                             ErrorWriter wr2 = new ErrorWriter(e2, "Accounting Helper", telcobrightJob,
-                                                "Exception within catch block.", tbc.DatabaseSetting.GetOperatorName);
+                                                "Exception within catch block.", tbc.Telcobrightpartner.CustomerName);
                                         }
                                         continue; //with next cdr or job
                                     }

@@ -23,8 +23,9 @@ namespace Jobs
             //returning corrrect jobCompletion status is important, because file may not be deleted due to pre-requisite
             //in that case the job must not be marked as "complete" in database
             OptimizerJobInputData input = (OptimizerJobInputData)jobInputData;
+            
             string entityConStr =
-                ConnectionManager.GetEntityConnectionStringByOperator(input.Tbc.DatabaseSetting.GetOperatorName);
+                ConnectionManager.GetEntityConnectionStringByOperator(input.Tbc.Telcobrightpartner.CustomerName);
             JobParamFileDelete delParam = null;
             delParam = GetJobParamByHandlingDeserializeErrorFromBackslash(input);
             //check if prereq jobs have been finished or not

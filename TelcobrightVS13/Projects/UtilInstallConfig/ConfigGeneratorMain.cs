@@ -146,7 +146,7 @@ namespace InstallConfig
                     case '7':
                         string operatorName = ConfigurationManager.AppSettings["OperatorsToBeConfigured"].Split(',')[0];
                         schedulerSetting = SchedulerConfigGenerator.GeneraterateSchedulerConfig(operatorName);
-                        ModifyPartitions(schedulerSetting.DatabaseSetting,operatorName);
+                        PartitionUtil.ModifyPartitions(schedulerSetting.DatabaseSetting,operatorName);
                         Console.WriteLine("Partition modification is successful, press 'q' to quit");
                         k = Convert.ToChar((Console.ReadKey(true)).Key);
                         if (k == 'q' || k == 'Q')
@@ -196,7 +196,7 @@ namespace InstallConfig
             string constr =
                 "server=" + tbc.DatabaseSetting.ServerName + ";User Id=" + tbc.DatabaseSetting.AdminUserName +
                 ";password=" + tbc.DatabaseSetting.AdminPassword + ";Persist Security Info=True;" +
-                "database="+tbc.DatabaseSetting.GetDataBaseName+";";
+                "database="+tbc.DatabaseSetting.DatabaseName+";";
             using (MySqlConnection con = new MySqlConnection(constr))
             {
                 con.Open();
@@ -205,8 +205,8 @@ namespace InstallConfig
                     try
                     {
                         string routeImportFilename =
-                            configPathHelper.GetOperatorWiseConfigDirInUtil(tbc.DatabaseSetting.GetOperatorName)
-                            + Path.DirectorySeparatorChar + tbc.DatabaseSetting.GetOperatorName + "Routes.json";
+                            configPathHelper.GetOperatorWiseConfigDirInUtil(tbc.Telcobrightpartner.CustomerName)
+                            + Path.DirectorySeparatorChar + tbc.Telcobrightpartner.CustomerName + "Routes.json";
                         List<ParnerRouteImportInfo> parnerRouteImportInfos =
                             JsonConvert.DeserializeObject<List<ParnerRouteImportInfo>>(
                                 File.ReadAllText(routeImportFilename));
@@ -269,176 +269,13 @@ namespace InstallConfig
                 }
             }
             Console.WriteLine();
-            Console.WriteLine("Routes have been reset successfully for " + tbc.DatabaseSetting.GetOperatorName + ".");
+            Console.WriteLine("Routes have been reset successfully for " + tbc.Telcobrightpartner.CustomerName + ".");
             
         }
 
-        private static List<PartitionInfo> getAllPartitionsInfo(MySqlConnection con, DatabaseSetting databaseSetting,
-            string operatorDbName)
-        {
-            using (MySqlCommand cmd = new MySqlCommand("", con))
-            {
-                cmd.CommandText = $@"select 
-                                        p.Table_Name as TableName, 
-                                        Partition_Name as PartitionName,
-                                        Partition_ordinal_position as PartitionOrdinalPosition,
-                                        partition_expression as PartitionExpression,
-                                        partition_description as PartitionDescription
-                                        from information_schema.partitions p
-                                        left join 
-                                        (select * from information_schema.tables
-                                        where TABLE_SCHEMA='{operatorDbName}'
-                                        and table_name not like 'lcr%'
-                                        and table_name not like 'rate%') t
-                                        on p.table_name=t.table_name
-                                        where p.TABLE_SCHEMA='{operatorDbName}'
-                                        and p.partition_name is not null
-                                        and p.table_name not like 'lcr%'
-                                        and p.table_name not like 'rate%'
-                                        order by PartitionOrdinalPosition";
-                MySqlDataReader reader = cmd.ExecuteReader();
-                List<PartitionInfo> partionInfos = new List<PartitionInfo>();
-                while (reader.Read())
-                {
-                    PartitionInfo partitionInfo = new PartitionInfo()
-                    {
-                        TableName = reader[0].ToString(),
-                        PartitionName = reader[1].ToString(),
-                        PartitionOrdinalPosition = Convert.ToInt32(reader[2].ToString()),
-                        PartitionExpression = reader[3].ToString(),
-                        PartitionDescription = reader[4].ToString().Replace("'", "")
-                    };
-                    DateTime tempDate = new DateTime();
-                    if (!DateTime.TryParseExact(partitionInfo.PartitionDescription, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out tempDate)) {
-                        throw new Exception("Could not parse partion expression to valid datetime.");
-                    }
-                    partitionInfo.PartitionDate = tempDate;
-                    partitionInfo.PartitionNumber = Convert.ToInt32(partitionInfo.PartitionName.Substring(1));
-                    partionInfos.Add(partitionInfo);
-                }
-                reader.Close();
-                return partionInfos;
-            };
-        }
-        private static void ModifyPartitions(DatabaseSetting databaseSetting, string operatorName)
-        {
-            string operatorDatabaseName = databaseSetting.operatorWiseDatabaseNames["db_" + operatorName];
-            List<string> partitionedTables = databaseSetting.PartitionedTables;
-            int MaxPartitionsPerTable = databaseSetting.MaxPartitionsPerTable;
-            DateTime partitionStartDate = databaseSetting.PartitionStartDate;
-            Console.WriteLine($@"All partitions before {partitionStartDate.ToString("yyyy-MM-dd")} will be erased. Are you sure? (Y/N)");
-            var consoleKey= Console.ReadKey();
-            Console.WriteLine();
-            if (consoleKey.KeyChar != 'y' && consoleKey.KeyChar != 'Y') {
-                Console.WriteLine("No partitions were changed.");
-                return;
-            }
-            Console.WriteLine("Opeing multiple connections for modifying partitions...");
-            string storageEngineForPartitionedTables = databaseSetting.StorageEngineForPartitionedTables;
-            int partitionLenInDays = databaseSetting.PartitionLenInDays;
-            string constr =
-                "server=" + databaseSetting.ServerName + ";User Id=" + databaseSetting.AdminUserName +
-                ";password=" + databaseSetting.AdminPassword + ";Persist Security Info=True; default command timeout=3600";
+        
 
-            Dictionary<string, TablePartitionManager> tableWisePartitionManager = new Dictionary<string, TablePartitionManager>();
-            partitionedTables.ForEach(t =>
-            {
-                TablePartitionManager partitionManager = new TablePartitionManager(constr);
-                tableWisePartitionManager.Add(t, partitionManager);
-            });
-
-            using (MySqlConnection con = new MySqlConnection(constr))
-            {
-                con.Open();
-                Dictionary<string, List<PartitionInfo>> allPartitions = getAllPartitionsInfo(con, databaseSetting, operatorDatabaseName)
-                    .GroupBy(p => p.TableName).ToDictionary(grouped => grouped.Key,
-                                                                grouped => grouped.OrderBy(item => item.PartitionOrdinalPosition).ToList());
-                foreach (string table in partitionedTables)
-                {
-                    List<PartitionInfo> partitionInfos = allPartitions[table];
-                    string partitionExpression = partitionInfos.First().PartitionExpression;
-                    Console.WriteLine($@"####Modifying partitions for table: {table}, start date={partitionStartDate.ToString("yyyy-MM-dd")}");
-                    Console.WriteLine($@"####Partition Length={partitionLenInDays} days");
-
-                    List<string> oldPartitionsToDelete = partitionInfos.Where(p => p.PartitionDate < partitionStartDate)
-                        .OrderBy(p => p.PartitionOrdinalPosition).Select(p => p.PartitionName).ToList();
-                    List<PartitionInfo> newPartitionsToCreate = new List<PartitionInfo>();
-                    
-                    int lastPartitionNumber = partitionInfos.Last().PartitionNumber;
-                    DateTime lastPartitionDate = partitionInfos.Last().PartitionDate;
-                    DateTime firstPartitionDate = partitionInfos.First().PartitionDate;
-                    if (partitionStartDate <= firstPartitionDate) {
-                        Console.WriteLine($@"Partition startdate must be > last existing max partition {lastPartitionDate.ToString("yyyy-MM-dd")}");
-                        Console.WriteLine($@"No Partitions are changed. Press any key to exit.");
-                        Console.ReadKey();
-                        Console.WriteLine();
-                        return;
-                    }
-                    int remainingPartitionsAfterDelete = partitionInfos.Count - oldPartitionsToDelete.Count;//5
-
-                    int maxNewPartitions = MaxPartitionsPerTable - oldPartitionsToDelete.Count;
-                    int nextPartitionNumber = lastPartitionNumber + 1;
-                    int maxPartitionNumberNew = lastPartitionNumber + maxNewPartitions;
-                    DateTime nextPartitionDate = partitionStartDate>lastPartitionDate?partitionStartDate
-                        :lastPartitionDate.AddDays(partitionLenInDays);
-
-                    while (nextPartitionNumber <= maxPartitionNumberNew) {
-                        PartitionInfo newPartition = new PartitionInfo()
-                        {
-                            TableName = table,
-                            PartitionName = "p" + nextPartitionNumber,
-                            PartitionDate = nextPartitionDate,
-                            PartitionDescription = "'" + nextPartitionDate.ToString("yyyy-MM-dd") + "'",
-                            PartitionExpression = partitionExpression
-                        };
-                        newPartitionsToCreate.Add(newPartition);
-                        nextPartitionNumber++;
-                        nextPartitionDate = nextPartitionDate.AddDays(partitionLenInDays);
-                    }
-                    TablePartitionManager partitionManager = tableWisePartitionManager[table];
-                    partitionManager.PartitionCreateinfo = newPartitionsToCreate;
-                    partitionManager.PartitionDropinfo = oldPartitionsToDelete;
-                    partitionManager.tableName = table;
-
-                }
-                //write sqls to drop and create partitions
-                tableWisePartitionManager.Values.AsParallel().ForAll(pManager =>
-                {
-                    Func<PartitionInfo, string> getCreateScript = (p) =>
-                        {
-                            return $@"PARTITION {p.PartitionName} VALUES LESS THAN ({p.PartitionDescription}) ENGINE={storageEngineForPartitionedTables}";
-                        };
-                    MySqlConnection con2 = pManager.con;
-                    var oldPartitionsToDelete = pManager.PartitionDropinfo;
-                    var newPartitionsToCreate = pManager.PartitionCreateinfo;
-                    using (MySqlCommand cmd = new MySqlCommand("", con2))
-                    {
-                        cmd.CommandText = $@"use {operatorDatabaseName};";
-                        cmd.ExecuteNonQuery();
-
-                        oldPartitionsToDelete.Reverse();
-                        var partitionsToDeleteExceptOne = oldPartitionsToDelete.Skip(1).ToList();//mysql doesn't support 0 partition
-                    partitionsToDeleteExceptOne.ForEach(pName =>
-                        {
-                            cmd.CommandText = $@"alter table {pManager.tableName} drop Partition {pName}";
-                            Console.WriteLine($@"{pManager.tableName} drop: partition {pName}");
-                            cmd.ExecuteNonQuery();
-                        });
-
-                        newPartitionsToCreate.ForEach(p =>
-                        {
-                            var script = getCreateScript(p);
-                            cmd.CommandText = $@"alter table {pManager.tableName} add partition({script});";
-                            Console.WriteLine($@"{pManager.tableName} add: {script}");
-                            cmd.ExecuteNonQuery();
-                        });
-                    }
-                    con.Close();
-                    con.Dispose();
-                });
-                Console.WriteLine("Partitions were modified successfully!!!");
-            }
-        }
+        
 
 
         private static void CreateSchedulerDatabaseIfRequired(DatabaseSetting databaseSetting, bool force,
@@ -466,13 +303,13 @@ namespace InstallConfig
                     };
                     Action createDb = () =>
                     {
-                        cmd.CommandText = "CREATE SCHEMA `" + databaseSetting.GetDataBaseName +
+                        cmd.CommandText = "CREATE SCHEMA `" + databaseSetting.DatabaseName +
                                           "` DEFAULT CHARACTER SET utf8 ;";
                         cmd.ExecuteNonQuery();
                     };
                     Action createTables = () =>
                     {
-                        cmd.CommandText = "use " + databaseSetting.GetDataBaseName;
+                        cmd.CommandText = "use " + databaseSetting.DatabaseName;
                         cmd.ExecuteNonQuery();
                         cmd.CommandText = File.ReadAllText(configPathHelper.GetSchedulerScriptPath()
                                                            + Path.DirectorySeparatorChar + "CreateTables.txt");
@@ -482,7 +319,7 @@ namespace InstallConfig
                     {
                         if (dbExists())
                         {
-                            cmd.CommandText = "drop database " + databaseSetting.GetDataBaseName + ";";
+                            cmd.CommandText = "drop database " + databaseSetting.DatabaseName + ";";
                             cmd.ExecuteNonQuery();
                         }
                         createDb();
@@ -490,7 +327,7 @@ namespace InstallConfig
                     }
                     else
                     {
-                        if (dbExists() == false)//not forced, create db only if doesn't exist
+                        if (dbExists() == false) //not forced, create db only if doesn't exist
                         {
                             createDb();
                             createTables();
@@ -498,12 +335,12 @@ namespace InstallConfig
                     }
                 }
             }
-
         }
         private static TelcobrightConfig ConfigureSingleOperator(IConfigGenerator configGenerator, DatabaseSetting schedulerDatabaseSetting,
             ConfigPathHelper configPathHelper)
         {
             Console.WriteLine("Generating Configuration for " + configGenerator.OperatorName);
+            //DbConnectionUtil.getDbConnection()
             TelcobrightConfig tbc = configGenerator.GenerateConfig(schedulerDatabaseSetting);
             Console.WriteLine("Writing Configuration Files for " + configGenerator.OperatorName);
             WriteConfigOperatorWise(tbc, configPathHelper);
@@ -522,35 +359,7 @@ namespace InstallConfig
             //write web & app.config files
             DatabaseSetting dbSettings = tbc.DatabaseSetting;
             WriteBillingRules(dbSettings);
-            //reset partitions
-            //Console.WriteLine($@"Reset datewise partitions for {tbc.DatabaseSetting.DatabaseName} tables (Y/N)? this will recreate the tables.");
-            //ConsoleKeyInfo kinfo = Console.ReadKey();
-            //if (kinfo.KeyChar == 'Y' || kinfo.KeyChar == 'y')
-            //{
-            //    Console.WriteLine();
-            //    Console.WriteLine($@"Resetting partitions for {tbc.DatabaseSetting.DatabaseName}...");
-            //    //PartitionManager partitionManager = new PartitionManager(tbc.DatabaseSetting);
-            //    //partitionManager.ResetPartitions();
-            //    Console.WriteLine("Partitions were reset successfully for "+tbc.DatabaseSetting.DatabaseName);
-            //}
-            //else
-            //{
-            //    Console.WriteLine();
-            //    Console.WriteLine("Partitions were not reset for "+tbc.DatabaseSetting.DatabaseName);
-            //}
-            //reset routes
-            //Console.WriteLine(Environment.NewLine + "Reset routes for " + tbc.DatabaseSetting.DatabaseName + " (Y/N)?");
-            //ConsoleKeyInfo keyInfo = Console.ReadKey();
-            //if (keyInfo.KeyChar == 'Y' || keyInfo.KeyChar == 'y')
-            //{
-            //    ResetParnerRoutes(tbc,configPathHelper); //reset routes per operator with confirmation for each
-            //    Console.WriteLine();
-            //}
-            //else
-            //{
-            //    Console.WriteLine();
-            //    Console.WriteLine("Routes were not reset for " + tbc.DatabaseSetting.DatabaseName);
-            //}
+            
             NameValueCollection configFiles = (NameValueCollection)ConfigurationManager.GetSection("appSettings");
             foreach (string key in configFiles)
             {
@@ -560,7 +369,7 @@ namespace InstallConfig
                         dbSettings, tbc.PortalSettings);
                 }
             }
-            string operatorShortName = tbc.DatabaseSetting.GetOperatorName;
+            string operatorShortName = tbc.Telcobrightpartner.CustomerName;
             //write config to operator's folder in util directory
             string targetDir = configPathHelper.GetOperatorWiseConfigDirInUtil(operatorShortName);
             FileAndPathHelper.DeleteFileContaining(targetDir, "*.conf");
@@ -633,7 +442,7 @@ namespace InstallConfig
 
         static void WriteIisScriptsForWebAndFtp(TelcobrightConfig tbc, string configRootDir)
         {
-            string scriptDir = configRootDir + Path.DirectorySeparatorChar + tbc.DatabaseSetting.GetOperatorName
+            string scriptDir = configRootDir + Path.DirectorySeparatorChar + tbc.Telcobrightpartner.CustomerName
                     + Path.DirectorySeparatorChar + "scripts";
             if (Directory.Exists(scriptDir) == false)
             {
@@ -648,17 +457,17 @@ namespace InstallConfig
             {
                 //site xml part
                 string script = ReplaceParametersInConfigFiles(site.GetDicProperties(), site.TemplateFileName);
-                string scriptFileName = configRootDir + Path.DirectorySeparatorChar + tbc.DatabaseSetting.GetOperatorName + Path.DirectorySeparatorChar
+                string scriptFileName = configRootDir + Path.DirectorySeparatorChar + tbc.Telcobrightpartner.CustomerName + Path.DirectorySeparatorChar
                     + "scripts" + Path.DirectorySeparatorChar +
-                    site.SiteType + "_" + tbc.DatabaseSetting.GetOperatorName + ".iisScript";
+                    site.SiteType + "_" + tbc.Telcobrightpartner.CustomerName + ".iisScript";
                 File.WriteAllText(scriptFileName, script);
                 //app pool part
                 if (site.SiteType == "http")
                 {
                     script = ReplaceParametersInConfigFiles(site.ApplicationPool.GetDicProperties(), site.ApplicationPool.TemplateFileName);
-                    string appPoolScriptFileName = configRootDir + Path.DirectorySeparatorChar + tbc.DatabaseSetting.GetOperatorName + Path.DirectorySeparatorChar
+                    string appPoolScriptFileName = configRootDir + Path.DirectorySeparatorChar + tbc.Telcobrightpartner.CustomerName + Path.DirectorySeparatorChar
                         + "scripts" + Path.DirectorySeparatorChar +
-                        "appPool" + "_" + tbc.DatabaseSetting.GetOperatorName + ".iisScript";
+                        "appPool" + "_" + tbc.Telcobrightpartner.CustomerName + ".iisScript";
                     File.WriteAllText(appPoolScriptFileName, script);
 
                     //write import_commands to help during installation
@@ -825,7 +634,7 @@ namespace InstallConfig
             string constr =
                 "server=" + serverName + ";User Id=" + databaseSetting.AdminUserName +
                 ";password=" + databaseSetting.AdminPassword +
-                ";Persist Security Info=True;database=" + databaseSetting.GetDataBaseName;
+                ";Persist Security Info=True;database=" + databaseSetting.DatabaseName;
 
             using (MySqlConnection con = new MySqlConnection(constr))
             {

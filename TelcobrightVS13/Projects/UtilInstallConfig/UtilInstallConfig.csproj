@@ -94,10 +94,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="bigl\ConfigGenerator_bigl.cs" />
     <Compile Include="BIllingRulesDefiner.cs" />
     <Compile Include="btel\BtelDatabaseSettings.cs" />
     <Compile Include="PartitionInfo.cs" />
+    <Compile Include="DbConnectionUtil.cs" />
+    <Compile Include="PartitionUtil.cs" />
     <Compile Include="srtelecom\SrtAppServerConfig.cs" />
     <Compile Include="srtelecom\SrtDatabaseSettings.cs" />
     <Compile Include="srtelecom\SrtDirectorySettings.cs" />
@@ -264,9 +265,6 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="bigl\tmplPortalAppPools.txt" />
-    <Content Include="bigl\tmplPortalFtpSite.txt" />
-    <Content Include="bigl\tmplPortalWebSite.txt" />
     <Content Include="srtelecom\tmplPortalAppPools.txt" />
     <Content Include="srtelecom\tmplPortalFtpSite.txt" />
     <Content Include="srtelecom\tmplPortalWebSite.txt" />

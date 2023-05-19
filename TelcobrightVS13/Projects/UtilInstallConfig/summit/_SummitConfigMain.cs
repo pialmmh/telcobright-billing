@@ -11,6 +11,7 @@ using TelcobrightMediation;
 using TelcobrightMediation.Config;
 using FlexValidation;
 using InstallConfig._CommonValidation;
+using MediationModel;
 using TelcobrightMediation.Accounting;
 
 namespace InstallConfig
@@ -18,26 +19,75 @@ namespace InstallConfig
     [Export(typeof(IConfigGenerator))]
     public partial class SummitConfigGenerator : IConfigGenerator
     {
-        public string OperatorName { get;}
         public TelcobrightConfig Tbc { get; }
+        public string OperatorName => this.Tbc.Telcobrightpartner.CustomerName;
 
         public SummitConfigGenerator()
         {
             int thisServerId = 1;
-            this.OperatorName = "summit";
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, thisServerId);
         }
 
         public TelcobrightConfig GenerateConfig(DatabaseSetting schedulerDatabaseSetting)
         {
-            if (string.IsNullOrWhiteSpace(this.OperatorName))
-                throw new Exception("Operator name not configured in Config Generator");
+            this.Tbc.Telcobrightpartner = new telcobrightpartner
+            {
+                idCustomer = 9,
+                CustomerName = "Summit Communications Ltd.",
+                idOperatorType = 2,
+                databasename = "summit",
+                NativeTimeZone = 3251,
+                IgwPrefix = null,
+                RateDictionaryMaxRecords = 3000000,
+                MinMSForIntlOut = 100,
+                RawCdrKeepDurationDays = 90,
+                SummaryKeepDurationDays = 730,
+                AutoDeleteOldData = 1,
+                AutoDeleteStartHour = 4,
+                AutoDeleteEndHour = 6
+            };
+            this.Tbc.Nes = new List<ne>()
+            {
+                new ne
+                {
+                    idSwitch = 9,
+                    idCustomer = 9,
+                    idcdrformat = 17,
+                    idMediationRule = 2,
+                    SwitchName = "zte",
+                    CDRPrefix = "ICX",
+                    FileExtension = ".DAT",
+                    Description = null,
+                    SourceFileLocations = "vault",
+                    BackupFileLocations = null,
+                    LoadingStopFlag = null,
+                    LoadingSpanCount = 100,
+                    TransactionSizeForCDRLoading = 1500,
+                    DecodingSpanCount = 100,
+                    SkipAutoCreateJob = 1,
+                    SkipCdrListed = 0,
+                    SkipCdrReceived = 0,
+                    SkipCdrDecoded = 0,
+                    SkipCdrBackedup = 1,
+                    KeepDecodedCDR = 0,
+                    KeepReceivedCdrServer = 1,
+                    CcrCauseCodeField = 56,
+                    SwitchTimeZoneId = null,
+                    CallConnectIndicator = "F5",
+                    FieldNoForTimeSummary = 29,
+                    EnableSummaryGeneration = "1",
+                    ExistingSummaryCacheSpanHr = 6,
+                    BatchToDecodeRatio = 3,
+                    PrependLocationNumberToFileName = 0
+                }
+            };
 
             CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
             CommonCdrValRulesGen commonCdrValRulesGen =
                 new CommonCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
             InconsistentCdrValRulesGen inconsistentCdrValRulesGen =
                 new InconsistentCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
+
             this.Tbc.CdrSetting = new CdrSetting
             {
                 SummaryTimeField = SummaryTimeFieldEnum.AnswerTime,
@@ -60,19 +110,10 @@ namespace InstallConfig
             };
 
             this.PrepareDirectorySettings(this.Tbc);
-
             this.PrepareProductAndServiceConfiguration();
-            
             this.PrepareApplicationServerConfig();
-
-            //DatabaseSetting databaseSetting = schedulerDatabaseSetting.GetCopy();
-            //DatabaseSetting databaseSetting = 
-            //databaseSetting.DatabaseName = this.OperatorName;//change dbname here if required
-            //this.Tbc.DatabaseSetting = databaseSetting;
             this.Tbc.DatabaseSetting = this.GetDatabaseSettings();
-            
-
-            this.Tbc.PortalSettings = GetPortalSettings(this.Tbc);
+            this.Tbc.PortalSettings = GetPortalSettings(this.Tbc.Telcobrightpartner.CustomerName);
             return this.Tbc;
         }
     }

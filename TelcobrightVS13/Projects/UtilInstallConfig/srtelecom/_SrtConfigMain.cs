@@ -11,6 +11,7 @@ using TelcobrightMediation;
 using TelcobrightMediation.Config;
 using FlexValidation;
 using InstallConfig._CommonValidation;
+using MediationModel;
 using TelcobrightMediation.Accounting;
 
 namespace InstallConfig
@@ -18,20 +19,78 @@ namespace InstallConfig
     [Export(typeof(IConfigGenerator))]
     public partial class SrtConfigGenerator : IConfigGenerator
     {
-        public string OperatorName { get;}
+        public string OperatorName => this.Tbc.Telcobrightpartner.CustomerName;
         public TelcobrightConfig Tbc { get; }
 
         public SrtConfigGenerator()
         {
             int thisServerId = 1;
-            this.OperatorName = "srtelecom";
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, thisServerId);
         }
 
         public TelcobrightConfig GenerateConfig(DatabaseSetting schedulerDatabaseSetting)
         {
-            if (string.IsNullOrWhiteSpace(this.OperatorName))
-                throw new Exception("Operator name not configured in Config Generator");
+            this.Tbc.Telcobrightpartner = new telcobrightpartner
+            {
+                idCustomer = 8,
+                CustomerName = "SR Telecom Ltd",
+                idOperatorType = 2,
+                databasename = "srtelecom",
+                databasetype = "",
+                user = null,
+                pass = null,
+                ServerNameOrIP = null,
+                IBServerNameOrIP = null,
+                IBdatabasename = null,
+                IBdatabasetype = null,
+                IBuser = null,
+                IBpass = null,
+                TransactionSizeForCDRLoading = null,
+                NativeTimeZone = 3251,
+                IgwPrefix = null,
+                RateDictionaryMaxRecords = 3000000,
+                MinMSForIntlOut = 100,
+                RawCdrKeepDurationDays = 90,
+                SummaryKeepDurationDays = 730,
+                AutoDeleteOldData = 1,
+                AutoDeleteStartHour = 4,
+                AutoDeleteEndHour = 6
+            };
+            this.Tbc.Nes = new List<ne>()
+            {
+                new ne
+                {
+                    idSwitch= 8,
+                    idCustomer= 8,
+                    idcdrformat= 3,
+                    idMediationRule= 2,
+                    SwitchName= "huawei",
+                    CDRPrefix= "SRT",
+                    FileExtension= ".dat",
+                    Description= null,
+                    SourceFileLocations= "vault",
+                    BackupFileLocations= null,
+                    LoadingStopFlag= null,
+                    LoadingSpanCount= 100,
+                    TransactionSizeForCDRLoading= 1500,
+                    DecodingSpanCount= 100,
+                    SkipAutoCreateJob= 1,
+                    SkipCdrListed= 0,
+                    SkipCdrReceived= 0,
+                    SkipCdrDecoded= 0,
+                    SkipCdrBackedup= 1,
+                    KeepDecodedCDR= 0,
+                    KeepReceivedCdrServer= 1,
+                    CcrCauseCodeField= 56,
+                    SwitchTimeZoneId= null,
+                    CallConnectIndicator= "F5",
+                    FieldNoForTimeSummary= 29,
+                    EnableSummaryGeneration= "1",
+                    ExistingSummaryCacheSpanHr= 6,
+                    BatchToDecodeRatio= 3,
+                    PrependLocationNumberToFileName= 0
+                }
+            };
 
             CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
             CommonCdrValRulesGen commonCdrValRulesGen =

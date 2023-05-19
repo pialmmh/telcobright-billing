@@ -11,6 +11,7 @@ using TelcobrightMediation;
 using TelcobrightMediation.Config;
 using FlexValidation;
 using InstallConfig._CommonValidation;
+using MediationModel;
 using TelcobrightMediation.Accounting;
 
 namespace InstallConfig
@@ -18,20 +19,79 @@ namespace InstallConfig
     [Export(typeof(IConfigGenerator))]
     public partial class JslConfigGenerator:IConfigGenerator
     {
-        public string OperatorName { get;}
+        public string OperatorName => this.Tbc.Telcobrightpartner.CustomerName;
         public TelcobrightConfig Tbc { get; }
 
         public JslConfigGenerator()
         {
             int thisServerId = 1;
-            this.OperatorName = "jsl";
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, thisServerId);
         }
 
         public TelcobrightConfig GenerateConfig(DatabaseSetting schedulerDatabaseSetting)
         {
-            if (string.IsNullOrWhiteSpace(this.OperatorName))
-                throw new Exception("Operator name not configured in Config Generator");
+            this.Tbc.Telcobrightpartner = new telcobrightpartner
+            {
+                idCustomer = 7,
+                CustomerName = "Jibondhara Solutions Ltd",
+                idOperatorType = 2,
+                databasename = "jsl",
+                databasetype = "mysql",
+                user = "root",
+                pass = null,
+                ServerNameOrIP = null,
+                IBServerNameOrIP = null,
+                IBdatabasename = null,
+                IBdatabasetype = null,
+                IBuser = null,
+                IBpass = null,
+                TransactionSizeForCDRLoading = null,
+                NativeTimeZone = 3251,
+                IgwPrefix = null,
+                RateDictionaryMaxRecords = 3000000,
+                MinMSForIntlOut = 100,
+                RawCdrKeepDurationDays = 90,
+                SummaryKeepDurationDays = 730,
+                AutoDeleteOldData = 1,
+                AutoDeleteStartHour = 4,
+                AutoDeleteEndHour = 6
+            };
+
+            this.Tbc.Nes = new List<ne>()
+            {
+                new ne
+                {
+                    idSwitch= 7,
+                    idCustomer= 7,
+                    idcdrformat= 17,
+                    idMediationRule= 2,
+                    SwitchName= "JslZteDhk",
+                    CDRPrefix= "ICX",
+                    FileExtension= ".DAT",
+                    Description= null,
+                    SourceFileLocations= "Vault.JslZteDhk",
+                    BackupFileLocations= null,
+                    LoadingStopFlag= null,
+                    LoadingSpanCount= 100,
+                    TransactionSizeForCDRLoading= 1500,
+                    DecodingSpanCount= 100,
+                    SkipAutoCreateJob= 1,
+                    SkipCdrListed= 1,
+                    SkipCdrReceived= 1,
+                    SkipCdrDecoded= 1,
+                    SkipCdrBackedup= 1,
+                    KeepDecodedCDR= 1,
+                    KeepReceivedCdrServer= 1,
+                    CcrCauseCodeField= 56,
+                    SwitchTimeZoneId= null,
+                    CallConnectIndicator= "F5",
+                    FieldNoForTimeSummary= 29,
+                    EnableSummaryGeneration= "1",
+                    ExistingSummaryCacheSpanHr= 6,
+                    BatchToDecodeRatio= 3,
+                    PrependLocationNumberToFileName= 0
+                }
+            };
 
             CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
             CommonCdrValRulesGen commonCdrValRulesGen =

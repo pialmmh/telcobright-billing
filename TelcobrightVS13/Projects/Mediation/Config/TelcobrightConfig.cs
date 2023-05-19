@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text.RegularExpressions;
 using LibraryExtensions.ConfigHelper;
+using MediationModel;
 using QuartzTelcobright;
 using TelcobrightMediation.Automation;
 using TelcobrightMediation.Config;
@@ -12,6 +13,8 @@ namespace TelcobrightMediation
     public class TelcobrightConfig
     {
         //temporarily keep connection strings with help of ne, change later
+        public telcobrightpartner Telcobrightpartner { get; set; }
+        public List<ne> Nes { get; set; }
         public int DefaultTimeZoneId { get; set; } = 3251;
         public TelecomOperatortype TelecomOperatortype { get;}
         public List<QuartzTbDaemonConfig> SchedulerDaemonConfigs { get; set; }

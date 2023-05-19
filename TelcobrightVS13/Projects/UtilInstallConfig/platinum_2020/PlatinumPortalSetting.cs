@@ -38,15 +38,15 @@ namespace InstallConfig
                     new InternetSite(this.Tbc)//make sure that first one always the http portal
                     {
                         SiteType = "http",
-                        SiteName = tbc.DatabaseSetting.GetOperatorName,
+                        SiteName = tbc.Telcobrightpartner.CustomerName,
                         SiteId = 1,
-                        PhysicalPath = "C:/inetpub/wwwroot/" + this.Tbc.DatabaseSetting.GetOperatorName,
+                        PhysicalPath = "C:/inetpub/wwwroot/" + this.Tbc.Telcobrightpartner.CustomerName,
                         BindAddress = this.Tbc.DirectorySettings.FileLocations["AppServerFTP" + this.Tbc.ServerId].ServerIp + ":80",
-                        TemplateFileName = "../../" + this.Tbc.DatabaseSetting.GetOperatorName + "/tmplPortalWebSite.txt",
+                        TemplateFileName = "../../" + this.Tbc.Telcobrightpartner.CustomerName + "/tmplPortalWebSite.txt",
                         ApplicationPool=new IisApplicationPool()
                         {
-                            AppPoolName = this.Tbc.DatabaseSetting.GetOperatorName,
-                            TemplateFileName = "../../" + this.Tbc.DatabaseSetting.GetOperatorName + "/tmplPortalAppPools.txt",
+                            AppPoolName = this.Tbc.Telcobrightpartner.CustomerName,
+                            TemplateFileName = "../../" + this.Tbc.Telcobrightpartner.CustomerName + "/tmplPortalAppPools.txt",
                         },
                         ImpersonateUserName=settings["PortalLocalAccountName"],
                         ImpersonatePassword =settings["PortalLocalAccountPassword"]
@@ -54,11 +54,11 @@ namespace InstallConfig
                     new InternetSite(this.Tbc)
                     {
                         SiteType = "ftp",
-                        SiteName = tbc.DatabaseSetting.GetOperatorName,
+                        SiteName = tbc.Telcobrightpartner.CustomerName,
                         SiteId = 2,
                         PhysicalPath = "C:/sftp_root",
                         BindAddress = this.Tbc.DirectorySettings.FileLocations["AppServerFTP" + this.Tbc.ServerId].ServerIp + ":21",
-                        TemplateFileName = "../../" + this.Tbc.DatabaseSetting.GetOperatorName + "/tmplPortalFtpSite.txt"
+                        TemplateFileName = "../../" + this.Tbc.Telcobrightpartner.CustomerName + "/tmplPortalFtpSite.txt"
                     }
                 },
                 DicConfigObjects = new Dictionary<string, object>()

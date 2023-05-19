@@ -153,6 +153,8 @@
     <Compile Include="Cdr\Collection\RowIdsCollectionForSingleDay.cs" />
     <Compile Include="Cdr\RateCacheCleaner.cs" />
     <Compile Include="Config\DirectorySettings.cs" />
+    <Compile Include="Config\DummySwitch.cs" />
+    <Compile Include="Config\DummyTelcobrightPartner.cs" />
     <Compile Include="Config\EmailSenderConfig.cs" />
     <Compile Include="Config\FileSplitSetting.cs" />
     <Compile Include="Config\IisApplicationPool.cs" />
