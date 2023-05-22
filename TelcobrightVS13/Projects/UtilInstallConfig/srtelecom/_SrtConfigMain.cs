@@ -23,7 +23,7 @@ namespace InstallConfig
         public SrtConfigGenerator()
         {
             int thisServerId = 1;
-            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, thisServerId, "SR Telecom Ltd");
+            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, thisServerId, "SR Telecom Ltd.");
         }
 
         public TelcobrightConfig GenerateConfig()
@@ -122,7 +122,7 @@ namespace InstallConfig
             this.PrepareApplicationServerConfig();
 
             this.Tbc.DatabaseSetting = this.GetDatabaseSettings();
-            this.Tbc.PortalSettings = GetPortalSettings(this.Tbc);
+            this.Tbc.PortalSettings = GetPortalSettings(this.Tbc.Telcobrightpartner.CustomerName);
             return this.Tbc;
         }
     }

@@ -19,9 +19,9 @@ namespace InstallConfig
 {
     public partial class SummitConfigGenerator //quartz config part
     {
-        static string databaseConfigFileName = new DirectoryInfo(FileAndPathHelper.GetBinPath()).Parent.Parent.FullName
+        /*static string databaseConfigFileName = new DirectoryInfo(FileAndPathHelper.GetBinPath()).Parent.Parent.FullName
                                                + Path.DirectorySeparatorChar + "Server.conf";
-
+*/
         PortalSettings GetPortalSettings(string operatorName)
         {
             string portalLocalAccountNameAdministrator = "Administrator";
@@ -171,32 +171,30 @@ namespace InstallConfig
             };//settings for one role within a page
             List<SettingByRoles> settingIntlInRoute = new List<SettingByRoles>()
             {
+                new SettingByRoles()
                 {
-                    new SettingByRoles()
+                    RoleNames = new List<string>()
                     {
-                        RoleNames = new List<string>()
-                        {
-                            "admin","billing"
-                        },
-                        SpringExpressionIfRole = new List<string>()
-                        {
-                            "CheckBoxShowCost.Enabled=true",
-                            "GridView1.Columns[6].Visible=true",//connect count
-                            "GridView1.Columns[8].Visible=true",//duration1
-                            "GridView1.Columns[19].Visible=true",//CCR
-                            "GridView1.Columns[20].Visible=false",//connect by cc
-                            "GridView1.Columns[21].Visible=false",//CCR by cc
-                        },
-                        SpringExpressionIfNotRole = new List<string>()
-                        {
-                            "CheckBoxShowCost.Enabled=false",
-                            "GridView1.Columns[6].Visible=true",
-                            "GridView1.Columns[8].Visible=false",
-                            "GridView1.Columns[7].HeaderText=Duration",
-                            "GridView1.Columns[19].Visible=true",//CCR
-                            "GridView1.Columns[20].Visible=false",//connect by cc
-                            "GridView1.Columns[21].Visible=false",//CCR by cc
-                        }
+                        "admin","billing"
+                    },
+                    SpringExpressionIfRole = new List<string>()
+                    {
+                        "CheckBoxShowCost.Enabled=true",
+                        "GridView1.Columns[6].Visible=true",//connect count
+                        "GridView1.Columns[8].Visible=true",//duration1
+                        "GridView1.Columns[19].Visible=true",//CCR
+                        "GridView1.Columns[20].Visible=false",//connect by cc
+                        "GridView1.Columns[21].Visible=false",//CCR by cc
+                    },
+                    SpringExpressionIfNotRole = new List<string>()
+                    {
+                        "CheckBoxShowCost.Enabled=false",
+                        "GridView1.Columns[6].Visible=true",
+                        "GridView1.Columns[8].Visible=false",
+                        "GridView1.Columns[7].HeaderText=Duration",
+                        "GridView1.Columns[19].Visible=true",//CCR
+                        "GridView1.Columns[20].Visible=false",//connect by cc
+                        "GridView1.Columns[21].Visible=false",//CCR by cc
                     }
                 }
             };//settings for one role within a page

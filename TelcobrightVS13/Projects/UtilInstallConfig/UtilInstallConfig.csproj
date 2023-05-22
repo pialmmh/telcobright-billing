@@ -98,7 +98,7 @@
     <Compile Include="btel\BtelDatabaseSettings.cs" />
     <Compile Include="dbl\DblDatabaseSettings.cs" />
     <Compile Include="PartitionInfo.cs" />
-    <Compile Include="DbConnectionUtil.cs" />
+    <Compile Include="dbUtil\DbUtil.cs" />
     <Compile Include="PartitionUtil.cs" />
     <Compile Include="purple\PurpleDatabaseSettings.cs" />
     <Compile Include="srtelecom\SrtAppServerConfig.cs" />
@@ -147,7 +147,6 @@
     <Compile Include="summit\SummitServiceGroups.cs" />
     <Compile Include="summit\_SummitConfigMain.cs" />
     <Compile Include="TableWisePartitionManagementInfo.cs" />
-    <Compile Include="utility\util_Del_CompletedCDRFilesLocal.cs" />
     <Compile Include="CommonValidationRulesGenerator\InconsistentCdrValRulesGen.cs" />
     <Compile Include="CommonValidationRulesGenerator\CommonCdrValRulesGen.cs" />
     <None Include="app.manifest" />
@@ -210,7 +209,9 @@
       <Name>QuartzTelcobright</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="dbUtil\initScripts\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="srtelecom\tmplPortalAppPools.txt" />
     <Content Include="srtelecom\tmplPortalFtpSite.txt" />

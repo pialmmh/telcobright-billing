@@ -21,6 +21,8 @@ namespace LibraryExtensions.ConfigHelper
         public string StorageEngineForPartitionedTables { get; set; } = "innodb";
         public int PartitionLenInDays { get; set; } = 1;
         public List<string> PartitionedTables { get; }
+        public string CharacterSet { get; set; } = "utf8mb4";
+        public string Collate { get; set; } = "utf8mb4_bin";
         public DatabaseSetting()
         {
             this.PartitionedTables = new List<string>

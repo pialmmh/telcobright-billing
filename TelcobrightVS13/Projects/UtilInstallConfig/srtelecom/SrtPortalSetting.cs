@@ -19,16 +19,21 @@ namespace InstallConfig
 {
     public partial class SrtConfigGenerator //quartz config part
     {
-        static string databaseConfigFileName = new DirectoryInfo(FileAndPathHelper.GetBinPath()).Parent.Parent.FullName
-                                               + Path.DirectorySeparatorChar + "Server.conf";
+        /*static string databaseConfigFileName = new DirectoryInfo(FileAndPathHelper.GetBinPath()).Parent.Parent.FullName
+                                               + Path.DirectorySeparatorChar + "Server.conf";*/
 
-        PortalSettings GetPortalSettings(TelcobrightConfig tbc)
+        PortalSettings GetPortalSettings(string operatorName)
         {
-            Dictionary<string, string> settings = JsonConvert.DeserializeObject<Dictionary<string, string>>(
-                File.ReadAllText(databaseConfigFileName));
+            /*Dictionary<string, string> settings = JsonConvert.DeserializeObject<Dictionary<string, string>>(
+                File.ReadAllText(databaseConfigFileName));*/
+
+            string portalLocalAccountNameAdministrator = "Administrator";
+            string portalLocalAccountPassword = "Takay1#$ane%%";
 
             PortalSettings portalSetting = new PortalSettings("Portal Settings")
             {
+                PortalLocalAccountNameAdministrator = portalLocalAccountNameAdministrator,
+                PortalLocalAccountPassword = portalLocalAccountPassword,
                 HomePageUrl = "~/Dashboard.aspx",
                 AlternateDisplayName = "ICX Manager",
                 RouteTypeEnums = new Dictionary<string, int>()
@@ -42,7 +47,7 @@ namespace InstallConfig
                     new InternetSite(this.Tbc)//make sure that first one always the http portal
                     {
                         SiteType = "http",
-                        SiteName = tbc.Telcobrightpartner.CustomerName,
+                        SiteName = operatorName,
                         SiteId = 1,
                         PhysicalPath = "C:/inetpub/wwwroot/" + this.Tbc.Telcobrightpartner.CustomerName,
                         BindAddress = this.Tbc.DirectorySettings.FileLocations["AppServerFTP" + this.Tbc.ServerId].ServerIp + ":80",
@@ -52,18 +57,10 @@ namespace InstallConfig
                             AppPoolName = this.Tbc.Telcobrightpartner.CustomerName,
                             TemplateFileName = "../../" + this.Tbc.Telcobrightpartner.CustomerName + "/tmplPortalAppPools.txt",
                         },
-                        ImpersonateUserName=settings["PortalLocalAccountName"],
-                        ImpersonatePassword =settings["PortalLocalAccountPassword"]
-        },
-                    new InternetSite(this.Tbc)
-                    {
-                        SiteType = "ftp",
-                        SiteName = tbc.Telcobrightpartner.CustomerName,
-                        SiteId = 2,
-                        PhysicalPath = "C:/sftp_root",
-                        BindAddress = this.Tbc.DirectorySettings.FileLocations["AppServerFTP" + this.Tbc.ServerId].ServerIp + ":21",
-                        TemplateFileName = "../../" + this.Tbc.Telcobrightpartner.CustomerName + "/tmplPortalFtpSite.txt"
-                    }
+                         ImpersonateUserName =portalLocalAccountNameAdministrator,
+                        ImpersonatePassword =portalLocalAccountPassword
+                    },
+                  
                 },
                 DicConfigObjects = new Dictionary<string, object>()
                 {

@@ -12,6 +12,7 @@ using System.Linq;
 using TelcobrightFileOperations;
 using System.Reflection;
 using System.Text;
+using DocumentFormat.OpenXml.Drawing;
 using LibraryExtensions;
 using LibraryExtensions.ConfigHelper;
 using MediationModel;
@@ -22,6 +23,8 @@ using QuartzTelcobright;
 using QuartzTelcobright.PropertyGen;
 using TelcobrightMediation.Config;
 using TelcobrightMediation.Scheduler.Quartz;
+using Path = System.IO.Path;
+
 //using CrystalQuartzTest;
 namespace InstallConfig
 {
@@ -51,9 +54,9 @@ namespace InstallConfig
                 Console.Clear();
                 //tb operator name
                 //string tbOperatorName = ConfigurationManager.AppSettings["JsonConfigFileNameForPortalCopyForSingleOperator"].Split('_')[1];
-                var splitArr = ConfigurationManager.AppSettings["JsonConfigFileNameForPortalCopyForSingleOperator"]
-                    .Split('_').ToList();
-                string tbOperatorName = String.Join("_", splitArr.Where((s, index) => index !=splitArr.Count-1 & index!=0));
+                //var splitArr = ConfigurationManager.AppSettings["JsonConfigFileNameForPortalCopyForSingleOperator"]
+                //    .Split('_').ToList();
+                string tbOperatorName = "summit";//todo: change
 
                 Console.WriteLine("Welcome to Telcobright Initial Configuration Utility");
                 Console.WriteLine("Partner Database Name: [" + tbOperatorName + "]");
@@ -70,6 +73,8 @@ namespace InstallConfig
                 ki = Console.ReadKey(true);
                 char cmdName = Convert.ToChar(ki.Key);
 
+                Dictionary<string, string> instances =
+                    ConfigurationManager.AppSettings.ToDictionary().Where(kv => kv.Key.StartsWith("instance")).ToDictionary(kv => kv.Key, kv => kv.Value);
 
                 switch (cmdName)
                 {
@@ -100,11 +105,9 @@ namespace InstallConfig
                         if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' || Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
                         break;
                     case '6':
-                        //SchedulerSetting schedulerSetting = SchedulerConfigGenerator.GeneraterateSchedulerConfig();
                         SchedulerSetting schedulerSetting = null;
-                        string[] operatorNames = ConfigurationManager.AppSettings["OperatorsToBeConfigured"].Split(',');
                         List<IConfigGenerator> operatorsToBeConfigured
-                            = new MefConfigImportComposer().Compose().Where(op=>operatorNames.Contains(op.Tbc.OperatorName)).ToList();
+                            = new MefConfigImportComposer().Compose().Where(op=>instances.Values.Contains(op.Tbc.OperatorName)).ToList();
                         ConfigPathHelper configPathHelper =
                             new ConfigPathHelper("WS_Topshelf_Quartz", "portal", "UtilInstallConfig", "SchedulerScripts");
                         List<TelcobrightConfig> operatorConfigs = new List<TelcobrightConfig>();
@@ -112,9 +115,7 @@ namespace InstallConfig
                         foreach (IConfigGenerator configGenerator in operatorsToBeConfigured)
                         {
                             //generate tbc & config file for each operator configure in app.config in installConfig
-                            TelcobrightConfig tbc = ConfigureSingleOperator(configGenerator,
-                                null,
-                                configPathHelper);
+                            TelcobrightConfig tbc = ConfigureSingleOperator(configGenerator,configPathHelper);
                             tbc.SchedulerDaemonConfigs = configGenerator.GetSchedulerDaemonConfigs();
                             operatorConfigs.Add(tbc);
                         }
@@ -124,7 +125,10 @@ namespace InstallConfig
                         ConsoleKeyInfo keyInfo = Console.ReadKey();
                         if (keyInfo.KeyChar == 'Y' || keyInfo.KeyChar == 'y')
                         {
-                            ConfigureQuartzJobStore(operatorConfigs, configPathHelper, schedulerSetting);//configure job store for all opeartors
+                            foreach (var tbc in operatorConfigs)
+                            {
+                                ConfigureQuartzJobStore(tbc, configPathHelper); //configure job store for all opeartors
+                            }
                             Console.WriteLine();
                             Console.WriteLine("Job store has been reset successfully.");
                         }
@@ -142,11 +146,66 @@ namespace InstallConfig
                             
                         break;
                     case '7':
-                        string operatorName = ConfigurationManager.AppSettings["OperatorsToBeConfigured"].Split(',')[0];
-                        schedulerSetting = new SchedulerSetting(
-                            schedulerType: "quartz",
-                            databaseSetting: databaseSetting);
-                        PartitionUtil.ModifyPartitions(schedulerSetting.DatabaseSetting,operatorName);
+                        //schedulerSetting = new SchedulerSetting(
+                        Action<Dictionary<string,string>> printPartitionMenu = instances2 =>
+                        {
+                        Console.Clear();
+                            Console.WriteLine("select operator or instance to modify partitions:");
+                            int i = 0;
+                            foreach (var kv in instances2)
+                            {
+                                Console.WriteLine($"{++i}={kv.Value}");
+                            }
+                            Console.WriteLine("Q or q=Quit");
+                        };
+                        //bool validUserInput = false;
+                        printPartitionMenu(instances);
+                        Func<int> getUserInput = () =>
+                        {
+                            string userInput = Console.ReadLine().Trim();
+                            if(userInput=="Q" || userInput=="q")
+                            {
+                                return 0;//0=quit
+                            }
+                            int inputAsNum = -1;
+                            bool successfullyParsed = int.TryParse(userInput, out inputAsNum);
+                            if (successfullyParsed )
+                            {
+                                return inputAsNum;//valid
+                            }
+                            return -1;//invalid
+                        };
+                        //Func<int, bool> validInput= inp => inp >= 1 && inp <= instances.Count;
+                        // = getUserInput();
+                        //printPartitionMenu(instances);
+                        while (true)
+                        {                            
+                            int userInput = getUserInput();
+                            if ((userInput < 0 || userInput > instances.Count))// invalid case
+                            {
+                                printPartitionMenu(instances);
+                                Console.WriteLine("<------------Invalid input------------>");
+                                //Console.Read();
+
+                            }
+                            else if (userInput == 0) // quit case
+                            {
+                                Console.WriteLine("<_______________Quit__________________>");
+                                return;
+                            }
+                            
+                            else // valid case
+                            {                     
+                                Console.WriteLine("<+++++++++++++valid input+++++++++++++>");
+                                Console.Read();
+                                break;                               
+                            }
+                        }
+
+                        return;
+                        //    schedulerType: "quartz",
+                        //    databaseSetting: databaseSetting);
+                        //PartitionUtil.ModifyPartitions(schedulerSetting.DatabaseSetting,operatorName);
                         Console.WriteLine("Partition modification is successful, press 'q' to quit");
                         k = Convert.ToChar((Console.ReadKey(true)).Key);
                         if (k == 'q' || k == 'Q')
@@ -169,25 +228,24 @@ namespace InstallConfig
             //}
         }
 
-        static void ConfigureQuartzJobStore(List<TelcobrightConfig> operatorConfigs, ConfigPathHelper configPathHelper,
-            SchedulerSetting schedulerSetting)
+      
+
+        static void ConfigureQuartzJobStore(TelcobrightConfig tbc, ConfigPathHelper configPathHelper)
         {
-            CreateSchedulerDatabaseIfRequired(schedulerSetting.DatabaseSetting, true, configPathHelper);//true=force    
-                                                                                                        //read quartz config part for ALL configured operator (mef)
+            CreateSchedulerDatabaseIfRequired(tbc.DatabaseSetting, configPathHelper); //true=force    
+            //read quartz config part for ALL configured operator (mef)
             QuartzPropGenRemoteSchedulerAdoJobStore quartzPropGenRemoteSchedulerAdoJobStore =
                 new QuartzPropGenRemoteSchedulerAdoJobStore(555);
-            quartzPropGenRemoteSchedulerAdoJobStore.DatabaseSetting = schedulerSetting.DatabaseSetting;
+            quartzPropGenRemoteSchedulerAdoJobStore.DatabaseSetting = tbc.DatabaseSetting;
             QuartzPropertyFactory quartzPropertyFactory =
                 new QuartzPropertyFactory(quartzPropGenRemoteSchedulerAdoJobStore);
             NameValueCollection schedulerProperties = quartzPropertyFactory.GetProperties();
             IScheduler scheduler = QuartzSchedulerFactory.CreateSchedulerInstance(schedulerProperties);
             QuartzTelcobrightManager quartzManager = new QuartzTelcobrightManager(scheduler);
-            quartzManager.ClearJobs();//reset job store
-            foreach (var tbc in operatorConfigs)
-            {
-                quartzManager.CreateJobs<QuartzTelcobrightProcessWrapper>(tbc.SchedulerDaemonConfigs);
-            }
+            quartzManager.ClearJobs(); //reset job store
+            quartzManager.CreateJobs<QuartzTelcobrightProcessWrapper>(tbc.SchedulerDaemonConfigs);
         }
+
         static void ResetParnerRoutes(TelcobrightConfig tbc, 
             ConfigPathHelper configPathHelper)
         {
@@ -276,8 +334,7 @@ namespace InstallConfig
         
 
 
-        private static void CreateSchedulerDatabaseIfRequired(DatabaseSetting databaseSetting, bool force,
-            ConfigPathHelper configPathHelper)
+        private static void CreateSchedulerDatabaseIfRequired(DatabaseSetting databaseSetting,ConfigPathHelper configPathHelper)
         {
             string constr =
                 "server=" + databaseSetting.ServerName + ";User Id=" + databaseSetting.AdminUserName +
@@ -313,28 +370,16 @@ namespace InstallConfig
                                                            + Path.DirectorySeparatorChar + "CreateTables.txt");
                         cmd.ExecuteNonQuery();
                     };
-                    if (force == true)
+                    if (dbExists() == false) //not forced, create db only if doesn't exist
                     {
-                        if (dbExists())
-                        {
-                            cmd.CommandText = "drop database " + databaseSetting.DatabaseName + ";";
-                            cmd.ExecuteNonQuery();
-                        }
                         createDb();
-                        createTables();
                     }
-                    else
-                    {
-                        if (dbExists() == false) //not forced, create db only if doesn't exist
-                        {
-                            createDb();
-                            createTables();
-                        }
-                    }
+                    createTables();
+
                 }
             }
         }
-        private static TelcobrightConfig ConfigureSingleOperator(IConfigGenerator configGenerator, DatabaseSetting schedulerDatabaseSetting,
+        private static TelcobrightConfig ConfigureSingleOperator(IConfigGenerator configGenerator,
             ConfigPathHelper configPathHelper)
         {
             Console.WriteLine("Generating Configuration for " + configGenerator.Tbc.OperatorName);
@@ -367,7 +412,7 @@ namespace InstallConfig
                         dbSettings, tbc.PortalSettings);
                 }
             }
-            string operatorShortName = tbc.Telcobrightpartner.CustomerName;
+            string operatorShortName = tbc.DatabaseSetting.DatabaseName;
             //write config to operator's folder in util directory
             string targetDir = configPathHelper.GetOperatorWiseConfigDirInUtil(operatorShortName);
             FileAndPathHelper.DeleteFileContaining(targetDir, "*.conf");

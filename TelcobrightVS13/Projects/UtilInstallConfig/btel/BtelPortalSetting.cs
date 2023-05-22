@@ -19,14 +19,16 @@ namespace InstallConfig
 {
     public partial class BtelConfigGenerator //quartz config part
     {
-        static string databaseConfigFileName = new DirectoryInfo(FileAndPathHelper.GetBinPath()).Parent.Parent.FullName
-                                               + Path.DirectorySeparatorChar + "Server.conf";
+        //static string databaseConfigFileName = new DirectoryInfo(FileAndPathHelper.GetBinPath()).Parent.Parent.FullName
+        //                                       + Path.DirectorySeparatorChar + "Server.conf";
         public PortalSettings GetPortalSettings(TelcobrightConfig tbc)
         {
-            Dictionary<string, string> settings = JsonConvert.DeserializeObject<Dictionary<string, string>>(
-                File.ReadAllText(databaseConfigFileName));
+            string portalLocalAccountNameAdministrator = "Administrator";
+            string portalLocalAccountPassword = "Takay1#$ane%%";
             PortalSettings portalSetting = new PortalSettings("Portal Settings")
             {
+                PortalLocalAccountNameAdministrator = portalLocalAccountNameAdministrator,
+                PortalLocalAccountPassword = portalLocalAccountPassword,
                 HomePageUrl = "~/Dashboard.aspx",
                 AlternateDisplayName = "IGW Manager",
                 RouteTypeEnums = new Dictionary<string, int>()
@@ -49,18 +51,10 @@ namespace InstallConfig
                             AppPoolName = this.Tbc.Telcobrightpartner.CustomerName,
                             TemplateFileName = "../../" + this.Tbc.Telcobrightpartner.CustomerName + "/tmplPortalAppPools.txt",
                         },
-                        ImpersonateUserName=settings["PortalLocalAccountName"],
-                        ImpersonatePassword =settings["PortalLocalAccountPassword"]
+                        ImpersonateUserName =portalLocalAccountNameAdministrator,
+                        ImpersonatePassword =portalLocalAccountPassword
                     },
-                    new InternetSite(this.Tbc)
-                    {
-                        SiteType = "ftp",
-                        SiteName = tbc.Telcobrightpartner.CustomerName,
-                        SiteId = 2,
-                        PhysicalPath = "C:/sftp_root",
-                        BindAddress = this.Tbc.DirectorySettings.FileLocations["AppServerFTP" + this.Tbc.ServerId].ServerIp + ":21",
-                        TemplateFileName = "../../" + this.Tbc.Telcobrightpartner.CustomerName + "/tmplPortalFtpSite.txt"
-                    }
+                   
                 },
                 DicConfigObjects = new Dictionary<string, object>()
                 {
