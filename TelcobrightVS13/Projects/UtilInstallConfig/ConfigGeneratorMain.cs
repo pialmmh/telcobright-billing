@@ -60,8 +60,8 @@ namespace InstallConfig
 
                 Console.WriteLine("Welcome to Telcobright Initial Configuration Utility");
                 Console.WriteLine("Partner Database Name: [" + tbOperatorName + "]");
-                Console.WriteLine("Select Option:");
-                Console.WriteLine("1=Not Implemented");
+                Console.WriteLine("Select Task:");
+                Console.WriteLine("1= Create Database");
                 Console.WriteLine("2=Append Prefix to Files");
                 Console.WriteLine("3=[Not Set]");
                 Console.WriteLine("4=Copy Portal to IIS Directory");
@@ -75,12 +75,11 @@ namespace InstallConfig
 
                 Dictionary<string, string> instances =
                     ConfigurationManager.AppSettings.ToDictionary().Where(kv => kv.Key.StartsWith("instance")).ToDictionary(kv => kv.Key, kv => kv.Value);
-
+                List<string> selectedInstances = InstanceMenu.getInstancesFromMenu(instances);
                 switch (cmdName)
                 {
                     case '1':
                         Console.WriteLine("Not implemented yet");
-
                         if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' || Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
                         break;
                     case '2':
@@ -107,7 +106,7 @@ namespace InstallConfig
                     case '6':
                         SchedulerSetting schedulerSetting = null;
                         List<IConfigGenerator> operatorsToBeConfigured
-                            = new MefConfigImportComposer().Compose().Where(op=>instances.Values.Contains(op.Tbc.OperatorName)).ToList();
+                            = new MefConfigImportComposer().Compose().Where(op=>instances.Values.Contains(op.Tbc.DatabaseSetting.DatabaseName)).ToList();
                         ConfigPathHelper configPathHelper =
                             new ConfigPathHelper("WS_Topshelf_Quartz", "portal", "UtilInstallConfig", "SchedulerScripts");
                         List<TelcobrightConfig> operatorConfigs = new List<TelcobrightConfig>();
@@ -146,62 +145,7 @@ namespace InstallConfig
                             
                         break;
                     case '7':
-                        //schedulerSetting = new SchedulerSetting(
-                        Action<Dictionary<string,string>> printPartitionMenu = instances2 =>
-                        {
-                        Console.Clear();
-                            Console.WriteLine("select operator or instance to modify partitions:");
-                            int i = 0;
-                            foreach (var kv in instances2)
-                            {
-                                Console.WriteLine($"{++i}={kv.Value}");
-                            }
-                            Console.WriteLine("Q or q=Quit");
-                        };
-                        //bool validUserInput = false;
-                        printPartitionMenu(instances);
-                        Func<int> getUserInput = () =>
-                        {
-                            string userInput = Console.ReadLine().Trim();
-                            if(userInput=="Q" || userInput=="q")
-                            {
-                                return 0;//0=quit
-                            }
-                            int inputAsNum = -1;
-                            bool successfullyParsed = int.TryParse(userInput, out inputAsNum);
-                            if (successfullyParsed )
-                            {
-                                return inputAsNum;//valid
-                            }
-                            return -1;//invalid
-                        };
-                        //Func<int, bool> validInput= inp => inp >= 1 && inp <= instances.Count;
-                        // = getUserInput();
-                        //printPartitionMenu(instances);
-                        while (true)
-                        {                            
-                            int userInput = getUserInput();
-                            if ((userInput < 0 || userInput > instances.Count))// invalid case
-                            {
-                                printPartitionMenu(instances);
-                                Console.WriteLine("<------------Invalid input------------>");
-                                //Console.Read();
-
-                            }
-                            else if (userInput == 0) // quit case
-                            {
-                                Console.WriteLine("<_______________Quit__________________>");
-                                return;
-                            }
-                            
-                            else // valid case
-                            {                     
-                                Console.WriteLine("<+++++++++++++valid input+++++++++++++>");
-                                Console.Read();
-                                break;                               
-                            }
-                        }
-
+                        selectedInstances= InstanceMenu.getInstancesFromMenu(instances);
                         return;
                         //    schedulerType: "quartz",
                         //    databaseSetting: databaseSetting);
@@ -227,8 +171,7 @@ namespace InstallConfig
             //    Console.ReadLine();
             //}
         }
-
-      
+        
 
         static void ConfigureQuartzJobStore(TelcobrightConfig tbc, ConfigPathHelper configPathHelper)
         {
@@ -346,7 +289,7 @@ namespace InstallConfig
                 {
                     Func<bool> dbExists = () =>
                     {
-                        cmd.CommandText = "show databases;";
+                        cmd.CommandText = "getInstancesFromMenu databases;";
                         MySqlDataReader reader = cmd.ExecuteReader();
                         List<string> databases = new List<string>();
                         while (reader.Read())
@@ -383,7 +326,6 @@ namespace InstallConfig
             ConfigPathHelper configPathHelper)
         {
             Console.WriteLine("Generating Configuration for " + configGenerator.Tbc.OperatorName);
-            
             TelcobrightConfig tbc = configGenerator.GenerateConfig();
             Console.WriteLine("Writing Configuration Files for " + configGenerator.Tbc.OperatorName);
             WriteConfigOperatorWise(tbc, configPathHelper);

@@ -15,11 +15,10 @@ namespace InstallConfig
     {
         public static string getDbConStr(DatabaseSetting databaseSetting, string operatorName)
         {
-            return 
-                "server=" + databaseSetting.ServerName + ";User Id=" + databaseSetting.AdminUserName +
+            return "server=" + databaseSetting.ServerName + ";User Id=" + databaseSetting.AdminUserName +
                 ";password=" + databaseSetting.AdminPassword + ";Persist Security Info=True; default command timeout=3600";
         }
-        private static bool CreateDatabaseIfRequired(DatabaseSetting databaseSetting, ConfigPathHelper configPathHelper)
+        private static void CreateDatabaseIfRequired(DatabaseSetting databaseSetting, ConfigPathHelper configPathHelper)
         {
             string constr =
                 "server=" + databaseSetting.ServerName + ";User Id=" + databaseSetting.AdminUserName +
@@ -31,7 +30,7 @@ namespace InstallConfig
                 {
                     Func<bool> dbExists = () =>
                     {
-                        cmd.CommandText = "show databases;";
+                        cmd.CommandText = "getInstancesFromMenu databases;";
                         MySqlDataReader reader = cmd.ExecuteReader();
                         List<string> databases = new List<string>();
                         while (reader.Read())
