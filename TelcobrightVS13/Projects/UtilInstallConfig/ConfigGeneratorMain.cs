@@ -57,7 +57,6 @@ namespace InstallConfig
                 //var splitArr = ConfigurationManager.AppSettings["JsonConfigFileNameForPortalCopyForSingleOperator"]
                 //    .Split('_').ToList();
                 string tbOperatorName = "summit";//todo: change
-
                 Console.WriteLine("Welcome to Telcobright Initial Configuration Utility");
                 Console.WriteLine("Partner Database Name: [" + tbOperatorName + "]");
                 Console.WriteLine("Select Task:");
@@ -75,12 +74,21 @@ namespace InstallConfig
 
                 Dictionary<string, string> instances =
                     ConfigurationManager.AppSettings.ToDictionary().Where(kv => kv.Key.StartsWith("instance")).ToDictionary(kv => kv.Key, kv => kv.Value);
-                List<string> selectedInstances = InstanceMenu.getInstancesFromMenu(instances);
+                List<string> selectedInstances = new List<string>();
+                ConfigPathHelper configPathHelper = new ConfigPathHelper("WS_Topshelf_Quartz", "portal", "UtilInstallConfig", "SchedulerScripts");
+                List<TelcobrightConfig> selectedOperatorsConfig;
                 switch (cmdName)
                 {
                     case '1':
-                        Console.WriteLine("Not implemented yet");
                         if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' || Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
+                        Console.WriteLine("Creating Database, none will be created if one exists.");
+                        selectedInstances = InstanceMenu.getInstancesFromMenu(instances,"Select instances to create initial database:");
+                        selectedOperatorsConfig = getSelectedOperatorsConfig(selectedInstances, configPathHelper);
+                        foreach (var tbc in selectedOperatorsConfig)
+                        {
+                            
+                        }
+                        //using(MySqlConnection con = new MySqlConnection())
                         break;
                     case '2':
                         Console.WriteLine("Enter Source Dir path & prefix without quotes, separated by comma...");
@@ -104,19 +112,11 @@ namespace InstallConfig
                         if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' || Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
                         break;
                     case '6':
-                        SchedulerSetting schedulerSetting = null;
-                        List<IConfigGenerator> operatorsToBeConfigured
-                            = new MefConfigImportComposer().Compose().Where(op=>instances.Values.Contains(op.Tbc.DatabaseSetting.DatabaseName)).ToList();
-                        ConfigPathHelper configPathHelper =
-                            new ConfigPathHelper("WS_Topshelf_Quartz", "portal", "UtilInstallConfig", "SchedulerScripts");
-                        List<TelcobrightConfig> operatorConfigs = new List<TelcobrightConfig>();
-                        DeletePrevConfigFilesForPortalAndWinService(configPathHelper);
-                        foreach (IConfigGenerator configGenerator in operatorsToBeConfigured)
+                        selectedOperatorsConfig=getSelectedOperatorsConfig(instances, configPathHelper);
+                        foreach (var tbc in selectedOperatorsConfig)
                         {
-                            //generate tbc & config file for each operator configure in app.config in installConfig
-                            TelcobrightConfig tbc = ConfigureSingleOperator(configGenerator,configPathHelper);
-                            tbc.SchedulerDaemonConfigs = configGenerator.GetSchedulerDaemonConfigs();
-                            operatorConfigs.Add(tbc);
+                            Console.WriteLine("Writing Configuration Files for " + tbc.OperatorName);
+                            WriteConfigOperatorWise(tbc, configPathHelper);
                         }
                         Console.WriteLine("Config Files have been generated successfully.");
                         //reset job store
@@ -124,7 +124,7 @@ namespace InstallConfig
                         ConsoleKeyInfo keyInfo = Console.ReadKey();
                         if (keyInfo.KeyChar == 'Y' || keyInfo.KeyChar == 'y')
                         {
-                            foreach (var tbc in operatorConfigs)
+                            foreach (var tbc in selectedOperatorsConfig)
                             {
                                 ConfigureQuartzJobStore(tbc, configPathHelper); //configure job store for all opeartors
                             }
@@ -138,14 +138,14 @@ namespace InstallConfig
                         }
                         Console.WriteLine("Config generation is successful, press 'q' to quit");
                         var k = Convert.ToChar((Console.ReadKey(true)).Key);
-                        if (k == 'q' || k== 'Q')
+                        if (k == 'q' || k == 'Q')
                         {
                             Environment.Exit(0);
                         }
-                            
+
                         break;
                     case '7':
-                        selectedInstances= InstanceMenu.getInstancesFromMenu(instances);
+                        selectedInstances= InstanceMenu.getInstancesFromMenu(instances, "Select instances to modify partitions:");
                         return;
                         //    schedulerType: "quartz",
                         //    databaseSetting: databaseSetting);
@@ -171,7 +171,22 @@ namespace InstallConfig
             //    Console.ReadLine();
             //}
         }
-        
+
+        private static List<TelcobrightConfig> getSelectedOperatorsConfig(List<string> instances, ConfigPathHelper configPathHelper)
+        {
+            List<IConfigGenerator> operatorsToBeConfigured
+                                        = new MefConfigImportComposer().Compose().Where(op => instances.Contains(op.Tbc.DatabaseSetting.DatabaseName)).ToList();
+            List<TelcobrightConfig> operatorConfigs = new List<TelcobrightConfig>();
+            DeletePrevConfigFilesForPortalAndWinService(configPathHelper);
+            foreach (IConfigGenerator configGenerator in operatorsToBeConfigured)
+            {
+                //generate tbc & config file for each operator configure in app.config in installConfig
+                TelcobrightConfig tbc = ConfigureSingleOperator(configGenerator, configPathHelper);
+                tbc.SchedulerDaemonConfigs = configGenerator.GetSchedulerDaemonConfigs();
+                operatorConfigs.Add(tbc);
+            }
+            return operatorConfigs;
+        }
 
         static void ConfigureQuartzJobStore(TelcobrightConfig tbc, ConfigPathHelper configPathHelper)
         {
@@ -327,8 +342,6 @@ namespace InstallConfig
         {
             Console.WriteLine("Generating Configuration for " + configGenerator.Tbc.OperatorName);
             TelcobrightConfig tbc = configGenerator.GenerateConfig();
-            Console.WriteLine("Writing Configuration Files for " + configGenerator.Tbc.OperatorName);
-            WriteConfigOperatorWise(tbc, configPathHelper);
             return tbc;
         }
 

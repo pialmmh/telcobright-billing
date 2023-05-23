@@ -11,10 +11,10 @@ namespace InstallConfig
 {
     public class InstanceMenu
     {
-        public static List<string> getInstancesFromMenu(Dictionary<string,string> instances)
+        public static List<string> getInstancesFromMenu(Dictionary<string,string> instances, string msgToDisplay)
         {
             Console.Clear();
-            printMenu(instances);
+            printMenu(instances, msgToDisplay);
             NameValueCollection configFiles = (NameValueCollection)ConfigurationManager.GetSection("appSettings");
             foreach (string key in configFiles)
             {
@@ -31,13 +31,15 @@ namespace InstallConfig
                 {
                     Console.Clear();
                     Console.WriteLine("Invalid input, try again...");
-                    printMenu(instances);
+                    printMenu(instances,msgToDisplay);
                 }
                 else // valid case
                 {
                     List<string> selectedKeys = userInputs.Select(i => "instance" + i.ToString()).ToList();
                     List<string> instanceNames = instances.Where(kv => selectedKeys.Contains(kv.Key))
                         .Select(kv => kv.Value).ToList();
+                    Console.WriteLine("Selected instances:");
+                    Console.WriteLine($"[{string.Join(",",instanceNames)}]");
                     return instanceNames;
                 }
             }
@@ -66,10 +68,11 @@ namespace InstallConfig
                     return finalInputs;
                 }
             }
+            
             return finalInputs;
         }
 
-        static void printMenu(Dictionary<string, string> instances)
+        static void printMenu(Dictionary<string, string> instances, string msgToDisplay)
         {
             Console.WriteLine("select operator or instance to modify partitions:");
             int i = 0;
