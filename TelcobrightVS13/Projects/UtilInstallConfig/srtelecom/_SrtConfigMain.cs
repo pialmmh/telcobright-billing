@@ -20,36 +20,37 @@ namespace InstallConfig
     public partial class SrtAbstractConfigConfigGenerator : AbstractConfigConfigGenerator
     {
         public override TelcobrightConfig Tbc { get; }
+
         public SrtAbstractConfigConfigGenerator()
         {
             int thisServerId = 1;
-            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, thisServerId, "SR Telecom Ltd.");
-            this.Tbc.Telcobrightpartner = new telcobrightpartner
-            {
-                idCustomer = 8,
-                CustomerName = this.Tbc.OperatorName,
-                idOperatorType = 2,
-                databasename = "srtelecom",
-                databasetype = "",
-                user = null,
-                pass = null,
-                ServerNameOrIP = null,
-                IBServerNameOrIP = null,
-                IBdatabasename = null,
-                IBdatabasetype = null,
-                IBuser = null,
-                IBpass = null,
-                TransactionSizeForCDRLoading = null,
-                NativeTimeZone = 3251,
-                IgwPrefix = null,
-                RateDictionaryMaxRecords = 3000000,
-                MinMSForIntlOut = 100,
-                RawCdrKeepDurationDays = 90,
-                SummaryKeepDurationDays = 730,
-                AutoDeleteOldData = 1,
-                AutoDeleteStartHour = 4,
-                AutoDeleteEndHour = 6
-            };
+            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, thisServerId,
+                new telcobrightpartner
+                {
+                    idCustomer = 8,
+                    CustomerName = this.Tbc.OperatorName,
+                    idOperatorType = 2,
+                    databasename = "srtelecom",
+                    databasetype = "",
+                    user = null,
+                    pass = null,
+                    ServerNameOrIP = null,
+                    IBServerNameOrIP = null,
+                    IBdatabasename = null,
+                    IBdatabasetype = null,
+                    IBuser = null,
+                    IBpass = null,
+                    TransactionSizeForCDRLoading = null,
+                    NativeTimeZone = 3251,
+                    IgwPrefix = null,
+                    RateDictionaryMaxRecords = 3000000,
+                    MinMSForIntlOut = 100,
+                    RawCdrKeepDurationDays = 90,
+                    SummaryKeepDurationDays = 730,
+                    AutoDeleteOldData = 1,
+                    AutoDeleteStartHour = 4,
+                    AutoDeleteEndHour = 6
+                });
         }
 
         public override TelcobrightConfig GenerateConfig()

@@ -60,6 +60,24 @@
     <Compile Include="Helper\CurrencyHelper.cs" />
     <Compile Include="Helper\TemplateNameHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reports\InvoiceReports\rgrn\Transit\InternationalIncomingToForeignCarrier.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\rgrn\Transit\InternationalIncomingToForeignCarrier.Designer.cs">
+      <DependentUpon>InternationalIncomingToForeignCarrier.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\rgrn\Transit\InternationalIncomingToForeignCarrierDetails1.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\rgrn\Transit\InternationalIncomingToForeignCarrierDetails1.Designer.cs">
+      <DependentUpon>InternationalIncomingToForeignCarrierDetails1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\rgrn\Transit\InternationalIncomingToForeignCarrierDetails2.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\rgrn\Transit\InternationalIncomingToForeignCarrierDetails2.Designer.cs">
+      <DependentUpon>InternationalIncomingToForeignCarrierDetails2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Reports\InvoiceReports\summit\ICX\DomesticToANS.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -312,27 +330,18 @@
     <Compile Include="Reports\InvoiceReports\btel\IGW\InternationalIncomingToForeignCarrier.Designer.cs">
       <DependentUpon>InternationalIncomingToForeignCarrier.cs</DependentUpon>
     </Compile>
-    <Compile Include="Reports\InvoiceReports\rgrn\Transit\InternationalIncomingToForeignCarrier.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\InvoiceReports\rgrn\Transit\InternationalIncomingToForeignCarrier.Designer.cs">
-      <DependentUpon>InternationalIncomingToForeignCarrier.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Reports\InvoiceReports\rgrn\Transit\InternationalIncomingToForeignCarrierDetails1.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\InvoiceReports\rgrn\Transit\InternationalIncomingToForeignCarrierDetails1.Designer.cs">
-      <DependentUpon>InternationalIncomingToForeignCarrierDetails1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Reports\InvoiceReports\rgrn\Transit\InternationalIncomingToForeignCarrierDetails2.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\InvoiceReports\rgrn\Transit\InternationalIncomingToForeignCarrierDetails2.Designer.cs">
-      <DependentUpon>InternationalIncomingToForeignCarrierDetails2.cs</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\licenses.licx" />
+    <EmbeddedResource Include="Reports\InvoiceReports\rgrn\Transit\InternationalIncomingToForeignCarrier.resx">
+      <DependentUpon>InternationalIncomingToForeignCarrier.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\InvoiceReports\rgrn\Transit\InternationalIncomingToForeignCarrierDetails1.resx">
+      <DependentUpon>InternationalIncomingToForeignCarrierDetails1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\InvoiceReports\rgrn\Transit\InternationalIncomingToForeignCarrierDetails2.resx">
+      <DependentUpon>InternationalIncomingToForeignCarrierDetails2.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\InvoiceReports\summit\ICX\DomesticToANS.resx">
       <DependentUpon>DomesticToANS.cs</DependentUpon>
     </EmbeddedResource>
@@ -458,15 +467,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\InvoiceReports\btel\IGW\InternationalIncomingToForeignCarrier.resx">
       <DependentUpon>InternationalIncomingToForeignCarrier.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\InvoiceReports\rgrn\Transit\InternationalIncomingToForeignCarrier.resx">
-      <DependentUpon>InternationalIncomingToForeignCarrier.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\InvoiceReports\rgrn\Transit\InternationalIncomingToForeignCarrierDetails1.resx">
-      <DependentUpon>InternationalIncomingToForeignCarrierDetails1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\InvoiceReports\rgrn\Transit\InternationalIncomingToForeignCarrierDetails2.resx">
-      <DependentUpon>InternationalIncomingToForeignCarrierDetails2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -12,8 +12,8 @@ namespace TelcobrightMediation
 {
     public class TelcobrightConfig
     {
-        public string OperatorName { get; set; }
         public telcobrightpartner Telcobrightpartner { get; set; }
+        public string OperatorName => this.Telcobrightpartner.CustomerName;
         public List<ne> Nes { get; set; }
         public int DefaultTimeZoneId { get; set; } = 3251;
         public TelecomOperatortype TelecomOperatortype { get;}
@@ -27,7 +27,6 @@ namespace TelcobrightMediation
         public DatabaseSetting DatabaseSetting { get; set; } = new DatabaseSetting();
         public PortalSettings PortalSettings { get; set; }
         public Dictionary<string, ApplicationServerConfig> ApplicationServersConfig { get; set; }//server id as string
-        public int IdTelcobrightPartner { get; set; }
         public Dictionary<int,AutomatedNetworkElementCli> AutomatedNetworkElementClis { get; set; }
         public EmailSenderConfig EmailSenderConfig { get; set; }
         public SmsSenderConfig SmsSenderConfig { get; set; }
@@ -36,13 +35,13 @@ namespace TelcobrightMediation
         public List<KeyValuePair<Regex, string>> ServiceAliasesRegex { get; set; } =
             new List<KeyValuePair<Regex, string>>();
         public TelcobrightConfig(TelecomOperatortype telecomOperatortype,
-            int thisServerId, string operatorName)
+            int thisServerId, telcobrightpartner tbpPartner)
         {
             this.ServerId = thisServerId;
             this.ApplicationServersConfig = new Dictionary<string, ApplicationServerConfig>();
             this.ResourcePool = new ResourcePool();
             this.TelecomOperatortype = telecomOperatortype;
-            this.OperatorName = operatorName;
+            this.Telcobrightpartner = tbpPartner;
         }
 
         public string GetPathIndependentApplicationDirectory()

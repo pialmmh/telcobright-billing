@@ -24,24 +24,23 @@ namespace InstallConfig
         public BtelAbstractConfigConfigGenerator()
         {
             int thisServerId = 1;
-            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Igw, thisServerId, "Bangla Tel Ltd");
-            this.Tbc.IdTelcobrightPartner = 1;
-            this.Tbc.Telcobrightpartner = new telcobrightpartner
-            {
-                idCustomer = 3,
-                CustomerName = this.Tbc.OperatorName,
-                idOperatorType = 4,
-                databasename = "btel",
-                NativeTimeZone = 3251,
-                IgwPrefix = "320",
-                RateDictionaryMaxRecords = 3000000,
-                MinMSForIntlOut = 100,
-                RawCdrKeepDurationDays = 90,
-                SummaryKeepDurationDays = 730,
-                AutoDeleteOldData = 1,
-                AutoDeleteStartHour = 2,
-                AutoDeleteEndHour = 3
-            };
+            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Igw, thisServerId,
+                new telcobrightpartner
+                {
+                    idCustomer = 3,
+                    CustomerName = this.Tbc.OperatorName,
+                    idOperatorType = 4,
+                    databasename = "btel",
+                    NativeTimeZone = 3251,
+                    IgwPrefix = "320",
+                    RateDictionaryMaxRecords = 3000000,
+                    MinMSForIntlOut = 100,
+                    RawCdrKeepDurationDays = 90,
+                    SummaryKeepDurationDays = 730,
+                    AutoDeleteOldData = 1,
+                    AutoDeleteStartHour = 2,
+                    AutoDeleteEndHour = 3
+                });
         }
 
         public override TelcobrightConfig GenerateConfig()

@@ -24,23 +24,23 @@ namespace InstallConfig
         public DblAbstractConfigConfigGeneratorHelper()
         {
             int thisServerId = 1;
-            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Igw, thisServerId, "DBL Telecom");
-            this.Tbc.Telcobrightpartner = new telcobrightpartner
-            {
-                idCustomer = 4,
-                CustomerName = this.Tbc.OperatorName,
-                idOperatorType = 4,
-                databasename = "dbl",
-                NativeTimeZone = 3251,
-                IgwPrefix = "240",
-                RateDictionaryMaxRecords = 3000000,
-                MinMSForIntlOut = 100,
-                RawCdrKeepDurationDays = 90,
-                SummaryKeepDurationDays = 730,
-                AutoDeleteOldData = 1,
-                AutoDeleteStartHour = 4,
-                AutoDeleteEndHour = 6
-            };
+            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Igw, thisServerId,
+                new telcobrightpartner
+                    {
+                        idCustomer = 4,
+                        CustomerName = this.Tbc.OperatorName,
+                        idOperatorType = 4,
+                        databasename = "dbl",
+                        NativeTimeZone = 3251,
+                        IgwPrefix = "240",
+                        RateDictionaryMaxRecords = 3000000,
+                        MinMSForIntlOut = 100,
+                        RawCdrKeepDurationDays = 90,
+                        SummaryKeepDurationDays = 730,
+                        AutoDeleteOldData = 1,
+                        AutoDeleteStartHour = 4,
+                        AutoDeleteEndHour = 6
+                    });
         }
         public override TelcobrightConfig GenerateConfig()
         {
