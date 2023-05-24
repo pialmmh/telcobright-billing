@@ -17,25 +17,21 @@ using TelcobrightMediation.Automation;
 
 namespace InstallConfig
 {
-    [Export(typeof(IConfigGenerator))]
-    public partial class BtelConfigGenerator : IConfigGenerator
+    [Export(typeof(AbstractConfigConfigGenerator))]
+    public partial class BtelAbstractConfigConfigGenerator : AbstractConfigConfigGenerator
     {
-        public TelcobrightConfig Tbc { get; }
-        public BtelConfigGenerator()
+        public override TelcobrightConfig Tbc { get; }
+        public BtelAbstractConfigConfigGenerator()
         {
             int thisServerId = 1;
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Igw, thisServerId, "Bangla Tel Ltd");
             this.Tbc.IdTelcobrightPartner = 1;
-        }
-
-        public TelcobrightConfig GenerateConfig()
-        {
             this.Tbc.Telcobrightpartner = new telcobrightpartner
             {
                 idCustomer = 3,
                 CustomerName = this.Tbc.OperatorName,
                 idOperatorType = 4,
-                databasename = "banglatel",
+                databasename = "btel",
                 NativeTimeZone = 3251,
                 IgwPrefix = "320",
                 RateDictionaryMaxRecords = 3000000,
@@ -46,6 +42,10 @@ namespace InstallConfig
                 AutoDeleteStartHour = 2,
                 AutoDeleteEndHour = 3
             };
+        }
+
+        public override TelcobrightConfig GenerateConfig()
+        {
             this.Tbc.Nes = new List<ne>()
             {
                 new ne

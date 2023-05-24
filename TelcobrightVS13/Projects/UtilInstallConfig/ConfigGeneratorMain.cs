@@ -51,12 +51,8 @@ namespace InstallConfig
             //try
             {
                 Start:
-                Console.Clear();
-                //tb operator name
-                //string tbOperatorName = ConfigurationManager.AppSettings["JsonConfigFileNameForPortalCopyForSingleOperator"].Split('_')[1];
-                //var splitArr = ConfigurationManager.AppSettings["JsonConfigFileNameForPortalCopyForSingleOperator"]
-                //    .Split('_').ToList();
                 string tbOperatorName = "summit";//todo: change
+                Console.Clear();
                 Console.WriteLine("Welcome to Telcobright Initial Configuration Utility");
                 Console.WriteLine("Partner Database Name: [" + tbOperatorName + "]");
                 Console.WriteLine("Select Task:");
@@ -112,11 +108,17 @@ namespace InstallConfig
                         if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' || Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
                         break;
                     case '6':
-                        selectedOperatorsConfig=getSelectedOperatorsConfig(instances, configPathHelper);
+                        selectedOperatorsConfig=getSelectedOperatorsConfig(instances.Values.ToList(), configPathHelper);
+                        if (!selectedOperatorsConfig.Any())
+                        {
+                            Console.WriteLine("No operator's config has been found. Press any key to start over.");
+                            Console.ReadKey();
+                            goto Start;
+                        }
                         foreach (var tbc in selectedOperatorsConfig)
                         {
                             Console.WriteLine("Writing Configuration Files for " + tbc.OperatorName);
-                            WriteConfigOperatorWise(tbc, configPathHelper);
+                            WriteConfig(tbc, configPathHelper);
                         }
                         Console.WriteLine("Config Files have been generated successfully.");
                         //reset job store
@@ -174,11 +176,11 @@ namespace InstallConfig
 
         private static List<TelcobrightConfig> getSelectedOperatorsConfig(List<string> instances, ConfigPathHelper configPathHelper)
         {
-            List<IConfigGenerator> operatorsToBeConfigured
-                                        = new MefConfigImportComposer().Compose().Where(op => instances.Contains(op.Tbc.DatabaseSetting.DatabaseName)).ToList();
+            List<AbstractConfigConfigGenerator> operatorsToBeConfigured
+                                        = new MefConfigImportComposer().Compose().Where(op => instances.Contains(op.Tbc.Telcobrightpartner.databasename)).ToList();
             List<TelcobrightConfig> operatorConfigs = new List<TelcobrightConfig>();
             DeletePrevConfigFilesForPortalAndWinService(configPathHelper);
-            foreach (IConfigGenerator configGenerator in operatorsToBeConfigured)
+            foreach (AbstractConfigConfigGenerator configGenerator in operatorsToBeConfigured)
             {
                 //generate tbc & config file for each operator configure in app.config in installConfig
                 TelcobrightConfig tbc = ConfigureSingleOperator(configGenerator, configPathHelper);
@@ -337,11 +339,11 @@ namespace InstallConfig
                 }
             }
         }
-        private static TelcobrightConfig ConfigureSingleOperator(IConfigGenerator configGenerator,
+        private static TelcobrightConfig ConfigureSingleOperator(AbstractConfigConfigGenerator abstractConfigConfigGenerator,
             ConfigPathHelper configPathHelper)
         {
-            Console.WriteLine("Generating Configuration for " + configGenerator.Tbc.OperatorName);
-            TelcobrightConfig tbc = configGenerator.GenerateConfig();
+            Console.WriteLine("Generating Configuration for " + abstractConfigConfigGenerator.Tbc.OperatorName);
+            TelcobrightConfig tbc = abstractConfigConfigGenerator.GenerateConfig();
             return tbc;
         }
 
@@ -352,7 +354,7 @@ namespace InstallConfig
             targetDir = configPathHelper.GetPortalBinPath();
             FileAndPathHelper.DeleteFileContaining(targetDir, "*.conf");
         }
-        static void WriteConfigOperatorWise(TelcobrightConfig tbc, ConfigPathHelper configPathHelper)
+        static void WriteConfig(TelcobrightConfig tbc, ConfigPathHelper configPathHelper)
         {
             //write web & app.config files
             DatabaseSetting dbSettings = tbc.DatabaseSetting;

@@ -13,21 +13,18 @@ using TelcobrightMediation.Scheduler.Quartz;
 
 namespace InstallConfig
 {
-    [Export(typeof(IConfigGenerator))]
-    public partial class DblConfigGeneratorHelper:IConfigGenerator
+    [Export(typeof(AbstractConfigConfigGenerator))]
+    public partial class DblAbstractConfigConfigGeneratorHelper:AbstractConfigConfigGenerator
     {
-        public List<QuartzTbDaemonConfig> GetSchedulerDaemonConfigs()
+        public override List<QuartzTbDaemonConfig> GetSchedulerDaemonConfigs()
         {
             throw new NotImplementedException();
         }
-        public TelcobrightConfig Tbc { get; }
-        public DblConfigGeneratorHelper()
+        public override TelcobrightConfig Tbc { get; }
+        public DblAbstractConfigConfigGeneratorHelper()
         {
             int thisServerId = 1;
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Igw, thisServerId, "DBL Telecom");
-        }
-        public TelcobrightConfig GenerateConfig()
-        {
             this.Tbc.Telcobrightpartner = new telcobrightpartner
             {
                 idCustomer = 4,
@@ -44,6 +41,10 @@ namespace InstallConfig
                 AutoDeleteStartHour = 4,
                 AutoDeleteEndHour = 6
             };
+        }
+        public override TelcobrightConfig GenerateConfig()
+        {
+            
             this.Tbc.Nes = new List<ne>()
             {
                 new ne

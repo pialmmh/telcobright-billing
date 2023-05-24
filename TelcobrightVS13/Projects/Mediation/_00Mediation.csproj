@@ -260,7 +260,7 @@
     <Compile Include="Config\ConfigFactory.cs" />
     <Compile Include="Config\ConnectionManager.cs" />
     <Compile Include="Config\Vault.cs" />
-    <Compile Include="Config\IConfigGenerator.cs" />
+    <Compile Include="Config\AbstractConfigConfigGenerator.cs" />
     <Compile Include="Config\IConfigurationSection.cs" />
     <Compile Include="Config\JobInputData\FileCopyJobInputData.cs" />
     <Compile Include="Config\JobInputData\OptimizerJobInputData.cs" />

@@ -18,14 +18,14 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class SrtConfigGenerator //quartz config part
+    public partial class SrtAbstractConfigConfigGenerator //quartz config part
     {
-        public DatabaseSetting GetDatabaseSettings()
+        public override DatabaseSetting GetDatabaseSettings()
         {
             return new DatabaseSetting()
             {
                 ServerName = "172.16.100.6",
-                DatabaseName = "srtelecom",
+                DatabaseName = this.Tbc.Telcobrightpartner.databasename,
                 AdminPassword = "Takay1#$ane",
                 AdminUserName = "root",
                 DatabaseEngine = "innodb",

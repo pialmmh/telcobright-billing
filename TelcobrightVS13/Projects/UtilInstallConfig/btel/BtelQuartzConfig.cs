@@ -15,10 +15,10 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class BtelConfigGenerator //quartz config part
+    public partial class BtelAbstractConfigConfigGenerator //quartz config part
     {
         private List<QuartzTbDaemonConfig> DaemonConfigurations { get; set; }
-        public List<QuartzTbDaemonConfig> GetSchedulerDaemonConfigs()
+        public override List<QuartzTbDaemonConfig> GetSchedulerDaemonConfigs()
         {
             this.DaemonConfigurations = new List<QuartzTbDaemonConfig>();
             this.DaemonConfigurations.AddRange(GetFileListerInstances(this.Tbc.Telcobrightpartner.CustomerName));

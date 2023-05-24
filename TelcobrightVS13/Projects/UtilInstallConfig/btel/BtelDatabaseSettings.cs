@@ -18,14 +18,14 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class BtelConfigGenerator //quartz config part
+    public partial class BtelAbstractConfigConfigGenerator //quartz config part
     {
-        public DatabaseSetting GetDatabaseSettings()
+        public override DatabaseSetting GetDatabaseSettings()
         {
             return new DatabaseSetting()
             {
                 ServerName = "10.0.0.9",
-                DatabaseName = "btel",
+                DatabaseName = this.Tbc.Telcobrightpartner.databasename,
                 AdminPassword = "Takay1#$ane",
                 AdminUserName = "root",
                 DatabaseEngine = "innodb",

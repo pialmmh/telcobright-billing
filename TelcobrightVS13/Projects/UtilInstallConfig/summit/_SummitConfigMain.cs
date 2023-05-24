@@ -16,18 +16,14 @@ using TelcobrightMediation.Accounting;
 
 namespace InstallConfig
 {
-    [Export(typeof(IConfigGenerator))]
-    public partial class SummitConfigGenerator : IConfigGenerator
+    [Export(typeof(AbstractConfigConfigGenerator))]
+    public partial class SummitAbstractConfigConfigGenerator : AbstractConfigConfigGenerator
     {
-        public TelcobrightConfig Tbc { get; }
-        public SummitConfigGenerator()
+        public override TelcobrightConfig Tbc { get; }
+        public SummitAbstractConfigConfigGenerator()
         {
             int thisServerId = 1;
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, thisServerId, "Summit Communications Ltd.");
-        }
-
-        public TelcobrightConfig GenerateConfig()
-        {
             this.Tbc.Telcobrightpartner = new telcobrightpartner
             {
                 idCustomer = 9,
@@ -44,6 +40,11 @@ namespace InstallConfig
                 AutoDeleteStartHour = 4,
                 AutoDeleteEndHour = 6
             };
+        }
+
+        public override TelcobrightConfig GenerateConfig()
+        {
+           
             this.Tbc.Nes = new List<ne>()
             {
                 new ne

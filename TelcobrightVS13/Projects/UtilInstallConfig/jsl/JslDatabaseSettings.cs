@@ -18,14 +18,14 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class JslConfigGenerator //quartz config part
+    public partial class JslAbstractConfigConfigGenerator //quartz config part
     {
-        public DatabaseSetting GetDatabaseSettings()
+        public override DatabaseSetting GetDatabaseSettings()
         {
             return new DatabaseSetting()
             {
                 ServerName = "10.0.0.5",
-                DatabaseName = "jsl",
+                DatabaseName = this.Tbc.Telcobrightpartner.databasename,
                 AdminPassword = "Takay1#$ane",
                 AdminUserName = "root",
                 DatabaseEngine = "innodb",

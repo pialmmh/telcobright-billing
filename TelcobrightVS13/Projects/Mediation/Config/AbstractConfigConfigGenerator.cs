@@ -11,6 +11,14 @@ namespace TelcobrightMediation.Config
         List<QuartzTbDaemonConfig> GetSchedulerDaemonConfigs();
         DatabaseSetting GetDatabaseSettings();
     }
+    public abstract class AbstractConfigConfigGenerator: IConfigGenerator
+    {
+        public override string ToString() => this.GetType().Name;
+        public abstract TelcobrightConfig Tbc { get; }
+        public abstract TelcobrightConfig GenerateConfig();
+        public abstract List<QuartzTbDaemonConfig> GetSchedulerDaemonConfigs();
+        public abstract DatabaseSetting GetDatabaseSettings();
+    }
 }
 
 

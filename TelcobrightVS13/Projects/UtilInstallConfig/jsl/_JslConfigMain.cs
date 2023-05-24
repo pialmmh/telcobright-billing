@@ -16,19 +16,15 @@ using TelcobrightMediation.Accounting;
 
 namespace InstallConfig
 {
-    [Export(typeof(IConfigGenerator))]
-    public partial class JslConfigGenerator:IConfigGenerator
+    [Export(typeof(AbstractConfigConfigGenerator))]
+    public partial class JslAbstractConfigConfigGenerator:AbstractConfigConfigGenerator
     {
-        public TelcobrightConfig Tbc { get; }
+        public override TelcobrightConfig Tbc { get; }
 
-        public JslConfigGenerator()
+        public JslAbstractConfigConfigGenerator()
         {
             int thisServerId = 1;
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, thisServerId, "Jibondhara Solutions Ltd.");
-        }
-
-        public TelcobrightConfig GenerateConfig()
-        {
             this.Tbc.Telcobrightpartner = new telcobrightpartner
             {
                 idCustomer = 7,
@@ -55,7 +51,11 @@ namespace InstallConfig
                 AutoDeleteStartHour = 4,
                 AutoDeleteEndHour = 6
             };
+        }
 
+        public override TelcobrightConfig GenerateConfig()
+        {
+            
             this.Tbc.Nes = new List<ne>()
             {
                 new ne

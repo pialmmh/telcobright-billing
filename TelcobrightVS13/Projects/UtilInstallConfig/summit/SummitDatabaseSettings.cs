@@ -18,14 +18,14 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class SummitConfigGenerator //quartz config part
+    public partial class SummitAbstractConfigConfigGenerator //quartz config part
     {
-        public DatabaseSetting GetDatabaseSettings()
+        public override DatabaseSetting GetDatabaseSettings()
         {
             return new DatabaseSetting()
             {
                 ServerName = "172.18.0.2",
-                DatabaseName = "summit",
+                DatabaseName = this.Tbc.Telcobrightpartner.databasename,
                 AdminPassword = "Takay1#$ane",
                 AdminUserName = "root",
                 DatabaseEngine = "innodb",

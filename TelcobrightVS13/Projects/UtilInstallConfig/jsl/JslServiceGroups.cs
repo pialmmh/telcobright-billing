@@ -19,7 +19,7 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class JslConfigGenerator //quartz config part
+    public partial class JslAbstractConfigConfigGenerator //quartz config part
     {
         public Dictionary<int, ServiceGroupConfiguration> GetServiceGroupConfigurations()
         {

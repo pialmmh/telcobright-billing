@@ -20,7 +20,7 @@ using TelcobrightMediation.Rating;
 
 namespace InstallConfig
 {
-    public partial class BtelConfigGenerator //quartz config part
+    public partial class BtelAbstractConfigConfigGenerator //quartz config part
     {
         public Dictionary<int, ServiceGroupConfiguration> GetServiceGroupConfigurations()
         {

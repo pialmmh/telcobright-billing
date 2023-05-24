@@ -16,17 +16,14 @@ using TelcobrightMediation.Accounting;
 
 namespace InstallConfig
 {
-    [Export(typeof(IConfigGenerator))]
-    public partial class PurpleConfigGenerator:IConfigGenerator
+    [Export(typeof(AbstractConfigConfigGenerator))]
+    public partial class PurpleAbstractConfigConfigGenerator:AbstractConfigConfigGenerator
     {
-        public TelcobrightConfig Tbc { get; }
-        public PurpleConfigGenerator()
+        public override TelcobrightConfig Tbc { get; }
+        public PurpleAbstractConfigConfigGenerator()
         {
             int thisServerId = 1;
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, thisServerId, "Purple Telecom Ltd.");
-        }
-        public TelcobrightConfig GenerateConfig()
-        {
             this.Tbc.Telcobrightpartner = new telcobrightpartner
             {
                 idCustomer = 2,
@@ -53,7 +50,9 @@ namespace InstallConfig
                 AutoDeleteStartHour = 4,
                 AutoDeleteEndHour = 6
             };
-
+        }
+        public override TelcobrightConfig GenerateConfig()
+        {
             this.Tbc.Nes = new List<ne>()
             {
                 new ne
