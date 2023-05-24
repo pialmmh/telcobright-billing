@@ -13,7 +13,6 @@ namespace TelcobrightMediation
     public class TelcobrightConfig
     {
         public telcobrightpartner Telcobrightpartner { get; set; }
-        public string OperatorName => this.Telcobrightpartner.CustomerName;
         public List<ne> Nes { get; set; }
         public int DefaultTimeZoneId { get; set; } = 3251;
         public TelecomOperatortype TelecomOperatortype { get;}

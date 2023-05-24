@@ -27,7 +27,7 @@ namespace InstallConfig
                 new telcobrightpartner
                     {
                         idCustomer = 2,
-                        CustomerName = this.Tbc.OperatorName,
+                        CustomerName = "Purple Telecom Ltd.",
                         idOperatorType = 2,
                         databasename = "purple",
                         databasetype = "mysql",

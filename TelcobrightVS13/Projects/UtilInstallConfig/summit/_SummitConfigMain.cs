@@ -27,7 +27,7 @@ namespace InstallConfig
                 new telcobrightpartner
                     {
                         idCustomer = 9,
-                        CustomerName = this.Tbc.OperatorName,
+                        CustomerName = "Summit Communications Ltd.",
                         idOperatorType = 2,
                         databasename = "summit",
                         NativeTimeZone = 3251,

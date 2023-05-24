@@ -28,7 +28,7 @@ namespace InstallConfig
                 new telcobrightpartner
                 {
                     idCustomer = 7,
-                    CustomerName = this.Tbc.OperatorName,
+                    CustomerName = "Jibondhara Solutions Ltd.",
                     idOperatorType = 2,
                     databasename = "jsl",
                     databasetype = "mysql",
@@ -231,15 +231,9 @@ namespace InstallConfig
             };
 
             this.PrepareDirectorySettings(this.Tbc);
-
             this.PrepareProductAndServiceConfiguration();
-            
             this.PrepareApplicationServerConfig();
-
-            DatabaseSetting databaseSetting = this.GetDatabaseSettings();
-            databaseSetting.DatabaseName = this.Tbc.OperatorName;//change dbname here if required
-            this.Tbc.DatabaseSetting = databaseSetting;
-
+            this.Tbc.DatabaseSetting = this.GetDatabaseSettings();
             this.Tbc.PortalSettings = GetPortalSettings(this.Tbc);
             return this.Tbc;
         }

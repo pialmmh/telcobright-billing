@@ -28,7 +28,7 @@ namespace InstallConfig
                 new telcobrightpartner
                     {
                         idCustomer = 4,
-                        CustomerName = this.Tbc.OperatorName,
+                        CustomerName = "DBL Telecom Ltd.",
                         idOperatorType = 4,
                         databasename = "dbl",
                         NativeTimeZone = 3251,

@@ -117,7 +117,7 @@ namespace InstallConfig
                         }
                         foreach (var tbc in selectedOperatorsConfig)
                         {
-                            Console.WriteLine("Writing Configuration Files for " + tbc.OperatorName);
+                            Console.WriteLine("Writing Configuration Files for " + tbc.Telcobrightpartner.CustomerName);
                             WriteConfig(tbc, configPathHelper);
                         }
                         Console.WriteLine("Config Files have been generated successfully.");
@@ -342,7 +342,7 @@ namespace InstallConfig
         private static TelcobrightConfig ConfigureSingleOperator(AbstractConfigConfigGenerator abstractConfigConfigGenerator,
             ConfigPathHelper configPathHelper)
         {
-            Console.WriteLine("Generating Configuration for " + abstractConfigConfigGenerator.Tbc.OperatorName);
+            Console.WriteLine("Generating Configuration for " + abstractConfigConfigGenerator.Tbc.Telcobrightpartner.CustomerName);
             TelcobrightConfig tbc = abstractConfigConfigGenerator.GenerateConfig();
             return tbc;
         }

@@ -36,7 +36,7 @@ namespace PortalApp.config
                     //String reportName = linkButton.CommandName;
                     int startPos = reportName.LastIndexOf("Template-", StringComparison.Ordinal) + "Template-".Length;
                     int length = reportName.Length - startPos;
-                    reportName = $"{Tbc.Telcobrightpartner.CustomerName}#{reportName.Substring(startPos, length)}";
+                    reportName = $"{Tbc.DatabaseSetting.DatabaseName}#{reportName.Substring(startPos, length)}";
 
                     IInvoiceTemplate template = invoiceTemplates[reportName];
 
