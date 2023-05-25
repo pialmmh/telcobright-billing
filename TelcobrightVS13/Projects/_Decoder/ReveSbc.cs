@@ -41,7 +41,7 @@ namespace Decoders
 
             string fileName = "cdr_success_192.168.1.105_From_2023-05-16_00_01_To_2023-05-17_00_00.csv";
             List<string[]> lines = FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(fileName, ',', 5, "\"", ";");
-            //inconsistentCdrs = new List<cdrinconsistent>();
+            inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
             //this.Input = input;
             List<cdrfieldmappingbyswitchtype> fieldMappings = null;
@@ -70,8 +70,8 @@ namespace Decoders
                 //string dt = lineAsArr[103];//SignalStart
                 ////if (!string.IsNullOrEmpty(dt)) cdr.SignalingStartTime = parseStringToDate(dt);
 
-                string diff = ConvertToUnixTimestamp(Convert.ToDateTime(lineAsArr[82])) - ConvertToUnixTimestamp((DateTime)textCdr[Fn.AnswerTime]);
-                textCdr[Fn.DurationSec] = diff;
+                //string diff = ConvertToUnixTimestamp(Convert.ToDateTime(lineAsArr[82])) - ConvertToUnixTimestamp((DateTime)textCdr[Fn.AnswerTime]);
+                //textCdr[Fn.DurationSec] = diff;
 
 
                 //OriginCalledId

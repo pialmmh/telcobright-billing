@@ -30,10 +30,9 @@ namespace Decoders
 
         public List<string[]> DecodeFile(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs)
         {
-
             string fileName = "VCDR.20130515.021157.1652";
             List<string[]> lines = FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(fileName, ',', 5, "\"", ";");
-            //inconsistentCdrs = new List<cdrinconsistent>();
+            inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
             //this.Input = input;
             List<cdrfieldmappingbyswitchtype> fieldMappings = null;

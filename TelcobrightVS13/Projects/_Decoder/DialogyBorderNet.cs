@@ -33,7 +33,7 @@ namespace Decoders
 
             string fileName = "sdr.bn4k.BorderNet-SBC.hpsbc01.20200207.074450.000191.0.v1.0.csv";
             List<string[]> lines = FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(fileName, ',', 1, "\"", ";");
-            //inconsistentCdrs = new List<cdrinconsistent>();
+            inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
             //this.Input = input;
             List<cdrfieldmappingbyswitchtype> fieldMappings = null;

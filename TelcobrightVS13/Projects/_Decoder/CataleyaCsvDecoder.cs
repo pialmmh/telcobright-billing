@@ -33,7 +33,7 @@ namespace Decoders
 
             string fileName = "esdr_sample.csv";
             List<string[]> lines = FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(fileName, ',', 1, "\"", ";");
-            //inconsistentCdrs = new List<cdrinconsistent>();
+            inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
             //this.Input = input;
             List<cdrfieldmappingbyswitchtype> fieldMappings = null;
