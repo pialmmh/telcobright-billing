@@ -19,12 +19,12 @@ namespace sshSender
             LinuxMysqlAutomation.execute();
         }
 
-        private static string runCommand(string command)
-        {
-            SshCommand sc = sshclient.CreateCommand(command);
-            sc.Execute();
-            string answer = sc.Result;
-            return answer;
-        }
+        //private static string runCommand(string command)
+        //{
+        //    SshCommand sc = sshclient.CreateCommand(command);
+        //    sc.Execute();
+        //    string answer = sc.Result;
+        //    return answer;
+        //}
     }
 }

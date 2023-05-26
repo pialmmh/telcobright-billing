@@ -17,7 +17,7 @@ namespace sshSender
 
         {
             string userName = "telcobright";
-            string password = "Btl@bright2$";
+            string password = "Takay1#$ane%%";
 
             Console.WriteLine("Hello !!");
 
@@ -28,10 +28,16 @@ namespace sshSender
             sshclient.Connect();
 
             string command = "ls -al";
-            string answer = runCommand(command);
+            string answer = RunCommand(command);
 
-            //command = "mysql -uroot -p'Takay1#$ane'";
-            //answer = runCommand(command);
+             //command = "sudo su";
+             //answer = RunCommand(command);
+
+            //command = "Bash";
+            //answer = RunCommand(command);
+
+            command = "sudo mysql -uroot -e 'show databases;'";
+            answer = RunCommand(command);
 
             //Thread.Sleep(3000);
 
@@ -58,6 +64,35 @@ namespace sshSender
 
         }
 
+        private static string RunCommand(string command)
+        {
+            var promptRegex = new Regex(@"\][#$>]"); // regular expression for matching terminal prompt
+            var modes = new Dictionary<Renci.SshNet.Common.TerminalModes, uint>();
+
+            using (var stream = sshclient.CreateShellStream("xterm", 255, 50, 800, 600, 1024, modes))
+            {
+                var writer = new StreamWriter(stream);
+                var reader = new StreamReader(stream);
+
+                writer.WriteLine(command);
+                writer.Flush();
+                var output = "";
+                var promptFound = false;
+                var timeout = TimeSpan.FromSeconds(10); // Set a timeout of 10 seconds
+                var startTime = DateTime.Now;
+
+                while (!promptFound && DateTime.Now - startTime < timeout)
+                {
+                    var line = reader.ReadLine();
+                    if (line != null)
+                    {
+                        output += line + "\n";
+                        promptFound = promptRegex.IsMatch(line);
+                    }
+                }
+                return output;
+            }
+        }
         private static string runCommand(string command)
         {
             SshCommand sc = sshclient.CreateCommand(command);
