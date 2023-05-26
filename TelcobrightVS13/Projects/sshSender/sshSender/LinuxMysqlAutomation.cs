@@ -21,30 +21,36 @@ namespace sshSender
 
             Console.WriteLine("Hello !!");
 
+            List<string> commands = new List<string>
+            {
+                $"sudo mysql -uroot -e 'CREATE USER root@192.168.0.230 IDENTIFIED WITH mysql_native_password BY Takay1#$ane;'",
+                $"sudo mysql -uroot -e 'alter user root@192.168.0.230 identified by 'Takay1#$ane';'",
+                $"sudo mysql -uroot -e 'grant all on *.* to root@192.168.0.230;		flush privileges;'",
+                $"sudo mysql -uroot -e 'flush privileges;'"
+            };
+
             //SshCommandLineRunner ssh = new SshCommandLineRunner("192.168.0.71", userName, password, "22");
             //ssh.Connect();
 
-            sshclient = new SshClient("103.134.90.125", userName, password);
-            sshclient.Connect();
+            //sshclient = new SshClient("103.134.90.125", userName, password);
+            //sshclient.Connect();
 
-            string command = "ls -al";
-            string answer = RunCommand(command);
-
-             //command = "sudo su";
-             //answer = RunCommand(command);
-
-            //command = "Bash";
+            //string command = "ls -al";
+            //string answer = RunCommand(command);
+            //command = "sudo mysql -uroot -e 'show databases;'";
             //answer = RunCommand(command);
 
-            command = "sudo mysql -uroot -e 'show databases;'";
-            answer = RunCommand(command);
+            foreach (string command in commands) {
+                string answer = RunCommand(command);
+            }
+
 
             //Thread.Sleep(3000);
 
             //command = "show databases;";
             //answer = runCommand(command);
 
-            File.WriteAllText("sshOutput.txt", answer);
+            //File.WriteAllText("sshOutput.txt", answer);
 
             var promptRegex = new Regex(@"\][#$>]"); // regular expression for matching terminal prompt
             var modes = new Dictionary<Renci.SshNet.Common.TerminalModes, uint>();
