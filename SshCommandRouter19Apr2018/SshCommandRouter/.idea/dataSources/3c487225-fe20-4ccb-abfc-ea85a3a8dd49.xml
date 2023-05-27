@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="iplog@localhost">
+  <database-model serializer="dbm" rdbms="MYSQL" format-version="4.1">
+    <root id="1"/>
+    <schema id="2" parent="1" name="iplog">
+      <Current>1</Current>
+      <Visible>1</Visible>
+    </schema>
+    <schema id="3" parent="1" name="bigl"/>
+    <schema id="4" parent="1" name="hangfire"/>
+    <schema id="5" parent="1" name="information_schema"/>
+    <schema id="6" parent="1" name="jbilling"/>
+    <schema id="7" parent="1" name="lportal"/>
+    <schema id="8" parent="1" name="mysql"/>
+    <schema id="9" parent="1" name="ofbiz"/>
+    <schema id="10" parent="1" name="ofbizolap"/>
+    <schema id="11" parent="1" name="ofbiztenant"/>
+    <schema id="12" parent="1" name="performance_schema"/>
+    <schema id="13" parent="1" name="platinum"/>
+    <schema id="14" parent="1" name="quartz"/>
+    <schema id="15" parent="1" name="scheduler"/>
+    <schema id="16" parent="1" name="telcobrightmediation"/>
+    <schema id="17" parent="1" name="test"/>
+    <schema id="18" parent="1" name="tpny"/>
+    <table id="19" parent="2" name="autoincrementcounter"/>
+    <table id="20" parent="2" name="ciscoshmacaddtableresult"/>
+    <table id="21" parent="2" name="employee"/>
+    <column id="22" parent="19" name="tableName">
+      <Position>1</Position>
+      <DataType>varchar(200)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="23" parent="19" name="value">
+      <Position>2</Position>
+      <DataType>bigint(20)|0</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>&apos;0&apos;</DefaultExpression>
+    </column>
+    <key id="24" parent="19" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>tableName</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="25" parent="20" name="id">
+      <Position>1</Position>
+      <DataType>bigint(20)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="26" parent="20" name="vlan">
+      <Position>2</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="27" parent="20" name="macAddress">
+      <Position>3</Position>
+      <DataType>varchar(100)|0</DataType>
+    </column>
+    <column id="28" parent="20" name="type">
+      <Position>4</Position>
+      <DataType>varchar(100)|0</DataType>
+    </column>
+    <column id="29" parent="20" name="learn">
+      <Position>5</Position>
+      <DataType>varchar(100)|0</DataType>
+    </column>
+    <column id="30" parent="20" name="age">
+      <Position>6</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="31" parent="20" name="port">
+      <Position>7</Position>
+      <DataType>varchar(100)|0</DataType>
+    </column>
+    <column id="32" parent="20" name="primary">
+      <Position>8</Position>
+      <DataType>tinyint(4)|0</DataType>
+    </column>
+    <column id="33" parent="20" name="logTime">
+      <Position>9</Position>
+      <DataType>datetime|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="34" parent="20" name="IpAddress">
+      <Position>10</Position>
+      <DataType>varchar(45)|0</DataType>
+    </column>
+    <column id="35" parent="20" name="URL">
+      <Position>11</Position>
+      <DataType>varchar(500)|0</DataType>
+    </column>
+    <index id="36" parent="20" name="ind_macAddress">
+      <ColNames>macAddress</ColNames>
+    </index>
+    <index id="37" parent="20" name="ind_Vlan">
+      <ColNames>vlan</ColNames>
+    </index>
+    <column id="38" parent="21" name="id">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="39" parent="21" name="firstName">
+      <Position>2</Position>
+      <DataType>varchar(45)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="40" parent="21" name="lastName">
+      <Position>3</Position>
+      <DataType>varchar(45)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="41" parent="21" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+  </database-model>
+</dataSource>

@@ -44,7 +44,6 @@ namespace InstallConfig
 
         public override TelcobrightConfig GenerateConfig()
         {
-           
             this.Tbc.Nes = new List<ne>()
             {
                 new ne
