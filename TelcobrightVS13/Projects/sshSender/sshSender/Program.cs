@@ -12,7 +12,6 @@ namespace sshSender
 {
     class Program
     {
-        static SshClient sshclient;
         static void Main(string[] args)
 
         {
