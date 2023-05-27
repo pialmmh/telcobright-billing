@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LibraryExtensions;
 using LibraryExtensions.ConfigHelper;
 using MySql.Data.MySqlClient;
 
@@ -13,12 +14,21 @@ namespace InstallConfig
 {
     public static class DbUtil
     {
-        public static string getDbConStr(DatabaseSetting databaseSetting, string operatorName)
+        public static ConfigPathHelper configPathHelper { get; set; }
+
+        public static string getDbConStrWithoutDatabase(DatabaseSetting databaseSetting)
         {
-            return "server=" + databaseSetting.ServerName + ";User Id=" + databaseSetting.AdminUserName +
-                ";password=" + databaseSetting.AdminPassword + ";Persist Security Info=True; default command timeout=3600";
+            return
+                $"server={databaseSetting.ServerName};User Id={databaseSetting.AdminUserName};password={databaseSetting.AdminPassword};" +
+                $"Persist Security Info=True; default command timeout=3600;";
         }
-        private static void CreateDatabaseIfRequired(DatabaseSetting databaseSetting, ConfigPathHelper configPathHelper)
+
+        public static string getDbConStrWithDatabase(DatabaseSetting databaseSetting)
+        {
+            return getDbConStrWithoutDatabase(databaseSetting) + $"database={databaseSetting.DatabaseName};";
+        }
+
+        public static void CreateDatabaseIfRequired(DatabaseSetting databaseSetting)
         {
             string constr =
                 "server=" + databaseSetting.ServerName + ";User Id=" + databaseSetting.AdminUserName +
@@ -42,14 +52,15 @@ namespace InstallConfig
                     };
                     Action createDb = () =>
                     {
-                        cmd.CommandText = $"CREATE SCHEMA `{databaseSetting.DatabaseName}` DEFAULT CHARACTER SET {databaseSetting.CharacterSet} collate {databaseSetting.Collate};";
+                        cmd.CommandText =
+                            $"CREATE SCHEMA `{databaseSetting.DatabaseName}` DEFAULT CHARACTER SET {databaseSetting.CharacterSet} collate {databaseSetting.Collate};";
                         cmd.ExecuteNonQuery();
                     };
                     Action createTables = () =>
                     {
                         cmd.CommandText = "use " + databaseSetting.DatabaseName;
                         cmd.ExecuteNonQuery();
-                        cmd.CommandText = File.ReadAllText(configPathHelper.GetSchedulerScriptPath()
+                        cmd.CommandText = File.ReadAllText(configPathHelper.GetDbScriptPath()
                                                            + Path.DirectorySeparatorChar + "CreateTables.txt");
                         cmd.ExecuteNonQuery();
                     };
@@ -62,6 +73,28 @@ namespace InstallConfig
                 }
             }
         }
-    }
 
+        public static void CreateOrOverwriteQuartzTables(DatabaseSetting databaseSetting)
+        {
+            string constr = getDbConStrWithDatabase(databaseSetting);
+            using (MySqlConnection con = new MySqlConnection(constr))
+            {
+                con.Open();
+                using (MySqlCommand cmd = new MySqlCommand("", con))
+                {
+                    cmd.CommandText = "use " + databaseSetting.DatabaseName;
+                    cmd.ExecuteNonQuery();
+
+                    List<string> commands = File.ReadAllText(configPathHelper.GetDbScriptPath()
+                                                             + Path.DirectorySeparatorChar + "quartzTables.sql")
+                        .Split(';').Select(c => c.Trim()).Where(c => !c.IsNullOrEmptyOrWhiteSpace()).ToList();
+                    foreach (string command in commands)
+                    {
+                        cmd.CommandText = command;
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+    }
 }

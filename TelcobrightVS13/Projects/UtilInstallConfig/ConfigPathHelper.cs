@@ -11,18 +11,18 @@ using TelcobrightMediation;
 
 namespace InstallConfig
 {
-    class ConfigPathHelper
+    public class ConfigPathHelper
     {
         private string TopShelfDirName { get; }
         private string PortalDirName { get; }
         private string UtilInstallConfigDir { get; }
-        private string SchedulerSchemaScriptPath { get; }
-        public ConfigPathHelper(string topShelfDirName, string portalDirName,string utilInstallConfigDir, string schedulerSchemaScriptPath)
+        private string DbScriptPath { get; }
+        public ConfigPathHelper(string topShelfDirName, string portalDirName,string utilInstallConfigDir, string dbScriptPath)
         {
             this.TopShelfDirName = topShelfDirName;
             this.PortalDirName = portalDirName;
             this.UtilInstallConfigDir = utilInstallConfigDir;
-            this.SchedulerSchemaScriptPath = schedulerSchemaScriptPath;
+            this.DbScriptPath = dbScriptPath;
         }
         public string GetTopShelfConfigDir()
         {
@@ -61,12 +61,12 @@ namespace InstallConfig
             return GetPortalBinPath() + Path.DirectorySeparatorChar
                                + operatorShortName + ".conf";
         }
-        public string GetSchedulerScriptPath()
+        public string GetDbScriptPath()
         {
             return Directory.GetParent(Directory
                        .GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName)
                        .FullName).FullName + Path.DirectorySeparatorChar + this.UtilInstallConfigDir + Path.DirectorySeparatorChar +
-                       this.SchedulerSchemaScriptPath;
+                       this.DbScriptPath;
         }
     }
 }

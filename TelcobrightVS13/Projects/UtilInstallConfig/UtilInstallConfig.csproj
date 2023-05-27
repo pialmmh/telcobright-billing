@@ -227,8 +227,7 @@
     <Content Include="btel\tmplPortalAppPools.txt" />
     <Content Include="btel\tmplPortalFtpSite.txt" />
     <Content Include="btel\tmplPortalWebSite.txt" />
-    <Content Include="schedulerScripts\DropTables.txt" />
-    <Content Include="schedulerScripts\CreateTables.txt" />
+    <Content Include="_dbscripts\quartzTables.sql" />
     <Content Include="jsl\tmplPortalAppPools.txt" />
     <Content Include="jsl\tmplPortalFtpSite.txt" />
     <Content Include="jsl\tmplPortalWebSite.txt" />

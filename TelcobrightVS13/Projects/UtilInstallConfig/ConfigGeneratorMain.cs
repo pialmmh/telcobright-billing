@@ -71,7 +71,8 @@ namespace InstallConfig
                 Dictionary<string, string> instances =
                     ConfigurationManager.AppSettings.ToDictionary().Where(kv => kv.Key.StartsWith("instance")).ToDictionary(kv => kv.Key, kv => kv.Value);
                 List<string> selectedInstances = new List<string>();
-                ConfigPathHelper configPathHelper = new ConfigPathHelper("WS_Topshelf_Quartz", "portal", "UtilInstallConfig", "SchedulerScripts");
+                ConfigPathHelper configPathHelper = new ConfigPathHelper("WS_Topshelf_Quartz", "portal", "UtilInstallConfig", "_dbscripts");
+                DbUtil.configPathHelper = configPathHelper;
                 List<TelcobrightConfig> selectedOperatorsConfig;
                 switch (cmdName)
                 {
@@ -128,7 +129,7 @@ namespace InstallConfig
                         {
                             foreach (var tbc in selectedOperatorsConfig)
                             {
-                                ConfigureQuartzJobStore(tbc, configPathHelper); //configure job store for all opeartors
+                                ConfigureQuartzJobStore(tbc); //configure job store for all opeartors
                             }
                             Console.WriteLine();
                             Console.WriteLine("Job store has been reset successfully.");
@@ -190,12 +191,13 @@ namespace InstallConfig
             return operatorConfigs;
         }
 
-        static void ConfigureQuartzJobStore(TelcobrightConfig tbc, ConfigPathHelper configPathHelper)
+        static void ConfigureQuartzJobStore(TelcobrightConfig tbc)
         {
-            CreateSchedulerDatabaseIfRequired(tbc.DatabaseSetting, configPathHelper); //true=force    
+            DbUtil.CreateOrOverwriteQuartzTables(tbc.DatabaseSetting);   
             //read quartz config part for ALL configured operator (mef)
+            int tcpPortNumber = tbc.TcpPortNoForRemoteScheduler;
             QuartzPropGenRemoteSchedulerAdoJobStore quartzPropGenRemoteSchedulerAdoJobStore =
-                new QuartzPropGenRemoteSchedulerAdoJobStore(555);
+                new QuartzPropGenRemoteSchedulerAdoJobStore(tcpPortNumber: tcpPortNumber);
             quartzPropGenRemoteSchedulerAdoJobStore.DatabaseSetting = tbc.DatabaseSetting;
             QuartzPropertyFactory quartzPropertyFactory =
                 new QuartzPropertyFactory(quartzPropGenRemoteSchedulerAdoJobStore);
@@ -294,51 +296,7 @@ namespace InstallConfig
         
 
 
-        private static void CreateSchedulerDatabaseIfRequired(DatabaseSetting databaseSetting,ConfigPathHelper configPathHelper)
-        {
-            string constr =
-                "server=" + databaseSetting.ServerName + ";User Id=" + databaseSetting.AdminUserName +
-                ";password=" + databaseSetting.AdminPassword + ";Persist Security Info=True;";
-            using (MySqlConnection con = new MySqlConnection(constr))
-            {
-                con.Open();
-                using (MySqlCommand cmd = new MySqlCommand("", con))
-                {
-                    Func<bool> dbExists = () =>
-                    {
-                        cmd.CommandText = "getInstancesFromMenu databases;";
-                        MySqlDataReader reader = cmd.ExecuteReader();
-                        List<string> databases = new List<string>();
-                        while (reader.Read())
-                        {
-                            databases.Add(reader[0].ToString());
-                        }
-                        reader.Close();
-                        return databases.Contains("scheduler");
-                    };
-                    Action createDb = () =>
-                    {
-                        cmd.CommandText = "CREATE SCHEMA `" + databaseSetting.DatabaseName +
-                                          "` DEFAULT CHARACTER SET utf8 ;";
-                        cmd.ExecuteNonQuery();
-                    };
-                    Action createTables = () =>
-                    {
-                        cmd.CommandText = "use " + databaseSetting.DatabaseName;
-                        cmd.ExecuteNonQuery();
-                        cmd.CommandText = File.ReadAllText(configPathHelper.GetSchedulerScriptPath()
-                                                           + Path.DirectorySeparatorChar + "CreateTables.txt");
-                        cmd.ExecuteNonQuery();
-                    };
-                    if (dbExists() == false) //not forced, create db only if doesn't exist
-                    {
-                        createDb();
-                    }
-                    createTables();
-
-                }
-            }
-        }
+        
         private static TelcobrightConfig ConfigureSingleOperator(AbstractConfigConfigGenerator abstractConfigConfigGenerator,
             ConfigPathHelper configPathHelper)
         {
@@ -672,7 +630,6 @@ namespace InstallConfig
                 }
             }
         }
-
     }
 
 
