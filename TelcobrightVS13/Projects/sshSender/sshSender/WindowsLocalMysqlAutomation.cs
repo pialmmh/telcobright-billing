@@ -18,11 +18,24 @@ namespace sshSender
         public static void execute()
 
         {
-           
-            string ans = RunCommand("dir");
-            ans = RunCommand("cd C:\\mysql && nul > filename.txt");
-            ans = RunCommand("ipconfig");
-            ans = RunCommand("cd D:\\ && nul > filename.txt");
+
+            //ans = RunCommand("cd C:\\mysql && nul > filename.txt");
+            //string ans = RunCommand("ipconfig");
+            //ans = RunCommand($"cd C:\\mysql\\bin && mysql -uroot --skip-password -e 'show databases'");
+            //string command = "C:\\mysql\\bin\\mysql --skip-password -e \"show databases/"";
+            List<string> devServerIpAddresses = new List<string> { "59.221.153.128", "146.85.89.185" ,"238.140.111.244","28.159.14.156"};
+
+            foreach (string ipAddress in devServerIpAddresses)
+            {
+                List<string> permissionCommands = buildPermissionForRoot(ipAddress, "root", "Takay1#$ane");
+                foreach (string command in permissionCommands)
+                {
+                    string answer = RunCommand(command);
+                }
+            }
+            string ans = RunCommand($"C:\\mysql\\bin\\mysql -uroot --skip-password -e \"show databases\"");
+            //ans = RunCommand($"Show database;");
+            //ans = RunCommand("cd D:\\ && nul > filename.txt");
             //RunCommand(process, "nul > filename.txt");
 
             //generateMySqlConfig("mysqlConfig.txt", "C:\\mysql");
@@ -50,6 +63,8 @@ namespace sshSender
             process.StartInfo.UseShellExecute = false;
             process.Start();
             //process.StartInfo.Arguments = "/user:Administrator \"cmd /K " + cmd + "\"";
+            process.StartInfo.Arguments = "/k" + cmd;
+            process.StartInfo.WorkingDirectory = "C:\\mysql\\bin";
             process.StandardInput.WriteLine(cmd);
             process.StandardInput.Flush();
             process.StandardInput.Close();
@@ -59,31 +74,31 @@ namespace sshSender
             //process.Close();
             //process.Dispose();
         }
-        /* private static List<string> buildPermissionForRoot(string ipAddress, string userName, string password)
-         {
-             return new List<string>
-             {
-                 $"sudo mysql -uroot -e 'CREATE USER {userName}@{ipAddress} IDENTIFIED WITH mysql_native_password BY \"{password}\";'",
-                 $"sudo mysql -uroot -e 'alter user {userName}@{ipAddress} identified by \"{password}\";'",
-                 $"sudo mysql -uroot -e 'grant all on *.* to {userName}@{ipAddress};'",
-                 $"sudo mysql -uroot -e 'flush privileges;'"
-             };
-         }*/
-        /*private static List<string> buildPermissionDbReader(string ipAddress, string userName, string password, string partner)
+        private static List<string> buildPermissionForRoot(string ipAddress, string userName, string password)
         {
             return new List<string>
             {
-                $"sudo mysql -uroot -e 'CREATE USER {userName}@{ipAddress} IDENTIFIED WITH mysql_native_password BY \"{password}\";'",
-                $"sudo mysql -uroot -e 'alter user {userName}@{ipAddress} identified by \"{password}\";'",
-                $"sudo mysql -uroot -e 'grant select, execute on {partner}.* to {userName}@{ipAddress};'",
-                $"sudo mysql -uroot -e 'flush privileges;'"
+                $"C:\\mysql\\bin\\mysql -uroot --skip-password -e \"CREATE USER {userName}@{ipAddress} IDENTIFIED WITH mysql_native_password BY '{password}';\"",
+                $"C:\\mysql\\bin\\mysql -uroot --skip-password -e \"alter user {userName}@{ipAddress} identified by '{password}';\"",
+                $"C:\\mysql\\bin\\mysql -uroot --skip-password -e \"grant all on *.* to {userName}@{ipAddress};\"",
+                $"C:\\mysql\\bin\\mysql -uroot --skip-password -e \"flush privileges;\""
             };
-        }*/
-        private static void generateMySqlConfig(string sourceFile, string path)
-        {
-            string cmd = File.ReadAllText(sourceFile);
-            File.WriteAllText(path, cmd);
         }
+        private static List<string> buildPermissionDbReader(string ipAddress, string userName, string password, string partner)
+        {
+            return new List<string>
+            {
+                $"C:\\mysql\\bin\\mysql -uroot --skip-password -e \"CREATE USER {userName}@{ipAddress} IDENTIFIED WITH mysql_native_password BY '{password}';\"",
+                $"C:\\mysql\\bin\\mysql -uroot --skip-password -e \"alter user {userName}@{ipAddress} identified by '{password}';\"",
+                $"C:\\mysql\\bin\\mysql -uroot --skip-password -e \"grant select, execute on {partner}.* to {userName}@{ipAddress};\"",
+                $"C:\\mysql\\bin\\mysql -uroot --skip-password -e \"flush privileges;\""
+            };
+        }
+        //private static void generateMySqlConfig(string sourceFile, string path)
+        //{
+        //    string cmd = File.ReadAllText(sourceFile);
+        //    File.WriteAllText(path, cmd);
+        //}
         /*private static string RunCommand(string command)
         {
             var promptRegex = new Regex(@"\][#$>]"); // regular expression for matching terminal prompt

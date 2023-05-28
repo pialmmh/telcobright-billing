@@ -48,7 +48,7 @@
   <ItemGroup>
     <Compile Include="DockerMysqlAutomation.cs" />
     <Compile Include="LinuxMysqlAutomation.cs" />
-    <Compile Include="WindowsMysqlAutomation.cs" />
+    <Compile Include="WindowsLocalMysqlAutomation.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SshCommandLineRunner.cs" />
