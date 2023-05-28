@@ -6,11 +6,11 @@ namespace TelcobrightMediation
     {
         public int ServerId { get; set; }
         public string OwnIpAddress { get; set; }
-        [ScriptIgnore]
-        private TelcobrightConfig TelcobrightConfig { get; set; }
-        public ApplicationServerConfig(TelcobrightConfig tbConfig)
+
+        public ApplicationServerConfig(int serverId, string ownIpAddress)
         {
-            this.TelcobrightConfig = tbConfig;
+            ServerId = serverId;
+            OwnIpAddress = ownIpAddress;
         }
     }
 }

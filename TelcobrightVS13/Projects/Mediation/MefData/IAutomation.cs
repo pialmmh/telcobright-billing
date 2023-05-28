@@ -9,6 +9,6 @@ namespace TelcobrightMediation
     {
         string RuleName { get; }
         string HelpText { get; }
-        void execute(ServerCredential sshCredential);
+        void execute(Object automationData);
     }
 }

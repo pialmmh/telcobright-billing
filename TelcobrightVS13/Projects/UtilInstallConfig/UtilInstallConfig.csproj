@@ -97,6 +97,7 @@
     <Compile Include="BIllingRulesDefiner.cs" />
     <Compile Include="btel\BtelDatabaseSettings.cs" />
     <Compile Include="dbl\DblDatabaseSettings.cs" />
+    <Compile Include="dbl\dblAppServerConfig.cs" />
     <Compile Include="InstanceMenu.cs" />
     <Compile Include="PartitionInfo.cs" />
     <Compile Include="dbUtil\DbUtil.cs" />

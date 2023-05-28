@@ -14,23 +14,10 @@ namespace CdrRules
         public string RuleName => GetType().Name;
         public string HelpText => "Percona docker automation";
         SshClient sshclient;
-        public void execute(ServerCredential credential)
+        public void execute(Object automationData)
         {
-            string serverName = credential.ServerNameOrIp;
-            string userName = credential.Username;
-            string password = credential.Password;
-            sshclient = new SshClient(serverName, userName, password);
-            sshclient.Connect();
-            string command = "ls -al";
-            string answer = runCommand(command);
+            
         }
 
-        private string runCommand(string command)
-        {
-            SshCommand sc = sshclient.CreateCommand(command);
-            sc.Execute();
-            string answer = sc.Result;
-            return answer;
-        }
     }
 }

@@ -122,7 +122,7 @@ namespace InstallConfig
 
             this.PrepareProductAndServiceConfiguration();
             
-            this.PrepareApplicationServerConfig();
+            this.Tbc.ApplicationServersConfig = this.GetApplicationServerConfigs();
 
             this.Tbc.DatabaseSetting = this.GetDatabaseSettings();
             this.Tbc.PortalSettings = GetPortalSettings(this.Tbc.Telcobrightpartner.CustomerName);

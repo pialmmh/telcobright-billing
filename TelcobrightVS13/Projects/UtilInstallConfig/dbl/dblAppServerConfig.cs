@@ -15,7 +15,7 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class SrtAbstractConfigConfigGenerator //quartz config part
+    public partial class DblAbstractConfigConfigGeneratorHelper //quartz config part
     {
         public override List<ApplicationServerConfig> GetApplicationServerConfigs()
         {

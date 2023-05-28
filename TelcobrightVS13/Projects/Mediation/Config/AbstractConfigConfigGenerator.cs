@@ -1,16 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using LibraryExtensions.ConfigHelper;
 using TelcobrightMediation.Scheduler.Quartz;
 
 namespace TelcobrightMediation.Config
 {
-    public interface IConfigGenerator
-    {
-        TelcobrightConfig Tbc { get; }
-        TelcobrightConfig GenerateConfig();
-        List<QuartzTbDaemonConfig> GetSchedulerDaemonConfigs();
-        DatabaseSetting GetDatabaseSettings();
-    }
     public abstract class AbstractConfigConfigGenerator: IConfigGenerator
     {
         public override string ToString() => this.GetType().Name;
@@ -18,6 +13,22 @@ namespace TelcobrightMediation.Config
         public abstract TelcobrightConfig GenerateConfig();
         public abstract List<QuartzTbDaemonConfig> GetSchedulerDaemonConfigs();
         public abstract DatabaseSetting GetDatabaseSettings();
+        public abstract List<ApplicationServerConfig> GetApplicationServerConfigs();
+
+        public List<ApplicationServerConfig> ValidateInstances(List<ApplicationServerConfig> configs)
+        {
+            bool ipAddressUnique = configs.Select(c => c.OwnIpAddress).Distinct().Count() == configs.Count;
+            bool serverIdUnique = configs.Select(c => c.ServerId).Distinct().Count() == configs.Count;
+            if (!ipAddressUnique)
+            {
+                throw new Exception("Application server ip addresses must be unique.");
+            }
+            if (!serverIdUnique)
+            {
+                throw new Exception("Application Server ids be unique.");
+            }
+            return configs;
+        }
     }
 }
 

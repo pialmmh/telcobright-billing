@@ -53,6 +53,11 @@ namespace sshSender
                 $"sudo mysql -uroot -e 'flush privileges;'"
             };
         }
+        private static void generateMySqlConfig(string sourceFile)
+        {
+            string cmd = File.ReadAllText(sourceFile);
+            runBase64ShellCommand(cmd);
+        }
         private static string RunCommand(string command)
         {
             //var promptRegex = new Regex(@"\][#$>]"); // regular expression for matching terminal prompt
@@ -66,18 +71,6 @@ namespace sshSender
                 writer.Flush();
                 return reader.ReadToEnd();
             }
-        }
-        private static string runCommand(string command)
-        {
-            SshCommand sc = sshclient.CreateCommand(command);
-            sc.Execute();
-            string answer = sc.Result;
-            return answer;
-        }
-        private static void generateMySqlConfig(string sourceFile)
-        {
-            string cmd = File.ReadAllText(sourceFile);
-            runBase64ShellCommand(cmd);
         }
         private static string runBase64ShellCommand(string cmd)
         {

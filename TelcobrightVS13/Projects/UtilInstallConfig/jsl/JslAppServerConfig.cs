@@ -17,13 +17,32 @@ namespace InstallConfig
 {
     public partial class JslAbstractConfigConfigGenerator //quartz config part
     {
-        public void PrepareApplicationServerConfig()
+        public override List<ApplicationServerConfig> GetApplicationServerConfigs()
         {
-            ApplicationServerConfig serverConfig1 = new ApplicationServerConfig(this.Tbc) { ServerId = 1, OwnIpAddress = "192.168.101.1" };
-            ApplicationServerConfig serverConfig2 = new ApplicationServerConfig(this.Tbc) { ServerId = 2 };
-
-            this.Tbc.ApplicationServersConfig.Add(serverConfig1.ServerId.ToString(), serverConfig1);
-            this.Tbc.ApplicationServersConfig.Add(serverConfig2.ServerId.ToString(), serverConfig1);
+            return
+                base.ValidateInstances(new List<ApplicationServerConfig>
+                {
+                    new ApplicationServerConfig
+                    (
+                        serverId: 1,
+                        ownIpAddress: "10.0.0.5"
+                    ),
+                    new ApplicationServerConfig
+                    (
+                        serverId: 2,
+                        ownIpAddress: "10.0.0.7"
+                    ),
+                    new ApplicationServerConfig
+                    (
+                        serverId: 3,
+                        ownIpAddress: "10.0.0.9"
+                    ),
+                    new ApplicationServerConfig
+                    (
+                        serverId: 4,
+                        ownIpAddress: "10.0.0.11"
+                    )
+                });
         }
     }
 }

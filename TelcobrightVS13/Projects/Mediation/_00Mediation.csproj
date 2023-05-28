@@ -157,6 +157,7 @@
     <Compile Include="Config\DummyTelcobrightPartner.cs" />
     <Compile Include="Config\EmailSenderConfig.cs" />
     <Compile Include="Config\FileSplitSetting.cs" />
+    <Compile Include="Config\IConfigGenerator.cs" />
     <Compile Include="Config\IisApplicationPool.cs" />
     <Compile Include="Config\InternetSite.cs" />
     <Compile Include="Config\JobInputData\StandardTelcobrightJobInput.cs" />
@@ -290,7 +291,8 @@
     <Compile Include="Accounting\Invoice\IInvoiceTemplate.cs" />
     <Compile Include="Accounting\Invoice\InvoiceCommonData.cs" />
     <Compile Include="MefData\MefExceptionalCdrPreProcessorContainer.cs" />
-    <Compile Include="MefData\ServerCredential.cs" />
+    <Compile Include="MefData\ServerAccessProtocol.cs" />
+    <Compile Include="MefData\ServerInfo.cs" />
     <Compile Include="Rating\PartnerEx.cs" />
     <Compile Include="Accounting\Invoice\InvoiceSectionDataRowForA2ZVoice.cs" />
     <Compile Include="Accounting\Invoice\InvoiceSection.cs" />

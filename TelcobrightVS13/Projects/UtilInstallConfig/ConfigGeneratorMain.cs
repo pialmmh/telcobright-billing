@@ -56,7 +56,7 @@ namespace InstallConfig
                 Console.WriteLine("Welcome to Telcobright Initial Configuration Utility");
                 Console.WriteLine("Partner Database Name: [" + tbOperatorName + "]");
                 Console.WriteLine("Select Task:");
-                Console.WriteLine("1= Create Database");
+                Console.WriteLine("1= Setup mysql remote access.");
                 Console.WriteLine("2=Append Prefix to Files");
                 Console.WriteLine("3=[Not Set]");
                 Console.WriteLine("4=Copy Portal to IIS Directory");
@@ -78,7 +78,7 @@ namespace InstallConfig
                 {
                     case '1':
                         if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' || Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
-                        Console.WriteLine("Creating Database, none will be created if one exists.");
+                        Console.WriteLine("Setting up remote access for mysql...");
                         selectedInstances = InstanceMenu.getInstancesFromMenu(instances,"Select instances to create initial database:");
                         selectedOperatorsConfig = getSelectedOperatorsConfig(selectedInstances, configPathHelper);
                         foreach (var tbc in selectedOperatorsConfig)
@@ -95,10 +95,14 @@ namespace InstallConfig
                         if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' || Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
                         break;
                     case '3':
-                        Console.WriteLine("Enter Path of ANS Prefix TextFile...");
-                        string fileName = Console.ReadLine();
-
                         if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' || Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
+                        Console.WriteLine("Creating Database, none will be created if one exists.");
+                        selectedInstances = InstanceMenu.getInstancesFromMenu(instances, "Select instances to create initial database:");
+                        selectedOperatorsConfig = getSelectedOperatorsConfig(selectedInstances, configPathHelper);
+                        foreach (var tbc in selectedOperatorsConfig)
+                        {
+
+                        }
                         break;
                     case '4':
                         Console.WriteLine("Copying Portal to c:/inetpub/wwwroot");
