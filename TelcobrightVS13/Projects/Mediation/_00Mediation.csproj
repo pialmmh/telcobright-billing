@@ -160,7 +160,8 @@
     <Compile Include="Config\IConfigGenerator.cs" />
     <Compile Include="Config\IisApplicationPool.cs" />
     <Compile Include="Config\InternetSite.cs" />
-    <Compile Include="Config\IpAddress.cs" />
+    <Compile Include="ServerAndDbUtil\HostOrSubnetType.cs" />
+    <Compile Include="ServerAndDbUtil\IpAddress.cs" />
     <Compile Include="Config\JobInputData\StandardTelcobrightJobInput.cs" />
     <Compile Include="Config\JobPreRequisite.cs" />
     <Compile Include="Config\LogFileProcessorSetting.cs" />
@@ -168,7 +169,12 @@
     <Compile Include="Config\SmsSenderConfig.cs" />
     <Compile Include="Config\PortalSettings.cs" />
     <Compile Include="Config\SummaryTimeFieldEnum.cs" />
-    <Compile Include="dbUtil\DbUtil.cs" />
+    <Compile Include="ServerAndDbUtil\DbUtil.cs" />
+    <Compile Include="ServerAndDbUtil\MySqlInstance.cs" />
+    <Compile Include="ServerAndDbUtil\MySqlPermission.cs" />
+    <Compile Include="ServerAndDbUtil\MySqlUser.cs" />
+    <Compile Include="ServerAndDbUtil\ReplicationHelper.cs" />
+    <Compile Include="ServerAndDbUtil\ServerOs.cs" />
     <Compile Include="FileOperations\JobParamFileDelete.cs" />
     <Compile Include="FileOperations\RemoteFileInfoExt.cs" />
     <Compile Include="IAutoincrementManager.cs" />
@@ -253,7 +259,7 @@
     <Compile Include="Cdr\PartialCdrWriter.cs" />
     <Compile Include="Cdr\Validator\IValidationRule.cs" />
     <Compile Include="Cdr\Validator\MefValidator.cs" />
-    <Compile Include="Config\ServerInstance.cs" />
+    <Compile Include="ServerAndDbUtil\Server.cs" />
     <Compile Include="Automation\CliCommandSequence.cs" />
     <Compile Include="Config\AutomationSetting.cs" />
     <Compile Include="Config\ISessionBasedCliAutomationConfig.cs" />
@@ -407,7 +413,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="dbUtil\initScripts\" />
+    <Folder Include="ServerAndDbUtil\initScripts\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

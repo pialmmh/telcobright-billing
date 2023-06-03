@@ -393,13 +393,13 @@ namespace InstallConfig
 
 
             //configuration for server1
-            ServerInstance serverConfig1 = new ServerInstance
+            Server serverConfig1 = new Server
             (
                 serverId: 1,
                 ipAddresses: new List<IpAddress>() {new IpAddress {Address = "10.0.0.5"}}
             );
             //configuration for server2
-            ServerInstance serverConfig2 = new ServerInstance
+            Server serverConfig2 = new Server
             (
                 serverId: 1,
                 ipAddresses: new List<IpAddress>() { new IpAddress { Address = "10.0.0.5" } }

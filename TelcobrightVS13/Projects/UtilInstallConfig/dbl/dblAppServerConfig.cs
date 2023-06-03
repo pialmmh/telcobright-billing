@@ -17,12 +17,12 @@ namespace InstallConfig
 {
     public partial class DblAbstractConfigConfigGeneratorHelper //quartz config part
     {
-        public override List<ServerInstance> GetApplicationServerConfigs()
+        public override List<Server> GetApplicationServerConfigs()
         {
             return
-                base.ValidateInstances(new List<ServerInstance>
+                base.ValidateInstances(new List<Server>
                 {
-                    new ServerInstance
+                    new Server
                     (
                         serverId: 1,
                         ipAddresses: new List<IpAddress>() { new IpAddress {Address = "10.0.0.5" }}

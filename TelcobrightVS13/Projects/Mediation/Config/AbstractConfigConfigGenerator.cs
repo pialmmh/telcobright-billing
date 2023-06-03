@@ -13,9 +13,9 @@ namespace TelcobrightMediation.Config
         public abstract TelcobrightConfig GenerateConfig();
         public abstract List<QuartzTbDaemonConfig> GetSchedulerDaemonConfigs();
         public abstract DatabaseSetting GetDatabaseSettings();
-        public abstract List<ServerInstance> GetApplicationServerConfigs();
+        public abstract List<Server> GetApplicationServerConfigs();
 
-        public List<ServerInstance> ValidateInstances(List<ServerInstance> configs)
+        public List<Server> ValidateInstances(List<Server> configs)
         {
             bool ipAddressUnique = configs.Select(c => c.IpAddresses.Select(ip=>ip.Address)).Distinct().Count() == configs.Count;
             bool serverIdUnique = configs.Select(c => c.ServerId).Distinct().Count() == configs.Count;

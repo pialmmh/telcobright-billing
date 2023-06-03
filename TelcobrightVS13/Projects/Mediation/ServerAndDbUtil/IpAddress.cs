@@ -6,17 +6,11 @@ using System.Threading.Tasks;
 
 namespace TelcobrightMediation
 {
-    public enum HostOrSubnet
-    {
-        Host,
-        Subnet
-    }
-
     public class IpAddress
     {
         public string Address { get; set; }
         public string SubnetMask { get; set; }
-        private HostOrSubnet HostOrSubnet { get; set; }=HostOrSubnet.Host;
+        private HostOrSubnetType HostOrSubnetType { get; set; }=HostOrSubnetType.Host;
         public string PrivateOrPublic { get; set; }
     }
 }
