@@ -23,7 +23,7 @@ namespace LibraryExtensions.ConfigHelper
         public List<string> PartitionedTables { get; }
         public string CharacterSet { get; set; } = "utf8mb4";
         public string Collate { get; set; } = "utf8mb4_bin";
-        public List<string> 
+        //public List<string> 
         public DatabaseSetting()
         {
             this.PartitionedTables = new List<string>

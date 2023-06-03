@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using LibraryExtensions.ConfigHelper;
 using TelcobrightMediation;
 
-namespace InstallConfig
+namespace LibraryExtensions
 {
     public class ConfigPathHelper
     {

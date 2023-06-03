@@ -16,7 +16,6 @@ namespace sshSender
     {
         static Process process;
         public static void execute()
-
         {
 
             //ans = RunCommand("cd C:\\mysql && nul > filename.txt");

@@ -100,7 +100,6 @@
     <Compile Include="dbl\dblAppServerConfig.cs" />
     <Compile Include="InstanceMenu.cs" />
     <Compile Include="PartitionInfo.cs" />
-    <Compile Include="dbUtil\DbUtil.cs" />
     <Compile Include="PartitionUtil.cs" />
     <Compile Include="purple\PurpleDatabaseSettings.cs" />
     <Compile Include="srtelecom\SrtAppServerConfig.cs" />
@@ -127,7 +126,6 @@
     <Compile Include="btel\BtelQuartzConfig.cs" />
     <Compile Include="btel\BtelServiceGroups.cs" />
     <Compile Include="btel\_BtelConfigMain.cs" />
-    <Compile Include="ConfigPathHelper.cs" />
     <Compile Include="FileRename.cs" />
     <Compile Include="jsl\JslProductAndServiceConfig.cs" />
     <Compile Include="jsl\JslDirectorySettings.cs" />
@@ -211,9 +209,7 @@
       <Name>QuartzTelcobright</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="dbUtil\initScripts\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="srtelecom\tmplPortalAppPools.txt" />
     <Content Include="srtelecom\tmplPortalFtpSite.txt" />

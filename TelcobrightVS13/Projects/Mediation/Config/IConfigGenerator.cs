@@ -10,6 +10,6 @@ namespace TelcobrightMediation.Config
         TelcobrightConfig GenerateConfig();
         List<QuartzTbDaemonConfig> GetSchedulerDaemonConfigs();
         DatabaseSetting GetDatabaseSettings();
-        List<ApplicationServerConfig> GetApplicationServerConfigs();
+        List<ServerInstance> GetApplicationServerConfigs();
     }
 }

@@ -20,7 +20,6 @@ namespace sshSender
             string password = "Takay1#$ane%%";
             sshclient = new SshClient("192.168.0.137", userName, password);
             sshclient.Connect();
-
             generateMySqlConfig("mysqlConfig.txt");
 
             List<string> devServerIpAddresses = new List<string> { "192.168.0.230", "192.168.0.231" };

@@ -79,6 +79,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigPathHelper.cs" />
     <Compile Include="DecimalExtensions.cs" />
     <Compile Include="DateTimeExtensions.cs" />
     <Compile Include="EntityHelper\ischema_columns.cs" />

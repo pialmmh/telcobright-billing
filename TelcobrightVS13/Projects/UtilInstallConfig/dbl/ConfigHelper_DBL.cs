@@ -393,12 +393,20 @@ namespace InstallConfig
 
 
             //configuration for server1
-            ApplicationServerConfig serverConfig1 = new ApplicationServerConfig(this.Tbc) { ServerId = 1, OwnIpAddress = "192.168.101.1" };
+            ServerInstance serverConfig1 = new ServerInstance
+            (
+                serverId: 1,
+                ipAddresses: new List<IpAddress>() {new IpAddress {Address = "10.0.0.5"}}
+            );
             //configuration for server2
-            ApplicationServerConfig serverConfig2 = new ApplicationServerConfig(this.Tbc) { ServerId = 2 };
+            ServerInstance serverConfig2 = new ServerInstance
+            (
+                serverId: 1,
+                ipAddresses: new List<IpAddress>() { new IpAddress { Address = "10.0.0.5" } }
+            );
 
-            this.Tbc.ApplicationServersConfig.Add(serverConfig1.ServerId.ToString(), serverConfig1);
-            this.Tbc.ApplicationServersConfig.Add(serverConfig2.ServerId.ToString(), serverConfig1);
+            this.Tbc.ApplicationServersConfig.Add(serverConfig1);
+            this.Tbc.ApplicationServersConfig.Add(serverConfig2);
 
             this.Tbc.DatabaseSetting = this.GetDatabaseSettings();
 

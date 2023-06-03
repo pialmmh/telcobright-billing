@@ -26,7 +26,7 @@ namespace TelcobrightMediation
         public DirectorySettings DirectorySettings { get; set; }
         public DatabaseSetting DatabaseSetting { get; set; } = new DatabaseSetting();
         public PortalSettings PortalSettings { get; set; }
-        public List<ApplicationServerConfig> ApplicationServersConfig { get; set; }//server id as string
+        public List<ServerInstance> ApplicationServersConfig { get; set; }//server id as string
         public Dictionary<int,AutomatedNetworkElementCli> AutomatedNetworkElementClis { get; set; }
         public EmailSenderConfig EmailSenderConfig { get; set; }
         public SmsSenderConfig SmsSenderConfig { get; set; }
@@ -38,7 +38,7 @@ namespace TelcobrightMediation
             int thisServerId, telcobrightpartner tbpPartner, int tcpPortNoForRemoteScheduler)
         {
             this.ServerId = thisServerId;
-            this.ApplicationServersConfig = new List<ApplicationServerConfig>();
+            this.ApplicationServersConfig = new List<ServerInstance>();
             this.ResourcePool = new ResourcePool();
             this.TelecomOperatortype = telecomOperatortype;
             this.Telcobrightpartner = tbpPartner;

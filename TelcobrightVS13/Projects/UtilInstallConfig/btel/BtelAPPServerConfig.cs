@@ -18,30 +18,30 @@ namespace InstallConfig
 {
     public partial class BtelAbstractConfigConfigGenerator //quartz config part
     {
-        public override List<ApplicationServerConfig> GetApplicationServerConfigs()
+        public override List<ServerInstance> GetApplicationServerConfigs()
         {
             return
-                base.ValidateInstances(new List<ApplicationServerConfig>
+                base.ValidateInstances(new List<ServerInstance>
                 {
-                    new ApplicationServerConfig
+                    new ServerInstance
                     (
                         serverId: 1,
-                        ownIpAddress: "10.0.0.5"
+                        ipAddresses: new List<IpAddress>() { new IpAddress {Address = "10.0.0.5" } } 
                     ),
-                    new ApplicationServerConfig
+                    new ServerInstance
                     (
                         serverId: 2,
-                        ownIpAddress: "10.0.0.7"
+                        ipAddresses: new List<IpAddress>() { new IpAddress {Address = "10.0.0.7" } }
                     ),
-                    new ApplicationServerConfig
+                    new ServerInstance
                     (
                         serverId: 3,
-                        ownIpAddress: "10.0.0.9"
+                        ipAddresses: new List<IpAddress>() { new IpAddress {Address = "10.0.0.9" } }
                     ),
-                    new ApplicationServerConfig
+                    new ServerInstance
                     (
                         serverId: 4,
-                        ownIpAddress: "10.0.0.11"
+                        ipAddresses: new List<IpAddress>() { new IpAddress {Address = "10.0.0.11" } }
                     )
                 });
         }

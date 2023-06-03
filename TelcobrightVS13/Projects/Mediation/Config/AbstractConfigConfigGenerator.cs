@@ -13,11 +13,11 @@ namespace TelcobrightMediation.Config
         public abstract TelcobrightConfig GenerateConfig();
         public abstract List<QuartzTbDaemonConfig> GetSchedulerDaemonConfigs();
         public abstract DatabaseSetting GetDatabaseSettings();
-        public abstract List<ApplicationServerConfig> GetApplicationServerConfigs();
+        public abstract List<ServerInstance> GetApplicationServerConfigs();
 
-        public List<ApplicationServerConfig> ValidateInstances(List<ApplicationServerConfig> configs)
+        public List<ServerInstance> ValidateInstances(List<ServerInstance> configs)
         {
-            bool ipAddressUnique = configs.Select(c => c.OwnIpAddress).Distinct().Count() == configs.Count;
+            bool ipAddressUnique = configs.Select(c => c.IpAddresses.Select(ip=>ip.Address)).Distinct().Count() == configs.Count;
             bool serverIdUnique = configs.Select(c => c.ServerId).Distinct().Count() == configs.Count;
             if (!ipAddressUnique)
             {

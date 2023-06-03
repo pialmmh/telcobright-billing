@@ -66,7 +66,7 @@
   <ItemGroup>
     <Compile Include="LinuxMysqlAutomation.cs" />
     <Compile Include="DockerMysqlAutomation.cs" />
-    <Compile Include="WinMysqlAutomation .cs" />
+    <Compile Include="WinLocalMysqlAutomation .cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

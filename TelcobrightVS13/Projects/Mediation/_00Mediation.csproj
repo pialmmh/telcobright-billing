@@ -160,6 +160,7 @@
     <Compile Include="Config\IConfigGenerator.cs" />
     <Compile Include="Config\IisApplicationPool.cs" />
     <Compile Include="Config\InternetSite.cs" />
+    <Compile Include="Config\IpAddress.cs" />
     <Compile Include="Config\JobInputData\StandardTelcobrightJobInput.cs" />
     <Compile Include="Config\JobPreRequisite.cs" />
     <Compile Include="Config\LogFileProcessorSetting.cs" />
@@ -167,6 +168,7 @@
     <Compile Include="Config\SmsSenderConfig.cs" />
     <Compile Include="Config\PortalSettings.cs" />
     <Compile Include="Config\SummaryTimeFieldEnum.cs" />
+    <Compile Include="dbUtil\DbUtil.cs" />
     <Compile Include="FileOperations\JobParamFileDelete.cs" />
     <Compile Include="FileOperations\RemoteFileInfoExt.cs" />
     <Compile Include="IAutoincrementManager.cs" />
@@ -251,7 +253,7 @@
     <Compile Include="Cdr\PartialCdrWriter.cs" />
     <Compile Include="Cdr\Validator\IValidationRule.cs" />
     <Compile Include="Cdr\Validator\MefValidator.cs" />
-    <Compile Include="Config\ApplicationServerConfig.cs" />
+    <Compile Include="Config\ServerInstance.cs" />
     <Compile Include="Automation\CliCommandSequence.cs" />
     <Compile Include="Config\AutomationSetting.cs" />
     <Compile Include="Config\ISessionBasedCliAutomationConfig.cs" />
@@ -404,7 +406,9 @@
       <Name>QuartzTelcobright</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="dbUtil\initScripts\" />
+  </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>

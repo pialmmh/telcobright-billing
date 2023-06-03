@@ -17,21 +17,19 @@ namespace InstallConfig
 {
     public partial class SrtAbstractConfigConfigGenerator //quartz config part
     {
-        public override List<ApplicationServerConfig> GetApplicationServerConfigs()
+        public override List<ServerInstance> GetApplicationServerConfigs()
         {
-            return
-                base.ValidateInstances(new List<ApplicationServerConfig>
+            return base.ValidateInstances(new List<ServerInstance>
                 {
-                    new ApplicationServerConfig
+                    new ServerInstance
                     (
                         serverId: 1,
-                        ownIpAddress: "172.16.100.7"
+                        ipAddresses: new List<IpAddress>()
+                        {
+                            new IpAddress{Address = "172.16.100.7"},
+                            new IpAddress{Address = "172.16.110.7"}
+                        }
                     ),
-                    //new ApplicationServerConfig
-                    //(
-                    //    serverId: 2,
-                    //    ownIpAddress: "192.168.0.231"
-                    //)
                 });
         }
     }

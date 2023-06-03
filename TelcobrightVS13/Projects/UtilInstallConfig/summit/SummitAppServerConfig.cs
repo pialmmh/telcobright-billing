@@ -17,20 +17,20 @@ namespace InstallConfig
 {
     public partial class SummitAbstractConfigConfigGenerator //quartz config part
     {
-        public override List<ApplicationServerConfig> GetApplicationServerConfigs()
+        public override List<ServerInstance> GetApplicationServerConfigs()
         {
             return
-                base.ValidateInstances(new List<ApplicationServerConfig>
+                base.ValidateInstances(new List<ServerInstance>
                 {
-                    new ApplicationServerConfig
+                    new ServerInstance
                     (
                         serverId: 1,
-                        ownIpAddress: "192.168.0.230"
+                        ipAddresses: new List<IpAddress>() { new IpAddress {Address = "172.18.0.3" } }
                     ),
-                    new ApplicationServerConfig
+                    new ServerInstance
                     (
                         serverId: 2,
-                        ownIpAddress: "192.168.0.231"
+                        ipAddresses: new List<IpAddress>() { new IpAddress {Address = "172.18.0.5" } }
                     )
                 });
         }
