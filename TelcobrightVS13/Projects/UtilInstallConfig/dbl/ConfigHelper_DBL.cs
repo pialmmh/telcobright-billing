@@ -393,17 +393,9 @@ namespace InstallConfig
 
 
             //configuration for server1
-            Server serverConfig1 = new Server
-            (
-                serverId: 1,
-                ipAddresses: new List<IpAddress>() {new IpAddress {Address = "10.0.0.5"}}
-            );
+            Server serverConfig1 = new Server();
             //configuration for server2
-            Server serverConfig2 = new Server
-            (
-                serverId: 1,
-                ipAddresses: new List<IpAddress>() { new IpAddress { Address = "10.0.0.5" } }
-            );
+            Server serverConfig2 = new Server();
 
             this.Tbc.ApplicationServersConfig.Add(serverConfig1);
             this.Tbc.ApplicationServersConfig.Add(serverConfig2);

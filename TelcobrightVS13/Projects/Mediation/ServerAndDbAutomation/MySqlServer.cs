@@ -2,27 +2,27 @@ using System.Collections.Generic;
 
 namespace TelcobrightMediation
 {
-    public class MySqlInstance
+    public class MySqlServer
     {
         private Server Server { get; set; }
         public string HostnameOrIp { get; set; }
         public int Port { get; set; }
         public string MasterUsername { get; set; }
         public string MasterPassword { get; set; }
-        public Dictionary<string, string> ConfigParams { get; set; }
+        public Dictionary<string, string> SectionWiseConfig { get; set; }
         public List<MySqlUser> Users { get; set; }
         public List<string> IgnoreDatabasesFromReplication { get; set; } = new List<string>() {"mysql"};
         public List<ReplicationHelper> SlaveInstances { get; set; }
-        public MySqlInstance(Server server, Dictionary<string, string> configParams)
+        public MySqlServer(Server server, Dictionary<string, string> sectionWiseConfig)
         {
             this.Server = server;
-            ConfigParams = configParams;
+            SectionWiseConfig = sectionWiseConfig;
         }
     }
 
     public class MySqlCluster
     {
-        public MySqlInstance Master { get; set; }
-        private List<MySqlInstance> Slaves { get; set; }
+        public MySqlServer Master { get; set; }
+        private List<MySqlServer> Slaves { get; set; }
     }
 }

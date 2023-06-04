@@ -14,11 +14,10 @@ namespace TelcobrightMediation.Config
         public abstract List<QuartzTbDaemonConfig> GetSchedulerDaemonConfigs();
         public abstract DatabaseSetting GetDatabaseSettings();
         public abstract List<Server> GetApplicationServerConfigs();
-
-        public List<Server> ValidateInstances(List<Server> configs)
+        public void ValidateServers(List<Server> servers)
         {
-            bool ipAddressUnique = configs.Select(c => c.IpAddresses.Select(ip=>ip.Address)).Distinct().Count() == configs.Count;
-            bool serverIdUnique = configs.Select(c => c.ServerId).Distinct().Count() == configs.Count;
+            bool ipAddressUnique = servers.Select(c => c.IpAddresses.Select(ip=>ip.Address)).Distinct().Count() == servers.Count;
+            bool serverIdUnique = servers.Select(c => c.ServerId).Distinct().Count() == servers.Count;
             if (!ipAddressUnique)
             {
                 throw new Exception("Application server ip addresses must be unique.");
@@ -27,7 +26,6 @@ namespace TelcobrightMediation.Config
             {
                 throw new Exception("Application Server ids be unique.");
             }
-            return configs;
         }
     }
 }
