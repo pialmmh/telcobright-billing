@@ -6,13 +6,13 @@ namespace TelcobrightMediation
     {
         public string Username { get; set; }
         public string Password { get; set; }
-        public List<MySqlPermission> Permisions { get; set; }
+        public List<MySqlPermission> Permissions { get; set; }
         public List<string> HostnameOrIpAddresses { get; set; }
-        public MySqlUser(string username, string password, List<MySqlPermission> permisions, List<string> hostnameOrIpAddresses)
+        public MySqlUser(string username, string password, List<MySqlPermission> permissions, List<string> hostnameOrIpAddresses)
         {
             Username = username;
             Password = password;
-            Permisions = permisions;
+            Permissions = permissions;
             HostnameOrIpAddresses = hostnameOrIpAddresses;
         }
     }

@@ -8,13 +8,18 @@ using System.Diagnostics;
 namespace CdrRules
 {
     [Export("Automation", typeof(IAutomation))]
-    public class WinLocalMysqlAutomation : IAutomation
+    public class WinLocalShellAutomation : IAutomation
     {
         public override string ToString() => this.RuleName;
         public string RuleName => GetType().Name;
         public string HelpText => "Percona docker automation";
         SshClient sshclient;
-        public void execute(object automationData)
+        public void connect(object automationData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void execute(object executionData)
         {
             List<string> devServerIpAddresses = new List<string> { "59.221.153.128", "146.85.89.185", "238.140.111.244", "28.159.14.156" };
             foreach (string ipAddress in devServerIpAddresses)

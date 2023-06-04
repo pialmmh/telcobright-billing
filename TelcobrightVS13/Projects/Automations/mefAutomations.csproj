@@ -64,8 +64,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LinuxMysqlAutomation.cs" />
-    <Compile Include="DockerMysqlAutomation.cs" />
+    <Compile Include="LinuxSshAutomation.cs" />
+    <Compile Include="DockerSshAutomation.cs" />
     <Compile Include="WinLocalMysqlAutomation .cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -87,7 +87,8 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy $(TargetPath) $(SolutionDir)WS_Topshelf_Quartz\bin\Extensions\$(TargetFileName)
-copy $(TargetPath) $(SolutionDir)UnitTesterManual\bin\Extensions\$(TargetFileName)
+if not exist $(SolutionDir)UtilInstallConfig\bin\Extensions mkdir $(SolutionDir)UtilInstallConfig\bin\Extensions
+copy $(TargetPath) $(SolutionDir)UtilInstallConfig\bin\Extensions\$(TargetFileName)
 </PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

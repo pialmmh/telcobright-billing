@@ -22,6 +22,7 @@ namespace TelcobrightMediation
         public CdrSetting CdrSetting => this.Tbc.CdrSetting;
         public PartnerEntities Context { get; }
         public AutoIncrementManager AutoIncrementManager { get; }
+        private AutomationContainer AutomationContainer { get; }= new AutomationContainer();
         public MefDecoderContainer MefDecoderContainer { get; set; }
         public MefServiceGroupsContainer MefServiceGroupContainer = new MefServiceGroupsContainer();
         public MefPartnerRulesContainer MefPartnerRuleContainer = new MefPartnerRulesContainer();
@@ -152,6 +153,8 @@ namespace TelcobrightMediation
 
         private void ComposeMefExtensions(TelcobrightConfig tbc)
         {
+            this.AutomationContainer.Compose();
+
             this.MefDecoderContainer.CmpDecoder.Compose();
             foreach (var ext in this.MefDecoderContainer.CmpDecoder.Decoders)
                 this.MefDecoderContainer.DicExtensions.Add(ext.Id, ext);

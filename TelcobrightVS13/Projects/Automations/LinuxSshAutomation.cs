@@ -11,35 +11,62 @@ using System.Text.RegularExpressions;
 namespace CdrRules
 {
     [Export("Automation", typeof(IAutomation))]
-    public class LinuxMysqlAutomation: IAutomation
+    public class LinuxSshAutomation: IAutomation
     {
         public override string ToString() => this.RuleName;
         public string RuleName => GetType().Name;
         public string HelpText => "Linux mysql automation";
-        SshClient sshclient;
-        public void execute(Object automationData)
-
+        SshClient sshClient;
+        public void connect(object automationData)
         {
-            Dictionary<string, object> data= (Dictionary<string, object>)automationData;
+            Dictionary<string, object> data = (Dictionary<string, object>)automationData;
             ServerInfo serverInfo = (ServerInfo)data["serverInfo"];
             string serverName = serverInfo.ServerNameOrIp;
             string userName = serverInfo.Username;
             string password = serverInfo.Password;
-            sshclient = new SshClient(serverName, userName, password);
-            sshclient.Connect();
+            sshClient = new SshClient(serverName, userName, password);
+            sshClient.Connect();
+        }
 
-            generateMySqlConfig("mysqlConfig.txt");
+        public void execute(Object executionData)
 
-            List<string> devServerIpAddresses = new List<string> { "192.168.0.230", "192.168.0.231" };
-
-            foreach (string ipAddress in devServerIpAddresses)
+        {
+            Dictionary<string, object> data = (Dictionary<string, object>)executionData;
+            bool useBase64EncodedBashCommand=false;
+            if (data.ContainsKey("useBase64EncodedBashCommand"))
             {
-                List<string> permissionCommands = buildPermissionForRoot(ipAddress, "root", "Takay1#$ane");
-                foreach (string command in permissionCommands)
+                object tempVal = data["useBase64EncodedBashCommand"];
+                useBase64EncodedBashCommand = (bool)tempVal;
+            }
+
+            List<string> commands = (List<string>) data["commands"];
+            if (useBase64EncodedBashCommand == true)
+            {
+                foreach (var command in commands)
                 {
-                    string answer = RunCommand(command);
+                    runBase64ShellCommand(command);
                 }
             }
+            else
+            {
+                foreach (var command in commands)
+                {
+                    runShellCommand(command);
+                }
+            }
+            //generateMySqlConfig("MysqlConfig.txt");
+
+
+            //List<string> devServerIpAddresses = new List<string> { "192.168.0.230", "192.168.0.231" };
+
+            //foreach (string ipAddress in devServerIpAddresses)
+            //{
+            //    List<string> permissionCommands = buildPermissionForRoot(ipAddress, "root", "Takay1#$ane");
+            //    foreach (string command in permissionCommands)
+            //    {
+            //        string answer = RunCommand(command);
+            //    }
+            //}
         }
         private static List<string> buildPermissionForRoot(string ipAddress, string userName, string password)
         {
@@ -71,7 +98,7 @@ namespace CdrRules
             //var promptRegex = new Regex(@"\][#$>]"); // regular expression for matching terminal prompt
             var modes = new Dictionary<Renci.SshNet.Common.TerminalModes, uint>();
 
-            using (var stream = sshclient.CreateShellStream("xterm", 255, 50, 800, 600, 1024, modes))
+            using (var stream = sshClient.CreateShellStream("xterm", 255, 50, 800, 600, 1024, modes))
             {
                 var writer = new StreamWriter(stream);
                 var reader = new StreamReader(stream);
@@ -80,13 +107,19 @@ namespace CdrRules
                 return reader.ReadToEnd();
             }
         }
+
+        private string runShellCommand(string cmd)
+        {
+            throw new NotImplementedException();
+        }
+
         private string runBase64ShellCommand(string cmd)
         {
             string base64Content = System.Convert.ToBase64String(Encoding.UTF8.GetBytes(cmd));
             string command = $"echo '{base64Content}' | base64 --decode | bash";
             var promptRegex = new Regex(@"\][#$>]"); // regular expression for matching terminal prompt
             var modes = new Dictionary<Renci.SshNet.Common.TerminalModes, uint>();
-            using (var stream = sshclient.CreateShellStream("xterm", 255, 50, 800, 600, 1024, modes))
+            using (var stream = sshClient.CreateShellStream("xterm", 255, 50, 800, 600, 1024, modes))
             {
                 var writer = new StreamWriter(stream);
                 var reader = new StreamReader(stream);

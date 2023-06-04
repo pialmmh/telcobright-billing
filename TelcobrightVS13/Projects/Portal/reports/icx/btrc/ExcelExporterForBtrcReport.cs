@@ -167,6 +167,9 @@ namespace PortalApp.ReportHelper
                     ws.Cells[icxCell].Value = "NAME OF ICX:";
                     ws.Cells[icxCell].Style.Font.Bold = true;
                     ws.Cells[icxCell].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+
+
                     ws.Cells[icxCell].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                     ws.Cells["B2:E2"].Merge = true;
                     ws.Cells["B2"].Value = partnerName;

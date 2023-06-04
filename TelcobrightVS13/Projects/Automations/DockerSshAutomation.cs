@@ -8,13 +8,18 @@ using Renci.SshNet;
 namespace CdrRules
 {
     [Export("Automation", typeof(IAutomation))]
-    public class DockerMysqlAutomation: IAutomation
+    public class DockerSshAutomation: IAutomation
     {
         public override string ToString() => this.RuleName;
         public string RuleName => GetType().Name;
         public string HelpText => "Percona docker automation";
         SshClient sshclient;
-        public void execute(Object automationData)
+        public void connect(object automationData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void execute(Object executionData)
         {
             
         }

@@ -45,10 +45,13 @@ namespace InstallConfig
     }
     class ConfigGeneratorMain
     {
+        private static AutomationContainer automationContainer = new AutomationContainer();
         static void Main(string[] args)
         {
+
+            automationContainer.Compose();
             string test = ConfigurationManager.AppSettings["conf1"];
-            //try
+            //try 
             {
                 Start:
                 string tbOperatorName = "summit";//todo: change

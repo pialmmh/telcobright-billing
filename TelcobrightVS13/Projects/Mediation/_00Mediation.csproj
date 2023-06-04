@@ -160,6 +160,8 @@
     <Compile Include="Config\IConfigGenerator.cs" />
     <Compile Include="Config\IisApplicationPool.cs" />
     <Compile Include="Config\InternetSite.cs" />
+    <Compile Include="MefData\Composers\AutomationContainer.cs" />
+    <Compile Include="ServerAndDbAutomation\BindAddress.cs" />
     <Compile Include="ServerAndDbAutomation\HostOrSubnetType.cs" />
     <Compile Include="ServerAndDbAutomation\IpAddress.cs" />
     <Compile Include="Config\JobInputData\StandardTelcobrightJobInput.cs" />
@@ -170,8 +172,10 @@
     <Compile Include="Config\PortalSettings.cs" />
     <Compile Include="Config\SummaryTimeFieldEnum.cs" />
     <Compile Include="ServerAndDbAutomation\DbUtil.cs" />
+    <Compile Include="ServerAndDbAutomation\MySqlCluster.cs" />
     <Compile Include="ServerAndDbAutomation\MySqlServer.cs" />
-    <Compile Include="ServerAndDbAutomation\MySqlPermission.cs" />
+    <Compile Include="ServerAndDbAutomation\MySqlPermissionType.cs" />
+    <Compile Include="ServerAndDbAutomation\MySqlShellAutomationHelper.cs" />
     <Compile Include="ServerAndDbAutomation\MySqlUser.cs" />
     <Compile Include="ServerAndDbAutomation\ReplicationHelper.cs" />
     <Compile Include="ServerAndDbAutomation\ServerAutomationtype.cs" />
@@ -343,6 +347,7 @@
     <Compile Include="Config\ServiceGroupConfiguration.cs" />
     <Compile Include="MefData\MefServiceGroupContainer.cs" />
     <Compile Include="MefData\MefServiceFamilyContainer.cs" />
+    <Compile Include="ServerAndDbAutomation\TransportProtocol.cs" />
     <Compile Include="SimpleLookups.cs" />
     <Compile Include="Mediation\CompressFile.cs" />
     <Compile Include="Mediation\TxtTableFromCdrOrSummary.cs" />

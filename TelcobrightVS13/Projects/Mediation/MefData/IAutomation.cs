@@ -9,6 +9,7 @@ namespace TelcobrightMediation
     {
         string RuleName { get; }
         string HelpText { get; }
-        void execute(Object automationData);
+        void connect(Object automationData);
+        void execute(Object executionData);
     }
 }

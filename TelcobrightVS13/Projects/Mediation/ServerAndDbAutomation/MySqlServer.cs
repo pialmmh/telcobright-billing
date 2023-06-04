@@ -4,25 +4,17 @@ namespace TelcobrightMediation
 {
     public class MySqlServer
     {
-        private Server Server { get; set; }
-        public string HostnameOrIp { get; set; }
-        public int Port { get; set; }
-        public string MasterUsername { get; set; }
-        public string MasterPassword { get; set; }
-        public Dictionary<string, string> SectionWiseConfig { get; set; }
-        public List<MySqlUser> Users { get; set; }
+        public Server Server { get;}
+        public List<BindAddress> BindAddresses { get; }= new List<BindAddress>();
+        public Dictionary<string, string> MysqlConfig { get;}
+        public List<MySqlUser> Users { get;}
         public List<string> IgnoreDatabasesFromReplication { get; set; } = new List<string>() {"mysql"};
         public List<ReplicationHelper> SlaveInstances { get; set; }
-        public MySqlServer(Server server, Dictionary<string, string> sectionWiseConfig)
+        public MySqlServer(Server server, Dictionary<string, string> mysqlConfig, List<MySqlUser> users)
         {
             this.Server = server;
-            SectionWiseConfig = sectionWiseConfig;
+            this.MysqlConfig = mysqlConfig;
+            this.Users = users;
         }
-    }
-
-    public class MySqlCluster
-    {
-        public MySqlServer Master { get; set; }
-        private List<MySqlServer> Slaves { get; set; }
     }
 }
