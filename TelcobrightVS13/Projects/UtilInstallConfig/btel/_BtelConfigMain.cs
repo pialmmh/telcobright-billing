@@ -54,7 +54,7 @@ namespace InstallConfig
                     idCustomer= 3,
                     idcdrformat= 16,
                     idMediationRule= 1,
-                    SwitchName= "BtelZteDhk",
+                    SwitchName= "BtelhuaweiDhk",
                     CDRPrefix= "IGW",
                     FileExtension= ".DAT",
                     Description= null,

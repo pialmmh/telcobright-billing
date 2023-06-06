@@ -29,14 +29,14 @@ namespace InstallConfig
             //***FILE LOCATIONS**********************************************
             //local/vault1: all app servers will use same local file location
             //the object "vault" will have a copy of below object for each app servers with server id as key and location as dictionary value
-            FileLocation vaultBtelZteDhk = new FileLocation()
+            FileLocation vaultBtelhuaweiDhk = new FileLocation()
             {
-                Name = "Vault.BtelZteDhk",//this is refered in ne table, name MUST start with "Vault"
+                Name = "Vault.BtelhuaweiDhk",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "C:/telcobright/Vault/Resources/CDR/btel/BtelZteDhk",
+                StartingPath = "C:/telcobright/Vault/Resources/CDR/btel/BtelhuaweiDhk",
                 User = "",
                 Pass = "",
             };
@@ -47,7 +47,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "C:/telcobright/Vault/Resources/CDR/btel/BtelZteDhk",
+                StartingPath = "C:/telcobright/Vault/Resources/CDR/btel/BtelhuaweiDhk",
                 User = "",
                 Pass = "",
             };
@@ -58,7 +58,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = "/",
                 ServerIp = "10.0.0.10",
-                StartingPath = "Resources/CDR/btel/BtelZteDhk",
+                StartingPath = "Resources/CDR/btel/BtelhuaweiDhk",
                 User = "ftpuser",
                 Pass = "Takay1takaane",
             };
@@ -69,7 +69,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = "/",
                 ServerIp = "10.0.0.12",
-                StartingPath = "Resources/CDR/btel/BtelZteDhk",
+                StartingPath = "Resources/CDR/btel/BtelhuaweiDhk",
                 User = "ftpuser",
                 Pass = "Takay1takaane",
                 Skip = true
@@ -78,16 +78,16 @@ namespace InstallConfig
             List<FileLocation> ftpLocations = new List<FileLocation>();
             ftpLocations.Add(appServerFtp1);
             ftpLocations.Add(appServerFtp2);
-            Vault BtelZteDhkvault = new Vault("Vault.BtelZteDhk", tbc, ftpLocations);
+            Vault BtelhuaweiDhkvault = new Vault("Vault.BtelhuaweiDhk", tbc, ftpLocations);
             Vault BtelCataleyaVault = new Vault("Vault.btelCataleya", tbc, ftpLocations);
 
-            BtelZteDhkvault.LocalLocation = new SyncLocation(vaultBtelZteDhk.Name) { FileLocation = vaultBtelZteDhk };//don't pass this to constructor and set there, causes problem in json serialize
+            BtelhuaweiDhkvault.LocalLocation = new SyncLocation(vaultBtelhuaweiDhk.Name) { FileLocation = vaultBtelhuaweiDhk };//don't pass this to constructor and set there, causes problem in json serialize
             BtelCataleyaVault.LocalLocation = new SyncLocation(vaultBtelCataleya.Name) { FileLocation = vaultBtelCataleya };//don't pass this to constructor and set there, causes problem in json serialize
-            directorySettings.Vaults.Add(BtelZteDhkvault);
+            directorySettings.Vaults.Add(BtelhuaweiDhkvault);
             directorySettings.Vaults.Add(BtelCataleyaVault);
-            FileLocation BtelZteDhk = new FileLocation()
+            FileLocation BtelhuaweiDhk = new FileLocation()
             {
-                Name = "BtelZteDhk",
+                Name = "BtelhuaweiDhk",
                 LocationType = "sftp",
                 OsType = "linux",
                 PathSeparator = "/",
@@ -140,27 +140,27 @@ namespace InstallConfig
                 IgnoreZeroLenghFile = 1
             };
             //add locations to directory settings
-            directorySettings.FileLocations.Add(vaultBtelZteDhk.Name, vaultBtelZteDhk);
+            directorySettings.FileLocations.Add(vaultBtelhuaweiDhk.Name, vaultBtelhuaweiDhk);
             directorySettings.FileLocations.Add(vaultBtelCataleya.Name, vaultBtelCataleya);
             directorySettings.FileLocations.Add(appServerFtp1.Name, appServerFtp1);
             directorySettings.FileLocations.Add(appServerFtp2.Name, appServerFtp2);
-            directorySettings.FileLocations.Add(BtelZteDhk.Name, BtelZteDhk);
+            directorySettings.FileLocations.Add(BtelhuaweiDhk.Name, BtelhuaweiDhk);
 
             directorySettings.FileLocations.Add(fileArchive1Zip.Name, fileArchive1Zip);
             directorySettings.FileLocations.Add(fileArchiveIof.Name, fileArchiveIof);
 
 
-            SyncPair spBtelZteDhkVault = new SyncPair("BtelZteDhk:Vault")
+            SyncPair spBtelhuaweiDhkVault = new SyncPair("BtelhuaweiDhk:Vault")
             {
                 SkipSourceFileListing = false,
-                SrcSyncLocation = new SyncLocation("BtelZteDhk")
+                SrcSyncLocation = new SyncLocation("BtelhuaweiDhk")
                 {
-                    FileLocation = BtelZteDhk,
+                    FileLocation = BtelhuaweiDhk,
                     DescendingFileListByFileName = tbc.CdrSetting.DescendingOrderWhileListingFiles
                 },
-                DstSyncLocation = new SyncLocation("Vault_BtelZteDhk")
+                DstSyncLocation = new SyncLocation("Vault_BtelhuaweiDhk")
                 {
-                    FileLocation = vaultBtelZteDhk
+                    FileLocation = vaultBtelhuaweiDhk
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
@@ -216,9 +216,9 @@ namespace InstallConfig
             {
                 SkipCopyingToDestination = false,
                 SkipSourceFileListing = true,
-                SrcSyncLocation = new SyncLocation("Vault_BtelZteDhk")
+                SrcSyncLocation = new SyncLocation("Vault_BtelhuaweiDhk")
                 {
-                    FileLocation = vaultBtelZteDhk
+                    FileLocation = vaultBtelhuaweiDhk
                 },
                 DstSyncLocation = new SyncLocation("FileArchive1Zip")
                 {
@@ -241,9 +241,9 @@ namespace InstallConfig
             {
                 SkipCopyingToDestination = false,
                 SkipSourceFileListing = true,
-                SrcSyncLocation = new SyncLocation("Vault_BtelZteDhk")
+                SrcSyncLocation = new SyncLocation("Vault_BtelhuaweiDhk")
                 {
-                    FileLocation = vaultBtelZteDhk
+                    FileLocation = vaultBtelhuaweiDhk
                 },
                 DstSyncLocation = new SyncLocation("IOF")
                 {
@@ -264,7 +264,7 @@ namespace InstallConfig
             };
 
             //add sync pairs to directory config
-            directorySettings.SyncPairs.Add(spBtelZteDhkVault.Name, spBtelZteDhkVault);
+            directorySettings.SyncPairs.Add(spBtelhuaweiDhkVault.Name, spBtelhuaweiDhkVault);
             directorySettings.SyncPairs.Add(spBtelCataleyaVault.Name, spBtelCataleyaVault);
             directorySettings.SyncPairs.Add(vaultFileArchive1Zip.Name, vaultFileArchive1Zip);
             directorySettings.SyncPairs.Add(vaultIof.Name, vaultIof);

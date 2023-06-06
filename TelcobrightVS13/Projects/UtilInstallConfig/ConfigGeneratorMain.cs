@@ -48,7 +48,6 @@ namespace InstallConfig
         private static AutomationContainer automationContainer = new AutomationContainer();
         static void Main(string[] args)
         {
-
             automationContainer.Compose();
             string test = ConfigurationManager.AppSettings["conf1"];
             //try 
@@ -57,9 +56,8 @@ namespace InstallConfig
                 string tbOperatorName = "summit";//todo: change
                 Console.Clear();
                 Console.WriteLine("Welcome to Telcobright Initial Configuration Utility");
-                Console.WriteLine("Partner Database Name: [" + tbOperatorName + "]");
                 Console.WriteLine("Select Task:");
-                Console.WriteLine("1= Setup mysql remote access.");
+                Console.WriteLine("1=Setup mysql remote access.");
                 Console.WriteLine("2=Append Prefix to Files");
                 Console.WriteLine("3=[Not Set]");
                 Console.WriteLine("4=Copy Portal to IIS Directory");
@@ -67,13 +65,14 @@ namespace InstallConfig
                 Console.WriteLine("6=Generate Configuration & Reset Scheduler data");
                 Console.WriteLine("7=Modify Partitions for tables");
                 Console.WriteLine("q=Quit");
+
+
                 ConsoleKeyInfo ki = new ConsoleKeyInfo();
                 ki = Console.ReadKey(true);
                 char cmdName = Convert.ToChar(ki.Key);
-
-                Dictionary<string, string> instances =
+                Dictionary<string, string> keyValuesForMenu =
                     ConfigurationManager.AppSettings.ToDictionary().Where(kv => kv.Key.StartsWith("instance")).ToDictionary(kv => kv.Key, kv => kv.Value);
-                List<string> selectedInstances = new List<string>();
+                List<string> choicesFromMenu = new List<string>();
                 ConfigPathHelper configPathHelper = new ConfigPathHelper("WS_Topshelf_Quartz", "portal", "UtilInstallConfig", "_dbscripts");
                 DbUtil.configPathHelper = configPathHelper;
                 List<TelcobrightConfig> selectedOperatorsConfig;
@@ -82,8 +81,8 @@ namespace InstallConfig
                     case '1':
                         if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' || Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
                         Console.WriteLine("Setting up remote access for mysql...");
-                        selectedInstances = InstanceMenu.getInstancesFromMenu(instances,"Select instances to create initial database:");
-                        selectedOperatorsConfig = getSelectedOperatorsConfig(selectedInstances, configPathHelper);
+                        choicesFromMenu = InstanceMenu.getInstancesFromMenu(keyValuesForMenu,"Select instances to create initial database:");
+                        selectedOperatorsConfig = getSelectedOperatorsConfig(choicesFromMenu, configPathHelper);
                         foreach (var tbc in selectedOperatorsConfig)
                         {
                             
@@ -100,8 +99,8 @@ namespace InstallConfig
                     case '3':
                         if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' || Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
                         Console.WriteLine("Creating Database, none will be created if one exists.");
-                        selectedInstances = InstanceMenu.getInstancesFromMenu(instances, "Select instances to create initial database:");
-                        selectedOperatorsConfig = getSelectedOperatorsConfig(selectedInstances, configPathHelper);
+                        choicesFromMenu = InstanceMenu.getInstancesFromMenu(keyValuesForMenu, "Select instances to create initial database:");
+                        selectedOperatorsConfig = getSelectedOperatorsConfig(choicesFromMenu, configPathHelper);
                         foreach (var tbc in selectedOperatorsConfig)
                         {
 
@@ -116,7 +115,7 @@ namespace InstallConfig
                         if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' || Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
                         break;
                     case '6':
-                        selectedOperatorsConfig=getSelectedOperatorsConfig(instances.Values.ToList(), configPathHelper);
+                        selectedOperatorsConfig=getSelectedOperatorsConfig(keyValuesForMenu.Values.ToList(), configPathHelper);
                         if (!selectedOperatorsConfig.Any())
                         {
                             Console.WriteLine("No operator's config has been found. Press any key to start over.");
@@ -155,7 +154,7 @@ namespace InstallConfig
 
                         break;
                     case '7':
-                        selectedInstances= InstanceMenu.getInstancesFromMenu(instances, "Select instances to modify partitions:");
+                        choicesFromMenu= InstanceMenu.getInstancesFromMenu(keyValuesForMenu, "Select instances to modify partitions:");
                         return;
                         //    schedulerType: "quartz",
                         //    databaseSetting: databaseSetting);

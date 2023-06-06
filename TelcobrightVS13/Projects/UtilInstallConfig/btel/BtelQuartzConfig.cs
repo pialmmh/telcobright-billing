@@ -37,7 +37,7 @@ namespace InstallConfig
                 new QuartzTbDaemonConfig
                 (
                     operatorName: operatorName,
-                    identity: "FileLister [BtelZteDhk:Vault]" + " [" + operatorName+"]",
+                    identity: "FileLister [BtelhuaweiDhk:Vault]" + " [" + operatorName+"]",
                     group: operatorName,
                     cronExpression: "/30 * * ? * *",
                     fireOnceIfMissFired: false,
@@ -45,7 +45,7 @@ namespace InstallConfig
                     {
                         {"telcobrightProcessId", "106"},
                         {"operatorName", operatorName},
-                        {"syncPair", "BtelZteDhk:Vault"}
+                        {"syncPair", "BtelhuaweiDhk:Vault"}
                     }),
                 new QuartzTbDaemonConfig
                 (
@@ -130,7 +130,7 @@ namespace InstallConfig
                 new QuartzTbDaemonConfig
                 (
                     operatorName: operatorName,
-                    identity: "FileCopier [BtelZteDhk:Vault]" + " [" + operatorName+"]",
+                    identity: "FileCopier [BtelhuaweiDhk:Vault]" + " [" + operatorName+"]",
                     group: operatorName,
                     cronExpression: "/5 * * ? * *",
                     fireOnceIfMissFired: false,
@@ -138,7 +138,7 @@ namespace InstallConfig
                     {
                         {"telcobrightProcessId", "104"},
                         {"operatorName", operatorName},
-                        {"syncPair", "BtelZteDhk:Vault"}
+                        {"syncPair", "BtelhuaweiDhk:Vault"}
                     }),
                 new QuartzTbDaemonConfig
                 (

@@ -53,7 +53,7 @@ namespace InstallConfig
                     idCustomer = 9,
                     idcdrformat = 17,
                     idMediationRule = 2,
-                    SwitchName = "zte",
+                    SwitchName = "huawei",
                     CDRPrefix = "ICX",
                     FileExtension = ".DAT",
                     Description = null,
