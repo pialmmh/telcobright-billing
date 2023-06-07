@@ -26,7 +26,7 @@ namespace QuartzTelcobright.PropertyGen
         private static string GetConnectionStringToRunScheduler(string schedulerDatabaseName)
         {
             //connection strings are available in app.conf
-            return ConfigurationManager.ConnectionStrings["Scheduler"]
+            return ConfigurationManager.ConnectionStrings["Partner"]
                 .ConnectionString.Replace("#DatabaseName#", schedulerDatabaseName);
         }
     }

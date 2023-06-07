@@ -63,7 +63,7 @@ namespace TelcobrightMediation.Reports.InvoiceReports.summit.ICX
 
             this.DataSource = invoiceBasicDatas;
             #region Page Header
-            xrLabelVatRegNo.Text = "BIN: 001285404-0208";
+            //xrLabelVatRegNo.Text = "BIN: 001285404-0208";
             xrLabelPartnerName.Text = invoiceMap["companyName"];
             xrLabelPartnerVatRegNo.Text = "BIN: " + invoiceMap["vatRegNo"];
             xrLabelType.Text = string.Format("Type: {0}", invoiceMap["customerType"]);
@@ -90,7 +90,37 @@ namespace TelcobrightMediation.Reports.InvoiceReports.summit.ICX
             xrTableCellRevenueTotal.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
             xrTableCellSubTotalAmount.DataBindings.Add("Text", this.DataSource, "GrandTotalAmount", "{0:n2}");
 
-            if(invoiceBasicDatasMerged != null && invoiceBasicDatasMerged.Count == 4)
+            if (invoiceBasicDatasMerged != null && invoiceBasicDatasMerged.Count == 3)
+            {
+                //xrTableCell23.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "Reference");
+                xrTableCell24.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "InPartnerName");
+                xrTableCell25.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "TotalCalls", "{0:n0}");
+                xrTableCell26.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "TotalMinutes", "{0:n2}");
+                xrTableCell27.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "Rate", "{0:##0.######}");
+                xrTableCell28.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "Amount", "{0:n2}");
+                xrTableCell29.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "GrandTotalAmount", "{0:n2}");
+
+                //xrTableCell16.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "Reference");
+                xrTableCell17.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "InPartnerName");
+                xrTableCell18.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "TotalCalls", "{0:n0}");
+                xrTableCell19.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "TotalMinutes", "{0:n2}");
+                xrTableCell20.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "Rate", "{0:##0.######}");
+                xrTableCell21.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "Amount", "{0:n2}");
+                xrTableCell22.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "GrandTotalAmount", "{0:n2}");
+
+                //xrTableCell30.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "Reference");
+                xrTableCell31.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "InPartnerName");
+                xrTableCell32.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "TotalCalls", "{0:n0}");
+                xrTableCell33.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "TotalMinutes", "{0:n2}");
+                xrTableCell34.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "Rate", "{0:##0.######}");
+                xrTableCell35.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "Amount", "{0:n2}");
+                xrTableCell36.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "GrandTotalAmount", "{0:n2}");
+
+                SubBand2.Visible = false;
+                SubBand3.Visible = false;
+            }
+
+            else if (invoiceBasicDatasMerged != null && invoiceBasicDatasMerged.Count == 4)
             {
                 //xrTableCell23.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "Reference");
                 xrTableCell24.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "InPartnerName");
@@ -123,7 +153,8 @@ namespace TelcobrightMediation.Reports.InvoiceReports.summit.ICX
                 xrTableCell41.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "Rate", "{0:##0.######}");
                 xrTableCell42.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "Amount", "{0:n2}");
                 xrTableCell43.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "GrandTotalAmount", "{0:n2}");
-                SubBand2.Visible = false;
+                SubBand2.Visible = true;
+                SubBand3.Visible = false;
             }
 
             else if(invoiceBasicDatasMerged != null && invoiceBasicDatasMerged.Count == 5)
@@ -136,6 +167,7 @@ namespace TelcobrightMediation.Reports.InvoiceReports.summit.ICX
                 xrTableCell87.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "Amount", "{0:n2}");
                 xrTableCell88.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "GrandTotalAmount", "{0:n2}");
                 SubBand2.Visible = true;
+                SubBand3.Visible = true;
             }
 
             if (invoiceBasicDatasMerged != null)
@@ -158,6 +190,10 @@ namespace TelcobrightMediation.Reports.InvoiceReports.summit.ICX
             if (invoiceBasicDatasMerged == null)
             {
                 SubBand3.Visible = false;
+            }
+            if (invoiceBasicDatasMerged == null)
+            {
+                SubBand4.Visible = false;
             }
 
 

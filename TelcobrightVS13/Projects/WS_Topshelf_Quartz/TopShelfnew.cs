@@ -103,7 +103,7 @@ namespace WS_Telcobright_Topshelf
                     ConnectionManager.GetEntityConnectionStringByOperator(configFileNameAsOperatorName, tbc);
                 using (PartnerEntities context = new PartnerEntities(entityConStr))
                 {
-                    var operatorShortName = tbc.Telcobrightpartner.CustomerName;
+                    var operatorShortName = tbc.Telcobrightpartner.databasename;
                     telcobrightpartner tbPartner = context.telcobrightpartners
                         .Where(p => p.databasename == operatorShortName).ToList().First();
                 }
