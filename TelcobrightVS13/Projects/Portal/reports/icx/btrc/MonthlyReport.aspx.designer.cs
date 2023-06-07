@@ -9,7 +9,7 @@
 
 
 
-public partial class DefaultRptDomesticMonthlyIcx {
+public partial class DefaultRptMonthlyIcx {
     
     /// <summary>
     /// DropDownListReportSource control.
@@ -372,15 +372,6 @@ public partial class DefaultRptDomesticMonthlyIcx {
     protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSource3;
     
     /// <summary>
-    /// IntlInHeader control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Label IntlInHeader;
-    
-    /// <summary>
     /// GvIntlin1 control.
     /// </summary>
     /// <remarks>
@@ -406,6 +397,24 @@ public partial class DefaultRptDomesticMonthlyIcx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label DomHeader;
+    
+    /// <summary>
+    /// IntlInHeader control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label IntlInHeader;
+    
+    /// <summary>
+    /// IntlOutHeader control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label IntlOutHeader;
     
     /// <summary>
     /// Gvdom control.

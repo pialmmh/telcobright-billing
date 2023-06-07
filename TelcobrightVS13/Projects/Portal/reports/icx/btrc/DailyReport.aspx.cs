@@ -275,7 +275,7 @@ group by tup_outpartnerid;";
             {
                 intOutComing_1_Records = ConvertBtrcDataSetToList(intOutComing_1_Ds, partnerNames);
                 sum = intOutComing_1_Records.Sum(r => r.minutes);
-                IntlOutHeader.Text = "International Outcoming Calls";
+                IntlOutHeader.Text = "International Outgoing Calls";
                 GvIntlout1.DataSource = intOutComing_1_Records;
                 ((BoundField)GvIntlout1.Columns[1]).FooterText = $"{sum:n0}";
                 GvIntlout1.DataBind();

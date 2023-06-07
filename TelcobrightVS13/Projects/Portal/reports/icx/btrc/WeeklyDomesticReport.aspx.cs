@@ -118,17 +118,17 @@ public partial class DefaultRptDomesticWeeklyIcx : System.Web.UI.Page
         domDataAdapter.Fill(ds);
         return ds;    
     }
-    List<BtrcReportRow> ConvertBtrcDataSetToList(DataSet ds, Dictionary<int, string> partnerNames) {
+    List<DomesticReportRow> ConvertBtrcDataSetToList(DataSet ds, Dictionary<int, string> partnerNames) {
         bool hasRecords = ds.Tables.Cast<DataTable>()
                            .Any(table => table.Rows.Count != 0);
-        List<BtrcReportRow> records = new List<BtrcReportRow>();
+        List<DomesticReportRow> records = new List<DomesticReportRow>();
         if (hasRecords == true)
         {
             foreach (DataTable table in ds.Tables)
             {
                 foreach (DataRow row in table.Rows)
                 {
-                    BtrcReportRow record = new BtrcReportRow();
+                    DomesticReportRow record = new DomesticReportRow();
                     int partnerId = row.Field<int>("partnerid");
                     string partnerName = "";
                     if (partnerNames.TryGetValue(partnerId, out partnerName) == false)
@@ -136,6 +136,7 @@ public partial class DefaultRptDomesticWeeklyIcx : System.Web.UI.Page
                         throw new Exception("Could not find partner name for partner id=" + partnerId);
                     }
                     record.partnerName = partnerName;
+                    record.noOfCalls = Convert.ToDecimal(row["noofcalls"]);
                     record.minutes = row.Field<Decimal>("minutes");
                     records.Add(record);
                 }
@@ -146,7 +147,7 @@ public partial class DefaultRptDomesticWeeklyIcx : System.Web.UI.Page
     DataSet getDomesticWeeklyReport(MySqlConnection connection)
     {
         string domSql =
-          $@"select tup_inpartnerid as partnerid,sum(duration1)/60 as minutes 
+          $@"select tup_inpartnerid as partnerid,sum(totalcalls) as noofcalls,sum(duration1)/60 as minutes 
         from 
         (select * from sum_voice_day_01
         where tup_starttime >= '{txtStartDate.Text}' and tup_starttime < '{txtEndDate.Text}'
@@ -163,7 +164,7 @@ public partial class DefaultRptDomesticWeeklyIcx : System.Web.UI.Page
     protected void submit_Click(object sender, EventArgs e)
     {
         
-        List<BtrcReportRow> domesticWeeklyRecords = new List<BtrcReportRow>();
+        List<DomesticReportRow> domesticWeeklyRecords = new List<DomesticReportRow>();
         
        
         Dictionary<int, string> partnerNames = null;
@@ -184,9 +185,11 @@ public partial class DefaultRptDomesticWeeklyIcx : System.Web.UI.Page
             {
                 domesticWeeklyRecords = ConvertBtrcDataSetToList(domesticDs, partnerNames);
                 Decimal sum = domesticWeeklyRecords.Sum(r => r.minutes);
+                Decimal sumOfCalls = domesticWeeklyRecords.Sum(r => r.noOfCalls);
                 DomHeader.Text = "Weekly Domestic Calls";
                 Gvdom.DataSource = domesticWeeklyRecords;
-                ((BoundField)Gvdom.Columns[1]).FooterText = $"{sum:n0}";
+                ((BoundField)Gvdom.Columns[1]).FooterText = $"{sumOfCalls:n0}";
+                ((BoundField)Gvdom.Columns[2]).FooterText = $"{sum:n0}";
                 Gvdom.DataBind();
             }
             return;
@@ -362,7 +365,7 @@ public partial class DefaultRptDomesticWeeklyIcx : System.Web.UI.Page
         //            + ".xlsx", Response);
         //}
 
-        List<BtrcReportRow> domesticWeeklyRecords = new List<BtrcReportRow>();
+        List<DomesticReportRow> domesticWeeklyRecords = new List<DomesticReportRow>();
    
         Dictionary<int, string> partnerNames= null;
         using (PartnerEntities context = new PartnerEntities())

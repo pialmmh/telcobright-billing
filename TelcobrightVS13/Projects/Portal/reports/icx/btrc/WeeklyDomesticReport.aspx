@@ -627,7 +627,7 @@
                         </asp:GridView>
                     </div>
                     <div style="clear: both;"></div>
-                    <div style="padding-left: 65px; padding-bottom: 5px;">
+                    <div style="padding-left: 100px; padding-bottom: 5px;">
                         <asp:Label ID="DomHeader" runat="server" Text="" ForeColor="#5D7B9D" Font-Bold="true" Font-Size="Large"></asp:Label>
                     </div>
                     <div style="text-align: left; float: left; clear: left">
@@ -636,6 +636,7 @@
                             <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                             <Columns>
                                 <asp:BoundField DataField="partnerName" HeaderText="Partner Name" SortExpression="partnerName" ItemStyle-Wrap="false" FooterText="Total" />
+                                <asp:BoundField DataField="noOfCalls" DataFormatString="{0:F2}" HeaderText="No. of Calls" SortExpression="noOfCalls" FooterText="" />
                                 <asp:BoundField DataField="minutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="minutes" FooterText="" />
                             </Columns>
                             <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />

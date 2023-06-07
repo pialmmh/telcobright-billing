@@ -1,5 +1,5 @@
 ﻿<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="True"
-    CodeBehind="MonthlyDomesticReport.aspx.cs" Inherits="DefaultRptDomesticMonthlyIcx" %>
+    CodeBehind="MonthlyReport.aspx.cs" Inherits="DefaultRptMonthlyIcx" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Import Namespace="MediationModel" %>
@@ -47,10 +47,10 @@
                 TextBoxYear1.Text = System.DateTime.Now.ToString("yyyy");
                 DropDownListMonth.SelectedIndex = int.Parse(System.DateTime.Now.ToString("MM")) - 1;
                 DropDownListMonth1.SelectedIndex = int.Parse(System.DateTime.Now.ToString("MM")) - 1;
-                //txtDate.Text = FirstDayOfMonthFromDateTime(System.DateTime.Now).ToString("dd/MM/yyyy");
-                //txtDate1.Text = LastDayOfMonthFromDateTime(System.DateTime.Now).ToString("dd/MM/yyyy");
-                txtStartDate.Text = FirstDayOfMonthFromDateTime(System.DateTime.Now).ToString("dd/MM/yyyy"); // might be changed
-                txtEndDate.Text = LastDayOfMonthFromDateTime(System.DateTime.Now).ToString("dd/MM/yyyy");
+                txtStartDate.Text = FirstDayOfMonthFromDateTime(System.DateTime.Now).ToString("yyyy-MM-dd 00:00:00");
+                txtEndDate.Text = LastDayOfMonthFromDateTime(System.DateTime.Now).ToString("yyyy-MM-dd 23:59:59");
+                //txtStartDate.Text = System.DateTime.Now.AddDays(-6).ToString("yyyy-MM-dd 00:00:00");
+                //txtEndDate.Text = System.DateTime.Now.ToString("yyyy-MM-dd 23:59:59");
 
 
                 //set controls if page is called for a template
@@ -115,8 +115,8 @@
 
                 }
 
-                DropDownListPartner_OnSelectedIndexChanged(DropDownListPartner, EventArgs.Empty);
-                DropDownListIgw_OnSelectedIndexChanged(DropDownListIgw, EventArgs.Empty);
+                //DropDownListPartner_OnSelectedIndexChanged(DropDownListPartner, EventArgs.Empty);
+                //DropDownListIgw_OnSelectedIndexChanged(DropDownListIgw, EventArgs.Empty);
 
 
                 //Retrieve Path from TreeView for displaying in the master page caption label
@@ -177,6 +177,8 @@
             //select 15th of month to find out first and last day of a month as it exists in all months.
             DateTime anyDayOfMonth = new DateTime(int.Parse(TextBoxYear.Text), int.Parse(DropDownListMonth.SelectedValue), 15);
             txtStartDate.Text = FirstDayOfMonthFromDateTime(anyDayOfMonth).ToString("yyyy-MM-dd 00:00:00");
+            txtEndDate.Text = LastDayOfMonthFromDateTime(anyDayOfMonth).ToString("yyyy-MM-dd 23:59:59");
+
         }
         protected void DropDownListMonth1_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -400,10 +402,10 @@
                             <asp:ListItem Value="12">Dec</asp:ListItem>
                         </asp:DropDownList>
 
-                        End Year/Month: 
-                        <asp:TextBox ID="TextBoxYear1" runat="server" Text="" Width="30px"></asp:TextBox>
-                        Month
-                        <asp:DropDownList ID="DropDownListMonth1" runat="server"
+                        <%--End Year/Month: --%>
+                        <asp:TextBox ID="TextBoxYear1" runat="server" Visible="False" Text="" Width="30px"></asp:TextBox>
+                        <%--Month--%>
+                        <asp:DropDownList ID="DropDownListMonth1" runat="server" Visible="False"
                             OnSelectedIndexChanged="DropDownListMonth1_SelectedIndexChanged" AutoPostBack="True">
                             <asp:ListItem Value="01">Jan</asp:ListItem>
                             <asp:ListItem Value="02">Feb</asp:ListItem>
@@ -422,8 +424,8 @@
                     </span>
 
 
-                    <div style="float: left; width: 280px;">
-                        Start Date [Time]
+                    <div style="float: left; width: -1px;visibility: hidden;">
+                        <%--Start Date [Time]--%>
                         <asp:TextBox ID="txtStartDate" AutoPostBack="true" OnTextChanged="CalendarEndDate_TextChanged" runat="server" />
                         <asp:CalendarExtender ID="CalendarStartDate" runat="server"
                             TargetControlID="txtStartDate" PopupButtonID="txtStartDate" Format="yyyy-MM-dd 00:00:00">
@@ -432,8 +434,8 @@
 
                     </div>
 
-                    <div style="float: left; width: 280px;">
-                        End Date [Time]
+                    <div style="float: left; width: 280px; visibility: hidden;">
+                        <%--End Date [Time]--%>
                         <asp:TextBox ID="txtEndDate" AutoPostBack="true" OnTextChanged="CalendarStartDate_TextChanged" runat="server" />
                         <asp:CalendarExtender ID="CalendarEndDate" runat="server"
                             TargetControlID="txtEndDate" PopupButtonID="txtEndDate" Format="yyyy-MM-dd 23:59:59">
@@ -514,8 +516,7 @@
                 </div>
 
                 <div id="RouteFilter" style="visibility: hidden; margin-top: -4px; margin-left: 10px; float: left; padding-left: 5px; background-color: #f2f2f2;">
-                    <%--<span style="font-size: smaller;position:relative;left:-53px;padding-left:0px;clear:right;">[Enter only Date in "dd/MM/yyyy (e.g. 21/11/2012) or Date+Time in "dd/MM/yyyy HH:mm:ss" (e.g. 21/11/2012 19:01:59) format]</span>   --%>
-
+                    <span style="font-size: smaller;position:relative;left:-53px;padding-left:0px;clear:right;">[Enter only Date in "dd/MM/yyyy (e.g. 21/11/2012) or Date+Time in "dd/MM/yyyy HH:mm:ss" (e.g. 21/11/2012 19:01:59) format]</span>   
                     <div style="text-align: left;">
 
                         <div style="float: left; height: 25px; min-width: 1285px;">
@@ -583,7 +584,7 @@
             <div style="text-align: center;">
                 <div style="clear: both;"></div>
                 <div style="padding-left: 25%; padding-bottom: 5px;">
-                    <asp:Label ID="IntlInHeader" runat="server" Text="" ForeColor="#5D7B9D" Font-Bold="true" Font-Size="Large"></asp:Label>
+<%--                    <asp:Label ID="IntlInHeader" runat="server" Text="" ForeColor="#5D7B9D" Font-Bold="true" Font-Size="Large"></asp:Label>--%>
                 </div>
                 <div style="text-align: left;">
                     <div style="text-align: left; float: left;">
@@ -627,16 +628,27 @@
                         </asp:GridView>
                     </div>
                     <div style="clear: both;"></div>
-                    <div style="padding-left: 65px; padding-bottom: 5px;">
-                        <asp:Label ID="DomHeader" runat="server" Text="" ForeColor="#5D7B9D" Font-Bold="true" Font-Size="Large"></asp:Label>
+                    <div style="padding-bottom: 5px; padding-left: 115px">
+                        <asp:Label Visible="false" ID="DomHeader" runat="server" Text="" Height="20px" Width="236px"  style="padding:2px;text-align: center;" BorderColor="LightGray" BorderWidth="1px" BorderStyle="Solid" ForeColor="#333333"></asp:Label>
+                        <asp:Label Visible="false" ID="IntlInHeader" runat="server" Text="" Height="20px" Width="234px"  style="padding:2px;text-align: center;" BorderColor="LightGray" BorderWidth="1px" BorderStyle="Solid" ForeColor="#333333" HorizontalAlign="Center"></asp:Label> 
+                        <asp:Label Visible="false" ID="IntlOutHeader" runat="server" Text="" style="padding:2px;text-align: center;" BorderStyle="Solid" BorderColor="LightGray" BorderWidth="1px" ForeColor="#333333"  Width="235px" Height="20px"></asp:Label> 
                     </div>
                     <div style="text-align: left; float: left; clear: left">
                         <asp:GridView ID="Gvdom" runat="server" AutoGenerateColumns="False"
                             CellPadding="4" ForeColor="#333333" GridLines="Vertical" Visible="true" ShowFooter="true">
                             <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+
                             <Columns>
-                                <asp:BoundField DataField="partnerName" HeaderText="Partner Name" SortExpression="partnerName" ItemStyle-Wrap="false" FooterText="Total" />
-                                <asp:BoundField DataField="minutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="minutes" FooterText="" />
+                                <asp:BoundField DataField="SLNo" HeaderText="Sl No" SortExpression="SLNo" ItemStyle-Wrap="false" FooterText="Total" />                                
+                                <asp:BoundField DataField="date" HeaderText="Date" SortExpression="Date" ItemStyle-Wrap="false" FooterText="" />
+                                <asp:BoundField DataField="domNoOfCalls" DataFormatString="{0:F0}" HeaderText="Total No. of Calls" SortExpression="domNoOfCalls" FooterText="" />
+                                <asp:BoundField DataField="domesticMinutes" DataFormatString="{0:F0}" HeaderText="Total No. of Minutes" SortExpression="domesticMinutes" FooterText="" />
+                                
+                                <asp:BoundField DataField="IntIncomingNoOfCalls" DataFormatString="{0:F0}" HeaderText="Total No. of Calls" SortExpression="IntIncomingNoOfCalls" FooterText="" />
+                                <asp:BoundField DataField="IntIncomingNoOfMinutes" DataFormatString="{0:F0}" HeaderText="Total No. of Minutes" SortExpression="IntIncomingNoOfMinutes" FooterText="" />
+
+                                <asp:BoundField DataField="IntOutgoingNoOfCalls" DataFormatString="{0:F0}" HeaderText="Total No. of Calls" SortExpression="IntOutgoingNoOfCalls" FooterText="" />
+                                <asp:BoundField DataField="IntOutgoingNoOfMinutes" DataFormatString="{0:F0}" HeaderText="Total No. of Minutes" SortExpression="IntOutgoingNoOfMinutes" FooterText="" />
                             </Columns>
                             <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
                             <EditRowStyle BackColor="#999999" />

@@ -174,6 +174,8 @@
                                     <asp:TreeNode Value="daily" Text="Daily Report" SelectAction="Select" NavigateUrl="~/reports/icx/btrc/DailyReport.aspx"></asp:TreeNode>
                                     <asp:TreeNode Value="weekly domestic" Text="Weekly Domestic Report" SelectAction="Select" NavigateUrl="~/reports/icx/btrc/WeeklyDomesticReport.aspx"></asp:TreeNode>
                                     <asp:TreeNode Value="weekly international" Text="Weekly International Report" SelectAction="Select" NavigateUrl="~/reports/icx/btrc/WeeklyInternationalReport.aspx"></asp:TreeNode>
+                                    
+                                    <asp:TreeNode Value="Monthly Report" Text="Monthly Report" SelectAction="Select" NavigateUrl="~/reports/icx/btrc/MonthlyReport.aspx"></asp:TreeNode>
 
                                 </asp:TreeNode>
 

@@ -12,16 +12,23 @@ using ExportToExcel;
 using MediationModel;
 using LibraryExtensions;
 using PortalApp.ReportHelper;
-public partial class DefaultRptDomesticMonthlyIcx : System.Web.UI.Page
+
+using System;
+
+
+
+public partial class DefaultRptMonthlyIcx : System.Web.UI.Page
 {
     public string operatorName;
     private int _mShowByCountry=0;
     private int _mShowByAns = 0;
     DataTable _dt;
+
+
     private string GetQuery()
     {
 
-        string StartDate =txtStartDate.Text;
+        string StartDate = txtStartDate.Text;
         string EndtDate = (txtEndDate.Text.ConvertToDateTimeFromMySqlFormat()).AddSeconds(1).ToMySqlFormatWithoutQuote();
         string tableName = DropDownListReportSource.SelectedValue + "01";
 
@@ -118,44 +125,80 @@ public partial class DefaultRptDomesticMonthlyIcx : System.Web.UI.Page
         domDataAdapter.Fill(ds);
         return ds;    
     }
-    List<BtrcReportRow> ConvertBtrcDataSetToList(DataSet ds, Dictionary<int, string> partnerNames) {
+    List<MonthlyReportRowForExcel> ConvertBtrcDataSetToList(DataSet ds) {
         bool hasRecords = ds.Tables.Cast<DataTable>()
                            .Any(table => table.Rows.Count != 0);
-        List<BtrcReportRow> records = new List<BtrcReportRow>();
+        //List<MonthlyReportRow> records = new List<MonthlyReportRow>();
+        List<MonthlyReportRowForExcel> finalRecords= new List<MonthlyReportRowForExcel>();
         if (hasRecords == true)
         {
             foreach (DataTable table in ds.Tables)
             {
+                int Slno = 1;
                 foreach (DataRow row in table.Rows)
                 {
-                    BtrcReportRow record = new BtrcReportRow();
-                    int partnerId = row.Field<int>("partnerid");
-                    string partnerName = "";
-                    if (partnerNames.TryGetValue(partnerId, out partnerName) == false)
-                    {
-                        throw new Exception("Could not find partner name for partner id=" + partnerId);
-                    }
-                    record.partnerName = partnerName;
-                    record.minutes = row.Field<Decimal>("minutes");
-                    records.Add(record);
+                    MonthlyReportRow record = new MonthlyReportRow();
+                    record.SLNo = Slno;
+                    Slno += 1;
+                    
+                    record.date= row.Field<DateTime>("date");
+                    //record.domNoOfCalls= row.Field<Decimal>("noofcalls");
+
+                
+                    record.domNoOfCalls= Convert.ToDecimal(row["noofcalls"]);
+                    record.domesticMinutes= row.Field<Decimal>("minutes");
+
+
+                    record.IntIncomingNoOfCalls= Convert.ToDecimal(row["noofcallsI"]);
+                    record.IntIncomingNoOfMinutes= row.Field<decimal>("minutesI");
+
+                    record.IntOutgoingNoOfCalls= Convert.ToDecimal(row["noofcallsO"]);
+                    record.IntOutgoingNoOfMinutes= row.Field<decimal>("minutesO");
+                    MonthlyReportRowForExcel excelRecord = new MonthlyReportRowForExcel(record);
+                    finalRecords.Add(excelRecord);
                 }
             }
         }
-        return records;
-    }
-    DataSet getDomesticWeeklyReport(MySqlConnection connection)
-    {
-        string domSql =
-          $@"select tup_inpartnerid as partnerid,sum(duration1)/60 as minutes 
-        from 
-        (select * from sum_voice_day_01
-        where tup_starttime >= '{txtStartDate.Text}' and tup_starttime < '{txtEndDate.Text}'
-        union all 
-        select * from sum_voice_day_04
-        where tup_starttime >= '{txtStartDate.Text}' and tup_starttime < '{txtEndDate.Text}') x
-        group by tup_inpartnerid;";
 
-        DataSet ds= getBtrcReport(connection, domSql);
+        return finalRecords;
+    }
+    DataSet getMonthlyReport(MySqlConnection connection)
+    {
+                string Sql = $@"select dom.date, dom.noofcalls, dom.minutes, 
+                i.noofcalls noofcallsI,i.minutes as minutesI,O.noofcalls as noofcallsO,O.minutes as minutesO
+                from
+                (select date(tup_starttime) as date, sum(totalcalls) as noofcalls,sum(duration1)/60 as minutes 
+                        from 
+                        (select * from sum_voice_day_01
+                        where tup_starttime >= '{txtStartDate.Text}' and tup_starttime < '{txtEndDate.Text}'
+                        union all 
+                        select * from sum_voice_day_04
+                        where tup_starttime >= '{txtStartDate.Text}' and tup_starttime < '{txtEndDate.Text}') x
+                        group by date(tup_starttime)) dom
+                left join 
+                (select date(tup_starttime) as date, sum(totalcalls) as noofcalls,sum(duration1)/60 as minutes 
+                        from sum_voice_day_03
+                        where tup_starttime >= '{txtStartDate.Text}' and tup_starttime < '{txtEndDate.Text}'
+                        group by date(tup_starttime)
+                ) i
+                on dom.date= i.date
+                left join 
+                (select date(tup_starttime) as date, sum(totalcalls) as noofcalls,sum(duration3)/60 as minutes 
+                        from sum_voice_day_02
+                        where tup_starttime >= '{txtStartDate.Text}' and tup_starttime < '{txtEndDate.Text}'
+                        group by date(tup_starttime)
+                )O
+                on dom.date= O.date;";
+        //  $@"select date(tup_starttime) as date,count(totalcalls) as noofcalls,sum(duration1)/60 as minutes 
+        //from 
+        //(select * from sum_voice_day_01
+        //where tup_starttime >= '{txtStartDate.Text}' and tup_starttime < '{txtEndDate.Text}'
+        //union all 
+        //select * from sum_voice_day_04
+        //where tup_starttime >= '{txtStartDate.Text}' and tup_starttime < '{txtEndDate.Text}') x
+        //group by date(tup_starttime);";
+
+        DataSet ds= getBtrcReport(connection, Sql);
         return ds;
     }
 
@@ -163,7 +206,7 @@ public partial class DefaultRptDomesticMonthlyIcx : System.Web.UI.Page
     protected void submit_Click(object sender, EventArgs e)
     {
         
-        List<BtrcReportRow> domesticWeeklyRecords = new List<BtrcReportRow>();
+        List<MonthlyReportRowForExcel> monthlyRecords = new List<MonthlyReportRowForExcel>();
         
        
         Dictionary<int, string> partnerNames = null;
@@ -175,18 +218,34 @@ public partial class DefaultRptDomesticMonthlyIcx : System.Web.UI.Page
             connection.ConnectionString = ConfigurationManager.ConnectionStrings["reader"].ConnectionString;
             connection.Open();
 
-            DataSet domesticDs = getDomesticWeeklyReport(connection);
+            DataSet monthlyDs =getMonthlyReport(connection);
            
 
-            bool hasdomesticDs = domesticDs.Tables.Cast<DataTable>()
+            bool hasdomesticDs =monthlyDs.Tables.Cast<DataTable>()
                           .Any(table => table.Rows.Count != 0);
             if (hasdomesticDs == true)
             {
-                domesticWeeklyRecords = ConvertBtrcDataSetToList(domesticDs, partnerNames);
-                Decimal sum = domesticWeeklyRecords.Sum(r => r.minutes);
-                DomHeader.Text = "Weekly Domestic Calls";
-                Gvdom.DataSource = domesticWeeklyRecords;
-                ((BoundField)Gvdom.Columns[1]).FooterText = $"{sum:n0}";
+                monthlyRecords = ConvertBtrcDataSetToList(monthlyDs);
+                Decimal sum1 = monthlyRecords.Sum(r => r.domNoOfCalls);
+                Decimal sum2 = monthlyRecords.Sum(r => r.domesticMinutes);
+                Decimal sum3 = monthlyRecords.Sum(r => r.IntIncomingNoOfCalls);
+                Decimal sum4 = monthlyRecords.Sum(r => r.IntIncomingNoOfMinutes);
+                Decimal sum5 = monthlyRecords.Sum(r => r.IntOutgoingNoOfCalls);
+                Decimal sum6 = monthlyRecords.Sum(r => r.IntOutgoingNoOfMinutes);
+
+                DomHeader.Text = "Domestic Report";
+                IntlInHeader.Text = "International Incoming Report";
+                IntlOutHeader.Text = "International Outgoing Report";
+                Gvdom.DataSource = monthlyRecords;
+                ((BoundField)Gvdom.Columns[2]).FooterText = $"{sum1:n0}";
+                ((BoundField)Gvdom.Columns[3]).FooterText = $"{sum2:n0}";
+                ((BoundField)Gvdom.Columns[4]).FooterText = $"{sum3:n0}";
+                ((BoundField)Gvdom.Columns[5]).FooterText = $"{sum4:n0}";
+                ((BoundField)Gvdom.Columns[6]).FooterText = $"{sum5:n0}";
+                ((BoundField)Gvdom.Columns[7]).FooterText = $"{sum6:n0}";
+                DomHeader.Visible = true;
+                IntlInHeader.Visible = true;
+                IntlOutHeader.Visible = true;
                 Gvdom.DataBind();
             }
             return;
@@ -362,7 +421,7 @@ public partial class DefaultRptDomesticMonthlyIcx : System.Web.UI.Page
         //            + ".xlsx", Response);
         //}
 
-        List<BtrcReportRow> domesticWeeklyRecords = new List<BtrcReportRow>();
+        List<MonthlyReportRowForExcel> monthlyReport= new List<MonthlyReportRowForExcel>();
    
         Dictionary<int, string> partnerNames= null;
         using (PartnerEntities context = new PartnerEntities())
@@ -376,16 +435,21 @@ public partial class DefaultRptDomesticMonthlyIcx : System.Web.UI.Page
             connection.Open();
 
 
-            DataSet domesticDs = getDomesticWeeklyReport(connection);
-            domesticWeeklyRecords = ConvertBtrcDataSetToList(domesticDs, partnerNames);
+            DataSet monthlyDs = getMonthlyReport(connection);
+            monthlyReport = ConvertBtrcDataSetToList(monthlyDs);
 
-            
-            ExcelExporterForBtrcReport.ExportToExcelDomesticWeeklyReport("DomesticWeeklyReport From " + txtStartDate.Text + " To " + txtEndDate.Text
-                    + ".xlsx", Response, domesticWeeklyRecords,txtStartDate.Text,txtEndDate.Text, this.operatorName);
+
+            ExcelExporterForBtrcReport.ExportToExcelMonthlyReport("MonthlyReport From " + txtStartDate.Text + " To " + txtEndDate.Text
+                    + ".xlsx", Response, monthlyReport, this.operatorName);
 
             return;
         }
         }
+
+    private List<MonthlyReportRow> ConvertBtrcDataSetToList()
+    {
+        throw new NotImplementedException();
+    }
 
     private List<BtrcReportRow> ConvertBtrcDataSetToList(DataSet domesticDs, object partnerName)
     {
@@ -522,8 +586,10 @@ public partial class DefaultRptDomesticMonthlyIcx : System.Web.UI.Page
     {
         CalendarStartDate.SelectedDate = txtStartDate.Text.ConvertToDateTimeFromMySqlFormat();
         DateTime startDate = CalendarStartDate.SelectedDate ?? DateTime.Now;
-        DateTime endDate = startDate.AddMonths(1);
+        DateTime endDate = System.DateTime.Now; // need to see the deatils 
         CalendarEndDate.SelectedDate = endDate;
+
+        
         //txtStartDate.Text = startDate.ToString("yyyy-MM-dd 00:00:00");
         //txtEndDate.Text = endDate.ToString("yyyy-MM-dd 23:59:59");
     }
