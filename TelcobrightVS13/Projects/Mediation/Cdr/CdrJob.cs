@@ -78,8 +78,10 @@ namespace TelcobrightMediation.Cdr
                     summaryCache.WriteAllChanges(this.CdrJobContext.DbCmd,
                         this.CdrJobContext.SegmentSizeForDbWrite);
                 }
-                var cdrWritingResult = this.CdrProcessor?.WriteCdrs(parallelCdrExts);
 
+                CdrWritingResult cdrWritingResult = this.CdrProcessor?.WriteCdrs(parallelCdrExts);
+                
+                
                 if (this.CdrProcessor != null && this.CdrProcessor.PartialProcessingEnabled
                     && this.CdrProcessor.CdrJobContext.TelcobrightJob.idjobdefinition == 1) //1=new cdr only
                 {

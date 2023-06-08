@@ -17,12 +17,12 @@ namespace InstallConfig
 {
     public partial class PurpleAbstractConfigConfigGenerator //quartz config part
     {
-        public override List<Server> GetApplicationServerConfigs()
+        public override List<Server> GetApplicationServerConfigs()//e.g. {"master", server}
         {
             List<Server> servers = new List<Server>();
             Server server01 = new Server(1, "db01")
             {
-                IpAddresses = new List<IpAddress>() { new IpAddress { Address = "114.130.82.54" } },
+                IpAddresses = new List<IpAddress>() { new IpAddress { Address = "192.168.0.137" } },
                 ServerOs = ServerOs.Ubuntu,
                 AutomationType = ServerAutomationType.LinuxMysqlAutomation,
                 AdminUsername = "telcobright",
@@ -43,8 +43,9 @@ namespace InstallConfig
             servers.Add(server01);
             servers.Add(server02);
             base.ValidateServers(servers);
-
             return servers;
         }
     }
 }
+
+

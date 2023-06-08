@@ -17,7 +17,7 @@ using TelcobrightMediation.Accounting;
 namespace InstallConfig
 {
     [Export(typeof(AbstractConfigConfigGenerator))]
-    public partial class PurpleAbstractConfigConfigGenerator:AbstractConfigConfigGenerator
+    public partial class PurpleAbstractConfigConfigGenerator : AbstractConfigConfigGenerator
     {
         public override TelcobrightConfig Tbc { get; }
         public PurpleAbstractConfigConfigGenerator()
@@ -27,21 +27,11 @@ namespace InstallConfig
                 new telcobrightpartner
                     {
                         idCustomer = 2,
-                        CustomerName = "Purple Telecom Ltd.",
+                        CustomerName = "Purple TELECOM LTD.",
                         idOperatorType = 2,
                         databasename = "purple",
-                        databasetype = "mysql",
-                        user = "root",
-                        pass = null,
-                        ServerNameOrIP = "127.0.0.1:3306",
-                        IBServerNameOrIP = "127.0.0.1:3306",
-                        IBdatabasename = "roots",
-                        IBdatabasetype = "InfoBright",
-                        IBuser = "root",
-                        IBpass = null,
-                        TransactionSizeForCDRLoading = 1500,
                         NativeTimeZone = 3251,
-                        IgwPrefix = "190",
+                        IgwPrefix = null,
                         RateDictionaryMaxRecords = 3000000,
                         MinMSForIntlOut = 100,
                         RawCdrKeepDurationDays = 90,
@@ -50,44 +40,44 @@ namespace InstallConfig
                         AutoDeleteStartHour = 4,
                         AutoDeleteEndHour = 6
                     },
-                tcpPortNoForRemoteScheduler: 557
-                );
+                tcpPortNoForRemoteScheduler: 555);
         }
+
         public override TelcobrightConfig GenerateConfig()
         {
             this.Tbc.Nes = new List<ne>()
             {
                 new ne
                 {
-                    idSwitch= 2,
-                    idCustomer= 2,
-                    idcdrformat= 3,
-                    idMediationRule= 2,
-                    SwitchName= "dhkHuawei",
-                    CDRPrefix= "p",
-                    FileExtension= ".dat",
-                    Description= null,
-                    SourceFileLocations= "[{  'type':'ftp','url':'ftp://127.0.0.1/' , 'user':'ftpuser','pass':'Takay1takaane','usefullurl':'false' }]",
-                    BackupFileLocations= null,
-                    LoadingStopFlag= null,
-                    LoadingSpanCount= 10000,
-                    TransactionSizeForCDRLoading= 100,
-                    DecodingSpanCount= 10000,
-                    SkipAutoCreateJob= 1,
-                    SkipCdrListed= 1,
-                    SkipCdrReceived= 1,
-                    SkipCdrDecoded= 1,
-                    SkipCdrBackedup= 1,
-                    KeepDecodedCDR= 0,
-                    KeepReceivedCdrServer= 1,
-                    CcrCauseCodeField= 56,
-                    SwitchTimeZoneId= null,
-                    CallConnectIndicator= "CT",
-                    FieldNoForTimeSummary= 29,
-                    EnableSummaryGeneration= "1",
-                    ExistingSummaryCacheSpanHr= 6,
-                    BatchToDecodeRatio= 3,
-                    PrependLocationNumberToFileName= 0
+                    idSwitch = 2,
+                    idCustomer = 2,
+                    idcdrformat = 3,
+                    idMediationRule = 2,
+                    SwitchName = "huawei",
+                    CDRPrefix = "b",
+                    FileExtension = ".dat",
+                    Description = null,
+                    SourceFileLocations = "vault",
+                    BackupFileLocations = null,
+                    LoadingStopFlag = null,
+                    LoadingSpanCount = 100,
+                    TransactionSizeForCDRLoading = 1500,
+                    DecodingSpanCount = 100,
+                    SkipAutoCreateJob = 1,
+                    SkipCdrListed = 0,
+                    SkipCdrReceived = 0,
+                    SkipCdrDecoded = 0,
+                    SkipCdrBackedup = 1,
+                    KeepDecodedCDR = 0,
+                    KeepReceivedCdrServer = 1,
+                    CcrCauseCodeField = 56,
+                    SwitchTimeZoneId = null,
+                    CallConnectIndicator = "F5",
+                    FieldNoForTimeSummary = 29,
+                    EnableSummaryGeneration = "1",
+                    ExistingSummaryCacheSpanHr = 6,
+                    BatchToDecodeRatio = 3,
+                    PrependLocationNumberToFileName = 0
                 }
             };
 
@@ -96,28 +86,40 @@ namespace InstallConfig
                 new CommonCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
             InconsistentCdrValRulesGen inconsistentCdrValRulesGen =
                 new InconsistentCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
+
             this.Tbc.CdrSetting = new CdrSetting
             {
                 SummaryTimeField = SummaryTimeFieldEnum.AnswerTime,
-                PartialCdrEnabledNeIds = new List<int>(),
-                PartialCdrFlagIndicators = new List<string>(), //{"1", "2", "3"},
+                PartialCdrEnabledNeIds = new List<int>() { },//7, was set to non-partial processing mode due to duplicate billid problem.
+                PartialCdrFlagIndicators = new List<string>() { },//{"1", "2", "3"},
                 DescendingOrderWhileListingFiles = false,
                 DescendingOrderWhileProcessingListedFiles = false,
                 ValidationRulesForCommonMediationCheck = commonCdrValRulesGen.GetRules(),
                 ValidationRulesForInconsistentCdrs = inconsistentCdrValRulesGen.GetRules(),
                 ServiceGroupConfigurations = this.GetServiceGroupConfigurations(),
                 DisableCdrPostProcessingJobCreationForAutomation = false,
+                BatchSizeForCdrJobCreationCheckingExistence = 10000,
                 DisableParallelMediation = false,
-                AutoCorrectDuplicateBillId = true,
+                AutoCorrectDuplicateBillId = false,
                 AutoCorrectBillIdsWithPrevChargeableIssue = true,
-                UseIdCallAsBillId=true,
-            };
+                AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
+                UseIdCallAsBillId = true,
+                ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>(),
+                BatchSizeWhenPreparingLargeSqlJob = 100000,
+                SummaryOnlySettings = new Dictionary<string, SkipSettingsForSummaryOnly>() {
+                    { "daily", new SkipSettingsForSummaryOnly {
+                                        SkipCdr=true,
+                                        SkipChargeable=true,
+                                        SkipTransaction=true
+                                    }}
+                    },
+        };
 
             this.PrepareDirectorySettings(this.Tbc);
             this.PrepareProductAndServiceConfiguration();
-            this.Tbc.ApplicationServersConfig = this.GetApplicationServerConfigs();
             this.Tbc.DatabaseSetting = this.GetDatabaseSettings();
-            this.Tbc.PortalSettings = GetPortalSettings(this.Tbc);
+            this.Tbc.ApplicationServersConfig = this.GetApplicationServerConfigs();
+            this.Tbc.PortalSettings = GetPortalSettings(this.Tbc.Telcobrightpartner.CustomerName);
             return this.Tbc;
         }
     }

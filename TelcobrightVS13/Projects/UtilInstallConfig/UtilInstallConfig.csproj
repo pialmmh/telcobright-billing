@@ -94,6 +94,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="purple\PurpleConfigMain.cs" />
+    <Compile Include="purple\PurpleDatabaseSettings.cs" />
+    <Compile Include="purple\PurpleDirectorySettings.cs" />
+    <Compile Include="purple\PurplePortalSetting.cs" />
+    <Compile Include="purple\PurpleProductAndServiceConfig.cs" />
+    <Compile Include="purple\PurpleQuartzConfig.cs" />
+    <Compile Include="purple\PurpleServerConfig.cs" />
+    <Compile Include="purple\PurpleServiceGroups.cs" />
     <Compile Include="_generator\BIllingRulesDefiner.cs" />
     <Compile Include="btel\BtelDatabaseSettings.cs" />
     <Compile Include="dbl\DblDatabaseSettings.cs" />
@@ -102,7 +110,6 @@
     <Compile Include="_generator\InstanceMenu.cs" />
     <Compile Include="_generator\PartitionInfo.cs" />
     <Compile Include="_generator\PartitionUtil.cs" />
-    <Compile Include="purple\PurpleDatabaseSettings.cs" />
     <Compile Include="srtelecom\SrtAppServerConfig.cs" />
     <Compile Include="srtelecom\SrtDatabaseSettings.cs" />
     <Compile Include="srtelecom\SrtDirectorySettings.cs" />
@@ -112,13 +119,6 @@
     <Compile Include="srtelecom\SrtServiceGroups.cs" />
     <Compile Include="srtelecom\_SrtConfigMain.cs" />
     <Compile Include="jsl\JslDatabaseSettings.cs" />
-    <Compile Include="purple\purpleAppServerConfig.cs" />
-    <Compile Include="purple\purpleDirectorySettings.cs" />
-    <Compile Include="purple\purplePortalSetting.cs" />
-    <Compile Include="purple\purpleProductAndServiceConfig.cs" />
-    <Compile Include="purple\purpleQuartzConfig.cs" />
-    <Compile Include="purple\purpleServiceGroups.cs" />
-    <Compile Include="purple\_purpleConfigMain.cs" />
     <Compile Include="btel\BtelAPPServerConfig.cs" />
     <Compile Include="btel\BtelAutomationConfig.cs" />
     <Compile Include="btel\BtelDirectorySetting.cs" />
@@ -159,7 +159,9 @@
     <Compile Include="CommonValidationRulesGenerator\InconsistentCdrValRulesGen.cs" />
     <Compile Include="CommonValidationRulesGenerator\CommonCdrValRulesGen.cs" />
     <None Include="app.manifest" />
-    <None Include="purple\jslRoutes.json" />
+    <None Include="purple\scripts\appPool_tpny.iisScript" />
+    <None Include="purple\scripts\ftp_tpny.iisScript" />
+    <None Include="purple\scripts\http_tpny.iisScript" />
     <None Include="btel\btel.conf" />
     <None Include="btel\scripts\apppools.xml.bak" />
     <None Include="btel\scripts\appPool_platinum.iisScript" />
@@ -181,7 +183,6 @@
     <None Include="banglatelecom\scripts\appPool_tpny.iisScript" />
     <None Include="banglatelecom\scripts\ftp_tpny.iisScript" />
     <None Include="banglatelecom\scripts\http_tpny.iisScript" />
-    <None Include="banglatelecom\BanglaTelecom.conf" />
     <None Include="summit\scripts\appPool_tpny.iisScript" />
     <None Include="summit\scripts\ftp_tpny.iisScript" />
     <None Include="summit\scripts\http_tpny.iisScript" />
@@ -224,12 +225,13 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="srtelecom\tmplPortalAppPools.txt" />
-    <Content Include="srtelecom\tmplPortalFtpSite.txt" />
-    <Content Include="srtelecom\tmplPortalWebSite.txt" />
+    <Content Include="purple\scripts\import_commands.txt" />
     <Content Include="purple\tmplPortalAppPools.txt" />
     <Content Include="purple\tmplPortalFtpSite.txt" />
     <Content Include="purple\tmplPortalWebSite.txt" />
+    <Content Include="srtelecom\tmplPortalAppPools.txt" />
+    <Content Include="srtelecom\tmplPortalFtpSite.txt" />
+    <Content Include="srtelecom\tmplPortalWebSite.txt" />
     <Content Include="btel\scripts\apppools.xml" />
     <Content Include="btel\scripts\import_commands.txt" />
     <Content Include="btel\scripts\sites.txt" />

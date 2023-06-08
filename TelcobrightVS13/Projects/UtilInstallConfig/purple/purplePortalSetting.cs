@@ -17,12 +17,12 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class PurpleAbstractConfigConfigGenerator //quartz config part
+    public partial class PurpleAbstractConfigConfigGenerator//quartz config part
     {
-        //static string databaseConfigFileName = new DirectoryInfo(FileAndPathHelper.GetBinPath()).Parent.Parent.FullName
-        //                                       + Path.DirectorySeparatorChar + "Server.conf";
-
-        PortalSettings GetPortalSettings(TelcobrightConfig tbc)
+        /*static string databaseConfigFileName = new DirectoryInfo(FileAndPathHelper.GetBinPath()).Parent.Parent.FullName
+                                               + Path.DirectorySeparatorChar + "Server.conf";
+*/
+        PortalSettings GetPortalSettings(string operatorName)
         {
             string portalLocalAccountNameAdministrator = "Administrator";
             string portalLocalAccountPassword = "Takay1#$ane%%";
@@ -44,20 +44,19 @@ namespace InstallConfig
                     new InternetSite(this.Tbc)//make sure that first one always the http portal
                     {
                         SiteType = "http",
-                        SiteName = tbc.Telcobrightpartner.CustomerName,
+                        SiteName = operatorName,
                         SiteId = 1,
                         PhysicalPath = "C:/inetpub/wwwroot/" + this.Tbc.Telcobrightpartner.CustomerName,
-                        BindAddress = this.Tbc.DirectorySettings.FileLocations["AppServerFTP" + this.Tbc.ServerId].ServerIp + ":80",
+                        BindAddress = "127.0.0.1:80",
                         TemplateFileName = "../../" + this.Tbc.Telcobrightpartner.CustomerName + "/tmplPortalWebSite.txt",
                         ApplicationPool=new IisApplicationPool()
                         {
                             AppPoolName = this.Tbc.Telcobrightpartner.CustomerName,
-                            TemplateFileName = "../../" + this.Tbc.Telcobrightpartner.CustomerName+ "/tmplPortalAppPools.txt",
+                            TemplateFileName = "../../" + this.Tbc.Telcobrightpartner.CustomerName + "/tmplPortalAppPools.txt",
                         },
                         ImpersonateUserName =portalLocalAccountNameAdministrator,
                         ImpersonatePassword =portalLocalAccountPassword
                     },
-                   
                 },
                 DicConfigObjects = new Dictionary<string, object>()
                 {
@@ -172,32 +171,30 @@ namespace InstallConfig
             };//settings for one role within a page
             List<SettingByRoles> settingIntlInRoute = new List<SettingByRoles>()
             {
+                new SettingByRoles()
                 {
-                    new SettingByRoles()
+                    RoleNames = new List<string>()
                     {
-                        RoleNames = new List<string>()
-                        {
-                            "admin","billing"
-                        },
-                        SpringExpressionIfRole = new List<string>()
-                        {
-                            "CheckBoxShowCost.Enabled=true",
-                            "GridView1.Columns[6].Visible=true",//connect count
-                            "GridView1.Columns[8].Visible=true",//duration1
-                            "GridView1.Columns[19].Visible=true",//CCR
-                            "GridView1.Columns[20].Visible=false",//connect by cc
-                            "GridView1.Columns[21].Visible=false",//CCR by cc
-                        },
-                        SpringExpressionIfNotRole = new List<string>()
-                        {
-                            "CheckBoxShowCost.Enabled=false",
-                            "GridView1.Columns[6].Visible=true",
-                            "GridView1.Columns[8].Visible=false",
-                            "GridView1.Columns[7].HeaderText=Duration",
-                            "GridView1.Columns[19].Visible=true",//CCR
-                            "GridView1.Columns[20].Visible=false",//connect by cc
-                            "GridView1.Columns[21].Visible=false",//CCR by cc
-                        }
+                        "admin","billing"
+                    },
+                    SpringExpressionIfRole = new List<string>()
+                    {
+                        "CheckBoxShowCost.Enabled=true",
+                        "GridView1.Columns[6].Visible=true",//connect count
+                        "GridView1.Columns[8].Visible=true",//duration1
+                        "GridView1.Columns[19].Visible=true",//CCR
+                        "GridView1.Columns[20].Visible=false",//connect by cc
+                        "GridView1.Columns[21].Visible=false",//CCR by cc
+                    },
+                    SpringExpressionIfNotRole = new List<string>()
+                    {
+                        "CheckBoxShowCost.Enabled=false",
+                        "GridView1.Columns[6].Visible=true",
+                        "GridView1.Columns[8].Visible=false",
+                        "GridView1.Columns[7].HeaderText=Duration",
+                        "GridView1.Columns[19].Visible=true",//CCR
+                        "GridView1.Columns[20].Visible=false",//connect by cc
+                        "GridView1.Columns[21].Visible=false",//CCR by cc
                     }
                 }
             };//settings for one role within a page

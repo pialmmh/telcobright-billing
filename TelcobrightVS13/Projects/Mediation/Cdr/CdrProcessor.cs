@@ -424,6 +424,18 @@ namespace TelcobrightMediation
             {
                 throw new Exception("Idcalls must be unique.");
             }
+
+            ////summary only settings being implemented...
+            //var summaryOnlySettings = this.Tbc.CdrSetting.SummaryOnlySettings;
+            //if (summaryOnlySettings.Any())
+            //{
+            //    SkipSettingsForSummaryOnly skipSettings = summaryOnlySettings.First().Value;
+            //    if (skipSettings.SkipCdr == false)
+            //    {
+            //    }
+            //}
+
+
             if (nonPartialCdrs.Any())
                 writtenNonPartialCdrCount = WriteCdr(nonPartialCdrs);
             if (normalizedPartialCdrs.Any())

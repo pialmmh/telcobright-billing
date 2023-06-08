@@ -5,6 +5,11 @@ using MediationModel;
 using TelcobrightMediation.Config;
 namespace TelcobrightMediation
 {
+    public class SkipSettingsForSummaryOnly {
+        public bool SkipCdr { get; set; } = false;
+        public bool SkipTransaction { get; set; } = false;
+        public bool SkipChargeable { get; set; } = false;
+    }
     public class CdrSetting : LogFileProcessorSetting
     {
         public bool EmptyFileAllowed { get; set; }
@@ -36,6 +41,7 @@ namespace TelcobrightMediation
         public bool AutoCorrectBillIdsWithPrevChargeableIssue { get; set; } = false;
         public Dictionary<string, Dictionary<string, string>> ExceptionalCdrPreProcessingData { get; set; } = new Dictionary<string, Dictionary<string, string>>();
         public int BatchSizeForCdrJobCreationCheckingExistence { get; set; } = 10000;
+        public Dictionary<string, SkipSettingsForSummaryOnly> SummaryOnlySettings = new Dictionary<string, SkipSettingsForSummaryOnly>();
         
         public CdrSetting()
         {
