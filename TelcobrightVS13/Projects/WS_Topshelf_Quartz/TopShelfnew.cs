@@ -56,7 +56,7 @@ namespace WS_Telcobright_Topshelf
                 IScheduler runtimeScheduler = null;
                 try
                 {
-                    runtimeScheduler = GetScheduler(SchedulerRunTimeType.Runtime);
+                    runtimeScheduler = GetScheduler(SchedulerRunTimeType.Runtime,operatorWiseConfigs.First().Value);
                 }
                 catch (Exception e1)
                 {
@@ -69,7 +69,7 @@ namespace WS_Telcobright_Topshelf
                 }
                 Console.WriteLine("Starting RAMJobStore based scheduler....");
                 runtimeScheduler.Standby();
-                IScheduler debugScheduler = GetScheduler(SchedulerRunTimeType.Debug);
+                IScheduler debugScheduler = GetScheduler(SchedulerRunTimeType.Debug, operatorWiseConfigs.First().Value);
                 ScheduleDebugJobsThroughMenu(runtimeScheduler, debugScheduler);
                 debugScheduler.Context.Put("processes", mefProcessContainer);
                 debugScheduler.Context.Put("configs", operatorWiseConfigs);
@@ -116,15 +116,16 @@ namespace WS_Telcobright_Topshelf
             return operatorWiseConfigs;
         }
 
-        static IScheduler GetScheduler(SchedulerRunTimeType runTimeType)// IApplicationContext springContext)
+        static IScheduler GetScheduler(SchedulerRunTimeType runTimeType,TelcobrightConfig tbc)// IApplicationContext springContext)
         {
             QuartzPropertyFactory quartzPropertyFactoryRuntime;
             QuartzPropertyFactory quartzPropertyFactoryDebug;
             NameValueCollection schedulerProperties = null;
             if (runTimeType == SchedulerRunTimeType.Runtime)
             {
+                
                 QuartzPropGenRemoteSchedulerAdoRuntime quartzPropGenRemoteSchedulerAdoRuntime =
-                    new QuartzTelcobright.PropertyGen.QuartzPropGenRemoteSchedulerAdoRuntime(555, "scheduler");
+                    new QuartzTelcobright.PropertyGen.QuartzPropGenRemoteSchedulerAdoRuntime(555, tbc.DatabaseSetting.DatabaseName);
 
                 quartzPropertyFactoryRuntime =
                     new QuartzPropertyFactory(quartzPropGenRemoteSchedulerAdoRuntime);

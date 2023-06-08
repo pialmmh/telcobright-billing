@@ -22,7 +22,7 @@ namespace TelcobrightMediation.Config
             string constr = GetEntityConnectionStringByType("PartnerEntities", operatorShortName, tbc);
             return constr;
         }
-        public static string GetEntityConnectionStringByType(string connectionType,string operatorShortName, TelcobrightConfig tbc = null)
+        public static string GetEntityConnectionStringByType(string connectionType, string operatorShortName, TelcobrightConfig tbc = null)
         {
             CacheConnectionStrings(operatorShortName, tbc);
 
@@ -34,7 +34,8 @@ namespace TelcobrightMediation.Config
             //            .Replace("#DatabaseName#", operatorShortName);
             //}
             string constr = "";
-            switch (connectionType) {
+            switch (connectionType)
+            {
                 case "Partner":
 
                     break;
@@ -44,6 +45,13 @@ namespace TelcobrightMediation.Config
             }
 
             return constr;
+        }
+
+        public static string GetEntityConnectionString(DatabaseSetting databaseSetting)
+        {
+             return $"metadata=res://*/PartnerModel.csdl|res://*/PartnerModel.ssdl|res://*/PartnerModel.msl;" +
+                    $"provider=MySql.Data.MySqlClient;" +
+                    $"provider connection string=\"server = {databaseSetting.ServerName}; user id = {databaseSetting.AdminUserName}; password = {databaseSetting.AdminPassword};persistsecurityinfo=True;Convert Zero Datetime=True;default command timeout=300;database={databaseSetting.DatabaseName}\"";
         }
 
         private static void CacheConnectionStrings(string operatorShortName, TelcobrightConfig tbc)
@@ -59,7 +67,7 @@ namespace TelcobrightMediation.Config
 
         public static DbCommand CreateCommandFromDbContext(DbContext context)
         {
-            DbCommand command=context.Database.Connection.CreateCommand();
+            DbCommand command = context.Database.Connection.CreateCommand();
             command.CommandType = CommandType.Text;
             return command;
         }
@@ -70,7 +78,7 @@ namespace TelcobrightMediation.Config
             command.CommandText = commandText;
             return command;
         }
-        public static DbCommand CreateCommandFromDbContext(DbContext context,CommandType commandType, string commandText)
+        public static DbCommand CreateCommandFromDbContext(DbContext context, CommandType commandType, string commandText)
         {
             DbCommand command = context.Database.Connection.CreateCommand();
             command.CommandType = commandType;

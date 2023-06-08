@@ -106,7 +106,7 @@ namespace PortalApp.ReportHelper
         }
 
         public static void createBtrcReportInExcel(ExcelWorksheet ws, List<BtrcReportRow> data, string cell, int cellNo, string partnerCat)
-            {
+        {
             int rowCount = data.Count;
             decimal sum = data.Sum(r => r.minutes);
             string reportStartCol = cell;
@@ -137,21 +137,162 @@ namespace PortalApp.ReportHelper
             return;
         }
 
-        public static void createBtrcHeader(ExcelWorksheet ws,string headerCell,int cellNo,string header)
+        public static void createBtrcHeader(ExcelWorksheet ws, string headerCell, int cellNo, string header)
         {
-                    ws.Cells[headerCell].Merge = true;
-                    ws.Cells[headerCell].Value = header;
-                    ws.Cells[headerCell].Style.Font.Bold = true;
-                    ws.Cells[headerCell].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-                    ws.Cells[headerCell].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                    ws.Cells["A"+cellNo+":B"+cellNo].Style.Font.Bold = true;
-                    ws.Cells["D"+ cellNo + ":E"+cellNo].Style.Font.Bold = true;
-            return; 
-         }
+            ws.Cells[headerCell].Merge = true;
+            ws.Cells[headerCell].Value = header;
+            ws.Cells[headerCell].Style.Font.Bold = true;
+            ws.Cells[headerCell].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+            ws.Cells[headerCell].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            ws.Cells[headerCell].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+            ws.Cells[headerCell].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+            ws.Cells[headerCell].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+            ws.Cells[headerCell].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+            ws.Cells["A" + cellNo + ":B" + cellNo].Style.Font.Bold = true;
+            ws.Cells["D" + cellNo + ":E" + cellNo].Style.Font.Bold = true;
+            return;
+        }
 
+        public static bool ExportToExcelMonthlyReport(string filename, HttpResponse response, List<MonthlyReportRowForExcel> monthlyRecords, string partnerName)
+        {
+            try
+            {
+                using (ExcelPackage pck = new ExcelPackage())
+                {
+                    //Create the worksheet
+                    ExcelWorksheet ws = pck.Workbook.Worksheets.Add("Sheet1");
+
+
+                    //Load the datatable into the sheet, starting from cell A1. Print the column names on row 1
+                    string icxCell = "A2";
+
+                    //ws.Cells[icxCell].Value = "NAME OF ICX:";
+                    //ws.Cells[icxCell].Style.Font.Bold = true;
+                    //ws.Cells[icxCell].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    //ws.Cells[icxCell].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    //ws.Cells["B2:E2"].Merge = true;
+                    //ws.Cells["B2"].Value = partnerName;
+                    //ws.Cells["B2"].Style.Font.Bold = true;
+                    //string dateCell = "A3";
+                    //ws.Cells[dateCell].Value = "Date:";
+                    //ws.Cells[dateCell].Style.Font.Bold = true;
+                    //ws.Cells[dateCell].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    //ws.Cells[dateCell].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    //ws.Cells["B3"].Value = DateTime.ParseExact(startDate, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture).ToString("yyyy-MM-dd") + " - " + DateTime.ParseExact(endDate, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture).ToString("yyyy-MM-dd");
+                    ws.Cells["B3"].Style.Font.Bold = true;
+
+                    createBtrcHeader(ws, "A1:H1", 8, $@"Name of ICX -{ partnerName }");
+                    //createBtrcHeader(ws, "A2:A3", 8, "Sl No");
+                    //for (int i=1;i<monthlyRecords.Count;i++) ws.Cells[$"A{4+i.ToString()}"].Value= i;
+                    createBtrcHeader(ws, "A2:A3", 8, "SL No.");
+                    createBtrcHeader(ws, "B2:B3", 8, "Date");
+                    createBtrcHeader(ws, "C2:D2", 8, "International Incoming");
+                    createBtrcHeader(ws, "E2:F2", 8, "International Outgoing");
+                    createBtrcHeader(ws, "G2:H2", 8, "Domestic Calls");
+                
+
+
+                    
+
+                    //createBtrcReportInExcel(ws, monthlyRecords, "A",3, "No of Calls");
+                    int rowCount = monthlyRecords.Count;
+                    decimal sum = monthlyRecords.Sum(r => r.IntIncomingNoOfCalls);
+                    decimal sum2 = monthlyRecords.Sum(r => r.IntIncomingNoOfMinutes);
+                    decimal sum3 = monthlyRecords.Sum(r => r.IntOutgoingNoOfCalls);
+                    decimal sum4 = monthlyRecords.Sum(r => r.IntOutgoingNoOfMinutes);
+                    decimal sum5 = monthlyRecords.Sum(r => r.domNoOfCalls);
+                    decimal sum6 = monthlyRecords.Sum(r => r.domesticMinutes);
+                    string reportStartCol = "A";
+                    int reportStartRow = 3;
+                    int totalStartRow = reportStartRow + rowCount + 1;
+                    string reportStartRange = reportStartCol + reportStartRow.ToString();
+                    string totalStartRange = reportStartCol + totalStartRow.ToString();
+                    ws.Cells[reportStartRange].LoadFromCollection<MonthlyReportRowForExcel>(monthlyRecords, true);
+                    ws.Cells[totalStartRange].Value = "Total";
+                    ws.Cells[totalStartRange].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    ws.Cells[totalStartRange].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    ws.Cells[totalStartRange].Style.Font.Bold = true;
+                    string nextCol = getNextRangeAtRight(totalStartRange);
+                    nextCol = getNextRangeAtRight(nextCol);
+                    ws.Cells[nextCol].Value = $"{sum:n0}";
+                    ws.Cells[nextCol].Style.Font.Bold = true;
+                    ws.Cells[nextCol].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    ws.Cells[nextCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                    nextCol = getNextRangeAtRight(nextCol);
+                    ws.Cells[nextCol].Value = $"{sum2:n0}";
+                    ws.Cells[nextCol].Style.Font.Bold = true;
+                    ws.Cells[nextCol].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    ws.Cells[nextCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    nextCol = getNextRangeAtRight(nextCol);
+                    ws.Cells[nextCol].Value = $"{sum3:n0}";
+                    ws.Cells[nextCol].Style.Font.Bold = true;
+                    ws.Cells[nextCol].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    ws.Cells[nextCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    nextCol = getNextRangeAtRight(nextCol);
+                    ws.Cells[nextCol].Value = $"{sum4:n0}";
+                    ws.Cells[nextCol].Style.Font.Bold = true;
+                    ws.Cells[nextCol].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    ws.Cells[nextCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                    nextCol = getNextRangeAtRight(nextCol);
+                    ws.Cells[nextCol].Value = $"{sum5:n0}";
+                    ws.Cells[nextCol].Style.Font.Bold = true;
+                    ws.Cells[nextCol].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    ws.Cells[nextCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                    nextCol = getNextRangeAtRight(nextCol);
+                    ws.Cells[nextCol].Value = $"{sum6:n0}";
+                    ws.Cells[nextCol].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    ws.Cells[nextCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                    ws.Cells[nextCol].Style.Font.Bold = true;
+                    ws.Cells[reportStartRange + ":" + nextCol].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                    ws.Cells[reportStartRange + ":" + nextCol].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                    ws.Cells[reportStartRange + ":" + nextCol].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                    ws.Cells[reportStartRange + ":" + nextCol].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                    ws.Cells[reportStartRange].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    ws.Cells[reportStartRange].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    string mntCol = getNextRangeAtRight(reportStartRange);
+                    //ws.Cells[mntCol].Value = "No.of Minutes";
+                    ws.Cells[mntCol].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    ws.Cells[mntCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+                    createBtrcHeader(ws, "C3", 8, "Total No Of Calls");
+                    createBtrcHeader(ws, "D3", 8, "Total No Of Minutes");
+                    createBtrcHeader(ws, "E3", 8, "Total No Of Calls");
+                    createBtrcHeader(ws, "F3", 8, "Total No Of Minutes");
+                    createBtrcHeader(ws, "G3", 8, "Total No Of Calls");
+                    createBtrcHeader(ws, "H3", 8, "Total No Of Minutes");
+
+                    ws.Cells["A8:B8"].Style.Font.Bold = false;
+                    ws.Cells["D8:E8"].Style.Font.Bold = false;
+                    ws.Column(1).Width = 14;
+                    ws.Column(3).Width = 14;
+                    ws.Column(4).Width = 14;
+                    ws.Column(5).Width = 14;
+                    ws.Column(7).Width = 14;
+                    ws.Column(8).Width = 14;
+                    // Set columns to auto-fit
+                    for (int i = 1; i <= ws.Dimension.Columns; i++)
+                    {
+                        ws.Column(i).AutoFit();
+                    }
+
+                    //Write it back to the client
+                    response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    response.AddHeader("content-disposition", "attachment;  filename=" + filename + "");
+                    response.BinaryWrite(pck.GetAsByteArray());
+                    response.End();
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                Trace.WriteLine("Failed, exception thrown: " + ex.Message);
+                return false;
+            }
+        }
 
         //btrc
-        public static bool ExportToExcelDomesticWeeklyReport(string filename, HttpResponse response, List<BtrcReportRow> domesticRecords,string startDate,string endDate,string partnerName
+        public static bool ExportToExcelDomesticWeeklyReport(string filename, HttpResponse response, List<DomesticReportRow> domesticRecords, string startDate, string endDate, string partnerName
 )
         {
             try
@@ -167,9 +308,6 @@ namespace PortalApp.ReportHelper
                     ws.Cells[icxCell].Value = "NAME OF ICX:";
                     ws.Cells[icxCell].Style.Font.Bold = true;
                     ws.Cells[icxCell].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-
-
-
                     ws.Cells[icxCell].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                     ws.Cells["B2:E2"].Merge = true;
                     ws.Cells["B2"].Value = partnerName;
@@ -179,12 +317,51 @@ namespace PortalApp.ReportHelper
                     ws.Cells[dateCell].Style.Font.Bold = true;
                     ws.Cells[dateCell].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
                     ws.Cells[dateCell].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                    ws.Cells["B3"].Value = DateTime.ParseExact(startDate, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture).ToString("yyyy-MM-dd") + " - "+ DateTime.ParseExact(endDate, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture).ToString("yyyy-MM-dd");
+                    ws.Cells["B3"].Value = DateTime.ParseExact(startDate, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture).ToString("yyyy-MM-dd") + " - " + DateTime.ParseExact(endDate, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture).ToString("yyyy-MM-dd");
                     ws.Cells["B3"].Style.Font.Bold = true;
+                    ws.Cells["A7"].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                    ws.Cells["A7"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                    ws.Cells["A7"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                    ws.Cells["A7"].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                    createBtrcHeader(ws, "B7:C7", 1, "Weekly Domestic Calls");
+                    int rowCount = domesticRecords.Count;
+                    decimal sum = domesticRecords.Sum(r => r.minutes);
+                    decimal sumOfCalls = domesticRecords.Sum(r => r.noOfCalls);
+                    string reportStartCol = "A";
+                    int reportStartRow = 8;
+                    int totalStartRow = reportStartRow + rowCount + 1;
+                    string reportStartRange = reportStartCol + reportStartRow.ToString();
+                    string totalStartRange = reportStartCol + totalStartRow.ToString();
+                    ws.Cells[reportStartRange].LoadFromCollection<DomesticReportRow>(domesticRecords, true);
+                    ws.Cells[totalStartRange].Value = "Total";
+                    ws.Cells[totalStartRange].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    ws.Cells[totalStartRange].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    ws.Cells[totalStartRange].Style.Font.Bold = true;
+                    string nextCol = getNextRangeAtRight(totalStartRange);
+                    ws.Cells[nextCol].Value = $"{sumOfCalls:n0}";
+                    ws.Cells[nextCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                    ws.Cells[nextCol].Style.Font.Bold = true;
+                    nextCol = getNextRangeAtRight(nextCol);
+                    ws.Cells[nextCol].Value = $"{sum:n0}";
+                    ws.Cells[nextCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                    ws.Cells[nextCol].Style.Font.Bold = true;
+                    ws.Cells[reportStartRange + ":" + nextCol].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                    ws.Cells[reportStartRange + ":" + nextCol].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                    ws.Cells[reportStartRange + ":" + nextCol].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                    ws.Cells[reportStartRange + ":" + nextCol].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                    ws.Cells[reportStartRange].Value = "Name of ANS";
+                    ws.Cells[reportStartRange].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    ws.Cells[reportStartRange].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    string mntCol = getNextRangeAtRight(reportStartRange);
+                    ws.Cells[mntCol].Value = "No.of Calls";
+                    ws.Cells[mntCol].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    ws.Cells[mntCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    mntCol = getNextRangeAtRight(mntCol);
+                    ws.Cells[mntCol].Value = "No.of Minutes";
+                    ws.Cells[mntCol].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    ws.Cells[mntCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
-                    createBtrcHeader(ws, "A7:B7", 8, "Weekly Domestic Calls");
-
-                    createBtrcReportInExcel(ws, domesticRecords, "A", 8, "Name of ANS");
+                    //createBtrcReportInExcel(ws, domesticRecords, "A", 8, "Name of ANS");
 
                     // Set columns to auto-fit
                     for (int i = 1; i <= ws.Dimension.Columns; i++)
@@ -210,8 +387,8 @@ namespace PortalApp.ReportHelper
 
 
         //btrc
-        public static bool ExportToExcelInternationalWeeklyReport(string filename, HttpResponse response,List<InternationalReportRow> internationalReports,
-string startDate,string endDate,string partnerName
+        public static bool ExportToExcelInternationalWeeklyReport(string filename, HttpResponse response, List<InternationalReportRow> internationalReports,
+string startDate, string endDate, string partnerName
 )
         {
             try
@@ -326,22 +503,22 @@ string partnerName
                     ws.Cells["B3"].Value = DateTime.ParseExact(startDate, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture).ToString("yyyy-MM-dd");
                     ws.Cells["B3"].Style.Font.Bold = true;
 
-                    createBtrcHeader(ws, "A7:E7",8, "International Incoming Calls");
-                    
+                    createBtrcHeader(ws, "A7:E7", 8, "International Incoming Calls");
+
                     createBtrcReportInExcel(ws, intInComing_1_Records, "A", 8, "Name of ANS");
 
                     createBtrcReportInExcel(ws, intInComing_2_Records, "D", 8, "Name of IOS");
 
                     createBtrcHeader(ws, "A19:E19", 20, "International Outgoing Calls");
-                    
+
                     createBtrcReportInExcel(ws, intOutComing_1_Records, "A", 20, "Name of ANS");
 
                     createBtrcReportInExcel(ws, intOutComing_2_Records, "D", 20, "Name of IOS");
 
                     createBtrcHeader(ws, "A29:B29", 30, "Domestic Calls");
-                   
+
                     createBtrcReportInExcel(ws, domesticRecords, "A", 30, "Name of ANS");
-                   
+
                     // Set columns to auto-fit
                     for (int i = 1; i <= ws.Dimension.Columns; i++)
                     {
@@ -350,7 +527,7 @@ string partnerName
 
 
 
-                    
+
                     //int noOfCols = tbl.Columns.Count;
                     //string lastColExcel = IndexToColumn(noOfCols);
                     //int noOfRows = tbl.Rows.Count;

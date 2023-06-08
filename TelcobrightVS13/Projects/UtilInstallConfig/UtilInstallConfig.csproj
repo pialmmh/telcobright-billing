@@ -94,13 +94,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BIllingRulesDefiner.cs" />
+    <Compile Include="_generator\BIllingRulesDefiner.cs" />
     <Compile Include="btel\BtelDatabaseSettings.cs" />
     <Compile Include="dbl\DblDatabaseSettings.cs" />
     <Compile Include="dbl\dblAppServerConfig.cs" />
-    <Compile Include="InstanceMenu.cs" />
-    <Compile Include="PartitionInfo.cs" />
-    <Compile Include="PartitionUtil.cs" />
+    <Compile Include="_generator\DbWriterForConfig.cs" />
+    <Compile Include="_generator\InstanceMenu.cs" />
+    <Compile Include="_generator\PartitionInfo.cs" />
+    <Compile Include="_generator\PartitionUtil.cs" />
     <Compile Include="purple\PurpleDatabaseSettings.cs" />
     <Compile Include="srtelecom\SrtAppServerConfig.cs" />
     <Compile Include="srtelecom\SrtDatabaseSettings.cs" />
@@ -126,7 +127,7 @@
     <Compile Include="btel\BtelQuartzConfig.cs" />
     <Compile Include="btel\BtelServiceGroups.cs" />
     <Compile Include="btel\_BtelConfigMain.cs" />
-    <Compile Include="FileRename.cs" />
+    <Compile Include="_generator\FileRename.cs" />
     <Compile Include="jsl\JslProductAndServiceConfig.cs" />
     <Compile Include="jsl\JslDirectorySettings.cs" />
     <Compile Include="jsl\JslPortalSetting.cs" />
@@ -134,9 +135,9 @@
     <Compile Include="jsl\_JslConfigMain.cs" />
     <Compile Include="jsl\JslServiceGroups.cs" />
     <Compile Include="jsl\JslQuartzConfig.cs" />
-    <Compile Include="MefConfigImportComposer.cs" />
+    <Compile Include="_generator\MefConfigImportComposer.cs" />
     <Compile Include="dbl\ConfigHelper_DBL.cs" />
-    <Compile Include="ConfigGeneratorMain.cs" />
+    <Compile Include="_generator\ConfigGeneratorMain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="banglatelecom\BanglaTelecomDatabaseSettings.cs" />
     <Compile Include="banglatelecom\BanglaTelecomDirectorySettings.cs" />
@@ -154,7 +155,7 @@
     <Compile Include="summit\SummitQuartzConfig.cs" />
     <Compile Include="summit\SummitServiceGroups.cs" />
     <Compile Include="summit\_SummitConfigMain.cs" />
-    <Compile Include="TableWisePartitionManagementInfo.cs" />
+    <Compile Include="_generator\TableWisePartitionManagementInfo.cs" />
     <Compile Include="CommonValidationRulesGenerator\InconsistentCdrValRulesGen.cs" />
     <Compile Include="CommonValidationRulesGenerator\CommonCdrValRulesGen.cs" />
     <None Include="app.manifest" />

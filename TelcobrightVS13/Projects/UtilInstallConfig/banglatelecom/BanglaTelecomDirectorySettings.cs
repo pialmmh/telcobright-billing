@@ -55,7 +55,7 @@ namespace InstallConfig
                 Name = "huawei",
                 LocationType = "ftp",
                 OsType = "linux",
-                UseActiveModeForFTP=true,
+                UseActiveModeForFTP=false,
                 PathSeparator = "/",
                 StartingPath = "/",
                 ServerIp = "123.176.59.19",

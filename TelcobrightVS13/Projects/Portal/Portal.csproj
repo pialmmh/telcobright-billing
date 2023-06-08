@@ -498,7 +498,7 @@
     <Content Include="reports\CauseRouteInternationalInCallView.aspx" />
     <Content Include="Mediation\CdrError.aspx" />
     <Content Include="reports\cdr.aspx" />
-    <Content Include="reports\icx\btrc\MonthlyDomesticReport.aspx" />
+    <Content Include="reports\icx\btrc\MonthlyReport.aspx" />
     <Content Include="reports\icx\btrc\WeeklyInternationalReport.aspx" />
     <Content Include="reports\icx\btrc\WeeklyDomesticReport.aspx" />
     <Content Include="reports\icx\btrc\DailyReport.aspx" />
@@ -866,12 +866,12 @@
     <Compile Include="reports\cdr.aspx.designer.cs">
       <DependentUpon>cdr.aspx</DependentUpon>
     </Compile>
-    <Compile Include="reports\icx\btrc\MonthlyDomesticReport.aspx.cs">
-      <DependentUpon>MonthlyDomesticReport.aspx</DependentUpon>
+    <Compile Include="reports\icx\btrc\MonthlyReport.aspx.cs">
+      <DependentUpon>MonthlyReport.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="reports\icx\btrc\MonthlyDomesticReport.aspx.designer.cs">
-      <DependentUpon>MonthlyDomesticReport.aspx</DependentUpon>
+    <Compile Include="reports\icx\btrc\MonthlyReport.aspx.designer.cs">
+      <DependentUpon>MonthlyReport.aspx</DependentUpon>
     </Compile>
     <Compile Include="reports\icx\btrc\WeeklyInternationalReport.aspx.cs">
       <DependentUpon>WeeklyInternationalReport.aspx</DependentUpon>

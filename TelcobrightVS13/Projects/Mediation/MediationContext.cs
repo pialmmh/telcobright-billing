@@ -106,7 +106,7 @@ namespace TelcobrightMediation
             DateRange dRange = new DateRange() {StartDate = DateTime.Today, EndDate = DateTime.Today.AddDays(1)};
             this.MefServiceFamilyContainer.RateCache =
                 new RateCache(
-                    context.telcobrightpartners.First(c => c.databasename == this.Tbc.Telcobrightpartner.CustomerName)
+                    context.telcobrightpartners.First(c => c.databasename == this.Tbc.Telcobrightpartner.databasename)
                         .RateDictionaryMaxRecords, this.Context)
                 {
                     DicRatePlan = context.rateplans.Include("enumbillingspan")
