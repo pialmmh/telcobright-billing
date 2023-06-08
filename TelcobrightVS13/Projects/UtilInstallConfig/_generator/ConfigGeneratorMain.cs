@@ -125,10 +125,23 @@ namespace InstallConfig
                         foreach (var tbc in selectedOperatorsConfig)
                         {
                             Console.WriteLine("Writing Configuration Files for " + tbc.Telcobrightpartner.CustomerName);
-                            PartnerEntities context = new PartnerEntities(ConnectionManager.GetEntityConnectionString(tbc.DatabaseSetting));
-                            DbWriterForConfig.WriteTelcobrightPartnerAndNes(context, new List<telcobrightpartner>() { tbc.Telcobrightpartner },
-                                tbc.Nes);
+                            
                             WriteConfig(tbc, configPathHelper);
+                            Console.WriteLine("Create Telcobrightpartner and NE? (Y/N)");
+                            ConsoleKeyInfo keyInfo1 = Console.ReadKey();
+                            if (keyInfo1.KeyChar == 'Y' || keyInfo1.KeyChar == 'y')
+                            {
+                                PartnerEntities context = new PartnerEntities(ConnectionManager.GetEntityConnectionString(tbc.DatabaseSetting));
+                                DbWriterForConfig.WriteTelcobrightPartnerAndNes(context, new List<telcobrightpartner>() { tbc.Telcobrightpartner },
+                                    tbc.Nes);
+                                Console.WriteLine();
+                                Console.WriteLine("Telcobrightpartner and NE created successfully!");
+                            }
+                            else
+                            {
+                                Console.WriteLine();
+                                Console.WriteLine("Telcobrightpartner and NE was not created.");
+                            }
                         }
                         Console.WriteLine("Config Files have been generated successfully.");
                         //reset job store
