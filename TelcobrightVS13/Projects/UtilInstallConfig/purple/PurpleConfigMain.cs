@@ -27,7 +27,7 @@ namespace InstallConfig
                 new telcobrightpartner
                     {
                         idCustomer = 2,
-                        CustomerName = "Purple TELECOM LTD.",
+                        CustomerName = "Purple Telecom Ltd.",
                         idOperatorType = 2,
                         databasename = "purple",
                         NativeTimeZone = 3251,

@@ -24,7 +24,7 @@ namespace InstallConfig
         {
             var databaseSetting= new DatabaseSetting()
             {
-                ServerName = "192.168.119.236",
+                ServerName = "127.0.0.1",
                 DatabaseName = this.Tbc.Telcobrightpartner.databasename,
                 AdminPassword = "Takay1#$ane",
                 AdminUserName = "root",
