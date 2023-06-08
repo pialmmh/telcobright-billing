@@ -127,6 +127,7 @@ namespace InstallConfig
                             Console.WriteLine("Writing Configuration Files for " + tbc.Telcobrightpartner.CustomerName);
                             
                             WriteConfig(tbc, configPathHelper);
+                            Console.WriteLine("Config Files have been generated successfully for "+tbc.Telcobrightpartner.databasename);
                             Console.WriteLine("Create Telcobrightpartner and NE? (Y/N)");
                             ConsoleKeyInfo keyInfo1 = Console.ReadKey();
                             if (keyInfo1.KeyChar == 'Y' || keyInfo1.KeyChar == 'y')
@@ -143,7 +144,6 @@ namespace InstallConfig
                                 Console.WriteLine("Telcobrightpartner and NE was not created.");
                             }
                         }
-                        Console.WriteLine("Config Files have been generated successfully.");
                         //reset job store
                         Console.WriteLine("Reset QuartzJob Store (Y/N)? this will clear all job data.");
                         ConsoleKeyInfo keyInfo = Console.ReadKey();

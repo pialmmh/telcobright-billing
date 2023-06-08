@@ -22,7 +22,7 @@ namespace InstallConfig
     {
         public override DatabaseSetting GetDatabaseSettings()
         {
-            var databaseSetting= new DatabaseSetting()
+            var databaseSetting = new DatabaseSetting()
             {
                 ServerName = "127.0.0.1",
                 DatabaseName = this.Tbc.Telcobrightpartner.databasename,
@@ -33,7 +33,8 @@ namespace InstallConfig
                 PartitionStartDate = new DateTime(2023, 1, 1),
                 PartitionLenInDays = 1,
                 ReadOnlyUserName = "dbreader",
-                ReadOnlyPassword = "Takay1takaane"
+                ReadOnlyPassword = "Takay1takaane",
+                UseVarcharInsteadOfTextForMemoryEngine = true//required for windows
             };
 
             Dictionary<string, List<string>> masterConfig = new Dictionary<string, List<string>>()

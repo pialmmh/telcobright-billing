@@ -260,9 +260,12 @@ namespace TelcobrightMediation
             cmd.CommandText = "drop table if exists temp_sql_statement;";
             cmd.ExecuteNonQuery();
 
+            bool windowsDb = this.Tbc.DatabaseSetting.UseVarcharInsteadOfTextForMemoryEngine;
+            string engine = windowsDb == false ? "memory" : "innodb";
             cmd.CommandText = $@"create temporary table temp_sql_statement(
                                         id int primary key auto_increment,
-                                        statement text not null) engine=memory;";
+                                        statement text not null) engine={engine};";
+            
             cmd.ExecuteNonQuery();
             DropAndCreateTempRateTable(cmd);
         }
