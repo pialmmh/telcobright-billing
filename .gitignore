@@ -249,5 +249,6 @@ ModelManifest.xml
 **/InvoiceTemplates/*.dll
 **/*.conf
 **/InvoicePdfs/*.pdf
+<<<<<<< HEAD
 
 TelcobrightProject\Projects\UtilInstallConfig\App.config
