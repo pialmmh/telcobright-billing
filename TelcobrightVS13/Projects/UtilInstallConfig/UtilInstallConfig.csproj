@@ -94,6 +94,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="cas\btrc\BtrcDatabaseSettings.cs" />
+    <Compile Include="cas\btrc\BtrcDirectorySettings.cs" />
+    <Compile Include="cas\btrc\BtrcPortalSetting.cs" />
+    <Compile Include="cas\btrc\BtrcProductAndServiceConfig.cs" />
+    <Compile Include="cas\btrc\BtrcQuartzConfig.cs" />
+    <Compile Include="cas\btrc\BtrcServerConfig.cs" />
+    <Compile Include="cas\btrc\BtrcServiceGroups.cs" />
+    <Compile Include="cas\btrc\BtrcConfigMain.cs" />
     <Compile Include="purple\PurpleConfigMain.cs" />
     <Compile Include="purple\PurpleDatabaseSettings.cs" />
     <Compile Include="purple\PurpleDirectorySettings.cs" />
@@ -102,6 +110,14 @@
     <Compile Include="purple\PurpleQuartzConfig.cs" />
     <Compile Include="purple\PurpleServerConfig.cs" />
     <Compile Include="purple\PurpleServiceGroups.cs" />
+    <Compile Include="cas\summit\SummitDatabaseSettings.cs" />
+    <Compile Include="cas\summit\SummitDirectorySettings.cs" />
+    <Compile Include="cas\summit\SummitPortalSetting.cs" />
+    <Compile Include="cas\summit\SummitProductAndServiceConfig.cs" />
+    <Compile Include="cas\summit\SummitQuartzConfig.cs" />
+    <Compile Include="cas\summit\SummitServerConfig.cs" />
+    <Compile Include="cas\summit\SummitServiceGroups.cs" />
+    <Compile Include="cas\summit\_SummitConfigMain.cs" />
     <Compile Include="_generator\BIllingRulesDefiner.cs" />
     <Compile Include="btel\BtelDatabaseSettings.cs" />
     <Compile Include="dbl\DblDatabaseSettings.cs" />
@@ -159,6 +175,10 @@
     <Compile Include="CommonValidationRulesGenerator\InconsistentCdrValRulesGen.cs" />
     <Compile Include="CommonValidationRulesGenerator\CommonCdrValRulesGen.cs" />
     <None Include="app.manifest" />
+    <None Include="cas\btrc\scripts\appPool_tpny.iisScript" />
+    <None Include="cas\btrc\scripts\ftp_tpny.iisScript" />
+    <None Include="cas\btrc\scripts\http_tpny.iisScript" />
+    <None Include="cas\btrc\summit.conf" />
     <None Include="purple\scripts\appPool_tpny.iisScript" />
     <None Include="purple\scripts\ftp_tpny.iisScript" />
     <None Include="purple\scripts\http_tpny.iisScript" />
@@ -183,6 +203,10 @@
     <None Include="banglatelecom\scripts\appPool_tpny.iisScript" />
     <None Include="banglatelecom\scripts\ftp_tpny.iisScript" />
     <None Include="banglatelecom\scripts\http_tpny.iisScript" />
+    <None Include="cas\summit\scripts\appPool_tpny.iisScript" />
+    <None Include="cas\summit\scripts\ftp_tpny.iisScript" />
+    <None Include="cas\summit\scripts\http_tpny.iisScript" />
+    <None Include="cas\summit\summit.conf" />
     <None Include="summit\scripts\appPool_tpny.iisScript" />
     <None Include="summit\scripts\ftp_tpny.iisScript" />
     <None Include="summit\scripts\http_tpny.iisScript" />
@@ -225,6 +249,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="cas\btrc\scripts\import_commands.txt" />
+    <Content Include="cas\btrc\tmplPortalAppPools.txt" />
+    <Content Include="cas\btrc\tmplPortalFtpSite.txt" />
+    <Content Include="cas\btrc\tmplPortalWebSite.txt" />
     <Content Include="purple\scripts\import_commands.txt" />
     <Content Include="purple\tmplPortalAppPools.txt" />
     <Content Include="purple\tmplPortalFtpSite.txt" />
@@ -243,6 +271,10 @@
     <Content Include="banglatelecom\tmplPortalAppPools.txt" />
     <Content Include="banglatelecom\tmplPortalFtpSite.txt" />
     <Content Include="banglatelecom\tmplPortalWebSite.txt" />
+    <Content Include="cas\summit\scripts\import_commands.txt" />
+    <Content Include="cas\summit\tmplPortalAppPools.txt" />
+    <Content Include="cas\summit\tmplPortalFtpSite.txt" />
+    <Content Include="cas\summit\tmplPortalWebSite.txt" />
     <Content Include="_dbscripts\quartzTables.sql" />
     <Content Include="jsl\tmplPortalAppPools.txt" />
     <Content Include="jsl\tmplPortalFtpSite.txt" />
