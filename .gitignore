@@ -249,4 +249,5 @@ ModelManifest.xml
 **/InvoiceTemplates/*.dll
 **/*.conf
 **/InvoicePdfs/*.pdf
-Projects\UtilInstallConfig\App.config
+
+TelcobrightProject\Projects\UtilInstallConfig\App.config
