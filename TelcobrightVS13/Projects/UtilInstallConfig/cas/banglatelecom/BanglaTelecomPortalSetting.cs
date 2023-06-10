@@ -17,7 +17,7 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class BanglaTelecomAbstractConfigConfigGenerator//quartz config part
+    public partial class CasBanglaTelecomAbstractConfigConfigGenerator//quartz config part
     {
         /*static string databaseConfigFileName = new DirectoryInfo(FileAndPathHelper.GetBinPath()).Parent.Parent.FullName
                                                + Path.DirectorySeparatorChar + "Server.conf";

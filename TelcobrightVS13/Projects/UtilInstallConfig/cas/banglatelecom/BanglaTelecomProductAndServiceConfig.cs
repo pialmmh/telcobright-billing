@@ -16,7 +16,7 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class BanglaTelecomAbstractConfigConfigGenerator //quartz config part
+    public partial class CasBanglaTelecomAbstractConfigConfigGenerator //quartz config part
     {
         public void PrepareProductAndServiceConfiguration()
         {
