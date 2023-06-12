@@ -70,8 +70,14 @@ namespace InstallConfig
                 ConsoleKeyInfo ki = new ConsoleKeyInfo();
                 ki = Console.ReadKey(true);
                 char cmdName = Convert.ToChar(ki.Key);
-                Dictionary<string, string> keyValuesForMenu =
-                    ConfigurationManager.AppSettings.ToDictionary().Where(kv => kv.Key.StartsWith("instance")).ToDictionary(kv => kv.Key, kv => kv.Value);
+                DirectoryInfo utilDir = (new DirectoryInfo(FileAndPathHelper.GetBinPath()).Parent).Parent;
+                string allInstanceJson = utilDir.FullName + Path.DirectorySeparatorChar + "deployment.json";
+                List<InstanceConfig> allTelcobrightInstances =
+                    JsonConvert.DeserializeObject<List<InstanceConfig>>(File.ReadAllText(allInstanceJson));
+                Dictionary<string, string> keyValuesForMenu = new Dictionary<string, string>();
+                for (int i = 1; i <= allTelcobrightInstances.Count; i++) {
+                    keyValuesForMenu.Add("instance" + i, allTelcobrightInstances[i - 1].name);
+                }
                 List<string> choicesFromMenu = new List<string>();
                 ConfigPathHelper configPathHelper = new ConfigPathHelper("WS_Topshelf_Quartz", "portal", "UtilInstallConfig", "_dbscripts");
                 DbUtil.configPathHelper = configPathHelper;
@@ -81,7 +87,8 @@ namespace InstallConfig
                     case '1':
                         if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' || Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
                         Console.WriteLine("Setting up remote access for mysql...");
-                        choicesFromMenu = InstanceMenu.getInstancesFromMenu(keyValuesForMenu,"Select instances to create initial database:");
+                        List<string> choices= InstanceMenu.getInstancesFromMenu(keyValuesForMenu, "Select instances to create initial database:");
+                        //choicesFromMenu = InstanceMenu.getInstancesFromMenu(keyValuesForMenu,"Select instances to create initial database:");
                         selectedOperatorsConfig = getSelectedOperatorsConfig(choicesFromMenu, configPathHelper);
                         foreach (var tbc in selectedOperatorsConfig)
                         {
@@ -125,7 +132,6 @@ namespace InstallConfig
                         foreach (var tbc in selectedOperatorsConfig)
                         {
                             Console.WriteLine("Writing Configuration Files for " + tbc.Telcobrightpartner.CustomerName);
-                            
                             WriteConfig(tbc, configPathHelper);
                             Console.WriteLine("Config Files have been generated successfully for "+tbc.Telcobrightpartner.databasename);
                             Console.WriteLine("Create Telcobrightpartner and NE? (Y/N)");

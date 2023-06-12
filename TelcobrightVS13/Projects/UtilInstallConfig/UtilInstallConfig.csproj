@@ -115,6 +115,7 @@
     <Compile Include="dbl\DblDatabaseSettings.cs" />
     <Compile Include="dbl\dblAppServerConfig.cs" />
     <Compile Include="_generator\DbWriterForConfig.cs" />
+    <Compile Include="_generator\InstanceConfig.cs" />
     <Compile Include="_generator\InstanceMenu.cs" />
     <Compile Include="_generator\PartitionInfo.cs" />
     <Compile Include="_generator\PartitionUtil.cs" />
@@ -170,6 +171,7 @@
     <None Include="cas\banglatelecom\scripts\appPool_tpny.iisScript" />
     <None Include="cas\banglatelecom\scripts\ftp_tpny.iisScript" />
     <None Include="cas\banglatelecom\scripts\http_tpny.iisScript" />
+    <None Include="deployment.json" />
     <None Include="purple\scripts\appPool_tpny.iisScript" />
     <None Include="purple\scripts\ftp_tpny.iisScript" />
     <None Include="purple\scripts\http_tpny.iisScript" />
@@ -190,7 +192,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="jsl\jslRoutes.json" />
-    <None Include="instance.conf" />
     <None Include="banglatelecom\scripts\appPool_tpny.iisScript" />
     <None Include="banglatelecom\scripts\ftp_tpny.iisScript" />
     <None Include="banglatelecom\scripts\http_tpny.iisScript" />
@@ -244,6 +245,7 @@
     <Content Include="purple\tmplPortalAppPools.txt" />
     <Content Include="purple\tmplPortalFtpSite.txt" />
     <Content Include="purple\tmplPortalWebSite.txt" />
+    <Content Include="seedDataSql\icx\seedData.sql" />
     <Content Include="srtelecom\tmplPortalAppPools.txt" />
     <Content Include="srtelecom\tmplPortalFtpSite.txt" />
     <Content Include="srtelecom\tmplPortalWebSite.txt" />
@@ -258,6 +260,7 @@
     <Content Include="banglatelecom\tmplPortalAppPools.txt" />
     <Content Include="banglatelecom\tmplPortalFtpSite.txt" />
     <Content Include="banglatelecom\tmplPortalWebSite.txt" />
+    <Content Include="TextFile1.txt" />
     <Content Include="_dbscripts\quartzTables.sql" />
     <Content Include="jsl\tmplPortalAppPools.txt" />
     <Content Include="jsl\tmplPortalFtpSite.txt" />
