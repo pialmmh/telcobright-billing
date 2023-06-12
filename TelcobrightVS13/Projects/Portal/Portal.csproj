@@ -498,6 +498,7 @@
     <Content Include="reports\CauseRouteInternationalInCallView.aspx" />
     <Content Include="Mediation\CdrError.aspx" />
     <Content Include="reports\cdr.aspx" />
+    <Content Include="reports\icx\btrc\MonthlyOutgoingSummary.aspx" />
     <Content Include="reports\icx\btrc\MonthlyReport.aspx" />
     <Content Include="reports\icx\btrc\WeeklyInternationalReport.aspx" />
     <Content Include="reports\icx\btrc\WeeklyDomesticReport.aspx" />
@@ -865,6 +866,13 @@
     </Compile>
     <Compile Include="reports\cdr.aspx.designer.cs">
       <DependentUpon>cdr.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\icx\btrc\MonthlyOutgoingSummary.aspx.cs">
+      <DependentUpon>MonthlyOutgoingSummary.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\icx\btrc\MonthlyOutgoingSummary.aspx.designer.cs">
+      <DependentUpon>MonthlyOutgoingSummary.aspx</DependentUpon>
     </Compile>
     <Compile Include="reports\icx\btrc\MonthlyReport.aspx.cs">
       <DependentUpon>MonthlyReport.aspx</DependentUpon>

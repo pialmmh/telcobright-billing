@@ -70,4 +70,30 @@ namespace PortalApp.ReportHelper
         }
 
     }
+
+    public class MonthlyOutSummary
+    {
+        public DateTime Date { get; set; }
+        public string OriginatingANS { get; set; }
+        public string TerminatingCarrier { get; set; }
+        public int ICRouteName { get; set; }
+        public int OGRouteName { get; set; }
+        public string TerminatingRegion { get; set; }
+        public int TotalCalls { get; set; }
+        public int TotalSuccessfulCalls { get; set; }
+        public Decimal TotalDuration { get; set; }
+        public int TotalPaidMinute { get; set; }
+        public Decimal ACD { get; set; }
+        public int ASR { get; set; }
+        public int CER { get; set; }
+        public Decimal MHT { get; set; }
+        public int XRate { get; set; }
+        public Decimal YRate { get; set; }
+        public Decimal ConversionRate { get; set; }
+        public Decimal XAmount { get; set; }
+        public Decimal YAmount { get; set; }
+        public Decimal ZAmount { get; set; }     
+        public Decimal Portion15PercOfZ { get; set; }
+
+    }
 }

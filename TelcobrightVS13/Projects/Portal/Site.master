@@ -176,7 +176,7 @@
                                     <asp:TreeNode Value="weekly international" Text="Weekly International Report" SelectAction="Select" NavigateUrl="~/reports/icx/btrc/WeeklyInternationalReport.aspx"></asp:TreeNode>
                                     
                                     <asp:TreeNode Value="Monthly Report" Text="Monthly Report" SelectAction="Select" NavigateUrl="~/reports/icx/btrc/MonthlyReport.aspx"></asp:TreeNode>
-
+                                    <asp:TreeNode Value="Monthly Out Going Summary" Text="Monthly Out Going Summary" SelectAction="Select" NavigateUrl="~/reports/icx/btrc/MonthlyOutgoingSummary.aspx"></asp:TreeNode>
                                 </asp:TreeNode>
 
 
