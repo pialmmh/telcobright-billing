@@ -177,6 +177,13 @@
                                     
                                     <asp:TreeNode Value="Monthly Report" Text="Monthly Report" SelectAction="Select" NavigateUrl="~/reports/icx/btrc/MonthlyReport.aspx"></asp:TreeNode>
                                     <asp:TreeNode Value="Monthly Out Going Summary" Text="Monthly Out Going Summary" SelectAction="Select" NavigateUrl="~/reports/icx/btrc/MonthlyOutgoingSummary.aspx"></asp:TreeNode>
+
+                                </asp:TreeNode>
+
+
+                                <asp:TreeNode Value="btrc" Expanded="True" Text="BTRC Custom Reports " SelectAction="None">                                    
+                                    <asp:TreeNode Value="Banglalink roaming report" Text="Banglalink Roaming Report" SelectAction="Select" NavigateUrl="~/reports/icx/customReports/BanglalinkRoamingReport.aspx"></asp:TreeNode>
+                                    <asp:TreeNode Value="Banglalink Forwarding Report" Text="Banglalink Forwarding Report" SelectAction="Select" NavigateUrl="~/reports/icx/customReports/BanglalinkForwardingReport.aspx"></asp:TreeNode>
                                 </asp:TreeNode>
 
 

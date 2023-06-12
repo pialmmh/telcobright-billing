@@ -503,6 +503,8 @@
     <Content Include="reports\icx\btrc\WeeklyInternationalReport.aspx" />
     <Content Include="reports\icx\btrc\WeeklyDomesticReport.aspx" />
     <Content Include="reports\icx\btrc\DailyReport.aspx" />
+    <Content Include="reports\icx\customReports\BanglalinkForwardingReport.aspx" />
+    <Content Include="reports\icx\customReports\BanglalinkRoamingReport.aspx" />
     <Content Include="reports\icx\LocalTollFree.aspx" />
     <Content Include="reports\icx\Domestic.aspx" />
     <Content Include="reports\icx\InternationalIn_ICX.aspx" />
@@ -904,6 +906,21 @@
     </Compile>
     <Compile Include="reports\icx\btrc\BtrcReportRow.cs" />
     <Compile Include="reports\icx\btrc\ExcelExporterForBtrcReport.cs" />
+    <Compile Include="reports\icx\customReports\BanglalinkForwardingReport.aspx.cs">
+      <DependentUpon>BanglalinkForwardingReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\icx\customReports\BanglalinkForwardingReport.aspx.designer.cs">
+      <DependentUpon>BanglalinkForwardingReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\icx\customReports\BanglalinkRoamingReport.aspx.cs">
+      <DependentUpon>BanglalinkRoamingReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\icx\customReports\BanglalinkRoamingReport.aspx.designer.cs">
+      <DependentUpon>BanglalinkRoamingReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\icx\customReports\CustomReportRow.cs" />
     <Compile Include="reports\icx\LocalTollFree.aspx.cs">
       <DependentUpon>LocalTollFree.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

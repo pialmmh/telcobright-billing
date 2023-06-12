@@ -171,7 +171,8 @@
     <None Include="cas\banglatelecom\scripts\appPool_tpny.iisScript" />
     <None Include="cas\banglatelecom\scripts\ftp_tpny.iisScript" />
     <None Include="cas\banglatelecom\scripts\http_tpny.iisScript" />
-    <None Include="deployment.json" />
+    <None Include="deployment\summit.json" />
+    <None Include="deployment\srtelecom.json" />
     <None Include="purple\scripts\appPool_tpny.iisScript" />
     <None Include="purple\scripts\ftp_tpny.iisScript" />
     <None Include="purple\scripts\http_tpny.iisScript" />

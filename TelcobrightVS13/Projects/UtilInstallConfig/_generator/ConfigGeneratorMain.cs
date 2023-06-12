@@ -52,7 +52,7 @@ namespace InstallConfig
             automationContainer.Compose();
             //try 
             {
-                Start:
+            Start:
                 string tbOperatorName = "summit";//todo: change
                 Console.Clear();
                 Console.WriteLine("Welcome to Telcobright Initial Configuration Utility");
@@ -66,33 +66,24 @@ namespace InstallConfig
                 Console.WriteLine("7=Modify Partitions for tables");
                 Console.WriteLine("q=Quit");
 
-
                 ConsoleKeyInfo ki = new ConsoleKeyInfo();
                 ki = Console.ReadKey(true);
                 char cmdName = Convert.ToChar(ki.Key);
-                DirectoryInfo utilDir = (new DirectoryInfo(FileAndPathHelper.GetBinPath()).Parent).Parent;
-                string allInstanceJson = utilDir.FullName + Path.DirectorySeparatorChar + "deployment.json";
-                List<InstanceConfig> allTelcobrightInstances =
-                    JsonConvert.DeserializeObject<List<InstanceConfig>>(File.ReadAllText(allInstanceJson));
-                Dictionary<string, string> keyValuesForMenu = new Dictionary<string, string>();
-                for (int i = 1; i <= allTelcobrightInstances.Count; i++) {
-                    keyValuesForMenu.Add("instance" + i, allTelcobrightInstances[i - 1].name);
-                }
-                List<string> choicesFromMenu = new List<string>();
                 ConfigPathHelper configPathHelper = new ConfigPathHelper("WS_Topshelf_Quartz", "portal", "UtilInstallConfig", "_dbscripts");
                 DbUtil.configPathHelper = configPathHelper;
+
+                Dictionary<string, string> menuItems = GetDeploymentInstanceToMenuItems();
                 List<TelcobrightConfig> selectedOperatorsConfig;
                 switch (cmdName)
                 {
                     case '1':
-                        if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' || Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
                         Console.WriteLine("Setting up remote access for mysql...");
-                        List<string> choices= InstanceMenu.getInstancesFromMenu(keyValuesForMenu, "Select instances to create initial database:");
+                        List<string> choices = Menu.getChoices(menuItems, "Select instances to create initial database:");
                         //choicesFromMenu = InstanceMenu.getInstancesFromMenu(keyValuesForMenu,"Select instances to create initial database:");
-                        selectedOperatorsConfig = getSelectedOperatorsConfig(choicesFromMenu, configPathHelper);
+                        selectedOperatorsConfig = getSelectedOperatorsConfig(choices, configPathHelper);
                         foreach (var tbc in selectedOperatorsConfig)
                         {
-                            
+
                         }
                         //using(MySqlConnection con = new MySqlConnection())
                         break;
@@ -106,8 +97,8 @@ namespace InstallConfig
                     case '3':
                         if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' || Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
                         Console.WriteLine("Creating Database, none will be created if one exists.");
-                        choicesFromMenu = InstanceMenu.getInstancesFromMenu(keyValuesForMenu, "Select instances to create initial database:");
-                        selectedOperatorsConfig = getSelectedOperatorsConfig(choicesFromMenu, configPathHelper);
+                        choices = Menu.getChoices(menuItems, "Select instances to create initial database:");
+                        selectedOperatorsConfig = getSelectedOperatorsConfig(choices, configPathHelper);
                         foreach (var tbc in selectedOperatorsConfig)
                         {
 
@@ -122,7 +113,7 @@ namespace InstallConfig
                         if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' || Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
                         break;
                     case '6':
-                        selectedOperatorsConfig=getSelectedOperatorsConfig(keyValuesForMenu.Values.ToList(), configPathHelper);
+                        selectedOperatorsConfig = getSelectedOperatorsConfig(menuItems.Values.ToList(), configPathHelper);
                         if (!selectedOperatorsConfig.Any())
                         {
                             Console.WriteLine("No operator's config has been found. Press any key to start over.");
@@ -133,7 +124,7 @@ namespace InstallConfig
                         {
                             Console.WriteLine("Writing Configuration Files for " + tbc.Telcobrightpartner.CustomerName);
                             WriteConfig(tbc, configPathHelper);
-                            Console.WriteLine("Config Files have been generated successfully for "+tbc.Telcobrightpartner.databasename);
+                            Console.WriteLine("Config Files have been generated successfully for " + tbc.Telcobrightpartner.databasename);
                             Console.WriteLine("Create Telcobrightpartner and NE? (Y/N)");
                             ConsoleKeyInfo keyInfo1 = Console.ReadKey();
                             if (keyInfo1.KeyChar == 'Y' || keyInfo1.KeyChar == 'y')
@@ -176,7 +167,7 @@ namespace InstallConfig
 
                         break;
                     case '7':
-                        choicesFromMenu= InstanceMenu.getInstancesFromMenu(keyValuesForMenu, "Select instances to modify partitions:");
+                        choices = Menu.getChoices(menuItems, "Select instances to modify partitions:");
                         return;
                         //    schedulerType: "quartz",
                         //    databaseSetting: databaseSetting);
@@ -201,6 +192,24 @@ namespace InstallConfig
             //    Console.Write("Error: " + e.Message + Environment.NewLine + e.InnerException);
             //    Console.ReadLine();
             //}
+        }
+
+        private static Dictionary<string, string> GetDeploymentInstanceToMenuItems()
+        {
+            DirectoryInfo utilDir = (new DirectoryInfo(FileAndPathHelper.GetBinPath()).Parent).Parent;
+            string deploymentProfile = ConfigurationManager.AppSettings.ToDictionary()
+                                        .First(kv => kv.Key.Equals("deploymentProfile")).Value;
+            string deployJson = utilDir.FullName + Path.DirectorySeparatorChar
+                + "deployment" + Path.DirectorySeparatorChar + $"{deploymentProfile}.json";
+            List<InstanceConfig> instanceConfigs =
+                JsonConvert.DeserializeObject<List<InstanceConfig>>(File.ReadAllText(deployJson));
+            Dictionary<string, string> keyValuesForMenu = new Dictionary<string, string>();
+            for (int i = 1; i <= instanceConfigs.Count; i++)
+            {
+                keyValuesForMenu.Add(i.ToString(), instanceConfigs[i - 1].name);
+            }
+
+            return keyValuesForMenu;
         }
 
         private static List<TelcobrightConfig> getSelectedOperatorsConfig(List<string> instances, ConfigPathHelper configPathHelper)

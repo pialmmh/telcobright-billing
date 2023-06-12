@@ -320,6 +320,18 @@ namespace InstallConfig
                     },
                     { "~/reports/icx/btrc/WeeklyInternationalReport.aspx",
                         settingIntlIn
+                    },
+                    { "~/reports/icx/btrc/MonthlyOutgoingSummary.aspx",
+                        settingIntlIn
+                    },
+                    { "~/reports/icx/btrc/MonthlyReport.aspx",
+                        settingIntlIn
+                    },
+                    { "~/reports/icx/customReports/BanglalinkRoamingReport.aspx",
+                        settingIntlIn
+                    },
+                    { "~/reports/icx/customReports/BanglalinkForwardingReport.aspx",
+                        settingIntlIn
                     }
                 },//dictionary of page settings
 

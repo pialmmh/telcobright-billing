@@ -9,17 +9,12 @@ using System.Threading.Tasks;
 
 namespace InstallConfig
 {
-    public class InstanceMenu
+    public class Menu
     {
-        public static List<string> getInstancesFromMenu(Dictionary<string,string> instances, string msgToDisplay)
+        public static List<string> getChoices(Dictionary<string,string> menuItems, string msgToDisplay)
         {
             Console.Clear();
-            printMenu(instances, msgToDisplay);
-            NameValueCollection configFiles = (NameValueCollection)ConfigurationManager.GetSection("appSettings");
-            foreach (string key in configFiles)
-            {
-                
-            }
+            printMenu(menuItems, msgToDisplay);
             while (true)
             {
                 List<int> userInputs = getUserInput();
@@ -27,20 +22,20 @@ namespace InstallConfig
                 {
                     return new List<string>();
                 }
-                else if (userInputs[0] < 0 || userInputs.Any(i=> i > instances.Count))// invalid case
+                else if (userInputs[0] < 0 || userInputs.Any(i=> i > menuItems.Count))// invalid case
                 {
                     Console.Clear();
                     Console.WriteLine("Invalid input, try again...");
-                    printMenu(instances,msgToDisplay);
+                    printMenu(menuItems,msgToDisplay);
                 }
                 else // valid case
                 {
-                    List<string> selectedKeys = userInputs.Select(i => "instance" + i.ToString()).ToList();
-                    List<string> instanceNames = instances.Where(kv => selectedKeys.Contains(kv.Key))
+                    List<string> selectedNumbers = userInputs.Select(i => i.ToString()).ToList();
+                    List<string> selectedItems = menuItems.Where(kv => selectedNumbers.Contains(kv.Key))
                         .Select(kv => kv.Value).ToList();
-                    Console.WriteLine("Selected instances:");
-                    Console.WriteLine($"[{string.Join(",",instanceNames)}]");
-                    return instanceNames;
+                    Console.WriteLine("Selected items:");
+                    Console.WriteLine($"[{string.Join(",",selectedItems)}]");
+                    return selectedItems;
                 }
             }
         }

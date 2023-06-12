@@ -10,6 +10,6 @@ namespace InstallConfig._generator
     {
         public string name { get; set; }
         public string type {get;set;}
-        public List<InstanceConfig> childInstances { get; set; }
+        public Dictionary<string, string> otherParams { get; set; }
     }
 }
