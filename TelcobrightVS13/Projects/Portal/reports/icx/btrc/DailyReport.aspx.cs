@@ -193,7 +193,7 @@ group by tup_inpartnerid;";
     DataSet getInternatinonalOutComingReport_1(MySqlConnection connection)
     {
         string intlOut_1_Sql =
- $@"select tup_inpartnerid as partnerid,sum(duration3)/60 as minutes 
+ $@"select tup_inpartnerid as partnerid,sum(roundedduration)/60 as minutes 
 from sum_voice_day_02
 where tup_starttime >= '{txtDate.Text}' and tup_starttime < '{txtDate1.Text}'
 group by tup_inpartnerid;";
@@ -206,7 +206,7 @@ group by tup_inpartnerid;";
     DataSet getInternatinonalOutComingReport_2(MySqlConnection connection)
     {
         string intlOut_2_Sql =
- $@"select tup_outpartnerid as partnerid,sum(duration3)/60 as minutes 
+ $@"select tup_outpartnerid as partnerid,sum(roundedduration)/60 as minutes 
 from sum_voice_day_02
 where tup_starttime >= '{txtDate.Text}' and tup_starttime < '{txtDate1.Text}'
 group by tup_outpartnerid;";

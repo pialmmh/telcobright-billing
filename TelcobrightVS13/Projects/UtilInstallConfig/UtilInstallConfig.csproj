@@ -115,6 +115,7 @@
     <Compile Include="dbl\DblDatabaseSettings.cs" />
     <Compile Include="dbl\dblAppServerConfig.cs" />
     <Compile Include="_generator\DbWriterForConfig.cs" />
+    <Compile Include="_generator\DeploymentProfile.cs" />
     <Compile Include="_generator\InstanceConfig.cs" />
     <Compile Include="_generator\InstanceMenu.cs" />
     <Compile Include="_generator\PartitionInfo.cs" />
@@ -171,6 +172,7 @@
     <None Include="cas\banglatelecom\scripts\appPool_tpny.iisScript" />
     <None Include="cas\banglatelecom\scripts\ftp_tpny.iisScript" />
     <None Include="cas\banglatelecom\scripts\http_tpny.iisScript" />
+    <None Include="deployment\cas.json" />
     <None Include="deployment\summit.json" />
     <None Include="deployment\srtelecom.json" />
     <None Include="purple\scripts\appPool_tpny.iisScript" />

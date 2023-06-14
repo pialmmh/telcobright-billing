@@ -47,9 +47,12 @@ namespace InstallConfig
     class ConfigGeneratorMain
     {
         private static AutomationContainer automationContainer = new AutomationContainer();
+        static List<InstanceConfig> instanceConfigs = new List<InstanceConfig>();
         static void Main(string[] args)
         {
             automationContainer.Compose();
+            List<string> deploymentProfiles = GetAllDeploymentInstanceNames();
+            Menu.getChoices(deploymentProfiles,"Select a deployment profile to configure automation.");
             //try 
             {
             Start:
@@ -210,6 +213,16 @@ namespace InstallConfig
             }
 
             return keyValuesForMenu;
+        }
+
+        private static List<string> GetAllDeploymentInstanceNames()
+        {
+            DirectoryInfo utilDir = (new DirectoryInfo(FileAndPathHelper.GetBinPath()).Parent).Parent;
+            DirectoryInfo deploymentDir = new DirectoryInfo(utilDir.FullName +Path.DirectorySeparatorChar + "deployment"); //Assuming Test is your Folder
+            FileInfo[] jsonFiles = deploymentDir.GetFiles("*.json"); //Getting Text files
+            return jsonFiles
+                .Select(j => JsonConvert.DeserializeObject<Deploymentprofile>(File.ReadAllText(j.FullName)))
+                .Select(profile=>profile.profileName).ToList();
         }
 
         private static List<TelcobrightConfig> getSelectedOperatorsConfig(List<string> instances, ConfigPathHelper configPathHelper)

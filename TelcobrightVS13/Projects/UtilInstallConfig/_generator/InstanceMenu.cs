@@ -11,7 +11,7 @@ namespace InstallConfig
 {
     public class Menu
     {
-        public static List<string> getChoices(Dictionary<string,string> menuItems, string msgToDisplay)
+        public static string getSingleChoice(Dictionary<string, string> menuItems, string msgToDisplay)
         {
             Console.Clear();
             printMenu(menuItems, msgToDisplay);
@@ -20,18 +20,53 @@ namespace InstallConfig
                 List<int> userInputs = getUserInput();
                 if (userInputs[0] == 0) // quit case
                 {
-                    return new List<string>();
+                    return string.Empty;
                 }
-                else if (userInputs[0] < 0 || userInputs.Any(i=> i > menuItems.Count))// invalid case
+                else if (userInputs[0] < 0 || userInputs.Any(i => i > menuItems.Count))// invalid case
                 {
                     Console.Clear();
                     Console.WriteLine("Invalid input, try again...");
-                    printMenu(menuItems,msgToDisplay);
+                    printMenu(menuItems, msgToDisplay);
                 }
                 else // valid case
                 {
                     List<string> selectedNumbers = userInputs.Select(i => i.ToString()).ToList();
                     List<string> selectedItems = menuItems.Where(kv => selectedNumbers.Contains(kv.Key))
+                        .Select(kv => kv.Value).ToList();
+                    Console.WriteLine("Selected item:");
+                    Console.WriteLine($"[{selectedItems.First()}]");
+                    return selectedItems.First();
+                }
+            }
+        }
+        public static List<string> getChoices(List<string> menuItems, string msgToDisplay)
+        {
+            Dictionary<string, string> menuItemsDic = menuItems.Select((item, index) =>
+             new
+             {
+                 item = item,
+                 index = index
+             }).ToDictionary(a => a.index.ToString(), a => a.item);
+
+            Console.Clear();
+            printMenu(menuItemsDic, msgToDisplay);
+            while (true)
+            {
+                List<int> userInputs = getUserInput();
+                if (userInputs[0] == 0) // quit case
+                {
+                    return new List<string>();
+                }
+                else if (userInputs[0] < 0 || userInputs.Any(i=> i > menuItemsDic.Count))// invalid case
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid input, try again...");
+                    printMenu(menuItemsDic,msgToDisplay);
+                }
+                else // valid case
+                {
+                    List<string> selectedNumbers = userInputs.Select(i => i.ToString()).ToList();
+                    List<string> selectedItems = menuItemsDic.Where(kv => selectedNumbers.Contains(kv.Key))
                         .Select(kv => kv.Value).ToList();
                     Console.WriteLine("Selected items:");
                     Console.WriteLine($"[{string.Join(",",selectedItems)}]");

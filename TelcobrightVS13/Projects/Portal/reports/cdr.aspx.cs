@@ -359,7 +359,7 @@ public partial class ConfigCdr : Page
     public DataSet GetDataSet(string connectionString, string sql)
     {
         MySqlConnection conn = new MySqlConnection(connectionString);
-        MySqlDataAdapter da = new MySqlDataAdapter();
+        MySqlDataAdapter da = new MySqlDataAdapter();  
         MySqlCommand cmd = conn.CreateCommand();
         cmd.CommandText = sql;
         da.SelectCommand = cmd;
@@ -540,6 +540,11 @@ public partial class ConfigCdr : Page
         }
         //
         //Sql +=
+        //if (!sql.ToLower().Contains("errorcode"))
+        //{
+        //    sql = sql.Replace("`Ingress CauseCode`", "`Ingress CauseCode`, errorcode, ");
+        //}
+
         GridDataBinding2(sql);
     }
 
@@ -562,8 +567,15 @@ public partial class ConfigCdr : Page
         {
 
         }
-
-
+        if (sql.ToLower().Contains("errorcode"))
+        {
+            sql = sql.Replace("c.InPartnerId", "c.InPartnerId  as `In Partner`");
+            sql = sql.Replace("c.OutPartnerId", "c.OutPartnerId as `Out Partner`");
+        }
+        if (!sql.ToLower().Contains("errorcode"))
+        {
+            sql = sql.Replace("`Ingress CauseCode`", "`Ingress CauseCode`, ErrorCode as `Error Code`,ReleaseCauseEgress as `Egress Cause Code` ");
+        }
         this.ViewState["squery"] = sql;
         this.ViewState["totalnumrows"] = this._totalNumRows;
         this.ViewState["gridactiveindex"] = this._gridActiveIndexTemp;
@@ -589,11 +601,16 @@ public partial class ConfigCdr : Page
         {
             DataRow dtExtra = this._dt.NewRow();
             this._dt.Rows.Add(dtExtra);
-
         }
+        //if (this._dt.Rows.Count > (this._maxNUmRows + 1))
+        //{
+        //    DataRow dtExtra = this._dt.NewRow();
+        //    this._dt.Rows.Remove(dtExtra);
+        //}
         // int cccnnntt = dtTable2.Rows.Count;
 
         this.Session["dtCDR"] = _dt;
+        //gridViewDx.Columns.;
         this.gridViewDx.DataBind();
 
 /*
@@ -837,6 +854,8 @@ public partial class ConfigCdr : Page
 
             //cmd.CommandText = "SELECT * FROM CDRListed";
             cmd.CommandText = strSelectCmd;
+            //cmd.CommandText = queryString;
+
 
             cmd.Parameters.AddWithValue("RowIndex", startRowIndex);
             cmd.Parameters.AddWithValue("MaxRows", maximumRows);

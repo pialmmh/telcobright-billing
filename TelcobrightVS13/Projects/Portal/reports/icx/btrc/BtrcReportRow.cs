@@ -96,4 +96,16 @@ namespace PortalApp.ReportHelper
         public Decimal Portion15PercOfZ { get; set; }
 
     }
+    public class CustomReportRow
+    {
+        public string StartTime { get; set; }
+        public String sourceNetwork { get; set; }
+        public string destinationNtwork { get; set; }
+        public string callerNumberANUM { get; set; }
+        public string callerNumberBNUM { get; set; }
+        public int billedDuration { get; set; }
+        public string redirectNumber { get; set; }
+        public string remarks { get; set; }
+
+    }
 }

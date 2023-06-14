@@ -1,6 +1,11 @@
-﻿[{
-		"name": "srtelecom",
-		"type": "icx",
-		"otherParams": null
-	},
-]
+﻿{
+  "profileName": "srtelecom",
+    "type": "icx"
+  [
+
+    {
+      "name": "srtelecom",
+      "otherParams": null
+    }
+  ]
+}

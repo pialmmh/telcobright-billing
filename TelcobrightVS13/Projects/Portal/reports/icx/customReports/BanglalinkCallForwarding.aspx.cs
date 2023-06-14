@@ -17,7 +17,7 @@ using System;
 
 
 
-public partial class DefaultRptMonthlyOutSummaryIcx : System.Web.UI.Page
+public partial class BanglalinkCallForwarding : System.Web.UI.Page
 {
     public string operatorName;
     private int _mShowByCountry=0;
@@ -29,7 +29,7 @@ public partial class DefaultRptMonthlyOutSummaryIcx : System.Web.UI.Page
     {
 
         string StartDate = txtStartDate.Text;
-        string EndtDate = (txtEndDate.Text.ConvertToDateTimeFromMySqlFormat()).AddSeconds(1).ToMySqlFormatWithoutQuote();
+        string EndDate = (txtEndDate.Text.ConvertToDateTimeFromMySqlFormat()).AddSeconds(1).ToMySqlFormatWithoutQuote();
         string tableName = DropDownListReportSource.SelectedValue + "01";
 
         string groupInterval = getSelectedRadioButtonText();
@@ -47,7 +47,7 @@ public partial class DefaultRptMonthlyOutSummaryIcx : System.Web.UI.Page
 
         string constructedSQL = new SqlHelperIntlInIcx
                         (StartDate,
-                         EndtDate,
+                         EndDate,
                          groupInterval,
                          tableName,
                          
@@ -116,7 +116,7 @@ public partial class DefaultRptMonthlyOutSummaryIcx : System.Web.UI.Page
         else return string.Empty;
     }
 
-    DataSet getBtrcReport(MySqlConnection connection, string sql)
+    DataSet getCustomReport(MySqlConnection connection, string sql)
     {
         MySqlCommand cmd = new MySqlCommand(sql, connection);
         cmd.Connection = connection;
@@ -125,61 +125,28 @@ public partial class DefaultRptMonthlyOutSummaryIcx : System.Web.UI.Page
         domDataAdapter.Fill(ds);
         return ds;    
     }
-    List<MonthlyOutSummary> ConvertBtrcDataSetToList(DataSet ds) {
+    List<CustomReportRow> ConvertCustomReportDataSetToList(DataSet ds) {
         bool hasRecords = ds.Tables.Cast<DataTable>()
                            .Any(table => table.Rows.Count != 0);
-        //List<MonthlyReportRow> records = new List<MonthlyReportRow>();
-        List<MonthlyOutSummary> finalRecords= new List<MonthlyOutSummary>();
+        List<CustomReportRow> finalRecords = new List<CustomReportRow>();
         if (hasRecords == true)
         {
             foreach (DataTable table in ds.Tables)
             {
-                //int Slno = 1;
+
                 foreach (DataRow row in table.Rows)
                 {
-                    MonthlyOutSummary record = new MonthlyOutSummary();
-                    //record.SLNo = Slno;
-                    //Slno += 1;
 
-                    record.Date  = row.Field<DateTime>("Date");
-                    record.OriginatingANS  = row.Field<string>("Originating ANS");
-                    record.TerminatingCarrier  = row.Field<string>("Terminating Carrier");
-                    //record.ICRouteName = row.Field<int>("I/C Route Name");
-                    record.ICRouteName = Convert.ToInt32(row["I/C Route Name"]);
-                    //record.OGRouteName = row.Field<int>("O/G Route Name");
-                    record.OGRouteName = Convert.ToInt32(row["O/G Route Name"]); ;
+                    CustomReportRow record = new CustomReportRow();
 
-                    record.TerminatingRegion  = row.Field<string>("Terminating Region");
-                    record.TotalCalls = Convert.ToInt32(row["Total Calls"]);
-                    record.TotalSuccessfulCalls  = Convert.ToInt32(row["Total Successful Calls"]);
-                    record.TotalDuration  = Convert.ToInt32(row["Total Duration"]);
-                    record.TotalPaidMinute  = Convert.ToInt32(row["Total Paid Minute"]);
-                    record.ACD  = row.Field<Decimal>("ACD");
-                    record.ASR  = Convert.ToInt32(row["ASR"]);
-                    record.CER  = Convert.ToInt32(row["CER"]);
-                    record.MHT  = row.Field<Decimal>("MHT");
-                    record.XRate  = Convert.ToInt32(row["X Rate"]);
-                    record.YRate  = row.Field<Decimal>("Y Rate");
-                    record.ConversionRate  = Convert.ToDecimal(row["Conversion Rate"]);
-                    record.XAmount  = row.Field<Decimal>("X Amount");
-                    record.YAmount  = row.Field<Decimal>("Y Amount");
-                    record.ZAmount  = row.Field<Decimal>("Z Amount");                    
-                    record.Portion15PercOfZ  = Convert.ToDecimal(row["ICX Portion(15% of Z)"]);
-
-                    
-                    //record.domNoOfCalls= row.Field<Decimal>("noofcalls");
-
-                    //record.
-                    //record.Origi = Convert.ToDecimal(row["noofcalls"]);
-                    //record.domesticMinutes= row.Field<Decimal>("minutes");
-
-
-                    //record.IntIncomingNoOfCalls= Convert.ToDecimal(row["noofcallsI"]);
-                    //record.IntIncomingNoOfMinutes= row.Field<decimal>("minutesI");
-
-                    //record.IntOutgoingNoOfCalls= Convert.ToDecimal(row["noofcallsO"]);
-                    //record.IntOutgoingNoOfMinutes= row.Field<decimal>("minutesO");
-                    //MonthlyOutSummary excelRecord = new MonthlyOutSummary();
+                    record.StartTime = row.Field<DateTime>("Start Time").ToString();
+                    record.sourceNetwork = row.Field<string>("Source Network");
+                    record.destinationNtwork = row.Field<string>("Destination Network");
+                    record.callerNumberANUM = row.Field<string>("Caller Number (A NUM)");
+                    record.callerNumberBNUM = row.Field<string>("Called Number (B NUM)");
+                    record.billedDuration = Convert.ToInt32(row["Billed Duration"]);
+                    record.redirectNumber = row.Field<string>("Redirect Number");
+                    record.remarks = row.Field<string>("Remarks");
                     finalRecords.Add(record);
                 }
             }
@@ -187,34 +154,28 @@ public partial class DefaultRptMonthlyOutSummaryIcx : System.Web.UI.Page
 
         return finalRecords;
     }
-    DataSet getMonthlyReport(MySqlConnection connection)
+    DataSet getCustomMonthlyReport(MySqlConnection connection)
     {
-                string Sql = $@"select date(tup_starttime) Date,inp.partnername 'Originating ANS', outp.partnername 'Terminating Carrier',
-                        inr.RouteName 'I/C Route Name', outr.RouteName 'O/G Route Name',concat(p.description, ' (',x.tup_matchedprefixcustomer, ')') 'Terminating Region',
-                        totalcalls 'Total Calls',totalSuccessfulCalls 'Total Successful Calls',totalDuration 'Total Duration',totalPaidMinute 'Total Paid Minute',ACD,
-                        (select 100) as ASR, (select 100) as CER,MHT,tup_customerrate 'X Rate',tup_supplierrate 'Y Rate',tup_customercurrency 'Conversion Rate',
-                        xAmount 'X Amount', yAmount 'Y Amount', zAmount 'Z Amount', (select .15*zAmount) 'ICX Portion(15% of Z)'
-                        from
-                        (select tup_starttime,tup_inpartnerid,tup_outpartnerid,tup_incomingroute,tup_outgoingroute,tup_switchid,
-                        tup_matchedprefixcustomer,sum(totalcalls) as totalCalls, sum(totalcalls) totalSuccessfulCalls,
-                        sum(actualDuration) totalDuration,sum(roundedDuration) totalPaidMinute,sum(actualduration)/sum(totalcalls) ACD,sum(actualduration)/sum(totalcalls) MHT,
-                        tup_customerrate,tup_supplierrate,tup_customercurrency,
-                        sum(longDecimalAmount1) xAmount, sum(longDecimalAmount2) yAmount, sum(longDecimalAmount3) zAmount
-                        from sum_voice_day_02
-                        where tup_starttime >= '{txtStartDate.Text}' and tup_starttime < '{txtEndDate.Text}'
-                        group by tup_starttime,tup_inpartnerid,tup_outpartnerid,tup_incomingroute, tup_outgoingroute,tup_switchid,
-                        tup_matchedprefixcustomer,tup_customerrate,tup_supplierrate,tup_customercurrency
-                        having sum(roundedDuration)>0) x
-                        left join partner inp
-                        on x.tup_inpartnerid=inp.idpartner
-                        left join partner outp
-                        on x.tup_outpartnerid=outp.idpartner
-                        left join route inr
-                        on x.tup_incomingroute=inr.routename and x.tup_switchid=inr.SwitchId
-                        left join route outr
-                        on x.tup_outgoingroute=outr.routename and x.tup_switchid=outr.SwitchId
-                        left join xyzprefix p
-                        on x.tup_matchedprefixcustomer = p.prefix";
+                string Sql = $@"select starttime as `Start Time`,cr.partnername as 'Source Network',
+                            (select 'BanglaLink') as `Destination Network`,OriginatingCallingNumber 'Caller Number (A NUM)',
+                            originatingCalledNumber 'Called Number (B Num)',
+                            duration1 as `Billed Duration`, RedirectingNumber as `Redirect Number`,
+                            (select 'Call Forwarding') as Remarks
+                            from 
+                            cdr c
+                            left join partner cr on 
+                            c.inpartnerid=cr.idpartner
+                            where starttime>='2023-05-01 00:00:00'
+                            and starttime<'2023-05-01 23:59:59'
+                            and OutgoingRoute in 
+                            (
+                            select RouteName from route 
+                            where idpartner=25 /*code of Partner*/
+                            and NationalOrInternational=1
+                            )
+                            and servicegroup=1
+                            and RedirectingNumber is not null
+                            limit 0,10;";
         //  $@"select date(tup_starttime) as date,count(totalcalls) as noofcalls,sum(duration1)/60 as minutes 
         //from 
         //(select * from sum_voice_day_01
@@ -224,7 +185,7 @@ public partial class DefaultRptMonthlyOutSummaryIcx : System.Web.UI.Page
         //where tup_starttime >= '{txtStartDate.Text}' and tup_starttime < '{txtEndDate.Text}') x
         //group by date(tup_starttime);";
 
-        DataSet ds= getBtrcReport(connection, Sql);
+        DataSet ds= getCustomReport(connection, Sql);
         return ds;
     }
 
@@ -232,7 +193,7 @@ public partial class DefaultRptMonthlyOutSummaryIcx : System.Web.UI.Page
     protected void submit_Click(object sender, EventArgs e)
     {
         
-        List<MonthlyOutSummary> monthlyRecords = new List<MonthlyOutSummary>();
+        List<CustomReportRow> monthlyRecords = new List<CustomReportRow>();
         
        
         Dictionary<int, string> partnerNames = null;
@@ -244,34 +205,22 @@ public partial class DefaultRptMonthlyOutSummaryIcx : System.Web.UI.Page
             connection.ConnectionString = ConfigurationManager.ConnectionStrings["reader"].ConnectionString;
             connection.Open();
 
-            DataSet monthlyDs =getMonthlyReport(connection);
+            DataSet monthlyDs =getCustomMonthlyReport(connection);
            
 
             bool hasdomesticDs =monthlyDs.Tables.Cast<DataTable>()
                           .Any(table => table.Rows.Count != 0);
             if (hasdomesticDs == true)
             {
-                monthlyRecords = ConvertBtrcDataSetToList(monthlyDs);
-                //Decimal sum1 = monthlyRecords.Sum(r => r.Date);
-                //Decimal sum2 = monthlyRecords.Sum(r => r.domesticMinutes);
-                //Decimal sum3 = monthlyRecords.Sum(r => r.IntIncomingNoOfCalls);
-                //Decimal sum4 = monthlyRecords.Sum(r => r.IntIncomingNoOfMinutes);
-                //Decimal sum5 = monthlyRecords.Sum(r => r.IntOutgoingNoOfCalls);
-                //Decimal sum6 = monthlyRecords.Sum(r => r.IntOutgoingNoOfMinutes);
+                monthlyRecords =ConvertCustomReportDataSetToList(monthlyDs);
+                
 
-                DomHeader.Text = "Monthly Outgoing Summary";
-                //IntlInHeader.Text = "International Incoming Report";
-                //IntlOutHeader.Text = "International Outgoing Report";
+                DomHeader.Text = "Banglalink Call Forwarding";
+                
                 Gvdom.DataSource = monthlyRecords;
-                //((BoundField)Gvdom.Columns[2]).FooterText = $"{sum1:n0}";
-                //((BoundField)Gvdom.Columns[3]).FooterText = $"{sum2:n0}";
-                //((BoundField)Gvdom.Columns[4]).FooterText = $"{sum3:n0}";
-                //((BoundField)Gvdom.Columns[5]).FooterText = $"{sum4:n0}";
-                //((BoundField)Gvdom.Columns[6]).FooterText = $"{sum5:n0}";
-                //((BoundField)Gvdom.Columns[7]).FooterText = $"{sum6:n0}";
+                
                 DomHeader.Visible = true;
-                //IntlInHeader.Visible = true;
-                //IntlOutHeader.Visible = true;
+                
                 Gvdom.DataBind();
             }
             return;
@@ -447,7 +396,7 @@ public partial class DefaultRptMonthlyOutSummaryIcx : System.Web.UI.Page
         //            + ".xlsx", Response);
         //}
 
-        List<MonthlyOutSummary> monthlyReport= new List<MonthlyOutSummary>();
+        List<CustomReportRow> monthlyReport= new List<CustomReportRow>();
    
         Dictionary<int, string> partnerNames= null;
         using (PartnerEntities context = new PartnerEntities())
@@ -461,11 +410,11 @@ public partial class DefaultRptMonthlyOutSummaryIcx : System.Web.UI.Page
             connection.Open();
 
 
-            DataSet monthlyDs = getMonthlyReport(connection);
-            monthlyReport = ConvertBtrcDataSetToList(monthlyDs);
+            DataSet monthlyDs =getCustomMonthlyReport(connection);
+            monthlyReport =ConvertCustomReportDataSetToList(monthlyDs);
 
 
-            ExcelExporterForBtrcReport.ExportToExcelMonthlyOutgoingReport("MonthlyReport From " + txtStartDate.Text + " To " + txtEndDate.Text
+            ExcelExporterForBtrcReport.ExportToExcelMonthlyCustomReport("MonthlyReport From " + txtStartDate.Text + " To " + txtEndDate.Text
                     + ".xlsx", Response, monthlyReport, this.operatorName);
 
             return;

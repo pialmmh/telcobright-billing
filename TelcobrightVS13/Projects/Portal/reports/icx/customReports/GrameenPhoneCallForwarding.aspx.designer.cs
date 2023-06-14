@@ -9,7 +9,7 @@
 
 
 
-public partial class DefaultRptMonthlyOutSummaryIcx {
+public partial class GrameenPhoneCallForwarding {
     
     /// <summary>
     /// DropDownListReportSource control.

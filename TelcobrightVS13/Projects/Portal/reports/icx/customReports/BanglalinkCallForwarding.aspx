@@ -1,5 +1,5 @@
 ﻿<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="True"
-    CodeBehind="MonthlyOutgoingSummary.aspx.cs" Inherits="DefaultRptMonthlyOutSummaryIcx" %>
+    CodeBehind="BanglalinkCallForwarding.aspx.cs" Inherits="BanglalinkCallForwarding" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Import Namespace="MediationModel" %>
@@ -638,29 +638,16 @@
 
                             <Columns>
                                 
-                                <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" ItemStyle-Wrap="false" FooterText="" />
-                                <asp:BoundField DataField="OriginatingANS" DataFormatString="{0:F0}" HeaderText="Originating ANS" SortExpression="OriginatingANS" ItemStyle-Wrap="false" FooterText="" />
-                                <asp:BoundField DataField="TerminatingCarrier" DataFormatString="{0:F0}" HeaderText="Terminating Carrier" ItemStyle-Wrap="false" SortExpression="TerminatingCarrier" FooterText="" />                                
-                                <asp:BoundField DataField="ICRouteName" DataFormatString="{0:F0}" HeaderText="I/C Route Name" ItemStyle-Wrap="false" SortExpression="ICRouteName" FooterText="" />
-                                <asp:BoundField DataField="OGRouteName" DataFormatString="{0:F0}" HeaderText="O/G Route Name" ItemStyle-Wrap="false" SortExpression="OGRouteName" FooterText="" />
-                                <asp:BoundField DataField="TerminatingRegion" DataFormatString="{0:F0}" HeaderText="Terminating Region" SortExpression="TerminatingRegion" ItemStyle-Wrap="false" FooterText="" />
-                                <asp:BoundField DataField="TotalCalls" DataFormatString="{0:F0}" HeaderText="Total Calls" SortExpression="TotalCalls" ItemStyle-Wrap="false" FooterText="" />
-                                <asp:BoundField DataField="TotalSuccessfulCalls"  DataFormatString="{0:F0}" HeaderText="Total Successful Calls" SortExpression="TotalSuccessfulCalls" ItemStyle-Wrap="false" FooterText="" />                                
-                                <asp:BoundField DataField="TotalDuration"  DataFormatString="{0:F0}"  ItemStyle-Wrap="false" HeaderText="Total Duration" SortExpression="TotalDuration"  FooterText="" />
-                                <asp:BoundField DataField="TotalPaidMinute" DataFormatString="{0:F0}" ItemStyle-Wrap="false" HeaderText="Total Paid Minute" SortExpression="TotalPaidMinute" FooterText="" />
-                                <asp:BoundField DataField="ACD" DataFormatString="{0:F0}" HeaderText="ACD" SortExpression="ACD" ItemStyle-Wrap="false" FooterText="" />                                
-                                <asp:BoundField DataField="ASR" DataFormatString="{0:F0}" HeaderText="ASR" SortExpression="ASR" ItemStyle-Wrap="false" FooterText="" />
-                                <asp:BoundField DataField="CER" DataFormatString="{0:F0}" HeaderText="CER" SortExpression="CER" ItemStyle-Wrap="false" FooterText="" />
-                                <asp:BoundField DataField="MHT" DataFormatString="{0:F0}" HeaderText="MHT" SortExpression="MHT" ItemStyle-Wrap="false" FooterText="" />
-                                <asp:BoundField DataField="XRate" DataFormatString="{0:F0}" HeaderText="X Rate" SortExpression="X Rate" ItemStyle-Wrap="false" FooterText="" />
-                                <asp:BoundField DataField="YRate"  DataFormatString="{0:F0}" HeaderText="Y Rate" SortExpression="YRate" ItemStyle-Wrap="false" FooterText="" />                                
-                                <asp:BoundField DataField="ConversionRate" DataFormatString="{0:F0}" HeaderText="Conversion Rate" SortExpression="ConversionRate" ItemStyle-Wrap="false" FooterText="" />
-                                <asp:BoundField DataField="XAmount" DataFormatString="{0:F0}" HeaderText="X Amount" SortExpression="XAmount" ItemStyle-Wrap="false" FooterText="" />
-                                <asp:BoundField DataField="YAmount" DataFormatString="{0:F0}" HeaderText="Y Amount" SortExpression="YAmount" ItemStyle-Wrap="false" FooterText="" />                                
-                                <asp:BoundField DataField="ZAmount" DataFormatString="{0:F0}" HeaderText="Z Amount" SortExpression="ZAmount" ItemStyle-Wrap="false" FooterText="" />
-                                <asp:BoundField DataField="Portion15PercOfZ" DataFormatString="{0:F0}" HeaderText="ICX Portion(15% of Z)" ItemStyle-Wrap="false" SortExpression="Portion15PercOfZ" FooterText="" />
-                                
+                                <asp:BoundField DataField="StartTime" HeaderText="Start Time" SortExpression="StartTime" ItemStyle-Wrap="false" FooterText="" />
+                                <asp:BoundField DataField="sourceNetwork" DataFormatString="{0:F0}" HeaderText="Source Network" SortExpression="sourceNetwork" ItemStyle-Wrap="false" FooterText="" />
+                                <asp:BoundField DataField="destinationNtwork" DataFormatString="{0:F0}" HeaderText="Destination Ntwork" ItemStyle-Wrap="false" SortExpression="destinationNtwork" FooterText="" />                                
+                                <asp:BoundField DataField="callerNumberANUM" DataFormatString="{0:F0}" HeaderText="Caller Number (A NUM)" ItemStyle-Wrap="false" SortExpression="callerNumberANUM" FooterText="" />
+                                <asp:BoundField DataField="callerNumberBNUM" DataFormatString="{0:F0}" HeaderText="Caller Number (B NUM)" ItemStyle-Wrap="false" SortExpression="callerNumberBNUM" FooterText="" />
+                                <asp:BoundField DataField="billedDuration" DataFormatString="{0:F0}" HeaderText="Billed Duration" SortExpression="billedDuration" ItemStyle-Wrap="false" FooterText="" />
+                                <asp:BoundField DataField="redirectNumber" DataFormatString="{0:F0}" HeaderText="Redirect Number" SortExpression="redirectNumber" ItemStyle-Wrap="false" FooterText="" />
+                                <asp:BoundField DataField="remarks"  DataFormatString="{0:F0}" HeaderText="Remarks" SortExpression="remarks" ItemStyle-Wrap="false" FooterText="" />
                             </Columns>
+
                             <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
                             <EditRowStyle BackColor="#999999" />
                             <FooterStyle BackColor="#5D7B9D" Font-Bold="true" ForeColor="White" />

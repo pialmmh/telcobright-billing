@@ -1,7 +1,10 @@
-﻿[
-	{
-		"name": "summit",
-		"type": "icx",
-		"OtherParams": null
-	}
-]
+﻿{
+  "profileName": "Summit",
+  "type": "icx"
+   [
+    {
+      "name": "summit",
+      "OtherParams": null
+    }
+  ]
+}
