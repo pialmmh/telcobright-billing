@@ -172,11 +172,16 @@
     <Compile Include="Config\PortalSettings.cs" />
     <Compile Include="Config\SummaryTimeFieldEnum.cs" />
     <Compile Include="ServerAndDbAutomation\DbUtil.cs" />
+    <Compile Include="ServerAndDbAutomation\MySql7CommandGenerator.cs" />
+    <Compile Include="ServerAndDbAutomation\MySql8CommandGenerator.cs" />
     <Compile Include="ServerAndDbAutomation\MySqlCluster.cs" />
+    <Compile Include="ServerAndDbAutomation\MySqlCommandGenerator.cs" />
+    <Compile Include="ServerAndDbAutomation\MySqlCommandGeneratorFactory.cs" />
     <Compile Include="ServerAndDbAutomation\MySqlServer.cs" />
     <Compile Include="ServerAndDbAutomation\MySqlPermissionType.cs" />
     <Compile Include="ServerAndDbAutomation\MySqlAutomationHelper.cs" />
     <Compile Include="ServerAndDbAutomation\MySqlUser.cs" />
+    <Compile Include="ServerAndDbAutomation\MySqlVersion.cs" />
     <Compile Include="ServerAndDbAutomation\ReplicationHelper.cs" />
     <Compile Include="ServerAndDbAutomation\ServerAutomationtype.cs" />
     <Compile Include="ServerAndDbAutomation\ServerOs.cs" />
