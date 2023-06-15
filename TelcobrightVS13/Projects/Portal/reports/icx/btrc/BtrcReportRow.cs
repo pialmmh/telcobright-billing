@@ -99,7 +99,7 @@ namespace PortalApp.ReportHelper
     public class CustomReportRow
     {
         public string StartTime { get; set; }
-        public String sourceNetwork { get; set; }
+        public string sourceNetwork { get; set; }
         public string destinationNtwork { get; set; }
         public string callerNumberANUM { get; set; }
         public string callerNumberBNUM { get; set; }

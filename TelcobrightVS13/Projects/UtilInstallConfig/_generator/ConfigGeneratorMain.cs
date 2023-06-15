@@ -52,7 +52,7 @@ namespace InstallConfig
         {
             automationContainer.Compose();
             List<string> deploymentProfiles = GetAllDeploymentInstanceNames();
-            Menu.getChoices(deploymentProfiles,"Select a deployment profile to configure automation.");
+            List<string> profiles= Menu.getChoices(deploymentProfiles,"Select a deployment profile to configure automation.");
             //try 
             {
             Start:
@@ -75,8 +75,8 @@ namespace InstallConfig
                 ConfigPathHelper configPathHelper = new ConfigPathHelper("WS_Topshelf_Quartz", "portal", "UtilInstallConfig", "_dbscripts");
                 DbUtil.configPathHelper = configPathHelper;
 
-                Dictionary<string, string> menuItems = GetDeploymentInstanceToMenuItems();
                 List<TelcobrightConfig> selectedOperatorsConfig;
+                List<string> menuItems = new List<string>();
                 switch (cmdName)
                 {
                     case '1':
@@ -116,7 +116,7 @@ namespace InstallConfig
                         if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' || Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
                         break;
                     case '6':
-                        selectedOperatorsConfig = getSelectedOperatorsConfig(menuItems.Values.ToList(), configPathHelper);
+                        selectedOperatorsConfig = getSelectedOperatorsConfig(menuItems, configPathHelper);
                         if (!selectedOperatorsConfig.Any())
                         {
                             Console.WriteLine("No operator's config has been found. Press any key to start over.");

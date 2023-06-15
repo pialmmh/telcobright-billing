@@ -499,6 +499,17 @@
     <Content Include="Mediation\CdrError.aspx" />
     <Content Include="reports\cdr.aspx" />
     <Content Include="reports\icx\btrc\DailyReport.aspx" />
+    <Content Include="reports\icx\btrc\IOFReport.aspx" />
+    <Content Include="reports\icx\btrc\MonthlyOutgoingSummary.aspx" />
+    <Content Include="reports\icx\btrc\MonthlyReport.aspx" />
+    <Content Include="reports\icx\btrc\WeeklyDomesticReport.aspx" />
+    <Content Include="reports\icx\btrc\WeeklyInternationalReport.aspx" />
+    <Content Include="reports\icx\customReports\BanglalinkCallForwarding.aspx" />
+    <Content Include="reports\icx\customReports\BanglalinkRoaming.aspx" />
+    <Content Include="reports\icx\customReports\GrameenPhoneCallForwarding.aspx" />
+    <Content Include="reports\icx\customReports\GrameenphoneRoaming.aspx" />
+    <Content Include="reports\icx\customReports\RobiCallForwarding.aspx" />
+    <Content Include="reports\icx\customReports\RobiRoaming.aspx" />
     <Content Include="reports\icx\LocalTollFree.aspx" />
     <Content Include="reports\icx\Domestic.aspx" />
     <Content Include="reports\icx\InternationalIn_ICX.aspx" />
@@ -872,6 +883,83 @@
     </Compile>
     <Compile Include="reports\icx\btrc\BtrcReportRow.cs" />
     <Compile Include="reports\icx\btrc\ExcelExporterForBtrcReport.cs" />
+    <Compile Include="reports\icx\btrc\IOFReport.aspx.cs">
+      <DependentUpon>IOFReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\icx\btrc\IOFReport.aspx.designer.cs">
+      <DependentUpon>IOFReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\icx\btrc\MonthlyOutgoingSummary.aspx.cs">
+      <DependentUpon>MonthlyOutgoingSummary.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\icx\btrc\MonthlyOutgoingSummary.aspx.designer.cs">
+      <DependentUpon>MonthlyOutgoingSummary.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\icx\btrc\MonthlyReport.aspx.cs">
+      <DependentUpon>MonthlyReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\icx\btrc\MonthlyReport.aspx.designer.cs">
+      <DependentUpon>MonthlyReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\icx\btrc\WeeklyDomesticReport.aspx.cs">
+      <DependentUpon>WeeklyDomesticReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\icx\btrc\WeeklyDomesticReport.aspx.designer.cs">
+      <DependentUpon>WeeklyDomesticReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\icx\btrc\WeeklyInternationalReport.aspx.cs">
+      <DependentUpon>WeeklyInternationalReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\icx\btrc\WeeklyInternationalReport.aspx.designer.cs">
+      <DependentUpon>WeeklyInternationalReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\icx\customReports\BanglalinkCallForwarding.aspx.cs">
+      <DependentUpon>BanglalinkCallForwarding.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\icx\customReports\BanglalinkCallForwarding.aspx.designer.cs">
+      <DependentUpon>BanglalinkCallForwarding.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\icx\customReports\BanglalinkRoaming.aspx.cs">
+      <DependentUpon>BanglalinkRoaming.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\icx\customReports\BanglalinkRoaming.aspx.designer.cs">
+      <DependentUpon>BanglalinkRoaming.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\icx\customReports\GrameenPhoneCallForwarding.aspx.cs">
+      <DependentUpon>GrameenPhoneCallForwarding.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\icx\customReports\GrameenPhoneCallForwarding.aspx.designer.cs">
+      <DependentUpon>GrameenPhoneCallForwarding.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\icx\customReports\GrameenphoneRoaming.aspx.cs">
+      <DependentUpon>GrameenphoneRoaming.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\icx\customReports\GrameenphoneRoaming.aspx.designer.cs">
+      <DependentUpon>GrameenphoneRoaming.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\icx\customReports\RobiCallForwarding.aspx.cs">
+      <DependentUpon>RobiCallForwarding.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\icx\customReports\RobiCallForwarding.aspx.designer.cs">
+      <DependentUpon>RobiCallForwarding.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\icx\customReports\RobiRoaming.aspx.cs">
+      <DependentUpon>RobiRoaming.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\icx\customReports\RobiRoaming.aspx.designer.cs">
+      <DependentUpon>RobiRoaming.aspx</DependentUpon>
+    </Compile>
     <Compile Include="reports\icx\LocalTollFree.aspx.cs">
       <DependentUpon>LocalTollFree.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
