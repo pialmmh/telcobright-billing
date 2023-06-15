@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace TelcobrightMediation.ServerAndDbAutomation
 {
-    public class MySqlShellAutomationHelper
+    public class MySqlAutomationHelper
     {
+       public class Shell
+
         public static List<string> createOrAlterUserLinux(List<MySqlUser> users)
         {
             List<string> shellCommands= new List<string>();
@@ -18,13 +20,21 @@ namespace TelcobrightMediation.ServerAndDbAutomation
                 {
                     string userName = user.Username;
                     string password = user.Password;
-                    return new List<string>
+                    //return 
+                    List<string> lines = new List<string>
                     {
-                        $"sudo mysql -uroot -e 'CREATE USER IF NOT EXISTS {userName}@{ipAddressOrHost} IDENTIFIED WITH mysql_native_password BY \"{password}\";'",
-                        $"sudo mysql -uroot -e 'alter user {userName}@{ipAddressOrHost} identified by \"{password}\";'",
-                        $"sudo mysql -uroot -e '{user.Permissions.Select(p=>p.getGrantStatement() + " to " + userName+"@"+ipAddressOrHost)+";"}'",
-                        $"sudo mysql -uroot -e 'flush privileges;'"
+                        user.getCreateUser(),
+                        user.getAlterUser(),
+                        //$"sudo mysql -uroot -e 'alter user {userName}@{ipAddressOrHost} identified by \"{password}\";'",
                     };
+                    List<string> grantLines = user.getGrantPrivileges();
+                    lines.AddRange(grantLines);
+                    lines.Add(user.getFlushPrivilege());
+                    //List<string> grantlines = grantLines.Select(l => $"sudo mysql -uroot -e '{l}'").ToList();
+                    //lines.AddRange(grantlines);
+
+                    lines.Add($"sudo mysql -uroot -e 'flush privileges;'");
+                    return lines;
                 };
                 foreach (string ipAddress in ipAddresses)
                 {
@@ -34,6 +44,10 @@ namespace TelcobrightMediation.ServerAndDbAutomation
             }
             return shellCommands;
         }
+
+      
+
+
         public static List<string> createOrAlterUserWindows(List<MySqlUser> users)
         {
             List<string> shellCommands = new List<string>();
