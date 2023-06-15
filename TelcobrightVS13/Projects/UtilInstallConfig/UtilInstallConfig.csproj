@@ -118,6 +118,7 @@
     <Compile Include="_generator\DeploymentProfile.cs" />
     <Compile Include="_generator\InstanceConfig.cs" />
     <Compile Include="_generator\InstanceMenu.cs" />
+    <Compile Include="_generator\ParnerRouteImportInfo.cs" />
     <Compile Include="_generator\PartitionInfo.cs" />
     <Compile Include="_generator\PartitionUtil.cs" />
     <Compile Include="srtelecom\SrtAppServerConfig.cs" />
@@ -165,6 +166,7 @@
     <Compile Include="summit\SummitQuartzConfig.cs" />
     <Compile Include="summit\SummitServiceGroups.cs" />
     <Compile Include="summit\_SummitConfigMain.cs" />
+    <Compile Include="_generator\RouteType.cs" />
     <Compile Include="_generator\TableWisePartitionManagementInfo.cs" />
     <Compile Include="CommonValidationRulesGenerator\InconsistentCdrValRulesGen.cs" />
     <Compile Include="CommonValidationRulesGenerator\CommonCdrValRulesGen.cs" />

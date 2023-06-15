@@ -21,38 +21,43 @@ namespace CdrRules
 
         public void execute(object executionData)
         {
-            List<string> devServerIpAddresses = new List<string> { "59.221.153.128", "146.85.89.185", "238.140.111.244", "28.159.14.156" };
-            foreach (string ipAddress in devServerIpAddresses)
+            Dictionary<string, object> parameters = (Dictionary<string, object>) executionData;
+            List<string> commandSequence = (List<string>) parameters["commandSequence"];
+            string workingDirectory = (string)parameters["workingDirectory"];
+            foreach (string cmd in commandSequence)
             {
-                List<string> permissionCommands = buildPermissionForRoot(ipAddress, "root", "Takay1#$ane");
-                foreach (string command in permissionCommands)
-                {
-                    string answer = RunCommand(command);
-                }
+                Process process = new Process();
+                Console.WriteLine(cmd);
+                process.StartInfo.FileName = "cmd.exe";
+                process.StartInfo.RedirectStandardInput = true;
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.CreateNoWindow = false;
+                process.StartInfo.UseShellExecute = false;
+                process.Start();
+                //process.StartInfo.Arguments = "/user:Administrator \"cmd /K " + cmd + "\"";
+                process.StartInfo.Arguments = "/k" + cmd;
+                process.StartInfo.WorkingDirectory = workingDirectory;
+                process.StandardInput.WriteLine(cmd);
+                process.StandardInput.Flush();
+                process.StandardInput.Close();
+                var output = process.StandardOutput.ReadToEnd();
+                process.WaitForExit();
             }
-            string ans = RunCommand($"C:\\mysql\\bin\\mysql -uroot --skip-password -e \"show databases\"");
         }
-        private static string RunCommand(string cmd)
-        {
-            Process process = new Process();
-            process.StartInfo.FileName = "cmd.exe";
-            process.StartInfo.RedirectStandardInput = true;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.CreateNoWindow = false;
-            process.StartInfo.UseShellExecute = false;
-            process.Start();
-            //process.StartInfo.Arguments = "/user:Administrator \"cmd /K " + cmd + "\"";
-            process.StartInfo.Arguments = "/k" + cmd;
-            process.StartInfo.WorkingDirectory = "C:\\mysql\\bin";
-            process.StandardInput.WriteLine(cmd);
-            process.StandardInput.Flush();
-            process.StandardInput.Close();
-            process.WaitForExit();
-            return process.StandardOutput.ReadToEnd();
-            //Close the process
-            //process.Close();
-            //process.Dispose();
-        }
+        //public void execute(object executionData)
+        //{
+        //    List<string> devServerIpAddresses = new List<string> { "59.221.153.128", "146.85.89.185", "238.140.111.244", "28.159.14.156" };
+        //    foreach (string ipAddress in devServerIpAddresses)
+        //    {
+        //        List<string> permissionCommands = buildPermissionForRoot(ipAddress, "root", "Takay1#$ane");
+        //        foreach (string command in permissionCommands)
+        //        {
+        //            string answer = RunCommand(command);
+        //        }
+        //    }
+        //    string ans = RunCommand($"C:\\mysql\\bin\\mysql -uroot --skip-password -e \"show databases\"");
+        //}
+        
         private static List<string> buildPermissionForRoot(string ipAddress, string userName, string password)
         {
             return new List<string>

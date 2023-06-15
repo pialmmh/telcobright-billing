@@ -26,24 +26,11 @@ using TelcobrightMediation.Config;
 using TelcobrightMediation.Scheduler.Quartz;
 using Path = System.IO.Path;
 using MediationModel;
+using TelcobrightMediation.ServerAndDbAutomation;
+
 //using CrystalQuartzTest;
 namespace InstallConfig
 {
-    internal enum RouteType
-    {
-        National=1,
-        International=2
-    }
-    internal class ParnerRouteImportInfo
-    {
-        public string PartnerName { get; set; }
-        public int IdPartner { get; set; }
-        public int SwitchId{get; set; }
-        public string DomesticTGs { get; set; }
-        public string InternationalTGs { get; set; }
-        //public string Description { get; set; }//can't use description as route naes are commaseparated in excel row
-        public int Status { get; set; }
-    }
     class ConfigGeneratorMain
     {
         private static AutomationContainer automationContainer = new AutomationContainer();
@@ -51,6 +38,29 @@ namespace InstallConfig
         static void Main(string[] args)
         {
             automationContainer.Compose();
+            IAutomation winAutomation = automationContainer.Automations["WinLocalShellAutomation"];
+            List<MySqlUser> mysqlUsers = new List<MySqlUser>()
+            {
+                new MySqlUser("root","123456",
+                                new List<string>() {"localhost"}, 
+                                new List<MySqlPermission>()
+                                {
+                                    new MySqlPermission(new List<MySqlPermissionType>() {MySqlPermissionType.all}, "summit")
+                                })
+            };
+            List<string> commandSequence= MySqlShellAutomationHelper.createOrAlterUserLinux(mysqlUsers);
+
+            /*List<string> commandSequence= new List<string>()
+            {
+                @"cd c:\mysql\bin",
+                @"dir"
+            };*/
+            Dictionary<string, object> executionData = new Dictionary<string, object>()
+            {
+                {"commandSequence", commandSequence},
+                { "workingDirectory", @"c:\mysql\bin"}
+            };
+            winAutomation.execute(executionData);;
             List<string> deploymentProfiles = GetAllDeploymentInstanceNames();
             List<string> profiles= Menu.getChoices(deploymentProfiles,"Select a deployment profile to configure automation.");
             //try 
