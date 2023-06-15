@@ -15,20 +15,20 @@ namespace TelcobrightMediation
             Permissions = permissions;
             HostnameOrIpAddresses = hostnameOrIpAddresses;
         }
-        public string getCreateUser()
+        public string getCreateUsers(string ipAddr)
         {
-            return $"CREATE USER IF NOT EXISTS {this.Username}@{this.HostnameOrIpAddresses} IDENTIFIED WITH mysql_native_password BY \"{this.Password}\";";
+            return $"CREATE USER IF NOT EXISTS {this.Username}@{ipAddr} IDENTIFIED WITH mysql_native_password BY \"{this.Password}\";";
         }
 
-        public string getAlterUser()
+        public string getAlterUsers(string ipAddr)
         {
-            return $"alter user {this.Username}@{this.HostnameOrIpAddresses} identified by \"{this.Password}\";";
+            return $"alter user {this.Username}@{ipAddr} identified by \"{this.Password}\";";
         }
 
-        public List<string> getGrantPrivileges()
+        public List<string> getGrantPrivileges(string ipAddr)
         {
             return this.Permissions.Select(p => p.getGrantStatement() + " to " + this.Username + "@" +
-                                                this.HostnameOrIpAddresses + ";").ToList();
+                                                ipAddr+ ";").ToList();
         }
 
         public string getFlushPrivilege()
@@ -36,15 +36,12 @@ namespace TelcobrightMediation
             return "flush privileges;";
         }
 
-        public List<string> createMySqlUserInTelcobright()
+        public List<string> createMySqlUserTelcobrightStyle()
         {
-            List<string> lines = new List<string>
-            {
-                this.getCreateUser(),
-                this.getAlterUser(),
-            };
-            List<string> grantLines = this.getGrantPrivileges();
-            lines.AddRange(grantLines);
+            List<string> lines = new List<string>();
+            lines.AddRange(this.HostnameOrIpAddresses.Select(ip=> this.getCreateUsers(ip)));
+            lines.AddRange(this.HostnameOrIpAddresses.Select(ip=>this.getAlterUsers(ip)));
+            lines.AddRange(this.HostnameOrIpAddresses.SelectMany(ip => this.getGrantPrivileges(ip)));
             lines.Add(this.getFlushPrivilege());
             return lines;
         }

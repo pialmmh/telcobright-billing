@@ -8,41 +8,11 @@ namespace TelcobrightMediation.ServerAndDbAutomation
 {
     public class MySqlAutomationHelper
     {
-       public class Shell
-
-        public static List<string> createOrAlterUserLinux(List<MySqlUser> users)
+        public static List<string> createOrAlterUser(List<MySqlUser> users, bool runFromShell)
         {
-            List<string> shellCommands= new List<string>();
-            foreach (MySqlUser user in users)
-            {
-                List<string> ipAddresses = user.HostnameOrIpAddresses;
-                Func<string, List<string>> getHostScript = ipAddressOrHost =>
-                {
-                    string userName = user.Username;
-                    string password = user.Password;
-                    //return 
-                    List<string> lines = new List<string>
-                    {
-                        user.getCreateUser(),
-                        user.getAlterUser(),
-                        //$"sudo mysql -uroot -e 'alter user {userName}@{ipAddressOrHost} identified by \"{password}\";'",
-                    };
-                    List<string> grantLines = user.getGrantPrivileges();
-                    lines.AddRange(grantLines);
-                    lines.Add(user.getFlushPrivilege());
-                    //List<string> grantlines = grantLines.Select(l => $"sudo mysql -uroot -e '{l}'").ToList();
-                    //lines.AddRange(grantlines);
-
-                    lines.Add($"sudo mysql -uroot -e 'flush privileges;'");
-                    return lines;
-                };
-                foreach (string ipAddress in ipAddresses)
-                {
-                    List<string> commands = getHostScript(ipAddress);
-                    shellCommands.AddRange(commands);
-                }
-            }
-            return shellCommands;
+            List<string> mysqlCommands = users.SelectMany(u => u.createMySqlUserTelcobrightStyle()).ToList();
+            if(runFromShell==false) return mysqlCommands;
+            return mysqlCommands.Select(c => $"sudo mysql -uroot -e '{mysqlCommands}'").ToList();
         }
 
       

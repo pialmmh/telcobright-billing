@@ -48,7 +48,7 @@ namespace InstallConfig
                                     new MySqlPermission(new List<MySqlPermissionType>() {MySqlPermissionType.all}, "summit")
                                 })
             };
-            List<string> commandSequence= MySqlAutomationHelper.createOrAlterUserLinux(mysqlUsers);
+            List<string> commandSequence= MySqlAutomationHelper.createOrAlterUser(mysqlUsers);
 
             /*List<string> commandSequence= new List<string>()
             {
