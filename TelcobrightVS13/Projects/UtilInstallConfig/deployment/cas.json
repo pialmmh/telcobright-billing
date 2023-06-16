@@ -1,14 +1,15 @@
 ﻿{
   "profileName": "cas",
-  "type": "icx"
-  [
-    {
-      "name": "srtelecom",
-      "otherParams": null
-    },
-    {
-      "name": "summit",
-      "OtherParams": null
-    }
-  ]
+  "type": "telcobilling",
+  "instances":  
+    [
+      {
+        "name": "srtelecom",
+        "otherParams": null
+      },
+      {
+        "name": "summit",
+        "OtherParams": null
+      }
+    ]
 }

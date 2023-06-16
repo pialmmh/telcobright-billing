@@ -65,9 +65,10 @@ namespace InstallConfig
                 {"commandSequence", commandSequence},
                 { "workingDirectory", @"c:\mysql\bin"}
             };
-            winAutomation.execute(executionData);;
-            List<string> deploymentProfiles = GetAllDeploymentInstanceNames();
-            List<string> profiles= Menu.getChoices(deploymentProfiles,"Select a deployment profile to configure automation.");
+            //winAutomation.execute(executionData);;
+            List<Deploymentprofile> deploymentProfiles = GetAllDeploymentInstances();
+            List<string> profiles= Menu.getChoices(deploymentProfiles.Select(dp=>dp.profileName).ToList(),
+                "Select a deployment profile to configure automation.");
             //try 
             {
             Start:
@@ -230,14 +231,14 @@ namespace InstallConfig
             return keyValuesForMenu;
         }
 
-        private static List<string> GetAllDeploymentInstanceNames()
+        private static List<Deploymentprofile> GetAllDeploymentInstances()
         {
             DirectoryInfo utilDir = (new DirectoryInfo(FileAndPathHelper.GetBinPath()).Parent).Parent;
             DirectoryInfo deploymentDir = new DirectoryInfo(utilDir.FullName +Path.DirectorySeparatorChar + "deployment"); //Assuming Test is your Folder
             FileInfo[] jsonFiles = deploymentDir.GetFiles("*.json"); //Getting Text files
             return jsonFiles
                 .Select(j => JsonConvert.DeserializeObject<Deploymentprofile>(File.ReadAllText(j.FullName)))
-                .Select(profile=>profile.profileName).ToList();
+                .ToList();
         }
 
         private static List<TelcobrightConfig> getSelectedOperatorsConfig(List<string> instances, ConfigPathHelper configPathHelper)

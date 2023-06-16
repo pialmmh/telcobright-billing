@@ -9,7 +9,7 @@ namespace InstallConfig._generator
     public class Deploymentprofile
     {
         public string profileName { get; set; }
-        public string type { get; set; }
+        public string type { get; set; }//telcobilling,sms
         public List<InstanceConfig> instances { get; set; }
        
     }

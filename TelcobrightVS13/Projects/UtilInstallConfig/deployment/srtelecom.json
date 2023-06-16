@@ -1,11 +1,11 @@
 ﻿{
   "profileName": "srtelecom",
-    "type": "icx"
-  [
-
-    {
-      "name": "srtelecom",
-      "otherParams": null
-    }
-  ]
+    "type": "telcobilling",
+    "instances": 
+      [
+        {
+          "name": "srtelecom",
+          "otherParams": null
+        }
+    ]
 }

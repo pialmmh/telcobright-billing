@@ -1,6 +1,7 @@
 ﻿{
-  "profileName": "Summit",
-  "type": "icx"
+  "profileName": "summit",
+  "type": "telcobilling",
+  "instances":
    [
     {
       "name": "summit",

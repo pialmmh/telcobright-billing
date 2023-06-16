@@ -10,9 +10,10 @@ namespace TelcobrightMediation.ServerAndDbAutomation
     {
         public static List<string> createOrAlterUser(List<MySqlUser> users, bool runFromShell)
         {
-            List<string> mysqlCommands = users.SelectMany(u => u.createMySqlUserTelcobrightStyle()).ToList();
-            if(runFromShell==false) return mysqlCommands;
-            return mysqlCommands.Select(c => $"sudo mysql -uroot -e '{mysqlCommands}'").ToList();
+            //List<string> mysqlCommands = users.SelectMany(u => u.createMySqlUserTelcobrightStyle()).ToList();
+            //if(runFromShell==false) return mysqlCommands;
+            //return mysqlCommands.Select(c => $"sudo mysql -uroot -e '{mysqlCommands}'").ToList();
+            return null;
         }
 
       
