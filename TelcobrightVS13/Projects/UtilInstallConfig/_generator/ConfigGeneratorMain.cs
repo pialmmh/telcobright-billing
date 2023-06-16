@@ -42,10 +42,15 @@ namespace InstallConfig
             List<MySqlUser> mysqlUsers = new List<MySqlUser>()
             {
                 new MySqlUser("root","123456",
-                                new List<string>() {"localhost"}, 
+                                new List<string>() {"localhost", "10.0.0.29"}, 
                                 new List<MySqlPermission>()
                                 {
-                                    new MySqlPermission(new List<MySqlPermissionType>() {MySqlPermissionType.all}, "summit")
+                                    new MySqlPermission(
+                                        new List<MySqlPermissionType>
+                                        {
+                                            MySqlPermissionType.all,
+                                            MySqlPermissionType.execute
+                                        }, "summit")
                                 })
             };
             List<string> commandSequence= MySqlAutomationHelper.createOrAlterUser(mysqlUsers,runFromShell: true);
