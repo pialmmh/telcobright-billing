@@ -9,6 +9,8 @@ namespace LibraryExtensions.ConfigHelper
     public class DatabaseSetting
     {
         public String ServerName { get; set; }
+        public string BaseDir { get; set; }
+        public string SocketNameForNamedPipeConnection { get; set; }
         public string DatabaseName { get; set; }
         public string AdminUserName { get; set; }
         public string AdminPassword { get; set; }
