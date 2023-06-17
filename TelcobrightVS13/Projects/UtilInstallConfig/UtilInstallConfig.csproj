@@ -170,6 +170,7 @@
     <Compile Include="_generator\TableWisePartitionManagementInfo.cs" />
     <Compile Include="CommonValidationRulesGenerator\InconsistentCdrValRulesGen.cs" />
     <Compile Include="CommonValidationRulesGenerator\CommonCdrValRulesGen.cs" />
+    <Compile Include="_generator\TelcobillingAutomationMenu.cs" />
     <None Include="app.manifest" />
     <None Include="cas\banglatelecom\scripts\appPool_tpny.iisScript" />
     <None Include="cas\banglatelecom\scripts\ftp_tpny.iisScript" />
