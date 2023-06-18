@@ -17,7 +17,7 @@ namespace InstallConfig
 {
     public partial class BanglaTelecomAbstractConfigConfigGenerator //quartz config part
     {
-        public override List<Server> GetApplicationServerConfigs()//e.g. {"master", server}
+        public override List<Server> GetServerConfigs()//e.g. {"master", server}
         {
             List<Server> servers = new List<Server>();
             Server server01 = new Server(1, "db01")

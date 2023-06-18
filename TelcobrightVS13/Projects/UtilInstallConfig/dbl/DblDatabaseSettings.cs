@@ -20,7 +20,7 @@ namespace InstallConfig
 {
     public partial class DblAbstractConfigConfigGeneratorHelper //quartz config part
     {
-        public override DatabaseSetting GetDatabaseSettings()
+        public override DatabaseSetting GetDatabaseConfigs()
         {
             var databaseSetting = new DatabaseSetting()
             {

@@ -20,7 +20,7 @@ namespace InstallConfig
 {
     public partial class CasBanglaTelecomAbstractConfigConfigGenerator //quartz config part
     {
-        public override DatabaseSetting GetDatabaseSettings()
+        public override DatabaseSetting GetDatabaseConfigs()
         {
             var databaseSetting= new DatabaseSetting()
             {
@@ -229,7 +229,7 @@ namespace InstallConfig
                     }
                 }
             };
-            var servers = this.GetApplicationServerConfigs();
+            var servers = this.GetServerConfigs();
             //MySqlServer master= new MySqlServer()
             return databaseSetting;
         }

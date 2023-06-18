@@ -139,7 +139,7 @@
     <Compile Include="_generator\ParnerRouteImportInfo.cs" />
     <Compile Include="_generator\PartitionInfo.cs" />
     <Compile Include="_generator\PartitionUtil.cs" />
-    <Compile Include="srtelecom\SrtAppServerConfig.cs" />
+    <Compile Include="srtelecom\SrtServerConfig.cs" />
     <Compile Include="srtelecom\SrtDatabaseSettings.cs" />
     <Compile Include="srtelecom\SrtDirectorySettings.cs" />
     <Compile Include="srtelecom\SrtPortalSetting.cs" />

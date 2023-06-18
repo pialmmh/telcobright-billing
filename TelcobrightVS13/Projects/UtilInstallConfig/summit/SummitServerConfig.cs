@@ -17,7 +17,7 @@ namespace InstallConfig
 {
     public partial class SummitAbstractConfigConfigGenerator //quartz config part
     {
-        public override List<Server> GetApplicationServerConfigs()
+        public override List<Server> GetServerConfigs()
         {
             List<Server> servers = new List<Server>();
             Server server01 = new Server(1, "db01")

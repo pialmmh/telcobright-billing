@@ -12,10 +12,9 @@ namespace TelcobrightMediation
     {
         public string Name { get; set; }
         public SyncLocation LocalLocation { get; set; }
-        public Dictionary<string, SyncLocation> FtpLocationsAll { get; set; }//serverid.tostring(),sl
         public List<SyncLocation> RemoteFtpLocations { get; set; }
         private TelcobrightConfig Tbc { get; set; }
-        public Vault(string name, TelcobrightConfig telcobrightConfig, List<FileLocation> ftpLocations)
+        public Vault(string name, TelcobrightConfig telcobrightConfig)
         {
             //json deserialize auto calls this, so skip below when null, tbc yet to be initialized
             this.Name = name;
@@ -25,21 +24,6 @@ namespace TelcobrightMediation
             {
                 localFtpServerName = "AppServerFTP" + this.Tbc.ServerId;
             }
-
-            this.FtpLocationsAll = new Dictionary<string, SyncLocation>();
-            this.RemoteFtpLocations = new List<SyncLocation>();
-            if (ftpLocations != null)
-            {
-                foreach (FileLocation fileloc in ftpLocations)
-                {
-                    SyncLocation thisSyncLocation = new SyncLocation(fileloc.Name) { FileLocation = fileloc };
-                    this.FtpLocationsAll.Add(fileloc.Name, thisSyncLocation);
-                    if (fileloc.Name != localFtpServerName)
-                    {
-                        this.RemoteFtpLocations.Add(thisSyncLocation);
-                    }
-                }
-            }
         }
 
         public List<FileInfo> GetFileListLocal()
@@ -47,11 +31,6 @@ namespace TelcobrightMediation
             Dictionary<string, FileInfo> fileNames = new Dictionary<string, FileInfo>();
             List<FileInfo> localFiles = this.LocalLocation.GetLocalFilesNonRecursive();
             return localFiles;
-            //foreach (FileInfo lf in localFiles)
-            //{
-            //    fileNames.Add(lf.Name, lf);
-            //}
-            //return fileNames; //already sorted because dic key
         }
         public List<string> GetFileListRemote()
         {

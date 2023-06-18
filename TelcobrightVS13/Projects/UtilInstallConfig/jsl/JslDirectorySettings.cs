@@ -64,10 +64,7 @@ namespace InstallConfig
                 Skip = true
             };
             //VAULT PART
-            List<FileLocation> ftpLocations = new List<FileLocation>();
-            ftpLocations.Add(appServerFtp1);
-            ftpLocations.Add(appServerFtp2);
-            Vault JslhuaweiDhkvault = new Vault("Vault.JslhuaweiDhk", tbc, ftpLocations);
+            Vault JslhuaweiDhkvault = new Vault("Vault.JslhuaweiDhk", tbc);
             JslhuaweiDhkvault.LocalLocation = new SyncLocation(vaultJslhuaweiDhk.Name) { FileLocation = vaultJslhuaweiDhk };//don't pass this to constructor and set there, causes problem in json serialize
             tbc.DirectorySettings.Vaults.Add(JslhuaweiDhkvault);
             FileLocation JslhuaweiDhk = new FileLocation()

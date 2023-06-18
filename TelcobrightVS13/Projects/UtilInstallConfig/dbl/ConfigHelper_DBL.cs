@@ -144,10 +144,7 @@ namespace InstallConfig
                 Skip = true
             };
             //VAULT PART
-            List<FileLocation> ftpLocations = new List<FileLocation>();
-            ftpLocations.Add(appServerFtp1);
-            ftpLocations.Add(appServerFtp2);
-            Vault s3Vault = new Vault("Vault.S3", this.Tbc, ftpLocations);
+            Vault s3Vault = new Vault("Vault.S3", this.Tbc);
             s3Vault.LocalLocation = new SyncLocation(vaultS3.Name) { FileLocation = vaultS3 };//don't pass this to constructor and set there, causes problem in json serialize
             this.Tbc.DirectorySettings.Vaults.Add(s3Vault);
             FileLocation s31 = new FileLocation()
@@ -400,7 +397,7 @@ namespace InstallConfig
             this.Tbc.ApplicationServersConfig.Add(serverConfig1);
             this.Tbc.ApplicationServersConfig.Add(serverConfig2);
 
-            this.Tbc.DatabaseSetting = this.GetDatabaseSettings();
+            this.Tbc.DatabaseSetting = this.GetDatabaseConfigs();
 
             PortalSettings portalSetting = new PortalSettings("Portal Settings")
             {

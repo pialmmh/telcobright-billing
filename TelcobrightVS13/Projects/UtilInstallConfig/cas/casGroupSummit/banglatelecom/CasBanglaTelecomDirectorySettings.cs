@@ -46,8 +46,7 @@ namespace InstallConfig
                 Pass = "",
             };
             //VAULT PART
-            List<FileLocation> ftpLocations = new List<FileLocation>();
-            Vault vault = new Vault("vault", tbc, ftpLocations);
+            Vault vault = new Vault("vault", tbc);
             vault.LocalLocation = new SyncLocation(vault.Name) { FileLocation = vaultPrimary };//don't pass this to constructor and set there, causes problem in json serialize
             tbc.DirectorySettings.Vaults.Add(vault);
             FileLocation huawei = new FileLocation()

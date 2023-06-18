@@ -9,7 +9,7 @@ namespace TelcobrightMediation.Config
         TelcobrightConfig Tbc { get; }
         TelcobrightConfig GenerateConfig();
         List<QuartzTbDaemonConfig> GetSchedulerDaemonConfigs();
-        DatabaseSetting GetDatabaseSettings();
-        List<Server> GetApplicationServerConfigs();
+        DatabaseSetting GetDatabaseConfigs();
+        List<Server> GetServerConfigs();
     }
 }

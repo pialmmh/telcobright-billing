@@ -107,8 +107,8 @@ namespace InstallConfig
 
             this.PrepareDirectorySetting(this.Tbc);
             this.PrepareProductAndServiceSettings();
-            this.Tbc.ApplicationServersConfig = this.GetApplicationServerConfigs();
-            this.Tbc.DatabaseSetting = this.GetDatabaseSettings();
+            this.Tbc.ApplicationServersConfig = this.GetServerConfigs();
+            this.Tbc.DatabaseSetting = this.GetDatabaseConfigs();
             this.Tbc.PortalSettings = GetPortalSettings(this.Tbc);
 
             this.Tbc.EmailSenderConfig = new EmailSenderConfig

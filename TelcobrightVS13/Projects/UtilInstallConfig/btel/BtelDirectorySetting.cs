@@ -75,11 +75,8 @@ namespace InstallConfig
                 Skip = true
             };
             //VAULT PART
-            List<FileLocation> ftpLocations = new List<FileLocation>();
-            ftpLocations.Add(appServerFtp1);
-            ftpLocations.Add(appServerFtp2);
-            Vault BtelhuaweiDhkvault = new Vault("Vault.BtelhuaweiDhk", tbc, ftpLocations);
-            Vault BtelCataleyaVault = new Vault("Vault.btelCataleya", tbc, ftpLocations);
+            Vault BtelhuaweiDhkvault = new Vault("Vault.BtelhuaweiDhk", tbc);
+            Vault BtelCataleyaVault = new Vault("Vault.btelCataleya", tbc);
 
             BtelhuaweiDhkvault.LocalLocation = new SyncLocation(vaultBtelhuaweiDhk.Name) { FileLocation = vaultBtelhuaweiDhk };//don't pass this to constructor and set there, causes problem in json serialize
             BtelCataleyaVault.LocalLocation = new SyncLocation(vaultBtelCataleya.Name) { FileLocation = vaultBtelCataleya };//don't pass this to constructor and set there, causes problem in json serialize
