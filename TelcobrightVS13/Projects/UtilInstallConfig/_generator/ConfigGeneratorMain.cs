@@ -66,6 +66,8 @@ namespace InstallConfig
                 { "workingDirectory", @"c:\mysql\bin"}
             };
             //winAutomation.execute(executionData);;
+            ConfigPathHelper configPathHelper = new ConfigPathHelper("WS_Topshelf_Quartz", "portal", "UtilInstallConfig", "_dbscripts");
+            DbUtil.configPathHelper = configPathHelper;
             List<Deploymentprofile> deploymentProfiles = GetAllDeploymentInstances();
             string selectedProfileName= Menu.getSingleChoice(deploymentProfiles.Select(dp=>dp.profileName).ToList(),
                 "Select a deployment profile to configure automation.");
@@ -74,7 +76,8 @@ namespace InstallConfig
             switch (selectedProfile.type)
             {
                 case "telcobilling":
-                    TelcobillingAutomationMenu telcoBillingMenu= new TelcobillingAutomationMenu();
+                    List<TelcobrightConfig> tbcs = getSelectedOperatorsConfig(instanceNames, configPathHelper);
+                    TelcobillingAutomationMenu telcoBillingMenu= new TelcobillingAutomationMenu(tbcs);
                     telcoBillingMenu.showMenu();
                     break;
                 default:

@@ -1,0 +1,266 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Configuration;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using LibraryExtensions;
+using LibraryExtensions.ConfigHelper;
+using MediationModel;
+using MySql.Data.MySqlClient;
+using Newtonsoft.Json;
+using Quartz;
+using QuartzTelcobright;
+using QuartzTelcobright.PropertyGen;
+using TelcobrightFileOperations;
+using TelcobrightMediation;
+using TelcobrightMediation.Config;
+
+namespace InstallConfig
+{
+    public class TelcobillingAutomationMenu
+    {
+        public List<TelcobrightConfig> Tbcs { get; set; }
+
+        public TelcobillingAutomationMenu(List<TelcobrightConfig> tbcs)
+        {
+            Tbcs = tbcs;
+        }
+
+       /* private static List<TelcobrightConfig> getthis.Tbcs(List<string> instances, ConfigPathHelper configPathHelper)
+        {
+            List<AbstractConfigConfigGenerator> operatorsToBeConfigured
+                = new MefConfigImportComposer().Compose().Where(op => instances.Contains(op.Tbc.Telcobrightpartner.databasename)).ToList();
+            List<TelcobrightConfig> operatorConfigs = new List<TelcobrightConfig>();
+            DeletePrevConfigFilesForPortalAndWinService(configPathHelper);
+            foreach (AbstractConfigConfigGenerator configGenerator in operatorsToBeConfigured)
+            {
+                //generate tbc & config file for each operator configure in app.config in installConfig
+                TelcobrightConfig tbc = ConfigureSingleOperator(configGenerator, configPathHelper);
+                tbc.SchedulerDaemonConfigs = configGenerator.GetSchedulerDaemonConfigs();
+                operatorConfigs.Add(tbc);
+            }
+            return operatorConfigs;
+        }*/
+        public void showMenu()
+        {
+            List<string> menuItems = new List<string>();
+            {
+                Start:
+                string tbOperatorName = "summit";//todo: change
+                Console.Clear();
+                Console.WriteLine("Welcome to Telcobright Initial Configuration Utility");
+                Console.WriteLine("Select Task:");
+                Console.WriteLine("1=Setup mysql remote access.");
+                Console.WriteLine("2=Append Prefix to Files");
+                Console.WriteLine("3=[Not Set]");
+                Console.WriteLine("4=Copy Portal to IIS Directory");
+                Console.WriteLine("5=Not Set");
+                Console.WriteLine("6=Generate Configuration & Reset Scheduler data");
+                Console.WriteLine("7=Modify Partitions for tables");
+                Console.WriteLine("q=Quit");
+
+                ConsoleKeyInfo ki = new ConsoleKeyInfo();
+                ki = Console.ReadKey(true);
+                char cmdName = Convert.ToChar(ki.Key);
+                ConfigPathHelper configPathHelper = new ConfigPathHelper("WS_Topshelf_Quartz", "portal", "UtilInstallConfig", "_dbscripts");
+                DbUtil.configPathHelper = configPathHelper;
+
+                switch (cmdName)
+            {
+                case '1':
+                    Console.WriteLine("Setting up remote access for mysql...");
+                    List<string> choices = Menu.getChoices(menuItems, "Select instances to create initial database:");
+                    //choicesFromMenu = InstanceMenu.getInstancesFromMenu(keyValuesForMenu,"Select instances to create initial database:");
+                    //this.Tbcs = this.Tbcs(choices, configPathHelper);
+                    foreach (var tbc in this.Tbcs)
+                    {
+
+                    }
+                    //using(MySqlConnection con = new MySqlConnection())
+                    break;
+                case '2':
+                    Console.WriteLine("Enter Source Dir path & prefix without quotes, separated by comma...");
+                    string str = Console.ReadLine();
+                    string[] p = str.Split(',');
+                    (new FileRename()).AppendPrefix(p[0], p[1]);
+                    if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' || Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
+                    break;
+                case '3':
+                    if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' || Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
+                    Console.WriteLine("Creating Database, none will be created if one exists.");
+                    choices = Menu.getChoices(menuItems, "Select instances to create initial database:");
+                    //this.Tbcs = getthis.Tbcs(choices, configPathHelper);
+                    foreach (var tbc in this.Tbcs)
+                    {
+
+                    }
+                    break;
+                case '4':
+                    Console.WriteLine("Copying Portal to c:/inetpub/wwwroot");
+                    CopyPortal(tbOperatorName);
+                    if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' || Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
+                    break;
+                case '5':
+                    if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' || Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
+                    break;
+                case '6':
+                    //this.Tbcs = getthis.Tbcs(menuItems, configPathHelper);
+                    if (!this.Tbcs.Any())
+                    {
+                        Console.WriteLine("No operator's config has been found. Press any key to start over.");
+                        Console.ReadKey();
+                        goto Start;
+                    }
+                    foreach (var tbc in this.Tbcs)
+                    {
+                            ConfigWriter cw= new ConfigWriter(tbc,configPathHelper);
+                            cw.writeConfig();
+                    }
+
+                    break;
+                case '7':
+                    choices = Menu.getChoices(menuItems, "Select instances to modify partitions:");
+                    return;
+                    //    schedulerType: "quartz",
+                    //    databaseSetting: databaseSetting);
+                    //PartitionUtil.ModifyPartitions(schedulerSetting.DatabaseSetting,operatorName);
+                    //Console.WriteLine("Partition modification is successful, press 'q' to quit");
+                    //k = Convert.ToChar((Console.ReadKey(true)).Key);
+                    //if (k == 'q' || k == 'Q')
+                    //{
+                    //    Environment.Exit(0);
+                    //}
+                    break;
+                case 'q':
+                case 'Q':
+                    return;
+                default:
+                    goto Start;
+            }
+            goto Start;
+        }
+    }
+        
+
+
+
+       
+
+        static void DeletePrevConfigFilesForPortalAndWinService(ConfigPathHelper configPathHelper)
+        {
+            string targetDir = configPathHelper.GetTopShelfConfigDir();
+            FileAndPathHelper.DeleteFileContaining(targetDir, "*.conf");
+            targetDir = configPathHelper.GetPortalBinPath();
+            FileAndPathHelper.DeleteFileContaining(targetDir, "*.conf");
+        }
+        
+        static void CopyPortal(string operatorDatabaseName)
+        {
+
+            //remove existing
+            string destinationPath = ConfigurationManager.AppSettings["PortalPath"].ToString().Replace("/", Path.DirectorySeparatorChar.ToString())
+                                     + operatorDatabaseName;
+            if (Directory.Exists(destinationPath))
+            {
+                Directory.Delete(destinationPath, true);
+            }
+
+            //copy
+            //Now Create all of the directories
+            string sourcePath = Directory.GetParent((Directory.GetParent(Directory.GetCurrentDirectory())).Parent.FullName).FullName +
+                                Path.DirectorySeparatorChar + "Portal";
+
+            foreach (string dirPath in
+                Directory.GetDirectories(sourcePath, "*",
+                    SearchOption.AllDirectories))
+                Directory.CreateDirectory(dirPath.Replace(sourcePath, destinationPath));
+
+            //Copy all the files & Replaces any files with the same name
+            foreach (string newPath in Directory.GetFiles(sourcePath, "*.*",
+                SearchOption.AllDirectories))
+                File.Copy(newPath, newPath.Replace(sourcePath, destinationPath), true);
+            //set permission to temp folder
+            string tempDir = destinationPath + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "temp";
+            FileUtil.AddDirectorySecurity(tempDir, "IUSR", System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
+            FileUtil.AddDirectorySecurity(tempDir, "IIS_IUSRS", System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
+
+            Console.WriteLine("Portal Copied Successfully!");
+
+
+
+        }
+
+
+        static void WriteIisScriptsForWebAndFtp(TelcobrightConfig tbc, string configRootDir)
+        {
+            string scriptDir = configRootDir + Path.DirectorySeparatorChar + tbc.Telcobrightpartner.CustomerName
+                               + Path.DirectorySeparatorChar + "scripts";
+            if (Directory.Exists(scriptDir) == false)
+            {
+                Directory.CreateDirectory(scriptDir);
+            }
+            string importCommandFile = scriptDir + Path.DirectorySeparatorChar + "import_commands.txt";
+            if (File.Exists(importCommandFile))
+            {
+                File.Delete(importCommandFile);
+            }
+            foreach (InternetSite site in tbc.PortalSettings.PortalSites)
+            {
+                //site xml part
+                string script = ReplaceParametersInConfigFiles(site.GetDicProperties(), site.TemplateFileName);
+                string scriptFileName = configRootDir + Path.DirectorySeparatorChar + tbc.Telcobrightpartner.CustomerName + Path.DirectorySeparatorChar
+                                        + "scripts" + Path.DirectorySeparatorChar +
+                                        site.SiteType + "_" + tbc.Telcobrightpartner.CustomerName + ".iisScript";
+                File.WriteAllText(scriptFileName, script);
+                //app pool part
+                if (site.SiteType == "http")
+                {
+                    script = ReplaceParametersInConfigFiles(site.ApplicationPool.GetDicProperties(), site.ApplicationPool.TemplateFileName);
+                    string appPoolScriptFileName = configRootDir + Path.DirectorySeparatorChar + tbc.Telcobrightpartner.CustomerName + Path.DirectorySeparatorChar
+                                                   + "scripts" + Path.DirectorySeparatorChar +
+                                                   "appPool" + "_" + tbc.Telcobrightpartner.CustomerName + ".iisScript";
+                    File.WriteAllText(appPoolScriptFileName, script);
+
+                    //write import_commands to help during installation
+                    File.AppendAllText(importCommandFile, "%windir%/system32/inetsrv/appcmd add apppool /in < " + appPoolScriptFileName + Environment.NewLine);
+                }
+                //write import_commands to help during installation
+                File.AppendAllText(importCommandFile, "%windir%/system32/inetsrv/appcmd add site /in < " + scriptFileName + Environment.NewLine);
+            }
+        }
+        static string ReplaceParametersInConfigFiles(Dictionary<string, string> dicParams, string fileName)
+        {
+            string templateStr = File.ReadAllText(fileName);
+            string[] splitString = templateStr.Split('`');
+            for (int i = 0; i < splitString.Length; i++)
+            {
+                string param = splitString[i];
+                if (param.StartsWith("%") && param.EndsWith("%"))
+                {
+                    param = param.Substring(1, param.Length - 2);
+                    string paramVal = null;
+                    dicParams.TryGetValue(param, out paramVal);
+                    if (paramVal != null) splitString[i] = paramVal;
+                }
+            }
+            return string.Join("", splitString);
+        }
+        
+
+
+        
+
+        
+
+        
+
+
+
+        
+
+
+    }
+}

@@ -110,6 +110,8 @@
     <Compile Include="purple\PurpleQuartzConfig.cs" />
     <Compile Include="purple\PurpleServerConfig.cs" />
     <Compile Include="purple\PurpleServiceGroups.cs" />
+    <Compile Include="_configWriter\ConfigWriter.cs" />
+    <Compile Include="_configWriter\QuartzWriter.cs" />
     <Compile Include="_generator\BIllingRulesDefiner.cs" />
     <Compile Include="btel\BtelDatabaseSettings.cs" />
     <Compile Include="dbl\DblDatabaseSettings.cs" />
@@ -170,7 +172,7 @@
     <Compile Include="_generator\TableWisePartitionManagementInfo.cs" />
     <Compile Include="CommonValidationRulesGenerator\InconsistentCdrValRulesGen.cs" />
     <Compile Include="CommonValidationRulesGenerator\CommonCdrValRulesGen.cs" />
-    <Compile Include="_generator\TelcobillingAutomationMenu.cs" />
+    <Compile Include="_configMenus\TelcobillingAutomationMenu.cs" />
     <None Include="app.manifest" />
     <None Include="cas\banglatelecom\scripts\appPool_tpny.iisScript" />
     <None Include="cas\banglatelecom\scripts\ftp_tpny.iisScript" />
