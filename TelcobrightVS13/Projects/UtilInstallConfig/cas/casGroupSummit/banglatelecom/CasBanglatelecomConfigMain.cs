@@ -29,7 +29,7 @@ namespace InstallConfig
                         idCustomer = 9,
                         CustomerName = "BANGLA TELECOM LTD.",
                         idOperatorType = 2,
-                        databasename = "banglatelecom",
+                        databasename = "banglatelecomcas",
                         NativeTimeZone = 3251,
                         IgwPrefix = null,
                         RateDictionaryMaxRecords = 3000000,

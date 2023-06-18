@@ -27,9 +27,9 @@ namespace InstallConfig
                 new telcobrightpartner
                     {
                         idCustomer = 9,
-                        CustomerName = "Summit Communications Ltd.",
+                        CustomerName = "Bangladesh Telecom Regulatory Commission- BTRC",
                         idOperatorType = 2,
-                        databasename = "summit",
+                        databasename = "btrc",
                         NativeTimeZone = 3251,
                         IgwPrefix = null,
                         RateDictionaryMaxRecords = 3000000,

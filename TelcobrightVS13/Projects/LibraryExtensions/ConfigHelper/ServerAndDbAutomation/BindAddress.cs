@@ -1,4 +1,4 @@
-namespace TelcobrightMediation
+namespace LibraryExtensions.ConfigHelper
 {
     public class BindAddress
     {

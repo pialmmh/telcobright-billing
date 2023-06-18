@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LibraryExtensions.ConfigHelper;
 using Quartz;
 using QuartzTelcobright;
 using QuartzTelcobright.PropertyGen;

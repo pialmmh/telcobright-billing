@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace TelcobrightMediation
+namespace LibraryExtensions.ConfigHelper
 {
     public class MySqlServer
     {

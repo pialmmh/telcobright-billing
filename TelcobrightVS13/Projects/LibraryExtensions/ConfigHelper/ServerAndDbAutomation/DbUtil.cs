@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -10,12 +9,18 @@ using LibraryExtensions;
 using LibraryExtensions.ConfigHelper;
 using MySql.Data.MySqlClient;
 
-namespace TelcobrightMediation
+namespace LibraryExtensions.ConfigHelper
 {
     public static class DbUtil
     {
         public static ConfigPathHelper configPathHelper { get; set; }
 
+        public static string getDbConStrPipeWithoutDatabase(DatabaseSetting databaseSetting)
+        {
+            return
+                $"server={databaseSetting.ServerName};Pipe={databaseSetting.SocketNameForNamedPipeConnection};Protocol=pipe;Host=.;User Id={databaseSetting.AdminUserName};password={databaseSetting.AdminPassword};" +
+                $"Persist Security Info=True; default command timeout=3600;";
+        }
         public static string getDbConStrWithoutDatabase(DatabaseSetting databaseSetting)
         {
             return

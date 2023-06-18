@@ -26,7 +26,7 @@ using TelcobrightMediation.Config;
 using TelcobrightMediation.Scheduler.Quartz;
 using Path = System.IO.Path;
 using MediationModel;
-using TelcobrightMediation.ServerAndDbAutomation;
+using LibraryExtensions.ConfigHelper;
 
 //using CrystalQuartzTest;
 namespace InstallConfig
@@ -68,6 +68,7 @@ namespace InstallConfig
             //winAutomation.execute(executionData);;
             ConfigPathHelper configPathHelper = new ConfigPathHelper("WS_Topshelf_Quartz", "portal", "UtilInstallConfig", "_dbscripts");
             DbUtil.configPathHelper = configPathHelper;
+            ConsoleUtil consoleUtil= new ConsoleUtil(new List<char>() {'y', 'Y'});
             List<Deploymentprofile> deploymentProfiles = GetAllDeploymentInstances();
             string selectedProfileName= Menu.getSingleChoice(deploymentProfiles.Select(dp=>dp.profileName).ToList(),
                 "Select a deployment profile to configure automation.");
@@ -77,7 +78,8 @@ namespace InstallConfig
             {
                 case "telcobilling":
                     List<TelcobrightConfig> tbcs = getSelectedOperatorsConfig(instanceNames, configPathHelper);
-                    TelcobillingAutomationMenu telcoBillingMenu= new TelcobillingAutomationMenu(tbcs);
+                    TelcoBillingAutomationMenu telcoBillingMenu =
+                        new TelcoBillingAutomationMenu(tbcs, configPathHelper, consoleUtil);
                     telcoBillingMenu.showMenu();
                     break;
                 default:

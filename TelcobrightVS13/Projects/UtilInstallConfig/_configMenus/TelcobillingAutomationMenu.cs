@@ -20,13 +20,18 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public class TelcobillingAutomationMenu
+    public class TelcoBillingAutomationMenu
     {
+        public ConsoleUtil ConsoleUtil { get; set; }
         public List<TelcobrightConfig> Tbcs { get; set; }
+        public ConfigPathHelper ConfigPathHelper { get; set; }
 
-        public TelcobillingAutomationMenu(List<TelcobrightConfig> tbcs)
+        public TelcoBillingAutomationMenu(List<TelcobrightConfig> tbcs, ConfigPathHelper configPathHelper,
+            ConsoleUtil consoleUtil)
         {
-            Tbcs = tbcs;
+            this.Tbcs = tbcs;
+            this.ConfigPathHelper = configPathHelper;
+            this.ConsoleUtil = consoleUtil;
         }
 
        /* private static List<TelcobrightConfig> getthis.Tbcs(List<string> instances, ConfigPathHelper configPathHelper)
@@ -46,10 +51,8 @@ namespace InstallConfig
         }*/
         public void showMenu()
         {
-            List<string> menuItems = new List<string>();
             {
                 Start:
-                string tbOperatorName = "summit";//todo: change
                 Console.Clear();
                 Console.WriteLine("Welcome to Telcobright Initial Configuration Utility");
                 Console.WriteLine("Select Task:");
@@ -65,82 +68,93 @@ namespace InstallConfig
                 ConsoleKeyInfo ki = new ConsoleKeyInfo();
                 ki = Console.ReadKey(true);
                 char cmdName = Convert.ToChar(ki.Key);
-                ConfigPathHelper configPathHelper = new ConfigPathHelper("WS_Topshelf_Quartz", "portal", "UtilInstallConfig", "_dbscripts");
-                DbUtil.configPathHelper = configPathHelper;
-
+                DbUtil.configPathHelper = this.ConfigPathHelper;
                 switch (cmdName)
-            {
-                case '1':
-                    Console.WriteLine("Setting up remote access for mysql...");
-                    List<string> choices = Menu.getChoices(menuItems, "Select instances to create initial database:");
-                    //choicesFromMenu = InstanceMenu.getInstancesFromMenu(keyValuesForMenu,"Select instances to create initial database:");
-                    //this.Tbcs = this.Tbcs(choices, configPathHelper);
-                    foreach (var tbc in this.Tbcs)
+                {
+                    case '1':
                     {
+                        Console.WriteLine("Setting up remote access for mysql...");
+                        List<string> choices =
+                            Menu.getChoices(this.Tbcs.Select(config => config.Telcobrightpartner.databasename),
+                                "Select instances to create initial database:");
+                        List<TelcobrightConfig> tbcs = this.Tbcs
+                            .Where(config => choices.Contains(config.Telcobrightpartner.databasename)).ToList();
+                        foreach (var tbc in this.Tbcs)
+                        {
 
+                        }
                     }
-                    //using(MySqlConnection con = new MySqlConnection())
                     break;
-                case '2':
-                    Console.WriteLine("Enter Source Dir path & prefix without quotes, separated by comma...");
-                    string str = Console.ReadLine();
-                    string[] p = str.Split(',');
-                    (new FileRename()).AppendPrefix(p[0], p[1]);
-                    if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' || Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
-                    break;
-                case '3':
-                    if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' || Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
-                    Console.WriteLine("Creating Database, none will be created if one exists.");
-                    choices = Menu.getChoices(menuItems, "Select instances to create initial database:");
-                    //this.Tbcs = getthis.Tbcs(choices, configPathHelper);
-                    foreach (var tbc in this.Tbcs)
-                    {
+                    case '2':
+                        Console.WriteLine("Enter Source Dir path & prefix without quotes, separated by comma...");
+                        string str = Console.ReadLine();
+                        string[] p = str.Split(',');
+                        (new FileRename()).AppendPrefix(p[0], p[1]);
+                        if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' ||
+                            Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
+                        break;
+                    case '3':
+                        if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' ||
+                            Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
+                        Console.WriteLine("Creating Database, none will be created if one exists.");
+                        //choices = Menu.getChoices(menuItems, "Select instances to create initial database:");
+                        //this.Tbcs = getthis.Tbcs(choices, configPathHelper);
+                        foreach (var tbc in this.Tbcs)
+                        {
 
-                    }
-                    break;
-                case '4':
-                    Console.WriteLine("Copying Portal to c:/inetpub/wwwroot");
-                    CopyPortal(tbOperatorName);
-                    if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' || Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
-                    break;
-                case '5':
-                    if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' || Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
-                    break;
-                case '6':
-                    //this.Tbcs = getthis.Tbcs(menuItems, configPathHelper);
-                    if (!this.Tbcs.Any())
-                    {
-                        Console.WriteLine("No operator's config has been found. Press any key to start over.");
-                        Console.ReadKey();
-                        goto Start;
-                    }
-                    foreach (var tbc in this.Tbcs)
-                    {
-                            ConfigWriter cw= new ConfigWriter(tbc,configPathHelper);
+                        }
+                        break;
+                    case '4':
+                        Console.WriteLine("Copying Portal to c:/inetpub/wwwroot");
+                        //CopyPortal(tbOperatorName);
+                        if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' ||
+                            Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
+                        break;
+                    case '5':
+                        if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' ||
+                            Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
+                        break;
+                    case '6':
+                        if (!this.Tbcs.Any())
+                        {
+                            Console.WriteLine("No operator's config has been found. Press any key to start over.");
+                            Console.ReadKey();
+                            goto Start;
+                        }
+                        List<string> opNames =
+                            Menu.getChoices(this.Tbcs.Select(config => config.Telcobrightpartner.databasename),
+                                "Select one or multiple operators to configure.");
+                        List<TelcobrightConfig> selectedTbcs =
+                            this.Tbcs.Where(config => opNames.Contains(config.Telcobrightpartner.databasename))
+                                .ToList();
+                        foreach (var tbc in selectedTbcs)
+                        {
+                            ConfigWriter cw = new ConfigWriter(tbc,this.ConfigPathHelper,this.ConsoleUtil);
                             cw.writeConfig();
-                    }
+                            cw.writeTelcobrightPartnerAndNe();
+                        }
 
-                    break;
-                case '7':
-                    choices = Menu.getChoices(menuItems, "Select instances to modify partitions:");
-                    return;
-                    //    schedulerType: "quartz",
-                    //    databaseSetting: databaseSetting);
-                    //PartitionUtil.ModifyPartitions(schedulerSetting.DatabaseSetting,operatorName);
-                    //Console.WriteLine("Partition modification is successful, press 'q' to quit");
-                    //k = Convert.ToChar((Console.ReadKey(true)).Key);
-                    //if (k == 'q' || k == 'Q')
-                    //{
-                    //    Environment.Exit(0);
-                    //}
-                    break;
-                case 'q':
-                case 'Q':
-                    return;
-                default:
-                    goto Start;
-            }
-            goto Start;
+                        break;
+                    case '7':
+                        //choices = Menu.getChoices(menuItems, "Select instances to modify partitions:");
+                        return;
+                        //    schedulerType: "quartz",
+                        //    databaseSetting: databaseSetting);
+                        //PartitionUtil.ModifyPartitions(schedulerSetting.DatabaseSetting,operatorName);
+                        //Console.WriteLine("Partition modification is successful, press 'q' to quit");
+                        //k = Convert.ToChar((Console.ReadKey(true)).Key);
+                        //if (k == 'q' || k == 'Q')
+                        //{
+                        //    Environment.Exit(0);
+                        //}
+                        break;
+                    case 'q':
+                    case 'Q':
+                        return;
+                    default:
+                        goto Start;
+                }
+                goto Start;
         }
     }
         

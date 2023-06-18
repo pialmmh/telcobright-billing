@@ -29,7 +29,7 @@ namespace InstallConfig
                         idCustomer = 9,
                         CustomerName = "Summit Communications Ltd.",
                         idOperatorType = 2,
-                        databasename = "summit",
+                        databasename = "summitcas",
                         NativeTimeZone = 3251,
                         IgwPrefix = null,
                         RateDictionaryMaxRecords = 3000000,

@@ -1,8 +1,7 @@
-﻿using System.Web.Script.Serialization;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using LibraryExtensions;
 
-namespace TelcobrightMediation
+namespace LibraryExtensions.ConfigHelper
 {
     public class Server
     {

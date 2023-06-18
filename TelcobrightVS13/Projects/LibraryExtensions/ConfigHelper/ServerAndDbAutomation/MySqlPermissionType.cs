@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace TelcobrightMediation
+namespace LibraryExtensions.ConfigHelper
 {
     public enum MySqlPermissionType
     {

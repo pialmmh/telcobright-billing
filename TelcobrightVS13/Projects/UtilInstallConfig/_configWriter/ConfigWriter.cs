@@ -19,32 +19,36 @@ namespace InstallConfig
 {
     public class ConfigWriter
     {
-        private TelcobrightConfig tbc;
-        private ConfigPathHelper configPathHelper;
-
-        public ConfigWriter(TelcobrightConfig tbc, ConfigPathHelper configPathHelper)
+        public TelcobrightConfig Tbc { get; set; }
+        public ConfigPathHelper ConfigPathHelper { get; set; }
+        public ConsoleUtil ConsoleUtil { get; set; }
+        public ConfigWriter(TelcobrightConfig tbc, ConfigPathHelper configPathHelper,
+            ConsoleUtil consoleUtil)
         {
-            this.tbc = tbc;
-            this.configPathHelper = configPathHelper;
+            this.Tbc = tbc;
+            this.ConsoleUtil = consoleUtil;
+            this.ConfigPathHelper = configPathHelper;
         }
 
         public void writeConfig()
         {
-            Console.WriteLine("Writing Configuration Files for " + tbc.Telcobrightpartner.CustomerName);
-            WriteConfig(tbc, configPathHelper);
+            Console.WriteLine("Writing Configuration Files for " + Tbc.Telcobrightpartner.databasename);
+            WriteConfig(Tbc, ConfigPathHelper);
             Console.WriteLine(
-                "Config Files have been generated successfully for " + tbc.Telcobrightpartner.databasename);
-            Console.WriteLine("Create Telcobrightpartner and NE? (Y/N)");
-            ConsoleKeyInfo keyInfo1 = Console.ReadKey();
-            if (keyInfo1.KeyChar == 'Y' || keyInfo1.KeyChar == 'y')
+                "Config Files have been generated successfully for " + Tbc.Telcobrightpartner.databasename);
+        }
+
+        public void writeTelcobrightPartnerAndNe()
+        {
+            if (ConsoleUtil.getConfirmationFromUser("Create Telcobrightpartner and NE? (Y/N)"))
             {
                 PartnerEntities context =
-                    new PartnerEntities(ConnectionManager.GetEntityConnectionString(tbc.DatabaseSetting));
+                    new PartnerEntities(ConnectionManager.GetEntityConnectionString(Tbc.DatabaseSetting));
                 DbWriterForConfig.WriteTelcobrightPartnerAndNes(context, new List<telcobrightpartner>()
                     {
-                        tbc.Telcobrightpartner
+                        Tbc.Telcobrightpartner
                     },
-                    tbc.Nes);
+                    Tbc.Nes);
                 Console.WriteLine();
                 Console.WriteLine("Telcobrightpartner and NE created successfully!");
             }
