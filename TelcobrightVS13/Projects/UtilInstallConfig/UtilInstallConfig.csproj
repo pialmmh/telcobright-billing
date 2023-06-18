@@ -307,6 +307,7 @@
     <Content Include="summit\tmplPortalAppPools.txt" />
     <Content Include="summit\tmplPortalFtpSite.txt" />
     <Content Include="summit\tmplPortalWebSite.txt" />
+    <Content Include="_dbscripts\seedDataSql\enumcdrformat.sql" />
     <Content Include="_notes\installation notes.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
