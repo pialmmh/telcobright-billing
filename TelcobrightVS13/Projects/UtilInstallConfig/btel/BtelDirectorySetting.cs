@@ -21,9 +21,9 @@ namespace InstallConfig
     {
         public void PrepareDirectorySetting(TelcobrightConfig tbc)
         {
-            DirectorySettings directorySettings = new DirectorySettings("Directory Settings")
+            DirectorySettings directorySettings = new DirectorySettings("Directory Settings","c:/telcobright")
             {
-                ApplicationRootDirectory = "c:/Telcobright"
+                RootDirectory = "c:/Telcobright"
             };
 
             //***FILE LOCATIONS**********************************************
@@ -40,17 +40,7 @@ namespace InstallConfig
                 User = "",
                 Pass = "",
             };
-            FileLocation vaultBtelCataleya = new FileLocation()
-            {
-                Name = "Vault.btelCataleya",//this is refered in ne table, name MUST start with "Vault"
-                LocationType = "vault",//locationtype always lowercase
-                OsType = "windows",
-                PathSeparator = @"\",
-                ServerIp = "",
-                StartingPath = "C:/telcobright/Vault/Resources/CDR/btel/BtelhuaweiDhk",
-                User = "",
-                Pass = "",
-            };
+            
             FileLocation appServerFtp1 = new FileLocation()
             {
                 Name = "AppServerFTP1",//
@@ -74,88 +64,35 @@ namespace InstallConfig
                 Pass = "Takay1takaane",
                 Skip = true
             };
-            //VAULT PART
-            Vault BtelhuaweiDhkvault = new Vault("Vault.BtelhuaweiDhk", tbc);
-            Vault BtelCataleyaVault = new Vault("Vault.btelCataleya", tbc);
-
-            BtelhuaweiDhkvault.LocalLocation = new SyncLocation(vaultBtelhuaweiDhk.Name) { FileLocation = vaultBtelhuaweiDhk };//don't pass this to constructor and set there, causes problem in json serialize
-            BtelCataleyaVault.LocalLocation = new SyncLocation(vaultBtelCataleya.Name) { FileLocation = vaultBtelCataleya };//don't pass this to constructor and set there, causes problem in json serialize
-            directorySettings.Vaults.Add(BtelhuaweiDhkvault);
-            directorySettings.Vaults.Add(BtelCataleyaVault);
-            FileLocation BtelhuaweiDhk = new FileLocation()
-            {
-                Name = "BtelhuaweiDhk",
-                LocationType = "sftp",
-                OsType = "linux",
-                PathSeparator = "/",
-                StartingPath = "/home/zxss10_bsvr/data/bfile/bill",
-                //StartingPath = "/home/zxss10_bsvr/data/bfile/bill/zsmart_media_bak",
-                Sftphostkey = "",
-                ServerIp = "10.33.34.12",
-                User = "igwbill",
-                Pass = "igw123",
-                ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
-                IgnoreZeroLenghFile = 1
-            };
-            FileLocation btelCataleya = new FileLocation()
-            {
-                Name = "btelCataleya",
-                LocationType = "sftp",
-                OsType = "linux",
-                PathSeparator = "/",
-                StartingPath = "/sdr/incoming_sdr_bin/",
-                //StartingPath = "/home/zxss10_bsvr/data/bfile/bill/zsmart_media_bak",
-                Sftphostkey = "",
-                ServerIp = "10.33.42.4",
-                User = "banglatel_sdr",
-                Pass = "B@ngL@TEL@2021!_1",
-                ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
-                IgnoreZeroLenghFile = 1
-            };
-            FileLocation fileArchive1Zip = new FileLocation()//raw cdr archive
-            {
-                Name = "FileArchive1Zip",
-                LocationType = "ftp",
-                OsType = "windows",
-                PathSeparator = @"/",//backslash didn't work with winscp
-                StartingPath = @"/IGW_CDR_BK",
-                ServerIp = "10.100.201.13", //server = "172.16.16.242",
-                User = "iofcdr",
-                Pass = "blt#.45",
-                IgnoreZeroLenghFile = 1
-            };
-            FileLocation fileArchiveIof = new FileLocation()//raw cdr archive
-            {
-                Name = "FileArchiveIof",
-                LocationType = "ftp",
-                OsType = "windows",
-                PathSeparator = @"/",//backslash didn't work with winscp
-                StartingPath = @"/IGW_TO_IOF2",
-                ServerIp = "10.100.201.13", //server = "172.16.16.242",
-                User = "iofcdr",
-                Pass = "blt#.45",
-                IgnoreZeroLenghFile = 1
-            };
-            //add locations to directory settings
-            directorySettings.FileLocations.Add(vaultBtelhuaweiDhk.Name, vaultBtelhuaweiDhk);
-            directorySettings.FileLocations.Add(vaultBtelCataleya.Name, vaultBtelCataleya);
-            directorySettings.FileLocations.Add(appServerFtp1.Name, appServerFtp1);
-            directorySettings.FileLocations.Add(appServerFtp2.Name, appServerFtp2);
-            directorySettings.FileLocations.Add(BtelhuaweiDhk.Name, BtelhuaweiDhk);
-
-            directorySettings.FileLocations.Add(fileArchive1Zip.Name, fileArchive1Zip);
-            directorySettings.FileLocations.Add(fileArchiveIof.Name, fileArchiveIof);
-
+           
+            
+            
+            
+            
 
             SyncPair spBtelhuaweiDhkVault = new SyncPair("BtelhuaweiDhk:Vault")
             {
                 SkipSourceFileListing = false,
-                SrcSyncLocation = new SyncLocation("BtelhuaweiDhk")
+                SrcSyncLocation = new SyncLocation()
                 {
-                    FileLocation = BtelhuaweiDhk,
+                    FileLocation = new FileLocation()
+                    {
+                        Name = "BtelhuaweiDhk",
+                        LocationType = "sftp",
+                        OsType = "linux",
+                        PathSeparator = "/",
+                        StartingPath = "/home/zxss10_bsvr/data/bfile/bill",
+                        //StartingPath = "/home/zxss10_bsvr/data/bfile/bill/zsmart_media_bak",
+                        Sftphostkey = "",
+                        ServerIp = "10.33.34.12",
+                        User = "igwbill",
+                        Pass = "igw123",
+                        ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
+                        IgnoreZeroLenghFile = 1
+                    },
                     DescendingFileListByFileName = tbc.CdrSetting.DescendingOrderWhileListingFiles
                 },
-                DstSyncLocation = new SyncLocation("Vault_BtelhuaweiDhk")
+                DstSyncLocation = new SyncLocation()
                 {
                     FileLocation = vaultBtelhuaweiDhk
                 },
@@ -180,15 +117,39 @@ namespace InstallConfig
             SyncPair spBtelCataleyaVault = new SyncPair("btelCataleya:Vault")
             {
                 SkipSourceFileListing = false,
-                SrcSyncLocation = new SyncLocation("btelCataleya")
+                SrcSyncLocation = new SyncLocation()
                 {
-                    FileLocation = btelCataleya,
+                    FileLocation = new FileLocation()
+                    {
+                        Name = "btelCataleya",
+                        LocationType = "sftp",
+                        OsType = "linux",
+                        PathSeparator = "/",
+                        StartingPath = "/sdr/incoming_sdr_bin/",
+                        //StartingPath = "/home/zxss10_bsvr/data/bfile/bill/zsmart_media_bak",
+                        Sftphostkey = "",
+                        ServerIp = "10.33.42.4",
+                        User = "banglatel_sdr",
+                        Pass = "B@ngL@TEL@2021!_1",
+                        ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
+                        IgnoreZeroLenghFile = 1
+                    },
                     DescendingFileListByFileName = tbc.CdrSetting.DescendingOrderWhileListingFiles
                 },
-                DstSyncLocation = new SyncLocation("Vault.btelCataleya")
+                DstSyncLocation = new SyncLocation()
                 {
-                    FileLocation = vaultBtelCataleya
-                },
+                    FileLocation = new FileLocation()
+                    {
+                        Name = "Vault.btelCataleya",//this is refered in ne table, name MUST start with "Vault"
+                        LocationType = "vault",//locationtype always lowercase
+                        OsType = "windows",
+                        PathSeparator = @"\",
+                        ServerIp = "",
+                        StartingPath = "C:/telcobright/Vault/Resources/CDR/btel/BtelhuaweiDhk",
+                        User = "",
+                        Pass = "",
+                    },
+        },
                 SrcSettings = new SyncSettingsSource()
                 {
                     SecondaryDirectory = "incoming_sdr_bin_backup",
@@ -213,14 +174,25 @@ namespace InstallConfig
             {
                 SkipCopyingToDestination = false,
                 SkipSourceFileListing = true,
-                SrcSyncLocation = new SyncLocation("Vault_BtelhuaweiDhk")
+                SrcSyncLocation = new SyncLocation()
                 {
                     FileLocation = vaultBtelhuaweiDhk
                 },
-                DstSyncLocation = new SyncLocation("FileArchive1Zip")
+                DstSyncLocation = new SyncLocation()
                 {
-                    FileLocation = fileArchive1Zip
-                },
+                    FileLocation = new FileLocation()//raw cdr archive
+                    {
+                        Name = "FileArchive1Zip",
+                        LocationType = "ftp",
+                        OsType = "windows",
+                        PathSeparator = @"/",//backslash didn't work with winscp
+                        StartingPath = @"/IGW_CDR_BK",
+                        ServerIp = "10.100.201.13", //server = "172.16.16.242",
+                        User = "iofcdr",
+                        Pass = "blt#.45",
+                        IgnoreZeroLenghFile = 1
+                    },
+        },
                 SrcSettings = new SyncSettingsSource()
                 {
                     SecondaryDirectory = "downloaded",
@@ -238,14 +210,25 @@ namespace InstallConfig
             {
                 SkipCopyingToDestination = false,
                 SkipSourceFileListing = true,
-                SrcSyncLocation = new SyncLocation("Vault_BtelhuaweiDhk")
+                SrcSyncLocation = new SyncLocation()
                 {
                     FileLocation = vaultBtelhuaweiDhk
                 },
-                DstSyncLocation = new SyncLocation("IOF")
+                DstSyncLocation = new SyncLocation()
                 {
-                    FileLocation = fileArchiveIof
-                },
+                    FileLocation = new FileLocation()//raw cdr archive
+                    {
+                        Name = "FileArchiveIof",
+                        LocationType = "ftp",
+                        OsType = "windows",
+                        PathSeparator = @"/",//backslash didn't work with winscp
+                        StartingPath = @"/IGW_TO_IOF2",
+                        ServerIp = "10.100.201.13", //server = "172.16.16.242",
+                        User = "iofcdr",
+                        Pass = "blt#.45",
+                        IgnoreZeroLenghFile = 1
+                    },
+        },
                 SrcSettings = new SyncSettingsSource()
                 {
                     ExpFileNameFilter = null,//source filter not required, job created after newcdr for this pair
@@ -265,22 +248,8 @@ namespace InstallConfig
             directorySettings.SyncPairs.Add(spBtelCataleyaVault.Name, spBtelCataleyaVault);
             directorySettings.SyncPairs.Add(vaultFileArchive1Zip.Name, vaultFileArchive1Zip);
             directorySettings.SyncPairs.Add(vaultIof.Name, vaultIof);
-            //load the syncpairs in dictioinary, first by source
-            foreach (SyncPair sp in directorySettings.SyncPairs.Values)
-            {
-                if (directorySettings.SyncLocations.ContainsKey(sp.SrcSyncLocation.Name) == false)
-                {
-                    directorySettings.SyncLocations.Add(sp.SrcSyncLocation.Name, sp.SrcSyncLocation);
-                }
-            }
-            foreach (SyncPair sp in directorySettings.SyncPairs.Values)
-            {
-                if (directorySettings.SyncLocations.ContainsKey(sp.DstSyncLocation.Name) == false)
-                {
-                    directorySettings.SyncLocations.Add(sp.DstSyncLocation.Name, sp.DstSyncLocation);
-                }
-            }
             tbc.DirectorySettings = directorySettings;
+
             //add archive locations to CdrSettings
             tbc.CdrSetting.BackupSyncPairNames = new List<string>
             {

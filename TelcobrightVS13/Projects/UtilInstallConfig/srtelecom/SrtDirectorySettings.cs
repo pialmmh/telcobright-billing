@@ -25,18 +25,17 @@ namespace InstallConfig
         };
         public void PrepareDirectorySettings(TelcobrightConfig tbc)
         {
-            DirectorySettings directorySetting = new DirectorySettings("Directory Settings")
+            DirectorySettings directorySetting = new DirectorySettings("Directory Settings","c:/telcobright")
             {
-                ApplicationRootDirectory = "c:/Telcobright"
+                RootDirectory = "c:/Telcobright"
             };
             tbc.DirectorySettings = directorySetting;
 
             //***FILE LOCATIONS**********************************************
-            //local/vault1: all app servers will use same local file location
-            //the object "vault" will have a copy of below object for each app servers with server id as key and location as dictionary value
-            FileLocation vaultPrimary = new FileLocation()
+            
+            FileLocation cataleyaLocal = new FileLocation()
             {
-                Name = "vault",//this is refered in ne table, name MUST start with "Vault"
+                Name = "vault",//this is refered in ne table
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
@@ -45,53 +44,6 @@ namespace InstallConfig
                 User = "",
                 Pass = "",
             };
-            FileLocation appServerFtp1 = new FileLocation()
-            {
-                Name = "AppServerFTP1",//
-                LocationType = "ftp",
-                OsType = "windows",
-                PathSeparator = "/",
-                ServerIp = "192.168.2.216",
-                StartingPath = "Resources/cdr",
-                User = "ftpuser",
-                Pass = "Takay1takaane",
-            };
-            FileLocation appServerFtp2 = new FileLocation()
-            {
-                Name = "AppServerFTP2",
-                LocationType = "ftp",
-                OsType = "windows",
-                PathSeparator = "/",
-                ServerIp = "192.168.2.224",
-                StartingPath = "Resources/cdr",
-                User = "ftpuser",
-                Pass = "Takay1takaane",
-                Skip = true
-            };
-            //VAULT PART
-            Vault vault = new Vault("vault", tbc);
-            vault.LocalLocation = new SyncLocation(vault.Name) { FileLocation = vaultPrimary };//don't pass this to constructor and set there, causes problem in json serialize
-            tbc.DirectorySettings.Vaults.Add(vault);
-            FileLocation huawei = new FileLocation()
-            {
-                Name = "huawei",
-                LocationType = "ftp",
-                OsType = "windows",
-                PathSeparator = "/",
-                StartingPath = "/",
-                //StartingPath = "/home/zxss10_bsvr/data/bfile/bill/zsmart_media_bak",
-                Sftphostkey = string.Empty,
-                //Sftphostkey = "ssh-rsa 2048 44:56:0b:fa:3a:79:c2:ee:1c:95:d9:05:b5:9b:56:4a",
-                ServerIp = "10.0.30.50",
-                User = "ftpuser",
-                Pass = "ftpuser",
-                //ServerIp = "192.168.0.105",
-                //User = "ftpuser",
-                //Pass = "Takay1takaane",
-                ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
-                IgnoreZeroLenghFile = 1
-            };
-
             FileLocation fileArchive1 = new FileLocation()//raw cdr archive
             {
                 Name = "FileArchive1Zip",
@@ -105,38 +57,46 @@ namespace InstallConfig
                 IgnoreZeroLenghFile = 1
             };
 
-            FileLocation fileArchiveCAS = new FileLocation()//raw cdr archive
+            FileLocation huaweiLocal = new FileLocation()
             {
-                Name = "cas",
-                LocationType = "ftp",
+                Name = "huaweiLocal",//this is refered in ne table
+                LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
-                PathSeparator = @"/",//backslash didn't work with winscp
-                StartingPath = @"/",
-                ServerIp = "192.168.100.161", //server = "172.16.16.242",
-                User = "adminsrt",
-                Pass = "srticx725",
-                IgnoreZeroLenghFile = 1
+                PathSeparator = @"\",
+                ServerIp = "",
+                StartingPath = "C:/telcobright/Vault/Resources/cdr/huawei",
+                User = "",
+                Pass = "",
             };
-
-            //add locations to directory settings
-            tbc.DirectorySettings.FileLocations.Add(vault.Name, vaultPrimary);
-            tbc.DirectorySettings.FileLocations.Add(appServerFtp1.Name, appServerFtp1);
-            tbc.DirectorySettings.FileLocations.Add(appServerFtp2.Name, appServerFtp2);
-            tbc.DirectorySettings.FileLocations.Add(huawei.Name, huawei);
-            tbc.DirectorySettings.FileLocations.Add(fileArchive1.Name, fileArchive1);
-            tbc.DirectorySettings.FileLocations.Add(fileArchiveCAS.Name, fileArchiveCAS);
-
             SyncPair Huawei_Vault = new SyncPair("Huawei:Vault")
             {
                 SkipSourceFileListing = false,
-                SrcSyncLocation = new SyncLocation("Huawei")
+                SrcSyncLocation = new SyncLocation()
                 {
-                    FileLocation = huawei,
+                    FileLocation = new FileLocation()
+                    {
+                        Name = "huaweiRemote",
+                        LocationType = "ftp",
+                        OsType = "windows",
+                        PathSeparator = "/",
+                        StartingPath = "/",
+                        //StartingPath = "/home/zxss10_bsvr/data/bfile/bill/zsmart_media_bak",
+                        Sftphostkey = string.Empty,
+                        //Sftphostkey = "ssh-rsa 2048 44:56:0b:fa:3a:79:c2:ee:1c:95:d9:05:b5:9b:56:4a",
+                        ServerIp = "10.0.30.50",
+                        User = "ftpuser",
+                        Pass = "ftpuser",
+                        //ServerIp = "192.168.0.105",
+                        //User = "ftpuser",
+                        //Pass = "Takay1takaane",
+                        ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
+                        IgnoreZeroLenghFile = 1
+                    },
                     DescendingFileListByFileName = this.Tbc.CdrSetting.DescendingOrderWhileListingFiles
                 },
-                DstSyncLocation = new SyncLocation("Vault_Huawei")
+                DstSyncLocation = new SyncLocation()
                 {
-                    FileLocation = vaultPrimary
+                    FileLocation = huaweiLocal
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
@@ -163,13 +123,24 @@ namespace InstallConfig
             {
                 SkipCopyingToDestination = false,
                 SkipSourceFileListing = true,
-                SrcSyncLocation = new SyncLocation("Vault")
+                SrcSyncLocation = new SyncLocation()
                 {
-                    FileLocation = vaultPrimary
+                    FileLocation = huaweiLocal
                 },
-                DstSyncLocation = new SyncLocation("fileArchiveCAS")
+                DstSyncLocation = new SyncLocation()
                 {
-                    FileLocation = fileArchiveCAS
+                    FileLocation = new FileLocation()//raw cdr archive
+                    {
+                        Name = "cas",
+                        LocationType = "ftp",
+                        OsType = "windows",
+                        PathSeparator = @"/",//backslash didn't work with winscp
+                        StartingPath = @"/",
+                        ServerIp = "192.168.100.161", //server = "172.16.16.242",
+                        User = "adminsrt",
+                        Pass = "srticx725",
+                        IgnoreZeroLenghFile = 1
+                    }
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
@@ -186,24 +157,8 @@ namespace InstallConfig
 
             //add sync pairs to directory config
             directorySetting.SyncPairs.Add(Huawei_Vault.Name, Huawei_Vault);
-            //directorySetting.SyncPairs.Add(vaultS3FileArchive1.Name, vaultS3FileArchive1);
             directorySetting.SyncPairs.Add(vaultCAS.Name, vaultCAS);
 
-            //load the syncpairs in dictionary, first by source
-            foreach (SyncPair sp in directorySetting.SyncPairs.Values)
-            {
-                if (directorySetting.SyncLocations.ContainsKey(sp.SrcSyncLocation.Name) == false)
-                {
-                    directorySetting.SyncLocations.Add(sp.SrcSyncLocation.Name, sp.SrcSyncLocation);
-                }
-            }
-            foreach (SyncPair sp in directorySetting.SyncPairs.Values)
-            {
-                if (directorySetting.SyncLocations.ContainsKey(sp.DstSyncLocation.Name) == false)
-                {
-                    directorySetting.SyncLocations.Add(sp.DstSyncLocation.Name, sp.DstSyncLocation);
-                }
-            }
             //add archive locations to CdrSettings
             this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
             {

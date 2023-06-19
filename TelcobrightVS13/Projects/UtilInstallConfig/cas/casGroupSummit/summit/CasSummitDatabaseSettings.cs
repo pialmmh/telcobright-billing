@@ -25,13 +25,11 @@ namespace InstallConfig
             var databaseSetting = new DatabaseSetting()
             {
                 ServerName = "172.18.0.2",
-                BaseDir = @"c:\mysql",
-                SocketNameForNamedPipeConnection = "casGroupSummit",
                 DatabaseName = this.Tbc.Telcobrightpartner.databasename,
                 AdminPassword = "Takay1#$ane",
                 AdminUserName = "root",
                 DatabaseEngine = "innodb",
-                StorageEngineForPartitionedTables = "innodb",
+                StorageEngineForPartitionedTables = "tokudb",
                 PartitionStartDate = new DateTime(2023, 1, 1),
                 PartitionLenInDays = 1,
                 ReadOnlyUserName = "dbreader",

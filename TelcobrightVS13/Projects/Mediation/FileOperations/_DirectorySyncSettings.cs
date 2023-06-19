@@ -36,14 +36,10 @@ namespace TelcobrightFileOperations
 
     public class SyncLocation
     {
-        public string Name { get; set; }
         public FileLocation FileLocation { get; set; }
+        public string Name => this.FileLocation.Name;
         public bool DescendingFileListByFileName { get; set; }
         public Session FileTransferSession { get; set; }
-        public SyncLocation(string name)
-        {
-            this.Name = name;
-        }
         public override string ToString()
         {
             return this.Name;

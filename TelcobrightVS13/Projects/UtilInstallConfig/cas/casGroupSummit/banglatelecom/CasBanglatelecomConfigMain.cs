@@ -20,7 +20,7 @@ namespace InstallConfig
     public partial class CasBanglaTelecomAbstractConfigConfigGenerator : AbstractConfigConfigGenerator
     {
         public override TelcobrightConfig Tbc { get; }
-        public CasBanglaTelecomAbstractConfigConfigGenerator()
+        public BanglaTelecomAbstractConfigConfigGenerator()
         {
             int thisServerId = 1;
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, thisServerId,
@@ -29,7 +29,7 @@ namespace InstallConfig
                         idCustomer = 9,
                         CustomerName = "BANGLA TELECOM LTD.",
                         idOperatorType = 2,
-                        databasename = "banglatelecomcas",
+                        databasename = "banglatelecom",
                         NativeTimeZone = 3251,
                         IgwPrefix = null,
                         RateDictionaryMaxRecords = 3000000,

@@ -26,8 +26,6 @@ namespace InstallConfig
             {
                 ServerName = "192.168.119.236",
                 DatabaseName = this.Tbc.Telcobrightpartner.databasename,
-                BaseDir = @"c:\mysql",
-                SocketNameForNamedPipeConnection = "casGroupSummit",
                 AdminPassword = "Takay1#$ane",
                 AdminUserName = "root",
                 DatabaseEngine = "innodb",

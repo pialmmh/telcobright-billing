@@ -102,7 +102,7 @@ namespace InstallConfig
             //database part
             DirectorySettings directorySetting = new DirectorySettings("Directory Settings")
             {
-                ApplicationRootDirectory = "c:/Telcobright"
+                RootDirectory = "c:/Telcobright"
             };
             this.Tbc.DirectorySettings = directorySetting;
 

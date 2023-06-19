@@ -29,6 +29,7 @@ namespace InstallConfig
             this.DaemonConfigurations.AddRange(GetInvoiceGeneratorInstances(this.Tbc.Telcobrightpartner.databasename));
             return this.DaemonConfigurations;
         }
+        //testing 
 
         private List<QuartzTbDaemonConfig> GetFileListerInstances(string operatorName)
         {

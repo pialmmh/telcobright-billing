@@ -102,7 +102,7 @@
     <Compile Include="cas\casGroupSummit\banglatelecom\CasBanglaTelecomQuartzConfig.cs" />
     <Compile Include="cas\casGroupSummit\banglatelecom\CasBanglaTelecomServerConfig.cs" />
     <Compile Include="cas\casGroupSummit\banglatelecom\CasBanglaTelecomServiceGroups.cs" />
-    <Compile Include="cas\casGroupSummit\btrc\BtrcConfigMain.cs" />
+    <Compile Include="cas\casGroupSummit\btrc\scripts\BtrcConfigMain.cs" />
     <Compile Include="cas\casGroupSummit\btrc\BtrcDatabaseSettings.cs" />
     <Compile Include="cas\casGroupSummit\btrc\BtrcDirectorySettings.cs" />
     <Compile Include="cas\casGroupSummit\btrc\BtrcPortalSetting.cs" />
@@ -117,7 +117,7 @@
     <Compile Include="cas\casGroupSummit\summit\CasSummitQuartzConfig.cs" />
     <Compile Include="cas\casGroupSummit\summit\CasSummitServerConfig.cs" />
     <Compile Include="cas\casGroupSummit\summit\CasSummitServiceGroups.cs" />
-    <Compile Include="cas\casGroupSummit\summit\_CasSummitConfigMain.cs" />
+    <Compile Include="cas\casGroupSummit\summit\CasSummitConfigMain.cs" />
     <Compile Include="purple\PurpleConfigMain.cs" />
     <Compile Include="purple\PurpleDatabaseSettings.cs" />
     <Compile Include="purple\PurpleDirectorySettings.cs" />
@@ -199,6 +199,7 @@
     <None Include="cas\casGroupSummit\summit\scripts\appPool_tpny.iisScript" />
     <None Include="cas\casGroupSummit\summit\scripts\ftp_tpny.iisScript" />
     <None Include="cas\casGroupSummit\summit\scripts\http_tpny.iisScript" />
+    <None Include="cas\casGroupSummit\summit\summit.conf" />
     <None Include="deployment\cas.json" />
     <None Include="deployment\summit.json" />
     <None Include="deployment\srtelecom.json" />

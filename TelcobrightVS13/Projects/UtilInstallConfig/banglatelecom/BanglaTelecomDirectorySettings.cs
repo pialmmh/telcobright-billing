@@ -25,9 +25,9 @@ namespace InstallConfig
         };
         public void PrepareDirectorySettings(TelcobrightConfig tbc)
         {
-            DirectorySettings directorySetting = new DirectorySettings("Directory Settings")
+            DirectorySettings directorySetting = new DirectorySettings("Directory Settings", "c:/telcobright")
             {
-                ApplicationRootDirectory = "c:/Telcobright"
+                RootDirectory = "c:/Telcobright"
             };
             tbc.DirectorySettings = directorySetting;
 
@@ -45,25 +45,8 @@ namespace InstallConfig
                 User = "",
                 Pass = "",
             };
-            //VAULT PART
-            Vault vault = new Vault("vault", tbc);
-            vault.LocalLocation = new SyncLocation(vault.Name) { FileLocation = vaultPrimary };//don't pass this to constructor and set there, causes problem in json serialize
-            tbc.DirectorySettings.Vaults.Add(vault);
-            FileLocation huawei = new FileLocation()
-            {
-                Name = "huawei",
-                LocationType = "ftp",
-                OsType = "linux",
-                UseActiveModeForFTP=false,
-                PathSeparator = "/",
-                StartingPath = "/",
-                ServerIp = "123.176.59.19",
-                User = "icxhuawei",
-                Pass = "Icx2023@",
-                //ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
-                IgnoreZeroLenghFile = 1,
-                FtpSessionCloseAndReOpeningtervalByFleTransferCount=1000
-            };
+            
+            
 
             FileLocation fileArchive1 = new FileLocation()//raw cdr archive
             {
@@ -78,34 +61,32 @@ namespace InstallConfig
                 IgnoreZeroLenghFile = 1
             };
 
-            FileLocation fileArchiveCAS = new FileLocation()//raw cdr archive
-            {
-                Name = "cas",
-                LocationType = "ftp",
-                OsType = "windows",
-                PathSeparator = @"/",//backslash didn't work with winscp
-                StartingPath = @"/",
-                ServerIp = "192.168.100.161", //server = "172.16.16.242",
-                User = "adminsrt",
-                Pass = "srticx725",
-                IgnoreZeroLenghFile = 1
-            };
+            
 
-            //add locations to directory settings
-            tbc.DirectorySettings.FileLocations.Add(vault.Name, vaultPrimary);
-            tbc.DirectorySettings.FileLocations.Add(huawei.Name, huawei);
-            tbc.DirectorySettings.FileLocations.Add(fileArchive1.Name, fileArchive1);
-            tbc.DirectorySettings.FileLocations.Add(fileArchiveCAS.Name, fileArchiveCAS);
-
+            
             SyncPair huawei_Vault = new SyncPair("huawei:Vault")
             {
                 SkipSourceFileListing = false,
-                SrcSyncLocation = new SyncLocation("huawei")
+                SrcSyncLocation = new SyncLocation()
                 {
-                    FileLocation = huawei,
+                    FileLocation = new FileLocation()
+                    {
+                        Name = "huawei",
+                        LocationType = "ftp",
+                        OsType = "linux",
+                        UseActiveModeForFTP = false,
+                        PathSeparator = "/",
+                        StartingPath = "/",
+                        ServerIp = "123.176.59.19",
+                        User = "icxhuawei",
+                        Pass = "Icx2023@",
+                        //ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
+                        IgnoreZeroLenghFile = 1,
+                        FtpSessionCloseAndReOpeningtervalByFleTransferCount = 1000
+                    },
                     DescendingFileListByFileName = this.Tbc.CdrSetting.DescendingOrderWhileListingFiles
                 },
-                DstSyncLocation = new SyncLocation("Vault_huawei")
+                DstSyncLocation = new SyncLocation()
                 {
                     FileLocation = vaultPrimary
                 },
@@ -134,14 +115,25 @@ namespace InstallConfig
             {
                 SkipCopyingToDestination = false,
                 SkipSourceFileListing = true,
-                SrcSyncLocation = new SyncLocation("Vault")
+                SrcSyncLocation = new SyncLocation()
                 {
                     FileLocation = vaultPrimary
                 },
-                DstSyncLocation = new SyncLocation("fileArchiveCAS")
+                DstSyncLocation = new SyncLocation()
                 {
-                    FileLocation = fileArchiveCAS
-                },
+                    FileLocation = new FileLocation()//raw cdr archive
+                    {
+                        Name = "cas",
+                        LocationType = "ftp",
+                        OsType = "windows",
+                        PathSeparator = @"/",//backslash didn't work with winscp
+                        StartingPath = @"/",
+                        ServerIp = "192.168.100.161", //server = "172.16.16.242",
+                        User = "adminsrt",
+                        Pass = "srticx725",
+                        IgnoreZeroLenghFile = 1
+                    }
+        },
                 SrcSettings = new SyncSettingsSource()
                 {
                     SecondaryDirectory = "downloaded",
@@ -160,21 +152,6 @@ namespace InstallConfig
             //directorySetting.SyncPairs.Add(vaultS3FileArchive1.Name, vaultS3FileArchive1);
             directorySetting.SyncPairs.Add(vaultCAS.Name, vaultCAS);
 
-            //load the syncpairs in dictionary, first by source
-            foreach (SyncPair sp in directorySetting.SyncPairs.Values)
-            {
-                if (directorySetting.SyncLocations.ContainsKey(sp.SrcSyncLocation.Name) == false)
-                {
-                    directorySetting.SyncLocations.Add(sp.SrcSyncLocation.Name, sp.SrcSyncLocation);
-                }
-            }
-            foreach (SyncPair sp in directorySetting.SyncPairs.Values)
-            {
-                if (directorySetting.SyncLocations.ContainsKey(sp.DstSyncLocation.Name) == false)
-                {
-                    directorySetting.SyncLocations.Add(sp.DstSyncLocation.Name, sp.DstSyncLocation);
-                }
-            }
             //add archive locations to CdrSettings
             this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
             {
