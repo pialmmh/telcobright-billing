@@ -58,9 +58,9 @@ namespace Jobs
 
         protected virtual NewCdrPreProcessor CollectRaw()
         {
-            Vault vault = this.Input.MediationContext.Tbc.DirectorySettings.Vaults.First(
-                c => c.Name == this.Input.TelcobrightJob.ne.SourceFileLocations);
-            FileLocation fileLocation = vault.LocalLocation.FileLocation;
+            string fileLocationName = this.Input.Ne.SourceFileLocations;
+            FileLocation fileLocation = this.Input.MediationContext.Tbc.DirectorySettings
+                .SyncPairs[fileLocationName].DstSyncLocation.FileLocation;
             string fileName = fileLocation.GetOsNormalizedPath(fileLocation.StartingPath)
                               + Path.DirectorySeparatorChar + this.Input.TelcobrightJob.JobName;
             this.CollectorInput = new CdrCollectorInputData(this.Input, fileName);
@@ -259,9 +259,6 @@ namespace Jobs
             string unsplitFileName)
         {
             List<long> dependentJobIdsBeforeDelete = new List<long>();
-            string vaultName = tbc.DirectorySettings.Vaults.Where(c => c.Name == cdrJob.ne.SourceFileLocations)
-                .Select(c => c.Name)
-                .First();
             if (tbc.CdrSetting.BackupSyncPairNames != null)
             {
                 foreach (string syncPairname in tbc.CdrSetting.BackupSyncPairNames)
@@ -275,8 +272,12 @@ namespace Jobs
                         long fileCopyJobsId = FileUtil.WriteFileCopyJobSingle(fileCopyJob, context.Database.Connection);
                         dependentJobIdsBeforeDelete.Add(fileCopyJobsId);
                         //create delete job for unsplitFile
+                        string vaultName = tbc.DirectorySettings.SyncPairs[cdrJob.ne.SourceFileLocations].Name;
+                        FileLocation srcFileLocation = tbc.DirectorySettings.SyncPairs[vaultName]
+                            .DstSyncLocation.FileLocation;
                         job newDelJob = FileUtil.CreateFileDeleteJob(unsplitFileName,
-                            tbc.DirectorySettings.FileLocations[vaultName],
+                            //tbc.DirectorySettings.FileLocations[vaultName],
+                            srcFileLocation,
                             context,
                             new JobPreRequisite()
                             {
@@ -310,10 +311,10 @@ namespace Jobs
                 }
             }
             //create delete job
-            string vaultName = tbc.DirectorySettings.Vaults.Where(c => c.Name == cdrJob.ne.SourceFileLocations)
-                .Select(c => c.Name)
-                .First();
-            job newDelJob= FileUtil.CreateFileDeleteJob(cdrJob.JobName, tbc.DirectorySettings.FileLocations[vaultName], context,
+            string vaultName = tbc.DirectorySettings.SyncPairs[cdrJob.ne.SourceFileLocations].Name;
+            FileLocation fileLocation = tbc.DirectorySettings.SyncPairs[vaultName]
+                .DstSyncLocation.FileLocation;
+            job newDelJob= FileUtil.CreateFileDeleteJob(cdrJob.JobName, fileLocation, context,
                 new JobPreRequisite()
                 {
                     ExecuteAfterJobs = dependentJobIdsBeforeDelete,

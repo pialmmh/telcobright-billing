@@ -31,7 +31,7 @@ namespace TelcobrightFileOperations
             };
             job newJob = new job()
             {
-                idjobdefinition = 8,
+                idjobdefinition = 8,                                                  
                 idNE = 0,
                 JobName = fileLocation.Name + "-" + fileName.Replace(@"\", @"\\"),
                 Status = 6, //created

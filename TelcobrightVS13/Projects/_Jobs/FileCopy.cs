@@ -31,7 +31,7 @@ namespace Jobs
         {
             string tmpfileName = Path.GetTempPath() + Guid.NewGuid().ToString() + ".tbtemp";
             FileSyncInfo tempSyncInfo = new FileSyncInfo(null, null);
-            tempSyncInfo.SyncLocation = new SyncLocation("temp")
+            tempSyncInfo.SyncLocation = new SyncLocation()
             {
                 FileLocation = new FileLocation() { Name = "temp", LocationType = "local" },
             };

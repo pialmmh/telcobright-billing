@@ -47,7 +47,7 @@ namespace InstallConfig
                         SiteName = tbc.Telcobrightpartner.CustomerName,
                         SiteId = 1,
                         PhysicalPath = "C:/inetpub/wwwroot/" + this.Tbc.Telcobrightpartner.CustomerName,
-                        BindAddress = this.Tbc.DirectorySettings.FileLocations["AppServerFTP" + this.Tbc.ServerId].ServerIp + ":80",
+                        BindAddress = "0.0.0.0:80",
                         TemplateFileName = "../../" + this.Tbc.Telcobrightpartner.CustomerName + "/tmplPortalWebSite.txt",
                         ApplicationPool=new IisApplicationPool()
                         {

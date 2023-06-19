@@ -23,6 +23,7 @@ namespace InstallConfig
         //                                       + Path.DirectorySeparatorChar + "Server.conf";
         public PortalSettings GetPortalSettings(TelcobrightConfig tbc)
         {
+            string bindAddress = "0.0.0.0:80";
             string portalLocalAccountNameAdministrator = "Administrator";
             string portalLocalAccountPassword = "Takay1#$ane%%";
             PortalSettings portalSetting = new PortalSettings("Portal Settings")
@@ -44,7 +45,7 @@ namespace InstallConfig
                         SiteName = tbc.Telcobrightpartner.CustomerName,
                         SiteId = 1,
                         PhysicalPath = "C:/inetpub/wwwroot/" + this.Tbc.Telcobrightpartner.CustomerName,
-                        BindAddress = this.Tbc.DirectorySettings.FileLocations["AppServerFTP" + this.Tbc.ServerId].ServerIp + ":80",
+                        BindAddress = bindAddress,
                         TemplateFileName = "../../" + this.Tbc.Telcobrightpartner.CustomerName + "/tmplPortalWebSite.txt",
                         ApplicationPool=new IisApplicationPool()
                         {

@@ -100,10 +100,7 @@ namespace InstallConfig
 
 
             //database part
-            DirectorySettings directorySetting = new DirectorySettings("Directory Settings")
-            {
-                RootDirectory = "c:/Telcobright"
-            };
+            DirectorySettings directorySetting = new DirectorySettings("c:/Telcobright");
             this.Tbc.DirectorySettings = directorySetting;
 
             //***FILE LOCATIONS**********************************************
@@ -144,9 +141,6 @@ namespace InstallConfig
                 Skip = true
             };
             //VAULT PART
-            Vault s3Vault = new Vault("Vault.S3", this.Tbc);
-            s3Vault.LocalLocation = new SyncLocation(vaultS3.Name) { FileLocation = vaultS3 };//don't pass this to constructor and set there, causes problem in json serialize
-            this.Tbc.DirectorySettings.Vaults.Add(s3Vault);
             FileLocation s31 = new FileLocation()
             {
                 Name = "S3_1",
@@ -229,13 +223,6 @@ namespace InstallConfig
                 IgnoreZeroLenghFile = 1,
             };
             //add locations to directory settings
-            this.Tbc.DirectorySettings.FileLocations.Add(vaultS3.Name, vaultS3);
-            this.Tbc.DirectorySettings.FileLocations.Add(appServerFtp1.Name, appServerFtp1);
-            this.Tbc.DirectorySettings.FileLocations.Add(appServerFtp2.Name, appServerFtp2);
-            this.Tbc.DirectorySettings.FileLocations.Add(s31.Name, s31);
-            this.Tbc.DirectorySettings.FileLocations.Add(s32.Name, s32);
-            this.Tbc.DirectorySettings.FileLocations.Add(fileArchive1.Name, fileArchive1);
-            this.Tbc.DirectorySettings.FileLocations.Add(fileArchiveIof.Name, fileArchiveIof);
 
 
 
@@ -243,11 +230,11 @@ namespace InstallConfig
             SyncPair s31Vault = new SyncPair("S3_1:Vault")
             {
                 SkipSourceFileListing = false,
-                SrcSyncLocation = new SyncLocation("S3_1")
+                SrcSyncLocation = new SyncLocation()
                 {
                     FileLocation = s31
                 },
-                DstSyncLocation = new SyncLocation("Vault_S3")
+                DstSyncLocation = new SyncLocation()
                 {
                     FileLocation = vaultS3
                 },
@@ -275,12 +262,12 @@ namespace InstallConfig
             {
                 SkipSourceFileListing = false,
                 SkipCopyingToDestination=false,
-                SrcSyncLocation = new SyncLocation("S3_2")
+                SrcSyncLocation = new SyncLocation()
                 {
                     FileLocation = s32,
                     DescendingFileListByFileName = this.Tbc.CdrSetting.DescendingOrderWhileListingFiles
                 },
-                DstSyncLocation = new SyncLocation("Vault_S3")
+                DstSyncLocation = new SyncLocation()
                 {
                     FileLocation = vaultS3
                 },
@@ -309,11 +296,11 @@ namespace InstallConfig
             {
                 SkipCopyingToDestination = false,
                 SkipSourceFileListing=false,
-                SrcSyncLocation = new SyncLocation("Vault_S3")
+                SrcSyncLocation = new SyncLocation()
                 {
                     FileLocation = vaultS3
                 },
-                DstSyncLocation = new SyncLocation("FileArchive1")
+                DstSyncLocation = new SyncLocation()
                 {
                     FileLocation = fileArchive1
                 },
@@ -341,11 +328,11 @@ namespace InstallConfig
             {
                 SkipCopyingToDestination = false,
                 SkipSourceFileListing=false,
-                SrcSyncLocation = new SyncLocation("Vault_S3")
+                SrcSyncLocation = new SyncLocation()
                 {
                     FileLocation = vaultS3
                 },
-                DstSyncLocation = new SyncLocation("IOF")
+                DstSyncLocation = new SyncLocation()
                 {
                     FileLocation = fileArchiveIof
                 },
@@ -369,20 +356,6 @@ namespace InstallConfig
             directorySetting.SyncPairs.Add(vaultS3FileArchive1.Name, vaultS3FileArchive1);
             directorySetting.SyncPairs.Add(vaultS3Iof.Name, vaultS3Iof);
             //load the syncpairs in dictioinary, first by source
-            foreach (SyncPair sp in directorySetting.SyncPairs.Values)
-            {
-                if (directorySetting.SyncLocations.ContainsKey(sp.SrcSyncLocation.Name) == false)
-                {
-                    directorySetting.SyncLocations.Add(sp.SrcSyncLocation.Name, sp.SrcSyncLocation);
-                }
-            }
-            foreach (SyncPair sp in directorySetting.SyncPairs.Values)
-            {
-                if (directorySetting.SyncLocations.ContainsKey(sp.DstSyncLocation.Name) == false)
-                {
-                    directorySetting.SyncLocations.Add(sp.DstSyncLocation.Name, sp.DstSyncLocation);
-                }
-            }
             //add archive locations to CdrSettings
             this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>();
             this.Tbc.CdrSetting.BackupSyncPairNames.Add(vaultS3FileArchive1.Name);
@@ -414,7 +387,7 @@ namespace InstallConfig
                         SiteName = this.Tbc.Telcobrightpartner.CustomerName,
                         SiteId = 1,
                         PhysicalPath = "C:/inetpub/wwwroot/" + this.Tbc.Telcobrightpartner.CustomerName,
-                        BindAddress = this.Tbc.DirectorySettings.FileLocations["AppServerFTP" + this.Tbc.ServerId].ServerIp + ":80",
+                        BindAddress = "0.0.0.0:80",
                         TemplateFileName = "../../" + this.Tbc.Telcobrightpartner.CustomerName+ "/tmplPortalWebSite.txt"
                     },
                     new InternetSite(this.Tbc)
@@ -423,7 +396,7 @@ namespace InstallConfig
                         SiteName = this.Tbc.Telcobrightpartner.CustomerName,
                         SiteId = 1,
                         PhysicalPath = "C:/sftp_root",
-                        BindAddress = this.Tbc.DirectorySettings.FileLocations["AppServerFTP" + this.Tbc.ServerId].ServerIp + ":21",
+                        BindAddress = "0.0.0.0:21",
                         TemplateFileName = "../../" + this.Tbc.Telcobrightpartner.CustomerName + "/tmplPortalFtpSite.txt"
                     }
                 },
