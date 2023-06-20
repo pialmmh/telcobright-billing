@@ -52,14 +52,17 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
                                 CheckBoxShowByIgw.Checked==true?"tup_outpartnerid":string.Empty,
                                 CheckBoxViewIncomingRoute.Checked==true?"tup_incomingroute":string.Empty,
                                 CheckBoxViewOutgoingRoute.Checked==true?"tup_outgoingroute":string.Empty,
-                            },
+                                ViewBySwitch.Checked==true?"tup_switchid":string.Empty
+                                },
                          new List<string>()
                             {
+                                ViewBySwitch.Checked==true? DropDownListShowBySwitch.SelectedIndex>0?"tup_switchid="+DropDownListShowBySwitch.SelectedItem.Value:string.Empty:string.Empty,
                                 CheckBoxPartner.Checked==true?DropDownListPartner.SelectedIndex>0?" tup_inpartnerid="+DropDownListPartner.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxShowByAns.Checked==true?DropDownListAns.SelectedIndex>0?" tup_destinationId="+DropDownListAns.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_outpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxViewIncomingRoute.Checked==true?DropDownListViewIncomingRoute.SelectedIndex>0?" tup_incomingroute="+DropDownListViewIncomingRoute.SelectedItem.Value:string.Empty:string.Empty,
                                 CheckBoxViewOutgoingRoute.Checked==true?DropDownListViewOutgoingRoute.SelectedIndex>0?" tup_outgoingroute="+DropDownListViewOutgoingRoute.SelectedItem.Value:string.Empty:string.Empty,
+                                
                             }).getSQLString();
 
        
@@ -335,8 +338,15 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
         }
     }
 
-    
 
+    protected void CheckBoxShowBySwitch_CheckedChanged(object sender, EventArgs e)
+    {
+        if (ViewBySwitch.Checked == true)
+        {
+            DropDownListShowBySwitch.Enabled = true;
+        }
+        else DropDownListShowBySwitch.Enabled = false;
+    }
 
 
     protected void CheckBoxShowByPartner_CheckedChanged(object sender, EventArgs e)

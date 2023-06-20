@@ -20,10 +20,7 @@ namespace InstallConfig
     {
         public void PrepareDirectorySettings(TelcobrightConfig tbc)
         {
-            DirectorySettings directorySetting = new DirectorySettings("Directory Settings", "c:/telcobright")
-            {
-                RootDirectory = "c:/Telcobright"
-            };
+            DirectorySettings directorySetting = new DirectorySettings("c:/telcobright");
             tbc.DirectorySettings = directorySetting;
 
             //***FILE LOCATIONS**********************************************

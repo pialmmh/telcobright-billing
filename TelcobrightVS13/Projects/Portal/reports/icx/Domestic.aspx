@@ -106,9 +106,15 @@
                     var IGWList = contex.partners.Where(c => c.PartnerType == 2).ToList();
                     DropDownListIgw.Items.Clear();
                     DropDownListIgw.Items.Add(new ListItem("[All]", "-1"));
-                    foreach(partner p in IGWList.OrderBy(x => x.PartnerName))
-                    {
+                    foreach(partner p in IGWList.OrderBy(x => x.PartnerName)){
                         DropDownListIgw.Items.Add(new ListItem(p.PartnerName, p.idPartner.ToString()));
+                    }
+
+                    List<ne> nes = contex.nes.ToList();
+                    DropDownListShowBySwitch.Items.Clear();
+                    DropDownListShowBySwitch.Items.Add(new ListItem(" [All]", "-1"));
+                    foreach (ne ns in nes.OrderBy(x => x.SwitchName)){
+                        DropDownListShowBySwitch.Items.Add(new ListItem(ns.SwitchName, ns.idSwitch.ToString()));
                     }
 
                 }
@@ -330,13 +336,19 @@
 
 
         <span style="padding-left: 0px; float: left; left: 0px; font-weight: bold; margin-top: 2px; margin-right: 20px; color: Black;">Report:</span>
-        <span style="font-weight: bold;">Source</span>
-         <asp:DropDownList ID="DropDownListReportSource" runat="server" >
+        <%--<span style="font-weight: bold;">Source</span>--%>
+         <asp:DropDownList ID="DropDownListReportSource" runat="server" Visible="False">
          <asp:ListItem Value="sum_voice_day_">Day Wise</asp:ListItem>
          <asp:ListItem Value="sum_voice_hr_">Hour Wise</asp:ListItem>
         
      </asp:DropDownList>
 
+        View by Switch:
+        <asp:CheckBox ID="ViewBySwitch" runat="server" AutoPostBack="True"
+                      OnCheckedChanged="CheckBoxShowBySwitch_CheckedChanged" Checked="True" />
+                       
+        <asp:DropDownList ID="DropDownListShowBySwitch" runat="server" Visible="true" Enabled="True">
+        </asp:DropDownList>
 
         <asp:Button ID="submit" runat="server" Text="Show Report" OnClick="submit_Click" OnClientClick="SethidValueSubmitClickFlag('true');" />
         <asp:Button ID="Button1" runat="server" OnClick="Button1_Click"

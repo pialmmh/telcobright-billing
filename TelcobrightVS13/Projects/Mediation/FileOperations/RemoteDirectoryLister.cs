@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 namespace TelcobrightFileOperations
 {
-    class DirectoryLister
+    public class DirectoryLister
     {
         List<RemoteFileInfo> GetFilesOnlyWithoutFolders(RemoteDirectoryInfo directoryInfo)
         {

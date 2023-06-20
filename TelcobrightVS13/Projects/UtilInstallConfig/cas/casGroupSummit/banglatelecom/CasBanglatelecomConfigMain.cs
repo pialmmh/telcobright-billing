@@ -20,7 +20,7 @@ namespace InstallConfig
     public partial class CasBanglaTelecomAbstractConfigConfigGenerator : AbstractConfigConfigGenerator
     {
         public override TelcobrightConfig Tbc { get; }
-        public BanglaTelecomAbstractConfigConfigGenerator()
+        public CasBanglaTelecomAbstractConfigConfigGenerator()
         {
             int thisServerId = 1;
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, thisServerId,

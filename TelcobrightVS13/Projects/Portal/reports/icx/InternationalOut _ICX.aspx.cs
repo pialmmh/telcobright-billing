@@ -47,7 +47,8 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                          tableName,
                          new List<string>()
                             {
-                                getInterval(groupInterval), 
+                                getInterval(groupInterval),
+                                ViewBySwitch.Checked==true?"tup_switchid":string.Empty,
                                 CheckBoxShowByCountry.Checked==true?"tup_countryorareacode":string.Empty,
                                 CheckBoxShowByDestination.Checked==true?"tup_matchedprefixcustomer":string.Empty,
                                 CheckBoxIntlPartner.Checked==true?"tup_outpartnerid":string.Empty,
@@ -57,6 +58,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                                 "tup_customercurrency",
                                 CheckBoxViewIncomingRoute.Checked==true?"tup_incomingroute":string.Empty,
                                 CheckBoxViewOutgoingRoute.Checked==true?"tup_outgoingroute":string.Empty,
+                                //CheckBoxShowBySwitch.Checked=true?"tup_switch":string.Empty;
                             },
                       
                          new List<string>()
@@ -68,7 +70,8 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                                 CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_inpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxViewIncomingRoute.Checked==true?DropDownListViewIncomingRoute.SelectedIndex>0?" tup_incomingroute="+DropDownListViewIncomingRoute.SelectedItem.Value:string.Empty:string.Empty,
                                 CheckBoxViewOutgoingRoute.Checked==true?DropDownListViewOutgoingRoute.SelectedIndex>0?" tup_outgoingroute="+DropDownListViewOutgoingRoute.SelectedItem.Value:string.Empty:string.Empty,
-                                " totalcalls>0",
+                                ViewBySwitch.Checked==true?DropDownListShowBySwitch.SelectedIndex>0?"tup_switchid="+DropDownListShowBySwitch.SelectedItem.Value:string.Empty:string.Empty,
+                                    
                             }).getSQLString();
 
         //File.WriteAllText("c:" + Path.DirectorySeparatorChar + "temp" + Path.DirectorySeparatorChar + "testQuery.txt", constructedSQL);
@@ -456,16 +459,22 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                 var IOSList = contex.partners.Where(p => p.PartnerType == 2).ToList();
                 DropDownListIgw.Items.Clear();
                 DropDownListIgw.Items.Add(new ListItem(" [All]", "-1"));
-                foreach (partner p in IOSList.OrderBy(x => x.PartnerName))
-                {
+                foreach (partner p in IOSList.OrderBy(x => x.PartnerName)){
                     DropDownListIgw.Items.Add(new ListItem(p.PartnerName, p.idPartner.ToString()));
                 }
                 var PartnerList = contex.partners.Where(p => p.PartnerType == 3).ToList();
                 DropDownListIntlCarier.Items.Clear();
                 DropDownListIntlCarier.Items.Add(new ListItem(" [All]", "-1"));
-                foreach (partner p in PartnerList.OrderBy(x => x.PartnerName))
-                {
+                foreach (partner p in PartnerList.OrderBy(x => x.PartnerName)){
                     DropDownListIntlCarier.Items.Add(new ListItem(p.PartnerName, p.idPartner.ToString()));
+                }
+
+
+                List<ne> nes = contex.nes.ToList();
+                DropDownListShowBySwitch.Items.Clear();
+                DropDownListShowBySwitch.Items.Add(new ListItem(" [All]", "-1"));
+                foreach (ne ns in nes.OrderBy(x => x.SwitchName)){
+                    DropDownListShowBySwitch.Items.Add(new ListItem(ns.SwitchName, ns.idSwitch.ToString()));
                 }
 
             }
@@ -770,7 +779,14 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
             }
         }
     }
-
+    protected void CheckBoxShowBySwitch_CheckedChanged(object sender, EventArgs e)
+    {
+        if (ViewBySwitch.Checked == true)
+        {
+            DropDownListShowBySwitch.Enabled = true;
+        }
+        else DropDownListShowBySwitch.Enabled = false;
+    }
 
     protected void CheckBoxShowByPartner_CheckedChanged(object sender, EventArgs e)
     {
@@ -859,12 +875,8 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                         DropDownPrefix.Items.Add(new ListItem(dr[1].ToString(), dr[0].ToString()));
                     }
                 }
-
             }
         }
-
-
-
     }
 
     protected void CheckBoxShowByDestination_CheckedChanged(object sender, EventArgs e)
@@ -1312,6 +1324,10 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
     {
         DropDownListViewOutgoingRoute.Enabled = CheckBoxViewOutgoingRoute.Checked;
     }
+    //protected void CheckBoxShowBySwitch_CheckedChanged(object sender, EventArgs e)
+    //{
+    //    DropDownListShowBySwitch.Enabled = CheckBoxShowBySwitch.Checked;
+    //}
 
     protected void DropDownListIgw_OnSelectedIndexChanged(object sender, EventArgs e)
     {

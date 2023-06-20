@@ -21,6 +21,24 @@ public partial class DefaultRptLocalTollFree {
     protected global::System.Web.UI.WebControls.DropDownList DropDownListReportSource;
     
     /// <summary>
+    /// ViewBySwitch control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.CheckBox ViewBySwitch;
+    
+    /// <summary>
+    /// DropDownListShowBySwitch control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList DropDownListShowBySwitch;
+    
+    /// <summary>
     /// submit control.
     /// </summary>
     /// <remarks>

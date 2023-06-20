@@ -51,8 +51,19 @@ namespace Process
                             if (thisSwitch.SkipCdrListed == 1) continue;
                             Console.WriteLine($"Checking new cdr files for Switch {thisSwitch.SwitchName} in vault...");
                             string vaultName = thisSwitch.SourceFileLocations;
-                            Vault vault = tbc.DirectorySettings.Vaults.First(c => c.Name == vaultName);
-                            var fileNames = vault.GetFileListLocal()
+                            //Vault vault = tbc.DirectorySettings.Vaults.First(c => c.Name == vaultName);
+                            string cdrPathLocal = tbc.DirectorySettings.SyncPairs[vaultName]
+                                .DstSyncLocation.FileLocation.StartingPath;
+                            //var fileNames = vault.GetFileListLocal()
+                            //var fileNames = Directory.GetFiles()
+                            //Dictionary<string, FileInfo> fileNames = new Dictionary<string, FileInfo>();
+
+                            //List<FileInfo> localFiles = this.LocalLocation.GetLocalFilesNonRecursive();
+                            DirectoryLister dirlister = new DirectoryLister();
+                            List<FileInfo> fileNames = dirlister.ListLocalDirectoryNonRecursive(cdrPathLocal)
+                            
+
+
                                 .Where(fInfo => fInfo.Extension == thisSwitch.FileExtension
                                     && !fInfo.Name.EndsWith(".tmp") && !fInfo.Name.Contains(".filepart")).ToList();
                             Console.WriteLine($"Found {fileNames.Count} files, checking split history...");

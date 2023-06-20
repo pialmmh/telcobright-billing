@@ -44,8 +44,9 @@ namespace Jobs
                 }
                 else if (delParam.FileLocation.LocationType == "vault")
                 {
-                    Vault vault = input.Tbc.DirectorySettings.Vaults.First(c => c.Name == delParam.FileLocation.Name);
-                    if (vault.DeleteSingleFile(delParam.FileName) == false) return JobCompletionStatus.Incomplete;
+                    //Vault vault = input.Tbc.DirectorySettings.Vaults.First(c => c.Name == delParam.FileLocation.Name);
+                    //if (vault.DeleteSingleFile(delParam.FileName) == false) return JobCompletionStatus.Incomplete;
+                    File.Delete(delParam.FileName);
                 }
             }
             return JobCompletionStatus.Complete;
