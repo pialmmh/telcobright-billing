@@ -19,7 +19,7 @@ namespace TelcobrightMediation.Config
                                        this.VaultDirectory;
         public string FullPathResources => this.FullPathVault + Path.DirectorySeparatorChar +
                                        this.ResourcesDirectory;
-        public Dictionary<string, SyncPair> SyncPairs { get; set; }
+        public Dictionary<string, SyncPair> SyncPairs { get; set; }= new Dictionary<string, SyncPair>();
         public DirectorySettings(string rootDirectory)
         {
             this.RootDirectory = rootDirectory;

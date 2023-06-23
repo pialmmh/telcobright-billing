@@ -40,7 +40,8 @@ namespace InstallConfig
 
         public void writeTelcobrightPartnerAndNe()
         {
-            if (ConsoleUtil.getConfirmationFromUser("Create Telcobrightpartner and NE? (Y/N)"))
+            if (ConsoleUtil.getConfirmationFromUser("Create Telcobrightpartner and NE? (Y/N) for "+
+                this.Tbc.Telcobrightpartner.databasename))
             {
                 PartnerEntities context =
                     new PartnerEntities(ConnectionManager.GetEntityConnectionString(Tbc.DatabaseSetting));
@@ -50,15 +51,14 @@ namespace InstallConfig
                     },
                     Tbc.Nes);
                 Console.WriteLine();
-                Console.WriteLine("Telcobrightpartner and NE created successfully!");
+                Console.WriteLine("Telcobrightpartner and NE created successfully for " + Tbc.Telcobrightpartner.databasename);
             }
             else
             {
                 Console.WriteLine();
-                Console.WriteLine("Telcobrightpartner and NE was not created.");
+                Console.WriteLine("Telcobrightpartner and NE was not created for "+Tbc.Telcobrightpartner.databasename);
             }
         }
-
         static void WriteConfig(TelcobrightConfig tbc, ConfigPathHelper configPathHelper)
         {
             //write web & app.config files
@@ -81,7 +81,7 @@ namespace InstallConfig
             SerializeConfig(tbc, configPathHelper.GetOperatorWiseTargetFileNameInUtil(operatorShortName));
             //write config for windows service
             targetDir = configPathHelper.GetTopShelfConfigDir();
-            SerializeConfig(tbc, configPathHelper.GetOperatorWiseTargetFileNameInTopShelf(operatorShortName));
+            SerializeConfig(tbc, configPathHelper.GetTemplateConfigFileName("telcobright.conf"));
             //write config for portal
             targetDir = configPathHelper.GetPortalBinPath();
             SerializeConfig(tbc, configPathHelper.GetTargetFileNameForPortal(operatorShortName));

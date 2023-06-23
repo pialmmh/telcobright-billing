@@ -12,9 +12,9 @@ namespace TelcobrightMediation
 {
     public class TelcobrightConfig
     {
+        public int TcpPortNoForRemoteScheduler { get; set; }
         public telcobrightpartner Telcobrightpartner { get; set; }
         public List<ne> Nes { get; set; }
-        public int TcpPortNoForRemoteScheduler { get; set; }
         public int DefaultTimeZoneId { get; set; } = 3251;
         public TelecomOperatortype TelecomOperatortype { get;}
         public List<QuartzTbDaemonConfig> SchedulerDaemonConfigs { get; set; }
@@ -35,16 +35,14 @@ namespace TelcobrightMediation
         public List<KeyValuePair<Regex, string>> ServiceAliasesRegex { get; set; } =
             new List<KeyValuePair<Regex, string>>();
         public TelcobrightConfig(TelecomOperatortype telecomOperatortype,
-            int thisServerId, telcobrightpartner tbpPartner, int tcpPortNoForRemoteScheduler)
+            int thisServerId, telcobrightpartner tbpPartner)
         {
             this.ServerId = thisServerId;
             this.ApplicationServersConfig = new List<Server>();
             this.ResourcePool = new ResourcePool();
             this.TelecomOperatortype = telecomOperatortype;
             this.Telcobrightpartner = tbpPartner;
-            this.TcpPortNoForRemoteScheduler = tcpPortNoForRemoteScheduler;
         }
-
         public string GetPathIndependentApplicationDirectory()
         {
             return this.DirectorySettings.RootDirectory.Replace("/", Path.DirectorySeparatorChar.ToString());

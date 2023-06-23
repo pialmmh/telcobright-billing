@@ -27,7 +27,8 @@ namespace PortalApp.ReportHelper
                 cr1.partnerName AS IGW,
                 cr2.partnerName AS 'International Partner',
 				tup_incomingroute , 
-				tup_outgoingroute , 
+				tup_outgoingroute ,
+                ne.SwitchName, 
                 TotalCalls AS CallsCount,
                 Successfulcalls  AS 'No of Calls (Outgoing International)',
                 ConnectedCalls AS ConnectedCount,
@@ -59,6 +60,7 @@ namespace PortalApp.ReportHelper
 	            tup_outpartnerid ,  
 				tup_incomingroute , 
 				tup_outgoingroute , 
+                tup_switchid ,
                 SUM(totalcalls) AS TotalCalls, 
 				SUM(successfulcalls) AS Successfulcalls, 
 				SUM(connectedcalls) AS ConnectedCalls,
@@ -98,6 +100,8 @@ namespace PortalApp.ReportHelper
             ON x.tup_matchedprefixcustomer=cx.Prefix
             LEFT JOIN CountryCode cn
             ON cx.CountryCode=cn.Code
+            LEFT JOIN ne 
+            ON x.tup_switchid=ne.idSwitch
             ORDER BY " + (GetGroupBy().Contains("tup_starttime") ? "Date, " : string.Empty) + " Successfulcalls DESC ;";
         }
     }

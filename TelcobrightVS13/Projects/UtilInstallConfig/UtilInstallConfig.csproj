@@ -126,6 +126,10 @@
     <Compile Include="purple\PurpleQuartzConfig.cs" />
     <Compile Include="purple\PurpleServerConfig.cs" />
     <Compile Include="purple\PurpleServiceGroups.cs" />
+    <Compile Include="_buildAndDeploy\DeploymentHelper.cs" />
+    <Compile Include="_buildAndDeploy\DeploymentPlatform.cs" />
+    <Compile Include="_buildAndDeploy\TelcobrightDeploymentAll.cs" />
+    <Compile Include="_buildAndDeploy\TelcobrightSeed.cs" />
     <Compile Include="_configWriter\ConfigWriter.cs" />
     <Compile Include="_configWriter\QuartzWriter.cs" />
     <Compile Include="_generator\BIllingRulesDefiner.cs" />
@@ -133,8 +137,8 @@
     <Compile Include="dbl\DblDatabaseSettings.cs" />
     <Compile Include="dbl\dblAppServerConfig.cs" />
     <Compile Include="_generator\DbWriterForConfig.cs" />
-    <Compile Include="_generator\DeploymentProfile.cs" />
-    <Compile Include="_generator\InstanceConfig.cs" />
+    <Compile Include="_buildAndDeploy\DeploymentProfile.cs" />
+    <Compile Include="_buildAndDeploy\InstanceConfig.cs" />
     <Compile Include="_generator\InstanceMenu.cs" />
     <Compile Include="_generator\ParnerRouteImportInfo.cs" />
     <Compile Include="_generator\PartitionInfo.cs" />

@@ -32,6 +32,8 @@ namespace Process
 
         public override void Execute(IJobExecutionContext schedulerContext)
         {
+            return;//todo: mustafa
+
             string operatorName = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");
             try
             {
@@ -61,9 +63,6 @@ namespace Process
                             //List<FileInfo> localFiles = this.LocalLocation.GetLocalFilesNonRecursive();
                             DirectoryLister dirlister = new DirectoryLister();
                             List<FileInfo> fileNames = dirlister.ListLocalDirectoryNonRecursive(cdrPathLocal)
-                            
-
-
                                 .Where(fInfo => fInfo.Extension == thisSwitch.FileExtension
                                     && !fInfo.Name.EndsWith(".tmp") && !fInfo.Name.Contains(".filepart")).ToList();
                             Console.WriteLine($"Found {fileNames.Count} files, checking split history...");

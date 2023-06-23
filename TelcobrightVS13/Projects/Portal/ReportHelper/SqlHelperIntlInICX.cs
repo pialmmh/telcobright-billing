@@ -26,7 +26,8 @@ namespace PortalApp.ReportHelper
                 cr1.partnerName AS ANS,
                 cr2.partnerName AS IGW,
 				tup_incomingroute , 
-				tup_outgoingroute , 
+				tup_outgoingroute ,
+                ne.SwitchName,
                 TotalCalls AS CallsCount,
                 Successfulcalls  AS 'Number Of Calls (International Incoming)',
                 ConnectedCalls AS ConnectedCount,
@@ -54,6 +55,7 @@ namespace PortalApp.ReportHelper
 	            tup_outpartnerid ,  
 				tup_incomingroute , 
 				tup_outgoingroute , 
+                tup_switchid ,
                 SUM(totalcalls) AS TotalCalls, 
 				SUM(successfulcalls) AS Successfulcalls, 
 				SUM(connectedcalls) AS ConnectedCalls,
@@ -86,6 +88,8 @@ namespace PortalApp.ReportHelper
             ON x.tup_destinationId = cr1.idpartner
             LEFT JOIN partner cr2
             ON x.tup_outpartnerid = cr2.idpartner
+            LEFT JOIN ne 
+            ON x.tup_switchid=ne.idSwitch
             ORDER BY " + (GetGroupBy().Contains("tup_starttime") ? "Date, " : string.Empty) + " Successfulcalls,costansin DESC ;";
         }
     }

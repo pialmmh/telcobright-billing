@@ -160,6 +160,7 @@
     <Compile Include="Config\IConfigGenerator.cs" />
     <Compile Include="Config\IisApplicationPool.cs" />
     <Compile Include="Config\InternetSite.cs" />
+    <Compile Include="FileOperations\SyncPair.cs" />
     <Compile Include="MefData\Composers\AutomationContainer.cs" />
     <Compile Include="Config\JobInputData\StandardTelcobrightJobInput.cs" />
     <Compile Include="Config\JobPreRequisite.cs" />

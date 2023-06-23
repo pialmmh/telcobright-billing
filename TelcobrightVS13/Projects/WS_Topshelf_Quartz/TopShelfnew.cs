@@ -52,11 +52,11 @@ namespace WS_Telcobright_Topshelf
             {
                 Console.WriteLine("Starting Telcobright Scheduler.");
                 mefProcessContainer = new MefProcessContainer(mefColllectiveAssemblyComposer);
-                Dictionary<string, TelcobrightConfig> operatorWiseConfigs = GetTelcobrightConfigs();
+                TelcobrightConfig tbc = GetTelcobrightConfig();
                 IScheduler runtimeScheduler = null;
                 try
                 {
-                    runtimeScheduler = GetScheduler(SchedulerRunTimeType.Runtime,operatorWiseConfigs.First().Value);
+                    runtimeScheduler = GetScheduler(SchedulerRunTimeType.Runtime,tbc);
                 }
                 catch (Exception e1)
                 {
@@ -69,10 +69,10 @@ namespace WS_Telcobright_Topshelf
                 }
                 Console.WriteLine("Starting RAMJobStore based scheduler....");
                 runtimeScheduler.Standby();
-                IScheduler debugScheduler = GetScheduler(SchedulerRunTimeType.Debug, operatorWiseConfigs.First().Value);
+                IScheduler debugScheduler = GetScheduler(SchedulerRunTimeType.Debug, tbc.First().Value);
                 ScheduleDebugJobsThroughMenu(runtimeScheduler, debugScheduler);
                 debugScheduler.Context.Put("processes", mefProcessContainer);
-                debugScheduler.Context.Put("configs", operatorWiseConfigs);
+                debugScheduler.Context.Put("configs", tbc);
                 debugScheduler.Start();
                 Console.WriteLine("Telcobright Scheduler has been started.");
                 Console.ReadLine();
@@ -85,35 +85,20 @@ namespace WS_Telcobright_Topshelf
             }
 
         }
-
-        
-
-        private static Dictionary<string, TelcobrightConfig> GetTelcobrightConfigs()
+        private static TelcobrightConfig GetTelcobrightConfig()
         {
             bool disableParallelMediationForDebug =
                 Convert.ToBoolean(ConfigurationManager.AppSettings["disableParallelMediationForDebug"]);
-            DirectoryInfo dir =
-                new DirectoryInfo(ExecutablePathFinder.GetBinPath() + Path.DirectorySeparatorChar + "config");
-            Dictionary<string, TelcobrightConfig> operatorWiseConfigs = new Dictionary<string, TelcobrightConfig>();
-            foreach (FileInfo configFile in dir.GetFiles())
+            string execPath = FileAndPathHelper.GetCurrentExecPath();
+            DirectoryInfo configDir= new DirectoryInfo(new DirectoryInfo(execPath).Parent.FullName +
+                                                       Path.DirectorySeparatorChar + "Config");
+            string configFileName = configDir.FullName + Path.DirectorySeparatorChar + "telcobright.conf";
+            TelcobrightConfig tbc = ConfigFactory.GetConfigFromFile(configFileName);
+            if (Debugger.IsAttached)
             {
-                string configFileNameAsOperatorName = Path.GetFileNameWithoutExtension(configFile.Name);
-                TelcobrightConfig tbc = ConfigFactory.GetConfigFromFile(configFile.FullName);
-                string entityConStr =
-                    ConnectionManager.GetEntityConnectionStringByOperator(configFileNameAsOperatorName, tbc);
-                using (PartnerEntities context = new PartnerEntities(entityConStr))
-                {
-                    var operatorShortName = tbc.Telcobrightpartner.databasename;
-                    telcobrightpartner tbPartner = context.telcobrightpartners
-                        .Where(p => p.databasename == operatorShortName).ToList().First();
-                }
-                if (Debugger.IsAttached)
-                {
-                    tbc.CdrSetting.DisableParallelMediation = disableParallelMediationForDebug;
-                }
-                operatorWiseConfigs.Add(configFileNameAsOperatorName, tbc);
+                tbc.CdrSetting.DisableParallelMediation = disableParallelMediationForDebug;
             }
-            return operatorWiseConfigs;
+            return tbc;
         }
 
         static IScheduler GetScheduler(SchedulerRunTimeType runTimeType,TelcobrightConfig tbc)// IApplicationContext springContext)

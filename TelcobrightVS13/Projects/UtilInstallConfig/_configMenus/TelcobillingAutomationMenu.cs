@@ -129,11 +129,15 @@ namespace InstallConfig
                                 .ToList();
                         foreach (var tbc in selectedTbcs)
                         {
-                            ConfigWriter cw = new ConfigWriter(tbc,this.ConfigPathHelper,this.ConsoleUtil);
+                            deployBinariesForProduction(tbc);
+
+                            ConfigWriter cw = new ConfigWriter(tbc, this.ConfigPathHelper, this.ConsoleUtil);
                             cw.writeConfig();
                             cw.writeTelcobrightPartnerAndNe();
+                            configureQuarzJobStore(tbc);
+                            Console.WriteLine("Press any key to continue...");
+                            Console.ReadKey();
                         }
-
                         break;
                     case '7':
                         //choices = Menu.getChoices(menuItems, "Select instances to modify partitions:");
@@ -157,11 +161,47 @@ namespace InstallConfig
                 goto Start;
         }
     }
-        
+
+        private static void configureQuarzJobStore(TelcobrightConfig tbc)
+        {
+            //reset job store
+            QuartzWriter quartzWriter = new QuartzWriter(tbc);
+            Console.WriteLine($"Reset QuartzJob Store for {tbc.Telcobrightpartner.databasename} (Y/N)? this will clear all job data.");
+            ConsoleKeyInfo keyInfo = Console.ReadKey();
+            if (keyInfo.KeyChar == 'Y' || keyInfo.KeyChar == 'y')
+            {
+                quartzWriter.configureQuartzJobStore();
+                Console.WriteLine();
+                Console.WriteLine("Job store has been reset successfully for " +
+                                  getOperatorShortName(tbc));
+            }
+            else
+            {
+                Console.WriteLine();
+                Console.WriteLine("Job store was not reset for " +
+                                  tbc.Telcobrightpartner.databasename);
+            }
+        }
+
+        private static void deployBinariesForProduction(TelcobrightConfig tbc)
+        {
+            Console.WriteLine("Deploying binaries for " + tbc.Telcobrightpartner.databasename);
+            string currentbinPath = FileAndPathHelper.getBinPath();
+            string solutionDir = new DirectoryInfo(currentbinPath).Parent.Parent.FullName;
+            DeploymentHelper deploymentHelper =
+                new DeploymentHelper(tbc, solutionDir,DeploymentPlatform.Win32);
+            deploymentHelper.deploy();
+            Console.WriteLine("Binaries deployed successfully for " + getOperatorShortName(tbc));
+        }
+
+        private static string getOperatorShortName(TelcobrightConfig tbc)
+        {
+            return tbc.Telcobrightpartner.databasename;
+        }
 
 
 
-       
+
 
         static void DeletePrevConfigFilesForPortalAndWinService(ConfigPathHelper configPathHelper)
         {

@@ -56,10 +56,32 @@ namespace Process
                 if (tbc.CdrSetting.DescendingOrderWhileListingFiles == true)
                     fileNames = fileNames.OrderByDescending(c => c).ToList();
                 if(fileNames.Any()) heartbeat1.end(); //heartbit1 successful, expect at least one good heartbeat in an hour
-                using (PartnerEntities context=new PartnerEntities(entityConStr))
+                using(PartnerEntities context=new PartnerEntities(entityConStr))
                 {
                     var connection = context.Database.Connection;
                     connection.Open();
+                    Dictionary<string, string> jobNames = fileNames.Select(f => // kv<jobName,fileName>
+                        new
+                        {
+                            jobName = FileUtil.prepareJobNamesToCheckIfExists(tbc, syncPair.Name, f, context),
+                            fileName = f
+                        }).ToDictionary(a => a.jobName, a => a.fileName);
+
+                    Dictionary<string,string> existingJobNames = context.Database
+                        .SqlQuery<string>($@"select jobname from job 
+                                             where idjobdefinition=6 
+                                             jobname in ({string.Join(",",jobNames.Keys.Select(f=> $"'{f}'"))})")
+                                             .ToDictionary(f=>f.ToString());
+                    fileNames= new List<string>();
+                    foreach (KeyValuePair<string, string> newJob in jobNames)
+                    {
+                        bool jobExists = existingJobNames.ContainsKey(newJob.Key);
+                        if (jobExists == false)
+                        {
+                            fileNames.Add(newJob.Value);
+                        }
+                    }
+
                     List<job> jobs=new List<job>();
                     foreach (string fileName in fileNames)
                     {
@@ -90,3 +112,4 @@ namespace Process
         }
     }
 }
+

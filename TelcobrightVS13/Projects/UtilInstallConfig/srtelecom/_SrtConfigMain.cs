@@ -50,8 +50,7 @@ namespace InstallConfig
                     AutoDeleteOldData = 1,
                     AutoDeleteStartHour = 4,
                     AutoDeleteEndHour = 6
-                },
-                tcpPortNoForRemoteScheduler: 556
+                },tcpPortNoForRemoteScheduler: 556
                 );
         }
 
@@ -69,7 +68,7 @@ namespace InstallConfig
                     CDRPrefix= "SRT",
                     FileExtension= ".dat",
                     Description= null,
-                    SourceFileLocations= "vault",
+                    SourceFileLocations= "Huawei:Vault",
                     BackupFileLocations= null,
                     LoadingStopFlag= null,
                     LoadingSpanCount= 100,

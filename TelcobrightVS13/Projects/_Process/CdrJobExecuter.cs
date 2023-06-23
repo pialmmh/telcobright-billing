@@ -34,6 +34,7 @@ namespace Process
         public override int ProcessId => 103;
         public override void Execute(IJobExecutionContext schedulerContext)
         {
+            return;//todo: mustafa
             string operatorName = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");
             try
             {

@@ -21,24 +21,7 @@ namespace InstallConfig
             this.tbc = tbc;
         }
 
-        public void writeQuartzJobStore()
-        {
-            //reset job store
-            Console.WriteLine($"Reset QuartzJob Store for {tbc.Telcobrightpartner.databasename} (Y/N)? this will clear all job data.");
-            ConsoleKeyInfo keyInfo = Console.ReadKey();
-            if (keyInfo.KeyChar == 'Y' || keyInfo.KeyChar == 'y')
-            {
-                ConfigureQuartzJobStore(this.tbc); //configure job store for all opeartors
-                Console.WriteLine();
-                Console.WriteLine("Job store has been reset successfully.");
-            }
-            else
-            {
-                Console.WriteLine();
-                Console.WriteLine("Job store was not reset.");
-            }
-        }
-        void ConfigureQuartzJobStore(TelcobrightConfig tbc)
+        public void configureQuartzJobStore()
         {
             DbUtil.CreateOrOverwriteQuartzTables(tbc.DatabaseSetting);
             //read quartz config part for ALL configured operator (mef)

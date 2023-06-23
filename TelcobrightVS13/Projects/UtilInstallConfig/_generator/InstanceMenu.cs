@@ -95,7 +95,6 @@ namespace InstallConfig
 
         static void printMenu(Dictionary<string, string> instances, string msgToDisplay)
         {
-            Console.WriteLine("select operator or instance to modify partitions:");
             int i = 0;
             foreach (var kv in instances)
             {

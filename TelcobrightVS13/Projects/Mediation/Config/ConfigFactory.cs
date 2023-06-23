@@ -14,13 +14,6 @@ namespace TelcobrightMediation.Config
             {
                 throw new Exception("Config file name is missing.");
             }
-            //prev deserializer
-            //using (StreamReader file = File.OpenText(configFileName))
-            //{
-            //    JsonSerializer serializer = new JsonSerializer();
-            //    return (TelcobrightConfig) serializer.Deserialize(file, typeof(TelcobrightConfig));
-            //}
-            //end prev
             string json = File.ReadAllText(configFileName);
             var obj = JsonConvert.DeserializeObject<TelcobrightConfig>(json,
                 new JsonSerializerSettings

@@ -239,21 +239,22 @@
                     <div style="height: 3px; clear: both;"></div>
 
                     <div style="float: left;">
-                        <%--View by ANS: --%>
+                        <%--View by ANS:--%> 
                         <asp:CheckBox ID="CheckBoxShowByAns" runat="server" AutoPostBack="True"
                             OnCheckedChanged="CheckBoxShowByAns_CheckedChanged" Checked="false" Visible="False" />
                         <asp:DropDownList ID="DropDownListAns" runat="server"
                             Visible="False" Enabled="False">
+
                         </asp:DropDownList>
                     </div>
 
                     <div style="float: left;">
                         View by ANS:
                         <asp:CheckBox ID="CheckBoxShowByIgw" runat="server"
-                            AutoPostBack="True" OnCheckedChanged="CheckBoxShowByIgw_CheckedChanged" Checked="false" />
+                            AutoPostBack="True" OnCheckedChanged="CheckBoxShowByIgw_CheckedChanged" Checked="false"/>
 
                         <asp:DropDownList ID="DropDownListIgw" runat="server" OnSelectedIndexChanged="DropDownListIgw_OnSelectedIndexChanged"
-                            Enabled="False" AutoPostBack="True">
+                            Enabled="False" AutoPostBack="True" >
                         </asp:DropDownList>
 
                     </div>
@@ -342,12 +343,12 @@
             <Columns>
                 <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" />
                 <asp:BoundField DataField="Country" HeaderText="Country"
-                    SortExpression="Country" Visible="false" />
+                    SortExpression="Country"/>
                 <asp:BoundField DataField="Destination" HeaderText="Destination"
                     SortExpression="Destination" />
-                <asp:BoundField DataField="ANS" HeaderText="ANS" SortExpression="ANS" />
+                <asp:BoundField DataField="IGW" HeaderText="ANSNotUse" SortExpression="ANSNotUse"  Visible="false"/>
                 <asp:BoundField DataField="tup_incomingroute" HeaderText="ANS Route" SortExpression="tup_incomingroute" />
-                <asp:BoundField DataField="IGW" HeaderText="ANS" SortExpression="IGW" />
+                <asp:BoundField DataField="ANS" HeaderText="ANS" SortExpression="ANS" />
                 <asp:BoundField DataField="International Partner" HeaderText="IOS" SortExpression="International Partner" />
                 <asp:BoundField DataField="tup_outgoingroute" HeaderText="IOS Route" SortExpression="tup_outgoingroute" />
 

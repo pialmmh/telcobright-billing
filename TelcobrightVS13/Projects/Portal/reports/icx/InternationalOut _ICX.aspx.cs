@@ -58,7 +58,6 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                                 "tup_customercurrency",
                                 CheckBoxViewIncomingRoute.Checked==true?"tup_incomingroute":string.Empty,
                                 CheckBoxViewOutgoingRoute.Checked==true?"tup_outgoingroute":string.Empty,
-                                //CheckBoxShowBySwitch.Checked=true?"tup_switch":string.Empty;
                             },
                       
                          new List<string>()
@@ -130,21 +129,22 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
         GridView1.Columns[0].Visible = true;
         if (CheckBoxDailySummary.Checked)
         {
-            GridView1.Columns[1].Visible = false;
-            GridView1.Columns[2].Visible = false;
-            GridView1.Columns[3].Visible = false;
+            //GridView1.Columns[1].Visible = false;
+            //GridView1.Columns[2].Visible = false;
+            //GridView1.Columns[3].Visible = false;
             GridView1.Columns[6].Visible = false;
         }
         //GridView1.Columns[1].Visible = true;
         //GridView1.Columns[2].Visible = false;
         //GridView1.Columns[3].Visible = false;
-        GridView1.Columns[5].Visible = false;
+        //GridView1.Columns[5].Visible = false;
         //*****************************
 
         GridView1.Columns[1].Visible = CheckBoxShowByCountry.Checked;
         GridView1.Columns[2].Visible = CheckBoxShowByDestination.Checked;
-        GridView1.Columns[3].Visible = CheckBoxShowByIgw.Checked;
+        //GridView1.Columns[3].Visible = CheckBoxShowByIgw.Checked;
         GridView1.Columns[4].Visible = CheckBoxViewIncomingRoute.Checked;
+
         GridView1.Columns[6].Visible = CheckBoxIntlPartner.Checked;
         GridView1.Columns[7].Visible = CheckBoxViewOutgoingRoute.Checked;
         GridView1.Columns[16].Visible = CheckBoxShowPerformance.Checked;
@@ -809,13 +809,11 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
         if (CheckBoxShowByAns.Checked == true)
         {
             DropDownListAns.Enabled = true;
-            //GridView1.Columns[3].Visible = true;
         }
         else
         {
             DropDownListAns.Enabled = false;
             DropDownListAns.SelectedIndex = 0;
-            //GridView1.Columns[3].Visible = false;
         }
     }
     protected void CheckBoxShowByIgw_CheckedChanged(object sender, EventArgs e)
@@ -823,13 +821,18 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
         if (CheckBoxShowByIgw.Checked == true)
         {
             DropDownListIgw.Enabled = true;
-            //GridView1.Columns[4].Visible = true;
+            DropDownListAns.Enabled = true;
+            CheckBoxShowByAns.Checked = true;
+            GridView1.Columns[5].Visible = true;
         }
         else
         {
             DropDownListIgw.Enabled = false;
             DropDownListIgw.SelectedIndex = 0;
-            //GridView1.Columns[4].Visible = false;
+            DropDownListAns.Enabled = false ;
+            CheckBoxShowByAns.Checked = false;
+
+            GridView1.Columns[5].Visible = false;
         }
     }
     protected void CheckBoxShowByCountry_CheckedChanged(object sender, EventArgs e)

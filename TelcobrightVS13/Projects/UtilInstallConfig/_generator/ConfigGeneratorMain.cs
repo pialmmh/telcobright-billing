@@ -69,7 +69,7 @@ namespace InstallConfig
             ConfigPathHelper configPathHelper = new ConfigPathHelper("WS_Topshelf_Quartz", "portal", "UtilInstallConfig", "_dbscripts");
             DbUtil.configPathHelper = configPathHelper;
             ConsoleUtil consoleUtil= new ConsoleUtil(new List<char>() {'y', 'Y'});
-            List<Deploymentprofile> deploymentProfiles = GetAllDeploymentInstances();
+            List<Deploymentprofile> deploymentProfiles = TelcobrightDeploymentAll.getDeploymentprofiles();
             string selectedProfileName= Menu.getSingleChoice(deploymentProfiles.Select(dp=>dp.profileName).ToList(),
                 "Select a deployment profile to configure automation.");
             Deploymentprofile selectedProfile = deploymentProfiles.First(p => p.profileName == selectedProfileName);
@@ -88,7 +88,8 @@ namespace InstallConfig
 
         }
 
-        private static List<TelcobrightConfig> getSelectedOperatorsConfig(List<string> instanceNames, ConfigPathHelper configPathHelper)
+        private static List<TelcobrightConfig> getSelectedOperatorsConfig(List<string> instanceNames, ConfigPathHelper configPathHelper,
+            int schedulerPortNo)
         {
             List<AbstractConfigConfigGenerator> operatorsToBeConfigured
                 = new MefConfigImportComposer().Compose().Where(op => instanceNames.Contains(op.Tbc.Telcobrightpartner.databasename)).ToList();
@@ -96,6 +97,7 @@ namespace InstallConfig
             foreach (AbstractConfigConfigGenerator configGenerator in operatorsToBeConfigured)
             {
                 TelcobrightConfig tbc = configGenerator.GenerateConfig();
+                tbc.TcpPortNoForRemoteScheduler = schedulerPortNo;
                 tbc.SchedulerDaemonConfigs = configGenerator.GetSchedulerDaemonConfigs();
                 operatorConfigs.Add(tbc);
             }
@@ -106,7 +108,7 @@ namespace InstallConfig
         
         private static Dictionary<string, string> GetDeploymentInstanceToMenuItems()
         {
-            DirectoryInfo utilDir = (new DirectoryInfo(FileAndPathHelper.GetBinPath()).Parent).Parent;
+            DirectoryInfo utilDir = (new DirectoryInfo(FileAndPathHelper.GetCurrentExecPath()).Parent).Parent;
             string deploymentProfile = ConfigurationManager.AppSettings.ToDictionary()
                                         .First(kv => kv.Key.Equals("deploymentProfile")).Value;
             string deployJson = utilDir.FullName + Path.DirectorySeparatorChar
@@ -120,16 +122,6 @@ namespace InstallConfig
             }
 
             return keyValuesForMenu;
-        }
-
-        private static List<Deploymentprofile> GetAllDeploymentInstances()
-        {
-            DirectoryInfo utilDir = (new DirectoryInfo(FileAndPathHelper.GetBinPath()).Parent).Parent;
-            DirectoryInfo deploymentDir = new DirectoryInfo(utilDir.FullName +Path.DirectorySeparatorChar + "deployment"); //Assuming Test is your Folder
-            FileInfo[] jsonFiles = deploymentDir.GetFiles("*.json"); //Getting Text files
-            return jsonFiles
-                .Select(j => JsonConvert.DeserializeObject<Deploymentprofile>(File.ReadAllText(j.FullName)))
-                .ToList();
         }
     }
 }

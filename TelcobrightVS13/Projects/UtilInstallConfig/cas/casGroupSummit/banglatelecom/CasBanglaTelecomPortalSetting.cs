@@ -19,7 +19,7 @@ namespace InstallConfig
 {
     public partial class CasBanglaTelecomAbstractConfigConfigGenerator//quartz config part
     {
-        /*static string databaseConfigFileName = new DirectoryInfo(FileAndPathHelper.GetBinPath()).Parent.Parent.FullName
+        /*static string databaseConfigFileName = new DirectoryInfo(FileAndPathHelper.GetCurrentExecPath()).Parent.Parent.FullName
                                                + Path.DirectorySeparatorChar + "Server.conf";
 */
         PortalSettings GetPortalSettings(string operatorName)

@@ -33,6 +33,8 @@ namespace Process
         public override int ProcessId => 104;
         public override void Execute(IJobExecutionContext schedulerContext)
         {
+            return;//todo: mustafa
+
             foreach (var process in System.Diagnostics.Process.GetProcesses().Where(p => p.ProcessName.ToLower().Contains("werfault")))
             {
                 process.Kill();

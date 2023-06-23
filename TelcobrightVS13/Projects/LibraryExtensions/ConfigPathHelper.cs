@@ -51,9 +51,9 @@ namespace LibraryExtensions
             return GetOperatorWiseConfigDirInUtil(operatorShortName) + Path.DirectorySeparatorChar+ operatorShortName+
                 ".conf";
         }
-        public string GetOperatorWiseTargetFileNameInTopShelf(string operatorShortName)
+        public string GetTemplateConfigFileName(string templateFileNameOnly)
         {
-            return GetTopShelfConfigDir()+Path.DirectorySeparatorChar+ operatorShortName + ".conf";
+            return GetTopShelfConfigDir()+Path.DirectorySeparatorChar+ templateFileNameOnly + ".conf";
         }
 
         public string GetTargetFileNameForPortal(string operatorShortName)

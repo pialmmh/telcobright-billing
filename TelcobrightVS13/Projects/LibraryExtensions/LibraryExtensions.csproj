@@ -102,6 +102,7 @@
     <Compile Include="ConfigPathHelper.cs" />
     <Compile Include="DecimalExtensions.cs" />
     <Compile Include="DateTimeExtensions.cs" />
+    <Compile Include="DirectoryInfoExtension.cs" />
     <Compile Include="EntityHelper\ischema_columns.cs" />
     <Compile Include="EntityHelper\Ischema_Retriever.cs" />
     <Compile Include="EntityHelper\SimplePropertyGetterFromClass.cs" />

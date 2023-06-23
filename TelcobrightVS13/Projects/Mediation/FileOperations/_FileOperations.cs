@@ -80,6 +80,29 @@ namespace TelcobrightFileOperations
             fileCopyJob.CreationTime = DateTime.Now;
             return fileCopyJob;
         }
+        public static string prepareJobNamesToCheckIfExists(TelcobrightConfig tbc, string syncPairName, string fileName, PartnerEntities context)
+        {
+            //returns job id
+            SyncPair syncPair = tbc.DirectorySettings.SyncPairs[syncPairName];
+            SyncLocation srcLocation = syncPair.SrcSyncLocation;
+            job fileCopyJob = null;
+            fileCopyJob = new job();
+            int startingPathLen = srcLocation.FileLocation.StartingPath.Length;
+            string relativeFileName = fileName.StartsWith(srcLocation.FileLocation.StartingPath) ?
+                fileName.Substring(startingPathLen) : fileName;
+            relativeFileName = relativeFileName.StartsWith("/") ? relativeFileName.Substring(1) : relativeFileName;
+            JobParamFileCopy copyParam = new JobParamFileCopy()
+            {
+                //relative path processing
+                RelativeFileName = relativeFileName,
+                SyncPairName = syncPair.Name
+            };
+
+            fileCopyJob.idNE = 0;
+            fileCopyJob.idjobdefinition = 6;
+            fileCopyJob.JobName = syncPair.Name + "-" + copyParam.RelativeFileName.Replace(@"\", @"\\");
+            return fileCopyJob.JobName;
+        }
         public static long WriteFileCopyJobSingle(job newJob, DbConnection connection)
         {
             DbCommand command = connection.CreateCommand();
