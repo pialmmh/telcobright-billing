@@ -39,8 +39,7 @@ namespace InstallConfig
                         AutoDeleteOldData = 1,
                         AutoDeleteStartHour = 4,
                         AutoDeleteEndHour = 6
-                    },
-                tcpPortNoForRemoteScheduler: 555);
+                    });
         }
 
         public override TelcobrightConfig GenerateConfig()

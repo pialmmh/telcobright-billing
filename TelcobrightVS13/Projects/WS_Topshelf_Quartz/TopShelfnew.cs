@@ -46,13 +46,14 @@ namespace WS_Telcobright_Topshelf
             {
                 SchedulerHost = "tcp://localhost:555/QuartzScheduler"
             };
-            provider.Init();
             File.WriteAllLines(logFileName, new string[] { DateTime.Now.ToMySqlFormatWithoutQuote() + ": Telcobright started at " + provider.SchedulerHost } );
             try
             {
                 Console.WriteLine("Starting Telcobright Scheduler.");
                 mefProcessContainer = new MefProcessContainer(mefColllectiveAssemblyComposer);
                 TelcobrightConfig tbc = GetTelcobrightConfig();
+                provider.SchedulerHost = $"tcp://localhost:{tbc.TcpPortNoForRemoteScheduler}/QuartzScheduler";
+                provider.Init();
                 IScheduler runtimeScheduler = null;
                 try
                 {
@@ -69,7 +70,7 @@ namespace WS_Telcobright_Topshelf
                 }
                 Console.WriteLine("Starting RAMJobStore based scheduler....");
                 runtimeScheduler.Standby();
-                IScheduler debugScheduler = GetScheduler(SchedulerRunTimeType.Debug, tbc.First().Value);
+                IScheduler debugScheduler = GetScheduler(SchedulerRunTimeType.Debug, tbc);
                 ScheduleDebugJobsThroughMenu(runtimeScheduler, debugScheduler);
                 debugScheduler.Context.Put("processes", mefProcessContainer);
                 debugScheduler.Context.Put("configs", tbc);

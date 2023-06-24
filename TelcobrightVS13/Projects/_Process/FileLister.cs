@@ -52,43 +52,38 @@ namespace Process
                 SyncLocation srcLocation = syncPair.SrcSyncLocation;
                 SyncLocation dstLocation = syncPair.DstSyncLocation;
                 heartbeat1.start();//heatrbit1 start
-                List<string> fileNames = srcLocation.GetFileNamesFiltered(syncPair.SrcSettings, tbc);
+                List<string> newFileNames = srcLocation.GetFileNamesFiltered(syncPair.SrcSettings, tbc);
                 if (tbc.CdrSetting.DescendingOrderWhileListingFiles == true)
-                    fileNames = fileNames.OrderByDescending(c => c).ToList();
-                if(fileNames.Any()) heartbeat1.end(); //heartbit1 successful, expect at least one good heartbeat in an hour
+                    newFileNames = newFileNames.OrderByDescending(c => c).ToList();
+                if(newFileNames.Any()) heartbeat1.end(); //heartbit1 successful, expect at least one good heartbeat in an hour
                 using(PartnerEntities context=new PartnerEntities(entityConStr))
                 {
                     var connection = context.Database.Connection;
                     connection.Open();
-                    Dictionary<string, string> jobNames = fileNames.Select(f => // kv<jobName,fileName>
+                    Dictionary<string, string> newJobNameVsFileName = newFileNames.Select(f => // kv<jobName,fileName>
                         new
                         {
                             jobName = FileUtil.prepareJobNamesToCheckIfExists(tbc, syncPair.Name, f, context),
                             fileName = f
                         }).ToDictionary(a => a.jobName, a => a.fileName);
-
-                    Dictionary<string,string> existingJobNames = context.Database
-                        .SqlQuery<string>($@"select jobname from job 
-                                             where idjobdefinition=6 
-                                             jobname in ({string.Join(",",jobNames.Keys.Select(f=> $"'{f}'"))})")
-                                             .ToDictionary(f=>f.ToString());
-                    fileNames= new List<string>();
-                    foreach (KeyValuePair<string, string> newJob in jobNames)
+                    Dictionary<string, string> existingJobNames = getExistingJobNames(context, newJobNameVsFileName);
+                    newFileNames = new List<string>();
+                    foreach (KeyValuePair<string, string> kv in newJobNameVsFileName)
                     {
-                        bool jobExists = existingJobNames.ContainsKey(newJob.Key);
+                        bool jobExists = existingJobNames.ContainsKey(kv.Key);
                         if (jobExists == false)
                         {
-                            fileNames.Add(newJob.Value);
+                            newFileNames.Add(kv.Value);
                         }
                     }
 
-                    List<job> jobs=new List<job>();
-                    foreach (string fileName in fileNames)
+                    List<job> jobs = new List<job>();
+                    foreach (string fileName in newFileNames)
                     {
                         try
                         {
                             var fileCopyJob = FileUtil.CreateFileCopyJob(tbc, syncPair.Name, fileName, context);
-                            if(fileCopyJob!=null) jobs.Add(fileCopyJob);
+                            if (fileCopyJob != null) jobs.Add(fileCopyJob);
                         }
                         catch (Exception e1)
                         {
@@ -97,7 +92,8 @@ namespace Process
                             continue; //with next file
                         }
                     }
-                    if (jobs.Any()) {
+                    if (jobs.Any())
+                    {
                         heartbeat2.start();// heartbit2 start, probe for successful db write.
                         FileUtil.WriteFileCopyJobMultiple(jobs, context);
                         heartbeat2.end();
@@ -109,6 +105,15 @@ namespace Process
                 Console.WriteLine(e1);
                 ErrorWriter wr = new ErrorWriter(e1, "FileLister", null, "",operatorName);
             }
+        }
+
+        private static Dictionary<string, string> getExistingJobNames(PartnerEntities context, Dictionary<string, string> newJobNameVsFileName)
+        {
+            return context.Database
+                                    .SqlQuery<string>($@"select jobname from job 
+                                             where idjobdefinition=6 
+                                             jobname in ({string.Join(",", newJobNameVsFileName.Keys.Select(f => $"'{f}'"))})")
+                                                         .ToDictionary(f => f.ToString());
         }
     }
 }

@@ -130,8 +130,8 @@
     <Compile Include="_buildAndDeploy\DeploymentPlatform.cs" />
     <Compile Include="_buildAndDeploy\TelcobrightDeploymentAll.cs" />
     <Compile Include="_buildAndDeploy\TelcobrightSeed.cs" />
-    <Compile Include="_configWriter\ConfigWriter.cs" />
-    <Compile Include="_configWriter\QuartzWriter.cs" />
+    <Compile Include="_generator\telcoBilling\TelcoBillingConfigGenerator.cs" />
+    <Compile Include="_generator\telcoBilling\TelcoBillingQuartzWriter.cs" />
     <Compile Include="_generator\BIllingRulesDefiner.cs" />
     <Compile Include="btel\BtelDatabaseSettings.cs" />
     <Compile Include="dbl\DblDatabaseSettings.cs" />
@@ -192,7 +192,7 @@
     <Compile Include="_generator\TableWisePartitionManagementInfo.cs" />
     <Compile Include="CommonValidationRulesGenerator\InconsistentCdrValRulesGen.cs" />
     <Compile Include="CommonValidationRulesGenerator\CommonCdrValRulesGen.cs" />
-    <Compile Include="_configMenus\TelcobillingAutomationMenu.cs" />
+    <Compile Include="_generator\telcoBilling\TelcoBillingMenu.cs" />
     <None Include="app.manifest" />
     <None Include="cas\casGroupSummit\banglatelecom\scripts\appPool_tpny.iisScript" />
     <None Include="cas\casGroupSummit\banglatelecom\scripts\ftp_tpny.iisScript" />

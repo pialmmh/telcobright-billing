@@ -12,11 +12,11 @@ using TelcobrightMediation;
 
 namespace InstallConfig
 {
-    public class QuartzWriter
+    public class TelcoBillingQuartzWriter
     {
         private TelcobrightConfig tbc;
 
-        public QuartzWriter(TelcobrightConfig tbc)
+        public TelcoBillingQuartzWriter(TelcobrightConfig tbc)
         {
             this.tbc = tbc;
         }

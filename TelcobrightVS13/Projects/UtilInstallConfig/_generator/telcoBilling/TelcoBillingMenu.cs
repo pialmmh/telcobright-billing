@@ -20,35 +20,19 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public class TelcoBillingAutomationMenu
+    public class TelcoBillingMenu
     {
         public ConsoleUtil ConsoleUtil { get; set; }
         public List<TelcobrightConfig> Tbcs { get; set; }
         public ConfigPathHelper ConfigPathHelper { get; set; }
 
-        public TelcoBillingAutomationMenu(List<TelcobrightConfig> tbcs, ConfigPathHelper configPathHelper,
+        public TelcoBillingMenu(List<TelcobrightConfig> tbcs, ConfigPathHelper configPathHelper,
             ConsoleUtil consoleUtil)
         {
             this.Tbcs = tbcs;
             this.ConfigPathHelper = configPathHelper;
             this.ConsoleUtil = consoleUtil;
         }
-
-       /* private static List<TelcobrightConfig> getthis.Tbcs(List<string> instances, ConfigPathHelper configPathHelper)
-        {
-            List<AbstractConfigConfigGenerator> operatorsToBeConfigured
-                = new MefConfigImportComposer().Compose().Where(op => instances.Contains(op.Tbc.Telcobrightpartner.databasename)).ToList();
-            List<TelcobrightConfig> operatorConfigs = new List<TelcobrightConfig>();
-            DeletePrevConfigFilesForPortalAndWinService(configPathHelper);
-            foreach (AbstractConfigConfigGenerator configGenerator in operatorsToBeConfigured)
-            {
-                //generate tbc & config file for each operator configure in app.config in installConfig
-                TelcobrightConfig tbc = ConfigureSingleOperator(configGenerator, configPathHelper);
-                tbc.SchedulerDaemonConfigs = configGenerator.GetSchedulerDaemonConfigs();
-                operatorConfigs.Add(tbc);
-            }
-            return operatorConfigs;
-        }*/
         public void showMenu()
         {
             {
@@ -129,12 +113,11 @@ namespace InstallConfig
                                 .ToList();
                         foreach (var tbc in selectedTbcs)
                         {
-                            deployBinariesForProduction(tbc);
-
-                            ConfigWriter cw = new ConfigWriter(tbc, this.ConfigPathHelper, this.ConsoleUtil);
+                            TelcoBillingConfigGenerator cw = new TelcoBillingConfigGenerator(tbc, this.ConfigPathHelper, this.ConsoleUtil);
                             cw.writeConfig();
                             cw.writeTelcobrightPartnerAndNe();
                             configureQuarzJobStore(tbc);
+                            deployBinariesForProduction(tbc);
                             Console.WriteLine("Press any key to continue...");
                             Console.ReadKey();
                         }
@@ -165,12 +148,12 @@ namespace InstallConfig
         private static void configureQuarzJobStore(TelcobrightConfig tbc)
         {
             //reset job store
-            QuartzWriter quartzWriter = new QuartzWriter(tbc);
+            TelcoBillingQuartzWriter telcoBillingQuartzWriter = new TelcoBillingQuartzWriter(tbc);
             Console.WriteLine($"Reset QuartzJob Store for {tbc.Telcobrightpartner.databasename} (Y/N)? this will clear all job data.");
             ConsoleKeyInfo keyInfo = Console.ReadKey();
             if (keyInfo.KeyChar == 'Y' || keyInfo.KeyChar == 'y')
             {
-                quartzWriter.configureQuartzJobStore();
+                telcoBillingQuartzWriter.configureQuartzJobStore();
                 Console.WriteLine();
                 Console.WriteLine("Job store has been reset successfully for " +
                                   getOperatorShortName(tbc));

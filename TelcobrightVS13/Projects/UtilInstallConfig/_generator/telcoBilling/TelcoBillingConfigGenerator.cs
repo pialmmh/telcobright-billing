@@ -17,17 +17,42 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public class ConfigWriter
+    public class TelcoBillingConfigGenerator
     {
         public TelcobrightConfig Tbc { get; set; }
         public ConfigPathHelper ConfigPathHelper { get; set; }
         public ConsoleUtil ConsoleUtil { get; set; }
-        public ConfigWriter(TelcobrightConfig tbc, ConfigPathHelper configPathHelper,
+        public TelcoBillingConfigGenerator(TelcobrightConfig tbc, ConfigPathHelper configPathHelper,
             ConsoleUtil consoleUtil)
         {
             this.Tbc = tbc;
             this.ConsoleUtil = consoleUtil;
             this.ConfigPathHelper = configPathHelper;
+        }
+
+        public static List<TelcobrightConfig> getSelectedOperatorsConfig(Deploymentprofile deploymentprofile)
+        {
+            Dictionary<string, int> namesVsSchedulerPort =
+                deploymentprofile.instances.Select(i =>
+                    new
+                    {
+                        name = i.name,
+                        schedulerPortNo = i.SchedulerPortNo
+                    }).ToDictionary(a => a.name, a => a.schedulerPortNo);
+
+            List<AbstractConfigConfigGenerator> operatorsToBeConfigured
+                = new MefConfigImportComposer().Compose()
+                    .Where(op => namesVsSchedulerPort.Keys
+                        .Contains(op.Tbc.Telcobrightpartner.databasename)).ToList();
+            List<TelcobrightConfig> operatorConfigs = new List<TelcobrightConfig>();
+            foreach (AbstractConfigConfigGenerator configGenerator in operatorsToBeConfigured)
+            {
+                TelcobrightConfig tbc = configGenerator.GenerateConfig();
+                tbc.TcpPortNoForRemoteScheduler = namesVsSchedulerPort[tbc.Telcobrightpartner.databasename];
+                tbc.SchedulerDaemonConfigs = configGenerator.GetSchedulerDaemonConfigs();
+                operatorConfigs.Add(tbc);
+            }
+            return operatorConfigs;
         }
 
         public void writeConfig()
@@ -120,7 +145,7 @@ namespace InstallConfig
             foreach (string line in fileLines)
             {
                 //identity impersonate in web.conf
-                if (!string.IsNullOrEmpty(impersonateUserName) && !string.IsNullOrEmpty(impersonatePassword))
+                if (!String.IsNullOrEmpty(impersonateUserName) && !String.IsNullOrEmpty(impersonatePassword))
                 {
                     if (fileName.ToLower().Contains("web.config"))
                     {
@@ -191,7 +216,7 @@ namespace InstallConfig
                     continue;
                 }
             }
-            return string.Join(Environment.NewLine, newFileLines);
+            return String.Join(Environment.NewLine, newFileLines);
         }
 
         static string ReplaceConfigVariableNamesWithValues(string appOrWebConfigFileName, string sourceString,
@@ -233,7 +258,7 @@ namespace InstallConfig
                     newSegments.Add(str);
                 }
             }
-            return string.Join("", newSegments);
+            return String.Join("", newSegments);
         }
         private static void WriteBillingRules(DatabaseSetting databaseSetting)
         {

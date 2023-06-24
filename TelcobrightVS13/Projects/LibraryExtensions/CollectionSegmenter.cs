@@ -9,7 +9,6 @@ namespace LibraryExtensions
         //convert enumerable to list to save problems associated with enumerable.skip() with parallel collections
         public List<T> Enumerable { get; }
         private int SkipFromStart { get; set; }
-
         public CollectionSegmenter(IEnumerable<T> enumerable, int startAtZeroBasedIndex)
         {
             if (enumerable is ParallelQuery)
@@ -27,6 +26,17 @@ namespace LibraryExtensions
             {
                 method.Invoke(segment);
             }
+        }
+
+        public List<object> ExecuteMethodInSegmentsWithRetval(int segmentSize, Func<IEnumerable<T>, List<object>> method)
+        {
+            IEnumerable<T> segment;
+            List<object> retVal= new List<object>();
+            while ((segment = GetNextSegment(segmentSize)).Any())
+            {
+                retVal.AddRange(method.Invoke(segment));
+            }
+            return retVal;
         }
 
         public IEnumerable<T> GetNextSegment(int segmentSize)

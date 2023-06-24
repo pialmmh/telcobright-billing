@@ -72,14 +72,14 @@ namespace InstallConfig
             List<Deploymentprofile> deploymentProfiles = TelcobrightDeploymentAll.getDeploymentprofiles();
             string selectedProfileName= Menu.getSingleChoice(deploymentProfiles.Select(dp=>dp.profileName).ToList(),
                 "Select a deployment profile to configure automation.");
-            Deploymentprofile selectedProfile = deploymentProfiles.First(p => p.profileName == selectedProfileName);
-            List<string> instanceNames = selectedProfile.instances.Select(i => i.name).ToList();
-            switch (selectedProfile.type)
+            Deploymentprofile deploymentprofile = deploymentProfiles.First(p => p.profileName == selectedProfileName);
+            List<string> instanceNames = deploymentprofile.instances.Select(i => i.name).ToList();
+            switch (deploymentprofile.type)
             {
-                case "telcobilling":
-                    List<TelcobrightConfig> tbcs = getSelectedOperatorsConfig(instanceNames, configPathHelper);
-                    TelcoBillingAutomationMenu telcoBillingMenu =
-                        new TelcoBillingAutomationMenu(tbcs, configPathHelper, consoleUtil);
+                case DeploymentProfileType.TelcoBilling:
+                    List<TelcobrightConfig> tbcs = TelcoBillingConfigGenerator.getSelectedOperatorsConfig(deploymentprofile);
+                    TelcoBillingMenu telcoBillingMenu =
+                        new TelcoBillingMenu(tbcs, configPathHelper, consoleUtil);
                     telcoBillingMenu.showMenu();
                     break;
                 default:
@@ -88,21 +88,7 @@ namespace InstallConfig
 
         }
 
-        private static List<TelcobrightConfig> getSelectedOperatorsConfig(List<string> instanceNames, ConfigPathHelper configPathHelper,
-            int schedulerPortNo)
-        {
-            List<AbstractConfigConfigGenerator> operatorsToBeConfigured
-                = new MefConfigImportComposer().Compose().Where(op => instanceNames.Contains(op.Tbc.Telcobrightpartner.databasename)).ToList();
-            List<TelcobrightConfig> operatorConfigs = new List<TelcobrightConfig>();
-            foreach (AbstractConfigConfigGenerator configGenerator in operatorsToBeConfigured)
-            {
-                TelcobrightConfig tbc = configGenerator.GenerateConfig();
-                tbc.TcpPortNoForRemoteScheduler = schedulerPortNo;
-                tbc.SchedulerDaemonConfigs = configGenerator.GetSchedulerDaemonConfigs();
-                operatorConfigs.Add(tbc);
-            }
-            return operatorConfigs;
-        }
+        
 
         
         

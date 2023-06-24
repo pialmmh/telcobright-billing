@@ -10,6 +10,8 @@ namespace InstallConfig._generator
     public class InstanceConfig
     {
         public string name { get; set; }
-        public Dictionary<string, string> otherParams { get; set; }
+        public int SchedulerPortNo { get; set; }
+        public Dictionary<string, string> otherParams { get; set; }=
+            new Dictionary<string, string>();
     }
 }

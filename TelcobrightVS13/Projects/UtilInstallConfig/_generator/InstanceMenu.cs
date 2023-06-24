@@ -93,10 +93,11 @@ namespace InstallConfig
             return finalInputs;
         }
 
-        static void printMenu(Dictionary<string, string> instances, string msgToDisplay)
+        static void printMenu(Dictionary<string, string> choices, string msgToDisplay)
         {
+            Console.WriteLine(msgToDisplay);
             int i = 0;
-            foreach (var kv in instances)
+            foreach (var kv in choices)
             {
                 Console.WriteLine($"{++i}={kv.Value}");
             }
