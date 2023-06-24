@@ -16,8 +16,9 @@ namespace InstallConfig
         public string SolutionDir { get; }
         private string srcBinaryFullPath;
         private string wsTopShelfDir;
-        Func<string,string> getConfigDir = wsTopShelfDir=> wsTopShelfDir + Path.DirectorySeparatorChar + "bin"
-                                        + Path.DirectorySeparatorChar + "Config";
+        Func<string,string> getSrcConfigDir = wsTopShelfDir=> wsTopShelfDir + Path.DirectorySeparatorChar + "bin"
+                                        + Path.DirectorySeparatorChar + "config";
+        Func<string,string> getDstConfigDir = wsTopShelfDir=> wsTopShelfDir + Path.DirectorySeparatorChar + "config";
         private string srcTemplateConfigFileNameOnly = "telcobright.conf";
         private string deploymentBaseDir;
         private string dstBinaryFullPath;
@@ -26,13 +27,12 @@ namespace InstallConfig
             Tbc = tbc;
             SolutionDir = solutionDir;
             this.DeploymentPlatform = deploymentPlatform;
-            string srcExecFolderNameOnly = this.DeploymentPlatform == DeploymentPlatform.Win32
+            /*string srcExecFolderNameOnly = this.DeploymentPlatform == DeploymentPlatform.Win32
                 ? "debug"
-                : "x64" + Path.DirectorySeparatorChar + "debug";
+                : "x64" + Path.DirectorySeparatorChar + "debug";*/
             this.wsTopShelfDir = this.SolutionDir + Path.DirectorySeparatorChar
                                    + "WS_Topshelf_Quartz";
-            this.srcBinaryFullPath = this.wsTopShelfDir + Path.DirectorySeparatorChar
-                                 + "bin" + Path.DirectorySeparatorChar + srcExecFolderNameOnly;
+            this.srcBinaryFullPath = this.wsTopShelfDir + Path.DirectorySeparatorChar + "bin";
             this.deploymentBaseDir = wsTopShelfDir + Path.DirectorySeparatorChar + "deployedInstances";
             if (!Directory.Exists(deploymentBaseDir))
             {
@@ -43,10 +43,14 @@ namespace InstallConfig
         public void deploy()
         {                       
             CopyBinaries(this.srcBinaryFullPath, this.dstBinaryFullPath);
-            string srcConfigFile = this.getConfigDir(this.wsTopShelfDir) + Path.DirectorySeparatorChar
+            string srcConfigFile = this.getSrcConfigDir(this.wsTopShelfDir) + Path.DirectorySeparatorChar
                                    + this.srcTemplateConfigFileNameOnly;
-            string destConfigFile = this.getConfigDir(this.dstBinaryFullPath) + Path.DirectorySeparatorChar
+            string destConfigFile = this.getDstConfigDir(this.dstBinaryFullPath) + Path.DirectorySeparatorChar
                                     + this.srcTemplateConfigFileNameOnly;
+            if (File.Exists(destConfigFile))
+            {
+                File.Delete(destConfigFile);
+            }
             File.Copy(srcConfigFile, destConfigFile);
         }
 

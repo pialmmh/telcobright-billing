@@ -53,7 +53,7 @@ namespace LibraryExtensions
         }
         public string GetTemplateConfigFileName(string templateFileNameOnly)
         {
-            return GetTopShelfConfigDir()+Path.DirectorySeparatorChar+ templateFileNameOnly + ".conf";
+            return GetTopShelfConfigDir()+Path.DirectorySeparatorChar+ templateFileNameOnly;
         }
 
         public string GetTargetFileNameForPortal(string operatorShortName)

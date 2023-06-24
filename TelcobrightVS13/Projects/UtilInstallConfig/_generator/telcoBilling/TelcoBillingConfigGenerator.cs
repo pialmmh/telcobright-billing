@@ -106,15 +106,28 @@ namespace InstallConfig
             SerializeConfig(tbc, configPathHelper.GetOperatorWiseTargetFileNameInUtil(operatorShortName));
             //write config for windows service
             targetDir = configPathHelper.GetTopShelfConfigDir();
-            SerializeConfig(tbc, configPathHelper.GetTemplateConfigFileName("telcobright.conf"));
+            SerializeConfig(tbc, configPathHelper.GetTemplateConfigFileName("telcobright.conf"),
+                eraseAllPrevFilesFromConfigDir: true);
             //write config for portal
             targetDir = configPathHelper.GetPortalBinPath();
             SerializeConfig(tbc, configPathHelper.GetTargetFileNameForPortal(operatorShortName));
             Console.WriteLine("Successfully written configuration template for " + operatorShortName);
         }
 
-        static void SerializeConfig(TelcobrightConfig tbc, string targetConfigFile)
+        static void SerializeConfig(TelcobrightConfig tbc, string targetConfigFile,
+            bool eraseAllPrevFilesFromConfigDir=false)
         {
+            if (eraseAllPrevFilesFromConfigDir == true)
+            {
+                var arr = targetConfigFile.Split(Path.DirectorySeparatorChar);
+                string folderPath = string.Join(Path.DirectorySeparatorChar.ToString(), arr.Take(arr.Length - 1));
+                DirectoryInfo configDir= new DirectoryInfo(folderPath);
+                if (Directory.Exists(configDir.FullName))
+                {
+                    configDir.Delete(recursive: true);
+                }
+                Directory.CreateDirectory(configDir.FullName);
+            }
             if (File.Exists(targetConfigFile))
             {
                 File.Delete(targetConfigFile); //debug directory
@@ -128,7 +141,6 @@ namespace InstallConfig
 
             string tbcAsStr = JsonConvert.SerializeObject(tbc, Formatting.Indented, settings);
             File.WriteAllText(jsonfile, tbcAsStr);
-
         }
 
         static void WriteAppAndWebConfigFiles(string fileName, DatabaseSetting dbSettings, PortalSettings portalSettings)
