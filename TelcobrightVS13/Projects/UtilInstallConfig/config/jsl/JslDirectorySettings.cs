@@ -26,17 +26,33 @@ namespace InstallConfig
             //***FILE LOCATIONS**********************************************
             //local/vault1: all app servers will use same local file location
             //the object "vault" will have a copy of below object for each app servers with server id as key and location as dictionary value
-            FileLocation vaultJslhuaweiDhk = new FileLocation()
+            FileLocation vaultJslZteDhk = new FileLocation()
             {
-                Name = "Vault.JslhuaweiDhk",//this is refered in ne table, name MUST start with "Vault"
+                Name = "Vault.JslZteDhk",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "C:/telcobright/Vault/Resources/CDR/JSL/JslhuaweiDhk",
+                StartingPath = "C:/telcobright/Vault/Resources/CDR/JSL/JslzteDhk",
                 User = "",
                 Pass = "",
             };
+
+            FileLocation vaultJslcataliyaDhk = new FileLocation()
+            {
+                Name = "Vault.JslcataleyaDhk",//this is refered in ne table, name MUST start with "Vault"
+                LocationType = "vault",//locationtype always lowercase
+                OsType = "windows",
+                PathSeparator = @"\",
+                ServerIp = "",
+                StartingPath = "C:/telcobright/Vault/Resources/CDR/JSL/JslcataleyaDhk",
+                User = "",
+                Pass = "",
+            };
+
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultJslZteDhk.Name, vaultJslZteDhk);
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultJslcataliyaDhk.Name, vaultJslcataliyaDhk);
+
             FileLocation appServerFtp1 = new FileLocation()
             {
                 Name = "AppServerFTP1",//
@@ -44,7 +60,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = "/",
                 ServerIp = "192.168.2.216",
-                StartingPath = "Resources/CDR/JSL/JslhuaweiDhk",
+                StartingPath = "C:/telcobright/Vault/Resources/CDR/JSL/JslhuaweiDhk",
                 User = "ftpuser",
                 Pass = "Takay1takaane",
             };
@@ -89,7 +105,7 @@ namespace InstallConfig
                 },
                 DstSyncLocation = new SyncLocation()
                 {
-                    FileLocation = vaultJslhuaweiDhk
+                    FileLocation = vaultJslZteDhk
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
@@ -117,7 +133,7 @@ namespace InstallConfig
                 SkipSourceFileListing = true,
                 SrcSyncLocation = new SyncLocation()
                 {
-                    FileLocation = vaultJslhuaweiDhk
+                    FileLocation = vaultJslZteDhk
                 },
                 DstSyncLocation = new SyncLocation()
                 {
@@ -154,7 +170,7 @@ namespace InstallConfig
                 SkipSourceFileListing = true,
                 SrcSyncLocation = new SyncLocation()
                 {
-                    FileLocation = vaultJslhuaweiDhk
+                    FileLocation = vaultJslZteDhk
                 },
                 DstSyncLocation = new SyncLocation()
                 {

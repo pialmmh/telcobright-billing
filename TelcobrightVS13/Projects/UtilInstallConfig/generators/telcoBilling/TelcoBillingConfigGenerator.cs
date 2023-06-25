@@ -70,7 +70,7 @@ namespace InstallConfig
                 this.Tbc.Telcobrightpartner.databasename))
             {
                 PartnerEntities context =
-                    new PartnerEntities(ConnectionManager.GetEntityConnectionString(Tbc.DatabaseSetting));
+                    new PartnerEntities(DbUtil.GetEntityConnectionString(Tbc.DatabaseSetting));
                 if(context.Database.Connection.State!= ConnectionState.Open)
                     context.Database.Connection.Open();
                 using (MySqlConnection con =

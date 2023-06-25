@@ -33,6 +33,13 @@ namespace LibraryExtensions.ConfigHelper
             return getDbConStrWithoutDatabase(databaseSetting) + $"database={databaseSetting.DatabaseName};";
         }
 
+        public static string GetEntityConnectionString(DatabaseSetting databaseSetting)
+        {
+            return $"metadata=res://*/PartnerModel.csdl|res://*/PartnerModel.ssdl|res://*/PartnerModel.msl;" +
+                   $"provider=MySql.Data.MySqlClient;" +
+                   $"provider connection string=\"server = {databaseSetting.ServerName}; user id = {databaseSetting.AdminUserName}; password = {databaseSetting.AdminPassword};persistsecurityinfo=True;Convert Zero Datetime=True;default command timeout=300;database={databaseSetting.DatabaseName}\"";
+        }
+
         public static string execCommandAndGetOutput(MySqlConnection con, string commandText)
         {
             MySqlCommand cmd= new MySqlCommand();

@@ -20,7 +20,6 @@ namespace InstallConfig
     public partial class SrtAbstractConfigConfigGenerator : AbstractConfigConfigGenerator
     {
         public override TelcobrightConfig Tbc { get; }
-
         public SrtAbstractConfigConfigGenerator()
         {
             int thisServerId = 1;
@@ -59,8 +58,8 @@ namespace InstallConfig
             {
                 new ne
                 {
-                    idSwitch= 8,
-                    idCustomer= 8,
+                    idSwitch= 10,
+                    idCustomer= this.Tbc.Telcobrightpartner.idCustomer,
                     idcdrformat= 3,
                     idMediationRule= 2,
                     SwitchName= "huawei",
@@ -68,7 +67,7 @@ namespace InstallConfig
                     FileExtension= ".dat",
                     Description= null,
                     SourceFileLocations= "huaweiLocal",
-                    BackupFileLocations= null,
+                    BackupFileLocations= "vaultHw:CAS",
                     LoadingStopFlag= null,
                     LoadingSpanCount= 100,
                     TransactionSizeForCDRLoading= 1500,
@@ -92,14 +91,14 @@ namespace InstallConfig
                 new ne
                 {
                     idSwitch= 18,
-                    idCustomer= 8,
+                    idCustomer= this.Tbc.Telcobrightpartner.idCustomer,
                     idcdrformat= 25,
                     idMediationRule= 2,
                     SwitchName= "cataleya",
                     CDRPrefix= "esdr",
                     FileExtension= "",
                     Description= null,
-                    SourceFileLocations= "vaultCataleya",
+                    SourceFileLocations= "cataleyaLocal",
                     BackupFileLocations= null,
                     LoadingStopFlag= null,
                     LoadingSpanCount= 100,

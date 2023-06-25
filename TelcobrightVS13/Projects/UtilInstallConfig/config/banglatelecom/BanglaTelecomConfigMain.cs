@@ -56,7 +56,7 @@ namespace InstallConfig
                     CDRPrefix = "b",
                     FileExtension = ".dat",
                     Description = null,
-                    SourceFileLocations = "vault",
+                    SourceFileLocations = "vaultHuawei",
                     BackupFileLocations = null,
                     LoadingStopFlag = null,
                     LoadingSpanCount = 100,

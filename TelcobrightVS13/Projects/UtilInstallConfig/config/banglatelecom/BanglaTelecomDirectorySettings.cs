@@ -31,14 +31,14 @@ namespace InstallConfig
             //***FILE LOCATIONS**********************************************
             //local/vault1: all app servers will use same local file location
             //the object "vault" will have a copy of below object for each app servers with server id as key and location as dictionary value
-            FileLocation vaultPrimary = new FileLocation()
+            FileLocation vaultHuawei = new FileLocation()
             {
                 Name = "vaultHuawei",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "d:/telcobright/Vault/Resources/cdr",
+                StartingPath = "d:/telcobright/Vault/Resources/cdr/huawei",
                 User = "",
                 Pass = "",
             };
@@ -56,7 +56,8 @@ namespace InstallConfig
                 Pass = "",
             };
 
-
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultDialogic.Name, vaultDialogic);
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultHuawei.Name, vaultHuawei);
 
             FileLocation fileArchive1 = new FileLocation()//raw cdr archive
             {
@@ -98,7 +99,7 @@ namespace InstallConfig
                 },
                 DstSyncLocation = new SyncLocation()
                 {
-                    FileLocation = vaultPrimary
+                    FileLocation = vaultHuawei
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
@@ -145,7 +146,7 @@ namespace InstallConfig
                 },
                 DstSyncLocation = new SyncLocation()
                 {
-                    FileLocation = vaultPrimary
+                    FileLocation = vaultHuawei
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
@@ -173,7 +174,7 @@ namespace InstallConfig
                 SkipSourceFileListing = true,
                 SrcSyncLocation = new SyncLocation()
                 {
-                    FileLocation = vaultPrimary
+                    FileLocation = vaultHuawei
                 },
                 DstSyncLocation = new SyncLocation()
                 {

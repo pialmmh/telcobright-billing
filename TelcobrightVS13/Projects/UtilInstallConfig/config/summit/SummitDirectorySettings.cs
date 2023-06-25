@@ -31,18 +31,33 @@ namespace InstallConfig
             //***FILE LOCATIONS**********************************************
             //local/vault1: all app servers will use same local file location
             //the object "vault" will have a copy of below object for each app servers with server id as key and location as dictionary value
-            FileLocation vaultPrimary = new FileLocation()
+            FileLocation vaultZte = new FileLocation()
             {
-                Name = "vault",//this is refered in ne table, name MUST start with "Vault"
+                Name = "vaultZte",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "C:/telcobright/Vault/Resources/cdr",
+                StartingPath = "C:/telcobright/Vault/Resources/cdr/zte",
                 User = "",
                 Pass = "",
             };
-            
+
+            FileLocation vaultDialogic = new FileLocation()
+            {
+                Name = "vaultDialogic",//this is refered in ne table, name MUST start with "Vault"
+                LocationType = "vault",//locationtype always lowercase
+                OsType = "windows",
+                PathSeparator = @"\",
+                ServerIp = "",
+                StartingPath = "C:/telcobright/Vault/Resources/cdr/dialogic",
+                User = "",
+                Pass = "",
+            };
+
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultZte.Name, vaultZte);
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultDialogic.Name, vaultDialogic);
+
 
             FileLocation fileArchive1 = new FileLocation()//raw cdr archive
             {
@@ -84,7 +99,7 @@ namespace InstallConfig
                 },
                 DstSyncLocation = new SyncLocation()
                 {
-                    FileLocation = vaultPrimary
+                    FileLocation = vaultZte
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
@@ -113,7 +128,7 @@ namespace InstallConfig
                 SkipSourceFileListing = true,
                 SrcSyncLocation = new SyncLocation()
                 {
-                    FileLocation = vaultPrimary
+                    FileLocation = vaultZte
                 },
                 DstSyncLocation = new SyncLocation()
                 {

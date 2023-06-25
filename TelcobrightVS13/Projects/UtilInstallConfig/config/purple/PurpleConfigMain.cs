@@ -49,7 +49,7 @@ namespace InstallConfig
                 new ne
                 {
                     idSwitch = 2,
-                    idCustomer = 2,
+                    idCustomer = this.Tbc.Telcobrightpartner.idCustomer,
                     idcdrformat = 3,
                     idMediationRule = 2,
                     SwitchName = "huawei",

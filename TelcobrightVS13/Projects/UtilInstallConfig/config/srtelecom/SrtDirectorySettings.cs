@@ -27,20 +27,31 @@ namespace InstallConfig
         {
             DirectorySettings directorySetting = new DirectorySettings("c:/telcobright");
             tbc.DirectorySettings = directorySetting;
-
-            //***FILE LOCATIONS**********************************************
-            
             FileLocation cataleyaLocal = new FileLocation()
             {
-                Name = "vault",//this is refered in ne table
+                Name = "cataleyaLocal",//this is refered in ne table
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "C:/telcobright/Vault/Resources/cdr",
+                StartingPath = "C:/telcobright/Vault/Resources/cdr/cataleya",
                 User = "",
                 Pass = "",
             };
+            FileLocation huaweiLocal = new FileLocation()
+            {
+                Name = "huaweiLocal",//this is refered in ne table
+                LocationType = "vault",//locationtype always lowercase
+                OsType = "windows",
+                PathSeparator = @"\",
+                ServerIp = "",
+                StartingPath = "C:/telcobright/Vault/Resources/cdr/huawei",
+                User = "",
+                Pass = "",
+            };
+            this.Tbc.DirectorySettings.FileLocations.Add(huaweiLocal.Name,huaweiLocal);
+            this.Tbc.DirectorySettings.FileLocations.Add(cataleyaLocal.Name,cataleyaLocal);
+
             FileLocation fileArchive1 = new FileLocation()//raw cdr archive
             {
                 Name = "FileArchive1Zip",
@@ -54,18 +65,8 @@ namespace InstallConfig
                 IgnoreZeroLenghFile = 1
             };
 
-            FileLocation huaweiLocal = new FileLocation()
-            {
-                Name = "huaweiLocal",//this is refered in ne table
-                LocationType = "vault",//locationtype always lowercase
-                OsType = "windows",
-                PathSeparator = @"\",
-                ServerIp = "",
-                StartingPath = "C:/telcobright/Vault/Resources/cdr/huawei",
-                User = "",
-                Pass = "",
-            };
-            SyncPair Huawei_Vault = new SyncPair("Huawei:Vault")
+            
+            SyncPair huaweiVault = new SyncPair("huawei:Vault")
             {
                 SkipSourceFileListing = false,
                 SrcSyncLocation = new SyncLocation()
@@ -114,9 +115,7 @@ namespace InstallConfig
                 }
             };
 
-            
-            //sync pair Vault_S3:FileArchive1
-            SyncPair vaultCAS = new SyncPair("Vault:CAS")
+            SyncPair vaultHw_CAS = new SyncPair("vaultHw:CAS")
             {
                 SkipCopyingToDestination = false,
                 SkipSourceFileListing = true,
@@ -153,23 +152,16 @@ namespace InstallConfig
             };
 
             //add sync pairs to directory config
-            directorySetting.SyncPairs.Add(Huawei_Vault.Name, Huawei_Vault);
-            directorySetting.SyncPairs.Add(vaultCAS.Name, vaultCAS);
+            directorySetting.SyncPairs.Add(huaweiVault.Name, huaweiVault);
+            directorySetting.SyncPairs.Add(vaultHw_CAS.Name, vaultHw_CAS);
 
             //add archive locations to CdrSettings
             this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
             {
                 //vaultS3FileArchive1.Name,
-                vaultCAS.Name
+                vaultHw_CAS.Name
             };
-
-            directorySetting.FileLocations = directorySetting.SyncPairs.Values.SelectMany(sp =>
-                new List<FileLocation>
-                {
-                    sp.SrcSyncLocation.FileLocation,
-                    sp.DstSyncLocation.FileLocation
-                }).ToDictionary(floc => floc.Name);
-
+            
         }
     }
 }
