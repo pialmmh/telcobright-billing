@@ -48,7 +48,7 @@ namespace Process
                 }
                 while (incompleteExists)
                 {
-                    string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName);
+                    string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName,tbc);
                     using (PartnerEntities context = new PartnerEntities(entityConStr))
                     {
                         var con = context.Database.Connection;

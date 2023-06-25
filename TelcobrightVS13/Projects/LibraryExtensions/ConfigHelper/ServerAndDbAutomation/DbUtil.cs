@@ -13,6 +13,7 @@ namespace LibraryExtensions.ConfigHelper
 {
     public static class DbUtil
     {
+        public static DatabaseSetting DatabaseSetting { get; set; }
         public static ConfigPathHelper configPathHelper { get; set; }
 
         public static string getDbConStrPipeWithoutDatabase(DatabaseSetting databaseSetting)

@@ -18,6 +18,7 @@ namespace LibraryExtensions.ConfigHelper
             List<char> confirm= confirmationChars ?? this._confirmationChars;
             Console.WriteLine(promptOrMsg);
             ConsoleKeyInfo keyInfo = Console.ReadKey();
+            Console.WriteLine();
             return confirm.Contains(keyInfo.KeyChar);
         }
     }

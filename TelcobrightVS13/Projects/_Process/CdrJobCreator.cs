@@ -32,14 +32,12 @@ namespace Process
 
         public override void Execute(IJobExecutionContext schedulerContext)
         {
-            return;//todo: mustafa
-
             string operatorName = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");
             try
             {
                 TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(
                     schedulerContext, operatorName);
-                string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName);
+                string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName, tbc);
                 using (PartnerEntities context = new PartnerEntities(entityConStr))
                 {
                     int idOprator = context.telcobrightpartners

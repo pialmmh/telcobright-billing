@@ -79,6 +79,7 @@ namespace InstallConfig
                     DbWriterForConfig dbWriter = new DbWriterForConfig(this.Tbc,this.ConfigPathHelper,
                         context, con);
                     dbWriter.WriteTelcobrightPartnerAndNes();
+
                     dbWriter.LoadSeedDataSqlForTelcoBilling();
                 }
                 Console.WriteLine();

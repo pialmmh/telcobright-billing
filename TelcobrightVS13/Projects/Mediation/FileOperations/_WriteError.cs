@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.IO;
+using LibraryExtensions.ConfigHelper;
 using MediationModel;
 using TelcobrightMediation.Config;
 
@@ -8,36 +9,35 @@ namespace TelcobrightFileOperations
 {
     public class ErrorWriter
     {
-        public ErrorWriter(Exception e,string processInformation,job telcobrightJob,string messageToPrepend,
-            string operatorName, PartnerEntities partnerEntities=null)
+        public ErrorWriter(Exception e, string processInformation, job telcobrightJob, string messageToPrepend,
+            string operatorName, PartnerEntities partnerEntities = null)
         {
             try
             {
                 string entityConStr = "";
                 PartnerEntities context = null;
-                if (partnerEntities == null)
+                allerror thisError = null;
+                if (partnerEntities != null)
                 {
-                    entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName);
-                    context = new PartnerEntities(entityConStr);
-                }
-                else {
-                    context = partnerEntities;
-                }
-
-                allerror thisError = new allerror
+                    thisError = new allerror
                     {
                         TimeRaised = DateTime.Now,
                         Status = 1,
                         ExceptionMessage = string.IsNullOrEmpty(messageToPrepend)
-                        ?e.Message:(messageToPrepend+Environment.NewLine+e.Message),
+                            ? e.Message
+                            : (messageToPrepend + Environment.NewLine + e.Message),
                         ProcessName = $@"{processInformation}/{telcobrightJob?.JobName}[jobid={telcobrightJob?.id}]",
                         ExceptionDetail = e.InnerException?.ToString() ?? ""
                     };
                     context.allerrors.Add(thisError);
                     context.SaveChanges();
-                
+                }
+                else
+                {
+                    File.AppendAllText("telcobright.log", JsonConvert.SerializeObject(thisError) + Environment.NewLine);
+                }
             }
-            catch (Exception e2)//database error
+            catch (Exception e2) //database error
             {
                 Console.WriteLine(e2);
                 try
@@ -58,7 +58,7 @@ namespace TelcobrightFileOperations
                 }
             }
         }
-        
+
 
     }
 }

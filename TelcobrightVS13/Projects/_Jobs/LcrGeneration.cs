@@ -30,7 +30,8 @@ namespace Jobs
             MediationContext mediationContext = null;
             CdrJob cdrJob = null;
             string entityConStr =
-                ConnectionManager.GetEntityConnectionStringByOperator(lcrJobInputData.Tbc.Telcobrightpartner.CustomerName);
+                ConnectionManager.GetEntityConnectionStringByOperator(lcrJobInputData.Tbc.Telcobrightpartner.CustomerName,
+                lcrJobInputData.Tbc);
             using (PartnerEntities partnerContext = new PartnerEntities(entityConStr))
             {
                 partnerContext.Database.Connection.Open();

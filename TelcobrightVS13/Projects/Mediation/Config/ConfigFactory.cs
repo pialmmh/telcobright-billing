@@ -25,7 +25,7 @@ namespace TelcobrightMediation.Config
 
         public static TelcobrightConfig GetConfigFromSchedulerExecutionContext(IJobExecutionContext context,string operatorName)
         {
-            return ((Dictionary<string,TelcobrightConfig>)context.Scheduler.Context.Get("configs"))[operatorName];
+            return (TelcobrightConfig)context.Scheduler.Context.Get("configs");
         }
         public static TelcobrightConfig GetConfigFromDatabase()
         {

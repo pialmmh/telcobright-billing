@@ -43,7 +43,7 @@ namespace Process
             JobDataMap jobDataMap = schedulerContext.JobDetail.JobDataMap;
             SyncPair syncPair = tbc.DirectorySettings.SyncPairs[jobDataMap.GetString("syncPair")];
             if (syncPair.SkipCopyingToDestination == true) return;
-            string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName);
+            string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName, tbc);
             using (PartnerEntities context = new PartnerEntities(entityConStr))
             {
                 List<int> jobDefsForThisQueue =

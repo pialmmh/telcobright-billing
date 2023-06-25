@@ -42,11 +42,11 @@ namespace Process
             //return;//todo
             JobDataMap jobDataMap = schedulerContext.JobDetail.JobDataMap;
             string operatorName = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");
-            string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName);
+            TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(
+                schedulerContext, operatorName);
+            string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName,tbc);
             try
             {
-                TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(
-                    schedulerContext, operatorName);
                 SyncPair syncPair = tbc.DirectorySettings.SyncPairs[jobDataMap.GetString("syncPair")];
                 if (syncPair.SkipSourceFileListing == true) return;
                 SyncLocation srcLocation = syncPair.SrcSyncLocation;

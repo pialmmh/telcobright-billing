@@ -40,7 +40,7 @@ namespace Process
             {
                 TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(
                     schedulerContext, operatorName);
-                string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName);
+                string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName,tbc);
                 MefJobComposer mefJobComposer = new MefJobComposer();
                 mefJobComposer.Compose();
                 ITelcobrightJob mefInvoicingJob = mefJobComposer.Jobs.Single(c => c.RuleName == "MefCdrInvoicingJob");

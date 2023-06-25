@@ -39,7 +39,7 @@ namespace Process
             {
                 TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(
                     schedulerContext, operatorName);
-                string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName);
+                string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName,tbc);
                 using (PartnerEntities context = new PartnerEntities(entityConStr))
                 {
                     context.Database.Connection.Open();

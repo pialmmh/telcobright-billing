@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -41,6 +42,8 @@ namespace InstallConfig._generator
             List<ne> nes = this.Tbc.Nes;
             nes.Insert(0, DummySwitch.getDummyNe());
 
+            this.Context.Database.ExecuteSqlCommand("SET FOREIGN_KEY_CHECKS = 0;");
+
             this.Context.Database.ExecuteSqlCommand("delete from ne;");
             this.Context.Database.ExecuteSqlCommand("delete from telcobrightpartner;");
 
@@ -53,6 +56,9 @@ namespace InstallConfig._generator
             this.Context.Database.ExecuteSqlCommand("insert into ne values " +
                                                     string.Join(",", nes.Select(p => p.GetExtInsertValues())));
             this.Context.Database.ExecuteSqlCommand("update ne set idSwitch=0 where SwitchName = 'dummy'");
+
+            this.Context.Database.ExecuteSqlCommand("SET FOREIGN_KEY_CHECKS = 1;");
+
             Console.WriteLine("Finished Loading partner and nes for " + this.Tbc.Telcobrightpartner.databasename + ".");
         }
 
@@ -68,7 +74,17 @@ namespace InstallConfig._generator
                 string sql = File.ReadAllText(file.FullName);
                 using (MySqlCommand cmd = new MySqlCommand("", this.Con))
                 {
+                    if (this.Con.State != ConnectionState.Open)
+                    {
+                        this.Con.Open();
+                    }
+                    cmd.CommandText = "SET FOREIGN_KEY_CHECKS = 0;";
+                    cmd.ExecuteNonQuery();
+
                     cmd.CommandText = sql;
+                    cmd.ExecuteNonQuery();
+
+                    cmd.CommandText = "SET FOREIGN_KEY_CHECKS = 1;";
                     cmd.ExecuteNonQuery();
                 }
             }

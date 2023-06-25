@@ -696,7 +696,7 @@ public partial class ConfigBatcJob : System.Web.UI.Page
                 lstSwitch = lstSwitch.Where(c => c.idSwitch == idSwitch).ToList();
             }
 
-            string conStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName);
+            string conStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName, tbc);
             using (PartnerEntities context = new PartnerEntities(conStr))
             {
                 foreach (ne thisSwitch in lstSwitch) //create a job for each selected ne
