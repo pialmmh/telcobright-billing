@@ -26,9 +26,14 @@ namespace InstallConfig
         public List<TelcobrightConfig> Tbcs { get; set; }
         public ConfigPathHelper ConfigPathHelper { get; set; }
 
-        public TelcoBillingMenu(List<TelcobrightConfig> tbcs, ConfigPathHelper configPathHelper,
-            ConsoleUtil consoleUtil)
+        public TelcoBillingMenu(List<TelcobrightConfig> tbcs, ConsoleUtil consoleUtil)
         {
+            ConfigPathHelper configPathHelper = new ConfigPathHelper(
+                "WS_Topshelf_Quartz", 
+                "portal", 
+                "UtilInstallConfig",
+                "generators");
+            DbUtil.configPathHelper = configPathHelper;
             this.Tbcs = tbcs;
             this.ConfigPathHelper = configPathHelper;
             this.ConsoleUtil = consoleUtil;

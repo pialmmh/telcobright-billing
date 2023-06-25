@@ -76,7 +76,7 @@ namespace LibraryExtensions.ConfigHelper
                 {
                     cmd.CommandText = "use " + databaseSetting.DatabaseName;
                     cmd.ExecuteNonQuery();
-                    cmd.CommandText = File.ReadAllText(configPathHelper.GetDbScriptPath()
+                    cmd.CommandText = File.ReadAllText(configPathHelper.getTelcoBillingDbScriptsHome()
                                                        + Path.DirectorySeparatorChar + "CreateTables.txt");
                     cmd.ExecuteNonQuery();
                 };
@@ -99,7 +99,7 @@ namespace LibraryExtensions.ConfigHelper
                     cmd.CommandText = "use " + databaseSetting.DatabaseName;
                     cmd.ExecuteNonQuery();
 
-                    List<string> commands = File.ReadAllText(configPathHelper.GetDbScriptPath()
+                    List<string> commands = File.ReadAllText(configPathHelper.getTelcoBillingDbScriptsHome()
                                                              + Path.DirectorySeparatorChar + "quartzTables.sql")
                         .Split(';').Select(c => c.Trim()).Where(c => !c.IsNullOrEmptyOrWhiteSpace()).ToList();
                     foreach (string command in commands)

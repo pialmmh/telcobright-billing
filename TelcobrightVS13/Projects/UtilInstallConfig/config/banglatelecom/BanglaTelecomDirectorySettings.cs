@@ -42,8 +42,21 @@ namespace InstallConfig
                 User = "",
                 Pass = "",
             };
-            
-            
+
+
+            FileLocation vaultDialogic= new FileLocation()
+            {
+                Name = "vault",//this is refered in ne table, name MUST start with "Vault"
+                LocationType = "vault",//locationtype always lowercase
+                OsType = "windows",
+                PathSeparator = @"\",
+                ServerIp = "",
+                StartingPath = "d:/telcobright/Vault/Resources/cdr/dialogic",
+                User = "",
+                Pass = "",
+            };
+
+
 
             FileLocation fileArchive1 = new FileLocation()//raw cdr archive
             {
@@ -106,7 +119,53 @@ namespace InstallConfig
                 }
             };
 
-            
+
+
+            SyncPair dialogic_Vault = new SyncPair("dialogic:Vault")
+            {
+                SkipSourceFileListing = false,
+                SrcSyncLocation = new SyncLocation()
+                {
+                    FileLocation = new FileLocation()
+                    {
+                        Name = "dialogic",
+                        LocationType = "ftp",
+                        OsType = "linux",
+                        UseActiveModeForFTP = false,
+                        PathSeparator = "/",
+                        StartingPath = "/",
+                        ServerIp = "123.176.59.19",
+                        User = "sdrbtdialogic",
+                        Pass = "SdrBT@2@23#",
+                        //ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
+                        IgnoreZeroLenghFile = 1,
+                        FtpSessionCloseAndReOpeningtervalByFleTransferCount = 1000
+                    },
+                    DescendingFileListByFileName = this.Tbc.CdrSetting.DescendingOrderWhileListingFiles
+                },
+                DstSyncLocation = new SyncLocation()
+                {
+                    FileLocation = vaultPrimary
+                },
+                SrcSettings = new SyncSettingsSource()
+                {
+                    SecondaryDirectory = "downloaded",
+                    MoveFilesToSecondaryAfterCopy = false,
+                    Recursive = false,
+                    ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('sdr')
+                                                                and
+                                                                (Name.EndsWith('.gz'))
+                                                                and Length>0")
+                },
+                DstSettings = new SyncSettingsDest()
+                {
+                    FileExtensionForSafeCopyWithTempFile = ".tmp",//make sure when copying to vault always .tmp ext used
+                    Overwrite = true,
+                    ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
+                    CompressionType = CompressionType.None
+                }
+            };
+
             //sync pair Vault_S3:FileArchive1
             SyncPair vaultCAS = new SyncPair("Vault:CAS")
             {

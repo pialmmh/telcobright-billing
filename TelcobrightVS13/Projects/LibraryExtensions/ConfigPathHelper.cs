@@ -15,14 +15,15 @@ namespace LibraryExtensions
     {
         private string TopShelfDirName { get; }
         private string PortalDirName { get; }
-        private string UtilInstallConfigDir { get; }
-        private string DbScriptPath { get; }
-        public ConfigPathHelper(string topShelfDirName, string portalDirName,string utilInstallConfigDir, string dbScriptPath)
+        private string UtilInstallConfigDirnameOnly { get; }
+        private string GeneratorsHome { get; }
+        public ConfigPathHelper(string topShelfDirName, string portalDirName,
+            string utilInstallConfigDirnameOnly,string generatorsHome)
         {
             this.TopShelfDirName = topShelfDirName;
             this.PortalDirName = portalDirName;
-            this.UtilInstallConfigDir = utilInstallConfigDir;
-            this.DbScriptPath = dbScriptPath;
+            this.UtilInstallConfigDirnameOnly = utilInstallConfigDirnameOnly;
+            this.GeneratorsHome = generatorsHome;
         }
         public string GetTopShelfConfigDir()
         {
@@ -43,7 +44,8 @@ namespace LibraryExtensions
         {
             return Directory.GetParent(Directory
                        .GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName)
-                       .FullName).FullName + Path.DirectorySeparatorChar +this.UtilInstallConfigDir+Path.DirectorySeparatorChar+
+                       .FullName).FullName + Path.DirectorySeparatorChar +this.UtilInstallConfigDirnameOnly
+                       +Path.DirectorySeparatorChar+"config" + Path.DirectorySeparatorChar +
                         operatorShortName;
         }
         public string GetOperatorWiseTargetFileNameInUtil(string operatorShortName)
@@ -61,12 +63,33 @@ namespace LibraryExtensions
             return GetPortalBinPath() + Path.DirectorySeparatorChar
                                + operatorShortName + ".conf";
         }
-        public string GetDbScriptPath()
+        public string GetUtilInstallConfigFullPath()
         {
             return Directory.GetParent(Directory
                        .GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName)
-                       .FullName).FullName + Path.DirectorySeparatorChar + this.UtilInstallConfigDir + Path.DirectorySeparatorChar +
-                       this.DbScriptPath;
+                       .FullName).FullName + Path.DirectorySeparatorChar + this.UtilInstallConfigDirnameOnly;
+        }
+        public string getTelcoBillingHome()
+        {
+            return GetUtilInstallConfigFullPath() + Path.DirectorySeparatorChar +
+                this.UtilInstallConfigDirnameOnly + Path.DirectorySeparatorChar
+                   + this.GeneratorsHome + Path.DirectorySeparatorChar + "telcoBilling";
+        }
+
+        public string getTelcoBillingDbScriptsHome()
+        {
+            return getTelcoBillingHome() + Path.DirectorySeparatorChar + "dbscripts";
+        }
+
+        public string getTelcoBillingSeedDataSqlHome()
+        {
+            return getTelcoBillingDbScriptsHome() + Path.DirectorySeparatorChar + "seedData"
+                   + Path.DirectorySeparatorChar + "sql";
+        }
+        public string getTelcoBillingSeedDataJsonHome()
+        {
+            return getTelcoBillingDbScriptsHome() + Path.DirectorySeparatorChar + "seedData"
+                   + Path.DirectorySeparatorChar + "json";
         }
     }
 }

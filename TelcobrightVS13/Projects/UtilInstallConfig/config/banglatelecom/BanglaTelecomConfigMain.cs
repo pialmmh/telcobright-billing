@@ -17,40 +17,29 @@ using TelcobrightMediation.Accounting;
 namespace InstallConfig
 {
     [Export(typeof(AbstractConfigConfigGenerator))]
-    public partial class SrtAbstractConfigConfigGenerator : AbstractConfigConfigGenerator
+    public partial class BanglaTelecomAbstractConfigConfigGenerator : AbstractConfigConfigGenerator
     {
         public override TelcobrightConfig Tbc { get; }
-
-        public SrtAbstractConfigConfigGenerator()
+        public BanglaTelecomAbstractConfigConfigGenerator()
         {
             int thisServerId = 1;
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, thisServerId,
                 new telcobrightpartner
-                {
-                    idCustomer = 8,
-                    CustomerName = "SR Telecom Ltd.",
-                    idOperatorType = 2,
-                    databasename = "srtelecom",
-                    databasetype = "",
-                    user = null,
-                    pass = null,
-                    ServerNameOrIP = null,
-                    IBServerNameOrIP = null,
-                    IBdatabasename = null,
-                    IBdatabasetype = null,
-                    IBuser = null,
-                    IBpass = null,
-                    TransactionSizeForCDRLoading = null,
-                    NativeTimeZone = 3251,
-                    IgwPrefix = null,
-                    RateDictionaryMaxRecords = 3000000,
-                    MinMSForIntlOut = 100,
-                    RawCdrKeepDurationDays = 90,
-                    SummaryKeepDurationDays = 730,
-                    AutoDeleteOldData = 1,
-                    AutoDeleteStartHour = 4,
-                    AutoDeleteEndHour = 6
-                });
+                    {
+                        idCustomer = 9,
+                        CustomerName = "BANGLA TELECOM LTD.",
+                        idOperatorType = 2,
+                        databasename = "banglatelecom",
+                        NativeTimeZone = 3251,
+                        IgwPrefix = null,
+                        RateDictionaryMaxRecords = 3000000,
+                        MinMSForIntlOut = 100,
+                        RawCdrKeepDurationDays = 90,
+                        SummaryKeepDurationDays = 730,
+                        AutoDeleteOldData = 1,
+                        AutoDeleteStartHour = 4,
+                        AutoDeleteEndHour = 6
+                    });
         }
 
         public override TelcobrightConfig GenerateConfig()
@@ -59,15 +48,47 @@ namespace InstallConfig
             {
                 new ne
                 {
-                    idSwitch= 8,
-                    idCustomer= 8,
-                    idcdrformat= 3,
+                    idSwitch = 9,
+                    idCustomer = this.Tbc.Telcobrightpartner.idCustomer,
+                    idcdrformat = 3,
+                    idMediationRule = 2,
+                    SwitchName = "huawei",
+                    CDRPrefix = "b",
+                    FileExtension = ".dat",
+                    Description = null,
+                    SourceFileLocations = "vault",
+                    BackupFileLocations = null,
+                    LoadingStopFlag = null,
+                    LoadingSpanCount = 100,
+                    TransactionSizeForCDRLoading = 1500,
+                    DecodingSpanCount = 100,
+                    SkipAutoCreateJob = 1,
+                    SkipCdrListed = 0,
+                    SkipCdrReceived = 0,
+                    SkipCdrDecoded = 0,
+                    SkipCdrBackedup = 1,
+                    KeepDecodedCDR = 0,
+                    KeepReceivedCdrServer = 1,
+                    CcrCauseCodeField = 56,
+                    SwitchTimeZoneId = null,
+                    CallConnectIndicator = "F5",
+                    FieldNoForTimeSummary = 29,
+                    EnableSummaryGeneration = "1",
+                    ExistingSummaryCacheSpanHr = 6,
+                    BatchToDecodeRatio = 3,
+                    PrependLocationNumberToFileName = 0
+                },
+                new ne
+                {
+                    idSwitch= 10,
+                    idCustomer= this.Tbc.Telcobrightpartner.idCustomer,
+                    idcdrformat= 26,
                     idMediationRule= 2,
-                    SwitchName= "huawei",
-                    CDRPrefix= "SRT",
-                    FileExtension= ".dat",
+                    SwitchName= "Dialogic",
+                    CDRPrefix= "sdr",
+                    FileExtension= ".gz",
                     Description= null,
-                    SourceFileLocations= "Huawei:Vault",
+                    SourceFileLocations= "vaultDialogic",
                     BackupFileLocations= null,
                     LoadingStopFlag= null,
                     LoadingSpanCount= 100,
@@ -96,6 +117,7 @@ namespace InstallConfig
                 new CommonCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
             InconsistentCdrValRulesGen inconsistentCdrValRulesGen =
                 new InconsistentCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
+
             this.Tbc.CdrSetting = new CdrSetting
             {
                 SummaryTimeField = SummaryTimeFieldEnum.AnswerTime,
@@ -113,16 +135,14 @@ namespace InstallConfig
                 AutoCorrectBillIdsWithPrevChargeableIssue = true,
                 AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
                 UseIdCallAsBillId = true,
-                ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>()
+                ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>(),
+                BatchSizeWhenPreparingLargeSqlJob=100000
             };
 
             this.PrepareDirectorySettings(this.Tbc);
-
             this.PrepareProductAndServiceConfiguration();
-            
-            this.Tbc.ApplicationServersConfig = this.GetServerConfigs();
-
             this.Tbc.DatabaseSetting = this.GetDatabaseConfigs();
+            this.Tbc.ApplicationServersConfig = this.GetServerConfigs();
             this.Tbc.PortalSettings = GetPortalSettings(this.Tbc.Telcobrightpartner.CustomerName);
             return this.Tbc;
         }

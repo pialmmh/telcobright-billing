@@ -13,7 +13,7 @@ namespace InstallConfig
         Sms
     }
 
-    public static class TelcobrightDeploymentAll
+    public static class AllTelcobrightDeployments
     {
         public static List<Deploymentprofile> getDeploymentprofiles()
         {
