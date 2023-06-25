@@ -71,8 +71,7 @@ namespace LibraryExtensions
         }
         public string getTelcoBillingHome()
         {
-            return GetUtilInstallConfigFullPath() + Path.DirectorySeparatorChar +
-                this.UtilInstallConfigDirnameOnly + Path.DirectorySeparatorChar
+            return GetUtilInstallConfigFullPath() + Path.DirectorySeparatorChar 
                    + this.GeneratorsHome + Path.DirectorySeparatorChar + "telcoBilling";
         }
 

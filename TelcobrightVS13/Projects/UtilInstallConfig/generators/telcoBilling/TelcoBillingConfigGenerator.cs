@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -65,18 +66,24 @@ namespace InstallConfig
 
         public void writeTelcobrightPartnerAndNe()
         {
-            if (ConsoleUtil.getConfirmationFromUser("Create Telcobrightpartner and NE? (Y/N) for "+
+            if (ConsoleUtil.getConfirmationFromUser("Load seed data? (Y/N) for "+
                 this.Tbc.Telcobrightpartner.databasename))
             {
                 PartnerEntities context =
                     new PartnerEntities(ConnectionManager.GetEntityConnectionString(Tbc.DatabaseSetting));
-                DbWriterForConfig.WriteTelcobrightPartnerAndNes(context, new List<telcobrightpartner>()
-                    {
-                        Tbc.Telcobrightpartner
-                    },
-                    Tbc.Nes);
+                if(context.Database.Connection.State!= ConnectionState.Open)
+                    context.Database.Connection.Open();
+                using (MySqlConnection con =
+                    new MySqlConnection(DbUtil.getDbConStrWithDatabase(this.Tbc.DatabaseSetting)))
+                {
+                    DbWriterForConfig dbWriter = new DbWriterForConfig(this.Tbc,this.ConfigPathHelper,
+                        context, con);
+                    dbWriter.WriteTelcobrightPartnerAndNes();
+                    dbWriter.LoadSeedDataSqlForTelcoBilling();
+                }
+                
                 Console.WriteLine();
-                Console.WriteLine("Telcobrightpartner and NE created successfully for " + Tbc.Telcobrightpartner.databasename);
+                Console.WriteLine("Seed data loaded successfully for " + Tbc.Telcobrightpartner.databasename);
             }
             else
             {
