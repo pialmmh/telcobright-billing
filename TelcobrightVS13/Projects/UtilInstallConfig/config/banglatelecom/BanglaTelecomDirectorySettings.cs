@@ -33,7 +33,7 @@ namespace InstallConfig
             //the object "vault" will have a copy of below object for each app servers with server id as key and location as dictionary value
             FileLocation vaultPrimary = new FileLocation()
             {
-                Name = "vault",//this is refered in ne table, name MUST start with "Vault"
+                Name = "vaultHuawei",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
@@ -46,7 +46,7 @@ namespace InstallConfig
 
             FileLocation vaultDialogic= new FileLocation()
             {
-                Name = "vault",//this is refered in ne table, name MUST start with "Vault"
+                Name = "vaultDialogic",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
@@ -167,7 +167,7 @@ namespace InstallConfig
             };
 
             //sync pair Vault_S3:FileArchive1
-            SyncPair vaultCAS = new SyncPair("Vault:CAS")
+            SyncPair vaultDlgCAS = new SyncPair("VaultDlg:CAS")
             {
                 SkipCopyingToDestination = false,
                 SkipSourceFileListing = true,
@@ -206,7 +206,7 @@ namespace InstallConfig
             //add sync pairs to directory config
             directorySetting.SyncPairs.Add(huawei_Vault.Name, huawei_Vault);
             //directorySetting.SyncPairs.Add(vaultS3FileArchive1.Name, vaultS3FileArchive1);
-            directorySetting.SyncPairs.Add(vaultCAS.Name, vaultCAS);
+            directorySetting.SyncPairs.Add(vaultDlgCAS.Name, vaultDlgCAS);
 
             //add archive locations to CdrSettings
             this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
@@ -214,6 +214,12 @@ namespace InstallConfig
                 //vaultS3FileArchive1.Name,
                 //vaultCAS.Name
             };
+            directorySetting.FileLocations = directorySetting.SyncPairs.Values.SelectMany(sp =>
+                   new List<FileLocation>
+                    {
+                        sp.SrcSyncLocation.FileLocation,
+                        sp.DstSyncLocation.FileLocation
+                    }).ToDictionary(floc=>floc.Name);
         }
     }
 }

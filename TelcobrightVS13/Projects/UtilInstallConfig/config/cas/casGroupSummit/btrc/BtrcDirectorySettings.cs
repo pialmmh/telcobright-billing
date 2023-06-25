@@ -155,6 +155,12 @@ namespace InstallConfig
                 //vaultS3FileArchive1.Name,
                 //vaultCAS.Name
             };
+            directorySetting.FileLocations = directorySetting.SyncPairs.Values.SelectMany(sp =>
+                new List<FileLocation>
+                {
+                    sp.SrcSyncLocation.FileLocation,
+                    sp.DstSyncLocation.FileLocation
+                }).ToDictionary(floc => floc.Name);
         }
     }
 }

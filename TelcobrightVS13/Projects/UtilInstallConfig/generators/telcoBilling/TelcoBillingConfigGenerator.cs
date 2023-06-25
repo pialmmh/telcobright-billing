@@ -64,7 +64,7 @@ namespace InstallConfig
                 "Config Files have been generated successfully for " + Tbc.Telcobrightpartner.databasename);
         }
 
-        public void writeTelcobrightPartnerAndNe()
+        public void LoadSeedData()
         {
             if (ConsoleUtil.getConfirmationFromUser("Load seed data? (Y/N) for "+
                 this.Tbc.Telcobrightpartner.databasename))

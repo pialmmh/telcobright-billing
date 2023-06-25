@@ -22,6 +22,7 @@ namespace InstallConfig
         public void PrepareDirectorySetting(TelcobrightConfig tbc)
         {
             DirectorySettings directorySettings = new DirectorySettings("c:/telcobright");
+            tbc.DirectorySettings = directorySettings;
             //***FILE LOCATIONS**********************************************
             //local/vault1: all app servers will use same local file location
             //the object "vault" will have a copy of below object for each app servers with server id as key and location as dictionary value
@@ -253,6 +254,12 @@ namespace InstallConfig
                 vaultIof.Name,
             };
 
+            directorySettings.FileLocations = directorySettings.SyncPairs.Values.SelectMany(sp =>
+                new List<FileLocation>
+                {
+                    sp.SrcSyncLocation.FileLocation,
+                    sp.DstSyncLocation.FileLocation
+                }).ToDictionary(floc => floc.Name);
         }
     }
 }

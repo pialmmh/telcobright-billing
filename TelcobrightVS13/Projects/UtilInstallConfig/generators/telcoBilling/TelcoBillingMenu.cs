@@ -120,7 +120,7 @@ namespace InstallConfig
                         {
                             TelcoBillingConfigGenerator cw = new TelcoBillingConfigGenerator(tbc, this.ConfigPathHelper, this.ConsoleUtil);
                             cw.writeConfig();
-                            cw.writeTelcobrightPartnerAndNe();
+                            cw.LoadSeedData();
                             configureQuarzJobStore(tbc);
                             deployBinariesForProduction(tbc);
                             Console.WriteLine("Press any key to continue...");
