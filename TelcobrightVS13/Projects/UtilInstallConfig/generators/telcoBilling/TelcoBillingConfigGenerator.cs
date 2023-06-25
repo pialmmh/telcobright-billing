@@ -81,14 +81,13 @@ namespace InstallConfig
                     dbWriter.WriteTelcobrightPartnerAndNes();
                     dbWriter.LoadSeedDataSqlForTelcoBilling();
                 }
-                
                 Console.WriteLine();
                 Console.WriteLine("Seed data loaded successfully for " + Tbc.Telcobrightpartner.databasename);
             }
             else
             {
                 Console.WriteLine();
-                Console.WriteLine("Telcobrightpartner and NE was not created for "+Tbc.Telcobrightpartner.databasename);
+                Console.WriteLine("Seed data was not loaded for "+Tbc.Telcobrightpartner.databasename);
             }
         }
         static void WriteConfig(TelcobrightConfig tbc, ConfigPathHelper configPathHelper)

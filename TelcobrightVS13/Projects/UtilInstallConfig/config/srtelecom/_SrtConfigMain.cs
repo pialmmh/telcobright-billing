@@ -67,7 +67,7 @@ namespace InstallConfig
                     CDRPrefix= "SRT",
                     FileExtension= ".dat",
                     Description= null,
-                    SourceFileLocations= "Huawei:Vault",
+                    SourceFileLocations= "huaweiLocal",
                     BackupFileLocations= null,
                     LoadingStopFlag= null,
                     LoadingSpanCount= 100,
