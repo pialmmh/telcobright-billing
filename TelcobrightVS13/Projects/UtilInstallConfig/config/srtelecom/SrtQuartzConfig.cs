@@ -46,7 +46,7 @@ namespace InstallConfig
                     {
                         {"telcobrightProcessId", "106"},
                         {"operatorName", operatorName},
-                        {"syncPair", "Huawei:Vault"}
+                        {"syncPair", Huawei_Vault.Name}
                     }),
             };
             return fileListerInstances;
@@ -67,7 +67,7 @@ namespace InstallConfig
                     {
                         {"telcobrightProcessId", "104"},
                         {"operatorName", operatorName},
-                        {"syncPair", "Huawei:Vault"}
+                        {"syncPair", Huawei_Vault.Name}
                     }),
                 
                 new QuartzTbDaemonConfig
@@ -81,7 +81,7 @@ namespace InstallConfig
                     {
                         {"telcobrightProcessId", "104"},
                         {"operatorName", operatorName},
-                        {"syncPair", "Vault:CAS"}
+                        {"syncPair", vaultCAS.Name}
                     }),
             };
             return fileCopierInstances;
