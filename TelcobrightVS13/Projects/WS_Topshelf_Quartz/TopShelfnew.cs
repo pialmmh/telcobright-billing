@@ -244,7 +244,7 @@ namespace WS_Telcobright_Topshelf
                 Console.WriteLine(Environment.NewLine + "No keys were pressed, starting all process...");
                 choices = string.Join(",", Enumerable.Range(1, triggers.Count).Select(num => num.ToString()));
             }
-            return choices.Split(',').Select(keyWithArgs =>
+            return choices.Split(',').Select(c=>c.Trim()).Select(keyWithArgs =>
             {
                 var arr = keyWithArgs.Split(null).Select(item => item.Trim()).ToArray();
                 int key = Convert.ToInt32(arr[0]) - 1;//displayed menu items are 1 based, change to 0 based choise

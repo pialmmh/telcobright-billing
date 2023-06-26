@@ -294,19 +294,32 @@ namespace Jobs
         private static void createJobsForUnsplitCase(PartnerEntities context, TelcobrightConfig tbc, job cdrJob)
         {
             string fileToCopy = cdrJob.JobName;
+            ne thisNe = cdrJob.ne;
+            List<string> cdrBackupSyncPairNames = new List<string>();
+            IEnumerable<string> syncPairnames = thisNe.BackupFileLocations?.Split(',').Select(s => s.Trim());
+            if (syncPairnames != null)
+                foreach (string syncPairname in syncPairnames)
+                {
+                    cdrBackupSyncPairNames.Add(syncPairname);
+                }
             List<long> dependentJobIdsBeforeDelete = new List<long>() {cdrJob.id};
             if (tbc.CdrSetting.BackupSyncPairNames != null)
             {
                 foreach (string syncPairname in tbc.CdrSetting.BackupSyncPairNames)
                 {
+                    if (cdrBackupSyncPairNames.Contains(syncPairname) == false) continue;
                     job fileCopyJob = FileUtil.CreateFileCopyJob(tbc, syncPairname, fileToCopy, context);
-                    bool jobExists =
-                        context.jobs.Any(j => j.JobName == fileCopyJob.JobName && j.idjobdefinition == 6);
-                    if (jobExists == false)
+                    if (fileCopyJob != null)
                     {
-                        long insertedJobsId = FileUtil.WriteFileCopyJobSingle(fileCopyJob, context.Database.Connection);
-                        dependentJobIdsBeforeDelete.Add(insertedJobsId);
+                        bool jobExists =
+                            context.jobs.Any(j => j.JobName == fileCopyJob.JobName && j.idjobdefinition == 6);
+                        if (jobExists == false)
+                        {
+                            long insertedJobsId = FileUtil.WriteFileCopyJobSingle(fileCopyJob, context.Database.Connection);
+                            dependentJobIdsBeforeDelete.Add(insertedJobsId);
+                        }
                     }
+                    //else job exists already, no need to create again.
                 }
             }
             //create delete job
