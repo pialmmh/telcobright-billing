@@ -80,7 +80,8 @@ namespace TelcobrightFileOperations
             fileCopyJob.CreationTime = DateTime.Now;
             return fileCopyJob;
         }
-        public static string prepareJobNamesToCheckIfExists(TelcobrightConfig tbc, string syncPairName, string fileName, PartnerEntities context)
+        public static string prepareJobNamesToCheckIfExists(TelcobrightConfig tbc, string syncPairName, 
+            string fileName)
         {
             //returns job id
             SyncPair syncPair = tbc.DirectorySettings.SyncPairs[syncPairName];

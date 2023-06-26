@@ -60,21 +60,42 @@ namespace Process
 
                             //List<FileInfo> localFiles = this.LocalLocation.GetLocalFilesNonRecursive();
                             DirectoryLister dirlister = new DirectoryLister();
-                            List<FileInfo> fileNames = dirlister.ListLocalDirectoryNonRecursive(cdrPathLocal)
+                            List<FileInfo> fileInfos = dirlister.ListLocalDirectoryNonRecursive(cdrPathLocal)
                                 .Where(fInfo => fInfo.Extension == thisSwitch.FileExtension
                                     && !fInfo.Name.EndsWith(".tmp") && !fInfo.Name.Contains(".filepart"))
                                     .ToList();
                             int minDurationToSkip = fileLocation.DurationSecToSkipVeryNewPossiblyIncompleteFiles;
-                            fileNames= fileNames.Where(f =>
+                            fileInfos= fileInfos.Where(f =>
                             {
                                 DateTime currentTime = DateTime.Now;
                                 return (currentTime - f.LastWriteTime).TotalSeconds
                                     > minDurationToSkip ;
                             }).ToList();
-                            Console.WriteLine($"Found {fileNames.Count} files, checking split history...");
+
+                            //**************
+                            Dictionary<string, FileInfo> newJobNameVsFileInfos  = fileInfos.Select(f => // kv<jobName,fileName>
+                                new
+                                {
+                                    jobName = f.Name,
+                                    fileName = f
+                                }).ToDictionary(a => a.jobName, a => a.fileName);
+                            Dictionary<string, string> existingJobNames 
+                                = getExistingJobNames(context, newJobNameVsFileInfos, thisSwitch.idSwitch);
+
+                            fileInfos = new List<FileInfo>();
+                            foreach (KeyValuePair<string, FileInfo> kv in newJobNameVsFileInfos)
+                            {
+                                bool jobExists = existingJobNames.ContainsKey(kv.Key);
+                                if (jobExists == false)
+                                {
+                                    fileInfos.Add(kv.Value);
+                                }
+                            }
+                            //*************
+                            Console.WriteLine($"Found {fileInfos.Count} new files with no prev job, checking split history...");
                             if (tbc.CdrSetting.DescendingOrderWhileListingFiles == true)
-                                fileNames = fileNames.OrderByDescending(c => c.Name).ToList();
-                            foreach (FileInfo fileInfo in fileNames)
+                                fileInfos = fileInfos.OrderByDescending(c => c.Name).ToList();
+                            foreach (FileInfo fileInfo in fileInfos)
                             {
                                 FileSplitSetting fileSplitSetting = tbc.CdrSetting.FileSplitSetting;
                                 if (fileSplitSetting == null ||
@@ -114,31 +135,38 @@ namespace Process
                 ErrorWriter wr = new ErrorWriter(e1, "CdrJobCreator", null, "", operatorName);
             }
         }
+        private static Dictionary<string, string> getExistingJobNames(PartnerEntities context,
+            Dictionary<string, FileInfo> newJobNameVsFileName, int idSwitch)
+        {
 
+            List<string> newJobNames = newJobNameVsFileName.Keys.ToList();
+            CollectionSegmenter<string> segmenter = new CollectionSegmenter<string>(newJobNames, 0);
+
+            Func<IEnumerable<string>, List<string>> getExistingJobNamesInSegment = jobNames =>
+                context.Database.SqlQuery<string>(
+                    $@"select jobname from job 
+                    where idjobdefinition=1 and idNe={idSwitch}
+                    and jobname in ({string.Join(",", jobNames.Select(f => "'" + f + "'"))})").ToList();
+
+            List<string> existingJobNames = segmenter
+                .ExecuteMethodInSegmentsWithRetval(200000, getExistingJobNamesInSegment)
+                .ToList();
+            return existingJobNames.ToDictionary(n => n);
+        }
         private static void writeJobs(PartnerEntities context, ne thisSwitch, List<job> newJobCacheForWritingAtOnceToDB)
         {
             if (!newJobCacheForWritingAtOnceToDB.Any())
             {
                 Console.WriteLine(" No new cdr file found, exiting...");
             }
-            Console.WriteLine($"Found {newJobCacheForWritingAtOnceToDB.Count} cdr files in vault, excluding duplicates...");
-            List<string> newJobNames = newJobCacheForWritingAtOnceToDB.Select(j => j.JobName).ToList();
-            var sql = $@"select * from ({string.Join(" union all ", newJobNames.Select(name => "select '" + name + "' as jobname "))})
-                                            as newJob 
-                                            where jobname not in 
-                                            (select jobname from job where idne={thisSwitch.idSwitch.ToString()} 
-                                            and idjobdefinition=1)";
-            List<string> nonExistingJobNames = context.Database.SqlQuery<string>(sql).ToList();
-            List<job> jobsToWrite = newJobCacheForWritingAtOnceToDB
-                .Where(j => nonExistingJobNames.Contains(j.JobName)).ToList();
-
-            if (jobsToWrite.Any())
-            {
-                Console.WriteLine("Writing " + jobsToWrite.Count + " cdr jobs to db...");
-                context.jobs.AddRange(jobsToWrite);
-                context.SaveChanges();
-            }
-            Console.WriteLine("switch: " + thisSwitch.SwitchName + ", new cdr job created:" + jobsToWrite.Count + ", already existing:" + newJobNames.Count);
+            Console.WriteLine(
+                $"Found {newJobCacheForWritingAtOnceToDB.Count} cdr files in vault, excluding duplicates...");
+            Console.WriteLine("Writing " + newJobCacheForWritingAtOnceToDB.Count + " cdr jobs to db...");
+            context.jobs.AddRange(newJobCacheForWritingAtOnceToDB);
+            context.SaveChanges();
+            Console.WriteLine("switch: " + thisSwitch.SwitchName + ", new cdr job created:" 
+                                + newJobCacheForWritingAtOnceToDB.Count + ", already existing:" + 
+                                newJobCacheForWritingAtOnceToDB.Count);
             newJobCacheForWritingAtOnceToDB = new List<job>();
         }
 

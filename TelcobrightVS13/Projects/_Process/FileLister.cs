@@ -74,7 +74,7 @@ namespace Process
                     Dictionary<string, string> newJobNameVsFileName = newFileNames.Select(f => // kv<jobName,fileName>
                         new
                         {
-                            jobName = FileUtil.prepareJobNamesToCheckIfExists(tbc, syncPair.Name, f, context),
+                            jobName = FileUtil.prepareJobNamesToCheckIfExists(tbc, syncPair.Name, f),
                             fileName = f
                         }).ToDictionary(a => a.jobName, a => a.fileName);
                     Dictionary<string, string> existingJobNames = getExistingJobNames(context, newJobNameVsFileName);
