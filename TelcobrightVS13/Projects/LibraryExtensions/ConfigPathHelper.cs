@@ -18,7 +18,7 @@ namespace LibraryExtensions
         private string UtilInstallConfigDirnameOnly { get; }
         private string GeneratorsHome { get; }
         public ConfigPathHelper(string topShelfDirName, string portalDirName,
-            string utilInstallConfigDirnameOnly,string generatorsHome)
+            string utilInstallConfigDirnameOnly, string generatorsHome)
         {
             this.TopShelfDirName = topShelfDirName;
             this.PortalDirName = portalDirName;
@@ -44,18 +44,18 @@ namespace LibraryExtensions
         {
             return Directory.GetParent(Directory
                        .GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName)
-                       .FullName).FullName + Path.DirectorySeparatorChar +this.UtilInstallConfigDirnameOnly
-                       +Path.DirectorySeparatorChar+"config" + Path.DirectorySeparatorChar +
+                       .FullName).FullName + Path.DirectorySeparatorChar + this.UtilInstallConfigDirnameOnly
+                       + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar +
                         operatorShortName;
         }
         public string GetOperatorWiseTargetFileNameInUtil(string operatorShortName)
         {
-            return GetOperatorWiseConfigDirInUtil(operatorShortName) + Path.DirectorySeparatorChar+ operatorShortName+
+            return GetOperatorWiseConfigDirInUtil(operatorShortName) + Path.DirectorySeparatorChar + operatorShortName +
                 ".conf";
         }
         public string GetTemplateConfigFileName(string templateFileNameOnly)
         {
-            return GetTopShelfConfigDir()+Path.DirectorySeparatorChar+ templateFileNameOnly;
+            return GetTopShelfConfigDir() + Path.DirectorySeparatorChar + templateFileNameOnly;
         }
 
         public string GetTargetFileNameForPortal(string operatorShortName)
@@ -71,7 +71,7 @@ namespace LibraryExtensions
         }
         public string getTelcoBillingHome()
         {
-            return GetUtilInstallConfigFullPath() + Path.DirectorySeparatorChar 
+            return GetUtilInstallConfigFullPath() + Path.DirectorySeparatorChar
                    + this.GeneratorsHome + Path.DirectorySeparatorChar + "telcoBilling";
         }
 
@@ -88,6 +88,26 @@ namespace LibraryExtensions
         public string getTelcoBillingSeedDataJsonHome()
         {
             return getTelcoBillingDbScriptsHome() + Path.DirectorySeparatorChar + "seedData"
+                   + Path.DirectorySeparatorChar + "json";
+        }
+        public string getTelcoBillingDdlSqlHome()
+        {
+            return getTelcoBillingDbScriptsHome() + Path.DirectorySeparatorChar + "ddl"
+                   + Path.DirectorySeparatorChar + "sql";
+        }
+        public string getTelcoBillingDdlJsonHome()
+        {
+            return getTelcoBillingDbScriptsHome() + Path.DirectorySeparatorChar + "ddl"
+                   + Path.DirectorySeparatorChar + "json";
+        }
+        public string getTelcoBillingDmlSqlHome()
+        {
+            return getTelcoBillingDbScriptsHome() + Path.DirectorySeparatorChar + "dml"
+                   + Path.DirectorySeparatorChar + "sql";
+        }
+        public string getTelcoBillingDmlJsonHome()
+        {
+            return getTelcoBillingDbScriptsHome() + Path.DirectorySeparatorChar + "dml"
                    + Path.DirectorySeparatorChar + "json";
         }
     }

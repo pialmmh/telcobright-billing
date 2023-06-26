@@ -193,7 +193,6 @@
     <Compile Include="util\CommonValidationRulesGenerator\InconsistentCdrValRulesGen.cs" />
     <Compile Include="util\CommonValidationRulesGenerator\CommonCdrValRulesGen.cs" />
     <Compile Include="generators\telcoBilling\TelcoBillingMenu.cs" />
-    <Compile Include="generators\telcoBilling\TelcoBillingSeedDataLoader.cs" />
     <None Include="app.manifest" />
     <None Include="config\cas\casGroupSummit\banglatelecom\scripts\appPool_tpny.iisScript" />
     <None Include="config\cas\casGroupSummit\banglatelecom\scripts\ftp_tpny.iisScript" />

@@ -48,7 +48,7 @@ namespace Decoders
                 //cdr.SequenceNumber = Convert.ToInt64(lineAsArr[0]);
                 textCdr[Fn.Filename] = fileName;
                 textCdr[Fn.ChargingStatus] = lineAsArr[2] == "S" ? "1" : "0"; 
-                textCdr[Fn.IncomingRoute] = lineAsArr[29];
+                textCdr[Fn.IncomingRoute] = lineAsArr[28];
                 textCdr[Fn.OutgoingRoute] = lineAsArr[59];
                 textCdr[Fn.DurationSec] = lineAsArr[17];
                 //cdr.DurationSec = Convert.ToDecimal(lineAsArr[17]) / 1000;
@@ -75,18 +75,18 @@ namespace Decoders
                 //cdr.MediaIp2 = lineAsArr[82];
 
                 string dt = lineAsArr[37];//SignalStart
-                if (!string.IsNullOrEmpty(dt)) textCdr[Fn.SignalingStartTime] = parseStringToDate(dt).ToString();
+                if (!string.IsNullOrEmpty(dt)) textCdr[Fn.SignalingStartTime] = parseStringToDate(dt).ToString("yyyy-MM-dd HH:mm:ss");
 
 
                 dt = lineAsArr[38];//ConnectTime
-                if (!string.IsNullOrEmpty(dt)) textCdr[Fn.ConnectTime] = parseStringToDate(dt).ToString();
+                if (!string.IsNullOrEmpty(dt)) textCdr[Fn.ConnectTime] = parseStringToDate(dt).ToString("yyyy-MM-dd HH:mm:ss");
 
                 dt = lineAsArr[39];//AnswerTime
-                if (!string.IsNullOrEmpty(dt)) textCdr[Fn.AnswerTime] = parseStringToDate(dt).ToString();
+                if (!string.IsNullOrEmpty(dt)) textCdr[Fn.AnswerTime] = parseStringToDate(dt).ToString("yyyy-MM-dd HH:mm:ss");
 
 
                 dt = lineAsArr[40];//EndTime
-                if (!string.IsNullOrEmpty(dt)) textCdr[Fn.Endtime] = parseStringToDate(dt).ToString();
+                if (!string.IsNullOrEmpty(dt)) textCdr[Fn.Endtime] = parseStringToDate(dt).ToString("yyyy-MM-dd HH:mm:ss");
 
 
                 textCdr[Fn.OriginatingCallingNumber] = lineAsArr[30].Trim();

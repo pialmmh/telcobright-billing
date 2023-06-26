@@ -14,6 +14,13 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig._generator
 {
+    public enum SqlOperationType
+    {
+        DML,
+        DDL,
+        SeedData
+    }
+
     public class DbWriterForConfig
     {
         public TelcobrightConfig Tbc { get; }
@@ -62,11 +69,37 @@ namespace InstallConfig._generator
             Console.WriteLine("Finished Loading partner and nes for " + this.Tbc.Telcobrightpartner.databasename + ".");
         }
 
-        public void LoadSeedDataSqlForTelcoBilling()
+        public void LoadSeedDataSqlForTelcoBilling(SqlOperationType sqlOperationType)
         {
-            Console.WriteLine("Loading seed data for " + this.Tbc.Telcobrightpartner.databasename + "...");
-            string dataDir = this.ConfigPathHelper.getTelcoBillingSeedDataSqlHome();
-            DirectoryInfo d = new DirectoryInfo(dataDir);
+            string msgBeforeOp;
+            string msgAfterOp;
+            string sqlDir;
+
+            switch (sqlOperationType)
+            {
+
+                case SqlOperationType.DML:
+                    sqlDir = this.ConfigPathHelper.getTelcoBillingDmlSqlHome();
+                    msgBeforeOp = "Loading dml scrips for " + this.Tbc.Telcobrightpartner.databasename + "...";
+                    msgAfterOp = "Finished loading dml scrips for " + this.Tbc.Telcobrightpartner.databasename + ".";
+                    break;
+                case SqlOperationType.DDL:
+                    sqlDir = this.ConfigPathHelper.getTelcoBillingDdlSqlHome();
+                    msgBeforeOp = "Loading ddl scrips for " + this.Tbc.Telcobrightpartner.databasename + "...";
+                    msgAfterOp = "Finished loading ddl scrips for " + this.Tbc.Telcobrightpartner.databasename + ".";
+                    break;
+                case SqlOperationType.SeedData:
+                    sqlDir = this.ConfigPathHelper.getTelcoBillingSeedDataSqlHome();
+                    msgBeforeOp = "Loading seed data for " + this.Tbc.Telcobrightpartner.databasename + "...";
+                    msgAfterOp = "Finished loading seed data for " + this.Tbc.Telcobrightpartner.databasename + ".";
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(sqlOperationType), sqlOperationType, null);
+            }
+            
+
+            Console.WriteLine(msgBeforeOp);
+            DirectoryInfo d = new DirectoryInfo(sqlDir);
             FileInfo[] sqlFiles = d.GetFiles("*.sql");
             foreach (FileInfo file in sqlFiles)
             {
@@ -88,8 +121,7 @@ namespace InstallConfig._generator
                     cmd.ExecuteNonQuery();
                 }
             }
-            Console.WriteLine("Finished loading seed data for " + this.Tbc.Telcobrightpartner.databasename + ".");
+            Console.WriteLine(msgAfterOp);
         }
-
     }
 }

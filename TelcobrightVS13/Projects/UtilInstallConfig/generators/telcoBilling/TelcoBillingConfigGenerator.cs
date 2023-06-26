@@ -80,7 +80,12 @@ namespace InstallConfig
                         context, con);
                     dbWriter.WriteTelcobrightPartnerAndNes();
 
-                    dbWriter.LoadSeedDataSqlForTelcoBilling();
+                    dbWriter.LoadSeedDataSqlForTelcoBilling(SqlOperationType.SeedData);
+                    if (ConsoleUtil.getConfirmationFromUser("Load ddl scripts? (Y/N) for " +
+                                                            this.Tbc.Telcobrightpartner.databasename))
+                    {
+                        dbWriter.LoadSeedDataSqlForTelcoBilling(SqlOperationType.DDL);
+                    }
                 }
                 Console.WriteLine();
                 Console.WriteLine("Seed data loaded successfully for " + Tbc.Telcobrightpartner.databasename);
