@@ -52,8 +52,8 @@ namespace Process
                             Console.WriteLine($"Checking new cdr files for Switch {thisSwitch.SwitchName} in vault...");
                             string vaultName = thisSwitch.SourceFileLocations;
                             //Vault vault = tbc.DirectorySettings.Vaults.First(c => c.Name == vaultName);
-                            string cdrPathLocal = tbc.DirectorySettings.SyncPairs[vaultName]
-                                .DstSyncLocation.FileLocation.StartingPath;
+                            FileLocation fileLocation = tbc.DirectorySettings.FileLocations[vaultName];
+                            string cdrPathLocal = fileLocation.StartingPath;
                             //var fileNames = vault.GetFileListLocal()
                             //var fileNames = Directory.GetFiles()
                             //Dictionary<string, FileInfo> fileNames = new Dictionary<string, FileInfo>();
@@ -62,7 +62,15 @@ namespace Process
                             DirectoryLister dirlister = new DirectoryLister();
                             List<FileInfo> fileNames = dirlister.ListLocalDirectoryNonRecursive(cdrPathLocal)
                                 .Where(fInfo => fInfo.Extension == thisSwitch.FileExtension
-                                    && !fInfo.Name.EndsWith(".tmp") && !fInfo.Name.Contains(".filepart")).ToList();
+                                    && !fInfo.Name.EndsWith(".tmp") && !fInfo.Name.Contains(".filepart"))
+                                    .ToList();
+                            int minDurationToSkip = fileLocation.DurationSecToSkipVeryNewPossiblyIncompleteFiles;
+                            fileNames= fileNames.Where(f =>
+                            {
+                                DateTime currentTime = DateTime.Now;
+                                return (currentTime - f.LastWriteTime).TotalSeconds
+                                    > minDurationToSkip ;
+                            }).ToList();
                             Console.WriteLine($"Found {fileNames.Count} files, checking split history...");
                             if (tbc.CdrSetting.DescendingOrderWhileListingFiles == true)
                                 fileNames = fileNames.OrderByDescending(c => c.Name).ToList();

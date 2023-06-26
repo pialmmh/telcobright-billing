@@ -10,7 +10,7 @@ namespace TelcobrightMediation.Config
 {
     public static class ConnectionManager
     {
-        static Dictionary<string, DatabaseSetting> operatorWiseDatabasettings { get; set; } = new Dictionary<string, DatabaseSetting>();
+        static public DatabaseSetting databasetting { get; set; }
         public static string GetConnectionStringByOperator(string operatorShortName, TelcobrightConfig tbc = null)
         {
             CacheConnectionStrings(operatorShortName, tbc);
@@ -26,8 +26,7 @@ namespace TelcobrightMediation.Config
         {
             CacheConnectionStrings(operatorShortName, tbc);
 
-            DatabaseSetting dbSettings = null;
-            operatorWiseDatabasettings.TryGetValue(operatorShortName, out dbSettings);
+            DatabaseSetting dbSettings = databasetting;
             //if (dbSettings.OverrideDatabaseSettingsFromAppConfig == false)
             //{
             //    return ConfigurationManager.ConnectionStrings[$"{connectionType}"].ConnectionString
@@ -58,10 +57,7 @@ namespace TelcobrightMediation.Config
         {
             if (tbc != null)
             {
-                if (!operatorWiseDatabasettings.ContainsKey(operatorShortName))
-                {
-                    operatorWiseDatabasettings.Add(operatorShortName, tbc.DatabaseSetting);
-                }
+                databasetting=tbc.DatabaseSetting;
             }
         }
 

@@ -17,9 +17,9 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class CasBtrcAbstractConfigConfigGenerator//quartz config part
+    public partial class BtrcAbstractConfigConfigGenerator //quartz config part
     {
-        /*static string databaseConfigFileName = new DirectoryInfo(FileAndPathHelper.GetBinPath()).Parent.Parent.FullName
+        /*static string databaseConfigFileName = new DirectoryInfo(FileAndPathHelper.GetCurrentExecPath()).Parent.Parent.FullName
                                                + Path.DirectorySeparatorChar + "Server.conf";
 */
         PortalSettings GetPortalSettings(string operatorName)
@@ -316,6 +316,9 @@ namespace InstallConfig
                         settingIntlIn
                     },
                     { "~/reports/icx/btrc/MonthlyReport.aspx",
+                        settingIntlIn
+                    },
+                    { "~/reports/icx/btrc/MonthlyOutgoingSummary.aspx",
                         settingIntlIn
                     }
                 },//dictionary of page settings

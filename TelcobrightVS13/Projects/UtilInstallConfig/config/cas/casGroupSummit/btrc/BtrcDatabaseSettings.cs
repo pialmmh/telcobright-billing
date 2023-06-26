@@ -18,15 +18,13 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class CasBtrcAbstractConfigConfigGenerator//quartz config part
+    public partial class BtrcAbstractConfigConfigGenerator //quartz config part
     {
         public override DatabaseSetting GetDatabaseConfigs()
         {
             var databaseSetting = new DatabaseSetting()
             {
                 ServerName = "172.18.0.2",
-                BaseDir = @"c:\mysql",
-                SocketNameForNamedPipeConnection = "casGroupSummit",
                 DatabaseName = this.Tbc.Telcobrightpartner.databasename,
                 AdminPassword = "Takay1#$ane",
                 AdminUserName = "root",

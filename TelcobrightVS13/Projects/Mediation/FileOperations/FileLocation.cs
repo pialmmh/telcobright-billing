@@ -20,6 +20,7 @@ namespace TelcobrightFileOperations
         public Dictionary<string,string> ExistingPaths { get; set; }
         public string RelativeCurrentDirectory { get; set; }
         public int FtpSessionCloseAndReOpeningtervalByFleTransferCount { get; set; } = 100000;
+        public int DurationSecToSkipVeryNewPossiblyIncompleteFiles { get; set; } = 40;
         public override string ToString()
         {
             return this.Name;

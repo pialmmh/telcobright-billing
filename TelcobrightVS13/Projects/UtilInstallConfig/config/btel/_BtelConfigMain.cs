@@ -45,6 +45,30 @@ namespace InstallConfig
 
         public override TelcobrightConfig GenerateConfig()
         {
+            CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
+            CommonCdrValRulesGen commonCdrValRulesGen =
+                new CommonCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
+            InconsistentCdrValRulesGen inconsistentCdrValRulesGen =
+                new InconsistentCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
+            this.Tbc.CdrSetting = new CdrSetting
+            {
+                SummaryTimeField = SummaryTimeFieldEnum.StartTime,
+                PartialCdrEnabledNeIds = new List<int>() { 3 },
+                PartialCdrFlagIndicators = new List<string>() { "1", "2", "3" },
+                DescendingOrderWhileListingFiles = false,
+                DescendingOrderWhileProcessingListedFiles = false,
+                ValidationRulesForCommonMediationCheck = commonCdrValRulesGen.GetRules(),
+                ValidationRulesForInconsistentCdrs = inconsistentCdrValRulesGen.GetRules(),
+                ServiceGroupConfigurations = this.GetServiceGroupConfigurations(),
+                DisableCdrPostProcessingJobCreationForAutomation = false,
+                DisableParallelMediation = false,
+                AutoCorrectBillIdsWithPrevChargeableIssue = true,
+                AutoCorrectDuplicateBillId = true,
+                AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
+                UseIdCallAsBillId = true
+            };
+
+            this.PrepareDirectorySetting(this.Tbc);
             this.Tbc.Nes = new List<ne>()
             {
                 new ne
@@ -81,30 +105,7 @@ namespace InstallConfig
                 },
             };
 
-            CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
-            CommonCdrValRulesGen commonCdrValRulesGen =
-                new CommonCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
-            InconsistentCdrValRulesGen inconsistentCdrValRulesGen =
-                new InconsistentCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
-            this.Tbc.CdrSetting = new CdrSetting
-            {
-                SummaryTimeField = SummaryTimeFieldEnum.StartTime,
-                PartialCdrEnabledNeIds = new List<int>() { 3 },
-                PartialCdrFlagIndicators = new List<string>() { "1", "2", "3" },
-                DescendingOrderWhileListingFiles = false,
-                DescendingOrderWhileProcessingListedFiles = false,
-                ValidationRulesForCommonMediationCheck = commonCdrValRulesGen.GetRules(),
-                ValidationRulesForInconsistentCdrs = inconsistentCdrValRulesGen.GetRules(),
-                ServiceGroupConfigurations = this.GetServiceGroupConfigurations(),
-                DisableCdrPostProcessingJobCreationForAutomation = false,
-                DisableParallelMediation = false,
-                AutoCorrectBillIdsWithPrevChargeableIssue=true,
-                AutoCorrectDuplicateBillId=true,
-                AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
-                UseIdCallAsBillId=true
-            };
-
-            this.PrepareDirectorySetting(this.Tbc);
+        
             this.PrepareProductAndServiceSettings();
             this.Tbc.ApplicationServersConfig = this.GetServerConfigs();
             this.Tbc.DatabaseSetting = this.GetDatabaseConfigs();

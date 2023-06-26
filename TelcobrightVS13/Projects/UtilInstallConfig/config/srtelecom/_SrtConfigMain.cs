@@ -54,6 +54,32 @@ namespace InstallConfig
 
         public override TelcobrightConfig GenerateConfig()
         {
+            CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
+            CommonCdrValRulesGen commonCdrValRulesGen =
+                new CommonCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
+            InconsistentCdrValRulesGen inconsistentCdrValRulesGen =
+                new InconsistentCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
+            this.Tbc.CdrSetting = new CdrSetting
+            {
+                EmptyFileAllowed = true,
+                SummaryTimeField = SummaryTimeFieldEnum.AnswerTime,
+                PartialCdrEnabledNeIds = new List<int>() { },//7, was set to non-partial processing mode due to duplicate billid problem.
+                PartialCdrFlagIndicators = new List<string>() { },//{"1", "2", "3"},
+                DescendingOrderWhileListingFiles = false,
+                DescendingOrderWhileProcessingListedFiles = false,
+                ValidationRulesForCommonMediationCheck = commonCdrValRulesGen.GetRules(),
+                ValidationRulesForInconsistentCdrs = inconsistentCdrValRulesGen.GetRules(),
+                ServiceGroupConfigurations = this.GetServiceGroupConfigurations(),
+                DisableCdrPostProcessingJobCreationForAutomation = false,
+                BatchSizeForCdrJobCreationCheckingExistence = 10000,
+                DisableParallelMediation = false,
+                AutoCorrectDuplicateBillId = false,
+                AutoCorrectBillIdsWithPrevChargeableIssue = true,
+                AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
+                UseIdCallAsBillId = true,
+                ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>()
+            };
+            this.PrepareDirectorySettings(this.Tbc);
             this.Tbc.Nes = new List<ne>()
             {
                 new ne
@@ -73,9 +99,9 @@ namespace InstallConfig
                     TransactionSizeForCDRLoading= 1500,
                     DecodingSpanCount= 100,
                     SkipAutoCreateJob= 1,
-                    SkipCdrListed= 0,
+                    SkipCdrListed= 1,
                     SkipCdrReceived= 0,
-                    SkipCdrDecoded= 0,
+                    SkipCdrDecoded= 1,
                     SkipCdrBackedup= 1,
                     KeepDecodedCDR= 0,
                     KeepReceivedCdrServer= 1,
@@ -96,9 +122,9 @@ namespace InstallConfig
                     idMediationRule= 2,
                     SwitchName= "cataleya",
                     CDRPrefix= "esdr",
-                    FileExtension= "",
+                    FileExtension= ".txt",
                     Description= null,
-                    SourceFileLocations= vaultCataleya.Name,
+                    SourceFileLocations= this.vaultCataleya.Name,
                     BackupFileLocations= null,
                     LoadingStopFlag= null,
                     LoadingSpanCount= 100,
@@ -122,32 +148,8 @@ namespace InstallConfig
                 }
             };
 
-            CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
-            CommonCdrValRulesGen commonCdrValRulesGen =
-                new CommonCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
-            InconsistentCdrValRulesGen inconsistentCdrValRulesGen =
-                new InconsistentCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
-            this.Tbc.CdrSetting = new CdrSetting
-            {
-                SummaryTimeField = SummaryTimeFieldEnum.AnswerTime,
-                PartialCdrEnabledNeIds = new List<int>() {},//7, was set to non-partial processing mode due to duplicate billid problem.
-                PartialCdrFlagIndicators = new List<string>() {},//{"1", "2", "3"},
-                DescendingOrderWhileListingFiles = false,
-                DescendingOrderWhileProcessingListedFiles = false,
-                ValidationRulesForCommonMediationCheck = commonCdrValRulesGen.GetRules(),
-                ValidationRulesForInconsistentCdrs = inconsistentCdrValRulesGen.GetRules(),
-                ServiceGroupConfigurations = this.GetServiceGroupConfigurations(),
-                DisableCdrPostProcessingJobCreationForAutomation = false,
-                BatchSizeForCdrJobCreationCheckingExistence=10000,
-                DisableParallelMediation = false,
-                AutoCorrectDuplicateBillId = false,
-                AutoCorrectBillIdsWithPrevChargeableIssue = true,
-                AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
-                UseIdCallAsBillId = true,
-                ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>()
-            };
+            
 
-            this.PrepareDirectorySettings(this.Tbc);
 
             this.PrepareProductAndServiceConfiguration();
             

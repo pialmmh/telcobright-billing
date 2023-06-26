@@ -105,6 +105,7 @@ namespace InstallConfig
             };
 
             //add locations to directory settings
+            tbc.DirectorySettings.FileLocations.Add(vaultCataleya.Name, vaultCataleya);
             tbc.DirectorySettings.FileLocations.Add(huawei.Name, huawei);
             tbc.DirectorySettings.FileLocations.Add(fileArchive1.Name, fileArchive1);
             tbc.DirectorySettings.FileLocations.Add(fileArchiveCAS.Name, fileArchiveCAS);

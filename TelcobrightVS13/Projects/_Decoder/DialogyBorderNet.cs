@@ -30,8 +30,8 @@ namespace Decoders
 
         public List<string[]> DecodeFile(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs)
         {
-
-            string fileName = "sdr.bn4k.BorderNet-SBC.hpsbc01.20200207.074450.000191.0.v1.0.csv";
+            this.Input = input;
+            string fileName = this.Input.FullPath; 
             List<string[]> lines = FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(fileName, ',', 1, "\"", ";");
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
@@ -40,7 +40,7 @@ namespace Decoders
 
             foreach (string[] lineAsArr in lines)
             {
-                var textCdr = new List<string>();
+                string[] textCdr = new string[input.MefDecodersData.Totalfieldtelcobright];
 
                 textCdr[Fn.Switchid] = Convert.ToString(9);
                 //cdr.SwitchId = 9;

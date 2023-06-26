@@ -126,15 +126,15 @@ namespace Process
             List<string> newJobNames = newJobNameVsFileName.Keys.ToList();
             CollectionSegmenter<string> segmenter = new CollectionSegmenter<string>(newJobNames, 0);
 
-            Func<IEnumerable<string>, List<object>> getExistingJobNamesInSegment = jobNames =>
-                context.Database.SqlQuery<object>(
+            Func<IEnumerable<string>, List<string>> getExistingJobNamesInSegment = jobNames =>
+                context.Database.SqlQuery<string>(
                     $@"select jobname from job 
                     where idjobdefinition=6 
                     and jobname in ({string.Join(",", jobNames.Select(f => "'" + f + "'"))})").ToList();
 
             List<string> existingJobNames = segmenter
                 .ExecuteMethodInSegmentsWithRetval(200000, getExistingJobNamesInSegment)
-                .Select(obj => (string) obj).ToList();
+                .ToList();
             return existingJobNames.ToDictionary(n => n);
         }
     }

@@ -28,10 +28,10 @@ namespace LibraryExtensions
             }
         }
 
-        public List<object> ExecuteMethodInSegmentsWithRetval(int segmentSize, Func<IEnumerable<T>, List<object>> method)
+        public List<TOut> ExecuteMethodInSegmentsWithRetval<TOut>(int segmentSize, Func<IEnumerable<T>, List<TOut>> method)
         {
             IEnumerable<T> segment;
-            List<object> retVal= new List<object>();
+            List<TOut> retVal= new List<TOut>();
             while ((segment = GetNextSegment(segmentSize)).Any())
             {
                 retVal.AddRange(method.Invoke(segment));

@@ -44,19 +44,46 @@ namespace InstallConfig
 
         public override TelcobrightConfig GenerateConfig()
         {
+            CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
+            CommonCdrValRulesGen commonCdrValRulesGen =
+                new CommonCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
+            InconsistentCdrValRulesGen inconsistentCdrValRulesGen =
+                new InconsistentCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
+
+            this.Tbc.CdrSetting = new CdrSetting
+            {
+                SummaryTimeField = SummaryTimeFieldEnum.AnswerTime,
+                PartialCdrEnabledNeIds = new List<int>() { },//7, was set to non-partial processing mode due to duplicate billid problem.
+                PartialCdrFlagIndicators = new List<string>() { },//{"1", "2", "3"},
+                DescendingOrderWhileListingFiles = false,
+                DescendingOrderWhileProcessingListedFiles = false,
+                ValidationRulesForCommonMediationCheck = commonCdrValRulesGen.GetRules(),
+                ValidationRulesForInconsistentCdrs = inconsistentCdrValRulesGen.GetRules(),
+                ServiceGroupConfigurations = this.GetServiceGroupConfigurations(),
+                DisableCdrPostProcessingJobCreationForAutomation = false,
+                BatchSizeForCdrJobCreationCheckingExistence = 10000,
+                DisableParallelMediation = false,
+                AutoCorrectDuplicateBillId = false,
+                AutoCorrectBillIdsWithPrevChargeableIssue = true,
+                AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
+                UseIdCallAsBillId = true,
+                ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>(),
+                BatchSizeWhenPreparingLargeSqlJob = 100000
+            };
+            this.PrepareDirectorySettings(this.Tbc);
             this.Tbc.Nes = new List<ne>()
             {
                 new ne
                 {
                     idSwitch = 9,
-                    idCustomer = 9,
+                    idCustomer = this.Tbc.Telcobrightpartner.idCustomer,
                     idcdrformat = 3,
                     idMediationRule = 2,
                     SwitchName = "huawei",
                     CDRPrefix = "b",
                     FileExtension = ".dat",
                     Description = null,
-                    SourceFileLocations = "vault",
+                    SourceFileLocations = vaultPrimary.Name,
                     BackupFileLocations = null,
                     LoadingStopFlag = null,
                     LoadingSpanCount = 100,
@@ -77,37 +104,43 @@ namespace InstallConfig
                     ExistingSummaryCacheSpanHr = 6,
                     BatchToDecodeRatio = 3,
                     PrependLocationNumberToFileName = 0
+                },
+                new ne
+                {
+                    idSwitch= 10,
+                    idCustomer= this.Tbc.Telcobrightpartner.idCustomer,
+                    idcdrformat= 26,
+                    idMediationRule= 2,
+                    SwitchName= "Dialogic",
+                    CDRPrefix= "sdr",
+                    FileExtension= ".gz",
+                    Description= null,
+                    SourceFileLocations= vaultDialogic.Name,
+                    BackupFileLocations= null,
+                    LoadingStopFlag= null,
+                    LoadingSpanCount= 100,
+                    TransactionSizeForCDRLoading= 1500,
+                    DecodingSpanCount= 100,
+                    SkipAutoCreateJob= 1,
+                    SkipCdrListed= 0,
+                    SkipCdrReceived= 0,
+                    SkipCdrDecoded= 0,
+                    SkipCdrBackedup= 1,
+                    KeepDecodedCDR= 0,
+                    KeepReceivedCdrServer= 1,
+                    CcrCauseCodeField= 56,
+                    SwitchTimeZoneId= null,
+                    CallConnectIndicator= "F5",
+                    FieldNoForTimeSummary= 29,
+                    EnableSummaryGeneration= "1",
+                    ExistingSummaryCacheSpanHr= 6,
+                    BatchToDecodeRatio= 3,
+                    PrependLocationNumberToFileName= 0
                 }
             };
 
-            CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
-            CommonCdrValRulesGen commonCdrValRulesGen =
-                new CommonCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
-            InconsistentCdrValRulesGen inconsistentCdrValRulesGen =
-                new InconsistentCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
+            
 
-            this.Tbc.CdrSetting = new CdrSetting
-            {
-                SummaryTimeField = SummaryTimeFieldEnum.AnswerTime,
-                PartialCdrEnabledNeIds = new List<int>() {},//7, was set to non-partial processing mode due to duplicate billid problem.
-                PartialCdrFlagIndicators = new List<string>() {},//{"1", "2", "3"},
-                DescendingOrderWhileListingFiles = false,
-                DescendingOrderWhileProcessingListedFiles = false,
-                ValidationRulesForCommonMediationCheck = commonCdrValRulesGen.GetRules(),
-                ValidationRulesForInconsistentCdrs = inconsistentCdrValRulesGen.GetRules(),
-                ServiceGroupConfigurations = this.GetServiceGroupConfigurations(),
-                DisableCdrPostProcessingJobCreationForAutomation = false,
-                BatchSizeForCdrJobCreationCheckingExistence=10000,
-                DisableParallelMediation = false,
-                AutoCorrectDuplicateBillId = false,
-                AutoCorrectBillIdsWithPrevChargeableIssue = true,
-                AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
-                UseIdCallAsBillId = true,
-                ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>(),
-                BatchSizeWhenPreparingLargeSqlJob=100000
-            };
-
-            this.PrepareDirectorySettings(this.Tbc);
             this.PrepareProductAndServiceConfiguration();
             this.Tbc.DatabaseSetting = this.GetDatabaseConfigs();
             this.Tbc.ApplicationServersConfig = this.GetServerConfigs();

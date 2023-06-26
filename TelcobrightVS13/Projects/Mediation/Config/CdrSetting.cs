@@ -5,11 +5,6 @@ using MediationModel;
 using TelcobrightMediation.Config;
 namespace TelcobrightMediation
 {
-    public class SkipSettingsForSummaryOnly {
-        public bool SkipCdr { get; set; } = false;
-        public bool SkipTransaction { get; set; } = false;
-        public bool SkipChargeable { get; set; } = false;
-    }
     public class CdrSetting : LogFileProcessorSetting
     {
         public bool EmptyFileAllowed { get; set; }

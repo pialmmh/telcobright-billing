@@ -59,8 +59,7 @@ namespace Jobs
         protected virtual NewCdrPreProcessor CollectRaw()
         {
             string fileLocationName = this.Input.Ne.SourceFileLocations;
-            FileLocation fileLocation = this.Input.MediationContext.Tbc.DirectorySettings
-                .SyncPairs[fileLocationName].DstSyncLocation.FileLocation;
+            FileLocation fileLocation = this.Input.MediationContext.Tbc.DirectorySettings.FileLocations[fileLocationName];
             string fileName = fileLocation.GetOsNormalizedPath(fileLocation.StartingPath)
                               + Path.DirectorySeparatorChar + this.Input.TelcobrightJob.JobName;
             this.CollectorInput = new CdrCollectorInputData(this.Input, fileName);
@@ -311,9 +310,8 @@ namespace Jobs
                 }
             }
             //create delete job
-            string vaultName = tbc.DirectorySettings.SyncPairs[cdrJob.ne.SourceFileLocations].Name;
-            FileLocation fileLocation = tbc.DirectorySettings.SyncPairs[vaultName]
-                .DstSyncLocation.FileLocation;
+            string vaultName = cdrJob.ne.SourceFileLocations;
+            FileLocation fileLocation = tbc.DirectorySettings.FileLocations[vaultName];
             job newDelJob= FileUtil.CreateFileDeleteJob(cdrJob.JobName, fileLocation, context,
                 new JobPreRequisite()
                 {
