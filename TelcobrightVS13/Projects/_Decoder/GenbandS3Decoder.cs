@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Globalization;
+using LibraryExtensions;
 using TelcobrightFileOperations;
 using MediationModel;
 using TelcobrightMediation.Mediation.Cdr;
@@ -18,6 +19,8 @@ namespace Decoders
         public string RuleName => GetType().Name;
         public int Id => 1;
         public string HelpText => "Decodes Genband S3 CDR.";
+        public CompressionType CompressionType { get; set; }
+
         public List<string[]> DecodeFile(CdrCollectorInputData input,out List<cdrinconsistent> inconsistentCdrs)
         {
             List<string[]> decodedRows = new List<string[]>();

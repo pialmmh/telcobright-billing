@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,53 @@ namespace LibraryExtensions
 {
     public static class FileAndPathHelper
     {
+        public static string[] readLinesFromCompressedFile(string fileName)
+        {
+            string compressedFile = fileName;
+            string tempFilePath = "tmpFile.txt";
+
+            // Extract the .gz file into the temporary file
+            using (FileStream gzFileStream = File.OpenRead(compressedFile))
+            {
+                using (FileStream tempFileStream = File.Create(tempFilePath))
+                {
+                    using (GZipStream gzipStream = new GZipStream(gzFileStream, CompressionMode.Decompress))
+                    {
+                        gzipStream.CopyTo(tempFileStream);
+                    }
+                }
+            }
+            // Read all lines from the temporary file
+            string[] lines = File.ReadAllLines(tempFilePath);
+            // Delete the temporary file
+            File.Delete(tempFilePath);
+            return lines;
+        }
+
+        public static string readTextFromCompressedFile(string fileName)
+        {
+            string compressedFile = fileName;
+            string tempFilePath = "tmpFile.txt";
+
+            // Extract the .gz file into the temporary file
+            using (FileStream gzFileStream = File.OpenRead(compressedFile))
+            {
+                using (FileStream tempFileStream = File.Create(tempFilePath))
+                {
+                    using (GZipStream gzipStream = new GZipStream(gzFileStream, CompressionMode.Decompress))
+                    {
+                        gzipStream.CopyTo(tempFileStream);
+                    }
+                }
+            }
+            // Read all lines from the temporary file
+            string allText = File.ReadAllText(tempFilePath);
+            // Delete the temporary file
+            File.Delete(tempFilePath);
+            return allText;
+        }
+
+
         public static void DeleteFileContaining(string targetDirectory, string wildcard)
         {
             string searchPattern = string.Format("*{0}*", wildcard);

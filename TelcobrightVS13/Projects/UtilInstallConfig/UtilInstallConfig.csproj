@@ -118,6 +118,7 @@
     <Compile Include="config\cas\casGroupSummit\summit\CasSummitServerConfig.cs" />
     <Compile Include="config\cas\casGroupSummit\summit\CasSummitServiceGroups.cs" />
     <Compile Include="config\cas\casGroupSummit\summit\Cas_SummitConfigMain.cs" />
+    <Compile Include="config\DeploymentProfileType.cs" />
     <Compile Include="config\purple\PurpleConfigMain.cs" />
     <Compile Include="config\purple\PurpleDatabaseSettings.cs" />
     <Compile Include="config\purple\PurpleDirectorySettings.cs" />
@@ -128,7 +129,7 @@
     <Compile Include="config\purple\PurpleServiceGroups.cs" />
     <Compile Include="buildAndDeploy\DeploymentHelper.cs" />
     <Compile Include="buildAndDeploy\DeploymentPlatform.cs" />
-    <Compile Include="config\AllTelcobrightDeployments.cs" />
+    <Compile Include="config\AllDeploymenProfiles.cs" />
     <Compile Include="buildAndDeploy\TelcobrightSeed.cs" />
     <Compile Include="generators\telcoBilling\TelcoBillingConfigGenerator.cs" />
     <Compile Include="generators\telcoBilling\TelcoBillingQuartzWriter.cs" />

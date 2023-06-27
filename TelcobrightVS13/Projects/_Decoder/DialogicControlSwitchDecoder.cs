@@ -7,6 +7,7 @@ using MediationModel;
 using TelcobrightMediation.Cdr;
 using TelcobrightMediation.Mediation.Cdr;
 using System.Linq;
+using LibraryExtensions;
 
 namespace Decoders
 {
@@ -18,6 +19,7 @@ namespace Decoders
         public virtual string RuleName => GetType().Name;
         public int Id => 2;
         public string HelpText => "Decodes Dialogic (Veraz) Control Switch CDR.";
+        public CompressionType CompressionType { get; set; }
         protected CdrCollectorInputData Input { get; set; }
         protected virtual List<string[]> GetTxtCdrs()
         {

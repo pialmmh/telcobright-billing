@@ -20,6 +20,7 @@ namespace Decoders
         public virtual string RuleName => GetType().Name;
         public int Id => 21;
         public string HelpText => "Decodes Cataleya CDR.";
+        public CompressionType CompressionType { get; set; }
         protected CdrCollectorInputData Input { get; set; }
         protected virtual List<string[]> GetTxtCdrs()
         {

@@ -11,6 +11,7 @@ using TelcobrightMediation;
 using TelcobrightMediation.Config;
 using FlexValidation;
 using InstallConfig._CommonValidation;
+using InstallConfig._generator;
 using MediationModel;
 using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Automation;
@@ -21,7 +22,7 @@ namespace InstallConfig
     public partial class BtelAbstractConfigConfigGenerator : AbstractConfigConfigGenerator
     {
         public override TelcobrightConfig Tbc { get; }
-        public BtelAbstractConfigConfigGenerator()
+        public BtelAbstractConfigConfigGenerator(InstanceConfig instanceConfig)
         {
             int thisServerId = 1;
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Igw, thisServerId,
@@ -30,7 +31,7 @@ namespace InstallConfig
                     idCustomer = 3,
                     CustomerName = "Banglatel Limited",
                     idOperatorType = 4,
-                    databasename = "btel",
+                    databasename = instanceConfig.name,
                     NativeTimeZone = 3251,
                     IgwPrefix = "320",
                     RateDictionaryMaxRecords = 3000000,

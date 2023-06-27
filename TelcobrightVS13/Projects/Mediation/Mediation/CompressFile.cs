@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using LibraryExtensions;
+
 namespace TelcobrightFileOperations
 {
     public class FileCompressor

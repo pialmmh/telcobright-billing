@@ -11,6 +11,7 @@ using TelcobrightMediation;
 using TelcobrightMediation.Config;
 using FlexValidation;
 using InstallConfig._CommonValidation;
+using InstallConfig._generator;
 using MediationModel;
 using TelcobrightMediation.Accounting;
 
@@ -20,7 +21,7 @@ namespace InstallConfig
     public partial class JslAbstractConfigConfigGenerator:AbstractConfigConfigGenerator
     {
         public override TelcobrightConfig Tbc { get; }
-        public JslAbstractConfigConfigGenerator()
+        public JslAbstractConfigConfigGenerator(InstanceConfig instanceConfig)
         {
             int thisServerId = 1;
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, thisServerId,
@@ -29,7 +30,7 @@ namespace InstallConfig
                     idCustomer = 7,
                     CustomerName = "Jibondhara Solutions Ltd.",
                     idOperatorType = 2,
-                    databasename = "jsl",
+                    databasename = instanceConfig.name,
                     databasetype = "mysql",
                     user = "root",
                     pass = null,

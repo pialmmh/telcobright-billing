@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Globalization;
 using System.Text;
+using LibraryExtensions;
 using TelcobrightFileOperations;
 using MediationModel;
 using TelcobrightMediation.Mediation.Cdr;
@@ -19,6 +20,7 @@ namespace Decoders
         public string RuleName => GetType().Name;
         public int Id => 4;
         public string HelpText => "Decodes Sansay CDR.";
+        public CompressionType CompressionType { get; set; }
         protected CdrCollectorInputData Input { get; set; }//required for testing with derived mock collector class
         protected virtual List<string[]> GetTxtCdrs()
         {

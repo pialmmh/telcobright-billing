@@ -53,8 +53,9 @@
     <Compile Include="CataleyaCsvDecoder.cs" />
     <Compile Include="AsteriskDecoder.cs" />
     <Compile Include="CataleyaDecoder.cs" />
+    <Compile Include="DialogicBorderNet.cs" />
     <Compile Include="DialogicControlSwitchDecoder.cs" />
-    <Compile Include="DialogyBorderNet.cs" />
+    <Compile Include="DialogicBorderNetGzip.cs" />
     <Compile Include="GenbandC3.cs" />
     <Compile Include="GenbandS3Decoder.cs" />
     <Compile Include="HuaweiSoftx3000Decoder.cs" />

@@ -68,7 +68,7 @@ namespace InstallConfig
             //winAutomation.execute(executionData);;
             
             ConsoleUtil consoleUtil= new ConsoleUtil(new List<char>() {'y', 'Y'});
-            List<Deploymentprofile> deploymentProfiles = AllTelcobrightDeployments.getDeploymentprofiles();
+            List<Deploymentprofile> deploymentProfiles = AllDeploymenProfiles.getDeploymentprofiles();
             string selectedProfileName= Menu.getSingleChoice(deploymentProfiles.Select(dp=>dp.profileName).ToList(),
                 "Select a deployment profile to configure automation.");
             Deploymentprofile deploymentprofile = deploymentProfiles.First(p => p.profileName == selectedProfileName);

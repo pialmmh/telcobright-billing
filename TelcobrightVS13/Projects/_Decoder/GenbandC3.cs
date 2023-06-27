@@ -8,6 +8,7 @@ using TelcobrightMediation.Cdr;
 using TelcobrightMediation.Mediation.Cdr;
 using System.Linq;
 using System.Globalization;
+using LibraryExtensions;
 
 namespace Decoders
 {
@@ -19,6 +20,7 @@ namespace Decoders
         public virtual string RuleName => GetType().Name;
         public int Id => 27;
         public string HelpText => "Decodes GenbandC3 CSV CDR.";
+        public CompressionType CompressionType { get; set; }
         protected CdrCollectorInputData Input { get; set; }
 
 

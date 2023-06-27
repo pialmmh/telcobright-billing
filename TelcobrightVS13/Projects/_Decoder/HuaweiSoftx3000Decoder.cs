@@ -5,6 +5,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using TelcobrightFileOperations;
 using System.Globalization;
+using LibraryExtensions;
 using MediationModel;
 using TelcobrightMediation.Mediation.Cdr;
 
@@ -19,6 +20,8 @@ namespace Decoders
         public string RuleName => GetType().Name;
         public int Id => 3;
         public string HelpText => "Decodes Huawei Softx3000 CDR.";
+        public CompressionType CompressionType { get; set; }
+
         public List<string[]> DecodeFile(CdrCollectorInputData input,out List<cdrinconsistent> inconsistentCdrs)
         {
             inconsistentCdrs = new List<cdrinconsistent>();

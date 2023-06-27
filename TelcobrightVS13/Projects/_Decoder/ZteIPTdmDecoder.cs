@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Globalization;
 using System.Linq;
+using LibraryExtensions;
 using TelcobrightFileOperations;
 using MediationModel;
 using TelcobrightMediation.Mediation.Cdr;
@@ -19,6 +20,8 @@ namespace Decoders
         public string RuleName => GetType().Name;
         public int Id => 18;
         public string HelpText => "Decodes ZTE IP TDM CDR.";
+        public CompressionType CompressionType { get; set; }
+
         public List<string[]> DecodeFile(CdrCollectorInputData input,out List<cdrinconsistent> inconsistentCdrs)
         {
             inconsistentCdrs = new List<cdrinconsistent>();

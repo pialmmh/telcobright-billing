@@ -7,13 +7,7 @@ using InstallConfig._generator;
 
 namespace InstallConfig
 {
-    public enum DeploymentProfileType
-    {
-        TelcoBilling,
-        Sms
-    }
-
-    public static class AllTelcobrightDeployments
+    public static class AllDeploymenProfiles
     {
         public static List<Deploymentprofile> getDeploymentprofiles()
         {
@@ -120,12 +114,12 @@ namespace InstallConfig
                         {
                             new InstanceConfig
                             {
-                                name = "srtelecom",
+                                name = "srtelecom_cas",
                                 SchedulerPortNo = 570
                             },
                             new InstanceConfig
                             {
-                                name = "summit",
+                                name = "summit_cas",
                                 SchedulerPortNo = 571,
                             }
                         }
@@ -162,9 +156,23 @@ namespace InstallConfig
                 }
             }
 
+            var instanceOrDatabaseName = allProfiles.SelectMany(p => p.instances.Select(i=>i.name))
+                .GroupBy(name => name)
+                .Select(g => new
+                {
+                    name = g.Key,
+                    count = g.Count()
+                }).Where(a => a.count > 1);
+
+            foreach (var a in instanceOrDatabaseName)
+            {
+                if (a.count > 1)
+                {
+                    throw new Exception("Instance or database names must be unique, duplicate name: " + a.name);
+                }
+            }
             return allProfiles;
         }
-
     }
 }
 

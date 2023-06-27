@@ -21,6 +21,7 @@ namespace InstallConfig
         private FileLocation vaultPrimary;
         private FileLocation vaultDialogic;
         private SyncPair huawei_Vault;
+        private SyncPair spdlg_Vault;
         private SyncPair vaultCAS;
         public static Dictionary<string, string> SrtConfigHelperMap = new Dictionary<string, string>()
         {
@@ -68,6 +69,22 @@ namespace InstallConfig
                 ServerIp = "123.176.59.19",
                 User = "icxhuawei",
                 Pass = "Icx2023@",
+                //ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
+                IgnoreZeroLenghFile = 1,
+                FtpSessionCloseAndReOpeningtervalByFleTransferCount = 1000
+            };
+
+            FileLocation dialogic = new FileLocation()
+            {
+                Name = "dialogic",
+                LocationType = "ftp",
+                OsType = "linux",
+                UseActiveModeForFTP = false,
+                PathSeparator = "/",
+                StartingPath = "/",
+                ServerIp = "123.176.59.19",
+                User = "sdrbtdialogic",
+                Pass = "SdrBT@2@23#",
                 //ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
                 IgnoreZeroLenghFile = 1,
                 FtpSessionCloseAndReOpeningtervalByFleTransferCount = 1000
@@ -121,11 +138,42 @@ namespace InstallConfig
                 SrcSettings = new SyncSettingsSource()
                 {
                     SecondaryDirectory = "downloaded",
-                    MoveFilesToSecondaryAfterCopy = false,
+                    MoveFilesToSecondaryAfterCopy = true,
                     Recursive = false,
                     ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('b')
                                                                 and
                                                                 (Name.EndsWith('.dat'))
+                                                                and Length>0")
+                },
+                DstSettings = new SyncSettingsDest()
+                {
+                    FileExtensionForSafeCopyWithTempFile = ".tmp",//make sure when copying to vault always .tmp ext used
+                    Overwrite = true,
+                    ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
+                    CompressionType = CompressionType.None
+                }
+            };
+
+            this.spdlg_Vault = new SyncPair("dlg:Vault")
+            {
+                SkipSourceFileListing = false,
+                SrcSyncLocation = new SyncLocation()
+                {
+                    FileLocation = dialogic,
+                    DescendingFileListByFileName = this.Tbc.CdrSetting.DescendingOrderWhileListingFiles
+                },
+                DstSyncLocation = new SyncLocation()
+                {
+                    FileLocation = vaultDialogic
+                },
+                SrcSettings = new SyncSettingsSource()
+                {
+                    SecondaryDirectory = "downloaded",
+                    MoveFilesToSecondaryAfterCopy = true,
+                    Recursive = false,
+                    ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('sdr')
+                                                                and
+                                                                (Name.EndsWith('.gz'))
                                                                 and Length>0")
                 },
                 DstSettings = new SyncSettingsDest()

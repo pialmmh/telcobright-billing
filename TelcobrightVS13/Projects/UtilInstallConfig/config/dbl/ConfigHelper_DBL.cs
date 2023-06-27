@@ -5,6 +5,8 @@ using TelcobrightFileOperations;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Text.RegularExpressions;
+using InstallConfig._generator;
+using LibraryExtensions;
 using LibraryExtensions.ConfigHelper;
 using MediationModel;
 using TelcobrightMediation;
@@ -21,7 +23,7 @@ namespace InstallConfig
             throw new NotImplementedException();
         }
         public override TelcobrightConfig Tbc { get; }
-        public DblAbstractConfigConfigGeneratorHelper()
+        public DblAbstractConfigConfigGeneratorHelper(InstanceConfig instanceConfig)
         {
             int thisServerId = 1;
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Igw, thisServerId,
@@ -30,7 +32,7 @@ namespace InstallConfig
                         idCustomer = 4,
                         CustomerName = "DBL Telecom Ltd.",
                         idOperatorType = 4,
-                        databasename = "dbl",
+                        databasename = instanceConfig.name,
                         NativeTimeZone = 3251,
                         IgwPrefix = "240",
                         RateDictionaryMaxRecords = 3000000,

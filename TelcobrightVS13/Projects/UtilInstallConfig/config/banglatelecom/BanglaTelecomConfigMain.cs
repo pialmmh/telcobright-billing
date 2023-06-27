@@ -11,6 +11,7 @@ using TelcobrightMediation;
 using TelcobrightMediation.Config;
 using FlexValidation;
 using InstallConfig._CommonValidation;
+using InstallConfig._generator;
 using MediationModel;
 using TelcobrightMediation.Accounting;
 
@@ -20,7 +21,7 @@ namespace InstallConfig
     public partial class BanglaTelecomAbstractConfigConfigGenerator : AbstractConfigConfigGenerator
     {
         public override TelcobrightConfig Tbc { get; }
-        public BanglaTelecomAbstractConfigConfigGenerator()
+        public BanglaTelecomAbstractConfigConfigGenerator(InstanceConfig instanceConfig)
         {
             int thisServerId = 1;
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, thisServerId,
@@ -29,7 +30,7 @@ namespace InstallConfig
                         idCustomer = 9,
                         CustomerName = "BANGLA TELECOM LTD.",
                         idOperatorType = 2,
-                        databasename = "banglatelecom",
+                        databasename = instanceConfig.name,
                         NativeTimeZone = 3251,
                         IgwPrefix = null,
                         RateDictionaryMaxRecords = 3000000,
@@ -109,7 +110,7 @@ namespace InstallConfig
                 {
                     idSwitch= 10,
                     idCustomer= this.Tbc.Telcobrightpartner.idCustomer,
-                    idcdrformat= 26,
+                    idcdrformat= 27,
                     idMediationRule= 2,
                     SwitchName= "Dialogic",
                     CDRPrefix= "sdr",

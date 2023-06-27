@@ -11,6 +11,7 @@ using TelcobrightMediation;
 using TelcobrightMediation.Config;
 using FlexValidation;
 using InstallConfig._CommonValidation;
+using InstallConfig._generator;
 using MediationModel;
 using TelcobrightMediation.Accounting;
 
@@ -20,7 +21,7 @@ namespace InstallConfig
     public partial class SrtAbstractConfigConfigGenerator : AbstractConfigConfigGenerator
     {
         public override TelcobrightConfig Tbc { get; }
-        public SrtAbstractConfigConfigGenerator()
+        public SrtAbstractConfigConfigGenerator(InstanceConfig instanceConfig)
         {
             int thisServerId = 1;
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, thisServerId,
@@ -29,7 +30,7 @@ namespace InstallConfig
                     idCustomer = 8,
                     CustomerName = "SR Telecom Ltd.",
                     idOperatorType = 2,
-                    databasename = "srtelecom",
+                    databasename = instanceConfig.name,
                     databasetype = "",
                     user = null,
                     pass = null,

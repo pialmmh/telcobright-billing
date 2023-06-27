@@ -9,13 +9,7 @@ using TelcobrightMediation;
 using System.Linq;
 namespace TelcobrightFileOperations
 {
-    public enum CompressionType
-    {
-        None = 0,
-        Zip = 1,
-        Sevenzip = 2,
-        Gzip = 3
-    }
+   
 
     public class SpringExpression//need this to support json config files, parsed spring expressions loses their value when serialized
     {

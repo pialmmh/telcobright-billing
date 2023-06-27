@@ -271,32 +271,19 @@ namespace TelcobrightFileOperations
                 lines = readFile.ReadToEnd().Split('\n')
                     .Skip(linesToSkipBefore)
                     .Select(line => line.Replace('\r', '\0'))
-                    .Where(line=>line.Trim()!="").ToList();
+                    .Where(line => line.Trim() != "").ToList();
             }
-            //temp
-            //lines = new List<string>();
-            //string tempLine = File.ReadAllText(@"c:\temp\oneLiner.txt");
-            //lines.Add(tempLine);
-            //Func<List<string[]>> test= ()=>;
+            return ParseLinesWithEnclosedAndUnenclosedFields(delimeter, enclosingChar, lines);
+        }
 
-            //List<string[]> rowsWithFieldArrs = lines.Select(
-            //    line =>
-            //    {
-            //        var delReplaced = ReplaceDelimeterInsideField(line, delimeter, enclosingChar, ";");
-            //        string[] quoteReplaced = delReplaced.Split(',').Select(c => c.Replace("\"", "")).ToArray();
-            //        return quoteReplaced;
-            //    }).ToList();
-
-            //File.WriteAllText(@"c:\temp\oneLinerProcessed.txt", lines[0]);
-
-            List<string[]> rowsWithFieldArrs = lines.Select(
+        public static List<string[]> ParseLinesWithEnclosedAndUnenclosedFields(char delimeter, string enclosingChar, List<string> lines)
+        {
+            return lines.Select(
                 line => ReplaceDelimeterInsideField(line, delimeter, enclosingChar, ";"))
                         .Select(line => line.Split(delimeter))
                         .Select(fieldArray => fieldArray.Select(field => field.Replace(enclosingChar, "")).ToArray())
                         .ToList();
-            return rowsWithFieldArrs;                        
         }
-
 
         static string ReplaceDelimeterInsideField(string line, char delimeter, string enclosingCharStr, string charToReplaceDelimiterInsideField)
         {
