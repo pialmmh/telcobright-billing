@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 
-namespace InstallConfig._generator
+namespace TelcobrightInfra
 {
     public class Deploymentprofile
     {

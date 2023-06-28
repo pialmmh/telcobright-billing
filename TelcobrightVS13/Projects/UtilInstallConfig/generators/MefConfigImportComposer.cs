@@ -15,8 +15,8 @@ namespace InstallConfig
 {
     class MefConfigImportComposer
     {
-        [ImportMany(typeof(AbstractConfigConfigGenerator))]
-        public IEnumerable<AbstractConfigConfigGenerator> OperatorWiseMainConfigGenerators { get; private set; }
+        [ImportMany(typeof(AbstractConfigGenerator))]
+        public IEnumerable<AbstractConfigGenerator> OperatorWiseMainConfigGenerators { get; private set; }
         public MefConfigImportComposer()
         {
             var catalog = new AggregateCatalog();
@@ -24,7 +24,7 @@ namespace InstallConfig
             CompositionContainer container = new CompositionContainer(catalog);
             container.ComposeParts(this);
         }
-        public IEnumerable<AbstractConfigConfigGenerator> Compose()
+        public IEnumerable<AbstractConfigGenerator> Compose()
         {
             return this.OperatorWiseMainConfigGenerators.ToList();
         }

@@ -118,7 +118,6 @@
     <Compile Include="config\cas\casGroupSummit\summit\CasSummitServerConfig.cs" />
     <Compile Include="config\cas\casGroupSummit\summit\CasSummitServiceGroups.cs" />
     <Compile Include="config\cas\casGroupSummit\summit\Cas_SummitConfigMain.cs" />
-    <Compile Include="config\DeploymentProfileType.cs" />
     <Compile Include="config\purple\PurpleConfigMain.cs" />
     <Compile Include="config\purple\PurpleDatabaseSettings.cs" />
     <Compile Include="config\purple\PurpleDirectorySettings.cs" />
@@ -127,10 +126,8 @@
     <Compile Include="config\purple\PurpleQuartzConfig.cs" />
     <Compile Include="config\purple\PurpleServerConfig.cs" />
     <Compile Include="config\purple\PurpleServiceGroups.cs" />
-    <Compile Include="buildAndDeploy\DeploymentHelper.cs" />
-    <Compile Include="buildAndDeploy\DeploymentPlatform.cs" />
     <Compile Include="config\AllDeploymenProfiles.cs" />
-    <Compile Include="buildAndDeploy\TelcobrightSeed.cs" />
+    <Compile Include="generators\DeploymentHelper.cs" />
     <Compile Include="generators\telcoBilling\TelcoBillingConfigGenerator.cs" />
     <Compile Include="generators\telcoBilling\TelcoBillingQuartzWriter.cs" />
     <Compile Include="generators\BIllingRulesDefiner.cs" />
@@ -138,8 +135,6 @@
     <Compile Include="config\dbl\DblDatabaseSettings.cs" />
     <Compile Include="config\dbl\dblAppServerConfig.cs" />
     <Compile Include="generators\DbWriterForConfig.cs" />
-    <Compile Include="buildAndDeploy\DeploymentProfile.cs" />
-    <Compile Include="buildAndDeploy\InstanceConfig.cs" />
     <Compile Include="generators\InstanceMenu.cs" />
     <Compile Include="generators\ParnerRouteImportInfo.cs" />
     <Compile Include="generators\PartitionInfo.cs" />
@@ -267,6 +262,10 @@
     <ProjectReference Include="..\QuartzTelcobright\QuartzTelcobright.csproj">
       <Project>{4dc3e3de-5ed6-4b02-abf1-b66f77b0dc6b}</Project>
       <Name>QuartzTelcobright</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TelcobrightInfra\TelcobrightInfra.csproj">
+      <Project>{ff350c55-2852-406c-930b-ae2938cceb91}</Project>
+      <Name>TelcobrightInfra</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

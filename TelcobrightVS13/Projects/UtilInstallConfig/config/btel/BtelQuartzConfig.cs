@@ -15,7 +15,7 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class BtelAbstractConfigConfigGenerator //quartz config part
+    public partial class BtelAbstractConfigGenerator //quartz config part
     {
         private List<QuartzTbDaemonConfig> DaemonConfigurations { get; set; }
         public override List<QuartzTbDaemonConfig> GetSchedulerDaemonConfigs()

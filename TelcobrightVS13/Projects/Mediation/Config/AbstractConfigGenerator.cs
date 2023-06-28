@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using LibraryExtensions.ConfigHelper;
+using TelcobrightInfra;
 using TelcobrightMediation.Scheduler.Quartz;
 
 namespace TelcobrightMediation.Config
 {
-    public abstract class AbstractConfigConfigGenerator: IConfigGenerator
+    public abstract class AbstractConfigGenerator: IConfigGenerator
     {
         public override string ToString() => this.GetType().Name;
-        public abstract TelcobrightConfig Tbc { get; }
-        public abstract TelcobrightConfig GenerateConfig();
+        public abstract TelcobrightConfig Tbc { get; set; }
+        public abstract TelcobrightConfig GenerateConfig(InstanceConfig instanceConfig,int microserviceInstanceId);
         public abstract List<QuartzTbDaemonConfig> GetSchedulerDaemonConfigs();
         public abstract DatabaseSetting GetDatabaseConfigs();
         public abstract List<Server> GetServerConfigs();

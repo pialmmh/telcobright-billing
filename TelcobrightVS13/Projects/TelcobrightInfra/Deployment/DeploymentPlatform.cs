@@ -1,4 +1,4 @@
-namespace InstallConfig
+namespace TelcobrightInfra
 {
     public enum DeploymentPlatform
     {

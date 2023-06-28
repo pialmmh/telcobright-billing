@@ -17,11 +17,11 @@ using TelcobrightMediation.Accounting;
 
 namespace InstallConfig
 {
-    [Export(typeof(AbstractConfigConfigGenerator))]
-    public partial class SrtAbstractConfigConfigGenerator : AbstractConfigConfigGenerator
+    [Export(typeof(AbstractConfigGenerator))]
+    public partial class SrtAbstractConfigGenerator : AbstractConfigGenerator
     {
         public override TelcobrightConfig Tbc { get; }
-        public SrtAbstractConfigConfigGenerator(InstanceConfig instanceConfig)
+        public SrtAbstractConfigGenerator(InstanceConfig instanceConfig)
         {
             int thisServerId = 1;
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, thisServerId,

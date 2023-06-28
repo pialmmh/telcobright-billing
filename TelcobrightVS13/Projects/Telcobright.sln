@@ -61,7 +61,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlexValidation", "FlexValid
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mefNERRules", "_NERRules\mefNERRules.csproj", "{B10BD6DE-255F-4628-9942-09C7EE59F162}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01_Lib", "01_Lib", "{7541485A-F1E4-457C-8913-03E8B6A1D2C8}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00_Lib", "00_Lib", "{7541485A-F1E4-457C-8913-03E8B6A1D2C8}"
 	ProjectSection(SolutionItems) = preProject
 		Lib\SshCommandRouter.dll = Lib\SshCommandRouter.dll
 	EndProjectSection
@@ -102,6 +102,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mefAutomations", "Automations\mefAutomations.csproj", "{6E8A53E8-C202-47D5-A310-918A2ED8D863}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Portal", "Portal\Portal.csproj", "{CB76CFD6-1D41-4AF5-9112-66647A5F20B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelcobrightInfra", "TelcobrightInfra\TelcobrightInfra.csproj", "{FF350C55-2852-406C-930B-AE2938CCEB91}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01_Infra", "01_Infra", "{DEEA860A-E8E4-43B0-8C26-BF3D553A808F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -748,6 +752,22 @@ Global
 		{CB76CFD6-1D41-4AF5-9112-66647A5F20B7}.Release|x64.Build.0 = Release|Any CPU
 		{CB76CFD6-1D41-4AF5-9112-66647A5F20B7}.Release|x86.ActiveCfg = Release|Any CPU
 		{CB76CFD6-1D41-4AF5-9112-66647A5F20B7}.Release|x86.Build.0 = Release|Any CPU
+		{FF350C55-2852-406C-930B-AE2938CCEB91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF350C55-2852-406C-930B-AE2938CCEB91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF350C55-2852-406C-930B-AE2938CCEB91}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{FF350C55-2852-406C-930B-AE2938CCEB91}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{FF350C55-2852-406C-930B-AE2938CCEB91}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FF350C55-2852-406C-930B-AE2938CCEB91}.Debug|x64.Build.0 = Debug|Any CPU
+		{FF350C55-2852-406C-930B-AE2938CCEB91}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FF350C55-2852-406C-930B-AE2938CCEB91}.Debug|x86.Build.0 = Debug|Any CPU
+		{FF350C55-2852-406C-930B-AE2938CCEB91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF350C55-2852-406C-930B-AE2938CCEB91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF350C55-2852-406C-930B-AE2938CCEB91}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{FF350C55-2852-406C-930B-AE2938CCEB91}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{FF350C55-2852-406C-930B-AE2938CCEB91}.Release|x64.ActiveCfg = Release|Any CPU
+		{FF350C55-2852-406C-930B-AE2938CCEB91}.Release|x64.Build.0 = Release|Any CPU
+		{FF350C55-2852-406C-930B-AE2938CCEB91}.Release|x86.ActiveCfg = Release|Any CPU
+		{FF350C55-2852-406C-930B-AE2938CCEB91}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -789,5 +809,6 @@ Global
 		{B6601454-C94C-45B0-AADE-6A71F6C9C71C} = {9B52CFB9-24E2-4113-91C4-DE7DD46A0B6C}
 		{6E8A53E8-C202-47D5-A310-918A2ED8D863} = {9B52CFB9-24E2-4113-91C4-DE7DD46A0B6C}
 		{CB76CFD6-1D41-4AF5-9112-66647A5F20B7} = {F300A5B7-26F3-4D3E-9EF5-33EBE722C289}
+		{FF350C55-2852-406C-930B-AE2938CCEB91} = {DEEA860A-E8E4-43B0-8C26-BF3D553A808F}
 	EndGlobalSection
 EndGlobal

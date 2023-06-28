@@ -18,7 +18,7 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class CasBanglaTelecomAbstractConfigConfigGenerator //quartz config part
+    public partial class CasBanglaTelecomAbstractConfigGenerator //quartz config part
     {
         public override DatabaseSetting GetDatabaseConfigs()
         {

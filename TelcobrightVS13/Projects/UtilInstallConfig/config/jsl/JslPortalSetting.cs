@@ -17,7 +17,7 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class JslAbstractConfigConfigGenerator //quartz config part
+    public partial class JslAbstractConfigGenerator //quartz config part
     {
         //static string databaseConfigFileName = new DirectoryInfo(FileAndPathHelper.GetCurrentExecPath()).Parent.Parent.FullName
         //                                       + Path.DirectorySeparatorChar + "Server.conf";

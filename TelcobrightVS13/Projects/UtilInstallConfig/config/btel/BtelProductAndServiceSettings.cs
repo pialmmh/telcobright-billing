@@ -17,7 +17,7 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class BtelAbstractConfigConfigGenerator //quartz config part
+    public partial class BtelAbstractConfigGenerator //quartz config part
     {
         public void PrepareProductAndServiceSettings()
         {

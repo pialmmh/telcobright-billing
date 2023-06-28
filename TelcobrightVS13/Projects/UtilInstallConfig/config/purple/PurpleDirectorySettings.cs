@@ -16,7 +16,7 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class PurpleAbstractConfigConfigGenerator//quartz config part
+    public partial class PurpleAbstractConfigGenerator//quartz config part
     {
         public static Dictionary<string, string> SrtConfigHelperMap = new Dictionary<string, string>()
         {

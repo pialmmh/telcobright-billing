@@ -16,7 +16,7 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class SummitAbstractConfigConfigGenerator //quartz config part
+    public partial class SummitAbstractConfigGenerator //quartz config part
     {
         private FileLocation vaultPrimary;
         private FileLocation vaultDialogic;

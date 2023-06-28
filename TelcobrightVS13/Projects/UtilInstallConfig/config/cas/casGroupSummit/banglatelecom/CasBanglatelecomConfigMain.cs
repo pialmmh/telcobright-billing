@@ -13,38 +13,39 @@ using FlexValidation;
 using InstallConfig._CommonValidation;
 using InstallConfig._generator;
 using MediationModel;
+using TelcobrightInfra;
 using TelcobrightMediation.Accounting;
 
 namespace InstallConfig
 {
-    [Export(typeof(AbstractConfigConfigGenerator))]
-    public partial class CasBanglaTelecomAbstractConfigConfigGenerator : AbstractConfigConfigGenerator
+    [Export(typeof(AbstractConfigGenerator))]
+    public partial class CasBanglaTelecomAbstractConfigGenerator : AbstractConfigGenerator
     {
         public override TelcobrightConfig Tbc { get; }
-        public CasBanglaTelecomAbstractConfigConfigGenerator(InstanceConfig instanceConfig)
+        public CasBanglaTelecomAbstractConfigGenerator(InstanceConfig instanceConfig)
         {
-            int thisServerId = 1;
-            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, thisServerId,
-                new telcobrightpartner
-                    {
-                        idCustomer = 9,
-                        CustomerName = "BANGLA TELECOM LTD.",
-                        idOperatorType = 2,
-                        databasename = instanceConfig.name,
-                        NativeTimeZone = 3251,
-                        IgwPrefix = null,
-                        RateDictionaryMaxRecords = 3000000,
-                        MinMSForIntlOut = 100,
-                        RawCdrKeepDurationDays = 90,
-                        SummaryKeepDurationDays = 730,
-                        AutoDeleteOldData = 1,
-                        AutoDeleteStartHour = 4,
-                        AutoDeleteEndHour = 6
-                    });
+            
         }
 
-        public override TelcobrightConfig GenerateConfig()
+        public override TelcobrightConfig GenerateConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
         {
+            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, microserviceInstanceId,
+                new telcobrightpartner
+                {
+                    idCustomer = 9,
+                    CustomerName = "BANGLA TELECOM LTD.",
+                    idOperatorType = 2,
+                    databasename = instanceConfig.name,
+                    NativeTimeZone = 3251,
+                    IgwPrefix = null,
+                    RateDictionaryMaxRecords = 3000000,
+                    MinMSForIntlOut = 100,
+                    RawCdrKeepDurationDays = 90,
+                    SummaryKeepDurationDays = 730,
+                    AutoDeleteOldData = 1,
+                    AutoDeleteStartHour = 4,
+                    AutoDeleteEndHour = 6
+                });
             CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
             CommonCdrValRulesGen commonCdrValRulesGen =
                 new CommonCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);

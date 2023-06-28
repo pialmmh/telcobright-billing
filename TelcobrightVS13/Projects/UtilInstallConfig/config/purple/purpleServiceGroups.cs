@@ -19,7 +19,7 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class PurpleAbstractConfigConfigGenerator //quartz config part
+    public partial class PurpleAbstractConfigGenerator //quartz config part
     {
         public Dictionary<int, ServiceGroupConfiguration> GetServiceGroupConfigurations()
         {

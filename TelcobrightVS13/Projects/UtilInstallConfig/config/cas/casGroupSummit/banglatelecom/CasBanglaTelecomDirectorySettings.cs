@@ -16,7 +16,7 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class CasBanglaTelecomAbstractConfigConfigGenerator//quartz config part
+    public partial class CasBanglaTelecomAbstractConfigGenerator//quartz config part
     {
         private FileLocation vaultPrimary;
         private FileLocation vaultDialogic;

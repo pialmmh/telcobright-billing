@@ -15,15 +15,15 @@ using TelcobrightMediation.Scheduler.Quartz;
 
 namespace InstallConfig
 {
-    [Export(typeof(AbstractConfigConfigGenerator))]
-    public partial class DblAbstractConfigConfigGeneratorHelper:AbstractConfigConfigGenerator
+    [Export(typeof(AbstractConfigGenerator))]
+    public partial class DblAbstractConfigGeneratorHelper:AbstractConfigGenerator
     {
         public override List<QuartzTbDaemonConfig> GetSchedulerDaemonConfigs()
         {
             throw new NotImplementedException();
         }
         public override TelcobrightConfig Tbc { get; }
-        public DblAbstractConfigConfigGeneratorHelper(InstanceConfig instanceConfig)
+        public DblAbstractConfigGeneratorHelper(InstanceConfig instanceConfig)
         {
             int thisServerId = 1;
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Igw, thisServerId,

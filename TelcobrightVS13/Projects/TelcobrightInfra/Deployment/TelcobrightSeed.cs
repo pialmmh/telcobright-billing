@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace InstallConfig
+namespace TelcobrightInfra
 {
     public class TelcobrightSeed{
        

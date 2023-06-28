@@ -41,12 +41,12 @@ namespace InstallConfig
                         schedulerPortNo = i.SchedulerPortNo
                     }).ToDictionary(a => a.name, a => a.schedulerPortNo);
 
-            List<AbstractConfigConfigGenerator> operatorsToBeConfigured
+            List<AbstractConfigGenerator> operatorsToBeConfigured
                 = new MefConfigImportComposer().Compose()
                     .Where(op => namesVsSchedulerPort.Keys
                         .Contains(op.Tbc.Telcobrightpartner.databasename)).ToList();
             List<TelcobrightConfig> operatorConfigs = new List<TelcobrightConfig>();
-            foreach (AbstractConfigConfigGenerator configGenerator in operatorsToBeConfigured)
+            foreach (AbstractConfigGenerator configGenerator in operatorsToBeConfigured)
             {
                 TelcobrightConfig tbc = configGenerator.GenerateConfig();
                 tbc.TcpPortNoForRemoteScheduler = namesVsSchedulerPort[tbc.Telcobrightpartner.databasename];

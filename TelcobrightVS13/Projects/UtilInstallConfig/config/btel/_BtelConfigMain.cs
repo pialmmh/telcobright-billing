@@ -13,19 +13,24 @@ using FlexValidation;
 using InstallConfig._CommonValidation;
 using InstallConfig._generator;
 using MediationModel;
+using TelcobrightInfra;
 using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Automation;
 
 namespace InstallConfig
 {
-    [Export(typeof(AbstractConfigConfigGenerator))]
-    public partial class BtelAbstractConfigConfigGenerator : AbstractConfigConfigGenerator
+    [Export(typeof(AbstractConfigGenerator))]
+    public partial class BtelAbstractConfigGenerator : AbstractConfigGenerator
     {
-        public override TelcobrightConfig Tbc { get; }
-        public BtelAbstractConfigConfigGenerator(InstanceConfig instanceConfig)
+        public override TelcobrightConfig Tbc { get; set; }
+        public BtelAbstractConfigGenerator()
         {
-            int thisServerId = 1;
-            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Igw, thisServerId,
+            
+        }
+
+        public override TelcobrightConfig GenerateConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
+        {
+            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Igw, microserviceInstanceId,
                 new telcobrightpartner
                 {
                     idCustomer = 3,
@@ -42,10 +47,6 @@ namespace InstallConfig
                     AutoDeleteStartHour = 2,
                     AutoDeleteEndHour = 3
                 });
-        }
-
-        public override TelcobrightConfig GenerateConfig()
-        {
             CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
             CommonCdrValRulesGen commonCdrValRulesGen =
                 new CommonCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
