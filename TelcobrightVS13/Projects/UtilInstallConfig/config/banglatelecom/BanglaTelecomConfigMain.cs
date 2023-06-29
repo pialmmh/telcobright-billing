@@ -21,18 +21,16 @@ namespace InstallConfig
     public partial class BanglaTelecomAbstractConfigGenerator : AbstractConfigGenerator
     {
         public override TelcobrightConfig Tbc { get; set; }
-        public BanglaTelecomAbstractConfigGenerator()
-        {}
 
-        public override TelcobrightConfig GenerateConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
+        public BanglaTelecomAbstractConfigGenerator()
         {
-            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, thisServerId,
+            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx,
                 new telcobrightpartner
                 {
                     idCustomer = 9,
                     CustomerName = "BANGLA TELECOM LTD.",
                     idOperatorType = 2,
-                    databasename = instanceConfig.name,
+                    databasename = "banglatelecom",
                     NativeTimeZone = 3251,
                     IgwPrefix = null,
                     RateDictionaryMaxRecords = 3000000,
@@ -43,7 +41,9 @@ namespace InstallConfig
                     AutoDeleteStartHour = 4,
                     AutoDeleteEndHour = 6
                 });
-
+        }
+        public override TelcobrightConfig GenerateConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
+        {
             CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
             CommonCdrValRulesGen commonCdrValRulesGen =
                 new CommonCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);

@@ -21,21 +21,16 @@ namespace InstallConfig
     [Export(typeof(AbstractConfigGenerator))]
     public partial class CasBanglaTelecomAbstractConfigGenerator : AbstractConfigGenerator
     {
-        public override TelcobrightConfig Tbc { get; }
-        public CasBanglaTelecomAbstractConfigGenerator(InstanceConfig instanceConfig)
+        public override TelcobrightConfig Tbc { get; set; }
+        public CasBanglaTelecomAbstractConfigGenerator()
         {
-            
-        }
-
-        public override TelcobrightConfig GenerateConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
-        {
-            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, microserviceInstanceId,
+            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx,
                 new telcobrightpartner
                 {
                     idCustomer = 9,
                     CustomerName = "BANGLA TELECOM LTD.",
                     idOperatorType = 2,
-                    databasename = instanceConfig.name,
+                    databasename = "banglatelecom_cas",
                     NativeTimeZone = 3251,
                     IgwPrefix = null,
                     RateDictionaryMaxRecords = 3000000,
@@ -46,6 +41,11 @@ namespace InstallConfig
                     AutoDeleteStartHour = 4,
                     AutoDeleteEndHour = 6
                 });
+        }
+
+        public override TelcobrightConfig GenerateConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
+        {
+            
             CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
             CommonCdrValRulesGen commonCdrValRulesGen =
                 new CommonCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);

@@ -1,3 +1,0 @@
-%windir%/system32/inetsrv/appcmd add apppool /in < C:\Dropbox\TelcobrightVS13\Projects\UtilInstallConfig\tpny\scripts\appPool_tpny.iisScript
-%windir%/system32/inetsrv/appcmd add site /in < C:\Dropbox\TelcobrightVS13\Projects\UtilInstallConfig\tpny\scripts\http_tpny.iisScript
-%windir%/system32/inetsrv/appcmd add site /in < C:\Dropbox\TelcobrightVS13\Projects\UtilInstallConfig\tpny\scripts\ftp_tpny.iisScript

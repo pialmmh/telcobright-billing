@@ -34,10 +34,8 @@ namespace TelcobrightMediation
 
         public List<KeyValuePair<Regex, string>> ServiceAliasesRegex { get; set; } =
             new List<KeyValuePair<Regex, string>>();
-        public TelcobrightConfig(TelecomOperatortype telecomOperatortype,
-            int thisServerId, telcobrightpartner tbpPartner)
+        public TelcobrightConfig(TelecomOperatortype telecomOperatortype, telcobrightpartner tbpPartner)
         {
-            this.ServerId = thisServerId;
             this.ApplicationServersConfig = new List<Server>();
             this.ResourcePool = new ResourcePool();
             this.TelecomOperatortype = telecomOperatortype;

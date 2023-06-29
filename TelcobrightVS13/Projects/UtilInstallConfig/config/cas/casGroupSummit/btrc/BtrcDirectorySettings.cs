@@ -22,12 +22,6 @@ namespace InstallConfig
         private FileLocation vaultDialogic;
         private SyncPair huawei_Vault;
         private SyncPair vaultCAS;
-
-        public static Dictionary<string, string> SrtConfigHelperMap = new Dictionary<string, string>()
-        {
-            { "vaultName","vault"},
-            //{}
-        };
         public void PrepareDirectorySettings(TelcobrightConfig tbc)
         {
             DirectorySettings directorySetting = new DirectorySettings("Directory Settings");

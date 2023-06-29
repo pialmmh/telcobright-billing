@@ -13,6 +13,7 @@ using FlexValidation;
 using InstallConfig._CommonValidation;
 using InstallConfig._generator;
 using MediationModel;
+using TelcobrightInfra;
 using TelcobrightMediation.Accounting;
 
 namespace InstallConfig
@@ -20,31 +21,33 @@ namespace InstallConfig
     [Export(typeof(AbstractConfigGenerator))]
     public partial class SummitAbstractConfigGenerator : AbstractConfigGenerator
     {
-        public override TelcobrightConfig Tbc { get; }
-        public SummitAbstractConfigGenerator(InstanceConfig instanceConfig)
+        public override TelcobrightConfig Tbc { get; set; }
+
+        public SummitAbstractConfigGenerator()
         {
-            int thisServerId = 1;
-            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, thisServerId,
+            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx,
                 new telcobrightpartner
-                    {
-                        idCustomer = 9,
-                        CustomerName = "Summit Communications Ltd.",
-                        idOperatorType = 2,
-                        databasename = instanceConfig.name,
-                        NativeTimeZone = 3251,
-                        IgwPrefix = null,
-                        RateDictionaryMaxRecords = 3000000,
-                        MinMSForIntlOut = 100,
-                        RawCdrKeepDurationDays = 90,
-                        SummaryKeepDurationDays = 730,
-                        AutoDeleteOldData = 1,
-                        AutoDeleteStartHour = 4,
-                        AutoDeleteEndHour = 6
-                    });
+                {
+                    idCustomer = 9,
+                    CustomerName = "Summit Communications Ltd.",
+                    idOperatorType = 2,
+                    databasename = "summit",
+                    NativeTimeZone = 3251,
+                    IgwPrefix = null,
+                    RateDictionaryMaxRecords = 3000000,
+                    MinMSForIntlOut = 100,
+                    RawCdrKeepDurationDays = 90,
+                    SummaryKeepDurationDays = 730,
+                    AutoDeleteOldData = 1,
+                    AutoDeleteStartHour = 4,
+                    AutoDeleteEndHour = 6
+                });
         }
 
-        public override TelcobrightConfig GenerateConfig()
+        public override TelcobrightConfig GenerateConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
         {
+            
+
             CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
             CommonCdrValRulesGen commonCdrValRulesGen =
                 new CommonCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);

@@ -13,6 +13,7 @@ using LibraryExtensions.ConfigHelper;
 using MediationModel;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
+using TelcobrightInfra;
 using TelcobrightMediation;
 using TelcobrightMediation.Config;
 
@@ -41,18 +42,22 @@ namespace InstallConfig
                         schedulerPortNo = i.SchedulerPortNo
                     }).ToDictionary(a => a.name, a => a.schedulerPortNo);
 
-            List<AbstractConfigGenerator> operatorsToBeConfigured
-                = new MefConfigImportComposer().Compose()
-                    .Where(op => namesVsSchedulerPort.Keys
-                        .Contains(op.Tbc.Telcobrightpartner.databasename)).ToList();
+            List<AbstractConfigGenerator> allConfigGenerators
+              = new MefConfigImportComposer().Compose()
+            .Where(op => namesVsSchedulerPort.Keys
+            .Contains(op.Tbc.Telcobrightpartner.databasename)).ToList();
+
             List<TelcobrightConfig> operatorConfigs = new List<TelcobrightConfig>();
-            foreach (AbstractConfigGenerator configGenerator in operatorsToBeConfigured)
-            {
-                TelcobrightConfig tbc = configGenerator.GenerateConfig();
-                tbc.TcpPortNoForRemoteScheduler = namesVsSchedulerPort[tbc.Telcobrightpartner.databasename];
-                tbc.SchedulerDaemonConfigs = configGenerator.GetSchedulerDaemonConfigs();
-                operatorConfigs.Add(tbc);
-            }
+            deploymentprofile.instances
+                .ForEach(ic =>
+                {
+                    AbstractConfigGenerator configGenerator =
+                        allConfigGenerators.First(c => c.Tbc.Telcobrightpartner.databasename==ic.name);
+                    TelcobrightConfig tbc = configGenerator.GenerateConfig(ic,1);
+                    tbc.TcpPortNoForRemoteScheduler = namesVsSchedulerPort[tbc.Telcobrightpartner.databasename];
+                    tbc.SchedulerDaemonConfigs = configGenerator.GetSchedulerDaemonConfigs();
+                    operatorConfigs.Add(tbc);
+                });
             return operatorConfigs;
         }
 

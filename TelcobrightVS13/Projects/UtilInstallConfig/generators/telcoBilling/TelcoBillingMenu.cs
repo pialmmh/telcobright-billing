@@ -15,6 +15,7 @@ using Quartz;
 using QuartzTelcobright;
 using QuartzTelcobright.PropertyGen;
 using TelcobrightFileOperations;
+using TelcobrightInfra;
 using TelcobrightMediation;
 using TelcobrightMediation.Config;
 

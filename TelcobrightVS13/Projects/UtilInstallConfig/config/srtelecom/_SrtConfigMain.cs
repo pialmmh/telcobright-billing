@@ -13,6 +13,7 @@ using FlexValidation;
 using InstallConfig._CommonValidation;
 using InstallConfig._generator;
 using MediationModel;
+using TelcobrightInfra;
 using TelcobrightMediation.Accounting;
 
 namespace InstallConfig
@@ -20,17 +21,16 @@ namespace InstallConfig
     [Export(typeof(AbstractConfigGenerator))]
     public partial class SrtAbstractConfigGenerator : AbstractConfigGenerator
     {
-        public override TelcobrightConfig Tbc { get; }
-        public SrtAbstractConfigGenerator(InstanceConfig instanceConfig)
+        public override TelcobrightConfig Tbc { get; set; }
+        public SrtAbstractConfigGenerator()
         {
-            int thisServerId = 1;
-            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, thisServerId,
+            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx,
                 new telcobrightpartner
                 {
                     idCustomer = 8,
                     CustomerName = "SR Telecom Ltd.",
                     idOperatorType = 2,
-                    databasename = instanceConfig.name,
+                    databasename = "srtelecom",
                     databasetype = "",
                     user = null,
                     pass = null,
@@ -53,8 +53,10 @@ namespace InstallConfig
                 });
         }
 
-        public override TelcobrightConfig GenerateConfig()
+        public override TelcobrightConfig GenerateConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
         {
+            
+
             CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
             CommonCdrValRulesGen commonCdrValRulesGen =
                 new CommonCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);

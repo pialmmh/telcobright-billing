@@ -9,6 +9,7 @@ using InstallConfig._generator;
 using LibraryExtensions;
 using LibraryExtensions.ConfigHelper;
 using MediationModel;
+using TelcobrightInfra;
 using TelcobrightMediation;
 using TelcobrightMediation.Config;
 using TelcobrightMediation.Scheduler.Quartz;
@@ -22,30 +23,31 @@ namespace InstallConfig
         {
             throw new NotImplementedException();
         }
-        public override TelcobrightConfig Tbc { get; }
-        public DblAbstractConfigGeneratorHelper(InstanceConfig instanceConfig)
+        public override TelcobrightConfig Tbc { get; set; }
+        public DblAbstractConfigGeneratorHelper()
         {
-            int thisServerId = 1;
-            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Igw, thisServerId,
+            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Igw,
                 new telcobrightpartner
-                    {
-                        idCustomer = 4,
-                        CustomerName = "DBL Telecom Ltd.",
-                        idOperatorType = 4,
-                        databasename = instanceConfig.name,
-                        NativeTimeZone = 3251,
-                        IgwPrefix = "240",
-                        RateDictionaryMaxRecords = 3000000,
-                        MinMSForIntlOut = 100,
-                        RawCdrKeepDurationDays = 90,
-                        SummaryKeepDurationDays = 730,
-                        AutoDeleteOldData = 1,
-                        AutoDeleteStartHour = 4,
-                        AutoDeleteEndHour = 6
-                    });
+                {
+                    idCustomer = 4,
+                    CustomerName = "DBL Telecom Ltd.",
+                    idOperatorType = 4,
+                    databasename = "dbl",
+                    NativeTimeZone = 3251,
+                    IgwPrefix = "240",
+                    RateDictionaryMaxRecords = 3000000,
+                    MinMSForIntlOut = 100,
+                    RawCdrKeepDurationDays = 90,
+                    SummaryKeepDurationDays = 730,
+                    AutoDeleteOldData = 1,
+                    AutoDeleteStartHour = 4,
+                    AutoDeleteEndHour = 6
+                });
+
         }
-        public override TelcobrightConfig GenerateConfig()
+        public override TelcobrightConfig GenerateConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
         {
+
             
             this.Tbc.Nes = new List<ne>()
             {

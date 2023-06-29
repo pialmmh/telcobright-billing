@@ -190,20 +190,8 @@
     <Compile Include="util\CommonValidationRulesGenerator\CommonCdrValRulesGen.cs" />
     <Compile Include="generators\telcoBilling\TelcoBillingMenu.cs" />
     <None Include="app.manifest" />
-    <None Include="config\cas\casGroupSummit\banglatelecom\scripts\appPool_tpny.iisScript" />
-    <None Include="config\cas\casGroupSummit\banglatelecom\scripts\ftp_tpny.iisScript" />
-    <None Include="config\cas\casGroupSummit\banglatelecom\scripts\http_tpny.iisScript" />
-    <None Include="config\cas\casGroupSummit\btrc\scripts\appPool_tpny.iisScript" />
-    <None Include="config\cas\casGroupSummit\btrc\scripts\ftp_tpny.iisScript" />
-    <None Include="config\cas\casGroupSummit\btrc\scripts\http_tpny.iisScript" />
     <None Include="config\cas\casGroupSummit\btrc\summit.conf" />
-    <None Include="config\cas\casGroupSummit\summit\scripts\appPool_tpny.iisScript" />
-    <None Include="config\cas\casGroupSummit\summit\scripts\ftp_tpny.iisScript" />
-    <None Include="config\cas\casGroupSummit\summit\scripts\http_tpny.iisScript" />
     <None Include="config\cas\casGroupSummit\summit\summit.conf" />
-    <None Include="config\purple\scripts\appPool_tpny.iisScript" />
-    <None Include="config\purple\scripts\ftp_tpny.iisScript" />
-    <None Include="config\purple\scripts\http_tpny.iisScript" />
     <None Include="config\btel\btel.conf" />
     <None Include="config\btel\scripts\apppools.xml.bak" />
     <None Include="config\btel\scripts\appPool_platinum.iisScript" />
@@ -224,9 +212,6 @@
     <None Include="config\banglatelecom\scripts\appPool_tpny.iisScript" />
     <None Include="config\banglatelecom\scripts\ftp_tpny.iisScript" />
     <None Include="config\banglatelecom\scripts\http_tpny.iisScript" />
-    <None Include="config\summit\scripts\appPool_tpny.iisScript" />
-    <None Include="config\summit\scripts\ftp_tpny.iisScript" />
-    <None Include="config\summit\scripts\http_tpny.iisScript" />
     <None Include="config\summit\summit.conf" />
     <None Include="_dbl.config" />
   </ItemGroup>
@@ -272,19 +257,15 @@
     <Folder Include="generators\telcoBilling\dbscripts\seedData\json\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="config\cas\casGroupSummit\banglatelecom\scripts\import_commands.txt" />
     <Content Include="config\cas\casGroupSummit\banglatelecom\tmplPortalAppPools.txt" />
     <Content Include="config\cas\casGroupSummit\banglatelecom\tmplPortalFtpSite.txt" />
     <Content Include="config\cas\casGroupSummit\banglatelecom\tmplPortalWebSite.txt" />
-    <Content Include="config\cas\casGroupSummit\btrc\scripts\import_commands.txt" />
     <Content Include="config\cas\casGroupSummit\btrc\tmplPortalAppPools.txt" />
     <Content Include="config\cas\casGroupSummit\btrc\tmplPortalFtpSite.txt" />
     <Content Include="config\cas\casGroupSummit\btrc\tmplPortalWebSite.txt" />
-    <Content Include="config\cas\casGroupSummit\summit\scripts\import_commands.txt" />
     <Content Include="config\cas\casGroupSummit\summit\tmplPortalAppPools.txt" />
     <Content Include="config\cas\casGroupSummit\summit\tmplPortalFtpSite.txt" />
     <Content Include="config\cas\casGroupSummit\summit\tmplPortalWebSite.txt" />
-    <Content Include="config\purple\scripts\import_commands.txt" />
     <Content Include="config\purple\tmplPortalAppPools.txt" />
     <Content Include="config\purple\tmplPortalFtpSite.txt" />
     <Content Include="config\purple\tmplPortalWebSite.txt" />
@@ -308,7 +289,6 @@
     <Content Include="config\jsl\tmplPortalAppPools.txt" />
     <Content Include="config\jsl\tmplPortalFtpSite.txt" />
     <Content Include="config\jsl\tmplPortalWebSite.txt" />
-    <Content Include="config\summit\scripts\import_commands.txt" />
     <Content Include="config\summit\tmplPortalAppPools.txt" />
     <Content Include="config\summit\tmplPortalFtpSite.txt" />
     <Content Include="config\summit\tmplPortalWebSite.txt" />
