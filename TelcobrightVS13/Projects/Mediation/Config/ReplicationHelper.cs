@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using MySql.Data.MySqlClient;
 
-namespace LibraryExtensions.ConfigHelper
+namespace TelcobrightMediation
 {
     public class ReplicationHelper
     {

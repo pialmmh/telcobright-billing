@@ -44,8 +44,26 @@
     <Compile Include="Deployment\DeploymentProfile.cs" />
     <Compile Include="Deployment\DeploymentProfileType.cs" />
     <Compile Include="Deployment\InstanceConfig.cs" />
+    <Compile Include="Infra\Datacenter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Deployment\TelcobrightSeed.cs" />
+    <Compile Include="Infra\BindAddress.cs" />
+    <Compile Include="Infra\HostOrSubnetType.cs" />
+    <Compile Include="Infra\IpAddress.cs" />
+    <Compile Include="Infra\MySql7CommandGenerator.cs" />
+    <Compile Include="Infra\MySql8CommandGenerator.cs" />
+    <Compile Include="Infra\MySqlAutomationHelper.cs" />
+    <Compile Include="Infra\MySqlCluster.cs" />
+    <Compile Include="Infra\MySqlCommandGenerator.cs" />
+    <Compile Include="Infra\MySqlCommandGeneratorFactory.cs" />
+    <Compile Include="Infra\MySqlPermissionType.cs" />
+    <Compile Include="Infra\MySqlServer.cs" />
+    <Compile Include="Infra\MySqlUser.cs" />
+    <Compile Include="Infra\MySqlVersion.cs" />
+    <Compile Include="Infra\Server.cs" />
+    <Compile Include="Infra\ServerAutomationtype.cs" />
+    <Compile Include="Infra\ServerOs.cs" />
+    <Compile Include="Infra\TransportProtocol.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LibraryExtensions\LibraryExtensions.csproj">

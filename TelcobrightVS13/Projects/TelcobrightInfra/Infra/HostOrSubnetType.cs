@@ -1,4 +1,4 @@
-namespace LibraryExtensions.ConfigHelper
+namespace TelcobrightInfra
 {
     public enum HostOrSubnetType
     {

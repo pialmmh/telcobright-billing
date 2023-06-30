@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace LibraryExtensions.ConfigHelper
+namespace TelcobrightInfra
 {
     public class MySqlCluster
     {

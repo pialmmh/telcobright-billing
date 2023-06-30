@@ -80,25 +80,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigHelper\ConsoleUtil.cs" />
-    <Compile Include="ConfigHelper\ServerAndDbAutomation\BindAddress.cs" />
-    <Compile Include="ConfigHelper\ServerAndDbAutomation\DbUtil.cs" />
-    <Compile Include="ConfigHelper\ServerAndDbAutomation\HostOrSubnetType.cs" />
-    <Compile Include="ConfigHelper\ServerAndDbAutomation\IpAddress.cs" />
-    <Compile Include="ConfigHelper\ServerAndDbAutomation\MySql7CommandGenerator.cs" />
-    <Compile Include="ConfigHelper\ServerAndDbAutomation\MySql8CommandGenerator.cs" />
-    <Compile Include="ConfigHelper\ServerAndDbAutomation\MySqlAutomationHelper.cs" />
-    <Compile Include="ConfigHelper\ServerAndDbAutomation\MySqlCluster.cs" />
-    <Compile Include="ConfigHelper\ServerAndDbAutomation\MySqlCommandGenerator.cs" />
-    <Compile Include="ConfigHelper\ServerAndDbAutomation\MySqlCommandGeneratorFactory.cs" />
-    <Compile Include="ConfigHelper\ServerAndDbAutomation\MySqlPermissionType.cs" />
-    <Compile Include="ConfigHelper\ServerAndDbAutomation\MySqlServer.cs" />
-    <Compile Include="ConfigHelper\ServerAndDbAutomation\MySqlUser.cs" />
-    <Compile Include="ConfigHelper\ServerAndDbAutomation\MySqlVersion.cs" />
-    <Compile Include="ConfigHelper\ServerAndDbAutomation\ReplicationHelper.cs" />
-    <Compile Include="ConfigHelper\ServerAndDbAutomation\Server.cs" />
-    <Compile Include="ConfigHelper\ServerAndDbAutomation\ServerAutomationtype.cs" />
-    <Compile Include="ConfigHelper\ServerAndDbAutomation\ServerOs.cs" />
-    <Compile Include="ConfigHelper\ServerAndDbAutomation\TransportProtocol.cs" />
     <Compile Include="ConfigPathHelper.cs" />
     <Compile Include="DecimalExtensions.cs" />
     <Compile Include="DateTimeExtensions.cs" />
@@ -154,9 +135,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ConfigHelper\ServerAndDbAutomation\initScripts\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

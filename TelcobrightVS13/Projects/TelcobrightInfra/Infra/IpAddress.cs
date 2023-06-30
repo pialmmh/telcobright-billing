@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LibraryExtensions.ConfigHelper
+namespace TelcobrightInfra
 {
     public class IpAddress
     {

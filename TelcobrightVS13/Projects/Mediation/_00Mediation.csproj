@@ -152,6 +152,7 @@
     <Compile Include="Cdr\Collection\PreProcessors\AbstractCdrReProcessingPreProcessor.cs" />
     <Compile Include="Cdr\Collection\RowIdsCollectionForSingleDay.cs" />
     <Compile Include="Cdr\RateCacheCleaner.cs" />
+    <Compile Include="Config\DbUtil.cs" />
     <Compile Include="Config\DirectorySettings.cs" />
     <Compile Include="Config\DummySwitch.cs" />
     <Compile Include="Config\DummyTelcobrightPartner.cs" />
@@ -160,6 +161,7 @@
     <Compile Include="Config\IConfigGenerator.cs" />
     <Compile Include="Config\IisApplicationPool.cs" />
     <Compile Include="Config\InternetSite.cs" />
+    <Compile Include="Config\ReplicationHelper.cs" />
     <Compile Include="Config\SkipSettingsForSummaryOnly.cs" />
     <Compile Include="FileOperations\SyncPair.cs" />
     <Compile Include="MefData\Composers\AutomationContainer.cs" />

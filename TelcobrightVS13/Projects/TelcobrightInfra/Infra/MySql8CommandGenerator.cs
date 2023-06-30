@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LibraryExtensions.ConfigHelper
+namespace TelcobrightInfra
 {
-    public class MySql7CommandGenerator:MySqlCommandGenerator
+    public class MySql8CommandGenerator : MySqlCommandGenerator
     {
         public override string getCreateUsers(MySqlUser user, string ipAddr)
         {
