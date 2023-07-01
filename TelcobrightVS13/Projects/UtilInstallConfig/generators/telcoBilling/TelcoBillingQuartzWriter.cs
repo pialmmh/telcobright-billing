@@ -8,6 +8,7 @@ using LibraryExtensions.ConfigHelper;
 using Quartz;
 using QuartzTelcobright;
 using QuartzTelcobright.PropertyGen;
+using TelcobrightInfra;
 using TelcobrightMediation;
 
 namespace InstallConfig

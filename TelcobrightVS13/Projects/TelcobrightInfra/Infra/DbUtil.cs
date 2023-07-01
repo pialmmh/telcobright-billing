@@ -9,7 +9,7 @@ using LibraryExtensions;
 using LibraryExtensions.ConfigHelper;
 using MySql.Data.MySqlClient;
 
-namespace TelcobrightMediation
+namespace TelcobrightInfra
 {
     public static class DbUtil
     {

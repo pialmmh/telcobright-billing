@@ -19,7 +19,7 @@ namespace TelcobrightMediation.Config
         {
             bool ipAddressUnique = servers.Select(c => c.IpAddresses.Select(ip=>ip.Address)).Distinct().Count() == servers.Count;
             bool serverIdUnique = servers.Select(c => c.ServerId).Distinct().Count() == servers.Count;
-            bool serverNameUnique = servers.Select(c => c.ServerName).Distinct().Count() == servers.Count;
+            bool serverNameUnique = servers.Select(c => c.Name).Distinct().Count() == servers.Count;
             if (!ipAddressUnique)
             {
                 throw new Exception("Application server ip addresses must be unique.");

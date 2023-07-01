@@ -365,9 +365,9 @@ namespace InstallConfig
 
 
             //configuration for server1
-            Server serverConfig1 = new Server(1, "db01");
+            Server serverConfig1 = new Server("db01");
             //configuration for server2
-            Server serverConfig2 = new Server(1, "db02");
+            Server serverConfig2 = new Server("db02");
 
             this.Tbc.ApplicationServersConfig.Add(serverConfig1);
             this.Tbc.ApplicationServersConfig.Add(serverConfig2);

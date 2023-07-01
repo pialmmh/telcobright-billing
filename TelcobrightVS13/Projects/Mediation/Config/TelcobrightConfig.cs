@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using LibraryExtensions.ConfigHelper;
 using MediationModel;
 using QuartzTelcobright;
+using TelcobrightInfra;
 using TelcobrightMediation.Automation;
 using TelcobrightMediation.Config;
 using TelcobrightMediation.Scheduler.Quartz;

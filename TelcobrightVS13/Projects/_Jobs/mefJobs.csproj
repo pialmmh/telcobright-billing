@@ -101,6 +101,10 @@
       <Project>{4282d6f4-efd2-418a-be9f-74f09b7a45d8}</Project>
       <Name>Models_Mediation</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TelcobrightInfra\TelcobrightInfra.csproj">
+      <Project>{ff350c55-2852-406c-930b-ae2938cceb91}</Project>
+      <Name>TelcobrightInfra</Name>
+    </ProjectReference>
     <ProjectReference Include="..\_ServiceFamilies\mefServiceFamilies.csproj">
       <Project>{ef80c1e3-4017-4019-ba8c-411723c462b4}</Project>
       <Name>mefServiceFamilies</Name>
