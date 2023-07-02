@@ -216,6 +216,7 @@ namespace InstallConfig
             directorySetting.SyncPairs.Add(huawei_Vault.Name, huawei_Vault);
             //directorySetting.SyncPairs.Add(vaultS3FileArchive1.Name, vaultS3FileArchive1);
             directorySetting.SyncPairs.Add(vaultCAS.Name, vaultCAS);
+            directorySetting.SyncPairs.Add(spdlg_Vault.Name, spdlg_Vault);
 
             //add archive locations to CdrSettings
             this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()

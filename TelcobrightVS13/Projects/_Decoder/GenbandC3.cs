@@ -18,7 +18,7 @@ namespace Decoders
     {
         public override string ToString() => this.RuleName;
         public virtual string RuleName => GetType().Name;
-        public int Id => 27;
+        public int Id => 28;
         public string HelpText => "Decodes GenbandC3 CSV CDR.";
         public CompressionType CompressionType { get; set; }
         protected CdrCollectorInputData Input { get; set; }

@@ -6,11 +6,18 @@ using System.Threading.Tasks;
 
 namespace TelcobrightInfra
 {
+    public enum IPAddressCidrType
+    {
+        Any,
+        Private,
+        Public,
+    }
+
     public class IpAddress
     {
         public string Address { get; set; }
         public string SubnetMask { get; set; }
         private HostOrSubnetType HostOrSubnetType { get; set; }=HostOrSubnetType.Host;
-        public string PrivateOrPublic { get; set; }
+        public IPAddressCidrType Type { get; set; } = IPAddressCidrType.Any;
     }
 }

@@ -18,8 +18,8 @@ namespace Decoders
     {
         public override string ToString() => this.RuleName;
         public virtual string RuleName => GetType().Name;
-        public int Id => 28;
-        public string HelpText => "Decodes ReveSbc CSV CDR.";
+        public int Id => 29;
+        public string HelpText => "Decodes ReveSBC CSV CDR.";
         public CompressionType CompressionType { get; set; }
         protected CdrCollectorInputData Input { get; set; }
 

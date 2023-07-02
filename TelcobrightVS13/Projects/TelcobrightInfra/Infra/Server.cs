@@ -7,7 +7,7 @@ namespace TelcobrightInfra
     {
         public string Name { get; }
         public Datacenter Datacenter { get; set; }
-        public int ServerId { get; set; }
+        public int ServerId { get; set; } = -1;
         public ServerOs ServerOs { get; set; }
         public Dictionary<string, Server> Vms { get; set; }
         public ServerAutomationType AutomationType { get; set; }

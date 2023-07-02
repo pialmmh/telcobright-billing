@@ -18,7 +18,8 @@ namespace TelcobrightMediation.Config
         public void ValidateServers(List<Server> servers)
         {
             bool ipAddressUnique = servers.Select(c => c.IpAddresses.Select(ip=>ip.Address)).Distinct().Count() == servers.Count;
-            bool serverIdUnique = servers.Select(c => c.ServerId).Distinct().Count() == servers.Count;
+            bool serverIdUnique = servers.Where(s=>s.ServerId>0).Select(c => c.ServerId)
+                .Distinct().Count() == servers.Count(s => s.ServerId > 0);
             bool serverNameUnique = servers.Select(c => c.Name).Distinct().Count() == servers.Count;
             if (!ipAddressUnique)
             {

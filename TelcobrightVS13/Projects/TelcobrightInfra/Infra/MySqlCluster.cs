@@ -6,7 +6,7 @@ namespace TelcobrightInfra
     {
         public MySqlServer Master { get; set; }
         private List<MySqlServer> Slaves { get; set; }
-
+        //public g
         public MySqlCluster(MySqlServer master, List<MySqlServer> slaves)
         {
             Master = master;

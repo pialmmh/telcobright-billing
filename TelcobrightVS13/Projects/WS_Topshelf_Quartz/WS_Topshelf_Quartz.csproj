@@ -142,6 +142,10 @@
       <Project>{4dc3e3de-5ed6-4b02-abf1-b66f77b0dc6b}</Project>
       <Name>QuartzTelcobright</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TelcobrightInfra\TelcobrightInfra.csproj">
+      <Project>{ff350c55-2852-406c-930b-ae2938cceb91}</Project>
+      <Name>TelcobrightInfra</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

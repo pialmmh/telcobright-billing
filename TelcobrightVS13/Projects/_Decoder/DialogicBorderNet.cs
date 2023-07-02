@@ -18,10 +18,10 @@ namespace Decoders
     {
         public override string ToString() => this.RuleName;
         public virtual string RuleName => GetType().Name;
-        public int Id => 26;
-        public string HelpText => "Decodes Dialogic BorderNet CSV CDR.";
-        public CompressionType CompressionType { get; set; } 
-        protected CdrCollectorInputData Input { get; set; }
+        public virtual int Id => 26;
+        public virtual string HelpText => "Decodes Dialogic BorderNet CSV CDR.";
+        public virtual CompressionType CompressionType { get; set; } 
+        protected virtual CdrCollectorInputData Input { get; set; }
                
         private static DateTime parseStringToDate(string timestamp)  //20181028051316400 yyyyMMddhhmmssfff
         {

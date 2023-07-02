@@ -61,7 +61,7 @@ namespace Process
                 if (syncPair.SkipSourceFileListing == true) return;
                 SyncLocation srcLocation = syncPair.SrcSyncLocation;
                 SyncLocation dstLocation = syncPair.DstSyncLocation;
-                heartbeat1.start(); //heatrbit1 start
+                heartbeat1.start(); //heartbit1 start
                 List<string> newFileNames = srcLocation.GetFileNamesFiltered(syncPair.SrcSettings, tbc);
                 if (tbc.CdrSetting.DescendingOrderWhileListingFiles == true)
                     newFileNames = newFileNames.OrderByDescending(c => c).ToList();

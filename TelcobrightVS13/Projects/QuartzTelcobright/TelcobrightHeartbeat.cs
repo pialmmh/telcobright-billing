@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using LibraryExtensions;
+using TelcobrightInfra;
+using TelcobrightInfra.logManagement;
 
 namespace QuartzTelcobright
 {
@@ -62,13 +64,14 @@ namespace QuartzTelcobright
             this.StartTime = DateTime.Now;
             this.ExpectedEndTime = this.StartTime.AddSeconds(this.HeartbeatReturnTimeSeconds);
             this.ExpectedNextStartTime = this.StartTime.AddSeconds(this.MinFrequencySeconds);
-            File.AppendAllLines(this.LogFileName, new string[] { this.ToString() });
+            TelcobillingLogger.LogMessageToFile(this.LogFileName, this.ToString());
         }
         public void end()
         {
             this.heartbeatLogtype = "end";//chanage logging type to end in log file, rest param remains same as during start
             this.ActualEndTime= DateTime.Now;
-            File.AppendAllLines(this.LogFileName, new string[] { this.ToString() });
+            //File.AppendAllLines(this.LogFileName, new string[] { this.ToString() });
+            TelcobillingLogger.LogMessageToFile(this.LogFileName, this.ToString());
         }
     }
 }

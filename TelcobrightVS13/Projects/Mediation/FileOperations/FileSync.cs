@@ -289,7 +289,27 @@ namespace TelcobrightFileOperations
                             //session.MoveFile(srcInfoRemote.FullPath, targetMoveDirOnly);
                         }
                         catch (Exception e) {
-                            Console.WriteLine(e.Message);
+                            if (e.Message.ToLower().Contains("filename invalid")) //target dirs don't exist
+                            {
+                                string[] targetDirectoryChain = finalTargetFileName.Split('/')
+                                    .Where(s => !string.IsNullOrEmpty(s)).ToArray();
+                                string parent = new string(finalTargetFileName.ToCharArray()
+                                    .TakeWhile(c => c == '/').ToArray());
+
+                                for (int i = 0; i < targetDirectoryChain.Length-1; i++)
+                                {
+                                    string folderName = targetDirectoryChain[i];
+                                    string dirToCreate = parent + folderName;
+                                    session.CreateDirectory(dirToCreate);
+                                    parent = dirToCreate + "/";
+                                }
+                                session.MoveFile(srcInfoRemote.FullPath, finalTargetFileName);
+                            }
+                            else
+                            {
+                                Console.WriteLine(e.Message);
+                                throw;
+                            }
                         }
                     }
                 }
