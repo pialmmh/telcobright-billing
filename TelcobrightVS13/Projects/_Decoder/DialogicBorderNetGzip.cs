@@ -23,12 +23,14 @@ namespace Decoders
         public override CompressionType CompressionType { get; set; } = CompressionType.Gzip;
         protected override CdrCollectorInputData Input { get; set; }
 
-        public new List<string[]> DecodeFile(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs)
+        public override List<string[]> DecodeFile(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs)
         {
             this.Input = input;
             string fileName = this.Input.FullPath;
             List<string> tempLines = FileAndPathHelper.readLinesFromCompressedFile(fileName).ToList();
-            List<string[]> lines = FileUtil.ParseLinesWithEnclosedAndUnenclosedFields(',', "\"",tempLines);
+            List<string[]> lines = FileUtil.ParseLinesWithEnclosedAndUnenclosedFields(',', "\"", tempLines)
+                .Skip(1).ToList();
+
             return decodeLines(input, out inconsistentCdrs, fileName, lines);
         }
     }

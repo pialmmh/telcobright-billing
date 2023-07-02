@@ -13,12 +13,12 @@ namespace LibraryExtensions
         public static string[] readLinesFromCompressedFile(string fileName)
         {
             string compressedFile = fileName;
-            string tempFilePath = "tmpFile.txt";
+            string tempFileName = Path.GetFileName(fileName) + Guid.NewGuid().ToString();
 
             // Extract the .gz file into the temporary file
             using (FileStream gzFileStream = File.OpenRead(compressedFile))
             {
-                using (FileStream tempFileStream = File.Create(tempFilePath))
+                using (FileStream tempFileStream = File.Create(tempFileName))
                 {
                     using (GZipStream gzipStream = new GZipStream(gzFileStream, CompressionMode.Decompress))
                     {
@@ -27,9 +27,9 @@ namespace LibraryExtensions
                 }
             }
             // Read all lines from the temporary file
-            string[] lines = File.ReadAllLines(tempFilePath);
+            string[] lines = File.ReadAllLines(tempFileName);
             // Delete the temporary file
-            File.Delete(tempFilePath);
+            File.Delete(tempFileName);
             return lines;
         }
 
