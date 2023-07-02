@@ -49,16 +49,41 @@ namespace Decoders
             foreach (string[] lineAsArr in lines)
             {
                 string[] textCdr = new string[input.MefDecodersData.Totalfieldtelcobright];
+                textCdr[Fn.Sequencenumber] = lineAsArr[1];
 
-                textCdr[Fn.Switchid] = Convert.ToString(9);
-                //cdr.SwitchId = 9;
-                textCdr[Fn.Sequencenumber] = lineAsArr[0];
-                //cdr.SequenceNumber = Convert.ToInt64(lineAsArr[0]);
-                textCdr[Fn.Filename] = fileName;
-                textCdr[Fn.IncomingRoute] = lineAsArr[57];
-                textCdr[Fn.DurationSec] = lineAsArr[15];
-                //cdr.DurationSec = Convert.ToDecimal(lineAsArr[17]) / 1000;
-                textCdr[Fn.Originatingip] = lineAsArr[70];
+                string durationSec = lineAsArr[7];
+                textCdr[Fn.DurationSec] = durationSec.IsNullOrEmptyOrWhiteSpace() == false
+                    ? durationSec : string.Empty;
+
+                string ingressRequestLine = lineAsArr[70]; //"sip:00918860086409@192.168.130.63:5060";
+                if (ingressRequestLine.IsNullOrEmptyOrWhiteSpace() == false)
+                {
+                    string[] calledNoAndIp = ingressRequestLine.Split(':')[1].Split('@').Select(s=>s.Trim()).ToArray();
+                    var originatingCalledNumber = calledNoAndIp[0];
+                    var originatingIp = calledNoAndIp[1];
+                    textCdr[Fn.IncomingRoute] = originatingIp;
+                    textCdr[Fn.Originatingip] = originatingIp;
+                    textCdr[Fn.OriginatingCalledNumber] = originatingCalledNumber;
+                }
+
+                string ingressSipFromHeader = lineAsArr[71]; //"From: <sip:1111111@192.168.130.63>;tag=5228fc25a2c34aa7ba35e565aeda1457";
+                if (ingressSipFromHeader.IsNullOrEmptyOrWhiteSpace() == false)
+                {
+                    textCdr[Fn.OriginatingCallingNumber] = ingressSipFromHeader.Replace(" ", string.Empty).Split(':')[2]
+                        .Split('@')[0];
+                }
+
+                string outSigReqLine = lineAsArr[81]; //sip: 00918860086409@10.10.234.8:5060; transport = UDP
+                if (outSigReqLine.IsNullOrEmptyOrWhiteSpace() == false)
+                {
+                    string[] calledNoAndIp = outSigReqLine.Replace(" ",string.Empty)
+                        .Split(':')[1].Split('@').Select(s => s.Trim()).ToArray();
+                    var terminatingCalledNumber = calledNoAndIp[0];
+                    var terminatingIp = calledNoAndIp[1];
+                    textCdr[Fn.OutgoingRoute] = terminatingIp;
+                    textCdr[Fn.TerminatingIp] = terminatingIp;
+                    textCdr[Fn.TerminatingCalledNumber] = terminatingCalledNumber;
+                }
                 textCdr[Fn.TerminatingIp] = lineAsArr[81];
                 //cdr.OriginatingIP = lineAsArr[70];
                 //cdr.TerminatingIP = lineAsArr[81];
@@ -92,6 +117,9 @@ namespace Decoders
                 dt = lineAsArr[130];//EndTime
                 if (!string.IsNullOrEmpty(dt)) textCdr[Fn.Endtime] = parseStringToDate(dt).ToString();
 
+                textCdr[Fn.ReleaseCauseIngress] = lineAsArr[109];
+                textCdr[Fn.ReleaseCauseEgress] = lineAsArr[78];
+
 
                 //string phoneNumber = lineAsArr[74]; //OriginCalled 
                 //if (!string.IsNullOrEmpty(phoneNumber))
@@ -121,6 +149,7 @@ namespace Decoders
                 //    string Contact = phoneNumber.Split(':')[1].Split('<')[0].Trim();
                 //    cdr.TerminatingCallingNumber = Contact;
                 //}
+                
                 decodedRows.Add(textCdr.ToArray());
             }
 
@@ -128,3 +157,4 @@ namespace Decoders
         }
     }
 }
+
