@@ -50,7 +50,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CataleyaCsvDecoder.cs" />
+    <Compile Include="CataleyaCsvDecoderSRNoFailed.cs" />
     <Compile Include="AsteriskDecoder.cs" />
     <Compile Include="CataleyaDecoder.cs" />
     <Compile Include="DialogicBorderNet.cs" />

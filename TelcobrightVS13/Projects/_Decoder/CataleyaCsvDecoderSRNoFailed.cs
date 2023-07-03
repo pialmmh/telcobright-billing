@@ -14,12 +14,12 @@ namespace Decoders
 {
 
     [Export("Decoder", typeof(IFileDecoder))]
-    public class CataleyaCsvDecoder : IFileDecoder
+    public class CataleyaCsvDecoderSRNoFailed : IFileDecoder
     {
         public override string ToString() => this.RuleName;
         public virtual string RuleName => GetType().Name;
         public int Id => 25;
-        public string HelpText => "Decodes Cataleya CSV CDR.";
+        public string HelpText => "Decodes Cataleya CSV CDR. SR Telecom format, no failed calls";
         public CompressionType CompressionType { get; set; }
         protected CdrCollectorInputData Input { get; set; }
 
@@ -42,14 +42,16 @@ namespace Decoders
 
             foreach (string[] lineAsArr in lines)
             {
-                string [] textCdr = new string [input.MefDecodersData.Totalfieldtelcobright];
+                string chargingStatus = lineAsArr[2] == "S" ? "1" : "0";
+                if (chargingStatus != "1") continue;
+                string[] textCdr = new string [input.MefDecodersData.Totalfieldtelcobright];
+                textCdr[Fn.ChargingStatus] = chargingStatus;
 
                 textCdr[Fn.Switchid] = Input.Ne.idSwitch.ToString();
                 //cdr.SwitchId = 9;
                 textCdr[Fn.Sequencenumber] = lineAsArr[0];
                 //cdr.SequenceNumber = Convert.ToInt64(lineAsArr[0]);
                 textCdr[Fn.Filename] = fileName;
-                textCdr[Fn.ChargingStatus] = lineAsArr[2] == "S" ? "1" : "0"; 
                 textCdr[Fn.IncomingRoute] = lineAsArr[28];
                 textCdr[Fn.OutgoingRoute] = lineAsArr[59];
                 textCdr[Fn.DurationSec] = lineAsArr[17];
@@ -98,6 +100,7 @@ namespace Decoders
                 textCdr[Fn.ReleaseCauseEgress] = lineAsArr[9].Trim();
                 textCdr[Fn.ReleaseCauseSystem] = lineAsArr[10].Trim();
                 //textCdr[Fn.UniqueBillId] = lineAsArr[10].Trim();
+                textCdr[Fn.Validflag] = "1";
                 decodedRows.Add(textCdr);
             }
 
