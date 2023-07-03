@@ -56,7 +56,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "d:/telcobright/Vault/Resources/cdr/dialogic",
+                StartingPath = "c:/telcobright/Vault/Resources/cdr/dialogic",
                 User = "",
                 Pass = "",
             };

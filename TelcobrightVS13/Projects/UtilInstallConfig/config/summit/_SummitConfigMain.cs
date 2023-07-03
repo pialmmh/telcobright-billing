@@ -126,7 +126,7 @@ namespace InstallConfig
                     TransactionSizeForCDRLoading = 1500,
                     DecodingSpanCount = 100,
                     SkipAutoCreateJob = 1,
-                    SkipCdrListed = 0,
+                    SkipCdrListed = 1,
                     SkipCdrReceived = 0,
                     SkipCdrDecoded = 0,
                     SkipCdrBackedup = 1,

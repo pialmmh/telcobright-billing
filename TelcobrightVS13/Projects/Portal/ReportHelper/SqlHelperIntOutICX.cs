@@ -88,7 +88,7 @@ namespace PortalApp.ReportHelper
                 AND tup_starttime<'{EndDate}'
                 {GetWhereClauseAdditional()}
                 {GetGroupBy()}
-            
+                having sum(roundedDuration)>0
             ) x
             LEFT JOIN partner cr
             ON x.tup_sourceID = cr.idpartner

@@ -49,7 +49,7 @@ namespace PortalApp.config
                     Dictionary<string, string> jsonDetail = JsonConvert.DeserializeObject<Dictionary<string, string>>(invoiceItem.JSON_DETAIL);
                     List<long> mergedInvoiceIds = new List<long>();
                     List<invoice> mergedInvoices = new List<invoice>();
-                    if (jsonDetail.ContainsKey("mergedInvoices") 
+                    if (jsonDetail.ContainsKey("mergedInvoices")
                         && !string.IsNullOrEmpty(jsonDetail["mergedInvoices"]) && !string.IsNullOrWhiteSpace(jsonDetail["mergedInvoices"]))
                     {
                         mergedInvoiceIds = jsonDetail["mergedInvoices"].Split(',').Select(childInvoiceId => Convert.ToInt64(childInvoiceId)).ToList();
@@ -68,7 +68,8 @@ namespace PortalApp.config
                         };
                         template.GenerateInvoice(invoiceWithMergeIds);
                     }
-                    else {
+                    else
+                    {
                         template.GenerateInvoice(invoice);
                     }
                     this.Session[refNo] = template;
