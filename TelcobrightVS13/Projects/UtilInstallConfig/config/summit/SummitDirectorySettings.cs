@@ -20,7 +20,7 @@ namespace InstallConfig
     {
         private FileLocation vaultPrimary;
         private FileLocation vaultDialogic;
-        private SyncPair huawei_Vault;
+        private SyncPair zte_Vault;
         private SyncPair vaultCAS;
 
         public static Dictionary<string, string> SrtConfigHelperMap = new Dictionary<string, string>()
@@ -61,9 +61,9 @@ namespace InstallConfig
                 Pass = "",
             };
 
-            FileLocation huawei = new FileLocation()
+            FileLocation zte = new FileLocation()
             {
-                Name = "huawei",
+                Name = "zte",
                 LocationType = "ftp",
                 OsType = "linux",
                 UseActiveModeForFTP = true,
@@ -106,16 +106,16 @@ namespace InstallConfig
             //add locations to directory settings
             tbc.DirectorySettings.FileLocations.Add(vaultPrimary.Name, vaultPrimary);
             tbc.DirectorySettings.FileLocations.Add(vaultDialogic.Name, vaultDialogic);
-            tbc.DirectorySettings.FileLocations.Add(huawei.Name, huawei);
+            tbc.DirectorySettings.FileLocations.Add(zte.Name, zte);
             tbc.DirectorySettings.FileLocations.Add(fileArchive1.Name, fileArchive1);
             tbc.DirectorySettings.FileLocations.Add(fileArchiveCAS.Name, fileArchiveCAS);
 
-            this.huawei_Vault = new SyncPair("huawei:Vault")
+            this.zte_Vault = new SyncPair("zte:Vault")
             {
                 SkipSourceFileListing = false,
                 SrcSyncLocation = new SyncLocation()
                 {
-                    FileLocation = huawei,
+                    FileLocation = zte,
                     DescendingFileListByFileName = this.Tbc.CdrSetting.DescendingOrderWhileListingFiles
                 },
                 DstSyncLocation = new SyncLocation()
@@ -169,7 +169,7 @@ namespace InstallConfig
             };
 
             //add sync pairs to directory config
-            directorySetting.SyncPairs.Add(huawei_Vault.Name, huawei_Vault);
+            directorySetting.SyncPairs.Add(zte_Vault.Name, zte_Vault);
             //directorySetting.SyncPairs.Add(vaultS3FileArchive1.Name, vaultS3FileArchive1);
             directorySetting.SyncPairs.Add(vaultCAS.Name, vaultCAS);
 
