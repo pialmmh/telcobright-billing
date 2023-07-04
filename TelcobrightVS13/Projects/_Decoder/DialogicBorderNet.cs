@@ -67,7 +67,7 @@ namespace Decoders
                 if (ingressRequestLine.IsNullOrEmptyOrWhiteSpace() == false)
                 {
                     string[] tempArr = ingressRequestLine.Split(':');
-                    string originatingCalledNumber = tempArr[1];
+                    string originatingCalledNumber = tempArr[1].Split('@')[0];
                     var originatingIp = ipAndPort;
                     textCdr[Fn.IncomingRoute] = originatingIp;
                     textCdr[Fn.Originatingip] = originatingIp;
