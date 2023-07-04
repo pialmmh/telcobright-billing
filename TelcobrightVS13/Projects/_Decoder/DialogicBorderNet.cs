@@ -71,14 +71,15 @@ namespace Decoders
                     var originatingIp = ipAndPort;
                     textCdr[Fn.IncomingRoute] = originatingIp;
                     textCdr[Fn.Originatingip] = originatingIp;
-                    textCdr[Fn.OriginatingCalledNumber] = originatingCalledNumber;
+                    textCdr[Fn.OriginatingCalledNumber] = originatingCalledNumber.Replace("+","");
                 }
 
                 string ingressSipFromHeader = lineAsArr[72]; //"From: <sip:1111111@192.168.130.63>;tag=5228fc25a2c34aa7ba35e565aeda1457";
                 if (ingressSipFromHeader.IsNullOrEmptyOrWhiteSpace() == false)
                 {
-                    textCdr[Fn.OriginatingCallingNumber] = ingressSipFromHeader.Replace(" ", string.Empty).Split(':')[2]
+                    string originatingCallingNumber = ingressSipFromHeader.Replace(" ", string.Empty).Split(':')[2]
                         .Split('@')[0];
+                    textCdr[Fn.OriginatingCallingNumber] = originatingCallingNumber.Replace("+", "");
                 }
 
                 string outSigReqLine = lineAsArr[82].Replace(" ",""); //sip: 00918860086409@10.10.234.8:5060; transport = UDP
@@ -91,13 +92,14 @@ namespace Decoders
                     var terminatingIp = calledNoAndIp[1].Split(';')[0];
                     textCdr[Fn.OutgoingRoute] = terminatingIp;
                     textCdr[Fn.TerminatingIp] = terminatingIp;
-                    textCdr[Fn.TerminatingCalledNumber] = terminatingCalledNumber;
+                    textCdr[Fn.TerminatingCalledNumber] = terminatingCalledNumber.Replace("+", "");
                 }
 
                 string outSigFrom = lineAsArr[83];//From: <sip:1111111@192.168.130.63>;tag=5228fc25a2c34aa7ba35e565aeda1457
                 if (outSigFrom.IsNullOrEmptyOrWhiteSpace() == false)
                 {
-                    textCdr[Fn.TerminatingCallingNumber] = outSigFrom.Split(':')[2].Split('@')[0];
+                    string terminatingCallingNumber = outSigFrom.Split(':')[2].Split('@')[0];
+                    textCdr[Fn.TerminatingCallingNumber] = terminatingCallingNumber.Replace("+", "");
                 }
 
                 
