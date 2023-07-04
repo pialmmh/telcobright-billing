@@ -853,6 +853,7 @@
     <Compile Include="ReportHelper\AbstractSqlHelper.cs" />
     <Compile Include="ReportHelper\SqlHelperDomestic.cs" />
     <Compile Include="ReportHelper\SqlHelperInIGWRouteWise.cs" />
+    <Compile Include="ReportHelper\SqlHelperIntlInICXv2.cs" />
     <Compile Include="ReportHelper\SqlHelperIntlInICX.cs" />
     <Compile Include="ReportHelper\SqlHelperIntlInIGW.cs" />
     <Compile Include="ReportHelper\SqlHelperIntlInTransit.cs" />

@@ -37,7 +37,7 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
 
         }
 
-        string constructedSQL = new SqlHelperIntlInIcx
+        string constructedSQL = new SqlHelperIntlInICXv2
                         (StartDate,
                          EndtDate,
                          groupInterval,
@@ -137,6 +137,10 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
         GridView1.Columns[2].Visible = CheckBoxViewIncomingRoute.Checked;
         GridView1.Columns[3].Visible = CheckBoxShowByIgw.Checked;
         GridView1.Columns[4].Visible = CheckBoxViewOutgoingRoute.Checked;
+        GridView1.Columns[5].Visible = false;
+
+
+
         if (CheckBoxShowCost.Checked == true)
         {
             GridView1.Columns[14].Visible = true;
