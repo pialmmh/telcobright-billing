@@ -71,36 +71,31 @@ namespace InstallConfig
 
         public void LoadSeedData()
         {
-            if (ConsoleUtil.getConfirmationFromUser("Load seed data? (Y/N) for "+
-                this.Tbc.Telcobrightpartner.databasename))
+            /*if (ConsoleUtil.getConfirmationFromUser("Load seed data? (Y/N) for "+
+                this.Tbc.Telcobrightpartner.databasename))*/
+            Console.WriteLine("Loading seed data for " + this.Tbc.Telcobrightpartner.databasename);
+            PartnerEntities context =
+                new PartnerEntities(DbUtil.GetEntityConnectionString(Tbc.DatabaseSetting));
+            if (context.Database.Connection.State != ConnectionState.Open)
+                context.Database.Connection.Open();
+            using (MySqlConnection con =
+                new MySqlConnection(DbUtil.getDbConStrWithDatabase(this.Tbc.DatabaseSetting)))
             {
-                PartnerEntities context =
-                    new PartnerEntities(DbUtil.GetEntityConnectionString(Tbc.DatabaseSetting));
-                if(context.Database.Connection.State!= ConnectionState.Open)
-                    context.Database.Connection.Open();
-                using (MySqlConnection con =
-                    new MySqlConnection(DbUtil.getDbConStrWithDatabase(this.Tbc.DatabaseSetting)))
-                {
-                    DbWriterForConfig dbWriter = new DbWriterForConfig(this.Tbc,this.ConfigPathHelper,
-                        context, con);
-                    dbWriter.WriteTelcobrightPartnerAndNes();
+                DbWriterForConfig dbWriter = new DbWriterForConfig(this.Tbc, this.ConfigPathHelper,
+                    context, con);
+                dbWriter.WriteTelcobrightPartnerAndNes();
 
-                    dbWriter.LoadSeedDataSqlForTelcoBilling(SqlOperationType.SeedData);
-                    if (ConsoleUtil.getConfirmationFromUser("Load ddl scripts? (Y/N) for " +
-                                                            this.Tbc.Telcobrightpartner.databasename))
-                    {
-                        dbWriter.LoadSeedDataSqlForTelcoBilling(SqlOperationType.DDL);
-                    }
+                dbWriter.LoadSeedDataSqlForTelcoBilling(SqlOperationType.SeedData);
+                if (ConsoleUtil.getConfirmationFromUser("Load ddl scripts? (Y/N) for " +
+                                                        this.Tbc.Telcobrightpartner.databasename))
+                {
+                    dbWriter.LoadSeedDataSqlForTelcoBilling(SqlOperationType.DDL);
                 }
-                Console.WriteLine();
-                Console.WriteLine("Seed data loaded successfully for " + Tbc.Telcobrightpartner.databasename);
             }
-            else
-            {
-                Console.WriteLine();
-                Console.WriteLine("Seed data was not loaded for "+Tbc.Telcobrightpartner.databasename);
-            }
+            Console.WriteLine();
+            Console.WriteLine("Seed data loaded successfully for " + Tbc.Telcobrightpartner.databasename);
         }
+
         static void WriteConfig(TelcobrightConfig tbc, ConfigPathHelper configPathHelper)
         {
             //write web & app.config files
