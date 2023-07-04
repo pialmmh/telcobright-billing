@@ -30,7 +30,12 @@ namespace TelcobrightMediation
         }
         public BatchSqlJobParamJson GetCopy()
         {
-            return new BatchSqlJobParamJson(this.TableName, this.BatchSize, this.LstWhereParamsSingle,
+            List<SqlSingleWhereClauseBuilder> whereParams= new List<SqlSingleWhereClauseBuilder>();
+            foreach (var item in this.LstWhereParamsSingle)
+            {
+                whereParams.Add(item);
+            }
+            return new BatchSqlJobParamJson(this.TableName, this.BatchSize, whereParams,
                 this.LstWhereParamsMultiple, this.ColumnExpressions,this.StartPartitionDate,this.EndPartitionDate,
                 this.PartitionColName,this.RowIdColName);
         }
