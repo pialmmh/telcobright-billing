@@ -88,10 +88,10 @@ namespace Decoders
                 dt = lineAsArr[40];//EndTime
                 if (!string.IsNullOrEmpty(dt)) textCdr[Fn.Endtime] = parseStringToDate(dt).ToString("yyyy-MM-dd HH:mm:ss");
 
-                textCdr[Fn.OriginatingCallingNumber] = lineAsArr[30].Replace("+","").Trim();
-                textCdr[Fn.OriginatingCalledNumber] = lineAsArr[31].Replace("+", "").Trim();
-                textCdr[Fn.TerminatingCallingNumber] = lineAsArr[61].Replace("+", "").Trim();
-                textCdr[Fn.TerminatingCalledNumber] = lineAsArr[62].Replace("+", "").Trim();
+                textCdr[Fn.OriginatingCallingNumber] = lineAsArr[30].Trim();
+                textCdr[Fn.OriginatingCalledNumber] = lineAsArr[31].Trim();
+                textCdr[Fn.TerminatingCallingNumber] = lineAsArr[61].Trim();
+                textCdr[Fn.TerminatingCalledNumber] = lineAsArr[62].Trim();
                 textCdr[Fn.ReleaseDirection] = lineAsArr[8].Trim();
                 textCdr[Fn.ReleaseCauseIngress] = lineAsArr[9].Trim();
                 textCdr[Fn.ReleaseCauseEgress] = lineAsArr[9].Trim();
