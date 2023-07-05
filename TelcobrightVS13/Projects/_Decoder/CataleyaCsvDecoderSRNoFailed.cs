@@ -73,20 +73,34 @@ namespace Decoders
                     textCdr[Fn.TerminatingIp] = ip + ":" + port;
                 }
                 
-                string dt = lineAsArr[37];//SignalStart
-                if (!string.IsNullOrEmpty(dt)) textCdr[Fn.SignalingStartTime] = parseStringToDate(dt).ToString("yyyy-MM-dd HH:mm:ss");
-                if (!string.IsNullOrEmpty(dt)) textCdr[Fn.StartTime] = parseStringToDate(dt).ToString("yyyy-MM-dd HH:mm:ss");
+                string startTime = lineAsArr[37];//SignalStart
+                if (!string.IsNullOrEmpty(startTime))
+                {
+                    startTime= parseStringToDate(startTime).ToString("yyyy-MM-dd HH:mm:ss");
+                }
 
+                string connectTime = lineAsArr[38];//ConnectTime
+                if (!string.IsNullOrEmpty(connectTime))
+                {
+                    connectTime= parseStringToDate(connectTime).ToString("yyyy-MM-dd HH:mm:ss");
+                }
 
-                dt = lineAsArr[38];//ConnectTime
-                if (!string.IsNullOrEmpty(dt)) textCdr[Fn.ConnectTime] = parseStringToDate(dt).ToString("yyyy-MM-dd HH:mm:ss");
+                string answerTime = lineAsArr[39];//AnswerTime
+                if (!string.IsNullOrEmpty(answerTime))
+                {
+                    answerTime= parseStringToDate(answerTime).ToString("yyyy-MM-dd HH:mm:ss");
+                }
 
-                dt = lineAsArr[39];//AnswerTime
-                if (!string.IsNullOrEmpty(dt)) textCdr[Fn.AnswerTime] = parseStringToDate(dt).ToString("yyyy-MM-dd HH:mm:ss");
+                string endTime = lineAsArr[40];//EndTime
+                if (!string.IsNullOrEmpty(endTime))
+                {
+                    endTime= parseStringToDate(endTime).ToString("yyyy-MM-dd HH:mm:ss");
+                }
 
-
-                dt = lineAsArr[40];//EndTime
-                if (!string.IsNullOrEmpty(dt)) textCdr[Fn.Endtime] = parseStringToDate(dt).ToString("yyyy-MM-dd HH:mm:ss");
+                textCdr[Fn.StartTime] = startTime;
+                textCdr[Fn.ConnectTime] = connectTime;
+                textCdr[Fn.AnswerTime] = answerTime;
+                textCdr[Fn.Endtime] = endTime;
 
                 textCdr[Fn.OriginatingCallingNumber] = lineAsArr[30].Trim();
                 textCdr[Fn.OriginatingCalledNumber] = lineAsArr[31].Trim();

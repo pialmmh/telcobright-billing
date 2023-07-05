@@ -166,7 +166,8 @@ namespace TelcobrightMediation
                         }
                     }
                 });
-                if (matchFound == false) return null;
+                //if (matchFound == false) return null; 
+                if (matchFound == false) continue;//mustafa changes, sr telecom ip integration July 2023
                 foreach (Rateext t in this.prefixWiseMatchedRates) //first matched is the longest match
                 {
                     if (t != null) return t;
