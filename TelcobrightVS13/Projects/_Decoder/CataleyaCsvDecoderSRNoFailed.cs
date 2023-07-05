@@ -52,8 +52,8 @@ namespace Decoders
                 textCdr[Fn.Sequencenumber] = lineAsArr[0];
                 //cdr.SequenceNumber = Convert.ToInt64(lineAsArr[0]);
                 textCdr[Fn.Filename] = fileName;
-                textCdr[Fn.IncomingRoute] = lineAsArr[28];
-                textCdr[Fn.OutgoingRoute] = lineAsArr[59];
+                textCdr[Fn.IncomingRoute] = lineAsArr[25];
+                textCdr[Fn.OutgoingRoute] = lineAsArr[56];
                 textCdr[Fn.DurationSec] = lineAsArr[17];
                 //cdr.DurationSec = Convert.ToDecimal(lineAsArr[17]) / 1000;
                 string ipAddr= lineAsArr[36];
