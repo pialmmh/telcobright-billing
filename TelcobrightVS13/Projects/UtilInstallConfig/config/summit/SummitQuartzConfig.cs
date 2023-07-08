@@ -69,20 +69,20 @@ namespace InstallConfig
                         {"operatorName", operatorName},
                         {"syncPair", this.zte_Vault.Name}
                     }),
-                
-                //new QuartzTbDaemonConfig
-                //(
-                //    operatorName: operatorName,
-                //    identity: "FileCopier [Vault:CAS]" + " [" + operatorName+"]",
-                //    group: operatorName,
-                //    cronExpression: "/5 * * ? * *",
-                //    fireOnceIfMissFired: false,
-                //    jobDataMap: new Dictionary<string, string>()
-                //    {
-                //        {"telcobrightProcessId", "104"},
-                //        {"operatorName", operatorName},
-                //        {"syncPair", "Vault:CAS"}
-                //    }),
+
+                new QuartzTbDaemonConfig
+                (
+                    operatorName: operatorName,
+                    identity: "FileCopier [zte:CAS]" + " [" + operatorName+"]",
+                    group: operatorName,
+                    cronExpression: "/5 * * ? * *",
+                    fireOnceIfMissFired: false,
+                    jobDataMap: new Dictionary<string, string>()
+                    {
+                        {"telcobrightProcessId", "104"},
+                        {"operatorName", operatorName},
+                        {"syncPair", this.zteCAS.Name}
+                    }),
             };
             return fileCopierInstances;
         }

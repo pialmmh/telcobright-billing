@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<appcmd>
+	<APPPOOL APPPOOL.NAME="`%appPoolName%`" PipelineMode="Integrated" RuntimeVersion="v4.0" state="Started">
+		<add name="`%appPoolName%`" enable32BitAppOnWin64="false">
+			<processModel identityType="LocalSystem" loadUserProfile="true" />
+			<recycling>
+				<periodicRestart>
+					<schedule>
+					</schedule>
+				</periodicRestart>
+			</recycling>
+			<failure />
+			<cpu />
+		</add>
+	</APPPOOL>
+</appcmd>

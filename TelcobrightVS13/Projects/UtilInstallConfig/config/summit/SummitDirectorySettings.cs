@@ -21,7 +21,7 @@ namespace InstallConfig
         private FileLocation vaultPrimary;
         private FileLocation vaultDialogic;
         private SyncPair zte_Vault;
-        private SyncPair vaultCAS;
+        private SyncPair zteCAS;
 
         public static Dictionary<string, string> SrtConfigHelperMap = new Dictionary<string, string>()
         {
@@ -90,16 +90,16 @@ namespace InstallConfig
                 IgnoreZeroLenghFile = 1
             };
 
-            FileLocation fileArchiveCAS = new FileLocation()//raw cdr archive
+            FileLocation cas_tdm = new FileLocation()//raw cdr archive
             {
                 Name = "cas",
                 LocationType = "ftp",
                 OsType = "windows",
                 PathSeparator = @"/",//backslash didn't work with winscp
                 StartingPath = @"/",
-                ServerIp = "192.168.100.161", //server = "172.16.16.242",
-                User = "adminsrt",
-                Pass = "srticx725",
+                ServerIp = "192.168.100.185", //server = "172.16.16.242",
+                User = "adnvertx",
+                Pass = "vtxicx296#",
                 IgnoreZeroLenghFile = 1
             };
 
@@ -108,7 +108,7 @@ namespace InstallConfig
             tbc.DirectorySettings.FileLocations.Add(vaultDialogic.Name, vaultDialogic);
             tbc.DirectorySettings.FileLocations.Add(zte.Name, zte);
             tbc.DirectorySettings.FileLocations.Add(fileArchive1.Name, fileArchive1);
-            tbc.DirectorySettings.FileLocations.Add(fileArchiveCAS.Name, fileArchiveCAS);
+            tbc.DirectorySettings.FileLocations.Add(cas_tdm.Name, cas_tdm);
 
             this.zte_Vault = new SyncPair("zte:Vault")
             {
@@ -143,7 +143,7 @@ namespace InstallConfig
 
 
             //sync pair Vault_S3:FileArchive1
-            this.vaultCAS = new SyncPair("Vault:CAS")
+            this.zteCAS = new SyncPair("zte:cas")
             {
                 SkipCopyingToDestination = false,
                 SkipSourceFileListing = true,
@@ -153,7 +153,7 @@ namespace InstallConfig
                 },
                 DstSyncLocation = new SyncLocation()
                 {
-                    FileLocation = fileArchiveCAS
+                    FileLocation = cas_tdm
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
@@ -171,13 +171,13 @@ namespace InstallConfig
             //add sync pairs to directory config
             directorySetting.SyncPairs.Add(zte_Vault.Name, zte_Vault);
             //directorySetting.SyncPairs.Add(vaultS3FileArchive1.Name, vaultS3FileArchive1);
-            directorySetting.SyncPairs.Add(vaultCAS.Name, vaultCAS);
+            directorySetting.SyncPairs.Add(zteCAS.Name, zteCAS);
 
             //add archive locations to CdrSettings
             this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
             {
                 //vaultS3FileArchive1.Name,
-                //vaultCAS.Name
+                zteCAS.Name
             };
         }
     }

@@ -21,7 +21,7 @@ namespace InstallConfig
         private FileLocation vaultPrimary;
         private FileLocation vaultDialogic;
         private SyncPair huawei_Vault;
-        private SyncPair vaultCAS;
+        private SyncPair zteCAS;
 
         public static Dictionary<string, string> SrtConfigHelperMap = new Dictionary<string, string>()
         {
@@ -97,9 +97,9 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"/",//backslash didn't work with winscp
                 StartingPath = @"/",
-                ServerIp = "192.168.100.161", //server = "172.16.16.242",
-                User = "adminsrt",
-                Pass = "srticx725",
+                ServerIp = "192.168.100.185", //server = "172.16.16.242",
+                User = "adnvertx",
+                Pass = "vtxicx296#",
                 IgnoreZeroLenghFile = 1
             };
 
@@ -143,7 +143,7 @@ namespace InstallConfig
 
 
             //sync pair Vault_S3:FileArchive1
-            this.vaultCAS = new SyncPair("Vault:CAS")
+            this.zteCAS = new SyncPair("zte:cas")
             {
                 SkipCopyingToDestination = false,
                 SkipSourceFileListing = true,
@@ -171,13 +171,13 @@ namespace InstallConfig
             //add sync pairs to directory config
             directorySetting.SyncPairs.Add(huawei_Vault.Name, huawei_Vault);
             //directorySetting.SyncPairs.Add(vaultS3FileArchive1.Name, vaultS3FileArchive1);
-            directorySetting.SyncPairs.Add(vaultCAS.Name, vaultCAS);
+            directorySetting.SyncPairs.Add(zteCAS.Name, zteCAS);
 
             //add archive locations to CdrSettings
             this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
             {
                 //vaultS3FileArchive1.Name,
-                //vaultCAS.Name
+                zteCAS.Name
             };
         }
     }

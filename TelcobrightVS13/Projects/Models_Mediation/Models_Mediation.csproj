@@ -501,6 +501,7 @@
     <Compile Include="ne.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="nonGeneratedEntities\ipaddressorpointcode.cs" />
     <Compile Include="partner.cs">
       <DependentUpon>PartnerModel.tt</DependentUpon>
     </Compile>

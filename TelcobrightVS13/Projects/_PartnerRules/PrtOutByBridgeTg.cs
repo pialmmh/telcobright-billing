@@ -17,9 +17,9 @@ namespace PartnerRules
         public string RuleName => GetType().Name;
         public string HelpText => "Egress Partner Identification by Bridge Trunk Group";
         public int Id => 4;
-        public int Execute(cdr thisCdr, MefPartnerRulesContainer pData)
+        public int Execute(cdr thisCdr, MefPartnerRulesContainer data)
         {
-            Dictionary<ValueTuple<int, string>, bridgedroute> bridgedRoutes = pData.MediationContext.BridgedRoutes;
+            Dictionary<ValueTuple<int, string>, bridgedroute> bridgedRoutes = data.MediationContext.BridgedRoutes;
             bridgedroute brRoute = null;
             var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.OutgoingRoute);
             bridgedRoutes.TryGetValue(key, out brRoute);
