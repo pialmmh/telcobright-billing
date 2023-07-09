@@ -475,31 +475,7 @@ union all
                 <SettingsDataSecurity AllowDelete="False" AllowInsert="False" />
                 <SettingsBehavior ColumnResizeMode="Control" />
             </dx:ASPxGridView>
-<%--            <asp:GridView ID="gridView" AllowPaging="True"
-                runat="server" 
-                CellPadding="4" ForeColor="#333333" GridLines="Vertical" 
-                Font-Size="Smaller" PageSize="5000" OnDataBound="gridView_DataBound"  OnRowDataBound="gridView_RowDataBound">
-                <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
-                <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#999999" />
-                <FooterStyle BackColor="#5D7B9D" Font-Bold="true" ForeColor="White" />
-                <PagerStyle BackColor="#5D7B9D" ForeColor="White" HorizontalAlign="Center" />
-                <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
-                <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
-                <PagerTemplate>
-                    <table width="100%">
-                    <tr>
-                        <td style="text-align: Left">
-                            <asp:PlaceHolder ID="placeholder" runat="server" />
-                        </td>
-                    </tr>
-                </table>
-                </PagerTemplate>
-                <SortedAscendingCellStyle BackColor="#E9E7E2" />
-                <SortedAscendingHeaderStyle BackColor="#506C8C" />
-                <SortedDescendingCellStyle BackColor="#FFFDF8" />
-                <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
-            </asp:GridView>--%>
+
     </div>
             
         

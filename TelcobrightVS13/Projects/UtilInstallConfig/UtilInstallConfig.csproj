@@ -285,6 +285,7 @@
     <Content Include="config\banglatelecom\tmplPortalWebSite.txt" />
     <Content Include="generators\telcoBilling\dbscripts\ddl\sql\serviceGroupNotNullCdrError.sql" />
     <Content Include="generators\telcoBilling\dbscripts\ddl\sql\indexSwitch.txt" />
+    <Content Include="generators\telcoBilling\dbscripts\seedData\sql\pointCodeAndIpAddr.sql" />
     <Content Include="TextFile1.txt" />
     <Content Include="generators\telcoBilling\dbscripts\quartzTables.sql" />
     <Content Include="config\jsl\tmplPortalAppPools.txt" />

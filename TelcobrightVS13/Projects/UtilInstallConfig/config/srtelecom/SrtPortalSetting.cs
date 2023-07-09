@@ -87,6 +87,8 @@ namespace InstallConfig
                                     "duration1 as Duration1",
                                     "duration2 as Duration2",
                                     "Duration3 as Duration3",
+                                    "ifnull(opc,OriginatingIP) OriginatingAddress",
+                                    "ifnull(dpc,TerminatingIP) TerminatingAddress",
                                     "releasecauseingress as `Ingress CauseCode`",
                                 }
                             },
