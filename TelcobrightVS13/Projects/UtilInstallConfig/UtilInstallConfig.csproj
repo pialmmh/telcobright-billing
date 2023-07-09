@@ -213,7 +213,6 @@
     <None Include="config\banglatelecom\scripts\ftp_tpny.iisScript" />
     <None Include="config\banglatelecom\scripts\http_tpny.iisScript" />
     <None Include="config\summit\summit.conf" />
-    <None Include="_dbl.config" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

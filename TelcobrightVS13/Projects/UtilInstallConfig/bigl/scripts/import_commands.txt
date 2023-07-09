@@ -1,3 +1,0 @@
-%windir%/system32/inetsrv/appcmd add apppool /in < C:\sftp_root\TelcobrightVS13\Projects\UtilInstallConfig\bigl\scripts\appPool_bigl.iisScript
-%windir%/system32/inetsrv/appcmd add site /in < C:\sftp_root\TelcobrightVS13\Projects\UtilInstallConfig\bigl\scripts\http_bigl.iisScript
-%windir%/system32/inetsrv/appcmd add site /in < C:\sftp_root\TelcobrightVS13\Projects\UtilInstallConfig\bigl\scripts\ftp_bigl.iisScript

@@ -14,12 +14,12 @@ namespace Decoders
 {
 
     [Export("Decoder", typeof(IFileDecoder))]
-    public class DialogicBorderNetGzip : DialogicBorderNet
+    public class DialogicBorderNetMirGzipMir : DialogicBorderNetMir
     {
         public override string ToString() => this.RuleName;
         public override string RuleName => GetType().Name;
         public override int Id => 27;
-        public override string HelpText => "Decodes Dialogic BorderNet CSV CDR with Gzip";
+        public override string HelpText => "Decodes Dialogic BorderNet CSV CDR with Gzip (Mir Telecom)";
         public override CompressionType CompressionType { get; set; } = CompressionType.Gzip;
         protected override CdrCollectorInputData Input { get; set; }
 

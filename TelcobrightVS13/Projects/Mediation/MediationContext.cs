@@ -63,6 +63,7 @@ namespace TelcobrightMediation
 
             this.MefDecoderContainer = new MefDecoderContainer(this.Context);
             this.MefServiceFamilyContainer = new MefServiceFamilyContainer();
+            this.Partners = context.partners.ToDictionary(c => c.idPartner);
             this.Nes = context.nes.Include(n=>n.telcobrightpartner)
                 .Where(n => n.telcobrightpartner.databasename == tbc.DatabaseSetting.DatabaseName)
                 .ToDictionary(c => c.idSwitch.ToString());
@@ -79,8 +80,8 @@ namespace TelcobrightMediation
             this.BillingSpans = context.enumbillingspans.ToDictionary(c => c.ofbiz_uom_Id); //route data
             this.Routes = context.routes.Include(r=>r.partner)
                 .ToDictionary(r => new ValueTuple<int,string>(r.SwitchId,r.RouteName));
-            this.IpAddressorPointCodes = context.Database.SqlQuery<ipaddressorpointcode>("select * from ipaddressorpointcode")
-                .ToDictionary(e=>e.RouteName);
+            //this.IpAddressorPointCodes = context.Database.SqlQuery<ipaddressorpointcode>("select * from ipaddressorpointcode")
+              //  .ToDictionary(e=>e.RouteName);
             this.BridgedRoutes = context.bridgedroutes.Include(r => r.partner).Include(r=>r.partner1)
                 .ToDictionary(r => new ValueTuple<int, string>(r.switchId, r.routeName));
             this.DictAnsOrig = new Dictionary<string, partnerprefix>();
@@ -134,7 +135,6 @@ namespace TelcobrightMediation
             }
             CdrSummaryTypeDictionary.Initialize();
             CreateTemporaryTables();
-            this.Partners = context.partners.ToDictionary(c => c.idPartner);
             this.MefPartnerRuleContainer.MediationContext = this;
         }
 

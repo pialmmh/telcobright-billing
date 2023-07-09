@@ -14,12 +14,12 @@ namespace Decoders
 {
 
     [Export("Decoder", typeof(IFileDecoder))]
-    public class DialogicBorderNet : IFileDecoder
+    public class DialogicBorderNetMir : IFileDecoder
     {
         public override string ToString() => this.RuleName;
         public virtual string RuleName => GetType().Name;
         public virtual int Id => 26;
-        public virtual string HelpText => "Decodes Dialogic BorderNet CSV CDR.";
+        public virtual string HelpText => "Decodes Dialogic BorderNet CSV CDR (Mir Telecom)";
         public virtual CompressionType CompressionType { get; set; } 
         protected virtual CdrCollectorInputData Input { get; set; }
                
@@ -69,8 +69,13 @@ namespace Decoders
                     string[] tempArr = ingressRequestLine.Split(':');
                     string originatingCalledNumber = tempArr[1].Split('@')[0];
                     var originatingIp = ipAndPort;
-                    textCdr[Fn.IncomingRoute] = originatingIp;
                     textCdr[Fn.Originatingip] = originatingIp;
+                    //use media ip1 as own signaling ip
+                    string ingressSigLocalAddress = lineAsArr[70].Split(null)[1];
+                    textCdr[Fn.Mediaip1] = ingressSigLocalAddress;
+                    textCdr[Fn.IncomingRoute] = new StringBuilder(originatingIp).Append('-').Append(ingressSigLocalAddress)
+                        .ToString();
+
                     textCdr[Fn.OriginatingCalledNumber] = originatingCalledNumber.Replace("+","");
                 }
 
@@ -90,7 +95,11 @@ namespace Decoders
                         .Split('@').Select(s => s.Trim()).ToArray();
                     var terminatingCalledNumber = calledNoAndIp[0];
                     var terminatingIp = calledNoAndIp[1].Split(';')[0];
-                    textCdr[Fn.OutgoingRoute] = terminatingIp;
+                    //media ip 2 as egress sig remote address OutSigLocalAddr
+                    string outSigLocalAddr = lineAsArr[80].Split(null)[1];
+                    textCdr[Fn.Mediaip2] = outSigLocalAddr;
+                    textCdr[Fn.OutgoingRoute] = new StringBuilder(terminatingIp).Append("-").Append(outSigLocalAddr)
+                        .ToString();
                     textCdr[Fn.TerminatingIp] = terminatingIp;
                     textCdr[Fn.TerminatingCalledNumber] = terminatingCalledNumber.Replace("+", "");
                 }
@@ -135,6 +144,7 @@ namespace Decoders
 
                 textCdr[Fn.ReleaseCauseIngress] = lineAsArr[110];
                 textCdr[Fn.ReleaseCauseEgress] = lineAsArr[133];
+                textCdr[Fn.Validflag] = "1";
                 decodedRows.Add(textCdr.ToArray());
             }
 
