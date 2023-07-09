@@ -20,6 +20,8 @@ namespace TelcobrightMediation
         public Dictionary<int,BillingRule> BillingRules { get; set; }
         public UoMConvRateCache UsdBcsCache { get; private set; }
         public Dictionary<int, IDigitRule> DigitRules { get; set; }=new Dictionary<int, IDigitRule>();
+        public Dictionary<string, partner> Partners = new Dictionary<string, partner>();
+        public Dictionary<string, ipaddressorpointcode> IpAddressOrPointCodes = new Dictionary<string, ipaddressorpointcode>();
         public MefServiceFamilyContainer()
         {
             this.DicRouteIncludingPartner = new Dictionary<ValueTuple<int, string>, route>();

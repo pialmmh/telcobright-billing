@@ -45,6 +45,8 @@ namespace TelcobrightMediation
         public Dictionary<int, SwitchWiseLookup> SwitchWiseLookups { get; }
         public Dictionary<string, ne> Nes { get; } //load only nes for corresponding telcobright partner
         public Dictionary<int,partner> Partners { get; }
+        public Dictionary<string, ipaddressorpointcode> IpAddressorPointCodes { get; }
+
         public MediationContext(TelcobrightConfig tbc, PartnerEntities context)
         {
             StaticExtInsertColumnParsedDic.Parse();
@@ -71,10 +73,14 @@ namespace TelcobrightMediation
             {
                 this.SwitchWiseLookups.Add(ne.idSwitch, new SwitchWiseLookup(context, ne.idSwitch));
                 this.ServiceGroupConfigurations.Add(ne.idSwitch, dicmedInner);
+                this.MefServiceGroupContainer.Partners = this.Partners.Values.ToDictionary(p => p.idPartner.ToString());
+                this.MefServiceGroupContainer.IpAddressOrPointCodes = this.IpAddressorPointCodes;
             }
             this.BillingSpans = context.enumbillingspans.ToDictionary(c => c.ofbiz_uom_Id); //route data
             this.Routes = context.routes.Include(r=>r.partner)
                 .ToDictionary(r => new ValueTuple<int,string>(r.SwitchId,r.RouteName));
+            this.IpAddressorPointCodes = context.Database.SqlQuery<ipaddressorpointcode>("select * from ipaddressorpointcode")
+                .ToDictionary(e=>e.RouteName);
             this.BridgedRoutes = context.bridgedroutes.Include(r => r.partner).Include(r=>r.partner1)
                 .ToDictionary(r => new ValueTuple<int, string>(r.switchId, r.routeName));
             this.DictAnsOrig = new Dictionary<string, partnerprefix>();
@@ -88,7 +94,9 @@ namespace TelcobrightMediation
                 DicRouteIncludingPartner = this.Routes,
                 DicRateplans = context.rateplans.ToDictionary(c => c.id),
                 BillingRules = context.jsonbillingrules.ToList()
-                    .Select(c => JsonBillingRuleToBillingRuleConverter.Convert(c)).ToDictionary(c => c.Id)
+                    .Select(c => JsonBillingRuleToBillingRuleConverter.Convert(c)).ToDictionary(c => c.Id),
+                Partners = this.Partners.Values.ToDictionary(p=>p.idPartner.ToString()),
+                IpAddressOrPointCodes = this.IpAddressorPointCodes
             };
             this.MefServiceFamilyContainer.PopulateCachedUsdBcs(this.Context);
             this.InconsistentCdrCheckListValidator = CreateValidatorInstanceFromRules<string[]>(this.Tbc

@@ -16,11 +16,11 @@ namespace PartnerRules
         public string RuleName => GetType().Name;
         public string HelpText => "Ingress Partner Identification by Trunk Group";
         public int Id => 1;
-        public int Execute(cdr thisCdr, MefPartnerRulesContainer pData)
+        public int Execute(cdr thisCdr, MefPartnerRulesContainer data)
         {
             var key = new ValueTuple<int,string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
             route thisRoute = null;
-            pData.SwitchWiseRoutes.TryGetValue(key, out thisRoute);
+            data.SwitchWiseRoutes.TryGetValue(key, out thisRoute);
             if (thisRoute != null)
             {
                 thisCdr.InPartnerId = thisRoute.idPartner;

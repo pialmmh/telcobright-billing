@@ -17,11 +17,11 @@ namespace PartnerRules
         public string HelpText => "Egress Partner Identification by Trunk Group";
         public int Id => 2;
 
-        public int Execute(cdr thisCdr, MefPartnerRulesContainer pData)
+        public int Execute(cdr thisCdr, MefPartnerRulesContainer data)
         {
             var key = new ValueTuple<int,string>(thisCdr.SwitchId,thisCdr.OutgoingRoute);
             route thisRoute = null;
-            pData.SwitchWiseRoutes.TryGetValue(key, out thisRoute);
+            data.SwitchWiseRoutes.TryGetValue(key, out thisRoute);
             if (thisRoute != null)
             {
                 thisCdr.OutPartnerId = thisRoute.idPartner;

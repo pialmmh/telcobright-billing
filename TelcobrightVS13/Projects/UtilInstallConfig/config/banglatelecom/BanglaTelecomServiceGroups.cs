@@ -30,8 +30,10 @@ namespace InstallConfig
                 Params = new Dictionary<string, string>() { {"prefixes","0800" } },
                 PartnerRules = new List<int>()
                 {
-                    PartnerRuletype.InPartnerByIncomingRoute,
-                    PartnerRuletype.OutPartnerByOutgoingRoute
+                    PartnerRuletype.InPartnerByIPAddressOrPointCode,
+                    PartnerRuletype.OutPartnerByOutgoingRoute,
+                    //PartnerRuletype.InPartnerByIncomingRoute,
+                    //PartnerRuletype.OutPartnerByOutgoingRoute
                 },
                 Ratingtrules = new List<RatingRule>()
                 {
