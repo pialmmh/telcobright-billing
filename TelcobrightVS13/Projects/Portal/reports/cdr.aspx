@@ -63,7 +63,7 @@ union all
 
  
     <div style="clear:left"></div>
- <div id="ParamBorder" style="overflow:hidden;margin-top:4px;float:left;padding-top:0px;padding-left:0px;height:190px;display:block;border:2px ridge #E5E4E2;margin-bottom:0px;width:1400px;">
+ <div id="ParamBorder" style="overflow:hidden;margin-top:4px;float:left;padding-top:0px;padding-left:0px;height:205px;display:block;border:2px ridge #E5E4E2;margin-bottom:0px;width:1400px;">
     
     <%--<div style="margin-left:10px;float:left;left:0px;font-weight:bold;margin-top:2px;margin-right:20px;color:Black;clear:both;"> Rates</div>--%>
 
