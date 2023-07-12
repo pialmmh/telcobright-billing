@@ -14,7 +14,7 @@ namespace Decoders
 {
 
     [Export("Decoder", typeof(IFileDecoder))]
-    public class DialogicBorderNetMirGzipMir : DialogicBorderNetMir
+    public class DialogicBorderNetMirNoFailedGzipMirNoFailed : DialogicBorderNetMirNoFailed
     {
         public override string ToString() => this.RuleName;
         public override string RuleName => GetType().Name;

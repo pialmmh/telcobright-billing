@@ -103,6 +103,7 @@
     <Compile Include="MySqlFieldToString.cs" />
     <Compile Include="ConfigHelper\PartitionManagerPerTable.cs" />
     <Compile Include="DbWriterWithAccurateCount.cs" />
+    <Compile Include="networking\cidrHelper.cs" />
     <Compile Include="NullToNonNullableConverter.cs" />
     <Compile Include="NullAlternative.cs" />
     <Compile Include="NumberFormatter.cs" />

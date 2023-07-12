@@ -14,7 +14,7 @@ namespace Decoders
 {
 
     [Export("Decoder", typeof(IFileDecoder))]
-    public class DialogicBorderNetMir : IFileDecoder
+    public class DialogicBorderNetMirNoFailed : IFileDecoder
     {
         public override string ToString() => this.RuleName;
         public virtual string RuleName => GetType().Name;
@@ -47,14 +47,27 @@ namespace Decoders
             foreach (string[] lineAsArr in lines)
             {
                 //take only final cdrs 
-                string chargingStatus = lineAsArr[15];
-                if (chargingStatus != "1" && chargingStatus != "3")
+                //AccountStatusType = field 7
+                //AccountEventReason = field 8
+                //SDRSessionStatus = field 16
+
+                string accountStatusType =lineAsArr[6].Trim();// AccountStatusType = field 7, we keep it in calledPartyNoa
+                string accountEventReason =lineAsArr[7].Trim(); //AccountEventReason = field 8, we keep it in callingPartyNoa
+
+                string chargingStatus = lineAsArr[15];//SDRSessionStatus = field 16
+                /*if (chargingStatus != "1" && chargingStatus != "3")
                 {
                     continue;//1= finalRecord, 3= unsuccessful, skip 2= interim
+                }*/
+                if (accountStatusType != "2" || chargingStatus!="1")
+                {
+                    continue;
                 }
 
                 string[] textCdr = new string[input.MefDecodersData.Totalfieldtelcobright];
                 textCdr[Fn.ChargingStatus] = chargingStatus == "1" ? "1" : "0";
+                textCdr[Fn.CalledpartyNOA] = accountStatusType;
+                textCdr[Fn.CallingPartyNOA] = accountEventReason;
 
                 textCdr[Fn.Sequencenumber] = lineAsArr[1];
                 string durationSec = lineAsArr[14];

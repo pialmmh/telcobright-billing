@@ -59,10 +59,6 @@
       <Project>{d4c2f34d-4d3d-43ae-84f0-e80cfedb1b48}</Project>
       <Name>LibraryExtensions</Name>
     </ProjectReference>
-    <ProjectReference Include="..\_000tester\Utils.csproj">
-      <Project>{57c85533-c119-4d65-a910-90c70337eb43}</Project>
-      <Name>Utils</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
