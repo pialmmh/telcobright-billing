@@ -88,7 +88,7 @@ namespace InstallConfig
                     FileExtension = ".DAT",
                     Description = null,
                     SourceFileLocations = this.vaultPrimary.Name,
-                    BackupFileLocations = this.zteCAS.Name,
+                    BackupFileLocations = this.zteCAS.Name + "," + this.zteSummitFtp.Name,
                     LoadingStopFlag = null,
                     LoadingSpanCount = 100,
                     TransactionSizeForCDRLoading = 1500,

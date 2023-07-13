@@ -83,6 +83,19 @@ namespace InstallConfig
                         {"operatorName", operatorName},
                         {"syncPair", this.zteCAS.Name}
                     }),
+                new QuartzTbDaemonConfig
+                (
+                    operatorName: operatorName,
+                    identity: "FileCopier [zte:summitFtp]" + " [" + operatorName+"]",
+                    group: operatorName,
+                    cronExpression: "/5 * * ? * *",
+                    fireOnceIfMissFired: false,
+                    jobDataMap: new Dictionary<string, string>()
+                    {
+                        {"telcobrightProcessId", "104"},
+                        {"operatorName", operatorName},
+                        {"syncPair", this.zteSummitFtp.Name}
+                    }),
             };
             return fileCopierInstances;
         }

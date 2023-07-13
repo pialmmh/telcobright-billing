@@ -22,6 +22,7 @@ namespace InstallConfig
         private FileLocation vaultDialogic;
         private SyncPair zte_Vault;
         private SyncPair zteCAS;
+        private SyncPair zteSummitFtp;
 
         public static Dictionary<string, string> SrtConfigHelperMap = new Dictionary<string, string>()
         {
@@ -103,6 +104,19 @@ namespace InstallConfig
                 IgnoreZeroLenghFile = 1
             };
 
+            FileLocation summitFtp = new FileLocation()//raw cdr archive
+            {
+                Name = "summitftp",
+                LocationType = "ftp",
+                OsType = "windows",
+                PathSeparator = @"/",//backslash didn't work with winscp
+                StartingPath = @"/",
+                ServerIp = "103.26.244.97", //server = "172.16.16.242",
+                User = "ftpuser",
+                Pass = "Takay1takaane",
+                IgnoreZeroLenghFile = 1
+            };
+
             //add locations to directory settings
             tbc.DirectorySettings.FileLocations.Add(vaultPrimary.Name, vaultPrimary);
             tbc.DirectorySettings.FileLocations.Add(vaultDialogic.Name, vaultDialogic);
@@ -167,17 +181,43 @@ namespace InstallConfig
                     CompressionType = CompressionType.None,
                 }
             };
+            this.zteSummitFtp = new SyncPair("zte:summitftp")
+            {
+                SkipCopyingToDestination = false,
+                SkipSourceFileListing = true,
+                SrcSyncLocation = new SyncLocation()
+                {
+                    FileLocation = vaultPrimary
+                },
+                DstSyncLocation = new SyncLocation()
+                {
+                    FileLocation = summitFtp 
+                },
+                SrcSettings = new SyncSettingsSource()
+                {
+                    SecondaryDirectory = "downloaded",
+                    ExpFileNameFilter = null,
+                },
+                DstSettings = new SyncSettingsDest()
+                {
+                    FileExtensionForSafeCopyWithTempFile = ".tmp",
+                    Overwrite = true,
+                    CompressionType = CompressionType.None,
+                }
+            };
 
             //add sync pairs to directory config
             directorySetting.SyncPairs.Add(zte_Vault.Name, zte_Vault);
             //directorySetting.SyncPairs.Add(vaultS3FileArchive1.Name, vaultS3FileArchive1);
             directorySetting.SyncPairs.Add(zteCAS.Name, zteCAS);
+            directorySetting.SyncPairs.Add(zteSummitFtp.Name, zteSummitFtp);
 
             //add archive locations to CdrSettings
             this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
             {
                 //vaultS3FileArchive1.Name,
-                zteCAS.Name
+                zteCAS.Name,
+                zteSummitFtp.Name
             };
         }
     }
