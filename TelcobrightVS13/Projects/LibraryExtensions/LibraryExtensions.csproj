@@ -101,6 +101,7 @@
     <Compile Include="LargeList.cs" />
     <Compile Include="MathAndDS\FractionCeilingHelper.cs" />
     <Compile Include="MathAndDS\Trie.cs" />
+    <Compile Include="MathAndDS\TrieDataType.cs" />
     <Compile Include="MathAndDS\TrieHelper.cs" />
     <Compile Include="MySqlFieldToString.cs" />
     <Compile Include="ConfigHelper\PartitionManagerPerTable.cs" />
