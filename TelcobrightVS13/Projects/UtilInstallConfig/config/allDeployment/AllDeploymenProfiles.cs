@@ -125,6 +125,19 @@ namespace InstallConfig
                             }
                         }
                     },
+                    new Deploymentprofile
+                    {
+                        profileName = "summit2",
+                        type = DeploymentProfileType.TelcoBilling,
+                        instances = new List<InstanceConfig>
+                        {
+                            new InstanceConfig
+                            {
+                                name = "summit2",
+                                SchedulerPortNo = 572
+                            },
+                        }
+                    },
                 };
             var tcpPortWisecount = allProfiles.SelectMany(p => p.instances.Select(i => i.SchedulerPortNo))
                 .GroupBy(portNo => portNo)

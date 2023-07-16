@@ -53,6 +53,8 @@ namespace InstallConfig._generator
 
             this.Context.Database.ExecuteSqlCommand("delete from ne;");
             this.Context.Database.ExecuteSqlCommand("delete from telcobrightpartner;");
+            this.Context.Database.ExecuteSqlCommand("delete from ne;");
+            this.Context.Database.ExecuteSqlCommand("delete from telcobrightpartner;");
 
             this.Context.telcobrightpartners.AddRange(partners);
 

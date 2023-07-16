@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_00Mediation", "Mediation\_00Mediation.csproj", "{1A64E6F9-903C-416C-B322-1B5C5D997001}"
 EndProject
@@ -108,6 +108,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01_Infra", "01_Infra", "{DEEA860A-E8E4-43B0-8C26-BF3D553A808F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tester", "Tester\Tester.csproj", "{8D7AE4E9-F542-4D4F-818A-BE2CD7CC5593}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "casPortal", "PortalCas\casPortal.csproj", "{ED90AD37-127B-4730-8798-D9EB44DBF04C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -786,6 +788,22 @@ Global
 		{8D7AE4E9-F542-4D4F-818A-BE2CD7CC5593}.Release|x64.Build.0 = Release|Any CPU
 		{8D7AE4E9-F542-4D4F-818A-BE2CD7CC5593}.Release|x86.ActiveCfg = Release|Any CPU
 		{8D7AE4E9-F542-4D4F-818A-BE2CD7CC5593}.Release|x86.Build.0 = Release|Any CPU
+		{ED90AD37-127B-4730-8798-D9EB44DBF04C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED90AD37-127B-4730-8798-D9EB44DBF04C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED90AD37-127B-4730-8798-D9EB44DBF04C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{ED90AD37-127B-4730-8798-D9EB44DBF04C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{ED90AD37-127B-4730-8798-D9EB44DBF04C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{ED90AD37-127B-4730-8798-D9EB44DBF04C}.Debug|x64.Build.0 = Debug|Any CPU
+		{ED90AD37-127B-4730-8798-D9EB44DBF04C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{ED90AD37-127B-4730-8798-D9EB44DBF04C}.Debug|x86.Build.0 = Debug|Any CPU
+		{ED90AD37-127B-4730-8798-D9EB44DBF04C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED90AD37-127B-4730-8798-D9EB44DBF04C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED90AD37-127B-4730-8798-D9EB44DBF04C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{ED90AD37-127B-4730-8798-D9EB44DBF04C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{ED90AD37-127B-4730-8798-D9EB44DBF04C}.Release|x64.ActiveCfg = Release|Any CPU
+		{ED90AD37-127B-4730-8798-D9EB44DBF04C}.Release|x64.Build.0 = Release|Any CPU
+		{ED90AD37-127B-4730-8798-D9EB44DBF04C}.Release|x86.ActiveCfg = Release|Any CPU
+		{ED90AD37-127B-4730-8798-D9EB44DBF04C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -829,5 +847,6 @@ Global
 		{CB76CFD6-1D41-4AF5-9112-66647A5F20B7} = {F300A5B7-26F3-4D3E-9EF5-33EBE722C289}
 		{FF350C55-2852-406C-930B-AE2938CCEB91} = {DEEA860A-E8E4-43B0-8C26-BF3D553A808F}
 		{8D7AE4E9-F542-4D4F-818A-BE2CD7CC5593} = {F2EBE54E-32B0-4FA9-8B7C-9C2502DC5F7C}
+		{ED90AD37-127B-4730-8798-D9EB44DBF04C} = {F300A5B7-26F3-4D3E-9EF5-33EBE722C289}
 	EndGlobalSection
 EndGlobal
