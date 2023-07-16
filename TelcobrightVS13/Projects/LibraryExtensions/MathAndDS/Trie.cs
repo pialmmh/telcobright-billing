@@ -9,7 +9,7 @@ namespace LibraryExtensions
     {
         private char RootChar { get; }
         private char Path { get; }
-        private string FullPath { get; }
+        public string FullPath { get; }
         private Trie root { get; }
         private Dictionary<char, Trie> Children { get; } = new Dictionary<char, Trie>();
 
@@ -21,7 +21,7 @@ namespace LibraryExtensions
             Trie t = Trie.findBestMatch(this.root, queryAsArr);
             return t;
         }
-        public Trie(List<string> data, char rootChar)//constructor
+        public Trie(IEnumerable<string> data, char rootChar)//constructor
         {
             this.root = new Trie(rootChar, null);
             this.RootChar = rootChar;

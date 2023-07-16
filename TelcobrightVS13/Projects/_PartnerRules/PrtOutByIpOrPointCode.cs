@@ -20,27 +20,39 @@ namespace PartnerRules
         public int Id => 6;
         public int Execute(cdr thisCdr, MefPartnerRulesContainer data)
         {
-            Dictionary<string,partner> partners= data.MediationContext.Partners.Values.ToDictionary(p=>p.idPartner.ToString());
+            Dictionary<string, partner> partners = data.MediationContext.Partners.Values.ToDictionary(p => p.idPartner.ToString());
             Dictionary<string, ipaddressorpointcode> ipOrPcs = data.MediationContext.IpAddressorPointCodes;
+            Trie ipOrPcTrie = data.MediationContext.IpAddressOrPointCodeTrie;
+            //var key = new ValueTuple<int,string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
 
             int? pc = thisCdr.DPC;
+            Trie bestMatch = null;
             partner partner = null;
-            if (pc!=null && pc > 0) //pointcode
+            Func<string, partner> getPartnerByTrieMatch = query =>
             {
-                partner = partners[pc.ToString()];
+                bestMatch = ipOrPcTrie.findBestMatch(query.ToString());
+                ipaddressorpointcode ipAddrOrPc = null;
+                ipOrPcs.TryGetValue(bestMatch.FullPath, out ipAddrOrPc);
+                int idPartner = ipAddrOrPc.idPartner;
+                partner = partners[idPartner.ToString()];
+                return partner;
+            };
+            if (pc != null && pc > 0) //pointcode
+            {
+                partner = getPartnerByTrieMatch(pc.ToString());
             }
             if (partner != null)
             {
                 string ipAddr = thisCdr.TerminatingIP;
                 if (!ipAddr.IsNullOrEmptyOrWhiteSpace() && ipAddr.Contains("."))
                 {
-                    partner = partners[ipAddr.ToString()];
+                    partner = getPartnerByTrieMatch(pc.ToString());
                 }
             }
-            
-            if (partner!= null)
+
+            if (partner != null)
             {
-                thisCdr.OutPartnerId= partner.idPartner;
+                thisCdr.OutPartnerId = partner.idPartner;
                 return partner.idPartner;
             }
             thisCdr.OutPartnerId = 0;

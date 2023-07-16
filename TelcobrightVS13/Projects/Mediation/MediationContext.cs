@@ -22,7 +22,7 @@ namespace TelcobrightMediation
         public CdrSetting CdrSetting => this.Tbc.CdrSetting;
         public PartnerEntities Context { get; }
         public AutoIncrementManager AutoIncrementManager { get; }
-        private AutomationContainer AutomationContainer { get; }= new AutomationContainer();
+        private AutomationContainer AutomationContainer { get; } = new AutomationContainer();
         public MefDecoderContainer MefDecoderContainer { get; set; }
         public MefServiceGroupsContainer MefServiceGroupContainer = new MefServiceGroupsContainer();
         public MefPartnerRulesContainer MefPartnerRuleContainer = new MefPartnerRulesContainer();
@@ -31,21 +31,24 @@ namespace TelcobrightMediation
         public MefValidator<string[]> InconsistentCdrCheckListValidator { get; private set; }
         public MefValidator<cdr> CommonMediationCheckListValidator { get; private set; }
         public MefServiceFamilyContainer MefServiceFamilyContainer { get; }
-        public MefExceptionalCdrPreProcessorContainer MefExceptionalCdrPreProcessorContainer = 
+        public MefExceptionalCdrPreProcessorContainer MefExceptionalCdrPreProcessorContainer =
             new MefExceptionalCdrPreProcessorContainer();
         public Dictionary<string, enumbillingspan> BillingSpans { get; }
-        public Dictionary<ValueTuple<int,string>, route> Routes { get; }
+        public Dictionary<ValueTuple<int, string>, route> Routes { get; }
         public Dictionary<ValueTuple<int, string>, bridgedroute> BridgedRoutes { get; }
-        public List<ansprefixextra> LstAnsPrefixExtra{get;private set;} //required for failed intl in calls where term number might be missing
+        public List<ansprefixextra> LstAnsPrefixExtra { get; private set; } //required for failed intl in calls where term number might be missing
         public Dictionary<string, partnerprefix>
-            DictAnsOrig { get; private set; } //ANSTermprefix partner dictionary with AnsPrefix as Key
+            DictAnsOrig
+        { get; private set; } //ANSTermprefix partner dictionary with AnsPrefix as Key
         public Dictionary<int, cdrfieldlist> CdrFieldLists { get; private set; }
         public Dictionary<int, Dictionary<int, ServiceGroupConfiguration>>
-            ServiceGroupConfigurations { get; } //<switchid,dic<servicegroupID,medruleassignment>>
+            ServiceGroupConfigurations
+        { get; } //<switchid,dic<servicegroupID,medruleassignment>>
         public Dictionary<int, SwitchWiseLookup> SwitchWiseLookups { get; }
         public Dictionary<string, ne> Nes { get; } //load only nes for corresponding telcobright partner
-        public Dictionary<int,partner> Partners { get; }
+        public Dictionary<int, partner> Partners { get; }
         public Dictionary<string, ipaddressorpointcode> IpAddressorPointCodes { get; }
+        public Trie IpAddressOrPointCodeTrie { get; }
 
         public MediationContext(TelcobrightConfig tbc, PartnerEntities context)
         {
@@ -53,18 +56,18 @@ namespace TelcobrightMediation
             this.Tbc = tbc;
             this.Context = context;
             this.AutoIncrementManager = new AutoIncrementManager(
-                counter=>(int)AutoIncrementTypeDictionary.EnumTypes[counter.tableName],
-                counter=>counter.GetExtInsertValues(),
-                counter=>counter.GetUpdateCommand(
-                    c=>$@" where tableName='{AutoIncrementTypeDictionary.EnumTypes[counter.tableName]}'"),
-                null, this.Context.Database.Connection.CreateCommand(),this.CdrSetting.SegmentSizeForDbWrite);
+                counter => (int)AutoIncrementTypeDictionary.EnumTypes[counter.tableName],
+                counter => counter.GetExtInsertValues(),
+                counter => counter.GetUpdateCommand(
+                    c => $@" where tableName='{AutoIncrementTypeDictionary.EnumTypes[counter.tableName]}'"),
+                null, this.Context.Database.Connection.CreateCommand(), this.CdrSetting.SegmentSizeForDbWrite);
             this.AutoIncrementManager.PopulateCache(() => context.autoincrementcounters
             .ToDictionary(c => (int)AutoIncrementTypeDictionary.EnumTypes[c.tableName]));
 
             this.MefDecoderContainer = new MefDecoderContainer(this.Context);
             this.MefServiceFamilyContainer = new MefServiceFamilyContainer();
             this.Partners = context.partners.ToDictionary(c => c.idPartner);
-            this.Nes = context.nes.Include(n=>n.telcobrightpartner)
+            this.Nes = context.nes.Include(n => n.telcobrightpartner)
                 .Where(n => n.telcobrightpartner.databasename == tbc.DatabaseSetting.DatabaseName)
                 .ToDictionary(c => c.idSwitch.ToString());
             this.SwitchWiseLookups = new Dictionary<int, SwitchWiseLookup>();
@@ -78,11 +81,14 @@ namespace TelcobrightMediation
                 this.MefServiceGroupContainer.IpAddressOrPointCodes = this.IpAddressorPointCodes;
             }
             this.BillingSpans = context.enumbillingspans.ToDictionary(c => c.ofbiz_uom_Id); //route data
-            this.Routes = context.routes.Include(r=>r.partner)
-                .ToDictionary(r => new ValueTuple<int,string>(r.SwitchId,r.RouteName));
-            //this.IpAddressorPointCodes = context.Database.SqlQuery<ipaddressorpointcode>("select * from ipaddressorpointcode")
-              //  .ToDictionary(e=>e.RouteName);
-            this.BridgedRoutes = context.bridgedroutes.Include(r => r.partner).Include(r=>r.partner1)
+            this.Routes = context.routes.Include(r => r.partner)
+                .ToDictionary(r => new ValueTuple<int, string>(r.SwitchId, r.RouteName));
+            this.IpAddressorPointCodes = context.Database
+                .SqlQuery<ipaddressorpointcode>("select routename from ipaddressorpointcode")
+                .ToDictionary(entity => entity.RouteName);
+            this.IpAddressOrPointCodeTrie = new Trie(this.IpAddressorPointCodes.Keys,
+                this.Tbc.DefaultRootCharForTrie);
+            this.BridgedRoutes = context.bridgedroutes.Include(r => r.partner).Include(r => r.partner1)
                 .ToDictionary(r => new ValueTuple<int, string>(r.switchId, r.routeName));
             this.DictAnsOrig = new Dictionary<string, partnerprefix>();
             this.DictAnsOrig = PopulateANSPrefix();
@@ -96,7 +102,7 @@ namespace TelcobrightMediation
                 DicRateplans = context.rateplans.ToDictionary(c => c.id),
                 BillingRules = context.jsonbillingrules.ToList()
                     .Select(c => JsonBillingRuleToBillingRuleConverter.Convert(c)).ToDictionary(c => c.Id),
-                Partners = this.Partners.Values.ToDictionary(p=>p.idPartner.ToString()),
+                Partners = this.Partners.Values.ToDictionary(p => p.idPartner.ToString()),
                 IpAddressOrPointCodes = this.IpAddressorPointCodes
             };
             this.MefServiceFamilyContainer.PopulateCachedUsdBcs(this.Context);
@@ -112,7 +118,7 @@ namespace TelcobrightMediation
                 this.Routes; //assign the route dic to servicegroupdata
 
             //assign the route dic to servicegroupdata
-            DateRange dRange = new DateRange() {StartDate = DateTime.Today, EndDate = DateTime.Today.AddDays(1)};
+            DateRange dRange = new DateRange() { StartDate = DateTime.Today, EndDate = DateTime.Today.AddDays(1) };
             this.MefServiceFamilyContainer.RateCache =
                 new RateCache(
                     context.telcobrightpartners.First(c => c.databasename == this.Tbc.Telcobrightpartner.databasename)
@@ -167,7 +173,7 @@ namespace TelcobrightMediation
             foreach (var ext in this.MefDecoderContainer.CmpDecoder.Decoders)
                 this.MefDecoderContainer.DicExtensions.Add(ext.Id, ext);
             this.MefServiceGroupContainer.CmpServiceGroupPre.Compose();
-            foreach (var serviceGroupPreProcessor 
+            foreach (var serviceGroupPreProcessor
                 in this.MefServiceGroupContainer.CmpServiceGroupPre.ServiceGroupPreProcessors)
             {
                 this.MefServiceGroupContainer.ServiceGroupPreProcessors.Add(serviceGroupPreProcessor.Id,
@@ -200,7 +206,7 @@ namespace TelcobrightMediation
                                 cdrRules.Add(cdrRule);
                             });
                     }
-                    additionalParams?.Add("cdrRules",cdrRules);
+                    additionalParams?.Add("cdrRules", cdrRules);
                     serviceGroup.SetAdditionalParams(additionalParams);
                 }
 
@@ -224,15 +230,16 @@ namespace TelcobrightMediation
             this.MefNerRulesContainer.NerComposer.Compose();
             foreach (var ext in this.MefNerRulesContainer.NerComposer.NerRules)
                 this.MefNerRulesContainer.DicExtensions.Add(ext.RuleName, ext);
-            DigitRuleComposer digitRuleComposer=new DigitRuleComposer();
+            DigitRuleComposer digitRuleComposer = new DigitRuleComposer();
             digitRuleComposer.Compose();
             this.MefServiceFamilyContainer.DigitRules = digitRuleComposer.DigitRules.ToDictionary(r => r.Id);
             this.MefExceptionalCdrPreProcessorContainer.composer.Compose();
-            foreach(var ext in this.MefExceptionalCdrPreProcessorContainer.composer.ExceptionalCdrPreProcessors) {
+            foreach (var ext in this.MefExceptionalCdrPreProcessorContainer.composer.ExceptionalCdrPreProcessors)
+            {
                 ext.Prepare(this);
                 this.MefExceptionalCdrPreProcessorContainer.DicExtensions.Add(ext.RuleName, ext);
             }
-            
+
         }
 
         private void CreateServiceGroupWiseValidatorInstances()
@@ -257,7 +264,7 @@ namespace TelcobrightMediation
         {
             var mefValidator = new MefValidator<T>(continueOnError: false,
                                 throwExceptionOnFirstError: false,
-                                rules:rules);
+                                rules: rules);
             return mefValidator;
         }
         private void CreateTemporaryTables()
@@ -273,7 +280,7 @@ namespace TelcobrightMediation
             cmd.CommandText = $@"create temporary table temp_sql_statement(
                                         id int primary key auto_increment,
                                         statement text not null) engine={engine};";
-            
+
             cmd.ExecuteNonQuery();
             DropAndCreateTempRateTable(cmd);
         }
