@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LibraryExtensions;
 
-namespace TelcobrightMediation.Accounting
+namespace LibraryExtensions
 {
     public class FractionCeilingHelper
     {
