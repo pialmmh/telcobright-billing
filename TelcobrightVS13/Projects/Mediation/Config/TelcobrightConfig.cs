@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using LibraryExtensions.ConfigHelper;
@@ -16,10 +17,11 @@ namespace TelcobrightMediation
         public int TcpPortNoForRemoteScheduler { get; set; }
         public telcobrightpartner Telcobrightpartner { get; set; }
         public List<ne> Nes { get; set; }
+        public char DefaultRootCharForTrie { get; set; } = Convert.ToChar(191);//¿
         public int DefaultTimeZoneId { get; set; } = 3251;
-        public TelecomOperatortype TelecomOperatortype { get;}
+        public TelecomOperatortype TelecomOperatortype { get; }
         public List<QuartzTbDaemonConfig> SchedulerDaemonConfigs { get; set; }
-        public ResourcePool ResourcePool{ get; set; }
+        public ResourcePool ResourcePool { get; set; }
         public SimpleCacheSettings SimpleCacheSettings { get; set; }
         public CdrSetting CdrSetting { get; set; }
         public AutomationSetting AutomationSetting { get; set; }
@@ -28,7 +30,7 @@ namespace TelcobrightMediation
         public DatabaseSetting DatabaseSetting { get; set; } = new DatabaseSetting();
         public PortalSettings PortalSettings { get; set; }
         public List<Server> ApplicationServersConfig { get; set; }//server id as string
-        public Dictionary<int,AutomatedNetworkElementCli> AutomatedNetworkElementClis { get; set; }
+        public Dictionary<int, AutomatedNetworkElementCli> AutomatedNetworkElementClis { get; set; }
         public EmailSenderConfig EmailSenderConfig { get; set; }
         public SmsSenderConfig SmsSenderConfig { get; set; }
         public TelcobrightConfig() { }//required by some non cdr process e.g. directorySYnc

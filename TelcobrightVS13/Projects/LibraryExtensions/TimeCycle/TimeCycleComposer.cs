@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
-using TelcobrightMediation.Accounting;
 
 namespace LibraryExtensions.TimeCycle
 {

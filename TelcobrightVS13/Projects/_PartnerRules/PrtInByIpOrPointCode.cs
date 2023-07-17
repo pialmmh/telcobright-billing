@@ -22,20 +22,31 @@ namespace PartnerRules
         {
             Dictionary<string,partner> partners= data.MediationContext.Partners.Values.ToDictionary(p=>p.idPartner.ToString());
             Dictionary<string, ipaddressorpointcode> ipOrPcs = data.MediationContext.IpAddressorPointCodes;
+            Trie ipOrPcTrie = data.MediationContext.IpAddressOrPointCodeTrie;
             //var key = new ValueTuple<int,string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
 
             int? pc = thisCdr.OPC;
+            Trie bestMatch = null;
             partner partner = null;
+            Func<string, partner> getPartnerByTrieMatch = query =>
+            {
+                bestMatch = ipOrPcTrie.findBestMatch(query.ToString());
+                ipaddressorpointcode ipAddrOrPc = null;
+                ipOrPcs.TryGetValue(bestMatch.FullPath, out ipAddrOrPc);
+                int idPartner = ipAddrOrPc.idPartner;
+                partner = partners[idPartner.ToString()];
+                return partner;
+            };
             if (pc!=null && pc > 0) //pointcode
             {
-                partner = partners[pc.ToString()];
+                partner = getPartnerByTrieMatch(pc.ToString());
             }
             if (partner != null)
             {
                 string ipAddr = thisCdr.OriginatingIP;
                 if (!ipAddr.IsNullOrEmptyOrWhiteSpace() && ipAddr.Contains("."))
                 {
-                    partner = partners[ipAddr.ToString()];
+                    partner = getPartnerByTrieMatch(pc.ToString());
                 }
             }
             
