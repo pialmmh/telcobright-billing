@@ -11,7 +11,7 @@ using TelcobrightMediation;
 using Newtonsoft.Json;
 namespace PortalApp.config
 {
-    public partial class PrepareReport : System.Web.UI.Page
+    public partial class PrepareReportForMultipleSections : System.Web.UI.Page
     {
         private static TelcobrightConfig Tbc { get; set; }
         private static Dictionary<string, IInvoiceTemplate> invoiceTemplates { get; set; }
@@ -20,6 +20,7 @@ namespace PortalApp.config
         {
             var reportName = Request.QueryString["reportName"];
             var invoiceId = Request.QueryString["invoiceId"];
+            var templetNamesCommaSeparated = Request.QueryString["templetNamesCommaSeparated"];
             if (reportName != null)
             {
                 using (PartnerEntities context = new PartnerEntities())
@@ -72,7 +73,6 @@ namespace PortalApp.config
                     else
                     {
                         template.GenerateInvoice(invoice);
-                        //template.SaveToPdf(@"C:\temp\abcd.pdf");
                     }
                     this.Session[refNo] = template;
                     Response.Redirect("~/config/ViewReport.aspx?refNo=" + HttpUtility.UrlEncode(refNo), false);

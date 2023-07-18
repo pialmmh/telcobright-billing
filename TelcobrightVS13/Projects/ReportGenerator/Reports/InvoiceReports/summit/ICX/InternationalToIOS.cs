@@ -68,7 +68,7 @@ namespace TelcobrightMediation.Reports.InvoiceReports.summit.ICX
             #region Report Footer
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
             xrLabelAmountInwords.Text = textInfo.ToTitleCase(CurrencyHelper.NumberToTakaWords(Convert.ToDouble(subTotalAmount)));
-            xrLabelConversionRate.Text = string.Format("As per Sonali Bank Rate (1USD = BDT {0:n2}) as on {1:dd-MMM-yyyy}", invoiceMap["usdRate"], invoiceMap["endDate"]);
+            xrLabelConversionRate.Text = string.Format("As per Sonali Bank Rate (1USD = BDT {0:n2})", invoiceMap["usdRate"]);
             #endregion
         }
 

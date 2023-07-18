@@ -16,10 +16,13 @@ namespace TelcobrightMediation.Reports.InvoiceReports.summit.ICX
     {
         public string TemplateName => TemplateNameHelper.GetTemplateName(GetType());
 
+        private static int currentInvoiceNumber = 1000;
+
 
         public DomesticToANS()
         {
             InitializeComponent();
+            
         }
         
         public void SaveToPdf(string fileName)
@@ -62,6 +65,9 @@ namespace TelcobrightMediation.Reports.InvoiceReports.summit.ICX
             this.DataSource = invoiceBasicDatas;
             //this.DataSource = mergeInvoiceBasicDatas;
 
+            string invoiceNumber = $"{currentInvoiceNumber}-{DateTime.Now.AddMonths(-1).ToString("MMM-yyyy")}";
+            currentInvoiceNumber++;
+
             #region Page Header
             //xrLabelVatRegNo.Text = "BIN: 001285404-0208";
             xrLabelPartnerName.Text = invoiceMap["companyName"];
@@ -73,7 +79,8 @@ namespace TelcobrightMediation.Reports.InvoiceReports.summit.ICX
             DateTime endDate = DateTime.ParseExact(invoiceMap["billingEndDate"], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
             xrLabelBillingPeriod.Text = $@"from {startDate.ToString("dd-MMM-yyyy")} to {endDate.ToString("dd-MMM-yyyy")}";
             xrLabelInvoiceDate.Text = string.Format("{0:dd-MMM-yyyy}", invoice.INVOICE_DATE);
-            xrLabelInvoiceNo.Text = invoice.REFERENCE_NUMBER;
+            //xrLabelInvoiceNo.Text = invoice.REFERENCE_NUMBER;
+            xrLabelInvoiceNo.Text = invoiceNumber;
             //xrLabelInvoiceDueDate.Text = string.Format("{0:dd-MMM-yyyy}", invoice.DUE_DATE);
             xrLabelCurrency.Text = invoiceMap["uom"];
             xrLabelTimeZone.Text = invoiceMap["timeZone"];

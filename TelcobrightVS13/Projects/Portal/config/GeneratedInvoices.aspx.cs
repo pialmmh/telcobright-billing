@@ -109,7 +109,22 @@ namespace PortalApp.config
                     }
                     else lblDueDate.Text = string.Empty;
 
+
+                    LinkButton lbAll = new LinkButton();
+                    lbAll.ID = "btnViewSectionAll";
+                    lbAll.Text = "All";
+                    //lbAll.CommandName = item.Key;
+                    //lb.Click += ViewReportOnClick;
+                    //lb.OnClientClick = "window.open('PrepareReport.aspx?reportName=" + HttpUtility.HtmlDecode(item.Key) + "&invoiceId=" + DataBinder.Eval(e.Row.DataItem, "INVOICE_ID") + "'); return false;";
+                    e.Row.Cells[8].Controls.Add(lbAll);
+
+                    Label lb10 = new Label();
+                    lb10.Text = " ";
+                    e.Row.Cells[8].Controls.Add(lb10);
+
                     int sectionNumber = 0;
+
+
                     foreach (KeyValuePair<string, string> item in sectionData)
                     {
                         sectionNumber += 1;
@@ -158,7 +173,7 @@ namespace PortalApp.config
                 invoice invoice = context.invoices.First(x => x.INVOICE_ID == INVOICE_ID);
                 hfInvoiceId.Value = invoice.INVOICE_ID.ToString();
                 LabelDESCRIPTION.Text = invoice.DESCRIPTION;
-                TextBoxReferenceNumber.Text = invoice.REFERENCE_NUMBER;
+                TextBoxReferenceNumber.Text = invoice.REFERENCE_NUMBER; 
                 if (invoice.INVOICE_DATE != null)
                     TextBoxInvoiceDate.Text = ((DateTime)invoice.INVOICE_DATE).ToString("yyyy-MM-dd");
                 if (invoice.DUE_DATE != null)

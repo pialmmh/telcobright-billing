@@ -20,13 +20,13 @@ namespace TelcobrightInfra
         {
             return
                 $"server={databaseSetting.ServerName};Pipe={databaseSetting.SocketNameForNamedPipeConnection};Protocol=pipe;Host=.;User Id={databaseSetting.AdminUserName};password={databaseSetting.AdminPassword};" +
-                $"Persist Security Info=True; default command timeout=3600;";
+                $"Persist Security Info=True; default command timeout=21600;";//6 hour
         }
         public static string getDbConStrWithoutDatabase(DatabaseSetting databaseSetting)
         {
             return
                 $"server={databaseSetting.ServerName};User Id={databaseSetting.AdminUserName};password={databaseSetting.AdminPassword};" +
-                $"Persist Security Info=True; default command timeout=3600;";
+                $"Persist Security Info=True; default command timeout=21600;";
         }
 
         public static string getDbConStrWithDatabase(DatabaseSetting databaseSetting)

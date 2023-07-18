@@ -14,6 +14,7 @@ namespace TelcobrightMediation.Reports.InvoiceReports.summit.ICX
     public partial class InternationalOutgoingToANS : DevExpress.XtraReports.UI.XtraReport, IInvoiceTemplate
     {
         public string TemplateName => TemplateNameHelper.GetTemplateName(GetType());
+        private static int currentInvoiceNumber = 2000;
 
         public InternationalOutgoingToANS()
         {
@@ -33,6 +34,9 @@ namespace TelcobrightMediation.Reports.InvoiceReports.summit.ICX
             Dictionary<string, string> invoiceMap = JsonConvert.DeserializeObject<Dictionary<string, string>>(invoiceItem.JSON_DETAIL);
             this.DataSource = invoiceBasicDatas;
 
+            string invoiceNumber = $"{currentInvoiceNumber}-{DateTime.Now.AddMonths(-1).ToString("MMM-yyyy")}";
+            currentInvoiceNumber++;
+
             #region Page Header
             //xrLabelVatRegNo.Text = "BIN: 001285404-0208";
             xrLabelPartnerName.Text = invoiceMap["companyName"];
@@ -45,7 +49,8 @@ namespace TelcobrightMediation.Reports.InvoiceReports.summit.ICX
             xrLabelBillingPeriod.Text = $@"from {startDate.ToString("dd-MMM-yyyy")} to {endDate.ToString("dd-MMM-yyyy")}";
             xrLabelInvoiceDate.Text = string.Format("{0:dd-MMM-yyyy}", invoice.INVOICE_DATE);
             //xrLabelInvoiceDueDate.Text = string.Format("{0:dd-MMM-yyyy}", invoice.DUE_DATE);
-            xrLabelInvoiceNo.Text = invoice.REFERENCE_NUMBER;
+            //xrLabelInvoiceNo.Text = invoice.REFERENCE_NUMBER;
+            xrLabelInvoiceNo.Text = invoiceNumber;
             xrLabelCurrency.Text = invoiceMap["uom"];
             xrLabelTimeZone.Text = invoiceMap["timeZone"];
             #endregion
@@ -88,9 +93,11 @@ namespace TelcobrightMediation.Reports.InvoiceReports.summit.ICX
             }
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
             xrLabelAmountInwords.Text = textInfo.ToTitleCase(CurrencyHelper.NumberToTakaWords(Convert.ToDouble(invTotalAmount)));
-            xrLabelConversionRate.Text = string.Format("As per Sonali Bank Rate (1USD = BDT {0:n2}) as on {1:dd-MMM-yyyy}", invoiceMap["usdRate"], invoiceMap["endDate"]);
+            xrLabelConversionRate.Text = string.Format("As per Sonali Bank Rate (1USD = BDT {0:n2})", invoiceMap["usdRate"]);
+                //as on { 1:dd - MMM - yyyy}
+            //invoiceMap["endDate"]
             #endregion
-            
+
         }
 
         private List<InvoiceSectionDataRowForA2ZVoice> GetReportData(invoice invoice)

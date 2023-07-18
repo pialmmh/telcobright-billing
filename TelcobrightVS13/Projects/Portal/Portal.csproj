@@ -459,6 +459,7 @@
     <Content Include="config\AddPayment.aspx" />
     <Content Include="config\PaymentManagement.aspx" />
     <Content Include="config\ConversionRates.aspx" />
+    <Content Include="config\PrepareReportForMultipleSections.aspx" />
     <Content Include="config\PrepareReport.aspx" />
     <Content Include="config\ViewPDF.aspx" />
     <Content Include="config\ViewReport.aspx" />
@@ -811,6 +812,13 @@
     </Compile>
     <Compile Include="config\ConversionRates.aspx.designer.cs">
       <DependentUpon>ConversionRates.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="config\PrepareReportForMultipleSections.aspx.cs">
+      <DependentUpon>PrepareReportForMultipleSections.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="config\PrepareReportForMultipleSections.aspx.designer.cs">
+      <DependentUpon>PrepareReportForMultipleSections.aspx</DependentUpon>
     </Compile>
     <Compile Include="config\PrepareReport.aspx.cs">
       <DependentUpon>PrepareReport.aspx</DependentUpon>
