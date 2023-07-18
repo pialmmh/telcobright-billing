@@ -27,14 +27,17 @@ namespace InstallConfig._generator
         public ConfigPathHelper ConfigPathHelper { get; }
         private PartnerEntities Context { get; }
         private MySqlConnection Con { get; }
+        private MySqlCommand Cmd { get; set; }
 
         public DbWriterForConfig(TelcobrightConfig tbc, ConfigPathHelper configPathHelper,
             PartnerEntities context, MySqlConnection con)
         {
-            Tbc = tbc;
-            Context = context;
-            Con = con;
-            ConfigPathHelper = configPathHelper;
+            this.Tbc = tbc;
+            this.Context = context;
+            this.Con = con;
+            if (this.Con.State != ConnectionState.Open) this.Con.Open();
+            this.ConfigPathHelper = configPathHelper;
+            this.Cmd = new MySqlCommand("", this.Con);
         }
 
         public void WriteTelcobrightPartnerAndNes()
@@ -48,27 +51,35 @@ namespace InstallConfig._generator
 
             List<ne> nes = this.Tbc.Nes;
             nes.Insert(0, DummySwitch.getDummyNe());
+            executeQuery("SET FOREIGN_KEY_CHECKS = 0;");
 
-            this.Context.Database.ExecuteSqlCommand("SET FOREIGN_KEY_CHECKS = 0;");
+            executeQuery("ALTER TABLE ne DISABLE KEYS;");
+            executeQuery("ALTER TABLE telcobrightpartner DISABLE KEYS;");
 
-            this.Context.Database.ExecuteSqlCommand("delete from ne;");
-            this.Context.Database.ExecuteSqlCommand("delete from telcobrightpartner;");
-            this.Context.Database.ExecuteSqlCommand("delete from ne;");
-            this.Context.Database.ExecuteSqlCommand("delete from telcobrightpartner;");
+            executeQuery("delete from ne;");
+            executeQuery("delete from telcobrightpartner;");
 
             this.Context.telcobrightpartners.AddRange(partners);
 
-            this.Context.Database.ExecuteSqlCommand("insert into telcobrightpartner values " +
+            executeQuery("insert into telcobrightpartner values " +
                                                     string.Join(",", partners.Select(p => p.GetExtInsertValues())));
-            this.Context.Database.ExecuteSqlCommand(
-                "update telcobrightpartner set idCustomer=0 where CustomerName = 'Dummy'");
-            this.Context.Database.ExecuteSqlCommand("insert into ne values " +
-                                                    string.Join(",", nes.Select(p => p.GetExtInsertValues())));
-            this.Context.Database.ExecuteSqlCommand("update ne set idSwitch=0 where SwitchName = 'dummy'");
+            executeQuery("update telcobrightpartner set idCustomer=0 where CustomerName = 'Dummy'");
+            executeQuery("insert into ne values " +
+                         string.Join(",", nes.Select(p => p.GetExtInsertValues())));
+            executeQuery("update ne set idSwitch=0 where SwitchName = 'dummy'");
 
-            this.Context.Database.ExecuteSqlCommand("SET FOREIGN_KEY_CHECKS = 1;");
+            executeQuery("SET FOREIGN_KEY_CHECKS = 1;");
+            executeQuery("ALTER TABLE ne DISABLE KEYS;");
+            executeQuery("ALTER TABLE telcobrightpartner DISABLE KEYS;");
+
 
             Console.WriteLine("Finished Loading partner and nes for " + this.Tbc.Telcobrightpartner.databasename + ".");
+        }
+
+        private void executeQuery(string sql)
+        {
+            this.Cmd.CommandText = sql;
+            this.Cmd.ExecuteNonQuery();
         }
 
         public void LoadSeedDataSqlForTelcoBilling(SqlOperationType sqlOperationType)
@@ -98,7 +109,7 @@ namespace InstallConfig._generator
                 default:
                     throw new ArgumentOutOfRangeException(nameof(sqlOperationType), sqlOperationType, null);
             }
-            
+
 
             Console.WriteLine(msgBeforeOp);
             DirectoryInfo d = new DirectoryInfo(sqlDir);
@@ -113,14 +124,11 @@ namespace InstallConfig._generator
                     {
                         this.Con.Open();
                     }
-                    cmd.CommandText = "SET FOREIGN_KEY_CHECKS = 0;";
-                    cmd.ExecuteNonQuery();
+                    executeQuery("SET FOREIGN_KEY_CHECKS = 0;");
 
-                    cmd.CommandText = sql;
-                    cmd.ExecuteNonQuery();
+                    executeQuery(sql);
 
-                    cmd.CommandText = "SET FOREIGN_KEY_CHECKS = 1;";
-                    cmd.ExecuteNonQuery();
+                    executeQuery("SET FOREIGN_KEY_CHECKS = 1;");
                 }
             }
             Console.WriteLine(msgAfterOp);

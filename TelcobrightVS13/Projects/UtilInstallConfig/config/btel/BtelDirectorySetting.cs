@@ -21,7 +21,7 @@ namespace InstallConfig
     {
         public void PrepareDirectorySetting(TelcobrightConfig tbc)
         {
-            DirectorySettings directorySettings = new DirectorySettings("c:/telcobright");
+            DirectorySettings directorySettings = new DirectorySettings("c:/telcobright", "");
             tbc.DirectorySettings = directorySettings;
             //***FILE LOCATIONS**********************************************
             //local/vault1: all app servers will use same local file location

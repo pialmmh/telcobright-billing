@@ -102,7 +102,7 @@ namespace InstallConfig
 
 
             //database part
-            DirectorySettings directorySetting = new DirectorySettings("c:/Telcobright");
+            DirectorySettings directorySetting = new DirectorySettings("c:/Telcobright", "");
             this.Tbc.DirectorySettings = directorySetting;
 
             //***FILE LOCATIONS**********************************************

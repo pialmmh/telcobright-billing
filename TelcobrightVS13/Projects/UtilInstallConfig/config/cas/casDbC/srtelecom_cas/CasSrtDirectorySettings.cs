@@ -16,13 +16,12 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class CasSummitAbstractConfigGenerator //quartz config part
+    public partial class CasSrtAbstractConfigGenerator //quartz config part
     {
         private FileLocation vaultPrimary;
-        private FileLocation vaultDialogic;
-        private SyncPair huawei_Vault;
-        private SyncPair zteCAS;
-
+        private FileLocation vaultCataleya;
+        private SyncPair Huawei_Vault;
+        private SyncPair vaultCAS;
         public static Dictionary<string, string> SrtConfigHelperMap = new Dictionary<string, string>()
         {
             { "vaultName","vault"},
@@ -30,8 +29,7 @@ namespace InstallConfig
         };
         public void PrepareDirectorySettings(TelcobrightConfig tbc)
         {
-            DirectorySettings directorySetting = new DirectorySettings("Directory Settings");
-            
+            DirectorySettings directorySetting = new DirectorySettings("Directory Settings", @"cas\casDbC");
             tbc.DirectorySettings = directorySetting;
 
             //***FILE LOCATIONS**********************************************
@@ -44,19 +42,18 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "C:/telcobright/Vault/Resources/cdr/zte",
+                StartingPath = "C:/telcobright/vault/resources/cdr/srTelecom/tdm",
                 User = "",
                 Pass = "",
             };
-
-            this.vaultDialogic = new FileLocation()
+            this.vaultCataleya = new FileLocation()
             {
-                Name = "vaultDialogic",//this is refered in ne table, name MUST start with "Vault"
+                Name = "vaultCataleya",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "d:/telcobright/Vault/Resources/cdr/dialogic",
+                StartingPath = "C:/telcobright/vault/resources/cdr/srTelecom/ip",
                 User = "",
                 Pass = "",
             };
@@ -65,16 +62,20 @@ namespace InstallConfig
             {
                 Name = "huawei",
                 LocationType = "ftp",
-                OsType = "linux",
-                UseActiveModeForFTP = true,
+                OsType = "windows",
                 PathSeparator = "/",
-                StartingPath = "/home/zxss10_bsvr/data/bfile/bill/delete/delete_reve",
-                ServerIp = "10.33.34.12",
-                User = "icxreve",
-                Pass = "icxreve123",
-                //ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
-                IgnoreZeroLenghFile = 1,
-                FtpSessionCloseAndReOpeningtervalByFleTransferCount = 1000
+                StartingPath = "/",
+                //StartingPath = "/home/zxss10_bsvr/data/bfile/bill/zsmart_media_bak",
+                Sftphostkey = string.Empty,
+                //Sftphostkey = "ssh-rsa 2048 44:56:0b:fa:3a:79:c2:ee:1c:95:d9:05:b5:9b:56:4a",
+                ServerIp = "10.0.30.50",
+                User = "ftpuser",
+                Pass = "ftpuser",
+                //ServerIp = "192.168.0.105",
+                //User = "ftpuser",
+                //Pass = "Takay1takaane",
+                ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
+                IgnoreZeroLenghFile = 1
             };
 
             FileLocation fileArchive1 = new FileLocation()//raw cdr archive
@@ -97,20 +98,17 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"/",//backslash didn't work with winscp
                 StartingPath = @"/",
-                ServerIp = "192.168.100.185", //server = "172.16.16.242",
-                User = "adnvertx",
-                Pass = "vtxicx296#",
+                ServerIp = "192.168.100.161", //server = "172.16.16.242",
+                User = "adminsrt",
+                Pass = "srticx725",
                 IgnoreZeroLenghFile = 1
             };
 
             //add locations to directory settings
-            tbc.DirectorySettings.FileLocations.Add(vaultPrimary.Name, vaultPrimary);
-            tbc.DirectorySettings.FileLocations.Add(vaultDialogic.Name, vaultDialogic);
-            tbc.DirectorySettings.FileLocations.Add(huawei.Name, huawei);
-            tbc.DirectorySettings.FileLocations.Add(fileArchive1.Name, fileArchive1);
-            tbc.DirectorySettings.FileLocations.Add(fileArchiveCAS.Name, fileArchiveCAS);
+            tbc.DirectorySettings.FileLocations.Add(vaultCataleya.Name, vaultCataleya);
+            tbc.DirectorySettings.FileLocations.Add(vaultPrimary.Name,vaultPrimary);
 
-            this.huawei_Vault = new SyncPair("huawei:Vault")
+            this.Huawei_Vault = new SyncPair("Huawei:Vault")
             {
                 SkipSourceFileListing = false,
                 SrcSyncLocation = new SyncLocation()
@@ -126,10 +124,10 @@ namespace InstallConfig
                 {
                     SecondaryDirectory = "downloaded",
                     MoveFilesToSecondaryAfterCopy = false,
-                    Recursive = false,
-                    ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('ICX')
+                    Recursive = true,
+                    ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('SRT')
                                                                 and
-                                                                (Name.EndsWith('.DAT'))
+                                                                (Name.EndsWith('.dat'))
                                                                 and Length>0")
                 },
                 DstSettings = new SyncSettingsDest()
@@ -143,7 +141,7 @@ namespace InstallConfig
 
 
             //sync pair Vault_S3:FileArchive1
-            this.zteCAS = new SyncPair("zte:cas")
+            this.vaultCAS = new SyncPair("Vault:CAS")
             {
                 SkipCopyingToDestination = false,
                 SkipSourceFileListing = true,
@@ -169,15 +167,16 @@ namespace InstallConfig
             };
 
             //add sync pairs to directory config
-            directorySetting.SyncPairs.Add(huawei_Vault.Name, huawei_Vault);
+            directorySetting.SyncPairs.Add(Huawei_Vault.Name, Huawei_Vault);
             //directorySetting.SyncPairs.Add(vaultS3FileArchive1.Name, vaultS3FileArchive1);
-            directorySetting.SyncPairs.Add(zteCAS.Name, zteCAS);
+            directorySetting.SyncPairs.Add(vaultCAS.Name, vaultCAS);
 
+           
             //add archive locations to CdrSettings
             this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
             {
                 //vaultS3FileArchive1.Name,
-                zteCAS.Name
+                vaultCAS.Name
             };
         }
     }

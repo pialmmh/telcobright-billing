@@ -113,12 +113,14 @@ namespace InstallConfig
             }
             string operatorShortName = tbc.DatabaseSetting.DatabaseName;
             //write config to operator's folder in util directory
-            string targetDir = configPathHelper.GetOperatorWiseConfigDirInUtil(operatorShortName);
+            string configRoot = tbc.DirectorySettings.ConfigRoot;
+            string targetDir =
+                configPathHelper.GetOperatorWiseConfigDirInUtil(operatorShortName, configRoot);
             FileAndPathHelper.DeleteFileContaining(targetDir, "*.conf");
-            SerializeConfig(tbc, configPathHelper.GetOperatorWiseTargetFileNameInUtil(operatorShortName));
+            SerializeConfig(tbc, configPathHelper.GetOperatorWiseTargetFileNameInUtil(operatorShortName,configRoot));
             //write config for windows service
             targetDir = configPathHelper.GetTopShelfConfigDir();
-            SerializeConfig(tbc, configPathHelper.GetTemplateConfigFileName("telcobright.conf"),
+             SerializeConfig(tbc, configPathHelper.GetTemplateConfigFileName("telcobright.conf"),
                 eraseAllPrevFilesFromConfigDir: true);
             //write config for portal
             targetDir = configPathHelper.GetPortalBinPath();

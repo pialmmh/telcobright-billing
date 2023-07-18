@@ -18,13 +18,13 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class CasSummitAbstractConfigGenerator //quartz config part
+    public partial class CasSrtAbstractConfigGenerator //quartz config part
     {
         public override DatabaseSetting GetDatabaseConfigs()
         {
             var databaseSetting = new DatabaseSetting()
             {
-                ServerName = "10.255.201.102",
+                ServerName = "10.255.201.101",
                 DatabaseName = this.Tbc.Telcobrightpartner.databasename,
                 AdminPassword = "Takay1takaane",
                 AdminUserName = "fduser",
@@ -33,7 +33,8 @@ namespace InstallConfig
                 PartitionStartDate = new DateTime(2023, 1, 1),
                 PartitionLenInDays = 1,
                 ReadOnlyUserName = "dbreader",
-                ReadOnlyPassword = "Takay1takaane"
+                ReadOnlyPassword = "Takay1takaane",
+                UseVarcharInsteadOfTextForMemoryEngine = true
             };
             Dictionary<string, List<string>> masterConfig = new Dictionary<string, List<string>>()
             {
@@ -41,23 +42,22 @@ namespace InstallConfig
                     "mysqld", new List<string>
                     {
                         "server-id=1",
-                        "log-bin=/var/lib/mysql/master-log-bin",
+                        "log-bin=/cdr/mysql/master-log-bin",
                         "binlog_format=MIXED",
-                        "log-bin-index=/var/lib/mysql/master-bin.index",
-                        "binlog-ignore-db=mysql,scheduler",
-                        "replicate-ignore-db=mysql,scheduler",
-                        "expire-logs-days=7",
+                        "log-bin-index=/cdr/mysql/master-bin.index",
+                        "binlog-ignore-db=mysql, scheduler",
+                        "replicate-ignore-db=mysql, scheduler",
                         "thread_stack=512M",
                         "sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION",
-                        "default_authentication_plugin=mysql_native_password",
+                        "default_authentication_plugin=	mysql_native_password",
                         "ssl=0",
                         "back_log=50",
-                        "datadir=subnetForAppServerNatMasq",
-                        "socket= /var/lib/mysql/mysql.sock",
+                        "datadir=/cdr/mysql",
+                        "socket=/cdr/mysql/mysql.sock",
                         "skip-name-resolve=1",
-                        "symbolic-links= 0",
+                        "symbolic-links=0",
                         "lower_case_table_names=1",
-                        "open-files-limit=200000",
+                        "open-files-limit=65534",
                         "secure_file_priv=/tmp/",
                         "max_connections=100",
                         "wait_timeout=256",
@@ -83,8 +83,8 @@ namespace InstallConfig
                         "tmp-table-size=2G",
                         "max-heap-table-size=2G",
                         "transaction_isolation=REPEATABLE-READ",
-                        "tokudb_cache_size=12G",
-                        "tokudb_fs_reserve_percent=1",
+                        "#tokudb_cache_size=12G",
+                        "#tokudb_fs_reserve_percent=1",
                         "#malloc-lib=/usr/lib64/libjemalloc.so.1",
                         "log-error=/var/log/mysqld.log",
                         "pid-file=/var/run/mysqld/mysqld.pid",
@@ -98,7 +98,7 @@ namespace InstallConfig
                         "innodb_log_buffer_size=1GB",
                         "innodb_change_buffering=all",
                         "innodb_change_buffer_max_size=25",
-                        "innodb_log_file_size=4G",
+                        "innodb_log_file_size=512M",
                         "innodb_log_files_in_group=3",
                         "innodb_max_dirty_pages_pct=90",
                         "innodb_lock_wait_timeout=256",
@@ -106,10 +106,10 @@ namespace InstallConfig
                 },
                 {    "client", new List<string>
                     {
-                        "#port=	3306",
-                        "#socket=	/var/lib/mysql/mysql.sock",
-                        "#user=	root",
-                        "#password=	'Takay1#$ane'",
+                        "port=3306",
+                        "socket=/cdr/mysql/mysql.sock",
+                        "user=root",
+                        "password='Takay1#$ane'",
                     }
 
                 },
@@ -117,7 +117,7 @@ namespace InstallConfig
                     "mysqld_safe", new List<string>
                     {
                         "log-error=	/var/log/mysqld.log",
-                        "pid-file=	/var/run/mysqld/mysqld.pid",
+                        "pid-file=	/var/run/mysqld/mysqld.pid"
                     }
 
                 }
@@ -129,23 +129,22 @@ namespace InstallConfig
                     "mysqld", new List<string>
                     {
                         "server-id=2",
-                        "#log-bin=/var/lib/mysql/master-log-bin",
+                        "#log-bin=/cdr/mysql/master-log-bin",
                         "#binlog_format=MIXED",
-                        "#log-bin-index=/var/lib/mysql/master-bin.index",
+                        "#log-bin-index=/cdr/mysql/master-bin.index",
                         "binlog-ignore-db=mysql, scheduler",
                         "replicate-ignore-db=mysql, scheduler",
-                        "expire-logs-days=7",
                         "thread_stack=512M",
                         "sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION",
-                        "default_authentication_plugin=	mysql_native_password",
+                        "default_authentication_plugin=mysql_native_password",
                         "ssl=0",
                         "back_log=50",
-                        "datadir=subnetForAppServerNatMasq",
-                        "socket=/var/lib/mysql/mysql.sock",
+                        "datadir=/cdr/mysql",
+                        "socket=/cdr/mysql/mysql.sock",
                         "skip-name-resolve=1",
                         "symbolic-links=0",
                         "lower_case_table_names=1",
-                        "open-files-limit=200000",
+                        "open-files-limit=65534",
                         "secure_file_priv=/tmp/",
                         "max_connections=100",
                         "wait_timeout=256",
@@ -171,8 +170,8 @@ namespace InstallConfig
                         "tmp-table-size=2G",
                         "max-heap-table-size=2G",
                         "transaction_isolation=REPEATABLE-READ",
-                        "tokudb_cache_size=12G",
-                        "tokudb_fs_reserve_percent=1",
+                        "#tokudb_cache_size=12G",
+                        "#tokudb_fs_reserve_percent=1",
                         "#malloc-lib=/usr/lib64/libjemalloc.so.1",
                         "log-error=/var/log/mysqld.log",
                         "pid-file=/var/run/mysqld/mysqld.pid",
@@ -186,10 +185,12 @@ namespace InstallConfig
                         "innodb_log_buffer_size=1GB",
                         "innodb_change_buffering=all",
                         "innodb_change_buffer_max_size=25",
-                        "innodb_log_file_size=4G",
+                        "innodb_log_file_size=512M",
                         "innodb_log_files_in_group=3",
                         "innodb_max_dirty_pages_pct=90",
-                        "innodb_lock_wait_timeout=256"
+                        "innodb_lock_wait_timeout=256",
+
+
                     }
                 },
                 {
@@ -211,7 +212,6 @@ namespace InstallConfig
 
             };
             //MySqlServer mySqlServer= new MySqlServer();
-
 
             return databaseSetting;
         }

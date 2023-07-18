@@ -28,7 +28,7 @@ namespace InstallConfig
         };
         public void PrepareDirectorySettings(TelcobrightConfig tbc)
         {
-            DirectorySettings directorySetting = new DirectorySettings("Directory Settings");
+            DirectorySettings directorySetting = new DirectorySettings("Directory Settings", "");
             
             tbc.DirectorySettings = directorySetting;
 

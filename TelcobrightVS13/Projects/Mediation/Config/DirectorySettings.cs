@@ -11,20 +11,22 @@ namespace TelcobrightMediation.Config
     {
         public string SectionName { get; set; } = "Directory Settings";
         public int SectionOrder { get; set; } = 1;
-        public string RootDirectory { get; set; }
+        public string ResourceRoot { get; set; }
+        public string ConfigRoot { get; set; }
         public string VaultDirectory { get; set; } = "vault";
         public string ResourcesDirectory { get; set; } = "resources";
 
-        public string FullPathVault => this.RootDirectory + Path.DirectorySeparatorChar +
+        public string FullPathVault => this.ResourceRoot + Path.DirectorySeparatorChar +
                                        this.VaultDirectory;
         public string FullPathResources => this.FullPathVault + Path.DirectorySeparatorChar +
                                        this.ResourcesDirectory;
         public Dictionary<string, SyncPair> SyncPairs { get; set; }= new Dictionary<string, SyncPair>();
         public Dictionary<string, FileLocation> FileLocations { get; set; }= new Dictionary<string, FileLocation>();
 
-        public DirectorySettings(string rootDirectory)
+        public DirectorySettings(string resourceRoot,string configRoot)
         {
-            this.RootDirectory = rootDirectory;
+            this.ResourceRoot = resourceRoot;
+            this.ConfigRoot = configRoot;
         }
     }
 }

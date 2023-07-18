@@ -72,7 +72,8 @@ namespace InstallConfig
                 AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
                 UseIdCallAsBillId = true,
                 ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>(),
-                BatchSizeWhenPreparingLargeSqlJob = 100000
+                BatchSizeWhenPreparingLargeSqlJob = 100000,
+                
             };
             this.PrepareDirectorySettings(this.Tbc);
             this.Tbc.Nes = new List<ne>()

@@ -39,17 +39,18 @@ namespace LibraryExtensions
                    + Path.DirectorySeparatorChar.ToString() + this.PortalDirName
                    + Path.DirectorySeparatorChar + "bin";
         }
-        public string GetOperatorWiseConfigDirInUtil(string operatorShortName)
+        public string GetOperatorWiseConfigDirInUtil(string operatorShortName,string configRoot)
         {
+           string directoryPrefix = configRoot == string.Empty ? "" : configRoot + Path.DirectorySeparatorChar;
             return Directory.GetParent(Directory
                        .GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName)
                        .FullName).FullName + Path.DirectorySeparatorChar + this.UtilInstallConfigDirnameOnly
-                       + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar +
-                        operatorShortName;
+                       + Path.DirectorySeparatorChar + "config"  + Path.DirectorySeparatorChar +
+                   directoryPrefix + operatorShortName;
         }
-        public string GetOperatorWiseTargetFileNameInUtil(string operatorShortName)
+        public string GetOperatorWiseTargetFileNameInUtil(string operatorShortName,string configRoot)
         {
-            return GetOperatorWiseConfigDirInUtil(operatorShortName) + Path.DirectorySeparatorChar + operatorShortName +
+            return GetOperatorWiseConfigDirInUtil(operatorShortName,configRoot) + Path.DirectorySeparatorChar + operatorShortName +
                 ".conf";
         }
         public string GetTemplateConfigFileName(string templateFileNameOnly)

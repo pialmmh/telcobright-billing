@@ -46,7 +46,7 @@ namespace TelcobrightMediation
         }
         public string GetPathIndependentApplicationDirectory()
         {
-            return this.DirectorySettings.RootDirectory.Replace("/", Path.DirectorySeparatorChar.ToString());
+            return this.DirectorySettings.ResourceRoot.Replace("/", Path.DirectorySeparatorChar.ToString());
         }
     }
 }
