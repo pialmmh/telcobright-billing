@@ -40,6 +40,7 @@ namespace PortalApp.config
 
                     IInvoiceTemplate template = invoiceTemplates[reportName];
 
+
                     //GridViewRow gvrow = (GridViewRow)linkButton.NamingContainer;
                     //int INVOICE_ID = Convert.ToInt32(gvInvoice.DataKeys[gvrow.RowIndex].Value);
                     int INVOICE_ID = Convert.ToInt32(invoiceId);
@@ -71,6 +72,7 @@ namespace PortalApp.config
                     else
                     {
                         template.GenerateInvoice(invoice);
+                        //template.SaveToPdf(@"C:\temp\abcd.pdf");
                     }
                     this.Session[refNo] = template;
                     Response.Redirect("~/config/ViewReport.aspx?refNo=" + HttpUtility.UrlEncode(refNo), false);
