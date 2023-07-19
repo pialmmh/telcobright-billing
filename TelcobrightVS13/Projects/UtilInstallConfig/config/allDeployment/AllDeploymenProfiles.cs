@@ -122,6 +122,11 @@ namespace InstallConfig
                             {
                                 name = "summit_cas",
                                 SchedulerPortNo = 571,
+                            },
+                            new InstanceConfig
+                            {
+                                name = "btrc_cas",
+                                SchedulerPortNo = 572,
                             }
                         }
                     },
@@ -134,7 +139,7 @@ namespace InstallConfig
                             new InstanceConfig
                             {
                                 name = "summit2",
-                                SchedulerPortNo = 572
+                                SchedulerPortNo = 573
                             },
                         }
                     },

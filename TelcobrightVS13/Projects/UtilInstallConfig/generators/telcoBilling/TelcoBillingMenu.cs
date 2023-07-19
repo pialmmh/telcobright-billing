@@ -123,6 +123,10 @@ namespace InstallConfig
                             cw.writeConfig();
                             cw.LoadSeedData();
                             configureQuarzJobStore(tbc);
+                            string deployedInstancsPath = this.ConfigPathHelper.GetTopShelfDir() + Path.DirectorySeparatorChar + "deployedInstances";
+                            if(Directory.Exists(deployedInstancsPath))
+                                Directory.Delete(deployedInstancsPath,true);
+                            Directory.CreateDirectory(deployedInstancsPath);
                             deployBinariesForProduction(tbc);
                             Console.WriteLine("Press any key to continue...");
                             Console.ReadKey();

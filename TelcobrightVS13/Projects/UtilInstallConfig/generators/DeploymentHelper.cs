@@ -38,7 +38,8 @@ namespace TelcobrightInfra
             {
                 Directory.CreateDirectory(deploymentBaseDir);
             }
-            this.dstBinaryFullPath = this.deploymentBaseDir +Path.DirectorySeparatorChar + getOperatorShortName(tbc);
+            this.dstBinaryFullPath = this.deploymentBaseDir +Path.DirectorySeparatorChar + getOperatorShortName(tbc) +
+                Path.DirectorySeparatorChar + "bin";
         }
         public void deploy()
         {                       

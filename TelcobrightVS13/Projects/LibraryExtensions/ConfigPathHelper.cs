@@ -24,12 +24,16 @@ namespace LibraryExtensions
             this.UtilInstallConfigDirnameOnly = utilInstallConfigDirnameOnly;
             this.GeneratorsHome = generatorsHome;
         }
-        public string GetTopShelfConfigDir()
+        public string GetTopShelfDir()
         {
             return Directory.GetParent(Directory
                        .GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName)
                        .FullName).FullName
-                   + Path.DirectorySeparatorChar.ToString() + this.TopShelfDirName
+                   + Path.DirectorySeparatorChar.ToString() + this.TopShelfDirName;
+        }
+        public string GetTopShelfConfigDir()
+        {
+            return GetTopShelfDir()
                    + Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar + "config";
         }
         public string GetPortalBinPath()

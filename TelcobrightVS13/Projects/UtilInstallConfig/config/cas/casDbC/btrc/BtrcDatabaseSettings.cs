@@ -33,7 +33,8 @@ namespace InstallConfig
                 PartitionStartDate = new DateTime(2023, 1, 1),
                 PartitionLenInDays = 1,
                 ReadOnlyUserName = "dbreader",
-                ReadOnlyPassword = "Takay1takaane"
+                ReadOnlyPassword = "Takay1takaane",
+                UseVarcharInsteadOfTextForMemoryEngine = true
             };
             Dictionary<string, List<string>> masterConfig = new Dictionary<string, List<string>>()
             {
