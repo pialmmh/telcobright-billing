@@ -24,12 +24,12 @@ namespace InstallConfig
         {
             var databaseSetting = new DatabaseSetting()
             {
-                ServerName = "172.18.0.2",
+                ServerName = "10.255.201.101",
                 DatabaseName = this.Tbc.Telcobrightpartner.databasename,
                 AdminPassword = "Takay1takaane",
                 AdminUserName = "fduser",
                 DatabaseEngine = "innodb",
-                StorageEngineForPartitionedTables = "tokudb",
+                StorageEngineForPartitionedTables = "innodb",
                 PartitionStartDate = new DateTime(2023, 1, 1),
                 PartitionLenInDays = 1,
                 ReadOnlyUserName = "dbreader",

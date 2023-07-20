@@ -70,10 +70,13 @@ namespace InstallConfig
             
             ConsoleUtil consoleUtil= new ConsoleUtil(new List<char>() {'y', 'Y'});
             List<Deploymentprofile> deploymentProfiles = AllDeploymenProfiles.getDeploymentprofiles();
+                
             string selectedProfileName= Menu.getSingleChoice(deploymentProfiles.Select(dp=>dp.profileName).ToList(),
                 "Select a deployment profile to configure automation.");
             Deploymentprofile deploymentprofile = deploymentProfiles.First(p => p.profileName == selectedProfileName);
-            List<string> instanceNames = deploymentprofile.instances.Select(i => i.name).ToList();
+            List<string> instanceNames = deploymentprofile.instances
+                .Where(i=>i.Skip==false)
+                .Select(i => i.Name).ToList();
             switch (deploymentprofile.type)
             {
                 case DeploymentProfileType.TelcoBilling:
@@ -104,7 +107,7 @@ namespace InstallConfig
             Dictionary<string, string> keyValuesForMenu = new Dictionary<string, string>();
             for (int i = 1; i <= instanceConfigs.Count; i++)
             {
-                keyValuesForMenu.Add(i.ToString(), instanceConfigs[i - 1].name);
+                keyValuesForMenu.Add(i.ToString(), instanceConfigs[i - 1].Name);
             }
 
             return keyValuesForMenu;

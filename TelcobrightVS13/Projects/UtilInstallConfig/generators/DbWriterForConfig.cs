@@ -56,8 +56,8 @@ namespace InstallConfig._generator
             executeQuery("ALTER TABLE ne DISABLE KEYS;");
             executeQuery("ALTER TABLE telcobrightpartner DISABLE KEYS;");
 
-            executeQuery("delete from ne;");
-            executeQuery("delete from telcobrightpartner;");
+            executeQuery("truncate table ne;");
+            executeQuery("truncate table telcobrightpartner;");
 
             this.Context.telcobrightpartners.AddRange(partners);
 

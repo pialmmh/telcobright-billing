@@ -17,16 +17,13 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class CasSrtAbstractConfigGenerator //quartz config part
+    public partial class CasJslAbstractConfigGenerator //quartz config part
     {
-        /*static string databaseConfigFileName = new DirectoryInfo(FileAndPathHelper.GetBinPath()).Parent.Parent.FullName
-                                               + Path.DirectorySeparatorChar + "Server.conf";*/
+        //static string databaseConfigFileName = new DirectoryInfo(FileAndPathHelper.GetCurrentExecPath()).Parent.Parent.FullName
+        //                                       + Path.DirectorySeparatorChar + "Server.conf";
 
-        PortalSettings GetPortalSettings(string operatorName)
+        PortalSettings GetPortalSettings(TelcobrightConfig tbc)
         {
-            /*Dictionary<string, string> settings = JsonConvert.DeserializeObject<Dictionary<string, string>>(
-                File.ReadAllText(databaseConfigFileName));*/
-
             string portalLocalAccountNameAdministrator = "Administrator";
             string portalLocalAccountPassword = "Takay1#$ane%%";
 
@@ -47,7 +44,7 @@ namespace InstallConfig
                     new InternetSite(this.Tbc)//make sure that first one always the http portal
                     {
                         SiteType = "http",
-                        SiteName = operatorName,
+                        SiteName = tbc.Telcobrightpartner.CustomerName,
                         SiteId = 1,
                         PhysicalPath = "C:/inetpub/wwwroot/" + this.Tbc.Telcobrightpartner.CustomerName,
                         BindAddress = "0.0.0.0:80",
@@ -57,10 +54,10 @@ namespace InstallConfig
                             AppPoolName = this.Tbc.Telcobrightpartner.CustomerName,
                             TemplateFileName = "../../" + this.Tbc.Telcobrightpartner.CustomerName + "/tmplPortalAppPools.txt",
                         },
-                         ImpersonateUserName =portalLocalAccountNameAdministrator,
+                        ImpersonateUserName =portalLocalAccountNameAdministrator,
                         ImpersonatePassword =portalLocalAccountPassword
                     },
-                  
+                    
                 },
                 DicConfigObjects = new Dictionary<string, object>()
                 {
@@ -87,8 +84,6 @@ namespace InstallConfig
                                     "duration1 as Duration1",
                                     "duration2 as Duration2",
                                     "Duration3 as Duration3",
-                                    "ifnull(opc,OriginatingIP) OriginatingAddress",
-                                    "ifnull(dpc,TerminatingIP) TerminatingAddress",
                                     "releasecauseingress as `Ingress CauseCode`",
                                 }
                             },
@@ -321,18 +316,6 @@ namespace InstallConfig
                         settingIntlIn
                     },
                     { "~/reports/icx/btrc/WeeklyInternationalReport.aspx",
-                        settingIntlIn
-                    },
-                    { "~/reports/icx/btrc/MonthlyOutgoingSummary.aspx",
-                        settingIntlIn
-                    },
-                    { "~/reports/icx/btrc/MonthlyReport.aspx",
-                        settingIntlIn
-                    },
-                    { "~/reports/icx/customReports/BanglalinkRoamingReport.aspx",
-                        settingIntlIn
-                    },
-                    { "~/reports/icx/customReports/BanglalinkForwardingReport.aspx",
                         settingIntlIn
                     }
                 },//dictionary of page settings

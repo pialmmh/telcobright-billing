@@ -117,16 +117,17 @@ namespace InstallConfig
                         List<TelcobrightConfig> selectedTbcs =
                             this.Tbcs.Where(config => opNames.Contains(config.Telcobrightpartner.databasename))
                                 .ToList();
+                        //clean deployed instances
+                        string deployedInstancsPath = this.ConfigPathHelper.GetTopShelfDir() + Path.DirectorySeparatorChar + "deployedInstances";
+                        if (Directory.Exists(deployedInstancsPath))
+                            Directory.Delete(deployedInstancsPath, true);
+                        Directory.CreateDirectory(deployedInstancsPath);
                         foreach (var tbc in selectedTbcs)
                         {
                             TelcoBillingConfigGenerator cw = new TelcoBillingConfigGenerator(tbc, this.ConfigPathHelper, this.ConsoleUtil);
                             cw.writeConfig();
                             cw.LoadSeedData();
                             configureQuarzJobStore(tbc);
-                            string deployedInstancsPath = this.ConfigPathHelper.GetTopShelfDir() + Path.DirectorySeparatorChar + "deployedInstances";
-                            if(Directory.Exists(deployedInstancsPath))
-                                Directory.Delete(deployedInstancsPath,true);
-                            Directory.CreateDirectory(deployedInstancsPath);
                             deployBinariesForProduction(tbc);
                             Console.WriteLine("Press any key to continue...");
                             Console.ReadKey();

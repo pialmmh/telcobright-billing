@@ -38,7 +38,7 @@ namespace InstallConfig
                 deploymentprofile.instances.Select(i =>
                     new
                     {
-                        name = i.name,
+                        name = i.Name,
                         schedulerPortNo = i.SchedulerPortNo
                     }).ToDictionary(a => a.name, a => a.schedulerPortNo);
 
@@ -49,10 +49,11 @@ namespace InstallConfig
 
             List<TelcobrightConfig> operatorConfigs = new List<TelcobrightConfig>();
             deploymentprofile.instances
+                .Where(i=>i.Skip==false).ToList()
                 .ForEach(ic =>
                 {
                     AbstractConfigGenerator configGenerator =
-                        allConfigGenerators.First(c => c.Tbc.Telcobrightpartner.databasename==ic.name);
+                        allConfigGenerators.First(c => c.Tbc.Telcobrightpartner.databasename==ic.Name);
                     TelcobrightConfig tbc = configGenerator.GenerateConfig(ic,1);
                     tbc.TcpPortNoForRemoteScheduler = namesVsSchedulerPort[tbc.Telcobrightpartner.databasename];
                     tbc.SchedulerDaemonConfigs = configGenerator.GetSchedulerDaemonConfigs();

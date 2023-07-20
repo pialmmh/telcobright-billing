@@ -15,7 +15,7 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class CasSrtAbstractConfigGenerator //quartz config part
+    public partial class CasPurpleAbstractConfigGenerator //quartz config part
     {
         private List<QuartzTbDaemonConfig> DaemonConfigurations { get; set; }
         public override List<QuartzTbDaemonConfig> GetSchedulerDaemonConfigs()
@@ -38,7 +38,7 @@ namespace InstallConfig
                 new QuartzTbDaemonConfig
                 (
                     operatorName: operatorName,
-                    identity: "FileLister [Huawei:Vault]" + " [" + operatorName+"]",
+                    identity: "FileLister [huawei:Vault]" + " [" + operatorName+"]",
                     group: operatorName,
                     cronExpression: "/30 * * ? * *",
                     fireOnceIfMissFired: false,
@@ -46,7 +46,7 @@ namespace InstallConfig
                     {
                         {"telcobrightProcessId", "106"},
                         {"operatorName", operatorName},
-                        {"syncPair", Huawei_Vault.Name}
+                        {"syncPair", "huawei:Vault"}
                     }),
             };
             return fileListerInstances;
@@ -59,7 +59,7 @@ namespace InstallConfig
                 new QuartzTbDaemonConfig
                 (
                     operatorName: operatorName,
-                    identity: "FileCopier [Huawei:Vault]" + " [" + operatorName+"]",
+                    identity: "FileCopier [huawei:Vault]" + " [" + operatorName+"]",
                     group: operatorName,
                     cronExpression: "/5 * * ? * *",
                     fireOnceIfMissFired: false,
@@ -67,22 +67,22 @@ namespace InstallConfig
                     {
                         {"telcobrightProcessId", "104"},
                         {"operatorName", operatorName},
-                        {"syncPair", Huawei_Vault.Name}
+                        {"syncPair", "huawei:Vault"}
                     }),
                 
-                new QuartzTbDaemonConfig
-                (
-                    operatorName: operatorName,
-                    identity: "FileCopier [Vault:CAS]" + " [" + operatorName+"]",
-                    group: operatorName,
-                    cronExpression: "/5 * * ? * *",
-                    fireOnceIfMissFired: false,
-                    jobDataMap: new Dictionary<string, string>()
-                    {
-                        {"telcobrightProcessId", "104"},
-                        {"operatorName", operatorName},
-                        {"syncPair", vaultCAS.Name}
-                    }),
+                //new QuartzTbDaemonConfig
+                //(
+                //    operatorName: operatorName,
+                //    identity: "FileCopier [Vault:CAS]" + " [" + operatorName+"]",
+                //    group: operatorName,
+                //    cronExpression: "/5 * * ? * *",
+                //    fireOnceIfMissFired: false,
+                //    jobDataMap: new Dictionary<string, string>()
+                //    {
+                //        {"telcobrightProcessId", "104"},
+                //        {"operatorName", operatorName},
+                //        {"syncPair", "Vault:CAS"}
+                //    }),
             };
             return fileCopierInstances;
         }

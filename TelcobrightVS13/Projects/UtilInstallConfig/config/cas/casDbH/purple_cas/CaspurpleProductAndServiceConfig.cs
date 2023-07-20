@@ -16,7 +16,7 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class CasSrtAbstractConfigGenerator //quartz config part
+    public partial class CasPurpleAbstractConfigGenerator //quartz config part
     {
         public void PrepareProductAndServiceConfiguration()
         {

@@ -31,7 +31,7 @@ namespace InstallConfig
                     idCustomer = 9,
                     CustomerName = "BTRC- CDR Analyze System (CAS)",
                     idOperatorType = 2,
-                    databasename = "btrc",
+                    databasename = "btrc_cas",
                     NativeTimeZone = 3251,
                     IgwPrefix = null,
                     RateDictionaryMaxRecords = 3000000,

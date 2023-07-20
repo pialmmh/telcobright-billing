@@ -1,4 +1,4 @@
-﻿ using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -11,19 +11,19 @@ using System.ComponentModel.Composition;
 using LibraryExtensions;
 using LibraryExtensions.ConfigHelper;
 using QuartzTelcobright;
- using TelcobrightInfra;
- using TelcobrightMediation.Config;
+using TelcobrightInfra;
+using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class CasSrtAbstractConfigGenerator  //quartz config part
+    public partial class CasPurpleAbstractConfigGenerator //quartz config part
     {
-        public override List<Server> GetServerConfigs()
+        public override List<Server> GetServerConfigs()//e.g. {"master", server}
         {
             List<Server> servers = new List<Server>();
             Server server01 = new Server("db01")
             {
-                IpAddresses = new List<IpAddress>() { new IpAddress { Address = "172.16.100.6" } },
+                IpAddresses = new List<IpAddress>() { new IpAddress { Address = "192.168.0.137" } },
                 ServerOs = ServerOs.Ubuntu,
                 AutomationType = ServerAutomationType.LinuxMysqlAutomation,
                 AdminUsername = "telcobright",
@@ -33,21 +33,20 @@ namespace InstallConfig
             };
             Server server02 = new Server("db02")
             {
-                IpAddresses = new List<IpAddress>() { new IpAddress { Address = "172.16.100.12" } },
+                IpAddresses = new List<IpAddress>() { new IpAddress { Address = "192.168.1.122" } },
                 ServerOs = ServerOs.Ubuntu,
                 AutomationType = ServerAutomationType.LinuxMysqlAutomation,
-                AdminUsername = "telcobright",
-                AdminPassword = "Takay1#$ane%%",
-                AutomationUsername = "telcobright",
-                AutomationPassword = "Takay1#$ane%%"
+                AdminUsername = "root",
+                AdminPassword = "Btl@secdb2$",
+                AutomationUsername = "root",
+                AutomationPassword = "Btl@secdb2$"
             };
             servers.Add(server01);
             servers.Add(server02);
             base.ValidateServers(servers);
-
-     
-
             return servers;
         }
     }
 }
+
+

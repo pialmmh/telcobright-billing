@@ -9,8 +9,9 @@ namespace TelcobrightInfra
    
     public class InstanceConfig
     {
-        public string name { get; set; }
+        public string Name { get; set; }
         public int SchedulerPortNo { get; set; }
+        public  bool Skip { get; set; }
         public Dictionary<string, string> otherParams { get; set; }=
             new Dictionary<string, string>();
     }

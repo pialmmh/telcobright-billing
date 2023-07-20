@@ -24,7 +24,7 @@ namespace InstallConfig
                         {
                             new InstanceConfig
                             {
-                                name = "srtelecom",
+                                Name = "srtelecom",
                                 SchedulerPortNo = 555,
                             },
                         }
@@ -37,7 +37,7 @@ namespace InstallConfig
                         {
                             new InstanceConfig
                             {
-                                name = "summit",
+                                Name = "summit",
                                 SchedulerPortNo = 556
                             },
                         }
@@ -50,7 +50,7 @@ namespace InstallConfig
                         {
                             new InstanceConfig
                             {
-                                name = "banglatelecom",
+                                Name = "banglatelecom",
                                 SchedulerPortNo = 557
                             },
                         }
@@ -63,7 +63,7 @@ namespace InstallConfig
                         {
                             new InstanceConfig
                             {
-                                name = "jsl",
+                                Name = "jsl",
                                 SchedulerPortNo = 558
                             },
                         }
@@ -76,7 +76,7 @@ namespace InstallConfig
                         {
                             new InstanceConfig
                             {
-                                name = "purple",
+                                Name = "purple",
                                 SchedulerPortNo = 559
                             },
                         }
@@ -89,7 +89,7 @@ namespace InstallConfig
                         {
                             new InstanceConfig
                             {
-                                name = "btel",
+                                Name = "btel",
                                 SchedulerPortNo = 560
                             },
                         }
@@ -102,7 +102,7 @@ namespace InstallConfig
                         {
                             new InstanceConfig
                             {
-                                name = "dbl",
+                                Name = "dbl",
                                 SchedulerPortNo = 561
                             },
                         }
@@ -115,31 +115,32 @@ namespace InstallConfig
                         {
                             new InstanceConfig
                             {
-                                name = "srtelecom_cas",
-                                SchedulerPortNo = 570
-                            },
-                            new InstanceConfig
-                            {
-                                name = "summit_cas",
-                                SchedulerPortNo = 571,
-                            },
-                            new InstanceConfig
-                            {
-                                name = "btrc_cas",
+                                Name = "btrc_cas",
                                 SchedulerPortNo = 572,
-                            }
-                        }
-                    },
-                    new Deploymentprofile
-                    {
-                        profileName = "summit2",
-                        type = DeploymentProfileType.TelcoBilling,
-                        instances = new List<InstanceConfig>
-                        {
+                                Skip = true
+                            },
                             new InstanceConfig
                             {
-                                name = "summit2",
-                                SchedulerPortNo = 573
+                                Name = "srtelecom_cas",
+                                SchedulerPortNo = 570,
+                            },
+                            new InstanceConfig
+                            {
+                                Name = "summit_cas",
+                                SchedulerPortNo = 571,
+                                
+                            },
+                            new InstanceConfig
+                            {
+                                Name = "jibondhara_cas",
+                                SchedulerPortNo = 573,
+                                Skip = true
+                            },
+                            new InstanceConfig
+                            {
+                                Name = "purple_cas",
+                                SchedulerPortNo = 574,
+                                Skip = true
                             },
                         }
                     },
@@ -175,7 +176,7 @@ namespace InstallConfig
                 }
             }
 
-            var instanceOrDatabaseName = allProfiles.SelectMany(p => p.instances.Select(i=>i.name))
+            var instanceOrDatabaseName = allProfiles.SelectMany(p => p.instances.Select(i=>i.Name))
                 .GroupBy(name => name)
                 .Select(g => new
                 {
