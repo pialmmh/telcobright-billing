@@ -11,6 +11,6 @@ namespace TelcobrightInfra
         public string profileName { get; set; }
         public DeploymentProfileType type { get; set; }
         public List<InstanceConfig> instances { get; set; }
-       
+        public string DebugOrReleaseBinaryPath { get; set; } = "debug";
     }
 }

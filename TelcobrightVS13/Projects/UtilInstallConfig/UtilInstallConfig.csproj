@@ -167,7 +167,6 @@
     <Compile Include="config\dbl\DblDatabaseSettings.cs" />
     <Compile Include="config\dbl\dblAppServerConfig.cs" />
     <Compile Include="generators\DbWriterForConfig.cs" />
-    <Compile Include="generators\InstanceMenu.cs" />
     <Compile Include="generators\ParnerRouteImportInfo.cs" />
     <Compile Include="generators\PartitionInfo.cs" />
     <Compile Include="generators\PartitionUtil.cs" />

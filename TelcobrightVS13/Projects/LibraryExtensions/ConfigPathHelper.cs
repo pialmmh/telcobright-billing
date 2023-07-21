@@ -31,6 +31,11 @@ namespace LibraryExtensions
                        .FullName).FullName
                    + Path.DirectorySeparatorChar.ToString() + this.TopShelfDirName;
         }
+        public string GetDeployedInstancesDir()
+        {
+            return this.GetTopShelfDir()
+                   + Path.DirectorySeparatorChar.ToString() + "deployedInstances";
+        }
         public string GetTopShelfConfigDir()
         {
             return GetTopShelfDir()

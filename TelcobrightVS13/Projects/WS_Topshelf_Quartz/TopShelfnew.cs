@@ -16,6 +16,7 @@ using QuartzTelcobright.MefComposers;
 using QuartzTelcobright.PropertyGen;
 using TelcobrightMediation.Config;
 using LibraryExtensions;
+using TelcobrightInfra;
 
 namespace WS_Telcobright_Topshelf
 {
@@ -38,20 +39,52 @@ namespace WS_Telcobright_Topshelf
             string logFileName = binPath + Path.DirectorySeparatorChar + "telcobright.log";
             return logFileName;
         }
+
+        static string getLastGeneratedConfigFileName()
+        {
+            string execPath = FileAndPathHelper.GetCurrentExecPath();
+            DirectoryInfo configDir = new DirectoryInfo(new DirectoryInfo(execPath).Parent.FullName +
+                                                        Path.DirectorySeparatorChar + "Config");
+            string configFileName = configDir.FullName + Path.DirectorySeparatorChar + "telcobright.conf";
+            return configFileName;
+        }
+
+
         static void Main(string[] args)
         {
+            string configFileName = args.Length>=1?args[0]:"";//config file name can be sent by batch file as arg[0]
+            if (configFileName == "")
+            {
+                ConfigPathHelper configPathHelper = new ConfigPathHelper(
+                    "WS_Topshelf_Quartz",
+                    "portal",
+                    "UtilInstallConfig",
+                    "generators");
+                string deployedInstancesPath = configPathHelper.GetDeployedInstancesDir();
+                DirectoryInfo deployDir = new DirectoryInfo(deployedInstancesPath);
+                Dictionary<string, string> operatorNameVsConfigFile = new Dictionary<string, string>();
+                foreach (DirectoryInfo dir in deployDir.GetDirectories())
+                {
+                    string operatorName = dir.Name;
+                    string cnfFileName = dir.FullName + Path.DirectorySeparatorChar +
+                                         dir.Name + ".conf";
+                    operatorNameVsConfigFile.Add(operatorName, cnfFileName);
+                }
+                string selectedOpName = Menu.getSingleChoice(operatorNameVsConfigFile.Keys.ToList(),
+                    "Select an Operatorname to debug.");
+                configFileName = operatorNameVsConfigFile[selectedOpName];
+            }
+            
             string logFileName=getLogFileName();
             mefColllectiveAssemblyComposer = new MefCollectiveAssemblyComposer("..//..//bin//Extensions//");
-            RemoteSchedulerProvider provider = new RemoteSchedulerProvider
-            {
-                SchedulerHost = "tcp://localhost:555/QuartzScheduler"
-            };
+            RemoteSchedulerProvider provider = new RemoteSchedulerProvider();
             File.WriteAllLines(logFileName, new string[] { DateTime.Now.ToMySqlFormatWithoutQuote() + ": Telcobright started at " + provider.SchedulerHost } );
             try
             {
                 Console.WriteLine("Starting Telcobright Scheduler.");
                 mefProcessContainer = new MefProcessContainer(mefColllectiveAssemblyComposer);
-                TelcobrightConfig tbc = GetTelcobrightConfig();
+                TelcobrightConfig tbc = GetTelcobrightConfig(configFileName);
+                Console.Title = tbc.Telcobrightpartner.databasename;
                 provider.SchedulerHost = $"tcp://localhost:{tbc.TcpPortNoForRemoteScheduler}/QuartzScheduler";
                 provider.Init();
                 IScheduler runtimeScheduler = null;
@@ -86,14 +119,11 @@ namespace WS_Telcobright_Topshelf
             }
 
         }
-        private static TelcobrightConfig GetTelcobrightConfig()
+        private static TelcobrightConfig GetTelcobrightConfig(string configFileName)
         {
             bool disableParallelMediationForDebug =
                 Convert.ToBoolean(ConfigurationManager.AppSettings["disableParallelMediationForDebug"]);
-            string execPath = FileAndPathHelper.GetCurrentExecPath();
-            DirectoryInfo configDir= new DirectoryInfo(new DirectoryInfo(execPath).Parent.FullName +
-                                                       Path.DirectorySeparatorChar + "Config");
-            string configFileName = configDir.FullName + Path.DirectorySeparatorChar + "telcobright.conf";
+            
             TelcobrightConfig tbc = ConfigFactory.GetConfigFromFile(configFileName);
             if (Debugger.IsAttached)
             {
@@ -102,16 +132,19 @@ namespace WS_Telcobright_Topshelf
             return tbc;
         }
 
+
         static IScheduler GetScheduler(SchedulerRunTimeType runTimeType,TelcobrightConfig tbc)// IApplicationContext springContext)
         {
             QuartzPropertyFactory quartzPropertyFactoryRuntime;
             QuartzPropertyFactory quartzPropertyFactoryDebug;
             NameValueCollection schedulerProperties = null;
+
             if (runTimeType == SchedulerRunTimeType.Runtime)
             {
-                
+
                 QuartzPropGenRemoteSchedulerAdoRuntime quartzPropGenRemoteSchedulerAdoRuntime =
-                    new QuartzTelcobright.PropertyGen.QuartzPropGenRemoteSchedulerAdoRuntime(555, tbc.DatabaseSetting.DatabaseName);
+                    new QuartzTelcobright.PropertyGen.QuartzPropGenRemoteSchedulerAdoRuntime(tbc.TcpPortNoForRemoteScheduler
+                    , DbUtil.getDbConStrWithDatabase(tbc.DatabaseSetting));
 
                 quartzPropertyFactoryRuntime =
                     new QuartzPropertyFactory(quartzPropGenRemoteSchedulerAdoRuntime);

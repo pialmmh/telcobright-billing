@@ -120,8 +120,14 @@ namespace InstallConfig
                         //clean deployed instances
                         string deployedInstancsPath = this.ConfigPathHelper.GetTopShelfDir() + Path.DirectorySeparatorChar + "deployedInstances";
                         if (Directory.Exists(deployedInstancsPath))
-                            Directory.Delete(deployedInstancsPath, true);
-                        Directory.CreateDirectory(deployedInstancsPath);
+                        {
+                            DirectoryInfo targetDir = new DirectoryInfo(deployedInstancsPath);
+                            targetDir.DeleteContentRecusively();
+                        }
+                        else
+                        {
+                            Directory.CreateDirectory(deployedInstancsPath);
+                        }
                         foreach (var tbc in selectedTbcs)
                         {
                             TelcoBillingConfigGenerator cw = new TelcoBillingConfigGenerator(tbc, this.ConfigPathHelper, this.ConsoleUtil);

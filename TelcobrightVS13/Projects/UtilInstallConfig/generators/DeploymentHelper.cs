@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LibraryExtensions;
 using TelcobrightMediation;
 
 namespace TelcobrightInfra
@@ -21,15 +20,14 @@ namespace TelcobrightInfra
         Func<string,string> getDstConfigDir = wsTopShelfDir=> wsTopShelfDir + Path.DirectorySeparatorChar + "config";
         private string srcTemplateConfigFileNameOnly = "telcobright.conf";
         private string deploymentBaseDir;
-        private string dstBinaryFullPath;
+        private string dstBatchFileTargetDir;
+        private string DebugOrReleaseBinariesPath = "";
         public DeploymentHelper(TelcobrightConfig tbc, string solutionDir,DeploymentPlatform deploymentPlatform)
         {
             Tbc = tbc;
             SolutionDir = solutionDir;
             this.DeploymentPlatform = deploymentPlatform;
-            /*string srcExecFolderNameOnly = this.DeploymentPlatform == DeploymentPlatform.Win32
-                ? "debug"
-                : "x64" + Path.DirectorySeparatorChar + "debug";*/
+            this.DebugOrReleaseBinariesPath = tbc.Deploymentprofile.DebugOrReleaseBinaryPath;
             this.wsTopShelfDir = this.SolutionDir + Path.DirectorySeparatorChar
                                    + "WS_Topshelf_Quartz";
             this.srcBinaryFullPath = this.wsTopShelfDir + Path.DirectorySeparatorChar + "bin";
@@ -38,37 +36,51 @@ namespace TelcobrightInfra
             {
                 Directory.CreateDirectory(deploymentBaseDir);
             }
-            this.dstBinaryFullPath = this.deploymentBaseDir +Path.DirectorySeparatorChar + getOperatorShortName(tbc) +
-                Path.DirectorySeparatorChar + "bin";
+            this.dstBatchFileTargetDir = this.deploymentBaseDir +Path.DirectorySeparatorChar + getOperatorShortName(tbc);
+            if (Directory.Exists(this.dstBatchFileTargetDir) == false)
+            {
+                Directory.CreateDirectory(this.dstBatchFileTargetDir);
+            }
         }
         public void deploy()
-        {                       
-            CopyBinaries(this.srcBinaryFullPath, this.dstBinaryFullPath);
+        {
+            //createBatchFile(this.srcBinaryFullPath, this.dstBinaryFullPath);
+
             string srcConfigFile = this.getSrcConfigDir(this.wsTopShelfDir) + Path.DirectorySeparatorChar
                                    + this.srcTemplateConfigFileNameOnly;
-            string destConfigFile = this.getDstConfigDir(this.dstBinaryFullPath) + Path.DirectorySeparatorChar
-                                    + this.srcTemplateConfigFileNameOnly;
+            string destConfigFile = this.dstBatchFileTargetDir + Path.DirectorySeparatorChar
+                                    + this.Tbc.Telcobrightpartner.databasename + ".conf";
             if (File.Exists(destConfigFile))
             {
                 File.Delete(destConfigFile);
             }
             File.Copy(srcConfigFile, destConfigFile);
+
+            string batchFileOrShellScript;
+            string targetScriptFileName;
+            if (this.DeploymentPlatform == DeploymentPlatform.Win32 ||
+                this.DeploymentPlatform == DeploymentPlatform.Win64)
+            {
+                batchFileOrShellScript = wsTopShelfDir + Path.DirectorySeparatorChar +
+                                         "bin" + Path.DirectorySeparatorChar + this.DebugOrReleaseBinariesPath + Path.DirectorySeparatorChar +
+                                         "WS_Telcobright_Topshelf.exe \"" + destConfigFile + "\"";
+                targetScriptFileName = this.dstBatchFileTargetDir + Path.DirectorySeparatorChar
+                                              + this.Tbc.Telcobrightpartner.databasename + ".bat";
+                File.WriteAllText(targetScriptFileName, batchFileOrShellScript);
+            }
+            else
+            {
+                throw new NotImplementedException();//write shell script for linux here
+                batchFileOrShellScript = wsTopShelfDir + Path.DirectorySeparatorChar +
+                                         "bin" + Path.DirectorySeparatorChar + "debug" + Path.DirectorySeparatorChar +
+                                         "WS_Telcobright_Topshelf.exe \"" + destConfigFile + "\"";
+                targetScriptFileName = this.dstBatchFileTargetDir + Path.DirectorySeparatorChar
+                                       + this.Tbc.Telcobrightpartner.databasename + ".sh";
+                File.WriteAllText(targetScriptFileName, batchFileOrShellScript);
+                //make .sh file executable here...
+            }
         }
 
-        void CopyBinaries(string sourceFolder, string destFolder)
-        {
-            if (!Directory.Exists(sourceFolder))
-            {
-                throw new Exception($"Source folder '{sourceFolder}' does not exist.");
-            }
-            if (Directory.Exists(destFolder))
-            {
-                Directory.Delete(destFolder,true);
-            }
-            Directory.CreateDirectory(destFolder);
-            DirectoryInfo srcDir = new DirectoryInfo(sourceFolder);
-            srcDir.DeepCopy(destFolder);
-        }
         private static string getOperatorShortName(TelcobrightConfig tbc)
         {
             return tbc.Telcobrightpartner.databasename;

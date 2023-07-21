@@ -14,6 +14,7 @@ namespace TelcobrightMediation
 {
     public class TelcobrightConfig
     {
+        public Deploymentprofile Deploymentprofile { get; set; }
         public int TcpPortNoForRemoteScheduler { get; set; }
         public telcobrightpartner Telcobrightpartner { get; set; }
         public List<ne> Nes { get; set; }

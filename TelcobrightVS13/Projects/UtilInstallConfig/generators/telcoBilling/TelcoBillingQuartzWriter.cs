@@ -33,7 +33,8 @@ namespace InstallConfig
             QuartzPropertyFactory quartzPropertyFactory =
                 new QuartzPropertyFactory(quartzPropGenRemoteSchedulerAdoJobStore);
             NameValueCollection schedulerProperties = quartzPropertyFactory.GetProperties();
-            IScheduler scheduler = QuartzSchedulerFactory.CreateSchedulerInstance(schedulerProperties);
+            IScheduler scheduler = null;
+            scheduler = QuartzSchedulerFactory.CreateSchedulerInstance(schedulerProperties);
             QuartzTelcobrightManager quartzManager = new QuartzTelcobrightManager(scheduler);
             quartzManager.ClearJobs(); //reset job store
             quartzManager.CreateJobs<QuartzTelcobrightProcessWrapper>(tbc.SchedulerDaemonConfigs);

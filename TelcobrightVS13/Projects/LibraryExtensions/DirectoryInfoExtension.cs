@@ -22,5 +22,16 @@ namespace LibraryExtensions
                 File.Copy(newPath, newPath.Replace(srcDir.FullName, destinationDir), true);
             }
         }
+        public static void DeleteContentRecusively(this DirectoryInfo di)
+        {
+            foreach (FileInfo file in di.EnumerateFiles())
+            {
+                file.Delete();
+            }
+            foreach (DirectoryInfo dir in di.EnumerateDirectories())
+            {
+                dir.Delete(true);
+            }
+        }
     }
 }

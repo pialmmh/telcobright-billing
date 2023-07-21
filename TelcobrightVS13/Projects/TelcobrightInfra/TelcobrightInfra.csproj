@@ -47,6 +47,7 @@
     <Compile Include="Deployment\DeploymentProfile.cs" />
     <Compile Include="Deployment\DeploymentProfileType.cs" />
     <Compile Include="Deployment\InstanceConfig.cs" />
+    <Compile Include="Deployment\Menu.cs" />
     <Compile Include="Infra\Datacenter.cs" />
     <Compile Include="Infra\DbUtil.cs" />
     <Compile Include="Infra\ReplicationHelper.cs" />
@@ -76,6 +77,9 @@
       <Project>{d4c2f34d-4d3d-43ae-84f0-e80cfedb1b48}</Project>
       <Name>LibraryExtensions</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Config\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
