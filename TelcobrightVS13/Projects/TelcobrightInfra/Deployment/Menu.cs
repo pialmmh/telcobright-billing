@@ -11,17 +11,27 @@ namespace TelcobrightInfra
 {
     public class Menu
     {
-        public static string getSingleChoice(List<string> menuItems, string msgToDisplay)
+        public List<string> MenuItems { get; }
+        public string MessageToDisplay { get; }
+        public string AllChoicesIndicator { get; }
+        public Menu(List<string> menuItems, string messageToDisplay, string allChoicesIndicator)
         {
-            List<string> selectedItems = getChoices(menuItems, msgToDisplay);
+            this.MenuItems = menuItems;
+            this.MessageToDisplay = messageToDisplay;
+            this.AllChoicesIndicator = allChoicesIndicator.ToLower();
+        }
+
+        public string getSingleChoice()
+        {
+            List<string> selectedItems = getChoices();
             return selectedItems.First();
         }
-        public static List<string> getChoices(IEnumerable<string> menuItems, string msgToDisplay)
+        public List<string> getChoices()
         {
-            var menuItemsAsList = menuItems as IList<string> ?? menuItems.ToList();
+            var menuItemsAsList = this.MenuItems as IList<string> ?? this.MenuItems.ToList();
             Dictionary<string, string> menuItemsDic = createMenuItemsDictionary(menuItemsAsList);
             Console.Clear();
-            printMenu(menuItemsDic, msgToDisplay);
+            printMenu(menuItemsDic, this.MessageToDisplay);
             while (true)
             {
                 List<int> userInputs = getUserInput();
@@ -37,7 +47,7 @@ namespace TelcobrightInfra
                 {
                     Console.Clear();
                     Console.WriteLine("Invalid input, try again...");
-                    printMenu(menuItemsDic, msgToDisplay);
+                    printMenu(menuItemsDic, this.MessageToDisplay);
                 }
                 else // valid case
                 {
@@ -50,7 +60,7 @@ namespace TelcobrightInfra
             }
         }
 
-        private static Dictionary<string, string> createMenuItemsDictionary(IEnumerable<string> menuItems)
+        private Dictionary<string, string> createMenuItemsDictionary(IEnumerable<string> menuItems)
         {
             return menuItems.OrderBy(s=>s).Select((item, index) =>
                          new
@@ -60,11 +70,12 @@ namespace TelcobrightInfra
                          }).ToDictionary(a => a.index.ToString(), a => a.item);
         }
 
-        static List<int> getUserInput()
+        List<int> getUserInput()
         {
             string userInput = Console.ReadLine().Trim();
             List<int> finalInputs= new List<int>();
-            if (userInput == "a" || userInput == "A")//all
+            if (!string.IsNullOrEmpty(this.AllChoicesIndicator) 
+                && userInput.ToLower() == this.AllChoicesIndicator)//all
             {
                 finalInputs.Add(999999);
                 return finalInputs;//999999=all selected
@@ -93,7 +104,7 @@ namespace TelcobrightInfra
             return finalInputs;
         }
 
-        static void printMenu(Dictionary<string, string> choices, string msgToDisplay)
+        void printMenu(Dictionary<string, string> choices, string msgToDisplay)
         {
             Console.WriteLine(msgToDisplay);
             int i = 0;
@@ -101,7 +112,14 @@ namespace TelcobrightInfra
             {
                 Console.WriteLine($"{++i}={kv.Value}");
             }
-            Console.WriteLine("Q or q=Quit");
+            if (!string.IsNullOrEmpty(this.AllChoicesIndicator))
+            {
+                Console.WriteLine($"[{this.AllChoicesIndicator}=All], [Q/q=Quit]");
+            }
+            else
+            {
+                Console.WriteLine($"Q/q=Quit");
+            }
         }
     }
 }

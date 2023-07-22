@@ -27,7 +27,7 @@ namespace TelcobrightInfra
             Tbc = tbc;
             SolutionDir = solutionDir;
             this.DeploymentPlatform = deploymentPlatform;
-            this.DebugOrReleaseBinariesPath = tbc.Deploymentprofile.DebugOrReleaseBinaryPath;
+            this.DebugOrReleaseBinariesPath = tbc.DeploymentProfile.DebugOrReleaseBinaryPath;
             this.wsTopShelfDir = this.SolutionDir + Path.DirectorySeparatorChar
                                    + "WS_Topshelf_Quartz";
             this.srcBinaryFullPath = this.wsTopShelfDir + Path.DirectorySeparatorChar + "bin";

@@ -36,25 +36,26 @@ namespace InstallConfig
     {
         private static AutomationContainer automationContainer = new AutomationContainer();
         static List<InstanceConfig> instanceConfigs = new List<InstanceConfig>();
+
         static void Main(string[] args)
         {
             automationContainer.Compose();
             IAutomation winAutomation = automationContainer.Automations["WinLocalShellAutomation"];
             List<MySqlUser> mysqlUsers = new List<MySqlUser>()
             {
-                new MySqlUser("root","123456",
-                                new List<string>() {"localhost", "10.0.0.29"},
-                                new List<MySqlPermission>()
-                                {
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.all,
-                                            MySqlPermissionType.execute
-                                        }, "summit")
-                                })
+                new MySqlUser("root", "123456",
+                    new List<string>() {"localhost", "10.0.0.29"},
+                    new List<MySqlPermission>()
+                    {
+                        new MySqlPermission(
+                            new List<MySqlPermissionType>
+                            {
+                                MySqlPermissionType.all,
+                                MySqlPermissionType.execute
+                            }, "summit")
+                    })
             };
-            List<string> commandSequence= MySqlAutomationHelper.createOrAlterUser(mysqlUsers,runFromShell: true);
+            List<string> commandSequence = MySqlAutomationHelper.createOrAlterUser(mysqlUsers, runFromShell: true);
 
             /*List<string> commandSequence= new List<string>()
             {
@@ -64,46 +65,36 @@ namespace InstallConfig
             Dictionary<string, object> executionData = new Dictionary<string, object>()
             {
                 {"commandSequence", commandSequence},
-                { "workingDirectory", @"c:\mysql\bin"}
+                {"workingDirectory", @"c:\mysql\bin"}
             };
             //winAutomation.execute(executionData);;
-            
-            ConsoleUtil consoleUtil= new ConsoleUtil(new List<char>() {'y', 'Y'});
+
+            ConsoleUtil consoleUtil = new ConsoleUtil(new List<char>() {'y', 'Y'});
             List<Deploymentprofile> deploymentProfiles = AllDeploymenProfiles.getDeploymentprofiles();
-                
-            string selectedProfileName= Menu.getSingleChoice(deploymentProfiles.Select(dp=>dp.profileName).ToList(),
-                "Select a deployment profile to configure automation.");
+
+            Menu menu= new Menu(deploymentProfiles.Select(dp => dp.profileName).ToList(),
+                "Select a deployment profile to configure automation.","a");
+            string selectedProfileName = menu.getSingleChoice();
             Deploymentprofile deploymentprofile = deploymentProfiles.First(p => p.profileName == selectedProfileName);
             List<string> instanceNames = deploymentprofile.instances
-                .Where(i=>i.Skip==false)
+                .Where(i => i.Skip == false)
                 .Select(i => i.Name).ToList();
             switch (deploymentprofile.type)
             {
                 case DeploymentProfileType.TelcoBilling:
-                    string userInput="";
-                    while (userInput!="q")
-                    {
-                        List<TelcobrightConfig> tbcs =
-                            TelcoBillingConfigGenerator.getSelectedOperatorsConfig(deploymentprofile);
-                        foreach (var tbc in tbcs)
-                        {
-                            tbc.Deploymentprofile = deploymentprofile;
-                        }
-                        TelcoBillingMenu telcoBillingMenu =
-                            new TelcoBillingMenu(tbcs, consoleUtil);
-                        userInput= telcoBillingMenu.showMenu().Trim();
-                    }
+                    TelcoBillingMenu telcoBillingMenu =
+                        new TelcoBillingMenu(deploymentprofile, consoleUtil);
+                    telcoBillingMenu.showMenu();
                     break;
                 default:
                     break;
             }
-
         }
 
-        
 
-        
-        
+
+
+
         private static Dictionary<string, string> GetDeploymentInstanceToMenuItems()
         {
             DirectoryInfo utilDir = (new DirectoryInfo(FileAndPathHelper.GetCurrentExecPath()).Parent).Parent;

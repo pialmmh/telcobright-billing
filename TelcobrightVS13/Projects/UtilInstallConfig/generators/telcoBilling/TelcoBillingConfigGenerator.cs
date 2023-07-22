@@ -32,34 +32,16 @@ namespace InstallConfig
             this.ConfigPathHelper = configPathHelper;
         }
 
-        public static List<TelcobrightConfig> getSelectedOperatorsConfig(Deploymentprofile deploymentprofile)
+        public static List<AbstractConfigGenerator> getSelectedOperatorsConfig(Deploymentprofile deploymentprofile)
         {
-            Dictionary<string, int> namesVsSchedulerPort =
-                deploymentprofile.instances.Select(i =>
-                    new
-                    {
-                        name = i.Name,
-                        schedulerPortNo = i.SchedulerPortNo
-                    }).ToDictionary(a => a.name, a => a.schedulerPortNo);
+            List<string> notSkippedInstanceNames =
+                deploymentprofile.instances.Where(i => i.Skip == false)
+                    .Select(i => i.Name).ToList();
 
             List<AbstractConfigGenerator> allConfigGenerators
-              = new MefConfigImportComposer().Compose()
-            .Where(op => namesVsSchedulerPort.Keys
-            .Contains(op.Tbc.Telcobrightpartner.databasename)).ToList();
-
-            List<TelcobrightConfig> operatorConfigs = new List<TelcobrightConfig>();
-            deploymentprofile.instances
-                .Where(i=>i.Skip==false).ToList()
-                .ForEach(ic =>
-                {
-                    AbstractConfigGenerator configGenerator =
-                        allConfigGenerators.First(c => c.Tbc.Telcobrightpartner.databasename==ic.Name);
-                    TelcobrightConfig tbc = configGenerator.GenerateConfig(ic,1);
-                    tbc.TcpPortNoForRemoteScheduler = namesVsSchedulerPort[tbc.Telcobrightpartner.databasename];
-                    tbc.SchedulerDaemonConfigs = configGenerator.GetSchedulerDaemonConfigs();
-                    operatorConfigs.Add(tbc);
-                });
-            return operatorConfigs;
+                = new MefConfigImportComposer().Compose()
+                    .Where(op => notSkippedInstanceNames.Contains(op.Tbc.Telcobrightpartner.databasename)).ToList();
+            return allConfigGenerators;
         }
 
         public void writeConfig()

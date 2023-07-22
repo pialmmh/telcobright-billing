@@ -70,8 +70,9 @@ namespace WS_Telcobright_Topshelf
                                          dir.Name + ".conf";
                     operatorNameVsConfigFile.Add(operatorName, cnfFileName);
                 }
-                string selectedOpName = Menu.getSingleChoice(operatorNameVsConfigFile.Keys.ToList(),
-                    "Select an Operatorname to debug.");
+                Menu menu= new Menu(operatorNameVsConfigFile.Keys.ToList(),
+                    "Select an Operatorname to debug.","");
+                string selectedOpName = menu.getSingleChoice();
                 configFileName = operatorNameVsConfigFile[selectedOpName];
             }
             

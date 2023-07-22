@@ -24,22 +24,28 @@ namespace InstallConfig
     public class TelcoBillingMenu
     {
         public ConsoleUtil ConsoleUtil { get; set; }
-        public List<TelcobrightConfig> Tbcs { get; set; }
+        //public List<TelcobrightConfig> Tbcs { get; set; }
+        List<AbstractConfigGenerator> configGenerators= new List<AbstractConfigGenerator>();
         public ConfigPathHelper ConfigPathHelper { get; set; }
-
-        public TelcoBillingMenu(List<TelcobrightConfig> tbcs, ConsoleUtil consoleUtil)
+        public List<TelcobrightConfig> TbcWithoutGeneratedConfig { get; set; }
+        public Deploymentprofile Deploymentprofile { get; set; }
+    
+        public TelcoBillingMenu(Deploymentprofile deploymentprofile, ConsoleUtil consoleUtil)
         {
+            this.Deploymentprofile = deploymentprofile;
             ConfigPathHelper configPathHelper = new ConfigPathHelper(
                 "WS_Topshelf_Quartz", 
                 "portal", 
                 "UtilInstallConfig",
                 "generators");
             DbUtil.configPathHelper = configPathHelper;
-            this.Tbcs = tbcs;
+            this.configGenerators =
+                TelcoBillingConfigGenerator.getSelectedOperatorsConfig(deploymentprofile);
+            this.TbcWithoutGeneratedConfig = this.configGenerators.Select(c => c.Tbc).ToList();
             this.ConfigPathHelper = configPathHelper;
             this.ConsoleUtil = consoleUtil;
         }
-        public string showMenu()
+        public void showMenu()
         {
             {
                 Start:
@@ -64,7 +70,7 @@ namespace InstallConfig
                     case '1':
                     {
                         Console.WriteLine("Setting up remote access for mysql...");
-                        List<string> choices =
+                        /*List<string> choices =
                             Menu.getChoices(this.Tbcs.Select(config => config.Telcobrightpartner.databasename),
                                 "Select instances to create initial database:");
                         List<TelcobrightConfig> tbcs = this.Tbcs
@@ -72,7 +78,7 @@ namespace InstallConfig
                         foreach (var tbc in this.Tbcs)
                         {
 
-                        }
+                        }*/
                     }
                     break;
                     case '2':
@@ -81,71 +87,67 @@ namespace InstallConfig
                         string[] p = str.Split(',');
                         (new FileRename()).AppendPrefix(p[0], p[1]);
                         if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' ||
-                            Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return "q";
+                            Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
                         break;
                     case '3':
                         if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' ||
-                            Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return "q";
+                            Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
                         Console.WriteLine("Creating Database, none will be created if one exists.");
                         //choices = Menu.getChoices(menuItems, "Select instances to create initial database:");
                         //this.Tbcs = getthis.Tbcs(choices, configPathHelper);
-                        foreach (var tbc in this.Tbcs)
+                        /*foreach (var tbc in this.Tbcs)
                         {
 
-                        }
+                        }*/
                         break;
                     case '4':
                         Console.WriteLine("Copying Portal to c:/inetpub/wwwroot");
                         //CopyPortal(tbOperatorName);
                         if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' ||
-                            Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return "q";
+                            Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
                         break;
                     case '5':
                         if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' ||
-                            Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return "q";
+                            Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
                         break;
                     case '6':
-                        if (!this.Tbcs.Any())
+                        if (!this.TbcWithoutGeneratedConfig.Any())
                         {
                             Console.WriteLine("No operator's config has been found. Press any key to start over.");
                             Console.ReadKey();
                             goto Start;
                         }
-                        List<string> opNames =
-                            Menu.getChoices(this.Tbcs.Select(config => config.Telcobrightpartner.databasename),
-                                "Select one or multiple operators to configure.");
+                            Menu menu= new Menu(this.TbcWithoutGeneratedConfig.Select(config => config.Telcobrightpartner.databasename).ToList(),
+                            "Select one or multiple operators to configure.","a");
+                        List<string> opNames = menu.getChoices();
                         List<TelcobrightConfig> selectedTbcs =
-                            this.Tbcs.Where(config => opNames.Contains(config.Telcobrightpartner.databasename))
+                            this.TbcWithoutGeneratedConfig.Where(config => opNames.Contains(config.Telcobrightpartner.databasename))
                                 .ToList();
-                        //clean deployed instances
-                        string deployedInstancsPath = this.ConfigPathHelper.GetTopShelfDir() + Path.DirectorySeparatorChar + "deployedInstances";
-                        if (Directory.Exists(deployedInstancsPath))
+                        cleanDeploymentDir();
+                        foreach (var tbWithoutFullConfig in selectedTbcs)
                         {
-                            DirectoryInfo targetDir = new DirectoryInfo(deployedInstancsPath);
-                            targetDir.DeleteContentRecusively();
-                        }
-                        else
-                        {
-                            Directory.CreateDirectory(deployedInstancsPath);
-                        }
-                        foreach (var tbc in selectedTbcs)
-                        {
+                            var dbOrInstanceName = tbWithoutFullConfig.Telcobrightpartner.databasename;
+                            AbstractConfigGenerator configGenerator = this.configGenerators
+                                .First(c => c.Tbc.Telcobrightpartner.databasename == dbOrInstanceName);
+                            InstanceConfig ic = this.Deploymentprofile.instances.First(i => i.Name == dbOrInstanceName);
+                            TelcobrightConfig tbc = configGenerator.GenerateConfig(ic, 1);
+                            tbc.DeploymentProfile = this.Deploymentprofile;
+                            int schedulerPortNo = ic.SchedulerPortNo;
+                            tbWithoutFullConfig.TcpPortNoForRemoteScheduler = schedulerPortNo;
+                            tbWithoutFullConfig.SchedulerDaemonConfigs = configGenerator.GetSchedulerDaemonConfigs();
                             TelcoBillingConfigGenerator cw = new TelcoBillingConfigGenerator(tbc, this.ConfigPathHelper, this.ConsoleUtil);
                             cw.writeConfig();
                             cw.LoadSeedData();
                             configureQuarzJobStore(tbc);
                             deployBinariesForProduction(tbc);
-                            Console.WriteLine("Press Q/q to quit or any other key to continue with next operator.");
-                            var k = Convert.ToChar((Console.ReadKey(true)).Key);
-                            if (k == 'q' || k == 'Q')
-                            {
-                                return "q";
-                            }
+                            Console.WriteLine("Successfully generated config for " 
+                                + string.Join(",",selectedTbcs.Select(t=>t.Telcobrightpartner.databasename)));
                         }
+                        goto Start;
                         break;
                     case '7':
                         //choices = Menu.getChoices(menuItems, "Select instances to modify partitions:");
-                        return "q";
+                        return;
                         //    schedulerType: "quartz",
                         //    databaseSetting: databaseSetting);
                         //PartitionUtil.ModifyPartitions(schedulerSetting.DatabaseSetting,operatorName);
@@ -158,13 +160,28 @@ namespace InstallConfig
                         break;
                     case 'q':
                     case 'Q':
-                        return "q";
+                        return;
                     default:
-                        return "";
+                        return;
                 }
-                return "";
+                return;
             }
     }
+
+        private void cleanDeploymentDir()
+        {
+            //clean deployed instances
+            string deployedInstancsPath = this.ConfigPathHelper.GetTopShelfDir() + Path.DirectorySeparatorChar + "deployedInstances";
+            if (Directory.Exists(deployedInstancsPath))
+            {
+                DirectoryInfo targetDir = new DirectoryInfo(deployedInstancsPath);
+                targetDir.DeleteContentRecusively();
+            }
+            else
+            {
+                Directory.CreateDirectory(deployedInstancsPath);
+            }
+        }
 
         private static void configureQuarzJobStore(TelcobrightConfig tbc)
         {
