@@ -9,7 +9,7 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{80C6B9AF-D976-496A-933A-EF2AF4895329}</ProjectGuid>
+    <ProjectGuid>{F08B348E-A3A1-4C38-9C6B-11C4B13CD968}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -1412,7 +1412,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>25964</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:25964/</IISUrl>
+          <IISUrl>http://localhost:25965/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

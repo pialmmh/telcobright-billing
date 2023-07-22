@@ -72,22 +72,27 @@ namespace InstallConfig
             ConsoleUtil consoleUtil = new ConsoleUtil(new List<char>() {'y', 'Y'});
             List<Deploymentprofile> deploymentProfiles = AllDeploymenProfiles.getDeploymentprofiles();
 
-            Menu menu= new Menu(deploymentProfiles.Select(dp => dp.profileName).ToList(),
-                "Select a deployment profile to configure automation.","a");
-            string selectedProfileName = menu.getSingleChoice();
-            Deploymentprofile deploymentprofile = deploymentProfiles.First(p => p.profileName == selectedProfileName);
-            List<string> instanceNames = deploymentprofile.instances
-                .Where(i => i.Skip == false)
-                .Select(i => i.Name).ToList();
-            switch (deploymentprofile.type)
+            Start:
             {
-                case DeploymentProfileType.TelcoBilling:
-                    TelcoBillingMenu telcoBillingMenu =
-                        new TelcoBillingMenu(deploymentprofile, consoleUtil);
-                    telcoBillingMenu.showMenu();
-                    break;
-                default:
-                    break;
+                Console.Clear();
+                Menu menu= new Menu(deploymentProfiles.Select(dp => dp.profileName).ToList(),
+                    "Select a deployment profile to configure automation.","");
+                string selectedProfileName = menu.getSingleChoice();
+                Deploymentprofile deploymentprofile = deploymentProfiles.First(p => p.profileName == selectedProfileName);
+                List<string> instanceNames = deploymentprofile.instances
+                    .Where(i => i.Skip == false)
+                    .Select(i => i.Name).ToList();
+                switch (deploymentprofile.type)
+                {
+                    case DeploymentProfileType.TelcoBilling:
+                        TelcoBillingMenu telcoBillingMenu =
+                            new TelcoBillingMenu(deploymentprofile, consoleUtil);
+                        telcoBillingMenu.showMenu();
+                        goto Start;
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
