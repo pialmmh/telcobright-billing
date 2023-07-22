@@ -39,7 +39,7 @@ namespace InstallConfig
             this.ConfigPathHelper = configPathHelper;
             this.ConsoleUtil = consoleUtil;
         }
-        public void showMenu()
+        public string showMenu()
         {
             {
                 Start:
@@ -81,11 +81,11 @@ namespace InstallConfig
                         string[] p = str.Split(',');
                         (new FileRename()).AppendPrefix(p[0], p[1]);
                         if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' ||
-                            Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
+                            Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return "q";
                         break;
                     case '3':
                         if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' ||
-                            Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
+                            Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return "q";
                         Console.WriteLine("Creating Database, none will be created if one exists.");
                         //choices = Menu.getChoices(menuItems, "Select instances to create initial database:");
                         //this.Tbcs = getthis.Tbcs(choices, configPathHelper);
@@ -98,11 +98,11 @@ namespace InstallConfig
                         Console.WriteLine("Copying Portal to c:/inetpub/wwwroot");
                         //CopyPortal(tbOperatorName);
                         if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' ||
-                            Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
+                            Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return "q";
                         break;
                     case '5':
                         if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' ||
-                            Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
+                            Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return "q";
                         break;
                     case '6':
                         if (!this.Tbcs.Any())
@@ -135,13 +135,17 @@ namespace InstallConfig
                             cw.LoadSeedData();
                             configureQuarzJobStore(tbc);
                             deployBinariesForProduction(tbc);
-                            Console.WriteLine("Press any key to continue...");
-                            Console.ReadKey();
+                            Console.WriteLine("Press Q/q to quit or any other key to continue with next operator.");
+                            var k = Convert.ToChar((Console.ReadKey(true)).Key);
+                            if (k == 'q' || k == 'Q')
+                            {
+                                return "q";
+                            }
                         }
                         break;
                     case '7':
                         //choices = Menu.getChoices(menuItems, "Select instances to modify partitions:");
-                        return;
+                        return "q";
                         //    schedulerType: "quartz",
                         //    databaseSetting: databaseSetting);
                         //PartitionUtil.ModifyPartitions(schedulerSetting.DatabaseSetting,operatorName);
@@ -154,12 +158,12 @@ namespace InstallConfig
                         break;
                     case 'q':
                     case 'Q':
-                        return;
+                        return "q";
                     default:
-                        goto Start;
+                        return "";
                 }
-                goto Start;
-        }
+                return "";
+            }
     }
 
         private static void configureQuarzJobStore(TelcobrightConfig tbc)

@@ -149,7 +149,8 @@ namespace WS_Telcobright_Topshelf
                 quartzPropertyFactoryRuntime =
                     new QuartzPropertyFactory(quartzPropGenRemoteSchedulerAdoRuntime);
                 schedulerProperties = quartzPropertyFactoryRuntime.GetProperties();
-                IScheduler scheduler = QuartzSchedulerFactory.CreateSchedulerInstance(schedulerProperties);
+                var factory = new QuartzSchedulerFactory(schedulerProperties);
+                IScheduler scheduler = factory.CreateSchedulerInstance();
                 return scheduler;
             }
             else if (runTimeType == SchedulerRunTimeType.Debug)

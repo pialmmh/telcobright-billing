@@ -24,17 +24,18 @@ namespace InstallConfig
 
         public void configureQuartzJobStore()
         {
-            DbUtil.CreateOrOverwriteQuartzTables(tbc.DatabaseSetting);
+            DatabaseSetting databaseSetting = tbc.DatabaseSetting;
+            DbUtil.CreateOrOverwriteQuartzTables(databaseSetting);
             //read quartz config part for ALL configured operator (mef)
             int tcpPortNumber = tbc.TcpPortNoForRemoteScheduler;
             QuartzPropGenRemoteSchedulerAdoJobStore quartzPropGenRemoteSchedulerAdoJobStore =
-                new QuartzPropGenRemoteSchedulerAdoJobStore(tcpPortNumber: tcpPortNumber);
-            quartzPropGenRemoteSchedulerAdoJobStore.DatabaseSetting = tbc.DatabaseSetting;
+                new QuartzPropGenRemoteSchedulerAdoJobStore(tcpPortNumber,databaseSetting);
             QuartzPropertyFactory quartzPropertyFactory =
                 new QuartzPropertyFactory(quartzPropGenRemoteSchedulerAdoJobStore);
             NameValueCollection schedulerProperties = quartzPropertyFactory.GetProperties();
             IScheduler scheduler = null;
-            scheduler = QuartzSchedulerFactory.CreateSchedulerInstance(schedulerProperties);
+            var factory = new QuartzSchedulerFactory(schedulerProperties);
+            scheduler = factory.CreateSchedulerInstance();
             QuartzTelcobrightManager quartzManager = new QuartzTelcobrightManager(scheduler);
             quartzManager.ClearJobs(); //reset job store
             quartzManager.CreateJobs<QuartzTelcobrightProcessWrapper>(tbc.SchedulerDaemonConfigs);

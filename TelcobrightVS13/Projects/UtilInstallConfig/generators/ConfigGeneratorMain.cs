@@ -80,15 +80,19 @@ namespace InstallConfig
             switch (deploymentprofile.type)
             {
                 case DeploymentProfileType.TelcoBilling:
-                    List<TelcobrightConfig> tbcs =
-                        TelcoBillingConfigGenerator.getSelectedOperatorsConfig(deploymentprofile);
-                    foreach (var tbc in tbcs)
+                    string userInput="";
+                    while (userInput!="q")
                     {
-                        tbc.Deploymentprofile = deploymentprofile;
+                        List<TelcobrightConfig> tbcs =
+                            TelcoBillingConfigGenerator.getSelectedOperatorsConfig(deploymentprofile);
+                        foreach (var tbc in tbcs)
+                        {
+                            tbc.Deploymentprofile = deploymentprofile;
+                        }
+                        TelcoBillingMenu telcoBillingMenu =
+                            new TelcoBillingMenu(tbcs, consoleUtil);
+                        userInput= telcoBillingMenu.showMenu().Trim();
                     }
-                    TelcoBillingMenu telcoBillingMenu =
-                        new TelcoBillingMenu(tbcs, consoleUtil);
-                    telcoBillingMenu.showMenu();
                     break;
                 default:
                     break;

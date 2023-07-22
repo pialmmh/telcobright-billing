@@ -4,18 +4,19 @@ using Quartz;
 using Quartz.Impl;
 namespace QuartzTelcobright
 {
-    public static class QuartzSchedulerFactory
+    public class QuartzSchedulerFactory
     {
-        public static IScheduler CreateSchedulerInstance(NameValueCollection schedulerProperties)
-        {
-            var schedularFactory = GetSchedulerFactory(schedulerProperties);
-                        return schedularFactory.GetScheduler();
-            
-        }
+        private NameValueCollection schedulerProperties;
 
-        private static StdSchedulerFactory GetSchedulerFactory(NameValueCollection schedulerProperties)
+        public QuartzSchedulerFactory(NameValueCollection schedulerProperties)
         {
-            return new StdSchedulerFactory(schedulerProperties);
+            this.schedulerProperties = schedulerProperties;
+        }
+        public IScheduler CreateSchedulerInstance()
+        {
+            var schedularFactory = new StdSchedulerFactory(this.schedulerProperties);
+            return schedularFactory.GetScheduler();
+            
         }
     }
 }

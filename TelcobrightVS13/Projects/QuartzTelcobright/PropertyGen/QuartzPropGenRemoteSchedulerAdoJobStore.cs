@@ -11,12 +11,13 @@ namespace QuartzTelcobright.PropertyGen
 {
     public class QuartzPropGenRemoteSchedulerAdoJobStore : AbstractQuartzPropertyGenerator
     {
-        public DatabaseSetting DatabaseSetting { get; set; }
+        public DatabaseSetting DatabaseSetting { get;}
         private int TcpPortNumber { get; set; }
 
-        public QuartzPropGenRemoteSchedulerAdoJobStore(int tcpPortNumber)
+        public QuartzPropGenRemoteSchedulerAdoJobStore(int tcpPortNumber,DatabaseSetting databaseSetting)
         {
             this.TcpPortNumber = tcpPortNumber;
+            this.DatabaseSetting = databaseSetting;
         }
 
         protected override NameValueCollection GenerateSchedulerProperties()
