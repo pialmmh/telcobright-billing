@@ -73,7 +73,8 @@ public partial class SiteMaster : System.Web.UI.MasterPage
             }
             else
             {
-                this.lblCustomerDisplayName.Text = tbc.PortalSettings.AlternateDisplayName;
+                //this.lblCustomerDisplayName.Text = tbc.PortalSettings.AlternateDisplayName;
+                this.lblCustomerDisplayName.Text = "CDR Analyzer System (CAS)";
             }
             List<role> roles = PageUtil.GetRoles();
             //nodes can't be accessed by name, so adding them so that they can be parsed by spring expression

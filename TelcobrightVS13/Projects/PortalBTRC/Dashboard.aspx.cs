@@ -31,7 +31,8 @@ public partial class DashboardAspx : Page
         {
             thisPartner = conTelco.telcobrightpartners.Where(c => c.databasename == dbNameAppConf).ToList().First();
         }
-        this.lblCustomerDisplayName.Text = thisPartner.CustomerName;
+        //this.lblCustomerDisplayName.Text = thisPartner.CustomerName;
+        //this.lblCustomerDisplayName.Text = "CDR Analyzer System (CAS)";
 
         //dashboard items
         UpdateErrorCalls();

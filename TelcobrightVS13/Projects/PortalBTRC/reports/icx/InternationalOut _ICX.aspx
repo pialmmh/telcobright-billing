@@ -286,7 +286,7 @@
                         <div style="float: left; height: 25px; min-width: 1285px;">
 
                             <div style="float: left;">
-                                View by ANS Route: 
+                                View by ICX: 
                             <asp:CheckBox ID="CheckBoxViewIncomingRoute" runat="server" AutoPostBack="True"
                                 OnCheckedChanged="CheckBoxViewIncomingRoute_CheckedChanged" Checked="False" />
 
@@ -347,7 +347,7 @@
                 <asp:BoundField DataField="Destination" HeaderText="Destination"
                     SortExpression="Destination" />
                 <asp:BoundField DataField="IGW" HeaderText="ANSNotUse" SortExpression="ANSNotUse"  Visible="false"/>
-                <asp:BoundField DataField="tup_incomingroute" HeaderText="ANS Route" SortExpression="tup_incomingroute" />
+                <asp:BoundField DataField="tup_incomingroute" HeaderText="ICX" SortExpression="tup_incomingroute" />
                 <asp:BoundField DataField="ANS" HeaderText="ANS" SortExpression="ANS" />
                 <asp:BoundField DataField="International Partner" HeaderText="IOS" SortExpression="International Partner" />
                 <asp:BoundField DataField="tup_outgoingroute" HeaderText="IOS Route" SortExpression="tup_outgoingroute" />
