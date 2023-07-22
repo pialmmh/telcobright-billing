@@ -85,114 +85,6 @@ namespace InstallConfig
                     MaxRecordsInSingleFile = 30000,
                     SplitFileIfSizeBiggerThanMbyte = 559 * 70000//559*30000
                 },
-                ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>()
-                {
-                    { "DateChangerForCdr",new Dictionary<string, string>()
-                        {
-                            { "random","true"},
-                            { "changeDateStart","2020-09-08 15:00:00" },
-                            { "changeDateEnd","2020-09-08 17:00:00" },
-                            { "jobNames",$@"ICX19200824135037682.DAT,			
-                                            ICX19200824141537763.DAT,			
-                                            ICX19200824140537761_0001.DAT,
-                                            ICX19200908174537679_0001.DAT,
-                                            ICX19200908174537679_0002.DAT,
-                                            ICX19200908174537679_0003.DAT,
-                                            ICX19200908174537679_0004.DAT,
-                                            ICX19200908174537679_0005.DAT,
-                                            ICX19200908174537679_0006.DAT,
-                                            ICX19200908174537679_0007.DAT,
-                                            ICX19200908174537679_0008.DAT,
-                                            ICX19200908174537679_0009.DAT,
-                                            ICX19200908174537679_0010.DAT,
-                                            ICX19200908174537679_0011.DAT,
-                                            ICX19200908174537679_0012.DAT,
-                                            ICX19200908174537679_0013.DAT,
-                                            ICX19200908174537679_0014.DAT,
-                                            ICX19200908174537679_0015.DAT,
-                                            ICX19200908174537679_0016.DAT,
-                                            ICX19200908174537679_0017.DAT,
-                                            ICX19200908174537679_0018.DAT,
-                                            ICX19200908174537679_0019.DAT,
-                                            ICX19200908174537679_0020.DAT,
-                                            ICX19200908174537679_0021.DAT,
-                                            ICX19200908174537679_0022.DAT,
-                                            ICX19200908174537679_0023.DAT,
-                                            ICX19200908174537679_0024.DAT,
-                                            ICX19200908174537679_0025.DAT,
-                                            ICX19200908174537679_0026.DAT"
-                            }
-                        }
-                    },
-                    { "IdCallChangerForCdr",new Dictionary<string, string>()
-                        {
-                            { "jobNames",$@"ICX19200824135037682.DAT,			
-                                            ICX19200824141537763.DAT,			
-                                            ICX19200824140537761_0001.DAT,
-                                            ICX19200908174537679_0001.DAT,
-                                            ICX19200908174537679_0002.DAT,
-                                            ICX19200908174537679_0003.DAT,
-                                            ICX19200908174537679_0004.DAT,
-                                            ICX19200908174537679_0005.DAT,
-                                            ICX19200908174537679_0006.DAT,
-                                            ICX19200908174537679_0007.DAT,
-                                            ICX19200908174537679_0008.DAT,
-                                            ICX19200908174537679_0009.DAT,
-                                            ICX19200908174537679_0010.DAT,
-                                            ICX19200908174537679_0011.DAT,
-                                            ICX19200908174537679_0012.DAT,
-                                            ICX19200908174537679_0013.DAT,
-                                            ICX19200908174537679_0014.DAT,
-                                            ICX19200908174537679_0015.DAT,
-                                            ICX19200908174537679_0016.DAT,
-                                            ICX19200908174537679_0017.DAT,
-                                            ICX19200908174537679_0018.DAT,
-                                            ICX19200908174537679_0019.DAT,
-                                            ICX19200908174537679_0020.DAT,
-                                            ICX19200908174537679_0021.DAT,
-                                            ICX19200908174537679_0022.DAT,
-                                            ICX19200908174537679_0023.DAT,
-                                            ICX19200908174537679_0024.DAT,
-                                            ICX19200908174537679_0025.DAT,
-                                            ICX19200908174537679_0026.DAT"
-                            }
-                        }
-                    },
-                    { "PartialToNonPartialChangerForCdr",new Dictionary<string, string>()
-                        {
-                            { "jobNames",$@"ICX19200824135037682.DAT,			
-                                            ICX19200824141537763.DAT,			
-                                            ICX19200824140537761_0001.DAT,
-                                            ICX19200908174537679_0001.DAT,
-                                            ICX19200908174537679_0002.DAT,
-                                            ICX19200908174537679_0003.DAT,
-                                            ICX19200908174537679_0004.DAT,
-                                            ICX19200908174537679_0005.DAT,
-                                            ICX19200908174537679_0006.DAT,
-                                            ICX19200908174537679_0007.DAT,
-                                            ICX19200908174537679_0008.DAT,
-                                            ICX19200908174537679_0009.DAT,
-                                            ICX19200908174537679_0010.DAT,
-                                            ICX19200908174537679_0011.DAT,
-                                            ICX19200908174537679_0012.DAT,
-                                            ICX19200908174537679_0013.DAT,
-                                            ICX19200908174537679_0014.DAT,
-                                            ICX19200908174537679_0015.DAT,
-                                            ICX19200908174537679_0016.DAT,
-                                            ICX19200908174537679_0017.DAT,
-                                            ICX19200908174537679_0018.DAT,
-                                            ICX19200908174537679_0019.DAT,
-                                            ICX19200908174537679_0020.DAT,
-                                            ICX19200908174537679_0021.DAT,
-                                            ICX19200908174537679_0022.DAT,
-                                            ICX19200908174537679_0023.DAT,
-                                            ICX19200908174537679_0024.DAT,
-                                            ICX19200908174537679_0025.DAT,
-                                            ICX19200908174537679_0026.DAT"
-                            }
-                        }
-                    }
-                }
             };
 
             this.PrepareDirectorySettings(this.Tbc);
@@ -200,7 +92,7 @@ namespace InstallConfig
             {
                 new ne
                 {
-                    idSwitch= 8,
+                    idSwitch= 7,
                     idCustomer= this.Tbc.Telcobrightpartner.idCustomer,
                     idcdrformat= 17,
                     idMediationRule= 2,
@@ -215,9 +107,9 @@ namespace InstallConfig
                     TransactionSizeForCDRLoading= 1500,
                     DecodingSpanCount= 100,
                     SkipAutoCreateJob= 1,
-                    SkipCdrListed= 1,
+                    SkipCdrListed= 0,
                     SkipCdrReceived= 1,
-                    SkipCdrDecoded= 1,
+                    SkipCdrDecoded= 0,
                     SkipCdrBackedup= 1,
                     KeepDecodedCDR= 1,
                     KeepReceivedCdrServer= 1,
@@ -247,9 +139,9 @@ namespace InstallConfig
                     TransactionSizeForCDRLoading= 1500,
                     DecodingSpanCount= 100,
                     SkipAutoCreateJob= 1,
-                    SkipCdrListed= 0,
+                    SkipCdrListed= 1,
                     SkipCdrReceived= 0,
-                    SkipCdrDecoded= 0,
+                    SkipCdrDecoded= 1,
                     SkipCdrBackedup= 1,
                     KeepDecodedCDR= 0,
                     KeepReceivedCdrServer= 1,

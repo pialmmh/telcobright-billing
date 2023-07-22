@@ -91,7 +91,7 @@ namespace InstallConfig
                     idcdrformat = 3,
                     idMediationRule = 2,
                     SwitchName = "huawei",
-                    CDRPrefix = "b",
+                    CDRPrefix = "p",
                     FileExtension = ".dat",
                     Description = null,
                     SourceFileLocations = "vault",

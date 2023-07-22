@@ -35,19 +35,19 @@ namespace InstallConfig
             //don't use foreach, do it manually for flixibility e.g. different repeating interval
             List<QuartzTbDaemonConfig> fileListerInstances = new List<QuartzTbDaemonConfig>()
             {
-                new QuartzTbDaemonConfig
-                (
-                    operatorName: operatorName,
-                    identity: "FileLister [huawei:Vault]" + " [" + operatorName+"]",
-                    group: operatorName,
-                    cronExpression: "/30 * * ? * *",
-                    fireOnceIfMissFired: false,
-                    jobDataMap: new Dictionary<string, string>()
-                    {
-                        {"telcobrightProcessId", "106"},
-                        {"operatorName", operatorName},
-                        {"syncPair", "huawei:Vault"}
-                    }),
+                //new QuartzTbDaemonConfig
+                //(
+                //    operatorName: operatorName,
+                //    identity: "FileLister [huawei:Vault]" + " [" + operatorName+"]",
+                //    group: operatorName,
+                //    cronExpression: "/30 * * ? * *",
+                //    fireOnceIfMissFired: false,
+                //    jobDataMap: new Dictionary<string, string>()
+                //    {
+                //        {"telcobrightProcessId", "106"},
+                //        {"operatorName", operatorName},
+                //        {"syncPair", "huawei:Vault"}
+                //    }),
             };
             return fileListerInstances;
         }
@@ -56,19 +56,19 @@ namespace InstallConfig
             //don't use foreach, do it manually for flixibility e.g. different repeating interval
             List<QuartzTbDaemonConfig> fileCopierInstances = new List<QuartzTbDaemonConfig>()
             {
-                new QuartzTbDaemonConfig
-                (
-                    operatorName: operatorName,
-                    identity: "FileCopier [huawei:Vault]" + " [" + operatorName+"]",
-                    group: operatorName,
-                    cronExpression: "/5 * * ? * *",
-                    fireOnceIfMissFired: false,
-                    jobDataMap: new Dictionary<string, string>()
-                    {
-                        {"telcobrightProcessId", "104"},
-                        {"operatorName", operatorName},
-                        {"syncPair", "huawei:Vault"}
-                    }),
+                //new QuartzTbDaemonConfig
+                //(
+                //    operatorName: operatorName,
+                //    identity: "FileCopier [huawei:Vault]" + " [" + operatorName+"]",
+                //    group: operatorName,
+                //    cronExpression: "/5 * * ? * *",
+                //    fireOnceIfMissFired: false,
+                //    jobDataMap: new Dictionary<string, string>()
+                //    {
+                //        {"telcobrightProcessId", "104"},
+                //        {"operatorName", operatorName},
+                //        {"syncPair", "huawei:Vault"}
+                //    }),
                 
                 //new QuartzTbDaemonConfig
                 //(
@@ -149,18 +149,18 @@ namespace InstallConfig
         {
             var telcobrightProcessInstances = new List<QuartzTbDaemonConfig>()
             {
-                new QuartzTbDaemonConfig(
-                    operatorName: operatorName,
-                    identity: "InvoiceGenerator" + " [" + operatorName+"]",
-                    @group: operatorName,
-                    fireOnceIfMissFired: false,
-                    cronExpression: "/5 * * ? * *",
-                    jobDataMap: new Dictionary<string, string>()
-                    {
-                        {"telcobrightProcessId", "108"},
-                        {"operatorName", operatorName}
-                    }
-                )
+                //new QuartzTbDaemonConfig(
+                //    operatorName: operatorName,
+                //    identity: "InvoiceGenerator" + " [" + operatorName+"]",
+                //    @group: operatorName,
+                //    fireOnceIfMissFired: false,
+                //    cronExpression: "/5 * * ? * *",
+                //    jobDataMap: new Dictionary<string, string>()
+                //    {
+                //        {"telcobrightProcessId", "108"},
+                //        {"operatorName", operatorName}
+                //    }
+                //)
             };
             return telcobrightProcessInstances;
         }

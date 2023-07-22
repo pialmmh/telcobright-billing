@@ -117,7 +117,6 @@ namespace InstallConfig
                             {
                                 Name = "btrc_cas",
                                 SchedulerPortNo = 572,
-                                Skip = true
                             },
                             new InstanceConfig
                             {
@@ -134,13 +133,11 @@ namespace InstallConfig
                             {
                                 Name = "jibondhara_cas",
                                 SchedulerPortNo = 573,
-                                Skip = true
                             },
                             new InstanceConfig
                             {
                                 Name = "purple_cas",
                                 SchedulerPortNo = 574,
-                                Skip = true
                             },
                         }
                     },

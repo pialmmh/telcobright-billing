@@ -58,96 +58,16 @@ namespace InstallConfig
                 IgnoreZeroLenghFile = 1
             };
 
-            
 
 
-            SyncPair huawei_Vault = new SyncPair("huawei:Vault")
-            {
-                SkipSourceFileListing = false,
-                SrcSyncLocation = new SyncLocation()
-                {
-                    FileLocation = new FileLocation()
-                    {
-                        Name = "huawei",
-                        LocationType = "ftp",
-                        OsType = "linux",
-                        UseActiveModeForFTP = false,
-                        PathSeparator = "/",
-                        StartingPath = "/",
-                        ServerIp = "123.176.59.19",
-                        User = "icxhuawei",
-                        Pass = "Icx2023@",
-                        //ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
-                        IgnoreZeroLenghFile = 1,
-                        FtpSessionCloseAndReOpeningtervalByFleTransferCount = 1000
-                    },
-                    DescendingFileListByFileName = this.Tbc.CdrSetting.DescendingOrderWhileListingFiles
-                },
-                DstSyncLocation = new SyncLocation()
-                {
-                    FileLocation = vaultPrimary
-                },
-                SrcSettings = new SyncSettingsSource()
-                {
-                    SecondaryDirectory = "downloaded",
-                    MoveFilesToSecondaryAfterCopy = false,
-                    Recursive=false,
-                    ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('b')
-                                                                and
-                                                                (Name.EndsWith('.dat'))
-                                                                and Length>0")
-                },
-                DstSettings = new SyncSettingsDest()
-                {
-                    FileExtensionForSafeCopyWithTempFile = ".tmp",//make sure when copying to vault always .tmp ext used
-                    Overwrite = true,
-                    ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
-                    CompressionType = CompressionType.None
-                }
-            };
 
-            
-            //sync pair Vault_S3:FileArchive1
-            SyncPair vaultCAS = new SyncPair("Vault:CAS")
-            {
-                SkipCopyingToDestination = false,
-                SkipSourceFileListing = true,
-                SrcSyncLocation = new SyncLocation()
-                {
-                    FileLocation = vaultPrimary
-                },
-                DstSyncLocation = new SyncLocation()
-                {
-                    FileLocation = new FileLocation()//raw cdr archive
-                    {
-                        Name = "cas",
-                        LocationType = "ftp",
-                        OsType = "windows",
-                        PathSeparator = @"/",//backslash didn't work with winscp
-                        StartingPath = @"/",
-                        ServerIp = "192.168.100.161", //server = "172.16.16.242",
-                        User = "adminsrt",
-                        Pass = "srticx725",
-                        IgnoreZeroLenghFile = 1
-                    }
-        },
-                SrcSettings = new SyncSettingsSource()
-                {
-                    SecondaryDirectory = "downloaded",
-                    ExpFileNameFilter = null,
-                },
-                DstSettings = new SyncSettingsDest()
-                {
-                    FileExtensionForSafeCopyWithTempFile = ".tmp",
-                    Overwrite = true,
-                    CompressionType = CompressionType.None,
-                }
-            };
+
 
             //add sync pairs to directory config
-            directorySetting.SyncPairs.Add(huawei_Vault.Name, huawei_Vault);
+            //directorySetting.SyncPairs.Add(huawei_Vault.Name, huawei_Vault);
             //directorySetting.SyncPairs.Add(vaultS3FileArchive1.Name, vaultS3FileArchive1);
-            directorySetting.SyncPairs.Add(vaultCAS.Name, vaultCAS);
+            //directorySetting.SyncPairs.Add(vaultCAS.Name, vaultCAS);
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultPrimary.Name, vaultPrimary);
 
             //add archive locations to CdrSettings
             this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
@@ -155,12 +75,7 @@ namespace InstallConfig
                 //vaultS3FileArchive1.Name,
                 //vaultCAS.Name
             };
-            directorySetting.FileLocations = directorySetting.SyncPairs.Values.SelectMany(sp =>
-                new List<FileLocation>
-                {
-                    //sp.SrcSyncLocation.FileLocation,
-                    //sp.DstSyncLocation.FileLocation
-                }).ToDictionary(floc => floc.Name);
+            
         }
     }
 }
