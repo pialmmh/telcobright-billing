@@ -43,7 +43,7 @@ namespace Process
                     int idOprator = context.telcobrightpartners
                         .Where(c => c.databasename == tbc.Telcobrightpartner.databasename).Select(c => c.idCustomer)
                         .First();
-                    foreach (ne thisSwitch in context.nes.Where(c => c.idCustomer == idOprator).ToList())
+                       foreach (ne thisSwitch in context.nes.Where(c => c.idCustomer == idOprator).ToList())
                     {
                         try
                         {
