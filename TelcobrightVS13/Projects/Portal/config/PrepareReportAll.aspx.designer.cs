@@ -10,6 +10,6 @@
 namespace PortalApp.config {
     
     
-    public partial class PrepareReportForMultipleSections {
+    public partial class PrepareReportAll {
     }
 }

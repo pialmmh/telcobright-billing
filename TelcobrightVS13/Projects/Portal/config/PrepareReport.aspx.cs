@@ -72,7 +72,7 @@ namespace PortalApp.config
                     else
                     {
                         template.GenerateInvoice(invoice);
-                        //template.SaveToPdf(@"C:\temp\abcd.pdf");
+                        //template.SaveToPdf(@"C:\temp\abcd10.pdf");
                     }
                     this.Session[refNo] = template;
                     Response.Redirect("~/config/ViewReport.aspx?refNo=" + HttpUtility.UrlEncode(refNo), false);

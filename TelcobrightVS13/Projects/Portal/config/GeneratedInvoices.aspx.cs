@@ -21,6 +21,7 @@ using Itenso.TimePeriod;
 using PortalApp.Models;
 using System.Reflection;
 using System.IO;
+using DevExpress.Office.Internal;
 using PortalApp.Handler;
 
 namespace PortalApp.config
@@ -112,7 +113,7 @@ namespace PortalApp.config
 
                     LinkButton lbAll = new LinkButton();
                     lbAll.ID = "btnViewSectionAll";
-                    lbAll.Text = "All";
+                    lbAll.Text = "Export All";
                     //lbAll.CommandName = item.Key;
                     //lb.Click += ViewReportOnClick;
                     //lb.OnClientClick = "window.open('PrepareReport.aspx?reportName=" + HttpUtility.HtmlDecode(item.Key) + "&invoiceId=" + DataBinder.Eval(e.Row.DataItem, "INVOICE_ID") + "'); return false;";
@@ -125,6 +126,7 @@ namespace PortalApp.config
                     int sectionNumber = 0;
 
 
+                    List<string> reportNames= new List<string>();
                     foreach (KeyValuePair<string, string> item in sectionData)
                     {
                         sectionNumber += 1;
@@ -134,12 +136,20 @@ namespace PortalApp.config
                         lb.CommandName = item.Key;
                         //lb.Click += ViewReportOnClick;
                         lb.OnClientClick = "window.open('PrepareReport.aspx?reportName=" + HttpUtility.HtmlDecode(item.Key) + "&invoiceId=" + DataBinder.Eval(e.Row.DataItem, "INVOICE_ID") + "'); return false;";
+                        string reportName = HttpUtility.HtmlDecode(item.Key);
+                        reportName = reportName.Split(',')[1].Trim();
+                        reportNames.Add(reportName);
                         e.Row.Cells[8].Controls.Add(lb);
 
                         Label lbl = new Label();
                         lbl.Text = " ";
                         e.Row.Cells[8].Controls.Add(lbl);
                     }
+
+                    string reportNamesAsStr = string.Join(",", reportNames);
+                    lbAll.OnClientClick = "window.open('PrepareReportAll.aspx?reportNames="
+                        + reportNamesAsStr + "&invoiceId=" + DataBinder.Eval(e.Row.DataItem, "INVOICE_ID") + "'); return false;";
+
                 }
             }
         }
