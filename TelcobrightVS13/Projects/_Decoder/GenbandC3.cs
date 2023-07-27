@@ -30,18 +30,28 @@ namespace Decoders
             return dateTime;
         }
 
-        public List<string[]> DecodeFile(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs)
+        public virtual List<string[]> DecodeFile(CdrCollectorInputData decoderInputData, out List<cdrinconsistent> inconsistentCdrs)
         {
-            string fileName = "VCDR.20130515.021157.1652";
-            List<string[]> lines = FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(fileName, ',', 5, "\"", ";");
+            this.Input = decoderInputData;
+            string fileName = this.Input.FullPath;
+            List<string> tempLines = FileAndPathHelper.readLinesFromCompressedFile(fileName).ToList();
+            List<string[]> lines = FileUtil.ParseLinesWithEnclosedAndUnenclosedFields(',', "\"", tempLines);
+            return decodeLine(decoderInputData, out inconsistentCdrs, fileName, lines);
+        }
+
+        public List<string[]> decodeLine(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs, string fileName, List<string[]> lines)
+        {
+            
+           
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
-            //this.Input = input;
+            
             List<cdrfieldmappingbyswitchtype> fieldMappings = null;
 
             foreach (string[] lineAsArr in lines)
             {
-                var textCdr = new List<string>();
+                if(lineAsArr.Length<15)continue;
+                string[] textCdr= new  string[input.MefDecodersData.Totalfieldtelcobright];
 
                 textCdr[Fn.Switchid] = Convert.ToString(9);
                 //cdr.SwitchId = 9;
@@ -55,15 +65,15 @@ namespace Decoders
                 textCdr[Fn.TerminatingIp] = lineAsArr[25];
                 //cdr.OriginatingIP = lineAsArr[70];
                 //cdr.TerminatingIP = lineAsArr[81];
-                textCdr[Fn.Mediaip1] = lineAsArr[71];//
-                textCdr[Fn.Mediaip2] = lineAsArr[82];//
+                //textCdr[Fn.Mediaip1] = lineAsArr[71];//
+                //textCdr[Fn.Mediaip2] = lineAsArr[82];//
                 //cdr.MediaIp1 = lineAsArr[71];
                 //cdr.MediaIp2 = lineAsArr[82];
 
                 //string dt = lineAsArr[103];//SignalStart
                 ////if (!string.IsNullOrEmpty(dt)) cdr.SignalingStartTime = parseStringToDate(dt);
 
-                string dt = lineAsArr[7];//SignalStart
+                string dt = lineAsArr[8];//SignalStart
                 if (!string.IsNullOrEmpty(dt)) textCdr[Fn.SignalingStartTime] = parseStringToDate(dt).ToString();
 
                 //dt = lineAsArr[38];//ConnectTime
@@ -93,34 +103,8 @@ namespace Decoders
                 phoneNumber = lineAsArr[14]; //OriginCalling 
                 if (!string.IsNullOrEmpty(phoneNumber)) textCdr[Fn.OriginatingCallingNumber] = phoneNumber;
 
-                //string phoneNumber = lineAsArr[74]; //OriginCalled 
-                //if (!string.IsNullOrEmpty(phoneNumber))
-                //{
-                //    string Contact = phoneNumber.Split(':')[1].Split('<')[0].Trim();
-                //    cdr.OriginatingCalledNumber = Contact;
-                //}
-
-                //phoneNumber = lineAsArr[73]; //OriginCalling 
-                //if (!string.IsNullOrEmpty(phoneNumber))
-                //{
-                //    string Contact = phoneNumber.Split(':')[1].Split('<')[0].Trim();
-                //    cdr.OriginatingCallingNumber = Contact;
-                //}
-
-
-                //phoneNumber = lineAsArr[85]; //TerminatingCalled 
-                //if (!string.IsNullOrEmpty(phoneNumber))
-                //{
-                //    string Contact = phoneNumber.Split(':')[1].Split('<')[0].Trim();
-                //    cdr.TerminatingCalledNumber = Contact;
-                //}
-
-                //phoneNumber = lineAsArr[84];
-                //if (!string.IsNullOrEmpty(phoneNumber))//TerminatingCalling 
-                //{
-                //    string Contact = phoneNumber.Split(':')[1].Split('<')[0].Trim();
-                //    cdr.TerminatingCallingNumber = Contact;
-                //}
+                
+                textCdr[Fn.Validflag] = "1";
                 decodedRows.Add(textCdr.ToArray());
             }
 

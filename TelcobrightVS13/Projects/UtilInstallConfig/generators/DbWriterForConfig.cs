@@ -9,6 +9,7 @@ using LibraryExtensions;
 using LibraryExtensions.ConfigHelper;
 using MediationModel;
 using MySql.Data.MySqlClient;
+using TelcobrightInfra;
 using TelcobrightMediation;
 using TelcobrightMediation.Config;
 
@@ -25,15 +26,13 @@ namespace InstallConfig._generator
     {
         public TelcobrightConfig Tbc { get; }
         public ConfigPathHelper ConfigPathHelper { get; }
-        private PartnerEntities Context { get; }
         private MySqlConnection Con { get; }
         private MySqlCommand Cmd { get; set; }
 
         public DbWriterForConfig(TelcobrightConfig tbc, ConfigPathHelper configPathHelper,
-            PartnerEntities context, MySqlConnection con)
+            MySqlConnection con)
         {
             this.Tbc = tbc;
-            this.Context = context;
             this.Con = con;
             if (this.Con.State != ConnectionState.Open) this.Con.Open();
             this.ConfigPathHelper = configPathHelper;
@@ -59,18 +58,21 @@ namespace InstallConfig._generator
             executeQuery("truncate table ne;");
             executeQuery("truncate table telcobrightpartner;");
 
-            this.Context.telcobrightpartners.AddRange(partners);
-
             executeQuery("insert into telcobrightpartner values " +
                                                     string.Join(",", partners.Select(p => p.GetExtInsertValues())));
             executeQuery("update telcobrightpartner set idCustomer=0 where CustomerName = 'Dummy'");
+
+           
+
+
             executeQuery("insert into ne values " +
                          string.Join(",", nes.Select(p => p.GetExtInsertValues())));
             executeQuery("update ne set idSwitch=0 where SwitchName = 'dummy'");
-
             executeQuery("SET FOREIGN_KEY_CHECKS = 1;");
-            executeQuery("ALTER TABLE ne DISABLE KEYS;");
-            executeQuery("ALTER TABLE telcobrightpartner DISABLE KEYS;");
+            executeQuery("ALTER TABLE ne enable KEYS;");
+            executeQuery("ALTER TABLE telcobrightpartner enable KEYS;");
+
+
 
 
             Console.WriteLine("Finished Loading partner and nes for " + this.Tbc.Telcobrightpartner.databasename + ".");

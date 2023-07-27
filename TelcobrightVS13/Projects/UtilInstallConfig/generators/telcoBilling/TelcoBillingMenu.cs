@@ -33,22 +33,29 @@ namespace InstallConfig
         public TelcoBillingMenu(Deploymentprofile deploymentprofile, ConsoleUtil consoleUtil)
         {
             this.Deploymentprofile = deploymentprofile;
+            this.ConsoleUtil = consoleUtil;
+            initConfig();
+        }
+
+        private void initConfig()
+        {
             ConfigPathHelper configPathHelper = new ConfigPathHelper(
-                "WS_Topshelf_Quartz", 
-                "portal", 
-                "UtilInstallConfig",
-                "generators");
+                            "WS_Topshelf_Quartz",
+                            "portal",
+                            "UtilInstallConfig",
+                            "generators");
             DbUtil.configPathHelper = configPathHelper;
             this.configGenerators =
-                TelcoBillingConfigGenerator.getSelectedOperatorsConfig(deploymentprofile);
+                TelcoBillingConfigGenerator.getSelectedOperatorsConfig(this.Deploymentprofile);
             this.TbcWithoutGeneratedConfig = this.configGenerators.Select(c => c.Tbc).ToList();
             this.ConfigPathHelper = configPathHelper;
-            this.ConsoleUtil = consoleUtil;
         }
+
         public void showMenu()
         {
             {
                 Start:
+                this.initConfig();
                 Console.Clear();
                 Console.WriteLine("Welcome to Telcobright Initial Configuration Utility");
                 Console.WriteLine("Select Task:");

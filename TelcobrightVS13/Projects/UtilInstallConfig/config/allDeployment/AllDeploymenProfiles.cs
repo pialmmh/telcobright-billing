@@ -139,6 +139,11 @@ namespace InstallConfig
                                 Name = "purple_cas",
                                 SchedulerPortNo = 574,
                             },
+                            new InstanceConfig
+                            {
+                                Name = "agni_cas",
+                                SchedulerPortNo = 575,
+                            }
                         }
                     },
                 };

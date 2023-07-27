@@ -43,7 +43,7 @@ namespace TelcobrightInfra
 
         public static string execCommandAndGetOutput(MySqlConnection con, string commandText)
         {
-            MySqlCommand cmd= new MySqlCommand();
+            MySqlCommand cmd= new MySqlCommand("",con);
             cmd.CommandText = commandText;
             MySqlDataReader reader = cmd.ExecuteReader();
             StringBuilder sb = new StringBuilder();

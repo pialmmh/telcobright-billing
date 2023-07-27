@@ -24,25 +24,18 @@ namespace Decoders
         protected CdrCollectorInputData Input { get; set; }
 
 
-        private static DateTime parseStringToDate(string timestamp)  //20181028051316400 yyyyMMddhhmmssfff
-        {
-            DateTime dateTime = DateTime.ParseExact(timestamp, "yyyyMMddHHmmssfff", CultureInfo.InvariantCulture);
-            return dateTime;
-        }
 
-        public static string ConvertToUnixTimestamp(DateTime date)
+
+        public static double ConvertToUnixTimestamp(DateTime date)
         {
 
             DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
             TimeSpan diff = date.ToUniversalTime() - origin;
-            return Math.Floor(diff.TotalSeconds).ToString();
+            return Math.Floor(diff.TotalSeconds);
         }
 
-        public List<string[]> DecodeFile(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs)
+        protected static List<string[]> decodeLines(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs, string fileName, List<string[]> lines)
         {
-
-            string fileName = "cdr_success_192.168.1.105_From_2023-05-16_00_01_To_2023-05-17_00_00.csv";
-            List<string[]> lines = FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(fileName, ',', 5, "\"", ";");
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
             //this.Input = input;
@@ -50,88 +43,70 @@ namespace Decoders
 
             foreach (string[] lineAsArr in lines)
             {
-                var textCdr = new List<string>();
+
+                string[] textCdr = new string[input.MefDecodersData.Totalfieldtelcobright];
+
 
                 textCdr[Fn.Switchid] = Convert.ToString(9);
-                //cdr.SwitchId = 9;
                 textCdr[Fn.Sequencenumber] = lineAsArr[0];
-                //cdr.SequenceNumber = Convert.ToInt64(lineAsArr[0]);
+
                 textCdr[Fn.Filename] = fileName;
-                textCdr[Fn.IncomingRoute] = lineAsArr[4];
-                textCdr[Fn.DurationSec] = lineAsArr[1];
-                //cdr.DurationSec = Convert.ToDecimal(lineAsArr[17]) / 1000;
-                textCdr[Fn.Originatingip] = lineAsArr[4];
-                textCdr[Fn.TerminatingIp] = lineAsArr[12];
-                //cdr.OriginatingIP = lineAsArr[70];
-                //cdr.TerminatingIP = lineAsArr[81];
-                textCdr[Fn.Mediaip1] = lineAsArr[71];
-                textCdr[Fn.Mediaip2] = lineAsArr[82];
-                //cdr.MediaIp1 = lineAsArr[71];
-                //cdr.MediaIp2 = lineAsArr[82];
+                string originatingIp = lineAsArr[5];
+                string originatingPort = lineAsArr[6];
 
-                //string dt = lineAsArr[103];//SignalStart
-                ////if (!string.IsNullOrEmpty(dt)) cdr.SignalingStartTime = parseStringToDate(dt);
-
-                //string diff = ConvertToUnixTimestamp(Convert.ToDateTime(lineAsArr[82])) - ConvertToUnixTimestamp((DateTime)textCdr[Fn.AnswerTime]);
-                //textCdr[Fn.DurationSec] = diff;
+                string orignatingIpPort = originatingIp + ":" + originatingPort;
+                textCdr[Fn.IncomingRoute] = orignatingIpPort;
 
 
-                //OriginCalledId
-                if (!string.IsNullOrEmpty(lineAsArr[6].Trim())) textCdr[Fn.OriginatingCalledNumber] = lineAsArr[6].Trim();
-
-                //OriginCalling 
-                if (!string.IsNullOrEmpty(lineAsArr[8].Trim())) textCdr[Fn.OriginatingCallingNumber] = lineAsArr[8].Trim();
-
-
-                //TerminatingCalledId
-                if (!string.IsNullOrEmpty(lineAsArr[7].Trim())) textCdr[Fn.TerminatingCalledNumber] = lineAsArr[7].Trim();
-
-                //TerminatingCalling
-                if (!string.IsNullOrEmpty(lineAsArr[17].Trim())) textCdr[Fn.OriginatingCallingNumber] = lineAsArr[17].Trim();
+                textCdr[Fn.Originatingip] = orignatingIpPort;
+                string terminitingIp = lineAsArr[12];
+                string terminitingPort = lineAsArr[13];
+                string terminitingIpPort = terminitingIp + ":" + terminitingPort;
+                textCdr[Fn.TerminatingIp] = terminitingIpPort;
 
 
-
-           
-
-
-                //string phoneNumber = lineAsArr[74]; //OriginCalled 
-                //if (!string.IsNullOrEmpty(phoneNumber))
-                //{
-                //    string Contact = phoneNumber.Split(':')[1].Split('<')[0].Trim();
-                //    cdr.OriginatingCalledNumber = Contact;
-                //}
-
-                //phoneNumber = lineAsArr[73]; //OriginCalling 
-                //if (!string.IsNullOrEmpty(phoneNumber))
-                //{
-                //    string Contact = phoneNumber.Split(':')[1].Split('<')[0].Trim();
-                //    cdr.OriginatingCallingNumber = Contact;
-                //}
+                textCdr[Fn.Mediaip1] = lineAsArr[18];
+                textCdr[Fn.Mediaip2] = lineAsArr[21];
 
 
-                //phoneNumber = lineAsArr[85]; //TerminatingCalled 
-                //if (!string.IsNullOrEmpty(phoneNumber))
-                //{
-                //    string Contact = phoneNumber.Split(':')[1].Split('<')[0].Trim();
-                //    cdr.TerminatingCalledNumber = Contact;
-                //}
+                string startTimestr = lineAsArr[10].Trim();
+                string answerTimeStr = lineAsArr[11].Trim();
+                string endTimeStr = lineAsArr[12].Trim();
 
-                //phoneNumber = lineAsArr[84];
-                //if (!string.IsNullOrEmpty(phoneNumber))//TerminatingCalling 
-                //{
-                //    string Contact = phoneNumber.Split(':')[1].Split('<')[0].Trim();
-                //    cdr.TerminatingCallingNumber = Contact;
-                //}
+                DateTime startTime = startTimestr.ConvertToDateTimeFromCustomFormat("yyyyMMddHHmmss.fff");
+                DateTime anstime = answerTimeStr.ConvertToDateTimeFromCustomFormat("yyyyMMddHHmmss.fff");
+                DateTime endtime = endTimeStr.ConvertToDateTimeFromCustomFormat("yyyyMMddHHmmss.fff");
+
+
+                textCdr[Fn.StartTime] = startTime.ToMySqlFormatWithoutQuote();
+                textCdr[Fn.AnswerTime] = anstime.ToMySqlFormatWithoutQuote();
+                textCdr[Fn.Endtime] = endtime.ToMySqlFormatWithoutQuote();
+                TimeSpan duration = endtime - anstime;
+                double durationSec = (duration.TotalMilliseconds) / 1000;
+                textCdr[Fn.DurationSec] = durationSec.ToString();
+
+
+
+                if (!string.IsNullOrEmpty(lineAsArr[7].Trim())) textCdr[Fn.OriginatingCalledNumber] = lineAsArr[7].Trim();
+                if (!string.IsNullOrEmpty(lineAsArr[9].Trim())) textCdr[Fn.OriginatingCallingNumber] = lineAsArr[9].Trim();
+                if (!string.IsNullOrEmpty(lineAsArr[8].Trim())) textCdr[Fn.TerminatingCalledNumber] = lineAsArr[8].Trim();
+                if (!string.IsNullOrEmpty(lineAsArr[20].Trim())) textCdr[Fn.TerminatingCallingNumber] = lineAsArr[20].Trim();
+
+
+                textCdr[Fn.Validflag] = "1";
                 decodedRows.Add(textCdr.ToArray());
             }
-
             return decodedRows;
-
         }
 
 
-
-
+        public virtual List<string[]> DecodeFile(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs)
+        {
+            this.Input = input;
+            string fileName = this.Input.FullPath;
+            List<string[]> lines = FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(fileName, ',', 1, "\"", ";");
+            return decodeLines(Input, out inconsistentCdrs, fileName, lines);
+        }
     }
 }
 

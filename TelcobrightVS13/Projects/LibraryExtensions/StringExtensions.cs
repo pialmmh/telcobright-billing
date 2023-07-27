@@ -95,6 +95,19 @@ namespace LibraryExtensions
                 return false;
             }
         }
+        
+        public static DateTime ConvertToDateTimeFromCustomFormat(this string s, string dateFormat)
+        {
+            DateTime targetDate = new DateTime();
+            if (DateTime.TryParseExact(s, dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out targetDate) == true)
+            {
+                return targetDate;
+            }
+            else
+            {
+                throw new Exception("Format String is not a valid date time format.");
+            }
+        }
         public static DateTime ConvertToDateTimeFromMySqlFormat(this string s)
         {
             DateTime targetDate = new DateTime();
