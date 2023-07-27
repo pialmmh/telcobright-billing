@@ -310,14 +310,6 @@
     <Compile Include="config\cas\casDbH\purple_cas\CasPurpleQuartzConfig.cs" />
     <Compile Include="config\cas\casDbH\purple_cas\CasPurpleServerConfig.cs" />
     <Compile Include="config\cas\casDbH\purple_cas\CasPurpleServiceGroups.cs" />
-    <Compile Include="config\summit2\CasSummit_2_DatabaseSettings.cs" />
-    <Compile Include="config\summit2\CasSummit_2_DirectorySettings.cs" />
-    <Compile Include="config\summit2\CasSummit_2_PortalSetting.cs" />
-    <Compile Include="config\summit2\CasSummit_2_ProductAndServiceConfig.cs" />
-    <Compile Include="config\summit2\CasSummit_2_QuartzConfig.cs" />
-    <Compile Include="config\summit2\CasSummit_2_ServerConfig.cs" />
-    <Compile Include="config\summit2\CasSummit_2_ServiceGroups.cs" />
-    <Compile Include="config\summit2\CasSummit_2_ConfigMain.cs" />
     <Compile Include="config\purple\PurpleConfigMain.cs" />
     <Compile Include="config\purple\PurpleDatabaseSettings.cs" />
     <Compile Include="config\purple\PurpleDirectorySettings.cs" />

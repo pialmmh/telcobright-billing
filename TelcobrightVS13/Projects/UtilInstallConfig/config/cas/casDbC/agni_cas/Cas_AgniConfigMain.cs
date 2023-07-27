@@ -28,7 +28,7 @@ namespace InstallConfig
                 new telcobrightpartner
                 {
                     idCustomer = 8,
-                    CustomerName = "SR Telecom Ltd.",
+                    CustomerName = "Agni Telecom Ltd.",
                     idOperatorType = 2,
                     databasename = "agni_cas",
                     databasetype = "",
@@ -87,13 +87,13 @@ namespace InstallConfig
             {
                 new ne
                 {
-                    idSwitch= 8,
+                    idSwitch= 1,
                     idCustomer= this.Tbc.Telcobrightpartner.idCustomer,
                     idcdrformat= 3,
                     idMediationRule= 2,
-                    SwitchName= "huawei",
-                    CDRPrefix= "SRT",
-                    FileExtension= ".dat",
+                    SwitchName= "genband",
+                    CDRPrefix= "VCDR",
+                    FileExtension= ".gz",
                     Description= null,
                     SourceFileLocations= vaultPrimary.Name,
                     BackupFileLocations= vaultCAS.Name,
@@ -119,13 +119,13 @@ namespace InstallConfig
                 },
                 new ne
                 {
-                    idSwitch= 18,
+                    idSwitch= 2,
                     idCustomer= this.Tbc.Telcobrightpartner.idCustomer,
                     idcdrformat= 25,
                     idMediationRule= 2,
-                    SwitchName= "cataleya",
-                    CDRPrefix= "esdr",
-                    FileExtension= ".txt",
+                    SwitchName= "reve",
+                    CDRPrefix= "cdr",
+                    FileExtension= ".csv",
                     Description= null,
                     SourceFileLocations= this.vaultCataleya.Name,
                     BackupFileLocations= null,

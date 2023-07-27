@@ -93,7 +93,7 @@ namespace InstallConfig
             {
                 new ne
                 {
-                    idSwitch= 7,
+                    idSwitch= 8,
                     idCustomer= this.Tbc.Telcobrightpartner.idCustomer,
                     idcdrformat= 17,
                     idMediationRule= 2,

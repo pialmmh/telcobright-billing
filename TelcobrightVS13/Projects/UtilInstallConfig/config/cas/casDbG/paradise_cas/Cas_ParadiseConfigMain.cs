@@ -92,11 +92,11 @@ namespace InstallConfig
             {
                 new ne
                 {
-                    idSwitch= 7,
+                    idSwitch= 1,
                     idCustomer= this.Tbc.Telcobrightpartner.idCustomer,
                     idcdrformat= 17,
                     idMediationRule= 2,
-                    SwitchName= "JslZteDhk",
+                    SwitchName= "huwaei",
                     CDRPrefix= "ICX",
                     FileExtension= ".DAT",
                     Description= null,
