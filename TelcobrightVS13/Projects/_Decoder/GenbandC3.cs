@@ -46,65 +46,61 @@ namespace Decoders
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
             
-            List<cdrfieldmappingbyswitchtype> fieldMappings = null;
+            
 
             foreach (string[] lineAsArr in lines)
             {
                 if(lineAsArr.Length<15)continue;
+                    
+
                 string[] textCdr= new  string[input.MefDecodersData.Totalfieldtelcobright];
 
-                textCdr[Fn.Switchid] = Convert.ToString(9);
-                //cdr.SwitchId = 9;
+                string durationStr = lineAsArr[52];
+                double durationIn10sOfMillis=0;
+                if (double.TryParse(durationStr, out durationIn10sOfMillis) && durationIn10sOfMillis <= 0) continue;
+
+
+
+                textCdr[Fn.DurationSec] = ((durationIn10sOfMillis*10)/1000).ToString();
                 textCdr[Fn.Sequencenumber] = lineAsArr[0];
-                //cdr.SequenceNumber = Convert.ToInt64(lineAsArr[0]);
+                textCdr[Fn.ReleaseCauseSystem] = lineAsArr[4];
                 textCdr[Fn.Filename] = fileName;
                 textCdr[Fn.IncomingRoute] = lineAsArr[22];
-                textCdr[Fn.DurationSec] = lineAsArr[52];
-                //cdr.DurationSec = Convert.ToDecimal(lineAsArr[17]) / 1000;
-                textCdr[Fn.Originatingip] = lineAsArr[21];
-                textCdr[Fn.TerminatingIp] = lineAsArr[25];
-                //cdr.OriginatingIP = lineAsArr[70];
-                //cdr.TerminatingIP = lineAsArr[81];
-                //textCdr[Fn.Mediaip1] = lineAsArr[71];//
-                //textCdr[Fn.Mediaip2] = lineAsArr[82];//
-                //cdr.MediaIp1 = lineAsArr[71];
-                //cdr.MediaIp2 = lineAsArr[82];
+                textCdr[Fn.OriginatingCallingNumber] = lineAsArr[14];
+                textCdr[Fn.OriginatingCalledNumber] = lineAsArr[17];
+                textCdr[Fn.TerminatingCalledNumber] = lineAsArr[18];
+                textCdr[Fn.TerminatingCallingNumber] = lineAsArr[14];
+                textCdr[Fn.OutgoingRoute] = lineAsArr[26];
 
-                //string dt = lineAsArr[103];//SignalStart
-                ////if (!string.IsNullOrEmpty(dt)) cdr.SignalingStartTime = parseStringToDate(dt);
-
-                string dt = lineAsArr[8];//SignalStart
-                if (!string.IsNullOrEmpty(dt)) textCdr[Fn.SignalingStartTime] = parseStringToDate(dt).ToString();
-
-                //dt = lineAsArr[38];//ConnectTime
-                //if (!string.IsNullOrEmpty(dt)) cdr.ConnectTime = parseStringToDate(dt);
+                string[] formats = new string[] { "MddyyyyHHmmssfff", "MMddyyyyHHmmssfff" };
 
 
-                dt = lineAsArr[8];//ConnectTime
-                if (!string.IsNullOrEmpty(dt)) textCdr[Fn.ConnectTime] = parseStringToDate(dt).ToString();
+                if (!string.IsNullOrEmpty(lineAsArr[8]))
+                {
+                    string startTimestr = lineAsArr[8].Trim();
+                    DateTime startTime = startTimestr.ConvertToDateTimeFromCustomFormats(formats);
+                    textCdr[Fn.StartTime] = startTime.ToMySqlFormatWithoutQuote();
+                }
 
-                //dt = lineAsArr[129];//AnswerTime
-                //if (!string.IsNullOrEmpty(dt)) cdr.AnswerTime = parseStringToDate(dt);
+                string ansTimestr = lineAsArr[9].Trim();
+                DateTime ansTime = ansTimestr.ConvertToDateTimeFromCustomFormats(formats);
 
-                dt = lineAsArr[9];//AnswerTime
-                if (!string.IsNullOrEmpty(dt)) textCdr[Fn.AnswerTime] = parseStringToDate(dt).ToString();
-
-                //dt = lineAsArr[130];//EndTime
-                //if (!string.IsNullOrEmpty(dt)) cdr.EndTime = parseStringToDate(dt);
-
-                dt = lineAsArr[11];//EndTime
-                if (!string.IsNullOrEmpty(dt)) textCdr[Fn.Endtime] = parseStringToDate(dt).ToString();
-
-
-
-                string phoneNumber = lineAsArr[17]; //OriginCalled 
-                if (!string.IsNullOrEmpty(phoneNumber)) textCdr[Fn.OriginatingCalledNumber] = phoneNumber;
-
-                phoneNumber = lineAsArr[14]; //OriginCalling 
-                if (!string.IsNullOrEmpty(phoneNumber)) textCdr[Fn.OriginatingCallingNumber] = phoneNumber;
-
-                
+                if (!string.IsNullOrEmpty(lineAsArr[9]))
+                {
+                    textCdr[Fn.AnswerTime] = ansTime.ToMySqlFormatWithoutQuote();
+                }
+                string endTimestr = lineAsArr[11].Trim();
+                if (!string.IsNullOrEmpty(endTimestr))
+                {
+                    DateTime endTime = endTimestr.ConvertToDateTimeFromCustomFormats(formats);
+                    textCdr[Fn.Endtime] = endTime.ToMySqlFormatWithoutQuote();
+                }
+                else
+                {
+                    textCdr[Fn.Endtime] = ansTime.ToMySqlFormatWithoutQuote();
+                }
                 textCdr[Fn.Validflag] = "1";
+                textCdr[Fn.ChargingStatus] = "1";
                 decodedRows.Add(textCdr.ToArray());
             }
 

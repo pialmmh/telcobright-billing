@@ -108,6 +108,19 @@ namespace LibraryExtensions
                 throw new Exception("Format String is not a valid date time format.");
             }
         }
+        public static DateTime ConvertToDateTimeFromCustomFormats(this string s, IEnumerable<string> dateFormats)
+        {
+            DateTime targetDate = new DateTime();
+            string[] formats = dateFormats.ToArray();
+            if (DateTime.TryParseExact(s, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out targetDate) == true)
+            {
+                return targetDate;
+            }
+            else
+            {
+                throw new Exception("Format String is not a valid date time format.");
+            }
+        }
         public static DateTime ConvertToDateTimeFromMySqlFormat(this string s)
         {
             DateTime targetDate = new DateTime();

@@ -12,9 +12,19 @@ namespace LibraryExtensions
     {
         public static string[] readLinesFromCompressedFile(string fileName)
         {
+            DirectoryInfo tempDir = new DirectoryInfo("tempcdr");
+            if (Directory.Exists(tempDir.Name) == false)
+            {
+                Directory.CreateDirectory(tempDir.Name);
+            }
+            else
+            {
+                tempDir.DeleteContentRecusively();
+            }
             string compressedFile = fileName;
-            string tempFileName = Path.GetFileName(fileName) + Guid.NewGuid().ToString();
+            string tempFileName = tempDir.Name + Path.DirectorySeparatorChar +  Path.GetFileName(fileName) + Guid.NewGuid().ToString();
 
+            
             // Extract the .gz file into the temporary file
             using (FileStream gzFileStream = File.OpenRead(compressedFile))
             {

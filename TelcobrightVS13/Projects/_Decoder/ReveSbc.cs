@@ -34,12 +34,18 @@ namespace Decoders
             return Math.Floor(diff.TotalSeconds);
         }
 
+        public virtual List<string[]> DecodeFile(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs)
+        {
+            this.Input = input;
+            string fileName = this.Input.FullPath;
+            List<string[]> lines = FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(fileName, ',', 1, "\"", ";");
+            return decodeLines(Input, out inconsistentCdrs, fileName, lines);
+        }
+
         protected static List<string[]> decodeLines(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs, string fileName, List<string[]> lines)
         {
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
-            //this.Input = input;
-            List<cdrfieldmappingbyswitchtype> fieldMappings = null;
 
             foreach (string[] lineAsArr in lines)
             {
@@ -47,7 +53,7 @@ namespace Decoders
                 string[] textCdr = new string[input.MefDecodersData.Totalfieldtelcobright];
 
 
-                textCdr[Fn.Switchid] = Convert.ToString(9);
+                textCdr[Fn.Switchid] = "9";
                 textCdr[Fn.Sequencenumber] = lineAsArr[0];
 
                 textCdr[Fn.Filename] = fileName;
@@ -97,15 +103,6 @@ namespace Decoders
                 decodedRows.Add(textCdr.ToArray());
             }
             return decodedRows;
-        }
-
-
-        public virtual List<string[]> DecodeFile(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs)
-        {
-            this.Input = input;
-            string fileName = this.Input.FullPath;
-            List<string[]> lines = FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(fileName, ',', 1, "\"", ";");
-            return decodeLines(Input, out inconsistentCdrs, fileName, lines);
         }
     }
 }
