@@ -6,6 +6,8 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using MediationModel;
 using TelcobrightMediation;
 using Newtonsoft.Json;
@@ -39,6 +41,7 @@ namespace PortalApp.config
                     //int length = reportNames.Length - startPos;
                     //reportNames = $"{Tbc.DatabaseSetting.DatabaseName}#{reportNames.Substring(startPos, length)}";
                     List<string> TempReportNames = reportNames.Split(',').ToList();
+                    List<string> generatedPdfPaths = new List<string>();
 
                     for (int i = 0; i < TempReportNames.Count; i++)
                     {
@@ -83,6 +86,7 @@ namespace PortalApp.config
                                 //template.SaveToPdf(@"C:\temp\abcd" + tempNum + ".pdf");
                                 string pdfFileName = $"C:\\temp\\invoice_{Guid.NewGuid()}.pdf";
                                 template.SaveToPdf(pdfFileName);
+                                generatedPdfPaths.Add(pdfFileName);
 
                             }
                             else
@@ -91,11 +95,30 @@ namespace PortalApp.config
                                 //template.SaveToPdf(@"C:\temp\abcd" + tempNum + ".pdf");
                                 string pdfFileName = $"C:\\temp\\invoice_{Guid.NewGuid()}.pdf";
                                 template.SaveToPdf(pdfFileName);
+                                generatedPdfPaths.Add(pdfFileName);
                             }
                         }
                     }
+
+                    // Call the updated method to merge the generated PDFs and get the merged PDF as a MemoryStream
+                    //MemoryStream mergedPdfStream = MergeGeneratedPdfs(generatedPdfPaths);
+
+                    // Show the preview using a PDF viewer control on the web page
+                    //ShowPdfPreview(mergedPdfStream);
+
+
+                    // Call the updated method to merge the generated PDFs and get the merged PDF as a MemoryStream
+                    MemoryStream mergedPdfStream = MergeGeneratedPdfs(generatedPdfPaths);
+
+                    // Add page numbers to the merged PDF
+                    MemoryStream numberedPdfStream = AddPageNumbersToPdf(mergedPdfStream);
+
+                    // Show the preview using a PDF viewer control on the web page
+                    ShowPdfPreview(numberedPdfStream);
+
+                    //MergeGeneratedPdfs(generatedPdfPaths);
                     //string reportNamesTemp = string.Join(",", TempReportNames);
-                    
+
                     //else
                     //{
                     //    //template.GenerateInvoice(invoice);
@@ -106,6 +129,80 @@ namespace PortalApp.config
                     //Context.ApplicationInstance.CompleteRequest();
                 }
             }
+        }
+
+        private MemoryStream MergeGeneratedPdfs(List<string> pdfFilePaths)
+        {
+            MemoryStream mergedPdfStream = new MemoryStream();
+
+            using (Document document = new Document())
+            {
+                PdfCopy pdf = new PdfCopy(document, mergedPdfStream);
+
+                document.Open();
+                int totalNumPages = 0;
+                
+
+                foreach (string pdfFilePath in pdfFilePaths)
+                {
+                    PdfReader reader = new PdfReader(pdfFilePath);
+                    totalNumPages += reader.NumberOfPages;
+                    for (int i = 1; i <= reader.NumberOfPages; i++)
+                    {
+                        PdfImportedPage page = pdf.GetImportedPage(reader, i);
+                        pdf.AddPage(page);
+                    }
+                    reader.Close();
+                }
+            }
+
+            return mergedPdfStream;
+        }
+        private void ShowPdfPreview(MemoryStream pdfStream)
+        {
+            // Set the appropriate content type for PDF
+            Response.ContentType = "application/pdf";
+
+            // Provide a filename for the merged PDF, if needed
+            // Response.AddHeader("Content-Disposition", "attachment; filename=mergedInvoice.pdf");
+
+            // Write the PDF content to the response stream for preview
+            Response.BinaryWrite(pdfStream.ToArray());
+            //Response.End();
+        }
+        private MemoryStream AddPageNumbersToPdf(MemoryStream pdfStream)
+        {
+            float xLocation = 270; // X-coordinate of the page number
+            float yLocation = 40;  // Y-coordinate of the page number
+
+            // Clone the pdfStream to avoid object disposed exception
+            MemoryStream clonedPdfStream = new MemoryStream(pdfStream.ToArray());
+
+            MemoryStream numberedPdfStream = new MemoryStream();
+            using (PdfReader reader = new PdfReader(clonedPdfStream))
+            using (PdfStamper stamper = new PdfStamper(reader, numberedPdfStream))
+            {
+                int totalNumPages = reader.NumberOfPages;
+
+                for (int pageNum = 1; pageNum <= totalNumPages; pageNum++)
+                {
+                    PdfContentByte pdfContent = stamper.GetOverContent(pageNum);
+                    Rectangle mediabox = reader.GetPageSize(pageNum);
+
+                    pdfContent.BeginText();
+
+                    // Set font and size for the page number text
+                    BaseFont baseFont = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+                    pdfContent.SetFontAndSize(baseFont, 10);
+
+                    pdfContent.ShowTextAligned(0, $"Page {pageNum} of {totalNumPages}", xLocation, yLocation, 0);
+                    pdfContent.EndText();
+                }
+
+                stamper.Close();
+            }
+
+            return numberedPdfStream;
         }
     }
 }

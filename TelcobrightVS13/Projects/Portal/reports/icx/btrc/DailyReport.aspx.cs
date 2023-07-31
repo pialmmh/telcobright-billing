@@ -119,6 +119,36 @@ public partial class DefaultRptBtrcDailyIcx : System.Web.UI.Page
         domDataAdapter.Fill(ds);
         return ds;
     }
+    List<InternationalReportRow> ConvertBtrcDataSetToList2(DataSet ds, Dictionary<int, string> partnerNames)
+    {
+        bool hasRecords = ds.Tables.Cast<DataTable>()
+            .Any(table => table.Rows.Count != 0);
+        List<InternationalReportRow> records = new List<InternationalReportRow>();
+        if (hasRecords == true)
+        {
+            foreach (DataTable table in ds.Tables)
+            {
+                foreach (DataRow row in table.Rows)
+                {
+                    InternationalReportRow record = new InternationalReportRow();
+                    int partnerId = row.Field<int>("partnerid");
+                    string partnerName = "";
+                    if (partnerNames.TryGetValue(partnerId, out partnerName) == false)
+                    {
+                        throw new Exception("Could not find partner name for partner id=" + partnerId);
+                    }
+                    record.partnerName = partnerName;
+                    record.inNoOfCalls = row.Field<Decimal>("innoofcalls");
+                    //record.inNoOfCalls = Convert.ToDecimal(row["innoofcalls"]);
+                    record.incomingMinutes = row.Field<Decimal>("incomingMinutes");
+                    record.outNoOfCalls = row.Field<Decimal>("outnoofcalls");
+                    record.outgoingMinutes = row.Field<Decimal>("outgoingMinutes");
+                    records.Add(record);
+                }
+            }
+        }
+        return records;
+    }
     List<BtrcReportRow> ConvertBtrcDataSetToList(DataSet ds, Dictionary<int, string> partnerNames)
     {
         bool hasRecords = ds.Tables.Cast<DataTable>()
@@ -144,6 +174,26 @@ public partial class DefaultRptBtrcDailyIcx : System.Web.UI.Page
             }
         }
         return records;
+    }
+    DataSet getInternatinonalReport(MySqlConnection connection)
+    {
+        string Sql =
+            $@"select i.partnerid as partnerid,i.noofcalls as innoofcalls, i.minutes as incomingMinutes, o.noofcalls as outnoofcalls, o.minutes as outgoingMinutes from
+(select tup_inpartnerid as partnerid,sum(totalcalls) as noofcalls,sum(duration1) / 60 as minutes
+from sum_voice_day_03
+where tup_starttime >= '{txtDate.Text}' and tup_starttime < '{txtDate1.Text}'
+group by tup_inpartnerid
+) i
+left join 
+(select tup_outpartnerid as partnerid,sum(totalcalls) as noofcalls ,sum(duration3)/60 as minutes 
+from sum_voice_day_02
+where tup_starttime >= '{txtDate.Text}' and tup_starttime < '{txtDate1.Text}'
+group by tup_outpartnerid) o
+on i.partnerid=o.partnerid;";
+
+
+        DataSet ds = getBtrcReport(connection, Sql);
+        return ds;
     }
     DataSet getDomesticReport(MySqlConnection connection)
     {
@@ -467,6 +517,8 @@ group by tup_outpartnerid;";
         List<BtrcReportRow> intInComing_2_Records = new List<BtrcReportRow>();
         List<BtrcReportRow> intOutComing_1_Records = new List<BtrcReportRow>();
         List<BtrcReportRow> intOutComing_2_Records = new List<BtrcReportRow>();
+        List<InternationalReportRow> international_Daily_Records = new List<InternationalReportRow>();
+
         Dictionary<int, string> partnerNames = null;
         using (PartnerEntities context = new PartnerEntities())
         {
@@ -498,9 +550,14 @@ group by tup_outpartnerid;";
             DataSet intOutComing_2_Ds = getInternatinonalOutComingReport_2(connection);
             intOutComing_2_Records = ConvertBtrcDataSetToList(intOutComing_2_Ds, partnerNames);
 
+            DataSet internatinonal_Daily_Ds= getInternatinonalReport(connection);
+            international_Daily_Records = ConvertBtrcDataSetToList2(internatinonal_Daily_Ds, partnerNames);
+
+
+
 
             ExcelExporterForBtrcReport.ExportToExcelBtrcReport("Btrc_" + txtDate.Text
-                    + ".xlsx", Response, domesticRecords, intInComing_1_Records, intInComing_2_Records, intOutComing_1_Records, intOutComing_2_Records,txtDate.Text, operatorName);
+                    + ".xlsx", Response, domesticRecords, intInComing_1_Records, intInComing_2_Records, intOutComing_1_Records, intOutComing_2_Records,international_Daily_Records,txtDate.Text, operatorName);
 
 
 

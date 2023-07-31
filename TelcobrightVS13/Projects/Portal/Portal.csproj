@@ -58,6 +58,10 @@
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>..\packages\BouncyCastle.1.8.9\lib\BouncyCastle.Crypto.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="ClosedXML, Version=0.76.0.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
       <HintPath>..\packages\ClosedXML.0.76.0\lib\net40-client\ClosedXML.dll</HintPath>
       <Private>True</Private>
@@ -125,6 +129,10 @@
     </Reference>
     <Reference Include="Itenso.TimePeriod, Version=2.1.1.0, Culture=neutral, PublicKeyToken=8cb6db75b4e81486, processorArchitecture=MSIL">
       <HintPath>..\packages\TimePeriodLibrary.NET.2.1.1\lib\net46\Itenso.TimePeriod.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.13.3, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13.3\lib\itextsharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Kentor.OwinCookieSaver, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -559,6 +567,7 @@
     <Content Include="reports\icx\customReports\GrameenphoneRoaming.aspx" />
     <Content Include="reports\icx\customReports\RobiCallForwarding.aspx" />
     <Content Include="reports\icx\customReports\RobiRoaming.aspx" />
+    <Content Include="reports\icx\Domestic2.aspx" />
     <Content Include="reports\icx\LocalTollFree.aspx" />
     <Content Include="reports\icx\Domestic.aspx" />
     <Content Include="reports\icx\InternationalIn_ICX.aspx" />
@@ -917,6 +926,7 @@
     <Compile Include="ReportHelper\AbstractSqlHelper.cs" />
     <Compile Include="ReportHelper\SqlHelperDomestic.cs" />
     <Compile Include="ReportHelper\SqlHelperInIGWRouteWise.cs" />
+    <Compile Include="ReportHelper\SqlHelperDomesticLtfs.cs" />
     <Compile Include="ReportHelper\SqlHelperIntlInICXv2.cs" />
     <Compile Include="ReportHelper\SqlHelperIntlInICX.cs" />
     <Compile Include="ReportHelper\SqlHelperIntlInIGW.cs" />
@@ -1016,6 +1026,13 @@
     </Compile>
     <Compile Include="reports\icx\customReports\RobiRoaming.aspx.designer.cs">
       <DependentUpon>RobiRoaming.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\icx\Domestic2.aspx.cs">
+      <DependentUpon>Domestic2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\icx\Domestic2.aspx.designer.cs">
+      <DependentUpon>Domestic2.aspx</DependentUpon>
     </Compile>
     <Compile Include="reports\icx\LocalTollFree.aspx.cs">
       <DependentUpon>LocalTollFree.aspx</DependentUpon>

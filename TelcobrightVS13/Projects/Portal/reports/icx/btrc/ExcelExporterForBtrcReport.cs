@@ -137,7 +137,7 @@ namespace PortalApp.ReportHelper
 
         public static void createBtrcHeader(ExcelWorksheet ws, string headerCell, int cellNo, string header)
         {
-            ws.Cells[headerCell].Merge = true;
+            if (!ws.Cells[headerCell].Merge) ws.Cells[headerCell].Merge = true;
             ws.Cells[headerCell].Value = header;
             ws.Cells[headerCell].Style.Font.Bold = true;
             ws.Cells[headerCell].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
@@ -572,6 +572,7 @@ namespace PortalApp.ReportHelper
             List<BtrcReportRow> intInComing_2_Records,
             List<BtrcReportRow> intOutComing_1_Records,
             List<BtrcReportRow> intOutComing_2_Records,
+            List<InternationalReportRow> international_Daily_Records,
             string startDate,
             string partnerName
         )
@@ -623,8 +624,57 @@ namespace PortalApp.ReportHelper
                         ws.Column(i).AutoFit();
                     }
 
+                    ExcelWorksheet ws2 = pck.Workbook.Worksheets.Add("Sheet2");
 
 
+                    icxCell = "A2";
+                    ws2.Cells[icxCell].Value = "NAME OF ICX:";
+                    ws2.Cells[icxCell].Style.Font.Bold = true;
+                    ws2.Cells[icxCell].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    ws2.Cells[icxCell].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    ws2.Cells["B2:C2"].Merge = true;
+                    icxCell = getNextRangeAtRight(icxCell);
+                    ws2.Cells[icxCell].Value = partnerName;
+                    ws2.Cells[icxCell].Style.Font.Bold = true;
+                    dateCell = "A3";
+                    ws2.Cells[dateCell].Value = "Date:";
+                    ws2.Cells[dateCell].Style.Font.Bold = true;
+                    ws2.Cells[dateCell].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    ws2.Cells[dateCell].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    dateCell = getNextRangeAtRight(dateCell);
+                    ws2.Cells[dateCell].Value = /*startDate*/DateTime.ParseExact(startDate, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture).ToString("yyyy-MM-dd");
+                    ws2.Cells[dateCell].Style.Font.Bold = true;
+                    dateCell = getNextRangeAtRight(dateCell);
+                    //ws2.Cells[dateCell].Value = /*endDate*/ DateTime.ParseExact(endDate, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture).ToString("yyyy-MM-dd");
+                    ws2.Cells[dateCell].Style.Font.Bold = true;
+                    string headerCell = "D7:E7";
+                    ws2.Cells[headerCell].Merge = true;
+                    ws2.Cells[headerCell].Value = "   International Outgoing Calls   ";
+                    ws2.Cells[headerCell].Style.Font.Bold = true;
+                    ws2.Cells[headerCell].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    ws2.Cells[headerCell].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    createBtrcHeader(ws2, "B7:C7", 8, "International Incoming Calls");
+                    string emptyCell = "A7";
+                    headerCell = getNextRangeAtRight(emptyCell);
+                    headerCell = getNextRangeAtRight(headerCell);
+                    headerCell = getNextRangeAtRight(headerCell);
+                    headerCell = getNextRangeAtRight(headerCell);
+                    styleAllBorder(ws2, emptyCell + ":" + headerCell);
+
+
+
+                    createInternationalReportInExcel(ws2, international_Daily_Records, "A", 8, "Name of IOS");
+
+
+                    // Set columns to auto-fit
+                    for (int i = 1; i <= ws2.Dimension.Columns; i++)
+                    {
+                        ws2.Column(i).AutoFit();
+                    }
+                    ws2.Column(2).Width = 14;
+                    ws2.Column(3).Width = 14;
+                    ws2.Column(4).Width = 14;
+                    ws2.Column(5).Width = 14;
 
                     //int noOfCols = tbl.Columns.Count;
                     //string lastColExcel = IndexToColumn(noOfCols);

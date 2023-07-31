@@ -144,5 +144,10 @@ namespace PortalApp
 			List<string> nonEmptyExpression = this.whereExpressions.Where(s => !string.IsNullOrEmpty(s)).ToList();
 			return string.Join(Environment.NewLine, nonEmptyExpression.Select(s => " and " + s).ToList());
 		}
-	}
+	    protected string GetWhereClauseAdditionalForLtfs()
+	    {
+	        List<string> nonEmptyExpression = this.whereExpressions.Where(s => !string.IsNullOrEmpty(s)).ToList();
+	        return string.Join(Environment.NewLine, nonEmptyExpression.Select(s => " and " + s).ToList());
+	    }
+    }
 }
