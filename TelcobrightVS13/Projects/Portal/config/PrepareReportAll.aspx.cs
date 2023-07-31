@@ -18,10 +18,13 @@ namespace PortalApp.config
         private static TelcobrightConfig Tbc { get; set; }
         private static Dictionary<string, IInvoiceTemplate> invoiceTemplates { get; set; }
 
+     
         protected void Page_Load(object sender, EventArgs e)
         {
             var reportNames = Request.QueryString["reportNames"];
             var invoiceId = Request.QueryString["invoiceId"];
+            
+            
             var templetNamesCommaSeparated = Request.QueryString["templetNamesCommaSeparated"];
             if (reportNames != null)
             {
@@ -43,6 +46,10 @@ namespace PortalApp.config
                     List<string> TempReportNames = reportNames.Split(',').ToList();
                     List<string> generatedPdfPaths = new List<string>();
 
+                    int INVOICE_ID = Convert.ToInt32(invoiceId);
+                    invoice invoice = context.invoices.First(x => x.INVOICE_ID == INVOICE_ID);
+
+
                     for (int i = 0; i < TempReportNames.Count; i++)
                     {
                         TempReportNames[i] = TempReportNames[i].Replace("Template-", "").Trim();
@@ -56,9 +63,7 @@ namespace PortalApp.config
                             IInvoiceTemplate template = templates[j];
                             //GridViewRow gvrow = (GridViewRow)linkButton.NamingContainer;
                             //int INVOICE_ID = Convert.ToInt32(gvInvoice.DataKeys[gvrow.RowIndex].Value);
-                            int INVOICE_ID = Convert.ToInt32(invoiceId);
-                            invoice invoice = context.invoices.First(x => x.INVOICE_ID == INVOICE_ID);
-
+                            
                             invoice_item invoiceItem = context.invoice_item.First(ii => ii.INVOICE_ID == invoice.INVOICE_ID);
                             Dictionary<string, string> jsonDetail = JsonConvert.DeserializeObject<Dictionary<string, string>>(invoiceItem.JSON_DETAIL);
                             List<long> mergedInvoiceIds = new List<long>();
@@ -92,6 +97,7 @@ namespace PortalApp.config
                             else
                             {
                                 template.GenerateInvoice(invoice);
+                                
                                 //template.SaveToPdf(@"C:\temp\abcd" + tempNum + ".pdf");
                                 string pdfFileName = $"C:\\temp\\invoice_{Guid.NewGuid()}.pdf";
                                 template.SaveToPdf(pdfFileName);
@@ -112,9 +118,10 @@ namespace PortalApp.config
 
                     // Add page numbers to the merged PDF
                     MemoryStream numberedPdfStream = AddPageNumbersToPdf(mergedPdfStream);
-
+                    
                     // Show the preview using a PDF viewer control on the web page
-                    ShowPdfPreview(numberedPdfStream);
+                    
+                    ShowPdfPreview(numberedPdfStream, invoice.DESCRIPTION);
 
                     //MergeGeneratedPdfs(generatedPdfPaths);
                     //string reportNamesTemp = string.Join(",", TempReportNames);
@@ -158,13 +165,15 @@ namespace PortalApp.config
 
             return mergedPdfStream;
         }
-        private void ShowPdfPreview(MemoryStream pdfStream)
+        private void ShowPdfPreview(MemoryStream pdfStream, string invoiceName)
         {
             // Set the appropriate content type for PDF
             Response.ContentType = "application/pdf";
+            //Response.AddHeader("hhhh");
 
             // Provide a filename for the merged PDF, if needed
-            // Response.AddHeader("Content-Disposition", "attachment; filename=mergedInvoice.pdf");
+            
+            Response.AddHeader("Content-Disposition", $"attachment; filename={invoiceName}.pdf");
 
             // Write the PDF content to the response stream for preview
             Response.BinaryWrite(pdfStream.ToArray());
