@@ -178,13 +178,14 @@ namespace TelcobrightMediation
         private uom_conversion_dated GetExactOrNearestEarlierConvRateForXyz(DateTime callDate)
         {
             var year = callDate.Year;
-            var month = callDate.Month - 1;
-            if (callDate.Month == 1)
-            {
-                year = callDate.Year - 1;
-                month = 12;
-            }
-            DateTime lastMonthsUsdbBcsDateTime =
+            var month = callDate.Month;
+            //var month = callDate.Month - 1;
+            //if (callDate.Month == 1)
+            //{
+            //    year = callDate.Year - 1;
+            //    month = 12;
+            //}
+            DateTime usdbBcsDateTime =
                 new DateTime(year, month, DateTime.DaysInMonth(year, month), 23, 59, 59);
             CachedItem<string, uom_conversion_dated> convRate = null;
             string dicKey =
@@ -193,14 +194,14 @@ namespace TelcobrightMediation
                     {
                         UOM_ID = "USD",
                         UOM_ID_TO = "BDT",
-                        FROM_DATE = lastMonthsUsdbBcsDateTime
+                        FROM_DATE = usdbBcsDateTime
                     });
             convRate = this.UsdBcsCache.GetItemByKey(dicKey); //exact match, last months's data at 23:59:59
             if (convRate != null)
             {
                 return convRate.Entity;
             }
-            else return this.UsdBcsCache.GetNearestEarlierDateTime(lastMonthsUsdbBcsDateTime);
+            else return this.UsdBcsCache.GetNearestEarlierDateTime(usdbBcsDateTime);
         }
 
         public static void ValidateInvoiceGenerationParams(InvoiceGenerationValidatorInput validationInput,
