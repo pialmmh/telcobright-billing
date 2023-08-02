@@ -42,7 +42,7 @@ namespace TelcobrightMediation
             List<string[]> decodedCdrRows = decoder.DecodeFile(this.CollectorInput, out cdrinconsistents); //collect
             Dictionary<string, string[]> decodedEventsAsTupDic= new Dictionary<string, string[]>();
             Dictionary<string, string[]> finalNonDuplicateEvents = new Dictionary<string, string[]>();
-            if (CollectorInput.Tbc.CdrSetting.FilterDuplicates == true)
+            if (CollectorInput.Tbc.CdrSetting.FilterDuplicates == true && decodedCdrRows.Count>0)
             {
                 filterDuplicateCdrs(decoder, decodedCdrRows, decodedEventsAsTupDic, finalNonDuplicateEvents);
             }
@@ -72,7 +72,7 @@ namespace TelcobrightMediation
             }
             Func<DateTime, List<string>, string> getSqlPerDay
                 = (day, tuples) => $" select tuple from uniqueevent where tuple " +
-                                   $" in({string.Join(",", tuples)}) " +
+                                   $" in ({string.Join(",", tuples.Select(t=>new StringBuilder("'").Append(t).Append("'")))}) " +
                                    $" and {decoder.getSqlWhereClauseForDayWiseSafeCollection(this.CollectorInput, day)}";
 
             string sql = string.Join(" union all ", dayWiseNewTuples.Select(kv => getSqlPerDay(kv.Key, kv.Value)));
@@ -85,6 +85,7 @@ namespace TelcobrightMediation
             {
                 existingEvents.Add(reader[0].ToString());
             }
+            reader.Close();
             Dictionary<string, string> alreadyConsideredEvents = existingEvents.ToDictionary(e => e);
             foreach (var kv in decodedEventsAsTupDic)
             {
@@ -93,6 +94,7 @@ namespace TelcobrightMediation
                 if (alreadyConsideredEvents.ContainsKey(kv.Key) == false)
                 {
                     finalNonDuplicateEvents.Add(tuple, decodedRow);
+                    alreadyConsideredEvents.Add(tuple, tuple);//it's just used like hashmap
                 }
             }
         }

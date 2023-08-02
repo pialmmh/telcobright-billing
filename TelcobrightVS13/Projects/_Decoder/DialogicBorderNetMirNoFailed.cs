@@ -55,14 +55,12 @@ namespace Decoders
 
         public string getSqlWhereClauseForDayWiseSafeCollection(CdrCollectorInputData decoderInputData, DateTime day)
         {
-            CdrSetting cdrSetting = decoderInputData.CdrSetting;
-            string startTimeFieldName = "";
             DateTime startTime = day;
             DateTime searchStart = startTime.AddDays(-1);
             DateTime searchEnd = startTime.AddDays(1).AddHours(23).AddMinutes(59).AddSeconds(59);
             DateRange searchRange = new DateRange(searchStart,searchEnd);
-            return $" {startTimeFieldName}>='{searchRange.StartDate.ToMySqlFormatWithoutQuote()}' " +
-                   $" and {startTimeFieldName}<='{searchRange.EndDate.ToMySqlFormatWithoutQuote()}' ";
+            return $" startTime>='{searchRange.StartDate.ToMySqlFormatWithoutQuote()}' " +
+                   $" and startTime<='{searchRange.EndDate.ToMySqlFormatWithoutQuote()}' ";
         }
 
         private static string getSessionId(string[] row)
