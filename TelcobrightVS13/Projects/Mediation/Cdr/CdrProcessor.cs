@@ -438,6 +438,7 @@ namespace TelcobrightMediation
 
             if (nonPartialCdrs.Any())
                 writtenNonPartialCdrCount = WriteCdr(nonPartialCdrs);
+            
             if (normalizedPartialCdrs.Any())
                 writtenNormalizedPartialCdrCount = WriteCdr(normalizedPartialCdrs);
             writtenCdrCount = writtenNonPartialCdrCount + writtenNormalizedPartialCdrCount;
@@ -445,6 +446,16 @@ namespace TelcobrightMediation
             {
                 throw new Exception("Written number of cdrs does not match processed cdrs count.");
             }
+            int uniqueEventCount = 0;
+            if (this.CdrJobContext.CdrjobInputData.CdrSetting.FilterDuplicates == true)
+            {
+                uniqueEventCount = WriteUniqueEventsHistory(this.CollectionResult.FinalNonDuplicateEvents);
+            }
+            if (uniqueEventCount != this.CollectionResult.FinalNonDuplicateEvents.Count)
+            {
+                throw new Exception("Written number of unique event count does not match non-duplicate event count.");
+            }
+
             List<PartialCdrContainer> partialCdrContainers = new List<PartialCdrContainer>();
             PartialCdrWriter partialCdrWriter = null;
             if (this.PartialProcessingEnabled)
@@ -581,6 +592,39 @@ namespace TelcobrightMediation
                 throw new Exception("Duration mismatch between segmented & non segmented cdrs.");
             return insertCount;
         }
+
+        int WriteUniqueEventsHistory(Dictionary<string,string[]> finalNonDuplicateEvents)//<tuple, cdr row as text[] as decoded initially>
+        {
+            int insertCount = 0;
+            int startAt = 0;
+            List<KeyValuePair<string, string[]>> tupleVsTextCdrs = finalNonDuplicateEvents
+                .Select(kv => new KeyValuePair<string, string[]>(kv.Key, kv.Value)).ToList();
+            CollectionSegmenter<KeyValuePair<string,string[]>> collectionSegmenter = 
+                new CollectionSegmenter<KeyValuePair<string, string[]>>(tupleVsTextCdrs, startAt);
+            collectionSegmenter.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
+                segment =>
+                {
+                    int segmentCount = segment.Count();
+                    var segmentAsParallel = segment.AsParallel();
+                    ParallelQuery<StringBuilder> sbs = segmentAsParallel
+                        .Select(kv => new StringBuilder($"('{kv.Key}','{kv.Value[Fn.StartTime]}')"));
+
+                    string sql = $" insert into uniqueevent(tuple, starttime) " +
+                                                                    $"{StringBuilderJoiner.Join(",", sbs).ToString()}";
+                    this.DbCmd.CommandType = CommandType.StoredProcedure;
+                    this.DbCmd.CommandText = "sp_extInsert";
+
+                    int affectedRecordCount = DbWriterWithAccurateCount.ExecSingleStatementThroughStoredProc(
+                        dbCmd: this.DbCmd,
+                        command: sql,
+                        expectedRecCount: segmentCount);
+                    if (affectedRecordCount != segmentCount)
+                        throw new Exception("Affected record count does not match segment count while writing cdrs.");
+                    insertCount += affectedRecordCount;
+                });
+            return insertCount;
+        }
+
     }
 }
 

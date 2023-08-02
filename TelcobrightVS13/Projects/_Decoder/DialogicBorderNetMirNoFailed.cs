@@ -61,7 +61,7 @@ namespace Decoders
             DateTime searchStart = startTime.AddDays(-1);
             DateTime searchEnd = startTime.AddDays(1).AddHours(23).AddMinutes(59).AddSeconds(59);
             DateRange searchRange = new DateRange(searchStart,searchEnd);
-            return $" where {startTimeFieldName}>='{searchRange.StartDate.ToMySqlFormatWithoutQuote()}' " +
+            return $" {startTimeFieldName}>='{searchRange.StartDate.ToMySqlFormatWithoutQuote()}' " +
                    $" and {startTimeFieldName}<='{searchRange.EndDate.ToMySqlFormatWithoutQuote()}' ";
         }
 

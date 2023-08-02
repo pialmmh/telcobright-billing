@@ -19,6 +19,8 @@ namespace TelcobrightMediation
     {
         private bool PartialCdrEnabled { get; }
         public List<string[]> TxtCdrRows { get; set; }
+        public Dictionary<string, string[]> FinalNonDuplicateEvents { get; set; }
+
         public NewCdrPreProcessor(List<string[]> txtCdrRows, List<cdrinconsistent> inconsistentCdrs,
             CdrCollectorInputData cdrCollectorInputData)
             : base(cdrCollectorInputData, txtCdrRows.Count + inconsistentCdrs.Count, inconsistentCdrs) //used after sql collection
