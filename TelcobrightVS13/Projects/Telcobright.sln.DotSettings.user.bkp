@@ -1,0 +1,10 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
+  &lt;Assembly Path="C:\GoogleDrive\TelcobrightProject\TelcobrightVS13\Projects\packages\Quartz.2.5.0\lib\net40\Quartz.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\Windows\Microsoft.NET\Framework\v4.0.30319\mscorlib.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\GoogleDrive\TelcobrightProject\TelcobrightVS13\Projects\packages\Spring.Core.2.0.1\lib\net45\Spring.Core.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\GoogleDrive\TelcobrightProject\TelcobrightVS13\Projects\packages\Common.Logging.3.0.0\lib\net40\Common.Logging.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\GoogleDrive\TelcobrightProject\TelcobrightVS13\Projects\packages\Common.Logging.3.3.1\lib\net40\Common.Logging.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\GoogleDrive\TelcobrightProject\TelcobrightVS13\Projects\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\Program Files (x86)\MySQL\MySQL Connector Net 6.9.8\Assemblies\v4.5\MySql.Data.dll" /&gt;&#xD;
+&lt;/AssemblyExplorer&gt;</s:String></wpf:ResourceDictionary>

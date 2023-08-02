@@ -10,6 +10,8 @@ using System.Linq;
 using System.Globalization;
 using LibraryExtensions;
 using System.Text;
+using TelcobrightMediation.Config;
+
 namespace Decoders
 {
 
@@ -23,9 +25,10 @@ namespace Decoders
         public virtual CompressionType CompressionType { get; set; } 
         protected virtual CdrCollectorInputData Input { get; set; }
                
-        private static string parseStringToDate(string timestamp)  //20181028051316400 yyyyMMddhhmmssfff
+        private static string parseStringToDateWithoutMilliSec(string timestamp)  //20181028051316400 yyyyMMddhhmmssfff
         {
-            return string.Join(" ", timestamp.Split('+').Select(s => s.Trim()));
+            string noMillis = timestamp.Split('.')[0];
+            return string.Join(" ", noMillis.Split('+').Select(s => s.Trim()));
         }
 
         public virtual List<string[]> DecodeFile(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs)
@@ -35,6 +38,68 @@ namespace Decoders
             List<string[]> lines = FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(fileName, ',', 1, "\"", ";");
             return decodeLines(input, out inconsistentCdrs, fileName, lines);
 
+        }
+
+        public string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row)
+        {
+            CdrSetting cdrSetting = decoderInputData.CdrSetting;
+            int switchId = decoderInputData.Ne.idSwitch;
+            string startTimeFieldName = "";
+            DateTime startTime = getStartTime(cdrSetting, row,out startTimeFieldName);
+            string sessionId = getSessionId(row);
+            string separator = "/";
+            return new StringBuilder(switchId.ToString()).Append(separator)
+                .Append(startTime.ToMySqlFormatWithoutQuote()).Append(separator)
+                .Append(sessionId).ToString();
+        }
+
+        public string getSqlWhereClauseForDayWiseSafeCollection(CdrCollectorInputData decoderInputData, DateTime day)
+        {
+            CdrSetting cdrSetting = decoderInputData.CdrSetting;
+            string startTimeFieldName = "";
+            DateTime startTime = day;
+            DateTime searchStart = startTime.AddDays(-1);
+            DateTime searchEnd = startTime.AddDays(1).AddHours(23).AddMinutes(59).AddSeconds(59);
+            DateRange searchRange = new DateRange(searchStart,searchEnd);
+            return $" where {startTimeFieldName}>='{searchRange.StartDate.ToMySqlFormatWithoutQuote()}' " +
+                   $" and {startTimeFieldName}<='{searchRange.EndDate.ToMySqlFormatWithoutQuote()}' ";
+        }
+
+        private static string getSessionId(string[] row)
+        {
+            string sessionId = row[Fn.UniqueBillId];
+            long sessionIdNum = 0;
+            if (sessionId.IsNullOrEmptyOrWhiteSpace() || Int64.TryParse(sessionId, out sessionIdNum) == false)
+            {
+                throw new Exception("UniquebillId is not in correct format.");
+            }
+            return sessionId;
+        }
+
+        private static DateTime getStartTime(CdrSetting cdrSettings, string[] row,out string timeFieldName)
+        {
+            DateTime startTime;
+            switch (cdrSettings.SummaryTimeField)
+            {
+                case SummaryTimeFieldEnum.StartTime:
+                    startTime = row[Fn.StartTime].ConvertToDateTimeFromMySqlFormat();
+                    timeFieldName = "starttime";
+                    break;
+                case SummaryTimeFieldEnum.AnswerTime:
+                    startTime = row[Fn.AnswerTime].ConvertToDateTimeFromMySqlFormat();
+                    timeFieldName = "answertime";
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            return startTime;
+        }
+
+        private static string getTimeFieldName(CdrSetting cdrSettings)
+        {
+            return cdrSettings.SummaryTimeField == SummaryTimeFieldEnum.AnswerTime
+                ? "answertime"
+                : "starttime";
         }
 
         protected static List<string[]> decodeLines(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs, string fileName, List<string[]> lines)
@@ -70,6 +135,7 @@ namespace Decoders
                 textCdr[Fn.CallingPartyNOA] = accountEventReason;
 
                 textCdr[Fn.Sequencenumber] = lineAsArr[1];
+                textCdr[Fn.UniqueBillId] = lineAsArr[10];
                 string durationSec = lineAsArr[14];
                 textCdr[Fn.DurationSec] = durationSec.IsNullOrEmptyOrWhiteSpace() == false
                     ? durationSec : string.Empty;
@@ -131,29 +197,29 @@ namespace Decoders
                 //cdr.MediaIp2 = lineAsArr[82];
 
                 //string dt = lineAsArr[103];//SignalStart
-                ////if (!string.IsNullOrEmpty(dt)) cdr.SignalingStartTime = parseStringToDate(dt);
+                ////if (!string.IsNullOrEmpty(dt)) cdr.SignalingStartTime = parseStringToDateWithoutMilliSec(dt);
 
                 string dt = lineAsArr[102];//SignalStart
-                if (!string.IsNullOrEmpty(dt)) textCdr[Fn.StartTime] = parseStringToDate(dt);
+                if (!string.IsNullOrEmpty(dt)) textCdr[Fn.StartTime] = parseStringToDateWithoutMilliSec(dt);
 
                 //dt = lineAsArr[38];//ConnectTime
-                //if (!string.IsNullOrEmpty(dt)) cdr.ConnectTime = parseStringToDate(dt);
+                //if (!string.IsNullOrEmpty(dt)) cdr.ConnectTime = parseStringToDateWithoutMilliSec(dt);
 
 
                 dt = lineAsArr[103];//ConnectTime
-                if (!string.IsNullOrEmpty(dt)) textCdr[Fn.ConnectTime] = parseStringToDate(dt);
+                if (!string.IsNullOrEmpty(dt)) textCdr[Fn.ConnectTime] = parseStringToDateWithoutMilliSec(dt);
 
                 //dt = lineAsArr[129];//AnswerTime
-                //if (!string.IsNullOrEmpty(dt)) cdr.AnswerTime = parseStringToDate(dt);
+                //if (!string.IsNullOrEmpty(dt)) cdr.AnswerTime = parseStringToDateWithoutMilliSec(dt);
 
                 dt = lineAsArr[105];//AnswerTime
-                if (!string.IsNullOrEmpty(dt)) textCdr[Fn.AnswerTime] = parseStringToDate(dt);
+                if (!string.IsNullOrEmpty(dt)) textCdr[Fn.AnswerTime] = parseStringToDateWithoutMilliSec(dt);
 
                 //dt = lineAsArr[130];//EndTime
-                //if (!string.IsNullOrEmpty(dt)) cdr.EndTime = parseStringToDate(dt);
+                //if (!string.IsNullOrEmpty(dt)) cdr.EndTime = parseStringToDateWithoutMilliSec(dt);
 
                 dt = lineAsArr[106];//EndTime
-                if (!string.IsNullOrEmpty(dt)) textCdr[Fn.Endtime] = parseStringToDate(dt);
+                if (!string.IsNullOrEmpty(dt)) textCdr[Fn.Endtime] = parseStringToDateWithoutMilliSec(dt);
 
                 textCdr[Fn.ReleaseCauseIngress] = lineAsArr[110];
                 textCdr[Fn.ReleaseCauseEgress] = lineAsArr[133];

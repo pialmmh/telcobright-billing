@@ -157,8 +157,14 @@ namespace Decoders
             return decodedRows;
         }
 
+        public string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row)
+        {
+            throw new NotImplementedException();
+        }
 
-
-
+        public string getSqlWhereClauseForDayWiseSafeCollection(CdrCollectorInputData decoderInputData, DateTime day)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

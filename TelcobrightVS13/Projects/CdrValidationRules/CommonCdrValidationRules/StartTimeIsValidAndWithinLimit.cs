@@ -27,7 +27,8 @@ namespace CdrValidationRules
         {
             if (this.IsPrepared == false)
                 throw new Exception("Rule is not prepared, method Prepare must be called first.");
-            return obj.StartTime > this.MinAllowedDateTime;
+            bool retVal = obj.StartTime > this.MinAllowedDateTime;
+            return retVal;
         }
     }
 }
