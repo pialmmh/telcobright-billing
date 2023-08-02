@@ -609,7 +609,7 @@ namespace TelcobrightMediation
                     ParallelQuery<StringBuilder> sbs = segmentAsParallel
                         .Select(kv => new StringBuilder($"('{kv.Key}','{kv.Value[Fn.StartTime]}')"));
 
-                    string sql = $" insert into uniqueevent(tuple, starttime) " +
+                    string sql = $" insert into uniqueevent(tuple, starttime) values " +
                                                                     $"{StringBuilderJoiner.Join(",", sbs).ToString()}";
                     this.DbCmd.CommandType = CommandType.StoredProcedure;
                     this.DbCmd.CommandText = "sp_extInsert";

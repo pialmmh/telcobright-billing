@@ -55,9 +55,9 @@ namespace TelcobrightMediation
         private void filterDuplicateCdrs(IFileDecoder decoder, List<string[]> decodedCdrRows, Dictionary<string, string[]> decodedEventsAsTupDic, Dictionary<string, string[]> finalNonDuplicateEvents)
         {
             Dictionary<DateTime, List<string>> dayWiseNewTuples = new Dictionary<DateTime, List<string>>();
+            CdrSetting cdrSetting = this.CollectorInput.CdrSetting;
             foreach (string[] row in decodedCdrRows)
             {
-                CdrSetting cdrSetting = this.CollectorInput.CdrSetting;
                 int timeFieldNo = getTimeFieldNo(cdrSetting, row);
                 DateTime thisDate = row[timeFieldNo].ConvertToDateTimeFromMySqlFormat().Date;
                 List<string> tuplesOfTheDay;//cdrs expressed as tuple like string expressions
