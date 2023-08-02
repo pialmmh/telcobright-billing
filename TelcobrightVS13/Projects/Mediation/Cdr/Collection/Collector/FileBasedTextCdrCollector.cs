@@ -94,7 +94,12 @@ namespace TelcobrightMediation
                 if (alreadyConsideredEvents.ContainsKey(kv.Key) == false)
                 {
                     finalNonDuplicateEvents.Add(tuple, decodedRow);
-                    alreadyConsideredEvents.Add(tuple, tuple);//it's just used like hashmap
+                    alreadyConsideredEvents.Add(tuple, tuple); //it's just used like hashmap
+                }
+                else
+                {
+                    //cdr is skipped
+                    Console.WriteLine("Skipped duplicate cdrs");
                 }
             }
         }
