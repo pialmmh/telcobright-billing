@@ -129,7 +129,7 @@ namespace Jobs
         {
             var collectorinput = this.CollectorInput;
             SetIdCallsInSameOrderAsCollected(preProcessor, collectorinput);
-            if (this.CollectorInput.CdrSetting.UseIdCallAsBillId == true)
+            if (this.CollectorInput.Ne.UseIdCallAsBillId == 1)
             {
                 SetIdCallAsBillId(preProcessor);
             }

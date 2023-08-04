@@ -39,8 +39,8 @@ namespace MediationModel
 				.Append(this.EnableSummaryGeneration.ToMySqlField()).Append(",")
 				.Append(this.ExistingSummaryCacheSpanHr.ToMySqlField()).Append(",")
 				.Append(this.BatchToDecodeRatio.ToMySqlField()).Append(",")
-				.Append(this.PrependLocationNumberToFileName.ToMySqlField()).Append(")")
-				;
+			    .Append(this.FilterDuplicateCdr.ToMySqlField()).Append(",")
+                .Append(this.PrependLocationNumberToFileName.ToMySqlField()).Append(")");
 		}
 		public  StringBuilder GetExtInsertCustom(Func<ne,string> externalInsertMethod)
 		{
@@ -77,7 +77,8 @@ namespace MediationModel
 				.Append("EnableSummaryGeneration=").Append(this.EnableSummaryGeneration.ToMySqlField()).Append(",")
 				.Append("ExistingSummaryCacheSpanHr=").Append(this.ExistingSummaryCacheSpanHr.ToMySqlField()).Append(",")
 				.Append("BatchToDecodeRatio=").Append(this.BatchToDecodeRatio.ToMySqlField()).Append(",")
-				.Append("PrependLocationNumberToFileName=").Append(this.PrependLocationNumberToFileName.ToMySqlField())
+                .Append("FilterDuplicateCdr=").Append(this.BatchToDecodeRatio.ToMySqlField()).Append(",")
+                .Append("PrependLocationNumberToFileName=").Append(this.PrependLocationNumberToFileName.ToMySqlField())
 				.Append(whereClauseMethod.Invoke(this));
 				
 		}

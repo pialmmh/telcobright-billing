@@ -447,7 +447,7 @@ namespace TelcobrightMediation
                 throw new Exception("Written number of cdrs does not match processed cdrs count.");
             }
             int uniqueEventCount = 0;
-            if (this.CdrJobContext.CdrjobInputData.CdrSetting.FilterDuplicates == true)
+            if (this.CdrJobContext.CdrjobInputData.Ne.FilterDuplicateCdr== 1)
             {
                 uniqueEventCount = WriteUniqueEventsHistory(this.CollectionResult.FinalNonDuplicateEvents);
             }

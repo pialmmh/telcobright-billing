@@ -66,12 +66,11 @@ namespace InstallConfig
                 AutoCorrectDuplicateBillId = false,
                 AutoCorrectBillIdsWithPrevChargeableIssue = true,
                 AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
-                UseIdCallAsBillId = true,
                 ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>(),
                 BatchSizeWhenPreparingLargeSqlJob = 100000,
                 EmptyFileAllowed = true,
                 DaysToAddBeforeAndAfterUniqueDaysForSafePartialCollection = 1,
-                FilterDuplicates = true
+                
             };
             this.PrepareDirectorySettings(this.Tbc);
             this.Tbc.Nes = new List<ne>()
@@ -93,9 +92,9 @@ namespace InstallConfig
                     TransactionSizeForCDRLoading = 1500,
                     DecodingSpanCount = 100,
                     SkipAutoCreateJob = 1,
-                    SkipCdrListed = 1,
+                    SkipCdrListed = 0,
                     SkipCdrReceived = 0,
-                    SkipCdrDecoded = 1,
+                    SkipCdrDecoded = 0,
                     SkipCdrBackedup = 1,
                     KeepDecodedCDR = 0,
                     KeepReceivedCdrServer = 1,
@@ -106,7 +105,9 @@ namespace InstallConfig
                     EnableSummaryGeneration = "1",
                     ExistingSummaryCacheSpanHr = 6,
                     BatchToDecodeRatio = 3,
-                    PrependLocationNumberToFileName = 0
+                    PrependLocationNumberToFileName = 0,
+                    FilterDuplicateCdr = 0,
+                    UseIdCallAsBillId = 1,
                 },
                 new ne
                 {
@@ -138,7 +139,9 @@ namespace InstallConfig
                     EnableSummaryGeneration= "1",
                     ExistingSummaryCacheSpanHr= 6,
                     BatchToDecodeRatio= 3,
-                    PrependLocationNumberToFileName= 0
+                    PrependLocationNumberToFileName= 0,
+                    FilterDuplicateCdr = 1,
+                    UseIdCallAsBillId = 0,
                 }
             };
 

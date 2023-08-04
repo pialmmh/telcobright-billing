@@ -10,6 +10,7 @@ using System.Linq;
 using System.Globalization;
 using LibraryExtensions;
 using System.Text;
+using iTextSharp.awt.geom;
 using TelcobrightMediation.Config;
 
 namespace Decoders
@@ -118,11 +119,10 @@ namespace Decoders
                 string accountEventReason =lineAsArr[7].Trim(); //AccountEventReason = field 8, we keep it in callingPartyNoa
 
                 string chargingStatus = lineAsArr[15];//SDRSessionStatus = field 16
-                /*if (chargingStatus != "1" && chargingStatus != "3")
-                {
-                    continue;//1= finalRecord, 3= unsuccessful, skip 2= interim
-                }*/
-                if (accountStatusType != "2" || chargingStatus!="1")
+                string durationSec = lineAsArr[14];
+                double duration = 0;
+                double.TryParse(durationSec, out duration);
+                if (accountStatusType != "2" || duration<=0)
                 {
                     continue;
                 }
@@ -134,7 +134,6 @@ namespace Decoders
 
                 textCdr[Fn.Sequencenumber] = lineAsArr[1];
                 textCdr[Fn.UniqueBillId] = lineAsArr[10];
-                string durationSec = lineAsArr[14];
                 textCdr[Fn.DurationSec] = durationSec.IsNullOrEmptyOrWhiteSpace() == false
                     ? durationSec : string.Empty;
 

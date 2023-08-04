@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using LibraryExtensions;
@@ -42,12 +43,20 @@ namespace TelcobrightMediation
             List<string[]> decodedCdrRows = decoder.DecodeFile(this.CollectorInput, out cdrinconsistents); //collect
             Dictionary<string, string[]> decodedEventsAsTupDic= new Dictionary<string, string[]>();
             Dictionary<string, string[]> finalNonDuplicateEvents = new Dictionary<string, string[]>();
-            if (CollectorInput.Tbc.CdrSetting.FilterDuplicates == true && decodedCdrRows.Count>0)
+            NewCdrPreProcessor textCdrCollectionPreProcessor = null;
+            if (CollectorInput.Ne.FilterDuplicateCdr == 1 && decodedCdrRows.Count > 0) //filter duplicates
             {
                 filterDuplicateCdrs(decoder, decodedCdrRows, decodedEventsAsTupDic, finalNonDuplicateEvents);
             }
-            NewCdrPreProcessor textCdrCollectionPreProcessor =
-                new NewCdrPreProcessor(finalNonDuplicateEvents.Values.ToList(), cdrinconsistents, this.CollectorInput);
+            else//duplicate check not required
+            {
+                textCdrCollectionPreProcessor =
+                    new NewCdrPreProcessor(decodedCdrRows, cdrinconsistents, this.CollectorInput);
+            }
+            if (textCdrCollectionPreProcessor == null)
+            {
+                throw new Exception("textCdrCollectionPreProcessor cannot be null");
+            }
             textCdrCollectionPreProcessor.FinalNonDuplicateEvents = finalNonDuplicateEvents;
             return textCdrCollectionPreProcessor;
         }

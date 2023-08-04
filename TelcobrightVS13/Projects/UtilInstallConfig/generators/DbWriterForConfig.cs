@@ -118,8 +118,10 @@ namespace InstallConfig._generator
             FileInfo[] sqlFiles = d.GetFiles("*.sql");
             foreach (FileInfo file in sqlFiles)
             {
+                List<string> lines = File.ReadAllLines(file.FullName).ToList();
+                if(lines[0].ToLower().StartsWith("#skip")) continue;
+                string sql = string.Join("", lines);
                 Console.WriteLine("Loading " + file.Name);
-                string sql = File.ReadAllText(file.FullName);
                 using (MySqlCommand cmd = new MySqlCommand("", this.Con))
                 {
                     if (this.Con.State != ConnectionState.Open)
