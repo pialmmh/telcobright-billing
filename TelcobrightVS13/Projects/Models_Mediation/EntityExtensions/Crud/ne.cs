@@ -40,6 +40,7 @@ namespace MediationModel
 				.Append(this.ExistingSummaryCacheSpanHr.ToMySqlField()).Append(",")
 				.Append(this.BatchToDecodeRatio.ToMySqlField()).Append(",")
 			    .Append(this.FilterDuplicateCdr.ToMySqlField()).Append(",")
+			    .Append(this.UseIdCallAsBillId.ToMySqlField()).Append(",")
                 .Append(this.PrependLocationNumberToFileName.ToMySqlField()).Append(")");
 		}
 		public  StringBuilder GetExtInsertCustom(Func<ne,string> externalInsertMethod)
