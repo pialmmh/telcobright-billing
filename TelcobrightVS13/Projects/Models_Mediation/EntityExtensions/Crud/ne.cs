@@ -78,7 +78,8 @@ namespace MediationModel
 				.Append("EnableSummaryGeneration=").Append(this.EnableSummaryGeneration.ToMySqlField()).Append(",")
 				.Append("ExistingSummaryCacheSpanHr=").Append(this.ExistingSummaryCacheSpanHr.ToMySqlField()).Append(",")
 				.Append("BatchToDecodeRatio=").Append(this.BatchToDecodeRatio.ToMySqlField()).Append(",")
-                .Append("FilterDuplicateCdr=").Append(this.BatchToDecodeRatio.ToMySqlField()).Append(",")
+                .Append("FilterDuplicateCdr=").Append(this.FilterDuplicateCdr.ToMySqlField()).Append(",")
+                .Append("UseIdCallAsBillId=").Append(this.UseIdCallAsBillId.ToMySqlField()).Append(",")
                 .Append("PrependLocationNumberToFileName=").Append(this.PrependLocationNumberToFileName.ToMySqlField())
 				.Append(whereClauseMethod.Invoke(this));
 				
