@@ -121,7 +121,7 @@ namespace PortalApp.config
                     
                     // Show the preview using a PDF viewer control on the web page
                     
-                    ShowPdfPreview(numberedPdfStream, invoice.DESCRIPTION);
+                    ShowPdfPreview(numberedPdfStream);
 
                     //MergeGeneratedPdfs(generatedPdfPaths);
                     //string reportNamesTemp = string.Join(",", TempReportNames);
@@ -148,7 +148,7 @@ namespace PortalApp.config
 
                 document.Open();
                 int totalNumPages = 0;
-                
+
 
                 foreach (string pdfFilePath in pdfFilePaths)
                 {
@@ -165,7 +165,8 @@ namespace PortalApp.config
 
             return mergedPdfStream;
         }
-        private void ShowPdfPreview(MemoryStream pdfStream, string invoiceName)
+
+        private void ShowPdfPreview(MemoryStream pdfStream)
         {
             // Set the appropriate content type for PDF
             Response.ContentType = "application/pdf";
@@ -173,7 +174,7 @@ namespace PortalApp.config
 
             // Provide a filename for the merged PDF, if needed
             
-            Response.AddHeader("Content-Disposition", $"attachment; filename={invoiceName}.pdf");
+            //Response.AddHeader("Content-Disposition", $"attachment; filename={invoiceName}.pdf");
 
             // Write the PDF content to the response stream for preview
             Response.BinaryWrite(pdfStream.ToArray());
@@ -204,7 +205,7 @@ namespace PortalApp.config
                     BaseFont baseFont = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
                     pdfContent.SetFontAndSize(baseFont, 10);
 
-                    pdfContent.ShowTextAligned(0, $"Page {pageNum} of {totalNumPages}", xLocation, yLocation, 0);
+                    pdfContent.ShowTextAligned(0, $"Page {pageNum} of {totalNumPages-1}", xLocation, yLocation, 0);
                     pdfContent.EndText();
                 }
 

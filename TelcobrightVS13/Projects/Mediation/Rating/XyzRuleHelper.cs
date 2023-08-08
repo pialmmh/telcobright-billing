@@ -220,10 +220,11 @@ namespace TelcobrightMediation
                 throw new Exception("Start date & end date must be first & last day of a month.");
             }
             var context = input.Context;
-            DateTime lastSecondOfPrevMonth = startDate.AddSeconds(-1);
+            //DateTime lastSecondOfPrevMonth = startDate.AddSeconds(-1);
+            DateTime lastSecondOfBillingMonth = startDate.GetLastDayOfMonth().AddDays(1).AddSeconds(-1);
             uom_conversion_dated usdConversionDated = context.uom_conversion_dated.Where(
                     c => c.PURPOSE_ENUM_ID == "EXTERNAL_CONVERSION"
-                         && c.UOM_ID == "USD" && c.UOM_ID_TO == "BDT" && c.FROM_DATE == lastSecondOfPrevMonth).ToList()
+                         && c.UOM_ID == "USD" && c.UOM_ID_TO == "BDT" && c.FROM_DATE == lastSecondOfBillingMonth).ToList()
                 .FirstOrDefault();
             if (usdConversionDated == null)
                 throw new Exception("Usd rate not found in uom_conversion_dated table.");
@@ -245,10 +246,11 @@ namespace TelcobrightMediation
             Dictionary<string, string> jobParamsMap = invoiceGenerationInputData.JsonDetail;
             DateTime startDate = Convert.ToDateTime(jobParamsMap["startDate"]);
             var context = invoiceGenerationInputData.Context;
-            DateTime lastSecondOfPrevMonth = startDate.AddSeconds(-1);
+            //DateTime lastSecondOfPrevMonth = startDate.AddSeconds(-1);
+            DateTime lastSecondOfBillingMonth = startDate.GetLastDayOfMonth().AddDays(1).AddSeconds(-1);
             uom_conversion_dated usdConversionDated = context.uom_conversion_dated.Where(
                     c => c.PURPOSE_ENUM_ID == "EXTERNAL_CONVERSION"
-                         && c.UOM_ID == "USD" && c.UOM_ID_TO == "BDT" && c.FROM_DATE == lastSecondOfPrevMonth).ToList()
+                         && c.UOM_ID == "USD" && c.UOM_ID_TO == "BDT" && c.FROM_DATE == lastSecondOfBillingMonth).ToList()
                 .FirstOrDefault();
             if (usdConversionDated == null)
                 throw new Exception("Usd conversion rate not found.");
