@@ -1785,6 +1785,8 @@ warning 6002: The table/view 'def.platinum.mockcdr' does not have a primary key 
           <Property Name="EnableSummaryGeneration" Type="varchar" MaxLength="45" Nullable="false" />
           <Property Name="ExistingSummaryCacheSpanHr" Type="int" Nullable="false" />
           <Property Name="BatchToDecodeRatio" Type="int" Nullable="false" />
+          <Property Name="FilterDuplicateCdr" Type="int" />
+          <Property Name="UseIdCallAsBillId" Type="int" />
           <Property Name="PrependLocationNumberToFileName" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="partner">
@@ -7282,6 +7284,8 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <Property Name="EnableSummaryGeneration" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
           <Property Name="ExistingSummaryCacheSpanHr" Type="Int32" Nullable="false" />
           <Property Name="BatchToDecodeRatio" Type="Int32" Nullable="false" />
+          <Property Name="FilterDuplicateCdr" Type="Int32" />
+          <Property Name="UseIdCallAsBillId" Type="Int32" />
           <Property Name="PrependLocationNumberToFileName" Type="Int32" Nullable="false" />
           <NavigationProperty Name="bridgedroutes" Relationship="MediationModel.fk_switch" FromRole="ne" ToRole="bridgedroute" />
           <NavigationProperty Name="enumcdrformat" Relationship="MediationModel.fk_cdrformat" FromRole="ne" ToRole="enumcdrformat" />
@@ -11579,6 +11583,8 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
             <EntityTypeMapping TypeName="MediationModel.ne">
               <MappingFragment StoreEntitySet="ne">
                 <ScalarProperty Name="PrependLocationNumberToFileName" ColumnName="PrependLocationNumberToFileName" />
+                <ScalarProperty Name="UseIdCallAsBillId" ColumnName="UseIdCallAsBillId" />
+                <ScalarProperty Name="FilterDuplicateCdr" ColumnName="FilterDuplicateCdr" />
                 <ScalarProperty Name="BatchToDecodeRatio" ColumnName="BatchToDecodeRatio" />
                 <ScalarProperty Name="ExistingSummaryCacheSpanHr" ColumnName="ExistingSummaryCacheSpanHr" />
                 <ScalarProperty Name="EnableSummaryGeneration" ColumnName="EnableSummaryGeneration" />

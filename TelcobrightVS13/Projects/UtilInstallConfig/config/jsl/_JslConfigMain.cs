@@ -77,7 +77,6 @@ namespace InstallConfig
                 AutoCorrectDuplicateBillId = true,
                 AutoCorrectBillIdsWithPrevChargeableIssue = true,
                 AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
-                UseIdCallAsBillId = true,
                 FileSplitSetting = new FileSplitSetting()
                 {
                     FileSplitType = "byte",
@@ -228,7 +227,8 @@ namespace InstallConfig
                     EnableSummaryGeneration= "1",
                     ExistingSummaryCacheSpanHr= 6,
                     BatchToDecodeRatio= 3,
-                    PrependLocationNumberToFileName= 0
+                    PrependLocationNumberToFileName= 0,
+                    UseIdCallAsBillId = 1,
                 },
                 new ne
                 {
@@ -260,7 +260,8 @@ namespace InstallConfig
                     EnableSummaryGeneration= "1",
                     ExistingSummaryCacheSpanHr= 6,
                     BatchToDecodeRatio= 3,
-                    PrependLocationNumberToFileName= 0
+                    PrependLocationNumberToFileName= 0,
+                    UseIdCallAsBillId = 1,
                 }
             };
 

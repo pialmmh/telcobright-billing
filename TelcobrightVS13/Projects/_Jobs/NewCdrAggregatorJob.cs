@@ -21,12 +21,12 @@ using TelcobrightMediation.Config;
 namespace Jobs
 {
     [Export("Job", typeof(ITelcobrightJob))]
-    public class NewCdrFileJob : ITelcobrightJob
+    public class NewCdrAggregatorJob : ITelcobrightJob
     {
-        public virtual string RuleName => "JobNewCdrFile";
-        public virtual string HelpText => "New Cdr Job, processes a new CDR file";
+        public virtual string RuleName => "NewCdrAggregatorJob";
+        public virtual string HelpText => "New Cdr Job, Aggregates or pre-processes new cdr files";
         public override string ToString() => this.RuleName;
-        public virtual int Id => 1;
+        public virtual int Id => 22;
         protected int RawCount, NonPartialCount, UniquePartialCount, RawPartialCount, DistinctPartialCount = 0;
         protected decimal RawDurationTotalOfConsistentCdrs = 0;
         protected CdrJobInputData Input { get; set; }
@@ -48,7 +48,6 @@ namespace Jobs
 
             CdrCollectionResult newCollectionResult, oldCollectionResult = null;
             preProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
-            newCollectionResult.FinalNonDuplicateEvents = preProcessor.FinalNonDuplicateEvents;
 
             PartialCdrTesterData partialCdrTesterData = OrganizeTestDataForPartialCdrs(preProcessor, newCollectionResult);
             CdrJob cdrJob = (new CdrJobFactory(this.Input, this.RawCount)).
@@ -129,7 +128,7 @@ namespace Jobs
         {
             var collectorinput = this.CollectorInput;
             SetIdCallsInSameOrderAsCollected(preProcessor, collectorinput);
-            if (this.CollectorInput.Ne.UseIdCallAsBillId == 1)
+            if (this.CollectorInput.CdrSetting.UseIdCallAsBillId == true)
             {
                 SetIdCallAsBillId(preProcessor);
             }

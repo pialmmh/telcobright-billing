@@ -25,13 +25,19 @@ namespace TelcobrightMediation
         public uom_conversion_dated GetNearestEarlierDateTime(DateTime inputDate)
         {
             List<DateTime> allDates = this.Cache.Values.Select(c=>c.FROM_DATE)
-                                        .OrderBy(c => c).ToList();//ascending req to find nearest date
+                                        .OrderByDescending(c => c).ToList();//ascending req to find nearest date
             if (allDates.Any() == false) return null;
-            DateTime? closestDate = inputDate >= allDates.Last()
-                ? allDates.Last()
-                : inputDate < allDates.First()
-                    ? (DateTime?)null
-                    : allDates.FirstOrDefault(d => d < inputDate);
+            DateTime? closestDate = null;
+            
+            foreach (DateTime existingDate in allDates)
+            {
+                if (existingDate<inputDate)
+                {
+                    closestDate = existingDate;
+                    break;
+                }
+            }
+
             if (closestDate == null) return null;
             string dicKey = this.DictionaryKeyGenerator(new uom_conversion_dated()
             {

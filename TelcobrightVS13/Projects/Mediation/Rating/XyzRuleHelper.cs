@@ -178,13 +178,14 @@ namespace TelcobrightMediation
         private uom_conversion_dated GetExactOrNearestEarlierConvRateForXyz(DateTime callDate)
         {
             var year = callDate.Year;
-            var month = callDate.Month - 1;
-            if (callDate.Month == 1)
-            {
-                year = callDate.Year - 1;
-                month = 12;
-            }
-            DateTime lastMonthsUsdbBcsDateTime =
+            var month = callDate.Month;
+            //var month = callDate.Month - 1;
+            //if (callDate.Month == 1)
+            //{
+            //    year = callDate.Year - 1;
+            //    month = 12;
+            //}
+            DateTime usdbBcsDateTime =
                 new DateTime(year, month, DateTime.DaysInMonth(year, month), 23, 59, 59);
             CachedItem<string, uom_conversion_dated> convRate = null;
             string dicKey =
@@ -193,14 +194,14 @@ namespace TelcobrightMediation
                     {
                         UOM_ID = "USD",
                         UOM_ID_TO = "BDT",
-                        FROM_DATE = lastMonthsUsdbBcsDateTime
+                        FROM_DATE = usdbBcsDateTime
                     });
             convRate = this.UsdBcsCache.GetItemByKey(dicKey); //exact match, last months's data at 23:59:59
             if (convRate != null)
             {
                 return convRate.Entity;
             }
-            else return this.UsdBcsCache.GetNearestEarlierDateTime(lastMonthsUsdbBcsDateTime);
+            else return this.UsdBcsCache.GetNearestEarlierDateTime(usdbBcsDateTime);
         }
 
         public static void ValidateInvoiceGenerationParams(InvoiceGenerationValidatorInput validationInput,
@@ -219,10 +220,11 @@ namespace TelcobrightMediation
                 throw new Exception("Start date & end date must be first & last day of a month.");
             }
             var context = input.Context;
-            DateTime lastSecondOfPrevMonth = startDate.AddSeconds(-1);
+            //DateTime lastSecondOfPrevMonth = startDate.AddSeconds(-1);
+            DateTime lastSecondOfBillingMonth = startDate.GetLastDayOfMonth().AddDays(1).AddSeconds(-1);
             uom_conversion_dated usdConversionDated = context.uom_conversion_dated.Where(
                     c => c.PURPOSE_ENUM_ID == "EXTERNAL_CONVERSION"
-                         && c.UOM_ID == "USD" && c.UOM_ID_TO == "BDT" && c.FROM_DATE == lastSecondOfPrevMonth).ToList()
+                         && c.UOM_ID == "USD" && c.UOM_ID_TO == "BDT" && c.FROM_DATE == lastSecondOfBillingMonth).ToList()
                 .FirstOrDefault();
             if (usdConversionDated == null)
                 throw new Exception("Usd rate not found in uom_conversion_dated table.");
@@ -244,10 +246,11 @@ namespace TelcobrightMediation
             Dictionary<string, string> jobParamsMap = invoiceGenerationInputData.JsonDetail;
             DateTime startDate = Convert.ToDateTime(jobParamsMap["startDate"]);
             var context = invoiceGenerationInputData.Context;
-            DateTime lastSecondOfPrevMonth = startDate.AddSeconds(-1);
+            //DateTime lastSecondOfPrevMonth = startDate.AddSeconds(-1);
+            DateTime lastSecondOfBillingMonth = startDate.GetLastDayOfMonth().AddDays(1).AddSeconds(-1);
             uom_conversion_dated usdConversionDated = context.uom_conversion_dated.Where(
                     c => c.PURPOSE_ENUM_ID == "EXTERNAL_CONVERSION"
-                         && c.UOM_ID == "USD" && c.UOM_ID_TO == "BDT" && c.FROM_DATE == lastSecondOfPrevMonth).ToList()
+                         && c.UOM_ID == "USD" && c.UOM_ID_TO == "BDT" && c.FROM_DATE == lastSecondOfBillingMonth).ToList()
                 .FirstOrDefault();
             if (usdConversionDated == null)
                 throw new Exception("Usd conversion rate not found.");

@@ -65,14 +65,13 @@ namespace InstallConfig
                 new MySqlConnection(DbUtil.getDbConStrWithDatabase(this.Tbc.DatabaseSetting)))
             {
                 DbWriterForConfig dbWriter = new DbWriterForConfig(this.Tbc, this.ConfigPathHelper, con);
-                dbWriter.WriteTelcobrightPartnerAndNes();
-
                 dbWriter.LoadSeedDataSqlForTelcoBilling(SqlOperationType.SeedData);
                 if (ConsoleUtil.getConfirmationFromUser("Load ddl scripts? (Y/N) for " +
                                                         this.Tbc.Telcobrightpartner.databasename))
                 {
                     dbWriter.LoadSeedDataSqlForTelcoBilling(SqlOperationType.DDL);
                 }
+                dbWriter.WriteTelcobrightPartnerAndNes();
             }
             Console.WriteLine();
             Console.WriteLine("Seed data loaded successfully for " + Tbc.Telcobrightpartner.databasename);

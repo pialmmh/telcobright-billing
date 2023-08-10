@@ -69,7 +69,6 @@ namespace InstallConfig
                 AutoCorrectDuplicateBillId = false,
                 AutoCorrectBillIdsWithPrevChargeableIssue = true,
                 AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
-                UseIdCallAsBillId = true,
                 ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>(),
                 BatchSizeWhenPreparingLargeSqlJob = 100000,
                 SummaryOnlySettings = new Dictionary<string, SkipSettingsForSummaryOnly>() {
@@ -114,7 +113,8 @@ namespace InstallConfig
                     EnableSummaryGeneration = "1",
                     ExistingSummaryCacheSpanHr = 6,
                     BatchToDecodeRatio = 3,
-                    PrependLocationNumberToFileName = 0
+                    PrependLocationNumberToFileName = 0,
+                    UseIdCallAsBillId = 1,
                 },
                 new ne
                 {
@@ -146,7 +146,9 @@ namespace InstallConfig
                     EnableSummaryGeneration = "1",
                     ExistingSummaryCacheSpanHr = 6,
                     BatchToDecodeRatio = 3,
-                    PrependLocationNumberToFileName = 0
+                    PrependLocationNumberToFileName = 0,
+                    UseIdCallAsBillId = 1,
+
                 }
             };
 
