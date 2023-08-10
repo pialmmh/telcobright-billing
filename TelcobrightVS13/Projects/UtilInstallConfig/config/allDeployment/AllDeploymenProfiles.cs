@@ -132,7 +132,7 @@ namespace InstallConfig
                             new InstanceConfig
                             {
                                 Name = "jibondhara_cas",
-                                SchedulerPortNo = 573,
+                                SchedulerPortNo = 573
                             },
                             new InstanceConfig
                             {

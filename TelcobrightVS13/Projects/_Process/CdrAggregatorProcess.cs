@@ -23,15 +23,15 @@ using TelcobrightMediation.Config;
 namespace Process
 {
     [Export("TelcobrightProcess", typeof(AbstractTelcobrightProcess))]
-    public class CdrJobExecuter : AbstractTelcobrightProcess
+    public class CdrAggregatorProcess : AbstractTelcobrightProcess
     {
         public override string ToString()
         {
             return this.RuleName;
         }
         public override string RuleName => this.GetType().ToString();
-        public override string HelpText => "Processes CDR";
-        public override int ProcessId => 103;
+        public override string HelpText => "Aggregates or pre-process new CDR";
+        public override int ProcessId => 119;
         public override void Execute(IJobExecutionContext schedulerContext)
         {
             string operatorName = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");
@@ -64,8 +64,7 @@ namespace Process
                                         if (cmd.Connection.State != ConnectionState.Open) cmd.Connection.Open();
                                         cmd.ExecuteCommandText("set autocommit=0;");
                                         ITelcobrightJob iJob = null;
-                                        mediationContext.MefJobContainer.DicExtensionsIdJobWise.TryGetValue(
-                                            telcobrightJob.idjobdefinition.ToString(), out iJob);
+                                        mediationContext.MefJobContainer.DicExtensionsIdJobWise.TryGetValue("NewCdrAggregatorJob", out iJob);
                                         if (iJob == null)
                                             throw new Exception("JobRule not found in MEF collection.");
                                         var cdrJobInputData =

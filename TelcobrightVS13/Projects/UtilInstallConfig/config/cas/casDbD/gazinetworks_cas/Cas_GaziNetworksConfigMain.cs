@@ -77,7 +77,6 @@ namespace InstallConfig
                 AutoCorrectDuplicateBillId = true,
                 AutoCorrectBillIdsWithPrevChargeableIssue = true,
                 AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
-                UseIdCallAsBillId = true,
                 FileSplitSetting = new FileSplitSetting()
                 {
                     FileSplitType = "byte",
@@ -107,9 +106,9 @@ namespace InstallConfig
                     TransactionSizeForCDRLoading= 1500,
                     DecodingSpanCount= 100,
                     SkipAutoCreateJob= 1,
-                    SkipCdrListed= 0,
+                    SkipCdrListed= 1,
                     SkipCdrReceived= 1,
-                    SkipCdrDecoded= 0,
+                    SkipCdrDecoded= 1,
                     SkipCdrBackedup= 1,
                     KeepDecodedCDR= 1,
                     KeepReceivedCdrServer= 1,
@@ -120,7 +119,8 @@ namespace InstallConfig
                     EnableSummaryGeneration= "1",
                     ExistingSummaryCacheSpanHr= 6,
                     BatchToDecodeRatio= 3,
-                    PrependLocationNumberToFileName= 0
+                    PrependLocationNumberToFileName= 0,
+                    UseIdCallAsBillId = 1,
                 },
                 new ne
                 {
@@ -139,9 +139,9 @@ namespace InstallConfig
                     TransactionSizeForCDRLoading= 1500,
                     DecodingSpanCount= 100,
                     SkipAutoCreateJob= 1,
-                    SkipCdrListed= 0,
+                    SkipCdrListed= 1,
                     SkipCdrReceived= 1,
-                    SkipCdrDecoded= 0,
+                    SkipCdrDecoded= 1,
                     SkipCdrBackedup= 1,
                     KeepDecodedCDR= 1,
                     KeepReceivedCdrServer= 1,
@@ -152,7 +152,8 @@ namespace InstallConfig
                     EnableSummaryGeneration= "1",
                     ExistingSummaryCacheSpanHr= 6,
                     BatchToDecodeRatio= 3,
-                    PrependLocationNumberToFileName= 0
+                    PrependLocationNumberToFileName= 0,
+                    UseIdCallAsBillId = 0,
                 },
                 new ne
                 {
@@ -184,7 +185,8 @@ namespace InstallConfig
                     EnableSummaryGeneration= "1",
                     ExistingSummaryCacheSpanHr= 6,
                     BatchToDecodeRatio= 3,
-                    PrependLocationNumberToFileName= 0
+                    PrependLocationNumberToFileName= 0,
+                    UseIdCallAsBillId = 1,
                 }
             };
 

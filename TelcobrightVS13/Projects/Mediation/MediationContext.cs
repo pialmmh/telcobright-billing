@@ -129,7 +129,7 @@ namespace TelcobrightMediation
                 };
 
             List<rateplanassignmenttuple> rateplanassignmenttuples
-                = context.rateplanassignmenttuples.Include("billingruleassignment").ToList();
+                = context.rateplanassignmenttuples.Include(rt=> rt.billingruleassignment).ToList();
             this.MefServiceFamilyContainer.IdWiseRateplanAssignmenttuplesIncludingBillingRules
                 = rateplanassignmenttuples.ToDictionary(c => c.id);
             Dictionary<int, List<rateplanassignmenttuple>> serviceGroupWiseRatePlanAssignmentTuples =

@@ -77,7 +77,6 @@ namespace InstallConfig
                 AutoCorrectDuplicateBillId = true,
                 AutoCorrectBillIdsWithPrevChargeableIssue = true,
                 AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
-                UseIdCallAsBillId = true,
                 EmptyFileAllowed = true,
                 FileSplitSetting = new FileSplitSetting()
                 {
@@ -109,7 +108,7 @@ namespace InstallConfig
                     DecodingSpanCount= 100,
                     SkipAutoCreateJob= 1,
                     SkipCdrListed= 1,
-                    SkipCdrReceived= 1,
+                    SkipCdrReceived= 0,
                     SkipCdrDecoded= 1,
                     SkipCdrBackedup= 1,
                     KeepDecodedCDR= 1,
@@ -121,13 +120,14 @@ namespace InstallConfig
                     EnableSummaryGeneration= "1",
                     ExistingSummaryCacheSpanHr= 6,
                     BatchToDecodeRatio= 3,
-                    PrependLocationNumberToFileName= 0
+                    PrependLocationNumberToFileName= 0,
+                    UseIdCallAsBillId = 1,
                 },
                 new ne
                 {
                     idSwitch= 18,
                     idCustomer= this.Tbc.Telcobrightpartner.idCustomer,
-                    idcdrformat= 25,
+                    idcdrformat= 30,
                     idMediationRule= 2,
                     SwitchName= "JslcataleyaDhk",
                     CDRPrefix= "esdr",
@@ -153,7 +153,8 @@ namespace InstallConfig
                     EnableSummaryGeneration= "1",
                     ExistingSummaryCacheSpanHr= 6,
                     BatchToDecodeRatio= 3,
-                    PrependLocationNumberToFileName= 0
+                    PrependLocationNumberToFileName= 0,
+                    UseIdCallAsBillId = 1,
                 }
             };
 

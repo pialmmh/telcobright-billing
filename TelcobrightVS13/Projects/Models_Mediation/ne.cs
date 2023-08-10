@@ -50,6 +50,8 @@ namespace MediationModel
         public string EnableSummaryGeneration { get; set; }
         public int ExistingSummaryCacheSpanHr { get; set; }
         public int BatchToDecodeRatio { get; set; }
+        public int FilterDuplicateCdr { get; set; }
+        public int UseIdCallAsBillId { get; set; }
         public int PrependLocationNumberToFileName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

@@ -48,6 +48,7 @@ namespace Jobs
 
             CdrCollectionResult newCollectionResult, oldCollectionResult = null;
             preProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
+            newCollectionResult.FinalNonDuplicateEvents = preProcessor.FinalNonDuplicateEvents;
 
             PartialCdrTesterData partialCdrTesterData = OrganizeTestDataForPartialCdrs(preProcessor, newCollectionResult);
             CdrJob cdrJob = (new CdrJobFactory(this.Input, this.RawCount)).
@@ -128,7 +129,7 @@ namespace Jobs
         {
             var collectorinput = this.CollectorInput;
             SetIdCallsInSameOrderAsCollected(preProcessor, collectorinput);
-            if (this.CollectorInput.CdrSetting.UseIdCallAsBillId == true)
+            if (this.CollectorInput.Ne.UseIdCallAsBillId == 1)
             {
                 SetIdCallAsBillId(preProcessor);
             }

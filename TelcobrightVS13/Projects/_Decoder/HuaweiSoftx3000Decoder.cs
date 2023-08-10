@@ -301,5 +301,15 @@ namespace Decoders
             }//try for each row in byte array
             return decodedRows;
         }
+
+        public string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getSqlWhereClauseForDayWiseSafeCollection(CdrCollectorInputData decoderInputData, DateTime day)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
