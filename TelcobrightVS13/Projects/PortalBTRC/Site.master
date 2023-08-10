@@ -12,6 +12,7 @@
         {
             color: #FFFFFF;
         }
+
     </style>
 
         
@@ -20,49 +21,58 @@
 <body>
     <form id="mainform" runat="server">
     
-    <div class="page">
-        
-            <div class="header" id="mygradient2" style="min-width:2200px;">
-             
-            <div class="title">
-                <h1>
-                    <span style="width:300px; color:#dd7917"> 
-                        <a href="default.aspx" style="text-decoration:none;">
-                            <%--<asp:Image ID="Image1" AlternateText="Logo" runat="server" Width="150" Height="30" ImageUrl="" />--%>
-                           <span style="margin-top:-5px;color:Maroon"> Telcobright </span>
-                        </a>
-                        <span style="padding-left:20px;">
-                            
-                            <asp:Label ID="lblCustomerDisplayName" runat="server" Text=""></asp:Label>
-                            
+    <div class="page" >
+     
+            <div class="header" id="mygradient2" style=" min-height: 70px; min-width: 100%; background-position: top; background-image: url('/img/NAV-BG.jpg');background-size: 100% 100%; background-size: cover;  background-position: center;">
+             <div class="logo" style="float: left;">
+                 <div style="float: left;"> 
+                     <a href="http://localhost:25965/Dashboard">
+                         <img src="/img/Telcobright logo.png" style="height: 40px; padding-top: 14px; padding-left: 20%;"/>
+                                
+                     </a>
+                 </div>
+             </div>
+
+                <%--============================--%> 
+              <div class="CDR"style="float: left; padding-left: 3%; padding-top: 17px;">
+                  <span class="bold" style="font-size: 16pt; color: #e40613;">
+                             
+                      CDR Analyzer System (CAS)
+                             
+                  </span>
+              </div>
+
+                <%--============================--%>
+                <div class="BTRC">
+                    <div class="btrclogo" style="float:right;" >
+                        <span> 
+                            <a href="#">
+                                <img src="/img/BTRC.png" style="height: 40px; padding-right: 20px; padding-left: 10px; padding-top: 14px;"/>
+                            </a>
                         </span>
-                    </span> 
-                </h1>
-                
-            </div>
-
-            <div class="loginDisplay">
-                <div style="float:left; padding-top:20px; font-weight:bold; color:White"> 
-                
-                    <span style="padding-left:80px;width:100px;">
-                        <asp:Label ID="lblScreenTitle" runat="server" Text=""></asp:Label>
-                    </span>
-
+                    </div>
                 </div>
-                <div style="float:left;padding-left:350px;">
-                   <asp:LoginView ID="HeadLoginView" runat="server" EnableViewState="false">
-                    <AnonymousTemplate>
-                         <%--<a href="~/Default.aspx" ID="HeadLoginStatus"  runat="server" style="color: #FF9900">[Home]</a> --%>
-                    </AnonymousTemplate>
-                    <LoggedInTemplate>
-                        Welcome <span class="bold"><asp:LoginName ID="HeadLoginName" runat="server" /></span>!
-                        [ <asp:LoginStatus ID="HeadLoginStatus" runat="server" LogoutAction="Redirect" LogoutText="Log Out" 
-                         LogoutPageUrl="~/Account/Login.aspx" onloggingout="HeadLoginStatus_LoggingOut"/> ]
-                    </LoggedInTemplate>
-                </asp:LoginView>
-                   
-                </div>
-            </div>
+                
+                <%--============================--%>
+              <div class="login"  style="float:right; padding-top: 14px;">
+                  <div class="loginDisplay">
+                      <span style="padding-left: 80px; width: 100px;">
+                          <asp:Label ID="lblScreenTitle" runat="server" Text=""></asp:Label>
+                      </span>
+
+                          <asp:LoginView ID="HeadLoginView" runat="server" EnableViewState="false">
+                                     
+                              <LoggedInTemplate >
+                                  Welcome <span class="bold"><asp:LoginName ID="HeadLoginName" runat="server" /></span>!
+                                  [ <asp:LoginStatus ID="HeadLoginStatus" runat="server" LogoutAction="Redirect" LogoutText="Log Out" 
+                                                     LogoutPageUrl="~/Account/Login.aspx" onloggingout="HeadLoginStatus_LoggingOut"/> ]
+                              </LoggedInTemplate>
+                          </asp:LoginView>
+                  </div>
+              </div>
+              
+
+            
           </div>  
        
         
@@ -73,7 +83,7 @@
 margin-left:30px;background-color:#F7F6F3;border-right-style:ridge;border-top-style:none;
 border-bottom-style:ridge;min-width:180px;padding-top:25px;">
 
-<div id="TreeView" style="padding-top:1.5%">
+<div id="TreeView" style="padding-top:10%">
 
 <div style="padding-left:5px;">
     <%--<a href="~/Default.aspx" ID="HeadLoginStatus"  runat="server" style="color: #FF9900">[Home]</a>--%>

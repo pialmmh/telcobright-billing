@@ -410,9 +410,9 @@
 
                 <%-- <asp:BoundField DataField="profitminute" HeaderText="Profit/Minute" SortExpression="profitminute" />--%>
             </Columns>
-            <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
+            <HeaderStyle BackColor="#086052" Font-Bold="True" ForeColor="White" />
             <EditRowStyle BackColor="#999999" />
-            <FooterStyle BackColor="#5D7B9D" Font-Bold="true" ForeColor="White" />
+            <FooterStyle BackColor="#086052" Font-Bold="true" ForeColor="White" />
             <%--<FooterStyle BackColor="#E0DCDF" Font-Bold="true" ForeColor="Black" />--%>
             <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
             <RowStyle BackColor="white" ForeColor="#333333" />
