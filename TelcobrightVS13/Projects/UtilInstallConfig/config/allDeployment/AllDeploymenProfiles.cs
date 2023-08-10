@@ -122,31 +122,32 @@ namespace InstallConfig
                             {
                                 Name = "srtelecom_cas",
                                 SchedulerPortNo = 570,
-                                Skip =  true
                             },
                             new InstanceConfig
                             {
                                 Name = "summit_cas",
                                 SchedulerPortNo = 571,
-                                Skip =  true
+                                
                             },
                             new InstanceConfig
                             {
                                 Name = "jibondhara_cas",
-                                SchedulerPortNo = 573,
-                                Skip =  true
+                                SchedulerPortNo = 573
                             },
                             new InstanceConfig
                             {
                                 Name = "purple_cas",
                                 SchedulerPortNo = 574,
-                                Skip =  true
                             },
                             new InstanceConfig
                             {
                                 Name = "agni_cas",
                                 SchedulerPortNo = 575,
-                                Skip =  true
+                            },
+                            new InstanceConfig
+                            {
+                                Name = "gazinetworks_cas",
+                                SchedulerPortNo = 576,
                             }
                         }
                     },

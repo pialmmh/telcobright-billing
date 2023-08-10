@@ -21,7 +21,8 @@ namespace PortalApp
 {
     public static class PageUtil
     {
-        public static string GetOperatorName() {
+        public static string GetOperatorName()
+        {
             string conStrPartner = ConfigurationManager.ConnectionStrings["partner"].ConnectionString;
             string dbNameAppConf = "";
             foreach (string param in conStrPartner.Split(';'))
@@ -49,7 +50,7 @@ namespace PortalApp
         {
             string operatorShortName = (ConfigurationManager.ConnectionStrings["Partner"].ConnectionString
                 .Split(';').FirstOrDefault(c => c.StartsWith("database"))).Split('=').Last().Trim();
-            string portalConfigFileName= string.Join(Path.DirectorySeparatorChar.ToString(), (Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase)).Split(Path.DirectorySeparatorChar).Where(c => c.Contains("file") == false)) + Path.DirectorySeparatorChar.ToString() 
+            string portalConfigFileName = string.Join(Path.DirectorySeparatorChar.ToString(), (Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase)).Split(Path.DirectorySeparatorChar).Where(c => c.Contains("file") == false)) + Path.DirectorySeparatorChar.ToString()
                 + operatorShortName + ".conf";
             TelcobrightConfig telcobrightConfig = ConfigFactory.GetConfigFromFile(portalConfigFileName);
             return telcobrightConfig;
@@ -60,7 +61,9 @@ namespace PortalApp
             string userid = "";
             List<string> roleIds = new List<string>();
             List<role> currentRoles = new List<role>();
-            using (PartnerEntities context = new PartnerEntities())
+            TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
+            var databaseSetting = telcobrightConfig.DatabaseSetting;
+            using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting))
             {
                 user currentUser = context.users.Where(c => c.UserName == user.Identity.Name).ToList().FirstOrDefault();
                 if (currentUser != null)
@@ -230,7 +233,9 @@ namespace PortalApp
             //clear existing nodes first to avoid duplication
             TreeNode nPrev = treeView1.FindNode("Report Templates");
             nPrev.ChildNodes.Clear();
-            using (PartnerEntities context = new PartnerEntities())
+            TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
+            var databaseSetting = telcobrightConfig.DatabaseSetting;
+            using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(telcobrightConfig.DatabaseSetting))
             {
                 TreeNode n = treeView1.FindNode("Report Templates");
                 foreach (reporttemplate thisTempl in context.reporttemplates.OrderBy(c => c.Templatename).ToList())
@@ -302,7 +307,9 @@ namespace PortalApp
                 controlValues = controlValues.Substring(0, controlValues.Length - 1);
                 //for some reason, controle values were getting :: sometime, replace them with "
                 controlValues = controlValues.Replace("::", ":");
-                using (PartnerEntities context = new PartnerEntities())
+                TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
+                var databaseSetting = telcobrightConfig.DatabaseSetting;
+                using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting))
                 {
                     reporttemplate newTemplate = new reporttemplate();
                     newTemplate.Templatename = templateName;
