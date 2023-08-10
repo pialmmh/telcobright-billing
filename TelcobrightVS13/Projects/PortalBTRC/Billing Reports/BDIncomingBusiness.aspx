@@ -78,8 +78,8 @@
                     <RowStyle HorizontalAlign="Center"/>
                     <AlternatingRowStyle BackColor="#EBF0FF" ForeColor="#284775"/>
                     <EditRowStyle HorizontalAlign="Center" />
-                    <HeaderStyle HorizontalAlign="Center" Font-Bold="true" BackColor="#5D7B9D" ForeColor="White"/>
-                    <FooterStyle BackColor="#5D7B9D" Font-Bold="true" ForeColor="White" HorizontalAlign="Center"/>
+                    <HeaderStyle HorizontalAlign="Center" Font-Bold="true" BackColor="#086052" ForeColor="White"/>
+                    <FooterStyle BackColor="#086052" Font-Bold="true" ForeColor="White" HorizontalAlign="Center"/>
                 </asp:GridView>
            <br />
            <asp:Button ID="btnExporttoCSV" runat="server" Font-Names="Arial-Narrow" Text="Export to CSV" CssClass="btnExport" OnClick="btnExporttoCSV_Click"/>
