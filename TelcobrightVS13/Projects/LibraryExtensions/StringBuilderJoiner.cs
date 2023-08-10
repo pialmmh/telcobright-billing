@@ -8,7 +8,7 @@ namespace LibraryExtensions
     public static class StringBuilderJoiner
     {
         //using parallel is not very rewarding as locking makes it behave like single thread
-        public static StringBuilder Join(string delimiter, List<StringBuilder> sbs)
+        public static StringBuilder Join(string delimiter, IEnumerable<StringBuilder> sbs)
         {
             if (!sbs.Any()) return new StringBuilder();
             StringBuilder sbFirst = sbs.First();

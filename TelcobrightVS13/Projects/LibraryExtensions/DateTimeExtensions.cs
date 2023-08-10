@@ -27,5 +27,9 @@ namespace LibraryExtensions
             dateTime = dateTime.AddSeconds(unixTimeStamp).ToLocalTime();
             return dateTime;
         }
+        public static DateTime GetLastDayOfMonth(this DateTime dateTime)
+        {
+            return new DateTime(dateTime.Year, dateTime.Month, DateTime.DaysInMonth(dateTime.Year, dateTime.Month));
+        }
     }
 }

@@ -284,6 +284,11 @@ namespace LibraryExtensions
                 "  or " +
                 " ( " + startfieldname + " >= '" + this.StartDate.ToString("yyyy-MM-dd HH:mm:ss") + "' and " + startfieldname + " < '" + this.EndDate.ToString("yyyy-MM-dd HH:mm:ss") + "')) ";
         }
+        public string GetWhereExpressionForTimeField(string timeFieldName)
+        {
+            return timeFieldName + " >= '" + this.StartDate.ToString("yyyy-MM-dd HH:mm:ss") +
+                   "  and " + timeFieldName + " <= '" + this.EndDate.ToString("yyyy-MM-dd HH:mm:ss");
+        }
         //public override int GetHashCode()
         //{
         //    return

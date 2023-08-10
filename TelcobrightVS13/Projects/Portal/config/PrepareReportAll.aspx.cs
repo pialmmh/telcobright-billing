@@ -74,8 +74,7 @@ namespace PortalApp.config
                                 mergedInvoiceIds = jsonDetail["mergedInvoices"].Split(',').Select(childInvoiceId => Convert.ToInt64(childInvoiceId)).ToList();
                             }
                             String refNo = Guid.NewGuid().ToString();
-                            //int tempNum = 1;
-                            //tempNum++;
+                            
                             if (mergedInvoiceIds.Any())
                             {
                                 //mergedInvoices = context.Database.SqlQuery<invoice>($@"select * from invoice where invoice_id in ({string.Join(",", mergedInvoiceIds)})").ToList();
@@ -88,7 +87,6 @@ namespace PortalApp.config
                                     { "mergedInvoice", mergedInvoices.First()}//do one for now
                                 };
                                 template.GenerateInvoice(invoiceWithMergeIds);
-                                //template.SaveToPdf(@"C:\temp\abcd" + tempNum + ".pdf");
                                 string pdfFileName = $"C:\\temp\\invoice_{Guid.NewGuid()}.pdf";
                                 template.SaveToPdf(pdfFileName);
                                 generatedPdfPaths.Add(pdfFileName);
@@ -98,7 +96,6 @@ namespace PortalApp.config
                             {
                                 template.GenerateInvoice(invoice);
                                 
-                                //template.SaveToPdf(@"C:\temp\abcd" + tempNum + ".pdf");
                                 string pdfFileName = $"C:\\temp\\invoice_{Guid.NewGuid()}.pdf";
                                 template.SaveToPdf(pdfFileName);
                                 generatedPdfPaths.Add(pdfFileName);
