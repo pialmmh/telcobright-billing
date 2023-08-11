@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CataleyaCsvDecoderJslNoFailed.cs" />
+    <Compile Include="CataleyaCsvDecoderGaziNoFailed.cs" />
     <Compile Include="CataleyaCsvDecoderSRNoFailed.cs" />
     <Compile Include="AsteriskDecoder.cs" />
     <Compile Include="CataleyaDecoder.cs" />

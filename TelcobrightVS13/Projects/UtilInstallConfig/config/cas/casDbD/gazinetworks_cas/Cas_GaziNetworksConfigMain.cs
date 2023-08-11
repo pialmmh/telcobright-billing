@@ -159,7 +159,7 @@ namespace InstallConfig
                 {
                     idSwitch= 3,
                     idCustomer= this.Tbc.Telcobrightpartner.idCustomer,
-                    idcdrformat= 25,
+                    idcdrformat= 32,
                     idMediationRule= 2,
                     SwitchName= "cataleya",
                     CDRPrefix= "esdr",
