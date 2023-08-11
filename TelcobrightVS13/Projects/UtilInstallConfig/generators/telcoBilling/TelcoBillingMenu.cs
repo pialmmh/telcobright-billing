@@ -65,7 +65,9 @@ namespace InstallConfig
                 Console.WriteLine("4=Copy Portal to IIS Directory");
                 Console.WriteLine("5=Not Set");
                 Console.WriteLine("6=Generate Configuration & Reset Scheduler data");
-                Console.WriteLine("7=Modify Partitions for tables");
+                Console.WriteLine("7=Init Databases");
+                Console.WriteLine("8= Setup MySql user and permissions");
+                Console.WriteLine("9=Modify Partitions for tables");
                 Console.WriteLine("q=Quit");
 
                 ConsoleKeyInfo ki = new ConsoleKeyInfo();
@@ -87,7 +89,7 @@ namespace InstallConfig
 
                         }*/
                     }
-                    break;
+                        break;
                     case '2':
                         Console.WriteLine("Enter Source Dir path & prefix without quotes, separated by comma...");
                         string str = Console.ReadLine();
@@ -117,7 +119,7 @@ namespace InstallConfig
                         if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' ||
                             Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
                         break;
-                    case '6'://generate config
+                    case '6': //generate config
                         if (!this.TbcWithoutGeneratedConfig.Any())
                         {
                             Console.WriteLine("No operator's config has been found. Press any key to start over.");
@@ -147,15 +149,20 @@ namespace InstallConfig
                             int schedulerPortNo = ic.SchedulerPortNo;
                             tbWithoutFullConfig.TcpPortNoForRemoteScheduler = schedulerPortNo;
                             tbWithoutFullConfig.SchedulerDaemonConfigs = configGenerator.GetSchedulerDaemonConfigs();
-                            TelcoBillingConfigGenerator cw = new TelcoBillingConfigGenerator(tbc, this.ConfigPathHelper, this.ConsoleUtil);
+                            TelcoBillingConfigGenerator cw =
+                                new TelcoBillingConfigGenerator(tbc, this.ConfigPathHelper, this.ConsoleUtil);
                             cw.writeConfig();
                             cw.LoadSeedData();
                             configureQuarzJobStore(tbc);
                             deployBinariesForProduction(tbc);
                             Console.WriteLine("Successfully generated config for "
-                                              + string.Join(",", selectedTbcs.Select(t => t.Telcobrightpartner.databasename)));
+                                              + string.Join(",",
+                                                  selectedTbcs.Select(t => t.Telcobrightpartner.databasename)));
                         }
                         goto Start;
+                        break;
+                    case '8':
+                        setupMySqlUsersAndPermissions();
                         break;
                     case 'q':
                     case 'Q':
@@ -165,8 +172,18 @@ namespace InstallConfig
                 }
                 return;
             }
-    }
+        }
 
+        void setupMySqlUsersAndPermissions()
+        {
+            Deploymentprofile profile= this.Deploymentprofile;
+            MySqlCommandGenerator generator = new MySqlCommandGeneratorFactory(profile.MySqlVersion).getInstance();
+            List<MySqlUser> users = profile.MySqlUsers;
+            ParallelIterator<MySqlUser, List<string>> parallelIterator= new ParallelIterator<MySqlUser, List<string>>(users);
+            List<List<string>> output = parallelIterator.getOutput(generator.createMySqlUserTelcobrightStyle);
+            List<string> sqls = output.SelectMany(list => list).ToList();
+            Console.WriteLine();
+        }
         void generateConfig()
         {
             List<TelcobrightConfig> selectedTbcs = getSelectedTbcs();
@@ -191,23 +208,7 @@ namespace InstallConfig
                                   + string.Join(",", selectedTbcs.Select(t => t.Telcobrightpartner.databasename)));
             }
         }
-        void createMySqlUsers()
-        {
-            List<TelcobrightConfig> selectedTbcs = getSelectedTbcs();
-            cleanDeploymentDir();
-            foreach (var tbWithoutFullConfig in selectedTbcs)
-            {
-                var dbOrInstanceName = tbWithoutFullConfig.Telcobrightpartner.databasename;
-                AbstractConfigGenerator configGenerator = this.configGenerators
-                    .First(c => c.Tbc.Telcobrightpartner.databasename == dbOrInstanceName);
-                InstanceConfig ic = this.Deploymentprofile.instances.First(i => i.Name == dbOrInstanceName);
-                TelcobrightConfig tbc = configGenerator.GenerateConfig(ic, 1);
-                tbc.DeploymentProfile = this.Deploymentprofile;
-                
-                Console.WriteLine("Successfully generated config for "
-                                  + string.Join(",", selectedTbcs.Select(t => t.Telcobrightpartner.databasename)));
-            }
-        }
+        
 
         void initDatabase()
         {

@@ -7,11 +7,11 @@ namespace TelcobrightInfra
     {
         public override string getCreateUsers(MySqlUser user, string ipAddr)
         {
-            return $"CREATE USER IF NOT EXISTS {user.Username}@{ipAddr} IDENTIFIED WITH mysql_native_password BY \"{user.Password}\";";
+            return $"CREATE USER IF NOT EXISTS {user.Username}@{ipAddr} IDENTIFIED WITH mysql_native_password BY '{user.Password}';";
         }
         public override string getAlterUsers(MySqlUser user, string ipAddr)
         {
-            return $"alter user {user.Username}@{ipAddr} identified by \"{user.Password}\";";
+            return $"alter user {user.Username}@{ipAddr} identified by '{user.Password}';";
         }
         public override List<string> getGrantPrivileges(MySqlUser user, string ipAddr)
         {

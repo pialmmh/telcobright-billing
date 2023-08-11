@@ -119,14 +119,13 @@ namespace InstallConfig
                                         permissions: new List<MySqlPermission>
                                         {
                                             new MySqlPermission(
-                                                new List<MySqlPermissionType>{ MySqlPermissionType.all,},"*"),
+                                                new List<MySqlPermissionType>{ MySqlPermissionType.all,},"*.*"),
                                         }),
                             new MySqlUser(username: "dbreader",
                                 password: "Takay1takaane",
                                 hostnameOrIpAddresses: new List<string>{"localhost","10.0.0.29"},
                                 permissions: new List<MySqlPermission>
                                 {
-                                    new MySqlPermission(new List<MySqlPermissionType>{ MySqlPermissionType.execute,MySqlPermissionType.@select},"information_schema"),
                                     new MySqlPermission(new List<MySqlPermissionType>{ MySqlPermissionType.execute,MySqlPermissionType.@select},"agni_cas"),
                                     new MySqlPermission(new List<MySqlPermissionType>{ MySqlPermissionType.execute,MySqlPermissionType.@select},"bangla_cas"),
                                     new MySqlPermission(new List<MySqlPermissionType>{ MySqlPermissionType.execute,MySqlPermissionType.@select},"banglatelecom_cas"),
