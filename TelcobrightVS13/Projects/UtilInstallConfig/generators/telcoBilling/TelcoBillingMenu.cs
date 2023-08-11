@@ -117,19 +117,24 @@ namespace InstallConfig
                         if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' ||
                             Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
                         break;
-                    case '6':
+                    case '6'://generate config
                         if (!this.TbcWithoutGeneratedConfig.Any())
                         {
                             Console.WriteLine("No operator's config has been found. Press any key to start over.");
                             Console.ReadKey();
                             goto Start;
                         }
-                            Menu menu= new Menu(this.TbcWithoutGeneratedConfig.Select(config => config.Telcobrightpartner.databasename).ToList(),
-                            "Select one or multiple operators to configure.","a");
-                        List<string> opNames = menu.getChoices();
-                        List<TelcobrightConfig> selectedTbcs =
-                            this.TbcWithoutGeneratedConfig.Where(config => opNames.Contains(config.Telcobrightpartner.databasename))
-                                .ToList();
+                        generateConfig();
+                        goto Start;
+                        break;
+                    case '7':
+                        if (!this.TbcWithoutGeneratedConfig.Any())
+                        {
+                            Console.WriteLine("No operator's config has been found. Press any key to start over.");
+                            Console.ReadKey();
+                            goto Start;
+                        }
+                        List<TelcobrightConfig> selectedTbcs = getSelectedTbcs();
                         cleanDeploymentDir();
                         foreach (var tbWithoutFullConfig in selectedTbcs)
                         {
@@ -147,23 +152,10 @@ namespace InstallConfig
                             cw.LoadSeedData();
                             configureQuarzJobStore(tbc);
                             deployBinariesForProduction(tbc);
-                            Console.WriteLine("Successfully generated config for " 
-                                + string.Join(",",selectedTbcs.Select(t=>t.Telcobrightpartner.databasename)));
+                            Console.WriteLine("Successfully generated config for "
+                                              + string.Join(",", selectedTbcs.Select(t => t.Telcobrightpartner.databasename)));
                         }
                         goto Start;
-                        break;
-                    case '7':
-                        //choices = Menu.getChoices(menuItems, "Select instances to modify partitions:");
-                        return;
-                        //    schedulerType: "quartz",
-                        //    databaseSetting: databaseSetting);
-                        //PartitionUtil.ModifyPartitions(schedulerSetting.DatabaseSetting,operatorName);
-                        //Console.WriteLine("Partition modification is successful, press 'q' to quit");
-                        //k = Convert.ToChar((Console.ReadKey(true)).Key);
-                        //if (k == 'q' || k == 'Q')
-                        //{
-                        //    Environment.Exit(0);
-                        //}
                         break;
                     case 'q':
                     case 'Q':
@@ -174,6 +166,77 @@ namespace InstallConfig
                 return;
             }
     }
+
+        void generateConfig()
+        {
+            List<TelcobrightConfig> selectedTbcs = getSelectedTbcs();
+            cleanDeploymentDir();
+            foreach (var tbWithoutFullConfig in selectedTbcs)
+            {
+                var dbOrInstanceName = tbWithoutFullConfig.Telcobrightpartner.databasename;
+                AbstractConfigGenerator configGenerator = this.configGenerators
+                    .First(c => c.Tbc.Telcobrightpartner.databasename == dbOrInstanceName);
+                InstanceConfig ic = this.Deploymentprofile.instances.First(i => i.Name == dbOrInstanceName);
+                TelcobrightConfig tbc = configGenerator.GenerateConfig(ic, 1);
+                tbc.DeploymentProfile = this.Deploymentprofile;
+                int schedulerPortNo = ic.SchedulerPortNo;
+                tbWithoutFullConfig.TcpPortNoForRemoteScheduler = schedulerPortNo;
+                tbWithoutFullConfig.SchedulerDaemonConfigs = configGenerator.GetSchedulerDaemonConfigs();
+                TelcoBillingConfigGenerator cw = new TelcoBillingConfigGenerator(tbc, this.ConfigPathHelper, this.ConsoleUtil);
+                cw.writeConfig();
+                cw.LoadSeedData();
+                configureQuarzJobStore(tbc);
+                deployBinariesForProduction(tbc);
+                Console.WriteLine("Successfully generated config for "
+                                  + string.Join(",", selectedTbcs.Select(t => t.Telcobrightpartner.databasename)));
+            }
+        }
+        void createMySqlUsers()
+        {
+            List<TelcobrightConfig> selectedTbcs = getSelectedTbcs();
+            cleanDeploymentDir();
+            foreach (var tbWithoutFullConfig in selectedTbcs)
+            {
+                var dbOrInstanceName = tbWithoutFullConfig.Telcobrightpartner.databasename;
+                AbstractConfigGenerator configGenerator = this.configGenerators
+                    .First(c => c.Tbc.Telcobrightpartner.databasename == dbOrInstanceName);
+                InstanceConfig ic = this.Deploymentprofile.instances.First(i => i.Name == dbOrInstanceName);
+                TelcobrightConfig tbc = configGenerator.GenerateConfig(ic, 1);
+                tbc.DeploymentProfile = this.Deploymentprofile;
+                
+                Console.WriteLine("Successfully generated config for "
+                                  + string.Join(",", selectedTbcs.Select(t => t.Telcobrightpartner.databasename)));
+            }
+        }
+
+        void initDatabase()
+        {
+            List<TelcobrightConfig> selectedTbcs = getSelectedTbcs();
+            cleanDeploymentDir();
+            foreach (var tbWithoutFullConfig in selectedTbcs)
+            {
+                var dbOrInstanceName = tbWithoutFullConfig.Telcobrightpartner.databasename;
+                AbstractConfigGenerator configGenerator = this.configGenerators
+                    .First(c => c.Tbc.Telcobrightpartner.databasename == dbOrInstanceName);
+                InstanceConfig ic = this.Deploymentprofile.instances.First(i => i.Name == dbOrInstanceName);
+                TelcobrightConfig tbc = configGenerator.GenerateConfig(ic, 1);
+                tbc.DeploymentProfile = this.Deploymentprofile;
+
+                Console.WriteLine("Successfully generated config for "
+                                  + string.Join(",", selectedTbcs.Select(t => t.Telcobrightpartner.databasename)));
+            }
+        }
+
+        private List<TelcobrightConfig> getSelectedTbcs()
+        {
+            Menu menu = new Menu(this.TbcWithoutGeneratedConfig.Select(config => config.Telcobrightpartner.databasename).ToList(),
+            "Select one or multiple operators to configure.", "a");
+            List<string> opNames = menu.getChoices();
+            List<TelcobrightConfig> selectedTbcs =
+                this.TbcWithoutGeneratedConfig.Where(config => opNames.Contains(config.Telcobrightpartner.databasename))
+                    .ToList();
+            return selectedTbcs;
+        }
 
         private void cleanDeploymentDir()
         {
