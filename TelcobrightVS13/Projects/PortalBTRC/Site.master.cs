@@ -43,8 +43,10 @@ public partial class SiteMaster : System.Web.UI.MasterPage
 
         if (!this.IsPostBack)
         {
-            TreeView1.NodeStyle.ForeColor = Color.Green;
-            TreeView1.SelectedNodeStyle.ForeColor = Color.Green;
+            TreeView1.NodeStyle.ForeColor = System.Drawing.ColorTranslator.FromHtml("#08605c");
+            TreeView1.SelectedNodeStyle.ForeColor = System.Drawing.ColorTranslator.FromHtml("#08605c");
+            //TreeView1.NodeStyle.ForeColor = Color.Green;
+            //TreeView1.SelectedNodeStyle.ForeColor = Color.Green;
             //            this.Session["isTreeLoaded"] = true;
             //Load Report Templates in TreeView dynically from database.
             CommonCode commonCode = new CommonCode();
@@ -97,6 +99,7 @@ public partial class SiteMaster : System.Web.UI.MasterPage
             //remove nodes other than expanded, for role based secutiry.  TV doesnot support visible property.
             if (currentRoles.Select(c => c.Name).Contains("admin") == false)
             {
+
                 this.TreeView1.Nodes.Clear();
                 List<TreeNode> authenticatedNodes = new List<TreeNode>();
                 List<TreeNode> nonExpandedNodes = mExt.Nodes.Values.Where(n => n.Expanded == false).ToList();

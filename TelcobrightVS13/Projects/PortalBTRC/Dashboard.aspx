@@ -17,12 +17,11 @@
             
                 <asp:UpdatePanel ID="UpdatePanel3" runat="server">
                     <Triggers>
-                        <asp:AsyncPostBackTrigger ControlID="Timer3" EventName="Tick" />
+                        <asp:AsyncPostBackTrigger ControlID="Timer3" EventName="Tick"/>
                     </Triggers>
                     <ContentTemplate>
-                        <h2>International Incoming</h2>
-                        <h2>
-                            <asp:HyperLink ID="HyperLinkIntlIn" runat="server" Target="_blank" NavigateUrl="~/reports/InternationalIn.aspx"></asp:HyperLink>
+                        <h2 >International Incoming</h2>
+                            <asp:HyperLink ID="HyperLinkIntlIn" runat="server" Target="_blank" NavigateUrl="~/reports/InternationalIn.aspx" ForeColor="#08605c" ></asp:HyperLink>
                             </h2>
                         <p></p>
 
@@ -67,7 +66,7 @@
                 <ContentTemplate>
                     <h2>
                         
-                        <asp:HyperLink ID="HyperLinkError" runat="server" NavigateUrl="~/reports/CdrError.aspx" Target="_blank"></asp:HyperLink>
+                        <asp:HyperLink ID="HyperLinkError" runat="server" NavigateUrl="~/reports/CdrError.aspx" Target="_blank" ForeColor="#08605c" ></asp:HyperLink>
 
                     </h2>
                     <p>
@@ -87,6 +86,8 @@
 
                     </p>
                 </ContentTemplate>
+
+
             </asp:UpdatePanel>
             <asp:Timer ID="Timer1" runat="server" Interval="30000" OnTick="Timer1_Tick" Enabled="false">
             </asp:Timer>
@@ -96,12 +97,17 @@
                     <asp:AsyncPostBackTrigger ControlID="Timer2" EventName="Tick" />
                 </Triggers>
                 <ContentTemplate>
-                    <div style="text-align: left;">
+                    
+                    <%--Table--%>
+                    <div style="text-align: center; float: left;">
                         <div style="float: left;">
-                            <div class="col-md-4">
-                                <h2>
-                                    <asp:HyperLink ID="HyperLink1" Text="Recently Completed Jobs" NavigateUrl="~/reports/Mediation.aspx" runat="server" Target="_blank"></asp:HyperLink>
-                                </h2>
+                            <div>
+                                <%--<h2>
+                                    <asp:HyperLink ID="HyperLink1" Text="Recently Completed Jobs" NavigateUrl="~/reports/Mediation.aspx" runat="server" Target="_blank" ForeColor="#08605c"></asp:HyperLink>
+                                </h2>--%>
+                                <div style="margin-left: auto; margin-right: auto; text-align: center;">
+                                    <asp:Label ID="Label2" runat="server" Text="Recently Completed Jobs" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
+                                </div>
                                 <p>
                                 </p>
                                 <p>
@@ -134,11 +140,98 @@
                         </div>
 
                     </div>
+                    
+<%--                    Pie chart--%>
+                    <div style="text-align: left; float: left;">
+                        <div style="float: left;">
+                            <div>
+                               
+                                <div style="margin-left: auto; margin-right: auto; text-align: center;">
+                                    <asp:Label ID="Label1" runat="server" Text="IP TDM Distribution" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
+                                </div>
+                                <p>
+                                </p>
+                                <p>
+                                    
+                                    <asp:Chart ID="PieChart" runat="server" Width="400px" Height="300px">
+                                        <Series>
+                                            <asp:Series Name="Series1" ChartType="Pie">
+                                                <Points>
+                                                    <asp:DataPoint AxisLabel="IP (90%)" YValues="90"  Color="#08605c" LabelForeColor="White"/>
+                                                    <asp:DataPoint AxisLabel="TDM (10%)" YValues="10" Color="#e40613" LabelForeColor="White"/>
+                                                    
+                                                </Points>
+                                            </asp:Series>
+                                        </Series>
+                                        <ChartAreas>
+                                            <asp:ChartArea Name="ChartArea1">
+                                                <Area3DStyle Enable3D="true" />
+                                            </asp:ChartArea>
+                                        </ChartAreas>
+                                    </asp:Chart>
+                                    
+
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <%--                    Bar Chart--%>
+                    <div style="text-align: center; float: left;">
+                        <div style="float: left;">
+                            <div class="col-3">
+                                
+                                <div style="margin-left: auto; margin-right: auto; text-align: center;">
+                                    <asp:Label ID="Label3" runat="server" Text="ICX Distribution (Current Month)" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
+                                </div>
+                                <p>
+                                </p>
+                                <p>
+                                  
+                                    
+                                    <asp:Chart ID="columnChart" runat="server" Width="400px" Height="300px">
+                                        <Series>
+                                            <asp:Series ChartType="Column">
+                                                <Points>
+                                                    <asp:DataPoint AxisLabel="Agni" YValues="90" Color="#08605c" />
+                                                    <asp:DataPoint AxisLabel="Banglatelecom" YValues="10" Color="#e40613"/>
+                                                    <asp:DataPoint AxisLabel="Bangla" YValues="10" Color="#e40613"/>
+                                                    
+                                                    
+                                                </Points>
+                                            </asp:Series>
+                                        </Series>
+                                        <ChartAreas>
+                                            <asp:ChartArea Name="ChartArea1">
+                                                <AxisX Title="Datas" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                    <LabelStyle Font="Arial, 10px" Interval="1" />
+                                                </AxisX>
+                                                <AxisY Title="Values" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                    <LabelStyle Font="Arial, 10px" />
+                                                </AxisY>
+                                                <%--<Area3DStyle Enable3D="true" />--%>
+                                            </asp:ChartArea>
+                                        </ChartAreas>
+                                      
+                                    </asp:Chart>
+                                    
+
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    
+
                 </ContentTemplate>
+
             </asp:UpdatePanel>
 
             <asp:Timer ID="Timer2" runat="server" Interval="30000" OnTick="Timer2_Tick" Enabled="false">
             </asp:Timer>
+            
 
         </div>
 

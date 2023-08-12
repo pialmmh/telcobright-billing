@@ -15,8 +15,10 @@ using MySql.Data.MySqlClient;
 
 public partial class DashboardAspx : Page
 {
+   
+    
     TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
-    string targetIcxName = "jibondhara_cas";
+    string targetIcxName = "btrc_cas";
     protected void Page_Load(object sender, EventArgs e)
     {
         //get any ne of this telcobright partner, required by rate handling objects

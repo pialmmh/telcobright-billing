@@ -120,13 +120,13 @@ public partial class DashboardAspx {
     protected global::System.Web.UI.UpdatePanel UpdatePanel2;
     
     /// <summary>
-    /// HyperLink1 control.
+    /// Label2 control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.HyperLink HyperLink1;
+    protected global::System.Web.UI.WebControls.Label Label2;
     
     /// <summary>
     /// GridViewCompleted control.
@@ -136,6 +136,42 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.GridView GridViewCompleted;
+    
+    /// <summary>
+    /// Label1 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label Label1;
+    
+    /// <summary>
+    /// PieChart control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.DataVisualization.Charting.Chart PieChart;
+    
+    /// <summary>
+    /// Label3 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label Label3;
+    
+    /// <summary>
+    /// columnChart control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.DataVisualization.Charting.Chart columnChart;
     
     /// <summary>
     /// Timer2 control.
