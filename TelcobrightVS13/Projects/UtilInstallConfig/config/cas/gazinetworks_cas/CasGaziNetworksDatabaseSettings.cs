@@ -26,8 +26,8 @@ namespace InstallConfig
             {
                 ServerName = "localhost",
                 DatabaseName = this.Tbc.Telcobrightpartner.databasename,
-                AdminPassword = "Takay1takaane",
-                AdminUserName = "fduser",
+                AdminPassword = "",
+                AdminUserName = "root",
                 DatabaseEngine = "innodb",
                 StorageEngineForPartitionedTables = "innodb",
                 PartitionStartDate = new DateTime(2023, 1, 1),
