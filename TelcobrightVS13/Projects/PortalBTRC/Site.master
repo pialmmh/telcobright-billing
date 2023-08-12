@@ -23,18 +23,18 @@
     
     <div class="page" >
      
-            <div class="header" id="mygradient2" style=" min-height: 70px; min-width: 100%; background-position: top; background-image: url('/img/NAV-BG.jpg');background-size: 100% 100%; background-size: cover;  background-position: center;">
+            <div class="header" id="mygradient2" style=" min-height: 50px; min-width: 100%; background-position: top; background-image: url('/img/NAV-BG.jpg');background-size: 100% 100%; background-size: cover;  background-position: center;">
              <div class="logo" style="float: left;">
                  <div style="float: left;"> 
                      <a href="http://localhost:25965/Dashboard">
-                         <img src="/img/Telcobright logo.png" style="height: 40px; padding-top: 14px; padding-left: 20%;"/>
+                         <img src="/img/Telcobright logo.png" style="height: 40px; padding-top: 10px; padding-left: 20%;"/>
                                 
                      </a>
                  </div>
              </div>
 
                 <%--============================--%> 
-              <div class="CDR"style="float: left; padding-left: 3%; padding-top: 17px;">
+              <div class="CDR"style="float: left; padding-left: 3%; padding-top: 12px;">
                   <span class="bold" style="font-size: 16pt; color: #e40613;">
                              
                       CDR Analyzer System (CAS)
@@ -47,14 +47,14 @@
                     <div class="btrclogo" style="float:right;" >
                         <span> 
                             <a href="#">
-                                <img src="/img/BTRC.png" style="height: 40px; padding-right: 20px; padding-left: 10px; padding-top: 14px;"/>
+                                <img src="/img/BTRC.png" style="height: 40px; padding-right: 20px; padding-left: 10px; padding-top: 10px;"/>
                             </a>
                         </span>
                     </div>
                 </div>
                 
                 <%--============================--%>
-              <div class="login"  style="float:right; padding-top: 14px;">
+              <div class="login"  style="float:right; padding-top: 10px;">
                   <div class="loginDisplay">
                       <span style="padding-left: 80px; width: 100px;">
                           <asp:Label ID="lblScreenTitle" runat="server" Text=""></asp:Label>

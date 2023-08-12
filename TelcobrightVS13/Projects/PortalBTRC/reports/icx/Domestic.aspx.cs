@@ -11,12 +11,16 @@ using reports;
 using ExportToExcel;
 using MediationModel;
 using LibraryExtensions;
+using PortalApp;
 using PortalApp.ReportHelper;
+using TelcobrightMediation;
+
 public partial class DefaultRptDomesticIcx : System.Web.UI.Page
 {
     private int _mShowByCountry=0;
     private int _mShowByAns = 0;
     DataTable _dt;
+    public TelcobrightConfig tbc;
     private string GetQuery()
     {
 
@@ -162,8 +166,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
         
         using (MySqlConnection connection = new MySqlConnection())
         {
-            connection.ConnectionString = ConfigurationManager.ConnectionStrings["reader"].ConnectionString;
-
+            connection.ConnectionString = PortalConnectionHelper.GetReadOnlyConnectionString(this.tbc.DatabaseSetting);
             connection.Open();
            
             MySqlCommand cmd = new MySqlCommand(GetQuery(), connection);
@@ -638,7 +641,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
         {
             if (DropDownListPartner.SelectedValue == "-1")
             {
-                using (PartnerEntities contex = new PartnerEntities())
+                using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(tbc.DatabaseSetting))
                 {
                     List<int> ansList = contex.partners.Where(c => c.PartnerType == 2).Select(c => c.idPartner).ToList();
                     foreach (route route in contex.routes.Where(x => ansList.Contains(x.idPartner)))
@@ -649,7 +652,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
             }
             else
             {
-                using (PartnerEntities contex = new PartnerEntities())
+                using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(tbc.DatabaseSetting))
                 {
                     int idPartner = Convert.ToInt32(DropDownListPartner.SelectedValue);
                     foreach (route route in contex.routes.Where(x => x.idPartner == idPartner))
@@ -669,7 +672,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
         {
             if (DropDownListIgw.SelectedValue == "-1")
             {
-                using (PartnerEntities contex = new PartnerEntities())
+                using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(tbc.DatabaseSetting))
                 {
                     List<int> ansList = contex.partners.Where(c => c.PartnerType == 2).Select(c => c.idPartner).ToList();
                     foreach (route route in contex.routes.Where(x => ansList.Contains(x.idPartner)))
@@ -680,7 +683,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
             }
             else
             {
-                using (PartnerEntities contex = new PartnerEntities())
+                using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(tbc.DatabaseSetting))
                 {
                     int idPartner = Convert.ToInt32(DropDownListIgw.SelectedValue);
                     foreach (route route in contex.routes.Where(x => x.idPartner == idPartner))

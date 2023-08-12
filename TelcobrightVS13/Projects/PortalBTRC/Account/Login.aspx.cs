@@ -2,12 +2,16 @@
 using System.Web;
 using System.Web.UI;
 using Microsoft.AspNet.Identity.Owin;
+using TelcobrightMediation;
 using MediationModel;
+using PortalApp;
 
 namespace WebApplication1.Account
 {
     public partial class Login : Page
     {
+
+        TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
         protected void Page_Load(object sender, EventArgs e)
         {
             //RegisterHyperLink.NavigateUrl = "Register";
@@ -33,10 +37,11 @@ namespace WebApplication1.Account
                 // To enable password failures to trigger lockout, change to shouldLockout: true
                 var result = signinManager.PasswordSignIn(this.Email.Text, this.Password.Text, this.RememberMe.Checked, shouldLockout: false);
 
+
                 switch (result)
                 {
                     case SignInStatus.Success:
-                        using (PartnerEntities context = new PartnerEntities())
+                        using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(telcobrightConfig.DatabaseSetting))
                         {
                             login_history history = new login_history();
                             history.username = this.Email.Text;
