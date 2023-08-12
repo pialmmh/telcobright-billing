@@ -604,10 +604,16 @@ namespace TelcobrightMediation
             collectionSegmenter.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
                 segment =>
                 {
-                    int segmentCount = segment.Count();
-                    var segmentAsParallel = segment.AsParallel();
-                    ParallelQuery<StringBuilder> sbs = segmentAsParallel
-                        .Select(kv => new StringBuilder($"('{kv.Key}','{kv.Value[Fn.StartTime]}')"));
+                    var segmentAsList = segment.ToList();
+                    int segmentCount = segmentAsList.Count;
+                    //var segmentAsParallel = segment.AsParallel();
+                    //ParallelQuery<StringBuilder> sbs = segmentAsParallel
+                    //    .Select(kv => new StringBuilder($"('{kv.Key}','{kv.Value[Fn.StartTime]}')"));
+
+                    ParallelIterator<KeyValuePair<string, string[]>, StringBuilder> iterator =
+                        new ParallelIterator<KeyValuePair<string, string[]>, StringBuilder>(segmentAsList);
+                    List<StringBuilder> sbs = 
+                        iterator.getOutput(kv => new StringBuilder($"('{kv.Key}','{kv.Value[Fn.StartTime]}')"));
 
                     string sql = $" insert into uniqueevent(tuple, starttime) values " +
                                                                     $"{StringBuilderJoiner.Join(",", sbs).ToString()}";
