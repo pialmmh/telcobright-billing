@@ -94,15 +94,15 @@ namespace Decoders
                 string originatingPort = lineAsArr[6];
 
                 string orignatingIpPort = originatingIp + ":" + originatingPort;
-                textCdr[Fn.IncomingRoute] = orignatingIpPort + "-" + ownSignalingAddress;
+                textCdr[Fn.IncomingRoute] = orignatingIpPort;
 
 
                 textCdr[Fn.Originatingip] = orignatingIpPort;
                 string terminitingIp = lineAsArr[15];
                 string terminitingPort = lineAsArr[16];
-                string terminitingIpPort = terminitingIp + ":" + terminitingPort;
+                string terminitingIpPort = terminitingIp + terminitingPort;
                 textCdr[Fn.TerminatingIp] = terminitingIpPort;
-                textCdr[Fn.OutgoingRoute] = terminitingIpPort + "-" + ownSignalingAddress;
+                textCdr[Fn.OutgoingRoute] = terminitingIpPort;
 
 
                 textCdr[Fn.Mediaip1] = lineAsArr[18];
