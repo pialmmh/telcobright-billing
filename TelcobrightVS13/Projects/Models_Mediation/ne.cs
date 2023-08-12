@@ -53,7 +53,9 @@ namespace MediationModel
         public int FilterDuplicateCdr { get; set; }
         public int UseIdCallAsBillId { get; set; }
         public int PrependLocationNumberToFileName { get; set; }
-    
+        public int AllowEmptyFile { get; set; }
+        public string ipOrTdm { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<bridgedroute> bridgedroutes { get; set; }
         public virtual enumcdrformat enumcdrformat { get; set; }
