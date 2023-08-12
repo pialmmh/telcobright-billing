@@ -451,7 +451,8 @@ namespace TelcobrightMediation
             {
                 uniqueEventCount = WriteUniqueEventsHistory(this.CollectionResult.FinalNonDuplicateEvents);
             }
-            if (uniqueEventCount != this.CollectionResult.FinalNonDuplicateEvents.Count)
+            if (this.CollectionResult.FinalNonDuplicateEvents!=null && 
+                uniqueEventCount != this.CollectionResult.FinalNonDuplicateEvents.Count)
             {
                 throw new Exception("Written number of unique event count does not match non-duplicate event count.");
             }
