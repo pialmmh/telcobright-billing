@@ -113,8 +113,8 @@ namespace InstallConfig
                         type = DeploymentProfileType.TelcoBilling,
                         MySqlUsers = new List<MySqlUser>()
                         {
-                          new MySqlUser(username: "fduser",
-                                        password: "Takay1takaane$",
+                          new MySqlUser(username: CasConfigHelper.Db.AdminUserName,
+                                        password: CasConfigHelper.Db.AdminPassword,
                                         hostnameOrIpAddresses: new List<string>{"localhost","10.0.0.29"},
                                         permissions: new List<MySqlPermission>
                                         {
