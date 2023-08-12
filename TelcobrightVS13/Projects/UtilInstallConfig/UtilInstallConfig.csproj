@@ -319,6 +319,7 @@
     <Compile Include="config\purple\PurpleServerConfig.cs" />
     <Compile Include="config\purple\PurpleServiceGroups.cs" />
     <Compile Include="config\allDeployment\AllDeploymenProfiles.cs" />
+    <Compile Include="config\_helper\CasDatabaseHelper.cs" />
     <Compile Include="generators\DeploymentHelper.cs" />
     <Compile Include="generators\telcoBilling\TelcoBillingConfigGenerator.cs" />
     <Compile Include="generators\telcoBilling\TelcoBillingQuartzWriter.cs" />

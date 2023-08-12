@@ -49,14 +49,14 @@ namespace Decoders
 
                 textCdr[Fn.Switchid] = Input.Ne.idSwitch.ToString();
                 //cdr.SwitchId = 9;
-                textCdr[Fn.Sequencenumber] = lineAsArr[0];
+                textCdr[Fn.Sequencenumber] = lineAsArr[0];//acc_rec_num
                 //cdr.SequenceNumber = Convert.ToInt64(lineAsArr[0]);
                 textCdr[Fn.Filename] = fileName;
-                textCdr[Fn.IncomingRoute] = lineAsArr[25];
-                textCdr[Fn.OutgoingRoute] = lineAsArr[56];
-                textCdr[Fn.DurationSec] = lineAsArr[17];
+                textCdr[Fn.IncomingRoute] = lineAsArr[25];//ingress_call_info_zone_name
+                textCdr[Fn.OutgoingRoute] = lineAsArr[56];//egress_call_info_inviting_ts
+                textCdr[Fn.DurationSec] = lineAsArr[17];//duration 
                 //cdr.DurationSec = Convert.ToDecimal(lineAsArr[17]) / 1000;
-                string ipAddr= lineAsArr[36];
+                string ipAddr= lineAsArr[36];//7 ingress_call_info_sip_remote_address
                 if (!string.IsNullOrEmpty(ipAddr))
                 {
                     string[] ipPort = ipAddr.Split(':');
@@ -64,7 +64,7 @@ namespace Decoders
                     string port = ipPort[2].Split(';')[0].Trim();
                     textCdr[Fn.Originatingip] = ip + ":"+ port;
                 }
-                ipAddr = lineAsArr[67];
+                ipAddr = lineAsArr[67];//ingress_media_record_remot e_address
                 if (!string.IsNullOrEmpty(ipAddr))
                 {
                     string[] ipPort = ipAddr.Split(':');
@@ -73,25 +73,25 @@ namespace Decoders
                     textCdr[Fn.TerminatingIp] = ip + ":" + port;
                 }
                 
-                string startTime = lineAsArr[37];//SignalStart
+                string startTime = lineAsArr[37];//ingress_call_info_inviting_ts
                 if (!string.IsNullOrEmpty(startTime))
                 {
                     startTime= parseStringToDate(startTime).ToString("yyyy-MM-dd HH:mm:ss");
                 }
 
-                string connectTime = lineAsArr[38];//ConnectTime
+                string connectTime = lineAsArr[38];//ingress_call_info_inviting_ts
                 if (!string.IsNullOrEmpty(connectTime))
                 {
                     connectTime= parseStringToDate(connectTime).ToString("yyyy-MM-dd HH:mm:ss");
                 }
 
-                string answerTime = lineAsArr[39];//AnswerTime
+                string answerTime = lineAsArr[39];//ingress_call_info_answer_ts 
                 if (!string.IsNullOrEmpty(answerTime))
                 {
                     answerTime= parseStringToDate(answerTime).ToString("yyyy-MM-dd HH:mm:ss");
                 }
 
-                string endTime = lineAsArr[40];//EndTime
+                string endTime = lineAsArr[40];//ingress_call_info_disconnect_ ts
                 if (!string.IsNullOrEmpty(endTime))
                 {
                     endTime= parseStringToDate(endTime).ToString("yyyy-MM-dd HH:mm:ss");
@@ -102,14 +102,16 @@ namespace Decoders
                 textCdr[Fn.AnswerTime] = answerTime;
                 textCdr[Fn.Endtime] = endTime;
 
-                textCdr[Fn.OriginatingCallingNumber] = lineAsArr[30].Trim();
-                textCdr[Fn.OriginatingCalledNumber] = lineAsArr[31].Trim();
-                textCdr[Fn.TerminatingCallingNumber] = lineAsArr[61].Trim();
-                textCdr[Fn.TerminatingCalledNumber] = lineAsArr[62].Trim();
-                textCdr[Fn.ReleaseDirection] = lineAsArr[8].Trim();
-                textCdr[Fn.ReleaseCauseIngress] = lineAsArr[9].Trim();
+                textCdr[Fn.OriginatingCallingNumber] = lineAsArr[30].Trim();//ingress_call_info_calling_part y
+                textCdr[Fn.OriginatingCalledNumber] = lineAsArr[31].Trim();//ingress_call_info_called_part                 y
+
+                textCdr[Fn.TerminatingCallingNumber] = lineAsArr[61].Trim();//ingress_media_record_flow_c ommit_ts
+                textCdr[Fn.TerminatingCalledNumber] = lineAsArr[62].Trim();//ingress_media_record_media_intf_name
+
+                textCdr[Fn.ReleaseDirection] = lineAsArr[8].Trim();//release_direction 
+                textCdr[Fn.ReleaseCauseIngress] = lineAsArr[9].Trim();//sip_status_code 
                 textCdr[Fn.ReleaseCauseEgress] = lineAsArr[9].Trim();
-                textCdr[Fn.ReleaseCauseSystem] = lineAsArr[10].Trim();
+                textCdr[Fn.ReleaseCauseSystem] = lineAsArr[10].Trim();//internal_reason
                 //textCdr[Fn.UniqueBillId] = lineAsArr[10].Trim();
                 textCdr[Fn.Validflag] = "1";
                 decodedRows.Add(textCdr);

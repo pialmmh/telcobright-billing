@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI.WebControls;
 using System.Collections;
+using System.Drawing;
 using ClosedXML.Excel;
 using LibraryExtensions;
 using PortalApp;
@@ -38,11 +39,13 @@ public partial class SiteMaster : System.Web.UI.MasterPage
             }
         }
 
-
+        
 
         if (!this.IsPostBack)
         {
-//            this.Session["isTreeLoaded"] = true;
+            TreeView1.NodeStyle.ForeColor = Color.Green;
+            TreeView1.SelectedNodeStyle.ForeColor = Color.Green;
+            //            this.Session["isTreeLoaded"] = true;
             //Load Report Templates in TreeView dynically from database.
             CommonCode commonCode = new CommonCode();
             commonCode.LoadReportTemplatesTree(ref this.TreeView1);
@@ -110,10 +113,10 @@ public partial class SiteMaster : System.Web.UI.MasterPage
                     }
                     if (bValid) authenticatedNodes.Add(node);
                 }
-
                 
                 foreach (TreeNode node in authenticatedNodes)
                 {
+                   
                     if (node.Expanded == false) continue;
                     String[] parts = node.ValuePath.Split('/');
                     String parentPath = String.Empty;
@@ -140,6 +143,7 @@ public partial class SiteMaster : System.Web.UI.MasterPage
                                 cNode = new TreeNode(node.Text, node.Value, node.ImageUrl, node.NavigateUrl,
                                     node.Target);
                                 if (node.NavigateUrl == String.Empty) cNode.SelectAction = TreeNodeSelectAction.None;
+                               
                                 tNode.ChildNodes.Add(cNode);
                             }
                         }

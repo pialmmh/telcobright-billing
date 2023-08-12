@@ -107,7 +107,7 @@
                                 <p>
                                     
 
-                                    <asp:GridView ID="GridViewCompleted" runat="server" AutoGenerateColumns="False" CellPadding="4" DataKeyNames="id" DataSourceID="SqlDataSource1" ForeColor="#333333" GridLines="None" BorderStyle="None" BorderWidth="1">
+                                    <asp:GridView ID="GridViewCompleted" runat="server" AutoGenerateColumns="False" CellPadding="4" DataKeyNames="id" ForeColor="#333333" GridLines="None" BorderStyle="None" BorderWidth="1">
                                         <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                                         <Columns>
                                             <asp:BoundField DataField="id" HeaderText="id" InsertVisible="False" ReadOnly="True" SortExpression="id" Visible="false" />
@@ -126,8 +126,8 @@
                                         <SortedDescendingCellStyle BackColor="#FFFDF8" />
                                         <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
                                     </asp:GridView>
-                                    <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:Partner %>" ProviderName="<%$ ConnectionStrings:Partner.ProviderName %>" SelectCommand="select id,JobName,CreationTime,CompletionTime from job where idjobdefinition=1 
-                                order by completiontime desc limit 0,10"></asp:SqlDataSource>
+                                  <%--  <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:Partner %>" ProviderName="<%$ ConnectionStrings:Partner.ProviderName %>" SelectCommand="select id,JobName,CreationTime,CompletionTime from job where idjobdefinition=1 
+                                order by completiontime desc limit 0,10"></asp:SqlDataSource>--%>
 
                                 </p>
                             </div>

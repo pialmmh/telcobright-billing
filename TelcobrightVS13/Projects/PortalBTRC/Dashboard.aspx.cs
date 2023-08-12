@@ -9,8 +9,14 @@ using reports;
 using System.Collections.Generic;
 using MediationModel;
 using PortalApp;
+using TelcobrightInfra;
+using System.Data;
+using MySql.Data.MySqlClient;
+
 public partial class DashboardAspx : Page
 {
+    TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
+    string targetIcxName = "jibondhara_cas";
     protected void Page_Load(object sender, EventArgs e)
     {
         //get any ne of this telcobright partner, required by rate handling objects
@@ -26,17 +32,50 @@ public partial class DashboardAspx : Page
         }
         telcobrightpartner thisPartner = null;
         string binpath = System.Web.HttpRuntime.BinDirectory;
-        TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
-        using (PartnerEntities conTelco = new PartnerEntities())
+
+        var databaseSetting = telcobrightConfig.DatabaseSetting;
+
+        using (PartnerEntities conTelco = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting))
         {
             thisPartner = conTelco.telcobrightpartners.Where(c => c.databasename == dbNameAppConf).ToList().First();
+
         }
         //this.lblCustomerDisplayName.Text = thisPartner.CustomerName;
         //this.lblCustomerDisplayName.Text = "CDR Analyzer System (CAS)";
+        databaseSetting.DatabaseName = this.targetIcxName;
+        string connectionString = DbUtil.getDbConStrWithDatabase(databaseSetting);
+
+        string sqlCommand = "select id, JobName, CreationTime, CompletionTime " +
+                                       "from job where idjobdefinition = 1 " +
+                                       "order by completiontime desc limit 0,10;";
+
+        List<GridViewCompletedJob> gridViewCompletedJob = new List<GridViewCompletedJob>();
+
+
+        using (MySqlConnection connection = new MySqlConnection())
+        {
+            connection.ConnectionString = connectionString;
+            connection.Open();
+            DataSet dataSet = gridViewCompletedData(connection, sqlCommand);
+            bool hasData = dataSet.Tables.Cast<DataTable>()
+                           .Any(table => table.Rows.Count != 0);
+            if (hasData == true)
+            {
+                gridViewCompletedJob = ConvertDataSetToList(dataSet);
+                this.GridViewCompleted.DataSource = gridViewCompletedJob;
+                this.GridViewCompleted.DataBind();
+
+            }
+        }
+
 
         //dashboard items
         UpdateErrorCalls();
-        this.GridViewCompleted.DataBind();
+
+
+
+
+
         UpdateInternationalIncoming();
         this.Timer1.Enabled = true;
         this.Timer2.Enabled = true;
@@ -45,11 +84,11 @@ public partial class DashboardAspx : Page
     private void UpdateErrorCalls()
     {
         List<DashBoard.ErrorCalls> ec = new List<DashBoard.ErrorCalls>();
-        using (PartnerEntities conPartner = new PartnerEntities())
+        using (PartnerEntities conPartner = PortalConnectionHelper.GetPartnerEntitiesDynamic(telcobrightConfig.DatabaseSetting))
         {
             ec = conPartner.Database.SqlQuery<DashBoard.ErrorCalls>(@"select ErrorCode as ErrorReason, count(*) as NumberOfCalls
                                                 from cdrerror group by ErrorCode").ToList();
-            this.HyperLinkError.Text = ec.Select(c=>c.NumberOfCalls).Sum() + " Calls in Error";
+            this.HyperLinkError.Text = ec.Select(c => c.NumberOfCalls).Sum() + " Calls in Error";
             this.GridViewError.DataSource = ec;
             this.GridViewError.DataBind();
 
@@ -71,6 +110,16 @@ public partial class DashboardAspx : Page
     {
         public string PartnerName { get; set; }
         public double Minutes { get; set; }
+    }
+
+    protected class GridViewCompletedJob
+    {
+        public int id { get; set; }
+        public string jobName { get; set; }
+        public DateTime creationTime { get; set; }
+        public DateTime completionTime { get; set; }
+
+
     }
     private void UpdateInternationalIncoming()
     {
@@ -94,4 +143,47 @@ public partial class DashboardAspx : Page
         this.GridViewIntlin.DataSource = intlIn;
         this.GridViewIntlin.DataBind();
     }
+
+
+
+    DataSet gridViewCompletedData(MySqlConnection connection, string sql)
+    {
+
+        MySqlCommand cmd = new MySqlCommand(sql, connection);
+        cmd.Connection = connection;
+        MySqlDataAdapter domDataAdapter = new MySqlDataAdapter(cmd);
+        DataSet ds = new DataSet();
+        domDataAdapter.Fill(ds);
+        return ds;
+    }
+
+    List<GridViewCompletedJob> ConvertDataSetToList(DataSet ds)
+    {
+        bool hasRecords = ds.Tables.Cast<DataTable>()
+                           .Any(table => table.Rows.Count != 0);
+        List<GridViewCompletedJob> records = new List<GridViewCompletedJob>();
+        if (hasRecords == true)
+        {
+            foreach (DataTable table in ds.Tables)
+            {
+                foreach (DataRow row in table.Rows)
+                {
+                    GridViewCompletedJob record = new GridViewCompletedJob();
+                    record.id = int.Parse(row.ItemArray[0].ToString());
+                    record.jobName = row.ItemArray[1].ToString();
+                    record.creationTime = row.Field<DateTime>("creationTime");
+                    record.completionTime = row.Field<DateTime>("completionTime");
+
+
+                    records.Add(record);
+                }
+            }
+        }
+        return records;
+    }
+
+
+
+
+
 }

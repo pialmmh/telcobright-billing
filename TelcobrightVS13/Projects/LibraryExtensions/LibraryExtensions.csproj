@@ -119,6 +119,7 @@
     <Compile Include="NullAlternative.cs" />
     <Compile Include="NumberFormatter.cs" />
     <Compile Include="ObjectWrapperWithCustomKey.cs" />
+    <Compile Include="ParallelIterator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomStringGenerator.cs" />
     <Compile Include="StringBuilderJoiner.cs" />
