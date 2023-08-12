@@ -70,6 +70,7 @@ public partial class ConfigPartner : System.Web.UI.Page
 
             using (PartnerEntities context = new PartnerEntities())
             {
+
                 IList<enumpartnertype> partnerTypes = (from c in context.enumpartnertypes
                                                        select c).ToList();
                 Session["sesPartnerTypes"] = partnerTypes;

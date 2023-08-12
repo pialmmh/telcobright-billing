@@ -71,7 +71,7 @@
 <%--<div style="height:1px;clear:both"></div>--%>  
 <div id="leftCol" style="font-size:90%;float:left;min-height:1500px;
 margin-left:30px;background-color:#F7F6F3;border-right-style:ridge;border-top-style:none;
-border-bottom-style:ridge;min-width:180px;padding-top:25px;">
+border-bottom-style:ridge;min-width:180px; padding-top: 10px;">
 
 <div id="TreeView" style="padding-top:1.5%">
 
@@ -81,7 +81,7 @@ border-bottom-style:ridge;min-width:180px;padding-top:25px;">
 </div>
 <br />
 <asp:TreeView ID="TreeView1" Runat="server" ImageSet="Arrows" NodeWrap="True" 
-        OnSelectedNodeChanged ="TreeView1_OnItemSelected" OnTreeNodeExpanded="OnExpand" OnTreeNodeCollapsed="OnCollapse">
+        OnSelectedNodeChanged ="TreeView1_OnItemSelected" OnTreeNodeExpanded="OnExpand" OnTreeNodeCollapsed="OnCollapse" >
     <HoverNodeStyle Font-Underline="True" ForeColor="#5555DD"  />
   <Nodes>
     <asp:TreeNode Value="Configuration" Expanded="True" Text="Configuration"  SelectAction="None">
