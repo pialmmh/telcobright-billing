@@ -85,7 +85,7 @@
                 }
               
                
-
+                 
                 using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(tbc.DatabaseSetting))
                 {
                     //var IOSList = contex.partners.Where(c => c.PartnerType == 3).ToList();
