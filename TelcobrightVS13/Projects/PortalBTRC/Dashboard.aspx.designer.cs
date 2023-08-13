@@ -12,15 +12,6 @@
 public partial class DashboardAspx {
     
     /// <summary>
-    /// lblCustomerDisplayName control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblCustomerDisplayName;
-    
-    /// <summary>
     /// ScriptManager1 control.
     /// </summary>
     /// <remarks>
@@ -165,13 +156,31 @@ public partial class DashboardAspx {
     protected global::System.Web.UI.WebControls.Label Label3;
     
     /// <summary>
-    /// columnChart control.
+    /// BarChart control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.DataVisualization.Charting.Chart columnChart;
+    protected global::System.Web.UI.DataVisualization.Charting.Chart BarChart;
+    
+    /// <summary>
+    /// Label11 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label Label11;
+    
+    /// <summary>
+    /// Chart8 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.DataVisualization.Charting.Chart Chart8;
     
     /// <summary>
     /// Label4 control.
