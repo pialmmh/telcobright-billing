@@ -32,10 +32,11 @@ namespace WebApplication1.Account
                 // Validate the user password
                 var manager = this.Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
                 var signinManager = this.Context.GetOwinContext().GetUserManager<ApplicationSignInManager>();
+              
 
-                // This doen't count login failures towards account lockout
-                // To enable password failures to trigger lockout, change to shouldLockout: true
-                var result = signinManager.PasswordSignIn(this.Email.Text, this.Password.Text, this.RememberMe.Checked, shouldLockout: false);
+                 // This doen't count login failures towards account lockout
+                 // To enable password failures to trigger lockout, change to shouldLockout: true
+                 var result = signinManager.PasswordSignIn(this.Email.Text, this.Password.Text, this.RememberMe.Checked, shouldLockout: false);
 
 
                 switch (result)

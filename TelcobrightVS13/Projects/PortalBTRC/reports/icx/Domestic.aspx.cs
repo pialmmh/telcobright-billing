@@ -5,15 +5,20 @@ using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using DevExpress.XtraPrinting.Native;
 using reports;
 using ExportToExcel;
 using MediationModel;
 using LibraryExtensions;
+using Microsoft.AspNet.Identity.Owin;
 using PortalApp;
 using PortalApp.ReportHelper;
+using TelcobrightInfra.CasAdditionalConfig;
 using TelcobrightMediation;
+using WebApplication1;
 
 public partial class DefaultRptDomesticIcx : System.Web.UI.Page
 {
@@ -637,16 +642,27 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
     {
         DropDownListViewIncomingRoute.Items.Clear();
         DropDownListViewIncomingRoute.Items.Add(new ListItem("[All]", "-1"));
+
+    
+    
         if (DropDownListPartner.SelectedValue != String.Empty)
         {
             if (DropDownListPartner.SelectedValue == "-1")
             {
                 using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(tbc.DatabaseSetting))
                 {
-                    List<int> ansList = contex.partners.Where(c => c.PartnerType == 2).Select(c => c.idPartner).ToList();
-                    foreach (route route in contex.routes.Where(x => ansList.Contains(x.idPartner)))
+                    //List<int> ansList = contex.partners.Where(c => c.PartnerType == 2).Select(c => c.idPartner).ToList();
+                    //foreach (route route in contex.routes.Where(x => ansList.Contains(x.idPartner)))
+                    //{
+                    //    DropDownListViewIncomingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
+                    //}
+                    foreach (var kv in CasUserVsDb.UserVsDbName)
                     {
-                        DropDownListViewIncomingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
+                        string username = kv.Key;
+                        string dbNameAsRouteName = kv.Value;
+                        string icxName = dbNameAsRouteName.Split('_')[0];
+                        DropDownListViewIncomingRoute.Items.Add(new ListItem(icxName, dbNameAsRouteName));
+
                     }
                 }
             }

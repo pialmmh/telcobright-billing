@@ -60,8 +60,11 @@ namespace Process
 
                             //List<FileInfo> localFiles = this.LocalLocation.GetLocalFilesNonRecursive();
                             DirectoryLister dirlister = new DirectoryLister();
+                            List<string> validFilePrefixes =
+                                thisSwitch.CDRPrefix.Split(',').Select(s => s.Trim()).ToList();
                             List<FileInfo> fileInfos = dirlister.ListLocalDirectoryNonRecursive(cdrPathLocal)
-                                .Where(fInfo => fInfo.Extension == thisSwitch.FileExtension
+                                .Where(fInfo => validFilePrefixes.Any(p=>fInfo.Name.StartsWith(p)) &&
+                                fInfo.Extension == thisSwitch.FileExtension
                                     && !fInfo.Name.EndsWith(".tmp") && !fInfo.Name.Contains(".filepart"))
                                     .ToList();
                             int minDurationToSkip = fileLocation.DurationSecToSkipVeryNewPossiblyIncompleteFiles;
