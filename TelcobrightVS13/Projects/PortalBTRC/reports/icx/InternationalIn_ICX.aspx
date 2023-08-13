@@ -16,7 +16,7 @@
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            TelcobrightConfig tbc = PageUtil.GetTelcobrightConfig();
+             this.tbc = PageUtil.GetTelcobrightConfig();
             PageUtil.ApplyPageSettings(this, false, tbc);
             //common code for report pages
             //view state of ParamBorder div
@@ -84,7 +84,7 @@
                     commonCode.LoadReportTemplatesTree(ref masterTree);
                 }
 
-                using (PartnerEntities contex = new PartnerEntities())
+                using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(this.tbc.DatabaseSetting))
                 {
                     var IOSList = contex.partners.Where(c => c.PartnerType == 3).ToList();
 
@@ -209,7 +209,7 @@
                 ClientScript.RegisterClientScriptBlock(this.GetType(), "Alert", script, true);
                 return;
             }
-            using (PartnerEntities context = new PartnerEntities())
+            using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(this.tbc.DatabaseSetting))
             {
                 if (context.reporttemplates.Any(c => c.Templatename == templateName))
                 {
@@ -590,8 +590,8 @@
                     <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                     <Columns>
                         <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" ItemStyle-Wrap="false" />
-                        <asp:BoundField DataField="International Partner" HeaderText="IOS" SortExpression="International Partner" />
                         <asp:BoundField DataField="tup_incomingroute" HeaderText="ICX" SortExpression="tup_incomingroute" />
+                        <asp:BoundField DataField="International Partner" HeaderText="IOS" SortExpression="International Partner" />
                         <asp:BoundField DataField="IGW" HeaderText="ANS" SortExpression="ANS"  Visible="false"/>
                         <asp:BoundField DataField="tup_outgoingroute" HeaderText="Outgoing Route" SortExpression="tup_outgoingroute" />
                         <asp:BoundField DataField="ANS" HeaderText="ANS1" SortExpression="ANS" Visible="False"/>
