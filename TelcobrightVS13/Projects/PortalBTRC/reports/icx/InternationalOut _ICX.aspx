@@ -341,13 +341,14 @@
             Font-Names="Arial-Narrow" OnRowDataBound="GridView1_RowDataBound">
             <AlternatingRowStyle BackColor="#f2f2f2" ForeColor="#284775" />
             <Columns>
+               
                 <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" />
+                <asp:BoundField DataField="tup_incomingroute" HeaderText="ICX" SortExpression="tup_incomingroute" />
                 <asp:BoundField DataField="Country" HeaderText="Country"
                     SortExpression="Country"/>
                 <asp:BoundField DataField="Destination" HeaderText="Destination"
                     SortExpression="Destination" />
                 <asp:BoundField DataField="IGW" HeaderText="ANSNotUse" SortExpression="ANSNotUse"  Visible="false"/>
-                <asp:BoundField DataField="tup_incomingroute" HeaderText="ICX" SortExpression="tup_incomingroute" />
                 <asp:BoundField DataField="ANS" HeaderText="ANS" SortExpression="ANS" />
                 <asp:BoundField DataField="International Partner" HeaderText="IOS" SortExpression="International Partner" />
                 <asp:BoundField DataField="tup_outgoingroute" HeaderText="IOS Route" SortExpression="tup_outgoingroute" />
