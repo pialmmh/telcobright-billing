@@ -52,15 +52,38 @@ namespace TelcobrightMediation
             //Domestic call direction/service group
             var dicRoutes = cdrProcessor.CdrJobContext.MediationContext.MefServiceGroupContainer.SwitchWiseRoutes;
             var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
-            route thisRoute = null;
-            dicRoutes.TryGetValue(key, out thisRoute);
-            if (thisRoute != null)
+            route incomingRoute = null;
+            dicRoutes.TryGetValue(key, out incomingRoute);
+            if (incomingRoute != null)
             {
-                if (thisRoute.partner.PartnerType == IcxPartnerType.ANS &&
-                    thisRoute.NationalOrInternational == RouteLocalityType.National) //ANS and route=national
+                bool useCasStyleProcessing = cdrProcessor.CdrJobContext.CdrjobInputData.CdrSetting.useCasStyleProcessing;
+
+                if(!useCasStyleProcessing)
                 {
-                    thisCdr.ServiceGroup = 1; //Domestic in ICX
+                    if (incomingRoute.partner.PartnerType == IcxPartnerType.ANS &&
+                    incomingRoute.NationalOrInternational == RouteLocalityType.National) //ANS and route=national
+                    {
+                        thisCdr.ServiceGroup = 1; //Domestic in ICX
+                    }
                 }
+                else
+                {
+                    key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.OutgoingRoute);
+                    route outGoingRoute = null;
+                    dicRoutes.TryGetValue(key, out outGoingRoute);
+
+
+                    if (outGoingRoute.partner.PartnerType == IcxPartnerType.ANS &&
+                        incomingRoute.partner.PartnerType == IcxPartnerType.ANS) //ANS and route=national
+                    {
+                        thisCdr.ServiceGroup = 1; //Domestic call
+                    }
+
+                    
+                }
+
+                
+
             }
         }
 
