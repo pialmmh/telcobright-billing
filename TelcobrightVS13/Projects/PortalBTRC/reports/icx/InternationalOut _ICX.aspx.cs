@@ -16,17 +16,21 @@ using reports;
 using MediationModel;
 using PortalApp;
 using PortalApp.ReportHelper;
+using TelcobrightInfra.CasAdditionalConfig;
 
 public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
 {
     DataTable _dt; bool _timerflag = false;
+
+    public TelcobrightConfig tbc;
+   
     private string GetQuery()
     {
 
         string StartDate = txtDate.Text;
         string EndtDate = (txtDate1.Text.ConvertToDateTimeFromMySqlFormat()).AddSeconds(1).ToMySqlFormatWithoutQuote();
         string tableName = DropDownListReportSource.SelectedValue+"02";
-
+        
         string groupInterval = getSelectedRadioButtonText();
         switch (groupInterval)
         {
@@ -68,7 +72,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                                 CheckBoxShowByAns.Checked==true?DropDownListAns.SelectedIndex>0?" tup_sourceID="+DropDownListAns.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_inpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxViewIncomingRoute.Checked==true?DropDownListViewIncomingRoute.SelectedIndex>0?" tup_incomingroute="+DropDownListViewIncomingRoute.SelectedItem.Value:string.Empty:string.Empty,
-                                CheckBoxViewOutgoingRoute.Checked==true?DropDownListViewOutgoingRoute.SelectedIndex>0?" tup_outgoingroute="+DropDownListViewOutgoingRoute.SelectedItem.Value:string.Empty:string.Empty,
+                                CheckBoxViewOutgoingRoute.Checked==true?DropDownListViewOutgoingRoute.SelectedIndex>0?" tup_outgoingroute="+"'"+DropDownListViewIncomingRoute.SelectedItem.Value.Split('_')[0].Trim().ToString().Split('_')[0].Trim().ToString()+"'":string.Empty:string.Empty,
                                 ViewBySwitch.Checked==true?DropDownListShowBySwitch.SelectedIndex>0?"tup_switchid="+DropDownListShowBySwitch.SelectedItem.Value:string.Empty:string.Empty,
                                     
                             }).getSQLString();
@@ -380,12 +384,12 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        TelcobrightConfig tbc = PageUtil.GetTelcobrightConfig();
+        this.tbc = PageUtil.GetTelcobrightConfig();
         PageUtil.ApplyPageSettings(this,false, tbc);
         //load Country KPI
 
         Dictionary<string, countrycode> dicKpiCountry = new Dictionary<string, countrycode>();
-        using (PartnerEntities context = new PartnerEntities())
+        using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(tbc.DatabaseSetting))
         {
             foreach (countrycode c in context.countrycodes.ToList())
             {
@@ -396,7 +400,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
 
         //load Destination KPI
         Dictionary<string, xyzprefix> dicKpiDest = new Dictionary<string, xyzprefix>();
-        using (PartnerEntities context = new PartnerEntities())
+        using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(tbc.DatabaseSetting))
         {
             foreach (xyzprefix c in context.xyzprefixes.ToList())
             {
@@ -431,7 +435,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
             Single usdExchangeRate = 0;
             var connectionString = ConfigurationManager.ConnectionStrings["reader"].ConnectionString;
 
-            using (PartnerEntities contex = new PartnerEntities())
+            using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(tbc.DatabaseSetting))
             {
                 var CountryList = contex.countrycodes.ToList();
 
@@ -687,7 +691,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
             ClientScript.RegisterClientScriptBlock(this.GetType(), "Alert", script, true);
             return;
         }
-        using (PartnerEntities context = new PartnerEntities())
+        using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(tbc.DatabaseSetting))
         {
             if (context.reporttemplates.Any(c => c.Templatename == templateName))
             {
@@ -1340,7 +1344,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
         {
             if (DropDownListIgw.SelectedValue == "-1")
             {
-                using (PartnerEntities contex = new PartnerEntities())
+                using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(this.tbc.DatabaseSetting))
                 {
                     List<int> ansList = contex.partners.Where(c => c.PartnerType == 2).Select(c => c.idPartner).ToList();
                     foreach (route route in contex.routes.Where(x => ansList.Contains(x.idPartner)))
@@ -1351,7 +1355,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
             }
             else
             {
-                using (PartnerEntities contex = new PartnerEntities())
+                using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(tbc.DatabaseSetting))
                 {
                     int idPartner = Convert.ToInt32(DropDownListIgw.SelectedValue);
                     foreach (route route in contex.routes.Where(x => x.idPartner == idPartner))
@@ -1371,18 +1375,26 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
         {
             if (DropDownListIntlCarier.SelectedValue == "-1")
             {
-                using (PartnerEntities contex = new PartnerEntities())
+                using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(tbc.DatabaseSetting))
                 {
                     List<int> ansList = contex.partners.Where(c => c.PartnerType == 3).Select(c => c.idPartner).ToList();
-                    foreach (route route in contex.routes.Where(x => ansList.Contains(x.idPartner)))
+                    //foreach (route route in contex.routes.Where(x => ansList.Contains(x.idPartner)))
+                    //{
+                    //    DropDownListViewOutgoingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
+                    //}
+                    foreach (var kv in CasUserVsDb.UserVsDbName)
                     {
-                        DropDownListViewOutgoingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
+                        string username = kv.Key;
+                        string dbNameAsRouteName = kv.Value;
+                        string icxName = dbNameAsRouteName.Split('_')[0];
+                        DropDownListViewIncomingRoute.Items.Add(new ListItem(icxName, dbNameAsRouteName));
+
                     }
                 }
             }
             else
             {
-                using (PartnerEntities contex = new PartnerEntities())
+                using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(tbc.DatabaseSetting))
                 {
                     int idPartner = Convert.ToInt32(DropDownListIntlCarier.SelectedValue);
                     foreach (route route in contex.routes.Where(x => x.idPartner == idPartner))
