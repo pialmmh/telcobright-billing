@@ -100,20 +100,12 @@ namespace Decoders
                 textCdr[Fn.Originatingip] = orignatingIpPort;
                 string terminitingIp = lineAsArr[15];
                 string terminitingPort = lineAsArr[16];
-                string terminitingIpPort = terminitingIp + terminitingPort;
+                string terminitingIpPort = terminitingIp + ":" + terminitingPort;
                 textCdr[Fn.TerminatingIp] = terminitingIpPort;
                 textCdr[Fn.OutgoingRoute] = terminitingIpPort;
 
-
                 textCdr[Fn.Mediaip1] = lineAsArr[18];
                 textCdr[Fn.Mediaip2] = lineAsArr[21];
-
-
-                
-
-                
-
-
 
                 if (!string.IsNullOrEmpty(lineAsArr[7].Trim())) textCdr[Fn.OriginatingCalledNumber] = lineAsArr[7].Trim();
                 if (!string.IsNullOrEmpty(lineAsArr[9].Trim())) textCdr[Fn.OriginatingCallingNumber] = lineAsArr[9].Trim();

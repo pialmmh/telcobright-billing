@@ -55,8 +55,6 @@ namespace InstallConfig
 
         public override TelcobrightConfig GenerateConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
         {
-            
-
             CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
             CommonCdrValRulesGen commonCdrValRulesGen =
                 new CommonCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
@@ -164,7 +162,7 @@ namespace InstallConfig
                     idMediationRule= 2,
                     SwitchName= "cataleya",
                     CDRPrefix= "esdr",
-                    FileExtension= ".txt",
+                    FileExtension= ".csv",
                     Description= null,
                     SourceFileLocations= "Vault.cataleyaDhk",
                     BackupFileLocations= null,

@@ -190,6 +190,11 @@ namespace InstallConfig
                             {
                                 Name = "gazinetworks_cas",
                                 SchedulerPortNo = 576,
+                            },
+                            new InstanceConfig
+                            {
+                                Name ="mothertelecom_cas",
+                                SchedulerPortNo = 577
                             }
                         }
                     },

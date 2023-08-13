@@ -46,8 +46,6 @@ namespace InstallConfig
 
         public override TelcobrightConfig GenerateConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
         {
-            
-
             CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
             CommonCdrValRulesGen commonCdrValRulesGen =
                 new CommonCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
@@ -94,9 +92,9 @@ namespace InstallConfig
                     TransactionSizeForCDRLoading = 1500,
                     DecodingSpanCount = 100,
                     SkipAutoCreateJob = 1,
-                    SkipCdrListed = 0,
+                    SkipCdrListed = 1,
                     SkipCdrReceived = 0,
-                    SkipCdrDecoded = 0,
+                    SkipCdrDecoded = 1,
                     SkipCdrBackedup = 1,
                     KeepDecodedCDR = 0,
                     KeepReceivedCdrServer = 1,
@@ -115,11 +113,11 @@ namespace InstallConfig
                 {
                     idSwitch = 2,
                     idCustomer = this.Tbc.Telcobrightpartner.idCustomer,
-                    idcdrformat = 17,
+                    idcdrformat = 26,
                     idMediationRule = 2,
                     SwitchName = "Dialogic",
-                    CDRPrefix = "sdr",
-                    FileExtension = ".gz",
+                    CDRPrefix = "sdr,C_sdr",
+                    FileExtension = ".csv",
                     Description = null,
                     SourceFileLocations = this.vaultDialogic.Name,
                     BackupFileLocations = null,
