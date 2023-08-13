@@ -4,6 +4,7 @@
 <%@ Import Namespace="MediationModel" %>
 <%@ Import Namespace="TelcobrightMediation" %>
 <%@ Import Namespace="PortalApp" %>
+<%@ Import Namespace="PortalApp._portalHelper" %>
 
 
 
@@ -16,7 +17,7 @@
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            TelcobrightConfig tbc = PageUtil.GetTelcobrightConfig();
+            this.tbc = PageUtil.GetTelcobrightConfig();
             PageUtil.ApplyPageSettings(this, false, tbc);
             //common code for report pages
             //view state of ParamBorder div

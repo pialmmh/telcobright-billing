@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.UI.WebControls;
 
-namespace PortalApp
+namespace PortalApp._portalHelper
 {
     public class MasterPageExtendedForSpring
     {

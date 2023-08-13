@@ -11,6 +11,7 @@ using ClosedXML.Excel;
 using LibraryExtensions;
 using PortalApp;
 using MediationModel;
+using PortalApp._portalHelper;
 
 public partial class SiteMaster : System.Web.UI.MasterPage
 {

@@ -8,15 +8,19 @@ using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using reports;
-using ExportToExcel;
 using MediationModel;
 using LibraryExtensions;
 using PortalApp.ReportHelper;
+using PortalApp._portalHelper;
+using TelcobrightInfra.CasAdditionalConfig;
+using TelcobrightMediation;
+
 public partial class DefaultRptDomesticIcx : System.Web.UI.Page
 {
     private int _mShowByCountry=0;
     private int _mShowByAns = 0;
     DataTable _dt;
+    public TelcobrightConfig tbc;
     private string GetQuery()
     {
 
@@ -36,6 +40,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
                 break;
 
         }
+
 
         string constructedSQL = new SqlHelperIntlInIcx
                         (StartDate,
@@ -60,7 +65,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
                                 CheckBoxPartner.Checked==true?DropDownListPartner.SelectedIndex>0?" tup_inpartnerid="+DropDownListPartner.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxShowByAns.Checked==true?DropDownListAns.SelectedIndex>0?" tup_destinationId="+DropDownListAns.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_outpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty,
-                                CheckBoxViewIncomingRoute.Checked==true?DropDownListViewIncomingRoute.SelectedIndex>0?" tup_incomingroute="+DropDownListViewIncomingRoute.SelectedItem.Value:string.Empty:string.Empty,
+                                CheckBoxViewIncomingRoute.Checked==true?DropDownListViewIncomingRoute.SelectedIndex>0?" tup_incomingroute="+"'"+DropDownListViewIncomingRoute.SelectedItem.Value:string.Empty:string.Empty,
                                 CheckBoxViewOutgoingRoute.Checked==true?DropDownListViewOutgoingRoute.SelectedIndex>0?" tup_outgoingroute="+DropDownListViewOutgoingRoute.SelectedItem.Value:string.Empty:string.Empty,
                                 
                             }).getSQLString();
@@ -629,6 +634,8 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
     {
         DropDownListViewOutgoingRoute.Enabled = CheckBoxViewOutgoingRoute.Checked;
     }
+
+
 
     protected void DropDownListPartner_OnSelectedIndexChanged(object sender, EventArgs e)
     {

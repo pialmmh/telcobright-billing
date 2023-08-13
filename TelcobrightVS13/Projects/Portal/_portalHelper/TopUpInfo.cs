@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
-namespace PortalApp._myCodes
+namespace PortalApp._portalHelper
 {
     public class TopUpInfo
     {

@@ -9,10 +9,10 @@ using System.Text.RegularExpressions;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using MediationModel;
-using PortalApp._myCodes;
 using TelcobrightMediation;
 using TelcobrightMediation.Accounting;
 using System.ComponentModel;
+using PortalApp._portalHelper;
 
 namespace PortalApp.config
 {

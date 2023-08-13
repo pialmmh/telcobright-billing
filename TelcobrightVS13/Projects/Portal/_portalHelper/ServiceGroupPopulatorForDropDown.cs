@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.UI.WebControls;
 using TelcobrightMediation;
 
-namespace PortalApp
+namespace PortalApp._portalHelper
 {
     public static class ServiceGroupPopulatorForDropDown
     {

@@ -18,7 +18,7 @@ public partial class DashboardAspx : Page
    
     
     TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
-    string targetIcxName = "btrc_cas";
+    string targetIcxName = "jibondhara_cas";
     protected void Page_Load(object sender, EventArgs e)
     {
         //get any ne of this telcobright partner, required by rate handling objects
@@ -173,8 +173,8 @@ public partial class DashboardAspx : Page
                     GridViewCompletedJob record = new GridViewCompletedJob();
                     record.id = int.Parse(row.ItemArray[0].ToString());
                     record.jobName = row.ItemArray[1].ToString();
-                    record.creationTime = row.Field<DateTime>("creationTime");
-                    record.completionTime = row.Field<DateTime>("completionTime");
+                    record.creationTime = (DateTime) row.ItemArray[2];
+                    record.completionTime = (DateTime)row.ItemArray[3];
 
 
                     records.Add(record);

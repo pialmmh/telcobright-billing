@@ -3,6 +3,8 @@ using PortalApp;
 using System;
 using System.Configuration;
 using System.Web.UI.WebControls;
+using PortalApp._portalHelper;
+
 //using IgwModel;
 //using telcobrightmediationModel;
 

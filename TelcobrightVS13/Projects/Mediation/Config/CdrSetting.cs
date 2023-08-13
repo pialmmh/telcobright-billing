@@ -36,6 +36,7 @@ namespace TelcobrightMediation
         public int BatchSizeForCdrJobCreationCheckingExistence { get; set; } = 10000;
         public Dictionary<string, SkipSettingsForSummaryOnly> SummaryOnlySettings = new Dictionary<string, SkipSettingsForSummaryOnly>();
         public FileSplitSetting FileSplitSetting { get; set; }
+        public bool useCasStyleProcessing { get; set; } = false;
 
         public CdrSetting()
         {

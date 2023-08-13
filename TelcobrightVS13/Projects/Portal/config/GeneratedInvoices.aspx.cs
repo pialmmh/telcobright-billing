@@ -23,6 +23,7 @@ using System.Reflection;
 using System.IO;
 using DevExpress.Office.Internal;
 using PortalApp.Handler;
+using PortalApp._portalHelper;
 
 namespace PortalApp.config
 {

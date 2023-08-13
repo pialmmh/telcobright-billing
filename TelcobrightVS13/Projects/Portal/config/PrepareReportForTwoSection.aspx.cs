@@ -11,6 +11,8 @@ using iTextSharp.text.pdf;
 using MediationModel;
 using TelcobrightMediation;
 using Newtonsoft.Json;
+using PortalApp._portalHelper;
+
 namespace PortalApp.config
 {
     public partial class PrepareReportForTwoSection : System.Web.UI.Page

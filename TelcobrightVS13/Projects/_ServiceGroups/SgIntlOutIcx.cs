@@ -58,6 +58,7 @@ namespace TelcobrightMediation
                     thisCdr.ServiceGroup = 2; //international Out in IGW 
                     break;
                 }
+
             }
         }
 

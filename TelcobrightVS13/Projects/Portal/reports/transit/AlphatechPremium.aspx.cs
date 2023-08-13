@@ -8,10 +8,11 @@ using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using reports;
-using ExportToExcel;
 using MediationModel;
 using LibraryExtensions;
 using PortalApp.ReportHelper;
+using PortalApp._portalHelper;
+
 public partial class AlphatechPremium : System.Web.UI.Page
 {
     private int _mShowByCountry=0;

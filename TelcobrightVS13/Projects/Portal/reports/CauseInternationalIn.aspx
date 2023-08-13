@@ -5,6 +5,7 @@
 <%----%>
 <%@ Import Namespace="MediationModel" %>
 <%@ Import Namespace="PortalApp" %>
+<%@ Import Namespace="PortalApp._portalHelper" %>
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
    
 <%--Page Load and Other Server Side Asp.net scripts--%>

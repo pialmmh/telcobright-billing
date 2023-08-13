@@ -10,12 +10,12 @@ using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using LibraryExtensions;
-using ExportToExcel;
 using System.Reflection;
 using OfficeOpenXml;
 using MediationModel;
 using PortalApp;
 using MySql.Data.MySqlClient;
+using PortalApp._portalHelper;
 using TelcobrightMediation.Config;
 using Color = System.Drawing.Color;
 
