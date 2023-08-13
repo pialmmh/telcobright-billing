@@ -19,6 +19,8 @@ using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Config;
 using Itenso.TimePeriod;
 using System.IO;
+using PortalApp._portalHelper;
+
 namespace PortalApp.config
 {
     public partial class BalanceAdjustment : System.Web.UI.Page

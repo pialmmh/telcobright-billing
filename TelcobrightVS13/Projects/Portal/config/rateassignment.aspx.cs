@@ -29,6 +29,7 @@ using TelcobrightMediation;
 using TelcobrightMediation.Accounting;
 using TelcobrightMediation.MefData.GenericAssignment;
 using Newtonsoft.Json;
+using PortalApp._portalHelper;
 using Excel = Microsoft.Office.Interop.Excel;
 
 public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Page
@@ -861,7 +862,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
     {
         //applicabel for postback and initial load
 
-        Tbc = PortalApp.PageUtil.GetTelcobrightConfig();
+        Tbc = PageUtil.GetTelcobrightConfig();
         foreach (billingruleassignment thisRule in Context.billingruleassignments)
         {
             dicBillRules.Add(thisRule.idRatePlanAssignmentTuple, thisRule);

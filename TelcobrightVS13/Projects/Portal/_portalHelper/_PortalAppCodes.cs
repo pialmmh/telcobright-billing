@@ -1,23 +1,22 @@
-﻿using TelcobrightMediation;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using Newtonsoft.Json;
-using System.IO;
-using System.Web;
-using Spring.Expressions;
-using Spring.Core.TypeResolution;
 using MediationModel;
+using Spring.Core.TypeResolution;
+using Spring.Expressions;
+using TelcobrightMediation;
 using TelcobrightMediation.Config;
 
 /// <summary>
 /// Summary description for CommonCode
 /// </summary>
 
-namespace PortalApp
+namespace PortalApp._portalHelper
 {
     public static class PageUtil
     {

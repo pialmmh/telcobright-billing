@@ -9,6 +9,8 @@ using System.Web.UI.WebControls;
 using LibraryExtensions;
 using MediationModel;
 using PortalApp;
+using PortalApp._portalHelper;
+
 public partial class ConfigSupplierRatePlan : Page
 {
     private static List<uom> Currencies { get; set; }

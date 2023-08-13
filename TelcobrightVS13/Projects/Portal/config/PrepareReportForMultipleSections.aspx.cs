@@ -9,6 +9,8 @@ using System.Web.UI.WebControls;
 using MediationModel;
 using TelcobrightMediation;
 using Newtonsoft.Json;
+using PortalApp._portalHelper;
+
 namespace PortalApp.config
 {
     public partial class PrepareReportForMultipleSections : System.Web.UI.Page

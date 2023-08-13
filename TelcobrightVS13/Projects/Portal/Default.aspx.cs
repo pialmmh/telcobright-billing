@@ -7,6 +7,8 @@ using System.Linq;
 using System.Web.UI;
 using MediationModel;
 using PortalApp;
+using PortalApp._portalHelper;
+
 public partial class DefaultAspx : Page
 {
     protected void Page_Load(object sender, EventArgs e)

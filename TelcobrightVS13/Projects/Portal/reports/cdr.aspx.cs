@@ -10,7 +10,6 @@ using System.Globalization;
 using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using ExportToExcel;
 using MySql.Data.MySqlClient;
 using System.Web;
 using DocumentFormat.OpenXml.Drawing;
@@ -22,6 +21,7 @@ using DevExpress.Web;
 using DevExpress.Web.Data;
 using DevExpress.Xpo;
 using LibraryExtensions;
+using PortalApp._portalHelper;
 
 public partial class ConfigCdr : Page
 {
@@ -174,7 +174,7 @@ public partial class ConfigCdr : Page
             MySqlConnection connection = new MySqlConnection(thisConectionString);
             string database = connection.Database.ToString();
             List<ne> lstSwitch;
-            TelcobrightConfig tbc = PortalApp.PageUtil.GetTelcobrightConfig();
+            TelcobrightConfig tbc = PageUtil.GetTelcobrightConfig();
             ServiceGroupComposer serviceGroupComposer = new ServiceGroupComposer();
             serviceGroupComposer.ComposeFromPath(PageUtil.GetPortalBinPath() +
                                                  System.IO.Path.DirectorySeparatorChar + ".." +

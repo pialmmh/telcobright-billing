@@ -1,9 +1,5 @@
 ﻿#define INCLUDE_WEB_FUNCTIONS
 
-using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
-using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,9 +7,13 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Web;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+using OfficeOpenXml;
 using OfficeOpenXml.Style;
 
-namespace ExportToExcel
+namespace PortalApp._portalHelper
 {
     //
     //  November 2013
