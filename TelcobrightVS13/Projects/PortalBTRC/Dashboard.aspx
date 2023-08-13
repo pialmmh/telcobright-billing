@@ -143,7 +143,7 @@
                     
 <%--                    Pie chart--%>
                     <div style="text-align: left; float: left;">
-                        <div style="float: left;">
+                        <div>
                             <div>
                                
                                 <div style="margin-left: auto; margin-right: auto; text-align: center;">
@@ -153,7 +153,7 @@
                                 </p>
                                 <p>
                                     
-                                    <asp:Chart ID="PieChart" runat="server" Width="400px" Height="300px">
+                                    <asp:Chart ID="PieChart" runat="server" Width="550px" Height="300px">
                                         <Series>
                                             <asp:Series Name="Series1" ChartType="Pie">
                                                 <Points>
@@ -177,26 +177,46 @@
 
                     </div>
                     
-                    <%--                    Bar Chart--%>
+                    <%--                    Bar Chart Dhaka--%>
                     <div style="text-align: center; float: left;">
                         <div style="float: left;">
                             <div class="col-3">
                                 
                                 <div style="margin-left: auto; margin-right: auto; text-align: center;">
-                                    <asp:Label ID="Label3" runat="server" Text="ICX Distribution (Current Month)" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
+                                    <asp:Label ID="Label3" runat="server" Text="ICX Distribution Dhaka Division (Current Month)" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
                                 </div>
                                 <p>
                                 </p>
                                 <p>
                                   
                                     
-                                    <asp:Chart ID="columnChart" runat="server" Width="400px" Height="300px">
+                                    <asp:Chart ID="columnChart" runat="server" Width="480px" Height="300px">
                                         <Series>
                                             <asp:Series ChartType="Column">
                                                 <Points>
                                                     <asp:DataPoint AxisLabel="Agni" YValues="90" Color="#08605c" />
                                                     <asp:DataPoint AxisLabel="Banglatelecom" YValues="10" Color="#e40613"/>
-                                                    <asp:DataPoint AxisLabel="Bangla" YValues="10" Color="#e40613"/>
+                                                    <asp:DataPoint AxisLabel="Bangla" YValues="56" Color="#F86F03"/>
+                                                    <asp:DataPoint AxisLabel="Bantel" YValues="78" Color="#FFA41B"/>
+                                                    <asp:DataPoint AxisLabel="Gazinetwork" YValues="25" Color="#8EAC50"/>
+                                                    <asp:DataPoint AxisLabel="Getco" YValues="96" Color="#898121"/>
+                                                    <asp:DataPoint AxisLabel="Immamnetworks" YValues="33" Color="#E7B10A"/>
+                                                    <asp:DataPoint AxisLabel="Jibondhara" YValues="44" Color="#4E4FEB"/>
+                                                    <asp:DataPoint AxisLabel="Mmcommunication" YValues="11" Color="#068FFF"/>
+                                                    <asp:DataPoint AxisLabel="M&h" YValues="55" Color="#1D5B79"/>
+                                                    <asp:DataPoint AxisLabel="Btcl" YValues="55" Color="#EF6262"/>
+                                                    <asp:DataPoint AxisLabel="Paradise" YValues="75" Color="#F3AA60"/>
+                                                    <asp:DataPoint AxisLabel="Purple" YValues="66" Color="#F2EE9D"/>
+                                                    <asp:DataPoint AxisLabel="Ringtech" YValues="91" Color="#7A9D54"/>
+                                                    <asp:DataPoint AxisLabel="Crossworld" YValues="88" Color="#557A46"/>
+                                                    <asp:DataPoint AxisLabel="Sheba" YValues="99" Color="#8C3333"/>
+                                                    <asp:DataPoint AxisLabel="Softex" YValues="34" Color="#252B48"/>
+                                                    <asp:DataPoint AxisLabel="Teleexchange" YValues="75" Color="#448069"/>
+                                                    <asp:DataPoint AxisLabel="NewGeneration" YValues="20" Color="#F7E987"/>
+                                                    <asp:DataPoint AxisLabel="TeleplusNetwork" YValues="60" Color="#8CABFF"/>
+                                                    <asp:DataPoint AxisLabel="Summit" YValues="40" Color="#4477CE"/>
+                                                    <asp:DataPoint AxisLabel="Mothertel" YValues="45" Color="#512B81"/>
+                                                    <asp:DataPoint AxisLabel="Voicetel" YValues="17" Color="#35155D"/>
                                                     
                                                     
                                                 </Points>
@@ -204,7 +224,7 @@
                                         </Series>
                                         <ChartAreas>
                                             <asp:ChartArea Name="ChartArea1">
-                                                <AxisX Title="Datas" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                <AxisX Title="ICX Names" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
                                                     <LabelStyle Font="Arial, 10px" Interval="1" />
                                                 </AxisX>
                                                 <AxisY Title="Values" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
@@ -223,6 +243,471 @@
 
                     </div>
                     
+                <%--                    Bar Chart Khulna--%>
+                <div style="text-align: center; float: left;">
+                    <div style="float: left;">
+                        <div class="col-3">
+                                
+                            <div style="margin-left: auto; margin-right: auto; text-align: center;">
+                                <asp:Label ID="Label4" runat="server" Text="ICX Distribution Khulna Division (Current Month)" Font-Bold="true" Font-Size="Medium" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
+                            </div>
+                            <p>
+                            </p>
+                            <p>
+                                  
+                                    
+                                <asp:Chart ID="Chart1" runat="server" Width="480px" Height="300px">
+                                    <Series>
+                                        <asp:Series ChartType="Column">
+                                            <Points>
+                                                <asp:DataPoint AxisLabel="Agni" YValues="90" Color="#08605c" />
+                                                <asp:DataPoint AxisLabel="Banglatelecom" YValues="10" Color="#e40613"/>
+                                                <asp:DataPoint AxisLabel="Bangla" YValues="56" Color="#F86F03"/>
+                                                <asp:DataPoint AxisLabel="Bantel" YValues="78" Color="#FFA41B"/>
+                                                <asp:DataPoint AxisLabel="Gazinetwork" YValues="25" Color="#8EAC50"/>
+                                                <asp:DataPoint AxisLabel="Getco" YValues="96" Color="#898121"/>
+                                                <asp:DataPoint AxisLabel="Immamnetworks" YValues="33" Color="#E7B10A"/>
+                                                <asp:DataPoint AxisLabel="Jibondhara" YValues="44" Color="#4E4FEB"/>
+                                                <asp:DataPoint AxisLabel="Mmcommunication" YValues="11" Color="#068FFF"/>
+                                                <asp:DataPoint AxisLabel="M&h" YValues="55" Color="#1D5B79"/>
+                                                <asp:DataPoint AxisLabel="Btcl" YValues="55" Color="#EF6262"/>
+                                                <asp:DataPoint AxisLabel="Paradise" YValues="75" Color="#F3AA60"/>
+                                                <asp:DataPoint AxisLabel="Purple" YValues="66" Color="#F2EE9D"/>
+                                                <asp:DataPoint AxisLabel="Ringtech" YValues="91" Color="#7A9D54"/>
+                                                <asp:DataPoint AxisLabel="Crossworld" YValues="88" Color="#557A46"/>
+                                                <asp:DataPoint AxisLabel="Sheba" YValues="99" Color="#8C3333"/>
+                                                <asp:DataPoint AxisLabel="Softex" YValues="34" Color="#252B48"/>
+                                                <asp:DataPoint AxisLabel="Teleexchange" YValues="75" Color="#448069"/>
+                                                <asp:DataPoint AxisLabel="NewGeneration" YValues="20" Color="#F7E987"/>
+                                                <asp:DataPoint AxisLabel="TeleplusNetwork" YValues="60" Color="#8CABFF"/>
+                                                <asp:DataPoint AxisLabel="Summit" YValues="40" Color="#4477CE"/>
+                                                <asp:DataPoint AxisLabel="Mothertel" YValues="45" Color="#512B81"/>
+                                                <asp:DataPoint AxisLabel="Voicetel" YValues="17" Color="#35155D"/>
+                                                    
+                                                    
+                                            </Points>
+                                        </asp:Series>
+                                    </Series>
+                                    <ChartAreas>
+                                        <asp:ChartArea Name="ChartArea1">
+                                            <AxisX Title="ICX Names" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                <LabelStyle Font="Arial, 10px" Interval="1" />
+                                            </AxisX>
+                                            <AxisY Title="Values" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                <LabelStyle Font="Arial, 10px" />
+                                            </AxisY>
+                                            <%--<Area3DStyle Enable3D="true" />--%>
+                                        </asp:ChartArea>
+                                    </ChartAreas>
+                                      
+                                </asp:Chart>
+                                    
+
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+                    
+                    
+                <%--                    Bar Chart Sylhet--%>
+                <div style="text-align: center; float: left;">
+                    <div style="float: left;">
+                        <div class="col-3">
+                                
+                            <div style="margin-left: auto; margin-right: auto; text-align: center;">
+                                <asp:Label ID="Label5" runat="server" Text="ICX Distribution Sylhet Division (Current Month)" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
+                            </div>
+                            <p>
+                            </p>
+                            <p>
+                                  
+                                    
+                                <asp:Chart ID="Chart2" runat="server" Width="480px" Height="300px">
+                                    <Series>
+                                        <asp:Series ChartType="Column">
+                                            <Points>
+                                                <asp:DataPoint AxisLabel="Agni" YValues="90" Color="#08605c" />
+                                                <asp:DataPoint AxisLabel="Banglatelecom" YValues="10" Color="#e40613"/>
+                                                <asp:DataPoint AxisLabel="Bangla" YValues="56" Color="#F86F03"/>
+                                                <asp:DataPoint AxisLabel="Bantel" YValues="78" Color="#FFA41B"/>
+                                                <asp:DataPoint AxisLabel="Gazinetwork" YValues="25" Color="#8EAC50"/>
+                                                <asp:DataPoint AxisLabel="Getco" YValues="96" Color="#898121"/>
+                                                <asp:DataPoint AxisLabel="Immamnetworks" YValues="33" Color="#E7B10A"/>
+                                                <asp:DataPoint AxisLabel="Jibondhara" YValues="44" Color="#4E4FEB"/>
+                                                <asp:DataPoint AxisLabel="Mmcommunication" YValues="11" Color="#068FFF"/>
+                                                <asp:DataPoint AxisLabel="M&h" YValues="55" Color="#1D5B79"/>
+                                                <asp:DataPoint AxisLabel="Btcl" YValues="55" Color="#EF6262"/>
+                                                <asp:DataPoint AxisLabel="Paradise" YValues="75" Color="#F3AA60"/>
+                                                <asp:DataPoint AxisLabel="Purple" YValues="66" Color="#F2EE9D"/>
+                                                <asp:DataPoint AxisLabel="Ringtech" YValues="91" Color="#7A9D54"/>
+                                                <asp:DataPoint AxisLabel="Crossworld" YValues="88" Color="#557A46"/>
+                                                <asp:DataPoint AxisLabel="Sheba" YValues="99" Color="#8C3333"/>
+                                                <asp:DataPoint AxisLabel="Softex" YValues="34" Color="#252B48"/>
+                                                <asp:DataPoint AxisLabel="Teleexchange" YValues="75" Color="#448069"/>
+                                                <asp:DataPoint AxisLabel="NewGeneration" YValues="20" Color="#F7E987"/>
+                                                <asp:DataPoint AxisLabel="TeleplusNetwork" YValues="60" Color="#8CABFF"/>
+                                                <asp:DataPoint AxisLabel="Summit" YValues="40" Color="#4477CE"/>
+                                                <asp:DataPoint AxisLabel="Mothertel" YValues="45" Color="#512B81"/>
+                                                <asp:DataPoint AxisLabel="Voicetel" YValues="17" Color="#35155D"/>
+                                                    
+                                                    
+                                            </Points>
+                                        </asp:Series>
+                                    </Series>
+                                    <ChartAreas>
+                                        <asp:ChartArea Name="ChartArea1">
+                                            <AxisX Title="ICX Names" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                <LabelStyle Font="Arial, 10px" Interval="1" />
+                                            </AxisX>
+                                            <AxisY Title="Values" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                <LabelStyle Font="Arial, 10px" />
+                                            </AxisY>
+                                            <%--<Area3DStyle Enable3D="true" />--%>
+                                        </asp:ChartArea>
+                                    </ChartAreas>
+                                      
+                                </asp:Chart>
+                                    
+
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+                    
+                    
+                <%--                    Bar Chart Barishal--%>
+                <div style="text-align: center; float: left;">
+                    <div style="float: left;">
+                        <div class="col-3">
+                                
+                            <div style="margin-left: auto; margin-right: auto; text-align: center;">
+                                <asp:Label ID="Label6" runat="server" Text="ICX Distribution Barishal Division (Current Month)" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
+                            </div>
+                            <p>
+                            </p>
+                            <p>
+                                  
+                                    
+                                <asp:Chart ID="Chart3" runat="server" Width="480px" Height="300px">
+                                    <Series>
+                                        <asp:Series ChartType="Column">
+                                            <Points>
+                                                <asp:DataPoint AxisLabel="Agni" YValues="90" Color="#08605c" />
+                                                <asp:DataPoint AxisLabel="Banglatelecom" YValues="10" Color="#e40613"/>
+                                                <asp:DataPoint AxisLabel="Bangla" YValues="56" Color="#F86F03"/>
+                                                <asp:DataPoint AxisLabel="Bantel" YValues="78" Color="#FFA41B"/>
+                                                <asp:DataPoint AxisLabel="Gazinetwork" YValues="25" Color="#8EAC50"/>
+                                                <asp:DataPoint AxisLabel="Getco" YValues="96" Color="#898121"/>
+                                                <asp:DataPoint AxisLabel="Immamnetworks" YValues="33" Color="#E7B10A"/>
+                                                <asp:DataPoint AxisLabel="Jibondhara" YValues="44" Color="#4E4FEB"/>
+                                                <asp:DataPoint AxisLabel="Mmcommunication" YValues="11" Color="#068FFF"/>
+                                                <asp:DataPoint AxisLabel="M&h" YValues="55" Color="#1D5B79"/>
+                                                <asp:DataPoint AxisLabel="Btcl" YValues="55" Color="#EF6262"/>
+                                                <asp:DataPoint AxisLabel="Paradise" YValues="75" Color="#F3AA60"/>
+                                                <asp:DataPoint AxisLabel="Purple" YValues="66" Color="#F2EE9D"/>
+                                                <asp:DataPoint AxisLabel="Ringtech" YValues="91" Color="#7A9D54"/>
+                                                <asp:DataPoint AxisLabel="Crossworld" YValues="88" Color="#557A46"/>
+                                                <asp:DataPoint AxisLabel="Sheba" YValues="99" Color="#8C3333"/>
+                                                <asp:DataPoint AxisLabel="Softex" YValues="34" Color="#252B48"/>
+                                                <asp:DataPoint AxisLabel="Teleexchange" YValues="75" Color="#448069"/>
+                                                <asp:DataPoint AxisLabel="NewGeneration" YValues="20" Color="#F7E987"/>
+                                                <asp:DataPoint AxisLabel="TeleplusNetwork" YValues="60" Color="#8CABFF"/>
+                                                <asp:DataPoint AxisLabel="Summit" YValues="40" Color="#4477CE"/>
+                                                <asp:DataPoint AxisLabel="Mothertel" YValues="45" Color="#512B81"/>
+                                                <asp:DataPoint AxisLabel="Voicetel" YValues="17" Color="#35155D"/>
+                                                    
+                                                    
+                                            </Points>
+                                        </asp:Series>
+                                    </Series>
+                                    <ChartAreas>
+                                        <asp:ChartArea Name="ChartArea1">
+                                            <AxisX Title="ICX Names" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                <LabelStyle Font="Arial, 10px" Interval="1" />
+                                            </AxisX>
+                                            <AxisY Title="Values" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                <LabelStyle Font="Arial, 10px" />
+                                            </AxisY>
+                                            <%--<Area3DStyle Enable3D="true" />--%>
+                                        </asp:ChartArea>
+                                    </ChartAreas>
+                                      
+                                </asp:Chart>
+                                    
+
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+                    
+                    
+                <%--                    Bar Chart Rangpur--%>
+                <div style="text-align: center; float: left;">
+                    <div style="float: left;">
+                        <div class="col-3">
+                                
+                            <div style="margin-left: auto; margin-right: auto; text-align: center;">
+                                <asp:Label ID="Label7" runat="server" Text="ICX Distribution Rangpur Division (Current Month)" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
+                            </div>
+                            <p>
+                            </p>
+                            <p>
+                                  
+                                    
+                                <asp:Chart ID="Chart4" runat="server" Width="480px" Height="300px">
+                                    <Series>
+                                        <asp:Series ChartType="Column">
+                                            <Points>
+                                                <asp:DataPoint AxisLabel="Agni" YValues="90" Color="#08605c" />
+                                                <asp:DataPoint AxisLabel="Banglatelecom" YValues="10" Color="#e40613"/>
+                                                <asp:DataPoint AxisLabel="Bangla" YValues="56" Color="#F86F03"/>
+                                                <asp:DataPoint AxisLabel="Bantel" YValues="78" Color="#FFA41B"/>
+                                                <asp:DataPoint AxisLabel="Gazinetwork" YValues="25" Color="#8EAC50"/>
+                                                <asp:DataPoint AxisLabel="Getco" YValues="96" Color="#898121"/>
+                                                <asp:DataPoint AxisLabel="Immamnetworks" YValues="33" Color="#E7B10A"/>
+                                                <asp:DataPoint AxisLabel="Jibondhara" YValues="44" Color="#4E4FEB"/>
+                                                <asp:DataPoint AxisLabel="Mmcommunication" YValues="11" Color="#068FFF"/>
+                                                <asp:DataPoint AxisLabel="M&h" YValues="55" Color="#1D5B79"/>
+                                                <asp:DataPoint AxisLabel="Btcl" YValues="55" Color="#EF6262"/>
+                                                <asp:DataPoint AxisLabel="Paradise" YValues="75" Color="#F3AA60"/>
+                                                <asp:DataPoint AxisLabel="Purple" YValues="66" Color="#F2EE9D"/>
+                                                <asp:DataPoint AxisLabel="Ringtech" YValues="91" Color="#7A9D54"/>
+                                                <asp:DataPoint AxisLabel="Crossworld" YValues="88" Color="#557A46"/>
+                                                <asp:DataPoint AxisLabel="Sheba" YValues="99" Color="#8C3333"/>
+                                                <asp:DataPoint AxisLabel="Softex" YValues="34" Color="#252B48"/>
+                                                <asp:DataPoint AxisLabel="Teleexchange" YValues="75" Color="#448069"/>
+                                                <asp:DataPoint AxisLabel="NewGeneration" YValues="20" Color="#F7E987"/>
+                                                <asp:DataPoint AxisLabel="TeleplusNetwork" YValues="60" Color="#8CABFF"/>
+                                                <asp:DataPoint AxisLabel="Summit" YValues="40" Color="#4477CE"/>
+                                                <asp:DataPoint AxisLabel="Mothertel" YValues="45" Color="#512B81"/>
+                                                <asp:DataPoint AxisLabel="Voicetel" YValues="17" Color="#35155D"/>
+                                                    
+                                                    
+                                            </Points>
+                                        </asp:Series>
+                                    </Series>
+                                    <ChartAreas>
+                                        <asp:ChartArea Name="ChartArea1">
+                                            <AxisX Title="ICX Names" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                <LabelStyle Font="Arial, 10px" Interval="1" />
+                                            </AxisX>
+                                            <AxisY Title="Values" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                <LabelStyle Font="Arial, 10px" />
+                                            </AxisY>
+                                            <%--<Area3DStyle Enable3D="true" />--%>
+                                        </asp:ChartArea>
+                                    </ChartAreas>
+                                      
+                                </asp:Chart>
+                                    
+
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <%--                    Bar Chart Rajshahi--%>
+                <div style="text-align: center; float: left;">
+                    <div style="float: left;">
+                        <div class="col-3">
+                                
+                            <div style="margin-left: auto; margin-right: auto; text-align: center;">
+                                <asp:Label ID="Label8" runat="server" Text="ICX Distribution Rajshahi Division (Current Month)" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
+                            </div>
+                            <p>
+                            </p>
+                            <p>
+                                  
+                                    
+                                <asp:Chart ID="Chart5" runat="server" Width="480px" Height="300px">
+                                    <Series>
+                                        <asp:Series ChartType="Column">
+                                            <Points>
+                                                <asp:DataPoint AxisLabel="Agni" YValues="90" Color="#08605c" />
+                                                <asp:DataPoint AxisLabel="Banglatelecom" YValues="10" Color="#e40613"/>
+                                                <asp:DataPoint AxisLabel="Bangla" YValues="56" Color="#F86F03"/>
+                                                <asp:DataPoint AxisLabel="Bantel" YValues="78" Color="#FFA41B"/>
+                                                <asp:DataPoint AxisLabel="Gazinetwork" YValues="25" Color="#8EAC50"/>
+                                                <asp:DataPoint AxisLabel="Getco" YValues="96" Color="#898121"/>
+                                                <asp:DataPoint AxisLabel="Immamnetworks" YValues="33" Color="#E7B10A"/>
+                                                <asp:DataPoint AxisLabel="Jibondhara" YValues="44" Color="#4E4FEB"/>
+                                                <asp:DataPoint AxisLabel="Mmcommunication" YValues="11" Color="#068FFF"/>
+                                                <asp:DataPoint AxisLabel="M&h" YValues="55" Color="#1D5B79"/>
+                                                <asp:DataPoint AxisLabel="Btcl" YValues="55" Color="#EF6262"/>
+                                                <asp:DataPoint AxisLabel="Paradise" YValues="75" Color="#F3AA60"/>
+                                                <asp:DataPoint AxisLabel="Purple" YValues="66" Color="#F2EE9D"/>
+                                                <asp:DataPoint AxisLabel="Ringtech" YValues="91" Color="#7A9D54"/>
+                                                <asp:DataPoint AxisLabel="Crossworld" YValues="88" Color="#557A46"/>
+                                                <asp:DataPoint AxisLabel="Sheba" YValues="99" Color="#8C3333"/>
+                                                <asp:DataPoint AxisLabel="Softex" YValues="34" Color="#252B48"/>
+                                                <asp:DataPoint AxisLabel="Teleexchange" YValues="75" Color="#448069"/>
+                                                <asp:DataPoint AxisLabel="NewGeneration" YValues="20" Color="#F7E987"/>
+                                                <asp:DataPoint AxisLabel="TeleplusNetwork" YValues="60" Color="#8CABFF"/>
+                                                <asp:DataPoint AxisLabel="Summit" YValues="40" Color="#4477CE"/>
+                                                <asp:DataPoint AxisLabel="Mothertel" YValues="45" Color="#512B81"/>
+                                                <asp:DataPoint AxisLabel="Voicetel" YValues="17" Color="#35155D"/>
+                                                    
+                                                    
+                                            </Points>
+                                        </asp:Series>
+                                    </Series>
+                                    <ChartAreas>
+                                        <asp:ChartArea Name="ChartArea1">
+                                            <AxisX Title="ICX Names" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                <LabelStyle Font="Arial, 10px" Interval="1" />
+                                            </AxisX>
+                                            <AxisY Title="Values" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                <LabelStyle Font="Arial, 10px" />
+                                            </AxisY>
+                                            <%--<Area3DStyle Enable3D="true" />--%>
+                                        </asp:ChartArea>
+                                    </ChartAreas>
+                                      
+                                </asp:Chart>
+                                    
+
+                            </p>
+                        </div>
+                    </div>
+
+                </div>  
+                    
+                    
+                <%--                    Bar Chart Chottogram--%>
+                <div style="text-align: center; float: left;">
+                    <div style="float: left;">
+                        <div class="col-3">
+                                
+                            <div style="margin-left: auto; margin-right: auto; text-align: center;">
+                                <asp:Label ID="Label9" runat="server" Text="ICX Distribution Chottogram Division (Current Month)" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
+                            </div>
+                            <p>
+                            </p>
+                            <p>
+                                  
+                                    
+                                <asp:Chart ID="Chart6" runat="server" Width="480px" Height="300px">
+                                    <Series>
+                                        <asp:Series ChartType="Column">
+                                            <Points>
+                                                <asp:DataPoint AxisLabel="Agni" YValues="90" Color="#08605c" />
+                                                <asp:DataPoint AxisLabel="Banglatelecom" YValues="10" Color="#e40613"/>
+                                                <asp:DataPoint AxisLabel="Bangla" YValues="56" Color="#F86F03"/>
+                                                <asp:DataPoint AxisLabel="Bantel" YValues="78" Color="#FFA41B"/>
+                                                <asp:DataPoint AxisLabel="Gazinetwork" YValues="25" Color="#8EAC50"/>
+                                                <asp:DataPoint AxisLabel="Getco" YValues="96" Color="#898121"/>
+                                                <asp:DataPoint AxisLabel="Immamnetworks" YValues="33" Color="#E7B10A"/>
+                                                <asp:DataPoint AxisLabel="Jibondhara" YValues="44" Color="#4E4FEB"/>
+                                                <asp:DataPoint AxisLabel="Mmcommunication" YValues="11" Color="#068FFF"/>
+                                                <asp:DataPoint AxisLabel="M&h" YValues="55" Color="#1D5B79"/>
+                                                <asp:DataPoint AxisLabel="Btcl" YValues="55" Color="#EF6262"/>
+                                                <asp:DataPoint AxisLabel="Paradise" YValues="75" Color="#F3AA60"/>
+                                                <asp:DataPoint AxisLabel="Purple" YValues="66" Color="#F2EE9D"/>
+                                                <asp:DataPoint AxisLabel="Ringtech" YValues="91" Color="#7A9D54"/>
+                                                <asp:DataPoint AxisLabel="Crossworld" YValues="88" Color="#557A46"/>
+                                                <asp:DataPoint AxisLabel="Sheba" YValues="99" Color="#8C3333"/>
+                                                <asp:DataPoint AxisLabel="Softex" YValues="34" Color="#252B48"/>
+                                                <asp:DataPoint AxisLabel="Teleexchange" YValues="75" Color="#448069"/>
+                                                <asp:DataPoint AxisLabel="NewGeneration" YValues="20" Color="#F7E987"/>
+                                                <asp:DataPoint AxisLabel="TeleplusNetwork" YValues="60" Color="#8CABFF"/>
+                                                <asp:DataPoint AxisLabel="Summit" YValues="40" Color="#4477CE"/>
+                                                <asp:DataPoint AxisLabel="Mothertel" YValues="45" Color="#512B81"/>
+                                                <asp:DataPoint AxisLabel="Voicetel" YValues="17" Color="#35155D"/>
+                                                    
+                                                    
+                                            </Points>
+                                        </asp:Series>
+                                    </Series>
+                                    <ChartAreas>
+                                        <asp:ChartArea Name="ChartArea1">
+                                            <AxisX Title="ICX Names" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                <LabelStyle Font="Arial, 10px" Interval="1" />
+                                            </AxisX>
+                                            <AxisY Title="Values" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                <LabelStyle Font="Arial, 10px" />
+                                            </AxisY>
+                                            <%--<Area3DStyle Enable3D="true" />--%>
+                                        </asp:ChartArea>
+                                    </ChartAreas>
+                                      
+                                </asp:Chart>
+                                    
+
+                            </p>
+                        </div>
+                    </div>
+
+                </div>  
+                    
+                <%--                    Bar Chart Mymenshing --%>
+                <div style="text-align: center; float: left;">
+                    <div style="float: left;">
+                        <div class="col-3">
+                                
+                            <div style="margin-left: auto; margin-right: auto; text-align: center;">
+                                <asp:Label ID="Label10" runat="server" Text="ICX Distribution Mymenshing Division (Current Month)" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
+                            </div>
+                            <p>
+                            </p>
+                            <p>
+                                  
+                                    
+                                <asp:Chart ID="Chart7" runat="server" Width="480px" Height="300px">
+                                    <Series>
+                                        <asp:Series ChartType="Column">
+                                            <Points>
+                                                <asp:DataPoint AxisLabel="Agni" YValues="90" Color="#08605c" />
+                                                <asp:DataPoint AxisLabel="Banglatelecom" YValues="10" Color="#e40613"/>
+                                                <asp:DataPoint AxisLabel="Bangla" YValues="56" Color="#F86F03"/>
+                                                <asp:DataPoint AxisLabel="Bantel" YValues="78" Color="#FFA41B"/>
+                                                <asp:DataPoint AxisLabel="Gazinetwork" YValues="25" Color="#8EAC50"/>
+                                                <asp:DataPoint AxisLabel="Getco" YValues="96" Color="#898121"/>
+                                                <asp:DataPoint AxisLabel="Immamnetworks" YValues="33" Color="#E7B10A"/>
+                                                <asp:DataPoint AxisLabel="Jibondhara" YValues="44" Color="#4E4FEB"/>
+                                                <asp:DataPoint AxisLabel="Mmcommunication" YValues="11" Color="#068FFF"/>
+                                                <asp:DataPoint AxisLabel="M&h" YValues="55" Color="#1D5B79"/>
+                                                <asp:DataPoint AxisLabel="Btcl" YValues="55" Color="#EF6262"/>
+                                                <asp:DataPoint AxisLabel="Paradise" YValues="75" Color="#F3AA60"/>
+                                                <asp:DataPoint AxisLabel="Purple" YValues="66" Color="#F2EE9D"/>
+                                                <asp:DataPoint AxisLabel="Ringtech" YValues="91" Color="#7A9D54"/>
+                                                <asp:DataPoint AxisLabel="Crossworld" YValues="88" Color="#557A46"/>
+                                                <asp:DataPoint AxisLabel="Sheba" YValues="99" Color="#8C3333"/>
+                                                <asp:DataPoint AxisLabel="Softex" YValues="34" Color="#252B48"/>
+                                                <asp:DataPoint AxisLabel="Teleexchange" YValues="75" Color="#448069"/>
+                                                <asp:DataPoint AxisLabel="NewGeneration" YValues="20" Color="#F7E987"/>
+                                                <asp:DataPoint AxisLabel="TeleplusNetwork" YValues="60" Color="#8CABFF"/>
+                                                <asp:DataPoint AxisLabel="Summit" YValues="40" Color="#4477CE"/>
+                                                <asp:DataPoint AxisLabel="Mothertel" YValues="45" Color="#512B81"/>
+                                                <asp:DataPoint AxisLabel="Voicetel" YValues="17" Color="#35155D"/>
+                                                    
+                                                    
+                                            </Points>
+                                        </asp:Series>
+                                    </Series>
+                                    <ChartAreas>
+                                        <asp:ChartArea Name="ChartArea1">
+                                            <AxisX Title="ICX Names" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                <LabelStyle Font="Arial, 10px" Interval="1" />
+                                            </AxisX>
+                                            <AxisY Title="Values" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                <LabelStyle Font="Arial, 10px" />
+                                            </AxisY>
+                                            <%--<Area3DStyle Enable3D="true" />--%>
+                                        </asp:ChartArea>
+                                    </ChartAreas>
+                                      
+                                </asp:Chart>
+                                    
+
+                            </p>
+                        </div>
+                    </div>
+
+                </div>                
                     
 
                 </ContentTemplate>

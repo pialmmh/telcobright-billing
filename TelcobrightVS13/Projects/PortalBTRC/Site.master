@@ -23,7 +23,7 @@
     
     <div class="page" >
      
-            <div class="header" id="mygradient2" style=" min-height: 50px; min-width: 100%; background-position: top; background-image: url('/img/NAV-BG.jpg');background-size: 100% 100%; background-size: cover;  background-position: center;">
+            <div class="header" id="mygradient2" style=" min-height: 50px; min-width: 100%; background-position: top; background-image: url('https://i.postimg.cc/Dz4p763k/NAV-BG1.jpg');background-size: 100% 100%; background-size: cover;  background-position: center;">
              <div class="logo" style="float: left;">
                  <div style="float: left;"> 
                      <a href="http://localhost:25965/Dashboard">
@@ -81,7 +81,7 @@
 <%--<div style="height:1px;clear:both"></div>--%>  
 <div id="leftCol" style="font-size:90%;float:left;min-height:1500px;
 margin-left:30px;background-color:#F7F6F3;border-right-style:ridge;border-top-style:none;
-border-bottom-style:ridge;min-width:180px;padding-top:25px;">
+border-bottom-style:ridge;min-width:180px;padding-top:10px;">
 
 <div id="TreeView" style="padding-top: 10%">
 
@@ -266,7 +266,7 @@ border-bottom-style:ridge;min-width:180px;padding-top:25px;">
                </div>
         </div> 
         <%--</div>--%>
-        <div id="footerContent" style="padding-left: 500px; text-align: left;">
+        <div id="footerContent" style="margin-left: 20%; text-align: left;">
             <p>
                 Copyright © 2015 Telcobright<br />
                 All Rights Reserved
