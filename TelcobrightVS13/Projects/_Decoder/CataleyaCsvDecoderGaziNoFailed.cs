@@ -44,7 +44,7 @@ namespace Decoders
             {
                 string chargingStatus = lineAsArr[3] == "S" ? "1" : "0"; //done
                 if (chargingStatus != "1") continue;
-                string[] textCdr = new string [input.MefDecodersData.Totalfieldtelcobright];
+                string[] textCdr = new string[input.MefDecodersData.Totalfieldtelcobright];
                 textCdr[Fn.ChargingStatus] = chargingStatus; //done
 
                 textCdr[Fn.Switchid] = Input.Ne.idSwitch.ToString();//done
@@ -53,16 +53,16 @@ namespace Decoders
                 //cdr.SequenceNumber = Convert.ToInt64(lineAsArr[0]);
                 textCdr[Fn.Filename] = fileName;//done
                 textCdr[Fn.IncomingRoute] = lineAsArr[16];//ingress_call_info_zone_name --done
-                textCdr[Fn.OutgoingRoute] = lineAsArr[30];//egress_call_info_inviting_ts --done
-                textCdr[Fn.DurationSec] = lineAsArr[18];//duration --done
+                textCdr[Fn.OutgoingRoute] = lineAsArr[31];//egress_call_info_inviting_ts --done
+                textCdr[Fn.DurationSec] = lineAsArr[5];//duration --done
                 //cdr.DurationSec = Convert.ToDecimal(lineAsArr[17]) / 1000;
-                string ipAddr= lineAsArr[23];//7 ingress_call_info_sip_remote_address--done
+                string ipAddr = lineAsArr[23];//7 ingress_call_info_sip_remote_address--done
                 if (!string.IsNullOrEmpty(ipAddr))
                 {
                     string[] ipPort = ipAddr.Split(':');
                     string ip = ipPort[1].Trim();
                     string port = ipPort[2].Split(';')[0].Trim();
-                    textCdr[Fn.Originatingip] = ip + ":"+ port;
+                    textCdr[Fn.Originatingip] = ip + ":" + port;
                 }
                 ipAddr = lineAsArr[37];//egress_call_info_sip_remote_address-done
 
@@ -73,29 +73,29 @@ namespace Decoders
                     string port = ipPort[2].Split(';')[0].Trim();
                     textCdr[Fn.TerminatingIp] = ip + ":" + port;
                 }
-                
+
                 string startTime = lineAsArr[24];//ingress_call_info_inviting_ts --done
                 if (!string.IsNullOrEmpty(startTime))
                 {
-                    startTime= parseStringToDate(startTime).ToString("yyyy-MM-dd HH:mm:ss");
+                    startTime = parseStringToDate(startTime).ToString("yyyy-MM-dd HH:mm:ss");
                 }
 
                 string connectTime = lineAsArr[24];//ingress_call_info_inviting_ts-- done
                 if (!string.IsNullOrEmpty(connectTime))
                 {
-                    connectTime= parseStringToDate(connectTime).ToString("yyyy-MM-dd HH:mm:ss");
+                    connectTime = parseStringToDate(connectTime).ToString("yyyy-MM-dd HH:mm:ss");
                 }
 
                 string answerTime = lineAsArr[27];//ingress_call_info_answer_ts -done
                 if (!string.IsNullOrEmpty(answerTime))
                 {
-                    answerTime= parseStringToDate(answerTime).ToString("yyyy-MM-dd HH:mm:ss");
+                    answerTime = parseStringToDate(answerTime).ToString("yyyy-MM-dd HH:mm:ss");
                 }
 
                 string endTime = lineAsArr[28];//ingress_call_info_disconnect_ ts--done
                 if (!string.IsNullOrEmpty(endTime))
                 {
-                    endTime= parseStringToDate(endTime).ToString("yyyy-MM-dd HH:mm:ss");
+                    endTime = parseStringToDate(endTime).ToString("yyyy-MM-dd HH:mm:ss");
                 }
 
                 textCdr[Fn.StartTime] = startTime;
@@ -119,7 +119,7 @@ namespace Decoders
             }
 
             return decodedRows;
-            
+
         }
 
         public string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row)

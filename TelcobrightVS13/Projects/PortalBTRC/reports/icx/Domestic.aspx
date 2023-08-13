@@ -16,7 +16,7 @@
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            TelcobrightConfig tbc = PageUtil.GetTelcobrightConfig();
+            this.tbc = PageUtil.GetTelcobrightConfig();
             PageUtil.ApplyPageSettings(this, false, tbc);
             //common code for report pages
             //view state of ParamBorder div
@@ -83,8 +83,10 @@
                     CommonCode commonCode = new CommonCode();
                     commonCode.LoadReportTemplatesTree(ref masterTree);
                 }
-
-                using (PartnerEntities contex = new PartnerEntities())
+              
+               
+                 
+                using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(tbc.DatabaseSetting))
                 {
                     //var IOSList = contex.partners.Where(c => c.PartnerType == 3).ToList();
                     var IOSList = contex.partners.Where(c => c.PartnerType == 2).ToList();
@@ -210,7 +212,8 @@
                 ClientScript.RegisterClientScriptBlock(this.GetType(), "Alert", script, true);
                 return;
             }
-            using (PartnerEntities context = new PartnerEntities())
+
+            using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(tbc.DatabaseSetting))
             {
                 if (context.reporttemplates.Any(c => c.Templatename == templateName))
                 {

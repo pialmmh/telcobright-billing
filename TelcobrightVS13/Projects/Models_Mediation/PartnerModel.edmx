@@ -1788,6 +1788,8 @@ warning 6002: The table/view 'def.platinum.mockcdr' does not have a primary key 
           <Property Name="FilterDuplicateCdr" Type="int" />
           <Property Name="UseIdCallAsBillId" Type="int" />
           <Property Name="PrependLocationNumberToFileName" Type="int" Nullable="false" />
+          <Property Name="AllowEmptyFile" Type="int" />
+          <Property Name="ipOrTdm" Type="varchar" MaxLength="1" />
         </EntityType>
         <EntityType Name="partner">
           <Key>
@@ -7287,6 +7289,8 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <Property Name="FilterDuplicateCdr" Type="Int32" />
           <Property Name="UseIdCallAsBillId" Type="Int32" />
           <Property Name="PrependLocationNumberToFileName" Type="Int32" Nullable="false" />
+          <Property Name="AllowEmptyFile" Type="Int32" />
+          <Property Name="ipOrTdm" Type="String" Nullable="true" MaxLength="1" />
           <NavigationProperty Name="bridgedroutes" Relationship="MediationModel.fk_switch" FromRole="ne" ToRole="bridgedroute" />
           <NavigationProperty Name="enumcdrformat" Relationship="MediationModel.fk_cdrformat" FromRole="ne" ToRole="enumcdrformat" />
           <NavigationProperty Name="jobs" Relationship="MediationModel.job_ibfk_4" FromRole="ne" ToRole="job" />
@@ -11582,6 +11586,8 @@ FROM `uom_conversion` AS `uom_conversion`</DefiningQuery>
           <EntitySetMapping Name="nes">
             <EntityTypeMapping TypeName="MediationModel.ne">
               <MappingFragment StoreEntitySet="ne">
+                <ScalarProperty Name="ipOrTdm" ColumnName="ipOrTdm" />
+                <ScalarProperty Name="AllowEmptyFile" ColumnName="AllowEmptyFile" />
                 <ScalarProperty Name="PrependLocationNumberToFileName" ColumnName="PrependLocationNumberToFileName" />
                 <ScalarProperty Name="UseIdCallAsBillId" ColumnName="UseIdCallAsBillId" />
                 <ScalarProperty Name="FilterDuplicateCdr" ColumnName="FilterDuplicateCdr" />

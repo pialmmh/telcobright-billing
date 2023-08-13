@@ -12,6 +12,7 @@ public partial class DefaultAspx : Page
     protected void Page_Load(object sender, EventArgs e)
     {
         //get any ne of this telcobright partner, required by rate handling objects
+
         string conStrPartner = ConfigurationManager.ConnectionStrings["partner"].ConnectionString;
         string dbNameAppConf = "";
         foreach (string param in conStrPartner.Split(';'))
@@ -25,13 +26,14 @@ public partial class DefaultAspx : Page
         telcobrightpartner thisPartner = null;
         string binpath = System.Web.HttpRuntime.BinDirectory;
         TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
-        
+        var databaseSetting = telcobrightConfig.DatabaseSetting;
+
         if (!string.IsNullOrEmpty(telcobrightConfig.PortalSettings.HomePageUrl))
         {
             this.Response.Redirect(telcobrightConfig.PortalSettings.HomePageUrl, false);
             Context.ApplicationInstance.CompleteRequest();
         }
-        using (PartnerEntities conTelco = new PartnerEntities())
+        using (PartnerEntities conTelco = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting))
         {
             thisPartner = conTelco.telcobrightpartners.Where(c => c.databasename == dbNameAppConf).ToList().First();
         }

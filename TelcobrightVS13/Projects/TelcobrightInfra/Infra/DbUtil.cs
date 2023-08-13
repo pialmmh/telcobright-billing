@@ -29,10 +29,26 @@ namespace TelcobrightInfra
                 $"Persist Security Info=True; default command timeout=21600;";
         }
 
+        public static string getReadOnlyConStrWithDatabase(DatabaseSetting databaseSetting)
+        {
+            return getDbConStrWithoutDatabase(databaseSetting) + $"database={databaseSetting.DatabaseName};";
+        }
+
+
+
+        public static string getReadOnlyConStrWithoutDatabase(DatabaseSetting databaseSetting)
+        {
+            return
+                $"server={databaseSetting.ServerName};User Id={databaseSetting.ReadOnlyUserName};password={databaseSetting.ReadOnlyPassword};" +
+                $"Persist Security Info=True; default command timeout=21600;";
+        }
+
         public static string getDbConStrWithDatabase(DatabaseSetting databaseSetting)
         {
             return getDbConStrWithoutDatabase(databaseSetting) + $"database={databaseSetting.DatabaseName};";
         }
+
+
 
         public static string GetEntityConnectionString(DatabaseSetting databaseSetting)
         {

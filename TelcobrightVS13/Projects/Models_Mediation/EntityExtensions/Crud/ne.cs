@@ -8,42 +8,45 @@ namespace MediationModel
 {
 	public partial class ne:ICacheble<ne>
 	{
-		public StringBuilder GetExtInsertValues()
-		{
-			return new StringBuilder("(")
-				.Append(this.idSwitch.ToMySqlField()).Append(",")
-				.Append(this.idCustomer.ToMySqlField()).Append(",")
-				.Append(this.idcdrformat.ToMySqlField()).Append(",")
-				.Append(this.idMediationRule.ToMySqlField()).Append(",")
-				.Append(this.SwitchName.ToMySqlField()).Append(",")
-				.Append(this.CDRPrefix.ToMySqlField()).Append(",")
-				.Append(this.FileExtension.ToMySqlField()).Append(",")
-				.Append(this.Description.ToMySqlField()).Append(",")
-				.Append(this.SourceFileLocations.ToMySqlField()).Append(",")
-				.Append(this.BackupFileLocations.ToMySqlField()).Append(",")
-				.Append(this.LoadingStopFlag.ToMySqlField()).Append(",")
-				.Append(this.LoadingSpanCount.ToMySqlField()).Append(",")
-				.Append(this.TransactionSizeForCDRLoading.ToMySqlField()).Append(",")
-				.Append(this.DecodingSpanCount.ToMySqlField()).Append(",")
-				.Append(this.SkipAutoCreateJob.ToMySqlField()).Append(",")
-				.Append(this.SkipCdrListed.ToMySqlField()).Append(",")
-				.Append(this.SkipCdrReceived.ToMySqlField()).Append(",")
-				.Append(this.SkipCdrDecoded.ToMySqlField()).Append(",")
-				.Append(this.SkipCdrBackedup.ToMySqlField()).Append(",")
-				.Append(this.KeepDecodedCDR.ToMySqlField()).Append(",")
-				.Append(this.KeepReceivedCdrServer.ToMySqlField()).Append(",")
-				.Append(this.CcrCauseCodeField.ToMySqlField()).Append(",")
-				.Append(this.SwitchTimeZoneId.ToMySqlField()).Append(",")
-				.Append(this.CallConnectIndicator.ToMySqlField()).Append(",")
-				.Append(this.FieldNoForTimeSummary.ToMySqlField()).Append(",")
-				.Append(this.EnableSummaryGeneration.ToMySqlField()).Append(",")
-				.Append(this.ExistingSummaryCacheSpanHr.ToMySqlField()).Append(",")
-				.Append(this.BatchToDecodeRatio.ToMySqlField()).Append(",")
-			    .Append(this.FilterDuplicateCdr.ToMySqlField()).Append(",")
-			    .Append(this.UseIdCallAsBillId.ToMySqlField()).Append(",")
-                .Append(this.PrependLocationNumberToFileName.ToMySqlField()).Append(")");
-		}
-		public  StringBuilder GetExtInsertCustom(Func<ne,string> externalInsertMethod)
+	    public StringBuilder GetExtInsertValues()
+	    {
+	        return new StringBuilder("(")
+	            .Append(this.idSwitch.ToMySqlField()).Append(",")
+	            .Append(this.idCustomer.ToMySqlField()).Append(",")
+	            .Append(this.idcdrformat.ToMySqlField()).Append(",")
+	            .Append(this.idMediationRule.ToMySqlField()).Append(",")
+	            .Append(this.SwitchName.ToMySqlField()).Append(",")
+	            .Append(this.CDRPrefix.ToMySqlField()).Append(",")
+	            .Append(this.FileExtension.ToMySqlField()).Append(",")
+	            .Append(this.Description.ToMySqlField()).Append(",")
+	            .Append(this.SourceFileLocations.ToMySqlField()).Append(",")
+	            .Append(this.BackupFileLocations.ToMySqlField()).Append(",")
+	            .Append(this.LoadingStopFlag.ToMySqlField()).Append(",")
+	            .Append(this.LoadingSpanCount.ToMySqlField()).Append(",")
+	            .Append(this.TransactionSizeForCDRLoading.ToMySqlField()).Append(",")
+	            .Append(this.DecodingSpanCount.ToMySqlField()).Append(",")
+	            .Append(this.SkipAutoCreateJob.ToMySqlField()).Append(",")
+	            .Append(this.SkipCdrListed.ToMySqlField()).Append(",")
+	            .Append(this.SkipCdrReceived.ToMySqlField()).Append(",")
+	            .Append(this.SkipCdrDecoded.ToMySqlField()).Append(",")
+	            .Append(this.SkipCdrBackedup.ToMySqlField()).Append(",")
+	            .Append(this.KeepDecodedCDR.ToMySqlField()).Append(",")
+	            .Append(this.KeepReceivedCdrServer.ToMySqlField()).Append(",")
+	            .Append(this.CcrCauseCodeField.ToMySqlField()).Append(",")
+	            .Append(this.SwitchTimeZoneId.ToMySqlField()).Append(",")
+	            .Append(this.CallConnectIndicator.ToMySqlField()).Append(",")
+	            .Append(this.FieldNoForTimeSummary.ToMySqlField()).Append(",")
+	            .Append(this.EnableSummaryGeneration.ToMySqlField()).Append(",")
+	            .Append(this.ExistingSummaryCacheSpanHr.ToMySqlField()).Append(",")
+	            .Append(this.BatchToDecodeRatio.ToMySqlField()).Append(",")
+	            .Append(this.FilterDuplicateCdr.ToMySqlField()).Append(",")
+	            .Append(this.UseIdCallAsBillId.ToMySqlField()).Append(",")
+	            .Append(this.PrependLocationNumberToFileName.ToMySqlField()).Append(",")
+	            .Append(this.AllowEmptyFile.ToMySqlField()).Append(",")
+	            .Append(this.ipOrTdm.ToMySqlField()).Append(")");
+	    }
+
+	    public  StringBuilder GetExtInsertCustom(Func<ne,string> externalInsertMethod)
 		{
 			return new StringBuilder(externalInsertMethod.Invoke(this));
 		}
@@ -80,8 +83,10 @@ namespace MediationModel
 				.Append("BatchToDecodeRatio=").Append(this.BatchToDecodeRatio.ToMySqlField()).Append(",")
                 .Append("FilterDuplicateCdr=").Append(this.FilterDuplicateCdr.ToMySqlField()).Append(",")
                 .Append("UseIdCallAsBillId=").Append(this.UseIdCallAsBillId.ToMySqlField()).Append(",")
-                .Append("PrependLocationNumberToFileName=").Append(this.PrependLocationNumberToFileName.ToMySqlField())
-				.Append(whereClauseMethod.Invoke(this));
+                .Append("PrependLocationNumberToFileName=").Append(this.PrependLocationNumberToFileName.ToMySqlField()).Append(",")
+			    .Append("AllowEmptyFile=").Append(this.AllowEmptyFile.ToMySqlField()).Append(",")
+			    .Append("ipOrTdm=").Append(this.ipOrTdm.ToMySqlField())
+                .Append(whereClauseMethod.Invoke(this));
 				
 		}
 		public  StringBuilder GetUpdateCommandCustom(Func<ne,string> updateCommandMethodCustom)
