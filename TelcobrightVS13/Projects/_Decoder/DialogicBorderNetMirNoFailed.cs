@@ -160,6 +160,7 @@ namespace Decoders
                 {
                     string originatingCallingNumber = ingressSipFromHeader.Replace(" ", string.Empty).Split(':')[2]
                         .Split('@')[0];
+                    originatingCallingNumber = originatingCallingNumber.Split('>')[0].Trim();
                     textCdr[Fn.OriginatingCallingNumber] = originatingCallingNumber.Replace("+", "");
                 }
 
@@ -184,6 +185,7 @@ namespace Decoders
                 if (outSigFrom.IsNullOrEmptyOrWhiteSpace() == false)
                 {
                     string terminatingCallingNumber = outSigFrom.Split(':')[2].Split('@')[0];
+                    terminatingCallingNumber = terminatingCallingNumber.Split('>')[0].Trim();
                     textCdr[Fn.TerminatingCallingNumber] = terminatingCallingNumber.Replace("+", "");
                 }
 
