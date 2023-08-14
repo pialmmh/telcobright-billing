@@ -17,12 +17,12 @@ namespace Decoders
 {
 
     [Export("Decoder", typeof(IFileDecoder))]
-    public class DialogicBorderNetMirNoFailed : IFileDecoder
+    public class DialogicBorderNetMotherTelNoFailed : IFileDecoder
     {
         public override string ToString() => this.RuleName;
         public virtual string RuleName => GetType().Name;
-        public virtual int Id => 26;
-        public virtual string HelpText => "Decodes Dialogic BorderNet CSV CDR (Mir Telecom)";
+        public virtual int Id => 33;
+        public virtual string HelpText => "Decodes Dialogic BorderNet CSV CDR (Mother Telecom)";
         public virtual CompressionType CompressionType { get; set; } 
         protected virtual CdrCollectorInputData Input { get; set; }
                
@@ -115,14 +115,14 @@ namespace Decoders
                 //AccountEventReason = field 8
                 //SDRSessionStatus = field 16
 
-                string accountStatusType = lineAsArr[6].Trim();// AccountStatusType = field 7, we keep it in calledPartyNoa 
-                string accountEventReason =lineAsArr[7].Trim(); //AccountEventReason = field 8, we keep it in callingPartyNoa
+                string accountStatusType = lineAsArr[86].Trim();// AccountStatusType = field 7, we keep it in calledPartyNoa 
+                string accountEventReason = lineAsArr[87].Trim();//AccountEventReason = field 8, we keep it in callingPartyNoa
 
-                string chargingStatus = lineAsArr[15];//SDRSessionStatus = field 16
-                string durationSec = lineAsArr[14]; // 
+                string chargingStatus = lineAsArr[93];//SDRSessionStatus = field 16
+                string durationSec = lineAsArr[13];
                 double duration = 0;
                 double.TryParse(durationSec, out duration);
-                if (accountStatusType != "2" || duration<=0)
+                if (accountStatusType != "2" || duration <= 0)
                 {
                     continue;
                 }
@@ -132,14 +132,15 @@ namespace Decoders
                 textCdr[Fn.CalledpartyNOA] = accountStatusType;
                 textCdr[Fn.CallingPartyNOA] = accountEventReason;
 
-                textCdr[Fn.Sequencenumber] = lineAsArr[1];
-                textCdr[Fn.UniqueBillId] = lineAsArr[10];
+                textCdr[Fn.Sequencenumber] = lineAsArr[4];
+                textCdr[Fn.UniqueBillId] = lineAsArr[5];
                 textCdr[Fn.DurationSec] = durationSec.IsNullOrEmptyOrWhiteSpace() == false
                     ? durationSec : string.Empty;
 
-                string ingressSigRemoteAddress = lineAsArr[69];//IPv4 192.168.130.63:5060
+
+                string ingressSigRemoteAddress = lineAsArr[16];//IPv4 192.168.130.63:5060
                 string ipAndPort = ingressSigRemoteAddress.Replace("IPv4 ", "");
-                string ingressRequestLine = lineAsArr[71]; //"sip:00918860086409@192.168.130.63:5060";
+                string ingressRequestLine = lineAsArr[57]; //"sip:00918860086409@192.168.130.63:5060";
                 if (ingressRequestLine.IsNullOrEmptyOrWhiteSpace() == false)
                 {
                     string[] tempArr = ingressRequestLine.Split(':');
@@ -147,15 +148,14 @@ namespace Decoders
                     var originatingIp = ipAndPort;
                     textCdr[Fn.Originatingip] = originatingIp;
                     //use media ip1 as own signaling ip
-                    string ingressSigLocalAddress = lineAsArr[70].Split(null)[1];
+                    string ingressSigLocalAddress = lineAsArr[17].Split(null)[1];
                     textCdr[Fn.Mediaip1] = ingressSigLocalAddress;
                     textCdr[Fn.IncomingRoute] = new StringBuilder(originatingIp).Append('-').Append(ingressSigLocalAddress)
                         .ToString();
-
-                    textCdr[Fn.OriginatingCalledNumber] = originatingCalledNumber.Replace("+","");
+                    textCdr[Fn.OriginatingCalledNumber] = originatingCalledNumber.Trim();
                 }
 
-                string ingressSipFromHeader = lineAsArr[72]; //"From: <sip:1111111@192.168.130.63>;tag=5228fc25a2c34aa7ba35e565aeda1457";
+                string ingressSipFromHeader = lineAsArr[58]; //"From: <sip:1111111@192.168.130.63>;tag=5228fc25a2c34aa7ba35e565aeda1457";
                 if (ingressSipFromHeader.IsNullOrEmptyOrWhiteSpace() == false)
                 {
                     string originatingCallingNumber = ingressSipFromHeader.Replace(" ", string.Empty).Split(':')[2]
@@ -164,7 +164,7 @@ namespace Decoders
                     textCdr[Fn.OriginatingCallingNumber] = originatingCallingNumber.Trim();
                 }
 
-                string outSigReqLine = lineAsArr[82].Replace(" ",""); //sip: 00918860086409@10.10.234.8:5060; transport = UDP
+                string outSigReqLine = lineAsArr[63].Replace(" ",""); //sip: 00918860086409@10.10.234.8:5060; transport = UDP
                 if (outSigReqLine.IsNullOrEmptyOrWhiteSpace() == false)
                 {
                     string[] tempArr = outSigReqLine.Split(':');
@@ -173,7 +173,7 @@ namespace Decoders
                     var terminatingCalledNumber = calledNoAndIp[0];
                     var terminatingIp = calledNoAndIp[1].Split(';')[0];
                     //media ip 2 as egress sig remote address OutSigLocalAddr v
-                    string outSigLocalAddr = lineAsArr[80].Split(null)[1];
+                    string outSigLocalAddr = lineAsArr[18].Split(null)[1];
                     textCdr[Fn.Mediaip2] = outSigLocalAddr;
                     textCdr[Fn.OutgoingRoute] = new StringBuilder(terminatingIp).Append("-").Append(outSigLocalAddr)
                         .ToString();
@@ -181,7 +181,7 @@ namespace Decoders
                     textCdr[Fn.TerminatingCalledNumber] = terminatingCalledNumber.Trim();
                 }
 
-                string outSigFrom = lineAsArr[83];//From: <sip:1111111@192.168.130.63>;tag=5228fc25a2c34aa7ba35e565aeda1457
+                string outSigFrom = lineAsArr[64];//From: <sip:1111111@192.168.130.63>;tag=5228fc25a2c34aa7ba35e565aeda1457
                 if (outSigFrom.IsNullOrEmptyOrWhiteSpace() == false)
                 {
                     string terminatingCallingNumber = outSigFrom.Split(':')[2].Split('@')[0];
@@ -198,30 +198,46 @@ namespace Decoders
                 //string dt = lineAsArr[103];//SignalStart
                 ////if (!string.IsNullOrEmpty(dt)) cdr.SignalingStartTime = parseStringToDateWithoutMilliSec(dt);
 
-                string dt = lineAsArr[102];//SignalStart
+                string dt = lineAsArr[34];//SignalStart
                 if (!string.IsNullOrEmpty(dt)) textCdr[Fn.StartTime] = parseStringToDateWithoutMilliSec(dt);
 
                 //dt = lineAsArr[38];//ConnectTime
                 //if (!string.IsNullOrEmpty(dt)) cdr.ConnectTime = parseStringToDateWithoutMilliSec(dt);
 
 
-                dt = lineAsArr[103];//ConnectTime
+                dt = lineAsArr[35];//ConnectTime
                 if (!string.IsNullOrEmpty(dt)) textCdr[Fn.ConnectTime] = parseStringToDateWithoutMilliSec(dt);
 
                 //dt = lineAsArr[129];//AnswerTime
                 //if (!string.IsNullOrEmpty(dt)) cdr.AnswerTime = parseStringToDateWithoutMilliSec(dt);
 
-                dt = lineAsArr[105];//AnswerTime
+                dt = lineAsArr[41];//AnswerTime
                 if (!string.IsNullOrEmpty(dt)) textCdr[Fn.AnswerTime] = parseStringToDateWithoutMilliSec(dt);
 
                 //dt = lineAsArr[130];//EndTime
                 //if (!string.IsNullOrEmpty(dt)) cdr.EndTime = parseStringToDateWithoutMilliSec(dt);
 
-                dt = lineAsArr[106];//EndTime
-                if (!string.IsNullOrEmpty(dt)) textCdr[Fn.Endtime] = parseStringToDateWithoutMilliSec(dt);
+                string endTimeStr="";
+                if (lineAsArr[42].IsNullOrEmptyOrWhiteSpace() == false)
+                {
+                    endTimeStr = lineAsArr[42];
+                }
+                else if (lineAsArr[43].IsNullOrEmptyOrWhiteSpace() == false)
+                {
+                    endTimeStr = lineAsArr[43];
+                }
+                else if (lineAsArr[12].IsNullOrEmptyOrWhiteSpace() == false)
+                {
+                    endTimeStr = lineAsArr[12];
+                }
+                else if (lineAsArr[37].IsNullOrEmptyOrWhiteSpace() == false)
+                {
+                    endTimeStr = lineAsArr[37];
+                }
+                if (!string.IsNullOrEmpty(dt)) textCdr[Fn.Endtime] = parseStringToDateWithoutMilliSec(endTimeStr);
 
-                textCdr[Fn.ReleaseCauseIngress] = lineAsArr[110];
-                textCdr[Fn.ReleaseCauseEgress] = lineAsArr[133];
+                textCdr[Fn.ReleaseCauseIngress] = lineAsArr[47];
+                textCdr[Fn.ReleaseCauseEgress] = lineAsArr[48];
                 textCdr[Fn.Validflag] = "1";
                 decodedRows.Add(textCdr.ToArray());
             }

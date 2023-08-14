@@ -116,7 +116,7 @@ namespace InstallConfig
                     idcdrformat = 33,
                     idMediationRule = 2,
                     SwitchName = "Dialogic",
-                    CDRPrefix = "sdr",
+                    CDRPrefix = "C_sdr,sdr",
                     FileExtension = ".csv",
                     Description = null,
                     SourceFileLocations = this.vaultDialogic.Name,

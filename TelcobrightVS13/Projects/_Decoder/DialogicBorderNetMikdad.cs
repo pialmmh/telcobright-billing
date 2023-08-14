@@ -17,12 +17,12 @@ namespace Decoders
 {
 
     [Export("Decoder", typeof(IFileDecoder))]
-    public class DialogicBorderNetMotherNoFailed : IFileDecoder
+    public class DialogicBorderNetMikdad : IFileDecoder
     {
         public override string ToString() => this.RuleName;
         public virtual string RuleName => GetType().Name;
-        public virtual int Id => 33;
-        public virtual string HelpText => "Decodes Dialogic BorderNet CSV CDR (Mir Telecom)";
+        public virtual int Id => 63;
+        public virtual string HelpText => "Decodes Dialogic BorderNet CSV CDR (MotherTelecom)";
         public virtual CompressionType CompressionType { get; set; }
         protected virtual CdrCollectorInputData Input { get; set; }
 
@@ -185,7 +185,7 @@ namespace Decoders
                 //    string originatingCallingNumber = ingressSipFromHeader.Replace(" ", string.Empty).Split(':')[2]
                 //        .Split('@')[0];
                 //    originatingCallingNumber = originatingCallingNumber.Split('>')[0].Trim();
-                //    textCdr[Fn.OriginatingCallingNumber] = originatingCallingNumber.Replace("+", "");
+                //    textCdr[Fn.OriginatingCallingNumber] = originatingCallingNumber.Trim();
                 //}
 
 
@@ -208,7 +208,7 @@ namespace Decoders
                     textCdr[Fn.OutgoingRoute] = new StringBuilder(terminatingIp).Append("-").Append(outSigLocalAddr)
                         .ToString();
                     textCdr[Fn.TerminatingIp] = terminatingIp;
-                    textCdr[Fn.TerminatingCalledNumber] = terminatingCalledNumber.Replace("+", "");
+                    textCdr[Fn.TerminatingCalledNumber] = terminatingCalledNumber.Trim();
                 }
 
 
@@ -227,10 +227,10 @@ namespace Decoders
                 //{
                 //    string terminatingCallingNumber = outSigFrom.Split(':')[2].Split('@')[0];
                 //    terminatingCallingNumber = terminatingCallingNumber.Split('>')[0].Trim();
-                //    textCdr[Fn.TerminatingCallingNumber] = terminatingCallingNumber.Replace("+", "");
+                //    textCdr[Fn.TerminatingCallingNumber] = terminatingCallingNumber.Trim();
                 //}
 
-                  if (lineAsArr[7].IsNullOrEmptyOrWhiteSpace() == false)
+                if (lineAsArr[7].IsNullOrEmptyOrWhiteSpace() == false)
                 {
                     textCdr[Fn.TerminatingCallingNumber] = lineAsArr[7];
                 }

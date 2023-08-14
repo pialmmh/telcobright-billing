@@ -98,7 +98,7 @@
             <div style="height:40px;"></div>
 
             
-               <asp:UpdatePanel ID="UpdatePanel2" runat="server">
+               <asp:UpdatePanel ID="UpdatePanel2" runat="server" style ="min-width: 1800px;">
                 <Triggers>
                     <asp:AsyncPostBackTrigger ControlID="Timer2" EventName="Tick" />
                 </Triggers>
