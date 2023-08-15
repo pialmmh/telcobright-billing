@@ -141,7 +141,8 @@ namespace InstallConfig
                     BatchToDecodeRatio = 3,
                     PrependLocationNumberToFileName = 0,
                     UseIdCallAsBillId = 0,
-                    AllowEmptyFile = 0
+                    AllowEmptyFile = 0,
+                    FilterDuplicateCdr =1
                 }
             };
 
