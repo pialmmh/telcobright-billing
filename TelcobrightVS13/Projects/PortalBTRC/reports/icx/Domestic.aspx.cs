@@ -122,6 +122,18 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
     }
 
 
+    private int GetColumnIndexByName(GridView grid, string name)
+    {
+        foreach (DataControlField col in grid.Columns)
+        {
+            if (col.SortExpression.ToLower().Trim() == name.ToLower().Trim())
+            {
+                return grid.Columns.IndexOf(col);
+            }
+        }
+
+        return -1;
+    }
 
     protected void submit_Click(object sender, EventArgs e)
     {
@@ -144,10 +156,10 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
         */
 
 
-        GridView1.Columns[1].Visible = CheckBoxPartner.Checked;
-        GridView1.Columns[2].Visible = CheckBoxViewIncomingRoute.Checked;
-        GridView1.Columns[3].Visible = CheckBoxShowByIgw.Checked;
-        GridView1.Columns[4].Visible = CheckBoxViewOutgoingRoute.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "International Partner")].Visible = CheckBoxPartner.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "tup_incomingroute")].Visible = CheckBoxViewIncomingRoute.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "IGW")].Visible = CheckBoxShowByIgw.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "tup_outgoingroute")].Visible = CheckBoxViewOutgoingRoute.Checked;
         if (CheckBoxShowCost.Checked == true)
         {
             GridView1.Columns[14].Visible = true;
@@ -181,11 +193,11 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
             if (CheckBoxDailySummary.Checked == false)
             {
 
-                GridView1.Columns[0].Visible = false;
+                GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].Visible = false;
             }
             else
             {
-                GridView1.Columns[0].Visible = true;
+                GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].Visible = true;
 
             }
 
