@@ -13,7 +13,7 @@ using TelcobrightInfra;
 using TelcobrightMediation.Cdr;
 using TelcobrightMediation.Config;
 using TelcobrightMediation.Mediation.Cdr;
-
+using TelcobrightInfra;
 namespace TelcobrightMediation
 {
     public class FileBasedTextCdrCollector : IEventCollector
@@ -81,12 +81,6 @@ namespace TelcobrightMediation
                 }
                 string tupleExpressionForRow = decoder.getTupleExpression(CollectorInput, row);
                 decodedEventsAsTupDic.Add(tupleExpressionForRow, row);
-                //**temp code mustafa
-                if (tupleExpressionForRow == "10/2023-06-12 12:22:10/1686562286")
-                {
-                    Console.WriteLine("duplicate event found");
-                }
-                //
                 tuplesOfTheDay.Add(tupleExpressionForRow);
             }
             Func<DateTime, List<string>, string> getSqlPerDay
@@ -106,35 +100,12 @@ namespace TelcobrightMediation
             }
             reader.Close();
 
-            //temp code fetch all unique values
-            List<string> allUniqueEvents = new List<string>();
-            this.DbCmd.CommandText = "select tuple from uniqueevent;";
-            this.DbCmd.CommandType = CommandType.Text;
-            reader = this.DbCmd.ExecuteReader();
-            while (reader.Read())
-            {
-                allUniqueEvents.Add(reader[0].ToString());
-            }
-            reader.Close();
-
-
-            //end temp code
 
             Dictionary<string, string> alreadyConsideredEvents = existingEvents.ToDictionary(e => e);
             foreach (var kv in decodedEventsAsTupDic)
             {
                 string tuple = kv.Key;
                 string[] decodedRow = kv.Value;
-                //temp code
-                if (allUniqueEvents.Contains(tuple))
-                {
-                    if (alreadyConsideredEvents.ContainsKey(tuple) == false)
-                    {
-                        Console.WriteLine("Unique event fetching probably incorrect.");
-                    }
-                }
-
-                //end temp doe
                 if (alreadyConsideredEvents.ContainsKey(tuple) == false)
                 {
                     finalNonDuplicateEvents.Add(tuple, decodedRow);
@@ -147,20 +118,24 @@ namespace TelcobrightMediation
                 }
             }
 
-            ////tempCode
-            //this.DbCmd.CommandText = "insert into uniqueevent(tuple,starttime) values "
-            //                         + string.Join(",", finalNonDuplicateEvents.Select(kv =>
-            //                         {
-            //                             string tuple = kv.Key;
-            //                             string[] row = kv.Value;
-            //                             return "('" + tuple + "','" + row[Fn.StartTime] + "')";
-            //                         }));
-            //this.DbCmd.CommandType = CommandType.Text;
-            //if (finalNonDuplicateEvents.Any())
-            //{
-            //    //this.DbCmd.ExecuteNonQuery();
-            //}
-            ////end 
+            //create uniqueevent tables for each date
+            List<DateTime> datesToCreateTable = dayWiseNewTuples.Keys.ToList();
+            string templateSql = @"CREATE TABLE uniqueevent (
+                                      tuple varchar(200) COLLATE utf8mb4_bin NOT NULL,
+                                      StartTime datetime NOT NULL,
+                                      description varchar(50) COLLATE utf8mb4_bin DEFAULT NULL,
+                                      UNIQUE KEY ind_tuple (tuple)
+                                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;";
+            var databaseSetting = this.CollectorInput.CdrJobInputData.Tbc.DatabaseSetting;
+            string conStr = DbUtil.getDbConStrWithDatabase(databaseSetting);
+            //ddl statement may auto commit all transactions
+            //so use a different db connection 
+            using (MySqlConnection con= new MySqlConnection(conStr))
+            {
+                con.Open();
+                DaywiseTableManager.CreateTables("uniqueevent", templateSql, datesToCreateTable, con);
+                con.Close();
+            }
             return finalNonDuplicateEvents;
         }
 
