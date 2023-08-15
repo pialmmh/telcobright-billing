@@ -116,6 +116,18 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
         else return String.Empty;
     }
 
+    private int GetColumnIndexByName(GridView grid, string name)
+    {
+        foreach (DataControlField col in grid.Columns)
+        {
+            if (col.SortExpression.ToLower().Trim() == name.ToLower().Trim())
+            {
+                return grid.Columns.IndexOf(col);
+            }
+        }
+
+        return -1;
+    }
 
 
     protected void submit_Click(object sender, EventArgs e)
@@ -138,10 +150,10 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
         else GridView1.Columns[3].Visible = false;
         */
 
-        GridView1.Columns[1].Visible = CheckBoxPartner.Checked;
-        GridView1.Columns[2].Visible = CheckBoxViewIncomingRoute.Checked;
-        GridView1.Columns[3].Visible = CheckBoxShowByIgw.Checked;
-        GridView1.Columns[4].Visible = CheckBoxViewOutgoingRoute.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "International Partner")].Visible = CheckBoxPartner.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "tup_incomingroute")].Visible = CheckBoxViewIncomingRoute.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "ANS")].Visible = CheckBoxShowByIgw.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "tup_outgoingroute")].Visible = CheckBoxViewOutgoingRoute.Checked;
         GridView1.Columns[5].Visible = false;
 
 
