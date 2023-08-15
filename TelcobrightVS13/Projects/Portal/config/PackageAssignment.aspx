@@ -52,8 +52,8 @@
             &nbsp;<asp:LinkButton ID="UpdateCancelButton" runat="server" CausesValidation="False" CommandName="Cancel" Text="Cancel" />
         </EditItemTemplate>
         <EditRowStyle BackColor="#999999" />
-        <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
-        <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
+        <FooterStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />
+        <HeaderStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />
         <InsertItemTemplate>
             AssignmentType:
             <asp:TextBox ID="AssignmentTypeTextBox" runat="server" Text='<%# Bind("AssignmentType") %>' />

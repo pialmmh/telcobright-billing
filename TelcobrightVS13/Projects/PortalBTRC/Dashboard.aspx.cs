@@ -12,13 +12,14 @@ using PortalApp;
 using TelcobrightInfra;
 using System.Data;
 using MySql.Data.MySqlClient;
+using System.Drawing;
 
 public partial class DashboardAspx : Page
 {
    
     
     TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
-    string targetIcxName = "jibondhara_cas";
+    string targetIcxName = "btrc_cas";
     protected void Page_Load(object sender, EventArgs e)
     {
         //get any ne of this telcobright partner, required by rate handling objects
@@ -49,7 +50,7 @@ public partial class DashboardAspx : Page
 
         string sqlCommand = "select id, JobName, CreationTime, CompletionTime " +
                                        "from job where idjobdefinition = 1 " +
-                                       "order by completiontime desc limit 0,10;";
+                                       "order by completiontime desc limit 0,23;";
 
         List<GridViewCompletedJob> gridViewCompletedJob = new List<GridViewCompletedJob>();
 
@@ -82,6 +83,58 @@ public partial class DashboardAspx : Page
         this.Timer1.Enabled = true;
         this.Timer2.Enabled = true;
         this.Timer3.Enabled = true;
+
+       
+
+
+        //PieChartIpTdm
+        var dataPoint1 = PieChartIpTdm.Series["Series1"].Points[0];
+         var dataPoint2 = PieChartIpTdm.Series["Series1"].Points[1];
+
+         var data1 = dataPoint1.YValues[0] = 80;
+         dataPoint1.AxisLabel = "IP"+" " + data1 +"%";
+
+         var data2 = dataPoint2.YValues[0] = 20;
+         dataPoint2.AxisLabel = "TDM" + " " + data2 + "%";
+
+         PieChartIpTdm.DataBind();
+
+
+        //BarChartIp
+        /*var dataPointI1 = BarChartIp.Series["PositiveSeries"].Points[0];
+        var dataPointI2 = BarChartIp.Series["PositiveSeries"].Points[1];
+        var dataPointI3 = BarChartIp.Series["PositiveSeries"].Points[2];
+        var dataPointI4 = BarChartIp.Series["PositiveSeries"].Points[3];
+        var dataPointI5 = BarChartIp.Series["PositiveSeries"].Points[4];
+        var dataPointI6 = BarChartIp.Series["PositiveSeries"].Points[5];*/
+
+
+        // Find the bar chart control
+        var barChart = FindControl("BarChartIp");
+
+        if (barChart != null)
+        {
+            // Find the positive and negative series
+            var positiveSeries = BarChartIp.Series["PositiveSeries"];
+            var negativeSeries = BarChartIp.Series["NegativeSeries"];
+
+            if (positiveSeries != null && negativeSeries != null)
+            {
+                // Iterate through the data points in the bar chart
+                for (int i = 0; i < positiveSeries.Points.Count; i++)
+                {
+                    // Access AxisLabel and YValues for both positive and negative series
+                    string barAxisLabel = positiveSeries.Points[i].AxisLabel;
+                    double barPositiveValue = positiveSeries.Points[i].YValues[0];
+                    double barNegativeValue = negativeSeries.Points[i].YValues[0];
+
+                    // Do something with the data from the bar chart
+                    // For example, you can add them to the same list or display them in a label
+                }
+            }
+        }
+
+
     }
     private void UpdateErrorCalls()
     {

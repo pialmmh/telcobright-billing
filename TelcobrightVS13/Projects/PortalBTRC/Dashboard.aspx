@@ -4,12 +4,6 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
-    <%--<div class="jumbotron">
-        <h1>
-            <asp:Label ID="lblCustomerDisplayName" runat="server" Text=""></asp:Label></h1>
-        <p class="lead">Billing & Traffic Reporting Portal</p>
-
-    </div>--%>
 
     <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
     <div style="text-align: left;min-width:1000px;padding-left:50px; margin-top: -80px">
@@ -108,9 +102,6 @@
                     <div style="text-align: center; float: left;">
                         <div style="float: left;">
                             <div>
-                                <%--<h2>
-                                    <asp:HyperLink ID="HyperLink1" Text="Recently Completed Jobs" NavigateUrl="~/reports/Mediation.aspx" runat="server" Target="_blank" ForeColor="#08605c"></asp:HyperLink>
-                                </h2>--%>
                                 <div style="margin-left: auto; margin-right: auto; text-align: center;">
                                     <asp:Label ID="Label2" runat="server" Text="CDR File Receiving Status By ICX (Current Month)" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
                                 </div>
@@ -119,7 +110,7 @@
                                 <p>
                                     
 
-                                    <asp:GridView ID="GridViewCompleted" runat="server" AutoGenerateColumns="False" CellPadding="4" DataKeyNames="id" ForeColor="#333333" GridLines="None" BorderStyle="None" BorderWidth="1">
+                                    <asp:GridView ID="GridViewCompleted" runat="server" AutoGenerateColumns="False" CellPadding="4" DataKeyNames="id" ForeColor="#333333" GridLines="None" BorderStyle="None" BorderWidth="1"  >
                                         <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                                         <Columns> 
                                             <asp:BoundField DataField="id" HeaderText="id" InsertVisible="False" ReadOnly="True" SortExpression="id" Visible="false" />
@@ -138,8 +129,6 @@
                                         <SortedDescendingCellStyle BackColor="#FFFDF8" />
                                         <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
                                     </asp:GridView>
-                                  <%--  <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:Partner %>" ProviderName="<%$ ConnectionStrings:Partner.ProviderName %>" SelectCommand="select id,JobName,CreationTime,CompletionTime from job where idjobdefinition=1 
-                                order by completiontime desc limit 0,10"></asp:SqlDataSource>--%>
 
                                 </p>
                             </div>
@@ -147,7 +136,7 @@
 
                     </div>
                     
-<%--                    Pie chart--%>
+                    <%--Pie chart--%>
                     <div style="text-align: left; float: left;">
                         <div>
                             <div>
@@ -159,13 +148,13 @@
                                 </p>
                                 <p>
                                     
-                                    <asp:Chart ID="PieChart" runat="server" Width="550px" Height="300px">
+                                    <asp:Chart ID="PieChartIpTdm" runat="server" Width="550px" Height="300px">
                                         <Series>
                                             <asp:Series Name="Series1" ChartType="Pie">
                                                 <Points>
-                                                    <asp:DataPoint AxisLabel="IP" YValues="100"  Color="#08605c" LabelForeColor="White"/>
-                                                    <asp:DataPoint AxisLabel="TDM" YValues="10" Color="#e40613" LabelForeColor="White"/>
-                                                    
+                                                     <asp:DataPoint runat="server" Color="#08605c" LabelForeColor="White"/>
+                                                     <asp:DataPoint runat="server" Color="#e40613" LabelForeColor="White"/>
+        
                                                 </Points>
                                             </asp:Series>
                                         </Series>
@@ -195,24 +184,24 @@
                             <p>
 
                                 <div id="chartContainer">
-                                    <asp:Chart ID="BarChart" runat="server" Width="480px" Height="300px">
+                                    <asp:Chart ID="BarChartIp" runat="server" Width="480px" Height="300px">
                                         <Series>
                                             <asp:Series Name="PositiveSeries" ChartType="StackedBar">
                                                 <Points>
-                                                    <asp:DataPoint AxisLabel="Sylhet" YValues="25" Color="#5B9BD5" LabelForeColor="White" />
-                                                    <asp:DataPoint AxisLabel="Bogura" YValues="5" Color="#5B9BD5" LabelForeColor="White" />
-                                                    <asp:DataPoint AxisLabel="Khulna" YValues="7" Color="#5B9BD5" LabelForeColor="White" />
-                                                    <asp:DataPoint AxisLabel="Chattogram" YValues="9" Color="#5B9BD5" LabelForeColor="White" />
-                                                    <asp:DataPoint AxisLabel="Dhaka" YValues="29" Color="#5B9BD5" LabelForeColor="White" />
+                                                    <asp:DataPoint AxisLabel="Sylhet" YValues="25" Color="#08605c" LabelForeColor="White" />
+                                                    <asp:DataPoint AxisLabel="Bogura" YValues="5" Color="#08605c" LabelForeColor="White" />
+                                                    <asp:DataPoint AxisLabel="Khulna" YValues="7" Color="#08605c" LabelForeColor="White" />
+                                                    <asp:DataPoint AxisLabel="Chattogram" YValues="9" Color="#08605c" LabelForeColor="White" />
+                                                    <asp:DataPoint AxisLabel="Dhaka" YValues="29" Color="#08605c" LabelForeColor="White" />
                                                 </Points>
                                             </asp:Series>
                                             <asp:Series Name="NegativeSeries" ChartType="StackedBar">
                                                 <Points>
-                                                    <asp:DataPoint AxisLabel="Sylhet" YValues="5" Color="#ED7D31" LabelForeColor="White" />
-                                                    <asp:DataPoint AxisLabel="Bogura" YValues="15" Color="#ED7D31" LabelForeColor="White" />
-                                                    <asp:DataPoint AxisLabel="Khulna" YValues="5" Color="#ED7D31" LabelForeColor="White" />
-                                                    <asp:DataPoint AxisLabel="Chattogram" YValues="2" Color="#ED7D31" LabelForeColor="White" />
-                                                    <asp:DataPoint AxisLabel="Dhaka" YValues="12" Color="#ED7D31" LabelForeColor="White" />
+                                                    <asp:DataPoint AxisLabel="Sylhet" YValues="5" Color="#e40613" LabelForeColor="White" />
+                                                    <asp:DataPoint AxisLabel="Bogura" YValues="15" Color="#e40613" LabelForeColor="White" />
+                                                    <asp:DataPoint AxisLabel="Khulna" YValues="5" Color="#e40613" LabelForeColor="White" />
+                                                    <asp:DataPoint AxisLabel="Chattogram" YValues="2" Color="#e40613" LabelForeColor="White" />
+                                                    <asp:DataPoint AxisLabel="Dhaka" YValues="12" Color="#e40613" LabelForeColor="White" />
                                                 </Points>
                                             </asp:Series>
                                         </Series>
@@ -236,7 +225,7 @@
                     
                     
                 <%--Bar chart Dhaka--%>
-                <div style="text-align: center; float: left;">
+                <div style="text-align: center; float: left; padding-left: 30px;">
                     <div style="float: left;">
                         <div class="col-3">
                                 
@@ -288,7 +277,6 @@
                                             <AxisY Title="Values" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
                                                 <LabelStyle Font="Arial, 10px" />
                                             </AxisY>
-                                            <%--<Area3DStyle Enable3D="true" />--%>
                                         </asp:ChartArea>
                                     </ChartAreas>
                                       
@@ -356,7 +344,6 @@
                                             <AxisY Title="Values" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
                                                 <LabelStyle Font="Arial, 10px" />
                                             </AxisY>
-                                            <%--<Area3DStyle Enable3D="true" />--%>
                                         </asp:ChartArea>
                                     </ChartAreas>
                                       
@@ -423,7 +410,6 @@
                                             <AxisY Title="Values" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
                                                 <LabelStyle Font="Arial, 10px" />
                                             </AxisY>
-                                            <%--<Area3DStyle Enable3D="true" />--%>
                                         </asp:ChartArea>
                                     </ChartAreas>
                                       
@@ -490,7 +476,6 @@
                                             <AxisY Title="Values" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
                                                 <LabelStyle Font="Arial, 10px" />
                                             </AxisY>
-                                            <%--<Area3DStyle Enable3D="true" />--%>
                                         </asp:ChartArea>
                                     </ChartAreas>
                                       
@@ -557,7 +542,6 @@
                                             <AxisY Title="Values" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
                                                 <LabelStyle Font="Arial, 10px" />
                                             </AxisY>
-                                            <%--<Area3DStyle Enable3D="true" />--%>
                                         </asp:ChartArea>
                                     </ChartAreas>
                                       
@@ -623,7 +607,6 @@
                                             <AxisY Title="Values" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
                                                 <LabelStyle Font="Arial, 10px" />
                                             </AxisY>
-                                            <%--<Area3DStyle Enable3D="true" />--%>
                                         </asp:ChartArea>
                                     </ChartAreas>
                                       
@@ -690,7 +673,6 @@
                                             <AxisY Title="Values" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
                                                 <LabelStyle Font="Arial, 10px" />
                                             </AxisY>
-                                            <%--<Area3DStyle Enable3D="true" />--%>
                                         </asp:ChartArea>
                                     </ChartAreas>
                                       
@@ -701,8 +683,7 @@
                         </div>
                     </div>
 
-                </div>  
-                    
+                </div>                     
                 <%--                    Bar Chart Mymenshing --%>
                 <div style="text-align: center; float: left;">
                     <div style="float: left;">
@@ -781,11 +762,4 @@
         </div>
 
     </div>
-
-
-
-
-
-
-
 </asp:Content>

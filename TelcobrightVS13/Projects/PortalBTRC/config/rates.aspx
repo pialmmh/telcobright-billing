@@ -1305,8 +1305,8 @@ select Code,Name from countrycode "
 
         </Columns>
         <EditRowStyle BackColor="#999999" />
-        <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
-        <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
+        <FooterStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />
+        <HeaderStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />
         <PagerStyle BackColor="#284775" ForeColor="White" 
             HorizontalAlign="Left" />
         <RowStyle BackColor="white" Width="5px" ForeColor="#333333" />

@@ -1231,8 +1231,8 @@ select (select 10) as status  ,(select 'Overlap Adjusted') as Description,count(
 
         </Columns>
         <EditRowStyle BackColor="#999999" />
-        <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
-        <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
+        <FooterStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />
+        <HeaderStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />
 
 <PagerSettings LastPageText="&lt;&lt;"></PagerSettings>
 
