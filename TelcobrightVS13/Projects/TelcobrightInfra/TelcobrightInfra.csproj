@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="CasAdditionalConfig\CasUserVsDb.cs" />
     <Compile Include="DbHelper\DaywiseTableManager.cs" />
+    <Compile Include="DbHelper\TupleIncrementManager.cs" />
     <Compile Include="Deployment\DeploymentPlatform.cs" />
     <Compile Include="Deployment\DeploymentProfile.cs" />
     <Compile Include="Deployment\DeploymentProfileType.cs" />
