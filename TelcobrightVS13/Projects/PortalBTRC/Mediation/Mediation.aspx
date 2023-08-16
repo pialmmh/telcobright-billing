@@ -5,19 +5,22 @@
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Import Namespace="MediationModel" %>
 <%@ Import Namespace="PortalApp" %>
+<%@ Import Namespace="TelcobrightMediation" %>
 
 <%----%>
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
    
     <%--Page Load and Other Server Side Asp.net scripts--%>
         <script runat="server">
-        
+            TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
+          
             protected void Page_Load(object sender, EventArgs e)
             {
                 //common code for report pages
                 //view state of ParamBorder div
                 string tempText = this.hidValueFilter.Value;
                 bool lastVisible = this.hidValueFilter.Value == "invisible" ? false : true;
+                var databaseSetting = telcobrightConfig.DatabaseSetting;
                 if (this.hidValueSubmitClickFlag.Value == "false")
                 {
                     if (lastVisible)
@@ -35,7 +38,7 @@
                 if (!this.IsPostBack)
                 {
                     //load job type and job status dropdownlist
-                    using (PartnerEntities context = new PartnerEntities())
+                    using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting))
                     {
                         //populate switch
                         List<ne> lstNe = context.nes.ToList();
@@ -65,6 +68,7 @@
                         }
                         
                     }
+                    DropDownListPartner_OnSelectedIndexChanged(DropDownListPartner, EventArgs.Empty);
 
                     this.TextBoxYear.Text = DateTime.Now.ToString("yyyy");
                     this.TextBoxYear1.Text = DateTime.Now.ToString("yyyy");
@@ -195,7 +199,8 @@
                  this.ClientScript.RegisterClientScriptBlock(GetType(), "Alert", script, true);
                  return;
              }
-             using (PartnerEntities context = new PartnerEntities())
+             var databaseSetting = telcobrightConfig.DatabaseSetting;
+             using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting))
              {
                  if (context.reporttemplates.Any(c => c.Templatename == templateName))
                  {
@@ -314,6 +319,17 @@
 
     
     <%--<span style="padding-left:0px;float:left;left:0px;font-weight:bold;margin-top:2px;margin-right:20px;color:Black;"> Report:</span>--%>
+     <span style="font-weight:bold;">
+         Select ICX: 
+         <asp:CheckBox ID="CheckBoxViewIncomingRoute" runat="server" AutoPostBack="True"
+                       OnCheckedChanged="CheckBoxViewIncomingRoute_CheckedChanged" Checked="False" />
+                       
+         <asp:DropDownList ID="DropDownListViewIncomingRoute" runat="server"
+                           Enabled="False">
+         </asp:DropDownList>
+
+     </span>
+
     <span style="font-weight:bold;"> Switch</span>
      
                 <asp:DropDownList ID="DropDownListPartner" runat="server" 
@@ -431,6 +447,9 @@
             TargetControlID="txtDate1"  PopupButtonID="txtDate1" Format="dd/MM/yyyy">
         </asp:CalendarExtender>     
     </div>
+         
+    
+
    
     <div style="font-size:smaller;text-align:left;overflow:visible;clear:left;color:#8B4500;">[Enter only Date in "dd/MM/yyyy (e.g. 21/11/2012) or Date+Time in "dd/MM/yyyy HH:mm:ss" (e.g. 21/11/2012 19:01:59) format]</div>
 
