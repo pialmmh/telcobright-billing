@@ -9,6 +9,9 @@ using System.Linq;
 using System.Web;
 using System.Web.UI.WebControls;
 using MediationModel;
+using PortalApp;
+using TelcobrightInfra.CasAdditionalConfig;
+using TelcobrightMediation;
 
 public partial class DefaultMediation : System.Web.UI.Page
 {
@@ -16,7 +19,10 @@ public partial class DefaultMediation : System.Web.UI.Page
     private int _mShowByAns = 0;
 
     DataTable _dt;
-    
+
+    TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
+
+
     protected void CheckBoxRealTimeUpdate_CheckedChanged(object sender, EventArgs e)
     {
         if (this.CheckBoxRealTimeUpdate.Checked)
@@ -274,7 +280,8 @@ public partial class DefaultMediation : System.Web.UI.Page
 
         long totalSequence = 0;
         List<job> lstAllCdr=null;
-        using (PartnerEntities context = new PartnerEntities())
+        var databaseSetting = telcobrightConfig.DatabaseSetting;
+        using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting))
         {
             //context.CommandTimeout = 3600;
             string sql = "";
@@ -445,13 +452,19 @@ public partial class DefaultMediation : System.Web.UI.Page
         //make sure to keep databasename at the last of the connection string
         string dbName = partnerConStr.Substring(posDatabase + 9, partnerConStr.Length - posDatabase - 9);
         //find TB customerid
-        using (PartnerEntities context = new PartnerEntities())
+        var databaseSetting = telcobrightConfig.DatabaseSetting;
+        using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting))
         {
             int idOperator = context.telcobrightpartners.Where(c => c.databasename == dbName).First().idCustomer;
             var allSwitches = e.Query.Cast<ne>();
             e.Query = allSwitches.Where(c => c.idCustomer == idOperator);
         }
 
+    }
+
+     protected void CheckBoxViewIncomingRoute_CheckedChanged(object sender, EventArgs e)
+    {
+        DropDownListViewIncomingRoute.Enabled = CheckBoxViewIncomingRoute.Checked;
     }
     protected void EntityDataAllCdr_QueryCreated(object sender, QueryCreatedEventArgs e)
     {
@@ -487,5 +500,46 @@ public partial class DefaultMediation : System.Web.UI.Page
         this.txtDate.Text = FirstDayOfMonthFromDateTime(DateTime.Today).ToString("dd/MM/yyyy");
         this.txtDate1.Text = LastDayOfMonthFromDateTime(DateTime.Today).ToString("dd/MM/yyyy");
         submit_Click(sender, e);
+    }
+    protected void DropDownListPartner_OnSelectedIndexChanged(object sender, EventArgs e)
+    {
+        DropDownListViewIncomingRoute.Items.Clear();
+        DropDownListViewIncomingRoute.Items.Add(new ListItem("[All]", "-1"));
+
+
+
+        if (DropDownListPartner.SelectedValue != String.Empty)
+        {
+            if (DropDownListPartner.SelectedValue == "-1")
+            {
+                using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(telcobrightConfig.DatabaseSetting))
+                {
+                    //List<int> ansList = contex.partners.Where(c => c.PartnerType == 2).Select(c => c.idPartner).ToList();
+                    //foreach (route route in contex.routes.Where(x => ansList.Contains(x.idPartner)))
+                    //{
+                    //    DropDownListViewIncomingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
+                    //}
+                    foreach (var kv in CasUserVsDb.UserVsDbName)
+                    {
+                        string username = kv.Key;
+                        string dbNameAsRouteName = kv.Value;
+                        string icxName = dbNameAsRouteName.Split('_')[0];
+                        DropDownListViewIncomingRoute.Items.Add(new ListItem(icxName, dbNameAsRouteName));
+
+                    }
+                }
+            }
+            else
+            {
+                using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(telcobrightConfig.DatabaseSetting))
+                {
+                    int idPartner = Convert.ToInt32(DropDownListPartner.SelectedValue);
+                    foreach (route route in contex.routes.Where(x => x.idPartner == idPartner))
+                    {
+                        DropDownListViewIncomingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
+                    }
+                }
+            }
+        }
     }
 }
