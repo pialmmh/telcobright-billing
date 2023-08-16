@@ -84,21 +84,47 @@ namespace TelcobrightMediation
                 tuplesOfTheDay.Add(tupleExpressionForRow);
             }
             Func<DateTime, List<string>, string> getSqlPerDay
-                = (day, tuples) => $" select tuple from uniqueevent where tuple " +
-                                   $" in ({string.Join(",", tuples.Select(t => new StringBuilder("'").Append(t).Append("'")))}) " +
-                                   $" and {decoder.getSqlWhereClauseForDayWiseSafeCollection(this.CollectorInput, day)}";
+                = (day, tuples) =>
+                {
+                    bool tableExists = false;
+                    string tableName = "uniqueevent" + day.Date.ToString("yyyyMMdd");
+                    string databaseName = this.CollectorInput.CdrJobInputData.Tbc.DatabaseSetting.DatabaseName;
+                    this.DbCmd.CommandText = $"show tables from {databaseName} where tables_in_{databaseName}='{tableName}';";
+                    this.DbCmd.CommandType = CommandType.Text;
+                    DbDataReader reader1 = this.DbCmd.ExecuteReader();
+                    string existingTable = "";
+                    while (reader1.Read())
+                    {
+                        //existingEvents.Add(reader[0].ToString());
+                        existingTable = reader1[0].ToString();
+                        tableExists = tableName == existingTable;
+                    }
+                    reader1.Close();
+                    if (tableExists == false)
+                    {
+                        return "tableDoesNotExist";
+                    }
+                    return
+                        $" select tuple from {tableName} where tuple " +
+                        $" in ({string.Join(",", tuples.Select(t => new StringBuilder("'").Append(t).Append("'")))}) " +
+                        $" and {decoder.getSqlWhereClauseForDayWiseSafeCollection(this.CollectorInput, day)}";
+                };
 
-            string sql = string.Join(" union all ", dayWiseNewTuples.Select(kv => getSqlPerDay(kv.Key, kv.Value)));
+            string sql = string.Join(" union all ", dayWiseNewTuples.Select(kv => getSqlPerDay(kv.Key, kv.Value))
+                .Where(sqlPerDay=>sqlPerDay!= "tableDoesNotExist"));
             List<string> newEvents = dayWiseNewTuples.SelectMany(kv => kv.Value).ToList();
             List<string> existingEvents = new List<string>();
-            this.DbCmd.CommandText = sql;
-            this.DbCmd.CommandType = CommandType.Text;
-            DbDataReader reader = this.DbCmd.ExecuteReader();
-            while (reader.Read())
+            if (sql!="")
             {
-                existingEvents.Add(reader[0].ToString());
+                this.DbCmd.CommandText = sql;
+                this.DbCmd.CommandType = CommandType.Text;
+                DbDataReader reader = this.DbCmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    existingEvents.Add(reader[0].ToString());
+                }
+                reader.Close();
             }
-            reader.Close();
 
 
             Dictionary<string, string> alreadyConsideredEvents = existingEvents.ToDictionary(e => e);
