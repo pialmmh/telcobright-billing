@@ -184,24 +184,24 @@
                             <p>
 
                                 <div id="chartContainer">
-                                    <asp:Chart ID="BarChartIp" runat="server" Width="480px" Height="300px">
+                                    <asp:Chart ID="IpTdmDistribution" runat="server" Width="480px" Height="300px">
                                         <Series>
                                             <asp:Series Name="PositiveSeries" ChartType="StackedBar">
                                                 <Points>
-                                                    <asp:DataPoint AxisLabel="Sylhet" YValues="25" Color="#08605c" LabelForeColor="White" />
+                                                    <%--<asp:DataPoint AxisLabel="Sylhet" YValues="25" Color="#08605c" LabelForeColor="White" />
                                                     <asp:DataPoint AxisLabel="Bogura" YValues="5" Color="#08605c" LabelForeColor="White" />
                                                     <asp:DataPoint AxisLabel="Khulna" YValues="7" Color="#08605c" LabelForeColor="White" />
                                                     <asp:DataPoint AxisLabel="Chattogram" YValues="9" Color="#08605c" LabelForeColor="White" />
-                                                    <asp:DataPoint AxisLabel="Dhaka" YValues="29" Color="#08605c" LabelForeColor="White" />
+                                                    <asp:DataPoint AxisLabel="Dhaka" YValues="29" Color="#08605c" LabelForeColor="White" />--%>
                                                 </Points>
                                             </asp:Series>
                                             <asp:Series Name="NegativeSeries" ChartType="StackedBar">
                                                 <Points>
-                                                    <asp:DataPoint AxisLabel="Sylhet" YValues="5" Color="#e40613" LabelForeColor="White" />
+                                                    <%--<asp:DataPoint AxisLabel="Sylhet" YValues="5" Color="#e40613" LabelForeColor="White" />
                                                     <asp:DataPoint AxisLabel="Bogura" YValues="15" Color="#e40613" LabelForeColor="White" />
                                                     <asp:DataPoint AxisLabel="Khulna" YValues="5" Color="#e40613" LabelForeColor="White" />
                                                     <asp:DataPoint AxisLabel="Chattogram" YValues="2" Color="#e40613" LabelForeColor="White" />
-                                                    <asp:DataPoint AxisLabel="Dhaka" YValues="12" Color="#e40613" LabelForeColor="White" />
+                                                    <asp:DataPoint AxisLabel="Dhaka" YValues="12" Color="#e40613" LabelForeColor="White" />--%>
                                                 </Points>
                                             </asp:Series>
                                         </Series>
@@ -237,11 +237,11 @@
                             <p>
                                   
                                     
-                                <asp:Chart ID="Chart8" runat="server" Width="480px" Height="300px">
+                                <asp:Chart ID="DomesticDistribution" runat="server" Width="480px" Height="300px">
                                     <Series>
-                                        <asp:Series ChartType="Column">
+                                        <asp:Series  Name="Series1" ChartType="Column">
                                             <Points>
-                                                <asp:DataPoint AxisLabel="Agni" YValues="90" Color="#08605c" />
+                                                <%--<asp:DataPoint AxisLabel="Agni" YValues="90" Color="#08605c" />
                                                 <asp:DataPoint AxisLabel="Banglatelecom" YValues="10" Color="#e40613"/>
                                                 <asp:DataPoint AxisLabel="Bangla" YValues="56" Color="#F86F03"/>
                                                 <asp:DataPoint AxisLabel="Bantel" YValues="78" Color="#FFA41B"/>
@@ -263,7 +263,7 @@
                                                 <asp:DataPoint AxisLabel="TeleplusNetwork" YValues="60" Color="#8CABFF"/>
                                                 <asp:DataPoint AxisLabel="Summit" YValues="40" Color="#4477CE"/>
                                                 <asp:DataPoint AxisLabel="Mothertel" YValues="45" Color="#512B81"/>
-                                                <asp:DataPoint AxisLabel="Voicetel" YValues="17" Color="#35155D"/>
+                                                <asp:DataPoint AxisLabel="Voicetel" YValues="17" Color="#35155D"/>--%>
                                                     
                                                     
                                             </Points>
@@ -281,6 +281,9 @@
                                     </ChartAreas>
                                       
                                 </asp:Chart>
+                                
+                               
+
                                     
 
                             </p>
@@ -734,7 +737,7 @@
                                             <AxisX Title="ICX Names" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
                                                 <LabelStyle Font="Arial, 10px" Interval="1" />
                                             </AxisX>
-                                            <AxisY Title="Values" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                            <AxisY Title="Values Minutes (Million)" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
                                                 <LabelStyle Font="Arial, 10px" />
                                             </AxisY>
                                             <%--<Area3DStyle Enable3D="true" />--%>
@@ -755,7 +758,7 @@
 
             </asp:UpdatePanel>
 
-            <asp:Timer ID="Timer2" runat="server" Interval="30000" OnTick="Timer2_Tick" Enabled="false">
+            <asp:Timer ID="Timer2" runat="server" Interval="30000" OnTick="Timer2_Tick" Enabled="True">
             </asp:Timer>
             
 

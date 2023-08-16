@@ -13,11 +13,12 @@ using TelcobrightInfra;
 using System.Data;
 using MySql.Data.MySqlClient;
 using System.Drawing;
+using System.Web.UI.DataVisualization.Charting;
 
 public partial class DashboardAspx : Page
 {
    
-    
+
     TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
     string targetIcxName = "btrc_cas";
     protected void Page_Load(object sender, EventArgs e)
@@ -84,58 +85,177 @@ public partial class DashboardAspx : Page
         this.Timer2.Enabled = true;
         this.Timer3.Enabled = true;
 
+
+
        
 
+        
 
-        //PieChartIpTdm
-        var dataPoint1 = PieChartIpTdm.Series["Series1"].Points[0];
-         var dataPoint2 = PieChartIpTdm.Series["Series1"].Points[1];
-
-         var data1 = dataPoint1.YValues[0] = 80;
-         dataPoint1.AxisLabel = "IP"+" " + data1 +"%";
-
-         var data2 = dataPoint2.YValues[0] = 20;
-         dataPoint2.AxisLabel = "TDM" + " " + data2 + "%";
-
-         PieChartIpTdm.DataBind();
-
-
-        //BarChartIp
-        /*var dataPointI1 = BarChartIp.Series["PositiveSeries"].Points[0];
-        var dataPointI2 = BarChartIp.Series["PositiveSeries"].Points[1];
-        var dataPointI3 = BarChartIp.Series["PositiveSeries"].Points[2];
-        var dataPointI4 = BarChartIp.Series["PositiveSeries"].Points[3];
-        var dataPointI5 = BarChartIp.Series["PositiveSeries"].Points[4];
-        var dataPointI6 = BarChartIp.Series["PositiveSeries"].Points[5];*/
-
-
-        // Find the bar chart control
-        var barChart = FindControl("BarChartIp");
-
-        if (barChart != null)
+        if (!IsPostBack)//initial
         {
-            // Find the positive and negative series
-            var positiveSeries = BarChartIp.Series["PositiveSeries"];
-            var negativeSeries = BarChartIp.Series["NegativeSeries"];
+            
 
-            if (positiveSeries != null && negativeSeries != null)
-            {
-                // Iterate through the data points in the bar chart
-                for (int i = 0; i < positiveSeries.Points.Count; i++)
-                {
-                    // Access AxisLabel and YValues for both positive and negative series
-                    string barAxisLabel = positiveSeries.Points[i].AxisLabel;
-                    double barPositiveValue = positiveSeries.Points[i].YValues[0];
-                    double barNegativeValue = negativeSeries.Points[i].YValues[0];
-
-                    // Do something with the data from the bar chart
-                    // For example, you can add them to the same list or display them in a label
-                }
-            }
         }
+
+        PopulateIpTdmPieChart();
+        PopulateDomesticDistribution();
+        PopulateIpTdmDistribution();
+
 
 
     }
+
+
+
+    //humayun
+    private void PopulateIpTdmDistribution()
+    {
+        //PositiveSeries
+        Series series1 = IpTdmDistribution.Series["PositiveSeries"];
+        DataPointCollection points1 = series1.Points;
+        DataPoint dataPoint1 = new DataPoint
+        {
+            AxisLabel = "Sylhet",
+            YValues = new double[] { 45 },
+            Color = ColorTranslator.FromHtml("#08605c")
+        };
+        points1.Add(dataPoint1);
+
+        dataPoint1 = new DataPoint
+        {
+            AxisLabel = "Bogura",
+            YValues = new double[] { 9 },
+            Color = ColorTranslator.FromHtml("#08605c")
+        };
+        points1.Add(dataPoint1);
+        dataPoint1 = new DataPoint
+        {
+            AxisLabel = "Khulna",
+            YValues = new double[] { 5 },
+            Color = ColorTranslator.FromHtml("#08605c")
+        };
+        points1.Add(dataPoint1);
+        dataPoint1 = new DataPoint
+        {
+            AxisLabel = "Chattogram",
+            YValues = new double[] { 35 },
+            Color = ColorTranslator.FromHtml("#08605c")
+        };
+        points1.Add(dataPoint1);
+        dataPoint1 = new DataPoint
+        {
+            AxisLabel = "Dhaka",
+            YValues = new double[] { 33 },
+            Color = ColorTranslator.FromHtml("#08605c")
+        };
+        points1.Add(dataPoint1);
+
+        //NegativeSeries
+        Series series2 = IpTdmDistribution.Series["NegativeSeries"];
+        DataPointCollection points2 = series2.Points;
+        DataPoint dataPoint2 = new DataPoint
+        {
+            AxisLabel = "Sylhet",
+            YValues = new double[] { 90 },
+            Color = ColorTranslator.FromHtml("#e40613")
+        };
+        points2.Add(dataPoint2);
+
+        dataPoint2 = new DataPoint
+        {
+            AxisLabel = "Bogura",
+            YValues = new double[] { 55 },
+            Color = ColorTranslator.FromHtml("#e40613")
+        };
+        points2.Add(dataPoint2);
+        dataPoint2 = new DataPoint
+        {
+            AxisLabel = "Khulna",
+            YValues = new double[] { 15 },
+            Color = ColorTranslator.FromHtml("#e40613")
+        };
+        points2.Add(dataPoint2);
+        dataPoint2 = new DataPoint
+        {
+            AxisLabel = "Chattogram",
+            YValues = new double[] { 30 },
+            Color = ColorTranslator.FromHtml("#e40613")
+        };
+        points2.Add(dataPoint2);
+        dataPoint2 = new DataPoint
+        {
+            AxisLabel = "Dhaka",
+            YValues = new double[] { 60 },
+            Color = ColorTranslator.FromHtml("#e40613")
+        };
+        points2.Add(dataPoint2);
+    }
+
+
+    private void PopulateDomesticDistribution()
+    {
+        Series series1=  DomesticDistribution.Series["Series1"];
+
+        DataPointCollection points = series1.Points;
+        DataPoint dataPoint = new DataPoint
+        {
+            AxisLabel = "Agni",
+            YValues = new double[] {90},
+            Color = ColorTranslator.FromHtml("#08605c")
+        };
+        points.Add(dataPoint);
+
+       dataPoint = new DataPoint
+        {
+            AxisLabel = "Banglatelecom",
+            YValues = new double[] { 10 },
+            Color = ColorTranslator.FromHtml("#e40613")
+        };
+        points.Add(dataPoint);
+
+
+        dataPoint = new DataPoint
+        {
+            AxisLabel = "Bangla",
+            YValues = new double[] { 19 },
+            Color = ColorTranslator.FromHtml("#F86F03")
+        };
+        points.Add(dataPoint);
+
+        dataPoint = new DataPoint
+        {
+            AxisLabel = "Bantel",
+            YValues = new double[] { 78 },
+            Color = ColorTranslator.FromHtml("#FFA41B")
+        };
+
+        points.Add(dataPoint);
+
+
+    }
+
+    private void PopulateIpTdmPieChart()
+    {
+
+        var dataPoint1 = PieChartIpTdm.Series["Series1"].Points[0];
+        var dataPoint2 = PieChartIpTdm.Series["Series1"].Points[1];
+
+        var data1 = dataPoint1.YValues[0] = 80;
+        dataPoint1.AxisLabel = "IP" + " " + data1 + "%";
+
+        var data2 = dataPoint2.YValues[0] = 20;
+        dataPoint2.AxisLabel = "TDM" + " " + data2 + "%";
+
+        PieChartIpTdm.DataBind();
+    }
+
+
+   
+
+
+
+
+
     private void UpdateErrorCalls()
     {
         List<DashBoard.ErrorCalls> ec = new List<DashBoard.ErrorCalls>();
@@ -152,6 +272,9 @@ public partial class DashboardAspx : Page
     protected void Timer1_Tick(object sender, EventArgs e)
     {
         UpdateErrorCalls();
+        PopulateIpTdmPieChart();
+        
+
     }
     protected void Timer2_Tick(object sender, EventArgs e)
     {
@@ -238,7 +361,7 @@ public partial class DashboardAspx : Page
     }
 
 
-
+ 
 
 
 }
