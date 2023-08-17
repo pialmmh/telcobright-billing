@@ -147,24 +147,6 @@ public partial class DashboardAspx {
     protected global::System.Web.UI.DataVisualization.Charting.Chart PieChartIpTdm;
     
     /// <summary>
-    /// Label3 control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Label Label3;
-    
-    /// <summary>
-    /// IpTdmDistribution control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.DataVisualization.Charting.Chart IpTdmDistribution;
-    
-    /// <summary>
     /// Label11 control.
     /// </summary>
     /// <remarks>
@@ -181,6 +163,24 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.DataVisualization.Charting.Chart DomesticDistribution;
+    
+    /// <summary>
+    /// Label3 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label Label3;
+    
+    /// <summary>
+    /// IpTdmDistribution control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.DataVisualization.Charting.Chart IpTdmDistribution;
     
     /// <summary>
     /// Label4 control.
