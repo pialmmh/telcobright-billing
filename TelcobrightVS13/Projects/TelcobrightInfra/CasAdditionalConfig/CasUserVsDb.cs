@@ -8,7 +8,7 @@ namespace TelcobrightInfra.CasAdditionalConfig
 {
     public static class CasUserVsDb
     {
-        public static Dictionary<string, string> UserVsDbName = new Dictionary<string, string>()
+        private static Dictionary<string, string> UserVsDbName = new Dictionary<string, string>()
         {
             {"admin@telcobright.com","btrc_cas"},
             {"agni@telcobright.com","agni_cas"},

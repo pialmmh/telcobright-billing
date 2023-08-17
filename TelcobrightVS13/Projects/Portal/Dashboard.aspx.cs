@@ -32,7 +32,7 @@ public partial class DashboardAspx : Page
         TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
         var databaseSetting = telcobrightConfig.DatabaseSetting;
         string userName = Page.User.Identity.Name;
-        string dbName = CasUserVsDb.UserVsDbName[userName];
+        string dbName = telcobrightConfig.DeploymentProfile.UserVsDbName[userName];
         databaseSetting.DatabaseName =dbName;
         using (PartnerEntities conTelco = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting))
         {

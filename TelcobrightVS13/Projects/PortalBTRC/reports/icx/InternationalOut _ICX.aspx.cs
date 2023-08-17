@@ -1675,7 +1675,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
     {
         DropDownListViewIncomingRoute.Items.Clear();
         DropDownListViewIncomingRoute.Items.Add(new ListItem("[All]", "-1"));
-        foreach (var kv in CasUserVsDb.UserVsDbName)
+        foreach (var kv in tbc.DeploymentProfile.UserVsDbName)
         {
             string username = kv.Key;
             string dbNameAsRouteName = kv.Value;

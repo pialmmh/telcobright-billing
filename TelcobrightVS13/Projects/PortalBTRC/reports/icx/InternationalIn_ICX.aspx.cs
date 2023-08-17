@@ -666,7 +666,7 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
                     //{
                     //    DropDownListViewIncomingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
                     //}
-                    foreach (var kv in CasUserVsDb.UserVsDbName)
+                    foreach (var kv in tbc.DeploymentProfile.UserVsDbName)
                     {
                         string username = kv.Key;
                         string dbNameAsRouteName = kv.Value;
