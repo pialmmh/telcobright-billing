@@ -156,13 +156,13 @@ public partial class DashboardAspx {
     protected global::System.Web.UI.WebControls.Label Label3;
     
     /// <summary>
-    /// BarChartIp control.
+    /// IpTdmDistribution control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.DataVisualization.Charting.Chart BarChartIp;
+    protected global::System.Web.UI.DataVisualization.Charting.Chart IpTdmDistribution;
     
     /// <summary>
     /// Label11 control.
@@ -174,13 +174,13 @@ public partial class DashboardAspx {
     protected global::System.Web.UI.WebControls.Label Label11;
     
     /// <summary>
-    /// Chart8 control.
+    /// DomesticDistribution control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.DataVisualization.Charting.Chart Chart8;
+    protected global::System.Web.UI.DataVisualization.Charting.Chart DomesticDistribution;
     
     /// <summary>
     /// Label4 control.
