@@ -111,125 +111,125 @@ public partial class DashboardAspx : Page
     private void PopulateIpTdmDistribution()
     {
         //PositiveSeries
-        Series series1 = IpTdmDistribution.Series["PositiveSeries"];
-        DataPointCollection points1 = series1.Points;
-        DataPoint dataPoint1 = new DataPoint
-        {
-            AxisLabel = "Sylhet",
-            YValues = new double[] { 45 },
-            Color = ColorTranslator.FromHtml("#08605c")
-        };
-        points1.Add(dataPoint1);
+        //Series series1 = IpTdmDistribution.Series["PositiveSeries"];
+        //DataPointCollection points1 = series1.Points;
+        //DataPoint dataPoint1 = new DataPoint
+        //{
+        //    AxisLabel = "Sylhet",
+        //    YValues = new double[] { 45 },
+        //    Color = ColorTranslator.FromHtml("#08605c")
+        //};
+        //points1.Add(dataPoint1);
 
-        dataPoint1 = new DataPoint
-        {
-            AxisLabel = "Bogura",
-            YValues = new double[] { 9 },
-            Color = ColorTranslator.FromHtml("#08605c")
-        };
-        points1.Add(dataPoint1);
-        dataPoint1 = new DataPoint
-        {
-            AxisLabel = "Khulna",
-            YValues = new double[] { 5 },
-            Color = ColorTranslator.FromHtml("#08605c")
-        };
-        points1.Add(dataPoint1);
-        dataPoint1 = new DataPoint
-        {
-            AxisLabel = "Chattogram",
-            YValues = new double[] { 35 },
-            Color = ColorTranslator.FromHtml("#08605c")
-        };
-        points1.Add(dataPoint1);
-        dataPoint1 = new DataPoint
-        {
-            AxisLabel = "Dhaka",
-            YValues = new double[] { 33 },
-            Color = ColorTranslator.FromHtml("#08605c")
-        };
-        points1.Add(dataPoint1);
+        //dataPoint1 = new DataPoint
+        //{
+        //    AxisLabel = "Bogura",
+        //    YValues = new double[] { 9 },
+        //    Color = ColorTranslator.FromHtml("#08605c")
+        //};
+        //points1.Add(dataPoint1);
+        //dataPoint1 = new DataPoint
+        //{
+        //    AxisLabel = "Khulna",
+        //    YValues = new double[] { 5 },
+        //    Color = ColorTranslator.FromHtml("#08605c")
+        //};
+        //points1.Add(dataPoint1);
+        //dataPoint1 = new DataPoint
+        //{
+        //    AxisLabel = "Chattogram",
+        //    YValues = new double[] { 35 },
+        //    Color = ColorTranslator.FromHtml("#08605c")
+        //};
+        //points1.Add(dataPoint1);
+        //dataPoint1 = new DataPoint
+        //{
+        //    AxisLabel = "Dhaka",
+        //    YValues = new double[] { 33 },
+        //    Color = ColorTranslator.FromHtml("#08605c")
+        //};
+        //points1.Add(dataPoint1);
 
-        //NegativeSeries
-        Series series2 = IpTdmDistribution.Series["NegativeSeries"];
-        DataPointCollection points2 = series2.Points;
-        DataPoint dataPoint2 = new DataPoint
-        {
-            AxisLabel = "Sylhet",
-            YValues = new double[] { 90 },
-            Color = ColorTranslator.FromHtml("#e40613")
-        };
-        points2.Add(dataPoint2);
+        ////NegativeSeries
+        //Series series2 = IpTdmDistribution.Series["NegativeSeries"];
+        //DataPointCollection points2 = series2.Points;
+        //DataPoint dataPoint2 = new DataPoint
+        //{
+        //    AxisLabel = "Sylhet",
+        //    YValues = new double[] { 90 },
+        //    Color = ColorTranslator.FromHtml("#e40613")
+        //};
+        //points2.Add(dataPoint2);
 
-        dataPoint2 = new DataPoint
-        {
-            AxisLabel = "Bogura",
-            YValues = new double[] { 55 },
-            Color = ColorTranslator.FromHtml("#e40613")
-        };
-        points2.Add(dataPoint2);
-        dataPoint2 = new DataPoint
-        {
-            AxisLabel = "Khulna",
-            YValues = new double[] { 15 },
-            Color = ColorTranslator.FromHtml("#e40613")
-        };
-        points2.Add(dataPoint2);
-        dataPoint2 = new DataPoint
-        {
-            AxisLabel = "Chattogram",
-            YValues = new double[] { 30 },
-            Color = ColorTranslator.FromHtml("#e40613")
-        };
-        points2.Add(dataPoint2);
-        dataPoint2 = new DataPoint
-        {
-            AxisLabel = "Dhaka",
-            YValues = new double[] { 60 },
-            Color = ColorTranslator.FromHtml("#e40613")
-        };
-        points2.Add(dataPoint2);
+        //dataPoint2 = new DataPoint
+        //{
+        //    AxisLabel = "Bogura",
+        //    YValues = new double[] { 55 },
+        //    Color = ColorTranslator.FromHtml("#e40613")
+        //};
+        //points2.Add(dataPoint2);
+        //dataPoint2 = new DataPoint
+        //{
+        //    AxisLabel = "Khulna",
+        //    YValues = new double[] { 15 },
+        //    Color = ColorTranslator.FromHtml("#e40613")
+        //};
+        //points2.Add(dataPoint2);
+        //dataPoint2 = new DataPoint
+        //{
+        //    AxisLabel = "Chattogram",
+        //    YValues = new double[] { 30 },
+        //    Color = ColorTranslator.FromHtml("#e40613")
+        //};
+        //points2.Add(dataPoint2);
+        //dataPoint2 = new DataPoint
+        //{
+        //    AxisLabel = "Dhaka",
+        //    YValues = new double[] { 60 },
+        //    Color = ColorTranslator.FromHtml("#e40613")
+        //};
+        //points2.Add(dataPoint2);
     }
 
 
     private void PopulateDomesticDistribution()
     {
-        Series series1=  DomesticDistribution.Series["Series1"];
+       // Series series1=  DomesticDistribution.Series["Series1"];
 
-        DataPointCollection points = series1.Points;
-        DataPoint dataPoint = new DataPoint
-        {
-            AxisLabel = "Agni",
-            YValues = new double[] {90},
-            Color = ColorTranslator.FromHtml("#08605c")
-        };
-        points.Add(dataPoint);
+       // DataPointCollection points = series1.Points;
+       // DataPoint dataPoint = new DataPoint
+       // {
+       //     AxisLabel = "Agni",
+       //     YValues = new double[] {90},
+       //     Color = ColorTranslator.FromHtml("#08605c")
+       // };
+       // points.Add(dataPoint);
 
-       dataPoint = new DataPoint
-        {
-            AxisLabel = "Banglatelecom",
-            YValues = new double[] { 10 },
-            Color = ColorTranslator.FromHtml("#e40613")
-        };
-        points.Add(dataPoint);
+       //dataPoint = new DataPoint
+       // {
+       //     AxisLabel = "Banglatelecom",
+       //     YValues = new double[] { 10 },
+       //     Color = ColorTranslator.FromHtml("#e40613")
+       // };
+       // points.Add(dataPoint);
 
 
-        dataPoint = new DataPoint
-        {
-            AxisLabel = "Bangla",
-            YValues = new double[] { 19 },
-            Color = ColorTranslator.FromHtml("#F86F03")
-        };
-        points.Add(dataPoint);
+       // dataPoint = new DataPoint
+       // {
+       //     AxisLabel = "Bangla",
+       //     YValues = new double[] { 19 },
+       //     Color = ColorTranslator.FromHtml("#F86F03")
+       // };
+       // points.Add(dataPoint);
 
-        dataPoint = new DataPoint
-        {
-            AxisLabel = "Bantel",
-            YValues = new double[] { 78 },
-            Color = ColorTranslator.FromHtml("#FFA41B")
-        };
+       // dataPoint = new DataPoint
+       // {
+       //     AxisLabel = "Bantel",
+       //     YValues = new double[] { 78 },
+       //     Color = ColorTranslator.FromHtml("#FFA41B")
+       // };
 
-        points.Add(dataPoint);
+       // points.Add(dataPoint);
 
 
     }

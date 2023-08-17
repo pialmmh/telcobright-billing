@@ -60,7 +60,7 @@ public class Program
 
 
        
-        TupleIncrementManager.getIncrementalValue("Abul");
+        //TupleIncrementManager.getIncrementalValue("Abul");
 
 
     }
