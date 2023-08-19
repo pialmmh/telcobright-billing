@@ -10,7 +10,6 @@ using System.Linq;
 namespace TelcobrightFileOperations
 {
    
-
     public class SpringExpression//need this to support json config files, parsed spring expressions loses their value when serialized
     {
         public string Expression { get; set; }

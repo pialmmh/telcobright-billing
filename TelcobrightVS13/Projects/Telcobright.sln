@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_00Mediation", "Mediation\_00Mediation.csproj", "{1A64E6F9-903C-416C-B322-1B5C5D997001}"
 EndProject
@@ -110,6 +110,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tester", "Tester\Tester.csproj", "{8D7AE4E9-F542-4D4F-818A-BE2CD7CC5593}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortalBTRC", "PortalBTRC\PortalBTRC.csproj", "{F08B348E-A3A1-4C38-9C6B-11C4B13CD968}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "stringExpressionGenerator", "StringExpressionGeneratorRules\stringExpressionGenerator.csproj", "{F39BACCB-F03D-40A0-A67F-02740FF2FE22}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -804,6 +806,22 @@ Global
 		{F08B348E-A3A1-4C38-9C6B-11C4B13CD968}.Release|x64.Build.0 = Release|Any CPU
 		{F08B348E-A3A1-4C38-9C6B-11C4B13CD968}.Release|x86.ActiveCfg = Release|Any CPU
 		{F08B348E-A3A1-4C38-9C6B-11C4B13CD968}.Release|x86.Build.0 = Release|Any CPU
+		{F39BACCB-F03D-40A0-A67F-02740FF2FE22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F39BACCB-F03D-40A0-A67F-02740FF2FE22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F39BACCB-F03D-40A0-A67F-02740FF2FE22}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{F39BACCB-F03D-40A0-A67F-02740FF2FE22}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{F39BACCB-F03D-40A0-A67F-02740FF2FE22}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F39BACCB-F03D-40A0-A67F-02740FF2FE22}.Debug|x64.Build.0 = Debug|Any CPU
+		{F39BACCB-F03D-40A0-A67F-02740FF2FE22}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F39BACCB-F03D-40A0-A67F-02740FF2FE22}.Debug|x86.Build.0 = Debug|Any CPU
+		{F39BACCB-F03D-40A0-A67F-02740FF2FE22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F39BACCB-F03D-40A0-A67F-02740FF2FE22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F39BACCB-F03D-40A0-A67F-02740FF2FE22}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{F39BACCB-F03D-40A0-A67F-02740FF2FE22}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{F39BACCB-F03D-40A0-A67F-02740FF2FE22}.Release|x64.ActiveCfg = Release|Any CPU
+		{F39BACCB-F03D-40A0-A67F-02740FF2FE22}.Release|x64.Build.0 = Release|Any CPU
+		{F39BACCB-F03D-40A0-A67F-02740FF2FE22}.Release|x86.ActiveCfg = Release|Any CPU
+		{F39BACCB-F03D-40A0-A67F-02740FF2FE22}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -848,5 +866,6 @@ Global
 		{FF350C55-2852-406C-930B-AE2938CCEB91} = {DEEA860A-E8E4-43B0-8C26-BF3D553A808F}
 		{8D7AE4E9-F542-4D4F-818A-BE2CD7CC5593} = {F2EBE54E-32B0-4FA9-8B7C-9C2502DC5F7C}
 		{F08B348E-A3A1-4C38-9C6B-11C4B13CD968} = {F300A5B7-26F3-4D3E-9EF5-33EBE722C289}
+		{F39BACCB-F03D-40A0-A67F-02740FF2FE22} = {9B52CFB9-24E2-4113-91C4-DE7DD46A0B6C}
 	EndGlobalSection
 EndGlobal

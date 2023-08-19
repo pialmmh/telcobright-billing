@@ -16,7 +16,7 @@ using MediationModel;
 using QuartzTelcobright;
 using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Config;
-
+using StringExpressionGeneratorRules;
 namespace InstallConfig
 {
     public partial class SummitAbstractConfigGenerator //quartz config part
@@ -59,6 +59,10 @@ namespace InstallConfig
                         {"TollFreeInvoiceSection2GeneratorWithTax","LTFSToIPTSPDetails1" },
                         {"TollFreeInvoiceSection3GeneratorWithTax","LTFSToIPTSPDetails2" }
                     },
+                    InvoiceRefNoExpressionGenerator = new MonthlyInvoiceNoWithDefaultStartingValuePerServiceGroup()
+                    {
+                        Data=1001
+                    }
                 }
             });
             

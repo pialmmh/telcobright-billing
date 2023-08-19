@@ -78,12 +78,7 @@ namespace TelcobrightMediation
                     {
                         thisCdr.ServiceGroup = 1; //Domestic call
                     }
-
-                    
                 }
-
-                
-
             }
         }
 

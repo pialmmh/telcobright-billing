@@ -461,6 +461,10 @@
       <Project>{4dc3e3de-5ed6-4b02-abf1-b66f77b0dc6b}</Project>
       <Name>QuartzTelcobright</Name>
     </ProjectReference>
+    <ProjectReference Include="..\StringExpressionGeneratorRules\stringExpressionGenerator.csproj">
+      <Project>{f39baccb-f03d-40a0-a67f-02740ff2fe22}</Project>
+      <Name>stringExpressionGenerator</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TelcobrightInfra\TelcobrightInfra.csproj">
       <Project>{ff350c55-2852-406c-930b-ae2938cceb91}</Project>
       <Name>TelcobrightInfra</Name>
