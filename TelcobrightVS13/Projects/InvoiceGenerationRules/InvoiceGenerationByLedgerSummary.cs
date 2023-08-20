@@ -31,6 +31,7 @@ namespace InvoiceGenerationRules
             ValidateIfLocalTimeZoneUsed(input, context, invoiceJsonDetail);
             DateTime startDate = Convert.ToDateTime(invoiceJsonDetail["startDate"]);
             DateTime endDate = Convert.ToDateTime(invoiceJsonDetail["endDate"]);
+            string partnerName = invoiceJsonDetail["companyName"];
 
             Dictionary<DateTime,acc_ledger_summary> dayWiseLedgerSummaries = context.acc_ledger_summary
                 .Where(c => c.idAccount == serviceAccountId && c.transactionDate >= startDate
@@ -54,8 +55,9 @@ namespace InvoiceGenerationRules
             if (serviceGroup == null)
                 throw new Exception("Service group should be set already thus cannot be null while " +
                                     "executing invoice generation by ledger summary.");
-            string invoiceDescription = serviceGroup.RuleName + $" [{startDate.ToMySqlFormatWithoutQuote()}" +
-                                        $"-{endDate.ToMySqlFormatWithoutQuote()}]";
+            //string invoiceDescription = $"{partnerName}" + "-" + serviceGroup.RuleName + $" [{startDate.ToMySqlFormatWithoutQuote()}" +
+            //                            $"-{endDate.ToMySqlFormatWithoutQuote()}]";
+            string invoiceDescription = $"{partnerName}" + "-" + serviceGroup.RuleName + $" [{startDate.ToMySqlFormatWithoutQuote()}";
             string uom = invoiceJsonDetail["uom"];
             invoice newInvoice = CreateInvoiceWithItem(invoiceJsonDetail, serviceAccountId, invoiceAmount, serviceGroup,
                 invoiceDescription, uom);

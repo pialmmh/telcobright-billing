@@ -18,8 +18,12 @@ namespace InstallConfig
 {
     public partial class JslAbstractConfigGenerator //quartz config part
     {
+        private SyncPair huawei_Vault;
+        private SyncPair spdlg_Vault;
         public void PrepareDirectorySettings(TelcobrightConfig tbc)
         {
+
+
             DirectorySettings directorySetting = new DirectorySettings("c:/telcobright", "");
             tbc.DirectorySettings = directorySetting;
 
@@ -124,6 +128,58 @@ namespace InstallConfig
                     CompressionType = CompressionType.None
                 }
             };
+
+
+
+            //SyncPair JslcataliyaDhkVault = new SyncPair("JslcataliyaDhk:Vault")
+            //{
+            //    SkipSourceFileListing = false,
+            //    SrcSyncLocation = new SyncLocation()
+            //    {
+            //        FileLocation = new FileLocation()
+            //        {
+            //            Name = "JslhuaweiDhk",
+            //            LocationType = "sftp",
+            //            OsType = "linux",
+            //            PathSeparator = "/",
+            //            StartingPath = "/home/zxss10_bsvr/data/bfile/bill",
+            //            //StartingPath = "/home/zxss10_bsvr/data/bfile/bill/zsmart_media_bak",
+            //            Sftphostkey = string.Empty,
+            //            //Sftphostkey = "ssh-rsa 2048 44:56:0b:fa:3a:79:c2:ee:1c:95:d9:05:b5:9b:56:4a",
+            //            ServerIp = "10.133.34.12",
+            //            User = "icxbill",
+            //            Pass = "icx123",
+            //            //ServerIp = "192.168.0.105",
+            //            //User = "ftpuser",
+            //            //Pass = "Takay1takaane",
+            //            ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
+            //            IgnoreZeroLenghFile = 1
+            //        },
+            //        DescendingFileListByFileName = this.Tbc.CdrSetting.DescendingOrderWhileListingFiles
+            //    },
+            //    DstSyncLocation = new SyncLocation()
+            //    {
+            //        FileLocation = vaultJslcataliyaDhk
+            //    },
+            //    SrcSettings = new SyncSettingsSource()
+            //    {
+            //        SecondaryDirectory = "downloaded",
+            //        MoveFilesToSecondaryAfterCopy = true,
+            //        Recursive = false,
+            //        ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('sdr')
+            //                                                    and
+            //                                                    (Name.EndsWith('.gz'))
+            //                                                    and Length>0")
+            //    },
+            //    DstSettings = new SyncSettingsDest()
+            //    {
+            //        FileExtensionForSafeCopyWithTempFile = ".tmp",//make sure when copying to vault always .tmp ext used
+            //        Overwrite = true,
+            //        ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
+            //        CompressionType = CompressionType.None
+            //    }
+            //};
+
 
 
             //sync pair Vault_S3:FileArchive1
