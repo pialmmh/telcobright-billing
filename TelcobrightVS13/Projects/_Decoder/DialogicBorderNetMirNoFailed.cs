@@ -115,11 +115,11 @@ namespace Decoders
                 //AccountEventReason = field 8
                 //SDRSessionStatus = field 16
 
-                string accountStatusType =lineAsArr[6].Trim();// AccountStatusType = field 7, we keep it in calledPartyNoa
+                string accountStatusType = lineAsArr[6].Trim();// AccountStatusType = field 7, we keep it in calledPartyNoa 
                 string accountEventReason =lineAsArr[7].Trim(); //AccountEventReason = field 8, we keep it in callingPartyNoa
 
                 string chargingStatus = lineAsArr[15];//SDRSessionStatus = field 16
-                string durationSec = lineAsArr[14];
+                string durationSec = lineAsArr[14]; // 
                 double duration = 0;
                 double.TryParse(durationSec, out duration);
                 if (accountStatusType != "2" || duration<=0)
@@ -161,7 +161,7 @@ namespace Decoders
                     string originatingCallingNumber = ingressSipFromHeader.Replace(" ", string.Empty).Split(':')[2]
                         .Split('@')[0];
                     originatingCallingNumber = originatingCallingNumber.Split('>')[0].Trim();
-                    textCdr[Fn.OriginatingCallingNumber] = originatingCallingNumber.Replace("+", "");
+                    textCdr[Fn.OriginatingCallingNumber] = originatingCallingNumber.Trim();
                 }
 
                 string outSigReqLine = lineAsArr[82].Replace(" ",""); //sip: 00918860086409@10.10.234.8:5060; transport = UDP
@@ -172,13 +172,13 @@ namespace Decoders
                         .Split('@').Select(s => s.Trim()).ToArray();
                     var terminatingCalledNumber = calledNoAndIp[0];
                     var terminatingIp = calledNoAndIp[1].Split(';')[0];
-                    //media ip 2 as egress sig remote address OutSigLocalAddr
+                    //media ip 2 as egress sig remote address OutSigLocalAddr v
                     string outSigLocalAddr = lineAsArr[80].Split(null)[1];
                     textCdr[Fn.Mediaip2] = outSigLocalAddr;
                     textCdr[Fn.OutgoingRoute] = new StringBuilder(terminatingIp).Append("-").Append(outSigLocalAddr)
                         .ToString();
                     textCdr[Fn.TerminatingIp] = terminatingIp;
-                    textCdr[Fn.TerminatingCalledNumber] = terminatingCalledNumber.Replace("+", "");
+                    textCdr[Fn.TerminatingCalledNumber] = terminatingCalledNumber.Trim();
                 }
 
                 string outSigFrom = lineAsArr[83];//From: <sip:1111111@192.168.130.63>;tag=5228fc25a2c34aa7ba35e565aeda1457
@@ -186,7 +186,7 @@ namespace Decoders
                 {
                     string terminatingCallingNumber = outSigFrom.Split(':')[2].Split('@')[0];
                     terminatingCallingNumber = terminatingCallingNumber.Split('>')[0].Trim();
-                    textCdr[Fn.TerminatingCallingNumber] = terminatingCallingNumber.Replace("+", "");
+                    textCdr[Fn.TerminatingCallingNumber] = terminatingCallingNumber.Trim();
                 }
 
                 

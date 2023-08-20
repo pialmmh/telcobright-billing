@@ -15,6 +15,7 @@ using System.Web.UI.WebControls;
 using LibraryExtensions;
 using MediationModel;
 using PortalApp;
+using PortalApp._portalHelper;
 using TelcobrightMediation.Config;
 
 public partial class DefaultRates : Page

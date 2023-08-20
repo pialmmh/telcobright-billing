@@ -5,6 +5,7 @@
 <%@ Import Namespace="MediationModel" %>
 <%@ Import Namespace="TelcobrightMediation" %>
 <%@ Import Namespace="PortalApp" %>
+<%@ Import Namespace="PortalApp._portalHelper" %>
 
 
 
@@ -580,7 +581,7 @@
             <div <%--style="text-align: center;"--%>>
                 <div style="clear: both;"></div>
                 <div style="padding-left: 25%; padding-bottom: 5px;">
-                    <asp:Label ID="IntlInHeader" runat="server" Text="" ForeColor="#5D7B9D" Font-Bold="true" Font-Size="Large"></asp:Label>
+                    <asp:Label ID="IntlInHeader" runat="server" Text="" ForeColor="#08605c" Font-Bold="true" Font-Size="Large"></asp:Label>
                 </div>
                 <div style="text-align: left;">
                     <div style="text-align: left; float: left;">
@@ -591,9 +592,9 @@
                                 <asp:BoundField DataField="partnerName" HeaderText="Partner Name" SortExpression="partnerName" ItemStyle-Wrap="false" FooterText="Total"/>
                                 <asp:BoundField DataField="minutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="minutes" FooterText="" />
                             </Columns>
-                            <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
+                            <HeaderStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />
                             <EditRowStyle BackColor="#999999" />
-                            <FooterStyle BackColor="#5D7B9D" Font-Bold="true" ForeColor="White" />
+                            <FooterStyle BackColor="#08605c" Font-Bold="true" ForeColor="White" />
                             <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
                             <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
                             <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
@@ -611,9 +612,9 @@
                                 <asp:BoundField DataField="partnerName" HeaderText="Partner Name" SortExpression="partnerName" ItemStyle-Wrap="false" FooterText="Total"/>
                                 <asp:BoundField DataField="minutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="minutes" FooterText="" />
                             </Columns>
-                            <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
+                            <HeaderStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />
                             <EditRowStyle BackColor="#999999" />
-                            <FooterStyle BackColor="#5D7B9D" Font-Bold="true" ForeColor="White" />
+                            <FooterStyle BackColor="#08605c" Font-Bold="true" ForeColor="White" />
                             <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
                             <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
                             <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
@@ -625,7 +626,7 @@
                     </div>
                     <div style="clear: both;"></div>
                     <div style="padding-left: 25%; padding-bottom: 5px;">
-                        <asp:Label ID="IntlOutHeader" runat="server" Text="" ForeColor="#5D7B9D" Font-Bold="true" Font-Size="Large"></asp:Label>
+                        <asp:Label ID="IntlOutHeader" runat="server" Text="" ForeColor="#08605c" Font-Bold="true" Font-Size="Large"></asp:Label>
                     </div>
                     <div style="text-align: left; float: left; clear: left; margin-bottom: 10px">
                         <asp:GridView ID="GvIntlout1" runat="server" AutoGenerateColumns="False"
@@ -635,9 +636,9 @@
                                 <asp:BoundField DataField="partnerName" HeaderText="Partner Name" SortExpression="partnerName" ItemStyle-Wrap="false" FooterText="Total"/>
                                 <asp:BoundField DataField="minutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="minutes" FooterText=""/>
                             </Columns>
-                            <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
+                            <HeaderStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />
                             <EditRowStyle BackColor="#999999" />
-                            <FooterStyle BackColor="#5D7B9D" Font-Bold="true" ForeColor="White" />
+                            <FooterStyle BackColor="#08605c" Font-Bold="true" ForeColor="White" />
                             <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
                             <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
                             <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
@@ -655,9 +656,9 @@
                                 <asp:BoundField DataField="partnerName" HeaderText="Partner Name" SortExpression="partnerName" ItemStyle-Wrap="false" FooterText="Total"/>
                                 <asp:BoundField DataField="minutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="minutes" FooterText=""/>
                             </Columns>
-                            <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
+                            <HeaderStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />
                             <EditRowStyle BackColor="#999999" />
-                            <FooterStyle BackColor="#5D7B9D" Font-Bold="true" ForeColor="White" />
+                            <FooterStyle BackColor="#08605c" Font-Bold="true" ForeColor="White" />
                             <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
                             <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
                             <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
@@ -669,7 +670,7 @@
                     </div>
                     <div style="clear: both;"></div>
                     <div style="padding-left: 10%; padding-bottom: 5px;">
-                        <asp:Label ID="DomHeader" runat="server" Text="" ForeColor="#5D7B9D" Font-Bold="true" Font-Size="Large"></asp:Label>
+                        <asp:Label ID="DomHeader" runat="server" Text="" ForeColor="#08605c" Font-Bold="true" Font-Size="Large"></asp:Label>
                     </div>
                     <div style="text-align: left; float: left; clear: left">
                         <asp:GridView ID="Gvdom" runat="server" AutoGenerateColumns="False"
@@ -679,9 +680,9 @@
                                 <asp:BoundField DataField="partnerName" HeaderText="Partner Name" SortExpression="partnerName" ItemStyle-Wrap="false" FooterText="Total" />
                                 <asp:BoundField DataField="minutes" DataFormatString="{0:F2}" HeaderText="No. of Minutes" SortExpression="minutes" FooterText=""/>
                             </Columns>
-                            <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
+                            <HeaderStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />
                             <EditRowStyle BackColor="#999999" />
-                            <FooterStyle BackColor="#5D7B9D" Font-Bold="true" ForeColor="White" />
+                            <FooterStyle BackColor="#08605c" Font-Bold="true" ForeColor="White" />
                             <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
                             <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
                             <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
@@ -792,9 +793,9 @@
 
 
                     </Columns>
-                    <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
+                    <HeaderStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />
                     <EditRowStyle BackColor="#999999" />
-                    <FooterStyle BackColor="#5D7B9D" Font-Bold="true" ForeColor="White" />
+                    <FooterStyle BackColor="#08605c" Font-Bold="true" ForeColor="White" />
                     <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
                     <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
                     <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />

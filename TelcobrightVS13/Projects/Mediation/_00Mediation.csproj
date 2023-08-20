@@ -201,6 +201,7 @@
     <Compile Include="Config\TelecomOperatortype.cs" />
     <Compile Include="Config\TypeNameSerializationBinder.cs" />
     <Compile Include="FileOperations\SyncPair.cs" />
+    <Compile Include="MefData\Composers\StringExpressionGeneratorContainer.cs" />
     <Compile Include="MefData\Composers\AutomationContainer.cs" />
     <Compile Include="FileOperations\JobParamFileDelete.cs" />
     <Compile Include="FileOperations\RemoteFileInfoExt.cs" />
@@ -226,6 +227,7 @@
     <Compile Include="MefData\IExceptionalCdrPreProcessor.cs" />
     <Compile Include="MefData\IInvoiceGenerationRule.cs" />
     <Compile Include="MefData\IDigitRule.cs" />
+    <Compile Include="MefData\IStringExpressionGenerator.cs" />
     <Compile Include="MefData\IServiceGroupPreProcessor.cs" />
     <Compile Include="MefData\ITelcobrightJobInput.cs" />
     <Compile Include="Cdr\CdrJobFactory.cs" />

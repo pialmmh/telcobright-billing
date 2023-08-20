@@ -86,6 +86,78 @@
     <Compile Include="Reports\InvoiceReports\rgrn\Transit\InternationalIncomingToForeignCarrierDetails2.Designer.cs">
       <DependentUpon>InternationalIncomingToForeignCarrierDetails2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Reports\InvoiceReports\banglatelecom\ICX\DomesticToANS.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\banglatelecom\ICX\DomesticToANS.Designer.cs">
+      <DependentUpon>DomesticToANS.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\banglatelecom\ICX\DomesticToANSDetails1.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\banglatelecom\ICX\DomesticToANSDetails1.Designer.cs">
+      <DependentUpon>DomesticToANSDetails1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\banglatelecom\ICX\DomesticToANSDetails2.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\banglatelecom\ICX\DomesticToANSDetails2.Designer.cs">
+      <DependentUpon>DomesticToANSDetails2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\banglatelecom\ICX\InternationalOutgoingToANS.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\banglatelecom\ICX\InternationalOutgoingToANS.Designer.cs">
+      <DependentUpon>InternationalOutgoingToANS.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\banglatelecom\ICX\InternationalOutgoingToANSDetails1.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\banglatelecom\ICX\InternationalOutgoingToANSDetails1.Designer.cs">
+      <DependentUpon>InternationalOutgoingToANSDetails1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\banglatelecom\ICX\InternationalOutgoingToANSDetails2.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\banglatelecom\ICX\InternationalOutgoingToANSDetails2.Designer.cs">
+      <DependentUpon>InternationalOutgoingToANSDetails2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\banglatelecom\ICX\InternationalToIOS.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\banglatelecom\ICX\InternationalToIOS.Designer.cs">
+      <DependentUpon>InternationalToIOS.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\banglatelecom\ICX\InternationalToIOSDetails1.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\banglatelecom\ICX\InternationalToIOSDetails1.Designer.cs">
+      <DependentUpon>InternationalToIOSDetails1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\banglatelecom\ICX\InternationalToIOSDetails2.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\banglatelecom\ICX\InternationalToIOSDetails2.Designer.cs">
+      <DependentUpon>InternationalToIOSDetails2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\banglatelecom\ICX\LTFSToIPTSP.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\banglatelecom\ICX\LTFSToIPTSP.Designer.cs">
+      <DependentUpon>LTFSToIPTSP.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\banglatelecom\ICX\LTFSToIPTSPDetails1.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\banglatelecom\ICX\LTFSToIPTSPDetails1.Designer.cs">
+      <DependentUpon>LTFSToIPTSPDetails1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\banglatelecom\ICX\LTFSToIPTSPDetails2.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\banglatelecom\ICX\LTFSToIPTSPDetails2.Designer.cs">
+      <DependentUpon>LTFSToIPTSPDetails2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Reports\InvoiceReports\summit\ICX\DomesticToANS.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -349,6 +421,42 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\InvoiceReports\rgrn\Transit\InternationalIncomingToForeignCarrierDetails2.resx">
       <DependentUpon>InternationalIncomingToForeignCarrierDetails2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\InvoiceReports\banglatelecom\ICX\DomesticToANS.resx">
+      <DependentUpon>DomesticToANS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\InvoiceReports\banglatelecom\ICX\DomesticToANSDetails1.resx">
+      <DependentUpon>DomesticToANSDetails1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\InvoiceReports\banglatelecom\ICX\DomesticToANSDetails2.resx">
+      <DependentUpon>DomesticToANSDetails2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\InvoiceReports\banglatelecom\ICX\InternationalOutgoingToANS.resx">
+      <DependentUpon>InternationalOutgoingToANS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\InvoiceReports\banglatelecom\ICX\InternationalOutgoingToANSDetails1.resx">
+      <DependentUpon>InternationalOutgoingToANSDetails1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\InvoiceReports\banglatelecom\ICX\InternationalOutgoingToANSDetails2.resx">
+      <DependentUpon>InternationalOutgoingToANSDetails2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\InvoiceReports\banglatelecom\ICX\InternationalToIOS.resx">
+      <DependentUpon>InternationalToIOS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\InvoiceReports\banglatelecom\ICX\InternationalToIOSDetails1.resx">
+      <DependentUpon>InternationalToIOSDetails1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\InvoiceReports\banglatelecom\ICX\InternationalToIOSDetails2.resx">
+      <DependentUpon>InternationalToIOSDetails2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\InvoiceReports\banglatelecom\ICX\LTFSToIPTSP.resx">
+      <DependentUpon>LTFSToIPTSP.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\InvoiceReports\banglatelecom\ICX\LTFSToIPTSPDetails1.resx">
+      <DependentUpon>LTFSToIPTSPDetails1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\InvoiceReports\banglatelecom\ICX\LTFSToIPTSPDetails2.resx">
+      <DependentUpon>LTFSToIPTSPDetails2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\InvoiceReports\summit\ICX\DomesticToANS.resx">
       <DependentUpon>DomesticToANS.cs</DependentUpon>

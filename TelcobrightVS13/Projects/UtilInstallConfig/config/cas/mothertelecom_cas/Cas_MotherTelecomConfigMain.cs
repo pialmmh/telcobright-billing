@@ -113,10 +113,10 @@ namespace InstallConfig
                 {
                     idSwitch = 2,
                     idCustomer = this.Tbc.Telcobrightpartner.idCustomer,
-                    idcdrformat = 26,
+                    idcdrformat = 33,
                     idMediationRule = 2,
                     SwitchName = "Dialogic",
-                    CDRPrefix = "sdr,C_sdr",
+                    CDRPrefix = "C_sdr,sdr",
                     FileExtension = ".csv",
                     Description = null,
                     SourceFileLocations = this.vaultDialogic.Name,
@@ -141,7 +141,8 @@ namespace InstallConfig
                     BatchToDecodeRatio = 3,
                     PrependLocationNumberToFileName = 0,
                     UseIdCallAsBillId = 0,
-                    AllowEmptyFile = 1
+                    AllowEmptyFile = 0,
+                    FilterDuplicateCdr =1
                 }
             };
 

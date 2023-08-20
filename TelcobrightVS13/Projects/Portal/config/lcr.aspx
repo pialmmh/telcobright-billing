@@ -438,8 +438,8 @@ union all
                
         <%--<EditRowStyle BackColor="#E5E4E2" />--%>
        <EditRowStyle BackColor="#f2f2f2" />
-       <FooterStyle BackColor="#5D7B9D" ForeColor="White" Font-Bold="True" />
-        <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
+       <FooterStyle BackColor="#08605c" ForeColor="White" Font-Bold="True" />
+        <HeaderStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />
                
         <InsertItemTemplate>
             Rateplan:
@@ -535,8 +535,8 @@ select Code,Name from countrycode "
     <asp:GridView ID="GridViewLCR" runat="server" CellPadding="4" ForeColor="#333333" GridLines="Vertical" OnRowDataBound="GridViewLCR_RowDataBound" AllowPaging="True" PageSize="50" OnPageIndexChanging="GridViewLCR_PageIndexChanging" AutoGenerateColumns="False" BorderStyle="None">
         <AlternatingRowStyle BackColor="White" />
         <EditRowStyle BackColor="#999999" />
-        <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
-        <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
+        <FooterStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />
+        <HeaderStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />
         <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
         <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
         <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />

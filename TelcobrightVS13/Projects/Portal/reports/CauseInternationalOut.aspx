@@ -6,6 +6,7 @@
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="MediationModel" %>
 <%@ Import Namespace="PortalApp" %>
+<%@ Import Namespace="PortalApp._portalHelper" %>
 
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
    
@@ -607,9 +608,9 @@
 
 
         </Columns>
-        <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
+        <HeaderStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />
           <EditRowStyle BackColor="#999999" />
-        <FooterStyle BackColor="#5D7B9D" Font-Bold="true" ForeColor="White" />
+        <FooterStyle BackColor="#08605c" Font-Bold="true" ForeColor="White" />
         <%--<FooterStyle BackColor="#E0DCDF" Font-Bold="true" ForeColor="Black" />--%>
         <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
         <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />

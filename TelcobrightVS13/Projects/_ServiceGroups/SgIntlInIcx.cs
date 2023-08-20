@@ -51,15 +51,38 @@ namespace TelcobrightMediation
             //international in call direction/service group
             var dicRoutes = cdrProcessor.CdrJobContext.MediationContext.MefServiceGroupContainer.SwitchWiseRoutes;
             var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
-            route thisRoute = null;
-            dicRoutes.TryGetValue(key, out thisRoute);
-            if (thisRoute != null)
+            route incomingRoute = null;
+            dicRoutes.TryGetValue(key, out incomingRoute);
+            if (incomingRoute != null)
             {
-                if (thisRoute.partner.PartnerType == IcxPartnerType.IOS
-                    && thisRoute.NationalOrInternational == RouteLocalityType.International
-                ) //IGW and route=international
+                bool useCasStyleProcessing = cdrProcessor.CdrJobContext.CdrjobInputData.CdrSetting.useCasStyleProcessing;
+                
+
+                if (!useCasStyleProcessing)
                 {
-                    thisCdr.ServiceGroup = 3; //Intl in ICX
+                    if (incomingRoute.partner.PartnerType == IcxPartnerType.IOS
+                            && incomingRoute.NationalOrInternational == RouteLocalityType.International
+                        ) //IGW and route=international
+                    {
+                        thisCdr.ServiceGroup = 3; //Intl in ICX
+                    }
+
+                }
+
+                else
+                {
+                    key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.OutgoingRoute);
+                    route outGoingRoute = null;
+                    dicRoutes.TryGetValue(key, out outGoingRoute);
+
+
+                    if (outGoingRoute.partner.PartnerType == IcxPartnerType.ANS &&
+                        incomingRoute.partner.PartnerType == IcxPartnerType.IOS) //ANS and route=national
+                    {
+                        thisCdr.ServiceGroup = 3; //Int incoming call
+                    }
+
+
                 }
             }
         }

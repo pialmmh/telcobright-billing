@@ -9,6 +9,9 @@ using reports;
 using System.Collections.Generic;
 using MediationModel;
 using PortalApp;
+using PortalApp._portalHelper;
+using TelcobrightInfra.CasAdditionalConfig;
+
 public partial class DashboardAspx : Page
 {
     protected void Page_Load(object sender, EventArgs e)
@@ -27,7 +30,11 @@ public partial class DashboardAspx : Page
         telcobrightpartner thisPartner = null;
         string binpath = System.Web.HttpRuntime.BinDirectory;
         TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
-        using (PartnerEntities conTelco = new PartnerEntities())
+        var databaseSetting = telcobrightConfig.DatabaseSetting;
+        string userName = Page.User.Identity.Name;
+        string dbName = telcobrightConfig.DeploymentProfile.UserVsDbName[userName];
+        databaseSetting.DatabaseName =dbName;
+        using (PartnerEntities conTelco = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting))
         {
             thisPartner = conTelco.telcobrightpartners.Where(c => c.databasename == dbNameAppConf).ToList().First();
         }

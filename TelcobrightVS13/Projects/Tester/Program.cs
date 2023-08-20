@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using LibraryExtensions;
-
+using TelcobrightInfra;
 public class Program
 {
     public static void Main()
@@ -47,12 +47,21 @@ public class Program
             //"10.184.199.72 / 12",
             //"10.184.199.69",
         };
-        List<string> trieData = TrieHelper.normalizePrefixOrIpAddress(rawData);
-        Trie trie= new Trie(trieData,'^');
-        ;
-        trie.print();
-        Trie t = trie.findBestMatch("11995");
+        //List<string> trieData = TrieHelper.normalizePrefixOrIpAddress(rawData);
+        //Trie trie= new Trie(trieData,'^');
+        //;
+        //trie.print();
+        //Trie t = trie.findBestMatch("11995");
 
-        ;
+
+        //DaywiseTableManager d = new DaywiseTableManager();
+
+        //TupleIncrementManager tim = new TupleIncrementManager();
+
+
+       
+        //TupleIncrementManager.getIncrementalValue("Abul");
+
+
     }
 }

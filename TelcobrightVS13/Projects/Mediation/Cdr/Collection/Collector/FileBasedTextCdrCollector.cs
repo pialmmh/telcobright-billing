@@ -13,7 +13,7 @@ using TelcobrightInfra;
 using TelcobrightMediation.Cdr;
 using TelcobrightMediation.Config;
 using TelcobrightMediation.Mediation.Cdr;
-
+using TelcobrightInfra;
 namespace TelcobrightMediation
 {
     public class FileBasedTextCdrCollector : IEventCollector
@@ -81,60 +81,57 @@ namespace TelcobrightMediation
                 }
                 string tupleExpressionForRow = decoder.getTupleExpression(CollectorInput, row);
                 decodedEventsAsTupDic.Add(tupleExpressionForRow, row);
-                //**temp code mustafa
-                if (tupleExpressionForRow == "10/2023-06-12 12:22:10/1686562286")
-                {
-                    Console.WriteLine("duplicate event found");
-                }
-                //
                 tuplesOfTheDay.Add(tupleExpressionForRow);
             }
             Func<DateTime, List<string>, string> getSqlPerDay
-                = (day, tuples) => $" select tuple from uniqueevent where tuple " +
-                                   $" in ({string.Join(",", tuples.Select(t => new StringBuilder("'").Append(t).Append("'")))}) " +
-                                   $" and {decoder.getSqlWhereClauseForDayWiseSafeCollection(this.CollectorInput, day)}";
+                = (day, tuples) =>
+                {
+                    bool tableExists = false;
+                    string tableName = "uniqueevent" + day.Date.ToString("yyyyMMdd");
+                    string databaseName = this.CollectorInput.CdrJobInputData.Tbc.DatabaseSetting.DatabaseName;
+                    this.DbCmd.CommandText = $"show tables from {databaseName} where tables_in_{databaseName}='{tableName}';";
+                    this.DbCmd.CommandType = CommandType.Text;
+                    DbDataReader reader1 = this.DbCmd.ExecuteReader();
+                    string existingTable = "";
+                    while (reader1.Read())
+                    {
+                        //existingEvents.Add(reader[0].ToString());
+                        existingTable = reader1[0].ToString();
+                        tableExists = tableName == existingTable;
+                    }
+                    reader1.Close();
+                    if (tableExists == false)
+                    {
+                        return "tableDoesNotExist";
+                    }
+                    return
+                        $" select tuple from {tableName} where tuple " +
+                        $" in ({string.Join(",", tuples.Select(t => new StringBuilder("'").Append(t).Append("'")))}) " +
+                        $" and {decoder.getSqlWhereClauseForDayWiseSafeCollection(this.CollectorInput, day)}";
+                };
 
-            string sql = string.Join(" union all ", dayWiseNewTuples.Select(kv => getSqlPerDay(kv.Key, kv.Value)));
+            string sql = string.Join(" union all ", dayWiseNewTuples.Select(kv => getSqlPerDay(kv.Key, kv.Value))
+                .Where(sqlPerDay=>sqlPerDay!= "tableDoesNotExist"));
             List<string> newEvents = dayWiseNewTuples.SelectMany(kv => kv.Value).ToList();
             List<string> existingEvents = new List<string>();
-            this.DbCmd.CommandText = sql;
-            this.DbCmd.CommandType = CommandType.Text;
-            DbDataReader reader = this.DbCmd.ExecuteReader();
-            while (reader.Read())
+            if (sql!="")
             {
-                existingEvents.Add(reader[0].ToString());
+                this.DbCmd.CommandText = sql;
+                this.DbCmd.CommandType = CommandType.Text;
+                DbDataReader reader = this.DbCmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    existingEvents.Add(reader[0].ToString());
+                }
+                reader.Close();
             }
-            reader.Close();
 
-            //temp code fetch all unique values
-            List<string> allUniqueEvents = new List<string>();
-            this.DbCmd.CommandText = "select tuple from uniqueevent;";
-            this.DbCmd.CommandType = CommandType.Text;
-            reader = this.DbCmd.ExecuteReader();
-            while (reader.Read())
-            {
-                allUniqueEvents.Add(reader[0].ToString());
-            }
-            reader.Close();
-
-
-            //end temp code
 
             Dictionary<string, string> alreadyConsideredEvents = existingEvents.ToDictionary(e => e);
             foreach (var kv in decodedEventsAsTupDic)
             {
                 string tuple = kv.Key;
                 string[] decodedRow = kv.Value;
-                //temp code
-                if (allUniqueEvents.Contains(tuple))
-                {
-                    if (alreadyConsideredEvents.ContainsKey(tuple) == false)
-                    {
-                        Console.WriteLine("Unique event fetching probably incorrect.");
-                    }
-                }
-
-                //end temp doe
                 if (alreadyConsideredEvents.ContainsKey(tuple) == false)
                 {
                     finalNonDuplicateEvents.Add(tuple, decodedRow);
@@ -147,20 +144,24 @@ namespace TelcobrightMediation
                 }
             }
 
-            ////tempCode
-            //this.DbCmd.CommandText = "insert into uniqueevent(tuple,starttime) values "
-            //                         + string.Join(",", finalNonDuplicateEvents.Select(kv =>
-            //                         {
-            //                             string tuple = kv.Key;
-            //                             string[] row = kv.Value;
-            //                             return "('" + tuple + "','" + row[Fn.StartTime] + "')";
-            //                         }));
-            //this.DbCmd.CommandType = CommandType.Text;
-            //if (finalNonDuplicateEvents.Any())
-            //{
-            //    //this.DbCmd.ExecuteNonQuery();
-            //}
-            ////end 
+            //create uniqueevent tables for each date
+            List<DateTime> datesToCreateTable = dayWiseNewTuples.Keys.ToList();
+            string templateSql = @"CREATE TABLE uniqueevent (
+                                      tuple varchar(200) COLLATE utf8mb4_bin NOT NULL,
+                                      StartTime datetime NOT NULL,
+                                      description varchar(50) COLLATE utf8mb4_bin DEFAULT NULL,
+                                      UNIQUE KEY ind_tuple (tuple)
+                                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;";
+            var databaseSetting = this.CollectorInput.CdrJobInputData.Tbc.DatabaseSetting;
+            string conStr = DbUtil.getDbConStrWithDatabase(databaseSetting);
+            //ddl statement may auto commit all transactions
+            //so use a different db connection 
+            using (MySqlConnection con= new MySqlConnection(conStr))
+            {
+                con.Open();
+                DaywiseTableManager.CreateTables("uniqueevent", templateSql, datesToCreateTable, con);
+                con.Close();
+            }
             return finalNonDuplicateEvents;
         }
 

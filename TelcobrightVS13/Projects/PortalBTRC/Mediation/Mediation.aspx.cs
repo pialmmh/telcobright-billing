@@ -9,6 +9,9 @@ using System.Linq;
 using System.Web;
 using System.Web.UI.WebControls;
 using MediationModel;
+using PortalApp;
+using TelcobrightInfra.CasAdditionalConfig;
+using TelcobrightMediation;
 
 public partial class DefaultMediation : System.Web.UI.Page
 {
@@ -16,7 +19,10 @@ public partial class DefaultMediation : System.Web.UI.Page
     private int _mShowByAns = 0;
 
     DataTable _dt;
-    
+
+    TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
+
+
     protected void CheckBoxRealTimeUpdate_CheckedChanged(object sender, EventArgs e)
     {
         if (this.CheckBoxRealTimeUpdate.Checked)
@@ -78,6 +84,7 @@ public partial class DefaultMediation : System.Web.UI.Page
 
     public DataSet GetDataSet(string connectionString, string sql)
     {
+        
         MySqlConnection conn = new MySqlConnection(connectionString);
         MySqlDataAdapter da = new MySqlDataAdapter();
         MySqlCommand cmd = conn.CreateCommand();
@@ -274,7 +281,9 @@ public partial class DefaultMediation : System.Web.UI.Page
 
         long totalSequence = 0;
         List<job> lstAllCdr=null;
-        using (PartnerEntities context = new PartnerEntities())
+        var databaseSetting = telcobrightConfig.DatabaseSetting;
+        databaseSetting.DatabaseName = DropDownListViewIncomingRoute.SelectedValue;
+        using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting))
         {
             //context.CommandTimeout = 3600;
             string sql = "";
@@ -445,13 +454,19 @@ public partial class DefaultMediation : System.Web.UI.Page
         //make sure to keep databasename at the last of the connection string
         string dbName = partnerConStr.Substring(posDatabase + 9, partnerConStr.Length - posDatabase - 9);
         //find TB customerid
-        using (PartnerEntities context = new PartnerEntities())
+        var databaseSetting = telcobrightConfig.DatabaseSetting;
+        using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting))
         {
             int idOperator = context.telcobrightpartners.Where(c => c.databasename == dbName).First().idCustomer;
             var allSwitches = e.Query.Cast<ne>();
             e.Query = allSwitches.Where(c => c.idCustomer == idOperator);
         }
 
+    }
+
+    protected void CheckBoxSwithcName_CheckedChanged(object sender, EventArgs e)
+    {
+       
     }
     protected void EntityDataAllCdr_QueryCreated(object sender, QueryCreatedEventArgs e)
     {
@@ -487,5 +502,44 @@ public partial class DefaultMediation : System.Web.UI.Page
         this.txtDate.Text = FirstDayOfMonthFromDateTime(DateTime.Today).ToString("dd/MM/yyyy");
         this.txtDate1.Text = LastDayOfMonthFromDateTime(DateTime.Today).ToString("dd/MM/yyyy");
         submit_Click(sender, e);
+    }
+    protected void DropDownListViewIncomingRoute_SelectedChanged(object sender, EventArgs e)
+    {
+        setSwitchListDropDown(DropDownListPartner, EventArgs.Empty);
+    }
+    protected void setICXListDropDown(object sender, EventArgs e)
+    {
+        DropDownListViewIncomingRoute.Items.Clear(); 
+                using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(telcobrightConfig.DatabaseSetting))
+                {                 
+                    foreach (var kv in telcobrightConfig.DeploymentProfile.UserVsDbName)
+                    {
+                        string username = kv.Key;
+                        string dbNameAsRouteName = kv.Value;
+                        string icxName = dbNameAsRouteName.Split('_')[0];
+                        DropDownListViewIncomingRoute.Items.Add(new ListItem(icxName, dbNameAsRouteName));
+
+                    }
+                }
+      }
+
+    protected void setSwitchListDropDown(object sender, EventArgs e)
+    {
+
+
+        TelcobrightConfig tb = telcobrightConfig;
+        tb.DatabaseSetting.DatabaseName = DropDownListViewIncomingRoute.SelectedValue;
+
+        using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(tb.DatabaseSetting))
+        {
+            //populate switch
+            List<ne> lstNe = context.nes.ToList();
+            this.DropDownListPartner.Items.Clear();
+            //this.DropDownListPartner.Items.Add(new ListItem(" [All]", "-1"));
+            foreach (ne nE in lstNe)
+            {
+                this.DropDownListPartner.Items.Add(new ListItem(nE.SwitchName, nE.idSwitch.ToString()));
+            }
+        }
     }
 }

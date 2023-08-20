@@ -4,6 +4,7 @@
 <%@ Import Namespace="MediationModel" %>
 <%@ Import Namespace="TelcobrightMediation" %>
 <%@ Import Namespace="PortalApp" %>
+<%@ Import Namespace="PortalApp._portalHelper" %>
 
 
 
@@ -16,7 +17,7 @@
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            TelcobrightConfig tbc = PageUtil.GetTelcobrightConfig();
+            this.tbc = PageUtil.GetTelcobrightConfig();
             PageUtil.ApplyPageSettings(this, false, tbc);
             //common code for report pages
             //view state of ParamBorder div
@@ -684,9 +685,9 @@
 
 
                     </Columns>
-                    <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
+                    <HeaderStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />
                     <EditRowStyle BackColor="#999999" />
-                    <FooterStyle BackColor="#5D7B9D" Font-Bold="true" ForeColor="White" />
+                    <FooterStyle BackColor="#08605c" Font-Bold="true" ForeColor="White" />
                     <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
                     <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
                     <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />

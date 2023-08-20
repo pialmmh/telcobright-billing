@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TelcobrightFileOperations;
 
 namespace TelcobrightMediation.Accounting
 {
@@ -11,5 +12,6 @@ namespace TelcobrightMediation.Accounting
         public string InvoiceGenerationRuleName { get; set; }
         public Dictionary<string, string> SectionGeneratorVsTemplateNames { get; set; }
         public Dictionary<string, string> OtherParams { get; set; }
+        public IStringExpressionGenerator InvoiceRefNoExpressionGenerator { get; set; }
     }
 }

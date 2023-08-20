@@ -13,6 +13,7 @@ using MediationModel;
 using System.Data.Entity;
 using System.IO;
 using PortalApp;
+using PortalApp._portalHelper;
 using TelcobrightMediation.Config;
 
 public partial class ConfigBatcJob : System.Web.UI.Page

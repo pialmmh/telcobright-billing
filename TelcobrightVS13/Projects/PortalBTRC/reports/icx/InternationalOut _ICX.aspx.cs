@@ -16,17 +16,21 @@ using reports;
 using MediationModel;
 using PortalApp;
 using PortalApp.ReportHelper;
+using TelcobrightInfra.CasAdditionalConfig;
 
 public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
 {
     DataTable _dt; bool _timerflag = false;
+
+    public TelcobrightConfig tbc;
+   
     private string GetQuery()
     {
 
         string StartDate = txtDate.Text;
         string EndtDate = (txtDate1.Text.ConvertToDateTimeFromMySqlFormat()).AddSeconds(1).ToMySqlFormatWithoutQuote();
         string tableName = DropDownListReportSource.SelectedValue+"02";
-
+        
         string groupInterval = getSelectedRadioButtonText();
         switch (groupInterval)
         {
@@ -68,7 +72,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                                 CheckBoxShowByAns.Checked==true?DropDownListAns.SelectedIndex>0?" tup_sourceID="+DropDownListAns.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_inpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxViewIncomingRoute.Checked==true?DropDownListViewIncomingRoute.SelectedIndex>0?" tup_incomingroute="+DropDownListViewIncomingRoute.SelectedItem.Value:string.Empty:string.Empty,
-                                CheckBoxViewOutgoingRoute.Checked==true?DropDownListViewOutgoingRoute.SelectedIndex>0?" tup_outgoingroute="+DropDownListViewOutgoingRoute.SelectedItem.Value:string.Empty:string.Empty,
+                                CheckBoxViewOutgoingRoute.Checked==true?DropDownListViewOutgoingRoute.SelectedIndex>0?" tup_outgoingroute="+"'"+DropDownListViewIncomingRoute.SelectedItem.Value.Split('_')[0].Trim().ToString().Split('_')[0].Trim().ToString()+"'":string.Empty:string.Empty,
                                 ViewBySwitch.Checked==true?DropDownListShowBySwitch.SelectedIndex>0?"tup_switchid="+DropDownListShowBySwitch.SelectedItem.Value:string.Empty:string.Empty,
                                     
                             }).getSQLString();
@@ -119,20 +123,32 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
         else return string.Empty;
     }
 
+    private int GetColumnIndexByName(GridView grid, string name)
+    {
+        foreach (DataControlField col in grid.Columns)
+        {
+            if (col.SortExpression.ToLower().Trim() == name.ToLower().Trim())
+            {
+                return grid.Columns.IndexOf(col);
+            }
+        }
+
+        return -1;
+    }
     protected void submit_Click(object sender, EventArgs e)
     {
         //view by country/prefix logic has been changed later, adding this new flag
         bool notViewingByCountry = CheckBoxShowByDestination.Checked | (!CheckBoxShowByCountry.Checked);//not viewing by country if view by desination is checked
 
-        
+
         //undo the effect of hiding some grid by the summary button first******************
-        GridView1.Columns[0].Visible = true;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].Visible = true;
         if (CheckBoxDailySummary.Checked)
         {
             //GridView1.Columns[1].Visible = false;
             //GridView1.Columns[2].Visible = false;
             //GridView1.Columns[3].Visible = false;
-            GridView1.Columns[6].Visible = false;
+            GridView1.Columns[GetColumnIndexByName(GridView1, "International Partner")].Visible = false;
         }
         //GridView1.Columns[1].Visible = true;
         //GridView1.Columns[2].Visible = false;
@@ -140,14 +156,15 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
         //GridView1.Columns[5].Visible = false;
         //*****************************
 
-        GridView1.Columns[1].Visible = CheckBoxShowByCountry.Checked;
-        GridView1.Columns[2].Visible = CheckBoxShowByDestination.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "Country")].Visible = CheckBoxShowByCountry.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "Destination")].Visible = CheckBoxShowByDestination.Checked;
         //GridView1.Columns[3].Visible = CheckBoxShowByIgw.Checked;
-        GridView1.Columns[4].Visible = CheckBoxViewIncomingRoute.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "tup_incomingroute")].Visible = CheckBoxViewIncomingRoute.Checked;
 
-        GridView1.Columns[6].Visible = CheckBoxIntlPartner.Checked;
-        GridView1.Columns[7].Visible = CheckBoxViewOutgoingRoute.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "International Partner")].Visible = CheckBoxIntlPartner.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "tup_outgoingroute")].Visible = CheckBoxViewOutgoingRoute.Checked;
         GridView1.Columns[16].Visible = CheckBoxShowPerformance.Checked;
+
 
         if (CheckBoxShowCost.Checked == true)
         {
@@ -171,7 +188,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
             GridView1.Columns[27].Visible = false;
             GridView1.Columns[28].Visible = false;
         }
-        
+
 
         using (MySqlConnection connection = new MySqlConnection())
         {
@@ -180,7 +197,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
 
             connection.Open();
 
-            MySqlCommand cmd = new MySqlCommand(GetQuery(),connection);
+            MySqlCommand cmd = new MySqlCommand(GetQuery(), connection);
             cmd.Connection = connection;
 
             //All Possible Report Combinations are here:
@@ -192,19 +209,19 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
 
                 //GridView1.Columns[1].Visible = true;//country
                 if (CheckBoxShowByDestination.Checked)
-                    GridView1.Columns[2].Visible = true;//destination
+                    GridView1.Columns[GetColumnIndexByName(GridView1, "Destination")].Visible = true;//destination
                 else
-                    GridView1.Columns[2].Visible = false;
+                    GridView1.Columns[GetColumnIndexByName(GridView1, "Destination")].Visible = false;
             }
-          
+
             if (CheckBoxDailySummary.Checked == false)
             {
 
-                GridView1.Columns[0].Visible = false;
+                GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].Visible = false;
             }
             else
             {
-                GridView1.Columns[0].Visible = true;
+                GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].Visible = true;
 
             }
 
@@ -222,27 +239,27 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                 if (RadioButtonHourly.Checked == true)
                 {
                     summaryInterval = "Hourly";
-                    GridView1.Columns[0].HeaderText = "Hour";
+                    GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].HeaderText = "Hour";
                 }
                 else if (RadioButtonDaily.Checked == true)
                 {
                     summaryInterval = "Daily";
-                    GridView1.Columns[0].HeaderText = "Date";
+                    GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].HeaderText = "Date";
                 }
                 else if (RadioButtonWeekly.Checked == true)
                 {
                     summaryInterval = "Weekly";
-                    GridView1.Columns[0].HeaderText = "Week";
+                    GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].HeaderText = "Week";
                 }
                 else if (RadioButtonMonthly.Checked == true)
                 {
                     summaryInterval = "Monthly";
-                    GridView1.Columns[0].HeaderText = "Month";
+                    GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].HeaderText = "Month";
                 }
                 else if (RadioButtonYearly.Checked == true)
                 {
                     summaryInterval = "Yearly";
-                    GridView1.Columns[0].HeaderText = "Year";
+                    GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].HeaderText = "Year";
                 }
 
 
@@ -251,7 +268,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
             DataSet dataset = new DataSet();
             da.Fill(dataset);
 
-            _dt = dataset.Tables[0];
+            _dt = dataset.Tables[GetColumnIndexByName(GridView1, "Date")];
             Session["InternationalOut.aspx.csdt17"] = dataset; //THIS MUST BE CHANGED FOR EACH PAGE
 
             GridView1.DataSource = dataset;
@@ -378,14 +395,273 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
 
     }
 
+    //protected void submit_Click(object sender, EventArgs e)
+    //{
+    //    //view by country/prefix logic has been changed later, adding this new flag
+    //    bool notViewingByCountry = CheckBoxShowByDestination.Checked | (!CheckBoxShowByCountry.Checked);//not viewing by country if view by desination is checked
+
+
+    //    //undo the effect of hiding some grid by the summary button first******************
+    //    GridView1.Columns[0].Visible = true;
+    //    if (CheckBoxDailySummary.Checked)
+    //    {
+    //        //GridView1.Columns[1].Visible = false;
+    //        //GridView1.Columns[2].Visible = false;
+    //        //GridView1.Columns[3].Visible = false;
+    //        GridView1.Columns[6].Visible = false;
+    //    }
+    //    //GridView1.Columns[1].Visible = true;
+    //    //GridView1.Columns[2].Visible = false;
+    //    //GridView1.Columns[3].Visible = false;
+    //    //GridView1.Columns[5].Visible = false;
+    //    //*****************************
+
+    //    GridView1.Columns[GetColumnIndexByName(GridView1, "Country")].Visible = CheckBoxShowByCountry.Checked;
+    //    GridView1.Columns[GetColumnIndexByName(GridView1, "Destination")].Visible = CheckBoxShowByDestination.Checked;
+    //    //GridView1.Columns[3].Visible = CheckBoxShowByIgw.Checked;
+    //    GridView1.Columns[GetColumnIndexByName(GridView1, "tup_incomingroute")].Visible = CheckBoxViewIncomingRoute.Checked;
+
+    //    GridView1.Columns[GetColumnIndexByName(GridView1, "International Partner")].Visible = CheckBoxIntlPartner.Checked;
+    //    GridView1.Columns[GetColumnIndexByName(GridView1, "tup_outgoingroute")].Visible = CheckBoxViewOutgoingRoute.Checked;
+    //    GridView1.Columns[16].Visible = CheckBoxShowPerformance.Checked;
+
+    //    if (CheckBoxShowCost.Checked == true)
+    //    {
+    //        GridView1.Columns[21].Visible = false;
+    //        GridView1.Columns[22].Visible = false;
+    //        GridView1.Columns[23].Visible = true;
+    //        GridView1.Columns[24].Visible = true;
+    //        GridView1.Columns[25].Visible = true;
+    //        GridView1.Columns[26].Visible = true;
+    //        GridView1.Columns[27].Visible = true;
+    //        GridView1.Columns[28].Visible = true;
+    //    }
+    //    else
+    //    {
+    //        GridView1.Columns[21].Visible = false;
+    //        GridView1.Columns[22].Visible = false;
+    //        GridView1.Columns[23].Visible = false;
+    //        GridView1.Columns[24].Visible = false;
+    //        GridView1.Columns[25].Visible = false;
+    //        GridView1.Columns[26].Visible = false;
+    //        GridView1.Columns[27].Visible = false;
+    //        GridView1.Columns[28].Visible = false;
+    //    }
+
+
+    //    using (MySqlConnection connection = new MySqlConnection())
+    //    {
+
+    //        connection.ConnectionString = ConfigurationManager.ConnectionStrings["reader"].ConnectionString;
+
+    //        connection.Open();
+
+    //        MySqlCommand cmd = new MySqlCommand(GetQuery(),connection);
+    //        cmd.Connection = connection;
+
+    //        //All Possible Report Combinations are here:
+
+    //        //^^^^^^^^^^^*********&&&&&&&&&&&&&&&& if checkbox view by destination is checked
+
+    //        if (CheckBoxShowByDestination.Checked == true || CheckBoxShowByCountry.Checked == true)
+    //        {
+
+    //            //GridView1.Columns[1].Visible = true;//country
+    //            if (CheckBoxShowByDestination.Checked)
+    //                GridView1.Columns[2].Visible = true;//destination
+    //            else
+    //                GridView1.Columns[2].Visible = false;
+    //        }
+
+    //        if (CheckBoxDailySummary.Checked == false)
+    //        {
+
+    //            GridView1.Columns[0].Visible = false;
+    //        }
+    //        else
+    //        {
+    //            GridView1.Columns[0].Visible = true;
+
+    //        }
+
+
+    //        //common code
+    //        if (CheckBoxDailySummary.Checked == true)
+    //        {
+    //            string summaryInterval = "";
+    //            //if (RadioButtonHalfHourly.Checked == true)
+    //            //{
+    //            //    summaryInterval = "Halfhourly";
+    //            //    GridView1.Columns[0].HeaderText = "Half Hour";
+    //            //}
+    //            //else 
+    //            if (RadioButtonHourly.Checked == true)
+    //            {
+    //                summaryInterval = "Hourly";
+    //                GridView1.Columns[0].HeaderText = "Hour";
+    //            }
+    //            else if (RadioButtonDaily.Checked == true)
+    //            {
+    //                summaryInterval = "Daily";
+    //                GridView1.Columns[0].HeaderText = "Date";
+    //            }
+    //            else if (RadioButtonWeekly.Checked == true)
+    //            {
+    //                summaryInterval = "Weekly";
+    //                GridView1.Columns[0].HeaderText = "Week";
+    //            }
+    //            else if (RadioButtonMonthly.Checked == true)
+    //            {
+    //                summaryInterval = "Monthly";
+    //                GridView1.Columns[0].HeaderText = "Month";
+    //            }
+    //            else if (RadioButtonYearly.Checked == true)
+    //            {
+    //                summaryInterval = "Yearly";
+    //                GridView1.Columns[0].HeaderText = "Year";
+    //            }
+
+
+    //        }
+    //        MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+    //        DataSet dataset = new DataSet();
+    //        da.Fill(dataset);
+
+    //        _dt = dataset.Tables[0];
+    //        Session["InternationalOut.aspx.csdt17"] = dataset; //THIS MUST BE CHANGED FOR EACH PAGE
+
+    //        GridView1.DataSource = dataset;
+    //        bool hasRows = dataset.Tables.Cast<DataTable>()
+    //                           .Any(table => table.Rows.Count != 0);
+
+    //        if (hasRows == true)
+    //        {
+    //            Label1.Text = "";
+    //            Button1.Visible = true; //show export
+    //            GridView1.ShowFooter = true;//set it here before setting footer text, setting this to true clears already set footer text
+    //            Label1.Text = "";
+    //            Button1.Visible = true; //show export
+    //            //Summary calculation for grid view*************************
+    //            TrafficReportDatasetBased tr = new TrafficReportDatasetBased(dataset);
+    //            tr.Ds = dataset;
+    //            List<NoOfCallsVsPdd> callVsPdd = new List<NoOfCallsVsPdd>();
+    //            foreach (DataRow dr in tr.Ds.Tables[0].Rows)
+    //            {
+    //                tr.CallStat.TotalCalls += tr.ForceConvertToLong(dr["CallsCount"]);
+    //                tr.CallStat.ConnectedCalls += tr.ForceConvertToLong(dr["ConnectedCount"]);
+    //                tr.CallStat.ConnectedCallsbyCauseCodes += tr.ForceConvertToLong(dr["ConectbyCC"]);
+    //                tr.CallStat.SuccessfullCalls += tr.ForceConvertToLong(dr["No of Calls (Outgoing International)"]);
+    //                tr.CallStat.TotalActualDuration += tr.ForceConvertToDouble(dr["Paid Minutes (Outgoing Internaitonal)"]);
+    //                tr.CallStat.TotalRoundedDuration += tr.ForceConvertToDouble(dr["RoundedDuration"]);
+    //                tr.CallStat.TotalDuration3 += tr.ForceConvertToDouble(dr["hmsduration"]);
+    //                tr.CallStat.TotalDuration2 += tr.ForceConvertToDouble(dr["supplierduration"]);
+    //                tr.CallStat.XAmount += tr.ForceConvertToDouble(dr["X (BDT)"]);
+    //                tr.CallStat.YAmount += tr.ForceConvertToDouble(dr["Y (USD)"]);
+    //                tr.CallStat.ZAmount += tr.ForceConvertToDouble(dr["Z (BDT)"]);
+    //                tr.CallStat.IgwRevenue += tr.ForceConvertToDouble(dr["revenueigwout"]);
+    //                tr.CallStat.BtrcRevShare += tr.ForceConvertToDouble(dr["tax1"]);
+
+    //                NoOfCallsVsPdd cpdd = new NoOfCallsVsPdd(tr.ForceConvertToLong(dr["No of Calls (Outgoing International)"]), tr.ForceConvertToDouble(dr["PDD"]));
+    //                callVsPdd.Add(cpdd);
+    //            }
+    //            tr.CallStat.TotalActualDuration = Math.Round(tr.CallStat.TotalActualDuration, 2);
+    //            tr.CallStat.TotalDuration1 = Math.Round(tr.CallStat.TotalDuration1, 2);
+    //            tr.CallStat.TotalDuration2 = Math.Round(tr.CallStat.TotalDuration2, 2);
+    //            tr.CallStat.TotalDuration3 = Math.Round(tr.CallStat.TotalDuration3, 2);
+    //            tr.CallStat.TotalDuration4 = Math.Round(tr.CallStat.TotalDuration4, 2);
+    //            tr.CallStat.TotalRoundedDuration = Math.Round(tr.CallStat.TotalRoundedDuration, 2);
+    //            tr.CallStat.XAmount = Math.Round(tr.CallStat.XAmount, 2);
+    //            tr.CallStat.YAmount = Math.Round(tr.CallStat.YAmount, 2);
+    //            tr.CallStat.ZAmount = Math.Round(tr.CallStat.ZAmount, 2);
+    //            tr.CallStat.IgwRevenue = Math.Round(tr.CallStat.IgwRevenue, 2);
+    //            tr.CallStat.CalculateAsr(2);
+    //            tr.CallStat.CalculateAcd(2);
+    //            tr.CallStat.CalculateAveragePdd(callVsPdd, 2);
+    //            tr.CallStat.CalculateCcr(2);
+    //            tr.CallStat.CalculateCcRbyCauseCode(2);
+    //            tr.CallStat.CalculateProfitPerMinute(2);
+    //            //SUMMARY CALCULATION FOR GRIDVIEW COMPLETE
+
+
+    //            //display summary information in the footer
+    //            Dictionary<string, dynamic> fieldSummaries = new Dictionary<string, dynamic>();//key=colname,val=colindex in grid
+    //            //all keys have to be lowercase, because db fields are lower case at times
+    //            fieldSummaries.Add("callscount", tr.CallStat.TotalCalls);
+    //            fieldSummaries.Add("connectedcount", tr.CallStat.ConnectedCalls);
+    //            fieldSummaries.Add("connectbycc", tr.CallStat.ConnectedCallsbyCauseCodes);
+    //            fieldSummaries.Add("no of calls (outgoing international)", tr.CallStat.SuccessfullCalls);
+    //            fieldSummaries.Add("paid minutes (outgoing internaitonal)", tr.CallStat.TotalActualDuration);
+    //            fieldSummaries.Add("roundedduration", tr.CallStat.TotalRoundedDuration);
+    //            fieldSummaries.Add("hmsduration", tr.CallStat.TotalDuration3);
+    //            fieldSummaries.Add("supplierduration", tr.CallStat.TotalDuration2);
+    //            fieldSummaries.Add("asr", tr.CallStat.Asr);
+    //            fieldSummaries.Add("acd", tr.CallStat.Acd);
+    //            fieldSummaries.Add("pdd", tr.CallStat.Pdd);
+    //            fieldSummaries.Add("ccr", tr.CallStat.Ccr);
+    //            fieldSummaries.Add("ccrbycc", tr.CallStat.CcRbyCauseCode);
+    //            fieldSummaries.Add("x (bdt)", tr.CallStat.XAmount);
+    //            fieldSummaries.Add("y (usd)", tr.CallStat.YAmount);
+    //            fieldSummaries.Add("z (bdt)", tr.CallStat.ZAmount);
+    //            fieldSummaries.Add("revenueigwout", tr.CallStat.IgwRevenue);
+    //            fieldSummaries.Add("tax1", tr.CallStat.BtrcRevShare);
+
+    //            tr.FieldSummaries = fieldSummaries;
+
+    //            Session["IntlOut"] = tr;//save to session
+
+    //            //populate footer
+    //            //clear first
+    //            bool captionSetForTotal = false;
+    //            for (int c = 0; c < GridView1.Columns.Count; c++)
+    //            {
+    //                GridView1.Columns[c].FooterText = "";
+    //            }
+    //            for (int c = 0; c < GridView1.Columns.Count; c++)
+    //            {
+    //                if (captionSetForTotal == false && GridView1.Columns[c].Visible == true)
+    //                {
+    //                    GridView1.Columns[c].FooterText = "Total: ";//first visible column
+    //                    captionSetForTotal = true;
+    //                }
+    //                string key = GridView1.Columns[c].SortExpression.ToLower();
+    //                if (key == "") continue;
+    //                if (tr.FieldSummaries.ContainsKey(key))
+    //                {
+    //                    GridView1.Columns[c].FooterText += (tr.GetDataColumnSummary(key)).ToString();//+ required to cocat "Total:"
+    //                }
+    //            }
+    //            GridView1.DataBind();//call it here after setting footer, footer text doesn't show sometime otherwise, may be a bug
+    //            GridView1.ShowFooter = true;//don't set it now, set before footer text setting, weird! it clears the footer text
+
+    //            //hide filters...
+    //            Page.ClientScript.RegisterStartupScript(GetType(), "MyKey", "HideParamBorderDivSubmit();", true);
+    //            hidValueSubmitClickFlag.Value = "false";
+
+
+    //        }//if has rows=true
+    //        else
+    //        {
+    //            GridView1.DataBind();
+    //            Label1.Text = "No Data!";
+    //            Button1.Visible = false; //hide export
+    //        }
+
+
+
+
+
+    //    }//using mysql connection
+
+    //}
+
     protected void Page_Load(object sender, EventArgs e)
     {
-        TelcobrightConfig tbc = PageUtil.GetTelcobrightConfig();
+        this.tbc = PageUtil.GetTelcobrightConfig();
         PageUtil.ApplyPageSettings(this,false, tbc);
         //load Country KPI
 
         Dictionary<string, countrycode> dicKpiCountry = new Dictionary<string, countrycode>();
-        using (PartnerEntities context = new PartnerEntities())
+        using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(tbc.DatabaseSetting))
         {
             foreach (countrycode c in context.countrycodes.ToList())
             {
@@ -396,7 +672,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
 
         //load Destination KPI
         Dictionary<string, xyzprefix> dicKpiDest = new Dictionary<string, xyzprefix>();
-        using (PartnerEntities context = new PartnerEntities())
+        using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(tbc.DatabaseSetting))
         {
             foreach (xyzprefix c in context.xyzprefixes.ToList())
             {
@@ -431,7 +707,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
             Single usdExchangeRate = 0;
             var connectionString = ConfigurationManager.ConnectionStrings["reader"].ConnectionString;
 
-            using (PartnerEntities contex = new PartnerEntities())
+            using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(tbc.DatabaseSetting))
             {
                 var CountryList = contex.countrycodes.ToList();
 
@@ -687,7 +963,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
             ClientScript.RegisterClientScriptBlock(this.GetType(), "Alert", script, true);
             return;
         }
-        using (PartnerEntities context = new PartnerEntities())
+        using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(tbc.DatabaseSetting))
         {
             if (context.reporttemplates.Any(c => c.Templatename == templateName))
             {
@@ -1340,18 +1616,19 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
         {
             if (DropDownListIgw.SelectedValue == "-1")
             {
-                using (PartnerEntities contex = new PartnerEntities())
-                {
-                    List<int> ansList = contex.partners.Where(c => c.PartnerType == 2).Select(c => c.idPartner).ToList();
-                    foreach (route route in contex.routes.Where(x => ansList.Contains(x.idPartner)))
-                    {
-                        DropDownListViewIncomingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
-                    }
-                }
+                populateICX();
+                //using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(this.tbc.DatabaseSetting))
+                //{
+                //    List<int> ansList = contex.partners.Where(c => c.PartnerType == 2).Select(c => c.idPartner).ToList();
+                //    foreach (route route in contex.routes.Where(x => ansList.Contains(x.idPartner)))
+                //    {
+                //        DropDownListViewIncomingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
+                //    }
+                //}
             }
             else
             {
-                using (PartnerEntities contex = new PartnerEntities())
+                using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(tbc.DatabaseSetting))
                 {
                     int idPartner = Convert.ToInt32(DropDownListIgw.SelectedValue);
                     foreach (route route in contex.routes.Where(x => x.idPartner == idPartner))
@@ -1365,24 +1642,24 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
 
     protected void DropDownListIntlCarier_OnSelectedIndexChanged(object sender, EventArgs e)
     {
-        DropDownListViewOutgoingRoute.Items.Clear();
-        DropDownListViewOutgoingRoute.Items.Add(new ListItem("[All]", "-1"));
+       
         if (DropDownListIntlCarier.SelectedValue != String.Empty)
         {
             if (DropDownListIntlCarier.SelectedValue == "-1")
             {
-                using (PartnerEntities contex = new PartnerEntities())
+                using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(tbc.DatabaseSetting))
                 {
                     List<int> ansList = contex.partners.Where(c => c.PartnerType == 3).Select(c => c.idPartner).ToList();
-                    foreach (route route in contex.routes.Where(x => ansList.Contains(x.idPartner)))
-                    {
-                        DropDownListViewOutgoingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
-                    }
+                    //foreach (route route in contex.routes.Where(x => ansList.Contains(x.idPartner)))
+                    //{
+                    //    DropDownListViewOutgoingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
+                    //}
+                    populateICX();
                 }
             }
             else
             {
-                using (PartnerEntities contex = new PartnerEntities())
+                using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(tbc.DatabaseSetting))
                 {
                     int idPartner = Convert.ToInt32(DropDownListIntlCarier.SelectedValue);
                     foreach (route route in contex.routes.Where(x => x.idPartner == idPartner))
@@ -1391,6 +1668,20 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                     }
                 }
             }
+        }
+    }
+
+    private void populateICX()
+    {
+        DropDownListViewIncomingRoute.Items.Clear();
+        DropDownListViewIncomingRoute.Items.Add(new ListItem("[All]", "-1"));
+        foreach (var kv in tbc.DeploymentProfile.UserVsDbName)
+        {
+            string username = kv.Key;
+            string dbNameAsRouteName = kv.Value;
+            string icxName = dbNameAsRouteName.Split('_')[0];
+            DropDownListViewIncomingRoute.Items.Add(new ListItem(icxName, dbNameAsRouteName));
+
         }
     }
 }

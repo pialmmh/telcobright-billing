@@ -64,8 +64,8 @@
                     <RowStyle HorizontalAlign="Center" BackColor="#F7F6F3" ForeColor="#333333"/>
                     <AlternatingRowStyle BackColor="White" ForeColor="#284775"/>
                     <EditRowStyle HorizontalAlign="Center" BackColor="#999999" />
-                    <FooterStyle BackColor="#5D7B9D" Font-Bold="true" ForeColor="White"/>
-                    <HeaderStyle HorizontalAlign="Center" Font-Bold="true" BackColor="#5D7B9D" ForeColor="White"/>
+                    <FooterStyle BackColor="#08605c" Font-Bold="true" ForeColor="White"/>
+                    <HeaderStyle HorizontalAlign="Center" Font-Bold="true" BackColor="#08605c" ForeColor="White"/>
                     
                     <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
                     <SortedAscendingCellStyle BackColor="#E9E7E2" />

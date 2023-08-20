@@ -95,8 +95,8 @@
                     <RowStyle HorizontalAlign="Center"/>
                     <AlternatingRowStyle BackColor="#EBF0FF" ForeColor="#284775"/>
                     <EditRowStyle HorizontalAlign="Center" />
-                    <HeaderStyle HorizontalAlign="Center" BackColor="#5D7B9D" Font-Bold="True" ForeColor="White"/>
-                    <FooterStyle BackColor="#5D7B9D" Font-Bold="true" ForeColor="White" HorizontalAlign="Center"/>
+                    <HeaderStyle HorizontalAlign="Center" BackColor="#08605c" Font-Bold="True" ForeColor="White"/>
+                    <FooterStyle BackColor="#08605c" Font-Bold="true" ForeColor="White" HorizontalAlign="Center"/>
                     
                 </asp:GridView>
 

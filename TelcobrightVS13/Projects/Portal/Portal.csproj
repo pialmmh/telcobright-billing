@@ -1151,14 +1151,15 @@
     <Compile Include="ViewSwitcher.ascx.designer.cs">
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>
     </Compile>
-    <Compile Include="_myCodes\CreateExcelFileAspNet.cs" />
-    <Compile Include="_myCodes\CreateExcelFile.cs" />
-    <Compile Include="_myCodes\MasterPageExtendedForPortal.cs" />
-    <Compile Include="_myCodes\PaymentHistoryInfo.cs" />
-    <Compile Include="_myCodes\ServiceAcountStatus.cs" />
-    <Compile Include="_myCodes\ServiceGroupPopulatorForDropDown.cs" />
-    <Compile Include="_myCodes\TopUpInfo.cs" />
-    <Compile Include="_myCodes\_PortalAppCodes.cs" />
+    <Compile Include="_portalHelper\CreateExcelFileAspNet.cs" />
+    <Compile Include="_portalHelper\CreateExcelFile.cs" />
+    <Compile Include="_portalHelper\MasterPageExtendedForPortal.cs" />
+    <Compile Include="_portalHelper\PaymentHistoryInfo.cs" />
+    <Compile Include="_portalHelper\portalConnectionHelper.cs" />
+    <Compile Include="_portalHelper\ServiceAcountStatus.cs" />
+    <Compile Include="_portalHelper\ServiceGroupPopulatorForDropDown.cs" />
+    <Compile Include="_portalHelper\TopUpInfo.cs" />
+    <Compile Include="_portalHelper\_PortalAppCodes.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="config\Partner.aspx.cs">
       <DependentUpon>Partner.aspx</DependentUpon>
@@ -1454,6 +1455,10 @@
     <ProjectReference Include="..\PowerCollections\PowerCollections.csproj">
       <Project>{5821977d-ac2c-4912-bcd0-6e6b1a756167}</Project>
       <Name>PowerCollections</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TelcobrightInfra\TelcobrightInfra.csproj">
+      <Project>{ff350c55-2852-406c-930b-ae2938cceb91}</Project>
+      <Name>TelcobrightInfra</Name>
     </ProjectReference>
     <ProjectReference Include="..\_jcLCR\mefJcLCR.csproj">
       <Project>{a9564cf3-228c-4cc7-9a8b-4b518907305b}</Project>

@@ -5,19 +5,22 @@
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Import Namespace="MediationModel" %>
 <%@ Import Namespace="PortalApp" %>
+<%@ Import Namespace="TelcobrightMediation" %>
 
 <%----%>
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
    
     <%--Page Load and Other Server Side Asp.net scripts--%>
         <script runat="server">
-        
+            TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
+
             protected void Page_Load(object sender, EventArgs e)
             {
                 //common code for report pages
                 //view state of ParamBorder div
                 string tempText = this.hidValueFilter.Value;
                 bool lastVisible = this.hidValueFilter.Value == "invisible" ? false : true;
+                var databaseSetting = telcobrightConfig.DatabaseSetting;
                 if (this.hidValueSubmitClickFlag.Value == "false")
                 {
                     if (lastVisible)
@@ -35,16 +38,17 @@
                 if (!this.IsPostBack)
                 {
                     //load job type and job status dropdownlist
-                    using (PartnerEntities context = new PartnerEntities())
+
+                    using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting))
                     {
                         //populate switch
-                        List<ne> lstNe = context.nes.ToList();
-                        this.DropDownListPartner.Items.Clear();
-                        this.DropDownListPartner.Items.Add(new ListItem(" [All]", "-1"));
-                        foreach (ne nE in lstNe)
-                        {
-                            this.DropDownListPartner.Items.Add(new ListItem(nE.SwitchName, nE.idSwitch.ToString()));
-                        }
+                        //List<ne> lstNe = context.nes.ToList();
+                        //this.DropDownListPartner.Items.Clear();
+                        //this.DropDownListPartner.Items.Add(new ListItem(" [All]", "-1"));
+                        //foreach (ne nE in lstNe)
+                        //{
+                        //    this.DropDownListPartner.Items.Add(new ListItem(nE.SwitchName, nE.idSwitch.ToString()));
+                        //}
                         //List<ne> lstne=context.nes
                         //populate jobtype
                         List<enumjobdefinition> lstJobDef = context.enumjobdefinitions.Include("enumjobtype").ToList();
@@ -63,8 +67,11 @@
                         {
                             this.DropDownListJobStatus.Items.Add(new ListItem(jobstat.Type, jobstat.id.ToString()));
                         }
-                        
+
                     }
+                    setICXListDropDown(DropDownListViewIncomingRoute, EventArgs.Empty);
+                    setSwitchListDropDown(DropDownListPartner, EventArgs.Empty);
+
 
                     this.TextBoxYear.Text = DateTime.Now.ToString("yyyy");
                     this.TextBoxYear1.Text = DateTime.Now.ToString("yyyy");
@@ -74,8 +81,8 @@
                     //txtDate1.Text = LastDayOfMonthFromDateTime(System.DateTime.Now).ToString("dd/MM/yyyy");
                     this.txtDate.Text = DateTime.Now.ToString("dd/MM/yyyy");
                     this.txtDate1.Text = DateTime.Now.ToString("dd/MM/yyyy");
-                    
-                    
+
+
                     //set controls if page is called for a template
                     this.ViewState["jobtype"]="";
                     TreeView masterTree = (TreeView) this.Master.FindControl("TreeView1");
@@ -158,94 +165,95 @@
             {
                 DateTime firstDayOfTheMonth = new DateTime(dateTime.Year, dateTime.Month, 1);
                 return firstDayOfTheMonth.AddMonths(1).AddDays(-1);
-            } 
-         
-        protected void DropDownListMonth_SelectedIndexChanged(object sender, EventArgs e)
-            {   
+            }
+
+            protected void DropDownListMonth_SelectedIndexChanged(object sender, EventArgs e)
+            {
                 //select 15th of month to find out first and last day of a month as it exists in all months.
                 DateTime anyDayOfMonth = new DateTime(int.Parse(this.TextBoxYear.Text), int.Parse(this.DropDownListMonth.SelectedValue), 15);
-            this.txtDate.Text= FirstDayOfMonthFromDateTime(anyDayOfMonth).ToString("dd/MM/yyyy");
+                this.txtDate.Text= FirstDayOfMonthFromDateTime(anyDayOfMonth).ToString("dd/MM/yyyy");
             }
-         protected void DropDownListMonth1_SelectedIndexChanged(object sender, EventArgs e)
-         {
-             //select 15th of month to find out first and last day of a month as it exists in all months.
-             DateTime anyDayOfMonth = new DateTime(int.Parse(this.TextBoxYear1.Text), int.Parse(this.DropDownListMonth1.SelectedValue), 15);
-             this.txtDate1.Text = LastDayOfMonthFromDateTime(anyDayOfMonth).ToString("dd/MM/yyyy");
-         }
-         protected void ButtonTemplate_Click(object sender, EventArgs e)
-         {
-             //exit if cancel clicked in javascript...
-             if (this.hidValueTemplate.Value == null || this.hidValueTemplate.Value == "")
-             {
-                 return;
-             }
+            protected void DropDownListMonth1_SelectedIndexChanged(object sender, EventArgs e)
+            {
+                //select 15th of month to find out first and last day of a month as it exists in all months.
+                DateTime anyDayOfMonth = new DateTime(int.Parse(this.TextBoxYear1.Text), int.Parse(this.DropDownListMonth1.SelectedValue), 15);
+                this.txtDate1.Text = LastDayOfMonthFromDateTime(anyDayOfMonth).ToString("dd/MM/yyyy");
+            }
+            protected void ButtonTemplate_Click(object sender, EventArgs e)
+            {
+                //exit if cancel clicked in javascript...
+                if (this.hidValueTemplate.Value == null || this.hidValueTemplate.Value == "")
+                {
+                    return;
+                }
 
-             //check for duplicate templatename and alert the client...
-             string templateName = this.hidValueTemplate.Value;
-             if (templateName == "")
-             {
-                 string script = "alert('Templatename cannot be empty!');";
-                 this.ClientScript.RegisterClientScriptBlock(GetType(), "Alert", script, true);
-                 return;
-             }
-             else if (templateName.IndexOf('=') >= 0 || templateName.IndexOf(':') >= 0 ||
-                 templateName.IndexOf(',') >= 0 || templateName.IndexOf('?') >= 0)
-             {
-                 string script = "alert('Templatename cannot contain characters =:,?');";
-                 this.ClientScript.RegisterClientScriptBlock(GetType(), "Alert", script, true);
-                 return;
-             }
-             using (PartnerEntities context = new PartnerEntities())
-             {
-                 if (context.reporttemplates.Any(c => c.Templatename == templateName))
-                 {
-                     string script = "alert('Templatename: " + templateName + " exists, try a different name.');";
-                     this.ClientScript.RegisterClientScriptBlock(GetType(), "Alert", script, true);
-                     return;
-                 }
-             }
-             string localPath = this.Request.Url.LocalPath;
-             int pos2NdSlash = localPath.Substring(1, localPath.Length - 1).IndexOf("/");
-             string rootFolder = localPath.Substring(1, pos2NdSlash);
-             int endOfRootFolder = this.Request.Url.AbsoluteUri.IndexOf(rootFolder);
-             string urlWithQueryString = "~" + this.Request.Url.AbsoluteUri.Substring((endOfRootFolder + rootFolder.Length), this.Request.Url.AbsoluteUri.Length - (endOfRootFolder + rootFolder.Length));
-             int posQMark = urlWithQueryString.IndexOf("?");
-             string urlWithoutQs = (posQMark < 0 ? urlWithQueryString : urlWithQueryString.Substring(0, posQMark)).Replace("~","~/reports").Replace("~","~/reports");
-             CommonCode commonCode = new CommonCode();
-             string retVal = commonCode.SaveTemplateControlsByPage(this, templateName, urlWithoutQs);
-             TreeView masterTree = (TreeView) this.Page.Master.FindControl("Treeview1");
-             commonCode.LoadReportTemplatesTree(ref masterTree);
+                //check for duplicate templatename and alert the client...
+                string templateName = this.hidValueTemplate.Value;
+                if (templateName == "")
+                {
+                    string script = "alert('Templatename cannot be empty!');";
+                    this.ClientScript.RegisterClientScriptBlock(GetType(), "Alert", script, true);
+                    return;
+                }
+                else if (templateName.IndexOf('=') >= 0 || templateName.IndexOf(':') >= 0 ||
+                    templateName.IndexOf(',') >= 0 || templateName.IndexOf('?') >= 0)
+                {
+                    string script = "alert('Templatename cannot contain characters =:,?');";
+                    this.ClientScript.RegisterClientScriptBlock(GetType(), "Alert", script, true);
+                    return;
+                }
+                var databaseSetting = telcobrightConfig.DatabaseSetting;
+                using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting))
+                {
+                    if (context.reporttemplates.Any(c => c.Templatename == templateName))
+                    {
+                        string script = "alert('Templatename: " + templateName + " exists, try a different name.');";
+                        this.ClientScript.RegisterClientScriptBlock(GetType(), "Alert", script, true);
+                        return;
+                    }
+                }
+                string localPath = this.Request.Url.LocalPath;
+                int pos2NdSlash = localPath.Substring(1, localPath.Length - 1).IndexOf("/");
+                string rootFolder = localPath.Substring(1, pos2NdSlash);
+                int endOfRootFolder = this.Request.Url.AbsoluteUri.IndexOf(rootFolder);
+                string urlWithQueryString = "~" + this.Request.Url.AbsoluteUri.Substring((endOfRootFolder + rootFolder.Length), this.Request.Url.AbsoluteUri.Length - (endOfRootFolder + rootFolder.Length));
+                int posQMark = urlWithQueryString.IndexOf("?");
+                string urlWithoutQs = (posQMark < 0 ? urlWithQueryString : urlWithQueryString.Substring(0, posQMark)).Replace("~","~/reports").Replace("~","~/reports");
+                CommonCode commonCode = new CommonCode();
+                string retVal = commonCode.SaveTemplateControlsByPage(this, templateName, urlWithoutQs);
+                TreeView masterTree = (TreeView) this.Page.Master.FindControl("Treeview1");
+                commonCode.LoadReportTemplatesTree(ref masterTree);
 
-             //Retrieve Path from TreeView for displaying in the master page caption label
-             TreeNodeCollection cNodes = masterTree.Nodes;
-             TreeNode matchedNode = null;
-             foreach (TreeNode n in cNodes)//for each nodes at root level, loop through children
-             {
-                 matchedNode = commonCode.RetrieveNodes(n, urlWithoutQs + "?templ=" + templateName);
-                 if (matchedNode != null)
-                 {
-                     break;
-                 }
-             }
-             //set screentile/caption in the master page...
-             Label lblScreenTitle = (Label) this.Master.FindControl("lblScreenTitle");
-             if (matchedNode != null)
-             {
-                 lblScreenTitle.Text = matchedNode.ValuePath;
-             }
-             else
-             {
-                 lblScreenTitle.Text = "";
-             }
-             
-             if (retVal == "success")
-             {
-                 string scrSuccess = "alert('Template created successfully');";
-                 this.ClientScript.RegisterClientScriptBlock(GetType(), "Alert", scrSuccess, true);
-             }
-             
-         }
-         
+                //Retrieve Path from TreeView for displaying in the master page caption label
+                TreeNodeCollection cNodes = masterTree.Nodes;
+                TreeNode matchedNode = null;
+                foreach (TreeNode n in cNodes)//for each nodes at root level, loop through children
+                {
+                    matchedNode = commonCode.RetrieveNodes(n, urlWithoutQs + "?templ=" + templateName);
+                    if (matchedNode != null)
+                    {
+                        break;
+                    }
+                }
+                //set screentile/caption in the master page...
+                Label lblScreenTitle = (Label) this.Master.FindControl("lblScreenTitle");
+                if (matchedNode != null)
+                {
+                    lblScreenTitle.Text = matchedNode.ValuePath;
+                }
+                else
+                {
+                    lblScreenTitle.Text = "";
+                }
+
+                if (retVal == "success")
+                {
+                    string scrSuccess = "alert('Template created successfully');";
+                    this.ClientScript.RegisterClientScriptBlock(GetType(), "Alert", scrSuccess, true);
+                }
+
+            }
+
      </script> 
 
 
@@ -314,9 +322,20 @@
 
     
     <%--<span style="padding-left:0px;float:left;left:0px;font-weight:bold;margin-top:2px;margin-right:20px;color:Black;"> Report:</span>--%>
+     <span style="font-weight:bold;">
+         Select ICX:                
+         <asp:DropDownList ID="DropDownListViewIncomingRoute" runat="server"
+                           OnSelectedIndexChanged="DropDownListViewIncomingRoute_SelectedChanged"
+                           AutoPostBack="True"
+                           Enabled="true">
+         </asp:DropDownList>
+
+     </span>
+
     <span style="font-weight:bold;"> Switch</span>
-     
-                <asp:DropDownList ID="DropDownListPartner" runat="server" 
+<%--     <asp:CheckBox ID="CheckBoxViewSwithcName" runat="server" AutoPostBack="True"
+                   OnCheckedChanged="CheckBoxSwithcName_CheckedChanged" Checked="false" />--%>
+                <asp:DropDownList ID="DropDownListPartner" runat="server"  Enabled="True"
                         DataTextField="SwitchName" 
                         DataValueField="idSwitch">
                     </asp:DropDownList>
@@ -431,6 +450,9 @@
             TargetControlID="txtDate1"  PopupButtonID="txtDate1" Format="dd/MM/yyyy">
         </asp:CalendarExtender>     
     </div>
+         
+    
+
    
     <div style="font-size:smaller;text-align:left;overflow:visible;clear:left;color:#8B4500;">[Enter only Date in "dd/MM/yyyy (e.g. 21/11/2012) or Date+Time in "dd/MM/yyyy HH:mm:ss" (e.g. 21/11/2012 19:01:59) format]</div>
 
@@ -572,9 +594,9 @@
                 SortExpression="Error" />
 
         </Columns>
-            <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
+            <HeaderStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />
             <EditRowStyle BackColor="#999999" />
-            <FooterStyle BackColor="#5D7B9D" Font-Bold="true" ForeColor="White" />
+            <FooterStyle BackColor="#08605c" Font-Bold="true" ForeColor="White" />
             <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
             <RowStyle BackColor="white" ForeColor="#333333" />
             <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />

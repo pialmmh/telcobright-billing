@@ -21,6 +21,15 @@ public partial class DefaultMediation {
     protected global::System.Web.UI.Timer Timer1;
     
     /// <summary>
+    /// DropDownListViewIncomingRoute control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList DropDownListViewIncomingRoute;
+    
+    /// <summary>
     /// DropDownListPartner control.
     /// </summary>
     /// <remarks>

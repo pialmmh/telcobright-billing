@@ -9,6 +9,7 @@ using System.Web.UI.WebControls;
 using MediationModel;
 using TelcobrightMediation;
 using PortalApp;
+using PortalApp._portalHelper;
 
 public partial class ConfigPartnerDetail : System.Web.UI.Page
 {

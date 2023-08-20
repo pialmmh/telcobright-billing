@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web.UI.WebControls;
 using PortalApp;
 using MediationModel;
+using PortalApp._portalHelper;
 
 public partial class ConfigKpians : System.Web.UI.Page
 {
