@@ -51,7 +51,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CasAdditionalConfig\CasUserVsDb.cs" />
     <Compile Include="DbHelper\DaywiseTableManager.cs" />
     <Compile Include="DbHelper\TupleIncrementManager.cs" />
     <Compile Include="Deployment\DeploymentPlatform.cs" />
@@ -90,6 +89,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="CasAdditionalConfig\" />
     <Folder Include="Config\" />
   </ItemGroup>
   <ItemGroup>

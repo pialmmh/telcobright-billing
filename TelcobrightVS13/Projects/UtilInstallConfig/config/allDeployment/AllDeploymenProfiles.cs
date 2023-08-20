@@ -33,6 +33,10 @@ namespace InstallConfig
                     {
                         profileName = "summit",
                         type = DeploymentProfileType.TelcoBilling,
+                        UserVsDbName = new Dictionary<string, string>()
+                        {
+                            {"admin@telcobright.com", "summit"},
+                        },
                         instances = new List<InstanceConfig>
                         {
                             new InstanceConfig
@@ -40,7 +44,8 @@ namespace InstallConfig
                                 Name = "summit",
                                 SchedulerPortNo = 556
                             },
-                        }
+                        },
+
                     },
                     new Deploymentprofile
                     {
