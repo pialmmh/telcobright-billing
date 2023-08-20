@@ -48,19 +48,19 @@ namespace InstallConfig
                         {"operatorName", operatorName},
                         {"syncPair", this.zte_Vault.Name}
                     }),
-                new QuartzTbDaemonConfig
-                (
-                    operatorName: operatorName,
-                    identity: "FileLister [Dialogic:Vault]" + " [" + operatorName+"]",
-                    group: operatorName,
-                    cronExpression: "/30 * * ? * *",
-                    fireOnceIfMissFired: false,
-                    jobDataMap: new Dictionary<string, string>()
-                    {
-                        {"telcobrightProcessId", "106"},
-                        {"operatorName", operatorName},
-                        {"syncPair", this.vaultDialogic.Name}
-                    }),
+                //new QuartzTbDaemonConfig
+                //(
+                //    operatorName: operatorName,
+                //    identity: "FileLister [Dialogic:Vault]" + " [" + operatorName+"]",
+                //    group: operatorName,
+                //    cronExpression: "/30 * * ? * *",
+                //    fireOnceIfMissFired: false,
+                //    jobDataMap: new Dictionary<string, string>()
+                //    {
+                //        {"telcobrightProcessId", "106"},
+                //        {"operatorName", operatorName},
+                //        {"syncPair", this.vaultDialogic.Name}
+                //    }),
             };
             return fileListerInstances;
         }
@@ -82,19 +82,19 @@ namespace InstallConfig
                         {"operatorName", operatorName},
                         {"syncPair", this.zte_Vault.Name}
                     }),
-                new QuartzTbDaemonConfig
-                (
-                    operatorName: operatorName,
-                    identity: "FileCopier [Dialogic:Vault]" + " [" + operatorName+"]",
-                    group: operatorName,
-                    cronExpression: "/5 * * ? * *",
-                    fireOnceIfMissFired: false,
-                    jobDataMap: new Dictionary<string, string>()
-                    {
-                        {"telcobrightProcessId", "104"},
-                        {"operatorName", operatorName},
-                        {"syncPair", this.vaultDialogic.Name}
-                    }),
+                //new QuartzTbDaemonConfig
+                //(
+                //    operatorName: operatorName,
+                //    identity: "FileCopier [Dialogic:Vault]" + " [" + operatorName+"]",
+                //    group: operatorName,
+                //    cronExpression: "/5 * * ? * *",
+                //    fireOnceIfMissFired: false,
+                //    jobDataMap: new Dictionary<string, string>()
+                //    {
+                //        {"telcobrightProcessId", "104"},
+                //        {"operatorName", operatorName},
+                //        {"syncPair", this.vaultDialogic.Name}
+                //    }),
 
                 new QuartzTbDaemonConfig
                 (

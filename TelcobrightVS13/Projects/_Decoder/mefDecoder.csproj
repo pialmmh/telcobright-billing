@@ -63,6 +63,8 @@
     <Compile Include="CataleyaCsvDecoderSRNoFailed.cs" />
     <Compile Include="AsteriskDecoder.cs" />
     <Compile Include="CataleyaDecoder.cs" />
+    <Compile Include="DialogicBorderNetSummitNoFailedGzip.cs" />
+    <Compile Include="DialogicBorderNetSummitNoFailed.cs" />
     <Compile Include="DialogicBorderNetMotherTelNoFailed.cs" />
     <Compile Include="DialogicBorderNetMirNoFailed.cs" />
     <Compile Include="DialogicControlSwitchDecoder.cs" />
