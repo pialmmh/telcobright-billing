@@ -16,17 +16,23 @@ namespace TelcobrightInfra
         //    GetIncrementalValue(tuple);
         //}
 
-        public static void getIncrementalValue(string tuple, MySqlConnection con)
+        public int DefaultValue = 1000;
+        public TupleIncrementManager(int defaultValue)
+        {
+            this.DefaultValue = defaultValue;
+        }
+
+        public void getIncrementalValue(string tuple, MySqlConnection con)
         {
             //string connectionString = "server=localhost;user=root;password=;database=testdb;";
             //MySqlConnection con = new MySqlConnection(connectionString);
             //con.Open();
 
             // search using given tuple
-            string searchSQL = $@"  select tuple, lastValue 
+            string searchSql = $@"  select tuple, lastValue 
                                     from testTable 
                                     where tuple = '{tuple}'";
-            MySqlCommand searchCmd = new MySqlCommand(searchSQL, con);
+            MySqlCommand searchCmd = new MySqlCommand(searchSql, con);
             MySqlDataReader reader = searchCmd.ExecuteReader();
             
 
@@ -35,19 +41,19 @@ namespace TelcobrightInfra
             {
 
                 int lastValue = reader.GetInt32("lastValue");
-                string updateSQL = $@"  update testTable 
+                string updateSql = $@"  update testTable 
                                         set lastValue = {lastValue + 1}
                                         where tuple = '{tuple}'; ";
-                MySqlCommand updateCmd = new MySqlCommand(updateSQL, con);
+                MySqlCommand updateCmd = new MySqlCommand(updateSql, con);
                 reader.Close();
                 updateCmd.ExecuteNonQuery();
             }
             // if tuple does not exist then insert new tuple with lastValue = 1
-            else
+            else 
             {
-                string insertSQL = $@"  insert into testTable 
-                                        values ( '{tuple}', {1}); ";
-                MySqlCommand updateCmd = new MySqlCommand(insertSQL, con);
+                string insertSql = $@"  insert into testTable 
+                                        values ( '{tuple}', {this.DefaultValue}); ";
+                MySqlCommand updateCmd = new MySqlCommand(insertSql, con);
                 reader.Close();
                 updateCmd.ExecuteNonQuery();
             }

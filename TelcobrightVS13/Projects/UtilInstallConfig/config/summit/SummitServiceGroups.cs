@@ -14,6 +14,7 @@ using LibraryExtensions;
 using LibraryExtensions.ConfigHelper;
 using MediationModel;
 using QuartzTelcobright;
+using StringExpressionGeneratorRules;
 using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Config;
 
@@ -148,7 +149,11 @@ namespace InstallConfig
                     OtherParams = new Dictionary<string, string>() {
                         { "serviceGroupsToMergeInvoice","6"} //ltfs icx to be merged with domestic for summit icx
                     },
-                    SectionNamesOfInvoiceForExport = new List<string>() { "DomesticToANS", "DomesticToANSDetails1" }
+                    SectionNamesOfInvoiceForExport = new List<string>() { "DomesticToANS", "DomesticToANSDetails1" },
+                    InvoiceRefNoExpressionGenerator = new MonthlyInvoiceNoWithDefaultStartingValuePerServiceGroup()
+                    {
+                        Data = 1001
+                    }
                 }
             });
             serviceGroupConfigurations.Add(
