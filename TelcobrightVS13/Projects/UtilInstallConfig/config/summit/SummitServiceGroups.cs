@@ -16,7 +16,7 @@ using MediationModel;
 using QuartzTelcobright;
 using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Config;
-using StringExpressionGeneratorRules;
+
 namespace InstallConfig
 {
     public partial class SummitAbstractConfigGenerator //quartz config part
@@ -27,7 +27,7 @@ namespace InstallConfig
 
             serviceGroupConfigurations.Add(new ServiceGroupConfiguration(idServiceGroup: 6) //LTFS
             {
-                Params = new Dictionary<string, string>() { {"prefixes","0800" } },
+                Params = new Dictionary<string, string>() { { "prefixes", "0800" } },
                 PartnerRules = new List<int>()
                 {
                     PartnerRuletype.InPartnerByIncomingRoute,
@@ -49,7 +49,7 @@ namespace InstallConfig
                         new Duration2Gt0() {Data = .1M},
                         new OutPartnerCostGt0() {Data = .1M},
                         new BtrcRevShareTax1Gt0() {Data = .1M},
-                     },
+                    },
                 InvoiceGenerationConfig = new InvoiceGenerationConfig()
                 {
                     InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary",
@@ -59,17 +59,14 @@ namespace InstallConfig
                         {"TollFreeInvoiceSection2GeneratorWithTax","LTFSToIPTSPDetails1" },
                         {"TollFreeInvoiceSection3GeneratorWithTax","LTFSToIPTSPDetails2" }
                     },
-                    InvoiceRefNoExpressionGenerator = new MonthlyInvoiceNoWithDefaultStartingValuePerServiceGroup()
-                    {
-                        Data=1001
-                    }
+                    SectionNamesOfInvoiceForExport = new List<string>() { "LTFSToIPTSP", "LTFSToIPTSPDetails1" }
                 }
             });
-            
+
             serviceGroupConfigurations.Add(new ServiceGroupConfiguration(idServiceGroup: 2) //intlOutIcx
             {
                 Params = new Dictionary<string, string>()
-                { { "idCdrRules", "2" } },//IcxOutgoingCallByInOutTg=2, IcxOutgoingCallByInTgType=1
+                    { { "idCdrRules", "2" } },//IcxOutgoingCallByInOutTg=2, IcxOutgoingCallByInTgType=1
                 PartnerRules = new List<int>()
                 {
                     PartnerRuletype.InPartnerByIncomingRoute,
@@ -103,8 +100,9 @@ namespace InstallConfig
                         {"XyzSection1GeneratorWithTax","InternationalOutgoingToANS" },
                         {"XyzSection2GeneratorWithTax","InternationalOutgoingToANSDetails1" },
                         {"XyzSection3GeneratorWithTax","InternationalOutgoingToANSDetails2" }
-                    }
-                }
+                    },
+                    SectionNamesOfInvoiceForExport = new List<string>() { "InternationalOutgoingToANS", "InternationalOutgoingToANSDetails1" }
+                },
             });
 
             serviceGroupConfigurations.Add(new ServiceGroupConfiguration(idServiceGroup: 1) //domestic
@@ -137,7 +135,7 @@ namespace InstallConfig
                             { "minDurationSec",.1M },
                             { "prefixesToExclude",new List<string> { "333"} }
                         } },
-                     },
+                    },
                 InvoiceGenerationConfig = new InvoiceGenerationConfig()
                 {
                     InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary",
@@ -149,7 +147,8 @@ namespace InstallConfig
                     },
                     OtherParams = new Dictionary<string, string>() {
                         { "serviceGroupsToMergeInvoice","6"} //ltfs icx to be merged with domestic for summit icx
-                    }
+                    },
+                    SectionNamesOfInvoiceForExport = new List<string>() { "DomesticToANS", "DomesticToANSDetails1" }
                 }
             });
             serviceGroupConfigurations.Add(
@@ -185,7 +184,8 @@ namespace InstallConfig
                             {"A2ZInvoiceSection1GeneratorWithCurrencyConversion","InternationalToIOS" },
                             {"A2ZInvoiceSection2GeneratorWithCurrencyConversion","InternationalToIOSDetails1" },
                             {"A2ZInvoiceSection3GeneratorWithCurrencyConversion","InternationalToIOSDetails2" }
-                        }
+                        },
+                        SectionNamesOfInvoiceForExport = new List<string>() { "InternationalToIOS", "InternationalToIOSDetails1" }
                     }
                 });
             return serviceGroupConfigurations.ToDictionary(s => s.IdServiceGroup);

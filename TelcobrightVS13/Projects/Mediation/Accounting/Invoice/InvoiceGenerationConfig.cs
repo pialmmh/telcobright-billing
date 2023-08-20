@@ -12,6 +12,7 @@ namespace TelcobrightMediation.Accounting
         public string InvoiceGenerationRuleName { get; set; }
         public Dictionary<string, string> SectionGeneratorVsTemplateNames { get; set; }
         public Dictionary<string, string> OtherParams { get; set; }
+        public List<string> SectionNamesOfInvoiceForExport { get; set; }
         public IStringExpressionGenerator InvoiceRefNoExpressionGenerator { get; set; }
     }
 }
