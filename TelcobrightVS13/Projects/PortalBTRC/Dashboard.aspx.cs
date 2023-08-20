@@ -51,6 +51,7 @@ public partial class DashboardAspx : Page
 
         string sqlCommand = "select id, JobName, CreationTime, CompletionTime " +
                                        "from job where idjobdefinition = 1 " +
+                                       "and status = 1 " +
                                        "order by completiontime desc limit 0,23;";
 
         List<GridViewCompletedJob> gridViewCompletedJob = new List<GridViewCompletedJob>();
@@ -347,11 +348,16 @@ public partial class DashboardAspx : Page
                 foreach (DataRow row in table.Rows)
                 {
                     GridViewCompletedJob record = new GridViewCompletedJob();
-                    record.id = int.Parse(row.ItemArray[0].ToString());
-                    record.jobName = row.ItemArray[1].ToString();
-                    record.creationTime = (DateTime) row.ItemArray[2];
-                    record.completionTime = (DateTime)row.ItemArray[3];
+                    //record.id = int.Parse(row.ItemArray[0].ToString());
+                    //record.jobName = row.ItemArray[1].ToString();
+                    //record.creationTime = (DateTime) row.ItemArray[2];
+                    //record.completionTime = (DateTime)row.ItemArray[3];
 
+
+                    record.id = Convert.ToInt32(row["Id"]);
+                    record.jobName = row["JobName"].ToString();
+                    record.creationTime = Convert.ToDateTime(row["CreationTime"]);
+                    record.completionTime = Convert.ToDateTime(row["CompletionTime"]);
 
                     records.Add(record);
                 }

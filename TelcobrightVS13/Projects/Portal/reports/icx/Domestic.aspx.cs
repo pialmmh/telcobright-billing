@@ -12,7 +12,6 @@ using MediationModel;
 using LibraryExtensions;
 using PortalApp.ReportHelper;
 using PortalApp._portalHelper;
-using TelcobrightInfra.CasAdditionalConfig;
 using TelcobrightMediation;
 
 public partial class DefaultRptDomesticIcx : System.Web.UI.Page

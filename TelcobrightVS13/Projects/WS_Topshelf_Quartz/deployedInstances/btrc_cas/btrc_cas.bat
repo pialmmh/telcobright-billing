@@ -1,1 +1,1 @@
-E:\TelcobrightProject\TelcobrightVS13\Projects\WS_Topshelf_Quartz\bin\debug\WS_Telcobright_Topshelf.exe "E:\TelcobrightProject\TelcobrightVS13\Projects\WS_Topshelf_Quartz\deployedInstances\btrc_cas\btrc_cas.conf"
+C:\sftp_root\TelcobrightProject\TelcobrightVS13\Projects\WS_Topshelf_Quartz\bin\debug\WS_Telcobright_Topshelf.exe "C:\sftp_root\TelcobrightProject\TelcobrightVS13\Projects\WS_Topshelf_Quartz\deployedInstances\btrc_cas\btrc_cas.conf"

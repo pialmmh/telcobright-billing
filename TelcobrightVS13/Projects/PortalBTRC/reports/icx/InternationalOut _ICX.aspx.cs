@@ -16,7 +16,6 @@ using reports;
 using MediationModel;
 using PortalApp;
 using PortalApp.ReportHelper;
-using TelcobrightInfra.CasAdditionalConfig;
 
 public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
 {
