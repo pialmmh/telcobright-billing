@@ -56,6 +56,7 @@ namespace InstallConfig
 
             this.Tbc.CdrSetting = new CdrSetting
             {
+                EmptyFileAllowed = true,
                 SummaryTimeField = SummaryTimeFieldEnum.AnswerTime,
                 PartialCdrEnabledNeIds = new List<int>() { },//7, was set to non-partial processing mode due to duplicate billid problem.
                 PartialCdrFlagIndicators = new List<string>() { },//{"1", "2", "3"},
@@ -93,9 +94,9 @@ namespace InstallConfig
                     TransactionSizeForCDRLoading = 1500,
                     DecodingSpanCount = 100,
                     SkipAutoCreateJob = 1,
-                    SkipCdrListed = 0,
+                    SkipCdrListed = 1,
                     SkipCdrReceived = 0,
-                    SkipCdrDecoded = 0,
+                    SkipCdrDecoded = 1,
                     SkipCdrBackedup = 0,
                     KeepDecodedCDR = 0,
                     KeepReceivedCdrServer = 1,
@@ -113,7 +114,7 @@ namespace InstallConfig
                 {
                     idSwitch = 10,
                     idCustomer = this.Tbc.Telcobrightpartner.idCustomer,
-                    idcdrformat = 17,
+                    idcdrformat = 35,
                     idMediationRule = 2,
                     SwitchName = "Dialogic",
                     CDRPrefix = "sdr",
@@ -126,7 +127,7 @@ namespace InstallConfig
                     TransactionSizeForCDRLoading = 1500,
                     DecodingSpanCount = 100,
                     SkipAutoCreateJob = 1,
-                    SkipCdrListed = 1,
+                    SkipCdrListed = 0,
                     SkipCdrReceived = 0,
                     SkipCdrDecoded = 0,
                     SkipCdrBackedup = 1,
@@ -140,7 +141,8 @@ namespace InstallConfig
                     ExistingSummaryCacheSpanHr = 6,
                     BatchToDecodeRatio = 3,
                     PrependLocationNumberToFileName = 0,
-                    UseIdCallAsBillId = 0,
+                    UseIdCallAsBillId = 1,
+                    AllowEmptyFile = 1
                 }
             };
 

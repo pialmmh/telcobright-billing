@@ -273,7 +273,7 @@ namespace TelcobrightFileOperations
                     .Select(line => line.Replace('\r', '\0'))
                     .Where(line => line.Trim() != "").ToList();
             }
-            return ParseLinesWithEnclosedAndUnenclosedFields(delimeter, enclosingChar, lines);
+                    return ParseLinesWithEnclosedAndUnenclosedFields(delimeter, enclosingChar, lines);
         }
 
         public static List<string[]> ParseLinesWithEnclosedAndUnenclosedFields(char delimeter, string enclosingChar, List<string> lines)
