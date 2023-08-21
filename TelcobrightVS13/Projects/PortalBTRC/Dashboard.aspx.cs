@@ -14,6 +14,9 @@ using System.Data;
 using MySql.Data.MySqlClient;
 using System.Drawing;
 using System.Web.UI.DataVisualization.Charting;
+using System.Web.UI.WebControls;
+using Image = System.Web.UI.WebControls.Image;
+
 
 public partial class DashboardAspx : Page
 {
@@ -49,8 +52,8 @@ public partial class DashboardAspx : Page
         databaseSetting.DatabaseName = this.targetIcxName;
         string connectionString = DbUtil.getDbConStrWithDatabase(databaseSetting);
 
-        string sqlCommand = "select id, JobName, CreationTime, CompletionTime " +
-                                       "from job where idjobdefinition = 1 " +
+        string sqlCommand = "select id, JobName, CreationTime, CompletionTime,status " +
+                                       "from srtelecom_cas.job where idjobdefinition = 1 " +
                                        "and status = 1 " +
                                        "order by completiontime desc limit 0,23;";
 
@@ -66,7 +69,10 @@ public partial class DashboardAspx : Page
                            .Any(table => table.Rows.Count != 0);
             if (hasData == true)
             {
-                gridViewCompletedJob = ConvertDataSetToList(dataSet);
+                gridViewCompletedJob = ConvertDataSetToList(dataSet,e);
+               
+          
+
                 this.GridViewCompleted.DataSource = gridViewCompletedJob;
                 this.GridViewCompleted.DataBind();
 
@@ -297,6 +303,7 @@ public partial class DashboardAspx : Page
         public string jobName { get; set; }
         public DateTime creationTime { get; set; }
         public DateTime completionTime { get; set; }
+        public Image image { get; set; }
 
 
     }
@@ -336,7 +343,7 @@ public partial class DashboardAspx : Page
         return ds;
     }
 
-    List<GridViewCompletedJob> ConvertDataSetToList(DataSet ds)
+    List<GridViewCompletedJob> ConvertDataSetToList(DataSet ds , EventArgs e)
     {
         bool hasRecords = ds.Tables.Cast<DataTable>()
                            .Any(table => table.Rows.Count != 0);
@@ -358,16 +365,55 @@ public partial class DashboardAspx : Page
                     record.jobName = row["JobName"].ToString();
                     record.creationTime = Convert.ToDateTime(row["CreationTime"]);
                     record.completionTime = Convert.ToDateTime(row["CompletionTime"]);
+                    string status = row["status"].ToString();
+                   
+                    // Determine the dynamic image URL based on your condition or data
 
-                    records.Add(record);
+      
+                     // Find the StatusImage control and set its ImageUrl      
+
+                     records.Add(record);
                 }
             }
         }
         return records;
     }
+    private string GetImageUrlBasedOnStatus(int  status)
+    {
+        // Add your logic here to determine the image URL based on the status
+         if (status%2 == 1)
+        {
+            return "https://i.postimg.cc/Rh0G70KG/5610944.png";
+        }
+        else
+        {
+            return "https://i.postimg.cc/Y0kkn8rT/Flat-cross-icon-svg.png";
+        }
+    }
 
 
- 
+    protected void onGridViewCompleted_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType == DataControlRowType.DataRow)
+        {
+            // Assuming you have a DataSource with a field named "Status" to determine the image URL
+            int i = 0;
+
+            foreach (GridViewRow row in GridViewCompleted.Rows)
+                {
+
+                    if (row.RowType == DataControlRowType.DataRow)
+                    {
+                        // Determine the dynamic image URL based on your condition or data
+                        string imageUrl = GetImageUrlBasedOnStatus(i++);
+                        Image img = row.FindControl("StatusImage") as Image;
+                        img.ImageUrl = imageUrl;
+
+                    }
+                }
+            }
+        
+    }
 
 
 }
