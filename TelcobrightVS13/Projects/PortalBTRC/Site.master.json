@@ -1,0 +1,24 @@
+﻿{
+	//"settingIfNotRoles":
+	//				[
+	//					{
+	//						"roleName":"admin",
+	//						"springPropertyVsValue":
+	//											[
+	//												"DropDownListSwitch.Enabled/false",
+	//												"DropDownListInPartner.Enabled/false"
+	//											]
+	//					}
+	//				],
+	"settingIfRoles":
+					[
+						{
+							"roleName":"noc",
+							"springPropertyVsValue":
+													[
+								            "nodes['Reports'].Expanded=true",						
+                            "nodes['Report Templates'].Expanded=true"
+													]
+						}
+					]					
+}
