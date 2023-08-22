@@ -1354,7 +1354,6 @@
     <Content Include="Site2.master" />
     <Content Include="Site.master.json" />
     <Content Include="Site.master" />
-    <Content Include="Web.config.example" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

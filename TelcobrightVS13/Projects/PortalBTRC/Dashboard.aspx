@@ -108,13 +108,13 @@
                                     <div style="margin-left: auto; margin-right: auto; text-align: center;">
                                         <asp:Label ID="Label2" runat="server" Text="CDR File Receiving Status By ICX (Current Month)" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
                                     </div>
-                                    <asp:GridView ID="GridViewCompleted" runat="server"  OnRowDataBound="onGridViewCompleted_RowDataBound" AutoPostBack="true" AutoGenerateColumns="False" CellPadding="4" DataKeyNames="id" ForeColor="#333333" GridLines="None" BorderStyle="None" BorderWidth="1"  >
+                                    <asp:GridView ID="GridViewCompleted" runat="server" AutoGenerateColumns="False" CellPadding="4" DataKeyNames="id" ForeColor="#333333" GridLines="None" BorderStyle="None" BorderWidth="1"  >
                                         <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                                         <Columns>
                                             <asp:TemplateField HeaderText="Status">
                                                 <ItemTemplate>
                                                     <div style="text-align: center;">
-                                                        <asp:Image ID="StatusImage" AutoPostBack="true"  runat="server"  Width="14" Height="14" />
+                                                        <asp:Image ID="StatusImage" runat="server" ImageUrl="https://i.postimg.cc/Rh0G70KG/5610944.png" Width="14" Height="14" />
                                                     </div>
                                                 </ItemTemplate>
                                             </asp:TemplateField> 
