@@ -184,7 +184,7 @@ where tup_starttime >= '{txtDate.Text}' and tup_starttime < '{txtDate1.Text}'
 group by tup_inpartnerid
 ) i
 left join 
-(select tup_outpartnerid as partnerid,sum(totalcalls) as noofcalls ,sum(duration3)/60 as minutes 
+(select tup_outpartnerid as partnerid,sum(totalcalls) as noofcalls ,sum(roundedduration)/60 as minutes 
 from sum_voice_day_02
 where tup_starttime >= '{txtDate.Text}' and tup_starttime < '{txtDate1.Text}'
 group by tup_outpartnerid) o

@@ -188,6 +188,7 @@ namespace InstallConfig
                     },
                     SpringExpressionIfNotRole = new List<string>()
                     {
+
                         "CheckBoxShowCost.Enabled=false",
                         "GridView1.Columns[6].Visible=true",
                         "GridView1.Columns[8].Visible=false",
@@ -320,7 +321,11 @@ namespace InstallConfig
                     },
                     { "~/reports/icx/btrc/MonthlyOutgoingSummary.aspx",
                         settingIntlIn
+                    },
+                    { "~/reports/icx/btrc/MonthlyOutgoingDetail.aspx",
+                        settingIntlIn
                     }
+
                 },//dictionary of page settings
 
             };

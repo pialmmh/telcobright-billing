@@ -49,7 +49,7 @@ namespace PortalApp.ReportHelper
                 tax1, 
                 XRate AS 'X RATE(BDT)', 
                 YRate AS 'Y RATE(USD)', 
-                USDRate AS 'Dollar Rate' 
+                USDRate AS 'Dollar Rate', 
                 FROM
                 (
 	            SELECT {GetDateExpression(this.groupInterval)} AS Date,

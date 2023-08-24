@@ -114,6 +114,19 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
         }
         else return string.Empty;
     }
+    private int GetColumnIndexByName(GridView grid, string name)
+    {
+        foreach (DataControlField col in grid.Columns)
+        {
+            if (col.SortExpression.ToLower().Trim() == name.ToLower().Trim())
+            {
+                return grid.Columns.IndexOf(col);
+            }
+        }
+
+        return -1;
+    }
+
 
 
 
@@ -138,10 +151,10 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
         */
 
 
-        GridView1.Columns[1].Visible = CheckBoxPartner.Checked;
-        GridView1.Columns[2].Visible = CheckBoxViewIncomingRoute.Checked;
-        GridView1.Columns[3].Visible = CheckBoxShowByIgw.Checked;
-        GridView1.Columns[4].Visible = CheckBoxViewOutgoingRoute.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "International Partner")].Visible = CheckBoxPartner.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "tup_incomingroute")].Visible = CheckBoxViewIncomingRoute.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "IGW")].Visible = CheckBoxShowByIgw.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "tup_outgoingroute")].Visible = CheckBoxViewOutgoingRoute.Checked;
         if (CheckBoxShowCost.Checked == true)
         {
             GridView1.Columns[14].Visible = true;
@@ -176,11 +189,12 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
             if (CheckBoxDailySummary.Checked == false)
             {
 
-                GridView1.Columns[0].Visible = false;
+                GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].Visible = false;
             }
             else
             {
-                GridView1.Columns[0].Visible = true;
+                GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].Visible = true;
+
 
             }
 
@@ -198,27 +212,27 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
                 if (RadioButtonHourly.Checked == true)
                 {
                     summaryInterval = "Hourly";
-                    GridView1.Columns[0].HeaderText = "Hour";
+                    GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].HeaderText = "Hour";
                 }
                 else if (RadioButtonDaily.Checked == true)
                 {
                     summaryInterval = "Daily";
-                    GridView1.Columns[0].HeaderText = "Date";
+                    GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].HeaderText = "Date";
                 }
                 else if (RadioButtonWeekly.Checked == true)
                 {
                     summaryInterval = "Weekly";
-                    GridView1.Columns[0].HeaderText = "Week";
+                    GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].HeaderText = "Week";
                 }
                 else if (RadioButtonMonthly.Checked == true)
                 {
                     summaryInterval = "Monthly";
-                    GridView1.Columns[0].HeaderText = "Month";
+                    GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].HeaderText = "Month";
                 }
                 else if (RadioButtonYearly.Checked == true)
                 {
                     summaryInterval = "Yearly";
-                    GridView1.Columns[0].HeaderText = "Year";
+                    GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].HeaderText = "Year";
                 }
             }
                 MySqlDataAdapter da = new MySqlDataAdapter(cmd);

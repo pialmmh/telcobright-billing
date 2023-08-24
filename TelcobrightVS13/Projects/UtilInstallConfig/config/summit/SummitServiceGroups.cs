@@ -150,10 +150,10 @@ namespace InstallConfig
                         { "serviceGroupsToMergeInvoice","6"} //ltfs icx to be merged with domestic for summit icx
                     },
                     SectionNamesOfInvoiceForExport = new List<string>() { "DomesticToANS", "DomesticToANSDetails1" },
-                    InvoiceRefNoExpressionGenerator = new MonthlyInvoiceNoWithDefaultStartingValuePerServiceGroup()
-                    {
-                        Data = 1001
-                    }
+                    //InvoiceRefNoExpressionGenerator = new MonthlyInvoiceNoWithDefaultStartingValuePerServiceGroup()
+                    //{
+                    //    Data = 1001
+                    //}
                 }
             });
             serviceGroupConfigurations.Add(
