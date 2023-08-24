@@ -320,7 +320,9 @@
     <Compile Include="config\purple\PurpleServiceGroups.cs" />
     <Compile Include="config\allDeployment\AllDeploymenProfiles.cs" />
     <Compile Include="config\_helper\CasConfigHelper.cs" />
+    <Compile Include="config\_helper\CasNeInfoHelper.cs" />
     <Compile Include="config\_helper\DeploymentEnvironment.cs" />
+    <Compile Include="config\_helper\TemplateNe.cs" />
     <Compile Include="generators\DeploymentHelper.cs" />
     <Compile Include="generators\telcoBilling\TelcoBillingConfigGenerator.cs" />
     <Compile Include="generators\telcoBilling\TelcoBillingQuartzWriter.cs" />

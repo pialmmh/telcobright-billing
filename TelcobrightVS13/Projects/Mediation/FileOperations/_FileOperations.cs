@@ -11,6 +11,7 @@ using System.Text;
 using LibraryExtensions;
 using MediationModel;
 
+
 namespace TelcobrightFileOperations
 {
     public class JobParamFileCopy
@@ -228,7 +229,35 @@ namespace TelcobrightFileOperations
 
             return 0;
         }
-        
+
+        public static List<string[]> ParseTextFileToListOfStrArraySimple(string path, char separator, int linesToSkipBefore)
+        {
+            List<string[]> parsedData = new List<string[]>();
+            using (StreamReader readFile = new StreamReader(path))
+            {
+                string line;
+                string[] row;
+                int thisLine = 1;
+                while ((line = readFile.ReadLine()) != null)
+                {
+                    if (thisLine <= linesToSkipBefore)
+                    {
+                        thisLine += 1;
+                        continue;
+                    }
+                    else if (line.Trim() == "" || line.Contains(separator) == false)//skip blanks and not having separator char
+                    {
+                        continue;
+                    }
+                    row = line.Split(separator);
+                   
+                    parsedData.Add(row);
+                    thisLine += 1;
+                }
+            }
+            return parsedData;
+        }
+
         public static List<string[]> ParseTextFileToListOfStrArray(string path, char separator, int linesToSkipBefore,
             char enclosingCharToRemove='\0')
         {
@@ -261,7 +290,7 @@ namespace TelcobrightFileOperations
             return parsedData;
         }
 
-
+        
         public static List<string[]> ParseCsvWithEnclosedAndUnenclosedFields(string path, char delimeter, int linesToSkipBefore,
             string enclosingChar, string charToReplaceDelimiterInsideField)
         {

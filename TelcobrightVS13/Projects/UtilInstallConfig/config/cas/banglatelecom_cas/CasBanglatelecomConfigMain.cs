@@ -27,7 +27,7 @@ namespace InstallConfig
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx,
                 new telcobrightpartner
                 {
-                    idCustomer = 9,
+                    idCustomer = 2,
                     CustomerName = "BANGLA TELECOM LTD.",
                     idOperatorType = 2,
                     databasename = "banglatelecom_cas",
@@ -85,7 +85,7 @@ namespace InstallConfig
                     CDRPrefix = "ICX",
                     FileExtension = ".DAT",
                     Description = null,
-                    SourceFileLocations = vaultPrimary.Name,
+                    SourceFileLocations = this.vaultPrimary.Name,
                     BackupFileLocations = null,
                     LoadingStopFlag = null,
                     LoadingSpanCount = 100,
@@ -119,7 +119,7 @@ namespace InstallConfig
                     CDRPrefix= "sdr",
                     FileExtension= ".gz",
                     Description= null,
-                    SourceFileLocations= vaultDialogic.Name,
+                    SourceFileLocations= this.vaultDialogic.Name,
                     BackupFileLocations= null,
                     LoadingStopFlag= null,
                     LoadingSpanCount= 100,
