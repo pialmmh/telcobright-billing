@@ -64,6 +64,7 @@ namespace InstallConfig
                 new InconsistentCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
             this.Tbc.CdrSetting = new CdrSetting
             {
+                EmptyFileAllowed = true,
                 SummaryTimeField = SummaryTimeFieldEnum.AnswerTime,
                 PartialCdrEnabledNeIds = new List<int>() { },//7, was set to non-partial processing mode due to duplicate billid problem.
                 PartialCdrFlagIndicators = new List<string>() { },//{"1", "2", "3"},
@@ -199,7 +200,7 @@ namespace InstallConfig
             {
                 new ne
                 {
-                    idSwitch= 8,
+                    idSwitch= 7,
                     idCustomer= this.Tbc.Telcobrightpartner.idCustomer,
                     idcdrformat= 17,
                     idMediationRule= 2,
@@ -234,7 +235,7 @@ namespace InstallConfig
                 {
                     idSwitch= 18,
                     idCustomer= this.Tbc.Telcobrightpartner.idCustomer,
-                    idcdrformat= 25,
+                    idcdrformat= 30,
                     idMediationRule= 2,
                     SwitchName= "JslcataleyaDhk",
                     CDRPrefix= "esdr",
@@ -262,6 +263,7 @@ namespace InstallConfig
                     BatchToDecodeRatio= 3,
                     PrependLocationNumberToFileName= 0,
                     UseIdCallAsBillId = 1,
+                    AllowEmptyFile = 1
                 }
             };
 

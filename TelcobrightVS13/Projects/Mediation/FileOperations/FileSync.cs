@@ -280,10 +280,16 @@ namespace TelcobrightFileOperations
                         syncSettingsSource.SecondaryDirectory + "/" + pathToDestinationFile.Last();
                     pathToDestinationFile[pathToDestinationFile.Length - 1] = destNamePrefixedBySecondary;
                     string finalTargetFileName = string.Join("/", pathToDestinationFile);
+                    string[] secondaryDirectory = finalTargetFileName.Split('/');
+                    secondaryDirectory = secondaryDirectory.Take(secondaryDirectory.Count() - 1).ToArray();
+                    string finalSecondaryDirectory = string.Join("/", secondaryDirectory);
+                    
+                    if (!session.FileExists(finalSecondaryDirectory)) session.CreateDirectory(finalSecondaryDirectory);
                     if (session.FileExists(srcInfoRemote.FullPath))
                     {
                         try//as the file was copied before, no need to propagate the exception so that job won't update
                         {
+                            
                             session.MoveFile(srcInfoRemote.FullPath, finalTargetFileName);
                             //string targetMoveDirOnly = Path.GetDirectoryName(finalTargetFileName);
                             //session.MoveFile(srcInfoRemote.FullPath, targetMoveDirOnly);
