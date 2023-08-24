@@ -155,7 +155,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
         */
 
 
-        GridView1.Columns[GetColumnIndexByName(GridView1, "International Partner")].Visible = CheckBoxPartner.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1,"International Partner")].Visible = CheckBoxPartner.Checked;
         GridView1.Columns[GetColumnIndexByName(GridView1, "tup_incomingroute")].Visible = CheckBoxViewIncomingRoute.Checked;
         GridView1.Columns[GetColumnIndexByName(GridView1, "IGW")].Visible = CheckBoxShowByIgw.Checked;
         GridView1.Columns[GetColumnIndexByName(GridView1, "tup_outgoingroute")].Visible = CheckBoxViewOutgoingRoute.Checked;

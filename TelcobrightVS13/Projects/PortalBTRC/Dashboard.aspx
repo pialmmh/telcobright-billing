@@ -218,7 +218,7 @@
                                                             <AxisX Title="ICX Names" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
                                                                 <LabelStyle Font="Arial, 10px" Interval="1" />
                                                             </AxisX>
-                                                            <AxisY Title="Values" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                            <AxisY Title="Minutes (Million)" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
                                                                 <LabelStyle Font="Arial, 10px" />
                                                             </AxisY>
                                                         </asp:ChartArea>
@@ -267,7 +267,7 @@
                                                         </Series>
                                                         <ChartAreas>
                                                             <asp:ChartArea Name="ChartArea1">
-                                                                <AxisY Title="Values" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                                <AxisY Title="Minutes (Million)" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
                                                                     <LabelStyle Font="Arial, 10px" Interval="5" />
                                                                 </AxisY>
                                                                 <AxisX Title="Zone" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
@@ -327,7 +327,7 @@
                                                             <AxisX Title="ICX Names" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
                                                                 <LabelStyle Font="Arial, 10px" Interval="1" />
                                                             </AxisX>
-                                                            <AxisY Title="Values" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                            <AxisY Title="Minutes (Million)" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
                                                                 <LabelStyle Font="Arial, 10px" />
                                                             </AxisY>
                                                         </asp:ChartArea>
@@ -402,7 +402,7 @@
                                             <AxisX Title="ICX Names" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
                                                 <LabelStyle Font="Arial, 10px" Interval="1" />
                                             </AxisX>
-                                            <AxisY Title="Values" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                            <AxisY Title="Minutes (Million)" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
                                                 <LabelStyle Font="Arial, 10px" />
                                             </AxisY>
                                         </asp:ChartArea>
@@ -468,7 +468,7 @@
                                             <AxisX Title="ICX Names" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
                                                 <LabelStyle Font="Arial, 10px" Interval="1" />
                                             </AxisX>
-                                            <AxisY Title="Values" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                            <AxisY Title="Minutes (Million)" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
                                                 <LabelStyle Font="Arial, 10px" />
                                             </AxisY>
                                         </asp:ChartArea>
@@ -534,7 +534,7 @@
                                             <AxisX Title="ICX Names" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
                                                 <LabelStyle Font="Arial, 10px" Interval="1" />
                                             </AxisX>
-                                            <AxisY Title="Values" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                            <AxisY Title="Minutes (Million)" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
                                                 <LabelStyle Font="Arial, 10px" />
                                             </AxisY>
                                         </asp:ChartArea>
@@ -599,7 +599,7 @@
                                             <AxisX Title="ICX Names" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
                                                 <LabelStyle Font="Arial, 10px" Interval="1" />
                                             </AxisX>
-                                            <AxisY Title="Values" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                            <AxisY Title="Minutes (Million)" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
                                                 <LabelStyle Font="Arial, 10px" />
                                             </AxisY>
                                         </asp:ChartArea>
@@ -665,7 +665,7 @@
                                             <AxisX Title="ICX Names" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
                                                 <LabelStyle Font="Arial, 10px" Interval="1" />
                                             </AxisX>
-                                            <AxisY Title="Values" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                            <AxisY Title="Minutes (Million)" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
                                                 <LabelStyle Font="Arial, 10px" />
                                             </AxisY>
                                         </asp:ChartArea>

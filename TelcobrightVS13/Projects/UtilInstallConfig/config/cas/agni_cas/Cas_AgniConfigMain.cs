@@ -158,7 +158,7 @@ namespace InstallConfig
             CasNeInfoHelper neHelper = new CasNeInfoHelper(csvPathForNe);
 
             this.Tbc.Nes = neHelper.getNesByOpId(this.Tbc.Telcobrightpartner.idCustomer);
-            //
+            //C:\TelcobrightProject\TelcobrightVS13\Projects\UtilInstallConfig\config\_helper
 
 
 
