@@ -641,7 +641,7 @@
                                 
                                 <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" ItemStyle-Wrap="false" FooterText="" Visible="false"/>
                                 <asp:BoundField DataField="callDuration" 
-                                HeaderText="Call Duration" 
+                                HeaderText="Call Duration" DataFormatString="{0:F4}"
                                 SortExpression="Call Duration" ItemStyle-Wrap="false" FooterText="" 
                                 />
                                  <asp:BoundField DataField="msf" HeaderText="MSF" SortExpression="MSF" />
@@ -655,12 +655,14 @@
                                     SortExpression="Terminating Carrier" />
 
                                 <asp:BoundField DataField="terminatingIp" HeaderText="Terminating Ip" SortExpression="Terminating Ip" />
+                                <asp:BoundField DataField="terminatingRegion"
+                                                HeaderText="Terminating Region"
+                                                SortExpression="terminatingRegion" />
+
                                 <asp:BoundField DataField="terminatingDuration" HeaderText="Terminating Duration" SortExpression="Terminating Duration" DataFormatString="{0:F4}"/>
                                 <asp:BoundField DataField="terminatingRate" HeaderText="Terminating Rate" SortExpression="Terminating Rate" DataFormatString="{0:F4}"/>
 
-                                <asp:BoundField DataField="terminatingRegion"
-                                    HeaderText="Terminating Region"
-                                    SortExpression="terminatingRegion" />
+                                
 
                                 <asp:BoundField DataField="dpc"
                                     HeaderText="DPC"
