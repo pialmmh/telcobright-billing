@@ -19,6 +19,20 @@ namespace PortalApp.ReportHelper
         public Decimal noOfCalls { get; set; }
         public Decimal minutes { get; set; }
     }
+
+    public class AcdReportRow
+    {
+        public string Date{ get; set; }
+        public string Call_Count { get; set; }
+        public string ACD_Value { get; set; }
+        public string Call_Type { get; set; }
+        public string Operator { get; set; }
+        public string partnerName { get; set; }
+        public string CustomerName { get; set; }
+        public string MSISDN { get; set; }
+        public string DurationInMinute { get; set; }
+    }
+
     public class InternationalReportRow
     {
 

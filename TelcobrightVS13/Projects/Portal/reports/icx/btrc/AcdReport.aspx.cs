@@ -11,23 +11,16 @@ using reports;
 using MediationModel;
 using LibraryExtensions;
 using PortalApp.ReportHelper;
-
-using System;
-
-
-
-public partial class DefaultRptMonthlyOutDetailIcx : System.Web.UI.Page
+public partial class DefaultRptAcdIcx : System.Web.UI.Page
 {
     public string operatorName;
     private int _mShowByCountry=0;
     private int _mShowByAns = 0;
     DataTable _dt;
-
-
     private string GetQuery()
     {
 
-        string StartDate = txtStartDate.Text;
+        string StartDate =txtStartDate.Text;
         string EndtDate = (txtEndDate.Text.ConvertToDateTimeFromMySqlFormat()).AddSeconds(1).ToMySqlFormatWithoutQuote();
         string tableName = DropDownListReportSource.SelectedValue + "01";
 
@@ -124,98 +117,64 @@ public partial class DefaultRptMonthlyOutDetailIcx : System.Web.UI.Page
         domDataAdapter.Fill(ds);
         return ds;    
     }
-    List<MonthlyOutSummaryDetail> ConvertBtrcDataSetToList(DataSet ds) {
+    List<AcdReportRow> ConvertBtrcDataSetToList(DataSet ds, Dictionary<int, string> partnerNames) {
         bool hasRecords = ds.Tables.Cast<DataTable>()
                            .Any(table => table.Rows.Count != 0);
-        //List<MonthlyReportRow> records = new List<MonthlyReportRow>();
-        List<MonthlyOutSummaryDetail> finalRecords= new List<MonthlyOutSummaryDetail>();
+        List<AcdReportRow> records = new List<AcdReportRow>();
         if (hasRecords == true)
         {
             foreach (DataTable table in ds.Tables)
             {
-                //int Slno = 1;
                 foreach (DataRow row in table.Rows)
                 {
-                    MonthlyOutSummaryDetail record = new MonthlyOutSummaryDetail();
-                    //record.SLNo = Slno;
-                    //Slno += 1;
-                    
-                    //record.Date  = Convert.ToString(row["Date"]);
-                    record.callDuration = Convert.ToString(row["Call Duration"]);
-                    record.msf = row.Field<string>("MSF");
-                    //record.ICRouteName = row.Field<int>("I/C Route Name");
-                    record.originatingCarrier = row.Field<string>("Originating Carrier");
-                    //record.OGRouteName = row.Field<int>("O/G Route Name");
-                    record.originatingIp = Convert.ToString(row["Originating Ip"]);
-                    record.originatingDuration = row["Originating Duration"].ToString();
-                    record.originatingRate = Convert.ToString(row["Originating Rate"]);
-                    record.terminatingCarrier = row.Field<string>("Terminating Carrier");
-                    record.terminatingIp = Convert.ToString(row["Terminating Ip"]);
-                    record.terminatingRegion = row.Field<string>("Terminating Region");
-                    record.terminatingDuration = Convert.ToString(row["Terminating Duration"]);
-                    record.terminatingRate = Convert.ToString(row["Terminating Rate"]);
-                    record.dpc = Convert.ToString(row["DPC"]);
-                    record.calledId = row.Field<string>("Called Id");
-                    record.dialedNumber = row.Field<string>("Dialed Number");
-                    record.connectTime = Convert.ToString(row["Connect Time"]);
-                    record.disconnectTime = Convert.ToString(row["Disconnect Time"]);
-                    //record.CER  = Convert.ToInt32(row["CER"]);
-                    //record.MHT  = row.Field<Decimal>("MHT");
-                    //record.XRate  = Convert.ToInt32(row["X Rate"]);
-                    //record.YRate  = row.Field<Decimal>("Y Rate");
-                    //record.ConversionRate  = Convert.ToDecimal(row["Conversion Rate"]);
-                    //record.XAmount  = row.Field<Decimal>("X Amount");
-                    //record.YAmount  = row.Field<Decimal>("Y Amount");
-                    //record.ZAmount  = row.Field<Decimal>("Z Amount");                    
-                    //record.Portion15PercOfZ  = Convert.ToDecimal(row["ICX Portion(15% of Z)"]);
-
-
-                    //record.domNoOfCalls= row.Field<Decimal>("noofcalls");
-
-                    //record.
-                    //record.Origi = Convert.ToDecimal(row["noofcalls"]);
-                    //record.domesticMinutes= row.Field<Decimal>("minutes");
-
-
-                    //record.IntIncomingNoOfCalls= Convert.ToDecimal(row["noofcallsI"]);
-                    //record.IntIncomingNoOfMinutes= row.Field<decimal>("minutesI");
-
-                    //record.IntOutgoingNoOfCalls= Convert.ToDecimal(row["noofcallsO"]);
-                    //record.IntOutgoingNoOfMinutes= row.Field<decimal>("minutesO");
-                    MonthlyOutSummaryDetail excelRecord = new MonthlyOutSummaryDetail();
-                    finalRecords.Add(record);
+                    AcdReportRow record = new AcdReportRow();
+                    record.ACD_Value= Convert.ToString(row["ACD Value"]);
+                    record.Call_Count= Convert.ToString(row["Call Count"]);
+                    record.Date= Convert.ToString(row["Date"]);
+                    record.Call_Type= Convert.ToString(row["Call Type"]);
+                    record.CustomerName = this.operatorName;
+                    record.Operator = Convert.ToString(row["Operator Name"]);
+                    record.MSISDN = Convert.ToString(row["A-Party MSISDN No"]);
+                    record.DurationInMinute = Convert.ToString(row["Call Duration in Min"]);
+                    records.Add(record);
                 }
             }
         }
-
-        return finalRecords;
+        return records;
     }
-    DataSet getMonthlyReport(MySqlConnection connection)
+    DataSet getDomesticWeeklyReport(MySqlConnection connection)
     {
-                string Sql = $@"
-                            select c.duration3 as 'Call Duration', ne.SwitchName as MSF, inP.PartnerName as 'Originating Carrier',
-                            c.incomingroute as 'Originating IP', c.RoundedDuration as 'Originating Duration', 
-                            60*c.xamount/c.roundedduration 'Originating Rate', outp.PartnerName as 'Terminating Carrier',
-                            outgoingroute as 'Terminating IP', concat(c.CountryCode,' (', cc.name, ')') as 'Terminating Region',
-                            c.RoundedDuration as 'Terminating Duration', 60*c.yamount/c.roundedduration 'Terminating Rate',
-                            c.dpc, c.OriginatingCallingNumber as 'Called Id', c.OriginatingCalledNumber as 'Dialed Number',
-                            c.AnswerTime as 'Connect Time', c.endtime as 'Disconnect Time'
-                            from cdr c
-                            left join ne
-                            on c.switchid=ne.idSwitch
-                            left join partner inP
-                            on c.InPartnerId=inP.idPartner
-                            left join partner outp
-                            on c.OutPartnerId=outp.idpartner
-                            left join countrycode cc
-                            on c.countrycode=cc.code
-                            where servicegroup=2
-                            and roundedduration>0
-                            and starttime >= '{txtStartDate.Text}' and starttime < '{txtEndDate.Text}'
-                            order by c.AnswerTime;
-                            ";
-        
-        DataSet ds= getBtrcReport(connection, Sql);
+        string domSql =$@"SELECT StartTime AS 'Date',
+		            p.partnername as 'Operator Name', 
+                   OriginatingCallingNumber AS 'A-Party MSISDN No',
+		            CASE
+                       WHEN servicegroup = 1 THEN 'Domestic'
+                       ELSE 'Other'
+                    END AS 'Call Type',
+                   CallCount AS 'Call Count',
+                   round(DurationInMinute,2) AS 'Call Duration in Min', 
+                   round(ACD,2) AS 'ACD Value'
+            FROM (
+                SELECT
+			            StartTime,
+		               inpartnerid, 
+                       originatingcallingnumber, 
+                       SUM(Duration1)/60 AS DurationInMinute, 
+                       COUNT(OriginatingCallingNumber) AS CallCount, 
+                       SUM(Duration1)/60/COUNT(OriginatingCallingNumber) AS ACD,
+			            ServiceGroup
+                FROM cdr 
+                WHERE starttime > '2023-08-01' 
+                    AND starttime < '2023-08-02' 
+                    AND servicegroup = 1 
+                GROUP BY inpartnerid, originatingcallingnumber 
+                HAVING SUM(Duration1)/60 >= 50 
+                       AND SUM(Duration1)/60/COUNT(OriginatingCallingNumber) >= 4
+            ) x 
+            LEFT JOIN partner p ON x.inpartnerid = p.idpartner 
+            ORDER BY p.PartnerName;";
+
+        DataSet ds= getBtrcReport(connection, domSql);
         return ds;
     }
 
@@ -223,7 +182,7 @@ public partial class DefaultRptMonthlyOutDetailIcx : System.Web.UI.Page
     protected void submit_Click(object sender, EventArgs e)
     {
         
-        List<MonthlyOutSummaryDetail> monthlyRecords = new List<MonthlyOutSummaryDetail>();
+        List<AcdReportRow> acdRecords = new List<AcdReportRow>();
         
        
         Dictionary<int, string> partnerNames = null;
@@ -235,34 +194,20 @@ public partial class DefaultRptMonthlyOutDetailIcx : System.Web.UI.Page
             connection.ConnectionString = ConfigurationManager.ConnectionStrings["reader"].ConnectionString;
             connection.Open();
 
-            DataSet monthlyDs =getMonthlyReport(connection);
+            DataSet domesticDs = getDomesticWeeklyReport(connection);
            
 
-            bool hasdomesticDs =monthlyDs.Tables.Cast<DataTable>()
+            bool hasdomesticDs = domesticDs.Tables.Cast<DataTable>()
                           .Any(table => table.Rows.Count != 0);
             if (hasdomesticDs == true)
             {
-                monthlyRecords = ConvertBtrcDataSetToList(monthlyDs);
-                //Decimal sum1 = monthlyRecords.Sum(r => r.Date);
-                //Decimal sum2 = monthlyRecords.Sum(r => r.domesticMinutes);
-                //Decimal sum3 = monthlyRecords.Sum(r => r.IntIncomingNoOfCalls);
-                //Decimal sum4 = monthlyRecords.Sum(r => r.IntIncomingNoOfMinutes);
-                //Decimal sum5 = monthlyRecords.Sum(r => r.IntOutgoingNoOfCalls);
-                //Decimal sum6 = monthlyRecords.Sum(r => r.IntOutgoingNoOfMinutes);
-
-                DomHeader.Text = "Monthly Outgoing Detail";
-                //IntlInHeader.Text = "International Incoming Report";
-                //IntlOutHeader.Text = "International Outgoing Report";
-                Gvdom.DataSource = monthlyRecords;
-                //((BoundField)Gvdom.Columns[2]).FooterText = $"{sum1:n0}";
-                //((BoundField)Gvdom.Columns[3]).FooterText = $"{sum2:n0}";
-                //((BoundField)Gvdom.Columns[4]).FooterText = $"{sum3:n0}";
-                //((BoundField)Gvdom.Columns[5]).FooterText = $"{sum4:n0}";
-                //((BoundField)Gvdom.Columns[6]).FooterText = $"{sum5:n0}";
-                //((BoundField)Gvdom.Columns[7]).FooterText = $"{sum6:n0}";
-                DomHeader.Visible = true;
-                //IntlInHeader.Visible = true;
-                //IntlOutHeader.Visible = true;
+                acdRecords = ConvertBtrcDataSetToList(domesticDs, partnerNames);
+                //Decimal sum = acdRecords.Sum(r => r.DurationInMinute);
+                //Decimal sumOfCalls = domesticWeeklyRecords.Sum(r => r.noOfCalls);
+                DomHeader.Text = "Daily ACD Reports";
+                Gvdom.DataSource = acdRecords;
+                //((BoundField)Gvdom.Columns[1]).FooterText = $"{sumOfCalls:n0}";
+                //((BoundField)Gvdom.Columns[2]).FooterText = $"{sum:n0}";
                 Gvdom.DataBind();
             }
             return;
@@ -438,7 +383,7 @@ public partial class DefaultRptMonthlyOutDetailIcx : System.Web.UI.Page
         //            + ".xlsx", Response);
         //}
 
-        List<MonthlyOutSummaryDetail> monthlyReport= new List<MonthlyOutSummaryDetail>();
+        List<AcdReportRow> acdRecords = new List<AcdReportRow>();
    
         Dictionary<int, string> partnerNames= null;
         using (PartnerEntities context = new PartnerEntities())
@@ -452,21 +397,16 @@ public partial class DefaultRptMonthlyOutDetailIcx : System.Web.UI.Page
             connection.Open();
 
 
-            DataSet monthlyDs = getMonthlyReport(connection);
-            monthlyReport = ConvertBtrcDataSetToList(monthlyDs);
+            DataSet domesticDs = getDomesticWeeklyReport(connection);
+            acdRecords = ConvertBtrcDataSetToList(domesticDs, partnerNames);
 
-
-            ExcelExporterForBtrcReport.ExportToExcelMonthlyOutgoingDetailReport("MonthlyReport From " + txtStartDate.Text + " To " + txtEndDate.Text
-                    + ".xlsx", Response, monthlyReport, this.operatorName);
+            
+            ExcelExporterForBtrcReport.AcdReport("AcdReport From " + txtStartDate.Text + " To " + txtEndDate.Text
+                    + ".xlsx", Response, acdRecords, txtStartDate.Text,txtEndDate.Text, this.operatorName);
 
             return;
         }
         }
-
-    private List<MonthlyReportRow> ConvertBtrcDataSetToList()
-    {
-        throw new NotImplementedException();
-    }
 
     private List<BtrcReportRow> ConvertBtrcDataSetToList(DataSet domesticDs, object partnerName)
     {
@@ -603,10 +543,8 @@ public partial class DefaultRptMonthlyOutDetailIcx : System.Web.UI.Page
     {
         CalendarStartDate.SelectedDate = txtStartDate.Text.ConvertToDateTimeFromMySqlFormat();
         DateTime startDate = CalendarStartDate.SelectedDate ?? DateTime.Now;
-        DateTime endDate = System.DateTime.Now; // need to see the deatils 
+        DateTime endDate = startDate.AddDays(1);
         CalendarEndDate.SelectedDate = endDate;
-
-        
         //txtStartDate.Text = startDate.ToString("yyyy-MM-dd 00:00:00");
         //txtEndDate.Text = endDate.ToString("yyyy-MM-dd 23:59:59");
     }
@@ -614,7 +552,7 @@ public partial class DefaultRptMonthlyOutDetailIcx : System.Web.UI.Page
     {
         CalendarEndDate.SelectedDate = txtEndDate.Text.ConvertToDateTimeFromMySqlFormat();
         DateTime endDate = CalendarEndDate.SelectedDate ?? DateTime.Now;
-        DateTime startDate = endDate.AddMonths(-1);
+        DateTime startDate = endDate.AddDays(-1);
         CalendarStartDate.SelectedDate = startDate;
         //txtStartDate.Text = startDate.ToString("yyyy-MM-dd 00:00:00");
         //txtEndDate.Text = endDate.ToString("yyyy-MM-dd 23:59:59");

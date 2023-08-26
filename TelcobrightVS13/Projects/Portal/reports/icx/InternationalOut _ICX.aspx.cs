@@ -293,7 +293,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                     tr.CallStat.TotalDuration3 += tr.ForceConvertToDouble(dr["hmsduration"]);
                     tr.CallStat.TotalDuration2 += tr.ForceConvertToDouble(dr["supplierduration"]);
                     tr.CallStat.XAmount += tr.ForceConvertToDouble(dr["X (BDT)"]);
-                    tr.CallStat.YAmount += tr.ForceConvertToDouble(dr["Y (USD)"]);
+                    tr.CallStat.YAmount += tr.ForceConvertToDouble(dr["Y (BDT)"]);
                     tr.CallStat.ZAmount += tr.ForceConvertToDouble(dr["Z (BDT)"]);
                     tr.CallStat.IgwRevenue += tr.ForceConvertToDouble(dr["revenueigwout"]);
                     tr.CallStat.BtrcRevShare += tr.ForceConvertToDouble(dr["tax1"]);
@@ -337,7 +337,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                 fieldSummaries.Add("ccr", tr.CallStat.Ccr);
                 fieldSummaries.Add("ccrbycc", tr.CallStat.CcRbyCauseCode);
                 fieldSummaries.Add("x (bdt)", tr.CallStat.XAmount);
-                fieldSummaries.Add("y (usd)", tr.CallStat.YAmount);
+                fieldSummaries.Add("y (bdt)", tr.CallStat.YAmount);
                 fieldSummaries.Add("z (bdt)", tr.CallStat.ZAmount);
                 fieldSummaries.Add("revenueigwout", tr.CallStat.IgwRevenue);
                 fieldSummaries.Add("tax1", tr.CallStat.BtrcRevShare);

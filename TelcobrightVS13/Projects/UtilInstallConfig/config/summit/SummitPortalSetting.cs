@@ -324,6 +324,9 @@ namespace InstallConfig
                     },
                     { "~/reports/icx/btrc/MonthlyOutgoingDetail.aspx",
                         settingIntlIn
+                    },
+                    { "~/reports/icx/btrc/AcdReport.aspx",
+                        settingIntlIn
                     }
 
                 },//dictionary of page settings

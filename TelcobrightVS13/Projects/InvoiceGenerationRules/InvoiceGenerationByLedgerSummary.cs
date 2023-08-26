@@ -57,7 +57,7 @@ namespace InvoiceGenerationRules
                                     "executing invoice generation by ledger summary.");
             //string invoiceDescription = $"{partnerName}" + "-" + serviceGroup.RuleName + $" [{startDate.ToMySqlFormatWithoutQuote()}" +
             //                            $"-{endDate.ToMySqlFormatWithoutQuote()}]";
-            string invoiceDescription = $"{partnerName}" + "-" + serviceGroup.RuleName + $" [{startDate.ToMySqlFormatWithoutQuote()}";
+            string invoiceDescription = $"{partnerName}" + "-" + serviceGroup.RuleName + $"-{startDate.ToMySqlFormatWithoutQuote()}";
             string uom = invoiceJsonDetail["uom"];
             invoice newInvoice = CreateInvoiceWithItem(invoiceJsonDetail, serviceAccountId, invoiceAmount, serviceGroup,
                 invoiceDescription, uom);

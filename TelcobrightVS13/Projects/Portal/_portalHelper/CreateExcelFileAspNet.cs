@@ -394,9 +394,9 @@ namespace PortalApp._portalHelper
                     using (ExcelRange rng = ws.Cells["A1:" + lastColExcel + "1"])
                     {
                         rng.Style.Font.Bold = true;
-                        rng.Style.Fill.PatternType = ExcelFillStyle.Solid;                      //Set Pattern for the background to Solid
-                        rng.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.FromArgb(79, 129, 189));  //Set color to dark blue
-                        rng.Style.Font.Color.SetColor(System.Drawing.Color.White);
+                        //rng.Style.Fill.PatternType = ExcelFillStyle.Solid;                      //Set Pattern for the background to Solid
+                        //rng.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.FromArgb(79, 129, 189));  //Set color to dark blue
+                        //rng.Style.Font.Color.SetColor(System.Drawing.Color.White);
                         rng.Style.WrapText = true;
                         rng.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
 
@@ -405,9 +405,9 @@ namespace PortalApp._portalHelper
                     using (ExcelRange rng = ws.Cells["A" + summaryRowIndex + ":" + lastColExcel + summaryRowIndex])
                     {
                         rng.Style.Font.Bold = true;
-                        rng.Style.Fill.PatternType = ExcelFillStyle.Solid;                      //Set Pattern for the background to Solid
-                        rng.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.FromArgb(79, 129, 189));  //Set color to dark blue
-                        rng.Style.Font.Color.SetColor(System.Drawing.Color.White);
+                        //rng.Style.Fill.PatternType = ExcelFillStyle.Solid;                      //Set Pattern for the background to Solid
+                        //rng.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.FromArgb(79, 129, 189));  //Set color to dark blue
+                        //rng.Style.Font.Color.SetColor(System.Drawing.Color.White);
                     }
 
                     ////Example how to Format Column 1 as numeric 
