@@ -99,7 +99,7 @@ namespace InstallConfig
                     CDRPrefix= "ICX",
                     FileExtension= ".DAT",
                     Description= null,
-                    SourceFileLocations= "Vault.JslZteDhk",
+                    SourceFileLocations= "Vault.NokiaDhk",
                     BackupFileLocations= null,
                     LoadingStopFlag= null,
                     LoadingSpanCount= 100,
