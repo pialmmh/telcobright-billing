@@ -141,19 +141,19 @@ public partial class DefaultRptMonthlyOutDetailIcx : System.Web.UI.Page
                     //Slno += 1;
                     
                     //record.Date  = Convert.ToString(row["Date"]);
-                    record.callDuration = Convert.ToDouble(row["Call Duration"]);
+                    record.callDuration = Convert.ToString(row["Call Duration"]);
                     record.msf = row.Field<string>("MSF");
                     //record.ICRouteName = row.Field<int>("I/C Route Name");
                     record.originatingCarrier = row.Field<string>("Originating Carrier");
                     //record.OGRouteName = row.Field<int>("O/G Route Name");
                     record.originatingIp = Convert.ToString(row["Originating Ip"]);
-                    record.originatingDuration = Convert.ToDouble(row["Originating Duration"]);
-                    record.originatingRate = Convert.ToDouble(row["Originating Rate"]);
+                    record.originatingDuration = row["Originating Duration"].ToString();
+                    record.originatingRate = Convert.ToString(row["Originating Rate"]);
                     record.terminatingCarrier = row.Field<string>("Terminating Carrier");
                     record.terminatingIp = Convert.ToString(row["Terminating Ip"]);
-                    record.terminatingDuration = Convert.ToDouble(row["Terminating Duration"]);
-                    record.terminatingRate = Convert.ToDouble(row["Terminating Rate"]);
                     record.terminatingRegion = row.Field<string>("Terminating Region");
+                    record.terminatingDuration = Convert.ToString(row["Terminating Duration"]);
+                    record.terminatingRate = Convert.ToString(row["Terminating Rate"]);
                     record.dpc = Convert.ToString(row["DPC"]);
                     record.calledId = row.Field<string>("Called Id");
                     record.dialedNumber = row.Field<string>("Dialed Number");
@@ -213,7 +213,7 @@ public partial class DefaultRptMonthlyOutDetailIcx : System.Web.UI.Page
                             and roundedduration>0
                             and starttime >= '{txtStartDate.Text}' and starttime < '{txtEndDate.Text}'
                             order by c.AnswerTime
-                            limit 0,10000;
+                            limit 0,1000;
                             ";
         
         DataSet ds= getBtrcReport(connection, Sql);

@@ -100,17 +100,17 @@ namespace PortalApp.ReportHelper
     }
     public class MonthlyOutSummaryDetail
     {
-        public double callDuration { get; set; }
+        public string callDuration { get; set; }
         public  string msf { get; set; }
         public  string originatingCarrier { get; set; }
         public  string originatingIp { get; set; }
-        public double originatingDuration { get; set; }
-        public double originatingRate { get; set; }
+        public string originatingDuration { get; set; }
+        public string originatingRate { get; set; }
         public string terminatingCarrier { get; set; }
         public string terminatingIp { get; set; }
-        public double terminatingDuration { get; set; }
-        public double terminatingRate { get; set; }
         public string terminatingRegion { get; set; }
+        public string terminatingDuration { get; set; }
+        public string terminatingRate { get; set; }
         public  string dpc { get; set; }
         public string calledId { get; set; }
         public  string dialedNumber { get; set; }
