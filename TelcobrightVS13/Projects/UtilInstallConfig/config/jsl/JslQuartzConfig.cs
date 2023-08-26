@@ -38,7 +38,7 @@ namespace InstallConfig
                 new QuartzTbDaemonConfig
                 (
                     operatorName: operatorName,
-                    identity: "FileLister [jslhuawei:Vault]" + " [" + operatorName+"]",
+                    identity: "FileLister [JslZteDhk:Vault]" + " [" + operatorName+"]",
                     group: operatorName,
                     cronExpression: "/30 * * ? * *",
                     fireOnceIfMissFired: false,
@@ -46,7 +46,20 @@ namespace InstallConfig
                     {
                         {"telcobrightProcessId", "106"},
                         {"operatorName", operatorName},
-                        {"syncPair", "JslhuaweiDhk:Vault"}
+                        {"syncPair", "JslZteDhk:Vault"} 
+                    }),
+                new QuartzTbDaemonConfig
+                (
+                    operatorName: operatorName,
+                    identity: "FileLister [JslcataliyaDhk:Vault]" + " [" + operatorName+"]",
+                    group: operatorName,
+                    cronExpression: "/30 * * ? * *",
+                    fireOnceIfMissFired: false,
+                    jobDataMap: new Dictionary<string, string>()
+                    {
+                        {"telcobrightProcessId", "106"},
+                        {"operatorName", operatorName},
+                        {"syncPair", "JslcataliyaDhk:Vault"}
                     }),
             };
             return fileListerInstances;
@@ -59,7 +72,7 @@ namespace InstallConfig
                 new QuartzTbDaemonConfig
                 (
                     operatorName: operatorName,
-                    identity: "FileCopier [jslhuawei:Vault]" + " [" + operatorName+"]",
+                    identity: "FileCopier [JslZteDhk:Vault]" + " [" + operatorName+"]",
                     group: operatorName,
                     cronExpression: "/5 * * ? * *",
                     fireOnceIfMissFired: false,
@@ -67,7 +80,20 @@ namespace InstallConfig
                     {
                         {"telcobrightProcessId", "104"},
                         {"operatorName", operatorName},
-                        {"syncPair", "JslhuaweiDhk:Vault"}
+                        {"syncPair", "JslZteDhk:Vault"}
+                    }),
+                new QuartzTbDaemonConfig
+                (
+                    operatorName: operatorName,
+                    identity: "FileCopier [JslcataliyaDhk:Vault]" + " [" + operatorName+"]",
+                    group: operatorName,
+                    cronExpression: "/5 * * ? * *",
+                    fireOnceIfMissFired: false,
+                    jobDataMap: new Dictionary<string, string>()
+                    {
+                        {"telcobrightProcessId", "104"},
+                        {"operatorName", operatorName},
+                        {"syncPair", "JslcataliyaDhk:Vault"}
                     }),
                 new QuartzTbDaemonConfig
                 (

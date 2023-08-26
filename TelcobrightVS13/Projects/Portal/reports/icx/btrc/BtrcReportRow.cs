@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using MediationModel;
+using Org.BouncyCastle.Bcpg.OpenPgp;
+
 namespace PortalApp.ReportHelper
 {
 
@@ -73,7 +75,7 @@ namespace PortalApp.ReportHelper
 
     public class MonthlyOutSummary
     {
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
         public string OriginatingANS { get; set; }
         public string TerminatingCarrier { get; set; }
         public int ICRouteName { get; set; }
@@ -81,8 +83,8 @@ namespace PortalApp.ReportHelper
         public string TerminatingRegion { get; set; }
         public int TotalCalls { get; set; }
         public int TotalSuccessfulCalls { get; set; }
-        public Decimal TotalDuration { get; set; }
-        public int TotalPaidMinute { get; set; }
+        public double TotalDuration { get; set; }
+        public double TotalPaidMinute { get; set; }
         public Decimal ACD { get; set; }
         public int ASR { get; set; }
         public int CER { get; set; }
@@ -95,6 +97,25 @@ namespace PortalApp.ReportHelper
         public Decimal ZAmount { get; set; }     
         public Decimal Portion15PercOfZ { get; set; }
 
+    }
+    public class MonthlyOutSummaryDetail
+    {
+        public double callDuration { get; set; }
+        public  string msf { get; set; }
+        public  string originatingCarrier { get; set; }
+        public  string originatingIp { get; set; }
+        public double originatingDuration { get; set; }
+        public double originatingRate { get; set; }
+        public string terminatingCarrier { get; set; }
+        public string terminatingIp { get; set; }
+        public double terminatingDuration { get; set; }
+        public double terminatingRate { get; set; }
+        public string terminatingRegion { get; set; }
+        public  string dpc { get; set; }
+        public string calledId { get; set; }
+        public  string dialedNumber { get; set; }
+        public string connectTime { get; set; }
+        public string disconnectTime { get; set; }
     }
     public class CustomReportRow
     {

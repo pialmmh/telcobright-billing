@@ -124,18 +124,6 @@ namespace PortalApp.config
                     lb10.Text = " ";
                     e.Row.Cells[8].Controls.Add(lb10);
 
-                    LinkButton lbTwoSection = new LinkButton();
-                    lbTwoSection.ID = "btnViewSectionAll";
-                    lbTwoSection.Text = "Export Section-1&2";
-                    //lbAll.CommandName = item.Key;
-                    //lb.Click += ViewReportOnClick;
-                    //lb.OnClientClick = "window.open('PrepareReport.aspx?reportName=" + HttpUtility.HtmlDecode(item.Key) + "&invoiceId=" + DataBinder.Eval(e.Row.DataItem, "INVOICE_ID") + "'); return false;";
-                    e.Row.Cells[8].Controls.Add(lbTwoSection);
-
-                    Label lb100 = new Label();
-                    lb100.Text = " ";
-                    e.Row.Cells[8].Controls.Add(lb100);
-
                     int sectionNumber = 0;
 
 
@@ -162,9 +150,6 @@ namespace PortalApp.config
                     string reportNamesAsStr = string.Join(",", reportNames);
                     lbAll.OnClientClick = "window.open('PrepareReportAll.aspx?reportNames="
                         + reportNamesAsStr + "&invoiceId=" + DataBinder.Eval(e.Row.DataItem, "INVOICE_ID") + "'); return false;";
-                    lbTwoSection.OnClientClick = "window.open('PrepareReportForTwoSection.aspx?reportNames="
-                                          + reportNamesAsStr + "&invoiceId=" + DataBinder.Eval(e.Row.DataItem, "INVOICE_ID") + "'); return false;";
-
                 }
             }
         }

@@ -119,20 +119,33 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
         else return string.Empty;
     }
 
+    private int GetColumnIndexByName(GridView grid, string name)
+    {
+        foreach (DataControlField col in grid.Columns)
+        {
+            if (col.SortExpression.ToLower().Trim() == name.ToLower().Trim())
+            {
+                return grid.Columns.IndexOf(col);
+            }
+        }
+
+        return -1;
+    }
+
     protected void submit_Click(object sender, EventArgs e)
     {
         //view by country/prefix logic has been changed later, adding this new flag
         bool notViewingByCountry = CheckBoxShowByDestination.Checked | (!CheckBoxShowByCountry.Checked);//not viewing by country if view by desination is checked
 
-        
+
         //undo the effect of hiding some grid by the summary button first******************
-        GridView1.Columns[0].Visible = true;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].Visible = true;
         if (CheckBoxDailySummary.Checked)
         {
             //GridView1.Columns[1].Visible = false;
             //GridView1.Columns[2].Visible = false;
             //GridView1.Columns[3].Visible = false;
-            GridView1.Columns[6].Visible = false;
+            GridView1.Columns[GetColumnIndexByName(GridView1, "International Partner")].Visible = false;
         }
         //GridView1.Columns[1].Visible = true;
         //GridView1.Columns[2].Visible = false;
@@ -140,13 +153,13 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
         //GridView1.Columns[5].Visible = false;
         //*****************************
 
-        GridView1.Columns[1].Visible = CheckBoxShowByCountry.Checked;
-        GridView1.Columns[2].Visible = CheckBoxShowByDestination.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "Country")].Visible = CheckBoxShowByCountry.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "Destination")].Visible = CheckBoxShowByDestination.Checked;
         //GridView1.Columns[3].Visible = CheckBoxShowByIgw.Checked;
-        GridView1.Columns[4].Visible = CheckBoxViewIncomingRoute.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "tup_incomingroute")].Visible = CheckBoxViewIncomingRoute.Checked;
 
-        GridView1.Columns[6].Visible = CheckBoxIntlPartner.Checked;
-        GridView1.Columns[7].Visible = CheckBoxViewOutgoingRoute.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "International Partner")].Visible = CheckBoxIntlPartner.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "tup_outgoingroute")].Visible = CheckBoxViewOutgoingRoute.Checked;
         GridView1.Columns[16].Visible = CheckBoxShowPerformance.Checked;
 
         if (CheckBoxShowCost.Checked == true)
@@ -192,19 +205,19 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
 
                 //GridView1.Columns[1].Visible = true;//country
                 if (CheckBoxShowByDestination.Checked)
-                    GridView1.Columns[2].Visible = true;//destination
+                    GridView1.Columns[GetColumnIndexByName(GridView1, "Destination")].Visible = true;//destination
                 else
-                    GridView1.Columns[2].Visible = false;
+                    GridView1.Columns[GetColumnIndexByName(GridView1, "Destination")].Visible = false;
             }
           
             if (CheckBoxDailySummary.Checked == false)
             {
 
-                GridView1.Columns[0].Visible = false;
+                GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].Visible = false;
             }
             else
             {
-                GridView1.Columns[0].Visible = true;
+                GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].Visible = true;
 
             }
 
@@ -222,27 +235,27 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                 if (RadioButtonHourly.Checked == true)
                 {
                     summaryInterval = "Hourly";
-                    GridView1.Columns[0].HeaderText = "Hour";
+                    GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].HeaderText = "Hour";
                 }
                 else if (RadioButtonDaily.Checked == true)
                 {
                     summaryInterval = "Daily";
-                    GridView1.Columns[0].HeaderText = "Date";
+                    GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].HeaderText = "Date";
                 }
                 else if (RadioButtonWeekly.Checked == true)
                 {
                     summaryInterval = "Weekly";
-                    GridView1.Columns[0].HeaderText = "Week";
+                    GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].HeaderText = "Week";
                 }
                 else if (RadioButtonMonthly.Checked == true)
                 {
                     summaryInterval = "Monthly";
-                    GridView1.Columns[0].HeaderText = "Month";
+                    GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].HeaderText = "Month";
                 }
                 else if (RadioButtonYearly.Checked == true)
                 {
                     summaryInterval = "Yearly";
-                    GridView1.Columns[0].HeaderText = "Year";
+                    GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].HeaderText = "Year";
                 }
 
 
@@ -821,8 +834,8 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
         if (CheckBoxShowByIgw.Checked == true)
         {
             DropDownListIgw.Enabled = true;
-            DropDownListAns.Enabled = true;
-            CheckBoxShowByAns.Checked = true;
+            //DropDownListAns.Enabled = true;
+            //CheckBoxShowByAns.Checked = true;
             GridView1.Columns[5].Visible = true;
         }
         else

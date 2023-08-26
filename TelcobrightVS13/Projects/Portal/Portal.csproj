@@ -558,6 +558,7 @@
     <Content Include="Mediation\CdrError.aspx" />
     <Content Include="reports\cdr.aspx" />
     <Content Include="reports\icx\btrc\DailyReport.aspx" />
+    <Content Include="reports\icx\btrc\MonthlyOutgoingDetail.aspx" />
     <Content Include="reports\icx\btrc\MonthlyOutgoingSummary.aspx" />
     <Content Include="reports\icx\btrc\MonthlyReport.aspx" />
     <Content Include="reports\icx\btrc\WeeklyDomesticReport.aspx" />
@@ -965,6 +966,13 @@
     </Compile>
     <Compile Include="reports\icx\btrc\BtrcReportRow.cs" />
     <Compile Include="reports\icx\btrc\ExcelExporterForBtrcReport.cs" />
+    <Compile Include="reports\icx\btrc\MonthlyOutgoingDetail.aspx.cs">
+      <DependentUpon>MonthlyOutgoingDetail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\icx\btrc\MonthlyOutgoingDetail.aspx.designer.cs">
+      <DependentUpon>MonthlyOutgoingDetail.aspx</DependentUpon>
+    </Compile>
     <Compile Include="reports\icx\btrc\MonthlyOutgoingSummary.aspx.cs">
       <DependentUpon>MonthlyOutgoingSummary.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

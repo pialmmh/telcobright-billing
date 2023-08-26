@@ -1,5 +1,5 @@
 ﻿<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="True"
-    CodeBehind="MonthlyOutgoingSummary.aspx.cs" Inherits="DefaultRptMonthlyOutSummaryIcx" %>
+    CodeBehind="MonthlyOutgoingDetail.aspx.cs" Inherits="DefaultRptMonthlyOutDetailIcx" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Import Namespace="MediationModel" %>
@@ -639,27 +639,67 @@
 
                             <Columns>
                                 
-                                <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" ItemStyle-Wrap="false" FooterText="" />
-                                <asp:BoundField DataField="OriginatingANS" DataFormatString="{0:F0}" HeaderText="Originating ANS" SortExpression="OriginatingANS" ItemStyle-Wrap="false" FooterText="" />
-                                <asp:BoundField DataField="TerminatingCarrier" DataFormatString="{0:F0}" HeaderText="Terminating Carrier" ItemStyle-Wrap="false" SortExpression="TerminatingCarrier" FooterText="" />                                
-                                <asp:BoundField DataField="ICRouteName" DataFormatString="{0:F0}" HeaderText="I/C Route Name" ItemStyle-Wrap="false" SortExpression="ICRouteName" FooterText="" />
-                                <asp:BoundField DataField="OGRouteName" DataFormatString="{0:F0}" HeaderText="O/G Route Name" ItemStyle-Wrap="false" SortExpression="OGRouteName" FooterText="" />
-                                <asp:BoundField DataField="TerminatingRegion" DataFormatString="{0:F0}" HeaderText="Terminating Region" SortExpression="TerminatingRegion" ItemStyle-Wrap="false" FooterText="" />
-                                <asp:BoundField DataField="TotalCalls" DataFormatString="{0:F0}" HeaderText="Total Calls" SortExpression="TotalCalls" ItemStyle-Wrap="false" FooterText="" />
-                                <asp:BoundField DataField="TotalSuccessfulCalls"  DataFormatString="{0:F0}" HeaderText="Total Successful Calls" SortExpression="TotalSuccessfulCalls" ItemStyle-Wrap="false" FooterText="" />                                
-                                <asp:BoundField DataField="TotalDuration"  DataFormatString="{0:F4}"  ItemStyle-Wrap="false" HeaderText="Total Duration" SortExpression="TotalDuration"  FooterText="" />
-                                <asp:BoundField DataField="TotalPaidMinute" DataFormatString="{0:F4}" ItemStyle-Wrap="false" HeaderText="Total Paid Minute" SortExpression="TotalPaidMinute" FooterText="" />
-                                <asp:BoundField DataField="ACD" DataFormatString="{0:F0}" HeaderText="ACD" SortExpression="ACD" ItemStyle-Wrap="false" FooterText="" />                                
-                                <asp:BoundField DataField="ASR" DataFormatString="{0:F0}" HeaderText="ASR" SortExpression="ASR" ItemStyle-Wrap="false" FooterText="" />
-                                <asp:BoundField DataField="CER" DataFormatString="{0:F0}" HeaderText="CER" SortExpression="CER" ItemStyle-Wrap="false" FooterText="" />
-                                <asp:BoundField DataField="MHT" DataFormatString="{0:F0}" HeaderText="MHT" SortExpression="MHT" ItemStyle-Wrap="false" FooterText="" />
-                                <asp:BoundField DataField="XRate" DataFormatString="{0:F0}" HeaderText="X Rate" SortExpression="X Rate" ItemStyle-Wrap="false" FooterText="" />
-                                <asp:BoundField DataField="YRate"  DataFormatString="{0:F0}" HeaderText="Y Rate" SortExpression="YRate" ItemStyle-Wrap="false" FooterText="" />                                
-                                <asp:BoundField DataField="ConversionRate" DataFormatString="{0:F0}" HeaderText="Conversion Rate" SortExpression="ConversionRate" ItemStyle-Wrap="false" FooterText="" />
-                                <asp:BoundField DataField="XAmount" DataFormatString="{0:F0}" HeaderText="X Amount" SortExpression="XAmount" ItemStyle-Wrap="false" FooterText="" />
-                                <asp:BoundField DataField="YAmount" DataFormatString="{0:F0}" HeaderText="Y Amount" SortExpression="YAmount" ItemStyle-Wrap="false" FooterText="" />                                
-                                <asp:BoundField DataField="ZAmount" DataFormatString="{0:F0}" HeaderText="Z Amount" SortExpression="ZAmount" ItemStyle-Wrap="false" FooterText="" />
-                                <asp:BoundField DataField="Portion15PercOfZ" DataFormatString="{0:F0}" HeaderText="ICX Portion(15% of Z)" ItemStyle-Wrap="false" SortExpression="Portion15PercOfZ" FooterText="" />
+                                <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" ItemStyle-Wrap="false" FooterText="" Visible="false"/>
+                                <asp:BoundField DataField="callDuration" 
+                                HeaderText="Call Duration" 
+                                SortExpression="Call Duration" ItemStyle-Wrap="false" FooterText="" 
+                                />
+                                 <asp:BoundField DataField="msf" HeaderText="MSF" SortExpression="MSF" />
+                                <asp:BoundField DataField="originatingCarrier" HeaderText="Originating Carrier" SortExpression="Originating Carrier" />
+                                <asp:BoundField DataField="originatingIp" HeaderText="Originating Ip" SortExpression="Originating Ip" />
+                                <asp:BoundField DataField="originatingDuration" HeaderText="Originating Duration" SortExpression="Originating Duration" DataFormatString="{0:F4}"/>
+                                <asp:BoundField DataField="originatingRate" HeaderText="Originating Rate" SortExpression="Originating Rate" DataFormatString="{0:F4}"/>
+
+                                <asp:BoundField DataField="terminatingCarrier"
+                                    HeaderText="Terminating Carrier"
+                                    SortExpression="Terminating Carrier" />
+
+                                <asp:BoundField DataField="terminatingIp" HeaderText="Terminating Ip" SortExpression="Terminating Ip" />
+                                <asp:BoundField DataField="terminatingDuration" HeaderText="Terminating Duration" SortExpression="Terminating Duration" DataFormatString="{0:F4}"/>
+                                <asp:BoundField DataField="terminatingRate" HeaderText="Terminating Rate" SortExpression="Terminating Rate" DataFormatString="{0:F4}"/>
+
+                                <asp:BoundField DataField="terminatingRegion"
+                                    HeaderText="Terminating Region"
+                                    SortExpression="terminatingRegion" />
+
+                                <asp:BoundField DataField="dpc"
+                                    HeaderText="DPC"
+                                    SortExpression="dpc" />
+
+                                <asp:BoundField DataField="calledId"
+                                    HeaderText="Called Id"
+                                    SortExpression="calledId" />
+                                <asp:BoundField DataField="dialedNumber"
+                                    HeaderText="Dialed Number"
+                                    SortExpression="dialedNumber" />
+                                <asp:BoundField DataField="connectTime"
+                                    HeaderText="Connect Time"
+                                    SortExpression="connectTime" />
+                                <asp:BoundField DataField="disconnectTime"
+                                    HeaderText="Disconnect Time"
+                                    SortExpression="disconnectTime" />
+
+
+                                <asp:BoundField DataField="OriginatingANS" DataFormatString="{0:F0}" HeaderText="Originating ANS" SortExpression="OriginatingANS" ItemStyle-Wrap="false" FooterText="" Visible="false"/>
+                                <asp:BoundField DataField="TerminatingCarrier" DataFormatString="{0:F0}" HeaderText="Terminating Carrier" ItemStyle-Wrap="false" SortExpression="TerminatingCarrier" FooterText="" Visible="false"/>                                
+                                <asp:BoundField DataField="ICRouteName" DataFormatString="{0:F0}" HeaderText="I/C Route Name" ItemStyle-Wrap="false" SortExpression="ICRouteName" FooterText="" Visible="false"/>
+                                <asp:BoundField DataField="OGRouteName" DataFormatString="{0:F0}" HeaderText="O/G Route Name" ItemStyle-Wrap="false" SortExpression="OGRouteName" FooterText="" Visible="false"/>
+                                <asp:BoundField DataField="TerminatingRegion" DataFormatString="{0:F0}" HeaderText="Terminating Region" SortExpression="TerminatingRegion" ItemStyle-Wrap="false" FooterText="" Visible="false"/>
+                                <asp:BoundField DataField="TotalCalls" DataFormatString="{0:F0}" HeaderText="Total Calls" SortExpression="TotalCalls" ItemStyle-Wrap="false" FooterText="" Visible="false"/>
+                                <asp:BoundField DataField="TotalSuccessfulCalls"  DataFormatString="{0:F0}" HeaderText="Total Successful Calls" SortExpression="TotalSuccessfulCalls" ItemStyle-Wrap="false" FooterText="" Visible="false"/>                                
+                                <asp:BoundField DataField="TotalDuration"  DataFormatString="{0:F4}"  ItemStyle-Wrap="false" HeaderText="Total Duration" SortExpression="TotalDuration"  FooterText="" Visible="false"/>
+                                <asp:BoundField DataField="TotalPaidMinute" DataFormatString="{0:F4}" ItemStyle-Wrap="false" HeaderText="Total Paid Minute" SortExpression="TotalPaidMinute" FooterText="" Visible="false"/>
+                                <asp:BoundField DataField="ACD" DataFormatString="{0:F0}" HeaderText="ACD" SortExpression="ACD" ItemStyle-Wrap="false" FooterText="" Visible="false"/>                                
+                                <asp:BoundField DataField="ASR" DataFormatString="{0:F0}" HeaderText="ASR" SortExpression="ASR" ItemStyle-Wrap="false" FooterText="" Visible="false"/>
+                                <asp:BoundField DataField="CER" DataFormatString="{0:F0}" HeaderText="CER" SortExpression="CER" ItemStyle-Wrap="false" FooterText="" Visible="false"/>
+                                <asp:BoundField DataField="MHT" DataFormatString="{0:F0}" HeaderText="MHT" SortExpression="MHT" ItemStyle-Wrap="false" FooterText="" Visible="false"/>
+                                <asp:BoundField DataField="XRate" DataFormatString="{0:F0}" HeaderText="X Rate" SortExpression="X Rate" ItemStyle-Wrap="false" FooterText="" Visible="false"/>
+                                <asp:BoundField DataField="YRate"  DataFormatString="{0:F0}" HeaderText="Y Rate" SortExpression="YRate" ItemStyle-Wrap="false" FooterText="" Visible="false"/>                                
+                                <asp:BoundField DataField="ConversionRate" DataFormatString="{0:F0}" HeaderText="Conversion Rate" SortExpression="ConversionRate" ItemStyle-Wrap="false" FooterText="" Visible="false"/>
+                                <asp:BoundField DataField="XAmount" DataFormatString="{0:F0}" HeaderText="X Amount" SortExpression="XAmount" ItemStyle-Wrap="false" FooterText="" Visible="false"/>
+                                <asp:BoundField DataField="YAmount" DataFormatString="{0:F0}" HeaderText="Y Amount" SortExpression="YAmount" ItemStyle-Wrap="false" FooterText="" Visible="false"/>                                
+                                <asp:BoundField DataField="ZAmount" DataFormatString="{0:F0}" HeaderText="Z Amount" SortExpression="ZAmount" ItemStyle-Wrap="false" FooterText="" Visible="false"/>
+                                <asp:BoundField DataField="Portion15PercOfZ" DataFormatString="{0:F0}" HeaderText="ICX Portion(15% of Z)" ItemStyle-Wrap="false" SortExpression="Portion15PercOfZ" FooterText="" Visible="false"/>
                                 
                             </Columns>
                             <HeaderStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />
@@ -684,61 +724,66 @@
                     OnRowDataBound="GridView1_RowDataBound" Visible="false">
                     <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                     <Columns>
-                        <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" ItemStyle-Wrap="false" />
-                        <asp:BoundField DataField="International Partner" HeaderText="Incoming ANS" SortExpression="International Partner" />
-                        <asp:BoundField DataField="tup_incomingroute" HeaderText="Incoming Route" SortExpression="tup_incomingroute" />
-                        <asp:BoundField DataField="IGW" HeaderText="Outgoing ANS" SortExpression="IGW" />
-                        <asp:BoundField DataField="tup_outgoingroute" HeaderText="Outgoing Route" SortExpression="tup_outgoingroute" />
-                        <asp:BoundField DataField="ANS" HeaderText="ANS" SortExpression="ANS" />
+                        <asp:BoundField DataField="callDuration" 
+                            HeaderText="Call Duration" 
+                            SortExpression="Call Duration" 
+                         />
+                        <asp:BoundField DataField="msf" HeaderText="MSF" SortExpression="MSF" />
+                        <asp:BoundField DataField="originatingCarrier" HeaderText="Originating Carrier" SortExpression="Originating Carrier" />
+                        <asp:BoundField DataField="originatingIp" HeaderText="Originating Ip" SortExpression="Originating Ip" />
+                        <asp:BoundField DataField="originatingDuration" HeaderText="Originating Duration" SortExpression="Originating Duration" DataFormatString="{0:F4}"/>
+                        <asp:BoundField DataField="originatingRate" HeaderText="Originating Rate" SortExpression="Originating Rate" DataFormatString="{0:F4}"/>
 
-                        <asp:BoundField DataField="CallsCount"
-                            HeaderText="Total Calls"
-                            SortExpression="CallsCount" />
+                        <asp:BoundField DataField="terminatingCarrier"
+                            HeaderText="Terminating Carrier"
+                            SortExpression="Terminating Carrier" />
 
-                        <asp:BoundField DataField="Number Of Calls (International Incoming)"
-                            HeaderText="Successful Calls"
-                            SortExpression="Number Of Calls (International Incoming)" />
+                        <asp:BoundField DataField="terminatingRegion"
+                            HeaderText="Terminating Region"
+                            SortExpression="terminatingRegion" />
 
-                        <asp:BoundField DataField="ConnectedCount"
-                            HeaderText="Connected Calls"
-                            SortExpression="ConnectedCount" />
+                        <asp:BoundField DataField="dpc"
+                            HeaderText="DPC"
+                            SortExpression="dpc" />
 
-                        <asp:BoundField DataField="Paid Minutes (International Incoming)"
-                            DataFormatString="{0:F2}"
-                            HeaderText="Actual Duration"
-                            SortExpression="Paid Minutes (International Incoming)" />
-                        <asp:BoundField DataField="RoundedDuration"
-                            DataFormatString="{0:F2}"
-                            HeaderText="Billed Duration"
-                            SortExpression="RoundedDuration" />
-                        <asp:BoundField DataField="Duration1"
-                            DataFormatString="{0:F2}"
-                            HeaderText="Carrier Duration"
-                            SortExpression="Duration1" />
-                        <asp:BoundField DataField="costansin"
-                            DataFormatString="{0:F2}"
-                            HeaderText="ANS (USD)"
-                            SortExpression="costansin" />
+                        <asp:BoundField DataField="calledId"
+                            HeaderText="Called Id"
+                            SortExpression="calledId" />
+                        <asp:BoundField DataField="dialedNumber"
+                            HeaderText="Dialed Number"
+                            SortExpression="dialedNumber" />
+                        <asp:BoundField DataField="connectTime"
+                            HeaderText="Connect Time"
+                            SortExpression="connectTime" />
+                        <asp:BoundField DataField="disconnectTime"
+                            HeaderText="Disconnect Time"
+                            SortExpression="disconnectTime" />
+
+
                         <asp:BoundField DataField="costicxin"
                             DataFormatString="{0:F2}"
                             HeaderText="ICX/IOS (USD)"
-                            SortExpression="costicxin" />
+                            SortExpression="costicxin" 
+                            Visible="false"/>
                         <asp:BoundField DataField="costvatcomissionin"
                             DataFormatString="{0:F2}"
                             HeaderText="BTRC Revenue Share"
-                            SortExpression="tax1" />
+                            SortExpression="tax1" 
+                            Visible="false"/>
 
 
 
                         <asp:BoundField DataField="customercost"
                             DataFormatString="{0:F2}"
                             HeaderText="Revenue"
-                            SortExpression="customercost" />
+                            SortExpression="customercost" 
+                            Visible="false"/>
 
                         <asp:BoundField DataField="igwrevenuein"
                             DataFormatString="{0:F2}"
                             HeaderText="IGW $"
-                            SortExpression="igwrevenuein" />
+                            SortExpression="igwrevenuein" 
+                            Visible="false"/>
 
                         <asp:BoundField DataField="profit" Visible="false"
                             DataFormatString="{0:F2}"
@@ -749,27 +794,33 @@
                         <asp:BoundField DataField="ASR"
                             DataFormatString="{0:F2}"
                             HeaderText="ASR"
-                            SortExpression="ASR" />
+                            SortExpression="ASR" 
+                            Visible="false"/>
                         <asp:BoundField DataField="ACD"
                             DataFormatString="{0:F2}"
                             HeaderText="ACD"
-                            SortExpression="ACD" />
+                            SortExpression="ACD" 
+                            Visible="false"/>
                         <asp:BoundField DataField="PDD"
                             DataFormatString="{0:F2}"
                             HeaderText="PDD"
-                            SortExpression="PDD" />
+                            SortExpression="PDD" 
+                            Visible="false"/>
                         <asp:BoundField DataField="CCR"
                             DataFormatString="{0:F2}"
                             HeaderText="CCR"
-                            SortExpression="CCR" />
+                            SortExpression="CCR" 
+                            Visible="false"/>
                         <asp:BoundField DataField="ConectbyCC"
                             DataFormatString="{0:F0}"
                             HeaderText="Connect Count (CC)"
-                            SortExpression="ConnectByCC" />
+                            SortExpression="ConnectByCC" 
+                            Visible="false"/>
                         <asp:BoundField DataField="CCRByCC"
                             DataFormatString="{0:F2}"
                             HeaderText="CCR By CC"
-                            SortExpression="CCRByCC" />
+                            SortExpression="CCRByCC" 
+                            Visible="false"/>
 
 
 

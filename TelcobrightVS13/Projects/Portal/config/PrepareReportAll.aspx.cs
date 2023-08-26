@@ -50,6 +50,15 @@ namespace PortalApp.config
 
                     int INVOICE_ID = Convert.ToInt32(invoiceId);
                     invoice invoice = context.invoices.First(x => x.INVOICE_ID == INVOICE_ID);
+                    int serviceGroupId = invoice.account.serviceGroup;
+                    ServiceGroupConfiguration sgConfiguration = null;
+                    Tbc.CdrSetting.ServiceGroupConfigurations.TryGetValue(serviceGroupId, out sgConfiguration);
+                    if (sgConfiguration == null)
+                    {
+                        throw new Exception("Service group configuraiton not found for generated invoice.");
+                    }
+                    List<string> sectionNamesOfInvoiceForExport =
+                        sgConfiguration.InvoiceGenerationConfig.SectionNamesOfInvoiceForExport;
 
 
                     for (int i = 0; i < TempReportNames.Count; i++)
@@ -63,9 +72,19 @@ namespace PortalApp.config
                         for (int j = 0; j < templates.Count; j++)
                         {
                             IInvoiceTemplate template = templates[j];
+                            bool includeTemplateDuringExport = true;
+                            if (sectionNamesOfInvoiceForExport.Any() == false) //empty=all sections
+                            {
+                                includeTemplateDuringExport = true;
+                            }
+                            else
+                            {
+                                includeTemplateDuringExport =
+                                    sectionNamesOfInvoiceForExport.Contains(template.TemplateName.Split('#')[1]);
+                            }
                             //GridViewRow gvrow = (GridViewRow)linkButton.NamingContainer;
                             //int INVOICE_ID = Convert.ToInt32(gvInvoice.DataKeys[gvrow.RowIndex].Value);
-                            
+
                             invoice_item invoiceItem = context.invoice_item.First(ii => ii.INVOICE_ID == invoice.INVOICE_ID);
                             Dictionary<string, string> jsonDetail = JsonConvert.DeserializeObject<Dictionary<string, string>>(invoiceItem.JSON_DETAIL);
                             List<long> mergedInvoiceIds = new List<long>();

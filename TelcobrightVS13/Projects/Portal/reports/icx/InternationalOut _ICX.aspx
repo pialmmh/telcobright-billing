@@ -215,11 +215,11 @@
                     <div style="text-align: left; float: left">
                         View By Country:
                     <asp:CheckBox ID="CheckBoxShowByCountry" runat="server"
-                        AutoPostBack="True" Checked="true" EnableViewState="true"
+                        AutoPostBack="True" Checked="false" EnableViewState="true"
                         OnCheckedChanged="CheckBoxShowByCountry_CheckedChanged" />
 
                         <asp:DropDownList ID="DropDownListCountry" runat="server"
-                            Enabled="true" AutoPostBack="True" OnSelectedIndexChanged="DropDownList1_SelectedIndexChanged">
+                            Enabled="false" AutoPostBack="True" OnSelectedIndexChanged="DropDownList1_SelectedIndexChanged">
                         </asp:DropDownList>
 
 
@@ -251,7 +251,7 @@
                     <div style="float: left;">
                         View by ANS:
                         <asp:CheckBox ID="CheckBoxShowByIgw" runat="server"
-                            AutoPostBack="True" OnCheckedChanged="CheckBoxShowByIgw_CheckedChanged" Checked="false"/>
+                            AutoPostBack="True" OnCheckedChanged="CheckBoxShowByIgw_CheckedChanged" Checked="false" />
 
                         <asp:DropDownList ID="DropDownListIgw" runat="server" OnSelectedIndexChanged="DropDownListIgw_OnSelectedIndexChanged"
                             Enabled="False" AutoPostBack="True" >
@@ -348,7 +348,7 @@
                     SortExpression="Destination" />
                 <asp:BoundField DataField="IGW" HeaderText="ANSNotUse" SortExpression="ANSNotUse"  Visible="false"/>
                 <asp:BoundField DataField="tup_incomingroute" HeaderText="ANS Route" SortExpression="tup_incomingroute" />
-                <asp:BoundField DataField="ANS" HeaderText="ANS" SortExpression="ANS" />
+                <asp:BoundField DataField="ANS" HeaderText="ANS" SortExpression="ANS" Visible="false"/>
                 <asp:BoundField DataField="International Partner" HeaderText="IOS" SortExpression="International Partner" />
                 <asp:BoundField DataField="tup_outgoingroute" HeaderText="IOS Route" SortExpression="tup_outgoingroute" />
 
