@@ -23,14 +23,17 @@ namespace PortalApp.ReportHelper
     public class AcdReportRow
     {
         public string Date{ get; set; }
-        public string Call_Count { get; set; }
-        public string ACD_Value { get; set; }
-        public string Call_Type { get; set; }
+        public string ICX_Name { get; set; }
         public string Operator { get; set; }
-        public string partnerName { get; set; }
-        public string CustomerName { get; set; }
         public string MSISDN { get; set; }
+        public string Call_Type { get; set; }
+        public string Call_Count { get; set; }
         public string DurationInMinute { get; set; }
+        public string ACD_Value { get; set; }
+        
+        
+        //public string partnerName { get; set; }
+        
     }
 
     public class InternationalReportRow

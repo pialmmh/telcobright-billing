@@ -109,8 +109,11 @@ namespace PortalApp.config
                                 };
                                 template.GenerateInvoice(invoiceWithMergeIds);
                                 string pdfFileName = $"C:\\temp\\invoice_{Guid.NewGuid()}.pdf";
-                                template.SaveToPdf(pdfFileName);
-                                generatedPdfPaths.Add(pdfFileName);
+                                if (includeTemplateDuringExport == true)
+                                {
+                                    template.SaveToPdf(pdfFileName);
+                                    generatedPdfPaths.Add(pdfFileName);
+                                }
 
                             }
                             else
@@ -118,8 +121,11 @@ namespace PortalApp.config
                                 template.GenerateInvoice(invoice);
                                 
                                 string pdfFileName = $"C:\\temp\\invoice_{Guid.NewGuid()}.pdf";
-                                template.SaveToPdf(pdfFileName);
-                                generatedPdfPaths.Add(pdfFileName);
+                                if (includeTemplateDuringExport == true)
+                                {
+                                    template.SaveToPdf(pdfFileName);
+                                    generatedPdfPaths.Add(pdfFileName);
+                                }
                             }
                         }
                     }

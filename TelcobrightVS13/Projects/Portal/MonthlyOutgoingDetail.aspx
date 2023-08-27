@@ -1,5 +1,5 @@
 ﻿<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="True"
-    CodeBehind="AcdReport.aspx.cs" Inherits="DefaultRptAcdIcx" %>
+    CodeBehind="MonthlyOutgoingDetail.aspx.cs" Inherits="DefaultRptMonthlyOutDetailIcx" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Import Namespace="MediationModel" %>
@@ -19,7 +19,7 @@
         protected void Page_Load(object sender, EventArgs e)
         {
             TelcobrightConfig tbc = PageUtil.GetTelcobrightConfig();
-            this.operatorName = PageUtil.GetOperatorName();
+            //this.operatorName = PageUtil.GetOperatorName();
             PageUtil.ApplyPageSettings(this, false, tbc);
             //common code for report pages
             //view state of ParamBorder div
@@ -48,10 +48,10 @@
                 TextBoxYear1.Text = System.DateTime.Now.ToString("yyyy");
                 DropDownListMonth.SelectedIndex = int.Parse(System.DateTime.Now.ToString("MM")) - 1;
                 DropDownListMonth1.SelectedIndex = int.Parse(System.DateTime.Now.ToString("MM")) - 1;
-                //txtDate.Text = FirstDayOfMonthFromDateTime(System.DateTime.Now).ToString("dd/MM/yyyy");
-                //txtDate1.Text = LastDayOfMonthFromDateTime(System.DateTime.Now).ToString("dd/MM/yyyy");
-                txtStartDate.Text = System.DateTime.Now.AddDays(-6).ToString("yyyy-MM-dd 00:00:00");
-                txtEndDate.Text = System.DateTime.Now.ToString("yyyy-MM-dd 23:59:59");
+                txtStartDate.Text = FirstDayOfMonthFromDateTime(System.DateTime.Now).ToString("yyyy-MM-dd 00:00:00");
+                txtEndDate.Text = LastDayOfMonthFromDateTime(System.DateTime.Now).ToString("yyyy-MM-dd 23:59:59");
+                //txtStartDate.Text = System.DateTime.Now.AddDays(-6).ToString("yyyy-MM-dd 00:00:00");
+                //txtEndDate.Text = System.DateTime.Now.ToString("yyyy-MM-dd 23:59:59");
 
 
                 //set controls if page is called for a template
@@ -178,6 +178,8 @@
             //select 15th of month to find out first and last day of a month as it exists in all months.
             DateTime anyDayOfMonth = new DateTime(int.Parse(TextBoxYear.Text), int.Parse(DropDownListMonth.SelectedValue), 15);
             txtStartDate.Text = FirstDayOfMonthFromDateTime(anyDayOfMonth).ToString("yyyy-MM-dd 00:00:00");
+            txtEndDate.Text = LastDayOfMonthFromDateTime(anyDayOfMonth).ToString("yyyy-MM-dd 23:59:59");
+
         }
         protected void DropDownListMonth1_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -401,10 +403,10 @@
                             <asp:ListItem Value="12">Dec</asp:ListItem>
                         </asp:DropDownList>
 
-                        End Year/Month: 
-                        <asp:TextBox ID="TextBoxYear1" runat="server" Text="" Width="30px"></asp:TextBox>
-                        Month
-                        <asp:DropDownList ID="DropDownListMonth1" runat="server"
+                        <%--End Year/Month: --%>
+                        <asp:TextBox ID="TextBoxYear1" runat="server" Visible="False" Text="" Width="30px"></asp:TextBox>
+                        <%--Month--%>
+                        <asp:DropDownList ID="DropDownListMonth1" runat="server" Visible="False"
                             OnSelectedIndexChanged="DropDownListMonth1_SelectedIndexChanged" AutoPostBack="True">
                             <asp:ListItem Value="01">Jan</asp:ListItem>
                             <asp:ListItem Value="02">Feb</asp:ListItem>
@@ -423,8 +425,8 @@
                     </span>
 
 
-                    <div style="float: left; width: 280px;">
-                        Start Date [Time]
+                    <div style="float: left; width: -1px;visibility: hidden;">
+                        <%--Start Date [Time]--%>
                         <asp:TextBox ID="txtStartDate" AutoPostBack="true" OnTextChanged="CalendarEndDate_TextChanged" runat="server" />
                         <asp:CalendarExtender ID="CalendarStartDate" runat="server"
                             TargetControlID="txtStartDate" PopupButtonID="txtStartDate" Format="yyyy-MM-dd 00:00:00">
@@ -433,8 +435,8 @@
 
                     </div>
 
-                    <div style="float: left; width: 280px;">
-                        End Date [Time]
+                    <div style="float: left; width: 280px; visibility: hidden;">
+                        <%--End Date [Time]--%>
                         <asp:TextBox ID="txtEndDate" AutoPostBack="true" OnTextChanged="CalendarStartDate_TextChanged" runat="server" />
                         <asp:CalendarExtender ID="CalendarEndDate" runat="server"
                             TargetControlID="txtEndDate" PopupButtonID="txtEndDate" Format="yyyy-MM-dd 23:59:59">
@@ -515,8 +517,7 @@
                 </div>
 
                 <div id="RouteFilter" style="visibility: hidden; margin-top: -4px; margin-left: 10px; float: left; padding-left: 5px; background-color: #f2f2f2;">
-                    <%--<span style="font-size: smaller;position:relative;left:-53px;padding-left:0px;clear:right;">[Enter only Date in "dd/MM/yyyy (e.g. 21/11/2012) or Date+Time in "dd/MM/yyyy HH:mm:ss" (e.g. 21/11/2012 19:01:59) format]</span>   --%>
-
+                    <span style="font-size: smaller;position:relative;left:-53px;padding-left:0px;clear:right;">[Enter only Date in "dd/MM/yyyy (e.g. 21/11/2012) or Date+Time in "dd/MM/yyyy HH:mm:ss" (e.g. 21/11/2012 19:01:59) format]</span>   
                     <div style="text-align: left;">
 
                         <div style="float: left; height: 25px; min-width: 1285px;">
@@ -584,7 +585,7 @@
             <div style="text-align: center;">
                 <div style="clear: both;"></div>
                 <div style="padding-left: 25%; padding-bottom: 5px;">
-                    <asp:Label ID="IntlInHeader" runat="server" Text="" ForeColor="#08605c" Font-Bold="true" Font-Size="Large"></asp:Label>
+<%--                    <asp:Label ID="IntlInHeader" runat="server" Text="" ForeColor="#08605c" Font-Bold="true" Font-Size="Large"></asp:Label>--%>
                 </div>
                 <div style="text-align: left;">
                     <div style="text-align: left; float: left;">
@@ -628,23 +629,80 @@
                         </asp:GridView>
                     </div>
                     <div style="clear: both;"></div>
-                    <div style="padding-left: 100px; padding-bottom: 5px;">
-                        <asp:Label ID="DomHeader" runat="server" Text="" ForeColor="#08605c" Font-Bold="true" Font-Size="Large"></asp:Label>
+                    <div style="padding-bottom: 5px; padding-left: 420px">
+                        <asp:Label Visible="false" ID="DomHeader" runat="server" Text="" Height="20px" Width="236px"  style="padding:2px;text-align: center;" BorderColor="LightGray" BorderWidth="2px" BorderStyle="Solid" ForeColor="#333333"></asp:Label>
                     </div>
                     <div style="text-align: left; float: left; clear: left">
                         <asp:GridView ID="Gvdom" runat="server" AutoGenerateColumns="False"
                             CellPadding="4" ForeColor="#333333" GridLines="Vertical" Visible="true" ShowFooter="true">
                             <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+
                             <Columns>
-                                <asp:BoundField DataField="Date"            HeaderText="Date"             SortExpression="Date" ItemStyle-Wrap="false" FooterText="Total" />
-                                <asp:BoundField DataField="Operator" HeaderText="Operator"         SortExpression="Operator" FooterText="" />
-                                <asp:BoundField DataField="MSISDN" HeaderText="A-Party MSISDN No"           SortExpression="A-Party MSISDN No" FooterText="" />
-                                <asp:BoundField DataField="Call_Type" HeaderText="Call_Type"        SortExpression="Call_Type" FooterText="" />
-                                <asp:BoundField DataField="Call_Count" HeaderText="Call_Count"       SortExpression="Call_Count" FooterText="" />
-                                <asp:BoundField DataField="DurationInMinute" HeaderText="DurationInMinute" SortExpression="DurationInMinute" FooterText="" />
-                                <asp:BoundField DataField="ACD_Value" HeaderText="ACD_Value"        SortExpression="ACD_Value" FooterText="" />
+                                
+                                <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" ItemStyle-Wrap="false" FooterText="" Visible="false"/>
+                                <asp:BoundField DataField="callDuration" 
+                                HeaderText="Call Duration" DataFormatString="{0:F4}"
+                                SortExpression="Call Duration" ItemStyle-Wrap="false" FooterText="" 
+                                />
+                                 <asp:BoundField DataField="msf" HeaderText="MSF" SortExpression="MSF" />
+                                <asp:BoundField DataField="originatingCarrier" HeaderText="Originating Carrier" SortExpression="Originating Carrier" />
+                                <asp:BoundField DataField="originatingIp" HeaderText="Originating Ip" SortExpression="Originating Ip" />
+                                <asp:BoundField DataField="originatingDuration" HeaderText="Originating Duration" SortExpression="Originating Duration" DataFormatString="{0:F4}"/>
+                                <asp:BoundField DataField="originatingRate" HeaderText="Originating Rate" SortExpression="Originating Rate" DataFormatString="{0:F4}"/>
+
+                                <asp:BoundField DataField="terminatingCarrier"
+                                    HeaderText="Terminating Carrier"
+                                    SortExpression="Terminating Carrier" />
+
+                                <asp:BoundField DataField="terminatingIp" HeaderText="Terminating Ip" SortExpression="Terminating Ip" />
+                                <asp:BoundField DataField="terminatingRegion"
+                                                HeaderText="Terminating Region"
+                                                SortExpression="terminatingRegion" />
+
+                                <asp:BoundField DataField="terminatingDuration" HeaderText="Terminating Duration" SortExpression="Terminating Duration" DataFormatString="{0:F4}"/>
+                                <asp:BoundField DataField="terminatingRate" HeaderText="Terminating Rate" SortExpression="Terminating Rate" DataFormatString="{0:F4}"/>
+
                                 
 
+                                <asp:BoundField DataField="dpc"
+                                    HeaderText="DPC"
+                                    SortExpression="dpc" />
+
+                                <asp:BoundField DataField="calledId"
+                                    HeaderText="Called Id"
+                                    SortExpression="calledId" />
+                                <asp:BoundField DataField="dialedNumber"
+                                    HeaderText="Dialed Number"
+                                    SortExpression="dialedNumber" />
+                                <asp:BoundField DataField="connectTime"
+                                    HeaderText="Connect Time"
+                                    SortExpression="connectTime" />
+                                <asp:BoundField DataField="disconnectTime"
+                                    HeaderText="Disconnect Time"
+                                    SortExpression="disconnectTime" />
+
+
+                                <asp:BoundField DataField="OriginatingANS" DataFormatString="{0:F0}" HeaderText="Originating ANS" SortExpression="OriginatingANS" ItemStyle-Wrap="false" FooterText="" Visible="false"/>
+                                <asp:BoundField DataField="TerminatingCarrier" DataFormatString="{0:F0}" HeaderText="Terminating Carrier" ItemStyle-Wrap="false" SortExpression="TerminatingCarrier" FooterText="" Visible="false"/>                                
+                                <asp:BoundField DataField="ICRouteName" DataFormatString="{0:F0}" HeaderText="I/C Route Name" ItemStyle-Wrap="false" SortExpression="ICRouteName" FooterText="" Visible="false"/>
+                                <asp:BoundField DataField="OGRouteName" DataFormatString="{0:F0}" HeaderText="O/G Route Name" ItemStyle-Wrap="false" SortExpression="OGRouteName" FooterText="" Visible="false"/>
+                                <asp:BoundField DataField="TerminatingRegion" DataFormatString="{0:F0}" HeaderText="Terminating Region" SortExpression="TerminatingRegion" ItemStyle-Wrap="false" FooterText="" Visible="false"/>
+                                <asp:BoundField DataField="TotalCalls" DataFormatString="{0:F0}" HeaderText="Total Calls" SortExpression="TotalCalls" ItemStyle-Wrap="false" FooterText="" Visible="false"/>
+                                <asp:BoundField DataField="TotalSuccessfulCalls"  DataFormatString="{0:F0}" HeaderText="Total Successful Calls" SortExpression="TotalSuccessfulCalls" ItemStyle-Wrap="false" FooterText="" Visible="false"/>                                
+                                <asp:BoundField DataField="TotalDuration"  DataFormatString="{0:F4}"  ItemStyle-Wrap="false" HeaderText="Total Duration" SortExpression="TotalDuration"  FooterText="" Visible="false"/>
+                                <asp:BoundField DataField="TotalPaidMinute" DataFormatString="{0:F4}" ItemStyle-Wrap="false" HeaderText="Total Paid Minute" SortExpression="TotalPaidMinute" FooterText="" Visible="false"/>
+                                <asp:BoundField DataField="ACD" DataFormatString="{0:F0}" HeaderText="ACD" SortExpression="ACD" ItemStyle-Wrap="false" FooterText="" Visible="false"/>                                
+                                <asp:BoundField DataField="ASR" DataFormatString="{0:F0}" HeaderText="ASR" SortExpression="ASR" ItemStyle-Wrap="false" FooterText="" Visible="false"/>
+                                <asp:BoundField DataField="CER" DataFormatString="{0:F0}" HeaderText="CER" SortExpression="CER" ItemStyle-Wrap="false" FooterText="" Visible="false"/>
+                                <asp:BoundField DataField="MHT" DataFormatString="{0:F0}" HeaderText="MHT" SortExpression="MHT" ItemStyle-Wrap="false" FooterText="" Visible="false"/>
+                                <asp:BoundField DataField="XRate" DataFormatString="{0:F0}" HeaderText="X Rate" SortExpression="X Rate" ItemStyle-Wrap="false" FooterText="" Visible="false"/>
+                                <asp:BoundField DataField="YRate"  DataFormatString="{0:F0}" HeaderText="Y Rate" SortExpression="YRate" ItemStyle-Wrap="false" FooterText="" Visible="false"/>                                
+                                <asp:BoundField DataField="ConversionRate" DataFormatString="{0:F0}" HeaderText="Conversion Rate" SortExpression="ConversionRate" ItemStyle-Wrap="false" FooterText="" Visible="false"/>
+                                <asp:BoundField DataField="XAmount" DataFormatString="{0:F0}" HeaderText="X Amount" SortExpression="XAmount" ItemStyle-Wrap="false" FooterText="" Visible="false"/>
+                                <asp:BoundField DataField="YAmount" DataFormatString="{0:F0}" HeaderText="Y Amount" SortExpression="YAmount" ItemStyle-Wrap="false" FooterText="" Visible="false"/>                                
+                                <asp:BoundField DataField="ZAmount" DataFormatString="{0:F0}" HeaderText="Z Amount" SortExpression="ZAmount" ItemStyle-Wrap="false" FooterText="" Visible="false"/>
+                                <asp:BoundField DataField="Portion15PercOfZ" DataFormatString="{0:F0}" HeaderText="ICX Portion(15% of Z)" ItemStyle-Wrap="false" SortExpression="Portion15PercOfZ" FooterText="" Visible="false"/>
+                                
                             </Columns>
                             <HeaderStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />
                             <EditRowStyle BackColor="#999999" />
@@ -668,61 +726,66 @@
                     OnRowDataBound="GridView1_RowDataBound" Visible="false">
                     <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                     <Columns>
-                        <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" ItemStyle-Wrap="false" />
-                        <asp:BoundField DataField="International Partner" HeaderText="Incoming ANS" SortExpression="International Partner" />
-                        <asp:BoundField DataField="tup_incomingroute" HeaderText="Incoming Route" SortExpression="tup_incomingroute" />
-                        <asp:BoundField DataField="IGW" HeaderText="Outgoing ANS" SortExpression="IGW" />
-                        <asp:BoundField DataField="tup_outgoingroute" HeaderText="Outgoing Route" SortExpression="tup_outgoingroute" />
-                        <asp:BoundField DataField="ANS" HeaderText="ANS" SortExpression="ANS" />
+                        <asp:BoundField DataField="callDuration" 
+                            HeaderText="Call Duration" 
+                            SortExpression="Call Duration" 
+                         />
+                        <asp:BoundField DataField="msf" HeaderText="MSF" SortExpression="MSF" />
+                        <asp:BoundField DataField="originatingCarrier" HeaderText="Originating Carrier" SortExpression="Originating Carrier" />
+                        <asp:BoundField DataField="originatingIp" HeaderText="Originating Ip" SortExpression="Originating Ip" />
+                        <asp:BoundField DataField="originatingDuration" HeaderText="Originating Duration" SortExpression="Originating Duration" DataFormatString="{0:F4}"/>
+                        <asp:BoundField DataField="originatingRate" HeaderText="Originating Rate" SortExpression="Originating Rate" DataFormatString="{0:F4}"/>
 
-                        <asp:BoundField DataField="CallsCount"
-                            HeaderText="Total Calls"
-                            SortExpression="CallsCount" />
+                        <asp:BoundField DataField="terminatingCarrier"
+                            HeaderText="Terminating Carrier"
+                            SortExpression="Terminating Carrier" />
 
-                        <asp:BoundField DataField="Number Of Calls (International Incoming)"
-                            HeaderText="Successful Calls"
-                            SortExpression="Number Of Calls (International Incoming)" />
+                        <asp:BoundField DataField="terminatingRegion"
+                            HeaderText="Terminating Region"
+                            SortExpression="terminatingRegion" />
 
-                        <asp:BoundField DataField="ConnectedCount"
-                            HeaderText="Connected Calls"
-                            SortExpression="ConnectedCount" />
+                        <asp:BoundField DataField="dpc"
+                            HeaderText="DPC"
+                            SortExpression="dpc" />
 
-                        <asp:BoundField DataField="Paid Minutes (International Incoming)"
-                            DataFormatString="{0:F2}"
-                            HeaderText="Actual Duration"
-                            SortExpression="Paid Minutes (International Incoming)" />
-                        <asp:BoundField DataField="RoundedDuration"
-                            DataFormatString="{0:F2}"
-                            HeaderText="Billed Duration"
-                            SortExpression="RoundedDuration" />
-                        <asp:BoundField DataField="Duration1"
-                            DataFormatString="{0:F2}"
-                            HeaderText="Carrier Duration"
-                            SortExpression="Duration1" />
-                        <asp:BoundField DataField="costansin"
-                            DataFormatString="{0:F2}"
-                            HeaderText="ANS (USD)"
-                            SortExpression="costansin" />
+                        <asp:BoundField DataField="calledId"
+                            HeaderText="Called Id"
+                            SortExpression="calledId" />
+                        <asp:BoundField DataField="dialedNumber"
+                            HeaderText="Dialed Number"
+                            SortExpression="dialedNumber" />
+                        <asp:BoundField DataField="connectTime"
+                            HeaderText="Connect Time"
+                            SortExpression="connectTime" />
+                        <asp:BoundField DataField="disconnectTime"
+                            HeaderText="Disconnect Time"
+                            SortExpression="disconnectTime" />
+
+
                         <asp:BoundField DataField="costicxin"
                             DataFormatString="{0:F2}"
                             HeaderText="ICX/IOS (USD)"
-                            SortExpression="costicxin" />
+                            SortExpression="costicxin" 
+                            Visible="false"/>
                         <asp:BoundField DataField="costvatcomissionin"
                             DataFormatString="{0:F2}"
                             HeaderText="BTRC Revenue Share"
-                            SortExpression="tax1" />
+                            SortExpression="tax1" 
+                            Visible="false"/>
 
 
 
                         <asp:BoundField DataField="customercost"
                             DataFormatString="{0:F2}"
                             HeaderText="Revenue"
-                            SortExpression="customercost" />
+                            SortExpression="customercost" 
+                            Visible="false"/>
 
                         <asp:BoundField DataField="igwrevenuein"
                             DataFormatString="{0:F2}"
                             HeaderText="IGW $"
-                            SortExpression="igwrevenuein" />
+                            SortExpression="igwrevenuein" 
+                            Visible="false"/>
 
                         <asp:BoundField DataField="profit" Visible="false"
                             DataFormatString="{0:F2}"
@@ -733,27 +796,33 @@
                         <asp:BoundField DataField="ASR"
                             DataFormatString="{0:F2}"
                             HeaderText="ASR"
-                            SortExpression="ASR" />
+                            SortExpression="ASR" 
+                            Visible="false"/>
                         <asp:BoundField DataField="ACD"
                             DataFormatString="{0:F2}"
                             HeaderText="ACD"
-                            SortExpression="ACD" />
+                            SortExpression="ACD" 
+                            Visible="false"/>
                         <asp:BoundField DataField="PDD"
                             DataFormatString="{0:F2}"
                             HeaderText="PDD"
-                            SortExpression="PDD" />
+                            SortExpression="PDD" 
+                            Visible="false"/>
                         <asp:BoundField DataField="CCR"
                             DataFormatString="{0:F2}"
                             HeaderText="CCR"
-                            SortExpression="CCR" />
+                            SortExpression="CCR" 
+                            Visible="false"/>
                         <asp:BoundField DataField="ConectbyCC"
                             DataFormatString="{0:F0}"
                             HeaderText="Connect Count (CC)"
-                            SortExpression="ConnectByCC" />
+                            SortExpression="ConnectByCC" 
+                            Visible="false"/>
                         <asp:BoundField DataField="CCRByCC"
                             DataFormatString="{0:F2}"
                             HeaderText="CCR By CC"
-                            SortExpression="CCRByCC" />
+                            SortExpression="CCRByCC" 
+                            Visible="false"/>
 
 
 

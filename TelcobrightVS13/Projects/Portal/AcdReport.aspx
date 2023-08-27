@@ -116,8 +116,8 @@
 
                 }
 
-                //DropDownListPartner_OnSelectedIndexChanged(DropDownListPartner, EventArgs.Empty);
-                //DropDownListIgw_OnSelectedIndexChanged(DropDownListIgw, EventArgs.Empty);
+                DropDownListPartner_OnSelectedIndexChanged(DropDownListPartner, EventArgs.Empty);
+                DropDownListIgw_OnSelectedIndexChanged(DropDownListIgw, EventArgs.Empty);
 
 
                 //Retrieve Path from TreeView for displaying in the master page caption label
@@ -638,12 +638,11 @@
                             <Columns>
                                 <asp:BoundField DataField="Date"            HeaderText="Date"             SortExpression="Date" ItemStyle-Wrap="false" FooterText="Total" />
                                 <asp:BoundField DataField="Operator" HeaderText="Operator"         SortExpression="Operator" FooterText="" />
-                                <asp:BoundField DataField="MSISDN" HeaderText="A-Party MSISDN No"           SortExpression="A-Party MSISDN No" FooterText="" />
+                                <asp:BoundField DataField="MSISDN" HeaderText="MSISDN"           SortExpression="MSISDN" FooterText="" />
                                 <asp:BoundField DataField="Call_Type" HeaderText="Call_Type"        SortExpression="Call_Type" FooterText="" />
                                 <asp:BoundField DataField="Call_Count" HeaderText="Call_Count"       SortExpression="Call_Count" FooterText="" />
-                                <asp:BoundField DataField="DurationInMinute" HeaderText="DurationInMinute" SortExpression="DurationInMinute" FooterText="" />
                                 <asp:BoundField DataField="ACD_Value" HeaderText="ACD_Value"        SortExpression="ACD_Value" FooterText="" />
-                                
+                                <asp:BoundField DataField="DurationInMinute" HeaderText="DurationInMinute" SortExpression="DurationInMinute" FooterText="" />
 
                             </Columns>
                             <HeaderStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />

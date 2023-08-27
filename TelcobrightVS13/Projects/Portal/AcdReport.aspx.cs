@@ -20,8 +20,8 @@ public partial class DefaultRptAcdIcx : System.Web.UI.Page
     private string GetQuery()
     {
 
-        string StartDate = txtStartDate.Text;
-        string EndtDate = (txtEndDate.Text.ConvertToDateTimeFromMySqlFormat()).AddSeconds(1).ToMySqlFormatWithoutQuote();
+        string StartDate = txtDate.Text;
+        string EndtDate = (txtDate1.Text.ConvertToDateTimeFromMySqlFormat()).AddSeconds(1).ToMySqlFormatWithoutQuote();
         string tableName = DropDownListReportSource.SelectedValue + "01";
 
         string groupInterval = getSelectedRadioButtonText();
@@ -128,15 +128,14 @@ public partial class DefaultRptAcdIcx : System.Web.UI.Page
                 foreach (DataRow row in table.Rows)
                 {
                     AcdReportRow record = new AcdReportRow();
-                    record.Date = Convert.ToString(row["Date"]);
-                    record.ICX_Name = this.operatorName;
+                    record.ACD_Value= Convert.ToString(row["ACD Value"]);
+                    record.Call_Count= Convert.ToString(row["Call Count"]);
+                    record.Date= Convert.ToString(row["Date"]);
+                    record.Call_Type= Convert.ToString(row["Call Type"]);
+                    record.CustomerName = this.operatorName;
                     record.Operator = Convert.ToString(row["Operator Name"]);
                     record.MSISDN = Convert.ToString(row["A-Party MSISDN No"]);
-                    record.Call_Type = Convert.ToString(row["Call Type"]);
-                    record.Call_Count = Convert.ToString(row["Call Count"]);
                     record.DurationInMinute = Convert.ToString(row["Call Duration in Min"]);
-                    record.ACD_Value= Convert.ToString(row["ACD Value"]);
-        
                     records.Add(record);
                 }
             }
@@ -165,8 +164,8 @@ public partial class DefaultRptAcdIcx : System.Web.UI.Page
                        SUM(Duration1)/60/COUNT(OriginatingCallingNumber) AS ACD,
 			            ServiceGroup
                 FROM cdr 
-                WHERE starttime >= '{txtStartDate.Text}' 
-                    AND starttime < '{txtEndDate.Text}' 
+                WHERE starttime >= '{txtDate.Text}' 
+                    AND starttime < '{txtDate1.Text}' 
                     AND servicegroup = 1 
                 GROUP BY inpartnerid, originatingcallingnumber 
                 HAVING SUM(Duration1)/60 >= 50 
@@ -409,7 +408,7 @@ public partial class DefaultRptAcdIcx : System.Web.UI.Page
         }
         }
 
-    private List<AcdReportRow> ConvertBtrcDataSetToList(DataSet domesticDs, object partnerName)
+    private List<BtrcReportRow> ConvertBtrcDataSetToList(DataSet domesticDs, object partnerName)
     {
         throw new NotImplementedException();
     }
@@ -517,8 +516,8 @@ public partial class DefaultRptAcdIcx : System.Web.UI.Page
 
             DateTime endtime = DateTime.Now;
             DateTime starttime = endtime.AddMinutes(a * (-1));
-            txtEndDate.Text = endtime.ToString("dd/MM/yyyy HH:mm:ss");
-            txtStartDate.Text = starttime.ToString("dd/MM/yyyy HH:mm:ss");
+            txtDate1.Text = endtime.ToString("dd/MM/yyyy HH:mm:ss");
+            txtDate.Text = starttime.ToString("dd/MM/yyyy HH:mm:ss");
 
             //return true;
         }
@@ -544,19 +543,19 @@ public partial class DefaultRptAcdIcx : System.Web.UI.Page
     {
         CalendarStartDate.SelectedDate = txtStartDate.Text.ConvertToDateTimeFromMySqlFormat();
         DateTime startDate = CalendarStartDate.SelectedDate ?? DateTime.Now;
-        DateTime endDate = startDate;
+        DateTime endDate = startDate.AddDays(1);
         CalendarEndDate.SelectedDate = endDate;
-        txtStartDate.Text = startDate.ToString("yyyy-MM-dd 00:00:00");
-        txtEndDate.Text = endDate.ToString("yyyy-MM-dd 23:59:59");
+        //txtStartDate.Text = startDate.ToString("yyyy-MM-dd 00:00:00");
+        //txtEndDate.Text = endDate.ToString("yyyy-MM-dd 23:59:59");
     }
     protected void CalendarStartDate_TextChanged(object sender, EventArgs e)
     {
         CalendarEndDate.SelectedDate = txtEndDate.Text.ConvertToDateTimeFromMySqlFormat();
         DateTime endDate = CalendarEndDate.SelectedDate ?? DateTime.Now;
-        DateTime startDate = endDate;
+        DateTime startDate = endDate.AddDays(-1);
         CalendarStartDate.SelectedDate = startDate;
-        txtStartDate.Text = startDate.ToString("yyyy-MM-dd 00:00:00");
-        txtEndDate.Text = endDate.ToString("yyyy-MM-dd 23:59:59");
+        //txtStartDate.Text = startDate.ToString("yyyy-MM-dd 00:00:00");
+        //txtEndDate.Text = endDate.ToString("yyyy-MM-dd 23:59:59");
     }
 
     protected void Timer1_Tick(object sender, EventArgs e)
