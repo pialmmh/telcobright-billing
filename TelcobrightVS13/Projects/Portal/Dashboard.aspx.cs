@@ -28,8 +28,16 @@ public partial class DashboardAspx : Page
         TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
         var databaseSetting = telcobrightConfig.DatabaseSetting;
         string userName = Page.User.Identity.Name;
-        string dbName = telcobrightConfig.DeploymentProfile.UserVsDbName[userName];
-        databaseSetting.DatabaseName =dbName;
+        string dbName;
+        if (telcobrightConfig.DeploymentProfile.UserVsDbName.ContainsKey(userName))
+        {
+            dbName = telcobrightConfig.DeploymentProfile.UserVsDbName[userName];
+        }
+        else
+        {
+            dbName = telcobrightConfig.DatabaseSetting.DatabaseName;
+        }
+        databaseSetting.DatabaseName = dbName;
         using (PartnerEntities conTelco = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting))
         {
             thisPartner = conTelco.telcobrightpartners.Where(c => c.databasename == dbNameAppConf).ToList().First();
@@ -51,7 +59,7 @@ public partial class DashboardAspx : Page
         {
             ec = conPartner.Database.SqlQuery<DashBoard.ErrorCalls>(@"select ErrorCode as ErrorReason, count(*) as NumberOfCalls
                                                 from cdrerror group by ErrorCode").ToList();
-            this.HyperLinkError.Text = ec.Select(c=>c.NumberOfCalls).Sum() + " Calls in Error";
+            this.HyperLinkError.Text = ec.Select(c => c.NumberOfCalls).Sum() + " Calls in Error";
             this.GridViewError.DataSource = ec;
             this.GridViewError.DataBind();
 

@@ -540,6 +540,47 @@ namespace PortalApp.ReportHelper
             }
         }
 
+        // Acd Report
+        public static bool AcdReport(string filename, HttpResponse response, List<AcdReportRow> acdRecords, string startDate, string endDate, string partnerName
+        )
+        {
+            try
+            {
+                using (ExcelPackage pck = new ExcelPackage())
+                {
+                    //Create the worksheet
+                    ExcelWorksheet ws = pck.Workbook.Worksheets.Add("Sheet1");
+
+                    int rowCount = acdRecords.Count;
+                    string reportStartCol = "A";
+                    int reportStartRow = 1;
+                    int totalStartRow = reportStartRow + rowCount + 1;
+                    string reportStartRange = reportStartCol + reportStartRow.ToString();
+                    string totalStartRange = reportStartCol + totalStartRow.ToString();
+                    ws.Cells[reportStartRange].LoadFromCollection<AcdReportRow>(acdRecords, true);
+
+                    // Set columns to auto-fit
+                    for (int i = 1; i <= ws.Dimension.Columns; i++)
+                    {
+                        ws.Column(i).AutoFit();
+                    }
+
+                    //Write it back to the client
+                    response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    response.AddHeader("content-disposition", "attachment;  filename=" + filename + "");
+                    response.BinaryWrite(pck.GetAsByteArray());
+                    response.End();
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                Trace.WriteLine("Failed, exception thrown: " + ex.Message);
+                return false;
+            }
+        }
+
 
         //btrc
         public static bool ExportToExcelInternationalWeeklyReport(string filename, HttpResponse response, List<InternationalReportRow> internationalReports,

@@ -120,6 +120,7 @@ namespace PortalApp.ReportHelper
                 FROM
                 (
 	            {"(" + getSqlForDomestic() + " union all " + getSqlForLtfs()+")"}
+	            {"(" + getSqlForDomestic() + " union all " + getSqlForLtfs()+")"}
                 {GetGroupBy()}
             
             ) x

@@ -264,7 +264,7 @@ union all
               }
             </script>
 
-    <div id="TimeSummary" style="float:left;margin-left:15px;padding-left:20px;height:70px;width: 345px;background-color: #faebd7;margin-top: 0px;">
+    <div id="TimeSummary" style="float:left;margin-left:15px;padding-left:20px;height:70px;width: 345px;margin-top: 0px;">
         <div style="font-weight:bold;float:left;">Quick Select Period<asp:CheckBox ID="CheckBoxDailySummary" Visible="false" runat="server" />
             <%--<span style="padding-left:10px;"><asp:CheckBox ID="CheckBoxAllTime" runat="server" 
                 Text="All Period when viewing one Rate Plan" /></span>--%>

@@ -43,13 +43,13 @@ namespace PortalApp.ReportHelper
                 ConectbyCC,
                 CCRbyCC,  
                 X AS 'X (BDT)',
-                Y AS 'Y (USD)',
+                Y AS 'Y (BDT)',
                 Z AS 'Z (BDT)',
                 revenueigwout,
                 tax1, 
                 XRate AS 'X RATE(BDT)', 
                 YRate AS 'Y RATE(USD)', 
-                USDRate AS 'Dollar Rate', 
+                USDRate AS 'Dollar Rate' 
                 FROM
                 (
 	            SELECT {GetDateExpression(this.groupInterval)} AS Date,
@@ -75,7 +75,7 @@ namespace PortalApp.ReportHelper
                 SUM(connectedCallscc) AS ConectbyCC ,
 		        100*(SUM(connectedCallsCC)/SUM(totalcalls)) AS CCRByCC,
                 SUM(longDecimalAmount1) AS X,
-                SUM(longDecimalAmount2) AS Y,
+                SUM(longDecimalAmount2*tup_customercurrency) AS Y,
                 SUM(longDecimalAmount3) AS Z,
                 SUM(customercost) AS revenueigwout,
                 SUM(tax2) AS tax1, 

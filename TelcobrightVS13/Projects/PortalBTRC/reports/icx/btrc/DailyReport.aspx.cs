@@ -147,7 +147,7 @@ public partial class DefaultRptBtrcDailyIcx : System.Web.UI.Page
     }
     DataSet getDomesticReport(MySqlConnection connection)
     {
-        string domSql =
+        string sql =
          $@"select tup_inpartnerid as partnerid,sum(duration1)/60 as minutes 
         from 
         (select * from sum_voice_day_01
@@ -157,20 +157,20 @@ public partial class DefaultRptBtrcDailyIcx : System.Web.UI.Page
         where tup_starttime >= '{txtDate.Text}' and tup_starttime < '{txtDate1.Text}') x
         group by tup_inpartnerid;";
 
-        DataSet ds = getBtrcReport(connection, domSql);
+        DataSet ds = getBtrcReport(connection, sql);
         return ds;
     }
 
 
     DataSet getInternatinonalInComingReport_1(MySqlConnection connection)
     {
-        string intlIn_1_Sql =
+        string sql =
  $@"select tup_outpartnerid as partnerid,sum(duration1)/60 as minutes 
 from sum_voice_day_03
 where tup_starttime >= '{txtDate.Text}' and tup_starttime < '{txtDate1.Text}'
 group by tup_outpartnerid;";
 
-        DataSet ds = getBtrcReport(connection, intlIn_1_Sql);
+        DataSet ds = getBtrcReport(connection, sql);
         return ds;
     }
 
@@ -179,31 +179,31 @@ group by tup_outpartnerid;";
     DataSet getInternatinonalInComingReport_2(MySqlConnection connection)
     {
 
-        string intlIn_2_Sql =
+        string sql =
 $@"select tup_inpartnerid as partnerid,sum(duration1)/60 as minutes 
 from sum_voice_day_03
 where tup_starttime >= '{txtDate.Text}' and tup_starttime < '{txtDate1.Text}'
 group by tup_inpartnerid;";
 
-        DataSet ds = getBtrcReport(connection, intlIn_2_Sql);
+        DataSet ds = getBtrcReport(connection, sql);
         return ds;
     }
 
 
-    DataSet getInternatinonalOutComingReport_1(MySqlConnection connection)
+    DataSet getInternatinonalOutgoingReport_1(MySqlConnection connection)
     {
-        string intlOut_1_Sql =
+        string sql =
  $@"select tup_inpartnerid as partnerid,sum(roundedduration)/60 as minutes 
 from sum_voice_day_02
 where tup_starttime >= '{txtDate.Text}' and tup_starttime < '{txtDate1.Text}'
 group by tup_inpartnerid;";
 
-        DataSet ds = getBtrcReport(connection, intlOut_1_Sql);
+        DataSet ds = getBtrcReport(connection, sql);
         return ds;
     }
 
 
-    DataSet getInternatinonalOutComingReport_2(MySqlConnection connection)
+    DataSet getInternatinonalOutgoingReport_2(MySqlConnection connection)
     {
         string intlOut_2_Sql =
  $@"select tup_outpartnerid as partnerid,sum(roundedduration)/60 as minutes 
@@ -268,7 +268,7 @@ group by tup_outpartnerid;";
             }
 
 
-            DataSet intOutComing_1_Ds = getInternatinonalOutComingReport_1(connection);
+            DataSet intOutComing_1_Ds = getInternatinonalOutgoingReport_1(connection);
             bool hasIntOutComing_1_Ds = intOutComing_1_Ds.Tables.Cast<DataTable>()
                            .Any(table => table.Rows.Count != 0);
             if (hasIntOutComing_1_Ds == true)
@@ -280,7 +280,7 @@ group by tup_outpartnerid;";
                 ((BoundField)GvIntlout1.Columns[1]).FooterText = $"{sum:n0}";
                 GvIntlout1.DataBind();
 
-                DataSet intOutComing_2_Ds = getInternatinonalOutComingReport_2(connection);
+                DataSet intOutComing_2_Ds = getInternatinonalOutgoingReport_2(connection);
                 intOutComing_2_Records = ConvertBtrcDataSetToList(intOutComing_2_Ds, partnerNames);
                 sum = intOutComing_2_Records.Sum(r => r.minutes);
                 GvIntlout2.DataSource = intOutComing_2_Records;
@@ -465,8 +465,8 @@ group by tup_outpartnerid;";
         List<BtrcReportRow> domesticRecords = new List<BtrcReportRow>();
         List<BtrcReportRow> intInComing_1_Records = new List<BtrcReportRow>();
         List<BtrcReportRow> intInComing_2_Records = new List<BtrcReportRow>();
-        List<BtrcReportRow> intOutComing_1_Records = new List<BtrcReportRow>();
-        List<BtrcReportRow> intOutComing_2_Records = new List<BtrcReportRow>();
+        List<BtrcReportRow> intOutgoing_1_Records = new List<BtrcReportRow>();
+        List<BtrcReportRow> intOutgoing_2_Records = new List<BtrcReportRow>();
         Dictionary<int, string> partnerNames = null;
         using (PartnerEntities context = new PartnerEntities())
         {
@@ -492,15 +492,15 @@ group by tup_outpartnerid;";
             intInComing_2_Records = ConvertBtrcDataSetToList(intInComing_2_Ds, partnerNames);
 
 
-            DataSet intOutComing_1_Ds = getInternatinonalOutComingReport_1(connection);
-            intOutComing_1_Records = ConvertBtrcDataSetToList(intOutComing_1_Ds, partnerNames);
+            DataSet intOutgoing_1_Ds = getInternatinonalOutgoingReport_1(connection);
+            intOutgoing_1_Records = ConvertBtrcDataSetToList(intOutgoing_1_Ds, partnerNames);
 
-            DataSet intOutComing_2_Ds = getInternatinonalOutComingReport_2(connection);
-            intOutComing_2_Records = ConvertBtrcDataSetToList(intOutComing_2_Ds, partnerNames);
+            DataSet intOutgoing_2_Ds = getInternatinonalOutgoingReport_2(connection);
+            intOutgoing_2_Records = ConvertBtrcDataSetToList(intOutgoing_2_Ds, partnerNames);
 
 
             ExcelExporterForBtrcReport.ExportToExcelBtrcReport("Btrc_" + txtDate.Text
-                    + ".xlsx", Response, domesticRecords, intInComing_1_Records, intInComing_2_Records, intOutComing_1_Records, intOutComing_2_Records,txtDate.Text, operatorName);
+                    + ".xlsx", Response, domesticRecords, intInComing_1_Records, intInComing_2_Records, intOutgoing_1_Records, intOutgoing_2_Records,txtDate.Text, operatorName);
 
 
 
