@@ -160,7 +160,7 @@ namespace InstallConfig
             this.Tbc.Nes = neHelper.getNesByOpId(this.Tbc.Telcobrightpartner.idCustomer);
             //C:\TelcobrightProject\TelcobrightVS13\Projects\UtilInstallConfig\config\_helper
 
-
+            //hello 
 
             this.PrepareProductAndServiceConfiguration();
             
