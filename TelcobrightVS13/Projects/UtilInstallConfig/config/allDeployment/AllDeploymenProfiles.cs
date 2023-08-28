@@ -349,6 +349,11 @@ namespace InstallConfig
                             {
                                 Name = "mothertelecom_cas",
                                 SchedulerPortNo = 577
+                            },
+                            new InstanceConfig
+                            {
+                                Name = "banglatelecom_cas",
+                                SchedulerPortNo = 578
                             }
                         }
                     },

@@ -29,7 +29,7 @@ namespace InstallConfig
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx,
                 new telcobrightpartner
                 {
-                    idCustomer = 7,
+                    idCustomer = 9,
                     CustomerName = "Jibondhara Solutions Ltd.",
                     idOperatorType = 2,
                     databasename = "jibondhara_cas",
