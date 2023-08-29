@@ -196,43 +196,22 @@ public partial class DashboardAspx : Page
     private void PopulateDomesticDistribution()
     {
         Series series1 = DomesticDistribution.Series["Series1"];
-
         DataPointCollection points = series1.Points;
-        DataPoint dataPoint = new DataPoint
+
+        string[] labels = { "Agni", "Banglatelecom", "Bangla", "Bantel" };
+        double[] values = { 90, 10, 19, 78 };
+        string[] colors = { "#08605c", "#e40613", "#F86F03", "#FFA41B" };
+
+        for (int i = 0; i < labels.Length; i++)
         {
-            AxisLabel = "Agni",
-            YValues = new double[] { 90 },
-            Color = ColorTranslator.FromHtml("#08605c")
-        };
-        points.Add(dataPoint);
-
-        dataPoint = new DataPoint
-        {
-            AxisLabel = "Banglatelecom",
-            YValues = new double[] { 10 },
-            Color = ColorTranslator.FromHtml("#e40613")
-        };
-        points.Add(dataPoint);
-
-
-        dataPoint = new DataPoint
-        {
-            AxisLabel = "Bangla",
-            YValues = new double[] { 19 },
-            Color = ColorTranslator.FromHtml("#F86F03")
-        };
-        points.Add(dataPoint);
-
-        dataPoint = new DataPoint
-        {
-            AxisLabel = "Bantel",
-            YValues = new double[] { 78 },
-            Color = ColorTranslator.FromHtml("#FFA41B")
-        };
-
-        points.Add(dataPoint);
-
-
+            DataPoint dataPoint = new DataPoint
+            {
+                AxisLabel = labels[i],
+                YValues = new double[] { values[i] },
+                Color = ColorTranslator.FromHtml(colors[i])
+            };
+            points.Add(dataPoint);
+        }
     }
 
     private void PopulateIpTdmPieChart()

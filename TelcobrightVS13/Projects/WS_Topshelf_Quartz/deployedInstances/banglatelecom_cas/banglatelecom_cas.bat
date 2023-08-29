@@ -1,1 +1,0 @@
-C:\sftp_root\TelcobrightProject\TelcobrightVS13\Projects\WS_Topshelf_Quartz\bin\debug\WS_Telcobright_Topshelf.exe "C:\sftp_root\TelcobrightProject\TelcobrightVS13\Projects\WS_Topshelf_Quartz\deployedInstances\banglatelecom_cas\banglatelecom_cas.conf"
