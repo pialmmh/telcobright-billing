@@ -135,6 +135,13 @@ namespace PortalApp.ReportHelper
             ws.Cells[cell].Style.Font.Bold = true;
         }
 
+        private static void styleAlignmentWithBold(ExcelWorksheet ws, string cell)
+        {
+            ws.Cells[cell].Style.Font.Bold = true;
+            ws.Cells[cell].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+            ws.Cells[cell].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+        }
+
         public static void createBtrcHeader(ExcelWorksheet ws, string headerCell, int cellNo, string header)
         {
             if (!ws.Cells[headerCell].Merge) ws.Cells[headerCell].Merge = true;
@@ -599,18 +606,14 @@ namespace PortalApp.ReportHelper
 
                     string icxCell = "A2";
                     ws.Cells[icxCell].Value = "NAME OF ICX:";
-                    ws.Cells[icxCell].Style.Font.Bold = true;
-                    ws.Cells[icxCell].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-                    ws.Cells[icxCell].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    styleAlignmentWithBold(ws, icxCell);
                     ws.Cells["B2:C2"].Merge = true;
                     icxCell = getNextRangeAtRight(icxCell);
                     ws.Cells[icxCell].Value = partnerName;
                     ws.Cells[icxCell].Style.Font.Bold = true;
                     string dateCell = "A3";
                     ws.Cells[dateCell].Value = "Date:";
-                    ws.Cells[dateCell].Style.Font.Bold = true;
-                    ws.Cells[dateCell].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-                    ws.Cells[dateCell].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    styleAlignmentWithBold(ws,dateCell);
                     dateCell = getNextRangeAtRight(dateCell);
                     ws.Cells[dateCell].Value = /*startDate*/DateTime.ParseExact(startDate, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture).ToString("yyyy-MM-dd");
                     ws.Cells[dateCell].Style.Font.Bold = true;
@@ -620,9 +623,7 @@ namespace PortalApp.ReportHelper
                     string headerCell = "D7:E7";
                     ws.Cells[headerCell].Merge = true;
                     ws.Cells[headerCell].Value = "   International Outgoing Calls   ";
-                    ws.Cells[headerCell].Style.Font.Bold = true;
-                    ws.Cells[headerCell].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-                    ws.Cells[headerCell].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    styleAlignmentWithBold(ws, headerCell);
                     createBtrcHeader(ws, "B7:C7", 8, "International Incoming Calls");
                     string emptyCell = "A7";
                     headerCell = getNextRangeAtRight(emptyCell);
@@ -660,6 +661,8 @@ namespace PortalApp.ReportHelper
                 return false;
             }
         }
+
+        
 
         //btrc
         public static bool ExportToExcelBtrcReport(string filename, HttpResponse response, List<BtrcReportRow> domesticRecords,

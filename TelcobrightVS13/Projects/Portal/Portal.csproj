@@ -244,7 +244,6 @@
     <Reference Include="MySql.Data.Entity.EF6, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="MySql.Web, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
@@ -558,6 +557,7 @@
     <Content Include="reports\CauseRouteInternationalInCallView.aspx" />
     <Content Include="Mediation\CdrError.aspx" />
     <Content Include="reports\cdr.aspx" />
+    <Content Include="reports\icx\btrc\AcdReport.aspx" />
     <Content Include="reports\icx\btrc\DailyReport.aspx" />
     <Content Include="reports\icx\btrc\MonthlyOutgoingDetail.aspx" />
     <Content Include="reports\icx\btrc\MonthlyOutgoingSummary.aspx" />
@@ -957,6 +957,13 @@
     </Compile>
     <Compile Include="reports\cdr.aspx.designer.cs">
       <DependentUpon>cdr.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\icx\btrc\AcdReport.aspx.cs">
+      <DependentUpon>AcdReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\icx\btrc\AcdReport.aspx.designer.cs">
+      <DependentUpon>AcdReport.aspx</DependentUpon>
     </Compile>
     <Compile Include="reports\icx\btrc\DailyReport.aspx.cs">
       <DependentUpon>DailyReport.aspx</DependentUpon>
