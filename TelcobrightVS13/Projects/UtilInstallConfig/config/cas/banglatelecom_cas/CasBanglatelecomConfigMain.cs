@@ -30,7 +30,7 @@ namespace InstallConfig
                 new telcobrightpartner
                 {
                     idCustomer = 2,
-                    CustomerName = "BANGLA TELECOM LTD.",
+                    CustomerName = "Bangla Telecom Ltd.",
                     idOperatorType = 2,
                     databasename = "banglatelecom_cas",
                     NativeTimeZone = 3251,
@@ -75,78 +75,7 @@ namespace InstallConfig
                 DaysToAddBeforeAndAfterUniqueDaysForSafePartialCollection = 1,
             };
             this.PrepareDirectorySettings(this.Tbc);
-            //this.Tbc.Nes = new List<ne>()
-            //{
-            //    new ne
-            //    {
-            //        idSwitch = 9,
-            //        idCustomer = this.Tbc.Telcobrightpartner.idCustomer,
-            //        idcdrformat = 3,
-            //        idMediationRule = 2,
-            //        SwitchName = "huawei",
-            //        CDRPrefix = "ICX",
-            //        FileExtension = ".DAT",
-            //        Description = null,
-            //        SourceFileLocations = this.vaultPrimary.Name,
-            //        BackupFileLocations = null,
-            //        LoadingStopFlag = null,
-            //        LoadingSpanCount = 100,
-            //        TransactionSizeForCDRLoading = 1500,
-            //        DecodingSpanCount = 100,
-            //        SkipAutoCreateJob = 1,
-            //        SkipCdrListed = 0,
-            //        SkipCdrReceived = 0,
-            //        SkipCdrDecoded = 0,
-            //        SkipCdrBackedup = 1,
-            //        KeepDecodedCDR = 0,
-            //        KeepReceivedCdrServer = 1,
-            //        CcrCauseCodeField = 56,
-            //        SwitchTimeZoneId = null,
-            //        CallConnectIndicator = "F5",
-            //        FieldNoForTimeSummary = 29,
-            //        EnableSummaryGeneration = "1",
-            //        ExistingSummaryCacheSpanHr = 6,
-            //        BatchToDecodeRatio = 3,
-            //        PrependLocationNumberToFileName = 0,
-            //        FilterDuplicateCdr = 0,
-            //        UseIdCallAsBillId = 1,
-            //    },
-            //    new ne
-            //    {
-            //        idSwitch= 10,
-            //        idCustomer= this.Tbc.Telcobrightpartner.idCustomer,
-            //        idcdrformat= 26,
-            //        idMediationRule= 2,
-            //        SwitchName= "Dialogic",
-            //        CDRPrefix= "sdr",
-            //        FileExtension= ".gz",
-            //        Description= null,
-            //        SourceFileLocations= this.vaultDialogic.Name,
-            //        BackupFileLocations= null,
-            //        LoadingStopFlag= null,
-            //        LoadingSpanCount= 100,
-            //        TransactionSizeForCDRLoading= 1500,
-            //        DecodingSpanCount= 100,
-            //        SkipAutoCreateJob= 1,
-            //        SkipCdrListed= 0,
-            //        SkipCdrReceived= 0,
-            //        SkipCdrDecoded= 0,
-            //        SkipCdrBackedup= 1,
-            //        KeepDecodedCDR= 0,
-            //        KeepReceivedCdrServer= 1,
-            //        CcrCauseCodeField= 56,
-            //        SwitchTimeZoneId= null,
-            //        CallConnectIndicator= "F5",
-            //        FieldNoForTimeSummary= 29,
-            //        EnableSummaryGeneration= "1",
-            //        ExistingSummaryCacheSpanHr= 6,
-            //        BatchToDecodeRatio= 3,
-            //        PrependLocationNumberToFileName= 0,
-            //        FilterDuplicateCdr = 1,
-            //        UseIdCallAsBillId = 0,
-
-            //    }
-            //};
+           
 
             string csvPathForNe = new DirectoryInfo(FileAndPathHelper.GetCurrentExecPath()).Parent.Parent.FullName + Path.DirectorySeparatorChar.ToString() + "config" + Path.DirectorySeparatorChar.ToString() + "_helper" + Path.DirectorySeparatorChar.ToString() + "casOperatorInfo.xlsx";//add more
             CasNeInfoHelper neHelper = new CasNeInfoHelper(csvPathForNe);

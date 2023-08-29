@@ -30,7 +30,7 @@ namespace InstallConfig
                 new telcobrightpartner
                 {
                     idCustomer = 24,
-                    CustomerName = "MotherTelecom Communications Ltd.",
+                    CustomerName = "Mother Telecom Ltd.",
                     idOperatorType = 2,
                     databasename = "mothertelecom_cas",
                     NativeTimeZone = 3251,
@@ -75,83 +75,11 @@ namespace InstallConfig
                 EmptyFileAllowed = true
             };
             this.PrepareDirectorySettings(this.Tbc);
-            //this.Tbc.Nes = new List<ne>()
-            //{
-            //    new ne
-            //    {
-            //        idSwitch = 1,
-            //        idCustomer = this.Tbc.Telcobrightpartner.idCustomer,
-            //        idcdrformat = 17,
-            //        idMediationRule = 2,
-            //        SwitchName = "nokia",
-            //        CDRPrefix = "ICX",
-            //        FileExtension = ".DAT",
-            //        Description = null,
-            //        SourceFileLocations = this.vaultPrimary.Name,
-            //        BackupFileLocations = null,
-            //        LoadingStopFlag = null,
-            //        LoadingSpanCount = 100,
-            //        TransactionSizeForCDRLoading = 1500,
-            //        DecodingSpanCount = 100,
-            //        SkipAutoCreateJob = 1,
-            //        SkipCdrListed = 1,
-            //        SkipCdrReceived = 0,
-            //        SkipCdrDecoded = 1,
-            //        SkipCdrBackedup = 1,
-            //        KeepDecodedCDR = 0,
-            //        KeepReceivedCdrServer = 1,
-            //        CcrCauseCodeField = 56,
-            //        SwitchTimeZoneId = null,
-            //        CallConnectIndicator = "F5",
-            //        FieldNoForTimeSummary = 29,
-            //        EnableSummaryGeneration = "1",
-            //        ExistingSummaryCacheSpanHr = 6,
-            //        BatchToDecodeRatio = 3,
-            //        PrependLocationNumberToFileName = 0,
-            //        UseIdCallAsBillId = 1,
-
-            //    },
-            //    new ne
-            //    {
-            //        idSwitch = 2,
-            //        idCustomer = this.Tbc.Telcobrightpartner.idCustomer,
-            //        idcdrformat = 33,
-            //        idMediationRule = 2,
-            //        SwitchName = "Dialogic",
-            //        CDRPrefix = "C_sdr,sdr",
-            //        FileExtension = ".csv",
-            //        Description = null,
-            //        SourceFileLocations = this.vaultDialogic.Name,
-            //        BackupFileLocations = null,
-            //        LoadingStopFlag = null,
-            //        LoadingSpanCount = 100,
-            //        TransactionSizeForCDRLoading = 1500,
-            //        DecodingSpanCount = 100,
-            //        SkipAutoCreateJob = 1,
-            //        SkipCdrListed = 0,
-            //        SkipCdrReceived = 0,
-            //        SkipCdrDecoded = 0,
-            //        SkipCdrBackedup = 1,
-            //        KeepDecodedCDR = 0,
-            //        KeepReceivedCdrServer = 1,
-            //        CcrCauseCodeField = 56,
-            //        SwitchTimeZoneId = null,
-            //        CallConnectIndicator = "F5",
-            //        FieldNoForTimeSummary = 29,
-            //        EnableSummaryGeneration = "1",
-            //        ExistingSummaryCacheSpanHr = 6,
-            //        BatchToDecodeRatio = 3,
-            //        PrependLocationNumberToFileName = 0,
-            //        UseIdCallAsBillId = 0,
-            //        AllowEmptyFile = 0,
-            //        FilterDuplicateCdr =1
-            //    }
-            //};
+            
 
 
             string csvPathForNe = new DirectoryInfo(FileAndPathHelper.GetCurrentExecPath()).Parent.Parent.FullName + Path.DirectorySeparatorChar.ToString() + "config" + Path.DirectorySeparatorChar.ToString() + "_helper" + Path.DirectorySeparatorChar.ToString() + "casOperatorInfo.xlsx";//add more
             CasNeInfoHelper neHelper = new CasNeInfoHelper(csvPathForNe);
-
             this.Tbc.Nes = neHelper.getNesByOpId(this.Tbc.Telcobrightpartner.idCustomer);
 
 
