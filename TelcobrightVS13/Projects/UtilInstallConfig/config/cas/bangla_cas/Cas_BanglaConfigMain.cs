@@ -27,32 +27,7 @@ namespace InstallConfig
         public CasBanglaAbstractConfigGenerator()
         {
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx,
-                new telcobrightpartner
-                {
-                    idCustomer = 7,
-                    CustomerName = "Bangla ICX",
-                    idOperatorType = 2,
-                    databasename = "bangla_cas",
-                    databasetype = "mysql",
-                    user = "root",
-                    pass = null,
-                    ServerNameOrIP = null,
-                    IBServerNameOrIP = null,
-                    IBdatabasename = null,
-                    IBdatabasetype = null,
-                    IBuser = null,
-                    IBpass = null,
-                    TransactionSizeForCDRLoading = null,
-                    NativeTimeZone = 3251,
-                    IgwPrefix = null,
-                    RateDictionaryMaxRecords = 3000000,
-                    MinMSForIntlOut = 100,
-                    RawCdrKeepDurationDays = 90,
-                    SummaryKeepDurationDays = 730,
-                    AutoDeleteOldData = 1,
-                    AutoDeleteStartHour = 4,
-                    AutoDeleteEndHour = 6
-                });
+                CasTbPartnerFactory.GetTemplatePartner(3, "Bangla ICX", "bangla_cas"));
         }
 
         public override TelcobrightConfig GenerateConfig(InstanceConfig instanceConfig, int microserviceInstanceId)

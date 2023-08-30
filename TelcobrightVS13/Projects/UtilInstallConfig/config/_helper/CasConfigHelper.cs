@@ -11,8 +11,6 @@ namespace InstallConfig
     public class CasConfigHelper
     {
         public DeploymentEnvironment DeploymentEnvironment { get; }
-
-
         public CasConfigHelper(DeploymentEnvironment deploymentEnvironment)
         {
             DeploymentEnvironment = deploymentEnvironment;

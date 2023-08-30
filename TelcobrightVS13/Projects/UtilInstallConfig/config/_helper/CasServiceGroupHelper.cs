@@ -1,33 +1,22 @@
-﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Quartz;
-using TelcobrightMediation;
-using TelcobrightMediation.Scheduler.Quartz;
-using System.ComponentModel.Composition;
 using CdrValidationRules;
 using CdrValidationRules.CdrValidationRules.CommonCdrValidationRules;
-using LibraryExtensions;
-using LibraryExtensions.ConfigHelper;
 using MediationModel;
-using QuartzTelcobright;
+using TelcobrightMediation;
 using TelcobrightMediation.Accounting;
-using TelcobrightMediation.Config;
 
-namespace InstallConfig
+namespace InstallConfig.config._helper
 {
-    public partial class CasMicrotradeAbstractConfigGenerator //quartz config part
+    public class CasServiceGroupHelper
     {
-        public Dictionary<int, ServiceGroupConfiguration> GetServiceGroupConfigurations()
+        public static Dictionary<int, ServiceGroupConfiguration> GetServiceGroupConfigurations()
         {
             List<ServiceGroupConfiguration> serviceGroupConfigurations = new List<ServiceGroupConfiguration>();
 
             serviceGroupConfigurations.Add(new ServiceGroupConfiguration(idServiceGroup: 6) //LTFS
             {
-                Params = new Dictionary<string, string>() { {"prefixes","0800" } },
+                Params = new Dictionary<string, string>() { { "prefixes", "0800" } },
                 PartnerRules = new List<int>()
                 {
                     PartnerRuletype.InPartnerByIncomingRoute,
@@ -49,7 +38,7 @@ namespace InstallConfig
                         new Duration2Gt0() {Data = .1M},
                         new OutPartnerCostGt0() {Data = .1M},
                         new BtrcRevShareTax1Gt0() {Data = .1M},
-                     },
+                    },
                 InvoiceGenerationConfig = new InvoiceGenerationConfig()
                 {
                     InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary",
@@ -65,7 +54,7 @@ namespace InstallConfig
             serviceGroupConfigurations.Add(new ServiceGroupConfiguration(idServiceGroup: 2) //intlOutIcx
             {
                 Params = new Dictionary<string, string>()
-                { { "idCdrRules", "2" } },//IcxOutgoingCallByInOutTg=2, IcxOutgoingCallByInTgType=1
+                    { { "idCdrRules", "2" } },//IcxOutgoingCallByInOutTg=2, IcxOutgoingCallByInTgType=1
                 PartnerRules = new List<int>()
                 {
                     PartnerRuletype.InPartnerByIncomingRoute,
@@ -123,10 +112,10 @@ namespace InstallConfig
                         new OutPartnerIdGt0(),
                         new ServiceGroupGt0(),
                         new MatchedPrefixCustomerNotEmpty(),
-                        new Duration1Gt0() {Data = .1M},
+                        new Duration1Gt0() {Data = .1M},//all was .09
                         new InPartnerCostGt0() {Data = .1M},
                         new BtrcRevShareTax1Gt0(){Data = .1M},
-                     },
+                    },
                 InvoiceGenerationConfig = new InvoiceGenerationConfig()
                 {
                     InvoiceGenerationRuleName = "InvoiceGenerationByLedgerSummary",
@@ -176,5 +165,6 @@ namespace InstallConfig
                 });
             return serviceGroupConfigurations.ToDictionary(s => s.IdServiceGroup);
         }
+
     }
 }
