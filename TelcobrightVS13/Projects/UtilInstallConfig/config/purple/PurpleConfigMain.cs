@@ -71,13 +71,6 @@ namespace InstallConfig
                 AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
                 ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>(),
                 BatchSizeWhenPreparingLargeSqlJob = 100000,
-                SummaryOnlySettings = new Dictionary<string, SkipSettingsForSummaryOnly>() {
-                    { "daily", new SkipSettingsForSummaryOnly {
-                        SkipCdr=true,
-                        SkipChargeable=true,
-                        SkipTransaction=true
-                    }}
-                },
             };
 
             this.PrepareDirectorySettings(this.Tbc);
