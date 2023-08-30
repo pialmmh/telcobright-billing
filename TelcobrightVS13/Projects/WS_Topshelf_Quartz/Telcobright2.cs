@@ -9,6 +9,7 @@ using Quartz;
 using QuartzTelcobright;
 using System.Configuration;
 using System.Diagnostics;
+using System.Threading;
 using CrystalQuartz.Core.SchedulerProviders;
 using Quartz.Impl;
 using Quartz.Impl.Matchers;
@@ -29,6 +30,7 @@ namespace WS_Telcobright_Topshelf
     
     public class Telcobright2
     {
+        public string ConfigFileName { get; set; }
         public static MefCollectiveAssemblyComposer mefColllectiveAssemblyComposer { get; set; }
         public static MefProcessContainer mefProcessContainer { get; set; }
         private static string getLogFileName()
@@ -40,6 +42,10 @@ namespace WS_Telcobright_Topshelf
             return logFileName;
         }
 
+        public Telcobright2(string configFileName)
+        {
+            this.ConfigFileName = configFileName;
+        }
         static string getLastGeneratedConfigFileName()
         {
             string execPath = FileAndPathHelper.GetCurrentExecPath();
@@ -49,13 +55,21 @@ namespace WS_Telcobright_Topshelf
             return configFileName;
         }
 
-
-        static void Main(string[] args)
+        //Func<> consoleCallBack
+        public void run(ConsoleRedirector consoleRedirector)
         {
+            Console.SetOut(consoleRedirector);
+            
+            while (true)
+            {
+                Console.WriteLine(this.ConfigFileName);
+                Thread.Sleep(2000);
+
+            }
 
             return;
-            string configFileName = args.Length>=1?args[0]:"";//config file name can be sent by batch file as arg[0]
-            if (configFileName == "")
+            //string configFileName = args.Length>=1?args[0]:"";//config file name can be sent by batch file as arg[0]
+            if (this.ConfigFileName== "")
             {
                 ConfigPathHelper configPathHelper = new ConfigPathHelper(
                     "WS_Topshelf_Quartz",
@@ -75,7 +89,7 @@ namespace WS_Telcobright_Topshelf
                 Menu menu= new Menu(operatorNameVsConfigFile.Keys.ToList(),
                     "Select an Operatorname to debug.","");
                 string selectedOpName = menu.getSingleChoice();
-                configFileName = operatorNameVsConfigFile[selectedOpName];
+                this.ConfigFileName = operatorNameVsConfigFile[selectedOpName];
             }
             
             string logFileName=getLogFileName();
@@ -86,7 +100,7 @@ namespace WS_Telcobright_Topshelf
             {
                 Console.WriteLine("Starting Telcobright Scheduler.");
                 mefProcessContainer = new MefProcessContainer(mefColllectiveAssemblyComposer);
-                TelcobrightConfig tbc = GetTelcobrightConfig(configFileName);
+                TelcobrightConfig tbc = GetTelcobrightConfig(this.ConfigFileName);
                 Console.Title = tbc.Telcobrightpartner.databasename;
                 provider.SchedulerHost = $"tcp://localhost:{tbc.TcpPortNoForRemoteScheduler}/QuartzScheduler";
                 provider.Init();

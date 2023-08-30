@@ -10,10 +10,15 @@ using System.Windows.Forms;
 using CasTelcobright.Forms;
 using CasTelcobright;
 using WS_Telcobright_Topshelf;
+using LibraryExtensions;
+using System.Threading.Tasks;
 namespace CasTelcobright
 {
+   
     public partial class Form1 : Form
     {
+        private string output; 
+        UserControl1 userControl1 = new UserControl1();      
         List<string> allIcx = IcxFactory.getAllIcx();
         Dictionary<string, Button> buttons = new Dictionary<string, Button>();
         NavigationControl navigationControl;
@@ -33,7 +38,7 @@ namespace CasTelcobright
         private void InitializeNavigationControl()
         {
             List<UserControl> userControls = new List<UserControl>() // Your UserControl list
-            { new UserControl1()};
+            { userControl1};
 
             navigationControl = new NavigationControl(userControls, panel2); // create an instance of NavigationControl class
         }
@@ -58,10 +63,24 @@ namespace CasTelcobright
         {
             Button btn = (Button)sender;
             string title = (string)btn.Name;
-            string shellCommand = (string)btn.Tag;
+            string tag = (string)btn.Tag;
 
-            navigationControl.Display(0, title, shellCommand);
+            navigationControl.Display(0, tag);
             navigationButtons.Highlight(btn);
+            Action<string> updateTextbox = (outputFromConsole) =>
+            {
+                this.userControl1.richTextBox1.Invoke(new Action(() =>
+                {
+                    this.userControl1.richTextBox1.AppendText(outputFromConsole + Environment.NewLine);
+                }));
+                //this.output = outputFromConsole;
+            };
+            ConsoleRedirector consoleRedirector = new ConsoleRedirector(updateTextbox);
+
+            Telcobright2 t2 = new Telcobright2(tag);
+            t2.run(consoleRedirector);
+
+            //Task.Run(() => CalculateDamageDone());
         }
 
     }

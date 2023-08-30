@@ -28,14 +28,14 @@ namespace CasTelcobright
             }
         }
 
-        public void Display(int index, String title, String shellCommand)
+        public void Display(int index, String title)
         {
             if (index < userControlList.Count())
             {
                 userControlList[index].BringToFront();
                 UserControl1 userControl = (UserControl1)userControlList[index];
                 userControl.SetTitle(title);
-                userControl.executeShell(shellCommand);
+                //userControl.executeShell(shellCommand);
             }
         }
     }

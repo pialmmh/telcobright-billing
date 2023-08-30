@@ -44,9 +44,9 @@ namespace CasTelcobright
             panel1.TabIndex = 0;
 
 
-            for (int i = allIcx.Count - 1, j = 0; i >= 0; i--, j++)
+            for (int i = allIcx.Count - 1, j = 1; i >= 0; i--, j++)
             {
-                addIcxButton(allIcx[i], 40 * i, i);
+                addIcxButton(allIcx[i], 40 * i, j);
             }
 
 
@@ -84,7 +84,7 @@ namespace CasTelcobright
             btnIcx.Font = new Font("Segoe UI", 7F, FontStyle.Bold, GraphicsUnit.Point);
             btnIcx.ForeColor = Color.Gainsboro;
             btnIcx.Location = new Point(0, yCoordinate);
-            btnIcx.Name = "btn" + operatorName;
+            btnIcx.Name = "btn  " + operatorName;
             btnIcx.Size = new Size(220, 23);
             btnIcx.TabIndex = tabIndex;
             btnIcx.Text = operatorName;

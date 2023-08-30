@@ -59,7 +59,7 @@ namespace CasTelcobright.Forms
             btn_start.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             btn_start.Location = new Point(121, 3);
             btn_start.Name = "btn_start";
-            btn_start.Size = new Size(113, 22);
+            btn_start.Size = new Size(113, 35);
             btn_start.TabIndex = 0;
             btn_start.Text = "Start";
             btn_start.UseVisualStyleBackColor = true;
@@ -69,7 +69,7 @@ namespace CasTelcobright.Forms
             btn_stop.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             btn_stop.Location = new Point(3, 3);
             btn_stop.Name = "btn_stop";
-            btn_stop.Size = new Size(112, 22);
+            btn_stop.Size = new Size(112, 35);
             btn_stop.TabIndex = 1;
             btn_stop.Text = "Stop";
             btn_stop.UseVisualStyleBackColor = true;
@@ -77,10 +77,10 @@ namespace CasTelcobright.Forms
             // richTextBox1
             // 
             richTextBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            richTextBox1.Location = new Point(17, 49);
+            richTextBox1.Location = new Point(17, 70);
             richTextBox1.Name = "richTextBox1";
             richTextBox1.ReadOnly = true;
-            richTextBox1.Size = new Size(528, 262);
+            richTextBox1.Size = new Size(528, 250);
             richTextBox1.TabIndex = 2;
             richTextBox1.Text = "";
             // 
@@ -88,7 +88,7 @@ namespace CasTelcobright.Forms
             // 
             operatorLabel.AutoSize = true;
             operatorLabel.BackColor = Color.Transparent;
-            operatorLabel.Font = new Font("Segoe UI", 20F, FontStyle.Bold, GraphicsUnit.Point);
+            operatorLabel.Font = new Font("Segoe UI", 24F, FontStyle.Bold, GraphicsUnit.Point);
             operatorLabel.ForeColor = SystemColors.ControlDarkDark;
             operatorLabel.Location = new Point(17, 9);
             operatorLabel.Name = "operatorLabel";
@@ -114,7 +114,7 @@ namespace CasTelcobright.Forms
         private TableLayoutPanel tableLayoutPanel1;
         private Button btn_stop;
         private Button btn_start;
-        private RichTextBox richTextBox1;
+        public RichTextBox richTextBox1;
         private Label operatorLabel;
     }
 }

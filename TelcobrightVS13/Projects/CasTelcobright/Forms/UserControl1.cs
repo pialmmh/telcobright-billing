@@ -21,16 +21,19 @@ namespace CasTelcobright.Forms
         public void SetTitle(string title)
         {
             operatorLabel.Text = title; // Assuming 'titleLabel' is the name of a label control on your user control.
+            richTextBox1.Text = "";
         }
 
 
         public void executeShell(string operatorName)
         {
+
+
             ShellExecutor shellExecutor =
-                new ShellExecutor(new List<string> { "C:\\Windows\\System32\\cmd.exe", "echo", "srtelecom" },
+                new ShellExecutor(new List<string> { "cmd.exe", "echo", operatorName },
                 this.p_OutputDataReceived);
-            richTextBox1.Text = "";
-            shellExecutor.execute();
+            
+            //shellExecutor.execute();
         }
 
         void p_OutputDataReceived(object sender, DataReceivedEventArgs e)

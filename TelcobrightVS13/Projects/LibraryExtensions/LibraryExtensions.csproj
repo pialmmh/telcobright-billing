@@ -109,6 +109,7 @@
   <ItemGroup>
     <Compile Include="ConfigHelper\ConsoleUtil.cs" />
     <Compile Include="ConfigPathHelper.cs" />
+    <Compile Include="ConsoleRedirector.cs" />
     <Compile Include="DecimalExtensions.cs" />
     <Compile Include="DateTimeExtensions.cs" />
     <Compile Include="DirectoryInfoExtension.cs" />
