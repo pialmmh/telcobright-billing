@@ -39,7 +39,29 @@ namespace InstallConfig
             InconsistentCdrValRulesGen inconsistentCdrValRulesGen =
                 new InconsistentCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
 
+<<<<<<< HEAD
             this.Tbc.CdrSetting = new CasCdrSettingHelper().getTemplateCdrSettings();
+=======
+            this.Tbc.CdrSetting = new CdrSetting
+            {
+                SummaryTimeField = SummaryTimeFieldEnum.AnswerTime,
+                PartialCdrEnabledNeIds = new List<int>() { },//7, was set to non-partial processing mode due to duplicate billid problem.
+                PartialCdrFlagIndicators = new List<string>() { },//{"1", "2", "3"},
+                DescendingOrderWhileListingFiles = false,
+                DescendingOrderWhileProcessingListedFiles = false,
+                ValidationRulesForCommonMediationCheck = commonCdrValRulesGen.GetRules(),
+                ValidationRulesForInconsistentCdrs = inconsistentCdrValRulesGen.GetRules(),
+                ServiceGroupConfigurations = this.GetServiceGroupConfigurations(),
+                DisableCdrPostProcessingJobCreationForAutomation = false,
+                BatchSizeForCdrJobCreationCheckingExistence = 10000,
+                DisableParallelMediation = false,
+                AutoCorrectDuplicateBillId = false,
+                AutoCorrectBillIdsWithPrevChargeableIssue = true,
+                AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
+                ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>(),
+                BatchSizeWhenPreparingLargeSqlJob = 100000,
+            };
+>>>>>>> 210bef93a82dcafa0892049daa8f224252cdc7e0
 
             this.PrepareDirectorySettings(this.Tbc);
             this.Tbc.Nes = new List<ne>()

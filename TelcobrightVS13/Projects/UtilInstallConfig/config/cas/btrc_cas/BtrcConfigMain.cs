@@ -26,23 +26,7 @@ namespace InstallConfig
 
         public BtrcAbstractConfigGenerator()
         {
-            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx, 
-                new telcobrightpartner
-                {
-                    idCustomer = 9,
-                    CustomerName = "BTRC- CDR Analyze System (CAS)",
-                    idOperatorType = 2,
-                    databasename = "btrc_cas",
-                    NativeTimeZone = 3251,
-                    IgwPrefix = null,
-                    RateDictionaryMaxRecords = 3000000,
-                    MinMSForIntlOut = 100,
-                    RawCdrKeepDurationDays = 90,
-                    SummaryKeepDurationDays = 730,
-                    AutoDeleteOldData = 1,
-                    AutoDeleteStartHour = 4,
-                    AutoDeleteEndHour = 6
-                });
+            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx,CasTbPartnerFactory.GetTemplatePartner(0, "BTRC- CDR Analyze System (CAS)", "btrc_cas"));
         }
 
         public override TelcobrightConfig GenerateConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
