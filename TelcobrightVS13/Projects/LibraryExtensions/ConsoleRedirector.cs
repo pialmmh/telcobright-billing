@@ -10,9 +10,11 @@ namespace LibraryExtensions
     public class ConsoleRedirector : TextWriter
     {
         private Action<string> callbackFromExternalApp;
+        private string instanceName;
 
-        public ConsoleRedirector(Action<string> callbackFromExternalApp)
+        public ConsoleRedirector(string instanceName, Action<string> callbackFromExternalApp)
         {
+            this.instanceName = instanceName;
             this.callbackFromExternalApp = callbackFromExternalApp;
         }
 
@@ -23,7 +25,7 @@ namespace LibraryExtensions
 
         public override void WriteLine(string value)
         {
-            callbackFromExternalApp(value);
+            callbackFromExternalApp(this.instanceName+"#"+ value);
         }
 
         public override System.Text.Encoding Encoding => System.Text.Encoding.Default;

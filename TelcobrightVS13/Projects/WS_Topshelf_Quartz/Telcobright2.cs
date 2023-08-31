@@ -9,6 +9,7 @@ using Quartz;
 using QuartzTelcobright;
 using System.Configuration;
 using System.Diagnostics;
+using System.Text;
 using System.Threading;
 using CrystalQuartz.Core.SchedulerProviders;
 using Quartz.Impl;
@@ -30,6 +31,7 @@ namespace WS_Telcobright_Topshelf
     
     public class Telcobright2
     {
+        StringBuilder processText = new StringBuilder();
         public string ConfigFileName { get; set; }
         public static MefCollectiveAssemblyComposer mefColllectiveAssemblyComposer { get; set; }
         public static MefProcessContainer mefProcessContainer { get; set; }
@@ -59,11 +61,11 @@ namespace WS_Telcobright_Topshelf
         public void run(ConsoleRedirector consoleRedirector)
         {
             Console.SetOut(consoleRedirector);
-            
+
             while (true)
             {
-                Console.WriteLine(this.ConfigFileName);
-                Thread.Sleep(2000);
+                Console.WriteLine(this.ConfigFileName + " : " + DateTime.Now);
+                Thread.Sleep(1000);
 
             }
 

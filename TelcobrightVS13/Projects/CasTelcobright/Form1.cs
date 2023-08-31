@@ -17,8 +17,11 @@ namespace CasTelcobright
    
     public partial class Form1 : Form
     {
-        private string output; 
-        UserControl1 userControl1 = new UserControl1();      
+        private string output;
+        private Dictionary<string, List<string>> displayPanelOutput = new Dictionary<string, List<string>>();
+        Dictionary<string, DisplayPanel> displayPanels = new Dictionary<string, DisplayPanel>();
+        public Dictionary<string, Telcobright2> processes = new Dictionary<string, Telcobright2>();
+
         List<string> allIcx = IcxFactory.getAllIcx();
         Dictionary<string, Button> buttons = new Dictionary<string, Button>();
         NavigationControl navigationControl;
@@ -37,10 +40,11 @@ namespace CasTelcobright
 
         private void InitializeNavigationControl()
         {
-            List<UserControl> userControls = new List<UserControl>() // Your UserControl list
-            { userControl1};
+            //List<UserControl> userControls = new List<UserControl>() // Your UserControl list
+            //{ displayPanel};
+            
 
-            navigationControl = new NavigationControl(userControls, panel2); // create an instance of NavigationControl class
+            navigationControl = new NavigationControl(displayPanels, panel2); // create an instance of NavigationControl class
         }
 
         private void InitializeNavigationButtons()
@@ -65,22 +69,21 @@ namespace CasTelcobright
             string title = (string)btn.Name;
             string tag = (string)btn.Tag;
 
-            navigationControl.Display(0, tag);
+            navigationControl.Display(tag);
             navigationButtons.Highlight(btn);
-            Action<string> updateTextbox = (outputFromConsole) =>
+
+
+
+            
+
+            if (!this.processes.ContainsKey(tag))
             {
-                this.userControl1.richTextBox1.Invoke(new Action(() =>
-                {
-                    this.userControl1.richTextBox1.AppendText(outputFromConsole + Environment.NewLine);
-                }));
-                //this.output = outputFromConsole;
-            };
-            ConsoleRedirector consoleRedirector = new ConsoleRedirector(updateTextbox);
+                DisplayPanel displayPanel = displayPanels[tag];
+                Telcobright2 t2 = new Telcobright2(tag);
+                ProcessWrapper processWrapper = new ProcessWrapper(tag, t2, displayPanel);
 
-            Telcobright2 t2 = new Telcobright2(tag);
-            t2.run(consoleRedirector);
-
-            //Task.Run(() => CalculateDamageDone());
+                processWrapper.task.Start();
+            }
         }
 
     }

@@ -1,5 +1,7 @@
 ﻿using System.Windows.Forms;
 using System.Drawing;
+using CasTelcobright.Forms;
+
 namespace CasTelcobright
 {
     partial class Form1
@@ -44,10 +46,18 @@ namespace CasTelcobright
             panel1.TabIndex = 0;
 
 
+            foreach (var icxName in allIcx)
+            {
+                var displayPanel = new DisplayPanel(icxName);
+                displayPanel.richTextBox1.Tag = icxName;
+                displayPanels.Add(icxName, displayPanel);
+            }
+
             for (int i = allIcx.Count - 1, j = 1; i >= 0; i--, j++)
             {
                 addIcxButton(allIcx[i], 40 * i, j);
             }
+
 
 
 
