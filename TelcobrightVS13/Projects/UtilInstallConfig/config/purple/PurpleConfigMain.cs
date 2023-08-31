@@ -39,9 +39,7 @@ namespace InstallConfig
             InconsistentCdrValRulesGen inconsistentCdrValRulesGen =
                 new InconsistentCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
 
-<<<<<<< HEAD
             this.Tbc.CdrSetting = new CasCdrSettingHelper().getTemplateCdrSettings();
-=======
             this.Tbc.CdrSetting = new CdrSetting
             {
                 SummaryTimeField = SummaryTimeFieldEnum.AnswerTime,
@@ -61,7 +59,6 @@ namespace InstallConfig
                 ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>(),
                 BatchSizeWhenPreparingLargeSqlJob = 100000,
             };
->>>>>>> 210bef93a82dcafa0892049daa8f224252cdc7e0
 
             this.PrepareDirectorySettings(this.Tbc);
             this.Tbc.Nes = new List<ne>()
