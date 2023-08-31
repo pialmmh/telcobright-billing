@@ -126,14 +126,6 @@
     <Compile Include="config\cas\srtelecom_cas\CasSrtServerConfig.cs" />
     <Compile Include="config\cas\srtelecom_cas\CasSrtServiceGroups.cs" />
     <Compile Include="config\cas\srtelecom_cas\Cas_SrtConfigMain.cs" />
-    <Compile Include="config\cas\cloudtel_cas\CasCloudTelAppServerConfig.cs" />
-    <Compile Include="config\cas\cloudtel_cas\CasCloudTelDatabaseSettings.cs" />
-    <Compile Include="config\cas\cloudtel_cas\CasCloudTelDirectorySettings.cs" />
-    <Compile Include="config\cas\cloudtel_cas\CasCloudTelPortalSetting.cs" />
-    <Compile Include="config\cas\cloudtel_cas\CasCloudTelProductAndServiceConfig.cs" />
-    <Compile Include="config\cas\cloudtel_cas\CasCloudTelQuartzConfig.cs" />
-    <Compile Include="config\cas\cloudtel_cas\CasCloudTelServiceGroups.cs" />
-    <Compile Include="config\cas\cloudtel_cas\Cas_CloudTelConfigMain.cs" />
     <Compile Include="config\cas\gazinetworks_cas\CasGaziNetworksAppServerConfig.cs" />
     <Compile Include="config\cas\gazinetworks_cas\CasGaziNetworksDatabaseSettings.cs" />
     <Compile Include="config\cas\gazinetworks_cas\CasGaziNetworksDirectorySettings.cs" />
@@ -198,14 +190,6 @@
     <Compile Include="config\cas\mnh_cas\CasMnHQuartzConfig.cs" />
     <Compile Include="config\cas\mnh_cas\CasMnHServiceGroups.cs" />
     <Compile Include="config\cas\mnh_cas\Cas_MnHConfigMain.cs" />
-    <Compile Include="config\cas\microtrade_cas\CasMicrotradeAppServerConfig.cs" />
-    <Compile Include="config\cas\microtrade_cas\CasMicrotradeDatabaseSettings.cs" />
-    <Compile Include="config\cas\microtrade_cas\CasMicrotradeDirectorySettings.cs" />
-    <Compile Include="config\cas\microtrade_cas\CasMicrotradePortalSetting.cs" />
-    <Compile Include="config\cas\microtrade_cas\CasMicrotradeProductAndServiceConfig.cs" />
-    <Compile Include="config\cas\microtrade_cas\CasMicrotradeQuartzConfig.cs" />
-    <Compile Include="config\cas\microtrade_cas\CasMicrotradeServiceGroups.cs" />
-    <Compile Include="config\cas\microtrade_cas\Cas_MicrotradeConfigMain.cs" />
     <Compile Include="config\cas\crossworld_cas\CasCrossWorldConfigMain.cs" />
     <Compile Include="config\cas\crossworld_cas\CasCrossWorldDatabaseSettings.cs" />
     <Compile Include="config\cas\crossworld_cas\CasCrossWorldDirectorySettings.cs" />
@@ -404,7 +388,6 @@
     <None Include="config\btel\tmplPortalWebSite.txt.bak" />
     <None Include="config\cas\agni_cas\srtelecom_cas.conf" />
     <None Include="config\cas\srtelecom_cas\srtelecom_cas.conf" />
-    <None Include="config\cas\cloudtel_cas\jslRoutes.json" />
     <None Include="config\cas\gazinetworks_cas\jslRoutes.json" />
     <None Include="config\cas\bantel_cas\jslRoutes.json" />
     <None Include="config\cas\bangla_cas\jslRoutes.json" />
@@ -413,7 +396,6 @@
     <None Include="config\cas\getco_cas\jslRoutes.json" />
     <None Include="config\cas\paradise_cas\jslRoutes.json" />
     <None Include="config\cas\mnh_cas\jslRoutes.json" />
-    <None Include="config\cas\microtrade_cas\jslRoutes.json" />
     <None Include="config\cas\teleexchange_cas\jslRoutes.json" />
     <None Include="config\cas\newgenerationtelecom_cas\jslRoutes.json" />
     <None Include="config\cas\softex_cas\jslRoutes.json" />
@@ -491,9 +473,6 @@
     <Content Include="config\cas\srtelecom_cas\tmplPortalAppPools.txt" />
     <Content Include="config\cas\srtelecom_cas\tmplPortalFtpSite.txt" />
     <Content Include="config\cas\srtelecom_cas\tmplPortalWebSite.txt" />
-    <Content Include="config\cas\cloudtel_cas\tmplPortalAppPools.txt" />
-    <Content Include="config\cas\cloudtel_cas\tmplPortalFtpSite.txt" />
-    <Content Include="config\cas\cloudtel_cas\tmplPortalWebSite.txt" />
     <Content Include="config\cas\gazinetworks_cas\tmplPortalAppPools.txt" />
     <Content Include="config\cas\gazinetworks_cas\tmplPortalFtpSite.txt" />
     <Content Include="config\cas\gazinetworks_cas\tmplPortalWebSite.txt" />
@@ -518,9 +497,6 @@
     <Content Include="config\cas\mnh_cas\tmplPortalAppPools.txt" />
     <Content Include="config\cas\mnh_cas\tmplPortalFtpSite.txt" />
     <Content Include="config\cas\mnh_cas\tmplPortalWebSite.txt" />
-    <Content Include="config\cas\microtrade_cas\tmplPortalAppPools.txt" />
-    <Content Include="config\cas\microtrade_cas\tmplPortalFtpSite.txt" />
-    <Content Include="config\cas\microtrade_cas\tmplPortalWebSite.txt" />
     <Content Include="config\cas\crossworld_cas\tmplPortalAppPools.txt" />
     <Content Include="config\cas\crossworld_cas\tmplPortalFtpSite.txt" />
     <Content Include="config\cas\crossworld_cas\tmplPortalWebSite.txt" />

@@ -197,17 +197,68 @@ public partial class DashboardAspx : Page
     {
         Series series1 = DomesticDistribution.Series["Series1"];
         DataPointCollection points = series1.Points;
+        string[] labels = { "Agni", "Banglatelecom" , "Bangla", "Bantel", "Gazinetworks", "Getco","Immamnetworks",
+            "Jibondhara", "Mmcommunication", "M&H", "Btrc", "Paradise", "Purple", "Ringtech", "Crossworld",
+            "Sheba", "Softech", "Teleexchange", "Newgeneration", "TeleplusNetwork", "Summit", "Mothertel", "Voicetel"};
+        string[] colors = { "#08605c", "#e40613", "#F86F03", "#FFA41B", "#8EAC50", "#898121", "#E7B10A", "#4E4FEB",
+                            "#068FFF", "#1D5B79", "#EF6262", "#F3AA60", "#F2EE9D", "#7A9D54", "#557A46", "#8C3333",
+                              "#252B48", "#448069", "#F7E987", "#8CABFF", "#4477CE", "#512B81", "#35155D" };
 
-        string[] labels = { "Agni", "Banglatelecom", "Bangla", "Bantel" };
-        double[] values = { 90, 10, 19, 78 };
-        string[] colors = { "#08605c", "#e40613", "#F86F03", "#FFA41B" };
+       // double[] values = { 90, 10, 19, 78,55,89,96,95,75,65,32,85,14,55,22,33,44,55,6,52,63,45 };
+
+        string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        List<double> data = new List<double>();
+        using (MySqlConnection con = new MySqlConnection(connectionString))
+        {
+            con.Open();
+            string sql = @"select (select 'agni_cas') as icxname,(select 10000000.00 ) as duration 
+            union all select(select 'banglatelecom_cas') as icxname,(select 10000000.00 ) as duration
+                union all select(select 'bangla_cas') as icxname,(select 10000000.00 ) as duration
+                union all select(select 'bantel_cas') as icxname,(select 10000000.00 ) as duration
+                union all select(select 'gazinetworks_cas') as icxname,(select 10000000.00 ) as duration
+                union all select(select 'getco_cas') as icxname,(select 10000000.00 ) as duration
+                union all select(select 'immamnetworks_cas') as icxname,(select 10000000.00 ) as duration
+                union all select(select 'jibondhara_cas') as icxname,(select 10000000.00 ) as duration
+                union all select(select 'mmcommunication_cas') as icxname,(select 10000000.00 ) as duration
+                union all select(select 'm&h_cas') as icxname,(select 10000000.00 ) as duration
+                union all select(select 'btrc_cas') as icxname,(select 10000000.00 ) as duration
+                union all select(select 'paradise_cas') as icxname,(select 10000000.00 ) as duration
+                union all select(select 'purple_cas') as icxname,(select 10000000.00 ) as duration
+                union all select(select 'ringtech_cas') as icxname,(select 10000000.00 ) as duration
+                union all select(select 'crossworld_cas') as icxname,(select 10000000.00 ) as duration
+                union all select(select 'sheba_cas') as icxname,(select 10000000.00 ) as duration
+                union all select(select 'softech_cas') as icxname,(select 10000000.00 ) as duration
+                union all select(select 'teleexchange_cas') as icxname,(select 10000000.00 ) as duration
+                union all select(select 'newgeneration_cas') as icxname,(select 10000000.00 ) as duration
+                union all select(select 'teleplusNetwork_cas') as icxname,(select 10000000.00 ) as duration
+                union all select(select 'summit_cas') as icxname,(select 10000000.00 ) as duration
+                union all select(select 'mothertel_cas') as icxname,(select 10000000.00 ) as duration
+                union all select(select 'voicetel_cas') as icxname,(select 10000000.00 ) as duration;";
+            using (MySqlCommand command = new MySqlCommand(sql ,con))
+            {
+                using (MySqlDataReader read = command.ExecuteReader())
+                {
+                   
+                    while (read.Read())
+                    {
+                        data.Add(read.GetDouble("duration"));
+                    }
+                    read.Close();
+                    
+                }
+                
+            }
+            
+        }
+
+
 
         for (int i = 0; i < labels.Length; i++)
         {
             DataPoint dataPoint = new DataPoint
             {
                 AxisLabel = labels[i],
-                YValues = new double[] { values[i] },
+                YValues = new double[] { data[i] },
                 Color = ColorTranslator.FromHtml(colors[i])
             };
             points.Add(dataPoint);

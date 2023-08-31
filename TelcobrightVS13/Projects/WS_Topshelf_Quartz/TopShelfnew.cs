@@ -52,7 +52,7 @@ namespace WS_Telcobright_Topshelf
 
         static void Main(string[] args)
         {
-            string configFileName = args.Length>=1?args[0]:"";//config file name can be sent by batch file as arg[0]
+            string configFileName = args.Length >= 1 ? args[0] : "";//config file name can be sent by batch file as arg[0]
             if (configFileName == "")
             {
                 ConfigPathHelper configPathHelper = new ConfigPathHelper(
@@ -70,16 +70,16 @@ namespace WS_Telcobright_Topshelf
                                          dir.Name + ".conf";
                     operatorNameVsConfigFile.Add(operatorName, cnfFileName);
                 }
-                Menu menu= new Menu(operatorNameVsConfigFile.Keys.ToList(),
-                    "Select an Operatorname to debug.","");
+                Menu menu = new Menu(operatorNameVsConfigFile.Keys.ToList(),
+                    "Select an Operatorname to debug.", "");
                 string selectedOpName = menu.getSingleChoice();
                 configFileName = operatorNameVsConfigFile[selectedOpName];
             }
-            
-            string logFileName=getLogFileName();
+
+            string logFileName = getLogFileName();
             mefColllectiveAssemblyComposer = new MefCollectiveAssemblyComposer("..//..//bin//Extensions//");
             RemoteSchedulerProvider provider = new RemoteSchedulerProvider();
-            File.WriteAllLines(logFileName, new string[] { DateTime.Now.ToMySqlFormatWithoutQuote() + ": Telcobright started at " + provider.SchedulerHost } );
+            File.WriteAllLines(logFileName, new string[] { DateTime.Now.ToMySqlFormatWithoutQuote() + ": Telcobright started at " + provider.SchedulerHost });
             try
             {
                 Console.WriteLine("Starting Telcobright Scheduler.");
@@ -91,7 +91,7 @@ namespace WS_Telcobright_Topshelf
                 IScheduler runtimeScheduler = null;
                 try
                 {
-                    runtimeScheduler = GetScheduler(SchedulerRunTimeType.Runtime,tbc);
+                    runtimeScheduler = GetScheduler(SchedulerRunTimeType.Runtime, tbc);
                 }
                 catch (Exception e1)
                 {
