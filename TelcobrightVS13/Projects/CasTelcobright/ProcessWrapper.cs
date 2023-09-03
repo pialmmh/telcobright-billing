@@ -28,15 +28,13 @@ namespace CasTelcobright
 
             this.updateTextbox = (outputFromConsole) =>
             {
-                if (outputFromConsole.StartsWith(this.instanceName + "#"))
-                {
-                    string output = string.Join("", outputFromConsole.Split('#').Skip(1));
+                string output = outputFromConsole;
+                    //string output = string.Join("", outputFromConsole.Split('#').Skip(1));
                     this.displayPanel.richTextBox1.Invoke(new Action(() =>
                     {
                         this.displayPanel.richTextBox1.AppendText(output + Environment.NewLine);
 
                     }));
-                }
                 
             };
             ConsoleRedirector consoleRedirector = new ConsoleRedirector(this.instanceName, this.updateTextbox);

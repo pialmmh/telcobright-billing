@@ -18,9 +18,8 @@ namespace CasTelcobright
     public partial class Form1 : Form
     {
         private string output;
-        private Dictionary<string, List<string>> displayPanelOutput = new Dictionary<string, List<string>>();
         Dictionary<string, DisplayPanel> displayPanels = new Dictionary<string, DisplayPanel>();
-        public Dictionary<string, Telcobright2> processes = new Dictionary<string, Telcobright2>();
+        public static Dictionary<string, Telcobright2> processes = new Dictionary<string, Telcobright2>();
 
         List<string> allIcx = IcxFactory.getAllIcx();
         Dictionary<string, Button> buttons = new Dictionary<string, Button>();
@@ -42,8 +41,6 @@ namespace CasTelcobright
         {
             //List<UserControl> userControls = new List<UserControl>() // Your UserControl list
             //{ displayPanel};
-            
-
             navigationControl = new NavigationControl(displayPanels, panel2); // create an instance of NavigationControl class
         }
 
@@ -63,23 +60,25 @@ namespace CasTelcobright
 
         }
 
-        private void commonClick(object sender, EventArgs e)
+        public void commonClick(object sender, EventArgs e)
         {
             Button btn = (Button)sender;
             string title = (string)btn.Name;
             string tag = (string)btn.Tag;
-
             navigationControl.Display(tag);
             navigationButtons.Highlight(btn);
 
+            process(tag);
+        }
 
-
-            
-
-            if (!this.processes.ContainsKey(tag))
+        public void process(string tag)
+        {
+            if (!processes.ContainsKey(tag))
             {
                 DisplayPanel displayPanel = displayPanels[tag];
+                displayPanel.btnStartStop.Text = "Stop";
                 Telcobright2 t2 = new Telcobright2(tag);
+                processes.Add(tag,t2);
                 ProcessWrapper processWrapper = new ProcessWrapper(tag, t2, displayPanel);
 
                 processWrapper.task.Start();

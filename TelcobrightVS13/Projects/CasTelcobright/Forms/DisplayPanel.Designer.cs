@@ -32,7 +32,7 @@ namespace CasTelcobright.Forms
         private void InitializeComponent()
         {
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.btn_stop = new System.Windows.Forms.Button();
+            this.btnStartStop = new System.Windows.Forms.Button();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
 
             this.operatorLabel = new System.Windows.Forms.Label();
@@ -44,7 +44,7 @@ namespace CasTelcobright.Forms
             this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Controls.Add(this.btn_stop, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.btnStartStop, 0, 0);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(15, 283);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
@@ -54,15 +54,16 @@ namespace CasTelcobright.Forms
             // 
             // btn_stop
             // 
-            this.btn_stop.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.btnStartStop.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_stop.Location = new System.Drawing.Point(3, 3);
-            this.btn_stop.Name = "btn_stop";
-            this.btn_stop.Size = new System.Drawing.Size(150, 25);
-            this.btn_stop.TabIndex = 1;
-            this.btn_stop.Text = "Stop";
-            this.btn_stop.UseVisualStyleBackColor = true;
+            this.btnStartStop.Location = new System.Drawing.Point(3, 3);
+            this.btnStartStop.Name = "btnStartStop";
+            this.btnStartStop.Size = new System.Drawing.Size(150, 25);
+            this.btnStartStop.TabIndex = 1;
+            this.btnStartStop.Text = "Start";
+            this.btnStartStop.UseVisualStyleBackColor = true;
+            this.btnStartStop.Click += StartStopClick;
             // 
             // richTextBox1
             // 
@@ -105,7 +106,7 @@ namespace CasTelcobright.Forms
 
         #endregion
         private TableLayoutPanel tableLayoutPanel1;
-        private Button btn_stop;
+        public Button btnStartStop;
         public RichTextBox richTextBox1;
         private Label operatorLabel;
     }

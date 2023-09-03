@@ -40,9 +40,7 @@ namespace CasTelcobright
             {
                 DisplayPanel userConrControl1 = listUserControl1s[title];
                 userConrControl1.BringToFront();
-                DisplayPanel userControl = (DisplayPanel)userConrControl1;
-                userControl.SetTitle(title);
-                //userControl.executeShell(shellCommand);
+                //DisplayPanel userControl = (DisplayPanel)userConrControl1;
             }
         }
     }
