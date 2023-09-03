@@ -231,9 +231,9 @@ border-bottom-style:ridge;min-width:180px; padding-top: 10px;">
       
     </asp:TreeNode>
 
-    <asp:TreeNode Value="Report Templates" Expanded="True" Text="Report Templates" SelectAction="None">
-      <%--<asp:TreeNode Value="CDR Files" Text="CDR Files" NavigateUrl="~/reports/MediationProcess.aspx" />
-      <asp:TreeNode Value="History" Text="History" NavigateUrl="~/reports/MediationHistory.aspx" />--%>
+    <asp:TreeNode Value="Report Templates" Expanded="False" Text="Report Templates" SelectAction="None">
+     <%--<asp:TreeNode Value="CDR Files" Text="CDR Files" NavigateUrl="~/reports/MediationProcess.aspx" />--%>
+      <%--<asp:TreeNode Value="History" Text="History" NavigateUrl="~/reports/MediationHistory.aspx" />--%>
     </asp:TreeNode>
 
   </Nodes>

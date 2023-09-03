@@ -44,8 +44,6 @@ namespace Process
                 MefJobComposer mefJobComposer = new MefJobComposer();
                 mefJobComposer.Compose();
                 ITelcobrightJob mefInvoicingJob = mefJobComposer.Jobs.Single(c => c.RuleName == "MefCdrInvoicingJob");
-                StringExpressionGeneratorContainer stringExpressionGeneratorContainer= new StringExpressionGeneratorContainer();
-                stringExpressionGeneratorContainer.Compose();
                 using (PartnerEntities context = new PartnerEntities(entityConStr))
                 {
                     context.Database.Connection.Open();

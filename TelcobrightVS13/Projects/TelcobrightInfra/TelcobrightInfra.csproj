@@ -59,6 +59,7 @@
     <Compile Include="Deployment\InstanceConfig.cs" />
     <Compile Include="Deployment\Menu.cs" />
     <Compile Include="Infra\Datacenter.cs" />
+    <Compile Include="Infra\DbCommandReader.cs" />
     <Compile Include="Infra\DbUtil.cs" />
     <Compile Include="Infra\ReplicationHelper.cs" />
     <Compile Include="logManagement\TelcoBillingLogWriter.cs" />

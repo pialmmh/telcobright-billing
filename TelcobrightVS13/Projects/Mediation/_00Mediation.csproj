@@ -201,7 +201,6 @@
     <Compile Include="Config\TelecomOperatortype.cs" />
     <Compile Include="Config\TypeNameSerializationBinder.cs" />
     <Compile Include="FileOperations\SyncPair.cs" />
-    <Compile Include="MefData\Composers\StringExpressionGeneratorContainer.cs" />
     <Compile Include="MefData\Composers\AutomationContainer.cs" />
     <Compile Include="FileOperations\JobParamFileDelete.cs" />
     <Compile Include="FileOperations\RemoteFileInfoExt.cs" />

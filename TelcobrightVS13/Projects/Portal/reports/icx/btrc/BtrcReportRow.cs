@@ -95,8 +95,8 @@ namespace PortalApp.ReportHelper
         public string Date { get; set; }
         public string OriginatingANS { get; set; }
         public string TerminatingCarrier { get; set; }
-        public int ICRouteName { get; set; }
-        public int OGRouteName { get; set; }
+        public string ICRouteName { get; set; }
+        public string OGRouteName { get; set; }
         public string TerminatingRegion { get; set; }
         public int TotalCalls { get; set; }
         public int TotalSuccessfulCalls { get; set; }

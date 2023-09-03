@@ -133,10 +133,12 @@ namespace TelcobrightMediation
             Dictionary<string, string> jobParamsMap = invoiceGenerationInputData.JsonDetail;
             DateTime startDate = Convert.ToDateTime(jobParamsMap["startDate"]);
             var context = invoiceGenerationInputData.Context;
-            DateTime lastSecondOfPrevMonth = startDate.AddSeconds(-1);
+            DateTime lastDayOfMonth = startDate.GetLastDayOfMonth();
+            DateTime lastSecondOfInvoicePeriod = new DateTime(lastDayOfMonth.Year, lastDayOfMonth.Month, lastDayOfMonth.Day, 23, 59, 59);
+            //DateTime lastSecondOfPrevMonth = startDate.AddSeconds(-1);
             uom_conversion_dated usdConversionDated = context.uom_conversion_dated.Where(
                     c => c.PURPOSE_ENUM_ID == "INTERNAL_CONVERSION"
-                         && c.UOM_ID == "USD" && c.UOM_ID_TO == "BDT" && c.FROM_DATE == lastSecondOfPrevMonth)
+                         && c.UOM_ID == "USD" && c.UOM_ID_TO == "BDT" && c.FROM_DATE == lastSecondOfInvoicePeriod)
                          .ToList().FirstOrDefault();
             if (usdConversionDated == null)
                 throw new Exception("Usd conversion rate not found.");

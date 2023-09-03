@@ -25,7 +25,7 @@ namespace TelcobrightInfra
 
         void readMasterLogPosition(MySqlConnection con, out string logFileName, out long position)
         {
-            string masterStatus = DbUtil.execCommandAndGetOutput(con, @"show master status \G");
+            string masterStatus = DbUtil.ExecCommandAndGetScalerString(con, @"show master status \G");
             string[] lines = masterStatus.Split(
                 new string[] {"\r\n", "\r", "\n"},
                 StringSplitOptions.None

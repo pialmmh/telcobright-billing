@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,53 +11,47 @@ namespace TelcobrightInfra
 {
     public class TupleIncrementManager
     {
-        //static void Main(string[] args)
-        //{
-        //    string tuple = "Mustafa";
-        //    GetIncrementalValue(tuple);
-        //}
-
-        public int DefaultValue = 1000;
-        public TupleIncrementManager(int defaultValue)
+        private DbCommand Cmd { get; set; }
+        public int DefaultValue { get; set; } //int enough, higher than int in mysql is bigint which is too big and not required now
+        public TupleIncrementManager(DbCommand cmd,int defaultValue=1001)
         {
             this.DefaultValue = defaultValue;
+            this.Cmd = cmd;
         }
-
-        public void getIncrementalValue(string tuple, MySqlConnection con)
+        public int getIncrementalValue(string tuple)
         {
             //string connectionString = "server=localhost;user=root;password=;database=testdb;";
             //MySqlConnection con = new MySqlConnection(connectionString);
             //con.Open();
+            string tableName =  "tupleIncrement";
+            string createTable = $@"CREATE TABLE IF NOT EXISTS {tableName}(
+                                    tuple varchar(255) primary key,
+                                    lastValue int not null
+                                );";
+            this.Cmd.CommandText = createTable;
+            this.Cmd.ExecuteNonQuery();
 
             // search using given tuple
             string searchSql = $@"  select tuple, lastValue 
-                                    from testTable 
+                                    from {tableName} 
                                     where tuple = '{tuple}'";
-            MySqlCommand searchCmd = new MySqlCommand(searchSql, con);
-            MySqlDataReader reader = searchCmd.ExecuteReader();
-            
-
-            // if tuple already exist then increase lastValue
-            if (reader.Read())
+            DbCommandReader<int?> reader = new DbCommandReader<int?>(this.Cmd,searchSql);//new helper class by Telcobright
+            int? lastValue = reader.getScaler();
+            int newValue = -1;
+            if (lastValue == null)
             {
-
-                int lastValue = reader.GetInt32("lastValue");
-                string updateSql = $@"  update testTable 
-                                        set lastValue = {lastValue + 1}
+                this.Cmd.CommandText= $" insert into tuple (tuple,lastvalue) values'{tuple}',{this.DefaultValue};";
+                this.Cmd.ExecuteNonQuery();
+            }
+            else
+            {
+                newValue = Convert.ToInt32(lastValue) + 1;
+                this.Cmd.CommandText= $@" update {tableName} 
+                                        set lastValue = {newValue}
                                         where tuple = '{tuple}'; ";
-                MySqlCommand updateCmd = new MySqlCommand(updateSql, con);
-                reader.Close();
-                updateCmd.ExecuteNonQuery();
+                this.Cmd.ExecuteNonQuery();
             }
-            // if tuple does not exist then insert new tuple with lastValue = 1
-            else 
-            {
-                string insertSql = $@"  insert into testTable 
-                                        values ( '{tuple}', {this.DefaultValue}); ";
-                MySqlCommand updateCmd = new MySqlCommand(insertSql, con);
-                reader.Close();
-                updateCmd.ExecuteNonQuery();
-            }
+            return newValue;
         }
     }
 }

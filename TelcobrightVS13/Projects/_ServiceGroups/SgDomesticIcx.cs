@@ -10,7 +10,6 @@ using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Accounting.Invoice;
 using TelcobrightMediation.Cdr;
 using TransactionTuple = System.ValueTuple<int, int, long, int, long>;
-
 namespace TelcobrightMediation
 {
     [Export("ServiceGroup", typeof(IServiceGroup))]
@@ -128,6 +127,24 @@ namespace TelcobrightMediation
                 .Key.ToString();
             CommonInvoicePostProcessor commonInvoicePostProcessor
                 = new CommonInvoicePostProcessor(invoicePostProcessingData, cdrOrSummarytableName, jsonDetail);
+
+            InvoiceGenerationInputData inputData = invoicePostProcessingData.InvoiceGenerationInputData;
+
+            invoice invoice = invoicePostProcessingData.Invoice;
+            InvoiceGenerationConfig invoiceGenerationConfig =null;
+            inputData.ServiceGroupWiseInvoiceGenerationConfigs.TryGetValue(this.Id, out invoiceGenerationConfig);
+            if(invoiceGenerationConfig==null)
+                throw new Exception("Could not find invoice generation confir for service group:" + this.Id);
+            IStringExpressionGenerator expressionGenerator= invoiceGenerationConfig.InvoiceRefNoExpressionGenerator;
+            Dictionary<string, object> expressionGenData = new Dictionary<string, object>
+            {
+                {"invoice", invoice},
+                {"serviceGroupName",this.RuleName},
+                {"dbcommand",inputData.Context.Database.Connection.CreateCommand()},
+            };
+            expressionGenerator.GetStringExpression(expressionGenData);
+            //expressionGenerator.GetStringExpression()
+            //TupleIncrementManager ti= new TupleIncrementManager();
             return commonInvoicePostProcessor.Process();
         }
     }

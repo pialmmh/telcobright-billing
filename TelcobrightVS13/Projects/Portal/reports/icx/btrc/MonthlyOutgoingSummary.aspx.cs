@@ -144,9 +144,9 @@ public partial class DefaultRptMonthlyOutSummaryIcx : System.Web.UI.Page
                     record.OriginatingANS  = row.Field<string>("Originating ANS");
                     record.TerminatingCarrier  = row.Field<string>("Terminating Carrier");
                     //record.ICRouteName = row.Field<int>("I/C Route Name");
-                    record.ICRouteName = Convert.ToInt32(row["I/C Route Name"]);
+                    record.ICRouteName = Convert.ToString(row["I/C Route Name"]);
                     //record.OGRouteName = row.Field<int>("O/G Route Name");
-                    record.OGRouteName = Convert.ToInt32(row["O/G Route Name"]); ;
+                    record.OGRouteName = Convert.ToString(row["O/G Route Name"]);
 
                     record.TerminatingRegion  = row.Field<string>("Terminating Region");
                     record.TotalCalls = Convert.ToInt32(row["Total Calls"]);

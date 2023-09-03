@@ -57,7 +57,7 @@ namespace TelcobrightInfra
                    $"provider connection string=\"server = {databaseSetting.ServerName}; user id = {databaseSetting.AdminUserName}; password = {databaseSetting.AdminPassword};persistsecurityinfo=True;Convert Zero Datetime=True;default command timeout=300;database={databaseSetting.DatabaseName}\"";
         }
 
-        public static string execCommandAndGetOutput(MySqlConnection con, string commandText)
+        public static string ExecCommandAndGetScalerString(MySqlConnection con, string commandText)
         {
             MySqlCommand cmd= new MySqlCommand("",con);
             cmd.CommandText = commandText;

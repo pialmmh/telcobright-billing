@@ -60,7 +60,8 @@ namespace InstallConfig
                         {"TollFreeInvoiceSection2GeneratorWithTax","LTFSToIPTSPDetails1" },
                         {"TollFreeInvoiceSection3GeneratorWithTax","LTFSToIPTSPDetails2" }
                     },
-                    SectionNamesOfInvoiceForExport = new List<string>() { "LTFSToIPTSP", "LTFSToIPTSPDetails1" }
+                    SectionNamesOfInvoiceForExport = new List<string>() { "LTFSToIPTSP", "LTFSToIPTSPDetails1" },
+                    //InvoiceRefNoExpressionGenerator = new MonthlyInvoiceNoWithDefaultStartingValuePerServiceGroup { Data = -1000000}
                 }
             });
 
@@ -102,7 +103,8 @@ namespace InstallConfig
                         {"XyzSection2GeneratorWithTax","InternationalOutgoingToANSDetails1" },
                         {"XyzSection3GeneratorWithTax","InternationalOutgoingToANSDetails2" }
                     },
-                    SectionNamesOfInvoiceForExport = new List<string>() { "InternationalOutgoingToANS", "InternationalOutgoingToANSDetails1" }
+                    SectionNamesOfInvoiceForExport = new List<string>() { "InternationalOutgoingToANS", "InternationalOutgoingToANSDetails1" },
+                    //InvoiceRefNoExpressionGenerator = new MonthlyInvoiceNoWithDefaultStartingValuePerServiceGroup { Data = 2001 }
                 },
             });
 
@@ -150,10 +152,7 @@ namespace InstallConfig
                         { "serviceGroupsToMergeInvoice","6"} //ltfs icx to be merged with domestic for summit icx
                     },
                     SectionNamesOfInvoiceForExport = new List<string>() { "DomesticToANS", "DomesticToANSDetails1" },
-                    //InvoiceRefNoExpressionGenerator = new MonthlyInvoiceNoWithDefaultStartingValuePerServiceGroup()
-                    //{
-                    //    Data = 1001
-                    //}
+                    //InvoiceRefNoExpressionGenerator = new MonthlyInvoiceNoWithDefaultStartingValuePerServiceGroup{Data = 1001}
                 }
             });
             serviceGroupConfigurations.Add(
@@ -190,7 +189,8 @@ namespace InstallConfig
                             {"A2ZInvoiceSection2GeneratorWithCurrencyConversion","InternationalToIOSDetails1" },
                             {"A2ZInvoiceSection3GeneratorWithCurrencyConversion","InternationalToIOSDetails2" }
                         },
-                        SectionNamesOfInvoiceForExport = new List<string>() { "InternationalToIOS", "InternationalToIOSDetails1" }
+                        SectionNamesOfInvoiceForExport = new List<string>() { "InternationalToIOS", "InternationalToIOSDetails1" },
+                        //InvoiceRefNoExpressionGenerator = new MonthlyInvoiceNoWithDefaultStartingValuePerServiceGroup { Data = 3001 }
                     }
                 });
             return serviceGroupConfigurations.ToDictionary(s => s.IdServiceGroup);

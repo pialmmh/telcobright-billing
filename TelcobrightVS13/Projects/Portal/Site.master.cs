@@ -45,8 +45,8 @@ public partial class SiteMaster : System.Web.UI.MasterPage
         {
 //            this.Session["isTreeLoaded"] = true;
             //Load Report Templates in TreeView dynically from database.
-            CommonCode commonCode = new CommonCode();
-            commonCode.LoadReportTemplatesTree(ref this.TreeView1);
+            //CommonCode commonCode = new CommonCode();
+            //commonCode.LoadReportTemplatesTree(ref this.TreeView1);
             //if(HeadLoginView.tet)
 
             //get any ne of this telcobright partner, required by rate handling objects

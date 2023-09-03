@@ -3,6 +3,7 @@ using System.ComponentModel.Composition;
 using MediationModel;
 using TelcobrightMediation;
 using System.Collections.Generic;
+using System.Data.Common;
 //using MySql.Data;
 using MySql.Data.MySqlClient;
 using TelcobrightInfra;
@@ -15,11 +16,11 @@ namespace StringExpressionGeneratorRules
         public string HelpText { get; }
         public int Id { get; }
         public object Data { get; set; }
-        private int DefaultStartingValue { get; set; }
+        private long DefaultStartingValue { get; set; }
         public bool IsPrepared { get; private set; }
         public void Prepare()
         {
-            this.DefaultStartingValue = (int) this.Data;
+            this.DefaultStartingValue = (long) this.Data;
             this.IsPrepared = true;
         }
         public string GetStringExpression(Dictionary<string,object> input)
@@ -29,16 +30,20 @@ namespace StringExpressionGeneratorRules
 
             invoice invoice = (invoice) input["invoice"];
             string serviceGroupName = (string) input["serviceGroupName"];
-            MySqlConnection connection = (MySqlConnection) input["connection"];
+            DbCommand cmd = (DbCommand)input["dbcommand"];
 
             if (invoice.INVOICE_DATE == null)
             {
                 throw new Exception("Invoice date found null while generating reference no expresion. ");
             }
+
             var invoiceDate = Convert.ToDateTime(invoice.INVOICE_DATE);
-            string tupleExpression = invoiceDate.Year.ToString() + invoiceDate.Month.ToString();
-            //TupleIncrementManager manager= new TupleIncrementManager();
-            return "hello world";
+
+            //TupleIncrementManager ti= new TupleIncrementManager(this.DefaultStartingValue);
+            string tupleExpression = invoiceDate.Year.ToString() + "-" + invoiceDate.Month.ToString() + "/" + serviceGroupName;
+            //var x = ti.getIncrementalValue(tupleExpression,cmd)
+
+            return tupleExpression; //e.g. 2023-12/domestic
         }
     }
 }

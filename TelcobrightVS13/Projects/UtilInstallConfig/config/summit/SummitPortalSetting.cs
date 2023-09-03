@@ -255,11 +255,12 @@ namespace InstallConfig
                                 {
                                     "nodes['Configuration'].Expanded=false",
                                     "nodes['Billing'].Expanded=false",
-                                    "nodes['Mediation'].Expanded=false",
+                                    "nodes['Mediation'].Expanded=true",
+                                    "nodes['Mediation/Create Batch Job'].Expanded=false",
                                     "nodes['Settings'].Expanded=false",
                                     "nodes['Billing Reports'].Expanded=false",
                                     "nodes['Reports/IGW'].Expanded=false",
-                                    "nodes['Reports/Transit'].Expanded=false"
+                                    "nodes['Reports/Transit'].Expanded=false",
                                 }
                             },
                             new SettingByRoles()

@@ -18,6 +18,16 @@ namespace TelcobrightMediation.Accounting
         public job TelcobrightJob { get; }
         public Dictionary<string,string> JsonDetail { get; set; }
         public Dictionary<int,InvoiceGenerationConfig> ServiceGroupWiseInvoiceGenerationConfigs { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tbc"></param>
+        /// <param name="context"></param>
+        /// <param name="telcobrightJob"></param>
+        /// <param name="serviceGroupWiseinvoiceGenerationConfigs"></param>
+        /// <param name="invoiceGenerationRules"></param>
+        /// <param name="serviceGroups"></param>
+        /// <param name="invoiceSectionGenerators"></param>
         public InvoiceGenerationInputData(TelcobrightConfig tbc,PartnerEntities context,job telcobrightJob,
             Dictionary<int,InvoiceGenerationConfig> serviceGroupWiseinvoiceGenerationConfigs,
             Dictionary<string, IInvoiceGenerationRule> invoiceGenerationRules,
@@ -31,6 +41,10 @@ namespace TelcobrightMediation.Accounting
             this.InvoiceGenerationRules = invoiceGenerationRules;
             this.ServiceGroups = serviceGroups;
             this.ServiceGroupWiseInvoiceGenerationConfigs = serviceGroupWiseinvoiceGenerationConfigs;
+            foreach (var invoiceGenerationConfig in serviceGroupWiseinvoiceGenerationConfigs.Values)
+            {
+                invoiceGenerationConfig.InvoiceRefNoExpressionGenerator.Prepare();
+            }
             this.InvoiceSectionGenerators = invoiceSectionGenerators;
         }
     }
