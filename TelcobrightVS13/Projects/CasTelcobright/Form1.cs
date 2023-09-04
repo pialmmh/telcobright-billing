@@ -19,7 +19,7 @@ namespace CasTelcobright
     {
         private string output;
         Dictionary<string, DisplayPanel> displayPanels = new Dictionary<string, DisplayPanel>();
-        public static Dictionary<string, Telcobright2> processes = new Dictionary<string, Telcobright2>();
+        
 
         List<string> allIcx = IcxFactory.getAllIcx();
         Dictionary<string, Button> buttons = new Dictionary<string, Button>();
@@ -46,7 +46,6 @@ namespace CasTelcobright
 
         private void InitializeNavigationButtons()
         {
-
             // create a NavigationButtons instance
             navigationButtons = new NavigationButtons(buttons, btnDefaultColor, btnSelectedtColor);
             // Make a default selected button
@@ -67,23 +66,6 @@ namespace CasTelcobright
             string tag = (string)btn.Tag;
             navigationControl.Display(tag);
             navigationButtons.Highlight(btn);
-
-            process(tag);
         }
-
-        public void process(string tag)
-        {
-            if (!processes.ContainsKey(tag))
-            {
-                DisplayPanel displayPanel = displayPanels[tag];
-                displayPanel.btnStartStop.Text = "Stop";
-                Telcobright2 t2 = new Telcobright2(tag);
-                processes.Add(tag,t2);
-                ProcessWrapper processWrapper = new ProcessWrapper(tag, t2, displayPanel);
-
-                processWrapper.task.Start();
-            }
-        }
-
     }
 }

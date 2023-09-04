@@ -15,6 +15,8 @@ namespace CasTelcobright.Forms
     public partial class DisplayPanel : UserControl
     {
         public string instanceName;
+        //private Dictionary<string, ProcessWrapper> processes = new Dictionary<string, ProcessWrapper>();
+        private ProcessWrapper processWrapper;
         public DisplayPanel(string title)
         {
             InitializeComponent();
@@ -27,21 +29,15 @@ namespace CasTelcobright.Forms
             Button btn = (Button)sender;
             if (btn.Text == "Stop")
             {
-                if (Form1.processes.ContainsKey(instanceName))
-                {
-                    Telcobright2 t2 = Form1.processes[instanceName];
-                    Form1.processes.Remove(instanceName);
-                    t2 = null;
-                    btn.Text = "Start";
-                }
+                btn.Text = "Start";
+                this.processWrapper.cancellationTokenSource.Cancel();
+                this.processWrapper = null;
             } else if (btn.Text == "Start")
             {
                 btn.Text = "Stop";
-                Form1 form1 = new Form1();
-                form1.process(instanceName);
+                this.processWrapper = new ProcessWrapper(instanceName, this);
+                this.processWrapper.task.Start();
             }
-            //btn.Text = (btn.Text == "Stop") ? "Start" : "Stop";
         }
-
     }
 }
