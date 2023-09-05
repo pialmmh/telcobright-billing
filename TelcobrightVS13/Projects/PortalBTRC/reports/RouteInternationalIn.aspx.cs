@@ -467,7 +467,7 @@ public partial class DefaultRtIntlIn : Page
         if (this.Session["IntlInRoute"] != null) //THIS MUST BE CHANGED IN EACH PAGE
         {
             TrafficReportDatasetBased tr = (TrafficReportDatasetBased) this.Session["IntlInRoute"];
-            DataSetWithGridView dsG = new DataSetWithGridView(tr, this.GridView1);//invisible columns are removed in constructor
+            DataSetWithGridView dsG = new DataSetWithGridView(tr, this.GridView1);//invisible baseColumns are removed in constructor
             CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(tr.Ds, "IntlIncomingRoute_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                     + ".xlsx", this.Response);
         }
@@ -485,7 +485,7 @@ public partial class DefaultRtIntlIn : Page
 
         //    ThisRow += column.ColumnName + ",";
         //}
-        //write columns in order specified in ColumnSortedList
+        //write baseColumns in order specified in ColumnSortedList
         int ii = 0;
         for (ii=0; ii<colNameList.Count;ii++ )
         {  

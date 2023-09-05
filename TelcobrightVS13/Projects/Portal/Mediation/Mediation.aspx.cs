@@ -391,7 +391,7 @@ public partial class DefaultMediation : System.Web.UI.Page
 
         //    ThisRow += column.ColumnName + ",";
         //}
-        //write columns in order specified in ColumnSortedList
+        //write baseColumns in order specified in ColumnSortedList
         int ii = 0;
         for (ii=0; ii<colNameList.Count;ii++ )
         {  

@@ -333,7 +333,7 @@ public class MyExcel
 
         string HeaderTextByAllSheet(Workbook book)
         {
-            //concat all text in first 500 lines, first 10 columns in each sheets
+            //concat all text in first 500 lines, first 10 baseColumns in each sheets
             StringBuilder sbstr = new StringBuilder();
 
             foreach (Worksheet Sheet in book.Worksheets)

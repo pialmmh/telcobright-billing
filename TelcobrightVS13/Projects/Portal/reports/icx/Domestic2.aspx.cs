@@ -112,6 +112,19 @@ public partial class DefaultRptDomesticIcx2 : System.Web.UI.Page
         else return string.Empty;
     }
 
+    private int GetColumnIndexByName(GridView grid, string name)
+    {
+        foreach (DataControlField col in grid.Columns)
+        {
+            if (col.SortExpression.ToLower().Trim() == name.ToLower().Trim())
+            {
+                return grid.Columns.IndexOf(col);
+            }
+        }
+
+        return -1;
+    }
+
 
 
     protected void submit_Click(object sender, EventArgs e)
@@ -135,7 +148,7 @@ public partial class DefaultRptDomesticIcx2 : System.Web.UI.Page
         */
 
 
-        GridView1.Columns[1].Visible = CheckBoxPartner.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "International Partner")].Visible = CheckBoxPartner.Checked;
         GridView1.Columns[2].Visible = CheckBoxViewIncomingRoute.Checked;
         GridView1.Columns[3].Visible = CheckBoxShowByIgw.Checked;
         GridView1.Columns[4].Visible = CheckBoxViewOutgoingRoute.Checked;
@@ -333,7 +346,7 @@ public partial class DefaultRptDomesticIcx2 : System.Web.UI.Page
         if (Session["IntlIn"] != null) //THIS MUST BE CHANGED IN EACH PAGE
         {
             TrafficReportDatasetBased tr = (TrafficReportDatasetBased)Session["IntlIn"];
-            DataSetWithGridView dsG = new DataSetWithGridView(tr, GridView1);//invisible columns are removed in constructor
+            DataSetWithGridView dsG = new DataSetWithGridView(tr, GridView1);//invisible baseColumns are removed in constructor
             CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(tr.Ds, "IntlIncoming_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                     + ".xlsx", Response);
         }

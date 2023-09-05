@@ -333,7 +333,7 @@ public partial class DefaultRptLocalTollFreePremium : System.Web.UI.Page
         if (Session["LclTFPreTr"] != null) //THIS MUST BE CHANGED IN EACH PAGE
         {
             TrafficReportDatasetBased tr = (TrafficReportDatasetBased)Session["LclTFPreTr"];
-            DataSetWithGridView dsG = new DataSetWithGridView(tr, GridView1);//invisible columns are removed in constructor
+            DataSetWithGridView dsG = new DataSetWithGridView(tr, GridView1);//invisible baseColumns are removed in constructor
             CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(tr.Ds, "LocalTFPremium_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                     + ".xlsx", Response);
         }

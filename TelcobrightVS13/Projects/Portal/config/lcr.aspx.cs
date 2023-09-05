@@ -732,7 +732,7 @@ public partial class config_lcr : Page
                 shSupplier.Cells[1, 4].Value = "Effective From";
 
                 
-                //autofit supplier columns
+                //autofit supplier baseColumns
                 for (int i = 1; i <= maxRank; i = i + 2)
                 {
                     shSupplier.Column(startRankColIndex + 1 + i).AutoFit();

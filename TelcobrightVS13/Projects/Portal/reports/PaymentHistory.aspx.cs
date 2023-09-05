@@ -100,7 +100,7 @@ namespace PortalApp.reports
 	        if (Session["PaymentHistory"] != null) //THIS MUST BE CHANGED IN EACH PAGE
 	        {
 	            TrafficReportDatasetBased tr = (TrafficReportDatasetBased)Session["PaymentHistory"];
-	            DataSetWithGridView dsG = new DataSetWithGridView(tr, GridView1);//invisible columns are removed in constructor
+	            DataSetWithGridView dsG = new DataSetWithGridView(tr, GridView1);//invisible baseColumns are removed in constructor
 	            CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(tr.Ds, "PaymentHistory_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
 	                                                                                                + ".xlsx", Response);
 	        }

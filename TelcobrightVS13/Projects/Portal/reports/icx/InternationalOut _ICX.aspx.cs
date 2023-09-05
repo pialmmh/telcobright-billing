@@ -759,7 +759,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
         if (Session["IntlOut"] != null) //THIS MUST BE CHANGED IN EACH PAGE
         {
             TrafficReportDatasetBased tr = (TrafficReportDatasetBased)Session["IntlOut"];
-            DataSetWithGridView dsG = new DataSetWithGridView(tr, GridView1);//invisible columns are removed in constructor
+            DataSetWithGridView dsG = new DataSetWithGridView(tr, GridView1);//invisible baseColumns are removed in constructor
             CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(tr.Ds, "IntlOutgoing_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                     + ".xlsx", Response);
         }

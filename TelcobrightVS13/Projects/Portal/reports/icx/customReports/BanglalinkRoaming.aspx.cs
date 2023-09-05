@@ -410,7 +410,7 @@ public partial class BanglalinkRoaming : System.Web.UI.Page
         //if (Session["IntlIn"] != null) //THIS MUST BE CHANGED IN EACH PAGE
         //{
         //    TrafficReportDatasetBased tr = (TrafficReportDatasetBased)Session["IntlIn"];
-        //    DataSetWithGridView dsG = new DataSetWithGridView(tr, GridView1);//invisible columns are removed in constructor
+        //    DataSetWithGridView dsG = new DataSetWithGridView(tr, GridView1);//invisible baseColumns are removed in constructor
         //    CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(tr.Ds, "IntlIncoming_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
         //            + ".xlsx", Response);
         //}

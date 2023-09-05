@@ -384,7 +384,7 @@ public partial class InternationalOutTransit : System.Web.UI.Page
         if (Session["IntlOutTr"] != null) //THIS MUST BE CHANGED IN EACH PAGE
         {
             TrafficReportDatasetBased tr = (TrafficReportDatasetBased)Session["IntlOutTr"];
-            DataSetWithGridView dsG = new DataSetWithGridView(tr, GridView1);//invisible columns are removed in constructor
+            DataSetWithGridView dsG = new DataSetWithGridView(tr, GridView1);//invisible baseColumns are removed in constructor
             CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(tr.Ds, "IntlOutgoing_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                     + ".xlsx", Response);
         }

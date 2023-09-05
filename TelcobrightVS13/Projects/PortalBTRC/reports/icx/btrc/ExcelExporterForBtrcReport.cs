@@ -260,7 +260,7 @@ namespace PortalApp.ReportHelper
                     ws.Column(5).Width = 14;
                     ws.Column(7).Width = 14;
                     ws.Column(8).Width = 14;
-                    // Set columns to auto-fit
+                    // Set baseColumns to auto-fit
                     for (int i = 1; i <= ws.Dimension.Columns; i++)
                     {
                         ws.Column(i).AutoFit();
@@ -313,7 +313,7 @@ namespace PortalApp.ReportHelper
                     string totalStartRange = reportStartCol + totalStartRow.ToString();
                     ws.Cells[reportStartRange].LoadFromCollection<MonthlyOutSummary>(monthlyRecords, true);
         
-                    // Set columns to auto-fit
+                    // Set baseColumns to auto-fit
                     for (int i = 1; i <= ws.Dimension.Columns; i++)
                     {
                         ws.Column(i).AutoFit();
@@ -368,7 +368,7 @@ namespace PortalApp.ReportHelper
                     //ws.Cells[mntCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
 
-                    // Set columns to auto-fit
+                    // Set baseColumns to auto-fit
                     for (int i = 1; i <= ws.Dimension.Columns; i++)
                     {
                         ws.Column(i).AutoFit();
@@ -464,7 +464,7 @@ namespace PortalApp.ReportHelper
 
                     //createBtrcReportInExcel(ws, domesticRecords, "A", 8, "Name of ANS");
 
-                    // Set columns to auto-fit
+                    // Set baseColumns to auto-fit
                     for (int i = 1; i <= ws.Dimension.Columns; i++)
                     {
                         ws.Column(i).AutoFit();
@@ -541,7 +541,7 @@ namespace PortalApp.ReportHelper
                     createInternationalReportInExcel(ws, internationalReports, "A", 8, "Name of IOS");
 
 
-                    // Set columns to auto-fit
+                    // Set baseColumns to auto-fit
                     for (int i = 1; i <= ws.Dimension.Columns; i++)
                     {
                         ws.Column(i).AutoFit();
@@ -617,7 +617,7 @@ namespace PortalApp.ReportHelper
 
                     createBtrcReportInExcel(ws, domesticRecords, "A", 30, "Name of ANS");
 
-                    // Set columns to auto-fit
+                    // Set baseColumns to auto-fit
                     for (int i = 1; i <= ws.Dimension.Columns; i++)
                     {
                         ws.Column(i).AutoFit();

@@ -145,7 +145,7 @@ namespace PortalApp.reports.BTRC
         // Call Date Header hide that normally created
         protected void grdViewProducts_RowDataBound(object sender, GridViewRowEventArgs e)
         {
-            // Invisibling the first three columns of second row header (normally created on binding)
+            // Invisibling the first three baseColumns of second row header (normally created on binding)
             if (e.Row.RowType == DataControlRowType.Header)
             {
                 e.Row.Cells[0].Visible = false; // Invisibiling Year Header Cell              
@@ -177,7 +177,7 @@ namespace PortalApp.reports.BTRC
                 headerCell = new TableCell();
                 headerCell.Text = "Incoming";
                 headerCell.HorizontalAlign = HorizontalAlign.Center;
-                headerCell.ColumnSpan = 2; // For merging three columns (Direct, Referral, Total)
+                headerCell.ColumnSpan = 2; // For merging three baseColumns (Direct, Referral, Total)
                 headerCell.CssClass = "HeaderStyle";
                 headerRow.Cells.Add(headerCell);
                            
@@ -186,7 +186,7 @@ namespace PortalApp.reports.BTRC
                 headerCell = new TableCell();
                 headerCell.Text = "Outgoing";
                 headerCell.HorizontalAlign = HorizontalAlign.Center;
-                headerCell.ColumnSpan = 2; // For merging three columns (Direct, Referral, Total)
+                headerCell.ColumnSpan = 2; // For merging three baseColumns (Direct, Referral, Total)
                 headerCell.CssClass = "HeaderStyle";
                 headerRow.Cells.Add(headerCell);
               

@@ -758,7 +758,7 @@ public partial class DefaultRates : Page
 
         string thisRow = "";
         
-        //write columns in order specified in ColumnSortedList
+        //write baseColumns in order specified in ColumnSortedList
         int ii = 0;
         for (ii=0; ii<colNameList.Count;ii++ )
         {  

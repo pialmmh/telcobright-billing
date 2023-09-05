@@ -305,7 +305,7 @@ public partial class DefaultRtUtilAgg : System.Web.UI.Page
             this._dt = dataset.Tables[0];
             this.Session["RouteUtilizationboth.aspx.csdt16"] = this._dt; //THIS MUST BE CHANGED FOR EACH PAGE
 
-            //suppress hidden columns of the gridview
+            //suppress hidden baseColumns of the gridview
             int cnt=0;
             int thisColumnIndexDataGrid = -1;
             colNamelist = new List<string>();
@@ -388,7 +388,7 @@ public partial class DefaultRtUtilAgg : System.Web.UI.Page
                 {
                     string thisDatasetFieldname = this._dt.Columns[summaryColumns[r1, 0]].ColumnName;
                     //find this datasetfield's index in current gridview, its required because the positions
-                    //change as some columns of the grid are dynamically made visible/invisible
+                    //change as some baseColumns of the grid are dynamically made visible/invisible
 
                     int thisColumnIndexInGridView = -1;
                     int count = 0;
@@ -502,7 +502,7 @@ public partial class DefaultRtUtilAgg : System.Web.UI.Page
 
         //    ThisRow += column.ColumnName + ",";
         //}
-        //write columns in order specified in ColumnSortedList
+        //write baseColumns in order specified in ColumnSortedList
         int ii = 0;
         for (ii=0; ii<colNameList.Count;ii++ )
         {  

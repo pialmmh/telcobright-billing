@@ -49,7 +49,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
                          
                          new List<string>()
                             {
-                                // groupInterval=="Hourly"?"tup_starttime":string.Empty,
+                                groupInterval=="Hourly"?"tup_starttime":string.Empty,
                                 getInterval(groupInterval),
                                 CheckBoxPartner.Checked==true?"tup_inpartnerid":string.Empty,
                                 CheckBoxShowByAns.Checked==true?"tup_destinationId":string.Empty,
@@ -96,9 +96,9 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
         if (CheckBoxDailySummary.Checked)
         {
             string interval = "";
-            //if (RadioButtonHalfHourly.Checked)
-            //    return interval = "" + RadioButtonHalfHourly.Text;
-            //else 
+            if (RadioButtonHalfHourly.Checked)
+                return interval = "" + RadioButtonHalfHourly.Text;
+            else 
             if (RadioButtonHourly.Checked)
                 return interval = "" + RadioButtonHourly.Text;
             else if (RadioButtonDaily.Checked)
@@ -203,12 +203,12 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
             if (CheckBoxDailySummary.Checked == true)
             {
                 string summaryInterval = "";
-                //if (RadioButtonHalfHourly.Checked == true)
-                //{
-                //    summaryInterval = "Halfhourly";
-                //    GridView1.Columns[0].HeaderText = "Half Hour";
-                //}
-                //else 
+                if (RadioButtonHalfHourly.Checked == true)
+                {
+                    summaryInterval = "Halfhourly";
+                    GridView1.Columns[0].HeaderText = "Half Hour";
+                }
+                else 
                 if (RadioButtonHourly.Checked == true)
                 {
                     summaryInterval = "Hourly";
@@ -350,7 +350,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
         if (Session["IntlIn"] != null) //THIS MUST BE CHANGED IN EACH PAGE
         {
             TrafficReportDatasetBased tr = (TrafficReportDatasetBased)Session["IntlIn"];
-            DataSetWithGridView dsG = new DataSetWithGridView(tr, GridView1);//invisible columns are removed in constructor
+            DataSetWithGridView dsG = new DataSetWithGridView(tr, GridView1);//invisible baseColumns are removed in constructor
             CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(tr.Ds, "IntlIncoming_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                     + ".xlsx", Response);
         }

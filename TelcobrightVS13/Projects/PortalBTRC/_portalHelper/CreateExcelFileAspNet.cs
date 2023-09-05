@@ -28,7 +28,7 @@ namespace ExportToExcel
     //        You can now create an Excel file via a Stream (making it more ASP.Net friendly)
     //   - Jan 2013: Fix: Couldn't open .xlsx files using OLEDB  (was missing "WorkbookStylesPart" part)
     //   - Nov 2012: 
-    //        List<>s with Nullable columns weren't be handled properly.
+    //        List<>s with Nullable baseColumns weren't be handled properly.
     //        If a value in a numeric column doesn't have any data, don't write anything to the Excel file (previously, it'd write a '0')
     //   - Jul 2012: Fix: Some worksheets weren't exporting their numeric data properly, causing "Excel found unreadable content in '___.xslx'" errors.
     //   - Mar 2012: Fixed issue, where Microsoft.ACE.OLEDB.12.0 wasn't able to connect to the Excel files created using this class.
@@ -363,7 +363,7 @@ namespace ExportToExcel
                     string lastColExcel = IndexToColumn(noOfCols);
                     int noOfRows = tbl.Rows.Count;
                     int summaryRowIndex = noOfRows + 1;
-                    // Set columns to auto-fit
+                    // Set baseColumns to auto-fit
                     for (int i = 1; i <= ws.Dimension.Columns; i++)
                     {
                         ws.Column(i).AutoFit();
@@ -453,7 +453,7 @@ namespace ExportToExcel
                     string lastColExcel = IndexToColumn(noOfCols);
                     int noOfRows = tbl.Rows.Count;
                     int summaryRowIndex = noOfRows + 1;
-                    // Set columns to auto-fit
+                    // Set baseColumns to auto-fit
                     for (int i = 1; i <= ws.Dimension.Columns; i++)
                     {
                         ws.Column(i).AutoFit();

@@ -561,7 +561,7 @@ public partial class DefaultCauseIntlIn : Page
             this._dt = dataset.Tables[0];
             this.Session["CauseInternationalIn.aspx.csdt16"] = this._dt; //THIS MUST BE CHANGED FOR EACH PAGE
 
-            //suppress hidden columns of the gridview
+            //suppress hidden baseColumns of the gridview
             int cnt=0;
             int thisColumnIndexDataGrid = -1;
             colNamelist = new List<string>();
@@ -675,7 +675,7 @@ public partial class DefaultCauseIntlIn : Page
         //    ThisRow += column.ColumnName + ",";
         //}
         //header row
-        //write columns in order specified in ColumnSortedList
+        //write baseColumns in order specified in ColumnSortedList
         int ii = 0;
         for (ii=0; ii<colNameList.Count;ii++ )
         {  

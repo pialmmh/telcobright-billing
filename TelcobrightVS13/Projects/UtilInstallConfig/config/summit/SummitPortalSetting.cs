@@ -305,6 +305,9 @@ namespace InstallConfig
                     { "~/reports/icx/Domestic.aspx",
                         settingIntlIn
                     },
+                    { "~/reports/icx/DomesticWithLtfs.aspx",
+                        settingIntlIn
+                    },
                     { "~/reports/icx/LocalTollFree.aspx",
                         settingIntlIn
                     },

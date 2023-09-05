@@ -338,7 +338,7 @@
 
         <span style="padding-left: 0px; float: left; left: 0px; font-weight: bold; margin-top: 2px; margin-right: 20px; color: Black;">Report:</span>
         <%--<span style="font-weight: bold;">Source</span>--%>
-         <asp:DropDownList ID="DropDownListReportSource" runat="server" Visible="False">
+         <asp:DropDownList ID="DropDownListReportSource" runat="server" Visible="True">
          <asp:ListItem Value="sum_voice_day_">Day Wise</asp:ListItem>
          <asp:ListItem Value="sum_voice_hr_">Hour Wise</asp:ListItem>
         
@@ -346,7 +346,7 @@
 
         View by Switch:
         <asp:CheckBox ID="ViewBySwitch" runat="server" AutoPostBack="True"
-                      OnCheckedChanged="CheckBoxShowBySwitch_CheckedChanged" Checked="True" />
+                      OnCheckedChanged="CheckBoxShowBySwitch_CheckedChanged" Checked="False" />
                        
         <asp:DropDownList ID="DropDownListShowBySwitch" runat="server" Visible="true" Enabled="True">
         </asp:DropDownList>
@@ -456,7 +456,7 @@
                     <div style="font-weight: bold; float: left;">Period wise Summary<asp:CheckBox ID="CheckBoxDailySummary" runat="server" /></div>
                     <div style="clear: left; margin-top: 5px;"></div>
                     <div style="float: left; margin-right: 5px;">
-                        <%--<asp:RadioButton ID="RadioButtonHalfHourly" Text="Half Hourly" GroupName="Time" runat="server" AutoPostBack="false" /><br />--%>
+                        <asp:RadioButton ID="RadioButtonHalfHourly" Text="Half Hourly" GroupName="Time" runat="server" AutoPostBack="false" /><br />
                         <asp:RadioButton ID="RadioButtonHourly" Text="Hourly" GroupName="Time" runat="server" AutoPostBack="false" />
                     </div>
                     <div style="float: left; margin-right: 5px;">

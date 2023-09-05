@@ -570,6 +570,7 @@
     <Content Include="reports\icx\customReports\GrameenphoneRoaming.aspx" />
     <Content Include="reports\icx\customReports\RobiCallForwarding.aspx" />
     <Content Include="reports\icx\customReports\RobiRoaming.aspx" />
+    <Content Include="reports\icx\DomesticWithLtfs.aspx" />
     <Content Include="reports\icx\Domestic2.aspx" />
     <Content Include="reports\icx\LocalTollFree.aspx" />
     <Content Include="reports\icx\Domestic.aspx" />
@@ -937,6 +938,7 @@
     <Compile Include="ReportHelper\SqlHelperDomestic.cs" />
     <Compile Include="ReportHelper\SqlHelperInIGWRouteWise.cs" />
     <Compile Include="ReportHelper\SqlHelperDomesticLtfs.cs" />
+    <Compile Include="ReportHelper\SqlHelperIntlInICXLtfs.cs" />
     <Compile Include="ReportHelper\SqlHelperIntlInICXv2.cs" />
     <Compile Include="ReportHelper\SqlHelperIntlInICX.cs" />
     <Compile Include="ReportHelper\SqlHelperIntlInIGW.cs" />
@@ -1050,6 +1052,13 @@
     </Compile>
     <Compile Include="reports\icx\customReports\RobiRoaming.aspx.designer.cs">
       <DependentUpon>RobiRoaming.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\icx\DomesticWithLtfs.aspx.cs">
+      <DependentUpon>DomesticWithLtfs.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\icx\DomesticWithLtfs.aspx.designer.cs">
+      <DependentUpon>DomesticWithLtfs.aspx</DependentUpon>
     </Compile>
     <Compile Include="reports\icx\Domestic2.aspx.cs">
       <DependentUpon>Domestic2.aspx</DependentUpon>

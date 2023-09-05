@@ -52,6 +52,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbHelper\DaywiseTableManager.cs" />
+    <Compile Include="DbHelper\DbColumn.cs" />
+    <Compile Include="DbHelper\SqlAggregator.cs" />
     <Compile Include="DbHelper\TupleIncrementManager.cs" />
     <Compile Include="Deployment\DeploymentPlatform.cs" />
     <Compile Include="Deployment\DeploymentProfile.cs" />
