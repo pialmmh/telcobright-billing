@@ -192,13 +192,13 @@ public partial class DashboardAspx {
     protected global::System.Web.UI.WebControls.Label Label4;
     
     /// <summary>
-    /// Chart1 control.
+    /// InternationalDistributionIncoming control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.DataVisualization.Charting.Chart Chart1;
+    protected global::System.Web.UI.DataVisualization.Charting.Chart InternationalDistributionIncoming;
     
     /// <summary>
     /// Label5 control.
@@ -210,13 +210,13 @@ public partial class DashboardAspx {
     protected global::System.Web.UI.WebControls.Label Label5;
     
     /// <summary>
-    /// Chart2 control.
+    /// InternationalDistributionOutgoing control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.DataVisualization.Charting.Chart Chart2;
+    protected global::System.Web.UI.DataVisualization.Charting.Chart InternationalDistributionOutgoing;
     
     /// <summary>
     /// Label6 control.
@@ -228,13 +228,13 @@ public partial class DashboardAspx {
     protected global::System.Web.UI.WebControls.Label Label6;
     
     /// <summary>
-    /// Chart3 control.
+    /// ICXDistributionSylhet control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.DataVisualization.Charting.Chart Chart3;
+    protected global::System.Web.UI.DataVisualization.Charting.Chart ICXDistributionSylhet;
     
     /// <summary>
     /// Label7 control.
@@ -246,13 +246,13 @@ public partial class DashboardAspx {
     protected global::System.Web.UI.WebControls.Label Label7;
     
     /// <summary>
-    /// Chart4 control.
+    /// ICXDistributionBarishal control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.DataVisualization.Charting.Chart Chart4;
+    protected global::System.Web.UI.DataVisualization.Charting.Chart ICXDistributionBarishal;
     
     /// <summary>
     /// Label8 control.
@@ -264,13 +264,13 @@ public partial class DashboardAspx {
     protected global::System.Web.UI.WebControls.Label Label8;
     
     /// <summary>
-    /// Chart5 control.
+    /// ICXDistributionRangpur control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.DataVisualization.Charting.Chart Chart5;
+    protected global::System.Web.UI.DataVisualization.Charting.Chart ICXDistributionRangpur;
     
     /// <summary>
     /// Label9 control.
@@ -282,13 +282,13 @@ public partial class DashboardAspx {
     protected global::System.Web.UI.WebControls.Label Label9;
     
     /// <summary>
-    /// Chart6 control.
+    /// ICXDistributionRajshahi control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.DataVisualization.Charting.Chart Chart6;
+    protected global::System.Web.UI.DataVisualization.Charting.Chart ICXDistributionRajshahi;
     
     /// <summary>
     /// Label10 control.
@@ -300,13 +300,13 @@ public partial class DashboardAspx {
     protected global::System.Web.UI.WebControls.Label Label10;
     
     /// <summary>
-    /// Chart7 control.
+    /// ICXDistributionMymenshing control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.DataVisualization.Charting.Chart Chart7;
+    protected global::System.Web.UI.DataVisualization.Charting.Chart ICXDistributionMymenshing;
     
     /// <summary>
     /// Timer2 control.
