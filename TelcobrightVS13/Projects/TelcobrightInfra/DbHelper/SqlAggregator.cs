@@ -106,6 +106,48 @@ namespace TelcobrightInfra
             }
             return new string(tempArr);
         }
+        private static string replaceCharWithinFristBrace(string sql, int startFrom, char charToReplace, char replaceWith)
+        {
+            var tempArr = sql.ToCharArray();
+            bool insideColName = false;
+            int braceCount = 0;
+            for (var index = startFrom; index < tempArr.Length; index++)
+            {
+                var c = tempArr[index];
+                if (c == '(' || c == ')')
+                {
+                  
+                    if (c == '(')
+                    {
+                        braceCount++;
+                        insideColName = true;
+                    }
+                    else
+                    {
+                        braceCount--;
+                    }
+                    if (braceCount == 0)
+                    {
+                        insideColName = false;
+                        break;
+                    }
+                }         
+                else
+                {
+                    if (insideColName)
+                    {
+                        if (c == charToReplace)
+                        {
+                            tempArr[index] = replaceWith;
+                        }
+                    }
+                    continue;
+                }
+                
+            }
+            return new string(tempArr);
+        }
+
 
         private StringBuilder wrapUnionedSqlWithGroupBy(string unionedSql)
         {
@@ -139,6 +181,18 @@ namespace TelcobrightInfra
         }
         private static List<DbColumn> getColumnsFromSelectLine(string selectLine)
         {
+            //var columns = new List<DbColumn>();
+            if (selectLine.Contains("concat(") == true)
+            {
+                int startIndex = selectLine.IndexOf(@"concat(");
+                selectLine = replaceCharWithinFristBrace(selectLine, startIndex, ',', '~');
+            }
+
+            if (selectLine.Contains("date_format(") == true)
+            {
+                int startIndex = selectLine.IndexOf(@"date_format(");
+                selectLine = replaceCharWithinFristBrace(selectLine, startIndex, ',', '~');
+            }
             var columns = selectLine.Split(',')
                 .Select(colNameWithExp =>
                 {

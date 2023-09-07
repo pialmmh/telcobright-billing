@@ -80,13 +80,13 @@ public partial class DefaultRptDomesticWithLtfsIcx : System.Web.UI.Page
         {
             case "Hourly":
             case "Daily":
-                return "tup_starttime";
+                return "Date";
             case "Weekly":
-                return "concat(year(tup_starttime),'-W',week(tup_starttime))";
+                return "concat(year(Date),'-W',week(Date))";
             case "Monthly":
-                return "concat(year(tup_starttime),'-',date_format(tup_starttime,'%b'))";
+                return "concat(year(Date),'-',date_format(Date,'%b'))";
             case "Yearly":
-                return "DATE_FORMAT(tup_starttime,'%Y')";
+                return "DATE_FORMAT(Date,'%Y')";
             default:
                 return string.Empty;
         }
@@ -187,7 +187,7 @@ public partial class DefaultRptDomesticWithLtfsIcx : System.Web.UI.Page
             string sql = GetQuery();
             //use sql aggregator
             SqlAggregator sqlAggregator= 
-                new SqlAggregator(nonUnionSql: sql.Replace("sum_voice_day_01", "<basetable>"), 
+                new SqlAggregator(nonUnionSql: sql.Replace("sum_voice_day_01", "<basetable>").Replace("sum_voice_hr_01", "<basetable>"), 
                                    tableNames: new[] {"sum_voice_day_01", "sum_voice_day_04" }, 
                                    _baseSqlStartsWith: "(", 
                                    _baseSqlEndsWith: ") x");
