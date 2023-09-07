@@ -425,23 +425,27 @@ namespace TelcobrightMediation
                 throw new Exception("Idcalls must be unique.");
             }
 
-            ////summary only settings being implemented...
-            //var summaryOnlySettings = this.Tbc.CdrSetting.SummaryOnlySettings;
-            //if (summaryOnlySettings.Any())
-            //{
-            //    SkipSettingsForSummaryOnly skipSettings = summaryOnlySettings.First().Value;
-            //    if (skipSettings.SkipCdr == false)
-            //    {
-            //    }
-            //}
+            var skipSettingsForSummaryOnly = this.Tbc.CdrSetting.SkipSettingsForSummaryOnly;
 
+            if (skipSettingsForSummaryOnly.SkipCdr == false)
+            {
+                if (nonPartialCdrs.Any())
+                {
+                    writtenNonPartialCdrCount = WriteCdr(nonPartialCdrs);
+                }
+                if (normalizedPartialCdrs.Any())
+                {
+                    writtenNormalizedPartialCdrCount = WriteCdr(normalizedPartialCdrs);
+                }
+                writtenCdrCount = writtenNonPartialCdrCount + writtenNormalizedPartialCdrCount;
+            }
+            else//summary mode only
+            {
+                writtenNonPartialCdrCount = nonPartialCdrs.Count;
+                writtenNormalizedPartialCdrCount = normalizedPartialCdrs.Count;
+                writtenCdrCount = writtenNonPartialCdrCount + writtenNormalizedPartialCdrCount;
+            }
 
-            if (nonPartialCdrs.Any())
-                writtenNonPartialCdrCount = WriteCdr(nonPartialCdrs);
-
-            if (normalizedPartialCdrs.Any())
-                writtenNormalizedPartialCdrCount = WriteCdr(normalizedPartialCdrs);
-            writtenCdrCount = writtenNonPartialCdrCount + writtenNormalizedPartialCdrCount;
             if (writtenCdrCount != numberOfProcessedCdrs)
             {
                 throw new Exception("Written number of cdrs does not match processed cdrs count.");
@@ -469,14 +473,21 @@ namespace TelcobrightMediation
                     .Select(e => e.PartialCdrContainer).ToList();
                 partialCdrWriter = new PartialCdrWriter(
                     processedPartialCdrs.Concat(errorPartialCdrs).ToList(), this.CdrJobContext);
-                partialCdrWriter.Write();
+                if (skipSettingsForSummaryOnly.SkipCdr == false)
+                {
+                    partialCdrWriter.Write();
+                }
                 partialCdrContainers = partialCdrWriter.PartialCdrContainers;
             }
             int rawPartialActualCount = partialCdrContainers.Sum(c => c.NewRawInstances.Count);
             int writtenNewRawInstances = partialCdrWriter?.WrittenNewRawInstances ?? 0;
-            if (writtenNewRawInstances != rawPartialActualCount)
+
+            if (skipSettingsForSummaryOnly.SkipCdr == false)
             {
-                throw new Exception("Written number of new partial raw instances does not match actual count.");
+                if (writtenNewRawInstances != rawPartialActualCount)
+                {
+                    throw new Exception("Written number of new partial raw instances does not match actual count.");
+                }
             }
 
             if (this.CdrReProcessingType == CdrReProcessingType.NoneOrNew) //newCdrFile

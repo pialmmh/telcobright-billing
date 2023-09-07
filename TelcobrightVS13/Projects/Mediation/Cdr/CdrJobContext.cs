@@ -56,7 +56,7 @@ namespace TelcobrightMediation
             this.DbCmd.CommandType = CommandType.Text;
             this.AutoIncrementManager = cdrJobInputData.AutoIncrementManager;
             this.AccountingContext = new AccountingContext(this.CdrjobInputData.Context, 0, this.AutoIncrementManager,
-                this.DatesInvolved, this.CdrjobInputData.CdrSetting.SegmentSizeForDbWrite);
+                this.DatesInvolved, this.CdrjobInputData.CdrSetting.SegmentSizeForDbWrite,this.CdrjobInputData.Tbc.CdrSetting.SkipSettingsForSummaryOnly);
             this.CdrSummaryContext = new CdrSummaryContext(this.MediationContext,
                 this.AutoIncrementManager, this.Context, this.HoursInvolved);
 

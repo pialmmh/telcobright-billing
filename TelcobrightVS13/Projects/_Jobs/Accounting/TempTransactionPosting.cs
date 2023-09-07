@@ -34,7 +34,7 @@ namespace Jobs
                     c => $@" where tableName='{AutoIncrementTypeDictionary.EnumTypes[counter.tableName]}'"),
                     null, input.Context.Database.Connection.CreateCommand(), segmentSizeForDbWrite);
             AccountingContext accountingContext = new AccountingContext(input.Context,0,autoIncrementManager,
-                datesInvolved,segmentSizeForDbWrite);
+                datesInvolved,segmentSizeForDbWrite,null);
             accountingContext.ExecuteTransactions(
                tempTransactions.Select(TempTransactionHelper.ConvertTempTransactionToTransaction));
             return JobCompletionStatus.Complete;

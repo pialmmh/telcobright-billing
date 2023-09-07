@@ -3464,7 +3464,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
         using (PartnerEntities context = new PartnerEntities())
         {
             AccountingContext accContext = new AccountingContext(context, 0,
-                new AutoIncrementManagerManualInt(context), new List<DateTime>(), 10000);
+                new AutoIncrementManagerManualInt(context), new List<DateTime>(), 10000,null);
             AccountCreatorFromRatePlanAssignment accountCreator =
                 new AccountCreatorFromRatePlanAssignment(accContext, context);
             accountCreator.CreateAllMissingCustomerAccountsFromRatePlanAssignmentInfo();
