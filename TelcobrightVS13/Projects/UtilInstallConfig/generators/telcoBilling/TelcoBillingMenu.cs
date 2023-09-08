@@ -177,7 +177,6 @@ namespace InstallConfig
 
         void setupMySqlUsersAndPermissions()
         {
-            Deploymentprofile profile = this.Deploymentprofile;
             MySqlCluster mySqlCluster = this.Deploymentprofile.MySqlCluster;
             Dictionary<string, MySqlServer> mySqlServers =
                 new Dictionary<string, MySqlServer>
@@ -211,6 +210,7 @@ namespace InstallConfig
                     foreach (var kv in userVsCreateScript)
                     {
                         string username = kv.Key;
+                        Console.WriteLine("Creating mysql user for:" + username);
                         List<string> commands = kv.Value;
                         foreach (var command in commands)
                         {
@@ -230,13 +230,6 @@ namespace InstallConfig
                     }
                 }
             }
-            
-            MySqlCommandGenerator generator = new MySqlCommandGeneratorFactory(profile.MySqlVersion).getInstance();
-            //List<MySqlUser> users = profile.MySqlUsers;
-            ParallelIterator<MySqlUser, List<string>> parallelIterator= new ParallelIterator<MySqlUser, List<string>>(users);
-            List<List<string>> output = parallelIterator.getOutput(generator.createMySqlUserTelcobrightStyle);
-            List<string> sqls = output.SelectMany(list => list).ToList();
-            Console.WriteLine();
         }
         void generateConfig()
         {
