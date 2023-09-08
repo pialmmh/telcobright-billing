@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -176,9 +177,62 @@ namespace InstallConfig
 
         void setupMySqlUsersAndPermissions()
         {
-            Deploymentprofile profile= this.Deploymentprofile;
+            Deploymentprofile profile = this.Deploymentprofile;
+            MySqlCluster mySqlCluster = this.Deploymentprofile.MySqlCluster;
+            Dictionary<string, MySqlServer> mySqlServers =
+                new Dictionary<string, MySqlServer>
+                {
+                    {mySqlCluster.Master.FriendlyName, mySqlCluster.Master}
+                };
+            mySqlCluster.Slaves.ForEach(s=> mySqlServers.Add(s.FriendlyName,s));
+            Menu menu = new Menu(mySqlServers.Keys, "Select a mysql instance to configure:", "a");
+            List<string> choices = menu.getChoices();
+            foreach (var choice in choices)
+            {
+                MySqlServer mySqlServer = mySqlServers[choice];
+                DatabaseSetting dbSettingForAutomation = new DatabaseSetting
+                {
+                    ServerName = mySqlServer.BindAddressForAutomation.IpAddressOrHostName.Address,
+                    AdminUserName = mySqlServer.RootUserForAutomation,
+                    AdminPassword = mySqlServer.RootPasswordForAutomation,
+                };
+                string constr = DbUtil.getDbConStrWithoutDatabase(dbSettingForAutomation);
+                using (MySqlConnection con = new MySqlConnection(constr))
+                {
+                    MySqlSession mySqlSession= new MySqlSession(con);
+                    //mySqlSession.executeCommand();
+                    MySqlCommandGenerator comamndGenerator= new MySqlCommandGenerator();
+                    Dictionary<string, List<string>> userVsCreateScript = mySqlServer.Users
+                        .Select(user => new
+                        {
+                            userName=user.Username,
+                            script= comamndGenerator.createMySqlUserTelcobrightStyle(user)
+                        }).ToDictionary(a=>a.userName, a=>a.script);
+                    foreach (var kv in userVsCreateScript)
+                    {
+                        string username = kv.Key;
+                        List<string> commands = kv.Value;
+                        foreach (var command in commands)
+                        {
+                            try
+                            {
+                                mySqlSession.executeCommand(command);
+                            }
+                            catch (Exception e)
+                            {
+                                if (e.Message.Contains("hello"))
+                                {
+                                    continue;
+                                }
+                                throw;
+                            }
+                        }
+                    }
+                }
+            }
+            
             MySqlCommandGenerator generator = new MySqlCommandGeneratorFactory(profile.MySqlVersion).getInstance();
-            List<MySqlUser> users = profile.MySqlUsers;
+            //List<MySqlUser> users = profile.MySqlUsers;
             ParallelIterator<MySqlUser, List<string>> parallelIterator= new ParallelIterator<MySqlUser, List<string>>(users);
             List<List<string>> output = parallelIterator.getOutput(generator.createMySqlUserTelcobrightStyle);
             List<string> sqls = output.SelectMany(list => list).ToList();

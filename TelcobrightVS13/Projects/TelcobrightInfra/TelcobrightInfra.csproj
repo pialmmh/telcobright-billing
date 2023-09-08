@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbHelper\DaywiseTableManager.cs" />
+    <Compile Include="DbHelper\MySqlSession.cs" />
     <Compile Include="DbHelper\DbColumn.cs" />
     <Compile Include="DbHelper\SqlAggregator.cs" />
     <Compile Include="DbHelper\TupleIncrementManager.cs" />
@@ -69,7 +70,7 @@
     <Compile Include="Deployment\TelcobrightSeed.cs" />
     <Compile Include="Infra\BindAddress.cs" />
     <Compile Include="Infra\HostOrSubnetType.cs" />
-    <Compile Include="Infra\IpAddress.cs" />
+    <Compile Include="Infra\IpAddressOrHostName.cs" />
     <Compile Include="Infra\MySql7CommandGenerator.cs" />
     <Compile Include="Infra\MySql8CommandGenerator.cs" />
     <Compile Include="Infra\MySqlAutomationHelper.cs" />

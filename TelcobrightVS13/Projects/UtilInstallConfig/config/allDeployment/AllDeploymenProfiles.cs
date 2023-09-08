@@ -112,176 +112,192 @@ namespace InstallConfig
                     {
                         profileName = "cas",
                         type = DeploymentProfileType.TelcoBilling,
-                        MySqlUsers = new List<MySqlUser>()
+                        MySqlCluster = new MySqlCluster
                         {
-                            new MySqlUser(username: CasConfigHelper.Db.AdminUserName,
-                                password: CasConfigHelper.Db.AdminPassword,
-                                hostnameOrIpAddresses: new List<string> {"localhost", "10.0.0.29"},
-                                permissions: new List<MySqlPermission>
+                            Master = new MySqlServer("master_win12")
+                            {
+                                MySqlVersion = MySqlVersion.MySql57,
+                                BindAddressForAutomation =
                                 {
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType> {MySqlPermissionType.all,}, "*.*"),
-                                }),
-                            new MySqlUser(username: "dbreader",
-                                password: "Takay1takaane",
-                                hostnameOrIpAddresses: new List<string> {"localhost", "10.0.0.29"},
-                                permissions: new List<MySqlPermission>
+                                    IpAddressOrHostName ={ Address = "localhost"},
+                                    Port = 3306
+                                },
+                                RootUserForAutomation = "fduser",
+                                RootPasswordForAutomation = "Takay1#$ane",
+                                Users = new List<MySqlUser>()
                                 {
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
+                                    new MySqlUser(username: CasConfigHelper.Db.AdminUserName,
+                                        password: CasConfigHelper.Db.AdminPassword,
+                                        hostnameOrIpAddresses: new List<string> {"localhost", "10.0.0.29"},
+                                        permissions: new List<MySqlPermission>
                                         {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "agni_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
+                                            new MySqlPermission(
+                                                new List<MySqlPermissionType> {MySqlPermissionType.all,}, "*.*"),
+                                        }),
+                                    new MySqlUser(username: "dbreader",
+                                        password: "Takay1takaane",
+                                        hostnameOrIpAddresses: new List<string> {"localhost", "10.0.0.29"},
+                                        permissions: new List<MySqlPermission>
                                         {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "bangla_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "banglatelecom_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "bantel_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "btcl_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "btrc_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "crossworld_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "gazinetworks_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "getco_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "imamnetwork_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "jibondhara_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "mmcommunications_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "mnh_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "mothertelecom_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "newgenerationtelecom_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "paradise_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "purple_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "ringtech_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "sheba_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "softex_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "srtelecom_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "summit_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "teleexchange_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "teleplusnetwork_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "voicetel_cas")
-                                })
-                        },
+                                            new MySqlPermission(
+                                                new List<MySqlPermissionType>
+                                                {
+                                                    MySqlPermissionType.execute,
+                                                    MySqlPermissionType.@select
+                                                }, "agni_cas"),
+                                            new MySqlPermission(
+                                                new List<MySqlPermissionType>
+                                                {
+                                                    MySqlPermissionType.execute,
+                                                    MySqlPermissionType.@select
+                                                }, "bangla_cas"),
+                                            new MySqlPermission(
+                                                new List<MySqlPermissionType>
+                                                {
+                                                    MySqlPermissionType.execute,
+                                                    MySqlPermissionType.@select
+                                                }, "banglatelecom_cas"),
+                                            new MySqlPermission(
+                                                new List<MySqlPermissionType>
+                                                {
+                                                    MySqlPermissionType.execute,
+                                                    MySqlPermissionType.@select
+                                                }, "bantel_cas"),
+                                            new MySqlPermission(
+                                                new List<MySqlPermissionType>
+                                                {
+                                                    MySqlPermissionType.execute,
+                                                    MySqlPermissionType.@select
+                                                }, "btcl_cas"),
+                                            new MySqlPermission(
+                                                new List<MySqlPermissionType>
+                                                {
+                                                    MySqlPermissionType.execute,
+                                                    MySqlPermissionType.@select
+                                                }, "btrc_cas"),
+                                            new MySqlPermission(
+                                                new List<MySqlPermissionType>
+                                                {
+                                                    MySqlPermissionType.execute,
+                                                    MySqlPermissionType.@select
+                                                }, "crossworld_cas"),
+                                            new MySqlPermission(
+                                                new List<MySqlPermissionType>
+                                                {
+                                                    MySqlPermissionType.execute,
+                                                    MySqlPermissionType.@select
+                                                }, "gazinetworks_cas"),
+                                            new MySqlPermission(
+                                                new List<MySqlPermissionType>
+                                                {
+                                                    MySqlPermissionType.execute,
+                                                    MySqlPermissionType.@select
+                                                }, "getco_cas"),
+                                            new MySqlPermission(
+                                                new List<MySqlPermissionType>
+                                                {
+                                                    MySqlPermissionType.execute,
+                                                    MySqlPermissionType.@select
+                                                }, "imamnetwork_cas"),
+                                            new MySqlPermission(
+                                                new List<MySqlPermissionType>
+                                                {
+                                                    MySqlPermissionType.execute,
+                                                    MySqlPermissionType.@select
+                                                }, "jibondhara_cas"),
+                                            new MySqlPermission(
+                                                new List<MySqlPermissionType>
+                                                {
+                                                    MySqlPermissionType.execute,
+                                                    MySqlPermissionType.@select
+                                                }, "mmcommunications_cas"),
+                                            new MySqlPermission(
+                                                new List<MySqlPermissionType>
+                                                {
+                                                    MySqlPermissionType.execute,
+                                                    MySqlPermissionType.@select
+                                                }, "mnh_cas"),
+                                            new MySqlPermission(
+                                                new List<MySqlPermissionType>
+                                                {
+                                                    MySqlPermissionType.execute,
+                                                    MySqlPermissionType.@select
+                                                }, "mothertelecom_cas"),
+                                            new MySqlPermission(
+                                                new List<MySqlPermissionType>
+                                                {
+                                                    MySqlPermissionType.execute,
+                                                    MySqlPermissionType.@select
+                                                }, "newgenerationtelecom_cas"),
+                                            new MySqlPermission(
+                                                new List<MySqlPermissionType>
+                                                {
+                                                    MySqlPermissionType.execute,
+                                                    MySqlPermissionType.@select
+                                                }, "paradise_cas"),
+                                            new MySqlPermission(
+                                                new List<MySqlPermissionType>
+                                                {
+                                                    MySqlPermissionType.execute,
+                                                    MySqlPermissionType.@select
+                                                }, "purple_cas"),
+                                            new MySqlPermission(
+                                                new List<MySqlPermissionType>
+                                                {
+                                                    MySqlPermissionType.execute,
+                                                    MySqlPermissionType.@select
+                                                }, "ringtech_cas"),
+                                            new MySqlPermission(
+                                                new List<MySqlPermissionType>
+                                                {
+                                                    MySqlPermissionType.execute,
+                                                    MySqlPermissionType.@select
+                                                }, "sheba_cas"),
+                                            new MySqlPermission(
+                                                new List<MySqlPermissionType>
+                                                {
+                                                    MySqlPermissionType.execute,
+                                                    MySqlPermissionType.@select
+                                                }, "softex_cas"),
+                                            new MySqlPermission(
+                                                new List<MySqlPermissionType>
+                                                {
+                                                    MySqlPermissionType.execute,
+                                                    MySqlPermissionType.@select
+                                                }, "srtelecom_cas"),
+                                            new MySqlPermission(
+                                                new List<MySqlPermissionType>
+                                                {
+                                                    MySqlPermissionType.execute,
+                                                    MySqlPermissionType.@select
+                                                }, "summit_cas"),
+                                            new MySqlPermission(
+                                                new List<MySqlPermissionType>
+                                                {
+                                                    MySqlPermissionType.execute,
+                                                    MySqlPermissionType.@select
+                                                }, "teleexchange_cas"),
+                                            new MySqlPermission(
+                                                new List<MySqlPermissionType>
+                                                {
+                                                    MySqlPermissionType.execute,
+                                                    MySqlPermissionType.@select
+                                                }, "teleplusnetwork_cas"),
+                                            new MySqlPermission(
+                                                new List<MySqlPermissionType>
+                                                {
+                                                    MySqlPermissionType.execute,
+                                                    MySqlPermissionType.@select
+                                                }, "voicetel_cas")
+                                        })
+                                }
+                            },
+                            Slaves = null
+                        } ,
                         UserVsDbName = new Dictionary<string, string>()
                         {
-                            {"admin@telcobright.com", "btrc_cas"},
+                            {"btrcadmin@telcobright.com", "btrc_cas"},
+                            {"btrc@telcobright.com", "btrc_cas"},
                             {"agni@telcobright.com", "agni_cas"},
                             {"banglatelecom@telcobright.com", "banglatelecom_cas"},
                             {"banglaicx@telcobright.com", "bangla_cas"},

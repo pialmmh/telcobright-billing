@@ -11,7 +11,7 @@ namespace TelcobrightInfra
         public ServerOs ServerOs { get; set; }
         public Dictionary<string, Server> Vms { get; set; }
         public ServerAutomationType AutomationType { get; set; }
-        public List<IpAddress> IpAddresses { get; set; }
+        public List<IpAddressOrHostName> IpAddresses { get; set; }
         public string AdminUsername { get; set; }
         public string AdminPassword { get; set; }
         public string AutomationUsername { get; set; }
