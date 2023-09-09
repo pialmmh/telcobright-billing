@@ -277,7 +277,7 @@
 
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
 
-    <div id="report" style="clear: both; height: 25px; background-color: white; padding-left: 5px; width: 1009px; margin-bottom: 2px;">
+    <div id="report" style="clear: both; height: 25px; background-color: white; padding-left: 5px; width: 1080px; margin-bottom: 2px;">
 
         <script type="text/javascript">
             function ToggleParamBorderDiv() {
@@ -335,11 +335,11 @@
         </script>
 
 
-        <span style="padding-left: 0px; float: left; left: 0px; font-weight: bold; margin-top: 2px; margin-right: 20px; color: Black;">Report:</span>
+        <span style="padding-left: 0px; float: left; left: 0px; font-weight: bold; margin-top: 2px; margin-right: 20px; color: Black;">Report Source:</span>
         <%--<span style="font-weight: bold;">Source</span>--%>
          <asp:DropDownList ID="DropDownListReportSource" runat="server" Visible="True">
-         <asp:ListItem Value="sum_voice_day_">Day Wise</asp:ListItem>
-         <asp:ListItem Value="sum_voice_hr_">Hour Wise</asp:ListItem>
+         <asp:ListItem Value="sum_voice_day_">Daily Summary</asp:ListItem>
+         <asp:ListItem Value="sum_voice_hr_">Hourly Summary</asp:ListItem>
         
      </asp:DropDownList>
 

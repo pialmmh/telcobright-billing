@@ -68,6 +68,8 @@ namespace TelcobrightMediation.Reports.InvoiceReports.banglatelecom.ICX
             string invoiceNumber = $"{currentInvoiceNumber}-{DateTime.Now.AddMonths(-1).ToString("MMM-yyyy")}";
             currentInvoiceNumber++;
 
+
+
             #region Page Header
             //xrLabelVatRegNo.Text = "BIN: 001285404-0208";
             xrLabelPartnerName.Text = invoiceMap["companyName"];
@@ -92,6 +94,26 @@ namespace TelcobrightMediation.Reports.InvoiceReports.banglatelecom.ICX
             xrTableCellUnitsCalls.DataBindings.Add("Text", this.DataSource, "TotalCalls", "{0:n0}");
             xrTableCellTotalMinutes.DataBindings.Add("Text", this.DataSource, "TotalMinutes", "{0:n2}");
             xrTableCellAmount.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
+
+            decimal subTotalAmountRev = invoiceBasicDatas.Sum(x => x.Amount / 2);
+            if (invoice.BILLING_ACCOUNT_ID == 3)
+            {
+                xrLabel12.Visible = true;
+                xrLabel15.Visible = true;
+                xrLabel16.Visible = true;
+                xrLabel17.Visible = true;
+                xrLabel18.Visible = true;
+                xrLabel17.Text = string.Format("{0:n2} BDT", subTotalAmountRev);
+                xrLabel18.Text = string.Format("{0:n2} BDT", subTotalAmountRev);
+            }
+            else
+            {
+                xrLabel12.Visible = false;
+                xrLabel15.Visible = false;
+                xrLabel16.Visible = false;
+                xrLabel17.Visible = false;
+                xrLabel18.Visible = false;
+            }
 
             if(invoiceBasicDatasMerged != null)
             {

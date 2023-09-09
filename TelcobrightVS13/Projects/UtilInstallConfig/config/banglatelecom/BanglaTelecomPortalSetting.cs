@@ -314,7 +314,22 @@ namespace InstallConfig
                     },
                     { "~/reports/icx/btrc/WeeklyInternationalReport.aspx",
                         settingIntlIn
-                    }
+                    },
+                    { "~/reports/icx/btrc/MonthlyReport.aspx",
+                        settingIntlIn
+                    },
+                    { "~/reports/icx/btrc/MonthlyOutgoingSummary.aspx",
+                        settingIntlIn
+                    },
+                    { "~/reports/icx/btrc/MonthlyOutgoingDetail.aspx",
+                        settingIntlIn
+                    },
+                    { "~/reports/icx/btrc/AcdReport.aspx",
+                        settingIntlIn
+                    },
+                    { "~/reports/icx/DomesticWithLtfs.aspx",
+                        settingIntlIn
+                    },
                 },//dictionary of page settings
 
             };

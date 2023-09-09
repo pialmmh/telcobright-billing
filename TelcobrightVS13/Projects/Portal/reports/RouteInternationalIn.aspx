@@ -318,8 +318,8 @@
     <span style="padding-left:0px;float:left;left:0px;font-weight:bold;margin-top:2px;margin-right:20px;color:Black;"> Report:</span>
     <span style="font-weight:bold;"> Source</span>
      <asp:DropDownList ID="DropDownListReportSource" runat="server" >
-         <asp:ListItem Value="sum_voice_day_">Day Wise</asp:ListItem>
-         <asp:ListItem Value="sum_voice_hr_">Hour Wise</asp:ListItem>
+         <asp:ListItem Value="sum_voice_day_">Daily Summary</asp:ListItem>
+         <asp:ListItem Value="sum_voice_hr_">Hourly Summary</asp:ListItem>
      </asp:DropDownList>
 
 
