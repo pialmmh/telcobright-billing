@@ -165,6 +165,8 @@ namespace InstallConfig
                     case '8':
                         setupMySqlUsersAndPermissions();
                         Console.WriteLine("Mysql users and permissions setup completed successfully.");
+                        Console.WriteLine("Press any ke to return.");
+                        Console.Read();
                         break;
                     case 'q':
                     case 'Q':
