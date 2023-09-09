@@ -200,8 +200,8 @@ namespace InstallConfig
                             IpAddressOrHostName = new IpAddressOrHostName {Address = "localhost"},
                             Port = 3306
                         },
-                        RootUserForAutomation = "fduser",
-                        RootPasswordForAutomation = "Takay1#$ane",
+                        RootUserForAutomation = "btrc",
+                        RootPasswordForAutomation = "Takay1takaane",
                         Users = new List<MySqlUser>()
                         {
                             new MySqlUser(username: CasConfigHelper.Db.AdminUserName,
@@ -210,7 +210,7 @@ namespace InstallConfig
                                 permissions: new List<MySqlPermission>
                                 {
                                     new MySqlPermission(
-                                        new List<MySqlPermissionType> {MySqlPermissionType.all,}, "*.*"),
+                                        new List<MySqlPermissionType> {MySqlPermissionType.all,}, "*"),
                                 }),
                             new MySqlUser(username: "dbreader",
                                 password: "Takay1takaane",

@@ -164,6 +164,7 @@ namespace InstallConfig
                         break;
                     case '8':
                         setupMySqlUsersAndPermissions();
+                        Console.WriteLine("Mysql users and permissions setup completed successfully.");
                         break;
                     case 'q':
                     case 'Q':
@@ -194,8 +195,9 @@ namespace InstallConfig
                     ServerName = mySqlServer.BindAddressForAutomation.IpAddressOrHostName.Address,
                     AdminUserName = mySqlServer.RootUserForAutomation,
                     AdminPassword = mySqlServer.RootPasswordForAutomation,
+                    DatabaseName = "mysql"
                 };
-                string constr = DbUtil.getDbConStrWithoutDatabase(dbSettingForAutomation);
+                string constr = DbUtil.getDbConStrWithDatabase(dbSettingForAutomation);
                 using (MySqlConnection con = new MySqlConnection(constr))
                 {
                     MySqlSession mySqlSession= new MySqlSession(con);
@@ -214,18 +216,7 @@ namespace InstallConfig
                         List<string> commands = kv.Value;
                         foreach (var command in commands)
                         {
-                            try
-                            {
-                                mySqlSession.executeCommand(command);
-                            }
-                            catch (Exception e)
-                            {
-                                if (e.Message.Contains("hello"))
-                                {
-                                    continue;
-                                }
-                                throw;
-                            }
+                            mySqlSession.executeCommand(command);
                         }
                     }
                 }
