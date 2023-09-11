@@ -15,6 +15,7 @@ namespace TelcobrightInfra
         public List<string> IgnoreDatabasesFromReplication { get; set; } = new List<string>() {"mysql"};
         public List<ReplicationHelper> SlaveInstances { get; set; }
 
+        public MySqlServer(){}
         public MySqlServer(string friendlyName)
         {
             this.FriendlyName = friendlyName;

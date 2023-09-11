@@ -188,6 +188,26 @@ namespace InstallConfig
                     {
                         Name = "banglatelecom_cas",
                         SchedulerPortNo = 578
+                    },
+                    new InstanceConfig
+                    {
+                        Name = "crossworld_cas",
+                        SchedulerPortNo = 579
+                    },
+                    new InstanceConfig
+                    {
+                        Name = "bantel_cas",
+                        SchedulerPortNo = 580
+                    },
+                    new InstanceConfig
+                    {
+                        Name = "teleexchange_cas",
+                        SchedulerPortNo = 581
+                    },
+                    new InstanceConfig
+                    {
+                        Name = "ringtech_cas",
+                        SchedulerPortNo = 582
                     }
                 },
                 MySqlCluster = new MySqlCluster

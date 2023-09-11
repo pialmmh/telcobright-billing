@@ -32,13 +32,6 @@ namespace InstallConfig
 
         public override TelcobrightConfig GenerateConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
         {
-            
-            CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
-            CommonCdrValRulesGen commonCdrValRulesGen =
-                new CommonCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
-            InconsistentCdrValRulesGen inconsistentCdrValRulesGen =
-                new InconsistentCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
-
             this.Tbc.CdrSetting = new CasCdrSettingHelper().getTemplateCdrSettings();
             this.PrepareDirectorySettings(this.Tbc);
 

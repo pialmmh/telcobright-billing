@@ -112,7 +112,7 @@ namespace InstallConfig
                         break;
                     case '4':
                         Console.WriteLine("Copying Portal to c:/inetpub/wwwroot");
-                        //CopyPortal(tbOperatorName);
+                        CopyPortal("portal");
                         if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' ||
                             Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
                         break;
@@ -354,7 +354,7 @@ namespace InstallConfig
                 Directory.Delete(destinationPath, true);
             }
 
-            //copy
+            //copy  
             //Now Create all of the directories
             string sourcePath = Directory.GetParent((Directory.GetParent(Directory.GetCurrentDirectory())).Parent.FullName).FullName +
                                 Path.DirectorySeparatorChar + "Portal";

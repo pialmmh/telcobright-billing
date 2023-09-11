@@ -27,7 +27,7 @@ namespace InstallConfig._generator
         public TelcobrightConfig Tbc { get; }
         public ConfigPathHelper ConfigPathHelper { get; }
         private MySqlConnection Con { get; }
-        private MySqlCommand Cmd { get; set; }
+        private MySqlCommand Cmd { get;}
 
         public DbWriterForConfig(TelcobrightConfig tbc, ConfigPathHelper configPathHelper,
             MySqlConnection con)
@@ -50,27 +50,27 @@ namespace InstallConfig._generator
 
             List<ne> nes = this.Tbc.Nes;
             nes.Insert(0, DummySwitch.getDummyNe());
-            executeQuery("SET FOREIGN_KEY_CHECKS = 0;");
+            executeScript("SET FOREIGN_KEY_CHECKS = 0;");
 
-            executeQuery("ALTER TABLE ne DISABLE KEYS;");
-            executeQuery("ALTER TABLE telcobrightpartner DISABLE KEYS;");
+            executeScript("ALTER TABLE ne DISABLE KEYS;");
+            executeScript("ALTER TABLE telcobrightpartner DISABLE KEYS;");
 
-            executeQuery("truncate table ne;");
-            executeQuery("truncate table telcobrightpartner;");
+            executeScript("truncate table ne;");
+            executeScript("truncate table telcobrightpartner;");
 
-            executeQuery("insert into telcobrightpartner values " +
+            executeScript("insert into telcobrightpartner values " +
                                                     string.Join(",", partners.Select(p => p.GetExtInsertValues())));
-            executeQuery("update telcobrightpartner set idCustomer=0 where CustomerName = 'Dummy'");
+            executeScript("update telcobrightpartner set idCustomer=0 where CustomerName = 'Dummy'");
 
            
 
 
-            executeQuery("insert into ne values " +
+            executeScript("insert into ne values " +
                          string.Join(",", nes.Select(p => p.GetExtInsertValues())));
-            executeQuery("update ne set idSwitch=0 where SwitchName = 'dummy'");
-            executeQuery("SET FOREIGN_KEY_CHECKS = 1;");
-            executeQuery("ALTER TABLE ne enable KEYS;");
-            executeQuery("ALTER TABLE telcobrightpartner enable KEYS;");
+            executeScript("update ne set idSwitch=0 where SwitchName = 'dummy'");
+            executeScript("SET FOREIGN_KEY_CHECKS = 1;");
+            executeScript("ALTER TABLE ne enable KEYS;");
+            executeScript("ALTER TABLE telcobrightpartner enable KEYS;");
 
 
 
@@ -78,12 +78,12 @@ namespace InstallConfig._generator
             Console.WriteLine("Finished Loading partner and nes for " + this.Tbc.Telcobrightpartner.databasename + ".");
         }
 
-        private void executeQuery(string sql)
+        private void executeScript(string sql)
         {
-            this.Cmd.CommandText = sql;
-            this.Cmd.ExecuteNonQuery();
+            MySqlScript script= new MySqlScript(this.Con,sql);
+            script.Execute();
         }
-
+        
         public void LoadSeedDataSqlForTelcoBilling(SqlOperationType sqlOperationType)
         {
             string msgBeforeOp;
@@ -119,21 +119,17 @@ namespace InstallConfig._generator
             foreach (FileInfo file in sqlFiles)
             {
                 List<string> lines = File.ReadAllLines(file.FullName).ToList();
-                if(lines[0].ToLower().StartsWith("#skip")) continue;
-                string sql = string.Join("", lines);
+                if (lines[0].ToLower().StartsWith("#skip")) continue;
+                string sql = string.Join("", lines); //
                 Console.WriteLine("Loading " + file.Name);
-                using (MySqlCommand cmd = new MySqlCommand("", this.Con))
+                if (this.Con.State != ConnectionState.Open)
                 {
-                    if (this.Con.State != ConnectionState.Open)
-                    {
-                        this.Con.Open();
-                    }
-                    executeQuery("SET FOREIGN_KEY_CHECKS = 0;");
-
-                    executeQuery(sql);
-
-                    executeQuery("SET FOREIGN_KEY_CHECKS = 1;");
+                    this.Con.Open();
                 }
+                sql = $@"SET FOREIGN_KEY_CHECKS = 0;
+                      {sql}; 
+                      SET FOREIGN_KEY_CHECKS = 1;";
+                executeScript(sql);
             }
             Console.WriteLine(msgAfterOp);
         }

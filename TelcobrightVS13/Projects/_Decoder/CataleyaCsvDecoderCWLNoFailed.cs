@@ -15,12 +15,12 @@ namespace Decoders
 {
 
     [Export("Decoder", typeof(IFileDecoder))]
-    public class CataleyaCsvDecoderGaziNoFailed : IFileDecoder
+    public class CataleyaCsvDecoderCWLNoFailed : IFileDecoder
     {
         public override string ToString() => this.RuleName;
         public virtual string RuleName => GetType().Name;
-        public int Id => 32;
-        public string HelpText => "Decodes Cataleya CSV CDR. Gazi format, no failed calls";
+        public int Id => 40;
+        public string HelpText => "Decodes Cataleya CSV CDR. CrossWorld format, no failed calls";
         public CompressionType CompressionType { get; set; }
         protected CdrCollectorInputData Input { get; set; }
 
@@ -35,7 +35,6 @@ namespace Decoders
         {
             this.Input = input;
             string fileName = this.Input.FullPath;
-            string str = File.ReadAllText(fileName);
             List<string[]> lines = FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(fileName, ',', 1, "\"", ";");
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
@@ -54,11 +53,11 @@ namespace Decoders
                 textCdr[Fn.Sequencenumber] = lineAsArr[1];//sequence num
                 //cdr.SequenceNumber = Convert.ToInt64(lineAsArr[0]);
                 textCdr[Fn.Filename] = fileName;//done
-                textCdr[Fn.IncomingRoute] = lineAsArr[16];//ingress_call_info_zone_name --done
-                textCdr[Fn.OutgoingRoute] = lineAsArr[31];//egress_call_info_inviting_ts --done
+                textCdr[Fn.IncomingRoute] = lineAsArr[18];//ingress_call_info_zone_name --done
+                textCdr[Fn.OutgoingRoute] = lineAsArr[33];//egress_call_info_inviting_ts --done
                 textCdr[Fn.DurationSec] = lineAsArr[5];//duration --done
                 //cdr.DurationSec = Convert.ToDecimal(lineAsArr[17]) / 1000;
-                string ipAddr = lineAsArr[23];//7 ingress_call_info_sip_remote_address--done
+                string ipAddr = lineAsArr[25];//7 ingress_call_info_sip_remote_address--done
                 if (!string.IsNullOrEmpty(ipAddr))
                 {
                     string[] ipPort = ipAddr.Split(':');
@@ -66,7 +65,7 @@ namespace Decoders
                     string port = ipPort[2].Split(';')[0].Trim();
                     textCdr[Fn.Originatingip] = ip + ":" + port;
                 }
-                ipAddr = lineAsArr[37];//egress_call_info_sip_remote_address-done
+                ipAddr = lineAsArr[39];//egress_call_info_sip_remote_address-done
 
                 if (!string.IsNullOrEmpty(ipAddr))
                 {
@@ -76,25 +75,25 @@ namespace Decoders
                     textCdr[Fn.TerminatingIp] = ip + ":" + port;
                 }
 
-                string startTime = lineAsArr[24];//ingress_call_info_inviting_ts --done
+                string startTime = lineAsArr[26];//ingress_call_info_inviting_ts --done
                 if (!string.IsNullOrEmpty(startTime))
                 {
                     startTime = parseStringToDate(startTime).ToString("yyyy-MM-dd HH:mm:ss");
                 }
 
-                string connectTime = lineAsArr[24];//ingress_call_info_inviting_ts-- done
+                string connectTime = lineAsArr[26];//ingress_call_info_inviting_ts-- done
                 if (!string.IsNullOrEmpty(connectTime))
                 {
                     connectTime = parseStringToDate(connectTime).ToString("yyyy-MM-dd HH:mm:ss");
                 }
 
-                string answerTime = lineAsArr[27];//ingress_call_info_answer_ts -done
+                string answerTime = lineAsArr[29];//ingress_call_info_answer_ts -done
                 if (!string.IsNullOrEmpty(answerTime))
                 {
                     answerTime = parseStringToDate(answerTime).ToString("yyyy-MM-dd HH:mm:ss");
                 }
 
-                string endTime = lineAsArr[28];//ingress_call_info_disconnect_ ts--done
+                string endTime = lineAsArr[30];//ingress_call_info_disconnect_ ts--done
                 if (!string.IsNullOrEmpty(endTime))
                 {
                     endTime = parseStringToDate(endTime).ToString("yyyy-MM-dd HH:mm:ss");
@@ -105,11 +104,11 @@ namespace Decoders
                 textCdr[Fn.AnswerTime] = answerTime;
                 textCdr[Fn.Endtime] = endTime;
 
-                textCdr[Fn.OriginatingCallingNumber] = lineAsArr[19].Trim();//ingress_call_info_calling_part y--done
-                textCdr[Fn.OriginatingCalledNumber] = lineAsArr[20].Trim();//ingress_call_info_called_part          --done       y
+                textCdr[Fn.OriginatingCallingNumber] = lineAsArr[21].Trim();//ingress_call_info_calling_part y--done
+                textCdr[Fn.OriginatingCalledNumber] = lineAsArr[22].Trim();//ingress_call_info_called_part          --done       y
 
-                textCdr[Fn.TerminatingCallingNumber] = lineAsArr[33].Trim();//ingress_media_record_flow_c ommit_ts--done
-                textCdr[Fn.TerminatingCalledNumber] = lineAsArr[34].Trim();//ingress_media_record_media_intf_name--done
+                textCdr[Fn.TerminatingCallingNumber] = lineAsArr[35].Trim();//ingress_media_record_flow_c ommit_ts--done
+                textCdr[Fn.TerminatingCalledNumber] = lineAsArr[36].Trim();//ingress_media_record_media_intf_name--done
 
                 textCdr[Fn.ReleaseDirection] = lineAsArr[6].Trim();//release_direction --done
                 textCdr[Fn.ReleaseCauseIngress] = lineAsArr[7].Trim();//sip_status_code --done

@@ -27,8 +27,9 @@ namespace InstallConfig
             public const int PartitionLenInDays = 3;
             public const string ReadOnlyUserName = "dbreader";
             public const string ReadOnlyPassword = "Takay1takaane";
+            public const bool UseVarcharInsteadOfTextForMemoryEngine = true;  //required for windows
         }
-        private DatabaseSetting getCommonDatabaseSetting(string databaseName)
+        public static DatabaseSetting getCommonDatabaseSetting(string databaseName)
         {
             return new DatabaseSetting()
             {
@@ -41,7 +42,9 @@ namespace InstallConfig
                 PartitionStartDate = Db.PartitionStartDate.ConvertToDateTimeFromCustomFormat("yyyy-MM-dd"),
                 PartitionLenInDays = Db.PartitionLenInDays,
                 ReadOnlyUserName = Db.ReadOnlyUserName,
-                ReadOnlyPassword = Db.ReadOnlyPassword
+                ReadOnlyPassword = Db.ReadOnlyPassword,
+                UseVarcharInsteadOfTextForMemoryEngine=Db.UseVarcharInsteadOfTextForMemoryEngine
+
             };
         }
         public DatabaseSetting getDatabaseSettingForMySqlWin(string databaseName)

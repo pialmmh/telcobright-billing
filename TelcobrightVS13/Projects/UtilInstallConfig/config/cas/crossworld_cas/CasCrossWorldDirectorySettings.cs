@@ -31,7 +31,18 @@ namespace InstallConfig
             //***FILE LOCATIONS**********************************************
             //local/vault1: all app servers will use same local file location
             //the object "vault" will have a copy of below object for each app servers with server id as key and location as dictionary value
-            FileLocation vaultPrimary = new FileLocation()
+            FileLocation vaultCataleya = new FileLocation()
+            {
+                Name = "vaultCataleya",//this is refered in ne table, name MUST start with "Vault"
+                LocationType = "vault",//locationtype always lowercase
+                OsType = "windows",
+                PathSeparator = @"\",
+                ServerIp = "",
+                StartingPath = "H:/telcobright/vault/resources/cdr/crossworld/ip",
+                User = "",
+                Pass = "",
+            };
+            FileLocation vaultGenband = new FileLocation()
             {
                 Name = "vault",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
@@ -42,8 +53,20 @@ namespace InstallConfig
                 User = "",
                 Pass = "",
             };
+            FileLocation vaultTelcobridge = new FileLocation()
+            {
+                Name = "vault",//this is refered in ne table, name MUST start with "Vault"
+                LocationType = "vault",//locationtype always lowercase
+                OsType = "windows",
+                PathSeparator = @"\",
+                ServerIp = "",
+                StartingPath = "H:/telcobright/vault/resources/cdr/crossworld/tdm1",
+                User = "",
+                Pass = "",
+            };
 
-            
+
+
 
             FileLocation fileArchive1 = new FileLocation()//raw cdr archive
             {
@@ -67,7 +90,9 @@ namespace InstallConfig
             //directorySetting.SyncPairs.Add(huawei_Vault.Name, huawei_Vault);
             //directorySetting.SyncPairs.Add(vaultS3FileArchive1.Name, vaultS3FileArchive1);
             //directorySetting.SyncPairs.Add(vaultCAS.Name, vaultCAS);
-            this.Tbc.DirectorySettings.FileLocations.Add(vaultPrimary.Name, vaultPrimary);
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultCataleya.Name,vaultCataleya);
+            //this.Tbc.DirectorySettings.FileLocations.Add(vaultGenband.Name, vaultGenband);
+            //this.Tbc.DirectorySettings.FileLocations.Add(vaultTelcobridge.Name, vaultTelcobridge);
 
             //add archive locations to CdrSettings
             this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()

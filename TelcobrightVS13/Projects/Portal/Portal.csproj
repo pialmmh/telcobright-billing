@@ -413,13 +413,13 @@
     <Content Include="AccountAdmin\ResetPasswordConfirmation.aspx" />
     <Content Include="AccountAdmin\TwoFactorAuthenticationSignIn.aspx" />
     <Content Include="AccountAdmin\VerifyPhoneNumber.aspx" />
-    <Content Include="Billing Reports\BDIncomingBusiness.aspx" />
-    <Content Include="Billing Reports\CarrierWiseInvoice.aspx" />
-    <Content Include="Billing Reports\CountryWiseOutgoing.aspx" />
-    <Content Include="Billing Reports\EgressInvoiceClearance.aspx" />
-    <Content Include="Billing Reports\ErrorCall.aspx" />
-    <Content Include="Billing Reports\IOSWiseOutgoingBusiness.aspx" />
-    <Content Include="Billing Reports\IOSWiseOutgoingSummary.aspx" />
+    <Content Include="App_Start\Billing Reports\BDIncomingBusiness.aspx" />
+    <Content Include="App_Start\Billing Reports\CarrierWiseInvoice.aspx" />
+    <Content Include="App_Start\Billing Reports\CountryWiseOutgoing.aspx" />
+    <Content Include="App_Start\Billing Reports\EgressInvoiceClearance.aspx" />
+    <Content Include="App_Start\Billing Reports\ErrorCall.aspx" />
+    <Content Include="App_Start\Billing Reports\IOSWiseOutgoingBusiness.aspx" />
+    <Content Include="App_Start\Billing Reports\IOSWiseOutgoingSummary.aspx" />
     <Content Include="bin\AjaxControlToolkit.dll" />
     <Content Include="bin\AjaxMin.dll" />
     <Content Include="bin\ar\AjaxControlToolkit.resources.dll" />
@@ -742,53 +742,53 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="Billing Reports\BDIncomingBusiness.aspx.cs">
+    <Compile Include="App_Start\Billing Reports\BDIncomingBusiness.aspx.cs">
       <DependentUpon>BDIncomingBusiness.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Billing Reports\BDIncomingBusiness.aspx.designer.cs">
+    <Compile Include="App_Start\Billing Reports\BDIncomingBusiness.aspx.designer.cs">
       <DependentUpon>BDIncomingBusiness.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Billing Reports\CarrierWiseInvoice.aspx.cs">
+    <Compile Include="App_Start\Billing Reports\CarrierWiseInvoice.aspx.cs">
       <DependentUpon>CarrierWiseInvoice.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Billing Reports\CarrierWiseInvoice.aspx.designer.cs">
+    <Compile Include="App_Start\Billing Reports\CarrierWiseInvoice.aspx.designer.cs">
       <DependentUpon>CarrierWiseInvoice.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Billing Reports\CountryWiseOutgoing.aspx.cs">
+    <Compile Include="App_Start\Billing Reports\CountryWiseOutgoing.aspx.cs">
       <DependentUpon>CountryWiseOutgoing.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Billing Reports\CountryWiseOutgoing.aspx.designer.cs">
+    <Compile Include="App_Start\Billing Reports\CountryWiseOutgoing.aspx.designer.cs">
       <DependentUpon>CountryWiseOutgoing.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Billing Reports\EgressInvoiceClearance.aspx.cs">
+    <Compile Include="App_Start\Billing Reports\EgressInvoiceClearance.aspx.cs">
       <DependentUpon>EgressInvoiceClearance.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Billing Reports\EgressInvoiceClearance.aspx.designer.cs">
+    <Compile Include="App_Start\Billing Reports\EgressInvoiceClearance.aspx.designer.cs">
       <DependentUpon>EgressInvoiceClearance.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Billing Reports\ErrorCall.aspx.cs">
+    <Compile Include="App_Start\Billing Reports\ErrorCall.aspx.cs">
       <DependentUpon>ErrorCall.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Billing Reports\ErrorCall.aspx.designer.cs">
+    <Compile Include="App_Start\Billing Reports\ErrorCall.aspx.designer.cs">
       <DependentUpon>ErrorCall.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Billing Reports\IOSWiseOutgoingBusiness.aspx.cs">
+    <Compile Include="App_Start\Billing Reports\IOSWiseOutgoingBusiness.aspx.cs">
       <DependentUpon>IOSWiseOutgoingBusiness.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Billing Reports\IOSWiseOutgoingBusiness.aspx.designer.cs">
+    <Compile Include="App_Start\Billing Reports\IOSWiseOutgoingBusiness.aspx.designer.cs">
       <DependentUpon>IOSWiseOutgoingBusiness.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Billing Reports\IOSWiseOutgoingSummary.aspx.cs">
+    <Compile Include="App_Start\Billing Reports\IOSWiseOutgoingSummary.aspx.cs">
       <DependentUpon>IOSWiseOutgoingSummary.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Billing Reports\IOSWiseOutgoingSummary.aspx.designer.cs">
+    <Compile Include="App_Start\Billing Reports\IOSWiseOutgoingSummary.aspx.designer.cs">
       <DependentUpon>IOSWiseOutgoingSummary.aspx</DependentUpon>
     </Compile>
     <Compile Include="config\BalanceAdjustment_old.aspx.cs">
