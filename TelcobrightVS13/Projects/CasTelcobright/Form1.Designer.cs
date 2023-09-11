@@ -1,6 +1,7 @@
 ﻿using System.Windows.Forms;
 using System.Drawing;
 using CasTelcobright.Forms;
+using System.IO;
 
 namespace CasTelcobright
 {
@@ -45,7 +46,6 @@ namespace CasTelcobright
             panel1.Name = "panel1";
             panel1.TabIndex = 0;
 
-
             foreach (var icxName in allIcx)
             {
                 var displayPanel = new DisplayPanel(icxName);
@@ -53,13 +53,11 @@ namespace CasTelcobright
                 displayPanels.Add(icxName, displayPanel);
             }
 
-            for (int i = allIcx.Count - 1, j = 1; i >= 0; i--, j++)
+            for (int i = allIcx.Count - 1, j = 1; i >= 0; --i, ++j)
             {
-                addIcxButton(allIcx[i], 40 * i, j);
+                addIcxButton(allIcx[i], 23 * i, j);
+                addPictureBox(++j, 23 * i);
             }
-
-
-
 
             // 
             // panel2
@@ -80,6 +78,50 @@ namespace CasTelcobright
             Text = "CAS Project Manager";
             panel1.ResumeLayout(false);
             ResumeLayout(false);
+
+
+            
+            this.ResumeLayout(false);
+
+        }
+
+        private void addPictureBox(int tabIndex, int yCoordinate)
+        {
+            PictureBox pictureBox = new PictureBox();
+            //pictureBox = new System.Windows.Forms.PictureBox();
+            //((System.ComponentModel.ISupportInitialize)(pictureBox)).BeginInit();
+            //this.SuspendLayout();
+            // 
+            // pictureBox1
+            // 
+           // pictureBox.Dock = DockStyle.Left;
+            pictureBox.Location = new System.Drawing.Point(185, yCoordinate);
+            pictureBox.Name = "pictureBox1";
+            pictureBox.Size = new Size(15, 15);
+            pictureBox.TabIndex = tabIndex;
+            //pictureBox.TabStop = false;
+            //pictureBox.BackColor = Color.LimeGreen;
+            try
+            {
+                // Attempt to load an image from a file
+                Image img = Image.FromFile("C:\\sftproot\\TelcobrightProject\\TelcobrightVS13\\Projects\\CasTelcobright\\Images\\Amber.PNG");
+                pictureBox.Image = img;
+            }
+            catch (FileNotFoundException ex)
+            {
+                // Handle the file not found exception by displaying an error message
+                MessageBox.Show("Error: File not found. Please check the file path.", "File Not Found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            
+
+            // 
+            // Form1
+            // 
+            //this.ClientSize = new System.Drawing.Size(284, 261);
+            //this.Controls.Add(pictureBox);
+            panel1.Controls.Add(pictureBox);
+            //this.Name = "Form1";  
+            //((System.ComponentModel.ISupportInitialize)(pictureBox)).EndInit();
         }
 
         private void addIcxButton(string operatorName, int yCoordinate, int tabIndex)
@@ -87,7 +129,7 @@ namespace CasTelcobright
             Button btnIcx = new Button();
             this.buttons.Add(operatorName, btnIcx);
 
-            btnIcx.Dock = DockStyle.Top;
+            //btnIcx.Dock = DockStyle.Top;
             btnIcx.FlatAppearance.BorderColor = Color.DimGray;
             btnIcx.FlatAppearance.BorderSize = 1;
             btnIcx.FlatStyle = FlatStyle.Flat;
@@ -95,7 +137,7 @@ namespace CasTelcobright
             btnIcx.ForeColor = Color.Gainsboro;
             btnIcx.Location = new Point(0, yCoordinate);
             btnIcx.Name = "btn  " + operatorName;
-            btnIcx.Size = new Size(220, 23);
+            btnIcx.Size = new Size(180, 23);
             btnIcx.TabIndex = tabIndex;
             btnIcx.Text = operatorName;
             btnIcx.UseVisualStyleBackColor = true;

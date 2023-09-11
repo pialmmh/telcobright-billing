@@ -30,13 +30,12 @@ namespace CasTelcobright.Forms
             if (btn.Text == "Stop")
             {
                 btn.Text = "Start";
-                this.processWrapper.cancellationTokenSource.Cancel();
-                this.processWrapper = null;
+                this.processWrapper.stop();
             } else if (btn.Text == "Start")
             {
                 btn.Text = "Stop";
                 this.processWrapper = new ProcessWrapper(instanceName, this);
-                this.processWrapper.task.Start();
+                this.processWrapper.start();
             }
         }
     }

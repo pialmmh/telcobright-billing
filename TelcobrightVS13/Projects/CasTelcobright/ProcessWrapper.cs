@@ -14,17 +14,16 @@ namespace CasTelcobright
     {
         public DisplayPanel displayPanel;
         public string instanceName;
-        public CancellationTokenSource cancellationTokenSource;
         private Telcobright2 telcobright;
-       // private Thread thread;
+        private ConsoleRedirector consoleRedirector;
+        private Thread thread;
         public Task task;
+        private ThreadStart threadStart;
 
         public Action<string> updateTextbox = null;
 
         public ProcessWrapper(string instanceName, DisplayPanel displayPanel)
         {
-            this.cancellationTokenSource = new CancellationTokenSource();
-            CancellationToken cancellationToken = cancellationTokenSource.Token;
             this.displayPanel = displayPanel;
             this.instanceName = instanceName;
             this.telcobright = new Telcobright2(instanceName);
@@ -38,9 +37,34 @@ namespace CasTelcobright
                     this.displayPanel.richTextBox1.AppendText(output + Environment.NewLine);
                 }));
             };
-            ConsoleRedirector consoleRedirector = new ConsoleRedirector(this.instanceName, this.updateTextbox);
-            task = new Task(() => this.telcobright.run(consoleRedirector, cancellationToken), cancellationToken);
+            this.consoleRedirector = new ConsoleRedirector(this.instanceName, this.updateTextbox);
+            //task = new Task(() => this.telcobright.run(consoleRedirector));
+            this.threadStart = new ThreadStart(() =>
+            {
+                this.telcobright.run(consoleRedirector);
+            });
 
+            this.thread = new Thread(this.threadStart);
+        }
+
+        public void start()
+        {
+            this.thread.Start();
+        }
+
+        public void stop()
+        {
+            try
+            {
+                if (this.thread.IsAlive)
+                {
+                    this.thread.Abort();
+                }
+            }
+            catch (ThreadAbortException e)
+            { 
+                Thread.ResetAbort();
+            }
         }
     }
 }
