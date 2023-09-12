@@ -17,9 +17,8 @@ namespace CasTelcobright
         private Telcobright2 telcobright;
         private ConsoleRedirector consoleRedirector;
         private Thread thread;
-        public Task task;
         private ThreadStart threadStart;
-
+        public DateTime lastExceptionTime = new DateTime(1800, 1 , 1);
         public Action<string> updateTextbox = null;
 
         public ProcessWrapper(string instanceName, DisplayPanel displayPanel)
@@ -30,15 +29,12 @@ namespace CasTelcobright
 
             this.updateTextbox = (outputFromConsole) =>
             {
-                string output = outputFromConsole;
-                //string output = string.Join("", outputFromConsole.Split('#').Skip(1));
                 this.displayPanel.richTextBox1.Invoke(new Action(() =>
                 {
-                    this.displayPanel.richTextBox1.AppendText(output + Environment.NewLine);
+                    this.displayPanel.richTextBox1.AppendText(outputFromConsole + Environment.NewLine);
                 }));
             };
             this.consoleRedirector = new ConsoleRedirector(this.instanceName, this.updateTextbox);
-            //task = new Task(() => this.telcobright.run(consoleRedirector));
             this.threadStart = new ThreadStart(() =>
             {
                 this.telcobright.run(consoleRedirector);

@@ -1,5 +1,6 @@
 ﻿using System.Windows.Forms;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using CasTelcobright.Forms;
 using System.IO;
 
@@ -95,16 +96,26 @@ namespace CasTelcobright
             // pictureBox1
             // 
            // pictureBox.Dock = DockStyle.Left;
-            pictureBox.Location = new System.Drawing.Point(185, yCoordinate);
+            pictureBox.Location = new System.Drawing.Point(183, yCoordinate+8);
             pictureBox.Name = "pictureBox1";
-            pictureBox.Size = new Size(15, 15);
+            pictureBox.Size = new Size(10, 10);
             pictureBox.TabIndex = tabIndex;
             //pictureBox.TabStop = false;
-            //pictureBox.BackColor = Color.LimeGreen;
+            pictureBox.BackColor = Color.DarkGray;       // Default Color
+
+
+            GraphicsPath path = new GraphicsPath();
+            path.AddEllipse(0, 0, pictureBox.Width, pictureBox.Height);
+
+            // Apply the mask to the PictureBox
+            pictureBox.Region = new Region(path);
             try
             {
+                string imagePath =
+                    @"C:\temp2\Amber.PNG";
                 // Attempt to load an image from a file
-                Image img = Image.FromFile("C:\\sftproot\\TelcobrightProject\\TelcobrightVS13\\Projects\\CasTelcobright\\Images\\Amber.PNG");
+                Image img = Image.FromFile(imagePath);
+                pictureBox.Size = img.Size;
                 pictureBox.Image = img;
             }
             catch (FileNotFoundException ex)

@@ -29,6 +29,9 @@ namespace CasTelcobright
         // Change the color of your buttons if you want
         Color btnDefaultColor = Color.FromKnownColor(KnownColor.GrayText);
         Color btnSelectedtColor = Color.FromKnownColor(KnownColor.SlateGray);
+        Color statusOn = Color.LimeGreen;
+        Color statusOff = Color.DarkGray;
+        Color statusException = Color.DarkOrange;
 
         public Form1()
         {
