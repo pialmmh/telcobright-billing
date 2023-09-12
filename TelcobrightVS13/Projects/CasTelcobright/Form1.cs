@@ -23,6 +23,7 @@ namespace CasTelcobright
 
         List<string> allIcx = IcxFactory.getAllIcx();
         Dictionary<string, Button> buttons = new Dictionary<string, Button>();
+        public static Dictionary<string, PictureBox> pictureBoxes = new Dictionary<string, PictureBox>();
         NavigationControl navigationControl;
         NavigationButtons navigationButtons;
 

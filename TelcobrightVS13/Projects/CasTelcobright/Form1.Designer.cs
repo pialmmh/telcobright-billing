@@ -50,6 +50,7 @@ namespace CasTelcobright
             foreach (var icxName in allIcx)
             {
                 var displayPanel = new DisplayPanel(icxName);
+
                 displayPanel.richTextBox1.Tag = icxName;
                 displayPanels.Add(icxName, displayPanel);
             }
@@ -57,8 +58,9 @@ namespace CasTelcobright
             for (int i = allIcx.Count - 1, j = 1; i >= 0; --i, ++j)
             {
                 addIcxButton(allIcx[i], 23 * i, j);
-                addPictureBox(++j, 23 * i);
+                addPictureBox(allIcx[i], ++j, 23 * i);
             }
+
 
             // 
             // panel2
@@ -86,22 +88,24 @@ namespace CasTelcobright
 
         }
 
-        private void addPictureBox(int tabIndex, int yCoordinate)
+        private void addPictureBox(string operatorName, int tabIndex, int yCoordinate)
         {
             PictureBox pictureBox = new PictureBox();
+            this.pictureBoxes.Add(operatorName, pictureBox);
             //pictureBox = new System.Windows.Forms.PictureBox();
             //((System.ComponentModel.ISupportInitialize)(pictureBox)).BeginInit();
             //this.SuspendLayout();
             // 
             // pictureBox1
             // 
-           // pictureBox.Dock = DockStyle.Left;
+            // pictureBox.Dock = DockStyle.Left;
             pictureBox.Location = new System.Drawing.Point(183, yCoordinate+8);
             pictureBox.Name = "pictureBox1";
             pictureBox.Size = new Size(10, 10);
             pictureBox.TabIndex = tabIndex;
             //pictureBox.TabStop = false;
             pictureBox.BackColor = Color.DarkGray;       // Default Color
+            pictureBox.Tag = operatorName;
 
 
             GraphicsPath path = new GraphicsPath();
@@ -109,20 +113,20 @@ namespace CasTelcobright
 
             // Apply the mask to the PictureBox
             pictureBox.Region = new Region(path);
-            try
-            {
-                string imagePath =
-                    @"C:\temp2\Amber.PNG";
-                // Attempt to load an image from a file
-                Image img = Image.FromFile(imagePath);
-                pictureBox.Size = img.Size;
-                pictureBox.Image = img;
-            }
-            catch (FileNotFoundException ex)
-            {
-                // Handle the file not found exception by displaying an error message
-                MessageBox.Show("Error: File not found. Please check the file path.", "File Not Found", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            //try
+            //{
+            //    string imagePath =
+            //        "temp2/Amber.PNG";
+            //    // Attempt to load an image from a file
+            //    Image img = Image.FromFile(imagePath);
+            //    pictureBox.Size = img.Size;
+            //    pictureBox.Image = img;
+            //}
+            //catch (FileNotFoundException ex)
+            //{
+            //    // Handle the file not found exception by displaying an error message
+            //    MessageBox.Show("Error: File not found. Please check the file path.", "File Not Found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //}
             
 
             // 

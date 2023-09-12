@@ -31,12 +31,14 @@ namespace CasTelcobright.Forms
             {
                 btn.Text = "Start";
                 this.processWrapper.stop();
+                
             }
             else if (btn.Text == "Start")
             {
                 btn.Text = "Stop";
                 this.processWrapper = new ProcessWrapper(instanceName, this);
                 this.processWrapper.start();
+
             }
         }
     }
