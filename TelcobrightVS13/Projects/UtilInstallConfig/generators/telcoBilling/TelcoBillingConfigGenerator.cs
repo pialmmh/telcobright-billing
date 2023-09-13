@@ -106,7 +106,15 @@ namespace InstallConfig
             //write config for portal
             targetDir = configPathHelper.GetPortalBinPath();
             //SerializeConfigAndWriteJsonFile(tbc, configPathHelper.GetTargetFileNameForPortal(operatorShortName));
-            SerializeConfigAndWriteJsonFile(tbc, configPathHelper.GetTargetFileNameForPortal("telcobright"));//also last gen config for opeartor will be here
+            var portalConfigFilename = configPathHelper.GetTargetFileNameForPortal("telcobright");
+            SerializeConfigAndWriteJsonFile(tbc, portalConfigFilename);
+
+            if (operatorShortName == "btrc_cas")
+            {
+                portalConfigFilename = portalConfigFilename.Replace("portal", "portalBTRC");
+                SerializeConfigAndWriteJsonFile(tbc, portalConfigFilename);//
+            }
+
             Console.WriteLine("Successfully written configuration template for " + operatorShortName);
         }
 

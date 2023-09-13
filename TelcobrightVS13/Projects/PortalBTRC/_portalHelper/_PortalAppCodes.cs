@@ -48,10 +48,8 @@ namespace PortalApp
         }
         public static TelcobrightConfig GetTelcobrightConfig()
         {
-            string operatorShortName = (ConfigurationManager.ConnectionStrings["Partner"].ConnectionString
-                .Split(';').FirstOrDefault(c => c.StartsWith("database"))).Split('=').Last().Trim();
-            string portalConfigFileName = string.Join(Path.DirectorySeparatorChar.ToString(), (Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase)).Split(Path.DirectorySeparatorChar).Where(c => c.Contains("file") == false)) + Path.DirectorySeparatorChar.ToString()
-                + operatorShortName + ".conf";
+            string portalConfigFileName = string.Join(Path.DirectorySeparatorChar.ToString(), (Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase)).Split(Path.DirectorySeparatorChar).Where(c => c.Contains("file") == false)) + Path.DirectorySeparatorChar.ToString() +
+                 "telcobright.conf";
             TelcobrightConfig telcobrightConfig = ConfigFactory.GetConfigFromFile(portalConfigFileName);
             return telcobrightConfig;
         }

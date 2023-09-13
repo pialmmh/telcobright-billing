@@ -115,6 +115,7 @@ namespace InstallConfig
                 type = DeploymentProfileType.TelcoBilling,
                 UserVsDbName = new Dictionary<string, string>()
                 {
+                    {"admin@telcobright.com", "btrc_cas"},
                     {"btrcadmin@telcobright.com", "btrc_cas"},
                     {"btrc@telcobright.com", "btrc_cas"},
                     {"agni@telcobright.com", "agni_cas"},
@@ -208,6 +209,11 @@ namespace InstallConfig
                     {
                         Name = "ringtech_cas",
                         SchedulerPortNo = 582
+                    },
+                    new InstanceConfig
+                    {
+                        Name = "voicetel_cas",
+                        SchedulerPortNo = 583
                     }
                 },
                 MySqlCluster = new MySqlCluster

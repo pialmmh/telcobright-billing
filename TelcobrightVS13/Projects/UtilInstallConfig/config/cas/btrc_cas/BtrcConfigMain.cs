@@ -26,7 +26,7 @@ namespace InstallConfig
 
         public BtrcAbstractConfigGenerator()
         {
-            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx,CasTbPartnerFactory.GetTemplatePartner(0, "BTRC- CDR Analyze System (CAS)", "btrc_cas"));
+            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx,CasTbPartnerFactory.GetTemplatePartner(30, "BTRC- CDR Analyze System (CAS)", "btrc_cas"));
         }
 
         public override TelcobrightConfig GenerateConfig(InstanceConfig instanceConfig, int microserviceInstanceId)

@@ -18,7 +18,7 @@ namespace InstallConfig
 {
     public partial class CasVoicetelAbstractConfigGenerator //quartz config part
     {
-        private FileLocation vaultPrimary;
+        private FileLocation vaultHuwaei;
         private FileLocation vaultDialogic;
         private SyncPair huawei_Vault;
         private SyncPair zteCAS;
@@ -37,14 +37,14 @@ namespace InstallConfig
             //***FILE LOCATIONS**********************************************
             //local/vault1: all app servers will use same local file location
             //the object "vault" will have a copy of below object for each app servers with server id as key and location as dictionary value
-            this.vaultPrimary = new FileLocation()
+            this.vaultHuwaei = new FileLocation()
             {
-                Name = "vault",//this is refered in ne table, name MUST start with "Vault"
+                Name = "vault.Huwaei",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "J:/telcobright/vault/resources/cdr/voicetel/tdm",
+                StartingPath = "E:/telcobright/vault/resources/cdr/voicetel/tdm",
                 User = "",
                 Pass = "",
             };
@@ -56,7 +56,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "J:/telcobright/vault/resources/cdr/voicetel/ip",
+                StartingPath = "E:/telcobright/vault/resources/cdr/voicetel/ip",
                 User = "",
                 Pass = "",
             };
@@ -104,7 +104,7 @@ namespace InstallConfig
             };
 
             //add locations to directory settings
-            tbc.DirectorySettings.FileLocations.Add(vaultPrimary.Name, vaultPrimary);
+            tbc.DirectorySettings.FileLocations.Add(vaultHuwaei.Name, vaultHuwaei);
             tbc.DirectorySettings.FileLocations.Add(vaultDialogic.Name, vaultDialogic);
             tbc.DirectorySettings.FileLocations.Add(huawei.Name, huawei);
             tbc.DirectorySettings.FileLocations.Add(fileArchive1.Name, fileArchive1);
@@ -120,7 +120,7 @@ namespace InstallConfig
                 },
                 DstSyncLocation = new SyncLocation()
                 {
-                    FileLocation = vaultPrimary
+                    FileLocation = vaultHuwaei
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
@@ -149,7 +149,7 @@ namespace InstallConfig
                 SkipSourceFileListing = true,
                 SrcSyncLocation = new SyncLocation()
                 {
-                    FileLocation = vaultPrimary
+                    FileLocation = vaultHuwaei
                 },
                 DstSyncLocation = new SyncLocation()
                 {

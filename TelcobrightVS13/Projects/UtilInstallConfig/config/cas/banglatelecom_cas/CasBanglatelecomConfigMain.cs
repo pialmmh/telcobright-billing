@@ -32,7 +32,7 @@ namespace InstallConfig
         public override TelcobrightConfig GenerateConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
         {
             this.Tbc.CdrSetting = new CasCdrSettingHelper().getTemplateCdrSettings();
-
+            this.PrepareDirectorySettings(this.Tbc);
 
             string csvPathForNe = new DirectoryInfo(FileAndPathHelper.GetCurrentExecPath()).Parent.Parent.FullName + Path.DirectorySeparatorChar.ToString() + "config" + Path.DirectorySeparatorChar.ToString() + "_helper" + Path.DirectorySeparatorChar.ToString() + "casOperatorInfo.xlsx";//add more
             CasNeInfoHelper neHelper = new CasNeInfoHelper(csvPathForNe);
