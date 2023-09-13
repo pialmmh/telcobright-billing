@@ -231,7 +231,7 @@
     </script>
 
 
-    <span style="padding-left: 0px; float: left; left: 0px; font-weight: bold; margin-top: 2px; margin-right: 20px; color: Black;">Report:</span>
+    <span style="padding-left: 0px; float: left; left: 0px; font-weight: bold; margin-top: 2px; margin-right: 20px; color: Black;">Report Source:</span>
 
     <asp:Button ID="submit" runat="server" Text="Show Report" OnClick="ShowReport_Click" OnClientClick="SethidValueSubmitClickFlag('true');" />
     <asp:Button ID="Button1" runat="server" OnClick="Export_Click"

@@ -15,7 +15,7 @@ namespace CasTelcobright.Forms
     public partial class DisplayPanel : UserControl
     {
         public string instanceName;
-        //private Dictionary<string, ProcessWrapper> processes = new Dictionary<string, ProcessWrapper>();
+        private Dictionary<string, ProcessWrapper> processesStatusDictionary = new Dictionary<string, ProcessWrapper>();
         private ProcessWrapper processWrapper;
         public DisplayPanel(string title)
         {
@@ -30,13 +30,15 @@ namespace CasTelcobright.Forms
             if (btn.Text == "Stop")
             {
                 btn.Text = "Start";
-                this.processWrapper.cancellationTokenSource.Cancel();
-                this.processWrapper = null;
-            } else if (btn.Text == "Start")
+                this.processWrapper.stop();
+                
+            }
+            else if (btn.Text == "Start")
             {
                 btn.Text = "Stop";
                 this.processWrapper = new ProcessWrapper(instanceName, this);
-                this.processWrapper.task.Start();
+                this.processWrapper.start();
+
             }
         }
     }

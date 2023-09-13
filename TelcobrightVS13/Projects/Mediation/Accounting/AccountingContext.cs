@@ -25,11 +25,13 @@ namespace TelcobrightMediation.Accounting
 		private int SegmentSizeforDbWrite { get; }
 		private AbstractSummaryFactory<acc_transaction> LedgerSummaryFactory { get; }
 			=new LedgerSummaryFactory<acc_transaction>();
-				
-		public AccountingContext(PartnerEntities context, int accountingLevelOrDepth,
-			IAutoIncrementManager autoIncrementManager, List<DateTime> datesInvolved, int segmentSizeForDbWrite)
+	    SkipSettingsForSummaryOnly SkipSetingsForSummaryOnly { get; }
+	    public AccountingContext(PartnerEntities context, int accountingLevelOrDepth,
+			IAutoIncrementManager autoIncrementManager, List<DateTime> datesInvolved, int segmentSizeForDbWrite,
+            SkipSettingsForSummaryOnly skipSettingsForSummaryOnly)
 		{
-			this.Context = context;
+		    this.SkipSetingsForSummaryOnly = skipSettingsForSummaryOnly;
+            this.Context = context;
 			this.Cmd = ConnectionManager.CreateCommandFromDbContext(this.Context);
 			this.AccountingLevelOrDepth = accountingLevelOrDepth;
 			this.AutoIncrementManager = autoIncrementManager;
@@ -75,10 +77,13 @@ namespace TelcobrightMediation.Accounting
 		}
 		public void WriteAllChanges()
 		{
-			this.ChargeableCache.WriteAllChanges(this.Cmd,this.SegmentSizeforDbWrite);
+            if(this.SkipSetingsForSummaryOnly.SkipChargeable==false)
+                this.ChargeableCache.WriteAllChanges(this.Cmd,this.SegmentSizeforDbWrite);
 			this.AccountCache.WriteAllChanges(this.Cmd, this.SegmentSizeforDbWrite);
-			this.TransactionCache.WriteAllChanges(this.Cmd, this.SegmentSizeforDbWrite);
-			this.LedgerSummaryCache.WriteAllChanges(this.Cmd, this.SegmentSizeforDbWrite);
+		    if (this.SkipSetingsForSummaryOnly.SkipTransaction == false)
+                this.TransactionCache.WriteAllChanges(this.Cmd, this.SegmentSizeforDbWrite);
+		    if (this.SkipSetingsForSummaryOnly.SkipTransaction == false)
+                this.LedgerSummaryCache.WriteAllChanges(this.Cmd, this.SegmentSizeforDbWrite);
 		}
 
 		public void ExecuteTransactions(IEnumerable<acc_transaction> transactions)

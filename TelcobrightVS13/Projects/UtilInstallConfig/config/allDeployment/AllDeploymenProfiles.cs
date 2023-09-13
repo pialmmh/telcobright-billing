@@ -14,7 +14,7 @@ namespace InstallConfig
         {
             TelcobrightSeed seed = new TelcobrightSeed();
             List<Deploymentprofile> allProfiles =
-                new List<Deploymentprofile>()
+                new List<Deploymentprofile>
                 {
                     new Deploymentprofile
                     {
@@ -41,7 +41,6 @@ namespace InstallConfig
                                 SchedulerPortNo = 556
                             },
                         },
-
                     },
                     new Deploymentprofile
                     {
@@ -107,12 +106,129 @@ namespace InstallConfig
                                 SchedulerPortNo = 561
                             },
                         }
-                    },
-                    new Deploymentprofile
+                    }
+                };
+
+            var deploymentprofile = new Deploymentprofile
+            {
+                profileName = "cas",
+                type = DeploymentProfileType.TelcoBilling,
+                UserVsDbName = new Dictionary<string, string>()
+                {
+                    {"admin@telcobright.com", "btrc_cas"},
+                    {"btrcadmin@telcobright.com", "btrc_cas"},
+                    {"btrc@telcobright.com", "btrc_cas"},
+                    {"agni@telcobright.com", "agni_cas"},
+                    {"banglatelecom@telcobright.com", "banglatelecom_cas"},
+                    {"banglaicx@telcobright.com", "bangla_cas"},
+                    {"bantel@telcobright.com", "bantel_cas"},
+                    {"gazinetworks@telcobright.com", "gazinetworks_cas"},
+                    {"getco@telcobright.com", "getco_cas"},
+                    {"imamnetwork@telcobright.com", "imamnetwork_cas"},
+                    {"jibondhara@telcobright.com", "jibondhara_cas"},
+                    {"mmcommunications@telcobright.com", "mmcommunications_cas"},
+                    {"mnh@telcobright.com", "mnh_cas"},
+                    {"btcl@telcobright.com", "btcl_cas"},
+                    {"paradise@telcobright.com", "paradise_cas"},
+                    {"purple@telcobright.com", "purple_cas"},
+                    {"ringtech@telcobright.com", "ringtech_cas"},
+                    {"crossworld@telcobright.com", "crossworld_cas"},
+                    {"srtelecom@telcobright.com", "srtelecom_cas"},
+                    {"sheba@telcobright.com", "sheba_cas"},
+                    {"softex@telcobright.com", "softex_cas"},
+                    {"teleexchange@telcobright.com", "teleexchange_cas"},
+                    {"newgenerationtelecom@telcobright.com", "newgenerationtelecom_cas"},
+                    {"mothertelecom@telcobright.com", "mothertelecom_cas"},
+                    {"teleplusnetwork@telcobright.com", "teleplusnetwork_cas"},
+                    {"summit@telcobright.com", "summit_cas"},
+                    {"voicetel@telcobright.com", "voicetel_cas"}
+                },
+                instances = new List<InstanceConfig>
+                {
+                    new InstanceConfig
                     {
-                        profileName = "cas",
-                        type = DeploymentProfileType.TelcoBilling,
-                        MySqlUsers = new List<MySqlUser>()
+                        Name = "btrc_cas",
+                        SchedulerPortNo = 572,
+                    },
+                    new InstanceConfig
+                    {
+                        Name = "srtelecom_cas",
+                        SchedulerPortNo = 570,
+                    },
+                    new InstanceConfig
+                    {
+                        Name = "summit_cas",
+                        SchedulerPortNo = 571,
+                    },
+                    new InstanceConfig
+                    {
+                        Name = "jibondhara_cas",
+                        SchedulerPortNo = 573
+                    },
+                    new InstanceConfig
+                    {
+                        Name = "purple_cas",
+                        SchedulerPortNo = 574,
+                    },
+                    new InstanceConfig
+                    {
+                        Name = "agni_cas",
+                        SchedulerPortNo = 575,
+                    },
+                    new InstanceConfig
+                    {
+                        Name = "gazinetworks_cas",
+                        SchedulerPortNo = 576,
+                    },
+                    new InstanceConfig
+                    {
+                        Name = "mothertelecom_cas",
+                        SchedulerPortNo = 577
+                    },
+                    new InstanceConfig
+                    {
+                        Name = "banglatelecom_cas",
+                        SchedulerPortNo = 578
+                    },
+                    new InstanceConfig
+                    {
+                        Name = "crossworld_cas",
+                        SchedulerPortNo = 579
+                    },
+                    new InstanceConfig
+                    {
+                        Name = "bantel_cas",
+                        SchedulerPortNo = 580
+                    },
+                    new InstanceConfig
+                    {
+                        Name = "teleexchange_cas",
+                        SchedulerPortNo = 581
+                    },
+                    new InstanceConfig
+                    {
+                        Name = "ringtech_cas",
+                        SchedulerPortNo = 582
+                    },
+                    new InstanceConfig
+                    {
+                        Name = "voicetel_cas",
+                        SchedulerPortNo = 583
+                    }
+                },
+                MySqlCluster = new MySqlCluster
+                {
+                    Master = new MySqlServer("master_win12")
+                    {
+                        MySqlVersion = MySqlVersion.MySql57,
+                        BindAddressForAutomation = new BindAddress
+                        {
+                            IpAddressOrHostName = new IpAddressOrHostName {Address = "localhost"},
+                            Port = 3306
+                        },
+                        RootUserForAutomation = "btrc",
+                        RootPasswordForAutomation = "Takay1takaane",
+                        Users = new List<MySqlUser>()
                         {
                             new MySqlUser(username: CasConfigHelper.Db.AdminUserName,
                                 password: CasConfigHelper.Db.AdminPassword,
@@ -120,7 +236,7 @@ namespace InstallConfig
                                 permissions: new List<MySqlPermission>
                                 {
                                     new MySqlPermission(
-                                        new List<MySqlPermissionType> {MySqlPermissionType.all,}, "*.*"),
+                                        new List<MySqlPermissionType> {MySqlPermissionType.all,}, "*"),
                                 }),
                             new MySqlUser(username: "dbreader",
                                 password: "Takay1takaane",
@@ -278,86 +394,12 @@ namespace InstallConfig
                                             MySqlPermissionType.@select
                                         }, "voicetel_cas")
                                 })
-                        },
-                        UserVsDbName = new Dictionary<string, string>()
-                        {
-                            {"admin@telcobright.com", "btrc_cas"},
-                            {"agni@telcobright.com", "agni_cas"},
-                            {"banglatelecom@telcobright.com", "banglatelecom_cas"},
-                            {"banglaicx@telcobright.com", "bangla_cas"},
-                            {"bantel@telcobright.com", "bantel_cas"},
-                            {"gazinetworks@telcobright.com", "gazinetworks_cas"},
-                            {"getco@telcobright.com", "getco_cas"},
-                            {"imamnetwork@telcobright.com", "imamnetwork_cas"},
-                            {"jibondhara@telcobright.com", "jibondhara_cas"},
-                            {"mmcommunications@telcobright.com", "mmcommunications_cas"},
-                            {"mnh@telcobright.com", "mnh_cas"},
-                            {"btcl@telcobright.com", "btcl_cas"},
-                            {"paradise@telcobright.com", "paradise_cas"},
-                            {"purple@telcobright.com", "purple_cas"},
-                            {"ringtech@telcobright.com", "ringtech_cas"},
-                            {"crossworld@telcobright.com", "crossworld_cas"},
-                            {"srtelecom@telcobright.com", "srtelecom_cas"},
-                            {"sheba@telcobright.com", "sheba_cas"},
-                            {"softex@telcobright.com", "softex_cas"},
-                            {"teleexchange@telcobright.com", "teleexchange_cas"},
-                            {"newgenerationtelecom@telcobright.com", "newgenerationtelecom_cas"},
-                            {"mothertelecom@telcobright.com", "mothertelecom_cas"},
-                            {"teleplusnetwork@telcobright.com", "teleplusnetwork_cas"},
-                            {"summit@telcobright.com", "summit_cas"},
-                            {"voicetel@telcobright.com", "voicetel_cas"}
-                        },
-                        instances = new List<InstanceConfig>
-                        {
-                            new InstanceConfig
-                            {
-                                Name = "btrc_cas",
-                                SchedulerPortNo = 572,
-                            },
-                            new InstanceConfig
-                            {
-                                Name = "srtelecom_cas",
-                                SchedulerPortNo = 570,
-                            },
-                            new InstanceConfig
-                            {
-                                Name = "summit_cas",
-                                SchedulerPortNo = 571,
-
-                            },
-                            new InstanceConfig
-                            {
-                                Name = "jibondhara_cas",
-                                SchedulerPortNo = 573
-                            },
-                            new InstanceConfig
-                            {
-                                Name = "purple_cas",
-                                SchedulerPortNo = 574,
-                            },
-                            new InstanceConfig
-                            {
-                                Name = "agni_cas",
-                                SchedulerPortNo = 575,
-                            },
-                            new InstanceConfig
-                            {
-                                Name = "gazinetworks_cas",
-                                SchedulerPortNo = 576,
-                            },
-                            new InstanceConfig
-                            {
-                                Name = "mothertelecom_cas",
-                                SchedulerPortNo = 577
-                            },
-                            new InstanceConfig
-                            {
-                                Name = "banglatelecom_cas",
-                                SchedulerPortNo = 578
-                            }
                         }
                     },
-                };
+                    Slaves = new List<MySqlServer>()
+                }
+            };
+            allProfiles.Add(deploymentprofile);
             var tcpPortWisecount = allProfiles.SelectMany(p => p.instances.Select(i => i.SchedulerPortNo))
                 .GroupBy(portNo => portNo)
                 .Select(g => new

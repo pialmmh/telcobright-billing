@@ -52,7 +52,7 @@ namespace InstallConfig.config._helper
                     SkipCdr = true,
                     SkipChargeable = true,
                     SkipTransaction = true,
-                    SkipHourlySummary = true,
+                    SkipHourlySummary = false,
                 }
             };
         }

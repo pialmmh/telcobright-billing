@@ -8,6 +8,7 @@ using TelcobrightMediation.Cdr;
 using TelcobrightMediation.Mediation.Cdr;
 using System.Linq;
 using System.Globalization;
+using System.IO;
 using LibraryExtensions;
 
 namespace Decoders
@@ -19,7 +20,7 @@ namespace Decoders
         public override string ToString() => this.RuleName;
         public virtual string RuleName => GetType().Name;
         public int Id => 32;
-        public string HelpText => "Decodes Cataleya CSV CDR. SR Telecom format, no failed calls";
+        public string HelpText => "Decodes Cataleya CSV CDR. Gazi format, no failed calls";
         public CompressionType CompressionType { get; set; }
         protected CdrCollectorInputData Input { get; set; }
 
@@ -33,7 +34,8 @@ namespace Decoders
         public List<string[]> DecodeFile(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs)
         {
             this.Input = input;
-            string fileName = this.Input.FullPath; ;
+            string fileName = this.Input.FullPath;
+            string str = File.ReadAllText(fileName);
             List<string[]> lines = FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(fileName, ',', 1, "\"", ";");
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();

@@ -33,7 +33,7 @@ namespace InstallConfig
             //the object "vault" will have a copy of below object for each app servers with server id as key and location as dictionary value
             FileLocation vaultPrimary = new FileLocation()
             {
-                Name = "vault",//this is refered in ne table, name MUST start with "Vault"
+                Name = "vaultZte",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",

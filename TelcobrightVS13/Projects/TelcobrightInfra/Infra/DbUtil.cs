@@ -22,12 +22,7 @@ namespace TelcobrightInfra
                 $"server={databaseSetting.ServerName};Pipe={databaseSetting.SocketNameForNamedPipeConnection};Protocol=pipe;Host=.;User Id={databaseSetting.AdminUserName};password={databaseSetting.AdminPassword};" +
                 $"Persist Security Info=True; default command timeout=21600;";//6 hour
         }
-        public static string getDbConStrWithoutDatabase(DatabaseSetting databaseSetting)
-        {
-            return
-                $"server={databaseSetting.ServerName};User Id={databaseSetting.AdminUserName};password={databaseSetting.AdminPassword};" +
-                $"Persist Security Info=True; default command timeout=21600;";
-        }
+        
 
         public static string getReadOnlyConStrWithDatabase(DatabaseSetting databaseSetting)
         {
@@ -47,7 +42,12 @@ namespace TelcobrightInfra
         {
             return getDbConStrWithoutDatabase(databaseSetting) + $"database={databaseSetting.DatabaseName};";
         }
-
+        public static string getDbConStrWithoutDatabase(DatabaseSetting databaseSetting)
+        {
+            return
+                $"server={databaseSetting.ServerName};User Id={databaseSetting.AdminUserName};password={databaseSetting.AdminPassword};" +
+                $"Persist Security Info=True; default command timeout=21600;";
+        }
 
 
         public static string GetEntityConnectionString(DatabaseSetting databaseSetting)

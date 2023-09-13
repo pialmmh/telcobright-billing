@@ -212,8 +212,7 @@ public partial class DefaultRptMonthlyOutDetailIcx : System.Web.UI.Page
                             where servicegroup=2
                             and roundedduration>0
                             and starttime >= '{txtStartDate.Text}' and starttime < '{txtEndDate.Text}'
-                            order by c.AnswerTime
-                            limit 0,1000;
+                            order by c.AnswerTime;
                             ";
         
         DataSet ds= getBtrcReport(connection, Sql);

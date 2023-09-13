@@ -100,7 +100,7 @@
                         <div style="float: left;">
                             <div class="col-md-4">
                                 <h2>
-                                    <asp:HyperLink ID="HyperLink1" Text="Recently Completed Jobs" NavigateUrl="~/reports/Mediation.aspx" runat="server" Target="_blank"></asp:HyperLink>
+                                    <asp:HyperLink ID="HyperLink1" Text="Recent Jobs" NavigateUrl="~/reports/Mediation.aspx" runat="server" Target="_blank"></asp:HyperLink>
                                 </h2>
                                 <p>
                                 </p>

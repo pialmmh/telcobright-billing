@@ -14,9 +14,9 @@ namespace TelcobrightInfra
         public List<string> MenuItems { get; }
         public string MessageToDisplay { get; }
         public string AllChoicesIndicator { get; }
-        public Menu(List<string> menuItems, string messageToDisplay, string allChoicesIndicator)
+        public Menu(IEnumerable<string> menuItems, string messageToDisplay, string allChoicesIndicator)
         {
-            this.MenuItems = menuItems;
+            this.MenuItems = menuItems.ToList();
             this.MessageToDisplay = messageToDisplay;
             this.AllChoicesIndicator = allChoicesIndicator.ToLower();
         }

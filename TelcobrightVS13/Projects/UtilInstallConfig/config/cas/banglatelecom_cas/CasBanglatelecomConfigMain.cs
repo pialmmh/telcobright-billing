@@ -31,16 +31,8 @@ namespace InstallConfig
 
         public override TelcobrightConfig GenerateConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
         {
-            
-            CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
-            CommonCdrValRulesGen commonCdrValRulesGen =
-                new CommonCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
-            InconsistentCdrValRulesGen inconsistentCdrValRulesGen =
-                new InconsistentCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
-
-
             this.Tbc.CdrSetting = new CasCdrSettingHelper().getTemplateCdrSettings();
-
+            this.PrepareDirectorySettings(this.Tbc);
 
             string csvPathForNe = new DirectoryInfo(FileAndPathHelper.GetCurrentExecPath()).Parent.Parent.FullName + Path.DirectorySeparatorChar.ToString() + "config" + Path.DirectorySeparatorChar.ToString() + "_helper" + Path.DirectorySeparatorChar.ToString() + "casOperatorInfo.xlsx";//add more
             CasNeInfoHelper neHelper = new CasNeInfoHelper(csvPathForNe);

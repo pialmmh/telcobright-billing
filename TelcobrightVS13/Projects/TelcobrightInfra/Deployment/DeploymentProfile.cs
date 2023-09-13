@@ -13,7 +13,7 @@ namespace TelcobrightInfra
         public DeploymentProfileType type { get; set; }
         public List<InstanceConfig> instances { get; set; }
         public string DebugOrReleaseBinaryPath { get; set; } = "debug";
-        public List<MySqlUser> MySqlUsers { get; set; }= new List<MySqlUser>();
+        public MySqlCluster MySqlCluster { get; set; }
         public Dictionary<string, string> UserVsDbName = new Dictionary<string, string>();
     }
 }

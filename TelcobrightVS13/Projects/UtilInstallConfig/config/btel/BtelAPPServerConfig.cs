@@ -24,7 +24,7 @@ namespace InstallConfig
             List<Server> servers = new List<Server>();
             Server server01 = new Server("db01")
             {
-                IpAddresses = new List<IpAddress>() { new IpAddress { Address = "10.0.0.9" } },
+                IpAddresses = new List<IpAddressOrHostName>() { new IpAddressOrHostName { Address = "10.0.0.9" } },
                 ServerOs = ServerOs.Ubuntu,
                 AutomationType = ServerAutomationType.LinuxMysqlAutomation,
                 AdminUsername = "telcobright",
@@ -34,7 +34,7 @@ namespace InstallConfig
             };
             Server server02 = new Server("db02")
             {
-                IpAddresses = new List<IpAddress>() { new IpAddress { Address = "10.0.0.11" } },
+                IpAddresses = new List<IpAddressOrHostName>() { new IpAddressOrHostName { Address = "10.0.0.11" } },
                 ServerOs = ServerOs.Ubuntu,
                 AutomationType = ServerAutomationType.LinuxMysqlAutomation,
                 AdminUsername = "telcobright",

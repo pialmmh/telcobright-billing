@@ -98,18 +98,27 @@ namespace InstallConfig
             string targetDir =
                 configPathHelper.GetOperatorWiseConfigDirInUtil(operatorShortName, configRoot);
             FileAndPathHelper.DeleteFileContaining(targetDir, "*.conf");
-            SerializeConfig(tbc, configPathHelper.GetOperatorWiseTargetFileNameInUtil(operatorShortName,configRoot));
+            SerializeConfigAndWriteJsonFile(tbc, configPathHelper.GetOperatorWiseTargetFileNameInUtil(operatorShortName,configRoot));
             //write config for windows service
             targetDir = configPathHelper.GetTopShelfConfigDir();
-             SerializeConfig(tbc, configPathHelper.GetTemplateConfigFileName("telcobright.conf"),
+             SerializeConfigAndWriteJsonFile(tbc, configPathHelper.GetTemplateConfigFileName("telcobright.conf"),
                 eraseAllPrevFilesFromConfigDir: true);
             //write config for portal
             targetDir = configPathHelper.GetPortalBinPath();
-            SerializeConfig(tbc, configPathHelper.GetTargetFileNameForPortal(operatorShortName));
+            //SerializeConfigAndWriteJsonFile(tbc, configPathHelper.GetTargetFileNameForPortal(operatorShortName));
+            var portalConfigFilename = configPathHelper.GetTargetFileNameForPortal("telcobright");
+            SerializeConfigAndWriteJsonFile(tbc, portalConfigFilename);
+
+            if (operatorShortName == "btrc_cas")
+            {
+                portalConfigFilename = portalConfigFilename.Replace("portal", "portalBTRC");
+                SerializeConfigAndWriteJsonFile(tbc, portalConfigFilename);//
+            }
+
             Console.WriteLine("Successfully written configuration template for " + operatorShortName);
         }
 
-        static void SerializeConfig(TelcobrightConfig tbc, string targetConfigFile,
+        static void SerializeConfigAndWriteJsonFile(TelcobrightConfig tbc, string targetConfigFile,
             bool eraseAllPrevFilesFromConfigDir=false)
         {
             if (eraseAllPrevFilesFromConfigDir == true)

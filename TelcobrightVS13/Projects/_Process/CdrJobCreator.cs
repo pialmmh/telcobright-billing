@@ -71,7 +71,7 @@ namespace Process
                             fileInfos= fileInfos.Where(f =>
                             {
                                 DateTime currentTime = DateTime.Now;
-                                return (currentTime - f.LastWriteTime).TotalSeconds
+                                return (currentTime - f.CreationTime).TotalSeconds
                                     > minDurationToSkip ;
                             }).ToList();
 

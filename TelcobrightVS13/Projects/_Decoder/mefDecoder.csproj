@@ -58,6 +58,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CataleyaCsvDecoderCWLNoFailed.cs" />
     <Compile Include="CataleyaCsvDecoderJslNoFailed.cs" />
     <Compile Include="CataleyaCsvDecoderGaziNoFailed.cs" />
     <Compile Include="CataleyaCsvDecoderSRNoFailed.cs" />

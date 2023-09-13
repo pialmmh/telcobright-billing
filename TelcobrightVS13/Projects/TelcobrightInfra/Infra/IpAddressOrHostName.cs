@@ -13,7 +13,7 @@ namespace TelcobrightInfra
         Public,
     }
 
-    public class IpAddress
+    public class IpAddressOrHostName
     {
         public string Address { get; set; }
         public string SubnetMask { get; set; }

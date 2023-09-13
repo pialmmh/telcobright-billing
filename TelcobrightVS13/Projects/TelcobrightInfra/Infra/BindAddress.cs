@@ -19,7 +19,7 @@ namespace TelcobrightInfra
         public string Name { get; set; } = "default";
         public BindAddressType BindAddressType { get; set; }
         public BindAddressRealmOrZone ReamOrZone { get; set; }
-        public IpAddress IpAddress { get; set; }
+        public IpAddressOrHostName IpAddressOrHostName { get; set; }
         public int Port { get; set; }
         public TransportProtocol TransportProtocol { get; set; }
 

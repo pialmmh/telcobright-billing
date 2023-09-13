@@ -60,25 +60,14 @@ namespace WS_Telcobright_Topshelf
         }
 
         //Func<> consoleCallBack
-        public void run(ConsoleRedirector consoleRedirector, CancellationToken cancellationToken)
+        public void run(ConsoleRedirector consoleRedirector)
         {
             Console.SetOut(consoleRedirector);
-            int i = 1000;
-            
-            while (!cancellationToken.IsCancellationRequested)
+           
+            while (true)
             {
-                while (i>=0)
-                {
-                    tbConsole.WriteLine(this.ConfigFileName + " : " + DateTime.Now);
-                    Thread.Sleep(1000);
-                    i--;
-                }
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    // Clean up and exit gracefully.
-                    // Optionally, you can throw an OperationCanceledException.
-                    return;
-                }
+                tbConsole.WriteLine(this.ConfigFileName + " : " + DateTime.Now);
+                Thread.Sleep(1000);
             }
 
             return;

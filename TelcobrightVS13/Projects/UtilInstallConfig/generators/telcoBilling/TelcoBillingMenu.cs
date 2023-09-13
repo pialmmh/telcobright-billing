@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -111,7 +112,7 @@ namespace InstallConfig
                         break;
                     case '4':
                         Console.WriteLine("Copying Portal to c:/inetpub/wwwroot");
-                        //CopyPortal(tbOperatorName);
+                        CopyPortal("portal");
                         if (Convert.ToChar((Console.ReadKey(true)).Key) == 'q' ||
                             Convert.ToChar((Console.ReadKey(true)).Key) == 'Q') return;
                         break;
@@ -163,6 +164,9 @@ namespace InstallConfig
                         break;
                     case '8':
                         setupMySqlUsersAndPermissions();
+                        Console.WriteLine("Mysql users and permissions setup completed successfully.");
+                        Console.WriteLine("Press any key to return.");
+                        Console.Read();
                         break;
                     case 'q':
                     case 'Q':
@@ -176,13 +180,49 @@ namespace InstallConfig
 
         void setupMySqlUsersAndPermissions()
         {
-            Deploymentprofile profile= this.Deploymentprofile;
-            MySqlCommandGenerator generator = new MySqlCommandGeneratorFactory(profile.MySqlVersion).getInstance();
-            List<MySqlUser> users = profile.MySqlUsers;
-            ParallelIterator<MySqlUser, List<string>> parallelIterator= new ParallelIterator<MySqlUser, List<string>>(users);
-            List<List<string>> output = parallelIterator.getOutput(generator.createMySqlUserTelcobrightStyle);
-            List<string> sqls = output.SelectMany(list => list).ToList();
-            Console.WriteLine();
+            MySqlCluster mySqlCluster = this.Deploymentprofile.MySqlCluster;
+            Dictionary<string, MySqlServer> mySqlServers =
+                new Dictionary<string, MySqlServer>
+                {
+                    {mySqlCluster.Master.FriendlyName, mySqlCluster.Master}
+                };
+            mySqlCluster.Slaves.ForEach(s=> mySqlServers.Add(s.FriendlyName,s));
+            Menu menu = new Menu(mySqlServers.Keys, "Select a mysql instance to configure:", "a");
+            List<string> choices = menu.getChoices();
+            foreach (var choice in choices)
+            {
+                MySqlServer mySqlServer = mySqlServers[choice];
+                DatabaseSetting dbSettingForAutomation = new DatabaseSetting
+                {
+                    ServerName = mySqlServer.BindAddressForAutomation.IpAddressOrHostName.Address,
+                    AdminUserName = mySqlServer.RootUserForAutomation,
+                    AdminPassword = mySqlServer.RootPasswordForAutomation,
+                    DatabaseName = "mysql"
+                };
+                string constr = DbUtil.getDbConStrWithDatabase(dbSettingForAutomation);
+                using (MySqlConnection con = new MySqlConnection(constr))
+                {
+                    MySqlSession mySqlSession= new MySqlSession(con);
+                    //mySqlSession.executeCommand();
+                    MySqlCommandGenerator comamndGenerator= new MySqlCommandGenerator();
+                    Dictionary<string, List<string>> userVsCreateScript = mySqlServer.Users
+                        .Select(user => new
+                        {
+                            userName=user.Username,
+                            script= comamndGenerator.createMySqlUserTelcobrightStyle(user)
+                        }).ToDictionary(a=>a.userName, a=>a.script);
+                    foreach (var kv in userVsCreateScript)
+                    {
+                        string username = kv.Key;
+                        Console.WriteLine("Creating mysql user for:" + username);
+                        List<string> commands = kv.Value;
+                        foreach (var command in commands)
+                        {
+                            mySqlSession.executeCommand(command);
+                        }
+                    }
+                }
+            }
         }
         void generateConfig()
         {
@@ -314,7 +354,7 @@ namespace InstallConfig
                 Directory.Delete(destinationPath, true);
             }
 
-            //copy
+            //copy  
             //Now Create all of the directories
             string sourcePath = Directory.GetParent((Directory.GetParent(Directory.GetCurrentDirectory())).Parent.FullName).FullName +
                                 Path.DirectorySeparatorChar + "Portal";

@@ -24,7 +24,9 @@ namespace TelcobrightInfra
 
         public string getGrantStatement()
         {
-            return $"grant {string.Join(",", this.PermissionTypes.Select(p => p.ToString()))} on {DatabaseName}";
+            return $"grant {string.Join(",", this.PermissionTypes.Select(p => p.ToString()))} on {DatabaseName}.*";
         }
     }
 }
+
+
