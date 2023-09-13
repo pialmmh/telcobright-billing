@@ -27,7 +27,7 @@ namespace PortalApp.ReportHelper
                 cr2.partnerName AS IGW,
 				tup_incomingroute , 
 				tup_outgoingroute ,
-                ne.SwitchName,
+                ne.SwitchName AS SwitchName,
                 TotalCalls AS CallsCount,
                 Successfulcalls  AS 'Number Of Calls (International Incoming)',
                 ConnectedCalls AS ConnectedCount,
