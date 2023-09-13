@@ -91,7 +91,7 @@ namespace CasTelcobright
         private void addPictureBox(string operatorName, int tabIndex, int yCoordinate)
         {
             PictureBox pictureBox = new PictureBox();
-            this.pictureBoxes.Add(operatorName, pictureBox);
+            //this.pictureBoxes.Add(operatorName, pictureBox);
             //pictureBox = new System.Windows.Forms.PictureBox();
             //((System.ComponentModel.ISupportInitialize)(pictureBox)).BeginInit();
             //this.SuspendLayout();
