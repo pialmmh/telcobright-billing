@@ -63,7 +63,14 @@ namespace WS_Telcobright_Topshelf
         public void run(ConsoleRedirector consoleRedirector)
         {
             Console.SetOut(consoleRedirector);
-           
+            int i = 0;
+            while (i<10)
+            {
+                tbConsole.WriteLine(this.ConfigFileName + " : " + DateTime.Now);
+                i++;
+                Thread.Sleep(1000);
+            }
+            tbConsole.WriteLine("Exception");
             while (true)
             {
                 tbConsole.WriteLine(this.ConfigFileName + " : " + DateTime.Now);

@@ -63,6 +63,8 @@
       <DependentUpon>DisplayPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="IcxFactory.cs" />
+    <Compile Include="IObservable.cs" />
+    <Compile Include="IObserver.cs" />
     <Compile Include="NavigationButtons.cs" />
     <Compile Include="NavigationControl.cs" />
     <Compile Include="ProcessWrapper.cs" />
