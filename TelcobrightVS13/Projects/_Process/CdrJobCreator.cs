@@ -68,13 +68,43 @@ namespace Process
                                     && !fInfo.Name.EndsWith(".tmp") && !fInfo.Name.Contains(".filepart"))
                                     .ToList();
                             int minDurationToSkip = fileLocation.DurationSecToSkipVeryNewPossiblyIncompleteFiles;
-                            fileInfos= fileInfos.Where(f =>
+                            fileInfos=fileInfos.Where(f =>
                             {
                                 DateTime currentTime = DateTime.Now;
                                 return (currentTime - f.CreationTime).TotalSeconds
                                     > minDurationToSkip ;
                             }).ToList();
 
+                            //take only those files whos size is not changing or not being written
+                            bool[] constantSizeCheckResult= new bool[fileInfos.Count];
+                            ParallelIterator<FileInfo,bool> parallelIterator= new ParallelIterator<FileInfo, bool>(fileInfos);
+                            constantSizeCheckResult = parallelIterator.getOutput(fileInfo =>
+                                FileAndPathHelper.IsFileSizeConstantOverAPeriod(fileInfo,
+                                    checkIntervalInSeconds: 1, noOfChecks: 3)).ToArray();
+                            var templist= new List<FileInfo>();
+                            for (var index = 0; index < fileInfos.Count; index++)
+                            {
+                                var fileInfo = fileInfos[index];
+                                var sizeWasConstant = constantSizeCheckResult[index];
+                                if (sizeWasConstant)
+                                {
+                                    templist.Add(fileInfo);
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Warning: File size varied during check before cdr job creation.");
+                                }
+                            }
+                            //most of the files should be finished written by now, still...
+                            //double check if file is still being written, by trying exclusive f open
+                            fileInfos= new List<FileInfo>();
+                            foreach (var fileInfo in templist)
+                            {
+                                if (FileAndPathHelper.IsFileLockedOrBeingWritten(fileInfo) == false)
+                                {
+                                    fileInfos.Add(fileInfo);
+                                }
+                            }
                             //**************
                             Dictionary<string, FileInfo> newJobNameVsFileInfos  = fileInfos.Select(f => // kv<jobName,fileName>
                                 new
