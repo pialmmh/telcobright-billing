@@ -11,15 +11,12 @@ using CasTelcobright.Forms;
 using CasTelcobright;
 using WS_Telcobright_Topshelf;
 using LibraryExtensions;
-using System.Threading.Tasks;
 namespace CasTelcobright
 {
    
     public partial class Form1 : Form
     {
-        private string output;
         Dictionary<string, DisplayPanel> displayPanels = new Dictionary<string, DisplayPanel>();
-        
 
         List<string> allIcx = IcxFactory.getAllIcx();
         Dictionary<string, Button> buttons = new Dictionary<string, Button>();

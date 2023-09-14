@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -12,6 +13,15 @@ namespace CasTelcobright
 {
     public class ProcessWrapper:IObservable
     {
+         
+        private ProcessState _processState;
+        public ProcessState ProcessState
+        {
+            get { return _processState; }
+            set {
+                _processState = value; Notify();
+            }
+        }
         public DisplayPanel displayPanel;
         public string instanceName;
         private Telcobright2 telcobright;
@@ -23,11 +33,6 @@ namespace CasTelcobright
         private IObserver Observer;
         private Boolean _exceptionOccur;
         private ExceptionHandler exceptionHandler;
-        public Boolean ExceptionOccur
-        {
-            get { return _exceptionOccur; }
-            set { _exceptionOccur = value; Notify(); }
-        }
 
         public ProcessWrapper(string instanceName, DisplayPanel displayPanel)
         {
@@ -43,16 +48,16 @@ namespace CasTelcobright
                 if (output.ToLower().Contains("exception"))
                 {
                     lastExceptionTime = DateTime.Now;
-                    ExceptionOccur = true;
+                    ProcessState = ProcessState.Alarm;
                 }
                 else
                 {
                     TimeSpan timeDifference = DateTime.Now - lastExceptionTime;                   
-                    int minutesDifference = timeDifference.Minutes;
+                    int minutesDifference = timeDifference.Seconds;
 
                     if (minutesDifference > 5)
                     {
-                        ExceptionOccur = false;
+                        ProcessState = ProcessState.On;
                     }
                 }
                 this.displayPanel.richTextBox1.Invoke(new Action(() =>
@@ -72,12 +77,15 @@ namespace CasTelcobright
         public void start()
         {
             this.thread.Start();
+            this.ProcessState = ProcessState.On;
         }
 
         public void stop()
         {
             try
             {
+                this.ProcessState = ProcessState.Off;
+
                 if (this.thread.IsAlive)
                 {
                     this.thread.Abort();
@@ -86,6 +94,7 @@ namespace CasTelcobright
             catch (ThreadAbortException e)
             { 
                 Thread.ResetAbort();
+                Console.WriteLine(e.StackTrace);
             }
         }
 
@@ -107,10 +116,12 @@ namespace CasTelcobright
             ProcessWrapper pw = subject as ProcessWrapper;
             if (pw != null)
             {
-                if(pw.ExceptionOccur)
-                    Form1.pictureBoxes[pw.instanceName].BackColor = StatusColors.StatusException;
-                else
-                    Form1.pictureBoxes[pw.instanceName].BackColor = StatusColors.StatusOn;
+                if (pw.ProcessState == ProcessState.Alarm)
+                    Form1.pictureBoxes[pw.instanceName].BackColor = Color.DarkOrange;
+                else if(pw.ProcessState == ProcessState.On)
+                    Form1.pictureBoxes[pw.instanceName].BackColor = Color.LimeGreen;
+                else if (pw.ProcessState == ProcessState.Off)
+                    Form1.pictureBoxes[pw.instanceName].BackColor = Color.DarkGray;
             }
         }
     }

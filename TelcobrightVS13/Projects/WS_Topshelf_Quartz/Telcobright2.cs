@@ -64,7 +64,7 @@ namespace WS_Telcobright_Topshelf
         {
             Console.SetOut(consoleRedirector);
             int i = 0;
-            while (i<10)
+            while (i < 5)
             {
                 tbConsole.WriteLine(this.ConfigFileName + " : " + DateTime.Now);
                 i++;
