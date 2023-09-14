@@ -31,14 +31,22 @@ namespace CasTelcobright.Forms
             {
                 btn.Text = "Start";
                 this.processWrapper.stop();
+<<<<<<< HEAD
                 Form1.pictureBoxes[instanceName].BackColor = StatusPictureBox.StatusOff;
+=======
+                Form1.pictureBoxes[instanceName].BackColor = StatusColors.StatusOff;
+>>>>>>> a341a24c1fdc2a61116133492f415135cb69eafc
             }
             else if (btn.Text == "Start")
             {
                 btn.Text = "Stop";
                 this.processWrapper = new ProcessWrapper(instanceName, this);
                 this.processWrapper.start();
+<<<<<<< HEAD
                 Form1.pictureBoxes[instanceName].BackColor = StatusPictureBox.StatusOn;
+=======
+                Form1.pictureBoxes[instanceName].BackColor = StatusColors.StatusOn;
+>>>>>>> a341a24c1fdc2a61116133492f415135cb69eafc
             }
         }
 
