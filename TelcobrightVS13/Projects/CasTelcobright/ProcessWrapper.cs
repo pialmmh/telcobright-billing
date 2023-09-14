@@ -108,9 +108,9 @@ namespace CasTelcobright
             if (pw != null)
             {
                 if(pw.ExceptionOccur)
-                    Form1.pictureBoxes[pw.instanceName].BackColor = StatusPictureBox.StatusException;
+                    Form1.pictureBoxes[pw.instanceName].BackColor = StatusColors.StatusException;
                 else
-                    Form1.pictureBoxes[pw.instanceName].BackColor = StatusPictureBox.StatusOn;
+                    Form1.pictureBoxes[pw.instanceName].BackColor = StatusColors.StatusOn;
             }
         }
     }
