@@ -32,13 +32,30 @@ using TelcobrightInfra;
 //using CrystalQuartzTest;
 namespace InstallConfig
 {
-    class ConfigGeneratorMain
+    public class ConfigGeneratorMain
     {
         private static AutomationContainer automationContainer = new AutomationContainer();
         static List<InstanceConfig> instanceConfigs = new List<InstanceConfig>();
-
-        static void Main(string[] args)
+        private static CompositionContainer _container;
+        [ImportMany("Script", typeof(IScript))]
+        public IEnumerable<IScript> SqlScripts { get; set; }
+        public void Run(string[] args)
         {
+            try
+            {
+                // An aggregate catalog that combines multiple catalogs.
+                var catalog = new AggregateCatalog();
+                // Adds all the parts found in the same assembly as the Program class.
+                catalog.Catalogs.Add(new AssemblyCatalog(typeof(ConfigGeneratorMain).Assembly));
+
+                // Create the CompositionContainer with the parts in the catalog.
+                _container = new CompositionContainer(catalog);
+                _container.ComposeParts(this);
+            }
+            catch (CompositionException compositionException)
+            {
+                Console.WriteLine(compositionException.ToString());
+            }
             automationContainer.Compose();
             IAutomation winAutomation = automationContainer.Automations["WinLocalShellAutomation"];
             List<MySqlUser> mysqlUsers = new List<MySqlUser>()

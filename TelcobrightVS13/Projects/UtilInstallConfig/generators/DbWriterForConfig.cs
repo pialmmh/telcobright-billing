@@ -27,16 +27,18 @@ namespace InstallConfig._generator
         public TelcobrightConfig Tbc { get; }
         public ConfigPathHelper ConfigPathHelper { get; }
         private MySqlConnection Con { get; }
-        private MySqlCommand Cmd { get;}
+        private MySqlCommand Cmd { get; }
+        public Dictionary<string, IScript> DdlScripts { get; }
 
         public DbWriterForConfig(TelcobrightConfig tbc, ConfigPathHelper configPathHelper,
-            MySqlConnection con)
+            MySqlConnection con, Dictionary<string, IScript> ddlScripts)
         {
             this.Tbc = tbc;
             this.Con = con;
             if (this.Con.State != ConnectionState.Open) this.Con.Open();
             this.ConfigPathHelper = configPathHelper;
             this.Cmd = new MySqlCommand("", this.Con);
+            this.DdlScripts = ddlScripts;
         }
 
         public void WriteTelcobrightPartnerAndNes()
@@ -59,14 +61,14 @@ namespace InstallConfig._generator
             executeScript("truncate table telcobrightpartner;");
 
             executeScript("insert into telcobrightpartner values " +
-                                                    string.Join(",", partners.Select(p => p.GetExtInsertValues())));
+                          string.Join(",", partners.Select(p => p.GetExtInsertValues())));
             executeScript("update telcobrightpartner set idCustomer=0 where CustomerName = 'Dummy'");
 
-           
+
 
 
             executeScript("insert into ne values " +
-                         string.Join(",", nes.Select(p => p.GetExtInsertValues())));
+                          string.Join(",", nes.Select(p => p.GetExtInsertValues())));
             executeScript("update ne set idSwitch=0 where SwitchName = 'dummy'");
             executeScript("SET FOREIGN_KEY_CHECKS = 1;");
             executeScript("ALTER TABLE ne enable KEYS;");
@@ -80,10 +82,10 @@ namespace InstallConfig._generator
 
         private void executeScript(string sql)
         {
-            MySqlScript script= new MySqlScript(this.Con,sql);
+            MySqlScript script = new MySqlScript(this.Con, sql);
             script.Execute();
         }
-        
+
         public void LoadSeedDataSqlForTelcoBilling(SqlOperationType sqlOperationType)
         {
             string msgBeforeOp;
@@ -113,25 +115,62 @@ namespace InstallConfig._generator
             }
 
 
-            Console.WriteLine(msgBeforeOp);
-            DirectoryInfo d = new DirectoryInfo(sqlDir);
-            FileInfo[] sqlFiles = d.GetFiles("*.sql");
-            foreach (FileInfo file in sqlFiles)
+            if (sqlOperationType != SqlOperationType.DDL)
             {
-                List<string> lines = File.ReadAllLines(file.FullName).ToList();
-                if (lines[0].ToLower().StartsWith("#skip")) continue;
-                string sql = string.Join("", lines); //
-                Console.WriteLine("Loading " + file.Name);
-                if (this.Con.State != ConnectionState.Open)
+                Console.WriteLine(msgBeforeOp);
+                DirectoryInfo d = new DirectoryInfo(sqlDir);
+                FileInfo[] sqlFiles = d.GetFiles("*.sql");
+                foreach (FileInfo file in sqlFiles)
                 {
-                    this.Con.Open();
-                }
-                sql = $@"SET FOREIGN_KEY_CHECKS = 0;
+                    List<string> lines = File.ReadAllLines(file.FullName).ToList();
+                    if (lines[0].ToLower().StartsWith("#skip")) continue;
+                    string sql = string.Join("", lines); //
+                    Console.WriteLine("Loading " + file.Name);
+                    if (this.Con.State != ConnectionState.Open)
+                    {
+                        this.Con.Open();
+                    }
+                    sql = $@"SET FOREIGN_KEY_CHECKS = 0;
                       {sql}; 
                       SET FOREIGN_KEY_CHECKS = 1;";
-                executeScript(sql);
+                    executeScript(sql);
+                }
+                Console.WriteLine(msgAfterOp);
             }
-            Console.WriteLine(msgAfterOp);
+            else //ddl scripts
+            {
+                Console.WriteLine("Run ddl scripts? (Y/N)");
+                ConsoleKeyInfo ki = new ConsoleKeyInfo();
+                ki = Console.ReadKey(true);
+                char usrInput = Convert.ToChar(ki.Key);
+                if (usrInput == 'Y' || usrInput == 'y')
+                {
+                    Console.WriteLine(msgBeforeOp);
+                    Menu menu= new Menu(this.DdlScripts.Values.Select(s=>s.RuleName),"select a ddl operation to run","a");
+                    List<string> choices = menu.getChoices();
+
+                    foreach (string scriptName in choices)
+                    {
+                        IScript script = this.DdlScripts[scriptName];
+                        string sql = script.GetScript(null);
+                        Console.WriteLine("Loading ddl script:" + script.RuleName);
+                        if (this.Con.State != ConnectionState.Open)
+                        {
+                            this.Con.Open();
+                        }
+                        sql = $@"SET FOREIGN_KEY_CHECKS = 0;
+                      {sql}; 
+                      SET FOREIGN_KEY_CHECKS = 1;";
+                        executeScript(sql);
+                    }
+
+
+                    Console.WriteLine(msgAfterOp);
+                }
+                //Console.ReadLine()
+
+
+            }
         }
     }
 }

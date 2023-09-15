@@ -309,6 +309,7 @@
     <Compile Include="config\_helper\CasServiceGroupHelper.cs" />
     <Compile Include="config\_helper\CasTbPartnerFactory.cs" />
     <Compile Include="config\_helper\DeploymentEnvironment.cs" />
+    <Compile Include="config\_helper\sqlscripts\ddl\FkIdPartnerRouteToBtrc.cs" />
     <Compile Include="config\_helper\TemplateNe.cs" />
     <Compile Include="generators\DeploymentHelper.cs" />
     <Compile Include="generators\telcoBilling\TelcoBillingConfigGenerator.cs" />
@@ -368,6 +369,7 @@
     <Compile Include="config\summit\_SummitConfigMain.cs" />
     <Compile Include="generators\RouteType.cs" />
     <Compile Include="generators\TableWisePartitionManagementInfo.cs" />
+    <Compile Include="UtilMain.cs" />
     <Compile Include="util\CommonValidationRulesGenerator\InconsistentCdrValRulesGen.cs" />
     <Compile Include="util\CommonValidationRulesGenerator\CommonCdrValRulesGen.cs" />
     <Compile Include="generators\telcoBilling\TelcoBillingMenu.cs" />
