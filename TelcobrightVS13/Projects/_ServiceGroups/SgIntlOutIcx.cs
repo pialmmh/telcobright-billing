@@ -50,15 +50,38 @@ namespace TelcobrightMediation
 
         public void Execute(cdr thisCdr, CdrProcessor cdrProcessor)
         {
+            bool useCasStyleProcessing = cdrProcessor.CdrJobContext.CdrjobInputData.CdrSetting.useCasStyleProcessing;
 
-            foreach (ICdrRule cdrRule in this.CdrRules)
+            if (useCasStyleProcessing == false)
             {
-                if (cdrRule.CheckIfTrue(thisCdr))
+                foreach (ICdrRule cdrRule in this.CdrRules)
                 {
-                    thisCdr.ServiceGroup = 2; //international Out in IGW 
-                    break;
-                }
+                    if (cdrRule.CheckIfTrue(thisCdr))
+                    {
+                        thisCdr.ServiceGroup = 2; //international Out in IGW 
+                        break;
+                    }
 
+                }
+            }
+            else
+            {
+                //cas style processing
+                var dicRoutes = cdrProcessor.CdrJobContext.MediationContext.MefServiceGroupContainer.SwitchWiseRoutes;
+                var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
+                route incomingRoute = null;
+                dicRoutes.TryGetValue(key, out incomingRoute);
+                if (incomingRoute != null)
+                {
+                    key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.OutgoingRoute);
+                    route outGoingRoute = null;
+                    dicRoutes.TryGetValue(key, out outGoingRoute);
+                    if (outGoingRoute?.partner.PartnerType == IcxPartnerType.IOS &&
+                            incomingRoute.partner.PartnerType == IcxPartnerType.ANS) //ANS and route=national
+                    {
+                        thisCdr.ServiceGroup = 2; //Int outgoing
+                    }
+                }
             }
         }
 

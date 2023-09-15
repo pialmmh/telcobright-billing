@@ -56,7 +56,6 @@ namespace TelcobrightMediation
             if (incomingRoute != null)
             {
                 bool useCasStyleProcessing = cdrProcessor.CdrJobContext.CdrjobInputData.CdrSetting.useCasStyleProcessing;
-                
 
                 if (!useCasStyleProcessing)
                 {
@@ -66,15 +65,12 @@ namespace TelcobrightMediation
                     {
                         thisCdr.ServiceGroup = 3; //Intl in ICX
                     }
-
                 }
-
-                else
+                else//cas style processing
                 {
                     key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.OutgoingRoute);
                     route outGoingRoute = null;
                     dicRoutes.TryGetValue(key, out outGoingRoute);
-
 
                     if (outGoingRoute.partner.PartnerType == IcxPartnerType.ANS &&
                         incomingRoute.partner.PartnerType == IcxPartnerType.IOS) //ANS and route=national
