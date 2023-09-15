@@ -214,6 +214,11 @@ namespace InstallConfig
                     {
                         Name = "voicetel_cas",
                         SchedulerPortNo = 583
+                    },
+                    new InstanceConfig
+                    {
+                        Name = "mnh_cas",
+                        SchedulerPortNo = 584
                     }
                 },
                 MySqlCluster = new MySqlCluster

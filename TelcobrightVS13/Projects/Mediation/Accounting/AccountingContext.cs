@@ -86,7 +86,19 @@ namespace TelcobrightMediation.Accounting
                 this.LedgerSummaryCache.WriteAllChanges(this.Cmd, this.SegmentSizeforDbWrite);
 		}
 
-		public void ExecuteTransactions(IEnumerable<acc_transaction> transactions)
+
+	    public void WriteAllChangesFromPortal()
+	    {
+	        if (this.SkipSetingsForSummaryOnly?.SkipChargeable == false)
+	            this.ChargeableCache.WriteAllChanges(this.Cmd, this.SegmentSizeforDbWrite);
+	        this.AccountCache.WriteAllChanges(this.Cmd, this.SegmentSizeforDbWrite);
+	        if (this.SkipSetingsForSummaryOnly?.SkipTransaction == false)
+	            this.TransactionCache.WriteAllChanges(this.Cmd, this.SegmentSizeforDbWrite);
+	        if (this.SkipSetingsForSummaryOnly?.SkipTransaction == false)
+	            this.LedgerSummaryCache.WriteAllChanges(this.Cmd, this.SegmentSizeforDbWrite);
+	    }
+
+        public void ExecuteTransactions(IEnumerable<acc_transaction> transactions)
 		{
 			foreach (var accTransaction in transactions)
 			{

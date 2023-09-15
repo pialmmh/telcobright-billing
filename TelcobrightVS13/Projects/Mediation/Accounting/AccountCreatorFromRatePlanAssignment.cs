@@ -63,7 +63,7 @@ namespace TelcobrightMediation.Accounting
                         break;
                 }
             }
-            this.AccountingContext.WriteAllChanges();
+            this.AccountingContext.WriteAllChangesFromPortal();
         }
     }
 }
