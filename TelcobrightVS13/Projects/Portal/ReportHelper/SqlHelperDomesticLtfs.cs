@@ -10,7 +10,7 @@ namespace PortalApp.ReportHelper
 {
     public class SqlHelperDomesticLtfs : AbstractSqlHelper
     {
-        public SqlHelperDomesticLtfs(string startDate, string endDate, string groupInterval,string tablename,
+        public SqlHelperDomesticLtfs(string startDate, string endDate, string groupInterval, string tablename,
                                     List<string> groupExpressions, List<string> whereExpressions)
         {
             StartDate = startDate;
@@ -165,11 +165,11 @@ namespace PortalApp.ReportHelper
 		        100*(SUM(connectedCalls)/SUM(totalcalls)) AS CCR,
                 SUM(connectedCallscc) AS ConectbyCC ,
 		        100*(SUM(connectedCallsCC)/SUM(totalcalls)) AS CCRByCC 
-	            FROM {TableName.Replace("01","04")}
+	            FROM {TableName.Replace("01", "04")}
                 WHERE tup_starttime>='{StartDate}'
                 AND tup_starttime<'{EndDate}'
                 {GetWhereClauseAdditional()}";
-        } 
+        }
 
 
         public override string getSQLString()

@@ -53,7 +53,8 @@ namespace InstallConfig.config._helper
                     SkipChargeable = true,
                     SkipTransaction = true,
                     SkipHourlySummary = false,
-                }
+                }, 
+                useCasStyleProcessing = true
             };
         }
     }

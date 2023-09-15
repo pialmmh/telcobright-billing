@@ -123,7 +123,7 @@
     <Compile Include="Enums\CompressionType.cs" />
     <Compile Include="Excel\ExcelHelper.cs" />
     <Compile Include="ExecutablePathFinder.cs" />
-    <Compile Include="FileAndPathHelper.cs" />
+    <Compile Include="FileAndPath\FileAndPathHelper.cs" />
     <Compile Include="CommonDbClientExtensions.cs" />
     <Compile Include="FileSplitter.cs" />
     <Compile Include="JsonCompressor.cs" />

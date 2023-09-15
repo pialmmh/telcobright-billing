@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace LibraryExtensions
@@ -99,6 +100,50 @@ namespace LibraryExtensions
             else throw new Exception("Could not locate bin path.");
         }
 
+        public static bool IsFileLockedOrBeingWritten(FileInfo file)
+        {
+            FileStream stream = null;
+            try
+            {
+                stream = file.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+            }
+            catch (IOException)
+            {
+                //the file is unavailable because it is:
+                //still being written to
+                //or being processed by another thread
+                //or does not exist (has already been processed)
+                return true;
+            }
+            finally
+            {
+                if (stream != null)
+                    stream.Close();
+            }
 
+            //file is not locked
+            return false;
+        }
+
+        public static bool IsFileSizeConstantOverAPeriod(FileInfo file, int checkIntervalInSeconds, int noOfChecks)
+        {
+            var initialSize = file.Length;
+            List<long> sizeCheckResults = new List<long> {initialSize};
+            for (int i = 0; i < noOfChecks; i++)
+            {
+                Thread.Sleep(checkIntervalInSeconds);
+                FileInfo sameFile = new FileInfo(file.FullName);
+                sizeCheckResults.Add(sameFile.Length);
+            }
+            bool sizeRemainedConstant = true;
+            foreach (long size in sizeCheckResults)
+            {
+                if (size != initialSize)
+                {
+                    sizeRemainedConstant= false;
+                }
+            }
+            return sizeRemainedConstant;
+        }
     }
 }

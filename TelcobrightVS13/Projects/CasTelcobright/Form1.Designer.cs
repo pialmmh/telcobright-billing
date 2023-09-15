@@ -50,7 +50,6 @@ namespace CasTelcobright
             foreach (var icxName in allIcx)
             {
                 var displayPanel = new DisplayPanel(icxName);
-
                 displayPanel.richTextBox1.Tag = icxName;
                 displayPanels.Add(icxName, displayPanel);
             }
@@ -91,7 +90,8 @@ namespace CasTelcobright
         private void addPictureBox(string operatorName, int tabIndex, int yCoordinate)
         {
             PictureBox pictureBox = new PictureBox();
-            this.pictureBoxes.Add(operatorName, pictureBox);
+            pictureBoxes.Add(operatorName, pictureBox);
+
             //pictureBox = new System.Windows.Forms.PictureBox();
             //((System.ComponentModel.ISupportInitialize)(pictureBox)).BeginInit();
             //this.SuspendLayout();
