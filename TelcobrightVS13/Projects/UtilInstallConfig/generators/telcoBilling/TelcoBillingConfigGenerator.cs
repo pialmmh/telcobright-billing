@@ -99,14 +99,17 @@ namespace InstallConfig
                         string sql = script.GetScript(null);
                         Console.WriteLine("Loading ddl script:" + script.RuleName);
                         sql = $@"SET FOREIGN_KEY_CHECKS = 0;
-                                    {sql}; 
+                                    {sql}
                                   SET FOREIGN_KEY_CHECKS = 1;";
                         dbWriter.executeScript(sql);
                     }
 
                     Console.WriteLine("Ddl scripts loaded successfully for " + Tbc.Telcobrightpartner.databasename);
                 }
-                Console.WriteLine("Ddl scripts were not for " + Tbc.Telcobrightpartner.databasename);
+                else
+                {
+                    Console.WriteLine("Ddl scripts were not for " + Tbc.Telcobrightpartner.databasename);
+                }
             }
         }
 

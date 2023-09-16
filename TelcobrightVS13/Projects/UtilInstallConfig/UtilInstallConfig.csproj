@@ -559,9 +559,6 @@
     <Content Include="config\banglatelecom\tmplPortalAppPools.txt" />
     <Content Include="config\banglatelecom\tmplPortalFtpSite.txt" />
     <Content Include="config\banglatelecom\tmplPortalWebSite.txt" />
-    <Content Include="generators\telcoBilling\dbscripts\ddl\sql\increaseFldLength.sql" />
-    <Content Include="generators\telcoBilling\dbscripts\ddl\sql\Ne.sql" />
-    <Content Include="generators\telcoBilling\dbscripts\ddl\sql\serviceGroupNotNullCdrError.sql" />
     <Content Include="generators\telcoBilling\dbscripts\ddl\sql\indexSwitch.txt" />
     <Content Include="generators\telcoBilling\dbscripts\ddl\sql\icxSp.sql" />
     <Content Include="generators\telcoBilling\dbscripts\seedData\sql\pointCodeAndIpAddr.sql" />

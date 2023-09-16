@@ -131,7 +131,7 @@ namespace InstallConfig._generator
                         this.Con.Open();
                     }
                     sql = $@"SET FOREIGN_KEY_CHECKS = 0;
-                      {sql}; 
+                      {sql} 
                       SET FOREIGN_KEY_CHECKS = 1;";
                     executeScript(sql);
                 }
