@@ -66,7 +66,11 @@ namespace InstallConfig
             using (MySqlConnection con =
                 new MySqlConnection(DbUtil.getDbConStrWithDatabase(this.Tbc.DatabaseSetting)))
             {
+<<<<<<< Updated upstream
                 DbWriterForConfig dbWriter = new DbWriterForConfig(this.Tbc, this.ConfigPathHelper, con,this.DdlScripts);
+=======
+                DbWriterForConfig dbWriter = new DbWriterForConfig(this.Tbc, this.ConfigPathHelper, con,new Dictionary<string, IScript>());
+>>>>>>> Stashed changes
                 dbWriter.LoadSeedDataSqlForTelcoBilling(SqlOperationType.SeedData);
                 dbWriter.WriteTelcobrightPartnerAndNes();
             }

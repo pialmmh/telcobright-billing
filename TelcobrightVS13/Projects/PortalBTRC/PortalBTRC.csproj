@@ -523,6 +523,7 @@
     <Content Include="reports\icx\customReports\GrameenphoneRoaming.aspx" />
     <Content Include="reports\icx\customReports\RobiCallForwarding.aspx" />
     <Content Include="reports\icx\customReports\RobiRoaming.aspx" />
+    <Content Include="reports\icx\DomesticWithLtfs.aspx" />
     <Content Include="reports\icx\LocalTollFree.aspx" />
     <Content Include="reports\icx\Domestic.aspx" />
     <Content Include="reports\icx\InternationalIn_ICX.aspx" />
@@ -874,6 +875,7 @@
     <Compile Include="ReportHelper\AbstractSqlHelper.cs" />
     <Compile Include="ReportHelper\SqlHelperDomestic.cs" />
     <Compile Include="ReportHelper\SqlHelperInIGWRouteWise.cs" />
+    <Compile Include="ReportHelper\SqlHelperIntlInICXLtfs.cs" />
     <Compile Include="ReportHelper\SqlHelperIntlInICXv2.cs" />
     <Compile Include="ReportHelper\SqlHelperIntlInICX.cs" />
     <Compile Include="ReportHelper\SqlHelperIntlInIGW.cs" />
@@ -973,6 +975,13 @@
     </Compile>
     <Compile Include="reports\icx\customReports\RobiRoaming.aspx.designer.cs">
       <DependentUpon>RobiRoaming.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\icx\DomesticWithLtfs.aspx.cs">
+      <DependentUpon>DomesticWithLtfs.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\icx\DomesticWithLtfs.aspx.designer.cs">
+      <DependentUpon>DomesticWithLtfs.aspx</DependentUpon>
     </Compile>
     <Compile Include="reports\icx\LocalTollFree.aspx.cs">
       <DependentUpon>LocalTollFree.aspx</DependentUpon>
@@ -1391,6 +1400,10 @@
     <ProjectReference Include="..\TelcobrightInfra\TelcobrightInfra.csproj">
       <Project>{ff350c55-2852-406c-930b-ae2938cceb91}</Project>
       <Name>TelcobrightInfra</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UtilInstallConfig\UtilInstallConfig.csproj">
+      <Project>{4bad4f1b-28c9-4c71-8282-894d2c1cd7f1}</Project>
+      <Name>UtilInstallConfig</Name>
     </ProjectReference>
     <ProjectReference Include="..\_jcLCR\mefJcLCR.csproj">
       <Project>{a9564cf3-228c-4cc7-9a8b-4b518907305b}</Project>
