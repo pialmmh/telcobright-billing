@@ -164,6 +164,7 @@ border-bottom-style:ridge;min-width:180px;padding-top:10px;">
         <asp:TreeNode Value="ICX" Expanded="True" Text="ICX" SelectAction="None">
                 <asp:TreeNode Value="Domestic" Expanded="True" Text="Domestic" SelectAction="None">
               <asp:TreeNode Value="Traffic" Text="Traffic" SelectAction="Select" NavigateUrl="~/reports/icx/Domestic.aspx"> </asp:TreeNode>
+                    <asp:TreeNode Value="TrafficWithLtfs" Text="Traffic With LTFS" SelectAction="Select" NavigateUrl="~/reports/icx/DomesticWithLtfs.aspx"> </asp:TreeNode>
                </asp:TreeNode>
                 <asp:TreeNode Value="Int.Incom" Expanded="True" Text="Int.Incom" SelectAction="None">
               <asp:TreeNode Value="Traffic" Text="Traffic" SelectAction="Select" NavigateUrl="~/reports/icx/InternationalIn_ICX.aspx"> </asp:TreeNode>

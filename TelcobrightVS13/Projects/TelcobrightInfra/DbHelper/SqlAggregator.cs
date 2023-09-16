@@ -165,7 +165,7 @@ namespace TelcobrightInfra
         {
             string unionedSql = new StringBuilder("(")
                 .Append(string.Join($"{newLine}UNION ALL{newLine}",
-                    this.TableNames.Select(t => this.BaseSql.Replace("<basetable>", t))))
+                    this.TableNames.Select(t => replaceTableNameIcxName(t))))
                 .Append(") as unioned").ToString();
             StringBuilder unionSqlWrapped = wrapUnionedSqlWithGroupBy(unionedSql);
 
@@ -179,6 +179,13 @@ namespace TelcobrightInfra
             finalSql = this.replaceCharWithinSingleQuotes(finalSql, '~', ' ');
             return finalSql;
         }
+
+        private string replaceTableNameIcxName(string t)
+        {
+            return this.BaseSql.Replace("<basetable>",t).Replace("_icxname_", t.Split('.')[0].Split('_')[0]);
+          
+        }
+
         private static List<DbColumn> getColumnsFromSelectLine(string selectLine)
         {
             //var columns = new List<DbColumn>();
