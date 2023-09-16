@@ -80,7 +80,7 @@ namespace InstallConfig._generator
             Console.WriteLine("Finished Loading partner and nes for " + this.Tbc.Telcobrightpartner.databasename + ".");
         }
 
-        private void executeScript(string sql)
+        public void executeScript(string sql)
         {
             MySqlScript script = new MySqlScript(this.Con, sql);
             script.Execute();
@@ -136,40 +136,6 @@ namespace InstallConfig._generator
                     executeScript(sql);
                 }
                 Console.WriteLine(msgAfterOp);
-            }
-            else //ddl scripts
-            {
-                Console.WriteLine("Run ddl scripts? (Y/N)");
-                ConsoleKeyInfo ki = new ConsoleKeyInfo();
-                ki = Console.ReadKey(true);
-                char usrInput = Convert.ToChar(ki.Key);
-                if (usrInput == 'Y' || usrInput == 'y')
-                {
-                    Console.WriteLine(msgBeforeOp);
-                    Menu menu= new Menu(this.DdlScripts.Values.Select(s=>s.RuleName),"select a ddl operation to run","a");
-                    List<string> choices = menu.getChoices();
-
-                    foreach (string scriptName in choices)
-                    {
-                        IScript script = this.DdlScripts[scriptName];
-                        string sql = script.GetScript(null);
-                        Console.WriteLine("Loading ddl script:" + script.RuleName);
-                        if (this.Con.State != ConnectionState.Open)
-                        {
-                            this.Con.Open();
-                        }
-                        sql = $@"SET FOREIGN_KEY_CHECKS = 0;
-                      {sql}; 
-                      SET FOREIGN_KEY_CHECKS = 1;";
-                        executeScript(sql);
-                    }
-
-
-                    Console.WriteLine(msgAfterOp);
-                }
-                //Console.ReadLine()
-
-
             }
         }
     }

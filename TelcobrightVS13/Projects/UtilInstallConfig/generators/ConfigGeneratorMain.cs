@@ -88,7 +88,11 @@ namespace InstallConfig
 
             ConsoleUtil consoleUtil = new ConsoleUtil(new List<char>() {'y', 'Y'});
             List<Deploymentprofile> deploymentProfiles = AllDeploymenProfiles.getDeploymentprofiles();
-
+            ConfigPathHelper configPathHelper = new ConfigPathHelper(
+                "WS_Topshelf_Quartz",
+                "portal",
+                "UtilInstallConfig",
+                "generators");
             Start:
             {
                 Console.Clear();
@@ -99,11 +103,12 @@ namespace InstallConfig
                 List<string> instanceNames = deploymentprofile.instances
                     .Where(i => i.Skip == false)
                     .Select(i => i.Name).ToList();
+                
                 switch (deploymentprofile.type)
                 {
                     case DeploymentProfileType.TelcoBilling:
                         TelcoBillingMenu telcoBillingMenu =
-                            new TelcoBillingMenu(deploymentprofile, consoleUtil);
+                            new TelcoBillingMenu(deploymentprofile, consoleUtil,configPathHelper, this.SqlScripts);
                         telcoBillingMenu.showMenu();
                         goto Start;
                         break;

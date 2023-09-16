@@ -99,6 +99,10 @@ namespace LibraryExtensions
             return getTelcoBillingDbScriptsHome() + Path.DirectorySeparatorChar + "seedData"
                    + Path.DirectorySeparatorChar + "json";
         }
+        public string getTelcoBillingDdlHome()
+        {
+            return getTelcoBillingDbScriptsHome() + Path.DirectorySeparatorChar + "ddl";
+        }
         public string getTelcoBillingDdlSqlHome()
         {
             return getTelcoBillingDbScriptsHome() + Path.DirectorySeparatorChar + "ddl"

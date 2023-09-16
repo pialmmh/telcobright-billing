@@ -30,21 +30,28 @@ namespace InstallConfig
         public ConfigPathHelper ConfigPathHelper { get; set; }
         public List<TelcobrightConfig> TbcWithoutGeneratedConfig { get; set; }
         public Deploymentprofile Deploymentprofile { get; set; }
-    
-        public TelcoBillingMenu(Deploymentprofile deploymentprofile, ConsoleUtil consoleUtil)
+        private Dictionary<string, IScript> DdlScripts { get; set; }= new Dictionary<string, IScript>();
+        public ConfigPathHelper configPathHelper { get; set; }
+
+        public TelcoBillingMenu(Deploymentprofile deploymentprofile, ConsoleUtil consoleUtil, 
+            ConfigPathHelper configPathHelper,IEnumerable<IScript> sqlScripts)
         {
             this.Deploymentprofile = deploymentprofile;
             this.ConsoleUtil = consoleUtil;
             initConfig();
+            this.configPathHelper = configPathHelper;
+
+            List<IScript> ddlScripts = sqlScripts.Where(s => s.ScriptType == ScriptType.SqlDDL).ToList();
+            foreach (IScript script in ddlScripts)
+            {
+                script.ScriptDir = configPathHelper.getTelcoBillingDdlHome();
+            }
+            this.DdlScripts= ddlScripts.ToDictionary(s => s.RuleName);
         }
 
         private void initConfig()
         {
-            ConfigPathHelper configPathHelper = new ConfigPathHelper(
-                            "WS_Topshelf_Quartz",
-                            "portal",
-                            "UtilInstallConfig",
-                            "generators");
+            
             DbUtil.configPathHelper = configPathHelper;
             this.configGenerators =
                 TelcoBillingConfigGenerator.getSelectedOperatorsConfig(this.Deploymentprofile);
@@ -131,35 +138,35 @@ namespace InstallConfig
                         goto Start;
                         break;
                     case '7':
-                        if (!this.TbcWithoutGeneratedConfig.Any())
-                        {
-                            Console.WriteLine("No operator's config has been found. Press any key to start over.");
-                            Console.ReadKey();
-                            goto Start;
-                        }
-                        List<TelcobrightConfig> selectedTbcs = getSelectedTbcs();
-                        cleanDeploymentDir();
-                        foreach (var tbWithoutFullConfig in selectedTbcs)
-                        {
-                            var dbOrInstanceName = tbWithoutFullConfig.Telcobrightpartner.databasename;
-                            AbstractConfigGenerator configGenerator = this.configGenerators
-                                .First(c => c.Tbc.Telcobrightpartner.databasename == dbOrInstanceName);
-                            InstanceConfig ic = this.Deploymentprofile.instances.First(i => i.Name == dbOrInstanceName);
-                            TelcobrightConfig tbc = configGenerator.GenerateConfig(ic, 1);
-                            tbc.DeploymentProfile = this.Deploymentprofile;
-                            int schedulerPortNo = ic.SchedulerPortNo;
-                            tbWithoutFullConfig.TcpPortNoForRemoteScheduler = schedulerPortNo;
-                            tbWithoutFullConfig.SchedulerDaemonConfigs = configGenerator.GetSchedulerDaemonConfigs();
-                            TelcoBillingConfigGenerator cw =
-                                new TelcoBillingConfigGenerator(tbc, this.ConfigPathHelper, this.ConsoleUtil);
-                            cw.writeConfig();
-                            cw.LoadSeedData();
-                            configureQuarzJobStore(tbc);
-                            deployBinariesForProduction(tbc);
-                            Console.WriteLine("Successfully generated config for "
-                                              + string.Join(",",
-                                                  selectedTbcs.Select(t => t.Telcobrightpartner.databasename)));
-                        }
+                        //if (!this.TbcWithoutGeneratedConfig.Any())
+                        //{
+                        //    Console.WriteLine("No operator's config has been found. Press any key to start over.");
+                        //    Console.ReadKey();
+                        //    goto Start;
+                        //}
+                        //List<TelcobrightConfig> selectedTbcs = getSelectedTbcs();
+                        //cleanDeploymentDir();
+                        //foreach (var tbWithoutFullConfig in selectedTbcs)
+                        //{
+                        //    var dbOrInstanceName = tbWithoutFullConfig.Telcobrightpartner.databasename;
+                        //    AbstractConfigGenerator configGenerator = this.configGenerators
+                        //        .First(c => c.Tbc.Telcobrightpartner.databasename == dbOrInstanceName);
+                        //    InstanceConfig ic = this.Deploymentprofile.instances.First(i => i.Name == dbOrInstanceName);
+                        //    TelcobrightConfig tbc = configGenerator.GenerateConfig(ic, 1);
+                        //    tbc.DeploymentProfile = this.Deploymentprofile;
+                        //    int schedulerPortNo = ic.SchedulerPortNo;
+                        //    tbWithoutFullConfig.TcpPortNoForRemoteScheduler = schedulerPortNo;
+                        //    tbWithoutFullConfig.SchedulerDaemonConfigs = configGenerator.GetSchedulerDaemonConfigs();
+                        //    TelcoBillingConfigGenerator cw =
+                        //        new TelcoBillingConfigGenerator(tbc, this.ConfigPathHelper, this.ConsoleUtil);
+                        //    cw.writeConfig();
+                        //    cw.LoadSeedData();
+                        //    configureQuarzJobStore(tbc);
+                        //    deployBinariesForProduction(tbc);
+                        //    Console.WriteLine("Successfully generated config for "
+                        //                      + string.Join(",",
+                        //                          selectedTbcs.Select(t => t.Telcobrightpartner.databasename)));
+                        //}
                         goto Start;
                         break;
                     case '8':
@@ -239,9 +246,11 @@ namespace InstallConfig
                 int schedulerPortNo = ic.SchedulerPortNo;
                 tbWithoutFullConfig.TcpPortNoForRemoteScheduler = schedulerPortNo;
                 tbWithoutFullConfig.SchedulerDaemonConfigs = configGenerator.GetSchedulerDaemonConfigs();
-                TelcoBillingConfigGenerator cw = new TelcoBillingConfigGenerator(tbc, this.ConfigPathHelper, this.ConsoleUtil);
-                cw.writeConfig();
-                cw.LoadSeedData();
+                TelcoBillingConfigGenerator generator = new TelcoBillingConfigGenerator(tbc, this.ConfigPathHelper, this.ConsoleUtil, this.DdlScripts);
+                generator.writeConfig();
+                generator.LoadSeedData();
+                generator.LoadDdlScripts();
+
                 configureQuarzJobStore(tbc);
                 deployBinariesForProduction(tbc);
                 Console.WriteLine("Successfully generated config for "

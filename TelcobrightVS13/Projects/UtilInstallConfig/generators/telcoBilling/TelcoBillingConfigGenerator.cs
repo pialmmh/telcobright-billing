@@ -24,12 +24,14 @@ namespace InstallConfig
         public TelcobrightConfig Tbc { get; set; }
         public ConfigPathHelper ConfigPathHelper { get; set; }
         public ConsoleUtil ConsoleUtil { get; set; }
+        private Dictionary<string, IScript> DdlScripts { get; set; }
         public TelcoBillingConfigGenerator(TelcobrightConfig tbc, ConfigPathHelper configPathHelper,
-            ConsoleUtil consoleUtil)
+            ConsoleUtil consoleUtil, Dictionary<string, IScript> ddlScripts)
         {
             this.Tbc = tbc;
             this.ConsoleUtil = consoleUtil;
             this.ConfigPathHelper = configPathHelper;
+            this.DdlScripts = ddlScripts;
         }
 
         public static List<AbstractConfigGenerator> getSelectedOperatorsConfig(Deploymentprofile deploymentprofile)
@@ -64,17 +66,48 @@ namespace InstallConfig
             using (MySqlConnection con =
                 new MySqlConnection(DbUtil.getDbConStrWithDatabase(this.Tbc.DatabaseSetting)))
             {
-                DbWriterForConfig dbWriter = new DbWriterForConfig(this.Tbc, this.ConfigPathHelper, con);
+                DbWriterForConfig dbWriter = new DbWriterForConfig(this.Tbc, this.ConfigPathHelper, con,this.DdlScripts);
                 dbWriter.LoadSeedDataSqlForTelcoBilling(SqlOperationType.SeedData);
-                if (ConsoleUtil.getConfirmationFromUser("Load ddl scripts? (Y/N) for " +
-                                                        this.Tbc.Telcobrightpartner.databasename))
-                {
-                    dbWriter.LoadSeedDataSqlForTelcoBilling(SqlOperationType.DDL);
-                }
                 dbWriter.WriteTelcobrightPartnerAndNes();
             }
             Console.WriteLine();
             Console.WriteLine("Seed data loaded successfully for " + Tbc.Telcobrightpartner.databasename);
+            Console.WriteLine("Partner and NE data written successfully for " + Tbc.Telcobrightpartner.databasename);
+        }
+
+
+        public void LoadDdlScripts()
+        {
+            PartnerEntities context =
+                new PartnerEntities(DbUtil.GetEntityConnectionString(Tbc.DatabaseSetting));
+            if (context.Database.Connection.State != ConnectionState.Open)
+                context.Database.Connection.Open();
+            using (MySqlConnection con =
+                new MySqlConnection(DbUtil.getDbConStrWithDatabase(this.Tbc.DatabaseSetting)))
+            {
+                DbWriterForConfig dbWriter =
+                    new DbWriterForConfig(this.Tbc, this.ConfigPathHelper, con, this.DdlScripts);
+                if (ConsoleUtil.getConfirmationFromUser("Load ddl scripts? (Y/N) for " +
+                                                        this.Tbc.Telcobrightpartner.databasename))
+                {
+                    Menu menu = new Menu(this.DdlScripts.Values.Select(s => s.RuleName),
+                        "select a ddl operation to run", "a");
+                    List<string> choices = menu.getChoices();
+                    foreach (string scriptName in choices)
+                    {
+                        IScript script = this.DdlScripts[scriptName];
+                        string sql = script.GetScript(null);
+                        Console.WriteLine("Loading ddl script:" + script.RuleName);
+                        sql = $@"SET FOREIGN_KEY_CHECKS = 0;
+                                    {sql}; 
+                                  SET FOREIGN_KEY_CHECKS = 1;";
+                        dbWriter.executeScript(sql);
+                    }
+
+                    Console.WriteLine("Ddl scripts loaded successfully for " + Tbc.Telcobrightpartner.databasename);
+                }
+                Console.WriteLine("Ddl scripts were not for " + Tbc.Telcobrightpartner.databasename);
+            }
         }
 
         static void WriteConfig(TelcobrightConfig tbc, ConfigPathHelper configPathHelper)
