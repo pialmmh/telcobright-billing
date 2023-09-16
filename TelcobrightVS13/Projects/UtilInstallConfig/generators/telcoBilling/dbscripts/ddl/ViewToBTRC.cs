@@ -74,7 +74,7 @@ namespace InstallConfig
                                   KEY `idCarrier` (`idPartner`),
                                   CONSTRAINT `fk_Ne` FOREIGN KEY (`SwitchId`) REFERENCES `ne` (`idSwitch`),
                                   CONSTRAINT `route_ibfk_1` FOREIGN KEY (`idPartner`) REFERENCES `btrc_cas`.`partner` (`idPartner`) ON DELETE NO ACTION ON UPDATE NO ACTION
-                                ) ENGINE=InnoDB AUTO_INCREMENT=3589 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+                                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
                                 insert into route select * from temp_route;
                                 drop table temp_route;
                                 set foreign_key_checks=1;";
