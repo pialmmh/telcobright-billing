@@ -219,6 +219,16 @@ namespace InstallConfig
                     {
                         Name = "mnh_cas",
                         SchedulerPortNo = 584
+                    },
+                    new InstanceConfig
+                    {
+                        Name = "softex_cas",
+                        SchedulerPortNo = 585
+                    },
+                    new InstanceConfig
+                    {
+                        Name = "imamnetwork_cas",
+                        SchedulerPortNo = 586
                     }
                 },
                 MySqlCluster = new MySqlCluster
