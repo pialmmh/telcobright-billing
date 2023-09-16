@@ -44,6 +44,10 @@ namespace InstallConfig
                                 drop table if exists xyzprefix; drop view if exists xyzprefix; create view xyzprefix as select * from btrc_cas.xyzprefix;
                                 drop table if exists xyzprefixset; drop view if exists xyzprefixset; create view xyzprefixset as select * from btrc_cas.xyzprefixset;
                                 drop table if exists xyzselected; drop view if exists xyzselected; create view xyzselected as select * from btrc_cas.xyzselected;
+                                drop table if exists userclaims; drop view if exists userclaims; create view userclaims as select * from btrc_cas.userclaims;
+                                drop table if exists userlogins; drop view if exists userlogins; create view userlogins as select * from btrc_cas.userlogins;
+                                drop table if exists userroles; drop view if exists userroles; create view userroles as select * from btrc_cas.userroles;
+                                drop table if exists users; drop view if exists users; create view users as select * from btrc_cas.users;
                                 drop table if exists temp_route;                                
                                 create table temp_route as 
                                 select * from route;
