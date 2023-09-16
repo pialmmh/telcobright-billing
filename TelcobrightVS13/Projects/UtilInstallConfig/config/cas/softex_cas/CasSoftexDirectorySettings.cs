@@ -27,9 +27,9 @@ namespace InstallConfig
             //***FILE LOCATIONS**********************************************
             //local/vault1: all app servers will use same local file location
             //the object "vault" will have a copy of below object for each app servers with server id as key and location as dictionary value
-            FileLocation vaultJslZteDhk = new FileLocation()
+            FileLocation vaultHuwaei = new FileLocation()
             {
-                Name = "Vault.JslZteDhk",//this is refered in ne table, name MUST start with "Vault"
+                Name = "Vault.Huwaei",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
@@ -51,7 +51,7 @@ namespace InstallConfig
                 Pass = "",
             };
 
-            this.Tbc.DirectorySettings.FileLocations.Add(vaultJslZteDhk.Name, vaultJslZteDhk);
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultHuwaei.Name, vaultHuwaei);
             this.Tbc.DirectorySettings.FileLocations.Add(vaultJslcataliyaDhk.Name, vaultJslcataliyaDhk);
            
             //add archive locations to CdrSettings

@@ -34,7 +34,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "F:/telcobright/vault/resources/cdr/imamnetwork/tdm",
+                StartingPath = @"F:\telcobright\vault\resources\cdr\imamNetwork\tdm",
                 User = "",
                 Pass = "",
             };
