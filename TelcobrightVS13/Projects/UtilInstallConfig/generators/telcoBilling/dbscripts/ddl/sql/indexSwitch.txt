@@ -1,2 +1,0 @@
-﻿ALTER TABLE `cdr` 
-ADD INDEX `ind_switchid` (`SwitchId` ASC);
