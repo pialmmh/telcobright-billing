@@ -71,7 +71,7 @@ public partial class DefaultRptDomesticWithLtfsIcx : System.Web.UI.Page
                 CheckBoxPartner.Checked==true?DropDownListPartner.SelectedIndex>0?" tup_inpartnerid="+DropDownListPartner.SelectedValue:string.Empty:string.Empty,
                 CheckBoxShowByAns.Checked==true?DropDownListAns.SelectedIndex>0?" tup_destinationId="+DropDownListAns.SelectedValue:string.Empty:string.Empty,
                 CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_outpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty,
-                CheckBoxViewIncomingRoute.Checked==true?DropDownListViewIncomingRoute.SelectedIndex>0?" tup_incomingroute="+"'"+DropDownListViewIncomingRoute.SelectedItem.Value:string.Empty:string.Empty,
+                //CheckBoxViewIncomingRoute.Checked==true?DropDownListViewIncomingRoute.SelectedIndex>0?$@" tup_incomingroute= '{DropDownListViewIncomingRoute.SelectedItem.Value}'":string.Empty :string.Empty+"'",                  
                 CheckBoxViewOutgoingRoute.Checked==true?DropDownListViewOutgoingRoute.SelectedIndex>0?" tup_outgoingroute="+DropDownListViewOutgoingRoute.SelectedItem.Value:string.Empty:string.Empty,
 
             }).getSQLString();
@@ -159,7 +159,7 @@ public partial class DefaultRptDomesticWithLtfsIcx : System.Web.UI.Page
 
 
         GridView1.Columns[GetColumnIndexByName(GridView1, "International Partner")].Visible = CheckBoxPartner.Checked;
-        GridView1.Columns[GetColumnIndexByName(GridView1, "tup_incomingroute")].Visible = CheckBoxViewIncomingRoute.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "icxName")].Visible = CheckBoxViewIncomingRoute.Checked;
         GridView1.Columns[GetColumnIndexByName(GridView1, "IGW")].Visible = CheckBoxShowByIgw.Checked;
         GridView1.Columns[GetColumnIndexByName(GridView1, "tup_outgoingroute")].Visible = CheckBoxViewOutgoingRoute.Checked;
         if (CheckBoxShowCost.Checked == true)
@@ -191,21 +191,40 @@ public partial class DefaultRptDomesticWithLtfsIcx : System.Web.UI.Page
             connection.Open();
 
             string sql = GetQuery();
-            Dictionary<string,string> dbVsDbName = AllDeploymenProfiles.getDeploymentprofiles().FindAll(p=>p.profileName=="cas")[0].UserVsDbName;
 
+          
+
+
+            //Dictionary<string, string> dbVsDbName = AllDeploymenProfiles.getDeploymentprofiles()
+            //    .FindAll(p => p.profileName == "cas")[0].UserVsDbName;
+            Dictionary<string, string> userVsDbName = tbc.DeploymentProfile.UserVsDbName;
 
 
             List<string> tableNames = new List<string>();
 
-            foreach (var db in dbVsDbName)
+
+      
+             String selectedIcxName =  CheckBoxViewIncomingRoute.Checked == true? DropDownListViewIncomingRoute.SelectedIndex > 0 ? $@"{DropDownListViewIncomingRoute.SelectedItem.Value}" : string.Empty : string.Empty ;
+
+            if (selectedIcxName == String.Empty)
             {
-                if (!db.Value.Contains("btrc"))
+                foreach (var db in userVsDbName)
                 {
-                    tableNames.Add(db.Value+ ".sum_voice_day_01");
-                    tableNames.Add(db.Value + ".sum_voice_day_04");
+                    if (!db.Value.Contains("btrc"))
+                    {
+                        tableNames.Add(db.Value + ".sum_voice_day_01");
+                        tableNames.Add(db.Value + ".sum_voice_day_04");
+                    }
+
                 }
-                   
             }
+            else
+            {
+                tableNames.Add(selectedIcxName  + ".sum_voice_day_01");
+                tableNames.Add(selectedIcxName  + ".sum_voice_day_04");
+            }
+
+            
 
             //use sql aggregator
             SqlAggregator sqlAggregator =
@@ -688,12 +707,20 @@ public partial class DefaultRptDomesticWithLtfsIcx : System.Web.UI.Page
         {
             if (DropDownListPartner.SelectedValue == "-1")
             {
-                using (PartnerEntities contex = new PartnerEntities())
+                using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(tbc.DatabaseSetting))
                 {
-                    List<int> ansList = contex.partners.Where(c => c.PartnerType == 2).Select(c => c.idPartner).ToList();
-                    foreach (route route in contex.routes.Where(x => ansList.Contains(x.idPartner)))
+                    //List<int> ansList = contex.partners.Where(c => c.PartnerType == 2).Select(c => c.idPartner).ToList();
+                    //foreach (route route in contex.routes.Where(x => ansList.Contains(x.idPartner)))
+                    //{
+                    //    DropDownListViewIncomingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
+                    //}
+                    foreach (var kv in tbc.DeploymentProfile.UserVsDbName)
                     {
-                        DropDownListViewIncomingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
+                        string username = kv.Key;
+                        string dbNameAsRouteName = kv.Value;
+                        string icxName = dbNameAsRouteName.Split('_')[0];
+                        DropDownListViewIncomingRoute.Items.Add(new ListItem(icxName, dbNameAsRouteName));
+
                     }
                 }
             }
