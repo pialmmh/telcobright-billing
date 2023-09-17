@@ -561,6 +561,7 @@
     <Content Include="config\banglatelecom\tmplPortalWebSite.txt" />
     <Content Include="generators\telcoBilling\dbscripts\ddl\sql\indexSwitch.txt" />
     <Content Include="generators\telcoBilling\dbscripts\ddl\sql\icxSp.sql" />
+    <Content Include="generators\telcoBilling\dbscripts\seedData\sql\huaweiFldTypesForMNH.sql" />
     <Content Include="generators\telcoBilling\dbscripts\seedData\sql\pointCodeAndIpAddr.sql" />
     <Content Include="TextFile1.txt" />
     <Content Include="generators\telcoBilling\dbscripts\quartzTables.sql" />

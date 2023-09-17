@@ -17,12 +17,12 @@ namespace Decoders
     public class HuaweiSoftx3000Decoder : IFileDecoder
     {
         public override string ToString() => this.RuleName;
-        public string RuleName => GetType().Name;
-        public int Id => 3;
-        public string HelpText => "Decodes Huawei Softx3000 CDR.";
-        public CompressionType CompressionType { get; set; }
+        public virtual string RuleName => GetType().Name;
+        public virtual int Id => 3;
+        public virtual string HelpText => "Decodes Huawei Softx3000 CDR.";
+        public virtual CompressionType CompressionType { get; set; }
 
-        public List<string[]> DecodeFile(CdrCollectorInputData input,out List<cdrinconsistent> inconsistentCdrs)
+        public virtual List<string[]> DecodeFile(CdrCollectorInputData input,out List<cdrinconsistent> inconsistentCdrs)
         {
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();

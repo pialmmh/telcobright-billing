@@ -72,7 +72,7 @@ namespace TelcobrightMediation
                     route outGoingRoute = null;
                     dicRoutes.TryGetValue(key, out outGoingRoute);
 
-                    if (outGoingRoute.partner.PartnerType == IcxPartnerType.ANS &&
+                    if (outGoingRoute?.partner.PartnerType == IcxPartnerType.ANS &&
                         incomingRoute.partner.PartnerType == IcxPartnerType.IOS) //ANS and route=national
                     {
                         thisCdr.ServiceGroup = 3; //Int incoming call
