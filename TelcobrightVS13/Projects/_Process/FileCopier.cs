@@ -51,13 +51,26 @@ namespace Process
                 string doubleQuote = Convert.ToChar(34).ToString();
                 string syncPairNameAsJobNamePrefix =
                     $"{{{"SyncPairName".EncloseWith(doubleQuote)}:{syncPair.Name.EncloseWith(doubleQuote)}";
-                bool incompleteExists =
-                    context.jobs.Any(c => c.Status != 1 && jobDefsForThisQueue.Contains(c.idjobdefinition)
-                                            && c.JobParameter.StartsWith(syncPairNameAsJobNamePrefix));
+                //bool incompleteExists =
+                //    context.jobs.Any(c => c.Status != 1 && jobDefsForThisQueue.Contains(c.idjobdefinition)
+                //                            && c.JobParameter.StartsWith(syncPairNameAsJobNamePrefix));
+
+                bool incompleteExists= context.Database.SqlQuery<job>(
+                    $@"select * from job 
+                    where status!=1 and idjobdefinition in({string.Join(",", jobDefsForThisQueue)}) 
+                    and jobparameter like '{syncPairNameAsJobNamePrefix}%' limit 0,1;").ToList().Any();
+
                 if (incompleteExists == false) return; //there is no job, just exit.
-                List<job> lstIncomplete = context.jobs
-                    .Where(c => c.Status != 1 && jobDefsForThisQueue.Contains(c.idjobdefinition)
-                                && c.JobParameter.StartsWith(syncPairNameAsJobNamePrefix)).ToList();
+                
+                //List<job> lstIncomplete = context.jobs
+                //    .Where(c => c.Status != 1 && jobDefsForThisQueue.Contains(c.idjobdefinition)
+                //                && c.JobParameter.StartsWith(syncPairNameAsJobNamePrefix)).ToList();
+
+                List<job> lstIncomplete = context.Database.SqlQuery<job>(
+                    $@"select * from job 
+                    where status!=1 and idjobdefinition in({string.Join(",", jobDefsForThisQueue)}) 
+                    and jobparameter like '{syncPairNameAsJobNamePrefix}%';").ToList();
+
                 if (tbc.CdrSetting.DescendingOrderWhileListingFiles == true)
                 {
                     lstIncomplete = lstIncomplete.OrderBy(c => c.priority).ThenByDescending(c => c.JobName)

@@ -113,8 +113,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "stringExpressionGenerator",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortalBTRC", "PortalBTRC\PortalBTRC.csproj", "{F08B348E-A3A1-4C38-9C6B-11C4B13CD968}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CasTelcobright", "CasTelcobright\CasTelcobright.csproj", "{F8AA8B33-A8F7-45B1-ADA6-47E2CAAE785E}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -824,22 +822,6 @@ Global
 		{F08B348E-A3A1-4C38-9C6B-11C4B13CD968}.Release|x64.Build.0 = Release|Any CPU
 		{F08B348E-A3A1-4C38-9C6B-11C4B13CD968}.Release|x86.ActiveCfg = Release|Any CPU
 		{F08B348E-A3A1-4C38-9C6B-11C4B13CD968}.Release|x86.Build.0 = Release|Any CPU
-		{F8AA8B33-A8F7-45B1-ADA6-47E2CAAE785E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F8AA8B33-A8F7-45B1-ADA6-47E2CAAE785E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F8AA8B33-A8F7-45B1-ADA6-47E2CAAE785E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{F8AA8B33-A8F7-45B1-ADA6-47E2CAAE785E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{F8AA8B33-A8F7-45B1-ADA6-47E2CAAE785E}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{F8AA8B33-A8F7-45B1-ADA6-47E2CAAE785E}.Debug|x64.Build.0 = Debug|Any CPU
-		{F8AA8B33-A8F7-45B1-ADA6-47E2CAAE785E}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{F8AA8B33-A8F7-45B1-ADA6-47E2CAAE785E}.Debug|x86.Build.0 = Debug|Any CPU
-		{F8AA8B33-A8F7-45B1-ADA6-47E2CAAE785E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F8AA8B33-A8F7-45B1-ADA6-47E2CAAE785E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F8AA8B33-A8F7-45B1-ADA6-47E2CAAE785E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{F8AA8B33-A8F7-45B1-ADA6-47E2CAAE785E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{F8AA8B33-A8F7-45B1-ADA6-47E2CAAE785E}.Release|x64.ActiveCfg = Release|Any CPU
-		{F8AA8B33-A8F7-45B1-ADA6-47E2CAAE785E}.Release|x64.Build.0 = Release|Any CPU
-		{F8AA8B33-A8F7-45B1-ADA6-47E2CAAE785E}.Release|x86.ActiveCfg = Release|Any CPU
-		{F8AA8B33-A8F7-45B1-ADA6-47E2CAAE785E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

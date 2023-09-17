@@ -39,7 +39,7 @@ namespace TelcobrightMediation.Config
 
                     break;
                 case "PartnerEntities":
-                    constr = $"metadata=res://*/PartnerModel.csdl|res://*/PartnerModel.ssdl|res://*/PartnerModel.msl;provider=MySql.Data.MySqlClient;provider connection string=\"server = {dbSettings.ServerName}; user id = {dbSettings.AdminUserName}; password = {dbSettings.AdminPassword};persistsecurityinfo=True;Convert Zero Datetime=True;default command timeout=300;database={dbSettings.DatabaseName}\"";
+                    constr = $"metadata=res://*/PartnerModel.csdl|res://*/PartnerModel.ssdl|res://*/PartnerModel.msl;provider=MySql.Data.MySqlClient;provider connection string=\"server = {dbSettings.ServerName}; user id = {dbSettings.AdminUserName}; password = {dbSettings.AdminPassword};persistsecurityinfo=True;Convert Zero Datetime=True;default command timeout=600;database={dbSettings.DatabaseName}\"";
                     break;
             }
 
