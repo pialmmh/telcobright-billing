@@ -36,6 +36,8 @@ namespace WS_Telcobright_Topshelf
         public static MefCollectiveAssemblyComposer mefColllectiveAssemblyComposer { get; set; }
         public static MefProcessContainer mefProcessContainer { get; set; }
         private TBConsole tbConsole { get; set; }
+        
+
         private static string getLogFileName()
         {
             var binPath = System.IO.Path.GetDirectoryName(
@@ -45,10 +47,10 @@ namespace WS_Telcobright_Topshelf
             return logFileName;
         }
 
-        public Telcobright2(string configFileName)
+        public Telcobright2(string configFileName, Action<string> callbackFromUI)
         {
             this.ConfigFileName = configFileName;
-            this.tbConsole = new TBConsole(configFileName);
+            this.tbConsole = new TBConsole(configFileName, callbackFromUI);
         }
         static string getLastGeneratedConfigFileName()
         {
@@ -60,9 +62,10 @@ namespace WS_Telcobright_Topshelf
         }
 
         //Func<> consoleCallBack
-        public void run(ConsoleRedirector consoleRedirector)
+        //public void run(ConsoleRedirector consoleRedirector)
+        public void run()
         {
-            Console.SetOut(consoleRedirector);
+            //Console.SetOut(consoleRedirector);
             int i = 0;
             while (i < 5)
             {
