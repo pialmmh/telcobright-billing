@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using CasTelcobright.Forms;
 using LibraryExtensions;
 using WS_Telcobright_Topshelf;
-
+using TelcobrightInfra;
 namespace CasTelcobright
 {
     public class ProcessWrapper
@@ -16,7 +16,7 @@ namespace CasTelcobright
         public string instanceName;
         private Telcobright2 telcobright;
         private Thread thread;
-
+        
         public ProcessWrapper(string instanceName, Action<string> callbackFromUI)
         {
             this.instanceName = instanceName;
@@ -49,5 +49,6 @@ namespace CasTelcobright
         }
 
         
+
     }
 }

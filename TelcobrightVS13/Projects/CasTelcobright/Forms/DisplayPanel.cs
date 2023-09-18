@@ -63,6 +63,14 @@ namespace CasTelcobright.Forms
                 lastExceptionTime = DateTime.Now;
                 ProcessState = ProcessState.Alarm;
             }
+            else if (outputFromConsole.ToLower().Contains("errorCount"))
+            {
+                string[] errorArray = outputFromConsole.Split('=');
+                if (int.Parse(errorArray[1]) > 0)
+                {
+                    ProcessState = ProcessState.Alarm;
+                }
+            }
             else
             {
                 TimeSpan timeDifference = DateTime.Now - lastExceptionTime;

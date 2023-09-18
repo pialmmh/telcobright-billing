@@ -8,6 +8,7 @@ using MediationModel;
 using Quartz;
 using QuartzTelcobright;
 using System.Configuration;
+using System.Data;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
@@ -18,6 +19,7 @@ using QuartzTelcobright.MefComposers;
 using QuartzTelcobright.PropertyGen;
 using TelcobrightMediation.Config;
 using LibraryExtensions;
+using MySql.Data.MySqlClient;
 using TelcobrightInfra;
 
 namespace WS_Telcobright_Topshelf
@@ -36,7 +38,11 @@ namespace WS_Telcobright_Topshelf
         public static MefCollectiveAssemblyComposer mefColllectiveAssemblyComposer { get; set; }
         public static MefProcessContainer mefProcessContainer { get; set; }
         private TBConsole tbConsole { get; set; }
-        
+        private Timer timer;
+        private TimerCallback timerCallback;
+        private int intervalInMilliseconds = 2000; //5 * 60 * 1000;
+        private MySqlConnection Con { get; set;}
+        private string conStr;
 
         private static string getLogFileName()
         {
@@ -51,7 +57,40 @@ namespace WS_Telcobright_Topshelf
         {
             this.ConfigFileName = configFileName;
             this.tbConsole = new TBConsole(configFileName, callbackFromUI);
+            this.timerCallback = new TimerCallback(ErrorCheck);
+            this.timer = new Timer(timerCallback, null, 0, intervalInMilliseconds);
+            this.conStr = "server=adfadf; database= adfadf; ";
         }
+
+        private void ErrorCheck(object state)
+        {
+            string msg = "Checking Error at: " + DateTime.Now;
+            tbConsole.WriteLine(msg);
+            //DbUtil.getDbConStrWithDatabase(this.instanceName)
+            using (MySqlConnection con= new MySqlConnection(conStr))
+            {
+                try
+                {
+                    if (this.Con.State != ConnectionState.Open) this.Con.Open();
+                    string sql = "select count(*) as errorCount from allerror;";
+                    using (MySqlCommand command = new MySqlCommand(sql, con))
+                    {
+                        long count = (long)command.ExecuteScalar();
+                        tbConsole.WriteLine($"errorCount={count}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex.Message}");
+                }
+                finally
+                {
+                    con.Close();
+                }
+            }
+
+        }
+
         static string getLastGeneratedConfigFileName()
         {
             string execPath = FileAndPathHelper.GetCurrentExecPath();
