@@ -494,6 +494,11 @@
     <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="ICX Reports\Cas ICX\CasDomestic.aspx" />
+    <Content Include="ICX Reports\Cas ICX\CasDomesticWithLtfs.aspx" />
+    <Content Include="ICX Reports\Cas ICX\CasInternationalIn_ICX.aspx" />
+    <Content Include="ICX Reports\Cas ICX\CasInternationalOut _ICX.aspx" />
+    <Content Include="ICX Reports\Cas ICX\CasLocalTollFree.aspx" />
     <Content Include="img\background.png" />
     <Content Include="img\background_old.png" />
     <Content Include="img\BTRC.png" />
@@ -870,6 +875,41 @@
       <DependentUpon>Dashboard.aspx</DependentUpon>
     </Compile>
     <Compile Include="Handler\PdfHandler.cs" />
+    <Compile Include="ICX Reports\Cas ICX\CasDomestic.aspx.cs">
+      <DependentUpon>CasDomestic.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ICX Reports\Cas ICX\CasDomestic.aspx.designer.cs">
+      <DependentUpon>CasDomestic.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ICX Reports\Cas ICX\CasDomesticWithLtfs.aspx.cs">
+      <DependentUpon>CasDomesticWithLtfs.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ICX Reports\Cas ICX\CasDomesticWithLtfs.aspx.designer.cs">
+      <DependentUpon>CasDomesticWithLtfs.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ICX Reports\Cas ICX\CasInternationalIn_ICX.aspx.cs">
+      <DependentUpon>CasInternationalIn_ICX.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ICX Reports\Cas ICX\CasInternationalIn_ICX.aspx.designer.cs">
+      <DependentUpon>CasInternationalIn_ICX.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ICX Reports\Cas ICX\CasInternationalOut _ICX.aspx.cs">
+      <DependentUpon>CasInternationalOut _ICX.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ICX Reports\Cas ICX\CasInternationalOut _ICX.aspx.designer.cs">
+      <DependentUpon>CasInternationalOut _ICX.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ICX Reports\Cas ICX\CasLocalTollFree.aspx.cs">
+      <DependentUpon>CasLocalTollFree.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ICX Reports\Cas ICX\CasLocalTollFree.aspx.designer.cs">
+      <DependentUpon>CasLocalTollFree.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\InvoiceHelper.cs" />
     <Compile Include="ReportHelper\AbstractSqlHelper.cs" />

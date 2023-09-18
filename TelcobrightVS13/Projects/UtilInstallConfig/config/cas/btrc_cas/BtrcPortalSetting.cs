@@ -248,7 +248,11 @@ namespace InstallConfig
                                     "nodes['Settings'].Expanded=true",
                                     "nodes['Billing Reports'].Expanded=true",
                                     "nodes['Reports/IGW'].Expanded=false",
-                                    "nodes['Reports/Transit'].Expanded=false"
+                                    "nodes['Reports/Transit'].Expanded=false",
+                                    "nodes['Individual ICX Report'].Expanded=true",
+                                    "nodes['Individual ICX Report/ICX'].Expanded=true"
+                                    
+
                                 },
                                 SpringExpressionIfNotRole = new List<string>()
                                 {
@@ -258,7 +262,10 @@ namespace InstallConfig
                                     "nodes['Settings'].Expanded=false",
                                     "nodes['Billing Reports'].Expanded=false",
                                     "nodes['Reports/IGW'].Expanded=false",
-                                    "nodes['Reports/Transit'].Expanded=false"
+                                    "nodes['Reports/Transit'].Expanded=false",
+                                    "nodes['Individual ICX Report'].Expanded=true",
+                                    "nodes['Individual ICX Report/ICX'].Expanded=true"
+                                    
                                 }
                             },
                             new SettingByRoles()
@@ -275,7 +282,10 @@ namespace InstallConfig
                                     "nodes['Settings'].Expanded=true",
                                     "nodes['Billing Reports'].Expanded=true",
                                     "nodes['Reports/IGW'].Expanded=false",
-                                    "nodes['Reports/Transit'].Expanded=false"
+                                    "nodes['Reports/Transit'].Expanded=false",
+                                    "nodes['Individual ICX Report'].Expanded=true",
+                                    "nodes['Individual ICX Report/ICX'].Expanded=true"
+                                    
                                 },
                                 SpringExpressionIfNotRole = new List<string>()
                                 {

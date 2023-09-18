@@ -199,8 +199,20 @@ border-bottom-style:ridge;min-width:180px;padding-top:10px;">
 
       
 
+      </asp:TreeNode>
+
+      <asp:TreeNode Value="Individual ICX Report" Expanded="True" Text="Individual ICX Report" SelectAction="None">
+
+        <asp:TreeNode Value="ICX" Expanded="True" Text="ICX" SelectAction="None">
+            <asp:TreeNode Value="Domestic" Text="Domestic" SelectAction="Select" NavigateUrl="~/reports/transit/LocalTransit.aspx"> </asp:TreeNode>
+            <asp:TreeNode Value="Intl. Incoming" Text="Intl. Incoming" SelectAction="Select" NavigateUrl="~/reports/transit/InternationalInTransit.aspx"> </asp:TreeNode>
+            <asp:TreeNode Value="Intl. Outgoing" Text="Intl. Outgoing" SelectAction="Select" NavigateUrl="~/reports/transit/InternationalOutTransit.aspx"> </asp:TreeNode>
+            <%-- <asp:TreeNode Value="Toll Free" Text="Toll Free" SelectAction="Select" NavigateUrl="~/reports/transit/LocalTollFree.aspx"> </asp:TreeNode>
+            <asp:TreeNode Value="Alphatech Premium" Text="Alphatech Premium" SelectAction="Select" NavigateUrl="~/reports/transit/AlphatechPremium.aspx"> </asp:TreeNode>--%>
+
         </asp:TreeNode>
 
+      </asp:TreeNode>
 
       <asp:TreeNode Value="Billing Reports" Expanded="True" Text="Billing Reports" SelectAction="None">
       
