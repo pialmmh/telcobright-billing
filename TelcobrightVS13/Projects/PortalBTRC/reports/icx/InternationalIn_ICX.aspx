@@ -590,7 +590,8 @@
                     <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                     <Columns>
                         <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" ItemStyle-Wrap="false" />
-                        <asp:BoundField DataField="tup_incomingroute" HeaderText="ICX" SortExpression="tup_incomingroute" />
+                        <%--<asp:BoundField DataField="tup_incomingroute" HeaderText="ICX" SortExpression="tup_incomingroute" />--%>
+                        <asp:BoundField DataField="icxName" HeaderText="ICX" SortExpression="IcxName" />
                         <asp:BoundField DataField="International Partner" HeaderText="IOS" SortExpression="International Partner" />
                         <asp:BoundField DataField="IGW" HeaderText="ANS" SortExpression="ANS"  Visible="false"/>
                         <asp:BoundField DataField="tup_outgoingroute" HeaderText="Outgoing Route" SortExpression="tup_outgoingroute" />

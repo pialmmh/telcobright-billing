@@ -726,12 +726,20 @@ public partial class DefaultRptDomesticWithLtfsIcx : System.Web.UI.Page
             }
             else
             {
-                using (PartnerEntities contex = new PartnerEntities())
+                using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(tbc.DatabaseSetting))
                 {
-                    int idPartner = Convert.ToInt32(DropDownListPartner.SelectedValue);
-                    foreach (route route in contex.routes.Where(x => x.idPartner == idPartner))
+                    //int idPartner = Convert.ToInt32(DropDownListPartner.SelectedValue);
+                    //foreach (route route in contex.routes.Where(x => x.idPartner == idPartner))
+                    //{
+                    //    DropDownListViewIncomingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
+                    //}
+                    foreach (var kv in tbc.DeploymentProfile.UserVsDbName)
                     {
-                        DropDownListViewIncomingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
+                        string username = kv.Key;
+                        string dbNameAsRouteName = kv.Value;
+                        string icxName = dbNameAsRouteName.Split('_')[0];
+                        DropDownListViewIncomingRoute.Items.Add(new ListItem(icxName, dbNameAsRouteName));
+
                     }
                 }
             }

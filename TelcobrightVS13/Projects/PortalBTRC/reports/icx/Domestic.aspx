@@ -477,8 +477,18 @@
                     <div style="text-align: left;">
 
                         <div style="float: left; height: 25px; min-width: 1285px;">
-
                             <div style="float: left;">
+                                View by ICX: 
+                                <asp:CheckBox ID="CheckBoxViewIncomingRoute" runat="server" AutoPostBack="True"
+                                              OnCheckedChanged="CheckBoxViewIncomingRoute_CheckedChanged" Checked="False" />
+                       
+                                <asp:DropDownList ID="DropDownListViewIncomingRoute" runat="server"
+                                                  Enabled="False">
+                                </asp:DropDownList>
+
+                            </div>
+                            
+                            <div style="float: left; margin-left: 15px;">
                                 View by Incoming ANS: 
                                 <asp:CheckBox ID="CheckBoxPartner" runat="server" AutoPostBack="True"
                                               OnCheckedChanged="CheckBoxShowByPartner_CheckedChanged" Checked="True" />
@@ -488,6 +498,7 @@
                                 </asp:DropDownList>
 
                             </div>
+
                             <div style="float: left; margin-left: 15px;">
                                 <%--View by ANS: --%>
                                 <asp:CheckBox ID="CheckBoxShowByAns" runat="server" AutoPostBack="True"
@@ -498,7 +509,7 @@
 
                             </div>
 
-                            <div style="float: left; margin-left: 18px;">
+                           <%-- <div style="float: left; margin-left: 18px;">
                                 View by Outgoing ANS:
                                 <asp:CheckBox ID="CheckBoxShowByIgw" runat="server"
                                               AutoPostBack="True" OnCheckedChanged="CheckBoxShowByIgw_CheckedChanged" Checked="false" />
@@ -506,7 +517,7 @@
                                                   Enabled="False" AutoPostBack="True">
                                 </asp:DropDownList>
 
-                            </div>
+                            </div>--%>
                             &nbsp;&nbsp;
 
                             <div style="width: 750px; padding-left: 28px;">
@@ -529,8 +540,19 @@
                     <div style="text-align: left;">
 
                         <div style="float: left; height: 25px; min-width: 1285px;">
-
+                            
                             <div style="float: left;">
+                                View by Outgoing ANS:
+                                <asp:CheckBox ID="CheckBoxShowByIgw" runat="server"
+                                              AutoPostBack="True" OnCheckedChanged="CheckBoxShowByIgw_CheckedChanged" Checked="false" />
+                                <asp:DropDownList ID="DropDownListIgw" runat="server" OnSelectedIndexChanged="DropDownListIgw_OnSelectedIndexChanged"
+                                                  Enabled="False" AutoPostBack="True">
+                                </asp:DropDownList>
+
+                            </div>
+                            
+
+                            <%--<div style="float: left;">
                                 View by ICX: 
                                 <asp:CheckBox ID="CheckBoxViewIncomingRoute" runat="server" AutoPostBack="True"
                                               OnCheckedChanged="CheckBoxViewIncomingRoute_CheckedChanged" Checked="False" />
@@ -539,7 +561,7 @@
                                                   Enabled="False">
                                 </asp:DropDownList>
 
-                            </div>
+                            </div>--%>
 
                             <div style="float: left; margin-left: 18px;">
                                 View by Outgoing Route:
@@ -597,7 +619,8 @@
                     <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                     <Columns>
                         <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date"  ItemStyle-Wrap="false" />   
-                         <asp:BoundField DataField="tup_incomingroute" HeaderText="ICX" SortExpression="tup_incomingroute" />                
+                         <%--<asp:BoundField DataField="tup_incomingroute" HeaderText="ICX" SortExpression="tup_incomingroute" />--%> 
+                        <asp:BoundField DataField="icxName" HeaderText="ICX" SortExpression="IcxName" />               
                         <asp:BoundField DataField="International Partner" HeaderText="Incoming ANS" SortExpression="International Partner" />                     
                         <asp:BoundField DataField="IGW" HeaderText="Outgoing ANS" SortExpression="IGW" />
                         <asp:BoundField DataField="tup_outgoingroute" HeaderText="Outgoing Route" SortExpression="tup_outgoingroute" />

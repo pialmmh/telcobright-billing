@@ -13,6 +13,7 @@ using MediationModel;
 using LibraryExtensions;
 using PortalApp;
 using PortalApp.ReportHelper;
+using TelcobrightInfra;
 using TelcobrightMediation;
 
 public partial class DefaultRptIntlInIcx : System.Web.UI.Page
@@ -40,7 +41,7 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
                 break;
 
         }
-        tableName = tbc.DatabaseSetting.DatabaseName + "." + tableName;
+        //tableName = tbc.DatabaseSetting.DatabaseName + "." + tableName;
         string constructedSQL = new SqlHelperIntlInICXv2
                         (StartDate,
                          EndtDate,
@@ -64,7 +65,7 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
                                 CheckBoxPartner.Checked==true?DropDownListPartner.SelectedIndex>0?" tup_inpartnerid="+DropDownListPartner.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxShowByAns.Checked==true?DropDownListAns.SelectedIndex>0?" tup_destinationId="+DropDownListAns.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_outpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty,
-                                CheckBoxViewIncomingRoute.Checked==true?DropDownListViewIncomingRoute.SelectedIndex>0?" tup_incomingroute="+"'"+DropDownListViewIncomingRoute.SelectedItem.Value.Split('_')[0].Trim().ToString().Split('_')[0].Trim().ToString()+"'":string.Empty:string.Empty,
+                                //CheckBoxViewIncomingRoute.Checked==true?DropDownListViewIncomingRoute.SelectedIndex>0?" tup_incomingroute="+"'"+DropDownListViewIncomingRoute.SelectedItem.Value.Split('_')[0].Trim().ToString().Split('_')[0].Trim().ToString()+"'":string.Empty:string.Empty,
                                 CheckBoxViewOutgoingRoute.Checked==true?DropDownListViewOutgoingRoute.SelectedIndex>0?" tup_outgoingroute="+DropDownListViewOutgoingRoute.SelectedItem.Value:string.Empty:string.Empty,
                             }).getSQLString();
 
@@ -78,13 +79,13 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
         {
             case "Hourly":
             case "Daily":
-                return "tup_starttime";
+                return "Date";
             case "Weekly":
-                return "concat(year(tup_starttime),'-W',week(tup_starttime))";
+                return "concat(year(Date),'-W',week(Date))";
             case "Monthly":
-                return "concat(year(tup_starttime),'-',date_format(tup_starttime,'%b'))";
+                return "concat(year(Date),'-',date_format(Date,'%b'))";
             case "Yearly":
-                return "DATE_FORMAT(tup_starttime,'%Y')";
+                return "DATE_FORMAT(Date,'%Y')";
             default:
                 return string.Empty;
         }
@@ -150,7 +151,7 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
         */
 
         GridView1.Columns[GetColumnIndexByName(GridView1, "International Partner")].Visible = CheckBoxPartner.Checked;
-        GridView1.Columns[GetColumnIndexByName(GridView1, "tup_incomingroute")].Visible = CheckBoxViewIncomingRoute.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "icxName")].Visible = CheckBoxViewIncomingRoute.Checked;
         GridView1.Columns[GetColumnIndexByName(GridView1, "ANS")].Visible = CheckBoxShowByIgw.Checked;
         GridView1.Columns[GetColumnIndexByName(GridView1, "tup_outgoingroute")].Visible = CheckBoxViewOutgoingRoute.Checked;
         GridView1.Columns[5].Visible = false;
@@ -184,18 +185,70 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
             connection.ConnectionString = ConfigurationManager.ConnectionStrings["reader"].ConnectionString;
 
             connection.Open();
-           
-            MySqlCommand cmd = new MySqlCommand(GetQuery(), connection);
 
-            cmd.Connection = connection; 
-            if (CheckBoxDailySummary.Checked == false)
+            string sql = GetQuery();
+
+
+
+
+            //Dictionary<string, string> dbVsDbName = AllDeploymenProfiles.getDeploymentprofiles()
+            //    .FindAll(p => p.profileName == "cas")[0].UserVsDbName;
+            Dictionary<string, string> userVsDbName = tbc.DeploymentProfile.UserVsDbName;
+
+
+            List<string> tableNames = new List<string>();
+
+
+
+            String selectedIcxName = CheckBoxViewIncomingRoute.Checked == true ? DropDownListViewIncomingRoute.SelectedIndex > 0 ? $@"{DropDownListViewIncomingRoute.SelectedItem.Value}" : string.Empty : string.Empty;
+
+            if (selectedIcxName == String.Empty)
             {
+                foreach (var db in userVsDbName)
+                {
+                    if (!db.Value.Contains("btrc"))
+                    {
+                        tableNames.Add(db.Value + ".sum_voice_day_03");
+                        //tableNames.Add(db.Value + ".sum_voice_day_04");
+                    }
 
-                GridView1.Columns[0].Visible = false;
+                }
             }
             else
             {
-                GridView1.Columns[0].Visible = true;
+                tableNames.Add(selectedIcxName + ".sum_voice_day_03");
+                //tableNames.Add(selectedIcxName + ".sum_voice_day_04");
+            }
+
+            SqlAggregator sqlAggregator =
+                new SqlAggregator(nonUnionSql: sql.Replace("sum_voice_day_03", "<basetable>").Replace("sum_voice_hr_03", "<basetable>"),
+                    tableNames: tableNames,
+                    _baseSqlStartsWith: "(",
+                    _baseSqlEndsWith: ") x");
+            string aggregatedSql = sqlAggregator.getFinalSql();
+
+            MySqlCommand cmd = new MySqlCommand(aggregatedSql, connection);
+
+            cmd.Connection = connection;
+            //if (CheckBoxDailySummary.Checked == false)
+            //{
+
+            //    GridView1.Columns[0].Visible = false;
+            //}
+            //else
+            //{
+            //    GridView1.Columns[0].Visible = true;
+
+            //}
+
+            if (CheckBoxDailySummary.Checked == false)
+            {
+                GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].Visible = false;
+            }
+            else
+            {
+                GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].Visible = true;
+
 
             }
 
@@ -213,27 +266,27 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
                 if (RadioButtonHourly.Checked == true)
                 {
                     summaryInterval = "Hourly";
-                    GridView1.Columns[0].HeaderText = "Hour";
+                    GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].HeaderText = "Hour";
                 }
                 else if (RadioButtonDaily.Checked == true)
                 {
                     summaryInterval = "Daily";
-                    GridView1.Columns[0].HeaderText = "Date";
+                    GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].HeaderText = "Date";
                 }
                 else if (RadioButtonWeekly.Checked == true)
                 {
                     summaryInterval = "Weekly";
-                    GridView1.Columns[0].HeaderText = "Week";
+                    GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].HeaderText = "Week";
                 }
                 else if (RadioButtonMonthly.Checked == true)
                 {
                     summaryInterval = "Monthly";
-                    GridView1.Columns[0].HeaderText = "Month";
+                    GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].HeaderText = "Month";
                 }
                 else if (RadioButtonYearly.Checked == true)
                 {
                     summaryInterval = "Yearly";
-                    GridView1.Columns[0].HeaderText = "Year";
+                    GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].HeaderText = "Year";
                 }
             }
                 MySqlDataAdapter da = new MySqlDataAdapter(cmd);
@@ -679,10 +732,18 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
             {
                 using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(tbc.DatabaseSetting))
                 {
-                    int idPartner = Convert.ToInt32(DropDownListPartner.SelectedValue);
-                    foreach (route route in contex.routes.Where(x => x.idPartner == idPartner))
+                    //int idPartner = Convert.ToInt32(DropDownListPartner.SelectedValue);
+                    //foreach (route route in contex.routes.Where(x => x.idPartner == idPartner))
+                    //{
+                    //    DropDownListViewIncomingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
+                    //}
+                    foreach (var kv in tbc.DeploymentProfile.UserVsDbName)
                     {
-                        DropDownListViewIncomingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
+                        string username = kv.Key;
+                        string dbNameAsRouteName = kv.Value;
+                        string icxName = dbNameAsRouteName.Split('_')[0];
+                        DropDownListViewIncomingRoute.Items.Add(new ListItem(icxName, dbNameAsRouteName));
+
                     }
                 }
             }

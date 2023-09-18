@@ -282,6 +282,24 @@ public partial class DefaultRptDomesticWithLtfsIcx {
     protected global::System.Web.UI.WebControls.RadioButton RadioButtonYearly;
     
     /// <summary>
+    /// CheckBoxViewIncomingRoute control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.CheckBox CheckBoxViewIncomingRoute;
+    
+    /// <summary>
+    /// DropDownListViewIncomingRoute control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList DropDownListViewIncomingRoute;
+    
+    /// <summary>
     /// CheckBoxPartner control.
     /// </summary>
     /// <remarks>
@@ -334,24 +352,6 @@ public partial class DefaultRptDomesticWithLtfsIcx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.DropDownList DropDownListIgw;
-    
-    /// <summary>
-    /// CheckBoxViewIncomingRoute control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.CheckBox CheckBoxViewIncomingRoute;
-    
-    /// <summary>
-    /// DropDownListViewIncomingRoute control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList DropDownListViewIncomingRoute;
     
     /// <summary>
     /// CheckBoxViewOutgoingRoute control.
