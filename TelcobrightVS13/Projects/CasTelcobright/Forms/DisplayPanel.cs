@@ -28,6 +28,7 @@ namespace CasTelcobright.Forms
         public DateTime lastExceptionTime = new DateTime(2800, 1, 1);
         private ExceptionHandler exceptionHandler;
         private IObserver Observer;
+        private int maxLines = 500;
         public DisplayPanel(string title)
         {
             this.exceptionHandler = new ExceptionHandler();
@@ -74,6 +75,11 @@ namespace CasTelcobright.Forms
             }
             this.richTextBox1.Invoke(new Action(() =>
             {
+                int lineCount = richTextBox1.Lines.Length;
+                if (lineCount > maxLines)
+                {
+                    richTextBox1.Clear();
+                }
                 this.richTextBox1.AppendText(outputFromConsole + Environment.NewLine);
                 this.richTextBox1.SelectionStart = richTextBox1.Text.Length;
                 richTextBox1.ScrollToCaret();
