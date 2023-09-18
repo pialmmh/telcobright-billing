@@ -98,7 +98,12 @@ namespace InstallConfig
                 Console.Clear();
                 Menu menu= new Menu(deploymentProfiles.Select(dp => dp.profileName).ToList(),
                     "Select a deployment profile to configure automation.","");
-                string selectedProfileName = menu.getSingleChoice();
+                bool quit = false;
+                string selectedProfileName = menu.getSingleChoice(out quit);
+                if(quit==true)
+                {
+                    Environment.Exit(0);
+                }
                 Deploymentprofile deploymentprofile = deploymentProfiles.First(p => p.profileName == selectedProfileName);
                 List<string> instanceNames = deploymentprofile.instances
                     .Where(i => i.Skip == false)

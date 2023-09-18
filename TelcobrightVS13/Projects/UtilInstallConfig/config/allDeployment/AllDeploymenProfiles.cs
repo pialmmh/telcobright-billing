@@ -139,7 +139,7 @@ namespace InstallConfig
                     {"teleexchange@telcobright.com", "teleexchange_cas"},
                     {"newgenerationtelecom@telcobright.com", "newgenerationtelecom_cas"},
                     {"mothertelecom@telcobright.com", "mothertelecom_cas"},
-                    {"teleplusnetwork@telcobright.com", "teleplusnetwork_cas"},
+                    {"teleplusnewyork@telcobright.com", "teleplusnewyork_cas"},
                     {"summit@telcobright.com", "summit_cas"},
                     {"voicetel@telcobright.com", "voicetel_cas"}
                 },
@@ -229,6 +229,11 @@ namespace InstallConfig
                     {
                         Name = "imamnetwork_cas",
                         SchedulerPortNo = 586
+                    },
+                    new InstanceConfig
+                    {
+                        Name = "teleplusnewyork_cas",
+                        SchedulerPortNo = 587
                     }
                 },
                 MySqlCluster = new MySqlCluster
@@ -401,7 +406,7 @@ namespace InstallConfig
                                         {
                                             MySqlPermissionType.execute,
                                             MySqlPermissionType.@select
-                                        }, "teleplusnetwork_cas"),
+                                        }, "teleplusnewyork_cas"),
                                     new MySqlPermission(
                                         new List<MySqlPermissionType>
                                         {

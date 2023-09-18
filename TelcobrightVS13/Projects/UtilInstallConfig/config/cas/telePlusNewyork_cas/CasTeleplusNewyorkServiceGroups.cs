@@ -19,7 +19,7 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class CasTeleplusNetworkAbstractConfigGenerator //quartz config part
+    public partial class CasTeleplusNewyorkAbstractConfigGenerator //quartz config part
     {
         public Dictionary<int, ServiceGroupConfiguration> GetServiceGroupConfigurations()
         {

@@ -21,9 +21,20 @@ namespace TelcobrightInfra
             this.AllChoicesIndicator = allChoicesIndicator.ToLower();
         }
 
+        public string getSingleChoice(out bool quit)
+        {
+            quit = false;
+            List<string> selectedItems = getChoices();//empty list = quit case
+            if (selectedItems.Any() == false)
+            {
+                quit = true;
+                return "";
+            }
+            return selectedItems.First();
+        }
         public string getSingleChoice()
         {
-            List<string> selectedItems = getChoices();
+            List<string> selectedItems = getChoices();//empty list = quit case
             return selectedItems.First();
         }
         public List<string> getChoices()
