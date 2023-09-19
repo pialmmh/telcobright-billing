@@ -282,22 +282,22 @@ public partial class DefaultRptIntlInIcx {
     protected global::System.Web.UI.WebControls.RadioButton RadioButtonYearly;
     
     /// <summary>
-    /// CheckBoxViewIncomingRoute control.
+    /// CheckBoxPartner control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.CheckBox CheckBoxViewIncomingRoute;
+    protected global::System.Web.UI.WebControls.CheckBox CheckBoxPartner;
     
     /// <summary>
-    /// DropDownListViewIncomingRoute control.
+    /// DropDownListPartner control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList DropDownListViewIncomingRoute;
+    protected global::System.Web.UI.WebControls.DropDownList DropDownListPartner;
     
     /// <summary>
     /// CheckBoxShowByAns control.
@@ -336,22 +336,22 @@ public partial class DefaultRptIntlInIcx {
     protected global::System.Web.UI.WebControls.DropDownList DropDownListIgw;
     
     /// <summary>
-    /// CheckBoxPartner control.
+    /// CheckBoxViewIncomingRoute control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.CheckBox CheckBoxPartner;
+    protected global::System.Web.UI.WebControls.CheckBox CheckBoxViewIncomingRoute;
     
     /// <summary>
-    /// DropDownListPartner control.
+    /// DropDownListViewIncomingRoute control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList DropDownListPartner;
+    protected global::System.Web.UI.WebControls.DropDownList DropDownListViewIncomingRoute;
     
     /// <summary>
     /// CheckBoxViewOutgoingRoute control.

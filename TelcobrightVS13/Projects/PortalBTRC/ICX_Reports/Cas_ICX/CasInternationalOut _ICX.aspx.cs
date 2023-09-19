@@ -17,7 +17,7 @@ using MediationModel;
 using PortalApp;
 using PortalApp.ReportHelper;
 
-public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
+public partial class CasDefaultRptIntlOutIcx : System.Web.UI.Page
 {
     DataTable _dt; bool _timerflag = false;
 

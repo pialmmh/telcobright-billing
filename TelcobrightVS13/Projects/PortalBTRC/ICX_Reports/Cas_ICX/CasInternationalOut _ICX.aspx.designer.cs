@@ -9,7 +9,7 @@
 
 
 
-public partial class DefaultRptIntlOutIcx {
+public partial class CasDefaultRptIntlOutIcx {
     
     /// <summary>
     /// DropDownListReportSource control.

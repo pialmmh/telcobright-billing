@@ -330,6 +330,18 @@ namespace InstallConfig
                     },
                     { "~/reports/icx/btrc/MonthlyOutgoingSummary.aspx",
                         settingIntlIn
+                    },
+                    {
+                        "~/ICX_Reports/Cas_ICX/CasDomestic.aspx",
+                        settingIntlIn
+                    },
+                    {
+                        "~/ICX_Reports/Cas_ICX/CasInternationalIn_ICX.aspx",
+                        settingIntlIn
+                    },
+                    {
+                        "~/ICX_Reports/Cas_ICX/CasInternationalOut _ICX.aspx",
+                        settingIntlIn
                     }
                 },//dictionary of page settings
 

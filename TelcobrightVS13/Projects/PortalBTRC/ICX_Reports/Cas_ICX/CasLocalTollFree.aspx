@@ -1,5 +1,5 @@
 ﻿<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="True"
-    CodeBehind="InternationalIn_ICX.aspx.cs" Inherits="DefaultRptIntlInIcx" %>
+    CodeBehind="CasLocalTollFree.aspx.cs" Inherits="CasDefaultRptLocalTollFree" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Import Namespace="MediationModel" %>
 <%@ Import Namespace="TelcobrightMediation" %>
@@ -16,7 +16,7 @@
 
         protected void Page_Load(object sender, EventArgs e)
         {
-             this.tbc = PageUtil.GetTelcobrightConfig();
+            TelcobrightConfig tbc = PageUtil.GetTelcobrightConfig();
             PageUtil.ApplyPageSettings(this, false, tbc);
             //common code for report pages
             //view state of ParamBorder div
@@ -84,9 +84,10 @@
                     commonCode.LoadReportTemplatesTree(ref masterTree);
                 }
 
-                using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(this.tbc.DatabaseSetting))
+                using (PartnerEntities contex = new PartnerEntities())
                 {
-                    var IOSList = contex.partners.Where(c => c.PartnerType == 3).ToList();
+                    //var IOSList = contex.partners.Where(c => c.PartnerType == 3).ToList();
+                    var IOSList = contex.partners.Where(c => c.PartnerType == 2).ToList();
 
                     DropDownListPartner.Items.Clear();
                     DropDownListPartner.Items.Add(new ListItem(" [All]", "-1"));
@@ -154,7 +155,7 @@
 
                 if (lblScreenTitle.Text == "")
                 {
-                    lblScreenTitle.Text = "Reports/Intl. Incoming/Traffic";
+                    lblScreenTitle.Text = "Reports/Domestic/Traffic";
                 }
                 //End of Site Map Part *******************************************************************
 
@@ -209,7 +210,7 @@
                 ClientScript.RegisterClientScriptBlock(this.GetType(), "Alert", script, true);
                 return;
             }
-            using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(this.tbc.DatabaseSetting))
+            using (PartnerEntities context = new PartnerEntities())
             {
                 if (context.reporttemplates.Any(c => c.Templatename == templateName))
                 {
@@ -341,11 +342,13 @@
          <asp:ListItem Value="sum_voice_hr_">Hour Wise</asp:ListItem>
         
      </asp:DropDownList>
-
+        
         View by Switch:
-        <asp:CheckBox ID="ViewBySwitch" AutoPostBack="True" runat="server" OnCheckedChanged="CheckBoxShowBySwitch_CheckedChanged" Checked="True"/>
+        <asp:CheckBox ID="ViewBySwitch" runat="server" AutoPostBack="True"
+                      OnCheckedChanged="CheckBoxShowBySwitch_CheckedChanged" Checked="True" />
         <asp:DropDownList ID="DropDownListShowBySwitch" runat="server" Visible="true" Enabled="True">
         </asp:DropDownList>
+
         <asp:Button ID="submit" runat="server" Text="Show Report" OnClick="submit_Click" OnClientClick="SethidValueSubmitClickFlag('true');" />
         <asp:Button ID="Button1" runat="server" OnClick="Button1_Click"
             Style="margin-left: 0px" Text="Export" Visible="False" />
@@ -368,7 +371,7 @@
         <ajaxToolkit:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server"></ajaxToolkit:ToolkitScriptManager>
 
     </div>
-    
+
     <asp:UpdatePanel runat="server">
         <ContentTemplate>
             <div id="ParamBorder" style="float: left; padding-top: 3px; padding-left: 10px; height: 155px; display: block; border: 2px ridge #E5E4E2; margin-bottom: 5px; width: 1300px;">
@@ -469,10 +472,10 @@
 
                     <div style="text-align: left;">
 
-                        <div style="float: left; height: 25px; min-width: 1285px;">
+                        <div style="float: left; height: 25px; min-width: 1400px;">
 
                             <div style="float: left;">
-                                View by IOS: 
+                                View by Incoming ANS: 
                                 <asp:CheckBox ID="CheckBoxPartner" runat="server" AutoPostBack="True"
                                               OnCheckedChanged="CheckBoxShowByPartner_CheckedChanged" Checked="True" />
                        
@@ -492,7 +495,7 @@
                             </div>
 
                             <div style="float: left; margin-left: 18px;">
-                                View by ANS:
+                                View by Outgoing ANS:
                                 <asp:CheckBox ID="CheckBoxShowByIgw" runat="server"
                                               AutoPostBack="True" OnCheckedChanged="CheckBoxShowByIgw_CheckedChanged" Checked="false" />
                                 <asp:DropDownList ID="DropDownListIgw" runat="server" OnSelectedIndexChanged="DropDownListIgw_OnSelectedIndexChanged"
@@ -523,7 +526,7 @@
                         <div style="float: left; height: 25px; min-width: 1285px;">
 
                             <div style="float: left;">
-                                View by ICX: 
+                                View by Incoming Route: 
                                 <asp:CheckBox ID="CheckBoxViewIncomingRoute" runat="server" AutoPostBack="True"
                                               OnCheckedChanged="CheckBoxViewIncomingRoute_CheckedChanged" Checked="False" />
                        
@@ -559,7 +562,6 @@
                 </div>
                 <%--End Div Partner***************************************************--%>
             </div>
-
         </ContentTemplate>
     </asp:UpdatePanel>
     <%--Param Border--%>
@@ -590,12 +592,11 @@
                     <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                     <Columns>
                         <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" ItemStyle-Wrap="false" />
-                        <%--<asp:BoundField DataField="tup_incomingroute" HeaderText="ICX" SortExpression="tup_incomingroute" />--%>
-                        <asp:BoundField DataField="icxName" HeaderText="ICX" SortExpression="IcxName" />
-                        <asp:BoundField DataField="International Partner" HeaderText="IOS" SortExpression="International Partner" />
-                        <asp:BoundField DataField="IGW" HeaderText="ANS" SortExpression="ANS"  Visible="false"/>
+                        <asp:BoundField DataField="International Partner" HeaderText="Incoming ANS" SortExpression="International Partner" />
+                        <asp:BoundField DataField="tup_incomingroute" HeaderText="Incoming Route" SortExpression="tup_incomingroute" />
+                        <asp:BoundField DataField="IGW" HeaderText="Outgoing ANS" SortExpression="IGW" />
                         <asp:BoundField DataField="tup_outgoingroute" HeaderText="Outgoing Route" SortExpression="tup_outgoingroute" />
-                        <asp:BoundField DataField="ANS" HeaderText="ANS1" SortExpression="ANS" Visible="False"/>
+                        <asp:BoundField DataField="ANS" HeaderText="ANS" SortExpression="ANS" />
 
                         <asp:BoundField DataField="CallsCount"
                             HeaderText="Total Calls"
@@ -629,14 +630,18 @@
                             DataFormatString="{0:F2}"
                             HeaderText="ICX/IOS (USD)"
                             SortExpression="costicxin" />
-                        <asp:BoundField DataField="customercost"
-                            DataFormatString="{0:F2}"
-                            HeaderText="Revenue (USD)"
-                            SortExpression="customercost" />
-                        <asp:BoundField DataField="tax1"
+                        <asp:BoundField DataField="costvatcomissionin"
                             DataFormatString="{0:F2}"
                             HeaderText="BTRC Revenue Share"
                             SortExpression="tax1" />
+
+
+
+                        <asp:BoundField DataField="customercost"
+                            DataFormatString="{0:F2}"
+                            HeaderText="Revenue"
+                            SortExpression="customercost" />
+
                         <asp:BoundField DataField="igwrevenuein"
                             DataFormatString="{0:F2}"
                             HeaderText="IGW $"
