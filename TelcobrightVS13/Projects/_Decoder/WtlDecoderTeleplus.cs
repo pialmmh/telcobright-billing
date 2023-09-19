@@ -8,25 +8,29 @@ using TelcobrightMediation;
 
 namespace Decoders
 {
-    Export("Decoder", typeof(IFileDecoder))]
-    public class WtlDecoderTeleplus : IFileDecoder
+
+    public class WtlDecoderTeleplus 
     {
         public  override string  ToString() => this.RuleName;
         public virtual string RuleName => GetType().Name;
-        public int Id = 61;
+        public int Id = 54;
         public virtual string Helptext => "Decode TelepluseNewyork WTL";
         public  CompressionType CompressionType { get; set; }
         protected  CdrCollectorInputData Input { get; set; }
 
-
-        List<string[]> DecodeFile()
+        public virtual List<string[]> DecodeFile()
         {
-            
+            return decodeLine();
         }
 
 
+        public List<string[]> decodeLine()
+        {
+            List<string[]> decodeRows = new List<string[]>();
 
 
+            return decodeRows;
+        }
 
     }
 }
