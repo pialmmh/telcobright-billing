@@ -16,6 +16,7 @@ using reports;
 using MediationModel;
 using PortalApp;
 using PortalApp.ReportHelper;
+using TelcobrightInfra;
 
 public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
 {
@@ -58,7 +59,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                                 CheckBoxShowByAns.Checked==true?"tup_sourceID":string.Empty,
                                 CheckBoxShowByIgw.Checked==true?"tup_inpartnerid":string.Empty,
                                 CheckBoxShowByCustomerRate.Checked==true?"tup_customerrate":string.Empty,
-                                "tup_customercurrency",
+                                "usdrate",
                                 CheckBoxViewIncomingRoute.Checked==true?"tup_incomingroute":string.Empty,
                                 CheckBoxViewOutgoingRoute.Checked==true?"tup_outgoingroute":string.Empty,
                             },
@@ -70,7 +71,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                                 CheckBoxIntlPartner.Checked==true?DropDownListIntlCarier.SelectedIndex>0?" tup_outpartnerid="+DropDownListIntlCarier.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxShowByAns.Checked==true?DropDownListAns.SelectedIndex>0?" tup_sourceID="+DropDownListAns.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_inpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty,
-                                CheckBoxViewIncomingRoute.Checked==true?DropDownListViewIncomingRoute.SelectedIndex>0?" tup_incomingroute="+DropDownListViewIncomingRoute.SelectedItem.Value:string.Empty:string.Empty,
+                                //CheckBoxViewIncomingRoute.Checked==true?DropDownListViewIncomingRoute.SelectedIndex>0?" tup_incomingroute="+DropDownListViewIncomingRoute.SelectedItem.Value:string.Empty:string.Empty,
                                 CheckBoxViewOutgoingRoute.Checked==true?DropDownListViewOutgoingRoute.SelectedIndex>0?" tup_outgoingroute="+"'"+DropDownListViewIncomingRoute.SelectedItem.Value.Split('_')[0].Trim().ToString().Split('_')[0].Trim().ToString()+"'":string.Empty:string.Empty,
                                 ViewBySwitch.Checked==true?DropDownListShowBySwitch.SelectedIndex>0?"tup_switchid="+DropDownListShowBySwitch.SelectedItem.Value:string.Empty:string.Empty,
                                     
@@ -86,13 +87,13 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
         {
             case "Hourly":
             case "Daily":
-                return "tup_starttime";
+                return "Date";
             case "Weekly":
-                return "concat(year(tup_starttime),'-W',week(tup_starttime))";
+                return "concat(year(Date),'-W',week(Date))";
             case "Monthly":
-                return "concat(year(tup_starttime),'-',date_format(tup_starttime,'%b'))";
+                return "concat(year(Date),'-',date_format(Date,'%b'))";
             case "Yearly":
-                return "DATE_FORMAT(tup_starttime,'%Y')";
+                return "DATE_FORMAT(Date,'%Y')";
             default:
                 return string.Empty;
         }
@@ -158,7 +159,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
         GridView1.Columns[GetColumnIndexByName(GridView1, "Country")].Visible = CheckBoxShowByCountry.Checked;
         GridView1.Columns[GetColumnIndexByName(GridView1, "Destination")].Visible = CheckBoxShowByDestination.Checked;
         //GridView1.Columns[3].Visible = CheckBoxShowByIgw.Checked;
-        GridView1.Columns[GetColumnIndexByName(GridView1, "tup_incomingroute")].Visible = CheckBoxViewIncomingRoute.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "icxName")].Visible = CheckBoxViewIncomingRoute.Checked;
 
         GridView1.Columns[GetColumnIndexByName(GridView1, "International Partner")].Visible = CheckBoxIntlPartner.Checked;
         GridView1.Columns[GetColumnIndexByName(GridView1, "tup_outgoingroute")].Visible = CheckBoxViewOutgoingRoute.Checked;
@@ -196,7 +197,50 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
 
             connection.Open();
 
-            MySqlCommand cmd = new MySqlCommand(GetQuery(), connection);
+            string sql = GetQuery();
+
+
+
+
+            //Dictionary<string, string> dbVsDbName = AllDeploymenProfiles.getDeploymentprofiles()
+            //    .FindAll(p => p.profileName == "cas")[0].UserVsDbName;
+            Dictionary<string, string> userVsDbName = tbc.DeploymentProfile.UserVsDbName;
+
+
+            List<string> tableNames = new List<string>();
+
+
+
+            String selectedIcxName = CheckBoxViewIncomingRoute.Checked == true ? DropDownListViewIncomingRoute.SelectedIndex > 0 ? $@"{DropDownListViewIncomingRoute.SelectedItem.Value}" : string.Empty : string.Empty;
+
+            if (selectedIcxName == String.Empty)
+            {
+                foreach (var db in userVsDbName)
+                {
+                    if (!db.Value.Contains("btrc"))
+                    {
+                        tableNames.Add(db.Value + ".sum_voice_day_02");
+                        //tableNames.Add(db.Value + ".sum_voice_day_04");
+                    }
+
+                }
+            }
+            else
+            {
+                tableNames.Add(selectedIcxName + ".sum_voice_day_02");
+                //tableNames.Add(selectedIcxName + ".sum_voice_day_04");
+            }
+
+            SqlAggregator sqlAggregator =
+                new SqlAggregator(nonUnionSql: sql.Replace("sum_voice_day_02", "<basetable>").Replace("sum_voice_hr_02", "<basetable>"),
+                    tableNames: tableNames,
+                    _baseSqlStartsWith: "(",
+                    _baseSqlEndsWith: ") x");
+            string aggregatedSql = sqlAggregator.getFinalSql();
+
+            MySqlCommand cmd = new MySqlCommand(aggregatedSql, connection);
+
+            //MySqlCommand cmd = new MySqlCommand(GetQuery(), connection);
             cmd.Connection = connection;
 
             //All Possible Report Combinations are here:
@@ -1629,11 +1673,12 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
             {
                 using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(tbc.DatabaseSetting))
                 {
-                    int idPartner = Convert.ToInt32(DropDownListIgw.SelectedValue);
-                    foreach (route route in contex.routes.Where(x => x.idPartner == idPartner))
-                    {
-                        DropDownListViewIncomingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
-                    }
+                    //int idPartner = Convert.ToInt32(DropDownListIgw.SelectedValue);
+                    //foreach (route route in contex.routes.Where(x => x.idPartner == idPartner))
+                    //{
+                    //    DropDownListViewIncomingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
+                    //}
+                    populateICX();
                 }
             }
         }

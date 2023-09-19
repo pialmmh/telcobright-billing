@@ -212,7 +212,17 @@
                 </div>
                 <asp:TextBox ID="TextBoxUsdRate" runat="server" Visible="false"></asp:TextBox>
                 <div id="PartnerFilter" style="min-width: 1285px; margin-top: -4px; margin-left: 10px; float: left; padding-left: 5px; background-color: #f2f2f2;">
-                    <div style="text-align: left; float: left">
+                    <div style="float: left;">
+                        View by ICX: 
+                        <asp:CheckBox ID="CheckBoxViewIncomingRoute" runat="server" AutoPostBack="True"
+                                      OnCheckedChanged="CheckBoxViewIncomingRoute_CheckedChanged" Checked="False" />
+
+                        <asp:DropDownList ID="DropDownListViewIncomingRoute" runat="server"
+                                          Enabled="False">
+                        </asp:DropDownList>
+
+                    </div>
+                    <div style="text-align: left; float: left; margin-left: 10px;">
                         View By Country:
                     <asp:CheckBox ID="CheckBoxShowByCountry" runat="server"
                         AutoPostBack="True" Checked="true" EnableViewState="true"
@@ -270,10 +280,7 @@
                         </asp:DropDownList>
                     </div>
 
-                    <div style="float: left; margin-left: 10px;">
-                        View by Customer Rate:
-                        <asp:CheckBox ID="CheckBoxShowByCustomerRate" runat="server" Checked="false" />
-                    </div>
+                    
 
                 </div>
                 <%--End Div Partner***************************************************--%>
@@ -284,17 +291,12 @@
                     <div style="text-align: left;">
 
                         <div style="float: left; height: 25px; min-width: 1285px;">
-
+                            
                             <div style="float: left;">
-                                View by ICX: 
-                            <asp:CheckBox ID="CheckBoxViewIncomingRoute" runat="server" AutoPostBack="True"
-                                OnCheckedChanged="CheckBoxViewIncomingRoute_CheckedChanged" Checked="False" />
-
-                                <asp:DropDownList ID="DropDownListViewIncomingRoute" runat="server"
-                                    Enabled="False">
-                                </asp:DropDownList>
-
+                                View by Customer Rate:
+                                <asp:CheckBox ID="CheckBoxShowByCustomerRate" runat="server" Checked="false" />
                             </div>
+
 
                             <div style="float: left; margin-left: 18px;">
                                 View by IOS Route:
@@ -342,7 +344,8 @@
             <AlternatingRowStyle BackColor="#f2f2f2" ForeColor="#284775" />
           <Columns>
                 <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" />
-              <asp:BoundField DataField="tup_incomingroute" HeaderText="ICX" SortExpression="tup_incomingroute" />
+              <%--<asp:BoundField DataField="tup_incomingroute" HeaderText="ICX" SortExpression="tup_incomingroute" />--%>
+              <asp:BoundField DataField="icxName" HeaderText="ICX" SortExpression="IcxName" />
                 <asp:BoundField DataField="Country" HeaderText="Country"
                     SortExpression="Country"/>
                 <asp:BoundField DataField="Destination" HeaderText="Destination"

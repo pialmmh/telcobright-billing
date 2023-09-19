@@ -470,17 +470,19 @@
                     <div style="text-align: left;">
 
                         <div style="float: left; height: 25px; min-width: 1285px;">
-
+                            
                             <div style="float: left;">
-                                View by IOS: 
-                                <asp:CheckBox ID="CheckBoxPartner" runat="server" AutoPostBack="True"
-                                              OnCheckedChanged="CheckBoxShowByPartner_CheckedChanged" Checked="True" />
+                                View by ICX: 
+                                <asp:CheckBox ID="CheckBoxViewIncomingRoute" runat="server" AutoPostBack="True"
+                                              OnCheckedChanged="CheckBoxViewIncomingRoute_CheckedChanged" Checked="False" />
                        
-                                <asp:DropDownList ID="DropDownListPartner" runat="server" OnSelectedIndexChanged="DropDownListPartner_OnSelectedIndexChanged"
-                                                  Enabled="true" AutoPostBack="True">
+                                <asp:DropDownList ID="DropDownListViewIncomingRoute" runat="server"
+                                                  Enabled="False">
                                 </asp:DropDownList>
 
                             </div>
+
+                            
                             <div style="float: left; margin-left: 15px;">
                                 <%--View by ANS: --%>
                                 <asp:CheckBox ID="CheckBoxShowByAns" runat="server" AutoPostBack="True"
@@ -521,17 +523,18 @@
                     <div style="text-align: left;">
 
                         <div style="float: left; height: 25px; min-width: 1285px;">
-
+                            
                             <div style="float: left;">
-                                View by ICX: 
-                                <asp:CheckBox ID="CheckBoxViewIncomingRoute" runat="server" AutoPostBack="True"
-                                              OnCheckedChanged="CheckBoxViewIncomingRoute_CheckedChanged" Checked="False" />
+                                View by IOS: 
+                                <asp:CheckBox ID="CheckBoxPartner" runat="server" AutoPostBack="True"
+                                              OnCheckedChanged="CheckBoxShowByPartner_CheckedChanged" Checked="True" />
                        
-                                <asp:DropDownList ID="DropDownListViewIncomingRoute" runat="server"
-                                                  Enabled="False">
+                                <asp:DropDownList ID="DropDownListPartner" runat="server" OnSelectedIndexChanged="DropDownListPartner_OnSelectedIndexChanged"
+                                                  Enabled="true" AutoPostBack="True">
                                 </asp:DropDownList>
 
                             </div>
+
 
                             <div style="float: left; margin-left: 18px;">
                                 View by Outgoing Route:
