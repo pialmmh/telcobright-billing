@@ -18,7 +18,7 @@ namespace InstallConfig
 {
     public partial class CasAgniAbstractConfigGenerator //quartz config part
     {
-        private FileLocation vaultPrimary;
+        private FileLocation vaultGenband;
         private FileLocation vaultCataleya;
         private SyncPair Huawei_Vault;
         private SyncPair vaultCAS;
@@ -35,9 +35,9 @@ namespace InstallConfig
             //***FILE LOCATIONS**********************************************
             //local/vault1: all app servers will use same local file location
             //the object "vault" will have a copy of below object for each app servers with server id as key and location as dictionary value
-            this.vaultPrimary = new FileLocation()
+            this.vaultGenband = new FileLocation()
             {
-                Name = "vault",//this is refered in ne table, name MUST start with "Vault"
+                Name = "vault.Genband",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
@@ -106,7 +106,7 @@ namespace InstallConfig
 
             //add locations to directory settings
             tbc.DirectorySettings.FileLocations.Add(vaultCataleya.Name, vaultCataleya);
-            tbc.DirectorySettings.FileLocations.Add(vaultPrimary.Name,vaultPrimary);
+            tbc.DirectorySettings.FileLocations.Add(vaultGenband.Name,vaultGenband);
 
             this.Huawei_Vault = new SyncPair("Huawei:Vault")
             {
@@ -118,7 +118,7 @@ namespace InstallConfig
                 },
                 DstSyncLocation = new SyncLocation()
                 {
-                    FileLocation = vaultPrimary
+                    FileLocation = vaultGenband
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
@@ -147,7 +147,7 @@ namespace InstallConfig
                 SkipSourceFileListing = true,
                 SrcSyncLocation = new SyncLocation()
                 {
-                    FileLocation = vaultPrimary
+                    FileLocation = vaultGenband
                 },
                 DstSyncLocation = new SyncLocation()
                 {

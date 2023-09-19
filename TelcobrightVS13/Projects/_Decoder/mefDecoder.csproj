@@ -76,6 +76,7 @@
     <Compile Include="HuaweiSoftx3000Decoder.cs" />
     <Compile Include="ReveSbc.cs" />
     <Compile Include="SansaySostSwitchDecoder.cs" />
+    <Compile Include="WtlDecoderTeleplus.cs" />
     <Compile Include="ZteIpTdmDecoder.cs" />
     <Compile Include="ZteTdmDecoder.cs" />
     <Compile Include="ZteDecoderHelper.cs" />
