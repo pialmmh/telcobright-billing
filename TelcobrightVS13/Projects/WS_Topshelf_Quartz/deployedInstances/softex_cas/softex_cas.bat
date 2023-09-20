@@ -1,0 +1,1 @@
+E:\TelcobrightProject\TelcobrightVS13\Projects\WS_Topshelf_Quartz\bin\debug\WS_Telcobright_Topshelf.exe "E:\TelcobrightProject\TelcobrightVS13\Projects\WS_Topshelf_Quartz\deployedInstances\softex_cas\softex_cas.conf"
