@@ -234,6 +234,16 @@ namespace InstallConfig
                     {
                         Name = "teleplusnewyork_cas",
                         SchedulerPortNo = 587
+                    },
+                    new InstanceConfig
+                    {
+                        Name = "sheba_cas",
+                        SchedulerPortNo = 588
+                    },
+                    new InstanceConfig
+                    {
+                        Name = "paradise_cas",
+                        SchedulerPortNo = 589
                     }
                 },
                 MySqlCluster = new MySqlCluster
