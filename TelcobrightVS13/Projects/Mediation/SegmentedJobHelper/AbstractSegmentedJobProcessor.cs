@@ -20,27 +20,30 @@ namespace TelcobrightMediation
 
     public abstract class AbstractSegmentedJobProcessor : ISegmentedJobProcessor
     {
-        
         public job TelcobrightJob { get; }
         public PartnerEntities Context { get; }
         public abstract ISegmentedJob CreateJobSegmentInstance(jobsegment jobSegment);
         public abstract void PrepareSegments();
-        protected AbstractSegmentedJobProcessor(job telcobrightJob, PartnerEntities context)
+        private CdrSetting CdrSetting { get; set; }
+
+        protected AbstractSegmentedJobProcessor(CdrSetting cdrSetting,job telcobrightJob, PartnerEntities context)
         {
             this.TelcobrightJob = telcobrightJob;
             this.Context = context;
+            this.CdrSetting = cdrSetting;
         }
 
         protected void SaveSegmentsToDb(List<jobsegment> jobSegments)
         {
-            using (DbCommand cmd = this.Context.Database.Connection.CreateCommand())
+            try
             {
-                try
+                using (DbCommand cmd = this.Context.Database.Connection.CreateCommand())
                 {
                     //cmd.ExecuteCommandText("set autocommit=0;"); //start transaction
                     foreach (jobsegment s in jobSegments)
                     {
-                        cmd.ExecuteCommandText($@"insert into jobsegment(idjob,segmentNumber,stepsCount,status,segmentdetail) values(
+                        cmd.ExecuteCommandText(
+                            $@"insert into jobsegment(idjob,segmentNumber,stepsCount,status,segmentdetail) values(
                                         {s.idJob},{s.segmentNumber},{s.stepsCount},
                                         {s.status},'{JsonConvert.SerializeObject(s.SegmentDetail)}')");
                     }
@@ -48,23 +51,26 @@ namespace TelcobrightMediation
                     //                       " status=2," + "NoOfSteps=" + jobSegments.Sum(s => s.stepsCount) +
                     //                       " where id= " + this.TelcobrightJob.id);
                     //cmd.ExecuteCommandText("commit;");
-                    CdrJobCommiter.Commit(cmd);
+                    CdrJobCommiter.Commit(cmd,this.CdrSetting);
                 }
-                catch (Exception e)
+            }
+            catch (Exception e)
+            {
+                try
                 {
-                    try
+                    using (DbCommand cmd = this.Context.Database.Connection.CreateCommand())
                     {
                         Console.WriteLine(e);
                         cmd.CommandText = ("rollback;");
                         cmd.ExecuteNonQuery();
                     }
-                    catch (Exception exception)
-                    {
-                        Console.WriteLine(exception);
-                        throw;
-                    }
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception);
                     throw;
                 }
+                throw;
             }
         }
 
@@ -101,7 +107,7 @@ namespace TelcobrightMediation
                             $" progress=ifnull(progress,0)+{segmentedJob.ActualStepsCount} " +
                             $" where id={TelcobrightJob.id}");
                         //cmd.ExecuteCommandText(" commit; ");
-                        CdrJobCommiter.Commit(cmd);
+                        CdrJobCommiter.Commit(cmd, this.CdrSetting);
                     }
                     catch (Exception e)
                     {
@@ -137,7 +143,7 @@ namespace TelcobrightMediation
                     //delete job segments which can hold large amount of data
                     cmd.ExecuteCommandText(" delete from jobsegment where idjob=" + this.TelcobrightJob.id);
                     //cmd.ExecuteCommandText(" commit; ");
-                    CdrJobCommiter.Commit(cmd);
+                    CdrJobCommiter.Commit(cmd, this.CdrSetting);
                 }
             }
         }

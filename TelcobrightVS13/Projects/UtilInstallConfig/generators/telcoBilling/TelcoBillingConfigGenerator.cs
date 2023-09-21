@@ -90,21 +90,25 @@ namespace InstallConfig
                 if (ConsoleUtil.getConfirmationFromUser("Load ddl scripts? (Y/N) for " +
                                                         this.Tbc.Telcobrightpartner.databasename))
                 {
-                    Menu menu = new Menu(this.DdlScripts.Values.Select(s => s.RuleName),
-                        "select a ddl operation to run", "a");
-                    List<string> choices = menu.getChoices();
-                    foreach (string scriptName in choices)
+                    if(ConsoleUtil.getConfirmationFromUser("Load ddl scripts? Confirm again, will erase important tables. (Y/N) for " +
+                                                        this.Tbc.Telcobrightpartner.databasename))
                     {
-                        IScript script = this.DdlScripts[scriptName];
-                        string sql = script.GetScript(null);
-                        Console.WriteLine("Loading ddl script:" + script.RuleName);
-                        sql = $@"SET FOREIGN_KEY_CHECKS = 0;
+                        Menu menu = new Menu(this.DdlScripts.Values.Select(s => s.RuleName),
+                            "select a ddl operation to run", "a");
+                        List<string> choices = menu.getChoices();
+                        foreach (string scriptName in choices)
+                        {
+                            IScript script = this.DdlScripts[scriptName];
+                            string sql = script.GetScript(null);
+                            Console.WriteLine("Loading ddl script:" + script.RuleName);
+                            sql = $@"SET FOREIGN_KEY_CHECKS = 0;
                                     {sql}
                                   SET FOREIGN_KEY_CHECKS = 1;";
-                        dbWriter.executeScript(sql);
-                    }
+                            dbWriter.executeScript(sql);
+                        }
 
-                    Console.WriteLine("Ddl scripts loaded successfully for " + Tbc.Telcobrightpartner.databasename);
+                        Console.WriteLine("Ddl scripts loaded successfully for " + Tbc.Telcobrightpartner.databasename);
+                    }
                 }
                 else
                 {

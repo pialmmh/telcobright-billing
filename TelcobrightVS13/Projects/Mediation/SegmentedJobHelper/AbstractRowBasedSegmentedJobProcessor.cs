@@ -20,14 +20,16 @@ namespace TelcobrightMediation
         protected string IndexedRowIdColumnName { get; }
         protected string DateColumnName { get; }
         protected int BatchSizeWhenPreparingLargeSqlJob { get; }
+        private CdrSetting cdrSetting { get; set; }
 
-        protected AbstractRowBasedSegmentedJobProcessor(job telcobrightJob, PartnerEntities context
-            , int batchSizeWhenPreparingLargeSqlJob,
-            string indexedRowIdColumnName, string dateColumnName) : base(telcobrightJob, context)
+        protected AbstractRowBasedSegmentedJobProcessor(CdrSetting cdrSetting, job telcobrightJob, PartnerEntities context, 
+            int batchSizeWhenPreparingLargeSqlJob,
+            string indexedRowIdColumnName, string dateColumnName) : base(cdrSetting,telcobrightJob, context)
         {
             this.BatchSizeWhenPreparingLargeSqlJob = batchSizeWhenPreparingLargeSqlJob;
             this.IndexedRowIdColumnName = indexedRowIdColumnName;
             this.DateColumnName = dateColumnName;
+            this.cdrSetting = cdrSetting;
         }
 
         public override void PrepareSegments()
@@ -119,7 +121,7 @@ namespace TelcobrightMediation
                     cmd.ExecuteCommandText(" update job set " +
                                                " status=2," + "NoOfSteps=" + stepsCount.ToString() +
                                                " where id= " + this.TelcobrightJob.id);
-                    CdrJobCommiter.Commit(cmd);
+                    CdrJobCommiter.Commit(cmd,this.cdrSetting);
                 }
                 catch (Exception e)
                 {

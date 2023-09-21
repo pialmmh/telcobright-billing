@@ -237,12 +237,37 @@ namespace Decoders
                                     //OriginatingCallingNumber 11  
                                     //TerminatingCallingNumber 12  
 
-                                    if (
+                                    /*if (
                                     (thisField.FieldNumber == 9) ||
                                     (thisField.FieldNumber == 10) ||
                                     (thisField.FieldNumber == 11) ||
                                     (thisField.FieldNumber == 12) ||
                                     (thisField.FieldNumber == 80))
+                                    {
+                                        strThisField = HuaweiBinCdr.BcdToDigitString(fieldAsByte).ToString();
+                                    }*/
+
+                                    if (thisField.FieldNumber == 9)
+                                    {
+                                        strThisField = HuaweiBinCdr.BcdToDigitString(fieldAsByte).ToString();
+                                    }
+
+                                    if (thisField.FieldNumber == 10)
+                                    {
+                                        strThisField = HuaweiBinCdr.BcdToDigitString(fieldAsByte).ToString();
+                                    }
+
+                                    if (thisField.FieldNumber == 11)
+                                    {
+                                        strThisField = HuaweiBinCdr.BcdToDigitString(fieldAsByte).ToString();
+                                    }
+
+                                    if (thisField.FieldNumber == 12)
+                                    {
+                                        strThisField = HuaweiBinCdr.BcdToDigitString(fieldAsByte).ToString();
+                                    }
+
+                                    if (thisField.FieldNumber == 80)
                                     {
                                         strThisField = HuaweiBinCdr.BcdToDigitString(fieldAsByte).ToString();
                                     }

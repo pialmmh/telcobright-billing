@@ -159,7 +159,7 @@ namespace TelcobrightMediation.Mediation.Cdr
             try//index out of bound error may occur, in that case do nothing in catch
             {//just return whatever field info have been gathered
                 inconsistentCdr.SwitchId = txtRow[Fn.Switchid];
-                inconsistentCdr.IdCall = System.Convert.ToInt64(txtRow[Fn.IdCall]).ToString();
+                inconsistentCdr.IdCall = txtRow[Fn.IdCall];
                 inconsistentCdr.SequenceNumber = Convert.ToInt64(txtRow[Fn.Sequencenumber]);
                 inconsistentCdr.FileName = txtRow[Fn.Filename];
                 inconsistentCdr.ServiceGroup = txtRow[Fn.ServiceGroup];

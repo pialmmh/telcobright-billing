@@ -15,7 +15,7 @@ namespace TelcobrightMediation
         private CdrCollectorInputData CdrCollectorInput { get; }
         public SegmentedCdrReprocessJobProcessor(CdrCollectorInputData cdrCollectorInput,int batchSizeWhenPreparingLargeSqlJob, 
             string indexedColumnName, string dateColumnName)
-            : base(cdrCollectorInput.TelcobrightJob, cdrCollectorInput.Context, batchSizeWhenPreparingLargeSqlJob,
+            : base(cdrCollectorInput.CdrSetting ,cdrCollectorInput.TelcobrightJob, cdrCollectorInput.Context, batchSizeWhenPreparingLargeSqlJob,
                 indexedColumnName, dateColumnName)
         {
             this.CdrCollectorInput = cdrCollectorInput;
