@@ -263,8 +263,8 @@ namespace InstallConfig
                                     "nodes['Billing Reports'].Expanded=false",
                                     "nodes['Reports/IGW'].Expanded=false",
                                     "nodes['Reports/Transit'].Expanded=false",
-                                    "nodes['Individual ICX Report'].Expanded=true",
-                                    "nodes['Individual ICX Report/ICX'].Expanded=true"
+                                    "nodes['Individual ICX Report'].Expanded=false",
+                                    "nodes['Individual ICX Report/ICX'].Expanded=false"
                                     
                                 }
                             },
@@ -283,8 +283,8 @@ namespace InstallConfig
                                     "nodes['Billing Reports'].Expanded=true",
                                     "nodes['Reports/IGW'].Expanded=false",
                                     "nodes['Reports/Transit'].Expanded=false",
-                                    "nodes['Individual ICX Report'].Expanded=true",
-                                    "nodes['Individual ICX Report/ICX'].Expanded=true"
+                                    "nodes['Individual ICX Report'].Expanded=false",
+                                    "nodes['Individual ICX Report/ICX'].Expanded=false"
                                     
                                 },
                                 SpringExpressionIfNotRole = new List<string>()
@@ -311,6 +311,9 @@ namespace InstallConfig
                         settingIntlOut
                     },
                     { "~/reports/icx/Domestic.aspx",
+                        settingIntlIn
+                    },
+                    { "~/reports/icx/DomesticWithLtfs.aspx",
                         settingIntlIn
                     },
                     { "~/reports/icx/LocalTollFree.aspx",
