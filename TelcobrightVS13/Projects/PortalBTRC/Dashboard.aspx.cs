@@ -36,17 +36,28 @@ public partial class DashboardAspx : Page
         }
         telcobrightpartner thisPartner = null;
         string binpath = System.Web.HttpRuntime.BinDirectory;
-
+        TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
         var databaseSetting = telcobrightConfig.DatabaseSetting;
+        string userName = Page.User.Identity.Name;
+        string dbName;
+        if (telcobrightConfig.DeploymentProfile.UserVsDbName.ContainsKey(userName))
+        {
+            dbName = telcobrightConfig.DeploymentProfile.UserVsDbName[userName];
+        }
+        else
+        {
+            dbName = telcobrightConfig.DatabaseSetting.DatabaseName;
+        }
+        databaseSetting.DatabaseName = dbName;
 
         using (PartnerEntities conTelco = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting))
         {
-            thisPartner = conTelco.telcobrightpartners.Where(c => c.databasename == dbNameAppConf).ToList().First();
+            thisPartner = conTelco.telcobrightpartners.Where(c => c.databasename == dbName).ToList().First();
 
         }
         //this.lblCustomerDisplayName.Text = thisPartner.CustomerName;
         //this.lblCustomerDisplayName.Text = "CDR Analyzer System (CAS)";
-        databaseSetting.DatabaseName = this.targetIcxName;
+        //databaseSetting.DatabaseName = this.targetIcxName;
         string connectionString = DbUtil.getDbConStrWithDatabase(databaseSetting);
 
         string sqlCommand = "select id, JobName, CreationTime, CompletionTime " +

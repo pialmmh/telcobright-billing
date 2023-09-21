@@ -204,9 +204,10 @@ public partial class DefaultRptDomesticWithLtfsIcx : System.Web.UI.Page
 
 
       
-             String selectedIcxName =  CheckBoxViewIncomingRoute.Checked == true? DropDownListViewIncomingRoute.SelectedIndex > 0 ? $@"{DropDownListViewIncomingRoute.SelectedItem.Value}" : string.Empty : string.Empty ;
+             //String selectedIcxName =  CheckBoxViewIncomingRoute.Checked == true? DropDownListViewIncomingRoute.SelectedIndex > 0 ? $@"{DropDownListViewIncomingRoute.SelectedItem.Value}" : string.Empty : string.Empty ;
+            String selectedIcxName = Page.User.Identity.Name;
 
-            if (selectedIcxName == String.Empty)
+            if (selectedIcxName == "btrc_cas")
             {
                 foreach (var db in userVsDbName)
                 {
@@ -215,6 +216,8 @@ public partial class DefaultRptDomesticWithLtfsIcx : System.Web.UI.Page
                         tableNames.Add(db.Value + ".sum_voice_day_01");
                         tableNames.Add(db.Value + ".sum_voice_day_04");
                     }
+
+
 
                 }
             }
