@@ -720,10 +720,13 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
                     //}
                     foreach (var kv in tbc.DeploymentProfile.UserVsDbName)
                     {
-                        string username = kv.Key;
-                        string dbNameAsRouteName = kv.Value;
-                        string icxName = dbNameAsRouteName.Split('_')[0];
-                        DropDownListViewIncomingRoute.Items.Add(new ListItem(icxName, dbNameAsRouteName));
+                        if (!kv.Value.Contains("btrc"))
+                        {
+                            string username = kv.Key;
+                            string dbNameAsRouteName = kv.Value;
+                            string icxName = dbNameAsRouteName.Split('_')[0];
+                            DropDownListViewIncomingRoute.Items.Add(new ListItem(icxName, dbNameAsRouteName));
+                        }
 
                     }
                 }
@@ -739,10 +742,13 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
                     //}
                     foreach (var kv in tbc.DeploymentProfile.UserVsDbName)
                     {
-                        string username = kv.Key;
-                        string dbNameAsRouteName = kv.Value;
-                        string icxName = dbNameAsRouteName.Split('_')[0];
-                        DropDownListViewIncomingRoute.Items.Add(new ListItem(icxName, dbNameAsRouteName));
+                        if (!kv.Value.Contains("btrc"))
+                        {
+                            string username = kv.Key;
+                            string dbNameAsRouteName = kv.Value;
+                            string icxName = dbNameAsRouteName.Split('_')[0];
+                            DropDownListViewIncomingRoute.Items.Add(new ListItem(icxName, dbNameAsRouteName));
+                        }
 
                     }
                 }

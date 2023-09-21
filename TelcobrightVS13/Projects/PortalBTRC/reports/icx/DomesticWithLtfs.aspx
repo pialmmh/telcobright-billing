@@ -480,10 +480,10 @@
                             <div style="float: left;">
                                 View by ICX: 
                                 <asp:CheckBox ID="CheckBoxViewIncomingRoute" runat="server" AutoPostBack="True"
-                                              OnCheckedChanged="CheckBoxViewIncomingRoute_CheckedChanged" Checked="False" />
+                                              OnCheckedChanged="CheckBoxViewIncomingRoute_CheckedChanged" Checked="True" />
                        
                                 <asp:DropDownList ID="DropDownListViewIncomingRoute" runat="server"
-                                                  Enabled="False">
+                                                  Enabled="True">
                                 </asp:DropDownList>
 
                             </div>
@@ -491,10 +491,10 @@
                             <div style="float: left;">
                                 View by Incoming ANS: 
                                 <asp:CheckBox ID="CheckBoxPartner" runat="server" AutoPostBack="True"
-                                              OnCheckedChanged="CheckBoxShowByPartner_CheckedChanged" Checked="True" />
+                                              OnCheckedChanged="CheckBoxShowByPartner_CheckedChanged" Checked="False" />
                        
                                 <asp:DropDownList ID="DropDownListPartner" runat="server" OnSelectedIndexChanged="DropDownListPartner_OnSelectedIndexChanged"
-                                                  Enabled="true" AutoPostBack="True">
+                                                  Enabled="False" AutoPostBack="True">
                                 </asp:DropDownList>
 
                             </div>
