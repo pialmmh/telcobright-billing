@@ -32,41 +32,11 @@ namespace InstallConfig
 
         public override TelcobrightConfig GenerateConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
         {
-            
-
-            CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
-            CommonCdrValRulesGen commonCdrValRulesGen =
-                new CommonCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
-            InconsistentCdrValRulesGen inconsistentCdrValRulesGen =
-                new InconsistentCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
-            this.Tbc.CdrSetting = new CdrSetting
-            {
-                SummaryTimeField = SummaryTimeFieldEnum.AnswerTime,
-                PartialCdrEnabledNeIds = new List<int>() { },//7, was set to non-partial processing mode due to duplicate billid problem.
-                PartialCdrFlagIndicators = new List<string>() { },//{"1", "2", "3"},
-                DescendingOrderWhileListingFiles = false,
-                DescendingOrderWhileProcessingListedFiles = false,
-                ValidationRulesForCommonMediationCheck = commonCdrValRulesGen.GetRules(),
-                ValidationRulesForInconsistentCdrs = inconsistentCdrValRulesGen.GetRules(),
-                ServiceGroupConfigurations = this.GetServiceGroupConfigurations(),
-                DisableCdrPostProcessingJobCreationForAutomation = false,
-                DisableParallelMediation = false,
-                AutoCorrectDuplicateBillId = true,
-                AutoCorrectBillIdsWithPrevChargeableIssue = true,
-                AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
-                FileSplitSetting = new FileSplitSetting()
-                {
-                    FileSplitType = "byte",
-                    BytesPerRecord = 559,
-                    MaxRecordsInSingleFile = 30000,
-                    SplitFileIfSizeBiggerThanMbyte = 559 * 70000//559*30000
-                },
-            };
-
+            this.Tbc.CdrSetting = new CasCdrSettingHelper().getTemplateCdrSettings();
             this.PrepareDirectorySettings(this.Tbc);
-            
 
-            string csvPathForNe = new DirectoryInfo(FileAndPathHelper.GetCurrentExecPath()).Parent.Parent.FullName + Path.DirectorySeparatorChar.ToString() + "config" + Path.DirectorySeparatorChar.ToString() + "_helper" + Path.DirectorySeparatorChar.ToString() + "casOperatorInfo.csv";//add more
+
+            string csvPathForNe = CasNeInfoHelper.getCasOperatorInfoFile();
             CasNeInfoHelper neHelper = new CasNeInfoHelper(csvPathForNe);
 
             this.Tbc.Nes = neHelper.getNesByOpId(this.Tbc.Telcobrightpartner.idCustomer);
@@ -75,7 +45,7 @@ namespace InstallConfig
             this.PrepareProductAndServiceConfiguration();
             this.Tbc.ApplicationServersConfig = this.GetServerConfigs();
             this.Tbc.DatabaseSetting = this.GetDatabaseConfigs();
-            this.Tbc.PortalSettings = GetPortalSettings(this.Tbc);
+            this.Tbc.PortalSettings = CasPortalSettingsHelper.GetCasCommonPortalSettings(this.Tbc);
             return this.Tbc;
         }
     }

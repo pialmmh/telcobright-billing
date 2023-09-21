@@ -20,7 +20,7 @@ namespace InstallConfig.config._helper
 {
     public class CasCdrSettingHelper
     {
-        public CdrSetting getTemplateCdrSettings()
+        public  CdrSetting getTemplateCdrSettings()
         {
             CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
             CommonCdrValRulesGen commonCdrValRulesGen =

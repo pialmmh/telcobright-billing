@@ -244,6 +244,11 @@ namespace InstallConfig
                     {
                         Name = "paradise_cas",
                         SchedulerPortNo = 589
+                    },
+                    new InstanceConfig
+                    {
+                        Name = "bangla_cas",
+                        SchedulerPortNo = 590
                     }
                 },
                 MySqlCluster = new MySqlCluster

@@ -27,6 +27,13 @@ namespace InstallConfig.config._helper
             //this.partnerWiseNesFromCsv = allNes.GroupBy(n => n.idCustomer).ToDictionary(g => g.Key, g => g.ToList());
         }
 
+
+        public static string getCasOperatorInfoFile()
+        {
+            return new DirectoryInfo(FileAndPathHelper.GetCurrentExecPath()).Parent.Parent.FullName + Path.DirectorySeparatorChar.ToString() + "config" + Path.DirectorySeparatorChar.ToString() + "_helper" + Path.DirectorySeparatorChar.ToString() + "casOperatorInfo.xlsx";//add more
+        }
+
+
         private static ne convertRowToNe(string[] row)
         {
             ne ne = TemplateNeFactory.GetInstanceNe();          
