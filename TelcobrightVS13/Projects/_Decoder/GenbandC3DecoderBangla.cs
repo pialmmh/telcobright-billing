@@ -13,7 +13,7 @@ using LibraryExtensions;
 namespace Decoders
 {
     [Export("Decoder", typeof(IFileDecoder))]
-    public class GenbandC3DecoderBangla 
+    public class GenbandC3DecoderBangla : IFileDecoder
     {
         public override string ToString() => this.RuleName;
         public virtual string RuleName => GetType().Name;
@@ -47,37 +47,37 @@ namespace Decoders
 
                 string[] textCdr = new string[input.MefDecodersData.Totalfieldtelcobright];
 
-                string durationStr = lineAsArr[52];
+                string durationStr = lineAsArr[16];
                 double durationIn10sOfMillis = 0;
                 if (double.TryParse(durationStr, out durationIn10sOfMillis) && durationIn10sOfMillis <= 0) continue;
 
                 textCdr[Fn.DurationSec] = ((durationIn10sOfMillis * 10) / 1000).ToString();
                 textCdr[Fn.Sequencenumber] = lineAsArr[0];
-                textCdr[Fn.ReleaseCauseSystem] = lineAsArr[4];
+                textCdr[Fn.ReleaseCauseSystem] = lineAsArr[49];
                 textCdr[Fn.Filename] = fileName;
                 textCdr[Fn.IncomingRoute] = lineAsArr[26];
-                textCdr[Fn.OriginatingCallingNumber] = lineAsArr[14];
-                textCdr[Fn.OriginatingCalledNumber] = lineAsArr[17];
-                textCdr[Fn.TerminatingCalledNumber] = lineAsArr[18];
-                textCdr[Fn.TerminatingCallingNumber] = lineAsArr[14];
+                textCdr[Fn.OriginatingCallingNumber] = lineAsArr[4];
+                textCdr[Fn.OriginatingCalledNumber] = lineAsArr[8];
+                textCdr[Fn.TerminatingCalledNumber] = lineAsArr[4];
+                textCdr[Fn.TerminatingCallingNumber] = lineAsArr[8];
                 textCdr[Fn.OutgoingRoute] = lineAsArr[33];
 
                 string[] formats = new string[] { "MddyyyyHHmmssfff", "MMddyyyyHHmmssfff" };
 
-                if (!string.IsNullOrEmpty(lineAsArr[8]))
+                if (!string.IsNullOrEmpty(lineAsArr[13]))
                 {
-                    string startTimestr = lineAsArr[8].Trim();
+                    string startTimestr = lineAsArr[13].Trim();
                     DateTime startTime = startTimestr.ConvertToDateTimeFromCustomFormats(formats);
                     textCdr[Fn.StartTime] = startTime.ToMySqlFormatWithoutQuote();
                 }
-                string ansTimestr = lineAsArr[9].Trim();
+                string ansTimestr = lineAsArr[14].Trim();
                 DateTime ansTime = ansTimestr.ConvertToDateTimeFromCustomFormats(formats);
 
-                if (!string.IsNullOrEmpty(lineAsArr[9]))
+                if (!string.IsNullOrEmpty(lineAsArr[14]))
                 {
                     textCdr[Fn.AnswerTime] = ansTime.ToMySqlFormatWithoutQuote();
                 }
-                string endTimestr = lineAsArr[11].Trim();
+                string endTimestr = lineAsArr[15].Trim();
                 if (!string.IsNullOrEmpty(endTimestr))
                 {
                     DateTime endTime = endTimestr.ConvertToDateTimeFromCustomFormats(formats);
