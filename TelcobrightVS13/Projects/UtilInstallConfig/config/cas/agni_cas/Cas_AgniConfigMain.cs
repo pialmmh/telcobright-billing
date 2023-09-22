@@ -30,7 +30,7 @@ namespace InstallConfig
                 CasTbPartnerFactory.GetTemplatePartner(1, "Agni Systems Ltd.", "agni_cas"));
         }
 
-        public override TelcobrightConfig GenerateConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
+        public override TelcobrightConfig GenerateFullConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
         {
 
             this.Tbc.CdrSetting = new CasCdrSettingHelper().getTemplateCdrSettings();

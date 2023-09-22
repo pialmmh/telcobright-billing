@@ -29,7 +29,7 @@ namespace InstallConfig
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx,CasTbPartnerFactory.GetTemplatePartner(20, "Integrated Service Limited (Sheba ICX)", "sheba_cas"));
         }
 
-        public override TelcobrightConfig GenerateConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
+        public override TelcobrightConfig GenerateFullConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
         {
            
             this.Tbc.CdrSetting = new CasCdrSettingHelper().getTemplateCdrSettings();

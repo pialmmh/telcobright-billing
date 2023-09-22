@@ -44,39 +44,49 @@ namespace Process
                     int idOprator = context.telcobrightpartners
                         .Where(c => c.databasename == tbc.Telcobrightpartner.databasename).Select(c => c.idCustomer)
                         .First();
-                       foreach (ne thisSwitch in context.nes.Where(c => c.idCustomer == idOprator).ToList())
+                    foreach (ne thisSwitch in context.nes.Where(c => c.idCustomer == idOprator).ToList())
                     {
                         try
                         {
                             if (thisSwitch.SkipCdrDecoded == 1) continue;
-                            bool jobExists= context.Database.SqlQuery<long>(
-                                $@"select idcall from cdrerror where switchid={thisSwitch.idSwitch} limit 0,1").ToList().Any();
-                            if (jobExists == false) continue;
-                            List<SqlSingleWhereClauseBuilder> whereParamsSingle = new List<SqlSingleWhereClauseBuilder>()
-                            {
-                                new SqlSingleWhereClauseBuilder(SqlWhereAndOrType.And){
-                                    Expression= "starttime>=",
-                                    ParamType= SqlWhereParamType.Datetime,
-                                    AndOrType= 0,
-                                    ParamValue= "2023-01-01 00:00:00",
-                                    PrependWith= null,
-                                    ApendWith= null
-                                },
-                                new SqlSingleWhereClauseBuilder(SqlWhereAndOrType.And){
-                                    Expression= "starttime<=",
-                                    ParamType= SqlWhereParamType.Datetime,
-                                    ParamValue= "2044-01-01 23:59:59",
-                                    PrependWith= null,
-                                    ApendWith= null
-                                },
-                                new SqlSingleWhereClauseBuilder(SqlWhereAndOrType.And){
-                                    Expression= "switchid=",
-                                    ParamType= SqlWhereParamType.Numeric,
-                                    ParamValue= "1",
-                                    PrependWith= null,
-                                    ApendWith= null
-                                },
-                            };
+                            bool errorCdrExists = context.Database.SqlQuery<long>(
+                                    $@"select idcall from cdrerror where switchid={thisSwitch.idSwitch} limit 0,1")
+                                .ToList()
+                                .Any();
+                            if (errorCdrExists == false) continue;
+                            bool errorJobExists = context.Database.SqlQuery<string>(
+                                    $@"select jobname from job where idne={thisSwitch.idSwitch}
+                                       and jobname like 'autoError_%' and status!=1 limit 0,1").ToList().Any();
+                            if (errorJobExists == true) continue;
+                            List<SqlSingleWhereClauseBuilder> whereParamsSingle =
+                                new List<SqlSingleWhereClauseBuilder>()
+                                {
+                                    new SqlSingleWhereClauseBuilder(SqlWhereAndOrType.And)
+                                    {
+                                        Expression = "starttime>=",
+                                        ParamType = SqlWhereParamType.Datetime,
+                                        AndOrType = 0,
+                                        ParamValue = "2023-01-01 00:00:00",
+                                        PrependWith = null,
+                                        ApendWith = null
+                                    },
+                                    new SqlSingleWhereClauseBuilder(SqlWhereAndOrType.And)
+                                    {
+                                        Expression = "starttime<=",
+                                        ParamType = SqlWhereParamType.Datetime,
+                                        ParamValue = "2044-01-01 23:59:59",
+                                        PrependWith = null,
+                                        ApendWith = null
+                                    },
+                                    new SqlSingleWhereClauseBuilder(SqlWhereAndOrType.And)
+                                    {
+                                        Expression = "switchid=",
+                                        ParamType = SqlWhereParamType.Numeric,
+                                        ParamValue = "1",
+                                        PrependWith = null,
+                                        ApendWith = null
+                                    },
+                                };
 
                             BatchSqlJobParamJson thisJobParam = new BatchSqlJobParamJson(
                                 tableName: "cdrerror",
@@ -89,12 +99,13 @@ namespace Process
                                 partitionColName: "starttime",
                                 rowIdColName: "idCall"
                             );
-                            
+
                             job newjob = new job();
                             newjob.Progress = 0;
                             newjob.idjobdefinition = 2;
                             newjob.Status = 6; //created
-                            newjob.JobName =  "AutoError_" + DateTime.Now.ToMySqlFormatWithoutQuote() + "_" +  thisSwitch.SwitchName;
+                            newjob.JobName = "autoError_" + DateTime.Now.ToMySqlFormatWithoutQuote() + "_" +
+                                             thisSwitch.SwitchName;
                             newjob.CreationTime = DateTime.Now;
                             newjob.idNE = thisSwitch.idSwitch;
                             newjob.JobParameter = JsonConvert.SerializeObject(thisJobParam);
