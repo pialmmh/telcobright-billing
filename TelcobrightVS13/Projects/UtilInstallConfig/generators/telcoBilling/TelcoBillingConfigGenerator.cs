@@ -90,7 +90,8 @@ namespace InstallConfig
                 if (ConsoleUtil.getConfirmationFromUser("Load ddl scripts? (Y/N) for " +
                                                         this.Tbc.Telcobrightpartner.databasename))
                 {
-                    if(ConsoleUtil.getConfirmationFromUser("Load ddl scripts? Confirm again, will erase important tables. (Y/N) for " +
+                    Console.WriteLine();
+                    if (ConsoleUtil.getConfirmationFromUser("Load ddl scripts? Confirm again, will erase important tables. (Y/N) for " +
                                                         this.Tbc.Telcobrightpartner.databasename))
                     {
                         Menu menu = new Menu(this.DdlScripts.Values.Select(s => s.RuleName),
