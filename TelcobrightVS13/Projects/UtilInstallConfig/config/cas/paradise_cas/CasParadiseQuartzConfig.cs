@@ -20,7 +20,7 @@ namespace InstallConfig
         private List<QuartzTbDaemonConfig> DaemonConfigurations { get; set; }
         public override List<QuartzTbDaemonConfig> GetSchedulerDaemonConfigs()
         {
-            List<QuartzTbDaemonConfig> quartzTbDaemonConfigs = CasQuartzHelper.GetSchedulerDaemonConfigs(this.CustomerName);
+            List<QuartzTbDaemonConfig> quartzTbDaemonConfigs = CasQuartzHelper.GetSchedulerDaemonConfigs(this.DatabaseName);
             return quartzTbDaemonConfigs;
         }
 

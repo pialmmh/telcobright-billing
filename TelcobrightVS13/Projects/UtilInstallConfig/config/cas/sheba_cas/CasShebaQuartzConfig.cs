@@ -15,19 +15,20 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class CasShebaAbstractConfigGenerator //quartz config part
+    public sealed partial class CasShebaAbstractConfigGenerator //quartz config part
     {
-        private List<QuartzTbDaemonConfig> DaemonConfigurations { get; set; }
         public override List<QuartzTbDaemonConfig> GetSchedulerDaemonConfigs()
         {
-            this.DaemonConfigurations = new List<QuartzTbDaemonConfig>();
-            this.DaemonConfigurations.AddRange(GetFileListerInstances(this.Tbc.Telcobrightpartner.databasename));
-            this.DaemonConfigurations.AddRange(GetLogFileJobCreatorInstances(this.Tbc.Telcobrightpartner.databasename));
-            this.DaemonConfigurations.AddRange(GetFileCopierInstances(this.Tbc.Telcobrightpartner.databasename));
-            this.DaemonConfigurations.AddRange(GetCdrJobProcessorInstances(this.Tbc.Telcobrightpartner.databasename));
-            this.DaemonConfigurations.AddRange(GetOptimizerInstances(this.Tbc.Telcobrightpartner.databasename));
-            this.DaemonConfigurations.AddRange(GetInvoiceGeneratorInstances(this.Tbc.Telcobrightpartner.databasename));
-            return this.DaemonConfigurations;
+            List<QuartzTbDaemonConfig> daemonConfigurations = CasQuartzHelper.GetSchedulerDaemonConfigs(this.DatabaseName);
+            return daemonConfigurations;
+            //this.DaemonConfigurations = new List<QuartzTbDaemonConfig>();
+            //this.DaemonConfigurations.AddRange(GetFileListerInstances(this.Tbc.Telcobrightpartner.databasename));
+            //this.DaemonConfigurations.AddRange(GetLogFileJobCreatorInstances(this.Tbc.Telcobrightpartner.databasename));
+            //this.DaemonConfigurations.AddRange(GetFileCopierInstances(this.Tbc.Telcobrightpartner.databasename));
+            //this.DaemonConfigurations.AddRange(GetCdrJobProcessorInstances(this.Tbc.Telcobrightpartner.databasename));
+            //this.DaemonConfigurations.AddRange(GetOptimizerInstances(this.Tbc.Telcobrightpartner.databasename));
+            //this.DaemonConfigurations.AddRange(GetInvoiceGeneratorInstances(this.Tbc.Telcobrightpartner.databasename));
+            //return this.DaemonConfigurations;
         }
 
         private List<QuartzTbDaemonConfig> GetFileListerInstances(string operatorName)
