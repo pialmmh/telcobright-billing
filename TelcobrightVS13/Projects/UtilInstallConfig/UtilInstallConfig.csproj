@@ -305,6 +305,7 @@
     <Compile Include="config\allDeployment\AllDeploymenProfiles.cs" />
     <Compile Include="config\_helper\CasCdrSettingHelper.cs" />
     <Compile Include="config\_helper\CasConfigHelper.cs" />
+    <Compile Include="config\_helper\CasPortalSettingsHelper.cs" />
     <Compile Include="config\_helper\CasQuartzHelper.cs" />
     <Compile Include="config\_helper\CasNeInfoHelper.cs" />
     <Compile Include="config\_helper\CasServiceGroupHelper.cs" />

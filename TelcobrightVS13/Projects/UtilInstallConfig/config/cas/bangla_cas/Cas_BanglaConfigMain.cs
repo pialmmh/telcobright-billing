@@ -45,7 +45,7 @@ namespace InstallConfig
             this.PrepareProductAndServiceConfiguration();
             this.Tbc.ApplicationServersConfig = this.GetServerConfigs();
             this.Tbc.DatabaseSetting = this.GetDatabaseConfigs();
-            //this.Tbc.PortalSettings = CasPortalSettingsHelper.GetCasCommonPortalSettings(this.Tbc);
+            this.Tbc.PortalSettings = CasPortalSettingsHelper.GetCasCommonPortalSettings(this.Tbc);
             return this.Tbc;
         }
     }
