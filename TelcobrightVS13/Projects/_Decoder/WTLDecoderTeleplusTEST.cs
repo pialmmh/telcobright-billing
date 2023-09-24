@@ -36,7 +36,7 @@ namespace Decoders
             this.Input = input;
             string fileName = this.Input.FullPath;
             //List<string[]> lines = FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(fileName, ',', 1, "\"", ";");
-            List<string[]> lines = FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(fileName, ',', 1, "\"", ";");
+            List<string[]> lines = FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(fileName, ',', 1, "\"", ",");
 
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
@@ -44,12 +44,32 @@ namespace Decoders
             List<cdrfieldmappingbyswitchtype> fieldMappings = null;
 
             foreach (string[] lineAsArr in lines)
+
             {
                 //string chargingStatus = lineAsArr[3] == "S" ? "1" : "0"; //done
                 //if (chargingStatus != "1") continue;
                 string[] textCdr = new string[input.MefDecodersData.Totalfieldtelcobright];
-                textCdr[Fn.OriginatingCallingNumber] = 
+
+                textCdr[Fn.Filename] = fileName;
+                textCdr[Fn.Switchid] = Input.Ne.idSwitch.ToString();
+
+                textCdr[Fn.OriginatingCallingNumber] = lineAsArr[66];
+                textCdr[Fn.OriginatingCalledNumber] = lineAsArr[68];
+
+                textCdr[Fn.TerminatingCallingNumber] = lineAsArr[82];
+                textCdr[Fn.TerminatingCalledNumber] = lineAsArr[84];
+
+                textCdr[Fn.DurationSec] = lineAsArr[60];
+
+
+
+
                 textCdr[Fn.Validflag] = "1";
+
+
+
+
+
                 decodedRows.Add(textCdr);
             }
 

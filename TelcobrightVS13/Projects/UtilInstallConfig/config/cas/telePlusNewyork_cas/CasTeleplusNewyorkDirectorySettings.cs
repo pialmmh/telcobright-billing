@@ -19,7 +19,7 @@ namespace InstallConfig
     public partial class CasTeleplusNewyorkAbstractConfigGenerator //quartz config part
     {
         private FileLocation vaultHuwaei;
-        private FileLocation vaultDialogic;
+        private FileLocation vaultWtl;
         private SyncPair huawei_Vault;
         private SyncPair zteCAS;
 
@@ -49,9 +49,9 @@ namespace InstallConfig
                 Pass = "",
             };
 
-            this.vaultDialogic = new FileLocation()
+            this.vaultWtl = new FileLocation()
             {
-                Name = "vaultDialogic",//this is refered in ne table, name MUST start with "Vault"
+                Name = "vault.WTL",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
@@ -65,7 +65,7 @@ namespace InstallConfig
 
             //add locations to directory settings
             tbc.DirectorySettings.FileLocations.Add(vaultHuwaei.Name, vaultHuwaei);
-            tbc.DirectorySettings.FileLocations.Add(vaultDialogic.Name, vaultDialogic);
+            tbc.DirectorySettings.FileLocations.Add(vaultWtl.Name, vaultWtl);
             
 
             
