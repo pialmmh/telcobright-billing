@@ -33,6 +33,7 @@ namespace PortalApp._portalHelper
             }
             telcobrightpartner thisPartner = null;
             string binpath = System.Web.HttpRuntime.BinDirectory;
+
             TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
             using (PartnerEntities conTelco = new PartnerEntities())
             {
