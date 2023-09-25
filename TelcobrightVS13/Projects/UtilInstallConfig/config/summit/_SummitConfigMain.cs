@@ -44,7 +44,7 @@ namespace InstallConfig
                 });
         }
 
-        public override TelcobrightConfig GenerateConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
+        public override TelcobrightConfig GenerateFullConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
         {
             
 

@@ -21,7 +21,7 @@ namespace TelcobrightMediation
 
         public SegmentedCdrInvoicingJobProcessor(InvoiceGenerationInputData invoiceGenerationInputData,
             string indexedColumnName, string dateColumnName)
-            : base(invoiceGenerationInputData.TelcobrightJob, invoiceGenerationInputData.Context,
+            : base(invoiceGenerationInputData.Tbc.CdrSetting,invoiceGenerationInputData.TelcobrightJob, invoiceGenerationInputData.Context,
                 invoiceGenerationInputData.Tbc.CdrSetting.BatchSizeWhenPreparingLargeSqlJob,
                 indexedColumnName, dateColumnName)
         {

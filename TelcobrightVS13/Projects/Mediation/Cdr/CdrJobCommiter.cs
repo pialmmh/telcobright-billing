@@ -5,14 +5,14 @@ namespace TelcobrightMediation.Cdr
 {
     public static class CdrJobCommiter
     {
-        public static void Commit(DbCommand cmd)
+        public static void Commit(DbCommand cmd, CdrSetting cdrSetting)
         {
-            CheckIfCdrDurationMatchesSummaryDuration(cmd);
+            CheckIfCdrDurationMatchesSummaryDuration(cmd, cdrSetting);
             CheckIfTransactionAmountMatchesLedgerSummary(cmd);
             cmd.CommandText = "commit;";
             cmd.ExecuteNonQuery();
         }
-        private static void CheckIfCdrDurationMatchesSummaryDuration(DbCommand cmd)
+        private static void CheckIfCdrDurationMatchesSummaryDuration(DbCommand cmd, CdrSetting cdrSetting)
         {
             cmd.CommandText = @"select totalinsertedduration as duration from cdrmeta union all
 										select 
@@ -32,18 +32,27 @@ namespace TelcobrightMediation.Cdr
             DbDataReader reader = cmd.ExecuteReader();
             decimal durationInCdr = -1;
             int durationRowCount = 0;
-            while (reader.Read())
+            try
             {
-                if (++durationRowCount == 1)
-                    durationInCdr = reader.GetDecimal(0);
-                else
+                while (reader.Read())
                 {
-                    decimal dayOrSummaryDuration = reader.GetDecimal(0);
-                    if (dayOrSummaryDuration != durationInCdr)
-                        throw new Exception("Duration in cdr & summary tables do not match after writing cdrs.");
+                    if (++durationRowCount == 1)
+                        durationInCdr = reader.GetDecimal(0);
+                    else
+                    {
+                        decimal dayOrSummaryDuration = reader.GetDecimal(0);
+                        if (cdrSetting.useCasStyleProcessing==false && dayOrSummaryDuration != durationInCdr)
+                            throw new Exception("Duration in cdr & summary tables do not match after writing cdrs.");
+                    }
                 }
+                reader.Close();
             }
-            reader.Close();
+            catch (Exception exception)
+            {
+                reader.Close();
+                Console.WriteLine(exception);
+                throw;
+            }
         }
         private static void CheckIfTransactionAmountMatchesLedgerSummary(DbCommand cmd)
         {

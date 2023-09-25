@@ -152,7 +152,7 @@ namespace InstallConfig
                         //    AbstractConfigGenerator configGenerator = this.configGenerators
                         //        .First(c => c.Tbc.Telcobrightpartner.databasename == dbOrInstanceName);
                         //    InstanceConfig ic = this.Deploymentprofile.instances.First(i => i.Name == dbOrInstanceName);
-                        //    TelcobrightConfig tbc = configGenerator.GenerateConfig(ic, 1);
+                        //    TelcobrightConfig tbc = configGenerator.GenerateFullConfig(ic, 1);
                         //    tbc.DeploymentProfile = this.Deploymentprofile;
                         //    int schedulerPortNo = ic.SchedulerPortNo;
                         //    tbWithoutFullConfig.TcpPortNoForRemoteScheduler = schedulerPortNo;
@@ -241,11 +241,11 @@ namespace InstallConfig
                 AbstractConfigGenerator configGenerator = this.configGenerators
                     .First(c => c.Tbc.Telcobrightpartner.databasename == dbOrInstanceName);
                 InstanceConfig ic = this.Deploymentprofile.instances.First(i => i.Name == dbOrInstanceName);
-                TelcobrightConfig tbc = configGenerator.GenerateConfig(ic, 1);
+                TelcobrightConfig tbc = configGenerator.GenerateFullConfig(ic, 1);
                 tbc.DeploymentProfile = this.Deploymentprofile;
                 int schedulerPortNo = ic.SchedulerPortNo;
-                tbWithoutFullConfig.TcpPortNoForRemoteScheduler = schedulerPortNo;
-                tbWithoutFullConfig.SchedulerDaemonConfigs = configGenerator.GetSchedulerDaemonConfigs();
+                tbc.TcpPortNoForRemoteScheduler = schedulerPortNo;
+                tbc.SchedulerDaemonConfigs = configGenerator.GetSchedulerDaemonConfigs();
                 TelcoBillingConfigGenerator generator = new TelcoBillingConfigGenerator(tbc, this.ConfigPathHelper, this.ConsoleUtil, this.DdlScripts);
                 generator.writeConfig();
                 generator.LoadDdlScripts();
@@ -269,7 +269,7 @@ namespace InstallConfig
                 AbstractConfigGenerator configGenerator = this.configGenerators
                     .First(c => c.Tbc.Telcobrightpartner.databasename == dbOrInstanceName);
                 InstanceConfig ic = this.Deploymentprofile.instances.First(i => i.Name == dbOrInstanceName);
-                TelcobrightConfig tbc = configGenerator.GenerateConfig(ic, 1);
+                TelcobrightConfig tbc = configGenerator.GenerateFullConfig(ic, 1);
                 tbc.DeploymentProfile = this.Deploymentprofile;
 
                 Console.WriteLine("Successfully generated config for "

@@ -21,15 +21,19 @@ using TelcobrightMediation.Accounting;
 namespace InstallConfig
 {
     [Export(typeof(AbstractConfigGenerator))]
-    public partial class CasShebaAbstractConfigGenerator : AbstractConfigGenerator
+    public sealed partial class CasShebaAbstractConfigGenerator : AbstractConfigGenerator
     {
         public override TelcobrightConfig Tbc { get; set; }
+        public int IdOperator { get; set; } = 20;
+        public string CustomerName { get; set; } = "Integrated Service Limited (Sheba ICX)";
+        public string DatabaseName { get; set; } = "sheba_cas";
+
         public CasShebaAbstractConfigGenerator()
         {
-            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx,CasTbPartnerFactory.GetTemplatePartner(20, "Integrated Service Limited (Sheba ICX)", "sheba_cas"));
+            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx,CasTbPartnerFactory.GetTemplatePartner(this.IdOperator,this.CustomerName , this.DatabaseName));
         }
 
-        public override TelcobrightConfig GenerateConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
+        public override TelcobrightConfig GenerateFullConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
         {
            
             this.Tbc.CdrSetting = new CasCdrSettingHelper().getTemplateCdrSettings();

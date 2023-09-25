@@ -21,31 +21,35 @@ using TelcobrightMediation.Accounting;
 namespace InstallConfig
 {
     [Export(typeof(AbstractConfigGenerator))]
-    public partial class CasParadiseAbstractConfigGenerator : AbstractConfigGenerator
+    public sealed partial class CasParadiseAbstractConfigGenerator : AbstractConfigGenerator
     {
         public override TelcobrightConfig Tbc { get; set; }
+        //public override string CustomerName { get; set; } = "Paradise Telecom";
+        //public override string DatabaseName { get; set; } = "paradise_cas";
+        public int IdOperator { get; set; } = 15;
+        public string CustomerName { get; set; } = "Paradise Telecom";
+        public string DatabaseName { get; set; } = "paradise_cas";
+
         public CasParadiseAbstractConfigGenerator()
         {
-            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx,CasTbPartnerFactory.GetTemplatePartner(15, "Paradise Telecom", "paradise_cas"));
+            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx,CasTbPartnerFactory.GetTemplatePartner(15, this.CustomerName, this.DatabaseName));
         }
 
-        public override TelcobrightConfig GenerateConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
+        public override TelcobrightConfig GenerateFullConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
         {
-            this.Tbc.CdrSetting =new CasCdrSettingHelper().getTemplateCdrSettings();
-
-            this.PrepareDirectorySettings(this.Tbc);
+            var newTbc = new TelcobrightConfig(TelecomOperatortype.Icx, CasTbPartnerFactory
+                .GetTemplatePartner(this.IdOperator, this.CustomerName, this.DatabaseName));
+            newTbc.CdrSetting =new CasCdrSettingHelper().getTemplateCdrSettings();
+            this.PrepareDirectorySettings(newTbc);
 
             string csvPathForNe = new DirectoryInfo(FileAndPathHelper.GetCurrentExecPath()).Parent.Parent.FullName + Path.DirectorySeparatorChar.ToString() + "config" + Path.DirectorySeparatorChar.ToString() + "_helper" + Path.DirectorySeparatorChar.ToString() + "casOperatorInfo.xlsx";//add more
             CasNeInfoHelper neHelper = new CasNeInfoHelper(csvPathForNe);
-            this.Tbc.Nes = neHelper.getNesByOpId(this.Tbc.Telcobrightpartner.idCustomer);
-
-
-
+            newTbc.Nes = neHelper.getNesByOpId(this.IdOperator);
             this.PrepareProductAndServiceConfiguration();
-            this.Tbc.ApplicationServersConfig = this.GetServerConfigs();
-            this.Tbc.DatabaseSetting = this.GetDatabaseConfigs();
-            this.Tbc.PortalSettings = GetPortalSettings(this.Tbc);
-            return this.Tbc;
+            newTbc.ApplicationServersConfig = this.GetServerConfigs();
+            newTbc.DatabaseSetting = this.GetDatabaseConfigs();
+            newTbc.PortalSettings = GetPortalSettings(this.Tbc);
+            return newTbc;
         }
     }
 }

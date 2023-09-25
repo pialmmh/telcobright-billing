@@ -45,7 +45,7 @@ namespace InstallConfig
                 });
         }
 
-        public override TelcobrightConfig GenerateConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
+        public override TelcobrightConfig GenerateFullConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
         {
             
             CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
