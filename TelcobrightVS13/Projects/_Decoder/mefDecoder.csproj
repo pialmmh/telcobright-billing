@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GenbandC3DecoderBangla.cs" />
+    <Compile Include="GNEWDecoderRingTechTEST.cs" />
     <Compile Include="WTLDecoderTeleplusTEST.cs" />
     <Compile Include="CataleyaCsvDecoderCWLNoFailed.cs" />
     <Compile Include="CataleyaCsvDecoderJslNoFailed.cs" />
