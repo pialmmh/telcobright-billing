@@ -95,7 +95,7 @@
 
         <asp:Button Style="margin-left: 5px" ID="submit" runat="server" Text="Show Report" OnClick="submit_Click" OnClientClick="SethidValueSubmitClickFlag('true');" />
         <asp:Button ID="Button1" runat="server" OnClick="Button1_Click"
-            Style="margin-left: px" Text="Export" Visible="False" />
+            Style="margin-left: 0px" Text="Export" Visible="False" />
         <asp:Button ID="ShowHideFilter" runat="server" ViewStateMode="Enabled"
             Style="margin-left: 0px" Text="Hide Filter" Visible="True" OnClientClick="ToggleParamBorderDiv();return false;" />
         <asp:Button ID="ButtonTemplate" runat="server" OnClientClick="var value = prompt('Enter name of the Report Template:'); SetHidValueTemplate(value);" OnClick="ButtonTemplate_Click"
@@ -286,17 +286,17 @@
                         <div style="float: left; height: 25px; min-width: 1285px;">
 
                             <div style="float: left;">
-                                View by ICX: 
+                                <%--View by ICX:--%> 
                             <asp:CheckBox ID="CheckBoxViewIncomingRoute" runat="server" AutoPostBack="True"
-                                OnCheckedChanged="CheckBoxViewIncomingRoute_CheckedChanged" Checked="False" />
+                                OnCheckedChanged="CheckBoxViewIncomingRoute_CheckedChanged" Checked="False"  Visible="False"/>
 
                                 <asp:DropDownList ID="DropDownListViewIncomingRoute" runat="server"
-                                    Enabled="False">
+                                    Enabled="False" Visible="False">
                                 </asp:DropDownList>
 
                             </div>
 
-                            <div style="float: left; margin-left: 18px;">
+                            <div style="float: left;">
                                 View by IOS Route:
                             <asp:CheckBox ID="CheckBoxViewOutgoingRoute" runat="server"
                                 AutoPostBack="True" OnCheckedChanged="CheckBoxViewOutgoingRoute_CheckedChanged" Checked="false" />
@@ -342,7 +342,8 @@
             <AlternatingRowStyle BackColor="#f2f2f2" ForeColor="#284775" />
           <Columns>
                 <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" />
-              <asp:BoundField DataField="tup_incomingroute" HeaderText="ICX" SortExpression="tup_incomingroute" />
+              <%--<asp:BoundField DataField="tup_incomingroute" HeaderText="ICX" SortExpression="tup_incomingroute" />--%>
+              <asp:BoundField DataField="icxName" HeaderText="ICX" SortExpression="IcxName" />
                 <asp:BoundField DataField="Country" HeaderText="Country"
                     SortExpression="Country"/>
                 <asp:BoundField DataField="Destination" HeaderText="Destination"

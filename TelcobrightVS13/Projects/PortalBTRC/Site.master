@@ -204,6 +204,7 @@ border-bottom-style:ridge;min-width:180px;padding-top:10px;">
       <asp:TreeNode Value="Individual ICX Report" Expanded="True" Text="Individual ICX Report" SelectAction="None">
           <asp:TreeNode Value="ICX" Expanded="True" Text="ICX" SelectAction="None">
            <asp:TreeNode Value="Domestic" Text="Domestic" SelectAction="Select" NavigateUrl="~/ICX_Reports/Cas_ICX/CasDomestic.aspx"> </asp:TreeNode>
+              <asp:TreeNode Value="DomesticWithLtfs" Text="Domestic With LTFS" SelectAction="Select" NavigateUrl="~/ICX_Reports/Cas_ICX/CasDomesticWithLtfs.aspx"> </asp:TreeNode>
             <asp:TreeNode Value="Intl. Incoming" Text="Intl. Incoming" SelectAction="Select" NavigateUrl="~/ICX_Reports/Cas_ICX/CasInternationalIn_ICX.aspx"> </asp:TreeNode>
             <asp:TreeNode Value="Intl. Outgoing" Text="Intl. Outgoing" SelectAction="Select" NavigateUrl="~/ICX_Reports/Cas_ICX/CasInternationalOut _ICX.aspx"> </asp:TreeNode>
             <%--  <asp:TreeNode Value="Toll Free" Text="Toll Free" SelectAction="Select" NavigateUrl="~/reports/transit/LocalTollFree.aspx"> </asp:TreeNode>

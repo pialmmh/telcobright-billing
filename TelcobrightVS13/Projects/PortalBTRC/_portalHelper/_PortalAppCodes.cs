@@ -37,8 +37,9 @@ namespace PortalApp
             string binpath = System.Web.HttpRuntime.BinDirectory;
             TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
             var databaseSetting = telcobrightConfig.DatabaseSetting;
-            //string userName = Page.User.Identity.Name;
-            string userName = Environment.UserName;
+            Page pageDetailsPage = new Page();
+            string userName = pageDetailsPage.User.Identity.Name;
+     
 
             string dbName;
             if (telcobrightConfig.DeploymentProfile.UserVsDbName.ContainsKey(userName))

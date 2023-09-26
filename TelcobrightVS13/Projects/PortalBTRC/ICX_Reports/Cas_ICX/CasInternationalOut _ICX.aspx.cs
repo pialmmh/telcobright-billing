@@ -16,10 +16,12 @@ using reports;
 using MediationModel;
 using PortalApp;
 using PortalApp.ReportHelper;
+using TelcobrightInfra;
 
 public partial class CasDefaultRptIntlOutIcx : System.Web.UI.Page
 {
-    DataTable _dt; bool _timerflag = false;
+    DataTable _dt;
+    bool _timerflag = false;
 
     public TelcobrightConfig tbc;
    
@@ -57,8 +59,8 @@ public partial class CasDefaultRptIntlOutIcx : System.Web.UI.Page
                                 CheckBoxIntlPartner.Checked==true?"tup_outpartnerid":string.Empty,
                                 CheckBoxShowByAns.Checked==true?"tup_sourceID":string.Empty,
                                 CheckBoxShowByIgw.Checked==true?"tup_inpartnerid":string.Empty,
-                                CheckBoxShowByCustomerRate.Checked==true?"tup_customerrate":string.Empty,
-                                "tup_customercurrency",
+                                CheckBoxShowByCustomerRate.Checked==true?"usdRate":string.Empty,
+                                "usdRate",
                                 CheckBoxViewIncomingRoute.Checked==true?"tup_incomingroute":string.Empty,
                                 CheckBoxViewOutgoingRoute.Checked==true?"tup_outgoingroute":string.Empty,
                             },
@@ -86,13 +88,13 @@ public partial class CasDefaultRptIntlOutIcx : System.Web.UI.Page
         {
             case "Hourly":
             case "Daily":
-                return "tup_starttime";
+                return "Date";
             case "Weekly":
-                return "concat(year(tup_starttime),'-W',week(tup_starttime))";
+                return "concat(year(Date),'-W',week(Date))";
             case "Monthly":
-                return "concat(year(tup_starttime),'-',date_format(tup_starttime,'%b'))";
+                return "concat(year(Date),'-',date_format(Date,'%b'))";
             case "Yearly":
-                return "DATE_FORMAT(tup_starttime,'%Y')";
+                return "DATE_FORMAT(Date,'%Y')";
             default:
                 return string.Empty;
         }
@@ -158,7 +160,7 @@ public partial class CasDefaultRptIntlOutIcx : System.Web.UI.Page
         GridView1.Columns[GetColumnIndexByName(GridView1, "Country")].Visible = CheckBoxShowByCountry.Checked;
         GridView1.Columns[GetColumnIndexByName(GridView1, "Destination")].Visible = CheckBoxShowByDestination.Checked;
         //GridView1.Columns[3].Visible = CheckBoxShowByIgw.Checked;
-        GridView1.Columns[GetColumnIndexByName(GridView1, "tup_incomingroute")].Visible = CheckBoxViewIncomingRoute.Checked;
+        //GridView1.Columns[GetColumnIndexByName(GridView1, "tup_incomingroute")].Visible = CheckBoxViewIncomingRoute.Checked;
 
         GridView1.Columns[GetColumnIndexByName(GridView1, "International Partner")].Visible = CheckBoxIntlPartner.Checked;
         GridView1.Columns[GetColumnIndexByName(GridView1, "tup_outgoingroute")].Visible = CheckBoxViewOutgoingRoute.Checked;
@@ -192,11 +194,60 @@ public partial class CasDefaultRptIntlOutIcx : System.Web.UI.Page
         using (MySqlConnection connection = new MySqlConnection())
         {
 
-            connection.ConnectionString = ConfigurationManager.ConnectionStrings["reader"].ConnectionString;
-
+            connection.ConnectionString = PortalConnectionHelper.GetReadOnlyConnectionString(this.tbc.DatabaseSetting);
             connection.Open();
+            string sql = GetQuery();
 
-            MySqlCommand cmd = new MySqlCommand(GetQuery(), connection);
+
+
+
+            //Dictionary<string, string> dbVsDbName = AllDeploymenProfiles.getDeploymentprofiles()
+            //    .FindAll(p => p.profileName == "cas")[0].UserVsDbName;
+            Dictionary<string, string> userVsDbName = tbc.DeploymentProfile.UserVsDbName;
+
+
+            List<string> tableNames = new List<string>();
+            string logIdentityName = this.User.Identity.Name;
+            String selectedIcx = logIdentityName;
+            TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
+            string selectedUserdbName;
+            if (userVsDbName.ContainsKey(logIdentityName))
+            {
+                selectedUserdbName = userVsDbName[logIdentityName];
+            }
+            else
+            {
+                selectedUserdbName = telcobrightConfig.DatabaseSetting.DatabaseName;
+            }
+
+            if (selectedIcx.Contains("btrc"))
+            {
+                foreach (var db in userVsDbName)
+                {
+                    if (!db.Value.Contains("btrc"))
+                    {
+                        tableNames.Add(db.Value + ".sum_voice_day_02");
+                        //tableNames.Add(db.Value + ".sum_voice_day_04");
+                    }
+
+                }
+            }
+            else
+            {
+                tableNames.Add(selectedUserdbName + ".sum_voice_day_02");
+                //tableNames.Add(selectedUserdbName + ".sum_voice_day_04");
+            }
+
+
+
+            //use sql aggregator
+            SqlAggregator sqlAggregator =
+                new SqlAggregator(nonUnionSql: sql.Replace("sum_voice_day_02", "<basetable>").Replace("sum_voice_hr_02", "<basetable>"),
+                    tableNames: tableNames,
+                    _baseSqlStartsWith: "(",
+                    _baseSqlEndsWith: ") x");
+            string aggregatedSql = sqlAggregator.getFinalSql();
+            MySqlCommand cmd = new MySqlCommand(aggregatedSql, connection);
             cmd.Connection = connection;
 
             //All Possible Report Combinations are here:
@@ -1676,10 +1727,13 @@ public partial class CasDefaultRptIntlOutIcx : System.Web.UI.Page
         DropDownListViewIncomingRoute.Items.Add(new ListItem("[All]", "-1"));
         foreach (var kv in tbc.DeploymentProfile.UserVsDbName)
         {
-            string username = kv.Key;
-            string dbNameAsRouteName = kv.Value;
-            string icxName = dbNameAsRouteName.Split('_')[0];
-            DropDownListViewIncomingRoute.Items.Add(new ListItem(icxName, dbNameAsRouteName));
+            if (!kv.Value.Contains("btrc"))
+            {
+                string username = kv.Key;
+                string dbNameAsRouteName = kv.Value;
+                string icxName = dbNameAsRouteName.Split('_')[0];
+                DropDownListViewIncomingRoute.Items.Add(new ListItem(icxName, dbNameAsRouteName));
+            }
 
         }
     }

@@ -276,15 +276,16 @@ namespace InstallConfig
                                 },
                                 SpringExpressionIfRole = new List<string>()
                                 {
-                                    "nodes['Configuration'].Expanded=true",
-                                    "nodes['Billing'].Expanded=true",
+                                    "nodes['Configuration'].Expanded=false",
+                                    "nodes['Billing'].Expanded=false",
                                     "nodes['Mediation'].Expanded=true",
-                                    "nodes['Settings'].Expanded=true",
-                                    "nodes['Billing Reports'].Expanded=true",
+                                    "nodes['Settings'].Expanded=false",
+                                    "nodes['Reports'].Expanded=false",
+                                    "nodes['Billing Reports'].Expanded=false",
                                     "nodes['Reports/IGW'].Expanded=false",
                                     "nodes['Reports/Transit'].Expanded=false",
-                                    "nodes['Individual ICX Report'].Expanded=false",
-                                    "nodes['Individual ICX Report/ICX'].Expanded=false"
+                                    "nodes['Individual ICX Report'].Expanded=true",
+                                    "nodes['Individual ICX Report/ICX'].Expanded=true"
                                     
                                 },
                                 SpringExpressionIfNotRole = new List<string>()
@@ -336,6 +337,10 @@ namespace InstallConfig
                     },
                     {
                         "~/ICX_Reports/Cas_ICX/CasDomestic.aspx",
+                        settingIntlIn
+                    },
+                    {
+                        "~/ICX_Reports/Cas_ICX/CasDomesticWithLtfs.aspx",
                         settingIntlIn
                     },
                     {

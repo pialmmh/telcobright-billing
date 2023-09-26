@@ -25,6 +25,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
     private int _mShowByCountry=0;
     private int _mShowByAns = 0;
     DataTable _dt;
+    TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
     public TelcobrightConfig tbc;
     private string GetQuery()
     {
@@ -198,7 +199,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
 
 
             List<string> tableNames = new List<string>();
-
+            string logIdentityName = this.User.Identity.Name;
 
 
             String selectedIcxName = CheckBoxViewIncomingRoute.Checked == true ? DropDownListViewIncomingRoute.SelectedIndex > 0 ? $@"{DropDownListViewIncomingRoute.SelectedItem.Value}" : string.Empty : string.Empty;

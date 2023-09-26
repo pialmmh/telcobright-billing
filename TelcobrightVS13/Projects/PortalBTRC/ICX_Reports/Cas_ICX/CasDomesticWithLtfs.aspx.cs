@@ -71,7 +71,7 @@ public partial class CasDefaultRptDomesticWithLtfsIcx : System.Web.UI.Page
                 CheckBoxPartner.Checked==true?DropDownListPartner.SelectedIndex>0?" tup_inpartnerid="+DropDownListPartner.SelectedValue:string.Empty:string.Empty,
                 CheckBoxShowByAns.Checked==true?DropDownListAns.SelectedIndex>0?" tup_destinationId="+DropDownListAns.SelectedValue:string.Empty:string.Empty,
                 CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_outpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty,
-                CheckBoxViewIncomingRoute.Checked==true?DropDownListViewIncomingRoute.SelectedIndex>0?" tup_incomingroute="+"'"+DropDownListViewIncomingRoute.SelectedItem.Value:string.Empty:string.Empty,
+                //CheckBoxViewIncomingRoute.Checked==true?DropDownListViewIncomingRoute.SelectedIndex>0?" tup_incomingroute="+"'"+DropDownListViewIncomingRoute.SelectedItem.Value:string.Empty:string.Empty,
                 CheckBoxViewOutgoingRoute.Checked==true?DropDownListViewOutgoingRoute.SelectedIndex>0?" tup_outgoingroute="+DropDownListViewOutgoingRoute.SelectedItem.Value:string.Empty:string.Empty,
 
             }).getSQLString();
@@ -186,26 +186,51 @@ public partial class CasDefaultRptDomesticWithLtfsIcx : System.Web.UI.Page
 
         using (MySqlConnection connection = new MySqlConnection())
         {
-            connection.ConnectionString = ConfigurationManager.ConnectionStrings["reader"].ConnectionString;
-
+            connection.ConnectionString = PortalConnectionHelper.GetReadOnlyConnectionString(this.tbc.DatabaseSetting);
             connection.Open();
-
             string sql = GetQuery();
-            Dictionary<string,string> dbVsDbName = AllDeploymenProfiles.getDeploymentprofiles().FindAll(p=>p.profileName=="cas")[0].UserVsDbName;
 
+
+
+
+            //Dictionary<string, string> dbVsDbName = AllDeploymenProfiles.getDeploymentprofiles()
+            //    .FindAll(p => p.profileName == "cas")[0].UserVsDbName;
+            Dictionary<string, string> userVsDbName = tbc.DeploymentProfile.UserVsDbName;
 
 
             List<string> tableNames = new List<string>();
-
-            foreach (var db in dbVsDbName)
+            string logIdentityName = this.User.Identity.Name;
+            String selectedIcx = logIdentityName;
+            TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
+            string selectedUserdbName;
+            if (userVsDbName.ContainsKey(logIdentityName))
             {
-                if (!db.Value.Contains("btrc"))
-                {
-                    tableNames.Add(db.Value+ ".sum_voice_day_01");
-                    tableNames.Add(db.Value + ".sum_voice_day_04");
-                }
-                   
+                selectedUserdbName = userVsDbName[logIdentityName];
             }
+            else
+            {
+                selectedUserdbName = telcobrightConfig.DatabaseSetting.DatabaseName;
+            }
+
+            if (selectedIcx.Contains("btrc"))
+            {
+                foreach (var db in userVsDbName)
+                {
+                    if (!db.Value.Contains("btrc"))
+                    {
+                        tableNames.Add(db.Value + ".sum_voice_day_01");
+                        tableNames.Add(db.Value + ".sum_voice_day_04");
+                    }
+
+                }
+            }
+            else
+            {
+                tableNames.Add(selectedUserdbName + ".sum_voice_day_01");
+                tableNames.Add(selectedUserdbName + ".sum_voice_day_04");
+            }
+
+
 
             //use sql aggregator
             SqlAggregator sqlAggregator =
@@ -697,22 +722,31 @@ public partial class CasDefaultRptDomesticWithLtfsIcx : System.Web.UI.Page
                     //}
                     foreach (var kv in tbc.DeploymentProfile.UserVsDbName)
                     {
-                        string username = kv.Key;
-                        string dbNameAsRouteName = kv.Value;
-                        string icxName = dbNameAsRouteName.Split('_')[0];
-                        DropDownListViewIncomingRoute.Items.Add(new ListItem(icxName, dbNameAsRouteName));
+                        if (!kv.Value.Contains("btrc"))
+                        {
+                            string username = kv.Key;
+                            string dbNameAsRouteName = kv.Value;
+                            string icxName = dbNameAsRouteName.Split('_')[0];
+                            DropDownListViewIncomingRoute.Items.Add(new ListItem(icxName, dbNameAsRouteName));
+                        }
 
                     }
                 }
             }
             else
             {
-                using (PartnerEntities contex = new PartnerEntities())
+                using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(tbc.DatabaseSetting))
                 {
-                    int idPartner = Convert.ToInt32(DropDownListPartner.SelectedValue);
-                    foreach (route route in contex.routes.Where(x => x.idPartner == idPartner))
+                    foreach (var kv in tbc.DeploymentProfile.UserVsDbName)
                     {
-                        DropDownListViewIncomingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
+                        if (!kv.Value.Contains("btrc"))
+                        {
+                            string username = kv.Key;
+                            string dbNameAsRouteName = kv.Value;
+                            string icxName = dbNameAsRouteName.Split('_')[0];
+                            DropDownListViewIncomingRoute.Items.Add(new ListItem(icxName, dbNameAsRouteName));
+                        }
+
                     }
                 }
             }

@@ -21,6 +21,24 @@ public partial class DefaultRptIntlInIcx {
     protected global::System.Web.UI.WebControls.DropDownList DropDownListReportSource;
     
     /// <summary>
+    /// CheckBoxViewIncomingRoute control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.CheckBox CheckBoxViewIncomingRoute;
+    
+    /// <summary>
+    /// DropDownListViewIncomingRoute control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList DropDownListViewIncomingRoute;
+    
+    /// <summary>
     /// ViewBySwitch control.
     /// </summary>
     /// <remarks>
@@ -282,22 +300,22 @@ public partial class DefaultRptIntlInIcx {
     protected global::System.Web.UI.WebControls.RadioButton RadioButtonYearly;
     
     /// <summary>
-    /// CheckBoxViewIncomingRoute control.
+    /// CheckBoxShowByIgw control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.CheckBox CheckBoxViewIncomingRoute;
+    protected global::System.Web.UI.WebControls.CheckBox CheckBoxShowByIgw;
     
     /// <summary>
-    /// DropDownListViewIncomingRoute control.
+    /// DropDownListIgw control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList DropDownListViewIncomingRoute;
+    protected global::System.Web.UI.WebControls.DropDownList DropDownListIgw;
     
     /// <summary>
     /// CheckBoxShowByAns control.
@@ -316,24 +334,6 @@ public partial class DefaultRptIntlInIcx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.DropDownList DropDownListAns;
-    
-    /// <summary>
-    /// CheckBoxShowByIgw control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.CheckBox CheckBoxShowByIgw;
-    
-    /// <summary>
-    /// DropDownListIgw control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList DropDownListIgw;
     
     /// <summary>
     /// CheckBoxPartner control.

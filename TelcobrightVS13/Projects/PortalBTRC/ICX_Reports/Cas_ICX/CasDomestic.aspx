@@ -533,15 +533,15 @@
                             <div style="float: left;">
                                 View by ICX: 
                                 <asp:CheckBox ID="CheckBoxViewIncomingRoute" runat="server" AutoPostBack="True"
-                                              OnCheckedChanged="CheckBoxViewIncomingRoute_CheckedChanged" Checked="False" />
+                                              OnCheckedChanged="CheckBoxViewIncomingRoute_CheckedChanged" Checked="False" Visible="False" />
                        
                                 <asp:DropDownList ID="DropDownListViewIncomingRoute" runat="server"
-                                                  Enabled="False">
+                                                  Enabled="False" Visible="False">
                                 </asp:DropDownList>
 
                             </div>
 
-                            <div style="float: left; margin-left: 18px;">
+                            <div style="float: left;">
                                 View by Outgoing Route:
                                 <asp:CheckBox ID="CheckBoxViewOutgoingRoute" runat="server"
                                               AutoPostBack="True" OnCheckedChanged="CheckBoxViewOutgoingRoute_CheckedChanged" Checked="false" />
@@ -597,7 +597,7 @@
                     <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                     <Columns>
                         <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date"  ItemStyle-Wrap="false" />   
-                         <asp:BoundField DataField="tup_incomingroute" HeaderText="ICX" SortExpression="tup_incomingroute" />                
+                        <asp:BoundField DataField="icxName" HeaderText="ICX" SortExpression="IcxName" />                
                         <asp:BoundField DataField="International Partner" HeaderText="Incoming ANS" SortExpression="International Partner" />                     
                         <asp:BoundField DataField="IGW" HeaderText="Outgoing ANS" SortExpression="IGW" />
                         <asp:BoundField DataField="tup_outgoingroute" HeaderText="Outgoing Route" SortExpression="tup_outgoingroute" />
