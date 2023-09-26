@@ -19,7 +19,7 @@ namespace Decoders
     {
         public override string ToString() => this.RuleName;
         public virtual string RuleName => GetType().Name;
-        public int Id => 55;
+        public int Id => 56;
         public string HelpText => "WTL Decoder Teleplus TEST";
         public CompressionType CompressionType { get; set; }
         protected CdrCollectorInputData Input { get; set; }
@@ -27,7 +27,9 @@ namespace Decoders
 
         private static DateTime parseStringToDate(string timestamp)  //20181028051316400 yyyyMMddhhmmssfff
         {
-            DateTime dateTime = DateTime.ParseExact(timestamp, "yyyyMMddHHmmssfff", CultureInfo.InvariantCulture);
+            DateTime dateTime;
+            if (DateTime.TryParseExact("20230904123527", "yyyyMMddHHmmss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime));
+                
             return dateTime;
         }
 
@@ -50,25 +52,47 @@ namespace Decoders
                 //if (chargingStatus != "1") continue;
                 string[] textCdr = new string[input.MefDecodersData.Totalfieldtelcobright];
 
+
+                string startTime = lineAsArr[11].Trim();
+                if (!string.IsNullOrEmpty(startTime))
+                {
+                    startTime = parseStringToDate(startTime).ToString("yyyy-MM-dd HH:mm:ss");
+                }
+
+                string endTime = lineAsArr[11].Trim(); 
+                if (!string.IsNullOrEmpty(endTime))
+                {
+                    endTime = parseStringToDate(endTime).ToString("yyyy-MM-dd HH:mm:ss");
+                }
+
+
+
+
                 textCdr[Fn.Filename] = fileName;
                 textCdr[Fn.Switchid] = Input.Ne.idSwitch.ToString();
 
-                textCdr[Fn.OriginatingCallingNumber] = lineAsArr[9];
-                textCdr[Fn.OriginatingCalledNumber] = lineAsArr[10];
+                textCdr[Fn.OriginatingCallingNumber] = lineAsArr[9].Trim();
+                textCdr[Fn.OriginatingCalledNumber] = lineAsArr[10].Trim();
 
-                textCdr[Fn.TerminatingCallingNumber] = lineAsArr[9];
-                textCdr[Fn.TerminatingCalledNumber] = lineAsArr[10];
+                textCdr[Fn.TerminatingCallingNumber] = lineAsArr[9].Trim();
+                textCdr[Fn.TerminatingCalledNumber] = lineAsArr[10].Trim();
 
-                textCdr[Fn.DurationSec] = lineAsArr[53];
+                textCdr[Fn.DurationSec] = lineAsArr[53].Trim();
 
+                textCdr[Fn.IncomingRoute] = lineAsArr[66].Trim();
+                textCdr[Fn.OutgoingRoute] = lineAsArr[67].Trim();
 
+                textCdr[Fn.Originatingip] = lineAsArr[13].Trim();
+                textCdr[Fn.TerminatingIp] = lineAsArr[14].Trim();
 
+                textCdr[Fn.StartTime] = startTime.Trim();
+                textCdr[Fn.Endtime] = endTime.Trim();
+
+                
 
                 textCdr[Fn.Validflag] = "1";
 
-
-
-
+                
 
                 decodedRows.Add(textCdr);
             }

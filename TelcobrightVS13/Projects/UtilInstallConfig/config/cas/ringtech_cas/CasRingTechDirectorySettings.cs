@@ -43,7 +43,19 @@ namespace InstallConfig
                 Pass = "",
             };
 
-            
+            FileLocation vaultGNEW = new FileLocation()
+            {
+                Name = "vault.GNEW",//this is refered in ne table, name MUST start with "Vault"
+                LocationType = "vault",//locationtype always lowercase
+                OsType = "windows",
+                PathSeparator = @"\",
+                ServerIp = "",
+                StartingPath = "H:/telcobright/vault/resources/cdr/ringtech/ip",
+                User = "",
+                Pass = "",
+            };
+
+
 
             FileLocation fileArchive1 = new FileLocation()//raw cdr archive
             {
@@ -68,6 +80,8 @@ namespace InstallConfig
             //directorySetting.SyncPairs.Add(vaultS3FileArchive1.Name, vaultS3FileArchive1);
             //directorySetting.SyncPairs.Add(vaultCAS.Name, vaultCAS);
             this.Tbc.DirectorySettings.FileLocations.Add(vaultPrimary.Name, vaultPrimary);
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultGNEW.Name, vaultGNEW);
+
 
             //add archive locations to CdrSettings
             this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
