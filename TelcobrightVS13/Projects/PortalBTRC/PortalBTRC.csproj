@@ -507,6 +507,7 @@
     <Content Include="img\logo_telcobright.png" />
     <Content Include="img\NAV-BG.jpg" />
     <Content Include="img\Telcobright logo.png" />
+    <Content Include="InternationalOut_ICX.aspx" />
     <Content Include="reports\BTRCReport.aspx" />
     <Content Include="reports\cal.png" />
     <Content Include="reports\CauseInternationalIn.aspx" />
@@ -529,10 +530,10 @@
     <Content Include="reports\icx\customReports\RobiCallForwarding.aspx" />
     <Content Include="reports\icx\customReports\RobiRoaming.aspx" />
     <Content Include="reports\icx\DomesticWithLtfs.aspx" />
+    <Content Include="reports\icx\InternationalOut_ICX.aspx" />
     <Content Include="reports\icx\LocalTollFree.aspx" />
     <Content Include="reports\icx\Domestic.aspx" />
     <Content Include="reports\icx\InternationalIn_ICX.aspx" />
-    <Content Include="reports\icx\InternationalOut _ICX.aspx" />
     <Content Include="reports\InternationalIn.aspx" />
     <Content Include="reports\InternationalOut.aspx" />
     <Content Include="Mediation\Mediation.aspx" />
@@ -910,6 +911,13 @@
     <Compile Include="ICX_Reports\Cas_ICX\CasLocalTollFree.aspx.designer.cs">
       <DependentUpon>CasLocalTollFree.aspx</DependentUpon>
     </Compile>
+    <Compile Include="InternationalOut_ICX.aspx.cs">
+      <DependentUpon>InternationalOut_ICX.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="InternationalOut_ICX.aspx.designer.cs">
+      <DependentUpon>InternationalOut_ICX.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\InvoiceHelper.cs" />
     <Compile Include="ReportHelper\AbstractSqlHelper.cs" />
@@ -1023,6 +1031,13 @@
     <Compile Include="reports\icx\DomesticWithLtfs.aspx.designer.cs">
       <DependentUpon>DomesticWithLtfs.aspx</DependentUpon>
     </Compile>
+    <Compile Include="reports\icx\InternationalOut_ICX.aspx.cs">
+      <DependentUpon>InternationalOut_ICX.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\icx\InternationalOut_ICX.aspx.designer.cs">
+      <DependentUpon>InternationalOut_ICX.aspx</DependentUpon>
+    </Compile>
     <Compile Include="reports\icx\LocalTollFree.aspx.cs">
       <DependentUpon>LocalTollFree.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1043,13 +1058,6 @@
     </Compile>
     <Compile Include="reports\icx\InternationalIn_ICX.aspx.designer.cs">
       <DependentUpon>InternationalIn_ICX.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\icx\InternationalOut _ICX.aspx.cs">
-      <DependentUpon>InternationalOut _ICX.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\icx\InternationalOut _ICX.aspx.designer.cs">
-      <DependentUpon>InternationalOut _ICX.aspx</DependentUpon>
     </Compile>
     <Compile Include="reports\IOFReport.aspx.cs">
       <DependentUpon>IOFReport.aspx</DependentUpon>

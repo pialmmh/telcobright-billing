@@ -202,7 +202,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
 
 
             String selectedIcxName = CheckBoxViewIncomingRoute.Checked == true ? DropDownListViewIncomingRoute.SelectedIndex > 0 ? $@"{DropDownListViewIncomingRoute.SelectedItem.Value}" : string.Empty : string.Empty;
-
+            
             if (selectedIcxName == String.Empty)
             {
                 foreach (var db in userVsDbName)

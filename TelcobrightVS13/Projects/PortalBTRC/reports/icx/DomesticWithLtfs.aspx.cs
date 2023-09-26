@@ -204,10 +204,10 @@ public partial class DefaultRptDomesticWithLtfsIcx : System.Web.UI.Page
 
 
       
-             //String selectedIcxName =  CheckBoxViewIncomingRoute.Checked == true? DropDownListViewIncomingRoute.SelectedIndex > 0 ? $@"{DropDownListViewIncomingRoute.SelectedItem.Value}" : string.Empty : string.Empty ;
-            String selectedIcxName = Page.User.Identity.Name;
+             String selectedIcxName =  CheckBoxViewIncomingRoute.Checked == true? DropDownListViewIncomingRoute.SelectedIndex > 0 ? $@"{DropDownListViewIncomingRoute.SelectedItem.Value}" : string.Empty : string.Empty ;
+            //String selectedIcxName = Page.User.Identity.Name;
 
-            if (selectedIcxName == "btrc_cas")
+            if (selectedIcxName == String.Empty)
             {
                 foreach (var db in userVsDbName)
                 {

@@ -345,6 +345,14 @@
          <asp:ListItem Value="sum_voice_hr_">Hour Wise</asp:ListItem>
         
      </asp:DropDownList>
+        
+        View by ICX: 
+        <asp:CheckBox ID="CheckBoxViewIncomingRoute" runat="server" AutoPostBack="True"
+                      OnCheckedChanged="CheckBoxViewIncomingRoute_CheckedChanged" Checked="True" />
+                       
+        <asp:DropDownList ID="DropDownListViewIncomingRoute" runat="server"
+                          Enabled="True">
+        </asp:DropDownList>
 
         View by Switch:
         <asp:CheckBox ID="ViewBySwitch" runat="server" AutoPostBack="True"
@@ -359,11 +367,11 @@
         <asp:Button ID="ShowHideFilter" runat="server" ViewStateMode="Enabled"
             Style="margin-left: 0px" Text="Hide Filter" Visible="True" OnClientClick="ToggleParamBorderDiv();return false;" />
         <asp:Button ID="ButtonTemplate" runat="server" OnClientClick="var value = prompt('Enter name of the Report Template:'); SetHidValueTemplate(value);" OnClick="ButtonTemplate_Click"
-            Style="margin-left: 0px" Text="Save as Template" Visible="True" />
+            Style="margin-left: 0px" Text="Save as Template" Visible="False" />
         <asp:Label ID="Label1" runat="server" Text="" ForeColor="Red"></asp:Label>
         <span style="font-weight: bold;">Real Time Update 
             <asp:CheckBox ID="CheckBoxRealTimeUpdate" runat="server" AutoPostBack="true" OnCheckedChanged="CheckBoxRealTimeUpdate_CheckedChanged" /></span>
-        <span style="font-weight: bold;">Update Duration Last  
+        <span style="font-weight: bold; display: none">Update Duration Last  
         <asp:TextBox ID="TextBoxDuration" runat="server" Text="30" Width="30px" OnTextChanged="TextBoxDuration_TextChanged" Enabled="false"></asp:TextBox>
             Minutes</span>
         <input type="hidden" id="hidValueFilter" runat="server" />
@@ -477,7 +485,7 @@
                     <div style="text-align: left;">
 
                         <div style="float: left; height: 25px; min-width: 1285px;">
-                            <div style="float: left;">
+                           <%-- <div style="float: left;">
                                 View by ICX: 
                                 <asp:CheckBox ID="CheckBoxViewIncomingRoute" runat="server" AutoPostBack="True"
                                               OnCheckedChanged="CheckBoxViewIncomingRoute_CheckedChanged" Checked="True" />
@@ -486,9 +494,9 @@
                                                   Enabled="True">
                                 </asp:DropDownList>
 
-                            </div>
+                            </div>--%>
                             
-                            <div style="float: left; margin-left: 15px;">
+                            <div style="float: left;">
                                 View by Incoming ANS: 
                                 <asp:CheckBox ID="CheckBoxPartner" runat="server" AutoPostBack="True"
                                               OnCheckedChanged="CheckBoxShowByPartner_CheckedChanged" Checked="False" />
@@ -502,9 +510,9 @@
                             <div style="float: left; margin-left: 15px;">
                                 <%--View by ANS: --%>
                                 <asp:CheckBox ID="CheckBoxShowByAns" runat="server" AutoPostBack="True"
-                                              OnCheckedChanged="CheckBoxShowByAns_CheckedChanged" Checked="false" Visible="False" />
+                                              OnCheckedChanged="CheckBoxShowByAns_CheckedChanged" Checked="false" Visible="True" />
                                 <asp:DropDownList ID="DropDownListAns" runat="server" 
-                                                  Enabled="False" Visible="False">
+                                                  Enabled="False" Visible="True">
                                 </asp:DropDownList>
 
                             </div>

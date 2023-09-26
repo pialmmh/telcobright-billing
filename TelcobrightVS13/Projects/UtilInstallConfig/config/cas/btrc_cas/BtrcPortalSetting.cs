@@ -249,8 +249,8 @@ namespace InstallConfig
                                     "nodes['Billing Reports'].Expanded=true",
                                     "nodes['Reports/IGW'].Expanded=false",
                                     "nodes['Reports/Transit'].Expanded=false",
-                                    "nodes['Individual ICX Report'].Expanded=true",
-                                    "nodes['Individual ICX Report/ICX'].Expanded=true"
+                                    "nodes['Individual ICX Report'].Expanded=false",
+                                    "nodes['Individual ICX Report/ICX'].Expanded=false"
                                     
 
                                 },
@@ -263,8 +263,8 @@ namespace InstallConfig
                                     "nodes['Billing Reports'].Expanded=false",
                                     "nodes['Reports/IGW'].Expanded=false",
                                     "nodes['Reports/Transit'].Expanded=false",
-                                    "nodes['Individual ICX Report'].Expanded=false",
-                                    "nodes['Individual ICX Report/ICX'].Expanded=false"
+                                    "nodes['Individual ICX Report'].Expanded=true",
+                                    "nodes['Individual ICX Report/ICX'].Expanded=true"
                                     
                                 }
                             },
@@ -307,7 +307,7 @@ namespace InstallConfig
                     { "~/reports/icx/InternationalIn_ICX.aspx",//settings for report pages
                         settingIntlIn
                     },
-                    { "~/reports/icx/InternationalOut _ICX.aspx",
+                    { "~/reports/icx/InternationalOut_ICX.aspx",
                         settingIntlOut
                     },
                     { "~/reports/icx/Domestic.aspx",

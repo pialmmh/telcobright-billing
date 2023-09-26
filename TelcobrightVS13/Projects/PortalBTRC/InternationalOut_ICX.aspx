@@ -1,5 +1,5 @@
 ﻿<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="True"
-    CodeBehind="InternationalOut_ICX.aspx.cs" Inherits="DefaultRptIntlOutIcx1" %>
+    CodeBehind="InternationalOut _ICX.aspx.cs" Inherits="DefaultRptIntlOutIcx" %>
 
 <%--<%@ Import Namespace="MySql.Web" %>--%>
 
@@ -219,7 +219,7 @@
                                       OnCheckedChanged="CheckBoxViewIncomingRoute_CheckedChanged" Checked="True" />
 
                         <asp:DropDownList ID="DropDownListViewIncomingRoute" runat="server"
-                                          Enabled="True">
+                                          Enabled="False">
                         </asp:DropDownList>
 
                     </div>
@@ -345,8 +345,7 @@
             <AlternatingRowStyle BackColor="#f2f2f2" ForeColor="#284775" />
           <Columns>
                 <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" />
-             <%-- <asp:BoundField DataField="tup_incomingroute" HeaderText="ICX" SortExpression="tup_incomingroute" />--%>
-              <asp:BoundField DataField="icxName" HeaderText="ICX" SortExpression="IcxName" />
+              <asp:BoundField DataField="tup_incomingroute" HeaderText="ICX" SortExpression="tup_incomingroute" />
                 <asp:BoundField DataField="Country" HeaderText="Country"
                     SortExpression="Country"/>
                 <asp:BoundField DataField="Destination" HeaderText="Destination"
