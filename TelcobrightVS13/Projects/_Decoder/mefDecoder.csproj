@@ -58,6 +58,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GenbandC3Gazi.cs" />
     <Compile Include="GenbandC3CrossWorld.cs" />
     <Compile Include="GenbandC3DecoderBangla.cs" />
     <Compile Include="GNEWDecoderRingTechTEST.cs" />
