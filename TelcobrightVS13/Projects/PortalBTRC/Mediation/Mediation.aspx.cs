@@ -14,7 +14,7 @@ using TelcobrightMediation;
 
 public partial class DefaultMediation : System.Web.UI.Page
 {
-    private int _mShowByCountry=0;
+    private int _mShowByCountry = 0;
     private int _mShowByAns = 0;
 
     DataTable _dt;
@@ -83,7 +83,7 @@ public partial class DefaultMediation : System.Web.UI.Page
 
     public DataSet GetDataSet(string connectionString, string sql)
     {
-        
+
         MySqlConnection conn = new MySqlConnection(connectionString);
         MySqlDataAdapter da = new MySqlDataAdapter();
         MySqlCommand cmd = conn.CreateCommand();
@@ -129,12 +129,13 @@ public partial class DefaultMediation : System.Web.UI.Page
         string sql = "";
         if (noOfRecords == -1)//all records
         {
-            sql = (string) this.ViewState["jobs.squery"];
+            sql = (string)this.ViewState["jobs.squery"];
         }
         else//first N
         {
-            sql = ((string) this.ViewState["jobs.squery"]).Replace(";", "") + " limit 0," + this.TextBoxNoOfRecords.Text + ";";
+            sql = ((string)this.ViewState["jobs.squery"]).Replace(";", "") + " limit 0," + this.TextBoxNoOfRecords.Text + ";";
         }
+
         DataTable dt = GetDataSet(ConfigurationManager.ConnectionStrings["Partner"].ConnectionString, sql).Tables[0];
         ExportToSpreadsheet(dt, "jobs_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
     }
@@ -237,14 +238,14 @@ public partial class DefaultMediation : System.Web.UI.Page
     protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
         this.GridView1.PageIndex = e.NewPageIndex;
-        submit_Click(sender,e);
+        submit_Click(sender, e);
     }
 
     protected void submit_Click(object sender, EventArgs e)
     {
         string startdate = this.txtDate.Text;
         string enddate = this.txtDate1.Text;
-        
+
         DateTime dstartdate = Convert.ToDateTime("1800-01-01", CultureInfo.InvariantCulture);
         DateTime denddate = Convert.ToDateTime("1800-01-01", CultureInfo.InvariantCulture);
         DateTime comparedate = dstartdate;
@@ -279,7 +280,7 @@ public partial class DefaultMediation : System.Web.UI.Page
         }
 
         long totalSequence = 0;
-        List<job> lstAllCdr=null;
+        List<job> lstAllCdr = null;
         var databaseSetting = telcobrightConfig.DatabaseSetting;
         databaseSetting.DatabaseName = DropDownListViewIncomingRoute.SelectedValue;
         using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting))
@@ -309,10 +310,10 @@ public partial class DefaultMediation : System.Web.UI.Page
                 {
                     sql += " and status!=" + this.DropDownListJobStatus.SelectedValue;
                 }
-                
+
             }
             //jobname contains
-            if(this.TextBoxJobName.Text.Trim()!="")
+            if (this.TextBoxJobName.Text.Trim() != "")
             {
                 if (CheckBoxJobNameContains.Checked == false)
                 {
@@ -333,7 +334,7 @@ public partial class DefaultMediation : System.Web.UI.Page
             var dicJobStatus = context.enumjobstatus.ToDictionary(c => c.id);
             var dicNe = context.nes.ToDictionary(c => c.idSwitch);
 
-            
+
             foreach (job j in lstAllCdr)
             {
                 long tempLong = 0;
@@ -341,7 +342,7 @@ public partial class DefaultMediation : System.Web.UI.Page
                 double tempDouble1 = 0;
                 long.TryParse(j.NoOfSteps.ToString(), out tempLong);
                 totalSequence += tempLong;
-                
+
                 ne ne = null;
                 dicNe.TryGetValue(Convert.ToInt32(j.idNE), out ne);
                 j.ne = ne;
@@ -380,12 +381,12 @@ public partial class DefaultMediation : System.Web.UI.Page
             this.Button2.Enabled = true;
             this.Button3.Enabled = true;
         }
-        
+
         return;
 
     }
 
-    
+
 
     public static void ExportToSpreadsheet(DataTable table, string name, List<string> colNameList, List<int> columnSortlist)
     {
@@ -401,16 +402,16 @@ public partial class DefaultMediation : System.Web.UI.Page
         //}
         //write baseColumns in order specified in ColumnSortedList
         int ii = 0;
-        for (ii=0; ii<colNameList.Count;ii++ )
-        {  
+        for (ii = 0; ii < colNameList.Count; ii++)
+        {
             //ThisRow +=  table.Columns[ColumnSortlist[ii]].ColumnName + ",";
-            thisRow += colNameList[ii]+ ",";
+            thisRow += colNameList[ii] + ",";
         }
 
         thisRow = thisRow.Substring(0, thisRow.Length - 1) + Environment.NewLine;
         context.Response.Write(thisRow);
 
-        
+
         //foreach (DataRow row in table.Rows)
         //{
         //    ThisRow = "";
@@ -426,7 +427,7 @@ public partial class DefaultMediation : System.Web.UI.Page
         {
             thisRow = "";
             for (ii = 0; ii < columnSortlist.Count; ii++) //for each column
-            {  
+            {
                 thisRow += row[columnSortlist[ii]].ToString().Replace(",", string.Empty) + ",";
             }
             thisRow = thisRow.Substring(0, thisRow.Length - 1) + Environment.NewLine;
@@ -443,7 +444,7 @@ public partial class DefaultMediation : System.Web.UI.Page
     protected void GridView1_RowDataBound(object sender, GridViewRowEventArgs e)
     {
 
-        
+
     }
 
     protected void EntityDataSwitch_QueryCreated(object sender, QueryCreatedEventArgs e)
@@ -465,11 +466,11 @@ public partial class DefaultMediation : System.Web.UI.Page
 
     protected void CheckBoxSwithcName_CheckedChanged(object sender, EventArgs e)
     {
-       
+
     }
     protected void EntityDataAllCdr_QueryCreated(object sender, QueryCreatedEventArgs e)
     {
-        
+
 
     }
     protected void LinkButtonToday_Click(object sender, EventArgs e)
@@ -508,23 +509,43 @@ public partial class DefaultMediation : System.Web.UI.Page
     }
     protected void setICXListDropDown(object sender, EventArgs e)
     {
-        DropDownListViewIncomingRoute.Items.Clear(); 
-                using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(telcobrightConfig.DatabaseSetting))
-                {                 
-                    foreach (var kv in telcobrightConfig.DeploymentProfile.UserVsDbName)
-                    {
-                        if (!kv.Value.Contains("btrc"))
-                        {
-                            string username = kv.Key;
-                            string dbNameAsRouteName = kv.Value;
-                            string icxName = dbNameAsRouteName.Split('_')[0];
-                            DropDownListViewIncomingRoute.Items.Add(new ListItem(icxName, dbNameAsRouteName));
-                        }
-                        
+        string logIdentityName = this.User.Identity.Name;
+        String selectedIcx = logIdentityName;
+        TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
+        string selectedUserdbName;
+        Dictionary<string, string> userVsDbName = telcobrightConfig.DeploymentProfile.UserVsDbName;
+        if (userVsDbName.ContainsKey(logIdentityName))
+        {
+            selectedUserdbName = userVsDbName[logIdentityName];
+        }
+        else
+        {
+            selectedUserdbName = telcobrightConfig.DatabaseSetting.DatabaseName;
+        }
+        DropDownListViewIncomingRoute.Items.Clear();
+        if (selectedUserdbName.Contains("btrc"))
+        {
+            foreach (var kv in telcobrightConfig.DeploymentProfile.UserVsDbName)
+            {
+                if (!kv.Value.Contains("btrc"))
+                {
+                    string username = kv.Key;
+                    string dbNameAsRouteName = kv.Value;
+                    string icxName = dbNameAsRouteName.Split('_')[0];
+                    DropDownListViewIncomingRoute.Items.Add(new ListItem(icxName, dbNameAsRouteName));
+
+                }
 
             }
-                }
-      }
+        }
+        else
+        {
+            string individualIcxName = selectedUserdbName.Split('_')[0];
+            DropDownListViewIncomingRoute.Items.Add(new ListItem(individualIcxName, selectedUserdbName));
+           
+        }
+
+    }
 
     protected void setSwitchListDropDown(object sender, EventArgs e)
     {
