@@ -44,7 +44,7 @@ namespace InstallConfig
             };
             FileLocation vaultGenband = new FileLocation()
             {
-                Name = "vault",//this is refered in ne table, name MUST start with "Vault"
+                Name = "vault.Genband",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
@@ -91,7 +91,7 @@ namespace InstallConfig
             //directorySetting.SyncPairs.Add(vaultS3FileArchive1.Name, vaultS3FileArchive1);
             //directorySetting.SyncPairs.Add(vaultCAS.Name, vaultCAS);
             this.Tbc.DirectorySettings.FileLocations.Add(vaultCataleya.Name,vaultCataleya);
-            //this.Tbc.DirectorySettings.FileLocations.Add(vaultGenband.Name, vaultGenband);
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultGenband.Name, vaultGenband);
             //this.Tbc.DirectorySettings.FileLocations.Add(vaultTelcobridge.Name, vaultTelcobridge);
 
             //add archive locations to CdrSettings

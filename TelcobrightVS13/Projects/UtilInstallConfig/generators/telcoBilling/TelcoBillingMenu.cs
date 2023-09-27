@@ -31,6 +31,7 @@ namespace InstallConfig
         public List<TelcobrightConfig> TbcWithoutGeneratedConfig { get; set; }
         public Deploymentprofile Deploymentprofile { get; set; }
         private Dictionary<string, IScript> DdlScripts { get; set; }= new Dictionary<string, IScript>();
+        private Dictionary<string, IScript> SeedDataScripts { get; set; }= new Dictionary<string, IScript>();
         public ConfigPathHelper configPathHelper { get; set; }
 
         public TelcoBillingMenu(Deploymentprofile deploymentprofile, ConsoleUtil consoleUtil, 
@@ -47,6 +48,8 @@ namespace InstallConfig
                 script.ScriptDir = configPathHelper.getTelcoBillingDdlHome();
             }
             this.DdlScripts= ddlScripts.ToDictionary(s => s.RuleName);
+            List<IScript> seedDataScripts = sqlScripts.Where(s => s.ScriptType == ScriptType.SqlSeedData).ToList();
+            this.SeedDataScripts= seedDataScripts.ToDictionary(s => s.RuleName);
         }
 
         private void initConfig()
@@ -246,11 +249,12 @@ namespace InstallConfig
                 int schedulerPortNo = ic.SchedulerPortNo;
                 tbc.TcpPortNoForRemoteScheduler = schedulerPortNo;
                 tbc.SchedulerDaemonConfigs = configGenerator.GetSchedulerDaemonConfigs();
-                TelcoBillingConfigGenerator generator = new TelcoBillingConfigGenerator(tbc, this.ConfigPathHelper, this.ConsoleUtil, this.DdlScripts);
+                TelcoBillingConfigGenerator generator = new TelcoBillingConfigGenerator(tbc, this.ConfigPathHelper, this.ConsoleUtil, this.DdlScripts,
+                    this.SeedDataScripts);
                 generator.writeConfig();
                 generator.LoadDdlScripts();
                 generator.LoadSeedData();
-
+                generator.LoadAdditionalSeedData();
                 configureQuarzJobStore(tbc);
                 deployBinariesForProduction(tbc);
                 Console.WriteLine("Successfully generated config for "

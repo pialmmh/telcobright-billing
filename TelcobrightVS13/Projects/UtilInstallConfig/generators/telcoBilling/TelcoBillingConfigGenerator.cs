@@ -25,13 +25,15 @@ namespace InstallConfig
         public ConfigPathHelper ConfigPathHelper { get; set; }
         public ConsoleUtil ConsoleUtil { get; set; }
         private Dictionary<string, IScript> DdlScripts { get; set; }
+        private Dictionary<string, IScript> SeedDataScripts { get; set; }
         public TelcoBillingConfigGenerator(TelcobrightConfig tbc, ConfigPathHelper configPathHelper,
-            ConsoleUtil consoleUtil, Dictionary<string, IScript> ddlScripts)
+            ConsoleUtil consoleUtil, Dictionary<string, IScript> ddlScripts, Dictionary<string, IScript> seedDataScripts)
         {
             this.Tbc = tbc;
             this.ConsoleUtil = consoleUtil;
             this.ConfigPathHelper = configPathHelper;
             this.DdlScripts = ddlScripts;
+            this.SeedDataScripts = seedDataScripts;
         }
 
         public static List<AbstractConfigGenerator> getSelectedOperatorsConfig(Deploymentprofile deploymentprofile)
@@ -117,6 +119,49 @@ namespace InstallConfig
                 }
             }
         }
+        public void LoadAdditionalSeedData()
+        {
+            PartnerEntities context =
+                new PartnerEntities(DbUtil.GetEntityConnectionString(Tbc.DatabaseSetting));
+            if (context.Database.Connection.State != ConnectionState.Open)
+                context.Database.Connection.Open();
+            using (MySqlConnection con =
+                new MySqlConnection(DbUtil.getDbConStrWithDatabase(this.Tbc.DatabaseSetting)))
+            {
+                DbWriterForConfig dbWriter =
+                    new DbWriterForConfig(this.Tbc, this.ConfigPathHelper, con, this.DdlScripts);
+                if (ConsoleUtil.getConfirmationFromUser("Load additional seed data? (Y/N) for " +
+                                                        this.Tbc.Telcobrightpartner.databasename))
+                {
+                    Console.WriteLine();
+                    Menu menu = new Menu(this.SeedDataScripts.Values.Select(s => s.RuleName),
+                        "select an additional seed data script to run", "a");
+                    List<string> choices = menu.getChoices();
+                    foreach (string scriptName in choices)
+                    {
+                        IScript script = this.SeedDataScripts[scriptName];
+                        string sql = script.GetScript(new Dictionary<string,object>
+                        {
+                            { "con", con},
+                        });
+                        Console.WriteLine("Loading seed data script:" + script.RuleName);
+                        //sql = $@"SET FOREIGN_KEY_CHECKS = 0;
+                        //            {sql}
+                        //          SET FOREIGN_KEY_CHECKS = 1;";
+                        dbWriter.executeScript(sql);
+                    }
+
+                    Console.WriteLine("Additional seed data loaded successfully for " + Tbc.Telcobrightpartner.databasename);
+                }
+                else
+                {
+                    Console.WriteLine("Additional seed data was not for " + Tbc.Telcobrightpartner.databasename);
+                }
+            }
+        }
+
+
+
 
         static void WriteConfig(TelcobrightConfig tbc, ConfigPathHelper configPathHelper)
         {

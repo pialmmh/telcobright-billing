@@ -319,6 +319,7 @@
     <Compile Include="generators\telcoBilling\dbscripts\ddl\ViewToBTRC.cs" />
     <Compile Include="config\_helper\TemplateNe.cs" />
     <Compile Include="generators\DeploymentHelper.cs" />
+    <Compile Include="generators\telcoBilling\dbscripts\seedData\sql\DomesticRateplaneAssignmentForCAS.cs" />
     <Compile Include="generators\telcoBilling\TelcoBillingConfigGenerator.cs" />
     <Compile Include="generators\telcoBilling\TelcoBillingQuartzWriter.cs" />
     <Compile Include="generators\BIllingRulesDefiner.cs" />

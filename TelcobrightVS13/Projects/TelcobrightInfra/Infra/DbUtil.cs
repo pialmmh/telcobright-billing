@@ -49,17 +49,9 @@ namespace TelcobrightInfra
                 $"Persist Security Info=True; default command timeout=21600;";
         }
 
-
-        public static string GetEntityConnectionString(DatabaseSetting databaseSetting)
-        {
-            return $"metadata=res://*/PartnerModel.csdl|res://*/PartnerModel.ssdl|res://*/PartnerModel.msl;" +
-                   $"provider=MySql.Data.MySqlClient;" +
-                   $"provider connection string=\"server = {databaseSetting.ServerName}; user id = {databaseSetting.AdminUserName}; password = {databaseSetting.AdminPassword};persistsecurityinfo=True;Convert Zero Datetime=True;default command timeout=300;database={databaseSetting.DatabaseName}\"";
-        }
-
         public static string ExecCommandAndGetScalerString(MySqlConnection con, string commandText)
         {
-            MySqlCommand cmd= new MySqlCommand("",con);
+            MySqlCommand cmd = new MySqlCommand("", con);
             cmd.CommandText = commandText;
             MySqlDataReader reader = cmd.ExecuteReader();
             StringBuilder sb = new StringBuilder();
@@ -70,6 +62,14 @@ namespace TelcobrightInfra
             reader.Close();
             return sb.ToString();
         }
+
+        public static string GetEntityConnectionString(DatabaseSetting databaseSetting)
+        {
+            return $"metadata=res://*/PartnerModel.csdl|res://*/PartnerModel.ssdl|res://*/PartnerModel.msl;" +
+                   $"provider=MySql.Data.MySqlClient;" +
+                   $"provider connection string=\"server = {databaseSetting.ServerName}; user id = {databaseSetting.AdminUserName}; password = {databaseSetting.AdminPassword};persistsecurityinfo=True;Convert Zero Datetime=True;default command timeout=300;database={databaseSetting.DatabaseName}\"";
+        }
+
 
         public static void CreateDatabase(DatabaseSetting databaseSetting)
         {

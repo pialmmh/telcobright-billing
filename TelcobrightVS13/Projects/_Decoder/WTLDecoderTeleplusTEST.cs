@@ -19,7 +19,7 @@ namespace Decoders
     {
         public override string ToString() => this.RuleName;
         public virtual string RuleName => GetType().Name;
-        public int Id => 55;
+        public int Id => 73;
         public string HelpText => "WTL Decoder Teleplus TEST";
         public CompressionType CompressionType { get; set; }
         protected CdrCollectorInputData Input { get; set; }

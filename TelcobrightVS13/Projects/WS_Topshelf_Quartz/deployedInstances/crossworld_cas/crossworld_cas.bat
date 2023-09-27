@@ -1,0 +1,1 @@
+C:\sftproot\TelcobrightProject\TelcobrightVS13\Projects\WS_Topshelf_Quartz\bin\debug\WS_Telcobright_Topshelf.exe "C:\sftproot\TelcobrightProject\TelcobrightVS13\Projects\WS_Topshelf_Quartz\deployedInstances\crossworld_cas\crossworld_cas.conf"
