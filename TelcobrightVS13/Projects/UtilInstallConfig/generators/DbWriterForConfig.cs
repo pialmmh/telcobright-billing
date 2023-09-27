@@ -88,6 +88,7 @@ namespace InstallConfig._generator
 
         public void LoadSeedDataSqlForTelcoBilling(SqlOperationType sqlOperationType)
         {
+
             string msgBeforeOp;
             string msgAfterOp;
             string sqlDir;

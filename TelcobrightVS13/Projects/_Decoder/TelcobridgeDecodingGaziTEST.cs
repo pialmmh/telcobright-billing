@@ -38,16 +38,26 @@ namespace Decoders
             this.Input = input;
             string fileName = this.Input.FullPath;
             //List<string[]> lines = FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(fileName, ',', 1, "\"", ";");
-            List<string[]> lines = FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(fileName, ',', 1, "\"", ",");
+            //List<string[]> lines = FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(fileName, ',', 0, "\"", ",");
+
+            // my parser
+            string[] linesAsString = File.ReadAllLines(fileName);
+            string[] lineAsArr;
+
+
+            //
 
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
             //this.Input = input;
             List<cdrfieldmappingbyswitchtype> fieldMappings = null;
 
-            foreach (string[] lineAsArr in lines)
+            foreach (string ln in linesAsString)
 
             {
+                lineAsArr = ln.Split(',');
+                if(lineAsArr.Length < 5)
+                    continue;             
                 //string chargingStatus = lineAsArr[3] == "S" ? "1" : "0"; //done
                 //if (chargingStatus != "1") continue;
                 string[] textCdr = new string[input.MefDecodersData.Totalfieldtelcobright];
@@ -72,8 +82,7 @@ namespace Decoders
                 }
 
 
-
-
+                
                 textCdr[Fn.Filename] = fileName;
                 textCdr[Fn.Switchid] = Input.Ne.idSwitch.ToString();
 
