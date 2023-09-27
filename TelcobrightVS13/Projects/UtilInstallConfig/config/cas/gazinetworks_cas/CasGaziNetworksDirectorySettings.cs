@@ -41,12 +41,12 @@ namespace InstallConfig
 
             FileLocation vaultTelcobridgeDhk = new FileLocation()
             {
-                Name = "Vault.TelcobridgeDhk",//this is refered in ne table, name MUST start with "Vault"
+                Name = "Vault.Telcobridge",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "D:/telcobright/vault/resources/cdr/gazinetworks/tdm_2",
+                StartingPath = "D:/telcobright/vault/resources/cdr/gazinetworks/tdm1",
                 User = "",
                 Pass = "",
             };
