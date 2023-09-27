@@ -26,7 +26,23 @@ namespace InstallConfig
         public override TelcobrightConfig Tbc { get; set; }
         public PurpleAbstractConfigGenerator()
         {
-            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx,CasTbPartnerFactory.GetTemplatePartner(16, "Purple Telecom Ltd.","purple_cas"));
+            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx,
+                new telcobrightpartner
+                {
+                    idCustomer = 16,
+                    CustomerName = "Purple Telecom Ltd.",
+                    idOperatorType = 2,
+                    databasename = "purple",
+                    NativeTimeZone = 3251,
+                    IgwPrefix = null,
+                    RateDictionaryMaxRecords = 3000000,
+                    MinMSForIntlOut = 100,
+                    RawCdrKeepDurationDays = 90,
+                    SummaryKeepDurationDays = 730,
+                    AutoDeleteOldData = 1,
+                    AutoDeleteStartHour = 4,
+                    AutoDeleteEndHour = 6
+                });
 
         }
 
@@ -63,77 +79,73 @@ namespace InstallConfig
             this.PrepareDirectorySettings(this.Tbc);
             this.Tbc.Nes = new List<ne>()
             {
-                //new ne
-                //{
-                //    idSwitch = 1,
-                //    idCustomer = this.Tbc.Telcobrightpartner.idCustomer,
-                //    idcdrformat = 3,
-                //    idMediationRule = 2,
-                //    SwitchName = "huawei",
-                //    CDRPrefix = "b",
-                //    FileExtension = ".dat",
-                //    Description = null,
-                //    SourceFileLocations = "vault",
-                //    BackupFileLocations = null,
-                //    LoadingStopFlag = null,
-                //    LoadingSpanCount = 100,
-                //    TransactionSizeForCDRLoading = 1500,
-                //    DecodingSpanCount = 100,
-                //    SkipAutoCreateJob = 1,
-                //    SkipCdrListed = 0,
-                //    SkipCdrReceived = 0,
-                //    SkipCdrDecoded = 0,
-                //    SkipCdrBackedup = 1,
-                //    KeepDecodedCDR = 0,
-                //    KeepReceivedCdrServer = 1,
-                //    CcrCauseCodeField = 56,
-                //    SwitchTimeZoneId = null,
-                //    CallConnectIndicator = "F5",
-                //    FieldNoForTimeSummary = 29,
-                //    EnableSummaryGeneration = "1",
-                //    ExistingSummaryCacheSpanHr = 6,
-                //    BatchToDecodeRatio = 3,
-                //    PrependLocationNumberToFileName = 0,
-                //    UseIdCallAsBillId = 1,
-                //},
-                //new ne
-                //{
-                //    idSwitch = 2,
-                //    idCustomer = this.Tbc.Telcobrightpartner.idCustomer,
-                //    idcdrformat = 3,
-                //    idMediationRule = 2,
-                //    SwitchName = "cataleya",
-                //    CDRPrefix = "b",
-                //    FileExtension = ".txt",
-                //    Description = null,
-                //    SourceFileLocations = "vault",
-                //    BackupFileLocations = null,
-                //    LoadingStopFlag = null,
-                //    LoadingSpanCount = 100,
-                //    TransactionSizeForCDRLoading = 1500,
-                //    DecodingSpanCount = 100,
-                //    SkipAutoCreateJob = 1,
-                //    SkipCdrListed = 0,
-                //    SkipCdrReceived = 0,
-                //    SkipCdrDecoded = 0,
-                //    SkipCdrBackedup = 1,
-                //    KeepDecodedCDR = 0,
-                //    KeepReceivedCdrServer = 1,
-                //    CcrCauseCodeField = 56,
-                //    SwitchTimeZoneId = null,
-                //    CallConnectIndicator = "F5",
-                //    FieldNoForTimeSummary = 29,
-                //    EnableSummaryGeneration = "1",
-                //    ExistingSummaryCacheSpanHr = 6,
-                //    BatchToDecodeRatio = 3,
-                //    PrependLocationNumberToFileName = 0,
-                //    UseIdCallAsBillId = 1,
-                //}
+                new ne
+                {
+                    idSwitch = 1,
+                    idCustomer = this.Tbc.Telcobrightpartner.idCustomer,
+                    idcdrformat = 3,
+                    idMediationRule = 2,
+                    SwitchName = "huawei",
+                    CDRPrefix = "b",
+                    FileExtension = ".dat",
+                    Description = null,
+                    SourceFileLocations = "vault.huawei",
+                    BackupFileLocations = null,
+                    LoadingStopFlag = null,
+                    LoadingSpanCount = 100,
+                    TransactionSizeForCDRLoading = 1500,
+                    DecodingSpanCount = 100,
+                    SkipAutoCreateJob = 1,
+                    SkipCdrListed = 0,
+                    SkipCdrReceived = 0,
+                    SkipCdrDecoded = 0,
+                    SkipCdrBackedup = 1,
+                    KeepDecodedCDR = 0,
+                    KeepReceivedCdrServer = 1,
+                    CcrCauseCodeField = 56,
+                    SwitchTimeZoneId = null,
+                    CallConnectIndicator = "F5",
+                    FieldNoForTimeSummary = 29,
+                    EnableSummaryGeneration = "1",
+                    ExistingSummaryCacheSpanHr = 6,
+                    BatchToDecodeRatio = 3,
+                    PrependLocationNumberToFileName = 0,
+                    UseIdCallAsBillId = 1,
+                },
+                new ne
+                {
+                    idSwitch = 2,
+                    idCustomer = this.Tbc.Telcobrightpartner.idCustomer,
+                    idcdrformat = 3,
+                    idMediationRule = 2,
+                    SwitchName = "cataleya",
+                    CDRPrefix = "b",
+                    FileExtension = ".txt",
+                    Description = null,
+                    SourceFileLocations = "vault.Cataleya",
+                    BackupFileLocations = null,
+                    LoadingStopFlag = null,
+                    LoadingSpanCount = 100,
+                    TransactionSizeForCDRLoading = 1500,
+                    DecodingSpanCount = 100,
+                    SkipAutoCreateJob = 1,
+                    SkipCdrListed = 0,
+                    SkipCdrReceived = 0,
+                    SkipCdrDecoded = 0,
+                    SkipCdrBackedup = 1,
+                    KeepDecodedCDR = 0,
+                    KeepReceivedCdrServer = 1,
+                    CcrCauseCodeField = 56,
+                    SwitchTimeZoneId = null,
+                    CallConnectIndicator = "F5",
+                    FieldNoForTimeSummary = 29,
+                    EnableSummaryGeneration = "1",
+                    ExistingSummaryCacheSpanHr = 6,
+                    BatchToDecodeRatio = 3,
+                    PrependLocationNumberToFileName = 0,
+                    UseIdCallAsBillId = 1,
+                }
             };
-
-            string csvPathForNe = new DirectoryInfo(FileAndPathHelper.GetCurrentExecPath()).Parent.Parent.FullName + Path.DirectorySeparatorChar.ToString() + "config" + Path.DirectorySeparatorChar.ToString() + "_helper" + Path.DirectorySeparatorChar.ToString() + "casOperatorInfo.xlsx";//add more
-            CasNeInfoHelper neHelper = new CasNeInfoHelper(csvPathForNe);
-            this.Tbc.Nes = neHelper.getNesByOpId(this.Tbc.Telcobrightpartner.idCustomer);
 
             this.PrepareProductAndServiceConfiguration();
             this.Tbc.DatabaseSetting = this.GetDatabaseConfigs();
