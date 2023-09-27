@@ -148,7 +148,8 @@ namespace InstallConfig
                         //sql = $@"SET FOREIGN_KEY_CHECKS = 0;
                         //            {sql}
                         //          SET FOREIGN_KEY_CHECKS = 1;";
-                        dbWriter.executeScript(sql);
+                        if(!sql.IsNullOrEmptyOrWhiteSpace())
+                            dbWriter.executeScript(sql);
                     }
 
                     Console.WriteLine("Additional seed data loaded successfully for " + Tbc.Telcobrightpartner.databasename);

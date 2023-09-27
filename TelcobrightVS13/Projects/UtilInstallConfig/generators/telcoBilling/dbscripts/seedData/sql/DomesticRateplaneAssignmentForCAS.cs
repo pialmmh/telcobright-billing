@@ -31,6 +31,7 @@ namespace InstallConfig
                             where idPartner not in (select CountryCode from rateassign where inactive=32)
                             and PartnerType=2;";
             List<int> idPartnersWithNoDomesticRatePlan = session.ExecCommandAndGetSingleColList<int>(sql);
+            if (idPartnersWithNoDomesticRatePlan.Any() == false) return "";
             List<string> tupleInserts= new List<string>();
             List<string> billingRuleInserts= new List<string>();
             List<string> rateAssignInserts = new List<string>();
