@@ -16,7 +16,7 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class CasAgniAbstractConfigGenerator //quartz config part
+    public sealed partial class CasAgniAbstractConfigGenerator //quartz config part
     {
         private FileLocation vaultGenband;
         private FileLocation vaultCataleya;

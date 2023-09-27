@@ -9,8 +9,9 @@ namespace TelcobrightMediation.Config
     public interface IConfigGenerator
     {
         TelcobrightConfig Tbc { get; set; }
-        //string CustomerName { get; set; }
-        //string DatabaseName { get; set; }
+        int IdOperator { get; set; }
+        string CustomerName { get; set; }
+        string DatabaseName { get; set; }
         TelcobrightConfig GenerateFullConfig(InstanceConfig instanceConfig, int microserviceInstanceId);
         List<QuartzTbDaemonConfig> GetSchedulerDaemonConfigs();
         DatabaseSetting GetDatabaseConfigs();

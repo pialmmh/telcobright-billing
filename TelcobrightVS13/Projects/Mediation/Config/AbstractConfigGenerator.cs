@@ -11,8 +11,9 @@ namespace TelcobrightMediation.Config
     {
         public override string ToString() => this.GetType().Name;
         public abstract TelcobrightConfig Tbc { get; set; }
-        //public abstract string CustomerName { get; set; }
-        //public abstract string DatabaseName { get; set; }
+        public abstract int IdOperator { get; set; }
+        public abstract string CustomerName { get; set; }
+        public abstract string DatabaseName { get; set; }
         public abstract TelcobrightConfig GenerateFullConfig(InstanceConfig instanceConfig,int microserviceInstanceId);
         public abstract List<QuartzTbDaemonConfig> GetSchedulerDaemonConfigs();
         public abstract DatabaseSetting GetDatabaseConfigs();

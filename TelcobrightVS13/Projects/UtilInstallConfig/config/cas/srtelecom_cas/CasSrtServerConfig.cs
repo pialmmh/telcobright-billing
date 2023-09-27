@@ -16,7 +16,7 @@ using QuartzTelcobright;
 
 namespace InstallConfig
 {
-    public partial class CasSrtAbstractConfigGenerator  //quartz config part
+    public sealed partial class CasSrtAbstractConfigGenerator  //quartz config part
     {
         public override List<Server> GetServerConfigs()
         {

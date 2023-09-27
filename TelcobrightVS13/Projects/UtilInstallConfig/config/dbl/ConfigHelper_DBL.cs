@@ -24,6 +24,10 @@ namespace InstallConfig
             throw new NotImplementedException();
         }
         public override TelcobrightConfig Tbc { get; set; }
+        public override int IdOperator { get; set; }
+        public override string CustomerName { get; set; }
+        public override string DatabaseName { get; set; }
+
         public DblAbstractConfigGeneratorHelper()
         {
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Igw,

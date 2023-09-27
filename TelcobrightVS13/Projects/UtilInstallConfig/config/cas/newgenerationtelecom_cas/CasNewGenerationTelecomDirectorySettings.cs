@@ -17,7 +17,7 @@ using TelcobrightMediation.Config;
 namespace InstallConfig
 {
 
-    public partial class CasNewGenerationTelecomAbstractConfigGenerator //quartz config part
+    public sealed partial class CasNewGenerationTelecomAbstractConfigGenerator //quartz config part
     {
         public void PrepareDirectorySettings(TelcobrightConfig tbc)
         {

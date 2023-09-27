@@ -16,7 +16,7 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class CasPurpleAbstractConfigGenerator//quartz config part
+    public sealed partial class CasPurpleAbstractConfigGenerator//quartz config part
     {
         public static Dictionary<string, string> SrtConfigHelperMap = new Dictionary<string, string>()
         {

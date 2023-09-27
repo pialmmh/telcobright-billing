@@ -24,6 +24,10 @@ namespace InstallConfig
     public partial class PurpleAbstractConfigGenerator : AbstractConfigGenerator
     {
         public override TelcobrightConfig Tbc { get; set; }
+        public override int IdOperator { get; set; }
+        public override string CustomerName { get; set; }
+        public override string DatabaseName { get; set; }
+
         public PurpleAbstractConfigGenerator()
         {
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx,

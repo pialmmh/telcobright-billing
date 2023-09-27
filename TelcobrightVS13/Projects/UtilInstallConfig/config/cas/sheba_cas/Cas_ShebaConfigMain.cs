@@ -24,9 +24,9 @@ namespace InstallConfig
     public sealed partial class CasShebaAbstractConfigGenerator : AbstractConfigGenerator
     {
         public override TelcobrightConfig Tbc { get; set; }
-        public int IdOperator { get; set; } = 20;
-        public string CustomerName { get; set; } = "Integrated Service Limited (Sheba ICX)";
-        public string DatabaseName { get; set; } = "sheba_cas";
+        public override int IdOperator { get; set; } = 20;
+        public override string CustomerName { get; set; } = "Integrated Service Limited (Sheba ICX)";
+        public override string DatabaseName { get; set; } = "sheba_cas";
 
         public CasShebaAbstractConfigGenerator()
         {
@@ -41,7 +41,7 @@ namespace InstallConfig
             this.PrepareDirectorySettings(this.Tbc);
 
 
-            string csvPathForNe = new DirectoryInfo(FileAndPathHelper.GetCurrentExecPath()).Parent.Parent.FullName + Path.DirectorySeparatorChar.ToString() + "config" + Path.DirectorySeparatorChar.ToString() + "_helper" + Path.DirectorySeparatorChar.ToString() + "casOperatorInfo.xlsx";//add more
+            string csvPathForNe = CasNeInfoHelper.getCasOperatorInfoFile();
             CasNeInfoHelper neHelper = new CasNeInfoHelper(csvPathForNe);
             this.Tbc.Nes = neHelper.getNesByOpId(this.Tbc.Telcobrightpartner.idCustomer);
 

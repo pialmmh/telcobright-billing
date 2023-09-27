@@ -21,13 +21,18 @@ using TelcobrightMediation.Accounting;
 namespace InstallConfig
 {
     [Export(typeof(AbstractConfigGenerator))]
-    public partial class CasAgniAbstractConfigGenerator : AbstractConfigGenerator
+    public sealed partial class CasAgniAbstractConfigGenerator : AbstractConfigGenerator
     {
         public override TelcobrightConfig Tbc { get; set; }
+        public override int IdOperator { get; set; } = 1;
+        public override string CustomerName { get; set; } = "Agni Systems Ltd.";
+        public override string DatabaseName { get; set; } = "agni_cas";
+
+
         public CasAgniAbstractConfigGenerator()
         {
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx,
-                CasTbPartnerFactory.GetTemplatePartner(1, "Agni Systems Ltd.", "agni_cas"));
+                CasTbPartnerFactory.GetTemplatePartner(this.IdOperator, this.CustomerName, this.DatabaseName));
         }
 
         public override TelcobrightConfig GenerateFullConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
@@ -36,13 +41,10 @@ namespace InstallConfig
             this.Tbc.CdrSetting = new CasCdrSettingHelper().getTemplateCdrSettings();
 
             this.PrepareDirectorySettings(this.Tbc);
-            string csvPathForNe = new DirectoryInfo(FileAndPathHelper.GetCurrentExecPath()).Parent.Parent.FullName + Path.DirectorySeparatorChar.ToString() + "config" + Path.DirectorySeparatorChar.ToString() + "_helper" + Path.DirectorySeparatorChar.ToString() + "casOperatorInfo.xlsx";//add more
+            string csvPathForNe = CasNeInfoHelper.getCasOperatorInfoFile();
             CasNeInfoHelper neHelper = new CasNeInfoHelper(csvPathForNe);
 
             this.Tbc.Nes = neHelper.getNesByOpId(this.Tbc.Telcobrightpartner.idCustomer);
-            //C:\TelcobrightProject\TelcobrightVS13\Projects\UtilInstallConfig\config\_helper
-
-            //hello 
 
             this.PrepareProductAndServiceConfiguration();
 

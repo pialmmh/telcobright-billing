@@ -21,13 +21,17 @@ using TelcobrightMediation.Accounting;
 namespace InstallConfig
 {
     [Export(typeof(AbstractConfigGenerator))]
-    public partial class CasBanglaAbstractConfigGenerator : AbstractConfigGenerator
+    public sealed partial class CasBanglaAbstractConfigGenerator : AbstractConfigGenerator
     {
         public override TelcobrightConfig Tbc { get; set; }
+        public override int IdOperator { get; set; } = 3;
+        public override string CustomerName { get; set; } = "Bangla ICX";
+        public override string DatabaseName { get; set; } = "bangla_cas";
+
         public CasBanglaAbstractConfigGenerator()
         {
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx,
-                CasTbPartnerFactory.GetTemplatePartner(3, "Bangla ICX", "bangla_cas"));
+                CasTbPartnerFactory.GetTemplatePartner(this.IdOperator,this.CustomerName ,this.DatabaseName ));
         }
 
         public override TelcobrightConfig GenerateFullConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
@@ -45,7 +49,7 @@ namespace InstallConfig
             this.PrepareProductAndServiceConfiguration();
             this.Tbc.ApplicationServersConfig = this.GetServerConfigs();
             this.Tbc.DatabaseSetting = this.GetDatabaseConfigs();
-            //this.Tbc.PortalSettings = CasPortalSettingsHelper.GetCasCommonPortalSettings(this.Tbc);
+            this.Tbc.PortalSettings = CasPortalSettingsHelper.GetCasCommonPortalSettings(this.Tbc);
             return this.Tbc;
         }
     }

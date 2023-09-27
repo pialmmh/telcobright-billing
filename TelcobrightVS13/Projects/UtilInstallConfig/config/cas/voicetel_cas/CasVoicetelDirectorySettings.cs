@@ -16,7 +16,7 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class CasVoicetelAbstractConfigGenerator //quartz config part
+    public sealed partial class CasVoicetelAbstractConfigGenerator //quartz config part
     {
         private FileLocation vaultHuwaei;
         private FileLocation vaultDialogic;

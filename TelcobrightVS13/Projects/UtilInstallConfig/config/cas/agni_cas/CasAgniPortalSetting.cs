@@ -17,7 +17,7 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class CasAgniAbstractConfigGenerator //quartz config part
+    public sealed partial class CasAgniAbstractConfigGenerator //quartz config part
     {
         /*static string databaseConfigFileName = new DirectoryInfo(FileAndPathHelper.GetBinPath()).Parent.Parent.FullName
                                                + Path.DirectorySeparatorChar + "Server.conf";*/
