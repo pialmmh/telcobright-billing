@@ -259,13 +259,15 @@ namespace InstallConfig
                                     "nodes['Configuration'].Expanded=false",
                                     "nodes['Billing'].Expanded=false",
                                     "nodes['Mediation'].Expanded=false",
+                                    "nodes['Mediation/Create Batch Job'].Expanded=false",
                                     "nodes['Settings'].Expanded=false",
                                     "nodes['Billing Reports'].Expanded=false",
                                     "nodes['Reports/IGW'].Expanded=false",
                                     "nodes['Reports/Transit'].Expanded=false",
                                     "nodes['Individual ICX Report'].Expanded=true",
-                                    "nodes['Individual ICX Report/ICX'].Expanded=true"
-                                    
+                                    "nodes['Individual ICX Report/ICX'].Expanded=true",
+                                    "nodes['Report Templates'].Expanded=false"
+
                                 }
                             },
                             new SettingByRoles()
@@ -279,14 +281,17 @@ namespace InstallConfig
                                     "nodes['Configuration'].Expanded=false",
                                     "nodes['Billing'].Expanded=false",
                                     "nodes['Mediation'].Expanded=true",
+                                    "nodes['Mediation/Create Batch Job'].Expanded=false",
                                     "nodes['Settings'].Expanded=false",
                                     "nodes['Reports'].Expanded=false",
                                     "nodes['Billing Reports'].Expanded=false",
                                     "nodes['Reports/IGW'].Expanded=false",
                                     "nodes['Reports/Transit'].Expanded=false",
                                     "nodes['Individual ICX Report'].Expanded=true",
-                                    "nodes['Individual ICX Report/ICX'].Expanded=true"
-                                    
+                                    "nodes['Individual ICX Report/ICX'].Expanded=true",
+                                    "nodes['Report Templates'].Expanded=false"
+
+
                                 },
                                 SpringExpressionIfNotRole = new List<string>()
                                 {
@@ -348,7 +353,7 @@ namespace InstallConfig
                         settingIntlIn
                     },
                     {
-                        "~/ICX_Reports/Cas_ICX/CasInternationalOut _ICX.aspx",
+                        "~/ICX_Reports/Cas_ICX/CasInternationalOut_ICX.aspx",
                         settingIntlIn
                     }
                 },//dictionary of page settings

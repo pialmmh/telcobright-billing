@@ -513,12 +513,16 @@ public partial class DefaultMediation : System.Web.UI.Page
                 {                 
                     foreach (var kv in telcobrightConfig.DeploymentProfile.UserVsDbName)
                     {
-                        string username = kv.Key;
-                        string dbNameAsRouteName = kv.Value;
-                        string icxName = dbNameAsRouteName.Split('_')[0];
-                        DropDownListViewIncomingRoute.Items.Add(new ListItem(icxName, dbNameAsRouteName));
+                        if (!kv.Value.Contains("btrc"))
+                        {
+                            string username = kv.Key;
+                            string dbNameAsRouteName = kv.Value;
+                            string icxName = dbNameAsRouteName.Split('_')[0];
+                            DropDownListViewIncomingRoute.Items.Add(new ListItem(icxName, dbNameAsRouteName));
+                        }
+                        
 
-                    }
+            }
                 }
       }
 

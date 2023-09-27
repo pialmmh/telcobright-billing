@@ -497,7 +497,7 @@
     <Content Include="ICX_Reports\Cas_ICX\CasDomestic.aspx" />
     <Content Include="ICX_Reports\Cas_ICX\CasDomesticWithLtfs.aspx" />
     <Content Include="ICX_Reports\Cas_ICX\CasInternationalIn_ICX.aspx" />
-    <Content Include="ICX_Reports\Cas_ICX\CasInternationalOut _ICX.aspx" />
+    <Content Include="ICX_Reports\Cas_ICX\CasInternationalOut_ICX.aspx" />
     <Content Include="ICX_Reports\Cas_ICX\CasLocalTollFree.aspx" />
     <Content Include="img\background.png" />
     <Content Include="img\background_old.png" />
@@ -897,12 +897,12 @@
     <Compile Include="ICX_Reports\Cas_ICX\CasInternationalIn_ICX.aspx.designer.cs">
       <DependentUpon>CasInternationalIn_ICX.aspx</DependentUpon>
     </Compile>
-    <Compile Include="ICX_Reports\Cas_ICX\CasInternationalOut _ICX.aspx.cs">
-      <DependentUpon>CasInternationalOut _ICX.aspx</DependentUpon>
+    <Compile Include="ICX_Reports\Cas_ICX\CasInternationalOut_ICX.aspx.cs">
+      <DependentUpon>CasInternationalOut_ICX.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="ICX_Reports\Cas_ICX\CasInternationalOut _ICX.aspx.designer.cs">
-      <DependentUpon>CasInternationalOut _ICX.aspx</DependentUpon>
+    <Compile Include="ICX_Reports\Cas_ICX\CasInternationalOut_ICX.aspx.designer.cs">
+      <DependentUpon>CasInternationalOut_ICX.aspx</DependentUpon>
     </Compile>
     <Compile Include="ICX_Reports\Cas_ICX\CasLocalTollFree.aspx.cs">
       <DependentUpon>CasLocalTollFree.aspx</DependentUpon>
