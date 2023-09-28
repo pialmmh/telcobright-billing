@@ -1,1 +1,0 @@
-C:\TelcobrightProject\TelcobrightVS13\Projects\WS_Topshelf_Quartz\bin\debug\WS_Telcobright_Topshelf.exe "C:\TelcobrightProject\TelcobrightVS13\Projects\WS_Topshelf_Quartz\deployedInstances\gazinetworks_cas\gazinetworks_cas.conf"

@@ -1,1 +1,0 @@
-C:\sftproot\TelcobrightProject\TelcobrightVS13\Projects\WS_Topshelf_Quartz\bin\debug\WS_Telcobright_Topshelf.exe "C:\sftproot\TelcobrightProject\TelcobrightVS13\Projects\WS_Topshelf_Quartz\deployedInstances\sheba_cas\sheba_cas.conf"
