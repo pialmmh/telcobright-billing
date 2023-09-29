@@ -19,15 +19,10 @@ namespace InstallConfig
     {
         public static List<QuartzTbDaemonConfig> GetSchedulerDaemonConfigs(string operatorName)
         {
-            List<QuartzTbDaemonConfig> daemonConfigurations= new List<QuartzTbDaemonConfig>();
-
-            daemonConfigurations = new List<QuartzTbDaemonConfig>();
-            daemonConfigurations.AddRange(GetFileListerInstances(operatorName));
+            var daemonConfigurations = new List<QuartzTbDaemonConfig>();
             daemonConfigurations.AddRange(GetLogFileJobCreatorInstances(operatorName));
-            daemonConfigurations.AddRange(GetFileCopierInstances(operatorName));
             daemonConfigurations.AddRange(GetCdrJobProcessorInstances(operatorName));
             daemonConfigurations.AddRange(GetOptimizerInstances(operatorName));
-            daemonConfigurations.AddRange(GetInvoiceGeneratorInstances(operatorName));
             return daemonConfigurations;
         }
 
