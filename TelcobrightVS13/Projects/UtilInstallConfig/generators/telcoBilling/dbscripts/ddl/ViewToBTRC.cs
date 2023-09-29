@@ -48,6 +48,8 @@ namespace InstallConfig
                                 drop table if exists userlogins; drop view if exists userlogins; create view userlogins as select * from btrc_cas.userlogins;
                                 drop table if exists userroles; drop view if exists userroles; create view userroles as select * from btrc_cas.userroles;
                                 drop table if exists users; drop view if exists users; create view users as select * from btrc_cas.users;
+                                drop table if exists enumcdrformat; drop view if exists enumcdrformat; create view enumcdrformat as select * from btrc_cas.enumcdrformat;
+                                drop table if exists cdrfieldmappingbyswitchtype; drop view if exists cdrfieldmappingbyswitchtype; create view cdrfieldmappingbyswitchtype as select * from btrc_cas.cdrfieldmappingbyswitchtype;
                                 drop table if exists temp_route;                                
                                 create table temp_route as 
                                 select * from route;

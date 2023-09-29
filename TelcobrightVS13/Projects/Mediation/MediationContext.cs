@@ -37,13 +37,9 @@ namespace TelcobrightMediation
         public Dictionary<ValueTuple<int, string>, route> Routes { get; }
         public Dictionary<ValueTuple<int, string>, bridgedroute> BridgedRoutes { get; }
         public List<ansprefixextra> LstAnsPrefixExtra { get; private set; } //required for failed intl in calls where term number might be missing
-        public Dictionary<string, partnerprefix>
-            DictAnsOrig
-        { get; private set; } //ANSTermprefix partner dictionary with AnsPrefix as Key
+        public Dictionary<string, partnerprefix>DictAnsOrig { get; private set; } //ANSTermprefix partner dictionary with AnsPrefix as Key
         public Dictionary<int, cdrfieldlist> CdrFieldLists { get; private set; }
-        public Dictionary<int, Dictionary<int, ServiceGroupConfiguration>>
-            ServiceGroupConfigurations
-        { get; } //<switchid,dic<servicegroupID,medruleassignment>>
+        public Dictionary<int, Dictionary<int, ServiceGroupConfiguration>> ServiceGroupConfigurations { get; } //<switchid,dic<servicegroupID,medruleassignment>>
         public Dictionary<int, SwitchWiseLookup> SwitchWiseLookups { get; }
         public Dictionary<string, ne> Nes { get; } //load only nes for corresponding telcobright partner
         public Dictionary<int, partner> Partners { get; }

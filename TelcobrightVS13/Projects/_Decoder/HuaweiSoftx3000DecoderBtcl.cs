@@ -18,11 +18,11 @@ namespace Decoders
     {
         public override string ToString() => this.RuleName;
         public override string RuleName => GetType().Name;
-        public override int Id => 70;
+        public override int Id => 68;
         public override string HelpText => "Decodes Huawei Softx3000 CDR (BTCL version)";
         public override CompressionType CompressionType { get; set; }
 
-        public virtual List<string[]> DecodeFile(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs)
+        public override List<string[]> DecodeFile(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs)
         {
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
@@ -40,6 +40,7 @@ namespace Decoders
             }
             int rowCnt = 0;
             string[] thisRow = null;
+            int row = 0;
             for (; rowCnt < totalCdrCountInFile; rowCnt++)//for each row in byte array
             {
                 try
@@ -313,10 +314,12 @@ namespace Decoders
                     }
                     thisRow[Fn.FinalRecord] = "1";
                     thisRow[Fn.Validflag] = "1";
+                    thisRow[Fn.Sequencenumber] = "1";
+                    thisRow[Fn.StartTime] = thisRow[Fn.AnswerTime];
 
-                    thisRow[Fn.IncomingRoute] = thisRowBytes.Where((element, index) => index >= 397 && index <= 412).ToString();
-                    thisRow[Fn.OutgoingRoute] = thisRowBytes.Where((element, index) => index >= 413 && index <= 428).ToString();
 
+                    //thisRowBytes = bytesFromFile.Skip(rowCnt * huaweiFixedBytePerRows).Take(huaweiFixedBytePerRows).ToArray();
+                    
                     decodedRows.Add(thisRow);
                 }
                 catch (Exception e1)
