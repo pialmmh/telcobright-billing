@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbHelper\DaywiseTableManager.cs" />
+    <Compile Include="DbHelper\_DbUtil.cs" />
     <Compile Include="DbHelper\MySqlSession.cs" />
     <Compile Include="DbHelper\DbColumn.cs" />
     <Compile Include="DbHelper\SqlAggregator.cs" />
@@ -63,7 +64,6 @@
     <Compile Include="Deployment\Menu.cs" />
     <Compile Include="Infra\Datacenter.cs" />
     <Compile Include="Infra\DbCommandReader.cs" />
-    <Compile Include="Infra\DbUtil.cs" />
     <Compile Include="Infra\ReplicationHelper.cs" />
     <Compile Include="logManagement\TelcoBillingLogWriter.cs" />
     <Compile Include="MEF\IScript.cs" />

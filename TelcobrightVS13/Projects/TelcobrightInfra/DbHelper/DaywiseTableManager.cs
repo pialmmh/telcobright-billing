@@ -43,25 +43,48 @@ namespace TelcobrightInfra
                 }
             }
         }
-
-
-
-        public static void CreateTables(string tablePrefix, string createTableTemplateSql, List<DateTime>dateTimes,MySqlConnection con)
+        public static void CreateTables(string tablePrefix, string templateSql, List<DateTime>dateTimes,MySqlConnection con,
+            bool partitionByHour,string partitionColName,string engine )
         {
+            string prefixEnclosed = "<" + tablePrefix + ">";
+            if (templateSql.Contains(prefixEnclosed)==false) 
+                throw new Exception($"Prefix in template is not enclosed with <> for table: {tablePrefix}");
             using (MySqlCommand cmd = new MySqlCommand("", con))
             {
-                foreach (DateTime dateTime in dateTimes)
+                foreach (DateTime tableDate in dateTimes)
                 {
-                    string date = dateTime.ToString("yyyyMMdd");
+                    string date = tableDate.ToString("yyyyMMdd");
                     string tableName = tablePrefix + date;
-
-                    string sql = "create table if not exists " + tableName + " " +
-                                 createTableTemplateSql.Remove(0, createTableTemplateSql.IndexOf('('));
+                    string sql = templateSql.Replace(prefixEnclosed, tableName);
+                    if (partitionByHour)
+                    {
+                        sql += GetHourlytPartitionExpression(partitionColName, tableDate, engine);
+                    }
                     cmd.CommandText = sql;
                     cmd.ExecuteNonQuery();
                 }
             } 
-            
+        }
+        public static string GetHourlytPartitionExpression(string partitionColName, DateTime date, string engine)
+        {
+            int yr = date.Year;
+            int mon = date.Month;
+            int day = date.Day;
+            DateTime partitionDay = new DateTime(yr, mon, day);
+
+            Func<DateTime, string> getPartitionExpression = dateHr =>
+                $"(PARTITION p{dateHr.Hour} VALUES LESS THAN ('{dateHr.ToMySqlFormatWithoutQuote()}') ENGINE = {engine});";
+
+            List<string> hourlyPartitionExpressions = Enumerable.Range(1, 23).Select(hr =>
+            {
+                var dateWithHour = partitionDay.AddHours(hr);
+                return getPartitionExpression(dateWithHour);
+            }).ToList();
+
+            var nextDayZeroHour = partitionDay.AddDays(1);
+            hourlyPartitionExpressions.Add(getPartitionExpression(nextDayZeroHour));
+            return $"PARTITION BY RANGE  COLUMNS({partitionColName})\r\n" +
+                   string.Join("\r\b", hourlyPartitionExpressions);
         }
     }
 }

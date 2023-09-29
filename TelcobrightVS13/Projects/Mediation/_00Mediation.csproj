@@ -156,9 +156,12 @@
     <Compile Include="Automation\SingleCliCommand.cs" />
     <Compile Include="Cdr\CdrJob.cs" />
     <Compile Include="Cdr\Collection\Collector\CdrRowCollector.cs" />
+    <Compile Include="Cdr\Collection\Collector\DayAndHourWiseCollector.cs" />
     <Compile Include="Cdr\Collection\PreProcessors\CdrErrorPreProcessor.cs" />
     <Compile Include="Cdr\Collection\PreProcessors\AbstractCdrReProcessingPreProcessor.cs" />
+    <Compile Include="Cdr\Collection\PreProcessors\DuplicaterEventFilter.cs" />
     <Compile Include="Cdr\Collection\RowIdsCollectionForSingleDay.cs" />
+    <Compile Include="Cdr\IFileDecoder.cs" />
     <Compile Include="Cdr\RateCacheCleaner.cs" />
     <Compile Include="Config\AbstractConfigGenerator.cs" />
     <Compile Include="Config\AutomationSetting.cs" />
@@ -321,7 +324,6 @@
     <Compile Include="Mediation\TupleDefinitions.cs" />
     <Compile Include="MefData\IAutoCreateJob.cs" />
     <Compile Include="MefData\IDisplayClass.cs" />
-    <Compile Include="MefData\IFileDecoder.cs" />
     <Compile Include="MefData\IFileNameMatchingRule.cs" />
     <Compile Include="MefData\INerCalculationRule.cs" />
     <Compile Include="MefData\IEventAggregator.cs" />
