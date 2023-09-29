@@ -63,7 +63,7 @@ namespace TelcobrightMediation
         public string getSqlPerDay(DateTime day, List<string> tuples, IFileDecoder decoder)
         {
             bool tableExists = false;
-            string tableName = "uniqueevent" + day.Date.ToString("yyyyMMdd");
+            string tableName = "zz_uniqueevent" + day.Date.ToString("yyyyMMdd");
             string databaseName = this.CollectorInput.CdrJobInputData.Tbc.DatabaseSetting.DatabaseName;
             this.DbCmd.CommandText = $"show tables from {databaseName} where tables_in_{databaseName}='{tableName}';";
             this.DbCmd.CommandType = CommandType.Text;
@@ -101,7 +101,6 @@ namespace TelcobrightMediation
                 }
                 reader.Close();
             }
-
             return existingEvents;
         }
     }
