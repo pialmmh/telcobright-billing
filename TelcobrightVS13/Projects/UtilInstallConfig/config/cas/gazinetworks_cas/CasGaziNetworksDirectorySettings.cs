@@ -40,14 +40,26 @@ namespace InstallConfig
                 Pass = "",
             };
 
-            FileLocation vaultTelcobridgeDhk = new FileLocation()
+            FileLocation vaultTelcoBogra = new FileLocation()
             {
                 Name = "Vault.Telcobridge",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "D:/telcobright/vault/resources/cdr/gazinetworks/tdm1",
+                StartingPath = "d:/telcobright/vault/resources/cdr/gaziNetworks/tdm1/Bogra_Zone",
+                User = "",
+                Pass = "",
+            };
+
+            FileLocation vaultTelcoKhulna = new FileLocation()
+            {
+                Name = "Vault.Telcobridge",//this is refered in ne table, name MUST start with "Vault"
+                LocationType = "vault",//locationtype always lowercase
+                OsType = "windows",
+                PathSeparator = @"\",
+                ServerIp = "",
+                StartingPath = "d:/telcobright/vault/resources/cdr/gaziNetworks/tdm1/Khulna_Zone",
                 User = "",
                 Pass = "",
             };
@@ -65,7 +77,8 @@ namespace InstallConfig
             };
 
             this.Tbc.DirectorySettings.FileLocations.Add(vaultGazi.Name, vaultGazi);
-            this.Tbc.DirectorySettings.FileLocations.Add(vaultTelcobridgeDhk.Name, vaultTelcobridgeDhk);
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultTelcoKhulna.Name, vaultTelcoKhulna);
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultTelcoBogra.Name, vaultTelcoBogra);
             this.Tbc.DirectorySettings.FileLocations.Add(vaultcataliyaDhk.Name, vaultcataliyaDhk);
            
             //add archive locations to CdrSettings
