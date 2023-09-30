@@ -20,7 +20,7 @@
 
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
 
-    <div id="report" style="clear: both; height: 25px; background-color: white; padding-left: 5px; width: 1080px; margin-bottom: 2px;">
+    <div id="report" style="clear: both; height: 25px; background-color: white; padding-left: 5px; width: 1200px; margin-bottom: 2px;">
 
         <script type="text/javascript">
             function ToggleParamBorderDiv() {
@@ -410,9 +410,9 @@
 
                 <%-- <asp:BoundField DataField="profitminute" HeaderText="Profit/Minute" SortExpression="profitminute" />--%>
             </Columns>
-            <HeaderStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />
+            <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
             <EditRowStyle BackColor="#999999" />
-            <FooterStyle BackColor="#08605c" Font-Bold="true" ForeColor="White" />
+            <FooterStyle BackColor="#5D7B9D" Font-Bold="true" ForeColor="White" />
             <%--<FooterStyle BackColor="#E0DCDF" Font-Bold="true" ForeColor="Black" />--%>
             <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
             <RowStyle BackColor="white" ForeColor="#333333" />

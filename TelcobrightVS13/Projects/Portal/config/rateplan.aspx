@@ -116,8 +116,8 @@ union all
        
 
 
-        <FooterStyle BackColor="#08605c" ForeColor="White" Font-Bold="True" />
-        <HeaderStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />
+        <FooterStyle BackColor="#5D7B9D" ForeColor="White" Font-Bold="True" />
+        <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
        
 
 
@@ -691,8 +691,8 @@ order by Type "
         <EditRowStyle BackColor="#999999" />
 
       
-        <FooterStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />
-        <HeaderStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />
+        <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
+        <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
         <PagerStyle BackColor="#284775" ForeColor="White" 
             HorizontalAlign="Center" />
         <RowStyle BackColor="white" ForeColor="#333333" />

@@ -50,7 +50,7 @@
                                   CellPadding="4" ForeColor="#333333" GridLines="Vertical"
                                   Font-Size="9pt" BorderColor="Silver" BorderStyle="Solid" OnRowDataBound="gvInvoice_RowDataBound">
                         <AlternatingRowStyle BackColor="#f2f2f2" ForeColor="#284775"></AlternatingRowStyle>
-                        <HeaderStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />
+                        <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
                         <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
                         <RowStyle BackColor="white" ForeColor="#333333" />
                         <Columns>
@@ -104,11 +104,11 @@ CancelControlID="btnCancel" BackgroundCssClass="modalBackground" BehaviorID="pnl
 <asp:Panel ID="pnlInvoice" runat="server" BackColor="White" Height="269px" Width="400px" style="display:none;">
     <asp:UpdatePanel runat="server" ID="upInner" UpdateMode="Conditional">
         <ContentTemplate>
-            <table width="100%" style="border:Solid 3px #08605c; width:100%; height:100%" cellpadding="0" cellspacing="0">
-                <tr style="background-color:#08605c">
+            <table width="100%" style="border:Solid 3px #5D7B9D; width:100%; height:100%" cellpadding="0" cellspacing="0">
+                <tr style="background-color:#5D7B9D">
                     <td colspan="2" style=" height:10%; color:White; font-weight:bold; font-size:larger" align="center">Invoice Details</td>
                 </tr>
-                <tr style="background-color:#08605c">
+                <tr style="background-color:#5D7B9D">
                     <td colspan="2" style=" height:10%; color:White; font-weight:bold; font-size:larger" align="center">
                         <asp:Label ID="LabelDESCRIPTION" runat="server" />
                     </td>

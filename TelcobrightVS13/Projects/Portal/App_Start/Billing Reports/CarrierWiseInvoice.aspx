@@ -124,8 +124,8 @@
                     <RowStyle HorizontalAlign="Center"/>
                     <AlternatingRowStyle BackColor="#EBF0FF" ForeColor="#284775"/>
                     <EditRowStyle HorizontalAlign="Center" />
-                    <HeaderStyle HorizontalAlign="Center" Font-Bold="true" BackColor="#08605c" ForeColor="White"/>
-                    <FooterStyle BackColor="#08605c" Font-Bold="true" ForeColor="White" HorizontalAlign="Center"/>
+                    <HeaderStyle HorizontalAlign="Center" Font-Bold="true" BackColor="#5D7B9D" ForeColor="White"/>
+                    <FooterStyle BackColor="#5D7B9D" Font-Bold="true" ForeColor="White" HorizontalAlign="Center"/>
                 </asp:GridView>
 
 
@@ -151,8 +151,8 @@
                     <RowStyle HorizontalAlign="Center"/>
                     <AlternatingRowStyle BackColor="#EBF0FF" ForeColor="#284775"/>
                     <EditRowStyle HorizontalAlign="Center" />
-                    <HeaderStyle HorizontalAlign="Center" Font-Bold="true" BackColor="#08605c" ForeColor="White"/>
-                    <FooterStyle BackColor="#08605c" Font-Bold="true" ForeColor="White" />
+                    <HeaderStyle HorizontalAlign="Center" Font-Bold="true" BackColor="#5D7B9D" ForeColor="White"/>
+                    <FooterStyle BackColor="#5D7B9D" Font-Bold="true" ForeColor="White" />
                 </asp:GridView>
            <br />
            <asp:Button ID="btnExporttoCSV" runat="server" Text="Export to CSV" Font-Names="Arial-Narrow" CssClass="btnExport" OnClick="btnExporttoCSV_Click"/>

@@ -330,7 +330,7 @@ order by type "></asp:SqlDataSource>
                                 <asp:BoundField ItemStyle-Width="80px" DataField="BalanceAfter" DataFormatString="{0:n2}" HeaderText="Balance" HeaderStyle-HorizontalAlign="Right" ItemStyle-HorizontalAlign="Right" />                                
                                 <asp:BoundField ItemStyle-Width="30px" DataField="uom" HeaderText="UOM" HeaderStyle-HorizontalAlign="Right" ItemStyle-HorizontalAlign="Right" />                                
                             </Columns>
-                            <HeaderStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />
+                            <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
                             <PagerStyle BackColor="#284775" ForeColor="White" 
                                         HorizontalAlign="Center" />
                             <RowStyle BackColor="white" Height="10" ForeColor="#333333" />
@@ -346,8 +346,8 @@ order by type "></asp:SqlDataSource>
         <EditRowStyle BackColor="#999999" />
 
       
-        <FooterStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />
-        <HeaderStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />
+        <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
+        <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
         <PagerStyle BackColor="#284775" ForeColor="White" 
             HorizontalAlign="Center" />
         <RowStyle BackColor="white" Height="10" ForeColor="#333333" />

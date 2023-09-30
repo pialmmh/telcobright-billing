@@ -12,9 +12,9 @@
      <asp:GridView ID="GridView" OnRowDataBound="GridView_RowDataBound" runat="server"
                 Font-Names="Arial"  DataKeyNames="id" Font-Size="9pt" CellPadding="4" ForeColor="#333333" AutoGenerateColumns="False">                
                 <EditRowStyle BackColor="#999999" />
-                <FooterStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />
+                <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
                 
-                <HeaderStyle BackColor="#08605c" ForeColor="white" Font-Bold="True" />
+                <HeaderStyle BackColor="#5D7B9D" ForeColor="white" Font-Bold="True" />
                 <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
     <Columns>
         <asp:BoundField DataField="idPartner" HeaderText="Partner Id"/>

@@ -20,6 +20,7 @@ namespace reports
     }
     public class CallStatistics
     {
+        public string SwitchName { get; set; }
         public long TotalCalls { get; set; }
         public long ConnectedCalls { get; set; }
         public long ConnectedCallsbyCauseCodes { get; set; }

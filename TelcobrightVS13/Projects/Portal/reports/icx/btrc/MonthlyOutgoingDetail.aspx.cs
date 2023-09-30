@@ -119,6 +119,7 @@ public partial class DefaultRptMonthlyOutDetailIcx : System.Web.UI.Page
     {
         MySqlCommand cmd = new MySqlCommand(sql, connection);
         cmd.Connection = connection;
+        cmd.CommandTimeout = 3200;
         MySqlDataAdapter domDataAdapter = new MySqlDataAdapter(cmd);
         DataSet ds = new DataSet();
         domDataAdapter.Fill(ds);

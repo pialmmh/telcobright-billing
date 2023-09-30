@@ -69,7 +69,7 @@ namespace InstallConfig
                 OsType = "linux",
                 UseActiveModeForFTP = true,
                 PathSeparator = "/",
-                StartingPath = "/home/zxss10_bsvr/data/bfile/bill/delete/delete_reve",
+                StartingPath = "/home/zxss10_bsvr/data/bfile/bill/delete",
                 ServerIp = "10.33.34.12",
                 User = "icxreve",
                 Pass = "icxreve123",

@@ -11,8 +11,8 @@
 </asp:ToolkitScriptManager>
 
     <div align="left">
-    <table width="100%" style="border:Solid 3px #08605c; width:680px; height:100%" cellpadding="0" cellspacing="2">
-    <tr style="background-color:#08605c">
+    <table width="100%" style="border:Solid 3px #5D7B9D; width:680px; height:100%" cellpadding="0" cellspacing="2">
+    <tr style="background-color:#5D7B9D">
         <td colspan="2" style=" height:10%; color:White; font-weight:bold; font-size:larger" align="center">Add Payment</td>
     </tr>
     <tr>
@@ -85,8 +85,8 @@
                     Font-Names="Arial"  DataKeyNames="id" Font-Size="9pt" CellPadding="4" ForeColor="#333333" AutoGenerateColumns="False"
                     OnRowDataBound="gvThreshold_RowDataBound">
                 <EditRowStyle BackColor="#999999" />
-                <FooterStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />                
-                <HeaderStyle BackColor="#08605c" ForeColor="white" Font-Bold="True" />
+                <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />                
+                <HeaderStyle BackColor="#5D7B9D" ForeColor="white" Font-Bold="True" />
                 <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                 <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
                 <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
@@ -140,8 +140,8 @@ CancelControlID="btnRuleCancel" BackgroundCssClass="modalBackground" BehaviorID=
 <asp:Panel ID="pnlRule" runat="server" BackColor="White" Height="269px" Width="400px" style="display:none;">
     <asp:UpdatePanel runat="server">
         <ContentTemplate>
-            <table width="100%" style="border:Solid 3px #08605c; width:100%; height:100%" cellpadding="0" cellspacing="0">
-                <tr style="background-color:#08605c">
+            <table width="100%" style="border:Solid 3px #5D7B9D; width:100%; height:100%" cellpadding="0" cellspacing="0">
+                <tr style="background-color:#5D7B9D">
                     <td colspan="2" style=" height:10%; color:White; font-weight:bold; font-size:larger" align="center">Account Action Rule</td>
                 </tr>
                 <tr>

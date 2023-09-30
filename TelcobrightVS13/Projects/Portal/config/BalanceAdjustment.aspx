@@ -36,7 +36,7 @@
                                   Font-Size="9pt" BorderColor="Silver" BorderStyle="Solid"
                                   OnRowDataBound="gvInvoice_OnRowDataBound">
                         <AlternatingRowStyle BackColor="#f2f2f2" ForeColor="#284775"></AlternatingRowStyle>
-                        <HeaderStyle BackColor="#08605c" Font-Bold="True" ForeColor="White" />
+                        <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
                         <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
                         <RowStyle BackColor="white" ForeColor="#333333" />
                         <Columns>
