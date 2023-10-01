@@ -58,6 +58,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NokiaHelper\NokiaDecodeHelper.cs" />
+    <Compile Include="NokiaHelper\NokiaSiemensDecoder.cs" />
     <Compile Include="GenbandC3Gazi.cs" />
     <Compile Include="GenbandC3CrossWorld.cs" />
     <Compile Include="GenbandC3DecoderBangla.cs" />
@@ -111,6 +113,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy $(TargetPath) $(SolutionDir)WS_Topshelf_Quartz\bin\Extensions\$(TargetFileName)
