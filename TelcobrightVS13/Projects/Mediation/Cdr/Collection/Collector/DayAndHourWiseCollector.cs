@@ -60,10 +60,10 @@ namespace TelcobrightMediation
             }
             return timeFieldNo;
         }
-        public string getSqlPerDay(DateTime day, List<string> tuples, IFileDecoder decoder)
+        public string getSqlPerDay(DateTime hourOfTheDay, List<string> tuples, IFileDecoder decoder)
         {
             bool tableExists = false;
-            string tableName = "zz_uniqueevent" + day.Date.ToString("yyyyMMdd");
+            string tableName = "zz_uniqueevent" + hourOfTheDay.Date.ToString("yyyyMMdd");
             string databaseName = this.CollectorInput.CdrJobInputData.Tbc.DatabaseSetting.DatabaseName;
             this.DbCmd.CommandText = $"show tables from {databaseName} where tables_in_{databaseName}='{tableName}';";
             this.DbCmd.CommandType = CommandType.Text;
@@ -83,7 +83,7 @@ namespace TelcobrightMediation
             return
                 $" select tuple from {tableName} where tuple " +
                 $" in ({string.Join(",", tuples.Select(t => new StringBuilder("'").Append(t).Append("'")))}) " +
-                $" and {decoder.getSqlWhereClauseForDayWiseSafeCollection(this.CollectorInput, day)}";
+                $" and {decoder.getSqlWhereClauseForDayWiseSafeCollection(this.CollectorInput, hourOfTheDay)}";
         }
         public List<string> collectExistingEvents()
         {

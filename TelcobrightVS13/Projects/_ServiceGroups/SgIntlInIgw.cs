@@ -118,7 +118,7 @@ namespace TelcobrightMediation
                     {
                         partnerprefix thisPrefix = null;
                         string matchStr = terminatingCalledNumber.Substring(0, iteration + 1);
-                        cdrProcessor.CdrJobContext.MediationContext.DictAnsOrig.TryGetValue(matchStr, out thisPrefix);
+                        cdrProcessor.CdrJobContext.MediationContext.AnsPrefixes.TryGetValue(matchStr, out thisPrefix);
                         if (thisPrefix != null)
                         {
                             ansPrefixTerm = thisPrefix.Prefix;

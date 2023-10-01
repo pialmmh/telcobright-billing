@@ -26,6 +26,22 @@ namespace PartnerRules
                 thisCdr.InPartnerId = thisRoute.idPartner;
                 return thisRoute.idPartner;
             }
+
+            if (thisCdr.InPartnerId <= 0)
+            {
+                CdrSetting cdrSetting = data.MediationContext.CdrSetting;
+                if (cdrSetting.useCasStyleProcessing == true)
+                {
+                    ANSInByPrefix ansInByPrefix= new ANSInByPrefix();
+                    int idPartner = ansInByPrefix.Execute(thisCdr, data);
+                    if (idPartner > 0)
+                    {
+                        thisCdr.InPartnerId = idPartner;
+                        return idPartner;
+                    }
+                }
+            }
+
             thisCdr.InPartnerId = 0;
             return 0;
         }

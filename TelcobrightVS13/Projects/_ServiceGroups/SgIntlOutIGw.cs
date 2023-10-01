@@ -106,7 +106,7 @@ namespace TelcobrightMediation
 
                         }
                         AnsPrefixFinder.FindOriginatingAnsPrefix(thisCdr, 
-                            cdrProcessor.CdrJobContext.MediationContext.DictAnsOrig, originatingCallingNumber);
+                            cdrProcessor.CdrJobContext.MediationContext.AnsPrefixes, originatingCallingNumber);
                     } //if originatingcallingnumber present
                 }
             }

@@ -13,6 +13,7 @@ namespace TelcobrightMediation
         public string PortalLocalAccountNameAdministrator { get; set; }
         public string PortalLocalAccountPassword { get; set; }
         public string HomePageUrl { get; set; }
+        public string HomePageUrlForIcx { get; set; }
         public string AlternateDisplayName { get; set; }
         public List<InternetSite> PortalSites { get; set; }
         public PortalSettings(string sectionName)

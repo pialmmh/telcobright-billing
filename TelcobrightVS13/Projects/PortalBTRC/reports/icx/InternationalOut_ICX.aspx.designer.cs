@@ -21,6 +21,24 @@ public partial class DefaultRptIntlOutIcx1 {
     protected global::System.Web.UI.WebControls.DropDownList DropDownListReportSource;
     
     /// <summary>
+    /// CheckBoxViewIncomingRoute control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.CheckBox CheckBoxViewIncomingRoute;
+    
+    /// <summary>
+    /// DropDownListViewIncomingRoute control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList DropDownListViewIncomingRoute;
+    
+    /// <summary>
     /// ViewBySwitch control.
     /// </summary>
     /// <remarks>
@@ -289,24 +307,6 @@ public partial class DefaultRptIntlOutIcx1 {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox TextBoxUsdRate;
-    
-    /// <summary>
-    /// CheckBoxViewIncomingRoute control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.CheckBox CheckBoxViewIncomingRoute;
-    
-    /// <summary>
-    /// DropDownListViewIncomingRoute control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList DropDownListViewIncomingRoute;
     
     /// <summary>
     /// CheckBoxShowByCountry control.

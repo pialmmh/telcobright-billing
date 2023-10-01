@@ -71,8 +71,8 @@
   <ItemGroup>
     <Compile Include="PrtOutByIpOrPointCode.cs" />
     <Compile Include="PrtInByIpOrPointCode.cs" />
-    <Compile Include="PrtOutByBridgeTg.cs" />
-    <Compile Include="PrtInByBridgeTg.cs" />
+    <Compile Include="ANSOutByPrefix.cs" />
+    <Compile Include="ANSInByPrefix.cs" />
     <Compile Include="PrtInByTg.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PrtOutByTg.cs" />

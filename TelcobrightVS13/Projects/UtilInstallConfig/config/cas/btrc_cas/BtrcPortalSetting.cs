@@ -32,6 +32,7 @@ namespace InstallConfig
                 PortalLocalAccountNameAdministrator = portalLocalAccountNameAdministrator,
                 PortalLocalAccountPassword = portalLocalAccountPassword,
                 HomePageUrl = "~/Dashboard.aspx",
+                HomePageUrlForIcx = "~/DashboardForIcx.aspx",
                 AlternateDisplayName = "ICX Manager",
                 RouteTypeEnums = new Dictionary<string, int>()
                 {

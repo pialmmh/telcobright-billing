@@ -490,6 +490,7 @@
     <Content Include="config\RouteImport.aspx" />
     <Content Include="config\test.aspx" />
     <Content Include="Contact.aspx" />
+    <Content Include="DashboardForIcx.aspx" />
     <Content Include="Dashboard.aspx" />
     <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
@@ -867,6 +868,13 @@
     </Compile>
     <Compile Include="config\ViewRoutes.aspx.designer.cs">
       <DependentUpon>ViewRoutes.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="DashboardForIcx.aspx.cs">
+      <DependentUpon>DashboardForIcx.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DashboardForIcx.aspx.designer.cs">
+      <DependentUpon>DashboardForIcx.aspx</DependentUpon>
     </Compile>
     <Compile Include="Dashboard.aspx.cs">
       <DependentUpon>Dashboard.aspx</DependentUpon>

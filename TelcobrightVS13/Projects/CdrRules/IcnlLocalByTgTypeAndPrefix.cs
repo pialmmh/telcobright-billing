@@ -28,7 +28,7 @@ namespace CdrRules
             MediationContext mediationContext = (MediationContext) input;
             this.routes = mediationContext.Routes;
             this.bridgedRoutes = mediationContext.BridgedRoutes;
-            this.AnsPrefixes = mediationContext.DictAnsOrig;
+            this.AnsPrefixes = mediationContext.AnsPrefixes;
             this.IsPrepared = true;
         }
 
