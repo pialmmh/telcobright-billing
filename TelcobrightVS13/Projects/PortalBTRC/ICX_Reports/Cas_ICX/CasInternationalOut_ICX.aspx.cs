@@ -61,7 +61,7 @@ public partial class CasDefaultRptIntlOutIcx : System.Web.UI.Page
                                 CheckBoxShowByIgw.Checked==true?"tup_inpartnerid":string.Empty,
                                 CheckBoxShowByCustomerRate.Checked==true?"usdRate":string.Empty,
                                 "usdRate",
-                                CheckBoxViewIncomingRoute.Checked==true?"tup_incomingroute":string.Empty,
+                                //CheckBoxViewIncomingRoute.Checked==true?"tup_incomingroute":string.Empty,
                                 CheckBoxViewOutgoingRoute.Checked==true?"tup_outgoingroute":string.Empty,
                             },
                       
@@ -72,7 +72,7 @@ public partial class CasDefaultRptIntlOutIcx : System.Web.UI.Page
                                 CheckBoxIntlPartner.Checked==true?DropDownListIntlCarier.SelectedIndex>0?" tup_outpartnerid="+DropDownListIntlCarier.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxShowByAns.Checked==true?DropDownListAns.SelectedIndex>0?" tup_sourceID="+DropDownListAns.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_inpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty,
-                                CheckBoxViewIncomingRoute.Checked==true?DropDownListViewIncomingRoute.SelectedIndex>0?" tup_incomingroute="+DropDownListViewIncomingRoute.SelectedItem.Value:string.Empty:string.Empty,
+                                //CheckBoxViewIncomingRoute.Checked==true?DropDownListViewIncomingRoute.SelectedIndex>0?" tup_incomingroute="+DropDownListViewIncomingRoute.SelectedItem.Value:string.Empty:string.Empty,
                                 CheckBoxViewOutgoingRoute.Checked==true?DropDownListViewOutgoingRoute.SelectedIndex>0?" tup_outgoingroute="+"'"+DropDownListViewIncomingRoute.SelectedItem.Value.Split('_')[0].Trim().ToString().Split('_')[0].Trim().ToString()+"'":string.Empty:string.Empty,
                                 ViewBySwitch.Checked==true?DropDownListShowBySwitch.SelectedIndex>0?"tup_switchid="+DropDownListShowBySwitch.SelectedItem.Value:string.Empty:string.Empty,
                                     

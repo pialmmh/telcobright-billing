@@ -60,7 +60,7 @@ public partial class DefaultRptIntlOutIcx1 : System.Web.UI.Page
                                 CheckBoxShowByIgw.Checked==true?"tup_inpartnerid":string.Empty,
                                 CheckBoxShowByCustomerRate.Checked==true?"usdRate":string.Empty,
                                 "usdRate",
-                                CheckBoxViewIncomingRoute.Checked==true?"tup_incomingroute":string.Empty,
+                                //CheckBoxViewIncomingRoute.Checked==true?"tup_incomingroute":string.Empty,
                                 CheckBoxViewOutgoingRoute.Checked==true?"tup_outgoingroute":string.Empty,
                             },
                       

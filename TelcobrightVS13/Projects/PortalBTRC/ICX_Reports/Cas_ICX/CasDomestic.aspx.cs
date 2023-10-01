@@ -59,7 +59,7 @@ public partial class CasDefaultRptDomesticIcx : System.Web.UI.Page
                 CheckBoxPartner.Checked==true?"tup_inpartnerid":string.Empty,
                 CheckBoxShowByAns.Checked==true?"tup_destinationId":string.Empty,
                 CheckBoxShowByIgw.Checked==true?"tup_outpartnerid":string.Empty,
-                CheckBoxViewIncomingRoute.Checked==true?"tup_incomingroute":string.Empty,
+                //CheckBoxViewIncomingRoute.Checked==true?"tup_incomingroute":string.Empty,
                 CheckBoxViewOutgoingRoute.Checked==true?"tup_outgoingroute":string.Empty,
                 ViewBySwitch.Checked==true?"tup_switchid":string.Empty
             },

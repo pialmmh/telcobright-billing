@@ -356,9 +356,9 @@
 
         View by Switch:
         <asp:CheckBox ID="ViewBySwitch" runat="server" AutoPostBack="True"
-                      OnCheckedChanged="CheckBoxShowBySwitch_CheckedChanged" Checked="False" />
+                      OnCheckedChanged="CheckBoxShowBySwitch_CheckedChanged" Checked="True" />
                        
-        <asp:DropDownList ID="DropDownListShowBySwitch" runat="server" Visible="true" Enabled="False">
+        <asp:DropDownList ID="DropDownListShowBySwitch" runat="server" Visible="true" Enabled="True">
         </asp:DropDownList>
 
         <asp:Button ID="submit" runat="server" Text="Show Report" OnClick="submit_Click" OnClientClick="SethidValueSubmitClickFlag('true');" />

@@ -25,6 +25,19 @@ public partial class SiteMaster : System.Web.UI.MasterPage
     protected void Page_Load(object sender, EventArgs e)
     {
 
+        TelcobrightConfig TelcoConf = PageUtil.GetTelcobrightConfig();
+        var databaseSetting = TelcoConf.DatabaseSetting;
+        string userName = Page.User.Identity.Name;
+        string dbName;
+        if (TelcoConf.DeploymentProfile.UserVsDbName.ContainsKey(userName))
+        {
+            dbName = TelcoConf.DeploymentProfile.UserVsDbName[userName];
+        }
+        else
+        {
+            dbName = TelcoConf.DatabaseSetting.DatabaseName;
+        }
+        databaseSetting.DatabaseName = dbName;
         //TreeView1 restore node states...
         if (this.Session["sesCommonState"] != null)
         {
@@ -66,13 +79,14 @@ public partial class SiteMaster : System.Web.UI.MasterPage
             }
             telcobrightpartner thisPartner = null;
             TelcobrightConfig tbc = PageUtil.GetTelcobrightConfig();
+            
 
             if (tbc.PortalSettings.AlternateDisplayName.IsNullOrEmptyOrWhiteSpace())
             {
-                using (PartnerEntities conTelco = new PartnerEntities())
+                using (PartnerEntities conTelco = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting))
                 {
-                    thisPartner = conTelco.telcobrightpartners.Where(c => c.databasename == dbNameAppConf).ToList()
-                        .First();
+                    thisPartner = conTelco.telcobrightpartners.Where(c => c.databasename == dbName).ToList().First();
+
                 }
                 //this.lblCustomerDisplayName.Text = thisPartner.CustomerName;
             }
@@ -178,10 +192,19 @@ public partial class SiteMaster : System.Web.UI.MasterPage
             }
             //set home page link to dashboard if specified in portalsettings
             var x = (LinkButton)FindControl("LinkButtonHome");
-            if (!string.IsNullOrEmpty(tbc.PortalSettings.HomePageUrl))
+            if (!string.IsNullOrEmpty(tbc.PortalSettings.HomePageUrlForIcx))
             {
-                x.PostBackUrl = tbc.PortalSettings.HomePageUrl;
+
+                x.PostBackUrl = tbc.PortalSettings.HomePageUrlForIcx;
             }
+            //if (dbName=="btrc_cas")
+            //{
+            //    x.PostBackUrl = tbc.PortalSettings.HomePageUrl;
+            //}
+            //else
+            //{
+            //    x.PostBackUrl = tbc.PortalSettings.HomePageUrlForIcx;
+            //}
         }//if not postback
     }
 
