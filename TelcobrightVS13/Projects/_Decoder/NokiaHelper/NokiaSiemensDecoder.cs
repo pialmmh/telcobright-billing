@@ -152,9 +152,10 @@ namespace Decoders
             else Row[Fn.TerminatingCalledNumber] = new string(poc[13].ToCharArray().TakeWhile(c => c != 'F').ToArray());
             if (ptc != null) Row[Fn.DurationSec] = Convert.ToString(Convert.ToInt32(ptc[51]) * 10 / 1000);
 
-            if (ptc != null) Row[Fn.IncomingRoute] = ptc[50].Trim().TrimStart('0');
+            string toChec = "ABCDEF";
+            if (ptc != null  && ptc[50].Any(c =>toChec.Contains(c))==false) Row[Fn.IncomingRoute] = ptc[50].Trim().TrimStart('0');
             else Row[Fn.IncomingRoute] = poc[50].Trim().TrimStart('0'); 
-            if (ptc != null) Row[Fn.OutgoingRoute] = ptc[14].Trim().TrimStart('0'); 
+            if (ptc != null && ptc[14].Any(c => toChec.Contains(c)) == false) Row[Fn.OutgoingRoute] = ptc[14].Trim().TrimStart('0'); 
             else Row[Fn.OutgoingRoute] = poc[14].Trim().TrimStart('0'); 
 
             string[] formats = new string[] { "MddyyyyHHmmss", "MMddyyyyHHmmss" };
