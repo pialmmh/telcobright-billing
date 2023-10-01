@@ -41,7 +41,6 @@ namespace PartnerRules
                     }
                 }
             }
-
             thisCdr.InPartnerId = 0;
             return 0;
         }
