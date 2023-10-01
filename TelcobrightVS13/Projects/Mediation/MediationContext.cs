@@ -37,7 +37,10 @@ namespace TelcobrightMediation
         public Dictionary<ValueTuple<int, string>, route> Routes { get; }
         public Dictionary<ValueTuple<int, string>, bridgedroute> BridgedRoutes { get; }
         public List<ansprefixextra> LstAnsPrefixExtra { get; private set; } //required for failed intl in calls where term number might be missing
-        public Dictionary<string, partnerprefix>DictAnsOrig { get; private set; } //ANSTermprefix partner dictionary with AnsPrefix as Key
+        public Dictionary<string, partnerprefix>AnsPrefixes0880 { get; }= new Dictionary<string, partnerprefix>();
+        public Dictionary<string, partnerprefix>AnsPrefixes880 { get; }= new Dictionary<string, partnerprefix>();
+        public Dictionary<string, partnerprefix>AnsPrefixes0 { get; }= new Dictionary<string, partnerprefix>();
+        public Dictionary<string, partnerprefix> AnsPrefixes { get; }= new Dictionary<string, partnerprefix>();  //ANSTermprefix partner dictionary with AnsPrefix as Key
         public Dictionary<int, cdrfieldlist> CdrFieldLists { get; private set; }
         public Dictionary<int, Dictionary<int, ServiceGroupConfiguration>> ServiceGroupConfigurations { get; } //<switchid,dic<servicegroupID,medruleassignment>>
         public Dictionary<int, SwitchWiseLookup> SwitchWiseLookups { get; }
@@ -86,8 +89,16 @@ namespace TelcobrightMediation
                 this.Tbc.DefaultRootCharForTrie);
             this.BridgedRoutes = context.bridgedroutes.Include(r => r.partner).Include(r => r.partner1)
                 .ToDictionary(r => new ValueTuple<int, string>(r.switchId, r.routeName));
-            this.DictAnsOrig = new Dictionary<string, partnerprefix>();
-            this.DictAnsOrig = PopulateANSPrefix();
+
+            this.AnsPrefixes = PopulateANSPrefix().OrderByDescending(p=>p.Prefix.Length).ToDictionary(p=>p.Prefix);
+            foreach (KeyValuePair<string, partnerprefix> kv in this.AnsPrefixes)
+            {
+                string prefix = kv.Key;
+                var partnerPrefix = kv.Value;
+                this.AnsPrefixes0880.Add("0800" + prefix,partnerPrefix);    
+                this.AnsPrefixes880.Add("800" + prefix,partnerPrefix);    
+                this.AnsPrefixes0.Add("0" + prefix,partnerPrefix);    
+            }
             this.LstAnsPrefixExtra = context.ansprefixextras.OrderByDescending(c => c.PrefixBeforeAnsNumber.Length)
                 .ToList();
             this.CdrFieldLists = context.cdrfieldlists.ToDictionary(c => c.fieldnumber);
@@ -140,25 +151,13 @@ namespace TelcobrightMediation
             this.MefPartnerRuleContainer.MediationContext = this;
         }
 
-        Dictionary<string, partnerprefix> PopulateANSPrefix()
+        List<partnerprefix> PopulateANSPrefix()
         {
             //load ans prefix from partnerprefix
             Dictionary<string, partnerprefix> dictAnsOrig = new Dictionary<string, partnerprefix>();
-            string sql = " select idpartner as partner,prefix from partnerprefix where prefixtype=3 ";
-            using (DbCommand commandOrig = ConnectionManager.CreateCommandFromDbContext(this.Context, sql))
-            {
-                commandOrig.CommandType = CommandType.Text;
-                DbDataReader myReader = commandOrig.ExecuteReader();
-                while (myReader.Read())
-                {
-                    partnerprefix thisPrefix = new partnerprefix();
-                    if (myReader[1].ToString() != "") thisPrefix.Prefix = myReader[1].ToString();
-                    thisPrefix.idPartner = int.Parse(myReader[0].ToString());
-                    dictAnsOrig.Add(thisPrefix.Prefix, thisPrefix);
-                }
-                myReader.Close();
-            }
-            return dictAnsOrig;
+            string sql = " select * from partnerprefix where prefixtype=3";
+            List<partnerprefix> partnerprefixes = this.Context.Database.SqlQuery<partnerprefix>(sql).ToList();
+            return partnerprefixes;
         }
 
         private void ComposeMefExtensions(TelcobrightConfig tbc)

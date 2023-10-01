@@ -27,14 +27,11 @@ namespace InstallConfig
         public override int IdOperator { get; set; } = 1;
         public override string CustomerName { get; set; } = "Agni Systems Ltd.";
         public override string DatabaseName { get; set; } = "agni_cas";
-
-
         public CasAgniAbstractConfigGenerator()
         {
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx,
                 CasTbPartnerFactory.GetTemplatePartner(this.IdOperator, this.CustomerName, this.DatabaseName));
         }
-
         public override TelcobrightConfig GenerateFullConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
         {
 
