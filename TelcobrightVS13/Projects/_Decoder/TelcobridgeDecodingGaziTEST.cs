@@ -79,8 +79,7 @@ namespace Decoders
                 if (!string.IsNullOrEmpty(connectTime))
                 {
                     connectTime = parseStringToDate(connectTime).ToString("yyyy-MM-dd HH:mm:ss");
-                }
-
+                }               
 
                 
                 textCdr[Fn.Filename] = fileName;
@@ -107,6 +106,14 @@ namespace Decoders
 
                 textCdr[Fn.UniqueBillId] = lineAsArr[2].Trim();
 
+                lineAsArr[0].Trim();
+
+
+                string status = lineAsArr[0].Trim().ToLower();
+                if(status == "end")
+                    textCdr[Fn.Partialflag] = "0";
+                else
+                    textCdr[Fn.Partialflag] = "1";
 
 
                 textCdr[Fn.Validflag] = "1";
