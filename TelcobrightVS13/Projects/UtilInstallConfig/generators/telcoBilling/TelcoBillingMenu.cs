@@ -237,7 +237,7 @@ namespace InstallConfig
         void generateConfig()
         {
             List<TelcobrightConfig> selectedTbcs = getSelectedTbcs();
-            cleanDeploymentDir();
+            //cleanDeploymentDir();
             foreach (var tbWithoutFullConfig in selectedTbcs)
             {
                 var dbOrInstanceName = tbWithoutFullConfig.Telcobrightpartner.databasename;
