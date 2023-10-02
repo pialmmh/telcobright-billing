@@ -79,16 +79,22 @@ namespace Decoders
                         CdrType cdrType = (fileData[currentPosition] == 177) ? CdrType.Ptc : CdrType.Poc;
                         string[] record = NokiaDecodeHelper.Decode(currentPosition, fileData, cdrType);
                         string callRef = record[5];
-                        PocAndPtc pocAndPtc = null;
+                        PocAndPtc pocAndPtc;
 
                         if (callRefWiseLegs.TryGetValue(callRef, out pocAndPtc) == false)
                         {
                             pocAndPtc = new PocAndPtc();
                             callRefWiseLegs.Add(callRef, pocAndPtc);
+                            if (cdrType == CdrType.Ptc) pocAndPtc.Ptc = record;
+                            else pocAndPtc.Poc = record;
+                        }
+                        else
+                        {
+                            if (cdrType == CdrType.Ptc) callRefWiseLegs[callRef].Ptc = record;
+                            else callRefWiseLegs[callRef].Poc = record;
                         }
 
-                        if (cdrType == CdrType.Ptc) pocAndPtc.Ptc = record;
-                        else pocAndPtc.Poc = record;
+                        
 
                         currentPosition += fileData[currentPosition];
                     }
@@ -134,75 +140,109 @@ namespace Decoders
             this.Ptc = ptc;
             this.Poc = poc;
 
-            if (this.Poc == null && this.Ptc == null) return;
+            if (this.Ptc == null) return;
 
-            if(ptc!= null)Row[Fn.Sequencenumber] = ptc[2];
-            else Row[Fn.Sequencenumber] = poc[2];
-            //Row[Fn.Filename] = fileName;
-            //Row[Fn.Switchid] = Input.Ne.idSwitch.ToString();
+            if (ptc != null) Row[Fn.Sequencenumber] = ptc[2];
+            else Row[Fn.Sequencenumber] = "";
 
-            if (poc != null) Row[Fn.OriginatingCallingNumber] = new string(poc[11].ToCharArray().TakeWhile(c => c != 'F').ToArray());
-            else Row[Fn.OriginatingCallingNumber] = new string(ptc[11].ToCharArray().TakeWhile(c => c != 'F').ToArray());
-            if (poc != null) Row[Fn.OriginatingCalledNumber] = new string(poc[13].ToCharArray().TakeWhile(c => c != 'F').ToArray());
-            else Row[Fn.OriginatingCalledNumber] = new string(ptc[13].ToCharArray().TakeWhile(c => c != 'F').ToArray());
+            if (Row[Fn.Sequencenumber] == "")
+            {
+                return;
+            }
 
-            if (ptc != null) Row[Fn.TerminatingCallingNumber] = new string(ptc[11].ToCharArray().TakeWhile(c => c != 'F').ToArray());
-            else Row[Fn.TerminatingCallingNumber] = new string(poc[11].ToCharArray().TakeWhile(c => c != 'F').ToArray());
-            if (ptc != null) Row[Fn.TerminatingCalledNumber] = new string(ptc[13].ToCharArray().TakeWhile(c => c != 'F').ToArray());
-            else Row[Fn.TerminatingCalledNumber] = new string(poc[13].ToCharArray().TakeWhile(c => c != 'F').ToArray());
-            if (ptc != null) Row[Fn.DurationSec] = Convert.ToString(Convert.ToInt32(ptc[51]) * 10 / 1000);
 
+            Row[Fn.OriginatingCallingNumber] = new string (ptc[11].ToCharArray().TakeWhile(c=>c!='F').ToArray());
+            Row[Fn.OriginatingCalledNumber] = new string(ptc[13].ToCharArray().TakeWhile(c => c != 'F').ToArray());
+            Row[Fn.TerminatingCallingNumber] = new string(ptc[11].ToCharArray().TakeWhile(c => c != 'F').ToArray());
+            Row[Fn.TerminatingCalledNumber] = new string(ptc[13].ToCharArray().TakeWhile(c => c != 'F').ToArray());
+           
+            Row[Fn.DurationSec] = Convert.ToString(Convert.ToInt32(ptc[51]) * 10 / 1000);
             string toChec = "ABCDEF";
-            if (ptc != null  && ptc[50].Any(c =>toChec.Contains(c))==false) Row[Fn.IncomingRoute] = ptc[50].Trim().TrimStart('0');
-            else Row[Fn.IncomingRoute] = poc[50].Trim().TrimStart('0'); 
-            if (ptc != null && ptc[14].Any(c => toChec.Contains(c)) == false) Row[Fn.OutgoingRoute] = ptc[14].Trim().TrimStart('0'); 
-            else Row[Fn.OutgoingRoute] = poc[14].Trim().TrimStart('0'); 
+            if (ptc[50].Any(c => toChec.Contains(c)) == false) Row[Fn.IncomingRoute] = ptc[50].Trim().TrimStart('0');
+            else Row[Fn.IncomingRoute] = "Incoming Route painai";
+            if (ptc[14].Any(c => toChec.Contains(c)) == false) Row[Fn.OutgoingRoute] = ptc[14].Trim().TrimStart('0');
+            else Row[Fn.OutgoingRoute] = "Outgoing Route Painai";
 
             string[] formats = new string[] { "MddyyyyHHmmss", "MMddyyyyHHmmss" };
 
-            if (ptc != null)
-            {
-                string startTimestr = ptc[16].Trim();
-                DateTime startTime = startTimestr.ConvertToDateTimeFromCustomFormats(formats);
-                Row[Fn.StartTime] = startTime.ToMySqlFormatWithoutQuote();
-               
-            }
-            else
-            {
-                string startTimestr = poc[16].Trim();
-                DateTime startTime = startTimestr.ConvertToDateTimeFromCustomFormats(formats);
-                Row[Fn.StartTime] = startTime.ToMySqlFormatWithoutQuote();
+            string startTimestr = ptc[16].Trim();
+            DateTime startTime = startTimestr.ConvertToDateTimeFromCustomFormats(formats);
+            Row[Fn.StartTime] = startTime.ToMySqlFormatWithoutQuote();
 
-            }
-            if (ptc != null)
-            {
+            string ansTime = ptc[17].Trim();
+            DateTime startTime1 = ansTime.ConvertToDateTimeFromCustomFormats(formats);
+            Row[Fn.AnswerTime] = startTime1.ToMySqlFormatWithoutQuote();
+
+
+            string endTime = ptc[18].Trim();
+            DateTime startTime2 = endTime.ConvertToDateTimeFromCustomFormats(formats);
+            Row[Fn.Endtime] = startTime2.ToMySqlFormatWithoutQuote();
+
+            //if (poc != null) Row[Fn.OriginatingCallingNumber] = new string(poc[11].ToCharArray().TakeWhile(c => c != 'F').ToArray());
+            //else Row[Fn.OriginatingCallingNumber] = new string(ptc[11].ToCharArray().TakeWhile(c => c != 'F').ToArray());
+            //if (poc != null) Row[Fn.OriginatingCalledNumber] = new string(poc[13].ToCharArray().TakeWhile(c => c != 'F').ToArray());
+            //else Row[Fn.OriginatingCalledNumber] = new string(ptc[13].ToCharArray().TakeWhile(c => c != 'F').ToArray());
+            
+
+
+
+            //if (ptc != null) Row[Fn.TerminatingCallingNumber] = new string(ptc[11].ToCharArray().TakeWhile(c => c != 'F').ToArray());
+            //else Row[Fn.TerminatingCallingNumber] = new string(poc[11].ToCharArray().TakeWhile(c => c != 'F').ToArray());
+            //if (ptc != null) Row[Fn.TerminatingCalledNumber] = new string(ptc[13].ToCharArray().TakeWhile(c => c != 'F').ToArray());
+            //else Row[Fn.TerminatingCalledNumber] = new string(poc[13].ToCharArray().TakeWhile(c => c != 'F').ToArray());
+            //if (ptc != null) Row[Fn.DurationSec] = Convert.ToString(Convert.ToInt32(ptc[51]) * 10 / 1000);
+
+            //string toChec = "ABCDEF";
+            //if (ptc != null  && ptc[50].Any(c =>toChec.Contains(c))==false) Row[Fn.IncomingRoute] = ptc[50].Trim().TrimStart('0');
+            //else Row[Fn.IncomingRoute] = poc[50].Trim().TrimStart('0'); 
+            //if (ptc != null && ptc[14].Any(c => toChec.Contains(c)) == false) Row[Fn.OutgoingRoute] = ptc[14].Trim().TrimStart('0'); 
+            //else Row[Fn.OutgoingRoute] = poc[14].Trim().TrimStart('0'); 
+
+            //string[] formats = new string[] { "MddyyyyHHmmss", "MMddyyyyHHmmss" };
+
+            //if (ptc != null)
+            //{
+            //    string startTimestr = ptc[16].Trim();
+            //    DateTime startTime = startTimestr.ConvertToDateTimeFromCustomFormats(formats);
+            //    Row[Fn.StartTime] = startTime.ToMySqlFormatWithoutQuote();
+               
+            //}
+            //else
+            //{
+            //    string startTimestr = poc[16].Trim();
+            //    DateTime startTime = startTimestr.ConvertToDateTimeFromCustomFormats(formats);
+            //    Row[Fn.StartTime] = startTime.ToMySqlFormatWithoutQuote();
+
+            //}
+            //if (ptc != null)
+            //{
                 
-                string ansTime = ptc[17].Trim();
-                DateTime startTime = ansTime.ConvertToDateTimeFromCustomFormats(formats);
-                Row[Fn.AnswerTime] = startTime.ToMySqlFormatWithoutQuote();
-            }
-            else
-            {
+            //    string ansTime = ptc[17].Trim();
+            //    DateTime startTime = ansTime.ConvertToDateTimeFromCustomFormats(formats);
+            //    Row[Fn.AnswerTime] = startTime.ToMySqlFormatWithoutQuote();
+            //}
+            //else
+            //{
 
-                string ansTime = poc[17].Trim();
-                DateTime startTime = ansTime.ConvertToDateTimeFromCustomFormats(formats);
-                Row[Fn.AnswerTime] = startTime.ToMySqlFormatWithoutQuote();
-            }
-            if (ptc != null)
-            {
+            //    string ansTime = poc[17].Trim();
+            //    DateTime startTime = ansTime.ConvertToDateTimeFromCustomFormats(formats);
+            //    Row[Fn.AnswerTime] = startTime.ToMySqlFormatWithoutQuote();
+            //}
+            //if (ptc != null)
+            //{
 
                
-                string endTime = ptc[18].Trim();
-                DateTime startTime = endTime.ConvertToDateTimeFromCustomFormats(formats);
-                Row[Fn.Endtime] = startTime.ToMySqlFormatWithoutQuote();
-            }
-            else
-            {
+            //    string endTime = ptc[18].Trim();
+            //    DateTime startTime = endTime.ConvertToDateTimeFromCustomFormats(formats);
+            //    Row[Fn.Endtime] = startTime.ToMySqlFormatWithoutQuote();
+            //}
+            //else
+            //{
 
-                string endTime = poc[18].Trim();
-                DateTime startTime = endTime.ConvertToDateTimeFromCustomFormats(formats);
-                Row[Fn.Endtime] = startTime.ToMySqlFormatWithoutQuote();
-            }
+            //    string endTime = poc[18].Trim();
+            //    DateTime startTime = endTime.ConvertToDateTimeFromCustomFormats(formats);
+            //    Row[Fn.Endtime] = startTime.ToMySqlFormatWithoutQuote();
+            //}
 
             Row[Fn.Validflag] = "1";
             Row[Fn.ChargingStatus] = "1";
