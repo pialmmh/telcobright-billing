@@ -241,7 +241,23 @@ namespace Decoders
                         };
                         break;
                 }
-                List<byte> recordBytes = fileData.GetRange(offset + (totalSkip), length);
+
+                List<byte> recordBytes;
+                if (f == "in_circuit_group" && cdrType == CdrType.Ptc)
+                {
+                    recordBytes = fileData.GetRange(currentPosition + (177 - 6), length);
+                }
+                else if (f == "oaz_duration_ten_ms" && cdrType == CdrType.Ptc)
+                {
+                    recordBytes = fileData.GetRange(currentPosition + (177 - 4), length);
+                }
+                else
+                {
+                    recordBytes = fileData.GetRange(offset + (totalSkip), length);
+
+                }
+
+                
 
                 string recordData = GetRecordData(dataType, recordBytes);
                 records.Add(recordData);

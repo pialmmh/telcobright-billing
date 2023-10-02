@@ -9,8 +9,9 @@
 
 
 
-public partial class DashboardAspx {
-    
+public partial class DashboardAspx
+{
+
     /// <summary>
     /// ScriptManager1 control.
     /// </summary>
@@ -19,7 +20,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.ScriptManager ScriptManager1;
-    
+
     /// <summary>
     /// UpdatePanel3 control.
     /// </summary>
@@ -28,7 +29,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.UpdatePanel UpdatePanel3;
-    
+
     /// <summary>
     /// HyperLinkIntlIn control.
     /// </summary>
@@ -37,7 +38,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.HyperLink HyperLinkIntlIn;
-    
+
     /// <summary>
     /// GridViewIntlin control.
     /// </summary>
@@ -46,7 +47,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.GridView GridViewIntlin;
-    
+
     /// <summary>
     /// SqlDataSource3 control.
     /// </summary>
@@ -55,7 +56,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSource3;
-    
+
     /// <summary>
     /// Timer3 control.
     /// </summary>
@@ -64,7 +65,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.Timer Timer3;
-    
+
     /// <summary>
     /// UpdatePanel1 control.
     /// </summary>
@@ -73,7 +74,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.UpdatePanel UpdatePanel1;
-    
+
     /// <summary>
     /// HyperLinkError control.
     /// </summary>
@@ -82,7 +83,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.HyperLink HyperLinkError;
-    
+
     /// <summary>
     /// GridViewError control.
     /// </summary>
@@ -91,7 +92,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.GridView GridViewError;
-    
+
     /// <summary>
     /// Timer1 control.
     /// </summary>
@@ -100,7 +101,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.Timer Timer1;
-    
+
     /// <summary>
     /// UpdatePanel2 control.
     /// </summary>
@@ -109,7 +110,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.UpdatePanel UpdatePanel2;
-    
+
     /// <summary>
     /// Label2 control.
     /// </summary>
@@ -118,7 +119,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label Label2;
-    
+
     /// <summary>
     /// GridViewCompleted control.
     /// </summary>
@@ -127,7 +128,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.GridView GridViewCompleted;
-    
+
     /// <summary>
     /// Label1 control.
     /// </summary>
@@ -136,7 +137,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label Label1;
-    
+
     /// <summary>
     /// PieChartIpTdm control.
     /// </summary>
@@ -145,7 +146,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.DataVisualization.Charting.Chart PieChartIpTdm;
-    
+
     /// <summary>
     /// Label11 control.
     /// </summary>
@@ -154,7 +155,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label Label11;
-    
+
     /// <summary>
     /// DomesticDistribution control.
     /// </summary>
@@ -163,7 +164,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.DataVisualization.Charting.Chart DomesticDistribution;
-    
+
     /// <summary>
     /// Label3 control.
     /// </summary>
@@ -172,7 +173,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label Label3;
-    
+
     /// <summary>
     /// IpTdmDistribution control.
     /// </summary>
@@ -181,7 +182,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.DataVisualization.Charting.Chart IpTdmDistribution;
-    
+
     /// <summary>
     /// Label4 control.
     /// </summary>
@@ -190,7 +191,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label Label4;
-    
+
     /// <summary>
     /// InternationalDistributionIncoming control.
     /// </summary>
@@ -199,7 +200,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.DataVisualization.Charting.Chart InternationalDistributionIncoming;
-    
+
     /// <summary>
     /// Label5 control.
     /// </summary>
@@ -208,7 +209,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label Label5;
-    
+
     /// <summary>
     /// InternationalDistributionOutgoing control.
     /// </summary>
@@ -217,7 +218,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.DataVisualization.Charting.Chart InternationalDistributionOutgoing;
-    
+
     /// <summary>
     /// Label6 control.
     /// </summary>
@@ -226,7 +227,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label Label6;
-    
+
     /// <summary>
     /// ICXDistributionSylhet control.
     /// </summary>
@@ -235,7 +236,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.DataVisualization.Charting.Chart ICXDistributionSylhet;
-    
+
     /// <summary>
     /// Label7 control.
     /// </summary>
@@ -244,7 +245,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label Label7;
-    
+
     /// <summary>
     /// ICXDistributionBarishal control.
     /// </summary>
@@ -253,7 +254,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.DataVisualization.Charting.Chart ICXDistributionBarishal;
-    
+
     /// <summary>
     /// Label8 control.
     /// </summary>
@@ -262,7 +263,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label Label8;
-    
+
     /// <summary>
     /// ICXDistributionRangpur control.
     /// </summary>
@@ -271,7 +272,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.DataVisualization.Charting.Chart ICXDistributionRangpur;
-    
+
     /// <summary>
     /// Label9 control.
     /// </summary>
@@ -280,7 +281,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label Label9;
-    
+
     /// <summary>
     /// ICXDistributionRajshahi control.
     /// </summary>
@@ -289,7 +290,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.DataVisualization.Charting.Chart ICXDistributionRajshahi;
-    
+
     /// <summary>
     /// Label10 control.
     /// </summary>
@@ -298,7 +299,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label Label10;
-    
+
     /// <summary>
     /// ICXDistributionMymenshing control.
     /// </summary>
@@ -307,7 +308,7 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.DataVisualization.Charting.Chart ICXDistributionMymenshing;
-    
+
     /// <summary>
     /// Timer2 control.
     /// </summary>
