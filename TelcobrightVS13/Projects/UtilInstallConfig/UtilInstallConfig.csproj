@@ -311,15 +311,15 @@
     <Compile Include="config\_helper\CasServiceGroupHelper.cs" />
     <Compile Include="config\_helper\CasTbPartnerFactory.cs" />
     <Compile Include="config\_helper\DeploymentEnvironment.cs" />
-    <Compile Include="generators\telcoBilling\dbscripts\ddl\IndexSwitchID.cs" />
-    <Compile Include="generators\telcoBilling\dbscripts\ddl\IcxSp.cs" />
-    <Compile Include="generators\telcoBilling\dbscripts\ddl\ServiceGroupNotNullCdrError.cs" />
-    <Compile Include="generators\telcoBilling\dbscripts\ddl\Ne.cs" />
-    <Compile Include="generators\telcoBilling\dbscripts\ddl\IncreaseFldLength.cs" />
-    <Compile Include="generators\telcoBilling\dbscripts\ddl\ViewToBTRC.cs" />
+    <Compile Include="config\cas\_dbscripts\ddl\IndexSwitchID.cs" />
+    <Compile Include="config\cas\_dbscripts\ddl\IcxSp.cs" />
+    <Compile Include="config\cas\_dbscripts\ddl\ServiceGroupNotNullCdrError.cs" />
+    <Compile Include="config\cas\_dbscripts\ddl\Ne.cs" />
+    <Compile Include="config\cas\_dbscripts\ddl\IncreaseFldLength.cs" />
+    <Compile Include="config\cas\_dbscripts\ddl\ViewToBTRC.cs" />
     <Compile Include="config\_helper\TemplateNe.cs" />
     <Compile Include="generators\DeploymentHelper.cs" />
-    <Compile Include="generators\telcoBilling\dbscripts\seedData\sql\DomesticRateplaneAssignmentForCAS.cs" />
+    <Compile Include="config\cas\_dbscripts\seedData\sql\DomesticRateplaneAssignmentForCAS.cs" />
     <Compile Include="generators\telcoBilling\TelcoBillingConfigGenerator.cs" />
     <Compile Include="generators\telcoBilling\TelcoBillingQuartzWriter.cs" />
     <Compile Include="generators\BIllingRulesDefiner.cs" />
@@ -468,7 +468,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="generators\telcoBilling\dbscripts\seedData\json\" />
+    <Folder Include="config\cas\_dbscripts\seedData\json\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="config\cas\banglatelecom_cas\tmplPortalAppPools.txt" />
@@ -563,22 +563,22 @@
     <Content Include="config\banglatelecom\tmplPortalAppPools.txt" />
     <Content Include="config\banglatelecom\tmplPortalFtpSite.txt" />
     <Content Include="config\banglatelecom\tmplPortalWebSite.txt" />
-    <Content Include="generators\telcoBilling\dbscripts\ddl\sql\indexSwitch.txt" />
-    <Content Include="generators\telcoBilling\dbscripts\ddl\sql\icxSp.sql" />
-    <Content Include="generators\telcoBilling\dbscripts\seedData\sql\partnerPrefix.sql" />
-    <Content Include="generators\telcoBilling\dbscripts\seedData\sql\testAnsPrefix.sql" />
-    <Content Include="generators\telcoBilling\dbscripts\seedData\sql\huaweiFldTypesForBtcl.sql" />
-    <Content Include="generators\telcoBilling\dbscripts\seedData\sql\huaweiFldTypesForMNH.sql" />
-    <Content Include="generators\telcoBilling\dbscripts\seedData\sql\pointCodeAndIpAddr.sql" />
+    <Content Include="config\cas\_dbscripts\ddl\sql\indexSwitch.txt" />
+    <Content Include="config\cas\_dbscripts\ddl\sql\icxSp.sql" />
+    <Content Include="config\cas\_dbscripts\seedData\sql\partnerPrefix.sql" />
+    <Content Include="config\cas\_dbscripts\seedData\sql\testAnsPrefix.sql" />
+    <Content Include="config\cas\_dbscripts\seedData\sql\huaweiFldTypesForBtcl.sql" />
+    <Content Include="config\cas\_dbscripts\seedData\sql\huaweiFldTypesForMNH.sql" />
+    <Content Include="config\cas\_dbscripts\seedData\sql\pointCodeAndIpAddr.sql" />
     <Content Include="TextFile1.txt" />
-    <Content Include="generators\telcoBilling\dbscripts\quartzTables.sql" />
+    <Content Include="config\cas\_dbscripts\quartzTables.sql" />
     <Content Include="config\jsl\tmplPortalAppPools.txt" />
     <Content Include="config\jsl\tmplPortalFtpSite.txt" />
     <Content Include="config\jsl\tmplPortalWebSite.txt" />
     <Content Include="config\summit\tmplPortalAppPools.txt" />
     <Content Include="config\summit\tmplPortalFtpSite.txt" />
     <Content Include="config\summit\tmplPortalWebSite.txt" />
-    <Content Include="generators\telcoBilling\dbscripts\seedData\sql\enumcdrformat.sql" />
+    <Content Include="config\cas\_dbscripts\seedData\sql\enumcdrformat.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

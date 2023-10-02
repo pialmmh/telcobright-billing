@@ -100,7 +100,7 @@ namespace TelcobrightInfra
                 {
                     cmd.CommandText = "use " + databaseSetting.DatabaseName;
                     cmd.ExecuteNonQuery();
-                    cmd.CommandText = File.ReadAllText(configPathHelper.getTelcoBillingDbScriptsHome()
+                    cmd.CommandText = File.ReadAllText(configPathHelper.getDbscriptHome()
                                                        + Path.DirectorySeparatorChar + "CreateTables.txt");
                     cmd.ExecuteNonQuery();
                 };
@@ -123,7 +123,7 @@ namespace TelcobrightInfra
                     cmd.CommandText = "use " + databaseSetting.DatabaseName;
                     cmd.ExecuteNonQuery();
 
-                    List<string> commands = File.ReadAllText(configPathHelper.getTelcoBillingDbScriptsHome()
+                    List<string> commands = File.ReadAllText(configPathHelper.getDbscriptHome()
                                                              + Path.DirectorySeparatorChar + "quartzTables.sql")
                         .Split(';').Select(c => c.Trim()).Where(c => !c.IsNullOrEmptyOrWhiteSpace()).ToList();
                     foreach (string command in commands)

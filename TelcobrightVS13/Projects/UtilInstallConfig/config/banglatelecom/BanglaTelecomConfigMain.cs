@@ -73,7 +73,6 @@ namespace InstallConfig
                 BatchSizeWhenPreparingLargeSqlJob = 100000,
                 EmptyFileAllowed = true,
                 DaysToAddBeforeAndAfterUniqueDaysForSafePartialCollection = 1,
-                
             };
             this.PrepareDirectorySettings(this.Tbc);
             this.Tbc.Nes = new List<ne>()
@@ -95,9 +94,9 @@ namespace InstallConfig
                     TransactionSizeForCDRLoading = 1500,
                     DecodingSpanCount = 100,
                     SkipAutoCreateJob = 1,
-                    SkipCdrListed = 0,
+                    SkipCdrListed = 1,
                     SkipCdrReceived = 0,
-                    SkipCdrDecoded = 0,
+                    SkipCdrDecoded = 1,
                     SkipCdrBackedup = 1,
                     KeepDecodedCDR = 0,
                     KeepReceivedCdrServer = 1,
@@ -129,9 +128,9 @@ namespace InstallConfig
                     TransactionSizeForCDRLoading= 1500,
                     DecodingSpanCount= 100,
                     SkipAutoCreateJob= 1,
-                    SkipCdrListed= 1,
+                    SkipCdrListed= 0,
                     SkipCdrReceived= 0,
-                    SkipCdrDecoded= 1,
+                    SkipCdrDecoded= 0,
                     SkipCdrBackedup= 1,
                     KeepDecodedCDR= 0,
                     KeepReceivedCdrServer= 1,

@@ -59,7 +59,7 @@ namespace WS_Telcobright_Topshelf
                     "WS_Topshelf_Quartz",
                     "portal",
                     "UtilInstallConfig",
-                    "generators");
+                    "generators","");
                 string deployedInstancesPath = configPathHelper.GetDeployedInstancesDir();
                 DirectoryInfo deployDir = new DirectoryInfo(deployedInstancesPath);
                 Dictionary<string, string> operatorNameVsConfigFile = new Dictionary<string, string>();

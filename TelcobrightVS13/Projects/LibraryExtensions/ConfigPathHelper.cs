@@ -16,13 +16,16 @@ namespace LibraryExtensions
         private string PortalDirName { get; }
         private string UtilInstallConfigDirnameOnly { get; }
         private string GeneratorsHome { get; }
+        string DeploymentProfileName { get; }
+
         public ConfigPathHelper(string topShelfDirName, string portalDirName,
-            string utilInstallConfigDirnameOnly, string generatorsHome)
+            string utilInstallConfigDirnameOnly, string generatorsHome,string deploymentProfile)
         {
             this.TopShelfDirName = topShelfDirName;
             this.PortalDirName = portalDirName;
             this.UtilInstallConfigDirnameOnly = utilInstallConfigDirnameOnly;
             this.GeneratorsHome = generatorsHome;
+            this.DeploymentProfileName = deploymentProfile;
         }
         public string GetTopShelfDir()
         {
@@ -78,49 +81,45 @@ namespace LibraryExtensions
                        .GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName)
                        .FullName).FullName + Path.DirectorySeparatorChar + this.UtilInstallConfigDirnameOnly;
         }
-        public string getTelcoBillingHome()
+        public string getDbscriptHome()
         {
             return GetUtilInstallConfigFullPath() + Path.DirectorySeparatorChar
-                   + this.GeneratorsHome + Path.DirectorySeparatorChar + "telcoBilling";
-        }
-
-        public string getTelcoBillingDbScriptsHome()
-        {
-            return getTelcoBillingHome() + Path.DirectorySeparatorChar + "dbscripts";
+                   + "config" + Path.DirectorySeparatorChar
+                   +this.DeploymentProfileName + Path.DirectorySeparatorChar + "_dbscripts";
         }
 
         public string getTelcoBillingSeedDataSqlHome()
         {
-            return getTelcoBillingDbScriptsHome() + Path.DirectorySeparatorChar + "seedData"
+            return getDbscriptHome() + Path.DirectorySeparatorChar + "seedData"
                    + Path.DirectorySeparatorChar + "sql";
         }
         public string getTelcoBillingSeedDataJsonHome()
         {
-            return getTelcoBillingDbScriptsHome() + Path.DirectorySeparatorChar + "seedData"
+            return getDbscriptHome() + Path.DirectorySeparatorChar + "seedData"
                    + Path.DirectorySeparatorChar + "json";
         }
         public string getTelcoBillingDdlHome()
         {
-            return getTelcoBillingDbScriptsHome() + Path.DirectorySeparatorChar + "ddl";
+            return getDbscriptHome() + Path.DirectorySeparatorChar + "ddl";
         }
         public string getTelcoBillingDdlSqlHome()
         {
-            return getTelcoBillingDbScriptsHome() + Path.DirectorySeparatorChar + "ddl"
+            return getDbscriptHome() + Path.DirectorySeparatorChar + "ddl"
                    + Path.DirectorySeparatorChar + "sql";
         }
         public string getTelcoBillingDdlJsonHome()
         {
-            return getTelcoBillingDbScriptsHome() + Path.DirectorySeparatorChar + "ddl"
+            return getDbscriptHome() + Path.DirectorySeparatorChar + "ddl"
                    + Path.DirectorySeparatorChar + "json";
         }
         public string getTelcoBillingDmlSqlHome()
         {
-            return getTelcoBillingDbScriptsHome() + Path.DirectorySeparatorChar + "dml"
+            return getDbscriptHome() + Path.DirectorySeparatorChar + "dml"
                    + Path.DirectorySeparatorChar + "sql";
         }
         public string getTelcoBillingDmlJsonHome()
         {
-            return getTelcoBillingDbScriptsHome() + Path.DirectorySeparatorChar + "dml"
+            return getDbscriptHome() + Path.DirectorySeparatorChar + "dml"
                    + Path.DirectorySeparatorChar + "json";
         }
     }
