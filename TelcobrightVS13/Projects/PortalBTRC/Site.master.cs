@@ -191,11 +191,12 @@ public partial class SiteMaster : System.Web.UI.MasterPage
                 }
             }
             //set home page link to dashboard if specified in portalsettings
+            
             var x = (LinkButton)FindControl("LinkButtonHome");
-            if (!string.IsNullOrEmpty(tbc.PortalSettings.HomePageUrlForIcx))
+            if (!string.IsNullOrEmpty(tbc.PortalSettings.HomePageUrl))
             {
 
-                x.PostBackUrl = tbc.PortalSettings.HomePageUrlForIcx;
+                x.PostBackUrl = tbc.PortalSettings.HomePageUrl;
             }
             //if (dbName=="btrc_cas")
             //{

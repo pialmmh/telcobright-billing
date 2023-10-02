@@ -89,17 +89,19 @@
         View by ICX: 
         <asp:CheckBox ID="CheckBoxViewIncomingRoute" runat="server" AutoPostBack="True"
                       OnCheckedChanged="CheckBoxViewIncomingRoute_CheckedChanged" Checked="True" />
-
+                       
         <asp:DropDownList ID="DropDownListViewIncomingRoute" runat="server"
+                          OnSelectedIndexChanged="DropDownListViewIncomingRoute_SelectedChanged"
                           Enabled="True">
         </asp:DropDownList>
-        
-        
-           View by Switch:
+
+        View by Switch:
         <asp:CheckBox ID="ViewBySwitch" runat="server" AutoPostBack="True"
-                      OnCheckedChanged="CheckBoxShowBySwitch_CheckedChanged" Checked="True" />
-            <asp:DropDownList ID="DropDownListShowBySwitch" runat="server" Visible="true" Enabled="True">
-            </asp:DropDownList>
+                      OnCheckedChanged="CheckBoxShowBySwitch_CheckedChanged" Checked="False" />
+                       
+        <asp:DropDownList ID="DropDownListShowBySwitch" runat="server" Visible="true" Enabled="False">
+        </asp:DropDownList>
+        
 
         <asp:Button Style="margin-left: 5px" ID="submit" runat="server" Text="Show Report" OnClick="submit_Click" OnClientClick="SethidValueSubmitClickFlag('true');" />
         <asp:Button ID="Button1" runat="server" OnClick="Button1_Click"
@@ -271,10 +273,10 @@
                     <div style="float: left;">
                         View by ANS:
                         <asp:CheckBox ID="CheckBoxShowByIgw" runat="server"
-                            AutoPostBack="True" OnCheckedChanged="CheckBoxShowByIgw_CheckedChanged" Checked="false"/>
+                            AutoPostBack="True" OnCheckedChanged="CheckBoxShowByIgw_CheckedChanged" Checked="True"/>
 
                         <asp:DropDownList ID="DropDownListIgw" runat="server" OnSelectedIndexChanged="DropDownListIgw_OnSelectedIndexChanged"
-                            Enabled="False" AutoPostBack="True" >
+                            Enabled="True" AutoPostBack="True" >
                         </asp:DropDownList>
 
                     </div>

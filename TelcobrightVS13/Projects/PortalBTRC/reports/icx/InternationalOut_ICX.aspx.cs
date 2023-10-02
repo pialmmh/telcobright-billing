@@ -21,6 +21,7 @@ using TelcobrightInfra;
 public partial class DefaultRptIntlOutIcx1 : System.Web.UI.Page
 {
     DataTable _dt; bool _timerflag = false;
+    TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
 
     public TelcobrightConfig tbc;
    
@@ -1638,6 +1639,31 @@ public partial class DefaultRptIntlOutIcx1 : System.Web.UI.Page
             }
         }
 
+    }
+
+    protected void DropDownListViewIncomingRoute_SelectedChanged(object sender, EventArgs e)
+    {
+        setSwitchListDropDown(DropDownListViewIncomingRoute, EventArgs.Empty);
+    }
+
+    protected void setSwitchListDropDown(object sender, EventArgs e)
+    {
+
+
+        TelcobrightConfig tb = telcobrightConfig;
+        tb.DatabaseSetting.DatabaseName = DropDownListViewIncomingRoute.SelectedValue;
+
+        using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(tb.DatabaseSetting))
+        {
+            //populate switch
+            List<ne> lstNe = context.nes.ToList();
+            this.DropDownListShowBySwitch.Items.Clear();
+            //this.DropDownListPartner.Items.Add(new ListItem(" [All]", "-1"));
+            foreach (ne nE in lstNe)
+            {
+                this.DropDownListShowBySwitch.Items.Add(new ListItem(nE.SwitchName, nE.idSwitch.ToString()));
+            }
+        }
     }
 
     protected void CheckBoxViewIncomingRoute_CheckedChanged(object sender, EventArgs e)

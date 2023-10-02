@@ -351,14 +351,15 @@
                       OnCheckedChanged="CheckBoxViewIncomingRoute_CheckedChanged" Checked="True" />
                        
         <asp:DropDownList ID="DropDownListViewIncomingRoute" runat="server"
+                          OnSelectedIndexChanged="DropDownListViewIncomingRoute_SelectedChanged"
                           Enabled="True">
         </asp:DropDownList>
 
         View by Switch:
         <asp:CheckBox ID="ViewBySwitch" runat="server" AutoPostBack="True"
-                      OnCheckedChanged="CheckBoxShowBySwitch_CheckedChanged" Checked="True" />
+                      OnCheckedChanged="CheckBoxShowBySwitch_CheckedChanged" Checked="False" />
                        
-        <asp:DropDownList ID="DropDownListShowBySwitch" runat="server" Visible="true" Enabled="True">
+        <asp:DropDownList ID="DropDownListShowBySwitch" runat="server" Visible="true" Enabled="False">
         </asp:DropDownList>
 
         <asp:Button ID="submit" runat="server" Text="Show Report" OnClick="submit_Click" OnClientClick="SethidValueSubmitClickFlag('true');" />
@@ -499,10 +500,10 @@
                             <div style="float: left;">
                                 View by Incoming ANS: 
                                 <asp:CheckBox ID="CheckBoxPartner" runat="server" AutoPostBack="True"
-                                              OnCheckedChanged="CheckBoxShowByPartner_CheckedChanged" Checked="False" />
+                                              OnCheckedChanged="CheckBoxShowByPartner_CheckedChanged" Checked="True" />
                        
                                 <asp:DropDownList ID="DropDownListPartner" runat="server" OnSelectedIndexChanged="DropDownListPartner_OnSelectedIndexChanged"
-                                                  Enabled="False" AutoPostBack="True">
+                                                  Enabled="True" AutoPostBack="True">
                                 </asp:DropDownList>
 
                             </div>
