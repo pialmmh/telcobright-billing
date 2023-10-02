@@ -79,20 +79,26 @@ namespace Decoders
                         CdrType cdrType = (fileData[currentPosition] == 177) ? CdrType.Ptc : CdrType.Poc;
                         string[] record = NokiaDecodeHelper.Decode(currentPosition, fileData, cdrType);
                         string callRef = record[5];
-                        PocAndPtc pocAndPtc;
+                        PocAndPtc pocAndPtc=null;
+                        if (cdrType==CdrType.Ptc)
+                        {
+                            NokiaCdr finalRecord = new NokiaCdr(record, null);
+                            decodedRows.Add(finalRecord.Row);
 
-                        if (callRefWiseLegs.TryGetValue(callRef, out pocAndPtc) == false)
-                        {
-                            pocAndPtc = new PocAndPtc();
-                            callRefWiseLegs.Add(callRef, pocAndPtc);
-                            if (cdrType == CdrType.Ptc) pocAndPtc.Ptc = record;
-                            else pocAndPtc.Poc = record;
                         }
-                        else
-                        {
-                            if (cdrType == CdrType.Ptc) callRefWiseLegs[callRef].Ptc = record;
-                            else callRefWiseLegs[callRef].Poc = record;
-                        }
+
+                        //if (callRefWiseLegs.TryGetValue(callRef, out pocAndPtc) == false)
+                        //{
+                        //    pocAndPtc = new PocAndPtc();
+                        //    callRefWiseLegs.Add(callRef, pocAndPtc);
+                        //    if (cdrType == CdrType.Ptc) pocAndPtc.Ptc = record;
+                        //    else pocAndPtc.Poc = record;
+                        //}
+                        //else
+                        //{
+                        //    if (cdrType == CdrType.Ptc) callRefWiseLegs[callRef].Ptc = record;
+                        //    else callRefWiseLegs[callRef].Poc = record;
+                        //}
 
                         
 
@@ -102,14 +108,18 @@ namespace Decoders
                 }
             }
 
-            foreach (KeyValuePair<string, PocAndPtc> callRefWiseLeg in callRefWiseLegs)
-            {
-                var ptc = callRefWiseLeg.Value.Ptc;
-                var poc = callRefWiseLeg.Value.Poc;
+            //foreach (KeyValuePair<string, PocAndPtc> callRefWiseLeg in callRefWiseLegs)
+            //{
+            //    var ptc = callRefWiseLeg.Value.Ptc;
+            //    var poc = callRefWiseLeg.Value.Poc;
 
-                NokiaCdr finalRecord = new NokiaCdr(ptc, poc);
-                decodedRows.Add(finalRecord.Row);
-            }
+            //    NokiaCdr finalRecord = new NokiaCdr(ptc, poc);
+            //    if (finalRecord.Row[2]=="")
+            //    {
+            //        decodedRows.Add(finalRecord.Row);
+
+            //    }
+            //}
 
 
             return decodedRows;
@@ -142,13 +152,11 @@ namespace Decoders
 
             if (this.Ptc == null) return;
 
-            if (ptc != null) Row[Fn.Sequencenumber] = ptc[2];
-            else Row[Fn.Sequencenumber] = "";
+             Row[Fn.Sequencenumber] = ptc[2];
+           
+            
 
-            if (Row[Fn.Sequencenumber] == "")
-            {
-                return;
-            }
+          
 
 
             Row[Fn.OriginatingCallingNumber] = new string (ptc[11].ToCharArray().TakeWhile(c=>c!='F').ToArray());
