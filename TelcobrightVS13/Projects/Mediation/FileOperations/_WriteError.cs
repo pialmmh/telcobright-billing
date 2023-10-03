@@ -15,10 +15,9 @@ namespace TelcobrightFileOperations
             try
             {
                 string entityConStr = "";
-                PartnerEntities context = null;
+                PartnerEntities context = partnerEntities;
                 allerror thisError = null;
-                if (partnerEntities != null)
-                {
+                try{
                     thisError = new allerror
                     {
                         TimeRaised = DateTime.Now,
@@ -32,8 +31,9 @@ namespace TelcobrightFileOperations
                     context.allerrors.Add(thisError);
                     context.SaveChanges();
                 }
-                else
+                catch(Exception exception)
                 {
+                    Console.WriteLine(exception.Message);
                     File.AppendAllText("telcobright.log", JsonConvert.SerializeObject(thisError) + Environment.NewLine);
                 }
             }

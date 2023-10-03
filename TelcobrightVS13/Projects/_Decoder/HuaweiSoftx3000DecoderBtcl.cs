@@ -316,6 +316,8 @@ namespace Decoders
                     thisRow[Fn.Validflag] = "1";
                     thisRow[Fn.Sequencenumber] = "1";
                     thisRow[Fn.StartTime] = thisRow[Fn.AnswerTime];
+                    thisRow[Fn.ConnectTime] = thisRow[Fn.AnswerTime];
+                    
 
 
                     //thisRowBytes = bytesFromFile.Skip(rowCnt * huaweiFixedBytePerRows).Take(huaweiFixedBytePerRows).ToArray();

@@ -27,14 +27,14 @@ namespace InstallConfig
             //***FILE LOCATIONS**********************************************
             //local/vault1: all app servers will use same local file location
             //the object "vault" will have a copy of below object for each app servers with server id as key and location as dictionary value
-            FileLocation vaultJslZteDhk = new FileLocation()
+            FileLocation vaultNokia = new FileLocation()
             {
-                Name = "Vault.JslZteDhk",//this is refered in ne table, name MUST start with "Vault"
+                Name = "Vault.Nokia",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "I:/telcobright/vault/resources/cdr/newgenerationtelecom/tdm",
+                StartingPath = "I:/telcobright/vault/resources/cdr/newGenerTelecom/tdm",
                 User = "",
                 Pass = "",
             };
@@ -46,20 +46,14 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "I:/telcobright/vault/resources/cdr/newgenerationtelecom/ip",
+                StartingPath = "I:/telcobright/vault/resources/cdr/newGenerTelecom/ip",
                 User = "",
                 Pass = "",
             };
 
-            this.Tbc.DirectorySettings.FileLocations.Add(vaultJslZteDhk.Name, vaultJslZteDhk);
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultNokia.Name, vaultNokia);
             this.Tbc.DirectorySettings.FileLocations.Add(vaultJslcataliyaDhk.Name, vaultJslcataliyaDhk);
-           
-            //add archive locations to CdrSettings
-            this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
-            {
-                //vaultS3FileArchive1.Name,
-                //vaultCAS.Name
-            };
+
            
         }
     }

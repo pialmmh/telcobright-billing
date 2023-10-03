@@ -86,7 +86,7 @@ namespace Process
                                             if (cacheLimitExceeded) continue;
                                             PrintErrorMessageToConsole(ne, telcobrightJob, e);
                                             ErrorWriter wr = new ErrorWriter(e, "ProcessCdr", telcobrightJob,
-                                                "CdrJob processing error.", tbc.Telcobrightpartner.CustomerName);
+                                                "CdrJob processing error.", tbc.Telcobrightpartner.CustomerName,context);
                                             try
                                             {
                                                 UpdateJobWithErrorInfo(cmd, telcobrightJob, e);

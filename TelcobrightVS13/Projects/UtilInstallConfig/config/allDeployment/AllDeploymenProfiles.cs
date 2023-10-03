@@ -252,6 +252,11 @@ namespace InstallConfig
                     {
                         Name = "btcl_cas",
                         SchedulerPortNo = 591
+                    },
+                    new InstanceConfig
+                    {
+                        Name = "newgenerationtelecom_cas",
+                        SchedulerPortNo = 592
                     }
                 },
                 MySqlCluster = new MySqlCluster
