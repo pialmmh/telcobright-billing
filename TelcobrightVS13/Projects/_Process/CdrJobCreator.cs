@@ -109,7 +109,7 @@ namespace Process
                             fileInfos= new List<FileInfo>();
                             foreach (var fileInfo in templist)
                             {
-                               // if (FileAndPathHelper.IsFileLockedOrBeingWritten(fileInfo) == false)
+                                if (FileAndPathHelper.IsFileLockedOrBeingWritten(fileInfo) == false)
                                 {
                                     fileInfos.Add(fileInfo);
                                 }

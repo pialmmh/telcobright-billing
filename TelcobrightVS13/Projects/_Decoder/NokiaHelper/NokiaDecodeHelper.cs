@@ -436,15 +436,16 @@ namespace Decoders
         private static int ExchangeIdStartPosition(List<byte> fileData, int tempOfset)
         {
 
-            while (fileData[tempOfset] != 136)
+            int len = fileData.Count;
+            do
             {
-
                 tempOfset += 1;
-                if (fileData[tempOfset] == 136)
+                int next = tempOfset + 1;
+                if (fileData[tempOfset] == 136 && fileData[next] == 16 && fileData[next + 1] == 50)
                 {
                     break;
                 }
-            }
+            } while (tempOfset < len);
 
             return tempOfset;
         }

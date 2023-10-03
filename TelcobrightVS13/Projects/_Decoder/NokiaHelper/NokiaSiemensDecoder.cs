@@ -135,14 +135,13 @@ namespace Decoders
 
             foreach (KeyValuePair<string, PocAndPtc> callRefWiseLeg in callRefWiseLegs)
             {
+
                 var ptc = callRefWiseLeg.Value.Ptc;
                 var poc = callRefWiseLeg.Value.Poc;
                 if (ptc!= null)
                 {
                     NokiaCdr finalRecord = new NokiaCdr(ptc, poc);
                     decodedRows.Add(finalRecord.Row);
-
-                    
                 }
                
             }
