@@ -44,8 +44,6 @@ namespace TelcobrightMediation.Cdr.Collection.PreProcessors
                     Console.WriteLine("Skipped duplicate cdrs");
                 }
             }
-
-            
             return FinalNonDuplicateEvents;
         }
 

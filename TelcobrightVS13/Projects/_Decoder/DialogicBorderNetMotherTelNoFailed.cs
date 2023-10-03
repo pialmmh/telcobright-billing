@@ -57,9 +57,9 @@ namespace Decoders
                 .Append(sessionId).ToString();
         }
 
-        public string getSqlWhereClauseForHourWiseSafeCollection(CdrCollectorInputData decoderInputData, DateTime day)
+        public string getSqlWhereClauseForHourWiseSafeCollection(CdrCollectorInputData decoderInputData,DateTime hourOfDay, int minusHoursForSafeCollection, int plusHoursForSafeCollection)
         {
-            DateTime startTime = day;
+            DateTime startTime = hourOfDay;
             DateTime searchStart = startTime.AddDays(-1);
             DateTime searchEnd = startTime.AddDays(1).AddHours(23).AddMinutes(59).AddSeconds(59);
             DateRange searchRange = new DateRange(searchStart,searchEnd);

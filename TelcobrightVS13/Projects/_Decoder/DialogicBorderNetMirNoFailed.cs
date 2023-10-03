@@ -56,14 +56,25 @@ namespace Decoders
                 .Append(sessionId).ToString();
         }
 
-        public string getSqlWhereClauseForHourWiseSafeCollection(CdrCollectorInputData decoderInputData, DateTime day)
+        public string getSqlWhereClauseForHourWiseSafeCollection(CdrCollectorInputData decoderInputData,DateTime hourOfDay, 
+            int minusHoursForSafeCollection, int plusHoursForSafeCollection)
         {
-            DateTime startTime = day;
-            DateTime searchStart = startTime.AddDays(-1);
-            DateTime searchEnd = startTime.AddDays(1).AddHours(23).AddMinutes(59).AddSeconds(59);
-            DateRange searchRange = new DateRange(searchStart,searchEnd);
-            return $" startTime>='{searchRange.StartDate.ToMySqlFormatWithoutQuote()}' " +
-                   $" and startTime<='{searchRange.EndDate.ToMySqlFormatWithoutQuote()}' ";
+            int hour = hourOfDay.Hour;
+            int minute = hourOfDay.Minute;
+            int second = hourOfDay.Second;
+            if(minute!=0 || second!=0)
+                throw new Exception("Hour of the day must be 0-23 and can't contain minutes or seconds parts.");
+
+            DateTime searchStart= hourOfDay.AddHours(minusHoursForSafeCollection);
+            DateTime searchEnd = hourOfDay.AddHours(plusHoursForSafeCollection);
+
+            //if()
+            //searchStart = startTime.AddHours(-1);
+            //searchEnd = startTime.AddDays(1).AddHours(23).AddMinutes(59).AddSeconds(59);
+            //DateRange searchRange = new DateRange(searchStart,searchEnd);
+            //return $" startTime>='{searchRange.StartDate.ToMySqlFormatWithoutQuote()}' " +
+            //       $" and startTime<='{searchRange.EndDate.ToMySqlFormatWithoutQuote()}' ";
+            return "";
         }
 
         public string getCreateTableSqlForUniqueEvent(CdrCollectorInputData decoderInputData)
@@ -82,7 +93,7 @@ namespace Decoders
             return
                 $" select tuple from {tableName} where tuple " +
                 $" in ({string.Join(",", tuples.Select(t => new StringBuilder("'").Append(t).Append("'")))}) " +
-                $" and {this.getSqlWhereClauseForHourWiseSafeCollection(decoderInputData, hourOfTheDay)}";
+                $" and {this.getSqlWhereClauseForHourWiseSafeCollection(decoderInputData, hourOfTheDay,-1,1)}";
         }
 
         public string getPartialCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples)
