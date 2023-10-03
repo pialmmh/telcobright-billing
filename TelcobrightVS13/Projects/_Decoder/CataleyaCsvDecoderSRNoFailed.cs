@@ -21,6 +21,9 @@ namespace Decoders
         public int Id => 25;
         public string HelpText => "Decodes Cataleya CSV CDR. SR Telecom format, no failed calls";
         public CompressionType CompressionType { get; set; }
+        public string PartialTablePrefix { get; }
+        public string PartialTableStorageEngine { get; }
+        public string partialTablePartitionColName { get; }
         protected CdrCollectorInputData Input { get; set; }
 
 
@@ -64,7 +67,8 @@ namespace Decoders
                     string port = ipPort[2].Split(';')[0].Trim();
                     textCdr[Fn.Originatingip] = ip + ":"+ port;
                 }
-                ipAddr = lineAsArr[67];//ingress_media_record_remot e_address
+                ipAddr = lineAsArr[67];//ingress_media_record_remot e_address
+
                 if (!string.IsNullOrEmpty(ipAddr))
                 {
                     string[] ipPort = ipAddr.Split(':');
@@ -126,7 +130,22 @@ namespace Decoders
             throw new NotImplementedException();
         }
 
-        public string getSqlWhereClauseForDayWiseSafeCollection(CdrCollectorInputData decoderInputData, DateTime day)
+        public string getSqlWhereClauseForHourWiseSafeCollection(CdrCollectorInputData decoderInputData, DateTime day)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getCreateTableSqlForUniqueEvent(CdrCollectorInputData decoderInputData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getDuplicateCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getPartialCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples)
         {
             throw new NotImplementedException();
         }

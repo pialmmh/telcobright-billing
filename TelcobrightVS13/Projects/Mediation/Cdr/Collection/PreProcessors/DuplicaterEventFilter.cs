@@ -15,21 +15,21 @@ namespace TelcobrightMediation.Cdr.Collection.PreProcessors
 {
     public class DuplicaterEventFilter
     {
-        private DayAndHourWiseCollector Collector { get; set; }
+        private HourlyEventManager EventManager { get; set; }
         public CdrCollectorInputData CollectorInput { get; set; }
         public DbCommand DbCmd { get; set; }
         private Dictionary<string, string[]> FinalNonDuplicateEvents { get; set; } = new Dictionary<string, string[]>();
-        public DuplicaterEventFilter(DayAndHourWiseCollector collector)
+        public DuplicaterEventFilter(HourlyEventManager eventManager)
         {
-            this.Collector = collector;
-            this.CollectorInput = collector.CollectorInput;
-            this.DbCmd = collector.DbCmd;
+            this.EventManager = eventManager;
+            this.CollectorInput = eventManager.CollectorInput;
+            this.DbCmd = eventManager.DbCmd;
         }
         public Dictionary<string, string[]> filterDuplicateCdrs()
         {
-            List<string> existingEvents = this.Collector.collectExistingEvents();
+            List<string> existingEvents = this.EventManager.collectExistingEvents();
             Dictionary<string, string> alreadyConsideredEvents = existingEvents.ToDictionary(e => e);
-            foreach (var kv in Collector.DecodedEventsAsTupDic)
+            foreach (var kv in EventManager.DecodedEventsAsTupDic)
             {
                 string tuple = kv.Key;
                 string[] decodedRow = kv.Value;
@@ -45,31 +45,7 @@ namespace TelcobrightMediation.Cdr.Collection.PreProcessors
                 }
             }
 
-            //create uniqueevent tables for each date
-            List<DateTime> datesToCreateTable = Collector.DayWiseNewTuples.Keys.ToList();
-            string engine = "innodb";
-            string partitionColName = "starttime";
-            string tablePrefix = "zz_uniqueevent";
-            string templateSql = $@"CREATE if not exists TABLE <{tablePrefix}> (tuple varchar(200) COLLATE utf8mb4_bin NOT NULL,
-						  {partitionColName} datetime NOT NULL,
-						  description varchar(50) COLLATE utf8mb4_bin DEFAULT NULL,
-						  UNIQUE KEY ind_tuple (tuple)) 
-                          ENGINE= {engine} DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin";
-
-            var databaseSetting = this.CollectorInput.CdrJobInputData.Tbc.DatabaseSetting;
-            string conStr = DbUtil.getDbConStrWithDatabase(databaseSetting);
-            //ddl statement may auto commit all transactions
-            //so use a different db connection 
-            using (MySqlConnection con = new MySqlConnection(conStr))
-            {
-                con.Open();
-                DaywiseTableManager.CreateTables(tablePrefix: tablePrefix,
-                    templateSql: templateSql,
-                    dateTimes: datesToCreateTable,
-                    con: con,
-                    partitionByHour: true, engine: engine, partitionColName: partitionColName);
-                con.Close();
-            }
+            
             return FinalNonDuplicateEvents;
         }
 

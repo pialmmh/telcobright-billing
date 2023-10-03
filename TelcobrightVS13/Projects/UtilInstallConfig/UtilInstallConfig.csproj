@@ -468,9 +468,23 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="config\banglatelecom\_dbscripts\ddl\" />
+    <Folder Include="config\banglatelecom\_dbscripts\seedData\json\" />
+    <Folder Include="config\banglatelecom\_dbscripts\seedData\sql\" />
+    <Folder Include="config\btel\_dbscripts\ddl\" />
+    <Folder Include="config\btel\_dbscripts\seedData\" />
     <Folder Include="config\cas\_dbscripts\seedData\json\" />
+    <Folder Include="config\jsl\_dbscripts\ddl\" />
+    <Folder Include="config\jsl\_dbscripts\seedData\" />
+    <Folder Include="config\purple\_dbscripts\ddl\" />
+    <Folder Include="config\purple\_dbscripts\seedData\" />
+    <Folder Include="config\srtelecom\_dbscripts\ddl\" />
+    <Folder Include="config\srtelecom\_dbscripts\seedData\" />
+    <Folder Include="config\summit\_dbscripts\ddl\" />
+    <Folder Include="config\summit\_dbscripts\seedData\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="config\banglatelecom\_dbscripts\quartzTables.sql" />
     <Content Include="config\cas\banglatelecom_cas\tmplPortalAppPools.txt" />
     <Content Include="config\cas\banglatelecom_cas\tmplPortalFtpSite.txt" />
     <Content Include="config\cas\banglatelecom_cas\tmplPortalWebSite.txt" />

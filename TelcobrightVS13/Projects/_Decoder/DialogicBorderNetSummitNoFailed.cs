@@ -23,7 +23,10 @@ namespace Decoders
         public virtual string RuleName => GetType().Name;
         public virtual int Id => 34;
         public virtual string HelpText => "Decodes Dialogic BorderNet CSV CDR (Summit Telecom)";
-        public virtual CompressionType CompressionType { get; set; } 
+        public virtual CompressionType CompressionType { get; set; }
+        public string PartialTablePrefix { get; }
+        public string PartialTableStorageEngine { get; }
+        public string partialTablePartitionColName { get; }
         protected virtual CdrCollectorInputData Input { get; set; }
                
         private static string parseStringToDateWithoutMilliSec(string timestamp)  //20181028051316400 yyyyMMddhhmmssfff
@@ -54,7 +57,7 @@ namespace Decoders
                 .Append(sessionId).ToString();
         }
 
-        public string getSqlWhereClauseForDayWiseSafeCollection(CdrCollectorInputData decoderInputData, DateTime day)
+        public string getSqlWhereClauseForHourWiseSafeCollection(CdrCollectorInputData decoderInputData, DateTime day)
         {
             DateTime startTime = day;
             DateTime searchStart = startTime.AddDays(-1);
@@ -62,6 +65,21 @@ namespace Decoders
             DateRange searchRange = new DateRange(searchStart,searchEnd);
             return $" startTime>='{searchRange.StartDate.ToMySqlFormatWithoutQuote()}' " +
                    $" and startTime<='{searchRange.EndDate.ToMySqlFormatWithoutQuote()}' ";
+        }
+
+        public string getCreateTableSqlForUniqueEvent(CdrCollectorInputData decoderInputData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getDuplicateCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getPartialCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples)
+        {
+            throw new NotImplementedException();
         }
 
         private static string getSessionId(string[] row)

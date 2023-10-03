@@ -23,7 +23,10 @@ namespace Decoders
         public virtual string RuleName => GetType().Name;
         public virtual int Id => 26;
         public virtual string HelpText => "Decodes Dialogic BorderNet CSV CDR (Mir Telecom)";
-        public virtual CompressionType CompressionType { get; set; } 
+        public virtual CompressionType CompressionType { get; set; }
+        public string PartialTablePrefix { get; } = "zz_uniqueevent";
+        public string PartialTableStorageEngine { get; } = "innodb";
+        public string partialTablePartitionColName { get; } = "starttime";
         protected virtual CdrCollectorInputData Input { get; set; }
                
         private static string parseStringToDateWithoutMilliSec(string timestamp)  //20181028051316400 yyyyMMddhhmmssfff
@@ -38,7 +41,6 @@ namespace Decoders
             string fileName = this.Input.FullPath;
             List<string[]> lines = FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(fileName, ',', 1, "\"", ";");
             return decodeLines(input, out inconsistentCdrs, fileName, lines);
-
         }
 
         public string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row)
@@ -54,7 +56,7 @@ namespace Decoders
                 .Append(sessionId).ToString();
         }
 
-        public string getSqlWhereClauseForDayWiseSafeCollection(CdrCollectorInputData decoderInputData, DateTime day)
+        public string getSqlWhereClauseForHourWiseSafeCollection(CdrCollectorInputData decoderInputData, DateTime day)
         {
             DateTime startTime = day;
             DateTime searchStart = startTime.AddDays(-1);
@@ -62,6 +64,30 @@ namespace Decoders
             DateRange searchRange = new DateRange(searchStart,searchEnd);
             return $" startTime>='{searchRange.StartDate.ToMySqlFormatWithoutQuote()}' " +
                    $" and startTime<='{searchRange.EndDate.ToMySqlFormatWithoutQuote()}' ";
+        }
+
+        public string getCreateTableSqlForUniqueEvent(CdrCollectorInputData decoderInputData)
+        {
+            return $@"CREATE table if not exists {this.PartialTablePrefix} (tuple varchar(200) COLLATE utf8mb4_bin NOT NULL,
+						  starttime datetime NOT NULL,
+						  description varchar(50) COLLATE utf8mb4_bin DEFAULT NULL,
+						  UNIQUE KEY ind_tuple (tuple)) 
+                          ENGINE= innodb DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin";
+        }
+
+        public string getDuplicateCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples)
+        {
+            DateTime day = hourOfTheDay.Date;
+            string tableName = this.PartialTablePrefix + day.ToMySqlFormatDateOnlyWithoutTimeAndQuote();
+            return
+                $" select tuple from {tableName} where tuple " +
+                $" in ({string.Join(",", tuples.Select(t => new StringBuilder("'").Append(t).Append("'")))}) " +
+                $" and {this.getSqlWhereClauseForHourWiseSafeCollection(decoderInputData, hourOfTheDay)}";
+        }
+
+        public string getPartialCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples)
+        {
+            throw new NotImplementedException();
         }
 
         private static string getSessionId(string[] row)

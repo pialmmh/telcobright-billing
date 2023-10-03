@@ -21,6 +21,9 @@ namespace Decoders
         public int Id => 17;
         public string HelpText => "Decodes ZTE TDM CDR.";
         public CompressionType CompressionType { get; set; }
+        public string PartialTablePrefix { get; }
+        public string PartialTableStorageEngine { get; }
+        public string partialTablePartitionColName { get; }
 
         public List<string[]> DecodeFile(CdrCollectorInputData input,out List<cdrinconsistent> inconsistentCdrs)
         {
@@ -39,7 +42,22 @@ namespace Decoders
             throw new NotImplementedException();
         }
 
-        public string getSqlWhereClauseForDayWiseSafeCollection(CdrCollectorInputData decoderInputData, DateTime day)
+        public string getSqlWhereClauseForHourWiseSafeCollection(CdrCollectorInputData decoderInputData, DateTime day)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getCreateTableSqlForUniqueEvent(CdrCollectorInputData decoderInputData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getDuplicateCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getPartialCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples)
         {
             throw new NotImplementedException();
         }

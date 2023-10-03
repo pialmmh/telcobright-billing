@@ -43,19 +43,15 @@ namespace TelcobrightInfra
                 }
             }
         }
-        public static void CreateTables(string tablePrefix, string templateSql, List<DateTime>dateTimes,MySqlConnection con,
+        public static void CreateTables(string tablePrefix, string sql, List<DateTime>dateTimes,MySqlConnection con,
             bool partitionByHour,string partitionColName,string engine )
         {
-            string prefixEnclosed = "<" + tablePrefix + ">";
-            if (templateSql.Contains(prefixEnclosed)==false) 
-                throw new Exception($"Prefix in template is not enclosed with <> for table: {tablePrefix}");
             using (MySqlCommand cmd = new MySqlCommand("", con))
             {
                 foreach (DateTime tableDate in dateTimes)
                 {
                     string date = tableDate.ToString("yyyyMMdd");
                     string tableName = tablePrefix + date;
-                    string sql = templateSql.Replace(prefixEnclosed, tableName);
                     if (partitionByHour)
                     {
                         sql += GetHourlytPartitionExpression(partitionColName, tableDate, engine);

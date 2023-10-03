@@ -20,6 +20,9 @@ namespace Decoders
         public int Id => 49;
         public string HelpText => "Decodes GenbandC3 (Bangla Version) CSV CDR.";
         public CompressionType CompressionType { get; set; }
+        public string PartialTablePrefix { get; }
+        public string PartialTableStorageEngine { get; }
+        public string partialTablePartitionColName { get; }
         protected CdrCollectorInputData Input { get; set; }      
 
         private static DateTime parseStringToDate(string timestamp)  //20181028051316400 yyyyMMddhhmmssfff
@@ -97,7 +100,22 @@ namespace Decoders
         {
             throw new NotImplementedException();
         }
-        public string getSqlWhereClauseForDayWiseSafeCollection(CdrCollectorInputData decoderInputData, DateTime day)
+        public string getSqlWhereClauseForHourWiseSafeCollection(CdrCollectorInputData decoderInputData, DateTime day)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getCreateTableSqlForUniqueEvent(CdrCollectorInputData decoderInputData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getDuplicateCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getPartialCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples)
         {
             throw new NotImplementedException();
         }

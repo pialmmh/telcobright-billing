@@ -22,6 +22,9 @@ namespace Decoders
         public int Id => 74;
         public string HelpText => "Decodes Nokia Siemens.";
         public CompressionType CompressionType { get; set; }
+        public string PartialTablePrefix { get; }
+        public string PartialTableStorageEngine { get; }
+        public string partialTablePartitionColName { get; }
         protected CdrCollectorInputData Input { get; set; }
 
 
@@ -36,6 +39,26 @@ namespace Decoders
         }
 
         public string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getSqlWhereClauseForHourWiseSafeCollection(CdrCollectorInputData decoderInputData, DateTime day)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getCreateTableSqlForUniqueEvent(CdrCollectorInputData decoderInputData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getDuplicateCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getPartialCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples)
         {
             throw new NotImplementedException();
         }
