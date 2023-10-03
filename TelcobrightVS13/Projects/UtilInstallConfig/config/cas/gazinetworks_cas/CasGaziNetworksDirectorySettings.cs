@@ -42,7 +42,7 @@ namespace InstallConfig
 
             FileLocation vaultTelcoBogra = new FileLocation()
             {
-                Name = "Vault.Telcobridge",//this is refered in ne table, name MUST start with "Vault"
+                Name = "Vault.TelcobridgeBogra",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
@@ -54,7 +54,7 @@ namespace InstallConfig
 
             FileLocation vaultTelcoKhulna = new FileLocation()
             {
-                Name = "Vault.Telcobridge",//this is refered in ne table, name MUST start with "Vault"
+                Name = "Vault.TelcobridgeKhulna",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
@@ -64,9 +64,9 @@ namespace InstallConfig
                 Pass = "",
             };
 
-            FileLocation vaultcataliyaDhk = new FileLocation()
+            FileLocation vaultcataliya = new FileLocation()
             {
-                Name = "Vault.cataleyaDhk",//this is refered in ne table, name MUST start with "Vault"
+                Name = "Vault.cataleya",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
@@ -79,14 +79,9 @@ namespace InstallConfig
             this.Tbc.DirectorySettings.FileLocations.Add(vaultGazi.Name, vaultGazi);
             this.Tbc.DirectorySettings.FileLocations.Add(vaultTelcoKhulna.Name, vaultTelcoKhulna);
             this.Tbc.DirectorySettings.FileLocations.Add(vaultTelcoBogra.Name, vaultTelcoBogra);
-            this.Tbc.DirectorySettings.FileLocations.Add(vaultcataliyaDhk.Name, vaultcataliyaDhk);
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultcataliya.Name, vaultcataliya);
            
-            //add archive locations to CdrSettings
-            this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
-            {
-                //vaultS3FileArchive1.Name,
-                //vaultCAS.Name
-            };
+           
            
         }
     }

@@ -105,6 +105,7 @@ namespace LibraryExtensions
             FileStream stream = null;
             try
             {
+                
                 stream = file.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None);
             }
             catch (IOException)
