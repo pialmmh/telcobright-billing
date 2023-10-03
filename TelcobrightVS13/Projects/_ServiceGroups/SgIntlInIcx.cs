@@ -115,10 +115,12 @@ namespace TelcobrightMediation
                 throw new Exception("Start date & end date must be first & last day of a month.");
             }
             var context = input.Context;
-            DateTime lastSecondOfPrevMonth = startDate.AddSeconds(-1);
+            //DateTime lastSecondOfPrevMonth = startDate.AddSeconds(-1);
+            DateTime lastDayOfMonth = startDate.GetLastDayOfMonth();
+            DateTime lastSecondOfInvoicePeriod = new DateTime(lastDayOfMonth.Year, lastDayOfMonth.Month, lastDayOfMonth.Day, 23, 59, 59);
             uom_conversion_dated usdConversionDated = context.uom_conversion_dated.Where(
                     c => c.PURPOSE_ENUM_ID == "INTERNAL_CONVERSION"
-                         && c.UOM_ID == "USD" && c.UOM_ID_TO == "BDT" && c.FROM_DATE == lastSecondOfPrevMonth).ToList()
+                         && c.UOM_ID == "USD" && c.UOM_ID_TO == "BDT" && c.FROM_DATE == lastSecondOfInvoicePeriod).ToList()
                 .FirstOrDefault();
             if (usdConversionDated == null)
                 throw new Exception("Usd rate not found in uom_conversion_dated table.");
