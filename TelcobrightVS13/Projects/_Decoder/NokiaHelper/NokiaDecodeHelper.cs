@@ -243,21 +243,16 @@ namespace Decoders
                 }
 
                 List<byte> recordBytes;
-                if (f == "in_circuit_group" && cdrType == CdrType.Ptc)
+                 if (f == "call_reference")
                 {
-                    recordBytes = fileData.GetRange(currentPosition + (177 - 6), length);
-                }
-                else if (f == "oaz_duration_ten_ms" && cdrType == CdrType.Ptc)
-                {
-                    recordBytes = fileData.GetRange(currentPosition + (177 - 4), length);
+                    int lastPosition = ExchangeIdStartPosition(fileData, tempOfset);
+                    recordBytes = fileData.GetRange((lastPosition - length) + totalSkip, length);
                 }
                 else
                 {
                     recordBytes = fileData.GetRange(offset + (totalSkip), length);
 
                 }
-
-                
 
                 string recordData = GetRecordData(dataType, recordBytes);
                 records.Add(recordData);
@@ -437,6 +432,21 @@ namespace Decoders
             }
 
             return totalSkip;
+        }
+        private static int ExchangeIdStartPosition(List<byte> fileData, int tempOfset)
+        {
+
+            while (fileData[tempOfset] != 136)
+            {
+
+                tempOfset += 1;
+                if (fileData[tempOfset] == 136)
+                {
+                    break;
+                }
+            }
+
+            return tempOfset;
         }
     }
 

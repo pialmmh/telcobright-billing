@@ -47,7 +47,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "d:/telcobright/vault/resources/cdr/gaziNetworks/tdm1/Bogra_Zone",
+                StartingPath = "D:/telcobright/vault/resources/cdr/gaziNetworks/tdm1/Bogra",
                 User = "",
                 Pass = "",
             };
@@ -59,8 +59,9 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "d:/telcobright/vault/resources/cdr/gaziNetworks/tdm1/Khulna_Zone",
-                User = "",
+                StartingPath = "D:/telcobright/vault/resources/cdr/gaziNetworks/tdm1/Khulna",
+                
+User = "",
                 Pass = "",
             };
 
