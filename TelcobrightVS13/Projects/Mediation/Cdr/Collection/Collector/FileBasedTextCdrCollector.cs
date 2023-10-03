@@ -70,8 +70,5 @@ namespace TelcobrightMediation
             }
             return textCdrCollectionPreProcessor;
         }
-
-        
-
     }
 }

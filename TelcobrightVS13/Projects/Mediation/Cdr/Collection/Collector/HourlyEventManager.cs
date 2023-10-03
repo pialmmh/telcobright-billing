@@ -143,7 +143,7 @@ namespace TelcobrightMediation
             return
                 $" select tuple from {tableName} where tuple " +
                 $" in ({string.Join(",", tuples.Select(t => new StringBuilder("'").Append(t).Append("'")))}) " +
-                $" and {decoder.getSqlWhereClauseForHourWiseSafeCollection(this.CollectorInput, hourOfTheDay)}";
+                $" and {decoder.getSqlWhereClauseForHourWiseSafeCollection(this.CollectorInput, hourOfTheDay,-1,1)}";
         }
         public List<string> collectExistingEvents()
         {

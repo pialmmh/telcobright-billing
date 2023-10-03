@@ -41,10 +41,10 @@ namespace TelcobrightMediation.Accounting
             this.InvoiceGenerationRules = invoiceGenerationRules;
             this.ServiceGroups = serviceGroups;
             this.ServiceGroupWiseInvoiceGenerationConfigs = serviceGroupWiseinvoiceGenerationConfigs;
-            foreach (var invoiceGenerationConfig in serviceGroupWiseinvoiceGenerationConfigs.Values)
-            {
-                invoiceGenerationConfig.InvoiceRefNoExpressionGenerator.Prepare();
-            }
+            //foreach (var invoiceGenerationConfig in serviceGroupWiseinvoiceGenerationConfigs.Values)
+            //{
+            //    invoiceGenerationConfig.InvoiceRefNoExpressionGenerator.Prepare();
+            //}
             this.InvoiceSectionGenerators = invoiceSectionGenerators;
         }
     }

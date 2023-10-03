@@ -132,14 +132,14 @@ namespace TelcobrightMediation
             inputData.ServiceGroupWiseInvoiceGenerationConfigs.TryGetValue(this.Id, out invoiceGenerationConfig);
             if(invoiceGenerationConfig==null)
                 throw new Exception("Could not find invoice generation confir for service group:" + this.Id);
-            IStringExpressionGenerator expressionGenerator= invoiceGenerationConfig.InvoiceRefNoExpressionGenerator;
+            //IStringExpressionGenerator expressionGenerator= invoiceGenerationConfig.InvoiceRefNoExpressionGenerator;
             Dictionary<string, object> expressionGenData = new Dictionary<string, object>
             {
                 {"invoice", invoice},
                 {"serviceGroupName",this.RuleName},
                 {"dbcommand",inputData.Context.Database.Connection.CreateCommand()},
             };
-            expressionGenerator.GetStringExpression(expressionGenData);
+            //expressionGenerator.GetStringExpression(expressionGenData);
             //expressionGenerator.GetStringExpression()
             //TupleIncrementManager ti= new TupleIncrementManager();
             return commonInvoicePostProcessor.Process();

@@ -335,7 +335,7 @@ namespace Decoders
             throw new NotImplementedException();
         }
 
-        public string getSqlWhereClauseForHourWiseSafeCollection(CdrCollectorInputData decoderInputData, DateTime day)
+        public string getSqlWhereClauseForHourWiseSafeCollection(CdrCollectorInputData decoderInputData,DateTime hourOfDay, int minusHoursForSafeCollection, int plusHoursForSafeCollection)
         {
             throw new NotImplementedException();
         }
