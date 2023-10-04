@@ -104,7 +104,7 @@ namespace Process
                             newjob.Progress = 0;
                             newjob.idjobdefinition = 2;
                             newjob.Status = 6; //created
-                            newjob.JobName = "autoError_" + DateTime.Now.ToMySqlFormatWithoutQuote() + "_" +
+                            newjob.JobName = "autoError_" + DateTime.Now.ToMySqlFormatWithMsWithoutQuote() + "_" +
                                              thisSwitch.SwitchName;
                             newjob.CreationTime = DateTime.Now;
                             newjob.idNE = thisSwitch.idSwitch;

@@ -312,6 +312,15 @@ namespace Decoders
                         }
                         thisRow[Fn.AnswerTime] = "";//set answertime to null
                     }
+                    if (thisRow[Fn.OriginatingCallingNumber].IsNullOrEmptyOrWhiteSpace()
+                        &&
+                        thisRow[Fn.OriginatingCalledNumber].IsNullOrEmptyOrWhiteSpace())
+                    {
+                        thisRow[Fn.OriginatingCallingNumber] = thisRow[Fn.TerminatingCallingNumber];
+                        thisRow[Fn.OriginatingCalledNumber] = thisRow[Fn.TerminatingCalledNumber];
+                    }
+
+
                     thisRow[Fn.FinalRecord] = "1";
                     thisRow[Fn.Validflag] = "1";
                     thisRow[Fn.Sequencenumber] = "1";

@@ -17,6 +17,10 @@ namespace LibraryExtensions
         {
             return val.ToString(MySqldateFormat);
         }
+        public static string ToMySqlFormatWithMsWithoutQuote(this DateTime val)
+        {
+            return val.ToString("yyyy-MM-dd HH:mm:ss.fff");
+        }
         public static string ToMySqlFormatWithQuote(this DateTime val)
         {
             return val.ToString(MySqldateFormat).EncloseWith("'");
