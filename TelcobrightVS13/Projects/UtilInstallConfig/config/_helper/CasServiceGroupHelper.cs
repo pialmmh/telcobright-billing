@@ -58,9 +58,7 @@ namespace InstallConfig.config._helper
                 PartnerRules = new List<int>()
                 {
                     PartnerRuletype.InPartnerByIncomingRoute,
-                    PartnerRuletype.InAnsByPrefix,
                     PartnerRuletype.OutPartnerByOutgoingRoute,
-                    PartnerRuletype.OutAnsByPrefix
                 },
                 Ratingtrules = new List<RatingRule>()
                 {
