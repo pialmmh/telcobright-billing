@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="CataleyaCsvDecoderBanIcxNoFailedTEST.cs" />
     <Compile Include="CataleyaCsvDecoderBantelTEST.cs" />
+    <Compile Include="CataleyaCsvDecoderTeleexchangeNoFailed.cs" />
     <Compile Include="NokiaHelper\NokiaDecodeHelper.cs" />
     <Compile Include="NokiaHelper\NokiaSiemensDecoder.cs" />
     <Compile Include="GenbandC3Gazi.cs" />

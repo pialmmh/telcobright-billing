@@ -82,7 +82,7 @@ namespace Process
                                     {
                                         Expression = "switchid=",
                                         ParamType = SqlWhereParamType.Numeric,
-                                        ParamValue = "1",
+                                        ParamValue = thisSwitch.idSwitch.ToString(),
                                         PrependWith = null,
                                         ApendWith = null
                                     },
@@ -90,7 +90,7 @@ namespace Process
 
                             BatchSqlJobParamJson thisJobParam = new BatchSqlJobParamJson(
                                 tableName: "cdrerror",
-                                batchSize: 5000,
+                                batchSize: 10000,
                                 lstWhereParamsSingle: whereParamsSingle,
                                 lstWhereParamsMulti: new List<SqlMultiWhereClauseBuilder>(),
                                 columnExpressions: new List<string>() {"IdCall as RowId", "starttime as RowDateTime"},
