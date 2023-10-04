@@ -85,12 +85,12 @@ namespace InstallConfig
             {
                 new ne
                 {
-                    idSwitch = 1,
+                    idSwitch = 2,
                     idCustomer = this.Tbc.Telcobrightpartner.idCustomer,
                     idcdrformat = 3,
                     idMediationRule = 2,
                     SwitchName = "huawei",
-                    CDRPrefix = "b",
+                    CDRPrefix = "p",
                     FileExtension = ".dat",
                     Description = null,
                     SourceFileLocations = "vault.huawei",
@@ -118,7 +118,7 @@ namespace InstallConfig
                 },
                 new ne
                 {
-                    idSwitch = 2,
+                    idSwitch = 3,
                     idCustomer = this.Tbc.Telcobrightpartner.idCustomer,
                     idcdrformat = 3,
                     idMediationRule = 2,
@@ -133,9 +133,9 @@ namespace InstallConfig
                     TransactionSizeForCDRLoading = 1500,
                     DecodingSpanCount = 100,
                     SkipAutoCreateJob = 1,
-                    SkipCdrListed = 0,
+                    SkipCdrListed = 1,
                     SkipCdrReceived = 0,
-                    SkipCdrDecoded = 0,
+                    SkipCdrDecoded = 1,
                     SkipCdrBackedup = 1,
                     KeepDecodedCDR = 0,
                     KeepReceivedCdrServer = 1,

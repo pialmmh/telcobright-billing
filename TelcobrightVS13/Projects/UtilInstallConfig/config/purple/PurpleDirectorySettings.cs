@@ -56,7 +56,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "C:/telcobright/Vault/Resources/cdr/cataleya",
+                StartingPath = "C:/telcobright/Vault/Resources/cdr/ip",
                 User = "",
                 Pass = "",
             };
