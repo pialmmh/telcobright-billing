@@ -26,9 +26,7 @@ namespace Decoders
         public string PartialTableStorageEngine { get; }
         public string partialTablePartitionColName { get; }
         protected CdrCollectorInputData Input { get; set; }
-
-
-     
+        
 
         public virtual List<string[]> DecodeFile(CdrCollectorInputData decoderInputData, out List<cdrinconsistent> inconsistentCdrs)
         {
@@ -99,18 +97,12 @@ namespace Decoders
                     if (validPoint)
                     {
                         cdrRecordNumber++;
+
+                        
                         CdrType cdrType = (fileData[currentPosition] == 177) ? CdrType.Ptc : CdrType.Poc;
                         string[] record = NokiaDecodeHelper.Decode(currentPosition, fileData, cdrType);
                         string callRef = record[5];
                         PocAndPtc pocAndPtc=null;
-
-                        //if (cdrType==CdrType.Ptc)
-                        //{
-
-                        //    NokiaCdr finalRecord = new NokiaCdr(record, null);
-                        //    decodedRows.Add(finalRecord.Row);
-
-                        //}
 
                         if (callRefWiseLegs.TryGetValue(callRef, out pocAndPtc) == false)
                         {
@@ -182,7 +174,6 @@ namespace Decoders
             Row[Fn.TerminatingCallingNumber] = new string(ptc[11].ToCharArray().TakeWhile(c => c != 'F').ToArray());
             Row[Fn.TerminatingCalledNumber] = new string(ptc[13].ToCharArray().TakeWhile(c => c != 'F').ToArray());
            
-            Row[Fn.DurationSec] = Convert.ToString(Convert.ToInt32(ptc[23]) * 10 / 1000);
             
             Row[Fn.IncomingRoute] = poc!=null?poc[15].Trim().TrimStart('0'): ptc[50].Trim().TrimStart('0');
 
@@ -202,6 +193,12 @@ namespace Decoders
             string endTime = ptc[18].Trim();
             DateTime startTime2 = endTime.ConvertToDateTimeFromCustomFormats(formats);
             Row[Fn.Endtime] = startTime2.ToMySqlFormatWithoutQuote();
+
+
+            string durationStr = ptc[51].Trim();
+            double duration = Convert.ToDouble(durationStr)/ 100;
+            Row[Fn.DurationSec] = duration.ToString();
+
 
             Row[Fn.Validflag] = "1";
             Row[Fn.ChargingStatus] = "1";

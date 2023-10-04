@@ -13,7 +13,7 @@ using LibraryExtensions;
 namespace Decoders
 {
 
-    
+
     public class NokiaDecodeHelper
     {
 
@@ -242,11 +242,48 @@ namespace Decoders
                         break;
                 }
 
-                List<byte> recordBytes;
-                 if (f == "call_reference")
+                List<byte> recordBytes = null;
+                if (f == "call_reference")
                 {
                     int lastPosition = ExchangeIdStartPosition(fileData, tempOfset);
                     recordBytes = fileData.GetRange((lastPosition - length) + totalSkip, length);
+                }
+                else if (f == "oaz_duration_ten_ms" && cdrType == CdrType.Ptc)
+                {
+
+                    int ptcLength = 177;
+
+                    int temCurrentPosition = currentPosition;
+
+                    int totalBytes = fileData.Count;
+
+                    bool validPoint = false;
+                    while (temCurrentPosition < totalBytes)
+                    {
+                        validPoint = false;
+                        if (fileData[temCurrentPosition] == 190 && fileData[temCurrentPosition + 2] == 17)
+                            validPoint = true;
+
+                        if (fileData[temCurrentPosition] == 177 && fileData[temCurrentPosition + 2] == 18)
+                            validPoint = true;
+
+                        if (validPoint)
+                        {
+                            int startPos = temCurrentPosition - 4;
+                            recordBytes = fileData.GetRange(startPos, length);
+                            break;
+
+                        }
+                        else
+                        {
+                            temCurrentPosition++;
+                        }
+                    }
+                    if (!validPoint)
+                    {
+                        recordBytes = fileData.GetRange(offset + totalSkip, length);
+                    }
+
                 }
                 else
                 {
@@ -576,8 +613,8 @@ namespace Decoders
             {
                 string yearString = new HexByte(year[1]).ToString() + new HexByte(year[0]).ToString();
 
-                string timestamp = new HexByte(timeSpan[4]).ToString()+ new HexByte(timeSpan[3]).ToString()+yearString+ 
-                                   new HexByte(timeSpan[2]).ToString()+ new HexByte(timeSpan[1]).ToString()+ new HexByte(timeSpan[0]).ToString();
+                string timestamp = new HexByte(timeSpan[4]).ToString() + new HexByte(timeSpan[3]).ToString() + yearString +
+                                   new HexByte(timeSpan[2]).ToString() + new HexByte(timeSpan[1]).ToString() + new HexByte(timeSpan[0]).ToString();
                 this.dt = timestamp;
             }
             catch (Exception e)
