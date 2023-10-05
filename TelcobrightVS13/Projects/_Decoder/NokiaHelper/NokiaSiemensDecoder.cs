@@ -196,7 +196,11 @@ namespace Decoders
 
 
             string durationStr = ptc[51].Trim();
-            double duration = Convert.ToDouble(durationStr)/ 100;
+            double duration = Convert.ToDouble(durationStr);
+            double duration2 = Convert.ToDouble(ptc[23].Trim().TrimStart('0'));
+
+            Row[Fn.Duration4] = duration2.ToString();
+
             Row[Fn.DurationSec] = duration.ToString();
 
 
