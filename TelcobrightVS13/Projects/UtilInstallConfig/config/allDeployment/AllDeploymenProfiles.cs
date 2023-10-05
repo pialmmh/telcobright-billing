@@ -120,7 +120,7 @@ namespace InstallConfig
                     {"btrc@telcobright.com", "btrc_cas"},
                     //{"agni@telcobright.com", "agni_cas"},
                     //{"banglatelecom@telcobright.com", "banglatelecom_cas"},
-                    //{"banglaicx@telcobright.com", "bangla_cas"},
+                    {"banglaicx@telcobright.com", "banglaicx_cas"},
                     //{"bantel@telcobright.com", "bantel_cas"},
                     //{"gazinetworks@telcobright.com", "gazinetworks_cas"},
                     //{"imamnetwork@telcobright.com", "imamnetwork_cas"},
@@ -245,7 +245,7 @@ namespace InstallConfig
                     },
                     new InstanceConfig
                     {
-                        Name = "bangla_cas",
+                        Name = "banglaicx_cas",
                         SchedulerPortNo = 590
                     },
                     new InstanceConfig
@@ -298,7 +298,7 @@ namespace InstallConfig
                                         {
                                             MySqlPermissionType.execute,
                                             MySqlPermissionType.@select
-                                        }, "bangla_cas"),
+                                        }, "banglaicx_cas"),
                                     new MySqlPermission(
                                         new List<MySqlPermissionType>
                                         {

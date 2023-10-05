@@ -21,23 +21,22 @@ using TelcobrightMediation.Accounting;
 namespace InstallConfig
 {
     [Export(typeof(AbstractConfigGenerator))]
-    public sealed partial class CasMotherTelecomAbstractConfigGenerator : AbstractConfigGenerator
+    public sealed partial class CasBanglaAbstractConfigGenerator : AbstractConfigGenerator
     {
         public override TelcobrightConfig Tbc { get; set; }
-        public override int IdOperator { get; set; } = 24;
-        public override string CustomerName { get; set; } = "Mother Telecom Ltd.";
-        public override string DatabaseName { get; set; } = "mothertelecom_cas";
+        public override int IdOperator { get; set; } = 3;
+        public override string CustomerName { get; set; } = "Bangla ICX";
+        public override string DatabaseName { get; set; } = "banglaicx_cas";
 
-        public CasMotherTelecomAbstractConfigGenerator()
+        public CasBanglaAbstractConfigGenerator()
         {
-            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx,CasTbPartnerFactory.GetTemplatePartner(this.IdOperator, this.CustomerName, this.DatabaseName));
-
+            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx,
+                CasTbPartnerFactory.GetTemplatePartner(this.IdOperator,this.CustomerName ,this.DatabaseName ));
         }
 
         public override TelcobrightConfig GenerateFullConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
         {
-
-
+            //this.Tbc.CdrSetting = new CasCdrSettingHelper().getTemplateCdrSettings();
             CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
             CommonCdrValRulesGen commonCdrValRulesGen =
                 new CommonCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
@@ -73,22 +72,16 @@ namespace InstallConfig
                 },
                 useCasStyleProcessing = true
             };
-
-            //this.Tbc.CdrSetting =new CasCdrSettingHelper().getTemplateCdrSettings();
             this.PrepareDirectorySettings(this.Tbc);
-
-
-
             string csvPathForNe = CasNeInfoHelper.getCasOperatorInfoFile();
             CasNeInfoHelper neHelper = new CasNeInfoHelper(csvPathForNe);
+
             this.Tbc.Nes = neHelper.getNesByOpId(this.Tbc.Telcobrightpartner.idCustomer);
 
-
-
             this.PrepareProductAndServiceConfiguration();
-            this.Tbc.DatabaseSetting = this.GetDatabaseConfigs();
             this.Tbc.ApplicationServersConfig = this.GetServerConfigs();
-            this.Tbc.PortalSettings = GetPortalSettings(this.Tbc.Telcobrightpartner.CustomerName);
+            this.Tbc.DatabaseSetting = this.GetDatabaseConfigs();
+            this.Tbc.PortalSettings = CasPortalSettingsHelper.GetCasCommonPortalSettings(this.Tbc);
             return this.Tbc;
         }
     }
