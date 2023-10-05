@@ -248,15 +248,12 @@ namespace Decoders
                     int lastPosition = ExchangeIdStartPosition(fileData, tempOfset);
                     recordBytes = fileData.GetRange((lastPosition - length) + totalSkip, length);
                 }
-                else if (f == "oaz_duration_ten_ms" && cdrType == CdrType.Ptc)
+                else if (f == "oaz_duration_ten_ms")
                 {
 
                     int ptcLength = 177;
-
-                    int temCurrentPosition = currentPosition;
-
+                    int temCurrentPosition = currentPosition + 1;
                     int totalBytes = fileData.Count;
-
                     bool validPoint = false;
                     while (temCurrentPosition < totalBytes)
                     {
@@ -266,6 +263,7 @@ namespace Decoders
 
                         if (fileData[temCurrentPosition] == 177 && fileData[temCurrentPosition + 2] == 18)
                             validPoint = true;
+                      
 
                         if (validPoint)
                         {
@@ -283,6 +281,7 @@ namespace Decoders
                     {
                         recordBytes = fileData.GetRange(offset + totalSkip, length);
                     }
+
 
                 }
                 else

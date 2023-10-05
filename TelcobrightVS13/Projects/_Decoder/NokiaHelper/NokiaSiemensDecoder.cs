@@ -124,7 +124,7 @@ namespace Decoders
                     else currentPosition++;
                 }
             }
-
+            
             foreach (KeyValuePair<string, PocAndPtc> callRefWiseLeg in callRefWiseLegs)
             {
 
@@ -197,7 +197,8 @@ namespace Decoders
 
             string durationStr = ptc[51].Trim();
             double duration = Convert.ToDouble(durationStr);
-            double duration2 = Convert.ToDouble(ptc[23].Trim().TrimStart('0'));
+            var tmp = ptc[23].Trim().TrimStart('0')==""?"0": ptc[23].Trim().TrimStart('0');
+            double duration2 = Convert.ToDouble(tmp);
 
             Row[Fn.Duration4] = duration2.ToString();
 
