@@ -251,19 +251,22 @@ namespace Decoders
                 else if (f == "oaz_duration_ten_ms")
                 {
 
-                    int ptcLength = 177;
-                    int temCurrentPosition = currentPosition + 1;
+                    int cdrLength = cdrType == CdrType.Ptc ? 177 : 190;
+                    int temCurrentPosition = currentPosition + cdrLength - 2;
                     int totalBytes = fileData.Count;
                     bool validPoint = false;
                     while (temCurrentPosition < totalBytes)
                     {
                         validPoint = false;
-                        if (fileData[temCurrentPosition] == 190 && fileData[temCurrentPosition + 2] == 17)
+                        if (fileData[temCurrentPosition] == 190 && fileData[temCurrentPosition + 1] == 0 && fileData[temCurrentPosition + 2] == 17)
                             validPoint = true;
 
-                        if (fileData[temCurrentPosition] == 177 && fileData[temCurrentPosition + 2] == 18)
+                        if (fileData[temCurrentPosition] == 177 && fileData[temCurrentPosition + 1] == 0 && fileData[temCurrentPosition + 2] == 18)
                             validPoint = true;
-                      
+                        if (fileData[temCurrentPosition] == 24 && fileData[temCurrentPosition + 1] == 0 && fileData[temCurrentPosition + 2] == 16)
+                            validPoint = true;
+                        if (fileData[temCurrentPosition] == 41 && fileData[temCurrentPosition + 1] == 0 && fileData[temCurrentPosition + 2] == 0)
+                            validPoint = true;
 
                         if (validPoint)
                         {
