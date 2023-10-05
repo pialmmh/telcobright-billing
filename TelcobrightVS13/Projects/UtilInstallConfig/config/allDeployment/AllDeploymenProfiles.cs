@@ -258,6 +258,7 @@ namespace InstallConfig
                         Name = "newgenerationtelecom_cas",
                         SchedulerPortNo = 592
                     }
+                    
                 },
                 MySqlCluster = new MySqlCluster
                 {
