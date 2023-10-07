@@ -252,22 +252,28 @@ namespace Decoders
                 {
 
                     int cdrLength = cdrType == CdrType.Ptc ? 177 : 190;
-                    int temCurrentPosition = currentPosition + cdrLength - 2;
+                    int temCurrentPosition = currentPosition + cdrLength;
                     int totalBytes = fileData.Count;
                     bool validPoint = false;
                     while (temCurrentPosition < totalBytes)
                     {
                         validPoint = false;
-                        if (fileData[temCurrentPosition] == 190 && fileData[temCurrentPosition + 1] == 0 && fileData[temCurrentPosition + 2] == 17)
+                        if (isPoc(temCurrentPosition, fileData))
+                        {
                             validPoint = true;
-
-                        if (fileData[temCurrentPosition] == 177 && fileData[temCurrentPosition + 1] == 0 && fileData[temCurrentPosition + 2] == 18)
+                        }
+                        else if (isPtc(temCurrentPosition, fileData))
+                        {
                             validPoint = true;
-                        if (fileData[temCurrentPosition] == 24 && fileData[temCurrentPosition + 1] == 0 && fileData[temCurrentPosition + 2] == 16)
+                        }
+                        else if (isHeader(temCurrentPosition, fileData))
+                        {
                             validPoint = true;
-                        if (fileData[temCurrentPosition] == 41 && fileData[temCurrentPosition + 1] == 0 && fileData[temCurrentPosition + 2] == 0)
+                        }
+                        else if (isTrailer(temCurrentPosition, fileData))
+                        {
                             validPoint = true;
-
+                        }
                         if (validPoint)
                         {
                             int startPos = temCurrentPosition - 4;
@@ -292,8 +298,24 @@ namespace Decoders
                     recordBytes = fileData.GetRange(offset + (totalSkip), length);
 
                 }
-
                 string recordData = GetRecordData(dataType, recordBytes);
+                if (f == "call_type" && cdrType == CdrType.Ptc)
+                {
+
+                    if (recordData == "03" || recordData == "11")
+                    {
+
+                    }
+                    else
+                    {
+                        totalSkip++;
+                        recordBytes = fileData.GetRange(offset + totalSkip, length);
+                        recordData = GetRecordData(dataType, recordBytes);
+                    }
+
+
+                }
+          
                 records.Add(recordData);
                 if (f == "calling_number")
                 {
@@ -309,7 +331,58 @@ namespace Decoders
 
             return records.ToArray();
         }
+        public static bool isPtc(int offset, List<byte> fileData)
+        {
+            if (fileData[offset] == 177 && fileData[offset + 1] == 0 && fileData[offset + 2] == 18)
+            {
+                return true;
+            }
+            else return false;
 
+        }
+        public static bool isPoc(int offset, List<byte> fileData)
+        {
+            if (fileData[offset] == 190 && fileData[offset + 1] == 0 && fileData[offset + 2] == 17)
+            {
+                return true;
+            }
+            else return false;
+        }
+        public static bool isHeader(int offset, List<byte> fileData)
+        {
+            List<int> sequence = new List<int>()
+            {
+                41,00,00,8,1,0,111,255,136,16,50,84,118,137
+            };
+            foreach (var item in sequence)
+            {
+                if (item != fileData[offset++])
+                {
+                    return false;
+                }
+            }
+            return true;
+
+        }
+        public static bool isTrailer(int offset, List<byte> fileData)
+        {
+
+
+            List<int> sequence = new List<int>()
+            {
+                24,0,16,136,16,50,84,118,137
+            };
+
+            foreach (var item in sequence)
+            {
+                if (item != fileData[offset])
+                {
+                    return false;
+                }
+                offset++;
+            }
+            return true;
+        }
         private static string GetRecordData(DataType dataType, List<byte> recordBytes)
         {
             string record = "";
