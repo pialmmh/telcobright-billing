@@ -39,9 +39,9 @@ namespace InstallConfig
                 Pass = "",
             };
 
-            FileLocation vaultJslcataliyaDhk = new FileLocation()
+            FileLocation vaultReve = new FileLocation()
             {
-                Name = "Vault.JslcataleyaDhk",//this is refered in ne table, name MUST start with "Vault"
+                Name = "vault.Reve",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
@@ -52,7 +52,7 @@ namespace InstallConfig
             };
 
             this.Tbc.DirectorySettings.FileLocations.Add(vaultNokia.Name, vaultNokia);
-            this.Tbc.DirectorySettings.FileLocations.Add(vaultJslcataliyaDhk.Name, vaultJslcataliyaDhk);
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultReve.Name, vaultReve);
 
            
         }

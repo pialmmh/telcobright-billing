@@ -105,7 +105,14 @@ public partial class DashboardAspx : Page
 
         if (!IsPostBack)//initial
         {
-
+            if (dbName == "btrc_cas")
+            {
+                UpdatePanel2.Visible = true;
+            }
+            else
+            {
+                UpdatePanel2.Visible = false;
+            }
 
         }
 
