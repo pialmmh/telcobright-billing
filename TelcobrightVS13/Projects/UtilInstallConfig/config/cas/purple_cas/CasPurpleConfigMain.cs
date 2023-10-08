@@ -36,13 +36,6 @@ namespace InstallConfig
 
         public override TelcobrightConfig GenerateFullConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
         {
-            
-            CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
-            CommonCdrValRulesGen commonCdrValRulesGen =
-                new CommonCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
-            InconsistentCdrValRulesGen inconsistentCdrValRulesGen =
-                new InconsistentCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
-
             this.Tbc.CdrSetting =new CasCdrSettingHelper().getTemplateCdrSettings();
 
             this.PrepareDirectorySettings(this.Tbc);
@@ -51,12 +44,10 @@ namespace InstallConfig
             CasNeInfoHelper neHelper = new CasNeInfoHelper(csvPathForNe);
             this.Tbc.Nes = neHelper.getNesByOpId(this.Tbc.Telcobrightpartner.idCustomer);
 
-
-
             this.PrepareProductAndServiceConfiguration();
             this.Tbc.DatabaseSetting = this.GetDatabaseConfigs();
             this.Tbc.ApplicationServersConfig = this.GetServerConfigs();
-            this.Tbc.PortalSettings = GetPortalSettings(this.Tbc.Telcobrightpartner.CustomerName);
+            this.Tbc.PortalSettings = CasPortalSettingsHelper.GetCasCommonPortalSettings(this.Tbc);
             return this.Tbc;
         }
     }

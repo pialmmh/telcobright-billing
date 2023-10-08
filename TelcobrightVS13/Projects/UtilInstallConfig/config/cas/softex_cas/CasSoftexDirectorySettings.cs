@@ -39,9 +39,9 @@ namespace InstallConfig
                 Pass = "",
             };
 
-            FileLocation vaultJslcataliyaDhk = new FileLocation()
+            FileLocation vaultCataliya = new FileLocation()
             {
-                Name = "Vault.JslcataleyaDhk",//this is refered in ne table, name MUST start with "Vault"
+                Name = "Vault.cataleya",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
@@ -52,7 +52,7 @@ namespace InstallConfig
             };
 
             this.Tbc.DirectorySettings.FileLocations.Add(vaultHuwaei.Name, vaultHuwaei);
-            this.Tbc.DirectorySettings.FileLocations.Add(vaultJslcataliyaDhk.Name, vaultJslcataliyaDhk);
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultCataliya.Name, vaultCataliya);
            
             //add archive locations to CdrSettings
             this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()

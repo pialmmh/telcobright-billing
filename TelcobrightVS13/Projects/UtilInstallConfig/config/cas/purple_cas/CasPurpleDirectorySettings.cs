@@ -43,31 +43,24 @@ namespace InstallConfig
                 Pass = "",
             };
 
-            
-
-            FileLocation fileArchive1 = new FileLocation()//raw cdr archive
+            FileLocation vaultCataleya = new FileLocation()
             {
-                Name = "FileArchive1Zip",
-                LocationType = "ftp",
+                Name = "vault.Cataleya",//this is refered in ne table, name MUST start with "Vault"
+                LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
-                PathSeparator = @"/",//backslash didn't work with winscp
-                StartingPath = @"/ICX_CDR_BK",
-                ServerIp = "10.100.201.13", //server = "172.16.16.242",
-                User = "iofcdr",
-                Pass = "blt#.45",
-                IgnoreZeroLenghFile = 1
+                PathSeparator = @"\",
+                ServerIp = "",
+                StartingPath = "h:/telcobright/Vault/Resources/cdr/purple/ip",
+                User = "",
+                Pass = "",
             };
-
-
-
-
-
 
             //add sync pairs to directory config
             //directorySetting.SyncPairs.Add(huawei_Vault.Name, huawei_Vault);
             //directorySetting.SyncPairs.Add(vaultS3FileArchive1.Name, vaultS3FileArchive1);
             //directorySetting.SyncPairs.Add(vaultCAS.Name, vaultCAS);
             this.Tbc.DirectorySettings.FileLocations.Add(vaultHuwaei.Name, vaultHuwaei);
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultCataleya.Name, vaultCataleya);
 
             //add archive locations to CdrSettings
             this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
