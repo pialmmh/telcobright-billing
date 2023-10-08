@@ -61,6 +61,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
                                 CheckBoxShowByAns.Checked==true?"tup_destinationId":string.Empty,
                                 CheckBoxShowByIgw.Checked==true?"tup_outpartnerid":string.Empty,
                                 //CheckBoxViewIncomingRoute.Checked==true?"tup_incomingroute":string.Empty,
+                                CheckBoxViewIncomingRoute.Checked==true?"icxname":string.Empty,
                                 CheckBoxViewOutgoingRoute.Checked==true?"tup_outgoingroute":string.Empty,
                                 ViewBySwitch.Checked==true?"tup_switchid":string.Empty
                                 },
@@ -699,17 +700,28 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
 
         TelcobrightConfig tb = telcobrightConfig;
         tb.DatabaseSetting.DatabaseName = DropDownListViewIncomingRoute.SelectedValue;
-
-        using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(tb.DatabaseSetting))
+        if (tb.DatabaseSetting.DatabaseName != "-1")
         {
-            //populate switch
-            List<ne> lstNe = context.nes.ToList();
-            this.DropDownListShowBySwitch.Items.Clear();
-            //this.DropDownListPartner.Items.Add(new ListItem(" [All]", "-1"));
-            foreach (ne nE in lstNe)
+            this.ViewBySwitch.Enabled = true;
+            this.DropDownListShowBySwitch.Enabled = true;
+            //this.ViewBySwitch.Checked = true;
+            using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(tb.DatabaseSetting))
             {
-                this.DropDownListShowBySwitch.Items.Add(new ListItem(nE.SwitchName, nE.idSwitch.ToString()));
+                //populate switch
+                List<ne> lstNe = context.nes.ToList();
+                this.DropDownListShowBySwitch.Items.Clear();
+                //this.DropDownListPartner.Items.Add(new ListItem(" [All]", "-1"));
+                foreach (ne nE in lstNe)
+                {
+                    this.DropDownListShowBySwitch.Items.Add(new ListItem(nE.SwitchName, nE.idSwitch.ToString()));
+                }
             }
+        }
+        else
+        {
+            this.ViewBySwitch.Enabled = false;
+            this.ViewBySwitch.Checked = false;
+            this.DropDownListShowBySwitch.Enabled = false;
         }
     }
     protected void CheckBoxViewOutgoingRoute_CheckedChanged(object sender, EventArgs e)

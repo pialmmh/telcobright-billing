@@ -45,9 +45,12 @@ namespace TelcobrightInfra
 
             string[] baseSqlAndGroupByBuilder = startIdentifierRemoved.Substring(0, startIdentifierRemoved.LastIndexOf(this.baseSqlEndsWith))
                 .Split(new[] { "group by" }, StringSplitOptions.None);
-            this.BaseSql = baseSqlAndGroupByBuilder[0];//baseSql
+            this.BaseSql = baseSqlAndGroupByBuilder[0];//
             this.groupByExpression = string.Join(" ", baseSqlAndGroupByBuilder.Skip(1));
-            this.BaseSql = this.BaseSql + " group by " + this.groupByExpression;
+            if(groupByExpression!="")
+            {
+                this.BaseSql = this.BaseSql + " group by " + this.groupByExpression;           
+            }
             this.TrailerSql = " left join " + string.Join(" left join ", tempStr.Skip(1));//trailerSql
 
             sqlParts = this.BaseSql.Split(new string[] { "from", "FROM", "From" }, StringSplitOptions.None).ToList();
@@ -156,7 +159,9 @@ namespace TelcobrightInfra
                     .Append($"select " + string.Join(",", this.baseColumns.Values.Select(c => c.ToBaseSqlWrapperString()))).Append(newLine)
                     .Append($" FROM").Append(newLine)
                     .Append(unionedSql).Append(newLine)
-                    .Append(" group by ").Append(this.groupByExpression).Append(newLine)
+                    .Append(this.groupByExpression==""?"": " group by ")
+                    .Append(this.groupByExpression)
+                    .Append(newLine)
                     .Append(this.baseSqlEndsWith);
             return colsInBaseSqlWrapper;
         }
