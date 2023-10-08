@@ -119,6 +119,7 @@
 
                 }
 
+
                 DropDownListPartner_OnSelectedIndexChanged(DropDownListPartner, EventArgs.Empty);
                 DropDownListIgw_OnSelectedIndexChanged(DropDownListIgw, EventArgs.Empty);
 
@@ -348,12 +349,13 @@
                        
         <asp:DropDownList ID="DropDownListViewIncomingRoute" runat="server"
                           OnSelectedIndexChanged="DropDownListViewIncomingRoute_SelectedChanged"
+                          AutoPostBack="True"
                           Enabled="True">
         </asp:DropDownList>
 
         View by Switch:
         <asp:CheckBox ID="ViewBySwitch" runat="server" AutoPostBack="True"
-                      OnCheckedChanged="CheckBoxShowBySwitch_CheckedChanged" Checked="False" />
+                      OnCheckedChanged="CheckBoxShowBySwitch_CheckedChanged" Checked="False" Enabled="False" />
                        
         <asp:DropDownList ID="DropDownListShowBySwitch" runat="server" Visible="true" Enabled="False">
         </asp:DropDownList>

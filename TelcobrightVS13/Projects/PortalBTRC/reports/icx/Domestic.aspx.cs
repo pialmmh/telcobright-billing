@@ -5,20 +5,16 @@ using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using DevExpress.XtraPrinting.Native;
 using reports;
 using ExportToExcel;
 using MediationModel;
 using LibraryExtensions;
-using Microsoft.AspNet.Identity.Owin;
 using PortalApp;
 using PortalApp.ReportHelper;
 using TelcobrightInfra;
 using TelcobrightMediation;
-using WebApplication1;
 
 public partial class DefaultRptDomesticIcx : System.Web.UI.Page
 {
@@ -242,8 +238,6 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
             else
             {
                 GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].Visible = true;
-
-
             }
 
 
@@ -703,7 +697,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
         if (tb.DatabaseSetting.DatabaseName != "-1")
         {
             this.ViewBySwitch.Enabled = true;
-            this.DropDownListShowBySwitch.Enabled = true;
+            
             //this.ViewBySwitch.Checked = true;
             using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(tb.DatabaseSetting))
             {

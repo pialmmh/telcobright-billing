@@ -97,7 +97,7 @@
 
         View by Switch:
         <asp:CheckBox ID="ViewBySwitch" runat="server" AutoPostBack="True"
-                      OnCheckedChanged="CheckBoxShowBySwitch_CheckedChanged" Checked="False" />
+                      OnCheckedChanged="CheckBoxShowBySwitch_CheckedChanged" Checked="False" Enabled="False" />
                        
         <asp:DropDownList ID="DropDownListShowBySwitch" runat="server" Visible="true" Enabled="False">
         </asp:DropDownList>
