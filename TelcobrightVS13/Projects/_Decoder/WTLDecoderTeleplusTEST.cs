@@ -88,7 +88,7 @@ namespace Decoders
                 {
                     incomingRoute = incomingRoute.Split('@')[1];
                 }
-                string outgoingRoute = lineAsArr[68];
+                string outgoingRoute = lineAsArr[69];
                 if (!string.IsNullOrEmpty(outgoingRoute))
                 {
                     outgoingRoute = outgoingRoute.Split('@')[1];
@@ -96,6 +96,7 @@ namespace Decoders
 
 
                 textCdr[Fn.StartTime] = startTime;
+                textCdr[Fn.AnswerTime] = ansTime;
                 textCdr[Fn.Endtime] = endTime;
 
                 textCdr[Fn.IncomingRoute] = incomingRoute;
@@ -110,7 +111,7 @@ namespace Decoders
                 textCdr[Fn.TerminatingCallingNumber] = lineAsArr[82].Trim();
                 textCdr[Fn.TerminatingCalledNumber] = lineAsArr[84].Trim();
 
-                textCdr[Fn.Originatingip] = lineAsArr[61].Trim();
+                //textCdr[Fn.Originatingip] = lineAsArr[61].Trim();
 
                 textCdr[Fn.UniqueBillId] = lineAsArr[68].Trim();
 
@@ -118,7 +119,7 @@ namespace Decoders
 
 
 
-
+                textCdr[Fn.Sequencenumber] = lineAsArr[1].Trim();
                 textCdr[Fn.Validflag] = "1";
 
 
