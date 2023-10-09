@@ -26,7 +26,7 @@ namespace InstallConfig
         public override TelcobrightConfig Tbc { get; set; }
         public override int IdOperator { get; set; } = 3;
         public override string CustomerName { get; set; } = "Bangla ICX";
-        public override string DatabaseName { get; set; } = "banglaicx_cas";
+        public override string DatabaseName { get; set; } = "bangla_cas";
 
         public CasBanglaAbstractConfigGenerator()
         {
@@ -36,7 +36,7 @@ namespace InstallConfig
 
         public override TelcobrightConfig GenerateFullConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
         {
-            //this.Tbc.CdrSetting = new CasCdrSettingHelper().getTemplateCdrSettings();
+            this.Tbc.CdrSetting = new CasCdrSettingHelper().getTemplateCdrSettings();
             CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
             CommonCdrValRulesGen commonCdrValRulesGen =
                 new CommonCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);

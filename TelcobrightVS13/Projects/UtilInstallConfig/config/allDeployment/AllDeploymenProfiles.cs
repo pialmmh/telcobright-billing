@@ -245,7 +245,7 @@ namespace InstallConfig
                     },
                     new InstanceConfig
                     {
-                        Name = "banglaicx_cas",
+                        Name = "bangla_cas",
                         SchedulerPortNo = 590
                     },
                     new InstanceConfig

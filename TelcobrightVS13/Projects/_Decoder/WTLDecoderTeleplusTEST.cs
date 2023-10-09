@@ -28,9 +28,18 @@ namespace Decoders
         protected CdrCollectorInputData Input { get; set; }
 
 
-        private static DateTime parseStringToDate(string timestamp)  //20181028051316400 yyyyMMddhhmmssfff
+        //private static DateTime parseStringToDate(string timestamp)  //20181028051316400 yyyyMMddhhmmssfff
+        //{
+        //    DateTime dateTime = DateTime.ParseExact(timestamp, "yyyyMMddHHmmssfff", CultureInfo.InvariantCulture);
+        //    return dateTime;
+        //}
+
+        public static DateTime UnixTimeStampToDateTime(string unixTimeStampStr)
         {
-            DateTime dateTime = DateTime.ParseExact(timestamp, "yyyyMMddHHmmssfff", CultureInfo.InvariantCulture);
+            double unixTimeStamp = Convert.ToDouble(unixTimeStampStr);
+            // Unix timestamp is seconds past epoch
+            DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            dateTime = dateTime.AddSeconds(unixTimeStamp).ToLocalTime();
             return dateTime;
         }
 
@@ -39,7 +48,7 @@ namespace Decoders
             this.Input = input;
             string fileName = this.Input.FullPath;
             //List<string[]> lines = FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(fileName, ',', 1, "\"", ";");
-            List<string[]> lines = FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(fileName, ',', 1, "\"", ",");
+            List<string[]> lines = FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(fileName, ',', 0, "\"", ",", true);
 
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
@@ -53,16 +62,59 @@ namespace Decoders
                 //if (chargingStatus != "1") continue;
                 string[] textCdr = new string[input.MefDecodersData.Totalfieldtelcobright];
 
+
+                string startTime = lineAsArr[1];
+                string ansTime = "";
+                
+
+                if (!string.IsNullOrEmpty(lineAsArr[1]))
+                {                   
+                    startTime = UnixTimeStampToDateTime(startTime).ToString("yyyy-MM-dd HH:mm:ss");
+                    ansTime = startTime;
+                    
+                }
+                //endTime   = UnixTimeStampToDateTime(startTime).AddSeconds(Convert.ToInt32(lineAsArr[60])).ToString("yyyy-MM-dd HH:mm:ss");
+                string endTime = "";
+                if (!string.IsNullOrEmpty(startTime))
+                {
+                    DateTime startTime1 = DateTime.ParseExact(startTime, "yyyy-MM-dd HH:mm:ss",
+                                       System.Globalization.CultureInfo.InvariantCulture);
+                    double durSec = Convert.ToDouble(lineAsArr[60]);
+                    endTime = startTime1.AddSeconds(durSec).ToString("yyyy-MM-dd HH:mm:ss");
+                }
+
+                string incomingRoute = lineAsArr[68];
+                if (!string.IsNullOrEmpty(incomingRoute))
+                {
+                    incomingRoute = incomingRoute.Split('@')[1];
+                }
+                string outgoingRoute = lineAsArr[68];
+                if (!string.IsNullOrEmpty(outgoingRoute))
+                {
+                    outgoingRoute = outgoingRoute.Split('@')[1];
+                }
+
+
+                textCdr[Fn.StartTime] = startTime;
+                textCdr[Fn.Endtime] = endTime;
+
+                textCdr[Fn.IncomingRoute] = incomingRoute;
+                textCdr[Fn.OutgoingRoute] = outgoingRoute;
+
                 textCdr[Fn.Filename] = fileName;
                 textCdr[Fn.Switchid] = Input.Ne.idSwitch.ToString();
 
-                textCdr[Fn.OriginatingCallingNumber] = lineAsArr[66];
-                textCdr[Fn.OriginatingCalledNumber] = lineAsArr[68];
+                textCdr[Fn.OriginatingCallingNumber] = lineAsArr[82].Trim(); ;
+                textCdr[Fn.OriginatingCalledNumber] = lineAsArr[84].Trim(); ;
 
-                textCdr[Fn.TerminatingCallingNumber] = lineAsArr[82];
-                textCdr[Fn.TerminatingCalledNumber] = lineAsArr[84];
+                textCdr[Fn.TerminatingCallingNumber] = lineAsArr[82].Trim();
+                textCdr[Fn.TerminatingCalledNumber] = lineAsArr[84].Trim();
 
-                textCdr[Fn.DurationSec] = lineAsArr[60];
+                textCdr[Fn.Originatingip] = lineAsArr[61].Trim();
+
+                textCdr[Fn.UniqueBillId] = lineAsArr[68].Trim();
+
+                textCdr[Fn.DurationSec] = lineAsArr[60].Trim();
 
 
 
