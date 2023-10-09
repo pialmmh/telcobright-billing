@@ -15,21 +15,20 @@ namespace TelcobrightMediation.Cdr.Collection.PreProcessors
 {
     public class DuplicaterEventFilter
     {
-        private HourlyEventManager EventManager { get; set; }
+        private DayWiseEventCollector EventCollector { get; set; }
         public CdrCollectorInputData CollectorInput { get; set; }
         public DbCommand DbCmd { get; set; }
         private Dictionary<string, string[]> FinalNonDuplicateEvents { get; set; } = new Dictionary<string, string[]>();
-        public DuplicaterEventFilter(HourlyEventManager eventManager)
+        public DuplicaterEventFilter(DayWiseEventCollector eventCollector)
         {
-            this.EventManager = eventManager;
-            this.CollectorInput = eventManager.CollectorInput;
-            this.DbCmd = eventManager.DbCmd;
+            this.EventCollector = eventCollector;
+            this.CollectorInput = eventCollector.CollectorInput;
+            this.DbCmd = eventCollector.DbCmd;
         }
         public Dictionary<string, string[]> filterDuplicateCdrs()
         {
-            List<string> existingEvents = this.EventManager.collectExistingEvents();
-            Dictionary<string, string> alreadyConsideredEvents = existingEvents.ToDictionary(e => e);
-            foreach (var kv in EventManager.DecodedEventsAsTupDic)
+            Dictionary<string, string> alreadyConsideredEvents = this.EventCollector.ExistingEvents.ToDictionary(e => e);
+            foreach (var kv in EventCollector.DecodedEventsAsTupDic)
             {
                 string tuple = kv.Key;
                 string[] decodedRow = kv.Value;
