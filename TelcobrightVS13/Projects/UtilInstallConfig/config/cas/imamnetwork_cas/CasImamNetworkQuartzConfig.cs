@@ -18,17 +18,12 @@ namespace InstallConfig
     public sealed partial class CasImamNetworkAbstractConfigGenerator //quartz config part
     {
         private List<QuartzTbDaemonConfig> DaemonConfigurations { get; set; }
-        public override List<QuartzTbDaemonConfig> GetSchedulerDaemonConfigs()
-        {
-            this.DaemonConfigurations = new List<QuartzTbDaemonConfig>();
-            this.DaemonConfigurations.AddRange(GetFileListerInstances(this.Tbc.Telcobrightpartner.databasename));
-            this.DaemonConfigurations.AddRange(GetLogFileJobCreatorInstances(this.Tbc.Telcobrightpartner.databasename));
-            this.DaemonConfigurations.AddRange(GetFileCopierInstances(this.Tbc.Telcobrightpartner.databasename));
-            this.DaemonConfigurations.AddRange(GetCdrJobProcessorInstances(this.Tbc.Telcobrightpartner.databasename));
-            this.DaemonConfigurations.AddRange(GetOptimizerInstances(this.Tbc.Telcobrightpartner.databasename));
-            this.DaemonConfigurations.AddRange(GetInvoiceGeneratorInstances(this.Tbc.Telcobrightpartner.databasename));
-            return this.DaemonConfigurations;
-        }
+     
+            public override List<QuartzTbDaemonConfig> GetSchedulerDaemonConfigs()
+            {
+                List<QuartzTbDaemonConfig> quartzTbDaemonConfigs = CasQuartzHelper.GetSchedulerDaemonConfigs(this.DatabaseName);
+                return quartzTbDaemonConfigs;
+            }
 
         private List<QuartzTbDaemonConfig> GetFileListerInstances(string operatorName)
         {
