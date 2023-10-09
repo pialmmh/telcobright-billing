@@ -62,18 +62,18 @@ namespace PartnerRules
                     }
                 }
             }
-            if (thisCdr.OutPartnerId == 0)
-            {
-                foreach (partnerprefix ansPrefix in ansPrefixes)
-                {
-                    string prefix = ansPrefix.Prefix;
-                    if (terminatingCalledNumber.StartsWith(prefix))
-                    {
-                        thisCdr.OutPartnerId = ansPrefix.idPartner;
-                        return ansPrefix.idPartner;
-                    }
-                }
-            }
+            //if (thisCdr.OutPartnerId == 0)
+            //{
+            //    foreach (partnerprefix ansPrefix in ansPrefixes)
+            //    {
+            //        string prefix = ansPrefix.Prefix;
+            //        if (terminatingCalledNumber.StartsWith(prefix))
+            //        {
+            //            thisCdr.OutPartnerId = ansPrefix.idPartner;
+            //            return ansPrefix.idPartner;
+            //        }
+            //    }
+            //}
             return 0;
         }
     }

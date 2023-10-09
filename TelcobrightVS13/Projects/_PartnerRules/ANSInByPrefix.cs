@@ -61,18 +61,18 @@ namespace PartnerRules
                     }
                 }
             }
-            if (thisCdr.InPartnerId == 0)
-            {
-                foreach (partnerprefix ansPrefix in ansPrefixes)
-                {
-                    string prefix = ansPrefix.Prefix;
-                    if (originatingCallingNumber.StartsWith(prefix))
-                    {
-                        thisCdr.InPartnerId = ansPrefix.idPartner;
-                        return ansPrefix.idPartner;
-                    }
-                }
-            }
+            //if (thisCdr.InPartnerId == 0)
+            //{
+            //    foreach (partnerprefix ansPrefix in ansPrefixes)
+            //    {
+            //        string prefix = ansPrefix.Prefix;
+            //        if (originatingCallingNumber.StartsWith(prefix))
+            //        {
+            //            thisCdr.InPartnerId = ansPrefix.idPartner;
+            //            return ansPrefix.idPartner;
+            //        }
+            //    }
+            //}
             return 0;
         }
     }

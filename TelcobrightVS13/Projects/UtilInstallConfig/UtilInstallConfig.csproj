@@ -580,7 +580,6 @@
     <Content Include="config\cas\_dbscripts\ddl\sql\indexSwitch.txt" />
     <Content Include="config\cas\_dbscripts\ddl\sql\icxSp.sql" />
     <Content Include="config\cas\_dbscripts\seedData\sql\partnerPrefix.sql" />
-    <Content Include="config\cas\_dbscripts\seedData\sql\testAnsPrefix.sql" />
     <Content Include="config\cas\_dbscripts\seedData\sql\huaweiFldTypesForBtcl.sql" />
     <Content Include="config\cas\_dbscripts\seedData\sql\huaweiFldTypesForMNH.sql" />
     <Content Include="config\cas\_dbscripts\seedData\sql\pointCodeAndIpAddr.sql" />
