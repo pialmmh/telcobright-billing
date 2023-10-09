@@ -40,30 +40,19 @@ namespace InstallConfig
                 Pass = "",
             };
 
-            FileLocation vaultTelcoBogra = new FileLocation()
+            FileLocation vaultKhlBogra = new FileLocation()
             {
                 Name = "Vault.TelcobridgeBogra",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "D:/telcobright/vault/resources/cdr/gaziNetworks/tdm1/Bogra",
+                StartingPath = "D:/telcobright/vault/resources/cdr/gaziNetworks/tdmKhlBogra",
                 User = "",
                 Pass = "",
             };
 
-            FileLocation vaultTelcoKhulna = new FileLocation()
-            {
-                Name = "Vault.TelcobridgeKhulna",//this is refered in ne table, name MUST start with "Vault"
-                LocationType = "vault",//locationtype always lowercase
-                OsType = "windows",
-                PathSeparator = @"\",
-                ServerIp = "",
-                StartingPath = "D:/telcobright/vault/resources/cdr/gaziNetworks/tdm1/Khulna",
-                
-User = "",
-                Pass = "",
-            };
+           
 
             FileLocation vaultcataliya = new FileLocation()
             {
@@ -78,8 +67,7 @@ User = "",
             };
 
             this.Tbc.DirectorySettings.FileLocations.Add(vaultGazi.Name, vaultGazi);
-            this.Tbc.DirectorySettings.FileLocations.Add(vaultTelcoKhulna.Name, vaultTelcoKhulna);
-            this.Tbc.DirectorySettings.FileLocations.Add(vaultTelcoBogra.Name, vaultTelcoBogra);
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultKhlBogra.Name, vaultKhlBogra);
             this.Tbc.DirectorySettings.FileLocations.Add(vaultcataliya.Name, vaultcataliya);
            
            

@@ -292,18 +292,31 @@ namespace TelcobrightFileOperations
 
         
         public static List<string[]> ParseCsvWithEnclosedAndUnenclosedFields(string path, char delimeter, int linesToSkipBefore,
-            string enclosingChar, string charToReplaceDelimiterInsideField)
+            string enclosingChar, string charToReplaceDelimiterInsideField, bool readlineByLine=false)
         {
             List<string> lines = new List<string>();
-            using (StreamReader readFile = new StreamReader(path))
+            if (readlineByLine == true)
             {
-                lines = readFile.ReadToEnd().Split('\n')
+                lines = File.ReadAllLines(path)
                     .Skip(linesToSkipBefore)
-                    .Select(line => line.Replace('\r', '\0'))
                     .Where(line => line.Trim() != "").ToList();
             }
-                    return ParseLinesWithEnclosedAndUnenclosedFields(delimeter, enclosingChar, lines);
+            else
+            {
+                using (StreamReader readFile = new StreamReader(path))
+                {
+                    lines = readFile.ReadToEnd().Split('\n')
+                        .Skip(linesToSkipBefore)
+                        .Select(line => line.Replace('\r', '\0'))
+                        .Where(line => line.Trim() != "").ToList();
+                }
+            }
+            return ParseLinesWithEnclosedAndUnenclosedFields(delimeter, enclosingChar, lines);
         }
+
+
+        
+
 
         public static List<string[]> ParseLinesWithEnclosedAndUnenclosedFields(char delimeter, string enclosingChar, List<string> lines)
         {

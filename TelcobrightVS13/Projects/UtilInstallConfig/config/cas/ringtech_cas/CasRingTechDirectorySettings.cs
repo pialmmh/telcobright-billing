@@ -70,26 +70,9 @@ namespace InstallConfig
                 IgnoreZeroLenghFile = 1
             };
 
-
-
-
-
-
-            //add sync pairs to directory config
-            //directorySetting.SyncPairs.Add(huawei_Vault.Name, huawei_Vault);
-            //directorySetting.SyncPairs.Add(vaultS3FileArchive1.Name, vaultS3FileArchive1);
-            //directorySetting.SyncPairs.Add(vaultCAS.Name, vaultCAS);
             this.Tbc.DirectorySettings.FileLocations.Add(vaultPrimary.Name, vaultPrimary);
             this.Tbc.DirectorySettings.FileLocations.Add(vaultGNEW.Name, vaultGNEW);
-
-
-            //add archive locations to CdrSettings
-            this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
-            {
-                //vaultS3FileArchive1.Name,
-                //vaultCAS.Name
-            };
-            
+ 
         }
     }
 }
