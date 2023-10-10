@@ -52,6 +52,7 @@ namespace TelcobrightInfra
                 {
                     string date = tableDate.ToString("yyyyMMdd");
                     string tableName = tablePrefix + date;
+                    sql = sql.Replace("<" + tablePrefix + ">", tableName);
                     if (partitionByHour)
                     {
                         sql += GetHourlytPartitionExpression(partitionColName, tableDate, engine);

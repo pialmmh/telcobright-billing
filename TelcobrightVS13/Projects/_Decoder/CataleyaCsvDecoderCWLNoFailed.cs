@@ -131,7 +131,7 @@ namespace Decoders
             throw new NotImplementedException();
         }
 
-        public string getWhereForHourForPartialCollection(CdrCollectorInputData decoderInputData, DateTime hourOfDay)
+        public string getWhereForHourWisePartialCollection(CdrCollectorInputData decoderInputData, DateTime hourOfDay)
         {
             throw new NotImplementedException();
         }
@@ -146,7 +146,7 @@ namespace Decoders
             throw new NotImplementedException();
         }
 
-        public string getWhereForHourForUniqueEvent(CdrCollectorInputData decoderInputData, DateTime hourOfDay)
+        public string getWhereForHourWiseUniqueEventCollection(CdrCollectorInputData decoderInputData, DateTime hourOfDay)
         {
             throw new NotImplementedException();
         }

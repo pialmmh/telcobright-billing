@@ -17,8 +17,8 @@ namespace TelcobrightMediation
         string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row);
         string getCreateTableSqlForUniqueEvent(CdrCollectorInputData decoderInputData);
         string getSelectExpressionForUniqueEvent(CdrCollectorInputData decoderInputData);
-        string getWhereForHourForUniqueEvent(CdrCollectorInputData decoderInputData, DateTime hourOfDay);
+        string getWhereForHourWiseUniqueEventCollection(CdrCollectorInputData decoderInputData, DateTime hourOfDay);
         string getSelectExpressionForPartialCollection(CdrCollectorInputData decoderInputData);
-        string getWhereForHourForPartialCollection(CdrCollectorInputData decoderInputData, DateTime hourOfDay);
+        string getWhereForHourWisePartialCollection(CdrCollectorInputData decoderInputData, DateTime hourOfDay);
     }
 }

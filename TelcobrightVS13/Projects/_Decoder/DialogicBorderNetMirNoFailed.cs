@@ -61,19 +61,14 @@ namespace Decoders
             throw new NotImplementedException();
         }
 
-        public string getWhereForHourForPartialCollection(CdrCollectorInputData decoderInputData, DateTime hourOfDay)
+        public string getWhereForHourWisePartialCollection(CdrCollectorInputData decoderInputData, DateTime hourOfDay)
         {
-            int hour = hourOfDay.Hour;
-            int minute = hourOfDay.Minute;
-            int second = hourOfDay.Second;
-            if(minute!=0 || second!=0)
-                throw new Exception("Hour of the day must be 0-23 and can't contain minutes or seconds parts.");
-            return hourOfDay.GetSqlWhereExpressionForHourlyCollection("starttime");
+            throw new NotImplementedException();
         }
 
         public string getCreateTableSqlForUniqueEvent(CdrCollectorInputData decoderInputData)
         {
-            return $@"CREATE table if not exists {this.PartialTablePrefix} (tuple varchar(200) COLLATE utf8mb4_bin NOT NULL,
+            return $@"CREATE table if not exists <{this.PartialTablePrefix}> (tuple varchar(200) COLLATE utf8mb4_bin NOT NULL,
 						  starttime datetime NOT NULL,
 						  description varchar(50) COLLATE utf8mb4_bin DEFAULT NULL,
 						  UNIQUE KEY ind_tuple (tuple)) 
@@ -82,12 +77,17 @@ namespace Decoders
 
         public string getSelectExpressionForUniqueEvent(CdrCollectorInputData decoderInputData)
         {
-            throw new NotImplementedException();
+            return @"select tuple ";
         }
 
-        public string getWhereForHourForUniqueEvent(CdrCollectorInputData decoderInputData, DateTime hourOfDay)
+        public string getWhereForHourWiseUniqueEventCollection(CdrCollectorInputData decoderInputData, DateTime hourOfDay)
         {
-            throw new NotImplementedException();
+            int hour = hourOfDay.Hour;
+            int minute = hourOfDay.Minute;
+            int second = hourOfDay.Second;
+            if (minute != 0 || second != 0)
+                throw new Exception("Hour of the day must be 0-23 and can't contain minutes or seconds parts.");
+            return hourOfDay.GetSqlWhereExpressionForHourlyCollection("starttime");
         }
 
 
