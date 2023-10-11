@@ -20,6 +20,9 @@ namespace CasTelcobright
         public ProcessWrapper(string instanceName, Action<string> callbackFromUI)
         {
             this.instanceName = instanceName;
+
+            ///C:\TelcobrightProject\TelcobrightVS13\Projects\WS_Topshelf_Quartz\deployedInstances\bantel_cas\
+
             this.telcobright = new Telcobright2(instanceName, callbackFromUI);
             this.thread = new Thread(() =>
             {

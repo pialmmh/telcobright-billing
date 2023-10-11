@@ -61,28 +61,28 @@ namespace Decoders
                 //string chargingStatus = lineAsArr[3] == "S" ? "1" : "0"; //done
                 //if (chargingStatus != "1") continue;
 
-                //string chargingStatus = "1";
-                //if (lineAsArr[70].Trim() == "0")
-                //    chargingStatus = "0";
-                //if (chargingStatus == "0")
-                //    continue;
+                string chargingstatus = "1";
+                if (lineAsArr[70].Trim() == "0")
+                    chargingstatus = "0";
+                if (chargingstatus == "0")
+                    continue;
 
-                
+
 
 
 
                 string[] textCdr = new string[input.MefDecodersData.Totalfieldtelcobright];
 
 
-                var terminatingCallingNumber = lineAsArr[82].Trim();
+                var terminatingCallingNumber = lineAsArr[8].Trim();
                 textCdr[Fn.TerminatingCallingNumber] = terminatingCallingNumber;
-                var terminatingCalledNumber = lineAsArr[84].Trim();
+                var terminatingCalledNumber = lineAsArr[27].Trim();
                 textCdr[Fn.TerminatingCalledNumber] = terminatingCalledNumber;
 
                 if (string.IsNullOrEmpty(terminatingCalledNumber) && string.IsNullOrEmpty(terminatingCalledNumber))
                 {
                     double durSec = Convert.ToDouble(lineAsArr[70].Trim());
-                    if(durSec > 0)
+                    if (durSec > 0)
                     {
                         throw new ArgumentException("call duration should not greater than 0");
                     }
@@ -96,44 +96,44 @@ namespace Decoders
                     continue;
 
                 if (!string.IsNullOrEmpty(lineAsArr[1]))
-                {                   
+                {
                     startTime = UnixTimeStampToDateTime(startTime).ToString("yyyy-MM-dd HH:mm:ss");
                     ansTime = startTime;
-                    
+
                 }
                 //endTime   = UnixTimeStampToDateTime(startTime).AddSeconds(Convert.ToInt32(lineAsArr[60])).ToString("yyyy-MM-dd HH:mm:ss");
                 string endTime = "";
-                if (!string.IsNullOrEmpty(startTime))
+                if (!string.IsNullOrEmpty(ansTime))
                 {
-                    DateTime startTime1 = DateTime.ParseExact(startTime, "yyyy-MM-dd HH:mm:ss",
+                    DateTime ansTime1 = DateTime.ParseExact(ansTime, "yyyy-MM-dd HH:mm:ss",
                                        System.Globalization.CultureInfo.InvariantCulture);
                     double durSec = Convert.ToDouble(lineAsArr[60]);
-                    endTime = startTime1.AddSeconds(durSec).ToString("yyyy-MM-dd HH:mm:ss");
+                    endTime = ansTime1.AddSeconds(durSec).ToString("yyyy-MM-dd HH:mm:ss");
                 }
 
-                string incomingRoute = lineAsArr[61];
-                string finalIncRoute = "";
+                string incomingRoute = lineAsArr[7];
+                //string finalIncRoute = "";
                 if (!string.IsNullOrEmpty(incomingRoute))
                 {
-                    
-                    string[] incomingRouteArr = incomingRoute.Split('.');
-                    //
+                    incomingRoute = incomingRoute.Trim();
+                    //string[] incomingRouteArr = incomingRoute.Split('.');
+                    ////
 
-                    int[] intArray = new int[incomingRouteArr.Length];
+                    //int[] intArray = new int[incomingRouteArr.Length];
 
-                    for (int i = 0; i < incomingRouteArr.Length; i++)
-                    {
-                        
-                       intArray[i] = Convert.ToInt32(incomingRouteArr[i]);
-                       
-                    }
-                    finalIncRoute = string.Join(".", intArray);
+                    //for (int i = 0; i < incomingRouteArr.Length; i++)
+                    //{
+
+                    //    intArray[i] = Convert.ToInt32(incomingRouteArr[i]);
+
+                    //}
+                    //finalIncRoute = string.Join(".", intArray);
 
                 }
-                string outgoingRoute = lineAsArr[69];
+                string outgoingRoute = lineAsArr[28];
                 if (!string.IsNullOrEmpty(outgoingRoute))
                 {
-                    outgoingRoute = outgoingRoute.Split('@')[1];
+                    outgoingRoute = outgoingRoute.Trim();
                 }
 
 
@@ -141,16 +141,16 @@ namespace Decoders
                 textCdr[Fn.AnswerTime] = ansTime;
                 textCdr[Fn.Endtime] = endTime;
 
-                textCdr[Fn.IncomingRoute] = finalIncRoute;
+                textCdr[Fn.IncomingRoute] = incomingRoute;
                 textCdr[Fn.OutgoingRoute] = outgoingRoute;
 
                 textCdr[Fn.Filename] = fileName;
                 textCdr[Fn.Switchid] = Input.Ne.idSwitch.ToString();
 
-                textCdr[Fn.OriginatingCallingNumber] = lineAsArr[82].Trim(); ;
-                textCdr[Fn.OriginatingCalledNumber] = lineAsArr[84].Trim(); ;
+                textCdr[Fn.OriginatingCallingNumber] = lineAsArr[8].Trim(); ;
+                textCdr[Fn.OriginatingCalledNumber] = lineAsArr[27].Trim(); ;
 
-               
+
 
                 textCdr[Fn.Originatingip] = incomingRoute;
                 textCdr[Fn.TerminatingIp] = outgoingRoute;
@@ -165,6 +165,7 @@ namespace Decoders
 
                 textCdr[Fn.Sequencenumber] = lineAsArr[1].Trim();
                 textCdr[Fn.Validflag] = "1";
+                textCdr[Fn.ChargingStatus] = "1";
 
 
 
