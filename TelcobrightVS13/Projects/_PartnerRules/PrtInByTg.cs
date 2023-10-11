@@ -26,7 +26,7 @@ namespace PartnerRules
                 thisCdr.InPartnerId = thisRoute.idPartner;
                 return thisRoute.idPartner;
             }
-
+             
             if (thisCdr.InPartnerId <= 0)
             {
                 CdrSetting cdrSetting = data.MediationContext.CdrSetting;
