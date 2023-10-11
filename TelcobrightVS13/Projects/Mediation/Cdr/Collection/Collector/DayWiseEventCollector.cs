@@ -37,35 +37,30 @@ namespace TelcobrightMediation
             var nextHoursToSeekForCollection = cdrSetting.HoursToAddAfterForSafePartialCollection;
             //this.DayAndHourWiseEvents = 
             var x = decodedCdrRows.SelectMany(row =>
-            {
-                int timeFieldNo = getTimeFieldNo(cdrSetting, row);
-                DateTime dateTime = row[timeFieldNo].ConvertToDateTimeFromMySqlFormat();
-                int hour = dateTime.Hour;
-                DateTime hourOfTheDay = dateTime.AddHours(hour);
-                List<DateTime> pastHoursToScan = Enumerable.Range(1, pastHoursToSeekForCollection)
-                    .Select(num => hourOfTheDay.AddHours((-1) * num)).ToList();
-                List<DateTime> nextHoursToScan = Enumerable.Range(1, nextHoursToSeekForCollection)
-                    .Select(num => hourOfTheDay.AddHours(num)).ToList();
-                List<DateTime> hoursInvolved = pastHoursToScan;
-                hoursInvolved.Add(hourOfTheDay);
-                hoursInvolved.AddRange(nextHoursToScan);
-
-                return hoursInvolved.Select(h => new
                 {
-                    Date = h.Date,
-                    HourOftheDay = h,
-                    Row = row
-                });
-            }).GroupBy(a => new
-            {
-                Date = a.Date,
-                HourOfTheDay = a.HourOftheDay
-            }).Select(g => new
-            {
-                Date = g.Key.Date,
-                HourOfTheDay = g.Key.HourOfTheDay,
-                Rows = g.GroupBy(g1=>g1.HourOftheDay).ToDictionary(g2=>g2.ToList())
-            });
+                    int timeFieldNo = getTimeFieldNo(cdrSetting, row);
+                    DateTime dateTime = row[timeFieldNo].ConvertToDateTimeFromMySqlFormat();
+                    int hour = dateTime.Hour;
+                    DateTime hourOfTheDay = dateTime.AddHours(hour);
+                    List<DateTime> pastHoursToScan = Enumerable.Range(1, pastHoursToSeekForCollection)
+                        .Select(num => hourOfTheDay.AddHours((-1) * num)).ToList();
+                    List<DateTime> nextHoursToScan = Enumerable.Range(1, nextHoursToSeekForCollection)
+                        .Select(num => hourOfTheDay.AddHours(num)).ToList();
+                    List<DateTime> hoursInvolved = pastHoursToScan;
+                    hoursInvolved.Add(hourOfTheDay);
+                    hoursInvolved.AddRange(nextHoursToScan);
+
+                    return hoursInvolved.Select(h => new //item
+                    {
+                        Date = h.Date,
+                        HourOftheDay = h,
+                        Row = row
+                    });
+                }).GroupBy(a => a.Date)
+                .ToDictionary(g => g.Key, 
+                                   g=>g.GroupBy(b=>b.HourOftheDay)
+                                   .ToDictionary(g2=>g2.Key, g2=> new HourlyEventData<string[]>(g2.Select(i => i.Row).ToList(),g2.Key)));
+
             //.ToDictionary(g => g.Date, g =>
             //{
             //    return g.Rows.ToDictionary(r => r.HourOftheDay,);
