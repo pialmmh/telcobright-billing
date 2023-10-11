@@ -503,10 +503,13 @@
     <Content Include="img\background.png" />
     <Content Include="img\background_old.png" />
     <Content Include="img\BTRC.png" />
+    <Content Include="img\correct.png" />
+    <Content Include="img\error.png" />
     <Content Include="img\logo_banglatel.png" />
     <Content Include="img\logo_Platinum.jpg" />
     <Content Include="img\logo_telcobright.png" />
     <Content Include="img\NAV-BG.jpg" />
+    <Content Include="img\NAV_BG1.jpg" />
     <Content Include="img\Telcobright logo.png" />
     <Content Include="InternationalOut_ICX.aspx" />
     <Content Include="reports\BTRCReport.aspx" />
