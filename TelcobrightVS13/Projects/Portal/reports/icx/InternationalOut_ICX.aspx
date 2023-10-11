@@ -1,5 +1,5 @@
 ﻿<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="True"
-    CodeBehind="InternationalOut _ICX.aspx.cs" Inherits="DefaultRptIntlOutIcx" %>
+    CodeBehind="InternationalOut_ICX.aspx.cs" Inherits="DefaultRptIntlOutIcx" %>
 
 <%--<%@ Import Namespace="MySql.Web" %>--%>
 

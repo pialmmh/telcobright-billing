@@ -13,6 +13,7 @@ namespace PortalApp.ReportHelper
         public string partnerName { get; set; }
         public Decimal minutes { get; set; }
     }
+
     public class DomesticReportRow
     {
         public string partnerName { get; set; }
@@ -22,7 +23,7 @@ namespace PortalApp.ReportHelper
 
     public class AcdReportRow
     {
-        public string Date{ get; set; }
+        public string Date { get; set; }
         public string ICX_Name { get; set; }
         public string Operator { get; set; }
         public string MSISDN { get; set; }
@@ -30,10 +31,10 @@ namespace PortalApp.ReportHelper
         public string Call_Count { get; set; }
         public string DurationInMinute { get; set; }
         public string ACD_Value { get; set; }
-        
-        
+
+
         //public string partnerName { get; set; }
-        
+
     }
 
     public class InternationalReportRow
@@ -47,6 +48,7 @@ namespace PortalApp.ReportHelper
         public Decimal outgoingMinutes { get; set; }
 
     }
+
     public class MonthlyReportRow
     {
         public int SLNo { get; set; }
@@ -66,6 +68,7 @@ namespace PortalApp.ReportHelper
     {
         //public  int  SlNo=0;
         public int SLNo { get; set; }
+
         public string date { get; set; }
         public Decimal IntIncomingNoOfCalls { get; set; }
         public Decimal IntIncomingNoOfMinutes { get; set; }
@@ -111,16 +114,17 @@ namespace PortalApp.ReportHelper
         public Decimal ConversionRate { get; set; }
         public Decimal XAmount { get; set; }
         public Decimal YAmount { get; set; }
-        public Decimal ZAmount { get; set; }     
+        public Decimal ZAmount { get; set; }
         public Decimal Portion15PercOfZ { get; set; }
 
     }
+
     public class MonthlyOutSummaryDetail
     {
         public string callDuration { get; set; }
-        public  string msf { get; set; }
-        public  string originatingCarrier { get; set; }
-        public  string originatingIp { get; set; }
+        public string msf { get; set; }
+        public string originatingCarrier { get; set; }
+        public string originatingIp { get; set; }
         public string originatingDuration { get; set; }
         public string originatingRate { get; set; }
         public string terminatingCarrier { get; set; }
@@ -128,12 +132,13 @@ namespace PortalApp.ReportHelper
         public string terminatingRegion { get; set; }
         public string terminatingDuration { get; set; }
         public string terminatingRate { get; set; }
-        public  string dpc { get; set; }
+        public string dpc { get; set; }
         public string calledId { get; set; }
-        public  string dialedNumber { get; set; }
+        public string dialedNumber { get; set; }
         public string connectTime { get; set; }
         public string disconnectTime { get; set; }
     }
+
     public class CustomReportRow
     {
         public string StartTime { get; set; }
@@ -144,6 +149,20 @@ namespace PortalApp.ReportHelper
         public int billedDuration { get; set; }
         public string redirectNumber { get; set; }
         public string remarks { get; set; }
+
+    }
+
+    public class SumDataOfMonth
+    {
+        public string startTime { get; set; }
+        public string sourceNetwork { get; set; }
+        public string destinationNetwork { get; set; }
+        public string callerNumberA { get; set; }
+        public string calledNumberB { get; set; }
+        public string redirectingNumber { get; set; }
+        public string billedDuration { get; set; }
+        public string remarks { get; set; }
+
 
     }
 }

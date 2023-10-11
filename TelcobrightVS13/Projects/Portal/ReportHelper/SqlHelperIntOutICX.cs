@@ -86,6 +86,7 @@ namespace PortalApp.ReportHelper
 	            FROM {TableName}
                 WHERE tup_starttime>='{StartDate}'
                 AND tup_starttime<'{EndDate}'
+                AND duration3>0
                 {GetWhereClauseAdditional()}
                 {GetGroupBy()}
                 having sum(roundedDuration)>0
