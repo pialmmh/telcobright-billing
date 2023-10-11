@@ -16,7 +16,8 @@ namespace TelcobrightMediation
         public int BatchSizeWhenPreparingLargeSqlJob { get; set; }
         public SummaryTimeFieldEnum SummaryTimeField { get; set; }
         public int DaysToAddBeforeAndAfterUniqueDaysForSafePartialCollection { get; set; } = 1;
-        public int HoursToAddBeforeAndAfterUniqueDaysForSafePartialCollection { get; set; } = 2;
+        public int HoursToAddBeforeForSafePartialCollection { get; set; } = 1;
+        public int HoursToAddAfterForSafePartialCollection { get; set; } = 1;
         public bool DescendingOrderWhileProcessingListedFiles { get; set; }
         public new bool DescendingOrderWhileListingFiles { get; set; }
         public List<string> IllegalStrToRemoveFromFields { get; set; }

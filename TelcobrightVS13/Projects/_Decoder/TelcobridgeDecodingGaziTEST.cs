@@ -135,22 +135,27 @@ namespace Decoders
             throw new NotImplementedException();
         }
 
-        public string getSqlWhereClauseForHourWiseSafeCollection(CdrCollectorInputData decoderInputData,DateTime hourOfDay, int minusHoursForSafeCollection, int plusHoursForSafeCollection)
-        {
-            throw new NotImplementedException();
-        }
-
         public string getCreateTableSqlForUniqueEvent(CdrCollectorInputData decoderInputData)
         {
             throw new NotImplementedException();
         }
 
-        public string getDuplicateCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples)
+        public string getSelectExpressionForUniqueEvent(CdrCollectorInputData decoderInputData)
         {
             throw new NotImplementedException();
         }
 
-        public string getPartialCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples)
+        public string getWhereForHourWiseUniqueEventCollection(CdrCollectorInputData decoderInputData, DateTime hourOfDay)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getSelectExpressionForPartialCollection(CdrCollectorInputData decoderInputData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getWhereForHourWisePartialCollection(CdrCollectorInputData decoderInputData, DateTime hourOfDay)
         {
             throw new NotImplementedException();
         }

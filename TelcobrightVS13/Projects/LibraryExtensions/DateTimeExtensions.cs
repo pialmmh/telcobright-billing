@@ -31,5 +31,15 @@ namespace LibraryExtensions
         {
             return new DateTime(dateTime.Year, dateTime.Month, DateTime.DaysInMonth(dateTime.Year, dateTime.Month));
         }
+        public static string GetSqlWhereExpressionForHourlyCollection(this DateTime hourOfTheDay, string dateColName)
+        {
+            int minute = hourOfTheDay.Minute;
+            int second = hourOfTheDay.Second;
+            if (minute != 0 || second != 0)
+                throw new Exception("Hour of the day must be 0-23 and minutes and seconds parts must be 0.");
+            DateTime nextHour = hourOfTheDay.AddHours(1);
+            return $" {dateColName}>='{hourOfTheDay.ToMySqlFormatWithoutQuote()}' " +
+                   $" and {dateColName}<'{nextHour.ToMySqlFormatWithoutQuote()}' ";
+        }
     }
 }

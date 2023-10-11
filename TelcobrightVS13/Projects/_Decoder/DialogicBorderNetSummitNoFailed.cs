@@ -57,7 +57,27 @@ namespace Decoders
                 .Append(sessionId).ToString();
         }
 
-        public string getSqlWhereClauseForHourWiseSafeCollection(CdrCollectorInputData decoderInputData,DateTime hourOfDay, int minusHoursForSafeCollection, int plusHoursForSafeCollection)
+        public string getCreateTableSqlForUniqueEvent(CdrCollectorInputData decoderInputData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getSelectExpressionForUniqueEvent(CdrCollectorInputData decoderInputData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getWhereForHourWiseUniqueEventCollection(CdrCollectorInputData decoderInputData, DateTime hourOfDay)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getSelectExpressionForPartialCollection(CdrCollectorInputData decoderInputData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getWhereForHourWisePartialCollection(CdrCollectorInputData decoderInputData, DateTime hourOfDay)
         {
             DateTime startTime = hourOfDay;
             DateTime searchStart = startTime.AddDays(-1);
@@ -67,20 +87,7 @@ namespace Decoders
                    $" and startTime<='{searchRange.EndDate.ToMySqlFormatWithoutQuote()}' ";
         }
 
-        public string getCreateTableSqlForUniqueEvent(CdrCollectorInputData decoderInputData)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string getDuplicateCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string getPartialCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples)
-        {
-            throw new NotImplementedException();
-        }
+        
 
         private static string getSessionId(string[] row)
         {

@@ -15,9 +15,10 @@ namespace TelcobrightMediation
         string partialTablePartitionColName { get; }
         List<string[]> DecodeFile(CdrCollectorInputData decoderInputData,out List<cdrinconsistent> inconsistentCdrs);
         string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row);
-        string getSqlWhereClauseForHourWiseSafeCollection(CdrCollectorInputData decoderInputData,DateTime hourOfDay, int minusHoursForSafeCollection, int plusHoursForSafeCollection);
         string getCreateTableSqlForUniqueEvent(CdrCollectorInputData decoderInputData);
-        string getDuplicateCollectionSql(CdrCollectorInputData decoderInputData,DateTime hourOfTheDay, List<string> tuples);
-        string getPartialCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples);
+        string getSelectExpressionForUniqueEvent(CdrCollectorInputData decoderInputData);
+        string getWhereForHourWiseUniqueEventCollection(CdrCollectorInputData decoderInputData, DateTime hourOfDay);
+        string getSelectExpressionForPartialCollection(CdrCollectorInputData decoderInputData);
+        string getWhereForHourWisePartialCollection(CdrCollectorInputData decoderInputData, DateTime hourOfDay);
     }
 }

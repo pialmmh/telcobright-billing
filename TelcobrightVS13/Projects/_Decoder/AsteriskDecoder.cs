@@ -61,15 +61,7 @@ namespace Decoders
                         foreach (string c in replaceChars) {
                             val = val.Replace(c, "");
                         }
-                        //temp code
                         
-                        if (val.Contains("<")|| val.Contains("'")|| val.Contains(">")) {
-                            Console.WriteLine("found");
-                        }
-                        if (val.Contains("0034711303061432"))
-                        {
-                            Console.WriteLine("found");
-                        }
                         switch (thisField.FieldNumber) {
                             case Fn.Sequencenumber:
                                 strThisField= val.Replace(".", "");
@@ -139,37 +131,27 @@ namespace Decoders
             throw new NotImplementedException();
         }
 
-        public string getSqlWhereClauseForHourWiseSafeCollection(CdrCollectorInputData decoderInputData,DateTime hourOfDay, int minusHoursForSafeCollection, int plusHoursForSafeCollection)
-        {
-            throw new NotImplementedException();
-        }
-
         public string getCreateTableSqlForUniqueEvent(CdrCollectorInputData decoderInputData)
         {
             throw new NotImplementedException();
         }
 
-        public string getDuplicateCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples)
+        public string getSelectExpressionForUniqueEvent(CdrCollectorInputData decoderInputData)
         {
             throw new NotImplementedException();
         }
 
-        public string getPartialCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples)
+        public string getWhereForHourWiseUniqueEventCollection(CdrCollectorInputData decoderInputData, DateTime hourOfDay)
         {
             throw new NotImplementedException();
         }
 
-        public string getCreateTableSqlForUniqueEvent(object data)
+        public string getSelectExpressionForPartialCollection(CdrCollectorInputData decoderInputData)
         {
             throw new NotImplementedException();
         }
 
-        public string getDuplicateCollectionSql(DateTime hourOfTheDay, List<string> tuples)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string getPartialCollectionSql(DateTime hourOfTheDay, List<string> tuples)
+        public string getWhereForHourWisePartialCollection(CdrCollectorInputData decoderInputData, DateTime hourOfDay)
         {
             throw new NotImplementedException();
         }
