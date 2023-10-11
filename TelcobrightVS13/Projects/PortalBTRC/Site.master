@@ -23,10 +23,10 @@
     
     <div class="page" >
      
-            <div class="header" id="mygradient2" style=" min-height: 50px; min-width: 100%; background-position: top; background-image: url('https://i.postimg.cc/nrzQGnvd/NAV-BG1.jpg');background-size: 100% 100%; background-size: cover;  background-position: center;">
+            <div class="header" id="mygradient2" style=" min-height: 50px; min-width: 100%; background-position: top; background-image: url('/img/NAV_BG1.jpg');background-size: 100% 100%; background-size: cover;  background-position: center;">
              <div class="logo" style="float: left;">
                  <div style="float: left;"> 
-                     <a href="http://localhost:25965/Dashboard">
+                     <a href="http://10.100.150.2/Dashboard">
                          <img src="/img/Telcobright logo.png" style="height: 40px; padding-top: 10px; padding-left: 20%;"/>
                                 
                      </a>

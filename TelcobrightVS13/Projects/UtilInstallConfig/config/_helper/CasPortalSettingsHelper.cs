@@ -316,6 +316,7 @@ namespace InstallConfig.config._helper
                     { "~/reports/icx/btrc/WeeklyInternationalReport.aspx",
                         settingIntlIn
                     }
+                    
                 },//dictionary of page settings
 
             };

@@ -563,6 +563,7 @@
     <Content Include="reports\icx\btrc\DailyReport.aspx" />
     <Content Include="reports\icx\btrc\MonthlyOutgoingDetail.aspx" />
     <Content Include="reports\icx\btrc\MonthlyOutgoingSummary.aspx" />
+    <Content Include="reports\icx\btrc\MonthlyRoamingReport.aspx" />
     <Content Include="reports\icx\btrc\MonthlyReport.aspx" />
     <Content Include="reports\icx\btrc\WeeklyDomesticReport.aspx" />
     <Content Include="reports\icx\btrc\WeeklyInternationalReport.aspx" />
@@ -577,7 +578,7 @@
     <Content Include="reports\icx\LocalTollFree.aspx" />
     <Content Include="reports\icx\Domestic.aspx" />
     <Content Include="reports\icx\InternationalIn_ICX.aspx" />
-    <Content Include="reports\icx\InternationalOut _ICX.aspx" />
+    <Content Include="reports\icx\InternationalOut_ICX.aspx" />
     <Content Include="reports\InternationalIn.aspx" />
     <Content Include="reports\InternationalOut.aspx" />
     <Content Include="Mediation\Mediation.aspx" />
@@ -992,6 +993,13 @@
     <Compile Include="reports\icx\btrc\MonthlyOutgoingSummary.aspx.designer.cs">
       <DependentUpon>MonthlyOutgoingSummary.aspx</DependentUpon>
     </Compile>
+    <Compile Include="reports\icx\btrc\MonthlyRoamingReport.aspx.cs">
+      <DependentUpon>MonthlyRoamingReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\icx\btrc\MonthlyRoamingReport.aspx.designer.cs">
+      <DependentUpon>MonthlyRoamingReport.aspx</DependentUpon>
+    </Compile>
     <Compile Include="reports\icx\btrc\MonthlyReport.aspx.cs">
       <DependentUpon>MonthlyReport.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1090,12 +1098,12 @@
     <Compile Include="reports\icx\InternationalIn_ICX.aspx.designer.cs">
       <DependentUpon>InternationalIn_ICX.aspx</DependentUpon>
     </Compile>
-    <Compile Include="reports\icx\InternationalOut _ICX.aspx.cs">
-      <DependentUpon>InternationalOut _ICX.aspx</DependentUpon>
+    <Compile Include="reports\icx\InternationalOut_ICX.aspx.cs">
+      <DependentUpon>InternationalOut_ICX.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="reports\icx\InternationalOut _ICX.aspx.designer.cs">
-      <DependentUpon>InternationalOut _ICX.aspx</DependentUpon>
+    <Compile Include="reports\icx\InternationalOut_ICX.aspx.designer.cs">
+      <DependentUpon>InternationalOut_ICX.aspx</DependentUpon>
     </Compile>
     <Compile Include="reports\IOFReport.aspx.cs">
       <DependentUpon>IOFReport.aspx</DependentUpon>

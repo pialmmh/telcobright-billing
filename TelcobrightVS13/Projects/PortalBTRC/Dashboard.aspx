@@ -111,13 +111,14 @@
                 <asp:GridView ID="GridViewCompleted" runat="server" AutoGenerateColumns="False" CellPadding="4" DataKeyNames="id" ForeColor="#333333" GridLines="None" BorderStyle="None" BorderWidth="1"  >
                     <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                     <Columns>
-                        <%--<asp:TemplateField HeaderText="Status">
+                        <asp:TemplateField HeaderText="Status">
                             <ItemTemplate>
                                 <div style="text-align: center;">
-                                    <asp:Image ID="StatusImage" runat="server" ImageUrl="https://i.postimg.cc/Rh0G70KG/5610944.png" Width="14" Height="14" />
+                                    <asp:Image ID="StatusImage" runat="server" Width="14" Height="14" 
+                                        ImageUrl='<%# (Container.DataItemIndex % 2 == 0) ? "~/img/correct.png" : "~/img/error.png" %>' />
                                 </div>
                             </ItemTemplate>
-                        </asp:TemplateField> --%>
+                        </asp:TemplateField>
                         <asp:BoundField DataField="id" HeaderText="id" InsertVisible="False" ReadOnly="True" SortExpression="id" Visible="false" />
                         <asp:BoundField DataField="JobName" HeaderText="JobName" SortExpression="JobName" />
                         <asp:BoundField DataField="CreationTime" HeaderText="CreationTime" SortExpression="CreationTime" DataFormatString="{0:yyyy-MM-dd HH:mm:ss}" />
