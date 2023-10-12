@@ -157,6 +157,9 @@
       <Name>TelcobrightInfra</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>copy $(SolutionDir)\7z.exe  $(SolutionDir)\WS_Topshelf_Quartz\bin\Debug\7z.exe

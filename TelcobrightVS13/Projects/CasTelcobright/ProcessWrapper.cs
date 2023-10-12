@@ -8,7 +8,11 @@ using System.Threading.Tasks;
 using CasTelcobright.Forms;
 using LibraryExtensions;
 using WS_Telcobright_Topshelf;
+using System.Configuration;
 using TelcobrightInfra;
+
+
+
 namespace CasTelcobright
 {
     public class ProcessWrapper
@@ -19,6 +23,7 @@ namespace CasTelcobright
         
         public ProcessWrapper(string instanceName, Action<string> callbackFromUI)
         {
+            instanceName = ConfigurationManager.AppSettings["configRoot"] + "\\" + instanceName + "_cas";
             this.instanceName = instanceName;
 
             ///C:\TelcobrightProject\TelcobrightVS13\Projects\WS_Topshelf_Quartz\deployedInstances\bantel_cas\
