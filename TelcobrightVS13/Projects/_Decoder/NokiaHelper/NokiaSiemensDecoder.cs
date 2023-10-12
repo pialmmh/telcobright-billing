@@ -92,10 +92,12 @@ namespace Decoders
 
                     if (fileData[currentPosition] == 177 && fileData[currentPosition + 2] == 18)
                         validPoint = true;
+                    if (fileData[currentPosition] == 177)
+                        cdrRecordNumber++;
 
                     if (validPoint)
                     {
-                        cdrRecordNumber++;
+                        //cdrRecordNumber++;
 
                         
                         CdrType cdrType = (fileData[currentPosition] == 177) ? CdrType.Ptc : CdrType.Poc;
