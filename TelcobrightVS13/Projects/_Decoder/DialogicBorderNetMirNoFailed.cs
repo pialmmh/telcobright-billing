@@ -56,14 +56,19 @@ namespace Decoders
                 .Append(sessionId).ToString();
         }
 
-        public string getSelectExpressionForPartialCollection(CdrCollectorInputData decoderInputData)
+        public string getSelectExpressionForPartialCollection(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getWhereForHourWisePartialCollection(CdrCollectorInputData decoderInputData, DateTime hourOfDay)
+        public DateTime getEventDatetime(Object data)
         {
-            throw new NotImplementedException();
+            Dictionary<string, object> dataAsDic = (Dictionary<string, object>) data;
+            CdrSetting cdrSetting = (CdrSetting)dataAsDic["cdrSetting"];
+            string[] row = (string[]) dataAsDic["row"];
+            int timeFieldNo = EventDateTimeHelper.getTimeFieldNo(cdrSetting, row);
+            DateTime dateTime = row[timeFieldNo].ConvertToDateTimeFromMySqlFormat();
+            return dateTime;
         }
 
         public string getCreateTableSqlForUniqueEvent(Object data)
@@ -80,7 +85,7 @@ namespace Decoders
             return @"select tuple ";
         }
 
-        public string getWhereForHourWiseUniqueEventCollection(Object data)
+        public string getWhereForHourWiseCollection(Object data)
         {
             HourlyEventData<string[]> hourwiseData = (HourlyEventData<string[]>) data;
             DateTime hourOfDay = hourwiseData.HourOfTheDay;
@@ -92,12 +97,6 @@ namespace Decoders
             string tuples = string.Join(",", hourwiseData.Events.Select(r => r[Fn.UniqueBillId]));
             return $@"tuple in ({tuples}) and {hourOfDay.GetSqlWhereExpressionForHourlyCollection("starttime")}" ;
              
-        }
-
-
-        public string getSelectExpressionForPartialCollection(Object data)
-        {
-            throw new NotImplementedException();
         }
 
         private static string getSessionId(string[] row)

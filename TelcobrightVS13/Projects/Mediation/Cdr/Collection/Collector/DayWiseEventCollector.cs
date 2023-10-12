@@ -14,32 +14,35 @@ using TelcobrightMediation.Config;
 
 namespace TelcobrightMediation
 {
-    public class DayWiseEventCollector
+    public class DayWiseEventCollector<T>
     {
         public CdrCollectorInputData CollectorInput { get;}
         public DbCommand DbCmd { get;}
         public IFileDecoder Decoder { get; }
-        public List<string[]> DecodedCdrRows { get; }
-        public Dictionary<string, string[]> DecodedEventsAsTupDic { get; } = new Dictionary<string, string[]>();
-        public Dictionary<DateTime, Dictionary<DateTime, HourlyEventData<string[]>>> DayAndHourWiseEvents { get; }
+        public List<T> DecodedEvents { get; }
+        public Dictionary<string, T> DecodedEventsAsTupDic { get; } = new Dictionary<string, T>();
+        public Dictionary<DateTime, Dictionary<DateTime, HourlyEventData<T>>> DayAndHourWiseEvents { get; }
         public List<string> ExistingEvents = new List<string>();
         public string SourceTablePrefix { get; set; }
 
         public DayWiseEventCollector(CdrCollectorInputData collectorInput, DbCommand dbCmd,
-            IFileDecoder decoder, List<string[]> decodedCdrRows, string sourceTablePrefix)
+            IFileDecoder decoder, List<T> decodedEvents, string sourceTablePrefix)
         {
             this.SourceTablePrefix = sourceTablePrefix;
             CollectorInput = collectorInput;
             DbCmd = dbCmd;
             this.Decoder = decoder;
-            this.DecodedCdrRows = decodedCdrRows;
+            this.DecodedEvents = decodedEvents;
             CdrSetting cdrSetting = this.CollectorInput.CdrSetting;
             var pastHoursToSeekForCollection = cdrSetting.HoursToAddBeforeForSafePartialCollection;
             var nextHoursToSeekForCollection = cdrSetting.HoursToAddAfterForSafePartialCollection;
-            this.DayAndHourWiseEvents = decodedCdrRows.SelectMany(row =>
+            this.DayAndHourWiseEvents = decodedEvents.SelectMany(row =>
             {
-                int timeFieldNo = getTimeFieldNo(cdrSetting, row);
-                DateTime dateTime = row[timeFieldNo].ConvertToDateTimeFromMySqlFormat();
+                DateTime dateTime= this.Decoder.getEventDatetime(new Dictionary<string,object>
+                {
+                    {"cdrSetting",cdrSetting },
+                    {"row",row }
+                });
                 int hour = dateTime.Hour;
                 DateTime hourOfTheDay = dateTime.AddHours(hour);
                 List<DateTime> pastHoursToScan = Enumerable.Range(1, pastHoursToSeekForCollection)
@@ -58,7 +61,7 @@ namespace TelcobrightMediation
                 });
             }).GroupBy(a => a.Date).ToDictionary(g => g.Key,
                     g => g.GroupBy(b => b.HourOftheDay).ToDictionary(g2 => g2.Key,
-                            g2 => new HourlyEventData<string[]>(g2.Select(i => i.Row).ToList(), g2.Key)));
+                            g2 => new HourlyEventData<T>(g2.Select(i => i.Row).ToList(), g2.Key)));
         }
 
         public void collectExistingEvents(IFileDecoder decoder)
@@ -73,21 +76,21 @@ namespace TelcobrightMediation
                 if (hour!=0 || min!=0 || sec !=0) throw new Exception("Hour, minute and second parts must be zero in date value for daywise collection. ");
 
                 string tableName = this.SourceTablePrefix + date.ToMySqlFormatDateOnlyWithoutTimeAndQuote();
-                Dictionary<DateTime, HourlyEventData<string[]>> hourlyDic = kv.Value;
-                List<HourlyEventData<string[]>> hourlyDatas = hourlyDic.Values.ToList();
+                Dictionary<DateTime, HourlyEventData<T>> hourlyDic = kv.Value;
+                List<HourlyEventData<T>> hourlyDatas = hourlyDic.Values.ToList();
                 List<string> sqls= new List<string>();
 
                 string sql = $@"{decoder.getSelectExpressionForUniqueEvent(this.CollectorInput)} from {tableName} where {Environment.NewLine}";
                 List<string> whereClausesByHour= hourlyDic.Select(kvHour =>
                 {
                     DateTime hourOfTheDay = kvHour.Key;
-                    HourlyEventData<string[]> hourlyData = kvHour.Value;
+                    HourlyEventData<T> hourlyData = kvHour.Value;
                     min = hourOfTheDay.Minute;
                     sec = hourOfTheDay.Second;
                     if (min != 0 || sec != 0)
                         throw new Exception(
                             "Minute and second parts must be zero in houroftheday for daywise collection. ");
-                    return this.Decoder.getWhereForHourWiseUniqueEventCollection(hourlyData);
+                    return this.Decoder.getWhereForHourWiseCollection(hourlyData);
                 }).ToList();
                 sql += string.Join(Environment.NewLine, whereClausesByHour);
 
@@ -165,23 +168,6 @@ namespace TelcobrightMediation
             return existingTables;
         }
 
-        private static int getTimeFieldNo(CdrSetting cdrSettings, string[] row)
-        {
-            int timeFieldNo = -1;
-            switch (cdrSettings.SummaryTimeField)
-            {
-                case SummaryTimeFieldEnum.StartTime:
-                    timeFieldNo = Fn.StartTime;
-                    break;
-                case SummaryTimeFieldEnum.AnswerTime:
-                    timeFieldNo = Fn.AnswerTime;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-            return timeFieldNo;
-        }
-       
-        
+      
     }
 }

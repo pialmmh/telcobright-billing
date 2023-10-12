@@ -47,10 +47,11 @@ namespace TelcobrightMediation
             NewCdrPreProcessor textCdrCollectionPreProcessor = null;
             if (CollectorInput.Ne.FilterDuplicateCdr == 1 && decodedCdrRows.Count > 0) //filter duplicates
             {
-                DayWiseEventCollector dayWiseEventCollector= new DayWiseEventCollector(this.CollectorInput,this.DbCmd,decoder,decodedCdrRows,"asdfsadf");
+                DayWiseEventCollector<string[]> dayWiseEventCollector= new DayWiseEventCollector<string[]>(this.CollectorInput,this.DbCmd,decoder,decodedCdrRows,
+                    decoder.PartialTablePrefix);
                 dayWiseEventCollector.createNonExistingTables();
                 dayWiseEventCollector.collectExistingEvents(decoder);
-                DuplicaterEventFilter duplicaterEventFilter= new DuplicaterEventFilter(dayWiseEventCollector);
+                DuplicaterEventFilter<string[]> duplicaterEventFilter= new DuplicaterEventFilter<string[]>(dayWiseEventCollector);
                 Dictionary<string, string[]> finalNonDuplicateEvents =
                     duplicaterEventFilter.filterDuplicateCdrs();
                 textCdrCollectionPreProcessor =

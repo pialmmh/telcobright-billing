@@ -13,25 +13,25 @@ using TelcobrightMediation.Config;
 
 namespace TelcobrightMediation.Cdr.Collection.PreProcessors
 {
-    public class DuplicaterEventFilter
+    public class DuplicaterEventFilter<T>
     {
-        private DayWiseEventCollector EventCollector { get; set; }
+        private DayWiseEventCollector<T> EventCollector { get; set; }
         public CdrCollectorInputData CollectorInput { get; set; }
         public DbCommand DbCmd { get; set; }
-        private Dictionary<string, string[]> FinalNonDuplicateEvents { get; set; } = new Dictionary<string, string[]>();
-        public DuplicaterEventFilter(DayWiseEventCollector eventCollector)
+        private Dictionary<string, T> FinalNonDuplicateEvents { get; set; } = new Dictionary<string, T>();
+        public DuplicaterEventFilter(DayWiseEventCollector<T> eventCollector)
         {
             this.EventCollector = eventCollector;
             this.CollectorInput = eventCollector.CollectorInput;
             this.DbCmd = eventCollector.DbCmd;
         }
-        public Dictionary<string, string[]> filterDuplicateCdrs()
+        public Dictionary<string, T> filterDuplicateCdrs()
         {
             Dictionary<string, string> alreadyConsideredEvents = this.EventCollector.ExistingEvents.ToDictionary(e => e);
             foreach (var kv in EventCollector.DecodedEventsAsTupDic)
             {
                 string tuple = kv.Key;
-                string[] decodedRow = kv.Value;
+                T decodedRow = kv.Value;
                 if (alreadyConsideredEvents.ContainsKey(tuple) == false)
                 {
                     FinalNonDuplicateEvents.Add(tuple, decodedRow);
@@ -45,9 +45,5 @@ namespace TelcobrightMediation.Cdr.Collection.PreProcessors
             }
             return FinalNonDuplicateEvents;
         }
-
-        
-
-        
     }
 }

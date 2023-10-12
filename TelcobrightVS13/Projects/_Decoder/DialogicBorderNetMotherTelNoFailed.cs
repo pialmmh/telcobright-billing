@@ -67,24 +67,24 @@ namespace Decoders
             throw new NotImplementedException();
         }
 
-        public string getWhereForHourWiseUniqueEventCollection(Object data)
+        public string getWhereForHourWiseCollection(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getSelectExpressionForPartialCollection(CdrCollectorInputData decoderInputData)
+        public string getSelectExpressionForPartialCollection(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getWhereForHourWisePartialCollection(CdrCollectorInputData decoderInputData, DateTime hourOfDay)
+        public DateTime getEventDatetime(Object data)
         {
-            DateTime startTime = hourOfDay;
-            DateTime searchStart = startTime.AddDays(-1);
-            DateTime searchEnd = startTime.AddDays(1).AddHours(23).AddMinutes(59).AddSeconds(59);
-            DateRange searchRange = new DateRange(searchStart,searchEnd);
-            return $" startTime>='{searchRange.StartDate.ToMySqlFormatWithoutQuote()}' " +
-                   $" and startTime<='{searchRange.EndDate.ToMySqlFormatWithoutQuote()}' ";
+            Dictionary<string, object> dataAsDic = (Dictionary<string, object>)data;
+            CdrSetting cdrSetting = (CdrSetting)dataAsDic["cdrSetting"];
+            string[] row = (string[])dataAsDic["row"];
+            int timeFieldNo = EventDateTimeHelper.getTimeFieldNo(cdrSetting, row);
+            DateTime dateTime = row[timeFieldNo].ConvertToDateTimeFromMySqlFormat();
+            return dateTime;
         }
 
        

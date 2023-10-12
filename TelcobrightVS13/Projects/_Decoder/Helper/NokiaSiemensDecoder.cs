@@ -50,17 +50,17 @@ namespace Decoders
             throw new NotImplementedException();
         }
 
-        public string getWhereForHourWiseUniqueEventCollection(object data)
+        public string getWhereForHourWiseCollection(object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getSelectExpressionForPartialCollection(CdrCollectorInputData decoderInputData)
+        public string getSelectExpressionForPartialCollection(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getWhereForHourWisePartialCollection(CdrCollectorInputData decoderInputData, DateTime hourOfDay)
+        public DateTime getEventDatetime(Object data)
         {
             throw new NotImplementedException();
         }
