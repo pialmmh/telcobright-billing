@@ -78,7 +78,7 @@ namespace Decoders
             
             int cdrRecordNumber = 0;
             int totalBytes = fileData.Count;
-            Dictionary<string, PocAndPtc> callRefWiseLegs = new Dictionary<string, PocAndPtc>();
+            //Dictionary<string, PocAndPtc> callRefWiseLegs = new Dictionary<string, PocAndPtc>();
 
 
             for (int currentPosition = 0; currentPosition < totalBytes - 1;)
@@ -99,43 +99,50 @@ namespace Decoders
 
                         
                         CdrType cdrType = (fileData[currentPosition] == 177) ? CdrType.Ptc : CdrType.Poc;
-                        string[] record = NokiaDecodeHelper.Decode(currentPosition, fileData, cdrType);
-                        string callRef = record[5];
-                        PocAndPtc pocAndPtc=null;
 
-                        if (callRefWiseLegs.TryGetValue(callRef, out pocAndPtc) == false)
+                        if (cdrType == CdrType.Ptc)
                         {
-                            pocAndPtc = new PocAndPtc();
-                            callRefWiseLegs.Add(callRef, pocAndPtc);
-                            if (cdrType == CdrType.Ptc) pocAndPtc.Ptc = record;
-                            else pocAndPtc.Poc = record;
+                            string[] record = NokiaDecodeHelper.Decode(currentPosition, fileData, cdrType);
+                            NokiaCdr finalRecord = new NokiaCdr(record);
+                            decodedRows.Add(finalRecord.Row);
                         }
-                        else
-                        {
-                            if (cdrType == CdrType.Ptc) callRefWiseLegs[callRef].Ptc = record;
-                            else callRefWiseLegs[callRef].Poc = record;
-                        }
+                        
+                        //string callRef = record[5];
+                        //PocAndPtc pocAndPtc=null;
+
+                        //if (callRefWiseLegs.TryGetValue(callRef, out pocAndPtc) == false)
+                        //{
+                        //    pocAndPtc = new PocAndPtc();
+                        //    callRefWiseLegs.Add(callRef, pocAndPtc);
+                        //    if (cdrType == CdrType.Ptc) pocAndPtc.Ptc = record;
+                        //    else pocAndPtc.Poc = record;
+                        //}
+                        //else
+                        //{
+                        //    if (cdrType == CdrType.Ptc) callRefWiseLegs[callRef].Ptc = record;
+                        //    else callRefWiseLegs[callRef].Poc = record;
+                        //}
 
 
 
-                        currentPosition += fileData[currentPosition];
+                        //currentPosition += fileData[currentPosition];
                     }
                     else currentPosition++;
                 }
             }
             
-            foreach (KeyValuePair<string, PocAndPtc> callRefWiseLeg in callRefWiseLegs)
-            {
+            //foreach (KeyValuePair<string, PocAndPtc> callRefWiseLeg in callRefWiseLegs)
+            //{
 
-                var ptc = callRefWiseLeg.Value.Ptc;
-                var poc = callRefWiseLeg.Value.Poc;
-                if (ptc!= null)
-                {
-                    NokiaCdr finalRecord = new NokiaCdr(ptc, poc);
-                    decodedRows.Add(finalRecord.Row);
-                }
+            //    var ptc = callRefWiseLeg.Value.Ptc;
+            //    var poc = callRefWiseLeg.Value.Poc;
+            //    if (ptc!= null)
+            //    {
+            //        NokiaCdr finalRecord = new NokiaCdr(ptc, poc);
+            //        decodedRows.Add(finalRecord.Row);
+            //    }
                
-            }
+            //}
 
 
             return decodedRows;
@@ -149,63 +156,61 @@ namespace Decoders
         Poc
     }
 
-    public class PocAndPtc
-    {
-        public string[] Poc { get; set; }
-        public string[] Ptc { get; set; }
-    }
+    //public class PocAndPtc
+    //{
+    //    public string[] Poc { get; set; }
+    //    public string[] Ptc { get; set; }
+    //}
 
     public class NokiaCdr
     {
         public string[] Row { get; } = new string[104];
-        private string[] Ptc { get; }
-        private string[] Poc { get; }
+       
 
-        public NokiaCdr(string[] ptc, string[] poc)
+        public NokiaCdr( string[] record)
         {
-            this.Ptc = ptc;
-            this.Poc = poc;
-
-           
-            Row[Fn.Sequencenumber] = ptc[2];
-            Row[Fn.OriginatingCallingNumber] = new string (ptc[11].ToCharArray().TakeWhile(c=>c!='F').ToArray());
-            Row[Fn.OriginatingCalledNumber] = new string(ptc[13].ToCharArray().TakeWhile(c => c != 'F').ToArray());
-            Row[Fn.TerminatingCallingNumber] = new string(ptc[11].ToCharArray().TakeWhile(c => c != 'F').ToArray());
-            Row[Fn.TerminatingCalledNumber] = new string(ptc[13].ToCharArray().TakeWhile(c => c != 'F').ToArray());
-           
             
-            Row[Fn.IncomingRoute] = poc!=null?poc[15].Trim().TrimStart('0'): ptc[50].Trim().TrimStart('0');
 
-            Row[Fn.OutgoingRoute] = ptc[14].Trim().TrimStart('0');
+           
+            this.Row[Fn.Sequencenumber] = record[2];
+            this.Row[Fn.OriginatingCallingNumber] = new string (record[11].ToCharArray().TakeWhile(c=>c!='F').ToArray());
+            this.Row[Fn.OriginatingCalledNumber] = new string(record[13].ToCharArray().TakeWhile(c => c != 'F').ToArray());
+            this.Row[Fn.TerminatingCallingNumber] = new string(record[11].ToCharArray().TakeWhile(c => c != 'F').ToArray());
+            this.Row[Fn.TerminatingCalledNumber] = new string(record[13].ToCharArray().TakeWhile(c => c != 'F').ToArray());
+
+
+            this.Row[Fn.IncomingRoute] = record[record.Length - 2].Trim().TrimStart('0');
+
+            this.Row[Fn.OutgoingRoute] = record[14].Trim().TrimStart('0');
             
             string[] formats = new string[] { "MddyyyyHHmmss", "MMddyyyyHHmmss" };
 
-            string startTimestr = ptc[17].Trim();
+            string startTimestr = record[17].Trim();
             DateTime startTime = startTimestr.ConvertToDateTimeFromCustomFormats(formats);
-            Row[Fn.StartTime] = startTime.ToMySqlFormatWithoutQuote();
+            this.Row[Fn.StartTime] = startTime.ToMySqlFormatWithoutQuote();
 
-            string ansTime = ptc[17].Trim();
+            string ansTime = record[17].Trim();
             DateTime startTime1 = ansTime.ConvertToDateTimeFromCustomFormats(formats);
-            Row[Fn.AnswerTime] = startTime1.ToMySqlFormatWithoutQuote();
+            this.Row[Fn.AnswerTime] = startTime1.ToMySqlFormatWithoutQuote();
 
 
-            string endTime = ptc[18].Trim();
+            string endTime = record[18].Trim();
             DateTime startTime2 = endTime.ConvertToDateTimeFromCustomFormats(formats);
-            Row[Fn.Endtime] = startTime2.ToMySqlFormatWithoutQuote();
+            this.Row[Fn.Endtime] = startTime2.ToMySqlFormatWithoutQuote();
 
 
-            string durationStr = ptc[51].Trim();
+            string durationStr = record[51].Trim();
             double duration = Convert.ToDouble(durationStr)/100;
-            var tmp = ptc[23].Trim().TrimStart('0')==""?"0": ptc[23].Trim().TrimStart('0');
+            var tmp = record[23].Trim().TrimStart('0')==""?"0": record[23].Trim().TrimStart('0');
             double duration2 = Convert.ToDouble(tmp);
 
-            Row[Fn.Duration4] = duration2.ToString();
+            this.Row[Fn.Duration4] = duration2.ToString();
 
-            Row[Fn.DurationSec] = duration.ToString();
+            this.Row[Fn.DurationSec] = duration.ToString();
 
 
-            Row[Fn.Validflag] = "1";
-            Row[Fn.ChargingStatus] = "1";
+            this.Row[Fn.Validflag] = "1";
+            this.Row[Fn.ChargingStatus] = "1";
         }
     }
     public class FieldInfo

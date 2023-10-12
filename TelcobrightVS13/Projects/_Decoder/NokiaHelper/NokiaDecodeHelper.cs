@@ -248,6 +248,51 @@ namespace Decoders
                     int lastPosition = ExchangeIdStartPosition(fileData, tempOfset);
                     recordBytes = fileData.GetRange((lastPosition - length) + totalSkip, length);
                 }
+                else if (f == "in_circuit_group")
+                {
+
+                    int cdrLength = cdrType == CdrType.Ptc ? 177 : 190;
+                    int temCurrentPosition = (currentPosition + cdrLength) - 4;
+                    int totalBytes = fileData.Count;
+                    bool validPoint = false;
+                    //if (currentPosition == 65190)
+                    while (temCurrentPosition < totalBytes)
+                    {
+                        validPoint = false;
+                        if (isPoc(temCurrentPosition, fileData))
+                        {
+                            validPoint = true;
+                        }
+                        else if (isPtc(temCurrentPosition, fileData))
+                        {
+                            validPoint = true;
+                        }
+                        else if (isHeader(temCurrentPosition, fileData))
+                        {
+                            validPoint = true;
+                        }
+                        else if (isTrailer(temCurrentPosition, fileData))
+                        {
+                            validPoint = true;
+                        }
+                        if (validPoint)
+                        {
+                            int startPos = temCurrentPosition - 6;
+                            recordBytes = fileData.GetRange(startPos, length);
+                            break;
+
+                        }
+                        else
+                        {
+                            temCurrentPosition++;
+                        }
+                    }
+                    if (!validPoint)
+                    {
+                        recordBytes = fileData.GetRange(offset + totalSkip, length);
+                    }
+
+                }
                 else if (f == "oaz_duration_ten_ms")
                 {
 
