@@ -180,7 +180,7 @@ namespace Decoders
             
             string[] formats = new string[] { "MddyyyyHHmmss", "MMddyyyyHHmmss" };
 
-            string startTimestr = ptc[16].Trim();
+            string startTimestr = ptc[17].Trim();
             DateTime startTime = startTimestr.ConvertToDateTimeFromCustomFormats(formats);
             Row[Fn.StartTime] = startTime.ToMySqlFormatWithoutQuote();
 
@@ -195,7 +195,7 @@ namespace Decoders
 
 
             string durationStr = ptc[51].Trim();
-            double duration = Convert.ToDouble(durationStr);
+            double duration = Convert.ToDouble(durationStr)/100;
             var tmp = ptc[23].Trim().TrimStart('0')==""?"0": ptc[23].Trim().TrimStart('0');
             double duration2 = Convert.ToDouble(tmp);
 

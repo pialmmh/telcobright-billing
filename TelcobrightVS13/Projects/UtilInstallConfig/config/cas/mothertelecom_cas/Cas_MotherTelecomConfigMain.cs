@@ -66,7 +66,7 @@ namespace InstallConfig
                 BatchSizeWhenPreparingLargeSqlJob = 100000,
                 SkipSettingsForSummaryOnly = new SkipSettingsForSummaryOnly
                 {
-                    SkipCdr = true,
+                    SkipCdr = false,
                     SkipChargeable = true,
                     SkipTransaction = true,
                     SkipHourlySummary = true,
@@ -74,7 +74,6 @@ namespace InstallConfig
                 useCasStyleProcessing = true
             };
 
-            //this.Tbc.CdrSetting =new CasCdrSettingHelper().getTemplateCdrSettings();
             this.PrepareDirectorySettings(this.Tbc);
 
 
