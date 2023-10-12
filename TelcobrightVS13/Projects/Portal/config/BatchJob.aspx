@@ -36,7 +36,7 @@
  
  
     <div style="clear:left"></div>
- <div id="ParamBorder" style="overflow:hidden;margin-top:4px;float:left;padding-top:0px;padding-left:0px;height:190px;display:block;border:2px ridge #E5E4E2;margin-bottom:0px;width:1400px;">
+ <div id="ParamBorder" style="overflow:hidden;margin-top:4px;float:left;padding-top:0px;padding-left:0px;height:190px;display:block;border:2px ridge #E5E4E2;margin-bottom:0px;width:2200px;">
     
     <%--<div style="margin-left:10px;float:left;left:0px;font-weight:bold;margin-top:2px;margin-right:20px;color:Black;clear:both;"> Rates</div>--%>
 
@@ -49,7 +49,7 @@
             <ContentTemplate>
             
 
-  <div id="PartnerFilter" style="height: 100px; margin-bottom: 5px; padding-top: 5px; width: 1285px; margin-top: 5px; margin-left: 0px; float: left; padding-left: 5px; background-color: #F7F6F3;">
+  <div id="PartnerFilter" style="height: 150px; margin-bottom: 5px; padding-top: 5px; width: 1800px; margin-top: 5px; margin-left: 0px; float: left; padding-left: 5px; background-color: #F7F6F3;">
 
 
         

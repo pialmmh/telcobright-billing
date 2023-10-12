@@ -266,17 +266,17 @@ namespace Decoders
             throw new NotImplementedException();
         }
 
-        public string getCreateTableSqlForUniqueEvent(CdrCollectorInputData decoderInputData)
+        public string getCreateTableSqlForUniqueEvent(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getSelectExpressionForUniqueEvent(CdrCollectorInputData decoderInputData)
+        public string getSelectExpressionForUniqueEvent(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getWhereForHourWiseUniqueEventCollection(CdrCollectorInputData decoderInputData, DateTime hourOfDay)
+        public string getWhereForHourWiseUniqueEventCollection(Object data)
         {
             throw new NotImplementedException();
         }

@@ -66,7 +66,7 @@ namespace Decoders
             throw new NotImplementedException();
         }
 
-        public string getCreateTableSqlForUniqueEvent(CdrCollectorInputData decoderInputData)
+        public string getCreateTableSqlForUniqueEvent(Object data)
         {
             return $@"CREATE table if not exists <{this.PartialTablePrefix}> (tuple varchar(200) COLLATE utf8mb4_bin NOT NULL,
 						  starttime datetime NOT NULL,
@@ -75,23 +75,27 @@ namespace Decoders
                           ENGINE= innodb DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin";
         }
 
-        public string getSelectExpressionForUniqueEvent(CdrCollectorInputData decoderInputData)
+        public string getSelectExpressionForUniqueEvent(Object data)
         {
             return @"select tuple ";
         }
 
-        public string getWhereForHourWiseUniqueEventCollection(CdrCollectorInputData decoderInputData, DateTime hourOfDay)
+        public string getWhereForHourWiseUniqueEventCollection(Object data)
         {
-            int hour = hourOfDay.Hour;
+            HourlyEventData<string[]> hourwiseData = (HourlyEventData<string[]>) data;
+            DateTime hourOfDay = hourwiseData.HourOfTheDay;
             int minute = hourOfDay.Minute;
             int second = hourOfDay.Second;
             if (minute != 0 || second != 0)
                 throw new Exception("Hour of the day must be 0-23 and can't contain minutes or seconds parts.");
-            return hourOfDay.GetSqlWhereExpressionForHourlyCollection("starttime");
+            string whereClauses = "";
+            string tuples = string.Join(",", hourwiseData.Events.Select(r => r[Fn.UniqueBillId]));
+            return $@"tuple in ({tuples}) and {hourOfDay.GetSqlWhereExpressionForHourlyCollection("starttime")}" ;
+             
         }
 
 
-        public string getSelectExpressionForPartialCollection(CdrCollectorInputData decoderInputData, List<DateTime> hoursInvolved)
+        public string getSelectExpressionForPartialCollection(Object data)
         {
             throw new NotImplementedException();
         }

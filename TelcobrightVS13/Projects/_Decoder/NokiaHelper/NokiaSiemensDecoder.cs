@@ -27,7 +27,6 @@ namespace Decoders
         public string partialTablePartitionColName { get; }
         protected CdrCollectorInputData Input { get; set; }
         
-
         public virtual List<string[]> DecodeFile(CdrCollectorInputData decoderInputData, out List<cdrinconsistent> inconsistentCdrs)
         {
             this.Input = decoderInputData;
@@ -41,17 +40,17 @@ namespace Decoders
             throw new NotImplementedException();
         }
 
-        public string getCreateTableSqlForUniqueEvent(CdrCollectorInputData decoderInputData)
+        public string getCreateTableSqlForUniqueEvent(object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getSelectExpressionForUniqueEvent(CdrCollectorInputData decoderInputData)
+        public string getSelectExpressionForUniqueEvent(object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getWhereForHourWiseUniqueEventCollection(CdrCollectorInputData decoderInputData, DateTime hourOfDay)
+        public string getWhereForHourWiseUniqueEventCollection(object data)
         {
             throw new NotImplementedException();
         }
