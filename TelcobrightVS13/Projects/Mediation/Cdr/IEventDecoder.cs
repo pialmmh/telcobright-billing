@@ -4,7 +4,7 @@ using MediationModel;
 using LibraryExtensions;
 namespace TelcobrightMediation
 {
-    public interface IFileDecoder
+    public interface IEventDecoder
     {
         string RuleName { get; }
         int Id { get; }
@@ -21,4 +21,5 @@ namespace TelcobrightMediation
         string getSelectExpressionForPartialCollection(Object data);
         DateTime getEventDatetime(Object data);
     }
+    
 }

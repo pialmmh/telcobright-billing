@@ -13,7 +13,7 @@ using LibraryExtensions;
 namespace Decoders
 {
 
-    [Export("Decoder", typeof(IFileDecoder))]
+    [Export("Decoder", typeof(AbstractCdrDecoder))]
     public class DialogicBorderNetMirNoFailedGzipMirNoFailed : DialogicBorderNetMirNoFailed
     {
         public override string ToString() => this.RuleName;

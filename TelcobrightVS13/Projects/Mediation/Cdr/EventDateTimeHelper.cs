@@ -7,7 +7,7 @@ using MediationModel;
 using TelcobrightMediation;
 using TelcobrightMediation.Config;
 
-namespace Decoders
+namespace TelcobrightMediation
 {
     public class EventDateTimeHelper
     {

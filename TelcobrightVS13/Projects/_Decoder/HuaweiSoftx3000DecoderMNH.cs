@@ -13,7 +13,7 @@ using TelcobrightMediation.Mediation.Cdr;
 namespace Decoders
 {
 
-    [Export("Decoder", typeof(IFileDecoder))]
+    [Export("Decoder", typeof(AbstractCdrDecoder))]
     public class HuaweiSoftx3000DecoderMNH : HuaweiSoftx3000Decoder
     {
         public override string ToString() => this.RuleName;
@@ -58,7 +58,7 @@ namespace Decoders
             return decodedRows;
         }
 
-        public string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row)
+        public override string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row)
         {
             throw new NotImplementedException();
         }

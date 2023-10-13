@@ -50,8 +50,8 @@ namespace TelcobrightInfra
             {
                 foreach (DateTime tableDate in dateTimes)
                 {
-                    string date = tableDate.ToString("yyyyMMdd");
-                    string tableName = tablePrefix + date;
+                    string date = tableDate.ToMySqlFormatDateOnlyWithoutTimeAndQuote();
+                    string tableName = tablePrefix + "_" + date;
                     sql = sql.Replace("<" + tablePrefix + ">", tableName);
                     if (partitionByHour)
                     {

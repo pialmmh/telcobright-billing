@@ -62,7 +62,6 @@
     <Compile Include="CataleyaCsvDecoderBantelTEST.cs" />
     <Compile Include="CataleyaCsvDecoderMnhNoFailed.cs" />
     <Compile Include="CataleyaCsvDecoderTeleexchangeNoFailed.cs" />
-    <Compile Include="Helper\EventDateTimeHelper.cs" />
     <Compile Include="Helper\NokiaDecodeHelper.cs" />
     <Compile Include="Helper\NokiaSiemensDecoder.cs" />
     <Compile Include="GenbandC3Gazi.cs" />

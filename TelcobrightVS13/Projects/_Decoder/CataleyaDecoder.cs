@@ -13,17 +13,17 @@ using LibraryExtensions;
 namespace Decoders
 {
 
-    [Export("Decoder", typeof(IFileDecoder))]
-    public class CataleyaDecoder : IFileDecoder
+    [Export("Decoder", typeof(AbstractCdrDecoder))]
+    public class CataleyaDecoder : AbstractCdrDecoder
     {
         public override string ToString() => this.RuleName;
-        public virtual string RuleName => GetType().Name;
-        public int Id => 21;
-        public string HelpText => "Decodes Cataleya CDR.";
-        public CompressionType CompressionType { get; set; }
-        public string PartialTablePrefix { get; }
-        public string PartialTableStorageEngine { get; }
-        public string partialTablePartitionColName { get; }
+        public override string RuleName => GetType().Name;
+        public override int Id => 21;
+        public override string HelpText => "Decodes Cataleya CDR.";
+        public override CompressionType CompressionType { get; set; }
+        public override string PartialTablePrefix { get; }
+        public override string PartialTableStorageEngine { get; }
+        public override string partialTablePartitionColName { get; }
         protected CdrCollectorInputData Input { get; set; }
         protected virtual List<string[]> GetTxtCdrs()
         {
@@ -31,7 +31,7 @@ namespace Decoders
         }
 
 
-        public List<string[]> DecodeFile(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs)
+        public override List<string[]> DecodeFile(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs)
         {
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
@@ -160,32 +160,32 @@ namespace Decoders
             return decodedRows;
         }
 
-        public string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row)
+        public override string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row)
         {
             throw new NotImplementedException();
         }
 
-        public DateTime getEventDatetime(Object data)
+        public override DateTime getEventDatetime(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getCreateTableSqlForUniqueEvent(Object data)
+        public override string getCreateTableSqlForUniqueEvent(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getSelectExpressionForUniqueEvent(Object data)
+        public override string getSelectExpressionForUniqueEvent(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getWhereForHourWiseCollection(Object data)
+        public override string getWhereForHourWiseCollection(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getSelectExpressionForPartialCollection(Object data)
+        public override string getSelectExpressionForPartialCollection(Object data)
         {
             throw new NotImplementedException();
         }

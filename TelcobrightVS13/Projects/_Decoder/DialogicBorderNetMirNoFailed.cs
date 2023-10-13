@@ -16,17 +16,17 @@ using TelcobrightMediation.Config;
 namespace Decoders
 {
 
-    [Export("Decoder", typeof(IFileDecoder))]
-    public class DialogicBorderNetMirNoFailed : IFileDecoder
+    [Export("Decoder", typeof(AbstractCdrDecoder))]
+    public class DialogicBorderNetMirNoFailed : AbstractCdrDecoder
     {
         public override string ToString() => this.RuleName;
-        public virtual string RuleName => GetType().Name;
-        public virtual int Id => 26;
-        public virtual string HelpText => "Decodes Dialogic BorderNet CSV CDR (Mir Telecom)";
-        public virtual CompressionType CompressionType { get; set; }
-        public string PartialTablePrefix { get; } = "zz_uniqueevent";
-        public string PartialTableStorageEngine { get; } = "innodb";
-        public string partialTablePartitionColName { get; } = "starttime";
+        public override string RuleName => GetType().Name;
+        public override int Id => 26;
+        public override string HelpText => "Decodes Dialogic BorderNet CSV CDR (Mir Telecom)";
+        public override CompressionType CompressionType { get; set; }
+        public override string PartialTablePrefix { get; } = "zz_uniqueevent";
+        public override string PartialTableStorageEngine { get; } = "innodb";
+        public override string partialTablePartitionColName { get; } = "starttime";
         protected virtual CdrCollectorInputData Input { get; set; }
                
         private static string parseStringToDateWithoutMilliSec(string timestamp)  //20181028051316400 yyyyMMddhhmmssfff
@@ -35,7 +35,7 @@ namespace Decoders
             return string.Join(" ", noMillis.Split('+').Select(s => s.Trim()));
         }
 
-        public virtual List<string[]> DecodeFile(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs)
+        public override List<string[]> DecodeFile(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs)
         {
             this.Input = input;
             string fileName = this.Input.FullPath;
@@ -43,7 +43,7 @@ namespace Decoders
             return decodeLines(input, out inconsistentCdrs, fileName, lines);
         }
 
-        public string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row)
+        public override string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row)
         {
             CdrSetting cdrSetting = decoderInputData.CdrSetting;
             int switchId = decoderInputData.Ne.idSwitch;
@@ -56,12 +56,12 @@ namespace Decoders
                 .Append(sessionId).ToString();
         }
 
-        public string getSelectExpressionForPartialCollection(Object data)
+        public override string getSelectExpressionForPartialCollection(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public DateTime getEventDatetime(Object data)
+        public override DateTime getEventDatetime(Object data)
         {
             Dictionary<string, object> dataAsDic = (Dictionary<string, object>) data;
             CdrSetting cdrSetting = (CdrSetting)dataAsDic["cdrSetting"];
@@ -71,7 +71,7 @@ namespace Decoders
             return dateTime;
         }
 
-        public string getCreateTableSqlForUniqueEvent(Object data)
+        public override string getCreateTableSqlForUniqueEvent(Object data)
         {
             return $@"CREATE table if not exists <{this.PartialTablePrefix}> (tuple varchar(200) COLLATE utf8mb4_bin NOT NULL,
 						  starttime datetime NOT NULL,
@@ -80,12 +80,12 @@ namespace Decoders
                           ENGINE= innodb DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin";
         }
 
-        public string getSelectExpressionForUniqueEvent(Object data)
+        public override string getSelectExpressionForUniqueEvent(Object data)
         {
             return @"select tuple ";
         }
 
-        public string getWhereForHourWiseCollection(Object data)
+        public override string getWhereForHourWiseCollection(Object data)
         {
             HourlyEventData<string[]> hourwiseData = (HourlyEventData<string[]>) data;
             DateTime hourOfDay = hourwiseData.HourOfTheDay;
@@ -129,12 +129,6 @@ namespace Decoders
             return startTime;
         }
 
-        private static string getTimeFieldName(CdrSetting cdrSettings)
-        {
-            return cdrSettings.SummaryTimeField == SummaryTimeFieldEnum.AnswerTime
-                ? "answertime"
-                : "starttime";
-        }
 
         protected static List<string[]> decodeLines(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs, string fileName, List<string[]> lines)
         {

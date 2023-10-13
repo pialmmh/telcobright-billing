@@ -18,7 +18,7 @@ namespace TelcobrightMediation
     {
         public CdrCollectorInputData CollectorInput { get;}
         public DbCommand DbCmd { get;}
-        public IFileDecoder Decoder { get; }
+        public AbstractCdrDecoder Decoder { get; }
         public List<T> DecodedEvents { get; }
         public Dictionary<string, T> DecodedEventsAsTupDic { get; } = new Dictionary<string, T>();
         public Dictionary<DateTime, Dictionary<DateTime, HourlyEventData<T>>> DayAndHourWiseEvents { get; }
@@ -26,7 +26,7 @@ namespace TelcobrightMediation
         public string SourceTablePrefix { get; set; }
 
         public DayWiseEventCollector(CdrCollectorInputData collectorInput, DbCommand dbCmd,
-            IFileDecoder decoder, List<T> decodedEvents, string sourceTablePrefix)
+            AbstractCdrDecoder decoder, List<T> decodedEvents, string sourceTablePrefix)
         {
             this.SourceTablePrefix = sourceTablePrefix;
             CollectorInput = collectorInput;
@@ -43,8 +43,9 @@ namespace TelcobrightMediation
                     {"cdrSetting",cdrSetting },
                     {"row",row }
                 });
+                DateTime date = dateTime.Date;
                 int hour = dateTime.Hour;
-                DateTime hourOfTheDay = dateTime.AddHours(hour);
+                DateTime hourOfTheDay = date.AddHours(hour);
                 List<DateTime> pastHoursToScan = Enumerable.Range(1, pastHoursToSeekForCollection)
                     .Select(num => hourOfTheDay.AddHours((-1) * num)).ToList();
                 List<DateTime> nextHoursToScan = Enumerable.Range(1, nextHoursToSeekForCollection)
@@ -64,7 +65,7 @@ namespace TelcobrightMediation
                             g2 => new HourlyEventData<T>(g2.Select(i => i.Row).ToList(), g2.Key)));
         }
 
-        public void collectExistingEvents(IFileDecoder decoder)
+        public void collectExistingEvents(AbstractCdrDecoder decoder)
         {
             //List<DateTime> daysInvolved = this.DayWiseHourlyEvents.Keys.ToList();
             foreach (var kv in this.DayAndHourWiseEvents)
@@ -146,7 +147,7 @@ namespace TelcobrightMediation
         {
             string databaseName = this.CollectorInput.CdrJobInputData.Tbc.DatabaseSetting.DatabaseName;
             this.DbCmd.CommandText = $"show tables from {databaseName} where tables_in_{databaseName} in (" +
-                                     $" {string.Join(",", requiredTableNamesPerDay.Select(t => $"'{t}'"))};";
+                                     $" {string.Join(",", requiredTableNamesPerDay.Keys.Select(t => $"'{t}'"))});";
             this.DbCmd.CommandType = CommandType.Text;
             DbDataReader reader1 = this.DbCmd.ExecuteReader();
             List<string> existingTables = new List<string>();

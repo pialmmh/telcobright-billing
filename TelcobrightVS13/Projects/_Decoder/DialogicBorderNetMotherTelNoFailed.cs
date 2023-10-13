@@ -16,17 +16,17 @@ using TelcobrightMediation.Config;
 namespace Decoders
 {
 
-    [Export("Decoder", typeof(IFileDecoder))]
-    public class DialogicBorderNetMotherTelNoFailed : IFileDecoder
+    [Export("Decoder", typeof(AbstractCdrDecoder))]
+    public class DialogicBorderNetMotherTelNoFailed : AbstractCdrDecoder
     {
         public override string ToString() => this.RuleName;
-        public virtual string RuleName => GetType().Name;
-        public virtual int Id => 33;
-        public virtual string HelpText => "Decodes Dialogic BorderNet CSV CDR (Mother Telecom)";
-        public virtual CompressionType CompressionType { get; set; }
-        public string PartialTablePrefix { get; }
-        public string PartialTableStorageEngine { get; }
-        public string partialTablePartitionColName { get; }
+        public override string RuleName => GetType().Name;
+        public override int Id => 33;
+        public override string HelpText => "Decodes Dialogic BorderNet CSV CDR (Mother Telecom)";
+        public override CompressionType CompressionType { get; set; }
+        public override string PartialTablePrefix { get; }
+        public override string PartialTableStorageEngine { get; }
+        public override string partialTablePartitionColName { get; }
         protected virtual CdrCollectorInputData Input { get; set; }
                
         private static string parseStringToDateWithoutMilliSec(string timestamp)  //20181028051316400 yyyyMMddhhmmssfff
@@ -35,7 +35,7 @@ namespace Decoders
             return string.Join(" ", noMillis.Split('+').Select(s => s.Trim()));
         }
 
-        public virtual List<string[]> DecodeFile(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs)
+        public override List<string[]> DecodeFile(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs)
         {
             this.Input = input;
             string fileName = this.Input.FullPath;
@@ -44,7 +44,7 @@ namespace Decoders
 
         }
 
-        public string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row)
+        public override string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row)
         {
             CdrSetting cdrSetting = decoderInputData.CdrSetting;
             int switchId = decoderInputData.Ne.idSwitch;
@@ -57,27 +57,27 @@ namespace Decoders
                 .Append(sessionId).ToString();
         }
 
-        public string getCreateTableSqlForUniqueEvent(Object data)
+        public override string getCreateTableSqlForUniqueEvent(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getSelectExpressionForUniqueEvent(Object data)
+        public override string getSelectExpressionForUniqueEvent(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getWhereForHourWiseCollection(Object data)
+        public override string getWhereForHourWiseCollection(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getSelectExpressionForPartialCollection(Object data)
+        public override string getSelectExpressionForPartialCollection(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public DateTime getEventDatetime(Object data)
+        public override DateTime getEventDatetime(Object data)
         {
             Dictionary<string, object> dataAsDic = (Dictionary<string, object>)data;
             CdrSetting cdrSetting = (CdrSetting)dataAsDic["cdrSetting"];

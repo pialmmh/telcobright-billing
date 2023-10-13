@@ -122,6 +122,7 @@
     <Compile Include="Accounting\BalanceAdjustmentPostProcessingData.cs" />
     <Compile Include="Accounting\BillingPeriodConstants.cs" />
     <Compile Include="Accounting\BlockAccountAction.cs" />
+    <Compile Include="Cdr\AbstractCdrDecoder.cs" />
     <Compile Include="Cdr\AnsPrefixFinder.cs" />
     <Compile Include="Cdr\CdrJobCommiter.cs" />
     <Compile Include="Accounting\CdrPostingAccountingFinder.cs" />
@@ -162,7 +163,8 @@
     <Compile Include="Cdr\Collection\PreProcessors\AbstractCdrReProcessingPreProcessor.cs" />
     <Compile Include="Cdr\Collection\PreProcessors\DuplicaterEventFilter.cs" />
     <Compile Include="Cdr\Collection\RowIdsCollectionForSingleDay.cs" />
-    <Compile Include="Cdr\IFileDecoder.cs" />
+    <Compile Include="Cdr\EventDateTimeHelper.cs" />
+    <Compile Include="Cdr\IEventDecoder.cs" />
     <Compile Include="Cdr\RateCacheCleaner.cs" />
     <Compile Include="Config\AbstractConfigGenerator.cs" />
     <Compile Include="Config\AutomationSetting.cs" />

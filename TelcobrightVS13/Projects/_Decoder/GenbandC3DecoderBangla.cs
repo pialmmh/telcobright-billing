@@ -12,17 +12,17 @@ using LibraryExtensions;
 
 namespace Decoders
 {
-    [Export("Decoder", typeof(IFileDecoder))]
-    public class GenbandC3DecoderBangla : IFileDecoder
+    [Export("Decoder", typeof(AbstractCdrDecoder))]
+    public class GenbandC3DecoderBangla : AbstractCdrDecoder
     {
         public override string ToString() => this.RuleName;
-        public virtual string RuleName => GetType().Name;
-        public int Id => 49;
-        public string HelpText => "Decodes GenbandC3 (Bangla Version) CSV CDR.";
-        public CompressionType CompressionType { get; set; }
-        public string PartialTablePrefix { get; }
-        public string PartialTableStorageEngine { get; }
-        public string partialTablePartitionColName { get; }
+        public override string RuleName => GetType().Name;
+        public override int Id => 49;
+        public override string HelpText => "Decodes GenbandC3 (Bangla Version) CSV CDR.";
+        public override CompressionType CompressionType { get; set; }
+        public override string PartialTablePrefix { get; }
+        public override string PartialTableStorageEngine { get; }
+        public override string partialTablePartitionColName { get; }
         protected CdrCollectorInputData Input { get; set; }      
 
         private static DateTime parseStringToDate(string timestamp)  //20181028051316400 yyyyMMddhhmmssfff
@@ -31,7 +31,7 @@ namespace Decoders
             return dateTime;
         }
 
-        public virtual List<string[]> DecodeFile(CdrCollectorInputData decoderInputData, out List<cdrinconsistent> inconsistentCdrs)
+        public override List<string[]> DecodeFile(CdrCollectorInputData decoderInputData, out List<cdrinconsistent> inconsistentCdrs)
         {
             this.Input = decoderInputData;
             string fileName = this.Input.FullPath;
@@ -39,32 +39,32 @@ namespace Decoders
             return decodeLine(decoderInputData, out inconsistentCdrs, fileName, lines);
         }
 
-        public string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row)
+        public override string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row)
         {
             throw new NotImplementedException();
         }
 
-        public string getCreateTableSqlForUniqueEvent(Object data)
+        public override string getCreateTableSqlForUniqueEvent(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getSelectExpressionForUniqueEvent(Object data)
+        public override string getSelectExpressionForUniqueEvent(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getWhereForHourWiseCollection(Object data)
+        public override string getWhereForHourWiseCollection(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getSelectExpressionForPartialCollection(Object data)
+        public override string getSelectExpressionForPartialCollection(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public DateTime getEventDatetime(Object data)
+        public override DateTime getEventDatetime(Object data)
         {
             throw new NotImplementedException();
         }

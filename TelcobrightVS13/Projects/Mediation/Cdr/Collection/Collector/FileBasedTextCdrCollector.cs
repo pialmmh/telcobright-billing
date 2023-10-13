@@ -32,7 +32,7 @@ namespace TelcobrightMediation
         }
         public object Collect()
         {
-            IFileDecoder decoder = null;
+            AbstractCdrDecoder decoder = null;
             this.CollectorInput.MefDecodersData.DicExtensions.TryGetValue(this.CollectorInput.Ne.idcdrformat,
                 out decoder);
             if (decoder == null)

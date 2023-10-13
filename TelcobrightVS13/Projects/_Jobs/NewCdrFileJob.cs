@@ -23,7 +23,7 @@ namespace Jobs
     [Export("Job", typeof(ITelcobrightJob))]
     public class NewCdrFileJob : ITelcobrightJob
     {
-        public virtual string RuleName => "JobNewCdrFile";
+        public string RuleName => "JobNewCdrFile";
         public virtual string HelpText => "New Cdr Job, processes a new CDR file";
         public override string ToString() => this.RuleName;
         public virtual int Id => 1;

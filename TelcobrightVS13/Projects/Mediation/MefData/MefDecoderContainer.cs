@@ -7,7 +7,7 @@ namespace TelcobrightMediation
     public class MefDecoderContainer
     {
         public DecoderComposer CmpDecoder = new DecoderComposer();
-        public IDictionary<int, IFileDecoder> DicExtensions = new Dictionary<int, IFileDecoder>();
+        public IDictionary<int, AbstractCdrDecoder> DicExtensions = new Dictionary<int, AbstractCdrDecoder>();
         public Dictionary<int, List<cdrfieldmappingbyswitchtype>> DicFieldMapping = new Dictionary<int, List<cdrfieldmappingbyswitchtype>>();
         public Dictionary<int, enumcdrformat> DicCdrFormatsByid = new Dictionary<int, enumcdrformat>();
         public PartnerEntities Context { get; }

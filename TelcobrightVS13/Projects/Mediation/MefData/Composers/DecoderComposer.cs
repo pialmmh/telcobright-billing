@@ -6,8 +6,8 @@ namespace TelcobrightMediation
 {
     public class DecoderComposer
     {
-        [ImportMany("Decoder", typeof(IFileDecoder))]
-        public IEnumerable<IFileDecoder> Decoders { get; set; }
+        [ImportMany("Decoder", typeof(AbstractCdrDecoder))]
+        public IEnumerable<AbstractCdrDecoder> Decoders { get; set; }
 
         public void Compose()
         {
