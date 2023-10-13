@@ -43,92 +43,12 @@ namespace Decoders
             return decodeLines(input, out inconsistentCdrs, fileName, lines);
         }
 
-        public override string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row)
-        {
-            CdrSetting cdrSetting = decoderInputData.CdrSetting;
-            int switchId = decoderInputData.Ne.idSwitch;
-            string startTimeFieldName = "";
-            DateTime startTime = getStartTime(cdrSetting, row,out startTimeFieldName);
-            string sessionId = getSessionId(row);
-            string separator = "/";
-            return new StringBuilder(switchId.ToString()).Append(separator)
-                .Append(startTime.ToMySqlFormatWithoutQuote()).Append(separator)
-                .Append(sessionId).ToString();
-        }
+       
 
         public override string getSelectExpressionForPartialCollection(Object data)
         {
             throw new NotImplementedException();
         }
-
-        public override DateTime getEventDatetime(Object data)
-        {
-            Dictionary<string, object> dataAsDic = (Dictionary<string, object>) data;
-            CdrSetting cdrSetting = (CdrSetting)dataAsDic["cdrSetting"];
-            string[] row = (string[]) dataAsDic["row"];
-            int timeFieldNo = EventDateTimeHelper.getTimeFieldNo(cdrSetting, row);
-            DateTime dateTime = row[timeFieldNo].ConvertToDateTimeFromMySqlFormat();
-            return dateTime;
-        }
-
-        public override string getCreateTableSqlForUniqueEvent(Object data)
-        {
-            return $@"CREATE table if not exists <{this.PartialTablePrefix}> (tuple varchar(200) COLLATE utf8mb4_bin NOT NULL,
-						  starttime datetime NOT NULL,
-						  description varchar(50) COLLATE utf8mb4_bin DEFAULT NULL,
-						  UNIQUE KEY ind_tuple (tuple)) 
-                          ENGINE= innodb DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin";
-        }
-
-        public override string getSelectExpressionForUniqueEvent(Object data)
-        {
-            return @"select tuple ";
-        }
-
-        public override string getWhereForHourWiseCollection(Object data)
-        {
-            HourlyEventData<string[]> hourwiseData = (HourlyEventData<string[]>) data;
-            DateTime hourOfDay = hourwiseData.HourOfTheDay;
-            int minute = hourOfDay.Minute;
-            int second = hourOfDay.Second;
-            if (minute != 0 || second != 0)
-                throw new Exception("Hour of the day must be 0-23 and can't contain minutes or seconds parts.");
-            string whereClauses = "";
-            string tuples = string.Join(",", hourwiseData.Events.Select(r => r[Fn.UniqueBillId]));
-            return $@"tuple in ({tuples}) and {hourOfDay.GetSqlWhereExpressionForHourlyCollection("starttime")}" ;
-             
-        }
-
-        private static string getSessionId(string[] row)
-        {
-            string sessionId = row[Fn.UniqueBillId];
-            long sessionIdNum = 0;
-            if (sessionId.IsNullOrEmptyOrWhiteSpace() || Int64.TryParse(sessionId, out sessionIdNum) == false)
-            {
-                throw new Exception("UniquebillId is not in correct format.");
-            }
-            return sessionId;
-        }
-
-        private static DateTime getStartTime(CdrSetting cdrSettings, string[] row,out string timeFieldName)
-        {
-            DateTime startTime;
-            switch (cdrSettings.SummaryTimeField)
-            {
-                case SummaryTimeFieldEnum.StartTime:
-                    startTime = row[Fn.StartTime].ConvertToDateTimeFromMySqlFormat();
-                    timeFieldName = "starttime";
-                    break;
-                case SummaryTimeFieldEnum.AnswerTime:
-                    startTime = row[Fn.AnswerTime].ConvertToDateTimeFromMySqlFormat();
-                    timeFieldName = "answertime";
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-            return startTime;
-        }
-
 
         protected static List<string[]> decodeLines(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs, string fileName, List<string[]> lines)
         {

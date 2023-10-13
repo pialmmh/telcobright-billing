@@ -44,87 +44,11 @@ namespace Decoders
 
         }
 
-        public override string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row)
-        {
-            CdrSetting cdrSetting = decoderInputData.CdrSetting;
-            int switchId = decoderInputData.Ne.idSwitch;
-            string startTimeFieldName = "";
-            DateTime startTime = getStartTime(cdrSetting, row,out startTimeFieldName);
-            string sessionId = getSessionId(row);
-            string separator = "/";
-            return new StringBuilder(switchId.ToString()).Append(separator)
-                .Append(startTime.ToMySqlFormatWithoutQuote()).Append(separator)
-                .Append(sessionId).ToString();
-        }
-
-        public override string getCreateTableSqlForUniqueEvent(Object data)
+        public override string getSelectExpressionForPartialCollection(object data)
         {
             throw new NotImplementedException();
         }
 
-        public override string getSelectExpressionForUniqueEvent(Object data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string getWhereForHourWiseCollection(Object data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string getSelectExpressionForPartialCollection(Object data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override DateTime getEventDatetime(Object data)
-        {
-            Dictionary<string, object> dataAsDic = (Dictionary<string, object>)data;
-            CdrSetting cdrSetting = (CdrSetting)dataAsDic["cdrSetting"];
-            string[] row = (string[])dataAsDic["row"];
-            int timeFieldNo = EventDateTimeHelper.getTimeFieldNo(cdrSetting, row);
-            DateTime dateTime = row[timeFieldNo].ConvertToDateTimeFromMySqlFormat();
-            return dateTime;
-        }
-
-        
-
-        private static string getSessionId(string[] row)
-        {
-            string sessionId = row[Fn.UniqueBillId];
-            long sessionIdNum = 0;
-            if (sessionId.IsNullOrEmptyOrWhiteSpace() || Int64.TryParse(sessionId, out sessionIdNum) == false)
-            {
-                throw new Exception("UniquebillId is not in correct format.");
-            }
-            return sessionId;
-        }
-
-        private static DateTime getStartTime(CdrSetting cdrSettings, string[] row,out string timeFieldName)
-        {
-            DateTime startTime;
-            switch (cdrSettings.SummaryTimeField)
-            {
-                case SummaryTimeFieldEnum.StartTime:
-                    startTime = row[Fn.StartTime].ConvertToDateTimeFromMySqlFormat();
-                    timeFieldName = "starttime";
-                    break;
-                case SummaryTimeFieldEnum.AnswerTime:
-                    startTime = row[Fn.AnswerTime].ConvertToDateTimeFromMySqlFormat();
-                    timeFieldName = "answertime";
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-            return startTime;
-        }
-
-        private static string getTimeFieldName(CdrSetting cdrSettings)
-        {
-            return cdrSettings.SummaryTimeField == SummaryTimeFieldEnum.AnswerTime
-                ? "answertime"
-                : "starttime";
-        }
 
         protected static List<string[]> decodeLines(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs, string fileName, List<string[]> lines)
         {

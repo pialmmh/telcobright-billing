@@ -76,7 +76,7 @@ namespace TelcobrightMediation
                 int sec = date.Second;
                 if (hour!=0 || min!=0 || sec !=0) throw new Exception("Hour, minute and second parts must be zero in date value for daywise collection. ");
 
-                string tableName = this.SourceTablePrefix + date.ToMySqlFormatDateOnlyWithoutTimeAndQuote();
+                string tableName = this.SourceTablePrefix + date.ToMySqlFormatDateOnlyWithoutTimeAndQuote().Replace("-", "");
                 Dictionary<DateTime, HourlyEventData<T>> hourlyDic = kv.Value;
                 List<HourlyEventData<T>> hourlyDatas = hourlyDic.Values.ToList();
                 List<string> sqls= new List<string>();
@@ -118,7 +118,7 @@ namespace TelcobrightMediation
                 .Select(day => new
                 {
                     Day = day,
-                    TableName = this.SourceTablePrefix + "_" + day.ToMySqlFormatDateOnlyWithoutTimeAndQuote()
+                    TableName = this.SourceTablePrefix + "_" + day.ToMySqlFormatDateOnlyWithoutTimeAndQuote().Replace("-","")
                 }).ToDictionary(a => a.TableName, a => a.Day);
             List<string> existingTables = getExistingTables(requiredTableNamesPerDay);
             List<string> newTablesToBeCreated = requiredTableNamesPerDay.Keys.Where(t => existingTables.Contains(t) == false)

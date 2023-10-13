@@ -19,7 +19,6 @@ namespace TelcobrightMediation
         public abstract string PartialTableStorageEngine { get; }
         public abstract string partialTablePartitionColName { get; }
         public abstract List<string[]> DecodeFile(CdrCollectorInputData decoderInputData, out List<cdrinconsistent> inconsistentCdrs);
-        public abstract string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row);
 
         public virtual string getCreateTableSqlForUniqueEvent(Object data)
         {
@@ -59,6 +58,33 @@ namespace TelcobrightMediation
             int timeFieldNo = EventDateTimeHelper.getTimeFieldNo(cdrSetting, row);
             DateTime dateTime = row[timeFieldNo].ConvertToDateTimeFromMySqlFormat();
             return dateTime;
+        }
+
+        public virtual string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row)
+        {
+            CdrSetting cdrSetting = decoderInputData.CdrSetting;
+            int switchId = decoderInputData.Ne.idSwitch;
+            DateTime startTime = getEventDatetime(new Dictionary<string, object>
+            {
+                {"cdrSetting",cdrSetting },
+                {"row",row }
+            });
+            string sessionId = getSessionId(row);
+            string separator = "/";
+            return new StringBuilder(switchId.ToString()).Append(separator)
+                .Append(startTime.ToMySqlFormatWithoutQuote()).Append(separator)
+                .Append(sessionId).ToString();
+        }
+       
+        private static string getSessionId(string[] row)
+        {
+            string sessionId = row[Fn.UniqueBillId];
+            long sessionIdNum = 0;
+            if (sessionId.IsNullOrEmptyOrWhiteSpace() || Int64.TryParse(sessionId, out sessionIdNum) == false)
+            {
+                throw new Exception("UniquebillId is not in correct format.");
+            }
+            return sessionId;
         }
     }
 }
