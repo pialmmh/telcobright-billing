@@ -14,7 +14,7 @@ namespace TelcobrightMediation
         string PartialTableStorageEngine { get; }
         string partialTablePartitionColName { get; }
         List<string[]> DecodeFile(CdrCollectorInputData decoderInputData,out List<cdrinconsistent> inconsistentCdrs);
-        string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row);
+        string getTupleExpression(Object data);
         string getCreateTableSqlForUniqueEvent(Object data);
         string getSelectExpressionForUniqueEvent(Object data);
         string getWhereForHourWiseCollection(Object data);

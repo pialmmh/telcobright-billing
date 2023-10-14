@@ -619,7 +619,7 @@ namespace TelcobrightMediation
             foreach (var kvDateWise in dateWiseTupleVsTextCdrs)
             {
                 DateTime date = kvDateWise.Key;
-                string tableName = $"uniqueevent{date:yyyyMMdd}";
+                string tableName = $"zz_uniqueevent_{date:yyyyMMdd}";
                 List<KeyValuePair<string, string[]>> tupleVsCdrRow = kvDateWise.Value;
 
                 CollectionSegmenter<KeyValuePair<string, string[]>> collectionSegmenter =

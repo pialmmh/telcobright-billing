@@ -24,8 +24,7 @@ namespace TelcobrightMediation
         {
             return $@"CREATE table if not exists <{this.PartialTablePrefix}> (tuple varchar(200) COLLATE utf8mb4_bin NOT NULL,
 						  starttime datetime NOT NULL,
-						  description varchar(50) COLLATE utf8mb4_bin DEFAULT NULL,
-						  UNIQUE KEY ind_tuple (tuple)) 
+						  description varchar(50) COLLATE utf8mb4_bin DEFAULT NULL) 
                           ENGINE= innodb DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ";
         }
 
@@ -36,17 +35,47 @@ namespace TelcobrightMediation
 
         public virtual string getWhereForHourWiseCollection(Object data)
         {
-            HourlyEventData<string[]> hourwiseData = (HourlyEventData<string[]>)data;
+            Dictionary<string, object> dataAsDic = (Dictionary<string, object>) data;
+            HourlyEventData<string[]> hourwiseData = (HourlyEventData<string[]>) dataAsDic["hourWiseData"];
+            CdrCollectorInputData collectorInput = (CdrCollectorInputData) dataAsDic["collectorInput"];
             DateTime hourOfDay = hourwiseData.HourOfTheDay;
             int minute = hourOfDay.Minute;
             int second = hourOfDay.Second;
             if (minute != 0 || second != 0)
                 throw new Exception("Hour of the day must be 0-23 and can't contain minutes or seconds parts.");
-            string whereClauses = "";
-            string tuples = string.Join(",", hourwiseData.Events.Select(r => r[Fn.UniqueBillId]));
-            return $@"tuple in ({tuples}) and {hourOfDay.GetSqlWhereExpressionForHourlyCollection("starttime")}";
-        }
 
+            string tuples = string.Join(",", hourwiseData.Events.Select(r =>
+            {
+                Dictionary<string, object> tupGenInput = new Dictionary<string, object>()
+                {
+                    {"collectorInput", collectorInput},
+                    {"row",r}
+                };
+                string tupleExpression = getTupleExpression(tupGenInput);
+                return new StringBuilder("'")
+                    .Append(tupleExpression)
+                    .Append("'");
+            }));
+            return $@"(tuple in ({tuples}) and {hourOfDay.GetSqlWhereExpressionForHourlyCollection("starttime")}) ";
+        }
+        public virtual string getTupleExpression(Object data)
+        {
+            Dictionary<string, object> dataAsDic = (Dictionary<string, object>)data;
+            CdrCollectorInputData collectorInput = (CdrCollectorInputData)dataAsDic["collectorInput"];
+            CdrSetting cdrSetting = collectorInput.CdrSetting;
+            string[] row = (string[])dataAsDic["row"];
+            int switchId = collectorInput.Ne.idSwitch;
+            DateTime startTime = getEventDatetime(new Dictionary<string, object>
+            {
+                {"cdrSetting",cdrSetting },
+                {"row",row }
+            });
+            string sessionId = getSessionId(row);
+            string separator = "/";
+            return new StringBuilder(switchId.ToString()).Append(separator)
+                .Append(startTime.ToMySqlFormatWithoutQuote()).Append(separator)
+                .Append(sessionId).ToString();
+        }
 
         public abstract string getSelectExpressionForPartialCollection(Object data);
 
@@ -60,21 +89,7 @@ namespace TelcobrightMediation
             return dateTime;
         }
 
-        public virtual string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row)
-        {
-            CdrSetting cdrSetting = decoderInputData.CdrSetting;
-            int switchId = decoderInputData.Ne.idSwitch;
-            DateTime startTime = getEventDatetime(new Dictionary<string, object>
-            {
-                {"cdrSetting",cdrSetting },
-                {"row",row }
-            });
-            string sessionId = getSessionId(row);
-            string separator = "/";
-            return new StringBuilder(switchId.ToString()).Append(separator)
-                .Append(startTime.ToMySqlFormatWithoutQuote()).Append(separator)
-                .Append(sessionId).ToString();
-        }
+       
        
         private static string getSessionId(string[] row)
         {

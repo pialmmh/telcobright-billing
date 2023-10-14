@@ -45,7 +45,7 @@ namespace Decoders
             return decodeLines(Input, out inconsistentCdrs, fileName, lines);
         }
 
-        public override string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row)
+        public override string getTupleExpression(Object data)
         {
             throw new NotImplementedException();
         }

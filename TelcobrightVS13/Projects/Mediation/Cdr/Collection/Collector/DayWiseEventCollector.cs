@@ -36,6 +36,19 @@ namespace TelcobrightMediation
             CdrSetting cdrSetting = this.CollectorInput.CdrSetting;
             var pastHoursToSeekForCollection = cdrSetting.HoursToAddBeforeForSafePartialCollection;
             var nextHoursToSeekForCollection = cdrSetting.HoursToAddAfterForSafePartialCollection;
+            this.DecodedEventsAsTupDic = decodedEvents.Select(e =>
+            {
+                var data = new Dictionary<string, object>
+                {
+                    {"collectorInput", this.CollectorInput},
+                    {"row", e}
+                };
+                return new
+                {
+                    Tuple = decoder.getTupleExpression(data),
+                    Event = e
+                };
+            }).ToDictionary(a => a.Tuple, a=>a.Event);
             this.DayAndHourWiseEvents = decodedEvents.SelectMany(row =>
             {
                 DateTime dateTime= this.Decoder.getEventDatetime(new Dictionary<string,object>
@@ -54,6 +67,10 @@ namespace TelcobrightMediation
                 hoursInvolved.Add(hourOfTheDay);
                 hoursInvolved.AddRange(nextHoursToScan);
 
+                int min = date.Minute;
+                int sec = date.Second;
+                if (min != 0 || sec != 0) throw new Exception("Hour, minute and second parts must be zero in date value for daywise collection. ");
+
                 return hoursInvolved.Select(h => new //item
                 {
                     Date = h.Date,
@@ -71,12 +88,8 @@ namespace TelcobrightMediation
             foreach (var kv in this.DayAndHourWiseEvents)
             {
                 DateTime date = kv.Key;
-                int hour = date.Hour;
-                int min = date.Minute;
-                int sec = date.Second;
-                if (hour!=0 || min!=0 || sec !=0) throw new Exception("Hour, minute and second parts must be zero in date value for daywise collection. ");
 
-                string tableName = this.SourceTablePrefix + date.ToMySqlFormatDateOnlyWithoutTimeAndQuote().Replace("-", "");
+                string tableName = this.SourceTablePrefix + "_" + date.ToMySqlFormatDateOnlyWithoutTimeAndQuote().Replace("-", "");
                 Dictionary<DateTime, HourlyEventData<T>> hourlyDic = kv.Value;
                 List<HourlyEventData<T>> hourlyDatas = hourlyDic.Values.ToList();
                 List<string> sqls= new List<string>();
@@ -85,15 +98,15 @@ namespace TelcobrightMediation
                 List<string> whereClausesByHour= hourlyDic.Select(kvHour =>
                 {
                     DateTime hourOfTheDay = kvHour.Key;
-                    HourlyEventData<T> hourlyData = kvHour.Value;
-                    min = hourOfTheDay.Minute;
-                    sec = hourOfTheDay.Second;
-                    if (min != 0 || sec != 0)
-                        throw new Exception(
-                            "Minute and second parts must be zero in houroftheday for daywise collection. ");
-                    return this.Decoder.getWhereForHourWiseCollection(hourlyData);
+                    HourlyEventData<T> hourWiseData = kvHour.Value;
+                    var data = new Dictionary<string, object>
+                    {
+                        {"collectorInput", this.CollectorInput},
+                        {"hourWiseData", hourWiseData}
+                    };
+                    return this.Decoder.getWhereForHourWiseCollection(data);
                 }).ToList();
-                sql += string.Join(Environment.NewLine, whereClausesByHour);
+                sql += string.Join(" or " +Environment.NewLine, whereClausesByHour);
 
                 List<string> existingEvents = new List<string>();
                 if (sql != "")

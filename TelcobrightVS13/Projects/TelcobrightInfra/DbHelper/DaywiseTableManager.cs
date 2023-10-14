@@ -50,12 +50,12 @@ namespace TelcobrightInfra
             {
                 foreach (DateTime tableDate in dateTimes)
                 {
-                    string date = tableDate.ToMySqlFormatDateOnlyWithoutTimeAndQuote();
+                    string date = tableDate.ToMySqlFormatDateOnlyWithoutTimeAndQuote().Replace("-","");
                     string tableName = tablePrefix + "_" + date;
                     sql = sql.Replace("<" + tablePrefix + ">", tableName);
                     if (partitionByHour)
                     {
-                        sql += GetHourlytPartitionExpression(partitionColName, tableDate, engine);
+                        sql += GetHourlytPartitionExpression(partitionColName, tableDate, engine) + ";";
                     }
                     cmd.CommandText = sql;
                     cmd.ExecuteNonQuery();
@@ -70,7 +70,7 @@ namespace TelcobrightInfra
             DateTime partitionDay = new DateTime(yr, mon, day);
 
             Func<DateTime, string> getPartitionExpression = dateHr =>
-                $"(PARTITION p{dateHr.Hour} VALUES LESS THAN ('{dateHr.ToMySqlFormatWithoutQuote()}') ENGINE = {engine});";
+                $"PARTITION p{dateHr.Hour} VALUES LESS THAN ('{dateHr.ToMySqlFormatWithoutQuote()}') ENGINE = {engine}";
 
             List<string> hourlyPartitionExpressions = Enumerable.Range(1, 23).Select(hr =>
             {
@@ -81,7 +81,7 @@ namespace TelcobrightInfra
             var nextDayZeroHour = partitionDay.AddDays(1);
             hourlyPartitionExpressions.Add(getPartitionExpression(nextDayZeroHour));
             return $"PARTITION BY RANGE  COLUMNS({partitionColName})\r\n" +
-                   string.Join("\r\b", hourlyPartitionExpressions);
+                    "(" + string.Join(",\r\n", hourlyPartitionExpressions) + ")";
         }
     }
 }

@@ -35,7 +35,7 @@ namespace Decoders
             return decodeLine(decoderInputData, out inconsistentCdrs, fileName, decoderInputData.TelcobrightJob.JobName);
         }
 
-        public override string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row)
+        public override string getTupleExpression(Object data)
         {
             throw new NotImplementedException();
         }
