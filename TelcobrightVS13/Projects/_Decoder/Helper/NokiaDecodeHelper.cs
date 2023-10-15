@@ -195,7 +195,7 @@ namespace Decoders
               { "oaz_duration_ten_ms", new FieldInfo(173, 4,DataType.BcdByteRev) }
 
   };
-        public static string[] Decode(int currentPosition, List<byte> fileData, CdrType cdrType)
+        public static string[] Decode(int currentPosition, List<byte> fileData, CdrType cdrType, List<int> trailerSequence)
         {
             List<string> records = new List<string>();
             int totalSkip = 0, totalLengthNeedToIncrease = 0;
@@ -271,7 +271,7 @@ namespace Decoders
                         {
                             validPoint = true;
                         }
-                        else if (isTrailer(temCurrentPosition, fileData))
+                        else if (isTrailer(temCurrentPosition, fileData,trailerSequence))
                         {
                             validPoint = true;
                         }
@@ -315,7 +315,7 @@ namespace Decoders
                         {
                             validPoint = true;
                         }
-                        else if (isTrailer(temCurrentPosition, fileData))
+                        else if (isTrailer(temCurrentPosition, fileData,trailerSequence))
                         {
                             validPoint = true;
                         }
@@ -397,7 +397,7 @@ namespace Decoders
         {
             List<int> sequence = new List<int>()
             {
-                41,00,00,8,1,0,111,255,136,16,50,84,118,137
+                41,00,00,8,1,0,111,255,136,16,50,84,118
             };
             foreach (var item in sequence)
             {
@@ -409,16 +409,10 @@ namespace Decoders
             return true;
 
         }
-        public static bool isTrailer(int offset, List<byte> fileData)
+        public static bool isTrailer(int offset, List<byte> fileData, List<int> trailerSequence)
         {
 
-
-            List<int> sequence = new List<int>()
-            {
-                24,0,16,136,16,50,84,118,137
-            };
-
-            foreach (var item in sequence)
+            foreach (var item in trailerSequence)
             {
                 if (item != fileData[offset])
                 {

@@ -15,7 +15,7 @@ namespace Decoders
 {
 
     [Export("Decoder", typeof(AbstractCdrDecoder))]
-    public class NokiaSiemensDecoder : AbstractCdrDecoder
+    public class NokiaSiemensDecoderMother : AbstractCdrDecoder
     {
         public override string ToString() => this.RuleName;
         public override string RuleName => GetType().Name;
@@ -25,14 +25,49 @@ namespace Decoders
         public override string PartialTablePrefix { get; }
         public override string PartialTableStorageEngine { get; }
         public override string partialTablePartitionColName { get; }
-        protected CdrCollectorInputData Input { get; set; }
-        
-        public override List<string[]> DecodeFile(CdrCollectorInputData decoderInputData, out List<cdrinconsistent> inconsistentCdrs)
+        protected  CdrCollectorInputData Input { get; set; }
+        private List<int> trailerSequence = new List<int>()
+            {
+
+                24,0,16,136,16,50,84,118,137
+            };
+
+        public  override List<string[]> DecodeFile(CdrCollectorInputData decoderInputData, out List<cdrinconsistent> inconsistentCdrs)
         {
             this.Input = decoderInputData;
             string fileName = this.Input.FullPath;
-            
+
             return decodeLine(decoderInputData, out inconsistentCdrs, fileName, decoderInputData.TelcobrightJob.JobName);
+        }
+
+        public string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getCreateTableSqlForUniqueEvent(CdrCollectorInputData decoderInputData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getSelectExpressionForUniqueEvent(CdrCollectorInputData decoderInputData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getWhereForHourWiseUniqueEventCollection(CdrCollectorInputData decoderInputData, DateTime hourOfDay)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getSelectExpressionForPartialCollection(CdrCollectorInputData decoderInputData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getWhereForHourWisePartialCollection(CdrCollectorInputData decoderInputData, DateTime hourOfDay)
+        {
+            throw new NotImplementedException();
         }
 
         public override string getTupleExpression(Object data)
@@ -74,7 +109,7 @@ namespace Decoders
             List<string[]> decodedRows = new List<string[]>();
 
             List<byte> fileData = File.ReadAllBytes(filePath).ToList();
-            
+
             int cdrRecordNumber = 0;
             int totalBytes = fileData.Count;
             //Dictionary<string, PocAndPtc> callRefWiseLegs = new Dictionary<string, PocAndPtc>();
@@ -98,16 +133,16 @@ namespace Decoders
                     {
                         //cdrRecordNumber++;
 
-                        
+
                         CdrType cdrType = (fileData[currentPosition] == 177) ? CdrType.Ptc : CdrType.Poc;
 
                         if (cdrType == CdrType.Ptc)
                         {
-                            string[] record = NokiaDecodeHelper.Decode(currentPosition, fileData, cdrType);
+                            string[] record = NokiaDecodeHelper.Decode(currentPosition, fileData, cdrType,trailerSequence);
                             NokiaCdr finalRecord = new NokiaCdr(record);
                             decodedRows.Add(finalRecord.Row);
                         }
-                        
+
                         //string callRef = record[5];
                         //PocAndPtc pocAndPtc=null;
 
@@ -126,12 +161,12 @@ namespace Decoders
 
 
 
-                        //currentPosition += fileData[currentPosition];
+                        currentPosition += fileData[currentPosition];
                     }
                     else currentPosition++;
                 }
             }
-            
+
             //foreach (KeyValuePair<string, PocAndPtc> callRefWiseLeg in callRefWiseLegs)
             //{
 
@@ -142,7 +177,7 @@ namespace Decoders
             //        NokiaCdr finalRecord = new NokiaCdr(ptc, poc);
             //        decodedRows.Add(finalRecord.Row);
             //    }
-               
+
             //}
 
 
@@ -166,15 +201,15 @@ namespace Decoders
     public class NokiaCdr
     {
         public string[] Row { get; } = new string[104];
-       
 
-        public NokiaCdr( string[] record)
+
+        public NokiaCdr(string[] record)
         {
-            
 
-           
+
+
             this.Row[Fn.Sequencenumber] = record[2];
-            this.Row[Fn.OriginatingCallingNumber] = new string (record[11].ToCharArray().TakeWhile(c=>c!='F').ToArray());
+            this.Row[Fn.OriginatingCallingNumber] = new string(record[11].ToCharArray().TakeWhile(c => c != 'F').ToArray());
             this.Row[Fn.OriginatingCalledNumber] = new string(record[13].ToCharArray().TakeWhile(c => c != 'F').ToArray());
             this.Row[Fn.TerminatingCallingNumber] = new string(record[11].ToCharArray().TakeWhile(c => c != 'F').ToArray());
             this.Row[Fn.TerminatingCalledNumber] = new string(record[13].ToCharArray().TakeWhile(c => c != 'F').ToArray());
@@ -183,7 +218,7 @@ namespace Decoders
             this.Row[Fn.IncomingRoute] = record[record.Length - 2].Trim().TrimStart('0');
 
             this.Row[Fn.OutgoingRoute] = record[14].Trim().TrimStart('0');
-            
+
             string[] formats = new string[] { "MddyyyyHHmmss", "MMddyyyyHHmmss" };
 
             string startTimestr = record[17].Trim();
@@ -201,8 +236,8 @@ namespace Decoders
 
 
             string durationStr = record[51].Trim();
-            double duration = Convert.ToDouble(durationStr)/100;
-            var tmp = record[23].Trim().TrimStart('0')==""?"0": record[23].Trim().TrimStart('0');
+            double duration = Convert.ToDouble(durationStr) / 100;
+            var tmp = record[23].Trim().TrimStart('0') == "" ? "0" : record[23].Trim().TrimStart('0');
             double duration2 = Convert.ToDouble(tmp);
 
             this.Row[Fn.Duration4] = duration2.ToString();
@@ -226,6 +261,6 @@ namespace Decoders
             this.Length = length;
             this.DataType = dataType;
         }
-        
+
     }
 }
