@@ -31,35 +31,19 @@ namespace WS_Telcobright_Topshelf
     {
         public static MefCollectiveAssemblyComposer mefColllectiveAssemblyComposer { get; set; }
         public static MefProcessContainer mefProcessContainer { get; set; }
-        private static string getLogFileName()
-        {
-            var binPath = System.IO.Path.GetDirectoryName(
-                            System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
-            binPath = binPath.Substring(6);
-            string logFileName = binPath + Path.DirectorySeparatorChar + "telcobright.log";
-            return logFileName;
-        }
-
-        static string getLastGeneratedConfigFileName()
-        {
-            string execPath = FileAndPathHelper.GetCurrentExecPath();
-            DirectoryInfo configDir = new DirectoryInfo(new DirectoryInfo(execPath).Parent.FullName +
-                                                        Path.DirectorySeparatorChar + "Config");
-            string configFileName = configDir.FullName + Path.DirectorySeparatorChar + "telcobright.conf";
-            return configFileName;
-        }
-
-
         static void Main(string[] args)
         {
-            string configFileName = args.Length >= 1 ? args[0] : "";//config file name can be sent by batch file as arg[0]
+            string deploymentRoot =
+                @"C:\sftproot\TelcobrightProject\TelcobrightVS13\Projects\WS_Topshelf_Quartz\deployedInstances";
+            string configFileName = "";
+
             if (configFileName == "")
             {
                 ConfigPathHelper configPathHelper = new ConfigPathHelper(
                     "WS_Topshelf_Quartz",
                     "portal",
                     "UtilInstallConfig",
-                    "generators","");
+                    "generators", "");
                 string deployedInstancesPath = configPathHelper.GetDeployedInstancesDir();
                 DirectoryInfo deployDir = new DirectoryInfo(deployedInstancesPath);
                 Dictionary<string, string> operatorNameVsConfigFile = new Dictionary<string, string>();
@@ -76,49 +60,28 @@ namespace WS_Telcobright_Topshelf
                 configFileName = operatorNameVsConfigFile[selectedOpName];
             }
 
-            string logFileName = getLogFileName();
-            mefColllectiveAssemblyComposer = new MefCollectiveAssemblyComposer("..//..//bin//Extensions//");
-            RemoteSchedulerProvider provider = new RemoteSchedulerProvider();
-            File.WriteAllLines(logFileName, new string[] { DateTime.Now.ToMySqlFormatWithoutQuote() + ": Telcobright started at " + provider.SchedulerHost });
-            try
-            {
-                Console.WriteLine("Starting Telcobright Scheduler.");
-                mefProcessContainer = new MefProcessContainer(mefColllectiveAssemblyComposer);
-                TelcobrightConfig tbc = GetTelcobrightConfig(configFileName);
-                Console.Title = tbc.Telcobrightpartner.databasename;
-                provider.SchedulerHost = $"tcp://localhost:{tbc.TcpPortNoForRemoteScheduler}/QuartzScheduler";
-                provider.Init();
-                IScheduler runtimeScheduler = null;
-                try
-                {
-                    runtimeScheduler = GetScheduler(SchedulerRunTimeType.Runtime, tbc);
-                }
-                catch (Exception e1)
-                {
-                    if (e1.Message.Contains("Unable to bind"))
-                    {
-                        Console.WriteLine("Unable to start debug scheduler, " +
-                                          "telcobright service needs to be turned off.");
-                    }
-                    throw (e1);
-                }
-                Console.WriteLine("Starting RAMJobStore based scheduler....");
-                runtimeScheduler.Standby();
-                IScheduler debugScheduler = GetScheduler(SchedulerRunTimeType.Debug, tbc);
-                ScheduleDebugJobsThroughMenu(runtimeScheduler, debugScheduler);
-                debugScheduler.Context.Put("processes", mefProcessContainer);
-                debugScheduler.Context.Put("configs", tbc);
-                debugScheduler.Start();
-                Console.WriteLine("Telcobright Scheduler has been started.");
-                Console.ReadLine();
-                Console.WriteLine("Program Exited.");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
 
+
+            //Telcobright2 tb = new Telcobright2($"{deploymentRoot}\\mothertelecom_cas\\mothertelecom_cas.conf", null);
+            Telcobright2 tb = new Telcobright2(configFileName, null);
+            tb.run();
+
+        }
+        private static string getLogFileName()
+        {
+            var binPath = System.IO.Path.GetDirectoryName(
+                            System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
+            binPath = binPath.Substring(6);
+            string logFileName = binPath + Path.DirectorySeparatorChar + "telcobright.log";
+            return logFileName;
+        }
+        static string getLastGeneratedConfigFileName()
+        {
+            string execPath = FileAndPathHelper.GetCurrentExecPath();
+            DirectoryInfo configDir = new DirectoryInfo(new DirectoryInfo(execPath).Parent.FullName +
+                                                        Path.DirectorySeparatorChar + "Config");
+            string configFileName = configDir.FullName + Path.DirectorySeparatorChar + "telcobright.conf";
+            return configFileName;
         }
         private static TelcobrightConfig GetTelcobrightConfig(string configFileName)
         {
@@ -132,8 +95,6 @@ namespace WS_Telcobright_Topshelf
             }
             return tbc;
         }
-
-
         static IScheduler GetScheduler(SchedulerRunTimeType runTimeType,TelcobrightConfig tbc)// IApplicationContext springContext)
         {
             QuartzPropertyFactory quartzPropertyFactoryRuntime;
@@ -162,7 +123,6 @@ namespace WS_Telcobright_Topshelf
             }
             return null;
         }
-
         private static void ScheduleDebugJobsThroughMenu(IScheduler runtimeScheduler, IScheduler debugScheduler)
         {
             List<TriggerKeyExt> triggerKeysForDebug = GetSelectedTriggerKeysFromMenu(runtimeScheduler)
@@ -193,7 +153,6 @@ namespace WS_Telcobright_Topshelf
             }
             return selectedTriggerKeysFinal;
         }
-
         static int ScheduleDebugJobs(IScheduler runtimeScheduler, IScheduler debugScheduler,
             List<TriggerKeyExt> triggerKeysForDebug)
         {
@@ -231,7 +190,6 @@ namespace WS_Telcobright_Topshelf
             }
             else throw new Exception("Scheduled job count did not match expected job count for debug scheduler.");
         }
-
         static void PauseNonSelectedTriggers(IScheduler runtimeScheduler, List<TriggerKeyExt> triggerKeysToPause)
         {
             if (triggerKeysToPause.Count > 0)
@@ -254,7 +212,6 @@ namespace WS_Telcobright_Topshelf
                 }
             }
         }
-
         private static Dictionary<int, string> DisplayMenu(List<ITrigger> triggers)
         {
             Console.Clear();
