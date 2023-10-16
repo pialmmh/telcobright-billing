@@ -75,12 +75,22 @@ namespace TelcobrightMediation.Cdr
                 //write summaries, so that durationTotal in summary can be validated after writing cdrs
                 foreach (var summaryCache in this.CdrJobContext.CdrSummaryContext.TableWiseSummaryCache.Values)
                 {
-                    if (this.CdrSetting.SkipSettingsForSummaryOnly.SkipHourlySummary == false
-                        && summaryCache.EntityOrTableName.Contains("sum_voice_hr") == false)
+                    //if (this.CdrSetting.SkipSettingsForSummaryOnly.SkipHourlySummary == false
+                    //    && summaryCache.EntityOrTableName.Contains("sum_voice_hr") == false)
+                    //{
+                    //    summaryCache.WriteAllChanges(this.CdrJobContext.DbCmd,
+                    //    this.CdrJobContext.SegmentSizeForDbWrite);
+                    //}
+                 
+
+                    if (summaryCache.EntityOrTableName.Contains("sum_voice_hr") != true ||
+                        this.CdrSetting.SkipSettingsForSummaryOnly.SkipHourlySummary != true)
                     {
                         summaryCache.WriteAllChanges(this.CdrJobContext.DbCmd,
-                        this.CdrJobContext.SegmentSizeForDbWrite);
+                            this.CdrJobContext.SegmentSizeForDbWrite);
                     }
+                  
+                                    
                 }
                 CdrWritingResult cdrWritingResult = this.CdrProcessor?.WriteCdrs(parallelCdrExts);
                 
