@@ -217,6 +217,7 @@ namespace WS_Telcobright_Topshelf
                             if (argsTelcobright != null)
                             {
                                 jobDetail.JobDataMap.Put("args", argsTelcobright);
+                                jobDetail.JobDataMap.Put("name", "apple");
                             }
                             debugScheduler.ScheduleJob(jobDetail, trigger);
                             jobCount++;

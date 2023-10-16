@@ -87,6 +87,7 @@
     <Compile Include="Infra\ServerAutomationtype.cs" />
     <Compile Include="Infra\ServerOs.cs" />
     <Compile Include="Infra\TransportProtocol.cs" />
+    <Compile Include="TBConsole.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LibraryExtensions\LibraryExtensions.csproj">

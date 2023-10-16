@@ -55,8 +55,9 @@ namespace WS_Telcobright_Topshelf
 
         public Telcobright2(string configFileName, Action<string> callbackFromUI)
         {
+            string instanceName = configFileName.Split('\\').Last();
             this.ConfigFileName = configFileName;
-            this.tbConsole = new TBConsole(configFileName, callbackFromUI);
+            this.tbConsole = new TBConsole(instanceName, callbackFromUI);
             this.timerCallback = new TimerCallback(ErrorCheck);
             this.timer = new Timer(timerCallback, null, 0, intervalInMilliseconds);
             this.conStr = "server=adfadf; database= adfadf; ";
@@ -151,7 +152,7 @@ namespace WS_Telcobright_Topshelf
             try
             {
                 tbConsole.WriteLine("Starting Telcobright Scheduler.");
-                mefProcessContainer = new MefProcessContainer(mefColllectiveAssemblyComposer);
+                mefProcessContainer = new MefProcessContainer(mefColllectiveAssemblyComposer,this.tbConsole);
                 TelcobrightConfig tbc = GetTelcobrightConfig(this.ConfigFileName);
                 Console.Title = tbc.Telcobrightpartner.databasename;
                 provider.SchedulerHost = $"tcp://localhost:{tbc.TcpPortNoForRemoteScheduler}/QuartzScheduler";

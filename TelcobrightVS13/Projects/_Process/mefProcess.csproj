@@ -87,7 +87,7 @@
     <Compile Include="Optimizer.cs" />
     <Compile Include="PaymentProcessor.cs" />
     <Compile Include="FileCopier.cs" />
-    <Compile Include="CdrJobExecuter.cs" />
+    <Compile Include="CdrJobProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Quartz;
 using System.IO;
 using LibraryExtensions;
+using TelcobrightInfra;
 namespace QuartzTelcobright
 {
     public abstract class AbstractTelcobrightProcess : ITelcobrightProcess
@@ -14,6 +15,8 @@ namespace QuartzTelcobright
         public abstract string HelpText { get; }
         public abstract int ProcessId { get; }
         public abstract void Execute(IJobExecutionContext context);
+
+        public TBConsole TbConsole { get; set; }
         //public static void updateHeartbeat(IJobExecutionContext context, string heartbitMsg) {}
     }
 }

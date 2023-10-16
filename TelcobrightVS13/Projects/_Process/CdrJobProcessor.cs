@@ -23,7 +23,7 @@ using TelcobrightMediation.Config;
 namespace Process
 {
     [Export("TelcobrightProcess", typeof(AbstractTelcobrightProcess))]
-    public class CdrJobExecuter : AbstractTelcobrightProcess
+    public class CdrJobProcessor : AbstractTelcobrightProcess
     {
         public override string ToString()
         {

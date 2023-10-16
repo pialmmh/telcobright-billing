@@ -115,8 +115,6 @@
   <ItemGroup>
     <Compile Include="MockTelcobrightJob.cs" />
     <Compile Include="SimpleMessage.cs" />
-    <Compile Include="TBConsole.cs" />
-    <Compile Include="TopShelf.cs" />
     <Compile Include="Telcobright2.cs" />
     <Compile Include="TopShelfnew.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

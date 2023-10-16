@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WS_Telcobright_Topshelf
+namespace TelcobrightInfra
 {
     public class TBConsole
     {
@@ -21,7 +21,10 @@ namespace WS_Telcobright_Topshelf
         public void WriteLine(string msgToPrintInConsole)
         {
             Console.WriteLine(this.ConsolePrefix + this.InstanceName + this.ConsolePrefix + msgToPrintInConsole);
-            callbackFromUI(msgToPrintInConsole);
+            if(this.callbackFromUI != null)
+            {
+                callbackFromUI(msgToPrintInConsole);
+            }
         }
     }
 }
