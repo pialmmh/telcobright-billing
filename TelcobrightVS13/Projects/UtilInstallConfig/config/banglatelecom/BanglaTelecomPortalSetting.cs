@@ -297,7 +297,7 @@ namespace InstallConfig
                     { "~/reports/icx/InternationalIn_ICX.aspx",//settings for report pages
                         settingIntlIn
                     },
-                    { "~/reports/icx/InternationalOut _ICX.aspx",
+                    { "~/reports/icx/InternationalOut_ICX.aspx",
                         settingIntlOut
                     },
                     { "~/reports/icx/Domestic.aspx",
