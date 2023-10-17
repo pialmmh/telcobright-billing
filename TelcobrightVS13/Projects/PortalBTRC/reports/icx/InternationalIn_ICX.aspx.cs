@@ -707,17 +707,18 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
         if (tb.DatabaseSetting.DatabaseName != "-1")
         {
             this.ViewBySwitch.Enabled = true;
-       
-        
             using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(tb.DatabaseSetting))
             {
                 //populate switch
                 List<ne> lstNe = context.nes.ToList();
                 this.DropDownListShowBySwitch.Items.Clear();
-                //this.DropDownListPartner.Items.Add(new ListItem(" [All]", "-1"));
+                this.DropDownListShowBySwitch.Items.Add(new ListItem(" [All]", "-1"));
                 foreach (ne nE in lstNe)
                 {
-                    this.DropDownListShowBySwitch.Items.Add(new ListItem(nE.SwitchName, nE.idSwitch.ToString()));
+                    if (!nE.SwitchName.Contains("dummy"))
+                    {
+                        this.DropDownListShowBySwitch.Items.Add(new ListItem(nE.SwitchName, nE.idSwitch.ToString()));
+                    }
                 }
             }
         }
