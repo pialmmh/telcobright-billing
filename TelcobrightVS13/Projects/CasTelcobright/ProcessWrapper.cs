@@ -23,7 +23,7 @@ namespace CasTelcobright
         
         public ProcessWrapper(string instanceName, Action<string> callbackFromUI)
         {
-            instanceName = ConfigurationManager.AppSettings["configRoot"] + "\\" + instanceName + "_cas";
+            instanceName = ConfigurationManager.AppSettings["configRoot"] + "\\" + instanceName +"_cas"+"\\" +instanceName+"_cas.conf";
             this.instanceName = instanceName;
 
             ///C:\TelcobrightProject\TelcobrightVS13\Projects\WS_Topshelf_Quartz\deployedInstances\bantel_cas\
@@ -31,7 +31,7 @@ namespace CasTelcobright
             this.telcobright = new Telcobright2(instanceName, callbackFromUI);
             this.thread = new Thread(() =>
             {
-                this.telcobright.run();
+                this.telcobright.run(false);
             });
         }
 

@@ -528,6 +528,8 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy $(TargetPath) $(SolutionDir)Portal\Extensions\InvoiceTemplates\$(TargetFileName)
+if not exist $(SolutionDir)CasTelcobright\bin\Extensions mkdir $(SolutionDir)CasTelcobright\bin\Extensions
+copy $(TargetPath) $(SolutionDir)CasTelcobright\bin\Extensions\$(TargetFileName)
 
 
 </PostBuildEvent>

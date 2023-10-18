@@ -59,6 +59,8 @@ namespace Process
                                 {
                                     Console.WriteLine("Processing CdrJob for Switch:" + ne.SwitchName + ", JobName:" +
                                                       telcobrightJob.JobName);
+                                    this.TbConsole.WriteLine("Processing CdrJob for Switch:" + ne.SwitchName + ", JobName:" +
+                                                             telcobrightJob.JobName);
                                     try
                                     {
                                         if (cmd.Connection.State != ConnectionState.Open) cmd.Connection.Open();

@@ -60,11 +60,12 @@ namespace WS_Telcobright_Topshelf
                 configFileName = operatorNameVsConfigFile[selectedOpName];
             }
 
+            Console.Title = configFileName.Split('\\').Last().Replace(".conf","");
 
 
             //Telcobright2 tb = new Telcobright2($"{deploymentRoot}\\mothertelecom_cas\\mothertelecom_cas.conf", null);
             Telcobright2 tb = new Telcobright2(configFileName, null);
-            tb.run();
+            tb.run(true);
 
         }
         private static string getLogFileName()

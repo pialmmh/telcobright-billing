@@ -131,7 +131,10 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy $(TargetPath) $(SolutionDir)WS_Topshelf_Quartz\bin\Extensions\$(TargetFileName)
+copy $(TargetPath) $(SolutionDir)CasTelcobright\bin\Extensions\$(TargetFileName)
 if not exist $(SolutionDir)UtilInstallConfig\bin\Extensions mkdir $(SolutionDir)UtilInstallConfig\bin\Extensions
+if not exist $(SolutionDir)CasTelcobright\bin\Extensions mkdir $(SolutionDir)CasTelcobright\bin\Extensions
+copy $(TargetPath) $(SolutionDir)CasTelcobright\bin\Extensions\$(TargetFileName)
 copy $(TargetPath) $(SolutionDir)UtilInstallConfig\bin\Extensions\$(TargetFileName)
 </PostBuildEvent>
   </PropertyGroup>

@@ -143,6 +143,10 @@
       <Project>{4dc3e3de-5ed6-4b02-abf1-b66f77b0dc6b}</Project>
       <Name>QuartzTelcobright</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TelcobrightInfra\TelcobrightInfra.csproj">
+      <Project>{ff350c55-2852-406c-930b-ae2938cceb91}</Project>
+      <Name>TelcobrightInfra</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -154,6 +158,8 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy $(TargetPath) $(SolutionDir)WS_Topshelf_Quartz\bin\Extensions\$(TargetFileName)
+if not exist $(SolutionDir)CasTelcobright\bin\Extensions mkdir $(SolutionDir)CasTelcobright\bin\Extensions
+copy $(TargetPath) $(SolutionDir)CasTelcobright\bin\Extensions\$(TargetFileName)
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

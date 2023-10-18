@@ -53,7 +53,7 @@ namespace WS_Telcobright_Topshelf
             //this.timer = new Timer(timerCallback, null, 0, intervalInMilliseconds);
             this.conStr = "server=adfadf; database= adfadf; ";
         }
-        public void run()
+        public void run(bool isConsoleApp)
         {
             //Console.SetOut(consoleRedirector);
             //int i = 0;
@@ -81,9 +81,8 @@ namespace WS_Telcobright_Topshelf
             try
             {
                 Console.WriteLine("Starting Telcobright Scheduler.");
-                mefProcessContainer = new MefProcessContainer(mefColllectiveAssemblyComposer);
+                mefProcessContainer = new MefProcessContainer(mefColllectiveAssemblyComposer,this.tbConsole);
                 TelcobrightConfig tbc = GetTelcobrightConfig(configFileName);
-                Console.Title = tbc.Telcobrightpartner.databasename;
                 provider.SchedulerHost = $"tcp://localhost:{tbc.TcpPortNoForRemoteScheduler}/QuartzScheduler";
                 provider.Init();
                 IScheduler runtimeScheduler = null;
@@ -103,7 +102,16 @@ namespace WS_Telcobright_Topshelf
                 Console.WriteLine("Starting RAMJobStore based scheduler....");
                 runtimeScheduler.Standby();
                 IScheduler debugScheduler = GetScheduler(SchedulerRunTimeType.Debug, tbc);
-                ScheduleDebugJobsThroughMenu(runtimeScheduler, debugScheduler);
+                if (isConsoleApp)
+                {
+                    ScheduleDebugJobsThroughMenu(runtimeScheduler, debugScheduler);
+                }
+                else
+                {
+                    List<TriggerKey> triggersKeys = runtimeScheduler.GetTriggerKeys(GroupMatcher<TriggerKey>.AnyGroup()).ToList();
+                    List<TriggerKeyExt> triggersKeysExt = triggersKeys.Select(triggersKey => new TriggerKeyExt(triggersKey, "")).ToList();
+                    ScheduleDebugJobs(runtimeScheduler, debugScheduler, triggersKeysExt);
+                }
                 debugScheduler.Context.Put("processes", mefProcessContainer);
                 debugScheduler.Context.Put("configs", tbc);
                 debugScheduler.Start();
@@ -258,7 +266,7 @@ namespace WS_Telcobright_Topshelf
                             if (argsTelcobright != null)
                             {
                                 jobDetail.JobDataMap.Put("args", argsTelcobright);
-                                jobDetail.JobDataMap.Put("name", "apple");
+                                //jobDetail.JobDataMap.Put("name", "apple");
                             }
                             debugScheduler.ScheduleJob(jobDetail, trigger);
                             jobCount++;
