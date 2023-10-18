@@ -219,8 +219,6 @@ public partial class DefaultRptDomesticWithLtfsIcx : System.Web.UI.Page
                         tableNames.Add(db.Value + ".sum_voice_day_04");
                     }
 
-
-
                 }
             }
             else
@@ -712,10 +710,13 @@ public partial class DefaultRptDomesticWithLtfsIcx : System.Web.UI.Page
                 //populate switch
                 List<ne> lstNe = context.nes.ToList();
                 this.DropDownListShowBySwitch.Items.Clear();
-                //this.DropDownListPartner.Items.Add(new ListItem(" [All]", "-1"));
+                this.DropDownListShowBySwitch.Items.Add(new ListItem(" [All]", "-1"));
                 foreach (ne nE in lstNe)
                 {
-                    this.DropDownListShowBySwitch.Items.Add(new ListItem(nE.SwitchName, nE.idSwitch.ToString()));
+                    if (!nE.SwitchName.Contains("dummy"))
+                    {
+                        this.DropDownListShowBySwitch.Items.Add(new ListItem(nE.SwitchName, nE.idSwitch.ToString()));
+                    }
                 }
             }
         }

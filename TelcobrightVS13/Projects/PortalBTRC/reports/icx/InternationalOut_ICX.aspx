@@ -92,6 +92,7 @@
                        
         <asp:DropDownList ID="DropDownListViewIncomingRoute" runat="server"
                           OnSelectedIndexChanged="DropDownListViewIncomingRoute_SelectedChanged"
+                          AutoPostBack="True"
                           Enabled="True">
         </asp:DropDownList>
 
