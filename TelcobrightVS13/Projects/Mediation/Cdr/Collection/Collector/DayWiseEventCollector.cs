@@ -20,9 +20,9 @@ namespace TelcobrightMediation
         public DbCommand DbCmd { get;}
         public AbstractCdrDecoder Decoder { get; }
         public List<T> DecodedEvents { get; }
-        public Dictionary<string, T> DecodedEventsAsTupDic { get; } = new Dictionary<string, T>();
+        public Dictionary<string, List<T>> TupleWiseDecodedEvents { get; } 
         public Dictionary<DateTime, Dictionary<DateTime, HourlyEventData<T>>> DayAndHourWiseEvents { get; }
-        public List<string> ExistingEvents = new List<string>();
+        public List<string> ExistingTuples = new List<string>();
         public string SourceTablePrefix { get; set; }
 
         public DayWiseEventCollector(CdrCollectorInputData collectorInput, DbCommand dbCmd,
@@ -36,7 +36,7 @@ namespace TelcobrightMediation
             CdrSetting cdrSetting = this.CollectorInput.CdrSetting;
             var pastHoursToSeekForCollection = cdrSetting.HoursToAddBeforeForSafePartialCollection;
             var nextHoursToSeekForCollection = cdrSetting.HoursToAddAfterForSafePartialCollection;
-            this.DecodedEventsAsTupDic = decodedEvents.Select(e =>
+            this.TupleWiseDecodedEvents = decodedEvents.Select(e =>
             {
                 var data = new Dictionary<string, object>
                 {
@@ -48,7 +48,7 @@ namespace TelcobrightMediation
                     Tuple = decoder.getTupleExpression(data),
                     Event = e
                 };
-            }).ToDictionary(a => a.Tuple, a=>a.Event);
+            }).GroupBy(a=>a.Tuple).ToDictionary(g => g.Key, g=>g.Select(groupEvents=>groupEvents.Event).ToList());
             this.DayAndHourWiseEvents = decodedEvents.SelectMany(row =>
             {
                 DateTime dateTime= this.Decoder.getEventDatetime(new Dictionary<string,object>
@@ -82,22 +82,18 @@ namespace TelcobrightMediation
                             g2 => new HourlyEventData<T>(g2.Select(i => i.Row).ToList(), g2.Key)));
         }
 
-        public void collectExistingEvents(AbstractCdrDecoder decoder)
+        public void collectTupleWiseExistingEvents(AbstractCdrDecoder decoder)
         {
             //List<DateTime> daysInvolved = this.DayWiseHourlyEvents.Keys.ToList();
             foreach (var kv in this.DayAndHourWiseEvents)
             {
                 DateTime date = kv.Key;
-
                 string tableName = this.SourceTablePrefix + "_" + date.ToMySqlFormatDateOnlyWithoutTimeAndQuote().Replace("-", "");
-                Dictionary<DateTime, HourlyEventData<T>> hourlyDic = kv.Value;
-                List<HourlyEventData<T>> hourlyDatas = hourlyDic.Values.ToList();
-                List<string> sqls= new List<string>();
 
+                Dictionary<DateTime, HourlyEventData<T>> hourlyDic = kv.Value;
                 string sql = $@"{decoder.getSelectExpressionForUniqueEvent(this.CollectorInput)} from {tableName} where {Environment.NewLine}";
                 List<string> whereClausesByHour= hourlyDic.Select(kvHour =>
                 {
-                    DateTime hourOfTheDay = kvHour.Key;
                     HourlyEventData<T> hourWiseData = kvHour.Value;
                     var data = new Dictionary<string, object>
                     {
@@ -109,7 +105,7 @@ namespace TelcobrightMediation
                 sql += string.Join(" or " +Environment.NewLine, whereClausesByHour);
 
                 List<string> existingEvents = new List<string>();
-                if (sql != "")
+                if (whereClausesByHour.Any())
                 {
                     this.DbCmd.CommandText = sql;
                     this.DbCmd.CommandType = CommandType.Text;
@@ -120,7 +116,7 @@ namespace TelcobrightMediation
                     }
                     reader.Close();
                 }
-                this.ExistingEvents = existingEvents;
+                this.ExistingTuples = existingEvents;
             }
         }
         public void createNonExistingTables()
@@ -148,7 +144,7 @@ namespace TelcobrightMediation
             {
                 con.Open();
                 DaywiseTableManager.CreateTables(tablePrefix: tablePrefix,
-                    sql: templateSql,
+                    templateSql: templateSql,
                     dateTimes: tableDatesToBeCreated,
                     con: con,
                     partitionByHour: true, engine: tableStorageEngine, partitionColName: "starttime");

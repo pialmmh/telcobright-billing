@@ -25,22 +25,25 @@ namespace TelcobrightMediation.Cdr.Collection.PreProcessors
             this.CollectorInput = eventCollector.CollectorInput;
             this.DbCmd = eventCollector.DbCmd;
         }
-        public Dictionary<string, T> filterDuplicateCdrs()
+        public Dictionary<string, T> filterDuplicateCdrs(out List<T> excludedDuplicateEvents)
         {
-            Dictionary<string, string> alreadyConsideredEvents = this.EventCollector.ExistingEvents.ToDictionary(e => e);
-            foreach (var kv in EventCollector.DecodedEventsAsTupDic)
+            excludedDuplicateEvents= new List<T>();
+            Dictionary<string, string> alreadyConsideredEvents = this.EventCollector.ExistingTuples.ToDictionary(e => e);
+            foreach (var kv in EventCollector.TupleWiseDecodedEvents)
             {
                 string tuple = kv.Key;
-                T decodedRow = kv.Value;
+                List<T> eventsForThisTuple = kv.Value;
                 if (alreadyConsideredEvents.ContainsKey(tuple) == false)
                 {
-                    FinalNonDuplicateEvents.Add(tuple, decodedRow);
+                    T head = eventsForThisTuple.First();
+                    List<T> tail = eventsForThisTuple.Skip(1).ToList();
+                    FinalNonDuplicateEvents.Add(tuple, head);
                     alreadyConsideredEvents.Add(tuple, tuple); //it's just used like hashmap
+                    excludedDuplicateEvents.AddRange(tail);
                 }
                 else
                 {
-                    //cdr is skipped
-                    Console.WriteLine("Skipped duplicate cdrs");
+                    excludedDuplicateEvents.AddRange(eventsForThisTuple); //dup events are skipped
                 }
             }
             return FinalNonDuplicateEvents;

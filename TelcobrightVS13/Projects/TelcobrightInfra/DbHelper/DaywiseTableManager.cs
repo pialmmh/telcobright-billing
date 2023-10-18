@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,7 +44,7 @@ namespace TelcobrightInfra
                 }
             }
         }
-        public static void CreateTables(string tablePrefix, string sql, List<DateTime>dateTimes,MySqlConnection con,
+        public static void CreateTables(string tablePrefix, string templateSql, List<DateTime>dateTimes,MySqlConnection con,
             bool partitionByHour,string partitionColName,string engine )
         {
             using (MySqlCommand cmd = new MySqlCommand("", con))
@@ -52,7 +53,7 @@ namespace TelcobrightInfra
                 {
                     string date = tableDate.ToMySqlFormatDateOnlyWithoutTimeAndQuote().Replace("-","");
                     string tableName = tablePrefix + "_" + date;
-                    sql = sql.Replace("<" + tablePrefix + ">", tableName);
+                    string sql = templateSql.Replace("<" + tablePrefix + ">", tableName);
                     if (partitionByHour)
                     {
                         sql += GetHourlytPartitionExpression(partitionColName, tableDate, engine) + ";";
@@ -69,8 +70,10 @@ namespace TelcobrightInfra
             int day = date.Day;
             DateTime partitionDay = new DateTime(yr, mon, day);
 
-            Func<DateTime, string> getPartitionExpression = dateHr =>
-                $"PARTITION p{dateHr.Hour} VALUES LESS THAN ('{dateHr.ToMySqlFormatWithoutQuote()}') ENGINE = {engine}";
+            
+            Func<DateTime, string> getPartitionExpression = dateHr => 
+                new StringBuilder("PARTITION p").Append((dateHr.Hour==0?24:dateHr.Hour).ToString()).Append(" VALUES LESS THAN ('")
+                    .Append(dateHr.ToMySqlFormatWithoutQuote()).Append("') ENGINE = ").Append(engine).ToString();
 
             List<string> hourlyPartitionExpressions = Enumerable.Range(1, 23).Select(hr =>
             {

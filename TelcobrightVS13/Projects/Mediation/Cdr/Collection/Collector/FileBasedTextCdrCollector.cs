@@ -50,15 +50,16 @@ namespace TelcobrightMediation
                 DayWiseEventCollector<string[]> dayWiseEventCollector= new DayWiseEventCollector<string[]>(this.CollectorInput,this.DbCmd,decoder,decodedCdrRows,
                     decoder.PartialTablePrefix);
                 dayWiseEventCollector.createNonExistingTables();
-                dayWiseEventCollector.collectExistingEvents(decoder);
+                dayWiseEventCollector.collectTupleWiseExistingEvents(decoder);
                 DuplicaterEventFilter<string[]> duplicaterEventFilter= new DuplicaterEventFilter<string[]>(dayWiseEventCollector);
-                Dictionary<string, string[]> finalNonDuplicateEvents =
-                    duplicaterEventFilter.filterDuplicateCdrs();
+                List<string[]> excludedDuplicateCdrs = null;
+                Dictionary<string, string[]> finalNonDuplicateEvents = duplicaterEventFilter.filterDuplicateCdrs(out excludedDuplicateCdrs);
                 textCdrCollectionPreProcessor =
                     new NewCdrPreProcessor(finalNonDuplicateEvents.Values.ToList(), cdrinconsistents,
                         this.CollectorInput)
                     {
-                        FinalNonDuplicateEvents = finalNonDuplicateEvents
+                        FinalNonDuplicateEvents = finalNonDuplicateEvents,
+                        ExcludedDuplicateEvents = excludedDuplicateCdrs
                     };
             }
             else//duplicate check not required

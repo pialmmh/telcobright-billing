@@ -572,6 +572,9 @@ namespace TelcobrightMediation
             return errorInsertedCount;
         }
 
+        
+
+
         int WriteCdr(List<cdr> cdrs)
         {
             decimal durationSumNonSegmented = cdrs.Sum(c => c.DurationSec);
@@ -604,6 +607,30 @@ namespace TelcobrightMediation
                 throw new Exception("Duration mismatch between segmented & non segmented cdrs.");
             return insertCount;
         }
+
+        //long WriteDuplicateOrExcludedCdrs(List<string[]> excludedEvents)
+        //{
+        //    long errorInsertedCount = 0;
+        //    int startAt = 0;
+        //    CollectionSegmenter<string[]> collectionSegmenter =
+        //        new CollectionSegmenter<string[]>(excludedEvents, startAt);
+        //    collectionSegmenter.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
+        //        segment =>
+        //        {
+        //            int segmentCount = segment.Count();
+        //            int affectedRecordCount = DbWriterWithAccurateCount.ExecSingleStatementThroughStoredProc(
+        //                dbCmd: this.DbCmd,
+        //                command: new StringBuilder(StaticExtInsertColumnHeaders.cdrerror)
+        //                    .Append(string.Join(",", segment.AsParallel().Select(c => c.CdrError.GetExtInsertValues())))
+        //                    .ToString(),
+        //                expectedRecCount: segmentCount);
+        //            if (affectedRecordCount != segmentCount)
+        //                throw new Exception(
+        //                    "Affected record count does not match segment count while writing cdr errors.");
+        //            errorInsertedCount += affectedRecordCount;
+        //        });
+        //    return errorInsertedCount;
+        //}
 
         int WriteUniqueEventsHistory(Dictionary<string, string[]> finalNonDuplicateEvents)//<tuple, cdr row as text[] as decoded initially>
         {

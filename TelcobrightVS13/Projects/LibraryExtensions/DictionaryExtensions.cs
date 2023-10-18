@@ -10,7 +10,7 @@ namespace LibraryExtensions
         public static List<TValue> AppendAndGetListIfMissing<TKey, TValue>(this Dictionary<TKey, List<TValue>> dic,
             TKey key)
         {
-            List<TValue> innerList;
+            List<TValue> innerList=null;
             dic.TryGetValue(key, out innerList);
             if (innerList != null) return innerList;
             innerList = new List<TValue>();
