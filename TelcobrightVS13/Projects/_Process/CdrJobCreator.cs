@@ -4,14 +4,9 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using TelcobrightFileOperations;
-using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 using LibraryExtensions;
 using MediationModel;
-using MySql.Data.MySqlClient;
 using Quartz;
 using QuartzTelcobright;
 using TelcobrightMediation.Config;
@@ -43,7 +38,7 @@ namespace Process
                     int idOprator = context.telcobrightpartners
                         .Where(c => c.databasename == tbc.Telcobrightpartner.databasename).Select(c => c.idCustomer)
                         .First();
-                       foreach (ne thisSwitch in context.nes.Where(c => c.idCustomer == idOprator).ToList())
+                    foreach (ne thisSwitch in context.nes.Where(c => c.idCustomer == idOprator).ToList())
                     {
                         try
                         {
@@ -54,6 +49,15 @@ namespace Process
                             //Vault vault = tbc.DirectorySettings.Vaults.First(c => c.Name == vaultName);
                             FileLocation fileLocation = tbc.DirectorySettings.FileLocations[vaultName];
                             string cdrPathLocal = fileLocation.StartingPath;
+                            List<FileInfo> zipFiles = new DirectoryLister().ListLocalDirectoryZipfileNonRecursive(cdrPathLocal);
+                            if (zipFiles.Count > 0)
+                            {
+                                foreach (FileInfo zipFile in zipFiles)
+                                {
+                                    UnZipper file = new UnZipper(zipFile.FullName);
+                                    file.UnZip();
+                                }
+                            }
                             //var fileNames = vault.GetFileListLocal()
                             //var fileNames = Directory.GetFiles()
                             //Dictionary<string, FileInfo> fileNames = new Dictionary<string, FileInfo>();
@@ -64,7 +68,8 @@ namespace Process
                                 thisSwitch.CDRPrefix.Split(',').Select(s => s.Trim()).ToList();
 
                             List<FileInfo> fileInfos = dirlister.ListLocalDirectoryNonRecursive(cdrPathLocal)
-                                .Where(fInfo => {
+                                .Where(fInfo =>
+                                {
                                     if (thisSwitch.FileExtension == null)
                                     {
                                         return validFilePrefixes.Any(p => fInfo.Name.StartsWith(p)) && !fInfo.Name.EndsWith(".tmp") && !fInfo.Name.Contains(".filepart");
@@ -76,12 +81,12 @@ namespace Process
                                 })
                                     .ToList();
                             int minDurationToSkip = fileLocation.DurationSecToSkipVeryNewPossiblyIncompleteFiles;
-                            fileInfos=fileInfos.Where(f =>
-                            {
-                                DateTime currentTime = DateTime.Now;
-                                return (currentTime - f.CreationTime).TotalSeconds
-                                    > minDurationToSkip ;
-                            }).ToList();
+                            fileInfos = fileInfos.Where(f =>
+                              {
+                                  DateTime currentTime = DateTime.Now;
+                                  return (currentTime - f.CreationTime).TotalSeconds
+                                      > minDurationToSkip;
+                              }).ToList();
 
                             //take only those files whos size is not changing or not being written
                             //bool[] constantSizeCheckResult= new bool[fileInfos.Count];
@@ -106,22 +111,22 @@ namespace Process
                             //most of the files should be finished written by now, still...
                             //double check if file is still being written, by trying exclusive f open
                             var templist = fileInfos;
-                            fileInfos= new List<FileInfo>();
+                            fileInfos = new List<FileInfo>();
                             foreach (var fileInfo in templist)
                             {
-                                //if (FileAndPathHelper.IsFileLockedOrBeingWritten(fileInfo) == false)
+                                if (FileAndPathHelper.IsFileLockedOrBeingWritten(fileInfo) == false)
                                 {
                                     fileInfos.Add(fileInfo);
                                 }
                             }
                             //**************
-                            Dictionary<string, FileInfo> newJobNameVsFileInfos  = fileInfos.Select(f => // kv<jobName,fileName>
-                                new
-                                {
-                                    jobName = f.Name,
-                                    fileName = f
-                                }).ToDictionary(a => a.jobName, a => a.fileName);
-                            Dictionary<string, string> existingJobNames 
+                            Dictionary<string, FileInfo> newJobNameVsFileInfos = fileInfos.Select(f => // kv<jobName,fileName>
+                               new
+                               {
+                                   jobName = f.Name,
+                                   fileName = f
+                               }).ToDictionary(a => a.jobName, a => a.fileName);
+                            Dictionary<string, string> existingJobNames
                                 = getExistingJobNames(context, newJobNameVsFileInfos, thisSwitch.idSwitch);
 
                             fileInfos = new List<FileInfo>();
@@ -158,7 +163,7 @@ namespace Process
                                     SplitFileByByteLen(context, thisSwitch, fileInfo, fileSplitSetting);
                                 }
                             }
-                            if(newJobCacheForWritingAtOnceToDB.Count>0)
+                            if (newJobCacheForWritingAtOnceToDB.Count > 0)
                                 writeJobs(context, thisSwitch, newJobCacheForWritingAtOnceToDB);
                         } //try
                         catch (Exception e1)
@@ -206,8 +211,8 @@ namespace Process
             Console.WriteLine("Writing " + newJobCacheForWritingAtOnceToDB.Count + " cdr jobs to db...");
             context.jobs.AddRange(newJobCacheForWritingAtOnceToDB);
             context.SaveChanges();
-            Console.WriteLine("switch: " + thisSwitch.SwitchName + ", new cdr job created:" 
-                                + newJobCacheForWritingAtOnceToDB.Count + ", already existing:" + 
+            Console.WriteLine("switch: " + thisSwitch.SwitchName + ", new cdr job created:"
+                                + newJobCacheForWritingAtOnceToDB.Count + ", already existing:" +
                                 newJobCacheForWritingAtOnceToDB.Count);
             newJobCacheForWritingAtOnceToDB = new List<job>();
         }

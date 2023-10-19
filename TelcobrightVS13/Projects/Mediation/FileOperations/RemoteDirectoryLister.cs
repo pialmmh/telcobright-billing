@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using WinSCP;
 using System.IO;
 using System.Linq;
@@ -25,14 +26,16 @@ namespace TelcobrightFileOperations
             {
                 if (fileInfo.IsDirectory)
                 {
-                    if ((fileInfo.Name != ".") && (fileInfo.Name != "..")) {
+                    if ((fileInfo.Name != ".") && (fileInfo.Name != ".."))
+                    {
                         foldersOnly.Add(fileInfo);
                     }
                 }
             }
             return foldersOnly;
         }
-        bool HasSubDirectory(RemoteDirectoryInfo directoryInfo) {
+        bool HasSubDirectory(RemoteDirectoryInfo directoryInfo)
+        {
             foreach (RemoteFileInfo fileInfo in directoryInfo.Files)
             {
                 if ((fileInfo.Name == ".") || (fileInfo.Name == "..")) continue;
@@ -48,11 +51,12 @@ namespace TelcobrightFileOperations
             List<RemoteFileInfo> remoteFiles = new List<RemoteFileInfo>();
             RemoteDirectoryInfo directoryInfo = session.ListDirectory(relativePath);
             List<RemoteFileInfo> filesOnly = GetFilesOnlyWithoutFolders(directoryInfo);
-            List<RemoteFileInfoExt> fileInfoExtOnly = filesOnly.Select(f => new RemoteFileInfoExt(f,relativePath)).ToList();
+            List<RemoteFileInfoExt> fileInfoExtOnly = filesOnly.Select(f => new RemoteFileInfoExt(f, relativePath)).ToList();
             if (HasSubDirectory(directoryInfo) == false) return fileInfoExtOnly;
             List<RemoteFileInfo> foldersOnly = GetFoldersOnly(directoryInfo);
-            foreach (RemoteFileInfo subDir in foldersOnly) {
-                string subDirRelativePath = !relativePath.EndsWith("/") ? relativePath+"/" + subDir.Name + "/"
+            foreach (RemoteFileInfo subDir in foldersOnly)
+            {
+                string subDirRelativePath = !relativePath.EndsWith("/") ? relativePath + "/" + subDir.Name + "/"
                     : relativePath + subDir.Name + "/";
                 fileInfoExtOnly.AddRange(ListRemoteDirectoryRecursive(session, subDirRelativePath));
             }
@@ -93,6 +97,18 @@ namespace TelcobrightFileOperations
                 localFiles.Add(new FileInfo(f));
             }
             return localFiles;
+        }
+        public List<FileInfo> ListLocalDirectoryZipfileNonRecursive(string dir)
+        {
+            List<FileInfo> zipFiles = new List<FileInfo>();
+            foreach (string f in Directory.GetFiles(dir))
+            {
+                if (f.EndsWith(".zip",StringComparison.OrdinalIgnoreCase) || f.EndsWith(".gz",StringComparison.OrdinalIgnoreCase))
+                {
+                    zipFiles.Add(new FileInfo(f));
+                }
+            }
+            return zipFiles;
         }
     }
 }
