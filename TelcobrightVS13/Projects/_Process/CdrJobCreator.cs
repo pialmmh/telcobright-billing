@@ -49,21 +49,35 @@ namespace Process
                             //Vault vault = tbc.DirectorySettings.Vaults.First(c => c.Name == vaultName);
                             FileLocation fileLocation = tbc.DirectorySettings.FileLocations[vaultName];
                             string cdrPathLocal = fileLocation.StartingPath;
-                            List<FileInfo> zipFiles = new DirectoryLister().ListLocalDirectoryZipfileNonRecursive(cdrPathLocal);
+                            DirectoryLister dirlister = new DirectoryLister();
+                            List<FileInfo> zipFiles = dirlister.ListLocalDirectoryZipfileNonRecursive(cdrPathLocal);
                             if (zipFiles.Count > 0)
                             {
+                                Console.WriteLine($"Found {zipFiles.Count} zip files. Unzipping ...");
                                 foreach (FileInfo zipFile in zipFiles)
                                 {
                                     UnZipper file = new UnZipper(zipFile.FullName);
                                     file.UnZip();
                                 }
                             }
+
+                            FileSplitSetting fileSplitSetting = tbc.CdrSetting.FileSplitSetting;
+
+                            if (fileSplitSetting != null)
+                            {
+                                List<FileInfo> splitableFiles = dirlister.ListLocalDirectorysplitablefileNonRecursive(cdrPathLocal,fileSplitSetting);
+                                foreach (FileInfo file in splitableFiles)
+                                {
+                                        SplitFileByByteLen(file, fileSplitSetting);
+                                }
+                            }
+
+
                             //var fileNames = vault.GetFileListLocal()
                             //var fileNames = Directory.GetFiles()
                             //Dictionary<string, FileInfo> fileNames = new Dictionary<string, FileInfo>();
 
                             //List<FileInfo> localFiles = this.LocalLocation.GetLocalFilesNonRecursive();
-                            DirectoryLister dirlister = new DirectoryLister();
                             List<string> validFilePrefixes =
                                 thisSwitch.CDRPrefix.Split(',').Select(s => s.Trim()).ToList();
 
@@ -144,7 +158,6 @@ namespace Process
                                 fileInfos = fileInfos.OrderByDescending(c => c.Name).ToList();
                             foreach (FileInfo fileInfo in fileInfos)
                             {
-                                FileSplitSetting fileSplitSetting = tbc.CdrSetting.FileSplitSetting;
                                 if (fileSplitSetting == null ||
                                     fileInfo.Length <= fileSplitSetting.SplitFileIfSizeBiggerThanMbyte)
                                 {
@@ -158,10 +171,11 @@ namespace Process
                                         newJobCacheForWritingAtOnceToDB = new List<job>();
                                     }
                                 }
-                                else if (fileInfo.Length > fileSplitSetting.SplitFileIfSizeBiggerThanMbyte)
-                                {
-                                    SplitFileByByteLen(context, thisSwitch, fileInfo, fileSplitSetting);
-                                }
+
+                                //else if (fileInfo.Length > fileSplitSetting.SplitFileIfSizeBiggerThanMbyte)
+                                //{
+                                //    SplitFileByByteLen(context, thisSwitch, fileInfo, fileSplitSetting);
+                                //}
                             }
                             if (newJobCacheForWritingAtOnceToDB.Count > 0)
                                 writeJobs(context, thisSwitch, newJobCacheForWritingAtOnceToDB);
@@ -217,7 +231,7 @@ namespace Process
             newJobCacheForWritingAtOnceToDB = new List<job>();
         }
 
-        private static void SplitFileByByteLen(PartnerEntities context, ne thisSwitch, FileInfo fileInfo, FileSplitSetting fileSplitSetting)
+        private static void SplitFileByByteLen(FileInfo fileInfo, FileSplitSetting fileSplitSetting)
         {
             if (fileSplitSetting.FileSplitType == "byte")
             {
@@ -226,34 +240,35 @@ namespace Process
                                                                 number of bytes per cdr ({fileSplitSetting.BytesPerRecord})");
 
                 //save original file in unsplit directory before spliting
-                DirectoryInfo currentDir = new DirectoryInfo(fileInfo.DirectoryName);
-                var unsplitPath = currentDir.FullName + Path.DirectorySeparatorChar + "unsplit";
-                bool unsplitExists = Directory.Exists(unsplitPath);
-                if (unsplitExists == false)
-                {
-                    Directory.CreateDirectory(unsplitPath);
-                }
-                string unsplitBackupFileName = unsplitPath + Path.DirectorySeparatorChar + fileInfo.Name;
-                if (File.Exists(unsplitBackupFileName))
-                {
-                    File.Delete(unsplitBackupFileName);
-                }
-                File.Copy(fileInfo.FullName, unsplitBackupFileName);
+                //DirectoryInfo currentDir = new DirectoryInfo(fileInfo.DirectoryName);
+                //var unsplitPath = currentDir.FullName + Path.DirectorySeparatorChar + "unsplit";
+                //bool unsplitExists = Directory.Exists(unsplitPath);
+                //if (unsplitExists == false)
+                //{
+                //    Directory.CreateDirectory(unsplitPath);
+                //}
+                //string unsplitBackupFileName = unsplitPath + Path.DirectorySeparatorChar + fileInfo.Name;
+                //if (File.Exists(unsplitBackupFileName))
+                //{
+                //    File.Delete(unsplitBackupFileName);
+                //}
+                //File.Copy(fileInfo.FullName, unsplitBackupFileName);
 
-                List<string> splitedFileNames = FileSplitter.SplitFile(fileInfo,//split the files
+                FileSplitter.SplitFile(fileInfo,//split the files
                     fileSplitSetting.BytesPerRecord * fileSplitSetting.MaxRecordsInSingleFile);
                 File.Delete(fileInfo.FullName);
 
                 //create a database file to log the association of the split files to the original unsplit
                 //this is required to backup original file instead of the split versions after cdr job processing
-                string historyFileName = unsplitPath + Path.DirectorySeparatorChar +
-                                         fileInfo.Name + ".history";
-                if (File.Exists(historyFileName))
-                {
-                    File.Delete(historyFileName);
-                }
-                string splitHistory = string.Join(",", splitedFileNames.Select(f => Path.GetFileName(f)));
-                File.AppendAllText(historyFileName, splitHistory + Environment.NewLine);
+
+                //string historyFileName = unsplitPath + Path.DirectorySeparatorChar +
+                //                         fileInfo.Name + ".history";
+                //if (File.Exists(historyFileName))
+                //{
+                //    File.Delete(historyFileName);
+                //}
+                //string splitHistory = string.Join(",", splitedFileNames.Select(f => Path.GetFileName(f)));
+                //File.AppendAllText(historyFileName, splitHistory + Environment.NewLine);
 
                 var dirInfo = new DirectoryInfo(fileInfo.DirectoryName);
                 string searchPattern = $"{Path.GetFileNameWithoutExtension(fileInfo.Name)}*" +
