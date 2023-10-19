@@ -22,6 +22,7 @@ namespace TelcobrightMediation
     public class CdrCollectionResult
     {
         public Dictionary<string, string[]> FinalNonDuplicateEvents { get; set; } = new Dictionary<string, string[]>();
+        public List<string[]> DuplicateEvents { get; set; } = new List<string[]>();
         public CollectionResultProcessingState CollectionResultProcessingState { get; set; } =
             CollectionResultProcessingState.BeforeMediation;
 

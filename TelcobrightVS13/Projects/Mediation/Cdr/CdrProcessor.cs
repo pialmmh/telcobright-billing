@@ -455,10 +455,21 @@ namespace TelcobrightMediation
             {
                 uniqueEventCount = WriteUniqueEventsHistory(this.CollectionResult.FinalNonDuplicateEvents);
             }
-            if (this.CollectionResult.FinalNonDuplicateEvents != null &&
+            if (this.CollectionResult.FinalNonDuplicateEvents.Any() &&
                 uniqueEventCount != this.CollectionResult.FinalNonDuplicateEvents.Count)
             {
                 throw new Exception("Written number of unique event count does not match non-duplicate event count.");
+            }
+
+            int cdrDiscardedCount = 0;
+            if (this.CdrJobContext.CdrjobInputData.Ne.FilterDuplicateCdr == 1)
+            {
+                cdrDiscardedCount= WriteDuplicateOrExcludedCdrs(this.CollectionResult.DuplicateEvents);
+            }
+            if (this.CollectionResult.DuplicateEvents.Any() &&
+                cdrDiscardedCount != this.CollectionResult.DuplicateEvents.Count)
+            {
+                throw new Exception("Written number of cdrdiscarded/duplicates count does not match non-duplicate event count.");
             }
 
             List<PartialCdrContainer> partialCdrContainers = new List<PartialCdrContainer>();
@@ -557,11 +568,17 @@ namespace TelcobrightMediation
             collectionSegmenter.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
                 segment =>
                 {
-                    int segmentCount = segment.Count();
+                    var cdrExts = segment as CdrExt[] ?? segment.ToArray();
+                    int segmentCount = cdrExts.Count();
+                    ParallelIterator<CdrExt, StringBuilder> iterator =
+                        new ParallelIterator<CdrExt, StringBuilder>(cdrExts);
+                    List<StringBuilder> insertCommands =
+                        iterator.getOutput(c => c.CdrError.GetExtInsertValues()).ToList();
+
                     int affectedRecordCount = DbWriterWithAccurateCount.ExecSingleStatementThroughStoredProc(
                         dbCmd: this.DbCmd,
                         command: new StringBuilder(StaticExtInsertColumnHeaders.cdrerror)
-                            .Append(string.Join(",", segment.AsParallel().Select(c => c.CdrError.GetExtInsertValues())))
+                            .Append(string.Join(",", insertCommands))
                             .ToString(),
                         expectedRecCount: segmentCount);
                     if (affectedRecordCount != segmentCount)
@@ -585,10 +602,17 @@ namespace TelcobrightMediation
             collectionSegmenter.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
                 segment =>
                 {
-                    int segmentCount = segment.Count();
-                    var segmentAsParallel = segment.AsParallel();
-                    ParallelQuery<StringBuilder> sbs = segmentAsParallel.Select(c => c.GetExtInsertValues());
-                    durationSumSegmented += segmentAsParallel.AsParallel().Sum(c => c.DurationSec);
+                    var enumerable = segment as cdr[] ?? segment.ToArray();
+                    int segmentCount = enumerable.Count();
+                    durationSumSegmented += enumerable.Sum(c => c.DurationSec);
+
+                    ParallelIterator<cdr, StringBuilder> iterator =
+                        new ParallelIterator<cdr, StringBuilder>(enumerable);
+                    List<StringBuilder> sbs =
+                        iterator.getOutput(c => c.GetExtInsertValues()).ToList();
+
+                    //var segmentAsParallel = segment.AsParallel();
+                    //ParallelQuery<StringBuilder> sbs = segmentAsParallel.Select(c => c.GetExtInsertValues());
 
                     StringBuilder extInsertCommandsForthisSegment = StringBuilderJoiner.Join(",", sbs.ToList());
                     this.DbCmd.CommandType = CommandType.StoredProcedure;
@@ -608,29 +632,32 @@ namespace TelcobrightMediation
             return insertCount;
         }
 
-        //long WriteDuplicateOrExcludedCdrs(List<string[]> excludedEvents)
-        //{
-        //    long errorInsertedCount = 0;
-        //    int startAt = 0;
-        //    CollectionSegmenter<string[]> collectionSegmenter =
-        //        new CollectionSegmenter<string[]>(excludedEvents, startAt);
-        //    collectionSegmenter.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
-        //        segment =>
-        //        {
-        //            int segmentCount = segment.Count();
-        //            int affectedRecordCount = DbWriterWithAccurateCount.ExecSingleStatementThroughStoredProc(
-        //                dbCmd: this.DbCmd,
-        //                command: new StringBuilder(StaticExtInsertColumnHeaders.cdrerror)
-        //                    .Append(string.Join(",", segment.AsParallel().Select(c => c.CdrError.GetExtInsertValues())))
-        //                    .ToString(),
-        //                expectedRecCount: segmentCount);
-        //            if (affectedRecordCount != segmentCount)
-        //                throw new Exception(
-        //                    "Affected record count does not match segment count while writing cdr errors.");
-        //            errorInsertedCount += affectedRecordCount;
-        //        });
-        //    return errorInsertedCount;
-        //}
+        int WriteDuplicateOrExcludedCdrs(List<string[]> excludedEvents)
+        {
+            List<cdrinconsistent> excludedEventsAsCdrInConsistents =
+                excludedEvents.Select(CdrConversionUtil.ConvertTxtRowToCdrinconsistent).ToList();
+            int errorInsertedCount = 0;
+            int startAt = 0;
+            CollectionSegmenter<cdrinconsistent> collectionSegmenter =
+                new CollectionSegmenter<cdrinconsistent>(excludedEventsAsCdrInConsistents, startAt);
+            collectionSegmenter.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
+                segment =>
+                {
+                    var cdrinconsistents = segment as cdrinconsistent[] ?? segment.ToArray();
+                    int segmentCount = cdrinconsistents.Count();
+                    int affectedRecordCount = DbWriterWithAccurateCount.ExecSingleStatementThroughStoredProc(
+                        dbCmd: this.DbCmd,
+                        command: new StringBuilder(StaticExtInsertColumnHeaders.cdrerror.Replace("cdrerror", "cdrdiscarded"))
+                            .Append(string.Join(",", cdrinconsistents.Select(c => c.GetExtInsertValues())))
+                            .ToString(),
+                        expectedRecCount: segmentCount);
+                    if (affectedRecordCount != segmentCount)
+                        throw new Exception(
+                            "Affected record count does not match segment count while writing cdr errors.");
+                    errorInsertedCount += affectedRecordCount;
+                });
+            return errorInsertedCount;
+        }
 
         int WriteUniqueEventsHistory(Dictionary<string, string[]> finalNonDuplicateEvents)//<tuple, cdr row as text[] as decoded initially>
         {

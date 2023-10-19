@@ -16,6 +16,7 @@ namespace TelcobrightMediation
 {
     public class DayWiseEventCollector<T>
     {
+        public bool UniqueEventsOnly { get; set; }
         public CdrCollectorInputData CollectorInput { get;}
         public DbCommand DbCmd { get;}
         public AbstractCdrDecoder Decoder { get; }
@@ -25,9 +26,10 @@ namespace TelcobrightMediation
         public List<string> ExistingTuples = new List<string>();
         public string SourceTablePrefix { get; set; }
 
-        public DayWiseEventCollector(CdrCollectorInputData collectorInput, DbCommand dbCmd,
+        public DayWiseEventCollector(bool uniqueEventsOnly, CdrCollectorInputData collectorInput, DbCommand dbCmd,
             AbstractCdrDecoder decoder, List<T> decodedEvents, string sourceTablePrefix)
         {
+            this.UniqueEventsOnly = uniqueEventsOnly;
             this.SourceTablePrefix = sourceTablePrefix;
             CollectorInput = collectorInput;
             DbCmd = dbCmd;
@@ -117,6 +119,21 @@ namespace TelcobrightMediation
                     reader.Close();
                 }
                 this.ExistingTuples = existingEvents;
+                if (this.UniqueEventsOnly==true)
+                {
+                    Dictionary<string, int> tupleWiseCount = this.ExistingTuples.GroupBy(s => s)
+                        .Select(g => new
+                        {
+                            Tuple = g.Key,
+                            Count = g.Count()
+                        }).ToDictionary(a => a.Tuple, a => a.Count);
+                    foreach (var tupVsCount in tupleWiseCount)
+                    {
+                        string tuple = tupVsCount.Key;
+                        int count = tupVsCount.Value;
+                        if(count>1) throw new Exception($"tuple {tuple} has more than one previous instances ({count})");
+                    }
+                }
             }
         }
         public void createNonExistingTables()

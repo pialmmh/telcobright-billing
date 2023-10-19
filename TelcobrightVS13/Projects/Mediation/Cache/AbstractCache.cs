@@ -186,12 +186,18 @@ namespace TelcobrightMediation
                 segments.ExecuteMethodInSegments(segmentSize,
                     segment =>
                     {
-                        int segmentCount=segment.Count();
-                        var sqlsAsStringBuilders = segment.AsParallel().Select(c => this.InsertCommandGenerator(c))
-                            .ToList();
+                        var enumerable = segment as TEntity[] ?? segment.ToArray();
+                        int segmentCount=enumerable.Count();
+                        //var sbs = segment.AsParallel().Select(c => this.InsertCommandGenerator(c)).ToList();
+
+                        ParallelIterator<TEntity, StringBuilder> iterator =
+                            new ParallelIterator<TEntity, StringBuilder>(enumerable);
+                        List<StringBuilder> sbs =
+                            iterator.getOutput(c => this.InsertCommandGenerator(c)).ToList();
+
                         int affectedRecordCount = DbWriterWithAccurateCount.ExecSingleStatementThroughStoredProc(dbCmd: cmd,
                             command: new StringBuilder(extInsertHeader)
-                                .Append(StringBuilderJoiner.Join(",", sqlsAsStringBuilders)).ToString(),
+                                .Append(StringBuilderJoiner.Join(",", sbs)).ToString(),
                             expectedRecCount: segmentCount);
                         if (affectedRecordCount != segmentCount)
                             throw new Exception("Affected record count does not match segment count while inserting cached items.");
@@ -219,9 +225,16 @@ namespace TelcobrightMediation
                 segments.ExecuteMethodInSegments(segmentSize,
                     segment =>
                     {
-                        int segmentCount = segment.Count();//count segment instead of segmentAsParallel for cross check, ignore multiple enumeration error
-                        List<string> sqlStatements = segment.AsParallel()
-                            .Select(c => this.UpdateCommandGenerator(c).Append(";").ToString()).ToList();
+                        var enumerable = segment as TEntity[] ?? segment.ToArray();
+                        int segmentCount = enumerable.Count();//count segment instead of segmentAsParallel for cross check, ignore multiple enumeration error
+                        //List<string> sqlStatements = segment.AsParallel()
+                          //  .Select(c => this.UpdateCommandGenerator(c).Append(";").ToString()).ToList();
+
+                        ParallelIterator<TEntity, string> iterator =
+                            new ParallelIterator<TEntity, string>(enumerable);
+                        List<string> sqlStatements =
+                            iterator.getOutput(c => this.UpdateCommandGenerator(c).Append(";").ToString());
+
                         int affectedRecordCount = DbWriterWithAccurateCount.ExecMultipleStatementsThroughStoredProc(dbCmd: cmd,
                             commands: sqlStatements,expectedRecCount: segmentCount);
                         if (affectedRecordCount != segmentCount)
@@ -249,9 +262,15 @@ namespace TelcobrightMediation
                 segments.ExecuteMethodInSegments(segmentSize,
                     segment =>
                     {
-                        int segmentCount = segment.Count();//count segment instead of segmentAsParallel for cross check, ignore multiple enumeration error
-                        List<string> sqlStatements = segment.AsParallel()
-                            .Select(c => this.DeleteCommandGenerator(c).Append(";").ToString()).ToList();
+                        var enumerable = segment as TEntity[] ?? segment.ToArray();
+                        int segmentCount = enumerable.Count();//count segment instead of segmentAsParallel for cross check, ignore multiple enumeration error
+                        //List<string> sqlStatements = segment.AsParallel()
+                          //  .Select(c => this.DeleteCommandGenerator(c).Append(";").ToString()).ToList();
+                        ParallelIterator<TEntity, string> iterator =
+                            new ParallelIterator<TEntity, string>(enumerable);
+                        List<string> sqlStatements =
+                            iterator.getOutput(c => this.DeleteCommandGenerator(c).Append(";").ToString());
+
                         int affectedRecordCount = DbWriterWithAccurateCount.ExecMultipleStatementsThroughStoredProc(dbCmd: cmd,
                             commands: sqlStatements, expectedRecCount: segmentCount);
                         if (affectedRecordCount != segmentCount)

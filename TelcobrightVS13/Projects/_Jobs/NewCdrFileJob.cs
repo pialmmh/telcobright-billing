@@ -49,6 +49,7 @@ namespace Jobs
             CdrCollectionResult newCollectionResult, oldCollectionResult = null;
             preProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
             newCollectionResult.FinalNonDuplicateEvents = preProcessor.FinalNonDuplicateEvents;
+            newCollectionResult.DuplicateEvents = preProcessor.DuplicateEvents;
 
             PartialCdrTesterData partialCdrTesterData = OrganizeTestDataForPartialCdrs(preProcessor, newCollectionResult);
             CdrJob cdrJob = (new CdrJobFactory(this.Input, this.RawCount)).
