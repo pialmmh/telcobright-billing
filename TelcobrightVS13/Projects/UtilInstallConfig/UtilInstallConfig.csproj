@@ -515,7 +515,7 @@
     <Folder Include="config\btel\_dbscripts\seedData\" />
     <Folder Include="config\cas\_dbscripts\seedData\json\" />
     <Folder Include="config\jsl\_dbscripts\ddl\" />
-    <Folder Include="config\jsl\_dbscripts\seedData\" />
+    <Folder Include="config\jsl\_dbscripts\seedData\sql\" />
     <Folder Include="config\purple\_dbscripts\ddl\" />
     <Folder Include="config\purple\_dbscripts\seedData\" />
     <Folder Include="config\srtelecom\_dbscripts\ddl\" />

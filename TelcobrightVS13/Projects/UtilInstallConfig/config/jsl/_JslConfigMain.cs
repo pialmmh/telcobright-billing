@@ -22,15 +22,18 @@ namespace InstallConfig
     public partial class JslAbstractConfigGenerator:AbstractConfigGenerator
     {
         public override TelcobrightConfig Tbc { get; set; }
+        public override int IdOperator { get; set; } = 1;
+        public override string CustomerName { get; set; } = "Jibondhara Solutions Ltd.";
+        public override string DatabaseName { get; set; } = "jsl";
         public JslAbstractConfigGenerator()
         {
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx,
                 new telcobrightpartner
                 {
                     idCustomer = 7,
-                    CustomerName = "Jibondhara Solutions Ltd.",
+                    CustomerName = this.CustomerName,
                     idOperatorType = 2,
-                    databasename = "jsl",
+                    databasename = this.DatabaseName,
                     databasetype = "mysql",
                     user = "root",
                     pass = null,
@@ -53,7 +56,7 @@ namespace InstallConfig
                 });
         }
 
-        public override TelcobrightConfig GenerateConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
+        public override TelcobrightConfig GenerateFullConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
         {
             
 
