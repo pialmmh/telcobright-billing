@@ -22,10 +22,6 @@ namespace InstallConfig
     public partial class JslAbstractConfigGenerator:AbstractConfigGenerator
     {
         public override TelcobrightConfig Tbc { get; set; }
-        public override int IdOperator { get; set; }
-        public override string CustomerName { get; set; }
-        public override string DatabaseName { get; set; }
-
         public JslAbstractConfigGenerator()
         {
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx,
@@ -57,7 +53,7 @@ namespace InstallConfig
                 });
         }
 
-        public override TelcobrightConfig GenerateFullConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
+        public override TelcobrightConfig GenerateConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
         {
             
 
@@ -82,6 +78,7 @@ namespace InstallConfig
                 AutoCorrectDuplicateBillId = true,
                 AutoCorrectBillIdsWithPrevChargeableIssue = true,
                 AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
+                // FileSplitSetting = null,
                 FileSplitSetting = new FileSplitSetting()
                 {
                     FileSplitType = "byte",
@@ -219,9 +216,9 @@ namespace InstallConfig
                     TransactionSizeForCDRLoading= 1500,
                     DecodingSpanCount= 100,
                     SkipAutoCreateJob= 1,
-                    SkipCdrListed= 1,
+                    SkipCdrListed= 0,
                     SkipCdrReceived= 1,
-                    SkipCdrDecoded= 1,
+                    SkipCdrDecoded= 0,
                     SkipCdrBackedup= 1,
                     KeepDecodedCDR= 1,
                     KeepReceivedCdrServer= 1,

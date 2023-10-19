@@ -162,7 +162,7 @@ namespace PortalApp.config
                 invoice invoice = context.invoices.First(x => x.INVOICE_ID == invoiceId);
                 invoice.REFERENCE_NUMBER = TextBoxReferenceNumber.Text;
                 invoice.INVOICE_DATE = Convert.ToDateTime(TextBoxInvoiceDate.Text);
-                //invoice.DUE_DATE = Convert.ToDateTime(TextBoxDueDate.Text);
+                invoice.DUE_DATE = Convert.ToDateTime(TextBoxDueDate.Text);
                 context.SaveChanges();
 
                 List<invoice> invoices = context.invoices.Where(x => x.PAID_DATE == null).OrderByDescending(x => x.INVOICE_DATE).ToList();

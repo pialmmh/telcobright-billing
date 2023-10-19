@@ -381,6 +381,10 @@ namespace Decoders
                 }
                 catch (Exception e1)
                 {
+                    if(e1.Message.Contains("System.OutOfMemoryException"))
+                    {
+                        throw;
+                    }
                     Console.WriteLine(e1);
                     inconsistentCdrs.Add(CdrConversionUtil.ConvertTxtRowToCdrinconsistent(thisRow));
                     ErrorWriter wr = new ErrorWriter(e1, "DecodeCdr", null,
