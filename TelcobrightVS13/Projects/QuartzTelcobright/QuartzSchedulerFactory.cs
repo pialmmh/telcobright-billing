@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using Quartz;
 using Quartz.Impl;
@@ -14,9 +15,12 @@ namespace QuartzTelcobright
         }
         public IScheduler CreateSchedulerInstance()
         {
-            var schedularFactory = new StdSchedulerFactory(this.schedulerProperties);
+
+            StdSchedulerFactory schedularFactory = null;
+            schedularFactory = new StdSchedulerFactory(this.schedulerProperties);
             return schedularFactory.GetScheduler();
             
         }
+       
     }
 }

@@ -107,15 +107,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SgDomesticIcxCas.cs" />
     <Compile Include="SgIcnlIntlIncoming.cs" />
     <Compile Include="SgIcnlOutgoing.cs" />
     <Compile Include="SgIcnlLocal.cs" />
     <Compile Include="SgIcnlAlphaPremium.cs" />
     <Compile Include="SgIcnlTollFree.cs" />
-    <Compile Include="SgIntlInIcxCas.cs" />
-    <Compile Include="SgIntlOutIcxCas.cs" />
-    <Compile Include="SgLtfsIcxCas.cs" />
     <Compile Include="SgLtfsIcx.cs" />
     <Compile Include="SgIntlTransitVoice.cs" />
     <Compile Include="SgDomesticIcx.cs" />

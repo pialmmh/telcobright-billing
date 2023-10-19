@@ -3,14 +3,16 @@ using System;
 using System.IO;
 using LibraryExtensions.ConfigHelper;
 using MediationModel;
+using TelcobrightInfra;
 using TelcobrightMediation.Config;
 
 namespace TelcobrightFileOperations
 {
     public class ErrorWriter
     {
+       
         public ErrorWriter(Exception e, string processInformation, job telcobrightJob, string messageToPrepend,
-            string operatorName, PartnerEntities partnerEntities = null)
+            string operatorName, PartnerEntities partnerEntities = null, TBConsole tbConsole = null)
         {
             try
             {
@@ -33,13 +35,29 @@ namespace TelcobrightFileOperations
                 }
                 catch(Exception exception)
                 {
-                    Console.WriteLine(exception.Message);
+                    if (tbConsole != null)
+                    {
+                        tbConsole.WriteLine(exception.Message);
+                    }
+                    else
+                    {
+                        Console.WriteLine(exception.Message);
+                    }
+                    
                     File.AppendAllText("telcobright.log", JsonConvert.SerializeObject(thisError) + Environment.NewLine);
                 }
             }
             catch (Exception e2) //database error
             {
-                Console.WriteLine(e2);
+                if (tbConsole != null)
+                {
+                    tbConsole.WriteLine(e2.ToString());
+                }
+                else
+                {
+                    Console.WriteLine(e2);
+                }
+                
                 try
                 {
                     allerror thisError = new allerror

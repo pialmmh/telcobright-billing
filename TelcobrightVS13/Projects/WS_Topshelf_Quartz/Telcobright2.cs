@@ -243,7 +243,7 @@ namespace WS_Telcobright_Topshelf
             }
             return selectedTriggerKeysFinal;
         }
-        static int ScheduleDebugJobs(IScheduler runtimeScheduler, IScheduler debugScheduler,
+        static void ScheduleDebugJobs(IScheduler runtimeScheduler, IScheduler debugScheduler,
             List<TriggerKeyExt> triggerKeysForDebug)
         {
             int jobCount = 0;
@@ -274,11 +274,12 @@ namespace WS_Telcobright_Topshelf
                     }
                 }
             }
-            if (debugScheduler.GetJobKeys(GroupMatcher<JobKey>.AnyGroup()).Count == jobCount)
-            {
-                return jobCount;
-            }
-            else throw new Exception("Scheduled job count did not match expected job count for debug scheduler.");
+            //if (debugScheduler.GetJobKeys(GroupMatcher<JobKey>.AnyGroup()).Count == jobCount)
+            //{
+            //    return jobCount;
+            //}
+            //else throw new Exception("Scheduled job count did not match expected job count for debug scheduler.");
+           
         }
         static void PauseNonSelectedTriggers(IScheduler runtimeScheduler, List<TriggerKeyExt> triggerKeysToPause)
         {

@@ -10,6 +10,7 @@ using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Accounting.Invoice;
 using TelcobrightMediation.Cdr;
 using TransactionTuple = System.ValueTuple<int, int, long, int, long>;
+
 namespace TelcobrightMediation
 {
     [Export("ServiceGroup", typeof(IServiceGroup))]
@@ -51,29 +52,14 @@ namespace TelcobrightMediation
             //Domestic call direction/service group
             var dicRoutes = cdrProcessor.CdrJobContext.MediationContext.MefServiceGroupContainer.SwitchWiseRoutes;
             var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
-            route incomingRoute = null;
-            dicRoutes.TryGetValue(key, out incomingRoute);
-            if (incomingRoute != null)
+            route thisRoute = null;
+            dicRoutes.TryGetValue(key, out thisRoute);
+            if (thisRoute != null)
             {
-                bool useCasStyleProcessing = cdrProcessor.CdrJobContext.CdrjobInputData.CdrSetting.useCasStyleProcessing;
-                if(!useCasStyleProcessing)
+                if (thisRoute.partner.PartnerType == IcxPartnerType.ANS &&
+                    thisRoute.NationalOrInternational == RouteLocalityType.National) //ANS and route=national
                 {
-                    if (incomingRoute.partner.PartnerType == IcxPartnerType.ANS &&
-                    incomingRoute.NationalOrInternational == RouteLocalityType.National) //ANS and route=national
-                    {
-                        thisCdr.ServiceGroup = 1; //Domestic in ICX
-                    }
-                }
-                else
-                {
-                    key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.OutgoingRoute);
-                    route outGoingRoute = null;
-                    dicRoutes.TryGetValue(key, out outGoingRoute);
-                    if (outGoingRoute?.partner.PartnerType == IcxPartnerType.ANS &&
-                        incomingRoute.partner.PartnerType == IcxPartnerType.ANS) //ANS and route=national
-                    {
-                        thisCdr.ServiceGroup = 1; //Domestic call
-                    }
+                    thisCdr.ServiceGroup = 1; //Domestic in ICX
                 }
             }
         }
@@ -98,7 +84,7 @@ namespace TelcobrightMediation
 
         public void ValidateInvoiceGenerationParams(object validationInput)
         {
-            
+
         }
 
         public InvoiceGenerationInputData ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData)
@@ -109,8 +95,9 @@ namespace TelcobrightMediation
             {
                 invoiceGenerationInputData.JsonDetail.Add("vat", ".15");//todo: for now harcode
             }
-            else {
-                invoiceGenerationInputData.JsonDetail["vat"]= ".15";//todo: for now harcode
+            else
+            {
+                invoiceGenerationInputData.JsonDetail["vat"] = ".15";//todo: for now harcode
             }
             return invoiceGenerationInputData;
         }
@@ -120,28 +107,10 @@ namespace TelcobrightMediation
             invoice_item invoiceItem = invoicePostProcessingData.InvoiceItem;
             Dictionary<string, string> jsonDetail = JsonConvert.DeserializeObject<Dictionary<string, string>>
                 (invoiceItem.JSON_DETAIL);
-            string cdrOrSummarytableName = this.SummaryTargetTables.Single(t=>t.Key.ToString().Contains("day"))
+            string cdrOrSummarytableName = this.SummaryTargetTables.Single(t => t.Key.ToString().Contains("day"))
                 .Key.ToString();
             CommonInvoicePostProcessor commonInvoicePostProcessor
                 = new CommonInvoicePostProcessor(invoicePostProcessingData, cdrOrSummarytableName, jsonDetail);
-
-            InvoiceGenerationInputData inputData = invoicePostProcessingData.InvoiceGenerationInputData;
-
-            invoice invoice = invoicePostProcessingData.Invoice;
-            InvoiceGenerationConfig invoiceGenerationConfig =null;
-            inputData.ServiceGroupWiseInvoiceGenerationConfigs.TryGetValue(this.Id, out invoiceGenerationConfig);
-            if(invoiceGenerationConfig==null)
-                throw new Exception("Could not find invoice generation confir for service group:" + this.Id);
-            //IStringExpressionGenerator expressionGenerator= invoiceGenerationConfig.InvoiceRefNoExpressionGenerator;
-            Dictionary<string, object> expressionGenData = new Dictionary<string, object>
-            {
-                {"invoice", invoice},
-                {"serviceGroupName",this.RuleName},
-                {"dbcommand",inputData.Context.Database.Connection.CreateCommand()},
-            };
-            //expressionGenerator.GetStringExpression(expressionGenData);
-            //expressionGenerator.GetStringExpression()
-            //TupleIncrementManager ti= new TupleIncrementManager();
             return commonInvoicePostProcessor.Process();
         }
     }

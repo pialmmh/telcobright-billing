@@ -99,7 +99,7 @@ namespace TelcobrightMediation
 
         public void ValidateInvoiceGenerationParams(object validationInput)
         {
-            
+
         }
 
         public InvoiceGenerationInputData ExecInvoicePreProcessing(InvoiceGenerationInputData invoiceGenerationInputData)
@@ -110,8 +110,9 @@ namespace TelcobrightMediation
             {
                 invoiceGenerationInputData.JsonDetail.Add("vat", ".15");//todo: for now harcode
             }
-            else {
-                invoiceGenerationInputData.JsonDetail["vat"]= ".15";//todo: for now harcode
+            else
+            {
+                invoiceGenerationInputData.JsonDetail["vat"] = ".15";//todo: for now harcode
             }
             return invoiceGenerationInputData;
         }

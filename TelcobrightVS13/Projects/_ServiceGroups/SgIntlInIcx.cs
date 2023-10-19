@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Accounting.Invoice;
 using TelcobrightMediation.Cdr;
-using TransactionTuple = System.ValueTuple<int, int, long, int,long>;
+using TransactionTuple = System.ValueTuple<int, int, long, int, long>;
 
 namespace TelcobrightMediation
 {
@@ -43,7 +43,7 @@ namespace TelcobrightMediation
 
         public void SetAdditionalParams(Dictionary<string, object> additionalParams)
         {
-            
+
         }
 
         public void Execute(cdr thisCdr, CdrProcessor cdrProcessor)
@@ -51,34 +51,15 @@ namespace TelcobrightMediation
             //international in call direction/service group
             var dicRoutes = cdrProcessor.CdrJobContext.MediationContext.MefServiceGroupContainer.SwitchWiseRoutes;
             var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
-            route incomingRoute = null;
-            dicRoutes.TryGetValue(key, out incomingRoute);
-            if (incomingRoute != null)
+            route thisRoute = null;
+            dicRoutes.TryGetValue(key, out thisRoute);
+            if (thisRoute != null)
             {
-                bool useCasStyleProcessing = cdrProcessor.CdrJobContext.CdrjobInputData.CdrSetting.useCasStyleProcessing;
-
-                if (!useCasStyleProcessing)
+                if (thisRoute.partner.PartnerType == IcxPartnerType.IOS
+                    && thisRoute.NationalOrInternational == RouteLocalityType.International
+                ) //IGW and route=international
                 {
-                    if (incomingRoute.partner.PartnerType == IcxPartnerType.IOS
-                            && incomingRoute.NationalOrInternational == RouteLocalityType.International
-                        ) //IGW and route=international
-                    {
-                        thisCdr.ServiceGroup = 3; //Intl in ICX
-                    }
-                }
-                else//cas style processing
-                {
-                    key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.OutgoingRoute);
-                    route outGoingRoute = null;
-                    dicRoutes.TryGetValue(key, out outGoingRoute);
-
-                    if (outGoingRoute?.partner.PartnerType == IcxPartnerType.ANS &&
-                        incomingRoute.partner.PartnerType == IcxPartnerType.IOS) //ANS and route=national
-                    {
-                        thisCdr.ServiceGroup = 3; //Int incoming call
-                    }
-
-
+                    thisCdr.ServiceGroup = 3; //Intl in ICX
                 }
             }
         }
@@ -115,12 +96,10 @@ namespace TelcobrightMediation
                 throw new Exception("Start date & end date must be first & last day of a month.");
             }
             var context = input.Context;
-            //DateTime lastSecondOfPrevMonth = startDate.AddSeconds(-1);
-            DateTime lastDayOfMonth = startDate.GetLastDayOfMonth();
-            DateTime lastSecondOfInvoicePeriod = new DateTime(lastDayOfMonth.Year, lastDayOfMonth.Month, lastDayOfMonth.Day, 23, 59, 59);
+            DateTime lastSecondOfPrevMonth = startDate.AddSeconds(-1);
             uom_conversion_dated usdConversionDated = context.uom_conversion_dated.Where(
                     c => c.PURPOSE_ENUM_ID == "INTERNAL_CONVERSION"
-                         && c.UOM_ID == "USD" && c.UOM_ID_TO == "BDT" && c.FROM_DATE == lastSecondOfInvoicePeriod).ToList()
+                         && c.UOM_ID == "USD" && c.UOM_ID_TO == "BDT" && c.FROM_DATE == lastSecondOfPrevMonth).ToList()
                 .FirstOrDefault();
             if (usdConversionDated == null)
                 throw new Exception("Usd rate not found in uom_conversion_dated table.");
@@ -131,13 +110,11 @@ namespace TelcobrightMediation
             Dictionary<string, string> jobParamsMap = invoiceGenerationInputData.JsonDetail;
             DateTime startDate = Convert.ToDateTime(jobParamsMap["startDate"]);
             var context = invoiceGenerationInputData.Context;
-            DateTime lastDayOfMonth = startDate.GetLastDayOfMonth();
-            DateTime lastSecondOfInvoicePeriod = new DateTime(lastDayOfMonth.Year, lastDayOfMonth.Month, lastDayOfMonth.Day, 23, 59, 59);
-            //DateTime lastSecondOfPrevMonth = startDate.AddSeconds(-1);
+            DateTime lastSecondOfPrevMonth = startDate.AddSeconds(-1);
             uom_conversion_dated usdConversionDated = context.uom_conversion_dated.Where(
                     c => c.PURPOSE_ENUM_ID == "INTERNAL_CONVERSION"
-                         && c.UOM_ID == "USD" && c.UOM_ID_TO == "BDT" && c.FROM_DATE == lastSecondOfInvoicePeriod)
-                         .ToList().FirstOrDefault();
+                         && c.UOM_ID == "USD" && c.UOM_ID_TO == "BDT" && c.FROM_DATE == lastSecondOfPrevMonth)
+                .ToList().FirstOrDefault();
             if (usdConversionDated == null)
                 throw new Exception("Usd conversion rate not found.");
             invoiceGenerationInputData.JsonDetail = jobParamsMap;
@@ -162,6 +139,6 @@ namespace TelcobrightMediation
                 = new CommonInvoicePostProcessor(invoicePostProcessingData, cdrOrSummarytableName, jsonDetail);
             return commonInvoicePostProcessor.Process();
         }
-        
+
     }
 }
