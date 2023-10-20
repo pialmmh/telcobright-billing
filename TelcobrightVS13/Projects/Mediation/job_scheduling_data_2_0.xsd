@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns="http://quartznet.sourceforge.net/JobSchedulingData"
@@ -6,7 +6,7 @@
            elementFormDefault="qualified"
            version="2.0">
 
-  <xs:element name="job-scheduling-data">
+  <xs:element name="job-scheduling-input">
     <xs:annotation>
       <xs:documentation>Root level node</xs:documentation>
     </xs:annotation>
@@ -78,14 +78,14 @@
 
   <xs:complexType name="processing-directivesType">
     <xs:sequence>
-      <xs:element name="overwrite-existing-data" type="xs:boolean" minOccurs="0" default="true">
+      <xs:element name="overwrite-existing-input" type="xs:boolean" minOccurs="0" default="true">
         <xs:annotation>
-          <xs:documentation>Whether the existing scheduling data (with same identifiers) will be overwritten. If false, and ignore-duplicates is not false, and jobs or triggers with the same names already exist as those in the file, an error will occur.</xs:documentation>
+          <xs:documentation>Whether the existing scheduling input (with same identifiers) will be overwritten. If false, and ignore-duplicates is not false, and jobs or triggers with the same names already exist as those in the file, an error will occur.</xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element name="ignore-duplicates" type="xs:boolean" minOccurs="0" default="false">
         <xs:annotation>
-          <xs:documentation>If true (and overwrite-existing-data is false) then any job/triggers encountered in this file that have names that already exist in the scheduler will be ignored, and no error will be produced.</xs:documentation>
+          <xs:documentation>If true (and overwrite-existing-input is false) then any job/triggers encountered in this file that have names that already exist in the scheduler will be ignored, and no error will be produced.</xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element name="schedule-trigger-relative-to-replaced-trigger" type="xs:boolean" minOccurs="0" default="false">
@@ -109,11 +109,11 @@
         <xs:element name="durable" type="xs:boolean" />
         <xs:element name="recover" type="xs:boolean" />
       </xs:sequence>
-      <xs:element name="job-data-map" type="job-data-mapType" minOccurs="0" />
+      <xs:element name="job-input-map" type="job-input-mapType" minOccurs="0" />
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="job-data-mapType">
+  <xs:complexType name="job-input-mapType">
     <xs:annotation>
       <xs:documentation>Define a JobDataMap</xs:documentation>
     </xs:annotation>
@@ -155,7 +155,7 @@
       <xs:element name="job-group" type="xs:string" minOccurs="0" />
       <xs:element name="priority" type="xs:nonNegativeInteger" minOccurs="0" />
       <xs:element name="calendar-name" type="xs:string" minOccurs="0" />
-      <xs:element name="job-data-map" type="job-data-mapType" minOccurs="0" />
+      <xs:element name="job-input-map" type="job-input-mapType" minOccurs="0" />
       <xs:sequence minOccurs="0">
         <xs:choice>
           <xs:element name="start-time" type="xs:dateTime" />

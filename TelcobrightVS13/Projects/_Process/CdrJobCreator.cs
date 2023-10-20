@@ -32,6 +32,7 @@ namespace Process
             {
                 TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(
                     schedulerContext, operatorName);
+                CdrSetting cdrSetting = tbc.CdrSetting;
                 string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName, tbc);
                 using (PartnerEntities context = new PartnerEntities(entityConStr))
                 {
@@ -48,16 +49,20 @@ namespace Process
                             string vaultName = thisSwitch.SourceFileLocations;
                             //Vault vault = tbc.DirectorySettings.Vaults.First(c => c.Name == vaultName);
                             FileLocation fileLocation = tbc.DirectorySettings.FileLocations[vaultName];
-                            string cdrPathLocal = fileLocation.StartingPath;
+                            string vaultPath = fileLocation.StartingPath;
                             DirectoryLister dirlister = new DirectoryLister();
-                            List<FileInfo> zipFiles = dirlister.ListLocalDirectoryZipfileNonRecursive(cdrPathLocal);
+                            List<FileInfo> zipFiles = dirlister.ListLocalDirectoryZipfileNonRecursive(vaultPath);
                             if (zipFiles.Count > 0)
                             {
                                 Console.WriteLine($"Found {zipFiles.Count} zip files. Unzipping ...");
-                                foreach (FileInfo zipFile in zipFiles)
+                                foreach (FileInfo compressedFile in zipFiles)
                                 {
-                                    UnZipper file = new UnZipper(zipFile.FullName);
-                                    file.UnZip();
+                                    CompressedFileHelperForVault compressedFileHelper= 
+                                        new CompressedFileHelperForVault(new List<string> { thisSwitch.FileExtension},vaultPath);
+                                    compressedFileHelper.ExtractWithSafeCopy(compressedFile.FullName);
+                                    compressedFile.Delete();//code reaching here means extraction successful, exceptions will not hit this and file will be kept
+                                    //UnZipper unzipper = new UnZipper(zipFile.FullName);
+                                    //unzipper.UnZipAll();
                                 }
                             }
                             
@@ -69,7 +74,7 @@ namespace Process
                             List<string> validFilePrefixes =
                                 thisSwitch.CDRPrefix.Split(',').Select(s => s.Trim()).ToList();
 
-                            List<FileInfo> fileInfos = dirlister.ListLocalDirectoryNonRecursive(cdrPathLocal)
+                            List<FileInfo> fileInfos = dirlister.ListLocalDirectoryNonRecursive(vaultPath)
                                 .Where(fInfo =>
                                 {
                                     if (thisSwitch.FileExtension == null)
@@ -103,26 +108,7 @@ namespace Process
                                 }
                             }
 
-                            //take only those files whos size is not changing or not being written
-                            //bool[] constantSizeCheckResult= new bool[fileInfos.Count];
-                            //ParallelIterator<FileInfo,bool> parallelIterator= new ParallelIterator<FileInfo, bool>(fileInfos);
-                            //constantSizeCheckResult = parallelIterator.getOutput(fileInfo =>
-                            //    FileAndPathHelper.IsFileSizeConstantOverAPeriod(fileInfo,
-                            //        checkIntervalInSeconds: 1, noOfChecks: 3)).ToArray();
-                            //var templist= new List<FileInfo>();
-                            //for (var index = 0; index < fileInfos.Count; index++)
-                            //{
-                            //    var fileInfo = fileInfos[index];
-                            //    var sizeWasConstant = constantSizeCheckResult[index];
-                            //    if (sizeWasConstant)
-                            //    {
-                            //        templist.Add(fileInfo);
-                            //    }
-                            //    else
-                            //    {
-                            //        Console.WriteLine("Warning: File size varied during check before cdr job creation.");
-                            //    }
-                            //}
+                           
                             //most of the files should be finished written by now, still...
                             //double check if file is still being written, by trying exclusive f open
                             var templist = fileInfos;

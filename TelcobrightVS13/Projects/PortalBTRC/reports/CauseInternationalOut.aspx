@@ -100,7 +100,7 @@
                                 return;
                             }
                         }
-                        //Load Report Templates in TreeView dynically from database.
+                        //Load Report Templates in TreeView dynically from inputbase.
                         CommonCode commonCode = new CommonCode();
                         commonCode.LoadReportTemplatesTree(ref masterTree);
                     }
@@ -552,7 +552,7 @@
           Font-Names="Arial-Narrow" OnSelectedIndexChanged="Send" 
           onrowdatabound="GridView1_RowDataBound">
           <%--OnSelectedIndexChanged="GridView1_SelectedIndexChanged" 
-          onselectedindexchanging="GridView1_SelectedIndexChanging">onrowdatabound="GridView1_RowDataBound" --%>
+          onselectedindexchanging="GridView1_SelectedIndexChanging">onrowinputbound="GridView1_RowDataBound" --%>
         <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
         <Columns>
             <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" />

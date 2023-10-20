@@ -76,7 +76,7 @@
                                 return;
                             }
                         }
-                        //Load Report Templates in TreeView dynically from database.
+                        //Load Report Templates in TreeView dynically from inputbase.
                         CommonCode commonCode = new CommonCode();
                         commonCode.LoadReportTemplatesTree(ref masterTree);
                     }
@@ -1301,7 +1301,7 @@ select Code,Name from countrycode "
              
 
 
-             <%--field1 will show the Rate Change type e.g. new, delete,increase,decrease etc. in row data bound event--%>
+             <%--field1 will show the Rate Change type e.g. new, delete,increase,decrease etc. in row input bound event--%>
 
 
         </Columns>
