@@ -122,18 +122,5 @@ namespace TelcobrightFileOperations
             }
             return zipFiles;
         }
-
-        public List<FileInfo> ListLocalDirectorysplitablefileNonRecursive(string dir,FileSplitSetting fileSplitSetting)
-        {
-            List<FileInfo> splitableFiles = new List<FileInfo>();
-            foreach (string f in Directory.GetFiles(dir))
-            {
-                if (f.Length > fileSplitSetting.SplitFileIfSizeBiggerThanMbyte)
-                {
-                    splitableFiles.Add(new FileInfo(f));
-                }
-            }
-            return splitableFiles;
-        }
     }
 }

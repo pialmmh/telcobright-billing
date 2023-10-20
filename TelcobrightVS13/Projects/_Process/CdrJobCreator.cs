@@ -60,19 +60,7 @@ namespace Process
                                     file.UnZip();
                                 }
                             }
-
-                            FileSplitSetting fileSplitSetting = tbc.CdrSetting.FileSplitSetting;
-
-                            if (fileSplitSetting != null)
-                            {
-                                List<FileInfo> splitableFiles = dirlister.ListLocalDirectorysplitablefileNonRecursive(cdrPathLocal,fileSplitSetting);
-                                foreach (FileInfo file in splitableFiles)
-                                {
-                                        SplitFileByByteLen(file, fileSplitSetting);
-                                }
-                            }
-
-
+                            
                             //var fileNames = vault.GetFileListLocal()
                             //var fileNames = Directory.GetFiles()
                             //Dictionary<string, FileInfo> fileNames = new Dictionary<string, FileInfo>();
@@ -101,6 +89,19 @@ namespace Process
                                   return (currentTime - f.CreationTime).TotalSeconds
                                       > minDurationToSkip;
                               }).ToList();
+
+                            FileSplitSetting fileSplitSetting = tbc.CdrSetting.FileSplitSetting;
+
+                            if (fileSplitSetting != null)
+                            {
+                                foreach (FileInfo file in fileInfos)
+                                {
+                                    if (file.Length > fileSplitSetting.SplitFileIfSizeBiggerThanMbyte)
+                                    {
+                                        SplitFileByByteLen(file, fileSplitSetting);
+                                    }
+                                }
+                            }
 
                             //take only those files whos size is not changing or not being written
                             //bool[] constantSizeCheckResult= new bool[fileInfos.Count];
