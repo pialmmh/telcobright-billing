@@ -127,7 +127,7 @@ namespace Process
                 ErrorWriter wr = new ErrorWriter(e1,"ProcessCdr",null,"",operatorName);
             }
         }
-        
+
         private static void PrintErrorMessageToConsole(ne ne, job telcobrightJob, Exception e)
         {
             Console.WriteLine("xxxErrorxxx Processing CdrJob for Switch:" +

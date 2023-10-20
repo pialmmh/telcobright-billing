@@ -49,7 +49,13 @@ namespace Jobs
             CdrCollectionResult newCollectionResult, oldCollectionResult = null;
             preProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
             newCollectionResult.FinalNonDuplicateEvents = preProcessor.FinalNonDuplicateEvents;
-            newCollectionResult.DuplicateEvents = preProcessor.DuplicateEvents;
+            //newCollectionResult.DuplicateEvents = preProcessor.DuplicateEvents;
+            foreach (string[] row in preProcessor.DuplicateEvents)
+            {
+                row[Fn.Switchid] = this.Input.Ne.idSwitch.ToString();
+                row[Fn.Filename] = this.CollectorInput.TelcobrightJob.JobName;
+                newCollectionResult.DuplicateEvents.Add(row);
+            }
 
             PartialCdrTesterData partialCdrTesterData = OrganizeTestDataForPartialCdrs(preProcessor, newCollectionResult);
             CdrJob cdrJob = (new CdrJobFactory(this.Input, this.RawCount)).
@@ -252,8 +258,6 @@ namespace Jobs
             {
                 createJobsForSplitCase(context, tbc, cdrJob,unsplitFileName);
             }
-            
-
         }
 
         private static void createJobsForSplitCase(PartnerEntities context, TelcobrightConfig tbc, job cdrJob,
