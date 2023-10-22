@@ -113,7 +113,7 @@
                                 <%--div 1--%>
                                 <div style="float: left;">
                                     <div style="margin-left: auto; margin-right: auto; text-align: center;">
-                                        <asp:Label ID="Label2" runat="server" Text="CDR File Receiving Status By ICX (Current Month)" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
+                                        <asp:Label ID="Label2" runat="server" Text="Latest CDR Processing Status" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
                                     </div>
                                     <asp:GridView ID="GridViewCompleted" runat="server" AutoGenerateColumns="False" CellPadding="4" DataKeyNames="id" ForeColor="#333333" GridLines="None" BorderStyle="None" BorderWidth="1"  >
                                         <AlternatingRowStyle BackColor="White" ForeColor="#284775" />

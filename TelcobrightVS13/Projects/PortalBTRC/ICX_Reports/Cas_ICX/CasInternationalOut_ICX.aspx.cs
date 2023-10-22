@@ -927,7 +927,7 @@ public partial class CasDefaultRptIntlOutIcx : System.Web.UI.Page
             }
             if (lblScreenTitle.Text == "")
             {
-                lblScreenTitle.Text = "Reports/Intl. Outgoing/Traffic";
+                lblScreenTitle.Text = "Reports/International Outgoing";
             }
 
             //End of Site Map Part *******************************************************************

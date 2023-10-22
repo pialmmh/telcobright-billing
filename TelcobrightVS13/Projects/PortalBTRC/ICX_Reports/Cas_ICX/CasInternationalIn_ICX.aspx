@@ -154,7 +154,7 @@
 
                 if (lblScreenTitle.Text == "")
                 {
-                    lblScreenTitle.Text = "Reports/Intl. Incoming/Traffic";
+                    lblScreenTitle.Text = "Reports/International Incoming";
                 }
                 //End of Site Map Part *******************************************************************
 
