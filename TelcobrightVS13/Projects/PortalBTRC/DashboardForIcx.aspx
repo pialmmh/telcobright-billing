@@ -3,19 +3,26 @@
 <%@ Register Assembly="System.Web.DataVisualization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Namespace="System.Web.UI.DataVisualization.Charting" TagPrefix="asp" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
+    
+    <div class="jumbotron">
+        <h1>
+            <asp:Label ID="lblCustomerDisplayName" runat="server" Text=""></asp:Label></h1>
+        <p class="lead">CDR Analyzer System (CAS)</p>
+
+    </div>
 
 
     <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
-    <div style="text-align: left;min-width:1000px;padding-left:50px; margin-top: -80px">
-        <div style="float: left; visibility: hidden">
+    <div style="text-align: left;min-width:1000px;padding-left:50px;">
+        <div style="float: left">
             
                 <asp:UpdatePanel ID="UpdatePanel3" runat="server">
                     <Triggers>
                         <asp:AsyncPostBackTrigger ControlID="Timer3" EventName="Tick"/>
                     </Triggers>
                     <ContentTemplate>
-                       <div style="visibility: hidden">
-                         <h2 >International Incoming</h2>
+                       <div>
+                         <h2 style="visibility: hidden">International Incoming</h2>
                             <asp:HyperLink ID="HyperLinkIntlIn" runat="server" Target="_blank" NavigateUrl="~/reports/InternationalIn.aspx" ForeColor="#08605c" ></asp:HyperLink>
                             </h2>
                         <p></p>
@@ -39,7 +46,7 @@
                             </asp:GridView>
                             <asp:SqlDataSource ID="SqlDataSource3" runat="server"></asp:SqlDataSource>
                         </div>
-                        <div style="float: left; padding-left: 100px;">
+                        <div style="float: left; ">
                         </div>
                         <p></p>
                         </div>
@@ -49,7 +56,7 @@
             <asp:Timer ID="Timer3" runat="server" Interval="30000" OnTick="Timer3_Tick" Enabled="false">
             </asp:Timer>
            
-            <div style="visibility: hidden">
+            <div>
                 <asp:UpdatePanel ID="UpdatePanel1" runat="server">
                     <Triggers>
                         <asp:AsyncPostBackTrigger ControlID="Timer1" EventName="Tick" />

@@ -89,8 +89,8 @@
         
            View by Switch:
         <asp:CheckBox ID="ViewBySwitch" runat="server" AutoPostBack="True"
-                      OnCheckedChanged="CheckBoxShowBySwitch_CheckedChanged" Checked="True" />
-            <asp:DropDownList ID="DropDownListShowBySwitch" runat="server" Visible="true" Enabled="True">
+                      OnCheckedChanged="CheckBoxShowBySwitch_CheckedChanged" Checked="False" />
+            <asp:DropDownList ID="DropDownListShowBySwitch" runat="server" Visible="true" Enabled="False">
             </asp:DropDownList>
 
         <asp:Button Style="margin-left: 5px" ID="submit" runat="server" Text="Show Report" OnClick="submit_Click" OnClientClick="SethidValueSubmitClickFlag('true');" />
@@ -343,7 +343,7 @@
           <Columns>
                 <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" />
               <%--<asp:BoundField DataField="tup_incomingroute" HeaderText="ICX" SortExpression="tup_incomingroute" />--%>
-              <asp:BoundField DataField="icxName" HeaderText="ICX" SortExpression="IcxName" />
+              <asp:BoundField DataField="icxName" HeaderText="ICX" SortExpression="IcxName" Visible="False"/>
                 <asp:BoundField DataField="Country" HeaderText="Country"
                     SortExpression="Country"/>
                 <asp:BoundField DataField="Destination" HeaderText="Destination"

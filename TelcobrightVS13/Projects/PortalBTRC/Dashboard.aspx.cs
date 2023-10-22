@@ -23,6 +23,7 @@ public partial class DashboardAspx : Page
     string targetIcxName = "btrc_cas";
     protected void Page_Load(object sender, EventArgs e)
     {
+       
         //get any ne of this telcobright partner, required by rate handling objects
         string conStrPartner = ConfigurationManager.ConnectionStrings["partner"].ConnectionString;
         string dbNameAppConf = "";
@@ -49,6 +50,13 @@ public partial class DashboardAspx : Page
             dbName = telcobrightConfig.DatabaseSetting.DatabaseName;
         }
         databaseSetting.DatabaseName = dbName;
+
+        if (dbName!="btrc_cas")
+        {
+            // if not BTRC user route to regular icx dashhboard
+            //add limit 0,1000 in error table query for icx dashboard
+            Response.Redirect("~/DashboardForIcx.aspx");
+        }
 
         using (PartnerEntities conTelco = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting))
         {
@@ -84,37 +92,13 @@ public partial class DashboardAspx : Page
             }
         }
 
-
         //dashboard items
         UpdateErrorCalls();
-
-
-
-
 
         UpdateInternationalIncoming();
         this.Timer1.Enabled = true;
         this.Timer2.Enabled = true;
         this.Timer3.Enabled = true;
-
-
-
-
-
-
-
-        if (!IsPostBack)//initial
-        {
-            if (dbName == "btrc_cas")
-            {
-                UpdatePanel2.Visible = true;
-            }
-            else
-            {
-                UpdatePanel2.Visible = false;
-            }
-
-        }
 
         PopulateIpTdmPieChart();
         PopulateDomesticDistribution();
@@ -127,12 +111,7 @@ public partial class DashboardAspx : Page
         PopulateIcxDistributionMymengshing();
         PopulateIcxDistributionRajshahi();
 
-
-
-
     }
-
-
 
     //humayun
     private void PopulateIpTdmPieChart()

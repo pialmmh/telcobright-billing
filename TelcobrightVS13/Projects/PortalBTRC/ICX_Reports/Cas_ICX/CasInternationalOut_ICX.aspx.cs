@@ -22,7 +22,7 @@ public partial class CasDefaultRptIntlOutIcx : System.Web.UI.Page
 {
     DataTable _dt;
     bool _timerflag = false;
-
+    TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
     public TelcobrightConfig tbc;
    
     private string GetQuery()
@@ -1110,6 +1110,7 @@ public partial class CasDefaultRptIntlOutIcx : System.Web.UI.Page
         if (ViewBySwitch.Checked == true)
         {
             DropDownListShowBySwitch.Enabled = true;
+            setSwitchListDropDown(DropDownListViewIncomingRoute, EventArgs.Empty);
         }
         else DropDownListShowBySwitch.Enabled = false;
     }
@@ -1658,6 +1659,46 @@ public partial class CasDefaultRptIntlOutIcx : System.Web.UI.Page
     //    DropDownListShowBySwitch.Enabled = CheckBoxShowBySwitch.Checked;
     //}
 
+    protected void DropDownListViewIncomingRoute_SelectedChanged(object sender, EventArgs e)
+    {
+        setSwitchListDropDown(DropDownListViewIncomingRoute, EventArgs.Empty);
+    }
+
+    protected void setSwitchListDropDown(object sender, EventArgs e)
+    {
+
+
+        TelcobrightConfig tb = telcobrightConfig;
+        tb.DatabaseSetting.DatabaseName = DropDownListViewIncomingRoute.SelectedValue;
+        if (tb.DatabaseSetting.DatabaseName != "-1")
+        {
+            this.ViewBySwitch.Enabled = true;
+
+            //this.ViewBySwitch.Checked = true;
+            using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(tb.DatabaseSetting))
+            {
+                //populate switch
+                List<ne> lstNe = context.nes.ToList();
+                this.DropDownListShowBySwitch.Items.Clear();
+                this.DropDownListShowBySwitch.Items.Add(new ListItem(" [All]", "-1"));
+                foreach (ne nE in lstNe)
+                {
+                    if (!nE.SwitchName.Contains("dummy"))
+                    {
+                        this.DropDownListShowBySwitch.Items.Add(new ListItem(nE.SwitchName, nE.idSwitch.ToString()));
+                    }
+
+                }
+            }
+        }
+        else
+        {
+            this.ViewBySwitch.Enabled = false;
+            this.ViewBySwitch.Checked = false;
+            this.DropDownListShowBySwitch.Enabled = false;
+        }
+    }
+
     protected void DropDownListIgw_OnSelectedIndexChanged(object sender, EventArgs e)
     {
         DropDownListViewIncomingRoute.Items.Clear();
@@ -1723,17 +1764,38 @@ public partial class CasDefaultRptIntlOutIcx : System.Web.UI.Page
 
     private void populateICX()
     {
-        DropDownListViewIncomingRoute.Items.Clear();
-        DropDownListViewIncomingRoute.Items.Add(new ListItem("[All]", "-1"));
-        foreach (var kv in tbc.DeploymentProfile.UserVsDbName)
+        string logIdentityName = this.User.Identity.Name;
+        String selectedIcx = logIdentityName;
+        TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
+        string selectedUserdbName;
+        Dictionary<string, string> userVsDbName = telcobrightConfig.DeploymentProfile.UserVsDbName;
+        if (userVsDbName.ContainsKey(logIdentityName))
         {
-            if (!kv.Value.Contains("btrc"))
+            selectedUserdbName = userVsDbName[logIdentityName];
+        }
+        else
+        {
+            selectedUserdbName = telcobrightConfig.DatabaseSetting.DatabaseName;
+        }
+        DropDownListViewIncomingRoute.Items.Clear();
+        if (selectedUserdbName.Contains("btrc"))
+        {
+            foreach (var kv in telcobrightConfig.DeploymentProfile.UserVsDbName)
             {
-                string username = kv.Key;
-                string dbNameAsRouteName = kv.Value;
-                string icxName = dbNameAsRouteName.Split('_')[0];
-                DropDownListViewIncomingRoute.Items.Add(new ListItem(icxName, dbNameAsRouteName));
+                if (!kv.Value.Contains("btrc"))
+                {
+                    string username = kv.Key;
+                    string dbNameAsRouteName = kv.Value;
+                    string icxName = dbNameAsRouteName.Split('_')[0];
+                    DropDownListViewIncomingRoute.Items.Add(new ListItem(icxName, dbNameAsRouteName));
+                }
+
             }
+        }
+        else
+        {
+            string individualIcxName = selectedUserdbName.Split('_')[0];
+            DropDownListViewIncomingRoute.Items.Add(new ListItem(individualIcxName, selectedUserdbName));
 
         }
     }

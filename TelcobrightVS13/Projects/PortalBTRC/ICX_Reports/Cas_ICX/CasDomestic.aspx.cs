@@ -25,6 +25,7 @@ public partial class CasDefaultRptDomesticIcx : System.Web.UI.Page
     private int _mShowByCountry=0;
     private int _mShowByAns = 0;
     DataTable _dt;
+    TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
     public TelcobrightConfig tbc;
     private string GetQuery()
     {
@@ -60,6 +61,7 @@ public partial class CasDefaultRptDomesticIcx : System.Web.UI.Page
                 CheckBoxShowByAns.Checked==true?"tup_destinationId":string.Empty,
                 CheckBoxShowByIgw.Checked==true?"tup_outpartnerid":string.Empty,
                 //CheckBoxViewIncomingRoute.Checked==true?"tup_incomingroute":string.Empty,
+                CheckBoxViewIncomingRoute.Checked==true?"icxname":string.Empty,
                 CheckBoxViewOutgoingRoute.Checked==true?"tup_outgoingroute":string.Empty,
                 ViewBySwitch.Checked==true?"tup_switchid":string.Empty
             },
@@ -418,6 +420,7 @@ public partial class CasDefaultRptDomesticIcx : System.Web.UI.Page
         if (ViewBySwitch.Checked == true)
         {
             DropDownListShowBySwitch.Enabled = true;
+            setSwitchListDropDown(DropDownListViewIncomingRoute, EventArgs.Empty);
         }
         else DropDownListShowBySwitch.Enabled = false;
     }
@@ -704,59 +707,82 @@ public partial class CasDefaultRptDomesticIcx : System.Web.UI.Page
         DropDownListViewOutgoingRoute.Enabled = CheckBoxViewOutgoingRoute.Checked;
     }
 
+    protected void DropDownListViewIncomingRoute_SelectedChanged(object sender, EventArgs e)
+    {
+        setSwitchListDropDown(DropDownListViewIncomingRoute, EventArgs.Empty);
+    }
+
+    protected void setSwitchListDropDown(object sender, EventArgs e)
+    {
+
+
+        TelcobrightConfig tb = telcobrightConfig;
+        tb.DatabaseSetting.DatabaseName = DropDownListViewIncomingRoute.SelectedValue;
+        if (tb.DatabaseSetting.DatabaseName != "-1")
+        {
+            this.ViewBySwitch.Enabled = true;
+
+            //this.ViewBySwitch.Checked = true;
+            using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(tb.DatabaseSetting))
+            {
+                //populate switch
+                List<ne> lstNe = context.nes.ToList();
+                this.DropDownListShowBySwitch.Items.Clear();
+                this.DropDownListShowBySwitch.Items.Add(new ListItem(" [All]", "-1"));
+                foreach (ne nE in lstNe)
+                {
+                    if (!nE.SwitchName.Contains("dummy"))
+                    {
+                        this.DropDownListShowBySwitch.Items.Add(new ListItem(nE.SwitchName, nE.idSwitch.ToString()));
+                    }
+
+                }
+            }
+        }
+        else
+        {
+            this.ViewBySwitch.Enabled = false;
+            this.ViewBySwitch.Checked = false;
+            this.DropDownListShowBySwitch.Enabled = false;
+        }
+    }
+
+
     protected void DropDownListPartner_OnSelectedIndexChanged(object sender, EventArgs e)
     {
-        DropDownListViewIncomingRoute.Items.Clear();
-        DropDownListViewIncomingRoute.Items.Add(new ListItem("[All]", "-1"));
-
-    
-    
-        if (DropDownListPartner.SelectedValue != String.Empty)
+        string logIdentityName = this.User.Identity.Name;
+        String selectedIcx = logIdentityName;
+        TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
+        string selectedUserdbName;
+        Dictionary<string, string> userVsDbName = telcobrightConfig.DeploymentProfile.UserVsDbName;
+        if (userVsDbName.ContainsKey(logIdentityName))
         {
-            if (DropDownListPartner.SelectedValue == "-1")
+            selectedUserdbName = userVsDbName[logIdentityName];
+        }
+        else
+        {
+            selectedUserdbName = telcobrightConfig.DatabaseSetting.DatabaseName;
+        }
+        DropDownListViewIncomingRoute.Items.Clear();
+        if (selectedUserdbName.Contains("btrc"))
+        {
+            foreach (var kv in telcobrightConfig.DeploymentProfile.UserVsDbName)
             {
-                using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(tbc.DatabaseSetting))
+                if (!kv.Value.Contains("btrc"))
                 {
-                    //List<int> ansList = contex.partners.Where(c => c.PartnerType == 2).Select(c => c.idPartner).ToList();
-                    //foreach (route route in contex.routes.Where(x => ansList.Contains(x.idPartner)))
-                    //{
-                    //    DropDownListViewIncomingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
-                    //}
-                    foreach (var kv in tbc.DeploymentProfile.UserVsDbName)
-                    {
-                        if (!kv.Value.Contains("btrc"))
-                        {
-                            string username = kv.Key;
-                            string dbNameAsRouteName = kv.Value;
-                            string icxName = dbNameAsRouteName.Split('_')[0];
-                            DropDownListViewIncomingRoute.Items.Add(new ListItem(icxName, dbNameAsRouteName));
-                        }
-
-                    }
+                    string username = kv.Key;
+                    string dbNameAsRouteName = kv.Value;
+                    string icxName = dbNameAsRouteName.Split('_')[0];
+                    DropDownListViewIncomingRoute.Items.Add(new ListItem(icxName, dbNameAsRouteName));
                 }
-            }
-            else
-            {
-                using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(tbc.DatabaseSetting))
-                {
-                    //int idPartner = Convert.ToInt32(DropDownListPartner.SelectedValue);
-                    //foreach (route route in contex.routes.Where(x => x.idPartner == idPartner))
-                    //{
-                    //    DropDownListViewIncomingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
-                    //}
-                    foreach (var kv in tbc.DeploymentProfile.UserVsDbName)
-                    {
-                        if (!kv.Value.Contains("btrc"))
-                        {
-                            string username = kv.Key;
-                            string dbNameAsRouteName = kv.Value;
-                            string icxName = dbNameAsRouteName.Split('_')[0];
-                            DropDownListViewIncomingRoute.Items.Add(new ListItem(icxName, dbNameAsRouteName));
-                        }
 
-                    }
-                }
             }
+        }
+        else
+        {
+            string individualIcxName = selectedUserdbName.Split('_')[0];
+            DropDownListViewIncomingRoute.Items.Add(new ListItem(individualIcxName, selectedUserdbName));
+
         }
     }
 

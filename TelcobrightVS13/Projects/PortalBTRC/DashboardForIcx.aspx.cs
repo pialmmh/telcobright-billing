@@ -55,7 +55,7 @@ public partial class DashboardAspxForIcx : Page
             thisPartner = conTelco.telcobrightpartners.Where(c => c.databasename == dbName).ToList().First();
 
         }
-        //this.lblCustomerDisplayName.Text = thisPartner.CustomerName;
+        this.lblCustomerDisplayName.Text = thisPartner.CustomerName;
         //this.lblCustomerDisplayName.Text = "CDR Analyzer System (CAS)";
         //databaseSetting.DatabaseName = this.targetIcxName;
         string connectionString = DbUtil.getDbConStrWithDatabase(databaseSetting);
@@ -88,20 +88,10 @@ public partial class DashboardAspxForIcx : Page
         //dashboard items
         UpdateErrorCalls();
 
-
-
-
-
         UpdateInternationalIncoming();
         this.Timer1.Enabled = true;
         this.Timer2.Enabled = true;
         this.Timer3.Enabled = true;
-
-
-
-       
-
-        
 
         if (!IsPostBack)//initial
         {
@@ -111,9 +101,7 @@ public partial class DashboardAspxForIcx : Page
 
     }
 
-
-
-    //humayun
+     //humayun
     
     private void UpdateErrorCalls()
     {
@@ -121,8 +109,17 @@ public partial class DashboardAspxForIcx : Page
         using (PartnerEntities conPartner = PortalConnectionHelper.GetPartnerEntitiesDynamic(telcobrightConfig.DatabaseSetting))
         {
             ec = conPartner.Database.SqlQuery<DashBoard.ErrorCalls>(@"select ErrorCode as ErrorReason, count(*) as NumberOfCalls
-                                                from cdrerror group by ErrorCode").ToList();
-            this.HyperLinkError.Text = ec.Select(c => c.NumberOfCalls).Sum() + " Calls in Error";
+                                                from cdrerror group by ErrorCode limit 0,1001").ToList();
+            long totalNumberOfCalls = ec.Select(c => c.NumberOfCalls).Sum();
+
+            if (totalNumberOfCalls > 1000)
+            {
+                this.HyperLinkError.Text = "1000+ Calls in Error";
+            }
+            else
+            {
+                this.HyperLinkError.Text = totalNumberOfCalls + " Calls in Error";
+            }
             this.GridViewError.DataSource = ec;
             this.GridViewError.DataBind();
 

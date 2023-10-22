@@ -559,9 +559,13 @@ public partial class DefaultMediation : System.Web.UI.Page
             List<ne> lstNe = context.nes.ToList();
             this.DropDownListPartner.Items.Clear();
             //this.DropDownListPartner.Items.Add(new ListItem(" [All]", "-1"));
+            this.DropDownListPartner.Items.Add(new ListItem(" [All]", "-1"));
             foreach (ne nE in lstNe)
             {
-                this.DropDownListPartner.Items.Add(new ListItem(nE.SwitchName, nE.idSwitch.ToString()));
+                if (!nE.SwitchName.Contains("dummy"))
+                {
+                    this.DropDownListPartner.Items.Add(new ListItem(nE.SwitchName, nE.idSwitch.ToString()));
+                }
             }
         }
     }

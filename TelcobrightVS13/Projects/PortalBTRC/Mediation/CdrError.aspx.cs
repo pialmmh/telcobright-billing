@@ -285,7 +285,7 @@ public partial class DefaultCdrError : System.Web.UI.Page
             //TotalNumRows= Convert.ToInt32(causecodecount);
             this.ViewState["totalnumrows"] = this._totalNumRows;
         }
-        // sqlstring += " Limit 0,1000;";
+        sqlstring += " Limit 0,1000;";
 
         return sqlstring;
     }
