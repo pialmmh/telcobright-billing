@@ -18,7 +18,7 @@ namespace TelcobrightMediation
     public class NewCdrPreProcessor : AbstractCdrJobPreProcessor
     {
         private bool PartialCdrEnabled { get; }
-        public List<string[]> TxtCdrRows { get; set; }
+        public List<string[]> TxtCdrRows { get; set; }= new List<string[]>();
         public Dictionary<string, string[]> FinalNonDuplicateEvents { get; set; }= new Dictionary<string, string[]>();
         public List<string[]> DuplicateEvents { get; set; }= new List<string[]>();
 
@@ -64,15 +64,23 @@ namespace TelcobrightMediation
             return txtRows;
         }
 
-        public void ConvertToCdr(string[] row,out cdrinconsistent cdrInconsistent)
+        public CdrAndInconsistentWrapper ConvertToCdr(string[] row)
         {
             cdr convertedCdr = null;
-            cdrInconsistent = null;
-            List<IExceptionalCdrPreProcessor> exceptionalCdrPreProcessor = 
+            cdrinconsistent cdrInconsistent = null;
+            List<IExceptionalCdrPreProcessor> exceptionalCdrPreProcessor =
                 base.CdrCollectorInputData.MediationContext.MefExceptionalCdrPreProcessorContainer.DicExtensions.Values.ToList();
             convertedCdr = CdrConversionUtil.ConvertTxtRowToCdrOrInconsistentOnFailure(row, exceptionalCdrPreProcessor, out cdrInconsistent);
+            return new CdrAndInconsistentWrapper(convertedCdr,cdrInconsistent);
+        }
+
+        public void AddToBaseCollection(CdrAndInconsistentWrapper cdrAndInconsistent)
+        {
+            cdrinconsistent cdrInconsistent = cdrAndInconsistent.Cdrinconsistent;
+            cdr convertedCdr = cdrAndInconsistent.Cdr;
             if (convertedCdr == null && cdrInconsistent != null) return;
-            if (convertedCdr != null && cdrInconsistent == null)
+            if (cdrInconsistent != null) this.InconsistentCdrs.Add(cdrInconsistent);
+            if (convertedCdr != null)
             {
                 if (convertedCdr.PartialFlag == 0)
                     base.NonPartialCdrs.Add(convertedCdr);

@@ -26,7 +26,7 @@ namespace Jobs
         public string RuleName => GetType().Name;
         public string HelpText => "Invoice generation job";
         public int Id => 12;
-        public JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
+        public object Execute(ITelcobrightJobInput jobInputData)
         {
             InvoiceGenerationInputData invoiceGenerationInputData = (InvoiceGenerationInputData)jobInputData;
             job telcobrightJob = invoiceGenerationInputData.TelcobrightJob;
@@ -73,6 +73,16 @@ namespace Jobs
             invoicePostProcessingData.TempTransaction = CreateTempTransaction(invoicePostProcessingData);
             WriteToDb(invoicePostProcessingData);//write the main invoice to db
             return JobCompletionStatus.Complete;
+        }
+
+        public object PreprocessJob(ITelcobrightJobInput jobInputData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object PostprocessJob(ITelcobrightJobInput jobInputData)
+        {
+            throw new NotImplementedException();
         }
 
         private List<long> GenerateChildInvoicesToBeMerged(InvoiceGenerationInputData invoiceGenerationInputData, 

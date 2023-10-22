@@ -54,7 +54,7 @@ namespace Jobs
                 })
             { FullPath = fullPath };
         }
-        public JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
+        public object Execute(ITelcobrightJobInput jobInputData)
         {
             FileCopyJobInputData input = (FileCopyJobInputData)jobInputData;
             JobParamFileCopy paramFileCopy = new JobParamFileCopy();
@@ -403,7 +403,18 @@ namespace Jobs
             }
 
             return JobCompletionStatus.Complete;
-        }//execute
+        }
+
+        public object PreprocessJob(ITelcobrightJobInput jobInputData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object PostprocessJob(ITelcobrightJobInput jobInputData)
+        {
+            throw new NotImplementedException();
+        }
+//execute
 
 
         public void CreateJob(SyncPair syncPair, string fileName, TelcobrightConfig tbc)

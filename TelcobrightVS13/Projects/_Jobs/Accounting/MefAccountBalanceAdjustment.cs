@@ -26,7 +26,7 @@ namespace Jobs
         public string RuleName => GetType().Name;
         public string HelpText => "Account balance adjustment job";
         public int Id => 13;
-        public JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
+        public object Execute(ITelcobrightJobInput jobInputData)
         {
             InvoiceGenerationInputData invoiceGenerationInputData = (InvoiceGenerationInputData)jobInputData;
             BalanceAdjustmentHelper balanceAdjustmentHelper = new BalanceAdjustmentHelper(invoiceGenerationInputData);
@@ -34,7 +34,17 @@ namespace Jobs
             WriteToDb(adjustmentPostProcessingData);
             return JobCompletionStatus.Complete;
         }
-        
+
+        public object PreprocessJob(ITelcobrightJobInput jobInputData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object PostprocessJob(ITelcobrightJobInput jobInputData)
+        {
+            throw new NotImplementedException();
+        }
+
         private void WriteToDb(BalanceAdjustmentPostProcessingData adjustmentPostProcessingData)
         {
             InvoiceGenerationInputData invoiceGenerationInputData =

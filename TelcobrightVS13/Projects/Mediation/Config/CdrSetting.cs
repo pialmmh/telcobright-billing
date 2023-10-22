@@ -39,7 +39,7 @@ namespace TelcobrightMediation
         public SkipSettingsForSummaryOnly SkipSettingsForSummaryOnly = new SkipSettingsForSummaryOnly();
         public FileSplitSetting FileSplitSetting { get; set; }
         public bool useCasStyleProcessing { get; set; } = false;
-        public Dictionary<int, NeAdditionalSetting> SwitchWiseAdditionalSettings { get; set; }= new Dictionary<int, NeAdditionalSetting>();
+        public Dictionary<int, NeAdditionalSetting> NeWiseAdditionalSettings { get; set; }= new Dictionary<int, NeAdditionalSetting>();
 
         public CdrSetting()
         {

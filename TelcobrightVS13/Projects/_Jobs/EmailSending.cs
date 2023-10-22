@@ -19,7 +19,7 @@ namespace Jobs
         public string HelpText => "Sends email notification";
         public int Id => 20;
 
-        public JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
+        public object Execute(ITelcobrightJobInput jobInputData)
         {
             //returning corrrect jobCompletion status is important, because file may not be deleted due to pre-requisite
             //in that case the job must not be marked as "complete" in database
@@ -51,6 +51,16 @@ namespace Jobs
                 }
             }
             return JobCompletionStatus.Complete;
+        }
+
+        public object PreprocessJob(ITelcobrightJobInput jobInputData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object PostprocessJob(ITelcobrightJobInput jobInputData)
+        {
+            throw new NotImplementedException();
         }
     }
 }

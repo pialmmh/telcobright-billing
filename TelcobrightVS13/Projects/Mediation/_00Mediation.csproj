@@ -196,6 +196,7 @@
     <Compile Include="Cdr\Collection\Collector\CdrRowCollector.cs" />
     <Compile Include="Cdr\Collection\Collector\DayWiseEventCollector.cs" />
     <Compile Include="Cdr\Collection\Collector\HourlyEventData.cs" />
+    <Compile Include="Cdr\Collection\PreProcessors\CdrAndInConsistentWrapper.cs" />
     <Compile Include="Cdr\Collection\PreProcessors\CdrErrorPreProcessor.cs" />
     <Compile Include="Cdr\Collection\PreProcessors\AbstractCdrReProcessingPreProcessor.cs" />
     <Compile Include="Cdr\Collection\PreProcessors\DuplicaterEventFilter.cs" />
@@ -206,7 +207,6 @@
     <Compile Include="Config\AbstractConfigGenerator.cs" />
     <Compile Include="Config\AutomationSetting.cs" />
     <Compile Include="Config\NeAdditionalSetting.cs" />
-    <Compile Include="Config\PreDecoderSetting.cs" />
     <Compile Include="Config\CdrSetting.cs" />
     <Compile Include="Config\ConfigFactory.cs" />
     <Compile Include="Config\ConnectionManager.cs" />

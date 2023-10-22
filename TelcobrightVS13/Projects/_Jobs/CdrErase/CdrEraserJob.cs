@@ -26,7 +26,7 @@ namespace Jobs
 
         public int Id => 4;
 
-        public JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
+        public object Execute(ITelcobrightJobInput jobInputData)
         {
             CdrJobInputData input = (CdrJobInputData) jobInputData;
             CdrCollectorInputData cdrCollectorInput = new CdrCollectorInputData(input, "");
@@ -38,6 +38,16 @@ namespace Jobs
             List<jobsegment> jobsegments = segmentedCdrErrorJobProcessor.ExecuteIncompleteSegments();
             segmentedCdrErrorJobProcessor.FinishJob(jobsegments,null); //mark job as complete
             return JobCompletionStatus.Complete;
+        }
+
+        public object PreprocessJob(ITelcobrightJobInput jobInputData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object PostprocessJob(ITelcobrightJobInput jobInputData)
+        {
+            throw new NotImplementedException();
         }
     }
 }

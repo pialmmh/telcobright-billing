@@ -35,10 +35,12 @@ namespace Process
         public override void Execute(IJobExecutionContext schedulerContext)
         {
             string operatorName = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");
+            
             try
             {
                 TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(
                     schedulerContext, operatorName);
+                CdrSetting cdrSetting= tbc.CdrSetting;
                 string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName,tbc);
                 using (PartnerEntities context = new PartnerEntities(entityConStr))
                 {
@@ -47,6 +49,19 @@ namespace Process
                     tbc.GetPathIndependentApplicationDirectory();
                     foreach (ne ne in mediationContext.Nes.Values)
                     {
+                        NeAdditionalSetting neAdditionalSetting = null;
+                        cdrSetting.NeWiseAdditionalSettings.TryGetValue(ne.idSwitch, out neAdditionalSetting);
+                        int maxRowCountForBatchProcessing = neAdditionalSetting.MaxRowCountForBatchProcessing;
+                        Dictionary<long, NewCdrWrappedJobForMerge> mergedJobsDic = new Dictionary<long, NewCdrWrappedJobForMerge>(); //key=idJob
+                        NewCdrWrappedJobForMerge headJobForMerge = null;
+                        int rowCountSoFarForMerge = 0;
+                        Action resetMergeJobStatus = () =>
+                        {
+                            mergedJobsDic = new Dictionary<long, NewCdrWrappedJobForMerge>(); //key=idJob
+                            headJobForMerge = null;
+                            rowCountSoFarForMerge = 0;
+                        };
+                        resetMergeJobStatus();
                         try
                         {
                             if (ne.SkipCdrDecoded == 1 || CheckIncomplete(context, mediationContext, ne) == false)
@@ -55,30 +70,69 @@ namespace Process
                             incompleteJobs.AddRange(GetNewCdrJobs(tbc, context, ne, ne.DecodingSpanCount)); //combine
                             using (DbCommand cmd = context.Database.Connection.CreateCommand())
                             {
-                                foreach (job telcobrightJob in incompleteJobs)
+                                foreach (job job in incompleteJobs)
                                 {
                                     Console.WriteLine("Processing CdrJob for Switch:" + ne.SwitchName + ", JobName:" +
-                                                      telcobrightJob.JobName);
+                                                      job.JobName);
                                     this.TbConsole.WriteLine("Processing CdrJob for Switch:" + ne.SwitchName + ", JobName:" +
-                                                             telcobrightJob.JobName);
+                                                             job.JobName);
                                     try
                                     {
                                         if (cmd.Connection.State != ConnectionState.Open) cmd.Connection.Open();
                                         cmd.ExecuteCommandText("set autocommit=0;");
-                                        ITelcobrightJob iJob = null;
+                                        ITelcobrightJob telcobrightJob = null;
                                         mediationContext.MefJobContainer.DicExtensionsIdJobWise.TryGetValue(
-                                            telcobrightJob.idjobdefinition.ToString(), out iJob);
-                                        if (iJob == null)
+                                            job.idjobdefinition.ToString(), out telcobrightJob);
+                                        if (telcobrightJob == null)
                                             throw new Exception("JobRule not found in MEF collection.");
                                         var cdrJobInputData =
-                                            new CdrJobInputData(mediationContext, context, ne, telcobrightJob);
-                                        iJob.Execute(cdrJobInputData); //EXECUTE
+                                            new CdrJobInputData(mediationContext, context, ne, job);
+                                        if (job.idjobdefinition!=1)//error process or re-process job, not merging, process as a single job
+                                        {
+                                            telcobrightJob.Execute(cdrJobInputData); //EXECUTE
+                                        }
+                                        else if (neAdditionalSetting == null || 
+                                            neAdditionalSetting?.ProcessMultipleCdrFilesInBatch==false)//new cdr job, not merging, process as single job
+                                        {
+                                            telcobrightJob.Execute(cdrJobInputData); //EXECUTE
+                                        }
+                                        else if(neAdditionalSetting?.ProcessMultipleCdrFilesInBatch == true)//merge new cdr jobs for batch processing
+                                        {
+                                            NewCdrPreProcessor preProcessor =
+                                                (NewCdrPreProcessor) telcobrightJob.PreprocessJob(cdrJobInputData);
+                                            if (preProcessor.TxtCdrRows.Count>=maxRowCountForBatchProcessing)//already large job, process as single
+                                            {
+                                                telcobrightJob.Execute(cdrJobInputData); //not merging, process as single job
+                                                continue;
+                                            }
+                                            //merge job for batch processing*******************
+                                            NewCdrWrappedJobForMerge newWrappedJob = new NewCdrWrappedJobForMerge(job, preProcessor);
+                                            if (mergedJobsDic.Any() == false)//empty list of merged job, add the first one (head)
+                                            {
+                                                headJobForMerge = newWrappedJob;
+                                                mergedJobsDic.Add(telcobrightJob.Id, newWrappedJob);
+                                                rowCountSoFarForMerge = newWrappedJob.OriginalRows.Count;
+                                            }
+                                            else //one of the tail jobs
+                                            {
+                                                mergedJobsDic.Add(newWrappedJob.TelcobrightJob.id, newWrappedJob);
+                                                rowCountSoFarForMerge = headJobForMerge.AppendTailJobRows(newWrappedJob);
+                                                if (rowCountSoFarForMerge>=maxRowCountForBatchProcessing)//enough jobs have been merged for batch processing 
+                                                {
+                                                    cdrJobInputData.MergedJobsDic = mergedJobsDic;
+                                                    telcobrightJob.Execute(cdrJobInputData);
+                                                    resetMergeJobStatus();
+                                                }
+                                            }
+                                        }
+                                        else throw new Exception("Job must be processed as single or in batch (merged).");
                                         cmd.ExecuteCommandText(" commit; ");
                                     }
                                     catch (Exception e)
                                     {
                                         try
                                         {
+                                            resetMergeJobStatus();
                                             if (cmd.Connection.State != ConnectionState.Open) cmd.Connection.Open();
                                             cmd.ExecuteCommandText(" rollback; ");
                                             bool cacheLimitExceeded =
@@ -86,16 +140,16 @@ namespace Process
                                             if (cacheLimitExceeded) continue;
                                             cacheLimitExceeded = RateCacheCleaner.ClearTempRateTable(e, cmd);
                                             if (cacheLimitExceeded) continue;
-                                            PrintErrorMessageToConsole(ne, telcobrightJob, e);
-                                            ErrorWriter wr = new ErrorWriter(e, "ProcessCdr", telcobrightJob,
+                                            PrintErrorMessageToConsole(ne, job, e);
+                                            ErrorWriter wr = new ErrorWriter(e, "ProcessCdr", job,
                                                 "CdrJob processing error.", tbc.Telcobrightpartner.CustomerName,context);
                                             try
                                             {
-                                                UpdateJobWithErrorInfo(cmd, telcobrightJob, e);
+                                                UpdateJobWithErrorInfo(cmd, job, e);
                                             }
                                             catch (Exception e2)
                                             {
-                                                ErrorWriter wr2 = new ErrorWriter(e2, "ProcessCdr", telcobrightJob,
+                                                ErrorWriter wr2 = new ErrorWriter(e2, "ProcessCdr", job,
                                                     "Exception within catch block.",
                                                     tbc.Telcobrightpartner.CustomerName);
                                             }

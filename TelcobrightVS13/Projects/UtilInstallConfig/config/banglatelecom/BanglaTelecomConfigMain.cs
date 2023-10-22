@@ -73,6 +73,13 @@ namespace InstallConfig
                 BatchSizeWhenPreparingLargeSqlJob = 100000,
                 EmptyFileAllowed = true,
                 DaysToAddBeforeAndAfterUniqueDaysForSafePartialCollection = 1,
+                NeWiseAdditionalSettings = new Dictionary<int, NeAdditionalSetting>
+                {
+                    { 9, new NeAdditionalSetting {
+                        ProcessMultipleCdrFilesInBatch = true,
+                        MaxRowCountForBatchProcessing = 100000}
+                    }
+                }
             };
             this.PrepareDirectorySettings(this.Tbc);
             this.Tbc.Nes = new List<ne>()

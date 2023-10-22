@@ -20,7 +20,7 @@ namespace Jobs
         public string RuleName => "JobDeleteFile";
         public string HelpText => "Delete File in a location";
         public int Id => 8;
-        public JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
+        public object Execute(ITelcobrightJobInput jobInputData)
         {
             //returning corrrect jobCompletion status is important, because file may not be deleted due to pre-requisite
             //in that case the job must not be marked as "complete" in database
@@ -49,6 +49,16 @@ namespace Jobs
                 }
             }
             return JobCompletionStatus.Complete;
+        }
+
+        public object PreprocessJob(ITelcobrightJobInput jobInputData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object PostprocessJob(ITelcobrightJobInput jobInputData)
+        {
+            throw new NotImplementedException();
         }
 
         private static JobParamFileDelete GetJobParamByHandlingDeserializeErrorFromBackslash

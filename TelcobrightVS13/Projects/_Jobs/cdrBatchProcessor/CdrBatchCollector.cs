@@ -20,72 +20,26 @@ using TelcobrightMediation.Config;
 
 namespace Jobs
 {
-    
-    [Export("Job", typeof(ITelcobrightJob))]
-    public class NewCdrFileJob : ITelcobrightJob
+    public class CdrBatchCollector
     {
-        public string RuleName => "JobNewCdrFile";
-        public virtual string HelpText => "New Cdr Job, processes a new CDR file";
-        public override string ToString() => this.RuleName;
-        public virtual int Id => 1;
         protected int RawCount, NonPartialCount, UniquePartialCount, RawPartialCount, DistinctPartialCount = 0;
         protected decimal RawDurationTotalOfConsistentCdrs = 0;
         protected CdrJobInputData Input { get; set; }
         protected CdrCollectorInputData CollectorInput { get; set; }
         protected bool PartialCollectionEnabled => this.Input.MediationContext.Tbc.CdrSetting
             .PartialCdrEnabledNeIds.Contains(this.Input.Ne.idSwitch);
-        protected Func<NewCdrPreProcessor, List<string[]>, List<CdrAndInconsistentWrapper>> parallelConvertToCdr = (preProcessor, txtRows) =>
+        protected Action<NewCdrPreProcessor, string[]> CdrConverter = (preProcessor, txtRow) =>
         {
-            //cdrinconsistent cdrInconsistent = null;
-            //CdrAndInconsistentWrapper cdrAndInconsistentWrapper = preProcessor.ConvertToCdr(txtRow, out cdrInconsistent);
-
-            ParallelIterator<string[], CdrAndInconsistentWrapper> parallelConverter=  
-                                                new ParallelIterator<string[], CdrAndInconsistentWrapper>(txtRows);
-            List<CdrAndInconsistentWrapper> cdrAndInconsistents =
-                parallelConverter.getOutput(r => preProcessor.ConvertToCdr(r));
-            return cdrAndInconsistents;
+            cdrinconsistent cdrInconsistent = null;
+            //preProcessor.ConvertToCdr(txtRow, out cdrInconsistent);
+            if (cdrInconsistent != null) preProcessor.InconsistentCdrs.Add(cdrInconsistent);
         };
-        public object PreprocessJob(ITelcobrightJobInput jobInputData)
+        public virtual object Execute(ITelcobrightJobInput jobInputData)
         {
             this.Input = (CdrJobInputData)jobInputData;
-            NewCdrPreProcessor preProcessor = DecodeAndPreProcessNewCdrFile();
-            return preProcessor;
-        }
-        public virtual Object Execute(ITelcobrightJobInput jobInputData)
-        {
-            NewCdrPreProcessor preProcessor = null;//preprecessor.txtrows contains decoded raw cdrs in string[] format
-            if (this.Input.IsBatchJob == false)
-            {
-                this.Input = (CdrJobInputData) jobInputData;
-                preProcessor = DecodeAndPreProcessNewCdrFile();
-            }
-            else//batch job
-            {
-                Dictionary<long, NewCdrWrappedJobForMerge> jobWiseRawCollection = this.Input.MergedJobsDic;
-                if (jobWiseRawCollection.Any() == false)//merged info must be present in cdr job input data
-                {
-                    throw new Exception("New cdr vs raw collection cannot be empty for merged cdr job. There must be at least one job.");
-                }
-                NewCdrWrappedJobForMerge head = jobWiseRawCollection.First().Value;
-                List<NewCdrWrappedJobForMerge> tail = jobWiseRawCollection.Skip(1).Select(kv => kv.Value).ToList();
-                foreach (var kv in jobWiseRawCollection)//make sure empty files haven't been merged.
-                {
-                    long idJob = kv.Key;
-                    var job = kv.Value.TelcobrightJob;
-                    var rows = kv.Value.PreProcessor.TxtCdrRows;
-                    if (rows.Any() == false)
-                    {
-                        throw new Exception($"Empty files cannot be merged. Job id:{idJob}, job name:{job.JobName}");
-                    }
-                }
-                int headCdrCount = head.PreProcessor.TxtCdrRows.Count;
-                int tailCdrCount = tail.Sum(job => job.PreProcessor.TxtCdrRows.Count);
-                if (headCdrCount!=tailCdrCount)
-                {
-                    throw new Exception($"Head cdr count must match sum of tail jobs for merge processing. Job id:{head.TelcobrightJob.id}, job name:{head.TelcobrightJob.JobName}");
-                }
-                preProcessor = head.PreProcessor;
-            }
+            NewCdrPreProcessor preProcessor = this.CollectRaw();
+            PreformatRawCdrs(preProcessor);
+            preProcessor.TxtCdrRows.ForEach(txtRow => this.CdrConverter(preProcessor, txtRow));
 
             CdrCollectionResult newCollectionResult, oldCollectionResult = null;
             preProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
@@ -101,116 +55,37 @@ namespace Jobs
             PartialCdrTesterData partialCdrTesterData = OrganizeTestDataForPartialCdrs(preProcessor, newCollectionResult);
             CdrJob cdrJob = (new CdrJobFactory(this.Input, this.RawCount)).
                 CreateCdrJob(preProcessor, newCollectionResult, oldCollectionResult, partialCdrTesterData);
+
             if (cdrJob.CdrProcessor.CollectionResult.ConcurrentCdrExts.Count > 0)//job not empty, or has records
             {
                 cdrJob.Execute();//MAIN EXECUTION/MEDIATION METHOD
-                //WriteJobCompletionIfCollectionNotEmpty(cdrJob.CdrProcessor.CollectionResult, this.Input.TelcobrightJob, cdrJob.CdrProcessor.CdrJobContext.Context);
+                WriteJobCompletionIfCollectionNotEmpty(cdrJob.CdrProcessor.CollectionResult, this.Input.TelcobrightJob,cdrJob.CdrProcessor.CdrJobContext.Context);
             }
             else
             {
-                handleEmptyJob(cdrJob);
-            }
-            if (this.Input.IsBatchJob == false)
-            {
-                FinalizeJob(cdrJob);
-            }
-            return JobCompletionStatus.Complete;
-        }
-
-        private void handleEmptyJob(CdrJob cdrJob)
-        {
-            if (cdrJob.CdrProcessor.CollectionResult.CdrInconsistents.Count > 0)
-            {
-                if (this.Input.TelcobrightJob.idjobdefinition == 1 &&
-                    cdrJob.CdrProcessor.CollectionResult.CdrInconsistents.Count > 0) //newcdr
+                if (cdrJob.CdrProcessor.CollectionResult.CdrInconsistents.Count > 0)
                 {
-                    cdrJob.CdrProcessor.WriteCdrInconsistent();
+                    if (this.Input.TelcobrightJob.idjobdefinition == 1 &&
+                        cdrJob.CdrProcessor.CollectionResult.CdrInconsistents.Count > 0) //newcdr
+                    {
+                        cdrJob.CdrProcessor.WriteCdrInconsistent();
+                    }
                 }
-            }
-            else
-            {
-                if (!cdrJob.CdrProcessor.CdrJobContext.MediationContext.Tbc.CdrSetting.EmptyFileAllowed)
-                {
-                    throw new Exception("Empty new cdr files are not considered valid as per cdr setting.");
-                }
-            }
-            //WriteJobCompletionIfCollectionIsEmpty(cdrJob.CdrProcessor.CollectionResult, this.Input.TelcobrightJob, cdrJob.CdrProcessor.CdrJobContext.Context);
-        }
-
-        private void FinalizeJob(CdrJob cdrJob)
-        {
-            if (cdrJob.CdrProcessor.CollectionResult.ConcurrentCdrExts.Count > 0)//job not empty, or has records
-            {
-                WriteJobCompletionIfCollectionNotEmpty(cdrJob.CdrProcessor.CollectionResult.RawCount, this.Input.TelcobrightJob, cdrJob.CdrProcessor.CdrJobContext.Context);
-            }
-            else
-            {
-                if (cdrJob.CdrProcessor.CollectionResult.CdrInconsistents.Count <= 0)
+                else
                 {
                     if (!cdrJob.CdrProcessor.CdrJobContext.MediationContext.Tbc.CdrSetting.EmptyFileAllowed)
                     {
                         throw new Exception("Empty new cdr files are not considered valid as per cdr setting.");
                     }
                 }
-                WriteJobCompletionIfCollectionIsEmpty(cdrJob.CdrProcessor.CollectionResult.RawCount, this.Input.TelcobrightJob, cdrJob.CdrProcessor.CdrJobContext.Context);
+                WriteJobCompletionIfCollectionIsEmpty(cdrJob.CdrProcessor.CollectionResult, this.Input.TelcobrightJob, cdrJob.CdrProcessor.CdrJobContext.Context);
             }
             if (this.Input.CdrSetting.DisableCdrPostProcessingJobCreationForAutomation == false)
             {
                 CreateNewCdrPostProcessingJobs(this.Input.Context, this.Input.MediationContext.Tbc,
                     cdrJob.CdrProcessor.CdrJobContext.TelcobrightJob);
             }
-        }
-
-        private void FinalizeMergedJobs(CdrJob cdrJob)
-        {
-            Dictionary<long, NewCdrWrappedJobForMerge> mergedJobsDic =
-                cdrJob.CdrProcessor.CdrJobContext.CdrjobInputData.MergedJobsDic;
-            NewCdrWrappedJobForMerge headJob = mergedJobsDic.First().Value;
-            List<NewCdrWrappedJobForMerge> tailJobs = mergedJobsDic.Skip(1).Select(kv => kv.Value).ToList();
-            //FinalizeSingleMergedJob();
-        }
-
-        private void FinalizeSingleMergedJob(NewCdrWrappedJobForMerge mergedJob)
-        {
-            //if (cdrJob.CdrProcessor.CollectionResult.ConcurrentCdrExts.Count <= 0)//job not empty, or has records
-            //{
-            //    throw new Exception("Merged jobs must have rows in processed concurrentCdrExt.");
-            //}
-            //WriteJobCompletionIfCollectionNotEmpty(cdrJob.CdrProcessor.CollectionResult.RawCount, this.Input.TelcobrightJob, cdrJob.CdrProcessor.CdrJobContext.Context);
-
-
-            //else
-            //{
-            //    if (cdrJob.CdrProcessor.CollectionResult.CdrInconsistents.Count <= 0)
-            //    {
-            //        if (!cdrJob.CdrProcessor.CdrJobContext.MediationContext.Tbc.CdrSetting.EmptyFileAllowed)
-            //        {
-            //            throw new Exception("Empty new cdr files are not considered valid as per cdr setting.");
-            //        }
-            //    }
-            //    WriteJobCompletionIfCollectionIsEmpty(cdrJob.CdrProcessor.CollectionResult.RawCount, this.Input.TelcobrightJob, cdrJob.CdrProcessor.CdrJobContext.Context);
-            //}
-            //if (this.Input.CdrSetting.DisableCdrPostProcessingJobCreationForAutomation == false)
-            //{
-            //    CreateNewCdrPostProcessingJobs(this.Input.Context, this.Input.MediationContext.Tbc,
-            //        cdrJob.CdrProcessor.CdrJobContext.TelcobrightJob);
-            //}
-        }
-
-        public object PostprocessJob(ITelcobrightJobInput jobInputData)
-        {
-            throw new NotImplementedException();
-        }
-
-        private NewCdrPreProcessor DecodeAndPreProcessNewCdrFile()
-        {
-            NewCdrPreProcessor preProcessor = this.CollectRaw();
-            PreProcessRawCdrs(preProcessor);
-            //preProcessor.TxtCdrRows.ForEach(txtRow => this.CdrConverter(preProcessor, txtRow));
-            List<CdrAndInconsistentWrapper> cdrAndInconsistents =
-                parallelConvertToCdr(preProcessor, preProcessor.TxtCdrRows);
-            cdrAndInconsistents.ForEach(c => preProcessor.AddToBaseCollection(c));
-            return preProcessor;
+            return JobCompletionStatus.Complete;
         }
 
         protected virtual NewCdrPreProcessor CollectRaw()
@@ -247,20 +122,22 @@ namespace Jobs
             }
             return partialCdrTesterData;
         }
-        
 
-        protected void PreProcessRawCdrs(NewCdrPreProcessor preProcessor)
+        protected virtual void ExecuteCdrJob(CdrJob cdrJob)
+        {
+            
+        }
+
+        protected void PreformatRawCdrs(NewCdrPreProcessor preProcessor)
         {
             var collectorinput = this.CollectorInput;
             SetIdCallsInSameOrderAsCollected(preProcessor, collectorinput);
-
-            //private static void SetIdCallAsBillId(NewCdrPreProcessor preProcessor)
-            //{
-            //    preProcessor.TxtCdrRows.ForEach(txtRow => txtRow[98] = txtRow[1]);
-            //}
+            if (this.CollectorInput.Ne.UseIdCallAsBillId == 1)
+            {
+                SetIdCallAsBillId(preProcessor);
+            }
             Parallel.ForEach(preProcessor.TxtCdrRows, txtRow =>
             {
-                txtRow[98] = txtRow[1];
                 preProcessor.SetAllBlankFieldsToZerolengthString(txtRow);
                 preProcessor.RemoveIllegalCharacters(collectorinput.Tbc.CdrSetting
                     .IllegalStrToRemoveFromFields, txtRow);
@@ -329,31 +206,36 @@ namespace Jobs
             //keep the cdrs in the same order as received, don't use parallel
             preProcessor.TxtCdrRows.ForEach(txtRow => preProcessor.SetIdCall(collectorinput.AutoIncrementManager, txtRow));
         }
+        private static void SetIdCallAsBillId(NewCdrPreProcessor preProcessor)
+        {
+            preProcessor.TxtCdrRows.ForEach(txtRow => txtRow[98] = txtRow[1]);
+        }
 
-        protected void WriteJobCompletionIfCollectionNotEmpty(int rawCount, job telcobrightJob, PartnerEntities context)
+
+        protected void WriteJobCompletionIfCollectionNotEmpty(CdrCollectionResult collectionResult, job telcobrightJob, PartnerEntities context)
         {
             using (DbCommand cmd = ConnectionManager.CreateCommandFromDbContext(context))
             {
                 string sql =
                     $" update job set CompletionTime={DateTime.Now.ToMySqlField()}, " +
                     $" status=1, " +
-                    $"NoOfSteps={rawCount}," +
-                    $"progress={rawCount}," +
+                    $"NoOfSteps={collectionResult.RawCount}," +
+                    $"progress={collectionResult.RawCount}," +
                     $"Error=null where id={telcobrightJob.id}";
                 cmd.CommandText = sql;
                 cmd.ExecuteNonQuery();
             }
         }
 
-        protected void WriteJobCompletionIfCollectionIsEmpty(int rawCount, job telcobrightJob, PartnerEntities context)
+        protected void WriteJobCompletionIfCollectionIsEmpty(CdrCollectionResult collectionResult, job telcobrightJob, PartnerEntities context)
         {
             using (DbCommand cmd = ConnectionManager.CreateCommandFromDbContext(context))
             {
                 string sql =
                     $" update job set CompletionTime={DateTime.Now.ToMySqlField()}, " +
                     $" status=1, " +
-                    $"NoOfSteps={rawCount}," +//could be non zero if inconsistents exist
-                    $"progress={rawCount}," +
+                    $"NoOfSteps={collectionResult.RawCount}," +//could be non zero if inconsistents exist
+                    $"progress={collectionResult.RawCount}," +
                     $"Error=null where id={telcobrightJob.id}";
                 cmd.CommandText = sql;
                 cmd.ExecuteNonQuery();

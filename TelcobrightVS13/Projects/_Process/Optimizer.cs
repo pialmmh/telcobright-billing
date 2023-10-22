@@ -88,7 +88,7 @@ namespace Process
                                         OptimizerJobInputData optimizerJobInputData =
                                             new OptimizerJobInputData(tbc, thisJob);
 
-                                        JobCompletionStatus jobStatus = iJob.Execute(optimizerJobInputData);
+                                        JobCompletionStatus jobStatus = (JobCompletionStatus)iJob.Execute(optimizerJobInputData);
                                         if (jobStatus == JobCompletionStatus.Complete)
                                         {
                                             sql = " update job set CompletionTime='" +

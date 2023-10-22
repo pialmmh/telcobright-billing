@@ -101,7 +101,7 @@ namespace Process
                                 throw new Exception("Filecopy Job definition not found " +
                                                     "after mef composition.");
                             FileCopyJobInputData fileCopyJobInputData = new FileCopyJobInputData(tbc, thisJob);
-                            JobCompletionStatus jobStatus = iJob.Execute(fileCopyJobInputData);
+                            JobCompletionStatus jobStatus = (JobCompletionStatus)iJob.Execute(fileCopyJobInputData);
                             if (jobStatus == JobCompletionStatus.Complete)
                             {
                                 sql = " update job set CompletionTime='" +

@@ -7,6 +7,8 @@ namespace TelcobrightMediation
         string RuleName { get; }
         string HelpText { get; }
         int Id { get; }
-        JobCompletionStatus Execute(ITelcobrightJobInput jobInputData);
+        object Execute(ITelcobrightJobInput jobInputData);
+        object PreprocessJob(ITelcobrightJobInput jobInputData);
+        object PostprocessJob(ITelcobrightJobInput jobInputData);
     }
 }

@@ -24,7 +24,7 @@ namespace Jobs
         public string RuleName => "JobLCR";
         public string HelpText => "LCR Creating Job on a Particular DateTime";
         public int Id => 16;
-        public JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
+        public object Execute(ITelcobrightJobInput jobInputData)
         {
             LcrJobInputData lcrJobInputData = (LcrJobInputData) jobInputData;
             MediationContext mediationContext = null;
@@ -92,6 +92,16 @@ namespace Jobs
                 }
                 return JobCompletionStatus.Complete;
             }
+        }
+
+        public object PreprocessJob(ITelcobrightJobInput jobInputData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object PostprocessJob(ITelcobrightJobInput jobInputData)
+        {
+            throw new NotImplementedException();
         }
 
         private void ExecutePseudoRating(route thisRoute, CdrProcessor cdrProcessor, IServiceFamily sf,

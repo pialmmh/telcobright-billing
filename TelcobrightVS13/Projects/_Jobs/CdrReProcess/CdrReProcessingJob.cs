@@ -27,7 +27,7 @@ namespace Jobs
         public string HelpText => "Cdr Re-Processing Job, processes already processed CDRs in cdr table in Database";
         public int Id => 3;
 
-        public virtual JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
+        public virtual object Execute(ITelcobrightJobInput jobInputData)
         {
             CdrJobInputData input = (CdrJobInputData) jobInputData;
             CdrCollectorInputData cdrCollectorInput = new CdrCollectorInputData(input, "");
@@ -39,6 +39,16 @@ namespace Jobs
             List<jobsegment> jobsegments = segmentedCdrReprocessJobProcessor.ExecuteIncompleteSegments();
             segmentedCdrReprocessJobProcessor.FinishJob(jobsegments,null); //mark job as complete
             return JobCompletionStatus.Complete;
+        }
+
+        public object PreprocessJob(ITelcobrightJobInput jobInputData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object PostprocessJob(ITelcobrightJobInput jobInputData)
+        {
+            throw new NotImplementedException();
         }
     }
 }
