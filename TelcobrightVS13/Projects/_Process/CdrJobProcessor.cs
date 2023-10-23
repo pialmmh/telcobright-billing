@@ -51,7 +51,7 @@ namespace Process
                     {
                         NeAdditionalSetting neAdditionalSetting = null;
                         cdrSetting.NeWiseAdditionalSettings.TryGetValue(ne.idSwitch, out neAdditionalSetting);
-                        int maxRowCountForBatchProcessing = neAdditionalSetting.MaxRowCountForBatchProcessing;
+                        int maxRowCountForBatchProcessing = neAdditionalSetting?.MaxRowCountForBatchProcessing ?? -1;
                         Dictionary<long, NewCdrWrappedJobForMerge> mergedJobsDic = new Dictionary<long, NewCdrWrappedJobForMerge>(); //key=idJob
                         NewCdrWrappedJobForMerge headJobForMerge = null;
                         int rowCountSoFarForMerge = 0;
@@ -72,8 +72,6 @@ namespace Process
                             {
                                 foreach (job job in incompleteJobs)
                                 {
-                                    Console.WriteLine("Processing CdrJob for Switch:" + ne.SwitchName + ", JobName:" +
-                                                      job.JobName);
                                     this.TbConsole.WriteLine("Processing CdrJob for Switch:" + ne.SwitchName + ", JobName:" +
                                                              job.JobName);
                                     try

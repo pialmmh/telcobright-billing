@@ -21,6 +21,7 @@ namespace TelcobrightMediation
 
     public class CdrCollectionResult
     {
+        public List<string[]> OriginalRowsBeforeMerge { get; }
         public Dictionary<string, string[]> FinalNonDuplicateEvents { get; set; } = new Dictionary<string, string[]>();
         public List<string[]> DuplicateEvents { get; set; } = new List<string[]>();
         public CollectionResultProcessingState CollectionResultProcessingState { get; set; } =
@@ -68,7 +69,7 @@ namespace TelcobrightMediation
         }
 
         public CdrCollectionResult(ne ne, List<CdrExt> cdrExts,
-            List<cdrinconsistent> cdrInconsistents, int rawCount)
+            List<cdrinconsistent> cdrInconsistents, int rawCount, List<string[]> originalRowsBeforeMerge)
         {
             this.Ne = ne;
             cdrExts.ForEach(c =>
@@ -81,6 +82,7 @@ namespace TelcobrightMediation
             this.DatesInvolved = this.HoursInvolved.Select(h => h.Date).Distinct().ToList();
             this.CdrInconsistents = cdrInconsistents;
             this.RawCount = rawCount;
+            this.OriginalRowsBeforeMerge = originalRowsBeforeMerge;
         }
 
         private cdrerror ConvertCdrToCdrError(ICdr cdr, string validationMsg)

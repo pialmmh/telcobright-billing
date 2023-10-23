@@ -54,7 +54,7 @@ namespace Jobs
                         .Select(c => new CdrExt(c,CdrNewOldType.NewCdr)).ToList();
                     CdrCollectionResult collectionResult =
                         new CdrCollectionResult(lcrJobInputData.Ne, cdrExtsForThisRoute,
-                                new List<cdrinconsistent>(), cdrExtsForThisRoute.Count);
+                                new List<cdrinconsistent>(), cdrExtsForThisRoute.Count,new List<string[]>());
                     CdrJobInputData cdrJobInputData=new CdrJobInputData(mediationContext,partnerContext,
                         lcrJobInputData.Ne,lcrJobInputData.TelcobrightJob);
                     CdrJobContext cdrJobContext=new CdrJobContext(cdrJobInputData,

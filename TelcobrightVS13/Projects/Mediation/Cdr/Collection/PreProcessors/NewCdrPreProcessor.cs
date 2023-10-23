@@ -21,12 +21,17 @@ namespace TelcobrightMediation
         public List<string[]> TxtCdrRows { get; set; }= new List<string[]>();
         public Dictionary<string, string[]> FinalNonDuplicateEvents { get; set; }= new Dictionary<string, string[]>();
         public List<string[]> DuplicateEvents { get; set; }= new List<string[]>();
+        public List<string[]> OriginalRowsBeforeMerge { get; }= new List<string[]>();
 
         public NewCdrPreProcessor(List<string[]> txtCdrRows, List<cdrinconsistent> inconsistentCdrs,
             CdrCollectorInputData cdrCollectorInputData)
             : base(cdrCollectorInputData, txtCdrRows.Count + inconsistentCdrs.Count, inconsistentCdrs) //used after sql collection
         {
             this.TxtCdrRows = txtCdrRows;
+            foreach (string[] row in this.TxtCdrRows)
+            {
+                this.OriginalRowsBeforeMerge.Add(row);
+            }
             this.PartialCdrEnabled = base.CdrCollectorInputData.CdrSetting.PartialCdrEnabledNeIds
                 .Contains(base.CdrCollectorInputData.CdrJobInputData.Ne.idSwitch);
         }
@@ -115,7 +120,7 @@ namespace TelcobrightMediation
             List<CdrExt> newCdrExtErrors = this.CreateNewCdrExtErrorsForPreExistingPartialCdrInError();
             ValidateCdrExtCreation(newPartialNonPartialCdrExts, newCdrExtErrors);
             var collectionResult= new CdrCollectionResult(base.CdrCollectorInputData.Ne, newPartialNonPartialCdrExts,
-                base.InconsistentCdrs.ToList(), base.RawCount);
+                base.InconsistentCdrs.ToList(), base.RawCount, this.OriginalRowsBeforeMerge);
             newCdrExtErrors.ForEach(c => collectionResult.SendPreExistingPartialCdrToCdrErrors(c, c.CdrError.ErrorCode));
             return collectionResult;
         }
@@ -180,7 +185,7 @@ namespace TelcobrightMediation
                 }
             }
             var oldCollectionResult = new CdrCollectionResult(base.CdrCollectorInputData.Ne, oldCdrExts,
-                new List<cdrinconsistent>(), oldCdrExts.Count);
+                new List<cdrinconsistent>(), oldCdrExts.Count, this.OriginalRowsBeforeMerge);
             return oldCollectionResult;
         }
 

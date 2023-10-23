@@ -54,9 +54,10 @@ namespace Jobs
         public virtual Object Execute(ITelcobrightJobInput jobInputData)
         {
             NewCdrPreProcessor preProcessor = null;//preprecessor.txtrows contains decoded raw cdrs in string[] format
-            if (this.Input.IsBatchJob == false)
+            this.Input = (CdrJobInputData)jobInputData;
+
+            if (this.Input.IsBatchJob == false)//not batch job
             {
-                this.Input = (CdrJobInputData) jobInputData;
                 preProcessor = DecodeAndPreProcessNewCdrFile();
             }
             else//batch job
@@ -139,7 +140,8 @@ namespace Jobs
 
         private void FinalizeJob(CdrJob cdrJob)
         {
-            if (cdrJob.CdrProcessor.CollectionResult.ConcurrentCdrExts.Count > 0)//job not empty, or has records
+            var collectionResult = cdrJob.CdrProcessor.CollectionResult;
+            if (collectionResult.OriginalRowsBeforeMerge.Count > 0)//job not empty, or has records
             {
                 WriteJobCompletionIfCollectionNotEmpty(cdrJob.CdrProcessor.CollectionResult.RawCount, this.Input.TelcobrightJob, cdrJob.CdrProcessor.CdrJobContext.Context);
             }
@@ -152,7 +154,8 @@ namespace Jobs
                         throw new Exception("Empty new cdr files are not considered valid as per cdr setting.");
                     }
                 }
-                WriteJobCompletionIfCollectionIsEmpty(cdrJob.CdrProcessor.CollectionResult.RawCount, this.Input.TelcobrightJob, cdrJob.CdrProcessor.CdrJobContext.Context);
+                WriteJobCompletionIfCollectionIsEmpty(cdrJob.CdrProcessor.CollectionResult.OriginalRowsBeforeMerge.Count, 
+                    this.Input.TelcobrightJob, cdrJob.CdrProcessor.CdrJobContext.Context);
             }
             if (this.Input.CdrSetting.DisableCdrPostProcessingJobCreationForAutomation == false)
             {

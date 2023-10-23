@@ -92,6 +92,14 @@
       <HintPath>..\packages\Common.Logging.Log4Net1210.3.4.1\lib\net40\Common.Logging.Log4Net1210.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="CrystalQuartz.Core, Version=4.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CrystalQuartz.Remote.4.2.1.0\lib\CrystalQuartz.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="CrystalQuartz.Web, Version=4.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CrystalQuartz.Remote.4.2.1.0\lib\CrystalQuartz.Web.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
