@@ -109,16 +109,20 @@ namespace Jobs
             }
             else
             {
-                handleEmptyJob(cdrJob);
+                handleAndFinalizeEmptyJob(cdrJob);
             }
             if (this.Input.IsBatchJob == false)
             {
-                FinalizeJob(cdrJob);
+                FinalizeNonMergedJob(cdrJob);
+            }
+            else
+            {
+                FinalizeMergedJobs(cdrJob);
             }
             return JobCompletionStatus.Complete;
         }
 
-        private void handleEmptyJob(CdrJob cdrJob)
+        private void handleAndFinalizeEmptyJob(CdrJob cdrJob)
         {
             if (cdrJob.CdrProcessor.CollectionResult.CdrInconsistents.Count > 0)
             {
@@ -135,10 +139,14 @@ namespace Jobs
                     throw new Exception("Empty new cdr files are not considered valid as per cdr setting.");
                 }
             }
-            //WriteJobCompletionIfCollectionIsEmpty(cdrJob.CdrProcessor.CollectionResult, this.Input.TelcobrightJob, cdrJob.CdrProcessor.CdrJobContext.Context);
+            WriteJobCompletionIfCollectionIsEmpty(0, this.Input.TelcobrightJob, cdrJob.CdrProcessor.CdrJobContext.Context);
+            if (this.Input.CdrSetting.DisableCdrPostProcessingJobCreationForAutomation == false)
+            {
+                CreateNewCdrPostProcessingJobs(this.Input.Context, this.Input.MediationContext.Tbc, cdrJob.CdrProcessor.CdrJobContext.TelcobrightJob);
+            }
         }
 
-        private void FinalizeJob(CdrJob cdrJob)
+        private void FinalizeNonMergedJob(CdrJob cdrJob)
         {
             var collectionResult = cdrJob.CdrProcessor.CollectionResult;
             if (collectionResult.OriginalRowsBeforeMerge.Count > 0)//job not empty, or has records
@@ -168,36 +176,28 @@ namespace Jobs
         {
             Dictionary<long, NewCdrWrappedJobForMerge> mergedJobsDic =
                 cdrJob.CdrProcessor.CdrJobContext.CdrjobInputData.MergedJobsDic;
-            NewCdrWrappedJobForMerge headJob = mergedJobsDic.First().Value;
-            List<NewCdrWrappedJobForMerge> tailJobs = mergedJobsDic.Skip(1).Select(kv => kv.Value).ToList();
-            //FinalizeSingleMergedJob();
+            PartnerEntities context = cdrJob.CdrJobContext.Context;
+
+            foreach (var newCdrWrappedJobForMerge in mergedJobsDic.Values)
+            {
+                FinalizeSingleMergedJob(newCdrWrappedJobForMerge, context);
+            }
         }
 
-        private void FinalizeSingleMergedJob(NewCdrWrappedJobForMerge mergedJob)
+        private void FinalizeSingleMergedJob(NewCdrWrappedJobForMerge mergedJob, PartnerEntities context)
         {
-            //if (cdrJob.CdrProcessor.CollectionResult.ConcurrentCdrExts.Count <= 0)//job not empty, or has records
-            //{
-            //    throw new Exception("Merged jobs must have rows in processed concurrentCdrExt.");
-            //}
-            //WriteJobCompletionIfCollectionNotEmpty(cdrJob.CdrProcessor.CollectionResult.RawCount, this.Input.TelcobrightJob, cdrJob.CdrProcessor.CdrJobContext.Context);
-
-
-            //else
-            //{
-            //    if (cdrJob.CdrProcessor.CollectionResult.CdrInconsistents.Count <= 0)
-            //    {
-            //        if (!cdrJob.CdrProcessor.CdrJobContext.MediationContext.Tbc.CdrSetting.EmptyFileAllowed)
-            //        {
-            //            throw new Exception("Empty new cdr files are not considered valid as per cdr setting.");
-            //        }
-            //    }
-            //    WriteJobCompletionIfCollectionIsEmpty(cdrJob.CdrProcessor.CollectionResult.RawCount, this.Input.TelcobrightJob, cdrJob.CdrProcessor.CdrJobContext.Context);
-            //}
-            //if (this.Input.CdrSetting.DisableCdrPostProcessingJobCreationForAutomation == false)
-            //{
-            //    CreateNewCdrPostProcessingJobs(this.Input.Context, this.Input.MediationContext.Tbc,
-            //        cdrJob.CdrProcessor.CdrJobContext.TelcobrightJob);
-            //}
+            job telcobrightJob = mergedJob.TelcobrightJob;
+            var preProcessor = mergedJob.PreProcessor;
+            if (preProcessor.TxtCdrRows.Any() == false)
+            {
+                throw new Exception($"Instance in a merged new cdr job cannot contain 0 record. Job id:{telcobrightJob.id}, Jobname:{telcobrightJob.JobName}");
+            }
+            WriteJobCompletionIfCollectionNotEmpty(preProcessor.TxtCdrRows.Count, this.Input.TelcobrightJob, context);
+           
+            if (this.Input.CdrSetting.DisableCdrPostProcessingJobCreationForAutomation == false)
+            {
+                CreateNewCdrPostProcessingJobs(this.Input.Context, this.Input.MediationContext.Tbc,telcobrightJob);
+            }
         }
 
         public object PostprocessJob(ITelcobrightJobInput jobInputData)

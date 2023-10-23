@@ -75,9 +75,9 @@ namespace InstallConfig
                 DaysToAddBeforeAndAfterUniqueDaysForSafePartialCollection = 1,
                 NeWiseAdditionalSettings = new Dictionary<int, NeAdditionalSetting>
                 {
-                    { 9, new NeAdditionalSetting {
+                    { 9, new NeAdditionalSetting {//for huawei
                         ProcessMultipleCdrFilesInBatch = true,
-                        MaxRowCountForBatchProcessing = 100000}
+                        MaxRowCountForBatchProcessing = 100000}//
                     }
                 }
             };
@@ -101,9 +101,9 @@ namespace InstallConfig
                     TransactionSizeForCDRLoading = 1500,
                     DecodingSpanCount = 100,
                     SkipAutoCreateJob = 1,
-                    SkipCdrListed = 1,
+                    SkipCdrListed = 0,
                     SkipCdrReceived = 0,
-                    SkipCdrDecoded = 1,
+                    SkipCdrDecoded = 0,
                     SkipCdrBackedup = 1,
                     KeepDecodedCDR = 0,
                     KeepReceivedCdrServer = 1,
@@ -135,9 +135,9 @@ namespace InstallConfig
                     TransactionSizeForCDRLoading= 1500,
                     DecodingSpanCount= 100,
                     SkipAutoCreateJob= 1,
-                    SkipCdrListed= 0,
+                    SkipCdrListed= 1,
                     SkipCdrReceived= 0,
-                    SkipCdrDecoded= 0,
+                    SkipCdrDecoded= 1,
                     SkipCdrBackedup= 1,
                     KeepDecodedCDR= 0,
                     KeepReceivedCdrServer= 1,
