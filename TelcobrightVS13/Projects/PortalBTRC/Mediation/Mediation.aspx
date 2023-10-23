@@ -22,6 +22,27 @@
                 string tempText = this.hidValueFilter.Value;
                 bool lastVisible = this.hidValueFilter.Value == "invisible" ? false : true;
                 var databaseSetting = telcobrightConfig.DatabaseSetting;
+                string logIdentityName = this.User.Identity.Name;
+                String selectedIcx = logIdentityName;
+                TelcobrightConfig tbc = PageUtil.GetTelcobrightConfig();
+                string selectedUserdbName;
+                Dictionary<string, string> userVsDbName = tbc.DeploymentProfile.UserVsDbName;
+                if (userVsDbName.ContainsKey(logIdentityName))
+                {
+                    selectedUserdbName = userVsDbName[logIdentityName];
+                }
+                else
+                {
+                    selectedUserdbName = telcobrightConfig.DatabaseSetting.DatabaseName;
+                }
+                if (selectedUserdbName.Contains("btrc"))
+                {
+                    this.DropDownListViewIncomingRoute.Visible = true;
+                }
+                else
+                {
+                    this.DropDownListViewIncomingRoute.Visible = false;
+                }
                 if (this.hidValueSubmitClickFlag.Value == "false")
                 {
                     if (lastVisible)
@@ -39,7 +60,7 @@
                 if (!this.IsPostBack)
                 {
                     //load job type and job status dropdownlist
-
+     
                     using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting))
                     {
                         //populate switch
@@ -324,7 +345,7 @@
 
     
     <%--<span style="padding-left:0px;float:left;left:0px;font-weight:bold;margin-top:2px;margin-right:20px;color:Black;"> Report:</span>--%>
-     <span style="font-weight:bold;">
+     <span style="font-weight:bold;" id="icx">
          Select ICX:                
          <asp:DropDownList ID="DropDownListViewIncomingRoute" runat="server"
                            OnSelectedIndexChanged="DropDownListViewIncomingRoute_SelectedChanged"
@@ -461,7 +482,7 @@
 
 </div> <%--END OF date time/months field DIV--%>
 <div id="TimeSummary" style="float:left;margin-left:15px;padding-left:20px;height:70px;width: 280px;background-color: #faebd7;margin-top: 0px;">
-    <div style="font-weight:bold;float:left;">Quick View:<asp:CheckBox ID="CheckBoxDailySummary" runat="server" Visible="false" /></div> 
+    <div style="font-weight:bold;float:left;">Quick Select Period:<asp:CheckBox ID="CheckBoxDailySummary" runat="server" Visible="false" /></div> 
     <div style="clear:left;margin-top:5px;"></div>
     <div style="float:left; margin-right:5px;">
         <asp:LinkButton ID="LinkButtonToday" runat="server" 
