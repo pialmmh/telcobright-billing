@@ -115,7 +115,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortalBTRC", "PortalBTRC\Po
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CasTelcobright", "CasTelcobright\CasTelcobright.csproj", "{F8AA8B33-A8F7-45B1-ADA6-47E2CAAE785E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mefLogPreprocessor", "LogPreprocessor\mefLogPreprocessor.csproj", "{AB1B2F2C-0B5D-49D2-B65E-1229470EDA02}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mefLogPreprocessingRules", "LogPreprocessingRules\mefLogPreprocessingRules.csproj", "{AB1B2F2C-0B5D-49D2-B65E-1229470EDA02}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

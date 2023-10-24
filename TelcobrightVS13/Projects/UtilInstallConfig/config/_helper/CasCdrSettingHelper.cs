@@ -43,7 +43,7 @@ namespace InstallConfig.config._helper
                 BatchSizeForCdrJobCreationCheckingExistence = 10000,
                 DisableParallelMediation = false,
                 AutoCorrectDuplicateBillId = false,
-                AutoCorrectBillIdsWithPrevChargeableIssue = true,
+                AutoCorrectBillIdsWithPrevChargeableIssue = false,
                 AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
                 ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>(),
                 BatchSizeWhenPreparingLargeSqlJob = 100000,

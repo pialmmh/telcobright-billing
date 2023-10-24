@@ -10,7 +10,7 @@ namespace TelcobrightMediation
         public int MaxParallelPreDecoding { get; set; } = 1;
         public bool ProcessMultipleCdrFilesInBatch { get; set; } = false;
         public int MaxRowCountForBatchProcessing { get; set; } = 90000;
-        public List<ILogPreprocessor> LogPreprocessors { get; set; }
+        public List<EventPreprocessingRule> EventPreprocessingRules { get; set; }= new List<EventPreprocessingRule>();
 
         public List<CompressionType> SupportedCompressedLogTypes { get; set; } = new List<CompressionType>()
         {

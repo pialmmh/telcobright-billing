@@ -23,8 +23,8 @@ using TelcobrightFileOperations;
 using System.IO;
 namespace Process
 {
-    [Export("LogPreprocessor", typeof(ILogPreprocessor))]
-    public class CompressedCdrExtractor : ILogPreprocessor
+    [Export("LogPreprocessor", typeof(EventPreprocessingRule))]
+    public class CompressedCdrExtractor : EventPreprocessingRule
     {
         public override string ToString()
         {
@@ -32,6 +32,7 @@ namespace Process
         }
         public string RuleName => this.GetType().ToString();
         public string HelpText => "Compressed Cdr Extractor";
+        public bool ProcessCollectionOnly { get; set; } = false;
         public bool IsPrepared { get; set; }
         public object RuleConfigData { get; set; }
         public List<CompressionType> SupportedCompressionTypes { get; set; }

@@ -51,7 +51,8 @@ namespace Process
                     {
                         NeAdditionalSetting neAdditionalSetting = null;
                         cdrSetting.NeWiseAdditionalSettings.TryGetValue(ne.idSwitch, out neAdditionalSetting);
-                        int maxRowCountForBatchProcessing = neAdditionalSetting?.MaxRowCountForBatchProcessing ?? -1;
+                        //int maxRowCountForBatchProcessing = neAdditionalSetting?.MaxRowCountForBatchProcessing ?? -1;
+                        int maxRowCountForBatchProcessing = 1;//temp code mustafa
                         Dictionary<long, NewCdrWrappedJobForMerge> mergedJobsDic = new Dictionary<long, NewCdrWrappedJobForMerge>(); //key=idJob
                         NewCdrWrappedJobForMerge headJobForMerge = null;
                         int rowCountSoFarForMerge = 0;
@@ -64,7 +65,7 @@ namespace Process
                         resetMergeJobStatus();
                         try
                         {
-                            if (ne.SkipCdrDecoded == 1 || CheckIncomplete(context, mediationContext, ne) == false)
+                            if (ne.SkipCdrDecoded == 1 || CheckIncompleteExists(context, mediationContext, ne) == false)
                                 continue;
                             List<job> incompleteJobs = GetReProcessJobs(context, ne, ne.DecodingSpanCount);
                             incompleteJobs.AddRange(GetNewCdrJobs(tbc, context, ne, ne.DecodingSpanCount)); //combine
@@ -85,14 +86,18 @@ namespace Process
                                             throw new Exception("JobRule not found in MEF collection.");
                                         var cdrJobInputData =
                                             new CdrJobInputData(mediationContext, context, ne, job);
-                                        if (job.idjobdefinition!=1)//error process or re-process job, not merging, process as a single job
+                                        if (job.idjobdefinition!=1)//error process or re-process job, not merging, process as a single job*************
                                         {
                                             telcobrightJob.Execute(cdrJobInputData); //EXECUTE
+                                            cmd.ExecuteCommandText(" commit; ");
+                                            continue;
                                         }
                                         else if (neAdditionalSetting == null || 
                                             neAdditionalSetting?.ProcessMultipleCdrFilesInBatch==false)//new cdr job, not merging, process as single job
                                         {
                                             telcobrightJob.Execute(cdrJobInputData); //EXECUTE
+                                            cmd.ExecuteCommandText(" commit; ");
+                                            continue;
                                         }
                                         else if(neAdditionalSetting?.ProcessMultipleCdrFilesInBatch == true)//merge new cdr jobs for batch processing
                                         {
@@ -100,7 +105,8 @@ namespace Process
                                                 (NewCdrPreProcessor) telcobrightJob.PreprocessJob(cdrJobInputData);
                                             if (preProcessor.TxtCdrRows.Count>=maxRowCountForBatchProcessing)//already large job, process as single
                                             {
-                                                telcobrightJob.Execute(cdrJobInputData); //not merging, process as single job
+                                                telcobrightJob.Execute(cdrJobInputData); //not merging, process as single job************
+                                                cmd.ExecuteCommandText(" commit; ");
                                                 continue;
                                             }
                                             //merge job for batch processing*******************
@@ -118,13 +124,13 @@ namespace Process
                                                 if (rowCountSoFarForMerge>=maxRowCountForBatchProcessing)//enough jobs have been merged for batch processing 
                                                 {
                                                     cdrJobInputData.MergedJobsDic = mergedJobsDic;
-                                                    telcobrightJob.Execute(cdrJobInputData);
+                                                    telcobrightJob.Execute(cdrJobInputData);//process as merged job************************
+                                                    cmd.ExecuteCommandText(" commit; ");
                                                     resetMergeJobStatus();
                                                 }
                                             }
                                         }
                                         else throw new Exception("Job must be processed as single or in batch (merged).");
-                                        cmd.ExecuteCommandText(" commit; ");
                                     }
                                     catch (Exception e)
                                     {
@@ -147,16 +153,28 @@ namespace Process
                                             }
                                             catch (Exception e2)
                                             {
+                                                resetMergeJobStatus();
                                                 ErrorWriter wr2 = new ErrorWriter(e2, "ProcessCdr", job,
                                                     "Exception within catch block.",
                                                     tbc.Telcobrightpartner.CustomerName);
+                                                continue;
                                             }
                                             continue; //with next cdr or job
                                         }
                                         catch (Exception)
                                         {
-                                            //reaching here would be database problem
-                                            context.Database.Connection.Close();
+                                            resetMergeJobStatus();
+                                            try
+                                            {
+                                                context.Database.Connection.Close();///////////reaching here would be database problem
+                                                continue;
+                                            }
+                                            catch (Exception exception)
+                                            {
+                                                context.Database.Connection.Dispose();
+                                                Console.WriteLine(exception);
+                                                continue;
+                                            }
                                         }
                                     } //end catch
                                 } //for each job
@@ -195,14 +213,14 @@ namespace Process
                                 + "' " +" where id=" + telcobrightJob.id+";commit;";
             cmd.ExecuteNonQuery();
         }
-        bool CheckIncomplete(PartnerEntities context, MediationContext mediationContext)
+        bool CheckIncompleteExists(PartnerEntities context, MediationContext mediationContext)
         {
             List<int> idJobDefs = context.enumjobdefinitions.Where(c => c.JobQueue == this.ProcessId).Select(c => c.id)
                 .ToList();
             return context.jobs.Any(c => c.CompletionTime == null && idJobDefs.Contains(c.idjobdefinition));
         }
 
-        bool CheckIncomplete(PartnerEntities context, MediationContext mediationContext, ne ne)
+        bool CheckIncompleteExists(PartnerEntities context, MediationContext mediationContext, ne ne)
         {
             List<int> idJobDefs = context.enumjobdefinitions.Where(c => c.JobQueue == this.ProcessId).Select(c => c.id).ToList();
             return context.jobs.Any(c => c.CompletionTime == null && idJobDefs.Contains(c.idjobdefinition)

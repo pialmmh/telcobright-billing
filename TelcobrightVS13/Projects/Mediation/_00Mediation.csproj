@@ -274,7 +274,7 @@
     <Compile Include="MefData\IDigitRule.cs" />
     <Compile Include="MefData\IStringExpressionGenerator.cs" />
     <Compile Include="MefData\IServiceGroupPreProcessor.cs" />
-    <Compile Include="MefData\ILogPreprocessor.cs" />
+    <Compile Include="MefData\EventPreprocessingRule.cs" />
     <Compile Include="MefData\ITelcobrightJobInput.cs" />
     <Compile Include="Cdr\CdrJobFactory.cs" />
     <Compile Include="Cdr\Collection\PreProcessors\CdrErasingPreProcessor.cs" />

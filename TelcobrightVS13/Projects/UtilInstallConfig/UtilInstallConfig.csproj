@@ -486,6 +486,10 @@
       <Project>{d4c2f34d-4d3d-43ae-84f0-e80cfedb1b48}</Project>
       <Name>LibraryExtensions</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LogPreprocessingRules\mefLogPreprocessingRules.csproj">
+      <Project>{ab1b2f2c-0b5d-49d2-b65e-1229470eda02}</Project>
+      <Name>mefLogPreprocessingRules</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Mediation\_00Mediation.csproj">
       <Project>{1a64e6f9-903c-416c-b322-1b5c5d997001}</Project>
       <Name>_00Mediation</Name>

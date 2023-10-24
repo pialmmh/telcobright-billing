@@ -24,5 +24,11 @@ namespace TelcobrightInfra
             Console.WriteLine(msgToPrintInConsole);
             callbackFromUI?.Invoke(msgToPrintInConsole);
         }
+        public void WriteLine(Exception e)
+        {
+            //Console.WriteLine(this.ConsolePrefix + this.InstanceName + this.ConsolePrefix + msgToPrintInConsole);
+            Console.WriteLine(e.Message);
+            callbackFromUI?.Invoke(e.Message);
+        }
     }
 }

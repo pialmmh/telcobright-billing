@@ -12,6 +12,7 @@ using TelcobrightMediation.Config;
 using FlexValidation;
 using InstallConfig._CommonValidation;
 using InstallConfig._generator;
+using LogPreProcessor;
 using MediationModel;
 using TelcobrightMediation.Accounting;
 using TelcobrightInfra;
@@ -67,7 +68,7 @@ namespace InstallConfig
                 BatchSizeForCdrJobCreationCheckingExistence = 10000,
                 DisableParallelMediation = false,
                 AutoCorrectDuplicateBillId = false,
-                AutoCorrectBillIdsWithPrevChargeableIssue = true,
+                AutoCorrectBillIdsWithPrevChargeableIssue = false,
                 AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
                 ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>(),
                 BatchSizeWhenPreparingLargeSqlJob = 100000,
@@ -77,8 +78,16 @@ namespace InstallConfig
                 {
                     { 9, new NeAdditionalSetting {//for huawei
                         ProcessMultipleCdrFilesInBatch = true,
-                        MaxRowCountForBatchProcessing = 100000}//
-                    }
+                        MaxRowCountForBatchProcessing = 100000,
+                        EventPreprocessingRules = new List<EventPreprocessingRule>()
+                        {
+                            new CdrPredecoder()
+                            {
+                                RuleConfigData = new Dictionary<string,int>() { { "maxParallelFileForPreDecode", 10}},
+                                ProcessCollectionOnly = true//does not accept single event, only list of events e.g. multiple new cdr jobs
+                            }
+                        }
+                    }}
                 }
             };
             this.PrepareDirectorySettings(this.Tbc);
