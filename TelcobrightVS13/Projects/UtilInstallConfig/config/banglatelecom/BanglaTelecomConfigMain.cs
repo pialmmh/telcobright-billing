@@ -74,6 +74,7 @@ namespace InstallConfig
                 BatchSizeWhenPreparingLargeSqlJob = 100000,
                 EmptyFileAllowed = true,
                 DaysToAddBeforeAndAfterUniqueDaysForSafePartialCollection = 1,
+                IllegalStrToRemoveFromFields = new List<string> { "`", "\"", "," },
                 NeWiseAdditionalSettings = new Dictionary<int, NeAdditionalSetting>
                 {
                     { 9, new NeAdditionalSetting {//for huawei
@@ -83,7 +84,7 @@ namespace InstallConfig
                         {
                             new CdrPredecoder()
                             {
-                                RuleConfigData = new Dictionary<string,int>() { { "maxParallelFileForPreDecode", 10}},
+                                RuleConfigData = new Dictionary<string,object>() { { "maxParallelFileForPreDecode", "10"}},
                                 ProcessCollectionOnly = true//does not accept single event, only list of events e.g. multiple new cdr jobs
                             }
                         }

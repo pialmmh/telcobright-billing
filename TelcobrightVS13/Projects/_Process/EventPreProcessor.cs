@@ -35,7 +35,6 @@ namespace Process
         public override void Execute(IJobExecutionContext schedulerContext)
         {
             string operatorName = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");
-            
             try
             {
                 TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(

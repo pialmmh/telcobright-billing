@@ -32,18 +32,17 @@ namespace LogPreProcessor
         {
             return this.RuleName;
         }
-
         public string RuleName => this.GetType().ToString();
         public string HelpText => "Predecodes cdr rows as telcoright string[] in text file";
         public bool ProcessCollectionOnly { get; set; } = true;
         public bool IsPrepared { get; set; }
         public object RuleConfigData { get; set; }
         private int maxParallelFileSizeForDecode { get; set; }
-
         public void PrepareRule()
         {
             Dictionary<string, object> dataAsDic = (Dictionary<string, object>) this.RuleConfigData;
-            this.maxParallelFileSizeForDecode = (int) dataAsDic["maxParallelFileForPreDecode"];
+            string val=(string) dataAsDic["maxParallelFileForPreDecode"];
+            this.maxParallelFileSizeForDecode = Convert.ToInt32(val);
             this.IsPrepared = true;
         }
 
