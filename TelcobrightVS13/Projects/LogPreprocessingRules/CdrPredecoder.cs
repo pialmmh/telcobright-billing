@@ -59,6 +59,8 @@ namespace LogPreProcessor
             List<job> newCdrFileJobs = (List<job>) dataAsDic["newCdrFileJobs"];
             PartnerEntities context = (PartnerEntities) dataAsDic["partnerEntities"];
             TBConsole tbConsole = (TBConsole) dataAsDic["tbConsole"];
+            NeAdditionalSetting neAdditionalSetting = (NeAdditionalSetting) dataAsDic["neAdditionalSetting"];
+            int maxParallelPreDecoding = neAdditionalSetting.MaxNoOfFilesForParallelPreDecoding;
             CollectionSegmenter<job> segmentedJobs = new CollectionSegmenter<job>(newCdrFileJobs, 0);
             DbCommand cmd = context.Database.Connection.CreateCommand();
 
@@ -68,9 +70,9 @@ namespace LogPreProcessor
             if (newCdrFileJob == null)
                 throw new Exception("JobRule not found in MEF collection.");
 
-            segmentedJobs.ExecuteMethodInSegments(10, segment =>
+            segmentedJobs.ExecuteMethodInSegments(maxParallelPreDecoding, segment =>
             {
-                Parallel.ForEach(segment, thisJob =>
+                Parallel.ForEach(segment.AsParallel(), thisJob =>
                 {
                     try
                     {
@@ -99,26 +101,37 @@ namespace LogPreProcessor
                     $"Job type must be 1= newCdrFileJob for cdrPredecoding. jobid:{thisJob.id}, jobName:{thisJob.JobName}");
             }
 
-            string fileLocationName = thisSwitch.SourceFileLocations;
-            FileLocation fileLocation = tbc.DirectorySettings.FileLocations[fileLocationName];
-            string newCdrFileName = fileLocation.GetOsNormalizedPath(fileLocation.StartingPath)
-                                    + Path.DirectorySeparatorChar + thisJob.JobName;
-            FileInfo newCdrFileInfo = new FileInfo(newCdrFileName);
-            string predecodedDirName = newCdrFileInfo.DirectoryName + Path.DirectorySeparatorChar +
-                                       "predecoded";
-            if (Directory.Exists(predecodedDirName) == false)
+            string predecodedDirName, predecodedFileName;
+            getPathNamesForPreDecoding(thisJob, thisSwitch, tbc, out predecodedDirName, out predecodedFileName);
+            if (!Directory.Exists(predecodedDirName)) Directory.CreateDirectory(predecodedDirName);
+
+            var preProcessorInput = new Dictionary<string, object>
             {
-                Directory.CreateDirectory(predecodedDirName);
-            }
-            string predecodedFileName = predecodedDirName + Path.DirectorySeparatorChar + newCdrFileName +
-                                        ".predecoded";
-            List<string[]> txtRows = (List<string[]>) newCdrFileJob.PreprocessJob(cdrJobInputData); //EXECUTE
+                { "cdrJobInputData",cdrJobInputData},
+                { "preDecodingStageOnly", true}
+            };
+            NewCdrPreProcessor newCdrPreProcessor =
+                (NewCdrPreProcessor)newCdrFileJob.PreprocessJob(preProcessorInput);//EXECUTE preDecoding
+            List<string[]> txtRows = newCdrPreProcessor.TxtCdrRows;
             List<string> rowsAsCsvLinesFieldsEnclosedWithBacktick = txtRows.Select(row =>
                 string.Join(",",
                     row.Select(field => new StringBuilder("`").Append(field).Append("`").ToString()).ToArray())).ToList();
             File.WriteAllLines(predecodedFileName, rowsAsCsvLinesFieldsEnclosedWithBacktick);
             cmd.CommandText = $" update job set status=2, Error=null where id={thisJob.id}";
             cmd.ExecuteNonQuery();
+        }
+
+        private static void getPathNamesForPreDecoding(job thisJob, ne thisSwitch, TelcobrightConfig tbc, out string predecodedDirName, out string predecodedFileName)
+        {
+            string fileLocationName = thisSwitch.SourceFileLocations;
+            FileLocation fileLocation = tbc.DirectorySettings.FileLocations[fileLocationName];
+            string newCdrFileName = fileLocation.GetOsNormalizedPath(fileLocation.StartingPath)
+                                    + Path.DirectorySeparatorChar + thisJob.JobName;
+            FileInfo newCdrFileInfo = new FileInfo(newCdrFileName);
+            predecodedDirName = newCdrFileInfo.DirectoryName + Path.DirectorySeparatorChar +
+                                       "predecoded";
+            predecodedFileName = predecodedDirName + Path.DirectorySeparatorChar + newCdrFileInfo.Name +
+".predecoded";
         }
     }
 }

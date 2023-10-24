@@ -25,7 +25,7 @@ namespace InstallConfig.config._helper
                 LoadingStopFlag = null,
                 LoadingSpanCount = 100,
                 TransactionSizeForCDRLoading = 1500,
-                DecodingSpanCount = 100,
+                DecodingSpanCount = 1000,
                 SkipAutoCreateJob = 1,
                 SkipCdrListed = 0,
                 SkipCdrReceived = 1,

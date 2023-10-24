@@ -28,6 +28,7 @@ namespace Jobs
         public virtual string HelpText => "New Cdr Job, processes a new CDR file";
         public override string ToString() => this.RuleName;
         public virtual int Id => 1;
+        public bool PreDecodingStageOnly { get; private set; }
         protected int RawCount, NonPartialCount, UniquePartialCount, RawPartialCount, DistinctPartialCount = 0;
         protected decimal RawDurationTotalOfConsistentCdrs = 0;
         protected CdrJobInputData Input { get; set; }
@@ -45,10 +46,25 @@ namespace Jobs
                 parallelConverter.getOutput(r => preProcessor.ConvertToCdr(r));
             return cdrAndInconsistents;
         };
-        public object PreprocessJob(ITelcobrightJobInput jobInputData)
+        public object PreprocessJob(object data)
         {
-            this.Input = (CdrJobInputData)jobInputData;
-            NewCdrPreProcessor preProcessor = DecodeAndPreProcessNewCdrFile();
+            Dictionary<string, object> dataAsDic = (Dictionary<string, object>) data;
+            this.Input = (CdrJobInputData)dataAsDic["cdrJobInputData"];
+            object preDecodingStageOnly=null;
+            if (dataAsDic.TryGetValue("preDecodingStageOnly", out preDecodingStageOnly) == false)
+            {
+                this.PreDecodingStageOnly = false;
+            }
+            else
+            {
+                this.PreDecodingStageOnly = (bool) preDecodingStageOnly;
+            }
+            NewCdrPreProcessor preProcessor = DecodeNewCdrFile();
+            if (PreDecodingStageOnly)
+            {
+                return preProcessor;
+            }
+            preProcessor = preFormatRawCdrs(preProcessor);
             return preProcessor;
         }
         public virtual Object Execute(ITelcobrightJobInput jobInputData)
@@ -58,7 +74,8 @@ namespace Jobs
 
             if (this.Input.IsBatchJob == false)//not batch job
             {
-                preProcessor = DecodeAndPreProcessNewCdrFile();
+                preProcessor = DecodeNewCdrFile();
+                preProcessor = preFormatRawCdrs(preProcessor);
             }
             else//batch job
             {
@@ -205,14 +222,19 @@ namespace Jobs
             }
         }
 
-        public object PostprocessJob(ITelcobrightJobInput jobInputData)
+        public object PostprocessJob(object data)
         {
             throw new NotImplementedException();
         }
 
-        private NewCdrPreProcessor DecodeAndPreProcessNewCdrFile()
+        private NewCdrPreProcessor DecodeNewCdrFile()
         {
             NewCdrPreProcessor preProcessor = this.CollectRaw();
+            return preProcessor;
+        }
+
+        private NewCdrPreProcessor preFormatRawCdrs(NewCdrPreProcessor preProcessor)
+        {
             PreProcessRawCdrs(preProcessor);
             //preProcessor.TxtCdrRows.ForEach(txtRow => this.CdrConverter(preProcessor, txtRow));
             List<CdrAndInconsistentWrapper> cdrAndInconsistents =
@@ -228,10 +250,21 @@ namespace Jobs
                 this.Input.MediationContext.Tbc.DirectorySettings.FileLocations[fileLocationName];
             string fileName = fileLocation.GetOsNormalizedPath(fileLocation.StartingPath)
                               + Path.DirectorySeparatorChar + this.Input.TelcobrightJob.JobName;
-            this.CollectorInput = new CdrCollectorInputData(this.Input, fileName);
-            IEventCollector cdrCollector = new FileBasedTextCdrCollector(this.CollectorInput);
+            this.CollectorInput =new CdrCollectorInputData(this.Input, fileName);
+            var cdrCollector = new FileBasedTextCdrCollector(this.CollectorInput);
+            if (this.PreDecodingStageOnly)
+            {
+                List<cdrinconsistent> cdrinconsistents = new List<cdrinconsistent>();
+                var decoder = cdrCollector.getDecoder();
+                var decodedCdrRows = decoder.DecodeFile(this.CollectorInput, out cdrinconsistents);
+                NewCdrPreProcessor newCdrPreProcessor =
+                    new NewCdrPreProcessor(decodedCdrRows, cdrinconsistents, this.CollectorInput);
+                return newCdrPreProcessor;
+            }
             return (NewCdrPreProcessor) cdrCollector.Collect();
         }
+
+
 
         public PartialCdrTesterData OrganizeTestDataForPartialCdrs(NewCdrPreProcessor preProcessor,
             CdrCollectionResult newCollectionResult)

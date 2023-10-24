@@ -52,15 +52,15 @@ namespace Process
                         {
                             NeAdditionalSetting neAdditionalSetting = null;
                             if (cdrSetting.NeWiseAdditionalSettings.
-                                TryGetValue(ne.idSwitch, out neAdditionalSetting) == false) return;
+                                TryGetValue(ne.idSwitch, out neAdditionalSetting) == false) continue;
                             List<EventPreprocessingRule> eventPreprocessingRules = neAdditionalSetting.EventPreprocessingRules;
-                            if (eventPreprocessingRules.Any() == false) return;
+                            if (eventPreprocessingRules.Any() == false) continue;
                             eventPreprocessingRules.ForEach(rule => rule.PrepareRule());
 
                             if (ne.SkipCdrDecoded == 1 || CheckIncompleteExists(context, mediationContext, ne) == false)
                                 continue;
                             List<job> incompleteJobs = GetNewCdrJobs(tbc, context, ne, ne.DecodingSpanCount);
-                            if (incompleteJobs.Any() == false) return;
+                            if (incompleteJobs.Any() == false) continue;
                             
                             foreach (var eventPreprocessingRule in eventPreprocessingRules)
                             {
@@ -72,7 +72,8 @@ namespace Process
                                         {"ne", ne},
                                         {"newCdrFileJobs", incompleteJobs},
                                         {"partnerEntities", context},
-                                        {"tbConsole", TbConsole}
+                                        {"tbConsole", TbConsole},
+                                        {"neAdditionalSetting",neAdditionalSetting }
                                     };
                                     eventPreprocessingRule.Execute(ruleInputData);
                                 }
@@ -101,9 +102,8 @@ namespace Process
 
         bool CheckIncompleteExists(PartnerEntities context, MediationContext mediationContext, ne ne)
         {
-            List<int> idJobDefs = context.enumjobdefinitions.Where(c => c.JobQueue == this.ProcessId).Select(c => c.id).ToList();
-            return context.jobs.Any(c => c.CompletionTime == null && idJobDefs.Contains(c.idjobdefinition)
-                                         && c.idNE == ne.idSwitch);
+            return context.jobs.Any(job => job.CompletionTime == null && job.idjobdefinition==1
+                                         && job.idNE == ne.idSwitch);
         }
 
         private static void PrintErrorMessageToConsole(ne ne, job telcobrightJob, Exception e)

@@ -8,7 +8,7 @@ namespace TelcobrightMediation
         string HelpText { get; }
         int Id { get; }
         object Execute(ITelcobrightJobInput jobInputData);
-        object PreprocessJob(ITelcobrightJobInput jobInputData);
-        object PostprocessJob(ITelcobrightJobInput jobInputData);
+        object PreprocessJob(object data);
+        object PostprocessJob(object data);
     }
 }

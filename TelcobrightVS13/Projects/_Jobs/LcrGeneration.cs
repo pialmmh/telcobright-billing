@@ -94,12 +94,12 @@ namespace Jobs
             }
         }
 
-        public object PreprocessJob(ITelcobrightJobInput jobInputData)
+        public object PreprocessJob(object data)
         {
             throw new NotImplementedException();
         }
 
-        public object PostprocessJob(ITelcobrightJobInput jobInputData)
+        public object PostprocessJob(object data)
         {
             throw new NotImplementedException();
         }

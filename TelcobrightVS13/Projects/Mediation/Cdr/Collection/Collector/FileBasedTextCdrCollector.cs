@@ -24,7 +24,7 @@ namespace TelcobrightMediation
         public CdrCollectorInputData CollectorInput { get; }
         public Dictionary<string, object> Params { get; set; }
         public NeAdditionalSetting NeAdditionalSetting { get; } = null;
-        public bool PreDecodeAsTextFile { get; }
+        public bool CollectFromPreDecodedFile { get; }
         private DbCommand DbCmd { get; }
         public FileBasedTextCdrCollector(CdrCollectorInputData collectorInput)
         {
@@ -38,11 +38,37 @@ namespace TelcobrightMediation
                     out neAdditionalSetting) == true)
             {
                 this.NeAdditionalSetting = neAdditionalSetting;
-                this.PreDecodeAsTextFile = neAdditionalSetting != null && neAdditionalSetting.PreDecodeAsTextFile;
+                this.CollectFromPreDecodedFile = neAdditionalSetting != null && neAdditionalSetting.PreDecodeAsTextFile;
                 
             }
         }
         public object Collect()
+        {
+            AbstractCdrDecoder decoder = getDecoder();
+            List<cdrinconsistent> cdrinconsistents = new List<cdrinconsistent>();
+            List<string[]> decodedCdrRows = new List<string[]>();
+            decodedCdrRows = this.CollectFromPreDecodedFile == false ? decoder.DecodeFile(this.CollectorInput, out cdrinconsistents) 
+                : collectFromPreDecodedFile(decoder, ref cdrinconsistents);
+
+            NewCdrPreProcessor textCdrCollectionPreProcessor = null;
+            if (CollectorInput.Ne.FilterDuplicateCdr == 1 && decodedCdrRows.Count > 0) //filter duplicates
+            {
+                textCdrCollectionPreProcessor = filterDuplicates(decoder, cdrinconsistents, decodedCdrRows);
+            }
+            else //duplicate check not required
+            {
+                textCdrCollectionPreProcessor =
+                    new NewCdrPreProcessor(decodedCdrRows, cdrinconsistents, this.CollectorInput);
+            }
+
+            if (textCdrCollectionPreProcessor == null)
+            {
+                throw new Exception("textCdrCollectionPreProcessor cannot be null");
+            }
+            return textCdrCollectionPreProcessor;
+        }
+
+        public AbstractCdrDecoder getDecoder()
         {
             AbstractCdrDecoder decoder = null;
             this.CollectorInput.MefDecodersData.DicExtensions.TryGetValue(this.CollectorInput.Ne.idcdrformat,
@@ -53,68 +79,59 @@ namespace TelcobrightMediation
                                     this.CollectorInput.Ne.idcdrformat
                                     + " and Ne:" + this.CollectorInput.Ne.idSwitch);
             }
-            List<cdrinconsistent> cdrinconsistents = new List<cdrinconsistent>();
-            List<string[]> decodedCdrRows = new List<string[]>();
-            if (this.PreDecodeAsTextFile == true)
+
+            return decoder;
+        }
+
+        private List<string[]> collectFromPreDecodedFile(AbstractCdrDecoder decoder, ref List<cdrinconsistent> cdrinconsistents)
+        {
+            List<string[]> decodedCdrRows;
+            string fileLocationName = this.CollectorInput.Ne.SourceFileLocations;
+            FileLocation fileLocation = this.CollectorInput.Tbc.DirectorySettings.FileLocations[fileLocationName];
+            string newCdrFileName = fileLocation.GetOsNormalizedPath(fileLocation.StartingPath)
+                                    + Path.DirectorySeparatorChar + this.CollectorInput.TelcobrightJob.JobName;
+            FileInfo newCdrFileInfo = new FileInfo(newCdrFileName);
+            string predecodedDirName = newCdrFileInfo.DirectoryName + Path.DirectorySeparatorChar + "predecoded";
+            if (Directory.Exists(predecodedDirName) == false)
             {
-                string fileLocationName = this.CollectorInput.Ne.SourceFileLocations;
-                FileLocation fileLocation = this.CollectorInput.Tbc.DirectorySettings.FileLocations[fileLocationName];
-                string newCdrFileName = fileLocation.GetOsNormalizedPath(fileLocation.StartingPath)
-                                        + Path.DirectorySeparatorChar + this.CollectorInput.TelcobrightJob.JobName;
-                FileInfo newCdrFileInfo = new FileInfo(newCdrFileName);
-                string predecodedDirName = newCdrFileInfo.DirectoryName + Path.DirectorySeparatorChar + "predecoded";
-                if (Directory.Exists(predecodedDirName) == false)
-                {
-                    Directory.CreateDirectory(predecodedDirName);
-                }
-                string predecodedFileName = predecodedDirName + Path.DirectorySeparatorChar + newCdrFileName +
-                                            ".predecoded";
-                if (File.Exists(predecodedFileName))//file may not exists occassionally due to clean up or while re-processing of new files
-                {
-                    decodedCdrRows =
-                        FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(predecodedFileName, ',', 0, "`",
-                            ";"); //backtick separated
-                }
-                else
-                {
-                    decodedCdrRows = decoder.DecodeFile(this.CollectorInput, out cdrinconsistents); //collect
-                }
+                Directory.CreateDirectory(predecodedDirName);
+            }
+            string predecodedFileName = predecodedDirName + Path.DirectorySeparatorChar + newCdrFileInfo.Name +
+                                        ".predecoded";
+            if (File.Exists(predecodedFileName)
+            ) //file may not exists occassionally due to clean up or while re-processing of new files
+            {
+                decodedCdrRows =
+                    FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(predecodedFileName, ',', 0, "`", ";"); //backtick separated
             }
             else
             {
                 decodedCdrRows = decoder.DecodeFile(this.CollectorInput, out cdrinconsistents); //collect
             }
 
-            NewCdrPreProcessor textCdrCollectionPreProcessor = null;
-            if (CollectorInput.Ne.FilterDuplicateCdr == 1 && decodedCdrRows.Count > 0) //filter duplicates
-            {
-                DayWiseEventCollector<string[]> dayWiseEventCollector= new DayWiseEventCollector<string[]>
-                    (uniqueEventsOnly: true, 
-                    collectorInput: this.CollectorInput,
-                    dbCmd: this.DbCmd,decoder: decoder,decodedEvents: decodedCdrRows,
-                    sourceTablePrefix: decoder.PartialTablePrefix);
-                dayWiseEventCollector.createNonExistingTables();
-                dayWiseEventCollector.collectTupleWiseExistingEvents(decoder);
-                DuplicaterEventFilter<string[]> duplicaterEventFilter= new DuplicaterEventFilter<string[]>(dayWiseEventCollector);
-                List<string[]> excludedDuplicateCdrs = null;
-                Dictionary<string, string[]> finalNonDuplicateEvents = duplicaterEventFilter.filterDuplicateCdrs(out excludedDuplicateCdrs);
-                textCdrCollectionPreProcessor =
-                    new NewCdrPreProcessor(finalNonDuplicateEvents.Values.ToList(), cdrinconsistents,
-                        this.CollectorInput)
-                    {
-                        FinalNonDuplicateEvents = finalNonDuplicateEvents,
-                        DuplicateEvents = excludedDuplicateCdrs
-                    };
-            }
-            else//duplicate check not required
-            {
-                textCdrCollectionPreProcessor =
-                    new NewCdrPreProcessor(decodedCdrRows, cdrinconsistents, this.CollectorInput);
-            }
-            if (textCdrCollectionPreProcessor == null)
-            {
-                throw new Exception("textCdrCollectionPreProcessor cannot be null");
-            }
+            return decodedCdrRows;
+        }
+
+        private NewCdrPreProcessor filterDuplicates(AbstractCdrDecoder decoder, List<cdrinconsistent> cdrinconsistents, List<string[]> decodedCdrRows)
+        {
+            NewCdrPreProcessor textCdrCollectionPreProcessor;
+            DayWiseEventCollector<string[]> dayWiseEventCollector = new DayWiseEventCollector<string[]>
+(uniqueEventsOnly: true,
+collectorInput: this.CollectorInput,
+dbCmd: this.DbCmd, decoder: decoder, decodedEvents: decodedCdrRows,
+sourceTablePrefix: decoder.PartialTablePrefix);
+            dayWiseEventCollector.createNonExistingTables();
+            dayWiseEventCollector.collectTupleWiseExistingEvents(decoder);
+            DuplicaterEventFilter<string[]> duplicaterEventFilter = new DuplicaterEventFilter<string[]>(dayWiseEventCollector);
+            List<string[]> excludedDuplicateCdrs = null;
+            Dictionary<string, string[]> finalNonDuplicateEvents = duplicaterEventFilter.filterDuplicateCdrs(out excludedDuplicateCdrs);
+            textCdrCollectionPreProcessor =
+                new NewCdrPreProcessor(finalNonDuplicateEvents.Values.ToList(), cdrinconsistents,
+                    this.CollectorInput)
+                {
+                    FinalNonDuplicateEvents = finalNonDuplicateEvents,
+                    DuplicateEvents = excludedDuplicateCdrs
+                };
             return textCdrCollectionPreProcessor;
         }
     }

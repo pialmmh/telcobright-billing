@@ -102,7 +102,10 @@ namespace Process
                                         else if(neAdditionalSetting?.ProcessMultipleCdrFilesInBatch == true)//merge new cdr jobs for batch processing
                                         {
                                             NewCdrPreProcessor preProcessor =
-                                                (NewCdrPreProcessor) telcobrightJob.PreprocessJob(cdrJobInputData);
+                                                (NewCdrPreProcessor) telcobrightJob.PreprocessJob(new Dictionary<string,object>
+                                                {
+                                                    { "cdrJobInputData",cdrJobInputData}
+                                                });
                                             if (preProcessor.TxtCdrRows.Count>=maxRowCountForBatchProcessing)//already large job, process as single
                                             {
                                                 telcobrightJob.Execute(cdrJobInputData); //not merging, process as single job************

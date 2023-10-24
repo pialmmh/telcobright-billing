@@ -39,7 +39,6 @@ namespace TelcobrightMediation
         public job TelcobrightJob { get; }
         public Dictionary<long, NewCdrWrappedJobForMerge> MergedJobsDic { get; set; }= new Dictionary<long, NewCdrWrappedJobForMerge>();
         public bool IsBatchJob => this.MergedJobsDic.Any();
-
         public CdrJobInputData(MediationContext mediationContext, PartnerEntities context, ne ne, job telcobrightJob)
         {
             this.MediationContext = mediationContext;
