@@ -102,20 +102,19 @@ namespace Jobs
             PartialCdrTesterData partialCdrTesterData = OrganizeTestDataForPartialCdrs(preProcessor, newCollectionResult);
             CdrJob cdrJob = (new CdrJobFactory(this.Input, this.RawCount)).
                 CreateCdrJob(preProcessor, newCollectionResult, oldCollectionResult, partialCdrTesterData);
-            if (cdrJob.CdrProcessor.CollectionResult.ConcurrentCdrExts.Count > 0)//job not empty, or has records
+            if (cdrJob.CdrProcessor.CollectionResult.ConcurrentCdrExts.Count > 0) //job not empty, or has records
             {
-                cdrJob.Execute();//MAIN EXECUTION/MEDIATION METHOD
-                //WriteJobCompletionIfCollectionNotEmpty(cdrJob.CdrProcessor.CollectionResult, this.Input.TelcobrightJob, cdrJob.CdrProcessor.CdrJobContext.Context);
+                cdrJob.Execute(); //MAIN EXECUTION/MEDIATION METHOD
             }
             else
             {
                 handleAndFinalizeEmptyJob(cdrJob);
             }
-            if (this.Input.IsBatchJob == false)
+            if (this.Input.IsBatchJob == false) //single job, not merged
             {
                 FinalizeNonMergedJob(cdrJob);
             }
-            else
+            else //
             {
                 FinalizeMergedJobs(cdrJob);
             }
@@ -143,15 +142,18 @@ namespace Jobs
             if (this.Input.CdrSetting.DisableCdrPostProcessingJobCreationForAutomation == false)
             {
                 CreateNewCdrPostProcessingJobs(this.Input.Context, this.Input.MediationContext.Tbc, cdrJob.CdrProcessor.CdrJobContext.TelcobrightJob);
+                DeletePreDecodedFile(this.Input.Context, this.Input.MediationContext.Tbc,
+                    cdrJob.CdrProcessor.CdrJobContext.TelcobrightJob);
             }
         }
 
         private void FinalizeNonMergedJob(CdrJob cdrJob)
         {
             var collectionResult = cdrJob.CdrProcessor.CollectionResult;
-            if (collectionResult.OriginalRowsBeforeMerge.Count > 0)//job not empty, or has records
+            if (collectionResult.OriginalRowsBeforeMerge.Count > 0) //job not empty, or has records
             {
-                WriteJobCompletionIfCollectionNotEmpty(cdrJob.CdrProcessor.CollectionResult.RawCount, this.Input.TelcobrightJob, cdrJob.CdrProcessor.CdrJobContext.Context);
+                WriteJobCompletionIfCollectionNotEmpty(cdrJob.CdrProcessor.CollectionResult.RawCount,
+                    this.Input.TelcobrightJob, cdrJob.CdrProcessor.CdrJobContext.Context);
             }
             else
             {
@@ -162,13 +164,17 @@ namespace Jobs
                         throw new Exception("Empty new cdr files are not considered valid as per cdr setting.");
                     }
                 }
-                WriteJobCompletionIfCollectionIsEmpty(cdrJob.CdrProcessor.CollectionResult.OriginalRowsBeforeMerge.Count, 
+                WriteJobCompletionIfCollectionIsEmpty(
+                    cdrJob.CdrProcessor.CollectionResult.OriginalRowsBeforeMerge.Count,
                     this.Input.TelcobrightJob, cdrJob.CdrProcessor.CdrJobContext.Context);
             }
             if (this.Input.CdrSetting.DisableCdrPostProcessingJobCreationForAutomation == false)
             {
                 CreateNewCdrPostProcessingJobs(this.Input.Context, this.Input.MediationContext.Tbc,
                     cdrJob.CdrProcessor.CdrJobContext.TelcobrightJob);
+                DeletePreDecodedFile(this.Input.Context, this.Input.MediationContext.Tbc,
+                    cdrJob.CdrProcessor.CdrJobContext.TelcobrightJob);
+
             }
         }
 
@@ -177,7 +183,6 @@ namespace Jobs
             Dictionary<long, NewCdrWrappedJobForMerge> mergedJobsDic =
                 cdrJob.CdrProcessor.CdrJobContext.CdrjobInputData.MergedJobsDic;
             PartnerEntities context = cdrJob.CdrJobContext.Context;
-
             foreach (var newCdrWrappedJobForMerge in mergedJobsDic.Values)
             {
                 FinalizeSingleMergedJob(newCdrWrappedJobForMerge, context);
@@ -193,10 +198,10 @@ namespace Jobs
                 throw new Exception($"Instance in a merged new cdr job cannot contain 0 record. Job id:{telcobrightJob.id}, Jobname:{telcobrightJob.JobName}");
             }
             WriteJobCompletionIfCollectionNotEmpty(preProcessor.TxtCdrRows.Count, this.Input.TelcobrightJob, context);
-           
             if (this.Input.CdrSetting.DisableCdrPostProcessingJobCreationForAutomation == false)
             {
                 CreateNewCdrPostProcessingJobs(this.Input.Context, this.Input.MediationContext.Tbc,telcobrightJob);
+                DeletePreDecodedFile(this.Input.Context, this.Input.MediationContext.Tbc, telcobrightJob);
             }
         }
 
@@ -219,12 +224,13 @@ namespace Jobs
         protected virtual NewCdrPreProcessor CollectRaw()
         {
             string fileLocationName = this.Input.Ne.SourceFileLocations;
-            FileLocation fileLocation = this.Input.MediationContext.Tbc.DirectorySettings.FileLocations[fileLocationName];
+            FileLocation fileLocation =
+                this.Input.MediationContext.Tbc.DirectorySettings.FileLocations[fileLocationName];
             string fileName = fileLocation.GetOsNormalizedPath(fileLocation.StartingPath)
                               + Path.DirectorySeparatorChar + this.Input.TelcobrightJob.JobName;
             this.CollectorInput = new CdrCollectorInputData(this.Input, fileName);
             IEventCollector cdrCollector = new FileBasedTextCdrCollector(this.CollectorInput);
-            return (NewCdrPreProcessor)cdrCollector.Collect();
+            return (NewCdrPreProcessor) cdrCollector.Collect();
         }
 
         public PartialCdrTesterData OrganizeTestDataForPartialCdrs(NewCdrPreProcessor preProcessor,
@@ -374,6 +380,19 @@ namespace Jobs
             else
             {
                 createJobsForSplitCase(context, tbc, cdrJob,unsplitFileName);
+            }
+        }
+        protected void DeletePreDecodedFile(PartnerEntities context, TelcobrightConfig tbc, job cdrJob)
+        {
+            string fileLocationName = this.CollectorInput.Ne.SourceFileLocations;
+            FileLocation fileLocation = this.CollectorInput.Tbc.DirectorySettings.FileLocations[fileLocationName];
+            string newCdrFileName = fileLocation.GetOsNormalizedPath(fileLocation.StartingPath)
+                                    + Path.DirectorySeparatorChar + cdrJob.JobName;
+            FileInfo newCdrFileInfo = new FileInfo(newCdrFileName);
+            string predecodedDirName = newCdrFileInfo.DirectoryName + Path.DirectorySeparatorChar + "predecoded";
+            if (File.Exists(newCdrFileName))
+            {
+                File.Delete(newCdrFileName);
             }
         }
 

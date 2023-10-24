@@ -114,10 +114,10 @@ namespace LogPreProcessor
             string predecodedFileName = predecodedDirName + Path.DirectorySeparatorChar + newCdrFileName +
                                         ".predecoded";
             List<string[]> txtRows = (List<string[]>) newCdrFileJob.PreprocessJob(cdrJobInputData); //EXECUTE
-            List<string> rowsAsCsvLinesWithDoubleQuotedFields = txtRows.Select(row =>
+            List<string> rowsAsCsvLinesFieldsEnclosedWithBacktick = txtRows.Select(row =>
                 string.Join(",",
-                    row.Select(field => new StringBuilder("").Append(field).Append("").ToString()).ToArray())).ToList();
-            File.WriteAllLines(predecodedFileName, rowsAsCsvLinesWithDoubleQuotedFields);
+                    row.Select(field => new StringBuilder("`").Append(field).Append("`").ToString()).ToArray())).ToList();
+            File.WriteAllLines(predecodedFileName, rowsAsCsvLinesFieldsEnclosedWithBacktick);
             cmd.CommandText = $" update job set status=2, Error=null where id={thisJob.id}";
             cmd.ExecuteNonQuery();
         }

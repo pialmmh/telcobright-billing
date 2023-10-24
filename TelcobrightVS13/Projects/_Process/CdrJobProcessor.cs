@@ -68,7 +68,7 @@ namespace Process
                             if (ne.SkipCdrDecoded == 1 || CheckIncompleteExists(context, mediationContext, ne) == false)
                                 continue;
                             List<job> incompleteJobs = GetReProcessJobs(context, ne, ne.DecodingSpanCount);
-                            incompleteJobs.AddRange(GetNewCdrJobs(tbc, context, ne, ne.DecodingSpanCount)); //combine
+                            incompleteJobs.AddRange(GetNewCdrJobs(tbc, context, ne, ne.DecodingSpanCount,neAdditionalSetting)); //combine
                             using (DbCommand cmd = context.Database.Connection.CreateCommand())
                             {
                                 foreach (job job in incompleteJobs)
@@ -258,15 +258,19 @@ namespace Process
                     .Take(Convert.ToInt32(decodingSpan)).ToList();
             return jobs;
         }
-        public List<job> GetNewCdrJobs(TelcobrightConfig tbc,PartnerEntities contextTb, ne thisSwitch, int? decodingSpan)
+        public List<job> GetNewCdrJobs(TelcobrightConfig tbc,PartnerEntities contextTb, ne thisSwitch, int? decodingSpan,
+            NeAdditionalSetting neAdditionalSetting)
         {
             List<job> jobs = null;
+            var preDecodeAsTextFile = neAdditionalSetting != null && neAdditionalSetting.PreDecodeAsTextFile;
+            int jobStatusToFetch = preDecodeAsTextFile == true ? 2//status 2=prepared
+                : 7; //status 7=downloaded
             if (tbc.CdrSetting.DescendingOrderWhileProcessingListedFiles == true)
             {
                 jobs=contextTb.jobs
                     .Where(c => c.CompletionTime == null
                                 && c.idNE == thisSwitch.idSwitch
-                                && c.Status == 7 && c.idjobdefinition == 1
+                                && c.Status == jobStatusToFetch && c.idjobdefinition == 1
                                 && c.JobState != "paused") //downloaded & new cdr
                     .Include(c => c.ne.enumcdrformat)
                     .Include(c => c.ne.telcobrightpartner)
@@ -278,7 +282,7 @@ namespace Process
                 jobs=contextTb.jobs
                     .Where(c => c.CompletionTime == null
                                 && c.idNE == thisSwitch.idSwitch
-                                && c.Status == 7 && c.idjobdefinition == 1
+                                && c.Status == jobStatusToFetch && c.idjobdefinition == 1
                                 && c.JobState != "paused") //downloaded & new cdr
                     .Include(c => c.ne.enumcdrformat)
                     .Include(c => c.ne.telcobrightpartner)
