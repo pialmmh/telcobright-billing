@@ -72,34 +72,37 @@ namespace LogPreProcessor
 
             segmentedJobs.ExecuteMethodInSegments(maxParallelPreDecoding, segment =>
             {
-                Parallel.ForEach(segment.AsParallel(), thisJob =>
+                var enumerable = segment as job[] ?? segment.ToArray();
+                Parallel.ForEach(enumerable.AsParallel(), thisJob =>
                 {
                     try
                     {
-                        preDecodeFiles(thisJob, mediationContext, thisSwitch, tbc, context, tbConsole, cmd,
-                            newCdrFileJob);
+                        preDecodeFiles(thisJob, mediationContext, thisSwitch, tbc, context, tbConsole, newCdrFileJob);
+                        
                     }
                     catch (Exception e)
                     {
                         tbConsole.WriteLine(e);//just print to console and continue with next job;
                     }
                 });
+                //can't write to db in parallel, reader busy error occurs
+                foreach (var job in enumerable)
+                {
+                    cmd.CommandText = $" update job set status=2, Error=null where id={job.id}";
+                    cmd.ExecuteNonQuery();
+                }
             });
         }
 
         private static void preDecodeFiles(job thisJob, MediationContext mediationContext, ne thisSwitch,
-            TelcobrightConfig tbc, PartnerEntities context, TBConsole tbConsole, DbCommand cmd,
-            ITelcobrightJob newCdrFileJob)
+            TelcobrightConfig tbc, PartnerEntities context, TBConsole tbConsole, ITelcobrightJob newCdrFileJob)
         {
             tbConsole.WriteLine("Predecoding CdrJob for Switch:" + thisSwitch.SwitchName + ", JobName:" +
                                 thisJob.JobName);
-            var cdrJobInputData =
-                new CdrJobInputData(mediationContext, context, thisSwitch, thisJob);
+            var cdrJobInputData = new CdrJobInputData(mediationContext, context, thisSwitch, thisJob);
             if (thisJob.idjobdefinition != 1)
-            {
                 throw new Exception(
                     $"Job type must be 1= newCdrFileJob for cdrPredecoding. jobid:{thisJob.id}, jobName:{thisJob.JobName}");
-            }
 
             string predecodedDirName, predecodedFileName;
             getPathNamesForPreDecoding(thisJob, thisSwitch, tbc, out predecodedDirName, out predecodedFileName);
@@ -117,8 +120,7 @@ namespace LogPreProcessor
                 string.Join(",",
                     row.Select(field => new StringBuilder("`").Append(field).Append("`").ToString()).ToArray())).ToList();
             File.WriteAllLines(predecodedFileName, rowsAsCsvLinesFieldsEnclosedWithBacktick);
-            cmd.CommandText = $" update job set status=2, Error=null where id={thisJob.id}";
-            cmd.ExecuteNonQuery();
+            
         }
 
         private static void getPathNamesForPreDecoding(job thisJob, ne thisSwitch, TelcobrightConfig tbc, out string predecodedDirName, out string predecodedFileName)
@@ -131,7 +133,7 @@ namespace LogPreProcessor
             predecodedDirName = newCdrFileInfo.DirectoryName + Path.DirectorySeparatorChar +
                                        "predecoded";
             predecodedFileName = predecodedDirName + Path.DirectorySeparatorChar + newCdrFileInfo.Name +
-".predecoded";
+                                       ".predecoded";
         }
     }
 }

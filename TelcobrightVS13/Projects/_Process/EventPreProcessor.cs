@@ -102,8 +102,9 @@ namespace Process
 
         bool CheckIncompleteExists(PartnerEntities context, MediationContext mediationContext, ne ne)
         {
-            return context.jobs.Any(job => job.CompletionTime == null && job.idjobdefinition==1
-                                         && job.idNE == ne.idSwitch);
+            var anyJob= context.jobs.Where(job => job.CompletionTime == null && job.idjobdefinition==1
+                                         && job.idNE == ne.idSwitch).ToList().FirstOrDefault();
+            return anyJob != null;
         }
 
         private static void PrintErrorMessageToConsole(ne ne, job telcobrightJob, Exception e)
