@@ -88,8 +88,15 @@ namespace LogPreProcessor
                 //can't write to db in parallel, reader busy error occurs
                 foreach (var job in enumerable)
                 {
-                    cmd.CommandText = $" update job set status=2, Error=null where id={job.id}";
-                    cmd.ExecuteNonQuery();
+                    try
+                    {
+                        cmd.CommandText = $" update job set status=2, Error=null where id={job.id}";
+                        cmd.ExecuteNonQuery();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
                 }
             });
         }
