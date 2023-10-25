@@ -9,6 +9,7 @@ using Quartz;
 using QuartzTelcobright;
 using System.Configuration;
 using System.Diagnostics;
+using System.Threading;
 using CrystalQuartz.Core.SchedulerProviders;
 using Quartz.Impl;
 using Quartz.Impl.Matchers;
@@ -26,16 +27,24 @@ namespace WS_Telcobright_Topshelf
         Debug
     }
 
-    
+
     public class TelcobrightService
     {
         public static MefCollectiveAssemblyComposer mefColllectiveAssemblyComposer { get; set; }
         public static MefProcessContainer mefProcessContainer { get; set; }
         static void Main(string[] args)
         {
-            string deploymentRoot =
-                @"C:\sftproot\TelcobrightProject\TelcobrightVS13\Projects\WS_Topshelf_Quartz\deployedInstances";
+           
             string configFileName = "";
+            string deploymentRoot =
+                @"D:\TelcobrightProject\TelcobrightVS13\Projects\WS_Topshelf_Quartz\deployedInstances";
+            if (args.Length >= 0)
+            {
+               
+                string instancename = args[0];
+                Console.WriteLine(instancename);
+                configFileName = instancename + ".conf";
+            }
 
             if (configFileName == "")
             {
@@ -60,7 +69,7 @@ namespace WS_Telcobright_Topshelf
                 configFileName = operatorNameVsConfigFile[selectedOpName];
             }
 
-            Console.Title = configFileName.Split('\\').Last().Replace(".conf","");
+            Console.Title = configFileName.Split('\\').Last().Replace(".conf", "");
 
 
             //Telcobright2 tb = new Telcobright2($"{deploymentRoot}\\mothertelecom_cas\\mothertelecom_cas.conf", null);
@@ -88,7 +97,7 @@ namespace WS_Telcobright_Topshelf
         {
             bool disableParallelMediationForDebug =
                 Convert.ToBoolean(ConfigurationManager.AppSettings["disableParallelMediationForDebug"]);
-            
+
             TelcobrightConfig tbc = ConfigFactory.GetConfigFromFile(configFileName);
             if (Debugger.IsAttached)
             {
@@ -96,7 +105,7 @@ namespace WS_Telcobright_Topshelf
             }
             return tbc;
         }
-        static IScheduler GetScheduler(SchedulerRunTimeType runTimeType,TelcobrightConfig tbc)// IApplicationContext springContext)
+        static IScheduler GetScheduler(SchedulerRunTimeType runTimeType, TelcobrightConfig tbc)// IApplicationContext springContext)
         {
             QuartzPropertyFactory quartzPropertyFactoryRuntime;
             QuartzPropertyFactory quartzPropertyFactoryDebug;
@@ -145,7 +154,8 @@ namespace WS_Telcobright_Topshelf
             {
                 selectedTriggerKeysFinal = triggersKeys
                         .Where((item, index) => selectedtriggersFromConsoleWithArgs.Select(kv => kv.Key).Contains(index))
-                        .Select((t, index) => {
+                        .Select((t, index) =>
+                        {
                             string argsStr = "";
                             selectedtriggersFromConsoleWithArgs.TryGetValue(index, out argsStr);
                             return new TriggerKeyExt(t, argsStr);
@@ -238,17 +248,17 @@ namespace WS_Telcobright_Topshelf
                 Console.WriteLine(Environment.NewLine + "No keys were pressed, starting all process...");
                 choices = string.Join(",", Enumerable.Range(1, triggers.Count).Select(num => num.ToString()));
             }
-            return choices.Split(',').Select(c=>c.Trim()).Select(keyWithArgs =>
-            {
-                var arr = keyWithArgs.Split(null).Select(item => item.Trim()).ToArray();
-                int key = Convert.ToInt32(arr[0]) - 1;//displayed menu items are 1 based, change to 0 based choise
+            return choices.Split(',').Select(c => c.Trim()).Select(keyWithArgs =>
+              {
+                  var arr = keyWithArgs.Split(null).Select(item => item.Trim()).ToArray();
+                  int key = Convert.ToInt32(arr[0]) - 1;//displayed menu items are 1 based, change to 0 based choise
                 string args = arr.Length > 1 ? arr[1] : "";
-                return new KeyValuePair<int, string>(key, args);
-            }).ToDictionary(kv => kv.Key, kv => kv.Value);
+                  return new KeyValuePair<int, string>(key, args);
+              }).ToDictionary(kv => kv.Key, kv => kv.Value);
         }
         static bool WaitForkeyPressForDebugMode()
         {
-            ConsoleKeyInfo k= new ConsoleKeyInfo();
+            ConsoleKeyInfo k = new ConsoleKeyInfo();
             int pressMenuWithinSec = 5;
             Console.Write("\r{0}   ", $"Press any key within {pressMenuWithinSec} seconds to selectively run processes from menu...");
             for (int cnt = pressMenuWithinSec; cnt > -1; cnt--)

@@ -66,7 +66,7 @@ namespace InstallConfig
                 BatchSizeWhenPreparingLargeSqlJob = 100000,
                 SkipSettingsForSummaryOnly = new SkipSettingsForSummaryOnly
                 {
-                    SkipCdr = false,
+                    SkipCdr = true,
                     SkipChargeable = true,
                     SkipTransaction = true,
                     SkipHourlySummary = true,

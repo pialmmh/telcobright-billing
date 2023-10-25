@@ -46,7 +46,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "G:/telcobright/vault/resources/cdr/btcl/tdm/SBN",
+                StartingPath = "G:/telcobright/vault/resources/cdr/btcl/tdm/SBN/BTCL_SBN_ICX_20230821/20230821",
                 User = "",
                 Pass = "",
             };

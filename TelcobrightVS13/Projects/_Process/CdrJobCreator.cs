@@ -28,6 +28,9 @@ namespace Process
         public override void Execute(IJobExecutionContext schedulerContext)
         {
             string operatorName = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");
+
+            this.TbConsole.WriteLine($"CdrJobCreater {operatorName}");
+            return;
             try
             {
                 TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(
@@ -46,6 +49,7 @@ namespace Process
                             List<job> newJobCacheForWritingAtOnceToDB = new List<job>();
                             if (thisSwitch.SkipCdrListed == 1) continue;
                             Console.WriteLine($"Checking new cdr files for Switch {thisSwitch.SwitchName} in vault...");
+                            this.TbConsole.WriteLine($"Checking new cdr files for Switch {thisSwitch.SwitchName} in vault...");
                             string vaultName = thisSwitch.SourceFileLocations;
                             //Vault vault = tbc.DirectorySettings.Vaults.First(c => c.Name == vaultName);
                             FileLocation fileLocation = tbc.DirectorySettings.FileLocations[vaultName];
@@ -55,6 +59,7 @@ namespace Process
                             if (zipFiles.Count > 0)
                             {
                                 Console.WriteLine($"Found {zipFiles.Count} zip files. Unzipping ...");
+                                this.TbConsole.WriteLine($"Found {zipFiles.Count} zip files. Unzipping ...");
                                 foreach (FileInfo compressedFile in zipFiles)
                                 {
                                     CompressedFileHelperForVault compressedFileHelper= 
@@ -141,6 +146,7 @@ namespace Process
                             }
                             //*************
                             Console.WriteLine($"Found {fileInfos.Count} new files with no prev job, checking split history...");
+                            this.TbConsole.WriteLine($"Found {fileInfos.Count} new files with no prev job, checking split history...");
                             if (tbc.CdrSetting.DescendingOrderWhileListingFiles == true)
                                 fileInfos = fileInfos.OrderByDescending(c => c.Name).ToList();
                             foreach (FileInfo fileInfo in fileInfos)

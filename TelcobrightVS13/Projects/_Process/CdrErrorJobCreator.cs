@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using TelcobrightFileOperations;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using LibraryExtensions;
@@ -15,6 +16,7 @@ using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using Quartz;
 using QuartzTelcobright;
+using TelcobrightInfra;
 using TelcobrightMediation.Config;
 
 namespace Process
@@ -31,9 +33,12 @@ namespace Process
         public override string HelpText => "Auto create Cdr Error Processing Job";
         public override int ProcessId => 110;
 
+    
         public override void Execute(IJobExecutionContext schedulerContext)
         {
             string operatorName = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");
+            //this.TbConsole.WriteLine($"CdrErrorJobCreater {operatorName}");
+            //return;
             try
             {
                 TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(

@@ -84,7 +84,7 @@ namespace LogPreProcessor
                     }
                     catch (Exception e)
                     {
-                        tbConsole.WriteLine(e);//just print to console and continue with next job;
+                        tbConsole.WriteLine(e.ToString());//just print to console and continue with next job;
                     }
                 });
                 //can't write to db in parallel, reader busy error occurs
