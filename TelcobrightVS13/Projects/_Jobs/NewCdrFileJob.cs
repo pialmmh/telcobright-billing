@@ -423,10 +423,9 @@ namespace Jobs
                                     + Path.DirectorySeparatorChar + cdrJob.JobName;
             FileInfo newCdrFileInfo = new FileInfo(newCdrFileName);
             string predecodedDirName = newCdrFileInfo.DirectoryName + Path.DirectorySeparatorChar + "predecoded";
-            if (File.Exists(newCdrFileName))
-            {
-                File.Delete(newCdrFileName);
-            }
+            string preDecodedFileName = predecodedDirName + Path.DirectorySeparatorChar + newCdrFileInfo.Name;
+            if (File.Exists(preDecodedFileName))
+                File.Delete(preDecodedFileName);
         }
 
         private static void createJobsForSplitCase(PartnerEntities context, TelcobrightConfig tbc, job cdrJob,
