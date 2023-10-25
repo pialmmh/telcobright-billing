@@ -51,8 +51,7 @@ namespace Process
                     {
                         NeAdditionalSetting neAdditionalSetting = null;
                         cdrSetting.NeWiseAdditionalSettings.TryGetValue(ne.idSwitch, out neAdditionalSetting);
-                        //int maxRowCountForBatchProcessing = neAdditionalSetting?.MaxRowCountForBatchProcessing ?? -1;
-                        int maxRowCountForBatchProcessing = 1;//temp code mustafa
+                        int maxRowCountForBatchProcessing = neAdditionalSetting?.MaxRowCountForBatchProcessing ?? 1;
                         Dictionary<long, NewCdrWrappedJobForMerge> mergedJobsDic = new Dictionary<long, NewCdrWrappedJobForMerge>(); //key=idJob
                         NewCdrWrappedJobForMerge headJobForMerge = null;
                         int rowCountSoFarForMerge = 0;
