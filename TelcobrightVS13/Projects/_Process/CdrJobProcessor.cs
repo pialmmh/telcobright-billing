@@ -118,7 +118,7 @@ namespace Process
                                             if (mergedJobsDic.Any() == false)//empty list of merged job, add the first one (head)
                                             {
                                                 headJobForMerge = newWrappedJob;
-                                                mergedJobsDic.Add(telcobrightJob.Id, newWrappedJob);
+                                                mergedJobsDic.Add(headJobForMerge.TelcobrightJob.id, newWrappedJob);
                                                 rowCountSoFarForMerge = newWrappedJob.OriginalRows.Count;
                                             }
                                             else //one of the tail jobs

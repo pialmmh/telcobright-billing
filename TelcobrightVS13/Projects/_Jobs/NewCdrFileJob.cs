@@ -97,8 +97,9 @@ namespace Jobs
                     }
                 }
                 int headCdrCount = head.PreProcessor.TxtCdrRows.Count;
-                int tailCdrCount = tail.Sum(job => job.PreProcessor.TxtCdrRows.Count);
-                if (headCdrCount!=tailCdrCount)
+                int headTailOriginalCountRaw = head.OriginalRows.Count+
+                    tail.Sum(job => job.PreProcessor.OriginalRowsBeforeMerge.Count);
+                if (headCdrCount!=headTailOriginalCountRaw)
                 {
                     throw new Exception($"Head cdr count must match sum of tail jobs for merge processing. Job id:{head.TelcobrightJob.id}, job name:{head.TelcobrightJob.JobName}");
                 }
@@ -214,7 +215,7 @@ namespace Jobs
             {
                 throw new Exception($"Instance in a merged new cdr job cannot contain 0 record. Job id:{telcobrightJob.id}, Jobname:{telcobrightJob.JobName}");
             }
-            WriteJobCompletionIfCollectionNotEmpty(preProcessor.TxtCdrRows.Count, this.Input.TelcobrightJob, context);
+            WriteJobCompletionIfCollectionNotEmpty(preProcessor.OriginalRowsBeforeMerge.Count, this.Input.TelcobrightJob, context);
             if (this.Input.CdrSetting.DisableCdrPostProcessingJobCreationForAutomation == false)
             {
                 CreateNewCdrPostProcessingJobs(this.Input.Context, this.Input.MediationContext.Tbc,telcobrightJob);
