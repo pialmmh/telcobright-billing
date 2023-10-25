@@ -134,6 +134,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="config\allDeployment\casLinux01.cs" />
     <Compile Include="config\cas\banglatelecom_cas\CasBanglaTelecomConfigMain.cs" />
     <Compile Include="config\cas\banglatelecom_cas\CasBanglaTelecomDatabaseSettings.cs" />
     <Compile Include="config\cas\banglatelecom_cas\CasBanglaTelecomDirectorySettings.cs" />
