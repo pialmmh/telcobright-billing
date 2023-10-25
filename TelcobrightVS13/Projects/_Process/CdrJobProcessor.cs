@@ -124,7 +124,7 @@ namespace Process
                                             else //one of the tail jobs
                                             {
                                                 mergedJobsDic.Add(newWrappedJob.TelcobrightJob.id, newWrappedJob);
-                                                rowCountSoFarForMerge = headJobForMerge.AppendTailJobRows(newWrappedJob);
+                                                rowCountSoFarForMerge = headJobForMerge.AppendTailJobRows(newWrappedJob);//apend head+new tail jobs rows
                                                 if (rowCountSoFarForMerge>=maxRowCountForBatchProcessing)//enough jobs have been merged for batch processing 
                                                 {
                                                     cdrJobInputData.MergedJobsDic = mergedJobsDic;
