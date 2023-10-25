@@ -31,64 +31,55 @@ namespace WS_Telcobright_Topshelf
     }
 
     
-    [Serializable]
+    
 
     public class Telcobright2
     {
         StringBuilder processText = new StringBuilder();
         public bool isActive;
-        public string ConfigFileName { get; set; }
+        public string InstanceName { get; set; }
         public static MefCollectiveAssemblyComposer mefColllectiveAssemblyComposer { get; set; }
         public static MefProcessContainer mefProcessContainer { get; set; }
-        private TBConsole tbConsole { get; set; }
-        private Timer timer;
-        private TimerCallback timerCallback;
-        private int intervalInMilliseconds = 2000; //5 * 60 * 1000;
+        private TBConsole TbConsole { get; set; }
         private MySqlConnection Con { get; set;}
-        private string conStr;
+        private string ConStr { get; set; }
+        public string DeploymentRoot { get;}
 
         public Telcobright2()
         {
             isActive = true;
         }
-
-        private string instanceName;
-        public Telcobright2(string configFileName, Action<string> callbackFromUI)
+        public Telcobright2(string instanceName, Action<string> callbackFromUI)
         {
-            this.instanceName = configFileName.Split('\\').Last();
-            this.ConfigFileName = configFileName;
-            this.tbConsole = new TBConsole(instanceName, callbackFromUI);
-            //this.timerCallback = new TimerCallback(ErrorCheck);
-            //this.timer = new Timer(timerCallback, null, 0, intervalInMilliseconds);
-            this.conStr = "server=adfadf; database= adfadf; ";
+            this.InstanceName = instanceName;
+            this.TbConsole = new TBConsole(this.InstanceName, callbackFromUI);
+            UpwordPathFinder<DirectoryInfo> pathFinder= new UpwordPathFinder<DirectoryInfo>("WS_Topshelf_Quartz");
+            string topshelfDir = pathFinder.FindAndGetFullPath();
+            this.DeploymentRoot = Path.Combine(new DirectoryInfo(topshelfDir).FullName,"deployedInstances");
+            this.ConStr = "server=adfadf; database= adfadf; ";
         }
         public void run(bool isConsoleApp)
         {
             isConsoleApp = false;
-            string appFolder = instanceName.Split('.')[0];
-            this.ConfigFileName = $@"D:\TelcobrightProject\TelcobrightVS13\Projects\WS_Topshelf_Quartz\deployedInstances\{appFolder}\{instanceName}";
-            this.tbConsole = new TBConsole(instanceName, null);
-            this.conStr = "server=adfadf; database= adfadf; ";
+            this.ConStr = "server=adfadf; database= adfadf; ";
 
             try
             {
-              
-                string configFileName = this.ConfigFileName;
-           
+                string configFileName = Path.Combine(this.DeploymentRoot, this.InstanceName,$"{this.InstanceName}.conf");
                 string logFileName = getLogFileName();
-
-                mefColllectiveAssemblyComposer = new MefCollectiveAssemblyComposer("..//..//bin//Extensions//");
+                UpwordPathFinder<DirectoryInfo> pathFinder=new UpwordPathFinder<DirectoryInfo>("Extensions");
+                string extensionsDir = pathFinder.FindAndGetFullPath();
+                mefColllectiveAssemblyComposer = new MefCollectiveAssemblyComposer(extensionsDir);
                 RemoteSchedulerProvider provider = new RemoteSchedulerProvider();
                 File.WriteAllLines(logFileName, new string[] { DateTime.Now.ToMySqlFormatWithoutQuote() + ": Telcobright started at " + provider.SchedulerHost });
                 try
                 {
                     Console.WriteLine("Starting Telcobright Scheduler.");
-                    mefProcessContainer = new MefProcessContainer(mefColllectiveAssemblyComposer,this.tbConsole);
+                    mefProcessContainer = new MefProcessContainer(mefColllectiveAssemblyComposer,this.TbConsole);
                     TelcobrightConfig tbc = GetTelcobrightConfig(configFileName);
                     provider.SchedulerHost = $"tcp://localhost:{tbc.TcpPortNoForRemoteScheduler}/QuartzScheduler";
                     provider.Init();
                     IScheduler runtimeScheduler = null;
-
                     try
                     {
                         runtimeScheduler = GetScheduler(SchedulerRunTimeType.Runtime, tbc);
@@ -150,9 +141,9 @@ namespace WS_Telcobright_Topshelf
         private void ErrorCheck(object state)
         {
             string msg = "Checking Error at: " + DateTime.Now;
-            tbConsole.WriteLine(msg);
+            TbConsole.WriteLine(msg);
             //DbUtil.getDbConStrWithDatabase(this.instanceName)
-            using (MySqlConnection con= new MySqlConnection(conStr))
+            using (MySqlConnection con= new MySqlConnection(ConStr))
             {
                 try
                 {
@@ -161,7 +152,7 @@ namespace WS_Telcobright_Topshelf
                     using (MySqlCommand command = new MySqlCommand(sql, con))
                     {
                         long count = (long)command.ExecuteScalar();
-                        tbConsole.WriteLine($"errorCount={count}");
+                        TbConsole.WriteLine($"errorCount={count}");
                     }
                 }
                 catch (Exception ex)

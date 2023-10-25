@@ -165,6 +165,7 @@
     <Compile Include="JsonCompressor.cs" />
     <Compile Include="JsonHelper.cs" />
     <Compile Include="LargeList.cs" />
+    <Compile Include="FileAndPath\UpwordPathFinder.cs" />
     <Compile Include="MathAndDS\FractionCeilingHelper.cs" />
     <Compile Include="MathAndDS\Trie.cs" />
     <Compile Include="MathAndDS\TrieDataType.cs" />

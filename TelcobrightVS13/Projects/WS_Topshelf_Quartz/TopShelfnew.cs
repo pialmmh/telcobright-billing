@@ -34,19 +34,9 @@ namespace WS_Telcobright_Topshelf
         public static MefProcessContainer mefProcessContainer { get; set; }
         static void Main(string[] args)
         {
-           
-            string configFileName = "";
-            string deploymentRoot =
-                @"D:\TelcobrightProject\TelcobrightVS13\Projects\WS_Topshelf_Quartz\deployedInstances";
-            if (args.Length >= 0)
-            {
-               
-                string instancename = args[0];
-                Console.WriteLine(instancename);
-                configFileName = instancename + ".conf";
-            }
 
-            if (configFileName == "")
+            string instanceName = args.Any() ? args[0] : "";
+            if (instanceName == "")
             {
                 ConfigPathHelper configPathHelper = new ConfigPathHelper(
                     "WS_Topshelf_Quartz",
@@ -66,16 +56,20 @@ namespace WS_Telcobright_Topshelf
                 Menu menu = new Menu(operatorNameVsConfigFile.Keys.ToList(),
                     "Select an Operatorname to debug.", "");
                 string selectedOpName = menu.getSingleChoice();
-                configFileName = operatorNameVsConfigFile[selectedOpName];
+                string configFileName = operatorNameVsConfigFile[selectedOpName];
+                instanceName = Path.GetFileNameWithoutExtension(configFileName);
             }
-
-            Console.Title = configFileName.Split('\\').Last().Replace(".conf", "");
-
-
-            //Telcobright2 tb = new Telcobright2($"{deploymentRoot}\\mothertelecom_cas\\mothertelecom_cas.conf", null);
-            Telcobright2 tb = new Telcobright2(configFileName, null);
-            tb.run(true);
-
+            if (instanceName != null)
+            {
+                Console.Title = instanceName;
+                //Telcobright2 tb = new Telcobright2($"{deploymentRoot}\\mothertelecom_cas\\mothertelecom_cas.conf", null);
+                Telcobright2 tb = new Telcobright2(instanceName, null);
+                tb.run(true);
+            }
+            else
+            {
+                throw new Exception("Could not find instance name.");
+            }
         }
         private static string getLogFileName()
         {

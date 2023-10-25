@@ -16,8 +16,11 @@ namespace MediationModel
             Type t = typeof(StaticExtInsertColumnHeaders);
 			foreach (var propertyInfo in t.GetProperties())
 			{
-				_parsedInsertHeaders.Add(propertyInfo.Name,propertyInfo.GetValue(null).ToString());
-			}
+			    if (_parsedInsertHeaders.ContainsKey(propertyInfo.Name)==false)//this static class can be called from multiple process or thread, populating only once is enough
+			    {
+			        _parsedInsertHeaders.Add(propertyInfo.Name,propertyInfo.GetValue(null).ToString());
+                }
+            }
 			IsParsed = true;
 		}
 
