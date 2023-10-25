@@ -2,6 +2,7 @@
 using MySql.Data.MySqlClient;
 using System;
 using System.CodeDom;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Data;
@@ -73,12 +74,13 @@ namespace LogPreProcessor
             segmentedJobs.ExecuteMethodInSegments(maxParallelPreDecoding, segment =>
             {
                 var enumerable = segment as job[] ?? segment.ToArray();
+                BlockingCollection<job> successfullyPreDecodedJobs= new BlockingCollection<job>();
                 Parallel.ForEach(enumerable.AsParallel(), thisJob =>
                 {
                     try
                     {
                         preDecodeFiles(thisJob, mediationContext, thisSwitch, tbc, context, tbConsole, newCdrFileJob);
-                        
+                        successfullyPreDecodedJobs.Add(thisJob);        
                     }
                     catch (Exception e)
                     {
@@ -86,7 +88,9 @@ namespace LogPreProcessor
                     }
                 });
                 //can't write to db in parallel, reader busy error occurs
-                foreach (var job in enumerable)
+                //no worries about failed jobs, they will be retried again or decoded again in decoder if .predecoded file doesn't exist
+                //no need for commit or rollback too.
+                foreach (var job in successfullyPreDecodedJobs)
                 {
                     try
                     {
