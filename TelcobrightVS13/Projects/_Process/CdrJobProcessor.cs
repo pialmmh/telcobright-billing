@@ -68,6 +68,8 @@ namespace Process
                                 continue;
                             List<job> incompleteJobs = GetReProcessJobs(context, ne, ne.DecodingSpanCount);
                             incompleteJobs.AddRange(GetNewCdrJobs(tbc, context, ne, ne.DecodingSpanCount,neAdditionalSetting)); //combine
+                            CdrJobInputData cdrJobInputData = null;
+                            ITelcobrightJob telcobrightJob = null;
                             using (DbCommand cmd = context.Database.Connection.CreateCommand())
                             {
                                 foreach (job job in incompleteJobs)
@@ -78,12 +80,11 @@ namespace Process
                                     {
                                         if (cmd.Connection.State != ConnectionState.Open) cmd.Connection.Open();
                                         cmd.ExecuteCommandText("set autocommit=0;");
-                                        ITelcobrightJob telcobrightJob = null;
                                         mediationContext.MefJobContainer.DicExtensionsIdJobWise.TryGetValue(
                                             job.idjobdefinition.ToString(), out telcobrightJob);
                                         if (telcobrightJob == null)
                                             throw new Exception("JobRule not found in MEF collection.");
-                                        var cdrJobInputData =
+                                        cdrJobInputData =
                                             new CdrJobInputData(mediationContext, context, ne, job);
                                         if (job.idjobdefinition!=1)//error process or re-process job, not merging, process as a single job*************
                                         {
@@ -181,6 +182,13 @@ namespace Process
                                         }
                                     } //end catch
                                 } //for each job
+                                if (headJobForMerge!=null)//mergedjob row count didn't hit maxvalue, process them when 
+                                {//there are no more jobs
+                                    cdrJobInputData.MergedJobsDic = mergedJobsDic;
+                                    telcobrightJob.Execute(cdrJobInputData);//process as merged job************************
+                                    cmd.ExecuteCommandText(" commit; ");
+                                    resetMergeJobStatus();
+                                }
                             } //using mysql command
                         } //try for each NE
 
