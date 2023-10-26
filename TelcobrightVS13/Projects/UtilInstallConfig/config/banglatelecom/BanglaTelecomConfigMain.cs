@@ -87,7 +87,7 @@ namespace InstallConfig
                         {
                             new CdrPredecoder()
                             {
-                                RuleConfigData = new Dictionary<string,object>() { { "maxParallelFileForPreDecode", "10"}},
+                                RuleConfigData = new Dictionary<string,object>() { { "maxParallelFileForPreDecode", "100"}},
                                 ProcessCollectionOnly = true//does not accept single event, only list of events e.g. multiple new cdr jobs
                             }
                         }

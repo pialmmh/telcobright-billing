@@ -51,8 +51,7 @@ namespace Process
                     {
                         NeAdditionalSetting neAdditionalSetting = null;
                         cdrSetting.NeWiseAdditionalSettings.TryGetValue(ne.idSwitch, out neAdditionalSetting);
-                        //int minRowCountForBatchProcessing = neAdditionalSetting?.MaxRowCountForBatchProcessing ?? 1;
-                        int minRowCountForBatchProcessing = 1800;
+                        int minRowCountForBatchProcessing = neAdditionalSetting?.MaxRowCountForBatchProcessing ?? 1;
                         Dictionary<long, NewCdrWrappedJobForMerge> mergedJobsDic = new Dictionary<long, NewCdrWrappedJobForMerge>(); //key=idJob
                         NewCdrWrappedJobForMerge headJobForMerge = null;
                         int rowCountSoFarForMerge = 0;
@@ -129,10 +128,10 @@ namespace Process
                                                 if (rowCountSoFarForMerge>=minRowCountForBatchProcessing)//enough jobs have been merged for batch processing 
                                                 {
                                                     cdrJobInputData.MergedJobsDic = mergedJobsDic;
-                                                    object retVal= telcobrightJob.Execute(cdrJobInputData);//process as merged job************************
+                                                    object retVal= telcobrightJob.Execute(cdrJobInputData);//Execute as merged job************************
+                                                    telcobrightJob.PostprocessJob(retVal);
                                                     cmd.ExecuteCommandText(" commit; ");
                                                     resetMergeJobStatus();
-                                                    telcobrightJob.PostprocessJob(retVal);
                                                 }
                                             }
                                         }

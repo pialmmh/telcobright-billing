@@ -140,10 +140,7 @@ namespace Jobs
             {
                 FinalizeMergedJobs(cdrJob);
             }
-            return new Dictionary<string,List<job>>
-            {
-                {"handledJobs",this.HandledJobs}
-            }; 
+            return this.HandledJobs;
         }
 
         private void handleAndFinalizeEmptyJob(CdrJob cdrJob)
@@ -231,8 +228,7 @@ namespace Jobs
 
         public object PostprocessJob(object data)
         {
-            Dictionary<string, object> dataAsDic = (Dictionary<string, object>)data;
-            List<job> handledJobs = (List<job>) dataAsDic["handledJobs"];
+            List<job> handledJobs = (List<job>)data;
             foreach (var job in handledJobs)
             {
                 DeletePreDecodedFile(this.Input.Context, this.Input.MediationContext.Tbc, job);

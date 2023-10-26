@@ -47,8 +47,24 @@ namespace TelcobrightMediation
             AbstractCdrDecoder decoder = getDecoder();
             List<cdrinconsistent> cdrinconsistents = new List<cdrinconsistent>();
             List<string[]> decodedCdrRows = new List<string[]>();
-            decodedCdrRows = this.CollectFromPreDecodedFile == false ? decoder.DecodeFile(this.CollectorInput, out cdrinconsistents) 
-                : collectFromPreDecodedFile(decoder, ref cdrinconsistents);
+            if (this.CollectFromPreDecodedFile == false)//regular decoding
+            {
+                decodedCdrRows = decoder.DecodeFile(this.CollectorInput, out cdrinconsistents);
+            }
+            else//collect form pre-decoded, but fallback to decode if predecoded file doesn't exist
+            {
+                string predecodedFileName = getPredecodedFileName();
+                if (File.Exists(predecodedFileName)
+                ) //file may not exists occassionally due to clean up or while re-processing of new files
+                {
+                    decodedCdrRows =
+                        FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(predecodedFileName, ',', 0, "`", ";"); //backtick separated
+                }
+                else
+                {
+                    decodedCdrRows = decoder.DecodeFile(this.CollectorInput, out cdrinconsistents); //collect
+                }
+            }
 
             NewCdrPreProcessor textCdrCollectionPreProcessor = null;
             if (CollectorInput.Ne.FilterDuplicateCdr == 1 && decodedCdrRows.Count > 0) //filter duplicates
@@ -83,33 +99,17 @@ namespace TelcobrightMediation
             return decoder;
         }
 
-        private List<string[]> collectFromPreDecodedFile(AbstractCdrDecoder decoder, ref List<cdrinconsistent> cdrinconsistents)
+        private string getPredecodedFileName()
         {
-            List<string[]> decodedCdrRows;
             string fileLocationName = this.CollectorInput.Ne.SourceFileLocations;
             FileLocation fileLocation = this.CollectorInput.Tbc.DirectorySettings.FileLocations[fileLocationName];
             string newCdrFileName = fileLocation.GetOsNormalizedPath(fileLocation.StartingPath)
                                     + Path.DirectorySeparatorChar + this.CollectorInput.TelcobrightJob.JobName;
             FileInfo newCdrFileInfo = new FileInfo(newCdrFileName);
             string predecodedDirName = newCdrFileInfo.DirectoryName + Path.DirectorySeparatorChar + "predecoded";
-            if (Directory.Exists(predecodedDirName) == false)
-            {
-                Directory.CreateDirectory(predecodedDirName);
-            }
             string predecodedFileName = predecodedDirName + Path.DirectorySeparatorChar + newCdrFileInfo.Name +
                                         ".predecoded";
-            if (File.Exists(predecodedFileName)
-            ) //file may not exists occassionally due to clean up or while re-processing of new files
-            {
-                decodedCdrRows =
-                    FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(predecodedFileName, ',', 0, "`", ";"); //backtick separated
-            }
-            else
-            {
-                decodedCdrRows = decoder.DecodeFile(this.CollectorInput, out cdrinconsistents); //collect
-            }
-
-            return decodedCdrRows;
+            return predecodedFileName;
         }
 
         private NewCdrPreProcessor filterDuplicates(AbstractCdrDecoder decoder, List<cdrinconsistent> cdrinconsistents, List<string[]> decodedCdrRows)
