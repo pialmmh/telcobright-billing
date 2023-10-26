@@ -51,8 +51,8 @@ namespace Process
                     {
                         NeAdditionalSetting neAdditionalSetting = null;
                         cdrSetting.NeWiseAdditionalSettings.TryGetValue(ne.idSwitch, out neAdditionalSetting);
-                        //int maxRowCountForBatchProcessing = neAdditionalSetting?.MaxRowCountForBatchProcessing ?? 1;
-                        int maxRowCountForBatchProcessing = 2;
+                        //int minRowCountForBatchProcessing = neAdditionalSetting?.MaxRowCountForBatchProcessing ?? 1;
+                        int minRowCountForBatchProcessing = 1800;
                         Dictionary<long, NewCdrWrappedJobForMerge> mergedJobsDic = new Dictionary<long, NewCdrWrappedJobForMerge>(); //key=idJob
                         NewCdrWrappedJobForMerge headJobForMerge = null;
                         int rowCountSoFarForMerge = 0;
@@ -108,15 +108,15 @@ namespace Process
                                             };
                                             NewCdrPreProcessor preProcessor =
                                                 (NewCdrPreProcessor) telcobrightJob.PreprocessJob(inputForPreprocess);//execute pre-processing
-                                            if (preProcessor.TxtCdrRows.Count>=maxRowCountForBatchProcessing)//already large job, process as single
-                                            {
+                                            if (headJobForMerge==null && preProcessor.TxtCdrRows.Count>=minRowCountForBatchProcessing)//already large job, process as single
+                                            {//but if merge in progress, do not process as single job, headjob for merge!=null means mergeInProgress
                                                 telcobrightJob.Execute(cdrJobInputData); //not merging, process as single job************
                                                 cmd.ExecuteCommandText(" commit; ");
                                                 continue;
                                             }
                                             //merge job for batch processing*******************
                                             NewCdrWrappedJobForMerge newWrappedJob = new NewCdrWrappedJobForMerge(job, preProcessor);
-                                            if (mergedJobsDic.Any() == false)//empty list of merged job, add the first one (head)
+                                            if (headJobForMerge==null)//empty list of merged job, add the first one (head)
                                             {
                                                 headJobForMerge = newWrappedJob;
                                                 mergedJobsDic.Add(headJobForMerge.TelcobrightJob.id, newWrappedJob);
@@ -126,12 +126,13 @@ namespace Process
                                             {
                                                 mergedJobsDic.Add(newWrappedJob.TelcobrightJob.id, newWrappedJob);
                                                 rowCountSoFarForMerge = headJobForMerge.AppendTailJobRows(newWrappedJob);//apend head+new tail jobs rows
-                                                if (rowCountSoFarForMerge>=maxRowCountForBatchProcessing)//enough jobs have been merged for batch processing 
+                                                if (rowCountSoFarForMerge>=minRowCountForBatchProcessing)//enough jobs have been merged for batch processing 
                                                 {
                                                     cdrJobInputData.MergedJobsDic = mergedJobsDic;
-                                                    telcobrightJob.Execute(cdrJobInputData);//process as merged job************************
+                                                    object retVal= telcobrightJob.Execute(cdrJobInputData);//process as merged job************************
                                                     cmd.ExecuteCommandText(" commit; ");
                                                     resetMergeJobStatus();
+                                                    telcobrightJob.PostprocessJob(retVal);
                                                 }
                                             }
                                         }

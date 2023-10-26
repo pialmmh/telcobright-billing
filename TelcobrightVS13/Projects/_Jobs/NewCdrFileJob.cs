@@ -28,6 +28,7 @@ namespace Jobs
         public virtual string HelpText => "New Cdr Job, processes a new CDR file";
         public override string ToString() => this.RuleName;
         public virtual int Id => 1;
+        public List<job> HandledJobs;//required for deleting pre-decoded files in post processing, list when merged jobs.
         public bool PreDecodingStageOnly { get; private set; }
         protected int RawCount, NonPartialCount, UniquePartialCount, RawPartialCount, DistinctPartialCount = 0;
         protected decimal RawDurationTotalOfConsistentCdrs = 0;
@@ -74,19 +75,22 @@ namespace Jobs
 
             if (this.Input.IsBatchJob == false)//not batch job
             {
+                this.HandledJobs = new List<job> {this.Input.TelcobrightJob};
                 preProcessor = DecodeNewCdrFile();
                 preProcessor = preFormatRawCdrs(preProcessor);
             }
             else//batch job
             {
-                Dictionary<long, NewCdrWrappedJobForMerge> jobWiseRawCollection = this.Input.MergedJobsDic;
-                if (jobWiseRawCollection.Any() == false)//merged info must be present in cdr job input data
+                this.HandledJobs = new List<job>();
+                this.HandledJobs.AddRange(this.Input.MergedJobsDic.Values.Select(wrappedJob=>wrappedJob.TelcobrightJob));
+                Dictionary<long, NewCdrWrappedJobForMerge> mergedJobsDic = this.Input.MergedJobsDic;
+                if (mergedJobsDic.Any() == false)//merged info must be present in cdr job input data
                 {
                     throw new Exception("New cdr vs raw collection cannot be empty for merged cdr job. There must be at least one job.");
                 }
-                NewCdrWrappedJobForMerge head = jobWiseRawCollection.First().Value;
-                List<NewCdrWrappedJobForMerge> tail = jobWiseRawCollection.Skip(1).Select(kv => kv.Value).ToList();
-                foreach (var kv in jobWiseRawCollection)//make sure empty files haven't been merged.
+                NewCdrWrappedJobForMerge head = mergedJobsDic.First().Value;
+                List<NewCdrWrappedJobForMerge> tail = mergedJobsDic.Skip(1).Select(kv => kv.Value).ToList();
+                foreach (var kv in mergedJobsDic)//make sure empty files haven't been merged.
                 {
                     long idJob = kv.Key;
                     var job = kv.Value.TelcobrightJob;
@@ -96,10 +100,10 @@ namespace Jobs
                         throw new Exception($"Empty files cannot be merged. Job id:{idJob}, job name:{job.JobName}");
                     }
                 }
-                int headCdrCount = head.PreProcessor.TxtCdrRows.Count;
+                int mergedCount = head.PreProcessor.TxtCdrRows.Count;
                 int headTailOriginalCountRaw = head.OriginalRows.Count+
                     tail.Sum(job => job.PreProcessor.OriginalRowsBeforeMerge.Count);
-                if (headCdrCount!=headTailOriginalCountRaw)
+                if (mergedCount!=headTailOriginalCountRaw)
                 {
                     throw new Exception($"Head cdr count must match sum of tail jobs for merge processing. Job id:{head.TelcobrightJob.id}, job name:{head.TelcobrightJob.JobName}");
                 }
@@ -136,7 +140,10 @@ namespace Jobs
             {
                 FinalizeMergedJobs(cdrJob);
             }
-            return JobCompletionStatus.Complete;
+            return new Dictionary<string,List<job>>
+            {
+                {"handledJobs",this.HandledJobs}
+            }; 
         }
 
         private void handleAndFinalizeEmptyJob(CdrJob cdrJob)
@@ -215,17 +222,22 @@ namespace Jobs
             {
                 throw new Exception($"Instance in a merged new cdr job cannot contain 0 record. Job id:{telcobrightJob.id}, Jobname:{telcobrightJob.JobName}");
             }
-            WriteJobCompletionIfCollectionNotEmpty(preProcessor.OriginalRowsBeforeMerge.Count, this.Input.TelcobrightJob, context);
+            WriteJobCompletionIfCollectionNotEmpty(preProcessor.OriginalRowsBeforeMerge.Count, telcobrightJob, context);
             if (this.Input.CdrSetting.DisableCdrPostProcessingJobCreationForAutomation == false)
             {
                 CreateNewCdrPostProcessingJobs(this.Input.Context, this.Input.MediationContext.Tbc,telcobrightJob);
-                DeletePreDecodedFile(this.Input.Context, this.Input.MediationContext.Tbc, telcobrightJob);
             }
         }
 
         public object PostprocessJob(object data)
         {
-            throw new NotImplementedException();
+            Dictionary<string, object> dataAsDic = (Dictionary<string, object>)data;
+            List<job> handledJobs = (List<job>) dataAsDic["handledJobs"];
+            foreach (var job in handledJobs)
+            {
+                DeletePreDecodedFile(this.Input.Context, this.Input.MediationContext.Tbc, job);
+            }
+            return handledJobs;
         }
 
         private NewCdrPreProcessor DecodeNewCdrFile()

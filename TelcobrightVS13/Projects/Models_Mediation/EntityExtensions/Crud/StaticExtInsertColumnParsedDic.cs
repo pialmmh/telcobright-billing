@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace MediationModel
 {
 	public static class StaticExtInsertColumnParsedDic
 	{
-		private static readonly Dictionary<string,string> _parsedInsertHeaders=new Dictionary<string, string>();
+		private static readonly ConcurrentDictionary<string,string> _parsedInsertHeaders=new ConcurrentDictionary<string, string>();
 	    public static bool IsParsed { get; set; } = false;
 		public static void Parse()
 		{
@@ -18,7 +19,7 @@ namespace MediationModel
 			{
 			    if (_parsedInsertHeaders.ContainsKey(propertyInfo.Name)==false)//this static class can be called from multiple process or thread, populating only once is enough
 			    {
-			        _parsedInsertHeaders.Add(propertyInfo.Name,propertyInfo.GetValue(null).ToString());
+			        _parsedInsertHeaders.TryAdd(propertyInfo.Name,propertyInfo.GetValue(null).ToString());
                 }
             }
 			IsParsed = true;
@@ -28,7 +29,12 @@ namespace MediationModel
 		{
 			if(IsParsed==false) Parse();
                 //throw new Exception("Static properties are not parsed to dictionary, method 'Parse()' must be called once before using this property.");
-			return _parsedInsertHeaders;
+			//return _parsedInsertHeaders.ToDictionary();
+		    return _parsedInsertHeaders.Select(kv => new
+		    {
+		        Key = kv.Key,
+		        Value = kv.Value
+		    }).ToDictionary(a => a.Key, a => a.Value);
 		}
 	}
 }

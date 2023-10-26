@@ -12,6 +12,7 @@ using TelcobrightMediation.Config;
 using FlexValidation;
 using InstallConfig._CommonValidation;
 using InstallConfig._generator;
+using LogPreProcessor;
 //using LogPreProcessor;
 using MediationModel;
 using TelcobrightMediation.Accounting;
@@ -84,11 +85,11 @@ namespace InstallConfig
                         PreDecodeAsTextFile = true,
                         EventPreprocessingRules = new List<EventPreprocessingRule>()
                         {
-                            //new CdrPredecoder()
-                            //{
-                            //    RuleConfigData = new Dictionary<string,object>() { { "maxParallelFileForPreDecode", "10"}},
-                            //    ProcessCollectionOnly = true//does not accept single event, only list of events e.g. multiple new cdr jobs
-                            //}
+                            new CdrPredecoder()
+                            {
+                                RuleConfigData = new Dictionary<string,object>() { { "maxParallelFileForPreDecode", "10"}},
+                                ProcessCollectionOnly = true//does not accept single event, only list of events e.g. multiple new cdr jobs
+                            }
                         }
                     }}
                 }

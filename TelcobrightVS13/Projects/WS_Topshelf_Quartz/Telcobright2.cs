@@ -60,7 +60,7 @@ namespace WS_Telcobright_Topshelf
         }
         public void run(bool isConsoleApp)
         {
-            isConsoleApp = false;
+            //isConsoleApp = false;
             this.ConStr = "server=adfadf; database= adfadf; ";
 
             try
