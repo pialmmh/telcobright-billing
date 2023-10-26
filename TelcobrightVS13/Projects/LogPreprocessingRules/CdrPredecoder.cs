@@ -53,18 +53,22 @@ namespace LogPreProcessor
                 throw new Exception(
                     $"Rule {this.RuleName} is not prepared, rule must have initial data in config file, then method prepare()" +
                     $" must be called during mediation, before executing rule.");
-            Dictionary<string, object> dataAsDic = (Dictionary<string, object>) input;
-            MediationContext mediationContext = (MediationContext) dataAsDic["mediationContext"];
-            ne thisSwitch = (ne) dataAsDic["ne"];
+            Dictionary<string, object> dataAsDic = (Dictionary<string, object>)input;
+            MediationContext mediationContext = (MediationContext)dataAsDic["mediationContext"];
+            ne thisSwitch = (ne)dataAsDic["ne"];
             TelcobrightConfig tbc = mediationContext.Tbc;
-            List<job> newCdrFileJobs = (List<job>) dataAsDic["newCdrFileJobs"];
-            PartnerEntities context = (PartnerEntities) dataAsDic["partnerEntities"];
-            TBConsole tbConsole = (TBConsole) dataAsDic["tbConsole"];
-            NeAdditionalSetting neAdditionalSetting = (NeAdditionalSetting) dataAsDic["neAdditionalSetting"];
-            int maxParallelPreDecoding = neAdditionalSetting.MaxNoOfFilesForParallelPreDecoding;
+            List<job> newCdrFileJobs = (List<job>)dataAsDic["newCdrFileJobs"];
+            PartnerEntities context = (PartnerEntities)dataAsDic["partnerEntities"];
+            TBConsole tbConsole = (TBConsole)dataAsDic["tbConsole"];
+            NeAdditionalSetting neAdditionalSetting = (NeAdditionalSetting)dataAsDic["neAdditionalSetting"];
+            int maxParallelPreDecoding = neAdditionalSetting.MaxConcurrentFilesForParallelPreDecoding;
+            int maxNumberOfFilesToPreDecode = neAdditionalSetting.MaxNumberOfFilesInPreDecodedDirectory;
+
+            int noOfExistingPreDecodedfiles = getNoOfExistingFilesInPreDecodedDir(thisSwitch, tbc, newCdrFileJobs);
+            if (noOfExistingPreDecodedfiles >= maxNumberOfFilesToPreDecode) return;
+
             CollectionSegmenter<job> segmentedJobs = new CollectionSegmenter<job>(newCdrFileJobs, 0);
             DbCommand cmd = context.Database.Connection.CreateCommand();
-
             ITelcobrightJob newCdrFileJob = null;
             mediationContext.MefJobContainer.DicExtensionsIdJobWise.TryGetValue(
                 newCdrFileJobs.First().idjobdefinition.ToString(), out newCdrFileJob);
@@ -74,13 +78,13 @@ namespace LogPreProcessor
             segmentedJobs.ExecuteMethodInSegments(maxParallelPreDecoding, segment =>
             {
                 var enumerable = segment as job[] ?? segment.ToArray();
-                BlockingCollection<job> successfullyPreDecodedJobs= new BlockingCollection<job>();
+                BlockingCollection<job> successfullyPreDecodedJobs = new BlockingCollection<job>();
                 Parallel.ForEach(enumerable.AsParallel(), thisJob =>
                 {
                     try
                     {
                         preDecodeFiles(thisJob, mediationContext, thisSwitch, tbc, context, tbConsole, newCdrFileJob);
-                        successfullyPreDecodedJobs.Add(thisJob);        
+                        successfullyPreDecodedJobs.Add(thisJob);
                     }
                     catch (Exception e)
                     {
@@ -103,6 +107,15 @@ namespace LogPreProcessor
                     }
                 }
             });
+        }
+
+        private static int getNoOfExistingFilesInPreDecodedDir(ne thisSwitch, TelcobrightConfig tbc, List<job> newCdrFileJobs)
+        {
+            string preDecodedDirName = "";
+            string preDecodedFileName = "";
+            getPathNamesForPreDecoding(newCdrFileJobs.First(), thisSwitch, tbc, out preDecodedDirName, out preDecodedFileName);
+            int noOfExistingPreDecodedfiles = Directory.GetFiles(preDecodedDirName, "*.predecoded").Length;
+            return noOfExistingPreDecodedfiles;
         }
 
         private static void preDecodeFiles(job thisJob, MediationContext mediationContext, ne thisSwitch,

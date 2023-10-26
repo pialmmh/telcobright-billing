@@ -7,9 +7,10 @@ namespace TelcobrightMediation
     public class NeAdditionalSetting
     {
         public bool PreDecodeAsTextFile { get; set; }
-        public int MaxNoOfFilesForParallelPreDecoding { get; set; } = 1;
+        public int MaxConcurrentFilesForParallelPreDecoding { get; set; } = 1;
         public bool ProcessMultipleCdrFilesInBatch { get; set; } = false;
-        public int MaxRowCountForBatchProcessing { get; set; } = 90000;
+        public int MinRowCountToStartBatchCdrProcessing { get; set; } = 90000;
+        public int MaxNumberOfFilesInPreDecodedDirectory { get; set; } = 100;
         public List<EventPreprocessingRule> EventPreprocessingRules { get; set; }= new List<EventPreprocessingRule>();
 
         public List<CompressionType> SupportedCompressedLogTypes { get; set; } = new List<CompressionType>()
