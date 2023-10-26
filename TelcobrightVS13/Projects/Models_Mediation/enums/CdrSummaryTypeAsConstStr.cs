@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using MediationModel.enums;
 
 namespace MediationModel
 {
     public static class CdrSummaryTypeDictionary
     {
-        private static readonly Dictionary<string, CdrSummaryType> Types=new Dictionary<string, CdrSummaryType>();
+        private static readonly ConcurrentDictionary<string, CdrSummaryType> Types=new ConcurrentDictionary<string, CdrSummaryType>();
         private static bool IsInitialized = false;
 
         public static void Initialize()
@@ -14,7 +16,7 @@ namespace MediationModel
             if (IsInitialized) return;
             foreach (var enumValue in Enum.GetValues(typeof(CdrSummaryType)))
             {
-               Types.Add(enumValue.ToString(),(CdrSummaryType)enumValue); 
+               Types.TryAdd(enumValue.ToString(),(CdrSummaryType)enumValue); 
             }
             IsInitialized = true;
         }
@@ -25,7 +27,11 @@ namespace MediationModel
             {
                 throw new Exception("Types are not initialized, method Initialize must be called at least once.");
             }
-            return Types;
+            return Types.Select(kv=>new
+            {
+                Key=kv.Key,
+                Value=kv.Value
+            }).ToDictionary(a=>a.Key, a=>a.Value);
         }
     }
 }
