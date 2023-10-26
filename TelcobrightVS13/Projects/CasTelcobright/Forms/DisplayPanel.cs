@@ -15,7 +15,7 @@ namespace CasTelcobright.Forms
     public partial class DisplayPanel : UserControl, IObservable
     {
         public string instanceName;
-        private ProcessWrapper processWrapper;
+        public ProcessWrapper processWrapper;
         private ProcessState _processState;
         public ProcessState ProcessState
         {
@@ -36,6 +36,7 @@ namespace CasTelcobright.Forms
             InitializeComponent();
             operatorLabel.Text = title;
             this.instanceName = title;
+            this.ProcessState = ProcessState.Off;
         }
 
         public void StartStopClick(object sender, EventArgs e)
@@ -89,6 +90,7 @@ namespace CasTelcobright.Forms
                     richTextBox1.Clear();
                 }
                 this.richTextBox1.AppendText(outputFromConsole + Environment.NewLine);
+                this.richTextBox1.AppendText(Environment.NewLine);
                 this.richTextBox1.SelectionStart = richTextBox1.Text.Length;
                 richTextBox1.ScrollToCaret();
             }));

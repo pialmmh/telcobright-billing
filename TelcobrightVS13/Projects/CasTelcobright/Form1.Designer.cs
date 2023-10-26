@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using CasTelcobright.Forms;
@@ -19,6 +20,18 @@ namespace CasTelcobright
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
+
+
+            foreach (var display in displayPanels)
+            {
+                if (display.Value.ProcessState == ProcessState.On)
+                {
+                    int processId = display.Value.processWrapper.processId;
+                    System.Diagnostics.Process procs = System.Diagnostics.Process.GetProcessById(processId, "."); // use "." for this machine
+                    procs.Kill();
+                }
+            }
+           
             if (disposing && (components != null))
             {
                 components.Dispose();
@@ -47,6 +60,11 @@ namespace CasTelcobright
             panel1.Name = "panel1";
             panel1.TabIndex = 0;
 
+            for (int i = allIcx.Count - 1, j = 1; i >= 0; --i, ++j)
+            {
+                addIcxButton(allIcx[i], 23 * i, j);
+                addPictureBox(allIcx[i], ++j, 23 * i);
+            }
             foreach (var icxName in allIcx)
             {
                 var displayPanel = new DisplayPanel(icxName);
@@ -54,11 +72,7 @@ namespace CasTelcobright
                 displayPanels.Add(icxName, displayPanel);
             }
 
-            for (int i = allIcx.Count - 1, j = 1; i >= 0; --i, ++j)
-            {
-                addIcxButton(allIcx[i], 23 * i, j);
-                addPictureBox(allIcx[i], ++j, 23 * i);
-            }
+            
 
 
             // 

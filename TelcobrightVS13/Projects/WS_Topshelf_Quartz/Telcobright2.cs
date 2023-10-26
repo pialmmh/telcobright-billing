@@ -45,10 +45,7 @@ namespace WS_Telcobright_Topshelf
         private string ConStr { get; set; }
         public string DeploymentRoot { get;}
 
-        public Telcobright2()
-        {
-            isActive = true;
-        }
+
         public Telcobright2(string instanceName, Action<string> callbackFromUI)
         {
             this.InstanceName = instanceName;
@@ -112,16 +109,8 @@ namespace WS_Telcobright_Topshelf
                     Console.WriteLine("Telcobright Scheduler has been started.");
                     Console.ReadLine();
                     Console.WriteLine("Program Exited.");
-                    //while (true)
-                    //{
-                    //    if (!isActive)
-                    //    {
-                    //        return;
-                    //    }
-                    //    Thread.Sleep(2000);
-                    //}
                    
-                    
+                                
                 }
                 catch (Exception e)
                 {

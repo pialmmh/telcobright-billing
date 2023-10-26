@@ -88,7 +88,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
             case "Monthly":
                 return "concat(year(Date),'-',date_format(Date,'%b'))";
             case "Yearly":
-                return "DATE_FORMAT(Date,'%Y')')";
+                return "DATE_FORMAT(Date,'%Y')";
             default:
                 return string.Empty;
         }

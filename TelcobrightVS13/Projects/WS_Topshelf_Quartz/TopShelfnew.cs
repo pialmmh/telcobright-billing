@@ -34,10 +34,11 @@ namespace WS_Telcobright_Topshelf
         public static MefProcessContainer mefProcessContainer { get; set; }
         static void Main(string[] args)
         {
-
+            bool isConsoleApp = false;
             string instanceName = args.Any() ? args[0] : "";
             if (instanceName == "")
             {
+                isConsoleApp = true;
                 ConfigPathHelper configPathHelper = new ConfigPathHelper(
                     "WS_Topshelf_Quartz",
                     "portal",
@@ -64,7 +65,7 @@ namespace WS_Telcobright_Topshelf
                 Console.Title = instanceName;
                 //Telcobright2 tb = new Telcobright2($"{deploymentRoot}\\mothertelecom_cas\\mothertelecom_cas.conf", null);
                 Telcobright2 tb = new Telcobright2(instanceName, null);
-                tb.run(true);
+                tb.run(isConsoleApp);
             }
             else
             {
