@@ -111,15 +111,6 @@ public partial class DashboardAspxForIcx {
     protected global::System.Web.UI.Timer Timer1;
     
     /// <summary>
-    /// UpdatePanel2 control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.UpdatePanel UpdatePanel2;
-    
-    /// <summary>
     /// Label2 control.
     /// </summary>
     /// <remarks>
@@ -138,11 +129,56 @@ public partial class DashboardAspxForIcx {
     protected global::System.Web.UI.WebControls.GridView GridViewCompleted;
     
     /// <summary>
-    /// Timer2 control.
+    /// PreviousButton control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.Timer Timer2;
+    protected global::System.Web.UI.WebControls.Button PreviousButton;
+    
+    /// <summary>
+    /// NextButton control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Button NextButton;
+    
+    /// <summary>
+    /// Label11 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label Label11;
+    
+    /// <summary>
+    /// GridView11 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.GridView GridView11;
+    
+    /// <summary>
+    /// LabelTgs control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label LabelTgs;
+    
+    /// <summary>
+    /// ListViewTgs control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.ListView ListViewTgs;
 }
