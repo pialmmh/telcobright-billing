@@ -36,7 +36,7 @@ namespace InstallConfig
             //    ReadOnlyPassword = "Takay1takaane",
             //    UseVarcharInsteadOfTextForMemoryEngine = true
             //};
-            var databaseSetting = CasConfigHelper.getCommonDatabaseSetting(this.Tbc.Telcobrightpartner.databasename);
+            var databaseSetting = CasDbHelperOld.getCommonDatabaseSetting(this.Tbc.Telcobrightpartner.databasename);
 
 
             Dictionary<string, List<string>> masterConfig = new Dictionary<string, List<string>>()

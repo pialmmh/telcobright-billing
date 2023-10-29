@@ -134,7 +134,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="config\allDeployment\casTemplate.cs" />
+    <Compile Include="config\allDeployment\cas\mysqlClusters\08CasNewSoftShebaTeleex.cs" />
+    <Compile Include="config\allDeployment\cas\mysqlClusters\07CasJibonParaPurple.cs" />
+    <Compile Include="config\allDeployment\cas\mysqlClusters\06CasBTCLImam.cs" />
+    <Compile Include="config\allDeployment\cas\mysqlClusters\05CasBanIcxCross.cs" />
+    <Compile Include="config\allDeployment\cas\mysqlClusters\04CasMnhSrtel.cs" />
+    <Compile Include="config\allDeployment\cas\mysqlClusters\03CasMotherTelePlusVoice.cs" />
+    <Compile Include="config\allDeployment\cas\mysqlClusters\02CasGaziSummitRing.cs" />
+    <Compile Include="config\allDeployment\cas\mysqlClusters\01CasAgniBanglatelBantel.cs" />
+    <Compile Include="config\allDeployment\cas\mysqlClusters\AppServerHostnamesForCas.cs" />
     <Compile Include="config\cas\banglatelecom_cas\CasBanglaTelecomConfigMain.cs" />
     <Compile Include="config\cas\banglatelecom_cas\CasBanglaTelecomDatabaseSettings.cs" />
     <Compile Include="config\cas\banglatelecom_cas\CasBanglaTelecomDirectorySettings.cs" />
@@ -345,7 +353,9 @@
     <Compile Include="config\purple\PurpleServiceGroups.cs" />
     <Compile Include="config\allDeployment\AllDeploymenProfiles.cs" />
     <Compile Include="config\_helper\CasCdrSettingHelper.cs" />
-    <Compile Include="config\_helper\CasConfigHelper.cs" />
+    <Compile Include="config\allDeployment\cas\mysqlClusters\CommonSlaveWin01.cs" />
+    <Compile Include="config\_helper\CasNewDbHelper.cs" />
+    <Compile Include="config\_helper\CasDbHelperOld.cs" />
     <Compile Include="config\_helper\CasPortalSettingsHelper.cs" />
     <Compile Include="config\_helper\CasQuartzHelper.cs" />
     <Compile Include="config\_helper\CasNeInfoHelper.cs" />

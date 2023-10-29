@@ -190,13 +190,15 @@ namespace InstallConfig
 
         void setupMySqlUsersAndPermissions()
         {
-            MySqlCluster mySqlCluster = this.Deploymentprofile.MySqlCluster;
-            Dictionary<string, MySqlServer> mySqlServers =
-                new Dictionary<string, MySqlServer>
-                {
-                    {mySqlCluster.Master.FriendlyName, mySqlCluster.Master}
-                };
-            mySqlCluster.Slaves.ForEach(s=> mySqlServers.Add(s.FriendlyName,s));
+            Dictionary<string, MySqlCluster> clusters = this.Deploymentprofile.MySqlClusters;
+            Dictionary<string, MySqlServer> mySqlServers = clusters.Values.Select(cl =>
+            {
+                var servers = new List<MySqlServer> {cl.Master};
+                servers.AddRange(cl.Slaves);
+                return servers;
+            }).SelectMany(servers=>servers).OrderBy(server=>server.FriendlyName)
+            .GroupBy(server=>server.FriendlyName).ToDictionary(g=>g.Key,g=>g.First());
+
             Menu menu = new Menu(mySqlServers.Keys, "Select a mysql instance to configure:", "a");
             List<string> choices = menu.getChoices();
             foreach (var choice in choices)
