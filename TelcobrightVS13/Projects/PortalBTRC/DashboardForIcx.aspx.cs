@@ -11,6 +11,8 @@ using MediationModel;
 using PortalApp;
 using TelcobrightInfra;
 using System.Data;
+using System.Data.Entity;
+using System.Data.SqlClient;
 using MySql.Data.MySqlClient;
 using System.Drawing;
 using System.Web.UI.DataVisualization.Charting;
@@ -21,7 +23,10 @@ public partial class DashboardAspxForIcx : Page
     private static int currentPageForJobGrid = 0;
     private static int currentIndexForJobGrid = 20;
     private int offset = currentPageForJobGrid * currentIndexForJobGrid;
+    private string icxConnstr;
     TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
+
+
     string targetIcxName = "btrc_cas";
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -36,60 +41,8 @@ public partial class DashboardAspxForIcx : Page
                 break;
             }
         }
-        //telcobrightpartner thisPartner = null;
-        //string binpath = System.Web.HttpRuntime.BinDirectory;
-        //TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
-        //var databaseSetting = telcobrightConfig.DatabaseSetting;
-        //string userName = Page.User.Identity.Name;
-        //string dbName;
-        //if (telcobrightConfig.DeploymentProfile.UserVsDbName.ContainsKey(userName))
-        //{
-        //    dbName = telcobrightConfig.DeploymentProfile.UserVsDbName[userName];
-        //}
-        //else
-        //{
-        //    dbName = telcobrightConfig.DatabaseSetting.DatabaseName;
-        //}
-        //databaseSetting.DatabaseName = dbName;
-
-        //using (PartnerEntities conTelco = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting))
-        //{
-        //    thisPartner = conTelco.telcobrightpartners.Where(c => c.databasename == dbName).ToList().First();
-
-        //}
-        //this.lblCustomerDisplayName.Text = thisPartner.CustomerName;
-        ////this.lblCustomerDisplayName.Text = "CDR Analyzer System (CAS)";
-        ////databaseSetting.DatabaseName = this.targetIcxName;
-
-        //string connectionString = DbUtil.getDbConStrWithDatabase(databaseSetting);
-
-        //string sqlCommand = "select id, JobName, CreationTime, CompletionTime " +
-        //                               "from job where idjobdefinition = 1 " +
-        //                               "and status = 1 " +
-        //                               "order by completiontime desc limit 0,20;";
-
-        //List<GridViewCompletedJob> gridViewCompletedJob = new List<GridViewCompletedJob>();
-
-
-        //using (MySqlConnection connection = new MySqlConnection())
-        //{
-        //    connection.ConnectionString = connectionString;
-        //    connection.Open();
-        //    DataSet dataSet = gridViewCompletedData(connection, sqlCommand);
-        //    bool hasData = dataSet.Tables.Cast<DataTable>()
-        //                   .Any(table => table.Rows.Count != 0);
-        //    if (hasData == true)
-        //    {
-        //        gridViewCompletedJob = ConvertDataSetToList(dataSet);
-        //        this.GridViewCompleted.DataSource = gridViewCompletedJob;
-        //        this.GridViewCompleted.DataBind();
-
-        //    }
-        //}
-
-
+        
         //dashboard items
-        UpdateErrorCalls();
 
         //UpdateInternationalIncoming();
         //this.Timer1.Enabled = true;
@@ -100,63 +53,19 @@ public partial class DashboardAspxForIcx : Page
         //GridViewCompleted.PageSize = 10;
         // Set the initial page index to 0 and page size to 20
         BindGridView();
-        BindGridViewForMissingTg();
+        //BindGridViewForMissingTg();
         BindGridViewForTg();
-        //getpartners();
-
 
         // Bind the GridView
+        UpdateErrorCalls();
 
 
         if (!IsPostBack)//initial
         {
-
-
+            BindGridViewForMissingTg();
         }
 
     }
-
-    //private static void getpartners()
-    //{
-    //    using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(tbc.DatabaseSetting))
-    //    {
-    //        var IOSList = contex.partners.Where(c => c.PartnerType == 2).ToList();
-
-    //        DropDownList1.Items.Clear();
-    //        DropDownListPartner.Items.Add(new ListItem(" [All]", "-1"));
-    //        foreach (partner p in IOSList.OrderBy(x => x.PartnerName))
-    //        {
-    //            DropDownListPartner.Items.Add(new ListItem(p.PartnerName, p.idPartner.ToString()));
-    //        }
-    //        var ANSList = contex.partners.Where(c => c.PartnerType == 1).ToList();
-    //        DropDownListAns.Items.Clear();
-    //        DropDownListAns.Items.Add(new ListItem("[All]", "-1"));
-    //        foreach (partner p in ANSList.OrderBy(x => x.PartnerName))
-    //        {
-    //            DropDownListAns.Items.Add(new ListItem(p.PartnerName, p.idPartner.ToString()));
-    //        }
-
-    //        var IGWList = contex.partners.Where(c => c.PartnerType == 2).ToList();
-    //        DropDownListIgw.Items.Clear();
-    //        DropDownListIgw.Items.Add(new ListItem("[All]", "-1"));
-    //        foreach (partner p in IGWList.OrderBy(x => x.PartnerName))
-    //        {
-    //            DropDownListIgw.Items.Add(new ListItem(p.PartnerName, p.idPartner.ToString()));
-    //        }
-
-    //        List<ne> nes = contex.nes.ToList();
-    //        DropDownListShowBySwitch.Items.Clear();
-    //        DropDownListShowBySwitch.Items.Add(new ListItem(" [All]", "-1"));
-    //        foreach (ne ns in nes.OrderBy(x => x.SwitchName))
-    //        {
-    //            DropDownListShowBySwitch.Items.Add(new ListItem(ns.SwitchName, ns.idSwitch.ToString()));
-    //        }
-
-    //    }
-
-    //    DropDownListPartner_OnSelectedIndexChanged(DropDownListPartner, EventArgs.Empty);
-    //    DropDownListIgw_OnSelectedIndexChanged(DropDownListIgw, EventArgs.Empty);
-    //}
 
     //humayun
 
@@ -187,18 +96,19 @@ public partial class DashboardAspxForIcx : Page
         // Calculate the offset based on the current page index and page size
         //int pageIndex = GridViewCompleted.PageIndex;
         //int pageSize = GridViewCompleted.PageSize;
-        if (offset == 0 || offset<0)
+        if (offset == 0 || offset < 0)
         {
-            PreviousButton.Enabled = false;  
+            PreviousButton.Enabled = false;
         }
         else
         {
             PreviousButton.Enabled = true;
         }
-        string connectionString = DbUtil.getDbConStrWithDatabase(databaseSetting);
 
         List<GridViewCompletedJob> gridViewCompletedJob = new List<GridViewCompletedJob>();
 
+        string connectionString = DbUtil.getDbConStrWithDatabase(databaseSetting);
+        icxConnstr = connectionString;
         // Modify your SQL query to include the OFFSET and FETCH NEXT clauses
         string sqlCommand = $"SELECT id, JobName, CreationTime, CompletionTime " +
                             "FROM job " +
@@ -222,7 +132,7 @@ public partial class DashboardAspxForIcx : Page
             }
         }
     }
-    
+
     private void BindGridViewForMissingTg()
     {
         telcobrightpartner thisPartner = null;
@@ -256,7 +166,8 @@ public partial class DashboardAspxForIcx : Page
         List<GridViewMissingTg> gridViewMissingTg = new List<GridViewMissingTg>();
 
         // Modify your SQL query to include the OFFSET and FETCH NEXT clauses
-        string sqlCommand = $@"SELECT DISTINCT
+        string sqlCommand = $@"SELECT TGNAME, SWITCHID,SWITCHNAME,CONCAT(SWITCHID,'-',TGNAME) as TG_WITH_SWITCH FROM
+                            (SELECT DISTINCT
                               CASE
                                 WHEN InPartnerId = 0 THEN IncomingRoute
                                 WHEN OutPartnerId = 0 THEN OutgoingRoute
@@ -266,7 +177,8 @@ public partial class DashboardAspxForIcx : Page
                               (SELECT * FROM cdrerror LIMIT 10000) AS x
                               LEFT JOIN ne 
                               ON x.switchid = ne.idSwitch
-                            WHERE InPartnerId = 0 OR OutPartnerId = 0;";
+                            WHERE InPartnerId = 0 OR OutPartnerId = 0) y
+                            where  (TGNAME,SWITCHID) NOT IN (SELECT ROUTENAME,SwitchId FROM ROUTE);";
 
         using (MySqlConnection connection = new MySqlConnection())
         {
@@ -290,6 +202,7 @@ public partial class DashboardAspxForIcx : Page
         string binpath = System.Web.HttpRuntime.BinDirectory;
         TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
         var databaseSetting = telcobrightConfig.DatabaseSetting;
+
         string userName = Page.User.Identity.Name;
         string dbName;
         if (telcobrightConfig.DeploymentProfile.UserVsDbName.ContainsKey(userName))
@@ -361,6 +274,35 @@ public partial class DashboardAspxForIcx : Page
         //}
     }
 
+    protected void GridView_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType == DataControlRowType.DataRow)
+        {
+            // Find the DropDownList control in the current row
+            DropDownList ddl = (DropDownList)e.Row.FindControl("DropDownListPartner");
+
+            // Check if the DropDownList control is found
+            if (ddl != null)
+            {
+                using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(telcobrightConfig.DatabaseSetting))
+                {
+                    List<partner> iosList = context.partners.ToList();
+
+                    // Clear the DropDownList and add the "Select" option
+                    ddl.Items.Clear();
+                    ddl.Items.Add(new ListItem("Select", "Select"));
+
+                    foreach (partner p in iosList.OrderBy(x => x.PartnerName))
+                    {
+                        ddl.Items.Add(new ListItem(p.PartnerName, p.idPartner.ToString()));
+                    }
+                }
+            }
+        }
+    }
+
+
+
     protected void NextButton_Click(object sender, EventArgs e)
     {
         // Go to the next page
@@ -376,30 +318,39 @@ public partial class DashboardAspxForIcx : Page
 
     private void UpdateErrorCalls()
     {
-        List<DashBoard.ErrorCalls> ec = new List<DashBoard.ErrorCalls>();
-        using (PartnerEntities conPartner = PortalConnectionHelper.GetPartnerEntitiesDynamic(telcobrightConfig.DatabaseSetting))
+        List<DashBoard.ErrorCalls> errorCalls = new List<DashBoard.ErrorCalls>();
+        string sql = @"select ErrorCode as ErrorReason, count(*) as NumberOfCalls from cdrerror group by ErrorCode limit 0,1001";
+
+        using (MySqlConnection connection = new MySqlConnection())
         {
-            ec = conPartner.Database.SqlQuery<DashBoard.ErrorCalls>(@"select ErrorCode as ErrorReason, count(*) as NumberOfCalls
-                                                from cdrerror group by ErrorCode limit 0,1001").ToList();
-            long totalNumberOfCalls = ec.Select(c => c.NumberOfCalls).Sum();
+            connection.ConnectionString = icxConnstr;
+            connection.Open();
+            DataSet dataSet = gridViewCompletedData(connection, sql);
+            
+            bool hasData = dataSet.Tables.Cast<DataTable>().Any(table => table.Rows.Count != 0);
 
-            if (totalNumberOfCalls > 1000)
+            if (hasData == true)
             {
-                this.HyperLinkError.Text = "1000+ Calls in Error";
-            }
-            else
-            {
-                this.HyperLinkError.Text = totalNumberOfCalls + " Calls in Error";
-            }
-            this.GridViewError.DataSource = ec;
-            this.GridViewError.DataBind();
 
+                errorCalls = ConvertDataSetToListForErrorCalls(dataSet);
+                long totalNumberOfCalls = errorCalls.Select(c => c.NumberOfCalls).Sum();
+                if (totalNumberOfCalls > 1000)
+                {
+                    this.HyperLinkError.Text = "1000+ Calls in Error";
+                }
+                else
+                {
+                    this.HyperLinkError.Text = totalNumberOfCalls + " Calls in Error";
+                }
+                GridViewError.DataSource = errorCalls;
+                GridViewError.DataBind();
+            }
         }
     }
     protected void Timer1_Tick(object sender, EventArgs e)
     {
         UpdateErrorCalls();
-        
+
 
     }
     protected void Timer2_Tick(object sender, EventArgs e)
@@ -426,7 +377,7 @@ public partial class DashboardAspxForIcx : Page
 
     }
 
-    
+
 
     protected class GridViewMissingTg
     {
@@ -552,15 +503,132 @@ public partial class DashboardAspxForIcx : Page
         }
         return records;
     }
+    List<DashBoard.ErrorCalls> ConvertDataSetToListForErrorCalls(DataSet ds)
+    {
+        bool hasRecords = ds.Tables.Cast<DataTable>()
+            .Any(table => table.Rows.Count != 0);
+        List<DashBoard.ErrorCalls> records = new List<DashBoard.ErrorCalls>();
+        if (hasRecords == true)
+        {
+            foreach (DataTable table in ds.Tables)
+            {
+                foreach (DataRow row in table.Rows)
+                {
+                    DashBoard.ErrorCalls record = new DashBoard.ErrorCalls();
+                    record.ErrorReason = row["ErrorReason"].ToString();
+                    record.NumberOfCalls = Convert.ToInt32(row["NumberOfCalls"]);
+                    records.Add(record);
+                }
+            }
+        }
+        return records;
+    }
+    protected void DropDownListPartner_OnSelectedIndexChanged(object sender, EventArgs e)
+    {
 
 
-    protected void DropDownListOfPartners(object sender, EventArgs e)
+    }
+
+
+    protected void DropDownListOfZone_SelectedIndexChanged(object sender, EventArgs e)
+    {
+
+    }
+
+    protected void TgAssignment(object sender, EventArgs e)
+    {
+        string connectionString = icxConnstr;
+        {
+            LinkButton btn = (LinkButton)sender;
+            GridViewRow row = (GridViewRow)btn.NamingContainer;
+
+            if (row.RowType == DataControlRowType.DataRow)
+            {
+                DropDownList ddlZone = (DropDownList)row.FindControl("DropDownList1");
+                DropDownList ddlPartner = (DropDownList)row.FindControl("DropDownListPartner");
+
+                if (ddlZone.SelectedValue == "Select" || ddlPartner.SelectedValue == "Select")
+                {
+                    Msg.Enabled = true;
+                    Msg.Text = "Please Select Valid Zone or Partner";
+                    return;
+                }
+
+                string tgName = row.Cells[1].Text;
+
+                string selectedZone = ddlZone.SelectedValue;
+                string selectedPartner = ddlPartner.SelectedValue;
+
+                // Perform a database lookup to get the SwitchId based on the selected SwitchName
+                string switchName = row.Cells[2].Text; 
+
+                // You need to implement a method to retrieve the SwitchId based on the switchName
+                int switchId = LookupSwitchId(switchName);
+
+                string insertQuery = "INSERT INTO route (RouteName, SwitchId, zone,idPartner) VALUES (@RouteName, @SwitchId, @Zone,@PartnerId)";
+
+                try
+                {
+                    using (MySqlConnection conn = new MySqlConnection(connectionString))
+                    {
+                        using (MySqlCommand cmd = new MySqlCommand(insertQuery, conn))
+                        {
+                            conn.Open();
+                            cmd.Parameters.AddWithValue("@RouteName", tgName);
+                            cmd.Parameters.AddWithValue("@SwitchId", switchId);
+                            cmd.Parameters.AddWithValue("@Zone", selectedZone);
+                            cmd.Parameters.AddWithValue("@PartnerId", selectedPartner);
+
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+                    Msg.Enabled = true;
+                    Msg.Text = "Tg/Route Name Assign Successfully";
+                    Msg.ForeColor = Color.Green;
+                    BindGridViewForMissingTg();
+                }
+                catch (Exception ex)
+                {
+                    Msg.Enabled = true;
+                    Msg.Text = $"{tgName} - Already Exists in Route Table";
+                    Msg.ForeColor = Color.Red;
+                    return;
+                }
+            }
+        }
+    }
+
+
+    private int LookupSwitchId(string switchName)
+    {
+        int switchId = 0;
+        string sql = $"select idSwitch from ne where SwitchName= @SwitchName;";
+
+        using (MySqlConnection connection = new MySqlConnection())
+        {
+            connection.ConnectionString = icxConnstr;
+            connection.Open();
+            MySqlCommand cmd = new MySqlCommand(sql, connection);
+            cmd.Parameters.AddWithValue("@SwitchName", switchName);
+
+
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                if (reader.Read())
+                {
+                    // Read the switchId from the query result
+                    switchId = reader.GetInt32(0);
+                }
+            }
+            return switchId;
+        }
+    }
+
+
+    protected void collectSelectedPartnervalue(string selectedValue)
     {
         throw new NotImplementedException();
     }
 
-    protected void DropDownListOfZone(object sender, EventArgs e)
-    {
-        throw new NotImplementedException();
-    }
+
 }

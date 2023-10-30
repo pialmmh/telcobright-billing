@@ -21,13 +21,13 @@ public partial class DashboardAspxForIcx {
     protected global::System.Web.UI.WebControls.Label lblCustomerDisplayName;
     
     /// <summary>
-    /// ScriptManager1 control.
+    /// ToolkitScriptManager1 control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.ScriptManager ScriptManager1;
+    protected global::AjaxControlToolkit.ToolkitScriptManager ToolkitScriptManager1;
     
     /// <summary>
     /// UpdatePanel3 control.
@@ -156,6 +156,15 @@ public partial class DashboardAspxForIcx {
     protected global::System.Web.UI.WebControls.Label Label11;
     
     /// <summary>
+    /// UpdatePanelFormissingTg control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.UpdatePanel UpdatePanelFormissingTg;
+    
+    /// <summary>
     /// GridView11 control.
     /// </summary>
     /// <remarks>
@@ -163,6 +172,15 @@ public partial class DashboardAspxForIcx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.GridView GridView11;
+    
+    /// <summary>
+    /// Msg control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label Msg;
     
     /// <summary>
     /// LabelTgs control.
