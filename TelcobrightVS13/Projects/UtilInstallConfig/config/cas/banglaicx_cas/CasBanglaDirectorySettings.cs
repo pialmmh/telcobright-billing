@@ -34,7 +34,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "D:/telcobright/vault/resources/cdr/bangla/tdm",
+                StartingPath = "d:/telcobright/vault/resources/cdr/banglaicx/tdm",
                 User = "",
                 Pass = "",
             };
@@ -46,7 +46,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "D:/telcobright/vault/resources/cdr/bangla/ip",
+                StartingPath = "d:/telcobright/vault/resources/cdr/banglaicx/ip",
                 User = "",
                 Pass = "",
             };
@@ -54,12 +54,6 @@ namespace InstallConfig
             this.Tbc.DirectorySettings.FileLocations.Add(vaultGenband.Name, vaultGenband);
             this.Tbc.DirectorySettings.FileLocations.Add(vaultBanglaicxCataleya.Name, vaultBanglaicxCataleya);
            
-            //add archive locations to CdrSettings
-            this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
-            {
-                //vaultS3FileArchive1.Name,
-                //vaultCAS.Name
-            };
            
         }
     }

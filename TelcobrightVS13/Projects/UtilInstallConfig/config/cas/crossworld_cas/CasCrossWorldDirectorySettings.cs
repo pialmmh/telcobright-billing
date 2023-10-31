@@ -38,7 +38,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "H:/telcobright/vault/resources/cdr/crossworld/ip",
+                StartingPath = "f:/telcobright/vault/resources/cdr/crossworld/ip",
                 User = "",
                 Pass = "",
             };
@@ -49,57 +49,40 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "H:/telcobright/vault/resources/cdr/crossworld/tdm",
+                StartingPath = "f:/telcobright/vault/resources/cdr/crossworld/tdm",
                 User = "",
                 Pass = "",
             };
-            FileLocation vaultTelcobridge = new FileLocation()
+            FileLocation vaultTelcobridgeCTG = new FileLocation()
             {
                 Name = "vault",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "H:/telcobright/vault/resources/cdr/crossworld/tdm1",
+                StartingPath = "f:/telcobright/vault/resources/cdr/crossworld/tdm1/CTG",
                 User = "",
                 Pass = "",
             };
 
 
-
-
-            FileLocation fileArchive1 = new FileLocation()//raw cdr archive
+            FileLocation vaultTelcobridgeKHL = new FileLocation()
             {
-                Name = "FileArchive1Zip",
-                LocationType = "ftp",
+                Name = "vault",//this is refered in ne table, name MUST start with "Vault"
+                LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
-                PathSeparator = @"/",//backslash didn't work with winscp
-                StartingPath = @"/ICX_CDR_BK",
-                ServerIp = "10.100.201.13", //server = "172.16.16.242",
-                User = "iofcdr",
-                Pass = "blt#.45",
-                IgnoreZeroLenghFile = 1
+                PathSeparator = @"\",
+                ServerIp = "",
+                StartingPath = "f:/telcobright/vault/resources/cdr/crossworld/tdm1/KHL",
+                User = "",
+                Pass = "",
             };
 
 
-
-
-
-
-            //add sync pairs to directory config
-            //directorySetting.SyncPairs.Add(huawei_Vault.Name, huawei_Vault);
-            //directorySetting.SyncPairs.Add(vaultS3FileArchive1.Name, vaultS3FileArchive1);
-            //directorySetting.SyncPairs.Add(vaultCAS.Name, vaultCAS);
+            
             this.Tbc.DirectorySettings.FileLocations.Add(vaultCataleya.Name,vaultCataleya);
             this.Tbc.DirectorySettings.FileLocations.Add(vaultGenband.Name, vaultGenband);
-            //this.Tbc.DirectorySettings.FileLocations.Add(vaultTelcobridge.Name, vaultTelcobridge);
-
-            //add archive locations to CdrSettings
-            this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
-            {
-                //vaultS3FileArchive1.Name,
-                //vaultCAS.Name
-            };
+          
             
         }
     }

@@ -38,7 +38,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "H:/telcobright/vault/resources/cdr/ringtech/tdm",
+                StartingPath = "f:/telcobright/vault/resources/cdr/ringTech/tdm",
                 User = "",
                 Pass = "",
             };
@@ -50,26 +50,10 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "H:/telcobright/vault/resources/cdr/ringtech/ip",
+                StartingPath = "f:/telcobright/vault/resources/cdr/ringTech/ip",
                 User = "",
                 Pass = "",
             };
-
-
-
-            FileLocation fileArchive1 = new FileLocation()//raw cdr archive
-            {
-                Name = "FileArchive1Zip",
-                LocationType = "ftp",
-                OsType = "windows",
-                PathSeparator = @"/",//backslash didn't work with winscp
-                StartingPath = @"/ICX_CDR_BK",
-                ServerIp = "10.100.201.13", //server = "172.16.16.242",
-                User = "iofcdr",
-                Pass = "blt#.45",
-                IgnoreZeroLenghFile = 1
-            };
-
             this.Tbc.DirectorySettings.FileLocations.Add(vaultPrimary.Name, vaultPrimary);
             this.Tbc.DirectorySettings.FileLocations.Add(vaultGNEW.Name, vaultGNEW);
  

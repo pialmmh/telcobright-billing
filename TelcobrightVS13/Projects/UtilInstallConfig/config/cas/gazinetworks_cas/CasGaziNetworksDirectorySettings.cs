@@ -35,7 +35,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "D:/telcobright/vault/resources/cdr/gazinetworks/tdm",
+                StartingPath = "d:/telcobright/vault/resources/cdr/gaziNetworks/tdm",
                 User = "",
                 Pass = "",
             };
@@ -47,7 +47,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "D:/telcobright/vault/resources/cdr/gaziNetworks/tdmKhlBogra",
+                StartingPath = "d:/telcobright/vault/resources/cdr/gaziNetworks/tdm1/tdmKhlBogra",
                 User = "",
                 Pass = "",
             };
@@ -61,7 +61,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "D:/telcobright/vault/resources/cdr/gazinetworks/ip",
+                StartingPath = "d:/telcobright/vault/resources/cdr/gaziNetworks/ip",
                 User = "",
                 Pass = "",
             };
