@@ -35,8 +35,8 @@ namespace TelcobrightMediation
                 this.PreProcessor.InconsistentCdrs.Add(inconsistentCdr);
             }
             int mergedCount = this.PreProcessor.TxtCdrRows.Count+ this.PreProcessor.InconsistentCdrs.Count;
-            if (this.OriginalRows.Count + this.OriginalCdrinconsistents.Count!= mergedCount)
-                throw new Exception("Original count and merged count of txtCdr rows and inconsistent cdrs don't match.");
+            if (this.OriginalRows.Count + this.OriginalCdrinconsistents.Count> mergedCount)
+                throw new Exception("Sum of Original rows and inconistent must be < mergedCount");
             return mergedCount;
         }
     }
