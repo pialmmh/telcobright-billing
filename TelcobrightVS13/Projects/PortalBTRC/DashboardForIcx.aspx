@@ -193,7 +193,7 @@
                     <div>
                         <%--div 1--%>
                         <div style="float: left;">
-                            <div style="margin-right: auto; text-align: left;">
+                            <div style="margin-right: auto; text-align: center;">
                                 <asp:Label ID="Label2" runat="server" Text="Latest CDR Job Process Status" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
                             </div>
                             <asp:GridView ID="GridViewCompleted" runat="server" AutoGenerateColumns="False" CellPadding="4" DataKeyNames="id" ForeColor="#333333" GridLines="None" BorderStyle="None" BorderWidth="1" OnPageIndexChanging="GridViewCompleted_PageIndexChanging">
@@ -226,6 +226,133 @@
                             </asp:GridView>
                             <asp:Button ID="PreviousButton" runat="server" Text="Newer" OnClick="PreviousButton_Click" AutoPostBack="True" />
                             <asp:Button ID="NextButton" runat="server" Text="Older" OnClick="NextButton_Click" AutoPostBack="True" />
+
+                        </div>
+                        <%--humayun--%>
+                        <div style="text-align: center; float: left; padding-left: 130px;">
+                            <div style="float: left;">
+                                <div class="col-3">
+                                
+                                    <div style="margin-left: auto; margin-right: auto; text-align: center;">
+                                        <asp:Label ID="Label5" runat="server" Text="Domestic Calls For Previous Seven Days" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
+                                    </div>
+                                    <p>
+                                    </p>
+                                    <p>
+                                  
+                                    
+                                        <asp:Chart ID="DomesticCallForPreviousSevenDays" runat="server" Width="650px" Height="170px">
+                                            <Series>
+                                                <asp:Series ChartType="Column">
+                                                    <Points>
+                                                
+                                                    </Points>
+                                                </asp:Series>
+                                            </Series>
+                                            <ChartAreas>
+                                                <asp:ChartArea Name="ChartArea1">
+                                                    <AxisX Title="Date" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                        <LabelStyle Font="Arial, 10px" Interval="1" />
+                                                    </AxisX>
+                                                    <AxisY Title="Minutes (Million)" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                        <LabelStyle Font="Arial, 10px" />
+                                                    </AxisY>
+                                                </asp:ChartArea>
+                                            </ChartAreas>
+                                      
+                                        </asp:Chart>
+                                    
+
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+                        
+                        
+                        
+                       <%-- International Incommimng For Previous Seven Days--%>
+                        
+                        <div style="text-align: center; float: right;">
+                            <div style="float: right; padding-right: 200px;">
+                                <div class="col-3">
+                                
+                                    <div style="margin-left: auto; margin-right: auto; text-align: center;">
+                                        <asp:Label ID="Label1" runat="server" Text="International Incommimng Calls For Previous Seven Days" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
+                                    </div>
+                                    <p>
+                                    </p>
+                                    <p>
+                                  
+                                    
+                                        <asp:Chart ID="InternationalIncommimng" runat="server" Width="650px" Height="170px">
+                                            <Series>
+                                                <asp:Series ChartType="Column">
+                                                    <Points>
+                                                
+                                                    </Points>
+                                                </asp:Series>
+                                            </Series>
+                                            <ChartAreas>
+                                                <asp:ChartArea Name="ChartArea1">
+                                                    <AxisX Title="Date" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                        <LabelStyle Font="Arial, 10px" Interval="1" />
+                                                    </AxisX>
+                                                    <AxisY Title="Minutes (Million)" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                        <LabelStyle Font="Arial, 10px" />
+                                                    </AxisY>
+                                                </asp:ChartArea>
+                                            </ChartAreas>
+                                      
+                                        </asp:Chart>
+                                    
+
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+                        
+                        
+                        <%-- International Incommimng For Previous Seven Days--%>
+                        
+                        <div style="text-align: center; float: right;">
+                            <div style="float: right; padding-right: 200px;">
+                                <div class="col-3">
+                                
+                                    <div style="margin-left: auto; margin-right: auto; text-align: center;">
+                                        <asp:Label ID="Label3" runat="server" Text="International Outgoing Calls For Previous Seven Days" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
+                                    </div>
+                                    <p>
+                                    </p>
+                                    <p>
+                                  
+                                    
+                                        <asp:Chart ID="InternationalOutgoing" runat="server" Width="650px" Height="170px">
+                                            <Series>
+                                                <asp:Series ChartType="Column">
+                                                    <Points>
+                                                
+                                                    </Points>
+                                                </asp:Series>
+                                            </Series>
+                                            <ChartAreas>
+                                                <asp:ChartArea Name="ChartArea1">
+                                                    <AxisX Title="Date" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                        <LabelStyle Font="Arial, 10px" Interval="1" />
+                                                    </AxisX>
+                                                    <AxisY Title="Minutes (Million)" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                        <LabelStyle Font="Arial, 10px" />
+                                                    </AxisY>
+                                                </asp:ChartArea>
+                                            </ChartAreas>
+                                      
+                                        </asp:Chart>
+                                    
+
+                                    </p>
+                                </div>
+                            </div>
 
                         </div>
                     </div>

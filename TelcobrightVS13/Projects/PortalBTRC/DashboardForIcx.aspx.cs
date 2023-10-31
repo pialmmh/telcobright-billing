@@ -41,16 +41,18 @@ public partial class DashboardAspxForIcx : Page
                 break;
             }
         }
-        
+
         //dashboard items
 
         //UpdateInternationalIncoming();
-        //this.Timer1.Enabled = true;
+        this.Timer1.Enabled = true;
         //this.Timer2.Enabled = true;
-        //this.Timer3.Enabled = true;
+        this.Timer3.Enabled = true;
 
         BindGridView();
-
+        DomesticCallForPreviousSevenDays1();
+        InternationalIncommimng1();
+        InternationalOutgoing1();
         // Bind the GridView
         UpdateErrorCalls();
 
@@ -62,8 +64,152 @@ public partial class DashboardAspxForIcx : Page
 
     }
 
-    //humayun
+    //humayun 
+    private void InternationalOutgoing1()
+    {
+        Series series1 = InternationalOutgoing.Series["Series1"];
+        DataPointCollection points = series1.Points;
+        //string[] labels = { "Oct-01", "Oct-02", "Oct-03", "Oct-04", "Oct-05", "Oct-06", "Oct-07" };
+        string[] colors = { "#08605c", "#e40613", "#F86F03", "#FFA41B", "#8EAC50", "#898121", "#E7B10A" };
 
+        // double[] values = { 90, 10, 19, 78,55,89,96,95,75,65,32,85,14,55,22,33,44,55,6,52,63,45 };
+
+        string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        List<double> data = new List<double>();
+        using (MySqlConnection con = new MySqlConnection(connectionString))
+        {
+            //select tup_starttime as DurationDate,sum(duration1) as Duration from sum_voice_day_01 where tup_starttime = CURDATE() and tup_starttime>= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+            //group by DurationDate;
+            //    =============================
+            con.Open();
+            string sql = @"select tup_starttime as DurationDate, sum(duration1) as Duration from sum_voice_day_01 where tup_starttime 
+                            <= '2023-09-07' and tup_starttime>=  DATE_SUB('2023-09-07', INTERVAL 6 DAY)group by DurationDate;";
+            using (MySqlCommand command = new MySqlCommand(sql, con))
+            {
+                using (MySqlDataReader read = command.ExecuteReader())
+                {
+
+                    while (read.Read())
+                    {
+                        data.Add(read.GetDouble("duration"));
+                    }
+                    read.Close();
+
+                }
+
+            }
+
+        }
+        for (int i = 0; i < colors.Length; i++)
+        {
+            DataPoint dataPoint = new DataPoint
+            {
+
+                Color = ColorTranslator.FromHtml(colors[i])
+            };
+            points.Add(dataPoint);
+        }
+    }
+
+
+    private void InternationalIncommimng1()
+    {
+        Series series1 = InternationalIncommimng.Series["Series1"];
+        DataPointCollection points = series1.Points;
+        //string[] labels = { "Oct-01", "Oct-02", "Oct-03", "Oct-04", "Oct-05", "Oct-06", "Oct-07" };
+        string[] colors = { "#08605c", "#e40613", "#F86F03", "#FFA41B", "#8EAC50", "#898121", "#E7B10A" };
+
+        // double[] values = { 90, 10, 19, 78,55,89,96,95,75,65,32,85,14,55,22,33,44,55,6,52,63,45 };
+
+        string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        List<double> data = new List<double>();
+        using (MySqlConnection con = new MySqlConnection(connectionString))
+        {
+            //select tup_starttime as DurationDate,sum(duration1) as Duration from sum_voice_day_01 where tup_starttime = CURDATE() and tup_starttime>= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+            //group by DurationDate;
+            //    =============================
+            con.Open();
+            string sql = @"select tup_starttime as DurationDate, sum(duration1) as Duration from sum_voice_day_01 where tup_starttime 
+                            <= '2023-09-07' and tup_starttime>=  DATE_SUB('2023-09-07', INTERVAL 6 DAY)group by DurationDate;";
+            using (MySqlCommand command = new MySqlCommand(sql, con))
+            {
+                using (MySqlDataReader read = command.ExecuteReader())
+                {
+
+                    while (read.Read())
+                    {
+                        data.Add(read.GetDouble("duration"));
+                    }
+                    read.Close();
+
+                }
+
+            }
+
+        }
+        for (int i = 0; i < colors.Length; i++)
+        {
+            DataPoint dataPoint = new DataPoint
+            {
+
+                Color = ColorTranslator.FromHtml(colors[i])
+            };
+            points.Add(dataPoint);
+        }
+    }
+
+
+    private void DomesticCallForPreviousSevenDays1()
+    {
+        Series series1 = DomesticCallForPreviousSevenDays.Series["Series1"];
+        DataPointCollection points = series1.Points;
+        //string[] labels = { "Oct-01", "Oct-02", "Oct-03", "Oct-04", "Oct-05", "Oct-06", "Oct-07" };
+        string[] colors = { "#08605c", "#e40613", "#F86F03", "#FFA41B", "#8EAC50", "#898121", "#E7B10A"};
+
+        // double[] values = { 90, 10, 19, 78,55,89,96,95,75,65,32,85,14,55,22,33,44,55,6,52,63,45 };
+
+        string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        List<double> data = new List<double>();
+        using (MySqlConnection con = new MySqlConnection(connectionString))
+        {
+            //select tup_starttime as DurationDate,sum(duration1) as Duration from sum_voice_day_01 where tup_starttime = CURDATE() and tup_starttime>= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+            //group by DurationDate;
+            //    =============================
+            con.Open();
+            string sql = @"select tup_starttime as DurationDate, sum(duration1) as Duration from sum_voice_day_01 where tup_starttime 
+                            <= '2023-09-07' and tup_starttime>=  DATE_SUB('2023-09-07', INTERVAL 6 DAY)group by DurationDate;";
+            using (MySqlCommand command = new MySqlCommand(sql, con))
+            {
+                using (MySqlDataReader read = command.ExecuteReader())
+                {
+
+                    while (read.Read())
+                    {
+                        data.Add(read.GetDouble("duration"));
+                    }
+                    read.Close();
+
+                }
+
+            }
+
+        }
+        for (int i = 0; i < colors.Length; i++)
+        {
+            DataPoint dataPoint = new DataPoint
+            {
+             
+                Color = ColorTranslator.FromHtml(colors[i])
+            };
+            points.Add(dataPoint);
+        }
+    }
+    //DataPoint dataPoint = new DataPoint
+    //{
+
+    //    Color = ColorTranslator.FromHtml(colors[i])
+    //};
+    //points.Add(dataPoint);
     private void BindGridView()
     {
         telcobrightpartner thisPartner = null;
@@ -254,7 +400,17 @@ public partial class DashboardAspxForIcx : Page
     private void UpdateErrorCalls()
     {
         List<DashBoard.ErrorCalls> errorCalls = new List<DashBoard.ErrorCalls>();
-        string sql = @"select ErrorCode as ErrorReason, count(*) as NumberOfCalls from cdrerror group by ErrorCode limit 0,1001";
+        string sql = @"SELECT
+                        CASE
+                            WHEN ErrorCode = 'Mediation error: InPartnerId must be > 0' THEN 'Mediation error: Incoming Route/TG Missing'
+                            WHEN ErrorCode = 'Mediation error: OutPartnerId must be > 0' THEN 'Mediation error: Outgoing Route/TG Missing'
+                            WHEN ErrorCode = 'Mediation error: ServiceGroup must be > 0' THEN 'Mediation error: Outgoing Route/TG Missing'
+                            else ErrorCode
+                        END AS ErrorReason,
+                        COUNT(*) AS NumberOfCalls
+                        FROM cdrerror
+                        GROUP BY ErrorReason
+                        LIMIT 0,1001;";
 
         using (MySqlConnection connection = new MySqlConnection())
         {
