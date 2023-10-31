@@ -30,7 +30,6 @@ namespace Process
             string operatorName = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");
 
             this.TbConsole.WriteLine($"CdrJobCreater {operatorName}");
-            return;
             try
             {
                 TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(

@@ -71,20 +71,21 @@ namespace Decoders
                 {
                     startTime = parseStringToDate(startTime).ToString("yyyy-MM-dd HH:mm:ss");
                 }
+                
+                string connectTime = lineAsArr[5].Trim();
+                if (!string.IsNullOrEmpty(connectTime))
+                {
+                    connectTime = parseStringToDate(connectTime).ToString("yyyy-MM-dd HH:mm:ss");
+                }
 
-                string endTime = lineAsArr[5].Trim(); 
+                string endTime = lineAsArr[6].Trim();
                 if (!string.IsNullOrEmpty(endTime))
                 {
                     endTime = parseStringToDate(endTime).ToString("yyyy-MM-dd HH:mm:ss");
                 }
 
-                string connectTime = lineAsArr[5].Trim();
-                if (!string.IsNullOrEmpty(connectTime))
-                {
-                    connectTime = parseStringToDate(connectTime).ToString("yyyy-MM-dd HH:mm:ss");
-                }               
 
-                
+
                 textCdr[Fn.Filename] = fileName;
                 textCdr[Fn.Switchid] = Input.Ne.idSwitch.ToString();
 
@@ -99,8 +100,8 @@ namespace Decoders
                 textCdr[Fn.IncomingRoute] = lineAsArr[12].Trim();
                 textCdr[Fn.OutgoingRoute] = lineAsArr[11].Trim();
 
-                textCdr[Fn.Originatingip] = lineAsArr[13].Trim();
-                textCdr[Fn.TerminatingIp] = lineAsArr[14].Trim();
+                //textCdr[Fn.Originatingip] = lineAsArr[13].Trim();
+                //textCdr[Fn.TerminatingIp] = lineAsArr[14].Trim();
 
 
                 textCdr[Fn.StartTime] = startTime;
@@ -121,7 +122,10 @@ namespace Decoders
 
                 textCdr[Fn.Validflag] = "1";
 
-                
+                string seqNumber = lineAsArr[3].Remove(0,2); 
+                seqNumber = Int64.Parse(seqNumber, System.Globalization.NumberStyles.HexNumber).ToString();
+                textCdr[Fn.Sequencenumber] = seqNumber;
+
 
                 decodedRows.Add(textCdr);
             }
