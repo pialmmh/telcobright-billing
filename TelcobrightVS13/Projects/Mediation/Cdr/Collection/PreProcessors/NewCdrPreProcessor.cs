@@ -23,7 +23,7 @@ namespace TelcobrightMediation
         public Dictionary<string, string[]> FinalNonDuplicateEvents { get; set; }= new Dictionary<string, string[]>();
         public List<string[]> DuplicateEvents { get; set; }= new List<string[]>();
         public List<string[]> OriginalRowsBeforeMerge { get; }= new List<string[]>();
-
+        public List<cdrinconsistent> OriginalCdrinconsistents { get; }= new List<cdrinconsistent>();
         public NewCdrPreProcessor(List<string[]> txtCdrRows, List<cdrinconsistent> inconsistentCdrs,
             CdrCollectorInputData cdrCollectorInputData)
             : base(cdrCollectorInputData, txtCdrRows.Count + inconsistentCdrs.Count, inconsistentCdrs) //used after sql collection
@@ -32,6 +32,10 @@ namespace TelcobrightMediation
             foreach (string[] row in this.TxtCdrRows)
             {
                 this.OriginalRowsBeforeMerge.Add(row);
+            }
+            foreach (cdrinconsistent inconsistentCdr in inconsistentCdrs)
+            {
+                this.OriginalCdrinconsistents.Add(inconsistentCdr);
             }
             this.PartialCdrEnabled = base.CdrCollectorInputData.CdrSetting.PartialCdrEnabledNeIds
                 .Contains(base.CdrCollectorInputData.CdrJobInputData.Ne.idSwitch);

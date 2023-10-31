@@ -87,8 +87,8 @@ namespace Jobs
                 int headTailOriginalCount = head.OriginalRows.Count + head.OriginalCdrinconsistents.Count +
                                                tail.Sum(t => t.OriginalRows.Count + t.OriginalCdrinconsistents.Count);
 
-                int headTailOriginalPreprocessorCount = head.PreProcessor.OriginalRowsBeforeMerge.Count + head.PreProcessor.InconsistentCdrs.Count +
-                                               tail.Sum(t => t.PreProcessor.OriginalRowsBeforeMerge.Count + t.PreProcessor.InconsistentCdrs.Count);
+                int headTailOriginalPreprocessorCount = head.PreProcessor.OriginalRowsBeforeMerge.Count + head.PreProcessor.OriginalCdrinconsistents.Count +
+                                               tail.Sum(t => t.PreProcessor.OriginalRowsBeforeMerge.Count + t.PreProcessor.OriginalCdrinconsistents.Count);
 
                 if (mergedCount!=headTailOriginalCount || mergedCount!=headTailOriginalPreprocessorCount)
                 {
