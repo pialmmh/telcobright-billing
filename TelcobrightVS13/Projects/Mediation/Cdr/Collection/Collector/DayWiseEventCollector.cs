@@ -16,6 +16,7 @@ namespace TelcobrightMediation
 {
     public class DayWiseEventCollector<T>
     {
+        private readonly object _synchronouslockWhileExecutingDdl = new object();
         public bool UniqueEventsOnly { get; set; }
         public CdrCollectorInputData CollectorInput { get;}
         public DbCommand DbCmd { get;}
@@ -159,12 +160,18 @@ namespace TelcobrightMediation
             //ddl statement may auto commit all transactions, so use a different db connection 
             using (MySqlConnection con = new MySqlConnection(conStr))
             {
-                con.Open();
-                DaywiseTableManager.CreateTables(tablePrefix: tablePrefix,
-                    templateSql: templateSql,
-                    dateTimes: tableDatesToBeCreated,
-                    con: con,
-                    partitionByHour: true, engine: tableStorageEngine, partitionColName: "starttime");
+                if (con.State != ConnectionState.Open)
+                {
+                    con.Open();
+                }
+                lock (_synchronouslockWhileExecutingDdl)
+                {
+                    DaywiseTableManager.CreateTables(tablePrefix: tablePrefix,
+                        templateSql: templateSql,
+                        dateTimes: tableDatesToBeCreated,
+                        con: con,
+                        partitionByHour: true, engine: tableStorageEngine, partitionColName: "starttime");
+                }
                 con.Close();
             }
         }

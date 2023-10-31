@@ -16,6 +16,7 @@ using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Cdr;
+using TelcobrightMediation.Cdr.Collection.PreProcessors;
 using TelcobrightMediation.Config;
 
 namespace Jobs
@@ -49,25 +50,17 @@ namespace Jobs
         };
         public object PreprocessJob(object data)
         {
-            Dictionary<string, object> dataAsDic = (Dictionary<string, object>) data;
+            Dictionary<string, object> dataAsDic = (Dictionary<string, object>)data;
             this.Input = (CdrJobInputData)dataAsDic["cdrJobInputData"];
-            object preDecodingStageOnly=null;
-            if (dataAsDic.TryGetValue("preDecodingStageOnly", out preDecodingStageOnly) == false)
-            {
-                this.PreDecodingStageOnly = false;
-            }
-            else
-            {
-                this.PreDecodingStageOnly = (bool) preDecodingStageOnly;
-            }
+            this.PreDecodingStageOnly= checkIfPreDecodingStage(dataAsDic);
             NewCdrPreProcessor preProcessor = DecodeNewCdrFile();
-            if (PreDecodingStageOnly)
-            {
-                return preProcessor;
-            }
+            if (PreDecodingStageOnly) return preProcessor;
+
             preProcessor = preFormatRawCdrs(preProcessor);
             return preProcessor;
         }
+
+       
         public virtual Object Execute(ITelcobrightJobInput jobInputData)
         {
             NewCdrPreProcessor preProcessor = null;//preprecessor.txtrows contains decoded raw cdrs in string[] format
@@ -90,25 +83,28 @@ namespace Jobs
                 }
                 NewCdrWrappedJobForMerge head = mergedJobsDic.First().Value;
                 List<NewCdrWrappedJobForMerge> tail = mergedJobsDic.Skip(1).Select(kv => kv.Value).ToList();
-                foreach (var kv in mergedJobsDic)//make sure empty files haven't been merged.
-                {
-                    long idJob = kv.Key;
-                    var job = kv.Value.TelcobrightJob;
-                    var rows = kv.Value.PreProcessor.TxtCdrRows;
-                    if (rows.Any() == false)
-                    {
-                        throw new Exception($"Empty files cannot be merged. Job id:{idJob}, job name:{job.JobName}");
-                    }
-                }
-                int mergedCount = head.PreProcessor.TxtCdrRows.Count;
-                int headTailOriginalCountRaw = head.OriginalRows.Count+
-                    tail.Sum(job => job.PreProcessor.OriginalRowsBeforeMerge.Count);
-                if (mergedCount!=headTailOriginalCountRaw)
+                int mergedCount = head.PreProcessor.TxtCdrRows.Count + head.PreProcessor.InconsistentCdrs.Count;
+                int headTailOriginalCount = head.OriginalRows.Count + head.OriginalCdrinconsistents.Count +
+                                               tail.Sum(t => t.OriginalRows.Count + t.OriginalCdrinconsistents.Count);
+
+                int headTailOriginalPreprocessorCount = head.PreProcessor.OriginalRowsBeforeMerge.Count + head.PreProcessor.InconsistentCdrs.Count +
+                                               tail.Sum(t => t.PreProcessor.OriginalRowsBeforeMerge.Count + t.PreProcessor.InconsistentCdrs.Count);
+
+                if (mergedCount!=headTailOriginalCount || mergedCount!=headTailOriginalPreprocessorCount)
                 {
                     throw new Exception($"Head cdr count must match sum of tail jobs for merge processing. Job id:{head.TelcobrightJob.id}, job name:{head.TelcobrightJob.JobName}");
                 }
                 preProcessor = head.PreProcessor;
             }
+
+            //at this moment preProcessor has either records from a single job or merged jobs
+            //duplicate cdr filter part ****************
+            if (CollectorInput.Ne.FilterDuplicateCdr == 1 && preProcessor.TxtCdrRows.Count > 0) //filter duplicates
+            {
+                preProcessor = this.filterDuplicates(preProcessor);
+            }
+            //end duplicate filter part
+
 
             CdrCollectionResult newCollectionResult, oldCollectionResult = null;
             preProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
@@ -143,12 +139,23 @@ namespace Jobs
             return this.HandledJobs;
         }
 
+        private bool checkIfPreDecodingStage(Dictionary<string, object> dataAsDic)
+        {
+            object preDecodingStageOnly = null;
+            if (dataAsDic.TryGetValue("preDecodingStageOnly", out preDecodingStageOnly) == false)
+            {
+                return false;
+            }
+            return (bool)preDecodingStageOnly;
+        }
+
+
         private void handleAndFinalizeEmptyJob(CdrJob cdrJob)
         {
             if (cdrJob.CdrProcessor.CollectionResult.CdrInconsistents.Count > 0)
             {
                 if (this.Input.TelcobrightJob.idjobdefinition == 1 &&
-                    cdrJob.CdrProcessor.CollectionResult.CdrInconsistents.Count > 0) //newcdr
+                    cdrJob.CdrProcessor.CollectionResult.CdrInconsistents.Count > 0)//newcdr
                 {
                     cdrJob.CdrProcessor.WriteCdrInconsistent();
                 }
@@ -174,6 +181,7 @@ namespace Jobs
             var collectionResult = cdrJob.CdrProcessor.CollectionResult;
             if (collectionResult.OriginalRowsBeforeMerge.Count > 0) //job not empty, or has records
             {
+                //this.CollectorInput.CdrJobInputData.MergedJobsDic
                 WriteJobCompletionIfCollectionNotEmpty(cdrJob.CdrProcessor.CollectionResult.RawCount,
                     this.Input.TelcobrightJob, cdrJob.CdrProcessor.CdrJobContext.Context);
             }
@@ -217,7 +225,8 @@ namespace Jobs
             var preProcessor = mergedJob.PreProcessor;
             if (preProcessor.TxtCdrRows.Any() == false)
             {
-                throw new Exception($"Instance in a merged new cdr job cannot contain 0 record. Job id:{telcobrightJob.id}, Jobname:{telcobrightJob.JobName}");
+                WriteJobCompletionIfCollectionIsEmpty(0, telcobrightJob, context);
+                //throw new Exception($"Instance in a merged new cdr job cannot contain 0 record. Job id:{telcobrightJob.id}, Jobname:{telcobrightJob.JobName}");
             }
             WriteJobCompletionIfCollectionNotEmpty(preProcessor.OriginalRowsBeforeMerge.Count, telcobrightJob, context);
             if (this.Input.CdrSetting.DisableCdrPostProcessingJobCreationForAutomation == false)
@@ -238,8 +247,31 @@ namespace Jobs
 
         private NewCdrPreProcessor DecodeNewCdrFile()
         {
-            NewCdrPreProcessor preProcessor = this.CollectRaw();
+            string fileName = getFullPathOfCdrFile();
+            this.CollectorInput = new CdrCollectorInputData(this.Input, fileName);
+            var cdrCollector = new FileBasedTextCdrCollector(this.CollectorInput);
+            AbstractCdrDecoder decoder = cdrCollector.getDecoder();
+            List<cdrinconsistent> cdrinconsistents = new List<cdrinconsistent>();
+            if (this.PreDecodingStageOnly)//PREDECODING
+            {
+                var decodedCdrRows = decoder.DecodeFile(this.CollectorInput, out cdrinconsistents);
+                NewCdrPreProcessor newCdrPreProcessor =
+                    new NewCdrPreProcessor(decodedCdrRows, cdrinconsistents, this.CollectorInput);
+                newCdrPreProcessor.Decoder = decoder;
+                return newCdrPreProcessor;
+            }
+            NewCdrPreProcessor preProcessor = (NewCdrPreProcessor)cdrCollector.Collect();
             return preProcessor;
+        }
+
+        private string getFullPathOfCdrFile()
+        {
+            string fileLocationName = this.Input.Ne.SourceFileLocations;
+            FileLocation fileLocation =
+                this.Input.MediationContext.Tbc.DirectorySettings.FileLocations[fileLocationName];
+            string fileName = fileLocation.GetOsNormalizedPath(fileLocation.StartingPath)
+                              + Path.DirectorySeparatorChar + this.Input.TelcobrightJob.JobName;
+            return fileName;
         }
 
         private NewCdrPreProcessor preFormatRawCdrs(NewCdrPreProcessor preProcessor)
@@ -251,29 +283,6 @@ namespace Jobs
             cdrAndInconsistents.ForEach(c => preProcessor.AddToBaseCollection(c));
             return preProcessor;
         }
-
-        protected virtual NewCdrPreProcessor CollectRaw()
-        {
-            string fileLocationName = this.Input.Ne.SourceFileLocations;
-            FileLocation fileLocation =
-                this.Input.MediationContext.Tbc.DirectorySettings.FileLocations[fileLocationName];
-            string fileName = fileLocation.GetOsNormalizedPath(fileLocation.StartingPath)
-                              + Path.DirectorySeparatorChar + this.Input.TelcobrightJob.JobName;
-            this.CollectorInput =new CdrCollectorInputData(this.Input, fileName);
-            var cdrCollector = new FileBasedTextCdrCollector(this.CollectorInput);
-            if (this.PreDecodingStageOnly)
-            {
-                List<cdrinconsistent> cdrinconsistents = new List<cdrinconsistent>();
-                var decoder = cdrCollector.getDecoder();
-                var decodedCdrRows = decoder.DecodeFile(this.CollectorInput, out cdrinconsistents);
-                NewCdrPreProcessor newCdrPreProcessor =
-                    new NewCdrPreProcessor(decodedCdrRows, cdrinconsistents, this.CollectorInput);
-                return newCdrPreProcessor;
-            }
-            return (NewCdrPreProcessor) cdrCollector.Collect();
-        }
-
-
 
         public PartialCdrTesterData OrganizeTestDataForPartialCdrs(NewCdrPreProcessor preProcessor,
             CdrCollectionResult newCollectionResult)
@@ -555,5 +564,32 @@ namespace Jobs
                 cmd.ExecuteNonQuery();
             }
         }
+        public NewCdrPreProcessor filterDuplicates(NewCdrPreProcessor preProcessorWithCollectedRows)
+        {
+            AbstractCdrDecoder decoder = preProcessorWithCollectedRows.Decoder;
+            List<string[]> decodedCdrRows = preProcessorWithCollectedRows.TxtCdrRows;
+            List<cdrinconsistent> cdrinconsistents = preProcessorWithCollectedRows.InconsistentCdrs.ToList();
+            DbCommand cmd = this.CollectorInput.CdrJobInputData.Context.Database.Connection.CreateCommand();
+            DayWiseEventCollector<string[]> dayWiseEventCollector = new DayWiseEventCollector<string[]>
+                                                                        (uniqueEventsOnly: true,
+                                                                            collectorInput: this.CollectorInput,
+                                                                            dbCmd: cmd, decoder: decoder,
+                                                                            decodedEvents: decodedCdrRows,//decoded rows
+                                                                            sourceTablePrefix: decoder.PartialTablePrefix);
+            dayWiseEventCollector.createNonExistingTables();
+            dayWiseEventCollector.collectTupleWiseExistingEvents(decoder);
+            DuplicaterEventFilter<string[]> duplicaterEventFilter = new DuplicaterEventFilter<string[]>(dayWiseEventCollector);
+            List<string[]> excludedDuplicateCdrs = null;
+            Dictionary<string, string[]> finalNonDuplicateEvents = duplicaterEventFilter.filterDuplicateCdrs(out excludedDuplicateCdrs);
+            var textCdrCollectionPreProcessor = new NewCdrPreProcessor(finalNonDuplicateEvents.Values.ToList(), cdrinconsistents,
+                this.CollectorInput)
+            {
+                FinalNonDuplicateEvents = finalNonDuplicateEvents,
+                DuplicateEvents = excludedDuplicateCdrs,
+                Decoder = decoder
+            };
+            return textCdrCollectionPreProcessor;
+        }
+
     }
 }

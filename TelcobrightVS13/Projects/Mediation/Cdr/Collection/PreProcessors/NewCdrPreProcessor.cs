@@ -17,6 +17,7 @@ namespace TelcobrightMediation
 {
     public class NewCdrPreProcessor : AbstractCdrJobPreProcessor
     {
+        public AbstractCdrDecoder Decoder { get; set; }
         private bool PartialCdrEnabled { get; }
         public List<string[]> TxtCdrRows { get; set; }= new List<string[]>();
         public Dictionary<string, string[]> FinalNonDuplicateEvents { get; set; }= new Dictionary<string, string[]>();

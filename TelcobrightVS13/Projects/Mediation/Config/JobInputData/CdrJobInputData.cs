@@ -12,7 +12,8 @@ namespace TelcobrightMediation
     public class NewCdrWrappedJobForMerge {
         public job TelcobrightJob { get; }
         public NewCdrPreProcessor PreProcessor { get; }
-        public List<string[]> OriginalRows= new List<string[]>();
+        public List<string[]> OriginalRows { get; }= new List<string[]>();
+        public List<cdrinconsistent> OriginalCdrinconsistents { get; }= new List<cdrinconsistent>();
         public NewCdrWrappedJobForMerge(job telcobrightJob, NewCdrPreProcessor preProcessor)
         {
             TelcobrightJob = telcobrightJob;
@@ -21,11 +22,22 @@ namespace TelcobrightMediation
             {
                 this.OriginalRows.Add(row);
             }
+            foreach (var inconsistentCdr in preProcessor.InconsistentCdrs)
+            {
+                this.OriginalCdrinconsistents.Add(inconsistentCdr);
+            }
         }
         public int AppendTailJobRows(NewCdrWrappedJobForMerge tailJob)
         {
             this.PreProcessor.TxtCdrRows.AddRange(tailJob.PreProcessor.TxtCdrRows);
-            return this.PreProcessor.TxtCdrRows.Count;
+            foreach (cdrinconsistent inconsistentCdr in tailJob.PreProcessor.InconsistentCdrs)
+            {
+                this.PreProcessor.InconsistentCdrs.Add(inconsistentCdr);
+            }
+            int mergedCount = this.PreProcessor.TxtCdrRows.Count+ this.PreProcessor.InconsistentCdrs.Count;
+            if (this.OriginalRows.Count + this.OriginalCdrinconsistents.Count!= mergedCount)
+                throw new Exception("Original count and merged count of txtCdr rows and inconsistent cdrs don't match.");
+            return mergedCount;
         }
     }
     public class CdrJobInputData : ITelcobrightJobInput

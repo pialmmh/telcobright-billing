@@ -40,6 +40,7 @@ namespace TelcobrightMediation
         public FileSplitSetting FileSplitSetting { get; set; }
         public bool useCasStyleProcessing { get; set; } = false;
         public Dictionary<int, NeAdditionalSetting> NeWiseAdditionalSettings { get; set; }= new Dictionary<int, NeAdditionalSetting>();
+        public bool UnzipCompressedFiles { get; set; }
 
         public CdrSetting()
         {
