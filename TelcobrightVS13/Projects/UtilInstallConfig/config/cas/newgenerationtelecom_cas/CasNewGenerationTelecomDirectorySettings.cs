@@ -34,7 +34,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "I:/telcobright/vault/resources/cdr/newGenerTelecom/tdm",
+                StartingPath = "f:/telcobright/vault/resources/cdr/newGenerTelecom/tdm",
                 User = "",
                 Pass = "",
             };
@@ -46,7 +46,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "I:/telcobright/vault/resources/cdr/newGenerTelecom/ip",
+                StartingPath = "f:/telcobright/vault/resources/cdr/newGenerTelecom/ip",
                 User = "",
                 Pass = "",
             };

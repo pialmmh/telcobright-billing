@@ -34,7 +34,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = @"F:\telcobright\vault\resources\cdr\imamNetwork\tdm",
+                StartingPath = "e:/telcobright/vault/resources/cdr/imamNetwork/tdm",
                 User = "",
                 Pass = "",
             };
@@ -46,20 +46,13 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "F:/telcobright/vault/resources/cdr/imamNetwork/ip",
+                StartingPath = "e:/telcobright/vault/resources/cdr/imamNetwork/ip",
                 User = "",
                 Pass = "",
             };
 
             this.Tbc.DirectorySettings.FileLocations.Add(VaultZte.Name, VaultZte);
             this.Tbc.DirectorySettings.FileLocations.Add(vaultCataliya.Name, vaultCataliya);
-           
-            //add archive locations to CdrSettings
-            this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
-            {
-                //vaultS3FileArchive1.Name,
-                //vaultCAS.Name
-            };
            
         }
     }

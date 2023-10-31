@@ -49,12 +49,7 @@ public partial class DashboardAspxForIcx : Page
         //this.Timer2.Enabled = true;
         //this.Timer3.Enabled = true;
 
-        //GridViewCompleted.PageIndex = 0;
-        //GridViewCompleted.PageSize = 10;
-        // Set the initial page index to 0 and page size to 20
         BindGridView();
-        //BindGridViewForMissingTg();
-        BindGridViewForTg();
 
         // Bind the GridView
         UpdateErrorCalls();
@@ -96,7 +91,7 @@ public partial class DashboardAspxForIcx : Page
         // Calculate the offset based on the current page index and page size
         //int pageIndex = GridViewCompleted.PageIndex;
         //int pageSize = GridViewCompleted.PageSize;
-        if (offset == 0 || offset < 0)
+        if (currentPageForJobGrid < 1)
         {
             PreviousButton.Enabled = false;
         }
@@ -196,62 +191,7 @@ public partial class DashboardAspxForIcx : Page
             }
         }
     }
-    private void BindGridViewForTg()
-    {
-        telcobrightpartner thisPartner = null;
-        string binpath = System.Web.HttpRuntime.BinDirectory;
-        TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
-        var databaseSetting = telcobrightConfig.DatabaseSetting;
-
-        string userName = Page.User.Identity.Name;
-        string dbName;
-        if (telcobrightConfig.DeploymentProfile.UserVsDbName.ContainsKey(userName))
-        {
-            dbName = telcobrightConfig.DeploymentProfile.UserVsDbName[userName];
-        }
-        else
-        {
-            dbName = telcobrightConfig.DatabaseSetting.DatabaseName;
-        }
-        databaseSetting.DatabaseName = dbName;
-
-        using (PartnerEntities conTelco = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting))
-        {
-            thisPartner = conTelco.telcobrightpartners.Where(c => c.databasename == dbName).ToList().First();
-
-        }
-        this.lblCustomerDisplayName.Text = thisPartner.CustomerName;
-        // Calculate the offset based on the current page index and page size
-        //int pageIndex = GridViewCompleted.PageIndex;
-        //int pageSize = GridViewCompleted.PageSize;
-
-        string connectionString = DbUtil.getDbConStrWithDatabase(databaseSetting);
-
-        List<GridViewTg> gridViewTg = new List<GridViewTg>();
-
-        // Modify your SQL query to include the OFFSET and FETCH NEXT clauses
-        string sqlCommand = $@"select idroute as id,RouteName as TgName,ne.SwitchName as SwitchName ,zone as Zone,partner.PartnerName as Partner from route
-                                left join ne
-                                on ne.idSwitch = route.SwitchId
-                                left join partner
-                                on partner.idPartner= route.idPartner;";
-
-        using (MySqlConnection connection = new MySqlConnection())
-        {
-            connection.ConnectionString = connectionString;
-            connection.Open();
-            DataSet dataSet = gridViewCompletedData(connection, sqlCommand);
-
-            bool hasData = dataSet.Tables.Cast<DataTable>().Any(table => table.Rows.Count != 0);
-
-            if (hasData == true)
-            {
-                gridViewTg = ConvertDataSetToListForTg(dataSet);
-                ListViewTgs.DataSource = gridViewTg;
-                ListViewTgs.DataBind();
-            }
-        }
-    }
+    
 
     protected void GridViewCompleted_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
@@ -263,15 +203,11 @@ public partial class DashboardAspxForIcx : Page
     protected void PreviousButton_Click(object sender, EventArgs e)
     {
         // Go to the previous page
-
-        currentPageForJobGrid--;
-        //currentIndexForJobGrid--;
-        BindGridView();
-        //if (GridViewCompleted.PageIndex > 0)
-        //{
-        //    GridViewCompleted.PageIndex--;
-        //    BindGridView();
-        //}
+        if (currentPageForJobGrid > 0)
+        {
+            currentPageForJobGrid--;
+            BindGridView();
+        }
     }
 
     protected void GridView_RowDataBound(object sender, GridViewRowEventArgs e)
@@ -306,9 +242,8 @@ public partial class DashboardAspxForIcx : Page
     protected void NextButton_Click(object sender, EventArgs e)
     {
         // Go to the next page
-        currentPageForJobGrid++;
-        //currentIndexForJobGrid++;
-        BindGridView();
+           currentPageForJobGrid++;
+           BindGridView();
         //if (GridViewCompleted.PageIndex < GridViewCompleted.PageCount - 1)
         //{
         //    GridViewCompleted.PageIndex++;
@@ -350,17 +285,18 @@ public partial class DashboardAspxForIcx : Page
     protected void Timer1_Tick(object sender, EventArgs e)
     {
         UpdateErrorCalls();
-
-
     }
+
     protected void Timer2_Tick(object sender, EventArgs e)
     {
         this.GridViewCompleted.DataBind();
     }
+
     protected void Timer3_Tick(object sender, EventArgs e)
     {
         UpdateInternationalIncoming();
     }
+
     protected class IntlIn
     {
         public string PartnerName { get; set; }
@@ -373,8 +309,6 @@ public partial class DashboardAspxForIcx : Page
         public string jobName { get; set; }
         public DateTime creationTime { get; set; }
         public DateTime completionTime { get; set; }
-
-
     }
 
 
@@ -623,12 +557,5 @@ public partial class DashboardAspxForIcx : Page
             return switchId;
         }
     }
-
-
-    protected void collectSelectedPartnervalue(string selectedValue)
-    {
-        throw new NotImplementedException();
-    }
-
 
 }

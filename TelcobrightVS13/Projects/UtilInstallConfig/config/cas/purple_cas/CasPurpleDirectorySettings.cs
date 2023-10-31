@@ -38,7 +38,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "H:/telcobright/vault/resources/cdr/purple/tdm",
+                StartingPath = "f:/telcobright/vault/resources/cdr/purple/tdm",
                 User = "",
                 Pass = "",
             };
@@ -50,24 +50,15 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "h:/telcobright/Vault/Resources/cdr/purple/ip",
+                StartingPath = "f:/telcobright/vault/resources/cdr/purple/ip",
                 User = "",
                 Pass = "",
             };
 
-            //add sync pairs to directory config
-            //directorySetting.SyncPairs.Add(huawei_Vault.Name, huawei_Vault);
-            //directorySetting.SyncPairs.Add(vaultS3FileArchive1.Name, vaultS3FileArchive1);
-            //directorySetting.SyncPairs.Add(vaultCAS.Name, vaultCAS);
+            
             this.Tbc.DirectorySettings.FileLocations.Add(vaultHuwaei.Name, vaultHuwaei);
             this.Tbc.DirectorySettings.FileLocations.Add(vaultCataleya.Name, vaultCataleya);
 
-            //add archive locations to CdrSettings
-            this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
-            {
-                //vaultS3FileArchive1.Name,
-                //vaultCAS.Name
-            };
             
         }
     }

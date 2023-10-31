@@ -44,7 +44,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "E:/telcobright/vault/resources/cdr/voicetel/tdm",
+                StartingPath = "e:/telcobright/vault/resources/cdr/voiceTel/tdm",
                 User = "",
                 Pass = "",
             };
@@ -56,7 +56,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "E:/telcobright/vault/resources/cdr/voicetel/ip",
+                StartingPath = "e:/telcobright/vault/resources/cdr/voiceTel/ip",
                 User = "",
                 Pass = "",
             };

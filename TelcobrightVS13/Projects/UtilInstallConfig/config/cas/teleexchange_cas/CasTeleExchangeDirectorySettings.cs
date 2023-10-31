@@ -34,7 +34,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "I:/telcobright/vault/resources/cdr/teleexchange/tdm",
+                StartingPath = "f:/telcobright/vault/resources/cdr/teleExchange/tdm",
                 User = "",Pass = "",
             };
             FileLocation vaultTelcobridge = new FileLocation()
@@ -44,7 +44,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "I:/telcobright/vault/resources/cdr/teleexchange/tdm1",
+                StartingPath = "f:/telcobright/vault/resources/cdr/teleExchange/tdm1",
                 User = "",
                 Pass = "",
             };
@@ -56,7 +56,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "I:/telcobright/vault/resources/cdr/teleexchange/ip",
+                StartingPath = "f:/telcobright/vault/resources/cdr/teleExchange/ip",
                 User = "",
                 Pass = "",
             };

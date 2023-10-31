@@ -7,25 +7,87 @@
     <div class="jumbotron">
         <h1>
             <asp:Label ID="lblCustomerDisplayName" runat="server" Text=""></asp:Label></h1>
-
     </div>
-<script type="text/javascript">
-    // Get a reference to the DropDownList control
-   <%-- var ddl = document.getElementById('<%= GridView11.FindControl("DropDownList1") %>');
+                <%-- Missing TG --%>
+                
+                <div style="float: right; padding-right: 200px; padding-top: 25px">
+                    <div style="margin-right: auto; text-align: center;">
+                        <asp:Label ID="Label11" runat="server" Text="Missing TGs (Please Assign Missing TGs to approprite ANS/IOS and Zone)" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
+                    </div>
 
-    // Attach an event listener to the DropDownList's change event
-    ddl.addEventListener('change', function () {
-        // Get the selected index
-        var selectedIndex = ddl.selectedIndex;
+                    <%--<asp:UpdatePanel ID="UpdatePanelFormissingTg" runat="server">--%>
+                        <%--<Triggers>
+                            <asp:PostBackTrigger ControlID="ButtonCreateJob" />
+                        </Triggers>--%>
 
-        // Check if the selected index is not the "Select" item
-        if (selectedIndex !== 0) {
-            // Change the selected index to the currently selected item
-            ddl.selectedIndex = selectedIndex;
-        }
-    });--%>
-</script>
 
+                        <%--<ContentTemplate>--%>
+                            
+                            <asp:GridView ID="GridView11" runat="server" AutoGenerateColumns="False" CellPadding="4" DataKeyNames="id" ForeColor="#333333" GridLines="None" BorderStyle="None" BorderWidth="1" OnRowDataBound="GridView_RowDataBound">
+                                <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+                                <Columns>
+                                    <asp:BoundField DataField="id" HeaderText="id" InsertVisible="False" ReadOnly="True" SortExpression="id" Visible="false" />
+                                    <asp:BoundField DataField="TgName" HeaderText="TgName" SortExpression="TgName" />
+                                    <asp:BoundField DataField="SwitchName" HeaderText="SwitchName" SortExpression="SwitchName" />
+                                    <asp:TemplateField HeaderText="Zone">
+                                        <ItemTemplate>
+                                            <div style="text-align: center;">
+                                                <asp:DropDownList ID="DropDownList1" runat="server"  AutoPostBack="False"
+                                                                OnSelectedIndexChanged="DropDownListOfZone_SelectedIndexChanged"
+                                                                  Enabled="True">
+                                                    <asp:ListItem  Value="Select">Select</asp:ListItem>
+                                                    <asp:ListItem  Value="Dhaka">Dhaka</asp:ListItem>
+                                                    <asp:ListItem  Value="Sylhet" >Sylhet</asp:ListItem>
+                                                    <asp:ListItem  Value="Khulna">Khulna</asp:ListItem>
+                                                    <asp:ListItem  Value="Bogra">Bogra</asp:ListItem>
+                                                    <asp:ListItem  Value="Chittagong">Chittagong</asp:ListItem>
+                                                    <asp:ListItem  Value="Rajshahi" >Rajshahi</asp:ListItem>
+                                                </asp:DropDownList>
+                                            </div>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Partners">
+                                        <ItemTemplate>
+                                            <div style="text-align: center;">
+                                                <asp:DropDownList ID="DropDownListPartner" runat="server" AutoPostBack="False" 
+                                                                  OnSelectedIndexChanged="DropDownListPartner_OnSelectedIndexChanged">
+                                                </asp:DropDownList>
+                                            </div>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+
+                                    <asp:TemplateField HeaderText="Action">
+                                        <ItemTemplate>
+                                            <div style="text-align: center;">
+                                                <asp:LinkButton ID="button1" Text="Assign" runat="server" OnClick="TgAssignment"  />
+                                            </div>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+
+                                </Columns>
+
+                                <EditRowStyle BackColor="#999999" />
+                                <FooterStyle BackColor="#086052" Font-Bold="True" ForeColor="White" />
+                                <HeaderStyle BackColor="#086052" Font-Bold="True" ForeColor="White" />
+                                <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
+                                <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
+                                <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
+                                <SortedAscendingCellStyle BackColor="#E9E7E2" />
+                                <SortedAscendingHeaderStyle BackColor="#506C8C" />
+                                <SortedDescendingCellStyle BackColor="#FFFDF8" />
+                                <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
+
+                            </asp:GridView>
+                            <p>
+                                <asp:Label ID="Msg" runat="server" Text="" ForeColor="Red"/>
+                            </p>
+                        <%--</ContentTemplate>--%>
+                    <%--</asp:UpdatePanel>--%>
+
+
+                    
+
+                </div>
     <%--<asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>--%>
 <ajaxToolkit:ToolkitScriptManager runat="Server" EnableScriptGlobalization="true"
                                   EnableScriptLocalization="true" ID="ToolkitScriptManager1" />
@@ -105,9 +167,14 @@
                 <asp:Timer ID="Timer1" runat="server" Interval="30000" OnTick="Timer1_Tick" Enabled="false">
                 </asp:Timer>
             </div>
-
-            <p></p>
+        <div>
+               
+            </div>
         </div>
+
+        
+
+
         <div style="padding-left: 20px;">
 
             <div style="height: 40px;"></div>
@@ -166,129 +233,8 @@
                 </div>
             </div>
 
-            <%-- Missing TG --%>
-            <div>
-                <%--div 1--%>
-                
-                <div style="float: left; padding-left: 200px">
-                    <div style="margin-right: auto; text-align: left;">
-                        <asp:Label ID="Label11" runat="server" Text="Missing Tg's" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
-                    </div>
-
-                    <%--<asp:UpdatePanel ID="UpdatePanelFormissingTg" runat="server">--%>
-                        <%--<Triggers>
-                            <asp:PostBackTrigger ControlID="ButtonCreateJob" />
-                        </Triggers>--%>
-
-
-                        <%--<ContentTemplate>--%>
-                            
-                            <asp:GridView ID="GridView11" runat="server" AutoGenerateColumns="False" CellPadding="4" DataKeyNames="id" ForeColor="#333333" GridLines="None" BorderStyle="None" BorderWidth="1" OnRowDataBound="GridView_RowDataBound">
-                                <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
-                                <Columns>
-                                    <asp:BoundField DataField="id" HeaderText="id" InsertVisible="False" ReadOnly="True" SortExpression="id" Visible="false" />
-                                    <asp:BoundField DataField="TgName" HeaderText="TgName" SortExpression="TgName" />
-                                    <asp:BoundField DataField="SwitchName" HeaderText="SwitchName" SortExpression="SwitchName" />
-                                    <asp:TemplateField HeaderText="Zone">
-                                        <ItemTemplate>
-                                            <div style="text-align: center;">
-                                                <asp:DropDownList ID="DropDownList1" runat="server"  AutoPostBack="False"
-                                                                OnSelectedIndexChanged="DropDownListOfZone_SelectedIndexChanged"
-                                                                  Enabled="True">
-                                                    <asp:ListItem  Value="Select">Select</asp:ListItem>
-                                                    <asp:ListItem  Value="Dhaka">Dhaka</asp:ListItem>
-                                                    <asp:ListItem  Value="Sylhet" >Sylhet</asp:ListItem>
-                                                    <asp:ListItem  Value="Khulna">Khulna</asp:ListItem>
-                                                    <asp:ListItem  Value="Bogra">Bogra</asp:ListItem>
-                                                    <asp:ListItem  Value="Chittagong">Chittagong</asp:ListItem>
-                                                    <asp:ListItem  Value="Rajshahi" >Rajshahi</asp:ListItem>
-                                                </asp:DropDownList>
-                                            </div>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Partners">
-                                        <ItemTemplate>
-                                            <div style="text-align: center;">
-                                                <asp:DropDownList ID="DropDownListPartner" runat="server" AutoPostBack="False" 
-                                                                  OnSelectedIndexChanged="DropDownListPartner_OnSelectedIndexChanged">
-                                                </asp:DropDownList>
-                                            </div>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-
-                                    <asp:TemplateField HeaderText="Action">
-                                        <ItemTemplate>
-                                            <div style="text-align: center;">
-                                                <asp:LinkButton ID="button1" Text="Assign" runat="server" OnClick="TgAssignment"  />
-                                            </div>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-
-                                </Columns>
-
-                                <EditRowStyle BackColor="#999999" />
-                                <FooterStyle BackColor="#086052" Font-Bold="True" ForeColor="White" />
-                                <HeaderStyle BackColor="#086052" Font-Bold="True" ForeColor="White" />
-                                <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
-                                <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
-                                <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
-                                <SortedAscendingCellStyle BackColor="#E9E7E2" />
-                                <SortedAscendingHeaderStyle BackColor="#506C8C" />
-                                <SortedDescendingCellStyle BackColor="#FFFDF8" />
-                                <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
-
-                            </asp:GridView>
-                            <p>
-                                <asp:Label ID="Msg" runat="server" Text="" ForeColor="Red"/>
-                            </p>
-                        <%--</ContentTemplate>--%>
-                    <%--</asp:UpdatePanel>--%>
-
-
-                    
-
-                </div>
-            </div>
+            
         </div>
-        <%--TGs --%>
-        <div>
-            <%--div 1--%>
-            <div style="float: left; padding-left: 200px">
-                <div style="margin-right: auto; text-align: left;">
-                    <asp:Label ID="LabelTgs" runat="server" Text="Tg List" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
-                </div>
-                <asp:ListView ID="ListViewTgs" runat="server" DataKeyNames="id">
-                    <LayoutTemplate>
-                        <table border="1" style="width: 100%;">
-                            <tr style="background-color: #086052; color: white; font-weight: bold;">
-                                <th>Tg</th>
-                                <th>SwitchName</th>
-                                <th>Zone</th>
-                                <th>Partners</th>
-                            </tr>
-                            <tr runat="server" id="itemPlaceholder"></tr>
-                        </table>
-                    </LayoutTemplate>
-                    <ItemTemplate>
-                        <tr>
-                            <td>
-                                <asp:Label runat="server" Text='<%# Eval("TgName") %>' />
-                            </td>
-                            <td>
-                                <asp:Label runat="server" Text='<%# Eval("SwitchName") %>' />
-                            </td>
-                            <td>
-                                <asp:Label runat="server" Text='<%# Eval("Zone") %>' />
-                            </td>
-                            <td>
-                                <asp:Label runat="server" Text='<%# Eval("Partner") %>' />
-                            </td>
-                        </tr>
-                    </ItemTemplate>
-                </asp:ListView>
-            </div>
-            <%--</ContentTemplate>--%>
-            <%--</asp:UpdatePanel>--%>
-        </div>
+        
     </div>
 </asp:Content>

@@ -512,6 +512,7 @@
     <Content Include="img\NAV_BG1.jpg" />
     <Content Include="img\Telcobright logo.png" />
     <Content Include="InternationalOut_ICX.aspx" />
+    <Content Include="Mediation\Tgs.aspx" />
     <Content Include="reports\BTRCReport.aspx" />
     <Content Include="reports\cal.png" />
     <Content Include="reports\CauseInternationalIn.aspx" />
@@ -928,6 +929,13 @@
     </Compile>
     <Compile Include="InternationalOut_ICX.aspx.designer.cs">
       <DependentUpon>InternationalOut_ICX.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Mediation\Tgs.aspx.cs">
+      <DependentUpon>Tgs.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Mediation\Tgs.aspx.designer.cs">
+      <DependentUpon>Tgs.aspx</DependentUpon>
     </Compile>
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\InvoiceHelper.cs" />
