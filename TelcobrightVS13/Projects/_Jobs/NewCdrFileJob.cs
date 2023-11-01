@@ -66,39 +66,44 @@ namespace Jobs
             NewCdrPreProcessor preProcessor = null;//preprecessor.txtrows contains decoded raw cdrs in string[] format
             this.Input = (CdrJobInputData)jobInputData;
 
-            if (this.Input.IsBatchJob == false)//not batch job
+            if (this.Input.IsBatchJob == false) //not batch job
             {
                 this.HandledJobs = new List<job> {this.Input.TelcobrightJob};
                 preProcessor = DecodeNewCdrFile();
-                preProcessor = preFormatRawCdrs(preProcessor);
             }
-            else//batch job
+            else //batch job
             {
                 this.HandledJobs = new List<job>();
-                this.HandledJobs.AddRange(this.Input.MergedJobsDic.Values.Select(wrappedJob=>wrappedJob.TelcobrightJob));
+                this.HandledJobs.AddRange(
+                    this.Input.MergedJobsDic.Values.Select(wrappedJob => wrappedJob.TelcobrightJob));
                 Dictionary<long, NewCdrWrappedJobForMerge> mergedJobsDic = this.Input.MergedJobsDic;
-                if (mergedJobsDic.Any() == false)//merged info must be present in cdr job input data
+                if (mergedJobsDic.Any() == false) //merged info must be present in cdr job input data
                 {
-                    throw new Exception("New cdr vs raw collection cannot be empty for merged cdr job. There must be at least one job.");
+                    throw new Exception(
+                        "New cdr vs raw collection cannot be empty for merged cdr job. There must be at least one job.");
                 }
                 NewCdrWrappedJobForMerge head = mergedJobsDic.First().Value;
                 List<NewCdrWrappedJobForMerge> tail = mergedJobsDic.Skip(1).Select(kv => kv.Value).ToList();
                 int mergedCount = head.PreProcessor.TxtCdrRows.Count + head.PreProcessor.InconsistentCdrs.Count;
                 int headTailOriginalCount = head.OriginalRows.Count + head.OriginalCdrinconsistents.Count +
-                                               tail.Sum(t => t.OriginalRows.Count + t.OriginalCdrinconsistents.Count);
+                                            tail.Sum(t => t.OriginalRows.Count + t.OriginalCdrinconsistents.Count);
 
-                int headTailOriginalPreprocessorCount = head.PreProcessor.OriginalRowsBeforeMerge.Count + head.PreProcessor.OriginalCdrinconsistents.Count +
-                                               tail.Sum(t => t.PreProcessor.OriginalRowsBeforeMerge.Count + t.PreProcessor.OriginalCdrinconsistents.Count);
+                int headTailOriginalPreprocessorCount =
+                    head.PreProcessor.OriginalRowsBeforeMerge.Count + head.PreProcessor.OriginalCdrinconsistents.Count +
+                    tail.Sum(t => t.PreProcessor.OriginalRowsBeforeMerge.Count +
+                                  t.PreProcessor.OriginalCdrinconsistents.Count);
 
-                if (mergedCount!=headTailOriginalCount || mergedCount!=headTailOriginalPreprocessorCount)
+                if (mergedCount != headTailOriginalCount || mergedCount != headTailOriginalPreprocessorCount)
                 {
-                    throw new Exception($"Head cdr count must match sum of tail jobs for merge processing. Job id:{head.TelcobrightJob.id}, job name:{head.TelcobrightJob.JobName}");
+                    throw new Exception(
+                        $"Head cdr count must match sum of tail jobs for merge processing. Job id:{head.TelcobrightJob.id}, job name:{head.TelcobrightJob.JobName}");
                 }
                 preProcessor = head.PreProcessor;
-            }
+            } //end if batch job
 
             //at this moment preProcessor has either records from a single job or merged jobs
             //duplicate cdr filter part ****************
+            preProcessor = preFormatRawCdrs(preProcessor);
             if (CollectorInput.Ne.FilterDuplicateCdr == 1 && preProcessor.TxtCdrRows.Count > 0) //filter duplicates
             {
                 preProcessor = this.filterDuplicates(preProcessor);
