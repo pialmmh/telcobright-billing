@@ -90,13 +90,15 @@ namespace Jobs
 
             //at this moment preProcessor has either records from a single job or merged jobs
             //duplicate cdr filter part ****************
-            preProcessor = initializeAndFormatCdrs(preProcessor);
+            initializeAndFormatBeforeCdrConversion(preProcessor);
             if (CollectorInput.Ne.FilterDuplicateCdr == 1 && preProcessor.TxtCdrRows.Count > 0) //filter duplicates
             {
                 preProcessor = this.filterDuplicates(preProcessor);
             }
             //end duplicate filter part
-
+            List<CdrAndInconsistentWrapper> cdrAndInconsistents =
+                parallelConvertToCdr(preProcessor, preProcessor.TxtCdrRows);
+            cdrAndInconsistents.ForEach(c => preProcessor.AddToBaseCollection(c));//add convertedCdrs to base collection
 
             CdrCollectionResult newCollectionResult, oldCollectionResult = null;
             preProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
@@ -284,16 +286,8 @@ namespace Jobs
             return fileName;
         }
 
-        private NewCdrPreProcessor initializeAndFormatCdrs(NewCdrPreProcessor preProcessor)
-        {
-            PreProcessRawCdrs(preProcessor);
-            //preProcessor.TxtCdrRows.ForEach(txtRow => this.CdrConverter(preProcessor, txtRow));
-            List<CdrAndInconsistentWrapper> cdrAndInconsistents =
-                parallelConvertToCdr(preProcessor, preProcessor.TxtCdrRows);
-            cdrAndInconsistents.ForEach(c => preProcessor.AddToBaseCollection(c));
-            return preProcessor;
-        }
-
+        
+        
         public PartialCdrTesterData OrganizeTestDataForPartialCdrs(NewCdrPreProcessor preProcessor,
             CdrCollectionResult newCollectionResult)
         {
@@ -319,7 +313,7 @@ namespace Jobs
         }
         
 
-        protected void PreProcessRawCdrs(NewCdrPreProcessor preProcessor)
+        protected void initializeAndFormatBeforeCdrConversion(NewCdrPreProcessor preProcessor)
         {
             var collectorinput = this.CollectorInput;
             SetIdCallsInSameOrderAsCollected(preProcessor, collectorinput);
@@ -591,6 +585,9 @@ namespace Jobs
             DuplicaterEventFilter<string[]> duplicaterEventFilter = new DuplicaterEventFilter<string[]>(dayWiseEventCollector);
             List<string[]> excludedDuplicateCdrs = null;
             Dictionary<string, string[]> finalNonDuplicateEvents = duplicaterEventFilter.filterDuplicateCdrs(out excludedDuplicateCdrs);
+
+            preProcessorWithCollectedRows.FinalNonDuplicateEvents = finalNonDuplicateEvents;
+
             var textCdrCollectionPreProcessor = new NewCdrPreProcessor(finalNonDuplicateEvents.Values.ToList(), cdrinconsistents,
                 this.CollectorInput)
             {

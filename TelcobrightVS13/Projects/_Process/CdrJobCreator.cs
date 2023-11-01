@@ -54,19 +54,22 @@ namespace Process
                             FileLocation fileLocation = tbc.DirectorySettings.FileLocations[vaultName];
                             string vaultPath = fileLocation.StartingPath;
                             DirectoryLister dirlister = new DirectoryLister();
-                            List<FileInfo> zipFiles = dirlister.ListLocalDirectoryZipfileNonRecursive(vaultPath);
-                            if (zipFiles.Count > 0)
+                            if (cdrSetting.UnzipCompressedFiles==true)
                             {
-                                Console.WriteLine($"Found {zipFiles.Count} zip files. Unzipping ...");
-                                this.TbConsole.WriteLine($"Found {zipFiles.Count} zip files. Unzipping ...");
-                                foreach (FileInfo compressedFile in zipFiles)
+                                List<FileInfo> zipFiles = dirlister.ListLocalDirectoryZipfileNonRecursive(vaultPath);
+                                if (zipFiles.Count > 0)
                                 {
-                                    CompressedFileHelperForVault compressedFileHelper= 
-                                        new CompressedFileHelperForVault(new List<string> { thisSwitch.FileExtension},vaultPath);
-                                    compressedFileHelper.ExtractWithSafeCopy(compressedFile.FullName);
-                                    compressedFile.Delete();//code reaching here means extraction successful, exceptions will not hit this and file will be kept
-                                    //UnZipper unzipper = new UnZipper(zipFile.FullName);
-                                    //unzipper.UnZipAll();
+                                    Console.WriteLine($"Found {zipFiles.Count} zip files. Unzipping ...");
+                                    this.TbConsole.WriteLine($"Found {zipFiles.Count} zip files. Unzipping ...");
+                                    foreach (FileInfo compressedFile in zipFiles)
+                                    {
+                                        CompressedFileHelperForVault compressedFileHelper= 
+                                            new CompressedFileHelperForVault(new List<string> { thisSwitch.FileExtension},vaultPath);
+                                        compressedFileHelper.ExtractWithSafeCopy(compressedFile.FullName);
+                                        compressedFile.Delete();//code reaching here means extraction successful, exceptions will not hit this and file will be kept
+                                        //UnZipper unzipper = new UnZipper(zipFile.FullName);
+                                        //unzipper.UnZipAll();
+                                    }
                                 }
                             }
                             

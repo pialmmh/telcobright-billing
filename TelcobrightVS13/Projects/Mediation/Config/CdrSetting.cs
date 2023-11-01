@@ -41,7 +41,6 @@ namespace TelcobrightMediation
         public bool useCasStyleProcessing { get; set; } = false;
         public Dictionary<int, NeAdditionalSetting> NeWiseAdditionalSettings { get; set; }= new Dictionary<int, NeAdditionalSetting>();
         public bool UnzipCompressedFiles { get; set; }
-
         public CdrSetting()
         {
             this.NerCalculationRule = "NerByCauseCode";
@@ -50,7 +49,6 @@ namespace TelcobrightMediation
             this.DaysToAddBeforeAndAfterUniqueDaysForSafePartialCollection = 1;
             this.IllegalStrToRemoveFromFields = new List<string>();
             this.CallConnectTimePresent = true;
-            
         }
     }
 }

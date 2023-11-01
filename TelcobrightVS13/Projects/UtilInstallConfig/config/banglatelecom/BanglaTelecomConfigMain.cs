@@ -79,9 +79,24 @@ namespace InstallConfig
                 {
                     { 9, new NeAdditionalSetting {//for huawei
                         ProcessMultipleCdrFilesInBatch = true,
+                        PreDecodeAsTextFile = true,
                         MaxConcurrentFilesForParallelPreDecoding = 10,
                         MinRowCountToStartBatchCdrProcessing = 100000,
-                        PreDecodeAsTextFile = true,
+                        MaxNumberOfFilesInPreDecodedDirectory = 500,
+                        EventPreprocessingRules = new List<EventPreprocessingRule>()
+                        {
+                            new CdrPredecoder()
+                            {
+                                RuleConfigData = new Dictionary<string,object>() { { "maxParallelFileForPreDecode", "100"}},
+                                ProcessCollectionOnly = true//does not accept single event, only list of events e.g. multiple new cdr jobs
+                            }
+                        }
+                    }},
+                    { 10, new NeAdditionalSetting {//dialogic
+                        ProcessMultipleCdrFilesInBatch = true,
+                        PreDecodeAsTextFile = false,
+                        MaxConcurrentFilesForParallelPreDecoding = 10,
+                        MinRowCountToStartBatchCdrProcessing = 100000,
                         MaxNumberOfFilesInPreDecodedDirectory = 500,
                         EventPreprocessingRules = new List<EventPreprocessingRule>()
                         {
