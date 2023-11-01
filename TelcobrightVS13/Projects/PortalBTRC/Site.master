@@ -25,10 +25,10 @@
             <div class="header" id="mygradient2" style="min-height: 50px; min-width: 100%; background-position: top; background-image: url('/img/NAV_BG1.jpg'); background-size: 100% 100%; background-size: cover; background-position: center;">
                 <div class="logo" style="float: left;">
                     <div style="float: left;">
-                        <a href="http://10.100.150.2/Dashboard">
+                        
+                        <asp:HyperLink ID="HyperLink1" runat="server"  NavigateUrl="Dashboard.aspx">
                             <img src="/img/Telcobright logo.png" style="height: 40px; padding-top: 10px; padding-left: 20%;" />
-
-                        </a>
+                        </asp:HyperLink>  
                     </div>
                 </div>
 
