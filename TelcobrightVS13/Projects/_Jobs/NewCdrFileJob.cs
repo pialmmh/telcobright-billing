@@ -56,7 +56,7 @@ namespace Jobs
             NewCdrPreProcessor preProcessor = DecodeNewCdrFile();
             if (PreDecodingStageOnly) return preProcessor;
 
-            preProcessor = preFormatRawCdrs(preProcessor);
+            //preProcessor = preFormatRawCdrs(preProcessor);
             return preProcessor;
         }
 
@@ -71,7 +71,7 @@ namespace Jobs
                 this.HandledJobs = new List<job> {this.Input.TelcobrightJob};
                 preProcessor = DecodeNewCdrFile();
             }
-            else //batch job
+            else //batch or merged job
             {
                 this.HandledJobs = new List<job>();
                 this.HandledJobs.AddRange(
@@ -84,26 +84,13 @@ namespace Jobs
                 }
                 NewCdrWrappedJobForMerge head = mergedJobsDic.First().Value;
                 List<NewCdrWrappedJobForMerge> tail = mergedJobsDic.Skip(1).Select(kv => kv.Value).ToList();
-                int mergedCount = head.PreProcessor.TxtCdrRows.Count + head.PreProcessor.InconsistentCdrs.Count;
-                int headTailOriginalCount = head.OriginalRows.Count + head.OriginalCdrinconsistents.Count +
-                                            tail.Sum(t => t.OriginalRows.Count + t.OriginalCdrinconsistents.Count);
-
-                int headTailOriginalPreprocessorCount =
-                    head.PreProcessor.OriginalRowsBeforeMerge.Count + head.PreProcessor.OriginalCdrinconsistents.Count +
-                    tail.Sum(t => t.PreProcessor.OriginalRowsBeforeMerge.Count +
-                                  t.PreProcessor.OriginalCdrinconsistents.Count);
-
-                if (mergedCount != headTailOriginalCount || mergedCount != headTailOriginalPreprocessorCount)
-                {
-                    throw new Exception(
-                        $"Head cdr count must match sum of tail jobs for merge processing. Job id:{head.TelcobrightJob.id}, job name:{head.TelcobrightJob.JobName}");
-                }
+                validateMergedCount(head, tail);
                 preProcessor = head.PreProcessor;
             } //end if batch job
 
             //at this moment preProcessor has either records from a single job or merged jobs
             //duplicate cdr filter part ****************
-            preProcessor = preFormatRawCdrs(preProcessor);
+            preProcessor = initializeAndFormatCdrs(preProcessor);
             if (CollectorInput.Ne.FilterDuplicateCdr == 1 && preProcessor.TxtCdrRows.Count > 0) //filter duplicates
             {
                 preProcessor = this.filterDuplicates(preProcessor);
@@ -142,6 +129,24 @@ namespace Jobs
                 FinalizeMergedJobs(cdrJob);
             }
             return this.HandledJobs;
+        }
+
+        private static void validateMergedCount(NewCdrWrappedJobForMerge head, List<NewCdrWrappedJobForMerge> tail)
+        {
+            int mergedCount = head.PreProcessor.TxtCdrRows.Count + head.PreProcessor.InconsistentCdrs.Count;
+            int headTailOriginalCount = head.OriginalRows.Count + head.OriginalCdrinconsistents.Count +
+                                        tail.Sum(t => t.OriginalRows.Count + t.OriginalCdrinconsistents.Count);
+
+            int headTailOriginalPreprocessorCount =
+                head.PreProcessor.OriginalRowsBeforeMerge.Count + head.PreProcessor.OriginalCdrinconsistents.Count +
+                tail.Sum(t => t.PreProcessor.OriginalRowsBeforeMerge.Count +
+                              t.PreProcessor.OriginalCdrinconsistents.Count);
+
+            if (mergedCount != headTailOriginalCount || mergedCount != headTailOriginalPreprocessorCount)
+            {
+                throw new Exception(
+                    $"Head cdr count must match sum of tail jobs for merge processing. Job id:{head.TelcobrightJob.id}, job name:{head.TelcobrightJob.JobName}");
+            }
         }
 
         private bool checkIfPreDecodingStage(Dictionary<string, object> dataAsDic)
@@ -279,7 +284,7 @@ namespace Jobs
             return fileName;
         }
 
-        private NewCdrPreProcessor preFormatRawCdrs(NewCdrPreProcessor preProcessor)
+        private NewCdrPreProcessor initializeAndFormatCdrs(NewCdrPreProcessor preProcessor)
         {
             PreProcessRawCdrs(preProcessor);
             //preProcessor.TxtCdrRows.ForEach(txtRow => this.CdrConverter(preProcessor, txtRow));
