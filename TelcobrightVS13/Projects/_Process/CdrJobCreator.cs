@@ -115,7 +115,7 @@ namespace Process
 
                         //most of the files should be finished written by now, still...
                         //double check if file is still being written, by trying exclusive f open
-                        var templist = fileInfos;
+                        var templist = fileInfos;//add logic to check if this file already exists in job table
                         fileInfos = new List<FileInfo>();
                         foreach (var fileInfo in templist)
                         {
