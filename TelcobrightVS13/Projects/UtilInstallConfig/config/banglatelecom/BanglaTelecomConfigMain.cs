@@ -95,7 +95,7 @@ namespace InstallConfig
                     }},
                     { 10, new NeAdditionalSetting {//dialogic
                         ProcessMultipleCdrFilesInBatch = true,
-                        PreDecodeAsTextFile = false,
+                        PreDecodeAsTextFile = true,
                         MaxConcurrentFilesForParallelPreDecoding = 10,
                         MinRowCountToStartBatchCdrProcessing = 100000,
                         MaxNumberOfFilesInPreDecodedDirectory = 500,
