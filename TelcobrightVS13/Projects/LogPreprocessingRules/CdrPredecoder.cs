@@ -61,6 +61,9 @@ namespace LogPreProcessor
             PartnerEntities context = (PartnerEntities)dataAsDic["partnerEntities"];
             TBConsole tbConsole = (TBConsole)dataAsDic["tbConsole"];
             NeAdditionalSetting neAdditionalSetting = (NeAdditionalSetting)dataAsDic["neAdditionalSetting"];
+            if (neAdditionalSetting?.PreDecodeAsTextFile == false)
+                return;
+
             int maxParallelPreDecoding = neAdditionalSetting.MaxConcurrentFilesForParallelPreDecoding;
             int maxNumberOfFilesToPreDecode = neAdditionalSetting.MaxNumberOfFilesInPreDecodedDirectory;
 
