@@ -12,12 +12,12 @@ namespace LibraryExtensions
 {
     public class CompressedFileLinesReader
     {
-        public string CompressedFileName { get;}
+        public FileInfo CompressedFileInfo { get;}
         public string ExtractedTempFileName { get; }
         public DirectoryInfo ExtractedTempDir { get; }
         public CompressedFileLinesReader(string compressedFileName)
         {
-            this.CompressedFileName = compressedFileName;
+            this.CompressedFileInfo = new FileInfo(compressedFileName);
             this.ExtractedTempDir = new DirectoryInfo("tempcdr" + compressedFileName.GetHashCode());
 
             if (!Directory.Exists(this.ExtractedTempDir.Name))
@@ -28,13 +28,15 @@ namespace LibraryExtensions
             {
                 this.ExtractedTempDir.DeleteContentRecusively();
             }
-            this.ExtractedTempFileName= this.ExtractedTempDir.Name + Path.DirectorySeparatorChar + Path.GetFileName(compressedFileName) + Guid.NewGuid().ToString();
+            this.ExtractedTempFileName = this.ExtractedTempDir.Name + Path.DirectorySeparatorChar +
+                                         Path.GetFileNameWithoutExtension(this.CompressedFileInfo.FullName);
+
         }
 
         public string[] readLinesFromCompressedFile()
         {
             // Extract the .gz file into the temporary file
-            using (FileStream gzFileStream = File.OpenRead(this.CompressedFileName))
+            using (FileStream gzFileStream = File.OpenRead(this.CompressedFileInfo.FullName))
             {
                 using (FileStream tempFileStream = File.Create(this.ExtractedTempFileName))
                 {
