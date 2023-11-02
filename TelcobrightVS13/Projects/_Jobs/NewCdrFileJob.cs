@@ -139,6 +139,7 @@ namespace Jobs
                 throw new Exception("Connection should only be open after preprocessing new cdr job.");
             }
             cmd.Connection.Open();
+            this.Input.MediationContext.CreateTemporaryTables();
             cmd.ExecuteCommandText("set autocommit=0;");
         }
 

@@ -266,7 +266,7 @@ namespace TelcobrightMediation
                 rules: rules);
             return mefValidator;
         }
-        private void CreateTemporaryTables()
+        public void CreateTemporaryTables()
         {
             DbCommand cmd = this.Context.Database.Connection.CreateCommand();
             cmd.CommandType = CommandType.Text;

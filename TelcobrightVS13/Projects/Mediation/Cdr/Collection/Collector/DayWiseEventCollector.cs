@@ -131,14 +131,13 @@ namespace TelcobrightMediation
                                     {
                                         existingEvents.Add(
                                             (T)decoder
-                                                .convertDbReaderRowToUniqueEventTuple(reader[0])); //collect uniqueevent
+                                                .convertDbReaderRowToUniqueEventTuple(reader)); //collect uniqueevent
                                     }
                                     else
                                     {
                                         existingEvents.Add(
                                             (T)decoder
-                                                .convertDbReaderRowToUniqueEventTuple(
-                                                    reader[0])); //collect full event e.g. cdr as string[]
+                                                .convertDbReaderRowToUniqueEventTuple(reader)); //collect full event e.g. cdr as string[]
                                     }
                                 }
                                 reader.Close();
