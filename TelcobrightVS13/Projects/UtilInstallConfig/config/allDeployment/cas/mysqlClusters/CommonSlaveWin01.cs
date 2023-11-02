@@ -22,8 +22,8 @@ namespace InstallConfig
             RootPasswordForAutomation = "Takay1takaane",
             Users = new List<MySqlUser>()
             {
-                new MySqlUser(username: CasNewDbHelper.Db.AdminUserName,
-                    password: CasNewDbHelper.Db.AdminPassword,
+                new MySqlUser(username: CasDockerDbHelper.Db.AdminUserName,
+                    password: CasDockerDbHelper.Db.AdminPassword,
                     hostnameOrIpAddresses: AppServerHostnamesForCas.Hostnames,
                     permissions: new List<MySqlPermission>
                     {

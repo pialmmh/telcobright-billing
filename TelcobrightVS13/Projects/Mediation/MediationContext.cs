@@ -82,11 +82,11 @@ namespace TelcobrightMediation
             this.BillingSpans = context.enumbillingspans.ToDictionary(c => c.ofbiz_uom_Id); //route data
             this.Routes = context.routes.Include(r => r.partner)
                 .ToDictionary(r => new ValueTuple<int, string>(r.SwitchId, r.RouteName));
-            this.IpAddressorPointCodes = context.Database
-                .SqlQuery<ipaddressorpointcode>("select routename from ipaddressorpointcode")
-                .ToDictionary(entity => entity.RouteName);
-            this.IpAddressOrPointCodeTrie = new Trie(this.IpAddressorPointCodes.Keys,
-                this.Tbc.DefaultRootCharForTrie);
+            //this.IpAddressorPointCodes = context.Database
+            //    .SqlQuery<ipaddressorpointcode>("select routename from ipaddressorpointcode")
+            //    .ToDictionary(entity => entity.RouteName);
+            //this.IpAddressOrPointCodeTrie = new Trie(this.IpAddressorPointCodes.Keys,
+            //    this.Tbc.DefaultRootCharForTrie);
             this.BridgedRoutes = context.bridgedroutes.Include(r => r.partner).Include(r => r.partner1)
                 .ToDictionary(r => new ValueTuple<int, string>(r.switchId, r.routeName));
 
