@@ -37,7 +37,8 @@ namespace TelcobrightFileOperations
                 {
                     Console.WriteLine(exception.Message);
 
-                    File.AppendAllText("telcobright.log", JsonConvert.SerializeObject(thisError) + Environment.NewLine);
+                    File.AppendAllText("telcobright.log", $"Error: {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + JsonConvert.SerializeObject(thisError)} " 
+                        + Environment.NewLine);
                 }
             }
             catch (Exception e2) //database error
