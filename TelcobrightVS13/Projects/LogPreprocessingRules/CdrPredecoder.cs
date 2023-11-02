@@ -117,6 +117,7 @@ namespace LogPreProcessor
             string preDecodedDirName = "";
             string preDecodedFileName = "";
             getPathNamesForPreDecoding(newCdrFileJobs.First(), thisSwitch, tbc, out preDecodedDirName, out preDecodedFileName);
+            if (!Directory.Exists(preDecodedDirName)) return 0;
             int noOfExistingPreDecodedfiles = Directory.GetFiles(preDecodedDirName, "*.predecoded").Length;
             return noOfExistingPreDecodedfiles;
         }
