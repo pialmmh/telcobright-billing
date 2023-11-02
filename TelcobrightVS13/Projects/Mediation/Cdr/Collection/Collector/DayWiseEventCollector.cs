@@ -93,32 +93,32 @@ namespace TelcobrightMediation
         public void collectTupleWiseExistingEvents(AbstractCdrDecoder decoder)
         {
             //List<DateTime> daysInvolved = this.DayWiseHourlyEvents.Keys.ToList();
-            foreach (var kv in this.DayAndHourWiseEvents)
+            using (MySqlConnection con = new MySqlConnection(this.ConStr))
             {
-                DateTime date = kv.Key;
-                string tableName = this.SourceTablePrefix + "_" + date.ToMySqlFormatDateOnlyWithoutTimeAndQuote().Replace("-", "");
-
-                Dictionary<DateTime, HourlyEventData<T>> hourlyDic = kv.Value;
-                string sql = $@"{decoder.getSelectExpressionForUniqueEvent(this.CollectorInput)} from {tableName} where {Environment.NewLine}";
-                List<string> whereClausesByHour= hourlyDic.Select(kvHour =>
+                con.Open();
+                using (MySqlCommand cmd = new MySqlCommand("", con))
                 {
-                    HourlyEventData<T> hourWiseData = kvHour.Value;
-                    var data = new Dictionary<string, object>
+                    foreach (var kv in this.DayAndHourWiseEvents)
                     {
-                        {"collectorInput", this.CollectorInput},
-                        {"hourWiseData", hourWiseData}
-                    };
-                    return this.Decoder.getWhereForHourWiseCollection(data);
-                }).ToList();
-                sql += string.Join(" or " +Environment.NewLine, whereClausesByHour);
+                        DateTime date = kv.Key;
+                        string tableName = this.SourceTablePrefix + "_" + date.ToMySqlFormatDateOnlyWithoutTimeAndQuote().Replace("-", "");
 
-                List<T> existingEvents = new List<T>();
-                if (whereClausesByHour.Any())
-                {
-                    using (MySqlConnection con= new MySqlConnection(this.ConStr))
-                    {
-                        con.Open();
-                        using (MySqlCommand cmd = new MySqlCommand("", con))
+                        Dictionary<DateTime, HourlyEventData<T>> hourlyDic = kv.Value;
+                        string sql = $@"{decoder.getSelectExpressionForUniqueEvent(this.CollectorInput)} from {tableName} where {Environment.NewLine}";
+                        List<string> whereClausesByHour = hourlyDic.Select(kvHour =>
+                        {
+                            HourlyEventData<T> hourWiseData = kvHour.Value;
+                            var data = new Dictionary<string, object>
+                            {
+                                {"collectorInput", this.CollectorInput},
+                                {"hourWiseData", hourWiseData}
+                            };
+                            return this.Decoder.getWhereForHourWiseCollection(data);
+                        }).ToList();
+                        sql += string.Join(" or " + Environment.NewLine, whereClausesByHour);
+
+                        List<T> existingEvents = new List<T>();
+                        if (whereClausesByHour.Any())
                         {
                             cmd.CommandText = sql;
                             cmd.CommandType = CommandType.Text;
@@ -129,11 +129,16 @@ namespace TelcobrightMediation
                                 {
                                     if (UniqueEventsOnly)
                                     {
-                                        existingEvents.Add((T)decoder.convertDbReaderRowToUniqueEventTuple(reader[0]));//collect uniqueevent
+                                        existingEvents.Add(
+                                            (T)decoder
+                                                .convertDbReaderRowToUniqueEventTuple(reader[0])); //collect uniqueevent
                                     }
                                     else
                                     {
-                                        existingEvents.Add((T)decoder.convertDbReaderRowToUniqueEventTuple(reader[0]));//collect full event e.g. cdr as string[]
+                                        existingEvents.Add(
+                                            (T)decoder
+                                                .convertDbReaderRowToUniqueEventTuple(
+                                                    reader[0])); //collect full event e.g. cdr as string[]
                                     }
                                 }
                                 reader.Close();
@@ -149,15 +154,14 @@ namespace TelcobrightMediation
                                 reader.Close();
                             }
                         }
-                        con.Close();
+                        this.ExistingEvents = existingEvents;
+                        if (this.UniqueEventsOnly == true)
+                        {
+                            checkForDuplicatesAndThrow();
+                        }
                     }
-                    
                 }
-                this.ExistingEvents = existingEvents;
-                if (this.UniqueEventsOnly==true)
-                {
-                    checkForDuplicatesAndThrow();
-                }
+                con.Close();
             }
         }
 
@@ -217,11 +221,14 @@ namespace TelcobrightMediation
 
                 lock (_synchronouslockWhileExecutingDdl)
                 {
-                    DaywiseTableManager.CreateTables(tablePrefix: tablePrefix,
-                        templateSql: templateSql,
-                        dateTimes: tableDatesToBeCreated,
-                        con: con,
-                        partitionByHour: true, engine: tableStorageEngine, partitionColName: "starttime");
+                    if (tableDatesToBeCreated.Any())
+                    {
+                        DaywiseTableManager.CreateTables(tablePrefix: tablePrefix,
+                            templateSql: templateSql,
+                            dateTimes: tableDatesToBeCreated,
+                            con: con,
+                            partitionByHour: true, engine: tableStorageEngine, partitionColName: "starttime");
+                    }
                 }
                 con.Close();
             }
