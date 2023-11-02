@@ -81,18 +81,39 @@ namespace LogPreProcessor
             {
                 var enumerable = segment as job[] ?? segment.ToArray();
                 BlockingCollection<job> successfullyPreDecodedJobs = new BlockingCollection<job>();
-                Parallel.ForEach(enumerable.AsParallel(), thisJob =>
+                bool disableParallelMediationForDebug =
+                    Convert.ToBoolean(ConfigurationManager.AppSettings["disableParallelMediationForDebug"]);
+                if (disableParallelMediationForDebug)
                 {
-                    try
+                    Console.WriteLine("Parallel mediation is disabled, this will affect performance.");
+                    foreach (var thisJob in enumerable)
                     {
-                        preDecodeFiles(thisJob, mediationContext, thisSwitch, tbc, context, newCdrFileJob);
-                        successfullyPreDecodedJobs.Add(thisJob);
+                        try
+                        {
+                            preDecodeFiles(thisJob, mediationContext, thisSwitch, tbc, context, newCdrFileJob);
+                            successfullyPreDecodedJobs.Add(thisJob);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e.ToString());//just print to console and continue with next job;
+                        }
                     }
-                    catch (Exception e)
+                }
+                else
+                {
+                    Parallel.ForEach(enumerable.AsParallel(), thisJob =>
                     {
-                        Console.WriteLine(e.ToString());//just print to console and continue with next job;
-                    }
-                });
+                        try
+                        {
+                            preDecodeFiles(thisJob, mediationContext, thisSwitch, tbc, context, newCdrFileJob);
+                            successfullyPreDecodedJobs.Add(thisJob);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e.ToString());//just print to console and continue with next job;
+                        }
+                    });
+                }
                 //can't write to db in parallel, reader busy error occurs
                 //no worries about failed jobs, they will be retried again or decoded again in decoder if .predecoded file doesn't exist
                 //no need for commit or rollback too.
