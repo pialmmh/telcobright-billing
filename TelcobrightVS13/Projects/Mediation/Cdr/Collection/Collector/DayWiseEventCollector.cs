@@ -24,14 +24,14 @@ namespace TelcobrightMediation
         private string DatabaseName { get; set; }
         private string ConStr { get; set; }
         public AbstractCdrDecoder Decoder { get; }
-        public List<T> DecodedEvents { get; }
-        public Dictionary<string, List<T>> TupleWiseDecodedEvents { get; } 
+        public List<string[]> DecodedEvents { get; }
+        public Dictionary<string, List<string[]>> TupleWiseDecodedEvents { get; } 
         public Dictionary<DateTime, Dictionary<DateTime, HourlyEventData<T>>> DayAndHourWiseEvents { get; }
         public List<T> ExistingEvents = new List<T>();
         public string SourceTablePrefix { get; set; }
 
         public DayWiseEventCollector(bool uniqueEventsOnly, CdrCollectorInputData collectorInput, DbCommand dbCmd,
-            AbstractCdrDecoder decoder, List<T> decodedEvents, string sourceTablePrefix)
+            AbstractCdrDecoder decoder, List<string[]> decodedEvents, string sourceTablePrefix)
         {
             this.UniqueEventsOnly = uniqueEventsOnly;
             this.SourceTablePrefix = sourceTablePrefix;
@@ -44,17 +44,17 @@ namespace TelcobrightMediation
             CdrSetting cdrSetting = this.CollectorInput.CdrSetting;
             var pastHoursToSeekForCollection = cdrSetting.HoursToAddBeforeForSafePartialCollection;
             var nextHoursToSeekForCollection = cdrSetting.HoursToAddAfterForSafePartialCollection;
-            this.TupleWiseDecodedEvents = decodedEvents.Select(e =>
+            this.TupleWiseDecodedEvents = decodedEvents.Select(row =>
             {
                 var data = new Dictionary<string, object>
                 {
                     {"collectorInput", this.CollectorInput},
-                    {"row", e}
+                    {"row", row}
                 };
                 return new
                 {
                     Tuple = decoder.getTupleExpression(data),
-                    Event = e
+                    Event = row
                 };
             }).GroupBy(a=>a.Tuple).ToDictionary(g => g.Key, g=>g.Select(groupEvents=>groupEvents.Event).ToList());
             this.DayAndHourWiseEvents = decodedEvents.SelectMany(row =>
