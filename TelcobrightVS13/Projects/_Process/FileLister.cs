@@ -100,8 +100,7 @@ namespace Process
                         catch (Exception e1)
                         {
                             Console.WriteLine(e1);
-                            ErrorWriter wr =
-                                new ErrorWriter(e1, "FileLister/Filename:" + fileName, null, "", operatorName, context);
+                            ErrorWriter.WriteError(e1, "FileLister/Filename:" + fileName, null, "", operatorName, context);
                             continue; //with next file
                         }
                     }
@@ -116,7 +115,7 @@ namespace Process
             catch (Exception e1)
             {
                 Console.WriteLine(e1);
-                ErrorWriter wr = new ErrorWriter(e1, "FileLister", null, "", operatorName, context);
+                ErrorWriter.WriteError(e1, "FileLister", null, "", operatorName, context);
             }
         }
 

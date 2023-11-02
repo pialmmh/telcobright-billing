@@ -74,7 +74,7 @@ namespace Process
                                                       " JobName:" + telcobrightJob.JobName);
                                     Console.WriteLine(e.Message);
                                     cmd.ExecuteCommandText(" rollback; ");
-                                    ErrorWriter wr = new ErrorWriter(e, "AccountingHelper", telcobrightJob,
+                                    ErrorWriter.WriteError(e, "AccountingHelper", telcobrightJob,
                                         "Accounting job error.", tbc.Telcobrightpartner.CustomerName, context);
                                     try
                                     {
@@ -89,7 +89,7 @@ namespace Process
                                     }
                                     catch (Exception e2)
                                     {
-                                        ErrorWriter wr2 = new ErrorWriter(e2, "Accounting Helper", telcobrightJob,
+                                        ErrorWriter.WriteError(e2, "Accounting Helper", telcobrightJob,
                                             "Exception within catch block.", tbc.Telcobrightpartner.CustomerName,
                                             context);
                                     }
@@ -108,7 +108,7 @@ namespace Process
             catch (Exception e1)
             {
                 Console.WriteLine(e1);
-                ErrorWriter wr = new ErrorWriter(e1, "AccountingHelper", null, "", operatorName,context);
+                ErrorWriter.WriteError(e1, "AccountingHelper", null, "", operatorName,context);
             }
         }
 

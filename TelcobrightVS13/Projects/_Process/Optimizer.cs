@@ -118,9 +118,7 @@ namespace Process
                                     "set autocommit=1;"; //must change back immediately, even if rollback occurs
                                 cmd.ExecuteNonQuery();
 
-
-                                ErrorWriter wr = new ErrorWriter(e1, "Optimizer", thisJob, "", operatorName, context);
-
+                                ErrorWriter.WriteError(e1, "Optimizer", thisJob, "", operatorName, context);
                                 //also save the error information within the job
                                 //use try catch in case DB is not accesible
                                 try
@@ -137,8 +135,7 @@ namespace Process
                                 }
                                 catch (Exception e2)
                                 {
-                                    ErrorWriter wr2 =
-                                        new ErrorWriter(e2, "Optimizer", thisJob, "", operatorName, context);
+                                    ErrorWriter.WriteError(e2, "Optimizer", thisJob, "", operatorName, context);
                                 }
                                 continue; //with next cdr or job
                             } //end catch
@@ -149,7 +146,7 @@ namespace Process
             catch (Exception e1)
             {
                 Console.WriteLine(e1);
-                ErrorWriter wr = new ErrorWriter(e1, "Optimizer", null, "", operatorName, context);
+                ErrorWriter.WriteError(e1, "Optimizer", null, "", operatorName, context);
             }
         }
 

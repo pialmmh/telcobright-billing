@@ -87,7 +87,7 @@ namespace Process
                                     }
                                     catch (Exception e2)
                                     {
-                                        ErrorWriter wr2 = new ErrorWriter(e2, "ProcessInvoiceGenerator",
+                                        ErrorWriter.WriteError(e2, "ProcessInvoiceGenerator",
                                             telcobrightJob,
                                             "Exception within catch block.",
                                             tbc.Telcobrightpartner.CustomerName,context);
@@ -107,7 +107,7 @@ namespace Process
             catch (Exception e1)
             {
                 Console.WriteLine(e1);
-                ErrorWriter wr = new ErrorWriter(e1, "ProcessInvoiceGenerator", null, "", operatorName,context);
+                ErrorWriter.WriteError(e1, "ProcessInvoiceGenerator", null, "", operatorName,context);
             }
         }
 

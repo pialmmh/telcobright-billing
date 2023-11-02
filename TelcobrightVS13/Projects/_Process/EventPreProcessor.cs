@@ -85,7 +85,7 @@ namespace Process
                     catch (Exception e1)
                     {
                         Console.WriteLine(e1);
-                        ErrorWriter wr = new ErrorWriter(e1, "EventPreProcessor", null, "NE:" + ne.idSwitch,
+                        ErrorWriter.WriteError(e1, "EventPreProcessor", null, "NE:" + ne.idSwitch,
                             tbc.Telcobrightpartner.CustomerName,context);
                         continue; //with next switch
                     }
@@ -94,7 +94,7 @@ namespace Process
             catch (Exception e1)
             {
                 Console.WriteLine(e1);
-                ErrorWriter wr = new ErrorWriter(e1,"EventPreProcessor",null,"",operatorName,context);
+                ErrorWriter.WriteError(e1,"EventPreProcessor",null,"",operatorName,context);
             }
         }
 

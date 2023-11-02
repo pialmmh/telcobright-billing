@@ -405,7 +405,7 @@
     <Compile Include="FileOperations\RemoteDirectoryLister.cs" />
     <Compile Include="FileOperations\_DirectorySyncSettings.cs" />
     <Compile Include="FileOperations\_FileOperations.cs" />
-    <Compile Include="FileOperations\_WriteError.cs" />
+    <Compile Include="FileOperations\ErrorWriter.cs" />
     <Compile Include="MefData\ServiceContext.cs" />
     <Compile Include="Models\PortalObjects.cs" />
     <Compile Include="Rating\PrefixMatcher.cs" />

@@ -176,8 +176,7 @@ namespace Process
                     catch (Exception e1)
                     {
                         Console.WriteLine(e1);
-                        ErrorWriter wr =
-                            new ErrorWriter(e1, "CdrJobCreator/SwitchId:" + thisSwitch.idSwitch, null, "",
+                        ErrorWriter.WriteError(e1, "CdrJobCreator/SwitchId:" + thisSwitch.idSwitch, null, "",
                                 operatorName, context);
                     } //catch
                 } //for each customerswitchinfo
@@ -185,7 +184,7 @@ namespace Process
             catch (Exception e1)
             {
                 Console.WriteLine(e1);
-                ErrorWriter wr = new ErrorWriter(e1, "CdrJobCreator", null, "", operatorName,context);
+                ErrorWriter.WriteError(e1, "CdrJobCreator", null, "", operatorName,context);
             }
         }
 

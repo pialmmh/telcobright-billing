@@ -115,7 +115,7 @@ namespace TelcobrightMediation
                         {
                             Console.WriteLine(e);
                             cmd.ExecuteCommandText("rollback;"); //rollback immediately
-                            ErrorWriter wr = new ErrorWriter(e, $@"Segmented Job Processor", this.TelcobrightJob,
+                            ErrorWriter.WriteError(e, $@"Segmented Job Processor", this.TelcobrightJob,
                                 "Error Processing Segments of batch job " + this.TelcobrightJob.JobName, 
                                 "", this.Context);
                             throw; // do not continue on error other than rateCache exception for cdrJobs

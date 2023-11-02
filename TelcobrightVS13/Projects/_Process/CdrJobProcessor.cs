@@ -181,7 +181,7 @@ namespace Process
                                         cacheLimitExceeded = RateCacheCleaner.ClearTempRateTable(e, cmd);
                                         if (cacheLimitExceeded) continue;
                                         PrintErrorMessageToConsole(ne, job, e);
-                                        ErrorWriter wr = new ErrorWriter(e, "ProcessCdr", job,
+                                        ErrorWriter.WriteError(e, "ProcessCdr", job,
                                             "CdrJob processing error.", tbc.Telcobrightpartner.CustomerName, context);
                                         try
                                         {
@@ -190,7 +190,7 @@ namespace Process
                                         catch (Exception e2)
                                         {
                                             resetMergeJobStatus();
-                                            ErrorWriter wr2 = new ErrorWriter(e2, "ProcessCdr", job,
+                                            ErrorWriter.WriteError(e2, "ProcessCdr", job,
                                                 "Exception within catch block.",
                                                 tbc.Telcobrightpartner.CustomerName, context);
                                             continue;
@@ -230,7 +230,7 @@ namespace Process
                     catch (Exception e1)
                     {
                         Console.WriteLine(e1);
-                        ErrorWriter wr = new ErrorWriter(e1, "ProcessCdr", null, "NE:" + ne.idSwitch,
+                        ErrorWriter.WriteError(e1, "ProcessCdr", null, "NE:" + ne.idSwitch,
                             tbc.Telcobrightpartner.CustomerName, context);
                         continue; //with next switch
                     }
@@ -239,7 +239,7 @@ namespace Process
             catch (Exception e1)
             {
                 Console.WriteLine(e1);
-                ErrorWriter wr = new ErrorWriter(e1, "ProcessCdr", null, "", operatorName, context);
+                ErrorWriter.WriteError(e1, "ProcessCdr", null, "", operatorName, context);
             }
         }
 
