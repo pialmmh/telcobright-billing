@@ -27,10 +27,10 @@ namespace Decoders
         {
             this.Input = input;
             string fileName = this.Input.FullPath;
-            List<string> tempLines = FileAndPathHelper.readLinesFromCompressedFile(fileName).ToList();
+            CompressedFileLinesReader linesReader = new CompressedFileLinesReader(fileName);
+            List<string> tempLines = linesReader.readLinesFromCompressedFile().ToList();
             List<string[]> lines = FileUtil.ParseLinesWithEnclosedAndUnenclosedFields(',', "\"", tempLines)
                 .Skip(1).ToList();
-
             return decodeLines(input, out inconsistentCdrs, fileName, lines);
         }
     }
