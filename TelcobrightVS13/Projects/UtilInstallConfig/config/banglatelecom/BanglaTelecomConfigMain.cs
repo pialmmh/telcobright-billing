@@ -60,7 +60,7 @@ namespace InstallConfig
                 PartialCdrEnabledNeIds = new List<int>() { },//7, was set to non-partial processing mode due to duplicate billid problem.
                 PartialCdrFlagIndicators = new List<string>() { },//{"1", "2", "3"},
                 DescendingOrderWhileListingFiles = false,
-                DescendingOrderWhileProcessingListedFiles = false,
+                DescendingOrderWhileProcessingListedFiles = true,
                 ValidationRulesForCommonMediationCheck = commonCdrValRulesGen.GetRules(),
                 ValidationRulesForInconsistentCdrs = inconsistentCdrValRulesGen.GetRules(),
                 ServiceGroupConfigurations = this.GetServiceGroupConfigurations(),
@@ -95,7 +95,7 @@ namespace InstallConfig
                     }},
                     { 10, new NeAdditionalSetting {//dialogic
                         ProcessMultipleCdrFilesInBatch = true,
-                        PreDecodeAsTextFile = true,
+                        PreDecodeAsTextFile = false,
                         MaxConcurrentFilesForParallelPreDecoding = 10,
                         MinRowCountToStartBatchCdrProcessing = 100000,
                         MaxNumberOfFilesInPreDecodedDirectory = 500,

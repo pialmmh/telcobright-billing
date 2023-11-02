@@ -18,7 +18,7 @@ namespace LibraryExtensions
         public CompressedFileLinesReader(string compressedFileName)
         {
             this.CompressedFileInfo = new FileInfo(compressedFileName);
-            this.ExtractedTempDir = new DirectoryInfo("tempcdr" + compressedFileName.GetHashCode());
+            this.ExtractedTempDir = new DirectoryInfo(this.CompressedFileInfo.Name);
 
             if (!Directory.Exists(this.ExtractedTempDir.Name))
             {
@@ -43,8 +43,11 @@ namespace LibraryExtensions
                     using (GZipStream gzipStream = new GZipStream(gzFileStream, CompressionMode.Decompress))
                     {
                         gzipStream.CopyTo(tempFileStream);
+                        gzipStream.Close();
                     }
+                    tempFileStream.Close();
                 }
+                gzFileStream.Close();
             }
             // Read all lines from the temporary file
             string[] lines = File.ReadAllLines(this.ExtractedTempFileName);
