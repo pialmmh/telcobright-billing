@@ -222,7 +222,10 @@ namespace TelcobrightFileOperations
                 }
                 string tempExt = "";
                 string secondaryDirectory = syncSettingsSource.SecondaryDirectory;
-                string alternateDownloadPathFromSecondaryDir = "";
+                string alternateDownloadPathFromSecondaryDir =
+                    Path.GetDirectoryName(srcInfoRemote.FullPath) + "/" + secondaryDirectory + "/" +
+                    Path.GetFileName(srcInfoRemote.FullPath);
+                bool alreadyDownloadingFromSecondaryDir = false;
                 if (dstSettings.FileExtensionForSafeCopyWithTempFile != "")
                 {
                     RemoteFileInfo remoteFileInfo = null;
@@ -239,17 +242,16 @@ namespace TelcobrightFileOperations
                         if (e.Message.Contains("Can't get attributes of file") && !secondaryDirectory//file not found and there is a downloaded dir
                                 .IsNullOrEmptyOrWhiteSpace())
                         {
-                            alternateDownloadPathFromSecondaryDir =
-                                Path.GetDirectoryName(srcInfoRemote.FullPath) + "/" + secondaryDirectory + "/" +
-                                Path.GetFileName(srcInfoRemote.FullPath);
+                            
                             srcInfoRemote.FullPath = alternateDownloadPathFromSecondaryDir;
+                            remoteFileInfo = session.GetFileInfo(srcInfoRemote.FullPath);
+                            alreadyDownloadingFromSecondaryDir = true;
                         }
                         else
                         {
                             Console.WriteLine(e);
                             throw;
                         }
-                        
                     }
                     session.GetFiles(srcInfoRemote.FullPath, tempFile, removeOriginal);
                     if (removeOriginal == true)
@@ -258,7 +260,7 @@ namespace TelcobrightFileOperations
                     }
                     else if (!secondaryDirectory.IsNullOrEmptyOrWhiteSpace())//move to secondary dir if set in config
                     {
-                        if (alternateDownloadPathFromSecondaryDir.IsNullOrEmptyOrWhiteSpace())//but it's not already in downloaded dir
+                        if (!alreadyDownloadingFromSecondaryDir)
                         {
                             session.MoveFile(srcInfoRemote.FullPath,alternateDownloadPathFromSecondaryDir);
                         }

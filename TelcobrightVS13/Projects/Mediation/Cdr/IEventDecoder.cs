@@ -22,6 +22,7 @@ namespace TelcobrightMediation
         DateTime getEventDatetime(Object data);
         object convertDbReaderRowToUniqueEventTuple(object data);
         object convertDbReaderRowToObject(object data);
+        IEventDecoder createNewNonSingletonInstance();
     }
     
 }

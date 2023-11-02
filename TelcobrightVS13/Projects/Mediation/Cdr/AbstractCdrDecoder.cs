@@ -108,6 +108,12 @@ namespace TelcobrightMediation
             return row;
         }
 
+        public virtual IEventDecoder createNewNonSingletonInstance()
+        {
+            Type t = this.GetType();
+            return (IEventDecoder)Activator.CreateInstance(t);
+        }
+
 
         private static string getSessionId(string[] row)
         {

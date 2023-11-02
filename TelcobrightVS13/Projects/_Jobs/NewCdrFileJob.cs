@@ -55,10 +55,13 @@ namespace Jobs
             Dictionary<string, object> dataAsDic = (Dictionary<string, object>)data;
             this.Input = (CdrJobInputData)dataAsDic["cdrJobInputData"];
             this.PreDecodingStageOnly= checkIfPreDecodingStage(dataAsDic);
-            NewCdrPreProcessor preProcessor = DecodeNewCdrFile();
-            if (PreDecodingStageOnly) return preProcessor;
-
-            //preProcessor = preFormatRawCdrs(preProcessor);
+            NewCdrPreProcessor preProcessor = null;
+            if (PreDecodingStageOnly)
+            {
+                preProcessor = DecodeNewCdrFile(preDecodingStage: true);
+                return preProcessor;
+            }
+            preProcessor = DecodeNewCdrFile(preDecodingStage: false);
             return preProcessor;
         }
 
@@ -71,7 +74,7 @@ namespace Jobs
             if (this.Input.IsBatchJob == false) //not batch job
             {
                 this.HandledJobs = new List<job> { this.Input.TelcobrightJob };
-                preProcessor = DecodeNewCdrFile();
+                preProcessor = DecodeNewCdrFile(preDecodingStage: false);
             }
             else //batch or merged job
             {
@@ -278,12 +281,16 @@ namespace Jobs
             return handledJobs;
         }
 
-        private NewCdrPreProcessor DecodeNewCdrFile()
+        private NewCdrPreProcessor DecodeNewCdrFile(bool preDecodingStage)
         {
             string fileName = getFullPathOfCdrFile();
             this.CollectorInput = new CdrCollectorInputData(this.Input, fileName);
             var cdrCollector = new FileBasedTextCdrCollector(this.CollectorInput);
             AbstractCdrDecoder decoder = cdrCollector.getDecoder();
+            if (preDecodingStage)
+            {
+                decoder = (AbstractCdrDecoder) decoder.createNewNonSingletonInstance();//singleton was causing io problem during predecoding file I/O
+            }
             List<cdrinconsistent> cdrinconsistents = new List<cdrinconsistent>();
             if (this.PreDecodingStageOnly)//PREDECODING
             {
