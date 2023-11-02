@@ -44,6 +44,12 @@ namespace LibraryExtensions
             return GetTopShelfDir()
                    + Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar + "config";
         }
+
+        public string GetTopShelfConfigDirForCas()
+        {
+            return GetTopShelfDir()
+                   + Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar + "Debug";
+        }
         public string GetPortalBinPath()
         {
             return Directory.GetParent(Directory
