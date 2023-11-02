@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -11,38 +12,7 @@ namespace LibraryExtensions
 {
     public static class FileAndPathHelper
     {
-        public static string[] readLinesFromCompressedFile(string fileName)
-        {
-            DirectoryInfo tempDir = new DirectoryInfo("tempcdr");
-            if (Directory.Exists(tempDir.Name) == false)
-            {
-                Directory.CreateDirectory(tempDir.Name);
-            }
-            else
-            {
-                tempDir.DeleteContentRecusively();
-            }
-            string compressedFile = fileName;
-            string tempFileName = tempDir.Name + Path.DirectorySeparatorChar +  Path.GetFileName(fileName) + Guid.NewGuid().ToString();
-
-            
-            // Extract the .gz file into the temporary file
-            using (FileStream gzFileStream = File.OpenRead(compressedFile))
-            {
-                using (FileStream tempFileStream = File.Create(tempFileName))
-                {
-                    using (GZipStream gzipStream = new GZipStream(gzFileStream, CompressionMode.Decompress))
-                    {
-                        gzipStream.CopyTo(tempFileStream);
-                    }
-                }
-            }
-            // Read all lines from the temporary file
-            string[] lines = File.ReadAllLines(tempFileName);
-            // Delete the temporary file
-            File.Delete(tempFileName);
-            return lines;
-        }
+        
 
         public static string readTextFromCompressedFile(string fileName)
         {

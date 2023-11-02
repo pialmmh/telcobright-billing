@@ -54,12 +54,13 @@ namespace TelcobrightMediation
             StaticExtInsertColumnParsedDic.Parse();
             this.Tbc = tbc;
             this.Context = context;
+            var cdrSetting = this.CdrSetting;
             this.AutoIncrementManager = new AutoIncrementManager(
                 counter => (int)AutoIncrementTypeDictionary.EnumTypes[counter.tableName],
                 counter => counter.GetExtInsertValues(),
                 counter => counter.GetUpdateCommand(
                     c => $@" where tableName='{AutoIncrementTypeDictionary.EnumTypes[counter.tableName]}'"),
-                null, this.Context.Database.Connection.CreateCommand(), this.CdrSetting.SegmentSizeForDbWrite);
+                null, this.Context.Database.Connection.CreateCommand(), cdrSetting.SegmentSizeForDbWrite);
             this.AutoIncrementManager.PopulateCache(() => context.autoincrementcounters
                 .ToDictionary(c => (int)AutoIncrementTypeDictionary.EnumTypes[c.tableName]));
 
@@ -265,7 +266,7 @@ namespace TelcobrightMediation
                 rules: rules);
             return mefValidator;
         }
-        private void CreateTemporaryTables()
+        public void CreateTemporaryTables()
         {
             DbCommand cmd = this.Context.Database.Connection.CreateCommand();
             cmd.CommandType = CommandType.Text;

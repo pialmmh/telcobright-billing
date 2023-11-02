@@ -161,8 +161,8 @@ namespace Jobs
             }
             else
             {
-                preProcessor.TxtCdrRows =
-                    preProcessor.FilterCdrsWithDuplicateBillIdsAsInconsistent(preProcessor.TxtCdrRows);
+                //preProcessor.TxtCdrRows =
+                  //  preProcessor.FilterCdrsWithDuplicateBillIdsAsInconsistent(preProcessor.TxtCdrRows);
                 preProcessor.TxtCdrRows.AsParallel().ForAll(row=>row[Fn.Partialflag]="0");
             }
 

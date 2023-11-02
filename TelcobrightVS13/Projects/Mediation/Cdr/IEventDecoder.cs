@@ -20,6 +20,8 @@ namespace TelcobrightMediation
         string getWhereForHourWiseCollection(Object data);
         string getSelectExpressionForPartialCollection(Object data);
         DateTime getEventDatetime(Object data);
+        object convertDbReaderRowToUniqueEventTuple(object data);
+        object convertDbReaderRowToObject(object data);
     }
     
 }

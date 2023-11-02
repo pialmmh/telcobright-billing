@@ -8,6 +8,7 @@ namespace MediationModel
 {
 	public partial class ne:ICacheble<ne>
 	{
+	    public override string ToString() => this.SwitchName;
 	    public StringBuilder GetExtInsertValues()
 	    {
 	        return new StringBuilder("(")

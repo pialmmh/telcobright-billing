@@ -51,6 +51,10 @@ namespace Process
                     {
                         NeAdditionalSetting neAdditionalSetting = null;
                         cdrSetting.NeWiseAdditionalSettings.TryGetValue(ne.idSwitch, out neAdditionalSetting);
+                        if (ne.UseIdCallAsBillId==1 && ne.FilterDuplicateCdr==1)
+                        {
+                            throw new Exception("Idcall cannot be used as uniquebillid when duplicate filtering is on.");
+                        }
                         int minRowCountForBatchProcessing = neAdditionalSetting?.MinRowCountToStartBatchCdrProcessing ?? 1;
                         Dictionary<long, NewCdrWrappedJobForMerge> mergedJobsDic = new Dictionary<long, NewCdrWrappedJobForMerge>(); //key=idJob
                         NewCdrWrappedJobForMerge headJobForMerge = null;
@@ -72,50 +76,52 @@ namespace Process
                             ITelcobrightJob telcobrightJob = null;
                             using (DbCommand cmd = context.Database.Connection.CreateCommand())
                             {
-                                foreach (job job in incompleteJobs)
+                                foreach (job job in incompleteJobs)//for each job********************************************
                                 {
                                     this.TbConsole.WriteLine("Processing CdrJob for Switch:" + ne.SwitchName + ", JobName:" +
                                                              job.JobName);
                                     try
                                     {
-                                        if (cmd.Connection.State != ConnectionState.Open) cmd.Connection.Open();
-                                        cmd.ExecuteCommandText("set autocommit=0;");
+                                        closeDbConnection(cmd);//connection will be opened inside newcdr file job after creating daywise tables as table creation ddl asks for transaction restart
                                         mediationContext.MefJobContainer.DicExtensionsIdJobWise.TryGetValue(
                                             job.idjobdefinition.ToString(), out telcobrightJob);
                                         if (telcobrightJob == null)
                                             throw new Exception("JobRule not found in MEF collection.");
                                         cdrJobInputData =
                                             new CdrJobInputData(mediationContext, context, ne, job);
-                                        if (job.idjobdefinition!=1)//error process or re-process job, not merging, process as a single job*************
+                                        if (job.idjobdefinition != 1)//error process or re-process job, not merging, process as a single job*************
                                         {
                                             telcobrightJob.Execute(cdrJobInputData); //EXECUTE
                                             cmd.ExecuteCommandText(" commit; ");
+                                            closeDbConnection(cmd);
                                             continue;
                                         }
-                                        else if (neAdditionalSetting == null || 
-                                            neAdditionalSetting?.ProcessMultipleCdrFilesInBatch==false)//new cdr job, not merging, process as single job
+                                        else if (neAdditionalSetting == null ||
+                                            neAdditionalSetting?.ProcessMultipleCdrFilesInBatch == false)//new cdr job, not merging, process as single job
                                         {
                                             telcobrightJob.Execute(cdrJobInputData); //EXECUTE
                                             cmd.ExecuteCommandText(" commit; ");
+                                            closeDbConnection(cmd);
                                             continue;
                                         }
-                                        else if(neAdditionalSetting?.ProcessMultipleCdrFilesInBatch == true)//merge new cdr jobs for batch processing
+                                        else if (neAdditionalSetting?.ProcessMultipleCdrFilesInBatch == true)//merge new cdr jobs for batch processing
                                         {
-                                            var inputForPreprocess = new Dictionary<string,object>
+                                            var inputForPreprocess = new Dictionary<string, object>
                                             {
                                                 { "cdrJobInputData",cdrJobInputData}
                                             };
                                             NewCdrPreProcessor preProcessor =
-                                                (NewCdrPreProcessor) telcobrightJob.PreprocessJob(inputForPreprocess);//execute pre-processing
-                                            if (headJobForMerge==null && preProcessor.TxtCdrRows.Count>=minRowCountForBatchProcessing)//already large job, process as single
+                                                (NewCdrPreProcessor)telcobrightJob.PreprocessJob(inputForPreprocess);//execute pre-processing
+                                            if (headJobForMerge == null && preProcessor.TxtCdrRows.Count >= minRowCountForBatchProcessing)//already large job, process as single
                                             {//but if merge in progress, do not process as single job, headjob for merge!=null means mergeInProgress
                                                 telcobrightJob.Execute(cdrJobInputData); //not merging, process as single job************
                                                 cmd.ExecuteCommandText(" commit; ");
+                                                closeDbConnection(cmd);
                                                 continue;
                                             }
                                             //merge job for batch processing*******************
                                             NewCdrWrappedJobForMerge newWrappedJob = new NewCdrWrappedJobForMerge(job, preProcessor);
-                                            if (headJobForMerge==null)//empty list of merged job, add the first one (head)
+                                            if (headJobForMerge == null)//empty list of merged job, add the first one (head)
                                             {
                                                 headJobForMerge = newWrappedJob;
                                                 mergedJobsDic.Add(headJobForMerge.TelcobrightJob.id, newWrappedJob);
@@ -125,12 +131,13 @@ namespace Process
                                             {
                                                 mergedJobsDic.Add(newWrappedJob.TelcobrightJob.id, newWrappedJob);
                                                 rowCountSoFarForMerge = headJobForMerge.AppendTailJobRows(newWrappedJob);//apend head+new tail jobs rows
-                                                if (rowCountSoFarForMerge>=minRowCountForBatchProcessing)//enough jobs have been merged for batch processing 
+                                                if (rowCountSoFarForMerge >= minRowCountForBatchProcessing)//enough jobs have been merged for batch processing 
                                                 {
                                                     cdrJobInputData.MergedJobsDic = mergedJobsDic;
-                                                    object retVal= telcobrightJob.Execute(cdrJobInputData);//Execute as merged job************************
+                                                    object retVal = telcobrightJob.Execute(cdrJobInputData);//Execute as merged job************************
                                                     telcobrightJob.PostprocessJob(retVal);
                                                     cmd.ExecuteCommandText(" commit; ");
+                                                    closeDbConnection(cmd);
                                                     resetMergeJobStatus();
                                                 }
                                             }
@@ -144,6 +151,7 @@ namespace Process
                                             resetMergeJobStatus();
                                             if (cmd.Connection.State != ConnectionState.Open) cmd.Connection.Open();
                                             cmd.ExecuteCommandText(" rollback; ");
+                                            closeDbConnection(cmd);
                                             bool cacheLimitExceeded =
                                                 RateCacheCleaner.CheckAndClearRateCache(mediationContext, e);
                                             if (cacheLimitExceeded) continue;
@@ -188,6 +196,7 @@ namespace Process
                                     cdrJobInputData.MergedJobsDic = mergedJobsDic;
                                     telcobrightJob.Execute(cdrJobInputData);//process as merged job************************
                                     cmd.ExecuteCommandText(" commit; ");
+                                    closeDbConnection(cmd);
                                     resetMergeJobStatus();
                                 }
                             } //using mysql command
@@ -208,6 +217,11 @@ namespace Process
                 Console.WriteLine(e1);
                 ErrorWriter wr = new ErrorWriter(e1,"ProcessCdr",null,"",operatorName);
             }
+        }
+
+        private static void closeDbConnection(DbCommand cmd)
+        {
+            if (cmd.Connection.State != ConnectionState.Closed) cmd.Connection.Close();
         }
 
         private static void PrintErrorMessageToConsole(ne ne, job telcobrightJob, Exception e)

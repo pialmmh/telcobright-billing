@@ -61,6 +61,9 @@ namespace LogPreProcessor
             PartnerEntities context = (PartnerEntities)dataAsDic["partnerEntities"];
             TBConsole tbConsole = (TBConsole)dataAsDic["tbConsole"];
             NeAdditionalSetting neAdditionalSetting = (NeAdditionalSetting)dataAsDic["neAdditionalSetting"];
+            if (neAdditionalSetting?.PreDecodeAsTextFile == false)
+                return;
+
             int maxParallelPreDecoding = neAdditionalSetting.MaxConcurrentFilesForParallelPreDecoding;
             int maxNumberOfFilesToPreDecode = neAdditionalSetting.MaxNumberOfFilesInPreDecodedDirectory;
 
@@ -114,6 +117,7 @@ namespace LogPreProcessor
             string preDecodedDirName = "";
             string preDecodedFileName = "";
             getPathNamesForPreDecoding(newCdrFileJobs.First(), thisSwitch, tbc, out preDecodedDirName, out preDecodedFileName);
+            if (!Directory.Exists(preDecodedDirName)) return 0;
             int noOfExistingPreDecodedfiles = Directory.GetFiles(preDecodedDirName, "*.predecoded").Length;
             return noOfExistingPreDecodedfiles;
         }

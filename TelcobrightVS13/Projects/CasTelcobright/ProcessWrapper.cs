@@ -10,6 +10,7 @@ using LibraryExtensions;
 using WS_Telcobright_Topshelf;
 using System.Configuration;
 using System.Diagnostics;
+using System.IO;
 using System.Security.Permissions;
 using TelcobrightInfra;
 
@@ -45,9 +46,16 @@ namespace CasTelcobright
                 ProcessStartInfo processStartInfo;
                 StringBuilder outputBuilder;
                 outputBuilder = new StringBuilder();
-                string fileName = @"D:\TelcobrightProject\TelcobrightVS13\Projects\WS_Topshelf_Quartz\bin\Debug\WS_Telcobright_Topshelf.exe";
-            
-                processStartInfo = getProcessStartInfo(fileName);
+                ConfigPathHelper configPathHelper = new ConfigPathHelper(
+                    "WS_Topshelf_Quartz",
+                    "portal",
+                    "UtilInstallConfig",
+                    "generators", "");
+                string deployedInstancesPath = configPathHelper.GetTopShelfConfigDirForCas();
+                DirectoryInfo deployDir = new DirectoryInfo(deployedInstancesPath);
+                //string fileName = @"D:\TelcobrightProject\TelcobrightVS13\Projects\WS_Topshelf_Quartz\bin\Debug\WS_Telcobright_Topshelf.exe";
+                string topshelfPath = deployDir.FullName + Path.DirectorySeparatorChar + "WS_Telcobright_Topshelf.exe";
+                processStartInfo = getProcessStartInfo(topshelfPath);
 
                 process.OutputDataReceived += ProcessOnOutputDataReceived();
                 process.Start();
@@ -106,7 +114,7 @@ namespace CasTelcobright
             {
                 if(!this.process.HasExited)
                 {
-                    System.Diagnostics.Process procs = System.Diagnostics.Process.GetProcessById(this.processId, "."); // use "." for this machine
+                    Process procs = Process.GetProcessById(this.processId, "."); // use "." for this machine
                     procs.Kill();
                 }
                    

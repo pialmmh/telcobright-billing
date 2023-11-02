@@ -56,23 +56,21 @@ namespace TelcobrightMediation
             }
         }
 
-        
-
-        public List<string[]> FilterCdrsWithDuplicateBillIdsAsInconsistent(List<string[]> txtRows)
-        {
-            List<string[]> dupRows = txtRows.GroupBy(c => c[Fn.UniqueBillId]).Where(g => g.Count() > 1)
-                .Select(g => g.ToList())
-                .SelectMany(c => c).ToList();
-            txtRows = txtRows.Where(r => !dupRows.Select(dupRow => dupRow[Fn.UniqueBillId]).ToList()
-                .Contains(r[Fn.UniqueBillId])).ToList();
-            dupRows.ForEach(
-                dupRow =>
-                {
-                    dupRow[Fn.ErrorCode] = "Duplicate billids are not allowed when partial cdrs are disabled.";
-                    base.InconsistentCdrs.Add(CdrConversionUtil.ConvertTxtRowToCdrinconsistent(dupRow));
-                });
-            return txtRows;
-        }
+        //public List<string[]> FilterCdrsWithDuplicateBillIdsAsInconsistent(List<string[]> txtRows)
+        //{
+        //    List<string[]> dupRows = txtRows.GroupBy(c => c[Fn.UniqueBillId]).Where(g => g.Count() > 1)
+        //        .Select(g => g.ToList())
+        //        .SelectMany(c => c).ToList();
+        //    txtRows = txtRows.Where(r => !dupRows.Select(dupRow => dupRow[Fn.UniqueBillId]).ToList()
+        //        .Contains(r[Fn.UniqueBillId])).ToList();
+        //    dupRows.ForEach(
+        //        dupRow =>
+        //        {
+        //            dupRow[Fn.ErrorCode] = "Duplicate billids are not allowed when partial cdrs are disabled.";
+        //            base.InconsistentCdrs.Add(CdrConversionUtil.ConvertTxtRowToCdrinconsistent(dupRow));
+        //        });
+        //    return txtRows;
+        //}
 
         public CdrAndInconsistentWrapper ConvertToCdr(string[] row)
         {

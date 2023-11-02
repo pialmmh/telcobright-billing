@@ -44,7 +44,7 @@ namespace InstallConfig.config._helper
                 DisableParallelMediation = false,
                 AutoCorrectDuplicateBillId = false,
                 AutoCorrectBillIdsWithPrevChargeableIssue = false,
-                AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
+                AutoCorrectDuplicateBillIdBeforeErrorProcess = false,
                 ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>(),
                 BatchSizeWhenPreparingLargeSqlJob = 100000,
                 SkipSettingsForSummaryOnly = new SkipSettingsForSummaryOnly
