@@ -13,7 +13,7 @@ namespace LibraryExtensions
     {
         public static string[] readLinesFromCompressedFile(string fileName)
         {
-            DirectoryInfo tempDir = new DirectoryInfo("tempcdr");
+            DirectoryInfo tempDir = new DirectoryInfo("tempcdr" + fileName.GetHashCode());
             if (Directory.Exists(tempDir.Name) == false)
             {
                 Directory.CreateDirectory(tempDir.Name);
@@ -41,6 +41,7 @@ namespace LibraryExtensions
             string[] lines = File.ReadAllLines(tempFileName);
             // Delete the temporary file
             File.Delete(tempFileName);
+            Directory.Delete(tempDir.FullName,true);
             return lines;
         }
 
