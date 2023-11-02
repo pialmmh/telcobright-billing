@@ -598,7 +598,7 @@ namespace Jobs
             List<string[]> decodedCdrRows = preProcessorWithCollectedRows.TxtCdrRows;
             List<cdrinconsistent> cdrinconsistents = preProcessorWithCollectedRows.InconsistentCdrs.ToList();
             DbCommand cmd = this.CollectorInput.CdrJobInputData.Context.Database.Connection.CreateCommand();
-            DayWiseEventCollector<string> dayWiseEventCollector = new DayWiseEventCollector<string>
+            DayWiseEventCollector<string[]> dayWiseEventCollector = new DayWiseEventCollector<string[]>
                                                                         (uniqueEventsOnly: true,
                                                                             collectorInput: this.CollectorInput,
                                                                             dbCmd: cmd, decoder: decoder,

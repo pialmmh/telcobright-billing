@@ -93,7 +93,7 @@ namespace TelcobrightMediation
         public object convertDbReaderRowToUniqueEventTuple(object data)
         {
             DbDataReader reader = (DbDataReader) data;
-            return reader[0].ToString();
+            return new string[] {reader[0].ToString()};
         }
 
         public object convertDbReaderRowToObject(object data)
