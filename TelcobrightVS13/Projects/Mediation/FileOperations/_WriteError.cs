@@ -12,7 +12,7 @@ namespace TelcobrightFileOperations
     {
        
         public ErrorWriter(Exception e, string processInformation, job telcobrightJob, string messageToPrepend,
-            string operatorName, PartnerEntities partnerEntities = null, TBConsole tbConsole = null)
+            string operatorName, PartnerEntities partnerEntities)
         {
             try
             {
@@ -35,29 +35,15 @@ namespace TelcobrightFileOperations
                 }
                 catch(Exception exception)
                 {
-                    if (tbConsole != null)
-                    {
-                        tbConsole.WriteLine(exception.Message);
-                    }
-                    else
-                    {
-                        Console.WriteLine(exception.Message);
-                    }
-                    
+                    Console.WriteLine(exception.Message);
+
                     File.AppendAllText("telcobright.log", JsonConvert.SerializeObject(thisError) + Environment.NewLine);
                 }
             }
             catch (Exception e2) //database error
             {
-                if (tbConsole != null)
-                {
-                    tbConsole.WriteLine(e2.ToString());
-                }
-                else
-                {
-                    Console.WriteLine(e2);
-                }
-                
+                Console.WriteLine(e2);
+
                 try
                 {
                     allerror thisError = new allerror

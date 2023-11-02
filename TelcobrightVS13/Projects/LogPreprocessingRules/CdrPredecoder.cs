@@ -59,7 +59,6 @@ namespace LogPreProcessor
             TelcobrightConfig tbc = mediationContext.Tbc;
             List<job> newCdrFileJobs = (List<job>)dataAsDic["newCdrFileJobs"];
             PartnerEntities context = (PartnerEntities)dataAsDic["partnerEntities"];
-            TBConsole tbConsole = (TBConsole)dataAsDic["tbConsole"];
             NeAdditionalSetting neAdditionalSetting = (NeAdditionalSetting)dataAsDic["neAdditionalSetting"];
             if (neAdditionalSetting?.PreDecodeAsTextFile == false)
                 return;
@@ -86,12 +85,12 @@ namespace LogPreProcessor
                 {
                     try
                     {
-                        preDecodeFiles(thisJob, mediationContext, thisSwitch, tbc, context, tbConsole, newCdrFileJob);
+                        preDecodeFiles(thisJob, mediationContext, thisSwitch, tbc, context, newCdrFileJob);
                         successfullyPreDecodedJobs.Add(thisJob);
                     }
                     catch (Exception e)
                     {
-                        tbConsole.WriteLine(e.ToString());//just print to console and continue with next job;
+                        Console.WriteLine(e.ToString());//just print to console and continue with next job;
                     }
                 });
                 //can't write to db in parallel, reader busy error occurs
@@ -123,9 +122,9 @@ namespace LogPreProcessor
         }
 
         private static void preDecodeFiles(job thisJob, MediationContext mediationContext, ne thisSwitch,
-            TelcobrightConfig tbc, PartnerEntities context, TBConsole tbConsole, ITelcobrightJob newCdrFileJob)
+            TelcobrightConfig tbc, PartnerEntities context, ITelcobrightJob newCdrFileJob)
         {
-            tbConsole.WriteLine("Predecoding CdrJob for Switch:" + thisSwitch.SwitchName + ", JobName:" +
+            Console.WriteLine("Predecoding CdrJob for Switch:" + thisSwitch.SwitchName + ", JobName:" +
                                 thisJob.JobName);
             var cdrJobInputData = new CdrJobInputData(mediationContext, context, thisSwitch, thisJob);
             if (thisJob.idjobdefinition != 1)

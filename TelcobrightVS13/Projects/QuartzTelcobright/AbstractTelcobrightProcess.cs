@@ -15,8 +15,6 @@ namespace QuartzTelcobright
         public abstract string HelpText { get; }
         public abstract int ProcessId { get; }
         public abstract void Execute(IJobExecutionContext context);
-
-        public TBConsole TbConsole { get; set; }
         //public static void updateHeartbeat(IJobExecutionContext context, string heartbitMsg) {}
     }
 }

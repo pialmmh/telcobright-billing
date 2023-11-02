@@ -35,68 +35,66 @@ namespace Process
         public override void Execute(IJobExecutionContext schedulerContext)
         {
             string operatorName = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");
-            try
+            TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(
+                schedulerContext, operatorName);
+            CdrSetting cdrSetting = tbc.CdrSetting;
+            string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName, tbc);
+            PartnerEntities context = new PartnerEntities(entityConStr);
+                try
             {
-                TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(
-                    schedulerContext, operatorName);
-                CdrSetting cdrSetting= tbc.CdrSetting;
-                string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName,tbc);
-                using (PartnerEntities context = new PartnerEntities(entityConStr))
+                context.Database.Connection.Open();
+                var mediationContext = new MediationContext(tbc, context);
+                tbc.GetPathIndependentApplicationDirectory();
+                foreach (ne ne in mediationContext.Nes.Values)
                 {
-                    context.Database.Connection.Open();
-                    var mediationContext = new MediationContext(tbc, context);
-                    tbc.GetPathIndependentApplicationDirectory();
-                    foreach (ne ne in mediationContext.Nes.Values)
+                    try
                     {
-                        try
-                        {
-                            NeAdditionalSetting neAdditionalSetting = null;
-                            if (cdrSetting.NeWiseAdditionalSettings.
-                                TryGetValue(ne.idSwitch, out neAdditionalSetting) == false) continue;
-                            List<EventPreprocessingRule> eventPreprocessingRules = neAdditionalSetting.EventPreprocessingRules;
-                            if (eventPreprocessingRules.Any() == false) continue;
-                            eventPreprocessingRules.ForEach(rule => rule.PrepareRule());
+                        NeAdditionalSetting neAdditionalSetting = null;
+                        if (cdrSetting.NeWiseAdditionalSettings.TryGetValue(ne.idSwitch, out neAdditionalSetting) ==
+                            false) continue;
+                        List<EventPreprocessingRule> eventPreprocessingRules =
+                            neAdditionalSetting.EventPreprocessingRules;
+                        if (eventPreprocessingRules.Any() == false) continue;
+                        eventPreprocessingRules.ForEach(rule => rule.PrepareRule());
 
-                            if (ne.SkipCdrDecoded == 1 || CheckIncompleteExists(context, mediationContext, ne) == false)
-                                continue;
-                            List<job> incompleteJobs = GetNewCdrJobs(tbc, context, ne, ne.DecodingSpanCount);
-                            if (incompleteJobs.Any() == false) continue;
-                            
-                            foreach (var eventPreprocessingRule in eventPreprocessingRules)
-                            {
-                                if (eventPreprocessingRule.ProcessCollectionOnly == true)
-                                {
-                                    var ruleInputData = new Dictionary<string, object>()
-                                    {
-                                        {"mediationContext", mediationContext},
-                                        {"ne", ne},
-                                        {"newCdrFileJobs", incompleteJobs},
-                                        {"partnerEntities", context},
-                                        {"tbConsole", TbConsole},
-                                        {"neAdditionalSetting",neAdditionalSetting }
-                                    };
-                                    eventPreprocessingRule.Execute(ruleInputData);
-                                }
-                                else //single job logic not implemented yet
-                                {
-                                    throw new NotImplementedException();
-                                }
-                            }
-                        } //try for each NE
-                        catch (Exception e1)
+                        if (ne.SkipCdrDecoded == 1 || CheckIncompleteExists(context, mediationContext, ne) == false)
+                            continue;
+                        List<job> incompleteJobs = GetNewCdrJobs(tbc, context, ne, ne.DecodingSpanCount);
+                        if (incompleteJobs.Any() == false) continue;
+
+                        foreach (var eventPreprocessingRule in eventPreprocessingRules)
                         {
-                            Console.WriteLine(e1);
-                            ErrorWriter wr = new ErrorWriter(e1, "EventPreProcessor", null, "NE:" + ne.idSwitch,
-                                tbc.Telcobrightpartner.CustomerName);
-                            continue; //with next switch
+                            if (eventPreprocessingRule.ProcessCollectionOnly == true)
+                            {
+                                var ruleInputData = new Dictionary<string, object>()
+                                {
+                                    {"mediationContext", mediationContext},
+                                    {"ne", ne},
+                                    {"newCdrFileJobs", incompleteJobs},
+                                    {"partnerEntities", context},
+                                    {"neAdditionalSetting", neAdditionalSetting}
+                                };
+                                eventPreprocessingRule.Execute(ruleInputData);
+                            }
+                            else //single job logic not implemented yet
+                            {
+                                throw new NotImplementedException();
+                            }
                         }
-                    } //for each NE
-                }
+                    } //try for each NE
+                    catch (Exception e1)
+                    {
+                        Console.WriteLine(e1);
+                        ErrorWriter wr = new ErrorWriter(e1, "EventPreProcessor", null, "NE:" + ne.idSwitch,
+                            tbc.Telcobrightpartner.CustomerName,context);
+                        continue; //with next switch
+                    }
+                } //for each NE
             } //try
             catch (Exception e1)
             {
                 Console.WriteLine(e1);
-                ErrorWriter wr = new ErrorWriter(e1,"EventPreProcessor",null,"",operatorName);
+                ErrorWriter wr = new ErrorWriter(e1,"EventPreProcessor",null,"",operatorName,context);
             }
         }
 

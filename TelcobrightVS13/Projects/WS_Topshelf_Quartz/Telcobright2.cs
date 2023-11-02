@@ -40,7 +40,6 @@ namespace WS_Telcobright_Topshelf
         public string InstanceName { get; set; }
         public static MefCollectiveAssemblyComposer mefColllectiveAssemblyComposer { get; set; }
         public static MefProcessContainer mefProcessContainer { get; set; }
-        private TBConsole TbConsole { get; set; }
         private MySqlConnection Con { get; set;}
         private string ConStr { get; set; }
         public string DeploymentRoot { get;}
@@ -49,7 +48,6 @@ namespace WS_Telcobright_Topshelf
         public Telcobright2(string instanceName, Action<string> callbackFromUI)
         {
             this.InstanceName = instanceName;
-            this.TbConsole = new TBConsole(this.InstanceName, callbackFromUI);
             UpwordPathFinder<DirectoryInfo> pathFinder= new UpwordPathFinder<DirectoryInfo>("WS_Topshelf_Quartz");
             string topshelfDir = pathFinder.FindAndGetFullPath();
             this.DeploymentRoot = Path.Combine(new DirectoryInfo(topshelfDir).FullName,"deployedInstances");
@@ -72,7 +70,7 @@ namespace WS_Telcobright_Topshelf
                 try
                 {
                     Console.WriteLine("Starting Telcobright Scheduler.");
-                    mefProcessContainer = new MefProcessContainer(mefColllectiveAssemblyComposer,this.TbConsole);
+                    mefProcessContainer = new MefProcessContainer(mefColllectiveAssemblyComposer);
                     TelcobrightConfig tbc = GetTelcobrightConfig(configFileName);
                     provider.SchedulerHost = $"tcp://localhost:{tbc.TcpPortNoForRemoteScheduler}/QuartzScheduler";
                     provider.Init();
@@ -130,7 +128,7 @@ namespace WS_Telcobright_Topshelf
         private void ErrorCheck(object state)
         {
             string msg = "Checking Error at: " + DateTime.Now;
-            TbConsole.WriteLine(msg);
+            Console.WriteLine(msg);
             //DbUtil.getDbConStrWithDatabase(this.instanceName)
             using (MySqlConnection con= new MySqlConnection(ConStr))
             {
@@ -141,7 +139,7 @@ namespace WS_Telcobright_Topshelf
                     using (MySqlCommand command = new MySqlCommand(sql, con))
                     {
                         long count = (long)command.ExecuteScalar();
-                        TbConsole.WriteLine($"errorCount={count}");
+                        Console.WriteLine($"errorCount={count}");
                     }
                 }
                 catch (Exception ex)

@@ -33,108 +33,105 @@ namespace Process
         public override string HelpText => "Auto create Cdr Error Processing Job";
         public override int ProcessId => 110;
 
-    
+
         public override void Execute(IJobExecutionContext schedulerContext)
         {
             string operatorName = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");
-            //this.TbConsole.WriteLine($"CdrErrorJobCreater {operatorName}");
-            //return;
+            TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(
+                schedulerContext, operatorName);
+            string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName, tbc);
+            PartnerEntities context = new PartnerEntities(entityConStr);
             try
             {
-                TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(
-                    schedulerContext, operatorName);
-                string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName, tbc);
-                using (PartnerEntities context = new PartnerEntities(entityConStr))
+                int idOprator = context.telcobrightpartners
+                    .Where(c => c.databasename == tbc.Telcobrightpartner.databasename).Select(c => c.idCustomer)
+                    .First();
+                foreach (ne thisSwitch in context.nes.Where(c => c.idCustomer == idOprator).ToList())
                 {
-                    int idOprator = context.telcobrightpartners
-                        .Where(c => c.databasename == tbc.Telcobrightpartner.databasename).Select(c => c.idCustomer)
-                        .First();
-                    foreach (ne thisSwitch in context.nes.Where(c => c.idCustomer == idOprator).ToList())
+                    try
                     {
-                        try
-                        {
-                            if (thisSwitch.SkipCdrDecoded == 1) continue;
-                            bool errorCdrExists = context.Database.SqlQuery<long>(
-                                    $@"select idcall from cdrerror where switchid={thisSwitch.idSwitch} limit 0,1")
-                                .ToList()
-                                .Any();
-                            if (errorCdrExists == false) continue;
-                            bool errorJobExists = context.Database.SqlQuery<string>(
-                                    $@"select jobname from job where idne={thisSwitch.idSwitch}
+                        if (thisSwitch.SkipCdrDecoded == 1) continue;
+                        bool errorCdrExists = context.Database.SqlQuery<long>(
+                                $@"select idcall from cdrerror where switchid={thisSwitch.idSwitch} limit 0,1")
+                            .ToList()
+                            .Any();
+                        if (errorCdrExists == false) continue;
+                        bool errorJobExists = context.Database.SqlQuery<string>(
+                            $@"select jobname from job where idne={thisSwitch.idSwitch}
                                        and jobname like 'autoError_%' and status!=1 limit 0,1").ToList().Any();
-                            if (errorJobExists == true) continue;
-                            List<SqlSingleWhereClauseBuilder> whereParamsSingle =
-                                new List<SqlSingleWhereClauseBuilder>()
+                        if (errorJobExists == true) continue;
+                        List<SqlSingleWhereClauseBuilder> whereParamsSingle =
+                            new List<SqlSingleWhereClauseBuilder>()
+                            {
+                                new SqlSingleWhereClauseBuilder(SqlWhereAndOrType.And)
                                 {
-                                    new SqlSingleWhereClauseBuilder(SqlWhereAndOrType.And)
-                                    {
-                                        Expression = "starttime>=",
-                                        ParamType = SqlWhereParamType.Datetime,
-                                        AndOrType = 0,
-                                        ParamValue = "2023-01-01 00:00:00",
-                                        PrependWith = null,
-                                        ApendWith = null
-                                    },
-                                    new SqlSingleWhereClauseBuilder(SqlWhereAndOrType.And)
-                                    {
-                                        Expression = "starttime<=",
-                                        ParamType = SqlWhereParamType.Datetime,
-                                        ParamValue = "2044-01-01 23:59:59",
-                                        PrependWith = null,
-                                        ApendWith = null
-                                    },
-                                    new SqlSingleWhereClauseBuilder(SqlWhereAndOrType.And)
-                                    {
-                                        Expression = "switchid=",
-                                        ParamType = SqlWhereParamType.Numeric,
-                                        ParamValue = thisSwitch.idSwitch.ToString(),
-                                        PrependWith = null,
-                                        ApendWith = null
-                                    },
-                                };
+                                    Expression = "starttime>=",
+                                    ParamType = SqlWhereParamType.Datetime,
+                                    AndOrType = 0,
+                                    ParamValue = "2023-01-01 00:00:00",
+                                    PrependWith = null,
+                                    ApendWith = null
+                                },
+                                new SqlSingleWhereClauseBuilder(SqlWhereAndOrType.And)
+                                {
+                                    Expression = "starttime<=",
+                                    ParamType = SqlWhereParamType.Datetime,
+                                    ParamValue = "2044-01-01 23:59:59",
+                                    PrependWith = null,
+                                    ApendWith = null
+                                },
+                                new SqlSingleWhereClauseBuilder(SqlWhereAndOrType.And)
+                                {
+                                    Expression = "switchid=",
+                                    ParamType = SqlWhereParamType.Numeric,
+                                    ParamValue = thisSwitch.idSwitch.ToString(),
+                                    PrependWith = null,
+                                    ApendWith = null
+                                },
+                            };
 
-                            BatchSqlJobParamJson thisJobParam = new BatchSqlJobParamJson(
-                                tableName: "cdrerror",
-                                batchSize: 10000,
-                                lstWhereParamsSingle: whereParamsSingle,
-                                lstWhereParamsMulti: new List<SqlMultiWhereClauseBuilder>(),
-                                columnExpressions: new List<string>() {"IdCall as RowId", "starttime as RowDateTime"},
-                                startPartitionDate: new DateTime(2022, 01, 01),
-                                endPartitionDate: new DateTime(2044, 01, 01),
-                                partitionColName: "starttime",
-                                rowIdColName: "idCall"
-                            );
+                        BatchSqlJobParamJson thisJobParam = new BatchSqlJobParamJson(
+                            tableName: "cdrerror",
+                            batchSize: 10000,
+                            lstWhereParamsSingle: whereParamsSingle,
+                            lstWhereParamsMulti: new List<SqlMultiWhereClauseBuilder>(),
+                            columnExpressions: new List<string>() {"IdCall as RowId", "starttime as RowDateTime"},
+                            startPartitionDate: new DateTime(2022, 01, 01),
+                            endPartitionDate: new DateTime(2044, 01, 01),
+                            partitionColName: "starttime",
+                            rowIdColName: "idCall"
+                        );
 
-                            job newjob = new job();
-                            newjob.Progress = 0;
-                            newjob.idjobdefinition = 2;
-                            newjob.Status = 6; //created
-                            newjob.JobName = "autoError_" + DateTime.Now.ToMySqlFormatWithMsWithoutQuote() + "_" +
-                                             thisSwitch.SwitchName;
-                            newjob.CreationTime = DateTime.Now;
-                            newjob.idNE = thisSwitch.idSwitch;
-                            newjob.JobParameter = JsonConvert.SerializeObject(thisJobParam);
-                            newjob.priority = 5;
-                            context.jobs.Add(newjob);
-                            context.SaveChanges();
-                        } //try
-                        catch (Exception e1)
-                        {
-                            this.TbConsole.WriteLine(e1.ToString());;
-                            ErrorWriter wr =
-                                new ErrorWriter(e1, "CdrErrorJobCreator/SwitchId:" + thisSwitch.idSwitch, null, "",
-                                    operatorName);
-                        } //catch
-                    } //for each customerswitchinfo
-                }
+                        job newjob = new job();
+                        newjob.Progress = 0;
+                        newjob.idjobdefinition = 2;
+                        newjob.Status = 6; //created
+                        newjob.JobName = "autoError_" + DateTime.Now.ToMySqlFormatWithMsWithoutQuote() + "_" +
+                                         thisSwitch.SwitchName;
+                        newjob.CreationTime = DateTime.Now;
+                        newjob.idNE = thisSwitch.idSwitch;
+                        newjob.JobParameter = JsonConvert.SerializeObject(thisJobParam);
+                        newjob.priority = 5;
+                        context.jobs.Add(newjob);
+                        context.SaveChanges();
+                    } //try
+                    catch (Exception e1)
+                    {
+                        Console.WriteLine(e1.ToString());
+                        ;
+                        ErrorWriter wr =
+                            new ErrorWriter(e1, "CdrErrorJobCreator/SwitchId:" + thisSwitch.idSwitch, null, "",
+                                operatorName, context);
+                    } //catch
+                } //for each customerswitchinfo
             }
             catch (Exception e1)
             {
-                this.TbConsole.WriteLine(e1.ToString());;
-                
-                ErrorWriter wr = new ErrorWriter(e1, "CdrJobCreator", null, "", operatorName);
+                Console.WriteLine(e1.ToString());
+                ErrorWriter wr = new ErrorWriter(e1, "CdrJobCreator", null, "", operatorName,context);
             }
         }
+
         private static Dictionary<string, string> getExistingJobNames(PartnerEntities context,
             Dictionary<string, FileInfo> newJobNameVsFileName, int idSwitch)
         {
