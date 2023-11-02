@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TelcobrightMediation;
 using System.ComponentModel.Composition;
+using System.Data;
 using System.Data.Common;
 using System.IO;
 using TelcobrightFileOperations;
@@ -48,6 +49,7 @@ namespace Jobs
                 parallelConverter.getOutput(r => preProcessor.ConvertToCdr(r));
             return cdrAndInconsistents;
         };
+        
         public object PreprocessJob(object data)
         {
             Dictionary<string, object> dataAsDic = (Dictionary<string, object>)data;
@@ -68,20 +70,15 @@ namespace Jobs
 
             if (this.Input.IsBatchJob == false) //not batch job
             {
-                this.HandledJobs = new List<job> {this.Input.TelcobrightJob};
+                this.HandledJobs = new List<job> { this.Input.TelcobrightJob };
                 preProcessor = DecodeNewCdrFile();
             }
             else //batch or merged job
             {
+                Dictionary<long, NewCdrWrappedJobForMerge> mergedJobsDic = getMergedJobs();
                 this.HandledJobs = new List<job>();
                 this.HandledJobs.AddRange(
-                    this.Input.MergedJobsDic.Values.Select(wrappedJob => wrappedJob.TelcobrightJob));
-                Dictionary<long, NewCdrWrappedJobForMerge> mergedJobsDic = this.Input.MergedJobsDic;
-                if (mergedJobsDic.Any() == false) //merged info must be present in cdr job input data
-                {
-                    throw new Exception(
-                        "New cdr vs raw collection cannot be empty for merged cdr job. There must be at least one job.");
-                }
+                    mergedJobsDic.Values.Select(wrappedJob => wrappedJob.TelcobrightJob));
                 NewCdrWrappedJobForMerge head = mergedJobsDic.First().Value;
                 List<NewCdrWrappedJobForMerge> tail = mergedJobsDic.Skip(1).Select(kv => kv.Value).ToList();
                 validateMergedCount(head, tail);
@@ -90,12 +87,13 @@ namespace Jobs
 
             //at this moment preProcessor has either records from a single job or merged jobs
             //duplicate cdr filter part ****************
-            initializeAndFormatBeforeCdrConversion(preProcessor);
-            if (CollectorInput.Ne.FilterDuplicateCdr == 1 && preProcessor.TxtCdrRows.Count > 0) //filter duplicates
-            {
+            initAndFormatTxtRowsBeforeCdrConversion(preProcessor);
+            if (CollectorInput.Ne.FilterDuplicateCdr == 1 && preProcessor.TxtCdrRows.Count > 0) //this.part is done using separate connection
+            {//performs ddl statement through new table creation and may autocommit
                 preProcessor = this.filterDuplicates(preProcessor);
             }
-            //end duplicate filter part
+            openDbConAndStartTransaction();//open new connection and start transaction
+
             List<CdrAndInconsistentWrapper> cdrAndInconsistents =
                 parallelConvertToCdr(preProcessor, preProcessor.TxtCdrRows);
             cdrAndInconsistents.ForEach(c => preProcessor.AddToBaseCollection(c));//add convertedCdrs to base collection
@@ -131,6 +129,28 @@ namespace Jobs
                 FinalizeMergedJobs(cdrJob);
             }
             return this.HandledJobs;
+        }
+
+        private void openDbConAndStartTransaction()
+        {
+            DbCommand cmd = this.CollectorInput.Context.Database.Connection.CreateCommand();
+            if (cmd.Connection.State == ConnectionState.Open)
+            {
+                throw new Exception("Connection should only be open after preprocessing new cdr job.");
+            }
+            cmd.Connection.Open();
+            cmd.ExecuteCommandText("set autocommit=0;");
+        }
+
+        private Dictionary<long, NewCdrWrappedJobForMerge> getMergedJobs()
+        {
+            Dictionary<long, NewCdrWrappedJobForMerge> mergedJobsDic = this.Input.MergedJobsDic;
+            if (mergedJobsDic.Any() == false) //merged info must be present in cdr job input data
+            {
+                throw new Exception(
+                    "New cdr vs raw collection cannot be empty for merged cdr job. There must be at least one job.");
+            }
+            return mergedJobsDic;
         }
 
         private static void validateMergedCount(NewCdrWrappedJobForMerge head, List<NewCdrWrappedJobForMerge> tail)
@@ -313,7 +333,7 @@ namespace Jobs
         }
         
 
-        protected void initializeAndFormatBeforeCdrConversion(NewCdrPreProcessor preProcessor)
+        protected void initAndFormatTxtRowsBeforeCdrConversion(NewCdrPreProcessor preProcessor)
         {
             var collectorinput = this.CollectorInput;
             SetIdCallsInSameOrderAsCollected(preProcessor, collectorinput);
@@ -324,7 +344,10 @@ namespace Jobs
             //}
             Parallel.ForEach(preProcessor.TxtCdrRows, txtRow =>
             {
-                txtRow[98] = txtRow[1];
+                if (this.CollectorInput.Ne.UseIdCallAsBillId==1)
+                {
+                    txtRow[Fn.UniqueBillId] = txtRow[Fn.IdCall];
+                }
                 preProcessor.SetAllBlankFieldsToZerolengthString(txtRow);
                 preProcessor.RemoveIllegalCharacters(collectorinput.Tbc.CdrSetting
                     .IllegalStrToRemoveFromFields, txtRow);
@@ -348,8 +371,8 @@ namespace Jobs
             }
             else
             {
-                preProcessor.TxtCdrRows =
-                    preProcessor.FilterCdrsWithDuplicateBillIdsAsInconsistent(preProcessor.TxtCdrRows);
+                //preProcessor.TxtCdrRows =
+                  //  preProcessor.FilterCdrsWithDuplicateBillIdsAsInconsistent(preProcessor.TxtCdrRows);
                 preProcessor.TxtCdrRows.AsParallel().ForAll(row=>row[Fn.Partialflag]="0");
             }
 

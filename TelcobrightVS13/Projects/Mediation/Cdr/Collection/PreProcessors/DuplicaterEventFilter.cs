@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LibraryExtensions;
+using LibraryExtensions.ConfigHelper;
 using MediationModel;
 using MySql.Data.MySqlClient;
 using TelcobrightInfra;
@@ -17,18 +18,19 @@ namespace TelcobrightMediation.Cdr.Collection.PreProcessors
     {
         private DayWiseEventCollector<T> EventCollector { get; set; }
         public CdrCollectorInputData CollectorInput { get; set; }
-        public DbCommand DbCmd { get; set; }
+        
         private Dictionary<string, T> FinalNonDuplicateEvents { get; set; } = new Dictionary<string, T>();
         public DuplicaterEventFilter(DayWiseEventCollector<T> eventCollector)
         {
             this.EventCollector = eventCollector;
             this.CollectorInput = eventCollector.CollectorInput;
-            this.DbCmd = eventCollector.DbCmd;
+            
         }
         public Dictionary<string, T> filterDuplicateCdrs(out List<T> excludedDuplicateEvents)
         {
             excludedDuplicateEvents= new List<T>();
-            Dictionary<string, string> alreadyConsideredEvents = this.EventCollector.ExistingTuples.ToDictionary(e => e);
+            Dictionary<string, string> alreadyConsideredEvents = this.EventCollector.ExistingEvents.Select(e=>e.ToString())
+                .ToDictionary(e => e);
             foreach (var kv in EventCollector.TupleWiseDecodedEvents)
             {
                 string tuple = kv.Key;

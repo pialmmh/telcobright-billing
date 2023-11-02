@@ -16,7 +16,32 @@ namespace TelcobrightInfra
 {
     public class DaywiseTableManager
     {
-
+        public static List<string> getExistingTableNames(string databaseName, IEnumerable<string> tableNamesToCheckIfExists, MySqlConnection con)
+        {
+            List<string> existingTables = new List<string>();
+            using (MySqlCommand cmd= new MySqlCommand("", con))
+            {
+                cmd.CommandText = $"show tables from {databaseName} where tables_in_{databaseName} in (" +
+                                  $" {string.Join(",", tableNamesToCheckIfExists.Select(t => $"'{t}'"))});";
+                cmd.CommandType = CommandType.Text;
+                DbDataReader reader1 = cmd.ExecuteReader();
+                try
+                {
+                    while (reader1.Read())
+                    {
+                        existingTables.Add(reader1[0].ToString());
+                    }
+                    reader1.Close();
+                }
+                catch (Exception e)
+                {
+                    reader1.Close();
+                    Console.WriteLine(e);
+                    throw;
+                }
+            }
+            return existingTables;
+        }
         public static void DeleteOldTables(string tablePrefix, int daysToRetainOldData, DbCommand cmd)
         {
 
@@ -58,7 +83,7 @@ namespace TelcobrightInfra
                     {
                         sql += GetHourlytPartitionExpression(partitionColName, tableDate, engine) + ";";
                     }
-                    cmd.CommandText = sql;
+                    cmd.CommandText = sql;//avoid using if not exists, that might have triggered the table definition has changed exception
                     cmd.ExecuteNonQuery();
                 }
             } 
@@ -69,7 +94,6 @@ namespace TelcobrightInfra
             int mon = date.Month;
             int day = date.Day;
             DateTime partitionDay = new DateTime(yr, mon, day);
-
             
             Func<DateTime, string> getPartitionExpression = dateHr => 
                 new StringBuilder("PARTITION p").Append((dateHr.Hour==0?24:dateHr.Hour).ToString()).Append(" VALUES LESS THAN ('")

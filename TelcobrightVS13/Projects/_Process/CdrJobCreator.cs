@@ -67,8 +67,8 @@ namespace Process
                                             new CompressedFileHelperForVault(new List<string> { thisSwitch.FileExtension},vaultPath);
                                         compressedFileHelper.ExtractWithSafeCopy(compressedFile.FullName);
                                         compressedFile.Delete();//code reaching here means extraction successful, exceptions will not hit this and file will be kept
-                                        //UnZipper unzipper = new UnZipper(zipFile.FullName);
-                                        //unzipper.UnZipAll();
+                                        UnZipper unzipper = new UnZipper(compressedFile.FullName);
+                                        unzipper.UnZipAll();
                                     }
                                 }
                             }
@@ -88,22 +88,19 @@ namespace Process
                                     {
                                         return validFilePrefixes.Any(p => fInfo.Name.StartsWith(p)) && !fInfo.Name.EndsWith(".tmp") && !fInfo.Name.Contains(".filepart");
                                     }
-                                    return
-                                    validFilePrefixes.Any(p => fInfo.Name.StartsWith(p)) &&
-                                fInfo.Extension == thisSwitch.FileExtension
-                                    && !fInfo.Name.EndsWith(".tmp") && !fInfo.Name.Contains(".filepart");
-                                })
-                                    .ToList();
+                                    return validFilePrefixes.Any(p => fInfo.Name.StartsWith(p)) &&
+                                                                        fInfo.Extension == thisSwitch.FileExtension
+                                                                        && !fInfo.Name.EndsWith(".tmp") && !fInfo.Name.Contains(".filepart");
+                                }).ToList();
                             int minDurationToSkip = fileLocation.DurationSecToSkipVeryNewPossiblyIncompleteFiles;
+
                             fileInfos = fileInfos.Where(f =>
                               {
                                   DateTime currentTime = DateTime.Now;
-                                  return (currentTime - f.CreationTime).TotalSeconds
-                                      > minDurationToSkip;
+                                  return (currentTime - f.CreationTime).TotalSeconds > minDurationToSkip;
                               }).ToList();
 
                             FileSplitSetting fileSplitSetting = tbc.CdrSetting.FileSplitSetting;
-
                             if (fileSplitSetting != null)
                             {
                                 foreach (FileInfo file in fileInfos)

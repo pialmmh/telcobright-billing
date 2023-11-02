@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -89,8 +90,25 @@ namespace TelcobrightMediation
             return dateTime;
         }
 
-       
-       
+        public object convertDbReaderRowToUniqueEventTuple(object data)
+        {
+            DbDataReader reader = (DbDataReader) data;
+            return reader[0].ToString();
+        }
+
+        public object convertDbReaderRowToObject(object data)
+        {
+            DbDataReader reader = (DbDataReader) data;
+            string[] row = new string[reader.FieldCount];
+            for (int i = 0; i < reader.FieldCount; i++)
+            {
+                object value = reader.GetValue(i);
+                row[i] = value != DBNull.Value ? Convert.ToString(value) : "";
+            }
+            return row;
+        }
+
+
         private static string getSessionId(string[] row)
         {
             string sessionId = row[Fn.UniqueBillId];

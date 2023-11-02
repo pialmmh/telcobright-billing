@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Itenso.TimePeriod;
 using LibraryExtensions;
+using LibraryExtensions.ConfigHelper;
 using MediationModel;
 using MySql.Data.MySqlClient;
 using TelcobrightInfra;
@@ -19,12 +20,14 @@ namespace TelcobrightMediation
         private readonly object _synchronouslockWhileExecutingDdl = new object();
         public bool UniqueEventsOnly { get; set; }
         public CdrCollectorInputData CollectorInput { get;}
-        public DbCommand DbCmd { get;}
+        private DatabaseSetting DatabaseSetting { get; set; }
+        private string DatabaseName { get; set; }
+        private string ConStr { get; set; }
         public AbstractCdrDecoder Decoder { get; }
         public List<T> DecodedEvents { get; }
         public Dictionary<string, List<T>> TupleWiseDecodedEvents { get; } 
         public Dictionary<DateTime, Dictionary<DateTime, HourlyEventData<T>>> DayAndHourWiseEvents { get; }
-        public List<string> ExistingTuples = new List<string>();
+        public List<T> ExistingEvents = new List<T>();
         public string SourceTablePrefix { get; set; }
 
         public DayWiseEventCollector(bool uniqueEventsOnly, CdrCollectorInputData collectorInput, DbCommand dbCmd,
@@ -33,7 +36,9 @@ namespace TelcobrightMediation
             this.UniqueEventsOnly = uniqueEventsOnly;
             this.SourceTablePrefix = sourceTablePrefix;
             CollectorInput = collectorInput;
-            DbCmd = dbCmd;
+            this.DatabaseSetting = this.CollectorInput.CdrJobInputData.Tbc.DatabaseSetting;
+            this.DatabaseName = this.DatabaseSetting.DatabaseName;
+            this.ConStr = DbUtil.getDbConStrWithDatabase(this.DatabaseSetting);
             this.Decoder = decoder;
             this.DecodedEvents = decodedEvents;
             CdrSetting cdrSetting = this.CollectorInput.CdrSetting;
@@ -107,36 +112,83 @@ namespace TelcobrightMediation
                 }).ToList();
                 sql += string.Join(" or " +Environment.NewLine, whereClausesByHour);
 
-                List<string> existingEvents = new List<string>();
+                List<T> existingEvents = new List<T>();
                 if (whereClausesByHour.Any())
                 {
-                    this.DbCmd.CommandText = sql;
-                    this.DbCmd.CommandType = CommandType.Text;
-                    DbDataReader reader = this.DbCmd.ExecuteReader();
-                    while (reader.Read())
+                    using (MySqlConnection con= new MySqlConnection(this.ConStr))
                     {
-                        existingEvents.Add(reader[0].ToString());
+                        con.Open();
+                        using (MySqlCommand cmd = new MySqlCommand("", con))
+                        {
+                            cmd.CommandText = sql;
+                            cmd.CommandType = CommandType.Text;
+                            DbDataReader reader = cmd.ExecuteReader();
+                            try
+                            {
+                                while (reader.Read())
+                                {
+                                    if (UniqueEventsOnly)
+                                    {
+                                        existingEvents.Add((T)decoder.convertDbReaderRowToUniqueEventTuple(reader[0]));//collect uniqueevent
+                                    }
+                                    else
+                                    {
+                                        existingEvents.Add((T)decoder.convertDbReaderRowToUniqueEventTuple(reader[0]));//collect full event e.g. cdr as string[]
+                                    }
+                                }
+                                reader.Close();
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e);
+                                reader.Close();
+                                throw;
+                            }
+                            finally
+                            {
+                                reader.Close();
+                            }
+                        }
+                        con.Close();
                     }
-                    reader.Close();
+                    
                 }
-                this.ExistingTuples = existingEvents;
+                this.ExistingEvents = existingEvents;
                 if (this.UniqueEventsOnly==true)
                 {
-                    Dictionary<string, int> tupleWiseCount = this.ExistingTuples.GroupBy(s => s)
-                        .Select(g => new
-                        {
-                            Tuple = g.Key,
-                            Count = g.Count()
-                        }).ToDictionary(a => a.Tuple, a => a.Count);
-                    foreach (var tupVsCount in tupleWiseCount)
-                    {
-                        string tuple = tupVsCount.Key;
-                        int count = tupVsCount.Value;
-                        if(count>1) throw new Exception($"tuple {tuple} has more than one previous instances ({count})");
-                    }
+                    checkForDuplicatesAndThrow();
                 }
             }
         }
+
+        private void checkForDuplicatesAndThrow()
+        {
+            Dictionary<T, int> tupleWiseCount = this.ExistingEvents.GroupBy(s => s)
+                                    .Select(g => new
+                                    {
+                                        Tuple = g.Key,
+                                        Count = g.Count()
+                                    }).ToDictionary(a => a.Tuple, a => a.Count);
+            foreach (var tupVsCount in tupleWiseCount)
+            {
+                T tuple = tupVsCount.Key;
+                int count = tupVsCount.Value;
+                if (count > 1)
+                {
+                    string tupleVal = tuple.ToString();
+                    if (typeof(T) == typeof(string))
+                    {
+                        tupleVal = tuple.ToString();
+                    }
+                    else if (typeof(T) == typeof(string[]))
+                    {
+                        tupleVal = string.Join(",", tuple as string[]);
+                    }
+                    throw new Exception($"tuple {tupleVal} has more than one previous instances ({count})");
+                }
+            }
+        }
+
         public void createNonExistingTables()
         {
             List<DateTime> daysInvolved = this.DayAndHourWiseEvents.Keys.ToList();
@@ -145,25 +197,24 @@ namespace TelcobrightMediation
                 .Select(day => new
                 {
                     Day = day,
-                    TableName = this.SourceTablePrefix + "_" + day.ToMySqlFormatDateOnlyWithoutTimeAndQuote().Replace("-","")
+                    TableName = this.SourceTablePrefix + "_" +
+                                day.ToMySqlFormatDateOnlyWithoutTimeAndQuote().Replace("-", "")
                 }).ToDictionary(a => a.TableName, a => a.Day);
-            List<string> existingTables = getExistingTables(requiredTableNamesPerDay);
-            List<string> newTablesToBeCreated = requiredTableNamesPerDay.Keys.Where(t => existingTables.Contains(t) == false)
-                .ToList();
-            List<DateTime> tableDatesToBeCreated =
-                newTablesToBeCreated.Select(t => requiredTableNamesPerDay[t]).ToList();
-            string templateSql = this.Decoder.getCreateTableSqlForUniqueEvent(this.CollectorInput);
-            string tablePrefix = this.Decoder.PartialTablePrefix;
-            string tableStorageEngine = this.Decoder.PartialTableStorageEngine;
-            var databaseSetting = this.CollectorInput.CdrJobInputData.Tbc.DatabaseSetting;
-            string conStr = DbUtil.getDbConStrWithDatabase(databaseSetting);
             //ddl statement may auto commit all transactions, so use a different db connection 
-            using (MySqlConnection con = new MySqlConnection(conStr))
+            using (MySqlConnection con = new MySqlConnection(this.ConStr))
             {
-                if (con.State != ConnectionState.Open)
-                {
-                    con.Open();
-                }
+                con.Open();
+                List<string> existingTables =
+                    DaywiseTableManager.getExistingTableNames(this.DatabaseName, requiredTableNamesPerDay.Keys, con);
+                List<string> newTablesToBeCreated = requiredTableNamesPerDay.Keys
+                    .Where(t => existingTables.Contains(t) == false)
+                    .ToList();
+                List<DateTime> tableDatesToBeCreated =
+                    newTablesToBeCreated.Select(t => requiredTableNamesPerDay[t]).ToList();
+                string templateSql = this.Decoder.getCreateTableSqlForUniqueEvent(this.CollectorInput);
+                string tablePrefix = this.Decoder.PartialTablePrefix;
+                string tableStorageEngine = this.Decoder.PartialTableStorageEngine;
+
                 lock (_synchronouslockWhileExecutingDdl)
                 {
                     DaywiseTableManager.CreateTables(tablePrefix: tablePrefix,
@@ -175,33 +226,5 @@ namespace TelcobrightMediation
                 con.Close();
             }
         }
-
-        private List<string> getExistingTables(Dictionary<string, DateTime> requiredTableNamesPerDay)
-        {
-            string databaseName = this.CollectorInput.CdrJobInputData.Tbc.DatabaseSetting.DatabaseName;
-            this.DbCmd.CommandText = $"show tables from {databaseName} where tables_in_{databaseName} in (" +
-                                     $" {string.Join(",", requiredTableNamesPerDay.Keys.Select(t => $"'{t}'"))});";
-            this.DbCmd.CommandType = CommandType.Text;
-            DbDataReader reader1 = this.DbCmd.ExecuteReader();
-            List<string> existingTables = new List<string>();
-            try
-            {
-                while (reader1.Read())
-                {
-                    existingTables.Add(reader1[0].ToString());
-                }
-                reader1.Close();
-            }
-            catch (Exception e)
-            {
-                reader1.Close();
-                Console.WriteLine(e);
-                throw;
-            }
-
-            return existingTables;
-        }
-
-      
     }
 }
