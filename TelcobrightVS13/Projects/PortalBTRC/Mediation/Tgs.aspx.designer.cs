@@ -12,15 +12,6 @@
 public partial class TgsOfICX {
     
     /// <summary>
-    /// lblCustomerDisplayName control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblCustomerDisplayName;
-    
-    /// <summary>
     /// ToolkitScriptManager1 control.
     /// </summary>
     /// <remarks>
@@ -39,11 +30,11 @@ public partial class TgsOfICX {
     protected global::System.Web.UI.WebControls.Label LabelTgs;
     
     /// <summary>
-    /// ListViewTgs control.
+    /// GridViewTgs control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.ListView ListViewTgs;
+    protected global::System.Web.UI.WebControls.GridView GridViewTgs;
 }

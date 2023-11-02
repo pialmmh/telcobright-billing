@@ -72,17 +72,24 @@ public partial class DashboardAspxForIcx : Page
         Series series1 = InternationalOutgoing.Series["Series1"];
         DataPointCollection points = series1.Points;
         series1.IsValueShownAsLabel = true;
+        series1.LabelFormat = "#,##0";
         string[] colors = { "#08605c", "#e40613", "#F86F03", "#FFA41B", "#8EAC50", "#898121", "#E7B10A" };
 
         string connectionString = icxConnstr;
         List<double> duration = new List<double>();
         List<string> durationDate = new List<string>();
+        DateTime currentDate = DateTime.Now;
+        DateTime sevenDaysAgo = currentDate.AddDays(-6);
+        DateTime lastHourMinuteSecond = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 23, 59, 59);
+        string today = lastHourMinuteSecond.ToString("yyyy-MM-dd HH:mm:ss");
+        DateTime firstHourMinuteSecondSevenDaysAgo = new DateTime(sevenDaysAgo.Year, sevenDaysAgo.Month, sevenDaysAgo.Day, 0, 0, 0);
+        string lastSevenDay = firstHourMinuteSecondSevenDaysAgo.ToString("yyyy-MM-dd HH:mm:ss");
 
         using (MySqlConnection con = new MySqlConnection(connectionString))
         {
             con.Open();
-            string sql = @"select tup_starttime as DurationDate, sum(duration1) as Duration from sum_voice_day_02 where tup_starttime 
-                        <= '2023-09-07' and tup_starttime >= DATE_SUB('2023-09-07', INTERVAL 7 DAY) group by DurationDate;";
+            string sql = $@"select tup_starttime as DurationDate, sum(duration1) as Duration from sum_voice_day_02 where 
+                            tup_starttime >= '{lastSevenDay}' and tup_starttime <= '{today}' group by DurationDate;";
             using (MySqlCommand command = new MySqlCommand(sql, con))
             {
                 using (MySqlDataReader read = command.ExecuteReader())
@@ -122,17 +129,24 @@ public partial class DashboardAspxForIcx : Page
         Series series1 = InternationalIncommimng.Series["Series1"];
         DataPointCollection points = series1.Points;
         series1.IsValueShownAsLabel = true;
+        series1.LabelFormat = "#,##0";
         string[] colors = { "#08605c", "#e40613", "#F86F03", "#FFA41B", "#8EAC50", "#898121", "#E7B10A" };
 
         string connectionString = icxConnstr;
         List<double> duration = new List<double>();
         List<string> durationDate = new List<string>();
+        DateTime currentDate = DateTime.Now;
+        DateTime sevenDaysAgo = currentDate.AddDays(-6);
+        DateTime lastHourMinuteSecond = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 23, 59, 59);
+        string today = lastHourMinuteSecond.ToString("yyyy-MM-dd HH:mm:ss");
+        DateTime firstHourMinuteSecondSevenDaysAgo = new DateTime(sevenDaysAgo.Year, sevenDaysAgo.Month, sevenDaysAgo.Day, 0, 0, 0);
+        string lastSevenDay = firstHourMinuteSecondSevenDaysAgo.ToString("yyyy-MM-dd HH:mm:ss");
 
         using (MySqlConnection con = new MySqlConnection(connectionString))
         {
             con.Open();
-            string sql = @"select tup_starttime as DurationDate, sum(duration1) as Duration from sum_voice_day_03 where tup_starttime 
-                    <= '2023-09-07' and tup_starttime >= DATE_SUB('2023-09-07', INTERVAL 7 DAY) group by DurationDate;";
+            string sql = $@"select tup_starttime as DurationDate, sum(duration1) as Duration from sum_voice_day_03 where 
+                            tup_starttime >= '{lastSevenDay}' and tup_starttime <= '{today}' group by DurationDate;";
             using (MySqlCommand command = new MySqlCommand(sql, con))
             {
                 using (MySqlDataReader read = command.ExecuteReader())
@@ -175,18 +189,26 @@ public partial class DashboardAspxForIcx : Page
         Series series1 = DomesticCallForPreviousSevenDays.Series["Series1"];
         DataPointCollection points = series1.Points;
         series1.IsValueShownAsLabel = true;
+        series1.LabelFormat = "#,##0";
+        
 
         string[] colors = { "#08605c", "#e40613", "#F86F03", "#FFA41B", "#8EAC50", "#898121", "#E7B10A" };
 
         string connectionString = icxConnstr;
         List<double> durations = new List<double>();
         List<string> durationDate = new List<string>();
+        DateTime currentDate = DateTime.Now;
+        DateTime sevenDaysAgo = currentDate.AddDays(-6);
+        DateTime lastHourMinuteSecond = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 23, 59, 59);
+        string today = lastHourMinuteSecond.ToString("yyyy-MM-dd HH:mm:ss");
+        DateTime firstHourMinuteSecondSevenDaysAgo = new DateTime(sevenDaysAgo.Year, sevenDaysAgo.Month, sevenDaysAgo.Day, 0, 0, 0);
+        string lastSevenDay = firstHourMinuteSecondSevenDaysAgo.ToString("yyyy-MM-dd HH:mm:ss");
 
         using (MySqlConnection con = new MySqlConnection(connectionString))
         {
             con.Open();
-            string sql = $@"select tup_starttime as DurationDate, sum(duration1) as Duration from sum_voice_day_01 where tup_starttime 
-                        <= '2023-09-07' and tup_starttime >= DATE_SUB('2023-09-07', INTERVAL 7 DAY) group by DurationDate;";
+            string sql = $@"select tup_starttime as DurationDate, sum(duration1) as Duration from sum_voice_day_01 where 
+                            tup_starttime >= '{lastSevenDay}' and tup_starttime <= '{today}' group by DurationDate;";
             using (MySqlCommand command = new MySqlCommand(sql, con))
             {
                 using (MySqlDataReader read = command.ExecuteReader())
