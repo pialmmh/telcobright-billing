@@ -30,7 +30,13 @@ namespace TelcobrightMediation.Cdr.Collection.PreProcessors
         {
             excludedDuplicateEvents= new List<T>();
             Dictionary<string, string> alreadyConsideredEvents = this.EventCollector.ExistingEvents.Select(e=>e.ToString())
-                .ToDictionary(e => e);
+                .GroupBy(e=>e)
+                .Select(g=> new
+                {
+                    Key=g.Key,
+                    Item= g.First()
+                })
+                .ToDictionary(a => a.Key, a=>a.Item);
             foreach (var kv in EventCollector.TupleWiseDecodedEvents)
             {
                 string tuple = kv.Key;
