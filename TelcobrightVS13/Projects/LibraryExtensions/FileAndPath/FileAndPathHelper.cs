@@ -72,6 +72,7 @@ namespace LibraryExtensions
 
         public static bool IsFileLockedOrBeingWritten(FileInfo file)
         {
+            //add thread lock here...
             FileStream stream = null;
             try
             {
