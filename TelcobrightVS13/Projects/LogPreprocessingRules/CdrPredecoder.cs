@@ -62,12 +62,17 @@ namespace LogPreProcessor
             NeAdditionalSetting neAdditionalSetting = (NeAdditionalSetting)dataAsDic["neAdditionalSetting"];
             if (neAdditionalSetting?.PreDecodeAsTextFile == false)
                 return;
+            cleanUpAlreadyFinishedButRemainingPredecodedFiles(thisSwitch, tbc, newCdrFileJobs, context);
 
             int maxParallelPreDecoding = neAdditionalSetting.MaxConcurrentFilesForParallelPreDecoding;
             int maxNumberOfFilesToPreDecode = neAdditionalSetting.MaxNumberOfFilesInPreDecodedDirectory;
 
             int noOfExistingPreDecodedfiles = getNoOfExistingFilesInPreDecodedDir(thisSwitch, tbc, newCdrFileJobs);
+
+
             if (noOfExistingPreDecodedfiles >= maxNumberOfFilesToPreDecode) return;
+
+
 
             CollectionSegmenter<job> segmentedJobs = new CollectionSegmenter<job>(newCdrFileJobs, 0);
             DbCommand cmd = context.Database.Connection.CreateCommand();
@@ -81,6 +86,7 @@ namespace LogPreProcessor
             {
                 var enumerable = segment as job[] ?? segment.ToArray();
                 BlockingCollection<job> successfullyPreDecodedJobs = new BlockingCollection<job>();
+                BlockingCollection<job> failedPreDecodedJobs = new BlockingCollection<job>();
                 bool disableParallelMediationForDebug =
                     Convert.ToBoolean(ConfigurationManager.AppSettings["disableParallelMediationForDebug"]);
                 if (disableParallelMediationForDebug)
@@ -90,11 +96,12 @@ namespace LogPreProcessor
                     {
                         try
                         {
-                            preDecodeFiles(thisJob, mediationContext, thisSwitch, tbc, context, newCdrFileJob);
+                            preDecodeFile(thisJob, mediationContext, thisSwitch, tbc, context, newCdrFileJob);
                             successfullyPreDecodedJobs.Add(thisJob);
                         }
                         catch (Exception e)
                         {
+                            failedPreDecodedJobs.Add(thisJob);
                             Console.WriteLine(e.ToString());//just print to console and continue with next job;
                         }
                     }
@@ -105,11 +112,12 @@ namespace LogPreProcessor
                     {
                         try
                         {
-                            preDecodeFiles(thisJob, mediationContext, thisSwitch, tbc, context, newCdrFileJob);
+                            preDecodeFile(thisJob, mediationContext, thisSwitch, tbc, context, newCdrFileJob);
                             successfullyPreDecodedJobs.Add(thisJob);
                         }
                         catch (Exception e)
                         {
+                            failedPreDecodedJobs.Add(thisJob);
                             Console.WriteLine(e.ToString());//just print to console and continue with next job;
                         }
                     });
@@ -129,7 +137,36 @@ namespace LogPreProcessor
                         Console.WriteLine(e);
                     }
                 }
+
+                foreach (job failedJob in failedPreDecodedJobs)
+                {
+                    string preDecodedDirName = "";
+                    string preDecodedFileName = "";
+                    getPathNamesForPreDecoding(failedJob, thisSwitch, tbc, out preDecodedDirName, out preDecodedFileName);
+                    if (File.Exists(preDecodedFileName))
+                    {
+                        File.Delete(preDecodedFileName);
+                    }
+                }
+
             });
+        }
+
+        private static void cleanUpAlreadyFinishedButRemainingPredecodedFiles(ne thisSwitch, TelcobrightConfig tbc, List<job> newCdrFileJobs, PartnerEntities context)
+        {
+            string sql = $@"select * from job where idjobdefinition=1 and status=1 and idne={thisSwitch.idSwitch} 
+                            and jobname in ({string.Join(",", newCdrFileJobs.Select(j => $"'{j.JobName}'"))})";
+            List<job> alreadyFinishedJobs = context.Database.SqlQuery<job>(sql).ToList();
+            foreach (job alreadyFinishedJob in alreadyFinishedJobs)
+            {
+                string preDecodedDirName = "";
+                string preDecodedFileName = "";
+                getPathNamesForPreDecoding(alreadyFinishedJob, thisSwitch, tbc, out preDecodedDirName, out preDecodedFileName);
+                if (File.Exists(preDecodedFileName))
+                {
+                    File.Delete(preDecodedFileName);
+                }
+            }
         }
 
         private static int getNoOfExistingFilesInPreDecodedDir(ne thisSwitch, TelcobrightConfig tbc, List<job> newCdrFileJobs)
@@ -142,7 +179,7 @@ namespace LogPreProcessor
             return noOfExistingPreDecodedfiles;
         }
 
-        private static void preDecodeFiles(job thisJob, MediationContext mediationContext, ne thisSwitch,
+        private static void preDecodeFile(job thisJob, MediationContext mediationContext, ne thisSwitch,
             TelcobrightConfig tbc, PartnerEntities context, ITelcobrightJob newCdrFileJob)
         {
             Console.WriteLine("Predecoding CdrJob for Switch:" + thisSwitch.SwitchName + ", JobName:" +

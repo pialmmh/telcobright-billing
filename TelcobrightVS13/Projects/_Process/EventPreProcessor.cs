@@ -40,7 +40,7 @@ namespace Process
             CdrSetting cdrSetting = tbc.CdrSetting;
             string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName, tbc);
             PartnerEntities context = new PartnerEntities(entityConStr);
-                try
+            try
             {
                 context.Database.Connection.Open();
                 var mediationContext = new MediationContext(tbc, context);
@@ -51,7 +51,8 @@ namespace Process
                     {
                         NeAdditionalSetting neAdditionalSetting = null;
                         if (cdrSetting.NeWiseAdditionalSettings.TryGetValue(ne.idSwitch, out neAdditionalSetting) ==
-                            false) continue;
+                            false)
+                            continue;
                         List<EventPreprocessingRule> eventPreprocessingRules =
                             neAdditionalSetting.EventPreprocessingRules;
                         if (eventPreprocessingRules.Any() == false) continue;
@@ -86,7 +87,7 @@ namespace Process
                     {
                         Console.WriteLine(e1);
                         ErrorWriter.WriteError(e1, "EventPreProcessor", null, "NE:" + ne.idSwitch,
-                            tbc.Telcobrightpartner.CustomerName,context);
+                            tbc.Telcobrightpartner.CustomerName, context);
                         continue; //with next switch
                     }
                 } //for each NE
@@ -94,14 +95,14 @@ namespace Process
             catch (Exception e1)
             {
                 Console.WriteLine(e1);
-                ErrorWriter.WriteError(e1,"EventPreProcessor",null,"",operatorName,context);
+                ErrorWriter.WriteError(e1, "EventPreProcessor", null, "", operatorName, context);
             }
         }
 
         bool CheckIncompleteExists(PartnerEntities context, MediationContext mediationContext, ne ne)
         {
-            var anyJob= context.jobs.Where(job => job.CompletionTime == null && job.idjobdefinition==1
-                                         && job.idNE == ne.idSwitch).ToList().FirstOrDefault();
+            var anyJob = context.jobs.Where(job => job.CompletionTime == null && job.idjobdefinition == 1
+                                          && job.idNE == ne.idSwitch).ToList().FirstOrDefault();
             return anyJob != null;
         }
 
@@ -130,13 +131,13 @@ namespace Process
                 mefDecoders.DicExtensions.Add(ext.Id, ext);
             return mefDecoders;
         }
-       
-        public List<job> GetNewCdrJobs(TelcobrightConfig tbc,PartnerEntities contextTb, ne thisSwitch, int? decodingSpan)
+
+        public List<job> GetNewCdrJobs(TelcobrightConfig tbc, PartnerEntities contextTb, ne thisSwitch, int? decodingSpan)
         {
             List<job> jobs = null;
             if (tbc.CdrSetting.DescendingOrderWhileProcessingListedFiles == true)
             {
-                jobs=contextTb.jobs
+                jobs = contextTb.jobs
                     .Where(c => c.CompletionTime == null
                                 && c.idNE == thisSwitch.idSwitch
                                 && c.Status == 7 && c.idjobdefinition == 1
@@ -148,7 +149,7 @@ namespace Process
             }
             else
             {
-                jobs=contextTb.jobs
+                jobs = contextTb.jobs
                     .Where(c => c.CompletionTime == null
                                 && c.idNE == thisSwitch.idSwitch
                                 && c.Status == 7 && c.idjobdefinition == 1
