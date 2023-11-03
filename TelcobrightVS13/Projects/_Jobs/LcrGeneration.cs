@@ -104,6 +104,11 @@ namespace Jobs
             throw new NotImplementedException();
         }
 
+        public ITelcobrightJob createNewNonSingletonInstance()
+        {
+            throw new NotImplementedException();
+        }
+
         private void ExecutePseudoRating(route thisRoute, CdrProcessor cdrProcessor, IServiceFamily sf,
             IdCallWiseListOfRouteVsCost IdCallWiseListOfRouteVsCost)
         {

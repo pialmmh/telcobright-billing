@@ -50,6 +50,11 @@ namespace Jobs
         {
             throw new NotImplementedException();
         }
+
+        public ITelcobrightJob createNewNonSingletonInstance()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 

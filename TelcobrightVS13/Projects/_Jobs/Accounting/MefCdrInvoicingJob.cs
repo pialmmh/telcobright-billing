@@ -85,6 +85,11 @@ namespace Jobs
             throw new NotImplementedException();
         }
 
+        public ITelcobrightJob createNewNonSingletonInstance()
+        {
+            throw new NotImplementedException();
+        }
+
         private List<long> GenerateChildInvoicesToBeMerged(InvoiceGenerationInputData invoiceGenerationInputData, 
             Dictionary<string, string> jsonDetail, PartnerEntities context, 
             account parentAccount, partner customer, 

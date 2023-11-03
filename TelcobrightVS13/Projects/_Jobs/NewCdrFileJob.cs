@@ -295,15 +295,17 @@ namespace Jobs
             return handledJobs;
         }
 
+        public ITelcobrightJob createNewNonSingletonInstance()
+        {
+            Type t = this.GetType();
+            return (ITelcobrightJob)Activator.CreateInstance(t);
+        }
+
         private NewCdrPreProcessor DecodeNewCdrFile(bool preDecodingStage)
         {
             string fileName = getFullPathOfCdrFile();
-            FileInfo cdrFileInfo= new FileInfo(fileName);
-            FileAndPathHelperMutable pathHelper = new FileAndPathHelperMutable();
-            if (pathHelper.IsFileLockedOrBeingWritten(cdrFileInfo) == true)
-            {
-                throw new Exception("Could not get exclusive lock on file before decoding, file transfer may be not finished yet through the network or FTP.");
-            }
+            
+
             this.CollectorInput = new CdrCollectorInputData(this.Input, fileName);
             var cdrCollector = new FileBasedTextCdrCollector(this.CollectorInput);
             AbstractCdrDecoder decoder = cdrCollector.getDecoder();
@@ -314,6 +316,12 @@ namespace Jobs
             List<cdrinconsistent> cdrinconsistents = new List<cdrinconsistent>();
             if (this.PreDecodingStageOnly)//PREDECODING
             {
+                FileInfo cdrFileInfo = new FileInfo(fileName);
+                FileAndPathHelperMutable pathHelper = new FileAndPathHelperMutable();
+                if (pathHelper.IsFileLockedOrBeingWritten(cdrFileInfo) == true)
+                {
+                    throw new Exception("Could not get exclusive lock on file before decoding, file transfer may be not finished yet through the network or FTP.");
+                }
                 var decodedCdrRows = decoder.DecodeFile(this.CollectorInput, out cdrinconsistents);
                 NewCdrPreProcessor newCdrPreProcessor =
                     new NewCdrPreProcessor(decodedCdrRows, cdrinconsistents, this.CollectorInput);

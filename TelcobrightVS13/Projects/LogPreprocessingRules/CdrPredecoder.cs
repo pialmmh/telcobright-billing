@@ -26,6 +26,14 @@ using System.Text;
 
 namespace LogPreProcessor
 {
+    class PredecoderInput
+    {
+        public CdrJobInputData CdrJobInputData { get; set; }
+        public PartnerEntities PartnerEntitiesNewInstance { get; set; }
+        public ITelcobrightJob NewCdrFileJobNewInstance { get; set; }
+        public string PredecodedFileName { get; set; }
+        public string PredecodedDirName { get; set; }
+    }
     [Export("LogPreprocessor", typeof(EventPreprocessingRule))]
     public class CdrPredecoder : EventPreprocessingRule
     {
@@ -39,6 +47,7 @@ namespace LogPreProcessor
         public bool IsPrepared { get; set; }
         public object RuleConfigData { get; set; }
         private int maxParallelFileSizeForDecode { get; set; }
+        private readonly object locker = new object();
         public void PrepareRule()
         {
             Dictionary<string, object> dataAsDic = (Dictionary<string, object>) this.RuleConfigData;
@@ -62,6 +71,13 @@ namespace LogPreProcessor
             NeAdditionalSetting neAdditionalSetting = (NeAdditionalSetting)dataAsDic["neAdditionalSetting"];
             if (neAdditionalSetting?.PreDecodeAsTextFile == false)
                 return;
+            foreach (var job in newCdrFileJobs)
+            {
+                if (job.idjobdefinition != 1)
+                    throw new Exception(
+                        $"Job type must be 1= newCdrFileJob for cdrPredecoding. jobid:{job.id}, jobName:{job.JobName}");
+            }
+            
             cleanUpAlreadyFinishedButRemainingPredecodedFiles(thisSwitch, tbc, newCdrFileJobs, context);
 
             int maxParallelPreDecoding = neAdditionalSetting.MaxConcurrentFilesForParallelPreDecoding;
@@ -71,8 +87,6 @@ namespace LogPreProcessor
 
 
             if (noOfExistingPreDecodedfiles >= maxNumberOfFilesToPreDecode) return;
-
-
 
             CollectionSegmenter<job> segmentedJobs = new CollectionSegmenter<job>(newCdrFileJobs, 0);
             DbCommand cmd = context.Database.Connection.CreateCommand();
@@ -85,47 +99,47 @@ namespace LogPreProcessor
             segmentedJobs.ExecuteMethodInSegments(maxParallelPreDecoding, segment =>
             {
                 var enumerable = segment as job[] ?? segment.ToArray();
-                BlockingCollection<job> successfullyPreDecodedJobs = new BlockingCollection<job>();
+                BlockingCollection<job> successfullPreDecodedJobs = new BlockingCollection<job>();
                 BlockingCollection<job> failedPreDecodedJobs = new BlockingCollection<job>();
+                
+                List<Task> decodingTasks = new List<Task>();
+                foreach (var job in enumerable)
+                {
+                    PredecoderInput predecoderInput = preparePreDecoderInput(mediationContext, thisSwitch, tbc, context, newCdrFileJob, job);
+                    if (!Directory.Exists(predecoderInput.PredecodedDirName))
+                        Directory.CreateDirectory(predecoderInput.PredecodedDirName);
+
+                    Task task = new Task(() =>
+                    {
+                        try
+                        {
+                            Console.WriteLine("Predecoding CdrJob for Switch:" + thisSwitch.SwitchName + ", JobName:" +
+                                              job.JobName);
+                            preDecodeFile(predecoderInput);
+                            successfullPreDecodedJobs.Add(job);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                            failedPreDecodedJobs.Add(job);
+                        }
+                    });
+                    decodingTasks.Add(task);
+                }
                 bool disableParallelMediationForDebug =
                     Convert.ToBoolean(ConfigurationManager.AppSettings["disableParallelMediationForDebug"]);
                 if (disableParallelMediationForDebug)
                 {
-                    Console.WriteLine("Parallel mediation is disabled, this will affect performance.");
-                    foreach (var thisJob in enumerable)
-                    {
-                        try
-                        {
-                            preDecodeFile(thisJob, mediationContext, thisSwitch, tbc, context, newCdrFileJob);
-                            successfullyPreDecodedJobs.Add(thisJob);
-                        }
-                        catch (Exception e)
-                        {
-                            failedPreDecodedJobs.Add(thisJob);
-                            Console.WriteLine(e.ToString());//just print to console and continue with next job;
-                        }
-                    }
+                    decodingTasks.ForEach(decodingTask => decodingTask.Start()); //single threaded
                 }
                 else
                 {
-                    Parallel.ForEach(enumerable.AsParallel(), thisJob =>
-                    {
-                        try
-                        {
-                            preDecodeFile(thisJob, mediationContext, thisSwitch, tbc, context, newCdrFileJob);
-                            successfullyPreDecodedJobs.Add(thisJob);
-                        }
-                        catch (Exception e)
-                        {
-                            failedPreDecodedJobs.Add(thisJob);
-                            Console.WriteLine(e.ToString());//just print to console and continue with next job;
-                        }
-                    });
+                    Parallel.ForEach(decodingTasks, decodingTask => decodingTask.Start()); //parallel
                 }
                 //can't write to db in parallel, reader busy error occurs
                 //no worries about failed jobs, they will be retried again or decoded again in decoder if .predecoded file doesn't exist
                 //no need for commit or rollback too.
-                foreach (var job in successfullyPreDecodedJobs)
+                foreach (var job in successfullPreDecodedJobs)
                 {
                     try
                     {
@@ -142,14 +156,36 @@ namespace LogPreProcessor
                 {
                     string preDecodedDirName = "";
                     string preDecodedFileName = "";
-                    getPathNamesForPreDecoding(failedJob, thisSwitch, tbc, out preDecodedDirName, out preDecodedFileName);
+                    getPathNamesForPreDecoding(failedJob, thisSwitch, tbc, out preDecodedDirName,
+                        out preDecodedFileName);
                     if (File.Exists(preDecodedFileName))
                     {
                         File.Delete(preDecodedFileName);
                     }
                 }
-
             });
+        }
+
+        private static PredecoderInput preparePreDecoderInput(MediationContext mediationContext, ne thisSwitch, TelcobrightConfig tbc, PartnerEntities context, ITelcobrightJob newCdrFileJob, job job)
+        {
+            var cdrJobInputData = new CdrJobInputData(mediationContext, context, thisSwitch, job);
+            ITelcobrightJob newCdrFileJobNewInstance = newCdrFileJob.createNewNonSingletonInstance();
+            PartnerEntities partnerEntitiesNewInstance =
+                new PartnerEntities(DbUtil.GetEntityConnectionString(tbc.DatabaseSetting));
+            partnerEntitiesNewInstance.Database.Connection.Open();
+
+            string predecodedDirName, predecodedFileName;
+            getPathNamesForPreDecoding(job, thisSwitch, tbc, out predecodedDirName,
+                out predecodedFileName);
+            PredecoderInput predecoderInput = new PredecoderInput
+            {
+                CdrJobInputData = cdrJobInputData,
+                PartnerEntitiesNewInstance = partnerEntitiesNewInstance,
+                NewCdrFileJobNewInstance = newCdrFileJobNewInstance,
+                PredecodedFileName = predecodedFileName,
+                PredecodedDirName = predecodedDirName
+            };
+            return predecoderInput;
         }
 
         private static void cleanUpAlreadyFinishedButRemainingPredecodedFiles(ne thisSwitch, TelcobrightConfig tbc, List<job> newCdrFileJobs, PartnerEntities context)
@@ -183,20 +219,11 @@ namespace LogPreProcessor
             return noOfExistingPreDecodedfiles;
         }
 
-        private static void preDecodeFile(job thisJob, MediationContext mediationContext, ne thisSwitch,
-            TelcobrightConfig tbc, PartnerEntities context, ITelcobrightJob newCdrFileJob)
+        private static void preDecodeFile(PredecoderInput input)
         {
-            Console.WriteLine("Predecoding CdrJob for Switch:" + thisSwitch.SwitchName + ", JobName:" +
-                                thisJob.JobName);
-            var cdrJobInputData = new CdrJobInputData(mediationContext, context, thisSwitch, thisJob);
-            if (thisJob.idjobdefinition != 1)
-                throw new Exception(
-                    $"Job type must be 1= newCdrFileJob for cdrPredecoding. jobid:{thisJob.id}, jobName:{thisJob.JobName}");
-
-            string predecodedDirName, predecodedFileName;
-            getPathNamesForPreDecoding(thisJob, thisSwitch, tbc, out predecodedDirName, out predecodedFileName);
-            if (!Directory.Exists(predecodedDirName)) Directory.CreateDirectory(predecodedDirName);
-
+            CdrJobInputData cdrJobInputData = input.CdrJobInputData;
+            ITelcobrightJob newCdrFileJob = input.NewCdrFileJobNewInstance;
+            string predecodedFileName = input.PredecodedFileName;
             var preProcessorInput = new Dictionary<string, object>
             {
                 { "cdrJobInputData",cdrJobInputData},
@@ -205,8 +232,8 @@ namespace LogPreProcessor
             NewCdrPreProcessor newCdrPreProcessor =
                 (NewCdrPreProcessor)newCdrFileJob.PreprocessJob(preProcessorInput);//EXECUTE preDecoding
             List<string[]> txtRows = newCdrPreProcessor.TxtCdrRows;
-            List<string> rowsAsCsvLinesFieldsEnclosedWithBacktick = txtRows.Select(row =>
-                string.Join(",",
+            List<string> rowsAsCsvLinesFieldsEnclosedWithBacktick = 
+                txtRows.Select(row => string.Join(",",
                     row.Select(field => new StringBuilder("`").Append(field).Append("`").ToString()).ToArray())).ToList();
             File.WriteAllLines(predecodedFileName, rowsAsCsvLinesFieldsEnclosedWithBacktick);
             
