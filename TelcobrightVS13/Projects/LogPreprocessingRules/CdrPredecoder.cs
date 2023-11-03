@@ -154,10 +154,13 @@ namespace LogPreProcessor
 
         private static void cleanUpAlreadyFinishedButRemainingPredecodedFiles(ne thisSwitch, TelcobrightConfig tbc, List<job> newCdrFileJobs, PartnerEntities context)
         {
-            string sql = $@"select * from job where idjobdefinition=1 and status=1 and idne={thisSwitch.idSwitch} 
+            //newcdr deletes predecoded files, but still predecoded files may exist due to shutdown of telcobright process
+            //or, if there are more than 500 jobs in predecoded folder due to exception in past preProcessing, no new job files will be predecoded
+            //so clean up erronous and existing predecoded files 
+            string sql = $@"select * from job where idjobdefinition=1 and status in (1,7) and idne={thisSwitch.idSwitch} 
                             and jobname in ({string.Join(",", newCdrFileJobs.Select(j => $"'{j.JobName}'"))})";
-            List<job> alreadyFinishedJobs = context.Database.SqlQuery<job>(sql).ToList();
-            foreach (job alreadyFinishedJob in alreadyFinishedJobs)
+            List<job> jobsToDeletePredecodeFiles = context.Database.SqlQuery<job>(sql).ToList();
+            foreach (job alreadyFinishedJob in jobsToDeletePredecodeFiles)
             {
                 string preDecodedDirName = "";
                 string preDecodedFileName = "";
@@ -168,6 +171,7 @@ namespace LogPreProcessor
                 }
             }
         }
+        
 
         private static int getNoOfExistingFilesInPreDecodedDir(ne thisSwitch, TelcobrightConfig tbc, List<job> newCdrFileJobs)
         {

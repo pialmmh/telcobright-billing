@@ -98,7 +98,8 @@ namespace Process
                                     if (job.idjobdefinition != 1
                                     ) //error process or re-process job, not merging, process as a single job*************
                                     {
-                                        telcobrightJob.Execute(cdrJobInputData); //EXECUTE
+                                        object retVal=telcobrightJob.Execute(cdrJobInputData); //EXECUTE
+                                        telcobrightJob.PostprocessJob(retVal);
                                         cmd.ExecuteCommandText(" commit; ");
                                         closeDbConnection(cmd);
                                         continue;
@@ -107,7 +108,8 @@ namespace Process
                                              neAdditionalSetting?.ProcessMultipleCdrFilesInBatch == false
                                     ) //new cdr job, not merging, process as single job
                                     {
-                                        telcobrightJob.Execute(cdrJobInputData); //EXECUTE
+                                        object retVal=telcobrightJob.Execute(cdrJobInputData); //EXECUTE
+                                        telcobrightJob.PostprocessJob(retVal);
                                         cmd.ExecuteCommandText(" commit; ");
                                         closeDbConnection(cmd);
                                         continue;
@@ -125,11 +127,9 @@ namespace Process
                                         if (headJobForMerge == null &&
                                             preProcessor.TxtCdrRows.Count >=
                                             minRowCountForBatchProcessing) //already large job, process as single
-                                        {
-//but if merge in progress, do not process as single job, headjob for merge!=null means mergeInProgress
-                                            telcobrightJob
-                                                .Execute(
-                                                    cdrJobInputData); //not merging, process as single job************
+                                        {//but if merge in progress, do not process as single job, headjob for merge!=null means mergeInProgress
+                                            object retVal= telcobrightJob.Execute(cdrJobInputData); //not merging, process as single job************
+                                            telcobrightJob.PostprocessJob(retVal);
                                             cmd.ExecuteCommandText(" commit; ");
                                             closeDbConnection(cmd);
                                             continue;
@@ -154,10 +154,7 @@ namespace Process
                                             ) //enough jobs have been merged for batch processing 
                                             {
                                                 cdrJobInputData.MergedJobsDic = mergedJobsDic;
-                                                object retVal =
-                                                    telcobrightJob
-                                                        .Execute(
-                                                            cdrJobInputData); //Execute as merged job************************
+                                                object retVal =telcobrightJob.Execute(cdrJobInputData); //Execute as merged job**
                                                 telcobrightJob.PostprocessJob(retVal);
                                                 cmd.ExecuteCommandText(" commit; ");
                                                 closeDbConnection(cmd);
@@ -219,7 +216,8 @@ namespace Process
                             {
                                 //there are no more jobs
                                 cdrJobInputData.MergedJobsDic = mergedJobsDic;
-                                telcobrightJob.Execute(cdrJobInputData); //process as merged job************************
+                                object retVal= telcobrightJob.Execute(cdrJobInputData); //process as merged job************************
+                                telcobrightJob.PostprocessJob(retVal);
                                 cmd.ExecuteCommandText(" commit; ");
                                 closeDbConnection(cmd);
                                 resetMergeJobStatus();
