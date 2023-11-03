@@ -117,9 +117,10 @@ namespace Process
                         //double check if file is still being written, by trying exclusive f open
                         var templist = fileInfos;//add logic to check if this file already exists in job table
                         fileInfos = new List<FileInfo>();
+                        FileAndPathHelperMutable pathHelper= new FileAndPathHelperMutable();
                         foreach (var fileInfo in templist)
                         {
-                            if (FileAndPathHelper.IsFileLockedOrBeingWritten(fileInfo) == false)
+                            if (pathHelper.IsFileLockedOrBeingWritten(fileInfo) == false)
                             {
                                 fileInfos.Add(fileInfo);
                             }

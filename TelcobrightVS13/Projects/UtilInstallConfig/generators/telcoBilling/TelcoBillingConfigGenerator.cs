@@ -184,7 +184,8 @@ namespace InstallConfig
             string configRoot = tbc.DirectorySettings.ConfigRoot;
             string targetDir =
                 configPathHelper.GetOperatorWiseConfigDirInUtil(operatorShortName, configRoot);
-            FileAndPathHelper.DeleteFileContaining(targetDir, "*.conf");
+            FileAndPathHelperMutable pathHelper= new FileAndPathHelperMutable();
+            pathHelper.DeleteFileContaining(targetDir, "*.conf");
             SerializeConfigAndWriteJsonFile(tbc, configPathHelper.GetOperatorWiseTargetFileNameInUtil(operatorShortName,configRoot));
             //write config for windows service
             targetDir = configPathHelper.GetTopShelfConfigDir();

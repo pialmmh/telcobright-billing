@@ -299,7 +299,8 @@ namespace Jobs
         {
             string fileName = getFullPathOfCdrFile();
             FileInfo cdrFileInfo= new FileInfo(fileName);
-            if (FileAndPathHelper.IsFileLockedOrBeingWritten(cdrFileInfo) == true)
+            FileAndPathHelperMutable pathHelper = new FileAndPathHelperMutable();
+            if (pathHelper.IsFileLockedOrBeingWritten(cdrFileInfo) == true)
             {
                 throw new Exception("Could not get exclusive lock on file before decoding, file transfer may be not finished yet through the network or FTP.");
             }

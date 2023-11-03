@@ -129,7 +129,7 @@ namespace InstallConfig
 
         private static Dictionary<string, string> GetDeploymentInstanceToMenuItems()
         {
-            DirectoryInfo utilDir = (new DirectoryInfo(FileAndPathHelper.GetCurrentExecPath()).Parent).Parent;
+            DirectoryInfo utilDir = (new DirectoryInfo(FileAndPathHelperReadOnly.GetCurrentExecPath()).Parent).Parent;
             string deploymentProfile = ConfigurationManager.AppSettings.ToDictionary()
                                         .First(kv => kv.Key.Equals("deploymentProfile")).Value;
             string deployJson = utilDir.FullName + Path.DirectorySeparatorChar

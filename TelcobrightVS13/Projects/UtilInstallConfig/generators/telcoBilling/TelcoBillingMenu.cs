@@ -333,7 +333,7 @@ namespace InstallConfig
         private static void deployBinariesForProduction(TelcobrightConfig tbc)
         {
             Console.WriteLine("Deploying binaries for " + tbc.Telcobrightpartner.databasename);
-            string currentbinPath = FileAndPathHelper.getBinPath();
+            string currentbinPath = FileAndPathHelperReadOnly.getBinPath();
             string solutionDir = new DirectoryInfo(currentbinPath).Parent.Parent.FullName;
             DeploymentHelper deploymentHelper =
                 new DeploymentHelper(tbc, solutionDir,DeploymentPlatform.Win32);
@@ -353,9 +353,10 @@ namespace InstallConfig
         static void DeletePrevConfigFilesForPortalAndWinService(ConfigPathHelper configPathHelper)
         {
             string targetDir = configPathHelper.GetTopShelfConfigDir();
-            FileAndPathHelper.DeleteFileContaining(targetDir, "*.conf");
+            FileAndPathHelperMutable pathHelper= new FileAndPathHelperMutable();
+            pathHelper.DeleteFileContaining(targetDir, "*.conf");
             targetDir = configPathHelper.GetPortalBinPath();
-            FileAndPathHelper.DeleteFileContaining(targetDir, "*.conf");
+            pathHelper.DeleteFileContaining(targetDir, "*.conf");
         }
         
         static void CopyPortal(string operatorDatabaseName)
