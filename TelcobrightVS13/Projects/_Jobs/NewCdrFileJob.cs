@@ -94,6 +94,20 @@ namespace Jobs
             if (CollectorInput.Ne.FilterDuplicateCdr == 1 && preProcessor.TxtCdrRows.Count > 0) //this.part is done using separate connection
             {//performs ddl statement through new table creation and may autocommit
                 preProcessor = this.filterDuplicates(preProcessor);
+                Dictionary<string, int> billIdVsCount =
+                    preProcessor.TxtCdrRows.GroupBy(r => r[Fn.UniqueBillId])
+                        .Select(g => new
+                        {
+                            UniqueBillId = g.Key,
+                            Count = g.Count()
+                        }).ToDictionary(a => a.UniqueBillId, a => a.Count);
+                foreach (var kv in billIdVsCount)
+                {
+                    string uniqueBillId = kv.Key;
+                    int count = kv.Value;
+                    if(count>1)
+                        throw new Exception($"Duplicate billid: ({uniqueBillId}) found after filtering duplicates.");
+                }
             }
             openDbConAndStartTransaction();//open new connection and start transaction
 
@@ -284,6 +298,11 @@ namespace Jobs
         private NewCdrPreProcessor DecodeNewCdrFile(bool preDecodingStage)
         {
             string fileName = getFullPathOfCdrFile();
+            FileInfo cdrFileInfo= new FileInfo(fileName);
+            if (FileAndPathHelper.IsFileLockedOrBeingWritten(cdrFileInfo) == true)
+            {
+                throw new Exception("Could not get exclusive lock on file before decoding, file transfer may be not finished yet through the network or FTP.");
+            }
             this.CollectorInput = new CdrCollectorInputData(this.Input, fileName);
             var cdrCollector = new FileBasedTextCdrCollector(this.CollectorInput);
             AbstractCdrDecoder decoder = cdrCollector.getDecoder();
@@ -344,17 +363,19 @@ namespace Jobs
         protected void initAndFormatTxtRowsBeforeCdrConversion(NewCdrPreProcessor preProcessor)
         {
             var collectorinput = this.CollectorInput;
+            var cdrSetting = collectorinput.CdrJobInputData.MediationContext.Tbc.CdrSetting;
             SetIdCallsInSameOrderAsCollected(preProcessor, collectorinput);
-
-            //private static void SetIdCallAsBillId(NewCdrPreProcessor preProcessor)
-            //{
-            //    preProcessor.TxtCdrRows.ForEach(txtRow => txtRow[98] = txtRow[1]);
-            //}
+            
             Parallel.ForEach(preProcessor.TxtCdrRows, txtRow =>
             {
                 if (this.CollectorInput.Ne.UseIdCallAsBillId==1)
                 {
                     txtRow[Fn.UniqueBillId] = txtRow[Fn.IdCall];
+                }
+                if (cdrSetting.SummaryTimeField == SummaryTimeFieldEnum.AnswerTime)
+                {
+                    txtRow[Fn.SignalingStartTime] = txtRow[Fn.StartTime];
+                    txtRow[Fn.StartTime] = txtRow[Fn.AnswerTime];
                 }
                 preProcessor.SetAllBlankFieldsToZerolengthString(txtRow);
                 preProcessor.RemoveIllegalCharacters(collectorinput.Tbc.CdrSetting
@@ -364,10 +385,10 @@ namespace Jobs
                 preProcessor
                     .AdjustStartTimeBasedOnCdrSettingsForSummaryTimeField(
                         collectorinput.Tbc.CdrSetting.SummaryTimeField, txtRow);
+
             });
             MefValidator<string[]> inconistentValidator =
                 NewCdrPreProcessor.CreateValidatorForInconsistencyCheck(collectorinput);
-            var cdrSetting = collectorinput.CdrJobInputData.MediationContext.Tbc.CdrSetting;
             if (cdrSetting.PartialCdrEnabledNeIds
                 .Contains(collectorinput.Ne.idSwitch))
             {
