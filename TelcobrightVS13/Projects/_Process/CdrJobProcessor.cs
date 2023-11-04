@@ -16,6 +16,7 @@ using System.Data.Common;
 using System.Data.Entity;
 using Quartz;
 using LibraryExtensions;
+using Newtonsoft.Json;
 using QuartzTelcobright;
 using TelcobrightMediation.Cdr;
 using TelcobrightMediation.Config;
@@ -284,8 +285,16 @@ namespace Process
 
         private static void UpdateJobWithErrorInfo(DbCommand cmd, job telcobrightJob, Exception e)
         {
+            List<CdrMergedJobError> mergedJobErrors = new List<CdrMergedJobError>();
+            foreach (var mergedJobError in e.Data.Values)
+            {
+                var errorWithoutJob = (CdrMergedJobError)mergedJobError;
+                errorWithoutJob.Job = null;//to avoid some circult reference during serialization
+                mergedJobErrors.Add(errorWithoutJob);
+            }
+            string errorDetailAsTxt = JsonConvert.SerializeObject(mergedJobErrors).Replace("'","");
             cmd.CommandText = " update job set `Error`= '" +
-                              e.Message.Replace("'", "") +
+                              e.Message.Replace("'", "") + errorDetailAsTxt +
                               Environment.NewLine + (e.InnerException?.ToString().Replace("'", "") ?? "")
                               + "' " + " where id=" + telcobrightJob.id + ";commit;";
             cmd.ExecuteNonQuery();
