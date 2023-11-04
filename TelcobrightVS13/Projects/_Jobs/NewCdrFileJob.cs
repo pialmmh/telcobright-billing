@@ -94,19 +94,56 @@ namespace Jobs
             if (CollectorInput.Ne.FilterDuplicateCdr == 1 && preProcessor.TxtCdrRows.Count > 0) //this.part is done using separate connection
             {//performs ddl statement through new table creation and may autocommit
                 preProcessor = this.filterDuplicates(preProcessor);
-                Dictionary<string, int> billIdVsCount =
+
+                Dictionary<string, List<string[]>> billIdVsCount =
                     preProcessor.TxtCdrRows.GroupBy(r => r[Fn.UniqueBillId])
                         .Select(g => new
                         {
                             UniqueBillId = g.Key,
-                            Count = g.Count()
-                        }).ToDictionary(a => a.UniqueBillId, a => a.Count);
+                            Rows = g.ToList()
+                        }).ToDictionary(a => a.UniqueBillId, a=>a.Rows);
+
                 foreach (var kv in billIdVsCount)
                 {
                     string uniqueBillId = kv.Key;
-                    int count = kv.Value;
-                    if(count>1)
-                        throw new Exception($"Duplicate billid: ({uniqueBillId}) found after filtering duplicates.");
+                    List<string[]> rows = kv.Value;
+
+                    List<CdrMergedJobError> mergedJobErrors = rows.Select(r => new CdrMergedJobError
+                    {
+                        Filename = r[Fn.Filename],
+                        Job = this.HandledJobs.First(j => j.JobName == r[Fn.Filename]),
+                        UniqueBillid = r[Fn.UniqueBillId],
+                        Starttime = r[Fn.StartTime],
+                        Answertime = r[Fn.AnswerTime],
+                        CalledNumber = r[Fn.OriginatingCalledNumber],
+                        CallingNumber = r[Fn.OriginatingCallingNumber],
+                        Duration = r[Fn.DurationSec]
+                    }).ToList();
+                    //List<string> x = rows.Select(r =>
+                    //{
+                    //    var y= new
+                    //    {
+                    //        Filename = r[Fn.Filename],
+                    //        UniqueBillid = r[Fn.UniqueBillId],
+                    //        Starttime = r[Fn.StartTime],
+                    //        Answertime = r[Fn.AnswerTime],
+                    //        CalledNumber= r[Fn.OriginatingCalledNumber],
+                    //        CallingNumber= r[Fn.OriginatingCallingNumber],
+                    //        Duration= r[Fn.DurationSec]
+                    //    };
+                    //    return $"Filename, sessionid, starttime, answertime, callednumber,callingnumber,actualDuration\r\n" +
+                    //           $"{y.Filename},{y.UniqueBillid},{y.Starttime},{y.Answertime},{y.CalledNumber},{y.CallingNumber},{y.Duration}\r\n";
+
+                    //}).ToList();
+                    if (rows.Count>1)
+                    {
+                        var exception = new Exception($"Duplicate billid: ({uniqueBillId}) found after filtering duplicates.");
+                        foreach (var mergedJobError in mergedJobErrors)
+                        {
+                            exception.Data.Add(mergedJobError.Job.id.ToString(), mergedJobError);
+                        }
+                        throw exception;
+                    }
                 }
             }
             openDbConAndStartTransaction();//open new connection and start transaction

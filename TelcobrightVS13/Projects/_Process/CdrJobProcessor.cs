@@ -76,6 +76,12 @@ namespace Process
                         List<job> incompleteJobs = GetReProcessJobs(context, ne, ne.DecodingSpanCount);
                         incompleteJobs.AddRange(GetNewCdrJobs(tbc, context, ne, ne.DecodingSpanCount,
                             neAdditionalSetting)); //combine
+                        //jobs with error to be processed as single job and add them to the first of the list, adding them to the last is a bit difficult to manage merge processing
+                        List<job> jobsWithError = incompleteJobs.Where(j => !j.Error.IsNullOrEmptyOrWhiteSpace())
+                            .ToList();
+                        incompleteJobs = incompleteJobs.Where(ij => !jobsWithError.Select(ej => ej.id).Contains(ij.id))
+                            .ToList();//without jobs with error, 
+                        incompleteJobs = jobsWithError.Union(incompleteJobs).ToList();
                         CdrJobInputData cdrJobInputData = null;
                         ITelcobrightJob telcobrightJob = null;
                         using (DbCommand cmd = context.Database.Connection.CreateCommand())
@@ -104,8 +110,8 @@ namespace Process
                                         closeDbConnection(cmd);
                                         continue;
                                     }
-                                    else if (neAdditionalSetting == null ||
-                                             neAdditionalSetting?.ProcessMultipleCdrFilesInBatch == false
+                                    if (neAdditionalSetting == null ||
+                                        neAdditionalSetting?.ProcessMultipleCdrFilesInBatch == false
                                     ) //new cdr job, not merging, process as single job
                                     {
                                         object retVal=telcobrightJob.Execute(cdrJobInputData); //EXECUTE
@@ -114,7 +120,15 @@ namespace Process
                                         closeDbConnection(cmd);
                                         continue;
                                     }
-                                    else if (neAdditionalSetting?.ProcessMultipleCdrFilesInBatch == true
+                                    if (!job.Error.IsNullOrEmptyOrWhiteSpace()) //jobs with error, process as single job
+                                    {
+                                        object retVal = telcobrightJob.Execute(cdrJobInputData); //EXECUTE
+                                        telcobrightJob.PostprocessJob(retVal);
+                                        cmd.ExecuteCommandText(" commit; ");
+                                        closeDbConnection(cmd);
+                                        continue;
+                                    }
+                                    if (neAdditionalSetting?.ProcessMultipleCdrFilesInBatch == true
                                     ) //merge new cdr jobs for batch processing
                                     {
                                         var inputForPreprocess = new Dictionary<string, object>
@@ -167,6 +181,11 @@ namespace Process
                                 {
                                     try
                                     {
+                                        List<CdrMergedJobError> mergedJobErrors = new List<CdrMergedJobError>();
+                                        foreach (var mergedJobError in e.Data.Values)
+                                        {
+                                            mergedJobErrors.Add((CdrMergedJobError)mergedJobError);
+                                        }
                                         resetMergeJobStatus();
                                         if (cmd.Connection.State != ConnectionState.Open) cmd.Connection.Open();
                                         cmd.ExecuteCommandText(" rollback; ");
@@ -180,7 +199,17 @@ namespace Process
                                             "CdrJob processing error.", tbc.Telcobrightpartner.CustomerName, context);
                                         try
                                         {
-                                            UpdateJobWithErrorInfo(cmd, job, e);
+                                            if (!mergedJobErrors.Any())
+                                            {
+                                                UpdateJobWithErrorInfo(cmd, job, e);
+                                            }
+                                            else
+                                            {
+                                                foreach (var mergedJobError in mergedJobErrors)
+                                                {
+                                                    UpdateJobWithErrorInfo(cmd, mergedJobError.Job, e);
+                                                }
+                                            }
                                             closeDbConnection(cmd);
                                         }
                                         catch (Exception e2)

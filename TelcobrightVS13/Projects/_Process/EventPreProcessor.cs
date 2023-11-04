@@ -60,7 +60,9 @@ namespace Process
 
                         if (ne.SkipCdrDecoded == 1 || CheckIncompleteExists(context, mediationContext, ne) == false)
                             continue;
-                        List<job> incompleteJobs = GetNewCdrJobs(tbc, context, ne, ne.DecodingSpanCount);
+                        int maxNumberOfFilesToPreDecode = neAdditionalSetting.MaxNumberOfFilesInPreDecodedDirectory;
+
+                        List<job> incompleteJobs = GetNewCdrJobs(tbc, context, ne, maxNumberOfFilesToPreDecode);
                         if (incompleteJobs.Any() == false) continue;
 
                         foreach (var eventPreprocessingRule in eventPreprocessingRules)
@@ -132,7 +134,7 @@ namespace Process
             return mefDecoders;
         }
 
-        public List<job> GetNewCdrJobs(TelcobrightConfig tbc, PartnerEntities contextTb, ne thisSwitch, int? decodingSpan)
+        public List<job> GetNewCdrJobs(TelcobrightConfig tbc, PartnerEntities contextTb, ne thisSwitch, int maxNumberOfFilesToPreDecode)
         {
             List<job> jobs = null;
             if (tbc.CdrSetting.DescendingOrderWhileProcessingListedFiles == true)
@@ -145,7 +147,7 @@ namespace Process
                     .Include(c => c.ne.enumcdrformat)
                     .Include(c => c.ne.telcobrightpartner)
                     .OrderByDescending(c => c.JobName)
-                    .Take(Convert.ToInt32(decodingSpan)).ToList();
+                    .Take(Convert.ToInt32(maxNumberOfFilesToPreDecode)).ToList();
             }
             else
             {
@@ -157,7 +159,7 @@ namespace Process
                     .Include(c => c.ne.enumcdrformat)
                     .Include(c => c.ne.telcobrightpartner)
                     .OrderBy(c => c.JobName)
-                    .Take(Convert.ToInt32(decodingSpan)).ToList();
+                    .Take(Convert.ToInt32(maxNumberOfFilesToPreDecode)).ToList();
             }
             return jobs;
         }
