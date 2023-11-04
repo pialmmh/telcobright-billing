@@ -140,7 +140,8 @@ namespace Jobs
                         var exception = new Exception($"Duplicate billid: ({uniqueBillId}) found after filtering duplicates.");
                         foreach (var mergedJobError in mergedJobErrors)
                         {
-                            exception.Data.Add(mergedJobError.Job.id.ToString(), mergedJobError);
+                            if(exception.Data.Contains(mergedJobError.Job.id.ToString())==false)
+                                exception.Data.Add(mergedJobError.Job.id.ToString(), mergedJobError);
                         }
                         throw exception;
                     }
