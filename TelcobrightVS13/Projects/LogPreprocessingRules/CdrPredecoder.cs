@@ -272,7 +272,7 @@ namespace LogPreProcessor
 
                 //now take orphan files in existing dir, if they don't have a corresponding job with status=2 (prepared) delete
                 string[] orphanFileNames = Directory.GetFiles(preDecodedDirName, "*.predecoded")
-                    .Select(f=>Path.GetFileName(f).Replace("*.predecoded","")).ToArray();
+                    .Select(f=>Path.GetFileName(f).Replace(".predecoded","")).ToArray();
                 sql = $@"select * from job where idjobdefinition=1 and status !=2 and idne={thisSwitch.idSwitch} 
                             and jobname in ({string.Join(",", orphanFileNames.Select(f => $"'{f}'"))})";
                 foreach (string orphanFileName in orphanFileNames)
