@@ -209,6 +209,7 @@ namespace Process
                                                 foreach (var mergedJobError in mergedJobErrors)
                                                 {
                                                     UpdateJobWithErrorInfo(cmd, mergedJobError.Job, e);
+                                                    closeDbConnection(cmd);
                                                 }
                                             }
                                             closeDbConnection(cmd);
