@@ -291,7 +291,7 @@ namespace LogPreProcessor
             Dictionary<string, job> jobsInPreparedStatusSubset = context.Database.SqlQuery<job>(sql).ToList()
                 .Select(j => new
                 {
-                    Filename = $"{j.JobName}.predecoded",
+                    Filename = $"{j.JobName}",
                     Job = j
                 }).ToDictionary(a => a.Filename, a => a.Job);
 
