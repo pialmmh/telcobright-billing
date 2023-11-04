@@ -34,6 +34,12 @@ namespace LogPreProcessor
         public string PredecodedFileName { get; set; }
         public string PredecodedDirName { get; set; }
     }
+
+    class PredecoderOutput
+    {
+        public job SuccessfulJob { get; set; }
+        public job FailedJob { get; set; }
+    }
     [Export("LogPreprocessor", typeof(EventPreprocessingRule))]
     public class CdrPredecoder : EventPreprocessingRule
     {
@@ -105,23 +111,25 @@ namespace LogPreProcessor
                 List<Task> decodingTasks = new List<Task>();
                 foreach (var job in enumerable)
                 {
-                    PredecoderInput predecoderInput = preparePreDecoderInput(mediationContext, thisSwitch, tbc, context, newCdrFileJob, job);
+                    PredecoderInput predecoderInput = preparePreDecoderInput(mediationContext, thisSwitch, tbc, context, 
+                        newCdrFileJob, job, successfullPreDecodedJobs,failedPreDecodedJobs);
                     if (!Directory.Exists(predecoderInput.PredecodedDirName))
                         Directory.CreateDirectory(predecoderInput.PredecodedDirName);
 
                     Task task = new Task(() =>
-                    {
-                        try
+                    {//no need for try catch, handled within preDecodeFile();
+                        Console.WriteLine("Predecoding CdrJob for Switch:" + thisSwitch.SwitchName + ", JobName:" +
+                                          job.JobName);
+                        PredecoderOutput output = preDecodeFile(predecoderInput);
+                        if (output.SuccessfulJob != null)
                         {
-                            Console.WriteLine("Predecoding CdrJob for Switch:" + thisSwitch.SwitchName + ", JobName:" +
-                                              job.JobName);
-                            preDecodeFile(predecoderInput);
-                            successfullPreDecodedJobs.Add(job);
+                            successfullPreDecodedJobs.Add(output.SuccessfulJob);
                         }
-                        catch (Exception e)
+                        else
                         {
-                            Console.WriteLine(e);
-                            failedPreDecodedJobs.Add(job);
+                            if (output.FailedJob == null)
+                                throw new Exception("Failed job cannot be null when successful job is null too.");
+                            failedPreDecodedJobs.Add(output.FailedJob);
                         }
                     });
                     decodingTasks.Add(task);
@@ -166,7 +174,9 @@ namespace LogPreProcessor
             });
         }
 
-        private static PredecoderInput preparePreDecoderInput(MediationContext mediationContext, ne thisSwitch, TelcobrightConfig tbc, PartnerEntities context, ITelcobrightJob newCdrFileJob, job job)
+        private static PredecoderInput preparePreDecoderInput(MediationContext mediationContext, ne thisSwitch, TelcobrightConfig tbc, 
+            PartnerEntities context, ITelcobrightJob newCdrFileJob, job job,
+            BlockingCollection<job> successfullPreDecodedJobs, BlockingCollection<job> failedPreDecodedJobs)
         {
             var cdrJobInputData = new CdrJobInputData(mediationContext, context, thisSwitch, job);
             ITelcobrightJob newCdrFileJobNewInstance = newCdrFileJob.createNewNonSingletonInstance();
@@ -183,7 +193,7 @@ namespace LogPreProcessor
                 PartnerEntitiesNewInstance = partnerEntitiesNewInstance,
                 NewCdrFileJobNewInstance = newCdrFileJobNewInstance,
                 PredecodedFileName = predecodedFileName,
-                PredecodedDirName = predecodedDirName
+                PredecodedDirName = predecodedDirName, 
             };
             return predecoderInput;
         }
@@ -219,24 +229,38 @@ namespace LogPreProcessor
             return noOfExistingPreDecodedfiles;
         }
 
-        private static void preDecodeFile(PredecoderInput input)
+        private static PredecoderOutput preDecodeFile(PredecoderInput input)
         {
-            CdrJobInputData cdrJobInputData = input.CdrJobInputData;
-            ITelcobrightJob newCdrFileJob = input.NewCdrFileJobNewInstance;
-            string predecodedFileName = input.PredecodedFileName;
-            var preProcessorInput = new Dictionary<string, object>
+            PredecoderOutput output= new PredecoderOutput();
+            try
             {
-                { "cdrJobInputData",cdrJobInputData},
-                { "preDecodingStageOnly", true}
-            };
-            NewCdrPreProcessor newCdrPreProcessor =
-                (NewCdrPreProcessor)newCdrFileJob.PreprocessJob(preProcessorInput);//EXECUTE preDecoding
-            List<string[]> txtRows = newCdrPreProcessor.TxtCdrRows;
-            List<string> rowsAsCsvLinesFieldsEnclosedWithBacktick = 
-                txtRows.Select(row => string.Join(",",
-                    row.Select(field => new StringBuilder("`").Append(field).Append("`").ToString()).ToArray())).ToList();
-            File.WriteAllLines(predecodedFileName, rowsAsCsvLinesFieldsEnclosedWithBacktick);
-            
+                CdrJobInputData cdrJobInputData = input.CdrJobInputData;
+                ITelcobrightJob newCdrFileJob = input.NewCdrFileJobNewInstance;
+                string predecodedFileName = input.PredecodedFileName;
+                var preProcessorInput = new Dictionary<string, object>
+                {
+                    {"cdrJobInputData", cdrJobInputData},
+                    {"preDecodingStageOnly", true}
+                };
+                NewCdrPreProcessor newCdrPreProcessor =
+                    (NewCdrPreProcessor) newCdrFileJob.PreprocessJob(preProcessorInput); //EXECUTE preDecoding
+                List<string[]> txtRows = newCdrPreProcessor.TxtCdrRows;
+                List<string> rowsAsCsvLinesFieldsEnclosedWithBacktick =
+                    txtRows.Select(row => string.Join(",",
+                            row.Select(field => new StringBuilder("`").Append(field).Append("`").ToString()).ToArray()))
+                        .ToList();
+                File.WriteAllLines(predecodedFileName, rowsAsCsvLinesFieldsEnclosedWithBacktick);
+                output.SuccessfulJob = cdrJobInputData.Job;
+                output.FailedJob = null;
+                return output;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                output.FailedJob = input.CdrJobInputData.Job;
+                output.SuccessfulJob = null;
+                return output;
+            }
         }
 
         private static void getPathNamesForPreDecoding(job thisJob, ne thisSwitch, TelcobrightConfig tbc, out string predecodedDirName, out string predecodedFileName)

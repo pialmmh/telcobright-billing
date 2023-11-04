@@ -42,7 +42,7 @@ namespace TelcobrightMediation
         public List<DateTime> DatesInvolved { get; } //set by new cdrs only, which covers old cdr case as well.
         public List<DateTime> HoursInvolved { get; } //set by new cdrs only, which covers old cdr case as well.
         public int SegmentSizeForDbWrite => this.MediationContext.Tbc.CdrSetting.SegmentSizeForDbWrite;
-        public job TelcobrightJob => this.CdrjobInputData.TelcobrightJob;
+        public job TelcobrightJob => this.CdrjobInputData.Job;
         public PartnerEntities Context => this.CdrjobInputData.Context;
         public DbCommand DbCmd { get; }
         public AutoIncrementManager AutoIncrementManager { get; }

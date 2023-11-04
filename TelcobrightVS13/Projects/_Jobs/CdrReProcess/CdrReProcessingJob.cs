@@ -34,7 +34,7 @@ namespace Jobs
             SegmentedCdrReprocessJobProcessor segmentedCdrReprocessJobProcessor =
                 new SegmentedCdrReprocessJobProcessor(cdrCollectorInput,
                     input.CdrSetting.BatchSizeWhenPreparingLargeSqlJob, "IdCall", "starttime");
-            if (input.TelcobrightJob.Status != 2) //prepare job if not prepared already
+            if (input.Job.Status != 2) //prepare job if not prepared already
                 segmentedCdrReprocessJobProcessor.PrepareSegments();
             List<jobsegment> jobsegments = segmentedCdrReprocessJobProcessor.ExecuteIncompleteSegments();
             segmentedCdrReprocessJobProcessor.FinishJob(jobsegments,null); //mark job as complete

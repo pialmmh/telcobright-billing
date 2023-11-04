@@ -48,15 +48,15 @@ namespace TelcobrightMediation
         public AutoIncrementManager AutoIncrementManager => this.MediationContext.AutoIncrementManager;
         public PartnerEntities Context { get; }
         public ne Ne { get; }
-        public job TelcobrightJob { get; }
+        public job Job { get; }
         public Dictionary<long, NewCdrWrappedJobForMerge> MergedJobsDic { get; set; }= new Dictionary<long, NewCdrWrappedJobForMerge>();
         public bool IsBatchJob => this.MergedJobsDic.Any();
-        public CdrJobInputData(MediationContext mediationContext, PartnerEntities context, ne ne, job telcobrightJob)
+        public CdrJobInputData(MediationContext mediationContext, PartnerEntities context, ne ne, job job)
         {
             this.MediationContext = mediationContext;
             this.Context = context;
             this.Ne = ne;
-            this.TelcobrightJob = telcobrightJob;
+            this.Job = job;
         }
     }
 }

@@ -59,13 +59,13 @@ namespace Jobs
             if (cdrJob.CdrProcessor.CollectionResult.ConcurrentCdrExts.Count > 0)//job not empty, or has records
             {
                 cdrJob.Execute();//MAIN EXECUTION/MEDIATION METHOD
-                WriteJobCompletionIfCollectionNotEmpty(cdrJob.CdrProcessor.CollectionResult, this.Input.TelcobrightJob,cdrJob.CdrProcessor.CdrJobContext.Context);
+                WriteJobCompletionIfCollectionNotEmpty(cdrJob.CdrProcessor.CollectionResult, this.Input.Job,cdrJob.CdrProcessor.CdrJobContext.Context);
             }
             else
             {
                 if (cdrJob.CdrProcessor.CollectionResult.CdrInconsistents.Count > 0)
                 {
-                    if (this.Input.TelcobrightJob.idjobdefinition == 1 &&
+                    if (this.Input.Job.idjobdefinition == 1 &&
                         cdrJob.CdrProcessor.CollectionResult.CdrInconsistents.Count > 0) //newcdr
                     {
                         cdrJob.CdrProcessor.WriteCdrInconsistent();
@@ -78,7 +78,7 @@ namespace Jobs
                         throw new Exception("Empty new cdr files are not considered valid as per cdr setting.");
                     }
                 }
-                WriteJobCompletionIfCollectionIsEmpty(cdrJob.CdrProcessor.CollectionResult, this.Input.TelcobrightJob, cdrJob.CdrProcessor.CdrJobContext.Context);
+                WriteJobCompletionIfCollectionIsEmpty(cdrJob.CdrProcessor.CollectionResult, this.Input.Job, cdrJob.CdrProcessor.CdrJobContext.Context);
             }
             if (this.Input.CdrSetting.DisableCdrPostProcessingJobCreationForAutomation == false)
             {
@@ -93,7 +93,7 @@ namespace Jobs
             string fileLocationName = this.Input.Ne.SourceFileLocations;
             FileLocation fileLocation = this.Input.MediationContext.Tbc.DirectorySettings.FileLocations[fileLocationName];
             string fileName = fileLocation.GetOsNormalizedPath(fileLocation.StartingPath)
-                              + Path.DirectorySeparatorChar + this.Input.TelcobrightJob.JobName;
+                              + Path.DirectorySeparatorChar + this.Input.Job.JobName;
             this.CollectorInput = new CdrCollectorInputData(this.Input, fileName);
             IEventCollector cdrCollector = new FileBasedTextCdrCollector(this.CollectorInput);
             return (NewCdrPreProcessor)cdrCollector.Collect();

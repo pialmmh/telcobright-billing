@@ -12,13 +12,13 @@ namespace TelcobrightMediation
     public class LcrJobInputData : ITelcobrightJobInput
     {
         public TelcobrightConfig Tbc { get; }
-        public job TelcobrightJob { get; }
+        public job Job { get; }
         public PartnerEntities Context { get; }
         public ne Ne { get; }
         public LcrJobInputData(TelcobrightConfig tbc, job telcobrightJob)
         {
             this.Tbc = tbc;
-            this.TelcobrightJob = telcobrightJob;
+            this.Job = telcobrightJob;
             this.Context = null;
         }
     }

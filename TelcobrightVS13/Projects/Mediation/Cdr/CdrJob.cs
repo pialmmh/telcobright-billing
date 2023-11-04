@@ -119,7 +119,7 @@ namespace TelcobrightMediation.Cdr
         protected void ValidateCdrProcessorWithMediationTester(CdrJobInputData input, ParallelQuery<CdrExt> processedCdrExts)
         {
             MediationTester mediationTester =
-                new MediationTester(input.TelcobrightJob);
+                new MediationTester(input.Job);
             if (!mediationTester.DurationSumInCdrAndSummaryAreEqual(processedCdrExts))
                 throw new Exception("Duration sum in cdr and summary are not tollerably equal");
             if (!mediationTester.SummaryCountTwiceAsCdrCount(processedCdrExts))
@@ -138,7 +138,7 @@ namespace TelcobrightMediation.Cdr
         protected void ValidateCdrEraserWithMediationTester(CdrJobInputData input, ParallelQuery<CdrExt> processedCdrExts)
         {
             MediationTester mediationTester =
-                new MediationTester(input.TelcobrightJob);
+                new MediationTester(input.Job);
             if (!mediationTester.DurationSumInCdrAndSummaryAreEqual(processedCdrExts))
                 throw new Exception("Duration sum in cdr and summary are not tollerably equal");
             if (!mediationTester.SummaryCountTwiceAsCdrCount(processedCdrExts))
@@ -155,7 +155,7 @@ namespace TelcobrightMediation.Cdr
         protected void AssertWithMediationTester(CdrJobInputData input, ParallelQuery<CdrExt> processedCdrExts)
         {
             MediationTester mediationTester =
-                new MediationTester(input.TelcobrightJob);
+                new MediationTester(input.Job);
             Assert.IsTrue(mediationTester.DurationSumInCdrAndSummaryAreEqual(processedCdrExts));
             Assert.IsTrue(mediationTester.SummaryCountTwiceAsCdrCount(processedCdrExts));
             //todo: do something about this test which makes database trip & need to modify this to work with both eraser & processor

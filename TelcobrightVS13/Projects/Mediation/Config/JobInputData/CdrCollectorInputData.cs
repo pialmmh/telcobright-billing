@@ -11,7 +11,7 @@ namespace TelcobrightMediation
         public TelcobrightConfig Tbc => this.CdrJobInputData.Tbc;
         public ne Ne => this.CdrJobInputData.Ne;
         public CdrSetting CdrSetting => this.CdrJobInputData.Tbc.CdrSetting;
-        public job TelcobrightJob => this.CdrJobInputData.TelcobrightJob;
+        public job TelcobrightJob => this.CdrJobInputData.Job;
         public MefDecoderContainer MefDecodersData => this.CdrJobInputData.MediationContext.MefDecoderContainer;
         public string FullPath { get; set; }
         public AutoIncrementManager AutoIncrementManager { get; }

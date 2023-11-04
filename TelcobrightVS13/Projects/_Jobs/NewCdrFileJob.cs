@@ -73,7 +73,7 @@ namespace Jobs
 
             if (this.Input.IsBatchJob == false) //not batch job
             {
-                this.HandledJobs = new List<job> { this.Input.TelcobrightJob };
+                this.HandledJobs = new List<job> { this.Input.Job };
                 preProcessor = DecodeNewCdrFile(preDecodingStage: false);
             }
             else //batch or merged job
@@ -204,7 +204,7 @@ namespace Jobs
         {
             if (cdrJob.CdrProcessor.CollectionResult.CdrInconsistents.Count > 0)
             {
-                if (this.Input.TelcobrightJob.idjobdefinition == 1 &&
+                if (this.Input.Job.idjobdefinition == 1 &&
                     cdrJob.CdrProcessor.CollectionResult.CdrInconsistents.Count > 0)//newcdr
                 {
                     cdrJob.CdrProcessor.WriteCdrInconsistent();
@@ -217,7 +217,7 @@ namespace Jobs
                     throw new Exception("Empty new cdr files are not considered valid as per cdr setting.");
                 }
             }
-            WriteJobCompletionIfCollectionIsEmpty(0, this.Input.TelcobrightJob, cdrJob.CdrProcessor.CdrJobContext.Context);
+            WriteJobCompletionIfCollectionIsEmpty(0, this.Input.Job, cdrJob.CdrProcessor.CdrJobContext.Context);
             if (this.Input.CdrSetting.DisableCdrPostProcessingJobCreationForAutomation == false)
             {
                 CreateNewCdrPostProcessingJobs(this.Input.Context, this.Input.MediationContext.Tbc, cdrJob.CdrProcessor.CdrJobContext.TelcobrightJob);
@@ -233,7 +233,7 @@ namespace Jobs
             {
                 //this.CollectorInput.CdrJobInputData.MergedJobsDic
                 WriteJobCompletionIfCollectionNotEmpty(cdrJob.CdrProcessor.CollectionResult.RawCount,
-                    this.Input.TelcobrightJob, cdrJob.CdrProcessor.CdrJobContext.Context);
+                    this.Input.Job, cdrJob.CdrProcessor.CdrJobContext.Context);
             }
             else
             {
@@ -246,7 +246,7 @@ namespace Jobs
                 }
                 WriteJobCompletionIfCollectionIsEmpty(
                     cdrJob.CdrProcessor.CollectionResult.OriginalRowsBeforeMerge.Count,
-                    this.Input.TelcobrightJob, cdrJob.CdrProcessor.CdrJobContext.Context);
+                    this.Input.Job, cdrJob.CdrProcessor.CdrJobContext.Context);
             }
             if (this.Input.CdrSetting.DisableCdrPostProcessingJobCreationForAutomation == false)
             {
@@ -338,7 +338,7 @@ namespace Jobs
             FileLocation fileLocation =
                 this.Input.MediationContext.Tbc.DirectorySettings.FileLocations[fileLocationName];
             string fileName = fileLocation.GetOsNormalizedPath(fileLocation.StartingPath)
-                              + Path.DirectorySeparatorChar + this.Input.TelcobrightJob.JobName;
+                              + Path.DirectorySeparatorChar + this.Input.Job.JobName;
             return fileName;
         }
 
