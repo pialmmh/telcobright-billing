@@ -252,71 +252,80 @@ namespace LogPreProcessor
             return threadSafePredecoder;
         }
 
-        private static void cleanUpAlreadyFinishedButRemainingPredecodedFiles(ne thisSwitch, TelcobrightConfig tbc, List<job> newCdrFileJobs, PartnerEntities context)
+        private static void cleanUpAlreadyFinishedButRemainingPredecodedFiles(ne thisSwitch, TelcobrightConfig tbc,
+            List<job> newCdrFileJobs, PartnerEntities context)
         {
             //newcdr deletes predecoded files, but still predecoded files may exist due to shutdown of telcobright process
             //or, if there are more than 500 jobs in predecoded folder due to exception in past preProcessing, no new job files will be predecoded
             //so clean up erronous and existing predecoded files 
-            string sql = $@"select * from job where idjobdefinition=1 and status in (1,7) and idne={thisSwitch.idSwitch} 
+            string sql =
+                $@"select * from job where idjobdefinition=1 and status in (1,7) and idne={thisSwitch.idSwitch} 
                             and jobname in ({string.Join(",", newCdrFileJobs.Select(j => $"'{j.JobName}'"))})";
             List<job> jobsToDeletePredecodeFiles = context.Database.SqlQuery<job>(sql).ToList();
+            string preDecodedDirName = "";
             foreach (job alreadyFinishedJob in jobsToDeletePredecodeFiles)
             {
-                string preDecodedDirName = "";
                 string preDecodedFileName = "";
-                getPathNamesForPreDecoding(alreadyFinishedJob, thisSwitch, tbc, out preDecodedDirName, out preDecodedFileName);
+                getPathNamesForPreDecoding(alreadyFinishedJob, thisSwitch, tbc, out preDecodedDirName,
+                    out preDecodedFileName);
                 if (File.Exists(preDecodedFileName))
                 {
                     File.Delete(preDecodedFileName);
                 }
-
-                //now take orphan files in existing dir, if they don't have a corresponding job with status=2 (prepared) delete
-                Dictionary<string, FileInfo> existingPredecodedfilesSet = Directory
-                    .GetFiles(preDecodedDirName, "*.predecoded")
-                    .Select(f =>
+            }
+            //now take orphan files in existing dir, if they don't have a corresponding job with status=2 (prepared) delete
+            Dictionary<string, FileInfo> existingPredecodedfilesSet = Directory
+                .GetFiles(preDecodedDirName, "*.predecoded")
+                .Select(f =>
+                {
+                    string filename = Path.GetFileName(f).Replace(".predecoded", "");
+                    return new
                     {
-                        string filename = Path.GetFileName(f).Replace(".predecoded","");
-                        return new
-                        {
-                            Filename = f,
-                            FileInfo = new FileInfo(f)
-                        };
-                    }).ToDictionary(a => a.Filename, a => a.FileInfo);
-
-                ////jobstatus 2=prepared
-                sql = $@"select * from job where idjobdefinition=1 and status !=2 and idne={thisSwitch.idSwitch} 
+                        Filename = f,
+                        FileInfo = new FileInfo(f)
+                    };
+                }).ToDictionary(a => a.Filename, a => a.FileInfo);
+            if (existingPredecodedfilesSet.Any()==false)
+            {
+                return;
+            }
+            ////jobstatus 2=prepared
+            sql = $@"select * from job where idjobdefinition=1 and status !=2 and idne={thisSwitch.idSwitch} 
                             and jobname in ({string.Join(",", existingPredecodedfilesSet.Select(f => $"'{f}'"))})";
-                Dictionary<string, job> notInPreparedStatusSubset = context.Database.SqlQuery<job>(sql).ToList()
-                    .Select(j => new
-                    {
-                        Filename = $"{j.JobName}.predecoded",
-                        Job = j
-                    }).ToDictionary(a => a.Filename, a => a.Job);
-                    
+            Dictionary<string, job> notInPreparedStatusSubset = context.Database.SqlQuery<job>(sql).ToList()
+                .Select(j => new
+                {
+                    Filename = $"{j.JobName}.predecoded",
+                    Job = j
+                }).ToDictionary(a => a.Filename, a => a.Job);
 
-                List<FileInfo> finalOrphanFiles= new List<FileInfo>();
-                if (notInPreparedStatusSubset.Any())
+
+            List<FileInfo> finalOrphanFiles = new List<FileInfo>();
+            if (notInPreparedStatusSubset.Any())
+            {
+                foreach (var kv in existingPredecodedfilesSet)
                 {
-                    foreach (var kv in existingPredecodedfilesSet)
+                    string filename = kv.Key;
+                    FileInfo fInfo = kv.Value;
+                    if (!notInPreparedStatusSubset.ContainsKey(filename))
                     {
-                        string filename = kv.Key;
-                        FileInfo fInfo = kv.Value;
-                        if (!notInPreparedStatusSubset.ContainsKey(filename))
-                        {
-                            finalOrphanFiles.Add(fInfo);
-                        }
-                    }
-                }
-                foreach (FileInfo orphanFileInfo in finalOrphanFiles)
-                {
-                    if (File.Exists(orphanFileInfo.FullName))
-                    {
-                        File.Delete(orphanFileInfo.FullName);
+                        finalOrphanFiles.Add(fInfo);
                     }
                 }
             }
+            else
+            {
+                finalOrphanFiles = existingPredecodedfilesSet.Values.ToList();
+            }
+            foreach (FileInfo orphanFileInfo in finalOrphanFiles)
+            {
+                if (File.Exists(orphanFileInfo.FullName))
+                {
+                    File.Delete(orphanFileInfo.FullName);
+                }
+            }
         }
-        
+
 
         private static int getNoOfExistingFilesInPreDecodedDir(ne thisSwitch, TelcobrightConfig tbc, List<job> newCdrFileJobs)
         {
