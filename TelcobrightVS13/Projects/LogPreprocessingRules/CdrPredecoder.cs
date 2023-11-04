@@ -273,13 +273,18 @@ namespace LogPreProcessor
                 //now take orphan files in existing dir, if they don't have a corresponding job with status=2 (prepared) delete
                 Dictionary<string, FileInfo> existingPredecodedfilesSet = Directory
                     .GetFiles(preDecodedDirName, "*.predecoded")
-                    .Select(f => new
+                    .Select(f =>
                     {
-                        Filename = f,
-                        FileInfo = new FileInfo(f)
+                        string filename = Path.GetFileName(f).Replace(".predecoded","");
+                        return new
+                        {
+                            Filename = f,
+                            FileInfo = new FileInfo(f)
+                        };
                     }).ToDictionary(a => a.Filename, a => a.FileInfo);
 
-                sql = $@"select * from job where idjobdefinition=1 and status !=2 and idne={thisSwitch.idSwitch} ////jobstatus 2=prepared
+                ////jobstatus 2=prepared
+                sql = $@"select * from job where idjobdefinition=1 and status !=2 and idne={thisSwitch.idSwitch} 
                             and jobname in ({string.Join(",", existingPredecodedfilesSet.Select(f => $"'{f}'"))})";
                 Dictionary<string, job> notInPreparedStatusSubset = context.Database.SqlQuery<job>(sql).ToList()
                     .Select(j => new
@@ -290,13 +295,16 @@ namespace LogPreProcessor
                     
 
                 List<FileInfo> finalOrphanFiles= new List<FileInfo>();
-                foreach (var kv in existingPredecodedfilesSet)
+                if (notInPreparedStatusSubset.Any())
                 {
-                    string filename = kv.Key;
-                    FileInfo fInfo = kv.Value;
-                    if (!notInPreparedStatusSubset.ContainsKey(filename))
+                    foreach (var kv in existingPredecodedfilesSet)
                     {
-                        finalOrphanFiles.Add(fInfo);
+                        string filename = kv.Key;
+                        FileInfo fInfo = kv.Value;
+                        if (!notInPreparedStatusSubset.ContainsKey(filename))
+                        {
+                            finalOrphanFiles.Add(fInfo);
+                        }
                     }
                 }
                 foreach (FileInfo orphanFileInfo in finalOrphanFiles)
