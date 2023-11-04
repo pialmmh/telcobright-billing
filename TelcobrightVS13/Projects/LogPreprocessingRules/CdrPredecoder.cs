@@ -274,25 +274,21 @@ namespace LogPreProcessor
                 }
             }
             //now take orphan files in existing dir, if they don't have a corresponding job with status=2 (prepared) delete
-            Dictionary<string, FileInfo> existingPredecodedfilesSet = Directory
-                .GetFiles(preDecodedDirName, "*.predecoded")
-                .Select(f =>
-                {
-                    string filename = Path.GetFileName(f).Replace(".predecoded", "");
-                    return new
+            Dictionary<string, FileInfo> existingPredecodedfilesSet =  //key=full file name, value = only file name without .predecoded extension
+                Directory.GetFiles(preDecodedDirName, "*.predecoded")
+                .Select(f => new
                     {
-                        Filename = f,
+                        Filename = Path.GetFileNameWithoutExtension(Path.GetFileName(f)),
                         FileInfo = new FileInfo(f)
-                    };
-                }).ToDictionary(a => a.Filename, a => a.FileInfo);
+                    }).ToDictionary(a => a.Filename, a => a.FileInfo);
             if (existingPredecodedfilesSet.Any()==false)
             {
                 return;
             }
             ////jobstatus 2=prepared
-            sql = $@"select * from job where idjobdefinition=1 and status !=2 and idne={thisSwitch.idSwitch} 
-                            and jobname in ({string.Join(",", existingPredecodedfilesSet.Select(f => $"'{f}'"))})";
-            Dictionary<string, job> notInPreparedStatusSubset = context.Database.SqlQuery<job>(sql).ToList()
+            sql = $@"select * from job where idjobdefinition=1 and status =2 and idne={thisSwitch.idSwitch} 
+                            and jobname in ({string.Join(",", existingPredecodedfilesSet.Keys.Select(fileNameWithoutExt => $"'{fileNameWithoutExt}'"))})";
+            Dictionary<string, job> jobsInPreparedStatusSubset = context.Database.SqlQuery<job>(sql).ToList()
                 .Select(j => new
                 {
                     Filename = $"{j.JobName}.predecoded",
@@ -301,13 +297,13 @@ namespace LogPreProcessor
 
 
             List<FileInfo> finalOrphanFiles = new List<FileInfo>();
-            if (notInPreparedStatusSubset.Any())
+            if (jobsInPreparedStatusSubset.Any())
             {
                 foreach (var kv in existingPredecodedfilesSet)
                 {
-                    string filename = kv.Key;
+                    string existingFileName = kv.Key;
                     FileInfo fInfo = kv.Value;
-                    if (!notInPreparedStatusSubset.ContainsKey(filename))
+                    if (!jobsInPreparedStatusSubset.ContainsKey(existingFileName))
                     {
                         finalOrphanFiles.Add(fInfo);
                     }

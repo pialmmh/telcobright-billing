@@ -122,8 +122,7 @@ namespace Process
                                             {"cdrJobInputData", cdrJobInputData}
                                         };
                                         NewCdrPreProcessor preProcessor =
-                                            (NewCdrPreProcessor) telcobrightJob
-                                                .PreprocessJob(inputForPreprocess); //execute pre-processing
+                                            (NewCdrPreProcessor) telcobrightJob.PreprocessJob(inputForPreprocess); //execute pre-processing
                                         if (headJobForMerge == null &&
                                             preProcessor.TxtCdrRows.Count >=
                                             minRowCountForBatchProcessing) //already large job, process as single
@@ -171,7 +170,6 @@ namespace Process
                                         resetMergeJobStatus();
                                         if (cmd.Connection.State != ConnectionState.Open) cmd.Connection.Open();
                                         cmd.ExecuteCommandText(" rollback; ");
-                                        closeDbConnection(cmd);
                                         bool cacheLimitExceeded =
                                             RateCacheCleaner.CheckAndClearRateCache(mediationContext, e);
                                         if (cacheLimitExceeded) continue;
@@ -183,10 +181,12 @@ namespace Process
                                         try
                                         {
                                             UpdateJobWithErrorInfo(cmd, job, e);
+                                            closeDbConnection(cmd);
                                         }
                                         catch (Exception e2)
                                         {
                                             resetMergeJobStatus();
+                                            closeDbConnection(cmd);
                                             ErrorWriter.WriteError(e2, "ProcessCdr", job,
                                                 "Exception within catch block.",
                                                 tbc.Telcobrightpartner.CustomerName, context);
