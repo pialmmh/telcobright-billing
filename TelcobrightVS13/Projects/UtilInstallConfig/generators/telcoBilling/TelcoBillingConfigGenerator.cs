@@ -102,7 +102,8 @@ namespace InstallConfig
                         foreach (string scriptName in choices)
                         {
                             IScript script = this.DdlScripts[scriptName];
-                            string sql = script.GetScript(null);
+                            string sql = script.GetScript(con);
+                            if(sql=="")continue;
                             Console.WriteLine("Loading ddl script:" + script.RuleName);
                             sql = $@"SET FOREIGN_KEY_CHECKS = 0;
                                     {sql}
