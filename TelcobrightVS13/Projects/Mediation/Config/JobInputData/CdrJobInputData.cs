@@ -10,13 +10,13 @@ using MySql.Data.MySqlClient;
 namespace TelcobrightMediation
 {
     public class NewCdrWrappedJobForMerge {
-        public job TelcobrightJob { get; }
+        public job Job { get; }
         public NewCdrPreProcessor PreProcessor { get; }
         public List<string[]> OriginalRows { get; }= new List<string[]>();
         public List<cdrinconsistent> OriginalCdrinconsistents { get; }= new List<cdrinconsistent>();
-        public NewCdrWrappedJobForMerge(job telcobrightJob, NewCdrPreProcessor preProcessor)
+        public NewCdrWrappedJobForMerge(job job, NewCdrPreProcessor preProcessor)
         {
-            TelcobrightJob = telcobrightJob;
+            Job = job;
             this.PreProcessor = preProcessor;
             foreach (string[] row in preProcessor.TxtCdrRows)
             {

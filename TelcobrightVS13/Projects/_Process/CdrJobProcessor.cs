@@ -83,6 +83,11 @@ namespace Process
                         incompleteJobs = incompleteJobs.Where(ij => !jobsWithError.Select(ej => ej.id).Contains(ij.id))
                             .ToList();//without jobs with error, 
                         incompleteJobs = jobsWithError.Union(incompleteJobs).ToList();
+                        //tempcode Mustafa
+                        //incompleteJobs = incompleteJobs
+                        //    .Where(j => j.JobName ==
+                        //                "sdr.bn4k.BorderNet-SBC.dhksbc1.20231030.065829.002141.0.v1.0.csv.gz").ToList();
+                        //end tmpcode
                         CdrJobInputData cdrJobInputData = null;
                         ITelcobrightJob telcobrightJob = null;
                         using (DbCommand cmd = context.Database.Connection.CreateCommand())
@@ -155,12 +160,12 @@ namespace Process
                                         ) //empty list of merged job, add the first one (head)
                                         {
                                             headJobForMerge = newWrappedJob;
-                                            mergedJobsDic.Add(headJobForMerge.TelcobrightJob.id, newWrappedJob);
+                                            mergedJobsDic.Add(headJobForMerge.Job.id, newWrappedJob);
                                             rowCountSoFarForMerge = newWrappedJob.OriginalRows.Count;
                                         }
                                         else //one of the tail jobs
                                         {
-                                            mergedJobsDic.Add(newWrappedJob.TelcobrightJob.id, newWrappedJob);
+                                            mergedJobsDic.Add(newWrappedJob.Job.id, newWrappedJob);
                                             rowCountSoFarForMerge =
                                                 headJobForMerge
                                                     .AppendTailJobRows(newWrappedJob); //apend head+new tail jobs rows

@@ -142,7 +142,7 @@ namespace Jobs
                 preProcessor.RemoveIllegalCharacters(collectorinput.Tbc.CdrSetting
                     .IllegalStrToRemoveFromFields, txtRow);
                 preProcessor.SetSwitchid(txtRow);
-                preProcessor.SetJobNameWithFileName(collectorinput.TelcobrightJob.JobName, txtRow);
+                preProcessor.SetFileNameWithJobName(collectorinput.TelcobrightJob.JobName, txtRow);
                 preProcessor
                     .AdjustStartTimeBasedOnCdrSettingsForSummaryTimeField(
                         collectorinput.Tbc.CdrSetting.SummaryTimeField, txtRow);
@@ -156,7 +156,7 @@ namespace Jobs
                 if (cdrSetting.AutoCorrectDuplicateBillId == true)
                 {
                     preProcessor.TxtCdrRows =
-                        AbstractCdrJobPreProcessor.ChangeDuplicateBillIds(preProcessor.TxtCdrRows);
+                        AbstractCdrJobPreProcessor.ChangeDuplicateBillIdsForPartialCdrs(preProcessor.TxtCdrRows);
                 }
             }
             else
@@ -193,7 +193,7 @@ namespace Jobs
                 preProcessor.RemoveIllegalCharacters(this.CollectorInput.Tbc.CdrSetting
                     .IllegalStrToRemoveFromFields, txtRow);
                 preProcessor.SetSwitchid(txtRow);
-                preProcessor.SetJobNameWithFileName(this.CollectorInput.TelcobrightJob.JobName, txtRow);
+                preProcessor.SetFileNameWithJobName(this.CollectorInput.TelcobrightJob.JobName, txtRow);
                 preProcessor
                     .AdjustStartTimeBasedOnCdrSettingsForSummaryTimeField(
                         this.CollectorInput.Tbc.CdrSetting.SummaryTimeField, txtRow);

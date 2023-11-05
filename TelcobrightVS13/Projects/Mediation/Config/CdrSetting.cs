@@ -32,6 +32,7 @@ namespace TelcobrightMediation
         public bool DisableParallelMediation { get; set; }
         public bool EnableTgCreationForAns { get; set; }
         public bool AutoCorrectDuplicateBillId { get; set; } = false;
+        //public bool IgnoreDuplicatesAfterDuplicateFiltering { get; set; } = false;
         public bool AutoCorrectDuplicateBillIdBeforeErrorProcess { get; set; } = false;
         public bool AutoCorrectBillIdsWithPrevChargeableIssue { get; set; } = false;
         public Dictionary<string, Dictionary<string, string>> ExceptionalCdrPreProcessingData { get; set; } = new Dictionary<string, Dictionary<string, string>>();

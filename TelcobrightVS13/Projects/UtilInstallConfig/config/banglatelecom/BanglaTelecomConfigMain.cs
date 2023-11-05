@@ -67,22 +67,23 @@ namespace InstallConfig
                 DisableCdrPostProcessingJobCreationForAutomation = false,
                 BatchSizeForCdrJobCreationCheckingExistence = 10000,
                 DisableParallelMediation = false,
-                AutoCorrectDuplicateBillId = false,
+                AutoCorrectDuplicateBillId = true,
                 AutoCorrectBillIdsWithPrevChargeableIssue = false,
                 AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
                 ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>(),
-                BatchSizeWhenPreparingLargeSqlJob = 100000,
+                BatchSizeWhenPreparingLargeSqlJob = 80000,
                 EmptyFileAllowed = true,
                 DaysToAddBeforeAndAfterUniqueDaysForSafePartialCollection = 1,
                 IllegalStrToRemoveFromFields = new List<string> { "`", "\"", "," },
                 UnzipCompressedFiles = false,
+                //IgnoreDuplicatesAfterDuplicateFiltering = true,
                 NeWiseAdditionalSettings = new Dictionary<int, NeAdditionalSetting>
                 {
                     { 9, new NeAdditionalSetting {//for huawei
                         ProcessMultipleCdrFilesInBatch = true,
                         PreDecodeAsTextFile = true,
                         MaxConcurrentFilesForParallelPreDecoding = 10,
-                        MinRowCountToStartBatchCdrProcessing = 100000,
+                        MinRowCountToStartBatchCdrProcessing = 80000,
                         MaxNumberOfFilesInPreDecodedDirectory = 500,
                         EventPreprocessingRules = new List<EventPreprocessingRule>()
                         {

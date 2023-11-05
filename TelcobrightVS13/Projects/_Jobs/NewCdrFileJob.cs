@@ -22,7 +22,7 @@ using TelcobrightMediation.Config;
 
 namespace Jobs
 {
-    
+
     [Export("Job", typeof(ITelcobrightJob))]
     public class NewCdrFileJob : ITelcobrightJob
     {
@@ -38,50 +38,54 @@ namespace Jobs
         protected CdrCollectorInputData CollectorInput { get; set; }
         protected bool PartialCollectionEnabled => this.Input.MediationContext.Tbc.CdrSetting
             .PartialCdrEnabledNeIds.Contains(this.Input.Ne.idSwitch);
+        private static readonly Random rndSuffixForDupCorrection = new Random();
         protected Func<NewCdrPreProcessor, List<string[]>, List<CdrAndInconsistentWrapper>> parallelConvertToCdr = (preProcessor, txtRows) =>
         {
             //cdrinconsistent cdrInconsistent = null;
             //CdrAndInconsistentWrapper cdrAndInconsistentWrapper = preProcessor.ConvertToCdr(txtRow, out cdrInconsistent);
 
-            ParallelIterator<string[], CdrAndInconsistentWrapper> parallelConverter=  
-                                                new ParallelIterator<string[], CdrAndInconsistentWrapper>(txtRows);
+            ParallelIterator<string[], CdrAndInconsistentWrapper> parallelConverter =
+                new ParallelIterator<string[], CdrAndInconsistentWrapper>(txtRows);
             List<CdrAndInconsistentWrapper> cdrAndInconsistents =
                 parallelConverter.getOutput(r => preProcessor.ConvertToCdr(r));
             return cdrAndInconsistents;
         };
-        
+
         public object PreprocessJob(object data)
         {
             Dictionary<string, object> dataAsDic = (Dictionary<string, object>)data;
             this.Input = (CdrJobInputData)dataAsDic["cdrJobInputData"];
-            this.PreDecodingStageOnly= checkIfPreDecodingStage(dataAsDic);
+            this.PreDecodingStageOnly = checkIfPreDecodingStage(dataAsDic);
             NewCdrPreProcessor preProcessor = null;
             if (PreDecodingStageOnly)
             {
                 preProcessor = DecodeNewCdrFile(preDecodingStage: true);
+                initAndFormatTxtRowsBeforeCdrConversion(preProcessor);
                 return preProcessor;
             }
             preProcessor = DecodeNewCdrFile(preDecodingStage: false);
+            initAndFormatTxtRowsBeforeCdrConversion(preProcessor);
             return preProcessor;
         }
 
-       
+
         public virtual Object Execute(ITelcobrightJobInput jobInputData)
         {
             NewCdrPreProcessor preProcessor = null;//preprecessor.txtrows contains decoded raw cdrs in string[] format
             this.Input = (CdrJobInputData)jobInputData;
-
+            CdrSetting cdrSetting = this.Input.CdrSetting;
             if (this.Input.IsBatchJob == false) //not batch job
             {
                 this.HandledJobs = new List<job> { this.Input.Job };
                 preProcessor = DecodeNewCdrFile(preDecodingStage: false);
+                initAndFormatTxtRowsBeforeCdrConversion(preProcessor);
             }
             else //batch or merged job
             {
                 Dictionary<long, NewCdrWrappedJobForMerge> mergedJobsDic = getMergedJobs();
                 this.HandledJobs = new List<job>();
                 this.HandledJobs.AddRange(
-                    mergedJobsDic.Values.Select(wrappedJob => wrappedJob.TelcobrightJob));
+                    mergedJobsDic.Values.Select(wrappedJob => wrappedJob.Job));
                 NewCdrWrappedJobForMerge head = mergedJobsDic.First().Value;
                 List<NewCdrWrappedJobForMerge> tail = mergedJobsDic.Skip(1).Select(kv => kv.Value).ToList();
                 validateMergedCount(head, tail);
@@ -90,63 +94,73 @@ namespace Jobs
 
             //at this moment preProcessor has either records from a single job or merged jobs
             //duplicate cdr filter part ****************
-            initAndFormatTxtRowsBeforeCdrConversion(preProcessor);
-            if (CollectorInput.Ne.FilterDuplicateCdr == 1 && preProcessor.TxtCdrRows.Count > 0) //this.part is done using separate connection
-            {//performs ddl statement through new table creation and may autocommit
+            Dictionary<long, CdrMergedJobError> mergedJobErrors = new Dictionary<long, CdrMergedJobError>();//key= jobId
+            if (CollectorInput.Ne.FilterDuplicateCdr == 1 && preProcessor.TxtCdrRows.Count > 0)
+            {
+                Console.WriteLine("CdrJobProcessor: Filtering duplicates...");
                 preProcessor = this.filterDuplicates(preProcessor);
 
-                Dictionary<string, List<string[]>> billIdVsCount =
+                Dictionary<string, List<string[]>> billIdWiseDuplicateRows =
                     preProcessor.TxtCdrRows.GroupBy(r => r[Fn.UniqueBillId])
                         .Select(g => new
                         {
                             UniqueBillId = g.Key,
                             Rows = g.ToList()
-                        }).ToDictionary(a => a.UniqueBillId, a=>a.Rows);
+                        }).Where(a => a.Rows.Count > 1)
+                        .ToDictionary(a => a.UniqueBillId, a => a.Rows);
 
-                foreach (var kv in billIdVsCount)
+                if (billIdWiseDuplicateRows.Any())
                 {
-                    string uniqueBillId = kv.Key;
-                    List<string[]> rows = kv.Value;
-
-                    List<CdrMergedJobError> mergedJobErrors = rows.Select(r => new CdrMergedJobError
+                    if (cdrSetting.AutoCorrectDuplicateBillId)
                     {
-                        Filename = r[Fn.Filename],
-                        Job = this.HandledJobs.First(j => j.JobName == r[Fn.Filename]),
-                        UniqueBillid = r[Fn.UniqueBillId],
-                        Starttime = r[Fn.StartTime],
-                        Answertime = r[Fn.AnswerTime],
-                        CalledNumber = r[Fn.OriginatingCalledNumber],
-                        CallingNumber = r[Fn.OriginatingCallingNumber],
-                        Duration = r[Fn.DurationSec]
-                    }).ToList();
-                    //List<string> x = rows.Select(r =>
-                    //{
-                    //    var y= new
-                    //    {
-                    //        Filename = r[Fn.Filename],
-                    //        UniqueBillid = r[Fn.UniqueBillId],
-                    //        Starttime = r[Fn.StartTime],
-                    //        Answertime = r[Fn.AnswerTime],
-                    //        CalledNumber= r[Fn.OriginatingCalledNumber],
-                    //        CallingNumber= r[Fn.OriginatingCallingNumber],
-                    //        Duration= r[Fn.DurationSec]
-                    //    };
-                    //    return $"Filename, sessionid, starttime, answertime, callednumber,callingnumber,actualDuration\r\n" +
-                    //           $"{y.Filename},{y.UniqueBillid},{y.Starttime},{y.Answertime},{y.CalledNumber},{y.CallingNumber},{y.Duration}\r\n";
-
-                    //}).ToList();
-                    if (rows.Count>1)
-                    {
-                        var exception = new Exception($"Duplicate billid: ({uniqueBillId}) found after filtering duplicates.");
-                        foreach (var mergedJobError in mergedJobErrors)
+                        foreach (string[] row in billIdWiseDuplicateRows.Values.SelectMany(r => r))
                         {
-                            if(exception.Data.Contains(mergedJobError.Job.id.ToString())==false)
-                                exception.Data.Add(mergedJobError.Job.id.ToString(), mergedJobError);
+                            row[Fn.UniqueBillId] = "d_" + row[Fn.UniqueBillId] + "_" +
+                                                   rndSuffixForDupCorrection.Next(); //auto correct erronous duplicate billid from switch e.g. dialogic
                         }
-                        throw exception;
                     }
+                    else
+                    {
+                        foreach (var kv in billIdWiseDuplicateRows)
+                        {
+                            string uniqueBillId = kv.Key;
+                            List<string[]> rows = kv.Value;
+                            foreach (var r in rows)
+                            {
+                                var mergedJobError = new CdrMergedJobError
+                                {
+                                    Filename = r[Fn.Filename],
+                                    Job = this.HandledJobs.First(j => j.JobName == r[Fn.Filename]),
+                                    UniqueBillid = uniqueBillId,
+                                    Starttime = r[Fn.StartTime],
+                                    Answertime = r[Fn.AnswerTime],
+                                    CalledNumber = r[Fn.OriginatingCalledNumber],
+                                    CallingNumber = r[Fn.OriginatingCallingNumber],
+                                    Duration = r[Fn.DurationSec]
+                                };
+                                if (mergedJobErrors.ContainsKey(mergedJobError.Job.id) == false)
+                                {
+                                    mergedJobErrors.Add(mergedJobError.Job.id,mergedJobError);
+                                }
+                            }
+                        }
+                    }
+                    
                 }
             }
+            if (mergedJobErrors.Any())
+            {
+                var exception =
+                    new Exception($"Duplicate billids found after filtering duplicates.");
+                foreach (var mergedJobError in mergedJobErrors.Values)
+                {
+                    if (exception.Data.Contains(mergedJobError.Job.id.ToString()) == false)
+                        exception.Data.Add(mergedJobError.Job.id.ToString(), mergedJobError);
+                }
+                throw exception;
+            }
+            
+
             openDbConAndStartTransaction();//open new connection and start transaction
 
             List<CdrAndInconsistentWrapper> cdrAndInconsistents =
@@ -223,7 +237,7 @@ namespace Jobs
             if (mergedCount != headTailOriginalCount || mergedCount != headTailOriginalPreprocessorCount)
             {
                 throw new Exception(
-                    $"Head cdr count must match sum of tail jobs for merge processing. Job id:{head.TelcobrightJob.id}, job name:{head.TelcobrightJob.JobName}");
+                    $"Head cdr count must match sum of tail jobs for merge processing. Job id:{head.Job.id}, job name:{head.Job.JobName}");
             }
         }
 
@@ -309,7 +323,7 @@ namespace Jobs
 
         private void FinalizeSingleMergedJob(NewCdrWrappedJobForMerge mergedJob, PartnerEntities context)
         {
-            job telcobrightJob = mergedJob.TelcobrightJob;
+            job telcobrightJob = mergedJob.Job;
             var preProcessor = mergedJob.PreProcessor;
             if (preProcessor.TxtCdrRows.Any() == false)
             {
@@ -319,7 +333,7 @@ namespace Jobs
             WriteJobCompletionIfCollectionNotEmpty(preProcessor.OriginalRowsBeforeMerge.Count, telcobrightJob, context);
             if (this.Input.CdrSetting.DisableCdrPostProcessingJobCreationForAutomation == false)
             {
-                CreateNewCdrPostProcessingJobs(this.Input.Context, this.Input.MediationContext.Tbc,telcobrightJob);
+                CreateNewCdrPostProcessingJobs(this.Input.Context, this.Input.MediationContext.Tbc, telcobrightJob);
             }
         }
 
@@ -342,14 +356,14 @@ namespace Jobs
         private NewCdrPreProcessor DecodeNewCdrFile(bool preDecodingStage)
         {
             string fileName = getFullPathOfCdrFile();
-            
+
 
             this.CollectorInput = new CdrCollectorInputData(this.Input, fileName);
             var cdrCollector = new FileBasedTextCdrCollector(this.CollectorInput);
             AbstractCdrDecoder decoder = cdrCollector.getDecoder();
             if (preDecodingStage)
             {
-                decoder = (AbstractCdrDecoder) decoder.createNewNonSingletonInstance();//singleton was causing io problem during predecoding file I/O
+                decoder = (AbstractCdrDecoder)decoder.createNewNonSingletonInstance();//singleton was causing io problem during predecoding file I/O
             }
             List<cdrinconsistent> cdrinconsistents = new List<cdrinconsistent>();
             if (this.PreDecodingStageOnly)//PREDECODING
@@ -380,8 +394,8 @@ namespace Jobs
             return fileName;
         }
 
-        
-        
+
+
         public PartialCdrTesterData OrganizeTestDataForPartialCdrs(NewCdrPreProcessor preProcessor,
             CdrCollectionResult newCollectionResult)
         {
@@ -405,17 +419,17 @@ namespace Jobs
             }
             return partialCdrTesterData;
         }
-        
+
 
         protected void initAndFormatTxtRowsBeforeCdrConversion(NewCdrPreProcessor preProcessor)
         {
             var collectorinput = this.CollectorInput;
             var cdrSetting = collectorinput.CdrJobInputData.MediationContext.Tbc.CdrSetting;
             SetIdCallsInSameOrderAsCollected(preProcessor, collectorinput);
-            
+
             Parallel.ForEach(preProcessor.TxtCdrRows, txtRow =>
             {
-                if (this.CollectorInput.Ne.UseIdCallAsBillId==1)
+                if (this.CollectorInput.Ne.UseIdCallAsBillId == 1)
                 {
                     txtRow[Fn.UniqueBillId] = txtRow[Fn.IdCall];
                 }
@@ -428,11 +442,14 @@ namespace Jobs
                 preProcessor.RemoveIllegalCharacters(collectorinput.Tbc.CdrSetting
                     .IllegalStrToRemoveFromFields, txtRow);
                 preProcessor.SetSwitchid(txtRow);
-                preProcessor.SetJobNameWithFileName(collectorinput.TelcobrightJob.JobName, txtRow);
+                preProcessor.SetFileNameWithJobName(collectorinput.TelcobrightJob.JobName, txtRow);
                 preProcessor
                     .AdjustStartTimeBasedOnCdrSettingsForSummaryTimeField(
                         collectorinput.Tbc.CdrSetting.SummaryTimeField, txtRow);
+                if (cdrSetting.AutoCorrectDuplicateBillId == true)
+                {
 
+                }
             });
             MefValidator<string[]> inconistentValidator =
                 NewCdrPreProcessor.CreateValidatorForInconsistencyCheck(collectorinput);
@@ -442,24 +459,24 @@ namespace Jobs
                 if (cdrSetting.AutoCorrectDuplicateBillId == true)
                 {
                     preProcessor.TxtCdrRows =
-                        AbstractCdrJobPreProcessor.ChangeDuplicateBillIds(preProcessor.TxtCdrRows);
+                        AbstractCdrJobPreProcessor.ChangeDuplicateBillIdsForPartialCdrs(preProcessor.TxtCdrRows);
                 }
             }
             else
             {
                 //preProcessor.TxtCdrRows =
-                  //  preProcessor.FilterCdrsWithDuplicateBillIdsAsInconsistent(preProcessor.TxtCdrRows);
-                preProcessor.TxtCdrRows.AsParallel().ForAll(row=>row[Fn.Partialflag]="0");
+                //  preProcessor.FilterCdrsWithDuplicateBillIdsAsInconsistent(preProcessor.TxtCdrRows);
+                preProcessor.TxtCdrRows.AsParallel().ForAll(row => row[Fn.Partialflag] = "0");
             }
 
             if (cdrSetting.AutoCorrectBillIdsWithPrevChargeableIssue == true)
             {
-                preProcessor.TxtCdrRows = CdrJob.ChangeBillIdsWithPrevChargeableIssue(preProcessor.TxtCdrRows);
+                //preProcessor.TxtCdrRows = CdrJob.ChangeBillIdsWithPrevChargeableIssue(preProcessor.TxtCdrRows);
             }
             Parallel.ForEach(preProcessor.TxtCdrRows, txtRow =>
             {
                 preProcessor.CheckAndConvertIfInconsistent(collectorinput.CdrJobInputData,
-                inconistentValidator, txtRow);
+                    inconistentValidator, txtRow);
             });
             if (preProcessor.InconsistentCdrs.Any())
             {
@@ -470,23 +487,6 @@ namespace Jobs
             }
 
         }
-
-        protected void PreformatRawCdrsForExceptionalCircumstances(NewCdrPreProcessor preProcessor)
-        {
-            Parallel.ForEach(preProcessor.TxtCdrRows, txtRow =>
-            {
-                preProcessor.SetAllBlankFieldsToZerolengthString(txtRow);
-                preProcessor.RemoveIllegalCharacters(this.CollectorInput.Tbc.CdrSetting
-                    .IllegalStrToRemoveFromFields, txtRow);
-                preProcessor.SetSwitchid(txtRow);
-                preProcessor.SetJobNameWithFileName(this.CollectorInput.TelcobrightJob.JobName, txtRow);
-                preProcessor
-                    .AdjustStartTimeBasedOnCdrSettingsForSummaryTimeField(
-                        this.CollectorInput.Tbc.CdrSetting.SummaryTimeField, txtRow);
-            });
-        }
-
-
         private static void SetIdCallsInSameOrderAsCollected(NewCdrPreProcessor preProcessor, CdrCollectorInputData collectorinput)
         {
             //keep the cdrs in the same order as received, don't use parallel
@@ -533,7 +533,7 @@ namespace Jobs
             }
             else
             {
-                createJobsForSplitCase(context, tbc, cdrJob,unsplitFileName);
+                createJobsForSplitCase(context, tbc, cdrJob, unsplitFileName);
             }
         }
         protected void DeletePreDecodedFile(PartnerEntities context, TelcobrightConfig tbc, job cdrJob)
@@ -597,7 +597,7 @@ namespace Jobs
                 {
                     cdrBackupSyncPairNames.Add(syncPairname);
                 }
-            List<long> dependentJobIdsBeforeDelete = new List<long>() {cdrJob.id};
+            List<long> dependentJobIdsBeforeDelete = new List<long>() { cdrJob.id };
             if (tbc.CdrSetting.BackupSyncPairNames != null)
             {
                 foreach (string syncPairname in tbc.CdrSetting.BackupSyncPairNames)
@@ -620,7 +620,7 @@ namespace Jobs
             //create delete job
             string vaultName = cdrJob.ne.SourceFileLocations;
             FileLocation fileLocation = tbc.DirectorySettings.FileLocations[vaultName];
-            job newDelJob= FileUtil.CreateFileDeleteJob(cdrJob.JobName, fileLocation, context,
+            job newDelJob = FileUtil.CreateFileDeleteJob(cdrJob.JobName, fileLocation, context,
                 new JobPreRequisite()
                 {
                     ExecuteAfterJobs = dependentJobIdsBeforeDelete,
@@ -674,11 +674,11 @@ namespace Jobs
             List<cdrinconsistent> cdrinconsistents = preProcessorWithCollectedRows.InconsistentCdrs.ToList();
             DbCommand cmd = this.CollectorInput.CdrJobInputData.Context.Database.Connection.CreateCommand();
             DayWiseEventCollector<string[]> dayWiseEventCollector = new DayWiseEventCollector<string[]>
-                                                                        (uniqueEventsOnly: true,
-                                                                            collectorInput: this.CollectorInput,
-                                                                            dbCmd: cmd, decoder: decoder,
-                                                                            decodedEvents: decodedCdrRows,//decoded rows
-                                                                            sourceTablePrefix: decoder.PartialTablePrefix);
+            (uniqueEventsOnly: true,
+                collectorInput: this.CollectorInput,
+                dbCmd: cmd, decoder: decoder,
+                decodedEvents: decodedCdrRows,//decoded rows
+                sourceTablePrefix: decoder.PartialTablePrefix);
             dayWiseEventCollector.createNonExistingTables();
             dayWiseEventCollector.collectTupleWiseExistingEvents(decoder);
             DuplicaterEventFilter<string[]> duplicaterEventFilter = new DuplicaterEventFilter<string[]>(dayWiseEventCollector);
