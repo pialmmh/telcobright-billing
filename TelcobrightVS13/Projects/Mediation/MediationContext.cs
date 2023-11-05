@@ -54,12 +54,13 @@ namespace TelcobrightMediation
             StaticExtInsertColumnParsedDic.Parse();
             this.Tbc = tbc;
             this.Context = context;
+            var cdrSetting = this.CdrSetting;
             this.AutoIncrementManager = new AutoIncrementManager(
                 counter => (int)AutoIncrementTypeDictionary.EnumTypes[counter.tableName],
                 counter => counter.GetExtInsertValues(),
                 counter => counter.GetUpdateCommand(
                     c => $@" where tableName='{AutoIncrementTypeDictionary.EnumTypes[counter.tableName]}'"),
-                null, this.Context.Database.Connection.CreateCommand(), this.CdrSetting.SegmentSizeForDbWrite);
+                null, this.Context.Database.Connection.CreateCommand(), cdrSetting.SegmentSizeForDbWrite);
             this.AutoIncrementManager.PopulateCache(() => context.autoincrementcounters
                 .ToDictionary(c => (int)AutoIncrementTypeDictionary.EnumTypes[c.tableName]));
 
@@ -82,11 +83,11 @@ namespace TelcobrightMediation
             this.BillingSpans = context.enumbillingspans.ToDictionary(c => c.ofbiz_uom_Id); //route data
             this.Routes = context.routes.Include(r => r.partner)
                 .ToDictionary(r => new ValueTuple<int, string>(r.SwitchId, r.RouteName));
-            this.IpAddressorPointCodes = context.Database
-                .SqlQuery<ipaddressorpointcode>("select routename from ipaddressorpointcode")
-                .ToDictionary(entity => entity.RouteName);
-            this.IpAddressOrPointCodeTrie = new Trie(this.IpAddressorPointCodes.Keys,
-                this.Tbc.DefaultRootCharForTrie);
+            //this.IpAddressorPointCodes = context.Database
+            //    .SqlQuery<ipaddressorpointcode>("select routename from ipaddressorpointcode")
+            //    .ToDictionary(entity => entity.RouteName);
+            //this.IpAddressOrPointCodeTrie = new Trie(this.IpAddressorPointCodes.Keys,
+            //    this.Tbc.DefaultRootCharForTrie);
             this.BridgedRoutes = context.bridgedroutes.Include(r => r.partner).Include(r => r.partner1)
                 .ToDictionary(r => new ValueTuple<int, string>(r.switchId, r.routeName));
 
@@ -265,7 +266,7 @@ namespace TelcobrightMediation
                 rules: rules);
             return mefValidator;
         }
-        private void CreateTemporaryTables()
+        public void CreateTemporaryTables()
         {
             DbCommand cmd = this.Context.Database.Connection.CreateCommand();
             cmd.CommandType = CommandType.Text;

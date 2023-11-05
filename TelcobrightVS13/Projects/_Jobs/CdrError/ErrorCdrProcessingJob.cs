@@ -34,7 +34,7 @@ namespace Jobs
             SegmentedCdrErrorProcessor segmentedCdrErrorJobProcessor =
                 new SegmentedCdrErrorProcessor(cdrCollectorInput,
                     input.CdrSetting.BatchSizeWhenPreparingLargeSqlJob, "IdCall", "starttime");
-            if (input.TelcobrightJob.Status != 2) //prepare job if not prepared already
+            if (input.Job.Status != 2) //prepare job if not prepared already
                 segmentedCdrErrorJobProcessor.PrepareSegments();
             List<jobsegment> jobsegments = segmentedCdrErrorJobProcessor.ExecuteIncompleteSegments();
             segmentedCdrErrorJobProcessor.FinishJob(jobsegments,null); //mark job as complete
@@ -47,6 +47,11 @@ namespace Jobs
         }
 
         public object PostprocessJob(object data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ITelcobrightJob createNewNonSingletonInstance()
         {
             throw new NotImplementedException();
         }

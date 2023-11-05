@@ -354,7 +354,7 @@
     <Compile Include="config\allDeployment\AllDeploymenProfiles.cs" />
     <Compile Include="config\_helper\CasCdrSettingHelper.cs" />
     <Compile Include="config\allDeployment\cas\mysqlClusters\CommonSlaveWin01.cs" />
-    <Compile Include="config\_helper\CasNewDbHelper.cs" />
+    <Compile Include="config\_helper\CasDockerDbHelper.cs" />
     <Compile Include="config\_helper\CasDbHelperOld.cs" />
     <Compile Include="config\_helper\CasPortalSettingsHelper.cs" />
     <Compile Include="config\_helper\CasQuartzHelper.cs" />

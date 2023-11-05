@@ -4,7 +4,7 @@ namespace TelcobrightMediation
 {
     public interface ITelcobrightJobInput
     {
-        job TelcobrightJob { get; }
+        job Job { get; }
         PartnerEntities Context { get; }
     }
 }

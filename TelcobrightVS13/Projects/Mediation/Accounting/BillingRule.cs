@@ -40,7 +40,7 @@ namespace TelcobrightMediation.Accounting
             if (nextValidTriggerDate == null)
                 throw new Exception("No next valid occurance found from cron, possibly invalid expression.");
             DateTime nextTriggerDate = ((DateTimeOffset)nextValidTriggerDate).LocalDateTime;
-            var extensionDir=new DirectoryInfo(FileAndPathHelper.GetCurrentExecPath()).Parent.GetDirectories()
+            var extensionDir=new DirectoryInfo(FileAndPathHelperReadOnly.GetCurrentExecPath()).Parent.GetDirectories()
                 .Single(c=>c.Name=="Extensions");
             this.TimeCycleFactory.ComposeMefRules(extensionDir.FullName);
             ITimeCycle timeCycle= this.TimeCycleFactory.GetTimeCycle();

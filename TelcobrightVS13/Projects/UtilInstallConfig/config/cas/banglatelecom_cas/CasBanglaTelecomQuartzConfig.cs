@@ -56,7 +56,7 @@ namespace InstallConfig
                 //    operatorName: operatorName,
                 //    identity: "FileCopier [huawei:Vault]" + " [" + operatorName+"]",
                 //    group: operatorName,
-                //    cronExpression: "/2 * * ? * *",
+                //    cronExpression: "/5 * * ? * *",
                 //    fireOnceIfMissFired: false,
                 //    jobDataMap: new Dictionary<string, string>()
                 //    {
@@ -70,7 +70,7 @@ namespace InstallConfig
                 //    operatorName: operatorName,
                 //    identity: "FileCopier [Vault:CAS]" + " [" + operatorName+"]",
                 //    group: operatorName,
-                //    cronExpression: "/2 * * ? * *",
+                //    cronExpression: "/5 * * ? * *",
                 //    fireOnceIfMissFired: false,
                 //    jobDataMap: new Dictionary<string, string>()
                 //    {
@@ -90,7 +90,7 @@ namespace InstallConfig
                     identity: "CdrJobCreator" + " [" + operatorName+"]",
                     @group: operatorName,
                     fireOnceIfMissFired: false,
-                    cronExpression: "/2 * * ? * *",
+                    cronExpression: "/5 * * ? * *",
                     jobDataMap: new Dictionary<string, string>()
                     {
                         {"telcobrightProcessId", "101"},
@@ -110,7 +110,7 @@ namespace InstallConfig
                     identity: "CdrJobProcessor" + " [" + operatorName+"]",
                     @group: operatorName,
                     fireOnceIfMissFired: false,
-                    cronExpression: "/2 * * ? * *",
+                    cronExpression: "/5 * * ? * *",
                     jobDataMap: new Dictionary<string, string>()
                     {
                         {"telcobrightProcessId", "103"},
@@ -149,7 +149,7 @@ namespace InstallConfig
                 //    identity: "InvoiceGenerator" + " [" + operatorName+"]",
                 //    @group: operatorName,
                 //    fireOnceIfMissFired: false,
-                //    cronExpression: "/2 * * ? * *",
+                //    cronExpression: "/5 * * ? * *",
                 //    jobDataMap: new Dictionary<string, string>()
                 //    {
                 //        {"telcobrightProcessId", "108"},

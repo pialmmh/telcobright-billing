@@ -37,7 +37,7 @@ namespace Jobs
                 }
                 if (delParam.FileLocation.LocationType == "local")
                 {
-                    Console.WriteLine("Processing Optimizer: " + input.TelcobrightJob.JobName + ", type: File Delete");
+                    Console.WriteLine("Processing Optimizer: " + input.Job.JobName + ", type: File Delete");
                     File.Delete(delParam.FileLocation.ServerIp.Replace("/", Path.DirectorySeparatorChar.ToString()) + Path.DirectorySeparatorChar.ToString() + delParam.FileName);
                     return JobCompletionStatus.Complete;
                 }
@@ -61,11 +61,16 @@ namespace Jobs
             throw new NotImplementedException();
         }
 
+        public ITelcobrightJob createNewNonSingletonInstance()
+        {
+            throw new NotImplementedException();
+        }
+
         private static JobParamFileDelete GetJobParamByHandlingDeserializeErrorFromBackslash
             (OptimizerJobInputData input)
         {
             JobParamFileDelete delParam = null;
-            var jobParameter = input.TelcobrightJob.JobParameter;
+            var jobParameter = input.Job.JobParameter;
             if (jobParameter.Contains("\"PathSeparator\":\"\\"))
             {
                 jobParameter = jobParameter.Replace("\"PathSeparator\":\"\\", "\"PathSeparator\":\"`");

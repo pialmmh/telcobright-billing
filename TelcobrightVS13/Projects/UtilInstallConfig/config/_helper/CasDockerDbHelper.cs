@@ -8,7 +8,7 @@ using LibraryExtensions.ConfigHelper;
 
 namespace InstallConfig
 {
-    public class CasNewDbHelper
+    public class CasDockerDbHelper
     {
         private  static  Dictionary<string, string> IcxVsdbHostNames = new Dictionary<string, string>()
         {
@@ -36,21 +36,21 @@ namespace InstallConfig
             {"newgenerationtelecom_cas","10.100.150.27"}
         };
         public DeploymentEnvironment DeploymentEnvironment { get; }
-        public CasNewDbHelper(DeploymentEnvironment deploymentEnvironment)
+        public CasDockerDbHelper(DeploymentEnvironment deploymentEnvironment)
         {
             DeploymentEnvironment = deploymentEnvironment;
         }
 
         public class Db
         {
-            public const string AdminPassword = "Takay1takaane";
+            public const string AdminPassword = "Takay1takaane$";
             public const string AdminUserName = "fduser";
             public const string DatabaseEngine = "innodb";
             public const string StorageEngineForPartitionedTables = "innodb";
             public const string PartitionStartDate = "2023-06-01";
             public const int PartitionLenInDays = 3;
             public const string ReadOnlyUserName = "dbreader";
-            public const string ReadOnlyPassword = "Takay1takaane";
+            public const string ReadOnlyPassword = "Takay1takaane$";
             public const bool UseVarcharInsteadOfTextForMemoryEngine = true;  //required for windows
         }
         public static DatabaseSetting getCommonDatabaseSetting(string databaseName)

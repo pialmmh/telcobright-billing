@@ -10,5 +10,6 @@ namespace TelcobrightMediation
         object Execute(ITelcobrightJobInput jobInputData);
         object PreprocessJob(object data);
         object PostprocessJob(object data);
+        ITelcobrightJob createNewNonSingletonInstance();
     }
 }

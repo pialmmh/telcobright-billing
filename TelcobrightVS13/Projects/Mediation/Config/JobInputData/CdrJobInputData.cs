@@ -10,13 +10,13 @@ using MySql.Data.MySqlClient;
 namespace TelcobrightMediation
 {
     public class NewCdrWrappedJobForMerge {
-        public job TelcobrightJob { get; }
+        public job Job { get; }
         public NewCdrPreProcessor PreProcessor { get; }
         public List<string[]> OriginalRows { get; }= new List<string[]>();
         public List<cdrinconsistent> OriginalCdrinconsistents { get; }= new List<cdrinconsistent>();
-        public NewCdrWrappedJobForMerge(job telcobrightJob, NewCdrPreProcessor preProcessor)
+        public NewCdrWrappedJobForMerge(job job, NewCdrPreProcessor preProcessor)
         {
-            TelcobrightJob = telcobrightJob;
+            Job = job;
             this.PreProcessor = preProcessor;
             foreach (string[] row in preProcessor.TxtCdrRows)
             {
@@ -48,15 +48,15 @@ namespace TelcobrightMediation
         public AutoIncrementManager AutoIncrementManager => this.MediationContext.AutoIncrementManager;
         public PartnerEntities Context { get; }
         public ne Ne { get; }
-        public job TelcobrightJob { get; }
+        public job Job { get; }
         public Dictionary<long, NewCdrWrappedJobForMerge> MergedJobsDic { get; set; }= new Dictionary<long, NewCdrWrappedJobForMerge>();
         public bool IsBatchJob => this.MergedJobsDic.Any();
-        public CdrJobInputData(MediationContext mediationContext, PartnerEntities context, ne ne, job telcobrightJob)
+        public CdrJobInputData(MediationContext mediationContext, PartnerEntities context, ne ne, job job)
         {
             this.MediationContext = mediationContext;
             this.Context = context;
             this.Ne = ne;
-            this.TelcobrightJob = telcobrightJob;
+            this.Job = job;
         }
     }
 }

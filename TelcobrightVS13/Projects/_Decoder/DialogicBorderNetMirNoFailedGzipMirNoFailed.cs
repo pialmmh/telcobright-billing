@@ -22,15 +22,19 @@ namespace Decoders
         public override string HelpText => "Decodes Dialogic BorderNet CSV CDR with Gzip (Mir Telecom)";
         public override CompressionType CompressionType { get; set; } = CompressionType.Gzip;
         protected override CdrCollectorInputData Input { get; set; }
-
+        private static readonly object threadLocker = new object();
         public override List<string[]> DecodeFile(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs)
         {
             this.Input = input;
             string fileName = this.Input.FullPath;
-            List<string> tempLines = FileAndPathHelper.readLinesFromCompressedFile(fileName).ToList();
+            List<string> tempLines= new List<string>();
+            lock (threadLocker)
+            {
+                CompressedFileLinesReader linesReader = new CompressedFileLinesReader(fileName);
+                tempLines = linesReader.readLinesFromCompressedFile().ToList();
+            }
             List<string[]> lines = FileUtil.ParseLinesWithEnclosedAndUnenclosedFields(',', "\"", tempLines)
                 .Skip(1).ToList();
-
             return decodeLines(input, out inconsistentCdrs, fileName, lines);
         }
     }

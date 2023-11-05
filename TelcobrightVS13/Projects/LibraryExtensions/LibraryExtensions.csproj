@@ -159,7 +159,9 @@
     <Compile Include="Enums\CompressionType.cs" />
     <Compile Include="Excel\ExcelHelper.cs" />
     <Compile Include="ExecutablePathFinder.cs" />
-    <Compile Include="FileAndPath\FileAndPathHelper.cs" />
+    <Compile Include="FileAndPath\CompressedFileLinesReader.cs" />
+    <Compile Include="FileAndPath\FileAndPathHelperMutable.cs" />
+    <Compile Include="FileAndPath\FileAndPathHelperReadOnly.cs" />
     <Compile Include="CommonDbClientExtensions.cs" />
     <Compile Include="FileSplitter.cs" />
     <Compile Include="JsonCompressor.cs" />

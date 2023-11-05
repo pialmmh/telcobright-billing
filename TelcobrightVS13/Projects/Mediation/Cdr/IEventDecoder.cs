@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using MediationModel;
 using LibraryExtensions;
 namespace TelcobrightMediation
@@ -20,6 +21,9 @@ namespace TelcobrightMediation
         string getWhereForHourWiseCollection(Object data);
         string getSelectExpressionForPartialCollection(Object data);
         DateTime getEventDatetime(Object data);
+        object convertDbReaderRowToUniqueEventTuple(object data);
+        object convertDbReaderRowToObject(object data);
+        IEventDecoder createNewNonSingletonInstance();
     }
     
 }

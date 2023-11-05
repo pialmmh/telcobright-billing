@@ -31,7 +31,7 @@ namespace InvoiceGenerationRules
             int batchSizeForJobSegments = input.BatchSizeForJobSegment;
             SegmentedCdrInvoicingJobProcessor segmentedInvoiceProcessor =
                 new SegmentedCdrInvoicingJobProcessor(input, "id", "transactiontime");
-            if (input.TelcobrightJob.Status != 2) //prepare job if not prepared already
+            if (input.Job.Status != 2) //prepare job if not prepared already
                 segmentedInvoiceProcessor.PrepareSegments();
             List<jobsegment> jobsegments =
                 segmentedInvoiceProcessor.ExecuteIncompleteSegments();

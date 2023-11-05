@@ -4,10 +4,13 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
-    <div class="jumbotron">
-        <h1>
-            <asp:Label ID="lblCustomerDisplayName" runat="server" Text=""></asp:Label></h1>
-    </div>
+   <%-- <div>
+        <label for="searchTerm">Search:</label>
+        <input type="text" id="searchTerm" runat="server" />
+        <asp:Button ID="btnSearch" runat="server" Text="Search" OnClick="btnSearch_Click" />
+    </div>--%>
+
+    
 
     <%--<asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>--%>
     <ajaxtoolkit:toolkitscriptmanager runat="Server" enablescriptglobalization="true"
@@ -21,42 +24,31 @@
         <%--TGs --%>
         <div>
             <%--div 1--%>
-            <div style="float: left; padding-left: 200px">
+            <div style="float: left; padding-left: 20px">
                 <div style="margin-right: auto; text-align: left;">
                     <asp:Label ID="LabelTgs" runat="server" Text="Tg List" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
                 </div>
-                <asp:ListView ID="ListViewTgs" runat="server" DataKeyNames="id">
-                    <LayoutTemplate>
-                        <table border="1" style="width: 100%;">
-                            <tr style="background-color: #086052; color: white; font-weight: bold;">
-                                <th>Tg</th>
-                                <th>SwitchName</th>
-                                <th>Zone</th>
-                                <th>Partners</th>
-                            </tr>
-                            <tr runat="server" id="itemPlaceholder"></tr>
-                        </table>
-                    </LayoutTemplate>
-                    <ItemTemplate>
-                        <tr>
-                            <td>
-                                <asp:Label runat="server" Text='<%# Eval("TgName") %>' />
-                            </td>
-                            <td>
-                                <asp:Label runat="server" Text='<%# Eval("SwitchName") %>' />
-                            </td>
-                            <td>
-                                <asp:Label runat="server" Text='<%# Eval("Zone") %>' />
-                            </td>
-                            <td>
-                                <asp:Label runat="server" Text='<%# Eval("Partner") %>' />
-                            </td>
-                        </tr>
-                    </ItemTemplate>
-                </asp:ListView>
+                <asp:GridView ID="GridViewTgs" runat="server" AutoGenerateColumns="false" DataKeyNames="id">
+                    <Columns>
+                        <asp:BoundField DataField="TgName" HeaderText="Tg" />
+                        <asp:BoundField DataField="SwitchName" HeaderText="SwitchName" />
+                        <asp:BoundField DataField="Zone" HeaderText="Zone" />
+                        <asp:BoundField DataField="Partner" HeaderText="Partners" />
+                    </Columns>
+                    <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+                    <EditRowStyle BackColor="#999999" />
+                    <FooterStyle BackColor="#086052" Font-Bold="True" ForeColor="White" />
+                    <HeaderStyle BackColor="#086052" Font-Bold="True" ForeColor="White" />
+                    <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
+                    <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
+                    <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
+                    <SortedAscendingCellStyle BackColor="#E9E7E2" />
+                    <SortedAscendingHeaderStyle BackColor="#506C8C" />
+                    <SortedDescendingCellStyle BackColor="#FFFDF8" />
+                    <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
+                </asp:GridView>
+
             </div>
-            <%--</ContentTemplate>--%>
-            <%--</asp:UpdatePanel>--%>
         </div>
     </div>
 </asp:Content>

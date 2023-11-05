@@ -222,6 +222,7 @@
     <Compile Include="Automation\SessionInfo.cs" />
     <Compile Include="Automation\SingleCliCommand.cs" />
     <Compile Include="Cdr\CdrJob.cs" />
+    <Compile Include="Cdr\CdrMergedJobError.cs" />
     <Compile Include="Cdr\Collection\Collector\CdrRowCollector.cs" />
     <Compile Include="Cdr\Collection\Collector\DayWiseEventCollector.cs" />
     <Compile Include="Cdr\Collection\Collector\HourlyEventData.cs" />
@@ -434,7 +435,7 @@
     <Compile Include="FileOperations\RemoteDirectoryLister.cs" />
     <Compile Include="FileOperations\_DirectorySyncSettings.cs" />
     <Compile Include="FileOperations\_FileOperations.cs" />
-    <Compile Include="FileOperations\_WriteError.cs" />
+    <Compile Include="FileOperations\ErrorWriter.cs" />
     <Compile Include="MefData\ServiceContext.cs" />
     <Compile Include="Models\PortalObjects.cs" />
     <Compile Include="Rating\PrefixMatcher.cs" />

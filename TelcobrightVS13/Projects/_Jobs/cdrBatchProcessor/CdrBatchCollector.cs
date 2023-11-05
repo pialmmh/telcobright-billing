@@ -59,13 +59,13 @@ namespace Jobs
             if (cdrJob.CdrProcessor.CollectionResult.ConcurrentCdrExts.Count > 0)//job not empty, or has records
             {
                 cdrJob.Execute();//MAIN EXECUTION/MEDIATION METHOD
-                WriteJobCompletionIfCollectionNotEmpty(cdrJob.CdrProcessor.CollectionResult, this.Input.TelcobrightJob,cdrJob.CdrProcessor.CdrJobContext.Context);
+                WriteJobCompletionIfCollectionNotEmpty(cdrJob.CdrProcessor.CollectionResult, this.Input.Job,cdrJob.CdrProcessor.CdrJobContext.Context);
             }
             else
             {
                 if (cdrJob.CdrProcessor.CollectionResult.CdrInconsistents.Count > 0)
                 {
-                    if (this.Input.TelcobrightJob.idjobdefinition == 1 &&
+                    if (this.Input.Job.idjobdefinition == 1 &&
                         cdrJob.CdrProcessor.CollectionResult.CdrInconsistents.Count > 0) //newcdr
                     {
                         cdrJob.CdrProcessor.WriteCdrInconsistent();
@@ -78,7 +78,7 @@ namespace Jobs
                         throw new Exception("Empty new cdr files are not considered valid as per cdr setting.");
                     }
                 }
-                WriteJobCompletionIfCollectionIsEmpty(cdrJob.CdrProcessor.CollectionResult, this.Input.TelcobrightJob, cdrJob.CdrProcessor.CdrJobContext.Context);
+                WriteJobCompletionIfCollectionIsEmpty(cdrJob.CdrProcessor.CollectionResult, this.Input.Job, cdrJob.CdrProcessor.CdrJobContext.Context);
             }
             if (this.Input.CdrSetting.DisableCdrPostProcessingJobCreationForAutomation == false)
             {
@@ -93,7 +93,7 @@ namespace Jobs
             string fileLocationName = this.Input.Ne.SourceFileLocations;
             FileLocation fileLocation = this.Input.MediationContext.Tbc.DirectorySettings.FileLocations[fileLocationName];
             string fileName = fileLocation.GetOsNormalizedPath(fileLocation.StartingPath)
-                              + Path.DirectorySeparatorChar + this.Input.TelcobrightJob.JobName;
+                              + Path.DirectorySeparatorChar + this.Input.Job.JobName;
             this.CollectorInput = new CdrCollectorInputData(this.Input, fileName);
             IEventCollector cdrCollector = new FileBasedTextCdrCollector(this.CollectorInput);
             return (NewCdrPreProcessor)cdrCollector.Collect();
@@ -142,7 +142,7 @@ namespace Jobs
                 preProcessor.RemoveIllegalCharacters(collectorinput.Tbc.CdrSetting
                     .IllegalStrToRemoveFromFields, txtRow);
                 preProcessor.SetSwitchid(txtRow);
-                preProcessor.SetJobNameWithFileName(collectorinput.TelcobrightJob.JobName, txtRow);
+                preProcessor.SetFileNameWithJobName(collectorinput.TelcobrightJob.JobName, txtRow);
                 preProcessor
                     .AdjustStartTimeBasedOnCdrSettingsForSummaryTimeField(
                         collectorinput.Tbc.CdrSetting.SummaryTimeField, txtRow);
@@ -156,13 +156,13 @@ namespace Jobs
                 if (cdrSetting.AutoCorrectDuplicateBillId == true)
                 {
                     preProcessor.TxtCdrRows =
-                        AbstractCdrJobPreProcessor.ChangeDuplicateBillIds(preProcessor.TxtCdrRows);
+                        AbstractCdrJobPreProcessor.ChangeDuplicateBillIdsForPartialCdrs(preProcessor.TxtCdrRows);
                 }
             }
             else
             {
-                preProcessor.TxtCdrRows =
-                    preProcessor.FilterCdrsWithDuplicateBillIdsAsInconsistent(preProcessor.TxtCdrRows);
+                //preProcessor.TxtCdrRows =
+                  //  preProcessor.FilterCdrsWithDuplicateBillIdsAsInconsistent(preProcessor.TxtCdrRows);
                 preProcessor.TxtCdrRows.AsParallel().ForAll(row=>row[Fn.Partialflag]="0");
             }
 
@@ -193,7 +193,7 @@ namespace Jobs
                 preProcessor.RemoveIllegalCharacters(this.CollectorInput.Tbc.CdrSetting
                     .IllegalStrToRemoveFromFields, txtRow);
                 preProcessor.SetSwitchid(txtRow);
-                preProcessor.SetJobNameWithFileName(this.CollectorInput.TelcobrightJob.JobName, txtRow);
+                preProcessor.SetFileNameWithJobName(this.CollectorInput.TelcobrightJob.JobName, txtRow);
                 preProcessor
                     .AdjustStartTimeBasedOnCdrSettingsForSummaryTimeField(
                         this.CollectorInput.Tbc.CdrSetting.SummaryTimeField, txtRow);

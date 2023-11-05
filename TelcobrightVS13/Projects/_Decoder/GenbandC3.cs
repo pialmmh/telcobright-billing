@@ -37,7 +37,8 @@ namespace Decoders
         {
             this.Input = decoderInputData;
             string fileName = this.Input.FullPath;
-            List<string> tempLines = FileAndPathHelper.readLinesFromCompressedFile(fileName).ToList();
+            CompressedFileLinesReader linesReader= new CompressedFileLinesReader(fileName);
+            List<string> tempLines = linesReader.readLinesFromCompressedFile().ToList();
             List<string[]> lines = FileUtil.ParseLinesWithEnclosedAndUnenclosedFields(',', "\"", tempLines);
             return decodeLine(decoderInputData, out inconsistentCdrs, fileName, lines);
         }

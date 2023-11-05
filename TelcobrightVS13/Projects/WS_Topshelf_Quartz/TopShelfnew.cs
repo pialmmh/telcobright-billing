@@ -82,7 +82,7 @@ namespace WS_Telcobright_Topshelf
         }
         static string getLastGeneratedConfigFileName()
         {
-            string execPath = FileAndPathHelper.GetCurrentExecPath();
+            string execPath = FileAndPathHelperReadOnly.GetCurrentExecPath();
             DirectoryInfo configDir = new DirectoryInfo(new DirectoryInfo(execPath).Parent.FullName +
                                                         Path.DirectorySeparatorChar + "Config");
             string configFileName = configDir.FullName + Path.DirectorySeparatorChar + "telcobright.conf";

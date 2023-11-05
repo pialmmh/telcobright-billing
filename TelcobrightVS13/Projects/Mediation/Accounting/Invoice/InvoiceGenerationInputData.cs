@@ -15,7 +15,7 @@ namespace TelcobrightMediation.Accounting
         public TelcobrightConfig Tbc { get; }
         public PartnerEntities Context { get; }
         public int BatchSizeForJobSegment { get; set; }
-        public job TelcobrightJob { get; }
+        public job Job { get; }
         public Dictionary<string,string> JsonDetail { get; set; }
         public Dictionary<int,InvoiceGenerationConfig> ServiceGroupWiseInvoiceGenerationConfigs { get; set; }
         /// <summary>
@@ -37,7 +37,7 @@ namespace TelcobrightMediation.Accounting
             this.Tbc = tbc;
             Context = context;
             BatchSizeForJobSegment = this.Tbc.CdrSetting.SegmentSizeForDbWrite;
-            this.TelcobrightJob = telcobrightJob;
+            this.Job = telcobrightJob;
             this.InvoiceGenerationRules = invoiceGenerationRules;
             this.ServiceGroups = serviceGroups;
             this.ServiceGroupWiseInvoiceGenerationConfigs = serviceGroupWiseinvoiceGenerationConfigs;

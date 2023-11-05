@@ -41,7 +41,7 @@ namespace TelcobrightMediation
             List<string[]> txtRows = dbRowCollector.CollectAsTxtRows();
             if (this.CdrCollectorInput.CdrSetting.AutoCorrectDuplicateBillIdBeforeErrorProcess == true)
             {
-                txtRows = AbstractCdrJobPreProcessor.ChangeDuplicateBillIds(txtRows);
+                txtRows = AbstractCdrJobPreProcessor.ChangeDuplicateBillIdsForNonPartialCdrs(txtRows);
             }
             List<cdr> cdrs = new List<cdr>();
             txtRows.ForEach(c =>

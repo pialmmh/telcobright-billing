@@ -15,8 +15,10 @@ using System.Data.Entity;
 using System.Data.SqlClient;
 using MySql.Data.MySqlClient;
 using System.Drawing;
+using System.Web;
 using System.Web.UI.DataVisualization.Charting;
 using System.Web.UI.WebControls;
+using LibraryExtensions;
 
 public partial class DashboardAspxForIcx : Page
 {
@@ -69,45 +71,55 @@ public partial class DashboardAspxForIcx : Page
     {
         Series series1 = InternationalOutgoing.Series["Series1"];
         DataPointCollection points = series1.Points;
-        //string[] labels = { "Oct-01", "Oct-02", "Oct-03", "Oct-04", "Oct-05", "Oct-06", "Oct-07" };
+        series1.IsValueShownAsLabel = true;
+        series1.LabelFormat = "#,##0";
         string[] colors = { "#08605c", "#e40613", "#F86F03", "#FFA41B", "#8EAC50", "#898121", "#E7B10A" };
 
-        // double[] values = { 90, 10, 19, 78,55,89,96,95,75,65,32,85,14,55,22,33,44,55,6,52,63,45 };
+        string connectionString = icxConnstr;
+        List<double> duration = new List<double>();
+        List<string> durationDate = new List<string>();
+        DateTime currentDate = DateTime.Now;
+        DateTime sevenDaysAgo = currentDate.AddDays(-6);
+        DateTime lastHourMinuteSecond = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 23, 59, 59);
+        string today = lastHourMinuteSecond.ToString("yyyy-MM-dd HH:mm:ss");
+        DateTime firstHourMinuteSecondSevenDaysAgo = new DateTime(sevenDaysAgo.Year, sevenDaysAgo.Month, sevenDaysAgo.Day, 0, 0, 0);
+        string lastSevenDay = firstHourMinuteSecondSevenDaysAgo.ToString("yyyy-MM-dd HH:mm:ss");
 
-        string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
-        List<double> data = new List<double>();
         using (MySqlConnection con = new MySqlConnection(connectionString))
         {
-            //select tup_starttime as DurationDate,sum(duration1) as Duration from sum_voice_day_01 where tup_starttime = CURDATE() and tup_starttime>= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
-            //group by DurationDate;
-            //    =============================
             con.Open();
-            string sql = @"select tup_starttime as DurationDate, sum(duration1) as Duration from sum_voice_day_01 where tup_starttime 
-                            <= '2023-09-07' and tup_starttime>=  DATE_SUB('2023-09-07', INTERVAL 6 DAY)group by DurationDate;";
+            string sql = $@"select tup_starttime as DurationDate, sum(duration1) as Duration from sum_voice_day_02 where 
+                            tup_starttime >= '{lastSevenDay}' and tup_starttime <= '{today}' group by DurationDate;";
             using (MySqlCommand command = new MySqlCommand(sql, con))
             {
                 using (MySqlDataReader read = command.ExecuteReader())
                 {
-
                     while (read.Read())
                     {
-                        data.Add(read.GetDouble("duration"));
+                        DateTime date = DateTime.Parse(read["DurationDate"].ToString());
+                        durationDate.Add(date.ToString("MMMM-dd"));
+                        duration.Add(read.GetDouble("Duration"));
                     }
-                    read.Close();
-
                 }
-
             }
-
         }
-        for (int i = 0; i < colors.Length; i++)
-        {
-            DataPoint dataPoint = new DataPoint
-            {
 
-                Color = ColorTranslator.FromHtml(colors[i])
-            };
-            points.Add(dataPoint);
+        // Ensure that the data is retrieved as expected
+        foreach (double value in duration)
+        {
+            Console.WriteLine("Duration: " + value);
+        }
+
+        // Set X-axis labels
+        for (int i = 0; i < durationDate.Count; i++)
+        {
+            points.AddXY(durationDate[i], duration[i]);
+        }
+
+        // Set colors
+        for (int i = 0; i < durationDate.Count; i++)
+        {
+            points[i].Color = ColorTranslator.FromHtml(colors[i]);
         }
     }
 
@@ -116,94 +128,122 @@ public partial class DashboardAspxForIcx : Page
     {
         Series series1 = InternationalIncommimng.Series["Series1"];
         DataPointCollection points = series1.Points;
-        //string[] labels = { "Oct-01", "Oct-02", "Oct-03", "Oct-04", "Oct-05", "Oct-06", "Oct-07" };
+        series1.IsValueShownAsLabel = true;
+        series1.LabelFormat = "#,##0";
         string[] colors = { "#08605c", "#e40613", "#F86F03", "#FFA41B", "#8EAC50", "#898121", "#E7B10A" };
 
-        // double[] values = { 90, 10, 19, 78,55,89,96,95,75,65,32,85,14,55,22,33,44,55,6,52,63,45 };
+        string connectionString = icxConnstr;
+        List<double> duration = new List<double>();
+        List<string> durationDate = new List<string>();
+        DateTime currentDate = DateTime.Now;
+        DateTime sevenDaysAgo = currentDate.AddDays(-6);
+        DateTime lastHourMinuteSecond = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 23, 59, 59);
+        string today = lastHourMinuteSecond.ToString("yyyy-MM-dd HH:mm:ss");
+        DateTime firstHourMinuteSecondSevenDaysAgo = new DateTime(sevenDaysAgo.Year, sevenDaysAgo.Month, sevenDaysAgo.Day, 0, 0, 0);
+        string lastSevenDay = firstHourMinuteSecondSevenDaysAgo.ToString("yyyy-MM-dd HH:mm:ss");
 
-        string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
-        List<double> data = new List<double>();
         using (MySqlConnection con = new MySqlConnection(connectionString))
         {
-            //select tup_starttime as DurationDate,sum(duration1) as Duration from sum_voice_day_01 where tup_starttime = CURDATE() and tup_starttime>= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
-            //group by DurationDate;
-            //    =============================
             con.Open();
-            string sql = @"select tup_starttime as DurationDate, sum(duration1) as Duration from sum_voice_day_01 where tup_starttime 
-                            <= '2023-09-07' and tup_starttime>=  DATE_SUB('2023-09-07', INTERVAL 6 DAY)group by DurationDate;";
+            string sql = $@"select tup_starttime as DurationDate, sum(duration1) as Duration from sum_voice_day_03 where 
+                            tup_starttime >= '{lastSevenDay}' and tup_starttime <= '{today}' group by DurationDate;";
             using (MySqlCommand command = new MySqlCommand(sql, con))
             {
                 using (MySqlDataReader read = command.ExecuteReader())
                 {
-
                     while (read.Read())
                     {
-                        data.Add(read.GetDouble("duration"));
+                        // Format the date to "Month-Day-Year" format
+                        DateTime date = DateTime.Parse(read["DurationDate"].ToString());
+                        durationDate.Add(date.ToString("MMMM-dd"));
+
+                        duration.Add(read.GetDouble("Duration"));
                     }
-                    read.Close();
-
                 }
-
             }
-
         }
-        for (int i = 0; i < colors.Length; i++)
-        {
-            DataPoint dataPoint = new DataPoint
-            {
 
-                Color = ColorTranslator.FromHtml(colors[i])
-            };
-            points.Add(dataPoint);
+        // Ensure that the data is retrieved as expected
+        foreach (double value in duration)
+        {
+            Console.WriteLine("Duration: " + value);
+        }
+
+        // Set X-axis labels
+        for (int i = 0; i < durationDate.Count; i++)
+        {
+            points.AddXY(durationDate[i], duration[i]);
+        }
+
+        // Set colors
+        for (int i = 0; i < durationDate.Count; i++)
+        {
+            points[i].Color = ColorTranslator.FromHtml(colors[i]);
         }
     }
+
 
 
     private void DomesticCallForPreviousSevenDays1()
     {
         Series series1 = DomesticCallForPreviousSevenDays.Series["Series1"];
         DataPointCollection points = series1.Points;
-        //string[] labels = { "Oct-01", "Oct-02", "Oct-03", "Oct-04", "Oct-05", "Oct-06", "Oct-07" };
-        string[] colors = { "#08605c", "#e40613", "#F86F03", "#FFA41B", "#8EAC50", "#898121", "#E7B10A"};
+        series1.IsValueShownAsLabel = true;
+        series1.LabelFormat = "#,##0";
+        
 
-        // double[] values = { 90, 10, 19, 78,55,89,96,95,75,65,32,85,14,55,22,33,44,55,6,52,63,45 };
+        string[] colors = { "#08605c", "#e40613", "#F86F03", "#FFA41B", "#8EAC50", "#898121", "#E7B10A" };
 
-        string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
-        List<double> data = new List<double>();
+        string connectionString = icxConnstr;
+        List<double> durations = new List<double>();
+        List<string> durationDate = new List<string>();
+        DateTime currentDate = DateTime.Now;
+        DateTime sevenDaysAgo = currentDate.AddDays(-6);
+        DateTime lastHourMinuteSecond = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 23, 59, 59);
+        string today = lastHourMinuteSecond.ToString("yyyy-MM-dd HH:mm:ss");
+        DateTime firstHourMinuteSecondSevenDaysAgo = new DateTime(sevenDaysAgo.Year, sevenDaysAgo.Month, sevenDaysAgo.Day, 0, 0, 0);
+        string lastSevenDay = firstHourMinuteSecondSevenDaysAgo.ToString("yyyy-MM-dd HH:mm:ss");
+
         using (MySqlConnection con = new MySqlConnection(connectionString))
         {
-            //select tup_starttime as DurationDate,sum(duration1) as Duration from sum_voice_day_01 where tup_starttime = CURDATE() and tup_starttime>= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
-            //group by DurationDate;
-            //    =============================
             con.Open();
-            string sql = @"select tup_starttime as DurationDate, sum(duration1) as Duration from sum_voice_day_01 where tup_starttime 
-                            <= '2023-09-07' and tup_starttime>=  DATE_SUB('2023-09-07', INTERVAL 6 DAY)group by DurationDate;";
+            string sql = $@"select tup_starttime as DurationDate, sum(duration1) as Duration from sum_voice_day_01 where 
+                            tup_starttime >= '{lastSevenDay}' and tup_starttime <= '{today}' group by DurationDate;";
             using (MySqlCommand command = new MySqlCommand(sql, con))
             {
                 using (MySqlDataReader read = command.ExecuteReader())
                 {
-
                     while (read.Read())
                     {
-                        data.Add(read.GetDouble("duration"));
+                        //durationDate.Add(read["DurationDate"].ToString().ConvertToDateTimeFromCustomFormat("MM/dd/yyyy HH:mm:ss").ToString("MMMM dd")); // Store date labels
+                        DateTime date = DateTime.Parse(read["DurationDate"].ToString());
+                        durationDate.Add(date.ToString("MMMM-dd"));
+                        durations.Add(read.GetDouble("Duration"));
                     }
-                    read.Close();
-
                 }
-
             }
+        }
 
-        }
-        for (int i = 0; i < colors.Length; i++)
+        // Ensure that the data is retrieved as expected
+        foreach (double value in durations)
         {
-            DataPoint dataPoint = new DataPoint
-            {
-             
-                Color = ColorTranslator.FromHtml(colors[i])
-            };
-            points.Add(dataPoint);
+            Console.WriteLine("Duration: " + value);
         }
+
+        // Set X-axis labels
+        for (int i = 0; i < durationDate.Count; i++)
+        {
+            points.AddXY(durationDate[i], durations[i]);
+        }
+
+        // Set colors
+        for (int i = 0; i < durationDate.Count; i++)
+        {
+            points[i].Color = ColorTranslator.FromHtml(colors[i]);
+        }
+
     }
+
     //DataPoint dataPoint = new DataPoint
     //{
 
@@ -334,6 +374,11 @@ public partial class DashboardAspxForIcx : Page
                 gridViewMissingTg = ConvertDataSetToListForMissingTg(dataSet);
                 GridView11.DataSource = gridViewMissingTg;
                 GridView11.DataBind();
+            }
+            else
+            {
+                Msg.Enabled = true;
+                Msg.Text = "** Missing TG Not Found";
             }
         }
     }

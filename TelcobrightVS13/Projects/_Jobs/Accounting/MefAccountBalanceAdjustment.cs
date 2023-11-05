@@ -45,6 +45,11 @@ namespace Jobs
             throw new NotImplementedException();
         }
 
+        public ITelcobrightJob createNewNonSingletonInstance()
+        {
+            throw new NotImplementedException();
+        }
+
         private void WriteToDb(BalanceAdjustmentPostProcessingData adjustmentPostProcessingData)
         {
             InvoiceGenerationInputData invoiceGenerationInputData =
@@ -62,7 +67,7 @@ namespace Jobs
             var input = (AccountingJobInputData) jobInput;
             var context = input.Context;
             var cmd = context.Database.Connection.CreateCommand();
-            cmd.CommandText = $"select jobstate from job where id={input.TelcobrightJob.id}";
+            cmd.CommandText = $"select jobstate from job where id={input.Job.id}";
             string json = (string) cmd.ExecuteScalar();
             var jobStateMap = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
             decimal finalInvoicedAmount = Convert.ToDecimal(jobStateMap["invoicedAmountAfterLastSegment"]);

@@ -102,7 +102,8 @@ namespace InstallConfig
                         foreach (string scriptName in choices)
                         {
                             IScript script = this.DdlScripts[scriptName];
-                            string sql = script.GetScript(null);
+                            string sql = script.GetScript(con);
+                            if(sql=="")continue;
                             Console.WriteLine("Loading ddl script:" + script.RuleName);
                             sql = $@"SET FOREIGN_KEY_CHECKS = 0;
                                     {sql}
@@ -184,7 +185,8 @@ namespace InstallConfig
             string configRoot = tbc.DirectorySettings.ConfigRoot;
             string targetDir =
                 configPathHelper.GetOperatorWiseConfigDirInUtil(operatorShortName, configRoot);
-            FileAndPathHelper.DeleteFileContaining(targetDir, "*.conf");
+            FileAndPathHelperMutable pathHelper= new FileAndPathHelperMutable();
+            pathHelper.DeleteFileContaining(targetDir, "*.conf");
             SerializeConfigAndWriteJsonFile(tbc, configPathHelper.GetOperatorWiseTargetFileNameInUtil(operatorShortName,configRoot));
             //write config for windows service
             targetDir = configPathHelper.GetTopShelfConfigDir();

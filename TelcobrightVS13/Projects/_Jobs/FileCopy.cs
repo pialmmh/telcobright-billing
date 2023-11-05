@@ -59,7 +59,7 @@ namespace Jobs
             FileCopyJobInputData input = (FileCopyJobInputData)jobInputData;
             JobParamFileCopy paramFileCopy = new JobParamFileCopy();
             paramFileCopy = JsonConvert.DeserializeObject<JobParamFileCopy>
-                (input.TelcobrightJob.JobParameter.Replace("unsplit\\", "unsplit`"));
+                (input.Job.JobParameter.Replace("unsplit\\", "unsplit`"));
             paramFileCopy.RelativeFileName = paramFileCopy.RelativeFileName.Replace("unsplit`", @"unsplit\");
             SyncPair syncPair = input.Tbc.DirectorySettings.SyncPairs[paramFileCopy.SyncPairName];
             SyncLocation srcLocation = syncPair.SrcSyncLocation;
@@ -411,6 +411,11 @@ namespace Jobs
         }
 
         public object PostprocessJob(object data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ITelcobrightJob createNewNonSingletonInstance()
         {
             throw new NotImplementedException();
         }

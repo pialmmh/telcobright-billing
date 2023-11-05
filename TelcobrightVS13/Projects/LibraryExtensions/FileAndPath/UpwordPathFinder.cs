@@ -16,7 +16,7 @@ namespace LibraryExtensions
         public string FileOrFolderNameToFind { get; private set; }
         public UpwordPathFinder(string fileOrFolderNameToFind)
         {
-            string searchBeginsAt = FileAndPathHelper.GetCurrentExecPath();
+            string searchBeginsAt = FileAndPathHelperReadOnly.GetCurrentExecPath();
             Init(fileOrFolderNameToFind, searchBeginsAt);
         }
 
@@ -39,7 +39,7 @@ namespace LibraryExtensions
 
         public string FindAndGetFullPath()
         {
-            DirectoryInfo possibleTargetDir = new DirectoryInfo(FileAndPathHelper.GetCurrentExecPath());
+            DirectoryInfo possibleTargetDir = new DirectoryInfo(FileAndPathHelperReadOnly.GetCurrentExecPath());
             while (!Directory.Exists(Path.Combine(possibleTargetDir.FullName, this.FileOrFolderNameToFind)))
             {
                 possibleTargetDir = possibleTargetDir.Parent;

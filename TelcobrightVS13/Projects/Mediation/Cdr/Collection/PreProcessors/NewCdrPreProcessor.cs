@@ -56,24 +56,6 @@ namespace TelcobrightMediation
             }
         }
 
-        
-
-        public List<string[]> FilterCdrsWithDuplicateBillIdsAsInconsistent(List<string[]> txtRows)
-        {
-            List<string[]> dupRows = txtRows.GroupBy(c => c[Fn.UniqueBillId]).Where(g => g.Count() > 1)
-                .Select(g => g.ToList())
-                .SelectMany(c => c).ToList();
-            txtRows = txtRows.Where(r => !dupRows.Select(dupRow => dupRow[Fn.UniqueBillId]).ToList()
-                .Contains(r[Fn.UniqueBillId])).ToList();
-            dupRows.ForEach(
-                dupRow =>
-                {
-                    dupRow[Fn.ErrorCode] = "Duplicate billids are not allowed when partial cdrs are disabled.";
-                    base.InconsistentCdrs.Add(CdrConversionUtil.ConvertTxtRowToCdrinconsistent(dupRow));
-                });
-            return txtRows;
-        }
-
         public CdrAndInconsistentWrapper ConvertToCdr(string[] row)
         {
             cdr convertedCdr = null;
@@ -210,19 +192,21 @@ namespace TelcobrightMediation
             var cdrExtsForPartials = newCdrExts.Where(c => c.Cdr.PartialFlag != 0).ToList();
             if (newCdrExts.GroupBy(c => c.UniqueBillId).Any(g => g.Count() > 1))
                 throw new Exception("Duplicate billId for CdrExts in CdrJob");
-            
-            var allIdCalls = cdrExtsForNonPartials.Select(c => c.Cdr.IdCall)
+
+            List<long> allIdCalls = new List<long>();
+            allIdCalls = cdrExtsForNonPartials.Select(c => c.Cdr.IdCall)
                 .Concat(cdrExtsForPartials
-                .SelectMany(c => c.PartialCdrContainer.CombinedNewAndOldUnprocessedInstance).Select(c => c.IdCall))
-                .Concat(errorCdrExts.Select(c=>c.CdrError.IdCall)).ToList();
+                    .SelectMany(c => c.PartialCdrContainer.CombinedNewAndOldUnprocessedInstance).Select(c => c.IdCall))
+                .Concat(errorCdrExts.Select(c => c.CdrError.IdCall)).ToList();
             if (allIdCalls.GroupBy(i => i).Any(g => g.Count() > 1))
             {
                 throw new Exception("Duplicate idcalls for CdrExts in CdrJob");
             }
             var rawPartialCount = this.PartialCdrContainers.SelectMany(p => p.NewRawInstances).Count();
-            if (this.RawCount != cdrExtsForNonPartials.Count + cdrExtsForPartials.Count + errorCdrExts.Count+
+            if (this.RawCount != cdrExtsForNonPartials.Count + cdrExtsForPartials.Count + errorCdrExts.Count +
                 rawPartialCount - this.PartialCdrContainers.Count + base.InconsistentCdrs.Count)
-                throw new Exception("Count of nonPartial and partial cdrs do not match expected with expected rawCount for this job.");
+                throw new Exception(
+                    "Count of nonPartial and partial cdrs do not match expected with expected rawCount for this job.");
         }
 
         public void SetAllBlankFieldsToZerolengthString(string[] thisRow)
@@ -263,15 +247,15 @@ namespace TelcobrightMediation
         {
             txtRow[0] = this.CdrCollectorInputData.Ne.idSwitch.ToString();
         }
-        
-        public void SetJobNameWithFileName(string cdrFileName, string[] txtRow)
+
+        public void SetFileNameWithJobName(string cdrFileName, string[] txtRow)
         {
-            txtRow[3] = cdrFileName; //filename
+            txtRow[Fn.Filename] = cdrFileName; //filename
         }
 
         public void SetIdCall(AutoIncrementManager autoIncrementManager, string[] thisRow)
         {
-            thisRow[1] = autoIncrementManager.GetNewCounter(AutoIncrementCounterType.cdr).ToString();
+            thisRow[Fn.IdCall] = autoIncrementManager.GetNewCounter(AutoIncrementCounterType.cdr).ToString();
         }
 
         public void AdjustStartTimeBasedOnCdrSettingsForSummaryTimeField(SummaryTimeFieldEnum summaryTimeFieldEnum,

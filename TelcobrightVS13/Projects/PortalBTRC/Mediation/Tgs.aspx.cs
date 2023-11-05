@@ -77,7 +77,7 @@ public partial class TgsOfICX : Page
             thisPartner = conTelco.telcobrightpartners.Where(c => c.databasename == dbName).ToList().First();
 
         }
-        this.lblCustomerDisplayName.Text = thisPartner.CustomerName;
+        //this.lblCustomerDisplayName.Text = thisPartner.CustomerName;
         // Calculate the offset based on the current page index and page size
         //int pageIndex = GridViewCompleted.PageIndex;
         //int pageSize = GridViewCompleted.PageSize;
@@ -104,8 +104,8 @@ public partial class TgsOfICX : Page
             if (hasData == true)
             {
                 gridViewTg = ConvertDataSetToListForTg(dataSet);
-                ListViewTgs.DataSource = gridViewTg;
-                ListViewTgs.DataBind();
+                GridViewTgs.DataSource = gridViewTg;
+                GridViewTgs.DataBind();
             }
         }
     }
@@ -114,6 +114,17 @@ public partial class TgsOfICX : Page
     {
         // Set the new page index
     }
+    //protected void btnSearch_Click(object sender, EventArgs e)
+    //{
+    //    // Get the search term from the input field
+    //    string searchTerm = GridViewTgs;
+
+    //    // Implement your search logic here
+    //    // You can search the database, filter a list, or perform any other search operation
+
+    //    // Update your UI to display search results
+    //    // For example, you can bind search results to a GridView or display them in a list
+    //}
 
     protected void PreviousButton_Click(object sender, EventArgs e)
     {

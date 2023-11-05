@@ -24,13 +24,27 @@ namespace LibraryExtensions
         }
         public static void DeleteContentRecusively(this DirectoryInfo di)
         {
-            foreach (FileInfo file in di.EnumerateFiles())
+            foreach (FileInfo fileInfo in di.EnumerateFiles())
             {
-                file.Delete();
+                try
+                {
+                    File.Delete(fileInfo.FullName);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
             }
-            foreach (DirectoryInfo dir in di.EnumerateDirectories())
+            foreach (DirectoryInfo directoryInfo in di.EnumerateDirectories())
             {
-                dir.Delete(true);
+                try
+                {
+                    Directory.Delete(directoryInfo.FullName,true);
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception.Message);
+                }
             }
         }
     }

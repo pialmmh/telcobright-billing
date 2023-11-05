@@ -229,7 +229,7 @@
 
                         </div>
                         <%--humayun--%>
-                        <div style="text-align: center; float: left; padding-left: 130px;">
+                        <div style="text-align: center; float: left; padding-left: 100px;">
                             <div style="float: left;">
                                 <div class="col-3">
                                 
@@ -245,7 +245,6 @@
                                             <Series>
                                                 <asp:Series ChartType="Column">
                                                     <Points>
-                                                
                                                     </Points>
                                                 </asp:Series>
                                             </Series>
@@ -253,9 +252,11 @@
                                                 <asp:ChartArea Name="ChartArea1">
                                                     <AxisX Title="Date" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
                                                         <LabelStyle Font="Arial, 10px" Interval="1" />
+                                                        <MajorGrid Enabled="false" /> 
                                                     </AxisX>
                                                     <AxisY Title="Minutes (Million)" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
                                                         <LabelStyle Font="Arial, 10px" />
+                                                        <MajorGrid Enabled="false" /> 
                                                     </AxisY>
                                                 </asp:ChartArea>
                                             </ChartAreas>
@@ -289,7 +290,6 @@
                                             <Series>
                                                 <asp:Series ChartType="Column">
                                                     <Points>
-                                                
                                                     </Points>
                                                 </asp:Series>
                                             </Series>
@@ -297,13 +297,14 @@
                                                 <asp:ChartArea Name="ChartArea1">
                                                     <AxisX Title="Date" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
                                                         <LabelStyle Font="Arial, 10px" Interval="1" />
+                                                        <MajorGrid Enabled="false" /> 
                                                     </AxisX>
                                                     <AxisY Title="Minutes (Million)" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
                                                         <LabelStyle Font="Arial, 10px" />
+                                                        <MajorGrid Enabled="false" /> 
                                                     </AxisY>
                                                 </asp:ChartArea>
                                             </ChartAreas>
-                                      
                                         </asp:Chart>
                                     
 
@@ -332,7 +333,6 @@
                                             <Series>
                                                 <asp:Series ChartType="Column">
                                                     <Points>
-                                                
                                                     </Points>
                                                 </asp:Series>
                                             </Series>
@@ -340,9 +340,11 @@
                                                 <asp:ChartArea Name="ChartArea1">
                                                     <AxisX Title="Date" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
                                                         <LabelStyle Font="Arial, 10px" Interval="1" />
+                                                        <MajorGrid Enabled="false" /> 
                                                     </AxisX>
                                                     <AxisY Title="Minutes (Million)" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
                                                         <LabelStyle Font="Arial, 10px" />
+                                                        <MajorGrid Enabled="false" /> 
                                                     </AxisY>
                                                 </asp:ChartArea>
                                             </ChartAreas>

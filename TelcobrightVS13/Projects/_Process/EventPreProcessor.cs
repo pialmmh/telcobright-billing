@@ -35,75 +35,76 @@ namespace Process
         public override void Execute(IJobExecutionContext schedulerContext)
         {
             string operatorName = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");
+            TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(
+                schedulerContext, operatorName);
+            CdrSetting cdrSetting = tbc.CdrSetting;
+            string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName, tbc);
+            PartnerEntities context = new PartnerEntities(entityConStr);
             try
             {
-                TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(
-                    schedulerContext, operatorName);
-                CdrSetting cdrSetting= tbc.CdrSetting;
-                string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName,tbc);
-                using (PartnerEntities context = new PartnerEntities(entityConStr))
+                context.Database.Connection.Open();
+                var mediationContext = new MediationContext(tbc, context);
+                tbc.GetPathIndependentApplicationDirectory();
+                foreach (ne ne in mediationContext.Nes.Values)
                 {
-                    context.Database.Connection.Open();
-                    var mediationContext = new MediationContext(tbc, context);
-                    tbc.GetPathIndependentApplicationDirectory();
-                    foreach (ne ne in mediationContext.Nes.Values)
+                    try
                     {
-                        try
-                        {
-                            NeAdditionalSetting neAdditionalSetting = null;
-                            if (cdrSetting.NeWiseAdditionalSettings.
-                                TryGetValue(ne.idSwitch, out neAdditionalSetting) == false) continue;
-                            List<EventPreprocessingRule> eventPreprocessingRules = neAdditionalSetting.EventPreprocessingRules;
-                            if (eventPreprocessingRules.Any() == false) continue;
-                            eventPreprocessingRules.ForEach(rule => rule.PrepareRule());
+                        NeAdditionalSetting neAdditionalSetting = null;
+                        if (cdrSetting.NeWiseAdditionalSettings.TryGetValue(ne.idSwitch, out neAdditionalSetting) ==
+                            false)
+                            continue;
+                        List<EventPreprocessingRule> eventPreprocessingRules =
+                            neAdditionalSetting.EventPreprocessingRules;
+                        if (eventPreprocessingRules.Any() == false) continue;
+                        eventPreprocessingRules.ForEach(rule => rule.PrepareRule());
 
-                            if (ne.SkipCdrDecoded == 1 || CheckIncompleteExists(context, mediationContext, ne) == false)
-                                continue;
-                            List<job> incompleteJobs = GetNewCdrJobs(tbc, context, ne, ne.DecodingSpanCount);
-                            if (incompleteJobs.Any() == false) continue;
-                            
-                            foreach (var eventPreprocessingRule in eventPreprocessingRules)
-                            {
-                                if (eventPreprocessingRule.ProcessCollectionOnly == true)
-                                {
-                                    var ruleInputData = new Dictionary<string, object>()
-                                    {
-                                        {"mediationContext", mediationContext},
-                                        {"ne", ne},
-                                        {"newCdrFileJobs", incompleteJobs},
-                                        {"partnerEntities", context},
-                                        {"tbConsole", TbConsole},
-                                        {"neAdditionalSetting",neAdditionalSetting }
-                                    };
-                                    eventPreprocessingRule.Execute(ruleInputData);
-                                }
-                                else //single job logic not implemented yet
-                                {
-                                    throw new NotImplementedException();
-                                }
-                            }
-                        } //try for each NE
-                        catch (Exception e1)
+                        if (ne.SkipCdrDecoded == 1 || CheckIncompleteExists(context, mediationContext, ne) == false)
+                            continue;
+                        int maxNumberOfFilesToPreDecode = neAdditionalSetting.MaxNumberOfFilesInPreDecodedDirectory;
+
+                        List<job> incompleteJobs = GetNewCdrJobs(tbc, context, ne, maxNumberOfFilesToPreDecode);
+                        if (incompleteJobs.Any() == false) continue;
+
+                        foreach (var eventPreprocessingRule in eventPreprocessingRules)
                         {
-                            Console.WriteLine(e1);
-                            ErrorWriter wr = new ErrorWriter(e1, "EventPreProcessor", null, "NE:" + ne.idSwitch,
-                                tbc.Telcobrightpartner.CustomerName);
-                            continue; //with next switch
+                            if (eventPreprocessingRule.ProcessCollectionOnly == true)
+                            {
+                                var ruleInputData = new Dictionary<string, object>()
+                                {
+                                    {"mediationContext", mediationContext},
+                                    {"ne", ne},
+                                    {"newCdrFileJobs", incompleteJobs},
+                                    {"partnerEntities", context},
+                                    {"neAdditionalSetting", neAdditionalSetting}
+                                };
+                                eventPreprocessingRule.Execute(ruleInputData);
+                            }
+                            else //single job logic not implemented yet
+                            {
+                                throw new NotImplementedException();
+                            }
                         }
-                    } //for each NE
-                }
+                    } //try for each NE
+                    catch (Exception e1)
+                    {
+                        Console.WriteLine(e1);
+                        ErrorWriter.WriteError(e1, "EventPreProcessor", null, "NE:" + ne.idSwitch,
+                            tbc.Telcobrightpartner.CustomerName, context);
+                        continue; //with next switch
+                    }
+                } //for each NE
             } //try
             catch (Exception e1)
             {
                 Console.WriteLine(e1);
-                ErrorWriter wr = new ErrorWriter(e1,"EventPreProcessor",null,"",operatorName);
+                ErrorWriter.WriteError(e1, "EventPreProcessor", null, "", operatorName, context);
             }
         }
 
         bool CheckIncompleteExists(PartnerEntities context, MediationContext mediationContext, ne ne)
         {
-            var anyJob= context.jobs.Where(job => job.CompletionTime == null && job.idjobdefinition==1
-                                         && job.idNE == ne.idSwitch).ToList().FirstOrDefault();
+            var anyJob = context.jobs.Where(job => job.CompletionTime == null && job.idjobdefinition == 1
+                                          && job.idNE == ne.idSwitch).ToList().FirstOrDefault();
             return anyJob != null;
         }
 
@@ -132,13 +133,13 @@ namespace Process
                 mefDecoders.DicExtensions.Add(ext.Id, ext);
             return mefDecoders;
         }
-       
-        public List<job> GetNewCdrJobs(TelcobrightConfig tbc,PartnerEntities contextTb, ne thisSwitch, int? decodingSpan)
+
+        public List<job> GetNewCdrJobs(TelcobrightConfig tbc, PartnerEntities contextTb, ne thisSwitch, int maxNumberOfFilesToPreDecode)
         {
             List<job> jobs = null;
             if (tbc.CdrSetting.DescendingOrderWhileProcessingListedFiles == true)
             {
-                jobs=contextTb.jobs
+                jobs = contextTb.jobs
                     .Where(c => c.CompletionTime == null
                                 && c.idNE == thisSwitch.idSwitch
                                 && c.Status == 7 && c.idjobdefinition == 1
@@ -146,11 +147,11 @@ namespace Process
                     .Include(c => c.ne.enumcdrformat)
                     .Include(c => c.ne.telcobrightpartner)
                     .OrderByDescending(c => c.JobName)
-                    .Take(Convert.ToInt32(decodingSpan)).ToList();
+                    .Take(Convert.ToInt32(maxNumberOfFilesToPreDecode)).ToList();
             }
             else
             {
-                jobs=contextTb.jobs
+                jobs = contextTb.jobs
                     .Where(c => c.CompletionTime == null
                                 && c.idNE == thisSwitch.idSwitch
                                 && c.Status == 7 && c.idjobdefinition == 1
@@ -158,7 +159,7 @@ namespace Process
                     .Include(c => c.ne.enumcdrformat)
                     .Include(c => c.ne.telcobrightpartner)
                     .OrderBy(c => c.JobName)
-                    .Take(Convert.ToInt32(decodingSpan)).ToList();
+                    .Take(Convert.ToInt32(maxNumberOfFilesToPreDecode)).ToList();
             }
             return jobs;
         }

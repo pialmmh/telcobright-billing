@@ -26,8 +26,8 @@ namespace InstallConfig
                         IpAddressOrHostName = new IpAddressOrHostName {Address = "10.100.150.20"},
                         Port = 3306
                     },
-                    RootUserForAutomation = "btrc",
-                    RootPasswordForAutomation = "Takay1takaane",
+                    RootUserForAutomation = "fduser",
+                    RootPasswordForAutomation = "Takay1takaane$",
                     Users = new List<MySqlUser>()
                     {
                         new MySqlUser(username: CasDbHelperOld.Db.AdminUserName,
