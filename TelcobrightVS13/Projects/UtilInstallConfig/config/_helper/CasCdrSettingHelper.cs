@@ -47,6 +47,7 @@ namespace InstallConfig.config._helper
                 AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
                 ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>(),
                 BatchSizeWhenPreparingLargeSqlJob = 100000,
+                UnzipCompressedFiles = true,
                 SkipSettingsForSummaryOnly = new SkipSettingsForSummaryOnly
                 {
                     SkipCdr = true,

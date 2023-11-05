@@ -56,7 +56,9 @@ namespace Process
                             DirectoryLister dirlister = new DirectoryLister();
                             if (cdrSetting.UnzipCompressedFiles==true)
                             {
-                                List<FileInfo> zipFiles = dirlister.ListLocalDirectoryZipfileNonRecursive(vaultPath);
+                                List<string> extensions = new List<string> { ".zip", ".gz", ".tar.Z" };
+
+                                List<FileInfo> zipFiles = dirlister.ListLocalDirectoryZipfileNonRecursive(vaultPath, extensions);
                                 if (zipFiles.Count > 0)
                                 {
                                     Console.WriteLine($"Found {zipFiles.Count} zip files. Unzipping ...");

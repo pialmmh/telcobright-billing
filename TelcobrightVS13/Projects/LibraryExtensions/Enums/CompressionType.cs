@@ -11,7 +11,8 @@ namespace LibraryExtensions
         None = 0,
         Zip = 1,
         Sevenzip = 2,
-        Gzip = 3
+        Gzip = 3,
+        tarZip = 4,
     }
 
     public static class CompressionTypeHelper
@@ -22,7 +23,8 @@ namespace LibraryExtensions
                 { "none", CompressionType.None},
                 { ".gz", CompressionType.Gzip},
                 {".zip", CompressionType.Zip},
-                { ".7z", CompressionType.Sevenzip}
+                { ".7z", CompressionType.Sevenzip},
+                { ".Z", CompressionType.tarZip}
             };
     }
 }

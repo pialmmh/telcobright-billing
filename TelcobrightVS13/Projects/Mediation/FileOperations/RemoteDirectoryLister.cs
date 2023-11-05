@@ -109,16 +109,33 @@ namespace TelcobrightFileOperations
             return localFiles;
         }
 
-        public List<FileInfo> ListLocalDirectoryZipfileNonRecursive(string dir)
+        public List<FileInfo> ListLocalDirectoryZipfileNonRecursive(string dir, List<string> extensions)
         {
             List<FileInfo> zipFiles = new List<FileInfo>();
             foreach (string f in Directory.GetFiles(dir))
             {
-                if (f.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) ||
-                    f.EndsWith(".gz", StringComparison.OrdinalIgnoreCase))
+                //foreach(string ext in extensions)
+                //{
+                //    if (f.EndsWith(ext, StringComparison.OrdinalIgnoreCase)){
+                //        zipFiles.Add(new FileInfo(f));
+                //        break;
+                //    }
+                //}
+
+                if (extensions.Any(e => f.EndsWith(e, StringComparison.OrdinalIgnoreCase)))
                 {
                     zipFiles.Add(new FileInfo(f));
                 }
+
+
+
+
+
+                //if (f.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) ||
+                //    f.EndsWith(".gz", StringComparison.OrdinalIgnoreCase))
+                //{
+                //    zipFiles.Add(new FileInfo(f));
+                //}
             }
             return zipFiles;
         }

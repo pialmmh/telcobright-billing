@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 using System.IO.Compression;
 using LibraryExtensions;
 
+using SharpCompress.Archives;
+using SharpCompress.Common;
+using SharpCompress.Readers;
+
 namespace TelcobrightFileOperations
 {
     
@@ -53,6 +57,35 @@ namespace TelcobrightFileOperations
                         }
                     }
                 }
+            }
+            else if (zippedFile.FullName.EndsWith("tar.Z"))
+            {
+                string extension = Path.GetExtension(zippedFile.Name);
+                string compressedFileName = zippedFile.Name.Substring(0, zippedFile.Name.Length - extension.Length); ;
+                string tempFileName = tempDir.FullName + Path.DirectorySeparatorChar + compressedFileName;
+
+                string tarGzFilePath = tempFileName; // Replace with the path to your .tar.gz file
+                string extractPath = tempDir.FullName;  // Replace with the directory where you want to extract the contents
+
+                using (Stream stream = File.OpenRead(zippedFile.FullName))
+                using (var reader = ReaderFactory.Open(stream))
+                {
+                    while (reader.MoveToNextEntry())
+                    {
+                        if (!reader.Entry.IsDirectory)
+                        {
+                            reader.WriteEntryToDirectory(extractPath, new ExtractionOptions
+                            {
+                                ExtractFullPath = true,
+                                Overwrite = true
+                            });
+                        }
+                    }
+                }
+
+                Console.WriteLine("Extraction completed.");
+
+
             }
             else
             {

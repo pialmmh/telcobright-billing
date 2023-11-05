@@ -30,7 +30,8 @@ namespace Process
         public List<CompressionType> SupportedCompressionTypes { get; set; }= new List<CompressionType>()
         {
             CompressionType.Gzip,
-            CompressionType.Zip
+            CompressionType.Zip,
+            CompressionType.tarZip
         };
 
         public CompressedFileHelperForVault(List<string> extensionsToAcceptAfterUnzip, string vaultPathToExtract="")
