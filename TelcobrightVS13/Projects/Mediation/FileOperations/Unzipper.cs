@@ -58,6 +58,32 @@ namespace TelcobrightFileOperations
                     }
                 }
             }
+            else if (zippedFile.FullName.EndsWith(".rar"))
+            {
+
+                string extension = Path.GetExtension(zippedFile.Name);
+                string compressedFileName = zippedFile.Name.Substring(0, zippedFile.Name.Length - extension.Length); ;
+                string tempFileName = tempDir.FullName + Path.DirectorySeparatorChar + compressedFileName;
+
+                //
+                //string rarFilePath = zippedFile.Name;  // Replace with the path to your .rar file
+                //string extractPath = tempFileName;  // Replace with the directory where you want to extract the contents
+
+                using (Stream stream = File.OpenRead(zippedFile.FullName))
+                using (var archive = ArchiveFactory.Open(stream))
+                {
+                    foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory))
+                    {
+                        entry.WriteToDirectory(tempFileName, new ExtractionOptions
+                        {
+                            ExtractFullPath = true,
+                            Overwrite = true
+                        });
+                    }
+                }
+
+                Console.WriteLine("Extraction completed.");
+            }
             else if (zippedFile.FullName.EndsWith("tar.Z"))
             {
                 string extension = Path.GetExtension(zippedFile.Name);
