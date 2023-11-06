@@ -98,6 +98,7 @@
     <Compile Include="Deployment\DeploymentProfileType.cs" />
     <Compile Include="Deployment\InstanceConfig.cs" />
     <Compile Include="Deployment\Menu.cs" />
+    <Compile Include="ExternalExeManager.cs" />
     <Compile Include="Infra\Datacenter.cs" />
     <Compile Include="Infra\DbCommandReader.cs" />
     <Compile Include="Infra\ReplicationHelper.cs" />

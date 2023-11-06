@@ -82,7 +82,7 @@ namespace Process
                     FileInfo copiedTempFileInfo = new FileInfo(targetFilenameWithTempExtension);
                     if (copiedTempFileInfo.Length == extractedFileInfo.Length)
                     {
-                        File.Move(copiedTempFileInfo.FullName, copiedTempFileInfo.FullName.Replace(tempExtension, ""));//rename to remove .tmp extension
+                        File.Move(copiedTempFileInfo.FullName.Replace(tempExtension, ""), VaultPathToExtract + Path.DirectorySeparatorChar + extractedFileInfo);//rename to remove .tmp extension
                         extractedFileInfo.Delete();
                     }
                 }

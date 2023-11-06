@@ -71,8 +71,8 @@ namespace Process
                                     compressedFileHelper.ExtractWithSafeCopy(compressedFile.FullName);
                                     compressedFile
                                         .Delete(); //code reaching here means extraction successful, exceptions will not hit this and file will be kept
-                                    UnZipper unzipper = new UnZipper(compressedFile.FullName);
-                                    unzipper.UnZipAll();
+                                    //UnZipper unzipper = new UnZipper(compressedFile.FullName);
+                                    //unzipper.UnZipAll();
                                 }
                             }
                         }

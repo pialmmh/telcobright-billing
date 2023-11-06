@@ -6,10 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO.Compression;
 using LibraryExtensions;
-
+using System.Diagnostics;
 using SharpCompress.Archives;
 using SharpCompress.Common;
 using SharpCompress.Readers;
+using TelcobrightInfra;
 
 namespace TelcobrightFileOperations
 {
@@ -65,24 +66,39 @@ namespace TelcobrightFileOperations
                 string compressedFileName = zippedFile.Name.Substring(0, zippedFile.Name.Length - extension.Length); ;
                 string tempFileName = tempDir.FullName + Path.DirectorySeparatorChar + compressedFileName;
 
-                //
-                //string rarFilePath = zippedFile.Name;  // Replace with the path to your .rar file
-                //string extractPath = tempFileName;  // Replace with the directory where you want to extract the contents
+                string rarFilePath = zippedFile.FullName.Replace("\\", "//");
+                string targetPath = tempDir.FullName.Replace("\\", "//");
 
-                using (Stream stream = File.OpenRead(zippedFile.FullName))
-                using (var archive = ArchiveFactory.Open(stream))
+                string sevenZipPath = ExternalResourceManager.getResourcePath(ExternalResourceType.SevenZip);
+                string command1 = $@"{sevenZipPath} x {rarFilePath} -o{targetPath}";
+                //string command2 = $@" & {sevenZipPath} x -o{targetPath} {targetPath + "//" + compressedFileName}";
+
+                string finalCommand = command1 ;
+
+                ProcessStartInfo psi = new ProcessStartInfo
                 {
-                    foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory))
-                    {
-                        entry.WriteToDirectory(tempFileName, new ExtractionOptions
-                        {
-                            ExtractFullPath = true,
-                            Overwrite = true
-                        });
-                    }
-                }
+                    FileName = "cmd.exe",
+                    RedirectStandardInput = true,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                };
 
-                Console.WriteLine("Extraction completed.");
+                Process process = new Process { StartInfo = psi };
+
+                process.Start();
+                process.StandardInput.WriteLine(finalCommand);
+                process.StandardInput.WriteLine("exit");
+                process.WaitForExit();
+
+                if (process.ExitCode == 0)
+                {
+                    Console.WriteLine("Extraction completed.");
+                }
+                else
+                {
+                    Console.WriteLine("Extraction Failed.");
+                }
             }
             else if (zippedFile.FullName.EndsWith("tar.Z"))
             {
@@ -90,28 +106,39 @@ namespace TelcobrightFileOperations
                 string compressedFileName = zippedFile.Name.Substring(0, zippedFile.Name.Length - extension.Length); ;
                 string tempFileName = tempDir.FullName + Path.DirectorySeparatorChar + compressedFileName;
 
-                string tarGzFilePath = tempFileName; // Replace with the path to your .tar.gz file
-                string extractPath = tempDir.FullName;  // Replace with the directory where you want to extract the contents
+                string tarFilePath = zippedFile.FullName.Replace("\\","//");
+                string targetPath = tempDir.FullName.Replace("\\", "//");
+                
+                string sevenZipPath = ExternalResourceManager.getResourcePath(ExternalResourceType.SevenZip);
+                string command1 = $@"{sevenZipPath} x -o{targetPath} {tarFilePath}"; 
+                string command2 = $@" & {sevenZipPath} x -o{targetPath} {targetPath +"//"+ compressedFileName}";
 
-                using (Stream stream = File.OpenRead(zippedFile.FullName))
-                using (var reader = ReaderFactory.Open(stream))
+                string finalCommand = command1 + command2;
+
+                ProcessStartInfo psi = new ProcessStartInfo
                 {
-                    while (reader.MoveToNextEntry())
-                    {
-                        if (!reader.Entry.IsDirectory)
-                        {
-                            reader.WriteEntryToDirectory(extractPath, new ExtractionOptions
-                            {
-                                ExtractFullPath = true,
-                                Overwrite = true
-                            });
-                        }
-                    }
+                    FileName = "cmd.exe",
+                    RedirectStandardInput = true,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                };
+
+                Process process = new Process { StartInfo = psi };
+
+                process.Start();
+                process.StandardInput.WriteLine(finalCommand);
+                process.StandardInput.WriteLine("exit");
+                process.WaitForExit();
+
+                if (process.ExitCode == 0)
+                {
+                    Console.WriteLine("Extraction completed.");
                 }
-
-                Console.WriteLine("Extraction completed.");
-
-
+                else
+                {
+                    Console.WriteLine("Extraction Failed.");
+                }
             }
             else
             {
