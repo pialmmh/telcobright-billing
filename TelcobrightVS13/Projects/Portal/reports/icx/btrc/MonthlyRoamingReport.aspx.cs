@@ -11,9 +11,9 @@ using reports;
 using MediationModel;
 using LibraryExtensions;
 using PortalApp.ReportHelper;
-
-using System;
+using System.Collections.Concurrent;
 using System.Globalization;
+using System.Threading.Tasks;
 
 
 public partial class DefultMonthlyRomingReport: System.Web.UI.Page
@@ -207,26 +207,19 @@ public partial class DefultMonthlyRomingReport: System.Web.UI.Page
     protected void submit_Click(object sender, EventArgs e)
     {
         
-        List<SumDataOfMonth> sumOfMonthlyRecords = new List<SumDataOfMonth>();
+        BlockingCollection<SumDataOfMonth> sumOfMonthlyRecords =new BlockingCollection<SumDataOfMonth>();
         
        
         Dictionary<int, string> partnerNames = null;
         using (PartnerEntities context = new PartnerEntities()) {
             partnerNames = context.partners.ToList().ToDictionary(p => p.idPartner, p => p.PartnerName);
         }
-        using (MySqlConnection connection = new MySqlConnection())
-        {
-           
-            connection.ConnectionString =$@"server = 172.18.0.2; user id = dbreader; password = Takay1takaane; 
-                                            persistsecurityinfo = True; defaultcommandtimeout = 14400; database = summit";
-
-            connection.Open();
+      
             List<DateTime> listOfdate = new List<DateTime>();
             string yearStr = TextBoxYear.Text;
             string monthStr = DropDownListMonth.SelectedItem.Text;
 
             int yearValue;
-
             if (int.TryParse(yearStr, out yearValue))
             {
                 DateTime startDate = DateTime.ParseExact($"{monthStr} 01 {yearStr}", "MMM dd yyyy", CultureInfo.InvariantCulture);
@@ -239,27 +232,30 @@ public partial class DefultMonthlyRomingReport: System.Web.UI.Page
                 }
             }
 
-            foreach (DateTime date in listOfdate)
+            Parallel.ForEach(listOfdate, date =>
             {
                 
+                MySqlConnection connnection = new MySqlConnection();
+                connnection.ConnectionString =  $@"server = 172.18.0.2; user id = dbreader; password = Takay1takaane; 
+                                           persistsecurityinfo = True; defaultcommandtimeout = 14400; database = summit";
+                connnection.Open();
                 string firstDate = date.ToString("yyyy-MM-dd");
                 string lastDate = date.AddDays(1).ToString("yyyy-MM-dd");
-                DataSet dailyRecords = getMonthlyReport(connection, firstDate, lastDate);
-
+                DataSet dailyRecords = getMonthlyReport(connnection, firstDate, lastDate);
 
                 bool hasdomesticDs = dailyRecords.Tables.Cast<DataTable>().Any(table => table.Rows.Count != 0);
-                if (hasdomesticDs)
-                {
+                if (hasdomesticDs){
+
                     List<SumDataOfMonth> finalRecords = new List<SumDataOfMonth>();
                     finalRecords = ConvertBtrcDataSetToList(dailyRecords);
-                    sumOfMonthlyRecords.AddRange(finalRecords);
-                }
+                    foreach (SumDataOfMonth x in finalRecords){
+                        sumOfMonthlyRecords.Add(x);
+                    }
                
+                }
+                });
 
-            }
-          
-           
-                DomHeader.Text = "Monthly Roaming  Report";
+            DomHeader.Text = "Monthly Roaming  Report";
                 Gvdom.DataSource = sumOfMonthlyRecords;
                 DomHeader.Visible = true;
                 Gvdom.DataBind();
@@ -420,7 +416,7 @@ public partial class DefultMonthlyRomingReport: System.Web.UI.Page
                 Button1.Visible = false; //hide export
             }
 
-        }//using mysql connection
+        //using mysql connection
 
 
 
@@ -471,13 +467,17 @@ public partial class DefultMonthlyRomingReport: System.Web.UI.Page
 
             List<SumDataOfMonth> sumOfMonthlyReport = new List<SumDataOfMonth>();
 
+            int cnt = 0;
+
             foreach (DateTime date in listOfdate)
             {
                 string firstDate = date.ToString("yyyy-MM-dd");
                 string lastDate = date.AddDays(1).ToString("yyyy-MM-dd");
                 DataSet dailyRecords = getMonthlyReport(connection, firstDate, lastDate);
                 List<SumDataOfMonth> finalRecords = ConvertBtrcDataSetToList(dailyRecords);
-                sumOfMonthlyReport.AddRange(finalRecords);  
+                sumOfMonthlyReport.AddRange(finalRecords);
+                cnt++;
+                if(cnt>=7)break;
             }
 
             ExcelExporterForBtrcReport.ExportToExcelMonthlyRoamingReport("MonthlyReport From " + txtStartDate.Text + " To " + txtEndDate.Text

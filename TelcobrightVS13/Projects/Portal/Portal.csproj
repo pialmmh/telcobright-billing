@@ -937,6 +937,7 @@
     <Compile Include="Handler\PdfHandler.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\InvoiceHelper.cs" />
+    <Compile Include="ReportHelper\cusomizeReportHelper.cs" />
     <Compile Include="ReportHelper\AbstractSqlHelper.cs" />
     <Compile Include="ReportHelper\SqlHelperDomestic.cs" />
     <Compile Include="ReportHelper\SqlHelperInIGWRouteWise.cs" />

@@ -222,9 +222,10 @@ namespace TelcobrightFileOperations
                 }
                 string tempExt = "";
                 string secondaryDirectory = syncSettingsSource.SecondaryDirectory;
-                string alternateDownloadPathFromSecondaryDir =
-                    Path.GetDirectoryName(srcInfoRemote.FullPath) + "/" + secondaryDirectory + "/" +
+                string downloadedDirFullPath = Path.GetDirectoryName(srcInfoRemote.FullPath) + "/" + secondaryDirectory;
+                string alternateDownloadPathFromSecondaryDir = downloadedDirFullPath + "/" +
                     Path.GetFileName(srcInfoRemote.FullPath);
+                
                 bool alreadyDownloadingFromSecondaryDir = false;
                 if (dstSettings.FileExtensionForSafeCopyWithTempFile != "")
                 {
@@ -254,14 +255,21 @@ namespace TelcobrightFileOperations
                         }
                     }
                     session.GetFiles(srcInfoRemote.FullPath, tempFile, removeOriginal);
+                
                     if (removeOriginal == true)
                     {
                         session.RemoveFile(srcInfoRemote.FullPath);
                     }
                     else if (!secondaryDirectory.IsNullOrEmptyOrWhiteSpace())//move to secondary dir if set in config
                     {
+
                         if (!alreadyDownloadingFromSecondaryDir)
                         {
+                            //string downloadedDirFullPath = "c:/sdfsdf/downloaded";
+                            if (session.FileExists(downloadedDirFullPath)==false)
+                            {
+                                session.CreateDirectory(downloadedDirFullPath);
+                            }
                             session.MoveFile(srcInfoRemote.FullPath,alternateDownloadPathFromSecondaryDir);
                         }
                     }

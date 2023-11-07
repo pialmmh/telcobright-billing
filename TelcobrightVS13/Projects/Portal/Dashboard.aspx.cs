@@ -40,7 +40,7 @@ public partial class DashboardAspx : Page
         databaseSetting.DatabaseName = dbName;
         using (PartnerEntities conTelco = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting))
         {
-            var telcoTelcobrightpartners = conTelco.telcobrightpartners.ToList();
+            List<telcobrightpartner> telcoTelcobrightpartners = conTelco.telcobrightpartners.ToList();
             thisPartner = telcoTelcobrightpartners.Where(c => c.databasename == dbName).ToList().First();
         }
         this.lblCustomerDisplayName.Text = thisPartner.CustomerName;

@@ -155,7 +155,6 @@ namespace InstallConfig
                 }
             };
 
-
             //sync pair Vault_S3:FileArchive1
             this.zteCAS = new SyncPair("zte:cas")
             {
@@ -181,6 +180,7 @@ namespace InstallConfig
                     CompressionType = CompressionType.None,
                 }
             };
+
             this.zteSummitFtp = new SyncPair("zte:summitftp")
             {
                 SkipCopyingToDestination = false,
