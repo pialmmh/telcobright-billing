@@ -31,6 +31,7 @@ namespace Jobs
         {
             CdrJobInputData input = (CdrJobInputData) jobInputData;
             CdrCollectorInputData cdrCollectorInput = new CdrCollectorInputData(input, "");
+            openDbConAndStartTransaction(jobInputData.Context, cdrCollectorInput.MediationContext);
             SegmentedCdrReprocessJobProcessor segmentedCdrReprocessJobProcessor =
                 new SegmentedCdrReprocessJobProcessor(cdrCollectorInput,
                     input.CdrSetting.BatchSizeWhenPreparingLargeSqlJob, "IdCall", "starttime");
@@ -39,6 +40,18 @@ namespace Jobs
             List<jobsegment> jobsegments = segmentedCdrReprocessJobProcessor.ExecuteIncompleteSegments();
             segmentedCdrReprocessJobProcessor.FinishJob(jobsegments,null); //mark job as complete
             return JobCompletionStatus.Complete;
+        }
+
+        private void openDbConAndStartTransaction(PartnerEntities context, MediationContext mediationContext)
+        {
+            DbCommand cmd = context.Database.Connection.CreateCommand();
+            if (cmd.Connection.State == ConnectionState.Open)
+            {
+                throw new Exception("Connection should only be open after preprocessing new cdr job.");
+            }
+            cmd.Connection.Open();
+            mediationContext.CreateTemporaryTables();
+            cmd.ExecuteCommandText("set autocommit=0;");
         }
 
         public object PreprocessJob(object data)

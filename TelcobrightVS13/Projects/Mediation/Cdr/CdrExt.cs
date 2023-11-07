@@ -49,8 +49,11 @@ namespace TelcobrightMediation.Cdr
         public Dictionary<ValueTuple<int, int, int>, acc_chargeable> Chargeables { get; }
             = new Dictionary<ValueTuple<int, int, int>, acc_chargeable>(); //key=tuple(sg,sf,assignedDir)
 
-        public Dictionary<long, AccWiseTransactionContainer> AccWiseTransactionContainers { get; } =
+        public Dictionary<long, AccWiseTransactionContainer> AccWiseTransactionContainers { get; } = 
             new Dictionary<long, AccWiseTransactionContainer>();
+
+        public Dictionary<string, AccWiseTransactionContainer> ServiceAccWiseTransactionContainers { get; } =//key= servicegroup/serviceFamily/product
+            new Dictionary<string, AccWiseTransactionContainer>();
 
         public CdrMediationResult MediationResult { get; set; }
 

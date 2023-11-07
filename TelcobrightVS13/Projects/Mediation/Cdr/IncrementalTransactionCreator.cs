@@ -16,7 +16,7 @@ namespace TelcobrightMediation.Cdr
         private List<CdrExt> NewSuccessfulCdrExts { get; }
         private ConcurrentDictionary<string, CdrExt> OldSuccessfulCdrExts { get; }
         private BlockingCollection<acc_transaction> IncrementalTransactions { get; set; }
-
+        private Dictionary<long, account> Accounts { get; set; }
         public IncrementalTransactionCreator(CdrJob cdrJob)
         {
             this.CdrProcessor = cdrJob.CdrProcessor;
@@ -24,7 +24,7 @@ namespace TelcobrightMediation.Cdr
             this.CdrJobContext = cdrJob.CdrJobContext;
             this.NewSuccessfulCdrExts = this.CdrProcessor?.CollectionResult.ProcessedCdrExts
                                             .Where(c => c.Cdr.ChargingStatus == 1).ToList() ?? new List<CdrExt>();
-
+            this.Accounts = this.CdrProcessor?.CdrJobContext.AccountingContext.IdWiseAccounts;
             this.OldSuccessfulCdrExts = new ConcurrentDictionary<string, CdrExt>();
             this.CdrEraser?.CollectionResult.ConcurrentCdrExts.Values.Where(c => c.Cdr.ChargingStatus == 1).ToList()
                 .ForEach(c =>
@@ -115,11 +115,15 @@ namespace TelcobrightMediation.Cdr
                         long accountId = kv.Key;
                         AccWiseTransactionContainer newTransactionContainer = kv.Value;
                         AccWiseTransactionContainer oldTransactionContainer = null;
+
                         if (oldCdrExt.AccWiseTransactionContainers.TryGetValue(accountId,
                                 out oldTransactionContainer) == false)
                         {
                             throw new Exception("OldTransaction container not found in old CdrExt instance.");
                         }
+
+                        //int serviceGroup= newTransactionContainer.NewTransaction.
+
                         var incTrans = newTransactionContainer.NewTransaction.Clone();
                         incTrans.amount =
                             newTransactionContainer.NewTransaction.amount -
