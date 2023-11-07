@@ -111,7 +111,7 @@ namespace Process
                                     ) //error process or re-process job, not merging, process as a single job*************
                                     {
                                         object retVal=telcobrightJob.Execute(cdrJobInputData); //EXECUTE
-                                        telcobrightJob.PostprocessJob(retVal);
+                                        if(job.idjobdefinition==1) telcobrightJob.PostprocessJob(retVal);
                                         cmd.ExecuteCommandText(" commit; ");
                                         closeDbConnection(cmd);
                                         continue;
