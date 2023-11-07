@@ -5,10 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Configuration;
+using System.Data;
 using System.Data.Common;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using LibraryExtensions;
 using TelcobrightFileOperations;
 using MediationModel;
 using TelcobrightMediation.Config;
@@ -34,6 +36,7 @@ namespace Jobs
             SegmentedCdrErrorProcessor segmentedCdrErrorJobProcessor =
                 new SegmentedCdrErrorProcessor(cdrCollectorInput,
                     input.CdrSetting.BatchSizeWhenPreparingLargeSqlJob, "IdCall", "starttime");
+            openDbConAndStartTransaction(cdrCollectorInput.Context,cdrCollectorInput.MediationContext);
             if (input.Job.Status != 2) //prepare job if not prepared already
                 segmentedCdrErrorJobProcessor.PrepareSegments();
             List<jobsegment> jobsegments = segmentedCdrErrorJobProcessor.ExecuteIncompleteSegments();
@@ -41,6 +44,18 @@ namespace Jobs
             return JobCompletionStatus.Complete;
         }
 
+
+        private void openDbConAndStartTransaction(PartnerEntities context, MediationContext mediationContext)
+        {
+            DbCommand cmd = context.Database.Connection.CreateCommand();
+            if (cmd.Connection.State == ConnectionState.Open)
+            {
+                throw new Exception("Connection should only be open after preprocessing new cdr job.");
+            }
+            cmd.Connection.Open();
+            mediationContext.CreateTemporaryTables();
+            cmd.ExecuteCommandText("set autocommit=0;");
+        }
         public object PreprocessJob(object data)
         {
             throw new NotImplementedException();
