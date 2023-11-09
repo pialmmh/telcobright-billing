@@ -6,7 +6,7 @@ namespace MediationModel
 {
     public class Rateext : rate
     {
-        public int IdRatePlanAssignmentTuple { get; set; }
+        public int IdRatePlanAssignmentTuple { get; set; } = 0;
         public override string ToString()
         {
             return new StringBuilder().Append(this.Prefix).Append("/")
@@ -19,10 +19,15 @@ namespace MediationModel
 
         public int? Priority { get; set; }
         public int AssignmentFlag { get; set; }
-        private DateTime? Enddatebyrateplan { get; set; }
-        private DateTime? Startdatebyrateplan { get; set; }
+        //private DateTime? Enddatebyrateplan { get; set; }
+        //private DateTime? Startdatebyrateplan { get; set; }
 
-        private int OpenRateAssignment { get; set; }
+        //private int OpenRateAssignment { get; set; }
+
+        public DateTime? Enddatebyrateplan {private get;  set ; }
+        public DateTime? Startdatebyrateplan {private get ; set; }
+
+        public int OpenRateAssignment {private get; set; }
 
         public int IdPartner { get; set; }
         public int IdRoute { get; set; }

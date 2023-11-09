@@ -26,12 +26,12 @@ namespace InstallConfig
                         IpAddressOrHostName = new IpAddressOrHostName {Address = "10.100.150.20"},
                         Port = 3306
                     },
-                    RootUserForAutomation = "fduser",
+                    RootUserForAutomation = "root",
                     RootPasswordForAutomation = "Takay1takaane$",
                     Users = new List<MySqlUser>()
                     {
-                        new MySqlUser(username: CasDbHelperOld.Db.AdminUserName,
-                            password: CasDbHelperOld.Db.AdminPassword,
+                        new MySqlUser(username: CasDockerDbHelper.Db.WriteUserNameForApplication,
+                            password: CasDockerDbHelper.Db.WritePasswordForApplication,
                             hostnameOrIpAddresses: AppServerHostnamesForCas.Hostnames,
                             permissions: new List<MySqlPermission>
                             {

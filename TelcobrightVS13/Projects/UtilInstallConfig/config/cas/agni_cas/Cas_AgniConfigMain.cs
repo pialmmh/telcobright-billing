@@ -36,6 +36,7 @@ namespace InstallConfig
         {
 
             this.Tbc.CdrSetting = new CasCdrSettingHelper().getTemplateCdrSettings();
+            this.Tbc.CdrSetting.UnzipCompressedFiles = false;
 
             this.PrepareDirectorySettings(this.Tbc);
             string csvPathForNe = CasNeInfoHelper.getCasOperatorInfoFile();

@@ -26,14 +26,14 @@ namespace InstallConfig
             {
                 ServerName = "127.0.0.1",
                 DatabaseName = this.Tbc.Telcobrightpartner.databasename,
-                AdminPassword = "",
-                AdminUserName = "root",
+                WritePasswordForApplication = "",
+                WriteUserNameForApplication = "root",
                 DatabaseEngine = "innodb",
                 StorageEngineForPartitionedTables = "innodb",
                 PartitionStartDate = new DateTime(2023, 1, 1),
                 PartitionLenInDays = 1,
-                ReadOnlyUserName = "dbreader",
-                ReadOnlyPassword = "Takay1takaane",
+                ReadOnlyUserNameForApplication = "dbreader",
+                ReadOnlyPasswordForApplication = "Takay1takaane",
                 UseVarcharInsteadOfTextForMemoryEngine = true
             };
             Dictionary<string, List<string>> masterConfig = new Dictionary<string, List<string>>()

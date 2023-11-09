@@ -31,8 +31,8 @@ namespace QuartzTelcobright.PropertyGen
         {
             //connection strings are not available at this moment in app.conf
             return $@"server = {this.DatabaseSetting.ServerName}; 
-                    User Id = {this.DatabaseSetting.AdminUserName}; 
-                    password = {this.DatabaseSetting.AdminPassword}; Persist Security Info = True;
+                    User Id = {this.DatabaseSetting.WriteUserNameForApplication}; 
+                    password = {this.DatabaseSetting.WritePasswordForApplication}; Persist Security Info = True;
                     default command timeout = 3600; 
                     database = {this.DatabaseSetting.DatabaseName}";
 

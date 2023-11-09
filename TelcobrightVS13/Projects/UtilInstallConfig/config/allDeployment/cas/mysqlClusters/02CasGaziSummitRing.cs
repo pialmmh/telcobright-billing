@@ -25,7 +25,7 @@ namespace InstallConfig
                         IpAddressOrHostName = new IpAddressOrHostName { Address = "10.100.150.21" },
                         Port = 3306
                     },
-                    RootUserForAutomation = "fduser",
+                    RootUserForAutomation = "root",
                     RootPasswordForAutomation = "Takay1takaane$",
                     Users = new List<MySqlUser>()
                     {

@@ -43,14 +43,14 @@ namespace InstallConfig
 
         public class Db
         {
-            public const string AdminPassword = "Takay1takaane$";
-            public const string AdminUserName = "fduser";
+            public const string WriteUserNameForApplication = "fduser";
+            public const string WritePasswordForApplication = "Takay1takaane$";
             public const string DatabaseEngine = "innodb";
             public const string StorageEngineForPartitionedTables = "innodb";
             public const string PartitionStartDate = "2023-06-01";
             public const int PartitionLenInDays = 3;
-            public const string ReadOnlyUserName = "dbreader";
-            public const string ReadOnlyPassword = "Takay1takaane$";
+            public const string ReadOnlyUserNameForApplication = "dbreader";
+            public const string ReadOnlyPasswordForApplication = "Takay1takaane$";
             public const bool UseVarcharInsteadOfTextForMemoryEngine = true;  //required for windows
         }
         public static DatabaseSetting getCommonDatabaseSetting(string databaseName)
@@ -59,14 +59,14 @@ namespace InstallConfig
             {
                 ServerName = IcxVsdbHostNames[databaseName],
                 DatabaseName = databaseName,
-                AdminPassword = Db.AdminPassword,
-                AdminUserName = Db.AdminUserName,
+                WritePasswordForApplication = Db.WritePasswordForApplication,
+                WriteUserNameForApplication = Db.WriteUserNameForApplication,
                 DatabaseEngine = Db.DatabaseEngine,
                 StorageEngineForPartitionedTables = Db.StorageEngineForPartitionedTables,
                 PartitionStartDate = Db.PartitionStartDate.ConvertToDateTimeFromCustomFormat("yyyy-MM-dd"),
                 PartitionLenInDays = Db.PartitionLenInDays,
-                ReadOnlyUserName = Db.ReadOnlyUserName,
-                ReadOnlyPassword = Db.ReadOnlyPassword,
+                ReadOnlyUserNameForApplication = Db.ReadOnlyUserNameForApplication,
+                ReadOnlyPasswordForApplication = Db.ReadOnlyPasswordForApplication,
                 UseVarcharInsteadOfTextForMemoryEngine=Db.UseVarcharInsteadOfTextForMemoryEngine
 
             };

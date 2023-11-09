@@ -207,8 +207,8 @@ namespace InstallConfig
                 DatabaseSetting dbSettingForAutomation = new DatabaseSetting
                 {
                     ServerName = mySqlServer.BindAddressForAutomation.IpAddressOrHostName.Address,
-                    AdminUserName = mySqlServer.RootUserForAutomation,
-                    AdminPassword = mySqlServer.RootPasswordForAutomation,
+                    WriteUserNameForApplication = mySqlServer.RootUserForAutomation,
+                    WritePasswordForApplication = mySqlServer.RootPasswordForAutomation,
                     DatabaseName = "mysql"
                 };
                 string constr = DbUtil.getDbConStrWithDatabase(dbSettingForAutomation);

@@ -35,14 +35,14 @@ namespace InstallConfig
             {
                 ServerName = Db.ServerName,
                 DatabaseName = databaseName,
-                AdminPassword = Db.AdminPassword,
-                AdminUserName = Db.AdminUserName,
+                WritePasswordForApplication = Db.AdminPassword,
+                WriteUserNameForApplication = Db.AdminUserName,
                 DatabaseEngine = Db.DatabaseEngine,
                 StorageEngineForPartitionedTables = Db.StorageEngineForPartitionedTables,
                 PartitionStartDate = Db.PartitionStartDate.ConvertToDateTimeFromCustomFormat("yyyy-MM-dd"),
                 PartitionLenInDays = Db.PartitionLenInDays,
-                ReadOnlyUserName = Db.ReadOnlyUserName,
-                ReadOnlyPassword = Db.ReadOnlyPassword,
+                ReadOnlyUserNameForApplication = Db.ReadOnlyUserName,
+                ReadOnlyPasswordForApplication = Db.ReadOnlyPassword,
                 UseVarcharInsteadOfTextForMemoryEngine=Db.UseVarcharInsteadOfTextForMemoryEngine
 
             };

@@ -371,8 +371,8 @@ namespace InstallConfig
 
 
             string constr =
-                "server=" + serverName + ";User Id=" + databaseSetting.AdminUserName +
-                ";password=" + databaseSetting.AdminPassword +
+                "server=" + serverName + ";User Id=" + databaseSetting.WriteUserNameForApplication +
+                ";password=" + databaseSetting.WritePasswordForApplication +
                 ";Persist Security Info=True;database=" + databaseSetting.DatabaseName;
 
             using (MySqlConnection con = new MySqlConnection(constr))
