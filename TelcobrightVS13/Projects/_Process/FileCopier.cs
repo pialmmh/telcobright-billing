@@ -58,7 +58,7 @@ namespace Process
                 bool incompleteExists= context.Database.SqlQuery<job>(
                     $@"select * from job 
                     where status!=1 and idjobdefinition in({string.Join(",", jobDefsForThisQueue)}) 
-                    and jobparameter like '{syncPairNameAsJobNamePrefix}%' limit 0,1;").ToList().Any();
+                    and jobparameter like '{syncPairNameAsJobNamePrefix}%' order by Error limit 0,1;").ToList().Any();
 
                 if (incompleteExists == false) return; //there is no job, just exit.
                 
