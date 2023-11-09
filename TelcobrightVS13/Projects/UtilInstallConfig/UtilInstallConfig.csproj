@@ -343,6 +343,14 @@
     <Compile Include="config\cas\purple_cas\CasPurpleQuartzConfig.cs" />
     <Compile Include="config\cas\purple_cas\CasPurpleServerConfig.cs" />
     <Compile Include="config\cas\purple_cas\CasPurpleServiceGroups.cs" />
+    <Compile Include="config\paradise\ParadiseConfigMain.cs" />
+    <Compile Include="config\paradise\ParadiseDatabaseSettings.cs" />
+    <Compile Include="config\paradise\ParadiseDirectorySettings.cs" />
+    <Compile Include="config\paradise\ParadisePortalSetting.cs" />
+    <Compile Include="config\paradise\ParadiseProductAndServiceConfig.cs" />
+    <Compile Include="config\paradise\ParadiseQuartzConfig.cs" />
+    <Compile Include="config\paradise\ParadiseServerConfig.cs" />
+    <Compile Include="config\paradise\ParadiseServiceGroups.cs" />
     <Compile Include="config\purple\PurpleConfigMain.cs" />
     <Compile Include="config\purple\PurpleDatabaseSettings.cs" />
     <Compile Include="config\purple\PurpleDirectorySettings.cs" />
@@ -466,6 +474,7 @@
     <None Include="config\cas\voicetel_cas\summit_cas.conf" />
     <None Include="config\cas\summit_cas\summit_cas.conf" />
     <None Include="config\cas\jibondhara_cas\jslRoutes.json" />
+    <None Include="config\paradise\paradise.conf" />
     <None Include="config\_helper\casOperatorInfo.xlsx" />
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
@@ -531,6 +540,8 @@
     <Folder Include="config\cas\_dbscripts\seedData\json\" />
     <Folder Include="config\jsl\_dbscripts\ddl\" />
     <Folder Include="config\jsl\_dbscripts\seedData\sql\" />
+    <Folder Include="config\paradise\_dbscripts\seedData\json\" />
+    <Folder Include="config\paradise\_dbscripts\seedData\sql\" />
     <Folder Include="config\purple\_dbscripts\ddl\" />
     <Folder Include="config\purple\_dbscripts\seedData\" />
     <Folder Include="config\srtelecom\_dbscripts\ddl\" />
@@ -615,6 +626,12 @@
     <Content Include="config\cas\purple_cas\tmplPortalAppPools.txt" />
     <Content Include="config\cas\purple_cas\tmplPortalFtpSite.txt" />
     <Content Include="config\cas\purple_cas\tmplPortalWebSite.txt" />
+    <Content Include="config\paradise\tmplPortalAppPools.txt" />
+    <Content Include="config\paradise\tmplPortalFtpSite.txt" />
+    <Content Include="config\paradise\tmplPortalWebSite.txt" />
+    <Content Include="config\paradise\_dbscripts\ddl\sql\icxSp.sql" />
+    <Content Include="config\paradise\_dbscripts\ddl\sql\indexSwitch.txt" />
+    <Content Include="config\paradise\_dbscripts\quartzTables.sql" />
     <Content Include="config\purple\tmplPortalAppPools.txt" />
     <Content Include="config\purple\tmplPortalFtpSite.txt" />
     <Content Include="config\purple\tmplPortalWebSite.txt" />

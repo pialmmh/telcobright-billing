@@ -106,6 +106,19 @@ namespace InstallConfig
                                 SchedulerPortNo = 561
                             },
                         }
+                    },
+                    new Deploymentprofile
+                    {
+                        profileName = "paradise",
+                        type = DeploymentProfileType.TelcoBilling,
+                        instances = new List<InstanceConfig>
+                        {
+                            new InstanceConfig
+                            {
+                                Name = "paradise",
+                                SchedulerPortNo = 562
+                            },
+                        }
                     }
                 };
 
