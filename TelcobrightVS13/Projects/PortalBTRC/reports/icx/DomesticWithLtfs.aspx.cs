@@ -48,8 +48,7 @@ public partial class DefaultRptDomesticWithLtfsIcx : System.Web.UI.Page
 
         }
 
-
-        string constructedSQL = new SqlHelperIntlInIcxLtfs
+        string constructedSQL = new SqlHelperIntlInIcx
         (StartDate,
             EndtDate,
             groupInterval,
@@ -59,22 +58,47 @@ public partial class DefaultRptDomesticWithLtfsIcx : System.Web.UI.Page
             {
                 // groupInterval=="Hourly"?"tup_starttime":string.Empty,
                 getInterval(groupInterval),
-                CheckBoxPartner.Checked==true?"tup_inpartnerid":string.Empty,
-                CheckBoxShowByAns.Checked==true?"tup_destinationId":string.Empty,
-                CheckBoxShowByIgw.Checked==true?"tup_outpartnerid":string.Empty,
-                //CheckBoxViewIncomingRoute.Checked==true?"tup_incomingroute":string.Empty,
-                CheckBoxViewIncomingRoute.Checked==true?"icxname":string.Empty,
-                CheckBoxViewOutgoingRoute.Checked==true?"tup_outgoingroute":string.Empty,
-                ViewBySwitch.Checked==true?"tup_switchid":string.Empty
+                CheckBoxPartner.Checked == true ? "tup_inpartnerid" : string.Empty,
+                CheckBoxShowByAns.Checked == true ? "tup_destinationId" : string.Empty,
+                CheckBoxShowByIgw.Checked == true ? "tup_outpartnerid" : string.Empty,
+                CheckBoxShowIncomingRouteIcx.Checked == true ? "tup_incomingroute" : string.Empty,
+                CheckBoxViewIncomingRoute.Checked == true ? "icxname" : string.Empty,
+                CheckBoxViewOutgoingRoute.Checked == true ? "tup_outgoingroute" : string.Empty,
+                ViewBySwitch.Checked == true ? "tup_switchid" : string.Empty
             },
             new List<string>()
             {
-                ViewBySwitch.Checked==true? DropDownListShowBySwitch.SelectedIndex>0?"tup_switchid="+DropDownListShowBySwitch.SelectedItem.Value:string.Empty:string.Empty,
-                CheckBoxPartner.Checked==true?DropDownListPartner.SelectedIndex>0?" tup_inpartnerid="+DropDownListPartner.SelectedValue:string.Empty:string.Empty,
-                CheckBoxShowByAns.Checked==true?DropDownListAns.SelectedIndex>0?" tup_destinationId="+DropDownListAns.SelectedValue:string.Empty:string.Empty,
-                CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_outpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty,
-                //CheckBoxViewIncomingRoute.Checked==true?DropDownListViewIncomingRoute.SelectedIndex>0?$@" tup_incomingroute= '{DropDownListViewIncomingRoute.SelectedItem.Value}'":string.Empty :string.Empty+"'",                  
-                CheckBoxViewOutgoingRoute.Checked==true?DropDownListViewOutgoingRoute.SelectedIndex>0?" tup_outgoingroute="+DropDownListViewOutgoingRoute.SelectedItem.Value:string.Empty:string.Empty,
+                ViewBySwitch.Checked == true
+                    ? DropDownListShowBySwitch.SelectedIndex > 0
+                        ? "tup_switchid=" + DropDownListShowBySwitch.SelectedItem.Value
+                        : string.Empty
+                    : string.Empty,
+                CheckBoxPartner.Checked == true
+                    ? DropDownListPartner.SelectedIndex > 0
+                        ? " tup_inpartnerid=" + DropDownListPartner.SelectedValue
+                        : string.Empty
+                    : string.Empty,
+                CheckBoxShowByAns.Checked == true
+                    ? DropDownListAns.SelectedIndex > 0
+                        ? " tup_destinationId=" + DropDownListAns.SelectedValue
+                        : string.Empty
+                    : string.Empty,
+                CheckBoxShowByIgw.Checked == true
+                    ? DropDownListIgw.SelectedIndex > 0
+                        ? " tup_outpartnerid=" + DropDownListIgw.SelectedValue
+                        : string.Empty
+                    : string.Empty,
+                CheckBoxShowIncomingRouteIcx.Checked == true
+                    ? DropDownListIncomingRouteIcx.SelectedIndex > 0
+                        ? " tup_incomingroute=" + "'" + DropDownListIncomingRouteIcx.SelectedItem.Value.Split('_')[0]
+                              .Trim().ToString().Split('_')[0].Trim().ToString() + "'"
+                        : string.Empty
+                    : string.Empty,
+                CheckBoxViewOutgoingRoute.Checked == true
+                    ? DropDownListViewOutgoingRoute.SelectedIndex > 0
+                        ? " tup_outgoingroute=" + DropDownListViewOutgoingRoute.SelectedItem.Value
+                        : string.Empty
+                    : string.Empty,
 
             }).getSQLString();
 
@@ -162,6 +186,7 @@ public partial class DefaultRptDomesticWithLtfsIcx : System.Web.UI.Page
 
         GridView1.Columns[GetColumnIndexByName(GridView1, "International Partner")].Visible = CheckBoxPartner.Checked;
         GridView1.Columns[GetColumnIndexByName(GridView1, "icxName")].Visible = CheckBoxViewIncomingRoute.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "tup_incomingroute")].Visible = CheckBoxShowIncomingRouteIcx.Checked;
         GridView1.Columns[GetColumnIndexByName(GridView1, "IGW")].Visible = CheckBoxShowByIgw.Checked;
         GridView1.Columns[GetColumnIndexByName(GridView1, "tup_outgoingroute")].Visible = CheckBoxViewOutgoingRoute.Checked;
         if (CheckBoxShowCost.Checked == true)
@@ -695,6 +720,11 @@ public partial class DefaultRptDomesticWithLtfsIcx : System.Web.UI.Page
         setSwitchListDropDown(DropDownListViewIncomingRoute, EventArgs.Empty);
     }
 
+    protected void CheckBoxShowIncomingRouteIcx_CheckedChanged(object sender, EventArgs e)
+    {
+        DropDownListIncomingRouteIcx.Enabled = CheckBoxShowIncomingRouteIcx.Checked;
+    }
+
     protected void setSwitchListDropDown(object sender, EventArgs e)
     {
 
@@ -725,6 +755,40 @@ public partial class DefaultRptDomesticWithLtfsIcx : System.Web.UI.Page
             this.ViewBySwitch.Enabled = false;
             this.ViewBySwitch.Checked = false;
             this.DropDownListShowBySwitch.Enabled = false;
+        }
+    }
+
+    protected void DropDownListIncoimgRouteIcx_OnSelectedIndexChanged(object sender, EventArgs e)
+    {
+        DropDownListIncomingRouteIcx.Items.Clear();
+        DropDownListIncomingRouteIcx.Items.Add(new ListItem("[All]", "-1"));
+        if (DropDownListPartner.SelectedValue != String.Empty)
+        {
+            if (DropDownListPartner.SelectedValue == "-1")
+            {
+                using (PartnerEntities contex = new PartnerEntities())
+                {
+                    List<int> ansList = contex.partners.Where(c => c.PartnerType == 2).Select(c => c.idPartner)
+                        .ToList();
+                    foreach (route route in contex.routes.Where(x => ansList.Contains(x.idPartner)))
+                    {
+                        DropDownListIncomingRouteIcx.Items.Add(new ListItem($"{route.Description} ({route.RouteName})",
+                            route.RouteName));
+                    }
+                }
+            }
+            else
+            {
+                using (PartnerEntities contex = new PartnerEntities())
+                {
+                    int idPartner = Convert.ToInt32(DropDownListPartner.SelectedValue);
+                    foreach (route route in contex.routes.Where(x => x.idPartner == idPartner))
+                    {
+                        DropDownListIncomingRouteIcx.Items.Add(new ListItem($"{route.Description} ({route.RouteName})",
+                            route.RouteName));
+                    }
+                }
+            }
         }
     }
 

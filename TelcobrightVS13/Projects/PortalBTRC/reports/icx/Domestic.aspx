@@ -128,6 +128,7 @@
                 //setSwitchListDropDown(DropDownListViewIncomingRoute, EventArgs.Empty);
                 DropDownListPartner_OnSelectedIndexChanged(DropDownListPartner, EventArgs.Empty);
                 DropDownListIgw_OnSelectedIndexChanged(DropDownListIgw, EventArgs.Empty);
+                DropDownListIncoimgRouteIcx_OnSelectedIndexChanged(DropDownListIgw, EventArgs.Empty);
 
 
                 //Retrieve Path from TreeView for displaying in the master page caption label
@@ -508,7 +509,7 @@
                                 <asp:CheckBox ID="CheckBoxPartner" runat="server" AutoPostBack="True"
                                               OnCheckedChanged="CheckBoxShowByPartner_CheckedChanged" Checked="True" />
                        
-                                <asp:DropDownList ID="DropDownListPartner" runat="server" OnSelectedIndexChanged="DropDownListPartner_OnSelectedIndexChanged"
+                                <asp:DropDownList ID="DropDownListPartner" runat="server" OnSelectedIndexChanged="DropDownListIncoimgRouteIcx_OnSelectedIndexChanged"
                                                   Enabled="True" AutoPostBack="True">
                                 </asp:DropDownList>
 
@@ -518,8 +519,18 @@
                                 <%--View by ANS: --%>
                                 View by Incoming Route:
                                 <asp:CheckBox ID="CheckBoxShowByAns" runat="server" AutoPostBack="True"
-                                              OnCheckedChanged="CheckBoxShowByAns_CheckedChanged" Checked="false" Visible="True" />
+                                              OnCheckedChanged="CheckBoxShowByAns_CheckedChanged" Checked="false" Visible="False" />
                                 <asp:DropDownList ID="DropDownListAns" runat="server" 
+                                                  Enabled="False" Visible="False">
+                                </asp:DropDownList>
+
+                            </div>
+                            
+                            <div style="float: left; margin-left: 15px;">
+                                <%--View by ANS: --%>
+                                <asp:CheckBox ID="CheckBoxShowIncomingRouteIcx" runat="server" AutoPostBack="True"
+                                              OnCheckedChanged="CheckBoxShowIncomingRouteIcx_CheckedChanged" Checked="false" Visible="True" />
+                                <asp:DropDownList ID="DropDownListIncomingRouteIcx" runat="server" 
                                                   Enabled="False" Visible="True">
                                 </asp:DropDownList>
 
@@ -635,10 +646,10 @@
                     <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                     <Columns>
                         <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date"  ItemStyle-Wrap="false" />   
-                         <%--<asp:BoundField DataField="tup_incomingroute" HeaderText="ICX" SortExpression="tup_incomingroute" />--%> 
                         <asp:BoundField DataField="icxName" HeaderText="ICX" SortExpression="IcxName" />               
                         <asp:BoundField DataField="International Partner" HeaderText="Incoming ANS" SortExpression="International Partner" />                     
                         <asp:BoundField DataField="IGW" HeaderText="Outgoing ANS" SortExpression="IGW" />
+                        <asp:BoundField DataField="tup_incomingroute" HeaderText="Incoming Route" SortExpression="tup_incomingroute" />
                         <asp:BoundField DataField="tup_outgoingroute" HeaderText="Outgoing Route" SortExpression="tup_outgoingroute" />
                         <asp:BoundField DataField="ANS" HeaderText="ANS" SortExpression="ANS" />
 
