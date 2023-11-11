@@ -30,8 +30,8 @@ namespace InstallConfig
                     RootPasswordForAutomation = "Takay1takaane$",
                     Users = new List<MySqlUser>()
                     {
-                        new MySqlUser(username: CasDbHelperOld.Db.AdminUserName,
-                            password: CasDbHelperOld.Db.AdminPassword,
+                        new MySqlUser(username: CasPortalDbHelper.Db.WriteUserNameForApplication,
+                            password: CasPortalDbHelper.Db.WritePasswordForApplication,
                             hostnameOrIpAddresses: AppServerHostnamesForCas.Hostnames,
                             permissions: new List<MySqlPermission>
                             {

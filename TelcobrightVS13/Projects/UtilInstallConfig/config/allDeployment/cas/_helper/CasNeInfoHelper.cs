@@ -30,7 +30,12 @@ namespace InstallConfig.config._helper
 
         public static string getCasOperatorInfoFile()
         {
-            return new DirectoryInfo(FileAndPathHelperReadOnly.GetCurrentExecPath()).Parent.Parent.FullName + Path.DirectorySeparatorChar.ToString() + "config" + Path.DirectorySeparatorChar.ToString() + "_helper" + Path.DirectorySeparatorChar.ToString() + "casOperatorInfo.xlsx";//add more
+            return new DirectoryInfo(FileAndPathHelperReadOnly.GetCurrentExecPath()).Parent.Parent.FullName + 
+                Path.DirectorySeparatorChar.ToString() + "config" + 
+                Path.DirectorySeparatorChar.ToString() + "allDeployment" + 
+                Path.DirectorySeparatorChar.ToString() + "cas" + 
+                Path.DirectorySeparatorChar.ToString() + "_helper" + 
+                Path.DirectorySeparatorChar.ToString() + "casOperatorInfo.xlsx";//add more
         }
 
 

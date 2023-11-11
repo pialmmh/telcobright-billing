@@ -238,6 +238,11 @@ namespace InstallConfig
 
         static void WriteAppAndWebConfigFiles(string fileName, DatabaseSetting dbSettings, PortalSettings portalSettings)
         {
+
+            if (dbSettings.DatabaseName == "btrc_cas")
+            {
+                fileName = fileName.Replace("portal", "PortalBTRC");
+            }
             List<string> fileLines = File.ReadAllLines(fileName).ToList();
             string fileNameOnly = Path.GetFileName(fileName);
             string appOrWebConfigFileName = fileNameOnly.ToLower().StartsWith("web") ? "web" : "app";

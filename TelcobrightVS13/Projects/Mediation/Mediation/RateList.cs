@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Data;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime;
 using System.Text;
 using System.Threading.Tasks;
 using LibraryExtensions;
-using MySql.Data;
 using MySql.Data.MySqlClient;
 using MediationModel;
-
 namespace TelcobrightMediation
 {
     class RateList
@@ -24,9 +21,9 @@ namespace TelcobrightMediation
         int _category = -1;
         int _subCategory = -1;
         RateChangeType _changeType = RateChangeType.All;
-        private PartnerEntities  Context { get; }
+        private PartnerEntities Context { get; }
         RateContainerInMemoryLocal _rateContainer = null;
-        
+
         public RateList(//constructor
             RateTuple pRtup,
             string pPrefix,
@@ -40,7 +37,7 @@ namespace TelcobrightMediation
             this._changeType = pChangeType;
             this._category = pServiceType;
             this._subCategory = pSubServiceType;
-            this.Context=context;
+            this.Context = context;
             this._rateContainer = rateContainer;
         }
 
@@ -56,7 +53,7 @@ namespace TelcobrightMediation
             foreach (RateAssignWithTuple ratePlan in lstRatePlans)
             {
                 //for each rate plans, keep on adding list of rates
-                List<Rateext> newrates = GetRatesByRatePlan(ratePlan,useInMemoryTable);
+                List<Rateext> newrates = GetRatesByRatePlan(ratePlan, useInMemoryTable);
                 lstRates.AddRange(newrates.Select(newRate => this._rateContainer.Append(newRate)));
             }
             GCSettings.LatencyMode = prevLatencyMode;
@@ -141,7 +138,7 @@ namespace TelcobrightMediation
 
             return idRatePlan;
         }
-        List<Rateext> GetRatesByRatePlan(RateAssignWithTuple rateAssignWithTuple,bool useInMemoryTable)
+        List<Rateext> GetRatesByRatePlan(RateAssignWithTuple rateAssignWithTuple, bool useInMemoryTable)
         {
             if (IsRatePlanWiseRateCacheInitialized == true)
             {
@@ -272,112 +269,35 @@ namespace TelcobrightMediation
             }
         }
 
-        private Dictionary<long, List<Rateext>> BuildRatePlanWiseLocalRateCache(string sql,int segmentSize)
+        private Dictionary<long, List<Rateext>> BuildRatePlanWiseLocalRateCache(string sql, int segmentSize)
         {
-            int startLimit = 0;
             List<Rateext> rates = new List<Rateext>();
-            MySqlConnection connection = (MySqlConnection)this.Context.Database.Connection;
-            MySqlCommand cmd = connection.CreateCommand();
-            
-            bool moreRecordMayExist = true;
-            while (moreRecordMayExist)
+            int startLimit = 0;
+            bool rateExists = true;
+            var prevGcLatencyMode = GCSettings.LatencyMode;
+            GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
+            while (rateExists)
             {
+                //GC.TryStartNoGCRegion(250 * 1000 * 1000);
                 var sqlWithOrderBy = sql.Replace(" ) x", $" order by r.id limit {startLimit},{segmentSize} ) x");
-                cmd.CommandText = sqlWithOrderBy;
-                List<Rateext> ratesForThisSegment= fetchRateExtSegment(cmd);
-                if (ratesForThisSegment.Any())
+                var rateSegment = this.Context.Database.SqlQuery<Rateext>
+                    (sqlWithOrderBy).ToList();
+                if (rateSegment.Any())
                 {
-                    rates.AddRange(ratesForThisSegment);
+                    rates.AddRange(rateSegment);
                     startLimit += segmentSize;
                 }
                 else
                 {
-                    moreRecordMayExist = false;
+                    rateExists = false;
                 }
+                //GC.EndNoGCRegion();
             }
+            GCSettings.LatencyMode = prevGcLatencyMode;
             Dictionary<long, List<Rateext>> ratePlanWiseRates =
                 rates.Where(r => r.idrateplan != null)
-                .GroupBy(r => (long)r.idrateplan).ToDictionary(g => g.Key, g => g.ToList());
+                    .GroupBy(r => (long)r.idrateplan).ToDictionary(g => g.Key, g => g.ToList());
             return ratePlanWiseRates;
-        }
-
-        private static List<Rateext> fetchRateExtSegment(MySqlCommand cmd)
-        {
-            DataTable dt = new DataTable();
-            dt.Load(cmd.ExecuteReader());
-            IEnumerable<DataRow> readerRows = dt.Rows.OfType<DataRow>();
-            var parallelIterator= new ParallelIterator<DataRow, Rateext>(readerRows);
-            List<Rateext> ratesForThisSegment = parallelIterator
-                .getOutput(readerRow =>
-                {
-                    Rateext rateExt = new Rateext();
-                    rateExt.Pcurrency = Convert.ToString(readerRow["pcurrency"]);
-                    rateExt.TechPrefix = Convert.ToString(readerRow["TechPrefix"]);
-                    rateExt.id = Convert.ToInt32(readerRow["id"]);
-                    rateExt.ProductId = Convert.ToInt32(readerRow["ProductId"]);
-                    rateExt.Prefix = Convert.ToString(readerRow["Prefix"]);
-                    rateExt.description = Convert.ToString(readerRow["description"]);
-                    rateExt.rateamount = Convert.ToDecimal(readerRow["rateamount"]);
-                    rateExt.WeekDayStart = Convert.ToInt32(readerRow["WeekDayStart"]);
-                    rateExt.WeekDayEnd = Convert.ToInt32(readerRow["WeekDayEnd"]);
-                    rateExt.starttime = Convert.ToString(readerRow["starttime"]);
-                    rateExt.endtime = Convert.ToString(readerRow["endtime"]);
-                    rateExt.Resolution = Convert.ToInt32(readerRow["Resolution"]);
-                    rateExt.MinDurationSec = Convert.ToSingle(readerRow["MinDurationSec"]);
-                    rateExt.SurchargeTime = Convert.ToInt32(readerRow["SurchargeTime"]);
-                    rateExt.SurchargeAmount = Convert.ToDecimal(readerRow["SurchargeAmount"]);
-                    rateExt.idrateplan = readerRow["idrateplan"] as int?;
-                    rateExt.CountryCode = Convert.ToString(readerRow["CountryCode"]);
-                    rateExt.date1 = readerRow["date1"] as DateTime?;
-                    rateExt.field1 = readerRow["field1"] as int?;
-                    rateExt.field2 = readerRow["field2"] as int?;
-                    rateExt.field3 = Convert.ToInt32(readerRow["field3"]);
-                    rateExt.field4 = Convert.ToString(readerRow["field4"]);
-                    rateExt.field5 = Convert.ToString(readerRow["field5"]);
-                    rateExt.startdate = Convert.ToDateTime(readerRow["startdate"]);
-                    rateExt.enddate = readerRow["enddate"] as DateTime?;
-                    rateExt.Inactive = Convert.ToInt32(readerRow["Inactive"]);
-                    rateExt.RouteDisabled = Convert.ToInt32(readerRow["RouteDisabled"]);
-                    rateExt.Type = Convert.ToInt32(readerRow["Type"]);
-                    rateExt.Currency = Convert.ToInt32(readerRow["Currency"]);
-                    rateExt.OtherAmount1 = readerRow["OtherAmount1"] as decimal?;
-                    rateExt.OtherAmount2 = readerRow["OtherAmount2"] as decimal?;
-                    rateExt.OtherAmount3 = readerRow["OtherAmount3"] as decimal?;
-                    rateExt.OtherAmount4 = readerRow["OtherAmount4"] as decimal?;
-                    rateExt.OtherAmount5 = readerRow["OtherAmount5"] as decimal?;
-                    rateExt.OtherAmount6 = readerRow["OtherAmount6"] as decimal?;
-                    rateExt.OtherAmount7 = readerRow["OtherAmount7"] as float?;
-                    rateExt.OtherAmount8 = readerRow["OtherAmount8"] as float?;
-                    rateExt.OtherAmount9 = readerRow["OtherAmount9"] as float?;
-                    rateExt.OtherAmount10 = readerRow["OtherAmount10"] as float?;
-                    rateExt.TimeZoneOffsetSec = Convert.ToInt32(readerRow["TimeZoneOffsetSec"]);
-                    rateExt.RatePosition = readerRow["RatePosition"] as int?;
-                    rateExt.IgwPercentageIn = readerRow["IgwPercentageIn"] as float?;
-                    rateExt.ConflictingRateIds = Convert.ToString(readerRow["ConflictingRateIds"]);
-                    rateExt.ChangedByTaskId = readerRow["ChangedByTaskId"] as long?;
-                    rateExt.ChangedOn = readerRow["ChangedOn"] as DateTime?;
-                    rateExt.Status = readerRow["Status"] as int?;
-                    rateExt.idPreviousRate = readerRow["idPreviousRate"] as long?;
-                    rateExt.EndPreviousRate = readerRow["EndPreviousRate"] as sbyte?;
-                    rateExt.Category = readerRow["Category"] as sbyte?;
-                    rateExt.SubCategory = readerRow["SubCategory"] as sbyte?;
-                    rateExt.ChangeCommitted = readerRow["ChangeCommitted"] as int?;
-                    rateExt.ConflictingRates = Convert.ToString(readerRow["ConflictingRates"]);
-                    rateExt.OverlappingRates = Convert.ToString(readerRow["OverlappingRates"]);
-                    rateExt.Comment1 = Convert.ToString(readerRow["Comment1"]);
-                    rateExt.Comment2 = Convert.ToString(readerRow["Comment2"]);
-                    rateExt.billingspan = readerRow["billingspan"] as int?;
-                    rateExt.RateAmountRoundupDecimal = readerRow["RateAmountRoundupDecimal"] as int?;
-                    rateExt.Priority = Convert.ToInt32(readerRow["priority"]);
-                    rateExt.Startdatebyrateplan = readerRow["startdatebyrateplan"] as DateTime?;
-                    rateExt.Enddatebyrateplan = readerRow["enddatebyrateplan"] as DateTime?;
-                    rateExt.AssignmentFlag = Convert.ToInt32(readerRow["AssignmentFlag"]);
-                    rateExt.IdPartner = Convert.ToInt32(readerRow["idPartner"]);
-                    rateExt.IdRoute = Convert.ToInt32(readerRow["idRoute"]);
-                    rateExt.OpenRateAssignment = Convert.ToInt32(readerRow["OpenRateAssignment"]);
-                    return rateExt;
-                });
-            return ratesForThisSegment;
         }
     }
 }

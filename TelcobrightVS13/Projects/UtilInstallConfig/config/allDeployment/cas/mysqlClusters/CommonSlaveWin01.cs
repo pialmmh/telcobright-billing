@@ -15,15 +15,15 @@ namespace InstallConfig
             MySqlVersion = MySqlVersion.percona57,
             BindAddressForAutomation = new BindAddress
             {
-                IpAddressOrHostName = new IpAddressOrHostName {Address = "103.98.66.5"}, //Container IP
+                IpAddressOrHostName = new IpAddressOrHostName {Address = "127.0.0.1"}, //.5 win12 server
                 Port = 3306
             },
             RootUserForAutomation = "root",
             RootPasswordForAutomation = "Takay1takaane$",
             Users = new List<MySqlUser>()
             {
-                new MySqlUser(username: CasDockerDbHelper.Db.WriteUserNameForApplication,
-                    password: CasDockerDbHelper.Db.WritePasswordForApplication,
+                new MySqlUser(username: CasPortalDbHelper.Db.WriteUserNameForApplication,
+                    password: CasPortalDbHelper.Db.WritePasswordForApplication,
                     hostnameOrIpAddresses: AppServerHostnamesForCas.Hostnames,
                     permissions: new List<MySqlPermission>
                     {
