@@ -3,7 +3,6 @@
     <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%----%>
 <%@ Import Namespace="MySql.Data.MySqlClient" %>
-<%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="MediationModel" %>
 <%@ Import Namespace="PortalApp" %>
 

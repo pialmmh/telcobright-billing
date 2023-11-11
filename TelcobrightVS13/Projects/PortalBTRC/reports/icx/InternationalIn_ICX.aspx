@@ -2,7 +2,6 @@
     CodeBehind="InternationalIn_ICX.aspx.cs" Inherits="DefaultRptIntlInIcx" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Import Namespace="MediationModel" %>
-<%@ Import Namespace="TelcobrightMediation" %>
 <%@ Import Namespace="PortalApp" %>
 
 

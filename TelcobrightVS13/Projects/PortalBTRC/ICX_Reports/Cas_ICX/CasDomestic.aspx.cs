@@ -1,24 +1,19 @@
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using DevExpress.XtraPrinting.Native;
-using reports;
 using ExportToExcel;
 using MediationModel;
 using LibraryExtensions;
-using Microsoft.AspNet.Identity.Owin;
 using PortalApp;
 using PortalApp.ReportHelper;
+using reports;
 using TelcobrightInfra;
 using TelcobrightMediation;
-using WebApplication1;
 
 public partial class CasDefaultRptDomesticIcx : System.Web.UI.Page
 {

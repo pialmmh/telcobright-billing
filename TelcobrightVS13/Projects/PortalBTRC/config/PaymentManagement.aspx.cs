@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
-using System.Data.Entity.Validation;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using MediationModel;
-using PortalApp._myCodes;
 using TelcobrightMediation;
 using TelcobrightMediation.Accounting;
 using System.ComponentModel;

@@ -3,7 +3,6 @@
 
 <%--Common--%>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
-<%@ Import Namespace="System.ServiceModel.Security" %>
 <%@ Import Namespace="MediationModel" %>
 <%@ Import Namespace="PortalApp" %>
 <%@ Import Namespace="TelcobrightMediation" %>

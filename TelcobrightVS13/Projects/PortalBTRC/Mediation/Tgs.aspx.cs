@@ -1,21 +1,14 @@
 ﻿using TelcobrightMediation;
-using Newtonsoft.Json;
 using System;
 using System.Configuration;
-using System.IO;
 using System.Linq;
 using System.Web.UI;
-using reports;
 using System.Collections.Generic;
 using MediationModel;
 using PortalApp;
 using TelcobrightInfra;
 using System.Data;
-using System.Data.Entity;
-using System.Data.SqlClient;
 using MySql.Data.MySqlClient;
-using System.Drawing;
-using System.Web.UI.DataVisualization.Charting;
 using System.Web.UI.WebControls;
 
 public partial class TgsOfICX : Page

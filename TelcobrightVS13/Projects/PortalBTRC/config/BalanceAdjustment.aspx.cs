@@ -1,24 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Configuration;
 using System.Drawing;
-using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using Itenso.TimePeriod;
 using LibraryExtensions;
 using MediationModel;
-using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using TelcobrightMediation;
 using TelcobrightMediation.Accounting;
-using TelcobrightMediation.Config;
-using Itenso.TimePeriod;
-using System.IO;
+
 namespace PortalApp.config
 {
     public partial class BalanceAdjustment : System.Web.UI.Page

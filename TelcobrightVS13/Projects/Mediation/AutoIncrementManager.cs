@@ -9,7 +9,6 @@ using System.Threading;
 using LibraryExtensions;
 using MySql.Data.MySqlClient;
 using MediationModel;
-using net.bytebuddy.asm;
 using TelcobrightMediation.Config;
 
 namespace TelcobrightMediation
