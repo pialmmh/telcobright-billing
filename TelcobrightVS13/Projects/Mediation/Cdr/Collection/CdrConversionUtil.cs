@@ -45,9 +45,10 @@ namespace TelcobrightMediation.Mediation.Cdr
                 convertedCdr.TerminatingCallingNumber = txtRow[Fn.TerminatingCallingNumber];
                 convertedCdr.PrePaid = txtRow[Fn.PrePaid].GetValueOrNull<byte>();
                 convertedCdr.DurationSec = txtRow[Fn.DurationSec].GetValue<decimal>();
-                convertedCdr.EndTime = txtRow[Fn.Endtime].ConvertToDateTimeFromMySqlFormat();
                 convertedCdr.ConnectTime = txtRow[Fn.ConnectTime].ConvertToNullableDateTimeFromMySqlFormat();
                 convertedCdr.AnswerTime = txtRow[Fn.AnswerTime].ConvertToNullableDateTimeFromMySqlFormat();
+                convertedCdr.EndTime = !txtRow[Fn.Endtime].IsNullOrEmptyOrWhiteSpace() ? txtRow[Fn.Endtime].ConvertToDateTimeFromMySqlFormat() 
+                    : Convert.ToDateTime(convertedCdr.AnswerTime);
                 convertedCdr.ChargingStatus = txtRow[Fn.ChargingStatus].GetValueOrNull<byte>();
                 convertedCdr.PDD = txtRow[Fn.Pdd].GetValueOrNull<Single>();
                 convertedCdr.CountryCode = txtRow[Fn.CountryCode];
