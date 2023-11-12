@@ -101,17 +101,17 @@
                                 <asp:TreeNode Value="Rate Plan" Text="Rate Plan" NavigateUrl="~/config/rateplan.aspx" />
                                 <asp:TreeNode Value="Rate Plan Assignment" Text="Rate Plan Assignment" NavigateUrl="~/config/rateassignment.aspx" />
                                 <asp:TreeNode Value="Rates" Text="Rates" NavigateUrl="~/config/rates.aspx" />
-                                <asp:TreeNode Value="Least Cost Routing (LCR)" Text="LCR" NavigateUrl="~/config/lcr.aspx" />
+                                <asp:TreeNode Value="Least Cost Routing (LCR)" Text="LCR" NavigateUrl="" />
                                 <asp:TreeNode Value="View Routes" Text="View Routes" NavigateUrl="~/config/ViewRoutes.aspx" />
 
 
                             </asp:TreeNode>
                             <asp:TreeNode Value="Billing" Expanded="True" Text="Billing" SelectAction="None">
-                                <asp:TreeNode Value="Conversion Rates" Text="Conversion Rates" NavigateUrl="~/config/ConversionRates.aspx" />
-                                <asp:TreeNode Value="Payment Management" Text="Payment Management" NavigateUrl="~/config/PaymentManagement.aspx" />
-                                <asp:TreeNode Value="Balance Adjustment" Text="Balance Adjustment" NavigateUrl="~/config/BalanceAdjustment.aspx" />
-                                <asp:TreeNode Value="Invoice Generation" Text="Invoice Generation" NavigateUrl="~/config/InvoiceGeneration.aspx" />
-                                <asp:TreeNode Value="Generated Invoices" Text="Generated Invoices" NavigateUrl="~/config/GeneratedInvoices.aspx" />
+                                <asp:TreeNode Value="Conversion Rates" Text="Conversion Rates" NavigateUrl="" />
+                                <asp:TreeNode Value="Payment Management" Text="Payment Management" NavigateUrl="" />
+                                <asp:TreeNode Value="Balance Adjustment" Text="Balance Adjustment" NavigateUrl="" />
+                                <asp:TreeNode Value="Invoice Generation" Text="Invoice Generation" NavigateUrl="" />
+                                <asp:TreeNode Value="Generated Invoices" Text="Generated Invoices" NavigateUrl="" />
                             </asp:TreeNode>
 
                             <asp:TreeNode Value="Reports" Expanded="True" Text="Reports" SelectAction="None">
@@ -128,7 +128,7 @@
                                     <asp:TreeNode Value="Intl. Incoming" Text="Intl. Incoming" SelectAction="Select" NavigateUrl="~/reports/transit/InternationalInTransit.aspx"></asp:TreeNode>
                                     <asp:TreeNode Value="Intl. Outgoing" Text="Intl. Outgoing" SelectAction="Select" NavigateUrl="~/reports/transit/InternationalOutTransit.aspx"></asp:TreeNode>
                                     <asp:TreeNode Value="Toll Free" Text="Toll Free" SelectAction="Select" NavigateUrl="~/reports/transit/LocalTollFree.aspx"></asp:TreeNode>
-                                    <asp:TreeNode Value="Alphatech Premium" Text="Alphatech Premium" SelectAction="Select" NavigateUrl="~/reports/transit/AlphatechPremium.aspx"></asp:TreeNode>
+                                    <asp:TreeNode Value="Alphatech Premium" Text="Alphatech Premium" SelectAction="Select" NavigateUrl=""></asp:TreeNode>
 
                                     <%--            <asp:TreeNode Value="Local" Expanded="True" Text="Local" SelectAction="None">
                 

@@ -11,6 +11,7 @@ using System.Data;
 using MySql.Data.MySqlClient;
 using System.Drawing;
 using System.Web.UI.DataVisualization.Charting;
+using LibraryExtensions.ConfigHelper;
 using reports;
 
 public partial class DashboardAspx : Page
@@ -19,6 +20,7 @@ public partial class DashboardAspx : Page
 
     TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
     string targetIcxName = "btrc_cas";
+    private DatabaseSetting databaseSetting = null;
     protected void Page_Load(object sender, EventArgs e)
     {
        
@@ -36,7 +38,7 @@ public partial class DashboardAspx : Page
         telcobrightpartner thisPartner = null;
         string binpath = System.Web.HttpRuntime.BinDirectory;
         TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
-        var databaseSetting = telcobrightConfig.DatabaseSetting;
+        this.databaseSetting = telcobrightConfig.DatabaseSetting;
         string userName = Page.User.Identity.Name;
         string dbName;
         if (telcobrightConfig.DeploymentProfile.UserVsDbName.ContainsKey(userName))
@@ -64,7 +66,7 @@ public partial class DashboardAspx : Page
         //this.lblCustomerDisplayName.Text = thisPartner.CustomerName;
         //this.lblCustomerDisplayName.Text = "CDR Analyzer System (CAS)";
         //databaseSetting.DatabaseName = this.targetIcxName;
-        string connectionString = DbUtil.getDbConStrWithDatabase(databaseSetting);
+        string connectionString = DbUtil.getReadOnlyConStrWithDatabase(databaseSetting);
 
         string sqlCommand = "select id, JobName, CreationTime, CompletionTime " +
                             "from job where idjobdefinition = 1 " +
@@ -223,7 +225,9 @@ public partial class DashboardAspx : Page
 
         // double[] values = { 90, 10, 19, 78,55,89,96,95,75,65,32,85,14,55,22,33,44,55,6,52,63,45 };
 
-        string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        //string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        string connectionString = DbUtil.getReadOnlyConStrWithDatabase(databaseSetting);
+
         List<double> data = new List<double>();
         using (MySqlConnection con = new MySqlConnection(connectionString))
         {
@@ -293,7 +297,9 @@ public partial class DashboardAspx : Page
 
         // double[] values = { 90, 10, 19, 78,55,89,96,95,75,65,32,85,14,55,22,33,44,55,6,52,63,45 };
 
-        string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        //string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        string connectionString = DbUtil.getDbConStrWithDatabase(this.databaseSetting);
+
         List<double> data = new List<double>();
         using (MySqlConnection con = new MySqlConnection(connectionString))
         {
@@ -364,7 +370,9 @@ public partial class DashboardAspx : Page
 
         // double[] values = { 90, 10, 19, 78,55,89,96,95,75,65,32,85,14,55,22,33,44,55,6,52,63,45 };
 
-        string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        //string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        string connectionString = DbUtil.getReadOnlyConStrWithDatabase(databaseSetting);
+
         List<double> data = new List<double>();
         using (MySqlConnection con = new MySqlConnection(connectionString))
         {
@@ -434,7 +442,9 @@ public partial class DashboardAspx : Page
 
 
 
-        string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        //string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        string connectionString = DbUtil.getReadOnlyConStrWithDatabase(databaseSetting);
+
         List<double> data = new List<double>();
         using (MySqlConnection con = new MySqlConnection(connectionString))
         {
@@ -503,7 +513,9 @@ public partial class DashboardAspx : Page
 
 
 
-        string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        //string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        string connectionString = DbUtil.getReadOnlyConStrWithDatabase(databaseSetting);
+
         List<double> data = new List<double>();
         using (MySqlConnection con = new MySqlConnection(connectionString))
         {
@@ -571,7 +583,9 @@ public partial class DashboardAspx : Page
 
 
 
-        string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        //string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        string connectionString = DbUtil.getReadOnlyConStrWithDatabase(databaseSetting);
+
         List<double> data = new List<double>();
         using (MySqlConnection con = new MySqlConnection(connectionString))
         {
@@ -640,7 +654,9 @@ public partial class DashboardAspx : Page
 
 
 
-        string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        //string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        string connectionString = DbUtil.getReadOnlyConStrWithDatabase(databaseSetting);
+
         List<double> data = new List<double>();
         using (MySqlConnection con = new MySqlConnection(connectionString))
         {
@@ -712,7 +728,10 @@ public partial class DashboardAspx : Page
 
 
 
-        string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        //string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        string connectionString = DbUtil.getReadOnlyConStrWithDatabase(databaseSetting);
+        
+
         List<double> data = new List<double>();
         using (MySqlConnection con = new MySqlConnection(connectionString))
         {
