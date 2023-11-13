@@ -2,7 +2,6 @@
     CodeBehind="CasDomestic.aspx.cs" Inherits="CasDefaultRptDomesticIcx" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Import Namespace="MediationModel" %>
-<%@ Import Namespace="TelcobrightMediation" %>
 <%@ Import Namespace="PortalApp" %>
 
 

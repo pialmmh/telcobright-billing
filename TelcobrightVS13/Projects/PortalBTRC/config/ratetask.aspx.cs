@@ -4,7 +4,6 @@ using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
@@ -15,7 +14,6 @@ using System.Linq;
 using System.Runtime;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Web;
 using LibraryExtensions;
 
@@ -29,8 +27,6 @@ using MediationModel;
 //using DocumentFormat.OpenXml.Packaging;
 using PortalApp;
 using Process = System.Diagnostics.Process;
-using LibraryExtensions;
-using TelcobrightMediation.Accounting;
 using Wintellect.PowerCollections;
 
 [System.Runtime.InteropServices.Guid("5FC3FD70-56C8-4DAA-9C00-472988E7CACD")]

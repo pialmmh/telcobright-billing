@@ -10,7 +10,7 @@ namespace InstallConfig.config.allDeployment.cas.mysqlClusters
     {
         public static List<string> Hostnames = new List<string>
         {
-            "localhost", "103.98.66.5", "10.100.150.30"
+            "localhost", "103.98.66.5", "10.100.150.30", "10.100.150.2"
         };
     }
 }

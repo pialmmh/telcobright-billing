@@ -119,8 +119,8 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.ValueTuple, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml.Linq" />
@@ -360,23 +360,23 @@
     <Compile Include="config\purple\PurpleServerConfig.cs" />
     <Compile Include="config\purple\PurpleServiceGroups.cs" />
     <Compile Include="config\allDeployment\AllDeploymenProfiles.cs" />
-    <Compile Include="config\_helper\CasCdrSettingHelper.cs" />
+    <Compile Include="config\allDeployment\cas\_helper\CasCdrSettingHelper.cs" />
     <Compile Include="config\allDeployment\cas\mysqlClusters\CommonSlaveWin01.cs" />
-    <Compile Include="config\_helper\CasDockerDbHelper.cs" />
-    <Compile Include="config\_helper\CasDbHelperOld.cs" />
-    <Compile Include="config\_helper\CasPortalSettingsHelper.cs" />
-    <Compile Include="config\_helper\CasQuartzHelper.cs" />
-    <Compile Include="config\_helper\CasNeInfoHelper.cs" />
-    <Compile Include="config\_helper\CasServiceGroupHelper.cs" />
-    <Compile Include="config\_helper\CasTbPartnerFactory.cs" />
-    <Compile Include="config\_helper\DeploymentEnvironment.cs" />
+    <Compile Include="config\allDeployment\cas\_helper\CasDockerDbHelper.cs" />
+    <Compile Include="config\allDeployment\cas\_helper\CasPortalDbHelper.cs" />
+    <Compile Include="config\allDeployment\cas\_helper\CasPortalSettingsHelper.cs" />
+    <Compile Include="config\allDeployment\cas\_helper\CasQuartzHelper.cs" />
+    <Compile Include="config\allDeployment\cas\_helper\CasNeInfoHelper.cs" />
+    <Compile Include="config\allDeployment\cas\_helper\CasServiceGroupHelper.cs" />
+    <Compile Include="config\allDeployment\cas\_helper\CasTbPartnerFactory.cs" />
+    <Compile Include="config\allDeployment\cas\_helper\DeploymentEnvironment.cs" />
     <Compile Include="config\cas\_dbscripts\ddl\IndexSwitchID.cs" />
     <Compile Include="config\cas\_dbscripts\ddl\IcxSp.cs" />
     <Compile Include="config\cas\_dbscripts\ddl\ServiceGroupNotNullCdrError.cs" />
     <Compile Include="config\cas\_dbscripts\ddl\Ne.cs" />
     <Compile Include="config\cas\_dbscripts\ddl\IncreaseFldLength.cs" />
     <Compile Include="config\cas\_dbscripts\ddl\ViewToBTRC.cs" />
-    <Compile Include="config\_helper\TemplateNe.cs" />
+    <Compile Include="config\allDeployment\cas\_helper\TemplateNe.cs" />
     <Compile Include="generators\DeploymentHelper.cs" />
     <Compile Include="config\cas\_dbscripts\seedData\sql\DomesticRateplaneAssignmentForCAS.cs" />
     <Compile Include="generators\telcoBilling\TelcoBillingConfigGenerator.cs" />
@@ -475,7 +475,7 @@
     <None Include="config\cas\summit_cas\summit_cas.conf" />
     <None Include="config\cas\jibondhara_cas\jslRoutes.json" />
     <None Include="config\paradise\paradise.conf" />
-    <None Include="config\_helper\casOperatorInfo.xlsx" />
+    <None Include="config\allDeployment\cas\_helper\casOperatorInfo.xlsx" />
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
     </None>

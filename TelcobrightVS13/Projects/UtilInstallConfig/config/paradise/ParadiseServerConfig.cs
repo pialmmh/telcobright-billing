@@ -27,7 +27,7 @@ namespace InstallConfig
             //    ServerOs = ServerOs.Ubuntu,
             //    AutomationType = ServerAutomationType.LinuxMysqlAutomation,
             //    AdminUsername = "telcobright",
-            //    AdminPassword = "Takay1#$ane%%",
+            //    WritePasswordForApplication = "Takay1#$ane%%",
             //    AutomationUsername = "telcobright",
             //    AutomationPassword = "Takay1#$ane%%",
             //};
@@ -37,7 +37,7 @@ namespace InstallConfig
             //    ServerOs = ServerOs.Ubuntu,
             //    AutomationType = ServerAutomationType.LinuxMysqlAutomation,
             //    AdminUsername = "telcobright",
-            //    AdminPassword = "Takay1#$ane%%",
+            //    WritePasswordForApplication = "Takay1#$ane%%",
             //    AutomationUsername = "telcobright",
             //    AutomationPassword = "Takay1#$ane%%"
             //};

@@ -1,14 +1,7 @@
 ﻿using System;
 using System.Linq;
-using System.Web;
 using System.Web.UI;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using WebApplication1.Models;
 using System.Collections.Generic;
-using System.Web.UI.WebControls;
-using MySql.Data.MySqlClient;
-using System.Configuration;
 using MediationModel;
 namespace WebApplication1.Account
 {
