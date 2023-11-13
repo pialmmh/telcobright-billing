@@ -343,6 +343,10 @@ namespace LogPreProcessor
             FileInfo newCdrFileInfo = new FileInfo(newCdrFileName);
             predecodedDirName = newCdrFileInfo.DirectoryName + Path.DirectorySeparatorChar +
                                        "predecoded";
+            if(!Directory.Exists(predecodedDirName))
+            {
+                Directory.CreateDirectory(predecodedDirName);
+            }
             predecodedFileName = predecodedDirName + Path.DirectorySeparatorChar + newCdrFileInfo.Name +
                                        ".predecoded";
         }

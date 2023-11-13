@@ -288,8 +288,8 @@ namespace TelcobrightMediation
         {
             cmd.CommandText = "drop table if exists temp_rate;";
             cmd.ExecuteNonQuery();
-            //temporary 
-            cmd.CommandText = $@"create table temp_rate  engine=memory
+            
+            cmd.CommandText = $@"create temporary  table temp_rate  engine=memory
                                      select * from rate where 1=2;";
             cmd.ExecuteNonQuery();
             cmd.CommandText =
