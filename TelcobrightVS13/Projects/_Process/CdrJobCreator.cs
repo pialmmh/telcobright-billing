@@ -122,17 +122,9 @@ namespace Process
 
                         //most of the files should be finished written by now, still...
                         //double check if file is still being written, by trying exclusive f open
-                        var templist = fileInfos;//add logic to check if this file already exists in job table
-                        fileInfos = new List<FileInfo>();
-                        FileAndPathHelperMutable pathHelper= new FileAndPathHelperMutable();
-                        foreach (var fileInfo in templist)
-                        {
-                            if (pathHelper.IsFileLockedOrBeingWritten(fileInfo) == false)
-                            {
-                                fileInfos.Add(fileInfo);
-                            }
-                        }
-                        //**************
+                        //var templist = fileInfos;//add logic to check if this file already exists in job table
+                        //fileInfos = new List<FileInfo>();
+                      
                         Dictionary<string, FileInfo> newJobNameVsFileInfos = fileInfos
                             .Select(f => // kv<jobName,fileName>
                                 new
@@ -154,7 +146,18 @@ namespace Process
                         }
                         //*************
                         Console.WriteLine(
-                            $"Found {fileInfos.Count} new files with no prev job, checking split history...");
+                            $"Found {fileInfos.Count} new files with no prev job, checking exclusive lock...");
+                        FileAndPathHelperMutable pathHelper = new FileAndPathHelperMutable();
+                        var templist = new List<FileInfo>();
+                        foreach (var fileInfo in fileInfos)
+                        {
+                            if (pathHelper.IsFileLockedOrBeingWritten(fileInfo) == false)
+                            {
+                                templist.Add(fileInfo);
+                            }
+                        }
+                        fileInfos = templist;
+                        //**************
                         if (tbc.CdrSetting.DescendingOrderWhileListingFiles == true)
                             fileInfos = fileInfos.OrderByDescending(c => c.Name).ToList();
                         foreach (FileInfo fileInfo in fileInfos)
