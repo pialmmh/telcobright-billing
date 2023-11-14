@@ -22,7 +22,7 @@ namespace TelcobrightFileOperations
         FileInfo zippedFile;
         bool DeleteOriginalCompressedFile { get; set; }
 
-        public UnZipper(String zipPath, String extractPath = "", bool deleteOriginalCompressedFile=false)
+        public UnZipper(String zipPath, bool deleteOriginalCompressedFile, String extractPath = "")
         {
             this.DeleteOriginalCompressedFile = deleteOriginalCompressedFile;
             this.zippedFile = new FileInfo(zipPath);
@@ -70,27 +70,22 @@ namespace TelcobrightFileOperations
                 string targetPath = tempDir.FullName.Replace("\\", "//");
 
                 string sevenZipPath = ExternalResourceManager.getResourcePath(ExternalResourceType.SevenZip);
-                string command1 = $@"{sevenZipPath} x {rarFilePath} -o{targetPath}";
-                //string command2 = $@" & {sevenZipPath} x -o{targetPath} {targetPath + "//" + compressedFileName}";
+                string command = $"x \"{rarFilePath}\" -o\"{targetPath}\"";
 
-                string finalCommand = command1 ;
+                Process process = new Process();
+                process.StartInfo.FileName = sevenZipPath;
+                process.StartInfo.Arguments = command;
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.CreateNoWindow = true;
 
-                ProcessStartInfo psi = new ProcessStartInfo
-                {
-                    FileName = "cmd.exe",
-                    RedirectStandardInput = true,
-                    RedirectStandardOutput = true,
-                    CreateNoWindow = true,
-                    UseShellExecute = false,
-                };
-
-                Process process = new Process { StartInfo = psi };
+                process.OutputDataReceived += (sender, e) => Console.WriteLine(e.Data);
+                process.ErrorDataReceived += (sender, e) => Console.WriteLine(e.Data);
 
                 process.Start();
-                process.StandardInput.WriteLine(finalCommand);
-                process.StandardInput.WriteLine("exit");
+                process.BeginOutputReadLine();
                 process.WaitForExit();
-
+                
                 if (process.ExitCode == 0)
                 {
                     Console.WriteLine("Extraction completed.");

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using WinSCP;
 using System.IO;
 using System.Linq;
+using LibraryExtensions;
 using TelcobrightMediation;
 
 namespace TelcobrightFileOperations
@@ -112,30 +113,24 @@ namespace TelcobrightFileOperations
         public List<FileInfo> ListLocalDirectoryZipfileNonRecursive(string dir, List<string> extensions)
         {
             List<FileInfo> zipFiles = new List<FileInfo>();
+            
             foreach (string f in Directory.GetFiles(dir))
             {
-                //foreach(string ext in extensions)
-                //{
-                //    if (f.EndsWith(ext, StringComparison.OrdinalIgnoreCase)){
-                //        zipFiles.Add(new FileInfo(f));
-                //        break;
-                //    }
-                //}
-
                 if (extensions.Any(e => f.EndsWith(e, StringComparison.OrdinalIgnoreCase)))
                 {
-                    zipFiles.Add(new FileInfo(f));
+                        zipFiles.Add(new FileInfo(f));
+
                 }
-
-
-
-
-
-                //if (f.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) ||
-                //    f.EndsWith(".gz", StringComparison.OrdinalIgnoreCase))
-                //{
-                //    zipFiles.Add(new FileInfo(f));
-                //}
+            }
+            List<FileInfo> templist = zipFiles ;//add logic to check if this file already exists in job table
+            zipFiles = new List<FileInfo>();
+            FileAndPathHelperMutable pathHelper = new FileAndPathHelperMutable();
+            foreach (FileInfo fileInfo in templist)
+            {
+                if (pathHelper.IsFileLockedOrBeingWritten(fileInfo) == false)
+                {
+                    zipFiles.Add(fileInfo);
+                }
             }
             return zipFiles;
         }

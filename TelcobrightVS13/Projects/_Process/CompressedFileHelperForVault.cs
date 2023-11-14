@@ -27,6 +27,7 @@ namespace Process
     {
         public List<string> ExtensionsToAcceptAfterUnzip { get; set; }
         public string VaultPathToExtract { get; set; }
+        public bool DeleteOriginalArchive { get; set; } = false;
         public List<CompressionType> SupportedCompressionTypes { get; set; }= new List<CompressionType>()
         {
             CompressionType.Gzip,
@@ -34,10 +35,11 @@ namespace Process
             CompressionType.tarZip
         };
 
-        public CompressedFileHelperForVault(List<string> extensionsToAcceptAfterUnzip, string vaultPathToExtract="")
+        public CompressedFileHelperForVault(List<string> extensionsToAcceptAfterUnzip,bool deleteOriginalArchive, string vaultPathToExtract="")
         {
             ExtensionsToAcceptAfterUnzip = extensionsToAcceptAfterUnzip;
             VaultPathToExtract = vaultPathToExtract;
+            this.DeleteOriginalArchive = deleteOriginalArchive;
         }
         public void ExtractWithSafeCopy(string compressedFile)
         {
@@ -58,7 +60,7 @@ namespace Process
                         $"supported extensions are: {string.Join(",", this.SupportedCompressionTypes.Select(ct => ct.ToString()))}");
             }
             DirectoryInfo tempDir = new DirectoryInfo(Path.Combine(this.VaultPathToExtract, "temp"));
-            UnZipper unzipper = new UnZipper(compressedFile, tempDir.FullName, false);
+            UnZipper unzipper = new UnZipper(compressedFile, DeleteOriginalArchive, tempDir.FullName);
             unzipper.UnZipAll();
 
             Func<FileInfo, FileInfo, bool> sameFileExists = (src, dst) => src.FullName == dst.FullName && src.Length == dst.Length;
@@ -82,7 +84,9 @@ namespace Process
                     FileInfo copiedTempFileInfo = new FileInfo(targetFilenameWithTempExtension);
                     if (copiedTempFileInfo.Length == extractedFileInfo.Length)
                     {
-                        File.Move(copiedTempFileInfo.FullName.Replace(tempExtension, ""), VaultPathToExtract + Path.DirectorySeparatorChar + extractedFileInfo);//rename to remove .tmp extension
+                        string tempFileName = copiedTempFileInfo.FullName.Replace(tempExtension, "");
+                        File.Move(tempFileName, VaultPathToExtract + Path.DirectorySeparatorChar + extractedFileInfo);//rename to remove .tmp extension
+                        File.Delete(tempFileName);
                         extractedFileInfo.Delete();
                     }
                 }

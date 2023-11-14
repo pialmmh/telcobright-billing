@@ -177,11 +177,11 @@
                                 </asp:TreeNode>
 
                                 <asp:TreeNode Value="btrc" Expanded="True" Text="BTRC Reports " SelectAction="None">
-                                    <asp:TreeNode Value="daily" Text="Daily Report" SelectAction="Select" NavigateUrl="~/reports/icx/btrc/DailyReport.aspx"></asp:TreeNode>
+                                    <%--<asp:TreeNode Value="daily" Text="Daily Report" SelectAction="Select" NavigateUrl="~/reports/icx/btrc/DailyReport.aspx"></asp:TreeNode>
                                     <asp:TreeNode Value="monthly" Text="Monthly Report" SelectAction="Select" NavigateUrl="~/reports/icx/btrc/MonthlyReport.aspx"></asp:TreeNode>
                                     <asp:TreeNode Value="monthlyout" Text="Monthly Outgoing Summary" SelectAction="Select" NavigateUrl="~/reports/icx/btrc/MonthlyOutgoingSummary.aspx"></asp:TreeNode>
                                     <asp:TreeNode Value="weeklyDom" Text="Weekly Domestic Report" SelectAction="Select" NavigateUrl="~/reports/icx/btrc/WeeklyDomesticReport.aspx"></asp:TreeNode>
-                                    <asp:TreeNode Value="weeklyInt" Text="Weekly International Report" SelectAction="Select" NavigateUrl="~/reports/icx/btrc/WeeklyInternationalReport.aspx"></asp:TreeNode>
+                                    <asp:TreeNode Value="weeklyInt" Text="Weekly International Report" SelectAction="Select" NavigateUrl="~/reports/icx/btrc/WeeklyInternationalReport.aspx"></asp:TreeNode>--%>
                                 </asp:TreeNode>
 
 

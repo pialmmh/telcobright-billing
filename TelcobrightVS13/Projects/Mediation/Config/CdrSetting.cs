@@ -42,6 +42,7 @@ namespace TelcobrightMediation
         public bool useCasStyleProcessing { get; set; } = false;
         public Dictionary<int, NeAdditionalSetting> NeWiseAdditionalSettings { get; set; }= new Dictionary<int, NeAdditionalSetting>();
         public bool UnzipCompressedFiles { get; set; }
+        public bool DeleteOriginalArchiveAfterUnzip { get; set; }
         public CdrSetting()
         {
             this.NerCalculationRule = "NerByCauseCode";

@@ -56,18 +56,20 @@ namespace Process
                         {
                             List<string> extensions = new List<string> { ".zip", ".gz", ".tar.Z", ".rar" };
                             List<FileInfo> zipFiles = dirlister.ListLocalDirectoryZipfileNonRecursive(vaultPath, extensions);
+                            
                             if (zipFiles.Count > 0)
                             {
-                               
-
                                 //List<FileInfo> zipFiles = dirlister.ListLocalDirectoryZipfileNonRecursive(vaultPath, extensions);
                                 if (zipFiles.Count > 0)
                                 Console.WriteLine($"Found {zipFiles.Count} zip files. Unzipping ...");
                                 foreach (FileInfo compressedFile in zipFiles)
                                 {
+                                    if(new FileAndPathHelperMutable().IsFileLockedOrBeingWritten(compressedFile))
+                                        continue;
+                                    
                                     CompressedFileHelperForVault compressedFileHelper =
                                         new CompressedFileHelperForVault(new List<string> {thisSwitch.FileExtension},
-                                            vaultPath);
+                                            cdrSetting.DeleteOriginalArchiveAfterUnzip,vaultPath);
                                     compressedFileHelper.ExtractWithSafeCopy(compressedFile.FullName);
                                     compressedFile
                                         .Delete(); //code reaching here means extraction successful, exceptions will not hit this and file will be kept

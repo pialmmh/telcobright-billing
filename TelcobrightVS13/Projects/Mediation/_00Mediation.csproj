@@ -424,7 +424,7 @@
     <Compile Include="EventAndListeners\ListenerFactory.cs" />
     <Compile Include="FileOperations\FileLocation.cs" />
     <Compile Include="FileOperations\FileSync.cs" />
-    <Compile Include="FileOperations\RemoteDirectoryLister.cs" />
+    <Compile Include="FileOperations\DirectoryLister.cs" />
     <Compile Include="FileOperations\_DirectorySyncSettings.cs" />
     <Compile Include="FileOperations\_FileOperations.cs" />
     <Compile Include="FileOperations\ErrorWriter.cs" />

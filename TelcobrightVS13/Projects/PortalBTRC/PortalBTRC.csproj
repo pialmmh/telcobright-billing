@@ -423,11 +423,6 @@
     <Content Include="Mediation\Tgs.aspx" />
     <Content Include="reports\cal.png" />
     <Content Include="Mediation\CdrError.aspx" />
-    <Content Include="reports\icx\btrc\DailyReport.aspx" />
-    <Content Include="reports\icx\btrc\MonthlyOutgoingSummary.aspx" />
-    <Content Include="reports\icx\btrc\MonthlyReport.aspx" />
-    <Content Include="reports\icx\btrc\WeeklyDomesticReport.aspx" />
-    <Content Include="reports\icx\btrc\WeeklyInternationalReport.aspx" />
     <Content Include="reports\icx\DomesticWithLtfs.aspx" />
     <Content Include="reports\icx\InternationalOut_ICX.aspx" />
     <Content Include="reports\icx\LocalTollFree.aspx" />
@@ -703,43 +698,6 @@
     <Compile Include="ReportHelper\SqlHelperIntOutICX.cs" />
     <Compile Include="ReportHelper\SqlHelperIntOut.cs" />
     <Compile Include="ReportHelper\SqlHelperPaymentHistory.cs" />
-    <Compile Include="reports\icx\btrc\DailyReport.aspx.cs">
-      <DependentUpon>DailyReport.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\icx\btrc\DailyReport.aspx.designer.cs">
-      <DependentUpon>DailyReport.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\icx\btrc\BtrcReportRow.cs" />
-    <Compile Include="reports\icx\btrc\ExcelExporterForBtrcReport.cs" />
-    <Compile Include="reports\icx\btrc\MonthlyOutgoingSummary.aspx.cs">
-      <DependentUpon>MonthlyOutgoingSummary.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\icx\btrc\MonthlyOutgoingSummary.aspx.designer.cs">
-      <DependentUpon>MonthlyOutgoingSummary.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\icx\btrc\MonthlyReport.aspx.cs">
-      <DependentUpon>MonthlyReport.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\icx\btrc\MonthlyReport.aspx.designer.cs">
-      <DependentUpon>MonthlyReport.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\icx\btrc\WeeklyDomesticReport.aspx.cs">
-      <DependentUpon>WeeklyDomesticReport.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\icx\btrc\WeeklyDomesticReport.aspx.designer.cs">
-      <DependentUpon>WeeklyDomesticReport.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\icx\btrc\WeeklyInternationalReport.aspx.cs">
-      <DependentUpon>WeeklyInternationalReport.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\icx\btrc\WeeklyInternationalReport.aspx.designer.cs">
-      <DependentUpon>WeeklyInternationalReport.aspx</DependentUpon>
-    </Compile>
     <Compile Include="reports\icx\DomesticWithLtfs.aspx.cs">
       <DependentUpon>DomesticWithLtfs.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -978,6 +936,7 @@
     <Folder Include="App_Data\App_Code\" />
     <Folder Include="Controllers\" />
     <Folder Include="Extensions\" />
+    <Folder Include="reports\icx\btrc\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AspNet.Identity.MySQL\AspNet.Identity.MySQL.csproj">

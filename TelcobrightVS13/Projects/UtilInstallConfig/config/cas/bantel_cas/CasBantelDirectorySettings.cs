@@ -46,7 +46,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "d:/telcobright/vault/resources/cdr/banTel/ip",
+                StartingPath = "D:/telcobright/vault/resources/cdr/banTel/ip/Newfolder",
                 User = "",
                 Pass = "",
             };

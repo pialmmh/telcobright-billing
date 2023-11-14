@@ -48,6 +48,7 @@ namespace InstallConfig.config._helper
                 ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>(),
                 BatchSizeWhenPreparingLargeSqlJob = 100000,
                 UnzipCompressedFiles = true,
+                DeleteOriginalArchiveAfterUnzip = true,
                 SkipSettingsForSummaryOnly = new SkipSettingsForSummaryOnly
                 {
                     SkipCdr = true,
