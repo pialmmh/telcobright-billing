@@ -17,6 +17,7 @@ using LibraryExtensions;
 using MediationModel;
 using TelcobrightInfra;
 using TelcobrightMediation.Accounting;
+using LogPreProcessor;
 
 namespace InstallConfig
 {
@@ -52,32 +53,74 @@ namespace InstallConfig
 
         public override TelcobrightConfig GenerateFullConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
         {
-            
+
             CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
             CommonCdrValRulesGen commonCdrValRulesGen =
                 new CommonCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
             InconsistentCdrValRulesGen inconsistentCdrValRulesGen =
                 new InconsistentCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
-
-            this.Tbc.CdrSetting = new CasCdrSettingHelper().getTemplateCdrSettings();
             this.Tbc.CdrSetting = new CdrSetting
             {
+                EmptyFileAllowed = true,
                 SummaryTimeField = SummaryTimeFieldEnum.AnswerTime,
-                PartialCdrEnabledNeIds = new List<int>() { },//7, was set to non-partial processing mode due to duplicate billid problem.
-                PartialCdrFlagIndicators = new List<string>() { },//{"1", "2", "3"},
+                PartialCdrEnabledNeIds =
+                    new List<int>() { }, //7, was set to non-partial processing mode due to duplicate billid problem.
+                PartialCdrFlagIndicators = new List<string>() { }, //{"1", "2", "3"},
                 DescendingOrderWhileListingFiles = false,
                 DescendingOrderWhileProcessingListedFiles = false,
                 ValidationRulesForCommonMediationCheck = commonCdrValRulesGen.GetRules(),
                 ValidationRulesForInconsistentCdrs = inconsistentCdrValRulesGen.GetRules(),
-                ServiceGroupConfigurations = this.GetServiceGroupConfigurations(),
+                ServiceGroupConfigurations = CasServiceGroupHelper.GetServiceGroupConfigurations(),
                 DisableCdrPostProcessingJobCreationForAutomation = false,
                 BatchSizeForCdrJobCreationCheckingExistence = 10000,
                 DisableParallelMediation = false,
                 AutoCorrectDuplicateBillId = false,
-                AutoCorrectBillIdsWithPrevChargeableIssue = true,
-                AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
+                AutoCorrectBillIdsWithPrevChargeableIssue = false,
+                AutoCorrectDuplicateBillIdBeforeErrorProcess = false,
                 ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>(),
                 BatchSizeWhenPreparingLargeSqlJob = 100000,
+                UnzipCompressedFiles = true,
+                DeleteOriginalArchiveAfterUnzip = true,
+                NeWiseAdditionalSettings = new Dictionary<int, NeAdditionalSetting>
+                {
+                    { 2, new NeAdditionalSetting {//for huawei
+                        ProcessMultipleCdrFilesInBatch = true,
+                        PreDecodeAsTextFile = true,
+                        MaxConcurrentFilesForParallelPreDecoding = 30,
+                        MinRowCountToStartBatchCdrProcessing = 70000,
+                        MaxNumberOfFilesInPreDecodedDirectory = 500,
+                        EventPreprocessingRules = new List<EventPreprocessingRule>()
+                        {
+                            new CdrPredecoder()
+                            {
+                                RuleConfigData = new Dictionary<string,object>() { { "maxParallelFileForPreDecode", "50"}},
+                                ProcessCollectionOnly = true//does not accept single event, only list of events e.g. multiple new cdr jobs
+                            }
+                        }
+                    }},
+                    { 3, new NeAdditionalSetting {//dialogic
+                        ProcessMultipleCdrFilesInBatch = true,
+                        PreDecodeAsTextFile = true,
+                        MaxConcurrentFilesForParallelPreDecoding = 10,
+                        MinRowCountToStartBatchCdrProcessing = 100000,
+                        MaxNumberOfFilesInPreDecodedDirectory = 500,
+                        EventPreprocessingRules = new List<EventPreprocessingRule>()
+                        {
+                            new CdrPredecoder()
+                            {
+                                RuleConfigData = new Dictionary<string,object>() { { "maxParallelFileForPreDecode", "50"}},
+                                ProcessCollectionOnly = true//does not accept single event, only list of events e.g. multiple new cdr jobs
+                            }
+                        }
+                    }}
+                },
+                SkipSettingsForSummaryOnly = new SkipSettingsForSummaryOnly
+                {
+                    SkipCdr = true,
+                    SkipChargeable = true,
+                    SkipTransaction = true,
+                    SkipHourlySummary = true,
+                },
             };
 
             this.PrepareDirectorySettings(this.Tbc);
@@ -120,10 +163,10 @@ namespace InstallConfig
                 {
                     idSwitch = 3,
                     idCustomer = this.Tbc.Telcobrightpartner.idCustomer,
-                    idcdrformat = 3,
+                    idcdrformat = 30,
                     idMediationRule = 2,
                     SwitchName = "cataleya",
-                    CDRPrefix = "b",
+                    CDRPrefix = "esdr",
                     FileExtension = ".txt",
                     Description = null,
                     SourceFileLocations = "vault.Cataleya",

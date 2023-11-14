@@ -202,7 +202,11 @@ namespace TelcobrightMediation
                 throw new Exception("Duplicate idcalls for CdrExts in CdrJob");
             }
             var rawPartialCount = this.PartialCdrContainers.SelectMany(p => p.NewRawInstances).Count();
-            if (this.RawCount != cdrExtsForNonPartials.Count + cdrExtsForPartials.Count + errorCdrExts.Count +
+            var cdrJobInputData = this.CdrCollectorInputData.CdrJobInputData;
+            int originalRawCount = cdrJobInputData.MergedJobsDic.Any()==false?this.RawCount
+                :cdrJobInputData.MergedJobsDic.Values.Sum(wrappedJobs => wrappedJobs.OriginalRows.Count);
+            if (originalRawCount!= 
+                cdrExtsForNonPartials.Count + cdrExtsForPartials.Count + errorCdrExts.Count +
                 rawPartialCount - this.PartialCdrContainers.Count + base.InconsistentCdrs.Count)
                 throw new Exception(
                     "Count of nonPartial and partial cdrs do not match expected with expected rawCount for this job.");

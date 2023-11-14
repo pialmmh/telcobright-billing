@@ -41,9 +41,6 @@ namespace Jobs
         private static readonly Random rndSuffixForDupCorrection = new Random();
         protected Func<NewCdrPreProcessor, List<string[]>, List<CdrAndInconsistentWrapper>> parallelConvertToCdr = (preProcessor, txtRows) =>
         {
-            //cdrinconsistent cdrInconsistent = null;
-            //CdrAndInconsistentWrapper cdrAndInconsistentWrapper = preProcessor.ConvertToCdr(txtRow, out cdrInconsistent);
-
             ParallelIterator<string[], CdrAndInconsistentWrapper> parallelConverter =
                 new ParallelIterator<string[], CdrAndInconsistentWrapper>(txtRows);
             List<CdrAndInconsistentWrapper> cdrAndInconsistents =
@@ -94,75 +91,24 @@ namespace Jobs
 
             //at this moment preProcessor has either records from a single job or merged jobs
             //duplicate cdr filter part ****************
-            Dictionary<long, CdrMergedJobError> mergedJobErrors = new Dictionary<long, CdrMergedJobError>();//key= jobId
             if (CollectorInput.Ne.FilterDuplicateCdr == 1 && preProcessor.TxtCdrRows.Count > 0)
             {
-                Console.WriteLine("CdrJobProcessor: Filtering duplicates...");
-                preProcessor = this.filterDuplicates(preProcessor);
-
-                Dictionary<string, List<string[]>> billIdWiseDuplicateRows =
-                    preProcessor.TxtCdrRows.GroupBy(r => r[Fn.UniqueBillId])
-                        .Select(g => new
-                        {
-                            UniqueBillId = g.Key,
-                            Rows = g.ToList()
-                        }).Where(a => a.Rows.Count > 1)
-                        .ToDictionary(a => a.UniqueBillId, a => a.Rows);
-
-                if (billIdWiseDuplicateRows.Any())
+                Dictionary<long, CdrMergedJobError> jobsWithDupCdrsDuringMergeProcessing = new Dictionary<long, CdrMergedJobError>();//key= jobId
+                preProcessor = filterDuplicates(preProcessor, cdrSetting, jobsWithDupCdrsDuringMergeProcessing);
+                if (jobsWithDupCdrsDuringMergeProcessing.Any())
                 {
-                    if (cdrSetting.AutoCorrectDuplicateBillId)
+                    var exception =
+                        new Exception($"Duplicate billids found after filtering duplicates.");
+                    foreach (var mergedJobError in jobsWithDupCdrsDuringMergeProcessing.Values)
                     {
-                        foreach (string[] row in billIdWiseDuplicateRows.Values.SelectMany(r => r))
-                        {
-                            row[Fn.UniqueBillId] = "d_" + row[Fn.UniqueBillId] + "_" +
-                                                   rndSuffixForDupCorrection.Next(); //auto correct erronous duplicate billid from switch e.g. dialogic
-                        }
+                        if (exception.Data.Contains(mergedJobError.Job.id.ToString()) == false)
+                            exception.Data.Add(mergedJobError.Job.id.ToString(), mergedJobError);
                     }
-                    else
-                    {
-                        foreach (var kv in billIdWiseDuplicateRows)
-                        {
-                            string uniqueBillId = kv.Key;
-                            List<string[]> rows = kv.Value;
-                            foreach (var r in rows)
-                            {
-                                var mergedJobError = new CdrMergedJobError
-                                {
-                                    Filename = r[Fn.Filename],
-                                    Job = this.HandledJobs.First(j => j.JobName == r[Fn.Filename]),
-                                    UniqueBillid = uniqueBillId,
-                                    Starttime = r[Fn.StartTime],
-                                    Answertime = r[Fn.AnswerTime],
-                                    CalledNumber = r[Fn.OriginatingCalledNumber],
-                                    CallingNumber = r[Fn.OriginatingCallingNumber],
-                                    Duration = r[Fn.DurationSec]
-                                };
-                                if (mergedJobErrors.ContainsKey(mergedJobError.Job.id) == false)
-                                {
-                                    mergedJobErrors.Add(mergedJobError.Job.id,mergedJobError);
-                                }
-                            }
-                        }
-                    }
-                    
+                    throw exception;
                 }
             }
-            if (mergedJobErrors.Any())
-            {
-                var exception =
-                    new Exception($"Duplicate billids found after filtering duplicates.");
-                foreach (var mergedJobError in mergedJobErrors.Values)
-                {
-                    if (exception.Data.Contains(mergedJobError.Job.id.ToString()) == false)
-                        exception.Data.Add(mergedJobError.Job.id.ToString(), mergedJobError);
-                }
-                throw exception;
-            }
-            
 
             openDbConAndStartTransaction();//open new connection and start transaction
-
             List<CdrAndInconsistentWrapper> cdrAndInconsistents =
                 parallelConvertToCdr(preProcessor, preProcessor.TxtCdrRows);
             cdrAndInconsistents.ForEach(c => preProcessor.AddToBaseCollection(c));//add convertedCdrs to base collection
@@ -198,6 +144,62 @@ namespace Jobs
                 FinalizeMergedJobs(cdrJob);
             }
             return this.HandledJobs;
+        }
+
+        private NewCdrPreProcessor filterDuplicates(NewCdrPreProcessor preProcessor, CdrSetting cdrSetting, Dictionary<long, CdrMergedJobError> jobsWithDupCdrsDuringMergeProcessing)
+        {
+            Console.WriteLine("CdrJobProcessor: Filtering duplicates...");
+            preProcessor = this.filterDuplicates(preProcessor);
+
+            Dictionary<string, List<string[]>> billIdWiseDuplicateRows =
+                preProcessor.TxtCdrRows.GroupBy(r => r[Fn.UniqueBillId])
+                    .Select(g => new
+                    {
+                        UniqueBillId = g.Key,
+                        Rows = g.ToList()
+                    }).Where(a => a.Rows.Count > 1)
+                    .ToDictionary(a => a.UniqueBillId, a => a.Rows);
+
+            if (billIdWiseDuplicateRows.Any())
+            {
+                if (cdrSetting.AutoCorrectDuplicateBillId)
+                {
+                    foreach (string[] row in billIdWiseDuplicateRows.Values.SelectMany(r => r))
+                    {
+                        row[Fn.UniqueBillId] = "d_" + row[Fn.UniqueBillId] + "_" +
+                                               rndSuffixForDupCorrection.Next(); //auto correct erronous duplicate billid from switch e.g. dialogic
+                    }
+                }
+                else
+                {
+                    foreach (var kv in billIdWiseDuplicateRows)
+                    {
+                        string uniqueBillId = kv.Key;
+                        List<string[]> rows = kv.Value;
+                        foreach (var r in rows)
+                        {
+                            var mergedJobError = new CdrMergedJobError
+                            {
+                                Filename = r[Fn.Filename],
+                                Job = this.HandledJobs.First(j => j.JobName == r[Fn.Filename]),
+                                UniqueBillid = uniqueBillId,
+                                Starttime = r[Fn.StartTime],
+                                Answertime = r[Fn.AnswerTime],
+                                CalledNumber = r[Fn.OriginatingCalledNumber],
+                                CallingNumber = r[Fn.OriginatingCallingNumber],
+                                Duration = r[Fn.DurationSec]
+                            };
+                            if (jobsWithDupCdrsDuringMergeProcessing.ContainsKey(mergedJobError.Job.id) == false)
+                            {
+                                jobsWithDupCdrsDuringMergeProcessing.Add(mergedJobError.Job.id, mergedJobError);
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            return preProcessor;
         }
 
         private void openDbConAndStartTransaction()
@@ -283,9 +285,17 @@ namespace Jobs
             var collectionResult = cdrJob.CdrProcessor.CollectionResult;
             if (collectionResult.OriginalRowsBeforeMerge.Count > 0) //job not empty, or has records
             {
-                //this.CollectorInput.CdrJobInputData.MergedJobsDic
+                decimal totalCdrDuration = cdrJob.CdrProcessor.CollectionResult
+                        .OriginalRowsBeforeMerge.Sum(r => r[Fn.DurationSec].IsNullOrEmptyOrWhiteSpace() 
+                        ? 0 
+                        : Convert.ToDecimal(r[Fn.DurationSec]));
+                decimal totalActualDurationInconsistent = cdrJob.CdrProcessor.CollectionResult
+                        .CdrInconsistents.Sum(r => r.DurationSec.IsNullOrEmptyOrWhiteSpace()
+                        ? 0
+                        : Convert.ToDecimal(r.DurationSec));
+                decimal totalActualDuration = totalCdrDuration + totalActualDurationInconsistent;
                 WriteJobCompletionIfCollectionNotEmpty(cdrJob.CdrProcessor.CollectionResult.RawCount,
-                    this.Input.Job, cdrJob.CdrProcessor.CdrJobContext.Context);
+                    this.Input.Job, cdrJob.CdrProcessor.CdrJobContext.Context, totalActualDuration);
             }
             else
             {
@@ -330,7 +340,14 @@ namespace Jobs
                 WriteJobCompletionIfCollectionIsEmpty(0, telcobrightJob, context);
                 //throw new Exception($"Instance in a merged new cdr job cannot contain 0 record. Job id:{telcobrightJob.id}, Jobname:{telcobrightJob.JobName}");
             }
-            WriteJobCompletionIfCollectionNotEmpty(preProcessor.OriginalRowsBeforeMerge.Count, telcobrightJob, context);
+            decimal totalCdrDuration = mergedJob.OriginalRows.Sum(r => r[Fn.DurationSec].IsNullOrEmptyOrWhiteSpace()
+                        ? 0
+                        : Convert.ToDecimal(r[Fn.DurationSec]));
+            decimal totalActualDurationInconsistent = mergedJob.OriginalCdrinconsistents.Sum(r => r.DurationSec.IsNullOrEmptyOrWhiteSpace()
+                    ? 0
+                    : Convert.ToDecimal(r.DurationSec));
+            decimal totalActualDuration = totalCdrDuration + totalActualDurationInconsistent;
+            WriteJobCompletionIfCollectionNotEmpty(preProcessor.OriginalRowsBeforeMerge.Count, telcobrightJob, context,totalActualDuration);
             if (this.Input.CdrSetting.DisableCdrPostProcessingJobCreationForAutomation == false)
             {
                 CreateNewCdrPostProcessingJobs(this.Input.Context, this.Input.MediationContext.Tbc, telcobrightJob);
@@ -493,15 +510,17 @@ namespace Jobs
             preProcessor.TxtCdrRows.ForEach(txtRow => preProcessor.SetIdCall(collectorinput.AutoIncrementManager, txtRow));
         }
 
-        protected void WriteJobCompletionIfCollectionNotEmpty(int rawCount, job telcobrightJob, PartnerEntities context)
+        protected void WriteJobCompletionIfCollectionNotEmpty(int rawCount, job telcobrightJob, PartnerEntities context,
+            decimal totalActualDuration)
         {
+            
             using (DbCommand cmd = ConnectionManager.CreateCommandFromDbContext(context))
             {
                 string sql =
                     $" update job set CompletionTime={DateTime.Now.ToMySqlField()}, " +
                     $" status=1, " +
                     $"NoOfSteps={rawCount}," +
-                    $"progress={rawCount}," +
+                    $"progress={rawCount},jobsummary={totalActualDuration}," +
                     $"Error=null where id={telcobrightJob.id}";
                 cmd.CommandText = sql;
                 cmd.ExecuteNonQuery();
@@ -516,7 +535,7 @@ namespace Jobs
                     $" update job set CompletionTime={DateTime.Now.ToMySqlField()}, " +
                     $" status=1, " +
                     $"NoOfSteps={rawCount}," +//could be non zero if inconsistents exist
-                    $"progress={rawCount}," +
+                    $"progress={rawCount}, jobsummary=0," +
                     $"Error=null where id={telcobrightJob.id}";
                 cmd.CommandText = sql;
                 cmd.ExecuteNonQuery();

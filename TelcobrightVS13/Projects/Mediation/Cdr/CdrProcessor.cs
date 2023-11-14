@@ -502,7 +502,10 @@ namespace TelcobrightMediation
 
             if (this.CdrReProcessingType == CdrReProcessingType.NoneOrNew) //newCdrFile
             {
-                if (this.CollectionResult.RawCount !=
+                int rawCount = this.CdrJobContext.CdrjobInputData.MergedJobsDic.Any() == false
+                    ? this.CollectionResult.RawCount 
+                    : this.CdrJobContext.CdrjobInputData.MergedJobsDic.Values.Sum(wrappedJobs => wrappedJobs.OriginalRows.Count);
+                if (rawCount !=
                     writtenNonPartialCdrCount + writtenNewRawInstances + writtenInconsistentCount
                     + nonPartialCdrErrors.Count)
                     throw new Exception(

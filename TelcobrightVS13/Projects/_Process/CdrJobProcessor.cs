@@ -46,7 +46,6 @@ namespace Process
 
             try
             {
-
                 context.Database.Connection.Open();
                 var mediationContext = new MediationContext(tbc, context);
                 tbc.GetPathIndependentApplicationDirectory();
@@ -110,6 +109,7 @@ namespace Process
                                     if (job.idjobdefinition != 1
                                     ) //error process or re-process job, not merging, process as a single job*************
                                     {
+                                        cdrJobInputData.MergedJobsDic = new Dictionary<long, NewCdrWrappedJobForMerge>();
                                         object retVal=telcobrightJob.Execute(cdrJobInputData); //EXECUTE
                                         if(job.idjobdefinition==1) telcobrightJob.PostprocessJob(retVal);
                                         cmd.ExecuteCommandText(" commit; ");
@@ -120,7 +120,8 @@ namespace Process
                                         neAdditionalSetting?.ProcessMultipleCdrFilesInBatch == false
                                     ) //new cdr job, not merging, process as single job
                                     {
-                                        object retVal=telcobrightJob.Execute(cdrJobInputData); //EXECUTE
+                                        cdrJobInputData.MergedJobsDic = new Dictionary<long, NewCdrWrappedJobForMerge>();
+                                        object retVal =telcobrightJob.Execute(cdrJobInputData); //EXECUTE
                                         telcobrightJob.PostprocessJob(retVal);
                                         cmd.ExecuteCommandText(" commit; ");
                                         closeDbConnection(cmd);
@@ -128,6 +129,7 @@ namespace Process
                                     }
                                     if (!job.Error.IsNullOrEmptyOrWhiteSpace()) //jobs with error, process as single job
                                     {
+                                        cdrJobInputData.MergedJobsDic = new Dictionary<long, NewCdrWrappedJobForMerge>();
                                         object retVal = telcobrightJob.Execute(cdrJobInputData); //EXECUTE
                                         telcobrightJob.PostprocessJob(retVal);
                                         cmd.ExecuteCommandText(" commit; ");
@@ -137,6 +139,7 @@ namespace Process
                                     if (neAdditionalSetting?.ProcessMultipleCdrFilesInBatch == true
                                     ) //merge new cdr jobs for batch processing
                                     {
+                                        cdrJobInputData.MergedJobsDic = mergedJobsDic;
                                         var inputForPreprocess = new Dictionary<string, object>
                                         {
                                             {"cdrJobInputData", cdrJobInputData}
@@ -147,7 +150,8 @@ namespace Process
                                             preProcessor.TxtCdrRows.Count >=
                                             minRowCountForBatchProcessing) //already large job, process as single
                                         {//but if merge in progress, do not process as single job, headjob for merge!=null means mergeInProgress
-                                            object retVal= telcobrightJob.Execute(cdrJobInputData); //not merging, process as single job************
+                                            cdrJobInputData.MergedJobsDic = new Dictionary<long, NewCdrWrappedJobForMerge>();
+                                            object retVal = telcobrightJob.Execute(cdrJobInputData); //not merging, process as single job************
                                             telcobrightJob.PostprocessJob(retVal);
                                             cmd.ExecuteCommandText(" commit; ");
                                             closeDbConnection(cmd);
