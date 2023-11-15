@@ -43,7 +43,7 @@ namespace Process
             try
             {
                 context.Database.Connection.Open();
-                var mediationContext = new MediationContext(tbc, context);
+                var mediationContext = new MediationContext(tbc, context,true);
                 tbc.GetPathIndependentApplicationDirectory();
                 foreach (ne ne in mediationContext.Nes.Values)
                 {

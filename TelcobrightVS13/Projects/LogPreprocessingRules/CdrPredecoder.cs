@@ -66,10 +66,12 @@ namespace LogPreProcessor
                 File.WriteAllLines(this.PredecodedFileName, rowsAsCsvLinesFieldsEnclosedWithBacktick);
                 output.SuccessfulJob = this.CdrJobInputData.Job;
                 output.FailedJob = null;
+                this.PartnerEntitiesNewInstance.Database.Connection.Close();
                 return output;
             }
             catch (Exception e)
             {
+                this.PartnerEntitiesNewInstance.Database.Connection.Close();
                 Console.WriteLine(e);
                 output.FailedJob = this.CdrJobInputData.Job;
                 output.SuccessfulJob = null;
@@ -117,6 +119,9 @@ namespace LogPreProcessor
             TelcobrightConfig tbc = mediationContext.Tbc;
             List<job> newCdrFileJobs = (List<job>)dataAsDic["newCdrFileJobs"];
             PartnerEntities context = (PartnerEntities)dataAsDic["partnerEntities"];
+            //quartz probably was getting hanged when connections are running out due to parallel processing, close them frequently and re-open;
+            context.Database.Connection.Close();
+            context.Database.Connection.Open();
             NeAdditionalSetting neAdditionalSetting = (NeAdditionalSetting)dataAsDic["neAdditionalSetting"];
             if (neAdditionalSetting?.PreDecodeAsTextFile == false)
                 return;
@@ -202,6 +207,8 @@ namespace LogPreProcessor
                 //can't write to db in parallel, reader busy error occurs
                 //no worries about failed jobs, they will be retried again or decoded again in decoder if .predecoded file doesn't exist
                 //no need for commit or rollback too.
+                if (cmd.Connection.State != ConnectionState.Open)
+                    cmd.Connection.Open();
                 foreach (var job in successfullPreDecodedJobs)
                 {
                     try
@@ -214,7 +221,10 @@ namespace LogPreProcessor
                         Console.WriteLine(e);
                     }
                 }
+                cmd.Connection.Close();
 
+                if (cmd.Connection.State != ConnectionState.Open)
+                    cmd.Connection.Open();
                 foreach (job failedJob in failedPreDecodedJobs)
                 {
                     string preDecodedDirName = "";
@@ -226,6 +236,7 @@ namespace LogPreProcessor
                         File.Delete(preDecodedFileName);
                     }
                 }
+                cmd.Connection.Close();
             });
         }
 

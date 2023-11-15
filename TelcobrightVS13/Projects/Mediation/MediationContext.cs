@@ -48,8 +48,9 @@ namespace TelcobrightMediation
         public Dictionary<int, partner> Partners { get; }
         public Dictionary<string, ipaddressorpointcode> IpAddressorPointCodes { get; }
         public Trie IpAddressOrPointCodeTrie { get; }
+        public bool DisableTemporaryTablesCreation { get; }
 
-        public MediationContext(TelcobrightConfig tbc, PartnerEntities context)
+        public MediationContext(TelcobrightConfig tbc, PartnerEntities context, bool disableTemporaryTablesCreation=false)
         {
             StaticExtInsertColumnParsedDic.Parse();
             this.Tbc = tbc;
@@ -151,7 +152,8 @@ namespace TelcobrightMediation
                 this.MefServiceFamilyContainer.ServiceGroupWiseTupDefs.Add(kv.Key, new TupleDefinitions(kv.Value));
             }
             CdrSummaryTypeDictionary.Initialize();
-            CreateTemporaryTables();
+            if(!disableTemporaryTablesCreation)
+                CreateTemporaryTables();
             this.MefPartnerRuleContainer.MediationContext = this;
         }
 
