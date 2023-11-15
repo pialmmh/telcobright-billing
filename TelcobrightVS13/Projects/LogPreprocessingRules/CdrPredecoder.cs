@@ -46,9 +46,8 @@ namespace LogPreProcessor
 
         public PredecoderOutput preDecodeToFile()
         {
-            //Console.WriteLine("Predecoding CdrJob for Switch:" + this.CdrJobInputData.Ne.SwitchName + ", JobName:" +
-              //                this.CdrJobInputData.Job.JobName);
-              //avoid this console.writeline, this clutters the console and makes monitoring other process difficult
+            Console.WriteLine("Predecoding CdrJob for Switch:" + this.CdrJobInputData.Ne.SwitchName + ", JobName:" +
+                              this.CdrJobInputData.Job.JobName);
             PredecoderOutput output = new PredecoderOutput();
             try
             {
@@ -156,7 +155,7 @@ namespace LogPreProcessor
                 var enumerable = segment as job[] ?? segment.ToArray();
                 BlockingCollection<job> successfullPreDecodedJobs = new BlockingCollection<job>();
                 BlockingCollection<job> failedPreDecodedJobs = new BlockingCollection<job>();
-                
+
                 List<ThreadSafePredecoder> threadSafePredecoders = new List<ThreadSafePredecoder>();
                 foreach (var job in enumerable)
                 {
@@ -233,15 +232,19 @@ namespace LogPreProcessor
                 //for undetectable reason, job status was not being updated, verify status again and throw exception if required
                 if (context.Database.Connection.State != ConnectionState.Open)
                     context.Database.Connection.Open();
-                string sql= $@"select * from job where idjobdefinition=1 and idne={thisSwitch.idSwitch} and status=7
-                                     and id in ({string.Join(",", successfullPreDecodedJobs.Select(j=>j.id))});";
+                string sql = $@"select * from job where idjobdefinition=1 and idne={thisSwitch.idSwitch} and status=7
+                                     and id in ({string.Join(",", successfullPreDecodedJobs.Select(j => j.id))});";
                 List<job> jobsWithStatusUpdateFailed = context.Database.SqlQuery<job>(sql).ToList();
                 if (jobsWithStatusUpdateFailed.Any())
                 {
                     context.Database.Connection.Close();
-                    throw new Exception($"Couldn't update status while predecoding {jobsWithStatusUpdateFailed.Count} jobs for ne: {thisSwitch.SwitchName}");
+                    var exception = new Exception($"Couldn't update status while predecoding {jobsWithStatusUpdateFailed.Count} jobs for ne: {thisSwitch.SwitchName}");
+                    Console.WriteLine(exception);
+                    throw exception;
                 }
-                Console.WriteLine($"Successfully predecoded {successfullPreDecodedJobs.Count} jobs for ne: {thisSwitch.SwitchName}");
+                //Console.WriteLine($"Successfully predecoded {successfullPreDecodedJobs.Count} jobs for ne: {thisSwitch.SwitchName}");
+
+
                 foreach (job failedJob in failedPreDecodedJobs)
                 {
                     string preDecodedDirName = "";
