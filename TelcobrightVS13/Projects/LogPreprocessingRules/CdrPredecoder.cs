@@ -46,8 +46,9 @@ namespace LogPreProcessor
 
         public PredecoderOutput preDecodeToFile()
         {
-            Console.WriteLine("Predecoding CdrJob for Switch:" + this.CdrJobInputData.Ne.SwitchName + ", JobName:" +
-                              this.CdrJobInputData.Job.JobName);
+            //Console.WriteLine("Predecoding CdrJob for Switch:" + this.CdrJobInputData.Ne.SwitchName + ", JobName:" +
+              //                this.CdrJobInputData.Job.JobName);
+              //avoid this console.writeline, this clutters the console and makes monitoring other process difficult
             PredecoderOutput output = new PredecoderOutput();
             try
             {
@@ -209,6 +210,8 @@ namespace LogPreProcessor
                 //no need for commit or rollback too.
                 if (cmd.Connection.State != ConnectionState.Open)
                     cmd.Connection.Open();
+                cmd.CommandText = $" set autocommit=0;";
+                cmd.ExecuteNonQuery();
                 foreach (var job in successfullPreDecodedJobs)
                 {
                     try
@@ -218,13 +221,27 @@ namespace LogPreProcessor
                     }
                     catch (Exception e)
                     {
+                        cmd.CommandText = $"rollback;";
+                        cmd.ExecuteNonQuery();
                         Console.WriteLine(e);
                     }
                 }
+                cmd.CommandText = $"commit;";
+                cmd.ExecuteNonQuery();
                 cmd.Connection.Close();
 
-                if (cmd.Connection.State != ConnectionState.Open)
-                    cmd.Connection.Open();
+                //for undetectable reason, job status was not being updated, verify status again and throw exception if required
+                if (context.Database.Connection.State != ConnectionState.Open)
+                    context.Database.Connection.Open();
+                string sql= $@"select * from job where idjobdefinition=1 and idne={thisSwitch.idSwitch} and status=7
+                                     and id in ({string.Join(",", successfullPreDecodedJobs.Select(j=>j.id))});";
+                List<job> jobsWithStatusUpdateFailed = context.Database.SqlQuery<job>(sql).ToList();
+                if (jobsWithStatusUpdateFailed.Any())
+                {
+                    context.Database.Connection.Close();
+                    throw new Exception($"Couldn't update status while predecoding {jobsWithStatusUpdateFailed.Count} jobs for ne: {thisSwitch.SwitchName}");
+                }
+                Console.WriteLine($"Successfully predecoded {successfullPreDecodedJobs.Count} jobs for ne: {thisSwitch.SwitchName}");
                 foreach (job failedJob in failedPreDecodedJobs)
                 {
                     string preDecodedDirName = "";
@@ -236,7 +253,6 @@ namespace LogPreProcessor
                         File.Delete(preDecodedFileName);
                     }
                 }
-                cmd.Connection.Close();
             });
         }
 
