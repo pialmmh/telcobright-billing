@@ -19,7 +19,7 @@ namespace InstallConfig
             {"gazinetworks_cas","127.0.0.1"},
             {"summit_cas","172.16.1.22"},
             {"ringtech_cas","172.16.1.22"},
-            {"mothertelecom_cas","172.16.1.23"},
+            {"mothertelecom_cas","127.0.0.1"},
             {"teleplusnewyork_cas","172.16.1.23"},
             {"voicetel_cas","172.16.1.23"},
             {"mnh_cas","172.16.1.24"},
@@ -34,7 +34,7 @@ namespace InstallConfig
             {"softex_cas","172.16.1.28"},
             {"sheba_cas","172.16.1.29"},
             {"teleexchange_cas","172.16.1.28"},
-            {"newgenerationtelecom_cas","172.16.1.28"}
+            {"newgenerationtelecom_cas","127.0.0.1"}
         };
         public DeploymentEnvironment DeploymentEnvironment { get; }
         public CasDockerDbHelper(DeploymentEnvironment deploymentEnvironment)
