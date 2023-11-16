@@ -19,34 +19,14 @@ namespace InstallConfig
     {
         public static List<QuartzTbDaemonConfig> GetSchedulerDaemonConfigs(string operatorName)
         {
-            var daemonConfigurations = new List<QuartzTbDaemonConfig>();
+            List<QuartzTbDaemonConfig> daemonConfigurations = new List<QuartzTbDaemonConfig>();
             daemonConfigurations.AddRange(GetLogFileJobCreatorInstances(operatorName));
             daemonConfigurations.AddRange(GetCdrJobProcessorInstances(operatorName));
+            daemonConfigurations.AddRange(GetCdrPreProcessorInstances(operatorName));
             daemonConfigurations.AddRange(GetOptimizerInstances(operatorName));
             return daemonConfigurations;
         }
 
-        private static List<QuartzTbDaemonConfig> GetFileListerInstances(string operatorName)
-        {
-            //don't use foreach, do it manually for flixibility e.g. different repeating interval
-            List<QuartzTbDaemonConfig> fileListerInstances = new List<QuartzTbDaemonConfig>()
-            {
-                //new QuartzTbDaemonConfig
-                //(
-                //    operatorName: operatorName,
-                //    identity: "FileLister [jslhuawei:Vault]" + " [" + operatorName+"]",
-                //    group: operatorName,
-                //    cronExpression: "/30 * * ? * *",
-                //    fireOnceIfMissFired: false,
-                //    jobDataMap: new Dictionary<string, string>()
-                //    {
-                //        {"telcobrightProcessId", "106"},
-                //        {"operatorName", operatorName},
-                //        {"syncPair", "JslhuaweiDhk:Vault"}
-                //    }),
-            };
-            return fileListerInstances;
-        }
         private static List<QuartzTbDaemonConfig> GetLogFileJobCreatorInstances(string operatorName)
         {
             var telcobrightProcessInstances = new List<QuartzTbDaemonConfig>()
@@ -96,7 +76,28 @@ namespace InstallConfig
                 )
             };
             return telcobrightProcessInstances;
+
         }
+        private static List<QuartzTbDaemonConfig> GetCdrPreProcessorInstances(string operatorName)
+        {
+            var telcobrightProcessInstances = new List<QuartzTbDaemonConfig>()
+            {
+                new QuartzTbDaemonConfig(
+                    operatorName: operatorName,
+                    identity: "CdrPreProcessor" + " [" + operatorName+"]",
+                    @group: operatorName,
+                    fireOnceIfMissFired: false,
+                    cronExpression: "/5 * * ? * *",
+                    jobDataMap: new Dictionary<string, string>()
+                    {
+                        {"telcobrightProcessId", "120"},
+                        {"operatorName", operatorName}
+                    }
+                )
+            };
+            return telcobrightProcessInstances;
+        }
+
         private static List<QuartzTbDaemonConfig> GetOptimizerInstances(string operatorName)
         {
             //don't use foreach, do it manually for flixibility e.g. different repeating interval
@@ -136,54 +137,5 @@ namespace InstallConfig
             };
             return telcobrightProcessInstances;
         }
-        private static List<QuartzTbDaemonConfig> GetFileCopierInstances(string operatorName)
-        {
-            //don't use foreach, do it manually for flixibility e.g. different repeating interval
-            List<QuartzTbDaemonConfig> fileCopierInstances = new List<QuartzTbDaemonConfig>()
-            {
-                //new QuartzTbDaemonConfig
-                //(
-                //    operatorName: operatorName,
-                //    identity: "FileCopier [jslhuawei:Vault]" + " [" + operatorName+"]",
-                //    group: operatorName,
-                //    cronExpression: "/5 * * ? * *",
-                //    fireOnceIfMissFired: false,
-                //    jobDataMap: new Dictionary<string, string>()
-                //    {
-                //        {"telcobrightProcessId", "104"},
-                //        {"operatorName", operatorName},
-                //        {"syncPair", "JslhuaweiDhk:Vault"}
-                //    }),
-                //new QuartzTbDaemonConfig
-                //(
-                //    operatorName: operatorName,
-                //    identity: "FileCopier [Vault:FileArchive1]" + " [" + operatorName+"]",
-                //    group: operatorName,
-                //    cronExpression: "/5 * * ? * *",
-                //    fireOnceIfMissFired: false,
-                //    jobDataMap: new Dictionary<string, string>()
-                //    {
-                //        {"telcobrightProcessId", "104"},
-                //        {"operatorName", operatorName},
-                //        {"syncPair", "Vault:FileArchive1"}
-                //    }),
-
-                //new QuartzTbDaemonConfig
-                //(
-                //    operatorName: operatorName,
-                //    identity: "FileCopier [Vault:CAS]" + " [" + operatorName+"]",
-                //    group: operatorName,
-                //    cronExpression: "/5 * * ? * *",
-                //    fireOnceIfMissFired: false,
-                //    jobDataMap: new Dictionary<string, string>()
-                //    {
-                //        {"telcobrightProcessId", "104"},
-                //        {"operatorName", operatorName},
-                //        {"syncPair", "Vault:CAS"}
-                //    }),
-            };
-            return fileCopierInstances;
-        }
-
     }
 }

@@ -45,18 +45,18 @@ namespace InstallConfig.config._helper
 
         public static string getCasOperatorInfoFile()
         {
-            return new DirectoryInfo(FileAndPathHelperReadOnly.GetCurrentExecPath()).Parent.Parent.FullName + 
-                Path.DirectorySeparatorChar.ToString() + "config" + 
-                Path.DirectorySeparatorChar.ToString() + "allDeployment" + 
-                Path.DirectorySeparatorChar.ToString() + "cas" + 
-                Path.DirectorySeparatorChar.ToString() + "_helper" + 
+            return new DirectoryInfo(FileAndPathHelperReadOnly.GetCurrentExecPath()).Parent.Parent.FullName +
+                Path.DirectorySeparatorChar.ToString() + "config" +
+                Path.DirectorySeparatorChar.ToString() + "allDeployment" +
+                Path.DirectorySeparatorChar.ToString() + "cas" +
+                Path.DirectorySeparatorChar.ToString() + "_helper" +
                 Path.DirectorySeparatorChar.ToString() + "casOperatorInfo.xlsx";//add more
         }
 
 
         private static NeWrapperWithAdditionalInfo convertRowToNe(string[] row)
         {
-            ne ne = TemplateNeFactory.GetInstanceNe();          
+            ne ne = TemplateNeFactory.GetInstanceNe();
             ne.idSwitch = Convert.ToInt32(row[2]);
             ne.idCustomer = Convert.ToInt32(row[1]);
             ne.idcdrformat = Convert.ToInt32(row[10]);
@@ -67,19 +67,27 @@ namespace InstallConfig.config._helper
             ne.SkipCdrListed = Convert.ToInt32(row[14]);
             ne.BackupFileLocations = Convert.ToString(row[13]);
             ne.FilterDuplicateCdr = Convert.ToInt32(row[19]);
-            ne.SwitchName= Convert.ToString(row[6]);
+            ne.SwitchName = Convert.ToString(row[6]);
             ne.UseIdCallAsBillId = Convert.ToInt32(row[16]);
             ne.SourceFileLocations = Convert.ToString(row[18]);
 
             NeAdditionalSetting neAdditionalSetting = new NeAdditionalSetting()
             {
-                    ExpectedNoOfCdrIn24Hour = Convert.ToInt32(row[22]),
-                    AggregationStyle = Convert.ToString(row[23]),
-                    ProcessMultipleCdrFilesInBatch = Convert.ToBoolean(row[24]),
-                    PreDecodeAsTextFile = Convert.ToBoolean(row[25]),
-                    MaxConcurrentFilesForParallelPreDecoding = Convert.ToInt32(row[26]),
-                    MinRowCountToStartBatchCdrProcessing = Convert.ToInt32(row[27]),
-                    MaxNumberOfFilesInPreDecodedDirectory = Convert.ToInt32(row[28])
+                ExpectedNoOfCdrIn24Hour = Convert.ToInt32(row[22]),
+                AggregationStyle = Convert.ToString(row[23]),
+                ProcessMultipleCdrFilesInBatch = Convert.ToBoolean(Convert.ToInt32(row[24])),
+                PreDecodeAsTextFile = Convert.ToBoolean(Convert.ToInt32(row[25])),
+                MaxConcurrentFilesForParallelPreDecoding = Convert.ToInt32(row[26]),
+                MinRowCountToStartBatchCdrProcessing = Convert.ToInt32(row[27]),
+                MaxNumberOfFilesInPreDecodedDirectory = Convert.ToInt32(row[28]),
+                EventPreprocessingRules = new List<EventPreprocessingRule>()
+                {
+                    new CdrPredecoder()
+                    {
+                        RuleConfigData = new Dictionary<string,object>() { { "maxParallelFileForPreDecode", Convert.ToString(row[29])}},
+                        ProcessCollectionOnly = true//does not accept single event, only list of events e.g. multiple new cdr jobs
+                    }
+                }
             };
 
             return new NeWrapperWithAdditionalInfo(ne, neAdditionalSetting);
@@ -89,6 +97,6 @@ namespace InstallConfig.config._helper
             List<NeWrapperWithAdditionalInfo> nes = this.partnerWiseNesFromCsv[opId];
             return nes;
         }
-    } 
+    }
 }
 
