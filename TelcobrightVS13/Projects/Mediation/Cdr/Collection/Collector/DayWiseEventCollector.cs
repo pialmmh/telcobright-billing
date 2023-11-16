@@ -216,7 +216,7 @@ namespace TelcobrightMediation
                 List<DateTime> tableDatesToBeCreated =
                     newTablesToBeCreated.Select(t => requiredTableNamesPerDay[t]).ToList();
                 string templateSql = this.Decoder.getCreateTableSqlForUniqueEvent(this.CollectorInput);
-                string tablePrefix = this.Decoder.PartialTablePrefix;
+                string tablePrefix = this.Decoder.UniqueEventTablePrefix;
                 string tableStorageEngine = this.Decoder.PartialTableStorageEngine;
 
                 lock (_synchronouslockWhileExecutingDdl)

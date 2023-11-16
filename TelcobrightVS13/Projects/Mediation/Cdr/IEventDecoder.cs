@@ -11,12 +11,14 @@ namespace TelcobrightMediation
         int Id { get; }
         string HelpText { get; }
         CompressionType CompressionType { get; set; }
+        string UniqueEventTablePrefix { get; }
         string PartialTablePrefix { get; }
         string PartialTableStorageEngine { get; }
         string partialTablePartitionColName { get; }
         List<string[]> DecodeFile(CdrCollectorInputData decoderInputData,out List<cdrinconsistent> inconsistentCdrs);
         string getTupleExpression(Object data);
         string getCreateTableSqlForUniqueEvent(Object data);
+        string getCreateTableSqlForPartialEvent(Object data);
         string getSelectExpressionForUniqueEvent(Object data);
         string getWhereForHourWiseCollection(Object data);
         string getSelectExpressionForPartialCollection(Object data);

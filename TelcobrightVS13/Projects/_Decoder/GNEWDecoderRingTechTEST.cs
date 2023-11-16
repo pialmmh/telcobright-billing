@@ -22,7 +22,7 @@ namespace Decoders
         public override int Id => 56;
         public override string HelpText => "WTL Decoder Teleplus TEST";
         public override CompressionType CompressionType { get; set; }
-        public override string PartialTablePrefix { get; }
+        public override string UniqueEventTablePrefix { get; }
         public override string PartialTableStorageEngine { get; }
         public override string partialTablePartitionColName { get; }
         protected CdrCollectorInputData Input { get; set; }

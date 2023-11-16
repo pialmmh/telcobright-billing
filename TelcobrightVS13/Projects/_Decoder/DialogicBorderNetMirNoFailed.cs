@@ -24,7 +24,6 @@ namespace Decoders
         public override int Id => 26;
         public override string HelpText => "Decodes Dialogic BorderNet CSV CDR (Mir Telecom)";
         public override CompressionType CompressionType { get; set; }
-        public override string PartialTablePrefix { get; } = "zz_uniqueevent";
         public override string PartialTableStorageEngine { get; } = "innodb";
         public override string partialTablePartitionColName { get; } = "starttime";
         protected virtual CdrCollectorInputData Input { get; set; }

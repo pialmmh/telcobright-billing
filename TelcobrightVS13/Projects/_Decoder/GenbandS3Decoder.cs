@@ -20,7 +20,7 @@ namespace Decoders
         public override int Id => 1;
         public override string HelpText => "Decodes Genband S3 CDR.";
         public override CompressionType CompressionType { get; set; }
-        public override string PartialTablePrefix { get; }
+        public override string UniqueEventTablePrefix { get; }
         public override string PartialTableStorageEngine { get; }
         public override string partialTablePartitionColName { get; }
 

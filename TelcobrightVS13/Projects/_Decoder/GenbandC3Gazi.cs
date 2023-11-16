@@ -21,7 +21,7 @@ namespace Decoders
         public override int Id => 70;
         public override string HelpText => "Decodes GenbandC3 CSV CDR For Gazi";
         public override CompressionType CompressionType { get; set; }
-        public override string PartialTablePrefix { get; }
+        public override string UniqueEventTablePrefix { get; }
         public override string PartialTableStorageEngine { get; }
         public override string partialTablePartitionColName { get; }
         protected CdrCollectorInputData Input { get; set; }

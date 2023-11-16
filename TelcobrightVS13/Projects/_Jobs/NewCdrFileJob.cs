@@ -697,7 +697,7 @@ namespace Jobs
                 collectorInput: this.CollectorInput,
                 dbCmd: cmd, decoder: decoder,
                 decodedEvents: decodedCdrRows,//decoded rows
-                sourceTablePrefix: decoder.PartialTablePrefix);
+                sourceTablePrefix: decoder.UniqueEventTablePrefix);
             dayWiseEventCollector.createNonExistingTables();
             dayWiseEventCollector.collectTupleWiseExistingEvents(decoder);
             DuplicaterEventFilter<string[]> duplicaterEventFilter = new DuplicaterEventFilter<string[]>(dayWiseEventCollector);
@@ -728,7 +728,7 @@ namespace Jobs
                 collectorInput: this.CollectorInput,
                 dbCmd: cmd, decoder: decoder,
                 decodedEvents: decodedCdrRows,//decoded rows
-                sourceTablePrefix: decoder.PartialTablePrefix);
+                sourceTablePrefix: decoder.UniqueEventTablePrefix);
             dayWiseEventCollector.createNonExistingTables();
             dayWiseEventCollector.collectTupleWiseExistingEvents(decoder);
             DuplicaterEventFilter<string[]> duplicaterEventFilter = new DuplicaterEventFilter<string[]>(dayWiseEventCollector);
