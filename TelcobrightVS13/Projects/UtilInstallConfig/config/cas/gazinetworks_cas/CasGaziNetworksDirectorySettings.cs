@@ -47,7 +47,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = @"D:\telcobright\vault\resources\cdr\gaziNetworks\tdm\aug20",
+                StartingPath = @"D:\telcobright\vault\resources\CDR\gazinetworks\tdmKhlBogra\bogra",
                 User = "",
                 Pass = "",
             };
