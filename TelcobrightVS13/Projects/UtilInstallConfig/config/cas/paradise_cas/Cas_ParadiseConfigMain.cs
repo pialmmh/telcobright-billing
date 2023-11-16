@@ -4,6 +4,7 @@ using System.IO;
 using TelcobrightFileOperations;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Linq;
 using System.Text.RegularExpressions;
 using LibraryExtensions.ConfigHelper;
 using QuartzTelcobright;
@@ -37,19 +38,29 @@ namespace InstallConfig
 
         public override TelcobrightConfig GenerateFullConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
         {
-            var newTbc = new TelcobrightConfig(TelecomOperatortype.Icx, CasTbPartnerFactory
-                .GetTemplatePartner(this.IdOperator, this.CustomerName, this.DatabaseName));
-            newTbc.CdrSetting =new CasCdrSettingHelper().getTemplateCdrSettings();
-            this.PrepareDirectorySettings(newTbc);
-
+            this.Tbc.CdrSetting = new CasCdrSettingHelper().getTemplateCdrSettings();
+            this.PrepareDirectorySettings(this.Tbc);
             string csvPathForNe = CasNeInfoHelper.getCasOperatorInfoFile();
             CasNeInfoHelper neHelper = new CasNeInfoHelper(csvPathForNe);
-            newTbc.Nes = neHelper.getNesByOpId(this.IdOperator);
+
+            List<NeWrapperWithAdditionalInfo> neWrapperWithAdditionalInfo =
+                neHelper.getNesByOpId(this.Tbc.Telcobrightpartner.idCustomer);
+            this.Tbc.Nes = neWrapperWithAdditionalInfo.Select(wrapped => wrapped.ne).ToList();
+
+            var neWiseAdditionalSettings = new Dictionary<int, NeAdditionalSetting>();
+            foreach (NeWrapperWithAdditionalInfo wrapped in neWrapperWithAdditionalInfo)
+            {
+                var ne = wrapped.ne;
+                var additionalSetting = wrapped.neAdditionalSetting;
+                neWiseAdditionalSettings.Add(ne.idSwitch, additionalSetting);
+            }
+            this.Tbc.CdrSetting.NeWiseAdditionalSettings = neWiseAdditionalSettings;
+
             this.PrepareProductAndServiceConfiguration();
-            newTbc.ApplicationServersConfig = this.GetServerConfigs();
-            newTbc.DatabaseSetting = this.GetDatabaseConfigs();
-            newTbc.PortalSettings = GetPortalSettings(this.Tbc);
-            return newTbc;
+            this.Tbc.DatabaseSetting = this.GetDatabaseConfigs();
+            this.Tbc.ApplicationServersConfig = this.GetServerConfigs();
+            this.Tbc.PortalSettings = GetPortalSettings(this.Tbc);
+            return this.Tbc;
         }
     }
 }

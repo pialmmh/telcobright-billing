@@ -6,12 +6,27 @@ using System.Threading.Tasks;
 using MediationModel;
 using LibraryExtensions;
 using System.IO;
+using LogPreProcessor;
 using TelcobrightFileOperations;
+using TelcobrightMediation;
+
 namespace InstallConfig.config._helper
 {
+    public class NeWrapperWithAdditionalInfo
+    {
+        public ne ne { get; }
+        public NeAdditionalSetting neAdditionalSetting { get; }
+
+        public NeWrapperWithAdditionalInfo(ne ne, NeAdditionalSetting neAdditionalSetting)
+        {
+            this.ne = ne;
+            this.neAdditionalSetting = neAdditionalSetting;
+        }
+    }
     public class CasNeInfoHelper
     {
-        Dictionary<int, List<ne>> partnerWiseNesFromCsv = new Dictionary<int, List<ne>>();
+
+        Dictionary<int, List<NeWrapperWithAdditionalInfo>> partnerWiseNesFromCsv;
         private string casOpCsvFileName;
         public CasNeInfoHelper(string casOpCsvFileName)
         {
@@ -21,7 +36,7 @@ namespace InstallConfig.config._helper
             List<string[]> rows = ExcelHelper.parseExcellRows(this.casOpCsvFileName);
             this.partnerWiseNesFromCsv = rows.Where(r => r[20] == "0")
                 .Select(r => convertRowToNe(r))
-                .GroupBy(n => n.idCustomer)
+                .GroupBy(n => n.ne.idCustomer)
                 .ToDictionary(grouping => grouping.Key, grouping => grouping.ToList());
             ;
             //this.partnerWiseNesFromCsv = allNes.GroupBy(n => n.idCustomer).ToDictionary(g => g.Key, g => g.ToList());
@@ -39,7 +54,7 @@ namespace InstallConfig.config._helper
         }
 
 
-        private static ne convertRowToNe(string[] row)
+        private static NeWrapperWithAdditionalInfo convertRowToNe(string[] row)
         {
             ne ne = TemplateNeFactory.GetInstanceNe();          
             ne.idSwitch = Convert.ToInt32(row[2]);
@@ -56,12 +71,23 @@ namespace InstallConfig.config._helper
             ne.UseIdCallAsBillId = Convert.ToInt32(row[16]);
             ne.SourceFileLocations = Convert.ToString(row[18]);
 
-            return ne;
+            NeAdditionalSetting neAdditionalSetting = new NeAdditionalSetting()
+            {
+                    ExpectedNoOfCdrIn24Hour = Convert.ToInt32(row[22]),
+                    AggregationStyle = Convert.ToString(row[23]),
+                    ProcessMultipleCdrFilesInBatch = Convert.ToBoolean(row[24]),
+                    PreDecodeAsTextFile = Convert.ToBoolean(row[25]),
+                    MaxConcurrentFilesForParallelPreDecoding = Convert.ToInt32(row[26]),
+                    MinRowCountToStartBatchCdrProcessing = Convert.ToInt32(row[27]),
+                    MaxNumberOfFilesInPreDecodedDirectory = Convert.ToInt32(row[28])
+            };
+
+            return new NeWrapperWithAdditionalInfo(ne, neAdditionalSetting);
         }
-        public List<ne> getNesByOpId(int opId)
+        public List<NeWrapperWithAdditionalInfo> getNesByOpId(int opId)
         {
-            List<ne> Nes = this.partnerWiseNesFromCsv[opId];
-            return Nes;
+            List<NeWrapperWithAdditionalInfo> nes = this.partnerWiseNesFromCsv[opId];
+            return nes;
         }
     } 
 }

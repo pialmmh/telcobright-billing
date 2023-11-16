@@ -4,6 +4,7 @@ using System.IO;
 using TelcobrightFileOperations;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Linq;
 using System.Text.RegularExpressions;
 using LibraryExtensions.ConfigHelper;
 using QuartzTelcobright;
@@ -35,55 +36,27 @@ namespace InstallConfig
 
         public override TelcobrightConfig GenerateFullConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
         {
-
-            CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
-            CommonCdrValRulesGen commonCdrValRulesGen =
-                new CommonCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
-            InconsistentCdrValRulesGen inconsistentCdrValRulesGen =
-                new InconsistentCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
-            this.Tbc.CdrSetting = new CdrSetting()
-            {
-                EmptyFileAllowed = true,
-                SummaryTimeField = SummaryTimeFieldEnum.AnswerTime,
-                PartialCdrEnabledNeIds =
-                    new List<int>() { }, //7, was set to non-partial processing mode due to duplicate billid problem.
-                PartialCdrFlagIndicators = new List<string>() { }, //{"1", "2", "3"},
-                DescendingOrderWhileListingFiles = false,
-                DescendingOrderWhileProcessingListedFiles = false,
-                ValidationRulesForCommonMediationCheck = commonCdrValRulesGen.GetRules(),
-                ValidationRulesForInconsistentCdrs = inconsistentCdrValRulesGen.GetRules(),
-                ServiceGroupConfigurations = CasServiceGroupHelper.GetServiceGroupConfigurations(),
-                DisableCdrPostProcessingJobCreationForAutomation = false,
-                BatchSizeForCdrJobCreationCheckingExistence = 10000,
-                DisableParallelMediation = false,
-                AutoCorrectDuplicateBillId = false,
-                AutoCorrectBillIdsWithPrevChargeableIssue = true,
-                AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
-                ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>(),
-                BatchSizeWhenPreparingLargeSqlJob = 100000,
-                SkipSettingsForSummaryOnly = new SkipSettingsForSummaryOnly
-                {
-                    SkipCdr = false,
-                    SkipChargeable = true,
-                    SkipTransaction = true,
-                    SkipHourlySummary = true,
-                },
-                useCasStyleProcessing = true
-            };
-            //this.Tbc.CdrSetting =new CasCdrSettingHelper().getTemplateCdrSettings();
-
+            this.Tbc.CdrSetting = new CasCdrSettingHelper().getTemplateCdrSettings();
             this.PrepareDirectorySettings(this.Tbc);
-
-
             string csvPathForNe = CasNeInfoHelper.getCasOperatorInfoFile();
             CasNeInfoHelper neHelper = new CasNeInfoHelper(csvPathForNe);
-            this.Tbc.Nes = neHelper.getNesByOpId(this.Tbc.Telcobrightpartner.idCustomer);
 
+            List<NeWrapperWithAdditionalInfo> neWrapperWithAdditionalInfo =
+                neHelper.getNesByOpId(this.Tbc.Telcobrightpartner.idCustomer);
+            this.Tbc.Nes = neWrapperWithAdditionalInfo.Select(wrapped => wrapped.ne).ToList();
 
+            var neWiseAdditionalSettings = new Dictionary<int, NeAdditionalSetting>();
+            foreach (NeWrapperWithAdditionalInfo wrapped in neWrapperWithAdditionalInfo)
+            {
+                var ne = wrapped.ne;
+                var additionalSetting = wrapped.neAdditionalSetting;
+                neWiseAdditionalSettings.Add(ne.idSwitch, additionalSetting);
+            }
+            this.Tbc.CdrSetting.NeWiseAdditionalSettings = neWiseAdditionalSettings;
 
             this.PrepareProductAndServiceConfiguration();
-            this.Tbc.ApplicationServersConfig = this.GetServerConfigs();
             this.Tbc.DatabaseSetting = this.GetDatabaseConfigs();
+            this.Tbc.ApplicationServersConfig = this.GetServerConfigs();
             this.Tbc.PortalSettings = GetPortalSettings(this.Tbc);
             return this.Tbc;
         }

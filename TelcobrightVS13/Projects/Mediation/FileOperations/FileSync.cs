@@ -235,7 +235,17 @@ namespace TelcobrightFileOperations
                     string tempFile = dstInfoLocal.FullPath + tempExt;
                     try
                     {
-                        remoteFileInfo= session.GetFileInfo(srcInfoRemote.FullPath);
+                        //remoteFileInfo= session.GetFileInfo(srcInfoRemote.FullPath);
+                        if (session.FileExists(srcInfoRemote.FullPath))
+                        {
+                            remoteFileInfo = session.GetFileInfo(srcInfoRemote.FullPath);   
+                        }
+                        else
+                        {
+                            srcInfoRemote.FullPath = alternateDownloadPathFromSecondaryDir;
+                            remoteFileInfo = session.GetFileInfo(srcInfoRemote.FullPath);
+                            alreadyDownloadingFromSecondaryDir = true;
+                        }
                     }
                     catch (Exception e)
                     {
