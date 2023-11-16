@@ -9,18 +9,19 @@ using TelcobrightMediation.Mediation.Cdr;
 using System.Linq;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using LibraryExtensions;
 
 namespace Decoders
 {
 
     [Export("Decoder", typeof(AbstractCdrDecoder))]
-    public class TelcobridgeDecodingGaziTEST : AbstractCdrDecoder
+    public class TelcobridgeDecoderGazi : AbstractCdrDecoder
     {
         public override string ToString() => this.RuleName;
         public override string RuleName => GetType().Name;
         public override int Id => 57;
-        public override string HelpText => "WTL Decoder Teleplus TEST";
+        public override string HelpText => "Gazi Telcobridge";
         public override CompressionType CompressionType { get; set; }
         public override string PartialTablePrefix { get; }
         public override string PartialTableStorageEngine { get; }
@@ -36,7 +37,8 @@ namespace Decoders
             return dateTime;
         }
 
-        public override List<string[]> DecodeFile(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs)
+        public override List<string[]> DecodeFile(CdrCollectorInputData input,
+            out List<cdrinconsistent> inconsistentCdrs)
         {
             this.Input = input;
             string fileName = this.Input.FullPath;
@@ -56,22 +58,30 @@ namespace Decoders
             List<cdrfieldmappingbyswitchtype> fieldMappings = null;
 
             foreach (string ln in linesAsString)
-
             {
                 lineAsArr = ln.Split(',');
-                if(lineAsArr.Length < 5)
-                    continue;             
-                //string chargingStatus = lineAsArr[3] == "S" ? "1" : "0"; //done
-                //if (chargingStatus != "1") continue;
                 string[] textCdr = new string[input.MefDecodersData.Totalfieldtelcobright];
 
+                string durationStr = lineAsArr[7].Trim();
+                double durationSec = 0;
+                double.TryParse(durationStr, out durationSec);
+                if (durationSec <= 0) continue;
+                string callStatus = lineAsArr[0].Trim();
+                if (!string.Equals(callStatus, "End")) continue;
+
+                textCdr[Fn.UniqueBillId] = lineAsArr[2].Trim();
+                textCdr[Fn.Partialflag] = "1";// all telcobridge cdrs are partial
+                textCdr[Fn.DurationSec] = lineAsArr[7].Trim();
+
+                //originate or answer, intrunk taken from "originate" let, outtrunk from "answer" leg
+                textCdr[Fn.InTrunkAdditionalInfo] = lineAsArr[16].Trim().ToLower();
 
                 string startTime = lineAsArr[4].Trim();
                 if (!string.IsNullOrEmpty(startTime))
                 {
                     startTime = parseStringToDate(startTime).ToString("yyyy-MM-dd HH:mm:ss");
                 }
-                
+
                 string connectTime = lineAsArr[5].Trim();
                 if (!string.IsNullOrEmpty(connectTime))
                 {
@@ -84,8 +94,6 @@ namespace Decoders
                     endTime = parseStringToDate(endTime).ToString("yyyy-MM-dd HH:mm:ss");
                 }
 
-
-
                 textCdr[Fn.Filename] = fileName;
                 textCdr[Fn.Switchid] = Input.Ne.idSwitch.ToString();
 
@@ -95,48 +103,78 @@ namespace Decoders
                 textCdr[Fn.TerminatingCallingNumber] = lineAsArr[8].Trim();
                 textCdr[Fn.TerminatingCalledNumber] = lineAsArr[9].Trim();
 
-                textCdr[Fn.DurationSec] = lineAsArr[7].Trim();
 
                 textCdr[Fn.IncomingRoute] = lineAsArr[12].Trim();
                 textCdr[Fn.OutgoingRoute] = lineAsArr[11].Trim();
-
-                //textCdr[Fn.Originatingip] = lineAsArr[13].Trim();
-                //textCdr[Fn.TerminatingIp] = lineAsArr[14].Trim();
-
 
                 textCdr[Fn.StartTime] = startTime;
                 textCdr[Fn.Endtime] = endTime;
                 textCdr[Fn.ConnectTime] = connectTime;
 
-                textCdr[Fn.UniqueBillId] = lineAsArr[2].Trim();
-
                 lineAsArr[0].Trim();
 
-
                 string status = lineAsArr[0].Trim().ToLower();
-                if(status == "end")
-                    textCdr[Fn.Partialflag] = "0";
-                else
-                    textCdr[Fn.Partialflag] = "1";
+                
 
 
                 textCdr[Fn.Validflag] = "1";
 
-                string seqNumber = lineAsArr[3].Remove(0,2); 
+                string seqNumber = lineAsArr[3].Remove(0, 2);
                 seqNumber = Int64.Parse(seqNumber, System.Globalization.NumberStyles.HexNumber).ToString();
                 textCdr[Fn.Sequencenumber] = seqNumber;
 
-
                 decodedRows.Add(textCdr);
             }
-
             return decodedRows;
-
         }
 
-        public override string getTupleExpression(Object data)
+        public override object Aggregate(object data, out object instancesRemainedUnaggregated)
         {
-            throw new NotImplementedException();
+            List<string[]> rowsToAggregate= ((List<string[]>)data).OrderBy(row=>row[Fn.StartTime]).ToList();
+            string[] aggregatedRow = rowsToAggregate.Last();
+            List <string[]> rowsOtherThanAggregatedInstance= new List<string[]>();
+            string incomingRoute ="", outgoingRoute="";
+            Dictionary<string, int> occuranceCountOfRoutes= new Dictionary<string, int>();
+            Action<string> incrementRouteCount = route =>
+            {
+                if (occuranceCountOfRoutes.ContainsKey(route))
+                {
+                    occuranceCountOfRoutes[route]++;
+                }
+                else
+                {
+                    occuranceCountOfRoutes.Add(route, 1);
+                }
+            };
+            foreach (string[] row in rowsToAggregate)
+            {
+                if (row[Fn.IdCall] != aggregatedRow[Fn.IdCall])
+                {
+                    rowsOtherThanAggregatedInstance.Add(row);
+                }
+                if (row[Fn.InTrunkAdditionalInfo]== "originate")
+                {
+                    string route = row[Fn.IncomingRoute];
+                    incomingRoute = route;
+                    incrementRouteCount(route);
+                }
+                else if (row[Fn.InTrunkAdditionalInfo] == "answer")
+                {
+                    string route = row[Fn.OutgoingRoute];
+                    outgoingRoute = route;
+                    incrementRouteCount(route);
+                }
+            }
+            if (occuranceCountOfRoutes[incomingRoute]!=3 || 
+                occuranceCountOfRoutes[outgoingRoute]!=1)
+            {
+                throw new Exception("Occurance of incomingroute must be 3, occurance of outgoingroute must be 1.");
+            }
+            aggregatedRow[Fn.IncomingRoute] = incomingRoute;
+            aggregatedRow[Fn.OutgoingRoute] = outgoingRoute;
+            aggregatedRow[Fn.Partialflag] = "0";
+            instancesRemainedUnaggregated = rowsOtherThanAggregatedInstance;//out param
+            return aggregatedRow;
         }
 
         public override string getCreateTableSqlForUniqueEvent(Object data)

@@ -24,6 +24,7 @@ namespace TelcobrightMediation
         object convertDbReaderRowToUniqueEventTuple(object data);
         object convertDbReaderRowToObject(object data);
         IEventDecoder createNewNonSingletonInstance();
+        object Aggregate (object data, out object instancesRemainedUnaggregated);
     }
     
 }

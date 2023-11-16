@@ -35,8 +35,7 @@ namespace TelcobrightMediation.Cdr.Collection.PreProcessors
                 {
                     Key=g.Key,
                     Item= g.First()
-                })
-                .ToDictionary(a => a.Key, a=>a.Item);
+                }).ToDictionary(a => a.Key, a=>a.Item);
             foreach (var kv in EventCollector.TupleWiseDecodedEvents)
             {
                 string tuple = kv.Key;

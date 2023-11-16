@@ -379,6 +379,7 @@
     <Compile Include="config\allDeployment\cas\_helper\TemplateNe.cs" />
     <Compile Include="generators\DeploymentHelper.cs" />
     <Compile Include="config\cas\_dbscripts\seedData\sql\DomesticRateplaneAssignmentForCAS.cs" />
+    <Compile Include="generators\telcoBilling\MySqlPermissionManager.cs" />
     <Compile Include="generators\telcoBilling\TelcoBillingConfigGenerator.cs" />
     <Compile Include="generators\telcoBilling\TelcoBillingQuartzWriter.cs" />
     <Compile Include="generators\BIllingRulesDefiner.cs" />
@@ -441,6 +442,7 @@
     <Compile Include="util\CommonValidationRulesGenerator\CommonCdrValRulesGen.cs" />
     <Compile Include="generators\telcoBilling\TelcoBillingMenu.cs" />
     <None Include="app.manifest" />
+    <None Include="config\allDeployment\cas\_helper\casOperatorInfo.xlsx" />
     <None Include="config\cas\btrc_cas\summit.conf" />
     <None Include="config\btel\btel.conf" />
     <None Include="config\btel\scripts\apppools.xml.bak" />

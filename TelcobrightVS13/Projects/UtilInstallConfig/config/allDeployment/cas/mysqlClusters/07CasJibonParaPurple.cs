@@ -23,7 +23,7 @@ namespace InstallConfig
                     MySqlVersion = MySqlVersion.MySql57,
                     BindAddressForAutomation = new BindAddress
                     {
-                        IpAddressOrHostName = new IpAddressOrHostName { Address = "10.100.150.26" },
+                        IpAddressOrHostName = new IpAddressOrHostName { Address = "172.16.1.27" },
                         Port = 3306
                     },
                     RootUserForAutomation = "root",

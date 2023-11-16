@@ -25,7 +25,7 @@ namespace InstallConfig
     {
         public override TelcobrightConfig Tbc { get; set; }
         public override int IdOperator { get; set; } = 24;
-        public override string CustomerName { get; set; } = "Mother Telecom Ltd.";
+        public override string CustomerName { get; set; } = "Mother Telecommunication";
         public override string DatabaseName { get; set; } = "mothertelecom_cas";
 
         public CasMotherTelecomAbstractConfigGenerator()

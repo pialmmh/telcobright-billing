@@ -149,7 +149,7 @@ namespace Jobs
         private NewCdrPreProcessor filterDuplicates(NewCdrPreProcessor preProcessor, CdrSetting cdrSetting, Dictionary<long, CdrMergedJobError> jobsWithDupCdrsDuringMergeProcessing)
         {
             Console.WriteLine("CdrJobProcessor: Filtering duplicates...");
-            preProcessor = this.filterDuplicates(preProcessor);
+            preProcessor = this.filterDuplicateCdrs(preProcessor);
 
             Dictionary<string, List<string[]>> billIdWiseDuplicateRows =
                 preProcessor.TxtCdrRows.GroupBy(r => r[Fn.UniqueBillId])
@@ -686,7 +686,7 @@ namespace Jobs
                 cmd.ExecuteNonQuery();
             }
         }
-        public NewCdrPreProcessor filterDuplicates(NewCdrPreProcessor preProcessorWithCollectedRows)
+        public NewCdrPreProcessor filterDuplicateCdrs(NewCdrPreProcessor preProcessorWithCollectedRows)
         {
             AbstractCdrDecoder decoder = preProcessorWithCollectedRows.Decoder;
             List<string[]> decodedCdrRows = preProcessorWithCollectedRows.TxtCdrRows;
@@ -702,7 +702,8 @@ namespace Jobs
             dayWiseEventCollector.collectTupleWiseExistingEvents(decoder);
             DuplicaterEventFilter<string[]> duplicaterEventFilter = new DuplicaterEventFilter<string[]>(dayWiseEventCollector);
             List<string[]> excludedDuplicateCdrs = null;
-            Dictionary<string, string[]> finalNonDuplicateEvents = duplicaterEventFilter.filterDuplicateCdrs(out excludedDuplicateCdrs);
+            Dictionary<string, string[]> finalNonDuplicateEvents = 
+                duplicaterEventFilter.filterDuplicateCdrs(out excludedDuplicateCdrs);
 
             preProcessorWithCollectedRows.FinalNonDuplicateEvents = finalNonDuplicateEvents;
 
@@ -715,6 +716,38 @@ namespace Jobs
             };
             return textCdrCollectionPreProcessor;
         }
+
+        public NewCdrPreProcessor aggregateCdrs(NewCdrPreProcessor preProcessorWithCollectedRows)
+        {
+            AbstractCdrDecoder decoder = preProcessorWithCollectedRows.Decoder;
+            List<string[]> decodedCdrRows = preProcessorWithCollectedRows.TxtCdrRows;
+            List<cdrinconsistent> cdrinconsistents = preProcessorWithCollectedRows.InconsistentCdrs.ToList();
+            DbCommand cmd = this.CollectorInput.CdrJobInputData.Context.Database.Connection.CreateCommand();
+            DayWiseEventCollector<string[]> dayWiseEventCollector = new DayWiseEventCollector<string[]>
+            (uniqueEventsOnly: true,
+                collectorInput: this.CollectorInput,
+                dbCmd: cmd, decoder: decoder,
+                decodedEvents: decodedCdrRows,//decoded rows
+                sourceTablePrefix: decoder.PartialTablePrefix);
+            dayWiseEventCollector.createNonExistingTables();
+            dayWiseEventCollector.collectTupleWiseExistingEvents(decoder);
+            DuplicaterEventFilter<string[]> duplicaterEventFilter = new DuplicaterEventFilter<string[]>(dayWiseEventCollector);
+            List<string[]> excludedDuplicateCdrs = null;
+            Dictionary<string, string[]> finalNonDuplicateEvents =
+                duplicaterEventFilter.filterDuplicateCdrs(out excludedDuplicateCdrs);
+
+            preProcessorWithCollectedRows.FinalNonDuplicateEvents = finalNonDuplicateEvents;
+
+            var textCdrCollectionPreProcessor = new NewCdrPreProcessor(finalNonDuplicateEvents.Values.ToList(), cdrinconsistents,
+                this.CollectorInput)
+            {
+                FinalNonDuplicateEvents = finalNonDuplicateEvents,
+                DuplicateEvents = excludedDuplicateCdrs,
+                Decoder = decoder
+            };
+            return textCdrCollectionPreProcessor;
+        }
+
 
     }
 }

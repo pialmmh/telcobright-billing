@@ -115,8 +115,11 @@ namespace TelcobrightMediation
             return (IEventDecoder)Activator.CreateInstance(t);
         }
 
-       
-
+        public virtual object Aggregate(object data, out object instancesRemainedUnaggregated)
+        {
+            throw new NotImplementedException();
+        }
+        
         private static string getSessionId(string[] row)
         {
             string sessionId = row[Fn.UniqueBillId];

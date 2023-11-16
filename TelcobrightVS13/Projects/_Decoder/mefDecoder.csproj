@@ -105,7 +105,7 @@
     <Compile Include="GenbandC3CrossWorld.cs" />
     <Compile Include="GenbandC3DecoderBangla.cs" />
     <Compile Include="HuaweiSoftx3000DecoderBtcl.cs" />
-    <Compile Include="TelcobridgeDecodingGaziTEST.cs" />
+    <Compile Include="TelcobridgeDecoderGazi.cs" />
     <Compile Include="GNEWDecoderRingTechTEST.cs" />
     <Compile Include="WTLDecoderTeleplusTEST.cs" />
     <Compile Include="CataleyaCsvDecoderCWLNoFailed.cs" />

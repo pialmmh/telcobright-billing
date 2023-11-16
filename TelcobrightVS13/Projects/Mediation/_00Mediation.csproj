@@ -222,6 +222,7 @@
     <Compile Include="Cdr\Collection\PreProcessors\CdrAndInConsistentWrapper.cs" />
     <Compile Include="Cdr\Collection\PreProcessors\CdrErrorPreProcessor.cs" />
     <Compile Include="Cdr\Collection\PreProcessors\AbstractCdrReProcessingPreProcessor.cs" />
+    <Compile Include="Cdr\Collection\PreProcessors\TelcobridgeStyleAggregator.cs" />
     <Compile Include="Cdr\Collection\PreProcessors\DuplicaterEventFilter.cs" />
     <Compile Include="Cdr\Collection\RowIdsCollectionForSingleDay.cs" />
     <Compile Include="Cdr\EventDateTimeHelper.cs" />

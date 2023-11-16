@@ -173,7 +173,8 @@ namespace InstallConfig
                         goto Start;
                         break;
                     case '8':
-                        setupMySqlUsersAndPermissions();
+                        MySqlPermissionManager permissionManager= new MySqlPermissionManager(this.Deploymentprofile.MySqlClusters);
+                        permissionManager.setupMySqlUsersAndPermissions();
                         Console.WriteLine("Mysql users and permissions setup completed successfully.");
                         Console.WriteLine("Press any key to return.");
                         Console.Read();
@@ -188,54 +189,7 @@ namespace InstallConfig
             }
         }
 
-        void setupMySqlUsersAndPermissions()
-        {
-            Dictionary<string, MySqlCluster> clusters = this.Deploymentprofile.MySqlClusters;
-            Dictionary<string, MySqlServer> mySqlServers = clusters.Values.Select(cl =>
-            {
-                var servers = new List<MySqlServer> {cl.Master};
-                servers.AddRange(cl.Slaves);
-                return servers;
-            }).SelectMany(servers=>servers).OrderBy(server=>server.FriendlyName)
-            .GroupBy(server=>server.FriendlyName).ToDictionary(g=>g.Key,g=>g.First());
-
-            Menu menu = new Menu(mySqlServers.Keys, "Select a mysql instance to configure:", "a");
-            List<string> choices = menu.getChoices();
-            foreach (var choice in choices)
-            {
-                MySqlServer mySqlServer = mySqlServers[choice];
-                DatabaseSetting dbSettingForAutomation = new DatabaseSetting
-                {
-                    ServerName = mySqlServer.BindAddressForAutomation.IpAddressOrHostName.Address,
-                    WriteUserNameForApplication = mySqlServer.RootUserForAutomation,
-                    WritePasswordForApplication = mySqlServer.RootPasswordForAutomation,
-                    DatabaseName = "mysql"
-                };
-                string constr = DbUtil.getDbConStrWithDatabase(dbSettingForAutomation);
-                using (MySqlConnection con = new MySqlConnection(constr))
-                {
-                    MySqlSession mySqlSession= new MySqlSession(con);
-                    //mySqlSession.executeCommand();
-                    MySqlCommandGenerator comamndGenerator= new MySqlCommandGenerator();
-                    Dictionary<string, List<string>> userVsCreateScript = mySqlServer.Users
-                        .Select(user => new
-                        {
-                            userName=user.Username,
-                            script= comamndGenerator.createMySqlUserTelcobrightStyle(user)
-                        }).ToDictionary(a=>a.userName, a=>a.script);
-                    foreach (var kv in userVsCreateScript)
-                    {
-                        string username = kv.Key;
-                        Console.WriteLine("Creating mysql user for:" + username);
-                        List<string> commands = kv.Value;
-                        foreach (var command in commands)
-                        {
-                            mySqlSession.executeCommand(command);
-                        }
-                    }
-                }
-            }
-        }
+        
         void generateConfig()
         {
             List<TelcobrightConfig> selectedTbcs = getSelectedTbcs();
