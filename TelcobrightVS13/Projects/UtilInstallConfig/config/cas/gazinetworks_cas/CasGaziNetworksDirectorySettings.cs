@@ -47,7 +47,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = @"D:\telcobright\vault\resources\CDR\gazinetworks\tdmKhlBogra\bogra",
+                StartingPath = @"D:\telcobright\vault\resources\cdr\gaziNetworks\tdmKhlBogra\Bogra\aggregation_testing_dont_delete",
                 User = "",
                 Pass = "",
             };

@@ -22,6 +22,11 @@ namespace InstallConfig.config._helper
             this.ne = ne;
             this.neAdditionalSetting = neAdditionalSetting;
         }
+
+        public override string ToString()
+        {
+            return this.ne.idSwitch + "-" + this.ne.SwitchName;
+        }
     }
     public class CasNeInfoHelper
     {

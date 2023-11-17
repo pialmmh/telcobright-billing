@@ -207,8 +207,8 @@ namespace InstallConfig
                 tbc.SchedulerDaemonConfigs = configGenerator.GetSchedulerDaemonConfigs();
                 TelcoBillingConfigGenerator generator = new TelcoBillingConfigGenerator(tbc, this.ConfigPathHelper, this.ConsoleUtil, this.DdlScripts,
                     this.SeedDataScripts);
-                generator.writeConfig();
                 generator.LoadDdlScripts();
+                generator.writeConfig();
                 generator.LoadSeedData();
                 generator.LoadAdditionalSeedData();
                 configureQuarzJobStore(tbc);
