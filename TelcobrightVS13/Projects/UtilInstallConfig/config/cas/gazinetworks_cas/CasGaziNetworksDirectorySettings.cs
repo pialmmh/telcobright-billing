@@ -40,6 +40,18 @@ namespace InstallConfig
                 Pass = "",
             };
 
+            FileLocation vaultKhlKhulna = new FileLocation()
+            {
+                Name = "Vault.TelcobridgeKhulna",//this is refered in ne table, name MUST start with "Vault"
+                LocationType = "vault",//locationtype always lowercase
+                OsType = "windows",
+                PathSeparator = @"\",
+                ServerIp = "",
+                StartingPath = @"D:\telcobright\vault\resources\cdr\gaziNetworks\tdmKhlBogra\Khulna",
+                User = "",
+                Pass = "",
+            };
+
             FileLocation vaultKhlBogra = new FileLocation()
             {
                 Name = "Vault.TelcobridgeBogra",//this is refered in ne table, name MUST start with "Vault"
@@ -52,7 +64,6 @@ namespace InstallConfig
                 Pass = "",
             };
 
-           
 
             FileLocation vaultcataliya = new FileLocation()
             {

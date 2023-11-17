@@ -14,6 +14,7 @@ using TelcobrightMediation.Config;
 namespace Process
 {
 
+    [DisallowConcurrentExecution]
     [Export("TelcobrightProcess", typeof(AbstractTelcobrightProcess))]
     public class CdrJobCreator : AbstractTelcobrightProcess
     {
@@ -107,6 +108,9 @@ namespace Process
                             return (currentTime - f.CreationTime).TotalSeconds > minDurationToSkip;
                         }).ToList();
 
+                        Console.WriteLine(
+                            $"Found {fileInfos.Count} cdr files in vault, excluding duplicates...");
+
                         FileSplitSetting fileSplitSetting = tbc.CdrSetting.FileSplitSetting;
                         if (fileSplitSetting != null)
                         {
@@ -121,10 +125,6 @@ namespace Process
 
 
                         //most of the files should be finished written by now, still...
-                        //double check if file is still being written, by trying exclusive f open
-                        //var templist = fileInfos;//add logic to check if this file already exists in job table
-                        //fileInfos = new List<FileInfo>();
-                      
                         Dictionary<string, FileInfo> newJobNameVsFileInfos = fileInfos
                             .Select(f => // kv<jobName,fileName>
                                 new
@@ -145,8 +145,7 @@ namespace Process
                             }
                         }
                         //*************
-                        Console.WriteLine(
-                            $"Found {fileInfos.Count} new files with no prev job, checking exclusive lock...");
+                        Console.WriteLine($"Checking exclusive lock...");
                         FileAndPathHelperMutable pathHelper = new FileAndPathHelperMutable();
                         var templist = new List<FileInfo>();
                         foreach (var fileInfo in fileInfos)
@@ -171,7 +170,7 @@ namespace Process
                                 if (tbc.CdrSetting.BatchSizeForCdrJobCreationCheckingExistence ==
                                     newJobCacheForWritingAtOnceToDB.Count)
                                 {
-                                    writeJobs(context, thisSwitch, newJobCacheForWritingAtOnceToDB);
+                                    writeJobs(context, thisSwitch, newJobCacheForWritingAtOnceToDB,existingJobNames.Count);
                                     newJobCacheForWritingAtOnceToDB = new List<job>();
                                 }
                             }
@@ -182,7 +181,7 @@ namespace Process
                             //}
                         }
                         if (newJobCacheForWritingAtOnceToDB.Count > 0)
-                            writeJobs(context, thisSwitch, newJobCacheForWritingAtOnceToDB);
+                            writeJobs(context, thisSwitch, newJobCacheForWritingAtOnceToDB,existingJobNames.Count);
                     } //try
                     catch (Exception e1)
                     {
@@ -217,20 +216,18 @@ namespace Process
                 .ToList();
             return existingJobNames.ToDictionary(n => n);
         }
-        private static void writeJobs(PartnerEntities context, ne thisSwitch, List<job> newJobCacheForWritingAtOnceToDB)
+        private static void writeJobs(PartnerEntities context, ne thisSwitch, List<job> newJobCacheForWritingAtOnceToDB,
+            int existingCount)
         {
             if (!newJobCacheForWritingAtOnceToDB.Any())
             {
                 Console.WriteLine(" No new cdr file found, exiting...");
             }
-            Console.WriteLine(
-                $"Found {newJobCacheForWritingAtOnceToDB.Count} cdr files in vault, excluding duplicates...");
             Console.WriteLine("Writing " + newJobCacheForWritingAtOnceToDB.Count + " cdr jobs to db...");
             context.jobs.AddRange(newJobCacheForWritingAtOnceToDB);
             context.SaveChanges();
             Console.WriteLine("switch: " + thisSwitch.SwitchName + ", new cdr job created:"
-                                + newJobCacheForWritingAtOnceToDB.Count + ", already existing:" +
-                                newJobCacheForWritingAtOnceToDB.Count);
+                                + newJobCacheForWritingAtOnceToDB.Count + ", already existing:" + existingCount);
             newJobCacheForWritingAtOnceToDB = new List<job>();
         }
 

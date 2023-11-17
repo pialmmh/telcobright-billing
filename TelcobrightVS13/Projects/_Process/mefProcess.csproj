@@ -116,14 +116,14 @@
     <Compile Include="AccountingHelper.cs" />
     <Compile Include="CdrErrorJobCreator.cs" />
     <Compile Include="EventPreProcessor.cs" />
-    <Compile Include="CompressedFileHelperForVault.cs" />
-    <Compile Include="FilebasedDuplicateJobNameChecker.cs" />
+    <Compile Include="helper\CompressedFileHelperForVault.cs" />
+    <Compile Include="helper\FilebasedDuplicateJobNameChecker.cs" />
     <Compile Include="ProcessInvoiceGenerator.cs" />
     <Compile Include="FileLister.cs" />
     <Compile Include="CdrJobCreator.cs" />
     <Compile Include="AutoCreateJob.cs" />
     <Compile Include="Optimizer.cs" />
-    <Compile Include="PaymentProcessor.cs" />
+    <Compile Include="helper\PaymentProcessor.cs" />
     <Compile Include="FileCopier.cs" />
     <Compile Include="CdrJobProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

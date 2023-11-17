@@ -23,6 +23,7 @@ using TelcobrightMediation.Config;
 using TelcobrightMediation;
 namespace Process
 {
+    [DisallowConcurrentExecution]
     [Export("TelcobrightProcess", typeof(AbstractTelcobrightProcess))]
     public class ProcessInvoiceGenerator : AbstractTelcobrightProcess
     {
