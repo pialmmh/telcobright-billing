@@ -465,7 +465,11 @@ namespace Jobs
                         collectorinput.Tbc.CdrSetting.SummaryTimeField, txtRow);
                 if (cdrSetting.AutoCorrectDuplicateBillId == true)
                 {
-
+                    if (this.Input.NeAdditionalSetting!=null &&
+                     !this.Input.NeAdditionalSetting.AggregationStyle.IsNullOrEmptyOrWhiteSpace())
+                    {
+                        throw new Exception("Autocorrect Duplicate BillId not supported when cdr aggregation is enabled.");
+                    }
                 }
             });
             MefValidator<string[]> inconistentValidator =
@@ -481,9 +485,11 @@ namespace Jobs
             }
             else
             {
-                //preProcessor.TxtCdrRows =
-                //  preProcessor.FilterCdrsWithDuplicateBillIdsAsInconsistent(preProcessor.TxtCdrRows);
-                preProcessor.TxtCdrRows.AsParallel().ForAll(row => row[Fn.Partialflag] = "0");
+                if (this.Input.NeAdditionalSetting == null ||
+                    this.Input.NeAdditionalSetting.AggregationStyle.IsNullOrEmptyOrWhiteSpace())
+                {
+                    preProcessor.TxtCdrRows.AsParallel().ForAll(row => row[Fn.Partialflag] = "0");
+                }
             }
 
             if (cdrSetting.AutoCorrectBillIdsWithPrevChargeableIssue == true)
@@ -501,6 +507,10 @@ namespace Jobs
                 preProcessor.TxtCdrRows = preProcessor.TxtCdrRows
                     .Where(c => !inconsistentIdCalls.Contains(Convert.ToInt64(c[Fn.IdCall])))
                     .ToList();
+                foreach (var cdrinconsistent in preProcessor.InconsistentCdrs)
+                {
+                    preProcessor.OriginalCdrinconsistents.Add(cdrinconsistent);
+                }
             }
 
         }

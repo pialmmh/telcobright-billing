@@ -24,6 +24,7 @@ using TelcobrightMediation.Config;
 using System.IO;
 using System.Text;
 using System.Threading;
+using TelcobrightMediation.Mediation.Cdr;
 
 namespace LogPreProcessor
 {
@@ -59,6 +60,10 @@ namespace LogPreProcessor
                 NewCdrPreProcessor newCdrPreProcessor =
                     (NewCdrPreProcessor)this.NewCdrFileJobNewInstance.PreprocessJob(preProcessorInput); //EXECUTE preDecoding
                 List<string[]> txtRows = newCdrPreProcessor.TxtCdrRows;
+
+                List<string[]> cdrInconsistents = newCdrPreProcessor.OriginalCdrinconsistents
+                    .Select(c => CdrConversionUtil.ConvertCdrinconsistentToTxtRow(c, txtRows.First().Length)).ToList();
+                txtRows.AddRange(cdrInconsistents);
                 List<string> rowsAsCsvLinesFieldsEnclosedWithBacktick =
                     txtRows.Select(row => string.Join(",",
                             row.Select(field => new StringBuilder("`").Append(field).Append("`").ToString()).ToArray()))
@@ -84,6 +89,7 @@ namespace LogPreProcessor
     {
         public job SuccessfulJob { get; set; }
         public job FailedJob { get; set; }
+        public string ExceptionMessage { get; set; }
     }
     [Export("LogPreprocessor", typeof(EventPreprocessingRule))]
     public class CdrPredecoder : EventPreprocessingRule
@@ -123,23 +129,17 @@ namespace LogPreProcessor
             context.Database.Connection.Close();
             context.Database.Connection.Open();
             NeAdditionalSetting neAdditionalSetting = (NeAdditionalSetting)dataAsDic["neAdditionalSetting"];
-            if (neAdditionalSetting?.PreDecodeAsTextFile == false)
+            if (neAdditionalSetting==null)
+                throw new Exception("NeAdditionalSettings cannot be null while predecoding cdrs.");
+            if (neAdditionalSetting.PreDecodeAsTextFile == false)
                 return;
-            foreach (var job in newCdrFileJobs)
-            {
-                if (job.idjobdefinition != 1)
-                    throw new Exception(
-                        $"Job type must be 1= newCdrFileJob for cdrPredecoding. jobid:{job.id}, jobName:{job.JobName}");
-            }
-            
+            validateIfCdrJob(newCdrFileJobs);
             cleanUpAlreadyFinishedButRemainingPredecodedFiles(thisSwitch, tbc, newCdrFileJobs, context);
 
             int maxParallelPreDecoding = neAdditionalSetting.MaxConcurrentFilesForParallelPreDecoding;
             int maxNumberOfFilesToPreDecode = neAdditionalSetting.MaxNumberOfFilesInPreDecodedDirectory;
 
             int noOfExistingPreDecodedfiles = getNoOfExistingFilesInPreDecodedDir(thisSwitch, tbc, newCdrFileJobs);
-
-
             if (noOfExistingPreDecodedfiles >= maxNumberOfFilesToPreDecode) return;
 
             CollectionSegmenter<job> segmentedJobs = new CollectionSegmenter<job>(newCdrFileJobs, 0);
@@ -153,110 +153,145 @@ namespace LogPreProcessor
             segmentedJobs.ExecuteMethodInSegments(maxParallelPreDecoding, segment =>
             {
                 var enumerable = segment as job[] ?? segment.ToArray();
-                BlockingCollection<job> successfullPreDecodedJobs = new BlockingCollection<job>();
-                BlockingCollection<job> failedPreDecodedJobs = new BlockingCollection<job>();
+                var successResult = new BlockingCollection<PredecoderOutput>();
+                var failedResults = new BlockingCollection<PredecoderOutput>();
+                List<ThreadSafePredecoder> threadSafePredecoders =
+                    prepareThreadSafePreDecoders(mediationContext, thisSwitch, tbc, context, newCdrFileJob, enumerable);
 
-                List<ThreadSafePredecoder> threadSafePredecoders = new List<ThreadSafePredecoder>();
-                foreach (var job in enumerable)
+                //no need for try catch, handled within preDecodeFile();
+                Parallel.ForEach(threadSafePredecoders, predecoder =>
                 {
-                    ThreadSafePredecoder threadSafePredecoder = preparePreDecoderInput(mediationContext, thisSwitch,
-                        tbc, context,
-                        newCdrFileJob, job);
-                    if (!Directory.Exists(threadSafePredecoder.PredecodedDirName))
-                        Directory.CreateDirectory(threadSafePredecoder
-                            .PredecodedDirName); 
-                    
-                    
-                    threadSafePredecoders.Add(threadSafePredecoder);
-                }
-                bool disableParallelMediationForDebug =
-                    Convert.ToBoolean(ConfigurationManager.AppSettings["disableParallelMediationForDebug"]);
-                Action<PredecoderOutput> resultUpdater = output =>
-                {
+                    PredecoderOutput output = predecoder.preDecodeToFile();//predecodehere
                     if (output.SuccessfulJob != null)
                     {
-                        successfullPreDecodedJobs.Add(output.SuccessfulJob);
+                        successResult.Add(output);
                     }
                     else
                     {
-                        if (output.FailedJob==null)
+                        if (output.FailedJob == null)
                         {
-                            throw new Exception("Both successful and failed jobs cannot be null after predecoding of cdr files.");
+                            throw new Exception(
+                                "Both successful and failed jobs cannot be null after predecoding of cdr files.");
                         }
-                        failedPreDecodedJobs.Add(output.FailedJob);
+                        failedResults.Add(output);
                     }
-                };
-                if (disableParallelMediationForDebug)
-                {
-                    //no need for try catch, handled within preDecodeFile();
-                    threadSafePredecoders.ForEach(predecoder =>
-                    {
-                        PredecoderOutput output = predecoder.preDecodeToFile();
-                        resultUpdater.Invoke(output);
-                    }); //single threaded
-                }
-                else
-                {
-                    //no need for try catch, handled within preDecodeFile();
-                    Parallel.ForEach(threadSafePredecoders, predecoder =>
-                    {
-                        PredecoderOutput output = predecoder.preDecodeToFile();
-                        resultUpdater.Invoke(output);
-                    }); //parallel
-                }
-                //can't write to db in parallel, reader busy error occurs
-                //no worries about failed jobs, they will be retried again or decoded again in decoder if .predecoded file doesn't exist
-                //no need for commit or rollback too.
-                if (cmd.Connection.State != ConnectionState.Open)
-                    cmd.Connection.Open();
-                cmd.CommandText = $" set autocommit=0;";
-                cmd.ExecuteNonQuery();
-                foreach (var job in successfullPreDecodedJobs)
-                {
-                    try
-                    {
-                        cmd.CommandText = $" update job set status=2, Error=null where id={job.id}";
-                        cmd.ExecuteNonQuery();
-                    }
-                    catch (Exception e)
-                    {
-                        cmd.CommandText = $"rollback;";
-                        cmd.ExecuteNonQuery();
-                        Console.WriteLine(e);
-                    }
-                }
-                cmd.CommandText = $"commit;";
-                cmd.ExecuteNonQuery();
-                cmd.Connection.Close();
+                }); //parallel
+                
+                updateSuccessfulJobs(thisSwitch, context, cmd, successResult);
+                updateFailedJobs(thisSwitch, context, cmd, failedResults, tbc);
+            });
+        }
 
-                //for undetectable reason, job status was not being updated, verify status again and throw exception if required
-                if (context.Database.Connection.State != ConnectionState.Open)
-                    context.Database.Connection.Open();
-                string sql = $@"select * from job where idjobdefinition=1 and idne={thisSwitch.idSwitch} and status=7
-                                     and id in ({string.Join(",", successfullPreDecodedJobs.Select(j => j.id))});";
-                List<job> jobsWithStatusUpdateFailed = context.Database.SqlQuery<job>(sql).ToList();
-                if (jobsWithStatusUpdateFailed.Any())
-                {
-                    context.Database.Connection.Close();
-                    var exception = new Exception($"Couldn't update status while predecoding {jobsWithStatusUpdateFailed.Count} jobs for ne: {thisSwitch.SwitchName}");
-                    Console.WriteLine(exception);
-                    throw exception;
-                }
-                //Console.WriteLine($"Successfully predecoded {successfullPreDecodedJobs.Count} jobs for ne: {thisSwitch.SwitchName}");
+        private void validateIfCdrJob(List<job> newCdrFileJobs)
+        {
+            foreach (var job in newCdrFileJobs)
+            {
+                if (job.idjobdefinition != 1)
+                    throw new Exception(
+                        $"Job type must be 1= newCdrFileJob for cdrPredecoding. jobid:{job.id}, jobName:{job.JobName}");
+            }
+        }
 
-
-                foreach (job failedJob in failedPreDecodedJobs)
+        private void updateFailedJobs(ne thisSwitch, PartnerEntities context, DbCommand cmd, BlockingCollection<PredecoderOutput> failedResults,
+            TelcobrightConfig tbc)
+        {
+            if (cmd.Connection.State != ConnectionState.Open)
+                cmd.Connection.Open();
+            cmd.CommandText = $" set autocommit=1;";
+            cmd.ExecuteNonQuery();
+            foreach (var result in failedResults)
+            {
+                try
                 {
+                    cmd.CommandText = $" update job set Error='{result.ExceptionMessage}' where id={result.FailedJob.id};";
+                    cmd.ExecuteNonQuery();
                     string preDecodedDirName = "";
                     string preDecodedFileName = "";
-                    getPathNamesForPreDecoding(failedJob, thisSwitch, tbc, out preDecodedDirName,
+                    getPathNamesForPreDecoding(result.FailedJob, thisSwitch, tbc, out preDecodedDirName,
                         out preDecodedFileName);
                     if (File.Exists(preDecodedFileName))
                     {
                         File.Delete(preDecodedFileName);
                     }
                 }
-            });
+                catch (Exception e)
+                {
+                    var exception = new Exception(
+                        $@"Couldn't update status while predecoding {result.FailedJob.JobName} jobs for ne: {thisSwitch.SwitchName}
+                               --{e.Message} ");
+                    Console.WriteLine(exception);
+                    ErrorWriter.WriteError(exception, "Cdr-Predecoder", null, "NE:" + thisSwitch.idSwitch, "", context);
+                    continue;
+                }
+                
+            }
+            cmd.Connection.Close();
+        }
+
+
+        private void updateSuccessfulJobs(ne thisSwitch, PartnerEntities context, DbCommand cmd, BlockingCollection<PredecoderOutput> successfullPreDecodedJobs)
+        {
+            //can't write to db in parallel, reader busy error occurs
+            //no worries about failed jobs, they will be retried again or decoded again in decoder if .predecoded file doesn't exist
+            //no need for commit or rollback too.
+            if (cmd.Connection.State != ConnectionState.Open)
+                cmd.Connection.Open();
+            cmd.CommandText = $" set autocommit=0;";
+            cmd.ExecuteNonQuery();
+            foreach (var result in successfullPreDecodedJobs)
+            {
+                try
+                {
+                    cmd.CommandText = $" update job set status=2, Error=null where id={result.SuccessfulJob.id}";
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception e)
+                {
+                    //cmd.CommandText = $"rollback;";//don't rollback, if one is updated fine...
+                    //cmd.ExecuteNonQuery();
+                    var exception = new Exception(
+                            $@"Couldn't update status while predecoding {result.SuccessfulJob.JobName} jobs for ne: {thisSwitch.SwitchName}
+                               --{e.Message} ");
+                    ErrorWriter.WriteError(exception, "Cdr-Predecoder", null, "NE:" + thisSwitch.idSwitch,"", context);
+                    continue; //with next switch
+                }
+            }
+            //for undetectable reason, job status was not being updated, verify status again and throw exception if required
+            string sql = $@"select * from job where idjobdefinition=1 and idne={thisSwitch.idSwitch} and status=7
+                                     and id in ({string.Join(",", successfullPreDecodedJobs.Select(j => j.SuccessfulJob.id))});";
+            List<job> jobsWithStatusUpdateFailed = context.Database.SqlQuery<job>(sql).ToList();
+            if (jobsWithStatusUpdateFailed.Any())
+            {
+                //cmd.CommandText = $"rollback;";
+                //cmd.ExecuteNonQuery();
+                context.Database.Connection.Close();
+                var exception =
+                    new Exception(
+                        $"Couldn't update status while predecoding {jobsWithStatusUpdateFailed.Count} jobs for ne: {thisSwitch.SwitchName}");
+                Console.WriteLine(exception);
+                throw exception;
+            }
+            cmd.CommandText = $"commit;";
+            cmd.ExecuteNonQuery();
+            cmd.Connection.Close();
+            if (context.Database.Connection.State != ConnectionState.Open)
+                context.Database.Connection.Open();
+        }
+
+        private List<ThreadSafePredecoder> prepareThreadSafePreDecoders(MediationContext mediationContext, ne thisSwitch, TelcobrightConfig tbc, PartnerEntities context, ITelcobrightJob newCdrFileJob, job[] enumerable)
+        {
+            List<ThreadSafePredecoder> threadSafePredecoders = new List<ThreadSafePredecoder>();
+            foreach (var job in enumerable)
+            {
+                ThreadSafePredecoder threadSafePredecoder = preparePreDecoderInput(mediationContext, thisSwitch,
+                    tbc, context,
+                    newCdrFileJob, job);
+                if (!Directory.Exists(threadSafePredecoder.PredecodedDirName))
+                    Directory.CreateDirectory(threadSafePredecoder.PredecodedDirName);
+                threadSafePredecoders.Add(threadSafePredecoder);
+            }
+
+            return threadSafePredecoders;
         }
 
         private ThreadSafePredecoder preparePreDecoderInput(MediationContext mediationContext, ne thisSwitch, TelcobrightConfig tbc, 
