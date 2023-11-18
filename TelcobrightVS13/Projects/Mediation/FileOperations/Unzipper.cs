@@ -135,6 +135,42 @@ namespace TelcobrightFileOperations
                     Console.WriteLine("Extraction Failed.");
                 }
             }
+            else if (zippedFile.FullName.EndsWith(".zip"))
+            {
+
+                string extension = Path.GetExtension(zippedFile.Name);
+                string compressedFileName = zippedFile.Name.Substring(0, zippedFile.Name.Length - extension.Length); ;
+                string tempFileName = tempDir.FullName + Path.DirectorySeparatorChar + compressedFileName;
+
+                string rarFilePath = zippedFile.FullName.Replace("\\", "//");
+                string targetPath = tempDir.FullName.Replace("\\", "//");
+
+                string sevenZipPath = ExternalResourceManager.getResourcePath(ExternalResourceType.SevenZip);
+                string command = $"x \"{rarFilePath}\" -o\"{targetPath}\"";
+
+                Process process = new Process();
+                process.StartInfo.FileName = sevenZipPath;
+                process.StartInfo.Arguments = command;
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.CreateNoWindow = true;
+
+                process.OutputDataReceived += (sender, e) => Console.WriteLine(e.Data);
+                process.ErrorDataReceived += (sender, e) => Console.WriteLine(e.Data);
+
+                process.Start();
+                process.BeginOutputReadLine();
+                process.WaitForExit();
+
+                if (process.ExitCode == 0)
+                {
+                    Console.WriteLine("Extraction completed.");
+                }
+                else
+                {
+                    Console.WriteLine("Extraction Failed.");
+                }
+            }
             else
             {
                 ZipFile.ExtractToDirectory(zippedFile.FullName, tempDir.ToString());
