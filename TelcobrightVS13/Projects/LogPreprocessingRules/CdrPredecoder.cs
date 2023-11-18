@@ -62,7 +62,7 @@ namespace LogPreProcessor
                 List<string[]> txtRows = newCdrPreProcessor.TxtCdrRows;
 
                 List<string[]> cdrInconsistents = newCdrPreProcessor.OriginalCdrinconsistents
-                    .Select(c => CdrConversionUtil.ConvertCdrinconsistentToTxtRow(c, txtRows.First().Length)).ToList();
+                    .Select(c => CdrConversionUtil.ConvertCdrinconsistentToTxtRow(c, this.CdrJobInputData.MediationContext.TotalFieldTelcobright)).ToList();
                 txtRows.AddRange(cdrInconsistents);
                 List<string> rowsAsCsvLinesFieldsEnclosedWithBacktick =
                     txtRows.Select(row => string.Join(",",
@@ -71,6 +71,7 @@ namespace LogPreProcessor
                 File.WriteAllLines(this.PredecodedFileName, rowsAsCsvLinesFieldsEnclosedWithBacktick);
                 output.SuccessfulJob = this.CdrJobInputData.Job;
                 output.FailedJob = null;
+                output.ExceptionMessage = "";
                 this.PartnerEntitiesNewInstance.Database.Connection.Close();
                 return output;
             }
@@ -79,6 +80,7 @@ namespace LogPreProcessor
                 this.PartnerEntitiesNewInstance.Database.Connection.Close();
                 Console.WriteLine(e);
                 output.FailedJob = this.CdrJobInputData.Job;
+                output.ExceptionMessage = e.Message;
                 output.SuccessfulJob = null;
                 return output;
             }
@@ -176,9 +178,9 @@ namespace LogPreProcessor
                         failedResults.Add(output);
                     }
                 }); //parallel
-                
-                updateSuccessfulJobs(thisSwitch, context, cmd, successResult);
-                updateFailedJobs(thisSwitch, context, cmd, failedResults, tbc);
+
+                if (successResult.Any()) updateSuccessfulJobs(thisSwitch, context, cmd, successResult);
+                if(failedResults.Any()) updateFailedJobs(thisSwitch, context, cmd, failedResults, tbc);
             });
         }
 
