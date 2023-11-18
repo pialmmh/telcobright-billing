@@ -20,11 +20,9 @@ namespace TelcobrightFileOperations
         private String zipPath;
         private string extractPath;
         FileInfo zippedFile;
-        bool DeleteOriginalCompressedFile { get; set; }
 
-        public UnZipper(String zipPath, bool deleteOriginalCompressedFile, String extractPath = "")
+        public UnZipper(String zipPath,String extractPath = "")
         {
-            this.DeleteOriginalCompressedFile = deleteOriginalCompressedFile;
             this.zippedFile = new FileInfo(zipPath);
             this.extractPath = (extractPath == "") ? zippedFile.DirectoryName : extractPath;
         }
@@ -35,10 +33,6 @@ namespace TelcobrightFileOperations
             if (Directory.Exists(tempDir.FullName) == false)
             {
                 Directory.CreateDirectory(tempDir.FullName);
-            }
-            else
-            {
-                tempDir.DeleteContentRecusively();
             }
 
             if (zippedFile.FullName.EndsWith(".gz"))
@@ -135,7 +129,7 @@ namespace TelcobrightFileOperations
                     Console.WriteLine("Extraction Failed.");
                 }
             }
-            else if (zippedFile.FullName.EndsWith(".zip"))
+            else if (zippedFile.FullName.EndsWith(".zip" )|| zippedFile.FullName.EndsWith(".7z"))
             {
 
                 string extension = Path.GetExtension(zippedFile.Name);
@@ -171,13 +165,8 @@ namespace TelcobrightFileOperations
                     Console.WriteLine("Extraction Failed.");
                 }
             }
-            else
-            {
-                ZipFile.ExtractToDirectory(zippedFile.FullName, tempDir.ToString());
-            }
 
-            if(this.DeleteOriginalCompressedFile==true)
-                File.Delete(zippedFile.FullName);
+               File.Delete(zippedFile.FullName);
         }
     }
 }

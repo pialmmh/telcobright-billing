@@ -26,27 +26,30 @@ namespace Process
     public class CompressedFileHelperForVault
     {
         public List<string> ExtensionsToAcceptAfterUnzip { get; set; }
-        public string VaultPathToExtract { get; set; }
-        public bool DeleteOriginalArchive { get; set; } = false;
-        public List<CompressionType> SupportedCompressionTypes { get; set; }= new List<CompressionType>()
+        public string OriginalPathToExtract { get; set; }
+
+        public string TempPathToExtract { get; set; }
+
+        public List<CompressionType> SupportedCompressionTypes { get; set; } = new List<CompressionType>()
         {
             CompressionType.Gzip,
             CompressionType.Zip,
-            CompressionType.tarZip
+            CompressionType.tarZip,
+            CompressionType.Sevenzip
         };
 
-        public CompressedFileHelperForVault(List<string> extensionsToAcceptAfterUnzip,bool deleteOriginalArchive, string vaultPathToExtract="")
+        public CompressedFileHelperForVault(List<string> extensionsToAcceptAfterUnzip, string originalPathToExtract = "",string tempPathToExtract ="")
         {
             ExtensionsToAcceptAfterUnzip = extensionsToAcceptAfterUnzip;
-            VaultPathToExtract = vaultPathToExtract;
-            this.DeleteOriginalArchive = deleteOriginalArchive;
+            this.OriginalPathToExtract = originalPathToExtract;
+            TempPathToExtract = tempPathToExtract;
         }
-        public void ExtractWithSafeCopy(string compressedFile)
+        public void ExtractToTempDir(string compressedFile)
         {
             string fileExtension = Path.GetExtension(compressedFile);
-            if(fileExtension.IsNullOrEmptyOrWhiteSpace())
+            if (fileExtension.IsNullOrEmptyOrWhiteSpace())
                 throw new Exception("File extension can't be empty for compressed files while creating cdr or logfile job.");
-            CompressionType compressionType=CompressionType.None;
+            CompressionType compressionType = CompressionType.None;
             if (CompressionTypeHelper.ExtensionVsCompressionTypes.TryGetValue(fileExtension, out compressionType) ==
                 false)
             {
@@ -59,36 +62,49 @@ namespace Process
                         $"Unsupported compression type {compressionType.ToString()}, " +
                         $"supported extensions are: {string.Join(",", this.SupportedCompressionTypes.Select(ct => ct.ToString()))}");
             }
-            DirectoryInfo tempDir = new DirectoryInfo(Path.Combine(this.VaultPathToExtract, "temp"));
-            UnZipper unzipper = new UnZipper(compressedFile, DeleteOriginalArchive, tempDir.FullName);
+            DirectoryInfo tempDir = new DirectoryInfo(Path.Combine(this.OriginalPathToExtract, "temp"));
+            UnZipper unzipper = new UnZipper(compressedFile, tempDir.FullName);
             unzipper.UnZipAll();
+        }
 
-            Func<FileInfo, FileInfo, bool> sameFileExists = (src, dst) => src.FullName == dst.FullName && src.Length == dst.Length;
-
+        public void MoveToOriginalPath(DirectoryInfo tempDir)
+        {
             foreach (FileInfo extractedFileInfo in tempDir.GetFiles("*.*", SearchOption.AllDirectories))
             {
-                if (this.ExtensionsToAcceptAfterUnzip.Contains(extractedFileInfo.Extension)||extractedFileInfo.Extension=="")
+                if (this.ExtensionsToAcceptAfterUnzip.Contains(extractedFileInfo.Extension) || extractedFileInfo.Extension == "")
                 {
-                    var destCdrFile = this.VaultPathToExtract + Path.DirectorySeparatorChar + extractedFileInfo.Name;
+                    var destCdrFile = this.OriginalPathToExtract + Path.DirectorySeparatorChar + extractedFileInfo.Name;
                     if (File.Exists(destCdrFile))
                     {
                         FileInfo existingFileINfo = new FileInfo(destCdrFile);
-                        if (sameFileExists(extractedFileInfo, existingFileINfo))
+                        if (extractedFileInfo.Name == existingFileINfo.Name &&
+                            (existingFileINfo.Length == extractedFileInfo.Length || existingFileINfo.Length > extractedFileInfo.Length))
                         {
                             extractedFileInfo.Delete();
                         }
+                        else if (extractedFileInfo.Name == existingFileINfo.Name && existingFileINfo.Length < extractedFileInfo.Length)
+                        {
+                            existingFileINfo.Delete();
+
+
+                        }
                     }
+
                     string tempExtension = ".tmp";
-                    var targetFilenameWithTempExtension = extractedFileInfo.FullName + tempExtension;
-                    File.Copy(extractedFileInfo.FullName, targetFilenameWithTempExtension);//safe copy with .tmp extension
-                    FileInfo copiedTempFileInfo = new FileInfo(targetFilenameWithTempExtension);
+                    string destTempFileName = destCdrFile + tempExtension;
+                    File.Copy(extractedFileInfo.FullName, destTempFileName);
+
+                    FileInfo copiedTempFileInfo = new FileInfo(destTempFileName);
                     if (copiedTempFileInfo.Length == extractedFileInfo.Length)
                     {
-                        string tempFileName = copiedTempFileInfo.FullName.Replace(tempExtension, "");
-                        File.Move(tempFileName, VaultPathToExtract + Path.DirectorySeparatorChar + extractedFileInfo);//rename to remove .tmp extension
-                        File.Delete(tempFileName);
+                        File.Move(destTempFileName, destTempFileName.Replace(tempExtension, ""));//rename to remove .tmp extension
                         extractedFileInfo.Delete();
                     }
+                    else
+                    {
+                        throw new Exception("temp file and dest file length did not match");
+                    }
+
                 }
                 else//this extension is not a cdr file, delete
                 {
