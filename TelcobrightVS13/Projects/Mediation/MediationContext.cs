@@ -49,6 +49,7 @@ namespace TelcobrightMediation
         public Dictionary<string, ipaddressorpointcode> IpAddressorPointCodes { get; }
         public Trie IpAddressOrPointCodeTrie { get; }
         public bool DisableTemporaryTablesCreation { get; }
+        public int TotalFieldTelcobright { get;  }
 
         public MediationContext(TelcobrightConfig tbc, PartnerEntities context, bool disableTemporaryTablesCreation=false)
         {
@@ -155,6 +156,7 @@ namespace TelcobrightMediation
             if(!disableTemporaryTablesCreation)
                 CreateTemporaryTables();
             this.MefPartnerRuleContainer.MediationContext = this;
+            this.TotalFieldTelcobright= context.cdrfieldlists.Count();
         }
 
         List<partnerprefix> PopulateANSPrefix()
