@@ -15,7 +15,8 @@ namespace InstallConfig
             {"agni_cas","172.16.1.21"},
             {"banglatelecom_cas","172.16.1.21"},
             {"bantel_cas","172.16.1.21"},
-            {"gazinetworks_cas","172.16.1.22"},
+            //{"gazinetworks_cas","172.16.1.22"},
+            {"gazinetworks_cas","127.0.0.1"},
             {"summit_cas","172.16.1.22"},
             {"ringtech_cas","172.16.1.22"},
             {"mothertelecom_cas","172.16.1.23"},
@@ -32,7 +33,8 @@ namespace InstallConfig
             {"purple_cas","172.16.1.27"},
             {"softex_cas","172.16.1.28"},
             {"sheba_cas","172.16.1.29"},
-            {"teleexchange_cas","172.16.1.28"},
+            //{"teleexchange_cas","172.16.1.28"},
+            {"teleexchange_cas","127.0.0.1"},
             {"newgenerationtelecom_cas","172.16.1.28"}
         };
         public DeploymentEnvironment DeploymentEnvironment { get; }

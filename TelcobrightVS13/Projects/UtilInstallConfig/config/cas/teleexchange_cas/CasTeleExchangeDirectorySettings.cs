@@ -44,7 +44,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "f:/telcobright/vault/resources/cdr/teleExchange/tdm1",
+                StartingPath = "i:/telcobright/vault/resources/cdr/teleExchange/tdm1",
                 User = "",
                 Pass = "",
             };

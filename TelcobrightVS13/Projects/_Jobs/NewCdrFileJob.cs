@@ -374,7 +374,6 @@ namespace Jobs
         {
             string fileName = getFullPathOfCdrFile();
 
-
             this.CollectorInput = new CdrCollectorInputData(this.Input, fileName);
             var cdrCollector = new FileBasedTextCdrCollector(this.CollectorInput);
             AbstractCdrDecoder decoder = cdrCollector.getDecoder();
@@ -398,6 +397,8 @@ namespace Jobs
                 return newCdrPreProcessor;
             }
             NewCdrPreProcessor preProcessor = (NewCdrPreProcessor)cdrCollector.Collect();
+            FileInfo fileInfo = new FileInfo(fileName);
+            preProcessor.OriginalCdrFileSize = fileInfo.Length;
             return preProcessor;
         }
 

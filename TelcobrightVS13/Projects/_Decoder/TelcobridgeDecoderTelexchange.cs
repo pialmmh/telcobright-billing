@@ -74,7 +74,7 @@ namespace Decoders
                 //double durationSec = 0;
                 //double.TryParse(durationStr, out durationSec);
                 //if (durationSec <= 0) continue;
-                string callStatus = lineAsArr[1].Trim();
+                string callStatus = lineAsArr[1].Trim().ToLower();
                 if (!string.Equals(callStatus, "End")) continue;
 
                 textCdr[Fn.UniqueBillId] = lineAsArr[2].Trim();

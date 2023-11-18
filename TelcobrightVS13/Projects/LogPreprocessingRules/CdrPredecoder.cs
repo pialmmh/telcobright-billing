@@ -59,6 +59,7 @@ namespace LogPreProcessor
                 };
                 NewCdrPreProcessor newCdrPreProcessor =
                     (NewCdrPreProcessor)this.NewCdrFileJobNewInstance.PreprocessJob(preProcessorInput); //EXECUTE preDecoding
+                long originalCdrFileSize = newCdrPreProcessor.OriginalCdrFileSize;
                 List<string[]> txtRows = newCdrPreProcessor.TxtCdrRows;
 
                 List<string[]> cdrInconsistents = newCdrPreProcessor.OriginalCdrinconsistents
@@ -69,7 +70,22 @@ namespace LogPreProcessor
                             row.Select(field => new StringBuilder("`").Append(field).Append("`").ToString()).ToArray()))
                         .ToList();
                 File.WriteAllLines(this.PredecodedFileName, rowsAsCsvLinesFieldsEnclosedWithBacktick);
+                FileInfo predecodedFileInfo = new FileInfo(this.PredecodedFileName);
+                if (originalCdrFileSize > 0)
+                {
+                    if (!cdrInconsistents.Any() && !txtRows.Any())
+                    {
+                        throw new Exception($"No decoded rows found for non empty cdr file {this.CdrJobInputData.Job.JobName}");
+                    }
+                    if (cdrInconsistents.Any() || txtRows.Any())
+                    {
+                        if (predecodedFileInfo.Length == 0)
+                            throw new Exception("Predecoded File size cannot be zero.");
+                    }
+                }
+                
                 output.SuccessfulJob = this.CdrJobInputData.Job;
+                output.WrittenFileSize = predecodedFileInfo.Length;
                 output.FailedJob = null;
                 output.ExceptionMessage = "";
                 this.PartnerEntitiesNewInstance.Database.Connection.Close();
@@ -90,6 +106,7 @@ namespace LogPreProcessor
     class PredecoderOutput
     {
         public job SuccessfulJob { get; set; }
+        public long WrittenFileSize { get; set; }
         public job FailedJob { get; set; }
         public string ExceptionMessage { get; set; }
     }
@@ -161,7 +178,26 @@ namespace LogPreProcessor
                     prepareThreadSafePreDecoders(mediationContext, thisSwitch, tbc, context, newCdrFileJob, enumerable);
 
                 //no need for try catch, handled within preDecodeFile();
-                Parallel.ForEach(threadSafePredecoders, predecoder =>
+                //Parallel.ForEach(threadSafePredecoders, predecoder =>
+                //{
+                //    PredecoderOutput output = predecoder.preDecodeToFile();//predecodehere
+                //    if (output.SuccessfulJob != null)
+                //    {
+                //        successResult.Add(output);
+                //    }
+                //    else
+                //    {
+                //        if (output.FailedJob == null)
+                //        {
+                //            throw new Exception(
+                //                "Both successful and failed jobs cannot be null after predecoding of cdr files.");
+                //        }
+                //        failedResults.Add(output);
+                //    }
+                //}); //parallel
+
+                //temp code, single trhread
+                threadSafePredecoders.ForEach(predecoder =>
                 {
                     PredecoderOutput output = predecoder.preDecodeToFile();//predecodehere
                     if (output.SuccessfulJob != null)
@@ -178,6 +214,9 @@ namespace LogPreProcessor
                         failedResults.Add(output);
                     }
                 }); //parallel
+                //end temp code
+
+
 
                 if (successResult.Any()) updateSuccessfulJobs(thisSwitch, context, cmd, successResult);
                 if(failedResults.Any()) updateFailedJobs(thisSwitch, context, cmd, failedResults, tbc);
