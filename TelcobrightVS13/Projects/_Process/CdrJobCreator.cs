@@ -53,6 +53,10 @@ namespace Process
                         FileLocation fileLocation = tbc.DirectorySettings.FileLocations[vaultName];
                         string vaultPath = fileLocation.StartingPath;
                         DirectoryInfo tempDir = new DirectoryInfo(Path.Combine(vaultPath, "temp"));
+                        if (Directory.Exists(tempDir.FullName) == false)
+                        {
+                            Directory.CreateDirectory(tempDir.FullName);
+                        }
                         new CompressedFileHelperForVault(new List<string>()).MoveToOriginalPath(tempDir);
                         DirectoryLister dirlister = new DirectoryLister();
                         if (cdrSetting.UnzipCompressedFiles == true)
