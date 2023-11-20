@@ -150,7 +150,8 @@ namespace Decoders
             return decodedRows;
         }
 
-        public override object Aggregate(object data, out object instancesRemainedUnaggregated)
+        public override object Aggregate(object data, out object instancesCouldNotBeAggregated,
+            out object instancesToBeDiscardedAfterAggregation)
         {
             List<string[]> rowsToAggregate= ((List<string[]>)data).OrderBy(row=>row[Fn.StartTime]).ToList();
             string[] aggregatedRow = rowsToAggregate.Last();
@@ -195,7 +196,8 @@ namespace Decoders
             aggregatedRow[Fn.IncomingRoute] = incomingRoute;
             aggregatedRow[Fn.OutgoingRoute] = outgoingRoute;
             aggregatedRow[Fn.Partialflag] = "0";
-            instancesRemainedUnaggregated = rowsOtherThanAggregatedInstance;//out param
+            instancesToBeDiscardedAfterAggregation = new List<string[]>();
+            instancesCouldNotBeAggregated= new List<string[]>();
             return aggregatedRow;
         }
 

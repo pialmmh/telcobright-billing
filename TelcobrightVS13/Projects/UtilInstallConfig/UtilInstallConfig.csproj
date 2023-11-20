@@ -134,15 +134,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="config\allDeployment\cas\mysqlClusters\08CasNewSoftShebaTeleex.cs" />
-    <Compile Include="config\allDeployment\cas\mysqlClusters\07CasJibonParaPurple.cs" />
-    <Compile Include="config\allDeployment\cas\mysqlClusters\06CasBTCLImam.cs" />
-    <Compile Include="config\allDeployment\cas\mysqlClusters\05CasBanIcxCross.cs" />
-    <Compile Include="config\allDeployment\cas\mysqlClusters\04CasMnhSrtel.cs" />
-    <Compile Include="config\allDeployment\cas\mysqlClusters\03CasMotherTelePlusVoice.cs" />
-    <Compile Include="config\allDeployment\cas\mysqlClusters\02CasGaziSummitRing.cs" />
-    <Compile Include="config\allDeployment\cas\mysqlClusters\01CasAgniBanglatelBantel.cs" />
-    <Compile Include="config\allDeployment\cas\mysqlClusters\AppServerHostnamesForCas.cs" />
+    <Compile Include="config\cas\_helper\mysqlClusters\08CasNewSoftShebaTeleex.cs" />
+    <Compile Include="config\cas\_helper\mysqlClusters\07CasJibonParaPurple.cs" />
+    <Compile Include="config\cas\_helper\mysqlClusters\06CasBTCLImam.cs" />
+    <Compile Include="config\cas\_helper\mysqlClusters\05CasBanIcxCross.cs" />
+    <Compile Include="config\cas\_helper\mysqlClusters\04CasMnhSrtel.cs" />
+    <Compile Include="config\cas\_helper\mysqlClusters\03CasMotherTelePlusVoice.cs" />
+    <Compile Include="config\cas\_helper\mysqlClusters\02CasGaziSummitRing.cs" />
+    <Compile Include="config\cas\_helper\mysqlClusters\01CasAgniBanglatelBantel.cs" />
+    <Compile Include="config\cas\_helper\mysqlClusters\AppServerHostnamesForCas.cs" />
     <Compile Include="config\cas\banglatelecom_cas\CasBanglaTelecomConfigMain.cs" />
     <Compile Include="config\cas\banglatelecom_cas\CasBanglaTelecomDatabaseSettings.cs" />
     <Compile Include="config\cas\banglatelecom_cas\CasBanglaTelecomDirectorySettings.cs" />
@@ -337,23 +337,23 @@
     <Compile Include="config\purple\PurpleServerConfig.cs" />
     <Compile Include="config\purple\PurpleServiceGroups.cs" />
     <Compile Include="config\allDeployment\AllDeploymenProfiles.cs" />
-    <Compile Include="config\allDeployment\cas\_helper\CasCdrSettingHelper.cs" />
-    <Compile Include="config\allDeployment\cas\mysqlClusters\CommonSlaveWin01.cs" />
-    <Compile Include="config\allDeployment\cas\_helper\CasDockerDbHelper.cs" />
-    <Compile Include="config\allDeployment\cas\_helper\CasPortalDbHelper.cs" />
-    <Compile Include="config\allDeployment\cas\_helper\CasPortalSettingsHelper.cs" />
-    <Compile Include="config\allDeployment\cas\_helper\CasQuartzHelper.cs" />
-    <Compile Include="config\allDeployment\cas\_helper\CasNeInfoHelper.cs" />
-    <Compile Include="config\allDeployment\cas\_helper\CasServiceGroupHelper.cs" />
-    <Compile Include="config\allDeployment\cas\_helper\CasTbPartnerFactory.cs" />
-    <Compile Include="config\allDeployment\cas\_helper\DeploymentEnvironment.cs" />
+    <Compile Include="config\cas\_helper\CasCdrSettingHelper.cs" />
+    <Compile Include="config\cas\_helper\mysqlClusters\CommonSlaveWin01.cs" />
+    <Compile Include="config\cas\_helper\CasDockerDbHelper.cs" />
+    <Compile Include="config\cas\_helper\CasPortalDbHelper.cs" />
+    <Compile Include="config\cas\_helper\CasPortalSettingsHelper.cs" />
+    <Compile Include="config\cas\_helper\CasQuartzHelper.cs" />
+    <Compile Include="config\cas\_helper\CasNeInfoHelper.cs" />
+    <Compile Include="config\cas\_helper\CasServiceGroupHelper.cs" />
+    <Compile Include="config\cas\_helper\CasTbPartnerFactory.cs" />
+    <Compile Include="config\cas\_helper\DeploymentEnvironment.cs" />
     <Compile Include="config\cas\_dbscripts\ddl\IndexSwitchID.cs" />
     <Compile Include="config\cas\_dbscripts\ddl\IcxSp.cs" />
     <Compile Include="config\cas\_dbscripts\ddl\ServiceGroupNotNullCdrError.cs" />
     <Compile Include="config\cas\_dbscripts\ddl\Ne.cs" />
     <Compile Include="config\cas\_dbscripts\ddl\IncreaseFldLength.cs" />
     <Compile Include="config\cas\_dbscripts\ddl\ViewToBTRC.cs" />
-    <Compile Include="config\allDeployment\cas\_helper\TemplateNe.cs" />
+    <Compile Include="config\cas\_helper\TemplateNe.cs" />
     <Compile Include="generators\DeploymentHelper.cs" />
     <Compile Include="config\cas\_dbscripts\seedData\sql\DomesticRateplaneAssignmentForCAS.cs" />
     <Compile Include="generators\telcoBilling\MySqlPermissionManager.cs" />
@@ -419,7 +419,7 @@
     <Compile Include="util\CommonValidationRulesGenerator\CommonCdrValRulesGen.cs" />
     <Compile Include="generators\telcoBilling\TelcoBillingMenu.cs" />
     <None Include="app.manifest" />
-    <None Include="config\allDeployment\cas\_helper\casOperatorInfo.xlsx" />
+    <None Include="config\cas\_helper\casOperatorInfo.xlsx" />
     <None Include="config\cas\btrc_cas\summit.conf" />
     <None Include="config\btel\btel.conf" />
     <None Include="config\btel\scripts\apppools.xml.bak" />
@@ -510,6 +510,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="config\allDeployment\cas\" />
     <Folder Include="config\banglatelecom\_dbscripts\ddl\" />
     <Folder Include="config\banglatelecom\_dbscripts\seedData\json\" />
     <Folder Include="config\banglatelecom\_dbscripts\seedData\sql\" />

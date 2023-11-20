@@ -19,7 +19,13 @@ namespace TelcobrightMediation
         public AbstractCdrDecoder Decoder { get; set; }
         private bool PartialCdrEnabled { get; }
         public List<string[]> TxtCdrRows { get; set; }= new List<string[]>();
+        public List<string[]> DecodedCdrRowsBeforeDuplicateFiltering { get; set; } = new List<string[]>();
+        public List<string[]> RowsToConsiderForAggregation { get; set; } = new List<string[]>();
+        public List<string[]> AggregatedEvents { get; set; } = new List<string[]>();
+        public List<string[]> NewRowsRemainedUnaggreagated { get; set; } = new List<string[]>();
+        public List<string[]> RowsToBeDiscardedAfterAggregation { get; set; } = new List<string[]>();
         public Dictionary<string, string[]> FinalNonDuplicateEvents { get; set; }= new Dictionary<string, string[]>();
+
         public List<string[]> DuplicateEvents { get; set; }= new List<string[]>();
         public List<string[]> OriginalRowsBeforeMerge { get; }= new List<string[]>();
         public List<cdrinconsistent> OriginalCdrinconsistents { get; }= new List<cdrinconsistent>();
@@ -39,6 +45,17 @@ namespace TelcobrightMediation
             }
             this.PartialCdrEnabled = base.CdrCollectorInputData.CdrSetting.PartialCdrEnabledNeIds
                 .Contains(base.CdrCollectorInputData.CdrJobInputData.Ne.idSwitch);
+        }
+        public void ValidateAggregation(job j)
+        {
+            if (TxtCdrRows.Count != AggregatedEvents.Count + NewRowsRemainedUnaggreagated.Count
+                + RowsToBeDiscardedAfterAggregation.Count)
+            {
+                Exception exception =
+                    new Exception($"Found Cdr count mismatch after aggregation. Job: {j.JobName}");
+                Console.WriteLine(exception);
+                throw exception;
+            }
         }
 
         public void CheckAndConvertIfInconsistent(CdrJobInputData input, MefValidator<string[]> mefValidator,

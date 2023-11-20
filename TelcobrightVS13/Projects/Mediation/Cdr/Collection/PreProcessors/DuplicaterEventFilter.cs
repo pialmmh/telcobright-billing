@@ -29,7 +29,7 @@ namespace TelcobrightMediation.Cdr.Collection.PreProcessors
         public Dictionary<string, T> filterDuplicateCdrs(out List<T> excludedDuplicateEvents)
         {
             excludedDuplicateEvents= new List<T>();
-            Dictionary<string, string> alreadyConsideredEvents = this.EventCollector.ExistingEvents.Select(e=>e.ToString())
+            Dictionary<string, string> alreadyConsideredEvents = this.EventCollector.ExistingEventsInDb.Select(e=>e.ToString())
                 .GroupBy(e=>e)
                 .Select(g=> new
                 {

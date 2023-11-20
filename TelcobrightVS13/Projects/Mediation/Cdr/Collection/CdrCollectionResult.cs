@@ -23,6 +23,8 @@ namespace TelcobrightMediation
     {
         public List<string[]> OriginalRowsBeforeMerge { get; }
         public Dictionary<string, string[]> FinalNonDuplicateEvents { get; set; } = new Dictionary<string, string[]>();
+        public List<string[]> NewRowsRemainedUnaggreagated { get; set; } = new List<string[]>();
+
         public List<string[]> DuplicateEvents { get; set; } = new List<string[]>();
         public CollectionResultProcessingState CollectionResultProcessingState { get; set; } =
             CollectionResultProcessingState.BeforeMediation;

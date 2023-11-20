@@ -116,8 +116,15 @@ namespace Decoders
                 lineAsArr[0].Trim();
 
                 string status = lineAsArr[0].Trim().ToLower();
-                
 
+                if (lineAsArr[16].ToLower() == "originate")
+                {
+                    textCdr[Fn.IncomingRoute] = lineAsArr[11].Trim();
+                }
+                else if (lineAsArr[16].ToLower() == "answer")
+                {
+                    textCdr[Fn.OutgoingRoute] = lineAsArr[11].Trim();
+                }
 
                 textCdr[Fn.Validflag] = "1";
 
@@ -130,52 +137,46 @@ namespace Decoders
             return decodedRows;
         }
 
-        public override object Aggregate(object data, out object instancesRemainedUnaggregated)
+        public override object Aggregate(object data, out object instancesCouldNotBeAggregated,
+            out object instancesToBeDiscardedAfterAggregation)
         {
             List<string[]> rowsToAggregate= ((List<string[]>)data).OrderBy(row=>row[Fn.StartTime]).ToList();
-            string[] aggregatedRow = rowsToAggregate.Last();
-            List <string[]> rowsOtherThanAggregatedInstance= new List<string[]>();
-            string incomingRoute ="", outgoingRoute="";
-            Dictionary<string, int> occuranceCountOfRoutes= new Dictionary<string, int>();
-            Action<string> incrementRouteCount = route =>
+            List<string[]> ingressLegs = rowsToAggregate.Where(r => r[Fn.InTrunkAdditionalInfo] == "originate")
+                .ToList();
+            List<string[]> egressLegs = rowsToAggregate.Where(r => r[Fn.InTrunkAdditionalInfo] == "answer")
+                .ToList();
+
+            List<string[]> rowsCouldntBeAggregated= new List<string[]>();
+            List<string[]> rowsToBeDiscardedAfterAggregation= new List<string[]>();
+
+            if (ingressLegs.Any()==false || egressLegs.Any()==false)
             {
-                if (occuranceCountOfRoutes.ContainsKey(route))
-                {
-                    occuranceCountOfRoutes[route]++;
-                }
-                else
-                {
-                    occuranceCountOfRoutes.Add(route, 1);
-                }
-            };
-            foreach (string[] row in rowsToAggregate)
-            {
-                if (row[Fn.IdCall] != aggregatedRow[Fn.IdCall])
-                {
-                    rowsOtherThanAggregatedInstance.Add(row);
-                }
-                if (row[Fn.InTrunkAdditionalInfo]== "originate")
-                {
-                    string route = row[Fn.IncomingRoute];
-                    incomingRoute = route;
-                    incrementRouteCount(route);
-                }
-                else if (row[Fn.InTrunkAdditionalInfo] == "answer")
-                {
-                    string route = row[Fn.OutgoingRoute];
-                    outgoingRoute = route;
-                    incrementRouteCount(route);
-                }
+                rowsCouldntBeAggregated.AddRange(ingressLegs);
+                rowsCouldntBeAggregated.AddRange(egressLegs);
+                instancesCouldNotBeAggregated = rowsCouldntBeAggregated;
+                instancesToBeDiscardedAfterAggregation = rowsToBeDiscardedAfterAggregation;
+                return null;
             }
-            if (occuranceCountOfRoutes[incomingRoute]!=3 || 
-                occuranceCountOfRoutes[outgoingRoute]!=1)
-            {
-                throw new Exception("Occurance of incomingroute must be 3, occurance of outgoingroute must be 1.");
-            }
-            aggregatedRow[Fn.IncomingRoute] = incomingRoute;
-            aggregatedRow[Fn.OutgoingRoute] = outgoingRoute;
-            aggregatedRow[Fn.Partialflag] = "0";
-            instancesRemainedUnaggregated = rowsOtherThanAggregatedInstance;//out param
+            
+            string[] aggregatedRow = egressLegs.Last();
+            aggregatedRow[Fn.IncomingRoute] = ingressLegs.Last()[Fn.IncomingRoute];
+            bool aggregationComplete = false;
+            //if (!aggregatedRow[Fn.IncomingRoute].IsNullOrEmptyOrWhiteSpace() &&
+            //    !ingressLegs.Last()[Fn.IncomingRoute].IsNullOrEmptyOrWhiteSpace() &&
+            //    aggregatedRow[Fn.IncomingRoute] != in)
+                //foreach (string[] row in rowsToAggregate)
+                //{
+                //    if (row[Fn.IdCall] != aggregatedRow[Fn.IdCall])
+                //    {
+                //        rowsToBeDiscardedAfterAggregation.Add(row);
+                //    }
+                //}
+
+                //aggregatedRow[Fn.Partialflag] = "0";
+                //instancesCouldNotBeAggregated = rowsOtherThanAggregatedInstance;//out param
+                //return aggregatedRow;
+            instancesToBeDiscardedAfterAggregation = new List<string[]>();
+                instancesCouldNotBeAggregated = new List<string[]>();
             return aggregatedRow;
         }
 

@@ -24,14 +24,14 @@ namespace TelcobrightMediation
         private string DatabaseName { get; set; }
         private string ConStr { get; set; }
         public AbstractCdrDecoder Decoder { get; }
-        public List<T> DecodedEvents { get; }
+        public List<T> InputEvents { get; }
         public Dictionary<string, List<T>> TupleWiseDecodedEvents { get; } 
         public Dictionary<DateTime, Dictionary<DateTime, HourlyEventData<T>>> DayAndHourWiseEvents { get; }
-        public List<T> ExistingEvents = new List<T>();
+        public List<T> ExistingEventsInDb = new List<T>();
         public string SourceTablePrefix { get; set; }
 
         public DayWiseEventCollector(bool uniqueEventsOnly, CdrCollectorInputData collectorInput, DbCommand dbCmd,
-            AbstractCdrDecoder decoder, List<T> decodedEvents, string sourceTablePrefix)
+            AbstractCdrDecoder decoder, List<T> inputEvents, string sourceTablePrefix)
         {
             this.UniqueEventsOnly = uniqueEventsOnly;
             this.SourceTablePrefix = sourceTablePrefix;
@@ -40,11 +40,11 @@ namespace TelcobrightMediation
             this.DatabaseName = this.DatabaseSetting.DatabaseName;
             this.ConStr = DbUtil.getDbConStrWithDatabase(this.DatabaseSetting);
             this.Decoder = decoder;
-            this.DecodedEvents = decodedEvents;
+            this.InputEvents = inputEvents;
             CdrSetting cdrSetting = this.CollectorInput.CdrSetting;
             var pastHoursToSeekForCollection = cdrSetting.HoursToAddBeforeForSafePartialCollection;
             var nextHoursToSeekForCollection = cdrSetting.HoursToAddAfterForSafePartialCollection;
-            this.TupleWiseDecodedEvents = decodedEvents.Select(row =>
+            this.TupleWiseDecodedEvents = inputEvents.Select(row =>
             {
                 var data = new Dictionary<string, object>
                 {
@@ -58,7 +58,7 @@ namespace TelcobrightMediation
                 };
             }).GroupBy(a=>a.Tuple).ToDictionary(g => g.Key, g=>g.Select(groupEvents=>groupEvents.Event).ToList());
 
-            this.DayAndHourWiseEvents = decodedEvents.SelectMany(row =>
+            this.DayAndHourWiseEvents = inputEvents.SelectMany(row =>
             {
                 DateTime dateTime= this.Decoder.getEventDatetime(new Dictionary<string,object>
                 {
@@ -154,7 +154,7 @@ namespace TelcobrightMediation
                                 reader.Close();
                             }
                         }
-                        this.ExistingEvents = existingEvents;
+                        this.ExistingEventsInDb = existingEvents;
                         if (this.UniqueEventsOnly == true)
                         {
                             checkForDuplicatesAndThrow();
@@ -167,7 +167,7 @@ namespace TelcobrightMediation
 
         private void checkForDuplicatesAndThrow()
         {
-            Dictionary<T, int> tupleWiseCount = this.ExistingEvents.GroupBy(s => s)
+            Dictionary<T, int> tupleWiseCount = this.ExistingEventsInDb.GroupBy(s => s)
                                     .Select(g => new
                                     {
                                         Tuple = g.Key,

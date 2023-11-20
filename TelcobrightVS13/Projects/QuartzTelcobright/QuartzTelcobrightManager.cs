@@ -81,7 +81,7 @@ namespace QuartzTelcobright
                 .WithIdentity(qData.Identity +" " +qData.Group, qData.Group)
                 .WithCronSchedule(qData.CronExpression,x=>x
                 .WithMisfireHandlingInstructionDoNothing()
-                .WithMisfireHandlingInstructionIgnoreMisfires()
+                //.WithMisfireHandlingInstructionIgnoreMisfires()
                 //.WithMisfireHandlingInstructionFireAndProceed()
                 ).Build();
         }

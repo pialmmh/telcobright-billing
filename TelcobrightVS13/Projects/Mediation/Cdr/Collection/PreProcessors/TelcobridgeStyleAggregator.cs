@@ -22,20 +22,19 @@ namespace TelcobrightMediation.Cdr.Collection.PreProcessors
         private Dictionary<string, T> AggregatedEvents { get; } = new Dictionary<string, T>();
         private List<T> OldUnAggregatedEventsFromDb { get; }
         private List<T> NewUnAggregatedEventsNotInDb { get; }
-        private Dictionary<string,List<T>> AllUnAggregatedEvents { get; set; }
         private AbstractCdrDecoder Decoder { get; }
 
         public TelcobridgeStyleAggregator(DayWiseEventCollector<T> eventCollector)
         {
             this.EventCollector = eventCollector;
             this.CollectorInput = eventCollector.CollectorInput;
-            this.OldUnAggregatedEventsFromDb = eventCollector.ExistingEvents;
-            this.NewUnAggregatedEventsNotInDb = eventCollector.DecodedEvents;
+            this.NewUnAggregatedEventsNotInDb = eventCollector.InputEvents;
+            this.OldUnAggregatedEventsFromDb = eventCollector.ExistingEventsInDb;
             this.Decoder = eventCollector.Decoder;
         }
-        public Dictionary<string, T> aggregateCdrs(out List<T> finalUnaggregatedEvents)
+        public Dictionary<string, T> aggregateCdrs(out List<T> eventsRemainedUnaggreagated, out List<T> eventsToBeDiscardedAfterAggregation)
         {
-            this.AllUnAggregatedEvents = this.OldUnAggregatedEventsFromDb.Concat(this.NewUnAggregatedEventsNotInDb)
+            var allUnAggregatedEvents = this.OldUnAggregatedEventsFromDb.Concat(this.NewUnAggregatedEventsNotInDb)
                 .GroupBy(e => Decoder.getTupleExpression(e))
                 .Select(g => new
                 {
@@ -43,33 +42,16 @@ namespace TelcobrightMediation.Cdr.Collection.PreProcessors
                     Events = g.ToList()
                 }).ToDictionary(a => a.Key, a => a.Events);
             Dictionary<string,T> finalAggregatedEvents= new Dictionary<string, T>();
-            finalUnaggregatedEvents= new List<T>();
-            foreach (var kv in this.AllUnAggregatedEvents)
+            eventsRemainedUnaggreagated= new List<T>();
+            foreach (var kv in allUnAggregatedEvents)
             {
                 string billId = kv.Key;
                 List<T> unAggregatedInstances = kv.Value;
-                object rowsRemainedUnAggregated = null;
-                T aggregatedInstance = (T)this.Decoder.Aggregate(unAggregatedInstances, out rowsRemainedUnAggregated);
-                finalAggregatedEvents.Add(billId,aggregatedInstance);
+                //object unaggregatedInstancesRorThisTupleOrBillId = null;
+                //T aggregatedInstance = (T)this.Decoder.Aggregate(unAggregatedInstances, out unaggregatedInstancesRorThisTupleOrBillId);
+                //finalAggregatedEvents.Add(billId,aggregatedInstance);
             }
-                
-            //foreach (var kv in EventCollector.TupleWiseDecodedEvents)
-            //{
-            //    string tuple = kv.Key;
-            //    List<T> eventsForThisTuple = kv.Value;
-            //    if (billIdWiseEvents.ContainsKey(tuple) == false)
-            //    {
-            //        T head = eventsForThisTuple.First();
-            //        List<T> tail = eventsForThisTuple.Skip(1).ToList();
-            //        AggregatedEvents.Add(tuple, head);
-            //        billIdWiseEvents.Add(tuple, tuple); //it's just used like hashmap
-            //        finalUnaggregatedEvents.AddRange(tail);
-            //    }
-            //    else
-            //    {
-            //        finalUnaggregatedEvents.AddRange(eventsForThisTuple); //dup events are skipped
-            //    }
-            //}
+            eventsToBeDiscardedAfterAggregation = new List<T>();
             return finalAggregatedEvents;
         }
     }

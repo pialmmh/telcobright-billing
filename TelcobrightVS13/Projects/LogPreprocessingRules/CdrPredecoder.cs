@@ -178,26 +178,7 @@ namespace LogPreProcessor
                     prepareThreadSafePreDecoders(mediationContext, thisSwitch, tbc, context, newCdrFileJob, enumerable);
 
                 //no need for try catch, handled within preDecodeFile();
-                //Parallel.ForEach(threadSafePredecoders, predecoder =>
-                //{
-                //    PredecoderOutput output = predecoder.preDecodeToFile();//predecodehere
-                //    if (output.SuccessfulJob != null)
-                //    {
-                //        successResult.Add(output);
-                //    }
-                //    else
-                //    {
-                //        if (output.FailedJob == null)
-                //        {
-                //            throw new Exception(
-                //                "Both successful and failed jobs cannot be null after predecoding of cdr files.");
-                //        }
-                //        failedResults.Add(output);
-                //    }
-                //}); //parallel
-
-                //temp code, single trhread
-                threadSafePredecoders.ForEach(predecoder =>
+                Parallel.ForEach(threadSafePredecoders, predecoder =>
                 {
                     PredecoderOutput output = predecoder.preDecodeToFile();//predecodehere
                     if (output.SuccessfulJob != null)
@@ -208,15 +189,14 @@ namespace LogPreProcessor
                     {
                         if (output.FailedJob == null)
                         {
-                            throw new Exception(
+                            var exception = new Exception(
                                 "Both successful and failed jobs cannot be null after predecoding of cdr files.");
+                            Console.WriteLine(exception);
+                            throw exception;
                         }
                         failedResults.Add(output);
                     }
                 }); //parallel
-                //end temp code
-
-
 
                 if (successResult.Any()) updateSuccessfulJobs(thisSwitch, context, cmd, successResult);
                 if(failedResults.Any()) updateFailedJobs(thisSwitch, context, cmd, failedResults, tbc);
@@ -228,8 +208,12 @@ namespace LogPreProcessor
             foreach (var job in newCdrFileJobs)
             {
                 if (job.idjobdefinition != 1)
-                    throw new Exception(
+                {
+                    var exception = new Exception(
                         $"Job type must be 1= newCdrFileJob for cdrPredecoding. jobid:{job.id}, jobName:{job.JobName}");
+                    Console.WriteLine(exception);
+                    throw exception;
+                }
             }
         }
 

@@ -460,6 +460,23 @@ namespace TelcobrightMediation
                 throw new Exception("Written number of unique event count does not match non-duplicate event count.");
             }
 
+            var neAdditionalSetting = this.CdrJobContext.CdrjobInputData.NeAdditionalSetting;
+            int newRowsRemainedUnaggreagatedCount = 0;
+            if (neAdditionalSetting!=null && 
+                !neAdditionalSetting.AggregationStyle.IsNullOrEmptyOrWhiteSpace())
+            {
+                if (neAdditionalSetting.AggregationStyle == "telcobridge")
+                {
+                    newRowsRemainedUnaggreagatedCount =
+                        WriteNewRowsRemainedUnaggreagated(this.CollectionResult.NewRowsRemainedUnaggreagated);
+                }
+            }
+            if (this.CollectionResult.NewRowsRemainedUnaggreagated.Any() &&
+                newRowsRemainedUnaggreagatedCount != this.CollectionResult.NewRowsRemainedUnaggreagated.Count)
+            {
+                throw new Exception("Written number of unique event count does not match non-duplicate event count.");
+            }
+
             int cdrDiscardedCount = 0;
             if (this.CdrJobContext.CdrjobInputData.Ne.FilterDuplicateCdr == 1)
             {
@@ -707,6 +724,61 @@ namespace TelcobrightMediation
             }
             return insertCount;
         }
+
+        int WriteNewRowsRemainedUnaggreagated(List<string[]> newRowsRemainedUnaggreagated)//<tuple, cdr row as text[] as decoded initially>
+        {
+            int insertCount = 0;
+            int startAt = 0;
+            //List<KeyValuePair<string, string[]>> tupleVsTextCdrs = newRowsRemainedUnaggreagated
+            //    .Select(kv => new KeyValuePair<string, string[]>(kv.Key, kv.Value)).ToList();
+
+            Dictionary<DateTime, List<string[]>> dateWiseRows =
+                newRowsRemainedUnaggreagated.GroupBy(r => r[Fn.AnswerTime].ConvertToDateTimeFromMySqlFormat().Date)
+                    .ToDictionary(grouping => grouping.Key, grouping => grouping.ToList());
+
+            foreach (var kv in dateWiseRows)
+            {
+                DateTime date = kv.Key;
+                List<string[]> rows = kv.Value;
+                string tableName = $"zz_zz_partialevent_{date:yyyyMMdd}";
+                //List<KeyValuePair<string, string[]>> tupleVsCdrRow = rows.Value;
+
+                CollectionSegmenter<string[]> collectionSegmenter =
+                    new CollectionSegmenter<string[]>(rows, startAt);
+                collectionSegmenter.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
+                    segment =>
+                    {
+                        var segmentAsList = segment.ToList();
+                        int segmentCount = segmentAsList.Count;
+
+                        ParallelIterator<string[], StringBuilder> iterator =
+                            new ParallelIterator<string[], StringBuilder>(segmentAsList);
+                        List<StringBuilder> sbs =
+                            iterator.getOutput(row =>
+                            {
+                                //cdrerror=cdrinconsitent and partialEvents all have same structure
+                                cdrinconsistent cdr = CdrConversionUtil.ConvertTxtRowToCdrinconsistent(row);
+                                return cdr.GetExtInsertValues();
+                            });
+
+                        //string sql = $" insert into {tableName}(tuple, starttime) values " +
+                        string sql = $"{StaticExtInsertColumnHeaders.cdrerror.Replace("insert into cdrerror","insert into " + tableName)}" +
+                                     $"{StringBuilderJoiner.Join(",", sbs).ToString()}";
+                        this.DbCmd.CommandType = CommandType.StoredProcedure;
+                        this.DbCmd.CommandText = "sp_extInsert";
+
+                        int affectedRecordCount = DbWriterWithAccurateCount.ExecSingleStatementThroughStoredProc(
+                            dbCmd: this.DbCmd,
+                            command: sql,
+                            expectedRecCount: segmentCount);
+                        if (affectedRecordCount != segmentCount)
+                            throw new Exception("Affected record count does not match segment count while writing cdrs.");
+                        insertCount += affectedRecordCount;
+                    });
+            }
+            return insertCount;
+        }
+
 
     }
 }
