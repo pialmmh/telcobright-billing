@@ -43,12 +43,12 @@ namespace Jobs
                 }
                 else if (delParam.FileLocation.LocationType == "vault")
                 {
-                    //Vault vault = input.Tbc.DirectorySettings.Vaults.First(c => c.Name == delParam.FileLocation.Name);
-                    //if (vault.DeleteSingleFile(delParam.FileName) == false) return JobCompletionStatus.Incomplete;
-                    File.Delete(delParam.FileName);
+                    Console.WriteLine("Processing Optimizer: " + input.Job.JobName + ", type: File Delete"); 
+                    File.Delete(delParam.FileLocation.StartingPath.Replace("/", Path.DirectorySeparatorChar.ToString()) + Path.DirectorySeparatorChar + delParam.FileName);
+                    return JobCompletionStatus.Complete;
                 }
             }
-            return JobCompletionStatus.Complete;
+            return JobCompletionStatus.Incomplete;
         }
 
         public object PreprocessJob(object data)

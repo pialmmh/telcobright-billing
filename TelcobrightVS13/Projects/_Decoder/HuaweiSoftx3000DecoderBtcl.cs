@@ -323,6 +323,7 @@ namespace Decoders
 
                     thisRow[Fn.FinalRecord] = "1";
                     thisRow[Fn.Validflag] = "1";
+                    thisRow[Fn.Partialflag] = "0";
                     thisRow[Fn.Sequencenumber] = "1";
                     thisRow[Fn.StartTime] = thisRow[Fn.AnswerTime];
                     thisRow[Fn.ConnectTime] = thisRow[Fn.AnswerTime];

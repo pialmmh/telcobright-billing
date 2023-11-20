@@ -14,6 +14,7 @@ namespace Decoders
 {
 
     [Export("Decoder", typeof(AbstractCdrDecoder))]
+
     public class ZteIpTdmDecoder : AbstractCdrDecoder
     {
         public override string ToString() => this.RuleName;

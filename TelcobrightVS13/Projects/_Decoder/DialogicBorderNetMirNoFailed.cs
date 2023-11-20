@@ -171,6 +171,7 @@ namespace Decoders
                 textCdr[Fn.ReleaseCauseIngress] = lineAsArr[110];
                 textCdr[Fn.ReleaseCauseEgress] = lineAsArr[133];
                 textCdr[Fn.Validflag] = "1";
+                textCdr[Fn.Partialflag] = "0";
                 decodedRows.Add(textCdr.ToArray());
             }
 

@@ -133,6 +133,7 @@ namespace Decoders
                     textCdr[Fn.Endtime] = ansTime.ToMySqlFormatWithoutQuote();
                 }
                 textCdr[Fn.Validflag] = "1";
+                textCdr[Fn.Partialflag] = "0";
                 textCdr[Fn.ChargingStatus] = "1";
                 decodedRows.Add(textCdr.ToArray());
             }

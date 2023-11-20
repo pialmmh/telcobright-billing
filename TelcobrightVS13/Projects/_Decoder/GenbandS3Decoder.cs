@@ -268,6 +268,8 @@ namespace Decoders
                                                         //remove the text "end1", casue that will throw error for this field in cdr
                             thisNormalizedRow[65] = "0";//a numeric value is ok as per cdrfieldlist
                             thisNormalizedRow[Fn.FinalRecord] = "1";
+                            thisNormalizedRow[Fn.Partialflag] = "0";
+
                             decodedRows.Add(thisNormalizedRow);
                         }
                     }

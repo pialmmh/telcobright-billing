@@ -115,6 +115,7 @@ namespace Decoders
                 textCdr[Fn.ReleaseCauseSystem] = lineAsArr[10].Trim();
                 //textCdr[Fn.UniqueBillId] = lineAsArr[10].Trim();
                 textCdr[Fn.Validflag] = "1";
+                textCdr[Fn.Partialflag] = "0";
                 decodedRows.Add(textCdr);
             }
 

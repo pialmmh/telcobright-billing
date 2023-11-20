@@ -165,6 +165,7 @@ namespace Decoders
 
                 textCdr[Fn.Sequencenumber] = lineAsArr[1].Trim();
                 textCdr[Fn.Validflag] = "1";
+                textCdr[Fn.Partialflag] = "0";
                 textCdr[Fn.ChargingStatus] = "1";
 
 

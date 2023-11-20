@@ -314,6 +314,7 @@ namespace Decoders
                     }
                     thisRow[Fn.FinalRecord] = "1";
                     thisRow[Fn.Validflag] = "1";
+                    thisRow[Fn.Partialflag] = "0";
                     decodedRows.Add(thisRow);
                 }
                 catch (Exception e1)

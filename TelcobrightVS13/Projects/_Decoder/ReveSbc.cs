@@ -138,6 +138,7 @@ namespace Decoders
 
 
                 textCdr[Fn.Validflag] = "1";
+                textCdr[Fn.Partialflag] = "0";
                 decodedRows.Add(textCdr.ToArray());
             }
             return decodedRows;
