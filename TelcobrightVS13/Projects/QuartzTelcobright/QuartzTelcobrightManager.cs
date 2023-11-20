@@ -80,9 +80,9 @@ namespace QuartzTelcobright
             return TriggerBuilder.Create()
                 .WithIdentity(qData.Identity +" " +qData.Group, qData.Group)
                 .WithCronSchedule(qData.CronExpression,x=>x
-                .WithMisfireHandlingInstructionDoNothing()
+                //.WithMisfireHandlingInstructionDoNothing()
                 //.WithMisfireHandlingInstructionIgnoreMisfires()
-                //.WithMisfireHandlingInstructionFireAndProceed()
+                .WithMisfireHandlingInstructionFireAndProceed()
                 ).Build();
         }
         private ITrigger CreateTriggerWithMissFire(QuartzTbDaemonConfig qData)

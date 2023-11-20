@@ -197,6 +197,12 @@
     <PreBuildEvent>copy $(SolutionDir)\7z.exe  $(SolutionDir)\WS_Topshelf_Quartz\bin\Debug\7z.exe
 copy $(SolutionDir)\7z.exe  $(SolutionDir)\WS_Topshelf_Quartz\bin\release\7z.exe</PreBuildEvent>
   </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>if exist "$(DevEnvDir)..\tools\vsvars32.bat" (
+   call "$(DevEnvDir)..\tools\vsvars32.bat"
+   editbin /largeaddressaware "$(TargetPath)"
+)</PostBuildEvent>
+  </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
