@@ -196,7 +196,12 @@
                             <div style=" text-align: center;">
                                 <asp:Label ID="Label2" runat="server" Text="Latest CDR Job Process Status" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
                             </div>
+                            <%--<asp:Label ID="NoDataLabel" runat="server" Text="NO DATA" Visible="false" ForeColor="Red"></asp:Label>--%>
+                            <%--<asp:Label ID="NoDataLabel" runat="server" Text="NO DATA" Visible="false" ForeColor="Red" Width="600px" Height="1000px"></asp:Label>--%>
+                            <asp:Label ID="NoDataLabel" runat="server" Text="NO DATA" Visible="false" ForeColor="Red" Width="600px" Height="400px" Font-Size="24px" style="text-align: center; line-height: 400px;"></asp:Label>
+
                             <asp:GridView ID="GridViewCompleted" runat="server" AutoGenerateColumns="False" CellPadding="4" Width="600px" DataKeyNames="id" ForeColor="#333333" GridLines="None" BorderStyle="None" BorderWidth="1" OnPageIndexChanging="GridViewCompleted_PageIndexChanging">
+                                
                                 <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                                 <Columns>
                                     <asp:TemplateField HeaderText="Status">
@@ -210,7 +215,6 @@
                                     <asp:BoundField DataField="JobName" HeaderText="JobName" SortExpression="JobName" />
                                     <asp:BoundField DataField="CreationTime" HeaderText="CreationTime" SortExpression="CreationTime" DataFormatString="{0:yyyy-MM-dd HH:mm:ss}" />
                                     <asp:BoundField DataField="CompletionTime" HeaderText="CompletionTime" SortExpression="CompletionTime" DataFormatString="{0:yyyy-MM-dd HH:mm:ss}" />
-
                                 </Columns>
                                 <EditRowStyle BackColor="#999999" />
                                 <FooterStyle BackColor="#086052" Font-Bold="True" ForeColor="White" />
@@ -230,8 +234,8 @@
 
                         </div>
                         <%--humayun--%>
-                        <div style="text-align: center; float: left;">
-                            <div style="text-align: center; float: left; ">
+                        <div style="text-align: center; float: right;">
+                            <div style="text-align: center; float: right; padding-right:200px;">
                                 <div class="col-3">
                                 
                                     <div style="margin-left: auto; margin-right: auto; text-align: center;">

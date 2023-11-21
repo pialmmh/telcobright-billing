@@ -115,15 +115,19 @@
                             <ItemTemplate>
                                 <div style="text-align: center;">
                                     <asp:Image ID="StatusImage" runat="server" Width="14" Height="14" 
-                                        ImageUrl='<%# (Container.DataItemIndex % 2 == 0) ? "~/img/correct.png" : "~/img/error.png" %>' />
+                                        ImageUrl='<%# Convert.ToInt32(Eval("No_Of_Cdrs_in_last_24_hours")) > 19 ? "~/img/correct.png" : "~/img/error.png" %>' />
                                 </div>
                             </ItemTemplate>
                         </asp:TemplateField>
-                        <asp:BoundField DataField="id" HeaderText="id" InsertVisible="False" ReadOnly="True" SortExpression="id" Visible="false" />
-                        <asp:BoundField DataField="JobName" HeaderText="JobName" SortExpression="JobName" />
-                        <asp:BoundField DataField="CreationTime" HeaderText="CreationTime" SortExpression="CreationTime" DataFormatString="{0:yyyy-MM-dd HH:mm:ss}" />
-                        <asp:BoundField DataField="CompletionTime" HeaderText="CompletionTime" SortExpression="CompletionTime" DataFormatString="{0:yyyy-MM-dd HH:mm:ss}" />
-                                            
+
+                        <%--<asp:BoundField DataField="id" HeaderText="id" InsertVisible="False" ReadOnly="True" SortExpression="id" Visible="false" />
+                        <asp:BoundField DataField="icx" HeaderText="ICX" SortExpression="icx" />
+                        <asp:BoundField DataField="Switch Name" HeaderText="Switch Name" SortExpression="Switch Name"/>
+                        <asp:BoundField DataField="No_Of_Cdrs_in_last_24_hours" HeaderText="No Of Cdrs in last 24 hours" SortExpression="No_Of_Cdrs_in_last_24_hours"/>--%>
+                        <asp:BoundField DataField="icx" HeaderText="ICX" SortExpression="icx" />
+                        <asp:BoundField DataField="SwitchName" HeaderText="Switch Name" SortExpression="SwitchName" />
+                        <asp:BoundField DataField="No_Of_Cdrs_in_last_24_hours" HeaderText="No Of CDRs in last 24 hours" SortExpression="No_Of_Cdrs_in_last_24_hours" />
+                 
                     </Columns>
                     <EditRowStyle BackColor="#999999" />
                     <FooterStyle BackColor="#086052" Font-Bold="True" ForeColor="White" />
