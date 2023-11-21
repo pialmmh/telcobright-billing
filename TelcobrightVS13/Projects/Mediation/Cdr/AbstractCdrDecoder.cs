@@ -113,8 +113,7 @@ namespace TelcobrightMediation
             return (IEventDecoder) Activator.CreateInstance(t);
         }
 
-        public virtual object Aggregate(object data, out object instancesCouldNotBeAggregated,
-            out object instancesToBeDiscardedAfterAggregation)
+        public virtual EventAggregationResult Aggregate(object data)
         {
             throw new NotImplementedException();
         }

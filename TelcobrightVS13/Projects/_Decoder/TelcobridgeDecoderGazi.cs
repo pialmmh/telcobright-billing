@@ -137,47 +137,9 @@ namespace Decoders
             return decodedRows;
         }
 
-        public override object Aggregate(object data, out object instancesCouldNotBeAggregated,
-            out object instancesToBeDiscardedAfterAggregation)
+        public override EventAggregationResult Aggregate(object data)
         {
-            List<string[]> rowsToAggregate= ((List<string[]>)data).OrderBy(row=>row[Fn.StartTime]).ToList();
-            List<string[]> ingressLegs = rowsToAggregate.Where(r => r[Fn.InTrunkAdditionalInfo] == "originate")
-                .ToList();
-            List<string[]> egressLegs = rowsToAggregate.Where(r => r[Fn.InTrunkAdditionalInfo] == "answer")
-                .ToList();
-
-            List<string[]> rowsCouldntBeAggregated= new List<string[]>();
-            List<string[]> rowsToBeDiscardedAfterAggregation= new List<string[]>();
-
-            if (ingressLegs.Any()==false || egressLegs.Any()==false)
-            {
-                rowsCouldntBeAggregated.AddRange(ingressLegs);
-                rowsCouldntBeAggregated.AddRange(egressLegs);
-                instancesCouldNotBeAggregated = rowsCouldntBeAggregated;
-                instancesToBeDiscardedAfterAggregation = rowsToBeDiscardedAfterAggregation;
-                return null;
-            }
-            
-            string[] aggregatedRow = egressLegs.Last();
-            aggregatedRow[Fn.IncomingRoute] = ingressLegs.Last()[Fn.IncomingRoute];
-            bool aggregationComplete = false;
-            //if (!aggregatedRow[Fn.IncomingRoute].IsNullOrEmptyOrWhiteSpace() &&
-            //    !ingressLegs.Last()[Fn.IncomingRoute].IsNullOrEmptyOrWhiteSpace() &&
-            //    aggregatedRow[Fn.IncomingRoute] != in)
-                //foreach (string[] row in rowsToAggregate)
-                //{
-                //    if (row[Fn.IdCall] != aggregatedRow[Fn.IdCall])
-                //    {
-                //        rowsToBeDiscardedAfterAggregation.Add(row);
-                //    }
-                //}
-
-                //aggregatedRow[Fn.Partialflag] = "0";
-                //instancesCouldNotBeAggregated = rowsOtherThanAggregatedInstance;//out param
-                //return aggregatedRow;
-            instancesToBeDiscardedAfterAggregation = new List<string[]>();
-                instancesCouldNotBeAggregated = new List<string[]>();
-            return aggregatedRow;
+            return TelcobridgeAggregationHelper.Aggregate(data);
         }
 
         public override string getCreateTableSqlForUniqueEvent(Object data)

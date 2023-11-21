@@ -10,6 +10,7 @@ using System.Linq;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using Decoders;
 using LibraryExtensions;
 
 namespace Decoders
@@ -150,55 +151,9 @@ namespace Decoders
             return decodedRows;
         }
 
-        public override object Aggregate(object data, out object instancesCouldNotBeAggregated,
-            out object instancesToBeDiscardedAfterAggregation)
+        public override EventAggregationResult Aggregate(object data)
         {
-            List<string[]> rowsToAggregate= ((List<string[]>)data).OrderBy(row=>row[Fn.StartTime]).ToList();
-            string[] aggregatedRow = rowsToAggregate.Last();
-            List <string[]> rowsOtherThanAggregatedInstance= new List<string[]>();
-            string incomingRoute ="", outgoingRoute="";
-            Dictionary<string, int> occuranceCountOfRoutes= new Dictionary<string, int>();
-            Action<string> incrementRouteCount = route =>
-            {
-                if (occuranceCountOfRoutes.ContainsKey(route))
-                {
-                    occuranceCountOfRoutes[route]++;
-                }
-                else
-                {
-                    occuranceCountOfRoutes.Add(route, 1);
-                }
-            };
-            foreach (string[] row in rowsToAggregate)
-            {
-                if (row[Fn.IdCall] != aggregatedRow[Fn.IdCall])
-                {
-                    rowsOtherThanAggregatedInstance.Add(row);
-                }
-                if (row[Fn.InTrunkAdditionalInfo]== "originate")
-                {
-                    string route = row[Fn.IncomingRoute];
-                    incomingRoute = route;
-                    incrementRouteCount(route);
-                }
-                else if (row[Fn.InTrunkAdditionalInfo] == "answer")
-                {
-                    string route = row[Fn.OutgoingRoute];
-                    outgoingRoute = route;
-                    incrementRouteCount(route);
-                }
-            }
-            if (occuranceCountOfRoutes[incomingRoute]!=3 || 
-                occuranceCountOfRoutes[outgoingRoute]!=1)
-            {
-                throw new Exception("Occurance of incomingroute must be 3, occurance of outgoingroute must be 1.");
-            }
-            aggregatedRow[Fn.IncomingRoute] = incomingRoute;
-            aggregatedRow[Fn.OutgoingRoute] = outgoingRoute;
-            aggregatedRow[Fn.Partialflag] = "0";
-            instancesToBeDiscardedAfterAggregation = new List<string[]>();
-            instancesCouldNotBeAggregated= new List<string[]>();
-            return aggregatedRow;
+            return TelcobridgeAggregationHelper.Aggregate(data);
         }
 
         public override string getCreateTableSqlForUniqueEvent(Object data)

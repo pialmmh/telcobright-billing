@@ -198,10 +198,8 @@
 copy $(SolutionDir)\7z.exe  $(SolutionDir)\WS_Topshelf_Quartz\bin\release\7z.exe</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>if exist "$(DevEnvDir)..\tools\vsvars32.bat" (
-   call "$(DevEnvDir)..\tools\vsvars32.bat"
-   editbin /largeaddressaware "$(TargetPath)"
-)</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

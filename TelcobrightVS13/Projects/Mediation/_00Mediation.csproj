@@ -225,6 +225,7 @@
     <Compile Include="Cdr\Collection\PreProcessors\TelcobridgeStyleAggregator.cs" />
     <Compile Include="Cdr\Collection\PreProcessors\DuplicaterEventFilter.cs" />
     <Compile Include="Cdr\Collection\RowIdsCollectionForSingleDay.cs" />
+    <Compile Include="Cdr\EventAggregationResult.cs" />
     <Compile Include="Cdr\EventDateTimeHelper.cs" />
     <Compile Include="Cdr\IEventDecoder.cs" />
     <Compile Include="Cdr\RateCacheCleaner.cs" />

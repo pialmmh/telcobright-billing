@@ -55,7 +55,7 @@ namespace InstallConfig
             };
             FileLocation vaultTelcobridgeCTG = new FileLocation()
             {
-                Name = "vault",//this is refered in ne table, name MUST start with "Vault"
+                Name = "Vault.TelcobridgeCTG",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
@@ -68,7 +68,7 @@ namespace InstallConfig
 
             FileLocation vaultTelcobridgeKHL = new FileLocation()
             {
-                Name = "vault",//this is refered in ne table, name MUST start with "Vault"
+                Name = "Vault.TelcobridgeKHL",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
