@@ -82,7 +82,7 @@ public partial class DashboardAspxForIcx : Page
         using (MySqlConnection con = new MySqlConnection(connectionString))
         {
             con.Open();
-            string sql = $@"select tup_starttime as DurationDate, sum(duration1) as Duration from sum_voice_day_02 where 
+            string sql = $@"select tup_starttime as DurationDate, sum(duration1) as Duration from sum_voice_day_01 where 
                             tup_starttime >= '{lastSevenDay}' and tup_starttime <= '{today}' group by DurationDate;";
             using (MySqlCommand command = new MySqlCommand(sql, con))
             {
@@ -139,7 +139,7 @@ public partial class DashboardAspxForIcx : Page
         using (MySqlConnection con = new MySqlConnection(connectionString))
         {
             con.Open();
-            string sql = $@"select tup_starttime as DurationDate, sum(duration1) as Duration from sum_voice_day_03 where 
+            string sql = $@"select tup_starttime as DurationDate, sum(duration1) as Duration from sum_voice_day_01 where 
                             tup_starttime >= '{lastSevenDay}' and tup_starttime <= '{today}' group by DurationDate;";
             using (MySqlCommand command = new MySqlCommand(sql, con))
             {

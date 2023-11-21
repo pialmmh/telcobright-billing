@@ -193,16 +193,16 @@
                     <div>
                         <%--div 1--%>
                         <div style="float: left;">
-                            <div style="margin-right: auto; text-align: center;">
+                            <div style=" text-align: center;">
                                 <asp:Label ID="Label2" runat="server" Text="Latest CDR Job Process Status" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
                             </div>
-                            <asp:GridView ID="GridViewCompleted" runat="server" AutoGenerateColumns="False" CellPadding="4" DataKeyNames="id" ForeColor="#333333" GridLines="None" BorderStyle="None" BorderWidth="1" OnPageIndexChanging="GridViewCompleted_PageIndexChanging">
+                            <asp:GridView ID="GridViewCompleted" runat="server" AutoGenerateColumns="False" CellPadding="4" Width="600px" DataKeyNames="id" ForeColor="#333333" GridLines="None" BorderStyle="None" BorderWidth="1" OnPageIndexChanging="GridViewCompleted_PageIndexChanging">
                                 <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                                 <Columns>
                                     <asp:TemplateField HeaderText="Status">
                                         <ItemTemplate>
                                             <div style="text-align: center;">
-                                                <asp:Image ID="StatusImage" runat="server" ImageUrl="https://i.postimg.cc/Rh0G70KG/5610944.png" Width="14" Height="14" />
+                                                <asp:Image ID="StatusImage" runat="server" ImageUrl="~/img/correct.png" Width="14" Height="14" />
                                             </div>
                                         </ItemTemplate>
                                     </asp:TemplateField>
@@ -224,13 +224,14 @@
                                 <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
 
                             </asp:GridView>
-                            <asp:Button ID="PreviousButton" runat="server" Text="Newer" OnClick="PreviousButton_Click" AutoPostBack="True" />
-                            <asp:Button ID="NextButton" runat="server" Text="Older" OnClick="NextButton_Click" AutoPostBack="True" />
+                                <asp:Button ID="PreviousButton" runat="server" Text="Newer" OnClick="PreviousButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />
+                                <asp:Button ID="NextButton" runat="server" Text="Older" OnClick="NextButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />
+
 
                         </div>
                         <%--humayun--%>
-                        <div style="text-align: center; float: left; padding-left: 100px;">
-                            <div style="float: left;">
+                        <div style="text-align: center; float: left;">
+                            <div style="text-align: center; float: left; ">
                                 <div class="col-3">
                                 
                                     <div style="margin-left: auto; margin-right: auto; text-align: center;">
@@ -262,9 +263,10 @@
                                             </ChartAreas>
                                       
                                         </asp:Chart>
-                                    
 
                                     </p>
+                                    <asp:Button ID="Button4" runat="server" Text="Newer" OnClick="PreviousButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />
+                                    <asp:Button ID="Button5" runat="server" Text="Older" OnClick="NextButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />
                                 </div>
                             </div>
 
@@ -309,6 +311,8 @@
                                     
 
                                     </p>
+                                    <asp:Button ID="Button6" runat="server" Text="Newer" OnClick="PreviousButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />
+                                    <asp:Button ID="Button7" runat="server" Text="Older" OnClick="NextButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />
                                 </div>
                             </div>
 
@@ -353,6 +357,8 @@
                                     
 
                                     </p>
+                                    <asp:Button ID="Button8" runat="server" Text="Newer" OnClick="PreviousButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />
+                                    <asp:Button ID="Button9" runat="server" Text="Older" OnClick="NextButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />
                                 </div>
                             </div>
 
