@@ -49,7 +49,7 @@ public partial class CasDefaultRptIntlInIcx : System.Web.UI.Page
                          
                          new List<string>()
                             {
-                                //groupInterval=="Hourly"?"tup_starttime":string.Empty,
+                                groupInterval=="Hourly"?"Date":string.Empty,
                                 getInterval(groupInterval),
                                 CheckBoxPartner.Checked==true?"tup_inpartnerid":string.Empty,
                                 CheckBoxShowByAns.Checked==true?"tup_destinationId":string.Empty,

@@ -105,7 +105,7 @@ namespace PortalApp.ReportHelper
             ON cx.CountryCode=cn.Code
             LEFT JOIN ne 
             ON x.tup_switchid=ne.idSwitch
-            ORDER BY " + (GetGroupBy().Contains("tup_starttime") ? "Date, " : string.Empty) + " Successfulcalls DESC ;";
+            ORDER BY " + (GetGroupBy().Contains("Date") ? "Date, " : string.Empty) + " Successfulcalls DESC ;";
         }
     }
 }
