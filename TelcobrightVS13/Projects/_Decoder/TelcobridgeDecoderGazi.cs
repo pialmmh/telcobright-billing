@@ -66,7 +66,7 @@ namespace Decoders
                 double.TryParse(durationStr, out durationSec);
                 if (durationSec <= 0) continue;
                 string callStatus = lineAsArr[0].Trim();
-                if (!string.Equals(callStatus, "End")) continue;
+                //if (!string.Equals(callStatus, "End")) continue;
 
                 textCdr[Fn.UniqueBillId] = lineAsArr[2].Trim();
                 textCdr[Fn.Partialflag] = "1";// all telcobridge cdrs are partial
