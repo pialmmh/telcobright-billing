@@ -11,6 +11,7 @@ namespace TelcobrightInfra.PerformanceAndOptimization
     {
         public static void CompactGCNowForOnce()
         {
+            Console.WriteLine("WARNING!!!!!!!! MANUAL GARBAGE COLLECTION AND COMPACTION OF LOH.");
             System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect();
         }
