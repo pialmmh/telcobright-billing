@@ -46,6 +46,7 @@ namespace TelcobrightMediation
         public bool DeleteOriginalArchiveAfterUnzip { get; set; }
         public DateRange SameRatePeriodForICX { get; set; }= new DateRange(new DateTime(2017,01,01), new DateTime(2030, 01, 01));
         public bool EnableSameRatePeriodForICX { get; set; } = true;
+        public bool ProcessNewCdrJobsBeforeReProcess { get; set; }
 
         public CdrSetting()
         {

@@ -75,15 +75,25 @@ namespace Process
                     {
                         if (ne.SkipCdrDecoded == 1 || CheckIncompleteExists(context, mediationContext, ne) == false)
                             continue;
-                        List<job> incompleteJobs = GetReProcessJobs(context, ne, ne.DecodingSpanCount);
-                        incompleteJobs.AddRange(GetNewCdrJobs(tbc, context, ne, ne.DecodingSpanCount,
-                            neAdditionalSetting)); //combine
+
+
+                        List<job> newCdrJobs = GetNewCdrJobs(tbc, context, ne, ne.DecodingSpanCount,
+                            neAdditionalSetting);
+                        var jobsWithError = newCdrJobs.Where(j => !j.Error.IsNullOrEmptyOrWhiteSpace()).ToList();
+                        var jobsWithoutError =
+                            newCdrJobs.Where(ij => !jobsWithError.Select(ej => ej.id).Contains(ij.id)).ToList();
+                        newCdrJobs = jobsWithoutError.Concat(jobsWithError).ToList();
+                        //incompleteJobs = jobsWithError.Union(incompleteJobs).ToList();
+                        List<job> reprocessJobs = GetReProcessJobs(context, ne, ne.DecodingSpanCount);
+
+                        List<job> incompleteJobs = cdrSetting.ProcessNewCdrJobsBeforeReProcess
+                            ? newCdrJobs.Concat(reprocessJobs).ToList()
+                            : reprocessJobs.Concat(newCdrJobs).ToList();
+
+                        //incompleteJobs.AddRange(newCdrJobs); //combine
                         //jobs with error to be processed as single job and add them to the first of the list, adding them to the last is a bit difficult to manage merge processing
-                        List<job> jobsWithError = incompleteJobs.Where(j => !j.Error.IsNullOrEmptyOrWhiteSpace())
-                            .ToList();
-                        incompleteJobs = incompleteJobs.Where(ij => !jobsWithError.Select(ej => ej.id).Contains(ij.id))
-                            .ToList();//without jobs with error, 
-                        incompleteJobs = jobsWithError.Union(incompleteJobs).ToList();
+                        
+                        
                         
                         CdrJobInputData cdrJobInputData = null;
                         ITelcobrightJob telcobrightJob = null;
