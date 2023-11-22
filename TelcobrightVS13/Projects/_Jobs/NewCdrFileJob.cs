@@ -15,6 +15,7 @@ using LibraryExtensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
+using TelcobrightInfra.PerformanceAndOptimization;
 using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Cdr;
 using TelcobrightMediation.Cdr.Collection.PreProcessors;
@@ -413,7 +414,25 @@ namespace Jobs
                 {
                     throw new Exception("Could not get exclusive lock on file before decoding, file transfer may be not finished yet through the network or FTP.");
                 }
-                var decodedCdrRows = decoder.DecodeFile(this.CollectorInput, out cdrinconsistents);
+                List<string[]> decodedCdrRows= new List<string[]>();
+                try
+                {
+                    decodedCdrRows = decoder.DecodeFile(this.CollectorInput, out cdrinconsistents);
+                }
+                catch (Exception e)
+                {
+                    if (e.Message.Contains("OutOfMemoryException"))
+                    {
+                        Console.WriteLine("WARNING!!!!!!!! MANUAL GARBAGE COLLECTION AND COMPACTION OF LOH.");
+                        GarbageCollectionHelper.CompactGCNowForOnce();
+                        decodedCdrRows = decoder.DecodeFile(this.CollectorInput, out cdrinconsistents);
+                    }
+                    else
+                    {
+                        Console.WriteLine(e);
+                        throw;
+                    }
+                }
                 NewCdrPreProcessor newCdrPreProcessor =
                     new NewCdrPreProcessor(decodedCdrRows, cdrinconsistents, this.CollectorInput);
                 newCdrPreProcessor.Decoder = decoder;

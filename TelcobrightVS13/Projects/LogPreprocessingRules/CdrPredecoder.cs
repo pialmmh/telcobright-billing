@@ -182,7 +182,6 @@ namespace LogPreProcessor
 
                 Parallel.ForEach(threadSafePredecoders, predecoder =>
                 {
-                    GarbageCollectionHelper.CompactGCNowForOnce();
                     PredecoderOutput output = predecoder.preDecodeToFile();//predecodehere
                     if (output.SuccessfulJob != null)
                     {

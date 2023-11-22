@@ -353,6 +353,7 @@ namespace Decoders
                 {
                     if (e.Message.Contains("OutOfMemoryException"))
                     {
+                        Console.WriteLine("WARNING!!!!!!!! MANUAL GARBAGE COLLECTION AND COMPACTION OF LOH.");
                         GarbageCollectionHelper.CompactGCNowForOnce();
                         recordData = GetRecordData(dataType, recordBytes);
                     }
@@ -382,6 +383,7 @@ namespace Decoders
                         {
                             if (e.Message.Contains("OutOfMemoryException"))
                             {
+                                Console.WriteLine("WARNING!!!!!!!! MANUAL GARBAGE COLLECTION AND COMPACTION OF LOH.");
                                 GarbageCollectionHelper.CompactGCNowForOnce();
                                 recordData = GetRecordData(dataType, recordBytes);
                             }

@@ -75,7 +75,7 @@ namespace Process
                 {
                     foreach (job thisJob in incompleteJobs)
                     {
-                        GarbageCollectionHelper.CompactGCNowForOnce();
+                        //GarbageCollectionHelper.CompactGCNowForOnce();
                         try
                         {
                             sql = "set autocommit=0;";

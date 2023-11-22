@@ -84,11 +84,7 @@ namespace Process
                         incompleteJobs = incompleteJobs.Where(ij => !jobsWithError.Select(ej => ej.id).Contains(ij.id))
                             .ToList();//without jobs with error, 
                         incompleteJobs = jobsWithError.Union(incompleteJobs).ToList();
-                        //tempcode Mustafa
-                        //incompleteJobs = incompleteJobs
-                        //    .Where(j => j.JobName ==
-                        //                "sdr.bn4k.BorderNet-SBC.dhksbc1.20231030.065829.002141.0.v1.0.csv.gz").ToList();
-                        //end tmpcode
+                        
                         CdrJobInputData cdrJobInputData = null;
                         ITelcobrightJob telcobrightJob = null;
                         using (DbCommand cmd = context.Database.Connection.CreateCommand())
@@ -112,7 +108,6 @@ namespace Process
                                     ) //error process or re-process job, not merging, process as a single job*************
                                     {
                                         cdrJobInputData.MergedJobsDic = new Dictionary<long, NewCdrWrappedJobForMerge>();
-                                        GarbageCollectionHelper.CompactGCNowForOnce();
                                         object retVal =telcobrightJob.Execute(cdrJobInputData); //EXECUTE
                                         if(job.idjobdefinition==1) telcobrightJob.PostprocessJob(retVal);
                                         cmd.ExecuteCommandText(" commit; ");
@@ -124,7 +119,6 @@ namespace Process
                                     ) //new cdr job, not merging, process as single job
                                     {
                                         cdrJobInputData.MergedJobsDic = new Dictionary<long, NewCdrWrappedJobForMerge>();
-                                        GarbageCollectionHelper.CompactGCNowForOnce();
                                         object retVal =telcobrightJob.Execute(cdrJobInputData); //EXECUTE
                                         telcobrightJob.PostprocessJob(retVal);
                                         cmd.ExecuteCommandText(" commit; ");
@@ -134,7 +128,6 @@ namespace Process
                                     if (!job.Error.IsNullOrEmptyOrWhiteSpace()) //jobs with error, process as single job
                                     {
                                         cdrJobInputData.MergedJobsDic = new Dictionary<long, NewCdrWrappedJobForMerge>();
-                                        GarbageCollectionHelper.CompactGCNowForOnce();
                                         object retVal = telcobrightJob.Execute(cdrJobInputData); //EXECUTE
                                         telcobrightJob.PostprocessJob(retVal);
                                         cmd.ExecuteCommandText(" commit; ");
@@ -149,7 +142,6 @@ namespace Process
                                         {
                                             {"cdrJobInputData", cdrJobInputData}
                                         };
-                                        //GarbageCollectionHelper.CompactGCNowForOnce();
                                         NewCdrPreProcessor preProcessor =
                                             (NewCdrPreProcessor) telcobrightJob.PreprocessJob(inputForPreprocess); //execute pre-processing
                                         if (headJobForMerge == null &&
@@ -189,7 +181,6 @@ namespace Process
                                                 cmd.ExecuteCommandText(" commit; ");
                                                 closeDbConnection(cmd);
                                                 resetMergeJobStatus();
-                                                GarbageCollectionHelper.CompactGCNowForOnce();
                                             }
                                         }
                                     }
@@ -197,6 +188,11 @@ namespace Process
                                 }
                                 catch (Exception e)
                                 {
+                                    if (e.Message.Contains("OutOfMemoryException"))
+                                    {
+                                        Console.WriteLine("WARNING!!!!!!!! MANUAL GARBAGE COLLECTION AND COMPACTION OF LOH.");
+                                        GarbageCollectionHelper.CompactGCNowForOnce();
+                                    }
                                     try
                                     {
                                         List<CdrMergedJobError> mergedJobErrors = new List<CdrMergedJobError>();
@@ -215,7 +211,6 @@ namespace Process
                                         PrintErrorMessageToConsole(ne, job, e);
                                         ErrorWriter.WriteError(e, "ProcessCdr", job,
                                             "CdrJob processing error.", tbc.Telcobrightpartner.CustomerName, context);
-                                        GarbageCollectionHelper.CompactGCNowForOnce();
                                         try
                                         {
                                             if (!mergedJobErrors.Any())
@@ -231,10 +226,14 @@ namespace Process
                                                 }
                                             }
                                             closeDbConnection(cmd);
-                                            GarbageCollectionHelper.CompactGCNowForOnce();
                                         }
                                         catch (Exception e2)
                                         {
+                                            if (e2.Message.Contains("OutOfMemoryException"))
+                                            {
+                                                Console.WriteLine("WARNING!!!!!!!! MANUAL GARBAGE COLLECTION AND COMPACTION OF LOH.");
+                                                GarbageCollectionHelper.CompactGCNowForOnce();
+                                            }
                                             resetMergeJobStatus();
                                             closeDbConnection(cmd);
                                             ErrorWriter.WriteError(e2, "ProcessCdr", job,
@@ -245,21 +244,29 @@ namespace Process
                                         }
                                         continue; //with next cdr or job
                                     }
-                                    catch (Exception)
+                                    catch (Exception e3)
                                     {
+                                        if (e3.Message.Contains("OutOfMemoryException"))
+                                        {
+                                            Console.WriteLine("WARNING!!!!!!!! MANUAL GARBAGE COLLECTION AND COMPACTION OF LOH.");
+                                            GarbageCollectionHelper.CompactGCNowForOnce();
+                                        }
                                         resetMergeJobStatus();
                                         try
                                         {
                                             context.Database.Connection
                                                 .Close(); ///////////reaching here would be database problem
-                                            GarbageCollectionHelper.CompactGCNowForOnce();
                                             continue;
                                         }
                                         catch (Exception exception)
                                         {
+                                            if (exception.Message.Contains("OutOfMemoryException"))
+                                            {
+                                                Console.WriteLine("WARNING!!!!!!!! MANUAL GARBAGE COLLECTION AND COMPACTION OF LOH.");
+                                                GarbageCollectionHelper.CompactGCNowForOnce();
+                                            }
                                             context.Database.Connection.Dispose();
                                             Console.WriteLine(exception);
-                                            GarbageCollectionHelper.CompactGCNowForOnce();
                                             continue;
                                         }
                                     }
@@ -274,13 +281,18 @@ namespace Process
                                 cmd.ExecuteCommandText(" commit; ");
                                 closeDbConnection(cmd);
                                 resetMergeJobStatus();
-                                GarbageCollectionHelper.CompactGCNowForOnce();
+                                //GarbageCollectionHelper.CompactGCNowForOnce();
                             }
                         } //using mysql command
                     } //try for each NE
 
                     catch (Exception e1)
                     {
+                        if (e1.Message.Contains("OutOfMemoryException"))
+                        {
+                            Console.WriteLine("WARNING!!!!!!!! MANUAL GARBAGE COLLECTION AND COMPACTION OF LOH.");
+                            GarbageCollectionHelper.CompactGCNowForOnce();
+                        }
                         Console.WriteLine(e1);
                         ErrorWriter.WriteError(e1, "ProcessCdr", null, "NE:" + ne.idSwitch,
                             tbc.Telcobrightpartner.CustomerName, context);
@@ -290,6 +302,11 @@ namespace Process
             } //try
             catch (Exception e1)
             {
+                if (e1.Message.Contains("OutOfMemoryException"))
+                {
+                    Console.WriteLine("WARNING!!!!!!!! MANUAL GARBAGE COLLECTION AND COMPACTION OF LOH.");
+                    GarbageCollectionHelper.CompactGCNowForOnce();
+                }
                 Console.WriteLine(e1);
                 ErrorWriter.WriteError(e1, "ProcessCdr", null, "", operatorName, context);
             }

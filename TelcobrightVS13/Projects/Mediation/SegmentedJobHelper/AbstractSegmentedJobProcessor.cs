@@ -84,7 +84,7 @@ namespace TelcobrightMediation
             {
                 foreach (int idJobSegment in incompleteSegmentIds)
                 {
-                    GarbageCollectionHelper.CompactGCNowForOnce();
+                    //GarbageCollectionHelper.CompactGCNowForOnce();
                     jobsegment jobSegment = this.Context.jobsegments.Where(js => js.id == idJobSegment).ToList().First();
                     int progressSoFar = getJobProgressSoFar(cmd);
                     if (progressSoFar > this.TelcobrightJob.NoOfSteps)

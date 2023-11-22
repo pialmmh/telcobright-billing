@@ -118,6 +118,7 @@ namespace Decoders
             {
                 if (e.Message.Contains("OutOfMemoryException"))
                 {
+                    Console.WriteLine("WARNING!!!!!!!! MANUAL GARBAGE COLLECTION AND COMPACTION OF LOH.");
                     GarbageCollectionHelper.CompactGCNowForOnce();
                     fileData = File.ReadAllBytes(filePath).ToList();
                 }
