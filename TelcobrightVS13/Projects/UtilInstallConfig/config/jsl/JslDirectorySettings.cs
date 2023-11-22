@@ -55,53 +55,53 @@ namespace InstallConfig
 
 
 
-            //SyncPair JslZteDhkVault = new SyncPair("JslZteDhk:Vault")
-            //{
-            //    SkipSourceFileListing = false,
-            //    SrcSyncLocation = new SyncLocation()
-            //    {
-            //        FileLocation = new FileLocation()
-            //        {
-            //            Name = "JslZteDhk",
-            //            LocationType = "sftp",
-            //            OsType = "linux",
-            //            PathSeparator = "/",
-            //            StartingPath = "/home/zxss10_bsvr/data/bfile/bill",
-            //            //StartingPath = "/home/zxss10_bsvr/data/bfile/bill/zsmart_media_bak",
-            //            Sftphostkey = string.Empty,
-            //            //Sftphostkey = "ssh-rsa 2048 44:56:0b:fa:3a:79:c2:ee:1c:95:d9:05:b5:9b:56:4a",
-            //            ServerIp = "10.133.34.12",
-            //            User = "icxbill",
-            //            Pass = "icx123",
-            //            //ServerIp = "192.168.0.105",
-            //            //User = "ftpuser",
-            //            //Pass = "Takay1takaane",
-            //            ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
-            //            IgnoreZeroLenghFile = 1
-            //        },
-            //        DescendingFileListByFileName = this.Tbc.CdrSetting.DescendingOrderWhileListingFiles
-            //    },
-            //    DstSyncLocation = new SyncLocation()
-            //    {
-            //        FileLocation = vaultJslZteDhk
-            //    },
-            //    SrcSettings = new SyncSettingsSource()
-            //    {
-            //        SecondaryDirectory = "downloaded",
-            //        MoveFilesToSecondaryAfterCopy = true,
-            //        ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('ICX')
-            //                                                    and
-            //                                                    (Name.EndsWith('.DAT'))
-            //                                                    and Length>0")
-            //    },
-            //    DstSettings = new SyncSettingsDest()
-            //    {
-            //        FileExtensionForSafeCopyWithTempFile = ".tmp",//make sure when copying to vault always .tmp ext used
-            //        Overwrite = true,
-            //        ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
-            //        CompressionType = CompressionType.None
-            //    }
-            //};
+            SyncPair JslZteDhkVault = new SyncPair("JslZteDhk:Vault")
+            {
+                SkipSourceFileListing = false,
+                SrcSyncLocation = new SyncLocation()
+                {
+                    FileLocation = new FileLocation()
+                    {
+                        Name = "JslZteDhk",
+                        LocationType = "sftp",
+                        OsType = "linux",
+                        PathSeparator = "/",
+                        StartingPath = "/home/zxss10_bsvr/data/bfile/bill",
+                        //StartingPath = "/home/zxss10_bsvr/data/bfile/bill/zsmart_media_bak",
+                        Sftphostkey = string.Empty,
+                        //Sftphostkey = "ssh-rsa 2048 44:56:0b:fa:3a:79:c2:ee:1c:95:d9:05:b5:9b:56:4a",
+                        ServerIp = "10.133.34.12", //10.133.34.12
+                        User = "icxbill",
+                        Pass = "icx123",
+                        //ServerIp = "192.168.0.105",
+                        //User = "ftpuser",
+                        //Pass = "Takay1takaane",
+                        ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
+                        IgnoreZeroLenghFile = 1
+                    },
+                    DescendingFileListByFileName = this.Tbc.CdrSetting.DescendingOrderWhileListingFiles
+                },
+                DstSyncLocation = new SyncLocation()
+                {
+                    FileLocation = vaultJslZteDhk
+                },
+                SrcSettings = new SyncSettingsSource()
+                {
+                    SecondaryDirectory = "downloaded",
+                    MoveFilesToSecondaryAfterCopy = true,
+                    ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('ICX')
+                                                                and
+                                                                (Name.EndsWith('.DAT'))
+                                                                and Length>0")
+                },
+                DstSettings = new SyncSettingsDest()
+                {
+                    FileExtensionForSafeCopyWithTempFile = ".tmp",//make sure when copying to vault always .tmp ext used
+                    Overwrite = true,
+                    ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
+                    CompressionType = CompressionType.None
+                }
+            };
 
             //SyncPair JslcataliyaDhkVault = new SyncPair("JslcataliyaDhk:Vault")
             //{
@@ -184,55 +184,93 @@ namespace InstallConfig
             //    }
             //};
 
-            ////sync pair Vault_S3:FileArchive1
-            //SyncPair vaultCAS = new SyncPair("Vault:CAS")
-            //{
-            //    SkipCopyingToDestination = false,
-            //    SkipSourceFileListing = true,
-            //    SrcSyncLocation = new SyncLocation()
-            //    {
-            //        FileLocation = vaultJslZteDhk
-            //    },
-            //    DstSyncLocation = new SyncLocation()
-            //    {
-            //        FileLocation = new FileLocation()//raw cdr archive
-            //        {
-            //            Name = "fileArchiveCAS",
-            //            LocationType = "ftp",
-            //            OsType = "windows",
-            //            PathSeparator = @"/",//backslash didn't work with winscp
-            //            StartingPath = @"/ICX_CDR_TO_BTRC_CAS",
-            //            ServerIp = "10.100.201.13", //server = "172.16.16.242",
-            //            User = "iofcdr",
-            //            Pass = "blt#.45",
-            //            IgnoreZeroLenghFile = 1
-            //        }
-            //    },
-            //    SrcSettings = new SyncSettingsSource()
-            //    {
-            //        SecondaryDirectory = "downloaded",
-            //        ExpFileNameFilter = null,
-            //    },
-            //    DstSettings = new SyncSettingsDest()
-            //    {
-            //        FileExtensionForSafeCopyWithTempFile = ".tmp",
-            //        Overwrite = true,
-            //        CompressionType = CompressionType.None,
-            //    }
-            //};
+            //sync pair Vault_S3:FileArchive1
+            SyncPair TdmCAS = new SyncPair("Tdm:CAS")
+            {
+                SkipCopyingToDestination = false,
+                SkipSourceFileListing = true,
+                SrcSyncLocation = new SyncLocation()
+                {
+                    FileLocation = vaultJslZteDhk
+                },
+                DstSyncLocation = new SyncLocation()
+                {
+                    FileLocation = new FileLocation()//raw cdr archive
+                    {
+                        Name = "zteVault",
+                        LocationType = "ftp",
+                        OsType = "windows",
+                        PathSeparator = @"/",//backslash didn't work with winscp
+                        StartingPath = @"/",
+                        ServerIp = "10.154.150.23", //server = "172.16.16.242",
+                        User = "jibonDhara_tdm",
+                        Pass = "N@774HA6Vi2J",
+                        IgnoreZeroLenghFile = 1
+                    }
+                },
+                SrcSettings = new SyncSettingsSource()
+                {
+                    SecondaryDirectory = "downloaded",
+                    ExpFileNameFilter = null,
+                },
+                DstSettings = new SyncSettingsDest()
+                {
+                    FileExtensionForSafeCopyWithTempFile = ".tmp",
+                    Overwrite = true,
+                    CompressionType = CompressionType.None,
+                }
+            };
+
+            SyncPair ipCAS = new SyncPair("Ip:CAS")
+            {
+                SkipCopyingToDestination = false,
+                SkipSourceFileListing = true,
+                SrcSyncLocation = new SyncLocation()
+                {
+                    FileLocation = vaultJslcataliyaDhk
+                },
+                DstSyncLocation = new SyncLocation()
+                {
+                    FileLocation = new FileLocation()//raw cdr archive
+                    {
+                        Name = "ipVault",
+                        LocationType = "ftp",
+                        OsType = "windows",
+                        PathSeparator = @"/",//backslash didn't work with winscp
+                        StartingPath = @"/",
+                        ServerIp = "10.255.200.23", 
+                        User = "jibonDhara_ip",
+                        Pass = @"6[.3hb2U=\Avj+6n",
+                        IgnoreZeroLenghFile = 1
+                    }
+                },
+                SrcSettings = new SyncSettingsSource()
+                {
+                    SecondaryDirectory = "downloaded",
+                    ExpFileNameFilter = null,
+                },
+                DstSettings = new SyncSettingsDest()
+                {
+                    FileExtensionForSafeCopyWithTempFile = ".tmp",
+                    Overwrite = true,
+                    CompressionType = CompressionType.None,
+                }
+            };
 
             ////add sync pairs to directory config
-            //directorySetting.SyncPairs.Add(JslZteDhkVault.Name, JslZteDhkVault);
+            directorySetting.SyncPairs.Add(JslZteDhkVault.Name, JslZteDhkVault);
             //directorySetting.SyncPairs.Add(JslcataliyaDhkVault.Name, JslcataliyaDhkVault);
             //directorySetting.SyncPairs.Add(vaultS3FileArchive1.Name, vaultS3FileArchive1);
-            //directorySetting.SyncPairs.Add(vaultCAS.Name, vaultCAS);
+            directorySetting.SyncPairs.Add(TdmCAS.Name, TdmCAS);
+            directorySetting.SyncPairs.Add(ipCAS.Name, ipCAS);
 
-            ////add archive locations to CdrSettings
-            //this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
-            //{
-            //    vaultS3FileArchive1.Name,
-            //    vaultCAS.Name
-            //};
+            //add archive locations to CdrSettings
+            this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
+            {
+                //vaultS3FileArchive1.Name,
+                TdmCAS.Name,
+                ipCAS.Name
+            };
             //directorySetting.FileLocations = directorySetting.SyncPairs.Values.SelectMany(sp =>
             //    new List<FileLocation>
             //    {
