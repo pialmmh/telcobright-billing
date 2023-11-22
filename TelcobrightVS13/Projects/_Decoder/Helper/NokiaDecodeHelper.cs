@@ -9,6 +9,7 @@ using TelcobrightMediation.Mediation.Cdr;
 using System.Linq;
 using System.Globalization;
 using LibraryExtensions;
+using TelcobrightInfra.PerformanceAndOptimization;
 
 namespace Decoders
 {
@@ -343,7 +344,25 @@ namespace Decoders
                     recordBytes = fileData.GetRange(offset + (totalSkip), length);
 
                 }
-                string recordData = GetRecordData(dataType, recordBytes);
+                string recordData;
+                try
+                {
+                    recordData = GetRecordData(dataType, recordBytes);
+                }
+                catch (Exception e)
+                {
+                    if (e.Message.Contains("OutOfMemoryException"))
+                    {
+                        GarbageCollectionHelper.CompactGCNowForOnce();
+                        recordData = GetRecordData(dataType, recordBytes);
+                    }
+                    else
+                    {
+                        Console.WriteLine(e);
+                        throw;
+                    }
+                }
+
                 if (f == "call_type" && cdrType == CdrType.Ptc)
                 {
 
@@ -355,7 +374,24 @@ namespace Decoders
                     {
                         totalSkip++;
                         recordBytes = fileData.GetRange(offset + totalSkip, length);
-                        recordData = GetRecordData(dataType, recordBytes);
+                        try
+                        {
+                            recordData = GetRecordData(dataType, recordBytes);
+                        }
+                        catch (Exception e)
+                        {
+                            if (e.Message.Contains("OutOfMemoryException"))
+                            {
+                                GarbageCollectionHelper.CompactGCNowForOnce();
+                                recordData = GetRecordData(dataType, recordBytes);
+                            }
+                            else
+                            {
+                                Console.WriteLine(e);
+                                throw;
+                            }
+                        }
+
                     }
 
 

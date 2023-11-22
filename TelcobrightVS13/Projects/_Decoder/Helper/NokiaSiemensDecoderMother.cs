@@ -10,6 +10,7 @@ using System.Linq;
 using System.Globalization;
 using System.IO;
 using LibraryExtensions;
+using TelcobrightInfra.PerformanceAndOptimization;
 
 namespace Decoders
 {
@@ -108,8 +109,24 @@ namespace Decoders
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
 
-            List<byte> fileData = File.ReadAllBytes(filePath).ToList();
-
+            List<byte> fileData= new List<byte>();
+            try
+            {
+                fileData = File.ReadAllBytes(filePath).ToList();
+            }
+            catch (Exception e)
+            {
+                if (e.Message.Contains("OutOfMemoryException"))
+                {
+                    GarbageCollectionHelper.CompactGCNowForOnce();
+                    fileData = File.ReadAllBytes(filePath).ToList();
+                }
+                else
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+            }
             int cdrRecordNumber = 0;
             int totalBytes = fileData.Count;
             //Dictionary<string, PocAndPtc> callRefWiseLegs = new Dictionary<string, PocAndPtc>();
