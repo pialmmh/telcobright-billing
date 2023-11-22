@@ -18,6 +18,7 @@ using Quartz;
 using LibraryExtensions;
 using Newtonsoft.Json;
 using QuartzTelcobright;
+using TelcobrightInfra.PerformanceAndOptimization;
 using TelcobrightMediation.Cdr;
 using TelcobrightMediation.Config;
 
@@ -111,7 +112,8 @@ namespace Process
                                     ) //error process or re-process job, not merging, process as a single job*************
                                     {
                                         cdrJobInputData.MergedJobsDic = new Dictionary<long, NewCdrWrappedJobForMerge>();
-                                        object retVal=telcobrightJob.Execute(cdrJobInputData); //EXECUTE
+                                        GarbageCollectionHelper.CompactGCNowForOnce();
+                                        object retVal =telcobrightJob.Execute(cdrJobInputData); //EXECUTE
                                         if(job.idjobdefinition==1) telcobrightJob.PostprocessJob(retVal);
                                         cmd.ExecuteCommandText(" commit; ");
                                         closeDbConnection(cmd);
@@ -122,6 +124,7 @@ namespace Process
                                     ) //new cdr job, not merging, process as single job
                                     {
                                         cdrJobInputData.MergedJobsDic = new Dictionary<long, NewCdrWrappedJobForMerge>();
+                                        GarbageCollectionHelper.CompactGCNowForOnce();
                                         object retVal =telcobrightJob.Execute(cdrJobInputData); //EXECUTE
                                         telcobrightJob.PostprocessJob(retVal);
                                         cmd.ExecuteCommandText(" commit; ");
@@ -131,6 +134,7 @@ namespace Process
                                     if (!job.Error.IsNullOrEmptyOrWhiteSpace()) //jobs with error, process as single job
                                     {
                                         cdrJobInputData.MergedJobsDic = new Dictionary<long, NewCdrWrappedJobForMerge>();
+                                        GarbageCollectionHelper.CompactGCNowForOnce();
                                         object retVal = telcobrightJob.Execute(cdrJobInputData); //EXECUTE
                                         telcobrightJob.PostprocessJob(retVal);
                                         cmd.ExecuteCommandText(" commit; ");
@@ -145,6 +149,7 @@ namespace Process
                                         {
                                             {"cdrJobInputData", cdrJobInputData}
                                         };
+                                        //GarbageCollectionHelper.CompactGCNowForOnce();
                                         NewCdrPreProcessor preProcessor =
                                             (NewCdrPreProcessor) telcobrightJob.PreprocessJob(inputForPreprocess); //execute pre-processing
                                         if (headJobForMerge == null &&
@@ -178,11 +183,13 @@ namespace Process
                                             ) //enough jobs have been merged for batch processing 
                                             {
                                                 cdrJobInputData.MergedJobsDic = mergedJobsDic;
+                                                //GarbageCollectionHelper.CompactGCNowForOnce();
                                                 object retVal =telcobrightJob.Execute(cdrJobInputData); //Execute as merged job**
                                                 telcobrightJob.PostprocessJob(retVal);
                                                 cmd.ExecuteCommandText(" commit; ");
                                                 closeDbConnection(cmd);
                                                 resetMergeJobStatus();
+                                                GarbageCollectionHelper.CompactGCNowForOnce();
                                             }
                                         }
                                     }
@@ -208,6 +215,7 @@ namespace Process
                                         PrintErrorMessageToConsole(ne, job, e);
                                         ErrorWriter.WriteError(e, "ProcessCdr", job,
                                             "CdrJob processing error.", tbc.Telcobrightpartner.CustomerName, context);
+                                        GarbageCollectionHelper.CompactGCNowForOnce();
                                         try
                                         {
                                             if (!mergedJobErrors.Any())
@@ -223,6 +231,7 @@ namespace Process
                                                 }
                                             }
                                             closeDbConnection(cmd);
+                                            GarbageCollectionHelper.CompactGCNowForOnce();
                                         }
                                         catch (Exception e2)
                                         {
@@ -231,6 +240,7 @@ namespace Process
                                             ErrorWriter.WriteError(e2, "ProcessCdr", job,
                                                 "Exception within catch block.",
                                                 tbc.Telcobrightpartner.CustomerName, context);
+                                            GarbageCollectionHelper.CompactGCNowForOnce();
                                             continue;
                                         }
                                         continue; //with next cdr or job
@@ -242,12 +252,14 @@ namespace Process
                                         {
                                             context.Database.Connection
                                                 .Close(); ///////////reaching here would be database problem
+                                            GarbageCollectionHelper.CompactGCNowForOnce();
                                             continue;
                                         }
                                         catch (Exception exception)
                                         {
                                             context.Database.Connection.Dispose();
                                             Console.WriteLine(exception);
+                                            GarbageCollectionHelper.CompactGCNowForOnce();
                                             continue;
                                         }
                                     }
@@ -262,6 +274,7 @@ namespace Process
                                 cmd.ExecuteCommandText(" commit; ");
                                 closeDbConnection(cmd);
                                 resetMergeJobStatus();
+                                GarbageCollectionHelper.CompactGCNowForOnce();
                             }
                         } //using mysql command
                     } //try for each NE

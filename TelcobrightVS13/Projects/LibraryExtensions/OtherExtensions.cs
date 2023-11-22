@@ -226,6 +226,11 @@ namespace LibraryExtensions
         {
             return this.StartDate.ToString("yyyy-MM-dd HH:mm:ss") + " to " + this.EndDate.ToString("yyyy-MM-dd HH:mm:ss");
         }
+
+        public bool WithinRange(DateTime dateTime)
+        {
+            return dateTime >= this.StartDate && dateTime < this.EndDate;
+        }
         public override int GetHashCode()
         {
             unchecked // Overflow is fine, just wrap

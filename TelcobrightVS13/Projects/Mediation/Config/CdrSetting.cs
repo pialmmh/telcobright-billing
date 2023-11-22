@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using LibraryExtensions;
 using TelcobrightMediation.Accounting;
 using MediationModel;
 using TelcobrightMediation.Config;
@@ -43,6 +44,9 @@ namespace TelcobrightMediation
         public Dictionary<int, NeAdditionalSetting> NeWiseAdditionalSettings { get; set; }= new Dictionary<int, NeAdditionalSetting>();
         public bool UnzipCompressedFiles { get; set; }
         public bool DeleteOriginalArchiveAfterUnzip { get; set; }
+        public DateRange SameRatePeriodForICX { get; set; }= new DateRange(new DateTime(2017,01,01), new DateTime(2030, 01, 01));
+        public bool EnableSameRatePeriodForICX { get; set; } = true;
+
         public CdrSetting()
         {
             this.NerCalculationRule = "NerByCauseCode";

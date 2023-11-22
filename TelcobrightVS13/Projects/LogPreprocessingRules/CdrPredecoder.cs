@@ -24,6 +24,7 @@ using TelcobrightMediation.Config;
 using System.IO;
 using System.Text;
 using System.Threading;
+using TelcobrightInfra.PerformanceAndOptimization;
 using TelcobrightMediation.Mediation.Cdr;
 
 namespace LogPreProcessor
@@ -71,18 +72,18 @@ namespace LogPreProcessor
                         .ToList();
                 File.WriteAllLines(this.PredecodedFileName, rowsAsCsvLinesFieldsEnclosedWithBacktick);
                 FileInfo predecodedFileInfo = new FileInfo(this.PredecodedFileName);
-                if (originalCdrFileSize > 0)
-                {
-                    if (!cdrInconsistents.Any() && !txtRows.Any())
-                    {
-                        throw new Exception($"No decoded rows found for non empty cdr file {this.CdrJobInputData.Job.JobName}");
-                    }
-                    if (cdrInconsistents.Any() || txtRows.Any())
-                    {
-                        if (predecodedFileInfo.Length == 0)
-                            throw new Exception("Predecoded File size cannot be zero.");
-                    }
-                }
+                //if (originalCdrFileSize > 0)
+                //{
+                //    if (!cdrInconsistents.Any() && !txtRows.Any())
+                //    {
+                //        throw new Exception($"No decoded rows found for non empty cdr file {this.CdrJobInputData.Job.JobName}");
+                //    }
+                //    if (cdrInconsistents.Any() || txtRows.Any())
+                //    {
+                //        if (predecodedFileInfo.Length == 0)
+                //            throw new Exception("Predecoded File size cannot be zero.");
+                //    }
+                //}
                 
                 output.SuccessfulJob = this.CdrJobInputData.Job;
                 output.WrittenFileSize = predecodedFileInfo.Length;
@@ -178,8 +179,10 @@ namespace LogPreProcessor
                     prepareThreadSafePreDecoders(mediationContext, thisSwitch, tbc, context, newCdrFileJob, enumerable);
 
                 //no need for try catch, handled within preDecodeFile();
+
                 Parallel.ForEach(threadSafePredecoders, predecoder =>
                 {
+                    GarbageCollectionHelper.CompactGCNowForOnce();
                     PredecoderOutput output = predecoder.preDecodeToFile();//predecodehere
                     if (output.SuccessfulJob != null)
                     {
@@ -202,6 +205,8 @@ namespace LogPreProcessor
                 if(failedResults.Any()) updateFailedJobs(thisSwitch, context, cmd, failedResults, tbc);
             });
         }
+
+        
 
         private void validateIfCdrJob(List<job> newCdrFileJobs)
         {

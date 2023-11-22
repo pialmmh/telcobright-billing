@@ -93,6 +93,7 @@
     <Compile Include="logManagement\TelcoBillingLogWriter.cs" />
     <Compile Include="MEF\IScript.cs" />
     <Compile Include="MEF\ScriptType.cs" />
+    <Compile Include="PerformanceAndOptimization\GarbageCollectionHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Deployment\TelcobrightSeed.cs" />
     <Compile Include="Infra\BindAddress.cs" />

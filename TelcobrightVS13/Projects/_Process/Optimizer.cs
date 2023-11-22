@@ -16,6 +16,7 @@ using MediationModel;
 using Quartz;
 using QuartzTelcobright;
 using TelcobrightFileOperations;
+using TelcobrightInfra.PerformanceAndOptimization;
 using TelcobrightMediation.Config;
 
 namespace Process
@@ -74,6 +75,7 @@ namespace Process
                 {
                     foreach (job thisJob in incompleteJobs)
                     {
+                        GarbageCollectionHelper.CompactGCNowForOnce();
                         try
                         {
                             sql = "set autocommit=0;";

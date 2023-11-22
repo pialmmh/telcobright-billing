@@ -11,6 +11,7 @@ using MediationModel;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using TelcobrightFileOperations;
+using TelcobrightInfra.PerformanceAndOptimization;
 using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Cdr;
 using TelcobrightMediation.Config;
@@ -83,26 +84,30 @@ namespace TelcobrightMediation
             {
                 foreach (int idJobSegment in incompleteSegmentIds)
                 {
+                    GarbageCollectionHelper.CompactGCNowForOnce();
                     jobsegment jobSegment = this.Context.jobsegments.Where(js => js.id == idJobSegment).ToList().First();
-                    string sqlProgress = " select ifnull(progress,0) as progress from job " +
-                                         " where id=" + this.TelcobrightJob.id;
-                    cmd.CommandText = sqlProgress;
-                    object retVal= cmd.ExecuteScalar();
-                    int progressSoFar = Convert.ToInt32(retVal);
+                    int progressSoFar = getJobProgressSoFar(cmd);
                     if (progressSoFar > this.TelcobrightJob.NoOfSteps)
                         throw new Exception("Progress cannot be > total no of steps for a job.");
                     Console.WriteLine("Processing Segment:" + (jobSegment.segmentNumber) + " for job "
-                                      + this.TelcobrightJob.JobName + ". Progress="+progressSoFar +"/"
+                                      + this.TelcobrightJob.JobName + ". Progress=" + progressSoFar + "/"
                                       + this.TelcobrightJob.NoOfSteps.ToString());
                     ISegmentedJob segmentedJob = null;
                     try
                     {
                         cmd.ExecuteCommandText("set autocommit=0;");
                         segmentedJob = this.CreateJobSegmentInstance(jobSegment);
+                        progressSoFar = getJobProgressSoFar(cmd);
+                        if (progressSoFar +segmentedJob.ActualStepsCount>this.TelcobrightJob.NoOfSteps)
+                        {
+                            Console.WriteLine("Processing Segment:" + (jobSegment.segmentNumber) + " for job "
+                                              + this.TelcobrightJob.JobName + ". Progress=" + progressSoFar + "/"
+                                              + this.TelcobrightJob.NoOfSteps.ToString());
+                        }
                         segmentedJob.Execute();//execute segment
                         jobSegment.status = 1; //finished
                         cmd.ExecuteCommandText($@"update jobsegment set status=1 where id={jobSegment.id}");
-                                                cmd.ExecuteCommandText(
+                        cmd.ExecuteCommandText(
                             $" update job set lastexecuted=\'{DateTime.Now:yyyy-MM-dd HH:mm:ss}\', " +
                             $" progress=ifnull(progress,0)+{segmentedJob.ActualStepsCount} " +
                             $" where id={TelcobrightJob.id}");
@@ -116,7 +121,7 @@ namespace TelcobrightMediation
                             Console.WriteLine(e);
                             cmd.ExecuteCommandText("rollback;"); //rollback immediately
                             ErrorWriter.WriteError(e, $@"Segmented Job Processor", this.TelcobrightJob,
-                                "Error Processing Segments of batch job " + this.TelcobrightJob.JobName, 
+                                "Error Processing Segments of batch job " + this.TelcobrightJob.JobName,
                                 "", this.Context);
                             throw; // do not continue on error other than rateCache exception for cdrJobs
                         }
@@ -127,6 +132,16 @@ namespace TelcobrightMediation
                                                   .Where(c => c.idJob == this.TelcobrightJob.id
                                                    && c.status == 6).ToList();
             return incompleteSegments;
+        }
+
+        private int getJobProgressSoFar(DbCommand cmd)
+        {
+            string sqlProgress = " select ifnull(progress,0) as progress from job " +
+                                                     " where id=" + this.TelcobrightJob.id;
+            cmd.CommandText = sqlProgress;
+            object retVal = cmd.ExecuteScalar();
+            int progressSoFar = Convert.ToInt32(retVal);
+            return progressSoFar;
         }
 
         public virtual void FinishJob(List<jobsegment> jobsegments,Action<object> additionalJobFinalizingTask)

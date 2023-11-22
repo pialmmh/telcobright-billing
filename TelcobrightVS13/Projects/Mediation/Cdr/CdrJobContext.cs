@@ -72,20 +72,56 @@ namespace TelcobrightMediation
         {
             //lock (parallelDbCallLock)
             {
-                this.DatesInvolved.ForEach(
-                    d =>
-                    {
-                        var rateCache = this.MediationContext.MefServiceFamilyContainer.RateCache;
-                        var dateRange = new DateRange(d.Date, d.AddDays(1));
-                        if (rateCache.DateRangeWiseRateDic.ContainsKey(dateRange) == false)
+                var cdrSetting = this.CdrjobInputData.Tbc.CdrSetting;
+                var enableSameRatePeriodForIcx = false;//cdrSetting.EnableSameRatePeriodForICX;
+                DateRange sameRatePeriodForICX = cdrSetting.SameRatePeriodForICX;
+                if (!enableSameRatePeriodForIcx)//regular rate caching
+                {
+                    this.DatesInvolved.ForEach(
+                        d =>
                         {
-                            Console.Write($"Populating ratecache for {d.ToString("yyyy-MM-dd")}...");
-                            this.MediationContext.MefServiceFamilyContainer.RateCache
-                                .PopulateDicByDay(dateRange, flagLcr: false, useInMemoryTable: true,
-                                    isCachingForMediation: true);
-                            Console.WriteLine("FINISHED.");
-                        }
-                    });
+                            var rateCache = this.MediationContext.MefServiceFamilyContainer.RateCache;
+                            var dateRange = new DateRange(d.Date, d.AddDays(1));
+                            if (rateCache.DateRangeWiseRateDic.ContainsKey(dateRange) == false)
+                            {
+                                Console.Write($"Populating ratecache for {d.ToString("yyyy-MM-dd")}...");
+                                this.MediationContext.MefServiceFamilyContainer.RateCache
+                                    .PopulateDicByDay(dateRange, flagLcr: false, useInMemoryTable: true,
+                                        isCachingForMediation: true);
+                                Console.WriteLine("FINISHED.");
+                            }
+                        });
+                }
+                else//enableSameRatePeriodForIcx
+                {
+                    var rateCache = this.MediationContext.MefServiceFamilyContainer.RateCache;
+                    var dayWiseRates = rateCache.DateRangeWiseRateDic;
+                    this.DatesInvolved.ForEach(
+                        d =>
+                        {
+                            var dateRange = new DateRange(d.Date, d.AddDays(1));
+                            if (dayWiseRates.Any() == false || !sameRatePeriodForICX.WithinRange(d))//ratecache empty
+                            {
+                                if (rateCache.DateRangeWiseRateDic.ContainsKey(dateRange) == false)
+                                {
+                                    Console.Write($"Populating ratecache for {d.ToString("yyyy-MM-dd")}...");
+                                    this.MediationContext.MefServiceFamilyContainer.RateCache
+                                        .PopulateDicByDay(dateRange, flagLcr: false, useInMemoryTable: true,
+                                            isCachingForMediation: true);
+                                    Console.WriteLine("FINISHED.");
+                                }
+                            }
+                            else
+                            {
+                                if (sameRatePeriodForICX.WithinRange(d) == true)
+                                {
+                                    DateRange thisDate= new DateRange(d, d.AddDays(1));
+                                    var rates = dayWiseRates.First().Value;
+                                    dayWiseRates.Add(thisDate, rates);
+                                }
+                            }
+                        });
+                }
             }
         }
 

@@ -49,9 +49,6 @@ namespace Decoders
             string[] linesAsString = File.ReadAllLines(fileName);
             string[] lineAsArr;
 
-
-            //
-
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
             //this.Input = input;

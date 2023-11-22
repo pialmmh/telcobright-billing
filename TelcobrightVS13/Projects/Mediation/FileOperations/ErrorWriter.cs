@@ -17,6 +17,7 @@ namespace TelcobrightFileOperations
         {
             try
             {
+                Console.WriteLine(e);
                 string constr = context.Database.Connection.ConnectionString;
                 int maxLenOfErrorDescFieldInDb = 1000;
                 string exceptionMessage = string.IsNullOrEmpty(messageToPrepend)
