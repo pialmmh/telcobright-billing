@@ -119,11 +119,6 @@
                                 </div>
                             </ItemTemplate>
                         </asp:TemplateField>
-
-                        <%--<asp:BoundField DataField="id" HeaderText="id" InsertVisible="False" ReadOnly="True" SortExpression="id" Visible="false" />
-                        <asp:BoundField DataField="icx" HeaderText="ICX" SortExpression="icx" />
-                        <asp:BoundField DataField="Switch Name" HeaderText="Switch Name" SortExpression="Switch Name"/>
-                        <asp:BoundField DataField="No_Of_Cdrs_in_last_24_hours" HeaderText="No Of Cdrs in last 24 hours" SortExpression="No_Of_Cdrs_in_last_24_hours"/>--%>
                         <asp:BoundField DataField="icx" HeaderText="ICX" SortExpression="icx" />
                         <asp:BoundField DataField="SwitchName" HeaderText="Switch Name" SortExpression="SwitchName" />
                         <asp:BoundField DataField="No_Of_Cdrs_in_last_24_hours" HeaderText="No Of CDRs in last 24 hours" SortExpression="No_Of_Cdrs_in_last_24_hours" />

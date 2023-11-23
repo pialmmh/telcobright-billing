@@ -196,8 +196,6 @@
                             <div style=" text-align: center;">
                                 <asp:Label ID="Label2" runat="server" Text="Latest CDR Job Process Status" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
                             </div>
-                            <%--<asp:Label ID="NoDataLabel" runat="server" Text="NO DATA" Visible="false" ForeColor="Red"></asp:Label>--%>
-                            <%--<asp:Label ID="NoDataLabel" runat="server" Text="NO DATA" Visible="false" ForeColor="Red" Width="600px" Height="1000px"></asp:Label>--%>
                             <asp:Label ID="NoDataLabel" runat="server" Text="NO DATA" Visible="false" ForeColor="Red" Width="600px" Height="400px" Font-Size="24px" style="text-align: center; line-height: 400px;"></asp:Label>
 
                             <asp:GridView ID="GridViewCompleted" runat="server" AutoGenerateColumns="False" CellPadding="4" Width="600px" DataKeyNames="id" ForeColor="#333333" GridLines="None" BorderStyle="None" BorderWidth="1" OnPageIndexChanging="GridViewCompleted_PageIndexChanging">
@@ -269,8 +267,8 @@
                                         </asp:Chart>
 
                                     </p>
-                                    <asp:Button ID="Button4" runat="server" Text="Newer" OnClick="PreviousButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />
-                                    <asp:Button ID="Button5" runat="server" Text="Older" OnClick="NextButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />
+                                    <%--<asp:Button ID="Button4" runat="server" Text="Newer" OnClick="PreviousButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />
+                                    <asp:Button ID="Button5" runat="server" Text="Older" OnClick="NextButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />--%>
                                 </div>
                             </div>
 
@@ -315,8 +313,8 @@
                                     
 
                                     </p>
-                                    <asp:Button ID="Button6" runat="server" Text="Newer" OnClick="PreviousButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />
-                                    <asp:Button ID="Button7" runat="server" Text="Older" OnClick="NextButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />
+                                    <%--<asp:Button ID="Button6" runat="server" Text="Newer" OnClick="PreviousButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />
+                                    <asp:Button ID="Button7" runat="server" Text="Older" OnClick="NextButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />--%>
                                 </div>
                             </div>
 
@@ -361,8 +359,8 @@
                                     
 
                                     </p>
-                                    <asp:Button ID="Button8" runat="server" Text="Newer" OnClick="PreviousButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />
-                                    <asp:Button ID="Button9" runat="server" Text="Older" OnClick="NextButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />
+                                    <%--<asp:Button ID="Button8" runat="server" Text="Newer" OnClick="PreviousButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />
+                                    <asp:Button ID="Button9" runat="server" Text="Older" OnClick="NextButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />--%>
                                 </div>
                             </div>
 

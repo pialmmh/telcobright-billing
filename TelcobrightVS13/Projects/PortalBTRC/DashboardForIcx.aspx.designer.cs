@@ -201,24 +201,6 @@ public partial class DashboardAspxForIcx {
     protected global::System.Web.UI.DataVisualization.Charting.Chart DomesticCallForPreviousSevenDays;
     
     /// <summary>
-    /// Button4 control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Button Button4;
-    
-    /// <summary>
-    /// Button5 control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Button Button5;
-    
-    /// <summary>
     /// Label1 control.
     /// </summary>
     /// <remarks>
@@ -237,24 +219,6 @@ public partial class DashboardAspxForIcx {
     protected global::System.Web.UI.DataVisualization.Charting.Chart InternationalIncommimng;
     
     /// <summary>
-    /// Button6 control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Button Button6;
-    
-    /// <summary>
-    /// Button7 control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Button Button7;
-    
-    /// <summary>
     /// Label3 control.
     /// </summary>
     /// <remarks>
@@ -271,22 +235,4 @@ public partial class DashboardAspxForIcx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.DataVisualization.Charting.Chart InternationalOutgoing;
-    
-    /// <summary>
-    /// Button8 control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Button Button8;
-    
-    /// <summary>
-    /// Button9 control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Button Button9;
 }
