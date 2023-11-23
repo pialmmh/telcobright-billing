@@ -52,6 +52,7 @@ public partial class CasDefaultRptIntlOutIcx : System.Web.UI.Page
                          tableName,
                          new List<string>()
                             {
+                                groupInterval=="Hourly"?"Date":string.Empty,
                                 getInterval(groupInterval),
                                 ViewBySwitch.Checked==true?"tup_switchid":string.Empty,
                                 CheckBoxShowByCountry.Checked==true?"tup_countryorareacode":string.Empty,
@@ -159,6 +160,7 @@ public partial class CasDefaultRptIntlOutIcx : System.Web.UI.Page
 
         GridView1.Columns[GetColumnIndexByName(GridView1, "Country")].Visible = CheckBoxShowByCountry.Checked;
         GridView1.Columns[GetColumnIndexByName(GridView1, "Destination")].Visible = CheckBoxShowByDestination.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "ANS")].Visible = CheckBoxShowByIgw.Checked;
         //GridView1.Columns[3].Visible = CheckBoxShowByIgw.Checked;
         //GridView1.Columns[GetColumnIndexByName(GridView1, "tup_incomingroute")].Visible = CheckBoxViewIncomingRoute.Checked;
 
