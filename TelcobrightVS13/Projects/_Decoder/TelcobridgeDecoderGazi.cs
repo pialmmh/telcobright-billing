@@ -29,12 +29,15 @@ namespace Decoders
         protected CdrCollectorInputData Input { get; set; }
 
 
-        private static DateTime parseStringToDate(string timestamp)  //20181028051316400 yyyyMMddhhmmssfff
+        private static string parseStringToDate(string timestamp)  //20181028051316400 yyyyMMddhhmmssfff
         {
             DateTime dateTime;
-            if (DateTime.TryParseExact("20230904123527", "yyyyMMddHHmmss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime));
-                
-            return dateTime;
+            if (DateTime.TryParseExact("20230904123527", "yyyyMMddHHmmss", CultureInfo.InvariantCulture,
+                DateTimeStyles.None, out dateTime))
+            {
+                return dateTime.ToMySqlFormatWithoutQuote();
+            }
+            return "";
         }
 
         public override List<string[]> DecodeFile(CdrCollectorInputData input,
@@ -64,13 +67,13 @@ namespace Decoders
                 string durationStr = lineAsArr[7].Trim();
                 double durationSec = 0;
                 double.TryParse(durationStr, out durationSec);
-                if (durationSec <= 0) continue;
+                //if (durationSec <= 0) continue;
                 string callStatus = lineAsArr[0].Trim();
                 //if (!string.Equals(callStatus, "End")) continue;
 
                 textCdr[Fn.UniqueBillId] = lineAsArr[2].Trim();
                 textCdr[Fn.Partialflag] = "1";// all telcobridge cdrs are partial
-                textCdr[Fn.DurationSec] = lineAsArr[7].Trim();
+                textCdr[Fn.DurationSec] = durationSec.ToString();
 
                 //originate or answer, intrunk taken from "originate" let, outtrunk from "answer" leg
                 textCdr[Fn.InTrunkAdditionalInfo] = lineAsArr[16].Trim().ToLower();
@@ -78,19 +81,23 @@ namespace Decoders
                 string startTime = lineAsArr[4].Trim();
                 if (!string.IsNullOrEmpty(startTime))
                 {
-                    startTime = parseStringToDate(startTime).ToString("yyyy-MM-dd HH:mm:ss");
+                    startTime = parseStringToDate(startTime);
                 }
 
                 string connectTime = lineAsArr[5].Trim();
                 if (!string.IsNullOrEmpty(connectTime))
                 {
-                    connectTime = parseStringToDate(connectTime).ToString("yyyy-MM-dd HH:mm:ss");
+                    connectTime = parseStringToDate(connectTime);
+                }
+                if (connectTime.IsNullOrEmptyOrWhiteSpace())
+                {
+                    continue;
                 }
 
                 string endTime = lineAsArr[6].Trim();
                 if (!string.IsNullOrEmpty(endTime))
                 {
-                    endTime = parseStringToDate(endTime).ToString("yyyy-MM-dd HH:mm:ss");
+                    endTime = parseStringToDate(endTime);
                 }
 
                 textCdr[Fn.Filename] = fileName;
@@ -106,11 +113,10 @@ namespace Decoders
                 textCdr[Fn.IncomingRoute] = lineAsArr[12].Trim();
                 textCdr[Fn.OutgoingRoute] = lineAsArr[11].Trim();
 
-                textCdr[Fn.StartTime] = startTime;
-                textCdr[Fn.Endtime] = endTime;
-                textCdr[Fn.ConnectTime] = connectTime;
+                textCdr[Fn.AnswerTime] = connectTime;
+                textCdr[Fn.StartTime] = connectTime;
+                textCdr[Fn.Endtime] = endTime.IsNullOrEmptyOrWhiteSpace()?connectTime:endTime;
 
-                lineAsArr[0].Trim();
 
                 string status = lineAsArr[0].Trim().ToLower();
 
@@ -124,7 +130,6 @@ namespace Decoders
                 }
 
                 textCdr[Fn.Validflag] = "1";
-
                 string seqNumber = lineAsArr[3].Remove(0, 2);
                 seqNumber = Int64.Parse(seqNumber, System.Globalization.NumberStyles.HexNumber).ToString();
                 textCdr[Fn.Sequencenumber] = seqNumber;
