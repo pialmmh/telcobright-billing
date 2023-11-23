@@ -46,7 +46,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "f:/telcobright/vault/resources/cdr/sheba/ip",
+                StartingPath = "f:/telcobright/vault/resources/cdr/sheba/ip/Aug-Oct",
                 User = "",
                 Pass = "",
             };

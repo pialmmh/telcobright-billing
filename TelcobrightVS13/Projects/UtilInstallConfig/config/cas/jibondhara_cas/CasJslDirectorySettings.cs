@@ -46,7 +46,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "e:/telcobright/vault/resources/cdr/jibonDhara/ip",
+                StartingPath = "e:/telcobright/vault/resources/cdr/jibonDhara/ip/Aug-Oct",
                 User = "",
                 Pass = "",
             };

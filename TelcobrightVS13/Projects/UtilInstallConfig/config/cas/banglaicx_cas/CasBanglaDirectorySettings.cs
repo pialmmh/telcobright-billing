@@ -46,7 +46,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "d:/telcobright/vault/resources/cdr/banglaicx/ip",
+                StartingPath = "d:/telcobright/vault/resources/cdr/banglaicx/ip/Aug-Oct",
                 User = "",
                 Pass = "",
             };

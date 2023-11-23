@@ -46,7 +46,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "e:/telcobright/vault/resources/cdr/imamNetwork/ip",
+                StartingPath = "e:/telcobright/vault/resources/cdr/imamNetwork/ip/Aug-Oct",
                 User = "",
                 Pass = "",
             };

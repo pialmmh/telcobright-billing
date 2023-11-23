@@ -56,7 +56,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "d:/telcobright/vault/resources/cdr/mothertelecom/ip",
+                StartingPath = "d:/telcobright/vault/resources/cdr/mothertelecom/ip/Aug-Oc",
                 User = "",
                 Pass = "",
             };
