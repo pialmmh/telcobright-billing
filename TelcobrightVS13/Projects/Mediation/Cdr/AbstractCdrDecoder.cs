@@ -19,8 +19,8 @@ namespace TelcobrightMediation
         public abstract CompressionType CompressionType { get; set; }
         public virtual string UniqueEventTablePrefix { get; } = "zz_uniqueevent";
         public virtual string PartialTablePrefix { get; } = "zz_zz_partialevent";
-        public abstract string PartialTableStorageEngine { get; }
-        public abstract string partialTablePartitionColName { get; }
+        public virtual string PartialTableStorageEngine { get; } = "innodb";
+        public virtual string partialTablePartitionColName { get; } = "starttime";
 
         public abstract List<string[]> DecodeFile(CdrCollectorInputData decoderInputData,
             out List<cdrinconsistent> inconsistentCdrs);

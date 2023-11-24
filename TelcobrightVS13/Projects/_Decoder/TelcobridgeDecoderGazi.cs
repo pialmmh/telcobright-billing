@@ -23,11 +23,7 @@ namespace Decoders
         public override int Id => 57;
         public override string HelpText => "Gazi Telcobridge";
         public override CompressionType CompressionType { get; set; }
-        public override string UniqueEventTablePrefix { get; }
-        public override string PartialTableStorageEngine { get; }
-        public override string partialTablePartitionColName { get; }
         protected CdrCollectorInputData Input { get; set; }
-
 
         private static string parseStringToDate(string timestamp)  //20181028051316400 yyyyMMddhhmmssfff
         {
@@ -139,34 +135,27 @@ namespace Decoders
             return decodedRows;
         }
 
+        public override string getTupleExpression(Object data)
+        {
+            Dictionary<string, object> dataAsDic = (Dictionary<string, object>)data;
+            CdrCollectorInputData collectorInput = (CdrCollectorInputData)dataAsDic["collectorInput"];
+            CdrSetting cdrSetting = collectorInput.CdrSetting;
+            string[] row = (string[])dataAsDic["row"];
+            int switchId = collectorInput.Ne.idSwitch;
+            DateTime startTime = getEventDatetime(new Dictionary<string, object>
+            {
+                {"cdrSetting", cdrSetting},
+                {"row", row}
+            });
+            string sessionId = row[Fn.UniqueBillId];
+            string separator = "/";
+            return new StringBuilder(switchId.ToString()).Append(separator)
+                .Append(startTime.ToMySqlFormatWithoutQuote()).Append(separator)
+                .Append(sessionId).ToString();
+        }
         public override EventAggregationResult Aggregate(object data)
         {
             return TelcobridgeAggregationHelper.Aggregate(data);
-        }
-
-        public override string getCreateTableSqlForUniqueEvent(Object data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string getSelectExpressionForUniqueEvent(Object data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string getWhereForHourWiseCollection(Object data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string getSelectExpressionForPartialCollection(Object data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override DateTime getEventDatetime(Object data)
-        {
-            throw new NotImplementedException();
         }
     }
 }
