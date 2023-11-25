@@ -14,6 +14,7 @@ using MediationModel;
 using System.Configuration;
 using System.Data.Common;
 using System.Data.Entity;
+using System.Threading;
 using Quartz;
 using LibraryExtensions;
 using Newtonsoft.Json;
@@ -92,9 +93,9 @@ namespace Process
 
                         //incompleteJobs.AddRange(newCdrJobs); //combine
                         //jobs with error to be processed as single job and add them to the first of the list, adding them to the last is a bit difficult to manage merge processing
-                        
-                        
-                        
+
+
+                        //Thread.Sleep(20000);
                         CdrJobInputData cdrJobInputData = null;
                         ITelcobrightJob telcobrightJob = null;
                         using (DbCommand cmd = context.Database.Connection.CreateCommand())

@@ -21,59 +21,13 @@ namespace Decoders
 
         public static List<string> FieldList = new List<string>()
         {
-            "record_length",
-            "record_type",
             "record_number",
-            "record_status",
-            "check_sum",
-            "call_reference",
-            "exchange_id",
-            "intermediate_record_number",
-            "intermediate_charging_ind",
-            "number_of_ss_records",
-            "calling_number_ton",
             "calling_number",
-            "called_number_ton",
             "called_number",
             "out_circuit_group",
-            "out_circuit",
-            "in_channel_allocated_time",
             "charging_start_time",
             "charging_end_time",
-            "cause_for_termination",
-            "call_type",
-            "ticket_type",
-            "oaz_chrg_type",
             "oaz_duration",
-            "oaz_tariff_class",
-            "oaz_pulses",
-            "called_msrn_ton",
-            "called_msrn",
-            "intermediate_chrg_cause",
-            // "leg_call_reference",
-            // "out_channel_allocated_time",
-            "basic_service_type",
-            "basic_service_code",
-            // "call_reference_time",
-            "number_of_all_in_records",
-            "char_band_change_direction",
-            "char_band_change_percent",
-            "number_of_in_records",
-            "oaz_change_direction",
-            "oaz_change_percent",
-            "scp_connection",
-            "term_mcz_change_direction",
-            "term_mcz_change_percent",
-            "cug_information",
-            "cug_interlock",
-            "cug_outgoing_access",
-            "selected_codec",
-            "out_bnc_connection_type",
-            "outside_control_plane_index",
-            "outside_user_plane_index",
-            "in_circuit_group_name",
-            "out_circuit_group_name",
-            "in_circuit",
             "in_circuit_group",
             "oaz_duration_ten_ms"
         };
@@ -196,9 +150,10 @@ namespace Decoders
               { "oaz_duration_ten_ms", new FieldInfo(173, 4,DataType.BcdByteRev) }
 
   };
-        public static string[] Decode(int currentPosition, List<byte> fileData, CdrType cdrType, List<int> trailerSequence)
+        public static Dictionary<string,string> Decode(int currentPosition, List<byte> fileData, CdrType cdrType, List<int> trailerSequence)
         {
             List<string> records = new List<string>();
+            Dictionary<string,string> recorDictionary = new Dictionary<string, string>();
             int totalSkip = 0, totalLengthNeedToIncrease = 0;
             bool skiped = false;
             List<string> allFieldList = FieldList;
@@ -399,6 +354,7 @@ namespace Decoders
 
                 }
           
+                recorDictionary.Add(f,recordData);
                 records.Add(recordData);
                 if (f == "calling_number")
                 {
@@ -412,7 +368,7 @@ namespace Decoders
 
             });
 
-            return records.ToArray();
+            return recorDictionary;
         }
         public static bool isPtc(int offset, List<byte> fileData)
         {

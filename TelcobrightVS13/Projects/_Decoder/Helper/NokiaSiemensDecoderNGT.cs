@@ -139,7 +139,7 @@ namespace Decoders
 
                         if (cdrType == CdrType.Ptc)
                         {
-                            string[] record = NokiaDecodeHelper.Decode(currentPosition, fileData, cdrType,trailerSequence);
+                            Dictionary<string, string> record = NokiaDecodeHelper.Decode(currentPosition, fileData, cdrType, trailerSequence);
                             NokiaCdr finalRecord = new NokiaCdr(record);
                             decodedRows.Add(finalRecord.Row);
                         }

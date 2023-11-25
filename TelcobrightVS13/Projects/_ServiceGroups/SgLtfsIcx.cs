@@ -59,26 +59,52 @@ namespace TelcobrightMediation
         {
             var dicRoutes = cdrProcessor.CdrJobContext.MediationContext.MefServiceGroupContainer.SwitchWiseRoutes;
             var key = new ValueTuple<int, string>(cdr.SwitchId, cdr.IncomingRoute);
-            route thisRoute = null;
-            dicRoutes.TryGetValue(key, out thisRoute);
-            if (thisRoute != null)
+            route incomingRoute = null;
+            dicRoutes.TryGetValue(key, out incomingRoute);
+            if (incomingRoute != null)
             {
-                if (thisRoute.partner.PartnerType == IcxPartnerType.ANS &&
-                    thisRoute.NationalOrInternational == RouteLocalityType.National
-                ) //ANS and route=national
+                bool useCasStyleProcessing = cdrProcessor.CdrJobContext.CdrjobInputData.CdrSetting.useCasStyleProcessing;
+                if (!useCasStyleProcessing)
                 {
-                    foreach (string prefix in this.PrefixesOrderedByMaxLenFirst)
+                    if (incomingRoute.partner.PartnerType == IcxPartnerType.ANS &&
+                        incomingRoute.NationalOrInternational == RouteLocalityType.National
+                    ) //ANS and route=national
                     {
-                        if (cdr.OriginatingCalledNumber.StartsWith(prefix))
+                        foreach (string prefix in this.PrefixesOrderedByMaxLenFirst)
                         {
-                            cdr.ServiceGroup = this.Id; //LTFS in ICX           
-                            break;
+                            if (cdr.OriginatingCalledNumber.StartsWith(prefix))
+                            {
+                                cdr.ServiceGroup = this.Id; //LTFS in ICX           
+                                break;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    key = new ValueTuple<int, string>(cdr.SwitchId, cdr.OutgoingRoute);
+                    route outGoingRoute = null;
+                    dicRoutes.TryGetValue(key, out outGoingRoute);
+                    if (incomingRoute.partner.PartnerType == IcxPartnerType.ANS &&
+                        outGoingRoute?.partner.PartnerType == IcxPartnerType.ANS 
+                    ) //ANS and route=national
+                    {
+                        foreach (string prefix in this.PrefixesOrderedByMaxLenFirst)
+                        {
+                            if (cdr.OriginatingCalledNumber.StartsWith(prefix))
+                            {
+                                cdr.ServiceGroup = this.Id; //LTFS in ICX   
+                                decimal roundedDuration = CasDurationHelper.getDomesticDur(cdr.DurationSec);
+                                cdr.Duration1 = roundedDuration;
+                                cdr.Duration2 = roundedDuration;
+                                break;
+                            }
                         }
                     }
                 }
             }
         }
-        public void SetServiceGroupWiseSummaryParams(CdrExt cdrExt, AbstractCdrSummary newSummary)
+        public void SetServiceGroupWiseSummaryParams(CdrExt cdrExt, AbstractCdrSummary newSummary,CdrSetting cdrSetting)
         {
             //this._sgIntlTransitVoice.SetServiceGroupWiseSummaryParams(cdrExt, newSummary);
             newSummary.tup_countryorareacode = cdrExt.Cdr.CountryCode;
@@ -87,13 +113,16 @@ namespace TelcobrightMediation
             if (cdrExt.Cdr.ChargingStatus != 1) return;
 
             acc_chargeable chargeableCust = null;
-            cdrExt.Chargeables.TryGetValue(new ValueTuple<int, int, int>(this.Id, 5, 1), out chargeableCust);
-            if (chargeableCust == null)
+            if (!cdrSetting.useCasStyleProcessing)
             {
-                throw new Exception("Chargeable info not found for customer direction.");
+                cdrExt.Chargeables.TryGetValue(new ValueTuple<int, int, int>(this.Id, 5, 1), out chargeableCust);
+                if (chargeableCust == null)
+                {
+                    throw new Exception("Chargeable info not found for customer direction.");
+                }
+                this.sgIntlTransitVoice.SetChargingSummaryInCustomerDirection(chargeableCust, newSummary);
+                newSummary.tax1 = Convert.ToDecimal(chargeableCust.TaxAmount1);
             }
-            this.sgIntlTransitVoice.SetChargingSummaryInCustomerDirection(chargeableCust, newSummary);
-            newSummary.tax1 = Convert.ToDecimal(chargeableCust.TaxAmount1);
         }
 
         public void ValidateInvoiceGenerationParams(object validationInput)

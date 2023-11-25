@@ -34,10 +34,10 @@ namespace InstallConfig.config._helper
                         new InPartnerIdGt0(),
                         new OutPartnerIdGt0(),
                         new ServiceGroupGt0(),
-                        new MatchedPrefixSupplierNotEmpty(),
+                        //new MatchedPrefixSupplierNotEmpty(),
                         new Duration2Gt0() {Data = .1M},
-                        new OutPartnerCostGt0() {Data = .1M},
-                        new BtrcRevShareTax1Gt0() {Data = .1M},
+                        //new OutPartnerCostGt0() {Data = .1M},
+                        //new BtrcRevShareTax1Gt0() {Data = .1M},
                     },
                 InvoiceGenerationConfig = new InvoiceGenerationConfig()
                 {
@@ -72,12 +72,12 @@ namespace InstallConfig.config._helper
                         new InPartnerIdGt0(),
                         new OutPartnerIdGt0(),
                         new ServiceGroupGt0(),
-                        new MatchedPrefixYNotempty(),
-                        new CountryCodeNotEmpty(),
-                        new RevIcxOutNot0() {Data = .1M},
-                        new BtrcRevShareTax2Gt0(){Data = .1M},
-                        new XAmountGt0(){Data = .1M},
-                        new YAmountGt0(){Data = .1M},
+                        //new MatchedPrefixYNotempty(),
+                        //new CountryCodeNotEmpty(),
+                        //new RevIcxOutNot0() {Data = .1M},
+                        //new BtrcRevShareTax2Gt0(){Data = .1M},
+                        //new XAmountGt0(){Data = .1M},
+                        //new YAmountGt0(){Data = .1M},
                         new RoundedDurationGt0(){Data = .1M}
                     },
                 InvoiceGenerationConfig = new InvoiceGenerationConfig()
@@ -111,10 +111,10 @@ namespace InstallConfig.config._helper
                         new InPartnerIdGt0(),
                         new OutPartnerIdGt0(),
                         new ServiceGroupGt0(),
-                        new MatchedPrefixCustomerNotEmpty(),
+                        //new MatchedPrefixCustomerNotEmpty(),
                         new Duration1Gt0() {Data = .1M},//all was .09
-                        new InPartnerCostGt0() {Data = .1M},
-                        new BtrcRevShareTax1Gt0(){Data = .1M},
+                        //new InPartnerCostGt0() {Data = .1M},
+                        //new BtrcRevShareTax1Gt0(){Data = .1M},
                     },
                 InvoiceGenerationConfig = new InvoiceGenerationConfig()
                 {
@@ -147,10 +147,10 @@ namespace InstallConfig.config._helper
                             new InPartnerIdGt0(),
                             new OutPartnerIdGt0(),
                             new ServiceGroupGt0(),
-                            new MatchedPrefixCustomerNotEmpty(),
+                            //new MatchedPrefixCustomerNotEmpty(),
                             new Duration1Gt0() {Data = .1M},
-                            new InPartnerCostGt0() {Data = .1M},
-                            new BtrcRevShareTax1Gt0() {Data = .1M},
+                            //new InPartnerCostGt0() {Data = .1M},
+                            //new BtrcRevShareTax1Gt0() {Data = .1M},
                         },
                     InvoiceGenerationConfig = new InvoiceGenerationConfig()
                     {

@@ -34,8 +34,8 @@ namespace InstallConfig.config._helper
                 PartialCdrEnabledNeIds =
                     new List<int>() { }, //7, was set to non-partial processing mode due to duplicate billid problem.
                 PartialCdrFlagIndicators = new List<string>() { }, //{"1", "2", "3"},
-                DescendingOrderWhileListingFiles = false,
-                DescendingOrderWhileProcessingListedFiles = false,
+                DescendingOrderWhileListingFiles = true,
+                DescendingOrderWhileProcessingListedFiles = true,
                 ValidationRulesForCommonMediationCheck = commonCdrValRulesGen.GetRules(),
                 ValidationRulesForInconsistentCdrs = inconsistentCdrValRulesGen.GetRules(),
                 ServiceGroupConfigurations = CasServiceGroupHelper.GetServiceGroupConfigurations(),

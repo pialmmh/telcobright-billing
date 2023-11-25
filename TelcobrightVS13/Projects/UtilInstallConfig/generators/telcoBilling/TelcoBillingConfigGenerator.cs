@@ -193,9 +193,9 @@ namespace InstallConfig
             pathHelper.DeleteFileContaining(targetDir, "*.conf");
             SerializeConfigAndWriteJsonFile(tbc, configPathHelper.GetOperatorWiseTargetFileNameInUtil(operatorShortName,configRoot));
             //write config for windows service
-            targetDir = configPathHelper.GetTopShelfConfigDir();
-             SerializeConfigAndWriteJsonFile(tbc, configPathHelper.GetTemplateConfigFileName("telcobright.conf"),
-                eraseAllPrevFilesFromConfigDir: true);
+            //targetDir = configPathHelper.GetTopShelfConfigDir();
+            // SerializeConfigAndWriteJsonFile(tbc, configPathHelper.GetTemplateConfigFileName("telcobright.conf"),
+            //    eraseAllPrevFilesFromConfigDir: true);
             //write config for portal
             targetDir = configPathHelper.GetPortalBinPath();
             //SerializeConfigAndWriteJsonFile(tbc, configPathHelper.GetTargetFileNameForPortal(operatorShortName));

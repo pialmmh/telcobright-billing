@@ -287,10 +287,9 @@ namespace InstallConfig
         private static void deployBinariesForProduction(TelcobrightConfig tbc)
         {
             Console.WriteLine("Deploying binaries for " + tbc.Telcobrightpartner.databasename);
-            string currentbinPath = FileAndPathHelperReadOnly.getBinPath();
-            string solutionDir = new DirectoryInfo(currentbinPath).Parent.Parent.FullName;
+            string solutionDir = new UpwordPathFinder<DirectoryInfo>("Projects").FindAndGetFullPath();
             DeploymentHelper deploymentHelper =
-                new DeploymentHelper(tbc, solutionDir,DeploymentPlatform.Win32);
+                new DeploymentHelper(tbc, solutionDir,DeploymentPlatform.Win64);
             deploymentHelper.deploy();
             Console.WriteLine("Binaries deployed successfully for " + getOperatorShortName(tbc));
         }

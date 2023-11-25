@@ -106,12 +106,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CasdurationHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SgIcnlIntlIncoming.cs" />
-    <Compile Include="SgIcnlOutgoing.cs" />
-    <Compile Include="SgIcnlLocal.cs" />
-    <Compile Include="SgIcnlAlphaPremium.cs" />
-    <Compile Include="SgIcnlTollFree.cs" />
     <Compile Include="SgLtfsIcx.cs" />
     <Compile Include="SgIntlTransitVoice.cs" />
     <Compile Include="SgDomesticIcx.cs" />

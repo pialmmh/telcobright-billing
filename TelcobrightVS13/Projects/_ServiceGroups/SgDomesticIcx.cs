@@ -10,7 +10,6 @@ using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Accounting.Invoice;
 using TelcobrightMediation.Cdr;
 using TransactionTuple = System.ValueTuple<int, int, long, int, long>;
-
 namespace TelcobrightMediation
 {
     [Export("ServiceGroup", typeof(IServiceGroup))]
@@ -52,19 +51,38 @@ namespace TelcobrightMediation
             //Domestic call direction/service group
             var dicRoutes = cdrProcessor.CdrJobContext.MediationContext.MefServiceGroupContainer.SwitchWiseRoutes;
             var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
-            route thisRoute = null;
-            dicRoutes.TryGetValue(key, out thisRoute);
-            if (thisRoute != null)
+            route incomingRoute = null;
+            dicRoutes.TryGetValue(key, out incomingRoute);
+            if (incomingRoute != null)
             {
-                if (thisRoute.partner.PartnerType == IcxPartnerType.ANS &&
-                    thisRoute.NationalOrInternational == RouteLocalityType.National) //ANS and route=national
+                bool useCasStyleProcessing = cdrProcessor.CdrJobContext.CdrjobInputData.CdrSetting.useCasStyleProcessing;
+                if (!useCasStyleProcessing)
                 {
-                    thisCdr.ServiceGroup = 1; //Domestic in ICX
+                    if (incomingRoute.partner.PartnerType == IcxPartnerType.ANS &&
+                        incomingRoute.NationalOrInternational == RouteLocalityType.National) //ANS and route=national
+                    {
+                        thisCdr.ServiceGroup = 1; //Domestic in ICX
+                    }
+                }
+                else
+                {
+                    key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.OutgoingRoute);
+                    route outGoingRoute = null;
+                    dicRoutes.TryGetValue(key, out outGoingRoute);
+                    if (outGoingRoute?.partner.PartnerType == IcxPartnerType.ANS &&
+                        incomingRoute.partner.PartnerType == IcxPartnerType.ANS) //ANS and route=national
+                    {
+                        thisCdr.ServiceGroup = 1; //Domestic call
+                        decimal roundedDuration = CasDurationHelper.getDomesticDur(thisCdr.DurationSec);
+
+                        thisCdr.Duration1 = roundedDuration;
+                    }
                 }
             }
         }
 
-        public void SetServiceGroupWiseSummaryParams(CdrExt cdrExt, AbstractCdrSummary newSummary)
+        public void SetServiceGroupWiseSummaryParams(CdrExt cdrExt, AbstractCdrSummary newSummary,
+            CdrSetting cdrSetting)
         {
             //this._sgIntlTransitVoice.SetServiceGroupWiseSummaryParams(cdrExt, newSummary);
             newSummary.tup_countryorareacode = cdrExt.Cdr.CountryCode;
@@ -74,12 +92,15 @@ namespace TelcobrightMediation
 
             acc_chargeable chargeableCust = null;
             cdrExt.Chargeables.TryGetValue(new ValueTuple<int, int, int>(this.Id, 1, 1), out chargeableCust);
-            if (chargeableCust == null)
+            if (!cdrSetting.useCasStyleProcessing)
             {
-                throw new Exception("Chargeable info not found for customer direction.");
+                if (chargeableCust == null)
+                {
+                    throw new Exception("Chargeable info not found for customer direction.");
+                }
+                this._sgIntlTransitVoice.SetChargingSummaryInCustomerDirection(chargeableCust, newSummary);
+                newSummary.tax1 = Convert.ToDecimal(chargeableCust.TaxAmount1);
             }
-            this._sgIntlTransitVoice.SetChargingSummaryInCustomerDirection(chargeableCust, newSummary);
-            newSummary.tax1 = Convert.ToDecimal(chargeableCust.TaxAmount1);
         }
 
         public void ValidateInvoiceGenerationParams(object validationInput)
@@ -111,6 +132,24 @@ namespace TelcobrightMediation
                 .Key.ToString();
             CommonInvoicePostProcessor commonInvoicePostProcessor
                 = new CommonInvoicePostProcessor(invoicePostProcessingData, cdrOrSummarytableName, jsonDetail);
+
+            InvoiceGenerationInputData inputData = invoicePostProcessingData.InvoiceGenerationInputData;
+
+            invoice invoice = invoicePostProcessingData.Invoice;
+            InvoiceGenerationConfig invoiceGenerationConfig = null;
+            inputData.ServiceGroupWiseInvoiceGenerationConfigs.TryGetValue(this.Id, out invoiceGenerationConfig);
+            if (invoiceGenerationConfig == null)
+                throw new Exception("Could not find invoice generation confir for service group:" + this.Id);
+            //IStringExpressionGenerator expressionGenerator= invoiceGenerationConfig.InvoiceRefNoExpressionGenerator;
+            Dictionary<string, object> expressionGenData = new Dictionary<string, object>
+            {
+                {"invoice", invoice},
+                {"serviceGroupName",this.RuleName},
+                {"dbcommand",inputData.Context.Database.Connection.CreateCommand()},
+            };
+            //expressionGenerator.GetStringExpression(expressionGenData);
+            //expressionGenerator.GetStringExpression()
+            //TupleIncrementManager ti= new TupleIncrementManager();
             return commonInvoicePostProcessor.Process();
         }
     }

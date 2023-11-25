@@ -59,7 +59,7 @@ namespace Jobs
             {
                 preProcessor = DecodeNewCdrFile(preDecodingStage: true);
                 initAndFormatTxtRowsBeforeCdrConversion(preProcessor);
-                return preProcessor;
+                return preProcessor; 
             }
             preProcessor = DecodeNewCdrFile(preDecodingStage: false);
             initAndFormatTxtRowsBeforeCdrConversion(preProcessor);

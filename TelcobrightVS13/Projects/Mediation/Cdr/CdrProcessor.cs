@@ -119,14 +119,17 @@ namespace TelcobrightMediation
                             }
                             if (allPartnersFound)
                             {
-                                ExecuteRating(serviceGroupConfiguration, serviceGroupConfiguration.Ratingtrules,
-                                    cdrExt);
-                                serviceGroup.ExecutePostRatingActions(cdrExt, this);
-                                ExecuteNerRule(this, cdrExt);
-                                if (this.CdrJobContext.MediationContext.Tbc.CdrSetting.CallConnectTimePresent == true &&
-                                    cdrExt.Cdr.ServiceGroup > 0 && cdrExt.Cdr.ChargingStatus == 1)
+                                if (!this.MediationContext.CdrSetting.useCasStyleProcessing)
                                 {
-                                    SetPdd(cdrExt.Cdr);
+                                    ExecuteRating(serviceGroupConfiguration, serviceGroupConfiguration.Ratingtrules,
+                                        cdrExt);
+                                    serviceGroup.ExecutePostRatingActions(cdrExt, this);
+                                    ExecuteNerRule(this, cdrExt);
+                                    if (this.CdrJobContext.MediationContext.Tbc.CdrSetting.CallConnectTimePresent == true &&
+                                        cdrExt.Cdr.ServiceGroup > 0 && cdrExt.Cdr.ChargingStatus == 1)
+                                    {
+                                        SetPdd(cdrExt.Cdr);
+                                    }
                                 }
                             }
                         }
@@ -228,8 +231,26 @@ namespace TelcobrightMediation
             {
                 foreach (var kv in processedCdrExt.TableWiseSummaries)
                 {
-                    CdrSummaryType summaryTargetTable = kv.Key;
-                    this.CdrJobContext.CdrSummaryContext.MergeAddSummary(summaryTargetTable, kv.Value);
+                    if (!this.MediationContext.CdrSetting.useCasStyleProcessing)
+                    {
+                        CdrSummaryType summaryTargetTable = kv.Key;
+                        this.CdrJobContext.CdrSummaryContext.MergeAddSummary(summaryTargetTable, kv.Value);
+                    }
+                    else//casStyleProcessing
+                    {
+                        CdrSummaryType summaryTargetTable = kv.Key;
+                        if (kv.Key == CdrSummaryType.sum_voice_day_01 || kv.Key == CdrSummaryType.sum_voice_day_02 ||
+                            kv.Key == CdrSummaryType.sum_voice_day_03 || kv.Key == CdrSummaryType.sum_voice_day_04 ||
+                            kv.Key == CdrSummaryType.sum_voice_day_06 || kv.Key == CdrSummaryType.sum_voice_day_06
+                        )
+                        {
+                            this.CdrJobContext.CdrSummaryContext.MergeAddSummary(summaryTargetTable, kv.Value);
+                        }
+                        else
+                        {
+                            Console.WriteLine("hello");
+                        }
+                    }
                 }
             });
         }

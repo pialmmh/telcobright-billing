@@ -56,12 +56,19 @@ namespace TelcobrightMediation
                 if (cdrRule.CheckIfTrue(thisCdr))
                 {
                     thisCdr.ServiceGroup = 2; //international Out in IGW 
+                    if (cdrProcessor.CdrJobContext.MediationContext.CdrSetting.useCasStyleProcessing)
+                    {
+                        decimal roundedDuration100Ms = CasDurationHelper.getDomesticDur(thisCdr.DurationSec);
+                        thisCdr.RoundedDuration = roundedDuration100Ms;
+                        thisCdr.Duration3 = CasDurationHelper.getIntlOutDur(roundedDuration100Ms);
+                    }
                     break;
                 }
             }
+            
         }
 
-        public void SetServiceGroupWiseSummaryParams(CdrExt cdrExt, AbstractCdrSummary newSummary)
+        public void SetServiceGroupWiseSummaryParams(CdrExt cdrExt, AbstractCdrSummary newSummary,CdrSetting cdrSetting)
         {
             newSummary.tup_matchedprefixcustomer = cdrExt.Cdr.MatchedPrefixY;
             newSummary.tup_countryorareacode = cdrExt.Cdr.CountryCode;
@@ -69,19 +76,22 @@ namespace TelcobrightMediation
             newSummary.tup_inpartnerid = Convert.ToInt32(cdrExt.Cdr.InPartnerId);
             if (cdrExt.Cdr.ChargingStatus != 1) return;
             acc_chargeable chargeableCust = null;
-            cdrExt.Chargeables.TryGetValue(new ValueTuple<int, int, int>(this.Id, 7, 1), out chargeableCust);
-            if (chargeableCust == null)
+            if (!cdrSetting.useCasStyleProcessing)
             {
-                throw new Exception("Chargeable not found for customer direction.");
+                cdrExt.Chargeables.TryGetValue(new ValueTuple<int, int, int>(this.Id, 7, 1), out chargeableCust);
+                if (chargeableCust == null)
+                {
+                    throw new Exception("Chargeable not found for customer direction.");
+                }
+                newSummary.customercost = Convert.ToDecimal(chargeableCust.BilledAmount); //invoice amount
+                newSummary.tup_customerrate = Convert.ToDecimal(chargeableCust.OtherDecAmount1); //x rate
+                newSummary.tup_supplierrate = Convert.ToDecimal(chargeableCust.OtherDecAmount2); //y rate
+                newSummary.tup_customercurrency = Convert.ToDecimal(chargeableCust.OtherDecAmount3).ToString(); //usd rate
+                newSummary.longDecimalAmount1 = Convert.ToDecimal(chargeableCust.OtherAmount1); //x amount
+                newSummary.longDecimalAmount2 = Convert.ToDecimal(chargeableCust.OtherAmount2); //y amount
+                newSummary.longDecimalAmount3 = Convert.ToDecimal(chargeableCust.OtherAmount3); //z amount
+                newSummary.tax1 = Convert.ToDecimal(chargeableCust.TaxAmount1);//btrc rev share
             }
-            newSummary.customercost = Convert.ToDecimal(chargeableCust.BilledAmount); //invoice amount
-            newSummary.tup_customerrate = Convert.ToDecimal(chargeableCust.OtherDecAmount1); //x rate
-            newSummary.tup_supplierrate = Convert.ToDecimal(chargeableCust.OtherDecAmount2); //y rate
-            newSummary.tup_customercurrency = Convert.ToDecimal(chargeableCust.OtherDecAmount3).ToString(); //usd rate
-            newSummary.longDecimalAmount1 = Convert.ToDecimal(chargeableCust.OtherAmount1); //x amount
-            newSummary.longDecimalAmount2 = Convert.ToDecimal(chargeableCust.OtherAmount2); //y amount
-            newSummary.longDecimalAmount3 = Convert.ToDecimal(chargeableCust.OtherAmount3); //z amount
-            newSummary.tax1 = Convert.ToDecimal(chargeableCust.TaxAmount1);//btrc rev share
         }
 
         public void ValidateInvoiceGenerationParams(object validationInput)

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LibraryExtensions;
 using TelcobrightMediation;
 
 namespace TelcobrightInfra
@@ -22,7 +23,7 @@ namespace TelcobrightInfra
         private string deploymentBaseDir;
         private string dstBatchFileTargetDir;
         private string DebugOrReleaseBinariesPath = "";
-        public DeploymentHelper(TelcobrightConfig tbc, string solutionDir,DeploymentPlatform deploymentPlatform)
+        public DeploymentHelper(TelcobrightConfig tbc,string solutionDir,DeploymentPlatform deploymentPlatform)
         {
             Tbc = tbc;
             SolutionDir = solutionDir;
@@ -45,9 +46,10 @@ namespace TelcobrightInfra
         public void deploy()
         {
             //createBatchFile(this.srcBinaryFullPath, this.dstBinaryFullPath);
-
-            string srcConfigFile = this.getSrcConfigDir(this.wsTopShelfDir) + Path.DirectorySeparatorChar
-                                   + this.srcTemplateConfigFileNameOnly;
+            string srcConfigFile = new UpwordPathFinder<DirectoryInfo>("config").FindAndGetFullPath()
+                + Path.DirectorySeparatorChar + Tbc.DeploymentProfile.profileName 
+                + Path.DirectorySeparatorChar +Tbc.Telcobrightpartner.databasename
+                                   + Path.DirectorySeparatorChar + Tbc.Telcobrightpartner.databasename + ".conf";
             string destConfigFile = this.dstBatchFileTargetDir + Path.DirectorySeparatorChar
                                     + this.Tbc.Telcobrightpartner.databasename + ".conf";
             if (File.Exists(destConfigFile))

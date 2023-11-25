@@ -61,7 +61,10 @@ namespace TelcobrightMediation
 
             if (this.DatesInvolved.Any())
             {
-                PopulateRateCacheForDatesInvolved();
+                if (!this.MediationContext.CdrSetting.useCasStyleProcessing)
+                {
+                    PopulateRateCacheForDatesInvolved();
+                }
                 this.AccountingContext.PopulatePrevLedgerSummary();
                 this.CdrSummaryContext.PopulatePrevSummary();
                 this.CdrSummaryContext.ValidateDayVsHourWiseSummaryCollection();

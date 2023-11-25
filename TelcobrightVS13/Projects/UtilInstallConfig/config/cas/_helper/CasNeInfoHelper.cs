@@ -50,7 +50,8 @@ namespace InstallConfig.config._helper
 
         public static string getCasOperatorInfoFile()
         {
-            return new DirectoryInfo(FileAndPathHelperReadOnly.GetCurrentExecPath()).Parent.Parent.FullName +
+            string utilInstallPath = new UpwordPathFinder<DirectoryInfo>("UtilInstallConfig").FindAndGetFullPath();
+            return utilInstallPath +
                 Path.DirectorySeparatorChar.ToString() + "config" +
                 Path.DirectorySeparatorChar.ToString() + "cas" +
                 Path.DirectorySeparatorChar.ToString() + "_helper" +

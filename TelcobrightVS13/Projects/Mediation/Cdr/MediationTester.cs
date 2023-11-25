@@ -67,14 +67,26 @@ namespace TelcobrightMediation
             return cdrProcessor.CollectionResult.RawDurationTotalOfConsistentCdrs
                    == errorCdrExtsDurationReProcess+cdrExtDurationReProcess;
         }
-        public bool DurationSumInCdrAndSummaryAreEqual(ParallelQuery<CdrExt> processedCdrExts)
+        public bool DurationSumInCdrAndSummaryAreEqual(ParallelQuery<CdrExt> processedCdrExts,bool casStyleProcessing)
         {
-            decimal durationSumInCdr = processedCdrExts.Sum(c => Convert.ToDecimal(c.Cdr?.DurationSec));
-            decimal durationSumInSummaries = processedCdrExts.
-                Sum(c => c.TableWiseSummaries.Values.Sum(s => Convert.ToDecimal(s?.actualduration)));
-            int summaryTypeCount = 2;//at this moment just hr & day
-            bool result = durationSumInCdr == decimal.Divide(durationSumInSummaries, summaryTypeCount);
-            return result;
+            if (!casStyleProcessing)
+            {
+                decimal durationSumInCdr = processedCdrExts.Sum(c => Convert.ToDecimal(c.Cdr?.DurationSec));
+                decimal durationSumInSummaries = processedCdrExts.
+                    Sum(c => c.TableWiseSummaries.Values.Sum(s => Convert.ToDecimal(s?.actualduration)));
+                int summaryTypeCount = 2;//at this moment just hr & day
+                bool result = durationSumInCdr == decimal.Divide(durationSumInSummaries, summaryTypeCount);
+                return result;
+            }
+            else
+            {
+                decimal durationSumInCdr = processedCdrExts.Sum(c => Convert.ToDecimal(c.Cdr?.DurationSec));
+                decimal durationSumInSummaries = processedCdrExts.
+                    Sum(c => c.TableWiseSummaries.Values.Sum(s => Convert.ToDecimal(s?.actualduration)));
+                int summaryTypeCount = 1;//at this moment just day
+                bool result = durationSumInCdr == decimal.Divide(durationSumInSummaries, summaryTypeCount);
+                return result;
+            }
         }
         public bool CdrDurationMatchesSumOfInsertedAndUpdatedSummaryDurationInCache(CdrProcessor cdrProcessor)
         {
@@ -88,11 +100,20 @@ namespace TelcobrightMediation
             bool result = durationSumInCdr == inserteDuration + updatedDuration;
             return result;
         }
-        public bool SummaryCountTwiceAsCdrCount(ParallelQuery<CdrExt> processedCdrExts)
+        public bool SummaryCountTwiceAsCdrCount(ParallelQuery<CdrExt> processedCdrExts,bool casStyleProcessing)
         {
-            var cdrCount = processedCdrExts.Count();
-            int summaryInstanceCount = processedCdrExts.SelectMany(c => c.TableWiseSummaries.Values).Count();
-            return 2 * cdrCount == summaryInstanceCount;
+            if (!casStyleProcessing)
+            {
+                var cdrCount = processedCdrExts.Count();
+                int summaryInstanceCount = processedCdrExts.SelectMany(c => c.TableWiseSummaries.Values).Count();
+                return 2 * cdrCount == summaryInstanceCount;
+            }
+            else
+            {
+                var cdrCount = processedCdrExts.Count();
+                int summaryInstanceCount = processedCdrExts.SelectMany(c => c.TableWiseSummaries.Values).Count();
+                return 1 * cdrCount == summaryInstanceCount;
+            }
         }
 
         public bool SumOfPrevDayWiseDurationsAndNewSummaryInstancesIsEqualToSameInMergedSummaryCache

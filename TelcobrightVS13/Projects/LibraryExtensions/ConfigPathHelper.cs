@@ -29,10 +29,12 @@ namespace LibraryExtensions
         }
         public string GetTopShelfDir()
         {
-            return Directory.GetParent(Directory
-                       .GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName)
-                       .FullName).FullName
-                   + Path.DirectorySeparatorChar.ToString() + this.TopShelfDirName;
+            //string topShelfDir = Directory.GetParent(Directory
+            //    .GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName)
+            //    .FullName).FullName;
+            UpwordPathFinder<DirectoryInfo> topShelfFinder = new UpwordPathFinder<DirectoryInfo>("WS_Topshelf_Quartz");
+            var topShelfDir = topShelfFinder.FindAndGetFullPath();
+            return topShelfDir;
         }
         public string GetDeployedInstancesDir()
         {
@@ -52,17 +54,13 @@ namespace LibraryExtensions
         }
         public string GetPortalBinPath()
         {
-            return Directory.GetParent(Directory
-                   .GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName).FullName).FullName
-                   + Path.DirectorySeparatorChar.ToString() + this.PortalDirName
+            return new UpwordPathFinder<DirectoryInfo>("Portal").FindAndGetFullPath()
                    + Path.DirectorySeparatorChar + "bin";
         }
         public string GetOperatorWiseConfigDirInUtil(string operatorShortName,string configRoot)
         {
            string directoryPrefix = configRoot == string.Empty ? "" : configRoot + Path.DirectorySeparatorChar;
-            return Directory.GetParent(Directory
-                       .GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName)
-                       .FullName).FullName + Path.DirectorySeparatorChar + this.UtilInstallConfigDirnameOnly
+            return new UpwordPathFinder<DirectoryInfo>("UtilInstallConfig").FindAndGetFullPath()
                        + Path.DirectorySeparatorChar + "config"  + Path.DirectorySeparatorChar +
                    directoryPrefix + operatorShortName;
         }
@@ -83,9 +81,7 @@ namespace LibraryExtensions
         }
         public string GetUtilInstallConfigFullPath()
         {
-            return Directory.GetParent(Directory
-                       .GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName)
-                       .FullName).FullName + Path.DirectorySeparatorChar + this.UtilInstallConfigDirnameOnly;
+            return new UpwordPathFinder<DirectoryInfo>("UtilInstallConfig").FindAndGetFullPath();
         }
         public string getDbscriptHome()
         {
