@@ -20,64 +20,74 @@
     <div style="padding-left: 20px;">
 
         <div style="height: 40px;"></div>
+         <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+            <Triggers>
+                <asp:AsyncPostBackTrigger ControlID="Timer1" EventName="Tick" />
+            </Triggers>
 
+        <ContentTemplate>
         <%--TGs --%>
         <div >
             <%--div 1--%>
-            <div style="float: left; padding-left: 20px; text-align: center;">
-                <div style="margin-right: auto; text-align: center;">
-                    <asp:Label ID="LabelJobProcessingStatus" runat="server" Text="Job Processing Status" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
-                </div>
-                <asp:GridView ID="GridViewJobProcessingStatus" runat="server" AutoGenerateColumns="false" DataKeyNames="id">
-                    <Columns>
-                        <asp:BoundField DataField="ICXName" HeaderText="ICX Name" />
-                        <asp:BoundField DataField="SwitchId" HeaderText="SwitchId" />
-                        <asp:BoundField DataField="LastJobName" HeaderText="Last Job Name" />
-                        <asp:BoundField DataField="CompletionTime" HeaderText="Completion Time" />
-                        <asp:BoundField DataField="NoofRecords" HeaderText="No of Records" />
-                    </Columns>
-                    <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
-                    <EditRowStyle BackColor="#999999" />
-                    <FooterStyle BackColor="#086052" Font-Bold="True" ForeColor="White" />
-                    <HeaderStyle BackColor="#086052" Font-Bold="True" ForeColor="White" />
-                    <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
-                    <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
-                    <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
-                    <SortedAscendingCellStyle BackColor="#E9E7E2" />
-                    <SortedAscendingHeaderStyle BackColor="#506C8C" />
-                    <SortedDescendingCellStyle BackColor="#FFFDF8" />
-                    <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
-                </asp:GridView>
+                    <div style="float: left; padding-left: 20px; text-align: center;">
+                        <div style="margin-right: auto; text-align: center;">
+                            <asp:Label ID="LabelJobProcessingStatus" runat="server" Text="Job Processing Status" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
+                        </div>
+                        <asp:GridView ID="GridViewJobProcessingStatus" runat="server" AutoGenerateColumns="false" DataKeyNames="id">
+                            <Columns>
+                                <asp:BoundField DataField="ICXName" HeaderText="ICX Name" />
+                                <asp:BoundField DataField="SwitchId" HeaderText="SwitchId" />
+                                <asp:BoundField DataField="LastJobName" HeaderText="Last Job Name" />
+                                <asp:BoundField DataField="CompletionTime" HeaderText="Completion Time" />
+                                <asp:BoundField DataField="NoofRecords" HeaderText="No of Records" />
+                            </Columns>
+                            <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+                            <EditRowStyle BackColor="#999999" />
+                            <FooterStyle BackColor="#086052" Font-Bold="True" ForeColor="White" />
+                            <HeaderStyle BackColor="#086052" Font-Bold="True" ForeColor="White" />
+                            <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
+                            <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
+                            <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
+                            <SortedAscendingCellStyle BackColor="#E9E7E2" />
+                            <SortedAscendingHeaderStyle BackColor="#506C8C" />
+                            <SortedDescendingCellStyle BackColor="#FFFDF8" />
+                            <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
+                        </asp:GridView>
 
-            </div>
+                    </div>
 
             <%--div 1--%>
-             <div style="float: left; padding-left: 40px; text-align: center;">
-                <div style="margin-right: auto; text-align: center;">
-                    <asp:Label ID="Label1" runat="server" Text="Error Status" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
+                     <div style="float: left; padding-left: 40px; text-align: center;">
+                        <div style="margin-right: auto; text-align: center;">
+                            <asp:Label ID="Label1" runat="server" Text="Error Status" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
+                        </div>
+                        <asp:GridView ID="GridViewErrorStatus" runat="server" AutoGenerateColumns="false" DataKeyNames="id">
+                            <Columns>
+                                <asp:BoundField DataField="ICXName" HeaderText="ICX Name" />
+                                <asp:BoundField DataField="Error" HeaderText="Error" />
+                                <asp:BoundField DataField="ProcessName" HeaderText="Process Name" />
+                                <asp:BoundField DataField="OccuranceTime" HeaderText="Occurance Time" />
+                            </Columns>
+                            <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+                            <EditRowStyle BackColor="#999999" />
+                            <FooterStyle BackColor="#086052" Font-Bold="True" ForeColor="White" />
+                            <HeaderStyle BackColor="#086052" Font-Bold="True" ForeColor="White" />
+                            <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
+                            <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
+                            <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
+                            <SortedAscendingCellStyle BackColor="#E9E7E2" />
+                            <SortedAscendingHeaderStyle BackColor="#506C8C" />
+                            <SortedDescendingCellStyle BackColor="#FFFDF8" />
+                            <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
+                        </asp:GridView>
+
+                    </div>
+
                 </div>
-                <asp:GridView ID="GridViewErrorStatus" runat="server" AutoGenerateColumns="false" DataKeyNames="id">
-                    <Columns>
-                        <asp:BoundField DataField="ICXName" HeaderText="ICX Name" />
-                        <asp:BoundField DataField="Error" HeaderText="Error" />
-                        <asp:BoundField DataField="ProcessName" HeaderText="Process Name" />
-                        <asp:BoundField DataField="OccuranceTime" HeaderText="Occurance Time" />
-                    </Columns>
-                    <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
-                    <EditRowStyle BackColor="#999999" />
-                    <FooterStyle BackColor="#086052" Font-Bold="True" ForeColor="White" />
-                    <HeaderStyle BackColor="#086052" Font-Bold="True" ForeColor="White" />
-                    <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
-                    <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
-                    <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
-                    <SortedAscendingCellStyle BackColor="#E9E7E2" />
-                    <SortedAscendingHeaderStyle BackColor="#506C8C" />
-                    <SortedDescendingCellStyle BackColor="#FFFDF8" />
-                    <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
-                </asp:GridView>
+            </ContentTemplate>
+        </asp:UpdatePanel>
+        <asp:Timer ID="Timer1" runat="server" Interval="30000" OnTick="Timer1_Tick" Enabled="false">
+        </asp:Timer>
 
-            </div>
-
-        </div>
     </div>
 </asp:Content>

@@ -180,197 +180,205 @@
             <div style="height: 40px;"></div>
 
 
-            <%--<asp:UpdatePanel ID="UpdatePanel2" runat="server" style ="min-width: 800px;">--%>
-            <%--<Triggers>
+            <asp:UpdatePanel ID="UpdatePanel2" runat="server">
+                <Triggers>
                     <asp:AsyncPostBackTrigger ControlID="Timer2" EventName="Tick" />
-                </Triggers>--%>
-            <%--<ContentTemplate>--%>
+                </Triggers>
+                <ContentTemplate>
 
 
-            <div style="text-align: center; float: left;">
-                <div style="float: left;">
-                    <%--main div 1--%>
-                    <div>
-                        <%--div 1--%>
-                        <div style="float: left;">
-                            <div style=" text-align: center;">
-                                <asp:Label ID="Label2" runat="server" Text="Latest CDR Job Process Status" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
+                <div style="text-align: center; float: left;">
+                    <div style="float: left;">
+                        <%--main div 1--%>
+                        <div>
+                            <%--div 1--%>
+                            <div style="float: left;">
+                                <div style=" text-align: center;">
+                                    <asp:Label ID="Label2" runat="server" Text="Latest CDR Job Process Status" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
+                                </div>
+                                <asp:Label ID="NoDataLabel" runat="server" Text="NO DATA" Visible="false" ForeColor="Red" Width="600px" Height="400px" Font-Size="24px" style="text-align: center; line-height: 400px;"></asp:Label>
+
+                                <asp:GridView ID="GridViewCompleted" runat="server" AutoGenerateColumns="False" CellPadding="4" Width="600px" DataKeyNames="id" ForeColor="#333333" GridLines="None" BorderStyle="None" BorderWidth="1" OnPageIndexChanging="GridViewCompleted_PageIndexChanging">
+                                
+                                    <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+                                    <Columns>
+                                        <asp:TemplateField HeaderText="Status">
+                                            <ItemTemplate>
+                                                <div style="text-align: center;">
+                                                    <asp:Image ID="StatusImage" runat="server" ImageUrl="~/img/correct.png" Width="14" Height="14" />
+                                                </div>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:BoundField DataField="id" HeaderText="id" InsertVisible="False" ReadOnly="True" SortExpression="id" Visible="false" />
+                                        <asp:BoundField DataField="JobName" HeaderText="JobName" SortExpression="JobName" />
+                                        <asp:BoundField DataField="CreationTime" HeaderText="CreationTime" SortExpression="CreationTime" DataFormatString="{0:yyyy-MM-dd HH:mm:ss}" />
+                                        <asp:BoundField DataField="CompletionTime" HeaderText="CompletionTime" SortExpression="CompletionTime" DataFormatString="{0:yyyy-MM-dd HH:mm:ss}" />
+                                    </Columns>
+                                    <EditRowStyle BackColor="#999999" />
+                                    <FooterStyle BackColor="#086052" Font-Bold="True" ForeColor="White" />
+                                    <HeaderStyle BackColor="#086052" Font-Bold="True" ForeColor="White" />
+                                    <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
+                                    <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
+                                    <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
+                                    <SortedAscendingCellStyle BackColor="#E9E7E2" />
+                                    <SortedAscendingHeaderStyle BackColor="#506C8C" />
+                                    <SortedDescendingCellStyle BackColor="#FFFDF8" />
+                                    <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
+
+                                </asp:GridView>
+                                    <asp:Button ID="PreviousButton" runat="server" Text="Newer" OnClick="PreviousButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />
+                                    <asp:Button ID="NextButton" runat="server" Text="Older" OnClick="NextButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />
+
+
                             </div>
-                            <asp:Label ID="NoDataLabel" runat="server" Text="NO DATA" Visible="false" ForeColor="Red" Width="600px" Height="400px" Font-Size="24px" style="text-align: center; line-height: 400px;"></asp:Label>
-
-                            <asp:GridView ID="GridViewCompleted" runat="server" AutoGenerateColumns="False" CellPadding="4" Width="600px" DataKeyNames="id" ForeColor="#333333" GridLines="None" BorderStyle="None" BorderWidth="1" OnPageIndexChanging="GridViewCompleted_PageIndexChanging">
+                            <%--humayun--%>
+                            <div style="text-align: center; float: right;">
+                                <div style="text-align: center; float: right; padding-right:200px;">
+                                    <div class="col-3">
                                 
-                                <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
-                                <Columns>
-                                    <asp:TemplateField HeaderText="Status">
-                                        <ItemTemplate>
-                                            <div style="text-align: center;">
-                                                <asp:Image ID="StatusImage" runat="server" ImageUrl="~/img/correct.png" Width="14" Height="14" />
-                                            </div>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:BoundField DataField="id" HeaderText="id" InsertVisible="False" ReadOnly="True" SortExpression="id" Visible="false" />
-                                    <asp:BoundField DataField="JobName" HeaderText="JobName" SortExpression="JobName" />
-                                    <asp:BoundField DataField="CreationTime" HeaderText="CreationTime" SortExpression="CreationTime" DataFormatString="{0:yyyy-MM-dd HH:mm:ss}" />
-                                    <asp:BoundField DataField="CompletionTime" HeaderText="CompletionTime" SortExpression="CompletionTime" DataFormatString="{0:yyyy-MM-dd HH:mm:ss}" />
-                                </Columns>
-                                <EditRowStyle BackColor="#999999" />
-                                <FooterStyle BackColor="#086052" Font-Bold="True" ForeColor="White" />
-                                <HeaderStyle BackColor="#086052" Font-Bold="True" ForeColor="White" />
-                                <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
-                                <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
-                                <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
-                                <SortedAscendingCellStyle BackColor="#E9E7E2" />
-                                <SortedAscendingHeaderStyle BackColor="#506C8C" />
-                                <SortedDescendingCellStyle BackColor="#FFFDF8" />
-                                <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
-
-                            </asp:GridView>
-                                <asp:Button ID="PreviousButton" runat="server" Text="Newer" OnClick="PreviousButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />
-                                <asp:Button ID="NextButton" runat="server" Text="Older" OnClick="NextButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />
-
-
-                        </div>
-                        <%--humayun--%>
-                        <div style="text-align: center; float: right;">
-                            <div style="text-align: center; float: right; padding-right:200px;">
-                                <div class="col-3">
-                                
-                                    <div style="margin-left: auto; margin-right: auto; text-align: center;">
-                                        <asp:Label ID="Label5" runat="server" Text="Domestic Calls For Previous Seven Days" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
-                                    </div>
-                                    <p>
-                                    </p>
-                                    <p>
+                                        <%--<div style="margin-left: auto; margin-right: auto; text-align: center;">
+                                            <asp:Label ID="Label5" runat="server" Text="Domestic Calls For Previous Seven Days" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
+                                        </div>--%>
+                                        <div style="margin-left: auto; margin-right: auto; text-align: center;">
+                                            <asp:Label ID="Label5" runat="server" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
+                                        </div>
+                                        <p>
+                                        </p>
+                                        <p>
                                   
                                     
-                                        <asp:Chart ID="DomesticCallForPreviousSevenDays" runat="server" Width="650px" Height="170px">
-                                            <Series>
-                                                <asp:Series ChartType="Column">
-                                                    <Points>
-                                                    </Points>
-                                                </asp:Series>
-                                            </Series>
-                                            <ChartAreas>
-                                                <asp:ChartArea Name="ChartArea1">
-                                                    <AxisX Title="Date" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
-                                                        <LabelStyle Font="Arial, 10px" Interval="1" />
-                                                        <MajorGrid Enabled="false" /> 
-                                                    </AxisX>
-                                                    <AxisY Title="Minutes (Million)" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
-                                                        <LabelStyle Font="Arial, 10px" />
-                                                        <MajorGrid Enabled="false" /> 
-                                                    </AxisY>
-                                                </asp:ChartArea>
-                                            </ChartAreas>
+                                            <asp:Chart ID="DomesticCallForPreviousSevenDays" runat="server" Width="650px" Height="170px">
+                                                <Series>
+                                                    <asp:Series ChartType="Column">
+                                                        <Points>
+                                                        </Points>
+                                                    </asp:Series>
+                                                </Series>
+                                                <ChartAreas>
+                                                    <asp:ChartArea Name="ChartArea1">
+                                                        <AxisX Title="Date" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                            <LabelStyle Font="Arial, 10px" Interval="1" />
+                                                            <MajorGrid Enabled="false" /> 
+                                                        </AxisX>
+                                                        <AxisY Title="Minutes (Million)" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                            <LabelStyle Font="Arial, 10px" />
+                                                            <MajorGrid Enabled="false" /> 
+                                                        </AxisY>
+                                                    </asp:ChartArea>
+                                                </ChartAreas>
                                       
-                                        </asp:Chart>
+                                            </asp:Chart>
 
-                                    </p>
-                                    <%--<asp:Button ID="Button4" runat="server" Text="Newer" OnClick="PreviousButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />
-                                    <asp:Button ID="Button5" runat="server" Text="Older" OnClick="NextButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />--%>
-                                </div>
-                            </div>
-
-                        </div>
-                        
-                        
-                        
-                       <%-- International Incommimng For Previous Seven Days--%>
-                        
-                        <div style="text-align: center; float: right;">
-                            <div style="float: right; padding-right: 200px;">
-                                <div class="col-3">
-                                
-                                    <div style="margin-left: auto; margin-right: auto; text-align: center;">
-                                        <asp:Label ID="Label1" runat="server" Text="International Incommimng Calls For Previous Seven Days" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
+                                        </p>
+<%--                                        <asp:Button ID="PreviousButton1" runat="server" Text="Newer" OnClick="PreviousButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />
+                                        <asp:Button ID="NextButton1" runat="server" Text="Older" OnClick="NextButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />--%>
                                     </div>
-                                    <p>
-                                    </p>
-                                    <p>
+                                </div>
+
+                            </div>
+                        
+                        
+                        
+                           <%-- International Incommimng For Previous Seven Days--%>
+                        
+                            <div style="text-align: center; float: right;">
+                                <div style="float: right; padding-right: 200px;">
+                                    <div class="col-3">
+                                
+                                        <div style="margin-left: auto; margin-right: auto; text-align: center;">
+                                            <%--<asp:Label ID="Label4" runat="server" Text="International Incommimng Calls For Previous Seven Days" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>--%>
+                                            <asp:Label ID="Label1" runat="server" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
+                                        </div>
+                                        <p>
+                                        </p>
+                                        <p>
                                   
                                     
-                                        <asp:Chart ID="InternationalIncommimng" runat="server" Width="650px" Height="170px">
-                                            <Series>
-                                                <asp:Series ChartType="Column">
-                                                    <Points>
-                                                    </Points>
-                                                </asp:Series>
-                                            </Series>
-                                            <ChartAreas>
-                                                <asp:ChartArea Name="ChartArea1">
-                                                    <AxisX Title="Date" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
-                                                        <LabelStyle Font="Arial, 10px" Interval="1" />
-                                                        <MajorGrid Enabled="false" /> 
-                                                    </AxisX>
-                                                    <AxisY Title="Minutes (Million)" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
-                                                        <LabelStyle Font="Arial, 10px" />
-                                                        <MajorGrid Enabled="false" /> 
-                                                    </AxisY>
-                                                </asp:ChartArea>
-                                            </ChartAreas>
-                                        </asp:Chart>
+                                            <asp:Chart ID="InternationalIncommimng" runat="server" Width="650px" Height="170px">
+                                                <Series>
+                                                    <asp:Series ChartType="Column">
+                                                        <Points>
+                                                        </Points>
+                                                    </asp:Series>
+                                                </Series>
+                                                <ChartAreas>
+                                                    <asp:ChartArea Name="ChartArea1">
+                                                        <AxisX Title="Date" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                            <LabelStyle Font="Arial, 10px" Interval="1" />
+                                                            <MajorGrid Enabled="false" /> 
+                                                        </AxisX>
+                                                        <AxisY Title="Minutes (Million)" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                            <LabelStyle Font="Arial, 10px" />
+                                                            <MajorGrid Enabled="false" /> 
+                                                        </AxisY>
+                                                    </asp:ChartArea>
+                                                </ChartAreas>
+                                            </asp:Chart>
                                     
 
-                                    </p>
-                                    <%--<asp:Button ID="Button6" runat="server" Text="Newer" OnClick="PreviousButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />
-                                    <asp:Button ID="Button7" runat="server" Text="Older" OnClick="NextButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />--%>
-                                </div>
-                            </div>
-
-                        </div>
-                        
-                        
-                        <%-- International Incommimng For Previous Seven Days--%>
-                        
-                        <div style="text-align: center; float: right;">
-                            <div style="float: right; padding-right: 200px;">
-                                <div class="col-3">
-                                
-                                    <div style="margin-left: auto; margin-right: auto; text-align: center;">
-                                        <asp:Label ID="Label3" runat="server" Text="International Outgoing Calls For Previous Seven Days" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
+                                        </p>
+<%--                                        <asp:Button ID="PreviousButton2" runat="server" Text="Newer" OnClick="PreviousButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />
+                                        <asp:Button ID="NextButton2" runat="server" Text="Older" OnClick="NextButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />--%>
                                     </div>
-                                    <p>
-                                    </p>
-                                    <p>
+                                </div>
+
+                            </div>
+                        
+                        
+                            <%-- International Incommimng For Previous Seven Days--%>
+                        
+                            <div style="text-align: center; float: right;">
+                                <div style="float: right; padding-right: 200px;">
+                                    <div class="col-3">
+                                
+                                        <div style="margin-left: auto; margin-right: auto; text-align: center;">
+                                            <%--<asp:Label ID="Label4" runat="server" Text="International Outgoing Calls For Previous Seven Days" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>--%>
+                                            <asp:Label ID="Label3" runat="server" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
+                                        </div>
+                                        <p>
+                                        </p>
+                                        <p>
                                   
                                     
-                                        <asp:Chart ID="InternationalOutgoing" runat="server" Width="650px" Height="170px">
-                                            <Series>
-                                                <asp:Series ChartType="Column">
-                                                    <Points>
-                                                    </Points>
-                                                </asp:Series>
-                                            </Series>
-                                            <ChartAreas>
-                                                <asp:ChartArea Name="ChartArea1">
-                                                    <AxisX Title="Date" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
-                                                        <LabelStyle Font="Arial, 10px" Interval="1" />
-                                                        <MajorGrid Enabled="false" /> 
-                                                    </AxisX>
-                                                    <AxisY Title="Minutes (Million)" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
-                                                        <LabelStyle Font="Arial, 10px" />
-                                                        <MajorGrid Enabled="false" /> 
-                                                    </AxisY>
-                                                </asp:ChartArea>
-                                            </ChartAreas>
+                                            <asp:Chart ID="InternationalOutgoing" runat="server" Width="650px" Height="170px">
+                                                <Series>
+                                                    <asp:Series ChartType="Column">
+                                                        <Points>
+                                                        </Points>
+                                                    </asp:Series>
+                                                </Series>
+                                                <ChartAreas>
+                                                    <asp:ChartArea Name="ChartArea1">
+                                                        <AxisX Title="Date" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                            <LabelStyle Font="Arial, 10px" Interval="1" />
+                                                            <MajorGrid Enabled="false" /> 
+                                                        </AxisX>
+                                                        <AxisY Title="Minutes (Million)" TitleFont="Arial, 12px" LineColor="#666666" LineWidth="2">
+                                                            <LabelStyle Font="Arial, 10px" />
+                                                            <MajorGrid Enabled="false" /> 
+                                                        </AxisY>
+                                                    </asp:ChartArea>
+                                                </ChartAreas>
                                       
-                                        </asp:Chart>
+                                            </asp:Chart>
                                     
 
-                                    </p>
-                                    <%--<asp:Button ID="Button8" runat="server" Text="Newer" OnClick="PreviousButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />
-                                    <asp:Button ID="Button9" runat="server" Text="Older" OnClick="NextButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />--%>
+                                        </p>
+<%--                                        <asp:Button ID="PreviousButton3" runat="server" Text="Newer" OnClick="PreviousButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />
+                                        <asp:Button ID="NextButton3" runat="server" Text="Older" OnClick="NextButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />--%>
+                                    </div>
                                 </div>
-                            </div>
 
+                            </div>
                         </div>
+
                     </div>
-
                 </div>
-            </div>
 
-            
+                </ContentTemplate>
+            </asp:UpdatePanel>
+            <asp:Timer ID="Timer2" runat="server" Interval="30000" OnTick="Timer2_Tick" Enabled="True">
+            </asp:Timer>
         </div>
         
     </div>

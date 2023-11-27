@@ -138,6 +138,15 @@ public partial class DashboardAspxForIcx {
     protected global::System.Web.UI.Timer Timer1;
     
     /// <summary>
+    /// UpdatePanel2 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.UpdatePanel UpdatePanel2;
+    
+    /// <summary>
     /// Label2 control.
     /// </summary>
     /// <remarks>
@@ -201,6 +210,24 @@ public partial class DashboardAspxForIcx {
     protected global::System.Web.UI.DataVisualization.Charting.Chart DomesticCallForPreviousSevenDays;
     
     /// <summary>
+    /// PreviousButton1 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Button PreviousButton1;
+    
+    /// <summary>
+    /// NextButton1 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Button NextButton1;
+    
+    /// <summary>
     /// Label1 control.
     /// </summary>
     /// <remarks>
@@ -219,6 +246,24 @@ public partial class DashboardAspxForIcx {
     protected global::System.Web.UI.DataVisualization.Charting.Chart InternationalIncommimng;
     
     /// <summary>
+    /// PreviousButton2 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Button PreviousButton2;
+    
+    /// <summary>
+    /// NextButton2 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Button NextButton2;
+    
+    /// <summary>
     /// Label3 control.
     /// </summary>
     /// <remarks>
@@ -235,4 +280,31 @@ public partial class DashboardAspxForIcx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.DataVisualization.Charting.Chart InternationalOutgoing;
+    
+    /// <summary>
+    /// PreviousButton3 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Button PreviousButton3;
+    
+    /// <summary>
+    /// NextButton3 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Button NextButton3;
+    
+    /// <summary>
+    /// Timer2 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.Timer Timer2;
 }

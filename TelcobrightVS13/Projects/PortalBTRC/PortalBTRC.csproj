@@ -420,6 +420,7 @@
     <Content Include="img\NAV_BG1.jpg" />
     <Content Include="img\Telcobright logo.png" />
     <Content Include="InternationalOut_ICX.aspx" />
+    <Content Include="Mediation\JobProcessingStatus.aspx" />
     <Content Include="Mediation\Tgs.aspx" />
     <Content Include="reports\cal.png" />
     <Content Include="Mediation\CdrError.aspx" />
@@ -677,6 +678,13 @@
     </Compile>
     <Compile Include="InternationalOut_ICX.aspx.designer.cs">
       <DependentUpon>InternationalOut_ICX.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Mediation\JobProcessingStatus.aspx.cs">
+      <DependentUpon>JobProcessingStatus.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Mediation\JobProcessingStatus.aspx.designer.cs">
+      <DependentUpon>JobProcessingStatus.aspx</DependentUpon>
     </Compile>
     <Compile Include="Mediation\Tgs.aspx.cs">
       <DependentUpon>Tgs.aspx</DependentUpon>

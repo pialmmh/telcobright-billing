@@ -37,6 +37,7 @@ public partial class JobProcessingStatusICX : Page
 
         BindGridViewForJobProcessingStatus();
         BindGridViewErrorStatus();
+        this.Timer1.Enabled = true;
 
         if (!IsPostBack)//initial
         {
@@ -527,7 +528,12 @@ public partial class JobProcessingStatusICX : Page
     {
 
     }
-    
+    protected void Timer1_Tick(object sender, EventArgs e)
+    {
+        BindGridViewForJobProcessingStatus();
+        BindGridViewErrorStatus();
+    }
+
     protected class IntlIn
     {
         public string PartnerName { get; set; }
