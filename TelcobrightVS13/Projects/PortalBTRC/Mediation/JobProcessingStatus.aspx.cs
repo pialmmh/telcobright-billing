@@ -82,68 +82,215 @@ public partial class JobProcessingStatusICX : Page
         List<GridVieJobProcessingStatus> gridViewJobProcessingStatus = new List<GridVieJobProcessingStatus>();
 
         // Modify your SQL query to include the OFFSET and FETCH NEXT clauses
-        string sqlCommand = $@"(SELECT (SELECT 'Agni') AS 'ICX NAME',SwitchName AS 'Switch Name',JobName AS 'Job Name',CompletionTime AS 'Completion Time',NoOfSteps AS 'No Of Records'
-                        FROM agni_cas.job c LEFT JOIN agni_cas.ne ON c.idNE = ne.idSwitch
-                        WHERE idjobdefinition = 1 AND idNE != 0 AND Status = 1 ORDER BY CompletionTime DESC LIMIT 0 , 1) 
-                        UNION ALL 
-                        (SELECT (SELECT 'BanglaICX') AS 'ICX NAME', SwitchName AS 'Switch Name', JobName AS 'Job Name', CompletionTime AS 'Completion Time', NoOfSteps AS 'No Of Records'
-                        FROM banglaicx_cas.job c LEFT JOIN banglaicx_cas.ne ON c.idNE = ne.idSwitch
-                        WHERE idjobdefinition = 1 AND idNE != 0 AND Status = 1 ORDER BY CompletionTime DESC LIMIT 0 , 1) 
-                        UNION ALL 
-                        (SELECT (SELECT 'BanglaTelecom') AS 'ICX NAME', SwitchName AS 'Switch Name', JobName AS 'Job Name', CompletionTime AS 'Completion Time', NoOfSteps AS 'No Of Records'
-                        FROM banglatelecom_cas.job c LEFT JOIN banglatelecom_cas.ne ON c.idNE = ne.idSwitch
-                        WHERE idjobdefinition = 1 AND idNE != 0 AND Status = 1 ORDER BY CompletionTime DESC LIMIT 0 , 1) 
-                        UNION ALL 
-                        (SELECT  (SELECT 'Bantel') AS 'ICX NAME', SwitchName AS 'Switch Name', JobName AS 'Job Name', CompletionTime AS 'Completion Time', NoOfSteps AS 'No Of Records'
-                        FROM bantel_cas.job c LEFT JOIN bantel_cas.ne ON c.idNE = ne.idSwitch
-                        WHERE idjobdefinition = 1 AND idNE != 0 AND Status = 1 ORDER BY CompletionTime DESC LIMIT 0 , 1) 
-                        UNION ALL 
-                        (SELECT  (SELECT 'BTCL') AS 'ICX NAME', SwitchName AS 'Switch Name', JobName AS 'Job Name', CompletionTime AS 'Completion Time', NoOfSteps AS 'No Of Records'
-                        FROM btcl_cas.job c LEFT JOIN btcl_cas.ne ON c.idNE = ne.idSwitch WHERE idjobdefinition = 1 AND idNE != 0 AND Status = 1
-                        ORDER BY CompletionTime DESC LIMIT 0 , 1) 
-                        UNION ALL 
-                        (SELECT (SELECT 'CrossWorld') AS 'ICX NAME', SwitchName AS 'Switch Name', JobName AS 'Job Name', CompletionTime AS 'Completion Time', NoOfSteps AS 'No Of Records'
-                        FROM crossworld_cas.job c LEFT JOIN crossworld_cas.ne ON c.idNE = ne.idSwitch
-                        WHERE idjobdefinition = 1 AND idNE != 0 AND Status = 1
-                        ORDER BY CompletionTime DESC LIMIT 0 , 1) 
-                        UNION ALL 
-                        (SELECT  (SELECT 'GaziNetworks') AS 'ICX NAME', SwitchName AS 'Switch Name', JobName AS 'Job Name', CompletionTime AS 'Completion Time', NoOfSteps AS 'No Of Records'
-                        FROM gazinetworks_cas.job c LEFT JOIN gazinetworks_cas.ne ON c.idNE = ne.idSwitch
-                        WHERE idjobdefinition = 1 AND idNE != 0 AND Status = 1
+        string sqlCommand = $@"(SELECT 
+                            (SELECT 'Agni') AS 'ICX NAME',
+                            SwitchName AS 'Switch Name',
+                            JobName AS 'Job Name',
+                            CompletionTime AS 'Completion Time',
+                            NoOfSteps AS 'No Of Records'
+                        FROM
+                            agni_cas.job c
+                                LEFT JOIN
+                            agni_cas.ne ON c.idNE = ne.idSwitch
+                        WHERE
+                            idjobdefinition = 1 AND idNE != 0
+                                AND Status = 1
                         ORDER BY CompletionTime DESC
-                        LIMIT 0 , 1) 
-                        UNION ALL 
-                        (SELECT  (SELECT 'ImamNetwork') AS 'ICX NAME', SwitchName AS 'Switch Name', JobName AS 'Job Name', CompletionTime AS 'Completion Time', NoOfSteps AS 'No Of Records'
-                        FROM imamnetwork_cas.job c LEFT JOIN imamnetwork_cas.ne ON c.idNE = ne.idSwitch
-                        WHERE idjobdefinition = 1 AND idNE != 0 AND Status = 1
+                        LIMIT 0 , 1) UNION ALL (SELECT 
+                            (SELECT 'BanglaICX') AS 'ICX NAME',
+                            SwitchName AS 'Switch Name',
+                            JobName AS 'Job Name',
+                            CompletionTime AS 'Completion Time',
+                            NoOfSteps AS 'No Of Records'
+                        FROM
+                            banglaicx_cas.job c
+                                LEFT JOIN
+                            banglaicx_cas.ne ON c.idNE = ne.idSwitch
+                        WHERE
+                            idjobdefinition = 1 AND idNE != 0
+                                AND Status = 1
                         ORDER BY CompletionTime DESC
-                        LIMIT 0 , 1) UNION ALL (SELECT  (SELECT 'Jibondhara') AS 'ICX NAME', SwitchName AS 'Switch Name', JobName AS 'Job Name', CompletionTime AS 'Completion Time',
-                        FROM jibondhara_cas.job c LEFT JOIN jibondhara_cas.ne ON c.idNE = ne.idSwitch
-                        WHERE idjobdefinition = 1 AND idNE != 0 AND Status = 1
+                        LIMIT 0 , 1) UNION ALL (SELECT 
+                            (SELECT 'BanglaTelecom') AS 'ICX NAME',
+                            SwitchName AS 'Switch Name',
+                            JobName AS 'Job Name',
+                            CompletionTime AS 'Completion Time',
+                            NoOfSteps AS 'No Of Records'
+                        FROM
+                            banglatelecom_cas.job c
+                                LEFT JOIN
+                            banglatelecom_cas.ne ON c.idNE = ne.idSwitch
+                        WHERE
+                            idjobdefinition = 1 AND idNE != 0
+                                AND Status = 1
                         ORDER BY CompletionTime DESC
-                        LIMIT 0 , 1) UNION ALL (SELECT  (SELECT 'MNH') AS 'ICX NAME', SwitchName AS 'Switch Name', JobName AS 'Job Name', CompletionTime AS 'Completion Time', NoOfSteps AS 'No Of Records'
-                        FROM mnh_cas.job c LEFT JOIN mnh_cas.ne ON c.idNE = ne.idSwitch
-                        WHERE idjobdefinition = 1 AND idNE != 0 AND Status = 1
+                        LIMIT 0 , 1) UNION ALL (SELECT 
+                            (SELECT 'Bantel') AS 'ICX NAME',
+                            SwitchName AS 'Switch Name',
+                            JobName AS 'Job Name',
+                            CompletionTime AS 'Completion Time',
+                            NoOfSteps AS 'No Of Records'
+                        FROM
+                            bantel_cas.job c
+                                LEFT JOIN
+                            bantel_cas.ne ON c.idNE = ne.idSwitch
+                        WHERE
+                            idjobdefinition = 1 AND idNE != 0
+                                AND Status = 1
                         ORDER BY CompletionTime DESC
-                        LIMIT 0 , 1) UNION ALL (SELECT  (SELECT 'MotherTelecom') AS 'ICX NAME', SwitchName AS 'Switch Name', JobName AS 'Job Name', CompletionTime AS 'Completion Time', NoOfSteps AS 'No Of Records'
-                        FROM mothertelecom_cas.job c LEFT JOIN mothertelecom_cas.ne ON c.idNE = ne.idSwitch
-                        WHERE idjobdefinition = 1 AND idNE != 0 AND Status = 1
+                        LIMIT 0 , 1) UNION ALL (SELECT 
+                            (SELECT 'BTCL') AS 'ICX NAME',
+                            SwitchName AS 'Switch Name',
+                            JobName AS 'Job Name',
+                            CompletionTime AS 'Completion Time',
+                            NoOfSteps AS 'No Of Records'
+                        FROM
+                            btcl_cas.job c
+                                LEFT JOIN
+                            btcl_cas.ne ON c.idNE = ne.idSwitch
+                        WHERE
+                            idjobdefinition = 1 AND idNE != 0
+                                AND Status = 1
                         ORDER BY CompletionTime DESC
-                        LIMIT 0 , 1) UNION ALL (SELECT  (SELECT 'NewGeneration') AS 'ICX NAME', SwitchName AS 'Switch Name', JobName AS 'Job Name', CompletionTime AS 'Completion Time', NoOfSteps AS 'No Of Records'
-                        FROM newgenerationtelecom_cas.job c LEFT JOIN newgenerationtelecom_cas.ne ON c.idNE = ne.idSwitch
-                        WHERE idjobdefinition = 1 AND idNE != 0 AND Status = 1
+                        LIMIT 0 , 1) UNION ALL (SELECT 
+                            (SELECT 'CrossWorld') AS 'ICX NAME',
+                            SwitchName AS 'Switch Name',
+                            JobName AS 'Job Name',
+                            CompletionTime AS 'Completion Time',
+                            NoOfSteps AS 'No Of Records'
+                        FROM
+                            crossworld_cas.job c
+                                LEFT JOIN
+                            crossworld_cas.ne ON c.idNE = ne.idSwitch
+                        WHERE
+                            idjobdefinition = 1 AND idNE != 0
+                                AND Status = 1
                         ORDER BY CompletionTime DESC
-                        LIMIT 0 , 1) UNION ALL (SELECT  (SELECT 'Paradise') AS 'ICX NAME', SwitchName AS 'Switch Name', JobName AS 'Job Name', CompletionTime AS 'Completion Time', NoOfSteps AS 'No Of Records'
-                        FROM paradise_cas.job c LEFT JOIN paradise_cas.ne ON c.idNE = ne.idSwitch
-                        WHERE idjobdefinition = 1 AND idNE != 0 AND Status = 1
+                        LIMIT 0 , 1) UNION ALL (SELECT 
+                            (SELECT 'GaziNetworks') AS 'ICX NAME',
+                            SwitchName AS 'Switch Name',
+                            JobName AS 'Job Name',
+                            CompletionTime AS 'Completion Time',
+                            NoOfSteps AS 'No Of Records'
+                        FROM
+                            gazinetworks_cas.job c
+                                LEFT JOIN
+                            gazinetworks_cas.ne ON c.idNE = ne.idSwitch
+                        WHERE
+                            idjobdefinition = 1 AND idNE != 0
+                                AND Status = 1
                         ORDER BY CompletionTime DESC
-                        LIMIT 0 , 1) UNION ALL (SELECT  (SELECT 'Purple') AS 'ICX NAME', SwitchName AS 'Switch Name', JobName AS 'Job Name', CompletionTime AS 'Completion Time', NoOfSteps AS 'No Of Records'
-                        FROM purple_cas.job c LEFT JOIN purple_cas.ne ON c.idNE = ne.idSwitch
-                        WHERE idjobdefinition = 1 AND idNE != 0 AND Status = 1
+                        LIMIT 0 , 1) UNION ALL (SELECT 
+                            (SELECT 'ImamNetwork') AS 'ICX NAME',
+                            SwitchName AS 'Switch Name',
+                            JobName AS 'Job Name',
+                            CompletionTime AS 'Completion Time',
+                            NoOfSteps AS 'No Of Records'
+                        FROM
+                            imamnetwork_cas.job c
+                                LEFT JOIN
+                            imamnetwork_cas.ne ON c.idNE = ne.idSwitch
+                        WHERE
+                            idjobdefinition = 1 AND idNE != 0
+                                AND Status = 1
                         ORDER BY CompletionTime DESC
-                        LIMIT 0 , 1) UNION ALL (SELECT  (SELECT 'RingTech') AS 'ICX NAME', SwitchName AS 'Switch Name', JobName AS 'Job Name', CompletionTime AS 'Completion Time', NoOfSteps AS 'No Of Records'
-                        FROM ringtech_cas.job c LEFT JOIN ringtech_cas.ne ON c.idNE = ne.idSwitch
-                        WHERE idjobdefinition = 1 AND idNE != 0 AND Status = 1
+                        LIMIT 0 , 1) UNION ALL (SELECT 
+                            (SELECT 'Jibondhara') AS 'ICX NAME',
+                            SwitchName AS 'Switch Name',
+                            JobName AS 'Job Name',
+                            CompletionTime AS 'Completion Time',
+                            NoOfSteps AS 'No Of Records'
+                        FROM
+                            jibondhara_cas.job c
+                                LEFT JOIN
+                            jibondhara_cas.ne ON c.idNE = ne.idSwitch
+                        WHERE
+                            idjobdefinition = 1 AND idNE != 0
+                                AND Status = 1
+                        ORDER BY CompletionTime DESC
+                        LIMIT 0 , 1) UNION ALL (SELECT 
+                            (SELECT 'MNH') AS 'ICX NAME',
+                            SwitchName AS 'Switch Name',
+                            JobName AS 'Job Name',
+                            CompletionTime AS 'Completion Time',
+                            NoOfSteps AS 'No Of Records'
+                        FROM
+                            mnh_cas.job c
+                                LEFT JOIN
+                            mnh_cas.ne ON c.idNE = ne.idSwitch
+                        WHERE
+                            idjobdefinition = 1 AND idNE != 0
+                                AND Status = 1
+                        ORDER BY CompletionTime DESC
+                        LIMIT 0 , 1) UNION ALL (SELECT 
+                            (SELECT 'MotherTelecom') AS 'ICX NAME',
+                            SwitchName AS 'Switch Name',
+                            JobName AS 'Job Name',
+                            CompletionTime AS 'Completion Time',
+                            NoOfSteps AS 'No Of Records'
+                        FROM
+                            mothertelecom_cas.job c
+                                LEFT JOIN
+                            mothertelecom_cas.ne ON c.idNE = ne.idSwitch
+                        WHERE
+                            idjobdefinition = 1 AND idNE != 0
+                                AND Status = 1
+                        ORDER BY CompletionTime DESC
+                        LIMIT 0 , 1) UNION ALL (SELECT 
+                            (SELECT 'NewGeneration') AS 'ICX NAME',
+                            SwitchName AS 'Switch Name',
+                            JobName AS 'Job Name',
+                            CompletionTime AS 'Completion Time',
+                            NoOfSteps AS 'No Of Records'
+                        FROM
+                            newgenerationtelecom_cas.job c
+                                LEFT JOIN
+                            newgenerationtelecom_cas.ne ON c.idNE = ne.idSwitch
+                        WHERE
+                            idjobdefinition = 1 AND idNE != 0
+                                AND Status = 1
+                        ORDER BY CompletionTime DESC
+                        LIMIT 0 , 1) UNION ALL (SELECT 
+                            (SELECT 'Paradise') AS 'ICX NAME',
+                            SwitchName AS 'Switch Name',
+                            JobName AS 'Job Name',
+                            CompletionTime AS 'Completion Time',
+                            NoOfSteps AS 'No Of Records'
+                        FROM
+                            paradise_cas.job c
+                                LEFT JOIN
+                            paradise_cas.ne ON c.idNE = ne.idSwitch
+                        WHERE
+                            idjobdefinition = 1 AND idNE != 0
+                                AND Status = 1
+                        ORDER BY CompletionTime DESC
+                        LIMIT 0 , 1) UNION ALL (SELECT 
+                            (SELECT 'Purple') AS 'ICX NAME',
+                            SwitchName AS 'Switch Name',
+                            JobName AS 'Job Name',
+                            CompletionTime AS 'Completion Time',
+                            NoOfSteps AS 'No Of Records'
+                        FROM
+                            purple_cas.job c
+                                LEFT JOIN
+                            purple_cas.ne ON c.idNE = ne.idSwitch
+                        WHERE
+                            idjobdefinition = 1 AND idNE != 0
+                                AND Status = 1
+                        ORDER BY CompletionTime DESC
+                        LIMIT 0 , 1) UNION ALL (SELECT 
+                            (SELECT 'RingTech') AS 'ICX NAME',
+                            SwitchName AS 'Switch Name',
+                            JobName AS 'Job Name',
+                            CompletionTime AS 'Completion Time',
+                            NoOfSteps AS 'No Of Records'
+                        FROM
+                            ringtech_cas.job c
+                                LEFT JOIN
+                            ringtech_cas.ne ON c.idNE = ne.idSwitch
+                        WHERE
+                            idjobdefinition = 1 AND idNE != 0
+                                AND Status = 1
                         ORDER BY CompletionTime DESC
                         LIMIT 0 , 1) UNION ALL (SELECT 
                             (SELECT 'Sheba') AS 'ICX NAME',
@@ -193,20 +340,57 @@ public partial class JobProcessingStatusICX : Page
                             JobName AS 'Job Name',
                             CompletionTime AS 'Completion Time',
                             NoOfSteps AS 'No Of Records'
-                        FROM summit_cas.job c LEFT JOIN summit_cas.ne ON c.idNE = ne.idSwitch
-                        WHERE idjobdefinition = 1 AND idNE != 0 AND Status = 1
+                        FROM
+                            summit_cas.job c
+                                LEFT JOIN
+                            summit_cas.ne ON c.idNE = ne.idSwitch
+                        WHERE
+                            idjobdefinition = 1 AND idNE != 0
+                                AND Status = 1
                         ORDER BY CompletionTime DESC
-                        LIMIT 0 , 1) UNION ALL (SELECT  (SELECT 'TeleExchange') AS 'ICX NAME', SwitchName AS 'Switch Name', JobName AS 'Job Name', CompletionTime AS 'Completion Time', NoOfSteps AS 'No Of Records'
-                        FROM teleexchange_cas.job c LEFT JOIN teleexchange_cas.ne ON c.idNE = ne.idSwitch
-                        WHERE idjobdefinition = 1 AND idNE != 0 AND Status = 1
+                        LIMIT 0 , 1) UNION ALL (SELECT 
+                            (SELECT 'TeleExchange') AS 'ICX NAME',
+                            SwitchName AS 'Switch Name',
+                            JobName AS 'Job Name',
+                            CompletionTime AS 'Completion Time',
+                            NoOfSteps AS 'No Of Records'
+                        FROM
+                            teleexchange_cas.job c
+                                LEFT JOIN
+                            teleexchange_cas.ne ON c.idNE = ne.idSwitch
+                        WHERE
+                            idjobdefinition = 1 AND idNE != 0
+                                AND Status = 1
                         ORDER BY CompletionTime DESC
-                        LIMIT 0 , 1) UNION ALL (SELECT  (SELECT 'TelePlusNewyork') AS 'ICX NAME', SwitchName AS 'Switch Name', JobName AS 'Job Name', CompletionTime AS 'Completion Time', NoOfSteps AS 'No Of Records'
-                        FROM teleplusnewyork_cas.job c LEFT JOIN teleplusnewyork_cas.ne ON c.idNE = ne.idSwitch
-                        WHERE idjobdefinition = 1 AND idNE != 0 AND Status = 1
+                        LIMIT 0 , 1) UNION ALL (SELECT 
+                            (SELECT 'TelePlusNewyork') AS 'ICX NAME',
+                            SwitchName AS 'Switch Name',
+                            JobName AS 'Job Name',
+                            CompletionTime AS 'Completion Time',
+                            NoOfSteps AS 'No Of Records'
+                        FROM
+                            teleplusnewyork_cas.job c
+                                LEFT JOIN
+                            teleplusnewyork_cas.ne ON c.idNE = ne.idSwitch
+                        WHERE
+                            idjobdefinition = 1 AND idNE != 0
+                                AND Status = 1
                         ORDER BY CompletionTime DESC
-                        LIMIT 0 , 1) UNION ALL (SELECT  (SELECT 'VoiceTel') AS 'ICX NAME', SwitchName AS 'Switch Name', JobName AS 'Job Name', CompletionTime AS 'Completion Time', NoOfSteps AS 'No Of Records'
-                        FROM voicetel_cas.job c LEFT JOIN voicetel_cas.ne ON c.idNE = ne.idSwitch
-                        WHERE idjobdefinition = 1 AND idNE != 0 AND Status = 1 ORDER BY CompletionTime DESC LIMIT 0 , 1) ORDER BY 4 DESC;";
+                        LIMIT 0 , 1) UNION ALL (SELECT 
+                            (SELECT 'VoiceTel') AS 'ICX NAME',
+                            SwitchName AS 'Switch Name',
+                            JobName AS 'Job Name',
+                            CompletionTime AS 'Completion Time',
+                            NoOfSteps AS 'No Of Records'
+                        FROM
+                            voicetel_cas.job c
+                                LEFT JOIN
+                            voicetel_cas.ne ON c.idNE = ne.idSwitch
+                        WHERE
+                            idjobdefinition = 1 AND idNE != 0
+                                AND Status = 1
+                        ORDER BY CompletionTime DESC
+                        LIMIT 0 , 1) ORDER BY 4 DESC;";
         //sqlCommand = $@"SELECT 'Agni ICX' AS ICXName, 123 AS SwitchId,'Job XYZ' AS LastJobName, NOW() AS CompletionTime, 1000 AS NoofRecords;";
 
         using (MySqlConnection connection = new MySqlConnection())
