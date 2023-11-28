@@ -18,7 +18,7 @@ namespace InstallConfig
 
         public class Db
         {
-            public const string ServerName = "localhost";
+            public const string ServerName = "172.16.1.5";
             public const string WritePasswordForApplication = "Takay1takaane$";
             public const string WriteUserNameForApplication = "fduser";
             public const string DatabaseEngine = "innodb";

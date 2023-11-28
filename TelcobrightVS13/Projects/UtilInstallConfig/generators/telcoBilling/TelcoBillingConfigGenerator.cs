@@ -204,7 +204,7 @@ namespace InstallConfig
 
             if (operatorShortName == "btrc_cas")
             {
-                portalConfigFilename = portalConfigFilename.Replace("portal", "portalBTRC");
+                portalConfigFilename = portalConfigFilename.Replace("Portal", "PortalBTRC");
                 SerializeConfigAndWriteJsonFile(tbc, portalConfigFilename);//
             }
 
