@@ -134,7 +134,9 @@ namespace TelcobrightMediation.Mediation.Cdr
                 convertedCdr.Category = txtRow[Fn.Category].GetValueOrNull<int>();
                 convertedCdr.SubCategory = txtRow[Fn.Subcategory].GetValueOrNull<int>();
                 convertedCdr.ChangedByJobId = txtRow[Fn.ChangedByJobId].GetValueOrNull<long>();
-                convertedCdr.SignalingStartTime = txtRow[Fn.SignalingStartTime].ConvertToDateTimeFromMySqlFormat();
+                convertedCdr.SignalingStartTime = 
+                    txtRow[Fn.SignalingStartTime].IsNullOrEmptyOrWhiteSpace()==true?convertedCdr.StartTime
+                    :txtRow[Fn.SignalingStartTime].ConvertToDateTimeFromMySqlFormat();
 
                 exceptionalCdrPreProcessors?.ForEach(processor => {
                     convertedCdr = processor.Process(convertedCdr);
@@ -261,6 +263,7 @@ namespace TelcobrightMediation.Mediation.Cdr
                 inconsistentCdr.SignalingStartTime = txtRow[Fn.SignalingStartTime];
             }
             catch (Exception e) {
+                Console.WriteLine(e);
                 //do nothing just resume with next field
             }
             return inconsistentCdr;

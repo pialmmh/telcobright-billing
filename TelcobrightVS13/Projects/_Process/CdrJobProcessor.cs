@@ -15,6 +15,7 @@ using System.Configuration;
 using System.Data.Common;
 using System.Data.Entity;
 using System.Threading;
+using iTextSharp.text;
 using Quartz;
 using LibraryExtensions;
 using Newtonsoft.Json;
@@ -84,9 +85,31 @@ namespace Process
                         var jobsWithoutError =
                             newCdrJobs.Where(ij => !jobsWithError.Select(ej => ej.id).Contains(ij.id)).ToList();
                         newCdrJobs = jobsWithoutError.Concat(jobsWithError).ToList();
-                        //incompleteJobs = jobsWithError.Union(incompleteJobs).ToList();
-                        List<job> reprocessJobs = GetReProcessJobs(context, ne, ne.DecodingSpanCount);
 
+                        List<job> reprocessJobs = new List<job>();
+                        if (!cdrSetting.useCasStyleProcessing)
+                        {
+                            reprocessJobs = GetReProcessJobs(context, ne, ne.DecodingSpanCount);
+                        }
+                        else//cas
+                        {
+                            if (cdrSetting.ProcessNewCdrJobsBeforeReProcess)
+                            {
+                                if (newCdrJobs.Any()) //process new cdr jobs first, don't add any reprocess job in the queue
+                                {
+                                    reprocessJobs = new List<job>();
+                                }
+                                else
+                                {
+                                    reprocessJobs = GetReProcessJobs(context, ne, ne.DecodingSpanCount);
+                                }
+                            }
+                            else
+                            {
+                                reprocessJobs = GetReProcessJobs(context, ne, ne.DecodingSpanCount);
+                            }
+
+                        }
                         List<job> incompleteJobs = cdrSetting.ProcessNewCdrJobsBeforeReProcess
                             ? newCdrJobs.Concat(reprocessJobs).ToList()
                             : reprocessJobs.Concat(newCdrJobs).ToList();
@@ -119,8 +142,8 @@ namespace Process
                                     ) //error process or re-process job, not merging, process as a single job*************
                                     {
                                         cdrJobInputData.MergedJobsDic = new Dictionary<long, NewCdrWrappedJobForMerge>();
-                                        object retVal =telcobrightJob.Execute(cdrJobInputData); //EXECUTE
-                                        if(job.idjobdefinition==1) telcobrightJob.PostprocessJob(retVal);
+                                        object retVal = telcobrightJob.Execute(cdrJobInputData); //EXECUTE
+                                        if (job.idjobdefinition == 1) telcobrightJob.PostprocessJob(retVal);
                                         cmd.ExecuteCommandText(" commit; ");
                                         closeDbConnection(cmd);
                                         continue;
@@ -130,7 +153,7 @@ namespace Process
                                     ) //new cdr job, not merging, process as single job
                                     {
                                         cdrJobInputData.MergedJobsDic = new Dictionary<long, NewCdrWrappedJobForMerge>();
-                                        object retVal =telcobrightJob.Execute(cdrJobInputData); //EXECUTE
+                                        object retVal = telcobrightJob.Execute(cdrJobInputData); //EXECUTE
                                         telcobrightJob.PostprocessJob(retVal);
                                         cmd.ExecuteCommandText(" commit; ");
                                         closeDbConnection(cmd);
@@ -154,7 +177,7 @@ namespace Process
                                             {"cdrJobInputData", cdrJobInputData}
                                         };
                                         NewCdrPreProcessor preProcessor =
-                                            (NewCdrPreProcessor) telcobrightJob.PreprocessJob(inputForPreprocess); //execute pre-processing
+                                            (NewCdrPreProcessor)telcobrightJob.PreprocessJob(inputForPreprocess); //execute pre-processing
                                         if (headJobForMerge == null &&
                                             preProcessor.TxtCdrRows.Count >=
                                             minRowCountForBatchProcessing) //already large job, process as single
@@ -187,7 +210,7 @@ namespace Process
                                             {
                                                 cdrJobInputData.MergedJobsDic = mergedJobsDic;
                                                 //GarbageCollectionHelper.CompactGCNowForOnce();
-                                                object retVal =telcobrightJob.Execute(cdrJobInputData); //Execute as merged job**
+                                                object retVal = telcobrightJob.Execute(cdrJobInputData); //Execute as merged job**
                                                 telcobrightJob.PostprocessJob(retVal);
                                                 cmd.ExecuteCommandText(" commit; ");
                                                 closeDbConnection(cmd);
@@ -287,7 +310,7 @@ namespace Process
                             {
                                 //there are no more jobs
                                 cdrJobInputData.MergedJobsDic = mergedJobsDic;
-                                object retVal= telcobrightJob.Execute(cdrJobInputData); //process as merged job************************
+                                object retVal = telcobrightJob.Execute(cdrJobInputData); //process as merged job************************
                                 telcobrightJob.PostprocessJob(retVal);
                                 cmd.ExecuteCommandText(" commit; ");
                                 closeDbConnection(cmd);
@@ -344,7 +367,7 @@ namespace Process
                 errorWithoutJob.Job = null;//to avoid some circult reference during serialization
                 mergedJobErrors.Add(errorWithoutJob);
             }
-            string errorDetailAsTxt = JsonConvert.SerializeObject(mergedJobErrors).Replace("'","");
+            string errorDetailAsTxt = JsonConvert.SerializeObject(mergedJobErrors).Replace("'", "");
             cmd.CommandText = " update job set `Error`= '" +
                               e.Message.Replace("'", "") + errorDetailAsTxt +
                               Environment.NewLine + (e.InnerException?.ToString().Replace("'", "") ?? "")
@@ -436,5 +459,3 @@ namespace Process
         }
     }
 }
-
-

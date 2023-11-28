@@ -539,11 +539,21 @@ namespace Jobs
             {
                 //preProcessor.TxtCdrRows = CdrJob.ChangeBillIdsWithPrevChargeableIssue(preProcessor.TxtCdrRows);
             }
-            Parallel.ForEach(preProcessor.TxtCdrRows, txtRow =>
+            ParallelIterator<string[], cdrinconsistent> parallelIterator =
+                new ParallelIterator<string[], cdrinconsistent>(preProcessor.TxtCdrRows);
+            CdrInconsistentValidator validator = new CdrInconsistentValidator(collectorinput.CdrJobInputData,
+                inconistentValidator);
+            List<cdrinconsistent> inconsistentCdrs = parallelIterator.getOutput(validator.CheckAndConvertIfInconsistent);
+            inconsistentCdrs = inconsistentCdrs.Where(c => c != null).ToList();
+            foreach (var inconsistentCdr in inconsistentCdrs)
             {
-                preProcessor.CheckAndConvertIfInconsistent(collectorinput.CdrJobInputData,
-                    inconistentValidator, txtRow);
-            });
+                preProcessor.InconsistentCdrs.Add(inconsistentCdr);
+            }
+            //Parallel.ForEach(preProcessor.TxtCdrRows, txtRow =>
+            //{
+            //    preProcessor.CheckAndConvertIfInconsistent(collectorinput.CdrJobInputData,
+            //        inconistentValidator, txtRow);
+            //});
             if (preProcessor.InconsistentCdrs.Any())
             {
                 List<long> inconsistentIdCalls = preProcessor.InconsistentCdrs.Select(c => Convert.ToInt64(c.IdCall)).ToList();

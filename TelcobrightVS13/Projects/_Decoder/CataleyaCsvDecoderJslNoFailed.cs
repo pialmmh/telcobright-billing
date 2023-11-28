@@ -46,6 +46,9 @@ namespace Decoders
             foreach (string[] lineAsArr in lines)
             {
                 string chargingStatus = lineAsArr[2] == "S" ? "1" : "0";
+                string durationStr = lineAsArr[17].Trim();
+                //decimal durationSec = 0;
+                //decimal.TryParse(durationStr, out durationSec);
                 if (chargingStatus != "1") continue;
                 string[] textCdr = new string [input.MefDecodersData.Totalfieldtelcobright];
                 textCdr[Fn.ChargingStatus] = chargingStatus;
@@ -57,7 +60,7 @@ namespace Decoders
                 textCdr[Fn.Filename] = fileName;
                 textCdr[Fn.IncomingRoute] = lineAsArr[24].Trim();
                 textCdr[Fn.OutgoingRoute] = lineAsArr[55].Trim();
-                textCdr[Fn.DurationSec] = lineAsArr[17];
+                textCdr[Fn.DurationSec] = durationStr;
                 //cdr.DurationSec = Convert.ToDecimal(lineAsArr[17]) / 1000;
                 string ipAddr= lineAsArr[36];
                 if (!string.IsNullOrEmpty(ipAddr))
@@ -100,10 +103,11 @@ namespace Decoders
                     endTime= parseStringToDate(endTime).ToString("yyyy-MM-dd HH:mm:ss");
                 }
 
-                textCdr[Fn.StartTime] = startTime;
                 textCdr[Fn.ConnectTime] = connectTime;
-                textCdr[Fn.AnswerTime] = answerTime;
                 textCdr[Fn.Endtime] = endTime;
+                textCdr[Fn.StartTime] = connectTime;
+                textCdr[Fn.AnswerTime] = connectTime;
+
 
                 textCdr[Fn.OriginatingCallingNumber] = lineAsArr[30].Trim();
                 textCdr[Fn.OriginatingCalledNumber] = lineAsArr[31].Trim();

@@ -31,7 +31,7 @@ namespace InstallConfig
             {"paradise_cas","172.16.1.27"},
             {"purple_cas","172.16.1.27"},
             {"softex_cas","172.16.1.28"},
-            {"sheba_cas","172.16.1.29"},
+            {"sheba_cas","172.16.1.28"},
             {"teleexchange_cas","172.16.1.28"},
             {"newgenerationtelecom_cas","172.16.1.28"}
         };
