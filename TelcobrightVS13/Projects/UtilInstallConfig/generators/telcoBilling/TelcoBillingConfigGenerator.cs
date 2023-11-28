@@ -176,13 +176,17 @@ namespace InstallConfig
             WriteBillingRules(dbSettings);
 
             NameValueCollection configFiles = (NameValueCollection) ConfigurationManager.GetSection("appSettings");
-            foreach (string key in configFiles)
+            List<string> configFileNames = new List<string>
             {
-                if (key.StartsWith("conf"))
-                {
-                    WriteAppAndWebConfigFiles(configFiles[key].Replace("/", Path.DirectorySeparatorChar.ToString()),
-                        dbSettings, tbc.PortalSettings);
-                }
+                $"{Path.Combine(new UpwordPathFinder<DirectoryInfo>("Portal").FindAndGetFullPath(),"web.config")} ",
+                $"{Path.Combine(new UpwordPathFinder<DirectoryInfo>("WS_Topshelf_Quartz").FindAndGetFullPath(),"app.config")} ",
+                $"{Path.Combine(new UpwordPathFinder<DirectoryInfo>("Portal").FindAndGetFullPath(),"RateTaskSerializer","app.config")} ",
+            };
+
+            foreach (string confFileName in configFileNames)
+            {
+                WriteAppAndWebConfigFiles(confFileName.Replace("/", Path.DirectorySeparatorChar.ToString()),
+                    dbSettings, tbc.PortalSettings);
             }
             string operatorShortName = tbc.DatabaseSetting.DatabaseName;
             //write config to operator's folder in util directory
@@ -301,7 +305,8 @@ namespace InstallConfig
 
         static string GetConnectionStrinsgFromUtilConfig(string appOrWebConfigFileName, DatabaseSetting dbSettings)
         {
-            List<string> fileLines = File.ReadAllLines("..\\..\\app.config").ToList();
+            //List<string> fileLines = File.ReadAllLines("..\\..\\app.config").ToList();
+            List<string> fileLines = File.ReadAllLines(Path.Combine(new UpwordPathFinder<DirectoryInfo>("UtilInstallConfig").FindAndGetFullPath(), "app.config")).ToList();
             List<string> newFileLines = new List<string>();
             bool insideConnectionStrings = false;
 
