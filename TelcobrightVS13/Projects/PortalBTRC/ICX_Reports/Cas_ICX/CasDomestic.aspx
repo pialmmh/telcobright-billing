@@ -617,7 +617,7 @@
                         <asp:BoundField DataField="Paid Minutes (International Incoming)"
                             DataFormatString="{0:F2}"
                             HeaderText="Actual Duration"
-                            SortExpression="Paid Minutes (International Incoming)" Visible="False"/>
+                            SortExpression="Paid Minutes (International Incoming)"/>
                         <asp:BoundField DataField="RoundedDuration"
                             DataFormatString="{0:F2}"
                             HeaderText="Billed Duration"
@@ -637,14 +637,14 @@
                         <asp:BoundField DataField="costvatcomissionin"
                             DataFormatString="{0:F2}"
                             HeaderText="BTRC Revenue Share"
-                            SortExpression="tax1" />
+                            SortExpression="tax1" Visible="False"/>
 
 
 
                         <asp:BoundField DataField="customercost"
                             DataFormatString="{0:F2}"
                             HeaderText="Revenue"
-                            SortExpression="customercost" />
+                            SortExpression="customercost" Visible="False"/>
 
                         <asp:BoundField DataField="igwrevenuein"
                             DataFormatString="{0:F2}"
@@ -676,7 +676,7 @@
                         <asp:BoundField DataField="ConectbyCC"
                             DataFormatString="{0:F0}"
                             HeaderText="Connect Count (CC)"
-                            SortExpression="ConnectByCC" />
+                            SortExpression="ConnectByCC" Visible="False"/>
                         <asp:BoundField DataField="CCRByCC"
                             DataFormatString="{0:F2}"
                             HeaderText="CCR By CC"
