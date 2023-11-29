@@ -102,10 +102,10 @@ namespace Decoders
                     endTime = parseStringToDate(endTime).ToString("yyyy-MM-dd HH:mm:ss");
                 }
 
-                textCdr[Fn.StartTime] = startTime;
-                //textCdr[Fn.ConnectTime] = connectTime;
-                textCdr[Fn.AnswerTime] = answerTime;
+                textCdr[Fn.ConnectTime] = connectTime;
+                textCdr[Fn.AnswerTime] = connectTime;
                 textCdr[Fn.Endtime] = endTime;
+                textCdr[Fn.StartTime] = connectTime;
 
                 textCdr[Fn.OriginatingCallingNumber] = lineAsArr[21].Trim();//ingress_call_info_calling_part y--done
                 textCdr[Fn.OriginatingCalledNumber] = lineAsArr[22].Trim();//ingress_call_info_called_part          --done       y

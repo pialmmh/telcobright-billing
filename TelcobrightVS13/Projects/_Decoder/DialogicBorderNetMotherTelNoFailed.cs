@@ -24,9 +24,6 @@ namespace Decoders
         public override int Id => 33;
         public override string HelpText => "Decodes Dialogic BorderNet CSV CDR (Mother Telecom)";
         public override CompressionType CompressionType { get; set; }
-        public override string UniqueEventTablePrefix { get; }
-        public override string PartialTableStorageEngine { get; }
-        public override string partialTablePartitionColName { get; }
         protected virtual CdrCollectorInputData Input { get; set; }
                
         private static string parseStringToDateWithoutMilliSec(string timestamp)  //20181028051316400 yyyyMMddhhmmssfff
@@ -43,19 +40,6 @@ namespace Decoders
             return decodeLines(input, out inconsistentCdrs, fileName, lines);
 
         }
-
-       
-        public override string getWhereForHourWiseCollection(Object data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string getSelectExpressionForPartialCollection(Object data)
-        {
-            throw new NotImplementedException();
-        }
-
-       
 
         protected static List<string[]> decodeLines(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs, string fileName, List<string[]> lines)
         {

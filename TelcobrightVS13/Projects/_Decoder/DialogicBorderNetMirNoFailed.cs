@@ -42,12 +42,6 @@ namespace Decoders
             return decodeLines(input, out inconsistentCdrs, fileName, lines);
         }
 
-       
-
-        public override string getSelectExpressionForPartialCollection(Object data)
-        {
-            throw new NotImplementedException();
-        }
 
         protected static List<string[]> decodeLines(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs, string fileName, List<string[]> lines)
         {

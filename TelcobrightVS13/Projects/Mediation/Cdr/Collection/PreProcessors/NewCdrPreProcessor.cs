@@ -58,7 +58,7 @@ namespace TelcobrightMediation
             }
         }
 
-        public void CheckAndConvertIfInconsistent(CdrJobInputData input, MefValidator<string[]> mefValidator,
+        public cdrinconsistent CheckAndConvertIfInconsistent(CdrJobInputData input, MefValidator<string[]> mefValidator,
             string[] txtRow)
         {
             ValidationResult validationResult = mefValidator.Validate(txtRow);
@@ -67,10 +67,12 @@ namespace TelcobrightMediation
                 if (rule.Validate(txtRow) == false)
                 {
                     txtRow[Fn.ErrorCode] = rule.ValidationMessage;
-                    base.InconsistentCdrs.Add(CdrConversionUtil.ConvertTxtRowToCdrinconsistent(txtRow));
-                    return;
+                   base.InconsistentCdrs.Add(CdrConversionUtil.ConvertTxtRowToCdrinconsistent(txtRow));
+                    var inconsistentCdr = CdrConversionUtil.ConvertTxtRowToCdrinconsistent(txtRow);
+                    return inconsistentCdr;
                 }
             }
+            return null;
         }
 
         public CdrAndInconsistentWrapper ConvertToCdr(string[] row)

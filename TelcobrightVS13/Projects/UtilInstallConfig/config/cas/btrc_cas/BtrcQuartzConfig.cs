@@ -18,8 +18,10 @@ namespace InstallConfig
     public sealed partial class BtrcAbstractConfigGenerator //quartz config part
     {
         private List<QuartzTbDaemonConfig> DaemonConfigurations { get; set; }
+
         public override List<QuartzTbDaemonConfig> GetSchedulerDaemonConfigs()
         {
+            this.DaemonConfigurations = CasQuartzHelper.GetSchedulerDaemonConfigs(this.DatabaseName);
             return this.DaemonConfigurations;
         }
     }

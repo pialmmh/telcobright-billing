@@ -57,7 +57,7 @@ namespace InstallConfig.config._helper
                     SkipHourlySummary = true,
                 }, 
                 useCasStyleProcessing = true,
-                ProcessNewCdrJobsBeforeReProcess = true
+                ProcessNewCdrJobsBeforeReProcess = false
             };
         }
     }
