@@ -39,14 +39,23 @@ namespace Decoders
             this.Input = input;
             string fileName = this.Input.FullPath;
             string str = File.ReadAllText(fileName);
-            List<string[]> lines = FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(fileName, ',', 1, "\"", ";");
+            List<string[]> lines = FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(fileName, ',', 0, "\"", ";");
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
             //this.Input = input;
             List<cdrfieldmappingbyswitchtype> fieldMappings = null;
 
+            int receivedRowCount = 0;
+            int foundRowCount = 0;
             foreach (string[] lineAsArr in lines)
             {
+                if(lineAsArr.Length == 1 && foundRowCount == 0)
+                {
+                    receivedRowCount = Convert.ToInt32( lineAsArr[0].Trim().Split('=')[1]);
+                    continue;
+                }
+                foundRowCount++;
+
                 string chargingStatus = lineAsArr[3] == "S" ? "1" : "0"; //done
                 if (chargingStatus != "1") continue;
                 string[] textCdr = new string[input.MefDecodersData.Totalfieldtelcobright];
@@ -79,35 +88,35 @@ namespace Decoders
                     textCdr[Fn.TerminatingIp] = ip + ":" + port;
                 }
 
-                string startTime = lineAsArr[24];//ingress_call_info_inviting_ts --done
-                if (!string.IsNullOrEmpty(startTime))
-                {
-                    startTime = parseStringToDate(startTime).ToString("yyyy-MM-dd HH:mm:ss");
-                }
+                //string startTime = lineAsArr[25];//ingress_call_info_inviting_ts --done
+                //if (!string.IsNullOrEmpty(startTime))
+                //{
+                //    startTime = parseStringToDate(startTime).ToString("yyyy-MM-dd HendTimeH:mm:ss");
+                //}
 
-                string connectTime = lineAsArr[24];//ingress_call_info_inviting_ts-- done
+                string connectTime = lineAsArr[25];//ingress_call_info_inviting_ts-- done
                 if (!string.IsNullOrEmpty(connectTime))
                 {
                     connectTime = parseStringToDate(connectTime).ToString("yyyy-MM-dd HH:mm:ss");
                 }
 
-                string answerTime = lineAsArr[22];//ingress_call_info_answer_ts -done
-                if (!string.IsNullOrEmpty(answerTime))
-                {
-                    answerTime = parseStringToDate(answerTime).ToString("yyyy-MM-dd HH:mm:ss");
-                }
+                //string answerTime = lineAsArr[22];//ingress_call_info_answer_ts -done
+                //if (!string.IsNullOrEmpty(answerTime))
+                //{
+                //    answerTime = parseStringToDate(answerTime).ToString("yyyy-MM-dd HH:mm:ss");
+                //}
 
-                string endTime = lineAsArr[23];//ingress_call_info_disconnect_ ts--done
+                string endTime = lineAsArr[28];//ingress_call_info_disconnect_ ts--done
                 if (!string.IsNullOrEmpty(endTime))
                 {
                     endTime = parseStringToDate(endTime).ToString("yyyy-MM-dd HH:mm:ss");
                 }
 
-                textCdr[Fn.StartTime] = answerTime;
+                textCdr[Fn.StartTime] = connectTime;
                 //textCdr[Fn.ConnectTime] = connectTime;
-                textCdr[Fn.AnswerTime] = answerTime;
+                textCdr[Fn.AnswerTime] = connectTime;
                 textCdr[Fn.Endtime] = endTime.IsNullOrEmptyOrWhiteSpace()==false?endTime
-                    :answerTime;
+                    :connectTime;
 
                 textCdr[Fn.OriginatingCallingNumber] = lineAsArr[19].Trim();//ingress_call_info_calling_part y--done
                 textCdr[Fn.OriginatingCalledNumber] = lineAsArr[20].Trim();//ingress_call_info_called_part          --done       y
@@ -124,7 +133,11 @@ namespace Decoders
                 textCdr[Fn.Partialflag] = "0";
                 decodedRows.Add(textCdr);
             }
-
+            if(receivedRowCount != foundRowCount)
+            {
+                throw new Exception("Received Row count Does not matched with found row count!");
+            }
+            
             return decodedRows;
 
         }
