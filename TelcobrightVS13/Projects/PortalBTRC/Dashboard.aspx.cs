@@ -205,7 +205,7 @@ public partial class DashboardAspx : Page
         //                      SELECT 'Summit Communication Limited(Vertex)' AS icx, 'HUAWEI' AS 'SwitchName', 20 AS No_Of_Cdrs_in_last_24_hours
         //                      union all
         //                      SELECT 'Softex Communication Ltd' AS icx, 'CATALIA' AS 'SwitchName', 10 AS No_Of_Cdrs_in_last_24_hours;";
-        List <GridViewJobStatusForICX> gridViewCompletedJobStatus = new List<GridViewJobStatusForICX>();
+        List<GridViewJobStatusForICX> gridViewCompletedJobStatus = new List<GridViewJobStatusForICX>();
 
 
         using (MySqlConnection connection = new MySqlConnection())

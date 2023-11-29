@@ -9,33 +9,32 @@
 
 
 
-public partial class TgsOfICX
-{
+public partial class IPJobTableStatusOfICX {
     
     /// <summary>
-    /// ToolkitScriptManager5 control.
+    /// ToolkitScriptManager1 control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::AjaxControlToolkit.ToolkitScriptManager ToolkitScriptManager1;
+    protected global::AjaxControlToolkit.ToolkitScriptManager ToolkitScriptManager5;
     
     /// <summary>
-    /// LabelIPJobTableStatus control.
+    /// LabelTgs control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label LabelTGs;
+    protected global::System.Web.UI.WebControls.Label LabelIPJobTableStatus;
     
     /// <summary>
-    /// GridViewIPJobTableStatus1 control.
+    /// GridViewTgs control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.GridView GridViewTgs;
+    protected global::System.Web.UI.WebControls.GridView GridViewIPJobTableStatus1;
 }

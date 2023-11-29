@@ -71,7 +71,7 @@ namespace InstallConfig
                 SummaryTimeField = SummaryTimeFieldEnum.AnswerTime,
                 PartialCdrEnabledNeIds = new List<int>() { },//7, was set to non-partial processing mode due to duplicate billid problem.
                 PartialCdrFlagIndicators = new List<string>() { },//{"1", "2", "3"},
-                DescendingOrderWhileListingFiles = false,
+                DescendingOrderWhileListingFiles = true,
                 DescendingOrderWhileProcessingListedFiles = false,
                 ValidationRulesForCommonMediationCheck = commonCdrValRulesGen.GetRules(),
                 ValidationRulesForInconsistentCdrs = inconsistentCdrValRulesGen.GetRules(),
@@ -239,11 +239,11 @@ namespace InstallConfig
                 {
                     idSwitch= 18,
                     idCustomer= this.Tbc.Telcobrightpartner.idCustomer,
-                    idcdrformat= 30,
+                    idcdrformat= 270,
                     idMediationRule= 2,
                     SwitchName= "JslcataleyaDhk",
                     CDRPrefix= "esdr",
-                    FileExtension= ".txt",
+                    FileExtension= ".gz",
                     Description= null,
                     SourceFileLocations= "Vault.JslcataleyaDhk",
                     BackupFileLocations= null,

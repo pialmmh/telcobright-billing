@@ -13,6 +13,9 @@ using System.Drawing;
 using System.Web.UI.DataVisualization.Charting;
 using System.Web.UI.WebControls;
 using reports;
+using LibraryExtensions;
+using Newtonsoft.Json;
+using System.IO;
 
 public partial class DashboardAspxForIcx : Page
 {
@@ -808,7 +811,37 @@ public partial class DashboardAspxForIcx : Page
 
                 try
                 {
-                    using (MySqlConnection conn = new MySqlConnection(connectionString))
+                    string userName = Page.User.Identity.Name;
+                    string dbName;
+                    ConfigPathHelper configPathHelper = new ConfigPathHelper(
+                                                    "WS_Topshelf_Quartz",
+                                                    "portalBTRC",
+                                                    "UtilInstallConfig",
+                                                    "generators", "");
+                    string jsonPath = configPathHelper.GetPortalBtrcBinPath() + @"\text.json";
+
+                    string jsonString = File.ReadAllText(jsonPath);
+
+                    // Deserialize the JSON string into a Dictionary<string, string>
+                    Dictionary<string, string> dbVSHostname = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonString);
+
+                    if (telcobrightConfig.DeploymentProfile.UserVsDbName.ContainsKey(userName))
+                    {
+                        dbName = telcobrightConfig.DeploymentProfile.UserVsDbName[userName];
+                    }
+                    else
+                    {
+                        dbName = telcobrightConfig.DatabaseSetting.DatabaseName;
+                    }
+
+                    var databaseSetting = telcobrightConfig.DatabaseSetting;
+                    databaseSetting.DatabaseName = dbName;
+                    databaseSetting.ServerName = dbVSHostname[dbName];
+                    
+                    string conString = DbUtil.getDbConStrWithDatabase(databaseSetting);
+
+
+                    using (MySqlConnection conn = new MySqlConnection(conString))
                     {
                         using (MySqlCommand cmd = new MySqlCommand(insertQuery, conn))
                         {

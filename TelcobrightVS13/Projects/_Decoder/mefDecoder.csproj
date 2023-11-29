@@ -99,6 +99,7 @@
     <Compile Include="CataleyaCsvDecoderGaziNoFailedV2.cs" />
     <Compile Include="CataleyaCsvDecoderMnhNoFailed.cs" />
     <Compile Include="CataleyaCsvDecoderTeleexchangeNoFailed.cs" />
+    <Compile Include="CataleyaCsvDecoderJslNoFailedGzip.cs" />
     <Compile Include="Helper\NokiaDecodeHelper.cs" />
     <Compile Include="Helper\NokiaSiemensDecoderNGT.cs" />
     <Compile Include="Helper\NokiaSiemensDecoderMother.cs" />

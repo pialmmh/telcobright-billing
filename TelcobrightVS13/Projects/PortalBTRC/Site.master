@@ -22,7 +22,7 @@
 
         <div class="page">
 
-            <div class="header" id="mygradient2" style="height: 50px; width: 1800px; margin: 0 auto; background-position: top; background-image: url('/img/NAV_BG1.jpg'); background-size: 100% 100%; background-size: cover; background-position: center;">
+            <div class="header" id="mygradient2" style="height: 50px; width: 1799px; margin: 0 auto; background-position: top; background-image: url('/img/NAV_BG1.jpg'); background-size: 100% 100%; background-size: cover; background-position: center;">
                 <div class="logo" style="float: left;">
                     <div style="float: left;">
                         

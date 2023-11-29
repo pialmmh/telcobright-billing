@@ -54,6 +54,11 @@ namespace LibraryExtensions
         }
         public string GetPortalBinPath()
         {
+            return new UpwordPathFinder<DirectoryInfo>("PortalBTRC").FindAndGetFullPath()
+                   + Path.DirectorySeparatorChar + "bin";
+        }
+        public string GetPortalBtrcBinPath()
+        {
             return new UpwordPathFinder<DirectoryInfo>("Portal").FindAndGetFullPath()
                    + Path.DirectorySeparatorChar + "bin";
         }
