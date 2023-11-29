@@ -105,8 +105,8 @@ namespace Decoders
 
                 textCdr[Fn.ConnectTime] = connectTime;
                 textCdr[Fn.Endtime] = endTime;
-                textCdr[Fn.StartTime] = connectTime;
-                textCdr[Fn.AnswerTime] = connectTime;
+                textCdr[Fn.StartTime] = answerTime;
+                textCdr[Fn.AnswerTime] = answerTime;
 
 
                 textCdr[Fn.OriginatingCallingNumber] = lineAsArr[30].Trim();

@@ -208,8 +208,23 @@ namespace InstallConfig
 
             if (operatorShortName == "btrc_cas")
             {
-                portalConfigFilename = portalConfigFilename.Replace("Portal", "PortalBTRC");
+                //portalConfigFilename = portalConfigFilename.Replace("Portal", "BTRC");
                 SerializeConfigAndWriteJsonFile(tbc, portalConfigFilename);//
+
+                ConfigPathHelper configPathHelper2 = new ConfigPathHelper(
+                    "WS_Topshelf_Quartz",
+                    "portalBTRC",
+                    "UtilInstallConfig",
+                    "generators", "");
+                string prtalBTRCBinPAth = configPathHelper.GetPortalBtrcBinPath() + @"\text.json";
+                var settings = new JsonSerializerSettings()
+                {
+                    TypeNameHandling = TypeNameHandling.Auto
+                };
+
+                string tbcAsStr = JsonConvert.SerializeObject(CasDockerDbHelper.IcxVsdbHostNames, Formatting.Indented, settings);
+                File.WriteAllText(prtalBTRCBinPAth, tbcAsStr);
+
             }
 
             Console.WriteLine("Successfully written configuration template for " + operatorShortName);
