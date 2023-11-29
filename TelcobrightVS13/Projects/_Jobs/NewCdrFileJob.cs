@@ -86,6 +86,7 @@ namespace Jobs
                     mergedJobsDic.Values.Select(wrappedJob => wrappedJob.Job));
                 NewCdrWrappedJobForMerge head = mergedJobsDic.First().Value;
                 List<NewCdrWrappedJobForMerge> tail = mergedJobsDic.Skip(1).Select(kv => kv.Value).ToList();
+
                 validateMergedCount(head, tail);
                 preProcessor = head.PreProcessor;
             } //end if batch job
@@ -560,10 +561,6 @@ namespace Jobs
                 preProcessor.TxtCdrRows = preProcessor.TxtCdrRows
                     .Where(c => !inconsistentIdCalls.Contains(Convert.ToInt64(c[Fn.IdCall])))
                     .ToList();
-                foreach (var cdrinconsistent in preProcessor.InconsistentCdrs)
-                {
-                    preProcessor.OriginalCdrinconsistents.Add(cdrinconsistent);
-                }
             }
 
         }

@@ -46,6 +46,7 @@ namespace TelcobrightMediation
             this.PartialCdrEnabled = base.CdrCollectorInputData.CdrSetting.PartialCdrEnabledNeIds
                 .Contains(base.CdrCollectorInputData.CdrJobInputData.Ne.idSwitch);
         }
+        public int NewAndInconsistentCount => this.TxtCdrRows.Count + base.InconsistentCdrs.Count;
         public void ValidateAggregation(job j)
         {
             if (TxtCdrRows.Count != AggregatedEvents.Count + NewRowsRemainedUnaggreagated.Count
@@ -224,7 +225,7 @@ namespace TelcobrightMediation
             var rawPartialCount = this.PartialCdrContainers.SelectMany(p => p.NewRawInstances).Count();
             var cdrJobInputData = this.CdrCollectorInputData.CdrJobInputData;
             int originalRawCount = cdrJobInputData.MergedJobsDic.Any()==false?this.RawCount
-                :cdrJobInputData.MergedJobsDic.Values.Sum(wrappedJobs => wrappedJobs.OriginalRows.Count);
+                :cdrJobInputData.MergedJobsDic.Values.Sum(wrappedJobs => wrappedJobs.NewAndInconsistentCount);
             if (originalRawCount!= 
                 cdrExtsForNonPartials.Count + cdrExtsForPartials.Count + errorCdrExts.Count +
                 rawPartialCount - this.PartialCdrContainers.Count + base.InconsistentCdrs.Count)

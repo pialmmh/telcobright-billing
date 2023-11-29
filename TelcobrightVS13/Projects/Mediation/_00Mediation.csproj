@@ -232,6 +232,7 @@
     <Compile Include="Cdr\RateCacheCleaner.cs" />
     <Compile Include="Config\AbstractConfigGenerator.cs" />
     <Compile Include="Config\AutomationSetting.cs" />
+    <Compile Include="Config\JobInputData\NewCdrWrappedJobForMerge.cs" />
     <Compile Include="Config\NeAdditionalSetting.cs" />
     <Compile Include="Config\CdrSetting.cs" />
     <Compile Include="Config\ConfigFactory.cs" />

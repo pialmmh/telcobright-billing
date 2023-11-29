@@ -179,7 +179,7 @@ namespace Process
                                         NewCdrPreProcessor preProcessor =
                                             (NewCdrPreProcessor)telcobrightJob.PreprocessJob(inputForPreprocess); //execute pre-processing
                                         if (headJobForMerge == null &&
-                                            preProcessor.TxtCdrRows.Count >=
+                                            preProcessor.NewAndInconsistentCount >=
                                             minRowCountForBatchProcessing) //already large job, process as single
                                         {//but if merge in progress, do not process as single job, headjob for merge!=null means mergeInProgress
                                             cdrJobInputData.MergedJobsDic = new Dictionary<long, NewCdrWrappedJobForMerge>();
@@ -197,7 +197,7 @@ namespace Process
                                         {
                                             headJobForMerge = newWrappedJob;
                                             mergedJobsDic.Add(headJobForMerge.Job.id, newWrappedJob);
-                                            rowCountSoFarForMerge = newWrappedJob.OriginalRows.Count;
+                                            rowCountSoFarForMerge = newWrappedJob.NewAndInconsistentCount;
                                         }
                                         else //one of the tail jobs
                                         {
@@ -209,7 +209,6 @@ namespace Process
                                             ) //enough jobs have been merged for batch processing 
                                             {
                                                 cdrJobInputData.MergedJobsDic = mergedJobsDic;
-                                                //GarbageCollectionHelper.CompactGCNowForOnce();
                                                 object retVal = telcobrightJob.Execute(cdrJobInputData); //Execute as merged job**
                                                 telcobrightJob.PostprocessJob(retVal);
                                                 cmd.ExecuteCommandText(" commit; ");
