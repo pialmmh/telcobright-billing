@@ -33,7 +33,7 @@
                         <div style="margin-right: auto; text-align: center;">
                             <asp:Label ID="LabelJobProcessingStatus" runat="server" Text="Job Processing Status" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
                         </div>
-                        <asp:GridView ID="GridViewJobProcessingStatus" runat="server" AutoGenerateColumns="false" DataKeyNames="id">
+                        <asp:GridView ID="GridViewJobProcessingStatus" runat="server" width="600px" AutoGenerateColumns="false" DataKeyNames="id">
                             <Columns>
                                 <asp:BoundField DataField="ICXName" HeaderText="ICX Name" />
                                 <asp:BoundField DataField="SwitchId" HeaderText="SwitchId" />
@@ -57,11 +57,11 @@
                     </div>
 
             <%--div 1--%>
-                     <div style="float: left; padding-left: 40px; text-align: center;">
+                     <div style="float: left; padding-left: 50px; text-align: center;">
                         <div style="margin-right: auto; text-align: center;">
                             <asp:Label ID="Label1" runat="server" Text="Error Status" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
                         </div>
-                        <asp:GridView ID="GridViewErrorStatus" runat="server" AutoGenerateColumns="false" DataKeyNames="id">
+                        <asp:GridView ID="GridViewErrorStatus" runat="server" width="600px" AutoGenerateColumns="false" DataKeyNames="id">
                             <Columns>
                                 <asp:BoundField DataField="ICXName" HeaderText="ICX Name" />
                                 <asp:BoundField DataField="Error" HeaderText="Error" />

@@ -393,6 +393,7 @@ public partial class JobProcessingStatusICX : Page
                         LIMIT 0 , 1) ORDER BY 4 DESC;";
         //sqlCommand = $@"SELECT 'Agni ICX' AS ICXName, 123 AS SwitchId,'Job XYZ' AS LastJobName, NOW() AS CompletionTime, 1000 AS NoofRecords;";
 
+
         using (MySqlConnection connection = new MySqlConnection())
         {
             connection.ConnectionString = connectionString;
