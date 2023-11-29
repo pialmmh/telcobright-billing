@@ -47,7 +47,6 @@ namespace TelcobrightInfra
         {
             //createBatchFile(this.srcBinaryFullPath, this.dstBinaryFullPath);
             string srcConfigFile = new UpwordPathFinder<DirectoryInfo>("config").FindAndGetFullPath()
-                + Path.DirectorySeparatorChar + Tbc.DeploymentProfile.profileName 
                 + Path.DirectorySeparatorChar +Tbc.Telcobrightpartner.databasename
                                    + Path.DirectorySeparatorChar + Tbc.Telcobrightpartner.databasename + ".conf";
             string destConfigFile = this.dstBatchFileTargetDir + Path.DirectorySeparatorChar

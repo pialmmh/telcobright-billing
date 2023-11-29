@@ -24,7 +24,7 @@ namespace Decoders
         public override string UniqueEventTablePrefix { get; }
         public override string PartialTableStorageEngine { get; }
         public override string partialTablePartitionColName { get; }
-        protected CdrCollectorInputData Input { get; set; }
+        protected virtual CdrCollectorInputData Input { get; set; }
 
 
         private static DateTime parseStringToDate(string timestamp)  //20181028051316400 yyyyMMddhhmmssfff
@@ -38,6 +38,16 @@ namespace Decoders
             this.Input = input;
             string fileName = this.Input.FullPath; ;
             List<string[]> lines = FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(fileName, ',', 1, "\"", ";");
+            
+            return decodeLines(input, out inconsistentCdrs, fileName, lines);
+
+
+        }
+
+        protected static List<string[]> decodeLines(CdrCollectorInputData input,
+            out List<cdrinconsistent> inconsistentCdrs, string fileName, List<string[]> lines)
+        {
+            
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
             //this.Input = input;
@@ -45,15 +55,17 @@ namespace Decoders
 
             foreach (string[] lineAsArr in lines)
             {
+                if(lineAsArr.Length <= 1) continue;
                 string chargingStatus = lineAsArr[2] == "S" ? "1" : "0";
                 string durationStr = lineAsArr[17].Trim();
                 //decimal durationSec = 0;
                 //decimal.TryParse(durationStr, out durationSec);
                 if (chargingStatus != "1") continue;
-                string[] textCdr = new string [input.MefDecodersData.Totalfieldtelcobright];
+                string[] textCdr = new string[input.MefDecodersData.Totalfieldtelcobright];
                 textCdr[Fn.ChargingStatus] = chargingStatus;
 
-                textCdr[Fn.Switchid] = Input.Ne.idSwitch.ToString();
+                //textCdr[Fn.Switchid] = Input.Ne.idSwitch.ToString();
+                textCdr[Fn.Switchid] = input.Ne.idSwitch.ToString();
                 //cdr.SwitchId = 9;
                 textCdr[Fn.Sequencenumber] = lineAsArr[0];
                 //cdr.SequenceNumber = Convert.ToInt64(lineAsArr[0]);
@@ -62,13 +74,13 @@ namespace Decoders
                 textCdr[Fn.OutgoingRoute] = lineAsArr[55].Trim();
                 textCdr[Fn.DurationSec] = durationStr;
                 //cdr.DurationSec = Convert.ToDecimal(lineAsArr[17]) / 1000;
-                string ipAddr= lineAsArr[36];
+                string ipAddr = lineAsArr[36];
                 if (!string.IsNullOrEmpty(ipAddr))
                 {
                     string[] ipPort = ipAddr.Split(':');
                     string ip = ipPort[1].Trim();
                     string port = ipPort[2].Split(';')[0].Trim();
-                    textCdr[Fn.Originatingip] = ip + ":"+ port;
+                    textCdr[Fn.Originatingip] = ip + ":" + port;
                 }
                 ipAddr = lineAsArr[67];
                 if (!string.IsNullOrEmpty(ipAddr))
@@ -78,29 +90,29 @@ namespace Decoders
                     string port = ipPort[2].Split(';')[0].Trim();
                     textCdr[Fn.TerminatingIp] = ip + ":" + port;
                 }
-                
+
                 string startTime = lineAsArr[37];//SignalStart
                 if (!string.IsNullOrEmpty(startTime))
                 {
-                    startTime= parseStringToDate(startTime).ToString("yyyy-MM-dd HH:mm:ss");
+                    startTime = parseStringToDate(startTime).ToString("yyyy-MM-dd HH:mm:ss");
                 }
 
                 string connectTime = lineAsArr[38];//ConnectTime
                 if (!string.IsNullOrEmpty(connectTime))
                 {
-                    connectTime= parseStringToDate(connectTime).ToString("yyyy-MM-dd HH:mm:ss");
+                    connectTime = parseStringToDate(connectTime).ToString("yyyy-MM-dd HH:mm:ss");
                 }
 
                 string answerTime = lineAsArr[39];//AnswerTime
                 if (!string.IsNullOrEmpty(answerTime))
                 {
-                    answerTime= parseStringToDate(answerTime).ToString("yyyy-MM-dd HH:mm:ss");
+                    answerTime = parseStringToDate(answerTime).ToString("yyyy-MM-dd HH:mm:ss");
                 }
 
                 string endTime = lineAsArr[40];//EndTime
                 if (!string.IsNullOrEmpty(endTime))
                 {
-                    endTime= parseStringToDate(endTime).ToString("yyyy-MM-dd HH:mm:ss");
+                    endTime = parseStringToDate(endTime).ToString("yyyy-MM-dd HH:mm:ss");
                 }
 
                 textCdr[Fn.ConnectTime] = connectTime;
@@ -122,9 +134,7 @@ namespace Decoders
                 textCdr[Fn.Partialflag] = "0";
                 decodedRows.Add(textCdr);
             }
-
             return decodedRows;
-            
         }
 
         public override string getTupleExpression(Object data)
