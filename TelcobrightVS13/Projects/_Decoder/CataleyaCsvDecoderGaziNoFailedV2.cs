@@ -51,8 +51,13 @@ namespace Decoders
             {
                 if(lineAsArr.Length == 1 && foundRowCount == 0)
                 {
-                    receivedRowCount = Convert.ToInt32( lineAsArr[0].Trim().Split('=')[1]);
-                    continue;
+                    string firstRowText = lineAsArr[0].Trim().Split('=')[0];
+                    if(firstRowText == "number_of_cdrs")
+                    {
+                        receivedRowCount = Convert.ToInt32(lineAsArr[0].Trim().Split('=')[1]); // number of cdr written on first row as metadata
+                        continue;
+                    }
+                    
                 }
                 foundRowCount++;
 
