@@ -34,7 +34,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "d:/telcobright/vault/resources/cdr/gaziNetworks/tdm",
+                StartingPath = "U:/telcobright/vault/resources/cdr/gaziNetworks/tdm",
                 User = "",
                 Pass = "",
             };
@@ -46,7 +46,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = @"D:\telcobright\vault\resources\cdr\gaziNetworks\tdmKhlBogra\Khulna",
+                StartingPath = @"U:\telcobright\vault\resources\cdr\gaziNetworks\tdmKhlBogra\Khulna",
                 User = "",
                 Pass = "",
             };
@@ -58,7 +58,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = @"D:\telcobright\vault\resources\cdr\gaziNetworks\tdmKhlBogra\Bogra\aggregation_testing_dont_delete",
+                StartingPath = @"U:\telcobright\vault\resources\cdr\gaziNetworks\tdmKhlBogra\Bogra\aggregation_testing_dont_delete",
                 User = "",
                 Pass = "",
             };
@@ -71,7 +71,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "d:/telcobright/vault/resources/cdr/gaziNetworks/ip/Aug-Oct",
+                StartingPath = "U:/telcobright/vault/resources/cdr/gaziNetworks/ip/Aug-Oct",
                 User = "",
                 Pass = "",
             };

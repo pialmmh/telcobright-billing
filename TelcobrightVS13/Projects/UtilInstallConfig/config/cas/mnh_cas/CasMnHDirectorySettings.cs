@@ -34,7 +34,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "e:/telcobright/vault/resources/cdr/mnh/tdm",
+                StartingPath = "X:/telcobright/vault/resources/cdr/mnh/tdm",
                 User = "",
                 Pass = "",
             };
@@ -46,7 +46,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "e:/telcobright/vault/resources/cdr/mnh/ip/Aug-Oct",
+                StartingPath = "X:/telcobright/vault/resources/cdr/mnh/ip/Aug-Oct",
                 User = "",
                 Pass = "",
             };
