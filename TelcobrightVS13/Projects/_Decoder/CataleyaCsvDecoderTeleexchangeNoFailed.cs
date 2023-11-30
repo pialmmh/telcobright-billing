@@ -37,7 +37,7 @@ namespace Decoders
         {
             this.Input = input;
             string fileName = this.Input.FullPath; ;
-            List<string[]> lines = FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(fileName, ',', 1, "\"", ";");
+            List<string[]> lines = FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(fileName, ',', 0, "\"", ";");
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
             //this.Input = input;
@@ -70,8 +70,8 @@ namespace Decoders
                 textCdr[Fn.Sequencenumber] = lineAsArr[0];
                 //cdr.SequenceNumber = Convert.ToInt64(lineAsArr[0]);
                 textCdr[Fn.Filename] = fileName;
-                textCdr[Fn.IncomingRoute] = lineAsArr[24].Trim();
-                textCdr[Fn.OutgoingRoute] = lineAsArr[55].Trim();
+                textCdr[Fn.IncomingRoute] = lineAsArr[25].Trim();
+                textCdr[Fn.OutgoingRoute] = lineAsArr[56].Trim();
                 textCdr[Fn.DurationSec] = lineAsArr[17];
                 //cdr.DurationSec = Convert.ToDecimal(lineAsArr[17]) / 1000;
                 string ipAddr= lineAsArr[36];
