@@ -151,7 +151,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MockTelcobrightJob.cs" />
     <Compile Include="SimpleMessage.cs" />
     <Compile Include="Telcobright2.cs" />
     <Compile Include="TopShelfnew.cs" />

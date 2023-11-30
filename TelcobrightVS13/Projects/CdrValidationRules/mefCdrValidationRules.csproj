@@ -177,13 +177,10 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy $(TargetPath) $(SolutionDir)WS_Topshelf_Quartz\bin\Extensions\$(TargetFileName)
-copy $(TargetPath) $(SolutionDir)UnitTesterManual\bin\Extensions\$(TargetFileName)
 copy $(TargetPath) $(SolutionDir)WS_Topshelf_Quartz\Bin\Debug\$(TargetFileName)
 if not exist $(SolutionDir)CasTelcobright\bin\Extensions mkdir $(SolutionDir)CasTelcobright\bin\Extensions
 copy $(TargetPath) $(SolutionDir)CasTelcobright\bin\Extensions\$(TargetFileName)
 copy $(TargetPath) $(SolutionDir)WS_Topshelf_Quartz\Bin\Release\$(TargetFileName)
-copy $(TargetPath) $(SolutionDir)UnitTesterManual\Bin\Debug\$(TargetFileName)
-copy $(TargetPath) $(SolutionDir)UnitTesterManual\Bin\Release\$(TargetFileName)
 copy $(TargetPath) $(SolutionDir)Portal\bin\$(TargetFileName)</PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

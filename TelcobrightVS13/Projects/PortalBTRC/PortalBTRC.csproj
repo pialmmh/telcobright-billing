@@ -959,10 +959,6 @@
       <Project>{26f6ecf9-4369-417b-8cf2-54fa92df3660}</Project>
       <Name>AspNet.Identity.MySQL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CdrValidationRules\mefCdrValidationRules.csproj">
-      <Project>{1cb7107d-88c4-4759-8158-243c5273ec3e}</Project>
-      <Name>mefCdrValidationRules</Name>
-    </ProjectReference>
     <ProjectReference Include="..\LibraryExtensions\LibraryExtensions.csproj">
       <Project>{d4c2f34d-4d3d-43ae-84f0-e80cfedb1b48}</Project>
       <Name>LibraryExtensions</Name>
