@@ -39,6 +39,7 @@ namespace InstallConfig
         {
             this.Tbc.CdrSetting = new CasCdrSettingHelper().getTemplateCdrSettings();
             this.Tbc.CdrSetting.ProcessNewCdrJobsBeforeReProcess = true;
+            this.Tbc.CdrSetting.DescendingOrderWhileListingFiles = true;
             this.PrepareDirectorySettings(this.Tbc);
             string csvPathForNe = CasNeInfoHelper.getCasOperatorInfoFile();
             CasNeInfoHelper neHelper = new CasNeInfoHelper(csvPathForNe);
