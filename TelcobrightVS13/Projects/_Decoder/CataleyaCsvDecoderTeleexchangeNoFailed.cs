@@ -43,8 +43,23 @@ namespace Decoders
             //this.Input = input;
             List<cdrfieldmappingbyswitchtype> fieldMappings = null;
 
+            int receivedRowCount = 0;
+            int foundRowCount = 0;
+
             foreach (string[] lineAsArr in lines)
             {
+                if (lineAsArr.Length == 1 && foundRowCount == 0)
+                {
+                    string firstRowText = lineAsArr[0].Trim().Split('=')[0];
+                    if (firstRowText == "number_of_cdrs")
+                    {
+                        receivedRowCount = Convert.ToInt32(lineAsArr[0].Trim().Split('=')[1]); // number of cdr written on first row as metadata
+                        continue;
+                    }
+
+                }
+                foundRowCount++;
+
                 string chargingStatus = lineAsArr[2] == "S" ? "1" : "0";
                 if (chargingStatus != "1") continue;
                 string[] textCdr = new string [input.MefDecodersData.Totalfieldtelcobright];
@@ -118,7 +133,10 @@ namespace Decoders
                 textCdr[Fn.Partialflag] = "0";
                 decodedRows.Add(textCdr);
             }
-
+            if (receivedRowCount != foundRowCount)
+            {
+                throw new Exception("Received Row count Does not matched with found row count!");
+            }
             return decodedRows;
             
         }
