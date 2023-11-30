@@ -662,14 +662,14 @@
                         <asp:BoundField DataField="costvatcomissionin"
                             DataFormatString="{0:F2}"
                             HeaderText="BTRC Revenue Share"
-                            SortExpression="tax1" />
+                            SortExpression="tax1" Visible="False"/>
 
 
 
                         <asp:BoundField DataField="customercost"
                             DataFormatString="{0:F2}"
                             HeaderText="Revenue"
-                            SortExpression="customercost" />
+                            SortExpression="customercost" Visible="False"/>
 
                         <asp:BoundField DataField="igwrevenuein"
                             DataFormatString="{0:F2}"
