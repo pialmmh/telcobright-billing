@@ -31,7 +31,9 @@ namespace Decoders
         private static DateTime parseStringToDate(string timestamp)  //20181028051316400 yyyyMMddhhmmssfff
         {
             DateTime dateTime;
-            if (DateTime.TryParseExact("20230904123527", "yyyyMMddHHmmss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime));
+            if (DateTime.TryParseExact(timestamp, "yyyyMMddHHmmss", CultureInfo.InvariantCulture, DateTimeStyles.None,
+                out dateTime)) ;
+
                 
             return dateTime;
         }
@@ -59,13 +61,13 @@ namespace Decoders
 
 
                 textCdr[Fn.Sequencenumber] = "1";
-                string startTime = lineAsArr[11].Trim();
+                string startTime = lineAsArr[11].Trim().Split('/')[1];
                 if (!string.IsNullOrEmpty(startTime))
                 {
                     startTime = parseStringToDate(startTime).ToString("yyyy-MM-dd HH:mm:ss");
                 }
 
-                string endTime = lineAsArr[12].Trim(); 
+                string endTime = lineAsArr[12].Trim().Split('/')[1]; 
                 if (!string.IsNullOrEmpty(endTime))
                 {
                     endTime = parseStringToDate(endTime).ToString("yyyy-MM-dd HH:mm:ss");
@@ -146,8 +148,8 @@ namespace Decoders
                 
                 
 
-                textCdr[Fn.StartTime] = startTime.Trim();
-                textCdr[Fn.AnswerTime] = startTime.Trim();
+                textCdr[Fn.StartTime] = startTime;
+                textCdr[Fn.AnswerTime] = startTime;
                 textCdr[Fn.Endtime] = endTime.Trim();
 
                 
