@@ -542,7 +542,7 @@ namespace TelcobrightMediation
             {
                 int rawCount = this.CdrJobContext.CdrjobInputData.MergedJobsDic.Any() == false
                     ? this.CollectionResult.RawCount 
-                    : this.CdrJobContext.CdrjobInputData.MergedJobsDic.Values.Sum(wrappedJobs => wrappedJobs.OriginalRows.Count);
+                    : this.CdrJobContext.CdrjobInputData.MergedJobsDic.Values.Sum(wrappedJobs => wrappedJobs.NewAndInconsistentCount);
                 if (rawCount !=
                     writtenNonPartialCdrCount + writtenNewRawInstances + writtenInconsistentCount
                     + nonPartialCdrErrors.Count)
