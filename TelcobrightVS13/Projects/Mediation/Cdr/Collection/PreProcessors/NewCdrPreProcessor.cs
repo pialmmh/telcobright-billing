@@ -49,8 +49,8 @@ namespace TelcobrightMediation
         public int NewAndInconsistentCount => this.TxtCdrRows.Count + base.InconsistentCdrs.Count;
         public void ValidateAggregation(job j)
         {
-            if (TxtCdrRows.Count != AggregatedEvents.Count + NewRowsRemainedUnaggreagated.Count
-                + RowsToBeDiscardedAfterAggregation.Count)
+            if (this.NewAndInconsistentCount != AggregatedEvents.Count + NewRowsRemainedUnaggreagated.Count
+                + RowsToBeDiscardedAfterAggregation.Count+base.InconsistentCdrs.Count)
             {
                 Exception exception =
                     new Exception($"Found Cdr count mismatch after aggregation. Job: {j.JobName}");

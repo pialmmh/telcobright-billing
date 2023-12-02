@@ -127,7 +127,9 @@ namespace Jobs
                                 .Where(r => dupFilteredBillIdsForThisJob.ContainsKey(r[Fn.UniqueBillId])).ToList();
                         preProcessor = aggregateCdrs(preProcessor);
                         preProcessor.TxtCdrRows = preProcessor.AggregatedEvents;
+                        preProcessor.FinalNonDuplicateEvents = preProcessor.AggregatedEvents.ToDictionary(r => r[Fn.UniqueBillId]);
                         preProcessor.ValidateAggregation(this.Input.Job);
+
                     }
                 }
             }
@@ -139,8 +141,12 @@ namespace Jobs
 
             CdrCollectionResult newCollectionResult, oldCollectionResult = null;
             preProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
+            //dup cdr related
             newCollectionResult.FinalNonDuplicateEvents = preProcessor.FinalNonDuplicateEvents;
             newCollectionResult.DuplicateEvents = preProcessor.DuplicateEvents;
+            //aggregation related
+            newCollectionResult.NewRowsRemainedUnaggreagated = preProcessor.NewRowsRemainedUnaggreagated;
+            newCollectionResult.RowsToBeDiscardedAfterAggregation = preProcessor.RowsToBeDiscardedAfterAggregation;
             foreach (string[] row in preProcessor.DuplicateEvents)
             {
                 row[Fn.Switchid] = this.Input.Ne.idSwitch.ToString();

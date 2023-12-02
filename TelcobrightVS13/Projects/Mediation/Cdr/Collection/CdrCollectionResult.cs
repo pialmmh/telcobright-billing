@@ -23,7 +23,6 @@ namespace TelcobrightMediation
     {
         public List<string[]> OriginalRowsBeforeMerge { get; }
         public Dictionary<string, string[]> FinalNonDuplicateEvents { get; set; } = new Dictionary<string, string[]>();
-        public List<string[]> NewRowsRemainedUnaggreagated { get; set; } = new List<string[]>();
 
         public List<string[]> DuplicateEvents { get; set; } = new List<string[]>();
         public CollectionResultProcessingState CollectionResultProcessingState { get; set; } =
@@ -40,7 +39,8 @@ namespace TelcobrightMediation
         public ne Ne { get; }
         public List<DateTime> DatesInvolved { get; }
         public List<DateTime> HoursInvolved { get; }
-
+        public List<string[]> NewRowsRemainedUnaggreagated { get; set; } = new List<string[]>();
+        public List<string[]> RowsToBeDiscardedAfterAggregation { get; set; } = new List<string[]>();
         public ConcurrentDictionary<string, CdrExt> ConcurrentCdrExts
         {
             get
