@@ -18,6 +18,7 @@ namespace PartnerRules
         public int Id => 1;
         public int Execute(cdr thisCdr, MefPartnerRulesContainer data)
         {
+            thisCdr.InPartnerId = 0;
             var key = new ValueTuple<int,string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
             route thisRoute = null;
             data.SwitchWiseRoutes.TryGetValue(key, out thisRoute);
@@ -27,20 +28,20 @@ namespace PartnerRules
                 return thisRoute.idPartner;
             }
              
-            if (thisCdr.InPartnerId <= 0)
-            {
-                CdrSetting cdrSetting = data.MediationContext.CdrSetting;
-                if (cdrSetting.useCasStyleProcessing == true)
-                {
-                    ANSInByPrefix ansInByPrefix= new ANSInByPrefix();
-                    int idPartner = ansInByPrefix.Execute(thisCdr, data);
-                    if (idPartner > 0)
-                    {
-                        thisCdr.InPartnerId = idPartner;
-                        return idPartner;
-                    }
-                }
-            }
+            //if (thisCdr.InPartnerId <= 0)
+            //{
+            //    CdrSetting cdrSetting = data.MediationContext.CdrSetting;
+            //    if (cdrSetting.useCasStyleProcessing == true)
+            //    {
+            //        ANSInByPrefix ansInByPrefix= new ANSInByPrefix();
+            //        int idPartner = ansInByPrefix.Execute(thisCdr, data);
+            //        if (idPartner > 0)
+            //        {
+            //            thisCdr.InPartnerId = idPartner;
+            //            return idPartner;
+            //        }
+            //    }
+            //}
             thisCdr.InPartnerId = 0;
             return 0;
         }
