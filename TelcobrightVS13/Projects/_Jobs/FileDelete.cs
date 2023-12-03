@@ -69,8 +69,8 @@ namespace Jobs
         private static JobParamFileDelete GetJobParamByHandlingDeserializeErrorFromBackslash
             (OptimizerJobInputData input)
         {
-            JobParamFileDelete delParam = null;
-            var jobParameter = input.Job.JobParameter;
+            JobParamFileDelete delParam = new JobParamFileDelete();
+            string jobParameter = input.Job.JobParameter;
             if (jobParameter.Contains("\"PathSeparator\":\"\\"))
             {
                 jobParameter = jobParameter.Replace("\"PathSeparator\":\"\\", "\"PathSeparator\":\"`");

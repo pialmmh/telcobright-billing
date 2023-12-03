@@ -20,7 +20,7 @@ namespace InstallConfig
     {
         public void PrepareDirectorySettings(TelcobrightConfig tbc)
         {
-            DirectorySettings directorySetting = new DirectorySettings("d:/telcobright", @"cas");
+            DirectorySettings directorySetting = new DirectorySettings("U:/telcobright", @"cas");
             tbc.DirectorySettings = directorySetting;
 
             //***FILE LOCATIONS**********************************************
@@ -78,6 +78,7 @@ namespace InstallConfig
 
             this.Tbc.DirectorySettings.FileLocations.Add(vaultGazi.Name, vaultGazi);
             this.Tbc.DirectorySettings.FileLocations.Add(vaultKhlBogra.Name, vaultKhlBogra);
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultKhlKhulna.Name, vaultKhlKhulna);
             this.Tbc.DirectorySettings.FileLocations.Add(vaultcataliya.Name, vaultcataliya);
            
            
