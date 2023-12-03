@@ -138,8 +138,11 @@
     <PostBuildEvent>copy $(TargetPath) $(SolutionDir)WS_Topshelf_Quartz\bin\Extensions\$(TargetFileName)
 if not exist $(SolutionDir)CasTelcobright\bin\Extensions mkdir $(SolutionDir)CasTelcobright\bin\Extensions
 copy $(TargetPath) $(SolutionDir)CasTelcobright\bin\Extensions\$(TargetFileName)
+if not exist $(SolutionDir)Portal\bin mkdir $(SolutionDir)PortalBTRC\bin
+copy $(TargetPath) $(SolutionDir)Portal\bin\$(TargetFileName)
 if not exist $(SolutionDir)PortalBTRC\bin mkdir $(SolutionDir)PortalBTRC\bin
 copy $(TargetPath) $(SolutionDir)PortalBTRC\bin\$(TargetFileName)
+
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
