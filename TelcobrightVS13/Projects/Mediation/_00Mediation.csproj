@@ -272,6 +272,7 @@
     <Compile Include="Config\TelcobrightConfig.cs" />
     <Compile Include="Config\TelecomOperatortype.cs" />
     <Compile Include="Config\TypeNameSerializationBinder.cs" />
+    <Compile Include="FileOperations\RecursiveVaultFileMover.cs" />
     <Compile Include="FileOperations\SyncPair.cs" />
     <Compile Include="FileOperations\Unzipper.cs" />
     <Compile Include="MefData\Composers\AutomationContainer.cs" />

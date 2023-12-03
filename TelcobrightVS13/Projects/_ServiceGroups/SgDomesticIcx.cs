@@ -80,7 +80,7 @@ namespace TelcobrightMediation
                         thisCdr.Duration1 = roundedDuration;
                         return;
                     }
-                    if (tbPartnerDb == "mnh_cas" && (thisCdr.SwitchId == 1 && outGoingRoute.RouteName == "commonTG"))
+                    if (tbPartnerDb == "mnh_cas" && (thisCdr.SwitchId == 1 && thisCdr.OutgoingRoute == "1974"))
                     {
                         thisCdr.ServiceGroup = 1; //Domestic call
                         decimal roundedDuration = CasDurationHelper.getDomesticDur(thisCdr.DurationSec);

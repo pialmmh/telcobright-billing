@@ -32,9 +32,9 @@ namespace PartnerRules
             }
             if (cdrSettOutg.useCasStyleProcessing == true &&
                     tbPartnerDb == "mnh_cas" && thisCdr.OutPartnerId <= 0
-                    && thisCdr.OutgoingRoute=="commonTG")
+                    && thisCdr.OutgoingRoute=="1974")
             {
-                ANSOutByPrefix ansOutByPrefix = new ANSOutByPrefix();
+               ANSOutByPrefix ansOutByPrefix = new ANSOutByPrefix();
                 int idPartner = ansOutByPrefix.Execute(thisCdr, data);
                 if (idPartner > 0)
                 {

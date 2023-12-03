@@ -23,7 +23,7 @@ using QuartzTelcobright;
 using TelcobrightInfra.PerformanceAndOptimization;
 using TelcobrightMediation.Cdr;
 using TelcobrightMediation.Config;
-
+using System.IO;
 namespace Process
 {
     [DisallowConcurrentExecution]
@@ -141,6 +141,7 @@ namespace Process
                                     if (job.idjobdefinition != 1
                                     ) //error process or re-process job, not merging, process as a single job*************
                                     {
+                                        checkIfProcessingIntendedForThisServer(tbc, ne);
                                         cdrJobInputData.MergedJobsDic = new Dictionary<long, NewCdrWrappedJobForMerge>();
                                         object retVal = telcobrightJob.Execute(cdrJobInputData); //EXECUTE
                                         if (job.idjobdefinition == 1) telcobrightJob.PostprocessJob(retVal);
@@ -343,6 +344,16 @@ namespace Process
                 Console.WriteLine(e1);
                 ErrorWriter.WriteError(e1, "ProcessCdr", null, "", operatorName, context);
             }
+        }
+
+        private static void checkIfProcessingIntendedForThisServer(TelcobrightConfig tbc, ne ne)
+        {
+            string vaultName = ne.SourceFileLocations;
+            //Vault vault = tbc.DirectorySettings.Vaults.First(c => c.Name == vaultName);
+            FileLocation fileLocation = tbc.DirectorySettings.FileLocations[vaultName];
+            string vaultPath = fileLocation.StartingPath;
+            if (!Directory.Exists(vaultPath))
+                throw new Exception($"Vault path '{vaultPath}' not found, may be processing is not intended to be running from this server.");
         }
 
         private static void closeDbConnection(DbCommand cmd)

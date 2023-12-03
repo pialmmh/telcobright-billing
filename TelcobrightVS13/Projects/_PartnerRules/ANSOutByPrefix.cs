@@ -33,17 +33,17 @@ namespace PartnerRules
 
             thisCdr.OutPartnerId = 0;
             string terminatingCalledNumber = thisCdr.TerminatingCalledNumber;
-            foreach (KeyValuePair<string, partnerprefix> kv in ansPrefixes0880)
-            {
-                string prefix = kv.Key;
-                partnerprefix ansPrefix = kv.Value;
+            //foreach (KeyValuePair<string, partnerprefix> kv in ansPrefixes0880)
+            //{
+            //    string prefix = kv.Key;
+            //    partnerprefix ansPrefix = kv.Value;
 
-                if (terminatingCalledNumber.StartsWith(prefix))
-                {
-                    thisCdr.OutPartnerId = ansPrefix.idPartner;
-                    return ansPrefix.idPartner;
-                }
-            }
+            //    if (terminatingCalledNumber.StartsWith(prefix))
+            //    {
+            //        thisCdr.OutPartnerId = ansPrefix.idPartner;
+            //        return ansPrefix.idPartner;
+            //    }
+            //}
 
 
             //foreach (partnerprefix ansPrefix in ansPrefixes0880)
@@ -82,20 +82,20 @@ namespace PartnerRules
             //        }
             //    }
             //}
-            if (thisCdr.OutPartnerId == 0)
-            {
-                foreach (KeyValuePair<string, partnerprefix> kv in ansPrefixes0)
-                {
-                    string prefix = kv.Key;
-                    partnerprefix ansPrefix = kv.Value;
+            //if (thisCdr.OutPartnerId == 0)
+            //{
+            //    foreach (KeyValuePair<string, partnerprefix> kv in ansPrefixes0)
+            //    {
+            //        string prefix = kv.Key;
+            //        partnerprefix ansPrefix = kv.Value;
 
-                    if (terminatingCalledNumber.StartsWith(prefix))
-                    {
-                        thisCdr.OutPartnerId = ansPrefix.idPartner;
-                        return ansPrefix.idPartner;
-                    }
-                }
-            }
+            //        if (terminatingCalledNumber.StartsWith(prefix))
+            //        {
+            //            thisCdr.OutPartnerId = ansPrefix.idPartner;
+            //            return ansPrefix.idPartner;
+            //        }
+            //    }
+            //}
             //    if (thisCdr.OutPartnerId == 0)
             //{
             //    foreach (partnerprefix ansPrefix in ansPrefixes0)
