@@ -85,10 +85,6 @@ namespace Decoders
                 {
                     connectTime = parseStringToDate(connectTime);
                 }
-                if (connectTime.IsNullOrEmptyOrWhiteSpace())
-                {
-                    continue;
-                }
 
                 string endTime = lineAsArr[6].Trim();
                 if (!string.IsNullOrEmpty(endTime))
@@ -109,8 +105,8 @@ namespace Decoders
                 textCdr[Fn.IncomingRoute] = lineAsArr[12].Trim();
                 textCdr[Fn.OutgoingRoute] = lineAsArr[11].Trim();
 
-                textCdr[Fn.AnswerTime] = connectTime;
-                textCdr[Fn.StartTime] = connectTime;
+                textCdr[Fn.AnswerTime] = connectTime.IsNullOrEmptyOrWhiteSpace()?startTime:connectTime;
+                textCdr[Fn.StartTime] = startTime;
                 textCdr[Fn.Endtime] = endTime.IsNullOrEmptyOrWhiteSpace()?connectTime:endTime;
 
 
@@ -150,7 +146,7 @@ namespace Decoders
             string sessionId = row[Fn.UniqueBillId];
             string separator = "/";
             return new StringBuilder(switchId.ToString()).Append(separator)
-                .Append(startTime.ToMySqlFormatWithoutQuote()).Append(separator)
+                //.Append(startTime.ToMySqlFormatWithoutQuote()).Append(separator)
                 .Append(sessionId).ToString();
         }
         public override EventAggregationResult Aggregate(object data)

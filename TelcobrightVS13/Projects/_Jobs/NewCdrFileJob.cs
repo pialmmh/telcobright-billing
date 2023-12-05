@@ -123,8 +123,18 @@ namespace Jobs
                     if (neAdditionalSetting.AggregationStyle == "telcobridge")
                     {
                         Dictionary<string, string[]> dupFilteredBillIdsForThisJob = preProcessor.FinalNonDuplicateEvents;
+                        Dictionary<string, object> tupleGenInput = new Dictionary<string, object>()
+                        {
+                            { "collectorInput",this.CollectorInput},
+                            { "row",null}
+                        };
                         preProcessor.RowsToConsiderForAggregation= preProcessor.DecodedCdrRowsBeforeDuplicateFiltering
-                                .Where(r => dupFilteredBillIdsForThisJob.ContainsKey(r[Fn.UniqueBillId])).ToList();
+                                .Where(r =>
+                            {
+                                tupleGenInput["row"] = r;
+                                return dupFilteredBillIdsForThisJob.ContainsKey(
+                                    preProcessor.Decoder.getTupleExpression(tupleGenInput));
+                            }).ToList();
                         preProcessor = aggregateCdrs(preProcessor);
                         preProcessor.TxtCdrRows = preProcessor.AggregatedEvents;
                         preProcessor.FinalNonDuplicateEvents = preProcessor.AggregatedEvents.ToDictionary(r => r[Fn.UniqueBillId]);
@@ -794,7 +804,7 @@ namespace Jobs
             //List<cdrinconsistent> cdrinconsistents = preprocessor.InconsistentCdrs.ToList();
             DbCommand cmd = this.CollectorInput.CdrJobInputData.Context.Database.Connection.CreateCommand();
             DayWiseEventCollector<string[]> dayWiseEventCollector = new DayWiseEventCollector<string[]>
-            (uniqueEventsOnly: true,
+            (uniqueEventsOnly: false,
                 collectorInput: this.CollectorInput,
                 dbCmd: cmd, decoder: decoder,
                 inputEvents: rowsToConsiderForAggregation,//decoded rows
@@ -802,16 +812,14 @@ namespace Jobs
             dayWiseEventCollector.createNonExistingTables();
             dayWiseEventCollector.collectTupleWiseExistingEvents(decoder);
             TelcobridgeStyleAggregator<string[]> aggregator = new TelcobridgeStyleAggregator<string[]>(dayWiseEventCollector);
-            List<string[]> eventsRemainedUnaggreagated = null;
-            List<string[]> eventsToBeDiscardedAfterAggregation = null;
-            Dictionary<string, string[]> aggregatedEvents = 
-                aggregator.aggregateCdrs(out eventsRemainedUnaggreagated, out eventsToBeDiscardedAfterAggregation);
-            preprocessor.AggregatedEvents = aggregatedEvents.Values.ToList();
-            preprocessor.NewRowsRemainedUnaggreagated = eventsRemainedUnaggreagated;
-            preprocessor.RowsToBeDiscardedAfterAggregation = eventsToBeDiscardedAfterAggregation;
+            
+            Dictionary<string,EventAggregationResult> aggregationResults = aggregator.aggregateCdrs();
+            preprocessor.AggregatedEvents = aggregationResults.Values.Select(ar=>ar.AggregatedInstance).ToList();
+            preprocessor.NewRowsRemainedUnaggreagated = aggregationResults.Values
+                .SelectMany(ar => ar.InstancesCouldNotBeAggregated).ToList();
+            preprocessor.RowsToBeDiscardedAfterAggregation = aggregationResults.Values
+                .SelectMany(ar => ar.InstancesToBeDiscardedAfterAggregation).ToList();
             return preprocessor;
         }
-
-
     }
 }

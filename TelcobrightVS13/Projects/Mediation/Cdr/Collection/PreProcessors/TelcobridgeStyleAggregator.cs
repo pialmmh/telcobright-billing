@@ -32,27 +32,33 @@ namespace TelcobrightMediation.Cdr.Collection.PreProcessors
             this.OldUnAggregatedEventsFromDb = eventCollector.ExistingEventsInDb;
             this.Decoder = eventCollector.Decoder;
         }
-        public Dictionary<string, T> aggregateCdrs(out List<T> eventsRemainedUnaggreagated, out List<T> eventsToBeDiscardedAfterAggregation)
+        public Dictionary<string, EventAggregationResult> aggregateCdrs()
         {
-            var allUnAggregatedEvents = this.OldUnAggregatedEventsFromDb.Concat(this.NewUnAggregatedEventsNotInDb)
-                .GroupBy(e => Decoder.getTupleExpression(e))
+            Dictionary<string, object> tupGenInput = new Dictionary<string, object>()
+            {
+                { "collectorInput", this.CollectorInput},
+                { "row", null}
+            };
+            Dictionary<string, List<T>> allUnAggregatedEvents = this.OldUnAggregatedEventsFromDb.Concat(this.NewUnAggregatedEventsNotInDb)
+                .GroupBy(e =>
+                {
+                    tupGenInput["row"] = e;
+                    return Decoder.getTupleExpression(tupGenInput);
+                })
                 .Select(g => new
                 {
                     Key = g.Key,
                     Events = g.ToList()
                 }).ToDictionary(a => a.Key, a => a.Events);
-            Dictionary<string,T> finalAggregatedEvents= new Dictionary<string, T>();
-            eventsRemainedUnaggreagated= new List<T>();
+            Dictionary<string,EventAggregationResult> aggregationResults= new Dictionary<string, EventAggregationResult>();
             foreach (var kv in allUnAggregatedEvents)
             {
                 string billId = kv.Key;
                 List<T> unAggregatedInstances = kv.Value;
-                //object unaggregatedInstancesRorThisTupleOrBillId = null;
-                //T aggregatedInstance = (T)this.Decoder.Aggregate(unAggregatedInstances, out unaggregatedInstancesRorThisTupleOrBillId);
-                //finalAggregatedEvents.Add(billId,aggregatedInstance);
+                EventAggregationResult aggregationResult = this.Decoder.Aggregate(unAggregatedInstances);
+                aggregationResults.Add(billId, aggregationResult);
             }
-            eventsToBeDiscardedAfterAggregation = new List<T>();
-            return finalAggregatedEvents;
+            return aggregationResults;
         }
     }
 }
