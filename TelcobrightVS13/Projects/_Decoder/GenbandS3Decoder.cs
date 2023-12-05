@@ -41,9 +41,10 @@ namespace Decoders
             string strThisField = "";
             string[] thisNormalizedRow = null;
             int currentFieldNo = 0;
-            foreach (string[] thisRow in tempTable) //for each row
+
+            try
             {
-                try
+                foreach (string[] thisRow in tempTable) //for each row
                 {
                     thisNormalizedRow = null;
                     thisNormalizedRow = new string[input.MefDecodersData.Totalfieldtelcobright];
@@ -108,13 +109,13 @@ namespace Decoders
 
                                     break;
                                 case 16://ConnectTime, connect time may not be present for failed call
-                                        //has been set later by PDD
+                                    //has been set later by PDD
                                     break;
                                 case 17://AnswerTime, may not be present for failed calls
-                                        //has been set later by duration and charging status
+                                    //has been set later by duration and charging status
                                     break;
                                 case 18://charging status
-                                        ////has been set later by duration
+                                    ////has been set later by duration
                                     break;
                                 case 22://release direction
 
@@ -265,7 +266,7 @@ namespace Decoders
                             //add valid flag for this type of switch, valid flag comes from cdr for zte
                             thisNormalizedRow[54] = "1";
                             thisNormalizedRow[55] = "0";//for now mark as non-partial, single cdr
-                                                        //remove the text "end1", casue that will throw error for this field in cdr
+                            //remove the text "end1", casue that will throw error for this field in cdr
                             thisNormalizedRow[65] = "0";//a numeric value is ok as per cdrfieldlist
                             thisNormalizedRow[Fn.FinalRecord] = "1";
                             thisNormalizedRow[Fn.Partialflag] = "0";
@@ -273,16 +274,27 @@ namespace Decoders
                             decodedRows.Add(thisNormalizedRow);
                         }
                     }
-                }
-                catch (Exception e1)
-                {//if error found for one row, add this to inconsistent
+                    //try
+                    //{
+                    //    
 
-                    Console.WriteLine(e1);
-                    inconsistentCdrs.Add(CdrConversionUtil.ConvertTxtRowToCdrinconsistent(thisRow));
-                    continue;//with next switch
-                }
-            }//for each row
-            return decodedRows;
+                    //}
+                    //catch (Exception e1)
+                    //{//if error found for one row, add this to inconsistent
+
+                    //    Console.WriteLine(e1);
+                    //    inconsistentCdrs.Add(CdrConversionUtil.ConvertTxtRowToCdrinconsistent(thisRow));
+                    //    continue;//with next switch
+                    //}
+                }//for each row
+                return decodedRows;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                e.Data.Add("customError", "Possibly Corrupted");
+                throw e;
+            }
         }
 
         public override string getTupleExpression(Object data)

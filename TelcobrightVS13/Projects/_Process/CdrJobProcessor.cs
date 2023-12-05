@@ -230,9 +230,10 @@ namespace Process
                                     try
                                     {
                                         List<CdrMergedJobError> mergedJobErrors = new List<CdrMergedJobError>();
-                                        foreach (var mergedJobError in e.Data.Values)
+                                        foreach (var customError in e.Data.Values)
                                         {
-                                            mergedJobErrors.Add((CdrMergedJobError)mergedJobError);
+                                            if(customError.GetType()==typeof(CdrMergedJobError))
+                                                mergedJobErrors.Add((CdrMergedJobError)customError);
                                         }
                                         resetMergeJobStatus();
                                         if (cmd.Connection.State != ConnectionState.Open) cmd.Connection.Open();
@@ -371,14 +372,19 @@ namespace Process
         private static void UpdateJobWithErrorInfo(DbCommand cmd, job telcobrightJob, Exception e)
         {
             List<CdrMergedJobError> mergedJobErrors = new List<CdrMergedJobError>();
-            foreach (var mergedJobError in e.Data.Values)
+            foreach (var jobError in e.Data.Values)
             {
-                var errorWithoutJob = (CdrMergedJobError)mergedJobError;
+                if(jobError.GetType()!= typeof(CdrMergedJobError))
+                    continue;
+                var errorWithoutJob = (CdrMergedJobError)jobError;
                 errorWithoutJob.Job = null;//to avoid some circult reference during serialization
                 mergedJobErrors.Add(errorWithoutJob);
             }
             string errorDetailAsTxt = JsonConvert.SerializeObject(mergedJobErrors).Replace("'", "");
-            cmd.CommandText = " update job set `Error`= '" +
+            string customError="";
+            if (e.Data.Contains("customError"))
+                customError = (string)e.Data["customError"];
+            cmd.CommandText = $" update job set jobSummary='{customError}', `Error`= '" +
                               e.Message.Replace("'", "") + errorDetailAsTxt +
                               Environment.NewLine + (e.InnerException?.ToString().Replace("'", "") ?? "")
                               + "' " + " where id=" + telcobrightJob.id + ";commit;";

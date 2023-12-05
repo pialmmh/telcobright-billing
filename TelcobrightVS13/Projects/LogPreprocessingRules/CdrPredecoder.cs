@@ -180,8 +180,27 @@ namespace LogPreProcessor
 
                 //no need for try catch, handled within preDecodeFile();
 
-                Parallel.ForEach(threadSafePredecoders, predecoder =>
-                {
+                //Parallel.ForEach(threadSafePredecoders, predecoder =>
+                //{
+                //    PredecoderOutput output = predecoder.preDecodeToFile();//predecodehere
+                //    if (output.SuccessfulJob != null)
+                //    {
+                //        successResult.Add(output);
+                //    }
+                //    else
+                //    {
+                //        if (output.FailedJob == null)
+                //        {
+                //            var exception = new Exception(
+                //                "Both successful and failed jobs cannot be null after predecoding of cdr files.");
+                //            Console.WriteLine(exception);
+                //            throw exception;
+                //        }
+                //        failedResults.Add(output);
+                //    }
+                //}); //parallel
+
+                threadSafePredecoders.Take(1).ToList().ForEach(predecoder=> {
                     PredecoderOutput output = predecoder.preDecodeToFile();//predecodehere
                     if (output.SuccessfulJob != null)
                     {
@@ -198,7 +217,10 @@ namespace LogPreProcessor
                         }
                         failedResults.Add(output);
                     }
-                }); //parallel
+                }); //parallel)
+                    //Parallel.ForEach(threadSafePredecoders, predecoder =>
+
+
 
                 if (successResult.Any()) updateSuccessfulJobs(thisSwitch, context, cmd, successResult);
                 if(failedResults.Any()) updateFailedJobs(thisSwitch, context, cmd, failedResults, tbc);
@@ -232,7 +254,7 @@ namespace LogPreProcessor
             {
                 try
                 {
-                    cmd.CommandText = $" update job set Error='{result.ExceptionMessage}' where id={result.FailedJob.id};";
+                    cmd.CommandText = $" update job set jobsummary='Possibly Corrupted', Error='{result.ExceptionMessage}' where id={result.FailedJob.id};";
                     cmd.ExecuteNonQuery();
                     string preDecodedDirName = "";
                     string preDecodedFileName = "";

@@ -101,6 +101,7 @@
     <Compile Include="CataleyaCsvDecoderSoftexNoFailed.cs" />
     <Compile Include="CataleyaCsvDecoderTeleexchangeNoFailed.cs" />
     <Compile Include="CataleyaCsvDecoderJslNoFailedGzip.cs" />
+    <Compile Include="GenbandC3.cs" />
     <Compile Include="Helper\NokiaDecodeHelper.cs" />
     <Compile Include="Helper\NokiaSiemensDecoderNGT.cs" />
     <Compile Include="Helper\NokiaSiemensDecoderMother.cs" />
@@ -125,7 +126,7 @@
     <Compile Include="DialogicBorderNetMirNoFailed.cs" />
     <Compile Include="DialogicControlSwitchDecoder.cs" />
     <Compile Include="DialogicBorderNetMirNoFailedGzipMirNoFailed.cs" />
-    <Compile Include="GenbandC3.cs" />
+    <Compile Include="GenbandC3WithGz.cs" />
     <Compile Include="GenbandS3Decoder.cs" />
     <Compile Include="HuaweiSoftx3000DecoderMNH.cs" />
     <Compile Include="HuaweiSoftx3000Decoder.cs" />

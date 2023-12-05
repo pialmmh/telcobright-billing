@@ -74,58 +74,67 @@ namespace Decoders
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
 
-            foreach (string[] lineAsArr in lines)
+            try
             {
-                if (lineAsArr.Length < 15) continue;
-
-                string[] textCdr = new string[input.MefDecodersData.Totalfieldtelcobright];
-
-                string durationStr = lineAsArr[16];
-                double durationIn10sOfMillis = 0;
-                if (double.TryParse(durationStr, out durationIn10sOfMillis) && durationIn10sOfMillis <= 0) continue;
-
-                textCdr[Fn.DurationSec] = ((durationIn10sOfMillis * 10) / 1000).ToString();
-                textCdr[Fn.Sequencenumber] = lineAsArr[0];
-                textCdr[Fn.ReleaseCauseSystem] = lineAsArr[49];
-                textCdr[Fn.Filename] = fileName;
-                textCdr[Fn.IncomingRoute] = lineAsArr[26];
-                textCdr[Fn.OriginatingCallingNumber] = lineAsArr[4];
-                textCdr[Fn.OriginatingCalledNumber] = lineAsArr[8];
-                textCdr[Fn.TerminatingCalledNumber] = lineAsArr[8];
-                textCdr[Fn.TerminatingCallingNumber] = lineAsArr[4];
-                textCdr[Fn.OutgoingRoute] = lineAsArr[33];
-
-                string[] formats = new string[] { "MddyyyyHHmmssfff", "MMddyyyyHHmmssfff" };
-
-                if (!string.IsNullOrEmpty(lineAsArr[13]))
+                foreach (string[] lineAsArr in lines)
                 {
-                    string startTimestr = lineAsArr[13].Trim();
-                    DateTime startTime = startTimestr.ConvertToDateTimeFromCustomFormats(formats);
-                    textCdr[Fn.StartTime] = startTime.ToMySqlFormatWithoutQuote();
-                }
-                string ansTimestr = lineAsArr[14].Trim();
-                DateTime ansTime = ansTimestr.ConvertToDateTimeFromCustomFormats(formats);
+                    if (lineAsArr.Length < 15) continue;
 
-                if (!string.IsNullOrEmpty(lineAsArr[14]))
-                {
-                    textCdr[Fn.AnswerTime] = ansTime.ToMySqlFormatWithoutQuote();
+                    string[] textCdr = new string[input.MefDecodersData.Totalfieldtelcobright];
+
+                    string durationStr = lineAsArr[16];
+                    double durationIn10sOfMillis = 0;
+                    if (double.TryParse(durationStr, out durationIn10sOfMillis) && durationIn10sOfMillis <= 0) continue;
+
+                    textCdr[Fn.DurationSec] = ((durationIn10sOfMillis * 10) / 1000).ToString();
+                    textCdr[Fn.Sequencenumber] = lineAsArr[0];
+                    textCdr[Fn.ReleaseCauseSystem] = lineAsArr[49];
+                    textCdr[Fn.Filename] = fileName;
+                    textCdr[Fn.IncomingRoute] = lineAsArr[26];
+                    textCdr[Fn.OriginatingCallingNumber] = lineAsArr[4];
+                    textCdr[Fn.OriginatingCalledNumber] = lineAsArr[8];
+                    textCdr[Fn.TerminatingCalledNumber] = lineAsArr[8];
+                    textCdr[Fn.TerminatingCallingNumber] = lineAsArr[4];
+                    textCdr[Fn.OutgoingRoute] = lineAsArr[33];
+
+                    string[] formats = new string[] { "MddyyyyHHmmssfff", "MMddyyyyHHmmssfff" };
+
+                    if (!string.IsNullOrEmpty(lineAsArr[13]))
+                    {
+                        string startTimestr = lineAsArr[13].Trim();
+                        DateTime startTime = startTimestr.ConvertToDateTimeFromCustomFormats(formats);
+                        textCdr[Fn.StartTime] = startTime.ToMySqlFormatWithoutQuote();
+                    }
+                    string ansTimestr = lineAsArr[14].Trim();
+                    DateTime ansTime = ansTimestr.ConvertToDateTimeFromCustomFormats(formats);
+
+                    if (!string.IsNullOrEmpty(lineAsArr[14]))
+                    {
+                        textCdr[Fn.AnswerTime] = ansTime.ToMySqlFormatWithoutQuote();
+                    }
+                    string endTimestr = lineAsArr[15].Trim();
+                    if (!string.IsNullOrEmpty(endTimestr))
+                    {
+                        DateTime endTime = endTimestr.ConvertToDateTimeFromCustomFormats(formats);
+                        textCdr[Fn.Endtime] = endTime.ToMySqlFormatWithoutQuote();
+                    }
+                    else
+                    {
+                        textCdr[Fn.Endtime] = ansTime.ToMySqlFormatWithoutQuote();
+                    }
+                    textCdr[Fn.Validflag] = "1";
+                    textCdr[Fn.Partialflag] = "0";
+                    textCdr[Fn.ChargingStatus] = "1";
+                    decodedRows.Add(textCdr.ToArray());
                 }
-                string endTimestr = lineAsArr[15].Trim();
-                if (!string.IsNullOrEmpty(endTimestr))
-                {
-                    DateTime endTime = endTimestr.ConvertToDateTimeFromCustomFormats(formats);
-                    textCdr[Fn.Endtime] = endTime.ToMySqlFormatWithoutQuote();
-                }
-                else
-                {
-                    textCdr[Fn.Endtime] = ansTime.ToMySqlFormatWithoutQuote();
-                }
-                textCdr[Fn.Validflag] = "1";
-                textCdr[Fn.Partialflag] = "0";
-                textCdr[Fn.ChargingStatus] = "1";
-                decodedRows.Add(textCdr.ToArray());
+                return decodedRows;
             }
-            return decodedRows;
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                e.Data.Add("customError", "Possibly Corrupted");
+                throw e;
+            }
         }
         
     }

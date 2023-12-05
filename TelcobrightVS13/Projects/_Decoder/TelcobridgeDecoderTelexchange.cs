@@ -58,97 +58,106 @@ namespace Decoders
             //this.Input = input;
             List<cdrfieldmappingbyswitchtype> fieldMappings = null;
 
-            foreach (string ln in linesAsString)
+            try
             {
-                lineAsArr = ln.Split(',');
-                string[] textCdr = new string[input.MefDecodersData.Totalfieldtelcobright];
-
-                if (lineAsArr.Length < 5)
-                    continue;
-                if (!string.IsNullOrEmpty(lineAsArr[5]))
+                foreach (string ln in linesAsString)
                 {
-                    continue;
-                }
-                if (lineAsArr.Length < 5)
-                continue;
-                //string durationStr = lineAsArr[7].Trim();
-                //double durationSec = 0;
-                //double.TryParse(durationStr, out durationSec);
-                //if (durationSec <= 0) continue;
-                string callStatus = lineAsArr[1].Trim().ToLower();
-                if (!string.Equals(callStatus, "End")) continue;
+                    lineAsArr = ln.Split(',');
+                    string[] textCdr = new string[input.MefDecodersData.Totalfieldtelcobright];
 
-                textCdr[Fn.UniqueBillId] = lineAsArr[2].Trim();
-                textCdr[Fn.Partialflag] = "1";// all telcobridge cdrs are partial
-                //textCdr[Fn.DurationSec] = lineAsArr[7].Trim();
+                    if (lineAsArr.Length < 5)
+                        continue;
+                    if (!string.IsNullOrEmpty(lineAsArr[5]))
+                    {
+                        continue;
+                    }
+                    if (lineAsArr.Length < 5)
+                        continue;
+                    //string durationStr = lineAsArr[7].Trim();
+                    //double durationSec = 0;
+                    //double.TryParse(durationStr, out durationSec);
+                    //if (durationSec <= 0) continue;
+                    string callStatus = lineAsArr[1].Trim().ToLower();
+                    if (!string.Equals(callStatus, "End")) continue;
 
-                //originate or answer, intrunk taken from "originate" let, outtrunk from "answer" leg
-                string inTrunkAdditionalInfo = lineAsArr[14].Trim().ToLower();
-                textCdr[Fn.InTrunkAdditionalInfo] = inTrunkAdditionalInfo;
+                    textCdr[Fn.UniqueBillId] = lineAsArr[2].Trim();
+                    textCdr[Fn.Partialflag] = "1";// all telcobridge cdrs are partial
+                    //textCdr[Fn.DurationSec] = lineAsArr[7].Trim();
 
-                string startTimeStr = lineAsArr[4].Trim();
-                DateTime startTime = new DateTime();
-                if (!string.IsNullOrEmpty(startTimeStr))
-                {
-                    startTime = DateTime.ParseExact(startTimeStr, "yyyy-MM-dd HH.mm.ss.fff", System.Globalization.CultureInfo.InvariantCulture);
-                    startTimeStr = startTime.ToString("yyyy-MM-dd HH:mm:ss");
-                }
+                    //originate or answer, intrunk taken from "originate" let, outtrunk from "answer" leg
+                    string inTrunkAdditionalInfo = lineAsArr[14].Trim().ToLower();
+                    textCdr[Fn.InTrunkAdditionalInfo] = inTrunkAdditionalInfo;
 
-                string connectTimeStr = lineAsArr[5].Trim();
-                DateTime connectTime = new DateTime();
-                if (!string.IsNullOrEmpty(connectTimeStr))
-                {
-                    connectTime = DateTime.ParseExact(connectTimeStr, "yyyy-MM-dd HH.mm.ss.fff", System.Globalization.CultureInfo.InvariantCulture);
-                    connectTimeStr = connectTime.ToString("yyyy-MM-dd HH:mm:ss");
-                }
+                    string startTimeStr = lineAsArr[4].Trim();
+                    DateTime startTime = new DateTime();
+                    if (!string.IsNullOrEmpty(startTimeStr))
+                    {
+                        startTime = DateTime.ParseExact(startTimeStr, "yyyy-MM-dd HH.mm.ss.fff", CultureInfo.InvariantCulture);
+                        startTimeStr = startTime.ToString("yyyy-MM-dd HH:mm:ss");
+                    }
 
-                string endTimeStr = lineAsArr[6].Trim();
-                DateTime endTime = new DateTime();
-                if (!string.IsNullOrEmpty(endTimeStr))
-                {
-                    endTime = DateTime.ParseExact(endTimeStr, "yyyy-MM-dd HH.mm.ss.fff", System.Globalization.CultureInfo.InvariantCulture);
-                    endTimeStr = endTime.ToString("yyyy-MM-dd HH:mm:ss");
-                }
+                    string connectTimeStr = lineAsArr[5].Trim();
+                    DateTime connectTime = new DateTime();
+                    if (!string.IsNullOrEmpty(connectTimeStr))
+                    {
+                        connectTime = DateTime.ParseExact(connectTimeStr, "yyyy-MM-dd HH.mm.ss.fff", CultureInfo.InvariantCulture);
+                        connectTimeStr = connectTime.ToString("yyyy-MM-dd HH:mm:ss");
+                    }
 
-
-                TimeSpan DurationSec = connectTime - startTime;
-                string DurationSecStr = DurationSec.TotalSeconds.ToString();
-
-                textCdr[Fn.Filename] = fileName;
-                textCdr[Fn.Switchid] = Input.Ne.idSwitch.ToString();
-
-                textCdr[Fn.OriginatingCallingNumber] = lineAsArr[9].Trim();
-                textCdr[Fn.OriginatingCalledNumber] = lineAsArr[10].Trim();
-
-                textCdr[Fn.TerminatingCallingNumber] = lineAsArr[9].Trim();
-                textCdr[Fn.TerminatingCalledNumber] = lineAsArr[10].Trim();
-
-                if(inTrunkAdditionalInfo == "originate")
-                {
-                    textCdr[Fn.IncomingRoute] = lineAsArr[12].Trim();
-                }
-                else
-                {
-                    textCdr[Fn.OutgoingRoute] = lineAsArr[12].Trim();
-                }
+                    string endTimeStr = lineAsArr[6].Trim();
+                    DateTime endTime = new DateTime();
+                    if (!string.IsNullOrEmpty(endTimeStr))
+                    {
+                        endTime = DateTime.ParseExact(endTimeStr, "yyyy-MM-dd HH.mm.ss.fff", CultureInfo.InvariantCulture);
+                        endTimeStr = endTime.ToString("yyyy-MM-dd HH:mm:ss");
+                    }
 
 
-                textCdr[Fn.StartTime] = startTimeStr;
-                textCdr[Fn.Endtime] = endTimeStr;
-                textCdr[Fn.AnswerTime] = connectTimeStr;
-                textCdr[Fn.DurationSec] = DurationSecStr;
+                    TimeSpan DurationSec = connectTime - startTime;
+                    string DurationSecStr = DurationSec.TotalSeconds.ToString();
+
+                    textCdr[Fn.Filename] = fileName;
+                    textCdr[Fn.Switchid] = Input.Ne.idSwitch.ToString();
+
+                    textCdr[Fn.OriginatingCallingNumber] = lineAsArr[9].Trim();
+                    textCdr[Fn.OriginatingCalledNumber] = lineAsArr[10].Trim();
+
+                    textCdr[Fn.TerminatingCallingNumber] = lineAsArr[9].Trim();
+                    textCdr[Fn.TerminatingCalledNumber] = lineAsArr[10].Trim();
+
+                    if(inTrunkAdditionalInfo == "originate")
+                    {
+                        textCdr[Fn.IncomingRoute] = lineAsArr[12].Trim();
+                    }
+                    else
+                    {
+                        textCdr[Fn.OutgoingRoute] = lineAsArr[12].Trim();
+                    }
+
+
+                    textCdr[Fn.StartTime] = startTimeStr;
+                    textCdr[Fn.Endtime] = endTimeStr;
+                    textCdr[Fn.AnswerTime] = connectTimeStr;
+                    textCdr[Fn.DurationSec] = DurationSecStr;
                 
 
 
-                textCdr[Fn.Validflag] = "1";
+                    textCdr[Fn.Validflag] = "1";
 
-                string seqNumber = lineAsArr[3].Remove(0, 2);
-                seqNumber = Int64.Parse(seqNumber, System.Globalization.NumberStyles.HexNumber).ToString();
-                textCdr[Fn.Sequencenumber] = seqNumber;
+                    string seqNumber = lineAsArr[3].Remove(0, 2);
+                    seqNumber = Int64.Parse(seqNumber, NumberStyles.HexNumber).ToString();
+                    textCdr[Fn.Sequencenumber] = seqNumber;
 
-                decodedRows.Add(textCdr);
+                    decodedRows.Add(textCdr);
+                }
+                return decodedRows;
             }
-            return decodedRows;
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                e.Data.Add("customError", "Possibly Corrupted");
+                throw e;
+            }
         }
 
         public override EventAggregationResult Aggregate(object data)

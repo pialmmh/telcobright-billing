@@ -46,99 +46,106 @@ namespace Decoders
             int receivedRowCount = 0;
             int foundRowCount = 0;
 
-            foreach (string[] lineAsArr in lines)
+            try
             {
-                if (lineAsArr.Length == 1 && foundRowCount == 0)
+                foreach (string[] lineAsArr in lines)
                 {
-                    string firstRowText = lineAsArr[0].Trim().Split('=')[0];
-                    if (firstRowText == "number_of_cdrs")
+                    if (lineAsArr.Length == 1 && foundRowCount == 0)
                     {
-                        receivedRowCount = Convert.ToInt32(lineAsArr[0].Trim().Split('=')[1]); // number of cdr written on first row as metadata
-                        continue;
+                        string firstRowText = lineAsArr[0].Trim().Split('=')[0];
+                        if (firstRowText == "number_of_cdrs")
+                        {
+                            receivedRowCount = Convert.ToInt32(lineAsArr[0].Trim().Split('=')[1]); // number of cdr written on first row as metadata
+                            continue;
+                        }
+
+                    }
+                    foundRowCount++;
+
+                    string chargingStatus = lineAsArr[2] == "S" ? "1" : "0";
+                    if (chargingStatus != "1") continue;
+                    string[] textCdr = new string [input.MefDecodersData.Totalfieldtelcobright];
+                    textCdr[Fn.ChargingStatus] = chargingStatus;
+
+                    textCdr[Fn.Switchid] = Input.Ne.idSwitch.ToString();
+                    //cdr.SwitchId = 9;
+                    textCdr[Fn.Sequencenumber] = lineAsArr[0];
+                    //cdr.SequenceNumber = Convert.ToInt64(lineAsArr[0]);
+                    textCdr[Fn.Filename] = fileName;
+                    textCdr[Fn.IncomingRoute] = lineAsArr[25].Trim();
+                    textCdr[Fn.OutgoingRoute] = lineAsArr[56].Trim();
+                    textCdr[Fn.DurationSec] = lineAsArr[17];
+                    //cdr.DurationSec = Convert.ToDecimal(lineAsArr[17]) / 1000;
+                    string ipAddr= lineAsArr[36];
+                    if (!string.IsNullOrEmpty(ipAddr))
+                    {
+                        string[] ipPort = ipAddr.Split(':');
+                        string ip = ipPort[1].Trim();
+                        string port = ipPort[2].Split(';')[0].Trim();
+                        textCdr[Fn.Originatingip] = ip + ":"+ port;
+                    }
+                    ipAddr = lineAsArr[67];
+                    if (!string.IsNullOrEmpty(ipAddr))
+                    {
+                        string[] ipPort = ipAddr.Split(':');
+                        string ip = ipPort[1].Trim();
+                        string port = ipPort[2].Split(';')[0].Trim();
+                        textCdr[Fn.TerminatingIp] = ip + ":" + port;
+                    }
+                
+                    string startTime = lineAsArr[37];//SignalStart
+                    if (!string.IsNullOrEmpty(startTime))
+                    {
+                        startTime= parseStringToDate(startTime).ToString("yyyy-MM-dd HH:mm:ss");
                     }
 
-                }
-                foundRowCount++;
+                    string connectTime = lineAsArr[38];//ConnectTime
+                    if (!string.IsNullOrEmpty(connectTime))
+                    {
+                        connectTime= parseStringToDate(connectTime).ToString("yyyy-MM-dd HH:mm:ss");
+                    }
 
-                string chargingStatus = lineAsArr[2] == "S" ? "1" : "0";
-                if (chargingStatus != "1") continue;
-                string[] textCdr = new string [input.MefDecodersData.Totalfieldtelcobright];
-                textCdr[Fn.ChargingStatus] = chargingStatus;
+                    string answerTime = lineAsArr[39];//AnswerTime
+                    if (!string.IsNullOrEmpty(answerTime))
+                    {
+                        answerTime= parseStringToDate(answerTime).ToString("yyyy-MM-dd HH:mm:ss");
+                    }
 
-                textCdr[Fn.Switchid] = Input.Ne.idSwitch.ToString();
-                //cdr.SwitchId = 9;
-                textCdr[Fn.Sequencenumber] = lineAsArr[0];
-                //cdr.SequenceNumber = Convert.ToInt64(lineAsArr[0]);
-                textCdr[Fn.Filename] = fileName;
-                textCdr[Fn.IncomingRoute] = lineAsArr[25].Trim();
-                textCdr[Fn.OutgoingRoute] = lineAsArr[56].Trim();
-                textCdr[Fn.DurationSec] = lineAsArr[17];
-                //cdr.DurationSec = Convert.ToDecimal(lineAsArr[17]) / 1000;
-                string ipAddr= lineAsArr[36];
-                if (!string.IsNullOrEmpty(ipAddr))
-                {
-                    string[] ipPort = ipAddr.Split(':');
-                    string ip = ipPort[1].Trim();
-                    string port = ipPort[2].Split(';')[0].Trim();
-                    textCdr[Fn.Originatingip] = ip + ":"+ port;
-                }
-                ipAddr = lineAsArr[67];
-                if (!string.IsNullOrEmpty(ipAddr))
-                {
-                    string[] ipPort = ipAddr.Split(':');
-                    string ip = ipPort[1].Trim();
-                    string port = ipPort[2].Split(';')[0].Trim();
-                    textCdr[Fn.TerminatingIp] = ip + ":" + port;
-                }
-                
-                string startTime = lineAsArr[37];//SignalStart
-                if (!string.IsNullOrEmpty(startTime))
-                {
-                    startTime= parseStringToDate(startTime).ToString("yyyy-MM-dd HH:mm:ss");
-                }
+                    string endTime = lineAsArr[40];//EndTime
+                    if (!string.IsNullOrEmpty(endTime))
+                    {
+                        endTime= parseStringToDate(endTime).ToString("yyyy-MM-dd HH:mm:ss");
+                    }
 
-                string connectTime = lineAsArr[38];//ConnectTime
-                if (!string.IsNullOrEmpty(connectTime))
-                {
-                    connectTime= parseStringToDate(connectTime).ToString("yyyy-MM-dd HH:mm:ss");
+                    textCdr[Fn.StartTime] = startTime;
+                    textCdr[Fn.ConnectTime] = connectTime;
+                    textCdr[Fn.AnswerTime] = answerTime;
+                    textCdr[Fn.Endtime] = endTime;
+
+                    textCdr[Fn.OriginatingCallingNumber] = lineAsArr[30].Trim();
+                    textCdr[Fn.OriginatingCalledNumber] = lineAsArr[31].Trim();
+                    textCdr[Fn.TerminatingCallingNumber] = lineAsArr[61].Trim();
+                    textCdr[Fn.TerminatingCalledNumber] = lineAsArr[62].Trim();
+                    textCdr[Fn.ReleaseDirection] = lineAsArr[8].Trim();
+                    textCdr[Fn.ReleaseCauseIngress] = lineAsArr[9].Trim();
+                    textCdr[Fn.ReleaseCauseEgress] = lineAsArr[9].Trim();
+                    textCdr[Fn.ReleaseCauseSystem] = lineAsArr[10].Trim();
+                    //textCdr[Fn.UniqueBillId] = lineAsArr[10].Trim();
+                    textCdr[Fn.Validflag] = "1";
+                    textCdr[Fn.Partialflag] = "0";
+                    decodedRows.Add(textCdr);
                 }
-
-                string answerTime = lineAsArr[39];//AnswerTime
-                if (!string.IsNullOrEmpty(answerTime))
-                {
-                    answerTime= parseStringToDate(answerTime).ToString("yyyy-MM-dd HH:mm:ss");
-                }
-
-                string endTime = lineAsArr[40];//EndTime
-                if (!string.IsNullOrEmpty(endTime))
-                {
-                    endTime= parseStringToDate(endTime).ToString("yyyy-MM-dd HH:mm:ss");
-                }
-
-                textCdr[Fn.StartTime] = startTime;
-                textCdr[Fn.ConnectTime] = connectTime;
-                textCdr[Fn.AnswerTime] = answerTime;
-                textCdr[Fn.Endtime] = endTime;
-
-                textCdr[Fn.OriginatingCallingNumber] = lineAsArr[30].Trim();
-                textCdr[Fn.OriginatingCalledNumber] = lineAsArr[31].Trim();
-                textCdr[Fn.TerminatingCallingNumber] = lineAsArr[61].Trim();
-                textCdr[Fn.TerminatingCalledNumber] = lineAsArr[62].Trim();
-                textCdr[Fn.ReleaseDirection] = lineAsArr[8].Trim();
-                textCdr[Fn.ReleaseCauseIngress] = lineAsArr[9].Trim();
-                textCdr[Fn.ReleaseCauseEgress] = lineAsArr[9].Trim();
-                textCdr[Fn.ReleaseCauseSystem] = lineAsArr[10].Trim();
-                //textCdr[Fn.UniqueBillId] = lineAsArr[10].Trim();
-                textCdr[Fn.Validflag] = "1";
-                textCdr[Fn.Partialflag] = "0";
-                decodedRows.Add(textCdr);
+                return decodedRows;
             }
-            if (receivedRowCount != foundRowCount)
+            catch (Exception e)
             {
-                throw new Exception("Received Row count Does not matched with found row count!");
+                if (receivedRowCount != foundRowCount)
+                    throw new Exception("Received Row count Does not matched with found row count!");
+
+                Console.WriteLine(e);
+                e.Data.Add("customError", "Possibly Corrupted");
+                throw e;
             }
-            return decodedRows;
-            
         }
 
         public override string getTupleExpression(Object data)
