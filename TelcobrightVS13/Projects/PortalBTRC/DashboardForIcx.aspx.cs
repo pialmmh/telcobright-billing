@@ -51,6 +51,7 @@ public partial class DashboardAspxForIcx : Page
         BindGridView();
         DomesticCallForPreviousSevenDays1();
         InternationalIncommimng1();
+        InternationalOutgoing1();
         //InternationalOutgoing1();
         // Bind the GridView
         UpdateErrorCalls();
@@ -61,7 +62,7 @@ public partial class DashboardAspxForIcx : Page
             BindGridViewForMissingTg();
             DateTime currentDate = DateTime.Now;
             DateTime sevenDaysAgo = currentDate.AddDays(-7);
-            InternationalOutgoing1(sevenDaysAgo, currentDate);
+            //InternationalOutgoing1(sevenDaysAgo, currentDate);
 
             DateTime lastDayDisplayed = sevenDaysAgo.AddDays(6);
             if (currentDate.Date == lastDayDisplayed.Date)
@@ -134,106 +135,56 @@ public partial class DashboardAspxForIcx : Page
 
     }
 
-    //private void InternationalOutgoing1()
-    //{
-    //    Series series1 = InternationalOutgoing.Series["Series1"];
-    //    DataPointCollection points = series1.Points;
-    //    series1.IsValueShownAsLabel = true;
-    //    series1.LabelFormat = "#,##0";
-    //    string[] colors = { "#08605c", "#e40613", "#F86F03", "#FFA41B", "#8EAC50", "#898121", "#E7B10A" };
-
-    //    string connectionString = icxConnstr;
-    //    List<double> duration = new List<double>();
-    //    List<string> durationDate = new List<string>();
-    //    DateTime currentDate = DateTime.Now;
-    //    DateTime sevenDaysAgo = currentDate.AddDays(-6);
-    //    DateTime lastHourMinuteSecond = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 23, 59, 59);
-    //    string today = lastHourMinuteSecond.ToString("yyyy-MM-dd HH:mm:ss");
-    //    DateTime firstHourMinuteSecondSevenDaysAgo = new DateTime(sevenDaysAgo.Year, sevenDaysAgo.Month, sevenDaysAgo.Day, 0, 0, 0);
-    //    string lastSevenDay = firstHourMinuteSecondSevenDaysAgo.ToString("yyyy-MM-dd HH:mm:ss");
-    //    using (MySqlConnection con = new MySqlConnection(connectionString))
-    //    {
-    //        con.Open();
-    //        string sql = $@"select tup_starttime as DurationDate, sum(duration1) as Duration from sum_voice_day_02 where 
-    //                        tup_starttime >= '{lastSevenDay}' and tup_starttime <= '{today}' group by DurationDate;";
-    //        using (MySqlCommand command = new MySqlCommand(sql, con))
-    //        {
-    //            using (MySqlDataReader read = command.ExecuteReader())
-    //            {
-    //                while (read.Read())
-    //                {
-    //                    DateTime date = DateTime.Parse(read["DurationDate"].ToString());
-    //                    durationDate.Add(date.ToString("MMMM-dd"));
-    //                    duration.Add(read.GetDouble("Duration"));
-    //                }
-    //            }
-    //        }
-    //    }
-
-    //    // Ensure that the data is retrieved as expected
-    //    foreach (double value in duration)
-    //    {
-    //        Console.WriteLine("Duration: " + value);
-    //    }
-
-    //    // Set X-axis labels
-    //    for (int i = 0; i < durationDate.Count; i++)
-    //    {
-    //        points.AddXY(durationDate[i], duration[i]);
-    //    }
-
-    //    // Set colors
-    //    for (int i = 0; i < durationDate.Count; i++)
-    //    {
-    //        points[i].Color = ColorTranslator.FromHtml(colors[i]);
-    //    }
-    //    Label3.Text = $"International Outgoing Calls of ({firstHourMinuteSecondSevenDaysAgo.ToString("yyyy-MM-dd")} to {lastHourMinuteSecond.ToString("yyyy-MM-dd")})";
-    //}
-    private void InternationalOutgoing1(DateTime startDate, DateTime endDate)
+    private void InternationalOutgoing1()
     {
         Series series1 = InternationalOutgoing.Series["Series1"];
         DataPointCollection points = series1.Points;
         series1.IsValueShownAsLabel = true;
         series1.LabelFormat = "#,##0";
+
+
         string[] colors = { "#08605c", "#e40613", "#F86F03", "#FFA41B", "#8EAC50", "#898121", "#E7B10A" };
 
         string connectionString = icxConnstr;
-        List<double> duration = new List<double>();
+        List<double> durations = new List<double>();
         List<string> durationDate = new List<string>();
-
-        string today = endDate.ToString("yyyy-MM-dd HH:mm:ss");
-        string lastSevenDay = startDate.ToString("yyyy-MM-dd HH:mm:ss");
+        DateTime currentDate = DateTime.Now;
+        DateTime sevenDaysAgo = currentDate.AddDays(-6);
+        DateTime lastHourMinuteSecond = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 23, 59, 59);
+        string today = lastHourMinuteSecond.ToString("yyyy-MM-dd HH:mm:ss");
+        DateTime firstHourMinuteSecondSevenDaysAgo = new DateTime(sevenDaysAgo.Year, sevenDaysAgo.Month, sevenDaysAgo.Day, 0, 0, 0);
+        string lastSevenDay = firstHourMinuteSecondSevenDaysAgo.ToString("yyyy-MM-dd HH:mm:ss");
 
         using (MySqlConnection con = new MySqlConnection(connectionString))
         {
             con.Open();
-            string sql = $@"select tup_starttime as DurationDate, sum(duration1) as Duration from sum_voice_day_02 where 
-                        tup_starttime >= '{lastSevenDay}' and tup_starttime <= '{today}' group by DurationDate;";
+            string sql = $@"select tup_starttime as DurationDate, sum(duration3) as Duration from sum_voice_day_02 where 
+                            tup_starttime >= '{lastSevenDay}' and tup_starttime <= '{today}' group by DurationDate;";
             using (MySqlCommand command = new MySqlCommand(sql, con))
             {
                 using (MySqlDataReader read = command.ExecuteReader())
                 {
                     while (read.Read())
                     {
+                        //durationDate.Add(read["DurationDate"].ToString().ConvertToDateTimeFromCustomFormat("MM/dd/yyyy HH:mm:ss").ToString("MMMM dd")); // Store date labels
                         DateTime date = DateTime.Parse(read["DurationDate"].ToString());
                         durationDate.Add(date.ToString("MMMM-dd"));
-                        duration.Add(read.GetDouble("Duration"));
+                        durations.Add(read.GetDouble("Duration"));
                     }
                 }
             }
         }
 
         // Ensure that the data is retrieved as expected
-        foreach (double value in duration)
+        foreach (double value in durations)
         {
             Console.WriteLine("Duration: " + value);
         }
 
         // Set X-axis labels
-        points.Clear(); // Clear existing points before adding new ones
         for (int i = 0; i < durationDate.Count; i++)
         {
-            points.AddXY(durationDate[i], duration[i]);
+            points.AddXY(durationDate[i], durations[i]);
         }
 
         // Set colors
@@ -241,8 +192,7 @@ public partial class DashboardAspxForIcx : Page
         {
             points[i].Color = ColorTranslator.FromHtml(colors[i]);
         }
-
-        Label3.Text = $"International Outgoing Calls of ({startDate.ToString("yyyy-MM-dd")} to {endDate.ToString("yyyy-MM-dd")})";
+        Label3.Text = $"International Outgoing Calls of ({firstHourMinuteSecondSevenDaysAgo.ToString("yyyy-MM-dd")} to {lastHourMinuteSecond.ToString("yyyy-MM-dd")})";
     }
 
     private void InternationalIncommimng1()
@@ -490,7 +440,7 @@ public partial class DashboardAspxForIcx : Page
         DateTime newEndDate = sevenDaysAgo.AddDays(6);
 
         // Update the method call with the new date range
-        InternationalOutgoing1(newStartDate, newEndDate);
+        //InternationalOutgoing1(newStartDate, newEndDate);
     }
 
     protected void NextButton_Click(object sender, EventArgs e)
@@ -511,7 +461,7 @@ public partial class DashboardAspxForIcx : Page
         DateTime newEndDate = sevenDaysAgo;
 
         // Update the method call with the new date range
-        InternationalOutgoing1(newStartDate, newEndDate);
+        //InternationalOutgoing1(newStartDate, newEndDate);
 
     }
 

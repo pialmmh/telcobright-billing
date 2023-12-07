@@ -619,7 +619,7 @@
                         <asp:BoundField DataField="Paid Minutes (International Incoming)"
                             DataFormatString="{0:F2}"
                             HeaderText="Actual Duration"
-                            SortExpression="Paid Minutes (International Incoming)" Visible="False"/>
+                            SortExpression="Paid Minutes (International Incoming)" Visible="True"/>
                         <asp:BoundField DataField="RoundedDuration"
                             DataFormatString="{0:F2}"
                             HeaderText="Billed Duration"

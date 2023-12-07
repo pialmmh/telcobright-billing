@@ -158,10 +158,11 @@ public partial class CasDefaultRptDomesticWithLtfsIcx : System.Web.UI.Page
         GridView1.Columns[GetColumnIndexByName(GridView1, "icxName")].Visible = CheckBoxViewIncomingRoute.Checked;
         GridView1.Columns[GetColumnIndexByName(GridView1, "IGW")].Visible = CheckBoxShowByIgw.Checked;
         GridView1.Columns[GetColumnIndexByName(GridView1, "tup_outgoingroute")].Visible = CheckBoxViewOutgoingRoute.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "Paid Minutes (International Incoming)")].Visible = true;
         if (CheckBoxShowCost.Checked == true)
         {
-            GridView1.Columns[14].Visible = true;
-            GridView1.Columns[15].Visible = true;
+            GridView1.Columns[14].Visible = false;
+            GridView1.Columns[15].Visible = false;
         }
         else
         {
