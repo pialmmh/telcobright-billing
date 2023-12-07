@@ -139,7 +139,6 @@ namespace Jobs
                         preProcessor.TxtCdrRows = preProcessor.FinalAggregatedInstances;
                         preProcessor.FinalNonDuplicateEvents = preProcessor.FinalAggregatedInstances.ToDictionary(r => r[Fn.UniqueBillId]);
                         preProcessor.ValidateAggregation(this.Input.Job);
-
                     }
                 }
             }

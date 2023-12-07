@@ -25,10 +25,11 @@ namespace Decoders
         public override CompressionType CompressionType { get; set; }
         protected CdrCollectorInputData Input { get; set; }
 
-        private static string parseStringToDate(string timestamp)  //20181028051316400 yyyyMMddhhmmssfff
+        private static string parseStringToDate(string timestamp)  
         {
             DateTime dateTime;
-            if (DateTime.TryParseExact("20230904123527", "yyyyMMddHHmmss", CultureInfo.InvariantCulture,
+            timestamp = timestamp.Split('.')[0]; //remove milliseconds part, not necessaryf for gazi decoder
+            if (DateTime.TryParseExact(timestamp, "yyyyMMddHHmmss", CultureInfo.InvariantCulture,
                 DateTimeStyles.None, out dateTime))
             {
                 return dateTime.ToMySqlFormatWithoutQuote();
@@ -143,10 +144,20 @@ namespace Decoders
                 {"cdrSetting", cdrSetting},
                 {"row", row}
             });
+            //23:00 hours eventid to be rounded up as 00:00 next hour in uniqueEventTupleId
+            //aggregation logic checks cdr for +-1 hour, so collection and aggregation will be possible 
+            if (startTime.Hour == 23)
+            {
+                startTime = startTime.Date.AddDays(1);
+            }
+            else
+            {
+                startTime = startTime.Date.AddHours(startTime.Hour);
+            }
             string sessionId = row[Fn.UniqueBillId];
             string separator = "/";
             return new StringBuilder(switchId.ToString()).Append(separator)
-                //.Append(startTime.ToMySqlFormatWithoutQuote()).Append(separator)
+                .Append(startTime.ToMySqlFormatWithoutQuote()).Append(separator)
                 .Append(sessionId).ToString();
         }
         public override EventAggregationResult Aggregate(object data)
