@@ -26,7 +26,7 @@
             <%--div 1--%>
             <div style="float: left; padding-left: 20px">
                 <div style="margin-right: auto; text-align: left;">
-                    <asp:Label ID="LabelTgs" runat="server" Text="Tg List" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
+                    <asp:Label runat="server" Text="Tg List" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
                 </div>
                 <asp:GridView ID="GridViewTgs" runat="server" AutoGenerateColumns="false" DataKeyNames="id">
                     <Columns>
