@@ -21,8 +21,8 @@ namespace TelcobrightMediation
         public List<string[]> TxtCdrRows { get; set; }= new List<string[]>();
         public List<string[]> DecodedCdrRowsBeforeDuplicateFiltering { get; set; } = new List<string[]>();
         public List<string[]> RowsToConsiderForAggregation { get; set; } = new List<string[]>();
-        public List<string[]> AggregatedEvents { get; set; } = new List<string[]>();
-        public List<string[]> NewRowsRemainedUnaggreagated { get; set; } = new List<string[]>();
+        public List<string[]> FinalAggregatedInstances { get; set; } = new List<string[]>();
+        public List<string[]> InstancesCouldNotBeAggreagated { get; set; } = new List<string[]>();
         public List<string[]> RowsToBeDiscardedAfterAggregation { get; set; } = new List<string[]>();
         public Dictionary<string, string[]> FinalNonDuplicateEvents { get; set; }= new Dictionary<string, string[]>();
 
@@ -49,7 +49,7 @@ namespace TelcobrightMediation
         public int NewAndInconsistentCount => this.TxtCdrRows.Count + base.InconsistentCdrs.Count;
         public void ValidateAggregation(job j)
         {
-            if (this.NewAndInconsistentCount != AggregatedEvents.Count + NewRowsRemainedUnaggreagated.Count
+            if (this.NewAndInconsistentCount != FinalAggregatedInstances.Count + InstancesCouldNotBeAggreagated.Count
                 + RowsToBeDiscardedAfterAggregation.Count+base.InconsistentCdrs.Count)
             {
                 Exception exception =

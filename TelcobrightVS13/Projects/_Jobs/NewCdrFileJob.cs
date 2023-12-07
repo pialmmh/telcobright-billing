@@ -136,8 +136,8 @@ namespace Jobs
                                     preProcessor.Decoder.getTupleExpression(tupleGenInput));
                             }).ToList();
                         preProcessor = aggregateCdrs(preProcessor);
-                        preProcessor.TxtCdrRows = preProcessor.AggregatedEvents;
-                        preProcessor.FinalNonDuplicateEvents = preProcessor.AggregatedEvents.ToDictionary(r => r[Fn.UniqueBillId]);
+                        preProcessor.TxtCdrRows = preProcessor.FinalAggregatedInstances;
+                        preProcessor.FinalNonDuplicateEvents = preProcessor.FinalAggregatedInstances.ToDictionary(r => r[Fn.UniqueBillId]);
                         preProcessor.ValidateAggregation(this.Input.Job);
 
                     }
@@ -155,7 +155,7 @@ namespace Jobs
             newCollectionResult.FinalNonDuplicateEvents = preProcessor.FinalNonDuplicateEvents;
             newCollectionResult.DuplicateEvents = preProcessor.DuplicateEvents;
             //aggregation related
-            newCollectionResult.NewRowsRemainedUnaggreagated = preProcessor.NewRowsRemainedUnaggreagated;
+            newCollectionResult.NewRowsRemainedUnaggreagated = preProcessor.InstancesCouldNotBeAggreagated;
             newCollectionResult.RowsToBeDiscardedAfterAggregation = preProcessor.RowsToBeDiscardedAfterAggregation;
             foreach (string[] row in preProcessor.DuplicateEvents)
             {
@@ -814,11 +814,22 @@ namespace Jobs
             TelcobridgeStyleAggregator<string[]> aggregator = new TelcobridgeStyleAggregator<string[]>(dayWiseEventCollector);
             
             Dictionary<string,EventAggregationResult> aggregationResults = aggregator.aggregateCdrs();
-            preprocessor.AggregatedEvents = aggregationResults.Values.Select(ar=>ar.AggregatedInstance).ToList();
-            preprocessor.NewRowsRemainedUnaggreagated = aggregationResults.Values
+            var successfulAggregationResults = aggregationResults.Values.Where(ar => ar.AggregatedInstance != null)
+                .ToList();
+            var failedAggregationResults = aggregationResults.Values.Where(ar => ar.AggregatedInstance == null)
+                .ToList();
+            preprocessor.FinalAggregatedInstances = successfulAggregationResults.Select(ar=>ar.AggregatedInstance).ToList();
+            preprocessor.InstancesCouldNotBeAggreagated = failedAggregationResults
                 .SelectMany(ar => ar.InstancesCouldNotBeAggregated).ToList();
-            preprocessor.RowsToBeDiscardedAfterAggregation = aggregationResults.Values
+            preprocessor.RowsToBeDiscardedAfterAggregation = successfulAggregationResults
                 .SelectMany(ar => ar.InstancesToBeDiscardedAfterAggregation).ToList();
+
+            var inputRows = dayWiseEventCollector.InputEvents;
+            if (inputRows.Count!=preprocessor.FinalAggregatedInstances.Count+preprocessor.RowsToBeDiscardedAfterAggregation.Count
+                +preprocessor.InstancesCouldNotBeAggreagated.Count)
+            {
+                throw new Exception("Input and aggregated rows count did not match expected value");    
+            }
             return preprocessor;
         }
     }
