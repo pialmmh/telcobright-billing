@@ -544,17 +544,17 @@
             <input type="hidden" id="hidValueSubmitClickFlag" runat="server" value="false"/>
             <input type="hidden" id="hidValueTemplate" runat="server" />
          <asp:Button ID="Button2" runat="server" 
-            style="margin-left: 0px" Text="Export First " Visible="true" Enabled="false"
+            style="margin-left: 0px" Text="Export First " Visible="False" Enabled="false"
              onclick="Button2_Click" />
-             <asp:TextBox ID="TextBoxNoOfRecords" runat="server" Text="1000"></asp:TextBox> Records or, 
+             <asp:TextBox ID="TextBoxNoOfRecords" runat="server" Text="1000" Visible="False"></asp:TextBox> 
      <span style="padding-left:5px;">
      <asp:Button ID="Button3" runat="server" 
-            style="margin-left: 0px" Text="Export All" Visible="true" Enabled="false"
+            style="margin-left: 0px" Text="Export All" Visible="False" Enabled="false"
              onclick="Button1_Click" />
      </span>
-     <span style="padding-left:5px;"> (Might take long...)</span>
-         <span style="padding-left:20px;font-weight:bold;"> Real Time Update 
-                <asp:CheckBox ID="CheckBoxRealTimeUpdate" runat="server" AutoPostBack="true" oncheckedchanged="CheckBoxRealTimeUpdate_CheckedChanged"/></span>
+     <%--<span style="padding-left:5px;"> (Might take long...)</span>--%>
+         <span style="padding-left:20px;font-weight:bold;">
+                <asp:CheckBox ID="CheckBoxRealTimeUpdate" runat="server" AutoPostBack="true" oncheckedchanged="CheckBoxRealTimeUpdate_CheckedChanged" Visible="False"/></span>
     </div>
     <div style="clear:both;padding:1px;">
          <asp:Label ID="lblStatus" Visible="false" ForeColor="Black" Font-Bold="true" runat="server" Text=""></asp:Label>
@@ -595,7 +595,7 @@
             <asp:BoundField DataField="ne.switchname" HeaderText="Network Element" 
                 SortExpression="idSwitch" />
             <asp:BoundField DataField="SerialNumber" HeaderText="SerialNumber" 
-                SortExpression="SerialNumber" />
+                SortExpression="SerialNumber" visible="False"/>
             <asp:BoundField DataField="enumjobstatu.type" HeaderText="Status" 
                 SortExpression="Status" />
             <asp:BoundField DataField="Progress" HeaderText="Progress" 
@@ -610,9 +610,9 @@
                 SortExpression="NoOfSteps"/>
             <%--<asp:BoundField DataField="JobParameter" HeaderText="Parameters" ItemStyle-Width="500px" ItemStyle-Wrap="false"
                 SortExpression="JobParameter" />--%>
-            <asp:BoundField DataField="JobSummary" HeaderText="Summary" 
+            <asp:BoundField DataField="JobSummary" HeaderText="Actual Duration From Switch" 
                 SortExpression="JobSummary" />
-            <asp:BoundField DataField="Error" HeaderText="Execution Error" 
+            <asp:BoundField DataField="Error" HeaderText="Processing Error" 
                 SortExpression="Error" />
 
         </Columns>
