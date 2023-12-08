@@ -123,8 +123,7 @@ namespace Process
                         ITelcobrightJob telcobrightJob = null;
                         using (DbCommand cmd = context.Database.Connection.CreateCommand())
                         {
-                            foreach (job job in incompleteJobs
-                            ) //for each job********************************************
+                            foreach (job job in incompleteJobs) //for each job***************
                             {
                                 Console.WriteLine("Processing CdrJob for Switch:" + ne.SwitchName + ", JobName:" +
                                                   job.JobName);

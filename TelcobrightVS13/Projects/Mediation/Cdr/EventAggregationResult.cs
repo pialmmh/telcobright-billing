@@ -35,12 +35,12 @@ namespace TelcobrightMediation
                     }
                     if (instancesCouldNotBeAggregated.Count == 0)
                     {
-                        throw new Exception("InstancesCouldNotBeAggregated has to be empty when aggregation is successful.");
+                        throw new Exception("RowsCouldNotBeAggregated has to be empty when aggregation is successful.");
                     }
                 }
-                else
+                else//aggregation failed
                 {
-                    if (instancesToBeDiscardedAfterAggregation.Count == 0)
+                    if (instancesToBeDiscardedAfterAggregation.Count > 0)
                     {
                         throw new Exception("Instances cannot be discarded when aggregation is unsuccessful.");
                     }
