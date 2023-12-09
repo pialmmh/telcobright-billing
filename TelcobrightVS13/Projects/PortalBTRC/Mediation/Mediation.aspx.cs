@@ -18,8 +18,9 @@ public partial class DefaultMediation : System.Web.UI.Page
     private int _mShowByAns = 0;
 
     DataTable _dt;
+    static TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
+    Dictionary<string, string> userVsDbName = telcobrightConfig.DeploymentProfile.UserVsDbName;
 
-    TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
 
 
     protected void CheckBoxRealTimeUpdate_CheckedChanged(object sender, EventArgs e)
@@ -126,6 +127,17 @@ public partial class DefaultMediation : System.Web.UI.Page
 
     public void ExportFirstOrAll(long noOfRecords)
     {
+        string logIdentityName = this.User.Identity.Name;
+        String selectedIcx = logIdentityName;
+        string selectedUserdbName;
+        if (userVsDbName.ContainsKey(logIdentityName))
+        {
+            selectedUserdbName = userVsDbName[logIdentityName];
+        }
+        else
+        {
+            selectedUserdbName = telcobrightConfig.DatabaseSetting.DatabaseName;
+        }
         string sql = "";
         if (noOfRecords == -1)//all records
         {
@@ -135,8 +147,13 @@ public partial class DefaultMediation : System.Web.UI.Page
         {
             sql = ((string)this.ViewState["jobs.squery"]).Replace(";", "") + " limit 0," + this.TextBoxNoOfRecords.Text + ";";
         }
+        string con =  ConfigurationManager.ConnectionStrings["Partner"].ConnectionString;
+        if (!selectedUserdbName.Contains("btrc_cas"))
+        {
+            con = con.Replace("btrc_cas", selectedUserdbName);
+        }
+        DataTable dt = GetDataSet(con, sql).Tables[0];
 
-        DataTable dt = GetDataSet(ConfigurationManager.ConnectionStrings["Partner"].ConnectionString, sql).Tables[0];
         ExportToSpreadsheet(dt, "jobs_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
     }
 

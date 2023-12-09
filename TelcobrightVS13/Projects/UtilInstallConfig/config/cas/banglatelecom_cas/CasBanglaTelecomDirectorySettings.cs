@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -48,7 +49,7 @@ namespace InstallConfig
             };
             this.vaultDialogic= new FileLocation()
             {
-                Name = "vaultDialogic",//this is refered in ne table, name MUST start with "Vault"
+                Name = "vault.Dialogic",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",

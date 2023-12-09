@@ -81,11 +81,11 @@ namespace Decoders
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
 
-            foreach (string[] lineAsArr in lines)
+            try
             {
-                string[] textCdr = new string[input.MefDecodersData.Totalfieldtelcobright];
-                try
+                foreach (string[] lineAsArr in lines)
                 {
+                    string[] textCdr = new string[input.MefDecodersData.Totalfieldtelcobright];
                     string startTimestr = lineAsArr[10].Trim();
                     string answerTimeStr = lineAsArr[11].Trim();
                     string endTimeStr = lineAsArr[12].Trim();
@@ -140,13 +140,24 @@ namespace Decoders
                     textCdr[Fn.Validflag] = "1";
                     textCdr[Fn.Partialflag] = "0";
                     decodedRows.Add(textCdr.ToArray());
+                    //try
+                    //{
+                   
+                    //}
+                    //catch (Exception e)
+                    //{
+                    //    Console.WriteLine(e);
+                    //    var cdrInconsistent = CdrConversionUtil.ConvertTxtRowToCdrinconsistent(textCdr);
+                    //    inconsistentCdrs.Add(cdrInconsistent);
+                    //}
                 }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    var cdrInconsistent = CdrConversionUtil.ConvertTxtRowToCdrinconsistent(textCdr);
-                    inconsistentCdrs.Add(cdrInconsistent);
-                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                e.Data.Add("customError", "Possibly Corrupted");
+                e.Data.Add("jobId", input.TelcobrightJob.id);
+                throw e;
             }
             return decodedRows;
         }

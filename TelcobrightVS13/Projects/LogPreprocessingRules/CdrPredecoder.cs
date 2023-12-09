@@ -200,6 +200,10 @@ namespace LogPreProcessor
                     }
                 }); //parallel
 
+
+
+
+
                 if (successResult.Any()) updateSuccessfulJobs(thisSwitch, context, cmd, successResult);
                 if(failedResults.Any()) updateFailedJobs(thisSwitch, context, cmd, failedResults, tbc);
             });
@@ -232,7 +236,7 @@ namespace LogPreProcessor
             {
                 try
                 {
-                    cmd.CommandText = $" update job set Error='{result.ExceptionMessage}' where id={result.FailedJob.id};";
+                    cmd.CommandText = $" update job set jobadditionalinfo='Possibly Corrupted', Error='{result.ExceptionMessage}' where id={result.FailedJob.id};";
                     cmd.ExecuteNonQuery();
                     string preDecodedDirName = "";
                     string preDecodedFileName = "";

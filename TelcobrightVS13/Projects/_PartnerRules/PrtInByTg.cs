@@ -19,7 +19,9 @@ namespace PartnerRules
         public int Execute(cdr thisCdr, MefPartnerRulesContainer data)
         {
             thisCdr.InPartnerId = 0;
-            var key = new ValueTuple<int,string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
+            string tbPartnerDb = data.MediationContext.Tbc.Telcobrightpartner.databasename;
+            CdrSetting cdrSetting = data.MediationContext.CdrSetting;
+            var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
             route thisRoute = null;
             data.SwitchWiseRoutes.TryGetValue(key, out thisRoute);
             if (thisRoute != null)
@@ -27,21 +29,23 @@ namespace PartnerRules
                 thisCdr.InPartnerId = thisRoute.idPartner;
                 return thisRoute.idPartner;
             }
-             
-            //if (thisCdr.InPartnerId <= 0)
-            //{
-            //    CdrSetting cdrSetting = data.MediationContext.CdrSetting;
-            //    if (cdrSetting.useCasStyleProcessing == true)
-            //    {
-            //        ANSInByPrefix ansInByPrefix= new ANSInByPrefix();
-            //        int idPartner = ansInByPrefix.Execute(thisCdr, data);
-            //        if (idPartner > 0)
-            //        {
-            //            thisCdr.InPartnerId = idPartner;
-            //            return idPartner;
-            //        }
-            //    }
-            //}
+
+            if (thisCdr.InPartnerId <= 0)
+            {
+                if (cdrSetting.useCasStyleProcessing == true &&
+                    tbPartnerDb == "mnh_cas" && thisCdr.InPartnerId <= 0
+                    && (thisCdr.IncomingRoute == "1151" || thisCdr.IncomingRoute == "1974"))
+                {
+                    ANSInByPrefix ansInByPrefix = new ANSInByPrefix();
+                    int idPartner = ansInByPrefix.Execute(thisCdr, data);
+                    if (idPartner > 0)
+                    {
+                        thisCdr.InPartnerId = idPartner;
+                        return idPartner;
+                    }
+                }
+            }
+
             thisCdr.InPartnerId = 0;
             return 0;
         }

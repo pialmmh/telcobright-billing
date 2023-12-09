@@ -41,12 +41,12 @@ namespace Decoders
             string strThisField = "";   
             string[] normalizedRow = null;
             int currentFieldNo = 0;
-            foreach (string[] csvRow in tempTable) //for each row
+            try
             {
-                if (csvRow[6].Trim() == "I")
-                    continue;
-                try
+                foreach (string[] csvRow in tempTable) //for each row
                 {
+                    if (csvRow[6].Trim() == "I")
+                        continue;
                     normalizedRow = null;
                     normalizedRow = new string[input.MefDecodersData.Totalfieldtelcobright];
                     int fldCount = 0;
@@ -346,15 +346,26 @@ namespace Decoders
                         normalizedRow[Fn.FinalRecord] = "1";
                         decodedRows.Add(normalizedRow);
                     }
+                    //try
+                    //{
+
+                    //}
+                    //catch (Exception e1)
+                    //{
+                    //    //if error found for one row, add this to inconsistent
+                    //    Console.WriteLine(e1);
+                    //    inconsistentCdrs.Add(CdrConversionUtil.ConvertTxtRowToCdrinconsistent(csvRow));
+                    //}
                 }
-                catch (Exception e1)
-                {
-                    //if error found for one row, add this to inconsistent
-                    Console.WriteLine(e1);
-                    inconsistentCdrs.Add(CdrConversionUtil.ConvertTxtRowToCdrinconsistent(csvRow));
-                }
+                return decodedRows;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                e.Data.Add("customError", "Possibly Corrupted");
+                e.Data.Add("jobId", input.TelcobrightJob.id);
+                throw e;
             }//for each row
-            return decodedRows;
         }
 
         public override string getTupleExpression(Object data)
