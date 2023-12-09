@@ -506,6 +506,9 @@ namespace TelcobrightMediation
                 throw new Exception("Deleted number of partial cdr does not match RowsToBeDiscardedAfterAggregation.");
             }
             //write at least one aggregation validation logic after cdr writing
+            if(writtenCdrCount+writtenErrorCount+newRowsRemainedUnaggreagatedCount+deletedRowsFromPartialEvent
+                !=)
+
             int cdrDiscardedCount = 0;
             if (this.CdrJobContext.CdrjobInputData.Ne.FilterDuplicateCdr == 1)
             {
