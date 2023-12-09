@@ -254,7 +254,7 @@ namespace LogPreProcessor
             {
                 try
                 {
-                    cmd.CommandText = $" update job set jobsummary='Possibly Corrupted', Error='{result.ExceptionMessage}' where id={result.FailedJob.id};";
+                    cmd.CommandText = $" update job set jobadditionalinfo='Possibly Corrupted', Error='{result.ExceptionMessage}' where id={result.FailedJob.id};";
                     cmd.ExecuteNonQuery();
                     string preDecodedDirName = "";
                     string preDecodedFileName = "";
