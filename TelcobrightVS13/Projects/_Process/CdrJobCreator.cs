@@ -139,7 +139,6 @@ namespace Process
                                 }).ToDictionary(a => a.jobName, a => a.fileName);
                         Dictionary<string, string> existingJobNames
                             = getExistingJobNames(context, newJobNameVsFileInfos, thisSwitch.idSwitch);
-
                         fileInfos = new List<FileInfo>();
                         foreach (KeyValuePair<string, FileInfo> kv in newJobNameVsFileInfos)
                         {
