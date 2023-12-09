@@ -21,8 +21,8 @@ namespace TelcobrightMediation
         public List<string[]> TxtCdrRows { get; set; }= new List<string[]>();
         public List<string[]> DecodedCdrRowsBeforeDuplicateFiltering { get; set; } = new List<string[]>();
         public List<string[]> RowsToConsiderForAggregation { get; set; } = new List<string[]>();
-        public List<string[]> AggregatedEvents { get; set; } = new List<string[]>();
-        public List<string[]> NewRowsRemainedUnaggreagated { get; set; } = new List<string[]>();
+        public List<string[]> FinalAggregatedInstances { get; set; } = new List<string[]>();
+        public List<string[]> RowsCouldNotBeAggregated { get; set; } = new List<string[]>();
         public List<string[]> RowsToBeDiscardedAfterAggregation { get; set; } = new List<string[]>();
         public Dictionary<string, string[]> FinalNonDuplicateEvents { get; set; }= new Dictionary<string, string[]>();
 
@@ -49,13 +49,34 @@ namespace TelcobrightMediation
         public int NewAndInconsistentCount => this.TxtCdrRows.Count + base.InconsistentCdrs.Count;
         public void ValidateAggregation(job j)
         {
-            if (this.NewAndInconsistentCount != AggregatedEvents.Count + NewRowsRemainedUnaggreagated.Count
-                + RowsToBeDiscardedAfterAggregation.Count+base.InconsistentCdrs.Count)
+            Exception exception =
+                new Exception($"Found Cdr count mismatch after aggregation. Job: {j.JobName}");
+            if (this.DecodedCdrRowsBeforeDuplicateFiltering.Count != FinalAggregatedInstances.Count + RowsCouldNotBeAggregated.Count
+                + RowsToBeDiscardedAfterAggregation.Count)
             {
-                Exception exception =
-                    new Exception($"Found Cdr count mismatch after aggregation. Job: {j.JobName}");
                 Console.WriteLine(exception);
                 throw exception;
+            }
+            if (this.FinalAggregatedInstances.Count != this.TxtCdrRows.Count)
+            {
+                Console.WriteLine(exception);
+                throw exception;
+            }
+            if (this.TxtCdrRows.Count == 0)//no successful aggregation
+            {
+                if (this.RowsToBeDiscardedAfterAggregation.Count > 0 || this.RowsCouldNotBeAggregated.Count < 0)
+                {
+                    Console.WriteLine(exception);
+                    throw exception;
+                }
+            }
+            else//at least one successful aggregation
+            {
+                if (this.RowsToBeDiscardedAfterAggregation.Count <= 0)
+                {
+                    Console.WriteLine(exception);
+                    throw exception;
+                }
             }
         }
 
@@ -227,7 +248,8 @@ namespace TelcobrightMediation
             int originalRawCount = cdrJobInputData.MergedJobsDic.Any()==false?this.RawCount
                 :cdrJobInputData.MergedJobsDic.Values.Sum(wrappedJobs => wrappedJobs.NewAndInconsistentCount);
             if (originalRawCount!= 
-                cdrExtsForNonPartials.Count + cdrExtsForPartials.Count + errorCdrExts.Count +
+                cdrExtsForNonPartials.Count + cdrExtsForPartials.Count + errorCdrExts.Count +RowsCouldNotBeAggregated.Count+
+                RowsToBeDiscardedAfterAggregation.Count+
                 rawPartialCount - this.PartialCdrContainers.Count + base.InconsistentCdrs.Count)
                 throw new Exception(
                     "Count of nonPartial and partial cdrs do not match expected with expected rawCount for this job.");

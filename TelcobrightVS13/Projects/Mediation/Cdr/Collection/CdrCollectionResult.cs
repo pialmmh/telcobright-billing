@@ -39,7 +39,7 @@ namespace TelcobrightMediation
         public ne Ne { get; }
         public List<DateTime> DatesInvolved { get; }
         public List<DateTime> HoursInvolved { get; }
-        public List<string[]> NewRowsRemainedUnaggreagated { get; set; } = new List<string[]>();
+        public List<string[]> RowsCouldNotBeAggreagated { get; set; } = new List<string[]>();
         public List<string[]> RowsToBeDiscardedAfterAggregation { get; set; } = new List<string[]>();
         public ConcurrentDictionary<string, CdrExt> ConcurrentCdrExts
         {
