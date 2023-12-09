@@ -81,7 +81,9 @@ namespace Process
 
                         List<job> newCdrJobs = GetNewCdrJobs(tbc, context, ne, ne.DecodingSpanCount,
                             neAdditionalSetting);
-                        var jobsWithError = newCdrJobs.Where(j => !j.Error.IsNullOrEmptyOrWhiteSpace()).ToList();
+                        var jobsWithError = newCdrJobs
+                            .Where(j => !j.Error.IsNullOrEmptyOrWhiteSpace() ||
+                                        !j.JobAdditionalInfo.IsNullOrEmptyOrWhiteSpace()).ToList();
                         var jobsWithoutError =
                             newCdrJobs.Where(ij => !jobsWithError.Select(ej => ej.id).Contains(ij.id)).ToList();
                         newCdrJobs = jobsWithoutError.Concat(jobsWithError).ToList();
@@ -384,10 +386,19 @@ namespace Process
             string customError="";
             if (e.Data.Contains("customError"))
                 customError = (string)e.Data["customError"];
-            cmd.CommandText = $" update job set jobSummary='{customError}', `Error`= '" +
+            long jobid = -1;
+            if (e.Data.Contains("jobId"))
+            {
+                jobid= (long) e.Data["jobId"];
+            }
+            else
+            {
+                jobid = telcobrightJob.id;
+            }
+            cmd.CommandText = $" update job set jobadditionalinfo='{customError}', `Error`= '" +
                               e.Message.Replace("'", "") + errorDetailAsTxt +
                               Environment.NewLine + (e.InnerException?.ToString().Replace("'", "") ?? "")
-                              + "' " + " where id=" + telcobrightJob.id + ";commit;";
+                              + "' " + " where id=" + jobid + ";commit;";
             cmd.ExecuteNonQuery();
         }
 

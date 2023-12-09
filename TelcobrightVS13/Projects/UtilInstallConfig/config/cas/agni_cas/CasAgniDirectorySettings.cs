@@ -41,7 +41,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "Y:/telcobright/vault/resources/cdr/agni/tdm/agni_tdm",
+                StartingPath = "Y:/telcobright/vault/resources/cdr/agni/tdm",
                 User = "",
                 Pass = "",
             };
