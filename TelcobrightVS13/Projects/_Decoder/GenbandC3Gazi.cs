@@ -84,7 +84,7 @@ namespace Decoders
 
                 foreach (string[] lineAsArr in lines)
                 {
-                    if (lineAsArr.Length < 100 ) continue;
+                    //if (lineAsArr.Length < 100 ) continue;
 
 
                     string[] textCdr= new  string[input.MefDecodersData.Totalfieldtelcobright];
@@ -144,6 +144,7 @@ namespace Decoders
             {
                 Console.WriteLine(e);
                 e.Data.Add("customError", "Possibly Corrupted");
+                e.Data.Add("jobId", input.TelcobrightJob.id);
                 throw e;
             }
 

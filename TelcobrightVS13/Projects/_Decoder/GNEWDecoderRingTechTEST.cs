@@ -170,6 +170,7 @@ namespace Decoders
             {
                 Console.WriteLine(e);
                 e.Data.Add("customError", "Possibly Corrupted");
+                e.Data.Add("jobId", input.TelcobrightJob.id);
                 throw e;
             }
         }

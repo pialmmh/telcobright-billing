@@ -105,7 +105,10 @@ namespace TelcobrightMediation
                         string tableName = this.SourceTablePrefix + "_" + date.ToMySqlFormatDateOnlyWithoutTimeAndQuote().Replace("-", "");
 
                         Dictionary<DateTime, HourlyEventData<T>> hourlyDic = kv.Value;
-                        string sql = $@"{decoder.getSelectExpressionForUniqueEvent(this.CollectorInput)} from {tableName} where {Environment.NewLine}";
+                        string selectExpression = this.UniqueEventsOnly? decoder.getSelectExpressionForUniqueEvent(this.CollectorInput)
+                            :decoder.getSelectExpressionForPartialCollection(null);
+                        string sql = $@"{selectExpression} from {tableName} where {Environment.NewLine}";
+                        
                         List<string> whereClausesByHour = hourlyDic.Select(kvHour =>
                         {
                             HourlyEventData<T> hourWiseData = kvHour.Value;
@@ -117,6 +120,10 @@ namespace TelcobrightMediation
                             return this.Decoder.getWhereForHourWiseCollection(data);
                         }).ToList();
                         sql += string.Join(" or " + Environment.NewLine, whereClausesByHour);
+                        if (this.UniqueEventsOnly == false)
+                        {
+                            sql = sql.Replace("tuple in", "uniquebillid in");
+                        }
 
                         List<T> existingEvents = new List<T>();
                         if (whereClausesByHour.Any())
@@ -215,8 +222,10 @@ namespace TelcobrightMediation
                     .ToList();
                 List<DateTime> tableDatesToBeCreated =
                     newTablesToBeCreated.Select(t => requiredTableNamesPerDay[t]).ToList();
-                string templateSql = this.Decoder.getCreateTableSqlForUniqueEvent(this.CollectorInput);
-                string tablePrefix = this.Decoder.UniqueEventTablePrefix;
+                string templateSql = this.UniqueEventsOnly?this.Decoder.getCreateTableSqlForUniqueEvent(this.CollectorInput)
+                    :this.Decoder.getCreateTableSqlForPartialEvent(null);
+                string tablePrefix = this.UniqueEventsOnly?this.Decoder.UniqueEventTablePrefix
+                    :this.Decoder.PartialTablePrefix;
                 string tableStorageEngine = this.Decoder.PartialTableStorageEngine;
 
                 lock (_synchronouslockWhileExecutingDdl)

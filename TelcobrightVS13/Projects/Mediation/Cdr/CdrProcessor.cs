@@ -490,13 +490,13 @@ namespace TelcobrightMediation
                 if (neAdditionalSetting.AggregationStyle == "telcobridge")
                 {
                     newRowsRemainedUnaggreagatedCount =
-                        WriteNewRowsRemainedUnaggreagated(this.CollectionResult.NewRowsRemainedUnaggreagated);
+                        WriteNewRowsRemainedUnaggreagated(this.CollectionResult.RowsCouldNotBeAggreagated);
                     deletedRowsFromPartialEvent = DeleteAggregatedPartialInstances(this.CollectionResult.RowsToBeDiscardedAfterAggregation);
 
                 }
             }
-            if (this.CollectionResult.NewRowsRemainedUnaggreagated.Any() &&
-                newRowsRemainedUnaggreagatedCount != this.CollectionResult.NewRowsRemainedUnaggreagated.Count)
+            if (this.CollectionResult.RowsCouldNotBeAggreagated.Any() &&
+                newRowsRemainedUnaggreagatedCount != this.CollectionResult.RowsCouldNotBeAggreagated.Count)
             {
                 throw new Exception("Written number of partial event count does not match collection result.");
             }

@@ -21,8 +21,8 @@ namespace PartnerRules
         {
             thisCdr.OutPartnerId = 0;
             string tbPartnerDb = data.MediationContext.Tbc.Telcobrightpartner.databasename;
-            CdrSetting cdrSettOutg = data.MediationContext.CdrSetting;
-            var key = new ValueTuple<int,string>(thisCdr.SwitchId,thisCdr.OutgoingRoute);
+            CdrSetting cdrSetting = data.MediationContext.CdrSetting;
+            var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.OutgoingRoute);
             route thisRoute = null;
             data.SwitchWiseRoutes.TryGetValue(key, out thisRoute);
             if (thisRoute != null)
@@ -30,11 +30,11 @@ namespace PartnerRules
                 thisCdr.OutPartnerId = thisRoute.idPartner;
                 return thisRoute.idPartner;
             }
-            if (cdrSettOutg.useCasStyleProcessing == true &&
+            if (cdrSetting.useCasStyleProcessing == true &&
                     tbPartnerDb == "mnh_cas" && thisCdr.OutPartnerId <= 0
-                    && thisCdr.OutgoingRoute=="1151")
+                    && (thisCdr.OutgoingRoute == "1151" || thisCdr.OutgoingRoute == "1974"))
             {
-               ANSOutByPrefix ansOutByPrefix = new ANSOutByPrefix();
+                ANSOutByPrefix ansOutByPrefix = new ANSOutByPrefix();
                 int idPartner = ansOutByPrefix.Execute(thisCdr, data);
                 if (idPartner > 0)
                 {

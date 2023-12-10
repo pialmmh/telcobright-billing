@@ -54,9 +54,9 @@ namespace TelcobrightMediation
             route incomingRoute = null;
             dicRoutes.TryGetValue(key, out incomingRoute);
             string tbPartnerDb = cdrProcessor.CdrJobContext.CdrjobInputData.Tbc.Telcobrightpartner.databasename;
+            bool useCasStyleProcessing = cdrProcessor.CdrJobContext.CdrjobInputData.CdrSetting.useCasStyleProcessing;
             if (incomingRoute != null)
             {
-                bool useCasStyleProcessing = cdrProcessor.CdrJobContext.CdrjobInputData.CdrSetting.useCasStyleProcessing;
                 if (!useCasStyleProcessing)
                 {
                     if (incomingRoute.partner.PartnerType == IcxPartnerType.ANS &&
@@ -66,28 +66,34 @@ namespace TelcobrightMediation
                         return;
                     }
                 }
-                else//cas style
+                
+            }
+            if (useCasStyleProcessing)//cas style
+            {
+                key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.OutgoingRoute);
+                route outGoingRoute = null;
+                dicRoutes.TryGetValue(key, out outGoingRoute);
+
+                if ((tbPartnerDb == "mnh_cas" && thisCdr.SwitchId == 1) &&
+                    (thisCdr.OutgoingRoute == "1151" || thisCdr.OutgoingRoute == "1974" ||
+                     thisCdr.IncomingRoute == "1151" || thisCdr.IncomingRoute == "1974")
+                    )
                 {
-                    key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.OutgoingRoute);
-                    route outGoingRoute = null;
-                    dicRoutes.TryGetValue(key, out outGoingRoute);
-                    
-                    if (outGoingRoute?.partner.PartnerType == IcxPartnerType.ANS &&
-                        incomingRoute.partner.PartnerType == IcxPartnerType.ANS) //ANS and route=national
-                    {
-                        thisCdr.ServiceGroup = 1; //Domestic call
-                        decimal roundedDuration = CasDurationHelper.getDomesticDur(thisCdr.DurationSec);
-                        thisCdr.Duration1 = roundedDuration;
-                        return;
-                    }
-                    if (tbPartnerDb == "mnh_cas" && (thisCdr.SwitchId == 1 && thisCdr.OutgoingRoute == "1151"))
-                    {
-                        thisCdr.ServiceGroup = 1; //Domestic call
-                        decimal roundedDuration = CasDurationHelper.getDomesticDur(thisCdr.DurationSec);
-                        thisCdr.Duration1 = roundedDuration;
-                        return;
-                    }
+                    thisCdr.ServiceGroup = 1; //Domestic call
+                    decimal roundedDuration = CasDurationHelper.getDomesticDur(thisCdr.DurationSec);
+                    thisCdr.Duration1 = roundedDuration;
+                    return;
                 }
+
+                if (outGoingRoute?.partner.PartnerType == IcxPartnerType.ANS &&
+                    incomingRoute?.partner.PartnerType == IcxPartnerType.ANS) //ANS and route=national
+                {
+                    thisCdr.ServiceGroup = 1; //Domestic call
+                    decimal roundedDuration = CasDurationHelper.getDomesticDur(thisCdr.DurationSec);
+                    thisCdr.Duration1 = roundedDuration;
+                    return;
+                }
+                
             }
         }
 

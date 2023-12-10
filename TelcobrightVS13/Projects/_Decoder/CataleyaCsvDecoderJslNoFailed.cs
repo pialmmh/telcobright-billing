@@ -69,7 +69,6 @@ namespace Decoders
 
                     }
                     foundRowCount++;
-                    if (lineAsArr.Length <= 1) continue;
                     string chargingStatus = lineAsArr[2] == "S" ? "1" : "0";
                     string durationStr = lineAsArr[17].Trim();
                     //decimal durationSec = 0;
@@ -158,6 +157,7 @@ namespace Decoders
 
                 Console.WriteLine(e);
                 e.Data.Add("customError", "Possibly Corrupted");
+                e.Data.Add("jobId", input.TelcobrightJob.id);
                 throw e;
             }           
         }
